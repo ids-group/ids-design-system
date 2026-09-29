@@ -1,3 +1,9 @@
+import type {
+  ChartDimmable,
+  ChartStaggered,
+  ChartWithDataTable,
+  ChartWithTooltipTrigger,
+} from '@ids-group-ltd/ids-design-system/components';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,11 +12,9 @@ import {
   booleanAttribute,
   computed,
   contentChild,
-  inject,
   input,
   numberAttribute,
   output,
-  signal,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
@@ -23,15 +27,11 @@ import {
   leaveMark,
   staggerDelay,
   chartRenderGate,
+  DsChartBase,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
-import type {
-  ChartDataTable,
-  ChartFrame,
-  ChartValueFormat,
-} from '@ids-group-ltd/ids-design-system/core';
+import type { ChartDataTable } from '@ids-group-ltd/ids-design-system/core';
 import {
   ChartTooltipDirective,
   chartActiveMark,
@@ -49,7 +49,6 @@ import {
 import type { BarChartRow, BarChartSegment } from './bar-chart.types';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
-import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 
 function segmentsOf(
   row: BarChartRow,
@@ -92,44 +91,30 @@ function segmentsOf(
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BarChartComponent {
+export class BarChartComponent
+  extends DsChartBase
+  implements
+    ChartDimmable,
+    ChartStaggered,
+    ChartWithDataTable,
+    ChartWithTooltipTrigger
+{
   protected readonly renderReady = chartRenderGate();
 
   protected readonly leaveMark = leaveMark;
 
   /** One row per bar, drawn in the order given. */
-  readonly data = input.required<readonly BarChartRow[]>();
+  readonly data = input<readonly BarChartRow[]>([]);
 
   /** Track length is relative to this. Null uses the largest value. */
   readonly max = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
-  /** `'auto'` draws a bordered, padded box; `'none'` leaves it bare. Unset falls back to
-   *  `DS_CONFIG.chart.frame`, then `'auto'`. */
-  readonly frame = input<ChartFrame | null>(null);
-
-  /** Colour dot beside each tooltip reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`,
-   *  then dots for up to four readings. */
-  readonly tooltipSwatches = input<boolean | null>(null, {
-    transform: (value: unknown) =>
-      value == null ? null : booleanAttribute(value),
-  });
-
-  /** Milliseconds the tooltip stays after the pointer leaves the mark; zero closes it at once. Unset
-   *  falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
-  readonly tooltipLingerMs = input<number | null>(null, {
-    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
-  });
-  /** Visible title above the plot, reused as the annex table's caption. */
-  readonly caption = input<string | null>(null);
-
-  /** Accessible name. Generated from the data when omitted. */
-  readonly summary = input<string | null>(null);
-
-  /** Label-and-value table under the plot: `'toggle'` behind a disclosure, `'visible'` open, `'none'`
-   *  none. Use `'none'` only where the data is already in a table on the page. Unset falls back to
-   *  `DS_CONFIG.chart.dataTable`, then `'none'`. */
+  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
+   *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
+   *  `'none'` belongs only where the same data is already in a table on the page.
+   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
   /** Declares the marks parts of one whole: each mark's share appears on the tooltip's second line and
    *  in the data table. Off by default, since a total over stages or months is not a real quantity. */
@@ -137,37 +122,8 @@ export class BarChartComponent {
 
   /** Prints each row's share of `max` beside its value. */
   readonly showPercent = input(true, { transform: booleanAttribute });
-  /** Draws skeleton marks in place of the data, at the same count. */
-  readonly loading = input(false, { transform: booleanAttribute });
-  /** Shown in place of the plot when `data` is empty. Unset falls back to
-   *  `DS_INTL.chart.empty`. */
-  readonly emptyText = input<string | null>(null);
 
-  /** Shows `errorText` in place of the plot. Distinct from `loading` and from an empty `data`. */
-  readonly error = input(false, { transform: booleanAttribute });
-
-  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
-  readonly errorText = input<string | null>(null);
-  /** Formats every printed value, including the annex table and generated description. Unset falls
-   *  back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`. */
-  readonly valueFormat = input<ChartValueFormat | null>(null);
-
-  /** Holds the clicked mark and its tooltip in place, with a pin disc, until a second click, Escape or a press
-   *  outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `rowClicked` fires either way. */
-  readonly pinOnClick = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
-
-  protected readonly defaults = resolveChartDefaults(this);
-  protected readonly intl = inject(DS_INTL);
-  readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
-  readonly emptyTextResolved = this.defaults.emptyText;
-  readonly errorTextResolved = this.defaults.errorText;
-  readonly valueFormatResolved = this.defaults.valueFormat;
-
-  /** Adds the pointer cursor and hover tint. `rowClicked` fires either way. */
-  readonly interactive = input(false, { transform: booleanAttribute });
 
   /** The row clicked or activated with Enter or Space, whether or not `interactive` is set. */
   readonly rowClicked = output<BarChartRow>();
@@ -207,15 +163,6 @@ export class BarChartComponent {
   protected readonly activeMark = chartActiveMark(
     () => this.tooltipLingerResolved(),
     () => this.defaults.hoverDelayMs(),
-  );
-
-  protected readonly hoveredLabel = signal(-1);
-
-  protected readonly dimsOthers = computed(
-    () =>
-      this.dimOthers() ||
-      (this.hoveredLabel() !== -1 &&
-        this.hoveredLabel() === this.activeMark.index()),
   );
 
   protected onMarkClick(

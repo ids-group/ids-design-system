@@ -3,9 +3,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Чарты - аудит docs, видов и общих входов</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-29">
+<meta name="ds-deck-evidence" content="src/lib/components/charts-base.ts:26">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <style>
   .opt { cursor: pointer; }
@@ -74,10 +76,19 @@
       видовых входов не показаны нигде. Ниже шесть решений, каждое кликом.
     </p>
     <div class="chips">
-      <span class="chip">открыт 2026-09-29</span>
+      <span class="chip is-done">Решено 2026-09-29</span>
       <span class="chip">dev 29f81005</span>
     </div>
   </div>
+
+  <div class="decided">
+    <h2>Решено и построено</h2>
+    <p>1. Общие входы показаны один раз на Foundations / Charts. 2. <code>ds-chart-legend</code> остался внутренним и ушёл из демо композиции: ни один потребитель не собирает <code>ds-chart</code> сам. 3. Три вида bar остаются в <code>ds-bar-chart</code>. 4. <code>DsChartBase</code> объявляет 12 входов, общих для всех 9 чартов; необязательные группы - интерфейсы <code>ChartDimmable</code>, <code>ChartStaggered</code>, <code>ChartWithDataTable</code>, <code>ChartWithTooltipTrigger</code>, без hostDirectives. 5. Дыры закрыты: heatmap получил <code>summary</code>, waterfall - <code>dimOthers</code> и <code>tooltip</code>; намеренно без входа остались scatter <code>staggerMs</code>, heatmap <code>dataTable</code> и <code>ds-chart</code> без входов марок. 6. <code>cursorPin</code> стал <code>pinOnClick</code>, <code>tooltipAnchor</code> - <code>'reading'</code>, <code>data</code> необязательный везде; sparkline <code>tooltip</code> остался boolean, имена кликов прежние.</p>
+    <p class="evidence">2026-09-29 · src/lib/components/charts-base.ts:26</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
 
   <section class="panel">
     <h2>Уже решено, не пересматриваю</h2>
@@ -93,40 +104,28 @@
 
   <section class="panel q" data-q="docs">
     <h2>1. Что не показано в docs</h2>
-    <table class="gap-table">
-      <thead><tr><th>Чарт</th><th>Значения без единого демо</th><th>Меняет картинку?</th></tr></thead>
-      <tbody>
-        <tr><td>funnel</td><td><code>drop="none"</code></td><td>да, пропадает колонка Drop</td></tr>
-        <tr><td>scatter</td><td><code>decimator="lttb"</code>, <code>"none"</code></td><td>да, другие точки остаются</td></tr>
-        <tr><td>waterfall</td><td><code>showConnectors=false</code>, <code>showValues=false</code></td><td>да</td></tr>
-        <tr><td>pie</td><td><code>partOfWhole=false</code></td><td>да, нет процентов</td></tr>
-        <tr><td>line</td><td><code>outline=false</code>, <code>tooltip="item"</code>/<code>"none"</code>, <code>tooltipAnchor="pointer"</code></td><td>да</td></tr>
-        <tr><td>column</td><td>threshold <code>dash: 'solid'</code></td><td>да</td></tr>
-        <tr><td>ds-chart</td><td><code>cursor="auto"</code>/<code>"none"</code>, <code>cursorPin=false</code>, <code>secondaryAxisMode</code> exact и dual-grid (на странице line они есть)</td><td>да</td></tr>
-        <tr><td>все 9</td><td><code>frame="none"</code></td><td>да, без рамки</td></tr>
-        <tr><td>7 чартов</td><td><code>dataTable</code> <code>visible</code> или <code>toggle</code>, <code>tooltip="none"</code> - где-то есть, где-то нет</td><td>общий вход, повторяется</td></tr>
-      </tbody>
-    </table>
-    <p>Отдельно: ни на одной странице чарта нет таблицы входов, только чип с селектором. Таблица есть только у сервисов, это общее устройство docs, не только чартов.</p>
+    <p><b>Уже сделано</b> (нужно при любом ответе, в <code>dev</code>): демо для каждого значения, которое меняет картинку, на странице своего чарта. funnel <code>drop="none"</code>, scatter <code>decimator="lttb"</code>, waterfall <code>showValues</code> и <code>showConnectors</code> выключенными, pie <code>partOfWhole=false</code>, line <code>outline=false</code>, <code>tooltip</code> item и none, <code>tooltipAnchor="pointer"</code>, column порог <code>dash: 'solid'</code>, ds-chart <code>cursor</code> auto и none, <code>secondaryAxisMode</code> exact и dual-grid. Демо line нашли баг: <code>tooltip="item"</code> и <code>"none"</code> не работали, курсор категории был включён всегда. Исправлено.</p>
+    <p><b>Не сделано и почему:</b> scatter <code>decimator="none"</code> нарисовал бы 12 000 узлов на странице, о чём секция сама предупреждает. ds-chart <code>cursorPin=false</code> ждёт вопроса 6: имя может стать <code>pinOnClick</code>.</p>
+    <p><b>Открыто:</b> куда показывать общие входы, которые есть у всех чартов: <code>frame="none"</code>, <code>dataTable</code> visible и toggle, <code>tooltip="none"</code>, <code>tooltipSwatches</code>. И ещё: ни на одной странице чарта нет таблицы входов, только чип с селектором. Таблица есть только у сервисов, это общее устройство docs.</p>
     <div class="opts">
       <article class="opt is-pick" tabindex="0">
         <span class="badge is-pick">рекомендую</span>
-        <h3>Видовое на своей странице, общее один раз</h3>
-        <p>Каждое значение, которое меняет картинку, получает демо на странице своего чарта. <code>frame</code>, <code>dataTable</code>, <code>tooltip</code>, <code>tooltipSwatches</code> показаны один раз на странице Foundations / Charts.</p>
-        <div class="pills"><span class="pill good">нет повторов</span><span class="pill good">все виды видны</span><span class="pill mid">около 16 новых демо</span></div>
+        <h3>Общее один раз на Foundations / Charts</h3>
+        <p><code>frame</code>, <code>dataTable</code>, <code>tooltip</code>, <code>tooltipSwatches</code> показаны один раз, страницы чартов ссылаются туда.</p>
+        <div class="pills"><span class="pill good">нет повторов</span><span class="pill good">все общие входы видны</span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
       <article class="opt" tabindex="0">
         <span class="badge">полнота</span>
-        <h3>Каждое значение на каждой странице</h3>
-        <p>Все 30 пробелов закрываются на страницах чартов, общие входы повторяются на каждой.</p>
-        <div class="pills"><span class="pill good">ничего не искать</span><span class="pill bad">одно и то же 7 раз</span><span class="pill mid">около 30 демо</span></div>
+        <h3>Общее на каждой странице</h3>
+        <p>Каждая страница чарта показывает свои <code>frame</code>, <code>dataTable</code>, <code>tooltip</code> и <code>tooltipSwatches</code>.</p>
+        <div class="pills"><span class="pill good">ничего не искать</span><span class="pill bad">одно и то же 9 раз</span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
       <article class="opt" tabindex="0">
         <span class="badge">минимум</span>
-        <h3>Только то, что меняет картинку</h3>
-        <p>Как первый вариант, но общие входы не показываются нигде.</p>
+        <h3>Общее не показывать</h3>
+        <p>Общие входы остаются только в описании API.</p>
         <div class="pills"><span class="pill good">меньше всего работы</span><span class="pill bad">frame и dataTable не видны</span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
@@ -323,7 +322,7 @@ export class BarChartComponent <b>extends DsChartBase</b> { … }</p>
     <table>
       <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
       <tbody>
-        <tr class="row-pick"><th class="rowlabel">1. Пробелы в docs</th><td>Видовое на своей странице, общее один раз · Каждое значение на каждой странице · Только то, что меняет картинку</td><td>Видовое на своей странице, общее один раз</td></tr>
+        <tr class="row-pick"><th class="rowlabel">1. Общие входы в docs</th><td>Общее один раз на Foundations / Charts · Общее на каждой странице · Общее не показывать</td><td>Общее один раз на Foundations / Charts</td></tr>
         <tr class="row-pick"><th class="rowlabel">2. ds-chart-legend</th><td>Опубликовать легенду · Оставить внутренней, убрать из демо</td><td>Опубликовать легенду</td></tr>
         <tr class="row-pick"><th class="rowlabel">3. Виды bar</th><td>Все три остаются в ds-bar-chart · Bullet отдельным ds-bullet-chart · Вид через вход kind</td><td>Все три остаются в ds-bar-chart</td></tr>
         <tr class="row-pick"><th class="rowlabel">4. Общие входы</th><td>Базовый класс DsChartBase · hostDirectives DsChartFrame · Интерфейс ChartCommonInputs · Не выносить</td><td>Базовый класс DsChartBase</td></tr>
@@ -332,6 +331,8 @@ export class BarChartComponent <b>extends DsChartBase</b> { … }</p>
       </tbody>
     </table>
   </section>
+
+  </details>
 
   <p class="src"><b>Источники, проверено 2026-09-29 на <code>dev</code>.</b> Инвентарь входов и docs собран двумя поисковыми агентами по <code>src/lib/components/*</code> и <code>ds-docs/src/app/sections/charts/*</code>, каждый вывод сверен по коду выборочно: <code>@internal</code> у <code>ChartLegendComponent</code> (<code>chart-legend.component.ts:30</code>) и правило генератора (<code>tools/generate-public-api.mjs:11</code>), наследование в генераторе API (<code>tools/extract-component-api.mjs:242</code>, <code>:278</code>), <code>tooltipAnchor</code> (<code>line-chart.component.ts:441</code>, <code>line-series.component.ts:187</code>), причина отсутствия <code>dataTable</code> у heatmap (<code>heatmap-chart.component.html:163</code>). Разрыв в трансформах <code>min</code>/<code>max</code> у line и heatmap решения не требовал и уже исправлен в <code>dev</code> (<code>fix(charts): accept static numeric min and max attributes</code>).</p>
 
@@ -347,7 +348,7 @@ export class BarChartComponent <b>extends DsChartBase</b> { … }</p>
   const PICK_KEY = 'ds-deck-charts-audit-picks';
   const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
   const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private window */ } };
-  const labels = { docs: '1 docs', legend: '2 legend', barkinds: '3 bar', base: '4 base', holes: '5 holes', names: '6 names' };
+  const labels = { docs: '1 shared docs', legend: '2 legend', barkinds: '3 bar', base: '4 base', holes: '5 holes', names: '6 names' };
   const state = read(PICK_KEY, {});
   const sections = [...document.querySelectorAll('.q[data-q]')];
   const optionName = (card) => card.querySelector('h3').textContent.trim();

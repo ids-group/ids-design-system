@@ -25,16 +25,20 @@ export interface ChartDefaultInputs {
   readonly tooltipLingerMs?: Signal<number | null>;
   /** Absent on a chart with nothing to pin. */
   readonly pinOnClick?: Signal<boolean | null>;
-  readonly hoverDelayMs?: Signal<number | null>;
   /** Absent on a chart with no tooltip of its own. */
   readonly tooltipSwatches?: Signal<boolean | null>;
 }
 
-const NO_DATA_TABLE = signal<ChartDataTable | null>(null);
-const NO_LINGER = signal<number | null>(null);
-const NO_PIN = signal<boolean | null>(null);
-const NO_DELAY = signal<number | null>(null);
-const NO_SWATCHES = signal<boolean | null>(null);
+// No chart takes the delay as an input: it is an app-wide setting, `DS_CONFIG.chart.hoverDelayMs`.
+const NO_HOVER_DELAY_INPUT = signal<number | null>(null);
+
+// Read when the value is, not when the chart is built: a chart's own optional inputs are declared
+// after the shared base that calls this, so at that moment they do not exist yet.
+function optional<T>(
+  input: () => Signal<T | null> | undefined,
+): Signal<T | null> {
+  return computed(() => input()?.() ?? null);
+}
 
 /** How long a resting pointer waits before a chart answers it, when nothing sets it.
  *
@@ -62,7 +66,7 @@ export function resolveChartDefaults(inputs: ChartDefaultInputs) {
       'auto' as ChartFrame,
     ),
     dataTable: resolveWithConfig(
-      inputs.dataTable ?? NO_DATA_TABLE,
+      optional(() => inputs.dataTable),
       (config) => config.chart?.dataTable,
       'none' as ChartDataTable,
     ),
@@ -74,22 +78,22 @@ export function resolveChartDefaults(inputs: ChartDefaultInputs) {
       chartValueFormat(locale),
     ),
     tooltipLingerMs: resolveWithConfig(
-      inputs.tooltipLingerMs ?? NO_LINGER,
+      optional(() => inputs.tooltipLingerMs),
       (config) => config.chart?.tooltipLingerMs,
       CHART_TOOLTIP_LINGER_MS,
     ),
     pinOnClick: resolveWithConfig(
-      inputs.pinOnClick ?? NO_PIN,
+      optional(() => inputs.pinOnClick),
       (config) => config.chart?.pinOnClick,
       true,
     ),
     hoverDelayMs: resolveWithConfig(
-      inputs.hoverDelayMs ?? NO_DELAY,
+      NO_HOVER_DELAY_INPUT,
       (config) => config.chart?.hoverDelayMs,
       CHART_HOVER_DELAY_MS,
     ),
     tooltipSwatches: resolveWithConfig<boolean | 'auto'>(
-      inputs.tooltipSwatches ?? NO_SWATCHES,
+      optional(() => inputs.tooltipSwatches),
       (config) => config.chart?.tooltipSwatches,
       'auto',
     ),

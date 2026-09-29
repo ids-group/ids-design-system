@@ -1,3 +1,9 @@
+import type {
+  ChartDimmable,
+  ChartStaggered,
+  ChartWithDataTable,
+  ChartWithTooltipTrigger,
+} from '@ids-group-ltd/ids-design-system/components';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,7 +12,6 @@ import {
   booleanAttribute,
   computed,
   contentChild,
-  inject,
   input,
   numberAttribute,
   output,
@@ -21,15 +26,11 @@ import {
   markAt,
   rovingMarks,
   chartRenderGate,
+  DsChartBase,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
-import type {
-  ChartDataTable,
-  ChartFrame,
-  ChartValueFormat,
-} from '@ids-group-ltd/ids-design-system/core';
+import type { ChartDataTable } from '@ids-group-ltd/ids-design-system/core';
 import {
   ChartTooltipDirective,
   chartActiveMark,
@@ -53,7 +54,6 @@ import {
 import type { PieChartSlice } from './pie-chart.types';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
-import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 
 const RING_VIEW_BOX_SIZE = 100;
 const RING_CENTER = RING_VIEW_BOX_SIZE / 2;
@@ -74,11 +74,19 @@ const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PieChartComponent {
+export class PieChartComponent
+  extends DsChartBase
+  implements
+    ChartDimmable,
+    ChartStaggered,
+    ChartWithDataTable,
+    ChartWithTooltipTrigger
+{
   protected readonly renderReady = chartRenderGate();
 
-  /** One slice per entry. A non-positive or non-finite value counts as zero. */
-  readonly data = input.required<readonly PieChartSlice[]>();
+  /** One slice per entry. A non-positive or non-finite value counts as zero — a ring is a
+   *  part-to-whole picture and has no way to draw a negative share. */
+  readonly data = input<readonly PieChartSlice[]>([]);
 
   /** Printed inside the ring. Null prints the sum through `valueFormat`. */
   readonly centerValue = input<string | null>(null);
@@ -106,62 +114,17 @@ export class PieChartComponent {
     transform: numberAttribute,
   });
 
-  /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare. Unset falls back to `DS_CONFIG.chart.frame`. */
-  readonly frame = input<ChartFrame | null>(null);
-
-  /** Whether the tooltip draws a colour dot per reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`. */
-  readonly tooltipSwatches = input<boolean | null>(null, {
-    transform: (value: unknown) =>
-      value == null ? null : booleanAttribute(value),
-  });
-
-  /** Milliseconds the tooltip stays after the pointer leaves the mark; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`. */
-  readonly tooltipLingerMs = input<number | null>(null, {
-    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
-  });
-  /** Visible title above the plot; also the annex table's caption. */
-  readonly caption = input<string | null>(null);
-
-  /** Accessible name. Generated from the data when omitted. */
-  readonly summary = input<string | null>(null);
-
-  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none.
-   *  Unset falls back to `DS_CONFIG.chart.dataTable`. */
+  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
+   *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
+   *  `'none'` belongs only where the same data is already in a table on the page.
+   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
 
   /** Prints each slice's share in the legend, the tooltip and the data table. */
   readonly partOfWhole = input(true, { transform: booleanAttribute });
 
-  /** Draws skeleton marks in place of the data, at the same count. */
-  readonly loading = input(false, { transform: booleanAttribute });
-  /** Shown in place of the plot when `data` is empty. Unset falls back to
-   *  `DS_INTL.chart.empty`. */
-  readonly emptyText = input<string | null>(null);
-
-  /** Shows `errorText` in place of the plot. */
-  readonly error = input(false, { transform: booleanAttribute });
-
-  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
-  readonly errorText = input<string | null>(null);
-  /** Formats every value the chart prints. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`. */
-  readonly valueFormat = input<ChartValueFormat | null>(null);
-
-  /** Holds the clicked mark and its tooltip until a second click, Escape or an outside press. `sliceClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
-  readonly pinOnClick = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
-
   // Declared after every input it reads: it takes each signal off `this` when it runs.
-  protected readonly defaults = resolveChartDefaults(this);
-  protected readonly intl = inject(DS_INTL);
-  readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
-  readonly emptyTextResolved = this.defaults.emptyText;
-  readonly errorTextResolved = this.defaults.errorText;
-  readonly valueFormatResolved = this.defaults.valueFormat;
-
-  /** Turns on the click affordance (pointer cursor, hover tint). */
-  readonly interactive = input(false, { transform: booleanAttribute });
 
   /** The slice that was clicked or activated with Enter or Space. */
   readonly sliceClicked = output<PieChartSlice>();

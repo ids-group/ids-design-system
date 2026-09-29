@@ -1,3 +1,8 @@
+import type {
+  ChartDimmable,
+  ChartWithDataTable,
+  ChartWithTooltipTrigger,
+} from '@ids-group-ltd/ids-design-system/components';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -23,6 +28,7 @@ import {
   niceDomain,
   tickValues,
   chartRenderGate,
+  DsChartBase,
 } from '@ids-group-ltd/ids-design-system/components';
 import type { MarkHit } from '@ids-group-ltd/ids-design-system/components';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
@@ -39,12 +45,7 @@ import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
-import type {
-  ChartDataTable,
-  ChartFrame,
-  ChartValueFormat,
-} from '@ids-group-ltd/ids-design-system/core';
+import type { ChartDataTable } from '@ids-group-ltd/ids-design-system/core';
 import {
   SCATTER_DEFAULT_TICK_COUNT,
   SCATTER_VIEW_HEIGHT,
@@ -55,7 +56,6 @@ import {
 import type { ScatterPlot } from './scatter-chart.math';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
-import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ScatterChartDecimator,
   ScatterChartReading,
@@ -105,7 +105,10 @@ interface PlacedSeries {
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScatterChartComponent {
+export class ScatterChartComponent
+  extends DsChartBase
+  implements ChartDimmable, ChartWithDataTable, ChartWithTooltipTrigger
+{
   protected readonly renderReady = chartRenderGate();
 
   /** One entry per series. */
@@ -125,64 +128,20 @@ export class ScatterChartComponent {
     transform: numberAttribute,
   });
 
-  /** Visible title above the plot; also the annex table's caption. */
-  readonly caption = input<string | null>(null);
-
-  /** The accessible name. Generated from the data when omitted. */
-  readonly summary = input<string | null>(null);
-
-  /** Makes every mark a button with a keyboard route. */
-  readonly interactive = input(false, { transform: booleanAttribute });
-
-  /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare. Unset falls back to `DS_CONFIG.chart.frame`. */
-  readonly frame = input<ChartFrame | null>(null);
-
-  /** Whether the tooltip draws a colour dot per reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`. */
-  readonly tooltipSwatches = input<boolean | null>(null, {
-    transform: (value: unknown) =>
-      value == null ? null : booleanAttribute(value),
-  });
-
   /** The annex table under the plot; lists every reading, including those decimation left out. */
   readonly dataTable = input<ChartDataTable | null>(null);
 
-  /** A skeleton at the plot's own height. */
-  readonly loading = input(false, { transform: booleanAttribute });
-
-  /** Shows the error message; distinct from empty data. */
-  readonly error = input(false, { transform: booleanAttribute });
-
-  /** Shown when no series carries a reading. Unset falls back to `DS_INTL.chart.empty`. */
-  readonly emptyText = input<string | null>(null);
-
-  /** Shown in place of the plot while `error` is set. Unset falls back to
-   *  `DS_INTL.chart.error`. */
-  readonly errorText = input<string | null>(null);
-
-  /** Formats every number the chart prints. Unset falls back to `DS_CONFIG.chart.valueFormat`. */
-  readonly valueFormat = input<ChartValueFormat | null>(null);
-
-  /** Whether a hovered or focused mark opens a tooltip. */
+  /** Whether a hovered or focused mark opens a tooltip. A scatter prints no value beside its
+   *  marks - there is no room - so this is where a reading is read without the annex table. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
   /** Fades every mark but the one under the pointer; on a scatter this hides pile-ups. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Holds the clicked mark and its tooltip until a second click, Escape or an outside press. `pointClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
-  readonly pinOnClick = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
-
   /** The clicked reading, with the series it belongs to. Fires on click and on Enter or Space. */
   readonly pointClicked = output<ScatterChartReading>();
 
-  protected readonly defaults = resolveChartDefaults(this);
-  protected readonly intl = inject(DS_INTL);
-  readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
-  readonly emptyTextResolved = this.defaults.emptyText;
-  readonly errorTextResolved = this.defaults.errorText;
-  readonly valueFormatResolved = this.defaults.valueFormat;
 
   protected readonly activeMark = chartActiveMark(
     () => this.defaults.tooltipLingerMs(),
@@ -399,6 +358,7 @@ export class ScatterChartComponent {
   });
 
   constructor() {
+    super();
     listenForMarkFocus(inject(ElementRef), (event, hit) =>
       this.activeMark.enter(hit.index, event, undefined, hit.element),
     );

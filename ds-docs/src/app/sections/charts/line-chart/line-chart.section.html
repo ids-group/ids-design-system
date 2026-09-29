@@ -417,6 +417,45 @@
     [(series)]="markersSeries" />
 
   <h3 class="block-title t-h4">
+    Outline
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      outline
+    </code> lays each line and its markers
+    on a band of the surface colour, so a line crossing a gridline or another
+    line stays unbroken. It is on by default; turn it off on a plot with no
+    gridlines or where the lines never cross, and the band only separates them
+    from the ground.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        [categories]="markersCategories()"
+        [series]="markersSeries()" />
+
+      <div class="state-cell-label">
+        outline = true (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        [categories]="markersCategories()"
+        [series]="markersSeries()"
+        [outline]="false" />
+
+      <div class="state-cell-label">
+        outline = false
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Area fill
   </h3>
 
@@ -687,7 +726,7 @@
     <code class="t-mono-inline">
       tooltipAnchor
     </code> decides where the panel
-    sits: <code class="t-mono-inline"> 'point' </code>, the default, pins it
+    sits: <code class="t-mono-inline"> 'reading' </code>, the default, pins it
     over the highest reading in the category, so it stays still while the
     pointer travels within one band;
     <code class="t-mono-inline">
@@ -708,6 +747,44 @@
   <p class="block-desc t-s">
     Last clicked: <code class="t-mono-inline">{{ lastPoint() || '—' }}</code>
   </p>
+
+  <div class="states is-cols-3">
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        tooltip="item"
+        [categories]="interactiveCategories()"
+        [series]="interactiveSeries()" />
+
+      <div class="state-cell-label">
+        tooltip = item
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        tooltipAnchor="pointer"
+        [categories]="interactiveCategories()"
+        [series]="interactiveSeries()" />
+
+      <div class="state-cell-label">
+        tooltipAnchor = pointer
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        tooltip="none"
+        [categories]="interactiveCategories()"
+        [series]="interactiveSeries()" />
+
+      <div class="state-cell-label">
+        tooltip = none
+      </div>
+    </div>
+  </div>
 
   <docs-replay-button />
 

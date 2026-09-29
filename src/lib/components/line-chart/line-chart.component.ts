@@ -1,3 +1,9 @@
+import type {
+  ChartDimmable,
+  ChartStaggered,
+  ChartWithDataTable,
+  ChartWithTooltipTrigger,
+} from '@ids-group-ltd/ids-design-system/components';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -21,6 +27,7 @@ import {
   describeSeries,
   chartRenderGate,
   CHART_RENDER_GATE_PASSED,
+  DsChartBase,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import {
@@ -36,10 +43,8 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components/chart';
 import { formatPercent } from '@ids-group-ltd/ids-design-system/components';
 import { stackOffsets } from '@ids-group-ltd/ids-design-system/components/chart';
-import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
-  ChartFrame,
   ChartValueFormat,
   ChartAxisMode,
   ChartGaps,
@@ -49,7 +54,6 @@ import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/component
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
-import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartTooltipContext,
   ChartTooltipTrigger,
@@ -113,15 +117,22 @@ const SERIES_DASH_ARRAYS = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [{ provide: CHART_RENDER_GATE_PASSED, useValue: true }],
 })
-export class LineChartComponent {
+export class LineChartComponent
+  extends DsChartBase
+  implements
+    ChartDimmable,
+    ChartStaggered,
+    ChartWithDataTable,
+    ChartWithTooltipTrigger
+{
   protected readonly renderReady = chartRenderGate();
 
   /** X labels. Every series' `data` is read against this length. */
-  readonly categories = input.required<readonly string[]>();
+  readonly categories = input<readonly string[]>([]);
 
   /** One line per entry. Every series is read against `categories`, so a series longer than it
    *  loses its tail and a shorter one ends early. */
-  readonly series = input.required<readonly LineChartSeries[]>();
+  readonly series = input<readonly LineChartSeries[]>([]);
 
   /** How a secondary axis relates to the primary one. */
   readonly yAxisMode = input<ChartAxisMode>('aligned');
@@ -137,21 +148,14 @@ export class LineChartComponent {
    *  draws them `aria-hidden`; their labels are appended to the accessible name instead. */
   readonly annotations = input<readonly LineChartAnnotation[]>([]);
 
-  /** Makes every reading focusable and clickable. A series drawn without markers grows invisible
-   *  ones to land on, shown on hover and focus. `pointClicked` fires whether or not this is set. */
-  readonly interactive = input(false, { transform: booleanAttribute });
-
   /** The point clicked or activated with Enter or Space, whether or not `interactive` is set. */
   readonly pointClicked = output<LineChartReading>();
 
-  /** Holds the clicked category's crosshair and tooltip in place, with a pin disc, until a second click, Escape or a press
-   *  outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `pointClicked` fires either way. */
-  readonly pinOnClick = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
-
-  /** Dims every OTHER mark while one is hovered or focused. Off by default: it costs separation
-   *  between the dimmed marks. */
+  /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
+   *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
+   *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
+   *  opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark
+   *  and pays for it with the rest of the chart. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
   /** What a `null` reading draws. The default `'break'` does not assert a missing reading is zero. */
@@ -175,31 +179,10 @@ export class LineChartComponent {
     transform: numberAttribute,
   });
 
-  /** `'auto'` draws a bordered, padded box; `'none'` leaves it bare. Unset falls back to
-   *  `DS_CONFIG.chart.frame`, then `'auto'`. */
-  readonly frame = input<ChartFrame | null>(null);
-
-  /** Colour dot beside each tooltip reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`,
-   *  then dots for up to four readings. */
-  readonly tooltipSwatches = input<boolean | null>(null, {
-    transform: (value: unknown) =>
-      value == null ? null : booleanAttribute(value),
-  });
-
-  /** Milliseconds the tooltip stays after the pointer leaves the mark; zero closes it at once. Unset
-   *  falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
-  readonly tooltipLingerMs = input<number | null>(null, {
-    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
-  });
-  /** Visible title above the plot, reused as the annex table's caption. */
-  readonly caption = input<string | null>(null);
-
-  /** Accessible name. Generated from the data when omitted. */
-  readonly summary = input<string | null>(null);
-
-  /** Label-and-value table under the plot: `'toggle'` behind a disclosure, `'visible'` open, `'none'`
-   *  none. Use `'none'` only where the data is already in a table on the page. Unset falls back to
-   *  `DS_CONFIG.chart.dataTable`, then `'none'`. */
+  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
+   *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
+   *  `'none'` belongs only where the same data is already in a table on the page.
+   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
   /** Pins the value axis maximum so separate renders are comparable. Null keeps the derived axis.
    *  Applies to the primary axis; `maxSecondary` pins the second. A maximum below the data does not
@@ -213,28 +196,7 @@ export class LineChartComponent {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
-  /** Draws skeleton marks in place of the data, at the same count. */
-  readonly loading = input(false, { transform: booleanAttribute });
-  /** Shown in place of the plot when `series` or `categories` is empty. Unset falls back to
-   *  `DS_INTL.chart.empty`. */
-  readonly emptyText = input<string | null>(null);
-
-  /** Shows `errorText` in place of the plot. Distinct from `loading` and from an empty chart. */
-  readonly error = input(false, { transform: booleanAttribute });
-
-  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
-  readonly errorText = input<string | null>(null);
-  /** Formats every printed value, including the annex table and generated description. Unset falls
-   *  back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`. */
-  readonly valueFormat = input<ChartValueFormat | null>(null);
-
-  private readonly defaults = resolveChartDefaults(this);
-  protected readonly intl = inject(DS_INTL);
-  readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
-  readonly emptyTextResolved = this.defaults.emptyText;
-  readonly errorTextResolved = this.defaults.errorText;
-  readonly valueFormatResolved = this.defaults.valueFormat;
 
   protected readonly resolvedSeries = computed<readonly ResolvedSeries[]>(
     () => {
@@ -385,14 +347,21 @@ export class LineChartComponent {
    *  under the pointer; `'item'` names only the marker itself. */
   readonly tooltip = input<ChartTooltipTrigger>('axis');
 
+  // The category cursor is the one hover area over the plot and names every series, so a
+  // marker-only or silent tooltip needs it off.
+  protected readonly plotCursor = computed(() =>
+    this.tooltip() === 'axis' ? 'category' : 'none',
+  );
+
   protected readonly tooltipTemplate =
     contentChild<TemplateRef<{ $implicit: ChartTooltipContext }>>(
       'dsChartTooltip',
     );
 
-  /** Where the tooltip is pinned. `'point'` (default) is the highest reading in the category, so the
-   *  panel stays put within one band. `'pointer'` follows the cursor. */
-  readonly tooltipAnchor = input<'point' | 'pointer'>('point');
+  /** Where the tooltip is pinned. `'reading'`, the default, is the highest reading in the
+   *  category, so the panel stays put while the pointer moves within one band. `'pointer'` follows
+   *  the cursor. */
+  readonly tooltipAnchor = input<'reading' | 'pointer'>('reading');
 
   protected readonly dataTableColumns = computed<readonly string[]>(() => [
     this.intl().chart.categoryColumn,
@@ -515,12 +484,6 @@ export class LineChartComponent {
       }),
   );
 
-  protected readonly markAnchor = computed(() =>
-    this.tooltipAnchor() === 'pointer'
-      ? ('pointer' as const)
-      : ('reading' as const),
-  );
-
   protected readonly hasSecondaryAxis = computed(() =>
     this.visibleSeries().some((entry) => entry.onSecondaryAxis),
   );
@@ -575,6 +538,7 @@ export class LineChartComponent {
   }
 
   constructor() {
+    super();
     const host = inject<ElementRef<HTMLElement>>(ElementRef);
     afterNextRender(() => {
       const parsed = Number.parseFloat(

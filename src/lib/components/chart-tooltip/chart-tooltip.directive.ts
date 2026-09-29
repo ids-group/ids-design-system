@@ -94,7 +94,7 @@ export class ChartTooltipDirective {
    *  the mark under it never sees the pointer. */
   readonly dsChartTooltipPinned = input(false);
 
-  /** Whether each reading carries its colour dot. `'auto'` draws them for up to four readings. */
+  /** Whether each reading carries its colour dot. `'auto'` draws them for two to four readings. */
   readonly dsChartTooltipSwatches = input<boolean | 'auto'>('auto');
 
   private overlayRef: OverlayRef | null = null;

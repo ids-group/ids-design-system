@@ -19,8 +19,6 @@ import type {
   LineSeriesData,
 } from 'ds/chart';
 import { ChartDataTableComponent } from 'ds/chart-data-table';
-import { ChartLegendComponent } from 'ds/chart-legend';
-import type { ChartLegendItem } from 'ds/chart-legend';
 import type { ChartDataRow } from 'ds/chart-data-table';
 import type { ChartThreshold } from 'ds/core';
 import { RadioComponent, RadioGroupComponent } from 'ds/radio-group';
@@ -123,7 +121,6 @@ const TRAFFIC_SERIES: readonly LineSeriesData[] = [
     RadioGroupComponent,
     ChartComponent,
     ChartDataTableComponent,
-    ChartLegendComponent,
     ColumnSeriesComponent,
     DocsSectionComponent,
     LineSeriesComponent,
@@ -161,15 +158,6 @@ export class ChartSection {
     return typeof choice === 'string' && choice !== 'all' ? choice : null;
   });
 
-  protected readonly ordersLegend: readonly ChartLegendItem[] = [
-    { id: 'orders', label: 'Orders', color: 'var(--ds-chart-series-1-color)' },
-    {
-      id: 'basket',
-      label: 'Average order value',
-      color: 'var(--ds-chart-series-4-color)',
-    },
-  ];
-  protected readonly legendHighlighted = signal<string | null>(null);
   protected readonly lineOutline = signal(true);
 
   protected readonly trafficSeries = TRAFFIC_SERIES;

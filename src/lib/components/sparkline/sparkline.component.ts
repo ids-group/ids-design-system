@@ -42,7 +42,7 @@ import type { SparklineScale } from './sparkline.types';
 })
 export class SparklineComponent {
   /** One reading per step, oldest first. `null` breaks the line. */
-  readonly data = input.required<readonly (number | null)[]>();
+  readonly data = input<readonly (number | null)[]>([]);
 
   /** What each reading is, for the tooltip. Left out, the tooltip prints the value alone. */
   readonly categories = input<readonly string[]>([]);
