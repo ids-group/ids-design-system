@@ -163,6 +163,10 @@ export class ColumnSeriesComponent implements OnDestroy {
    *  from zero to its own value (unstacked). */
   readonly offsets = input<readonly ChartStackOffset[] | null>(null);
 
+  /** The only series in its slot, as a waterfall's floating bars are: nothing stacks on the
+   *  lifted marks, so each answers the pointer over the whole plot height. */
+  readonly soleSeries = input(false, { transform: booleanAttribute });
+
   /** Which value axis the columns are measured against; `'secondary'` reads the second axis. */
   readonly axis = input<ChartAxis>('primary');
 
@@ -271,11 +275,6 @@ export class ColumnSeriesComponent implements OnDestroy {
     });
   }
 
-  // Naming a category by its label dims the rest whatever `dimOthers` says, as for a legend entry.
-  protected readonly dimsFromLabel = computed(
-    () => (this.scales.categoryLabelHover?.() ?? null) !== null,
-  );
-
   ngOnDestroy(): void {
     this.scales.releaseTooltip(this.domainId);
     this.scales.releaseDomain(this.domainId);
@@ -313,7 +312,9 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   /** Stacked series overlap, so full-slot hit boxes would make only the last drawn reachable; a
    *  stacked mark catches the pointer over its own segment only. */
-  protected readonly stacked = computed(() => this.offsets() !== null);
+  protected readonly stacked = computed(
+    () => this.offsets() !== null && !this.soleSeries(),
+  );
 
   /** Keeps a thin segment reachable without letting it reach into its neighbours. */
   private static readonly MIN_STACK_HIT = 6;

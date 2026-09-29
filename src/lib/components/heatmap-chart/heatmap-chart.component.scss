@@ -79,6 +79,7 @@
 }
 
 .cell {
+  position: relative;
   display: grid;
   place-items: center;
   inline-size: var(--_heatmap-chart-cell-size);
@@ -86,6 +87,14 @@
   border: 0;
   border-radius: var(--_heatmap-chart-cell-radius);
   padding: 0;
+}
+
+// The gap between two cells is the table's border-spacing and belongs to no cell, so each cell
+// reaches half of it on every side and the pointer never crosses ground that answers nothing.
+.cell::before {
+  position: absolute;
+  inset: calc(var(--_heatmap-chart-cell-gap) / -2);
+  content: '';
 }
 
 @include chart-motion.fades-in('.cell');

@@ -114,6 +114,13 @@ export class PieChartComponent {
    *  `'auto'`. */
   readonly frame = input<ChartFrame | null>(null);
 
+  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
+  readonly tooltipSwatches = input<boolean | null>(null, {
+    transform: (value: unknown) =>
+      value == null ? null : booleanAttribute(value),
+  });
+
   /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. Long enough to
    *  cross to the next mark and find the same panel, which glides there. Zero closes it at once.
    *  Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */

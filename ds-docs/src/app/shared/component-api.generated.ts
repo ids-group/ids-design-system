@@ -1154,6 +1154,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+      },
+      {
         "name": "tooltipLingerMs",
         "kind": "input",
         "type": "number | null",
@@ -2002,6 +2011,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the chart draws its own bordered, padded box: `'auto'` draws it, `'none'` leaves it bare for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+      },
+      {
         "name": "loading",
         "kind": "input",
         "type": "boolean",
@@ -2267,6 +2285,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Where each mark starts and ends on the value axis, one entry per point. Unset, every mark runs from zero to its own value (unstacked)."
+      },
+      {
+        "name": "soleSeries",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The only series in its slot, as a waterfall's floating bars are: `offsets` lifts each mark off the axis, but nothing is stacked above or below it, so the mark answers the pointer over the whole plot height rather than over its own span."
       },
       {
         "name": "axis",
@@ -3075,6 +3102,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -4111,6 +4147,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+      },
+      {
         "name": "tooltipLingerMs",
         "kind": "input",
         "type": "number | null",
@@ -4383,6 +4428,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
       },
       {
         "name": "loading",
@@ -5300,6 +5354,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -6992,6 +7055,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the chart draws its own bordered, padded box. `'auto'` draws it; `'none'` leaves the chart bare, for one placed inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+      },
+      {
         "name": "tooltipLingerMs",
         "kind": "input",
         "type": "number | null",
@@ -7648,6 +7720,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
       },
       {
         "name": "dataTable",
@@ -11592,6 +11673,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
       },
       {
         "name": "dataTable",

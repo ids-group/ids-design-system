@@ -95,6 +95,9 @@ export class ChartTooltipDirective {
    *  the mark under it never sees the pointer. */
   readonly dsChartTooltipPinned = input(false);
 
+  /** Whether each reading carries its colour dot. `'auto'` draws them for up to four readings. */
+  readonly dsChartTooltipSwatches = input<boolean | 'auto'>('auto');
+
   private overlayRef: OverlayRef | null = null;
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
   private detachScrollReposition: (() => void) | null = null;
@@ -131,11 +134,13 @@ export class ChartTooltipDirective {
       this.panelRef = this.overlayRef.attach(
         new ComponentPortal(ChartTooltipPanelComponent, this.viewContainerRef),
       );
-      // CDK's reposition strategy misses an app's own `overflow: auto` container. Moved, not closed:
-      // a pinned mark ignores pointer moves, so a close would be permanent and leave the pin glyph
-      // and Unpin control over a reading that is gone.
+      // CDK's reposition strategy misses an app's own `overflow: auto` container. A following
+      // panel closes, since the scroll carries its mark away; a pinned one moves, because its mark
+      // ignores pointer moves and a close would strand the pin glyph and Unpin over nothing.
       this.detachScrollReposition = closeOnScroll(this.overlayRef, () =>
-        this.overlayRef?.updatePosition(),
+        this.dsChartTooltipPinned()
+          ? this.overlayRef?.updatePosition()
+          : this.close(),
       );
       this.detachEscape = this.closeOnEscape();
     } else {
@@ -147,6 +152,7 @@ export class ChartTooltipDirective {
     );
     this.panelRef?.setInput('context', context);
     this.panelRef?.setInput('template', this.dsChartTooltipTemplate());
+    this.panelRef?.setInput('swatches', this.dsChartTooltipSwatches());
     if (from) {
       // Render the new reading before measuring the landing, or a resized panel lands where the old one would.
       this.panelRef?.changeDetectorRef.detectChanges();

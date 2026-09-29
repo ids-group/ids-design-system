@@ -5,12 +5,17 @@ import {
   TemplateRef,
   ViewEncapsulation,
   afterRenderEffect,
+  computed,
   inject,
   input,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import type { ChartTooltipContext } from './chart-tooltip.types';
 import { swatchBlendsInto } from './swatch-contrast';
+
+// Past four readings the dots stop telling rows apart and start reading as a column of noise; the
+// labels carry the series on their own.
+const AUTO_SWATCH_LIMIT = 4;
 
 @Component({
   selector: 'ds-chart-tooltip-panel',
@@ -33,6 +38,16 @@ export class ChartTooltipPanelComponent {
   readonly template = input<TemplateRef<{
     $implicit: ChartTooltipContext;
   }> | null>(null);
+
+  readonly swatches = input<boolean | 'auto'>('auto');
+
+  protected readonly showsSwatches = computed(() => {
+    const swatches = this.swatches();
+
+    return swatches === 'auto'
+      ? this.context().entries.length <= AUTO_SWATCH_LIMIT
+      : swatches;
+  });
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 

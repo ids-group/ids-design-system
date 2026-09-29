@@ -167,6 +167,13 @@ export class ColumnChartComponent {
    *  a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`. */
   readonly frame = input<ChartFrame | null>(null);
 
+  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
+  readonly tooltipSwatches = input<boolean | null>(null, {
+    transform: (value: unknown) =>
+      value == null ? null : booleanAttribute(value),
+  });
+
   /** Milliseconds the tooltip stays after the pointer leaves the mark, so it can glide to the next
    *  mark instead of reopening. Zero closes it at once. Unset falls back to
    *  `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
