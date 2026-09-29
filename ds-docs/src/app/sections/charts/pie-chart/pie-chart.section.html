@@ -1,4 +1,5 @@
-<docs-section data-claude-design
+<docs-section
+  data-claude-design
   anchor="pie-chart"
   eyebrow="Charts"
   title="Pie chart"
@@ -240,9 +241,9 @@
     or the focused one. <code class="t-mono-inline"> staggerMs </code> is
     accepted for parity with the other charts but has no effect here: the ring
     turns into place as one object, because arcs share their edges and arriving
-    one at a time would show the background through every seam. Hovering or focusing
-    a legend item reads as hovering the arc it names: the same tooltip opens
-    over the ARC, and the rest of the ring dims with it.
+    one at a time would show the background through every seam. Hovering or
+    focusing a legend item reads as hovering the arc it names: the same tooltip
+    opens over the ARC, and the rest of the ring dims with it.
   </p>
 
   <div class="states is-cols-2">
@@ -290,11 +291,12 @@
     appears at the top end of the chart, on the caption's line;
     <kbd>
       Esc
-    </kbd>, a press outside, or clicking the slice again releases it. Set
+    </kbd>, a press outside, or clicking the slice again releases it.
+    Set <code class="t-mono-inline"> pinOnClick="false" </code> to keep slices
+    unheld, or
     <code class="t-mono-inline">
-      pinOnClick="false"
-    </code> to keep slices
-    unheld, or <code class="t-mono-inline">DS_CONFIG.chart.pinOnClick: false</code>
+      DS_CONFIG.chart.pinOnClick: false
+    </code>
     for every chart in the app.
   </p>
 
