@@ -1,5 +1,11 @@
 ## Unreleased
 
+### Breaking
+
+- **`ds-pie-chart` drops the `staggerMs` input.** The input was accepted and did nothing: the ring
+  turns into place as one object. Remove the binding; a template that keeps it fails to compile.
+  Nothing replaces it.
+
 ### Added
 
 - **`ds-sparkline`, a word-sized trend line for a table cell or a stat.** One `svg` with no axes,

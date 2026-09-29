@@ -1,6 +1,21 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "pie-chart-stagger-ms-removed",
+      "kind": "removed-api",
+      "old": "ds-pie-chart[staggerMs]",
+      "new": null,
+      "action": "Remove the `staggerMs` attribute or `[staggerMs]` binding from every ds-pie-chart.",
+      "appliesWhen": "ds-pie-chart only. `staggerMs` on the other charts and on the chart series is unchanged and still spaces their arrivals.",
+      "searchHints": [
+        "staggerMs",
+        "ds-pie-chart"
+      ],
+      "surface": "template",
+      "verify": "No ds-pie-chart element carries a staggerMs attribute or binding, and the app compiles."
+    }
+  ],
   "informational": [
     {
       "text": "A toast's announcement stays off screen from the first toast on a page. ToastService speaks through the CDK LiveAnnouncer, whose region carries .cdk-visually-hidden, and the CDK loads that rule only with a dialog or a focus trap, so until one opened the announcement rendered as text at the page's bottom-left. styles/toast-overlay, which styles/ds forwards, declares the rule, and an app's own include of it is redundant (delete list: cdk-visually-hidden-include).",
@@ -11,7 +26,10 @@
     {
       "id": "cdk-visually-hidden-include",
       "surface": "style",
-      "find": ["a11y-visually-hidden", "a11y-prebuilt.css"],
+      "find": [
+        "a11y-visually-hidden",
+        "a11y-prebuilt.css"
+      ],
       "why": "styles/toast-overlay, which styles/ds forwards, declares .cdk-visually-hidden for the announcer region ToastService writes to, so an app-level include of the CDK rule restates it.",
       "replaceWith": "nothing; keep it where the app loads neither styles/ds nor styles/toast-overlay"
     }

@@ -7113,15 +7113,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Dims every other mark while one is hovered or focused. Off by default: dimming costs the separation between the dimmed marks (worst pair of three series: dE 14.8 at full opacity to 2.1 at the default `--ds-chart-dim-opacity` of 0.3, measured 2026-09-13)."
       },
       {
-        "name": "staggerMs",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "0",
-        "required": false,
-        "description": "Accepted for parity with the other charts and without effect: the ring arrives as one object, since fading arcs one at a time shows the background through every seam."
-      },
-      {
         "name": "tooltip",
         "kind": "input",
         "type": "ChartItemTooltipTrigger",

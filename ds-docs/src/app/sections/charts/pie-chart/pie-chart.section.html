@@ -238,12 +238,11 @@
       dimOthers
     </code> fades every slice but the one
     the chart is answering: the hovered slice once the pointer has rested on it,
-    or the focused one. <code class="t-mono-inline"> staggerMs </code> is
-    accepted for parity with the other charts but has no effect here: the ring
-    turns into place as one object, because arcs share their edges and arriving
-    one at a time would show the background through every seam. Hovering or
-    focusing a legend item reads as hovering the arc it names: the same tooltip
-    opens over the ARC, and the rest of the ring dims with it.
+    or the focused one. The ring turns into place as one object, with no
+    per-slice stagger: arcs share their edges, and arriving one at a time would
+    show the background through every seam. Hovering or focusing a legend item
+    reads as hovering the arc it names: the same tooltip opens over the ARC, and
+    the rest of the ring dims with it.
   </p>
 
   <div class="states is-cols-2">

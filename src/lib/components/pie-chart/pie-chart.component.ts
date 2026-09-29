@@ -184,10 +184,6 @@ export class PieChartComponent {
    *  2.1 at the default `--ds-chart-dim-opacity` of 0.3, measured 2026-09-13). */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Accepted for parity with the other charts and without effect: the ring arrives as one object,
-   *  since fading arcs one at a time shows the background through every seam. */
-  readonly staggerMs = input(0, { transform: numberAttribute });
-
   /** Whether a hovered or focused slice opens a tooltip. `'axis'` is not offered: a ring has no
    *  axis. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
