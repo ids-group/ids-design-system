@@ -131,11 +131,11 @@ export class ChartComponent implements ChartScales {
   /** Whether a press holds the category cursor where it is, so the reader can look away from the
    *  plot with the comparison still on screen. Released by pressing it again, by Escape, or by a
    *  press outside the plot. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
-  readonly cursorPin = input<boolean | null, unknown>(null, {
+  readonly pinOnClick = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
-  readonly cursorPinResolved = resolveWithConfig(
-    this.cursorPin,
+  readonly pinOnClickResolved = resolveWithConfig(
+    this.pinOnClick,
     (config) => config.chart?.pinOnClick,
     true,
   );
@@ -760,7 +760,7 @@ export class ChartComponent implements ChartScales {
   }
 
   protected readonly bandPins = computed(
-    () => this.cursorPinResolved() && this.pointerInBand(),
+    () => this.pinOnClickResolved() && this.pointerInBand(),
   );
 
   readonly cursorPointer = computed(() =>
@@ -805,7 +805,7 @@ export class ChartComponent implements ChartScales {
 
       return;
     }
-    if (event.type === 'pointerdown' && this.cursorPinResolved()) {
+    if (event.type === 'pointerdown' && this.pinOnClickResolved()) {
       this.cursorState.pin(index, event);
 
       return;

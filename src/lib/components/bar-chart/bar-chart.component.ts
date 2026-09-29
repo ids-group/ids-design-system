@@ -100,7 +100,7 @@ export class BarChartComponent {
   protected readonly leaveMark = leaveMark;
 
   /** One row per bar, drawn in the order given. */
-  readonly data = input.required<readonly BarChartRow[]>();
+  readonly data = input<readonly BarChartRow[]>([]);
 
   /** Track length is relative to this. Null uses the largest value, so the
    *  longest row always fills its track. */

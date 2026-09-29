@@ -1125,11 +1125,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "inputs": [
       {
         "name": "data",
-        "kind": "input-required",
+        "kind": "input",
         "type": "readonly BarChartRow[]",
         "union": null,
-        "default": null,
-        "required": true,
+        "default": "[]",
+        "required": false,
         "description": "One row per bar, drawn in the order given."
       },
       {
@@ -1918,7 +1918,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Draws a band and a crosshair down the category under the pointer, and reports that category to every mark through `activeIndex`. On a plot of two or more marks that show a tooltip, the panel then names every mark's reading at that category wherever in it the pointer is. `'auto'`, the default, is `'category'` for such a composed plot and `'none'` for a plot of one mark, whose marks already answer per mark: two affordances on one plot read as two different questions."
       },
       {
-        "name": "cursorPin",
+        "name": "pinOnClick",
         "kind": "input",
         "type": "boolean | null",
         "union": null,
@@ -3043,11 +3043,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "inputs": [
       {
         "name": "data",
-        "kind": "input-required",
+        "kind": "input",
         "type": "readonly ColumnChartPoint[] | readonly ColumnChartSeries[]",
         "union": null,
-        "default": null,
-        "required": true,
+        "default": "[]",
+        "required": false,
         "description": "One column per point, drawn in the order given - or one NAMED SERIES per entry, where every category carries a column from each. The two forms are told apart by their shape, so a chart handed a flat list behaves exactly as it always has."
       },
       {
@@ -4105,11 +4105,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "inputs": [
       {
         "name": "data",
-        "kind": "input-required",
+        "kind": "input",
         "type": "readonly FunnelChartStage[]",
         "union": null,
-        "default": null,
-        "required": true,
+        "default": "[]",
+        "required": false,
         "description": "Drawn in the order given. The order of a funnel's stages is its meaning, so they are never sorted."
       },
       {
@@ -5194,20 +5194,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "inputs": [
       {
         "name": "categories",
-        "kind": "input-required",
+        "kind": "input",
         "type": "readonly string[]",
         "union": null,
-        "default": null,
-        "required": true,
+        "default": "[]",
+        "required": false,
         "description": "X labels. Every series' `data` is read against this length."
       },
       {
         "name": "series",
-        "kind": "input-required",
+        "kind": "input",
         "type": "readonly LineChartSeries[]",
         "union": null,
-        "default": null,
-        "required": true,
+        "default": "[]",
+        "required": false,
         "description": "One line per entry. Every series is read against `categories`, so a series longer than it loses its tail and a shorter one ends early."
       },
       {
@@ -5549,14 +5549,14 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "tooltipAnchor",
         "kind": "input",
-        "type": "'point' | 'pointer'",
+        "type": "'reading' | 'pointer'",
         "union": [
-          "point",
+          "reading",
           "pointer"
         ],
-        "default": "'point'",
+        "default": "'reading'",
         "required": false,
-        "description": "Where the tooltip is pinned. `'point'`, the default, is the highest reading in the category, so the panel stays put while the pointer moves within one band. `'pointer'` follows the cursor."
+        "description": "Where the tooltip is pinned. `'reading'`, the default, is the highest reading in the category, so the panel stays put while the pointer moves within one band. `'pointer'` follows the cursor."
       }
     ],
     "outputs": [
@@ -6977,11 +6977,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "inputs": [
       {
         "name": "data",
-        "kind": "input-required",
+        "kind": "input",
         "type": "readonly PieChartSlice[]",
         "union": null,
-        "default": null,
-        "required": true,
+        "default": "[]",
+        "required": false,
         "description": "One slice per entry. A non-positive or non-finite value counts as zero — a ring is a part-to-whole picture and has no way to draw a negative share."
       },
       {
@@ -8991,11 +8991,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "inputs": [
       {
         "name": "data",
-        "kind": "input-required",
+        "kind": "input",
         "type": "readonly (number | null)[]",
         "union": null,
-        "default": null,
-        "required": true,
+        "default": "[]",
+        "required": false,
         "description": "One reading per step, oldest first. `null` breaks the line."
       },
       {

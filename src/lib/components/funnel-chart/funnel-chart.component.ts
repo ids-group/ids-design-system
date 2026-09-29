@@ -101,7 +101,7 @@ export class FunnelChartComponent {
 
   /** Drawn in the order given. The order of a funnel's stages is its meaning,
    *  so they are never sorted. */
-  readonly data = input.required<readonly FunnelChartStage[]>();
+  readonly data = input<readonly FunnelChartStage[]>([]);
 
   /** What the silhouette encodes. `'area'`, the default, makes each stage's AREA proportional to
    *  its value, which is the honest encoding that still leaves a tail wide enough to label.

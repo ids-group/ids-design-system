@@ -120,11 +120,11 @@ export class LineChartComponent {
   protected readonly renderReady = chartRenderGate();
 
   /** X labels. Every series' `data` is read against this length. */
-  readonly categories = input.required<readonly string[]>();
+  readonly categories = input<readonly string[]>([]);
 
   /** One line per entry. Every series is read against `categories`, so a series longer than it
    *  loses its tail and a shorter one ends early. */
-  readonly series = input.required<readonly LineChartSeries[]>();
+  readonly series = input<readonly LineChartSeries[]>([]);
 
   /** How a secondary axis relates to the primary one. */
   readonly yAxisMode = input<ChartAxisMode>('aligned');
@@ -445,10 +445,10 @@ export class LineChartComponent {
       'dsChartTooltip',
     );
 
-  /** Where the tooltip is pinned. `'point'`, the default, is the highest reading in the category,
-   *  so the panel stays put while the pointer moves within one band. `'pointer'` follows the
-   *  cursor. */
-  readonly tooltipAnchor = input<'point' | 'pointer'>('point');
+  /** Where the tooltip is pinned. `'reading'`, the default, is the highest reading in the
+   *  category, so the panel stays put while the pointer moves within one band. `'pointer'` follows
+   *  the cursor. */
+  readonly tooltipAnchor = input<'reading' | 'pointer'>('reading');
 
   protected readonly dataTableColumns = computed<readonly string[]>(() => [
     this.intl().chart.categoryColumn,
@@ -578,12 +578,6 @@ export class LineChartComponent {
           },
         ];
       }),
-  );
-
-  protected readonly markAnchor = computed(() =>
-    this.tooltipAnchor() === 'pointer'
-      ? ('pointer' as const)
-      : ('reading' as const),
   );
 
   protected readonly hasSecondaryAxis = computed(() =>
