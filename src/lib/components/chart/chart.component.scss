@@ -23,7 +23,7 @@
   inline-size: 100%;
 }
 
-// Over a category band a press holds the cursor, and the gap between two bands does nothing.
+// Anywhere over the plot a press holds the cursor on the nearest category.
 .canvas.pins {
   cursor: pointer;
 }

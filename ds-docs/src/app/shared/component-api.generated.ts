@@ -1154,13 +1154,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
       },
       {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+      },
+      {
         "name": "tooltipLingerMs",
         "kind": "input",
         "type": "number | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the default, takes it away at once: a panel that outlives the pointer sits over the plot the reader has moved on to. Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 0."
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "caption",
@@ -2002,6 +2011,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves it bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+      },
+      {
         "name": "loading",
         "kind": "input",
         "type": "boolean",
@@ -2219,9 +2237,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "number",
         "union": null,
-        "default": "0",
+        "default": "CHART_TOOLTIP_LINGER_MS",
         "required": false,
-        "description": "How long the panel survives the pointer leaving the mark. Raise it only for a panel a reader has to REACH, which is WCAG 1.4.13's hoverable clause; about 140 crosses the gap."
+        "description": "How long the panel survives the pointer leaving the mark, in milliseconds. The default lets the pointer reach the next mark before the panel closes, so it glides there instead."
       },
       {
         "name": "valueFormat",
@@ -2267,6 +2285,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Where each mark starts and ends on the value axis, one entry per point. Unset, every mark runs from zero to its own value, which is the unstacked case."
+      },
+      {
+        "name": "soleSeries",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The only series in its slot, as a waterfall's floating bars are: `offsets` lifts each mark off the axis, but nothing is stacked above or below it, so the mark answers the pointer over the whole plot height rather than over its own span."
       },
       {
         "name": "axis",
@@ -2496,9 +2523,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "number",
         "union": null,
-        "default": "0",
+        "default": "CHART_TOOLTIP_LINGER_MS",
         "required": false,
-        "description": "How long the panel survives the pointer leaving the marker. Raise it only for a panel a reader has to REACH, which is WCAG 1.4.13's hoverable clause; about 140 crosses the gap."
+        "description": "How long the panel survives the pointer leaving the marker, in milliseconds. The default lets the pointer reach the next marker before the panel closes, so it glides there instead."
       },
       {
         "name": "valueFormat",
@@ -3077,13 +3104,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
       },
       {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+      },
+      {
         "name": "tooltipLingerMs",
         "kind": "input",
         "type": "number | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the default, takes it away at once: a panel that outlives the pointer sits over the plot the reader has moved on to. Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 0."
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "caption",
@@ -4111,13 +4147,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
       },
       {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+      },
+      {
         "name": "tooltipLingerMs",
         "kind": "input",
         "type": "number | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the default, takes it away at once: a panel that outlives the pointer sits over the plot the reader has moved on to. Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 0."
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "caption",
@@ -4383,6 +4428,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
       },
       {
         "name": "loading",
@@ -5302,13 +5356,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
       },
       {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+      },
+      {
         "name": "tooltipLingerMs",
         "kind": "input",
         "type": "number | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the default, takes it away at once: a panel that outlives the pointer sits over the plot the reader has moved on to. Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 0."
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "caption",
@@ -6992,13 +7055,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
       },
       {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+      },
+      {
         "name": "tooltipLingerMs",
         "kind": "input",
         "type": "number | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the default, takes it away at once: a panel that outlives the pointer sits over the plot the reader has moved on to. Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 0."
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "caption",
@@ -7648,6 +7720,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
       },
       {
         "name": "dataTable",
@@ -8894,6 +8975,76 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name for the thumb(s) — suffixed \"minimum\"/\"maximum\" in `range` mode."
+      }
+    ],
+    "outputs": []
+  },
+  "sparkline": {
+    "key": "sparkline",
+    "selector": "ds-sparkline",
+    "isElement": true,
+    "className": "SparklineComponent",
+    "status": "stable",
+    "importName": "SparklineComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input-required",
+        "type": "readonly (number | null)[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "One reading per step, oldest first. `null` breaks the line."
+      },
+      {
+        "name": "categories",
+        "kind": "input",
+        "type": "readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "What each reading is, for the tooltip. Left out, the tooltip prints the value alone."
+      },
+      {
+        "name": "label",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name, and the series name in the tooltip. Left out, the sparkline is decorative and hidden from assistive technology: it is then taken to sit beside a value that says it."
+      },
+      {
+        "name": "scale",
+        "kind": "input",
+        "type": "SparklineScale",
+        "union": [
+          "data",
+          "zero"
+        ],
+        "default": "'data'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Shows the reading under the pointer, and under the keyboard where `label` makes the sparkline focusable: focus opens the last reading, the arrow keys, Home and End move."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "((value: number) => string) | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats the value the tooltip prints. Unset, the locale's plain number format."
       }
     ],
     "outputs": []
@@ -11522,6 +11673,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
       },
       {
         "name": "dataTable",

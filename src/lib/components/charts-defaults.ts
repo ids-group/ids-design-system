@@ -26,17 +26,27 @@ export interface ChartDefaultInputs {
   /** Absent on a chart with nothing to pin. */
   readonly pinOnClick?: Signal<boolean | null>;
   readonly hoverDelayMs?: Signal<number | null>;
+  /** Absent on a chart with no tooltip of its own. */
+  readonly tooltipSwatches?: Signal<boolean | null>;
 }
 
 const NO_DATA_TABLE = signal<ChartDataTable | null>(null);
 const NO_LINGER = signal<number | null>(null);
 const NO_PIN = signal<boolean | null>(null);
 const NO_DELAY = signal<number | null>(null);
+const NO_SWATCHES = signal<boolean | null>(null);
 
 /** How long a resting pointer waits before a chart answers it, when nothing sets it.
  *
  *  @internal */
-export const CHART_HOVER_DELAY_MS = 500;
+export const CHART_HOVER_DELAY_MS = 0;
+
+/** How long a tooltip outlives the pointer leaving its mark, when nothing sets it. Long enough
+ *  that the pointer crossing the gap to the next mark finds the same panel and it glides there,
+ *  where a shorter wait closes it and opens a new one.
+ *
+ *  @internal */
+export const CHART_TOOLTIP_LINGER_MS = 500;
 
 /** Each resolved input → `DS_CONFIG.chart` → the built-in; copy resolves input → `DS_INTL.chart`.
  *  Call from an injection context.
@@ -68,7 +78,7 @@ export function resolveChartDefaults(inputs: ChartDefaultInputs) {
     tooltipLingerMs: resolveWithConfig(
       inputs.tooltipLingerMs ?? NO_LINGER,
       (config) => config.chart?.tooltipLingerMs,
-      0,
+      CHART_TOOLTIP_LINGER_MS,
     ),
     pinOnClick: resolveWithConfig(
       inputs.pinOnClick ?? NO_PIN,
@@ -79,6 +89,11 @@ export function resolveChartDefaults(inputs: ChartDefaultInputs) {
       inputs.hoverDelayMs ?? NO_DELAY,
       (config) => config.chart?.hoverDelayMs,
       CHART_HOVER_DELAY_MS,
+    ),
+    tooltipSwatches: resolveWithConfig<boolean | 'auto'>(
+      inputs.tooltipSwatches ?? NO_SWATCHES,
+      (config) => config.chart?.tooltipSwatches,
+      'auto',
     ),
   };
 }

@@ -16,6 +16,7 @@ import {
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
+  CHART_TOOLTIP_LINGER_MS,
   chartValueFormat,
   describeShare,
   listenForMarkFocus,
@@ -143,9 +144,11 @@ export class ColumnSeriesComponent implements OnDestroy {
    *  category cell, which puts the panel at the top of the plot whatever the column's value. */
   readonly tooltipAnchor = input<'mark' | 'cell'>('mark');
 
-  /** How long the panel survives the pointer leaving the mark. Raise it only for a panel a
-   *  reader has to REACH, which is WCAG 1.4.13's hoverable clause; about 140 crosses the gap. */
-  readonly tooltipLingerMs = input(0, { transform: numberAttribute });
+  /** How long the panel survives the pointer leaving the mark, in milliseconds. The default lets
+   *  the pointer reach the next mark before the panel closes, so it glides there instead. */
+  readonly tooltipLingerMs = input(CHART_TOOLTIP_LINGER_MS, {
+    transform: numberAttribute,
+  });
 
   /** Formats every value this series prints. Called with `'tick'` for an axis label and
    *  `'tooltip'` everywhere a value is printed in full. */
@@ -168,6 +171,11 @@ export class ColumnSeriesComponent implements OnDestroy {
   /** Where each mark starts and ends on the value axis, one entry per point. Unset, every mark
    *  runs from zero to its own value, which is the unstacked case. */
   readonly offsets = input<readonly ChartStackOffset[] | null>(null);
+
+  /** The only series in its slot, as a waterfall's floating bars are: `offsets` lifts each mark
+   *  off the axis, but nothing is stacked above or below it, so the mark answers the pointer over
+   *  the whole plot height rather than over its own span. */
+  readonly soleSeries = input(false, { transform: booleanAttribute });
 
   /** Which value axis the columns are measured against. `'secondary'` reads them off the second
    *  axis, the way `axis: 'secondary'` does on a line series' data. */
@@ -282,12 +290,6 @@ export class ColumnSeriesComponent implements OnDestroy {
     });
   }
 
-  // A reader naming a category by its label is asking for that column, so the rest step back
-  // whatever `dimOthers` says, as they do for a legend entry.
-  protected readonly dimsFromLabel = computed(
-    () => (this.scales.categoryLabelHover?.() ?? null) !== null,
-  );
-
   ngOnDestroy(): void {
     this.scales.releaseTooltip(this.domainId);
     this.scales.releaseDomain(this.domainId);
@@ -310,9 +312,7 @@ export class ColumnSeriesComponent implements OnDestroy {
     return count > 0 ? this.scales.plot().width / count / slots : 0;
   });
 
-  protected readonly slotBandPx = computed(
-    () => `${this.scales.bandWidth() / Math.max(1, this.slotCount())}px`,
-  );
+  protected readonly slotStepPx = computed(() => `${this.slotStep()}px`);
 
   protected readonly markWidthPx = computed(
     () => `${this.slotStep() * this.columnWidthRatio()}px`,
@@ -330,7 +330,9 @@ export class ColumnSeriesComponent implements OnDestroy {
   /** Stacked series sit on top of one another, so a full-slot hit box on each one means only the
    *  series drawn last is ever reachable. Stacked, a mark catches the pointer over its own segment
    *  and nothing else. */
-  protected readonly stacked = computed(() => this.offsets() !== null);
+  protected readonly stacked = computed(
+    () => this.offsets() !== null && !this.soleSeries(),
+  );
 
   /** Keeps a thin segment reachable without letting it reach into its neighbours. */
   private static readonly MIN_STACK_HIT = 6;

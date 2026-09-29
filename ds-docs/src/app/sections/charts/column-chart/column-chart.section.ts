@@ -141,6 +141,12 @@ const UPTIME_THRESHOLDS: readonly ChartThreshold[] = [
     color: 'var(--ds-chart-series-1-color)',
     dash: 'dotted',
   },
+  {
+    value: 95,
+    label: 'Stretch',
+    color: 'var(--ds-chart-series-3-color)',
+    dash: 'solid',
+  },
 ];
 
 const UPTIME_BAND: readonly ChartThreshold[] = [

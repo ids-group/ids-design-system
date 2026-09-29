@@ -9,7 +9,9 @@
     another.
   </span>
 
-  <h3 data-claude-design class="block-title t-h4">
+  <h3
+    data-claude-design
+    class="block-title t-h4">
     Default
   </h3>
 
@@ -54,7 +56,9 @@
     bad one, and a hue cannot say which direction is the welcome one.
   </p>
 
-  <h3 data-claude-design class="block-title t-h4">
+  <h3
+    data-claude-design
+    class="block-title t-h4">
     Subtotals
   </h3>
 
@@ -81,6 +85,51 @@
   <ds-waterfall-chart
     caption="A balance that goes negative and comes back"
     [data]="belowZero" />
+
+  <h3 class="block-title t-h4">
+    Values and connectors
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      showValues
+    </code> prints each bar's change
+    above it; <code class="t-mono-inline"> showConnectors </code> draws the
+    dashed rule from one bar's end to where the next begins. Both are on by
+    default. Turn the values off where the chart sits beside a table that
+    already carries them, and the connectors off where bars are too close for
+    the rule to read.
+  </p>
+
+  <div class="states is-cols-3">
+    <div class="state-cell">
+      <ds-waterfall-chart [data]="settlement" />
+
+      <div class="state-cell-label">
+        default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-waterfall-chart
+        [data]="settlement"
+        [showValues]="false" />
+
+      <div class="state-cell-label">
+        showValues = false
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-waterfall-chart
+        [data]="settlement"
+        [showConnectors]="false" />
+
+      <div class="state-cell-label">
+        showConnectors = false
+      </div>
+    </div>
+  </div>
 
   <h3 class="block-title t-h4">
     Drilling in

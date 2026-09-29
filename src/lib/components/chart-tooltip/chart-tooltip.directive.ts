@@ -101,10 +101,14 @@ export class ChartTooltipDirective {
    *  the pointer the pane stays inert, or the mark it covers never sees the pointer at all. */
   readonly dsChartTooltipPinned = input(false);
 
+  /** Whether each reading carries its colour dot. `'auto'` draws them for up to four readings. */
+  readonly dsChartTooltipSwatches = input<boolean | 'auto'>('auto');
+
   private overlayRef: OverlayRef | null = null;
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
   private detachScrollReposition: (() => void) | null = null;
   private detachEscape: (() => void) | null = null;
+  private glide: Animation | null = null;
 
   constructor() {
     effect(() => {
@@ -121,6 +125,12 @@ export class ChartTooltipDirective {
   }
 
   private open(context: ChartTooltipContext, origin: ChartTooltipOrigin): void {
+    // Measured before the glide in flight is dropped, so a panel re-aimed mid-glide leaves from
+    // where it is on screen rather than jumping to where that glide was heading.
+    const from =
+      this.overlayRef?.overlayElement.getBoundingClientRect() ?? null;
+    this.glide?.cancel();
+    this.glide = null;
     // Reposition rather than re-create while the pointer moves between marks: a fresh
     // OverlayRef per mark restarts the enter transition on every band it crosses.
     if (!this.overlayRef) {
@@ -132,12 +142,15 @@ export class ChartTooltipDirective {
       this.panelRef = this.overlayRef.attach(
         new ComponentPortal(ChartTooltipPanelComponent, this.viewContainerRef),
       );
-      // CDK's reposition strategy watches `window` and registered `cdkScrollable`s only, so it
-      // misses an app's own `overflow: auto` container. Moved rather than closed: a PINNED mark
-      // stops answering pointer moves, so a close here would be permanent, leaving the pin glyph
-      // and the Unpin control standing over a reading that is gone.
+      // Heard on the document, because CDK's reposition strategy misses an app's own
+      // `overflow: auto` container. A panel that follows the pointer closes: a scroll carries the
+      // mark out from under it, and moved instead it rides the viewport edge, one panel per chart
+      // the pointer crossed. A PINNED panel moves: its mark stops answering pointer moves, so a close
+      // would be permanent, leaving the pin glyph and the Unpin control over a reading that is gone.
       this.detachScrollReposition = closeOnScroll(this.overlayRef, () =>
-        this.overlayRef?.updatePosition(),
+        this.dsChartTooltipPinned()
+          ? this.overlayRef?.updatePosition()
+          : this.close(),
       );
       this.detachEscape = this.closeOnEscape();
     } else {
@@ -149,6 +162,42 @@ export class ChartTooltipDirective {
     );
     this.panelRef?.setInput('context', context);
     this.panelRef?.setInput('template', this.dsChartTooltipTemplate());
+    this.panelRef?.setInput('swatches', this.dsChartTooltipSwatches());
+    if (from) {
+      // The new reading is rendered before the landing is measured, or a panel that changes size
+      // lands where the old one would have.
+      this.panelRef?.changeDetectorRef.detectChanges();
+      this.overlayRef.updatePosition();
+      this.glideFrom(from, this.overlayRef.overlayElement);
+    }
+  }
+
+  // `translate`, not `transform`: the pane's own enter and leave animate `transform`, and a glide
+  // that replaced it would cut an entrance short.
+  private glideFrom(from: DOMRect, pane: HTMLElement): void {
+    const to = pane.getBoundingClientRect();
+    const deltaX = from.left - to.left;
+    const deltaY = from.top - to.top;
+    if ((deltaX === 0 && deltaY === 0) || typeof pane.animate !== 'function') {
+      return;
+    }
+    const style = getComputedStyle(pane);
+    const duration = milliseconds(
+      style.getPropertyValue('--ds-motion-chart-tooltip-move-duration'),
+    );
+    if (duration <= 0) {
+      return;
+    }
+    this.glide = pane.animate(
+      [{ translate: `${deltaX}px ${deltaY}px` }, { translate: '0 0' }],
+      {
+        duration,
+        easing:
+          style
+            .getPropertyValue('--ds-motion-chart-tooltip-move-easing')
+            .trim() || 'ease',
+      },
+    );
   }
 
   private strategyFor(origin: ChartTooltipOrigin) {
@@ -192,9 +241,19 @@ export class ChartTooltipDirective {
     // family's answer to that is a fade. Moving between marks repositions this overlay rather than
     // closing it, so nothing here can lag behind the pointer.
     disposeWithLeave(this.overlayRef, 'dismiss');
+    this.glide = null;
     this.overlayRef = null;
     this.panelRef = null;
   }
+}
+
+function milliseconds(duration: string): number {
+  const value = parseFloat(duration);
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+
+  return duration.trim().endsWith('ms') ? value : value * 1000;
 }
 
 function coarsePointer(): boolean {

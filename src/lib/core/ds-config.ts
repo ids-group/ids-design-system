@@ -171,19 +171,21 @@ export interface DsConfig {
      *  global stylesheet. */
     frame?: ChartFrame;
     /** How long every chart's tooltip stays after the pointer leaves the mark, in milliseconds.
-     *  Default 0. Raise it only where the panels carry something a reader has to reach — WCAG
-     *  1.4.13's hoverable clause — which is a property of what an app puts in its tooltips rather
-     *  than of one plot. About 140 is enough to cross the gap at an ordinary pointer speed. */
+     *  Default 500: the pointer crossing to the next mark finds the same panel, which glides there
+     *  instead of closing and opening again. Zero takes it away at once. */
     tooltipLingerMs?: number;
     /** Whether a click on a mark, or on a category under the category cursor, holds its tooltip
      *  and highlight in place, for every chart. Default `true`. A held mark shows a pin disc; a
      *  second click, Escape or a press elsewhere lets go. A tap holds whatever this says. */
     pinOnClick?: boolean;
     /** How long the pointer rests on a mark, a category or a legend entry before the chart answers
-     *  it - highlight and tooltip alike - in milliseconds. Default 500. Once a chart has answered,
+     *  it - highlight and tooltip alike - in milliseconds. Default 0. Once a chart has answered,
      *  the next mark answers at once until the pointer leaves the chart; focus, a tap and a click
      *  that pins answer at once. */
     hoverDelayMs?: number;
+    /** Whether every chart's tooltip draws a colour dot beside each reading. Unset draws them for up
+     *  to four readings and leaves them out from five, where a column of dots reads as noise. */
+    tooltipSwatches?: boolean;
     /** How every chart formats its values, the annex table and the generated description included.
      *  Default groups digits in `locale` and abbreviates on a tick (`1.2M`). The same reason
      *  `datePicker.locale` lives here: a number reads one way in an app, and a formatter passed

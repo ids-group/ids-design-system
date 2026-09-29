@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**113 open — 0 P1, 12 P2, 101 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**112 open — 0 P1, 12 P2, 100 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 12
 
@@ -37,7 +37,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 101
+### P3 — 100
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -84,7 +84,6 @@ item and nothing else.
   - `ds-autocomplete`'s arrow keys walk a private copy of the list cursor
 - **Three open verdicts, each drawn in a deck**
   - Does the picker list height become a public token, or stay behind `panelClass`?
-  - Does the `variant="spark"` line preset keep zero in its value domain, or scale to the …
   - Do the date picker's first day of the week and the time picker's 12h/24h default from …
 - **Tooling**
   - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
@@ -462,7 +461,7 @@ Each has somebody behind it. Nothing here is speculative work.
 
 - [ ] **[P3] Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24).** Reverses the name kept in
   `presentations/implemented/ds-bar-name-collision.html`, whose decided block is now superseded. The
-  type name is drawn in `11-decision-queue`'s `row-chart-row-type` section. Migration: a
+  type name is drawn in `10-decision-queue`'s `row-chart-row-type` section. Migration: a
   `selector-rename`, one `type-rename` per exported symbol, a `token-rename` for the
   `--ds-bar-chart-*` prefix and a `class-rename` for the internal `.bar-chart` class - the same shape
   as the `ds-waterfall-chart` item above.
@@ -501,7 +500,7 @@ Both found while planning that consumer's move to 0.13.3. Neither blocks it; bot
   arrives in the datum on one side and in an input on the other, and the same flat array is one
   series in the bar, where every row takes `--ds-chart-series-default-color`, against N categories
   in the column, where each mark takes its own palette slot (`bar-chart.component.ts:407` against
-  `column-chart.component.ts:312-322`). Both drawn in deck `8-bar-column-contracts`.
+  `column-chart.component.ts:312-322`). Both drawn in deck `7-bar-column-contracts`.
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
@@ -996,12 +995,6 @@ that already existed, because both are the kind of ask that comes back.
   is sized by a public host token and none by `panelClass`. Stas leans to (a), verdict later
   (2026-09-24).
 
-- [ ] **[P3] Does the `variant="spark"` line preset keep zero in its value domain, or scale to the
-  data's range?** The preset (deck `chart-sparkline-preset`, decided) is planned (scratchpad plan-B,
-  task 39). Keeping zero is what every chart does today and gives the same polyline point for point;
-  scaling to the data range is what the deck's own tiles and Tufte do, but it needs a new domain mode
-  in `ds-chart`. Stas: undecided, decide before the preset is built (2026-09-24).
-
 - [ ] **[P3] Do the date picker's first day of the week and the time picker's 12h/24h default from
   the locale?** Drawn in deck `locale-week-and-hour`. Today both are fixed: `resolvedFirstDay` is
   `firstDayOfWeek() ?? config.datePicker?.firstDayOfWeek ?? 1` (`date-picker.component.ts:327-328`) and
@@ -1022,7 +1015,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one. **`presentations/11-decision-queue.html` carries every open question** — every open
+in 1..N, and an `implemented` deck still carrying one. **`presentations/10-decision-queue.html` carries every open question** — every open
 deck's question with its options in that deck's own words, the recommendation starred, a link back
 for the argument, and the two questions that have no deck. It duplicates no argument, so it cannot
 contradict a deck; re-check it when a deck's OPTIONS change. **Never cite a deck by number from this
@@ -1036,12 +1029,11 @@ file** — the number moves; cite the filename.
 | 4 | `4-migration-manifest-audit` | Which of ten format practices marked *Adopt* are worth the tooling. | the manifest-practices P3 |
 | 5 | `5-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
 | 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
-| 7 | `7-chart-sparkline-preset` | The sparkline preset's vertical scale: zero in the domain or the data's own range. | the spark-scale Decision, then task 39 |
-| 8 | `8-bar-column-contracts` | Decided (Stas, 2026-09-22): extract what bar and column share, keep their contracts different; not yet built. | the bar/column extract under *Two chart names that collide* |
-| 9 | `9-picker-list-height` | Which knob caps a picker's list: one cap, `panelClass`, or a new list token, all three drawn and measured. | the picker-cap Decision (task 53) |
-| 10 | `10-locale-week-and-hour` | Whether the date picker's first day of the week and the time picker's 12h/24h follow `DS_CONFIG.locale`: fixed as today, both, week only, or hours only, each drawn over six locales. | the locale-defaults Decision (plan-C, task 21) |
-| 11 | `11-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 27 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
-| 12 | `12-docs-reasoning-blocks` | What ds-docs does with its ~38 reasoning blocks: keep, fold to the chapter end, move to a proof page, or delete. | none - the Claude Design side is settled in `.design-sync/CARDS.md` |
+| 7 | `7-bar-column-contracts` | Decided (Stas, 2026-09-22): extract what bar and column share, keep their contracts different; not yet built. | the bar/column extract under *Two chart names that collide* |
+| 8 | `8-picker-list-height` | Which knob caps a picker's list: one cap, `panelClass`, or a new list token, all three drawn and measured. | the picker-cap Decision (task 53) |
+| 9 | `9-locale-week-and-hour` | Whether the date picker's first day of the week and the time picker's 12h/24h follow `DS_CONFIG.locale`: fixed as today, both, week only, or hours only, each drawn over six locales. | the locale-defaults Decision (plan-C, task 21) |
+| 10 | `10-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 27 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 11 | `11-docs-reasoning-blocks` | What ds-docs does with its ~38 reasoning blocks: keep, fold to the chapter end, move to a proof page, or delete. | none - the Claude Design side is settled in `.design-sync/CARDS.md` |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

@@ -10,7 +10,9 @@
     own data before drawing.
   </span>
 
-  <h3 data-claude-design class="block-title t-h4">
+  <h3
+    data-claude-design
+    class="block-title t-h4">
     Default
   </h3>
 
@@ -36,7 +38,9 @@
     yLabel="Cost"
     [data]="oneSeries" />
 
-  <h3 data-claude-design class="block-title t-h4">
+  <h3
+    data-claude-design
+    class="block-title t-h4">
     Several series
   </h3>
 
@@ -88,12 +92,33 @@
     is the caller taking the node budget on themselves.
   </p>
 
-  <ds-scatter-chart
-    caption="12 000 readings, thinned to what the plot can hold"
-    xLabel="Weight, kg"
-    yLabel="Reading"
-    dataTable="toggle"
-    [data]="flood" />
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-scatter-chart
+        caption="12 000 readings, thinned to what the plot can hold"
+        xLabel="Weight, kg"
+        yLabel="Reading"
+        dataTable="toggle"
+        [data]="flood" />
+
+      <div class="state-cell-label">
+        decimator = minMax (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-scatter-chart
+        caption="The same 12 000, thinned by shape"
+        decimator="lttb"
+        xLabel="Weight, kg"
+        yLabel="Reading"
+        [data]="flood" />
+
+      <div class="state-cell-label">
+        decimator = lttb
+      </div>
+    </div>
+  </div>
 
   <h3 class="block-title t-h4">
     Drilling in
@@ -129,10 +154,15 @@
     the chart. A second click, <kbd>Esc</kbd> or a press elsewhere lets go, and
     <code class="t-mono-inline">
       pointClicked
-    </code> fires either way. Enter and
-    Space on a point fire <code class="t-mono-inline">pointClicked</code> and do
-    not pin. Set <code class="t-mono-inline">pinOnClick="false"</code> to keep
-    points unheld, or
+    </code> fires either way. Enter
+    and Space on a point fire
+    <code class="t-mono-inline">
+      pointClicked
+    </code> and do not pin. Set
+    <code class="t-mono-inline">
+      pinOnClick="false"
+    </code> to keep points
+    unheld, or
     <code class="t-mono-inline">
       DS_CONFIG.chart.pinOnClick: false
     </code> for

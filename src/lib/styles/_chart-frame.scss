@@ -138,20 +138,18 @@
   }
 
   // Room on the caption's line while the control is up, so a long caption wraps short of it rather
-  // than running under it; a chart with no caption gains the line. The shift answers a click.
+  // than running under it. The chart keeps its height: with no caption the control floats over the
+  // plot's top end.
   // ponytail: a fixed room fits `Unpin`; a translation longer than about ten characters overlaps
   // the caption's end, measure the control if one ever does.
   :host:has(.pin-reset) figure > figcaption {
     padding-inline-end: calc(5rem + var(--space-2));
   }
 
-  :host:has(.pin-reset) figure:not(:has(> figcaption)) {
-    padding-block-start: calc(var(--space-6) + var(--space-2));
-  }
-
   /* Top END, on the caption's line: the bottom of a chart carries its axis labels, its legend or its
      table, and a control floating over them hides the words the reader is comparing. The caption
-     line is the one run of a chart with room to its end.
+     line is the one run of a chart with room to its end, and without a caption the plot's top end
+     is the next.
 
      Drawn at the caption's height; the 44px the library's touch rule asks of a real control is the
      hit area around it, not its box. */

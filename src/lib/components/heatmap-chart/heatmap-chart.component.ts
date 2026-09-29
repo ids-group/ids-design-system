@@ -95,12 +95,16 @@ export class HeatmapChartComponent {
 
   /** Pins the floor of the colour scale. It only ever OPENS the scale further, so a floor above
    *  the data cannot push a reading off the ramp. Unset, the scale starts at the lowest reading. */
-  readonly min = input<number | null>(null);
+  readonly min = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
 
   /** Pins the ceiling of the colour scale, the same way `min` pins its floor. Set both to compare
    *  two heat maps by colour: unset, each one spans its own readings and the same hue means a
    *  different quantity on each. */
-  readonly max = input<number | null>(null);
+  readonly max = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
 
   /** Prints each cell's reading inside it. Off by default: a grid dense enough to be worth a heat
    *  map has no room for the numbers, which is why the annex table is always there. */
@@ -124,6 +128,13 @@ export class HeatmapChartComponent {
   /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the
    *  page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`. */
   readonly frame = input<ChartFrame | null>(null);
+
+  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
+  readonly tooltipSwatches = input<boolean | null>(null, {
+    transform: (value: unknown) =>
+      value == null ? null : booleanAttribute(value),
+  });
 
   /** A skeleton at the grid's own height, so the page does not resize when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });

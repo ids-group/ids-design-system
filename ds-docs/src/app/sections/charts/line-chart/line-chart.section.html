@@ -1,4 +1,5 @@
-<docs-section data-claude-design
+<docs-section
+  data-claude-design
   anchor="line-chart"
   eyebrow="Charts"
   title="Line chart"
@@ -416,6 +417,45 @@
     [(series)]="markersSeries" />
 
   <h3 class="block-title t-h4">
+    Outline
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      outline
+    </code> lays each line and its markers
+    on a band of the surface colour, so a line crossing a gridline or another
+    line stays unbroken. It is on by default; turn it off on a plot with no
+    gridlines or where the lines never cross, and the band only separates them
+    from the ground.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        [categories]="markersCategories()"
+        [series]="markersSeries()" />
+
+      <div class="state-cell-label">
+        outline = true (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        [categories]="markersCategories()"
+        [series]="markersSeries()"
+        [outline]="false" />
+
+      <div class="state-cell-label">
+        outline = false
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Area fill
   </h3>
 
@@ -567,9 +607,10 @@
     </code> is the default and
     <code class="t-mono-inline">
       0
-    </code> draws them all at once. A solid line draws on and a dashed one
-    fades in; an area fades in under its line, and the markers settle once the
-    line has arrived. The whole spread fits inside 260ms.
+    </code> draws them all at once. A solid line
+    draws on and a dashed one fades in; an area fades in under its line, and the
+    markers settle once the line has arrived. The whole spread fits inside
+    260ms.
   </p>
 
   <ds-line-chart
@@ -648,19 +689,16 @@
     without one so there is something to land on. The hit area is a transparent
     24px stroke on a fine pointer and 44px on a coarse one — a 4px dot is not a
     touch target. Tab to a marker and the tooltip names that series alone; hover
-    the plot and it names every series at the category. A tap holds the
-    tooltip open: with the default
-    <code class="t-mono-inline">
-      pinOnClick
-    </code> a second tap on the same
-    category lets go, and a tap outside always does.
+    the plot and it names every series at the category. A tap holds the tooltip
+    open: with the default <code class="t-mono-inline"> pinOnClick </code> a
+    second tap on the same category lets go, and a tap outside always does.
     <code class="t-mono-inline">
       pointClicked
     </code> fires whether or not the
     flag is set. <code class="t-mono-inline"> dimOthers </code> is a separate
-    opt-in, off by default on every chart: fading the rest costs the
-    separation between the faded marks, so it buys loudness for one reading and
-    pays for it with the others.
+    opt-in, off by default on every chart: fading the rest costs the separation
+    between the faded marks, so it buys loudness for one reading and pays for it
+    with the others.
   </p>
 
   <p class="block-desc t-s">
@@ -709,6 +747,44 @@
   <p class="block-desc t-s">
     Last clicked: <code class="t-mono-inline">{{ lastPoint() || '—' }}</code>
   </p>
+
+  <div class="states is-cols-3">
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        tooltip="item"
+        [categories]="interactiveCategories()"
+        [series]="interactiveSeries()" />
+
+      <div class="state-cell-label">
+        tooltip = item
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        tooltipAnchor="pointer"
+        [categories]="interactiveCategories()"
+        [series]="interactiveSeries()" />
+
+      <div class="state-cell-label">
+        tooltipAnchor = pointer
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        tooltip="none"
+        [categories]="interactiveCategories()"
+        [series]="interactiveSeries()" />
+
+      <div class="state-cell-label">
+        tooltip = none
+      </div>
+    </div>
+  </div>
 
   <docs-replay-button />
 
@@ -830,8 +906,8 @@
     and focusing one fades them at once, whether or not
     <code class="t-mono-inline">
       dimOthers
-    </code> is set. Switch them all off and the plot is replaced by an
-    explanation rather than an empty grid.
+    </code> is set. Switch them all off
+    and the plot is replaced by an explanation rather than an empty grid.
   </p>
 
   <div class="states is-cols-2">

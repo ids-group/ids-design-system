@@ -283,6 +283,10 @@ delete_files { planId, paths }
   `.claude/local/design-sync-batches/owner-delete-request.txt`: `obsolete.txt` intersected with what
   `list_files` still shows, so a path the owner has already cleared is not asked for twice, and an
   orphan nobody declared is reported as a gap in the list rather than folded into the request.
+- **`--remote` also blanks those paths**, in `blank-obsolete-N.json` batches of `{ path, data: "" }`
+  sent with `write_files` under the same `planId`. `--record` keeps what was sent in
+  `last-upload.json` (`blanked`), so a path is blanked once, not on every upload. Without `--remote`
+  nothing is blanked: the owner may have deleted a path since, and blanking it would bring it back.
 - **Do NOT compare content with the project to decide what to send.** `list_files` returns paths and
   nothing else — no size, no hash, no mtime — so a content comparison means `get_file` per path,
   which is 6.2 MB of card HTML through the session against 170 KB of path JSON for sending the whole
@@ -307,19 +311,15 @@ project is owned by another user`. Writes are fine, deletes are not, so an
   write_files, delete_files, register_assets, unregister_assets, create_project,
   report_validate — so "move it to a trashcan folder" means copy plus blank, which
   leaves the original in place and doubles the file count.
-- **Marking an obsolete path, given no rename and no delete: replace its CONTENT,
-  and add nothing.** Title and body read `[TO BE DELETED]` and name what replaced
-  it, so the path is inert and self-explaining. That is the whole solution, and
-  the only one that adds no file. A `[TO BE DELETED]` PREFIX on the name is a
-  second file beside the first, not a rename. `register_assets` is the one lever
-  on a card's DISPLAYED name, but registering an orphan publishes a dead card into
-  the pane, which is worse than an invisible file.
+- **An obsolete path is blanked, and nothing is added** (Stas). A 0-byte file
+  cannot mislead the agent reading the project, and it adds no file. A
+  `[TO BE DELETED]` PREFIX on the name is a second file beside the first, not a
+  rename. `register_assets` is the one lever on a card's DISPLAYED name, but
+  registering an orphan publishes a dead card into the pane, which is worse than
+  an invisible file.
 - **On a project you do not own, every write is permanent.** A helper file added to
-  carry a list of what to delete becomes an item on that list: blanking it leaves a
-  0-byte file with no explanation, which is worse than leaving it. `_TO_BE_DELETED.md`
-  was written for exactly that reason on 2026-09-03 and now names itself. The list
-  belongs in the repo, and reaches the project only inside a file the build already
-  writes.
+  carry a list of what to delete becomes an item on that list. The list belongs in
+  the repo, and reaches the project only inside a file the build already writes.
 - **Removing a file: every route tested, 2026-09-03, all closed.** The refusal
   wording invites two theories and both are wrong.
   - A finalize_plan that DECLARES the deletes does not lift it. The 403 names a

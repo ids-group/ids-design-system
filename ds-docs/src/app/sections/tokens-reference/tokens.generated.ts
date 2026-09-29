@@ -6491,6 +6491,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Sparkline",
+    "selector": ".sparkline",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-sparkline-width",
+        "value": "80px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sparkline-height",
+        "value": "24px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sparkline-line-color",
+        "value": "var(--ds-chart-series-1-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sparkline-line-width",
+        "value": "1.5px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sparkline-dot-radius",
+        "value": "2.5px",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Spinner",
     "selector": ".spinner",
     "description": "",
@@ -8584,6 +8616,16 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--ds-field-focus-shadow",
     "value": "var(--focus-field)",
     "kind": "color"
+  },
+  {
+    "name": "--ds-motion-chart-tooltip-move-duration",
+    "value": "300ms",
+    "kind": "motion"
+  },
+  {
+    "name": "--ds-motion-chart-tooltip-move-easing",
+    "value": "var(--ease-standard)",
+    "kind": "other"
   },
   {
     "name": "--ds-motion-check-enter-duration",

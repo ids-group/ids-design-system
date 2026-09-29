@@ -199,14 +199,17 @@ export class LineChartComponent {
    *  is one decision per app rather than per plot. */
   readonly frame = input<ChartFrame | null>(null);
 
-  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the
-   *  default, takes it away at once: a panel that outlives the pointer sits over the plot the
-   *  reader has moved on to.
-   *
-   *  Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything
-   *  selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so
-   *  crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to
-   *  `DS_CONFIG.chart.tooltipLingerMs`, then 0. */
+  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
+  readonly tooltipSwatches = input<boolean | null>(null, {
+    transform: (value: unknown) =>
+      value == null ? null : booleanAttribute(value),
+  });
+
+  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default,
+   *  500, lets the pointer cross to the next mark and find the same panel, which glides there
+   *  instead of closing and opening again. Zero takes it away at once. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
   readonly tooltipLingerMs = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
@@ -231,10 +234,14 @@ export class LineChartComponent {
    *  the second one where a series sets `axis: 'secondary'`. A maximum below the data does not clip
    *  it — the larger of the two wins, because silently hiding a reading is worse than a taller axis
    *  than you asked for. */
-  readonly max = input<number | null>(null);
+  readonly max = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
 
   /** Pins the secondary value axis. See `max`. */
-  readonly maxSecondary = input<number | null>(null);
+  readonly maxSecondary = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
 
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
@@ -426,6 +433,12 @@ export class LineChartComponent {
    *  category under the pointer, which is the reading a multi-series line is compared on;
    *  `'item'` names only the marker itself. */
   readonly tooltip = input<ChartTooltipTrigger>('axis');
+
+  // The category cursor is the one hover area over the plot and names every series, so a
+  // marker-only or silent tooltip needs it off.
+  protected readonly plotCursor = computed(() =>
+    this.tooltip() === 'axis' ? 'category' : 'none',
+  );
 
   protected readonly tooltipTemplate =
     contentChild<TemplateRef<{ $implicit: ChartTooltipContext }>>(

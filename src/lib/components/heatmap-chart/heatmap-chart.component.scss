@@ -80,6 +80,7 @@
 }
 
 .cell {
+  position: relative;
   display: grid;
   place-items: center;
   inline-size: var(--_heatmap-chart-cell-size);
@@ -87,6 +88,14 @@
   border: 0;
   border-radius: var(--_heatmap-chart-cell-radius);
   padding: 0;
+}
+
+// The gap between two cells is the table's border-spacing and belongs to no cell, so each cell
+// reaches half of it on every side and the pointer never crosses ground that answers nothing.
+.cell::before {
+  position: absolute;
+  inset: calc(var(--_heatmap-chart-cell-gap) / -2);
+  content: '';
 }
 
 @include chart-motion.fades-in('.cell');
@@ -143,6 +152,13 @@
 .scale-step {
   inline-size: var(--space-4);
   block-size: var(--space-2);
+  transition: transform var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
+}
+
+// The step is a swatch, so the legend entry's tint would paint over the colour it names. It stands
+// taller instead, at once, while the cells wait out the hover delay before they dim.
+.scale-step:hover {
+  transform: scaleY(1.75);
 }
 
 .scale-step:first-child {

@@ -24,6 +24,7 @@ import {
   tickValues,
   chartRenderGate,
 } from '@ids-group-ltd/ids-design-system/components';
+import type { MarkHit } from '@ids-group-ltd/ids-design-system/components';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -68,6 +69,9 @@ const CATEGORY_GUTTER = 34;
 const EDGE_GUTTER = 12;
 // The point's default radius, `--chart-dot-radius`.
 const PIN_POINT_CLEARANCE = 4;
+// Screen pixels from the pointer to a point's centre. A point is too small to hold a pointer on, so
+// hover answers the nearest point within this reach instead.
+const HOVER_REACH_PX = 16;
 
 interface PlacedPoint {
   readonly key: string;
@@ -149,6 +153,13 @@ export class ScatterChartComponent {
   /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card
    *  the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`. */
   readonly frame = input<ChartFrame | null>(null);
+
+  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
+  readonly tooltipSwatches = input<boolean | null>(null, {
+    transform: (value: unknown) =>
+      value == null ? null : booleanAttribute(value),
+  });
 
   /** The annex table under the plot. It lists EVERY reading, including the ones decimation left
    *  out of the drawing, which is what keeps a thinned chart honest. */
@@ -425,25 +436,59 @@ export class ScatterChartComponent {
     );
   }
 
-  protected onPointOver(event: Event): void {
-    const hit = markOf(event);
-    if (hit) {
-      this.activeMark.enter(hit.index, event, undefined, hit.element);
+  private hoveredIndex = -1;
+
+  // Entered on every move while a point is in reach, not only when it changes: the active mark
+  // schedules a clear on any `pointerover` outside the point's own element, and re-entering is
+  // what cancels it.
+  protected onCanvasPointer(event: PointerEvent): void {
+    const canvas = event.currentTarget;
+    const nearest =
+      canvas instanceof SVGSVGElement ? this.nearestMark(canvas, event) : null;
+    if (nearest) {
+      this.hoveredIndex = nearest.index;
+      this.activeMark.enter(nearest.index, event, undefined, nearest.element);
+    } else {
+      this.onCanvasLeave();
     }
   }
 
-  protected onPointOut(event: PointerEvent): void {
-    const hit = markOf(event);
-    if (!hit) {
-      return;
-    }
-    const next =
-      event.relatedTarget instanceof Element
-        ? event.relatedTarget.closest('[data-mark-index]')
-        : null;
-    if (next !== hit.element) {
+  protected onCanvasLeave(): void {
+    if (this.hoveredIndex !== -1) {
+      this.hoveredIndex = -1;
       this.activeMark.leave();
     }
+  }
+
+  // ponytail: linear scan per pointer move, over marks already capped by decimation; a spatial
+  // index if that cap is ever raised far enough to show in a trace.
+  private nearestMark(
+    canvas: SVGSVGElement,
+    event: PointerEvent,
+  ): MarkHit | null {
+    const matrix = canvas.getScreenCTM();
+    if (!matrix) {
+      return null;
+    }
+    const pointer = new DOMPoint(event.clientX, event.clientY).matrixTransform(
+      matrix.inverse(),
+    );
+    const reach = HOVER_REACH_PX / matrix.a;
+    let nearestIndex = -1;
+    let nearestDistance = reach * reach;
+    this.flatMarks().forEach(({ mark }, index) => {
+      const distance = (mark.cx - pointer.x) ** 2 + (mark.cy - pointer.y) ** 2;
+      if (distance <= nearestDistance) {
+        nearestIndex = index;
+        nearestDistance = distance;
+      }
+    });
+    const element =
+      nearestIndex === -1
+        ? null
+        : canvas.querySelector(`[data-mark-index="${nearestIndex}"]`);
+
+    return element ? { element, index: nearestIndex } : null;
   }
 
   protected onPointPress(event: Event): void {

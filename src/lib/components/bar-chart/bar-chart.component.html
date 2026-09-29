@@ -25,7 +25,9 @@
       class="skeleton"
       aria-hidden="true">
       @for (placeholder of skeletonRows(); track $index) {
-        <ds-skeleton height="var(--_bar-chart-track-height)" [shimmer]="loading()" />
+        <ds-skeleton
+          height="var(--_bar-chart-track-height)"
+          [shimmer]="loading()" />
       }
     </div>
   } @else if (isEmpty()) {
@@ -39,6 +41,7 @@
       [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="accessibleName()"
       [dsChartTooltip]="tooltipContext()"
+      [dsChartTooltipSwatches]="defaults.tooltipSwatches()"
       [dsChartTooltipPinned]="activeMark.pinned()"
       [dsChartTooltipOrigin]="activeMark.origin()"
       [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
