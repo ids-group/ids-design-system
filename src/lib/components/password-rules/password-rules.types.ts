@@ -1,6 +1,5 @@
 /**
- * One password requirement. The consumer owns the POLICY — `test` must mirror
- * whatever their server enforces — and the DS owns only how the row reads.
+ * One password requirement; `test` must mirror what the server enforces.
  */
 export interface DsPasswordRule {
   /** Row text, e.g. "At least 8 characters". */
@@ -9,5 +8,5 @@ export interface DsPasswordRule {
   readonly test: (value: string) => boolean;
 }
 
-/** Per-row state, exposed so a consumer can style or test against it. */
+/** Per-row state. */
 export type DsPasswordRuleState = 'pending' | 'met' | 'failed';

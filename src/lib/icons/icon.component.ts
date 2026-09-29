@@ -13,8 +13,8 @@ import { ICONS, type IconName } from '@ids-group-ltd/ids-design-system/core';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 /* Truncation contract:
-   Glyph — Never clipped — the SVG sits in a square frame at one of the fixed sizes.
-   Icon + text pair — Glyph fixed; text label takes the remaining width and clips with ellipsis. */
+   Glyph - Never clipped - the SVG sits in a square frame at one of the fixed sizes.
+   Icon + text pair - Glyph fixed; text label takes the remaining width and clips with ellipsis. */
 
 @Component({
   selector: 'ds-icon',
@@ -39,7 +39,6 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 })
 export class IconComponent {
   private readonly sanitizer = inject(DomSanitizer);
-  // Consumer-supplied icons via provideDsIcons(...). Empty record by default.
   private readonly registry = inject(DS_ICON_REGISTRY);
   readonly name = input.required<IconName>();
   /** Pixel size of the square glyph. Unset falls back to `DS_CONFIG.icon.size`,
@@ -58,14 +57,9 @@ export class IconComponent {
   readonly ariaLabel = input<string | null>(null);
   protected readonly paths = computed<SafeHtml>(() => {
     const key = this.name();
-    // Built-in DS set wins over consumer registry — see provideDsIcons() docs.
     const body =
       (ICONS as Record<string, string>)[key] ?? this.registry[key] ?? '';
-    // A misspelled name renders an empty <svg> and nothing else — no error, and
-    // the type cannot catch it: IconName stays open (`| (string & {})`) so a
-    // consumer can register their own through provideDsIcons(), and closing the
-    // union would reject every registered name. This branch is the only place
-    // that knows. Production pays one falsy check.
+    // IconName is open (`| (string & {})`) for consumer-registered names, so the type cannot catch a typo; this warning is the only check.
     if (!body && isDevMode()) {
       console.warn(
         `[ds-icon] Unknown icon name "${key}" — not in the DS set and not registered through provideDsIcons(), so nothing renders.`,

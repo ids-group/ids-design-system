@@ -44,8 +44,6 @@ button.activator {
   }
 }
 
-/* Tinted from the host, so the whole row lights up even though only the body is the
-   button. Hover on the button alone would leave the control gutters unpainted. */
 :host(:has(button.activator:hover)) {
   background-color: var(--_list-item-hover-bg-color);
 }
@@ -97,8 +95,6 @@ button.activator {
   color: var(--_list-item-selected-label-color);
 }
 
-// The leading icon inherits from the host and selection retints only `.title`, so without
-// this the label goes accent and the icon stays near-black beside it.
 :host(.selected) .leading {
   color: var(--_list-item-selected-icon-color);
 }

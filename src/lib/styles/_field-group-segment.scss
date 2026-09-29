@@ -1,8 +1,7 @@
 @use 'focus' as focus;
 
-// `display: flex` on the host is load-bearing: the group stretches the host, but a
-// block host gives the box no height to resolve a percentage against, and the value
-// ends up at the top of the row instead of its centre.
+// `display: flex` on the host is load-bearing: a block host gives the box no height to resolve a
+// percentage against and the value sits at the top of the row.
 @mixin field-group-segment($box) {
   width: auto;
   display: flex;
@@ -29,8 +28,9 @@
       @include focus.own-indicator;
     }
 
-    /* No blanket reset here on purpose: the block above clears the segment BOX and
-       each field silences its own control, which leaves a tab stop inside a segment
-       the ring it needs. */
+    /* No blanket reset on purpose: each field silences its own control, leaving a tab stop
+       inside a segment its ring. */
   }
 }
+
+    /* No blanket reset on purpose: each field silences its own control, leaving a tab stop inside a segment its ring. */

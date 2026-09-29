@@ -18,9 +18,7 @@ import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/to
 })
 export class StatComponent {
   constructor() {
-    // `unit` concatenates onto the INPUT value, so a projected value silently
-    // drops it — and "kg" quietly missing from a tile is the kind of thing that
-    // reads as fine until someone checks the number against the source.
+    // `unit` concatenates onto the input value, so a projected value silently drops it.
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       devWarn(() =>
         this.unit() && !this.value()
@@ -32,21 +30,8 @@ export class StatComponent {
 
   /** Metric name shown above the value. */
   readonly label = input.required<string>();
-  /** Headline metric; `unit` is appended directly after it.
-   *
-   *  Optional because the value can be PROJECTED instead — `[dsStatValue]`
-   *  takes a badge, a status dot, anything a tile needs where a number would go.
-   *  The input is the fallback, the same shape `[delta]` already has.
-   *
-   *  Namespaced, unlike `[delta]`: twenty components in this library have a
-   *  `value` input, so a bare `value` attribute used to slot one of them in
-   *  would also set that input to the empty string.
-   *
-   *  Takes `null` so `[value]="count | number"` typechecks: Angular's own
-   *  `number`/`date`/`percent` pipes are typed `string | null`, and without the null the
-   *  idiomatic form fails `strictTemplates` and pushes consumers to `toLocaleString()` in
-   *  the template — which hardcodes a locale instead of reading LOCALE_ID. Renders as
-   *  nothing, like the empty default. */
+  /** Headline metric; `unit` is appended directly after it. Optional: `[dsStatValue]` projects any content in its place.
+   *  Accepts `null` so pipes returning `string | null` typecheck; renders as nothing. */
   readonly value = input<string | number | null>('');
   /** Change amount; sign drives the up/down arrow and color. */
   readonly delta = input<number | null>(null);

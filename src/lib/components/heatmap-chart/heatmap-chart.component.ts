@@ -53,13 +53,7 @@ interface PlacedRow {
   readonly cells: readonly PlacedCell[];
 }
 
-/**
- * A matrix of readings, coloured by magnitude: depot by weekday, hour by date, queue by region.
- *
- * Colour carries the quantity and nothing else carries it on the plot, so every cell names its own
- * reading to assistive tech and the annex table is not optional here the way it is on the other
- * charts - WCAG 1.4.1 is not satisfied by a grid of coloured squares.
- */
+/** A matrix of readings, coloured by magnitude. Every cell names its reading to assistive tech and the annex table is always present. */
 @Component({
   selector: 'ds-heatmap-chart',
   standalone: true,
@@ -84,52 +78,41 @@ export class HeatmapChartComponent
 {
   protected readonly renderReady = chartRenderGate();
 
-  /** The column headings, left to right. Their count decides how many readings of a row are drawn:
-   *  a row longer than this loses its tail, a shorter one ends early. */
+  /** The column headings, left to right; a row longer than this loses its tail. */
   readonly columns = input<readonly string[]>([]);
 
-  /** One entry per row, each carrying one reading per column. A `null` reading is a cell that
-   *  was never measured and is drawn as the surface rather than as the ramp's coldest step. */
+  /** One entry per row, one reading per column; a `null` reading is drawn as the surface. */
   readonly data = input<readonly HeatmapChartRow[]>([]);
 
-  /** Pins the floor of the colour scale. It only ever OPENS the scale further, so a floor above
-   *  the data cannot push a reading off the ramp. Unset, the scale starts at the lowest reading. */
+  /** Pins the floor of the colour scale. It only OPENS the scale further; a floor above the data
+   *  is ignored. Unset, the scale starts at the lowest reading. */
   readonly min = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
-  /** Pins the ceiling of the colour scale, the same way `min` pins its floor. Set both to compare
-   *  two heat maps by colour: unset, each one spans its own readings and the same hue means a
-   *  different quantity on each. */
+  /** Pins the ceiling of the colour scale, as `min` pins the floor. */
   readonly max = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
-  /** Prints each cell's reading inside it. Off by default: a grid dense enough to be worth a heat
-   *  map has no room for the numbers, which is why the annex table is always there. */
+  /** Prints each cell's reading inside it. */
   readonly showValues = input(false, { transform: booleanAttribute });
 
-  /** Fades every cell but the one under the pointer. Off by default: the dimming costs the
-   *  separation BETWEEN the dimmed cells, which on a ramp is the only thing carrying magnitude. */
+  /** Fades every cell but the one under the pointer. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Whether a hovered or focused cell opens a tooltip. A heat map's cells carry no printed value
-   *  by default, so this is where a reading is read without reaching for the annex table. */
+  /** Whether a hovered or focused cell opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
-  /** Milliseconds between one column's entrance and the next, left to right, `40` by default;
-   *  `0` turns the stagger off. The whole spread stays within 260ms, so a wide grid narrows the
-   *  step instead of crawling in. */
+  /** Milliseconds between one column's entrance and the next; `0` turns it off. The spread is capped at 260ms. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
-  // One step for the whole grid: each column's delay is its index times this, applied by the
-  // stylesheet, because a table has no element that holds a column's cells.
+  // The stylesheet multiplies this by the column index.
   protected readonly columnStagger = computed(
     () => `${staggerDelay(1, this.columns().length, this.staggerMs())}ms`,
   );
 
-  /** The clicked cell, with the row and the column it sits at. Never fires for an unmeasured
-   *  cell, which has no reading to drill into. */
+  /** The clicked cell, with its row and column. Never fires for an unmeasured cell. */
   readonly cellClicked = output<HeatmapChartCell>();
 
   protected readonly activeMark = chartActiveMark(
@@ -158,8 +141,7 @@ export class HeatmapChartComponent
   }
 
   protected onCellPress(cell: PlacedCell, index: number, event: Event): void {
-    // A cell is a native button, so Enter and Space click it too; `detail` is 0 for those, and a
-    // key that pins would hold one chart where every other chart's keys only focus.
+    // Enter and Space click the native button with `detail` 0; keys must not pin.
     const fromKeyboard = event instanceof MouseEvent && event.detail === 0;
     if (cell.value !== null && this.defaults.pinOnClick() && !fromKeyboard) {
       this.activeMark.pin(index, event);
@@ -191,8 +173,6 @@ export class HeatmapChartComponent
     };
   });
 
-  /** The row header column has no name of its own: the corner cell above it is blank, which is
-   *  what a matrix's top-left is. */
   protected readonly tableColumns = computed<readonly string[]>(() => [
     '',
     ...this.columns(),
@@ -241,8 +221,6 @@ export class HeatmapChartComponent
     }));
   });
 
-  /** The legend under the grid: the ramp's own steps with the readings at either end, which is the
-   *  only thing that says what a colour is worth. */
   protected readonly scaleSteps = computed(() => CHART_HEAT_COLORS);
 
   protected readonly scaleMinLabel = computed(() =>
@@ -275,8 +253,7 @@ export class HeatmapChartComponent
     Array.from({ length: Math.max(this.data().length, 4) }),
   );
 
-  /** Flattened so one index addresses a cell: `chartActiveMark` counts marks, and a grid's marks
-   *  are its cells rather than its rows. */
+  /** Flattened so one index addresses a cell (`chartActiveMark` counts marks). */
   private readonly flatCells = computed(() =>
     this.rows().flatMap((row) => row.cells),
   );

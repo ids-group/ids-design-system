@@ -5,10 +5,9 @@ import type {
 
 /** Where each bar spans, walking the running sum from zero.
  *
- *  Every row adds its own value to the sum, including a total - a closing total carries `0` and so
- *  prints the sum reached. A delta then spans from the sum before it to the sum after; a total or a
- *  subtotal stands on zero and reaches the sum, which is what makes it a figure rather than a
- *  change. A non-finite reading adds nothing rather than poisoning every bar after it.
+ *  Every row adds its own value to the sum, a total included. A delta spans from the sum before it
+ *  to the sum after; a total or subtotal stands on zero and reaches the sum. A non-finite reading
+ *  adds nothing.
  *
  *  @internal */
 export function waterfallSteps(

@@ -61,6 +61,7 @@ export const GROUPS = {
     'chart-palette-separation',
     'color-families',
     'docblock-drift',
+    'dev-guards',
     'changelog-lint',
     'manifest-coverage',
     'design-sync-log',
@@ -122,7 +123,9 @@ for (const file of readdirSync(join(ROOT, 'tools')).sort()) {
 export const checks = new Map([...discovered, ...Object.entries(EXTRA)]);
 
 const missing = Object.entries(GROUPS).flatMap(([group, names]) =>
-  names.filter((name) => !checks.has(name)).map((name) => `${group} -> ${name}`),
+  names
+    .filter((name) => !checks.has(name))
+    .map((name) => `${group} -> ${name}`),
 );
 if (missing.length > 0) {
   console.error(
@@ -135,7 +138,9 @@ if (missing.length > 0) {
 export const run = (name) => {
   const command = checks.get(name);
   if (!command) {
-    console.error(`check: no check called "${name}". Run \`node tools/check.mjs\` for the list.`);
+    console.error(
+      `check: no check called "${name}". Run \`node tools/check.mjs\` for the list.`,
+    );
 
     return 1;
   }
@@ -147,8 +152,10 @@ export const run = (name) => {
   }
 
   return (
-    spawnSync(process.execPath, [join(ROOT, script), ...rest], { cwd: ROOT, stdio: 'inherit' })
-      .status ?? 1
+    spawnSync(process.execPath, [join(ROOT, script), ...rest], {
+      cwd: ROOT,
+      stdio: 'inherit',
+    }).status ?? 1
   );
 };
 
@@ -159,11 +166,14 @@ const main = () => {
   const groupName = groupIndex === -1 ? null : argv[groupIndex + 1];
   const positional = argv.filter(
     (argument, index) =>
-      !argument.startsWith('--') && (groupIndex === -1 || index !== groupIndex + 1),
+      !argument.startsWith('--') &&
+      (groupIndex === -1 || index !== groupIndex + 1),
   );
 
   if (positional.length === 0 && !groupName) {
-    console.log(`check: ${checks.size} check(s)\n  ${[...checks.keys()].sort().join('\n  ')}`);
+    console.log(
+      `check: ${checks.size} check(s)\n  ${[...checks.keys()].sort().join('\n  ')}`,
+    );
     console.log(
       `\ngroups\n  ${Object.entries(GROUPS)
         .map(([name, members]) => `${name} (${members.length})`)
@@ -174,7 +184,9 @@ const main = () => {
   }
 
   if (groupName && !GROUPS[groupName]) {
-    console.error(`check: no group called "${groupName}". Known: ${Object.keys(GROUPS).join(', ')}.`);
+    console.error(
+      `check: no group called "${groupName}". Known: ${Object.keys(GROUPS).join(', ')}.`,
+    );
 
     return 1;
   }
@@ -204,6 +216,9 @@ const main = () => {
   return 0;
 };
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
   process.exitCode = main();
 }

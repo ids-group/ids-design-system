@@ -1,11 +1,9 @@
 import { Directive, TemplateRef, inject } from '@angular/core';
 
 /**
- * Replaces the CONTENTS of a picker's trigger — the chips, the value, the
- * placeholder — with your own markup. The trigger ELEMENT stays library-owned,
- * so `aria-haspopup`, `aria-expanded`, `aria-controls`, the roving
- * `aria-activedescendant` and the Enter/Space/ArrowDown/Escape handling cannot
- * be lost with it.
+ * Replaces the CONTENTS of a picker's trigger (chips, value, placeholder) with your own
+ * markup. The trigger ELEMENT stays library-owned: its ARIA attributes and
+ * Enter/Space/ArrowDown/Escape handling are kept.
  *
  * ```html
  * <ds-multi-select [options]="labels()" [(value)]="picked">
@@ -18,8 +16,7 @@ import { Directive, TemplateRef, inject } from '@angular/core';
  * Context: `$implicit` and `selected` are the selected options, `count` their
  * number, `open` whether the panel is showing, `disabled` the control's state.
  *
- * A projected template WINS over `triggerDisplay` — that input is then not read
- * at all, so there is no "compact plus a template" combination to explain.
+ * A projected template WINS over `triggerDisplay`, which is then not read at all.
  */
 @Directive({
   selector: '[dsPickerTrigger]',

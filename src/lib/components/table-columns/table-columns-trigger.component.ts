@@ -5,7 +5,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 /**
  * The button in the table's utility header cell that opens the column panel.
  *
- * @internal Not API — created by `DsTableColumns` in the header-utility anchor.
+ * @internal Not API - created by `DsTableColumns`.
  */
 @Component({
   selector: 'ds-table-columns-trigger',

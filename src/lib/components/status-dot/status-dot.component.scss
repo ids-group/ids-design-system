@@ -1,14 +1,10 @@
 /* Truncation contract:
-   Status pill — No clip — lifecycle labels are fixed and short (Planning, Active, etc.). */
+   Status pill - No clip - lifecycle labels are fixed and short (Planning, Active, etc.). */
 
-/* Status dot atom — ported verbatim from vendor/claude-design-ds/components.css */
 :host {
   --_status-dot-color: var(--ds-status-dot-color, var(--icon-muted));
   --_status-dot-size:  var(--ds-status-dot-size,  var(--status-dot-size));
 
-  // inline-flex with explicit 1em height so the dot is vertically centered
-  // against the surrounding text line regardless of the parent layout mode
-  // (inline, flex row, grid cell). Width shrinks to dot intrinsic.
   display: inline-flex;
   align-items: center;
   justify-content: center;

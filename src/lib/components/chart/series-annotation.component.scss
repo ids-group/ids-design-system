@@ -6,8 +6,7 @@
   --_chart-annotation-halo-width: var(--ds-chart-annotation-halo-width, 3px);
 }
 
-/* The halo is painted UNDER the glyphs, which is what `paint-order` buys: a stroke over them
-   would thicken the letters instead of separating them from the line they sit on. */
+/* `paint-order` puts the halo under the glyphs; a stroke over them would thicken the letters. */
 .annotation {
   fill: var(--_chart-annotation-color);
   font-size: var(--_chart-annotation-font-size);

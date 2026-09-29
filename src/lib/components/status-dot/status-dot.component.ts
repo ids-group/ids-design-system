@@ -14,8 +14,8 @@ import type { DsStatusKey } from '@ids-group-ltd/ids-design-system/core';
   },
 })
 export class StatusDotComponent {
-  /** Consumer-defined status key; colours are wired via styles/status. */
+  /** Consumer-defined status key that colours the dot. */
   readonly status = input<DsStatusKey>();
-  /** Override the colour-only status with a human label for assistive tech. */
+  /** Human label for assistive tech; colour alone carries the status otherwise. */
   readonly ariaLabel = input<string | null>(null);
 }

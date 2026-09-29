@@ -107,10 +107,6 @@ export class TimePickerComponent
   private readonly vcr = inject(ViewContainerRef);
   private readonly injector = inject(Injector);
   private readonly host = inject(ElementRef<HTMLElement>);
-  /** Public panel tokens forwarded onto the portaled overlay pane on open so
-   *  a consumer's `ds-time-picker { --ds-time-picker-panel-*: … }` reaches it.
-   *  Not the whole set: `prepareOverlayEnter` also forwards `DROPDOWN_PANEL_TOKENS`
-   *  (overlay-motion.ts) onto every pane, the `--ds-option-*` family among them. */
   private readonly panelTokens = [
     '--ds-time-picker-bg-color',
     '--ds-time-picker-border',
@@ -130,39 +126,32 @@ export class TimePickerComponent
   readonly maxTime = input<string | null>(null);
   /** Predicate marking individual times unselectable. */
   readonly disabledTime = input<((time: string) => boolean) | null>(null);
-  /** Trigger height — sm/md/lg.
-   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Trigger height; falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,
   );
-  /** Stretch the trigger to fill its container instead of hugging its content —
-   *  opt in when the field shares a grid/flex track with inputs. */
+  /** Stretches the trigger to fill its container instead of hugging its content. */
   readonly fullWidth = input(false, { transform: booleanAttribute });
-  /** Field label shown above the trigger — same row a `ds-date-picker` label
-   *  occupies, so date + time in one form row line up without a hand-rolled label. */
+  /** Field label above the trigger. */
   readonly label = input<string>('');
-  /** Marks the field required — shows an asterisk and sets `aria-required`. */
+  /** Marks the field required - shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
-  /** Shows an "(optional)" marker beside the label — ignored when `required` is set. */
+  /** Shows an "(optional)" marker beside the label - ignored when `required` is set. */
   readonly optional = input(false, { transform: booleanAttribute });
-  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`,
-   *  `ds-overlay-pane` and this component's own `ds-time-picker-panel`. The panel
-   *  is portaled out of the host, so a class on the pane is the only way a consumer
-   *  stylesheet reaches ONE instance of it. */
+  /** Extra classes for the portaled panel, the only way to style one instance of it. */
   readonly panelClass = input<string | readonly string[]>([]);
   /** Disables the picker and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Confirmation text, shown when there is no error or warning — and it paints
-   *  the field's success border. A string like `warning`: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning; paints the success border. */
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
   /** Shown in the trigger when no time is set. */
   readonly placeholder = input<string>('--:--');
-  /** Shows an inline clear button when a value is set — single mode only. */
+  /** Shows an inline clear button when a value is set - single mode only. */
   readonly clearable = input(false, { transform: booleanAttribute });
   /** Accessible name for the trigger(s), suffixed "(from)"/"(to)" in range mode. */
   readonly ariaLabel = input<string | null>(null);
@@ -172,11 +161,7 @@ export class TimePickerComponent
   protected readonly uid = `ds-timepicker-${++nextId}`;
   protected readonly labelId = `${this.uid}-label`;
   protected readonly openSegment = signal<Segment | null>(null);
-  // Which columns the user has been through since THIS opening. In single mode
-  // the panel has no Done button, so it closes itself once both halves of a time
-  // have been chosen — "picked an hour and a minute" is the completion. Reset on
-  // open, so re-opening a field that already holds a value asks for both again
-  // rather than closing on the first tap.
+  // Columns visited since this opening; single mode has no Done button and closes once both halves are chosen. Reset on open.
   private readonly pickedParts = signal<ReadonlySet<TimeColumnId>>(new Set());
   private overlayRef: OverlayRef | null = null;
 
@@ -190,9 +175,7 @@ export class TimePickerComponent
     viewChild.required<TemplateRef<unknown>>('panel');
   protected readonly columns = viewChild(TimeColumnsComponent);
 
-  /** Any of the three trigger boxes, not the host: a range renders two and a single
-   *  one renders one, while the host also carries the label and the message row —
-   *  clicking those has to dismiss the panel. */
+  /** Any of the three trigger boxes, not the host: clicking the label or message row must dismiss the panel. */
   private insideATrigger(target: Node): boolean {
     return [this.singleTrigger(), this.startTrigger(), this.endTrigger()].some(
       (trigger) => trigger?.nativeElement.contains(target) ?? false,
@@ -257,7 +240,6 @@ export class TimePickerComponent
     return parts.join(' ');
   });
 
-  /** Value the open column set edits (the active segment's value). */
   protected readonly panelValue = computed(() => {
     const segment = this.openSegment();
     if (segment === 'start') {
@@ -282,8 +264,7 @@ export class TimePickerComponent
   protected readonly panelMaxTime = computed(() => this.maxTime());
 
   protected ariaLabelFor(segment: Segment): string {
-    // A visible label is the accessible name; range segments still need the
-    // from/to suffix, so they keep an aria-label built from it.
+    // Range segments keep an aria-label built from the visible label for the from/to suffix.
     const base =
       this.ariaLabel() ?? (this.label() || this.intl().timePicker.selectTime);
     if (segment === 'start') {
@@ -329,8 +310,7 @@ export class TimePickerComponent
       (target) => this.insideATrigger(target),
       () => this.close('dismiss'),
     );
-    // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
-    // overflow container, so close on any outside scroll ourselves.
+    // No backdrop catches a page scroll and CDK scroll strategies miss a plain overflow container, so close on any outside scroll ourselves.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
@@ -388,8 +368,7 @@ export class TimePickerComponent
   }
 
   ngOnDestroy(): void {
-    // Host torn down while open → close() never runs. Dispose the overlay so
-    // its pane and event subscriptions don't leak.
+    // A host torn down while open never runs close().
     this.overlayRef?.dispose();
     this.overlayRef = null;
   }

@@ -25,23 +25,18 @@ let nextId = 0;
   imports: [IconComponent],
   templateUrl: './modal-card.component.html',
   styleUrl: './modal.component.scss',
-  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
-  // which makes the host a native browser tooltip over everything inside it.
+  // Keeps a static `title` attribute from becoming a native tooltip on the host.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class ModalCardComponent {
   protected readonly intl = inject(DS_INTL);
 
-  /** Card width — sm/md/lg/xl/fullscreen. */
+  /** Card width. */
   readonly size = input<ModalSize>('md');
-  /** Severity — drives the icon-badge tint, the title colour, the DEFAULT icon and
-   *  the ARIA role, which is the same set `ds-alert`'s variant drives. Null (the
-   *  default) is a neutral dialog. It picks an icon as well as a tint because a tint
-   *  alone signals by colour only; `icon` overrides the pick.
-   *
-   *  `false` and `undefined` land on null too, so a template can bind the short
-   *  `[status]="isDangerous && 'error'"` instead of spelling out the ternary. */
+  /** Severity: drives the icon-badge tint, title colour, DEFAULT icon and ARIA role.
+   *  Null (default) is a neutral dialog; `icon` overrides the picked icon.
+   *  `false` and `undefined` land on null too, so `[status]="isDangerous && 'error'"` binds. */
   readonly status = input<DsStatus | null, DsStatus | false | null | undefined>(
     null,
     { transform: (value) => value || null },
@@ -52,18 +47,15 @@ export class ModalCardComponent {
   readonly subtitle = input<string | null>(null);
   /** Shows the header close button. */
   readonly showClose = input(true, { transform: booleanAttribute });
-  /** Draws the rules under the header and over the actions. Turning them off also
-   *  tightens the vertical padding they were sized for. Unset falls back to
-   *  `DS_CONFIG.modal.dividers`, then `true`. */
+  /** Draws the rules under the header and over the actions; off also tightens the vertical padding.
+   *  Unset falls back to `DS_CONFIG.modal.dividers`, then `true`. */
   readonly dividers = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
   readonly dividersResolved = resolveDividers(this.dividers);
   /** Icon badge shown next to the title. Overrides the icon `status` would pick. */
   readonly icon = input<IconName | null>(null);
-  /** ARIA role. Unset, an error or warning becomes `alertdialog` — the role for a
-   *  dialog that interrupts with something the reader must act on — and anything
-   *  else stays `dialog`. Same split `ds-alert` makes between `alert` and `status`. */
+  /** ARIA role. Unset, an error or warning becomes `alertdialog`; anything else stays `dialog`. */
   readonly dialogRole = input<'dialog' | 'alertdialog' | null>(null);
   /** Fires when the header close button is clicked. */
   readonly closed = output<void>();
@@ -79,18 +71,15 @@ export class ModalCardComponent {
     afterRenderEffect((onCleanup) => {
       this.stackOverflowingActions();
       let frame = 0;
-      // Deferred a frame: a layout change made inside a ResizeObserver callback is reported as an
-      // observer loop by whatever else observes an ancestor.
+      // Deferred a frame: a layout change inside a ResizeObserver callback is reported as an observer loop.
       const remeasure = () => {
         cancelAnimationFrame(frame);
         frame = requestAnimationFrame(() => this.stackOverflowingActions());
       };
       const observer = new ResizeObserver(remeasure);
-      // The header, not the actions row: the header's box does not move when the row stacks, so
-      // the observer never reports this function's own output back to it.
+      // The header, not the actions row: its box does not move when the row stacks.
       observer.observe(this.header().nativeElement);
-      // A label that changes after open leaves every box the ResizeObserver watches unchanged.
-      // Attributes stay unobserved, so toggling `stacked` never reports back here.
+      // A label change leaves every observed box unchanged; attributes stay unobserved so toggling `stacked` never loops.
       const contentObserver = new MutationObserver(remeasure);
       contentObserver.observe(this.actionsRow().nativeElement, {
         childList: true,
@@ -122,7 +111,6 @@ export class ModalCardComponent {
     row.classList.toggle('stacked', needed > available);
   }
 
-  /** Status picks the glyph so a severity is never carried by colour alone. */
   protected readonly resolvedIcon = computed<IconName | null>(() => {
     const explicit = this.icon();
     if (explicit) {

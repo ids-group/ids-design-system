@@ -1,9 +1,6 @@
 import type { HeatmapChartRow } from './heatmap-chart.types';
 
-/** The reading's step on a ramp of `stepCount` colours, or `null` where there is no reading to
- *  place. A `null` step is not the coldest one: an absent measurement and the smallest measured
- *  value are different facts, and painting them the same colour is the failure this return exists
- *  to prevent.
+/** The reading's step on a ramp of `stepCount` colours, or `null` where there is no reading.
  *
  *  @internal */
 export function rampIndexOf(
@@ -24,8 +21,7 @@ export function rampIndexOf(
   return Math.floor(share * (stepCount - 1));
 }
 
-/** The span every cell is coloured against. Built from the readings alone: a `null` is a hole, so
- *  it neither lowers the floor to zero nor counts as a measurement.
+/** The span every cell is coloured against; `null` readings are ignored.
  *
  *  @internal */
 export function heatmapDomain(rows: readonly HeatmapChartRow[]): {

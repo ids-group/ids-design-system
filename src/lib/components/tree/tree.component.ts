@@ -36,16 +36,15 @@ export class TreeComponent {
 
   /** Root-level nodes; nest via `children`. */
   readonly nodes = input<readonly TreeNode[]>([]);
-  /** Two-way set of currently expanded node ids. */
+  /** Ids of the expanded nodes. */
   readonly expandedIds = model<Set<string>>(new Set());
-  /** Two-way id of the currently selected node. */
+  /** Id of the selected node. */
   readonly selectedId = model<string | null>(null);
   /** Fires with the node when a row is selected (click or Enter/Space). */
   readonly nodeSelected = output<TreeNode>();
 
   private readonly activeId = signal<string | null>(null);
 
-  // Depth-first list of currently-visible nodes; drives rendering and keyboard nav.
   protected readonly visibleNodes = computed<VisibleNode[]>(() => {
     const out: VisibleNode[] = [];
     const walk = (list: readonly TreeNode[], level: number): void => {
@@ -63,7 +62,6 @@ export class TreeComponent {
     return out;
   });
 
-  // The single roving-tabindex treeitem — the active node, or the first one.
   protected readonly effectiveActiveId = computed(
     () => this.activeId() ?? this.visibleNodes()[0]?.node.id ?? null,
   );
@@ -127,7 +125,7 @@ export class TreeComponent {
         }
         break;
       default:
-        // Enter / Space activate the focused row via its native button click.
+        // Enter and Space activate through the row button's native click.
         return;
     }
     event.preventDefault();

@@ -1,12 +1,7 @@
 @use 'press' as press;
 
-// The `×` that clears a trigger-shaped field — ds-select, ds-autocomplete, ds-multi-select all
-// render the same `.clear-btn` markup behind `clearable`. Shared because two of the three had the
-// markup and no rule, so the button came out as the browser's default: include it inside whichever
-// selector holds the trigger's own layout.
-//
-// ds-input's clear button is deliberately NOT this one — it paints a filled disc so the glyph
-// still reads on a blurred field, and keeps its rule with the input.
+// The `×` behind `clearable` for ds-select, ds-autocomplete and ds-multi-select (ds-input has its own).
+// Include inside the selector holding the trigger's layout.
 @mixin button {
   border: 0;
   background: transparent;

@@ -17,21 +17,17 @@ export interface CellTemplateContext<T = unknown> {
  * </ds-table>
  * ```
  *
- * `[dsCellTemplateOf]` exists only to TYPE the template: bound to the same rows the
- * table gets, it makes `let-row` a `T` under strict templates, so a typo in a field
- * name is a compile error. Left off, `row` is `unknown` and a typed helper on the
- * host narrows it, as before.
+ * `[dsCellTemplateOf]` only types the template: bound to the table's rows, `let-row` is a `T`.
+ * Left off, `row` is `unknown`.
  */
 @Directive({
   selector: '[dsCellTemplate]',
   standalone: true,
 })
 export class CellTemplateDirective<T = unknown> {
-  /** The `key` of the column this template replaces, matched against the table's
-   *  `columns`. A key no column declares renders nothing and warns nowhere. */
+  /** The `key` of the column this template replaces. An undeclared key renders nothing, silently. */
   readonly dsCellTemplate = input.required<string>();
-  /** The table's rows, bound to type `let-row`. Never read at runtime - the table
-   *  hands the row out itself. */
+  /** The table's rows, bound to type `let-row`; never read at runtime. */
   readonly dsCellTemplateOf = input<readonly T[] | null>(null);
   readonly template = inject(TemplateRef<CellTemplateContext<T>>);
 

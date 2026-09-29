@@ -17,11 +17,10 @@ import type {
   ToastRef,
 } from './toast.types';
 
-// An error stays longer than a success: it usually needs reading, and often acting on.
 const SETTLED_SUCCESS_MS = 4000;
 const SETTLED_ERROR_MS = 6000;
 
-// Has to outlast the loop that fires a burst, not any human interval.
+// Must outlast the loop that fires a burst.
 const ANNOUNCE_COALESCE_MS = 120;
 
 @Injectable({ providedIn: 'root' })
@@ -51,9 +50,8 @@ export class ToastService {
     this.ensureRegion();
     const id = this.nextId++;
     const variant = opts.variant ?? 'info';
-    // An `action` toast cannot expire: that button is the only way to take the action,
-    // the region is the last child of `body`, and a keyboard user cannot cross a page
-    // to reach it inside five seconds.
+    // An `action` toast cannot expire: the region is the last child of `body`, so a
+    // keyboard user cannot reach the button in time.
     const durationMs =
       variant === 'loading' || opts.action ? 0 : (opts.durationMs ?? 5000);
     const entry: ToastEntry = {
@@ -61,14 +59,12 @@ export class ToastService {
       title: opts.title,
       body: opts.body,
       variant,
-      // Nothing that cannot expire may also be unclosable, or it holds a slot for the
-      // life of the page — which is how a hung promise blocked the whole region.
+      // Nothing that cannot expire may also be unclosable, or it holds a slot for the page's life.
       dismissible: durationMs > 0 ? (opts.dismissible ?? true) : true,
       action: opts.action,
       durationMs,
     };
-    // The region runs the countdown, because only it knows when the toast became
-    // visible — started here, one queued behind `maxVisible` expires unseen.
+    // The region runs the countdown: a toast queued behind `maxVisible` would expire unseen if started here.
     this.regionRef!.instance.add(entry);
     this.announce(variant, entry.body, entry.title);
 
@@ -78,13 +74,10 @@ export class ToastService {
     };
   }
 
-  /** Show a loading toast for the duration of `source`. Resolution and rejection are
-   *  reflected in-place (same toast, no stack-up) as success/error variants, each with
-   *  its own auto-dismiss delay.
+  /** Shows a loading toast for the duration of `source`; resolution and rejection turn the
+   *  same toast into a success/error variant with its own auto-dismiss delay.
    *
-   *  Returns `source` itself, so the caller still owns rejection handling — an
-   *  un-`catch`ed call produces an unhandled rejection exactly as it would without a
-   *  toast. */
+   *  Returns `source` itself, so the caller still owns rejection handling. */
   promise<T>(
     source: Promise<T>,
     messages: ToastPromiseMessages<T>,
@@ -95,7 +88,6 @@ export class ToastService {
       durationMs: 0,
     });
 
-    // The duration goes to the region, for the reason given on `add()` above.
     source.then(
       (value) => {
         const successBody =
@@ -129,13 +121,11 @@ export class ToastService {
   }
 
   /** The announcement must NOT ride the visual toast: `aria-live` on an element created
-   *  together with its text announces nothing in NVDA or JAWS. The CDK announcer's region
-   *  exists from construction and only its text changes.
+   *  together with its text announces nothing in NVDA or JAWS.
    *
-   *  Serialising a burst does not work either — `announce()` clears the region and writes
-   *  on a timeout, resolving its promise inside that callback, so the next message wipes
-   *  the previous one before anything can read it. One region change carrying every
-   *  message is the only shape that survives. */
+   *  Serialising a burst does not work either: `announce()` clears the region and writes
+   *  on a timeout, so the next message wipes the previous one. One region change carrying
+   *  every message is the only shape that survives. */
   private announce(variant: ToastVariant, body: string, title?: string): void {
     const spoken = [title, body].filter(Boolean).join('. ');
     if (!spoken) {
@@ -171,8 +161,7 @@ export class ToastService {
     this.regionRef = this.overlayRef.attach(
       new ComponentPortal(ToastRegionComponent),
     );
-    // `>= 0`, not truthiness: 0 is the only way to ask for an uncapped stack, so it has
-    // to reach the region rather than read as "unset".
+    // `>= 0`, not truthiness: 0 asks for an uncapped stack and must not read as "unset".
     const maxVisible = this.toastConfig?.maxVisible;
     if (typeof maxVisible === 'number' && maxVisible >= 0) {
       this.regionRef.setInput('maxVisible', maxVisible);
@@ -184,12 +173,9 @@ export class ToastService {
     this.keepAboveScrims();
   }
 
-  /** Keeps the toast above a scrim opened AFTER it. `--layer-toast` cannot: CDK gives
-   *  every overlay host `popover="manual"`, and the browser's top layer paints in the
-   *  order things were shown, ignoring z-index. Re-showing the host is the only lever.
-   *
-   *  Scrimmed overlays only: the published layer scale puts `--layer-tooltip` above the
-   *  toast. */
+  /** Keeps the toast above a scrim opened AFTER it. `--layer-toast` cannot: CDK overlay hosts
+   *  are `popover="manual"` and the top layer paints in show order, ignoring z-index.
+   *  Scrimmed overlays only: `--layer-tooltip` sits above the toast. */
   private keepAboveScrims(): void {
     const host = this.overlayRef?.hostElement;
     const container = host?.parentElement;
@@ -209,7 +195,7 @@ export class ToastService {
       if (!scrimAppeared || !host.isConnected) {
         return;
       }
-      // The top layer has no "raise"; nothing paints between these two calls.
+      // The top layer has no "raise"; re-showing is the only lever.
       try {
         host.hidePopover();
         host.showPopover();

@@ -12,16 +12,13 @@
   --_bottom-sheet-leave-duration: var(--ds-bottom-sheet-leave-duration, var(--ds-motion-exit-large-duration));
   --_bottom-sheet-leave-easing: var(--ds-bottom-sheet-leave-easing, var(--ds-motion-exit-large-easing));
 
-  /* The scrim reads the same public tokens but keeps its own faster default. */
   --_bottom-sheet-scrim-enter-duration: var(--ds-bottom-sheet-enter-duration, var(--ds-motion-enter-panel-duration));
   --_bottom-sheet-scrim-leave-duration: var(--ds-bottom-sheet-leave-duration, var(--ds-motion-exit-duration));
   --_ds-enter-scale: var(--ds-bottom-sheet-enter-scale, 0.96);
 
   display: contents;
 
-  // Reduced motion zeroes the DURATION, never the animation. At 0s `animationend` is not
-  // reliably delivered, so the component's 300 ms fallback timer is what tears down, and
-  // `.closing` is click-through for exactly that window.
+  // Zero duration, never `animation: none`: the component's fallback timer tears down.
   @media (prefers-reduced-motion: reduce) {
     --_bottom-sheet-enter-duration: 0ms;
     --_bottom-sheet-leave-duration: 0ms;
@@ -39,9 +36,8 @@
   flex-direction: column;
   justify-content: flex-end;
 
-  /* clip, not hidden: the entering sheet (translateY(100%)) must not add scrollable
-     overflow to ancestor frames (filter containing-block + overflow: hidden), where the
-     focus-trap's initial focus() would scroll-into-view and yank the host app's content. */
+  /* clip, not hidden: the entering sheet must not add scrollable overflow to ancestor
+     frames, where the focus-trap's initial focus() would scroll the host app. */
   overflow: clip;
   animation-name: ds-fade-in;
   animation-duration: var(--_bottom-sheet-scrim-enter-duration);
@@ -73,8 +69,7 @@
   background: var(--_bottom-sheet-bg-color);
   border-radius: var(--_bottom-sheet-radius) var(--_bottom-sheet-radius) 0 0;
 
-  /* `, 0px` is not decoration: an unknown env() variable invalidates the whole
-     declaration, which would drop the horizontal padding with it. */
+  /* `, 0px` fallback: an unknown env() invalidates the whole declaration. */
   padding: 0 var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
   animation-name: var(--_bottom-sheet-enter-keyframes);
   animation-duration: var(--_bottom-sheet-enter-duration);
@@ -88,8 +83,6 @@
     transition: none;
   }
 
-  /* When snap points are active, animate height changes between snap stops.
-     Reduced-motion collapses this to an instant switch. */
   &.snapping {
     transition:
       transform var(--duration-base) var(--ease-decelerate),
@@ -136,8 +129,7 @@
   overflow-y: auto;
   min-height: 0;
 
-  // Scroll containers clip at the padding box - reserve room so focus halos
-  // on edge-to-edge children survive, compensated to keep the layout width.
+  // Reserves room so focus halos on edge-to-edge children are not clipped at the padding box.
   padding: var(--space-1);
   margin: calc(var(--space-1) * -1);
 }

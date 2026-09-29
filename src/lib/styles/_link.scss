@@ -1,11 +1,8 @@
 @use 'focus' as focus;
 
-/* Global .link helper — pure CSS class (no Angular wrapper) so consumers
-   can apply it to inline anchors inside <p> text without disrupting line
-   flow. Modifiers: .quiet, .inline, .standalone, .xs, .sm, .lg. */
+/* Pure CSS class so inline anchors in <p> text keep their line flow. */
 
 .link {
-  /* Hover and active derive from the resolved color. */
   --_link-color:        var(--ds-link-color,        var(--text-link));
   --_link-color-hover:  var(--ds-link-color-hover,  color-mix(in srgb, var(--_link-color) 80%, black));
   --_link-color-active: var(--ds-link-color-active, color-mix(in srgb, var(--_link-color) 65%, black));
@@ -48,16 +45,9 @@
     flex-shrink: 0;
   }
 
-  /* ds-button warns `variant="text"` off in favour of this class, and an action
-     that is not navigation has to be a <button> — which arrives with UA chrome
-     none of the rules above touch (measured: 13.3px inside 14px text, plus padding
-     and an outset border). `:where()` keeps the reset at this class's specificity,
-     so a consumer's rule still wins on source order.
-
-     Absences are deliberate and invisible in code: no `font-weight`, so `.quiet` /
-     `.standalone` keep deciding it, and no `display`, because inline-block is what
-     lays a standalone button out predictably. `appearance` is the reverse — no
-     effect in Chrome, needed where native chrome outlives a zeroed border. */
+  /* A `<button>` styled as a link brings UA chrome. `:where()` keeps the reset at this class's specificity
+     so consumer rules win. No `font-weight` (`.quiet`/`.standalone` decide it) and no `display` on purpose.
+     `appearance` is a no-op in Chrome but needed where native chrome outlives a zeroed border. */
   &:where(button) {
     appearance: none;
     padding: 0;
@@ -71,10 +61,6 @@
 
   &.quiet {
     color: var(--text-secondary);
-
-    /* Pull the underline down to match the muted text — the base rule sets
-       text-decoration-color to the link color, which would leave a bright
-       underline under grey text at rest. */
     text-decoration-color: var(--text-secondary);
     font-weight: var(--font-weight-medium);
 

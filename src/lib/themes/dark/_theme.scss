@@ -1,10 +1,6 @@
-// Dark theme — Tier 2 role overrides. Activation (:root[data-theme='dark']) lives in
-// styles/_theme-activation.scss; dark is opt-in, with no prefers-color-scheme switch.
-//
-// Most roles follow the inverted --neutral-* ramp on their own, because custom props resolve at
-// use-time. Overridden here are ONLY the roles that cannot follow the flip: tint/subtle surfaces,
-// on-tint text, hover/pressed direction, scrim (must stay dark), focus halo alpha, and charts.
-// On-dark-fill text points at --static-ink; on-light-fill uses literal white.
+// Dark theme role overrides. Most roles follow the inverted --neutral-* ramp because custom
+// properties resolve at use time; only roles that cannot follow the flip are overridden: tint
+// surfaces, on-tint text, hover/pressed direction, scrim, focus halo alpha, and charts.
 
 @use 'palette';
 @use '../semantic';
@@ -13,9 +9,7 @@
   @include palette.palette;
   @include semantic.roles;
 
-  // Interaction states: on dark, hover/pressed must LIGHTEN. The default theme
-  // derives them as color-mix toward black (darkens) — wrong direction here.
-  // Mirror the light recipe's 88% / 76% steps, mixed toward white instead.
+  // Hover/pressed must lighten on dark: the light recipe's 88% / 76% steps, mixed toward white.
   --primary-hover:          color-mix(in srgb, var(--primary) 88%, white);
   --primary-pressed:        color-mix(in srgb, var(--primary) 76%, white);
   --primary-selected-hover: color-mix(in srgb, var(--primary) 88%, white);
@@ -31,7 +25,6 @@
   --warning-pressed:        color-mix(in srgb, var(--warning) 76%, white);
   --info-hover:             color-mix(in srgb, var(--info) 88%, white);
 
-  // Brand tint surfaces + on-tint text (channel-derived → track rebrand).
   --surface-tint:         hsl(var(--primary-h) 45% 16%);
   --primary-subtitle:     hsl(var(--primary-h) 45% 18%);
   --primary-muted:        hsl(var(--primary-h) 40% 26%);
@@ -75,28 +68,23 @@
   --info-border:          hsl(217deg 38% 32%);
   --info-text:            hsl(217deg 90% 74%);
 
-  // Scrim stays dark — must NOT follow --shadow-tint-l: 95%.
+  // Must not follow --shadow-tint-l (95%) or the scrim turns light.
   --surface-scrim: hsl(225deg 39% 4% / 70%);
 
-  // Field focus halo — boost alpha for legibility on dark.
   --focus-field-alpha: .35;
 
-  // Chart / dataviz overrides. Axis/grid/label/title/cursor already flip via the
-  // --neutral-* / --text-* roles; only the light-bg-tuned bits move here.
-  --chart-hover-bg-color:     hsl(0deg 0% 100% / 6%); // light wash (default dark wash is invisible on dark)
-  --chart-tooltip-bg-color:   var(--surface-overlay);  // native dark tooltip, not an inverted light box
+  // Axis, grid, label and cursor already flip via --neutral-* / --text-*; only light-tuned values move.
+  --chart-hover-bg-color:     hsl(0deg 0% 100% / 6%);
+  --chart-tooltip-bg-color:   var(--surface-overlay);
   --chart-tooltip-text-color: var(--text-primary);
   --chart-tooltip-border-color:     var(--border-strong);
 
-  // The two neutrals of the chart palette. Both are pushed dark on light so a lightness gap keeps
-  // them off the emerald; on a dark canvas that gap points the wrong way and they read as holes in
-  // the chart, so both flip. Slot 8 lands at dE 12 from the orchid under protanopia rather than the
-  // dE 15 the rest of the set holds — the orchid desaturates almost to grey there, and 7 and 8 are
-  // the "rest" / "other" buckets where such a collision is placed on purpose.
+  // The two chart neutrals are dark on light to keep a lightness gap from the emerald; on a dark canvas that
+  // gap points the wrong way and they read as holes, so both flip. Slot 8 sits at dE 12 from the orchid under
+  // protanopia (the rest hold dE 15), and slot 8 is the "other" bucket.
   --chart-categorical-8: hsl(222deg 14% 60%);
   --chart-series-default: hsl(222deg 14% 64%);
 
-  // Ramp — flip so first → last reads deep → bright on a dark canvas.
   --chart-ramp-1: hsl(  8deg 52% 32%);
   --chart-ramp-2: hsl(  8deg 56% 37%);
   --chart-ramp-3: hsl(  8deg 61% 42%);
@@ -106,10 +94,7 @@
   --chart-ramp-7: hsl(  8deg 79% 64%);
   --chart-ramp-8: hsl(  8deg 84% 70%);
 
-  // Heat — the full span, flipped the same way, so a heat map carries the same number of readable
-  // steps in either theme: adjacent dE 5.9–10.1, first to last 54.5, measured 2026-09-19 in OKLab.
-  // The lightness curve is mirrored from the light scale rather than designed on its own — worth a
-  // designer's eye before it is treated as settled.
+  // Heat: flipped so a heat map keeps the same readable steps in either theme (adjacent OKLab dE 5.9-10.1, measured 2026-09-19).
   --chart-heat-1: hsl(  8deg 68% 20%);
   --chart-heat-2: hsl(  8deg 74% 29%);
   --chart-heat-3: hsl(  8deg 78% 38%);
@@ -119,7 +104,6 @@
   --chart-heat-7: hsl(  8deg 67% 74%);
   --chart-heat-8: hsl(  8deg 60% 84%);
 
-  // Sequential — flip so low → high reads dark → bright on a dark canvas.
   --chart-sequential-1: var(--blue-800);
   --chart-sequential-2: var(--blue-700);
   --chart-sequential-3: var(--blue-600);
@@ -127,7 +111,7 @@
   --chart-sequential-5: var(--blue-400);
   --chart-sequential-6: var(--blue-300);
 
-  // Divergent — bright red ← dark-neutral zero → bright green (|value| → brightness).
+  // Divergent: |value| maps to brightness, zero is dark neutral.
   --chart-divergent--3: hsl(0deg 70% 62%);
   --chart-divergent--2: hsl(0deg 55% 46%);
   --chart-divergent--1: hsl(0deg 45% 32%);

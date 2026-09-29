@@ -9,9 +9,8 @@ import {
   input,
 } from '@angular/core';
 
-// The shimmer animates `background-position`, which the browser recomputes on the main thread every
-// frame whether or not the placeholder is on screen. One observer for every skeleton pauses the
-// ones out of view.
+// The shimmer animates `background-position` on the main thread even off screen; one shared
+// observer pauses the skeletons out of view.
 let offscreenObserver: IntersectionObserver | null = null;
 
 function observeVisibility(host: Element, zone: NgZone): () => void {
@@ -45,17 +44,15 @@ function observeVisibility(host: Element, zone: NgZone): () => void {
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class SkeletonComponent {
-  /** CSS width of the placeholder (e.g. `'120px'`, `'50%'`). */
+  /** CSS width, e.g. `'120px'` or `'50%'`. */
   readonly width = input<string | undefined>(undefined);
-  /** CSS height of the placeholder. */
+  /** CSS height. */
   readonly height = input<string | undefined>(undefined);
   /** Pill radius, for avatar/dot-shaped placeholders. */
   readonly circle = input(false, { transform: booleanAttribute });
   /** `display: inline-block` instead of `block`, to sit inline with text. */
   readonly inline = input(false, { transform: booleanAttribute });
-  /** Whether the wave passes over the placeholder. Default `true`. Off, it is a flat block of the
-   *  same shape and size - for a space held for something that is not loading yet, where motion
-   *  would claim work that is not happening and cost a main-thread update a frame. */
+  /** Whether the wave passes over the placeholder; off, it is a flat block of the same shape. */
   readonly shimmer = input(true, { transform: booleanAttribute });
 
   constructor() {
@@ -64,8 +61,7 @@ export class SkeletonComponent {
     }
     const host = inject<ElementRef<Element>>(ElementRef).nativeElement;
     const zone = inject(NgZone);
-    // Only a moving wave has anything to pause, and every observed skeleton is one more
-    // intersection the browser computes on each scrolled frame.
+    // Each observed skeleton costs an intersection computation per scrolled frame; a still one has nothing to pause.
     effect((onCleanup) => {
       if (this.shimmer()) {
         onCleanup(observeVisibility(host, zone));

@@ -1,8 +1,5 @@
-<!-- Selector-scoped slots ([icon], [trailing]) coexist with no default
-     <ng-content> here — projection goes via attributes only, so consumers
-     can compose icon + label + arbitrary trailing content (status pill,
-     status icon, etc.). The two <a> variants (routerLink vs href) share one
-     #content template so the inner markup isn't duplicated. -->
+<!-- Projection is by attribute only ([icon], [trailing]); no default <ng-content>.
+     The two <a> variants share one #content template. -->
 @if (routerLink()) {
   <a
     routerLinkActive="active"
@@ -31,9 +28,7 @@
     <ng-container [ngTemplateOutlet]="content" />
   </a>
 } @else {
-  <!-- No destination, so not a link: an `href="#"` navigates — it rewrites the URL
-       and discards the scroll position on every click. An item that only emits
-       `activate` is a button. -->
+  <!-- No destination, so a button: `href="#"` would rewrite the URL and discard the scroll position. -->
   <button
     type="button"
     dsTooltipPlacement="right"

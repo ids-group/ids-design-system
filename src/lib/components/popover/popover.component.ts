@@ -47,8 +47,6 @@ export type PopoverPlacement = 'top' | 'bottom' | 'left' | 'right';
   styleUrl: './popover.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
-  // Expose this popover as a DsOverlayCloseRef so projected content (e.g.
-  // ds-menu-item) can close it via DI — the popover never references a child.
   providers: [
     {
       provide: DsOverlayCloseRef,
@@ -66,10 +64,8 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
   private ref: OverlayRef | null = null;
   private triggerElement: HTMLElement | null = null;
   private focusTimer: ReturnType<typeof setTimeout> | null = null;
-  /** Public panel tokens forwarded onto the portaled overlay pane on open so
-   *  a consumer's `ds-popover { --ds-popover-panel-*: … }` reaches it.
-   *  Not the whole set: `prepareOverlayEnter` also forwards `DROPDOWN_PANEL_TOKENS`
-   *  (overlay-motion.ts) onto every pane, the `--ds-option-*` family among them. */
+  /** Public panel tokens forwarded onto the portaled overlay pane on open, so a
+   *  consumer's `ds-popover { --ds-popover-panel-*: ... }` reaches it. */
   private readonly panelTokens = [
     '--ds-popover-bg-color',
     '--ds-popover-border-color',
@@ -79,8 +75,7 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
     '--ds-popover-max-width',
     '--ds-popover-min-width',
     '--ds-popover-arrow-size',
-    // Forwarded too: a projected ds-menu is portaled into the pane, so a
-    // consumer scoping the menu's width in their own DOM can't reach it.
+    // A projected ds-menu is portaled into the pane, out of reach of a scoped width.
     '--ds-menu-min-width',
     '--ds-menu-max-width',
   ];
@@ -92,29 +87,24 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
   /** Render a small caret pointing at the trigger. */
   readonly arrow = input(false, { transform: booleanAttribute });
 
-  /** ARIA role for the panel (e.g. 'dialog' for interactive popovers). When set,
-   *  the panel traps focus and captures it on open; a keyboard (Escape) or
-   *  in-panel close returns focus to the trigger, while an outside click or
-   *  scroll leaves focus where it lands (non-modal). Leave null for plain,
-   *  non-interactive text popovers. */
+  /** ARIA role for the panel (e.g. 'dialog'). When set, the panel traps focus and captures it
+   *  on open; Escape or an in-panel close returns focus to the trigger, an outside click or
+   *  scroll does not (non-modal). Leave null for plain text popovers. */
   readonly panelRole = input<string | null>(null);
   /** Accessible name for the panel; pair with `panelRole`. */
   readonly panelLabel = input<string | null>(null);
 
-  /** Open/closed state — for callers binding `aria-expanded` on the trigger. */
+  /** Open/closed state, for callers binding `aria-expanded` on the trigger. */
   readonly opened = signal(false);
-  /** Resolved placement after the overlay positions — drives the arrow direction. */
+  /** Resolved placement after the overlay positions; drives the arrow direction. */
   readonly resolvedPlacement = signal<PopoverPlacement>('bottom');
 
   toggle(trigger: HTMLElement): void {
     if (this.preview.staticPreview()) {
       return;
     }
-    // Reads as "a second click closes", and that is also what makes ONE popover serve many
-    // triggers: clicking another trigger while open dismisses the overlay through the CDK's
-    // outside-pointer listener FIRST, so `ref` is already gone by the time this runs and the
-    // call re-opens on the new trigger instead of closing. ds-table's column filters, row menus
-    // and clipped-cell text all depend on that order.
+    // Clicking another trigger while open dismisses the overlay through the CDK's outside-pointer
+    // listener FIRST, so `ref` is already gone here and this re-opens on the new trigger.
     if (this.ref) {
       this.close();
 
@@ -154,8 +144,7 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
       (target) => trigger.contains(target),
       () => this.close('dismiss'),
     );
-    // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
-    // overflow container, so close on any outside scroll ourselves.
+    // CDK's scroll strategies miss a plain overflow container, so close on any outside scroll ourselves.
     const removeScrollClose = closeOnScroll(this.ref, () =>
       this.close('dismiss'),
     );
@@ -177,8 +166,7 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
     this.resolvedPlacement.set(placement);
     this.opened.set(true);
     if (this.panelRole()) {
-      // Same initial focus as cdkTrapFocusAutoCapture, minus its destroy-time
-      // restore — that restore steals focus on an outside/scroll close.
+      // cdkTrapFocusAutoCapture without its destroy-time restore, which steals focus on an outside/scroll close.
       this.focusTimer = setTimeout(() => {
         this.focusTimer = null;
         void this.panelTrap()?.focusTrap?.focusInitialElementWhenReady();

@@ -1,31 +1,18 @@
-// =========================================================================
-// Theme activation.
-//
-// Light is the DEFAULT — applied at bare :root, no attribute needed. Dark is
-// OPT-IN via <html data-theme="dark">; because the dark block declares the
-// complete token set (palette + roles + overrides), the more-specific
-// [data-theme='dark'] selector fully replaces light when present — it is not
-// a delta-patch.
-//
-// There is no automatic prefers-color-scheme switch. To follow the OS, a
-// consumer opts in at the app root: provideDsTheme({ followSystem: true })
-// (exported from the package; see themes/README.md).
-//
-// Order matters: the dark block comes LAST so it wins over the light-context
-// overrides (brand-gray neutrals) at equal specificity.
-// =========================================================================
+// Light applies at bare :root. Dark is opt-in via <html data-theme="dark">; its block declares the complete
+// token set, so it replaces light rather than patching it. No automatic prefers-color-scheme switch:
+// opt in with provideDsTheme({ followSystem: true }). The dark block comes last so it wins over the
+// light-context overrides (brand-gray neutrals) at equal specificity.
 
 @use '../themes/light/theme' as light;
 @use '../themes/dark/theme' as dark;
 
 :root {
-  color-scheme: light; // native UI (scrollbars, form controls) match; opts out of UA force-dark
+  color-scheme: light; // opts out of UA force-dark
 
   @include light.theme;
 }
 
-// Brand-gray neutral family — opt-in light-context switch via <html data-neutrals="brand">.
-// A light-theme feature: dark ships its own neutral ramp and wins below.
+// Opt-in via <html data-neutrals="brand">; light only, dark ships its own neutral ramp.
 :root[data-neutrals='brand'] {
   --neutral-0:   var(--brand-gray-0);
   --neutral-50:  var(--brand-gray-50);
@@ -43,7 +30,7 @@
 }
 
 :root[data-theme='dark'] {
-  color-scheme: dark; // native UI (scrollbars, form controls) render dark to match
+  color-scheme: dark;
 
   @include dark.theme;
 }

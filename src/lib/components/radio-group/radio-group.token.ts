@@ -1,8 +1,6 @@
 import { InjectionToken } from '@angular/core';
 
-/** Contract that ds-radio reads from its parent ds-radio-group, injected via
- *  token to avoid a circular import (radio-group → RadioComponent for
- *  contentChildren; radio → RadioGroupComponent for group injection). */
+/** Contract ds-radio reads from its parent ds-radio-group; a token avoids the circular import. */
 export interface RadioGroupContract {
   readonly value: () => unknown;
   readonly groupName: () => string;
@@ -11,7 +9,6 @@ export interface RadioGroupContract {
   select(value: unknown): void;
 }
 
-/** Contract the radio-group reads back from each projected radio. */
 export interface RadioGroupChild {
   readonly value: () => unknown;
   readonly effectiveDisabled: () => boolean;

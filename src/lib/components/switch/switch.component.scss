@@ -2,7 +2,6 @@
 @use '../../styles/press' as press;
 
 :host {
-  // md references the global tokens so it stays density-responsive; sm/lg are explicit overrides.
   --_switch-track-w: var(--switch-track-w);
   --_switch-track-h: var(--switch-track-h);
   --_switch-thumb-size: var(--switch-thumb-size);

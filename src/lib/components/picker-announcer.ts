@@ -10,10 +10,8 @@ import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 /**
  * Announces how many options survived the filter.
  *
- * Deliberately NOT a row inside the listbox. A live region there is an invalid
- * child and, worse, a region created together with its text is the case screen
- * readers reliably do not announce — there is no content CHANGE to fire on. The
- * node here is created once, empty, and only its text changes.
+ * NOT a row inside the listbox (a live region there is an invalid child). The node is created
+ * once, empty, and only its text changes: a region created with its text is not reliably announced.
  * @internal
  */
 export function announceOptionCount(
@@ -25,8 +23,7 @@ export function announceOptionCount(
   const region = documentRef.createElement('div');
   region.setAttribute('aria-live', 'polite');
   region.setAttribute('aria-atomic', 'true');
-  // Off-screen rather than `display: none`, which would take it out of the
-  // accessibility tree and announce nothing at all.
+  // Off-screen, not `display: none`, which would remove it from the accessibility tree.
   region.style.cssText =
     'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;margin:-1px;padding:0';
   documentRef.body.appendChild(region);

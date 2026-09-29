@@ -1,5 +1,3 @@
-// Icon-base sizing — `.icon` class is used inside components to size <ds-icon> svg elements.
-// The actual <svg> is rendered by IconComponent; this class sets default size.
 .icon {
   --_icon-size: var(--ds-icon-size, var(--icon-md));
 

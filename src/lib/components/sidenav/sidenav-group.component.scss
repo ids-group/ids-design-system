@@ -50,8 +50,7 @@
   }
 }
 
-/* A navigating header splits into a link plus its own caret button; the link keeps the whole
-   header's look so the row reads as one control either way. */
+/* A navigating header splits into a link plus a caret button; the link keeps the header's look. */
 .group-header-row {
   display: flex;
   align-items: center;
@@ -116,7 +115,7 @@
   padding-left: var(--_sidenav-group-child-indent);
   overflow: hidden;
 
-  // Clips, so the ring has to be drawn inward or the overflow eats it.
+  // Inward ring: the overflow clips an outer one.
   --focus-ring-offset: calc(-1 * var(--focus-ring-width));
 
   height: auto;

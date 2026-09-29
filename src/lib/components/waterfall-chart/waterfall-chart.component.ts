@@ -37,22 +37,14 @@ import type {
   WaterfallChartStep,
 } from './waterfall-chart.types';
 
-/** What each direction is painted with. A total is the neutral series colour because it is not a
- *  change at all, and reading it as one is the mistake the three-colour scheme exists to prevent. */
+/** A total is the neutral series colour because it is not a change. */
 const DIRECTION_COLORS: Record<WaterfallChartStep['direction'], string> = {
   increase: 'var(--ds-chart-positive-color)',
   decrease: 'var(--ds-chart-negative-color)',
   total: 'var(--ds-chart-series-default-color)',
 };
 
-/**
- * A running total, bar by bar: what a figure started at, what moved it, and what it ended at.
- *
- * The one chart in the family that cannot be a mode on another, because it needs three things at
- * once - an accumulating level, bars pinned to zero for the totals, and its own three-colour
- * semantic. Colour never carries that semantic alone: every bar's label prints its own sign and
- * every bar's accessible name says "increase" or "decrease" in words.
- */
+/** A running total, bar by bar: what a figure started at, what moved it, and what it ended at. */
 @Component({
   selector: 'ds-waterfall-chart',
   standalone: true,
@@ -83,34 +75,29 @@ export class WaterfallChartComponent
 {
   protected readonly renderReady = chartRenderGate();
 
-  /** The bars in the order they are read, which is the order they happened in - a waterfall is
-   *  never sorted, because the sequence is the meaning. */
+  /** The bars in reading order; never sorted. */
   readonly data = input<readonly WaterfallChartBar[]>([]);
 
   /** Prints each bar's own reading above it, with its sign. */
   readonly showValues = input(true, { transform: booleanAttribute });
 
-  /** The dashed rule chaining one bar to the next at the level they share. Without it the bars
-   *  read as separate columns rather than as one running total. */
+  /** The dashed rule chaining one bar to the next. */
   readonly showConnectors = input(true, { transform: booleanAttribute });
 
-  /** Dims every OTHER bar while one is hovered or focused, so the reader's eye is held on the one
-   *  under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed bars. */
+  /** Dims every OTHER bar while one is hovered or focused. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Whether a hovered or focused bar opens a tooltip. `'axis'` is not offered - each bar is its
-   *  own category, so an axis tooltip would repeat the item one. */
+  /** Whether a hovered or focused bar opens a tooltip. `'axis'` is not offered: each bar is its
+   *  own category. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
-  /** A hint, not a count. Ticks snap to a round step. */
+  /** How many value-axis ticks to aim for; ticks snap to a round step. */
   readonly tickCount = input(5, { transform: numberAttribute });
 
-  /** The annex table under the plot. Unset falls back to `DS_CONFIG.chart.dataTable`, then
-   *  `'none'`. It prints each step's direction, its own reading and the running total. */
+  /** The annex table under the plot: each step's direction, reading and running total. Unset falls back to `DS_CONFIG.chart.dataTable`. */
   readonly dataTable = input<ChartDataTable | null>(null);
 
-  /** Milliseconds between one step's entrance and the next; a long waterfall narrows the step to
-   *  arrive within 260ms. `0` is no stagger. */
+  /** Milliseconds between one step's entrance and the next; the step narrows to finish within 260ms. `0` turns it off. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
   protected readonly series = viewChild(ColumnSeriesComponent);
@@ -136,8 +123,7 @@ export class WaterfallChartComponent
     this.steps().map((step) => ({ from: step.from, to: step.to })),
   );
 
-  /** What each bar's label prints: a delta's own change, a total's running sum. The two are
-   *  different readings and only one of them takes a sign. */
+  /** What each bar's label prints: a delta's change, a total's running sum. */
   protected readonly labelValues = computed(() =>
     this.steps().map((step, index) =>
       step.direction === 'total' ? step.to : (this.data()[index]?.value ?? 0),
@@ -155,8 +141,7 @@ export class WaterfallChartComponent
 
       return {
         id: datum?.id ?? String(index),
-        // The word is what carries the meaning where colour cannot - forced colours, a monochrome
-        // print, a reader who cannot tell the two hues apart, and every screen reader.
+        // The word carries the meaning where colour cannot: forced colours, print, screen readers.
         label: `${step.label}, ${this.intl().chart[step.direction]} ${sign}${format(reading, 'tooltip')}`,
         value: reading,
         color: DIRECTION_COLORS[step.direction],

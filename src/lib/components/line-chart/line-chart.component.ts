@@ -65,7 +65,7 @@ import {
   paletteIndexFor,
 } from './line-chart.math';
 
-/** Matches `--ds-line-chart-plot-height`, for the frame before the first style read and for SSR. */
+/** Default of `--ds-line-chart-plot-height`, used before the first style read and under SSR. */
 const DEFAULT_PLOT_HEIGHT = 240;
 import type {
   LineChartAnnotation,
@@ -77,17 +77,14 @@ import type {
 interface ResolvedSeries {
   readonly series: LineChartSeries;
   readonly values: readonly (number | null)[];
-  /** Where this series' band starts on the value axis, one entry per category. `null` while the
-   *  chart is unstacked, where every band starts at the baseline. */
+  /** Where this series' band starts on the value axis, per category. `null` while unstacked. */
   readonly lowerValues: readonly (number | null)[] | null;
   readonly onSecondaryAxis: boolean;
   readonly color: string;
-  /** `null` while `patterns` is off, which is what keeps a solid line solid. */
+  /** `null` while `patterns` is off. */
   readonly dash: string | null;
 }
 
-// One dash per palette slot, in the same order the colours are. Slot 1 stays solid so a
-// single-series chart is unchanged by turning patterns on.
 const SERIES_DASH_ARRAYS = [
   'none',
   '7 4',
@@ -133,8 +130,7 @@ export class LineChartComponent
   /** X labels. Every series' `data` is read against this length. */
   readonly categories = input<readonly string[]>([]);
 
-  /** One line per entry. Every series is read against `categories`, so a series longer than it
-   *  loses its tail and a shorter one ends early. */
+  /** One line per entry, read against `categories`: a longer series loses its tail, a shorter one ends early. */
   readonly series = input<readonly LineChartSeries[]>([]);
 
   /** How a secondary axis relates to the primary one. */
@@ -143,66 +139,45 @@ export class LineChartComponent
   /** Draws a dot at every reading. Off, the dots appear on hover and on focus only. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
 
-  /** Lays the lines and their markers on a band of the background colour. Off where the plot holds
-   *  nothing for them to cross and the band only separates them from the gridlines. */
+  /** Lays the lines and their markers on a band of the background colour. */
   readonly outline = input(true, { transform: booleanAttribute });
 
-  /** Labels pinned over their readings, for the points that have to read without a pointer. They
-   *  are drawn, not announced: the data table already carries every reading, and repeating one in
-   *  the plot makes a screen reader say it twice. */
+  /** Labels pinned over their readings. Drawn `aria-hidden`; their text is appended to the accessible name. */
   readonly annotations = input<readonly LineChartAnnotation[]>([]);
 
-  /** The point that was clicked, or activated with Enter or Space. Fires whether or not
-   *  `interactive` is set. */
+  /** The point clicked or activated with Enter or Space, whether or not `interactive` is set. */
   readonly pointClicked = output<LineChartReading>();
 
-  /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
-   *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
-   *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
-   *  opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark
-   *  and pays for it with the rest of the chart. */
+  /** Dims every OTHER mark while one is hovered or focused. Dimmed marks lose separation between
+   *  them (three series: worst pair dE 14.8 to 2.1 at `--ds-chart-dim-opacity` 0.3, measured 2026-09-13). */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** What a `null` reading draws. The default refuses to assert that a missing
-   *  reading is a zero. */
+  /** What a `null` reading draws. The default `'break'` does not assert a missing reading is zero. */
   readonly gaps = input<ChartGaps>('break');
 
-  /** How the line joins its readings. `'linear'` by default, which asserts nothing the data does
-   *  not say; a curve is a claim about what happened BETWEEN two readings. */
+  /** How the line joins its readings. `'linear'` asserts nothing between readings; a curve does. */
   readonly curve = input<ChartCurve>('linear');
 
-  /** How several series share the value axis. Stacking runs per AXIS, so a series on the secondary
-   *  axis never piles onto one measured against the primary. */
+  /** How several series share the value axis. Stacking runs per axis. */
   readonly stack = input<LineChartStack>('none');
 
-  /** Names the first axis's unit beside it. On a plot carrying two scales the colour says which
-   *  line reads which axis and this says what the numbers ARE - and a reader who has neither is
-   *  left comparing two quantities that may not be comparable at all. */
+  /** Names the first axis's unit beside it. */
   readonly yAxisLabel = input<string | null>(null);
 
   /** `yAxisLabel` for the second axis. */
   readonly secondaryAxisLabel = input<string | null>(null);
 
-  /** How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so
-   *  the axis may carry one more or one fewer. */
+  /** How many value-axis ticks to aim for; ticks snap to a round step. */
   readonly tickCount = input(LINE_CHART_DEFAULT_TICK_COUNT, {
     transform: numberAttribute,
   });
 
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
-   *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
-   *  `'none'` belongs only where the same data is already in a table on the page.
-   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
+   *  `'visible'` opens it, `'none'` renders none. Unset falls back to `DS_CONFIG.chart.dataTable`,
+   *  then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
-  /** Pins the value axis instead of deriving it from the data. A panel opened one subject at a
-   *  time — one agent, one microsite — derives a different axis for each of them, so two plots with
-   *  the same gentle wiggle can be four times apart in value and nothing on screen says so. A fixed
-   *  maximum is what makes two renders comparable.
-   *
-   *  Null, the default, keeps the derived axis. Applies to the primary axis; `maxSecondary` pins
-   *  the second one where a series sets `axis: 'secondary'`. A maximum below the data does not clip
-   *  it — the larger of the two wins, because silently hiding a reading is worse than a taller axis
-   *  than you asked for. */
+  /** Pins the primary value axis maximum so separate renders are comparable; `maxSecondary` pins
+   *  the second. Null keeps the derived axis. A maximum below the data does not clip it. */
   readonly max = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
@@ -240,27 +215,20 @@ export class LineChartComponent
     },
   );
 
-  /** Ids of the series the legend has switched off. Two-way, so a page can drive it from a URL
-   *  parameter and read back what the reader chose. */
+  /** Ids of the series the legend has switched off. */
   readonly hiddenSeries = model<readonly string[]>([]);
 
-  /** Whether hiding a series re-scales the value axis to what is left. Default `false`: a silent
-   *  rescale turns a period-over-period comparison into a different claim, and a comparison
-   *  dashboard is the common case. */
+  /** Whether hiding a series re-scales the value axis to what is left. */
   readonly rescaleOnHide = input(false, { transform: booleanAttribute });
 
   /** Whether the legend switches series off. Off leaves it a plain key. */
   readonly legendFilters = input(false, { transform: booleanAttribute });
 
-  /** What a legend control does. `'isolate'` shows one series and hides the rest — one action to
-   *  answer "show me only this" rather than one per series. `'toggle'` hides one and leaves the
-   *  rest, for taking a dominant series out so the others can be read at a usable scale.
-   *  Forwarded to `ds-chart-legend`, which renders radios for the first and checkboxes for the
-   *  second. */
+  /** What a legend control does. `'isolate'` shows one series and hides the rest (radios);
+   *  `'toggle'` hides one and leaves the rest (checkboxes). */
   readonly legendMode = input<'toggle' | 'isolate'>('isolate');
 
-  /** Shown in place of the plot once the legend has switched every series off. Without it the
-   *  reader is left with an empty grid and nothing saying why. Unset falls back to
+  /** Shown in place of the plot once the legend has switched every series off. Unset falls back to
    *  `DS_INTL.chart.noVisibleSeries`. */
   readonly noVisibleSeriesText = input<string | null>(null);
 
@@ -268,22 +236,17 @@ export class LineChartComponent
     () => this.noVisibleSeriesText() ?? this.intl().chart.noVisibleSeries,
   );
 
-  /** Gives every series a dash pattern of its own, so the lines are told apart by shape as well
-   *  as by colour — WCAG technique G111. Off by default: the shipped palette clears the
-   *  colour-blind separation threshold on its own, so the patterns are for monochrome print, for a
-   *  retuned palette, and for a reader who asks for them. */
+  /** Gives every series a dash pattern, so lines differ by shape as well as colour. */
   readonly patterns = input(false, { transform: booleanAttribute });
 
-  /** Milliseconds between one series' entrance and the next. `0` turns the stagger off. The step
-   *  narrows so the last series still starts within the stagger budget, so a long list of series
-   *  does not crawl in. */
+  /** Milliseconds between one series' entrance and the next; `0` turns it off. The step narrows
+   *  so the last series still starts within the stagger budget. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
   protected readonly highlightedSeries = signal<string | null>(null);
 
-  /** Every series with its band's own span, stacked per axis. Hiding a series does NOT re-pile the
-   *  rest, for the same reason `rescaleOnHide` defaults off: switching one off must not move the
-   *  ones still drawn. A `null` stays a hole in the line and contributes nothing to the pile. */
+  /** Every series with its band's span, stacked per axis. Hiding a series does not re-pile the
+   *  rest. A `null` stays a hole and adds nothing to the pile. */
   protected readonly stackedSeries = computed<readonly ResolvedSeries[]>(() => {
     const mode = this.stack();
     const entries = this.resolvedSeries();
@@ -339,18 +302,14 @@ export class LineChartComponent
     })),
   );
 
-  /** A normalized stack draws shares, not readings, so the axis has to say so - the value a tooltip
-   *  or the annex table prints stays the reading, which is what `valueFormat` goes on formatting. */
+  /** A normalized stack draws shares, so the axis prints percentages; tooltip and table values stay
+   *  the reading. */
   protected readonly axisFormat = computed<ChartValueFormat>(() =>
     this.stack() === 'normalized'
       ? (value: number) => formatPercent(value, 1, this.defaults.locale)
       : this.valueFormatResolved(),
   );
 
-  /** Each axis takes the colour of the series measured against it, but only where two scales share
-   *  one plot: on a single-scale chart it would restate the marks' own colour in the furniture,
-   *  and under `'split'` the two plots are already apart. The chart knows its own series colours,
-   *  so this is derived rather than asked for. */
   private readonly axisTint = computed(() => {
     if (!this.hasSecondaryAxis() || this.yAxisMode() === 'split') {
       return { primary: null, secondary: null };
@@ -373,9 +332,8 @@ export class LineChartComponent
 
   protected readonly tooltipLingerResolved = this.defaults.tooltipLingerMs;
 
-  /** Whether the plot opens a tooltip, and for what. `'axis'` names every series at the
-   *  category under the pointer, which is the reading a multi-series line is compared on;
-   *  `'item'` names only the marker itself. */
+  /** Whether the plot opens a tooltip, and for what. `'axis'` names every series at the category
+   *  under the pointer; `'item'` names only the marker itself. */
   readonly tooltip = input<ChartTooltipTrigger>('axis');
 
   // The category cursor is the one hover area over the plot and names every series, so a
@@ -389,9 +347,8 @@ export class LineChartComponent
       'dsChartTooltip',
     );
 
-  /** Where the tooltip is pinned. `'reading'`, the default, is the highest reading in the
-   *  category, so the panel stays put while the pointer moves within one band. `'pointer'` follows
-   *  the cursor. */
+  /** Where the tooltip anchors. `'reading'` (default) is the highest reading in the category, so
+   *  the panel stays put within one band; `'pointer'` follows the cursor. */
   readonly tooltipAnchor = input<'reading' | 'pointer'>('reading');
 
   protected readonly dataTableColumns = computed<readonly string[]>(() => [
@@ -432,8 +389,6 @@ export class LineChartComponent
     const format = (value: number) =>
       this.valueFormatResolved()(value, 'tooltip');
     const categories = this.categories();
-    // The pointer belongs to the WHOLE chart, not to each series, or a two-series plot promises
-    // the table twice.
     const sentences = this.resolvedSeries().map((entry) =>
       describeSeries(
         words,
@@ -447,8 +402,7 @@ export class LineChartComponent
     );
     const pointer =
       this.dataTableResolved() === 'none' ? '' : ` ${words.tableFollows}`;
-    // The plot's own text is inside an `aria-hidden` svg, so an annotation a sighted reader takes
-    // as the point of the chart would otherwise reach nobody else.
+    // Annotation text sits inside an `aria-hidden` svg, so it reaches assistive tech only through the name.
     const notes = this.markAnnotations().map((note) => note.label);
     const noted = notes.length ? ` ${words.noted(notes)}` : '';
 
@@ -465,8 +419,6 @@ export class LineChartComponent
 
   private readonly plot = viewChild(ChartComponent);
 
-  /** Whether the category cursor is held. Read off the container, which owns the pin now that it
-   *  owns the cursor. */
   protected readonly pinnedCategory = computed(
     () => this.plot()?.cursorPinned() ?? false,
   );
@@ -475,7 +427,6 @@ export class LineChartComponent
     this.plot()?.releaseCursor();
   }
 
-  /** What the series mark draws: the stacked values, the hidden series already filtered out. */
   protected readonly markSeries = computed<readonly LineSeriesData[]>(() =>
     this.visibleSeries().map((entry) => ({
       id: entry.series.id,
@@ -494,9 +445,6 @@ export class LineChartComponent
     this.visibleSeries().map((entry) => entry.dash ?? ''),
   );
 
-  /** The reading each label names, which is what the mark needs: it draws against the scales and
-   *  never sees the series list. One whose series is hidden or whose reading is missing is
-   *  dropped rather than left floating over the plot. */
   protected readonly markAnnotations = computed<readonly ChartAnnotation[]>(
     () =>
       this.annotations().flatMap((annotation) => {
@@ -528,9 +476,8 @@ export class LineChartComponent
     this.visibleSeries().some((entry) => entry.onSecondaryAxis),
   );
 
-  /** The ceiling handed to the container, which raises its own domain to it and never lowers.
-   *  Unless `rescaleOnHide` says otherwise it is the maximum across EVERY series, so switching
-   *  one off does not move the gridlines under the ones still drawn. */
+  /** The ceiling handed to the container, which only raises its domain to it. Unless `rescaleOnHide`,
+   *  it spans every series, so hiding one does not move the gridlines. */
   protected readonly axisMax = computed(() =>
     this.rescaleOnHide() ? this.max() : this.ceilingOf(false, this.max()),
   );
@@ -553,12 +500,8 @@ export class LineChartComponent
       : derived;
   }
 
-  /** `--ds-line-chart-plot-height` reaches an SVG coordinate space only as a number, so it is read
-   *  back off the host rather than applied as CSS. */
   protected readonly plotHeight = signal(DEFAULT_PLOT_HEIGHT);
 
-  /** Every state occupies the box the plot would have, so nothing on the page moves when the data
-   *  lands, the request fails or the last series is switched off. */
   protected readonly viewHeightPx = computed(
     () => `${chartViewHeight(this.plotHeight(), CHART_DEFAULT_VALUE_SPACE)}px`,
   );
@@ -607,9 +550,6 @@ export class LineChartComponent
     () => this.series().length > 0 && this.visibleSeries().length === 0,
   );
 
-  /** Placeholder legend rows while loading. Follows the real series count so the
-   *  chart does not resize when the data lands; falls back to three when `series`
-   *  is still empty. */
   protected readonly skeletonSeries = computed(() =>
     Array.from({ length: Math.max(this.series().length, 3) }),
   );

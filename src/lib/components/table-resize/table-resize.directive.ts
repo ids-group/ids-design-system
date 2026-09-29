@@ -16,15 +16,9 @@ const RESIZE_PAGE = 64;
  * <ds-table dsTableResize [columns]="cols" [data]="rows" />
  * ```
  *
- * The bare attribute is the whole switch: there is no input to bind, so resizing cannot be toggled
- * by an expression. Seed a width through the column's own `width`, read the live ones through
- * `viewChild(DsTableResize)`, and let `persistLayout` on the table carry them across a reload.
- *
- * The handle's MARKUP stays in the table's header, gated on this directive being present, and so
- * does the width template the column panel renders. Two reasons: a per-column
- * `ViewContainerRef` would cost every header cell of every table a container to save seventeen
- * lines of template, and a directive has no view of its own to declare an `ng-template` in. The
- * bytes here are in the logic, and the logic is all here.
+ * The bare attribute is the whole switch; there is no input to bind. Seed a width through the
+ * column's own `width`, read live ones through `viewChild(DsTableResize)`; `persistLayout` on the
+ * table carries them across a reload.
  */
 @Directive({
   selector: '[dsTableResize]',
@@ -33,7 +27,7 @@ const RESIZE_PAGE = 64;
 export class DsTableResize<T extends object> {
   private readonly layout = inject<DsTableLayout<T>>(DsTableLayout);
 
-  /** Per-column pixel widths, keyed by column key. Seeded from `column.width` where unset. */
+  /** Per-column pixel widths, keyed by column key. */
   readonly columnWidths = signal<Map<string, number>>(new Map());
 
   private resizeState: {
@@ -69,7 +63,7 @@ export class DsTableResize<T extends object> {
     });
   }
 
-  /** `'content'` is not a pixel value — it is carried by a class instead, see `fitsContent`. */
+  /** `'content'` is not a pixel value; it is carried by a class, see `fitsContent`. */
   private columnWidth(column: TableColumn<T>): number | null {
     const dragged = this.columnWidths().get(column.key);
     if (dragged !== undefined) {
@@ -83,15 +77,7 @@ export class DsTableResize<T extends object> {
     return this.layout.view().scrollViewport() ?? null;
   }
 
-  /**
-   * The widest a single column may be dragged: the scroll viewport.
-   *
-   * A column wider than the viewport can never be seen whole, and long text has its own
-   * affordance here — `truncate` clips it and the clip popover shows the rest — so nothing is lost
-   * by stopping at the edge. The ceiling exists at all because `aria-valuemax` has to be TRUE: a
-   * focusable `role="separator"` is a range widget, and announcing a bound that neither resize
-   * path applies is worse than announcing none.
-   */
+  /** The scroll viewport. `aria-valuemax` must be a bound both resize paths apply. */
   private columnWidthCeiling(): number {
     return Math.max(MIN_COLUMN_WIDTH, this.viewport()?.clientWidth ?? 0);
   }
@@ -119,15 +105,7 @@ export class DsTableResize<T extends object> {
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
   }
 
-  /**
-   * Freeze the columns at what they currently measure, once, before the first drag moves
-   * anything.
-   *
-   * Without it only the dragged column has a width and the rest are still auto-sized, so the
-   * browser redistributes the remainder across them and columns the reader never touched visibly
-   * jump. Measuring first means the drag changes one column and leaves the others where they
-   * were. Reads the header row that is actually on screen rather than assuming a column order.
-   */
+  /** Freezes columns at their measured width before the first drag, or untouched auto-sized columns jump. */
   private lockMeasuredWidths(from: HTMLElement): void {
     const columns = this.layout.view().visibleColumns();
     if (columns.every((column) => this.columnWidth(column) !== null)) {
@@ -177,15 +155,7 @@ export class DsTableResize<T extends object> {
     });
   }
 
-  /**
-   * The separator's range, and only while it holds focus — that is when a range widget is
-   * announced, and an auto-sized column has no width to report until something measures one.
-   * Measuring on every change detection to fill an attribute nothing is reading would force
-   * layout once per resizable column.
-   *
-   * `now` prefers the known width, which the first arrow key makes known and keeps live; the
-   * focus measurement only covers the moment before that.
-   */
+  /** Computed only while the separator holds focus: measuring on every change detection forces layout per column. */
   private resizeRange(
     column: TableColumn<T>,
   ): { now: number; min: number; max: number } | null {
@@ -234,11 +204,7 @@ export class DsTableResize<T extends object> {
     this.stepColumnWidth(column, delta, target.closest('th'));
   }
 
-  /**
-   * The header cell is passed when the caller has it — the column panel does not, so it is looked
-   * up by `data-col-key`, and the measurement matters: stepping an auto-sized column has to start
-   * from what it currently RENDERS, not from the minimum.
-   */
+  /** Stepping an auto-sized column starts from its rendered width; the panel passes no header cell, so it is found by `data-col-key`. */
   private stepColumnWidth(
     column: TableColumn<T>,
     delta: number | 'auto',

@@ -27,23 +27,20 @@ import type {
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class PaginationComponent {
-  /** Total item count, used to compute the page count. */
+  /** Total item count; drives the page count. */
   readonly total = input.required<number>();
   /** Items per page, two-way bound. */
   readonly pageSize = model<number>(10);
-  /** 1-based active page, two-way bound; a page change (incl. the reset to 1
-   *  after a size change) emits via the implicit `currentPageChange`. */
+  /** 1-based active page. Resets to 1 after a page-size change. */
   readonly currentPage = model<number>(1);
-  /** Preset choices offered in the page-size dropdown. */
+  /** Choices in the page-size dropdown. */
   readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
   /** Shows the range label, `DS_INTL.pagination.range`: "Showing X-Y of Z", or "Showing 0 of 0"
    *  on an empty list. */
   readonly showLabel = input(true, { transform: booleanAttribute });
-  /** Shows the rows-per-page dropdown. Turn it off for a screen with a fixed
-   *  page size — otherwise the control offers a choice the host won't honour. */
+  /** Shows the rows-per-page dropdown. Turn it off when the host fixes the page size. */
   readonly showPageSize = input(true, { transform: booleanAttribute });
-  /** Control height - sm/md/lg. A pager under a full-width table wants targets bigger than the
-   *  dense default. Unset falls back to `DS_CONFIG.pagination.size`, then
+  /** Unset falls back to `DS_CONFIG.pagination.size`, then
    *  `DS_CONFIG.control.size`, then `'sm'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
@@ -61,8 +58,7 @@ export class PaginationComponent {
     'grouped' as PaginationLayout,
   );
   /** The host is still fetching: every control disables, the range label is masked with a
-   *  `<ds-skeleton>` so a stale `total` is never quoted, and the nav reports `aria-busy`.
-   *  `ds-table` sets it from `loading="skeleton"`. */
+   *  `<ds-skeleton>` so a stale `total` is never quoted, and the nav reports `aria-busy`. */
   readonly loading = input(false, { transform: booleanAttribute });
 
   protected readonly intl = inject(DS_INTL);

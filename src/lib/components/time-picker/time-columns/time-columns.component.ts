@@ -33,8 +33,7 @@ interface Cell<T> {
   selected: boolean;
 }
 
-/** Internal (not public API): Hours / Minutes / AM-PM listbox columns.
- * Reused by ds-time-picker's overlay and the date-picker time footer. */
+/** Hours / Minutes / AM-PM listbox columns inside ds-time-picker's overlay. Not exported. */
 @Component({
   selector: 'ds-time-columns',
   standalone: true,
@@ -49,26 +48,21 @@ interface Cell<T> {
 })
 export class TimeColumnsComponent {
   protected readonly intl = inject(DS_INTL);
-  /** Current time as `HH:mm` (24h, always — `format` changes only what is DISPLAYED). */
+  /** Current time as `HH:mm`, always 24h; `format` changes only the display. */
   readonly value = input<string | null>(null);
-  /** Display clock. `12h` adds an AM/PM column; the emitted value stays 24h either way. */
+  /** Display clock; `12h` adds an AM/PM column. */
   readonly format = input<TimeFormat>('24h');
-  /** Minute granularity — 15 gives four rows an hour instead of sixty. */
+  /** Minute granularity. */
   readonly minuteStep = input(1, { transform: numberAttribute });
-  /** Earliest selectable time, `HH:mm`. Earlier rows render disabled rather than being removed,
-   *  so the columns do not reflow as the bound changes. */
+  /** Earliest selectable time, `HH:mm`. Earlier rows render disabled, not removed, so the columns do not reflow. */
   readonly minTime = input<string | null>(null);
   /** Latest selectable time, `HH:mm`. */
   readonly maxTime = input<string | null>(null);
-  /** Per-time predicate for what a range cannot express — booked slots, a lunch break.
-   *  Receives `HH:mm`; return true to disable. */
+  /** Per-time predicate receiving `HH:mm`; return true to disable. */
   readonly disabledTime = input<((time: string) => boolean) | null>(null);
-  /** A complete time was picked, as `HH:mm`. Not emitted while only one column has moved. */
+  /** A complete time was picked, as `HH:mm`; not emitted while only one column has moved. */
   readonly timeChange = output<string>();
-  /** Which column the pick came from. `timeChange` alone cannot say: it carries a
-   *  whole time, and a host that wants to close once the user has been through
-   *  both columns cannot infer the difference between "chose the same hour again"
-   *  and "did not touch hours". Emitted immediately after `timeChange`. */
+  /** Which column the pick came from, emitted right after `timeChange`, which carries a whole time and cannot say which half moved. */
   readonly partPicked = output<TimeColumnId>();
 
   private readonly hourButtons =
@@ -227,7 +221,6 @@ export class TimeColumnsComponent {
     this.buttonsFor(column)()[target]?.nativeElement.focus();
   }
 
-  /** Called by the parent after the overlay renders. */
   focusSelected(): void {
     this.hourButtons()[Math.max(this.hourEntry(), 0)]?.nativeElement.focus();
     this.scrollSelectedIntoView();

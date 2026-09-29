@@ -16,16 +16,14 @@ import { DS_TOAST_POSITION_DEFAULT } from './toast.config';
 import { ToastComponent } from './toast.component';
 import type { ToastEntry } from './toast.types';
 
-// Only the floor: see leaveDuration(), which reads the real length off the node.
+// Fallback floor; leaveDuration() reads the real length off the node.
 const LEAVE_FALLBACK_MS = 180;
 
-// A toast whose clock ran out while the pointer was over it should not vanish the
-// instant the pointer leaves — the reader gets this much to see it go.
+// Grace period once the pointer leaves a toast whose clock ran out under it.
 const MIN_RESUME_MS = 600;
 
 const DEFAULT_MAX_VISIBLE = 5;
 
-// Past this the exact figure stops being information, so the counter says "99+".
 const QUEUE_COUNT_CAP = 99;
 
 @Component({
@@ -57,7 +55,6 @@ export class ToastRegionComponent {
   protected readonly visibleEntries = signal<readonly ToastEntry[]>([]);
   protected readonly leaving = signal<ReadonlySet<number>>(new Set());
 
-  // A signal, not a plain array: the `+N` strip renders from its length.
   private readonly pendingQueue = signal<readonly ToastEntry[]>([]);
 
   protected readonly queuedLabel = computed(() => {
@@ -90,8 +87,7 @@ export class ToastRegionComponent {
       this.maxVisible();
       this.drainQueue();
     });
-    // An uncancelled timer fires into a destroyed component: invisible in an app that
-    // never tears the root down, a stream of "N timers still in the queue" under fakeAsync.
+    // An uncancelled timer fires into a destroyed component.
     inject(DestroyRef).onDestroy(() => {
       this.timers.forEach((timer) => window.clearTimeout(timer));
       this.leaveTimers.forEach((timer) => window.clearTimeout(timer));
@@ -100,9 +96,7 @@ export class ToastRegionComponent {
     });
   }
 
-  /** Newest goes NEAREST the anchor, so the toast that just fired appears where the
-   *  stack is pinned rather than at the far end of a list the reader has to hunt
-   *  down. DOM order is the visual order, so this also keeps the reading order. */
+  /** Newest goes NEAREST the anchor; DOM order is the visual and reading order. */
   protected readonly newestFirst =
     (this.position?.verticalPosition ??
       DS_TOAST_POSITION_DEFAULT.verticalPosition) === 'top';
@@ -127,9 +121,7 @@ export class ToastRegionComponent {
     this.slideNeighbours(before);
   }
 
-  /** FLIP, rather than the usual absolute stack: absolute positioning collapses the region
-   *  to zero height, and it lives in a CDK pane sized to its content, so the hit area goes
-   *  with it. */
+  /** FLIP, not an absolute stack: that collapses the region to zero height inside the content-sized CDK pane. */
   private slideNeighbours(before: Map<number, number>): void {
     if (!before.size) {
       return;
@@ -188,8 +180,7 @@ export class ToastRegionComponent {
       return;
     }
     this.remaining.set(id, remaining);
-    // A toast can be armed with no user event anywhere near it — drainQueue runs from a
-    // timeout — so this has to bank rather than trust that a pause event will follow.
+    // drainQueue arms from a timeout, with no user event nearby, so bank the pause state here.
     if (this.hovered || this.focusWithin) {
       this.startedAt.delete(id);
 
@@ -221,9 +212,7 @@ export class ToastRegionComponent {
     this.syncPause();
   }
 
-  // `focusout` bubbles, so it also fires when focus moves BETWEEN elements inside the region —
-  // tabbing from the action to the close button. Without the containment check that reads as
-  // leaving, and every round trip re-floors the remainder at MIN_RESUME_MS.
+  // `focusout` also fires when focus moves BETWEEN elements inside the region; the containment check avoids re-flooring at MIN_RESUME_MS.
   protected onFocusWithin(event: FocusEvent | true): void {
     this.focusWithin =
       event === true ||
@@ -265,9 +254,8 @@ export class ToastRegionComponent {
     }
   }
 
-  /** Replace fields of an already-visible or queued toast in place. Patching
-   *  `durationMs` restarts the clock, and on a QUEUED toast it takes effect only on
-   *  promotion — otherwise a duration would burn down while the toast is invisible. */
+  /** Replaces fields of a visible or queued toast in place. Patching `durationMs`
+   *  restarts the clock; on a QUEUED toast it takes effect on promotion. */
   update(
     id: number,
     patch: Partial<
@@ -334,9 +322,8 @@ export class ToastRegionComponent {
     );
   }
 
-  /** The leave transition is a public token, so its length is whatever the consumer
-   *  set — read it off the node rather than assuming. Reduced motion zeroes it, which
-   *  is why the floor applies only when there is nothing to measure. */
+  /** The leave transition length is a public token, so read it off the node. Reduced
+   *  motion zeroes it, so the floor applies only when there is nothing to measure. */
   private leaveDuration(id: number): number {
     const node = this.toastNodes().get(id);
     if (!node) {

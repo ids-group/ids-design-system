@@ -63,14 +63,12 @@ import type {
   ScatterPoint,
 } from './scatter-chart.types';
 
-/** Room for the axis labels outside the plot, in the canvas's own units. */
 const AXIS_GUTTER = 52;
 const CATEGORY_GUTTER = 34;
 const EDGE_GUTTER = 12;
-// The point's default radius, `--chart-dot-radius`.
+// Clearance past the point's default radius, `--chart-dot-radius`.
 const PIN_POINT_CLEARANCE = 4;
-// Screen pixels from the pointer to a point's centre. A point is too small to hold a pointer on, so
-// hover answers the nearest point within this reach instead.
+// Screen pixels from the pointer to a point's centre within which hover answers.
 const HOVER_REACH_PX = 16;
 
 interface PlacedPoint {
@@ -87,16 +85,7 @@ interface PlacedSeries {
   readonly points: readonly PlacedPoint[];
 }
 
-/**
- * Two continuous quantities against each other: weight against carriage cost, distance against
- * time, volume against conversion. None of the other five charts draws this.
- *
- * It is the only chart in the family whose mark count the CALLER decides - an area has one node per
- * series, a waterfall one per step, a heat map one per cell, and all three are bounded by the
- * question itself. So it is also the only one that thins its own data before drawing: past four
- * times the plot's width in marks the series is decimated, and the chart says so on its face
- * rather than leaving the reader to count points that are not there.
- */
+/** Two continuous quantities against each other. Past four times the plot's width in marks a series is decimated, and the chart says so. */
 @Component({
   selector: 'ds-scatter-chart',
   standalone: true,
@@ -122,36 +111,30 @@ export class ScatterChartComponent
 {
   protected readonly renderReady = chartRenderGate();
 
-  /** One entry per series, each carrying its own readings. Both scales are continuous, so a
-   *  point holds its position on each rather than an index into a list of categories. */
+  /** One entry per series. */
   readonly data = input<readonly ScatterChartSeries[]>([]);
 
-  /** Names the horizontal quantity under the plot. Without it the reader has two numbers and no
-   *  idea which is which - on a scatter that is the whole reading. */
+  /** Names the horizontal quantity under the plot. */
   readonly xLabel = input<string | null>(null);
 
   /** Names the vertical quantity beside the plot. */
   readonly yLabel = input<string | null>(null);
 
-  /** Which decimator thins a series past the budget. `'minMax'` by default, because it is the only
-   *  one that promises each bucket's extremum survives. */
+  /** Which decimator thins a series past the budget. See `ScatterChartDecimator`. */
   readonly decimator = input<ScatterChartDecimator>('minMax');
 
-  /** A hint, not a count, and it applies to BOTH axes. Ticks snap to a round step. */
+  /** A hint, not a count, applied to both axes. Ticks snap to a round step. */
   readonly tickCount = input(SCATTER_DEFAULT_TICK_COUNT, {
     transform: numberAttribute,
   });
 
-  /** The annex table under the plot. It lists EVERY reading, including the ones decimation left
-   *  out of the drawing, which is what keeps a thinned chart honest. */
+  /** The annex table under the plot; lists every reading, including those decimation left out. */
   readonly dataTable = input<ChartDataTable | null>(null);
 
-  /** Whether a hovered or focused mark opens a tooltip. A scatter prints no value beside its
-   *  marks - there is no room - so this is where a reading is read without the annex table. */
+  /** Whether a hovered or focused mark opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
-  /** Fades every mark but the one under the pointer. Off by default: on a scatter the pile-up IS
-   *  the reading, and dimming the neighbours takes exactly that away. */
+  /** Fades every mark but the one under the pointer; on a scatter this hides pile-ups. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
   /** The clicked reading, with the series it belongs to. Fires on click and on Enter or Space. */
@@ -177,8 +160,7 @@ export class ScatterChartComponent
     this.data().every((series) => series.data.length === 0),
   );
 
-  /** One mark per drawn unit of plot width is the ceiling: two marks sharing a pixel are two DOM
-   *  nodes a reader cannot tell apart. The viewBox is one unit per pixel at a typical card width. */
+  /** One mark per drawn unit of plot width is the ceiling. */
   private readonly budget = computed(() => decimationTarget(this.plot.width));
 
   protected readonly drawnSeries = computed(() => {
@@ -198,8 +180,7 @@ export class ScatterChartComponent
     });
   });
 
-  /** How many readings were dropped, over every series. A decimated chart that does not SAY it is
-   *  decimated leaves the reader counting points that were never drawn. */
+  /** How many readings were dropped, over every series. */
   protected readonly droppedCount = computed(() =>
     this.drawnSeries().reduce(
       (total, entry) =>
@@ -324,8 +305,7 @@ export class ScatterChartComponent
     this.yLabel() ?? 'y',
   ]);
 
-  /** Built only while the disclosure is open: a scatter carries thousands of readings, and every
-   *  one of them as a table row is a cost nobody pays until they ask. */
+  /** Built only while the disclosure is open. */
   protected readonly dataTableRows = computed<readonly ChartDataRow[]>(() =>
     this.tableIsOpen()
       ? this.tableRows().map((row) => ({
@@ -348,10 +328,7 @@ export class ScatterChartComponent
     );
   });
 
-  /** `<details>` keeps its children in the DOM while it is shut, so a scatter of 12 000 readings
-   *  parked 48 000 nodes on the page - three times what decimating the PLOT had just saved. The
-   *  rows are built when the disclosure opens and dropped when it shuts; every reading is still
-   *  one click away, which is what the table is for. */
+  /** `<details>` keeps its children in the DOM while shut, so rows exist only while it is open. */
   protected readonly tableOpen = signal(false);
 
   protected readonly tableIsOpen = computed(
@@ -360,15 +337,14 @@ export class ScatterChartComponent
 
   protected readonly skeletonHeight = `${SCATTER_VIEW_HEIGHT}`;
 
-  /** Flattened so one index addresses a mark, which is what `chartActiveMark` counts. */
+  /** Flattened so one index addresses a mark (`chartActiveMark` counts marks). */
   private readonly flatMarks = computed(() =>
     this.series().flatMap((entry) =>
       entry.points.map((mark) => ({ entry, mark })),
     ),
   );
 
-  /** Where each series starts in `flatMarks`, so a point carries its flat index without a search
-   *  and the series' one listener reads it back. */
+  /** Where each series starts in `flatMarks`. */
   protected readonly seriesStart = computed(() => {
     const starts = new Map<string, number>();
     let next = 0;
@@ -389,9 +365,8 @@ export class ScatterChartComponent
 
   private hoveredIndex = -1;
 
-  // Entered on every move while a point is in reach, not only when it changes: the active mark
-  // schedules a clear on any `pointerover` outside the point's own element, and re-entering is
-  // what cancels it.
+  // Entered on every move, not only on change: the active mark schedules a clear on any
+  // `pointerover` outside the point's element, and re-entering cancels it.
   protected onCanvasPointer(event: PointerEvent): void {
     const canvas = event.currentTarget;
     const nearest =

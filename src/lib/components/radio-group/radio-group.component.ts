@@ -52,13 +52,13 @@ export class RadioGroupComponent
   extends DsControlValueAccessor<unknown>
   implements RadioGroupContract
 {
-  /** Selected radio value; two-way bound. */
+  /** Value of the selected radio. */
   readonly value = model<unknown>(null);
-  /** Native `name` shared by every radio in the group. */
+  /** Native `name` shared by every radio. */
   readonly name = input<string | null>(null);
   /** Disables the whole group. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Accessible name for the group when no visible label is provided. */
+  /** Accessible name when there is no visible `label`. */
   readonly ariaLabel = input<string | null>(null);
   /** Visible group label; omit to supply your own. */
   readonly label = input<string>('');
@@ -120,14 +120,13 @@ export class RadioGroupComponent
 
   protected onKeydown(event: KeyboardEvent): void {
     const key = event.key;
-    // Enter is deliberately absent: the group sits in forms, where Enter is the
-    // submit and swallowing it leaves the form with no keyboard way out.
+    // Enter is deliberately absent: swallowing it would remove the form's keyboard submit.
     if (
       !['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft', ' '].includes(key)
     ) {
       return;
     }
-    // A text field beside the radios (the "Other: ___" row) types its own keys.
+    // A text field beside the radios (an "Other" row) types its own keys.
     if (isTextEntryTarget(event)) {
       return;
     }

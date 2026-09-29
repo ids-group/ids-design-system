@@ -13,8 +13,6 @@ import { NgTemplateOutlet } from '@angular/common';
 import type { ChartTooltipContext } from './chart-tooltip.types';
 import { swatchBlendsInto } from './swatch-contrast';
 
-// A dot tells readings apart, so a lone reading has nothing to tell it from, and past four the dots
-// read as a column of noise; in both cases the labels carry the series on their own.
 const AUTO_SWATCH_MIN = 2;
 const AUTO_SWATCH_MAX = 4;
 
@@ -25,9 +23,7 @@ const AUTO_SWATCH_MAX = 4;
   templateUrl: './chart-tooltip-panel.component.html',
   styleUrl: './chart-tooltip-panel.component.scss',
   host: {
-    // Hidden from assistive technology on purpose: every interactive mark already
-    // carries the same label and value in its `aria-label`, so exposing the panel
-    // makes a screen reader read each reading twice.
+    // Hidden from AT: every interactive mark's `aria-label` already carries the reading.
     'aria-hidden': 'true',
   },
   encapsulation: ViewEncapsulation.Emulated,
@@ -56,7 +52,6 @@ export class ChartTooltipPanelComponent {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   constructor() {
-    // Before the frame paints, so a ring never lands a frame after its row.
     afterRenderEffect({
       earlyRead: () => {
         this.context();

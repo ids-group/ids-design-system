@@ -53,24 +53,19 @@
   stop-opacity: 0;
 }
 
-// A stacked band is separated from the one below it by a stroke in the BACKGROUND colour, never a
-// darker rule: a rule is a third ink the palette has to stay legible against and it vanishes in
-// print, while a gap survives both. Only stacked bands take it - an unstacked area sits on the
-// baseline and has nothing to be separated from.
+// A stacked band is separated by a background-colour stroke, not a darker rule (which vanishes in print).
 .series-area.is-stacked {
   stroke: var(--ds-chart-bg-color);
   stroke-width: 2;
   stroke-linejoin: round;
 }
 
-/* The singled-out series thickens as well as keeping its colour, so the highlight survives a
-   monochrome print and a reader who cannot tell the two hues apart. */
+/* Thickens as well as keeping its colour, so the highlight survives monochrome print. */
 .lines:has(.series-line.is-dimmed) .series-line:not(.is-dimmed) {
   stroke-width: var(--_chart-line-width-bold);
 }
 
-/* Under the line, never around it: a stroke on the line itself would be clipped by its own dash
-   pattern, and a dashed line would lose the band exactly where it crosses a column. */
+/* A stroke on the line itself would be clipped by its own dash pattern. */
 .series-halo {
   fill: none;
   stroke: var(--ds-chart-bg-color);
@@ -98,8 +93,6 @@
   r: var(--_chart-dot-radius);
 }
 
-/* The dot takes the band too: outlining the line and leaving its readings bare makes the markers
-   read as a different series where they cross a column. */
 .lines.is-outlined .series-marker {
   stroke: var(--ds-chart-bg-color);
   stroke-width: var(--_chart-line-outline, 3px);
@@ -120,8 +113,7 @@
   r: var(--_chart-dot-radius-active);
 }
 
-/* The hit area, not the dot. `non-scaling-stroke` is what makes it a CSS-pixel size independent of
-   any transform on the canvas, and a transparent stroke is still `visiblePainted`, so it
+/* The hit area, not the dot: `non-scaling-stroke` keeps it CSS pixels, and a transparent stroke still
    hit-tests. 24px is WCAG 2.5.8; the coarse-pointer rule below takes it to 44. */
 .series-marker.interactive {
   stroke: transparent;
@@ -135,9 +127,9 @@
   }
 }
 
-/* focus-ring-guard: an outline on an SVG element paints its BOUNDING BOX, not its silhouette, so a
-   marker would ring as a square. The ring is a stroke on the circle instead; `own-indicator` keeps
-   the outline under forced colours, where `stroke` is not remapped. */
+/* focus-ring-guard: an outline on an SVG element paints its bounding box, so a marker would ring as a
+   square. The ring is a stroke on the circle; `own-indicator` keeps the outline under forced
+   colours, where `stroke` is not remapped. */
 .series-marker.interactive:focus-visible {
   @include focus.own-indicator;
   @include chart-frame.drawn-focus-ring;

@@ -24,8 +24,6 @@
   --_chart-hatch-width: var(--ds-chart-hatch-width, 1.5px);
 }
 
-// One user unit is one CSS pixel inside `ds-chart`, which is what lets a cap in pixels stay a
-// length here instead of becoming a share of the band computed in TypeScript.
 .column {
   --_column-mark-width: min(
     var(--_column-chart-column-share),
@@ -37,9 +35,7 @@
     calc(var(--_column-mark-height) / 2)
   );
 
-  // Grouped slots are placed here rather than in the transform the component writes, so the
-  // spacing follows the mark's CAPPED width: a band wide enough for the cap to bite would
-  // otherwise leave the pair drawn 48px wide but spread as though it were wider.
+  // Placed here, not in the component's transform, so spacing follows the mark's capped width.
   --_column-slot-offset: calc(
     (2 * var(--_column-slot, 0) - var(--_column-slots, 1) + 1) * (var(--_column-mark-width) + var(--_column-chart-column-gap)) / 2
   );
@@ -49,9 +45,8 @@
   );
 }
 
-// The slot's whole share of the category's step, measured from the category's centre rather than
-// from the column: the columns are spaced by their capped width, the strips by the step, and only
-// the strips tile the plot with no ground between two of them.
+// Measured from the category's centre, not the column: columns are spaced by capped width, strips
+// by the step, so only the strips tile the plot without gaps.
 .hit-area {
   --_column-hit-start: calc(
     var(--_column-chart-slot-step) * (var(--_column-slot, 0) - var(--_column-slots, 1) / 2)
@@ -62,8 +57,7 @@
   fill: transparent;
 }
 
-// `fill-box`, not the default view-box: the arrival scales about the column's own baseline, and
-// against the canvas corner it would fly in from the axis instead.
+// `fill-box`, not view-box: the arrival scales about the column's own baseline.
 .bar {
   transform-box: fill-box;
 }
@@ -74,10 +68,8 @@
   width: var(--_column-mark-width);
   x: calc(var(--_column-mark-width) / -2);
 
-  // NOTE(chart-layout-transition): a VALUE change animates `y` and `height`, not `transform`, and
-  // it is a considered trade — under a scaled transform the rounded cap squashes with the body, so
-  // the cap changes shape for the length of the animation. The cost is a layout pass per frame on
-  // one property. The mark's ARRIVAL does scale, where the squash is worth the compositor.
+  // NOTE(chart-layout-transition): a value change animates `y` and `height`, not `transform`: a
+  // scaled transform squashes the rounded cap. Costs a layout pass per frame; the arrival does scale.
   transition:
     y var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing),
     height var(--ds-motion-chart-mark-duration)
@@ -89,8 +81,6 @@
   rx: var(--_column-chart-cap-radius);
 }
 
-// The ground carries no paint of its own: the mark under it supplies the hue, and only the stripes
-// are drawn in the background colour, which is what keeps one shared pattern correct for every mark.
 .hatch-ground {
   fill: none;
 }
@@ -105,9 +95,8 @@
   pointer-events: none;
 }
 
-// Half the mark's height is the ceiling because SVG clamps `ry` to that as well: past it the cap
-// this squares off is no longer the radius it was asked for, and squaring the full height would
-// leave a short column with no cap at all.
+// Half the mark's height is the ceiling because SVG clamps `ry` to it too; squaring the full height
+// would leave a short column with no cap.
 .bar-base {
   height: var(--_column-square-height);
   y: calc(var(--_column-baseline-y) - var(--_column-square-height));
@@ -117,8 +106,7 @@
   y: var(--_column-baseline-y);
 }
 
-// `fill`, not `color`: SVG text takes its paint from `fill`, and `currentColor` is what keeps the
-// inherited colour the DOM label read from its ancestor.
+// SVG text paints from `fill`; `currentcolor` keeps the inherited colour.
 .value {
   fill: currentcolor;
   font-size: var(--font-size-xs);
@@ -126,16 +114,13 @@
   pointer-events: none;
 }
 
-// Anchored at the bar's own tip, which for a column below zero sits ABOVE the label rather than
-// below it, so the label hangs from that edge instead of sitting on it.
 .column.below-baseline .value {
   dominant-baseline: hanging;
 }
 
-/* focus-ring-guard: an outline on an SVG element paints its BOUNDING BOX, not its silhouette, so
-   the group would ring as a rectangle around the whole category slot. The ring is a stroke on the
-   capped rect instead; `own-indicator` keeps the outline under forced colours, where `stroke` is
-   not remapped. */
+/* focus-ring-guard: an outline on an SVG element paints its bounding box, so the group would ring the
+   whole category slot. The ring is a stroke on the capped rect; `own-indicator` keeps the outline
+   under forced colours, where `stroke` is not remapped. */
 .column.interactive:focus-visible {
   @include focus.own-indicator;
 }
@@ -151,8 +136,7 @@
   }
 }
 
-/* The whole series steps back while another one is named in the legend. On the group, not each
-   column: a stacked segment and its neighbours fade together or the stack stops reading as one. */
+/* On the group, not each column: a stack's segments must fade together. */
 .columns.is-dimmed {
   opacity: var(--ds-chart-dim-opacity);
   transition: opacity var(--ds-motion-chart-mark-duration)
