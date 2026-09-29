@@ -1,5 +1,15 @@
 ## Unreleased
 
+### Added
+
+- **`ds-sparkline`, a word-sized trend line for a table cell or a stat.** One `svg` with no axes,
+  gridlines, legend or frame and a dot on the last reading. `scale` is `'data'` (the readings' own
+  min..max, default) or `'zero'`; a `null` in `data` breaks the line. A tooltip names the reading
+  under the pointer, on by default and off with `[tooltip]="false"`; with a `label` the sparkline
+  is a tab stop whose arrow keys, Home and End move it. Sized by `--ds-sparkline-width` and
+  `--ds-sparkline-height`, 80×24 by default. Import from
+  `@ids-group-ltd/ids-design-system/components/sparkline`.
+
 ### Fixed
 
 - **A toast's announcement stays off screen before any dialog has opened.** `ToastService` speaks
