@@ -140,7 +140,7 @@
 }
 
 /* Segments divide the mark, never replace it: the row's length still says how it compares with the
-   rest of the chart, and the parts say what it is made of. The 2px seam is surface-coloured, not a
+   rest of the chart, and the parts say what it is made of. The 2px seam is background-coloured, not a
    margin: two parts meeting edge to edge read as one longer part, and a gap in the track's own
    colour would read as a missing category. */
 .segment {
@@ -159,7 +159,7 @@
   }
 
   & + & {
-    border-inline-start: 2px solid var(--ds-chart-frame-bg-color, var(--surface-default));
+    border-inline-start: 2px solid var(--ds-chart-bg-color);
   }
 }
 

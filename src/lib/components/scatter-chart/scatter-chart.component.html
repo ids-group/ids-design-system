@@ -44,6 +44,14 @@
       (pointerover)="onCanvasPointer($event)"
       (pointermove)="onCanvasPointer($event)"
       (pointerleave)="onCanvasLeave()">
+      <rect
+        class="plot-bg"
+        aria-hidden="true"
+        [attr.x]="plot.left"
+        [attr.y]="plot.top"
+        [attr.width]="plot.width"
+        [attr.height]="plot.height" />
+
       @for (tick of yTicks(); track tick.value) {
         <line
           class="grid-line"

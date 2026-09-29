@@ -98,6 +98,13 @@
   --chart-divergent-2:  hsl(145deg 38% 52%);
   --chart-divergent-3:  hsl(145deg 46% 34%);      /* large positive (best) */
 
+  /* BACKGROUND - what is behind the marks: the frame is painted in it, and every place a chart
+     cuts one mark from another in that colour - a line's outline, a segment seam, hatching, a
+     label or focus halo - reads it, so the cut stays invisible on any card. Read at the point of
+     use, never through another token declared here: a token declared on :root resolves there, and
+     would ignore a background set on one chart. */
+  --chart-bg-color: var(--surface-default);
+
   /* FRAME — the box a chart draws around itself. On by default: a chart is
      read as an object on the page, not as a block of text, and without an
      edge it bleeds into whatever sits under it. A chart already inside a
@@ -107,7 +114,6 @@
   --chart-frame-border-width: var(--border-width-default);
   --chart-frame-radius: var(--radius-lg);
   --chart-frame-padding: var(--space-5);
-  --chart-frame-bg-color: var(--surface-default);
 
   /* AXIS / GRID / LEGEND */
   --chart-axis-line-color:    var(--neutral-300);
@@ -139,7 +145,6 @@
      the white keyline is what separates it from the mark underneath, and it is the keyline rather
      than the ring that does the surviving. */
   --chart-focus-ring-color:  var(--focus-ring-color);
-  --chart-focus-halo-color:  white;
 
   --chart-tooltip-bg-color:   var(--neutral-900);
   --chart-tooltip-text-color:   var(--neutral-0);
@@ -158,9 +163,8 @@
   --chart-area-opacity:      0.16;
   --chart-area-fade-opacity: 0.32;
 
-  /* Stripes wide enough to survive a 24px-wide mark at a glance, and drawn in the surface colour
-     so they read as gaps cut out of the mark rather than a second hue competing with it. */
-  --chart-hatch-color: var(--surface-default);
+  /* Stripes wide enough to survive a 24px-wide mark at a glance, and drawn in the background
+     colour so they read as gaps cut out of the mark rather than a second hue competing with it. */
   --chart-hatch-width: 1.5px;
 }
 
@@ -204,11 +208,11 @@
   --ds-chart-heat-7-color: var(--chart-heat-7);
   --ds-chart-heat-8-color: var(--chart-heat-8);
 
+  --ds-chart-bg-color: var(--chart-bg-color);
   --ds-chart-frame-border-color: var(--chart-frame-border-color);
   --ds-chart-frame-border-width: var(--chart-frame-border-width);
   --ds-chart-frame-radius: var(--chart-frame-radius);
   --ds-chart-frame-padding: var(--chart-frame-padding);
-  --ds-chart-frame-bg-color: var(--chart-frame-bg-color);
 
   --ds-chart-axis-line-color: var(--chart-axis-line-color);
   --ds-chart-axis-label-color: var(--chart-axis-label-color);
@@ -224,7 +228,6 @@
   --ds-chart-hover-bg-color: var(--chart-hover-bg-color);
   --ds-chart-cursor-line-color: var(--chart-cursor-line-color);
   --ds-chart-focus-ring-color: var(--chart-focus-ring-color);
-  --ds-chart-focus-halo-color: var(--chart-focus-halo-color);
   --ds-chart-tooltip-bg-color: var(--chart-tooltip-bg-color);
   --ds-chart-tooltip-text-color: var(--chart-tooltip-text-color);
   --ds-chart-tooltip-border-color: var(--chart-tooltip-border-color);
@@ -237,6 +240,5 @@
   --ds-chart-dot-radius-active: var(--chart-dot-radius-active);
   --ds-chart-area-opacity: var(--chart-area-opacity);
   --ds-chart-area-fade-opacity: var(--chart-area-fade-opacity);
-  --ds-chart-hatch-color: var(--chart-hatch-color);
   --ds-chart-hatch-width: var(--chart-hatch-width);
 }

@@ -143,7 +143,7 @@ export class LineChartComponent
   /** Draws a dot at every reading. Off, the dots appear on hover and on focus only. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
 
-  /** Lays the lines and their markers on a band of the surface colour. Off where the plot holds
+  /** Lays the lines and their markers on a band of the background colour. Off where the plot holds
    *  nothing for them to cross and the band only separates them from the gridlines. */
   readonly outline = input(true, { transform: booleanAttribute });
 

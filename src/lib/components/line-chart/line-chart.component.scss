@@ -21,7 +21,7 @@
   --_line-chart-annotation-color: var(--ds-line-chart-annotation-color, var(--text-primary));
   --_line-chart-annotation-font-size: var(--ds-line-chart-annotation-font-size, var(--ds-chart-axis-font-size));
   --_line-chart-annotation-font-weight: var(--ds-line-chart-annotation-font-weight, var(--font-weight-bold));
-  --_line-chart-annotation-halo-color: var(--ds-line-chart-annotation-halo-color, var(--surface-default));
+  --_line-chart-annotation-halo-color: var(--ds-line-chart-annotation-halo-color, var(--ds-chart-bg-color));
   --_line-chart-annotation-halo-width: var(--ds-line-chart-annotation-halo-width, 3px);
   --_line-chart-line-width: var(--ds-line-chart-line-width, var(--ds-chart-line-width));
   --_line-chart-dot-radius: var(--ds-line-chart-dot-radius, var(--ds-chart-dot-radius));

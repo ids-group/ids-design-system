@@ -62,7 +62,7 @@ export interface ColumnSeriesPoint {
 const VALUE_LABEL_GAP = 8;
 
 /** Blank left at a stacked segment's lower end, so the boundary between two segments is a gap in
- *  the surface colour rather than a drawn rule. A rule is a third ink the palette has to stay
+ *  the background colour rather than a drawn rule. A rule is a third ink the palette has to stay
  *  legible against and it vanishes in print; a gap survives both, and it is the secondary encoding
  *  the palette's 6-8 dE separation band asks for. */
 const STACK_SEGMENT_GAP = 2;

@@ -4,7 +4,7 @@
   --_chart-tooltip-bg-color: var(--ds-chart-tooltip-bg-color);
   --_chart-tooltip-text-color: var(--ds-chart-tooltip-text-color);
   --_chart-tooltip-border-color: var(--ds-chart-tooltip-border-color);
-  --_chart-tooltip-hatch-color: var(--ds-chart-hatch-color);
+  --_chart-tooltip-hatch-color: var(--ds-chart-hatch-color, var(--surface-default));
   --_chart-tooltip-hatch-width: var(--ds-chart-hatch-width);
 
   display: block;

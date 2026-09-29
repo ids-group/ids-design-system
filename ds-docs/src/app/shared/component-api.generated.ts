@@ -2403,7 +2403,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Lays the line and its markers on a band of the surface colour, so they stay legible where they cross other marks. On by default: a line shares its plot more often than not, and on an empty plot the band only separates it from the gridlines."
+        "description": "Lays the line and its markers on a band of the background colour, so they stay legible where they cross other marks. On by default: a line shares its plot more often than not, and on an empty plot the band only separates it from the gridlines."
       },
       {
         "name": "interactive",
@@ -5369,7 +5369,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Lays the lines and their markers on a band of the surface colour. Off where the plot holds nothing for them to cross and the band only separates them from the gridlines."
+        "description": "Lays the lines and their markers on a band of the background colour. Off where the plot holds nothing for them to cross and the band only separates them from the gridlines."
       },
       {
         "name": "annotations",

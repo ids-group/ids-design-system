@@ -116,7 +116,7 @@ export class LineSeriesComponent implements OnDestroy {
    *  roughly twenty points. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
 
-  /** Lays the line and its markers on a band of the surface colour, so they stay legible where
+  /** Lays the line and its markers on a band of the background colour, so they stay legible where
    *  they cross other marks. On by default: a line shares its plot more often than not, and on an
    *  empty plot the band only separates it from the gridlines. */
   readonly outline = input(true, { transform: booleanAttribute });

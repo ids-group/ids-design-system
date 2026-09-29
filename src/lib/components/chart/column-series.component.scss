@@ -19,7 +19,7 @@
   );
   --_chart-hatch-color: var(
     --ds-chart-hatch-color,
-    var(--surface-default)
+    var(--ds-chart-bg-color)
   );
   --_chart-hatch-width: var(--ds-chart-hatch-width, 1.5px);
 }
@@ -90,7 +90,7 @@
 }
 
 // The ground carries no paint of its own: the mark under it supplies the hue, and only the stripes
-// are drawn in the surface colour, which is what keeps one shared pattern correct for every mark.
+// are drawn in the background colour, which is what keeps one shared pattern correct for every mark.
 .hatch-ground {
   fill: none;
 }
