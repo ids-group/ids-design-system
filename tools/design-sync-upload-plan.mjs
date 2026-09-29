@@ -6,6 +6,9 @@
 //   node tools/design-sync-upload-plan.mjs --remote <list.json>  # + reconcile against the project
 //   node tools/design-sync-upload-plan.mjs --record              # stamp after a successful upload
 //
+// With --remote it also blanks every obsolete.txt path the project still holds, since a non-owner
+// cannot delete. Only with --remote: blanking a path the owner has already deleted recreates it.
+//
 // The comparison is LOCAL and must stay local: `list_files` returns paths and nothing else — no
 // size, no hash, no mtime — so comparing content means `get_file` per path, 6.2 MB through the
 // session against 170 KB of path JSON for sending the whole tree blind. See COMMANDS.md.
@@ -25,6 +28,9 @@ const POINTER = join(ROOT, '.design-sync', 'last-upload.json');
 const OBSOLETE = join(ROOT, '.design-sync', 'obsolete.txt');
 const OUT = join(ROOT, '.claude', 'local', 'design-sync-batches');
 const BATCH = 250;
+const BLANK_PREFIX = 'blank-obsolete-';
+
+const readPointer = () => (existsSync(POINTER) ? JSON.parse(readFileSync(POINTER, 'utf8')) : {});
 
 const argv = process.argv.slice(2);
 const flag = (name) => argv.includes(name);
@@ -46,11 +52,17 @@ const git = (...args) =>
 const treeCommit = () => git('log', '-1', '--format=%H', '--', TREE_REL);
 
 if (flag('--record')) {
+  const sentBlanks = existsSync(OUT)
+    ? readdirSync(OUT)
+        .filter((name) => name.startsWith(BLANK_PREFIX))
+        .flatMap((name) => JSON.parse(readFileSync(join(OUT, name), 'utf8')).map((entry) => entry.path))
+    : [];
   const record = {
     treeCommit: treeCommit(),
     head: git('rev-parse', 'HEAD'),
     files: localFiles().length,
     uploadedAt: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
+    blanked: [...new Set([...(readPointer().blanked ?? []), ...sentBlanks])].sort(),
   };
   writeFileSync(POINTER, `${JSON.stringify(record, null, 2)}\n`);
   console.log(`design-sync-upload-plan: recorded ${record.files} file(s) at ${record.treeCommit.slice(0, 8)}.`);
@@ -89,7 +101,7 @@ if (flag('--all')) {
   changed = local;
   basis = 'the whole tree (--all)';
 } else {
-  const since = value('--since') ?? (existsSync(POINTER) ? JSON.parse(readFileSync(POINTER, 'utf8')).treeCommit : null);
+  const since = value('--since') ?? readPointer().treeCommit ?? null;
   if (!since) {
     console.error(
       'design-sync-upload-plan: no upload has been recorded, so there is no basis for a diff.\n' +
@@ -176,6 +188,30 @@ if (stillThere.length) {
   );
 }
 
+const alreadyBlank = new Set(readPointer().blanked ?? []);
+const toBlank = remoteFiles ? stillThere.filter((path) => !alreadyBlank.has(path)) : [];
+const blankBatches = [];
+for (let at = 0; at < toBlank.length; at += BATCH) {
+  const slice = toBlank.slice(at, at + BATCH);
+  const file = join(OUT, `${BLANK_PREFIX}${blankBatches.length + 1}.json`);
+  writeFileSync(file, JSON.stringify(slice.map((path) => ({ path, data: '' }))));
+  blankBatches.push({ file, count: slice.length, bytes: statSync(file).size });
+}
+if (blankBatches.length) {
+  console.log(`
+${toBlank.length} obsolete path(s) to blank until the owner deletes them:`);
+  for (const b of blankBatches) {
+    console.log(`  ${b.count.toString().padStart(4)} file(s), ${b.bytes} B  ${b.file.replace(ROOT, '.')}`);
+  }
+} else if (!remoteFiles && declared.length) {
+  console.log(
+    `
+${declared.length} obsolete path(s) not blanked: pass --remote, since blanking a path the owner
+` +
+      'has already deleted brings it back as a 0-byte file.',
+  );
+}
+
 const batches = [];
 for (let at = 0; at < changed.length; at += BATCH) {
   const slice = changed.slice(at, at + BATCH);
@@ -212,5 +248,12 @@ if (!changed.length) {
     `\nlocalDir for finalize_plan: ${TREE}\n` +
       'writes: ["**/*"] — a plan takes globs; only write_files needs one entry per file.\n' +
       'After every batch succeeds: node tools/design-sync-upload-plan.mjs --record',
+  );
+}
+if (blankBatches.length) {
+  console.log(
+    `write_files each ${BLANK_PREFIX}*.json as-is, inline \`data\` entries under the same planId,
+` +
+      'then --record, which remembers them so the next upload does not blank them again.',
   );
 }

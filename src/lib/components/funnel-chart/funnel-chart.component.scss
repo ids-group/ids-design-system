@@ -40,7 +40,9 @@
 
   // Four end-aligned columns have a hard minimum width, and below it the stage table would spill
   // past whatever the chart is sitting in. Scrolling the annex table is what ds-table does too.
-  overflow-x: auto;
+  // Y is hidden, not left visible: a scrolling x computes a visible y to `auto`, and the table rows
+  // rising in overshoot the bottom edge for the length of the entrance.
+  overflow: auto hidden;
   margin: 0;
 }
 
