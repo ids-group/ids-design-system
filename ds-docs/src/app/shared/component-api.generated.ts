@@ -2287,6 +2287,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Where each mark starts and ends on the value axis, one entry per point. Unset, every mark runs from zero to its own value, which is the unstacked case."
       },
       {
+        "name": "soleSeries",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The only series in its slot, as a waterfall's floating bars are: `offsets` lifts each mark off the axis, but nothing is stacked above or below it, so the mark answers the pointer over the whole plot height rather than over its own span."
+      },
+      {
         "name": "axis",
         "kind": "input",
         "type": "ChartAxis",
