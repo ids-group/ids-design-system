@@ -94,7 +94,7 @@
       pointClicked
     </code> still fires, and
     <code class="t-mono-inline">
-      cursorPin
+      pinOnClick
     </code> holds the category.
   </p>
 
@@ -392,12 +392,9 @@
     ceiling the way <code class="t-mono-inline"> max </code> pins the first, so
     two plots read against each other do not rescale under one another. A press
     holds the category cursor where it is, by default, with a pin disc at the
-    foot of its band: press again, Escape, or a press outside or between two
-    bands to let go. Set
-    <code class="t-mono-inline">
-      cursorPin="false"
-    </code> to keep it moving
-    with the pointer. A composed chart draws no Unpin control;
+    foot of its band: press again, Escape, or a press outside the plot to let
+    go. Set <code class="t-mono-inline"> pinOnClick="false" </code> to keep it
+    moving with the pointer. A composed chart draws no Unpin control;
     <code class="t-mono-inline">
       cursorPinned()
     </code> and
@@ -553,7 +550,7 @@
     </code> separates a piled band from the
     one under it, <code class="t-mono-inline"> pinOnClick </code> holds a
     reading on a plot without the category cursor (under the cursor the
-    container's <code class="t-mono-inline"> cursorPin </code> holds the whole
+    container's <code class="t-mono-inline"> pinOnClick </code> holds the whole
     category instead), and
     <code class="t-mono-inline">
       tooltipAnchor

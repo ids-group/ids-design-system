@@ -152,9 +152,9 @@ export class ColumnChartComponent {
   /** One column per point, drawn in the order given - or one NAMED SERIES per entry, where every
    *  category carries a column from each. The two forms are told apart by their shape, so a chart
    *  handed a flat list behaves exactly as it always has. */
-  readonly data = input.required<
+  readonly data = input<
     readonly ColumnChartPoint[] | readonly ColumnChartSeries[]
-  >();
+  >([]);
 
   /** How several series share one category's band. `'none'`, the default, and `'grouped'` draw
    *  them side by side - a chart of one series takes the whole band either way, so the two differ

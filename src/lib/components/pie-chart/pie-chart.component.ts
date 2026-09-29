@@ -79,7 +79,7 @@ export class PieChartComponent {
 
   /** One slice per entry. A non-positive or non-finite value counts as zero — a ring is a
    *  part-to-whole picture and has no way to draw a negative share. */
-  readonly data = input.required<readonly PieChartSlice[]>();
+  readonly data = input<readonly PieChartSlice[]>([]);
 
   /** Printed inside the ring. Null prints the sum through `valueFormat`. */
   readonly centerValue = input<string | null>(null);
