@@ -25,6 +25,8 @@
   --_funnel-chart-row-gap: var(--ds-funnel-chart-row-gap, var(--space-4));
   --_funnel-chart-focus-color: var(--ds-funnel-chart-focus-color, var(--focus-ring-color));
   --_funnel-chart-focus-width: var(--ds-funnel-chart-focus-width, var(--focus-ring-width));
+  --_funnel-chart-row-hover-bg-color: var(--ds-chart-legend-hover-bg-color, var(--surface-secondary));
+  --_funnel-chart-row-hover-text-color: var(--ds-chart-legend-hover-text-color, var(--text-primary));
 
   /* The shared mixins draw the ring from `--focus-ring-*` and `--ds-chart-focus-ring-color`, so
      the two hooks above reach nothing without this. */
@@ -38,7 +40,9 @@
 
   // Four end-aligned columns have a hard minimum width, and below it the stage table would spill
   // past whatever the chart is sitting in. Scrolling the annex table is what ds-table does too.
-  overflow-x: auto;
+  // Y is hidden, not left visible: a scrolling x computes a visible y to `auto`, and the table rows
+  // rising in overshoot the bottom edge for the length of the entrance.
+  overflow: auto hidden;
   margin: 0;
 }
 
@@ -120,6 +124,15 @@ svg {
   font-weight: 400;
   text-align: start;
 }
+
+// The stage table is the funnel's legend. A row takes no margin or padding, so the tint fills it
+// edge to edge.
+@include chart-interactive.legend-entry(
+  '.stage-table tbody > tr',
+  var(--_funnel-chart-row-hover-bg-color),
+  var(--_funnel-chart-row-hover-text-color),
+  '> *'
+);
 
 .swatch {
   display: inline-block;

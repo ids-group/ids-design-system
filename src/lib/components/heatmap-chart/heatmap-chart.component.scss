@@ -143,6 +143,13 @@
 .scale-step {
   inline-size: var(--space-4);
   block-size: var(--space-2);
+  transition: transform var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
+}
+
+// The step is a swatch, so the legend entry's tint would paint over the colour it names. It stands
+// taller instead, at once, while the cells wait out the hover delay before they dim.
+.scale-step:hover {
+  transform: scaleY(1.75);
 }
 
 .scale-step:first-child {
