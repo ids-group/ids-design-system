@@ -3,9 +3,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Waterfall - где тултип отвечает курсору</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-29">
+<meta name="ds-deck-evidence" content="src/lib/components/chart/column-series.component.ts:178">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <style>
   .opt { cursor: pointer; }
@@ -74,10 +76,19 @@
       Поводи мышью по каждому.
     </p>
     <div class="chips">
-      <span class="chip">открыт 2026-09-29</span>
+      <span class="chip is-done">Решено 2026-09-29</span>
       <span class="chip">ветка fix/chart-contiguous-hover</span>
     </div>
   </div>
+
+  <div class="decided">
+    <h2>Решено: на весь шаг и всю высоту</h2>
+    <p>Столбец waterfall отвечает курсору по всему шагу своей категории и по всей высоте плота, как line и column. Для этого <code>dsColumnSeries</code> получил вход <code>soleSeries</code>: серия с <code>offsets</code>, которая одна в своём слоте, берёт полную высоту вместо своего пролёта. Waterfall его ставит, настоящий стек остаётся по сегментам.</p>
+    <p class="evidence">2026-09-29 · src/lib/components/chart/column-series.component.ts:178</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
 
   <section class="panel q" data-q="zones">
     <h2>Три размера hover-зоны</h2>
@@ -121,6 +132,8 @@
       </tbody>
     </table>
   </section>
+
+  </details>
 
   <p class="src"><b>Источники, проверено 2026-09-29.</b> Waterfall кладёт столбцы через <code>dsColumnSeries</code> (<code>waterfall-chart.component.html:55</code>), ширину зоны задаёт <code>.hit-area</code> в <code>chart/column-series.component.scss</code>, высоту - <code>hitBox()</code> в <code>column-series.component.ts</code> (у плавающего столбца зона равна его пролёту). <b>Замер</b> на docs dev-сервере, Chrome 1400px, первый waterfall страницы, <code>getBoundingClientRect</code> пяти <code>.hit-area</code>: на <code>dev</code> ширина 51.9-52.0px при шаге около 196.8px, между зонами около 145px пустоты; в ветке <code>fix/chart-contiguous-hover</code> 196.7-196.8px, правый край каждой зоны совпадает с левым краем следующей. Высоты в обоих случаях 239.9, 61.9, 40.0, 24.0, 160.0px, то есть по пролёту столбца. Графики в деке нарисованы заново на токенах <code>ds.css</code>; счётчик под каждым считается в странице из тех же прямоугольников.</p>
 
