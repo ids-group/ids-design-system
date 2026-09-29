@@ -1,66 +1,54 @@
 /** Whether the label-and-value table under a chart's plot is offered, and how. It is the
- *  non-visual route to the numbers, so `'none'` belongs only where the same data is already in a
- *  table on the page. */
+ *  non-visual route to the numbers: use `'none'` only if the page already has the data in a table. */
 export type ChartDataTable = 'toggle' | 'visible' | 'none';
 
-/** Whether a chart draws its own bordered, padded box. `'auto'` draws it; `'none'` leaves the
- *  chart bare, for a chart placed inside a card the page has already drawn. */
+/** Whether a chart draws its own bordered, padded box; `'none'` for a chart inside a card. */
 export type ChartFrame = 'auto' | 'none';
 
 /** Where a chart-value formatter is printing: the compact `'tick'` label on the value axis, or
- *  `'tooltip'` everywhere else a value is spelled out in full, meaning the annex table, the
- *  generated description, and a value printed beside a mark. */
+ *  `'tooltip'` for every value spelled out in full (annex table, description, beside a mark). */
 export type ChartFormatLocation = 'tick' | 'tooltip';
 
-/** Formats every value a chart prints, the annex table and the generated description included.
- *  Called with the location it is formatting for, so one function can abbreviate on the axis and
- *  spell the value out everywhere else. */
+/** Formats every value a chart prints, annex table and generated description included.
+ *  Receives the location, so one function can abbreviate on the axis only. */
 export type ChartValueFormat = (
   value: number,
   location: ChartFormatLocation,
 ) => string;
 
-/** How a reference line is stroked. Named rather than a `stroke-dasharray`, so the same word
- *  draws the same line on every chart. */
+/** How a reference line is stroked. */
 export type ChartThresholdDash = 'solid' | 'dashed' | 'dotted';
 
 /** A line drawn across a chart's plot at one reading - a target, a budget, an SLA - or, with `to`,
- *  the band between two of them.
- *
- *  ONE number, not a coordinate pair: a horizontal line has a single reading. */
+ *  the band between two of them. */
 export interface ChartThreshold {
   readonly value: number;
-  /** Printed at the line's left end and named in the generated description. An unlabelled one
-   *  reads as "Threshold" there. */
+  /** Printed at the line's left end and named in the generated description (default "Threshold"). */
   readonly label?: string;
   /** Any CSS colour. Unset takes `--ds-chart-threshold-color`. */
   readonly color?: string;
-  /** The band's other end. Present, the threshold is drawn as a filled region between the two
-   *  readings rather than a line; either order reads the same. */
+  /** The band's other end: the threshold is drawn as a filled region between the two readings. */
   readonly to?: number;
-  /** Defaults to `'dashed'`, which is what separates an annotation from another series. Carries
-   *  nothing on a band, which is a fill. */
+  /** Defaults to `'dashed'`. Ignored on a band. */
   readonly dash?: ChartThresholdDash;
 }
 
 /** Which of a chart's two value axes a mark is measured against. */
 export type ChartAxis = 'primary' | 'secondary';
 
-/** How a chart's second value axis relates to its first. The modes differ only in what is done
- *  to the GRIDLINES.
+/** How a chart's second value axis relates to its first.
  *
- *  - `'aligned'` - one set of gridlines, and the secondary axis rounds its step up to a round
- *    number, so its series stops short of the top.
- *  - `'exact'` - one set of gridlines, and the secondary axis ends exactly at its largest
- *    reading, so its series uses the full height and the labels are not round.
+ *  - `'aligned'` - one set of gridlines; the secondary axis rounds its step up, so its series
+ *    stops short of the top.
+ *  - `'exact'` - one set of gridlines; the secondary axis ends exactly at its largest reading,
+ *    so the labels are not round.
  *  - `'dual-grid'` - each axis is scaled and gridded on its own.
  *  - `'split'` - two plots one above the other, sharing the category axis. */
 export type ChartAxisMode = 'aligned' | 'exact' | 'dual-grid' | 'split';
 
-/** How a line joins its readings. `'linear'` asserts nothing the data does not say. `'step'`
- *  holds each reading until the next, which is right for a quantity that CHANGES at a moment
- *  rather than drifting between two. `'smooth'` is a monotone cubic: it never draws a peak or a
- *  trough the readings do not contain, which a Catmull-Rom does. */
+/** How a line joins its readings. `'step'` holds each reading until the next, for a quantity that
+ *  CHANGES at a moment. `'smooth'` is a monotone cubic: it never draws a peak or trough the
+ *  readings do not contain. */
 export type ChartCurve = 'linear' | 'step' | 'smooth';
 
 /** What a `null` reading draws: a hole in the line, or a point at zero. */
@@ -68,37 +56,30 @@ export type ChartGaps = 'break' | 'zero';
 
 /** How several series share one category's band.
  *
- *  - `'none'` - every series draws from the baseline at the band's centre (the single-series case).
+ *  - `'none'` - every series draws from the baseline at the band's centre.
  *  - `'grouped'` - each series takes its own slot inside the band, side by side.
- *  - `'stacked'` - each series starts where the one before it ended, so the band's full height is
- *    the category's total.
- *  - `'normalized'` - stacked, then divided by the category's own total, so every band is full and
- *    the axis reads in shares rather than in the data's own unit.
- *
- *  Unrelated to `ChartAxisMode`'s `'split'`, which puts two PLOTS one above the other. */
+ *  - `'stacked'` - each series starts where the one before it ended.
+ *  - `'normalized'` - stacked, then divided by the category's total: the axis reads in shares. */
 export type ChartStackMode = 'none' | 'grouped' | 'stacked' | 'normalized';
 
-/** How charts build themselves on a long page, set once for an app in `DS_CONFIG.chart.rendering`.
- *  Everything is off unless `deferUntilVisible` is on: a screen with a few charts draws them at
- *  once, with nothing waiting and nothing to flicker. */
+/** How charts build themselves on a long page, set in `DS_CONFIG.chart.rendering`.
+ *  Everything is off unless `deferUntilVisible` is on. */
 export interface ChartRendering {
   /** Build a chart only when it comes near the viewport; until then it shows its loading
-   *  placeholder at its own height, and a screen reader meets its caption and nothing else.
-   *  Default `false`. For a page with dozens of charts - a dashboard, a report - where building
-   *  them all at once stalls the page. */
+   *  placeholder at its own height. Default `false`. For pages with dozens of charts. */
   deferUntilVisible?: boolean;
   /** How far outside the viewport a deferred chart is built, as an `IntersectionObserver`
-   *  `rootMargin`. Default `'10% 0px'`: near enough that its entrance still plays on screen. */
+   *  `rootMargin`. Default `'10% 0px'`. */
   visibleMargin?: string;
-  /** Also build the deferred charts within `buildAheadMargin` while the page is idle, so the next
-   *  scroll finds them ready. Default `true`. Skipped where `requestIdleCallback` does not exist. */
+  /** Also build deferred charts within `buildAheadMargin` while the page is idle. Default `true`.
+   *  Skipped where `requestIdleCallback` does not exist. */
   buildAheadWhileIdle?: boolean;
   /** The reach of `buildAheadWhileIdle`, as a `rootMargin`. Default `'100% 0px'`, one viewport. */
   buildAheadMargin?: string;
-  /** Milliseconds of chart building one task may spend before it yields, so no frame waits on a
-   *  queue of charts. Default `8`. A single chart that takes longer is still built whole. */
+  /** Milliseconds of chart building one task may spend before it yields. Default `8`. A single
+   *  chart that takes longer is still built whole. */
   frameBudgetMs?: number;
-  /** With `deferUntilVisible`, also let the browser skip a built chart's style, layout and paint
-   *  while it is off screen, through `content-visibility: auto`. Default `true`. */
+  /** With `deferUntilVisible`, also skip a built chart's style, layout and paint while off screen
+   *  (`content-visibility: auto`). Default `true`. */
   skipWhileOffscreen?: boolean;
 }

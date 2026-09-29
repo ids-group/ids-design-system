@@ -7,8 +7,7 @@ export interface BarChartSegment {
   id?: string;
   label: string;
   value: number;
-  /** Overrides the palette slot this segment would take. Segments take the categorical palette in
-   *  order; rows share one series colour. */
+  /** Overrides the palette slot this segment would take. */
   color?: string;
 }
 
@@ -26,16 +25,12 @@ export interface BarChartRow {
   /** A percentage already out of 100, not a fraction: `42`, never `0.42`. Printed at
    *  the row's end while `showPercent` is on; derived from `value / max` when omitted. */
   percent?: number;
-  /** Divides the row's bar into parts. The bar keeps its length, so rows stay comparable.
-   *
-   *  The parts are sized against their OWN sum and always fill the bar, even when it differs from
-   *  `value`. With segments present the row's `color` is unused and each part gets its own row in the
-   *  data table. */
+  /** Divides the row's bar into parts sized against their OWN sum, filling the bar even when it
+   *  differs from `value`. The row's `color` is unused and each part gets its own data-table row. */
   segments?: readonly BarChartSegment[];
   /** A second reading for this row, printed under the label. Already formatted: `valueFormat` is
    *  written for the bar's own scale and is not applied to it. */
   detail?: string;
-  /** Overrides this row's colour. Rows share one series colour by default; set this on the row to
-   *  accent, usually to `var(--ds-chart-series-accent-color)`. */
+  /** Overrides this row's colour, usually `var(--ds-chart-series-accent-color)` to accent it. */
   color?: string;
 }

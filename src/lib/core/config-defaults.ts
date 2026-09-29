@@ -4,9 +4,8 @@ import { DS_CONFIG, type DsConfig } from './ds-config';
 /**
  * Resolve an input against `DS_CONFIG`, then a built-in default.
  *
- * The input must be typed `T | null` and default to `null`: a signal input cannot
- * report whether it was bound, so `null` is what separates "not set" from an explicit
- * value. Precedence is input → config → built-in. Call from an injection context.
+ * The input must be typed `T | null` and default to `null`: a signal input cannot report
+ * whether it was bound. Precedence is input → config → built-in. Call from an injection context.
  * @internal
  */
 export function resolveWithConfig<T>(

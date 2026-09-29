@@ -1,6 +1,5 @@
 /**
- * Index arithmetic for a keyboard cursor over a list of options: next, previous, first, last,
- * skipping whatever is disabled and wrapping at the ends.
+ * Index arithmetic for a keyboard cursor over options: skips disabled entries, wraps at the ends.
  */
 export interface DsListCursorList {
   length: number;
@@ -34,8 +33,7 @@ export function lastEnabledIndex(list: DsListCursorList): number {
 /**
  * The next enabled index `step` away from `from`, wrapping at both ends.
  *
- * `from` of -1 means "no cursor yet": stepping forward lands on the first enabled entry and
- * stepping back on the last.
+ * `from` of -1 means "no cursor yet".
  * @internal
  */
 export function nextEnabledIndex(

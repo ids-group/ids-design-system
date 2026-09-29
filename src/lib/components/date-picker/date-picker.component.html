@@ -20,7 +20,6 @@
     </span>
   }
 
-  <!-- Whole-field click opens the panel; keyboard access is on the inner input (aria-haspopup + ArrowDown). -->
   <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
   <div
     #anchor
@@ -54,9 +53,9 @@
         (keydown)="onFieldKeydown($event)"
         (keydown.arrowdown)="open(true); $event.preventDefault()" />
 
-      <!-- Per-slot overlay: the real input is transparent (see .masked), so this paints every glyph. Monospace keeps glyphs aligned 1:1 with the input's caret. -->
+      <!-- The real input is transparent (see .masked), so this overlay paints every glyph. -->
       @if (allowInput()) {
-        <!-- Whitespace-tight on purpose: the overlay paints with `white-space: pre`, so stray whitespace would render and shift later glyphs. -->
+        <!-- Whitespace-tight: the overlay uses `white-space: pre`, so stray whitespace would render. -->
         <!-- eslint-disable ds/template/element-content-newline -->
         <span
           class="mask-ghost"
@@ -76,7 +75,7 @@
       aria-hidden="true"
       [disabled]="isDisabled()"
       (click)="onFieldClick(); $event.stopPropagation()">
-      <!-- 14, not 16: the calendar path fills 18 of 24 viewBox units, so at 16 its ink overhangs the value's cap height by a pixel each side. -->
+      <!-- 14, not 16: the path fills 18 of 24 viewBox units, so at 16 it overhangs the value's cap height. -->
       <ds-icon
         name="calendar"
         [size]="14" />
@@ -96,7 +95,7 @@
 </div>
 
 <ng-template #panel>
-  <!-- Dialog-level click is a pointer-only light-dismiss for an open month/year popup; keyboard users use Escape (bound on each popup). -->
+  <!-- Pointer-only light-dismiss for an open month/year popup; keyboard users use Escape on each popup. -->
   <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
   <div
     class="calendar"
@@ -131,7 +130,7 @@
             </button>
 
             @if (monthMenuOpen()) {
-              <!-- Popup container, not a focusable widget: it wraps real <button>s and closes on Escape; the click only stops light-dismiss bubbling. -->
+              <!-- Popup container, not a focusable widget; the click only stops light-dismiss bubbling. -->
               <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
               <div
                 class="picker-menu"
@@ -173,7 +172,7 @@
             </button>
 
             @if (yearMenuOpen()) {
-              <!-- Popup container, not a focusable widget: it wraps real <button>s and closes on Escape; the click only stops light-dismiss bubbling. -->
+              <!-- Popup container, not a focusable widget; the click only stops light-dismiss bubbling. -->
               <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
               <div
                 class="picker-menu"

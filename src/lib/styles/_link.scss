@@ -1,7 +1,6 @@
 @use 'focus' as focus;
 
-/* Pure CSS class so inline anchors in <p> text keep their line flow.
-   Modifiers: .quiet, .inline, .standalone, .xs, .sm, .lg. */
+/* Pure CSS class so inline anchors in <p> text keep their line flow. */
 
 .link {
   --_link-color:        var(--ds-link-color,        var(--text-link));
@@ -46,11 +45,9 @@
     flex-shrink: 0;
   }
 
-  /* A non-navigation action styled as a link is a <button>, which brings UA chrome (font size,
-     padding, outset border). `:where()` keeps the reset at this class's specificity so consumer
-     rules win on source order. No `font-weight` (`.quiet`/`.standalone` decide it) and no
-     `display` (inline-block lays a standalone button out predictably) on purpose. `appearance`
-     is a no-op in Chrome but needed where native chrome outlives a zeroed border. */
+  /* A `<button>` styled as a link brings UA chrome. `:where()` keeps the reset at this class's specificity
+     so consumer rules win. No `font-weight` (`.quiet`/`.standalone` decide it) and no `display` on purpose.
+     `appearance` is a no-op in Chrome but needed where native chrome outlives a zeroed border. */
   &:where(button) {
     appearance: none;
     padding: 0;
@@ -64,8 +61,6 @@
 
   &.quiet {
     color: var(--text-secondary);
-
-    /* The base rule's link-coloured underline would show under grey text. */
     text-decoration-color: var(--text-secondary);
     font-weight: var(--font-weight-medium);
 

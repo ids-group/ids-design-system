@@ -1,6 +1,5 @@
 // Status colour wiring for ds-badge / ds-status-dot. The DS ships no statuses: a consumer declares
-// their own and wires each to a colour (a palette token, or a raw value). The components key off
-// [data-status]; these rules set the public --ds-badge-* / --ds-status-dot-* tokens.
+// their own and wires each to a colour. The components key off [data-status].
 //
 //   @use '@ids-group-ltd/ids-design-system/styles/status' as status;
 //   @include status.semantic-preset;                                  // optional universal set
@@ -9,8 +8,8 @@
 //     shipped:   (bg: #E1EFFF, text: #0A6DB3),
 //   ));
 //
-// Map entry: (bg:, text?:, dot?:). `bg` is the badge fill. `text` is the badge label (unset:
-// --text-secondary). `dot` is the ds-status-dot colour (unset: `text`).
+// Map entry: (bg:, text?:, dot?:). `bg` is the badge fill, `text` the badge label (unset:
+// --text-secondary), `dot` the ds-status-dot colour (unset: `text`).
 
 @use 'sass:map';
 

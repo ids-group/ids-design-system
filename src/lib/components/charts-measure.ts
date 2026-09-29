@@ -9,8 +9,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
-/** Container width as a signal. It is 0 under SSR, while the container is
- *  `display: none`, and before the first observation.
+/** Container width as a signal; 0 under SSR, while `display: none`, and before the first observation.
  *
  *  @internal */
 export function elementWidth(host: ElementRef<HTMLElement>): Signal<number> {

@@ -27,10 +27,9 @@ import {
 import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 
 /**
- * Fixed-frame application layout: the host is pinned to the viewport
- * (`100dvh` + `overflow: hidden`) and ONLY the content region scrolls, so
- * the sidenav rail and the topbar stay put on pages taller than the
- * viewport. Consumers project their own chrome into the slots:
+ * Fixed-frame application layout: the host is pinned to the viewport and ONLY
+ * the content region scrolls, so the sidenav rail and topbar stay put.
+ * Consumers project their own chrome into the slots:
  *
  * ```html
  * <ds-app-layout>
@@ -42,13 +41,10 @@ import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
  *
  * The layout renders the `<main>` landmark itself, so do not nest another
  * `<main>` in the content. Scroll-to-top is built in (`AppLayoutScrollService`)
- * and fires when navigation changes the PATH, so a URL-driven list can page
- * and filter without losing the reader's place; inject the service and call
- * `scrollToTop()` for the changes that do want the top. The content padding
- * auto-compensates the native scrollbar width so the right inset always
- * equals the left one. The layout requires the application router
- * (`provideRouter`) because its scroll-to-top service subscribes to
- * navigation events.
+ * and fires when navigation changes the PATH; call `scrollToTop()` for other
+ * changes that want the top. The content padding compensates the native
+ * scrollbar width so the right inset equals the left. Requires the application
+ * router (`provideRouter`).
  *
  * Below the `lg` breakpoint the rail becomes a modal overlay driven by
  * `[(railOpen)]`; put the burger wherever the design wants it inside your own
@@ -71,18 +67,10 @@ import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
   providers: [AppLayoutScrollService],
 })
 export class AppLayoutComponent {
-  /**
-   * `'content'` (default): the rail spans the full viewport height on the
-   * left and the topbar sits above the content column only. `'full'`: the
-   * topbar spans the full width and the rail + content sit below it.
-   */
+  /** `'content'` (default): rail spans the full height, topbar sits above the content only. `'full'`: topbar spans the full width. */
   readonly topbarSpan = input<'content' | 'full'>('content');
 
-  /**
-   * Whether the rail is open as an overlay. Only meaningful below the `lg`
-   * breakpoint; above it the rail is always in the layout and this is
-   * ignored. Two-way, so a burger in your topbar can drive it.
-   */
+  /** Whether the rail is open as an overlay. Ignored at and above the `lg` breakpoint. */
   readonly railOpen = model(false);
 
   /** Accessible name for the rail while it is a modal overlay. Unset falls back to
@@ -95,31 +83,18 @@ export class AppLayoutComponent {
 
   /**
    * Remember the content scroll per path and restore it on the way BACK. Off by
-   * default. Only a history traversal restores (following a link into a screen
-   * still lands at the top), plus a host that pushes its own "back to list" and
-   * says so with `state: { dsRestoreScroll: true }`, and the first navigation after
-   * a reload.
+   * default. Restores on a history traversal, on `state: { dsRestoreScroll: true }`,
+   * and on the first navigation after a reload.
    */
   readonly restoreScroll = input(false, { transform: booleanAttribute });
 
-  /**
-   * How long to wait for the restored screen's content to grow tall enough before
-   * landing as close as it allows. Only meaningful with `restoreScroll`.
-   */
+  /** Milliseconds to wait for the restored content to grow tall enough. Only with `restoreScroll`. */
   readonly restoreScrollTimeout = input(2000);
 
-  /**
-   * When the content scroll resets to the top. `'path'` (default) resets when the path changes; `'always'` also resets on a query- or fragment-only
-   * navigation, which is what a server-paged list wants; `'never'` hands the
-   * decision to the screen, which can still call `AppLayoutScrollService.scrollToTop()`.
-   */
+  /** When the content scroll resets to the top: on path change (`'path'`), also on query/fragment-only navigation (`'always'`), or never (`'never'`). */
   readonly scrollReset = input<DsAppLayoutScrollReset>('path');
 
-  /**
-   * True only while the rail is an overlay. Gates the dialog semantics: above
-   * the breakpoint the rail is an ordinary region, and a permanent
-   * `role="dialog"` there would lie to a screen reader.
-   */
+  /** True only while the rail is an overlay; gates the dialog semantics. */
   protected readonly compact = signal(false);
 
   /** Whether the rail is currently an overlay rather than part of the layout. */
@@ -150,9 +125,7 @@ export class AppLayoutComponent {
       this.watchDesktopBreakpoint();
     });
 
-    // Not closeRail(): navigating is not a dismissal. The reader activated a link,
-    // so focus belongs wherever the router put it - handing it back to the burger
-    // would announce "Open navigation" instead of the page they asked for.
+    // Not closeRail(): returning focus to the burger would override where the router put it.
     this.navigation.pathChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.railOpen.set(false));
@@ -167,9 +140,7 @@ export class AppLayoutComponent {
     if (!this.compact()) {
       return;
     }
-    // cdkTrapFocusAutoCapture returns focus only when the directive is DESTROYED, not when it flips
-    // off, so without this focus stays inside the now off-canvas panel. Whichever control claims
-    // the rail through aria-controls owns it (dsRailTrigger and the DS-button forwarding both set it).
+    // cdkTrapFocusAutoCapture returns focus only on destroy, so focus would stay in the off-canvas panel.
     this.content()
       .nativeElement.ownerDocument.querySelector<HTMLElement>(
         `[aria-controls="${this.railId}"]`,
@@ -178,8 +149,7 @@ export class AppLayoutComponent {
   }
 
   private watchDesktopBreakpoint(): void {
-    // Same `--bp-lg` as the stylesheet's media block. No literal fallback: it could
-    // disagree with the scale and flip the rail at a different width than the CSS.
+    // Same `--bp-lg` as the stylesheet; a literal fallback could flip the rail at a different width than the CSS.
     const lg = getComputedStyle(document.documentElement)
       .getPropertyValue('--bp-lg')
       .trim();
@@ -195,8 +165,7 @@ export class AppLayoutComponent {
     const desktop = window.matchMedia(`(width >= ${lg})`);
     const sync = (): void => {
       this.compact.set(!desktop.matches);
-      // Crossing up drops the overlay state, or the rail re-opens unprompted on the
-      // next narrowing. Not closeRail(): its focus restore targets a trigger hidden on desktop.
+      // Not closeRail(): its focus restore targets a trigger hidden on desktop.
       if (desktop.matches) {
         this.railOpen.set(false);
       }

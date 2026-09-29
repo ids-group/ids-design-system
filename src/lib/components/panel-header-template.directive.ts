@@ -6,9 +6,8 @@ import { Directive, TemplateRef, inject } from '@angular/core';
  * Context: `count` is how many options are visible after filtering, `total` how
  * many were given, and `query` the text that narrowed them.
  *
- * It sits OUTSIDE the `listbox`, so its content is not counted as an option and does
- * not break a screen reader's "N of M" position reporting. It stays put while the
- * list scrolls under it.
+ * It sits OUTSIDE the `listbox`, so it is not counted as an option in a screen
+ * reader's "N of M" position. It stays put while the list scrolls.
  */
 @Directive({
   selector: '[dsPanelHeaderTemplate]',

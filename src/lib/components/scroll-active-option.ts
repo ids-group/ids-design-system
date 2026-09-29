@@ -8,11 +8,10 @@ import {
 /**
  * Keeps the keyboard cursor's row visible inside a scrolling panel.
  *
- * KEYBOARD ONLY (`armed`): option rows also set the active index on `mouseenter`, so reacting
- * to every change would pull a partially visible row up under the pointer.
+ * KEYBOARD ONLY (`armed`): rows also set the active index on `mouseenter`, and reacting to
+ * that would pull a partially visible row up under the pointer.
  *
- * Rows are looked up by id, not a `viewChildren` query, because they live in a portaled
- * template. The id is the one `aria-activedescendant` points at.
+ * Rows are looked up by id, not `viewChildren`, because they live in a portaled template.
  * @internal
  */
 export function scrollActiveOptionIntoView(

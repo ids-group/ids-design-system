@@ -10,25 +10,22 @@ export type ChartItemTooltipTrigger = 'item' | 'none';
 export interface ChartTooltipEntry {
   readonly label: string;
   readonly value: number;
-  /** Already through the chart's `valueFormat`, so the panel never formats. */
+  /** Already through the chart's `valueFormat`. */
   readonly formatted: string;
   readonly color: string;
-  /** Marks whose fill is hatched rather than solid. The swatch is hatched too, so the distinction
-   *  does not rely on hue alone. */
+  /** Marks whose fill is hatched; the swatch is hatched too. */
   readonly hatched?: boolean;
-  /** A second line under the value, for what the chart does not already print beside the mark:
-   *  its share of the total, its rank, the drop into it. */
+  /** A second line under the value: share of the total, rank, the drop into it. */
   readonly detail?: string;
 }
 
 export interface ChartTooltipContext {
-  /** Empty on a chart whose marks are the categories, where the entry label says it. */
+  /** Empty on a chart whose marks are the categories. */
   readonly category: string;
   readonly entries: readonly ChartTooltipEntry[];
 }
 
-/** Where the panel is anchored: the mark's own element, or a point in client
- *  coordinates for a chart whose active mark has no element of its own. */
+/** The mark's own element, or a point in client coordinates when the active mark has no element. */
 export type ChartTooltipOrigin =
   | Element
   | { readonly x: number; readonly y: number };

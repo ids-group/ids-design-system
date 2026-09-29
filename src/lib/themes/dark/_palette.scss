@@ -1,22 +1,22 @@
-// Dark-specific primitives only: hand-tuned dark neutrals (not a linear inverse: --neutral-0 is an
-// elevated card surface, lighter than the --neutral-50 canvas) and --shadow-tint-l.
+// Dark-specific primitives only: hand-tuned dark neutrals (not a linear inverse: --neutral-0 is an elevated
+// card surface, lighter than the --neutral-50 canvas) and --shadow-tint-l.
 //
 // With `[data-neutrals='brand']` and `[data-theme='dark']` both set, dark wins by source order at
 // equal specificity: the brand-gray tint is dropped and the fixed dark neutrals apply.
 
 @mixin palette {
-  --neutral-0:   #171B24; // surface-default / overlay (cards) — elevated
-  --neutral-50:  #0F131A; // surface-canvas — darkest (page bg)
-  --neutral-100: #1E2330; // surface-secondary / disabled
-  --neutral-150: #242A38; // surface-muted, border-subtitle/divider/disabled
-  --neutral-200: #2A3040; // border-default
-  --neutral-300: #3A4252; // border-strong
-  --neutral-400: #6B7388; // text-muted/disabled, icon-muted
-  --neutral-500: #8A93A6; // text-tertiary, icon-default
+  --neutral-0:   #171B24;
+  --neutral-50:  #0F131A;
+  --neutral-100: #1E2330;
+  --neutral-150: #242A38;
+  --neutral-200: #2A3040;
+  --neutral-300: #3A4252;
+  --neutral-400: #6B7388;
+  --neutral-500: #8A93A6;
   --neutral-600: #9BA3B4;
-  --neutral-700: #B7BFD0; // text-secondary, icon-strong, border-inverted
+  --neutral-700: #B7BFD0;
   --neutral-800: #CDD3E0;
-  --neutral-900: #E7EAF2; // text-primary, surface-inverted
+  --neutral-900: #E7EAF2;
   --neutral-950: #F4F6FA;
 
   // Flipped light so the same alphas read as soft glows.

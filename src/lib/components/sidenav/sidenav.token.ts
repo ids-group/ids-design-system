@@ -3,8 +3,7 @@ import { InjectionToken } from '@angular/core';
 /** Contract that ds-sidenav-item reads from its parent ds-sidenav. */
 export interface SidenavContract {
   readonly collapsed: () => boolean;
-  /** Whether the active item draws its edge marker. Set once on the sidenav; an
-   *  item can still override it for itself. */
+  /** Whether the active item draws its edge marker; an item can override it. */
   readonly rail: () => boolean;
 }
 

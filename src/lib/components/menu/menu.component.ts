@@ -15,8 +15,7 @@ import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
-  // data-focus="inset": the panel clips, so a ring drawn outward is lost. Belongs on the
-  // clipping element.
+  // data-focus="inset": the panel clips, so an outward ring is lost.
   host: {
     '(keydown)': 'onKeydown($event)',
     'data-focus': 'inset',
@@ -26,8 +25,7 @@ import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
 export class MenuComponent {
   private readonly items = contentChildren(MenuItemComponent);
 
-  /** One item with an icon makes every item reserve the slot, so the labels share one axis. The
-   *  menu owns the decision because an item would have to know its siblings to take it. */
+  /** One item with an icon makes every item reserve the slot, so the labels share one axis. */
   protected readonly anyIcon = computed(() =>
     this.items().some((item) => item.icon() !== null),
   );
@@ -35,8 +33,7 @@ export class MenuComponent {
   private readonly activeIndex = signal(0);
 
   constructor() {
-    // Disabled items stay in the roving order (APG) so a tooltip explaining why can be
-    // read; activation is blocked in menu-item.
+    // Disabled items stay in the roving order (APG) so their tooltip is reachable.
     effect(() => {
       const items = this.items();
       if (!items.length) {
@@ -52,8 +49,7 @@ export class MenuComponent {
 
   protected onKeydown(event: KeyboardEvent): void {
     const items = this.items();
-    // A projected search/filter field owns its typing; type-ahead below would
-    // eat every character it receives.
+    // A projected search field owns its typing; type-ahead would eat it.
     if (!items.length || isTextEntryTarget(event)) {
       return;
     }

@@ -2,16 +2,15 @@
  *
  *  @internal */
 export interface ChartDwell {
-  /** Runs `answer` once the pointer has rested on `target` for the delay. Focus, touch and a chart
-   *  that has already answered the pointer run it at once. Asking again for the same `target`
-   *  keeps the running wait and swaps in the newer `answer`. */
+  /** Runs `answer` once the pointer has rested on `target` for the delay; focus, touch and a chart
+   *  that has already answered run it at once. Asking again for the same `target` keeps the running
+   *  wait and swaps in the newer `answer`. */
   schedule(target: unknown, answer: () => void, event: Event): void;
   /** Drops a wait that has not run yet. */
   cancel(): void;
 }
 
-// A chart stays warm from its first answer until the pointer leaves it. One set for the whole page:
-// a legend and its plot are one chart.
+// A chart stays warm from its first answer until the pointer leaves it; one set for the page, as a legend and its plot are one chart.
 const warmCharts = new WeakSet<Element>();
 
 function chartOf(event: Event): Element | null {
@@ -34,8 +33,7 @@ function warmUp(chart: Element): void {
   document.addEventListener('pointerover', coolOnLeave, true);
 }
 
-/** Call from anywhere; the wait is cancelled by the caller's own `leave`. `delayMs` is read at each
- *  `schedule`, so a config that changes is picked up on the next rest.
+/** Call from anywhere; the caller's own `leave` cancels the wait. `delayMs` is read at each `schedule`.
  *
  *  @internal */
 export function chartDwell(delayMs: () => number): ChartDwell {

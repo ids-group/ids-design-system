@@ -36,15 +36,14 @@
     border-bottom: var(--border-width-default) solid var(--_page-header-divider);
   }
 
-  /* Projected tabs supply their own bottom border; suppress the divider so two lines don't stack. */
+  /* Projected tabs bring their own bottom border; avoid a double line. */
   &:has(> [tabs]) {
     padding-bottom: 0;
     border-bottom: 0;
   }
 
   .row {
-    /* flex-start is load-bearing: title-block must hug the row's top so its
-       stack stays independent of the actions slot height. */
+    /* flex-start is load-bearing: title-block stays independent of the actions slot height. */
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -136,7 +135,7 @@
     align-items: center;
     gap: var(--space-3);
 
-    // With title-block's flex gap, makes subtitle-to-meta spacing equal meta-to-tabs (both --space-3).
+    // Plus title-block's flex gap, equals the meta-to-tabs spacing (--space-3).
     margin-top: var(--space-1-5);
 
     &:not(:has(> *)) { display: none; }

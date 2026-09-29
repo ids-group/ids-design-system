@@ -154,9 +154,8 @@ export function linePath(
   return smoothPath(segment);
 }
 
-/** The filled band between two edges (a stacked area, or a confidence band). The lower edge is
- *  walked backwards, so its curve is rebuilt from the reversed points: a monotone cubic is not
- *  symmetric, and reusing the forward path would bend the bottom the wrong way.
+/** The filled band between two edges. The lower edge is walked backwards, so its curve is rebuilt
+ *  from the reversed points: a monotone cubic is not symmetric.
  *
  *  @internal */
 export function bandPath(
@@ -178,7 +177,7 @@ export function bandPath(
 }
 
 /** The same run as `linePath`, closed down to the baseline. It takes the curve so a fill and its
- *  line share one edge (a smooth line would float off a straight-edged fill).
+ *  line share one edge.
  *
  *  @internal */
 export function areaPath(

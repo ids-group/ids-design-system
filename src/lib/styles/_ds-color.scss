@@ -2,14 +2,12 @@
 
 $families: secondary, tertiary, error, success, warning;
 
-// Scoped accent recolour: `ds-color="<family>"` on a container or host (or the ds.color() mixin)
-// flips the --accent-* pointers to another family for its subtree. Without it --accent-* stays the
-// primary family.
-
-// Each pointer ends in a fallback: a role a family does not define is guaranteed-invalid, so every
-// declaration reading it resets to `unset` (body-text label, transparent fill) with no console
-// message. -hover, -pressed and -strong fall back to the family base, tints to its -muted, and
-// -on and the focus pointers to the theme-wide role.
+// `ds-color="<family>"` on a container or host (or the ds.color() mixin) flips the --accent-* pointers to
+// another family for its subtree.
+//
+// Each pointer ends in a fallback: a role a family does not define is guaranteed-invalid and would reset
+// every declaration reading it to `unset` with no console message. -hover, -pressed and -strong fall
+// back to the family base, tints to its -muted, -on and the focus pointers to the theme-wide role.
 @mixin family-vars($family) {
   --accent: var(--#{$family});
   --accent-hover: var(--#{$family}-hover, var(--#{$family}));
@@ -23,16 +21,12 @@ $families: secondary, tertiary, error, success, warning;
   --accent-focus-field: var(--focus-field-#{$family}, var(--focus-field));
   --accent-surface-tint: var(--#{$family}-subtitle, var(--#{$family}-muted));
 
-  // Re-declared: `--focus-ring-color: var(--accent)` on :root is resolved there, so the subtree
-  // would inherit the brand hue and ring brand-blue inside an error zone.
+  // Re-declared: `--focus-ring-color: var(--accent)` on :root is resolved there, so the subtree would ring brand-blue.
   --focus-ring-color: var(--#{$family});
 }
 
-/// Recolour the DS accent for a type or scope from consumer SCSS, e.g.
-/// `ds-switch { @include ds.color(secondary); }`.
-///
-/// A name outside $families is refused: `--accent: var(--<unknown>)` is guaranteed-invalid and the
-/// subtree would render as body text with no console message.
+/// Recolour the DS accent for a scope from consumer SCSS, e.g. `ds-switch { @include ds.color(secondary); }`.
+/// A name outside $families is refused: `--accent: var(--<unknown>)` is guaranteed-invalid and renders as body text silently.
 @mixin color($family) {
   @if not list.index($families, $family) {
     @error 'ds.color(): unknown family "#{$family}". Available: #{$families}.';

@@ -35,8 +35,7 @@ export class AvatarComponent {
   readonly size = input<AvatarSize>('md');
   /** Fallback text shown when there is no `imageUrl`. Wins over initials derived from `name`. */
   readonly initials = input<string>('');
-  /** The person or thing this avatar stands for; drives both the initials and the tint seed.
-   *  The tint hashes the name, not the initials, which would collide (Alice Brown, Adam Bell). */
+  /** The person or thing this avatar stands for; drives the initials and the tint seed. */
   readonly name = input<string>('');
   /** Replaces the rule turning `name` into initials. Falls back to
    *  `DS_CONFIG.avatar.initials`, then to `initialsFrom` (first two words, Latin script). */

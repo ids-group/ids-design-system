@@ -191,7 +191,8 @@
           <tr aria-hidden="true">
             <td
               class="loading-space"
-              [attr.colspan]="expandedColspan()"></td>
+              [attr.colspan]="expandedColspan()">
+            </td>
           </tr>
         } @else if (showsEmptyRow()) {
           <tr>
@@ -212,7 +213,8 @@
             <tr
               class="spacer"
               aria-hidden="true"
-              [style.height.px]="window.padTop"></tr>
+              [style.height.px]="window.padTop">
+            </tr>
           }
 
           @for (slot of rowSlots(); track slot.index) {
@@ -369,18 +371,16 @@
               </tr>
 
               @if (
-                expandableRows() &&
-                isExpanded(row) &&
-                rowExpandTemplate() &&
-                !virtualizing()
-              ) {
+                  expandableRows() &&
+                  isExpanded(row) &&
+                  rowExpandTemplate() &&
+                  !virtualizing()
+                ) {
                 <tr class="expand-panel-row">
                   <td
                     class="expand-panel-cell"
                     [attr.colspan]="expandedColspan()">
                     <div class="expand-panel-inner">
-                      <!-- The animation runs on the grid track; the child with `overflow: hidden`
-                           is its content. -->
                       <div class="expand-panel-content">
                         <ng-container
                           [ngTemplateOutlet]="rowExpandTemplate()!"
@@ -406,7 +406,8 @@
             <tr
               class="spacer"
               aria-hidden="true"
-              [style.height.px]="window.padBottom"></tr>
+              [style.height.px]="window.padBottom">
+            </tr>
           }
         }
       </tbody>
@@ -422,7 +423,8 @@
     [class.hscroll-hidden]="!hscrollNeeded()">
     <div
       class="hscroll-spacer"
-      [style.width.px]="hscrollContentWidth()"></div>
+      [style.width.px]="hscrollContentWidth()">
+    </div>
   </div>
 }
 
@@ -595,7 +597,8 @@
     @if (expandableRows()) {
       <td
         class="expand-col"
-        [class.pin-expand]="stickyFirstColumn()"></td>
+        [class.pin-expand]="stickyFirstColumn()">
+      </td>
     }
 
     @for (col of visibleColumns(); track col.key; let first = $first) {

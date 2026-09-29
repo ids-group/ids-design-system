@@ -1,15 +1,5 @@
 ## Unreleased
 
-### Added
-
-- **`ds-sparkline`, a word-sized trend line for a table cell or a stat.** One `svg` with no axes,
-  gridlines, legend or frame and a dot on the last reading. `scale` is `'data'` (the readings' own
-  min..max, default) or `'zero'`; a `null` in `data` breaks the line. A tooltip names the reading
-  under the pointer, on by default and off with `[tooltip]="false"`; with a `label` the sparkline
-  is a tab stop whose arrow keys, Home and End move it. Sized by `--ds-sparkline-width` and
-  `--ds-sparkline-height`, 80×24 by default. Import from
-  `@ids-group-ltd/ids-design-system/components/sparkline`.
-
 ### Fixed
 
 - **A `dsLineSeries` with `tooltip="axis"` opens its panel under the default `cursor`.**
@@ -17,18 +7,138 @@
   so a plot whose one tooltip-showing mark was an axis-tooltip line answered nothing until
   `cursor="category"` was set. `auto` now turns it on for any mark with `tooltip="axis"`.
 
-- **A toast's announcement stays off screen before any dialog has opened.** `ToastService` speaks
-  through the CDK `LiveAnnouncer`, whose region carries `.cdk-visually-hidden`, and the CDK loads that
-  rule only with a dialog or a focus trap. On a page where neither had opened yet, the first toast's
-  text also rendered as plain text at the bottom-left. `styles/toast-overlay`, which `styles/ds`
-  forwards, now declares the rule.
+- **Several `provideDsConfig` calls in one `providers` array all apply.** The last one replaced
+  the others, whose keys were lost without a warning; they now merge in order, the later call
+  winning per key. `provideDsIntl` merges the same way.
+
+- **`ds-table`'s `exportCsv()` and `runExport()` warn when the table has no `dsTableExport`.**
+  In a development build either call threw NG0203 from the click handler that made it; it now
+  logs the missing directive. Production builds were unaffected.
 
 ### What you can now DELETE
 
 | Delete | Why | Replace with |
 | --- | --- | --- |
 | `cursor="category"` on a `ds-chart` set only so a `tooltip="axis"` line opens its panel | `cursor="auto"` turns the category cursor on for a mark with `tooltip="axis"` | nothing; keep it on a plot whose marks do not use `tooltip="axis"` |
+
+## 0.14.4 — 2026-09-29
+
+### Breaking
+
+- **A chart answers a resting pointer at once.** `DS_CONFIG.chart.hoverDelayMs` now defaults to
+  `0` (was `500`): a chart shows its tooltip, highlight, dimming, category cursor, legend entry,
+  heat-map scale step, funnel stage row, pie legend, bar row label and scatter point the moment the
+  pointer comes to rest, with no wait. To restore the wait, set
+  `provideDsConfig({ chart: { hoverDelayMs: 500 } })`.
+
+- **A chart tooltip lingers after the pointer leaves a mark.** `DS_CONFIG.chart.tooltipLingerMs`
+  now defaults to `500` (was `0`), as does the per-series `tooltipLingerMs` on `dsColumnSeries` and
+  `dsLineSeries`: the tooltip stays 500 ms after the pointer leaves a mark and glides to the next
+  mark it reaches within that window. The highlight, the dimming and the category cursor have no
+  hide delay. To dismiss the tooltip the instant the pointer leaves, set
+  `provideDsConfig({ chart: { tooltipLingerMs: 0 } })`.
+
+- **A chart tooltip drops its colour swatches once it lists five or more readings.** By default the
+  tooltip now shows a colour dot beside each series only when it lists four readings or fewer; from
+  five up the dots are dropped and the labels alone carry the series (was: always shown). A new
+  `tooltipSwatches` input (`boolean | null`, default `null`) on `ds-chart`, `ds-bar-chart`,
+  `ds-column-chart`, `ds-funnel-chart`, `ds-pie-chart`, `ds-heatmap-chart`, `ds-scatter-chart`,
+  `ds-waterfall-chart` and `ds-line-chart` forces the dots on with `true` or off with `false`, and
+  `DS_CONFIG.chart.tooltipSwatches` sets the default for every chart. To keep dots on every tooltip,
+  set `tooltipSwatches` on the chart or `provideDsConfig({ chart: { tooltipSwatches: true } })`.
+
+- **Hovering a category label dims the other columns only when `dimOthers` is set.** A category-axis
+  label used to dim the other columns on hover, like a legend entry; it now does so only when
+  `dimOthers` is set on the chart. To keep the dimming, set `dimOthers`.
+
+- **`ds-line-chart` honours `tooltip="item"` and `tooltip="none"`.** Both settings previously still
+  opened the all-series category panel and band; now `"item"` shows per-marker tooltips with no
+  category band and `"none"` shows no tooltip. `"axis"` (the default) is unchanged. To keep the
+  all-series panel, use `tooltip="axis"`.
+
+- **Subclassing one of these breaks on a name collision.** `BarChartComponent`,
+  `ColumnChartComponent`, `FunnelChartComponent`, `HeatmapChartComponent`, `PieChartComponent` and
+  `WaterfallChartComponent` each gained `tooltipSwatches`; `ChartComponent` gained `tooltipSwatches`
+  and `tooltipSwatchesResolved`; `LineChartComponent` gained `tooltipSwatches` and `plotCursor`;
+  `ScatterChartComponent` gained `tooltipSwatches`, `hoveredIndex`, `nearestMark`, `onCanvasLeave`
+  and `onCanvasPointer` and lost `onPointOver` and `onPointOut`; `ColumnSeriesComponent` gained
+  `soleSeries` and `slotStepPx` and lost `dimsFromLabel` and `slotBandPx`; the internal
+  `ChartTooltipPanelComponent` gained `showsSwatches` and `swatches`; and the internal
+  `ChartTooltipDirective` gained `dsChartTooltipSwatches`, `glide` and `glideFrom`. The `min` and
+  `max` inputs of `HeatmapChartComponent` and the `max` and `maxSecondary` inputs of
+  `LineChartComponent` now carry a `numberAttribute` transform, so a subclass that redeclares one
+  must declare the same transform, and `tooltipLingerMs` on `ColumnSeriesComponent` and
+  `LineSeriesComponent` defaults to `500`. Build after upgrading; rename or mark `override` every member the
+  compiler reports colliding. Subclassing a DS component is unsupported.
+
+### Added
+
+- **`ds-sparkline`, a word-sized trend line for a table cell or a stat.** One `svg` with no axes,
+  gridlines, legend or frame and a dot on the last reading. `scale` is `'data'` (the readings' own
+  min..max, default) or `'zero'`; a `null` in `data` breaks the line. A tooltip names the reading
+  under the pointer, on by default and off with `[tooltip]="false"`; with the tooltip on and a
+  `label` set, the sparkline is a tab stop whose arrow keys, Home and End move it. Sized by
+  `--ds-sparkline-width` and `--ds-sparkline-height`, 80×24 by default. Import from
+  `@ids-group-ltd/ids-design-system/components/sparkline`.
+
+- **`dsColumnSeries` takes a `soleSeries` input.** A boolean attribute (default `false`) that draws
+  an offsets series as a single series rather than a stack, so each mark catches the full plot
+  height at its category. `ds-waterfall-chart` sets it.
+
+### Changed
+
+- **A chart tooltip glides between marks.** When the tooltip moves from one mark to the next it now
+  translates across the plot instead of jumping. Two tokens tune it:
+  `--ds-motion-chart-tooltip-move-duration` (`300ms`, `0ms` under reduced motion) and
+  `--ds-motion-chart-tooltip-move-easing` (`var(--ease-standard)`). A duration of `0` removes the
+  glide; a tooltip re-aimed mid-glide sets off from where it is on screen.
+
+- **A scroll closes an unpinned chart tooltip.** Scrolling the window or an ancestor scroll
+  container now dismisses an open, unpinned chart tooltip, where it used to reposition and follow
+  its mark; a scroll inside the tooltip or in an `input`, `textarea` or `select` does not. A pinned
+  tooltip still repositions and stays.
+
+- **A captionless chart no longer reserves top padding for the Unpin control.** The control floats
+  over the top end of the plot, and the chart keeps its height when a mark is held. A captioned
+  chart is unchanged, its control on the caption line.
+
+- **`ds-heatmap-chart`'s `min` and `max` and `ds-line-chart`'s `max` and `maxSecondary` accept a
+  static attribute.** Written as `min="0"` they now coerce through `numberAttribute`; before, only a
+  bound number (`[min]="0"`) compiled. A bound number still works.
+
+### Fixed
+
+- **A toast's announcement stays off screen before any dialog has opened.** `ToastService` speaks
+  through the CDK `LiveAnnouncer`, whose region carries `.cdk-visually-hidden`, and the CDK loads that
+  rule only with a dialog or a focus trap. On a page where neither had opened yet, the first toast's
+  text also rendered as plain text at the bottom-left. `styles/toast-overlay`, which `styles/ds`
+  forwards, now declares the rule.
+
+- **A chart answers the pointer across the whole plot, not only over a drawn mark.** In `ds-chart`
+  and `ds-column-chart` the gap between column bands was dead ground; hit strips now tile the whole
+  category step, so every point of the plot answers its nearest category. A `ds-waterfall-chart`
+  step answers at any height of the plot in its category, not only over its drawn bar. A
+  `ds-heatmap-chart` cell's hit area now spans half the gap on each side, where the gap between
+  cells answered nothing. A `ds-scatter-chart` point answers when the pointer is within 16 screen
+  pixels of its centre, where before only its own small shape did; this is not configurable and
+  keyboard selection is unchanged.
+
+- **A hovered heat-map colour-scale step shows it.** The colour-scale step under the pointer grows
+  to 1.75x its height; before, nothing on the step changed.
+
+- **A hovered funnel stage-table row is tinted edge to edge.** The row highlight now spans the full
+  row, using `--ds-chart-legend-hover-bg-color` and `--ds-chart-legend-hover-text-color`.
+
+- **A `ds-funnel-chart`'s entrance no longer flashes a vertical scrollbar.** The figure now clips
+  vertical overflow, so stage rows rising during the entrance animation no longer overshoot or
+  flash a vertical scrollbar; horizontal scrolling is kept.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
 | an app-level `@include cdk.a11y-visually-hidden()` or `a11y-prebuilt.css` added so toast announcements stay hidden | `styles/toast-overlay` declares `.cdk-visually-hidden` | nothing; keep it where the app loads neither `styles/ds` nor `styles/toast-overlay` |
+| `DS_CONFIG.chart.hoverDelayMs: 0` set so charts answer a resting pointer at once | `0` is the default | nothing |
 
 ## 0.14.3 — 2026-09-27
 
