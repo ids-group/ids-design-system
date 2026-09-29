@@ -84,8 +84,7 @@ export class PieChartComponent
 {
   protected readonly renderReady = chartRenderGate();
 
-  /** One slice per entry. A non-positive or non-finite value counts as zero — a ring is a
-   *  part-to-whole picture and has no way to draw a negative share. */
+  /** One slice per entry. A non-positive or non-finite value counts as zero. */
   readonly data = input<readonly PieChartSlice[]>([]);
 
   /** Printed inside the ring. Null prints the sum through `valueFormat`. */
@@ -115,21 +114,19 @@ export class PieChartComponent
   });
 
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
-   *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
-   *  `'none'` belongs only where the same data is already in a table on the page.
-   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
+   *  `'visible'` opens it, `'none'` renders none. Unset falls back to `DS_CONFIG.chart.dataTable`,
+   *  then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
 
   /** Prints each slice's share in the legend, the tooltip and the data table. */
   readonly partOfWhole = input(true, { transform: booleanAttribute });
 
-  // Declared after every input it reads: it takes each signal off `this` when it runs.
   readonly dataTableResolved = this.defaults.dataTable;
 
   /** The slice that was clicked or activated with Enter or Space. */
   readonly sliceClicked = output<PieChartSlice>();
 
-  /** Dims every other mark while one is hovered or focused; dimmed marks lose separation from each other. */
+  /** Dims every other mark while one is hovered or focused. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
   /** Accepted for parity with the other charts; has no effect. */

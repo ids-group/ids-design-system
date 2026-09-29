@@ -11,49 +11,35 @@ import type {
 } from '@ids-group-ltd/ids-design-system/core';
 import { chartValueFormat } from './charts-format';
 
-/** The inputs every chart carries for the decisions an app makes once rather than per plot.
- *
- *  @internal */
+/** The inputs every chart carries for app-wide decisions. @internal */
 export interface ChartDefaultInputs {
   readonly frame: Signal<ChartFrame | null>;
-  /** Absent on a chart with no annex table of its own. */
   readonly dataTable?: Signal<ChartDataTable | null>;
   readonly emptyText: Signal<string | null>;
   readonly errorText: Signal<string | null>;
   readonly valueFormat: Signal<ChartValueFormat | null>;
-  /** Absent on a chart with no tooltip of its own. */
   readonly tooltipLingerMs?: Signal<number | null>;
-  /** Absent on a chart with nothing to pin. */
   readonly pinOnClick?: Signal<boolean | null>;
-  /** Absent on a chart with no tooltip of its own. */
   readonly tooltipSwatches?: Signal<boolean | null>;
 }
 
-// No chart takes the delay as an input: it is an app-wide setting, `DS_CONFIG.chart.hoverDelayMs`.
 const NO_HOVER_DELAY_INPUT = signal<number | null>(null);
 
-// Read when the value is, not when the chart is built: a chart's own optional inputs are declared
-// after the shared base that calls this, so at that moment they do not exist yet.
+// Lazy: a chart's own optional inputs are declared after the base that calls this, so they do not exist yet.
 function optional<T>(
   input: () => Signal<T | null> | undefined,
 ): Signal<T | null> {
   return computed(() => input()?.() ?? null);
 }
 
-/** How long a resting pointer waits before a chart answers it, when nothing sets it.
- *
- *  @internal */
+/** Default hover delay, in milliseconds. @internal */
 export const CHART_HOVER_DELAY_MS = 0;
 
-/** How long a tooltip outlives the pointer leaving its mark, when nothing sets it; long enough to cross to the next mark and find the same panel.
- *
- *  @internal */
+/** Default tooltip linger, in milliseconds; long enough to cross to the next mark. @internal */
 export const CHART_TOOLTIP_LINGER_MS = 500;
 
-/** Each resolved input → `DS_CONFIG.chart` → the built-in; copy resolves input → `DS_INTL.chart`.
- *  Call from an injection context.
- *
- *  @internal */
+/** Resolves each input, then `DS_CONFIG.chart`, then the built-in; copy resolves input, then `DS_INTL.chart`.
+ *  Call from an injection context. @internal */
 export function resolveChartDefaults(inputs: ChartDefaultInputs) {
   const locale = injectDsLocale();
   const intl = inject(DS_INTL);

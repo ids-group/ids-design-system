@@ -1133,7 +1133,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+        "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
         "name": "caption",
@@ -1142,7 +1142,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot, reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -1160,7 +1160,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
       },
       {
         "name": "error",
@@ -1169,7 +1169,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data."
       },
       {
         "name": "emptyText",
@@ -1178,7 +1178,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+        "description": "Shown when there is no data. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "errorText",
@@ -1196,7 +1196,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+        "description": "Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "interactive",
@@ -1205,7 +1205,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+        "description": "Turns on the click affordance: pointer cursor and hover tint. The click output fires whether or not this is set."
       },
       {
         "name": "tooltipSwatches",
@@ -1214,7 +1214,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -1223,7 +1223,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -1232,7 +1232,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
       },
       {
         "name": "data",
@@ -1263,7 +1263,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
       },
       {
         "name": "partOfWhole",
@@ -1272,7 +1272,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Declares the marks parts of one whole: each mark's share appears on the tooltip's second line and in the data table. Off by default, since a total over stages or months is not a real quantity."
+        "description": "Declares the marks parts of one whole: each share appears on the tooltip's second line and in the data table."
       },
       {
         "name": "showPercent",
@@ -1290,7 +1290,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Dims every OTHER mark while one is hovered or focused. Off by default: it costs separation between the dimmed marks."
+        "description": "Dims every OTHER mark while one is hovered or focused."
       },
       {
         "name": "highlighted",
@@ -1299,7 +1299,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The segment to single out, by its `id` or by its position as a string where it has none. Every other segment in every row fades. Independent of `dimOthers`; rows without segments are unaffected."
+        "description": "The segment to single out, by its `id` or its position as a string; every other segment fades. Independent of `dimOthers`."
       },
       {
         "name": "staggerMs",
@@ -1308,7 +1308,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one row's entrance and the next; `0` turns the stagger off. The step narrows to keep the spread within 260ms."
+        "description": "Milliseconds between one row's entrance and the next; `0` turns it off. The step narrows to keep the spread within 260ms."
       },
       {
         "name": "tooltip",
@@ -1878,7 +1878,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+        "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
         "name": "caption",
@@ -1887,7 +1887,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot, reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -1905,7 +1905,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
       },
       {
         "name": "error",
@@ -1914,7 +1914,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data."
       },
       {
         "name": "emptyText",
@@ -1923,7 +1923,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+        "description": "Shown when there is no data. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "errorText",
@@ -1941,7 +1941,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+        "description": "Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "interactive",
@@ -1950,7 +1950,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+        "description": "Turns on the click affordance: pointer cursor and hover tint. The click output fires whether or not this is set."
       },
       {
         "name": "tooltipSwatches",
@@ -1959,7 +1959,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -1968,7 +1968,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -1977,7 +1977,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
       },
       {
         "name": "categories",
@@ -1995,7 +1995,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "CHART_DEFAULT_TICK_COUNT",
         "required": false,
-        "description": "How many value-axis ticks to aim for. A hint: ticks snap to a round step, so one more or fewer may appear."
+        "description": "How many value-axis ticks to aim for; ticks snap to a round step, so the count may differ by one."
       },
       {
         "name": "min",
@@ -2004,7 +2004,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Pins the floor of the value axis. It only ever opens the axis further: a floor above the data would push readings off the plot."
+        "description": "Pins the floor of the value axis. It only opens the axis further; a floor above the data is ignored."
       },
       {
         "name": "max",
@@ -2026,7 +2026,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'auto'",
         "required": false,
-        "description": "Draws a band and a crosshair down the category under the pointer and reports it to every mark through `activeIndex`; with two or more tooltip-showing marks the panel names every reading at that category. `'auto'` (default) is `'category'` for such a composed plot and `'none'` for a single-mark plot, which already answers per mark."
+        "description": "Draws a band and crosshair down the category under the pointer and reports it to every mark through `activeIndex`; the panel then names every reading at that category. `'auto'` (default) is `'category'` with two or more tooltip-showing marks, else `'none'`."
       },
       {
         "name": "maxSecondary",
@@ -2035,7 +2035,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Pins the ceiling of the SECOND value axis, the way `max` pins the first. Two plots read against each other need both pinned, or the second rescales under them."
+        "description": "Pins the ceiling of the SECOND value axis, the way `max` pins the first."
       },
       {
         "name": "plotHeight",
@@ -2062,7 +2062,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "CHART_DEFAULT_VALUE_SPACE",
         "required": false,
-        "description": "Pixels reserved at each end of the plot for a value label, drawn or not, so the height holds."
+        "description": "Pixels reserved at each end of the plot for a value label, drawn or not."
       },
       {
         "name": "secondaryAxisMode",
@@ -2076,7 +2076,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'aligned'",
         "required": false,
-        "description": "How the second value axis relates to the first, once a mark has reported against it. The same four words `ds-line-chart` takes."
+        "description": "How the second value axis relates to the first, once a mark has reported against it."
       },
       {
         "name": "axisColor",
@@ -2130,7 +2130,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "0",
         "required": false,
-        "description": "Extra clearance between the mark and the panel, for a chart that prints a value label in that gap."
+        "description": "Extra clearance between the mark and the panel, for a value label printed in that gap."
       }
     ],
     "outputs": []
@@ -3051,7 +3051,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+        "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
         "name": "caption",
@@ -3060,7 +3060,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot, reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -3078,7 +3078,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
       },
       {
         "name": "error",
@@ -3087,7 +3087,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data."
       },
       {
         "name": "emptyText",
@@ -3096,7 +3096,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+        "description": "Shown when there is no data. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "errorText",
@@ -3114,7 +3114,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+        "description": "Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "interactive",
@@ -3123,7 +3123,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+        "description": "Turns on the click affordance: pointer cursor and hover tint. The click output fires whether or not this is set."
       },
       {
         "name": "tooltipSwatches",
@@ -3132,7 +3132,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -3141,7 +3141,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -3150,7 +3150,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
       },
       {
         "name": "data",
@@ -3159,7 +3159,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "One column per point, drawn in the order given - or one NAMED SERIES per entry, where every category carries a column from each. The two forms are told apart by their shape, so a chart handed a flat list behaves exactly as it always has."
+        "description": "One column per point, drawn in the order given, or one NAMED SERIES per entry, where every category carries a column from each. The two forms are told apart by their shape."
       },
       {
         "name": "stack",
@@ -3173,7 +3173,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'none'",
         "required": false,
-        "description": "How several series share one category's band. `'none'` (default) and `'grouped'` draw them side by side; `'stacked'` piles them; `'normalized'` piles then divides by the category's total."
+        "description": "How several series share one category's band. `'none'` (default) and `'grouped'` sit side by side; `'stacked'` piles them; `'normalized'` piles then divides by the category's total."
       },
       {
         "name": "thresholds",
@@ -3182,7 +3182,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Reference lines and bands behind the columns. Each widens the value axis and is named in the generated description."
+        "description": "Reference lines and bands behind the columns; each widens the value axis and is named in the generated description."
       },
       {
         "name": "showValues",
@@ -3200,7 +3200,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "5",
         "required": false,
-        "description": "How many value-axis ticks to aim for. A hint: ticks snap to a round step."
+        "description": "How many value-axis ticks to aim for; ticks snap to a round step."
       },
       {
         "name": "dataTable",
@@ -3213,7 +3213,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
       },
       {
         "name": "partOfWhole",
@@ -3222,7 +3222,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Declares the marks parts of one whole: each mark's share appears on the tooltip's second line and in the data table. Off by default, since a total over stages or months is not a real quantity."
+        "description": "Declares the marks parts of one whole: each share appears on the tooltip's second line and in the data table."
       },
       {
         "name": "dimOthers",
@@ -3231,7 +3231,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart."
+        "description": "Dims every OTHER mark while one is hovered or focused. Dimmed marks lose separation between them (three series: worst pair dE 14.8 to 2.1 at `--ds-chart-dim-opacity` 0.3, measured 2026-09-13)."
       },
       {
         "name": "staggerMs",
@@ -3240,7 +3240,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one mark's entrance and the next; `0` is no stagger. The steps narrow to fit the whole spread within 260ms."
+        "description": "Milliseconds between one mark's entrance and the next; `0` turns it off. The step narrows to fit within 260ms."
       },
       {
         "name": "tooltip",
@@ -3264,7 +3264,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'mark'",
         "required": false,
-        "description": "Where the tooltip is pinned: `'mark'` (default) is the column; `'cell'` is the full-height category cell."
+        "description": "Where the tooltip anchors: `'mark'` (default) is the column; `'cell'` is the full-height category cell."
       }
     ],
     "outputs": [
@@ -4113,7 +4113,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+        "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
         "name": "caption",
@@ -4122,7 +4122,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot, reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -4140,7 +4140,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
       },
       {
         "name": "error",
@@ -4149,7 +4149,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data."
       },
       {
         "name": "emptyText",
@@ -4158,7 +4158,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+        "description": "Shown when there is no data. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "errorText",
@@ -4176,7 +4176,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+        "description": "Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "interactive",
@@ -4185,7 +4185,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+        "description": "Turns on the click affordance: pointer cursor and hover tint. The click output fires whether or not this is set."
       },
       {
         "name": "tooltipSwatches",
@@ -4194,7 +4194,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -4203,7 +4203,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -4212,7 +4212,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
       },
       {
         "name": "data",
@@ -4221,7 +4221,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Drawn in the order given. The order of a funnel's stages is its meaning, so they are never sorted."
+        "description": "Drawn in the order given; stages are never sorted, since their order is the meaning."
       },
       {
         "name": "shape",
@@ -4234,7 +4234,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'area'",
         "required": false,
-        "description": "What the silhouette encodes. `'area'` (default) makes each stage's area proportional to its value and keeps the tail wide enough to label. `'width'` reads widths straight off the values, which collapses the tail of a steep funnel. `'taper'` encodes nothing: the shape is fixed and the numbers are read from the table."
+        "description": "What the silhouette encodes. `'area'` (default) makes each stage's area proportional to its value. `'width'` reads widths straight off the values, which collapses the tail of a steep funnel. `'taper'` encodes nothing: the shape is fixed."
       },
       {
         "name": "showTable",
@@ -4243,7 +4243,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "The value, percent and drop table printed under the funnel. While on, `dataTable` is not rendered: it would repeat a subset of these numbers."
+        "description": "The value, percent and drop table printed under the funnel. While on, `dataTable` is not rendered."
       },
       {
         "name": "dataTable",
@@ -4256,7 +4256,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The label-and-value disclosure every chart carries. Ignored while `showTable` is on, which already prints every label and value. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
+        "description": "The label-and-value disclosure. Ignored while `showTable` is on. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
       },
       {
         "name": "drop",
@@ -4278,7 +4278,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Dims every OTHER mark while one is hovered or focused. Off by default: it costs separation between the dimmed marks."
+        "description": "Dims every OTHER mark while one is hovered or focused."
       },
       {
         "name": "staggerMs",
@@ -4287,7 +4287,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "60",
         "required": false,
-        "description": "Milliseconds between one stage's entrance and the next, top to bottom; `0` brings every stage in at once. The step narrows to keep the spread within 260ms."
+        "description": "Milliseconds between one stage's entrance and the next, top to bottom; `0` turns it off. The step narrows to keep the spread within 260ms."
       },
       {
         "name": "tooltip",
@@ -4346,7 +4346,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+        "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
         "name": "caption",
@@ -4355,7 +4355,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot, reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -4373,7 +4373,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
       },
       {
         "name": "error",
@@ -4382,7 +4382,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data."
       },
       {
         "name": "emptyText",
@@ -4391,7 +4391,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+        "description": "Shown when there is no data. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "errorText",
@@ -4409,7 +4409,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+        "description": "Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "interactive",
@@ -4418,7 +4418,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+        "description": "Turns on the click affordance: pointer cursor and hover tint. The click output fires whether or not this is set."
       },
       {
         "name": "tooltipSwatches",
@@ -4427,7 +4427,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -4436,7 +4436,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -4445,7 +4445,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
       },
       {
         "name": "columns",
@@ -4472,7 +4472,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Pins the floor of the colour scale. It only ever OPENS the scale further, so a floor above the data cannot push a reading off the ramp. Unset, the scale starts at the lowest reading."
+        "description": "Pins the floor of the colour scale. It only OPENS the scale further; a floor above the data is ignored. Unset, the scale starts at the lowest reading."
       },
       {
         "name": "max",
@@ -4511,7 +4511,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'item'",
         "required": false,
-        "description": "Whether a hovered or focused cell opens a tooltip. A heat map's cells carry no printed value by default, so this is where a reading is read without reaching for the annex table."
+        "description": "Whether a hovered or focused cell opens a tooltip."
       },
       {
         "name": "staggerMs",
@@ -4520,7 +4520,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one column's entrance and the next; `0` turns the stagger off. The spread is capped at 260ms."
+        "description": "Milliseconds between one column's entrance and the next; `0` turns it off. The spread is capped at 260ms."
       }
     ],
     "outputs": [
@@ -4531,7 +4531,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "The clicked cell, with the row and the column it sits at. Never fires for an unmeasured cell."
+        "description": "The clicked cell, with its row and column. Never fires for an unmeasured cell."
       }
     ]
   },
@@ -5220,7 +5220,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+        "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
         "name": "caption",
@@ -5229,7 +5229,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot, reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -5247,7 +5247,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
       },
       {
         "name": "error",
@@ -5256,7 +5256,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data."
       },
       {
         "name": "emptyText",
@@ -5265,7 +5265,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+        "description": "Shown when there is no data. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "errorText",
@@ -5283,7 +5283,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+        "description": "Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "interactive",
@@ -5292,7 +5292,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+        "description": "Turns on the click affordance: pointer cursor and hover tint. The click output fires whether or not this is set."
       },
       {
         "name": "tooltipSwatches",
@@ -5301,7 +5301,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -5310,7 +5310,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -5319,7 +5319,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
       },
       {
         "name": "categories",
@@ -5337,7 +5337,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "One line per entry. Every series is read against `categories`, so a series longer than it loses its tail and a shorter one ends early."
+        "description": "One line per entry, read against `categories`: a longer series loses its tail, a shorter one ends early."
       },
       {
         "name": "yAxisMode",
@@ -5369,7 +5369,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Lays the lines and their markers on a band of the surface colour. Off where the plot holds nothing for them to cross and the band only separates them from the gridlines."
+        "description": "Lays the lines and their markers on a band of the surface colour."
       },
       {
         "name": "annotations",
@@ -5378,7 +5378,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Labels pinned over their readings, for the points that have to read without a pointer. The plot draws them `aria-hidden`; their labels are appended to the accessible name instead."
+        "description": "Labels pinned over their readings. Drawn `aria-hidden`; their text is appended to the accessible name."
       },
       {
         "name": "dimOthers",
@@ -5387,7 +5387,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart."
+        "description": "Dims every OTHER mark while one is hovered or focused. Dimmed marks lose separation between them (three series: worst pair dE 14.8 to 2.1 at `--ds-chart-dim-opacity` 0.3, measured 2026-09-13)."
       },
       {
         "name": "gaps",
@@ -5434,7 +5434,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Names the first axis's unit beside it. On a two-scale plot the colour says which line reads which axis and this says what the numbers are."
+        "description": "Names the first axis's unit beside it."
       },
       {
         "name": "secondaryAxisLabel",
@@ -5452,7 +5452,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "LINE_CHART_DEFAULT_TICK_COUNT",
         "required": false,
-        "description": "How many value-axis ticks to aim for. A hint: ticks snap to a round step."
+        "description": "How many value-axis ticks to aim for; ticks snap to a round step."
       },
       {
         "name": "dataTable",
@@ -5465,7 +5465,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
       },
       {
         "name": "max",
@@ -5474,7 +5474,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Pins the value axis maximum so separate renders are comparable. Null keeps the derived axis. Applies to the primary axis; `maxSecondary` pins the second. A maximum below the data does not clip it: the larger of the two wins."
+        "description": "Pins the primary value axis maximum so separate renders are comparable; `maxSecondary` pins the second. Null keeps the derived axis. A maximum below the data does not clip it."
       },
       {
         "name": "maxSecondary",
@@ -5501,7 +5501,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether hiding a series re-scales the value axis to what is left. Off by default, so comparisons stay on one scale."
+        "description": "Whether hiding a series re-scales the value axis to what is left."
       },
       {
         "name": "legendFilters",
@@ -5522,7 +5522,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'isolate'",
         "required": false,
-        "description": "What a legend control does. `'isolate'` shows one series and hides the rest; `'toggle'` hides one and leaves the rest. Forwarded to `ds-chart-legend`, which renders radios for the first and checkboxes for the second."
+        "description": "What a legend control does. `'isolate'` shows one series and hides the rest (radios); `'toggle'` hides one and leaves the rest (checkboxes)."
       },
       {
         "name": "noVisibleSeriesText",
@@ -5540,7 +5540,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Gives every series a dash pattern, so lines differ by shape as well as colour. Off by default; use it for monochrome print or a retuned palette."
+        "description": "Gives every series a dash pattern, so lines differ by shape as well as colour."
       },
       {
         "name": "staggerMs",
@@ -5549,7 +5549,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one series' entrance and the next; `0` turns the stagger off. The step narrows so the last series still starts within the stagger budget."
+        "description": "Milliseconds between one series' entrance and the next; `0` turns it off. The step narrows so the last series still starts within the stagger budget."
       },
       {
         "name": "tooltip",
@@ -5574,7 +5574,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'reading'",
         "required": false,
-        "description": "Where the tooltip is pinned. `'reading'`, the default, is the highest reading in the category, so the panel stays put while the pointer moves within one band. `'pointer'` follows the cursor."
+        "description": "Where the tooltip anchors. `'reading'` (default) is the highest reading in the category, so the panel stays put within one band; `'pointer'` follows the cursor."
       }
     ],
     "outputs": [
@@ -7003,7 +7003,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+        "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
         "name": "caption",
@@ -7012,7 +7012,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot, reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -7030,7 +7030,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
       },
       {
         "name": "error",
@@ -7039,7 +7039,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data."
       },
       {
         "name": "emptyText",
@@ -7048,7 +7048,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+        "description": "Shown when there is no data. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "errorText",
@@ -7066,7 +7066,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+        "description": "Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "interactive",
@@ -7075,7 +7075,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+        "description": "Turns on the click affordance: pointer cursor and hover tint. The click output fires whether or not this is set."
       },
       {
         "name": "tooltipSwatches",
@@ -7084,7 +7084,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -7093,7 +7093,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -7102,7 +7102,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
       },
       {
         "name": "data",
@@ -7111,7 +7111,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "One slice per entry. A non-positive or non-finite value counts as zero — a ring is a part-to-whole picture and has no way to draw a negative share."
+        "description": "One slice per entry. A non-positive or non-finite value counts as zero."
       },
       {
         "name": "centerValue",
@@ -7182,7 +7182,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
       },
       {
         "name": "partOfWhole",
@@ -7200,7 +7200,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Dims every other mark while one is hovered or focused; dimmed marks lose separation from each other."
+        "description": "Dims every other mark while one is hovered or focused."
       },
       {
         "name": "staggerMs",
@@ -7661,7 +7661,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+        "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
         "name": "caption",
@@ -7670,7 +7670,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot, reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -7688,7 +7688,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
       },
       {
         "name": "error",
@@ -7697,7 +7697,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data."
       },
       {
         "name": "emptyText",
@@ -7706,7 +7706,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+        "description": "Shown when there is no data. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "errorText",
@@ -7724,7 +7724,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+        "description": "Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "interactive",
@@ -7733,7 +7733,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+        "description": "Turns on the click affordance: pointer cursor and hover tint. The click output fires whether or not this is set."
       },
       {
         "name": "tooltipSwatches",
@@ -7742,7 +7742,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -7751,7 +7751,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -7760,7 +7760,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
       },
       {
         "name": "data",
@@ -7834,7 +7834,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'item'",
         "required": false,
-        "description": "Whether a hovered or focused mark opens a tooltip. A scatter prints no value beside its marks - there is no room - so this is where a reading is read without the annex table."
+        "description": "Whether a hovered or focused mark opens a tooltip."
       },
       {
         "name": "dimOthers",
@@ -11636,7 +11636,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+        "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
         "name": "caption",
@@ -11645,7 +11645,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot, reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -11663,7 +11663,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
       },
       {
         "name": "error",
@@ -11672,7 +11672,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data."
       },
       {
         "name": "emptyText",
@@ -11681,7 +11681,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+        "description": "Shown when there is no data. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "errorText",
@@ -11699,7 +11699,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+        "description": "Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "interactive",
@@ -11708,7 +11708,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+        "description": "Turns on the click affordance: pointer cursor and hover tint. The click output fires whether or not this is set."
       },
       {
         "name": "tooltipSwatches",
@@ -11717,7 +11717,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -11726,7 +11726,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -11735,7 +11735,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
       },
       {
         "name": "data",
@@ -11771,7 +11771,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Dims every OTHER bar while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed bars."
+        "description": "Dims every OTHER bar while one is hovered or focused."
       },
       {
         "name": "tooltip",
@@ -11783,7 +11783,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'item'",
         "required": false,
-        "description": "Whether a hovered or focused bar opens a tooltip. `'axis'` is not offered - each bar is its own category, so an axis tooltip would repeat the item one."
+        "description": "Whether a hovered or focused bar opens a tooltip. `'axis'` is not offered: each bar is its own category."
       },
       {
         "name": "tickCount",
@@ -11792,7 +11792,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "5",
         "required": false,
-        "description": "A hint, not a count. Ticks snap to a round step."
+        "description": "How many value-axis ticks to aim for; ticks snap to a round step."
       },
       {
         "name": "dataTable",
@@ -11814,7 +11814,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one step's entrance and the next; a long waterfall narrows the step to arrive within 260ms. `0` is no stagger."
+        "description": "Milliseconds between one step's entrance and the next; the step narrows to finish within 260ms. `0` turns it off."
       }
     ],
     "outputs": [

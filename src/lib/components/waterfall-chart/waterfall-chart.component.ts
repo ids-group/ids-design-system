@@ -84,22 +84,20 @@ export class WaterfallChartComponent
   /** The dashed rule chaining one bar to the next. */
   readonly showConnectors = input(true, { transform: booleanAttribute });
 
-  /** Dims every OTHER bar while one is hovered or focused, so the reader's eye is held on the one
-   *  under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed bars. */
+  /** Dims every OTHER bar while one is hovered or focused. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Whether a hovered or focused bar opens a tooltip. `'axis'` is not offered - each bar is its
-   *  own category, so an axis tooltip would repeat the item one. */
+  /** Whether a hovered or focused bar opens a tooltip. `'axis'` is not offered: each bar is its
+   *  own category. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
-  /** A hint, not a count. Ticks snap to a round step. */
+  /** How many value-axis ticks to aim for; ticks snap to a round step. */
   readonly tickCount = input(5, { transform: numberAttribute });
 
   /** The annex table under the plot: each step's direction, reading and running total. Unset falls back to `DS_CONFIG.chart.dataTable`. */
   readonly dataTable = input<ChartDataTable | null>(null);
 
-  /** Milliseconds between one step's entrance and the next; a long waterfall narrows the step to
-   *  arrive within 260ms. `0` is no stagger. */
+  /** Milliseconds between one step's entrance and the next; the step narrows to finish within 260ms. `0` turns it off. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
   protected readonly series = viewChild(ColumnSeriesComponent);

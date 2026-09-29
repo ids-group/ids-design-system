@@ -13,8 +13,6 @@ import { NgTemplateOutlet } from '@angular/common';
 import type { ChartTooltipContext } from './chart-tooltip.types';
 import { swatchBlendsInto } from './swatch-contrast';
 
-// A dot tells readings apart, so a lone reading has nothing to tell it from, and past four the dots
-// read as a column of noise; in both cases the labels carry the series on their own.
 const AUTO_SWATCH_MIN = 2;
 const AUTO_SWATCH_MAX = 4;
 
@@ -25,7 +23,7 @@ const AUTO_SWATCH_MAX = 4;
   templateUrl: './chart-tooltip-panel.component.html',
   styleUrl: './chart-tooltip-panel.component.scss',
   host: {
-    // Every interactive mark's `aria-label` already carries the reading.
+    // Hidden from AT: every interactive mark's `aria-label` already carries the reading.
     'aria-hidden': 'true',
   },
   encapsulation: ViewEncapsulation.Emulated,

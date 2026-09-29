@@ -131,8 +131,7 @@ export class ScatterChartComponent
   /** The annex table under the plot; lists every reading, including those decimation left out. */
   readonly dataTable = input<ChartDataTable | null>(null);
 
-  /** Whether a hovered or focused mark opens a tooltip. A scatter prints no value beside its
-   *  marks - there is no room - so this is where a reading is read without the annex table. */
+  /** Whether a hovered or focused mark opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
   /** Fades every mark but the one under the pointer; on a scatter this hides pile-ups. */

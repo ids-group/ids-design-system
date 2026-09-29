@@ -84,8 +84,8 @@ export class HeatmapChartComponent
   /** One entry per row, one reading per column; a `null` reading is drawn as the surface. */
   readonly data = input<readonly HeatmapChartRow[]>([]);
 
-  /** Pins the floor of the colour scale. It only ever OPENS the scale further, so a floor above
-   *  the data cannot push a reading off the ramp. Unset, the scale starts at the lowest reading. */
+  /** Pins the floor of the colour scale. It only OPENS the scale further; a floor above the data
+   *  is ignored. Unset, the scale starts at the lowest reading. */
   readonly min = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
@@ -101,11 +101,10 @@ export class HeatmapChartComponent
   /** Fades every cell but the one under the pointer. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Whether a hovered or focused cell opens a tooltip. A heat map's cells carry no printed value
-   *  by default, so this is where a reading is read without reaching for the annex table. */
+  /** Whether a hovered or focused cell opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
-  /** Milliseconds between one column's entrance and the next; `0` turns the stagger off. The spread is capped at 260ms. */
+  /** Milliseconds between one column's entrance and the next; `0` turns it off. The spread is capped at 260ms. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
   // The stylesheet multiplies this by the column index.
@@ -113,8 +112,7 @@ export class HeatmapChartComponent
     () => `${staggerDelay(1, this.columns().length, this.staggerMs())}ms`,
   );
 
-  /** The clicked cell, with the row and the column it sits at. Never fires for an unmeasured
-   *  cell. */
+  /** The clicked cell, with its row and column. Never fires for an unmeasured cell. */
   readonly cellClicked = output<HeatmapChartCell>();
 
   protected readonly activeMark = chartActiveMark(

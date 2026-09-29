@@ -104,40 +104,34 @@ export class FunnelChartComponent
 
   protected readonly leaveMark = leaveMark;
 
-  /** Drawn in the order given. The order of a funnel's stages is its meaning,
-   *  so they are never sorted. */
+  /** Drawn in the order given; stages are never sorted, since their order is the meaning. */
   readonly data = input<readonly FunnelChartStage[]>([]);
 
   /** What the silhouette encodes. `'area'` (default) makes each stage's area proportional to its
-   *  value and keeps the tail wide enough to label. `'width'` reads widths straight off the values,
-   *  which collapses the tail of a steep funnel. `'taper'` encodes nothing: the shape is fixed and
-   *  the numbers are read from the table. */
+   *  value. `'width'` reads widths straight off the values, which collapses the tail of a steep
+   *  funnel. `'taper'` encodes nothing: the shape is fixed. */
   readonly shape = input<FunnelChartShape>('area');
 
-  /** The value, percent and drop table printed under the funnel. While on, `dataTable` is not
-   *  rendered: it would repeat a subset of these numbers. */
+  /** The value, percent and drop table printed under the funnel. While on, `dataTable` is not rendered. */
   readonly showTable = input(true, { transform: booleanAttribute });
 
-  /** The label-and-value disclosure every chart carries. Ignored while `showTable` is on, which
-   *  already prints every label and value. Unset falls back to `DS_CONFIG.chart.dataTable`, then
-   *  `'toggle'`. */
+  /** The label-and-value disclosure. Ignored while `showTable` is on. Unset falls back to
+   *  `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
   /** What the Drop column reports: `'relative'` (default) the share that leaked at this stage,
    *  `'absolute'` the count, `'none'` no column. */
   readonly drop = input<FunnelChartDrop>('relative');
 
-  // Declared after every input it reads: it takes each signal off `this` when it runs.
   readonly dataTableResolved = this.defaults.dataTable;
 
   /** The stage clicked or activated with Enter or Space, whether or not `interactive` is set. */
   readonly stageClicked = output<FunnelChartStage>();
 
-  /** Dims every OTHER mark while one is hovered or focused. Off by default: it costs separation
-   *  between the dimmed marks. */
+  /** Dims every OTHER mark while one is hovered or focused. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Milliseconds between one stage's entrance and the next, top to bottom; `0` brings every stage in
-   *  at once. The step narrows to keep the spread within 260ms. */
+  /** Milliseconds between one stage's entrance and the next, top to bottom; `0` turns it off. The
+   *  step narrows to keep the spread within 260ms. */
   readonly staggerMs = input(60, { transform: numberAttribute });
 
   protected markStagger(index: number): string {

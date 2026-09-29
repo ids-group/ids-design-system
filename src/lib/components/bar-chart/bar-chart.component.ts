@@ -112,12 +112,11 @@ export class BarChartComponent
   });
 
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
-   *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
-   *  `'none'` belongs only where the same data is already in a table on the page.
-   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
+   *  `'visible'` opens it, `'none'` renders none. Unset falls back to `DS_CONFIG.chart.dataTable`,
+   *  then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
-  /** Declares the marks parts of one whole: each mark's share appears on the tooltip's second line and
-   *  in the data table. Off by default, since a total over stages or months is not a real quantity. */
+  /** Declares the marks parts of one whole: each share appears on the tooltip's second line and in
+   *  the data table. */
   readonly partOfWhole = input(false, { transform: booleanAttribute });
 
   /** Prints each row's share of `max` beside its value. */
@@ -128,13 +127,11 @@ export class BarChartComponent
   /** The row clicked or activated with Enter or Space, whether or not `interactive` is set. */
   readonly rowClicked = output<BarChartRow>();
 
-  /** Dims every OTHER mark while one is hovered or focused. Off by default: it costs separation
-   *  between the dimmed marks. */
+  /** Dims every OTHER mark while one is hovered or focused. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** The segment to single out, by its `id` or by its position as a string where it has none. Every
-   *  other segment in every row fades. Independent of `dimOthers`; rows without segments are
-   *  unaffected. */
+  /** The segment to single out, by its `id` or its position as a string; every other segment
+   *  fades. Independent of `dimOthers`. */
   readonly highlighted = input<string | null>(null);
 
   protected isSegmentDimmed(key: string): boolean {
@@ -143,7 +140,7 @@ export class BarChartComponent
     return highlighted !== null && highlighted !== key;
   }
 
-  /** Milliseconds between one row's entrance and the next; `0` turns the stagger off. The step narrows to keep the spread within 260ms. */
+  /** Milliseconds between one row's entrance and the next; `0` turns it off. The step narrows to keep the spread within 260ms. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
   protected markStagger(index: number): string {

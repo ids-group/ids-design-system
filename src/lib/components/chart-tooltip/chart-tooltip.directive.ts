@@ -65,13 +65,7 @@ function positionsFor(gap: number): ConnectedPosition[] {
   ];
 }
 
-/**
- * The chart tooltip, driven entirely by the context a chart hands it: non-null opens the
- * panel, null closes it. Pointer and keyboard share one path: a chart that sets the context on
- * `focus` gets the panel with no pointer involved.
- *
- * @internal
- */
+/** The chart tooltip: a non-null context opens the panel, null closes it. @internal */
 @Directive({
   selector: '[dsChartTooltip]',
   standalone: true,
@@ -86,8 +80,7 @@ export class ChartTooltipDirective {
     $implicit: ChartTooltipContext;
   }> | null>(null);
 
-  /** Extra clearance between the mark and the panel, for a chart that prints text above its mark
-   *  (a column's value). Ignored for touch. */
+  /** Extra clearance between the mark and the panel, for text printed above the mark. Ignored for touch. */
   readonly dsChartTooltipExtraGap = input(0);
 
   /** A held panel takes the pointer so its text can be selected; a following one stays inert or

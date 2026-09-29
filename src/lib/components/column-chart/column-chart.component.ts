@@ -60,13 +60,13 @@ import type {
   ColumnChartSeries,
 } from './column-chart.types';
 
-/** `points` is the caller's own array, never a copy, so a clicked point comes back as the object handed in. */
 interface ResolvedColumnSeries {
   readonly key: string;
   readonly label: string;
   /** Null leaves each mark on the categorical palette by its own position. */
   readonly color: string | null;
   readonly fill: ChartMarkFill | null;
+  /** The caller's own array, not a copy, so a clicked point comes back as the object handed in. */
   readonly points: readonly ColumnChartPoint[];
 }
 
@@ -146,33 +146,31 @@ export class ColumnChartComponent
 {
   protected readonly renderReady = chartRenderGate();
 
-  /** One column per point, drawn in the order given - or one NAMED SERIES per entry, where every
-   *  category carries a column from each. The two forms are told apart by their shape, so a chart
-   *  handed a flat list behaves exactly as it always has. */
+  /** One column per point, drawn in the order given, or one NAMED SERIES per entry, where every
+   *  category carries a column from each. The two forms are told apart by their shape. */
   readonly data = input<
     readonly ColumnChartPoint[] | readonly ColumnChartSeries[]
   >([]);
 
-  /** How several series share one category's band. `'none'` (default) and `'grouped'` draw them side
+  /** How several series share one category's band. `'none'` (default) and `'grouped'` sit side
    *  by side; `'stacked'` piles them; `'normalized'` piles then divides by the category's total. */
   readonly stack = input<ChartStackMode>('none');
 
-  /** Reference lines and bands behind the columns. Each widens the value axis and is named in the generated description. */
+  /** Reference lines and bands behind the columns; each widens the value axis and is named in the generated description. */
   readonly thresholds = input<readonly ChartThreshold[]>([]);
 
   /** Prints each column's value above the column. */
   readonly showValues = input(true, { transform: booleanAttribute });
 
-  /** How many value-axis ticks to aim for. A hint: ticks snap to a round step. */
+  /** How many value-axis ticks to aim for; ticks snap to a round step. */
   readonly tickCount = input(5, { transform: numberAttribute });
 
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
-   *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
-   *  `'none'` belongs only where the same data is already in a table on the page.
-   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
+   *  `'visible'` opens it, `'none'` renders none. Unset falls back to `DS_CONFIG.chart.dataTable`,
+   *  then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
-  /** Declares the marks parts of one whole: each mark's share appears on the tooltip's second line and
-   *  in the data table. Off by default, since a total over stages or months is not a real quantity. */
+  /** Declares the marks parts of one whole: each share appears on the tooltip's second line and in
+   *  the data table. */
   readonly partOfWhole = input(false, { transform: booleanAttribute });
 
   readonly dataTableResolved = this.defaults.dataTable;
@@ -180,15 +178,11 @@ export class ColumnChartComponent
   /** The point clicked or activated with Enter or Space, whether or not `interactive` is set. */
   readonly pointClicked = output<ColumnChartPoint>();
 
-  /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
-   *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
-   *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
-   *  opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark
-   *  and pays for it with the rest of the chart. */
+  /** Dims every OTHER mark while one is hovered or focused. Dimmed marks lose separation between
+   *  them (three series: worst pair dE 14.8 to 2.1 at `--ds-chart-dim-opacity` 0.3, measured 2026-09-13). */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Milliseconds between one mark's entrance and the next; `0` is no stagger. The steps narrow to
-   *  fit the whole spread within 260ms. */
+  /** Milliseconds between one mark's entrance and the next; `0` turns it off. The step narrows to fit within 260ms. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
   /** Whether a hovered or focused column opens a tooltip. */
@@ -199,7 +193,7 @@ export class ColumnChartComponent
       'dsChartTooltip',
     );
 
-  /** Where the tooltip is pinned: `'mark'` (default) is the column; `'cell'` is the full-height category cell. */
+  /** Where the tooltip anchors: `'mark'` (default) is the column; `'cell'` is the full-height category cell. */
   readonly tooltipAnchor = input<'mark' | 'cell'>('mark');
 
   /** Keeps the panel clear of the value printed above the column. */

@@ -124,28 +124,25 @@ export interface DsConfig {
     withDot?: boolean;
   };
   chart?: {
-    /** Default `dataTable` for all five charts. Default `'none'`. An accessibility policy: set
-     *  `'toggle'` to offer the annex everywhere. */
+    /** Default `dataTable` for every chart. Default `'none'`; `'toggle'` offers the annex everywhere. */
     dataTable?: ChartDataTable;
     /** Whether every chart draws its own bordered, padded box. Default `'auto'`, which draws it. */
     frame?: ChartFrame;
-    /** How long every chart's tooltip stays after the pointer leaves the mark, in milliseconds.
-     *  Default 500, so the panel glides to the next mark. Zero takes it away at once. */
+    /** How long a chart's tooltip stays after the pointer leaves the mark, in milliseconds.
+     *  Default 500; zero closes it at once. */
     tooltipLingerMs?: number;
-    /** Whether a click on a mark, or on a category under the category cursor, holds its tooltip
-     *  and highlight in place. Default `true`. A second click, Escape or a press elsewhere lets go.
-     *  A tap holds whatever this says. */
+    /** Whether a click on a mark or category holds its tooltip and highlight. Default `true`.
+     *  A second click, Escape or a press elsewhere releases. A tap holds whatever this says. */
     pinOnClick?: boolean;
-    /** How long the pointer rests on a mark, a category or a legend entry before the chart answers
-     *  it, in milliseconds. Default 0. Once answered, the next mark answers at once until the
-     *  pointer leaves the chart; focus, a tap and a pinning click always answer at once. */
+    /** Milliseconds the pointer rests on a mark, category or legend entry before the chart answers.
+     *  Default 0. After one answer the next is immediate until the pointer leaves the chart;
+     *  focus, a tap and a pinning click are always immediate. */
     hoverDelayMs?: number;
-    /** Whether every chart's tooltip draws a colour dot beside each reading. Unset draws them for two
-     *  to four readings: a lone reading has nothing to tell apart, and from five a column of dots
-     *  reads as noise. */
+    /** Whether a chart's tooltip draws a colour dot beside each reading. Unset draws them for two
+     *  to four readings. */
     tooltipSwatches?: boolean;
-    /** How every chart formats its values, annex table and description included. Default groups
-     *  digits in `locale` and abbreviates on a tick (`1.2M`). */
+    /** How charts format values, annex table and description included. Default groups digits in
+     *  `locale` and abbreviates on a tick (`1.2M`). */
     valueFormat?: ChartValueFormat;
     /** How charts build themselves on a long page. All off by default. */
     rendering?: ChartRendering;

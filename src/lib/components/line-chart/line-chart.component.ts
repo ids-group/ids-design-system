@@ -130,8 +130,7 @@ export class LineChartComponent
   /** X labels. Every series' `data` is read against this length. */
   readonly categories = input<readonly string[]>([]);
 
-  /** One line per entry. Every series is read against `categories`, so a series longer than it
-   *  loses its tail and a shorter one ends early. */
+  /** One line per entry, read against `categories`: a longer series loses its tail, a shorter one ends early. */
   readonly series = input<readonly LineChartSeries[]>([]);
 
   /** How a secondary axis relates to the primary one. */
@@ -140,22 +139,17 @@ export class LineChartComponent
   /** Draws a dot at every reading. Off, the dots appear on hover and on focus only. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
 
-  /** Lays the lines and their markers on a band of the surface colour. Off where the plot holds
-   *  nothing for them to cross and the band only separates them from the gridlines. */
+  /** Lays the lines and their markers on a band of the surface colour. */
   readonly outline = input(true, { transform: booleanAttribute });
 
-  /** Labels pinned over their readings, for the points that have to read without a pointer. The plot
-   *  draws them `aria-hidden`; their labels are appended to the accessible name instead. */
+  /** Labels pinned over their readings. Drawn `aria-hidden`; their text is appended to the accessible name. */
   readonly annotations = input<readonly LineChartAnnotation[]>([]);
 
   /** The point clicked or activated with Enter or Space, whether or not `interactive` is set. */
   readonly pointClicked = output<LineChartReading>();
 
-  /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
-   *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
-   *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
-   *  opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark
-   *  and pays for it with the rest of the chart. */
+  /** Dims every OTHER mark while one is hovered or focused. Dimmed marks lose separation between
+   *  them (three series: worst pair dE 14.8 to 2.1 at `--ds-chart-dim-opacity` 0.3, measured 2026-09-13). */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
   /** What a `null` reading draws. The default `'break'` does not assert a missing reading is zero. */
@@ -167,26 +161,23 @@ export class LineChartComponent
   /** How several series share the value axis. Stacking runs per axis. */
   readonly stack = input<LineChartStack>('none');
 
-  /** Names the first axis's unit beside it. On a two-scale plot the colour says which line reads
-   *  which axis and this says what the numbers are. */
+  /** Names the first axis's unit beside it. */
   readonly yAxisLabel = input<string | null>(null);
 
   /** `yAxisLabel` for the second axis. */
   readonly secondaryAxisLabel = input<string | null>(null);
 
-  /** How many value-axis ticks to aim for. A hint: ticks snap to a round step. */
+  /** How many value-axis ticks to aim for; ticks snap to a round step. */
   readonly tickCount = input(LINE_CHART_DEFAULT_TICK_COUNT, {
     transform: numberAttribute,
   });
 
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
-   *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
-   *  `'none'` belongs only where the same data is already in a table on the page.
-   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
+   *  `'visible'` opens it, `'none'` renders none. Unset falls back to `DS_CONFIG.chart.dataTable`,
+   *  then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
-  /** Pins the value axis maximum so separate renders are comparable. Null keeps the derived axis.
-   *  Applies to the primary axis; `maxSecondary` pins the second. A maximum below the data does not
-   *  clip it: the larger of the two wins. */
+  /** Pins the primary value axis maximum so separate renders are comparable; `maxSecondary` pins
+   *  the second. Null keeps the derived axis. A maximum below the data does not clip it. */
   readonly max = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
@@ -227,15 +218,14 @@ export class LineChartComponent
   /** Ids of the series the legend has switched off. */
   readonly hiddenSeries = model<readonly string[]>([]);
 
-  /** Whether hiding a series re-scales the value axis to what is left. Off by default, so comparisons stay on one scale. */
+  /** Whether hiding a series re-scales the value axis to what is left. */
   readonly rescaleOnHide = input(false, { transform: booleanAttribute });
 
   /** Whether the legend switches series off. Off leaves it a plain key. */
   readonly legendFilters = input(false, { transform: booleanAttribute });
 
-  /** What a legend control does. `'isolate'` shows one series and hides the rest; `'toggle'` hides
-   *  one and leaves the rest. Forwarded to `ds-chart-legend`, which renders radios for the first and
-   *  checkboxes for the second. */
+  /** What a legend control does. `'isolate'` shows one series and hides the rest (radios);
+   *  `'toggle'` hides one and leaves the rest (checkboxes). */
   readonly legendMode = input<'toggle' | 'isolate'>('isolate');
 
   /** Shown in place of the plot once the legend has switched every series off. Unset falls back to
@@ -246,18 +236,17 @@ export class LineChartComponent
     () => this.noVisibleSeriesText() ?? this.intl().chart.noVisibleSeries,
   );
 
-  /** Gives every series a dash pattern, so lines differ by shape as well as colour. Off by default;
-   *  use it for monochrome print or a retuned palette. */
+  /** Gives every series a dash pattern, so lines differ by shape as well as colour. */
   readonly patterns = input(false, { transform: booleanAttribute });
 
-  /** Milliseconds between one series' entrance and the next; `0` turns the stagger off. The step
-   *  narrows so the last series still starts within the stagger budget. */
+  /** Milliseconds between one series' entrance and the next; `0` turns it off. The step narrows
+   *  so the last series still starts within the stagger budget. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
   protected readonly highlightedSeries = signal<string | null>(null);
 
-  /** Every series with its band's own span, stacked per axis. Hiding a series does not re-pile the
-   *  rest, so the ones still drawn do not move. A `null` stays a hole and adds nothing to the pile. */
+  /** Every series with its band's span, stacked per axis. Hiding a series does not re-pile the
+   *  rest. A `null` stays a hole and adds nothing to the pile. */
   protected readonly stackedSeries = computed<readonly ResolvedSeries[]>(() => {
     const mode = this.stack();
     const entries = this.resolvedSeries();
@@ -358,9 +347,8 @@ export class LineChartComponent
       'dsChartTooltip',
     );
 
-  /** Where the tooltip is pinned. `'reading'`, the default, is the highest reading in the
-   *  category, so the panel stays put while the pointer moves within one band. `'pointer'` follows
-   *  the cursor. */
+  /** Where the tooltip anchors. `'reading'` (default) is the highest reading in the category, so
+   *  the panel stays put within one band; `'pointer'` follows the cursor. */
   readonly tooltipAnchor = input<'reading' | 'pointer'>('reading');
 
   protected readonly dataTableColumns = computed<readonly string[]>(() => [
