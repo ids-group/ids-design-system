@@ -8898,6 +8898,76 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "sparkline": {
+    "key": "sparkline",
+    "selector": "ds-sparkline",
+    "isElement": true,
+    "className": "SparklineComponent",
+    "status": "stable",
+    "importName": "SparklineComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input-required",
+        "type": "readonly (number | null)[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "One reading per step, oldest first. `null` breaks the line."
+      },
+      {
+        "name": "categories",
+        "kind": "input",
+        "type": "readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "What each reading is, for the tooltip. Left out, the tooltip prints the value alone."
+      },
+      {
+        "name": "label",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name, and the series name in the tooltip. Left out, the sparkline is decorative and hidden from assistive technology: it is then taken to sit beside a value that says it."
+      },
+      {
+        "name": "scale",
+        "kind": "input",
+        "type": "SparklineScale",
+        "union": [
+          "data",
+          "zero"
+        ],
+        "default": "'data'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Shows the reading under the pointer."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "((value: number) => string) | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats the value the tooltip prints. Unset, the locale's plain number format."
+      }
+    ],
+    "outputs": []
+  },
   "spinner": {
     "key": "spinner",
     "selector": "ds-spinner",

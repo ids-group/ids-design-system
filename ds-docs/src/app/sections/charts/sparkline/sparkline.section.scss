@@ -1,0 +1,20 @@
+.spark-table {
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: var(--space-2) var(--space-4);
+    border-block-end: 1px solid var(--border-default);
+    text-align: start;
+  }
+
+  .value {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.wide {
+  --ds-sparkline-width: 200px;
+  --ds-sparkline-height: 48px;
+}

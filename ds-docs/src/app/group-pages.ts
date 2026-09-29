@@ -78,6 +78,7 @@ import { PieChartSection } from './sections/charts/pie-chart/pie-chart.section';
 import { FunnelChartSection } from './sections/charts/funnel-chart/funnel-chart.section';
 import { HeatmapChartSection } from './sections/charts/heatmap-chart/heatmap-chart.section';
 import { LineChartSection } from './sections/charts/line-chart/line-chart.section';
+import { SparklineSection } from './sections/charts/sparkline/sparkline.section';
 import { ScatterChartSection } from './sections/charts/scatter-chart/scatter-chart.section';
 import { WaterfallChartSection } from './sections/charts/waterfall-chart/waterfall-chart.section';
 
@@ -241,6 +242,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       HeatmapChartSection,
       LineChartSection,
       ScatterChartSection,
+      SparklineSection,
       WaterfallChartSection,
     ],
   },

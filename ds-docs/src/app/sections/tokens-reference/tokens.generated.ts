@@ -6491,6 +6491,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Sparkline",
+    "selector": ".sparkline",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-sparkline-width",
+        "value": "80px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sparkline-height",
+        "value": "24px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sparkline-line-color",
+        "value": "var(--ds-chart-series-1-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sparkline-line-width",
+        "value": "1.5px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sparkline-dot-radius",
+        "value": "2.5px",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Spinner",
     "selector": ".spinner",
     "description": "",
