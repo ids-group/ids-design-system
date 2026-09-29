@@ -26,12 +26,15 @@ export interface ChartDefaultInputs {
   /** Absent on a chart with nothing to pin. */
   readonly pinOnClick?: Signal<boolean | null>;
   readonly hoverDelayMs?: Signal<number | null>;
+  /** Absent on a chart with no tooltip of its own. */
+  readonly tooltipSwatches?: Signal<boolean | null>;
 }
 
 const NO_DATA_TABLE = signal<ChartDataTable | null>(null);
 const NO_LINGER = signal<number | null>(null);
 const NO_PIN = signal<boolean | null>(null);
 const NO_DELAY = signal<number | null>(null);
+const NO_SWATCHES = signal<boolean | null>(null);
 
 /** How long a resting pointer waits before a chart answers it, when nothing sets it.
  *
@@ -86,6 +89,11 @@ export function resolveChartDefaults(inputs: ChartDefaultInputs) {
       inputs.hoverDelayMs ?? NO_DELAY,
       (config) => config.chart?.hoverDelayMs,
       CHART_HOVER_DELAY_MS,
+    ),
+    tooltipSwatches: resolveWithConfig<boolean | 'auto'>(
+      inputs.tooltipSwatches ?? NO_SWATCHES,
+      (config) => config.chart?.tooltipSwatches,
+      'auto',
     ),
   };
 }

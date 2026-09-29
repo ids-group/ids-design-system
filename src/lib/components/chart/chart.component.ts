@@ -192,6 +192,13 @@ export class ChartComponent implements ChartScales {
    *  falls back to `DS_CONFIG.chart.frame`, then `'auto'`. */
   readonly frame = input<ChartFrame | null>(null);
 
+  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
+  readonly tooltipSwatches = input<boolean | null>(null, {
+    transform: (value: unknown) =>
+      value == null ? null : booleanAttribute(value),
+  });
+
   /** Draws a placeholder in place of the plot, at the plot's own height, so the page does not
    *  resize when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
@@ -234,6 +241,8 @@ export class ChartComponent implements ChartScales {
   readonly secondaryAxisLabel = input<string | null>(null);
 
   private readonly defaults = resolveChartDefaults(this);
+
+  protected readonly tooltipSwatchesResolved = this.defaults.tooltipSwatches;
   protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly emptyTextResolved = this.defaults.emptyText;

@@ -37,6 +37,7 @@
   } @else {
     <ds-chart
       frame="none"
+      [tooltipSwatches]="tooltipSwatches()"
       [categories]="categories()"
       [tickCount]="tickCount()"
       [valueFormat]="valueFormatResolved()"

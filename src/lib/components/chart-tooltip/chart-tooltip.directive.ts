@@ -101,6 +101,9 @@ export class ChartTooltipDirective {
    *  the pointer the pane stays inert, or the mark it covers never sees the pointer at all. */
   readonly dsChartTooltipPinned = input(false);
 
+  /** Whether each reading carries its colour dot. `'auto'` draws them for up to four readings. */
+  readonly dsChartTooltipSwatches = input<boolean | 'auto'>('auto');
+
   private overlayRef: OverlayRef | null = null;
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
   private detachScrollReposition: (() => void) | null = null;
@@ -156,6 +159,7 @@ export class ChartTooltipDirective {
     );
     this.panelRef?.setInput('context', context);
     this.panelRef?.setInput('template', this.dsChartTooltipTemplate());
+    this.panelRef?.setInput('swatches', this.dsChartTooltipSwatches());
     if (from) {
       // The new reading is rendered before the landing is measured, or a panel that changes size
       // lands where the old one would have.

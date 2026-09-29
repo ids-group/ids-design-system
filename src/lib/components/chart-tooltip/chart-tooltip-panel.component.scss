@@ -47,6 +47,10 @@
   gap: var(--space-2);
 }
 
+.no-swatches .entry {
+  grid-template-columns: 1fr auto;
+}
+
 /* Under the value, in the swatch's column and the label's: the detail belongs to the reading
    above it, not to the next one. */
 .detail {
@@ -55,6 +59,10 @@
   color: var(--_chart-tooltip-text-color);
   opacity: 0.7;
   font-size: var(--font-size-2xs);
+}
+
+.no-swatches .detail {
+  grid-column: 1 / -1;
 }
 
 /* Big enough to read a colour at a glance. */

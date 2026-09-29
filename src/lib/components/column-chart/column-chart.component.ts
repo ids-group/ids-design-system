@@ -185,6 +185,13 @@ export class ColumnChartComponent {
    *  is one decision per app rather than per plot. */
   readonly frame = input<ChartFrame | null>(null);
 
+  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
+  readonly tooltipSwatches = input<boolean | null>(null, {
+    transform: (value: unknown) =>
+      value == null ? null : booleanAttribute(value),
+  });
+
   /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default,
    *  500, lets the pointer cross to the next mark and find the same panel, which glides there
    *  instead of closing and opening again. Zero takes it away at once. Unset falls back to
