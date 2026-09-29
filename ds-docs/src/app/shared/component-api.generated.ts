@@ -1906,7 +1906,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'auto'",
         "required": false,
-        "description": "Draws a band and a crosshair down the category under the pointer and reports it to every mark through `activeIndex`; with two or more tooltip-showing marks the panel names every reading at that category. `'auto'` (default) is `'category'` for such a composed plot and `'none'` for a single-mark plot, which already answers per mark."
+        "description": "Draws a band and a crosshair down the category under the pointer and reports it to every mark through `activeIndex`; with two or more tooltip-showing marks the panel names every reading at that category. `'auto'` (default) is `'category'` for such a composed plot or for a mark with `tooltip=\"axis\"`, and `'none'` otherwise, where each mark answers for itself."
       },
       {
         "name": "cursorPin",
@@ -2477,7 +2477,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'item'",
         "required": false,
-        "description": "Whether a hovered or focused reading opens a tooltip, and for what. `'item'` names the marker; `'axis'` names every series at the category under the pointer. `'axis'` follows the container's `cursor`: set `cursor=\"category\"` on `ds-chart` or nothing marks the category being read."
+        "description": "Whether a hovered or focused reading opens a tooltip, and for what. `'item'` names the marker; `'axis'` names every series at the category under the pointer, and turns the container's category cursor on under `cursor=\"auto\"`."
       },
       {
         "name": "tooltipAnchor",

@@ -23,6 +23,9 @@ export interface ChartTooltipSource {
   /** Whether this mark shows a tooltip at all; absent means it does. Two such marks make the plot
    *  composed, which turns the category cursor on under `cursor="auto"`. */
   readonly offersTooltip?: Signal<boolean>;
+  /** Whether the mark's own panel is about the category, as `tooltip="axis"` is. One such mark
+   *  turns the category cursor on under `cursor="auto"`. */
+  readonly readsCategory?: Signal<boolean>;
   /** This mark's reading at the cursor's category, as an element, pointer over it or not. A category
    *  panel hangs over the highest of these. Absent falls back to `origin`. */
   readonly axisOrigin?: Signal<Element | null>;

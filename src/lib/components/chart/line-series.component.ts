@@ -163,8 +163,8 @@ export class LineSeriesComponent implements OnDestroy {
   readonly curve = input<ChartCurve>('linear');
 
   /** Whether a hovered or focused reading opens a tooltip, and for what. `'item'` names the marker;
-   *  `'axis'` names every series at the category under the pointer. `'axis'` follows the container's
-   *  `cursor`: set `cursor="category"` on `ds-chart` or nothing marks the category being read. */
+   *  `'axis'` names every series at the category under the pointer, and turns the container's
+   *  category cursor on under `cursor="auto"`. */
   readonly tooltip = input<ChartTooltipTrigger>('item');
 
   /** Where an `'axis'` panel hangs: `'reading'` over the highest reading in the category (stays put
@@ -210,6 +210,7 @@ export class LineSeriesComponent implements OnDestroy {
       context: this.tooltipContext,
       origin: this.tooltipOrigin,
       offersTooltip: computed(() => this.tooltip() !== 'none'),
+      readsCategory: computed(() => this.tooltip() === 'axis'),
       axisOrigin: this.topReadingElement,
       axisEntries: this.axisEntries,
     });

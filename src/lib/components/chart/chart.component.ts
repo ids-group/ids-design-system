@@ -119,8 +119,8 @@ export class ChartComponent implements ChartScales {
 
   /** Draws a band and a crosshair down the category under the pointer and reports it to every mark
    *  through `activeIndex`; with two or more tooltip-showing marks the panel names every reading at
-   *  that category. `'auto'` (default) is `'category'` for such a composed plot and `'none'` for a
-   *  single-mark plot, which already answers per mark. */
+   *  that category. `'auto'` (default) is `'category'` for such a composed plot or for a mark with
+   *  `tooltip="axis"`, and `'none'` otherwise, where each mark answers for itself. */
   readonly cursor = input<'none' | 'category' | 'auto'>('auto');
 
   /** Whether a press holds the category cursor where it is. Released by pressing again, Escape, or a
@@ -461,13 +461,19 @@ export class ChartComponent implements ChartScales {
       ).length > 1,
   );
 
+  private readonly readsCategory = computed(() =>
+    [...this.tooltipSources().values()].some(
+      (source) => source.readsCategory?.() ?? false,
+    ),
+  );
+
   protected readonly cursorResolved = computed(() => {
     const cursor = this.cursor();
     if (cursor !== 'auto') {
       return cursor;
     }
 
-    return this.composed() ? 'category' : 'none';
+    return this.composed() || this.readsCategory() ? 'category' : 'none';
   });
 
   readonly cursorOn = computed(() => this.cursorResolved() === 'category');

@@ -12,6 +12,11 @@
 
 ### Fixed
 
+- **A `dsLineSeries` with `tooltip="axis"` opens its panel under the default `cursor`.**
+  `cursor="auto"` turned the category cursor on only for two or more marks that show a tooltip,
+  so a plot whose one tooltip-showing mark was an axis-tooltip line answered nothing until
+  `cursor="category"` was set. `auto` now turns it on for any mark with `tooltip="axis"`.
+
 - **A toast's announcement stays off screen before any dialog has opened.** `ToastService` speaks
   through the CDK `LiveAnnouncer`, whose region carries `.cdk-visually-hidden`, and the CDK loads that
   rule only with a dialog or a focus trap. On a page where neither had opened yet, the first toast's
@@ -22,6 +27,7 @@
 
 | Delete | Why | Replace with |
 | --- | --- | --- |
+| `cursor="category"` on a `ds-chart` set only so a `tooltip="axis"` line opens its panel | `cursor="auto"` turns the category cursor on for a mark with `tooltip="axis"` | nothing; keep it on a plot whose marks do not use `tooltip="axis"` |
 | an app-level `@include cdk.a11y-visually-hidden()` or `a11y-prebuilt.css` added so toast announcements stay hidden | `styles/toast-overlay` declares `.cdk-visually-hidden` | nothing; keep it where the app loads neither `styles/ds` nor `styles/toast-overlay` |
 
 ## 0.14.3 — 2026-09-27
