@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.14.4 — 2026-09-29
+
 ### Breaking
 
 - **A chart answers a resting pointer at once.** `DS_CONFIG.chart.hoverDelayMs` now defaults to
