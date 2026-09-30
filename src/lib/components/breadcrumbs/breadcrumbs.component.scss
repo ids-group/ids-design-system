@@ -9,6 +9,12 @@
   --_breadcrumbs-label-color-hover:     var(--ds-breadcrumbs-label-color-hover,     var(--accent));
   --_breadcrumbs-separator-icon-color: var(--ds-breadcrumbs-separator-icon-color, var(--icon-muted));
   --_breadcrumbs-current-label-color:   var(--ds-breadcrumbs-current-label-color,   var(--text-primary));
+  --_breadcrumbs-gap:                   var(--ds-breadcrumbs-gap,                   var(--space-2));
+  --_breadcrumbs-font-size:             var(--ds-breadcrumbs-font-size,             var(--font-size-s));
+  --_breadcrumbs-font-weight:           var(--ds-breadcrumbs-font-weight,           var(--font-weight-regular));
+  --_breadcrumbs-current-label-font-weight: var(--ds-breadcrumbs-current-label-font-weight, var(--font-weight-bold));
+  --_breadcrumbs-label-max-width:       var(--ds-breadcrumbs-label-max-width,       16ch);
+  --_breadcrumbs-current-label-max-width: var(--ds-breadcrumbs-current-label-max-width, 32ch);
 
   display: inline-flex;
   min-width: 0;
@@ -18,8 +24,8 @@
 .breadcrumbs {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
+  gap: var(--_breadcrumbs-gap);
+  font: var(--_breadcrumbs-font-weight) var(--_breadcrumbs-font-size) / var(--line-height-flat) var(--font-sans);
   color: var(--_breadcrumbs-label-color);
   min-width: 0;
   max-width: 100%;
@@ -67,16 +73,16 @@
 
   .current {
     color: var(--_breadcrumbs-current-label-color);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--_breadcrumbs-current-label-font-weight);
   }
 
   .label {
     @include text-clip.single-line-ellipsis;
 
-    max-width: 16ch;
+    max-width: var(--_breadcrumbs-label-max-width);
   }
 
   .current .label {
-    max-width: 32ch;
+    max-width: var(--_breadcrumbs-current-label-max-width);
   }
 }
