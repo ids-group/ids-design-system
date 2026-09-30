@@ -1,15 +1,19 @@
 #!/usr/bin/env node
 // Run by the npm `version` hook (after the bump, before the commit/tag): stamp the
 // Unreleased section with the new version + local date, open a fresh Unreleased,
-// and stage CHANGELOG.md so it lands in the release commit and tag.
+// and stage CHANGELOG.md so it lands in the release commit and tag. A stable version also
+// absorbs the prereleases cut since the last stable one (tools/release-fold.mjs).
 import { execSync } from 'node:child_process';
 import {
   existsSync,
+  readdirSync,
   readFileSync,
   rmSync,
   writeFileSync,
   renameSync,
 } from 'node:fs';
+import { compareVersions, isPrerelease } from './release-tags.mjs';
+import { foldChangelog, foldManifests } from './release-fold.mjs';
 
 const version = process.env.npm_package_version;
 if (!version) {
@@ -30,13 +34,19 @@ function stampUnreleased(path) {
     );
     process.exit(1);
   }
-  writeFileSync(
-    path,
-    changelog.replace(
-      /^## Unreleased$/m,
-      `## Unreleased\n\n## ${version} — ${date}`,
-    ),
+  let stamped = changelog.replace(
+    /^## Unreleased$/m,
+    `## Unreleased\n\n## ${version} — ${date}`,
   );
+  if (!isPrerelease(version)) {
+    const { text, folded } = foldChangelog(stamped, version);
+    stamped = text;
+    if (folded.length)
+      console.log(
+        `changelog: moved ${folded.join(', ')} into ${version} in ${path}.`,
+      );
+  }
+  writeFileSync(path, stamped);
   execSync(`git add "${path}"`);
   console.log(`changelog: stamped ${path} ${version} — ${date}.`);
 }
@@ -47,11 +57,21 @@ function hasUnreleasedEntry(path) {
   return /^\s*-\s+\S/m.test(section);
 }
 
+function hasPrereleaseBlock(path) {
+  const text = readFileSync(path, 'utf8').replace(/\r\n/g, '\n');
+  const next = text.split(/^## Unreleased$/m)[1]?.match(/^## (\S+) — /m);
+  return Boolean(next && isPrerelease(next[1]));
+}
+
 stampUnreleased('CHANGELOG.md');
 
 // Stamped only when the cycle wrote something: an empty version block says nothing.
 const designSyncLog = '.design-sync/CHANGELOG.md';
-if (existsSync(designSyncLog) && hasUnreleasedEntry(designSyncLog)) {
+if (
+  existsSync(designSyncLog) &&
+  (hasUnreleasedEntry(designSyncLog) ||
+    (!isPrerelease(version) && hasPrereleaseBlock(designSyncLog)))
+) {
   stampUnreleased(designSyncLog);
 }
 
@@ -59,7 +79,50 @@ if (existsSync(designSyncLog) && hasUnreleasedEntry(designSyncLog)) {
 // drafts migrations/unreleased.json; at release time it becomes migrations/<version>.json
 // (the auto-update plugin's planner prefers these manifests over parsing the prose).
 const draft = 'migrations/unreleased.json';
-if (existsSync(draft)) {
+const prereleaseManifests = isPrerelease(version)
+  ? []
+  : readdirSync('migrations')
+      .filter((file) => /^\d+\.\d+\.\d+-.+\.json$/.test(file))
+      .map((file) => file.slice(0, -'.json'.length))
+      .sort(compareVersions);
+for (const prerelease of prereleaseManifests) {
+  if (existsSync(`migrations/${prerelease}`)) {
+    console.error(
+      `changelog: migrations/${prerelease}/ is a prerelease guide, which the fold does not move — merge it into migrations/unreleased/ first.`,
+    );
+    process.exit(1);
+  }
+}
+if (prereleaseManifests.length) {
+  const target = `migrations/${version}.json`;
+  if (existsSync(target)) {
+    console.error(
+      `changelog: ${target} already exists — refusing to overwrite the manifest.`,
+    );
+    process.exit(1);
+  }
+  const sources = prereleaseManifests.map(
+    (prerelease) => `migrations/${prerelease}.json`,
+  );
+  if (existsSync(draft)) sources.push(draft);
+  let folded;
+  try {
+    folded = foldManifests(
+      version,
+      sources.map((path) => JSON.parse(readFileSync(path, 'utf8'))),
+    );
+  } catch (error) {
+    console.error(
+      `changelog: cannot fold ${sources.join(', ')} — ${error.message}.`,
+    );
+    process.exit(1);
+  }
+  writeFileSync(target, JSON.stringify(folded, null, 2) + '\n');
+  for (const path of sources) rmSync(path);
+  execSync(`git rm --cached --ignore-unmatch --quiet -- ${sources.join(' ')}`);
+  execSync(`git add ${target}`);
+  console.log(`changelog: moved ${sources.join(', ')} -> ${target}.`);
+} else if (existsSync(draft)) {
   const target = `migrations/${version}.json`;
   if (existsSync(target)) {
     console.error(

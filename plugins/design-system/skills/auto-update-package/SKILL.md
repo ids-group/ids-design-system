@@ -22,7 +22,8 @@ only when a version cannot be made green.
 
 ## Invocation arguments (`$ARGUMENTS`)
 
-- **A semver** (e.g. `0.4.0`) → target version: end the chain there instead of the latest.
+- **A semver** (e.g. `0.4.0`, or a beta such as `0.15.1-beta.2`) → target version: end the chain
+  there instead of the latest. A beta target has its own rules in Phase A step 6.
 - **`dry-run`** (or `plan`) → **plan-only mode**: run Phase A read-only (no branch, no
   AskUserQuestion about git strategy), then for each chain version run plan + find + a read-only
   customization-drift scan (the extracted `v<V>` tree lets you check consumer deep
@@ -204,7 +205,7 @@ field meanings, the verification rule and the triage flow are defined once, in t
 - **The manifest evidence the run collects is feedback, not prose:** the locator-dead set,
   surface-under-declared hits, hits on `surface: "none"` items, a misfiled informational entry,
   and every manifest-truth defect or unverified value become entries with `target:
-  manifest:<V>#<itemId>` (or `tool:check-manifest-truth` when the tool, not the manifest, is wrong).
+manifest:<V>#<itemId>` (or `tool:check-manifest-truth` when the tool, not the manifest, is wrong).
 - Never file feedback about the consumer's own code quality. That is not this plugin's business.
 
 ## Phase A — Run setup (do once)
@@ -249,10 +250,23 @@ step 8's question while the wave runs. Collect the whole wave before Phase B.
    went green, and computing from the lockfile would silently skip it. Fetch each chain version's
    `peerDependencies` now (`npm view …@V peerDependencies --json` needs no install) and tell the
    user up front which version, if any, will stop the run on an unsatisfied peer.
-   If `current` is not a published stable, or is newer than every published
-   stable (a local build ahead of npm), or the chain is empty → report "already up to date / ahead
-   of published" and stop. **If the user named a target version** in their invocation, validate it
-   exists among the published stables and end the chain there instead of the latest.
+   Semver order puts a prerelease BELOW its own release (`0.14.6-beta.2` < `0.14.6`).
+   **A `current` that is a published prerelease** (`X.Y.Z-beta.N`) is a valid start: the chain
+   begins at the first stable above it, which is usually `X.Y.Z` itself. A stable release absorbs
+   the prereleases cut since the stable before it, so the `## X.Y.Z` block and
+   `migrations/X.Y.Z.json` repeat what the consumer already took from its beta. Those items find
+   no old API left and end `not-applicable`, so the step is harmless.
+   If `current` is neither a published stable nor a published prerelease, or is newer than every
+   published stable (a local build ahead of npm), or the chain is empty → report "already up to
+   date / ahead of published" and stop. **If the user named a target version** in their
+   invocation, validate it exists among the published versions and end the chain there instead of
+   the latest.
+   **A prerelease target** (`X.Y.Z-beta.N`) is honoured only while no stable `X.Y.Z` or later is
+   published. Once one is, that beta's changes live in the stable block, so report "fold-in:
+   target the stable instead" and stop. Otherwise the chain is every stable above `current` below
+   `X.Y.Z`, then every published `X.Y.Z-beta.*` above `current`, up to and including the target,
+   one step each. Each beta step reads its own `## X.Y.Z-beta.N` block and
+   `migrations/X.Y.Z-beta.N.json`, both present on the default branch until the stable is cut.
 7. **Clone the DS sources + load the changelog.** Clone
    `https://bitbucket.org/itband/ids-design-system.git` into your scratchpad (NEVER inside the
    consumer repo) — a FULL clone with tags (no `--depth`, no `--no-tags`): the per-version tree
@@ -378,6 +392,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 
    An item in the Phase A supersedes skip set is skipped here, for every item kind, with its
    reason recorded.
+
 3. **Apply (parallel, sonnet).** Group the finder's hits by file; dispatch one
    `ds-migration-applier` per file — or per **small disjoint batch** of files (≤~5) when many small
    files carry the same items. The invariant is disjointness: a file is NEVER shared between

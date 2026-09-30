@@ -60,7 +60,7 @@ install_deps
 
 # Runs preflight, then the version hook (tools/prepare-release-commit.mjs), then commit + tag.
 if [ "$level" = "beta" ]; then
-  npm version prerelease --preid=beta -m "release: %s"
+  node tools/release-beta.mjs
 else
   npm version "$level" -m "release: %s"
 fi

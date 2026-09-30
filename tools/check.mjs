@@ -83,6 +83,7 @@ export const GROUPS = {
   release: [
     'tools-parse',
     'class-surface-entry',
+    'release-fold:selftest',
     'migration-lint:selftest',
     'migration-lint',
     'delete-tables',

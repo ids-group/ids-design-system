@@ -28,11 +28,7 @@ lone `>` is not prettier's normal line-breaking. Where one survives — 57 sites
 `<code>`, `<span>` or `<strong>` — it is prettier protecting RENDERED whitespace:
 
 ```html
-Entrance played with
-<code class="t-mono-inline">
-  {{ preset() }}
-</code
->.
+Entrance played with <code class="t-mono-inline"> {{ preset() }} </code>.
 ```
 
 `<code>` is inline, so a break between `</code>` and the `.` would print a space before the period.
@@ -101,13 +97,14 @@ Merge `dev` → `main` yourself first, then from a clean, in-sync `main`:
 npm run release:patch   # 0.1.0 -> 0.1.1  bugfixes
 npm run release:minor   # 0.1.0 -> 0.2.0  new components/inputs/tokens
 npm run release:major   # 0.x   -> 1.0.0  breaking changes
-npm run release:beta    # 0.2.0 -> 0.2.1-beta.0  pre-release
+npm run release:beta    # 0.2.0 -> 0.2.1-beta.1, then -beta.2  pre-release
 
 git push origin main --follow-tags   # the tag push triggers CI publish
 ```
 
 Each `release:*` runs preflight checks first (must be on a clean, in-sync `main`
-with a non-empty `## Unreleased` CHANGELOG section), bumps the version, stamps the
+with a non-empty `## Unreleased` CHANGELOG section, unless a stable release only promotes a
+beta), bumps the version, stamps the
 CHANGELOG (`## Unreleased` → `## x.y.z — date`, opening a fresh Unreleased), and
 creates a `release: x.y.z` commit plus a `vX.Y.Z` git tag locally — it does **not**
 publish. The tag push to Bitbucket runs `bitbucket-pipelines.yml`, which builds
@@ -130,8 +127,14 @@ Manual publish (fallback, requires an authenticated npm session):
 npm run publish:manual
 ```
 
-Pre-releases: `npm run release:beta` bumps to `x.y.z-beta.N`; the matching tag
-publishes under the `next` dist-tag (never `latest`).
+Pre-releases: `npm run release:beta` (or `release-beta`) bumps a stable `x.y.z` to
+`x.y.(z+1)-beta.1`, and a beta to the next counter (`-beta.2`). The matching tag publishes under
+the `next` dist-tag (never `latest`) and stops there: no docs deploy, no Claude Design bundle,
+because both show the version `latest` installs. A beta takes `## Unreleased` and
+`migrations/unreleased.json` like any release. The next stable release MOVES every beta block and
+manifest since the last stable into its own `## x.y.z` and `migrations/x.y.z.json`, so a consumer
+stepping stable to stable reads each change once. Its `## Unreleased` may be empty when the stable
+only promotes the beta.
 
 ## A claim about a past release is checked against that release
 

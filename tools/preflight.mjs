@@ -46,7 +46,11 @@ if (!unreleased) fail("no '## Unreleased' section in CHANGELOG.md.");
 const hasEntry = unreleased[1]
   .split('\n')
   .some((line) => line.trim().startsWith('-'));
-if (!hasEntry)
+// A stable release straight after a beta may add nothing: it moves the beta's blocks into itself.
+const betaBelow = /^## \d+\.\d+\.\d+-\S+ — /.test(
+  changelog.slice(unreleased.index + unreleased[0].length),
+);
+if (!hasEntry && !(betaBelow && process.env.DS_RELEASE_BETA !== '1'))
   fail("'## Unreleased' is empty — add release notes before releasing.");
 
 // The checks and their order live in `tools/check.mjs` (GROUPS.release), with the reasons for
@@ -61,12 +65,14 @@ const selftestHint = (lint) =>
   'that could not run means nothing has been proved either way.';
 
 const HINTS = {
-  'tools-parse': 'a script in tools/ does not parse — the file and the error are above.',
+  'tools-parse':
+    'a script in tools/ does not parse — the file and the error are above.',
   'class-surface-entry':
     'the class-surface entry check did not pass — read its output above. If it named classes, ' +
     'the `## Unreleased` entry is behind the code; if it named none, it could not run.',
   'migration-lint:selftest': selftestHint('migration-lint'),
-  'migration-lint': 'the manifest lint did not pass — the rule it names above is the diagnosis.',
+  'migration-lint':
+    'the manifest lint did not pass — the rule it names above is the diagnosis.',
   'delete-tables':
     'a manifest `deleteList` row is not reachable from its CHANGELOG block (errors above).',
   'manifest-coverage:selftest': MANIFEST_COVERAGE,
@@ -78,7 +84,8 @@ const HINTS = {
     'changelog-lint did not pass — read the rule it names above. Its fifteen rules cover ' +
     'unreachable names, internal references, section order and more, so the rule id is the ' +
     'diagnosis, not this line.',
-  'focus-rings': 'a ringed shell does not silence the base focus indicator (errors above).',
+  'focus-rings':
+    'a ringed shell does not silence the base focus indicator (errors above).',
   'docs-attrs':
     'a static attribute on a ds-* element answers to no input of that component (errors above).',
   'color-families':
@@ -98,7 +105,8 @@ const HINTS = {
 };
 
 for (const name of GROUPS.release) {
-  if (runCheck(name) !== 0) fail(HINTS[name] ?? `the ${name} check did not pass (output above).`);
+  if (runCheck(name) !== 0)
+    fail(HINTS[name] ?? `the ${name} check did not pass (output above).`);
 }
 
 console.log('preflight: all checks passed.');
