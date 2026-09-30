@@ -21,7 +21,11 @@ import type { BreadcrumbItem } from './breadcrumbs.types';
 function opensInBrowser(event: Event): boolean {
   return (
     event instanceof MouseEvent &&
-    (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)
+    (event.button !== 0 ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey ||
+      event.altKey)
   );
 }
 
