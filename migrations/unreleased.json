@@ -43,6 +43,68 @@
       "verify": "On the light theme an open chart tooltip panel computes a light background, unless the app sets --ds-chart-tooltip-bg-color on purpose."
     },
     {
+      "id": "chart-tooltip-lone-reading-no-swatch",
+      "kind": "behavior",
+      "old": "ds-chart-tooltip-panel",
+      "new": null,
+      "surface": [
+        "template",
+        "config"
+      ],
+      "action": "None, unless a tooltip listing a single reading must keep its colour dot: set [tooltipSwatches]=\"true\" on that chart, or provideDsConfig({ chart: { tooltipSwatches: true } }) for every chart.",
+      "appliesWhen": "A chart tooltip with exactly one reading under the default tooltipSwatches. Two to four readings keep their dots; five or more had none already.",
+      "pitfall": "A test or style that reads the swatch of a single-series tooltip finds none.",
+      "restore": "provideDsConfig({ chart: { tooltipSwatches: true } })",
+      "searchHints": [
+        "ds-chart-tooltip-panel",
+        "swatch",
+        "tooltipSwatches"
+      ],
+      "detect": [
+        "ds-chart-tooltip-panel",
+        "swatch"
+      ],
+      "verify": "A one-reading chart tooltip shows a colour dot only where tooltipSwatches is true on the chart or in DS_CONFIG.chart."
+    },
+    {
+      "id": "chart-frame-tokens-fall-back-to-chart-bg",
+      "kind": "behavior",
+      "old": "--ds-chart-frame-bg-color",
+      "new": null,
+      "surface": "style",
+      "action": "Where your own CSS reads var(--ds-chart-frame-bg-color), var(--ds-chart-focus-halo-color) or var(--ds-chart-hatch-color), read var(--ds-chart-bg-color) instead. Setting the three still overrides. To keep the white focus halo, set --ds-chart-focus-halo-color: white.",
+      "appliesWhen": "Stylesheets that read one of the three tokens, which ship in styles/tokens-charts, which styles/ds forwards, and every chart's keyboard focus halo, which follows the chart background instead of white. Setting the tokens is unaffected.",
+      "pitfall": "A var(--ds-chart-frame-bg-color) with no fallback in your CSS resolves to nothing and the declaration it sits in is dropped without an error.",
+      "restore": ":root { --ds-chart-focus-halo-color: white; }",
+      "searchHints": [
+        "--ds-chart-frame-bg-color",
+        "--ds-chart-focus-halo-color",
+        "--ds-chart-hatch-color"
+      ],
+      "detect": [
+        "var(--ds-chart-frame-bg-color",
+        "var(--ds-chart-focus-halo-color",
+        "var(--ds-chart-hatch-color"
+      ],
+      "verify": "The built CSS declares --ds-chart-bg-color on :root, and no rule of yours reads one of the three tokens without a fallback.",
+      "note": "The three no longer declare a default; each chart reads var(--token, var(--ds-chart-bg-color)), and --ds-chart-bg-color defaults to var(--surface-default)."
+    },
+    {
+      "id": "bar-chart-row-label-dims-only-under-dim-others",
+      "kind": "behavior",
+      "old": "ds-bar-chart[dimOthers]",
+      "new": null,
+      "surface": "template",
+      "action": "None, unless you want hovering a ds-bar-chart row label to dim the other rows: set dimOthers on that chart.",
+      "appliesWhen": "ds-bar-chart with dimOthers unset. A chart with dimOthers set is unchanged, and hovering a bar itself never dimmed the other rows without it.",
+      "restore": "dimOthers",
+      "searchHints": [
+        "dimOthers",
+        "ds-bar-chart"
+      ],
+      "verify": "Hovering a row label dims the other rows only on ds-bar-chart elements that set dimOthers."
+    },
+    {
       "id": "chart-cursor-pin-renamed",
       "kind": "input-rename",
       "old": "ds-chart[cursorPin]",
@@ -55,6 +117,24 @@
         "ds-chart"
       ],
       "verify": "No template binds cursorPin, and the app compiles."
+    },
+    {
+      "id": "chart-cursor-pin-resolved-renamed",
+      "kind": "behavior",
+      "old": "cursorPinResolved",
+      "new": null,
+      "surface": "typescript",
+      "action": "Replace cursorPinResolved() with pinOnClickResolved() wherever your code reads it from a ds-chart reference.",
+      "appliesWhen": "Only TypeScript reading the resolved pin setting back from a ChartComponent through viewChild or a template reference. The preset charts already exposed pinOnClickResolved.",
+      "restore": null,
+      "searchHints": [
+        "cursorPinResolved"
+      ],
+      "detect": [
+        ".cursorPinResolved(",
+        "cursorPinResolved()"
+      ],
+      "verify": "No code calls cursorPinResolved, and the app compiles."
     },
     {
       "id": "line-chart-tooltip-anchor-point-renamed",
@@ -144,13 +224,17 @@
         "extends ChartTooltipDirective"
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS chart class.",
-      "note": "The shared chart inputs and their resolved signals moved to an internal base class; ChartTooltipDirective gained host, LineSeriesComponent fadeId, SparklineComponent area, WaterfallChartComponent dimOthers and tooltip; data, categories and series became optional. The compiler names every collision."
+      "note": "The shared chart inputs and their resolved signals moved to an internal base class. ChartComponent lost cursorPin and cursorPinResolved and gained pinOnClickResolved, BarChartComponent lost dimsOthers and hoveredLabel, LineChartComponent lost markAnchor, PieChartComponent lost staggerMs; the internal ChartTooltipDirective gained host, LineSeriesComponent fadeId, SparklineComponent area, WaterfallChartComponent dimOthers and tooltip; data, categories and series became optional. The compiler names every collision."
     }
   ],
   "informational": [
     "ds-table's exportCsv() and runExport() log a warning in a development build when the table has no dsTableExport, where they threw NG0203 from the calling click handler.",
     "provideDsConfig and provideDsIntl merge several calls in one providers array in order, the later winning per key, where the last call used to replace the others.",
-    "A dsLineSeries with tooltip=\"axis\" opens its category panel under the default cursor=\"auto\", where the category cursor used to stay off unless two or more marks showed a tooltip. A cursor=\"category\" set only to make that panel appear is redundant (delete list: chart-cursor-category-for-axis-tooltip)."
+    "A dsLineSeries with tooltip=\"axis\" opens its category panel under the default cursor=\"auto\", where the category cursor used to stay off unless two or more marks showed a tooltip. A cursor=\"category\" set only to make that panel appear is redundant (delete list: chart-cursor-category-for-axis-tooltip).",
+    "--ds-chart-tooltip-bg-color, --ds-chart-tooltip-text-color and --ds-chart-tooltip-border-color set on a chart element or an ancestor reach the tooltip panel, which copies them onto its overlay pane on every open; before, only :root reached it.",
+    "--ds-chart-bg-color (default var(--surface-default)) paints the chart frame and every knockout, and --ds-chart-plot-bg-color (default transparent) fills the plot area of ds-chart and ds-scatter-chart.",
+    "data on ds-bar-chart, ds-column-chart, ds-funnel-chart, ds-pie-chart and ds-sparkline, and categories and series on ds-line-chart, are optional and default to empty, so an omitted one shows the empty state instead of throwing NG0950.",
+    "A ds-breadcrumbs label clipped at 16ch (the current page at 32ch) opens a tooltip with its full text on hover, and on focus of its link; a label that fits opens none."
   ],
   "deleteList": [
     {
@@ -161,6 +245,15 @@
       ],
       "why": "cursor=\"auto\", the default, turns the category cursor on for any mark with tooltip=\"axis\".",
       "replaceWith": "nothing; keep it on a plot whose marks do not use tooltip=\"axis\", where it is what turns the cursor on"
+    },
+    {
+      "id": "chart-frame-bg-color-for-surface",
+      "surface": "style",
+      "find": [
+        "--ds-chart-frame-bg-color"
+      ],
+      "why": "--ds-chart-bg-color paints the frame and every knockout together, so a frame override set only to match the surface behind the chart leaves the knockouts on the old colour.",
+      "replaceWith": "--ds-chart-bg-color set to that surface; keep --ds-chart-frame-bg-color only to colour the frame apart from the knockouts"
     },
     {
       "id": "chart-tooltip-light-override-redundant",
