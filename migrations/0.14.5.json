@@ -74,7 +74,7 @@
       "surface": "style",
       "action": "Where your own CSS reads var(--ds-chart-frame-bg-color), var(--ds-chart-focus-halo-color) or var(--ds-chart-hatch-color), read var(--ds-chart-bg-color) instead. Setting the three still overrides. To keep the white focus halo, set --ds-chart-focus-halo-color: white.",
       "appliesWhen": "Stylesheets that read one of the three tokens, which ship in styles/tokens-charts, which styles/ds forwards, and every chart's keyboard focus halo, which follows the chart background instead of white. Setting the tokens is unaffected.",
-      "pitfall": "A var(--ds-chart-frame-bg-color) with no fallback in your CSS resolves to nothing and the declaration it sits in is dropped without an error.",
+      "pitfall": "A var(--ds-chart-frame-bg-color) with no fallback in your CSS resolves to nothing and the declaration it sits in is dropped without an error. The hatched swatch in a chart tooltip reads --ds-chart-hatch-color with the fallback var(--surface-default), so --ds-chart-bg-color does not reach it.",
       "restore": ":root { --ds-chart-focus-halo-color: white; }",
       "searchHints": [
         "--ds-chart-frame-bg-color",
@@ -224,7 +224,7 @@
         "extends ChartTooltipDirective"
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS chart class.",
-      "note": "The shared chart inputs and their resolved signals moved to an internal base class. ChartComponent lost cursorPin and cursorPinResolved and gained pinOnClickResolved, BarChartComponent lost dimsOthers and hoveredLabel, LineChartComponent lost markAnchor, PieChartComponent lost staggerMs; the internal ChartTooltipDirective gained host, LineSeriesComponent fadeId, SparklineComponent area, WaterfallChartComponent dimOthers and tooltip; data, categories and series became optional. The compiler names every collision."
+      "note": "The shared chart inputs and their resolved signals moved to an internal base class, DsChartBase, together with the protected defaults and intl. ChartComponent lost cursorPin and cursorPinResolved and gained pinOnClickResolved, BarChartComponent lost dimsOthers and hoveredLabel, LineChartComponent lost markAnchor, PieChartComponent lost staggerMs; the internal ChartTooltipDirective gained host, LineSeriesComponent fadeId, SparklineComponent area, WaterfallChartComponent dimOthers and tooltip; data, categories and series became optional. The compiler names every collision."
     },
     {
       "id": "tooltip-light-panel",
@@ -257,7 +257,7 @@
     "--ds-chart-tooltip-bg-color, --ds-chart-tooltip-text-color and --ds-chart-tooltip-border-color set on a chart element or an ancestor reach the tooltip panel, which copies them onto its overlay pane on every open; before, only :root reached it.",
     "--ds-chart-bg-color (default var(--surface-default)) paints the chart frame and every knockout, and --ds-chart-plot-bg-color (default transparent) fills the plot area of ds-chart and ds-scatter-chart.",
     "data on ds-bar-chart, ds-column-chart, ds-funnel-chart, ds-pie-chart and ds-sparkline, and categories and series on ds-line-chart, are optional and default to empty, so an omitted one shows the empty state instead of throwing NG0950.",
-    "A ds-breadcrumbs label clipped at 16ch (the current page at 32ch) opens a tooltip with its full text on hover, and on focus of its link; a label that fits opens none.",
+    "A ds-breadcrumbs label clipped at 16ch (the current page at 32ch) opens a tooltip with its full text on hover, and on keyboard focus (:focus-visible) of its link; a label that fits opens none.",
     "ds-tooltip and the chart tooltip read three new theme tokens, --tooltip-bg-color, --tooltip-text-color and --tooltip-border-color, so one override on :root recolours both; ds-tooltip gains the --ds-tooltip-border-color hook for its border and caret.",
     "dsTooltipWhenClipped applies the tooltip directive on its own, so the empty dsTooltip written beside it is redundant (delete list: tooltip-empty-beside-when-clipped).",
     "A ds-breadcrumbs link clicked with Ctrl, Cmd, Shift or Alt, or with a non-primary button, opens its href the browser's way and emits no (navigate); a plain primary click is unchanged.",

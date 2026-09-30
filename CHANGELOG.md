@@ -50,7 +50,9 @@
 - **Three chart tokens lose their declared defaults and fall back to `--ds-chart-bg-color`.**
   `--ds-chart-frame-bg-color`, `--ds-chart-focus-halo-color` and `--ds-chart-hatch-color` no longer
   declare a value; each resolves to `--ds-chart-bg-color` (default `var(--surface-default)`) unless
-  you set it. The focus halo, which was white, is now the chart background. Setting any of the three
+  you set it. The focus halo, which was white, is now the chart background. The hatched swatch in a
+  chart tooltip reads `--ds-chart-hatch-color` with `var(--surface-default)` as its fallback, so
+  `--ds-chart-bg-color` does not reach it. Setting any of the three
   still overrides as before; reading one in your own CSS, which used to resolve to its old default,
   now resolves to nothing.
 
@@ -65,8 +67,8 @@
 
 - **Subclassing a chart breaks on moved, grown and renamed members.** The inputs every chart shares
   (`caption`, `summary`, `frame`, `loading`, `error`, `emptyText`, `errorText`, `valueFormat`,
-  `interactive`, `tooltipSwatches`, `tooltipLingerMs`, `pinOnClick`) and their resolved signals move
-  to an internal base class (`DsChartBase`) that `BarChartComponent`, `ChartComponent`,
+  `interactive`, `tooltipSwatches`, `tooltipLingerMs`, `pinOnClick`), their resolved signals and the
+  protected `defaults` and `intl` move to an internal base class (`DsChartBase`) that `BarChartComponent`, `ChartComponent`,
   `ColumnChartComponent`, `FunnelChartComponent`, `HeatmapChartComponent`, `LineChartComponent`,
   `PieChartComponent`, `ScatterChartComponent` and `WaterfallChartComponent` extend, each dropping
   its own declaration of them. On top of that: `ChartComponent` loses `cursorPin` and
@@ -92,8 +94,8 @@
 
 - **`--ds-chart-bg-color` paints the chart frame and every knockout.** A new token, default
   `var(--surface-default)`. It fills the frame background and every knockout cut into the plot:
-  stacked line band separators, the line halo, the outlined line-marker ring, stacked-column gaps
-  and hatch stripes, bar segment seams, reference-label and annotation halos, the pie centre-text
+  stacked line band separators, the line halo, the outlined line-marker ring, stacked-column hatch
+  stripes, bar segment seams, reference-label and annotation halos, the pie centre-text
   knockout and the focus halo. Set it to the surface the chart sits on - a card, say - and the frame
   and every knockout match it. A second new token, `--ds-chart-plot-bg-color` (default
   `transparent`), fills the plot area of `ds-chart` and `ds-scatter-chart`.
@@ -148,12 +150,13 @@
 
 - **A clipped `ds-breadcrumbs` label shows its full text in a tooltip.** A crumb label past `16ch`
   (the current page past `32ch`) ended in an ellipsis with no way to read the rest; hovering it, or
-  focusing its link, now opens a tooltip with the whole label. A label that fits opens none.
+  focusing its link from the keyboard, now opens a tooltip with the whole label. A label that fits opens none.
 
-- **A Ctrl, Cmd or Shift click on a `ds-breadcrumbs` link opens it the browser's way.** Every click
+- **A modified or non-primary click on a `ds-breadcrumbs` link opens it the browser's way.** Every click
   was prevented and emitted as `(navigate)`, so a consumer routing on it moved the current tab where
   the user asked for a new tab or window. A plain primary click still emits `(navigate)` with the
-  default prevented; a modified or non-primary click leaves `href` to the browser and emits nothing.
+  default prevented; a Ctrl, Cmd, Shift or Alt click and any non-primary button leave `href` to the
+  browser and emit nothing.
 
 - **A `dsTooltip` with no room on its side opens on the opposite side.** The panel had one
   position, so a tooltip on a trigger near the top of the viewport (a page breadcrumb, a toolbar)
