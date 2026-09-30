@@ -81,7 +81,7 @@ export class TooltipDirective implements OnDestroy {
 
   /** Tip text. An empty string turns the tooltip off. */
   readonly dsTooltip = input<string>('');
-  /** Which side the tip opens on. It does NOT flip: with no room it is pushed, not moved. */
+  /** Which side the tip opens on. With no room there it opens on the opposite side. */
   readonly dsTooltipPlacement = input<TooltipPlacement>('top');
   /** Milliseconds before the tip appears. Hiding is immediate. */
   readonly dsTooltipDelay = input<number>(120);

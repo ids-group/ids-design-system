@@ -78,12 +78,13 @@ const conditionalProjection = templates
   .map(relPath)
   .sort();
 
-const directiveSelector = /selector:\s*'(\[[A-Za-z][\w-]*\])'/g;
+const selectorList =
+  /selector:\s*'(\[[A-Za-z][\w-]*\](?:,\s*\[[A-Za-z][\w-]*\])*)'/g;
 const attributeDirectives = [
   ...new Set(
     walk(join(repo, 'src', 'lib'), '.ts').flatMap((file) =>
-      [...readFileSync(file, 'utf8').matchAll(directiveSelector)].map(
-        (m) => m[1],
+      [...readFileSync(file, 'utf8').matchAll(selectorList)].flatMap((m) =>
+        m[1].split(',').map((selector) => selector.trim()),
       ),
     ),
   ),

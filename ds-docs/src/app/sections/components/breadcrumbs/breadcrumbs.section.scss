@@ -31,3 +31,9 @@
       white-space: pre-wrap;
       overflow-x: auto;
     }
+
+    .pills {
+      --ds-breadcrumbs-bg-color-hover: var(--surface-muted);
+      --ds-breadcrumbs-padding: var(--space-1) var(--space-2);
+      --ds-breadcrumbs-radius: var(--radius-md);
+    }

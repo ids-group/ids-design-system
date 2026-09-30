@@ -17,6 +17,18 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **The `ds-sparkline` card is built from marked blocks.** `data-claude-design` sits on each block
+  title in the `charts/sparkline` section, not on the section, so only those blocks reach the card.
+
+### Build
+
+- **`check-manual-surface` reads a comma-separated directive selector.** A directive declared as
+  `[dsTooltip], [dsTooltipWhenClipped]` counts both attributes as selectors, so `[dsTooltip]` no
+  longer reads as removed. `[dsTooltipWhenClipped]` joins the watch list, which now holds twenty
+  directives.
+
 ## 0.14.5 — 2026-09-30
 
 ### Cards

@@ -11427,7 +11427,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'top'",
         "required": false,
-        "description": "Which side the tip opens on. It does NOT flip: with no room it is pushed, not moved."
+        "description": "Which side the tip opens on. With no room there it opens on the opposite side."
       },
       {
         "name": "dsTooltipDelay",

@@ -94,6 +94,25 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Hover surface
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">separator="slash"</code> with
+    <code class="t-mono-inline">--ds-breadcrumbs-bg-color-hover</code>,
+    <code class="t-mono-inline">--ds-breadcrumbs-padding</code> and
+    <code class="t-mono-inline">--ds-breadcrumbs-radius</code> set turns each
+    crumb into a pill on hover.
+  </p>
+
+  <div class="stage">
+    <ds-breadcrumbs
+      class="pills"
+      separator="slash"
+      [items]="defaultTrail" />
+  </div>
+
+  <h3 class="block-title t-h4">
     Non-clickable
   </h3>
 

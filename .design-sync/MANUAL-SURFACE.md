@@ -183,14 +183,14 @@ express.
 ## 2. Attribute directives — no element to register
 
 A directive has no tag, so `@angular/elements` has nothing to define and it is
-absent from the generated surface entirely. Nineteen of them:
+absent from the generated surface entirely. Twenty of them:
 
 `[dsBrandName]` · `[dsCellTemplate]` · `[dsChartTooltip]` · `[dsChipTemplate]` · `[dsCreateTemplate]` ·
 `[dsEmptyTemplate]` · `[dsFieldClickFocus]` · `[dsGroupLabelTemplate]` ·
 `[dsOptionTemplate]` · `[dsPanelFooterTemplate]` · `[dsPanelHeaderTemplate]` ·
 `[dsPickerTrigger]` · `[dsProjectionDropped]` · `[dsRailTrigger]` ·
 `[dsReserveMessages]` · `[dsTableColumns]` · `[dsTableExport]` ·
-`[dsTableResize]` · `[dsTooltip]`
+`[dsTableResize]` · `[dsTooltip]` · `[dsTooltipWhenClipped]`
 
 Most are template-slot markers for the picker family (`dsOptionTemplate`,
 `dsPanelHeaderTemplate`, …) and are meaningless without an Angular template
