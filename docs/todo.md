@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**113 open — 0 P1, 12 P2, 101 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**114 open — 0 P1, 12 P2, 102 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 12
 
@@ -37,7 +37,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 101
+### P3 — 102
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -87,6 +87,7 @@ item and nothing else.
 - **Three open verdicts, each drawn in a deck**
   - Does the picker list height become a public token, or stay behind `panelClass`?
   - Do the date picker's first day of the week and the time picker's 12h/24h default from …
+  - Should the `ds-breadcrumbs` hover colour derive from `--text-link`, like the `.link` helper?
 - **Tooling**
   - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
@@ -1030,6 +1031,13 @@ that already existed, because both are the kind of ask that comes back.
   `Intl.DateTimeFormat(tag, { hour: 'numeric' }).resolvedOptions().hourCycle`. Four options: fixed as
   today, both from the locale, week only, hours only. Recommended in the deck: both from the locale,
   with Monday where the engine has no week data.
+
+- [ ] **[P3] Should the `ds-breadcrumbs` hover colour derive from `--text-link`, like the `.link` helper?**
+  `--_breadcrumbs-label-color-hover` defaults to `--accent` (`breadcrumbs.component.scss`), while the
+  `.link` helper (`src/lib/styles/_link.scss`) hovers from `--text-link` mixed 80% with black. A
+  consumer whose accent is a brand colour gets breadcrumb links that hover in a different colour from
+  every other link. **Wanted:** a verdict on whether the breadcrumb hover default derives from
+  `--text-link` the way `.link` does. The default is unchanged until it is given.
 
 None of these is blocked on effort. Each is a verdict, and most carry a deck that renders the options.
 
