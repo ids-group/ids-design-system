@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 0.14.5 — 2026-09-30
+
 ### Cards
 
 - **`ds-sparkline` has its card.** `docs/Sparkline.md` describes it for the design agent, and
