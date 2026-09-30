@@ -1,5 +1,15 @@
 ## Unreleased
 
+### Added
+
+- **`ds-breadcrumbs` crumbs can carry a hover surface.** `--ds-breadcrumbs-bg-color-hover` (default
+  `transparent`) tints a link on hover, `--ds-breadcrumbs-padding` (default `0`) pads every crumb,
+  the current one included, so labels stay on one baseline, and `--ds-breadcrumbs-radius` (default
+  `var(--radius-sm)`) rounds the surface and the focus ring. Rendering is unchanged until one is set.
+
+- **A `slash` icon.** `<ds-breadcrumbs separator="slash">` separates crumbs with a "/" in the
+  weight of `chevronRight`.
+
 ## 0.14.5 — 2026-09-30
 
 ### Breaking
