@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.14.5 — 2026-09-30
+
 ### Breaking
 
 - **`ds-tooltip` is light on the light theme, with a border, like the chart tooltip.** It takes
