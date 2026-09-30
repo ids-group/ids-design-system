@@ -37,6 +37,7 @@
     "[dsTableColumns]",
     "[dsTableExport]",
     "[dsTableResize]",
+    "[dsTooltipWhenClipped]",
     "[dsTooltip]"
   ]
 }
