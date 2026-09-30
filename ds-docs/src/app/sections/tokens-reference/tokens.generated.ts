@@ -3066,6 +3066,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Current crumb."
       },
       {
+        "name": "--ds-breadcrumbs-gap",
+        "value": "var(--space-2)",
+        "notes": "Space between crumbs and separators (default --space-2)."
+      },
+      {
+        "name": "--ds-breadcrumbs-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Crumb text size (default --font-size-s)."
+      },
+      {
+        "name": "--ds-breadcrumbs-font-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Link crumb weight (default --font-weight-regular)."
+      },
+      {
+        "name": "--ds-breadcrumbs-current-label-font-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": "Current crumb weight (default --font-weight-bold)."
+      },
+      {
+        "name": "--ds-breadcrumbs-label-max-width",
+        "value": "16ch",
+        "notes": "Width at which a link crumb clips to an ellipsis (default 16ch)."
+      },
+      {
+        "name": "--ds-breadcrumbs-current-label-max-width",
+        "value": "32ch",
+        "notes": "Width at which the current crumb clips to an ellipsis (default 32ch)."
+      },
+      {
         "name": "--breadcrumbs-link-uloff",
         "value": "2px",
         "notes": "Breadcrumb link underline offset (2px)."
