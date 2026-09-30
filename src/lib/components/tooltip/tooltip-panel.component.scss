@@ -1,7 +1,8 @@
 :host {
   /* Portaled, so --ds-tooltip-* overrides are theme-level (:root). */
-  --_tooltip-bg-color:   var(--ds-tooltip-bg-color,   var(--surface-inverted));
-  --_tooltip-text-color: var(--ds-tooltip-text-color, var(--text-inverted));
+  --_tooltip-bg-color:   var(--ds-tooltip-bg-color,   var(--tooltip-bg-color));
+  --_tooltip-text-color: var(--ds-tooltip-text-color, var(--tooltip-text-color));
+  --_tooltip-border-color: var(--ds-tooltip-border-color, var(--tooltip-border-color));
   --_tooltip-radius:     var(--ds-tooltip-radius,     var(--ds-radius-control));
   --_tooltip-shadow:     var(--ds-tooltip-shadow,     var(--ds-elevation-overlay));
   --_tooltip-max-width:  var(--ds-tooltip-max-width,  var(--tooltip-maxw));
@@ -11,6 +12,7 @@
   position: relative;
   background: var(--_tooltip-bg-color);
   color: var(--_tooltip-text-color);
+  border: var(--border-width-default) solid var(--_tooltip-border-color);
   font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
   padding: var(--_tooltip-padding);
   border-radius: var(--_tooltip-radius);
@@ -25,11 +27,12 @@
     width: var(--space-2);
     height: var(--space-2);
     background: var(--_tooltip-bg-color);
+    border: 0 solid var(--_tooltip-border-color);
     transform: rotate(45deg);
   }
 }
 
-:host(.bottom)::after { top:    calc(var(--tooltip-arrow) / -2); left: 50%; margin-left: calc(var(--tooltip-arrow) / -2); }
-:host(.top)::after    { bottom: calc(var(--tooltip-arrow) / -2); left: 50%; margin-left: calc(var(--tooltip-arrow) / -2); }
-:host(.left)::after   { right:  calc(var(--tooltip-arrow) / -2); top: 50%;  margin-top:  calc(var(--tooltip-arrow) / -2); }
-:host(.right)::after  { left:   calc(var(--tooltip-arrow) / -2); top: 50%;  margin-top:  calc(var(--tooltip-arrow) / -2); }
+:host(.bottom)::after { top:    calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); left: 50%; margin-left: calc(var(--tooltip-arrow) / -2); border-top-width: var(--border-width-default); border-left-width: var(--border-width-default); }
+:host(.top)::after    { bottom: calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); left: 50%; margin-left: calc(var(--tooltip-arrow) / -2); border-bottom-width: var(--border-width-default); border-right-width: var(--border-width-default); }
+:host(.left)::after   { right:  calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); top: 50%;  margin-top:  calc(var(--tooltip-arrow) / -2); border-top-width: var(--border-width-default); border-right-width: var(--border-width-default); }
+:host(.right)::after  { left:   calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); top: 50%;  margin-top:  calc(var(--tooltip-arrow) / -2); border-bottom-width: var(--border-width-default); border-left-width: var(--border-width-default); }
