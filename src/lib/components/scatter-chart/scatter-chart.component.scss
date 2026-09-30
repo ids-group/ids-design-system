@@ -20,8 +20,8 @@
   --_scatter-chart-focus-color: var(--ds-scatter-chart-focus-color, var(--focus-ring-color));
   --_scatter-chart-focus-width: var(--ds-scatter-chart-focus-width, var(--focus-ring-width));
 
-  /* The shared mixins draw the ring from `--focus-ring-*` and `--ds-chart-focus-ring-color`, so
-     the two hooks above reach nothing without this. */
+  /* The shared mixins read `--focus-ring-*` and `--ds-chart-focus-ring-color`; without these the two
+     hooks above reach nothing. */
   --ds-chart-focus-ring-color: var(--_scatter-chart-focus-color);
   --focus-ring-color: var(--_scatter-chart-focus-color);
   --focus-ring-width: var(--_scatter-chart-focus-width);
@@ -65,8 +65,7 @@
   font-weight: var(--font-weight-bold);
 }
 
-// Semi-transparent by default: on a scatter the INTERESTING thing is where marks pile up, and at
-// full opacity a cluster of forty and a cluster of four are the same solid disc.
+// Semi-transparent so pile-ups show.
 .point {
   r: var(--_scatter-chart-dot-radius);
   fill: var(--_scatter-series-color);
@@ -87,18 +86,21 @@
   @include chart-frame.drawn-focus-ring;
 }
 
-// Said on the chart's face, not only in its accessible name - a reader who cannot see the notice
-// counts points that were never drawn.
 .thinned {
   margin-block: var(--space-2) 0;
   color: var(--text-secondary);
   font-size: var(--font-size-xs);
 }
 
-/* The whole series steps back while another is named in the legend - the same answer the column
-   and line charts give, so one gesture means one thing across the family. */
 g.is-dimmed {
   opacity: var(--ds-chart-dim-opacity);
   transition: opacity var(--ds-motion-chart-mark-duration)
     var(--ds-motion-chart-mark-easing);
+}
+
+// The rectangle inside the axes. Transparent unless `--ds-chart-plot-bg-color` is set, so the plot
+// shows the chart's background by default.
+.plot-bg {
+  fill: var(--ds-chart-plot-bg-color, transparent);
+  pointer-events: none;
 }

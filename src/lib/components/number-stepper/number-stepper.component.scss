@@ -18,7 +18,7 @@
   border-radius: var(--radius-md);
   overflow: hidden;
 
-  // Clips, so the ring has to be drawn inward or the overflow eats it.
+  // The box clips, so the ring is drawn inward.
   --focus-ring-offset: calc(-1 * var(--focus-ring-width));
 
   @include focus.owns-the-focus-ring('.qty');
@@ -94,8 +94,7 @@
 }
 
 .qty {
-  // Sized from the box height, which is what the three size blocks change. A value wider than the
-  // digits it was scaled for clips, so the width is a hook rather than a constant.
+  // Scales with the box height; a value wider than the digits it was scaled for clips, hence the hook.
   inline-size: var(--ds-number-stepper-field-width, calc(var(--_field-height) * 1.25));
   flex: 1;
   min-width: 0;

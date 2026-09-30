@@ -1,5 +1,3 @@
-// A divider is a boundary, not a row: it takes no space of its own, and
-// `--ds-menu-divider-spacing` is the only thing that can add air.
 :host {
   --_menu-divider-color: var(--ds-menu-divider-color, var(--border-divider));
   --_menu-divider-spacing: var(--ds-menu-divider-spacing, 0px);
@@ -7,9 +5,8 @@
   display: block;
   padding: var(--_menu-divider-spacing) 0;
 
-  // `ds-menu` is a flex column, so its row gap lands above AND below the divider on
-  // top of any padding here, and has to be cancelled. `--_menu-gap` inherits from
-  // ds-menu's host; the 0px fallback leaves a divider used outside a menu alone.
+  // Cancels ds-menu's flex row gap, which would land above AND below the divider.
+  // `--_menu-gap` inherits from ds-menu's host; 0px leaves a divider outside a menu alone.
   margin-block: calc(-1 * var(--_menu-gap, 0px));
 }
 

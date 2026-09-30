@@ -7,11 +7,9 @@
   gap: var(--_filter-bar-gap);
 }
 
-/* The measured region. The clip is deliberate and hides nothing reachable: what
-   does not fit is moved into the panel behind the trigger, which is the one child
-   that cannot shrink. It is here so this flex item may go below its content's
-   intrinsic width — otherwise the row would simply push the trailing group off the
-   edge and never report a width small enough to collapse anything. */
+/* The measured region. The clip lets this flex item go below its content's intrinsic width;
+   without it the row pushes the trailing group off the edge and never reports a width small
+   enough to collapse anything. */
 .row {
   display: flex;
   flex: 1 1 auto;
@@ -19,26 +17,21 @@
   gap: var(--_filter-bar-gap);
   min-width: 0;
 
-  /* `clip` with a margin, not `hidden`: the box starts flush with the first item's
-     left edge and the focus ring is an OUTSET shadow (3–4px), so `hidden` cut the
-     ring off the first and last item while interior ones lived in the gap. The
-     margin lets only the shadow bleed, and `clip` still forbids scrolling — so the
-     width this row reports, which decides the split, is unchanged. */
+  /* `clip` with a margin, not `hidden`: the focus ring is an outset shadow (3-4px) that `hidden`
+     cuts off the first and last item. The margin lets only the shadow bleed and `clip` still
+     forbids scrolling, so the reported width is unchanged. */
   overflow: clip;
   overflow-clip-margin: 4px;
 
-  /* No filters at all: collapse rather than sit empty, since an empty flex child
-     still takes the row's gap. `:not(:has(*))` and not `:empty` — the latter is
-     defeated by a single whitespace text node, so it would stop matching in a
-     consumer that turns on `preserveWhitespaces`. */
+  /* Collapse when empty: an empty flex child still takes the row's gap. Not `:empty`, which a
+     single whitespace text node (`preserveWhitespaces`) defeats. */
   &:not(:has(*)) {
     display: none;
   }
 }
 
-/* Exactly the declared width, so the arithmetic that placed it here is true by
-   construction — and the same width in the panel, so a filter does not resize as
-   it crosses over. Shrinkable only as the last resort before the row overflows. */
+/* The declared width, in the row and in the panel alike, so a filter does not resize when it
+   crosses over. Shrinks only as the last resort before the row overflows. */
 .item {
   flex: 0 1 auto;
   min-width: 0;
@@ -54,8 +47,7 @@
   gap: var(--_filter-bar-panel-gap);
 }
 
-/* margin-left keeps this at the trailing edge whether or not the row is there to
-   push it — the row collapses when a screen's only control is a trailing one. */
+/* margin-left keeps it at the trailing edge when the row has collapsed. */
 .trailing {
   display: flex;
   flex: 0 0 auto;

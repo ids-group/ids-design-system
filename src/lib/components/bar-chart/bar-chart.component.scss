@@ -7,7 +7,6 @@
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
-
 .bar-chart {
   --_bar-chart-band-color: var(--ds-bar-chart-band-color, var(--ds-chart-grid-line-color));
   --_bar-chart-target-color: var(--ds-bar-chart-target-color, var(--text-primary));
@@ -20,19 +19,14 @@
     var(--ds-chart-mark-cap-radius)
   );
 
-  // Two gaps, and the ratio between them is what does the work. A label belongs to the bar under
-  // it, so it sits closer to that bar than the bar sits to the next row — otherwise the eye groups
-  // a bar with the label BELOW it and reads every row off by one. The row gap follows the standard
-  // bar-chart guidance of roughly half the bar's own thickness again.
+  // The label gap must stay smaller than the row gap, or the eye pairs a bar with the label below it.
   --_bar-chart-row-gap: var(--ds-bar-chart-row-gap, var(--space-5));
   --_bar-chart-label-gap: var(--ds-bar-chart-label-gap, var(--space-1));
 
   margin: 0;
 }
 
-// The gap between rows is PADDING on each row, not `row-gap` on the list: a gap is dead space to
-// the pointer, and a reader aiming between two bars then hits neither. Half above and half below
-// leaves the spacing identical and gives every pixel an owner.
+// Row spacing is padding on each row, not `row-gap`: a gap is dead space to the pointer.
 .rows {
   @include chart-interactive.fades('.row');
   @include chart-interactive.clickable('.row');
@@ -53,13 +47,11 @@
   align-items: baseline;
 }
 
-
 @include chart-frame.message-box(
   calc(3 * (var(--_bar-chart-track-height) + var(--_bar-chart-row-gap)))
 );
 
-// Sized to its text: hovering the label is what fades the other rows, so the empty column beside
-// it must not.
+// Sized to its text: hovering the label fades the other rows, so the empty column beside it must not.
 .label {
   justify-self: start;
   color: var(--text-secondary);
@@ -82,8 +74,6 @@
   background: var(--_bar-chart-track-color);
 }
 
-// Qualitative bands sit under the bar and stack from the track's start, each one wider than the
-// last, so the visible step between two of them is the boundary between the two meanings.
 .band {
   position: absolute;
   inset-block: 0;
@@ -92,8 +82,6 @@
   background: var(--_bar-chart-band-color);
 }
 
-// A tick, not a bar: the target is a level to compare against, and drawing it with any width at
-// all would read as a second quantity.
 .target {
   position: absolute;
   inset-block: calc(-1 * var(--_bar-chart-target-overhang));
@@ -108,16 +96,12 @@
   display: flex;
   block-size: 100%;
 
-  // A `max` below the data is the caller's statement and `widthPercent` honours it, so the mark
-  // has to be capped here. It replaces `overflow: hidden` on the track, which would also clip the
-  // pin badge to the 12px bar.
+  // Caps a `max` below the data here rather than with `overflow: hidden` on the track, which would clip the pin badge.
   max-inline-size: 100%;
   border-radius: inherit;
 
-  // NOTE(chart-layout-transition): a VALUE change animates `inline-size`, not `transform`, and it
-  // is a considered trade — under a scaled transform the rounded data-end squashes with the body,
-  // so the cap changes shape for the length of the animation. The cost is a layout pass per frame
-  // on one property. The mark's ARRIVAL does scale, where the squash is worth the compositor.
+  // NOTE(chart-layout-transition): a value change animates `inline-size`, not `transform`: a scaled
+  // transform squashes the rounded cap. Costs a layout pass per frame; the arrival does scale.
   transition:
     inline-size var(--ds-motion-chart-mark-duration)
       var(--ds-motion-chart-mark-easing),
@@ -125,29 +109,21 @@
       var(--ds-motion-chart-mark-easing);
 }
 
-
 @include chart-frame.forced-colors;
 @include chart-frame.pin-reset;
 @include chart-frame.pin-marker;
 
-/* The row's second reading, under its label rather than beside it: the value column is right-aligned
-   on the bar's scale, and a number on a different scale sitting in it would read as belonging to
-   that column. */
 .label > .detail {
   display: block;
   color: var(--text-secondary);
   font-size: var(--font-size-xs);
 }
 
-/* Segments divide the mark, never replace it: the row's length still says how it compares with the
-   rest of the chart, and the parts say what it is made of. The 2px seam is surface-coloured, not a
-   margin: two parts meeting edge to edge read as one longer part, and a gap in the track's own
-   colour would read as a missing category. */
+/* The seam is background-coloured, not a margin: a track-coloured gap would read as a missing category. */
 .segment {
   block-size: 100%;
 
-  // The end parts carry the mark's cap themselves. Clipping the fill instead would take the pin
-  // badge with it, and the badge is taller than the bar by design.
+  // End parts carry the cap; clipping `.fill` would clip the pin badge, which is taller than the bar.
   &:first-of-type {
     border-start-start-radius: var(--_bar-chart-cap-radius);
     border-end-start-radius: var(--_bar-chart-cap-radius);
@@ -159,21 +135,16 @@
   }
 
   & + & {
-    border-inline-start: 2px solid var(--ds-chart-frame-bg-color, var(--surface-default));
+    border-inline-start: 2px solid var(--ds-chart-bg-color);
   }
 }
 
 @include chart-interactive.dims('.segment', ', background-color var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
 
-/* On the mark rather than beside it, at the bar's start: a badge at the END would hang off the left
-   of the chart on a row whose value is zero, and the start is a column every row shares. The bar is
-   thinner than the badge, so the badge overflows it — which is why the clip moved onto `.fill`. */
+/* At the bar's start: a badge at the end would hang off the chart on a zero-value row. */
 .fill > .pin-marker {
   position: absolute;
   inset-inline-start: 0;
   inset-block-start: 50%;
   translate: 0 -50%;
 }
-
-/* A segment's row belongs to the row above it. Indent and de-emphasis are the table's only way to
-   say so — a nested table would break the column alignment the reader is scanning down. */

@@ -25,8 +25,7 @@ export function formatValue(value: number, locale?: string): string {
 const chartFormats = new Map<string, ChartValueFormat>();
 
 /** The built-in `valueFormat` in one locale: compact on a tick (`1.2M`), spelled out everywhere
- *  else (`1,248,392`). A caller-supplied formatter receives the same `location` and decides for
- *  itself; this is only the default.
+ *  else (`1,248,392`). A caller-supplied formatter receives the same `location`.
  *
  *  @internal */
 export function chartValueFormat(locale: string): ChartValueFormat {
@@ -77,8 +76,7 @@ export function formatPercent(
   }
   const fraction = value / total;
   const formatter = percentFormatter(locale, 1);
-  // A real share must never print as an exact zero: at one decimal, 214 of 987,654,321 rounds to
-  // "0.0%" beside a bar too short to see, and the row reads as nothing when it is not nothing.
+  // A real share must never print as an exact zero.
   if (fraction !== 0 && Math.abs(fraction) < 0.0005) {
     return fraction > 0
       ? `<${formatter.format(0.001)}`
@@ -95,10 +93,9 @@ export function formatWholePercent(percent: number, locale: string): string {
   return percentFormatter(locale, 0).format(percent / 100);
 }
 
-/** Whole percentages that sum to exactly 100. Rounding each share on its own
- *  gives 33/33/33 for three equal parts, and a legend that visibly loses 1%.
+/** Whole percentages that sum to exactly 100 (rounding each alone gives 33/33/33).
  *
- *  @internal Exported for the chart entry points; not part of the package surface. */
+ *  @internal */
 export function largestRemainder(values: readonly number[]): number[] {
   const total = values.reduce((sum, value) => sum + value, 0);
   if (!total) {
@@ -131,8 +128,7 @@ export function formatTick(value: number, step: number): string {
     return String(value);
   }
 
-  // The unit follows the STEP, not the value, so every label on one axis carries the same suffix:
-  // a step of 200M labels 1e9 as 1000M, never 1B beside 800M.
+  // The unit follows the step, not the value, so every label on an axis shares a suffix.
   const units = [
     { suffix: 'B', scale: 1e9 },
     { suffix: 'M', scale: 1e6 },
@@ -142,20 +138,15 @@ export function formatTick(value: number, step: number): string {
     units.find((candidate) => Math.abs(step) >= candidate.scale) ?? units[2];
   const scaled = value / unit.scale;
 
-  // A step that divides its unit evenly needs no decimal; one that does not needs exactly one on
-  // EVERY label, so an axis reads 1.0K · 1.5K · 2.0K rather than mixing 1K with 1.5K. Rounding the
-  // whole branch matters too: a caller passing a raw datum instead of a tick would otherwise print
-  // every digit of the division, as 987.654321M.
+  // A step that divides its unit evenly needs no decimal; otherwise exactly one on every label.
+  // Rounding the whole branch keeps a raw datum from printing 987.654321M.
   return step % unit.scale === 0
     ? `${Math.round(scaled)}${unit.suffix}`
     : `${scaled.toFixed(1)}${unit.suffix}`;
 }
 
-/** One mark's share of the total its siblings add up to, as a bare percentage.
- *
- *  Empty for a lone mark, which is the whole of its own total, and empty for a reading that is not
- *  part of a total anyone can see: negatives and non-finite values are excluded from the total
- *  rather than subtracted from it, so a negative mark has no share rather than a misleading one.
+/** One mark's share of the total its siblings add up to, as a bare percentage; empty for a lone mark,
+ *  and for a negative or non-finite reading (excluded from the total, not subtracted).
  *
  *  @internal */
 export function shareOfTotal(
@@ -174,8 +165,7 @@ export function shareOfTotal(
   return total > 0 ? formatPercent(value, total, locale) : '';
 }
 
-/** The same share, phrased for a tooltip line, where no column header stands above it to say what
- *  the percentage is OF.
+/** The same share, phrased for a tooltip line.
  *
  *  @internal */
 export function describeShare(

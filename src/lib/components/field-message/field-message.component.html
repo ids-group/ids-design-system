@@ -1,6 +1,5 @@
-<!-- The error variant is a separate branch so it mounts as a FRESH node with
-     role="alert" already set — screen readers reliably announce a live region
-     on insertion, but not when role="alert" is toggled onto an existing node. -->
+<!-- Error is a separate branch so it mounts as a fresh node with role="alert" already set; screen
+     readers announce a live region on insertion, not when the role is toggled onto an existing node. -->
 @if (text()) {
   @if (state() === 'error') {
     <span

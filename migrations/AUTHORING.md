@@ -344,6 +344,21 @@ Emit a `behavior` entry per widened type naming who breaks (readers and override
 writers, who are fine), with the resolution in the `note`: usually "handle the new union member
 where the field is read back", with the literal old → new type.
 
+**Tightening a template context is actionable, in the opposite direction.** A directive whose
+context a consumer's template reads - `let-row` on a `dsCellTemplate` - is typed `any` until the
+directive declares a static `ngTemplateContextGuard` or a generic parameter defaulting to `unknown`.
+From then on every read of that variable is checked under `strictTemplates`, and code that compiled
+yesterday fails with TS2571 or TS2345, although nothing was removed and the release reads as
+stricter typing. Emit a `behavior` item on `surface: template` (plus `typescript` where the context
+reaches a typed method), `old` naming the directive class, the build errors in `detect`
+(`Object is of type 'unknown'`), and the binding that types the context in `action`
+(`0.14.0#cell-template-context-typed-unknown` is the shape). The subclass-collision item does not
+cover it even when `class-surface` lists the new members: it tells subclassers to rename, and the
+consumers who break here subclass nothing. `tools/check-class-surface-entry.mjs` fails the release
+when a static `ngTemplateContextGuard` appears in a pre-existing file whose exported class no
+`surface: template` item in the draft manifest names. A generic parameter alone has no such gate:
+`class-surface` prints it under CHANGED types, and that line is the cue.
+
 **Do not compile either list by eye — run `npm run class-surface`.** It diffs the exported surface
 between the last tag and HEAD (`[base] [head]` overrides both ends) and prints it per class:
 gained/lost member names AND changed types — annotated fields, `input`/`model`/`output`
@@ -388,6 +403,9 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
 - [ ] Non-mechanical entries carry the decision rule + where to read the real new name, not "review".
 - [ ] Widened/changed exported types each have a `behavior` entry naming who breaks
       (run `npm run class-surface` — do not assemble the list by eye).
+- [ ] A directive that gained a template context guard or an `unknown`-defaulting generic has a
+      `behavior` item on `surface: template` with the consumer's build error in `detect`.
+      (`tools/check-class-surface-entry.mjs`, for the guard half, at the cut)
 - [ ] `deleteList` holds every "you can now delete X" — with a greppable `find`, not our token name,
       and a word on when the workaround is still legitimate. (lint, for the shape)
 - [ ] Every delete instruction cites its row as `(delete list: <id>)`, or does not promise a

@@ -12,9 +12,7 @@
       </div>
     }
 
-    <!-- Wrapped so `:empty` can answer "is there a body?" — projected content is
-         usually a bare text node, which no selector can otherwise tell from
-         nothing at all. -->
+    <!-- Wrapper lets `:empty` answer "is there a body?"; a bare projected text node is otherwise invisible to selectors. -->
     <span class="text">
       <ng-content></ng-content>
     </span>

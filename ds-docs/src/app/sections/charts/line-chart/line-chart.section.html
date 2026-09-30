@@ -468,11 +468,41 @@
     into a third quantity that is not there.
   </p>
 
-  <ds-line-chart
-    caption="A series with area on, filling down to its axis baseline"
-    dataTable="none"
-    [categories]="areaFillCategories()"
-    [series]="areaFillSeries()" />
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        caption="A series with area on, filling down to its axis baseline"
+        dataTable="none"
+        [categories]="areaFillCategories()"
+        [series]="areaFillSeries()" />
+
+      <div class="state-cell-label">
+        area: true
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="The same series, fading to the baseline"
+        dataTable="none"
+        [categories]="areaFillCategories()"
+        [series]="areaFadeSeries()" />
+
+      <div class="state-cell-label">
+        area: 'fade'
+      </div>
+    </div>
+  </div>
+
+  <p class="block-desc t-s">
+    The fill takes the series colour at
+    <code class="t-mono-inline">
+      --ds-chart-area-opacity
+    </code>; a fade starts
+    at <code class="t-mono-inline"> --ds-chart-area-fade-opacity </code> by the
+    line. <code class="t-mono-inline"> --ds-chart-area-color </code>, set on the
+    chart, gives every fill its own colour instead of the series'.
+  </p>
 
   <docs-line-chart-data-editor
     [(categories)]="areaFillCategories"
@@ -726,7 +756,7 @@
     <code class="t-mono-inline">
       tooltipAnchor
     </code> decides where the panel
-    sits: <code class="t-mono-inline"> 'point' </code>, the default, pins it
+    sits: <code class="t-mono-inline"> 'reading' </code>, the default, pins it
     over the highest reading in the category, so it stays still while the
     pointer travels within one band;
     <code class="t-mono-inline">

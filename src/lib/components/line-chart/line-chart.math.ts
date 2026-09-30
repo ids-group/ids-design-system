@@ -4,11 +4,9 @@ export type { LinePoint } from '@ids-group-ltd/ids-design-system/components';
 
 export const LINE_CHART_DEFAULT_TICK_COUNT = 5;
 
-/** One reading per category, however long the series actually was. A series longer
- *  than `categories` loses its tail and a shorter one ends early: a line that stops
- *  short is a defect the reader can see, while a thrown error takes down the page
- *  around it. Anything that is not a finite number is a missing reading, so `NaN`
- *  and `Infinity` follow the `gaps` policy rather than reaching a coordinate. */
+/** One reading per category. A longer series loses its tail and a shorter one ends early rather than
+ *  throwing. Anything that is not a finite number is a missing reading, so `NaN` and `Infinity`
+ *  follow the `gaps` policy rather than reaching a coordinate. */
 export function alignSeriesValues(
   data: readonly (number | null)[],
   categoryCount: number,
@@ -29,9 +27,8 @@ export function alignSeriesValues(
   return aligned;
 }
 
-/** Largest finite reading across the given series, or zero. Never negative: this
- *  feeds the ceiling handed to `ds-chart`, which raises its domain and never lowers
- *  it, so a negative here would pin an axis below its own data. */
+/** Largest finite reading across the given series, or zero. Never negative: `ds-chart` only raises
+ *  its domain to this ceiling, so a negative would pin an axis below its own data. */
 export function domainMaxOf(
   valueGroups: readonly (readonly (number | null)[])[],
 ): number {

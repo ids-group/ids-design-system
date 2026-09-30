@@ -15,10 +15,7 @@ import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
-  // Keyboard nav bubbles up from the focused menuitem button. Hand-rolled roving
-  // (mirrors ds-tabs) — kept signal-based and consistent with the rest of the DS.
-  // data-focus="inset": the panel clips, so a ring drawn outward is lost. Belongs on the
-  // clipping element — see styles/_focus.scss.
+  // data-focus="inset": the panel clips, so an outward ring is lost.
   host: {
     '(keydown)': 'onKeydown($event)',
     'data-focus': 'inset',
@@ -28,18 +25,15 @@ import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
 export class MenuComponent {
   private readonly items = contentChildren(MenuItemComponent);
 
-  /** One item with an icon makes every item reserve the slot, so the labels share one axis. The
-   *  menu owns the decision because an item would have to know its siblings to take it. */
+  /** One item with an icon makes every item reserve the slot, so the labels share one axis. */
   protected readonly anyIcon = computed(() =>
     this.items().some((item) => item.icon() !== null),
   );
-  /** Index of the roving-focus item — the single item reachable via Tab. */
+  /** Index of the roving-focus item, the single one reachable via Tab. */
   private readonly activeIndex = signal(0);
 
   constructor() {
-    // Roving tabindex: exactly one item is tabbable (0), the rest -1. Disabled
-    // items stay in the order (APG menu practice) — they're focusable so a
-    // tooltip explaining why can be read; activation is blocked in menu-item.
+    // Disabled items stay in the roving order (APG) so their tooltip is reachable.
     effect(() => {
       const items = this.items();
       if (!items.length) {
@@ -55,8 +49,7 @@ export class MenuComponent {
 
   protected onKeydown(event: KeyboardEvent): void {
     const items = this.items();
-    // A projected search/filter field owns its typing — type-ahead below would
-    // eat every character it receives.
+    // A projected search field owns its typing; type-ahead would eat it.
     if (!items.length || isTextEntryTarget(event)) {
       return;
     }
@@ -66,8 +59,6 @@ export class MenuComponent {
     );
     const from = focused >= 0 ? focused : this.activeIndex();
 
-    // Single-character type-ahead: jump to the next item whose label starts
-    // with the typed character.
     if (
       event.key.length === 1 &&
       /\S/.test(event.key) &&
@@ -99,8 +90,6 @@ export class MenuComponent {
         return;
     }
     event.preventDefault();
-    // Disabled items are NOT skipped — they stay reachable (APG); onClick blocks
-    // their activation.
     this.focusItem(next);
   }
 

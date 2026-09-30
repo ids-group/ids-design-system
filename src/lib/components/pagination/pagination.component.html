@@ -61,9 +61,7 @@
   </button>
 
   @if (showPageSize()) {
-    <!-- reserveMessage pinned off: a page-size dropdown shows neither hint nor
-         error, so there is nothing to reserve, and inheriting the app-level
-         default would push the control off the page buttons' baseline. -->
+    <!-- reserveMessage pinned off: the app-level default would push the control off the page buttons' baseline. -->
     <ds-select
       class="size"
       size="sm"

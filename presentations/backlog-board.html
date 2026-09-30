@@ -149,7 +149,7 @@
   </div>
 
   <div class="lane">
-    <div class="lane-head"><h2>⏳ Ждёт твоего решения</h2><span class="count c-you">12</span><span class="why">Твой вход. У открытых дек по карточке; очередь решений собирает все вопросы на одной странице.</span></div>
+    <div class="lane-head"><h2>⏳ Ждёт твоего решения</h2><span class="count c-you">13</span><span class="why">Твой вход. У открытых дек по карточке; очередь решений собирает все вопросы на одной странице.</span></div>
     <div class="cards">
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">Очередь решений - всё открытое на одной странице</div><p class="d">7 асков, которых ждёт консюмер, в трёх группах, и 27 решений в шести - каждый вопрос нарисован как «сейчас» против «после», со ссылкой на деку с аргументом. Выборы запоминаются в браузере, панель внизу отдаёт их одной строкой.</p><div class="meta">10-decision-queue.html</div></div>
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">Single-source colour engine</div><p class="d">«primary» живёт в двух расцепленных видах: <code>--primary</code> с ручными пиками рампы для заливок и каналы <code>--primary-h/s/l</code> для гало и серых. <b>Перепроверено 23.09</b> (<code>_semantic.scss:89-91</code>). Открыто для спеки: цветовое пространство, чистая деривация против ручных пиков, тёмная тема. Recipe-vs-hand-tuned - вопрос (b) внутри этой спеки. Прототип-половина - дека 2.</p><div class="meta">1-color-engine-derivation.html</div></div>
@@ -162,11 +162,12 @@
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">fix:all переформатирует HTML, который eslint возвращает</div><p class="d"><code>lint:all</code> зелёный - сломан только фиксер: <code>format:fix</code> добавляет <code>html</code> в глоб, и prettier переписывает ~112 шаблонов, которые два правила <code>ds/template/*</code> тут же хотят назад. Замерено 10.09: один <code>prettier --write</code> по трём файлам секций дал 63 предупреждения eslint. Фикс - убрать <code>html</code> из <code>format:fix</code>, но это файл политики.</p></div>
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">ds-number-stepper и ds-dropzone вне field-message</div><p class="d">Не «полям не хватает фичи» - <b>обёртки не было никогда</b>: ни <code>label</code>, ни <code>hint</code>, ни <code>error</code>, ни <code>ds-field-message</code>, тогда как у остальных четырнадцати полей есть всё. Значит, это добавление возможности, а не унификация, и вступление делает оба forms CVA. Образец уже есть: <code>ds-button</code> вшил message-половину в компонент, который полем не был.</p></div>
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">Signal Forms: dirty и pending (disabledReasons отвечен)</div><p class="d"><code>disabledReasons</code> <b>отвечен 26.08</b> и стал проводкой: причина идёт внутрь контрола, а не в тултип, потому что тултипу нужен hover, а нативно <code>disabled</code> контрол не берёт фокус. <code>ds-button.disabledReason</code> - образец. Остальные два блокированы <b>видом</b>: как выглядит поле с валидатором в полёте и рисует ли DS «изменено» хоть где-нибудь.</p><div class="meta">implemented/button-refusal-reason.html</div></div>
+      <div class="card you"><span class="chip ch-you">решить</span><div class="t">Мульти-пин: закреплять больше одной метки</div><p class="d">Сейчас чарт держит один пин: <code>chartActiveMark</code> хранит один индекс, у тултипа одна панель, клик по другой метке переносит пин. Решить до постройки: добавляет ли пин обычный клик или клик с модификатором (обычный клик меняет поведение всех чартов), лимит, как раскладывать панели, которые перекрылись бы, что отпускает клик вне плота, как добавлять и снимать пин с клавиатуры.</p></div>
     </div>
   </div>
 
   <div class="lane">
-    <div class="lane-head"><h2>🧭 Решено или решать не нужно - ждут рук</h2><span class="count c-raw">8</span><span class="why">P3, записаны 22-24.09: аски Stas и находки чартов и инструментов.</span></div>
+    <div class="lane-head"><h2>🧭 Решено или решать не нужно - ждут рук</h2><span class="count c-raw">9</span><span class="why">P3, записаны 22-24.09: аски Stas и находки чартов и инструментов.</span></div>
     <div class="cards">
       <div class="card raw"><span class="chip ch-raw">аск · решено</span><div class="t">Бар и колонка: вынести общее, контракты разные</div><p class="d">Решено Stas 22.09, не построено. Это разные чарты, и они не сливаются: строка бара - одна метка и значение с <code>segments</code>, серия колонок - N марок по категориям с <code>stack</code>. Общее уходит в модуль с точкой расширения; два видимых расхождения - где объявлен стек и одна серия против N категорий в палитре - документируются, а не убираются.</p><div class="meta">7-bar-column-contracts.html</div></div>
       <div class="card raw"><span class="chip ch-raw">аск Stas</span><div class="t">ds-bar-chart → ds-row-chart</div><p class="d">Отменяет имя, сохранённое в <code>implemented/ds-bar-name-collision.html</code>. Имя типа нарисовано в деке очереди, секция <code>row-chart-row-type</code>. Миграция той же формы, что у waterfall: <code>selector-rename</code>, <code>type-rename</code> на каждый символ, <code>token-rename</code> для <code>--ds-bar-chart-*</code>, <code>class-rename</code>.</p><div class="meta">10-decision-queue.html</div></div>
@@ -176,6 +177,7 @@
       <div class="card raw"><span class="chip ch-raw">инструменты</span><div class="t">changelog-lint C001 не смотрит ds-docs/src и docs/agent</div><p class="d">Проверка имён клиентов в опубликованном читает стили, темы, <code>src/lib/**/*.ts</code> и миграции, но не исходники сайта доков и агентские доки - а оба уходят читателям вне команды. Sweep вымышленных брендов, которого ждал пункт, влит (8e6c9454), так что делать можно.</p></div>
       <div class="card raw"><span class="chip ch-raw">инструменты</span><div class="t">Гард press-фидбэка пропускает .disabled и [aria-disabled]</div><p class="d"><code>_press.scss:22</code> исключает только <code>:disabled</code>, <code>[disabled]</code> и <code>.is-disabled</code>, так что компонент, выключенный классом или <code>aria-disabled</code>, всё равно играет нажатие на контроле, который ничего не делает.</p></div>
       <div class="card raw"><span class="chip ch-raw">инструменты</span><div class="t">--picker-maxh - сокращённое имя токена</div><p class="d">Потолок списка пикера пишется <code>-maxh</code> против конвенции полных имён (<code>-max-height</code>); <code>check-abbreviated-tokens</code> читает только <code>--ds-*</code> и его не ловит. Связан с вердиктом о высоте списка.</p></div>
+      <div class="card raw"><span class="chip ch-raw">аск Stas</span><div class="t">Сократить тексты в ds-docs</div><p class="d">Текста слишком много, его не читают. Оставить то, что демо не покажет: имя инпута или токена, дефолт, неочевидное ограничение. Самые большие страницы: table, line-chart, charts, tokens-reference, chart.</p></div>
     </div>
   </div>
 
@@ -224,9 +226,9 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**112 open — 0 P1, 12 P2, 100 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**112 open — 0 P1, 11 P2, 101 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 12
+### P2 — 11
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - A `ds-table` expanded row animates open and vanishes on close, so the reveal is one-sided (recorded 2026-09-24, from the mm-ecm consumer)
@@ -237,7 +239,6 @@ item and nothing else.
   - `--ds-multi-select-option-bg-color-active` is documented and dead
   - `ds-tag` marked `interactive` is mouse-only
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
-  - Nothing classifies a tightened template context as actionable (recorded 2026-09-24, from the mm-ecm consumer's 0.13.4 -> 0.14.0 upgrade)
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - DOCS for A3: `@defer` needs the deep specifier — the one exception to «no consumer
@@ -247,7 +248,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 100
+### P3 — 101
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -267,6 +268,8 @@ item and nothing else.
 - **Asked by Stas**
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
   - Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24)
+  - Pin more than one mark at a time (Stas, 2026-09-29)
+  - Cut the prose in ds-docs (Stas, 2026-09-29: "слишком много и никто это не читает")
 - **Tooling**
   - changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24)
   - The press feedback guard misses `.disabled` and `[aria-disabled]` (recorded 2026-09-24)
@@ -324,7 +327,6 @@ item and nothing else.
   - Four exports on the package surface have no consumer in `src/`
   - `'none'` and `'grouped'` are the same value on `ds-column-chart`
   - Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea
-  - `ds-pie-chart` declares `staggerMs` and documents that it does nothing
 - **ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)**
   - `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them
 - **Missing components (from gap analysis)**
@@ -405,10 +407,10 @@ item and nothing else.
 
 **Consumer asks are the head of the board.** Every item a consumer is waiting on is drawn, with its
 before and after, in deck `decision-queue` under *Ждут консьюмеры*; pick there, and the items here
-are the work. Five are open: the `ds-table` expand-leave animation (:227) and the control-edge
-contrast (:232) under *Bugs*, the tightened template context (:312) under *Bugs*, the bar/column
-extract (:487) under *Two chart names that collide*, and the indeterminate bar's stripe verdict
-(:1138). The 0.9.0-0.13.3 manifest walk and the eleven reached-past styling hooks are both closed.
+are the work. Four are open: the `ds-table` expand-leave animation (:229) and the control-edge
+contrast (:234) under *Bugs*, the bar/column extract (:510) under *Two chart names that collide*,
+and the indeterminate bar's stripe verdict (:1146). The 0.9.0-0.13.3 manifest walk and the eleven
+reached-past styling hooks are both closed.
 
 **Nobody is blocked from installing.** All six consumer repos declare Angular `^21` or `~21`, so the
 Angular 22 upgrade is parked rather than P1; the probe and its price stay in the item.
@@ -520,9 +522,6 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
 ## Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)
 
 *This section also has items under **Records**.*
-
-- [ ] **[P2] Nothing classifies a tightened template context as actionable (recorded 2026-09-24, from the mm-ecm consumer's 0.13.4 -> 0.14.0 upgrade).** 0.14.0 gave `CellTemplateDirective` a static `ngTemplateContextGuard` and a generic `T = unknown`, which turns every consumer `let-row` read from `any` into `unknown` under `strictTemplates`; the consumer's build failed with 194 + 6 errors (TS2571 / TS2345). `class-surface` did see it - `dsCellTemplateOf` and the guard were listed as grown members, so they landed in `exported-class-members-grew`, the subclass-collision item - and the prose went to `informational`. AUTHORING.md's widening rule covers a type that grows for its READERS; the reverse, a context that narrows from `any`, has no rule, and the manifest item was added after release (`0.14.0#cell-template-context-typed-unknown`).
-  **Wanted:** an AUTHORING.md rule that adding a context guard, or a generic parameter defaulting to `unknown`, to a directive a consumer's template reads is a `behavior` item on `surface: template` with the build error in `detect`; and a gate - `check-class-surface-entry` or `class-surface` - that fails when a new `ngTemplateContextGuard` appears on a class no draft item names.
 
 - [ ] **[P2] The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold.** `src/lib/styles/_status.scss:53` pairs `bg: var(--warning-subtitle)` with `text: var(--warning-text)`. Resolved in the default theme that is `#8A7400` on `#FFFBEA`, which computes to **4.42:1** by the WCAG relative-luminance formula — under AA for text below 18.66px/700. **It is the only status pair that fails:** error measures **5.92**, success **6.42** and primary **6.16** on their own subtitle backgrounds, so this is one colour out of step, not a palette-wide problem.
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:175`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
@@ -675,6 +674,29 @@ Each has somebody behind it. Nothing here is speculative work.
   `selector-rename`, one `type-rename` per exported symbol, a `token-rename` for the
   `--ds-bar-chart-*` prefix and a `class-rename` for the internal `.bar-chart` class - the same shape
   as the `ds-waterfall-chart` item above.
+
+- [ ] **[P3] Pin more than one mark at a time (Stas, 2026-09-29).** Today a chart holds one pin:
+  `chartActiveMark` keeps a single `index` and a `pinned` flag
+  (`components/chart-tooltip/chart-active-mark.ts`), the tooltip directive keeps one overlay per
+  chart (`chart-tooltip.directive.ts`), and a press on another mark moves the pin rather than adding
+  one. **What moves:** the active-mark state becomes a set of pinned indices beside the hovered one;
+  the directive opens one panel per pin while the hover panel keeps gliding; each pinned mark carries
+  its disc; `Unpin` releases all of them, and a click on a pinned mark releases that one. The
+  category cursor of `ds-chart` (`pinOnClick`) needs the same, one band per pin.
+  **To decide before building:** whether a plain click adds a pin or a modifier does (a plain click
+  that adds changes what every chart does today), a cap on how many, how panels that would overlap
+  are placed, what a press outside the plot releases, and how the keyboard adds and removes one.
+
+- [ ] **[P3] Cut the prose in ds-docs (Stas, 2026-09-29: "слишком много и никто это не читает").**
+  The pages explain too much. Readers skip the text and look at the demos. Keep what a demo cannot
+  show: the input or token name, a default value, and a constraint that is easy to break. Cut the
+  rest: paragraphs that restate what the demo shows, rationale, and a fact that repeats on several
+  pages (for example, shared chart inputs belong on Foundations only). Size, measured 2026-09-29:
+  103 `ds-docs/src/app/sections/**/*.section.html` hold 53448 words once tags are stripped. That
+  count also includes demo data and code-sample text, so the prose share is smaller. The largest
+  files are `table` (5080), `line-chart` (2422), `charts` (2082), `tokens-reference` (1548) and
+  `chart` (1504). Start with those. Re-measure with the same command, which pipes `find`, then
+  `sed 's/<[^>]*>/ /g'`, then `wc -w`.
 
 ## Tooling
 
@@ -1421,10 +1443,6 @@ and the fifteen lint rules.
   `line-chart.types.ts:22` declares `LineChartStack` rather than narrowing `ChartStackMode`, then
   feeds it to `stackOffsets`, which is typed on the full union (`chart.math.ts:329-331`).
 
-- [ ] **[P3] `ds-pie-chart` declares `staggerMs` and documents that it does nothing.**
-  `pie-chart.component.ts:194-197`. It exists for parity with the other charts. Either it works or
-  it goes.
-
 # Parked — asked, and deliberately not now
 
 Ordered by how close each is to a first consumer ask, which is the only thing that unparks any of them.
@@ -1972,6 +1990,20 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirrors the live backlog (`todo.md`); deep gap analysis stays in `docs/superpowers/ds-gap-analysis.md`.
 
 ---
+
+## A tightened template context is classified as actionable, and the cut gates it (2026-09-30)
+
+`migrations/AUTHORING.md` states that a directive gaining a static `ngTemplateContextGuard` or a
+generic parameter defaulting to `unknown` breaks every consumer template that read its context as
+`any`, and is a `behavior` item on `surface: template` with the build error in `detect`, not a line
+in `informational` or the subclass-collision item. `tools/check-class-surface-entry.mjs`, in the
+`release` group, fails when a static `ngTemplateContextGuard` appears since the base tag in a file
+that existed there and whose exported class no `surface: template` item in
+`migrations/unreleased.json` names; `class-surface-diff` never lists static members, so the gate
+reads the guards from the two refs itself. Measured 2026-09-30: against `v0.13.4` it names
+`components/table/cell-template.directive.ts - CellTemplateDirective` (the 0.14.0 precedent,
+`0.14.0#cell-template-context-typed-unknown`); against `v0.14.4` it names nothing; a draft item on
+`surface: template` naming the class silences it, and one on `surface: typescript` does not.
 
 ## A toast's announcement stays off screen before any dialog has opened (2026-09-29)
 
@@ -5906,6 +5938,8 @@ mark, because each is waiting on a deck verdict rather than on work.
       ["fix:all переформатирует HTML, который eslint возвращает",    "`fix:all` reformats HTML that eslint then fights",                            ""],
       ["ds-number-stepper и ds-dropzone вне field-message",          "outside the field-message system entirely",                                   ""],
       ["Signal Forms: dirty и pending (disabledReasons отвечен)",    "blocked on a LOOK, not on wiring",                                            "implemented/button-refusal-reason.html"],
+      ["Мульти-пин: закреплять больше одной метки",                  "Pin more than one mark at a time",                                            ""],
+      ["Сократить тексты в ds-docs",                                 "Cut the prose in ds-docs",                                                    ""],
       ["Бар и колонка: вынести общее, контракты разные",             "Extract what bar and column SHARE",                                           "7-bar-column-contracts.html"],
       ["ds-bar-chart → ds-row-chart",                                "Rename `ds-bar-chart` to `ds-row-chart`",                                     "10-decision-queue.html"],
       ["ds-waterfall-chart → ds-cascade-chart",                      "`ds-waterfall-chart` is `ds-cascade-chart`",                                  ""],

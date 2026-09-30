@@ -548,38 +548,109 @@
   </p>
 
   <p class="block-desc t-s">
-    A chart answers a resting pointer, not a passing one: the tooltip, the
-    highlight and the dimming wait
+    A chart answers the pointer at once: the tooltip, the highlight and the
+    dimming show the moment it reaches a mark.
     <code class="t-mono-inline">
       DS_CONFIG.chart.hoverDelayMs
-    </code>,
-    <code class="t-mono-inline">
-      500
-    </code> by default, before they show. Once
-    the chart has answered, the next mark answers at once until the pointer
-    leaves the chart. Focus, a tap and a click that pins answer at once. Set it
-    to <code class="t-mono-inline"> 0 </code> to answer at once, which is also
-    what a test that hovers and asserts in the same tick needs.
+    </code> makes it
+    wait for a resting pointer instead; once the chart has answered, the next
+    mark answers at once until the pointer leaves the chart. Focus, a tap and a
+    click that pins answer at once.
   </p>
 
   <p class="block-desc t-s">
-    An unheld panel goes when the pointer does - one left behind sits over the
-    plot you have moved on to.
+    One panel serves the whole chart. Moving from one mark to the next glides it
+    there rather than closing it and opening another, and it goes once,
     <code class="t-mono-inline">
       tooltipLingerMs
-    </code> is how long it stays
-    after the pointer leaves, and it is <code class="t-mono-inline"> 0 </code>.
-    Raise it only where a panel holds something to REACH — a link, a figure, a
-    selectable string — which is what WCAG's hoverable clause is about; the
-    built-in panel is one line of text and has nothing in it to reach. The panel
-    is portaled out of the chart, so crossing the gap to it at an ordinary
-    pointer speed takes about <code class="t-mono-inline"> 140 </code>. Set it
-    per chart, or on
+    </code> after the pointer
+    leaves: <code class="t-mono-inline"> 500 </code> by default, which is what
+    lets the pointer cross the gap between two marks and find the same panel.
+    Set it to <code class="t-mono-inline"> 0 </code> to take it away at once,
+    per chart or on
     <code class="t-mono-inline">
       DS_CONFIG.chart.tooltipLingerMs
-    </code> for an
-    app whose tooltips all carry one.
+    </code>. A
+    scroll closes a panel that follows the pointer; a pinned one moves with its
+    mark.
   </p>
+
+  <p class="block-desc t-s">
+    Each reading in the panel carries its series' colour dot while there are two
+    to four readings. A lone reading has nothing to tell it from, and from five
+    the dots read as noise, so in both cases they go and the labels carry the
+    series on their own.
+    <code class="t-mono-inline">
+      tooltipSwatches
+    </code>, per chart or on
+    <code class="t-mono-inline">
+      DS_CONFIG.chart
+    </code>, turns them on or off
+    whatever the count. And
+    <code class="t-mono-inline">
+      tooltip="none"
+    </code> takes the panel away
+    altogether, for a chart whose numbers are printed beside it.
+  </p>
+
+  <div class="states is-cols-3">
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        [categories]="tooltipDemoMonths"
+        [series]="tooltipDemoSeries" />
+
+      <div class="state-cell-label">
+        tooltipSwatches unset (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        [categories]="tooltipDemoMonths"
+        [series]="tooltipDemoSeries"
+        [tooltipSwatches]="false" />
+
+      <div class="state-cell-label">
+        tooltipSwatches = false
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        tooltip="none"
+        [categories]="tooltipDemoMonths"
+        [series]="tooltipDemoSeries" />
+
+      <div class="state-cell-label">
+        tooltip = none
+      </div>
+    </div>
+  </div>
+
+  <p class="block-desc t-s">
+    The panel's colours are
+    <code class="t-mono-inline">
+      --ds-chart-tooltip-bg-color
+    </code>,
+    <code class="t-mono-inline">
+      -text-color
+    </code> and
+    <code class="t-mono-inline">
+      -border-color
+    </code>. Set them on the theme
+    for every chart, or on one chart: the panel is portaled out to the page, and
+    the chart copies its own values onto it when it opens.
+  </p>
+
+  <ds-line-chart
+    class="dark-tooltip"
+    caption="A dark tooltip on this chart alone"
+    dataTable="none"
+    [categories]="tooltipDemoMonths"
+    [series]="tooltipDemoSeries" />
 
   <p class="block-desc t-s">
     A click on a mark holds it by default, on every chart: the mark keeps its
@@ -598,11 +669,11 @@
     focused mark fire its click output and hold nothing. Set
     <code class="t-mono-inline">
       pinOnClick="false"
-    </code> on one chart (<code
-      class="t-mono-inline"
-      >cursorPin="false"</code
-    >
-    on <code class="t-mono-inline"> ds-chart </code>), or
+    </code> on one chart,
+    <code class="t-mono-inline">
+      ds-chart
+    </code>
+    included, or
     <code class="t-mono-inline">
       DS_CONFIG.chart.pinOnClick: false
     </code> for
@@ -665,6 +736,122 @@
   </p>
 
   <h3 class="block-title t-h4">
+    Background
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      --ds-chart-bg-color
+    </code> is what sits behind
+    the marks. The frame is painted in it, and so is every cut a chart makes
+    between two marks: the band a line rides on, the seam between segments,
+    hatching, the halo round a label or a focused mark. On a card of another
+    colour with <code class="t-mono-inline"> frame="none" </code>, set it to the
+    card's colour and the cuts disappear into it.
+    <code class="t-mono-inline">
+      --ds-chart-plot-bg-color
+    </code> paints only
+    the rectangle inside the axes; unset, it is transparent.
+  </p>
+
+  <div class="states is-cols-3">
+    <div class="state-cell">
+      <div class="tinted-card">
+        <ds-line-chart
+          frame="none"
+          dataTable="none"
+          [categories]="tooltipDemoMonths"
+          [series]="tooltipDemoSeries" />
+      </div>
+
+      <div class="state-cell-label">
+        grey card, background unset
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="tinted-card">
+        <ds-line-chart
+          class="on-tinted-card"
+          frame="none"
+          dataTable="none"
+          [categories]="tooltipDemoMonths"
+          [series]="tooltipDemoSeries" />
+      </div>
+
+      <div class="state-cell-label">
+        --ds-chart-bg-color = the card
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        class="tinted-plot"
+        dataTable="none"
+        [categories]="tooltipDemoMonths"
+        [series]="tooltipDemoSeries" />
+
+      <div class="state-cell-label">
+        --ds-chart-plot-bg-color set
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    The annex table
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dataTable
+    </code> gives the numbers behind a
+    plot a route that is not a colour or a length.
+    <code class="t-mono-inline">
+      none
+    </code>, the default, draws no table;
+    <code class="t-mono-inline">
+      toggle
+    </code> puts it behind a closed
+    disclosure; <code class="t-mono-inline"> visible </code> renders it open.
+    Set it per chart, or on
+    <code class="t-mono-inline">
+      DS_CONFIG.chart.dataTable
+    </code> for an app
+    that wants the annex everywhere. A heat map carries its table always,
+    because colour is the only channel carrying its magnitude.
+  </p>
+
+  <div class="states is-cols-3">
+    <div class="state-cell">
+      <ds-column-chart [data]="frameDemoPoints()" />
+
+      <div class="state-cell-label">
+        dataTable = none (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-column-chart
+        dataTable="toggle"
+        [data]="frameDemoPoints()" />
+
+      <div class="state-cell-label">
+        dataTable = toggle
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-column-chart
+        dataTable="visible"
+        [data]="frameDemoPoints()" />
+
+      <div class="state-cell-label">
+        dataTable = visible
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     What a chart says to a screen reader
   </h3>
 
@@ -713,12 +900,16 @@
     cards), <code class="t-mono-inline"> tooltipLingerMs </code> (a property of
     what the app puts in its tooltips),
     <code class="t-mono-inline">
-      pinOnClick
-    </code> (whether a click holds a
-    mark) and <code class="t-mono-inline"> hoverDelayMs </code> (how long a
-    resting pointer waits before a chart answers it, which has no per-chart
-    input). Precedence is the input, then the config, then the built-in default
-    — so binding one on a single chart still wins. The empty and error copy is
+      tooltipSwatches
+    </code> (whether the tooltips
+    carry colour dots), <code class="t-mono-inline"> pinOnClick </code> (whether
+    a click holds a mark) and
+    <code class="t-mono-inline">
+      hoverDelayMs
+    </code> (how long a resting
+    pointer waits before a chart answers it, which has no per-chart input).
+    Precedence is the input, then the config, then the built-in default — so
+    binding one on a single chart still wins. The empty and error copy is
     wording, so it lives in <code class="t-mono-inline"> DS_INTL.chart </code>,
     and the number locale is
     <code class="t-mono-inline">

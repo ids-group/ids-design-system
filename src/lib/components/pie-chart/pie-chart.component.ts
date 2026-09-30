@@ -1,3 +1,8 @@
+import type {
+  ChartDimmable,
+  ChartWithDataTable,
+  ChartWithTooltipTrigger,
+} from '@ids-group-ltd/ids-design-system/components';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,7 +11,6 @@ import {
   booleanAttribute,
   computed,
   contentChild,
-  inject,
   input,
   numberAttribute,
   output,
@@ -21,15 +25,11 @@ import {
   markAt,
   rovingMarks,
   chartRenderGate,
+  DsChartBase,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
-import type {
-  ChartDataTable,
-  ChartFrame,
-  ChartValueFormat,
-} from '@ids-group-ltd/ids-design-system/core';
+import type { ChartDataTable } from '@ids-group-ltd/ids-design-system/core';
 import {
   ChartTooltipDirective,
   chartActiveMark,
@@ -53,7 +53,6 @@ import {
 import type { PieChartSlice } from './pie-chart.types';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
-import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 
 const RING_VIEW_BOX_SIZE = 100;
 const RING_CENTER = RING_VIEW_BOX_SIZE / 2;
@@ -74,12 +73,14 @@ const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PieChartComponent {
+export class PieChartComponent
+  extends DsChartBase
+  implements ChartDimmable, ChartWithDataTable, ChartWithTooltipTrigger
+{
   protected readonly renderReady = chartRenderGate();
 
-  /** One slice per entry. A non-positive or non-finite value counts as zero — a ring is a
-   *  part-to-whole picture and has no way to draw a negative share. */
-  readonly data = input.required<readonly PieChartSlice[]>();
+  /** One slice per entry. A non-positive or non-finite value counts as zero. */
+  readonly data = input<readonly PieChartSlice[]>([]);
 
   /** Printed inside the ring. Null prints the sum through `valueFormat`. */
   readonly centerValue = input<string | null>(null);
@@ -87,12 +88,10 @@ export class PieChartComponent {
   /** Caption under the centre value. */
   readonly centerLabel = input<string | null>(null);
 
-  /** Logical placement, so a right-to-left page needs no second value. */
+  /** Legend placement, logical so it flips in right-to-left. */
   readonly legend = input<'end' | 'bottom' | 'none'>('end');
 
-  /** Longest legend to draw. Past it the smallest slices are summed into one, so a long tail does
-   *  not become a legend nobody reads. Off by default: grouping changes what the chart says, and
-   *  that is the consumer's call. Values below 2 are ignored — one slice is not a pie. */
+  /** Longest legend to draw; past it the smallest slices are summed into one. Values below 2 are ignored. */
   readonly maxSlices = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
@@ -104,109 +103,28 @@ export class PieChartComponent {
     () => this.otherLabel() ?? this.intl().chart.other,
   );
 
-  /** The hole, as a fraction of the outer radius. Zero draws a solid pie and takes the centre
-   *  content away with the hole that held it. */
+  /** The hole, as a fraction of the outer radius. Zero draws a solid pie without centre content. */
   readonly innerRadius = input(DEFAULT_INNER_RADIUS, {
     transform: numberAttribute,
   });
 
-  /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it;
-   *  `'none'` leaves the chart bare, for one placed inside a card the page has already drawn.
-   *  Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards
-   *  is one decision per app rather than per plot. */
-  readonly frame = input<ChartFrame | null>(null);
-
-  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
-   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
-  readonly tooltipSwatches = input<boolean | null>(null, {
-    transform: (value: unknown) =>
-      value == null ? null : booleanAttribute(value),
-  });
-
-  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default,
-   *  500, lets the pointer cross to the next mark and find the same panel, which glides there
-   *  instead of closing and opening again. Zero takes it away at once. Unset falls back to
-   *  `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
-  readonly tooltipLingerMs = input<number | null>(null, {
-    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
-  });
-  /** Printed above the plot as the chart's visible title, and reused as the annex table's
-   *  caption. */
-  readonly caption = input<string | null>(null);
-
-  /** Accessible name. Generated from the data when omitted. */
-  readonly summary = input<string | null>(null);
-
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
-   *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
-   *  `'none'` belongs only where the same data is already in a table on the page.
-   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
+   *  `'visible'` opens it, `'none'` renders none. Unset falls back to `DS_CONFIG.chart.dataTable`,
+   *  then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
 
-  /** Prints each slice's share of the ring — in the legend, on the tooltip and in the data table.
-   *  On by default, unlike every other chart, because a ring IS parts of one whole: the share is a
-   *  real quantity here whatever the data, not a claim the consumer has to make. Off drops all
-   *  three, for a ring whose slices are already labelled in percent. */
+  /** Prints each slice's share in the legend, the tooltip and the data table. */
   readonly partOfWhole = input(true, { transform: booleanAttribute });
 
-  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
-   *  when the data lands. */
-  readonly loading = input(false, { transform: booleanAttribute });
-  /** Shown in place of the plot when `data` is empty. Unset falls back to
-   *  `DS_INTL.chart.empty`. */
-  readonly emptyText = input<string | null>(null);
-
-  /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
-   *  because "the request failed" and "there is nothing to show" read the same to a reader and
-   *  mean opposite things. */
-  readonly error = input(false, { transform: booleanAttribute });
-
-  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
-  readonly errorText = input<string | null>(null);
-  /** Formats every value the chart prints, the annex table and the generated description
-   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` /
-   *  `LOCALE_ID`. */
-  readonly valueFormat = input<ChartValueFormat | null>(null);
-
-  /** Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click,
-   *  Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then
-   *  `true`. `sliceClicked` fires either way - pinning is a state, not a handler. */
-  readonly pinOnClick = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
-
-  // Declared after every input it reads: it takes each signal off `this` when it runs.
-  protected readonly defaults = resolveChartDefaults(this);
-  protected readonly intl = inject(DS_INTL);
-  readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
-  readonly emptyTextResolved = this.defaults.emptyText;
-  readonly errorTextResolved = this.defaults.errorText;
-  readonly valueFormatResolved = this.defaults.valueFormat;
 
-  /** Turns on the click affordance — the pointer cursor and any hover tint.
-   *  The click output fires whether or not this is set, so a consumer that
-   *  binds the output and forgets the flag still receives every click. */
-  readonly interactive = input(false, { transform: booleanAttribute });
-
-  /** The slice that was clicked, or activated with Enter or Space. Fires whether or not
-   *  `interactive` is set. */
+  /** The slice that was clicked or activated with Enter or Space. */
   readonly sliceClicked = output<PieChartSlice>();
 
-  /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
-   *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
-   *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
-   *  opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark
-   *  and pays for it with the rest of the chart. */
+  /** Dims every other mark while one is hovered or focused. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Accepted for parity with the other four charts and deliberately without effect here: a ring
-   *  arrives as ONE object, because arcs share their edges and fading them one at a time lets the
-   *  background through every seam. There is nothing to stagger. */
-  readonly staggerMs = input(0, { transform: numberAttribute });
-
-  /** Whether a hovered or focused slice opens a tooltip. `'axis'` is not offered — a ring
-   *  has no axis to group readings under. */
+  /** Whether a hovered or focused slice opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
   protected readonly tooltipTemplate =
@@ -241,8 +159,7 @@ export class PieChartComponent {
   private readonly legendHighlight = signal(-1);
   private readonly legendDwell = chartDwell(() => this.defaults.hoverDelayMs());
 
-  /** A legend item stands for its arc, so it opens the arc's tooltip over the ARC and dims the
-   *  other slices — the same state hovering the arc itself produces. */
+  /** A legend item opens the arc's tooltip and dims the other slices, as hovering the arc does. */
   protected onLegendEnter(index: number, event: Event): void {
     this.legendDwell.schedule(
       index,
@@ -283,8 +200,7 @@ export class PieChartComponent {
   }
 
   protected isDimmed(index: number): boolean {
-    // Naming a slice in the legend fades the rest whether or not `dimOthers` is set, the way every
-    // chart legend singles out its series; `dimOthers` governs what a pointer over the ring does.
+    // The legend dims the rest whether or not `dimOthers` is set; `dimOthers` governs the ring only.
     const legendHighlight = this.legendHighlight();
     if (legendHighlight !== -1) {
       return legendHighlight !== index;
@@ -377,8 +293,7 @@ export class PieChartComponent {
 
     return data.map((slice, index) => ({
       slice,
-      // Halfway along the arc and halfway through the ring: the one point that is inside a slice
-      // whatever its sweep, which the bounding box of a curved wedge is not.
+      // Halfway along the arc and through the ring: inside the slice whatever its sweep.
       center: ringCoords(
         RING_CENTER,
         RING_CENTER,
@@ -405,9 +320,7 @@ export class PieChartComponent {
     }));
   });
 
-  /** The held slice's centre as a share of the ring box. The badge is HTML over the ring rather
-   *  than a `foreignObject` inside it: inside, the viewBox scale grows the badge with the ring and
-   *  the grid that centres the glyph does not lay out. */
+  /** The held slice's centre as a share of the ring box. The badge is HTML over the ring: inside a `foreignObject` the viewBox scale grows it and the centring grid does not lay out. */
   protected readonly pinnedEntry = computed(() => {
     const entry = this.activeMark.pinned()
       ? this.slices()[this.activeMark.index()]
@@ -456,8 +369,7 @@ export class PieChartComponent {
   }
 
   protected onSliceKey(slice: PieChartSlice, event: Event): void {
-    // Only the legend item's own key opens it: a key pressed on a control inside belongs to that
-    // control.
+    // A key pressed on a control inside the item belongs to that control.
     if (!this.interactive() || event.target !== event.currentTarget) {
       return;
     }
@@ -465,17 +377,14 @@ export class PieChartComponent {
     this.sliceClicked.emit(slice);
   }
 
-  // Both focusable would double the tab order; the legend items already carry the route.
-  // Without this the ring is unreachable at `legend="none"`.
+  // The legend items carry the tab route; the ring needs it only at `legend="none"`.
   protected readonly ringCarriesTheRoute = computed(
     () => this.interactive() && this.legend() === 'none',
   );
 
   protected readonly isEmpty = computed(() => this.data().length === 0);
 
-  /** Placeholder legend rows while loading. Follows the real slice count so the
-   *  chart does not resize when the data lands; falls back to three when `data`
-   *  is still empty. */
+  /** Placeholder legend rows while loading. */
   protected readonly skeletonRows = computed(() =>
     Array.from({ length: Math.max(this.data().length, 3) }),
   );

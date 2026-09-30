@@ -1,11 +1,11 @@
-// WCAG 1.4.11: a graphical object needs 3:1 against what it sits on to be seen.
-const NON_TEXT_CONTRAST = 3;
+// Below this the dot reads as the panel itself, as the palest heat step does on a light panel (1.14:1).
+// A merely low-contrast hue still reads as a colour next to its label and takes no ring.
+const SAME_AS_GROUND = 1.5;
 
 let probe: CanvasRenderingContext2D | null = null;
 const blendsByPair = new Map<string, boolean>();
 
-// Painting the colour and reading the pixel back resolves any CSS colour syntax to sRGB -
-// `oklch()`, `color-mix()` and named colours included - where parsing the string would not.
+// Painting and reading the pixel back resolves any CSS colour syntax (`oklch()`, `color-mix()`) to sRGB.
 function srgbOf(color: string): readonly [number, number, number] {
   if (!probe) {
     const canvas = document.createElement('canvas');
@@ -38,8 +38,7 @@ function relativeLuminance([red, green, blue]: readonly [
   return 0.2126 * linear(red) + 0.7152 * linear(green) + 0.0722 * linear(blue);
 }
 
-/** Whether a swatch of `color` sits on `ground` below the non-text contrast a graphical object
- *  needs, and so has to be ringed to be seen. Both are computed CSS colours. */
+/** Whether `color` is close enough to `ground` to vanish into it and needs a ring. Both are computed CSS colours. */
 export function swatchBlendsInto(color: string, ground: string): boolean {
   const pair = `${color}|${ground}`;
   const known = blendsByPair.get(pair);
@@ -51,7 +50,7 @@ export function swatchBlendsInto(color: string, ground: string): boolean {
   const ratio =
     (Math.max(swatchLuminance, groundLuminance) + 0.05) /
     (Math.min(swatchLuminance, groundLuminance) + 0.05);
-  const blends = ratio < NON_TEXT_CONTRAST;
+  const blends = ratio < SAME_AS_GROUND;
   blendsByPair.set(pair, blends);
 
   return blends;

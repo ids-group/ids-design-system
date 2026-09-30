@@ -12,6 +12,6 @@ import { Component, ViewEncapsulation, input } from '@angular/core';
   },
 })
 export class ButtonGroupComponent {
-  /** Accessible name for the group, set as `aria-label` on the `role="group"` host. */
+  /** `aria-label` of the `role="group"` host. */
   readonly ariaLabel = input<string | null>(null);
 }

@@ -29,7 +29,7 @@ import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 export class W3wComponent {
   protected readonly intl = inject(DS_INTL);
 
-  /** Marker rendered before the address (e.g. the "///" glyph). */
+  /** Marker before the address. */
   readonly prefix = input<string>('///');
   /** The three-word address, rendered after `prefix`. */
   readonly address = input.required<string>();

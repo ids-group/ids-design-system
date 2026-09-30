@@ -1,17 +1,11 @@
-// The ONLY place a chart derives a hover state.
+// The only place a chart derives a hover state (the fade half; the value label is markup).
 //
 // TODO(ds-interactive): migrate this onto `_interaction.scss` once that file exists.
-//
-// Only the fade half lives here. Singling a mark OUT is a direct value label, which the component
-// renders as markup, because a label has to be a node a screen reader can reach — an ::after
-// cannot be.
 
-// `.is-dimmed` alone, for a mark whose highlight only ever comes from outside — a legend, or a
-// consumer. A line has no mark between two readings, so it has no `:hover` half to derive.
+// `.is-dimmed` alone, for a mark highlighted only from outside (legend, consumer).
 //
-// `$also` is how a mark adds its OWN animated properties to the same declaration — a second
-// `transition` on the same selector replaces this one rather than adding to it, and the fade then
-// disappears with nothing reporting it. Pass a leading comma: `', fill 180ms ease'`.
+// `$also` adds the mark's own transitions; a second `transition` on the same selector would
+// replace this one and drop the fade. Pass a leading comma: `', fill 180ms ease'`.
 @mixin dims($mark, $also: '') {
   #{$mark} {
     transition: opacity var(--ds-motion-chart-state-duration)
@@ -23,36 +17,19 @@
   }
 }
 
-// Include on the CONTAINER, never on the mark: `:has()` asks the container whether one of its
-// marks is the active one. `.is-active` is the component's, set from the same state the tooltip
-// reads, so the highlight waits out the hover delay with the tooltip rather than flashing on every
-// mark the pointer crosses. The component also sets it on focus.
-//
-// Gated on `.dims-others`, which the chart puts on the container from its `dimOthers` input. Off by
-// default, because dimming is not free: measured 2026-09-13, OKLab dE x100, the worst pair of three
-// dimmed series falls from 14.8 at full opacity to 2.1 at 30%. It buys loudness for the mark under
-// the pointer and pays for it with the reader's ability to tell the REST of the chart apart, which
-// is a trade a consumer should make deliberately rather than inherit.
-//
-// Usage: `.columns { @include chart-interactive.fades('.column'); }`
+// Include on the container, never on the mark: `:has()` asks the container whether one of its marks is active.
+// Gated on `.dims-others` (the `dimOthers` input), off by default: dimming makes the rest hard to tell apart.
 @mixin fades($mark, $also: '') {
   @include dims($mark, $also);
 
-  // A PIN SUSPENDS THE HOVER RULE ENTIRELY, which is what `:not(:has(.is-pinned))` is for. Without
-  // it the two rules dim each other out: the hover rule takes down the pinned mark because the
-  // pointer has moved off it, the pin rule takes down the hovered mark because it is not the pinned
-  // one, and every mark on the chart ends up faded with nothing lit.
+  // Suspends the hover rule under a pin, or the two rules dim each other's mark and every mark fades.
   &.dims-others:not(:has(#{$mark}.is-pinned)):has(#{$mark}.is-active)
     #{$mark}:not(.is-active),
-  // A pinned mark keeps the others down after the pointer has gone, which is the whole point of
-  // pinning: the reader looks away from the chart and the comparison is still on screen.
   &.dims-others:has(#{$mark}.is-pinned) #{$mark}:not(.is-pinned) {
     opacity: var(--ds-chart-dim-opacity);
   }
 }
 
-// `.interactive` is a mark a consumer made clickable, `.pins` one a click would hold. The pointer
-// cursor promises a click, so it goes where one of the two is true and nowhere else.
 @mixin clickable($mark) {
   #{$mark}.interactive,
   #{$mark}.pins {
@@ -60,12 +37,7 @@
   }
 }
 
-// A legend entry's own hover state, shared by every chart legend. Keyboard focus inside the entry
-// takes the same state. The padding is paid back as a negative margin, so the tint grows around the
-// entry without moving a single legend row; the legend gaps are wider than the overhang.
-//
-// `$label` names the element to recolour when the label sets its own colour and would not inherit
-// the entry's.
+// The negative margin offsets the padding so the tint grows without moving rows. `$label` is recoloured when it sets its own colour.
 @mixin legend-entry($entry, $hover-bg-color, $hover-text-color, $label: null) {
   #{$entry} {
     margin: calc(-1 * var(--space-0-5)) calc(-1 * var(--space-1-5));

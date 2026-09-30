@@ -44,6 +44,13 @@
       (pointerover)="onCanvasPointer($event)"
       (pointermove)="onCanvasPointer($event)"
       (pointerleave)="onCanvasLeave()">
+      <rect
+        class="plot-bg"
+        [attr.x]="plot.left"
+        [attr.y]="plot.top"
+        [attr.width]="plot.width"
+        [attr.height]="plot.height" />
+
       @for (tick of yTicks(); track tick.value) {
         <line
           class="grid-line"
@@ -141,8 +148,6 @@
       }
     </svg>
 
-    <!-- On its face, not only in the accessible name: a decimated chart that stays quiet leaves the
-         reader counting points that were never drawn. -->
     @if (droppedCount() > 0) {
       <p
         class="thinned"

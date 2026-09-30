@@ -1,6 +1,3 @@
-/* Toast region — vertical stack of toasts. Placement is owned by the overlay
-   (ToastService position strategy); this component lays out the stack only. */
-
 :host {
   display: flex;
   flex-direction: column;
@@ -21,8 +18,7 @@
   font: var(--font-weight-semibold) var(--font-size-xs) / 1 var(--font-sans);
 }
 
-/* The strip belongs where the NEXT toast will appear, and that follows the anchor: a
-   bottom-anchored stack grows downwards, so the queue sits under it. */
+/* The strip sits where the NEXT toast will appear, which follows the anchor. */
 :host(.stack-newest-last) .queue-count {
   order: 1;
 }

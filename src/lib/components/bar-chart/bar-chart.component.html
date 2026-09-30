@@ -37,7 +37,7 @@
   } @else {
     <div
       class="rows"
-      [class.dims-others]="dimsOthers()"
+      [class.dims-others]="dimOthers()"
       [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="accessibleName()"
       [dsChartTooltip]="tooltipContext()"
@@ -70,10 +70,7 @@
           (click)="onMarkClick(entry.row, index, $event)"
           (keydown.enter)="onRowKey(entry.row, $event)"
           (keydown.space)="onRowKey(entry.row, $event)">
-          <span
-            class="label"
-            (pointerenter)="hoveredLabel.set(index)"
-            (pointerleave)="hoveredLabel.set(-1)">
+          <span class="label">
             {{ entry.row.label }}
 
             @if (entry.row.detail) {

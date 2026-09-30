@@ -1,14 +1,12 @@
 <div class="stat">
   <div
     class="label"
-    dsTooltip
     dsTooltipWhenClipped>
     {{ label() }}
   </div>
 
   <div
     class="value"
-    dsTooltip
     dsTooltipWhenClipped>
     <ng-content select="[dsStatValue]">{{ value() }}{{ unit() }}</ng-content>
   </div>

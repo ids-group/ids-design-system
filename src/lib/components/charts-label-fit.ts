@@ -1,14 +1,10 @@
-/** A label turned 45 degrees takes this fraction of its width across the axis. 45 is where the
- *  policy stops: past it the eye has to tilt rather than glance. */
+/** A label turned 45 degrees takes this fraction of its width across the axis. */
 const ROTATED_FOOTPRINT = Math.sin(Math.PI / 4);
 
-/** Two labels that merely fail to overlap still read as one run of text, so a label's footprint is
- *  its width PLUS this. 16 sits in the middle of the 12-36 band the probe's cases allow, so a later
- *  nudge does not flip an interval. */
+/** Labels that merely fail to overlap read as one run, so a footprint is its width plus this. */
 const LABEL_GAP = 16;
 
-/** The WIDEST label decides for all of them: an axis that thins on the average still collides on
- *  the one long month name, and a reader meets the collision rather than the average.
+/** The widest label decides for all.
  *
  *  @internal */
 export function labelInterval(
@@ -26,7 +22,7 @@ export function labelInterval(
   return Math.max(1, Math.ceil(footprint / step));
 }
 
-/** Asked before thinning, so the axis spends a tilt before it spends a reading.
+/** Asked before thinning: a tilt is spent before a reading.
  *
  *  @internal */
 export function rotationWouldFit(

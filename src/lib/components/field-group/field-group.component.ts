@@ -18,12 +18,10 @@ import {
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
 
 /**
- * One bordered control out of several: `select + input`, `search + button`,
- * `button + select`. The group owns the border, the radius, the focus ring and
- * the divider between segments; the controls inside render "naked".
+ * One bordered control out of several: `select + input`, `search + button`, `button + select`. The group owns the border, radius,
+ * focus ring and segment dividers; the controls inside render "naked".
  *
- * Segments are the direct children. Each hugs its content by default; mark the
- * one that should take the slack with `grow`:
+ * Segments are the direct children. Each hugs its content by default; mark the one that should take the slack with `grow`:
  *
  * ```html
  * <ds-field-group error="Введите сумму больше нуля">
@@ -32,11 +30,8 @@ import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/componen
  * </ds-field-group>
  * ```
  *
- * A control knows it is a segment by injecting `DS_FIELD_GROUP` — see the token
- * for why that is DI and not an input. A segment's own label and message stay
- * suppressed: they would break the glued line, which is why the group carries
- * the pair every field has — `error` for state WITH text, `invalid` for state
- * whose text lives elsewhere.
+ * A control knows it is a segment by injecting `DS_FIELD_GROUP`. A segment's own label and message stay suppressed; the group
+ * carries them: `error` for state with text, `invalid` for state whose text lives elsewhere.
  */
 @Component({
   selector: 'ds-field-group',
@@ -64,31 +59,21 @@ export class FieldGroupComponent
   extends DsMessageBase
   implements DsFieldGroupContext
 {
-  /** Segment height — the field family's scale, so a group lines up with a
-   *  plain field beside it.
-   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Segment height; falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,
   );
-  /** Paints the error state WITHOUT a message of its own — for when the text
-   *  lives in a form-level summary. Use `error` to show text; binding either one
-   *  is enough, exactly as on a field.
-   *
-   *  Segments read `invalidResolved`, not this, so an `error` string announces
-   *  itself without the flag beside it. */
+  /** Paints the error state without a message, for when the text lives elsewhere. Use `error` to show text; either one is enough. */
   readonly invalid = input(false, { transform: booleanAttribute });
-  /** Dims the group. Disable the CONTROLS too — this is the chrome, not their
-   *  interactivity. */
+  /** Dims the group's chrome; disable the controls too. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Fills the container instead of hugging its segments. */
   readonly fullWidth = input(false, { transform: booleanAttribute });
 
   private readonly uid = nextControlId('ds-field-group');
-  // No `errors`/`touched` here: a group has no form control of its own, so its
-  // state is only ever what the consumer bound.
   private readonly fieldMessage = resolveFieldMessage({
     hint: this.hint,
     warning: this.warning,

@@ -5,13 +5,11 @@ import type { AccordionChevron } from './accordion.types';
 export interface AccordionContract {
   readonly multiple: () => boolean;
   readonly chevron: () => AccordionChevron;
-  /** Called when an item opens; coordinator may close other items. */
   notifyOpen(item: AccordionItemRef): void;
 }
 
 /** Contract ds-accordion reads back from each projected item. */
 export interface AccordionItemRef {
-  /** Closes this item (sets expanded to false). */
   closeItem(): void;
 }
 

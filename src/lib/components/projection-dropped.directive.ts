@@ -7,10 +7,8 @@ import {
 } from '@angular/core';
 
 /**
- * Dev-only guard for a component that DROPS whatever is projected into it, so the
- * author gets a warning instead of silence — there is no compile-time signal for
- * content a component chooses to ignore. Put it on a probe around the
- * `<ng-content>`, gated on dev mode so production renders no extra node:
+ * Dev-only guard for a component that DROPS whatever is projected into it: warns instead of
+ * staying silent. Put it on a probe around the `<ng-content>`, gated on dev mode:
  *
  * ```html
  * @if (devMode) {
@@ -18,14 +16,8 @@ import {
  * }
  * ```
  *
- * It is NOT projection support: the probe exists so the warning can see that
- * content arrived, and then hides it.
- *
- * `ds-filter-bar` is the only host today.
- *
- * `reason` replaces the default `[label]` wording for a host that drops content
- * for a different reason — `ds-filter-bar` drops anything that carries neither of
- * its slot attributes.
+ * It is NOT projection support: the probe only detects that content arrived, then hides it.
+ * `reason` replaces the default `[label]` wording.
  * @internal
  */
 @Directive({
@@ -34,10 +26,8 @@ import {
   host: { style: 'display: none' },
 })
 export class ProjectionDroppedDirective {
-  /** The host component's selector, named in the warning. */
   readonly dsProjectionDropped = input.required<string>();
-  /** Overrides the `[label]` explanation for a host that drops content for
-   *  another reason. Ends up after "renders nothing — ". */
+  /** Overrides the `[label]` explanation; appended after "Projected content renders nothing". */
   readonly reason = input<string>('');
 
   private readonly probe = inject(ElementRef<HTMLElement>);

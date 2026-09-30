@@ -8,7 +8,7 @@ import type { DsControlWidth } from '@ids-group-ltd/ids-design-system/core';
 /** `content` here also reserves a minimum typing area beside the chips. */
 export type AutocompleteWidth = DsControlWidth;
 
-/** What a settled single value does when it outgrows the trigger. */
+/** Handling of a settled single value wider than the trigger. */
 export type AutocompleteValueOverflow = 'ellipsis' | 'wrap';
 
 export interface AutocompleteOption<T = unknown> extends DsOption<T> {}

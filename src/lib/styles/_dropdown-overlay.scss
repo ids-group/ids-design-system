@@ -1,19 +1,13 @@
 @use 'focus' as focus;
 
-// GLOBAL because the panel is portaled via CDK Overlay outside the host
-// component's DOM tree, so emulated encapsulation (and any `:host ::ng-deep`
-// selector) cannot reach it. The component sets `panelClass: 'ds-dropdown-panel'`
-// on the overlay config; this partial declares the matching rules.
+// Global: the panel is portaled via CDK Overlay outside the host's DOM tree, out of reach of
+// emulated encapsulation. The component sets `panelClass: 'ds-dropdown-panel'`.
 
 @use 'check-mark' as check-mark;
 @use 'text-clip' as text-clip;
 @use 'visually-hidden' as visually-hidden;
 
 .ds-dropdown-panel {
-  /* Every --_* below resolves through a public --ds-* hook and falls back to a
-     semantic role or the panel radius role, so an untouched theme is unchanged.
-     Panel-level, not per-component: this one partial paints the rows for select,
-     autocomplete and multi-select alike. */
   --_option-selected-bg-color: var(--ds-option-selected-bg-color, var(--primary-subtitle));
   --_option-selected-label-color: var(--ds-option-selected-label-color, var(--primary-strong));
   --_option-selected-bg-color-hover: var(--ds-option-selected-bg-color-hover, var(--primary-muted));
@@ -39,15 +33,12 @@
   --_dropdown-panel-shadow: var(--ds-dropdown-panel-shadow, var(--shadow-popover));
   --_dropdown-panel-max-height: var(--ds-dropdown-panel-max-height, 320px);
 
-  /* minw/maxw only bite in `content` width mode, where the pane is auto-sized: in
-     `fill` the component pins the pane to the trigger width and there is nothing
-     left to bound. */
+  /* Min/max width only apply in `content` width mode; `fill` pins the pane to the trigger. */
   --_dropdown-panel-min-width: var(--ds-dropdown-panel-min-width, 0);
   --_dropdown-panel-max-width: var(--ds-dropdown-panel-max-width, none);
 
   .dropdown-panel {
-    // The pane is sized from the trigger, so without `width: 100%` the panel is a flex
-    // child of it and shrinks to its own option content width.
+    // The panel is a flex child of the pane; without this it shrinks to its option content.
     width: 100%;
     background: var(--_dropdown-panel-bg-color);
     border: var(--border-width-default) solid var(--_dropdown-panel-border-color);
@@ -57,10 +48,6 @@
     min-width: var(--_dropdown-panel-min-width);
     max-width: var(--_dropdown-panel-max-width);
     max-height: var(--_dropdown-panel-max-height);
-
-    // The panel clips and the LIST scrolls, so a filter or select-all row stays
-    // put while the options move under it — a panel that scrolled itself would
-    // carry those rows out of view.
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -68,8 +55,6 @@
   }
 
   .dropdown-list {
-    // A cap of its own, separate from the panel's: the difference between the two
-    // is what the panel's non-scrolling rows (filter, select-all) can occupy.
     max-height: var(--picker-maxh);
     list-style: none;
     margin: 0;
@@ -77,8 +62,7 @@
     display: flex;
     flex-direction: column;
 
-    // A flex child will not shrink below its content without this, so the list
-    // would push the panel past its own max-height instead of scrolling.
+    // Without this the list pushes the panel past its max-height instead of scrolling.
     min-height: 0;
     overflow-y: auto;
     gap: var(--_option-row-gap);
@@ -147,14 +131,11 @@
       @include text-clip.single-line-ellipsis;
     }
 
-    // Visually hidden, not display:none — the latter leaves the accessibility
-    // tree and the reason would be announced nowhere.
+    // Not display:none: that removes the reason from the accessibility tree.
     .option-reason {
       @include visually-hidden.visually-hidden;
     }
 
-    // Persistent, not rendered only when selected: an element that does not exist has no resting
-    // state to transition from, which is why this was the one selection mark that popped in.
     .option-check {
       @include check-mark.mark;
 
@@ -171,17 +152,12 @@
       cursor: not-allowed;
     }
 
-    // `:not(.is-selected)` is load-bearing: this branch outranks `.is-selected`
-    // on specificity, so without it a hovered (or keyboard-active) selected row
-    // repaints to the neutral surface while KEEPING the selected label colour —
-    // unreadable as soon as a brand gives the selected row a dark fill.
+    // `:not(.is-selected)` is load-bearing: this branch outranks `.is-selected`, and a hovered selected row would get the neutral surface with the selected label colour.
     &:hover:not(.is-disabled, .is-selected, :disabled),
     &.is-active:not(.is-disabled, .is-selected, :disabled) {
       background: var(--_option-bg-color-active);
     }
 
-    // A tap on a phone has no hover, so the pressed state is the only feedback
-    // that the row was hit.
     &:active:not(.is-disabled, :disabled) {
       background: var(--surface-muted);
     }
@@ -201,8 +177,7 @@
         background: var(--_option-selected-bg-color-hover);
       }
 
-      // Same reason as the hover above: falling back to the neutral pressed fill
-      // would strand the selected label colour on it.
+      // As with hover: the neutral pressed fill would strand the selected label colour on it.
       &:active:not(.is-disabled) {
         background: var(--_option-selected-bg-color);
       }

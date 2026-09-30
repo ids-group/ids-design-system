@@ -1,17 +1,6 @@
-// Reduced-motion opt-out for the skeleton shimmer.
-//
-// The travel itself is a per-element animation declared in skeleton.component.scss. Only this rule
-// has to be global: the media query is a document-level preference, and a component stylesheet
-// cannot express "stop wherever a skeleton appears" without one.
-//
-// Do NOT drive it from one animated custom property on :root instead, however tempting the
-// phase-lock between skeletons is: a REGISTERED custom property is a computed value, so animating
-// one invalidates the style of every element that could inherit it — the whole document, every
-// frame. And the phase-lock buys no viewport anchoring anyway, because `mask-position` measures
-// from the host's own box.
-//
-// `!important`, because the travel is declared as `[_nghost-…]::after`, which outranks
-// `ds-skeleton::after` whatever the order.
+// Reduced-motion opt-out for the skeleton shimmer; the travel is per-element in the skeleton component.
+// Not driven from one animated `:root` custom property: a registered property is a computed value, so animating it invalidates style for the whole document every frame.
+// `!important`: the travel is declared as `[_nghost-...]::after`, which outranks `ds-skeleton::after`.
 @media (prefers-reduced-motion: reduce) {
   ds-skeleton::after {
     animation: none !important;

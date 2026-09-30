@@ -42,19 +42,19 @@ type SliderValue = number | readonly [number, number];
 })
 export class SliderComponent extends DsControlValueAccessor<SliderValue> {
   protected readonly intl = inject(DS_INTL);
-  /** Current value, or `[low, high]` when `range`. Two-way bound. */
+  /** Current value, or `[low, high]` when `range`. */
   readonly value = model<SliderValue>(0);
   /** Minimum selectable value. */
   readonly min = input(0, { transform: numberAttribute });
   /** Maximum selectable value. */
   readonly max = input(100, { transform: numberAttribute });
-  /** Increment applied when dragging (snap) or nudging with arrow keys. */
+  /** Snap increment for dragging and arrow keys. */
   readonly step = input(1, { transform: numberAttribute });
-  /** Two-thumb range mode — `value` becomes a `[low, high]` tuple. */
+  /** Two-thumb mode: `value` becomes a `[low, high]` tuple. */
   readonly range = input(false, { transform: booleanAttribute });
   /** Disables the slider and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Accessible name for the thumb(s) — suffixed "minimum"/"maximum" in `range` mode. */
+  /** Accessible name of the thumb(s); suffixed "minimum"/"maximum" in `range` mode. */
   readonly ariaLabel = input<string | null>(null);
 
   private readonly track = viewChild.required<ElementRef<HTMLElement>>('track');
@@ -137,9 +137,8 @@ export class SliderComponent extends DsControlValueAccessor<SliderValue> {
     this.updateFromClientX(event.clientX);
   }
 
-  // Bound to both pointerup and pointercancel — touch interventions (scroll
-  // takeover, stylus lift) fire pointercancel, and without it the drag state
-  // would leak and keep moving the thumb with no pointer down.
+  // Bound to pointerup and pointercancel: touch interventions fire pointercancel, and without it
+  // the drag state leaks and keeps moving the thumb with no pointer down.
   protected onTrackPointerUp(event: PointerEvent): void {
     if (this.dragging < 0) {
       return;

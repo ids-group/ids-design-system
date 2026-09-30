@@ -3,9 +3,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Чарты - аудит docs, видов и общих входов</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-29">
+<meta name="ds-deck-evidence" content="src/lib/components/charts-base.ts:26">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <style>
   .opt { cursor: pointer; }
@@ -74,10 +76,19 @@
       видовых входов не показаны нигде. Ниже шесть решений, каждое кликом.
     </p>
     <div class="chips">
-      <span class="chip">открыт 2026-09-29</span>
+      <span class="chip is-done">Решено 2026-09-29</span>
       <span class="chip">dev 29f81005</span>
     </div>
   </div>
+
+  <div class="decided">
+    <h2>Решено и построено</h2>
+    <p>1. Общие входы показаны один раз на Foundations / Charts. 2. <code>ds-chart-legend</code> остался внутренним и ушёл из демо композиции: ни один потребитель не собирает <code>ds-chart</code> сам. 3. Три вида bar остаются в <code>ds-bar-chart</code>. 4. <code>DsChartBase</code> объявляет 12 входов, общих для всех 9 чартов; необязательные группы - интерфейсы <code>ChartDimmable</code>, <code>ChartStaggered</code>, <code>ChartWithDataTable</code>, <code>ChartWithTooltipTrigger</code>, без hostDirectives. 5. Дыры закрыты: heatmap получил <code>summary</code>, waterfall - <code>dimOthers</code> и <code>tooltip</code>; намеренно без входа остались scatter <code>staggerMs</code>, heatmap <code>dataTable</code> и <code>ds-chart</code> без входов марок. 6. <code>cursorPin</code> стал <code>pinOnClick</code>, <code>tooltipAnchor</code> - <code>'reading'</code>, <code>data</code> необязательный везде; sparkline <code>tooltip</code> остался boolean, имена кликов прежние.</p>
+    <p class="evidence">2026-09-29 · src/lib/components/charts-base.ts:26</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
 
   <section class="panel">
     <h2>Уже решено, не пересматриваю</h2>
@@ -320,6 +331,8 @@ export class BarChartComponent <b>extends DsChartBase</b> { … }</p>
       </tbody>
     </table>
   </section>
+
+  </details>
 
   <p class="src"><b>Источники, проверено 2026-09-29 на <code>dev</code>.</b> Инвентарь входов и docs собран двумя поисковыми агентами по <code>src/lib/components/*</code> и <code>ds-docs/src/app/sections/charts/*</code>, каждый вывод сверен по коду выборочно: <code>@internal</code> у <code>ChartLegendComponent</code> (<code>chart-legend.component.ts:30</code>) и правило генератора (<code>tools/generate-public-api.mjs:11</code>), наследование в генераторе API (<code>tools/extract-component-api.mjs:242</code>, <code>:278</code>), <code>tooltipAnchor</code> (<code>line-chart.component.ts:441</code>, <code>line-series.component.ts:187</code>), причина отсутствия <code>dataTable</code> у heatmap (<code>heatmap-chart.component.html:163</code>). Разрыв в трансформах <code>min</code>/<code>max</code> у line и heatmap решения не требовал и уже исправлен в <code>dev</code> (<code>fix(charts): accept static numeric min and max attributes</code>).</p>
 

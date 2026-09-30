@@ -2,13 +2,9 @@
 @use '../../styles/press' as press;
 
 :host {
-  /* contents → the host (role="gridcell") collapses for layout so the inner
-     <button> is the grid item (7-col track, focusable by [data-day]) while the
-     a11y tree keeps grid → row → gridcell(host) → button. */
+  /* Makes the inner <button> the grid item while the a11y tree keeps grid > row > gridcell(host) > button. */
   display: contents;
 
-  /* Reads the --ds-date-picker-day-* family, not one of its own: a consumer
-     overrides on <ds-date-picker> and the values inherit straight in. */
   --_date-picker-day-hover-bg-color:          var(--ds-date-picker-day-hover-bg-color,          var(--surface-secondary));
   --_date-picker-day-today-label-color:       var(--ds-date-picker-day-today-label-color,       var(--accent));
   --_date-picker-day-selected-bg-color:       var(--ds-date-picker-day-selected-bg-color,       var(--accent));
@@ -38,8 +34,7 @@
   color: var(--_date-picker-day-label-color);
   transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
 
-  // Guarded because the button is only ever aria-disabled, never natively disabled, so
-  // :hover matches on a day that cannot be picked.
+  // :hover must be guarded: the button is only aria-disabled, never natively disabled.
   &:hover:not(.disabled) {
     background-color: var(--_date-picker-day-hover-bg-color);
   }

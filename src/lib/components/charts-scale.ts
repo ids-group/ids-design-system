@@ -2,8 +2,7 @@ const E10 = Math.sqrt(50);
 const E5 = Math.sqrt(10);
 const E2 = Math.sqrt(2);
 
-/** d3's tick-increment rule. A naive `span / count` produces steps like 482, which
- *  no reader parses; this snaps to 1, 2, 5 or 10 times a power of ten. */
+/** d3's tick-increment rule: snaps to 1, 2, 5 or 10 times a power of ten, not `span / count` steps like 482. */
 function tickIncrement(span: number, targetCount: number): number {
   const step = span / Math.max(1, targetCount);
   const power = Math.floor(Math.log10(step));
@@ -13,8 +12,7 @@ function tickIncrement(span: number, targetCount: number): number {
   return factor * Math.pow(10, power);
 }
 
-/** The floor of a domain that has to include zero: zero itself for an all-positive
- *  series, and the most negative reading otherwise.
+/** The floor of a domain that has to include zero: zero for an all-positive series, else the most negative reading.
  *
  *  @internal */
 export function domainMinOf(values: readonly number[]): number {
@@ -66,8 +64,7 @@ export function niceDomain(
   };
 }
 
-/** Distance between two ticks, which `formatTick` needs to pick a precision. A
- *  degenerate series yields a single tick and therefore no step.
+/** Distance between two ticks, which `formatTick` needs to pick a precision; a single tick has no step.
  *
  *  @internal */
 export function tickStep(ticks: readonly number[]): number {
@@ -99,22 +96,19 @@ export interface PointScale {
 /** @internal */
 export interface BandScale {
   readonly bandWidth: number;
-  /** Centre to centre, so it exceeds `bandWidth` by the padding. */
+  /** Centre to centre; exceeds `bandWidth` by the padding. */
   readonly step: number;
   readonly count: number;
   position(index: number): number;
-  /** The band an offset falls in, clamped at both ends so a pointer leaving the plot
-   *  keeps the band it left from. `-1` when there are no bands, which is the one case
-   *  a caller branches on rather than clamps. */
+  /** The band an offset falls in, clamped at both ends. `-1` when there are no bands. */
   indexAt(offset: number): number;
 }
 
-/** Positions for marks that sit AT a category rather than inside it — the readings of a line.
- *  The first is at the plot's start and the last at its end, so the run fills the axis rather than
- *  floating half a slot inside it. A single reading has no run to fill and takes the middle.
+/** Positions for marks that sit at a category rather than inside it (a line's readings): first at
+ *  the plot's start, last at its end, a single reading in the middle.
  *
- *  `step` is the distance between neighbours, which is what a crosshair band is a slot of; at the
- *  two ends that slot is half outside the plot and the caller clamps it.
+ *  `step` is the distance between neighbours; at the two ends that slot is half outside the plot and
+ *  the caller clamps it.
  *
  *  @internal */
 export function pointScale(count: number, rangeSize: number): PointScale {
@@ -137,8 +131,7 @@ export function pointScale(count: number, rangeSize: number): PointScale {
     step,
     count: total,
     position: (index) => Math.min(Math.max(index, 0), total - 1) * step,
-    // Nearest reading, not the slot the pointer is over: with the ends on the axes the first and
-    // last slots are half-width, and rounding is what makes both of them reachable.
+    // Nearest reading, not the slot the pointer is over: the end slots are half-width.
     indexAt: (offset) => {
       if (!Number.isFinite(offset) || step === 0) {
         return -1;
@@ -179,15 +172,12 @@ export function bandScale(
 }
 
 const ROUND_STEP_FACTORS = [1, 2, 5, 10];
-// A step divided out of a domain and multiplied back rarely lands on itself, so a
-// candidate equal to the minimum can compare as smaller by one bit and push the
-// whole axis up a rung.
+// A step divided out and multiplied back rarely lands on itself: a candidate equal to the minimum
+// can compare smaller by one bit and push the axis up a rung.
 const ROUND_STEP_TOLERANCE = 1 - 1e-12;
 
-/** The smallest 1/2/5/10 x power-of-ten step that is not below `minimumStep`.
- *  `niceDomain` picks its own number of intervals, so it cannot answer this: a second
- *  axis drawn against the first's gridlines has to reach its data within the intervals
- *  the first already drew.
+/** The smallest 1/2/5/10 x power-of-ten step not below `minimumStep`. `niceDomain` picks its own
+ *  interval count, so it cannot answer this.
  *
  *  @internal */
 export function roundStepAtLeast(minimumStep: number): number {

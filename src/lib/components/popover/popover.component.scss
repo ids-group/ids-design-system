@@ -1,14 +1,7 @@
-/* Popover — light surface panel rendered via TemplatePortal into the CDK
-   overlay. The `<div class="popover">` lives inside this component's template,
-   so Angular tags it with our _ngcontent attr — styles below reach it even
-   after it's mounted in document.body. The host element itself is a layout
-   no-op anchor in the consumer DOM. */
-
 :host { display: contents; }
 
 .popover {
-  /* Portaled to body via CDK overlay → --ds-popover-* overrides are theme-level
-     (:root), not per-instance. One-off panel? Pass a panelClass, target globally. */
+  /* Portaled to body, so --ds-popover-* overrides are theme-level (:root); one-off: panelClass. */
   --_popover-bg-color:     var(--ds-popover-bg-color,     var(--surface-overlay));
   --_popover-border-color: var(--ds-popover-border-color, var(--border-default));
   --_popover-radius:       var(--ds-popover-radius,       var(--ds-radius-panel));
@@ -27,13 +20,10 @@
   max-width: var(--_popover-max-width);
   min-width: var(--_popover-min-width);
 
-  // ds-menu items already have their own per-item padding; outer padding here
-  // would double-pad. Drop it when the popover hosts a menu.
   &:has(ds-menu) {
     padding: 0;
 
-    // Read by ds-menu, which clips its own rows — see its `:host-context(.popover)`
-    // block. Less the border, so the menu's clip is concentric with this panel's.
+    // Read by ds-menu's `:host-context(.popover)`; less the border so the clip is concentric.
     --ds-menu-clip-radius: calc(
       var(--_popover-radius) - var(--border-width-default)
     );

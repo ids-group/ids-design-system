@@ -11,7 +11,7 @@ export interface ModalConfirmOptions {
   tone?: ModalConfirmTone;
   icon?: IconName;
   /** When set, the confirm button stays disabled until the user types this
-   *  exact phrase — a guard for high-stakes destructive actions. */
+   *  exact phrase, guarding high-stakes destructive actions. */
   typeToConfirm?: string;
 }
 

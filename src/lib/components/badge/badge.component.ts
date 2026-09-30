@@ -25,10 +25,10 @@ import {
 })
 export class BadgeComponent {
   protected readonly intl = inject(DS_INTL);
-  /** Consumer-defined status key; colours are wired via styles/status. Unset → neutral. */
+  /** Consumer-defined status key that colours the badge. Unset is neutral. */
   readonly status = input<DsStatusKey>();
-  /** Leading status dot, rendered only while `count` is unset — a count replaces the
-   *  badge's whole content. Unset falls back to `DS_CONFIG.badge.withDot`, then `false`. */
+  /** Leading status dot, rendered only while `count` is unset (a count replaces the
+   *  badge's whole content). Unset falls back to `DS_CONFIG.badge.withDot`, then `false`. */
   readonly withDot = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
@@ -41,9 +41,9 @@ export class BadgeComponent {
   readonly solid = input(false, { transform: booleanAttribute });
   /** Numeric count to display; overrides projected content when set. */
   readonly count = input<number | null>(null);
-  /** Count is capped at this value, shown as `"max+"` beyond it. */
+  /** Counts above this show as `"max+"`. */
   readonly max = input(99, { transform: numberAttribute });
-  /** Noun used in the count's accessible label — set for non-notification counts (cart, results, …).
+  /** Noun used in the count's accessible label; set for non-notification counts (cart, results).
    *  Unset falls back to `DS_INTL.badge.noun`. */
   readonly countLabel = input<string | null>(null);
   readonly countLabelResolved = computed(

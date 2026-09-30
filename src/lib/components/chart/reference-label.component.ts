@@ -13,13 +13,10 @@ import { thresholdMarks } from './chart.math';
 /**
  * The names of a chart's reference lines, laid out by the same geometry that draws them.
  *
- * A second element rather than part of `g[dsReferenceLine]`: the strokes belong under the marks
- * and the names over them, and a projected element lands in exactly one of the container's slots.
- * Reports no domain - the line it names already did.
+ * A second element because strokes go under the marks and names over them, and a projected element
+ * lands in one slot only. Reports no domain; the line it names already did.
  */
 @Component({
-  // The repository's `component-selector` rule asks for an element selector, and one cannot work
-  // inside a canvas - see the same exemption on `g[dsColumnSeries]`.
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[dsReferenceLabel]',
   standalone: true,
@@ -31,9 +28,7 @@ import { thresholdMarks } from './chart.math';
 export class ReferenceLabelComponent {
   private readonly scales = inject(CHART_SCALES);
 
-  /** The same list `dsReferenceLine` is given. This mark draws only the labels, so it is placed
-   *  AFTER the series and the line mark before it, which is what keeps a label legible over a mark
-   *  that would otherwise cover it. */
+  /** The same list `dsReferenceLine` is given. Place this mark after the series so labels stay legible over marks. */
   readonly thresholds = input<readonly ChartThreshold[]>([]);
 
   protected readonly lines = computed(() =>

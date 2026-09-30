@@ -1,11 +1,8 @@
 @use 'focus' as focus;
 
-// Controls the table shares with its opt-in directives. `dsTableColumns` renders its trigger and
-// its panel from components of its own, whose DOM never carries ds-table's encapsulation
-// attribute — so a rule stated in table.component.scss cannot reach them, and the body has to
-// live somewhere both stylesheets can include it.
-
-// The square icon button in a header cell — expand-all, row actions, the column-panel trigger.
+// Controls shared by ds-table and its opt-in directives. `dsTableColumns` renders from its own
+// components, which lack ds-table's encapsulation attribute, so both stylesheets include these.
+// The square icon button in a header cell: expand-all, row actions, the column-panel trigger.
 // Reads the `--_table-icon-btn-*` resolvers, so include it only inside a ds-table.
 @mixin header-icon-button {
   display: flex;

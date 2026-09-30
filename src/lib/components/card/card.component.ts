@@ -19,13 +19,13 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class CardComponent {
-  /** Visual treatment; `interactive` makes the card clickable and emits `pressed`.
+  /** `interactive` makes the card clickable and emits `pressed`.
    *  Unset falls back to `DS_CONFIG.card.elevation`, then `'flat'`. */
   readonly elevation = input<CardElevation | null>(null);
   /** Inner padding preset. Unset falls back to `DS_CONFIG.card.padding`, then the
    *  card's own padding. */
   readonly padding = input<CardPadding | null>(null);
-  /** Fires the click event when `elevation` is `interactive`. */
+  /** Fires on click when `elevation` is `interactive`. */
   readonly pressed = output<MouseEvent>();
 
   readonly elevationResolved = resolveWithConfig(
@@ -55,9 +55,8 @@ export class CardComponent {
     }
   }
 
-  // Keydown reaches the card from everything projected into it, so consuming it
-  // unconditionally cancelled the descendant's own default action — a form's
-  // Enter submit, a checkbox's Space, a typed space.
+  // Keydown bubbles up from projected content; acting on it unconditionally would cancel a
+  // descendant's default (form Enter submit, checkbox Space, typing a space).
   protected onActivationKey(event: Event): void {
     if (!this.interactive() || event.target !== event.currentTarget) {
       return;

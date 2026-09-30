@@ -17,10 +17,7 @@
   }
 }
 
-/* Generates no box, so wrapping the projection cannot move anything: the flag
-   `inert` carries is a subtree property, not a layout one. The host must NOT be
-   the one carrying it — an inert host loses its own `aria-busy`, and the reader
-   is then told nothing about why the content went away. */
+/* `inert` goes here, not on the host: an inert host loses its own `aria-busy`. */
 .content {
   display: contents;
 }

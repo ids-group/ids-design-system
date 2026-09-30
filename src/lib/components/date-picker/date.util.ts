@@ -7,7 +7,7 @@ export interface DateFormatSpec {
 
 const SEGMENT_LENGTH: Record<'D' | 'M' | 'Y', number> = { D: 2, M: 2, Y: 4 };
 const TOKEN: Record<'D' | 'M' | 'Y', string> = { D: 'DD', M: 'MM', Y: 'YYYY' };
-// 2023-11-22: day, month and year are all distinct values.
+// Day, month and year are all distinct values.
 const REFERENCE_DATE = new Date(2023, 10, 22);
 
 function buildSpec(
@@ -88,7 +88,6 @@ export function formatDate(date: Date | null, spec: DateFormatSpec): string {
   return spec.order.map((token) => values[token]).join(spec.separator);
 }
 
-/** Build a date from three per-slot digit strings; null if any slot isn't full-width or invalid. */
 function parseSegments(segments: string[], spec: DateFormatSpec): Date | null {
   const values: Record<'D' | 'M' | 'Y', number> = { D: 1, M: 1, Y: 2000 };
   for (let index = 0; index < spec.segments.length; index++) {
@@ -119,15 +118,12 @@ export function parseDate(text: string, spec: DateFormatSpec): Date | null {
   return parseSegments(parseFieldText(text, singleFieldLayout(spec)), spec);
 }
 
-/** Separator between the two dates of a range, in the field and its placeholder. */
 export const RANGE_SEPARATOR = ' – ';
 
-/** Combined placeholder/mask for a range field, e.g. "MM/DD/YYYY – MM/DD/YYYY". */
 export function rangeMask(spec: DateFormatSpec): string {
   return `${spec.mask}${RANGE_SEPARATOR}${spec.mask}`;
 }
 
-/** Render a range value to the combined field string. */
 export function formatRange(
   range: [Date | null, Date | null] | null,
   spec: DateFormatSpec,
@@ -144,7 +140,6 @@ export function formatRange(
   return start ? `${startText}${RANGE_SEPARATOR}` : '';
 }
 
-/** Parse a combined range field string into [start, end] (either may be null). */
 export function parseDateRange(
   text: string,
   spec: DateFormatSpec,
@@ -158,17 +153,13 @@ export function parseDateRange(
   ];
 }
 
-// Each field is fixed-width digit slots (MM/DD/YYYY) joined by literals; edits
-// stay inside the caret's slot and never shift digits across a literal, so
-// fixing one segment can't corrupt its neighbours.
+// Fields are fixed-width digit slots joined by literals; edits stay inside the caret's slot and never shift digits across a literal.
 
-/** One editable digit slot in the masked field. */
 export interface FieldSlot {
   type: 'D' | 'M' | 'Y';
   maxLength: number;
 }
 
-/** Field layout: the slots and the literal shown after each (except the last). */
 export interface FieldLayout {
   slots: FieldSlot[];
   literals: string[];
@@ -193,9 +184,7 @@ export function rangeFieldLayout(spec: DateFormatSpec): FieldLayout {
   };
 }
 
-/** Split a fixed-width renderFieldValue output into per-slot digits, read at
- *  each slot's fixed position — every slot is maxLength wide and every literal
- *  always present, so a `_` pad or any stray char is simply dropped. */
+/** Splits a fixed-width renderFieldValue output into per-slot digits by position, dropping `_` pads. */
 export function parseFieldText(text: string, layout: FieldLayout): string[] {
   const segments: string[] = [];
   let position = 0;
@@ -222,7 +211,7 @@ function slotPlaceholder(slot: FieldSlot): string {
   return slot.type === 'Y' ? 'YYYY' : slot.type === 'M' ? 'MM' : 'DD';
 }
 
-/** Fixed-width input value: every slot padded to maxLength with `_`, all literals present. */
+/** Fixed-width value: every slot padded with `_`, all literals present. */
 export function renderFieldValue(
   segments: string[],
   layout: FieldLayout,
@@ -239,8 +228,7 @@ export function renderFieldValue(
   return out;
 }
 
-/** Ordered runs for the overlay: digits (not muted), placeholders (muted), literals (not muted).
- *  Untouched slot → its format letters; partial slot → digits + `_` for the missing positions. */
+/** Ordered runs for the overlay; an untouched slot shows its format letters, a partial one digits + `_`. */
 export function displayParts(
   segments: string[],
   layout: FieldLayout,
@@ -268,8 +256,6 @@ export function displayParts(
   return parts;
 }
 
-/** Char offset where slot `index` begins in the fixed-width value — every
- *  slot is maxLength wide and every literal always present. */
 function slotStart(layout: FieldLayout, index: number): number {
   let position = 0;
   for (let slot = 0; slot < index; slot++) {
@@ -287,7 +273,7 @@ export function slotToCaret(
   return slotStart(layout, slot) + offset;
 }
 
-/** Map a caret char offset to its slot; a caret inside a literal snaps forward. */
+/** A caret inside a literal snaps forward to the next slot. */
 export function caretToSlot(
   layout: FieldLayout,
   caret: number,
@@ -317,7 +303,6 @@ interface SlotEdit {
   offset: number;
 }
 
-/** After typing, hop to the next slot once the current one is full. */
 function advanceAfterType(
   segments: string[],
   layout: FieldLayout,
@@ -334,8 +319,7 @@ function advanceAfterType(
   return { segments, slot, offset };
 }
 
-/** Type a digit into the caret's slot: overtype under the caret, else append;
- *  a full slot spills the digit into the next one instead of shifting. */
+/** Types a digit into the caret's slot: overtype, else append; a full slot spills into the next. */
 export function editType(
   segments: string[],
   layout: FieldLayout,
@@ -363,8 +347,7 @@ export function editType(
   return { segments: next, slot, offset };
 }
 
-/** Backspace: drop the digit left of the caret within its slot, else the last
- *  digit of the nearest earlier non-empty slot. Null when nothing precedes it. */
+/** Backspace: null when nothing precedes the caret. */
 export function editBackspace(
   segments: string[],
   layout: FieldLayout,
@@ -388,8 +371,7 @@ export function editBackspace(
   return null;
 }
 
-/** Delete: drop the digit at the caret within its slot, else the first digit of
- *  the nearest later non-empty slot. Null when nothing follows it. */
+/** Delete: null when nothing follows the caret. */
 export function editDelete(
   segments: string[],
   layout: FieldLayout,

@@ -77,6 +77,13 @@ export type {
 } from './destination';
 export { DsEmptyTemplateDirective } from './empty-template.directive';
 export { DsFieldBase } from './field-base';
+export { DsChartBase } from './charts-base';
+export type {
+  ChartDimmable,
+  ChartStaggered,
+  ChartWithDataTable,
+  ChartWithTooltipTrigger,
+} from './charts-base';
 export { FieldClickFocusDirective } from './field-click-focus.directive';
 export {
   DS_FIELD_WARNING_KIND,

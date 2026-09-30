@@ -141,3 +141,23 @@
     }
 
     .empty-msg { margin: var(--space-2) 0 0; }
+
+.dark-tooltip {
+  --ds-chart-tooltip-bg-color: var(--neutral-900);
+  --ds-chart-tooltip-text-color: var(--neutral-0);
+  --ds-chart-tooltip-border-color: var(--neutral-700);
+}
+
+.tinted-card {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--surface-secondary);
+}
+
+.on-tinted-card {
+  --ds-chart-bg-color: var(--surface-secondary);
+}
+
+.tinted-plot {
+  --ds-chart-plot-bg-color: var(--neutral-50);
+}

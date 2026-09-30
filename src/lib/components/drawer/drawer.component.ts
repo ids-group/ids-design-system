@@ -27,8 +27,7 @@ let nextId = 0;
   templateUrl: './drawer.component.html',
   styleUrl: './drawer.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
-  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
-  // which makes the host a native browser tooltip over everything inside it.
+  // Keeps a static `title` attribute from becoming a native tooltip on the host.
   host: {
     '[attr.title]': 'null',
     '(document:keydown.escape)': 'onEscape()',
@@ -42,7 +41,7 @@ export class DrawerComponent implements OnDestroy {
 
   /** Open state, two-way bound. */
   readonly open = model<boolean>(false);
-  /** Panel size — sm/md/lg. */
+  /** Panel size. */
   readonly size = input<DsSize>('md');
   /** Edge the panel slides in from. */
   readonly placement = input<DrawerPlacement>('right');
@@ -52,9 +51,7 @@ export class DrawerComponent implements OnDestroy {
   readonly closed = output<void>();
 
   protected readonly titleId = `ds-drawer-title-${++nextId}`;
-  /** Panel is in the DOM (kept true through the slide-out). */
   protected readonly rendered = signal(false);
-  /** Playing the slide-out + scrim-fade leave animation. */
   protected readonly closing = signal(false);
   private wasOpen = false;
   private closeFallbackTimer: ReturnType<typeof setTimeout> | null = null;
@@ -66,8 +63,6 @@ export class DrawerComponent implements OnDestroy {
   });
 
   constructor() {
-    // open → DOM lifecycle: opening renders now; closing keeps the panel mounted
-    // and flips `closing` so the slide-out can play (teardown in onLeaveEnd).
     effect(() => {
       if (this.preview.staticPreview()) {
         return;
@@ -80,18 +75,15 @@ export class DrawerComponent implements OnDestroy {
         this.closeFallbackTimer = null;
       } else if (this.wasOpen) {
         this.closing.set(true);
-        // Two cases never deliver animationend: Chrome freezes CSS animations on a
-        // backgrounded tab, and a 0s reduced-motion leave finishes before a listener
-        // hears it. This timer is the teardown guarantee, not belt-and-braces.
+        // animationend is never delivered on a backgrounded tab (Chrome freezes CSS
+        // animations) or for a 0s reduced-motion leave; this timer is the teardown.
         clearTimeout(this.closeFallbackTimer ?? undefined);
         this.closeFallbackTimer = setTimeout(() => this.finishClose(), 300);
       }
       this.wasOpen = isOpen;
     });
 
-    // Ref-counted body-scroll lock, shared with modal/bottom-sheet so stacked
-    // overlays don't unlock each other. The effect's cleanup fires on the
-    // rendered→false transition and on destroy, keeping lock/unlock paired.
+    // Ref-counted, so stacked overlays don't unlock each other.
     effect((onCleanup) => {
       if (this.preview.staticPreview() || !this.rendered()) {
         return;
@@ -114,9 +106,7 @@ export class DrawerComponent implements OnDestroy {
   }
 
   protected onLeaveEnd(event: AnimationEvent): void {
-    // The panel is the element with the handler, so its OWN animationend is the
-    // signal; the scrim is a sibling and anything else is inside. This replaces
-    // matching four keyframes NAMES, which is what made the exit un-overridable.
+    // Panel's OWN animationend only; matching the keyframes name would make the exit un-overridable.
     if (event.target !== event.currentTarget) {
       return;
     }

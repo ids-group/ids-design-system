@@ -12,24 +12,18 @@
   border: var(--border-width-default) solid var(--_menu-border-color);
   border-radius: var(--ds-menu-radius, var(--radius-md));
 
-  // No padding, and clip: rows run edge to edge, so this radius is what rounds
-  // the first and last row's hover fill.
+  // Rows run edge to edge, so this clipping radius rounds the first and last row's hover fill.
   padding: 0;
   overflow: hidden;
 }
 
-// When projected inside a ds-popover (which already provides surface +
-// border + shadow), drop the menu's own frame so consumers don't see a
-// double border. The .popover class sits on ds-popover's inner wrapper.
+// Inside a ds-popover the popover provides the frame; drop the menu's own to avoid a double border.
 :host-context(.popover) {
   background: transparent;
   border: 0;
   padding: 0;
 
-  // NOT flat: `overflow: hidden` from :host stays in force, so this radius is what
-  // shapes the first and last row's fill. Zero here clips them square and the
-  // panel's rounded corner shows that square fill through it. The fallback keeps
-  // any other .popover-classed container, which publishes nothing, as it was.
+  // NOT flat: `overflow: hidden` stays, and zero would clip the first and last row square under the panel's corner.
   border-radius: var(--ds-menu-clip-radius, var(--radius-flat));
 }
 

@@ -38,7 +38,7 @@ import type { AccordionChevron } from './accordion.types';
   ],
 })
 export class AccordionComponent implements AccordionContract {
-  /** When false, opening one item automatically closes all others. */
+  /** When false, opening one item closes the others. */
   readonly multiple = input(true, { transform: booleanAttribute });
 
   /** Which way the closed chevron points on every item: `right` turns down when an item opens, `down` turns up. */

@@ -6,11 +6,11 @@
 @use '../../styles/focus' as focus;
 
 /* Truncation contract:
-   Label — Single line, no clip — labels are short by spec. Wraps if forced.
-   Input value — No clip while focused (caret needs reach). Single-line ellipsis when blurred and
+   Label - Single line, no clip - labels are short by spec. Wraps if forced.
+   Input value - No clip while focused (caret needs reach). Single-line ellipsis when blurred and
      overflowing; full value in title attr.
-   Hint — Wrap to 2 lines, then ellipsis. No tooltip — hint is itself the tooltip.
-   Error message — Wrap, no clip. Always fully visible — error must never hide. */
+   Hint - Wrap to 2 lines, then ellipsis. No tooltip - hint is itself the tooltip.
+   Error message - Wrap, no clip. Always fully visible - error must never hide. */
 
 :host {
   @include field-box.field-box-tokens;
@@ -31,8 +31,7 @@
   --_input-border-success: var(--ds-input-border-success, var(--success));
   --_input-bg-color-disabled:    var(--ds-input-bg-color-disabled,    var(--surface-disabled));
 
-  // These predate the --ds-field-label-* family and still win, but they chain into
-  // it — so one family-level retune reaches ds-input as well.
+  // Component tokens win but chain into the --ds-field-label-* family.
   --_input-label-color:    var(--ds-input-label-color,    var(--ds-field-label-color,       var(--text-secondary)));
   --_input-label-font-size:       var(--ds-input-label-font-size,       var(--ds-field-label-font-size,   var(--font-size-xs)));
   --_input-label-font-weight: var(--ds-input-label-font-weight, var(--ds-field-label-font-weight, var(--font-weight-bold)));
@@ -114,8 +113,7 @@
       padding: 0;
       border: 0;
 
-      // Not a muted colour: the × only appears when there IS a value, so it has to
-      // read on a blurred field too.
+      // Not a muted colour: the × only appears when there IS a value, so it has to read on a blurred field.
       background-color: var(--_input-clear-color);
       cursor: pointer;
       flex-shrink: 0;
@@ -201,9 +199,7 @@
     &:empty { display: none; }
   }
 
-  /* A label pill projected by the consumer (an "https://" prefix), as opposed to the
-     bare icons `.addon-slot` holds. It carries the CONSUMER's scope attribute, so
-     ::ng-deep is the only way to reach it from here. */
+  /* A label pill projected by the consumer; it carries the consumer's scope attribute, so ::ng-deep is the only route. */
   ::ng-deep .addon {
     display: inline-flex;
     align-items: center;
@@ -257,10 +253,7 @@
   }
 }
 
-/* As a group segment this control gives up its border, radius and focus ring — the
-   group draws one of each for the whole row. Width goes to auto because the host
-   stretches to 100% inside a flex segment; the label and message rows are
-   suppressed because they would break the glued line. */
+/* As a group segment the group owns border, radius and focus ring; width goes to auto because the host would stretch to 100%. */
 :host(.in-group) {
   @include field-group-segment.field-group-segment('.control');
 }

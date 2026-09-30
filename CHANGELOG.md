@@ -1,5 +1,163 @@
 ## Unreleased
 
+### Breaking
+
+- **`ds-tooltip` is light on the light theme, with a border, like the chart tooltip.** It takes
+  `--surface-overlay`, `--text-primary` and a `--border-default` border that runs round the
+  caret, where it was `--surface-inverted` with `--text-inverted` and no border; on the dark theme
+  it is a dark panel with a `--border-strong` border. Both tooltips read three new theme tokens,
+  `--tooltip-bg-color`, `--tooltip-text-color` and `--tooltip-border-color`, and `ds-tooltip`
+  gains the `--ds-tooltip-border-color` hook. To keep the inverted look, set
+  `--ds-tooltip-bg-color: var(--surface-inverted)`, `--ds-tooltip-text-color: var(--text-inverted)`
+  and `--ds-tooltip-border-color: transparent` on `:root`.
+
+- **`ds-chart`'s `cursorPin` input is `pinOnClick`,** the name every other chart already uses, and
+  its readback signal `cursorPinResolved()` is `pinOnClickResolved()`. There is no alias: rename
+  both. `DS_CONFIG.chart.pinOnClick` still sets the default.
+
+- **`ds-line-chart`'s `tooltipAnchor` takes `'reading'` where it took `'point'`.** The behaviour is
+  unchanged: the panel hangs over the highest reading in the category. Replace
+  `tooltipAnchor="point"`.
+
+- **`LineChartSeries.area` and a `dsLineSeries` entry's `area` are `boolean | 'fade'`.** Code that
+  reads `area` back as a boolean handles `'fade'` too; code that only sets it needs nothing.
+
+- **A chart tooltip is light on the light theme.** The panel takes `--surface-overlay`,
+  `--text-primary` and `--border-default`, where it was `--neutral-900` with white text; the
+  dark theme keeps its dark panel. A reading's colour dot takes a ring only when its colour is
+  close to the panel itself (below 1.5:1, the palest heat-map steps), where any dot below 3:1 took
+  one. To keep the dark panel, set `--ds-chart-tooltip-bg-color: var(--neutral-900)`,
+  `--ds-chart-tooltip-text-color: var(--neutral-0)` and
+  `--ds-chart-tooltip-border-color: var(--neutral-700)` on `:root`.
+
+- **A chart tooltip listing one reading shows no colour dot.** Under the default auto rule the
+  tooltip now shows dots only when it lists two to four readings (was one to four); a single-reading
+  tooltip drops its dot and the label alone carries the series. `tooltipSwatches` set to `true`
+  still forces the dot on; set it to keep a dot on a one-reading tooltip.
+
+- **Three chart tokens lose their declared defaults and fall back to `--ds-chart-bg-color`.**
+  `--ds-chart-frame-bg-color`, `--ds-chart-focus-halo-color` and `--ds-chart-hatch-color` no longer
+  declare a value; each resolves to `--ds-chart-bg-color` (default `var(--surface-default)`) unless
+  you set it. The focus halo, which was white, is now the chart background. Setting any of the three
+  still overrides as before; reading one in your own CSS, which used to resolve to its old default,
+  now resolves to nothing.
+
+- **Hovering a `ds-bar-chart` row label dims the other rows only when `dimOthers` is set.** A
+  row-axis label used to dim the other rows on hover whatever `dimOthers` was; it now does so only
+  when `dimOthers` is set on the chart (default `false`), matching the category-label behaviour on
+  `ds-chart`. To keep the dimming, set `dimOthers`.
+
+- **`ds-pie-chart` drops the `staggerMs` input.** It was accepted and did nothing; the ring turns
+  into place as one object. Remove the binding, or a template that keeps it fails to compile.
+  Nothing replaces it.
+
+- **Subclassing a chart breaks on moved, grown and renamed members.** The inputs every chart shares
+  (`caption`, `summary`, `frame`, `loading`, `error`, `emptyText`, `errorText`, `valueFormat`,
+  `interactive`, `tooltipSwatches`, `tooltipLingerMs`, `pinOnClick`) and their resolved signals move
+  to an internal base class (`DsChartBase`) that `BarChartComponent`, `ChartComponent`,
+  `ColumnChartComponent`, `FunnelChartComponent`, `HeatmapChartComponent`, `LineChartComponent`,
+  `PieChartComponent`, `ScatterChartComponent` and `WaterfallChartComponent` extend, each dropping
+  its own declaration of them. On top of that: `ChartComponent` loses `cursorPin` and
+  `cursorPinResolved` and gains `pinOnClickResolved`; `BarChartComponent` loses `dimsOthers` and
+  `hoveredLabel`; `LineChartComponent` loses `markAnchor`; `PieChartComponent` loses `staggerMs`;
+  `SparklineComponent` gains `area`; `LineSeriesComponent` gains `fadeId`; `WaterfallChartComponent`
+  gains `dimOthers` and `tooltip`; and the internal `ChartTooltipDirective` gains `host`. Build
+  after upgrading; rename or mark `override` every member the compiler reports. Subclassing a DS
+  component is unsupported.
+
+### Added
+
+- **`dsTooltipWhenClipped` applies the tooltip on its own.** A label that should disclose its
+  own text when it is cut off takes the one attribute; the empty `dsTooltip` that had to sit
+  beside it is no longer needed. `dsTooltip="..."` together with `dsTooltipWhenClipped` still
+  shows that text, only while the host is clipped.
+
+- **`ds-breadcrumbs` takes type, gap and clip-width tokens.** `--ds-breadcrumbs-font-size`
+  (default `var(--font-size-s)`), `--ds-breadcrumbs-font-weight` (`var(--font-weight-regular)`),
+  `--ds-breadcrumbs-current-label-font-weight` (`var(--font-weight-bold)`),
+  `--ds-breadcrumbs-gap` (`var(--space-2)`), `--ds-breadcrumbs-label-max-width` (`16ch`) and
+  `--ds-breadcrumbs-current-label-max-width` (`32ch`). Rendering is unchanged until one is set.
+
+- **`--ds-chart-bg-color` paints the chart frame and every knockout.** A new token, default
+  `var(--surface-default)`. It fills the frame background and every knockout cut into the plot:
+  stacked line band separators, the line halo, the outlined line-marker ring, stacked-column gaps
+  and hatch stripes, bar segment seams, reference-label and annotation halos, the pie centre-text
+  knockout and the focus halo. Set it to the surface the chart sits on - a card, say - and the frame
+  and every knockout match it. A second new token, `--ds-chart-plot-bg-color` (default
+  `transparent`), fills the plot area of `ds-chart` and `ds-scatter-chart`.
+
+- **`dsLineSeries` and `LineChartSeries` take `area: 'fade'`.** Beside `true` (a flat tint at
+  `--ds-chart-area-opacity`, `0.16`), `area` now accepts `'fade'`: a vertical gradient from
+  `--ds-chart-area-fade-opacity` (new, default `0.32`) at the line down to transparent at the
+  baseline. A new optional `--ds-chart-area-color` overrides the fill colour, which otherwise
+  follows the series colour.
+
+- **`ds-sparkline` takes an `area` input.** A boolean attribute (default `false`) that fills flat
+  under the line, tuned by `--ds-sparkline-area-color` (default the line colour) and
+  `--ds-sparkline-area-opacity` (default `--ds-chart-area-opacity`).
+
+- **`ds-heatmap-chart`, `ds-scatter-chart` and `ds-waterfall-chart` gain inputs from the shared
+  chart base.** `ds-heatmap-chart` adds `summary` (an accessible summary of the chart) and
+  `tooltipLingerMs`; `ds-scatter-chart` and `ds-waterfall-chart` add `tooltipLingerMs`, which holds
+  a tooltip open the set number of milliseconds after the pointer leaves a mark (default from
+  `DS_CONFIG.chart.tooltipLingerMs`).
+
+- **`ds-waterfall-chart` takes `dimOthers` and `tooltip`.** `dimOthers` (boolean attribute, default
+  `false`) dims the other steps while one is hovered; `tooltip` (`ChartItemTooltipTrigger`, default
+  `'item'`) sets its tooltip trigger.
+
+### Changed
+
+- **A chart tooltip picks up `--ds-chart-tooltip-*` set on the chart.** `--ds-chart-tooltip-bg-color`,
+  `--ds-chart-tooltip-text-color` and `--ds-chart-tooltip-border-color` set on a chart element or
+  any ancestor now reach the panel; the tooltip copies them onto its overlay pane each time it
+  opens. Before, only `:root` reached it, because the panel renders in an overlay outside the chart.
+
+- **A chart with no `data` renders its empty state instead of throwing.** `data` on `ds-bar-chart`,
+  `ds-column-chart`, `ds-funnel-chart`, `ds-pie-chart` and `ds-sparkline`, and `categories` and
+  `series` on `ds-line-chart`, are optional and default to empty; omitting one now shows the empty
+  state, where a missing required input used to throw NG0950. `ds-scatter-chart`, `ds-heatmap-chart`
+  and `ds-waterfall-chart` already treated their data as optional.
+
+### Fixed
+
+- **A `dsLineSeries` with `tooltip="axis"` opens its panel under the default `cursor`.**
+  `cursor="auto"` turned the category cursor on only for two or more marks that show a tooltip,
+  so a plot whose one tooltip-showing mark was an axis-tooltip line answered nothing until
+  `cursor="category"` was set. `auto` now turns it on for any mark with `tooltip="axis"`.
+
+- **Several `provideDsConfig` calls in one `providers` array all apply.** The last one replaced
+  the others, whose keys were lost without a warning; they now merge in order, the later call
+  winning per key. `provideDsIntl` merges the same way.
+
+- **`ds-table`'s `exportCsv()` and `runExport()` warn when the table has no `dsTableExport`.**
+  In a development build either call threw NG0203 from the click handler that made it; it now
+  logs the missing directive. Production builds were unaffected.
+
+- **A clipped `ds-breadcrumbs` label shows its full text in a tooltip.** A crumb label past `16ch`
+  (the current page past `32ch`) ended in an ellipsis with no way to read the rest; hovering it, or
+  focusing its link, now opens a tooltip with the whole label. A label that fits opens none.
+
+- **A Ctrl, Cmd or Shift click on a `ds-breadcrumbs` link opens it the browser's way.** Every click
+  was prevented and emitted as `(navigate)`, so a consumer routing on it moved the current tab where
+  the user asked for a new tab or window. A plain primary click still emits `(navigate)` with the
+  default prevented; a modified or non-primary click leaves `href` to the browser and emits nothing.
+
+- **A `dsTooltip` with no room on its side opens on the opposite side.** The panel had one
+  position, so a tooltip on a trigger near the top of the viewport (a page breadcrumb, a toolbar)
+  opened above it, ran off the screen and pointed its arrow into the trigger. It now flips to the
+  opposite side when the preferred one does not fit, keeps 8px from the viewport edge, and turns
+  its arrow to the side it opened on.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| an empty `dsTooltip` attribute next to `dsTooltipWhenClipped` | `dsTooltipWhenClipped` applies the tooltip directive by itself | nothing; keep a `dsTooltip` that carries text |
+| `--ds-chart-tooltip-bg-color`, `--ds-chart-tooltip-text-color` and `--ds-chart-tooltip-border-color` set to light surface and text colours so the tooltip matches a light page | the panel takes `--surface-overlay`, `--text-primary` and `--border-default` by default | nothing; keep an override that sets any other colour |
+| `--ds-chart-frame-bg-color` set on a chart only to match the surface behind it | `--ds-chart-bg-color` paints the frame and every knockout together | `--ds-chart-bg-color` set to that surface; keep `--ds-chart-frame-bg-color` only to colour the frame apart from the knockouts |
+| `cursor="category"` on a `ds-chart` set only so a `tooltip="axis"` line opens its panel | `cursor="auto"` turns the category cursor on for a mark with `tooltip="axis"` | nothing; keep it on a plot whose marks do not use `tooltip="axis"` |
+
 ## 0.14.4 — 2026-09-29
 
 ### Breaking

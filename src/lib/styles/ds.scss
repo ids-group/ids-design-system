@@ -1,17 +1,9 @@
 // Public DS stylesheet entry. Consumers import once at the top of their styles.scss:
 //   @use 'styles/ds';
 //
-// Bundles the base palette (theme-independent ramps + channels + statics + fonts)
-// and the theme activation (light + dark, sibling themes + OS-default media rule).
-// Layers:
-//   base-palette      — Tier 1a theme-independent primitives (ramps, channels,
-//                       statics, shadow h/s, font families) emitted at :root
-//   theme-activation  — Tier 1b + Tier 2: per-theme palette + role assignments,
-//                       scoped to mutually-exclusive :root selectors
-//   tokens            — Tier 3 geometry / typography scale / motion / component tokens
-// Advanced consumers can compose themes individually instead of using ds:
+// Bundles the base palette, theme activation (light and dark), tokens and the global styles.
+// Advanced consumers can compose the parts individually:
 //   @use 'themes/base-palette'; @use 'styles/theme-activation'; @use 'styles/tokens';
-//   @use 'styles/fonts'; @use 'styles/link'; …
 
 @use 'breakpoints' as bp-emit;
 @forward '../themes/base-palette';

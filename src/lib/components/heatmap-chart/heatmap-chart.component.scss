@@ -19,8 +19,7 @@
   --_heatmap-chart-focus-color: var(--ds-heatmap-chart-focus-color, var(--focus-ring-color));
   --_heatmap-chart-focus-width: var(--ds-heatmap-chart-focus-width, var(--focus-ring-width));
 
-  /* The shared mixins draw the ring from `--focus-ring-*` and `--ds-chart-focus-ring-color`, so
-     the two hooks above reach nothing without this. */
+  /* The shared mixins read these; without them the hooks above reach nothing. */
   --ds-chart-focus-ring-color: var(--_heatmap-chart-focus-color);
   --focus-ring-color: var(--_heatmap-chart-focus-color);
   --focus-ring-width: var(--_heatmap-chart-focus-width);
@@ -38,8 +37,6 @@
   gap: var(--_heatmap-chart-cell-gap);
 }
 
-// A matrix has a hard minimum width - one cell per column - so below it the grid scrolls rather
-// than crushing the cells into unreadable slivers. The same answer ds-table gives.
 .grid-scroll {
   overflow-x: auto;
 }
@@ -90,8 +87,7 @@
   padding: 0;
 }
 
-// The gap between two cells is the table's border-spacing and belongs to no cell, so each cell
-// reaches half of it on every side and the pointer never crosses ground that answers nothing.
+// The gap is table border-spacing owned by no cell; each cell reaches half of it so hover has no dead ground.
 .cell::before {
   position: absolute;
   inset: calc(var(--_heatmap-chart-cell-gap) / -2);
@@ -101,8 +97,7 @@
 @include chart-motion.fades-in('.cell');
 @include chart-motion.follows('.cell-value', var(--ds-motion-chart-mark-enter-duration));
 
-// The column index comes from the slot's position (the row label is the first child), so the
-// cells of one column match the same rule and share their style instead of each carrying its own.
+// The row label is the first child, so a slot's position is its column index + 1.
 // ponytail: columns past the 61st start together at the 61st column's delay; raise the bound if wider
 // grids appear.
 @for $column from 1 through 59 {
@@ -115,8 +110,7 @@
   --_chart-mark-stagger: calc(60 * var(--_heatmap-chart-column-stagger, 0ms));
 }
 
-// An unmeasured cell is the surface, not the coldest colour: the ramp's own first step is a real
-// reading, and painting "we never measured this" with it states a figure nobody recorded.
+// The ramp's first step is a real reading, so a missing cell must not use it.
 .cell.is-missing {
   background: var(--_heatmap-chart-missing-color);
 }
@@ -125,9 +119,7 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
 
-  // The ramp spans 1.14:1 to 9.07:1 against white, so one ink cannot serve both ends. The glyph
-  // takes the cell's own colour inverted by `difference`, which stays legible at either end
-  // without the component having to know which half of the scale it landed on.
+  // The ramp spans 1.14:1 to 9.07:1 against white; `difference` inverts the cell's colour so one ink serves both ends.
   color: white;
   mix-blend-mode: difference;
 }
@@ -155,8 +147,7 @@
   transition: transform var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
 }
 
-// The step is a swatch, so the legend entry's tint would paint over the colour it names. It stands
-// taller instead, at once, while the cells wait out the hover delay before they dim.
+// A swatch: a tint would paint over the colour it names, so it grows taller instead.
 .scale-step:hover {
   transform: scaleY(1.75);
 }

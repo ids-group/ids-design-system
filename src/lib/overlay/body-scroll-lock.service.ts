@@ -2,11 +2,9 @@ import { DOCUMENT } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
 
 /**
- * Ref-counted lock on `document.body` scroll, shared by every overlay that
- * covers the viewport (modal, drawer, bottom-sheet). The FIRST `lock()` saves
- * the current `body` overflow and hides it; the LAST `unlock()` restores it —
- * so closing one overlay never re-enables page scroll while another stacked on
- * top of it is still open. Calls must be paired (one `unlock()` per `lock()`).
+ * Ref-counted lock on `document.body` scroll for viewport-covering overlays.
+ * The first `lock()` saves and hides the body overflow, the last `unlock()`
+ * restores it. Calls must be paired.
  */
 @Injectable({ providedIn: 'root' })
 export class BodyScrollLockService {

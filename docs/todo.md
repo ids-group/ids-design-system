@@ -14,11 +14,12 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**112 open — 0 P1, 12 P2, 100 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**114 open — 0 P1, 12 P2, 102 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 12
 
 - **Defects consumers work around today (swept 2026-09-23)**
+  - A composable `ds-chart` pins on click by default and shows no way to unpin (recorded 2026-09-30, from the mm-ecm consumer's 0.14.4 check)
   - A `ds-table` expanded row animates open and vanishes on close, so the reveal is one-sided (recorded 2026-09-24, from the mm-ecm consumer)
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
@@ -27,7 +28,6 @@ item and nothing else.
   - `--ds-multi-select-option-bg-color-active` is documented and dead
   - `ds-tag` marked `interactive` is mouse-only
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
-  - Nothing classifies a tightened template context as actionable (recorded 2026-09-24, from the mm-ecm consumer's 0.13.4 -> 0.14.0 upgrade)
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - DOCS for A3: `@defer` needs the deep specifier — the one exception to «no consumer
@@ -37,7 +37,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 100
+### P3 — 102
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -57,6 +57,8 @@ item and nothing else.
 - **Asked by Stas**
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
   - Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24)
+  - Pin more than one mark at a time (Stas, 2026-09-29)
+  - Cut the prose in ds-docs (Stas, 2026-09-29: "слишком много и никто это не читает")
 - **Tooling**
   - changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24)
   - The press feedback guard misses `.disabled` and `[aria-disabled]` (recorded 2026-09-24)
@@ -85,6 +87,7 @@ item and nothing else.
 - **Three open verdicts, each drawn in a deck**
   - Does the picker list height become a public token, or stay behind `panelClass`?
   - Do the date picker's first day of the week and the time picker's 12h/24h default from …
+  - Should the `ds-breadcrumbs` hover colour derive from `--text-link`, like the `.link` helper?
 - **Tooling**
   - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
@@ -114,7 +117,6 @@ item and nothing else.
   - Four exports on the package surface have no consumer in `src/`
   - `'none'` and `'grouped'` are the same value on `ds-column-chart`
   - Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea
-  - `ds-pie-chart` declares `staggerMs` and documents that it does nothing
 - **ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)**
   - `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them
 - **Missing components (from gap analysis)**
@@ -195,10 +197,10 @@ item and nothing else.
 
 **Consumer asks are the head of the board.** Every item a consumer is waiting on is drawn, with its
 before and after, in deck `decision-queue` under *Ждут консьюмеры*; pick there, and the items here
-are the work. Five are open: the `ds-table` expand-leave animation (:227) and the control-edge
-contrast (:232) under *Bugs*, the tightened template context (:312) under *Bugs*, the bar/column
-extract (:487) under *Two chart names that collide*, and the indeterminate bar's stripe verdict
-(:1138). The 0.9.0-0.13.3 manifest walk and the eleven reached-past styling hooks are both closed.
+are the work. Five are open: the unpin control a composable `ds-chart` lacks (:230), the `ds-table`
+expand-leave animation (:233) and the control-edge contrast (:238) under *Bugs*, the bar/column extract
+(:514) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1150). The 0.9.0-0.13.3 manifest walk and the eleven
+reached-past styling hooks are both closed.
 
 **Nobody is blocked from installing.** All six consumer repos declare Angular `^21` or `~21`, so the
 Angular 22 upgrade is parked rather than P1; the probe and its price stay in the item.
@@ -225,6 +227,9 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
 ## Defects consumers work around today (swept 2026-09-23)
 
 Defects a consumer hit - from a QA pass, or from reading a consumer tree for a rule that out-specifies a DS internal, a `::ng-deep` into a `ds-*`, or a wrapper that exists only because the library gets something wrong. Each is checked against `dev`.
+
+- [ ] **[P2] A composable `ds-chart` pins on click by default and shows no way to unpin (recorded 2026-09-30, from the mm-ecm consumer's 0.14.4 check).** `cursorPin` / `pinOnClick` resolves to `true` when unset (`chart/chart.component.ts:133-139` at v0.14.4, `pinOnClickResolved` at dev), so a click on a band of any `ds-chart` pins the category cursor and its tooltip. The `pin-reset` "Unpin" button exists only in the preset charts (bar, column, funnel, heatmap, line, pie, scatter, waterfall); no template under `components/chart/` renders one at v0.14.4 or at dev, and `dsChartPinMarker` is `aria-hidden`. Measured 2026-09-30 in the consumer's Analyze screens with seeded data: after a click the chart stays pinned when the pointer leaves, 0 buttons in the chart, host height unchanged (650x310, 613.8x310); Escape, a press outside, or a second click on the band are the only exits, and none of them is visible. The 0.14.4 note that a captionless chart's Unpin "floats over the top end of the plot" therefore holds for presets only.
+  **Wanted:** `ds-chart` renders the same Unpin control as the presets while `cursorPinned()`, in the same place (caption line, else over the plot's top end), or its pin defaults to off; the changelog line about the floating control names which charts it covers.
 
 - [ ] **[P2] A `ds-table` expanded row animates open and vanishes on close, so the reveal is one-sided (recorded 2026-09-24, from the mm-ecm consumer).** Opening interpolates `grid-template-rows` from `0fr` to `1fr` over `--duration-base`; closing has no counterpart, and the row is gone on the very next frame. Measured on the docs site's own expandable table: right after the open click, `getAnimations()` on `.expand-panel-inner` returns `ds-table-expand`, duration 180, `running`; right after the close click, on the next `requestAnimationFrame`, the panel is already absent from the DOM. The eye reads the pair as a glitch rather than as a reveal.
   **Why it is one-sided.** `.expand-panel-row` sits inside a structural `@if`, so a close unmounts the `<tr>` immediately, and the only motion declared is a keyframe - `@keyframes ds-table-expand`, from `0fr`/`opacity: 0` to `1fr`/`opacity: 1`. A keyframe cannot run on an element that is being removed, and there is no leave state for it to run from. The component's own comment picks the keyframe deliberately: "the row is inserted when it opens, and there is no previous state for a transition to run from". That reasoning is right for the enter and leaves the exit with nothing.
@@ -310,9 +315,6 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
 ## Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)
 
 *This section also has items under **Records**.*
-
-- [ ] **[P2] Nothing classifies a tightened template context as actionable (recorded 2026-09-24, from the mm-ecm consumer's 0.13.4 -> 0.14.0 upgrade).** 0.14.0 gave `CellTemplateDirective` a static `ngTemplateContextGuard` and a generic `T = unknown`, which turns every consumer `let-row` read from `any` into `unknown` under `strictTemplates`; the consumer's build failed with 194 + 6 errors (TS2571 / TS2345). `class-surface` did see it - `dsCellTemplateOf` and the guard were listed as grown members, so they landed in `exported-class-members-grew`, the subclass-collision item - and the prose went to `informational`. AUTHORING.md's widening rule covers a type that grows for its READERS; the reverse, a context that narrows from `any`, has no rule, and the manifest item was added after release (`0.14.0#cell-template-context-typed-unknown`).
-  **Wanted:** an AUTHORING.md rule that adding a context guard, or a generic parameter defaulting to `unknown`, to a directive a consumer's template reads is a `behavior` item on `surface: template` with the build error in `detect`; and a gate - `check-class-surface-entry` or `class-surface` - that fails when a new `ngTemplateContextGuard` appears on a class no draft item names.
 
 - [ ] **[P2] The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold.** `src/lib/styles/_status.scss:53` pairs `bg: var(--warning-subtitle)` with `text: var(--warning-text)`. Resolved in the default theme that is `#8A7400` on `#FFFBEA`, which computes to **4.42:1** by the WCAG relative-luminance formula — under AA for text below 18.66px/700. **It is the only status pair that fails:** error measures **5.92**, success **6.42** and primary **6.16** on their own subtitle backgrounds, so this is one colour out of step, not a palette-wide problem.
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:175`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
@@ -465,6 +467,29 @@ Each has somebody behind it. Nothing here is speculative work.
   `selector-rename`, one `type-rename` per exported symbol, a `token-rename` for the
   `--ds-bar-chart-*` prefix and a `class-rename` for the internal `.bar-chart` class - the same shape
   as the `ds-waterfall-chart` item above.
+
+- [ ] **[P3] Pin more than one mark at a time (Stas, 2026-09-29).** Today a chart holds one pin:
+  `chartActiveMark` keeps a single `index` and a `pinned` flag
+  (`components/chart-tooltip/chart-active-mark.ts`), the tooltip directive keeps one overlay per
+  chart (`chart-tooltip.directive.ts`), and a press on another mark moves the pin rather than adding
+  one. **What moves:** the active-mark state becomes a set of pinned indices beside the hovered one;
+  the directive opens one panel per pin while the hover panel keeps gliding; each pinned mark carries
+  its disc; `Unpin` releases all of them, and a click on a pinned mark releases that one. The
+  category cursor of `ds-chart` (`pinOnClick`) needs the same, one band per pin.
+  **To decide before building:** whether a plain click adds a pin or a modifier does (a plain click
+  that adds changes what every chart does today), a cap on how many, how panels that would overlap
+  are placed, what a press outside the plot releases, and how the keyboard adds and removes one.
+
+- [ ] **[P3] Cut the prose in ds-docs (Stas, 2026-09-29: "слишком много и никто это не читает").**
+  The pages explain too much. Readers skip the text and look at the demos. Keep what a demo cannot
+  show: the input or token name, a default value, and a constraint that is easy to break. Cut the
+  rest: paragraphs that restate what the demo shows, rationale, and a fact that repeats on several
+  pages (for example, shared chart inputs belong on Foundations only). Size, measured 2026-09-29:
+  103 `ds-docs/src/app/sections/**/*.section.html` hold 53448 words once tags are stripped. That
+  count also includes demo data and code-sample text, so the prose share is smaller. The largest
+  files are `table` (5080), `line-chart` (2422), `charts` (2082), `tokens-reference` (1548) and
+  `chart` (1504). Start with those. Re-measure with the same command, which pipes `find`, then
+  `sed 's/<[^>]*>/ /g'`, then `wc -w`.
 
 ## Tooling
 
@@ -1007,6 +1032,13 @@ that already existed, because both are the kind of ask that comes back.
   today, both from the locale, week only, hours only. Recommended in the deck: both from the locale,
   with Monday where the engine has no week data.
 
+- [ ] **[P3] Should the `ds-breadcrumbs` hover colour derive from `--text-link`, like the `.link` helper?**
+  `--_breadcrumbs-label-color-hover` defaults to `--accent` (`breadcrumbs.component.scss`), while the
+  `.link` helper (`src/lib/styles/_link.scss`) hovers from `--text-link` mixed 80% with black. A
+  consumer whose accent is a brand colour gets breadcrumb links that hover in a different colour from
+  every other link. **Wanted:** a verdict on whether the breadcrumb hover default derives from
+  `--text-link` the way `.link` does. The default is unchanged until it is given.
+
 None of these is blocked on effort. Each is a verdict, and most carry a deck that renders the options.
 
 ## Decks awaiting a verdict (re-audited 2026-09-24)
@@ -1210,10 +1242,6 @@ and the fifteen lint rules.
   `line-series` spells the same idea `'reading' | 'pointer'` (`:161`), in one folder. And
   `line-chart.types.ts:22` declares `LineChartStack` rather than narrowing `ChartStackMode`, then
   feeds it to `stackOffsets`, which is typed on the full union (`chart.math.ts:329-331`).
-
-- [ ] **[P3] `ds-pie-chart` declares `staggerMs` and documents that it does nothing.**
-  `pie-chart.component.ts:194-197`. It exists for parity with the other charts. Either it works or
-  it goes.
 
 # Parked — asked, and deliberately not now
 

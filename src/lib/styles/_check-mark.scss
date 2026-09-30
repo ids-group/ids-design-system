@@ -1,13 +1,5 @@
-// The tick a selection draws, in one place.
-//
-// ds-checkbox owns the canonical mark; multi-select and autocomplete draw their own box in an
-// option row rather than composing ds-checkbox, so they need the mark on its own. Do not reach
-// for `ds-icon name="check"` in those boxes: it is a 24-viewBox path at stroke 1.75, which at a
-// 13px glyph paints a 0.95px line against this mark's 2px — one box, two different ticks.
-//
-// Painted as a MASK over `currentColor`, not as a coloured image: the same mark then serves a
-// filled box (white on the accent) and a bare trailing indicator in a select row (accent on the
-// surface) without a second copy of the path.
+// A mask over `currentColor`, so one mark serves a filled box and a bare trailing indicator.
+// Not `ds-icon name="check"`: at a 13px glyph it paints a 0.95px line against this mark's 2px.
 @mixin mark {
   --_check-mark-enter-duration: var(--ds-check-mark-enter-duration, var(--ds-motion-check-enter-duration));
   --_check-mark-enter-easing: var(--ds-check-mark-enter-easing, var(--ds-motion-check-enter-easing));
@@ -16,24 +8,17 @@
 
   width: var(--check-tick-size);
   height: var(--check-tick-size);
-
-  // Always rendered, so it can scale and fade rather than pop: an element that does not exist has
-  // no resting state to transition from. `.checked` on the box is what brings it in.
   transform: scale(0.6);
   opacity: 0;
   transform-origin: center;
 
-  // The resting rule carries the EXIT timing and the entered rule the enter timing — a transition
-  // belongs to the state being moved TO, which is the only way one property pair can run two
-  // different curves in the two directions.
+  // The resting rule carries the exit timing, `shown` the enter timing: a transition takes the
+  // timing of the state being moved to.
   transition: transform var(--_check-mark-exit-duration) var(--_check-mark-exit-easing),
               opacity var(--_check-mark-exit-duration) var(--_check-mark-exit-easing);
   background-color: currentcolor;
 
-  // Forced colours override `background-color` and leave `background-image` alone, so moving the
-  // tick from an image to a masked fill made it vanish under Windows High Contrast: the mark was
-  // forced to Canvas, the same colour the box fill becomes, leaving checked and unchecked
-  // pixel-identical. The mask itself survives, so naming the text colour puts the glyph back.
+  // Forced colours override `background-color` to Canvas, making checked and unchecked identical; the mask survives, so name the text colour.
   @media (forced-colors: active) {
     background-color: CanvasText;
   }
@@ -41,7 +26,7 @@
   mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'><path d='M2 6.5l2.5 2.5L10 3.5' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
 }
 
-// The entered state, for a box that carries `.checked` rather than a `:checked` input.
+// For a box carrying `.checked` rather than a `:checked` input.
 @mixin shown {
   transform: scale(1);
   opacity: 1;
@@ -49,8 +34,7 @@
               opacity var(--_check-mark-enter-duration) var(--_check-mark-enter-easing);
 }
 
-// The bar a mixed selection draws, on the SAME element as the tick: a second span would sit beside
-// it in the centred box rather than replacing it, and the two could not cross-fade.
+// On the same element as the tick so the two cross-fade; a second span would sit beside it.
 @mixin dash {
   width: var(--check-indet-w);
   height: var(--check-indet-h);
