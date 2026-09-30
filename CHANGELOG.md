@@ -2,6 +2,15 @@
 
 ### Breaking
 
+- **`ds-tooltip` is light on the light theme, with a border, like the chart tooltip.** It takes
+  `--surface-overlay`, `--text-primary` and a `--border-default` border that runs round the
+  caret, where it was `--surface-inverted` with `--text-inverted` and no border; on the dark theme
+  it is a dark panel with a `--border-strong` border. Both tooltips read three new theme tokens,
+  `--tooltip-bg-color`, `--tooltip-text-color` and `--tooltip-border-color`, and `ds-tooltip`
+  gains the `--ds-tooltip-border-color` hook. To keep the inverted look, set
+  `--ds-tooltip-bg-color: var(--surface-inverted)`, `--ds-tooltip-text-color: var(--text-inverted)`
+  and `--ds-tooltip-border-color: transparent` on `:root`.
+
 - **`ds-chart`'s `cursorPin` input is `pinOnClick`,** the name every other chart already uses, and
   its readback signal `cursorPinResolved()` is `pinOnClickResolved()`. There is no alias: rename
   both. `DS_CONFIG.chart.pinOnClick` still sets the default.

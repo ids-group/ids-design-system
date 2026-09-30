@@ -1007,18 +1007,18 @@ export const CHARTS: readonly ColourRow[] = [
   },
   {
     "name": "--chart-tooltip-bg-color",
-    "value": "var(--surface-overlay)",
-    "notes": "Chart tooltip background colour."
+    "value": "var(--tooltip-bg-color)",
+    "notes": "Chart tooltip background colour (defaults to --tooltip-bg-color)."
   },
   {
     "name": "--chart-tooltip-text-color",
-    "value": "var(--text-primary)",
-    "notes": "Chart tooltip text colour."
+    "value": "var(--tooltip-text-color)",
+    "notes": "Chart tooltip text colour (defaults to --tooltip-text-color)."
   },
   {
     "name": "--chart-tooltip-border-color",
-    "value": "var(--border-default)",
-    "notes": "Chart tooltip border colour."
+    "value": "var(--tooltip-border-color)",
+    "notes": "Chart tooltip border colour (defaults to --tooltip-border-color)."
   },
   {
     "name": "--chart-mark-cap-radius",
@@ -8216,13 +8216,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-tooltip-bg-color",
-        "value": "var(--surface-inverted)",
-        "notes": "Tooltip surface fill (defaults to --surface-inverted)."
+        "value": "var(--tooltip-bg-color)",
+        "notes": "Tooltip surface fill (defaults to --tooltip-bg-color)."
       },
       {
         "name": "--ds-tooltip-text-color",
-        "value": "var(--text-inverted)",
-        "notes": "Tooltip text colour (defaults to --text-inverted)."
+        "value": "var(--tooltip-text-color)",
+        "notes": "Tooltip text colour (defaults to --tooltip-text-color)."
+      },
+      {
+        "name": "--ds-tooltip-border-color",
+        "value": "var(--tooltip-border-color)",
+        "notes": "Tooltip border colour, caret included (defaults to --tooltip-border-color)."
       },
       {
         "name": "--ds-tooltip-radius",
@@ -8253,6 +8258,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--tooltip-arrow",
         "value": "var(--space-2)",
         "notes": "Tooltip arrow size (8px)."
+      },
+      {
+        "name": "--tooltip-bg-color",
+        "value": "var(--surface-overlay)",
+        "notes": "Surface of ds-tooltip and the chart tooltip: --surface-overlay."
+      },
+      {
+        "name": "--tooltip-text-color",
+        "value": "var(--text-primary)",
+        "notes": "Text of ds-tooltip and the chart tooltip: --text-primary."
+      },
+      {
+        "name": "--tooltip-border-color",
+        "value": "var(--border-default)",
+        "notes": "Border of ds-tooltip and the chart tooltip: --border-default, --border-strong on the dark theme."
       }
     ]
   },

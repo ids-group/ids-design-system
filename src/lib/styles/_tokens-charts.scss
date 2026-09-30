@@ -93,9 +93,9 @@
   /* Two tones: a single ring disappears on a mark of the same hue; the white keyline separates it. */
   --chart-focus-ring-color:  var(--focus-ring-color);
 
-  --chart-tooltip-bg-color: var(--surface-overlay);
-  --chart-tooltip-text-color: var(--text-primary);
-  --chart-tooltip-border-color: var(--border-default);
+  --chart-tooltip-bg-color: var(--tooltip-bg-color);
+  --chart-tooltip-text-color: var(--tooltip-text-color);
+  --chart-tooltip-border-color: var(--tooltip-border-color);
 
   /* Not a pill: the cap squashes with the body while a mark grows in; 3px keeps that unreadable. */
   --chart-mark-cap-radius: 3px;

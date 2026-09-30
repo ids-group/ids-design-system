@@ -225,6 +225,29 @@
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS chart class.",
       "note": "The shared chart inputs and their resolved signals moved to an internal base class. ChartComponent lost cursorPin and cursorPinResolved and gained pinOnClickResolved, BarChartComponent lost dimsOthers and hoveredLabel, LineChartComponent lost markAnchor, PieChartComponent lost staggerMs; the internal ChartTooltipDirective gained host, LineSeriesComponent fadeId, SparklineComponent area, WaterfallChartComponent dimOthers and tooltip; data, categories and series became optional. The compiler names every collision."
+    },
+    {
+      "id": "tooltip-light-panel",
+      "kind": "behavior",
+      "old": "--ds-tooltip-bg-color",
+      "new": null,
+      "surface": "style",
+      "action": "None, unless a screen relies on the inverted ds-tooltip: set the three --ds-tooltip-* colours on :root as in restore.",
+      "appliesWhen": "Every ds-tooltip, on both themes. The chart tooltip already took the same colours and is unchanged by this item.",
+      "pitfall": "A screenshot test of an open ds-tooltip changes, and a --ds-tooltip-bg-color override now meets a --tooltip-border-color border it did not have.",
+      "restore": ":root { --ds-tooltip-bg-color: var(--surface-inverted); --ds-tooltip-text-color: var(--text-inverted); --ds-tooltip-border-color: transparent; }",
+      "searchHints": [
+        "--ds-tooltip-bg-color",
+        "--ds-tooltip-text-color",
+        "ds-tooltip-panel",
+        "dsTooltip"
+      ],
+      "detect": [
+        "--ds-tooltip-bg-color",
+        "ds-tooltip-panel",
+        "toHaveScreenshot"
+      ],
+      "verify": "An open ds-tooltip on the light theme computes a light background and a visible border, unless the app sets --ds-tooltip-bg-color on purpose."
     }
   ],
   "informational": [
@@ -234,7 +257,8 @@
     "--ds-chart-tooltip-bg-color, --ds-chart-tooltip-text-color and --ds-chart-tooltip-border-color set on a chart element or an ancestor reach the tooltip panel, which copies them onto its overlay pane on every open; before, only :root reached it.",
     "--ds-chart-bg-color (default var(--surface-default)) paints the chart frame and every knockout, and --ds-chart-plot-bg-color (default transparent) fills the plot area of ds-chart and ds-scatter-chart.",
     "data on ds-bar-chart, ds-column-chart, ds-funnel-chart, ds-pie-chart and ds-sparkline, and categories and series on ds-line-chart, are optional and default to empty, so an omitted one shows the empty state instead of throwing NG0950.",
-    "A ds-breadcrumbs label clipped at 16ch (the current page at 32ch) opens a tooltip with its full text on hover, and on focus of its link; a label that fits opens none."
+    "A ds-breadcrumbs label clipped at 16ch (the current page at 32ch) opens a tooltip with its full text on hover, and on focus of its link; a label that fits opens none.",
+    "ds-tooltip and the chart tooltip read three new theme tokens, --tooltip-bg-color, --tooltip-text-color and --tooltip-border-color, so one override on :root recolours both; ds-tooltip gains the --ds-tooltip-border-color hook for its border and caret."
   ],
   "deleteList": [
     {
