@@ -10,6 +10,7 @@
 //
 //   node tools/check-manifest-truth-selftest.mjs
 import { execFileSync } from 'node:child_process';
+import { existsSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkItem, surfaceAt } from './check-manifest-truth.mjs';
@@ -577,7 +578,25 @@ for (const [version, what] of UNCHECKABLE) {
   ran++;
   // The draft is the one manifest that can still be corrected, and it used to be excluded from the
   // sweep by a filter that demanded an existing tag.
-  const out = run('unreleased', { text: true });
+  // Straight after a release there is no draft, so the case brings an empty one of its own.
+  const draftPath = join(ROOT, 'migrations', 'unreleased.json');
+  const ownDraft = !existsSync(draftPath);
+  if (ownDraft)
+    writeFileSync(
+      draftPath,
+      JSON.stringify({
+        version: 'unreleased',
+        items: [],
+        informational: [],
+        deleteList: [],
+      }),
+    );
+  let out;
+  try {
+    out = run('unreleased', { text: true });
+  } finally {
+    if (ownDraft) rmSync(draftPath);
+  }
   const covered = /1 manifest\(s\) against/.test(out);
   if (!covered) failed++;
   console.log(

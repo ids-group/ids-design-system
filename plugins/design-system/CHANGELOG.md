@@ -4,6 +4,17 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.11.0 - 2026-09-30
+
+### Added
+
+- **Betas as a start and as a target.** A consumer installed on a published `X.Y.Z-beta.N` now
+  updates. The chain starts at the first stable above it, and items it already took from the beta
+  end `not-applicable`. A named beta target is honoured while no stable `X.Y.Z` is published.
+  The chain then walks the stables below it, then each published `X.Y.Z-beta.*` above `current`
+  up to the target. Once the stable is out, the run reports that the beta was folded into it and
+  stops.
+
 ## 1.10.1 - 2026-09-27
 
 ### Fixed

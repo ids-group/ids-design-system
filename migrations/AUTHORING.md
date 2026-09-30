@@ -188,6 +188,14 @@ the one you named.
 Only `unreleased.json` is written and checked against HEAD, because HEAD is the version it
 describes.
 
+**A beta is promoted like any release and then moved.** `release-beta` turns the draft into
+`migrations/X.Y.Z-beta.N.json`, checked against the tag before it. The next STABLE release moves
+every such manifest, oldest first, plus the draft, into `migrations/X.Y.Z.json`, and deletes the
+beta files (`tools/changelog-release.mjs`). The CHANGELOG blocks move into `## X.Y.Z` the same way.
+That stable manifest's boundary is the previous STABLE tag, because it describes the whole cycle.
+Item ids must therefore be unique across a beta cycle. Correct a beta's item in its beta file
+until the stable is cut, and in the stable file after.
+
 ## Supersession: name the item you reverse
 
 A default flipped in one release and flipped back in the next reads as two independent instructions,

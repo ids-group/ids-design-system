@@ -32,16 +32,22 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { surfaceAt } from './check-manifest-truth.mjs';
+import { previousBoundary, releaseTags } from './release-tags.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const AUDIT = process.argv.includes('--audit');
-const ONLY = process.argv.slice(2).find((arg) => /^\d+\.\d+\.\d+$/.test(arg));
+const ONLY = process.argv
+  .slice(2)
+  .find((arg) => /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?$/.test(arg));
 
 // An argument nobody recognises used to be dropped, so `v0.11.4`, `0.11` and a mistyped
 // `--audti` each reported on Unreleased and exited 0 — an answer to a question that was not asked.
 const unknownArgument = process.argv
   .slice(2)
-  .find((arg) => arg !== '--audit' && !/^\d+\.\d+\.\d+$/.test(arg));
+  .find(
+    (arg) =>
+      arg !== '--audit' && !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?$/.test(arg),
+  );
 if (unknownArgument) {
   console.error(
     `check-manifest-coverage: "${unknownArgument}" is neither \`--audit\` nor an <x.y.z> version.`,
@@ -207,7 +213,9 @@ function blocks() {
     // truncated the real one at that line and left every entry below it unchecked.
     if (/^\s*```/.test(lines[i])) fenced = !fenced;
     if (fenced) continue;
-    const released = /^## (\d+\.\d+\.\d+)(?: — |$)/.exec(lines[i]);
+    const released = /^## (\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?)(?: — |$)/.exec(
+      lines[i],
+    );
     const unreleased = /^## Unreleased\s*$/.exec(lines[i]);
     if (released) found.push({ version: released[1], start: i });
     else if (unreleased) found.push({ version: 'unreleased', start: i });
@@ -219,7 +227,7 @@ function blocks() {
       console.error(
         `check-manifest-coverage: CHANGELOG.md line ${i + 1} is a \`## \` heading this check ` +
           `cannot read: ${JSON.stringify(lines[i])}. Expected \`## Unreleased\` or ` +
-          '`## <x.y.z> — <date>` with an em dash.',
+          '`## <x.y.z> — <date>` (or `<x.y.z-beta.n>`) with an em dash.',
       );
       process.exit(1);
     }
@@ -284,27 +292,12 @@ export function patternsIn(text) {
 
 // The tokens the library already had at the boundary this block describes. A token present there
 // is not what this block introduced, whatever the entry says about it.
-const TAGS = (() => {
-  try {
-    return execFileSync('git', ['-C', ROOT, 'tag', '--list', 'v*'], {
-      encoding: 'utf8',
-    })
-      .split('\n')
-      .map((line) => line.trim())
-      .filter(Boolean)
-      .sort((a, b) =>
-        a.slice(1).localeCompare(b.slice(1), undefined, { numeric: true }),
-      );
-  } catch {
-    return [];
-  }
-})();
+const TAGS = releaseTags(ROOT);
 
 function boundaryTag(version) {
   if (!TAGS.length) return null;
   if (version === 'unreleased') return TAGS.at(-1);
-  const at = TAGS.indexOf(`v${version}`);
-  return at > 0 ? TAGS[at - 1] : null;
+  return previousBoundary(TAGS, version);
 }
 
 const tokenCache = new Map();

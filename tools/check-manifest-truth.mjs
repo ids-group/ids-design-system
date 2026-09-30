@@ -19,11 +19,12 @@ import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { previousBoundary, releaseTags } from './release-tags.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ONLY = process.argv
   .slice(2)
-  .find((arg) => /^(\d+\.\d+\.\d+|unreleased)$/.test(arg));
+  .find((arg) => /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)$/.test(arg));
 
 const git = (args) =>
   execFileSync('git', ['-C', ROOT, ...args], {
@@ -40,13 +41,7 @@ const tags = (() => {
   // tags present, half the manifests are unreadable, and the branch that says so had no coverage.
   if (process.env.DS_TRUTH_TAGS)
     return process.env.DS_TRUTH_TAGS.split(',').filter(Boolean);
-  try {
-    return git(['tag', '--list', 'v*', '--sort=v:refname'])
-      .split('\n')
-      .filter(Boolean);
-  } catch {
-    return [];
-  }
+  return releaseTags(ROOT);
 })();
 
 // One `git cat-file --batch` per tag, not one `git show` per file: a tag's surface is ~400 files
@@ -521,7 +516,9 @@ function sweep() {
   const unresolved = [];
 
   const manifests = readdirSync(join(ROOT, 'migrations'))
-    .filter((f) => /^(\d+\.\d+\.\d+|unreleased)\.json$/.test(f))
+    .filter((f) =>
+      /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)\.json$/.test(f),
+    )
     .filter((f) => !ONLY || f === `${ONLY}.json`)
     .sort();
 
@@ -555,7 +552,7 @@ function sweep() {
       );
       continue;
     }
-    const prev = tags[index - 1];
+    const prev = draft ? tags.at(-1) : previousBoundary(tags, version);
     const before = surfaceAt(prev);
     const after = draft ? surfaceOfWorkingTree() : surfaceAt(`v${version}`);
     if (!before || !after) {
