@@ -14,11 +14,12 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**112 open — 0 P1, 11 P2, 101 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**113 open — 0 P1, 12 P2, 101 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 11
+### P2 — 12
 
 - **Defects consumers work around today (swept 2026-09-23)**
+  - A composable `ds-chart` pins on click by default and shows no way to unpin (recorded 2026-09-30, from the mm-ecm consumer's 0.14.4 check)
   - A `ds-table` expanded row animates open and vanishes on close, so the reveal is one-sided (recorded 2026-09-24, from the mm-ecm consumer)
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
@@ -195,9 +196,9 @@ item and nothing else.
 
 **Consumer asks are the head of the board.** Every item a consumer is waiting on is drawn, with its
 before and after, in deck `decision-queue` under *Ждут консьюмеры*; pick there, and the items here
-are the work. Four are open: the `ds-table` expand-leave animation (:229) and the control-edge
-contrast (:234) under *Bugs*, the bar/column extract (:510) under *Two chart names that collide*,
-and the indeterminate bar's stripe verdict (:1146). The 0.9.0-0.13.3 manifest walk and the eleven
+are the work. Five are open: the unpin control a composable `ds-chart` lacks (:230), the `ds-table`
+expand-leave animation (:233) and the control-edge contrast (:238) under *Bugs*, the bar/column extract
+(:514) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1150). The 0.9.0-0.13.3 manifest walk and the eleven
 reached-past styling hooks are both closed.
 
 **Nobody is blocked from installing.** All six consumer repos declare Angular `^21` or `~21`, so the
@@ -225,6 +226,9 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
 ## Defects consumers work around today (swept 2026-09-23)
 
 Defects a consumer hit - from a QA pass, or from reading a consumer tree for a rule that out-specifies a DS internal, a `::ng-deep` into a `ds-*`, or a wrapper that exists only because the library gets something wrong. Each is checked against `dev`.
+
+- [ ] **[P2] A composable `ds-chart` pins on click by default and shows no way to unpin (recorded 2026-09-30, from the mm-ecm consumer's 0.14.4 check).** `cursorPin` / `pinOnClick` resolves to `true` when unset (`chart/chart.component.ts:133-139` at v0.14.4, `pinOnClickResolved` at dev), so a click on a band of any `ds-chart` pins the category cursor and its tooltip. The `pin-reset` "Unpin" button exists only in the preset charts (bar, column, funnel, heatmap, line, pie, scatter, waterfall); no template under `components/chart/` renders one at v0.14.4 or at dev, and `dsChartPinMarker` is `aria-hidden`. Measured 2026-09-30 in the consumer's Analyze screens with seeded data: after a click the chart stays pinned when the pointer leaves, 0 buttons in the chart, host height unchanged (650x310, 613.8x310); Escape, a press outside, or a second click on the band are the only exits, and none of them is visible. The 0.14.4 note that a captionless chart's Unpin "floats over the top end of the plot" therefore holds for presets only.
+  **Wanted:** `ds-chart` renders the same Unpin control as the presets while `cursorPinned()`, in the same place (caption line, else over the plot's top end), or its pin defaults to off; the changelog line about the floating control names which charts it covers.
 
 - [ ] **[P2] A `ds-table` expanded row animates open and vanishes on close, so the reveal is one-sided (recorded 2026-09-24, from the mm-ecm consumer).** Opening interpolates `grid-template-rows` from `0fr` to `1fr` over `--duration-base`; closing has no counterpart, and the row is gone on the very next frame. Measured on the docs site's own expandable table: right after the open click, `getAnimations()` on `.expand-panel-inner` returns `ds-table-expand`, duration 180, `running`; right after the close click, on the next `requestAnimationFrame`, the panel is already absent from the DOM. The eye reads the pair as a glitch rather than as a reveal.
   **Why it is one-sided.** `.expand-panel-row` sits inside a structural `@if`, so a close unmounts the `<tr>` immediately, and the only motion declared is a keyframe - `@keyframes ds-table-expand`, from `0fr`/`opacity: 0` to `1fr`/`opacity: 1`. A keyframe cannot run on an element that is being removed, and there is no leave state for it to run from. The component's own comment picks the keyframe deliberately: "the row is inserted when it opens, and there is no previous state for a transition to run from". That reasoning is right for the enter and leaves the exit with nothing.
