@@ -11,11 +11,21 @@ import {
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { TooltipPanelComponent } from './tooltip-panel.component';
-import { prepareOverlayEnter } from '@ids-group-ltd/ids-design-system/components';
+import {
+  overlayPlacementOf,
+  prepareOverlayEnter,
+} from '@ids-group-ltd/ids-design-system/components';
 import { isTextClipped } from '@ids-group-ltd/ids-design-system/core';
 import type { TooltipPlacement } from './tooltip.types';
 
 const TRIGGER_GAP_PX = 8;
+const VIEWPORT_MARGIN_PX = 8;
+const OPPOSITE_PLACEMENT: Record<TooltipPlacement, TooltipPlacement> = {
+  top: 'bottom',
+  bottom: 'top',
+  left: 'right',
+  right: 'left',
+};
 
 const NATIVELY_FOCUSABLE = 'a[href], button, input, select, textarea, summary';
 const FOCUSABLE = `${NATIVELY_FOCUSABLE}, [tabindex]`;
@@ -285,7 +295,11 @@ export class TooltipDirective implements OnDestroy {
     const positionStrategy = this.overlay
       .position()
       .flexibleConnectedTo(this.host)
-      .withPositions([this.positionFor(placement)]);
+      .withPositions([
+        this.positionFor(placement),
+        this.positionFor(OPPOSITE_PLACEMENT[placement]),
+      ])
+      .withViewportMargin(VIEWPORT_MARGIN_PX);
 
     this.ref = this.overlay.create({
       positionStrategy,
@@ -298,6 +312,12 @@ export class TooltipDirective implements OnDestroy {
     const text = this.tipText();
     cmpRef.setInput('text', text);
     cmpRef.setInput('placement', placement);
+    positionStrategy.positionChanges.subscribe(({ connectionPair }) =>
+      cmpRef.setInput(
+        'placement',
+        overlayPlacementOf(connectionPair.overlayY, connectionPair.overlayX),
+      ),
+    );
     cmpRef.setInput('panelId', this.tipId);
     if (this.disclosesOwnText(text)) {
       return;

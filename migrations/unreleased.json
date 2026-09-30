@@ -261,7 +261,11 @@
     "ds-tooltip and the chart tooltip read three new theme tokens, --tooltip-bg-color, --tooltip-text-color and --tooltip-border-color, so one override on :root recolours both; ds-tooltip gains the --ds-tooltip-border-color hook for its border and caret.",
     "dsTooltipWhenClipped applies the tooltip directive on its own, so the empty dsTooltip written beside it is redundant (delete list: tooltip-empty-beside-when-clipped).",
     "A ds-breadcrumbs link clicked with Ctrl, Cmd, Shift or Alt, or with a non-primary button, opens its href the browser's way and emits no (navigate); a plain primary click is unchanged.",
-    "ds-breadcrumbs gains --ds-breadcrumbs-font-size (default var(--font-size-s)), --ds-breadcrumbs-font-weight (var(--font-weight-regular)), --ds-breadcrumbs-current-label-font-weight (var(--font-weight-bold)), --ds-breadcrumbs-gap (var(--space-2)), --ds-breadcrumbs-label-max-width (16ch) and --ds-breadcrumbs-current-label-max-width (32ch); rendering is unchanged until one is set."
+    "ds-breadcrumbs gains --ds-breadcrumbs-font-size (default var(--font-size-s)), --ds-breadcrumbs-font-weight (var(--font-weight-regular)), --ds-breadcrumbs-current-label-font-weight (var(--font-weight-bold)), --ds-breadcrumbs-gap (var(--space-2)), --ds-breadcrumbs-label-max-width (16ch) and --ds-breadcrumbs-current-label-max-width (32ch); rendering is unchanged until one is set.",
+    {
+      "text": "A dsTooltip whose preferred side does not fit in the viewport opens on the opposite side, 8px from the edge, with its arrow turned to match.",
+      "verify": "Hover a trigger near the top of the viewport whose tooltip is placed on top and confirm the panel opens below it, fully on screen, arrow pointing up at the trigger."
+    }
   ],
   "deleteList": [
     {
