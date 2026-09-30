@@ -1312,7 +1312,7 @@
 
   The eight `--ds-description-list-term-*` and `-details-*` tokens are declared in
   `description-item.component.scss` and style one item, so they are `--ds-description-item-*`.
-  The three `--ds-segmented-button-*` are `--ds-segmented-segment-*`, because the component calls
+  The three `--ds-segmented-btn-*` are `--ds-segmented-segment-*`, because the component calls
   its parts segments everywhere else it speaks - `class="segment"` in the template,
   `SegmentedOption` as the published type. `--ds-tabs-strip-gap` is `--ds-tabs-gap`: `strip` is
   our internal word for the tab list and appears nowhere a consumer reads.
