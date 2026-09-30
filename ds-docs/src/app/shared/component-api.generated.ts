@@ -1449,7 +1449,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Fires when a clickable crumb with `href` is activated; default navigation is always prevented."
+        "description": "Fires when a clickable crumb with `href` is activated by a plain primary click, whose default navigation is prevented; a modified or non-primary click opens `href` in the browser instead."
       }
     ]
   },

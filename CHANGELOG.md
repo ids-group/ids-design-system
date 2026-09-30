@@ -72,6 +72,12 @@
   beside it is no longer needed. `dsTooltip="..."` together with `dsTooltipWhenClipped` still
   shows that text, only while the host is clipped.
 
+- **`ds-breadcrumbs` takes type, gap and clip-width tokens.** `--ds-breadcrumbs-font-size`
+  (default `var(--font-size-s)`), `--ds-breadcrumbs-font-weight` (`var(--font-weight-regular)`),
+  `--ds-breadcrumbs-current-label-font-weight` (`var(--font-weight-bold)`),
+  `--ds-breadcrumbs-gap` (`var(--space-2)`), `--ds-breadcrumbs-label-max-width` (`16ch`) and
+  `--ds-breadcrumbs-current-label-max-width` (`32ch`). Rendering is unchanged until one is set.
+
 - **`--ds-chart-bg-color` paints the chart frame and every knockout.** A new token, default
   `var(--surface-default)`. It fills the frame background and every knockout cut into the plot:
   stacked line band separators, the line halo, the outlined line-marker ring, stacked-column gaps
@@ -131,6 +137,11 @@
 - **A clipped `ds-breadcrumbs` label shows its full text in a tooltip.** A crumb label past `16ch`
   (the current page past `32ch`) ended in an ellipsis with no way to read the rest; hovering it, or
   focusing its link, now opens a tooltip with the whole label. A label that fits opens none.
+
+- **A Ctrl, Cmd or Shift click on a `ds-breadcrumbs` link opens it the browser's way.** Every click
+  was prevented and emitted as `(navigate)`, so a consumer routing on it moved the current tab where
+  the user asked for a new tab or window. A plain primary click still emits `(navigate)` with the
+  default prevented; a modified or non-primary click leaves `href` to the browser and emits nothing.
 
 ### What you can now DELETE
 

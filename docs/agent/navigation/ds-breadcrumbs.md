@@ -4,7 +4,7 @@
 Group: Layout & navigation
 
 Inputs: `items: BreadcrumbItem[] | null = null` (`{ label?, href?, icon? }` — when `null`/omitted, the component reads from `BreadcrumbsService.items` so route-driven flows work without a per-page `[items]` binding), `separator: IconName | null = null` (overrides `DsConfig.breadcrumbs.separator`, falls back to `'chevronRight'`), `clickable: boolean | null = null` (overrides `DsConfig.breadcrumbs.clickable`, falls back to `true`)
-Output: `(navigate): BreadcrumbItem` — emits when an item with `href` is clicked and `clickable` resolves to `true` (event is `preventDefault`-ed so the consumer can decide what to do)
+Output: `(navigate): BreadcrumbItem` — emits when an item with `href` is clicked and `clickable` resolves to `true` (a plain primary click is `preventDefault`-ed so the consumer can decide what to do; Ctrl, Cmd, Shift, Alt or a non-primary button leaves the browser to open `href`, e.g. in a new tab)
 
 <!-- inputs:ds-breadcrumbs -->
 All inputs: `items: BreadcrumbItem[] | null = null`, `separator: IconName | null = null`, `clickable: boolean | null = null`, `maxItems: number | null = null`

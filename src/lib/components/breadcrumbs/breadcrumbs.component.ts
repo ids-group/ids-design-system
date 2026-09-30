@@ -18,6 +18,13 @@ import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { BreadcrumbsService } from './breadcrumbs.service';
 import type { BreadcrumbItem } from './breadcrumbs.types';
 
+function opensInBrowser(event: Event): boolean {
+  return (
+    event instanceof MouseEvent &&
+    (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)
+  );
+}
+
 @Component({
   selector: 'ds-breadcrumbs',
   standalone: true,
@@ -42,7 +49,8 @@ export class BreadcrumbsComponent {
   readonly maxItems = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
-  /** Fires when a clickable crumb with `href` is activated; default navigation is always prevented. */
+  /** Fires when a clickable crumb with `href` is activated by a plain primary click, whose default
+   *  navigation is prevented; a modified or non-primary click opens `href` in the browser instead. */
   readonly navigate = output<BreadcrumbItem>();
 
   private readonly allItems = computed<BreadcrumbItem[]>(
@@ -85,6 +93,9 @@ export class BreadcrumbsComponent {
     if (!item.href || !this.effectiveClickable()) {
       event.preventDefault();
 
+      return;
+    }
+    if (opensInBrowser(event)) {
       return;
     }
     event.preventDefault();
