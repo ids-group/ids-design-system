@@ -143,6 +143,12 @@
   the user asked for a new tab or window. A plain primary click still emits `(navigate)` with the
   default prevented; a modified or non-primary click leaves `href` to the browser and emits nothing.
 
+- **A `dsTooltip` with no room on its side opens on the opposite side.** The panel had one
+  position, so a tooltip on a trigger near the top of the viewport (a page breadcrumb, a toolbar)
+  opened above it, ran off the screen and pointed its arrow into the trigger. It now flips to the
+  opposite side when the preferred one does not fit, keeps 8px from the viewport edge, and turns
+  its arrow to the side it opened on.
+
 ### What you can now DELETE
 
 | Delete | Why | Replace with |
