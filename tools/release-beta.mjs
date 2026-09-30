@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// `npm version` to the next beta; the numbering rule is nextBeta in tools/release-tags.mjs.
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { nextBeta } from './release-tags.mjs';
