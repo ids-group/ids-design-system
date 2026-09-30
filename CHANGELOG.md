@@ -114,6 +114,10 @@
   In a development build either call threw NG0203 from the click handler that made it; it now
   logs the missing directive. Production builds were unaffected.
 
+- **A clipped `ds-breadcrumbs` label shows its full text in a tooltip.** A crumb label past `16ch`
+  (the current page past `32ch`) ended in an ellipsis with no way to read the rest; hovering it, or
+  focusing its link, now opens a tooltip with the whole label. A label that fits opens none.
+
 ### What you can now DELETE
 
 | Delete | Why | Replace with |
