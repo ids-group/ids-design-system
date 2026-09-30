@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**114 open — 0 P1, 12 P2, 102 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**116 open — 0 P1, 12 P2, 104 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 12
 
@@ -37,7 +37,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 102
+### P3 — 104
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -52,6 +52,7 @@ item and nothing else.
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
   - A pressed danger menu item shows its hover colour (recorded 2026-09-24)
 - **The chart family read as an architecture (audited 2026-09-22)**
+  - `ds-column-chart` reads its geometry tokens once, so a breakpoint override is ignored (recorded 2026-09-30)
   - `ds-line-chart`'s `tooltipAnchor` doc does not say it is inert unless `tooltip="axis"`
   - A focused marker's panel names every series at its category, where the docs say its own (recorded 2026-09-24)
 - **Asked by Stas**
@@ -60,6 +61,7 @@ item and nothing else.
   - Pin more than one mark at a time (Stas, 2026-09-29)
   - Cut the prose in ds-docs (Stas, 2026-09-29: "слишком много и никто это не читает")
 - **Tooling**
+  - No pixel comparison was run over the 2026-09-29/30 library comment sweep (recorded 2026-09-30)
   - changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24)
   - The press feedback guard misses `.disabled` and `[aria-disabled]` (recorded 2026-09-24)
   - `--picker-maxh` is an abbreviated token name (recorded 2026-09-24)
@@ -395,6 +397,12 @@ Constraints and decisions that read as removable and are not.
 
 *This section also has items under **Decisions**, **Parked**, **Records**.*
 
+- [ ] **[P3] `ds-column-chart` reads its geometry tokens once, so a breakpoint override is ignored (recorded 2026-09-30).**
+  `readColumnGeometry` (`column-chart.component.ts:86-115`) runs in `afterNextRender` and stores the result;
+  a `--ds-column-chart-*` geometry token re-pointed in a media query after first paint never reaches the plot,
+  and the docblock states the limit instead of lifting it. Wanted: re-read on the host's resize (`ds-chart`
+  already tracks its width through `elementWidth` in `charts-measure.ts`), or drop the tokens the plot cannot follow.
+
 - [ ] **[P3] `ds-line-chart`'s `tooltipAnchor` doc does not say it is inert unless `tooltip="axis"`.**
   `chart/line-series.component.ts:562-572` reads the anchor only for an `axis` panel. `g[dsLineSeries]`
   says so (its docblock at `:157-160` and the CHANGELOG), but `ds-line-chart`'s own docblock
@@ -494,6 +502,12 @@ Each has somebody behind it. Nothing here is speculative work.
 ## Tooling
 
 *This section also has items under **Decisions**, **Parked**, **Records**.*
+
+- [ ] **[P3] No pixel comparison was run over the 2026-09-29/30 library comment sweep (recorded 2026-09-30).**
+  Two passes rewrote comments in 370+ files of `src/lib`; a comment-stripped code diff against the base came out
+  empty, and build, lint and every `tools/check.mjs` check are green, but `tools/compare-docs-pixels.mjs` was
+  stopped before its first route finished. Run it over every route for `dda7b8bf^1` against `dda7b8bf` (the sweep
+  merge alone): any differing block is a rendering change a comment pass must not make.
 
 - [ ] **[P3] changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24).**
   The published-artefact check for client names reads styles, themes, `src/lib/**/*.ts` and migrations (its closing `by group` line),
