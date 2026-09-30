@@ -13,6 +13,7 @@ import {
   devWarn,
 } from '@ids-group-ltd/ids-design-system/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { BreadcrumbsService } from './breadcrumbs.service';
 import type { BreadcrumbItem } from './breadcrumbs.types';
@@ -20,7 +21,7 @@ import type { BreadcrumbItem } from './breadcrumbs.types';
 @Component({
   selector: 'ds-breadcrumbs',
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, TooltipDirective],
   templateUrl: './breadcrumbs.component.html',
   styleUrl: './breadcrumbs.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
