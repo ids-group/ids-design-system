@@ -67,6 +67,12 @@
 
 ### Added
 
+- **`ds-breadcrumbs` takes type, gap and clip-width tokens.** `--ds-breadcrumbs-font-size`
+  (default `var(--font-size-s)`), `--ds-breadcrumbs-font-weight` (`var(--font-weight-regular)`),
+  `--ds-breadcrumbs-current-label-font-weight` (`var(--font-weight-bold)`),
+  `--ds-breadcrumbs-gap` (`var(--space-2)`), `--ds-breadcrumbs-label-max-width` (`16ch`) and
+  `--ds-breadcrumbs-current-label-max-width` (`32ch`). Rendering is unchanged until one is set.
+
 - **`--ds-chart-bg-color` paints the chart frame and every knockout.** A new token, default
   `var(--surface-default)`. It fills the frame background and every knockout cut into the plot:
   stacked line band separators, the line halo, the outlined line-marker ring, stacked-column gaps
