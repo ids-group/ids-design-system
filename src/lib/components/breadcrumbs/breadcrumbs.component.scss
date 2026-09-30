@@ -7,6 +7,9 @@
 :host {
   --_breadcrumbs-label-color:           var(--ds-breadcrumbs-label-color,           var(--text-tertiary));
   --_breadcrumbs-label-color-hover:     var(--ds-breadcrumbs-label-color-hover,     var(--accent));
+  --_breadcrumbs-bg-color-hover:        var(--ds-breadcrumbs-bg-color-hover,        transparent);
+  --_breadcrumbs-padding:               var(--ds-breadcrumbs-padding,               0);
+  --_breadcrumbs-radius:                var(--ds-breadcrumbs-radius,                var(--radius-sm));
   --_breadcrumbs-separator-icon-color: var(--ds-breadcrumbs-separator-icon-color, var(--icon-muted));
   --_breadcrumbs-current-label-color:   var(--ds-breadcrumbs-current-label-color,   var(--text-primary));
   --_breadcrumbs-gap:                   var(--ds-breadcrumbs-gap,                   var(--space-2));
@@ -41,13 +44,21 @@
     gap: var(--space-1);
   }
 
+  a, > span:not(.sep) {
+    padding: var(--_breadcrumbs-padding);
+    border-radius: var(--_breadcrumbs-radius);
+  }
+
   a {
     color: var(--_breadcrumbs-label-color);
     text-decoration: none;
     cursor: pointer;
-    transition: color var(--duration-fast) var(--ease-standard);
+    transition:
+      color var(--duration-fast) var(--ease-standard),
+      background-color var(--duration-fast) var(--ease-standard);
 
     &:hover {
+      background-color: var(--_breadcrumbs-bg-color-hover);
       color: var(--_breadcrumbs-label-color-hover);
       text-decoration: underline;
       text-underline-offset: var(--breadcrumbs-link-uloff);
@@ -55,8 +66,6 @@
 
     &:focus-visible {
       @include focus.ring;
-
-      border-radius: var(--radius-sm);
     }
   }
 

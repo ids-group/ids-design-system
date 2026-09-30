@@ -1,0 +1,9 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    "ds-breadcrumbs gains --ds-breadcrumbs-bg-color-hover (default transparent), --ds-breadcrumbs-padding (0) and --ds-breadcrumbs-radius (var(--radius-sm)); rendering is unchanged until one is set.",
+    "The slash icon is built in, so ds-breadcrumbs separator=\"slash\" and DS_CONFIG.breadcrumbs.separator: 'slash' render a \"/\" between crumbs."
+  ],
+  "deleteList": []
+}
