@@ -8,6 +8,7 @@ export const ICONS = {
   x: '<path d="M6 6l12 12M18 6L6 18" />',
   chevronDown: '<path d="m6 9 6 6 6-6" />',
   chevronRight: '<path d="m9 6 6 6-6 6" />',
+  slash: '<path d="M15 5 9 19" />',
   chevronLeft: '<path d="m15 6-6 6 6 6" />',
   chevronUp: '<path d="m6 15 6-6 6 6" />',
   menu: '<path d="M4 6h16M4 12h16M4 18h16" />',
