@@ -3056,6 +3056,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Link hover."
       },
       {
+        "name": "--ds-breadcrumbs-bg-color-hover",
+        "value": "transparent",
+        "notes": "Crumb link hover background (default transparent)."
+      },
+      {
+        "name": "--ds-breadcrumbs-padding",
+        "value": "0",
+        "notes": "Padding of every crumb, the current one included (default 0)."
+      },
+      {
+        "name": "--ds-breadcrumbs-radius",
+        "value": "var(--radius-sm)",
+        "notes": "Crumb corner radius, also the focus ring's (default --radius-sm)."
+      },
+      {
         "name": "--ds-breadcrumbs-separator-icon-color",
         "value": "var(--icon-muted)",
         "notes": "Chevron / slash."
