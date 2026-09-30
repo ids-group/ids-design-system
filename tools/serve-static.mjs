@@ -7,11 +7,13 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const [root, port] = process.argv.slice(2);
-if (!root || !port) {
+const [rootArgument, port] = process.argv.slice(2);
+if (!rootArgument || !port) {
   console.error('usage: node tools/serve-static.mjs <root> <port>');
   process.exit(2);
 }
+
+const root = path.resolve(rootArgument);
 
 const TYPES = {
   '.js': 'text/javascript',
@@ -28,7 +30,7 @@ const TYPES = {
 http
   .createServer((request, response) => {
     let file = path.join(root, decodeURIComponent(request.url.split('?')[0]));
-    if (!file.startsWith(path.resolve(root))) {
+    if (!file.startsWith(root)) {
       response.writeHead(403).end();
       return;
     }
@@ -40,5 +42,5 @@ http
     fs.createReadStream(file).pipe(response);
   })
   .listen(Number(port), () =>
-    console.log(`serving ${path.resolve(root)} on http://localhost:${port}`),
+    console.log(`serving ${root} on http://localhost:${port}`),
   );
