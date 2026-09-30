@@ -258,7 +258,8 @@
     "--ds-chart-bg-color (default var(--surface-default)) paints the chart frame and every knockout, and --ds-chart-plot-bg-color (default transparent) fills the plot area of ds-chart and ds-scatter-chart.",
     "data on ds-bar-chart, ds-column-chart, ds-funnel-chart, ds-pie-chart and ds-sparkline, and categories and series on ds-line-chart, are optional and default to empty, so an omitted one shows the empty state instead of throwing NG0950.",
     "A ds-breadcrumbs label clipped at 16ch (the current page at 32ch) opens a tooltip with its full text on hover, and on focus of its link; a label that fits opens none.",
-    "ds-tooltip and the chart tooltip read three new theme tokens, --tooltip-bg-color, --tooltip-text-color and --tooltip-border-color, so one override on :root recolours both; ds-tooltip gains the --ds-tooltip-border-color hook for its border and caret."
+    "ds-tooltip and the chart tooltip read three new theme tokens, --tooltip-bg-color, --tooltip-text-color and --tooltip-border-color, so one override on :root recolours both; ds-tooltip gains the --ds-tooltip-border-color hook for its border and caret.",
+    "A ds-breadcrumbs link clicked with Ctrl, Cmd, Shift or Alt, or with a non-primary button, opens its href the browser's way and emits no (navigate); a plain primary click is unchanged."
   ],
   "deleteList": [
     {
