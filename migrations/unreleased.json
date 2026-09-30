@@ -259,6 +259,7 @@
     "data on ds-bar-chart, ds-column-chart, ds-funnel-chart, ds-pie-chart and ds-sparkline, and categories and series on ds-line-chart, are optional and default to empty, so an omitted one shows the empty state instead of throwing NG0950.",
     "A ds-breadcrumbs label clipped at 16ch (the current page at 32ch) opens a tooltip with its full text on hover, and on focus of its link; a label that fits opens none.",
     "ds-tooltip and the chart tooltip read three new theme tokens, --tooltip-bg-color, --tooltip-text-color and --tooltip-border-color, so one override on :root recolours both; ds-tooltip gains the --ds-tooltip-border-color hook for its border and caret.",
+    "dsTooltipWhenClipped applies the tooltip directive on its own, so the empty dsTooltip written beside it is redundant (delete list: tooltip-empty-beside-when-clipped).",
     "A ds-breadcrumbs link clicked with Ctrl, Cmd, Shift or Alt, or with a non-primary button, opens its href the browser's way and emits no (navigate); a plain primary click is unchanged.",
     "ds-breadcrumbs gains --ds-breadcrumbs-font-size (default var(--font-size-s)), --ds-breadcrumbs-font-weight (var(--font-weight-regular)), --ds-breadcrumbs-current-label-font-weight (var(--font-weight-bold)), --ds-breadcrumbs-gap (var(--space-2)), --ds-breadcrumbs-label-max-width (16ch) and --ds-breadcrumbs-current-label-max-width (32ch); rendering is unchanged until one is set."
   ],
@@ -291,6 +292,16 @@
       ],
       "why": "The panel takes --surface-overlay, --text-primary and --border-default by default, so an override setting those light colours restates it.",
       "replaceWith": "nothing; keep an override that sets any other colour"
+    },
+    {
+      "id": "tooltip-empty-beside-when-clipped",
+      "surface": "template",
+      "find": [
+        "dsTooltip dsTooltipWhenClipped",
+        "dsTooltipWhenClipped"
+      ],
+      "why": "The directive selector includes [dsTooltipWhenClipped], so the attribute alone creates the tooltip.",
+      "replaceWith": "nothing; keep a dsTooltip that carries text or a [dsTooltip] binding"
     }
   ]
 }

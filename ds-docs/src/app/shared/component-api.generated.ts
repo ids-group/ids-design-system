@@ -11398,7 +11398,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
   },
   "tooltip": {
     "key": "tooltip",
-    "selector": "[dsTooltip]",
+    "selector": "[dsTooltip], [dsTooltipWhenClipped]",
     "isElement": false,
     "className": "TooltipDirective",
     "status": "stable",
@@ -11445,7 +11445,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Show the tip only while the host shows less text than it holds. Re-tested on every open. With this on, `dsTooltip` may be left empty and the host's own text is disclosed. A tip whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip` that says more than the host does describes it as usual."
+        "description": "Show the tip only while the host shows less text than it holds. Re-tested on every open. Applies the tooltip on its own: without a `dsTooltip` the host's own text is disclosed. A tip whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip` that says more than the host does describes it as usual."
       },
       {
         "name": "dsTooltipTextSelector",

@@ -67,6 +67,11 @@
 
 ### Added
 
+- **`dsTooltipWhenClipped` applies the tooltip on its own.** A label that should disclose its
+  own text when it is cut off takes the one attribute; the empty `dsTooltip` that had to sit
+  beside it is no longer needed. `dsTooltip="..."` together with `dsTooltipWhenClipped` still
+  shows that text, only while the host is clipped.
+
 - **`ds-breadcrumbs` takes type, gap and clip-width tokens.** `--ds-breadcrumbs-font-size`
   (default `var(--font-size-s)`), `--ds-breadcrumbs-font-weight` (`var(--font-weight-regular)`),
   `--ds-breadcrumbs-current-label-font-weight` (`var(--font-weight-bold)`),
@@ -142,6 +147,7 @@
 
 | Delete | Why | Replace with |
 | --- | --- | --- |
+| an empty `dsTooltip` attribute next to `dsTooltipWhenClipped` | `dsTooltipWhenClipped` applies the tooltip directive by itself | nothing; keep a `dsTooltip` that carries text |
 | `--ds-chart-tooltip-bg-color`, `--ds-chart-tooltip-text-color` and `--ds-chart-tooltip-border-color` set to light surface and text colours so the tooltip matches a light page | the panel takes `--surface-overlay`, `--text-primary` and `--border-default` by default | nothing; keep an override that sets any other colour |
 | `--ds-chart-frame-bg-color` set on a chart only to match the surface behind it | `--ds-chart-bg-color` paints the frame and every knockout together | `--ds-chart-bg-color` set to that surface; keep `--ds-chart-frame-bg-color` only to colour the frame apart from the knockouts |
 | `cursor="category"` on a `ds-chart` set only so a `tooltip="axis"` line opens its panel | `cursor="auto"` turns the category cursor on for a mark with `tooltip="axis"` | nothing; keep it on a plot whose marks do not use `tooltip="axis"` |

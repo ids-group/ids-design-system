@@ -62,7 +62,7 @@ function firstClippedHost(
 let nextId = 0;
 
 @Directive({
-  selector: '[dsTooltip]',
+  selector: '[dsTooltip], [dsTooltipWhenClipped]',
   standalone: true,
 })
 export class TooltipDirective implements OnDestroy {
@@ -77,7 +77,7 @@ export class TooltipDirective implements OnDestroy {
   readonly dsTooltipDelay = input<number>(120);
   /** Show the tip only while the host shows less text than it holds. Re-tested on every open.
    *
-   *  With this on, `dsTooltip` may be left empty and the host's own text is disclosed. A tip
+   *  Applies the tooltip on its own: without a `dsTooltip` the host's own text is disclosed. A tip
    *  whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip`
    *  that says more than the host does describes it as usual. */
   readonly dsTooltipWhenClipped = input(false, { transform: booleanAttribute });
