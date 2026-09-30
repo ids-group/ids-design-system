@@ -127,6 +127,11 @@
   (the current page past `32ch`) ended in an ellipsis with no way to read the rest; hovering it, or
   focusing its link, now opens a tooltip with the whole label. A label that fits opens none.
 
+- **A Ctrl, Cmd or Shift click on a `ds-breadcrumbs` link opens it the browser's way.** Every click
+  was prevented and emitted as `(navigate)`, so a consumer routing on it moved the current tab where
+  the user asked for a new tab or window. A plain primary click still emits `(navigate)` with the
+  default prevented; a modified or non-primary click leaves `href` to the browser and emits nothing.
+
 ### What you can now DELETE
 
 | Delete | Why | Replace with |
