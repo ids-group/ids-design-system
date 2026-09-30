@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.14.6-beta.0 — 2026-09-30
+
 ### Added
 
 - **`ds-breadcrumbs` crumbs can carry a hover surface.** `--ds-breadcrumbs-bg-color-hover` (default

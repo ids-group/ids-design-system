@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 0.14.6-beta.0 — 2026-09-30
+
 ### Cards
 
 - **The `ds-sparkline` card is built from marked blocks.** `data-claude-design` sits on each block
