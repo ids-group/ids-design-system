@@ -4286,9 +4286,10 @@
   else, so a bundler sees straight through it. There is no migration here and no reason to rewrite
   an import.
 
-- **Per-component specifiers do resolve** (`@ids-group-ltd/ids-design-system/button`), for a codebase
-  that prefers a file's dependencies spelled out. They are not the recommended form and they buy no
-  bytes. If you want them shorter, one line in your own `tsconfig.json` does it, with no change on
+- **Per-component specifiers do resolve** (`@ids-group-ltd/ids-design-system/components/button`),
+  for a codebase that prefers a file's dependencies spelled out. They buy no bytes, except inside a
+  `@defer` block: a component imported from the package root there stays in the initial bundle, so
+  import it from its own specifier. If you want them shorter, one line in your own `tsconfig.json` does it, with no change on
   our side:
 
   ```json
