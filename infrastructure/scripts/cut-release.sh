@@ -39,6 +39,7 @@ else
   git fetch origin --quiet
 fi
 git checkout -B main origin/main
+released_dev=$(git rev-parse origin/dev)
 
 # This merge IS the release. --no-ff because main is normally a strict ancestor of dev, so a
 # default merge would fast-forward and leave no release boundary in main's history.
@@ -66,6 +67,16 @@ else
 fi
 
 new_version=$(node -p "require('./package.json').version")
+
+# A commit merged into dev during the cut would come back through the back-merge with its
+# `## Unreleased` entry sitting inside `## $new_version`, a clean merge that is wrong. Nothing has
+# left this container yet, so stop here and let the release run again.
+git fetch origin dev --quiet
+if [ "$(git rev-parse origin/dev)" != "$released_dev" ]; then
+  echo "cut-release: dev moved during the cut, so nothing was published — run the release again."
+  exit 1
+fi
+
 echo "cut-release: tagged $new_version — pushing main + tag (the v* pipeline publishes + deploys docs)..."
 git push origin main --follow-tags
 
@@ -77,5 +88,8 @@ git merge --no-edit --no-ff main || {
   echo "cut-release: back-merge of main into dev conflicts — reconcile dev manually (the release itself succeeded)."
   exit 1
 }
-git push origin dev
+git push origin dev || {
+  echo "cut-release: dev moved after main was published — merge main into dev by hand, then move every entry the new dev commits added out of ## $new_version and back under ## Unreleased, and their manifest lines from migrations/$new_version.json back into migrations/unreleased.json."
+  exit 1
+}
 echo "cut-release: dev synced to $new_version."
