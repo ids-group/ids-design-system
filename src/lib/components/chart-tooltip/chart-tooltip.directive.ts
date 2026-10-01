@@ -104,6 +104,7 @@ export class ChartTooltipDirective {
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
   private detachScrollReposition: (() => void) | null = null;
   private detachEscape: (() => void) | null = null;
+  private detachOffscreen: (() => void) | null = null;
   private glide: Animation | null = null;
 
   constructor() {
@@ -149,6 +150,10 @@ export class ChartTooltipDirective {
           : this.close(),
       );
       this.detachEscape = this.closeOnEscape();
+      this.detachOffscreen = hideWhileOffscreen(
+        this.overlayRef.overlayElement,
+        this.host.nativeElement,
+      );
     } else {
       this.overlayRef.updatePositionStrategy(this.strategyFor(origin));
     }
@@ -228,11 +233,27 @@ export class ChartTooltipDirective {
     this.detachEscape = null;
     this.detachScrollReposition?.();
     this.detachScrollReposition = null;
+    this.detachOffscreen?.();
+    this.detachOffscreen = null;
     disposeWithLeave(this.overlayRef, 'dismiss');
     this.glide = null;
     this.overlayRef = null;
     this.panelRef = null;
   }
+}
+
+// A pinned panel survives a scroll, and the position strategy's push would hold it inside the
+// viewport after its chart has gone; it hides while the chart is out of sight instead.
+function hideWhileOffscreen(pane: HTMLElement, chart: HTMLElement): () => void {
+  if (typeof IntersectionObserver === 'undefined') {
+    return () => undefined;
+  }
+  const observer = new IntersectionObserver(([entry]) => {
+    pane.style.visibility = entry?.isIntersecting ? '' : 'hidden';
+  });
+  observer.observe(chart);
+
+  return () => observer.disconnect();
 }
 
 function milliseconds(duration: string): number {

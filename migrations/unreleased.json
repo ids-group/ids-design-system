@@ -45,17 +45,25 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "ChartComponent, TagComponent",
+      "old": "ChartComponent, TagComponent, ChartTooltipDirective",
       "new": null,
       "surface": "typescript",
-      "searchHints": ["extends ChartComponent", "extends TagComponent"],
-      "detect": ["extends ChartComponent", "extends TagComponent"],
+      "searchHints": [
+        "extends ChartComponent",
+        "extends TagComponent",
+        "extends ChartTooltipDirective"
+      ],
+      "detect": [
+        "extends ChartComponent",
+        "extends TagComponent",
+        "extends ChartTooltipDirective"
+      ],
       "action": "Build after upgrading, and rename or mark `override` a member of yours the compiler reports as colliding.",
-      "appliesWhen": "Only a class of yours that extends ChartComponent or TagComponent. Template users of ds-chart and ds-tag need nothing; subclassing a DS component is unsupported.",
-      "pitfall": "`protected` is no protection: a redeclared member collides exactly as a public one does.",
+      "appliesWhen": "Only a class of yours that extends ChartComponent, TagComponent or the internal ChartTooltipDirective. Template users of ds-chart and ds-tag need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does.",
       "restore": null,
-      "verify": "The app builds with no TS4114 or TS2416 against ChartComponent or TagComponent.",
-      "note": "ChartComponent gained the protected drawsUnpin, TagComponent the protected onKeyActivate."
+      "verify": "The app builds with no TS4114 or TS2416 against ChartComponent, TagComponent or the internal ChartTooltipDirective.",
+      "note": "ChartComponent gained the protected drawsUnpin, TagComponent the protected onKeyActivate, the internal ChartTooltipDirective the private detachOffscreen."
     },
     {
       "id": "tag-interactive-keyboard-own-handlers",
@@ -96,6 +104,10 @@
     {
       "text": "ds-column-chart and ds-line-chart re-read their geometry tokens (--ds-column-chart-plot-height and the other --ds-column-chart-* geometry, --ds-line-chart-plot-height) whenever the chart's width changes, so a value re-pointed at a breakpoint reaches the plot.",
       "verify": "resize the window across a breakpoint where your stylesheet changes one of those tokens and confirm the plot height follows without a reload."
+    },
+    {
+      "text": "A pinned chart tooltip hides while its chart is scrolled out of sight and shows again beside it when the chart returns; the pin is kept.",
+      "verify": "pin a chart's tooltip, scroll until the chart is gone, and confirm no panel stays on screen; scroll back and confirm it is there again."
     }
   ],
   "deleteList": [
