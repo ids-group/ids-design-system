@@ -1,6 +1,22 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "ChartComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": ["extends ChartComponent"],
+      "detect": ["extends ChartComponent"],
+      "action": "Build after upgrading, and rename or mark `override` a member of yours the compiler reports as colliding.",
+      "appliesWhen": "Only a class of yours that extends ChartComponent. Template users of ds-chart need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "`protected` is no protection: a redeclared member collides exactly as a public one does.",
+      "restore": null,
+      "verify": "The app builds with no TS4114 or TS2416 against ChartComponent.",
+      "note": "ChartComponent gained the protected drawsUnpin."
+    }
+  ],
   "informational": [
     {
       "text": "ds-chart draws the Unpin control while its category cursor is pinned, on its caption's line or, without a caption, over the top end of the plot. In every chart the .pin-reset button now sits inside an internal ds-chart-unpin element rendered display: contents, so a consumer rule selecting it as a direct child of the chart's figure no longer matches; select .pin-reset alone.",

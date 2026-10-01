@@ -7,8 +7,9 @@
   charts, on its caption's line or, without a caption, over the top end of the plot. Before, Escape,
   a press outside the plot or a second click on the band released the pin, and nothing on screen
   said so. In every chart the `.pin-reset` button now sits inside an internal `ds-chart-unpin`
-  element rendered `display: contents`, so a rule selecting it as a direct child of the chart's `figure`
-  no longer matches; select `.pin-reset` alone.
+  element rendered `display: contents`, so a rule selecting it as a direct child of the chart's
+  `figure` no longer matches; select `.pin-reset` alone. `ChartComponent` gained a protected
+  `drawsUnpin`, so a subclass declaring that name needs `override`.
 
 ## 0.14.6-beta.0 — 2026-09-30
 
