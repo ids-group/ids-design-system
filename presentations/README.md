@@ -23,6 +23,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 10 | `10-decision-queue` | every consumer ask and every open question in one page - 7 asks a consumer waits on, each drawn as today against after, then 27 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
 | 11 | `11-docs-reasoning-blocks` | what ds-docs does with its ~38 reasoning blocks (fix proofs, edge-case guards, internals): keep, fold to the chapter end, move to a proof page, or delete - drawn on the real Table chapter |
 | 12 | `12-field-focus-click-vs-tab` | whether a text field shows the same focused style after a click as after Tab, or the border alone after a click: both variants live, with a halo/ring switch and the input modality shown |
+| 13 | `13-status-field-focus-halo` | the halo of a focused warning or success field: the shared blue as today, or its status colour like error; both drawn and read back, halo and ring |
 
 **Rank 1 is the way in, and ranks 2-4 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-5 are written in Russian; `deck.css`, which sits beside `ds.css` and carries the
