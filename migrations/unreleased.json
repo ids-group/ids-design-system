@@ -96,6 +96,10 @@
     {
       "text": "ds-column-chart and ds-line-chart re-read their geometry tokens (--ds-column-chart-plot-height and the other --ds-column-chart-* geometry, --ds-line-chart-plot-height) whenever the chart's width changes, so a value re-pointed at a breakpoint reaches the plot.",
       "verify": "resize the window across a breakpoint where your stylesheet changes one of those tokens and confirm the plot height follows without a reload."
+    },
+    {
+      "text": "A pinned chart tooltip hides while its chart is scrolled out of sight and shows again beside it when the chart returns; the pin is kept.",
+      "verify": "pin a chart's tooltip, scroll until the chart is gone, and confirm no panel stays on screen; scroll back and confirm it is there again."
     }
   ],
   "deleteList": [

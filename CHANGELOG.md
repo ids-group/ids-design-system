@@ -31,6 +31,10 @@
 
 ### Fixed
 
+- **A pinned chart tooltip leaves the screen with its chart.** Scrolled past, the chart's pinned
+  panel stayed held at the edge of the viewport; it now hides while the chart is out of sight and
+  shows beside it again when it scrolls back. The pin itself is kept.
+
 - **`ds-column-chart` and `ds-line-chart` follow a plot-height or geometry token re-pointed at a
   breakpoint.** They read `--ds-column-chart-*` geometry and `--ds-line-chart-plot-height` once,
   after the first render, so a media query changing one later never reached the plot; they now
