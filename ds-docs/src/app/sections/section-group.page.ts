@@ -85,6 +85,12 @@ export class SectionGroupPage {
 
           return;
         }
+        // The scroll spy and in-page links navigate too, with focus already where the reader is.
+        if (
+          this.router.lastSuccessfulNavigation()?.extras.state?.['dsSamePage']
+        ) {
+          return;
+        }
         const main = this.layoutScroll.scroller();
         if (main instanceof HTMLElement) {
           main.focus({ preventScroll: true });
