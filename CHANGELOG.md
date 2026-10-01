@@ -16,6 +16,12 @@
   `datePicker` section of one, declared as a typed object stops compiling until it lists them.
   Overrides passed to `provideDsIntl` are partial and need nothing.
 
+### Added
+
+- **`.link.plain`: a link underlined only on hover and keyboard focus.** For a link that stands on its
+  own, such as a row action or a list of links; keep the plain `.link`, underlined at rest, for a link
+  inside running text. Every other `.link` renders as before.
+
 ### Fixed
 
 - **`ds-column-chart` and `ds-line-chart` follow a plot-height or geometry token re-pointed at a

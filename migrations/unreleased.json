@@ -48,6 +48,7 @@
     }
   ],
   "informational": [
+    ".link.plain is new: a link underlined only on hover and keyboard focus, for a link that stands on its own. A .link without it renders as before.",
     {
       "text": "ds-chart draws the Unpin control while its category cursor is pinned, on its caption's line or, without a caption, over the top end of the plot. In every chart the .pin-reset button now sits inside an internal ds-chart-unpin element rendered display: contents, so a consumer rule selecting it as a direct child of the chart's figure no longer matches; select .pin-reset alone.",
       "verify": "click a band of a ds-chart and confirm an Unpin pill appears at the top end of the chart, and that pressing it releases the cursor and removes the pill."
