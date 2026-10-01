@@ -2,6 +2,20 @@
   "version": "unreleased",
   "items": [
     {
+      "id": "intl-date-picker-month-nav-required",
+      "kind": "behavior",
+      "old": "DsIntl",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": ["DsIntl", "DS_INTL", "previousYears"],
+      "detect": [": DsIntl =", "Signal<DsIntl>", "previousYears:"],
+      "action": "None, unless your code builds a complete DsIntl object of its own: add datePicker.previousMonth and datePicker.nextMonth, the names of the calendar's month arrows.",
+      "appliesWhen": "Only an object or signal typed as the full DsIntl, not as DsIntlOverrides. provideDsIntl with a partial override, and every app that leaves DS_INTL alone, is unaffected.",
+      "pitfall": "An object that spreads DS_INTL_DEFAULTS.datePicker compiles, but a datePicker section written out key by key without the spread fails with TS2741 on previousMonth.",
+      "restore": null,
+      "verify": "The app builds, and every complete DsIntl object it declares has datePicker.previousMonth and datePicker.nextMonth."
+    },
+    {
       "id": "focus-global-rules-behind-emit-rules",
       "kind": "scss-api",
       "old": "@use 'styles/focus'",

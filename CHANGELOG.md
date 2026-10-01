@@ -11,7 +11,16 @@
   after `@use 'styles/focus' as focus;`, or focus rings disappear on elements that style none
   themselves and `data-focus` stops switching. `@use 'styles/ds'` needs nothing.
 
+- **`DsIntl` gains two required keys: `datePicker.previousMonth` and `datePicker.nextMonth`**
+  (defaults `'Previous month'` and `'Next month'`). A complete `DsIntl` dictionary, or a complete
+  `datePicker` section of one, declared as a typed object stops compiling until it lists them.
+  Overrides passed to `provideDsIntl` are partial and need nothing.
+
 ### Fixed
+
+- **`ds-date-picker`'s month arrows have accessible names.** The previous- and next-month buttons in
+  the calendar panel are announced as `datePicker.previousMonth` and `datePicker.nextMonth`, where
+  they were announced as an unnamed button.
 
 - **`ds-chart` shows the Unpin control while its category cursor is held.** A click on a band pins
   the cursor by default, and the composable chart now draws the same pill button as the preset

@@ -229,6 +229,7 @@
         <span class="nav">
           <button
             type="button"
+            [attr.aria-label]="intl().datePicker.previousMonth"
             (click)="prevMonth()">
             <ds-icon
               name="chevronLeft"
@@ -238,6 +239,7 @@
 
           <button
             type="button"
+            [attr.aria-label]="intl().datePicker.nextMonth"
             (click)="nextMonth()">
             <ds-icon
               name="chevronRight"
