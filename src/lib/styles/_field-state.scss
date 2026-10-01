@@ -7,8 +7,8 @@
   $error-bg: var(--error-subtitle),
   $error-focus-shadow: var(--ds-field-focus-shadow-error),
   $warning-border: var(--warning-text),
-  $warning-focus-shadow: var(--ds-field-focus-shadow-warning),
   $success-border: var(--success),
+  $warning-focus-shadow: var(--ds-field-focus-shadow-warning),
   $success-focus-shadow: var(--ds-field-focus-shadow-success)
 ) {
   // `:not(.in-group)`: a segment ties `.in-group` at (0,3,0) and this mixin is included last, so the fill
