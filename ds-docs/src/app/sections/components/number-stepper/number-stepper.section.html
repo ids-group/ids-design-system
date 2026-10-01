@@ -30,6 +30,7 @@
   <div class="row">
     <div class="cell">
       <ds-number-stepper
+        ariaLabel="Quantity"
         size="sm"
         [(value)]="qtySm" />
 
@@ -39,7 +40,9 @@
     </div>
 
     <div class="cell">
-      <ds-number-stepper [(value)]="qtyMd" />
+      <ds-number-stepper
+        ariaLabel="Quantity"
+        [(value)]="qtyMd" />
 
       <code class="t-mono-inline">
         size="md" · default
@@ -48,6 +51,7 @@
 
     <div class="cell">
       <ds-number-stepper
+        ariaLabel="Quantity"
         size="lg"
         [(value)]="qtyLg" />
 
@@ -75,6 +79,7 @@
   <div class="row">
     <div class="cell">
       <ds-number-stepper
+        ariaLabel="Seats"
         [min]="0"
         [max]="10"
         [(value)]="bounded" />
@@ -86,6 +91,7 @@
 
     <div class="cell">
       <ds-number-stepper
+        ariaLabel="Discount, %"
         [step]="5"
         [min]="0"
         [max]="100"
@@ -104,6 +110,7 @@
   <div class="row">
     <div class="cell">
       <ds-number-stepper
+        ariaLabel="Quantity"
         [value]="3"
         [disabled]="true" />
 

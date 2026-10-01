@@ -14,9 +14,9 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**112 open — 0 P1, 8 P2, 104 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**111 open — 0 P1, 7 P2, 104 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 8
+### P2 — 7
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -26,8 +26,6 @@ item and nothing else.
   - `ds-tag` marked `interactive` is mouse-only
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
-- **DS-docs**
-  - Fourteen focusable elements in ds-docs still have no accessible name, on two components that always could
 - **Tooling**
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
@@ -194,8 +192,8 @@ item and nothing else.
 
 **Consumer asks are the head of the board.** Every item a consumer is waiting on is drawn, with its
 before and after, in deck `decision-queue` under *Ждут консьюмеры*; pick there, and the items here
-are the work. Three are open: the control-edge contrast (:227) under *Bugs*, the bar/column extract
-(:477) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1120). The 0.9.0-0.13.3 manifest walk and the eleven
+are the work. Three are open: the control-edge contrast (:225) under *Bugs*, the bar/column extract
+(:473) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1116). The 0.9.0-0.13.3 manifest walk and the eleven
 reached-past styling hooks are both closed.
 
 **Nobody is blocked from installing.** All six consumer repos declare Angular `^21` or `~21`, so the
@@ -296,8 +294,6 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
 ## DS-docs
 
 *This section also has items under **Parked**.*
-
-- [ ] **[P2] Fourteen focusable elements in ds-docs still have no accessible name, on two components that always could.** Nine `ds-select` instances — the ones carrying a `value` and no `placeholder`, because `placeholder` is a name source there and `value` is not — and five `ds-number-stepper` instances in the size and behaviour demos. Both components have taken an `ariaLabel` since long before this; the demos simply never set one, so this is ds-docs authoring and not a library gap. Left rather than auto-filled because neither sits in a `state-cell` with a caption to borrow, so each needs a written name. Measured on `/components/autocomplete`, where the count went 31 → 14 once checkbox, radio and switch got theirs.
 
 - [ ] **[P3] ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01).**
   The house lint rule `ds/template/element-content-newline` moves the content of an inline `<code>` onto
