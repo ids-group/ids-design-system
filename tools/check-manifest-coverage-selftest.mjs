@@ -14,6 +14,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { patternsIn } from './check-manifest-coverage.mjs';
+import { releaseTags } from './release-tags.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 // Fixtures go to a private copy, never to the tracked file. Writing CHANGELOG.md and restoring it
@@ -60,13 +61,7 @@ const introducedToken = (() => {
     }
     return found;
   };
-  const tags = execFileSync(
-    'git',
-    ['tag', '--list', 'v*', '--sort=v:refname'],
-    { cwd: ROOT, encoding: 'utf8' },
-  )
-    .split('\n')
-    .filter(Boolean);
+  const tags = releaseTags(ROOT);
   if (!tags.length) return '';
   const before = at(tags.at(-1));
   return [...at('')].find((token) => !before.has(token)) ?? '';
