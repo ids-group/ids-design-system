@@ -17,6 +17,11 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **`ds-chart-unpin` has a usage doc and a section.** The design agent reads it as the pill a chart
+  draws while a mark is held, and its card resolves to the `charts/chart` section.
+
 ## 0.14.6-beta.0 — 2026-09-30
 
 ### Cards
