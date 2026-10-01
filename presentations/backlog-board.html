@@ -226,14 +226,13 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**113 open — 0 P1, 9 P2, 104 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**112 open — 0 P1, 8 P2, 104 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 9
+### P2 — 8
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
-  - `_focus.scss`'s top-level CSS is copied into 48 component style strings
   - Warning and success fields show a mismatched halo
   - `--ds-multi-select-option-bg-color-active` is documented and dead
   - `ds-tag` marked `interactive` is mouse-only
@@ -407,8 +406,8 @@ item and nothing else.
 
 **Consumer asks are the head of the board.** Every item a consumer is waiting on is drawn, with its
 before and after, in deck `decision-queue` under *Ждут консьюмеры*; pick there, and the items here
-are the work. Three are open: the control-edge contrast (:228) under *Bugs*, the bar/column extract
-(:500) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1143). The 0.9.0-0.13.3 manifest walk and the eleven
+are the work. Three are open: the control-edge contrast (:227) under *Bugs*, the bar/column extract
+(:477) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1120). The 0.9.0-0.13.3 manifest walk and the eleven
 reached-past styling hooks are both closed.
 
 **Nobody is blocked from installing.** All six consumer repos declare Angular `^21` or `~21`, so the
@@ -442,28 +441,6 @@ Defects a consumer hit - from a QA pass, or from reading a consumer tree for a r
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
 *This section also has items under **Asks**, **Decisions**, **Parked**, **Records**.*
-
-- [ ] **[P2] `_focus.scss`'s top-level CSS is copied into 48 component style strings.** Measured
-  2026-09-23 on `dist/ds/fesm2022/`: 48 of 90 built bundles each carry the blanket
-  `:where(:focus-visible)` rule, all three `data-focus` blocks, the `@keyframes` and the
-  forced-colors block - 4 to 12 copies of the blanket selector per bundle, none of which the
-  component uses. 51 stylesheets `@use` the partial for its mixins, and each is a
-  separate Sass compilation, so each re-emits the module's top-level rules.
-  `docs/agent/foundations/global-helper-classes.md` states the opposite in writing: "reaching for
-  the mixin adds no CSS." That sentence is wrong either way and should go.
-  **What is NOT measured, and must be before sizing this:** what the copies do in a running app.
-  A library build ships styles UNSHIMMED (`.button{` appears with no `_ngcontent` attribute), so
-  the consumer's AOT compiler is what scopes them — whether these copies end up scoped, global or
-  deduped is decided there, not here. One runtime fact is now in hand, and it is not the whole
-  answer: in ds-docs, which compiles the library FROM SOURCE, a component's copy comes back
-  scoped — `animationName` on a focused ds-icon-button read
-  `_ngcontent-ng-c838688186_ds-focus-ring-in`. So the shim does run and the copies are
-  per-component rather than global. What that costs a consumer of the PUBLISHED package is still
-  unmeasured. Do not quote a byte cost until it is measured in a real consumer build.
-  Same shape wherever a partial mixes mixins with top-level rules — check `_press.scss`,
-  `_dropdown-overlay.scss`, `_link.scss` and `_check-mark.scss` before choosing the fix. Splitting
-  the partial (mixins in one file, emitted rules in another that only the global aggregate uses) is
-  the likely answer.
 
 Six defects from that review are fixed (`a5af6ba8`, `38764f81`, `29532e27`, `e88de757`). Everything
 below survived wave 2's attack and is NOT fixed. Each claim was traced in emitted CSS from a linked
