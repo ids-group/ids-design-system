@@ -18,6 +18,10 @@
 
 ### Fixed
 
+- **`ds-funnel-chart`'s Unpin control sits where every other chart's does.** In a framed funnel it
+  stood a frame padding further in from the top and the end (41px against 21px with the default
+  20px padding); it now lines up with the caption like the rest.
+
 - **`ds-date-picker`'s month arrows have accessible names.** The previous- and next-month buttons in
   the calendar panel are announced as `datePicker.previousMonth` and `datePicker.nextMonth`, where
   they were announced as an unnamed button.
