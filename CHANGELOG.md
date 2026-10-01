@@ -27,6 +27,11 @@
   already resolved the fill, so setting it changed nothing. Unset, the fill stays
   `--surface-secondary`.
 
+- **An `interactive` `ds-tag` works from the keyboard.** It is a tab stop with `role="button"` and
+  `aria-pressed` following `selected`, and Enter or Space emits `toggled`, as a click does; it took a
+  click only. A key pressed on its close button still only closes it. `TagComponent` gained a
+  protected `onKeyActivate`, so a subclass declaring that name needs `override`.
+
 - **`ds-chart` shows the Unpin control while its category cursor is held.** A click on a band pins
   the cursor by default, and the composable chart now draws the same pill button as the preset
   charts, on its caption's line or, without a caption, over the top end of the plot. Before, Escape,
