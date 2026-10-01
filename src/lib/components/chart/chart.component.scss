@@ -1,4 +1,5 @@
 @use '../../styles/chart-frame' as chart-frame;
+@use '../../styles/focus' as focus;
 @include chart-frame.chart-frame;
 @include chart-frame.pin-reset;
 
@@ -76,6 +77,19 @@
 
 .category-band {
   fill: var(--ds-chart-hover-bg-color);
+}
+
+.category-stop {
+  fill: transparent;
+  pointer-events: none;
+}
+
+@include chart-frame.no-bounding-box-focus('.category-stop');
+
+/* focus-ring-guard: drawn as a stroke, as the series markers ring, so the band reads as one of the chart's marks. */
+.category-stop:focus-visible {
+  @include focus.own-indicator;
+  @include chart-frame.drawn-focus-ring;
 }
 
 .cursor-line {

@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Клавиатура графика по вертикалям</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-01">
+<meta name="ds-deck-evidence" content="src/lib/components/chart/chart.component.ts - CHANGELOG.md">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   /* The tooltip panel, rebuilt from chart-tooltip-panel.component.scss; its --tooltip-* roles resolve to these per styles/_tokens.scss:391-393. */
   .tip {
@@ -76,8 +78,17 @@
   <header class="masthead">
     <h1>Стрелкой выбрана одна точка: тултип показывает всю категорию или только её</h1>
     <p class="lede">Одно решение. Модель клавиатуры уже выбрана: Tab приходит на вертикаль, ←/→ переключают вертикали, ↑/↓ выбирают точку серии, Enter на точке - как клик мышью. Осталось, что в этот момент показывает тултип.</p>
-    <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">актуально на 2026-10-01</span></div>
+    <div class="chips"><span class="chip">Решено</span><span class="chip">актуально на 2026-10-01</span></div>
   </header>
+
+  <div class="decided">
+    <h2>Решено: только точка</h2>
+    <p>Tab приходит на вертикаль, ←/→ переключают вертикали по кругу, ↑/↓ выбирают точку серии; с выбранной точкой тултип показывает только её строку, на вертикали - всю категорию. Enter на точке вызывает <code>pointClicked</code>.</p>
+    <p class="evidence">2026-10-01 · src/lib/components/chart/chart.component.ts - CHANGELOG.md</p>
+  </div>
+
+  <details class="folded">
+    <summary>Вопрос и оба варианта</summary>
 
   <section class="panel">
     <h2>Что уже решено и что я сделаю так</h2>
@@ -147,6 +158,8 @@
       </tbody>
     </table>
   </section>
+
+  </details>
 
   <p class="src"><b>Источники, проверено 2026-10-01 на <code>dev</code>.</b> Сегодня: у каждой серии своя roving-остановка (<code>chart/line-series.component.ts:352</code>), клик по маркеру даёт <code>pointClicked</code> и под курсором категории (<code>:460-480</code>), клик по полосе закрепляет курсор (<code>chart/chart.component.ts</code>, <code>plotPointer</code>), панель при курсоре категории собирает всю категорию (<code>:417-450</code>). Решения Stas, 2026-10-01: Tab выделяет вертикаль, стрелками переключение, ↑/↓ по сериям. Research - в файле выше. Графики в деке нарисованы заново на данных примера ds-docs (<code>line-chart.section.ts</code>); панель по <code>chart-tooltip-panel.component.scss</code>.</p>
 

@@ -96,7 +96,8 @@
           [attr.role]="interactive() ? 'button' : null"
           [attr.tabindex]="
             interactive()
-              ? isTabStop(entry.series.id, marker.markIndex)
+              ? !scales.cursorOn?.() &&
+                isTabStop(entry.series.id, marker.markIndex)
                 ? 0
                 : -1
               : null

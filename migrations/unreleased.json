@@ -45,25 +45,29 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "ChartComponent, TagComponent, ChartTooltipDirective",
+      "old": "ChartComponent, LineSeriesComponent, ColumnSeriesComponent, TagComponent, ChartTooltipDirective",
       "new": null,
       "surface": "typescript",
       "searchHints": [
         "extends ChartComponent",
+        "extends LineSeriesComponent",
+        "extends ColumnSeriesComponent",
         "extends TagComponent",
         "extends ChartTooltipDirective"
       ],
       "detect": [
         "extends ChartComponent",
+        "extends LineSeriesComponent",
+        "extends ColumnSeriesComponent",
         "extends TagComponent",
         "extends ChartTooltipDirective"
       ],
       "action": "Build after upgrading, and rename or mark `override` a member of yours the compiler reports as colliding.",
-      "appliesWhen": "Only a class of yours that extends ChartComponent, TagComponent or the internal ChartTooltipDirective. Template users of ds-chart and ds-tag need nothing; subclassing a DS component is unsupported.",
-      "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does. Against the private detachOffscreen, `override` still fails with TS2415; only a rename resolves it.",
+      "appliesWhen": "Only a class of yours that extends ChartComponent, LineSeriesComponent, ColumnSeriesComponent, TagComponent or the internal ChartTooltipDirective. Template users of ds-chart, dsLineSeries, dsColumnSeries and ds-tag need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does. Against a private one, such as detachOffscreen or ChartComponent's focusStop, `override` still fails with TS2415; only a rename resolves it.",
       "restore": null,
-      "verify": "The app builds with no TS4114, TS2415 or TS2416 against ChartComponent, TagComponent or the internal ChartTooltipDirective.",
-      "note": "ChartComponent gained the protected drawsUnpin, TagComponent the protected onKeyActivate, the internal ChartTooltipDirective the private detachOffscreen."
+      "verify": "The app builds with no TS4114, TS2415 or TS2416 against ChartComponent, LineSeriesComponent, ColumnSeriesComponent, TagComponent or the internal ChartTooltipDirective.",
+      "note": "ChartComponent gained the public focusedCategory, the protected drawsUnpin, keyboardStops, categoryStops, stopLabel, onStopFocus, onStopBlur, onStopKey, onChartKey and onChartFocusOut, and the private roving, pickedLabel, categoryContext, categoryOrigin, leavesChart, focusStop, pinFromKeyboard and readingsTopDown; LineSeriesComponent the public axisPointElements; ColumnSeriesComponent the public axisPointElements and the private host; TagComponent the protected onKeyActivate; the internal ChartTooltipDirective the private detachOffscreen."
     },
     {
       "id": "tag-interactive-keyboard-own-handlers",
@@ -78,6 +82,18 @@
       "pitfall": "Nothing fails to build: the tag now emits toggled on Enter and Space itself, so your handler and your (toggled) handler both run and one key press toggles twice, which reads as the key doing nothing.",
       "restore": null,
       "verify": "Every interactive ds-tag toggles exactly once per Enter or Space press, and no template binds keydown.enter or keydown.space on one."
+    },
+    {
+      "id": "chart-keyboard-by-category",
+      "kind": "behavior",
+      "old": "ds-line-chart",
+      "new": null,
+      "surface": "none",
+      "action": "None, unless your own code or tests focus a series marker inside a line chart or a category-cursor ds-chart by Tab order: they now reach the category band first and a marker through Up/Down.",
+      "appliesWhen": "ds-line-chart and a ds-chart whose cursor resolves to category, interactive. Charts whose pointer picks a mark are unaffected.",
+      "pitfall": "An end-to-end test that tabs to a marker and presses Enter now lands on the band and pins it instead of firing pointClicked.",
+      "restore": null,
+      "verify": "Tab into a line chart: the band is ringed, Up focuses a marker, Enter fires pointClicked."
     }
   ],
   "informational": [

@@ -27,6 +27,8 @@ export interface ChartTooltipSource {
   readonly axisOrigin?: Signal<Element | null>;
   /** What this mark reads at the cursor's category, whatever its own tooltip setting. */
   readonly axisEntries?: Signal<readonly ChartAxisEntry[]>;
+  /** The drawn element of each `axisEntries` reading, same order; the keyboard focuses it. */
+  readonly axisPointElements?: Signal<readonly (Element | null)[]>;
 }
 
 /** The drawable rectangle inside `ds-chart`, in CSS pixels; one `viewBox` user unit is one pixel. */

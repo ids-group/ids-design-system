@@ -159,6 +159,27 @@
           <ng-content />
         </g>
 
+        <!-- After the marks, so a stop's ring paints over them. -->
+        @if (keyboardStops()) {
+          <g
+            class="category-stops"
+            (keydown)="onStopKey($event)">
+            @for (stop of categoryStops(); track stop.index) {
+              <rect
+                class="category-stop"
+                [attr.data-category-index]="stop.index"
+                [attr.x]="stop.x"
+                [attr.y]="plot().top"
+                [attr.width]="stop.width"
+                [attr.height]="plot().height"
+                [attr.tabindex]="stop.index === focusedCategory() ? 0 : -1"
+                [attr.aria-label]="stopLabel(stop.index)"
+                (focus)="onStopFocus(stop.index, $event)"
+                (blur)="onStopBlur($event)" />
+            }
+          </g>
+        }
+
         <g
           class="labels"
           aria-hidden="true">
