@@ -22,6 +22,13 @@
   own, such as a row action or a list of links; keep the plain `.link`, underlined at rest, for a link
   inside running text. Every other `.link` renders as before.
 
+- **A focused warning or success field shows its state's colour.** Its halo is
+  `--ds-field-focus-shadow-warning` or `--ds-field-focus-shadow-success` (defaults
+  `--focus-field-warning` and `--focus-field-success`), as an error field's already was, where both
+  showed the blue halo of a plain field. Under `data-focus="ring"`, `"edge"` and `"inset"` the
+  indicator takes the field's border colour, `--warning-text` or `--success`. Set either token to
+  `var(--ds-field-focus-shadow)` to keep the blue.
+
 ### Fixed
 
 - **`ds-column-chart` and `ds-line-chart` follow a plot-height or geometry token re-pointed at a

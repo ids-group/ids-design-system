@@ -507,6 +507,8 @@
   "--ds-field-border-color-hover": "Hovered border colour for the same six fields, under each one's own token. Default --border-strong; ds-search keeps its border steady on hover unless --ds-search-border-hover is set.",
   "--ds-field-focus-shadow": "Field focus ring shadow — themeable (defaults to --focus-field).",
   "--ds-field-focus-shadow-error": "Field focus ring shadow in error state (defaults to --focus-field-error).",
+  "--ds-field-focus-shadow-warning": "Field focus shadow in warning state (defaults to --focus-field-warning).",
+  "--ds-field-focus-shadow-success": "Field focus shadow in success state (defaults to --focus-field-success).",
   "--ds-field-font-size": "Text size of the same six fields, under each one's own token (--ds-input-font-size, --ds-select-font-size, ...). Default --font-size-s.",
   "--ds-field-group-bg-color": "Fill behind the whole glued row.",
   "--ds-field-group-border-color": "The single border the group draws around all its segments.",

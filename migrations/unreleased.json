@@ -2,6 +2,17 @@
   "version": "unreleased",
   "items": [
     {
+      "id": "status-field-focus-halo",
+      "kind": "behavior",
+      "old": "data-field-state",
+      "new": null,
+      "surface": "none",
+      "action": "None, unless your design wants a focused warning or success field to keep the blue focus halo: set --ds-field-focus-shadow-warning and --ds-field-focus-shadow-success to var(--ds-field-focus-shadow).",
+      "appliesWhen": "Fields showing a warning or success state - ds-input, ds-textarea, ds-select, ds-multi-select, ds-autocomplete, ds-date-picker, ds-time-picker, ds-color-picker and ds-otp-input - while focused. Error fields and fields with no state are unchanged.",
+      "restore": ":root { --ds-field-focus-shadow-warning: var(--ds-field-focus-shadow); --ds-field-focus-shadow-success: var(--ds-field-focus-shadow); }",
+      "verify": "focus a field in warning state and confirm its halo is the warning colour, or the blue one if you restored it."
+    },
+    {
       "id": "intl-date-picker-month-nav-required",
       "kind": "behavior",
       "old": "DsIntl",
