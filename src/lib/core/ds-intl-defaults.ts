@@ -39,6 +39,8 @@ export const DS_INTL_DEFAULTS: DsIntl = {
     selectYear: 'Select year',
     previousYears: 'Previous years',
     nextYears: 'Next years',
+    previousMonth: 'Previous month',
+    nextMonth: 'Next month',
     invalidDate: (mask) => `Enter a valid date (${mask})`,
   },
   timePicker: {
