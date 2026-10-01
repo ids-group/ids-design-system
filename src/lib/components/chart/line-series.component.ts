@@ -433,6 +433,7 @@ export class LineSeriesComponent implements OnDestroy {
       return;
     }
     if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
       this.selectMarker(hit.index);
 
       return;

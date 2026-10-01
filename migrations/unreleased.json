@@ -67,7 +67,7 @@
       "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does.",
       "restore": null,
       "verify": "The app builds with no TS4114 or TS2416 against ChartComponent, LineSeriesComponent, ColumnSeriesComponent, TagComponent or the internal ChartTooltipDirective.",
-      "note": "ChartComponent gained the public focusedCategory, the protected drawsUnpin, keyboardStops, categoryStops, stopLabel, onStopFocus, onStopBlur, onStopKey, onChartKey and onChartFocusOut, and the private roving, pickedLabel, categoryContext, categoryOrigin, leavesChart, focusStop and readingsTopDown; LineSeriesComponent the public axisPointElements; ColumnSeriesComponent the public axisPointElements and the private host; TagComponent the protected onKeyActivate; the internal ChartTooltipDirective the private detachOffscreen."
+      "note": "ChartComponent gained the public focusedCategory, the protected drawsUnpin, keyboardStops, categoryStops, stopLabel, onStopFocus, onStopBlur, onStopKey, onChartKey and onChartFocusOut, and the private roving, pickedLabel, categoryContext, categoryOrigin, leavesChart, focusStop, pinFromKeyboard and readingsTopDown; LineSeriesComponent the public axisPointElements; ColumnSeriesComponent the public axisPointElements and the private host; TagComponent the protected onKeyActivate; the internal ChartTooltipDirective the private detachOffscreen."
     },
     {
       "id": "tag-interactive-keyboard-own-handlers",

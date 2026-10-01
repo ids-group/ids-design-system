@@ -2,8 +2,8 @@
 
 ### Breaking
 
-- **A chart whose pointer picks a category is walked by verticals from the keyboard.** In
-  `ds-line-chart` and a `ds-chart` with a category cursor, Tab lands on the category band
+- **A chart whose pointer picks a category is walked by verticals from the keyboard.** In an
+  `interactive` `ds-line-chart` and an `interactive` `ds-chart` with a category cursor, Tab lands on the category band
   (ringed), Left and Right move between bands and wrap, Home and End jump to the ends, and Tab
   leaves the chart in one press. Up and Down focus one series' marker inside the band and the
   panel shows that point alone; Enter on it fires `pointClicked` as a click does. Enter on a band

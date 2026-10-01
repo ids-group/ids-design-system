@@ -814,32 +814,46 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   }
 
   // Index after focus: the marker losing focus clears the series' cursor index on its way out.
-  private focusStop(index: number): void {
+  // A pin travels with the focused stop, or the ring and the held panel would name different categories.
+  private focusStop(index: number, event: Event): void {
     this.roving.set(index);
     this.host.nativeElement
       .querySelector<SVGElement>(
         `.category-stop[data-category-index="${index}"]`,
       )
       ?.focus();
-    this.cursorState.setIndex(index);
+    if (this.cursorPinned() && this.activeIndex() !== index) {
+      this.pinFromKeyboard(index, event);
+    } else {
+      this.cursorState.setIndex(index);
+    }
+  }
+
+  // Held by the canvas, as a pointer pin is: a press on the band then releases it instead of re-pinning.
+  private pinFromKeyboard(index: number, event: Event): void {
+    const canvas = this.canvasElement()?.nativeElement;
+    this.cursorState.pin(index, event, null, canvas);
   }
 
   private readingsTopDown(): readonly { label: string; element: Element }[] {
-    return [...this.tooltipSources().values()]
-      .flatMap((source) => {
-        const elements = source.axisPointElements?.() ?? [];
+    return (
+      [...this.tooltipSources().values()]
+        .flatMap((source) => {
+          const elements = source.axisPointElements?.() ?? [];
 
-        return (source.axisEntries?.() ?? []).map((entry, index) => ({
-          entry,
-          element: elements[index] ?? null,
-        }));
-      })
-      .filter(
-        (reading): reading is { entry: ChartAxisEntry; element: Element } =>
-          reading.element !== null,
-      )
-      .sort((a, b) => (a.entry.y ?? 0) - (b.entry.y ?? 0))
-      .map(({ entry, element }) => ({ label: entry.label, element }));
+          return (source.axisEntries?.() ?? []).map((entry, index) => ({
+            entry,
+            element: elements[index] ?? null,
+          }));
+        })
+        // A mark without `interactive` has no tabindex and would swallow the focus call.
+        .filter(
+          (reading): reading is { entry: ChartAxisEntry; element: Element } =>
+            reading.element?.hasAttribute('tabindex') ?? false,
+        )
+        .sort((a, b) => (a.entry.y ?? 0) - (b.entry.y ?? 0))
+        .map(({ entry, element }) => ({ label: entry.label, element }))
+    );
   }
 
   protected onChartKey(event: KeyboardEvent): void {
@@ -854,6 +868,8 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     }
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
       event.preventDefault();
+      // The pointer may have moved the cursor, or Escape cleared it, since the stop took focus.
+      this.cursorState.setIndex(this.focusedCategory());
       const readings = this.readingsTopDown();
       if (readings.length === 0) {
         return;
@@ -878,7 +894,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     }
     if (event.key === 'Tab') {
       // Moved before the browser acts, so Tab leaves from the stop: a marker sits before it in the DOM.
-      this.focusStop(this.focusedCategory());
+      this.focusStop(this.focusedCategory(), event);
 
       return;
     }
@@ -892,7 +908,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
           );
     if (next !== null) {
       event.preventDefault();
-      this.focusStop(next);
+      this.focusStop(next, event);
     }
   }
 
@@ -904,13 +920,15 @@ export class ChartComponent extends DsChartBase implements ChartScales {
         : nextRovingIndex(event.key, current, this.categories().length);
     if (next !== null) {
       event.preventDefault();
-      this.focusStop(next);
+      this.focusStop(next, event);
 
       return;
     }
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      this.cursorState.pin(current, event, null, event.target as Element);
+      if (this.pinOnClickResolved()) {
+        this.pinFromKeyboard(current, event);
+      }
     } else if (event.key === 'Escape') {
       this.cursorState.release();
       this.cursorState.leave();
