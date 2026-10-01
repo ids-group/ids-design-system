@@ -62,7 +62,7 @@
       "appliesWhen": "Only a class of yours that extends ChartComponent, TagComponent or the internal ChartTooltipDirective. Template users of ds-chart and ds-tag need nothing; subclassing a DS component is unsupported.",
       "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does.",
       "restore": null,
-      "verify": "The app builds with no TS4114 or TS2416 against ChartComponent, TagComponent or ChartTooltipDirective.",
+      "verify": "The app builds with no TS4114 or TS2416 against ChartComponent, TagComponent or the internal ChartTooltipDirective.",
       "note": "ChartComponent gained the protected drawsUnpin, TagComponent the protected onKeyActivate, the internal ChartTooltipDirective the private detachOffscreen."
     },
     {
