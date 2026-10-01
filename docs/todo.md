@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**107 open — 0 P1, 5 P2, 102 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**106 open — 0 P1, 5 P2, 101 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 5
 
@@ -28,7 +28,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 102
+### P3 — 101
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -43,7 +43,6 @@ item and nothing else.
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
   - A pressed danger menu item shows its hover colour (recorded 2026-09-24)
 - **The chart family read as an architecture (audited 2026-09-22)**
-  - `ds-column-chart` reads its geometry tokens once, so a breakpoint override is ignored (recorded 2026-09-30)
   - A focused marker's panel names every series at its category, where the docs say its own (recorded 2026-09-24)
 - **Asked by Stas**
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
@@ -188,8 +187,8 @@ item and nothing else.
 
 **Consumer asks are the head of the board.** Every item a consumer is waiting on is drawn, with its
 before and after, in deck `decision-queue` under *Ждут консьюмеры*; pick there, and the items here
-are the work. Three are open: the control-edge contrast (:221) under *Bugs*, the bar/column extract
-(:447) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1092). The 0.9.0-0.13.3 manifest walk and the eleven
+are the work. Three are open: the control-edge contrast (:220) under *Bugs*, the bar/column extract
+(:440) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1085). The 0.9.0-0.13.3 manifest walk and the eleven
 reached-past styling hooks are both closed.
 
 **Nobody is blocked from installing.** All six consumer repos declare Angular `^21` or `~21`, so the
@@ -325,12 +324,6 @@ Constraints and decisions that read as removable and are not.
 ## The chart family read as an architecture (audited 2026-09-22)
 
 *This section also has items under **Decisions**, **Parked**, **Records**.*
-
-- [ ] **[P3] `ds-column-chart` reads its geometry tokens once, so a breakpoint override is ignored (recorded 2026-09-30).**
-  `readColumnGeometry` (`column-chart.component.ts:86-115`) runs in `afterNextRender` and stores the result;
-  a `--ds-column-chart-*` geometry token re-pointed in a media query after first paint never reaches the plot,
-  and the docblock states the limit instead of lifting it. Wanted: re-read on the host's resize (`ds-chart`
-  already tracks its width through `elementWidth` in `charts-measure.ts`), or drop the tokens the plot cannot follow.
 
 - [ ] **[P3] A focused marker's panel names every series at its category, where the docs say its own (recorded 2026-09-24).**
   The category merge in `ds-chart.tooltipContext` adds the other marks' readings to a keyboard-focused

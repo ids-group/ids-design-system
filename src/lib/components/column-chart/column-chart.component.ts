@@ -10,7 +10,6 @@ import {
   ElementRef,
   TemplateRef,
   ViewEncapsulation,
-  afterNextRender,
   booleanAttribute,
   computed,
   contentChild,
@@ -29,6 +28,7 @@ import {
   chartRenderGate,
   CHART_RENDER_GATE_PASSED,
   DsChartBase,
+  readOnHostResize,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import type {
@@ -84,7 +84,19 @@ const COLUMN_GEOMETRY = {
   columnWidthRatio: 0.8,
 };
 
-/** Reads the four geometry tokens off the host. Read once: a token re-pointed at a breakpoint is NOT picked up. */
+function sameColumnGeometry(
+  previous: typeof COLUMN_GEOMETRY,
+  next: typeof COLUMN_GEOMETRY,
+): boolean {
+  return (
+    previous.plotHeight === next.plotHeight &&
+    previous.axisGutter === next.axisGutter &&
+    previous.valueSpace === next.valueSpace &&
+    previous.columnWidthRatio === next.columnWidthRatio
+  );
+}
+
+/** Reads the four geometry tokens off the host. */
 function readColumnGeometry(host: HTMLElement): typeof COLUMN_GEOMETRY {
   const style = getComputedStyle(host);
   const length = (token: string, fallback: number): number => {
@@ -205,7 +217,12 @@ export class ColumnChartComponent
 
   protected readonly tooltipLingerResolved = this.defaults.tooltipLingerMs;
 
-  protected readonly geometry = signal(COLUMN_GEOMETRY);
+  protected readonly geometry = readOnHostResize(
+    inject<ElementRef<HTMLElement>>(ElementRef),
+    readColumnGeometry,
+    COLUMN_GEOMETRY,
+    sameColumnGeometry,
+  );
 
   protected readonly viewHeightPx = computed(
     () =>
@@ -356,12 +373,4 @@ export class ColumnChartComponent
   protected readonly skeletonColumns = computed(() =>
     Array.from({ length: Math.max(this.categories().length, 3) }),
   );
-
-  constructor() {
-    super();
-    const host = inject<ElementRef<HTMLElement>>(ElementRef);
-    afterNextRender(() =>
-      this.geometry.set(readColumnGeometry(host.nativeElement)),
-    );
-  }
 }
