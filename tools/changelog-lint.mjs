@@ -107,6 +107,34 @@ function shippedSources() {
   return { files: found, groups, assetsDeclared: assets.length };
 }
 
+// The docs site and the agent docs reach readers outside the team too, but they are full of code
+// and of prose about how the library is built, so only the consumer-name rule applies to them.
+const DOCS_SITE_RULES = new Set(['C001']);
+
+function docsSiteSources() {
+  const found = [];
+  const groups = [];
+  const crawl = (dir, keep) => {
+    if (!existsSync(dir)) return;
+    for (const item of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, item.name);
+      if (item.isDirectory()) crawl(full, keep);
+      else if (keep(item.name))
+        found.push(relative(ROOT, full).split('\\').join('/'));
+    }
+  };
+  for (const [name, keep] of [
+    ['ds-docs/src', (n) => /\.(html|ts|scss|json|md)$/.test(n)],
+    ['docs/agent', (n) => n.endsWith('.md')],
+  ]) {
+    const before = found.length;
+    crawl(join(ROOT, name), keep);
+    groups.push({ name, count: found.length - before });
+  }
+
+  return { files: found, groups };
+}
+
 // A published artefact is read by ALL of these, so naming one to the others is a
 // confidentiality problem, not a style one.
 const CLIENTS = [
@@ -302,20 +330,30 @@ const requested = process.argv.slice(2).filter((arg) => !arg.startsWith('--'));
 if (process.argv.includes('--list')) {
   for (const file of publishedFiles()) console.log(`document  ${file}`);
   for (const file of shippedSources().files) console.log(`source    ${file}`);
+  for (const file of docsSiteSources().files) console.log(`docs-site ${file}`);
   process.exit(0);
 }
 // `resolve`, not `join`: an absolute argument has to work, so a staged copy of one release
 // block can be checked before it is spliced back.
 const shipped = shippedSources();
 const sourceSet = new Set(shipped.files);
+const docsSite = docsSiteSources();
+const docsSiteSet = new Set(docsSite.files);
 const targets = (
-  requested.length ? requested : [...publishedFiles(), ...sourceSet]
+  requested.length
+    ? requested
+    : [...publishedFiles(), ...sourceSet, ...docsSiteSet]
 ).map((file) => {
   const full = resolve(ROOT, file);
   const label = relative(ROOT, full).split('\\').join('/');
   const shown = label.startsWith('..') ? full.split('\\').join('/') : label;
 
-  return { full, label: shown, isSource: sourceSet.has(shown) };
+  return {
+    full,
+    label: shown,
+    isSource: sourceSet.has(shown),
+    isDocsSite: docsSiteSet.has(shown),
+  };
 });
 
 // Both resolvers degrade quietly — `existsSync` filtering and `assets ?? []` — so a renamed
@@ -335,6 +373,7 @@ if (!requested.length) {
   ).length;
   const groups = [
     ...shipped.groups,
+    ...docsSite.groups,
     { name: 'migrations/*.json', count: manifests },
   ];
   const empty = groups.filter((group) => group.count === 0);
@@ -364,16 +403,17 @@ if (!requested.length) {
 }
 
 const errors = [];
-let current = { isSource: false };
+let current = { isSource: false, isDocsSite: false };
 const report = (file, line, code, message) => {
   if (current.isSource && !SOURCE_RULES.has(code)) return;
+  if (current.isDocsSite && !DOCS_SITE_RULES.has(code)) return;
   errors.push(`${file}:${line}  ${code}  ${message}`);
 };
 
 const quote = (text) => JSON.stringify(text.trim().slice(0, 90));
 
-for (const { full, label: file, isSource } of targets) {
-  current = { isSource };
+for (const { full, label: file, isSource, isDocsSite } of targets) {
+  current = { isSource, isDocsSite };
   if (!existsSync(full)) {
     report(file, 0, 'C000', 'not found');
     continue;
