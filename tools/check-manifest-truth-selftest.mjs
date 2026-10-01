@@ -571,6 +571,14 @@ for (const [version, what, budget] of readOnly) {
     );
   }
   ran++;
+  const tagQualified = Boolean(
+    surfaceAt('v0.14.0')?.directives.has('dsLineSeries'),
+  );
+  if (!tagQualified) failed++;
+  console.log(
+    `${tagQualified ? 'ok   ' : 'FAIL '} v0.14.0 g[dsLineSeries] is read as a directive selector`,
+  );
+  ran++;
   // The set has to EXIST for its not-containing something to mean anything: `!undefined` is
   // true, so an empty surface used to pass this control while proving nothing.
   const present = members('ds-input');
