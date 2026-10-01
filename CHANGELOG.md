@@ -18,6 +18,11 @@
 
 ### Fixed
 
+- **`styles/press`'s `feedback` mixin plays no press on a control disabled by class or ARIA.** It
+  skipped `:disabled`, `[disabled]` and `.is-disabled` only; it now also skips `.disabled` and
+  `[aria-disabled='true']`, so an anchor or a custom control marked disabled that way no longer
+  darkens and shrinks on press.
+
 - **`ds-funnel-chart`'s Unpin control sits where every other chart's does.** In a framed funnel it
   stood a frame padding further in from the top and the end (41px against 21px with the default
   20px padding); it now lines up with the caption like the rest.
