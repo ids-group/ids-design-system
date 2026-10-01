@@ -30,7 +30,7 @@ const problems = [];
 let checked = 0;
 
 const manifests = readdirSync(join(ROOT, 'migrations'))
-  .filter((file) => /^\d[\d.]*\.json$/.test(file))
+  .filter((file) => /^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?\.json$/.test(file))
   .sort()
   .map((file) => ({ file, label: file.replace(/\.json$/, ''), needle: null }));
 
