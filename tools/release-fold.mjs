@@ -82,13 +82,24 @@ export function foldManifests(version, manifests) {
       result[key].push(...manifest[key]);
     }
   }
-  const seen = new Set();
+  for (const key of ['items', 'deleteList']) {
+    const seen = new Set();
+    for (const entry of result[key]) {
+      if (seen.has(entry.id))
+        throw new Error(
+          `${key} id "${entry.id}" appears in two manifests of this cycle`,
+        );
+      seen.add(entry.id);
+    }
+  }
+  // The folded files are deleted, so a reference into one now resolves in this manifest.
+  const folded = new Set(manifests.map((manifest) => manifest.version));
   for (const item of result.items) {
-    if (seen.has(item.id))
-      throw new Error(
-        `item id "${item.id}" appears in two manifests of this cycle`,
-      );
-    seen.add(item.id);
+    if (!item.supersedes) continue;
+    item.supersedes = item.supersedes.map((reference) => {
+      const [from, id] = String(reference).split('#');
+      return folded.has(from) ? `${version}#${id}` : reference;
+    });
   }
   return result;
 }

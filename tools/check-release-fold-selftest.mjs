@@ -203,6 +203,20 @@ expect(
 expectThrow('an item id repeated across the cycle is refused', () =>
   foldManifests('0.14.6', [beta1, { ...draft, items: [{ id: 'a' }] }]),
 );
+expectThrow('a deleteList id repeated across the cycle is refused', () =>
+  foldManifests('0.14.6', [beta2, { ...draft, deleteList: [{ id: 'd' }] }]),
+);
+expect(
+  'a supersedes link into a folded beta points at the stable, one outside the cycle is kept',
+  foldManifests('0.14.6', [
+    beta1,
+    {
+      ...draft,
+      items: [{ id: 'c', supersedes: ['0.14.6-beta.1#a', '0.14.5#z'] }],
+    },
+  ]).items[1].supersedes,
+  ['0.14.6#a', '0.14.5#z'],
+);
 expectThrow('an unknown manifest key is refused rather than dropped', () =>
   foldManifests('0.14.6', [{ ...beta1, notes: 'x' }]),
 );
