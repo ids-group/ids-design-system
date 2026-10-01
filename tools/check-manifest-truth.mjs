@@ -260,7 +260,8 @@ function buildSurface(files) {
         // puts THERE — `ds-table dsTableExport`. Without it the surface knows only the component's
         // own inputs, and an item whose `new` is a directive was accused of naming a member that
         // does not exist on the element it sits on.
-        const attribute = /^\s*\[([A-Za-z][A-Za-z0-9]*)\]\s*$/.exec(part);
+        const attribute =
+          /^\s*(?:[a-z][a-z0-9-]*)?\[([A-Za-z][A-Za-z0-9]*)\]\s*$/.exec(part);
         if (attribute) {
           directives.add(attribute[1]);
           continue;
