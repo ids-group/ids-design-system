@@ -22,26 +22,31 @@ if [ "$pkg_version" != "$tag_version" ]; then
   exit 1
 fi
 
-if npm view "$pkg_name@$pkg_version" version > /dev/null 2>&1; then
-  echo "publish: $pkg_name@$pkg_version is already published — refusing to republish."
-  exit 1
-fi
-
 dist_tag=latest
 case "$pkg_version" in
   *-*) dist_tag=next ;;
 esac
 
 echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
-echo "publish: publishing $pkg_name@$pkg_version (dist-tag: $dist_tag)..."
-npm publish ./dist/ds --tag "$dist_tag"
 
 # `next` must never resolve older than `latest`. Non-fatal: the package is already on npm, and a
 # failure here would stop the after-release trigger that follows in the same step.
-if [ "$dist_tag" = latest ]; then
+move_next_up() {
+  [ "$dist_tag" = latest ] || return 0
   next_version=$(npm view "$pkg_name" dist-tags.next 2> /dev/null || true)
   if [ -n "$next_version" ] && node --input-type=module -e "import { compareVersions } from './tools/release-tags.mjs'; process.exit(compareVersions(process.argv[1], process.argv[2]) < 0 ? 0 : 1)" "$next_version" "$pkg_version"; then
     npm dist-tag add "$pkg_name@$pkg_version" next \
-      || echo "publish: could not move the next dist-tag from $next_version to $pkg_version."
+      || echo "publish: could not move the next dist-tag from $next_version to $pkg_version — re-run this pipeline to retry."
   fi
+}
+
+# A re-run of an already published tag still repairs `next`, then refuses.
+if npm view "$pkg_name@$pkg_version" version > /dev/null 2>&1; then
+  move_next_up
+  echo "publish: $pkg_name@$pkg_version is already published — refusing to republish."
+  exit 1
 fi
+
+echo "publish: publishing $pkg_name@$pkg_version (dist-tag: $dist_tag)..."
+npm publish ./dist/ds --tag "$dist_tag"
+move_next_up
