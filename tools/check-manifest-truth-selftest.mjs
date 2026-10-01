@@ -116,6 +116,22 @@ const rules = [
     unresolved: 1,
   },
   {
+    name: 'HOLDS: a bare camelCase input name resolves against element members',
+    item: { id: 'x', kind: 'behavior', old: 'pinOnClick', new: null },
+    before: surface({ elements: { 'ds-line-series': ['pinOnClick'] } }),
+    after: surface({ elements: { 'ds-line-series': ['pinOnClick'] } }),
+    expect: 'hold',
+    unresolved: 0,
+  },
+  {
+    name: 'HOLDS: a bare camelCase name no element declares is set aside',
+    item: { id: 'x', kind: 'behavior', old: 'pinOnClik', new: null },
+    before: surface({ elements: { 'ds-line-series': ['pinOnClick'] } }),
+    after: surface({ elements: { 'ds-line-series': ['pinOnClick'] } }),
+    expect: 'hold',
+    unresolved: 1,
+  },
+  {
     name: 'FIRES when a note names a --ds-* token neither tag declares',
     item: {
       id: 'x',
