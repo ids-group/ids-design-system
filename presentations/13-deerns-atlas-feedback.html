@@ -133,7 +133,7 @@
 <main>
   <header class="masthead">
     <h1>Прототип на бандле: самый громкий баг сидит в нашем elements-рантайме, а не в компонентах</h1>
-    <p class="lede">Проверены около 40 пунктов основного фидбека и 15 пунктов отдельного отчёта о мигании при монтировании. 15 исправлений имеют один верный ответ и сделаю их без выбора (список ниже). Решить нужно 8 вопросов, плюс таблица компонентов.</p>
+    <p class="lede">Проверены около 40 пунктов основного фидбека, 15 пунктов отчёта о мигании при монтировании и аудит прототипа (27 рекомендованных компонентов проверены через бандл). 19 исправлений имеют один верный ответ и сделаю их без выбора (список ниже). Решить нужно 9 вопросов, плюс таблица компонентов.</p>
     <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">актуально на 2026-10-01</span><span class="chip">бандл cad10e7d = dev</span></div>
   </header>
 
@@ -177,6 +177,10 @@
       <li><b>Документация</b>: раздел «Поверхности» (кто рисует рамку сам: Card, Stat, Table, графики; кто тонирован: Alert, Banner, EmptyState), правило про обязательные пропы, карточка Tabs <code>scrollable</code>, правка <code>SidenavFooter</code> prompt (документирует пропы, которых нет), рецепты: страница сущности с вкладками и очередь согласований.</li>
       <li><b>Бандл для прототипов без разделов ds-docs</b>: два бандла, для карточек и для прототипов. Минус около 45% по stats-сборке.</li>
       <li><b>Timeline не зависит от разметки вокруг пунктов</b>: линию решает сам <code>ds-timeline</code>, а не <code>:host(:last-child)</code> пункта. Обёртки хоста, <code>@for</code> с обёрткой, <code>ng-container</code> перестают её гасить. Из 4 компонентов с <code>contentChildren</code> (Accordion, Menu, RadioGroup, Tabs) обёртка не ломает Accordion, Menu и RadioGroup; Tabs пустые и без обёртки.</li>
+      <li><b>Без позиционных селекторов между DS-элементами</b>: разделители List, наложение AvatarGroup, линия Timeline не зависят от <code>:last-child</code> и соседства. С обёрткой хоста сейчас: List 0 разделителей из 2, AvatarGroup отступы 0 вместо -8px.</li>
+      <li><b>Слоты Modal, Drawer, Popover остаются подключёнными, пока окно закрыто</b>: сейчас <code>@if</code> и <code>ng-template</code> отцепляют DS-элементы внутри, и <code>@angular/elements</code> уничтожает их через 10 мс. Замер: DS-компоненты в слоте пропадают после закрытия и открытия, <code>Popover &gt; Menu</code> открывается пустым. Popover получает публичный <code>open</code>.</li>
+      <li><b>Сервисы в бандле</b>: <code>IdsDs.toast()</code> и <code>IdsDs.modal.confirm()</code> из инжектора elements-приложения. Сейчас из React нельзя показать тост в <code>ToastRegion</code>, а <code>ModalConfirm</code> падает с <code>NG0201</code>.</li>
+      <li><b>Table в бандле</b>: <code>cell</code> возвращает React-узел (бейдж, кнопка), <code>Table.md</code> переписан по реальному <code>.d.ts</code>. Сейчас он документирует <code>cellTemplates</code>, <code>sortDir</code>, <code>clientSort</code>, которых в обёртке нет, и строки по нему не сортируются.</li>
       <li><b>Проверка на мигание</b>: <code>tools/check-mount-flicker.mjs</code> в <code>check.mjs</code> на собранном бандле. Сравнивает вычисленные стили в первом кадре и через 500 мс и падает, если в первом кадре идёт анимация. Без скриншотов, на <code>tools/headless-chrome.mjs</code>.</li>
       <li><b>Keep-alive через <code>display:none</code></b> записать как поддерживаемый: замер на 10 скрытых экранах (256 элементов) дал 0 long tasks за 5 с простоя, ни одного зацикленного ResizeObserver или rAF.</li>
       <li><b>Бренд</b>: в загрузку идёт готовый рецепт <code>[data-brand]</code> из <code>themes/README.md</code> и замер, что смена одного hue ломает контраст. Сам движок цвета остаётся в деке <code>color-engine-derivation</code>.</li>
@@ -442,7 +446,52 @@
   </section>
 
   <section class="panel">
-    <h2>9. Компоненты, которых «не хватило»</h2>
+    <h2>Аудит прототипа: что из рекомендованного работает через бандл</h2>
+    <p>Аудит советует заменить самодельную разметку прототипа нашими компонентами. Его утверждения про токены верны (<code>--border-focus</code> нет, <code>--layer-*</code> и <code>--ds-radius-inner</code> есть). Проверено, можно ли взять каждый совет из бандла на React 18 с обёртками хоста:</p>
+    <table class="verdicts">
+      <thead><tr><th>Итог</th><th>Компоненты</th><th>Что мешает</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill bad">заблокировано</span></td><td>Popover, Tabs, FilterBar, ModalConfirm</td><td>Popover не открыть: нет публичного <code>open</code>. Tabs: 0 вкладок. FilterBar видит только <code>ng-template[dsFilterItem]</code>, которого React не создаст, и счётчика активных фильтров или «clear all» в нём нет вовсе, аудит тут ошибается. ModalConfirm: <code>NG0201</code>, данные даёт только <code>ModalService</code></td></tr>
+        <tr><td><span class="pill mid">частично</span></td><td>Menu, Table, List, Modal, Drawer, Toast, Accordion, AvatarGroup</td><td>Menu: стрелки не двигают фокус. Table: свою ячейку не отрисовать, документация расходится с типами. List и AvatarGroup теряют разделители и наложение под обёрткой. Modal и Drawer теряют DS-компоненты в слотах после закрытия. Тост в регион не отправить. Accordion: <code>multiple=false</code> не закрывает соседа</td></tr>
+        <tr><td><span class="pill good">работает</span></td><td>Breadcrumbs, PageHeader, EmptyState, StatusDot, Checkbox label, MultiSelect, IconButton, Divider, Stack, Inline, Container, Banner, Pagination, Skeleton, DatePicker, Tree, Switch, Spinner</td><td>Checkbox: обрезку длинной подписи не воспроизвёл, она переносится; счётчик справа положить некуда</td></tr>
+      </tbody>
+    </table>
+    <p>Больше половины «самодельных клонов» в прототипе появились не по незнанию: Tabs, Timeline, Popover и FilterBar через бандл просто не работают.</p>
+  </section>
+
+  <section class="panel q" data-q="composites">
+    <h2>9. Как чинить составные компоненты в бандле</h2>
+    <p>Tabs, Menu, Accordion, FilterBar собирают детей через <code>contentChildren</code>. В бандле каждый ребёнок - отдельный custom element со своим корнем, и запрос ничего не находит. Один и тот же экран, написанный на каждом варианте:</p>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Ничего не делать</h3>
+        <p class="says">&lt;Tabs&gt;&lt;Tab label="Overview"/&gt;&lt;/Tabs&gt; → пустой tablist</p>
+        <div class="pills"><span class="pill bad">4 компонента не работают в Claude Design</span><span class="pill bad">агент собирает клоны</span></div>
+        <dl class="layer"><dt>Трогает</dt><dd class="none">ничего</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Родитель находит детей сам</h3>
+        <p class="says">&lt;Tabs&gt;&lt;Tab label="Overview"/&gt;&lt;/Tabs&gt; → 1 вкладка, тот же API</p>
+        <div class="pills"><span class="pill good">один API в Angular и в бандле</span><span class="pill good">handoff в код без правок</span><span class="pill mid">правка в src/lib у 4 компонентов</span><span class="pill mid">нужен общий механизм регистрации</span></div>
+        <dl class="layer"><dt>Трогает</dt><dd class="gain">tabs, menu, accordion, filter-bar: дети регистрируются у ближайшего родителя по DOM, а не через запрос Angular</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <span class="badge is-no">вариант</span>
+        <h3>Обёртки принимают массивы</h3>
+        <p class="says">&lt;Tabs tabs={[{ label: 'Overview', content }]}/&gt;</p>
+        <div class="pills"><span class="pill good">src/lib не трогаем</span><span class="pill bad">в бандле другой API, чем в Angular</span><span class="pill bad">перенос прототипа в код переписывается</span></div>
+        <dl class="layer"><dt>Трогает</dt><dd class="gain">gen.mjs: особые обёртки для 4 компонентов</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>10. Компоненты, которых «не хватило»</h2>
     <p>В каждой строке - что есть сегодня и что получится. Обведённая кнопка - рекомендация, клик выбирает. Три компонента уже есть и не входят: List/ListItem, Breadcrumbs, EmptyState - их чинит каталог из списка выше.</p>
     <table class="comp">
       <thead><tr><th>Запрос</th><th>Сегодня → после</th><th>Решение</th></tr></thead>
@@ -469,7 +518,7 @@
 
   <section class="panel verdict is-done">
     <h2>Рекомендация</h2>
-    <p class="pick"><strong>Обёртка ждёт и предупреждает; Встроенный tone; frame="none", как у графиков; Border-strong; Минимум поиску, действия обрезаются; Тултип при обрезке; Только документация; Переключатель data-ds-motion.</strong> Компоненты: расширить семь существующих, новый компонент один (Thumbnail / Media), пять рецептов, три остаются у приложения. Каждый выбор либо повторяет механизм, который в DS уже есть (<code>frame</code>, <code>dsTooltipWhenClipped</code>, токены статусов), либо обходится без нового API. Где новый API нужен, он opt-in.</p>
+    <p class="pick"><strong>Обёртка ждёт и предупреждает; Встроенный tone; frame="none", как у графиков; Border-strong; Минимум поиску, действия обрезаются; Тултип при обрезке; Только документация; Переключатель data-ds-motion; Родитель находит детей сам.</strong> Компоненты: расширить семь существующих, новый компонент один (Thumbnail / Media), пять рецептов, три остаются у приложения. Каждый выбор либо повторяет механизм, который в DS уже есть (<code>frame</code>, <code>dsTooltipWhenClipped</code>, токены статусов), либо обходится без нового API. Где новый API нужен, он opt-in.</p>
   </section>
 
   <section class="panel">
@@ -485,12 +534,13 @@
         <tr class="row-pick"><th class="rowlabel">Длинная подпись в SidenavItem</th><td>Многоточие · Тултип при обрезке · Две строки</td><td>Тултип при обрезке</td></tr>
         <tr class="row-pick"><th class="rowlabel">Input в панели 176px</th><td>Распирает · Только документация · Поле тянется по контейнеру</td><td>Только документация</td></tr>
         <tr class="row-pick"><th class="rowlabel">Alert вместе с экраном</th><td>Появляется каждый раз · Без появления по умолчанию · Переключатель data-ds-motion</td><td>Переключатель data-ds-motion</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Составные компоненты в бандле</th><td>Ничего не делать · Родитель находит детей сам · Обёртки принимают массивы</td><td>Родитель находит детей сам</td></tr>
         <tr class="row-pick"><th class="rowlabel">Компоненты</th><td>по строке: Компонент в DS · Расширить · Рецепт · У приложения</td><td>как обведено в таблице</td></tr>
       </tbody>
     </table>
   </section>
 
-  <p class="src"><b>Источники, проверено 2026-10-01.</b> Бандл в Claude Design собран с <code>cad10e7d</code> (<code>.design-sync/last-upload.json</code>). <code>upload/_ds_bundle.js</code> имеет тот же md5 на HEAD, а файлы перечисленных компонентов с тех пор менялись только в комментариях. Все замеры сделаны на загруженном бандле с React 18.3.1 в Chrome, вычисленные стили через getBoundingClientRect и getComputedStyle. Код: NG0950 - <code>.design-sync/elements/runtime.tsx:15-17,85-96</code>, <code>@angular/elements</code> 21.2.22 <code>connectedCallback</code>; alias - <code>elements/tools/gen.mjs:476-492</code>; Stat - <code>stat.component.scss:49-53</code>; Timeline - <code>timeline-item.component.scss:9,40-55</code>; <code>.link</code> - <code>styles/_link.scss:51-60</code>; Topbar - <code>topbar.component.scss:34-44</code>; SidenavItem - <code>sidenav-item.component.ts:88-90</code>; ложная фраза - <code>.design-sync/conventions.md:33</code>. Контраст бренда посчитан по WCAG на формуле <code>themes/_base-palette.scss:47</code>, сменён только <code>--blue-h</code>. Карточки повторяют компоненты по их SCSS, но собраны вручную: Topbar нарисован в масштабе 1:3, остальные - в натуральную величину. Мигание: первый кадр замерен на видимой вкладке в фазах commit / rAF1 / rAF2 / 500 мс; планировщик - <code>scheduleCallbackWithRafRace</code> в <code>@angular/core</code>, вызов <code>cdScheduler.notify</code> в <code>@angular/elements</code> <code>elements.mjs:151-163</code>. Alert - <code>alert.component.scss:30-36</code>, reduced motion - <code>_tokens.scss:483-503</code>. Проверки на зависание шли в headless Chrome через <code>tools/headless-chrome.mjs</code>. Tabs: <code>tabs.component.ts:114</code> <code>contentChildren</code>, замер на загруженном бандле. Прототип: файл <code>Deerns Atlas v3.dc.html</code> и рантайм хоста <code>support.js</code> прочитаны из превью Claude Design без изменений в проекте; обёртка - <code>walkXImport</code> в <code>support.js</code> (<code>wrap = tplId != null || …</code>, а <code>data-dc-tpl</code> ставится на каждый узел). Полные находки с file:line лежат в <code>.claude/local/todo/deerns-feedback/</code> (g1-g5, f1, f2, prototype/).</p>
+  <p class="src"><b>Источники, проверено 2026-10-01.</b> Бандл в Claude Design собран с <code>cad10e7d</code> (<code>.design-sync/last-upload.json</code>). <code>upload/_ds_bundle.js</code> имеет тот же md5 на HEAD, а файлы перечисленных компонентов с тех пор менялись только в комментариях. Все замеры сделаны на загруженном бандле с React 18.3.1 в Chrome, вычисленные стили через getBoundingClientRect и getComputedStyle. Код: NG0950 - <code>.design-sync/elements/runtime.tsx:15-17,85-96</code>, <code>@angular/elements</code> 21.2.22 <code>connectedCallback</code>; alias - <code>elements/tools/gen.mjs:476-492</code>; Stat - <code>stat.component.scss:49-53</code>; Timeline - <code>timeline-item.component.scss:9,40-55</code>; <code>.link</code> - <code>styles/_link.scss:51-60</code>; Topbar - <code>topbar.component.scss:34-44</code>; SidenavItem - <code>sidenav-item.component.ts:88-90</code>; ложная фраза - <code>.design-sync/conventions.md:33</code>. Контраст бренда посчитан по WCAG на формуле <code>themes/_base-palette.scss:47</code>, сменён только <code>--blue-h</code>. Карточки повторяют компоненты по их SCSS, но собраны вручную: Topbar нарисован в масштабе 1:3, остальные - в натуральную величину. Мигание: первый кадр замерен на видимой вкладке в фазах commit / rAF1 / rAF2 / 500 мс; планировщик - <code>scheduleCallbackWithRafRace</code> в <code>@angular/core</code>, вызов <code>cdScheduler.notify</code> в <code>@angular/elements</code> <code>elements.mjs:151-163</code>. Alert - <code>alert.component.scss:30-36</code>, reduced motion - <code>_tokens.scss:483-503</code>. Проверки на зависание шли в headless Chrome через <code>tools/headless-chrome.mjs</code>. Tabs: <code>tabs.component.ts:114</code> <code>contentChildren</code>, замер на загруженном бандле. Прототип: файл <code>Deerns Atlas v3.dc.html</code> и рантайм хоста <code>support.js</code> прочитаны из превью Claude Design без изменений в проекте; обёртка - <code>walkXImport</code> в <code>support.js</code> (<code>wrap = tplId != null || …</code>, а <code>data-dc-tpl</code> ставится на каждый узел). Полные находки с file:line лежат в <code>.claude/local/todo/deerns-feedback/</code> (g1-g5, f1, f2, a1, prototype/). Аудит: 27 компонентов отрисованы через загруженный бандл на React 18.3.1 с обёрткой <code>sc-host-x</code> и без неё; причины - <code>popover.component.html:2-4</code>, <code>tabs.component.ts:114</code>, <code>filter-bar.component.ts:87</code>, <code>modal.component.html:1</code>, <code>list.component.scss:7</code>, <code>@angular/elements</code> <code>DESTROY_DELAY = 10</code>.</p>
 
   <div class="bar-fixed">
     <span class="count" id="count">0</span>
