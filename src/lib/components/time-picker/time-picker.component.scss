@@ -225,7 +225,6 @@
     color: var(--accent);
   }
 
-  /* Public token, for the portal reason on .time-panel above. */
   &:focus-visible {
     @include focus.ring;
   }
