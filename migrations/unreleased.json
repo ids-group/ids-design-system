@@ -59,7 +59,8 @@
     {
       "text": "--ds-multi-select-option-bg-color-active takes effect: it colours the option row under the keyboard cursor and the pointer in that multi-select panel. A value set on the token before and never seen now shows.",
       "verify": "open a ds-multi-select whose host or an ancestor sets the token, move the keyboard cursor onto an unselected option, and confirm the row takes that colour."
-    }
+    },
+    "ds-date-picker's previous- and next-month buttons are named by datePicker.previousMonth and datePicker.nextMonth, where a screen reader announced an unnamed button."
   ],
   "deleteList": []
 }
