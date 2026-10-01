@@ -844,7 +844,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   }
 
   // Index after focus: the marker losing focus clears the series' cursor index on its way out.
-  // Moving to another band lets a pin go (Stas, 2026-10-02); returning to the held band keeps it.
+  // Moving to another band lets a pin go; returning to the held band keeps it.
   private focusStop(index: number): void {
     this.roving.set(index);
     this.host.nativeElement
