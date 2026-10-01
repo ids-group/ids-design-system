@@ -12,6 +12,7 @@
     "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
     "g: aria-hidden=true",
     "g: aria-hidden=true",
+    "rect: aria-label={stopLabel(stop.index)}",
     "g: aria-hidden=true"
   ],
   "column-chart": ["p: role=status", "div: aria-hidden=true"],
