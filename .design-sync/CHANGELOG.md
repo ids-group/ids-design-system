@@ -22,6 +22,10 @@ holds an entry; what the release bot commits afterwards needs none.
 - **`ds-chart-unpin` has a usage doc and a section.** The design agent reads it as the pill a chart
   draws while a mark is held, and its card resolves to the `charts/chart` section.
 
+- **The `CalendarDay` and `FieldMessage` docs send the design agent to the parent.** Neither part
+  has a React component of its own, so the docs name `DatePicker` and the field's `hint`, `invalid`,
+  `success`, `warning` and `reserveMessage` instead of a component to place.
+
 ## 0.14.6-beta.0 — 2026-09-30
 
 ### Cards
