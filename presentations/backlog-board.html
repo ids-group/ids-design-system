@@ -1174,7 +1174,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-24)
 
-**Thirteen** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Fourteen** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1199,6 +1199,7 @@ file** — the number moves; cite the filename.
 | 11 | `11-docs-reasoning-blocks` | What ds-docs does with its ~38 reasoning blocks: keep, fold to the chapter end, move to a proof page, or delete. | none - the Claude Design side is settled in `.design-sync/CARDS.md` |
 | 12 | `12-field-focus-click-vs-tab` | Whether a text field keeps one focused style for click and Tab, or shows the border alone after a click and the halo only after a key; both live in the deck. | none |
 | 13 | `13-status-field-focus-halo` | Whether a focused warning or success field keeps the shared blue halo or takes its status colour, as error already does. | the mismatched-halo P2 under *Bugs* |
+| 14 | `14-focused-marker-tooltip` | Whether a keyboard-focused line marker's panel names the whole category, as the code and the `ds-chart` page do, or its own series alone, as `components.md` promises. | the focused-marker P3 under the chart family |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

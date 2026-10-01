@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тултип маркера в фокусе</title>
+<meta name="ds-deck-status" content="open">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+<style>
+  /* The panel, rebuilt from chart-tooltip-panel.component.scss; its --tooltip-* roles resolve to these per styles/_tokens.scss:391-393. */
+  .tip {
+    position: absolute; min-inline-size: 140px;
+    background: var(--surface-overlay); color: var(--text-primary);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--ds-radius-control); box-shadow: var(--shadow-popover);
+    padding: var(--space-2) var(--space-2-5);
+    font: var(--font-weight-regular) var(--font-size-xs) / 1.5 var(--font-sans);
+  }
+  .tip .category { margin: 0 0 var(--space-1-5); font-weight: var(--font-weight-medium); }
+  .tip ul { display: grid; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
+  .tip li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-2); }
+  .tip .sw { inline-size: var(--space-3); block-size: var(--space-3); border-radius: var(--radius-pill); }
+  .tip .v { font-variant-numeric: tabular-nums; }
+
+  .plot { position: relative; inline-size: 380px; block-size: 200px; }
+  .plot svg { display: block; inline-size: 380px; block-size: 200px; overflow: visible; }
+  .plot .grid { stroke: var(--chart-grid-line-color); stroke-width: 1; }
+  .plot .band { fill: var(--surface-secondary); }
+  .plot .line { fill: none; stroke-width: 2; }
+  .plot .dot { stroke: var(--surface-default); stroke-width: 2; }
+  .plot .ring { fill: none; stroke: var(--focus-ring-color); stroke-width: 2; }
+  .plot .axis { fill: var(--text-tertiary); font: var(--font-size-2xs) var(--font-sans); }
+
+  .opt { cursor: pointer; }
+  .opt > .badge { align-self: flex-start; }
+  .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+  .opt.is-chosen { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+  .opt .chosen-mark { display: none; font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--accent-strong); }
+  .opt.is-chosen .chosen-mark { display: block; }
+  .opts { grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); }
+  .pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  .pill { padding: 2px var(--space-2); border-radius: var(--radius-pill); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.5 var(--font-sans); }
+  .pill.good { background: var(--success-subtitle); color: var(--success-text); }
+  .pill.bad { background: var(--error-subtitle); color: var(--error-text); }
+  .pill.mid { background: var(--warning-subtitle); color: var(--warning-text); }
+  .quote { margin: 0; padding: var(--space-2) var(--space-3); border-inline-start: 3px solid var(--border-strong); background: var(--surface-secondary); font: var(--font-size-s) / 1.5 var(--font-sans); color: var(--text-secondary); }
+
+  .bar-fixed { position: fixed; inset-inline: 0; inset-block-end: 0; display: flex; gap: var(--space-3); align-items: center; padding: var(--space-3) var(--space-5); background: var(--surface-default); border-top: var(--border-width-default) solid var(--border-default); font: var(--font-size-s) / 1.4 var(--font-sans); color: var(--text-secondary); }
+  .bar-fixed .count { font-weight: var(--font-weight-bold); flex: none; color: var(--text-primary); }
+  .bar-fixed output { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-fixed button { border: var(--border-width-default) solid var(--border-default); background: var(--surface-default); color: var(--text-primary); border-radius: var(--ds-radius-control); padding: var(--space-1) var(--space-3); font: var(--font-weight-semibold) var(--font-size-s) / 1.4 var(--font-sans); cursor: pointer; }
+  main { padding-block-end: 96px; }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1>Маркер в фокусе показывает все серии, а документация обещает только его</h1>
+    <p class="lede">Одно решение: что показывает панель, когда маркер линейного графика получил фокус с клавиатуры. После выбора код и документация приводятся к одному.</p>
+    <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">актуально на 2026-10-01</span></div>
+  </header>
+
+  <section class="panel">
+    <h2>Сегодня: код и сайт говорят «вся категория», каталог - «только своя»</h2>
+    <p>Замер на ds-docs, пример «Sessions and signups - every reading is a control»: фокус на маркере Sessions, январь. Панель:</p>
+    <div class="stage">
+      <div class="plot" data-panel="all"><p class="cap">фокус на маркере, как сейчас</p></div>
+    </div>
+    <p class="quote"><code>components.md</code>, раздел <code>ds-line-chart</code>: «a focused marker's tooltip names its own series alone».</p>
+    <p class="quote">Страница <code>ds-chart</code> на сайте: «Focus opens the category's band and its panel, naming every mark's reading there».</p>
+  </section>
+
+  <section class="panel q" data-q="focused-marker">
+    <h2>Два варианта</h2>
+    <p>Один и тот же график, фокус на январском маркере Sessions. Выбор - клик по карточке.</p>
+    <div class="opts">
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Вся категория</h3>
+        <div class="plot" data-panel="all"></div>
+        <div class="pills"><span class="pill good">как у указателя</span><span class="pill good">как сейчас в коде</span><span class="pill good">видно сравнение</span><span class="pill mid">правка только в каталоге</span></div>
+        <dl class="layer">
+          <dt>Панель</dt><dd class="gain">Jan · Sessions 3,200 · Signups 820, полоса категории</dd>
+          <dt>Скринридер</dt><dd class="gain">«Sessions, Jan, 3,200» - имя маркера</dd>
+          <dt>Что меняется</dt><dd class="gain">одна фраза в components.md и docs/agent</dd>
+        </dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+
+      <article class="opt" tabindex="0">
+        <span class="badge is-same">вариант</span>
+        <h3>Только своя серия</h3>
+        <div class="plot" data-panel="own"></div>
+        <div class="pills"><span class="pill good">как обещает каталог</span><span class="pill mid">клавиатура и указатель видят разное</span><span class="pill bad">правка в ds-chart</span></div>
+        <dl class="layer">
+          <dt>Панель</dt><dd class="gain">Jan · Sessions 3,200, без полосы</dd>
+          <dt>Скринридер</dt><dd class="gain">«Sessions, Jan, 3,200» - то же</dd>
+          <dt>Что меняется</dt><dd class="gain">ds-chart перестаёт подмешивать чужие серии к панели маркера в фокусе; фраза на сайте</dd>
+        </dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+
+    <table>
+      <thead><tr><th></th><th>Вся категория</th><th>Только своя серия</th></tr></thead>
+      <tbody>
+        <tr class="row-pick"><th class="rowlabel">указатель над категорией</th><td>все серии</td><td>все серии</td></tr>
+        <tr class="row-pick"><th class="rowlabel">маркер в фокусе с клавиатуры</th><td>все серии</td><td>только его серия</td></tr>
+        <tr><th class="rowlabel">стрелки</th><td>идут по своей серии, панель показывает категорию</td><td>идут по своей серии, панель показывает точку</td></tr>
+        <tr><th class="rowlabel">код</th><td>без изменений</td><td>условие в tooltipContext у ds-chart</td></tr>
+        <tr><th class="rowlabel">документация</th><td>правится components.md</td><td>правится страница ds-chart</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel verdict is-done">
+    <h2>Рекомендация</h2>
+    <p class="pick"><strong>Вся категория.</strong> Указатель уже показывает категорию целиком, и пользователь клавиатуры получает ту же картину, а не урезанную. Скринридер в обоих вариантах слышит имя маркера («Sessions, Jan, 3,200»), панель - для зрячего, ему сравнение и нужно. Код и сайт уже так работают, неверна одна фраза в каталоге.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Что решить</h2>
+    <table>
+      <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
+      <tbody>
+        <tr class="row-pick"><th class="rowlabel">Что показывает панель маркера в фокусе</th><td>Вся категория · Только своя серия</td><td>Вся категория</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <p class="src"><b>Источники, проверено 2026-10-01 на <code>dev</code>.</b> Поведение: <code>chart/chart.component.ts:417-450</code>, <code>tooltipContext</code> - при курсоре <code>category</code> к панели активного маркера подмешиваются показания всех серий в категории. Замер на ds-docs того же дня: фокус на маркере «Sessions, Jan, 3,200» в примере «every reading is a control» даёт панель «Jan · Sessions 3,200 · Signups 820». Документация: <code>components.md:1010</code> (и <code>docs/agent/charts/ds-line-chart.md</code>) против страницы <code>ds-chart</code> в ds-docs. Данные графика - те же, что в примере (<code>line-chart.section.ts</code>: Sessions 3200-5000, Signups 820-1450). Панель собрана по <code>chart-tooltip-panel.component.scss</code>; роли <code>--tooltip-*</code> взяты по их значениям из <code>styles/_tokens.scss:391-393</code>, потому что <code>presentations/ds.css</code> собран раньше, чем они появились.</p>
+
+  <div class="bar-fixed">
+    <span class="count" id="count">0 из 1</span>
+    <output id="line">пока ничего не выбрано</output>
+    <button type="button" id="copy">Скопировать</button>
+    <button type="button" id="reset">Сбросить</button>
+  </div>
+</main>
+
+<script>
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const SERIES = [
+    { label: 'Sessions', data: [3200, 3850, 4400, 4120, 4760, 5000], color: 'var(--chart-categorical-1)' },
+    { label: 'Signups', data: [820, 960, 1180, 1040, 1320, 1450], color: 'var(--chart-categorical-2)' },
+  ];
+  const W = 380, H = 170, LEFT = 8, RIGHT = 8, TOP = 10, MAX = 6000;
+  const step = (W - LEFT - RIGHT) / MONTHS.length;
+  const x = (index) => LEFT + step * (index + 0.5);
+  const y = (value) => TOP + (H - TOP) * (1 - value / MAX);
+  const ns = 'http://www.w3.org/2000/svg';
+
+  for (const plot of document.querySelectorAll('.plot')) {
+    const all = plot.dataset.panel === 'all';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${W} 200`);
+    let markup = '';
+    for (const value of [0, 2000, 4000, 6000]) markup += `<line class="grid" x1="${LEFT}" x2="${W - RIGHT}" y1="${y(value)}" y2="${y(value)}" />`;
+    if (all) markup += `<rect class="band" x="${LEFT}" y="${TOP}" width="${step}" height="${H - TOP}" />`;
+    for (const series of SERIES) {
+      markup += `<polyline class="line" style="stroke:${series.color}" points="${series.data.map((value, index) => `${x(index)},${y(value)}`).join(' ')}" />`;
+      series.data.forEach((value, index) => { markup += `<circle class="dot" style="fill:${series.color}" cx="${x(index)}" cy="${y(value)}" r="4" />`; });
+    }
+    markup += `<circle class="ring" cx="${x(0)}" cy="${y(3200)}" r="8" />`;
+    MONTHS.forEach((month, index) => { markup += `<text class="axis" x="${x(index)}" y="192" text-anchor="middle">${month}</text>`; });
+    svg.innerHTML = markup;
+    plot.prepend(svg);
+
+    const rows = (all ? SERIES : SERIES.slice(0, 1)).map((series) => `<li><span class="sw" style="background:${series.color}"></span><span>${series.label}</span><span class="v">${series.data[0].toLocaleString('en-US')}</span></li>`).join('');
+    const tip = document.createElement('div');
+    tip.className = 'tip';
+    tip.innerHTML = `<p class="category">Jan</p><ul>${rows}</ul>`;
+    tip.style.insetInlineStart = `${x(0) + 18}px`;
+    tip.style.insetBlockStart = `${y(3200) - 20}px`;
+    plot.append(tip);
+  }
+
+  const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
+  const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private window */ } };
+  const PICK_KEY = 'ds-deck-focused-marker-picks';
+  const labels = { 'focused-marker': 'Панель маркера в фокусе' };
+  const state = read(PICK_KEY, {});
+  const sections = [...document.querySelectorAll('.q[data-q]')];
+  const optionName = (card) => card.querySelector('h3').textContent.trim();
+
+  function render() {
+    for (const section of sections) {
+      for (const card of section.querySelectorAll('.opt')) {
+        const chosen = state[section.dataset.q] === optionName(card);
+        card.classList.toggle('is-chosen', chosen);
+        card.setAttribute('aria-pressed', String(chosen));
+      }
+    }
+    const done = sections.filter((section) => state[section.dataset.q]);
+    document.getElementById('count').textContent = `${done.length} из ${sections.length}`;
+    document.getElementById('line').textContent = done.length
+      ? 'Дека focused-marker-tooltip: ' + done.map((section) => `${labels[section.dataset.q]} - ${state[section.dataset.q]}`).join('; ')
+      : 'пока ничего не выбрано';
+  }
+
+  function pick(section, card) {
+    const key = section.dataset.q;
+    const name = optionName(card);
+    if (state[key] === name) { delete state[key]; } else { state[key] = name; }
+    write(PICK_KEY, state);
+    render();
+  }
+
+  for (const section of sections) {
+    for (const card of section.querySelectorAll('.opt')) {
+      card.setAttribute('role', 'button');
+      card.addEventListener('click', () => pick(section, card));
+      card.addEventListener('keydown', (event) => {
+        if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); pick(section, card); }
+      });
+    }
+  }
+
+  document.getElementById('copy').addEventListener('click', () => { navigator.clipboard?.writeText(document.getElementById('line').textContent); });
+  document.getElementById('reset').addEventListener('click', () => { for (const key of Object.keys(state)) delete state[key]; write(PICK_KEY, state); render(); });
+  render();
+</script>
+</body>
+</html>
