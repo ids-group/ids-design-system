@@ -395,6 +395,11 @@
       }
     }
 
+    // Angular removes the row on this animation's `animationend`; under reduced motion it runs at 0ms and still fires one.
+    .expand-panel-row.is-leaving .expand-panel-inner {
+      animation: ds-table-collapse var(--duration-base) var(--ease-standard) both;
+    }
+
     .expand-panel-content {
       overflow: hidden;
       min-height: 0;
@@ -409,6 +414,13 @@
       to {
         grid-template-rows: 1fr;
         opacity: 1;
+      }
+    }
+
+    @keyframes ds-table-collapse {
+      to {
+        grid-template-rows: 0fr;
+        opacity: 0;
       }
     }
 

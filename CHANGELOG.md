@@ -11,6 +11,10 @@
   `figure` no longer matches; select `.pin-reset` alone. `ChartComponent` gained a protected
   `drawsUnpin`, so a subclass declaring that name needs `override`.
 
+- **A `ds-table` expanded row closes the way it opens.** Collapsing a row folds its panel back over
+  `--duration-base`, where the panel used to vanish on the next frame; the row leaves the DOM when
+  the fold ends. Under `prefers-reduced-motion` it closes at once, as it opens.
+
 ## 0.14.6-beta.0 — 2026-09-30
 
 ### Added

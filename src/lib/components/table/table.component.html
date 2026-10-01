@@ -376,7 +376,9 @@
                   rowExpandTemplate() &&
                   !virtualizing()
                 ) {
-                <tr class="expand-panel-row">
+                <tr
+                  class="expand-panel-row"
+                  (animate.leave)="$event.target.classList.add('is-leaving')">
                   <td
                     class="expand-panel-cell"
                     [attr.colspan]="expandedColspan()">
