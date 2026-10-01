@@ -2,6 +2,7 @@
 // and migration manifests MOVE into the stable version's own, so a consumer stepping from one stable
 // to the next (the auto-update plugin skips prereleases) reads every change in one block and one
 // manifest, and nothing is listed twice.
+import { sectionSlot } from './changelog-sections.mjs';
 
 const PRERELEASE_HEADING = /^## (\d+\.\d+\.\d+-[0-9A-Za-z.-]+) — /;
 
@@ -18,8 +19,9 @@ function splitSections(lines) {
 
 const trimBlank = (lines) => lines.join('\n').replace(/^\n+|\n+$/g, '');
 
-// `bodies` newest first. Sections keep the order they first appear in; within a section the newer
-// entries stay on top, as they would have in one Unreleased written over the whole cycle.
+// `bodies` newest first. Sections take the changelog's slot order, an unknown heading after the
+// known ones; within a section the newer entries stay on top, as they would have in one Unreleased
+// written over the whole cycle.
 function mergeBodies(bodies) {
   const preamble = [];
   const order = [];
@@ -37,6 +39,8 @@ function mergeBodies(bodies) {
       if (text) byName.get(section.name).push(text);
     }
   }
+  const rank = (name) => sectionSlot(name) ?? Infinity;
+  order.sort((a, b) => rank(a) - rank(b));
   const parts = [...preamble];
   for (const name of order) parts.push(`### ${name}`, ...byName.get(name));
   return parts.join('\n\n');
@@ -82,13 +86,24 @@ export function foldManifests(version, manifests) {
       result[key].push(...manifest[key]);
     }
   }
-  const seen = new Set();
+  for (const key of ['items', 'deleteList']) {
+    const seen = new Set();
+    for (const entry of result[key]) {
+      if (seen.has(entry.id))
+        throw new Error(
+          `${key} id "${entry.id}" appears in two manifests of this cycle`,
+        );
+      seen.add(entry.id);
+    }
+  }
+  // The folded files are deleted, so a reference into one now resolves in this manifest.
+  const folded = new Set(manifests.map((manifest) => manifest.version));
   for (const item of result.items) {
-    if (seen.has(item.id))
-      throw new Error(
-        `item id "${item.id}" appears in two manifests of this cycle`,
-      );
-    seen.add(item.id);
+    if (!item.supersedes) continue;
+    item.supersedes = item.supersedes.map((reference) => {
+      const [from, id] = String(reference).split('#');
+      return folded.has(from) ? `${version}#${id}` : reference;
+    });
   }
   return result;
 }

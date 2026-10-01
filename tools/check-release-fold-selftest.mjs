@@ -130,7 +130,7 @@ expect('every beta block since the last stable is folded', folded, [
   '0.14.6-beta.1',
 ]);
 expect(
-  'the stable block holds every entry once, sections merged, newest first',
+  'the stable block holds every entry once, sections merged in slot order, newest first',
   text,
   [
     '# Changelog',
@@ -138,12 +138,6 @@ expect(
     '## Unreleased',
     '',
     '## 0.14.6 — 2026-10-02',
-    '',
-    '### Fixed',
-    '',
-    '- **Fix after beta 2.**',
-    '',
-    '- **Fixed in beta 1.**',
     '',
     '### Added',
     '',
@@ -154,6 +148,12 @@ expect(
     '```',
     '',
     '- **Added in beta 1.**',
+    '',
+    '### Fixed',
+    '',
+    '- **Fix after beta 2.**',
+    '',
+    '- **Fixed in beta 1.**',
     '',
     '## 0.14.5 — 2026-09-29',
     '',
@@ -202,6 +202,20 @@ expect(
 );
 expectThrow('an item id repeated across the cycle is refused', () =>
   foldManifests('0.14.6', [beta1, { ...draft, items: [{ id: 'a' }] }]),
+);
+expectThrow('a deleteList id repeated across the cycle is refused', () =>
+  foldManifests('0.14.6', [beta2, { ...draft, deleteList: [{ id: 'd' }] }]),
+);
+expect(
+  'a supersedes link into a folded beta points at the stable, one outside the cycle is kept',
+  foldManifests('0.14.6', [
+    beta1,
+    {
+      ...draft,
+      items: [{ id: 'c', supersedes: ['0.14.6-beta.1#a', '0.14.5#z'] }],
+    },
+  ]).items[1].supersedes,
+  ['0.14.6#a', '0.14.5#z'],
 );
 expectThrow('an unknown manifest key is refused rather than dropped', () =>
   foldManifests('0.14.6', [{ ...beta1, notes: 'x' }]),

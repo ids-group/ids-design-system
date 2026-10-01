@@ -3,8 +3,8 @@
 ### Breaking
 
 - **A chart whose pointer picks a category is walked by verticals from the keyboard.** In an
-  `interactive` `ds-line-chart` and an `interactive` `ds-chart` with a category cursor, Tab lands on the category band
-  (ringed), Left and Right move between bands and wrap, Home and End jump to the ends, and Tab
+  `interactive` `ds-line-chart` and an `interactive` `ds-chart` with a category cursor, Tab
+  lands on the category band (ringed), Left and Right move between bands and wrap, Home and End jump to the ends, and Tab
   leaves the chart in one press. Up and Down focus one series' marker inside the band and the
   panel shows that point alone; Enter on it fires `pointClicked` as a click does. Enter on a band
   pins it, Escape steps back from a marker to the band and then closes the panel. The series
@@ -16,10 +16,10 @@
   (`:where(:focus-visible)`), the `ds-focus-ring-in` keyframes, the `data-focus` switch and the
   forced-colours outline moved into `@mixin emit-rules`, which `styles/ds` includes. Before, every
   stylesheet that used a focus mixin re-emitted all of them, so each component carrying one shipped a
-  copy of 1.0 kB of duplicated global rules unminified. If your global
-  stylesheet composes the parts instead of `@use 'styles/ds'`, add `@include focus.emit-rules;`
-  after `@use 'styles/focus' as focus;`, or focus rings disappear on elements that style none
-  themselves and `data-focus` stops switching. `@use 'styles/ds'` needs nothing.
+  copy of 1.0 kB of duplicated global rules unminified. If your global stylesheet composes the parts
+  instead of `@use 'styles/ds'`, add `@include focus.emit-rules;` after
+  `@use 'styles/focus' as focus;`, or focus rings disappear on elements that style none themselves
+  and `data-focus` stops switching. `@use 'styles/ds'` needs nothing.
 
 - **`DsIntl` gains two required keys: `datePicker.previousMonth` and `datePicker.nextMonth`**
   (defaults `'Previous month'` and `'Next month'`). A complete `DsIntl` dictionary, or a complete
@@ -32,12 +32,15 @@
   own, such as a row action or a list of links; keep the plain `.link`, underlined at rest, for a link
   inside running text. Every other `.link` renders as before.
 
+### Changed
+
 - **A focused warning or success field shows its state's colour.** Its halo is
   `--ds-field-focus-shadow-warning` or `--ds-field-focus-shadow-success` (defaults
   `--focus-field-warning` and `--focus-field-success`), as an error field's already was, where both
   showed the blue halo of a plain field. Under `data-focus="ring"`, `"edge"` and `"inset"` the
   indicator takes the field's border colour, `--warning-text` or `--success`. Set either token to
-  `var(--ds-field-focus-shadow)` to keep the blue.
+  `var(--ds-field-focus-shadow)` to keep the blue. The `field-state` mixin of `styles/field-state`
+  takes them as two new trailing arguments, `$warning-focus-shadow` and `$success-focus-shadow`.
 
 ### Fixed
 
@@ -45,7 +48,7 @@
   panel stayed held at the edge of the viewport; it now hides while the chart is out of sight and
   shows beside it again when it scrolls back. The pin itself is kept. The internal
   `ChartTooltipDirective` gained a private `detachOffscreen`, so a subclass declaring that name
-  needs `override`.
+  must rename it: `override` cannot reach a private member.
 
 - **`ds-column-chart` and `ds-line-chart` follow a plot-height or geometry token re-pointed at a
   breakpoint.** They read `--ds-column-chart-*` geometry and `--ds-line-chart-plot-height` once,

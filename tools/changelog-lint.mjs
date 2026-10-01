@@ -19,6 +19,7 @@ import {
   PRIMARY_NG_PACKAGE,
   resolveLibSpecifier,
 } from './lib-entry-points.mjs';
+import { SECTION_ORDER, sectionSlot } from './changelog-sections.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -196,19 +197,6 @@ const OUR_RECORD = [
 ];
 
 const PEOPLE = ['Stas', 'Misha'];
-
-// Ranked by slot rather than by heading, so a release that spells its breaking half
-// `Changed (breaking, visual)` still lands in the Breaking slot.
-const SECTION_SLOTS = [
-  [/^breaking|\(breaking/i, 0],
-  [/^added$/i, 1],
-  [/^changed$/i, 2],
-  [/^(removed|deprecated)$/i, 3],
-  [/^fixed$/i, 4],
-  [/^what you can now delete$/i, 5],
-];
-const SECTION_ORDER =
-  'Breaking → Added → Changed → Removed → Fixed → What you can now DELETE';
 
 // Symbols a module exports but the package root never surfaces: naming one tells a reader
 // to import something the package cannot give them. Resolved from the export graph, not a
@@ -778,8 +766,8 @@ for (const { full, label: file, isSource, isDocsSite } of targets) {
       }
       if (!release || !line.startsWith('### ')) return;
       const heading = line.slice(4).trim();
-      const slot = SECTION_SLOTS.find(([pattern]) => pattern.test(heading));
-      if (!slot) {
+      const slot = sectionSlot(heading);
+      if (slot === undefined) {
         report(
           file,
           index + 1,
@@ -789,7 +777,7 @@ for (const { full, label: file, isSource, isDocsSite } of targets) {
 
         return;
       }
-      seen.push([heading, slot[1], index + 1]);
+      seen.push([heading, slot, index + 1]);
     });
     if (release) checkOrder();
   }
