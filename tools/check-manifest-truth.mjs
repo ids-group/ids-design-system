@@ -413,7 +413,7 @@ function claims(value) {
     });
 
   if (/^[a-z][a-z0-9]*[A-Z][A-Za-z0-9]*$/.test(text))
-    return [{ kind: 'symbol', name: text, bare: false }];
+    return [{ kind: 'symbol', name: text, bare: false, member: true }];
 
   for (const match of text.matchAll(/\b[A-Z][A-Za-z0-9_]{3,}\b/g))
     found.push({ kind: 'symbol', name: match[0], bare: text === match[0] });
@@ -473,7 +473,15 @@ function resolves(surface, claim) {
     return surface.partials ? surface.partials.has(claim.name) : null;
   if (claim.kind === 'keyframes')
     return surface.keyframes ? surface.keyframes.has(claim.name) : null;
-  if (claim.kind === 'symbol') return surface.symbols.has(claim.name);
+  if (claim.kind === 'symbol')
+    return (
+      surface.symbols.has(claim.name) ||
+      (claim.member === true &&
+        (surface.directives?.has(claim.name) ||
+          [...surface.elements.values()].some((members) =>
+            members.has(claim.name),
+          )))
+    );
   if (claim.kind === 'class') return surface.classes.has(claim.name);
   if (claim.kind === 'element') return surface.elements.has(claim.name);
   if (claim.kind === 'member') {
