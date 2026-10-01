@@ -122,13 +122,18 @@
   .comp .choice button.rec { border-color: var(--success); }
   .comp .choice button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-on); }
   .comp .spec-cell { min-inline-size: 200px; }
+  .alert-demo { min-block-size: 52px; }
+  .al { padding: var(--space-3) var(--space-4); border-radius: var(--ds-radius-control); background: var(--warning-subtitle); color: var(--warning-text); border: var(--border-width-default) solid var(--border-divider); font: var(--font-size-s) / 1.4 var(--font-sans); }
+  .alert-demo[data-mode="enter"] .al { animation: deck-scale-in 180ms ease-out both; }
+  @keyframes deck-scale-in { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+  .replay { align-self: flex-start; border: var(--border-width-default) solid var(--border-default); background: var(--surface-default); border-radius: var(--ds-radius-control); padding: 2px var(--space-2); font: var(--font-size-xs) / 1.5 var(--font-sans); cursor: pointer; color: var(--text-secondary); }
 </style>
 </head>
 <body>
 <main>
   <header class="masthead">
     <h1>Прототип на бандле: самый громкий баг сидит в нашем elements-рантайме, а не в компонентах</h1>
-    <p class="lede">Проверено около 40 пунктов фидбека. 12 исправлений имеют один верный ответ и сделаю их без выбора (список ниже). Решить нужно 8 вопросов, плюс таблица компонентов.</p>
+    <p class="lede">Проверены около 40 пунктов основного фидбека и 15 пунктов отдельного отчёта о мигании при монтировании. 15 исправлений имеют один верный ответ и сделаю их без выбора (список ниже). Решить нужно 8 вопросов, плюс таблица компонентов.</p>
     <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">актуально на 2026-10-01</span><span class="chip">бандл cad10e7d = dev</span></div>
   </header>
 
@@ -159,7 +164,8 @@
   <section class="panel">
     <h2>Без выбора: один верный ответ, делаю</h2>
     <ol class="fixlist">
-      <li><b>NG0950 на верных значениях</b>: в <code>gen.mjs</code> <code>connectedCallback</code> откладывается на микротаск. Замер на патче: ошибок было 11, осталось 2, и это настоящие пропуски. Комментарий <code>runtime.tsx:15-17</code> исправляю.</li>
+      <li><b>NG0950 и мигание при монтировании, один фикс</b>: <code>gen.mjs</code> откладывает <code>connectedCallback</code>, а обёртка подключает элемент сразу после того, как выставила свойства. Тогда первая проверка Angular видит настоящие inputs. Замер на патче: 0 NG0950, ни одного перехода при монтировании даже при синхронном чтении стилей, рендер совпадает до символа (3423). Одного отложенного микротаска мало: он даёт новый переход ширины у Sidenav. Комментарий <code>runtime.tsx:15-17</code> исправляю. Предложенный в отчёте атрибут <code>data-ds-ready</code> с <code>transition: none</code> после этого не нужен.</li>
+      <li><b>Tabs в бандле пустые</b>: на React 18 <code>&lt;Tabs&gt;&lt;Tab/&gt;&lt;/Tabs&gt;</code> рисует пустой tablist, и дочерние элементы теряются (замер: 0 вкладок). Accordion и RadioGroup работают. Проверить после фикса выше, остальные 10 компонентов с content query пройти так же.</li>
       <li><b>Значение → <code>undefined</code> не сбрасывается</b> (<code>runtime.tsx:45,93</code>): старая иконка остаётся на месте. Сбрасывать.</li>
       <li><b>Alias <code>ds-x-*</code></b>: глобальные селекторы по тегу (status-пресет, хост Icon, Skeleton) должны совпадать и с alias. В заголовках <code>.d.ts</code> писать настоящий тег.</li>
       <li><b>Dev-сборка бандла</b> без минификации и с source maps, рядом с prod.</li>
@@ -170,6 +176,8 @@
       <li><b>Каталог для агента</b>: в <code>conventions.md</code> строка «компонент - зачем» на каждый компонент, описания в <code>_ds_manifest.json</code>. Заодно убрать ложное «Statuses ship empty by design» (<code>conventions.md:33</code>, <code>NOTES.md:56</code>).</li>
       <li><b>Документация</b>: раздел «Поверхности» (кто рисует рамку сам: Card, Stat, Table, графики; кто тонирован: Alert, Banner, EmptyState), правило про обязательные пропы, карточка Tabs <code>scrollable</code>, правка <code>SidenavFooter</code> prompt (документирует пропы, которых нет), рецепты: страница сущности с вкладками и очередь согласований.</li>
       <li><b>Бандл для прототипов без разделов ds-docs</b>: два бандла, для карточек и для прототипов. Минус около 45% по stats-сборке.</li>
+      <li><b>Проверка на мигание</b>: <code>tools/check-mount-flicker.mjs</code> в <code>check.mjs</code> на собранном бандле. Сравнивает вычисленные стили в первом кадре и через 500 мс и падает, если в первом кадре идёт анимация. Без скриншотов, на <code>tools/headless-chrome.mjs</code>.</li>
+      <li><b>Keep-alive через <code>display:none</code></b> записать как поддерживаемый: замер на 10 скрытых экранах (256 элементов) дал 0 long tasks за 5 с простоя, ни одного зацикленного ResizeObserver или rAF.</li>
       <li><b>Бренд</b>: в загрузку идёт готовый рецепт <code>[data-brand]</code> из <code>themes/README.md</code> и замер, что смена одного hue ломает контраст. Сам движок цвета остаётся в деке <code>color-engine-derivation</code>.</li>
     </ol>
     <p>Скажи, если с чем-то не согласен.</p>
@@ -384,7 +392,56 @@
   </section>
 
   <section class="panel">
-    <h2>8. Компоненты, которых «не хватило»</h2>
+    <h2>Мигание при монтировании: что подтвердилось</h2>
+    <table class="verdicts">
+      <thead><tr><th>Вердикт</th><th>Пункт</th><th>Что на самом деле</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill mid">частично</span></td><td>Первый кадр с inputs по умолчанию</td><td>Первая проверка Angular действительно идёт до того, как свойства выставлены. Следующая срабатывает через 1-8 мс, ещё до отрисовки. Неверный кадр рисуется и анимируется, только если что-то читает стили в этом промежутке. Замер: 0 из 8 прогонов без чтения, 4 из 4 с <code>heading.focus()</code> при смене экрана. Их опрос <code>getComputedStyle</code> сам вызывал то, что мерил, но <code>focus()</code> - обычный приём</td></tr>
+        <tr><td><span class="pill bad">подтверждено</span></td><td>Transition на базовых правилах</td><td>Button, IconButton, Card, Sidenav, SidenavItem, ListItem, Segmented, Tabs, заливка Bar (180 мс). У Tag - только у interactive, нейтральный тег не анимировался ни разу</td></tr>
+        <tr><td><span class="pill bad">подтверждено</span></td><td>Alert появляется при каждом монтировании</td><td>От inputs не зависит, играет при любом фиксе: opacity 0 → 1. <code>prefers-reduced-motion</code> учитывается, токены <code>--ds-alert-enter-duration</code> / <code>-keyframes</code> его уже выключают. Пропа <code>animate</code> и общего атрибута нет</td></tr>
+        <tr><td><span class="pill mid">частично</span></td><td>Badge withDot 64 → 76px</td><td>Опаздывает только точка: она под <code>@if</code> по input. Текст на месте с первой проверки</td></tr>
+        <tr><td><span class="pill good">неверно</span></td><td><code>animation-duration: 0s</code> вешает поток</td><td>600 бесконечных анимаций с 0s - 0 long tasks. На повторяющиеся события анимаций никто не подписан. Скорее всего, их «зависание» - замершие лоадеры</td></tr>
+        <tr><td><span class="pill good">неверно</span></td><td><code>display:none</code> вешает поток</td><td>10 скрытых экранов: 0 long tasks, 0 срабатываний ResizeObserver, rAF и таймеров в простое. У Segmented вообще нет кода измерений. Keep-alive дешевле повторного монтирования: 117 мс против 152 мс на 4x CPU</td></tr>
+        <tr><td><span class="pill bad">новое</span></td><td>Tabs в бандле</td><td>Не из отчёта, найдено при проверке: на React 18 вкладки не рендерятся вовсе. Наверное, поэтому прототип собирал вкладки из <code>Segmented</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel q" data-q="entrance">
+    <h2>8. Alert, который пришёл вместе с экраном</h2>
+    <p>Alert монтируется в составе нового экрана. Кнопка «смонтировать заново» под каждой карточкой показывает, что видит пользователь.</p>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Появляется каждый раз</h3>
+        <div class="alert-demo" data-mode="enter"><div class="al">Standard EN 13779 was superseded</div></div>
+        <button type="button" class="replay">смонтировать заново</button>
+        <div class="pills"><span class="pill bad">мерцает на каждом переходе</span><span class="pill good">ноль работы</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <span class="badge is-no">вариант</span>
+        <h3>Без появления по умолчанию</h3>
+        <div class="alert-demo" data-mode="none"><div class="al">Standard EN 13779 was superseded</div></div>
+        <button type="button" class="replay">смонтировать заново</button>
+        <div class="pills"><span class="pill good">экран спокойный</span><span class="pill bad">ошибка формы, возникшая сама, тоже без появления</span></div>
+        <dl class="layer"><dt>API</dt><dd class="gain">--ds-alert-enter-keyframes: none по умолчанию у Alert и Banner</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Переключатель data-ds-motion</h3>
+        <div class="alert-demo" data-mode="none"><div class="al">Standard EN 13779 was superseded</div></div>
+        <button type="button" class="replay">смонтировать заново</button>
+        <div class="pills"><span class="pill good">одно место для всех компонентов</span><span class="pill good">opt-in</span><span class="pill mid">приложение ставит атрибут на время перехода</span></div>
+        <dl class="layer"><dt>API</dt><dd class="gain">[data-ds-motion="reduced"] на контейнере повторяет блок prefers-reduced-motion: переходы и появления 0 мс</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>9. Компоненты, которых «не хватило»</h2>
     <p>В каждой строке - что есть сегодня и что получится. Обведённая кнопка - рекомендация, клик выбирает. Три компонента уже есть и не входят: List/ListItem, Breadcrumbs, EmptyState - их чинит каталог из списка выше.</p>
     <table class="comp">
       <thead><tr><th>Запрос</th><th>Сегодня → после</th><th>Решение</th></tr></thead>
@@ -411,7 +468,7 @@
 
   <section class="panel verdict is-done">
     <h2>Рекомендация</h2>
-    <p class="pick"><strong>Обёртка ждёт и предупреждает; Встроенный tone; frame="none", как у графиков; Border-strong; Минимум поиску, действия обрезаются; Тултип при обрезке; Только документация.</strong> Компоненты: расширить семь существующих, новый компонент один (Thumbnail / Media), пять рецептов, три остаются у приложения. Каждый выбор либо повторяет механизм, который в DS уже есть (<code>frame</code>, <code>dsTooltipWhenClipped</code>, токены статусов), либо обходится без нового API. Где новый API нужен, он opt-in.</p>
+    <p class="pick"><strong>Обёртка ждёт и предупреждает; Встроенный tone; frame="none", как у графиков; Border-strong; Минимум поиску, действия обрезаются; Тултип при обрезке; Только документация; Переключатель data-ds-motion.</strong> Компоненты: расширить семь существующих, новый компонент один (Thumbnail / Media), пять рецептов, три остаются у приложения. Каждый выбор либо повторяет механизм, который в DS уже есть (<code>frame</code>, <code>dsTooltipWhenClipped</code>, токены статусов), либо обходится без нового API. Где новый API нужен, он opt-in.</p>
   </section>
 
   <section class="panel">
@@ -426,12 +483,13 @@
         <tr class="row-pick"><th class="rowlabel">Topbar на 684px</th><td>Поиск схлопывается · Минимум поиску, действия обрезаются · Меню «Ещё» · Поиск в иконку</td><td>Минимум поиску, действия обрезаются</td></tr>
         <tr class="row-pick"><th class="rowlabel">Длинная подпись в SidenavItem</th><td>Многоточие · Тултип при обрезке · Две строки</td><td>Тултип при обрезке</td></tr>
         <tr class="row-pick"><th class="rowlabel">Input в панели 176px</th><td>Распирает · Только документация · Поле тянется по контейнеру</td><td>Только документация</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Alert вместе с экраном</th><td>Появляется каждый раз · Без появления по умолчанию · Переключатель data-ds-motion</td><td>Переключатель data-ds-motion</td></tr>
         <tr class="row-pick"><th class="rowlabel">Компоненты</th><td>по строке: Компонент в DS · Расширить · Рецепт · У приложения</td><td>как обведено в таблице</td></tr>
       </tbody>
     </table>
   </section>
 
-  <p class="src"><b>Источники, проверено 2026-10-01.</b> Бандл в Claude Design собран с <code>cad10e7d</code> (<code>.design-sync/last-upload.json</code>). <code>upload/_ds_bundle.js</code> имеет тот же md5 на HEAD, а файлы перечисленных компонентов с тех пор менялись только в комментариях. Все замеры сделаны на загруженном бандле с React 18.3.1 в Chrome, вычисленные стили через getBoundingClientRect и getComputedStyle. Код: NG0950 - <code>.design-sync/elements/runtime.tsx:15-17,85-96</code>, <code>@angular/elements</code> 21.2.22 <code>connectedCallback</code>; alias - <code>elements/tools/gen.mjs:476-492</code>; Stat - <code>stat.component.scss:49-53</code>; Timeline - <code>timeline-item.component.scss:9,40-55</code>; <code>.link</code> - <code>styles/_link.scss:51-60</code>; Topbar - <code>topbar.component.scss:34-44</code>; SidenavItem - <code>sidenav-item.component.ts:88-90</code>; ложная фраза - <code>.design-sync/conventions.md:33</code>. Контраст бренда посчитан по WCAG на формуле <code>themes/_base-palette.scss:47</code>, сменён только <code>--blue-h</code>. Карточки повторяют компоненты по их SCSS, но собраны вручную: Topbar нарисован в масштабе 1:3, остальные - в натуральную величину. Полные находки с file:line лежат в <code>.claude/local/todo/deerns-feedback/g1-g5</code>.</p>
+  <p class="src"><b>Источники, проверено 2026-10-01.</b> Бандл в Claude Design собран с <code>cad10e7d</code> (<code>.design-sync/last-upload.json</code>). <code>upload/_ds_bundle.js</code> имеет тот же md5 на HEAD, а файлы перечисленных компонентов с тех пор менялись только в комментариях. Все замеры сделаны на загруженном бандле с React 18.3.1 в Chrome, вычисленные стили через getBoundingClientRect и getComputedStyle. Код: NG0950 - <code>.design-sync/elements/runtime.tsx:15-17,85-96</code>, <code>@angular/elements</code> 21.2.22 <code>connectedCallback</code>; alias - <code>elements/tools/gen.mjs:476-492</code>; Stat - <code>stat.component.scss:49-53</code>; Timeline - <code>timeline-item.component.scss:9,40-55</code>; <code>.link</code> - <code>styles/_link.scss:51-60</code>; Topbar - <code>topbar.component.scss:34-44</code>; SidenavItem - <code>sidenav-item.component.ts:88-90</code>; ложная фраза - <code>.design-sync/conventions.md:33</code>. Контраст бренда посчитан по WCAG на формуле <code>themes/_base-palette.scss:47</code>, сменён только <code>--blue-h</code>. Карточки повторяют компоненты по их SCSS, но собраны вручную: Topbar нарисован в масштабе 1:3, остальные - в натуральную величину. Мигание: первый кадр замерен на видимой вкладке в фазах commit / rAF1 / rAF2 / 500 мс; планировщик - <code>scheduleCallbackWithRafRace</code> в <code>@angular/core</code>, вызов <code>cdScheduler.notify</code> в <code>@angular/elements</code> <code>elements.mjs:151-163</code>. Alert - <code>alert.component.scss:30-36</code>, reduced motion - <code>_tokens.scss:483-503</code>. Проверки на зависание шли в headless Chrome через <code>tools/headless-chrome.mjs</code>. Tabs: <code>tabs.component.ts:114</code> <code>contentChildren</code>, замер на загруженном бандле. Полные находки с file:line лежат в <code>.claude/local/todo/deerns-feedback/</code> (g1-g5, f1, f2).</p>
 
   <div class="bar-fixed">
     <span class="count" id="count">0</span>
@@ -507,6 +565,15 @@
 
   document.getElementById('copy').addEventListener('click', () => { navigator.clipboard?.writeText(document.getElementById('line').textContent); });
   document.getElementById('reset').addEventListener('click', () => { for (const key of Object.keys(state)) delete state[key]; write(PICK_KEY, state); render(); });
+  for (const button of document.querySelectorAll('.replay')) {
+    button.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const demo = button.previousElementSibling;
+      const alert = demo.firstElementChild;
+      alert.remove();
+      setTimeout(() => demo.append(alert), 250);
+    });
+  }
   render();
 </script>
 </body>
