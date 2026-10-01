@@ -395,9 +395,10 @@
       }
     }
 
-    // Angular removes the row on this animation's `animationend`; under reduced motion it runs at 0ms and still fires one.
+    // Angular removes the row on this animation's `animationend`, which a 0s animation does not fire reliably;
+    // the 1ms floor keeps reduced motion from holding the row for Angular's 4s fallback.
     .expand-panel-row.is-leaving .expand-panel-inner {
-      animation: ds-table-collapse var(--duration-base) var(--ease-standard) both;
+      animation: ds-table-collapse max(var(--duration-base), 1ms) var(--ease-standard) both;
     }
 
     .expand-panel-content {
