@@ -31,8 +31,10 @@ import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/s
 import {
   CHART_PIN_GAP,
   CHART_PIN_RADIUS,
+  CHART_UNPIN_DRAWN_BY_HOST,
   ChartPinMarkerComponent,
   ChartTooltipDirective,
+  ChartUnpinComponent,
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type { ChartTooltipContext } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
@@ -72,7 +74,12 @@ import {
   selector: 'ds-chart',
   standalone: true,
   exportAs: 'dsChart',
-  imports: [SkeletonComponent, ChartTooltipDirective, ChartPinMarkerComponent],
+  imports: [
+    SkeletonComponent,
+    ChartTooltipDirective,
+    ChartPinMarkerComponent,
+    ChartUnpinComponent,
+  ],
   templateUrl: './chart.component.html',
   styleUrl: './chart.component.scss',
   host: {
@@ -629,6 +636,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   /** Whether the cursor is held. */
   readonly cursorPinned = this.cursorState.pinned;
+
+  protected readonly drawsUnpin = !inject(CHART_UNPIN_DRAWN_BY_HOST, {
+    optional: true,
+  });
 
   releaseCursor(): void {
     this.cursorState.release();

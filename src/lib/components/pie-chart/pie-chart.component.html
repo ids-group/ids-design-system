@@ -1,14 +1,9 @@
 <figure
   class="pie-chart"
   [style.--_pie-chart-hole-fraction]="hole()">
-  @if (activeMark.pinned()) {
-    <button
-      class="pin-reset"
-      type="button"
-      (click)="activeMark.release()">
-      {{ intl().chart.unpin }}
-    </button>
-  }
+  <ds-chart-unpin
+    [pinned]="activeMark.pinned()"
+    (release)="activeMark.release()" />
 
   @if (caption()) {
     <figcaption>

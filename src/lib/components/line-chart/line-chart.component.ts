@@ -54,6 +54,10 @@ import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/component
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import {
+  CHART_UNPIN_DRAWN_BY_HOST,
+  ChartUnpinComponent,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
   ChartTooltipContext,
   ChartTooltipTrigger,
@@ -106,6 +110,7 @@ const SERIES_DASH_ARRAYS = [
     SeriesAnnotationComponent,
     ChartLegendComponent,
     ChartDataTableComponent,
+    ChartUnpinComponent,
   ],
   templateUrl: './line-chart.component.html',
   styleUrl: './line-chart.component.scss',
@@ -115,7 +120,10 @@ const SERIES_DASH_ARRAYS = [
   },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  viewProviders: [{ provide: CHART_RENDER_GATE_PASSED, useValue: true }],
+  viewProviders: [
+    { provide: CHART_RENDER_GATE_PASSED, useValue: true },
+    { provide: CHART_UNPIN_DRAWN_BY_HOST, useValue: true },
+  ],
 })
 export class LineChartComponent
   extends DsChartBase

@@ -1,5 +1,6 @@
 @use '../../styles/chart-frame' as chart-frame;
 @include chart-frame.chart-frame;
+@include chart-frame.pin-reset;
 
 .chart {
   --_chart-grid-line-color: var(--ds-chart-grid-line-color, var(--chart-grid-line-color));

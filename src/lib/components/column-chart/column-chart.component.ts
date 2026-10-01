@@ -50,6 +50,7 @@ import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/component
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import { ChartUnpinComponent } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
@@ -121,6 +122,7 @@ function readColumnGeometry(host: HTMLElement): typeof COLUMN_GEOMETRY {
     SkeletonComponent,
     ChartComponent,
     ChartLegendComponent,
+    ChartUnpinComponent,
     ColumnSeriesComponent,
     ReferenceLabelComponent,
     ReferenceLineComponent,

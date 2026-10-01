@@ -1,12 +1,7 @@
 <figure class="line-chart">
-  @if (pinnedCategory()) {
-    <button
-      class="pin-reset"
-      type="button"
-      (click)="releaseCategoryPin()">
-      {{ intl().chart.unpin }}
-    </button>
-  }
+  <ds-chart-unpin
+    [pinned]="pinnedCategory()"
+    (release)="releaseCategoryPin()" />
 
   @if (caption()) {
     <figcaption>
