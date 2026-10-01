@@ -418,7 +418,6 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       ) ?? null,
   );
 
-  /** The series a keyboard user picked inside the focused category, by its panel label. */
   private readonly pickedLabel = signal<string | null>(null);
 
   protected readonly tooltipContext = computed(() => {
@@ -753,7 +752,6 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     this.cursorBand() ? (this.bandElement()?.nativeElement ?? null) : null,
   );
 
-  /** One Tab stop per chart, on a category band; the series markers step back from Tab. */
   protected readonly keyboardStops = computed(
     () => this.cursorOn() && this.interactive(),
   );
@@ -826,7 +824,6 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     this.cursorState.setIndex(index);
   }
 
-  /** Every drawn reading at the focused category with its element, highest on screen first. */
   private readingsTopDown(): readonly { label: string; element: Element }[] {
     return [...this.tooltipSources().values()]
       .flatMap((source) => {
@@ -845,7 +842,6 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       .map(({ entry, element }) => ({ label: entry.label, element }));
   }
 
-  /** Keys from a stop or a picked marker: Up/Down pick a reading; from a marker, the rest return to a stop. */
   protected onChartKey(event: KeyboardEvent): void {
     if (!this.keyboardStops() || !(event.target instanceof Element)) {
       return;
