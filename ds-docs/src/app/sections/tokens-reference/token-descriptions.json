@@ -1087,7 +1087,7 @@
   "--ds-time-picker-border": "Panel border.",
   "--ds-time-picker-column-height": "Max height of each scroll column.",
   "--ds-time-picker-column-width": "Min width of each column.",
-  "--ds-time-picker-focus-shadow": "Time picker focus ring shadow (defaults to --ds-control-focus-shadow) — read directly by the portaled panel, where a :host-scoped private token cannot reach.",
+  "--ds-time-picker-focus-shadow": "Time picker trigger focus ring shadow (defaults to --ds-control-focus-shadow).",
   "--ds-time-picker-option-bg-color-hover": "Option fill on hover (defaults to --surface-secondary).",
   "--ds-time-picker-option-bg-color-selected": "Fill of the selected hour/minute option in the panel (defaults to --accent).",
   "--ds-time-picker-option-text-color-selected": "Label colour of the selected option (defaults to --accent-on).",

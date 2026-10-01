@@ -7917,7 +7917,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-time-picker-focus-shadow",
         "value": "var(--ds-control-focus-shadow)",
-        "notes": "Time picker focus ring shadow (defaults to --ds-control-focus-shadow) — read directly by the portaled panel, where a :host-scoped private token cannot reach."
+        "notes": "Time picker trigger focus ring shadow (defaults to --ds-control-focus-shadow)."
       },
       {
         "name": "--ds-time-picker-trigger-bg-color",
