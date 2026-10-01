@@ -13,6 +13,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "AccordionComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/accordion",
     "summary": null,
     "inputs": [
       {
@@ -47,6 +48,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "AccordionItemComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/accordion",
     "summary": null,
     "inputs": [
       {
@@ -87,6 +89,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "AlertComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/alert",
     "summary": null,
     "inputs": [
       {
@@ -161,6 +164,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "AppLayoutComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/app-layout",
     "summary": null,
     "inputs": [
       {
@@ -235,6 +239,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "RailTriggerDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/app-layout",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -247,6 +252,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "AuthLayoutComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/auth-layout",
     "summary": null,
     "inputs": [
       {
@@ -327,6 +333,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "AutocompleteComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/autocomplete",
     "summary": null,
     "inputs": [
       {
@@ -702,6 +709,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "AvatarComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/avatar",
     "summary": null,
     "inputs": [
       {
@@ -824,6 +832,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "AvatarGroupComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/avatar-group",
     "summary": null,
     "inputs": [
       {
@@ -855,6 +864,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "BadgeComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/badge",
     "summary": null,
     "inputs": [
       {
@@ -922,6 +932,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "BannerComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/banner",
     "summary": null,
     "inputs": [
       {
@@ -1027,6 +1038,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "BarComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/bar",
     "summary": null,
     "inputs": [
       {
@@ -1121,6 +1133,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "BarChartComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/bar-chart",
     "summary": null,
     "inputs": [
       {
@@ -1343,6 +1356,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "BottomSheetComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/bottom-sheet",
     "summary": null,
     "inputs": [
       {
@@ -1402,6 +1416,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "BreadcrumbsComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/breadcrumbs",
     "summary": null,
     "inputs": [
       {
@@ -1461,6 +1476,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ButtonComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/button",
     "summary": null,
     "inputs": [
       {
@@ -1793,6 +1809,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ButtonGroupComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/button-group",
     "summary": null,
     "inputs": [
       {
@@ -1815,6 +1832,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "CardComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/card",
     "summary": null,
     "inputs": [
       {
@@ -1866,6 +1884,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ChartComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chart",
     "summary": null,
     "inputs": [
       {
@@ -2143,6 +2162,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ColumnSeriesComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chart",
     "summary": null,
     "inputs": [
       {
@@ -2376,6 +2396,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "LineSeriesComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chart",
     "summary": null,
     "inputs": [
       {
@@ -2557,6 +2578,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ReferenceLabelComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chart",
     "summary": null,
     "inputs": [
       {
@@ -2579,6 +2601,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ReferenceLineComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chart",
     "summary": null,
     "inputs": [
       {
@@ -2601,6 +2624,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "SeriesAnnotationComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chart",
     "summary": null,
     "inputs": [
       {
@@ -2623,6 +2647,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ChartDataTableComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chart-data-table",
     "summary": null,
     "inputs": [
       {
@@ -2691,6 +2716,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "CheckboxComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/checkbox",
     "summary": null,
     "inputs": [
       {
@@ -2870,6 +2896,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DsChipTemplateDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -2882,6 +2909,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ColorPickerComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/color-picker",
     "summary": null,
     "inputs": [
       {
@@ -3039,6 +3067,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ColumnChartComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/column-chart",
     "summary": null,
     "inputs": [
       {
@@ -3287,6 +3316,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DsCreateTemplateDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -3299,6 +3329,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DatePickerComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/date-picker",
     "summary": null,
     "inputs": [
       {
@@ -3616,6 +3647,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DescriptionItemComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/description-list",
     "summary": null,
     "inputs": [
       {
@@ -3647,6 +3679,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DescriptionListComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/description-list",
     "summary": null,
     "inputs": [
       {
@@ -3672,6 +3705,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DividerComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/divider",
     "summary": null,
     "inputs": [
       {
@@ -3713,6 +3747,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DrawerComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/drawer",
     "summary": null,
     "inputs": [
       {
@@ -3790,6 +3825,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DropzoneComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/dropzone",
     "summary": null,
     "inputs": [
       {
@@ -3858,6 +3894,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "EmptyStateComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/empty-state",
     "summary": null,
     "inputs": [
       {
@@ -3913,6 +3950,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DsEmptyTemplateDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -3925,6 +3963,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "FieldClickFocusDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -3937,6 +3976,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "FieldGroupComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/field-group",
     "summary": null,
     "inputs": [
       {
@@ -4035,6 +4075,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "FilterBarComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/filter-bar",
     "summary": null,
     "inputs": [
       {
@@ -4079,6 +4120,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "FilterItemDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/filter-bar",
     "summary": null,
     "inputs": [
       {
@@ -4101,6 +4143,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "FunnelChartComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/funnel-chart",
     "summary": null,
     "inputs": [
       {
@@ -4322,6 +4365,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DsGroupLabelTemplateDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -4334,6 +4378,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "HeatmapChartComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/heatmap-chart",
     "summary": null,
     "inputs": [
       {
@@ -4543,6 +4588,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "IconButtonComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/icon-button",
     "summary": null,
     "inputs": [
       {
@@ -4686,6 +4732,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "InputComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/input",
     "summary": null,
     "inputs": [
       {
@@ -5071,6 +5118,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ContainerComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/layout",
     "summary": null,
     "inputs": [
       {
@@ -5099,6 +5147,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "InlineComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/layout",
     "summary": null,
     "inputs": [
       {
@@ -5165,6 +5214,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "StackComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/layout",
     "summary": null,
     "inputs": [
       {
@@ -5208,6 +5258,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "LineChartComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/line-chart",
     "summary": null,
     "inputs": [
       {
@@ -5597,6 +5648,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ListComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/list",
     "summary": null,
     "inputs": [
       {
@@ -5619,6 +5671,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ListItemComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/list",
     "summary": null,
     "inputs": [
       {
@@ -5687,6 +5740,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "LoadingOverlayComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/loading-overlay",
     "summary": null,
     "inputs": [
       {
@@ -5758,6 +5812,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "MenuComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/menu",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -5770,6 +5825,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "MenuDividerComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/menu",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -5782,6 +5838,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "MenuItemComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/menu",
     "summary": null,
     "inputs": [
       {
@@ -5859,6 +5916,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ModalCardComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/modal",
     "summary": null,
     "inputs": [
       {
@@ -5968,6 +6026,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ModalComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/modal",
     "summary": null,
     "inputs": [
       {
@@ -6092,6 +6151,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "MultiSelectComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/multi-select",
     "summary": null,
     "inputs": [
       {
@@ -6441,6 +6501,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "NumberStepperComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/number-stepper",
     "summary": null,
     "inputs": [
       {
@@ -6521,6 +6582,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DsOptionTemplateDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -6533,6 +6595,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "OtpInputComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/otp-input",
     "summary": null,
     "inputs": [
       {
@@ -6703,6 +6766,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "PageFooterComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/page-footer",
     "summary": null,
     "inputs": [
       {
@@ -6729,6 +6793,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "PageHeaderComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/page-header",
     "summary": null,
     "inputs": [
       {
@@ -6796,6 +6861,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "PaginationComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/pagination",
     "summary": null,
     "inputs": [
       {
@@ -6897,6 +6963,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DsPanelFooterTemplateDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -6909,6 +6976,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DsPanelHeaderTemplateDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -6921,6 +6989,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "PasswordRulesComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/password-rules",
     "summary": null,
     "inputs": [
       {
@@ -6979,6 +7048,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DsPickerTriggerDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -6991,6 +7061,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "PieChartComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/pie-chart",
     "summary": null,
     "inputs": [
       {
@@ -7235,6 +7306,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "PopoverComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/popover",
     "summary": null,
     "inputs": [
       {
@@ -7310,6 +7382,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "RadioComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/radio-group",
     "summary": null,
     "inputs": [
       {
@@ -7489,6 +7562,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "RadioGroupComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/radio-group",
     "summary": null,
     "inputs": [
       {
@@ -7628,6 +7702,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ReserveMessagesDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/reserve-messages",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -7640,6 +7715,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ScatterChartComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/scatter-chart",
     "summary": null,
     "inputs": [
       {
@@ -7857,6 +7933,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "SearchComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/search",
     "summary": null,
     "inputs": [
       {
@@ -7974,6 +8051,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "SegmentedComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/segmented",
     "summary": null,
     "inputs": [
       {
@@ -8122,6 +8200,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "SelectComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/select",
     "summary": null,
     "inputs": [
       {
@@ -8413,6 +8492,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "BrandNameDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/sidenav",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -8425,6 +8505,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "SidenavComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/sidenav",
     "summary": null,
     "inputs": [
       {
@@ -8492,6 +8573,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "SidenavGroupComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/sidenav",
     "summary": null,
     "inputs": [
       {
@@ -8566,6 +8648,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "SidenavItemComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/sidenav",
     "summary": null,
     "inputs": [
       {
@@ -8686,6 +8769,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "SidenavFooterComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/sidenav-footer",
     "summary": null,
     "inputs": [
       {
@@ -8790,6 +8874,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "SkeletonComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/skeleton",
     "summary": null,
     "inputs": [
       {
@@ -8848,6 +8933,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "SliderComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/slider",
     "summary": null,
     "inputs": [
       {
@@ -9005,6 +9091,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "SparklineComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/sparkline",
     "summary": null,
     "inputs": [
       {
@@ -9084,6 +9171,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "SpinnerComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/spinner",
     "summary": null,
     "inputs": [
       {
@@ -9110,6 +9198,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "SplitButtonComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/split-button",
     "summary": null,
     "inputs": [
       {
@@ -9199,6 +9288,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "StatComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/stat",
     "summary": null,
     "inputs": [
       {
@@ -9303,6 +9393,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "StatusDotComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/status-dot",
     "summary": null,
     "inputs": [
       {
@@ -9334,6 +9425,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "StepperComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/stepper",
     "summary": null,
     "inputs": [
       {
@@ -9417,6 +9509,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "SwitchComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/switch",
     "summary": null,
     "inputs": [
       {
@@ -9619,6 +9712,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "CellTemplateDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/table",
     "summary": null,
     "inputs": [
       {
@@ -9650,6 +9744,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "HeaderFilterDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/table",
     "summary": null,
     "inputs": [
       {
@@ -9681,6 +9776,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "TableComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/table",
     "summary": null,
     "inputs": [
       {
@@ -10262,6 +10358,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DsTableColumns",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/table-columns",
     "summary": null,
     "inputs": [
       {
@@ -10302,6 +10399,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DsTableExport",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/table-export",
     "summary": null,
     "inputs": [
       {
@@ -10352,6 +10450,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "DsTableResize",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/table-resize",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -10364,6 +10463,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "TabComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/tabs",
     "summary": null,
     "inputs": [
       {
@@ -10422,6 +10522,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "TabsComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/tabs",
     "summary": null,
     "inputs": [
       {
@@ -10523,6 +10624,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "TagComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/tag",
     "summary": null,
     "inputs": [
       {
@@ -10603,6 +10705,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "TextareaComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/textarea",
     "summary": null,
     "inputs": [
       {
@@ -10907,6 +11010,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "TimePickerComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/time-picker",
     "summary": null,
     "inputs": [
       {
@@ -11182,6 +11286,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "TimelineComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/timeline",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -11194,6 +11299,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "TimelineItemComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/timeline",
     "summary": null,
     "inputs": [
       {
@@ -11250,6 +11356,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ToastComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/toast",
     "summary": null,
     "inputs": [
       {
@@ -11333,6 +11440,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ToastRegionComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/toast",
     "summary": null,
     "inputs": [
       {
@@ -11364,6 +11472,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "ToggleButtonComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/toggle-button",
     "summary": null,
     "inputs": [
       {
@@ -11404,6 +11513,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "TooltipDirective",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/tooltip",
     "summary": null,
     "inputs": [
       {
@@ -11467,6 +11577,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "TooltipPanelComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/tooltip",
     "summary": null,
     "inputs": [
       {
@@ -11512,6 +11623,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "TopBarComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/topbar",
     "summary": null,
     "inputs": [],
     "outputs": []
@@ -11524,6 +11636,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "TreeComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/tree",
     "summary": null,
     "inputs": [
       {
@@ -11574,6 +11687,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "W3wComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/w3w",
     "summary": null,
     "inputs": [
       {
@@ -11624,6 +11738,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "status": "stable",
     "importName": "WaterfallChartComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/waterfall-chart",
     "summary": null,
     "inputs": [
       {

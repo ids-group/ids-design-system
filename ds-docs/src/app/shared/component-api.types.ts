@@ -24,6 +24,8 @@ export interface ComponentApi {
   readonly status: ComponentStatus;
   readonly importName: string;
   readonly importPath: string;
+  /** The component's own specifier: inside a `@defer` block only this one defers, the root does not. */
+  readonly entryPoint: string;
   readonly summary: string | null;
   /** input / input-required / model (models render here with a two-way tag). */
   readonly inputs: readonly ApiProp[];
