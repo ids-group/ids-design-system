@@ -1,12 +1,7 @@
 <figure class="column-chart">
-  @if (pinnedSeries()) {
-    <button
-      class="pin-reset"
-      type="button"
-      (click)="pinnedSeries()?.activeMark?.release()">
-      {{ intl().chart.unpin }}
-    </button>
-  }
+  <ds-chart-unpin
+    [pinned]="!!pinnedSeries()"
+    (release)="pinnedSeries()?.activeMark?.release()" />
 
   @if (caption()) {
     <figcaption>

@@ -1,12 +1,7 @@
 <figure class="bar-chart">
-  @if (activeMark.pinned()) {
-    <button
-      class="pin-reset"
-      type="button"
-      (click)="activeMark.release()">
-      {{ intl().chart.unpin }}
-    </button>
-  }
+  <ds-chart-unpin
+    [pinned]="activeMark.pinned()"
+    (release)="activeMark.release()" />
 
   @if (caption()) {
     <figcaption>

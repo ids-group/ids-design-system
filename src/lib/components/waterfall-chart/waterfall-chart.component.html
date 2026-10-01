@@ -1,12 +1,7 @@
 <figure class="waterfall-chart">
-  @if (pinned()) {
-    <button
-      class="pin-reset"
-      type="button"
-      (click)="series()?.activeMark?.release()">
-      {{ intl().chart.unpin }}
-    </button>
-  }
+  <ds-chart-unpin
+    [pinned]="pinned()"
+    (release)="series()?.activeMark?.release()" />
 
   @if (caption()) {
     <figcaption>

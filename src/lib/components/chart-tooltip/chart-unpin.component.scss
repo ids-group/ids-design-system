@@ -1,0 +1,41 @@
+@use '../../styles/focus' as focus;
+
+// Positioned against the chart's host, which `chart-frame.pin-reset` makes the containing block.
+:host {
+  display: contents;
+}
+
+/* Top end: the bottom carries axis labels, legend and table. The 44px touch target is the ::before. */
+.pin-reset {
+  position: absolute;
+  inset-block-start: var(--_chart-pin-reset-inset, 0);
+  inset-inline-end: var(--_chart-pin-reset-inset, 0);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  block-size: var(--space-6);
+  padding: 0 var(--space-2-5);
+  border: var(--border-width-default) solid var(--border-divider);
+  border-radius: var(--radius-pill);
+  background: var(--surface-default);
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  line-height: 1;
+  box-shadow: var(--shadow-1);
+  cursor: pointer;
+
+  &::before {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    inline-size: max(100%, var(--hit-comfy));
+    block-size: var(--hit-comfy);
+    transform: translate(-50%, -50%);
+    content: '';
+  }
+
+  &:hover {
+    color: var(--text-primary);
+    border-color: var(--border-strong);
+  }
+}
