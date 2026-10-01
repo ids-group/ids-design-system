@@ -1,4 +1,5 @@
 @use '../../styles/breakpoints' as bp;
+@use '../../styles/focus' as focus;
 
 :host {
   --_app-layout-padding-x: var(--ds-app-layout-padding-x, var(--space-6));
@@ -93,7 +94,7 @@
 
   // Only script focuses it, as the next Tab's starting point; a ring round the whole page marks no control.
   &:focus {
-    outline: none;
+    @include focus.own-indicator;
   }
 }
 

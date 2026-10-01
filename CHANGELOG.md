@@ -25,7 +25,7 @@
 - **`ds-app-layout`'s content region draws no focus ring.** An app that moves focus to the
   `<main>` after a navigation, so the next Tab starts on the new page, got the base indicator round
   the whole content area, and with no key pressed first the browser showed it. The region still
-  takes focus; only the ring is gone.
+  takes focus; only the ring is gone, except under forced colours, where it stays.
 
 - **`ds-date-picker`'s month arrows have accessible names.** The previous- and next-month buttons in
   the calendar panel are announced as `datePicker.previousMonth` and `datePicker.nextMonth`, where
