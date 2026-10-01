@@ -1,4 +1,10 @@
 <figure class="chart">
+  @if (drawsUnpin) {
+    <ds-chart-unpin
+      [pinned]="cursorPinned()"
+      (release)="releaseCursor()" />
+  }
+
   @if (caption()) {
     <figcaption>
       {{ caption() }}
