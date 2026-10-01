@@ -3,15 +3,16 @@
 ### Breaking
 
 - **A chart whose pointer picks a category is walked by verticals from the keyboard.** In an
-  `interactive` `ds-line-chart` and an `interactive` `ds-chart` with a category cursor, Tab
-  lands on the category band (ringed), Left and Right move between bands and wrap, Home and End jump to the ends, and Tab
-  leaves the chart in one press. Up and Down focus one series' marker inside the band and the
-  panel shows that point alone; Enter on it fires `pointClicked` as a click does. Enter on a band
-  pins it and moving to another band lets the pin go; Escape steps back from a marker to the band
-  and then closes the panel. The series
-  markers are no longer Tab stops there; charts whose pointer picks a mark are unchanged. A class
-  extending `ChartComponent`, `LineSeriesComponent` or `ColumnSeriesComponent` may collide with
-  the members they gained (`focusedCategory`, `axisPointElements` and the keyboard handlers).
+  `interactive` `ds-line-chart` and an `interactive` `ds-chart` with a category cursor, Tab lands
+  on the category band (ringed), Left and Right move between bands and wrap, Home and End jump to
+  the ends, and Tab leaves the chart in one press. Up and Down focus one series' marker inside the
+  band and the panel shows that point alone; Enter on it fires `pointClicked` as a click does.
+  Enter on a band pins it and moving to another band lets the pin go; Escape steps back from a
+  marker to the band and then closes the panel. The series markers are no longer Tab stops there;
+  charts whose pointer picks a mark are unchanged. A class extending `ChartComponent`,
+  `LineSeriesComponent` or `ColumnSeriesComponent` may collide with the members they gained
+  (`focusedCategory`, `axisPointElements` and the keyboard handlers); a colliding private one must
+  be renamed, since `override` cannot reach it.
 
 - **`styles/focus` emits its global rules only through `emit-rules`.** The base focus indicator
   (`:where(:focus-visible)`), the `ds-focus-ring-in` keyframes, the `data-focus` switch and the
