@@ -301,7 +301,7 @@ const ourScripts = (() => {
 const requested = process.argv.slice(2).filter((arg) => !arg.startsWith('--'));
 if (process.argv.includes('--list')) {
   for (const file of publishedFiles()) console.log(`document  ${file}`);
-  for (const file of shippedSources()) console.log(`source    ${file}`);
+  for (const file of shippedSources().files) console.log(`source    ${file}`);
   process.exit(0);
 }
 // `resolve`, not `join`: an absolute argument has to work, so a staged copy of one release
