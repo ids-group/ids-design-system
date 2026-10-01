@@ -60,9 +60,9 @@
       ],
       "action": "Build after upgrading, and rename or mark `override` a member of yours the compiler reports as colliding.",
       "appliesWhen": "Only a class of yours that extends ChartComponent, TagComponent or the internal ChartTooltipDirective. Template users of ds-chart and ds-tag need nothing; subclassing a DS component is unsupported.",
-      "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does.",
+      "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does. Against the private detachOffscreen, `override` still fails with TS2415; only a rename resolves it.",
       "restore": null,
-      "verify": "The app builds with no TS4114 or TS2416 against ChartComponent, TagComponent or the internal ChartTooltipDirective.",
+      "verify": "The app builds with no TS4114, TS2415 or TS2416 against ChartComponent, TagComponent or the internal ChartTooltipDirective.",
       "note": "ChartComponent gained the protected drawsUnpin, TagComponent the protected onKeyActivate, the internal ChartTooltipDirective the private detachOffscreen."
     },
     {
