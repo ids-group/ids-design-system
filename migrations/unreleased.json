@@ -64,7 +64,8 @@
     {
       "text": "A framed ds-funnel-chart draws its Unpin control at the frame padding from the top and end, like the other charts, where it stood twice that far in.",
       "verify": "pin a stage of a framed ds-funnel-chart and confirm the Unpin pill sits on the caption line at the same inset as on a ds-bar-chart."
-    }
+    },
+    "ds-app-layout's content region draws no focus ring when the app moves focus to it; it stays focusable from script as the starting point for the next Tab."
   ],
   "deleteList": []
 }
