@@ -66,12 +66,18 @@
   :root[data-focus='ring'] {
     --ds-field-focus-shadow: var(--focus-ring);
     --ds-field-focus-shadow-error: var(--focus-ring-error);
+
+    // `--warning-text`, not `--focus-ring-warning`: the bright warning hue is 1.47:1 on white, too faint for a ring.
+    --ds-field-focus-shadow-warning: 0 0 0 2px var(--focus-ring-inner), 0 0 0 4px var(--warning-text);
+    --ds-field-focus-shadow-success: var(--focus-ring-success);
   }
 
   :root[data-focus='edge'] {
     --focus-ring-offset: 0px;
     --ds-field-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
     --ds-field-focus-shadow-error: 0 0 0 var(--border-width-default) var(--error);
+    --ds-field-focus-shadow-warning: 0 0 0 var(--border-width-default) var(--warning-text);
+    --ds-field-focus-shadow-success: 0 0 0 var(--border-width-default) var(--success);
   }
 
   // Not pinned to :root: set it on a clipping element and everything inside keeps an indicator.
@@ -79,6 +85,8 @@
     --focus-ring-offset: calc(-1 * var(--focus-ring-width));
     --ds-field-focus-shadow: var(--focus-ring-inset);
     --ds-field-focus-shadow-error: var(--focus-ring-inset-error);
+    --ds-field-focus-shadow-warning: inset 0 0 0 2px var(--focus-ring-inner), inset 0 0 0 4px var(--warning-text);
+    --ds-field-focus-shadow-success: inset 0 0 0 2px var(--focus-ring-inner), inset 0 0 0 4px var(--success);
   }
 
   // Applies under every style: forced colours drops box-shadow, so the field halo vanishes.

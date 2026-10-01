@@ -14,14 +14,12 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**104 open — 0 P1, 5 P2, 99 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**103 open — 0 P1, 4 P2, 99 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 5
+### P2 — 4
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
-- **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
-  - Warning and success fields show a mismatched halo
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Tooling**
@@ -185,8 +183,8 @@ item and nothing else.
 
 **Consumer asks are the head of the board.** Every item a consumer is waiting on is drawn, with its
 before and after, in deck `decision-queue` under *Ждут консьюмеры*; pick there, and the items here
-are the work. Three are open: the control-edge contrast (:219) under *Bugs*, the bar/column extract
-(:434) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1079). The 0.9.0-0.13.3 manifest walk and the eleven
+are the work. Three are open: the control-edge contrast (:216) under *Bugs*, the bar/column extract
+(:416) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1064). The 0.9.0-0.13.3 manifest walk and the eleven
 reached-past styling hooks are both closed.
 
 **Nobody is blocked from installing.** All six consumer repos declare Angular `^21` or `~21`, so the
@@ -233,14 +231,6 @@ box-shadow layer paints nothing and reserves nothing, so there was no gap betwee
 fix. The record cannot be corrected (a published manifest is frozen, `AUTHORING.md:183`) and
 `CONTRIBUTING.md:168-174` forbids describing it in a new entry, so the new item carries `supersedes`
 and says nothing about the old one. Measured on three grounds: `presentations/focus-ring-gap.png`.
-
-- [ ] **[P2] Warning and success fields show a mismatched halo.** `_field-state.scss` gives error a
-  nested focus block and gives warning/success none, so a focused warning field is a yellow border
-  with a blue halo. `--focus-field-warning` and `--focus-field-success` already exist in
-  `themes/_semantic.scss` and are documented, and nothing in `src/` reads either — the tokens for the
-  fix are already shipped. The mixin also takes no `$warning-focus-shadow` / `$success-focus-shadow`,
-  so a component cannot pass its own.
-
 
 - [ ] **[P3] Thirteen ds-docs forced-state pins misrepresent their component.** Three change pixels
   today: the dropzone pin invents a text colour from a token nothing else reads (itself a published

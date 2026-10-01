@@ -4422,6 +4422,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-focus-shadow-error",
         "value": "—",
         "notes": "Field focus ring shadow in error state (defaults to --focus-field-error)."
+      },
+      {
+        "name": "--ds-field-focus-shadow-warning",
+        "value": "—",
+        "notes": "Field focus shadow in warning state (defaults to --focus-field-warning)."
+      },
+      {
+        "name": "--ds-field-focus-shadow-success",
+        "value": "—",
+        "notes": "Field focus shadow in success state (defaults to --focus-field-success)."
       }
     ]
   },

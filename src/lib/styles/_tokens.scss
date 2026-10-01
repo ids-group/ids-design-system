@@ -241,6 +241,8 @@
      declared, so a ds-color zone could never reach it. */
   --ds-field-focus-shadow:         var(--focus-field);
   --ds-field-focus-shadow-error:   var(--focus-field-error);
+  --ds-field-focus-shadow-warning: var(--focus-field-warning);
+  --ds-field-focus-shadow-success: var(--focus-field-success);
   --ds-control-focus-shadow:       var(--focus-ring);
   --ds-control-focus-shadow-error: var(--focus-ring-error);
 

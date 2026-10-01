@@ -7,7 +7,9 @@
   $error-bg: var(--error-subtitle),
   $error-focus-shadow: var(--ds-field-focus-shadow-error),
   $warning-border: var(--warning-text),
-  $success-border: var(--success)
+  $warning-focus-shadow: var(--ds-field-focus-shadow-warning),
+  $success-border: var(--success),
+  $success-focus-shadow: var(--ds-field-focus-shadow-success)
 ) {
   // `:not(.in-group)`: a segment ties `.in-group` at (0,3,0) and this mixin is included last, so the fill
   // would repaint one segment mid-row. `:not(.disabled)`: state is (0,3,0) against (0,2,0) and would
@@ -25,9 +27,19 @@
   // --warning is 1.47:1 against a white field (WCAG 1.4.11 asks 3:1); --warning-text is the first ramp rung that clears it, at 4.59:1.
   :host([data-field-state='warning']:not(.in-group)) #{$box}:not(.disabled):not(:disabled) {
     border-color: #{$warning-border};
+
+    &:focus-within,
+    &:focus-visible {
+      box-shadow: #{$warning-focus-shadow};
+    }
   }
 
   :host([data-field-state='success']:not(.in-group)) #{$box}:not(.disabled):not(:disabled) {
     border-color: #{$success-border};
+
+    &:focus-within,
+    &:focus-visible {
+      box-shadow: #{$success-focus-shadow};
+    }
   }
 }
