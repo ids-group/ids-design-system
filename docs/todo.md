@@ -14,15 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**110 open — 0 P1, 6 P2, 104 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**109 open — 0 P1, 5 P2, 104 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 6
+### P2 — 5
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Warning and success fields show a mismatched halo
-  - `ds-tag` marked `interactive` is mouse-only
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Tooling**
@@ -191,8 +190,8 @@ item and nothing else.
 
 **Consumer asks are the head of the board.** Every item a consumer is waiting on is drawn, with its
 before and after, in deck `decision-queue` under *Ждут консьюмеры*; pick there, and the items here
-are the work. Three are open: the control-edge contrast (:224) under *Bugs*, the bar/column extract
-(:465) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1108). The 0.9.0-0.13.3 manifest walk and the eleven
+are the work. Three are open: the control-edge contrast (:223) under *Bugs*, the bar/column extract
+(:460) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1103). The 0.9.0-0.13.3 manifest walk and the eleven
 reached-past styling hooks are both closed.
 
 **Nobody is blocked from installing.** All six consumer repos declare Angular `^21` or `~21`, so the
@@ -246,10 +245,6 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   `themes/_semantic.scss` and are documented, and nothing in `src/` reads either — the tokens for the
   fix are already shipped. The mixin also takes no `$warning-focus-shadow` / `$success-focus-shadow`,
   so a component cannot pass its own.
-
-- [ ] **[P2] `ds-tag` marked `interactive` is mouse-only.** It takes a click handler but no
-  `tabindex`, no `role` and no keydown, so the affordance is unreachable by keyboard. Found while
-  auditing its focus ring, which is moot until this is fixed.
 
 - [ ] **[P3] The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`.**
   It does not: the panel's `.time-action` rings with `focus.ring` (`176e1f2d`), and the token is
