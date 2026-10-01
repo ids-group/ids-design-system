@@ -55,6 +55,10 @@
     {
       "text": "A ds-table expanded row folds closed over --duration-base, mirroring its opening, and its panel row stays in the DOM until the fold ends.",
       "verify": "collapse an expanded row and confirm the panel folds shut rather than disappearing, and that code reading the table's rows right after the collapse does not depend on the panel row being gone in the same frame."
+    },
+    {
+      "text": "--ds-multi-select-option-bg-color-active takes effect: it colours the option row under the keyboard cursor and the pointer in that multi-select panel. A value set on the token before and never seen now shows.",
+      "verify": "open a ds-multi-select whose host or an ancestor sets the token, move the keyboard cursor onto an unselected option, and confirm the row takes that colour."
     }
   ],
   "deleteList": []

@@ -684,7 +684,7 @@
   "--ds-multi-select-border-color-hover": "Trigger border colour on hover (default --ds-field-border-color-hover, then --border-strong).",
   "--ds-multi-select-check-bg-color": "Multi-select option checkmark fill (defaults to --accent).",
   "--ds-multi-select-font-size": "Trigger text size (default --ds-field-font-size, then --font-size-s).",
-  "--ds-multi-select-option-bg-color-active": "Option row fill while pressed (default --surface-secondary). Separate from hover, which does nothing on touch.",
+  "--ds-multi-select-option-bg-color-active": "Option row fill under the keyboard cursor and the pointer, for this multi-select's panel only (default --surface-secondary).",
   "--ds-multi-select-panel-bg-color": "Dropdown panel surface (default --surface-overlay). The panel is portaled, so set it on the host — a global rule against the pane cannot see the host override.",
   "--ds-multi-select-placeholder-color": "Placeholder colour shown while nothing is selected (default --ds-field-placeholder-color, then --text-tertiary).",
   "--ds-multi-select-radius": "Multi-select control corner radius (defaults to --radius-md).",
