@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**105 open — 0 P1, 5 P2, 100 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**104 open — 0 P1, 5 P2, 99 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 5
 
@@ -28,10 +28,9 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 100
+### P3 — 99
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
-  - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
   - Thirteen ds-docs forced-state pins misrepresent their component
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - Prose-shaped `old` values in 0.11.x remain (hygiene, not breakage)
@@ -242,13 +241,6 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   fix are already shipped. The mixin also takes no `$warning-focus-shadow` / `$success-focus-shadow`,
   so a component cannot pass its own.
 
-- [ ] **[P3] The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`.**
-  It does not: the panel's `.time-action` rings with `focus.ring` (`176e1f2d`), and the token is
-  resolved on `:host` and read only by the trigger's `:focus-visible`
-  (`time-picker.component.scss:7-11,105-108`), so its absence from `panelTokens` is correct. What
-  remains is text: the description at `token-descriptions.json:1071` ("read directly by the portaled
-  panel") and the orphaned "Public token, for the portal reason" comment at
-  `time-picker.component.scss:232`, above a rule that reads no token.
 
 - [ ] **[P3] Thirteen ds-docs forced-state pins misrepresent their component.** Three change pixels
   today: the dropzone pin invents a text colour from a token nothing else reads (itself a published
