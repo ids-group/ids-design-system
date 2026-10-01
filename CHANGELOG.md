@@ -1,5 +1,16 @@
 ## Unreleased
 
+### Breaking
+
+- **`styles/focus` emits its global rules only through `emit-rules`.** The base focus indicator
+  (`:where(:focus-visible)`), the `ds-focus-ring-in` keyframes, the `data-focus` switch and the
+  forced-colours outline moved into `@mixin emit-rules`, which `styles/ds` includes. Before, every
+  stylesheet that used a focus mixin re-emitted all of them, so each component carrying one shipped a
+  copy; an app of seven components builds 12.6 kB smaller unminified, 0.9 kB gzip. If your global
+  stylesheet composes the parts instead of `@use 'styles/ds'`, add `@include focus.emit-rules;`
+  after `@use 'styles/focus' as focus;`, or focus rings disappear on elements that style none
+  themselves and `data-focus` stops switching. `@use 'styles/ds'` needs nothing.
+
 ### Fixed
 
 - **`ds-chart` shows the Unpin control while its category cursor is held.** A click on a band pins

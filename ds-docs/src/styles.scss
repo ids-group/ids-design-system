@@ -10,7 +10,7 @@
 @use 'styles/reset';
 @use 'styles/typography';
 @use 'styles/link';
-@use 'styles/focus';
+@use 'styles/focus' as focus;
 @use 'styles/ds-color';
 @use 'styles/layout-utils';
 @use 'styles/scrollbar';
@@ -30,6 +30,7 @@
 // Brand preview for the Tweaks panel toggle; active only under <html data-brand="acme">.
 @use 'styles/preview-brand-acme';
 @include bp.emit-vars;
+@include focus.emit-rules;
 @include status.semantic-preset;
 @include status.define((
   planning:  (bg: var(--neutral-150),      text: var(--neutral-700),   dot: var(--icon-muted)),
