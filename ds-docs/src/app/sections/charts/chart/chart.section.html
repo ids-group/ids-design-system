@@ -85,11 +85,12 @@
     mark as on a composed one, and every point of the plot belongs to its
     nearest category, so the pointer moves from one band straight to the next. A
     mark inside the band opens no panel of its own on hover and does not pin on
-    click. Focus opens the category's band and its panel, naming every mark's
-    reading there,
-    <code class="t-mono-inline">
-      pointClicked
-    </code> still fires, and
+    click. With <code class="t-mono-inline"> interactive </code> set, Tab lands
+    on the category's band, ringed, and opens its panel naming every mark's
+    reading there; <kbd> ← </kbd> and <kbd> → </kbd> walk the bands and wrap,
+    and <kbd> ↑ </kbd> and <kbd> ↓ </kbd> focus one mark's reading, whose panel
+    names it alone. A click on a mark, or <kbd> Enter </kbd> on a focused one,
+    still fires <code class="t-mono-inline"> pointClicked </code>, and
     <code class="t-mono-inline">
       pinOnClick
     </code> holds the category.
