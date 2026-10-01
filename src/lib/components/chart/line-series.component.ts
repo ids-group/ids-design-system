@@ -100,7 +100,7 @@ const PIN_MARKER_CLEARANCE = 6;
 export class LineSeriesComponent implements OnDestroy {
   protected readonly leaveMark = leaveMark;
 
-  private readonly scales = inject(CHART_SCALES);
+  protected readonly scales = inject(CHART_SCALES);
 
   /** Not `input.required`: the preset reads `tooltipContext()` from a binding on this element (NG0950). */
   readonly data = input<readonly LineSeriesData[]>([]);
@@ -204,6 +204,7 @@ export class LineSeriesComponent implements OnDestroy {
       readsCategory: computed(() => this.tooltip() === 'axis'),
       axisOrigin: this.topReadingElement,
       axisEntries: this.axisEntries,
+      axisPointElements: this.axisPointElements,
     });
     listenForMarkFocus(
       inject(ElementRef),
@@ -436,6 +437,10 @@ export class LineSeriesComponent implements OnDestroy {
 
       return;
     }
+    // The category cursor's `ds-chart` owns the other keys.
+    if (this.scales.cursorOn?.()) {
+      return;
+    }
     const marker = this.allMarkers()[hit.index];
     const strand = this.allMarkers().filter(
       (candidate) => candidate.seriesId === marker?.seriesId,
@@ -508,6 +513,7 @@ export class LineSeriesComponent implements OnDestroy {
         ? [
             {
               seriesId: entry.series.id,
+              markIndex: marker.markIndex,
               reading: {
                 label: marker.seriesLabel,
                 value: marker.value,
@@ -548,6 +554,12 @@ export class LineSeriesComponent implements OnDestroy {
 
   private readonly markerElements =
     viewChildren<ElementRef<Element>>('markerEl');
+
+  readonly axisPointElements = computed<readonly (Element | null)[]>(() =>
+    this.readingsAtCursor().map(
+      ({ markIndex }) => this.markerElements()[markIndex]?.nativeElement ?? null,
+    ),
+  );
 
   /** The topmost reading at the active category, as an element; the cursor band spans the plot and would open an `'axis'` panel at the top. */
   private readonly topReadingElement = computed<Element | null>(() => {

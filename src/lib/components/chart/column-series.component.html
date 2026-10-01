@@ -51,7 +51,11 @@
       [attr.data-mark-index]="index"
       [attr.role]="interactive() ? 'button' : null"
       [attr.tabindex]="
-        interactive() ? (index === roving.tabStop() ? 0 : -1) : null
+        interactive()
+          ? !scales.cursorOn?.() && index === roving.tabStop()
+            ? 0
+            : -1
+          : null
       "
       [attr.aria-label]="interactive() ? entryLabel(mark) : null"
       (animate.leave)="leaveMark($event)">

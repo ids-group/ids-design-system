@@ -86,7 +86,8 @@ let nextSeriesId = 0;
 export class ColumnSeriesComponent implements OnDestroy {
   protected readonly leaveMark = leaveMark;
 
-  private readonly scales = inject(CHART_SCALES);
+  protected readonly scales = inject(CHART_SCALES);
+  private readonly host = inject<ElementRef<Element>>(ElementRef);
   private readonly locale = injectDsLocale();
   protected readonly intl = inject(DS_INTL);
 
@@ -224,8 +225,9 @@ export class ColumnSeriesComponent implements OnDestroy {
           : (this.barElements()[categoryIndex]?.nativeElement ?? null);
       }),
       axisEntries: this.axisEntries,
+      axisPointElements: this.axisPointElements,
     });
-    const host = inject<ElementRef<Element>>(ElementRef);
+    const host = this.host;
     listenForMarkFocus(
       host,
       (event, hit) => this.onMarkFocus(event, hit),
@@ -424,6 +426,10 @@ export class ColumnSeriesComponent implements OnDestroy {
 
       return;
     }
+    // The category cursor's `ds-chart` owns the other keys.
+    if (this.scales.cursorOn?.()) {
+      return;
+    }
     this.roving.navigate(event, hit.index, hit.element.closest('.columns'));
   }
 
@@ -454,6 +460,16 @@ export class ColumnSeriesComponent implements OnDestroy {
       },
     ];
   });
+
+  readonly axisPointElements = computed<readonly (Element | null)[]>(() =>
+    this.axisEntries().length === 0
+      ? []
+      : [
+          this.host.nativeElement.querySelector(
+            `.columns [data-mark-index="${this.scales.activeIndex()}"]`,
+          ),
+        ],
+  );
 
   private shareDetail(index: number): string | undefined {
     return this.partOfWhole()
