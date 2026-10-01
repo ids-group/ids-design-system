@@ -5,7 +5,7 @@
 // painting its own shadow must yield, see `state-shadow`.
 // An outline follows the element's border-radius: a shell that only carries the ring takes `--focus-ring-radius`.
 // Include inside `&:focus-visible`, never on the element itself, or every instance is ringed at all times.
-// Usually include nothing: `:where(:focus-visible)` below rings anything focusable that styles nothing itself.
+// Usually include nothing: `:where(:focus-visible)` in `emit-rules` rings anything focusable that styles nothing itself.
 // Pass a negative offset where an ancestor clips.
 @mixin ring($offset: var(--focus-ring-offset)) {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
@@ -13,18 +13,6 @@
 
   // An animation, not a transition: a `transition` here would replace the component's own list. Colour only, so the ring does not lag the caret.
   animation: ds-focus-ring-in var(--duration-fast) var(--ease-standard);
-}
-
-// Catches anything focusable that styles nothing itself; a shell ringing on `:focus-within`
-// silences its control with `owns-the-focus-ring` to avoid a second ring.
-:where(:focus-visible) {
-  @include ring;
-}
-
-@keyframes ds-focus-ring-in {
-  from {
-    outline-color: transparent;
-  }
 }
 
 // A shell that rings on its control's behalf and silences $control in the same call.
@@ -60,28 +48,44 @@
   }
 }
 
-:root[data-focus='ring'] {
-  --ds-field-focus-shadow: var(--focus-ring);
-  --ds-field-focus-shadow-error: var(--focus-ring-error);
-}
-
-:root[data-focus='edge'] {
-  --focus-ring-offset: 0px;
-  --ds-field-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
-  --ds-field-focus-shadow-error: 0 0 0 var(--border-width-default) var(--error);
-}
-
-// Not pinned to :root: set it on a clipping element and everything inside keeps an indicator.
-[data-focus='inset'] {
-  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
-  --ds-field-focus-shadow: var(--focus-ring-inset);
-  --ds-field-focus-shadow-error: var(--focus-ring-inset-error);
-}
-
-// Applies under every style: forced colours drops box-shadow, so the field halo vanishes.
-@media (forced-colors: active) {
+// The global focus rules. Call from exactly one global stylesheet: `styles/ds` does. A rule here,
+// emitted at the top level instead, would be copied into every component stylesheet that uses a mixin.
+@mixin emit-rules {
+  // Catches anything focusable that styles nothing itself; a shell ringing on `:focus-within`
+  // silences its control with `owns-the-focus-ring` to avoid a second ring.
   :where(:focus-visible) {
-    outline: var(--focus-ring-width) solid CanvasText;
-    outline-offset: var(--focus-ring-offset);
+    @include ring;
+  }
+
+  @keyframes ds-focus-ring-in {
+    from {
+      outline-color: transparent;
+    }
+  }
+
+  :root[data-focus='ring'] {
+    --ds-field-focus-shadow: var(--focus-ring);
+    --ds-field-focus-shadow-error: var(--focus-ring-error);
+  }
+
+  :root[data-focus='edge'] {
+    --focus-ring-offset: 0px;
+    --ds-field-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
+    --ds-field-focus-shadow-error: 0 0 0 var(--border-width-default) var(--error);
+  }
+
+  // Not pinned to :root: set it on a clipping element and everything inside keeps an indicator.
+  [data-focus='inset'] {
+    --focus-ring-offset: calc(-1 * var(--focus-ring-width));
+    --ds-field-focus-shadow: var(--focus-ring-inset);
+    --ds-field-focus-shadow-error: var(--focus-ring-inset-error);
+  }
+
+  // Applies under every style: forced colours drops box-shadow, so the field halo vanishes.
+  @media (forced-colors: active) {
+    :where(:focus-visible) {
+      outline: var(--focus-ring-width) solid CanvasText;
+      outline-offset: var(--focus-ring-offset);
+    }
   }
 }

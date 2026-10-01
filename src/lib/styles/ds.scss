@@ -6,6 +6,7 @@
 //   @use 'themes/base-palette'; @use 'styles/theme-activation'; @use 'styles/tokens';
 
 @use 'breakpoints' as bp-emit;
+@use 'focus' as focus-emit;
 @forward '../themes/base-palette';
 @forward 'theme-activation';
 @forward 'tokens';
@@ -27,3 +28,4 @@
 @forward 'overlay-motion';
 @forward 'skeleton-shimmer';
 @include bp-emit.emit-vars;
+@include focus-emit.emit-rules;

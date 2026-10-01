@@ -2,6 +2,22 @@
   "version": "unreleased",
   "items": [
     {
+      "id": "focus-global-rules-behind-emit-rules",
+      "kind": "scss-api",
+      "old": "@use 'styles/focus'",
+      "new": "@include focus.emit-rules;",
+      "surface": "style",
+      "searchHints": ["styles/focus", "emit-rules"],
+      "detect": [
+        "@use 'styles/focus'",
+        "@use '@ids-group-ltd/ids-design-system/styles/focus'"
+      ],
+      "action": "In the ONE global stylesheet that composes the parts instead of `@use 'styles/ds'`, write `@use 'styles/focus' as focus;` and `@include focus.emit-rules;` after it. Change nothing in a component stylesheet that uses focus mixins.",
+      "appliesWhen": "Only a global stylesheet that pulls in `styles/focus` itself rather than through `styles/ds`. Ships in `styles/focus`, which `styles/ds` forwards and whose rules `styles/ds` now includes; an app on `@use 'styles/ds'` needs nothing.",
+      "pitfall": "Nothing fails to build: without the include, links, plain buttons and other elements that style no focus themselves lose their ring, and setting `data-focus` on `<html>` changes nothing.",
+      "verify": "The app's BUILT global CSS contains a bare `:where(:focus-visible)` rule and `@keyframes ds-focus-ring-in`, each once."
+    },
+    {
       "id": "exported-class-members-grew",
       "kind": "behavior",
       "old": "ChartComponent",
