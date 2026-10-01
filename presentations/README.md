@@ -25,6 +25,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 12 | `12-field-focus-click-vs-tab` | whether a text field shows the same focused style after a click as after Tab, or the border alone after a click: both variants live, with a halo/ring switch and the input modality shown |
 | 13 | `13-status-field-focus-halo` | the halo of a focused warning or success field: the shared blue as today, or its status colour like error; both drawn and read back, halo and ring |
 | 14 | `14-focused-marker-tooltip` | what a keyboard-focused line marker's panel names: the whole category, as the code does today, or its own series, as the catalogue promises; the measured panel and both options drawn on the docs example's data |
+| 15 | `15-deerns-atlas-feedback` | the Deerns Atlas prototype feedback, every claim checked against the uploaded bundle: seven drawn decisions (missing required input, Badge tone, Stat frame, Timeline spine, narrow Topbar, clipped SidenavItem label, Input in a narrow grid) and a build-extend-recipe-consumer call for each requested component; twelve one-answer fixes listed |
 
 **Rank 1 is the way in, and ranks 2-4 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-5 are written in Russian; `deck.css`, which sits beside `ds.css` and carries the

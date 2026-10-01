@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Фидбек Deerns Atlas</title>
+<meta name="ds-deck-status" content="open">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+<style>
+  main { padding-block-end: 96px; }
+  .opt { cursor: pointer; }
+  .opt > .badge { align-self: flex-start; }
+  .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+  .opt.is-chosen { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+  .opt .chosen-mark { display: none; font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--accent-strong); }
+  .opt.is-chosen .chosen-mark { display: block; }
+  .opts { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  .pill { padding: 2px var(--space-2); border-radius: var(--radius-pill); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.5 var(--font-sans); white-space: nowrap; }
+  .pill.good { background: var(--success-subtitle); color: var(--success-text); }
+  .pill.bad { background: var(--error-subtitle); color: var(--error-text); }
+  .pill.mid { background: var(--warning-subtitle); color: var(--warning-text); }
+  .pill.info { background: var(--info-subtitle); color: var(--info-text); }
+  .bar-fixed { position: fixed; inset-inline: 0; inset-block-end: 0; display: flex; gap: var(--space-3); align-items: center; padding: var(--space-3) var(--space-5); background: var(--surface-default); border-top: var(--border-width-default) solid var(--border-default); font: var(--font-size-s) / 1.4 var(--font-sans); color: var(--text-secondary); z-index: 5; }
+  .bar-fixed .count { font-weight: var(--font-weight-bold); flex: none; color: var(--text-primary); }
+  .bar-fixed output { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-fixed button { border: var(--border-width-default) solid var(--border-default); background: var(--surface-default); color: var(--text-primary); border-radius: var(--ds-radius-control); padding: var(--space-1) var(--space-3); font: var(--font-weight-semibold) var(--font-size-s) / 1.4 var(--font-sans); cursor: pointer; }
+  .verdicts td:first-child { white-space: nowrap; }
+  .fixlist { margin: 0; padding-inline-start: var(--space-5); display: grid; gap: var(--space-1-5); font: var(--font-size-s) / 1.5 var(--font-sans); }
+  .mock { font: var(--font-size-s) / 1.5 var(--font-sans); color: var(--text-primary); }
+
+  /* Badge, rebuilt from badge.component.scss; tones from the status semantic preset. */
+  .b { display: inline-flex; align-items: center; gap: var(--badge-gap, 4px); padding: var(--badge-pad-y) var(--badge-pad-x); border-radius: var(--radius-pill); font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans); letter-spacing: var(--letter-spacing-wide); white-space: nowrap; background: var(--surface-secondary); color: var(--text-secondary); }
+  .b .d { width: 6px; height: 6px; border-radius: var(--radius-pill); background: currentcolor; }
+  .b.success { background: var(--success-subtitle); color: var(--success-text); }
+  .b.warning { background: var(--warning-subtitle); color: var(--warning-text); }
+  .b.error { background: var(--error-subtitle); color: var(--error-text); }
+  .b.info { background: var(--info-subtitle); color: var(--info-text); }
+  .brow { display: flex; flex-wrap: wrap; gap: var(--space-1-5); }
+
+  /* Card and Stat, rebuilt from card/stat .component.scss. */
+  .card { background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--ds-radius-panel); padding: var(--ds-surface-padding); }
+  .card.tight { padding: var(--space-4); }
+  .stat { background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--ds-radius-panel); padding: var(--space-4); }
+  .stat.bare { border: 0; padding: 0; background: none; }
+  .stat .l { font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-sans); text-transform: uppercase; letter-spacing: var(--letter-spacing-wide); color: var(--text-tertiary); }
+  .stat .v { font: var(--font-weight-bold) 26px / 1.2 var(--font-sans); color: var(--text-primary); }
+  .kpis2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+  .group { display: grid; grid-template-columns: 1fr 1fr; border: var(--border-width-default) solid var(--border-divider); border-radius: var(--ds-radius-panel); background: var(--surface-default); }
+  .group > .stat { border: 0; border-radius: 0; background: none; }
+  .group > .stat + .stat { border-inline-start: var(--border-width-default) solid var(--border-divider); }
+
+  /* Timeline, rebuilt from timeline-item.component.scss. */
+  .tl { display: grid; }
+  .ti { display: grid; grid-template-columns: var(--timeline-node-size) 1fr; column-gap: var(--space-4); }
+  .ti .nc { display: flex; flex-direction: column; align-items: center; }
+  .ti .n { width: var(--timeline-node-size); height: var(--timeline-node-size); border-radius: var(--radius-pill); background: var(--surface-secondary); border: var(--border-width-strong) solid var(--border-strong); flex: none; box-sizing: border-box; }
+  .ti .n.ok { background: var(--success); border-color: var(--success); }
+  .ti .n.pr { background: var(--accent); border-color: var(--accent); }
+  .ti .sp { flex: 1; width: var(--timeline-spine-w); margin-top: var(--space-1); background: var(--sp, var(--border-divider)); }
+  .ti:last-child .sp { display: none; }
+  .ti .c { padding-bottom: var(--space-4); font: var(--font-size-s) / 1.4 var(--font-sans); }
+  .ti:last-child .c { padding-bottom: 0; }
+  .ti .c small { display: block; color: var(--text-tertiary); font-size: var(--font-size-xs); }
+
+  .q[data-q="topbar"] .opts { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .tbwrap { inline-size: 226px; overflow: hidden; border: var(--border-width-default) dashed var(--border-strong); border-radius: var(--ds-radius-control); }
+  .tb { zoom: .33; inline-size: 684px; display: flex; align-items: center; gap: var(--space-3); padding: 0 var(--space-4); block-size: 64px; background: var(--surface-default); border-bottom: 1px solid var(--border-divider); box-sizing: border-box; font: var(--font-size-s) / 1.4 var(--font-sans); }
+  .tb .title { font-weight: var(--font-weight-bold); font-size: 20px; flex: none; }
+  .tb .search { display: flex; align-items: center; gap: 6px; block-size: 40px; padding: 0 12px; border: 1px solid var(--border-default); border-radius: var(--ds-radius-control); color: var(--text-tertiary); background: var(--surface-default); box-sizing: border-box; min-inline-size: 0; overflow: hidden; white-space: nowrap; }
+  .tb .acts { display: flex; gap: var(--space-2); align-items: center; margin-inline-start: auto; }
+  .tb .btn { flex: none; block-size: 40px; padding: 0 14px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); white-space: nowrap; }
+  .tb .btn.ic { padding: 0; inline-size: 40px; justify-content: center; }
+  .tb .btn.pri { background: var(--accent); color: var(--accent-on); border-color: var(--accent); }
+  .tb.today .search { inline-size: 0; padding: 0; border-width: 1px; flex: 0 1 0; margin-inline-end: -16px; }
+  .tb.minclip .search { flex: 1 0 200px; }
+  .tb.minclip .acts { min-inline-size: 0; overflow: hidden; }
+  .tb.more .search { flex: 1 0 200px; }
+  .tb.icon .search { flex: none; inline-size: 40px; padding: 0; justify-content: center; }
+  .tb.icon .search span { display: none; }
+
+  .sn { inline-size: 240px; padding: var(--space-2); background: var(--surface-default); border: 1px solid var(--border-divider); border-radius: var(--ds-radius-control); box-sizing: border-box; position: relative; }
+  .si { display: flex; align-items: center; gap: var(--space-3); padding: 8px 12px; border-radius: var(--ds-radius-control); font: var(--font-weight-medium) var(--font-size-s) / 1.4 var(--font-sans); color: var(--text-secondary); }
+  .si.on { background: var(--accent-subtitle, var(--surface-secondary)); color: var(--accent-strong); }
+  .si .ico { inline-size: 18px; block-size: 18px; border-radius: 4px; background: currentcolor; opacity: .5; flex: none; }
+  .si .lb { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .si.wrap .lb { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .tip { position: absolute; inset-inline-start: 150px; inset-block-start: 8px; background: var(--neutral-900, #161a28); color: #fff; padding: 4px 8px; border-radius: 6px; font: var(--font-size-xs) / 1.4 var(--font-sans); white-space: nowrap; box-shadow: var(--shadow-popover); }
+
+  .fp { display: flex; gap: var(--space-2); inline-size: 300px; overflow: hidden; border: 1px dashed var(--border-strong); border-radius: var(--ds-radius-control); padding: var(--space-2); box-sizing: border-box; }
+  .fp .side { flex: 0 0 176px; border: 1px solid var(--error); padding: var(--space-2); box-sizing: border-box; }
+  .fp .side.ok { border-color: var(--success); }
+  .fp .main { flex: 1; background: var(--surface-secondary); border-radius: 6px; font: var(--font-size-xs) / 1.4 var(--font-sans); color: var(--text-tertiary); padding: 4px; }
+  .fp .g { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .fp .g.mm { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .fp .in { block-size: 32px; border: 1px solid var(--border-default); border-radius: 6px; padding: 0 8px; display: flex; align-items: center; font: var(--font-size-xs) / 1 var(--font-sans); color: var(--text-tertiary); background: var(--surface-default); box-sizing: border-box; min-inline-size: 0; overflow: hidden; }
+  .fp .in.wide { inline-size: 168px; flex: none; }
+  .fp .side.over { flex-basis: 360px; }
+
+  .tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid var(--border-default); border-radius: var(--radius-pill); font: var(--font-weight-medium) var(--font-size-xs) / 1.4 var(--font-sans); white-space: nowrap; background: var(--surface-default); color: var(--text-secondary); }
+  .tag.sel { background: var(--accent-subtitle, var(--info-subtitle)); border-color: var(--accent); color: var(--accent-strong); }
+  .tag .cnt { font-weight: var(--font-weight-bold); color: var(--text-tertiary); }
+  .tag.sel .cnt { color: inherit; }
+  .seg { display: inline-flex; border: 1px solid var(--border-default); border-radius: var(--ds-radius-control); overflow: hidden; }
+  .seg span { padding: 6px 10px; font: var(--font-size-xs) / 1.4 var(--font-sans); display: inline-flex; gap: 6px; align-items: center; }
+  .seg span.on { background: var(--accent); color: var(--accent-on); }
+  .seg i { inline-size: 12px; block-size: 12px; border: 2px solid currentcolor; border-radius: 2px; box-sizing: border-box; }
+  .cbr { display: flex; align-items: center; gap: 8px; font: var(--font-size-s) / 1.4 var(--font-sans); }
+  .cbr .box { inline-size: 16px; block-size: 16px; border: 2px solid var(--border-strong); border-radius: 4px; box-sizing: border-box; }
+  .cbr .box.on { background: var(--accent); border-color: var(--accent); }
+  .cbr .num { margin-inline-start: auto; color: var(--text-tertiary); font-size: var(--font-size-xs); font-variant-numeric: tabular-nums; }
+  .steps { display: flex; gap: var(--space-3); font: var(--font-size-xs) / 1.3 var(--font-sans); }
+  .steps > div { display: grid; gap: 2px; }
+  .steps b { display: inline-grid; place-items: center; inline-size: 20px; block-size: 20px; border-radius: 50%; background: var(--success); color: #fff; font-size: 11px; }
+  .steps .cur b { background: var(--accent); }
+  .steps .lock b { background: var(--surface-secondary); color: var(--text-tertiary); border: 1px solid var(--border-strong); }
+  .steps small { color: var(--text-tertiary); }
+  .comp td, .comp th { vertical-align: top; }
+  .comp .choice { display: flex; flex-wrap: wrap; gap: 4px; }
+  .comp .choice button { border: 1px solid var(--border-default); background: var(--surface-default); border-radius: var(--radius-pill); padding: 2px 10px; font: var(--font-size-2xs) / 1.6 var(--font-sans); cursor: pointer; color: var(--text-secondary); }
+  .comp .choice button.rec { border-color: var(--success); }
+  .comp .choice button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-on); }
+  .comp .spec-cell { min-inline-size: 200px; }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1>Прототип на бандле: самый громкий баг сидит в нашем elements-рантайме, а не в компонентах</h1>
+    <p class="lede">Проверено около 40 пунктов фидбека. 12 исправлений имеют один верный ответ и сделаю их без выбора (список ниже). Решить нужно 8 вопросов, плюс таблица компонентов.</p>
+    <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">актуально на 2026-10-01</span><span class="chip">бандл cad10e7d = dev</span></div>
+  </header>
+
+  <section class="panel">
+    <h2>Сверка: что подтвердилось</h2>
+    <table class="verdicts">
+      <thead><tr><th>Вердикт</th><th>Пункт</th><th>Что на самом деле</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill bad">подтверждено</span></td><td>NG0950 без компонента</td><td>Причина на нашей стороне: на React 18 обёртка ставит свойства в layout effect, а элемент уже подключён, и первая проверка Angular читает пустой required input. Ошибка сыплется на <i>каждый</i> Icon/Stat/SidenavItem/IconButton, даже с верным значением. Поэтому литералы не помогли. Бандл минифицирован, source maps нет</td></tr>
+        <tr><td><span class="pill bad">подтверждено</span></td><td>Stat - сам карточка</td><td>Своя рамка, фон, радиус 12px, отступ 24px. <code>design-system.md:413</code> ещё и советует класть KPI в Card</td></tr>
+        <tr><td><span class="pill mid">другая причина</span></td><td>Badge без цвета</td><td>Пресет <code>ds-badge[data-status]</code> в бандле есть, но генератор регистрирует Badge как <code>ds-x-badge</code>, и селектор не совпадает ни разу. Та же беда у Icon (<code>ds-x-icon</code>: хост <code>inline</code> вместо <code>inline-flex</code>) и, по коду, у Skeleton</td></tr>
+        <tr><td><span class="pill mid">частично</span></td><td>Timeline без линий</td><td>Линия есть: 2px, <code>--border-divider</code>, около 1.19:1 к белому, её почти не видно. Если обернуть пункты в div, она исчезает целиком. Тона уже есть (6), слота для автора и метаданных нет</td></tr>
+        <tr><td><span class="pill bad">подтверждено</span></td><td><code>.link</code> перебивает <code>t-caption</code></td><td>Только на <code>&lt;button&gt;</code>: у <code>.link:where(button)</code> та же специфичность, и он подключён позже. Замер: 16px вместо 12px</td></tr>
+        <tr><td><span class="pill good">не воспроизвелось</span></td><td>Select «EN» → «E…»</td><td><code>fit-content</code> учитывает шеврон, хост 65.8px, без обрезки ни в одном размере. Скорее всего, сжимал их собственный обходной <code>flex</code></td></tr>
+        <tr><td><span class="pill bad">подтверждено</span></td><td>Topbar не сжимается</td><td>Сжимается только spacer. При 684px поиск 0px, первое действие наезжает на него</td></tr>
+        <tr><td><span class="pill bad">подтверждено</span></td><td>SidenavItem без подсказки</td><td>Тултип только в свёрнутом режиме. Плюс наш дефект: пустой <code>.trailing</code> съедает 12px, и «Standards and laws» обрезается на 0.5px. Ширина уже настраивается через <code>--ds-sidenav-width</code></td></tr>
+        <tr><td><span class="pill bad">подтверждено</span></td><td>Tag переносится</td><td>Нет <code>nowrap</code>, хотя комментарий в коде обещает одну строку. В колонке 90px тег вырастает до 61px в высоту</td></tr>
+        <tr><td><span class="pill mid">частично</span></td><td>Input распирает панель</td><td>Распирает встроенная ширина нативного <code>&lt;input&gt;</code> (164px). Чинит <code>minmax(0,1fr)</code> в их grid: замер дал панель 176px и поля по 83px. Checkbox ни при чём</td></tr>
+        <tr><td><span class="pill good">неверно</span></td><td>Пустые <code>.d.ts</code></td><td>Загруженный <code>Checkbox.d.ts</code> - 51 строка, все пропы с JSDoc. Агент, видимо, прочёл 2-строчный <code>Checkbox.jsx</code>. Настоящая дыра другая: union иконок обрезан до 15 имён «+68 more»</td></tr>
+        <tr><td><span class="pill mid">частично</span></td><td>Список иконок</td><td>Неизвестное имя рендерит пустой svg молча, NG0950 не кидает. Счёт расходится: 86 / 85 / 83 / в коде 87. Тип <code>IconName</code> в загрузку не попадает</td></tr>
+        <tr><td><span class="pill mid">частично</span></td><td>Бренд-цвет</td><td>Публичного API нет. <code>--primary-h/s/l</code> есть, но к заливке не подключены. Замер: зелёный h=145 даёт белому на <code>--primary</code> 1.33:1 (сейчас 5.48). Это открытый вопрос деки <code>color-engine-derivation</code>, здесь его не решаю</td></tr>
+        <tr><td><span class="pill mid">частично</span></td><td>Тормоза на 13 плитках</td><td>Замер: 104 элемента - 51-63 мс, 900 Badge - 49-80 мс. 900 Icon - около 1 с, и это тот же NG0950 (4812 ошибок). Бандл 2.9 MB, 45% - разделы ds-docs, которые прототипу не нужны</td></tr>
+        <tr><td><span class="pill mid">частично</span></td><td>«Нет компонентов»</td><td>List, Breadcrumbs, EmptyState есть и опубликованы. Агент их не нашёл: в загрузке нет каталога «компонент - зачем». Ещё 12 закрыты частично, 4 отсутствуют (таблица ниже)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel">
+    <h2>Без выбора: один верный ответ, делаю</h2>
+    <ol class="fixlist">
+      <li><b>NG0950 на верных значениях</b>: в <code>gen.mjs</code> <code>connectedCallback</code> откладывается на микротаск. Замер на патче: ошибок было 11, осталось 2, и это настоящие пропуски. Комментарий <code>runtime.tsx:15-17</code> исправляю.</li>
+      <li><b>Значение → <code>undefined</code> не сбрасывается</b> (<code>runtime.tsx:45,93</code>): старая иконка остаётся на месте. Сбрасывать.</li>
+      <li><b>Alias <code>ds-x-*</code></b>: глобальные селекторы по тегу (status-пресет, хост Icon, Skeleton) должны совпадать и с alias. В заголовках <code>.d.ts</code> писать настоящий тег.</li>
+      <li><b>Dev-сборка бандла</b> без минификации и с source maps, рядом с prod.</li>
+      <li><b><code>.link</code> на кнопке</b>: три <code>inherit</code> переезжают в <code>:where(button.link)</code> с нулевой специфичностью, и любой <code>t-*</code> побеждает.</li>
+      <li><b>Tag в одну строку</b>: <code>nowrap</code> по умолчанию и хук <code>--ds-tag-white-space</code>, как у Badge.</li>
+      <li><b>SidenavItem</b>: <code>.trailing:empty</code> скрыт, лишние 12px уходят.</li>
+      <li><b>Иконки</b>: в <code>Icon.d.ts</code> один полный закрытый <code>IconName</code>, иконочные пропы ссылаются на него, счёт генерируется.</li>
+      <li><b>Каталог для агента</b>: в <code>conventions.md</code> строка «компонент - зачем» на каждый компонент, описания в <code>_ds_manifest.json</code>. Заодно убрать ложное «Statuses ship empty by design» (<code>conventions.md:33</code>, <code>NOTES.md:56</code>).</li>
+      <li><b>Документация</b>: раздел «Поверхности» (кто рисует рамку сам: Card, Stat, Table, графики; кто тонирован: Alert, Banner, EmptyState), правило про обязательные пропы, карточка Tabs <code>scrollable</code>, правка <code>SidenavFooter</code> prompt (документирует пропы, которых нет), рецепты: страница сущности с вкладками и очередь согласований.</li>
+      <li><b>Бандл для прототипов без разделов ds-docs</b>: два бандла, для карточек и для прототипов. Минус около 45% по stats-сборке.</li>
+      <li><b>Бренд</b>: в загрузку идёт готовый рецепт <code>[data-brand]</code> из <code>themes/README.md</code> и замер, что смена одного hue ломает контраст. Сам движок цвета остаётся в деке <code>color-engine-derivation</code>.</li>
+    </ol>
+    <p>Скажи, если с чем-то не согласен.</p>
+  </section>
+
+  <section class="panel q" data-q="required">
+    <h2>1. Обязательный input так и не пришёл: что видит прототип</h2>
+    <p>Когда отложенный connect уберёт ложные ошибки, останутся настоящие: <code>&lt;Icon name={undefined}&gt;</code> во время стриминга.</p>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Ошибка Angular</h3>
+        <p class="says">Uncaught Error: NG0950 at _ds_bundle.js:4:70189</p>
+        <div class="pills"><span class="pill bad">без имени компонента</span><span class="pill bad">шум в консоли</span><span class="pill good">ноль работы</span></div>
+        <dl class="layer"><dt>Рендер</dt><dd class="none">пустой элемент, потом восстанавливается</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Обёртка ждёт и предупреждает</h3>
+        <p class="says">[IdsDs] Icon: required prop "name" is undefined - not mounted yet</p>
+        <div class="pills"><span class="pill good">имя компонента и пропа</span><span class="pill good">один warning</span><span class="pill good">Angular не трогаем</span></div>
+        <dl class="layer"><dt>Рендер</dt><dd class="gain">пустое место, монтируется, когда значение придёт</dd><dt>Типы</dt><dd class="gain">required пропы в .d.ts без «?»</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <span class="badge is-no">вариант</span>
+        <h3>Всё необязательно в бандле</h3>
+        <p class="says">(тишина)</p>
+        <div class="pills"><span class="pill mid">бандл расходится с библиотекой</span><span class="pill bad">настоящий пропуск не виден</span></div>
+        <dl class="layer"><dt>Рендер</dt><dd class="none">Stat без label молча рисует пустую подпись</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel q" data-q="badge">
+    <h2>2. Цвет статуса у Badge</h2>
+    <p>Тот же бейдж, <code>status="success|warning|error|info|neutral"</code>, в прототипе:</p>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Ничего не красит</h3>
+        <div class="brow"><span class="b">Approved</span><span class="b">Pending</span><span class="b">Rejected</span><span class="b">Draft</span></div>
+        <div class="pills"><span class="pill bad">30+ обёрток в прототипе</span></div>
+        <dl class="layer"><dt>API</dt><dd class="none">--ds-badge-bg-color руками</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <span class="badge is-no">вариант</span>
+        <h3>Починить пресет data-status</h3>
+        <div class="brow"><span class="b success">Approved</span><span class="b warning">Pending</span><span class="b error">Rejected</span><span class="b">Draft</span></div>
+        <div class="pills"><span class="pill good">в бандле заработает</span><span class="pill mid">в Angular-приложении пресет opt-in</span><span class="pill bad">перенос в код молча теряет цвет</span></div>
+        <dl class="layer"><dt>API</dt><dd class="gain">status="success" + mixin в приложении</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Встроенный tone</h3>
+        <div class="brow"><span class="b success"><span class="d"></span>Approved</span><span class="b warning"><span class="d"></span>Pending</span><span class="b error"><span class="d"></span>Rejected</span><span class="b info">Info</span></div>
+        <div class="pills"><span class="pill good">одинаково в бандле и в Angular</span><span class="pill good">по умолчанию neutral</span><span class="pill mid">tone и status надо развести</span></div>
+        <dl class="layer"><dt>API</dt><dd class="gain">tone="success" на Badge и StatusDot, цвета из токенов --*-subtitle / --*-text</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel q" data-q="stat">
+    <h2>3. Stat внутри Card</h2>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Карточка в карточке</h3>
+        <div class="card tight"><div class="kpis2"><div class="stat"><div class="l">Projects</div><div class="v">128</div></div><div class="stat"><div class="l">Pending</div><div class="v">14</div></div></div></div>
+        <div class="pills"><span class="pill bad">выглядит как баг</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>frame="none", как у графиков</h3>
+        <div class="card tight"><div class="kpis2"><div class="stat bare"><div class="l">Projects</div><div class="v">128</div></div><div class="stat bare"><div class="l">Pending</div><div class="v">14</div></div></div></div>
+        <div class="pills"><span class="pill good">тот же API, что у 8 графиков</span><span class="pill good">один input</span><span class="pill good">DS_CONFIG по умолчанию</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <span class="badge is-no">вариант</span>
+        <h3>StatGroup с общей рамкой</h3>
+        <div class="group"><div class="stat"><div class="l">Projects</div><div class="v">128</div></div><div class="stat"><div class="l">Pending</div><div class="v">14</div></div></div>
+        <div class="pills"><span class="pill good">KPI-ряд из коробки</span><span class="pill mid">новый компонент</span><span class="pill mid">Stat в Card всё равно двоится</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel q" data-q="timeline">
+    <h2>4. Линия Timeline</h2>
+    <p>Те же три пункта. Сейчас линия <code>--border-divider</code>, около 1.19:1 к белому (расчёт, не замер).</p>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Divider</h3>
+        <div class="tl" style="--sp: var(--border-divider)"><div class="ti"><div class="nc"><span class="n ok"></span><span class="sp"></span></div><div class="c">Submitted<small>J. Smith · 12 Sep</small></div></div><div class="ti"><div class="nc"><span class="n pr"></span><span class="sp"></span></div><div class="c">In review<small>QA · 14 Sep</small></div></div><div class="ti"><div class="nc"><span class="n"></span><span class="sp"></span></div><div class="c">Approval<small>pending</small></div></div></div>
+        <div class="pills"><span class="pill bad">«это не таймлайн»</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Border-strong</h3>
+        <div class="tl" style="--sp: var(--border-strong)"><div class="ti"><div class="nc"><span class="n ok"></span><span class="sp"></span></div><div class="c">Submitted<small>J. Smith · 12 Sep</small></div></div><div class="ti"><div class="nc"><span class="n pr"></span><span class="sp"></span></div><div class="c">In review<small>QA · 14 Sep</small></div></div><div class="ti"><div class="nc"><span class="n"></span><span class="sp"></span></div><div class="c">Approval<small>pending</small></div></div></div>
+        <div class="pills"><span class="pill good">цвет обводки узла</span><span class="pill good">одна строка в SCSS</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <span class="badge is-no">вариант</span>
+        <h3>Цвет пройденного пути</h3>
+        <div class="tl"><div class="ti" style="--sp: var(--success)"><div class="nc"><span class="n ok"></span><span class="sp"></span></div><div class="c">Submitted<small>J. Smith · 12 Sep</small></div></div><div class="ti" style="--sp: var(--border-strong)"><div class="nc"><span class="n pr"></span><span class="sp"></span></div><div class="c">In review<small>QA · 14 Sep</small></div></div><div class="ti"><div class="nc"><span class="n"></span><span class="sp"></span></div><div class="c">Approval<small>pending</small></div></div></div>
+        <div class="pills"><span class="pill good">видно прогресс</span><span class="pill mid">это уже Stepper</span><span class="pill mid">новое правило тонов</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+    <p>В любом варианте: dev-warning, если родитель пункта не <code>ds-timeline</code>, и отдельно слот <code>[meta]</code> для автора и даты.</p>
+  </section>
+
+  <section class="panel q" data-q="topbar">
+    <h2>5. Topbar на 684px (окно 924 минус сайдбар 240)</h2>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Поиск схлопывается</h3>
+        <div class="tbwrap"><div class="tb today"><span class="title">Deerns Atlas</span><span class="search"><span>Search…</span></span><span class="acts"><span class="btn">EN</span><span class="btn">SI</span><span class="btn ic">🔔</span><span class="btn">Upload</span><span class="btn pri">New element</span></span></div></div>
+        <div class="pills"><span class="pill bad">поиск 0px</span><span class="pill bad">наезд</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Минимум поиску, действия обрезаются</h3>
+        <div class="tbwrap"><div class="tb minclip"><span class="title">Deerns Atlas</span><span class="search"><span>Search…</span></span><span class="acts"><span class="btn">EN</span><span class="btn">SI</span><span class="btn ic">🔔</span><span class="btn">Upload</span><span class="btn pri">New element</span></span></div></div>
+        <div class="pills"><span class="pill good">три CSS-правила</span><span class="pill good">токен --ds-topbar-search-min-width</span><span class="pill mid">лишнее уходит за край</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <span class="badge is-no">вариант</span>
+        <h3>Меню «Ещё»</h3>
+        <div class="tbwrap"><div class="tb more"><span class="title">Deerns Atlas</span><span class="search"><span>Search…</span></span><span class="acts"><span class="btn ic">🔔</span><span class="btn pri">New element</span><span class="btn ic">⋯</span></span></div></div>
+        <div class="pills"><span class="pill good">ничего не теряется</span><span class="pill bad">нужен массив actions вместо слота</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <span class="badge is-no">вариант</span>
+        <h3>Поиск в иконку</h3>
+        <div class="tbwrap"><div class="tb icon"><span class="title">Deerns Atlas</span><span class="search">🔍<span>Search…</span></span><span class="acts"><span class="btn">EN</span><span class="btn">SI</span><span class="btn ic">🔔</span><span class="btn">Upload</span><span class="btn pri">New element</span></span></div></div>
+        <div class="pills"><span class="pill good">слот остаётся слотом</span><span class="pill mid">поиск на клик дальше</span><span class="pill mid">container query</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel q" data-q="sidenav">
+    <h2>6. Длинная подпись в SidenavItem при 240px</h2>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Многоточие</h3>
+        <div class="sn"><div class="si"><span class="ico"></span><span class="lb">Reviews and approvals</span><span class="b">12</span></div><div class="si on"><span class="ico"></span><span class="lb">Standards and laws</span></div><div class="si"><span class="ico"></span><span class="lb">Upload and classify</span></div></div>
+        <div class="pills"><span class="pill bad">полного текста нигде нет</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Тултип при обрезке</h3>
+        <div class="sn"><div class="si"><span class="ico"></span><span class="lb">Reviews and approvals</span><span class="b">12</span></div><div class="si on"><span class="ico"></span><span class="lb">Standards and laws</span></div><div class="si"><span class="ico"></span><span class="lb">Upload and classify</span></div><span class="tip">Reviews and approvals</span></div>
+        <div class="pills"><span class="pill good">dsTooltipWhenClipped уже есть</span><span class="pill good">высота пунктов та же</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <span class="badge is-no">вариант</span>
+        <h3>Две строки</h3>
+        <div class="sn"><div class="si wrap"><span class="ico"></span><span class="lb">Reviews and approvals</span><span class="b">12</span></div><div class="si on wrap"><span class="ico"></span><span class="lb">Standards and laws</span></div><div class="si wrap"><span class="ico"></span><span class="lb">Upload and classify</span></div></div>
+        <div class="pills"><span class="pill good">видно сразу</span><span class="pill mid">пункты разной высоты</span><span class="pill mid">новый input</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel q" data-q="input">
+    <h2>7. Пара Input в панели фильтров 176px</h2>
+    <p>Красная рамка - панель распёрта, зелёная - держит 176px. Замер на загруженном бандле: <code>1fr 1fr</code> - панель 396px; <code>minmax(0,1fr)</code> - 176px, поля по 83px.</p>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Распирает</h3>
+        <div class="fp"><div class="side over"><div class="g"><span class="in wide">Min</span><span class="in wide">Max</span></div></div><div class="main">list</div></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Только документация</h3>
+        <div class="fp"><div class="side ok"><div class="g mm"><span class="in">Min</span><span class="in">Max</span></div></div><div class="main">list</div></div>
+        <div class="pills"><span class="pill good">так ведёт себя любой native input</span><span class="pill good">ничего не ломаем</span><span class="pill mid">потребителю правило знать</span></div>
+        <dl class="layer"><dt>Где</dt><dd class="gain">«поля в grid: minmax(0,1fr)» в conventions + рецепт RangeInput на FieldGroup</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <span class="badge is-no">вариант</span>
+        <h3>Поле тянется по контейнеру</h3>
+        <div class="fp"><div class="side ok"><div class="g"><span class="in">Min</span><span class="in">Max</span></div></div><div class="main">list</div></div>
+        <div class="pills"><span class="pill good">работает и с 1fr</span><span class="pill bad">в inline-тулбаре поле 29px вместо 190</span></div>
+        <dl class="layer"><dt>Где</dt><dd class="gain">input { width: 0 } + :host { width: 100% }</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>8. Компоненты, которых «не хватило»</h2>
+    <p>В каждой строке - что есть сегодня и что получится. Обведённая кнопка - рекомендация, клик выбирает. Три компонента уже есть и не входят: List/ListItem, Breadcrumbs, EmptyState - их чинит каталог из списка выше.</p>
+    <table class="comp">
+      <thead><tr><th>Запрос</th><th>Сегодня → после</th><th>Решение</th></tr></thead>
+      <tbody>
+        <tr class="cq" data-q="c-filterchip" data-rec="Расширить"><th class="rowlabel">FilterChip со счётчиком</th><td class="spec-cell"><div class="brow"><span class="tag sel">Laws</span><span class="tag">Standards</span></div><div class="brow" style="margin-top:6px"><span class="tag sel">Laws <span class="cnt">3</span></span><span class="tag">Standards <span class="cnt">6</span></span><button class="link" style="font-size:12px">Clear</button></div></td><td><div class="choice" data-for="Tag: input count + рецепт ряда с Clear"></div></td></tr>
+        <tr class="cq" data-q="c-facet" data-rec="Расширить"><th class="rowlabel">FacetGroup</th><td class="spec-cell"><div class="cbr"><span class="box on"></span>Laws<span class="num">12</span></div><div class="cbr"><span class="box"></span>Guidelines<span class="num">4</span></div></td><td><div class="choice" data-for="Checkbox: слот [trailing] для счётчика"></div></td></tr>
+        <tr class="cq" data-q="c-view" data-rec="Расширить"><th class="rowlabel">ViewToggle</th><td class="spec-cell"><div class="seg"><span class="on"><i></i>List</span><span><i></i>Grid</span></div> → <div class="seg"><span class="on"><i></i></span><span><i></i></span></div></td><td><div class="choice" data-for="Segmented: icon-only сегменты с aria-label"></div></td></tr>
+        <tr class="cq" data-q="c-stepper" data-rec="Расширить"><th class="rowlabel">ApprovalFlow</th><td class="spec-cell"><div class="steps"><div><b>✓</b>Design<small>J. Smith · 12 Sep</small></div><div class="cur"><b>2</b>Review<small>QA lead</small></div><div class="lock"><b>3</b>Approve<small>blocked</small></div></div></td><td><div class="choice" data-for="Stepper: шаги {label, caption}, состояние blocked; роли и подписи у приложения"></div></td></tr>
+        <tr class="cq" data-q="c-tabs" data-rec="Расширить"><th class="rowlabel">Tabs с «More»</th><td class="spec-cell"><span class="pill info">scrollable уже есть</span> → <span class="pill mid">Overview · Annotations · Fit · More ▾</span></td><td><div class="choice" data-for="Tabs: overflow в меню More"></div></td></tr>
+        <tr class="cq" data-q="c-popover" data-rec="Расширить"><th class="rowlabel">Панель у колокольчика</th><td class="spec-cell">в бандле Popover нельзя открыть: нет пропа <code>open</code>, только метод <code>toggle()</code></td><td><div class="choice" data-for="Popover-обёртка: open / trigger"></div></td></tr>
+        <tr class="cq" data-q="c-sidefoot" data-rec="Расширить"><th class="rowlabel">SidenavFooter с контентом</th><td class="spec-cell">состав фиксирован, ng-content нет</td><td><div class="choice" data-for="SidenavFooter: проецируемый слот"></div></td></tr>
+        <tr class="cq" data-q="c-media" data-rec="Компонент в DS"><th class="rowlabel">Thumbnail / Media</th><td class="spec-cell">нет; в todo «Image / lightbox, спроса нет» - теперь спрос есть</td><td><div class="choice" data-for="Новый ds-media: соотношение сторон, подпись, оверлей-метки, плейсхолдер"></div></td></tr>
+        <tr class="cq" data-q="c-range" data-rec="Рецепт"><th class="rowlabel">RangeInput</th><td class="spec-cell">FieldGroup + Input suffix, или Slider range</td><td><div class="choice" data-for="рецепт min-max с единицами"></div></td></tr>
+        <tr class="cq" data-q="c-file" data-rec="Рецепт"><th class="rowlabel">FileRow</th><td class="spec-cell">ListItem с leading-иконкой и trailing-действиями</td><td><div class="choice" data-for="рецепт на ListItem"></div></td></tr>
+        <tr class="cq" data-q="c-match" data-rec="Рецепт"><th class="rowlabel">MatchScore</th><td class="spec-cell">Bar semantics="meter" + target</td><td><div class="choice" data-for="рецепт meter с подписью; пороги у приложения"></div></td></tr>
+        <tr class="cq" data-q="c-criteria" data-rec="Рецепт"><th class="rowlabel">CriteriaTable</th><td class="spec-cell">Table + колонка статуса</td><td><div class="choice" data-for="рецепт колонки ✓ ⚠ ✕"></div></td></tr>
+        <tr class="cq" data-q="c-lang" data-rec="Рецепт"><th class="rowlabel">Language / Unit switcher</th><td class="spec-cell">Select sm или Menu</td><td><div class="choice" data-for="рецепт компактного переключателя"></div></td></tr>
+        <tr class="cq" data-q="c-flag" data-rec="У приложения"><th class="rowlabel">CountryFlag</th><td class="spec-cell">большой лицензируемый набор, живёт по своему графику</td><td><div class="choice" data-for="у приложения"></div></td></tr>
+        <tr class="cq" data-q="c-unit" data-rec="У приложения"><th class="rowlabel">UnitValue SI ↔ Imperial</th><td class="spec-cell">показ уже закрыт <code>Stat.unit</code> / <code>Input suffix</code>, конвертация - логика предметной области</td><td><div class="choice" data-for="у приложения"></div></td></tr>
+        <tr class="cq" data-q="c-alert" data-rec="У приложения"><th class="rowlabel">AlertCard / ActivityItem</th><td class="spec-cell">TimelineItem + гайд Activity stream; поля SLA и «откуда → куда» предметные</td><td><div class="choice" data-for="у приложения на TimelineItem/ListItem"></div></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel verdict is-done">
+    <h2>Рекомендация</h2>
+    <p class="pick"><strong>Обёртка ждёт и предупреждает; Встроенный tone; frame="none", как у графиков; Border-strong; Минимум поиску, действия обрезаются; Тултип при обрезке; Только документация.</strong> Компоненты: расширить семь существующих, новый компонент один (Thumbnail / Media), пять рецептов, три остаются у приложения. Каждый выбор либо повторяет механизм, который в DS уже есть (<code>frame</code>, <code>dsTooltipWhenClipped</code>, токены статусов), либо обходится без нового API. Где новый API нужен, он opt-in.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Что решить</h2>
+    <table>
+      <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
+      <tbody>
+        <tr class="row-pick"><th class="rowlabel">Обязательный input не пришёл</th><td>Ошибка Angular · Обёртка ждёт и предупреждает · Всё необязательно в бандле</td><td>Обёртка ждёт и предупреждает</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Цвет статуса у Badge</th><td>Ничего не красит · Починить пресет data-status · Встроенный tone</td><td>Встроенный tone</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Stat внутри Card</th><td>Карточка в карточке · frame="none", как у графиков · StatGroup с общей рамкой</td><td>frame="none", как у графиков</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Линия Timeline</th><td>Divider · Border-strong · Цвет пройденного пути</td><td>Border-strong</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Topbar на 684px</th><td>Поиск схлопывается · Минимум поиску, действия обрезаются · Меню «Ещё» · Поиск в иконку</td><td>Минимум поиску, действия обрезаются</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Длинная подпись в SidenavItem</th><td>Многоточие · Тултип при обрезке · Две строки</td><td>Тултип при обрезке</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Input в панели 176px</th><td>Распирает · Только документация · Поле тянется по контейнеру</td><td>Только документация</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Компоненты</th><td>по строке: Компонент в DS · Расширить · Рецепт · У приложения</td><td>как обведено в таблице</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <p class="src"><b>Источники, проверено 2026-10-01.</b> Бандл в Claude Design собран с <code>cad10e7d</code> (<code>.design-sync/last-upload.json</code>). <code>upload/_ds_bundle.js</code> имеет тот же md5 на HEAD, а файлы перечисленных компонентов с тех пор менялись только в комментариях. Все замеры сделаны на загруженном бандле с React 18.3.1 в Chrome, вычисленные стили через getBoundingClientRect и getComputedStyle. Код: NG0950 - <code>.design-sync/elements/runtime.tsx:15-17,85-96</code>, <code>@angular/elements</code> 21.2.22 <code>connectedCallback</code>; alias - <code>elements/tools/gen.mjs:476-492</code>; Stat - <code>stat.component.scss:49-53</code>; Timeline - <code>timeline-item.component.scss:9,40-55</code>; <code>.link</code> - <code>styles/_link.scss:51-60</code>; Topbar - <code>topbar.component.scss:34-44</code>; SidenavItem - <code>sidenav-item.component.ts:88-90</code>; ложная фраза - <code>.design-sync/conventions.md:33</code>. Контраст бренда посчитан по WCAG на формуле <code>themes/_base-palette.scss:47</code>, сменён только <code>--blue-h</code>. Карточки повторяют компоненты по их SCSS, но собраны вручную: Topbar нарисован в масштабе 1:3, остальные - в натуральную величину. Полные находки с file:line лежат в <code>.claude/local/todo/deerns-feedback/g1-g5</code>.</p>
+
+  <div class="bar-fixed">
+    <span class="count" id="count">0</span>
+    <output id="line">пока ничего не выбрано</output>
+    <button type="button" id="copy">Скопировать</button>
+    <button type="button" id="reset">Сбросить</button>
+  </div>
+</main>
+
+<script>
+  const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
+  const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private window */ } };
+  const PICK_KEY = 'ds-deck-deerns-atlas-feedback-picks';
+  const state = read(PICK_KEY, {});
+  const CHOICES = ['Компонент в DS', 'Расширить', 'Рецепт', 'У приложения'];
+  const sections = [...document.querySelectorAll('.q[data-q]')];
+  const rows = [...document.querySelectorAll('.cq[data-q]')];
+  const labelOf = (el) => el.matches('tr') ? el.querySelector('th').textContent.trim() : el.querySelector('h2').textContent.replace(/^\d+\.\s*/, '').trim();
+  const optionName = (card) => card.querySelector('h3').textContent.trim();
+
+  for (const row of rows) {
+    const box = row.querySelector('.choice');
+    for (const choice of CHOICES) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = choice;
+      if (choice === row.dataset.rec) { button.classList.add('rec'); button.title = box.dataset.for; }
+      button.addEventListener('click', () => { if (state[row.dataset.q] === choice) delete state[row.dataset.q]; else state[row.dataset.q] = choice; write(PICK_KEY, state); render(); });
+      box.append(button);
+    }
+    const hint = document.createElement('small');
+    hint.style.cssText = 'display:block;margin-top:4px;color:var(--text-tertiary)';
+    hint.textContent = box.dataset.for;
+    box.after(hint);
+  }
+
+  function render() {
+    for (const section of sections) {
+      for (const card of section.querySelectorAll('.opt')) {
+        const chosen = state[section.dataset.q] === optionName(card);
+        card.classList.toggle('is-chosen', chosen);
+        card.setAttribute('aria-pressed', String(chosen));
+      }
+    }
+    for (const row of rows) {
+      for (const button of row.querySelectorAll('.choice button')) button.setAttribute('aria-pressed', String(state[row.dataset.q] === button.textContent));
+    }
+    const all = [...sections, ...rows];
+    const done = all.filter((el) => state[el.dataset.q]);
+    document.getElementById('count').textContent = `${done.length} из ${all.length}`;
+    document.getElementById('line').textContent = done.length
+      ? 'Дека deerns-atlas-feedback: ' + done.map((el) => `${labelOf(el)} - ${state[el.dataset.q]}`).join('; ')
+      : 'пока ничего не выбрано';
+  }
+
+  function pick(section, card) {
+    const key = section.dataset.q;
+    const name = optionName(card);
+    if (state[key] === name) { delete state[key]; } else { state[key] = name; }
+    write(PICK_KEY, state);
+    render();
+  }
+
+  for (const section of sections) {
+    for (const card of section.querySelectorAll('.opt')) {
+      card.setAttribute('role', 'button');
+      card.addEventListener('click', () => pick(section, card));
+      card.addEventListener('keydown', (event) => {
+        if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); pick(section, card); }
+      });
+    }
+  }
+
+  document.getElementById('copy').addEventListener('click', () => { navigator.clipboard?.writeText(document.getElementById('line').textContent); });
+  document.getElementById('reset').addEventListener('click', () => { for (const key of Object.keys(state)) delete state[key]; write(PICK_KEY, state); render(); });
+  render();
+</script>
+</body>
+</html>

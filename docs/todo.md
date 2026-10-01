@@ -988,6 +988,7 @@ file** — the number moves; cite the filename.
 | 12 | `12-field-focus-click-vs-tab` | Whether a text field keeps one focused style for click and Tab, or shows the border alone after a click and the halo only after a key; both live in the deck. | none |
 | 13 | `13-status-field-focus-halo` | Whether a focused warning or success field keeps the shared blue halo or takes its status colour, as error already does. | the mismatched-halo P2 under *Bugs* |
 | 14 | `14-focused-marker-tooltip` | Whether a keyboard-focused line marker's panel names the whole category, as the code and the `ds-chart` page do, or its own series alone, as `components.md` promises. | the focused-marker P3 under the chart family |
+| 15 | `15-deerns-atlas-feedback` | Seven design calls and a per-component scope call raised by the Deerns Atlas prototype on the Claude Design bundle; twelve one-answer fixes (NG0950 on React 18, `ds-x-*` alias vs tag selectors, `.link` on button, Tag nowrap, agent catalogue) are listed in the deck. | Deerns Atlas feedback |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
