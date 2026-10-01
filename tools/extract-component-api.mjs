@@ -12,7 +12,7 @@ import {
   existsSync,
 } from 'node:fs';
 import { entryPoints, internalSymbols } from './lib-entry-points.mjs';
-import { join, dirname, basename } from 'node:path';
+import { join, dirname, basename, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -368,6 +368,13 @@ const aliases = collectAliasNodes();
 const { map: classIndex } = indexClasses(allTsFiles);
 const editorial = JSON.parse(readFileSync(EDITORIAL, 'utf8'));
 const importPathDefault = editorial.$importPathDefault;
+const entryPointsDeepestFirst = entryPoints().sort(
+  (a, b) => b.directory.length - a.directory.length,
+);
+const entryPointOf = (file) =>
+  entryPointsDeepestFirst.find((entry) =>
+    file.startsWith(entry.directory + sep),
+  )?.moduleId ?? importPathDefault;
 
 const exported = exportedClassNames();
 // A guard, not politeness: if the barrels ever stop parsing, dropping every
@@ -417,6 +424,7 @@ for (const file of files) {
       status: ed.status ?? 'stable',
       importName: ed.importName ?? node.name.text,
       importPath: ed.importPath ?? importPathDefault,
+      entryPoint: entryPointOf(file),
       summary: ed.summary ?? null,
       inputs: props.filter((p) => p.kind !== 'output').map(finalize),
       outputs: props.filter((p) => p.kind === 'output').map(finalize),

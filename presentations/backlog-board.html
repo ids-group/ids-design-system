@@ -226,9 +226,9 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**114 open — 0 P1, 10 P2, 104 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**113 open — 0 P1, 9 P2, 104 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 10
+### P2 — 9
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -239,8 +239,6 @@ item and nothing else.
   - `ds-tag` marked `interactive` is mouse-only
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
-- **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
-  - DOCS for A3: `@defer` needs the deep specifier — the one exception to «no consumer
 - **DS-docs**
   - Fourteen focusable elements in ds-docs still have no accessible name, on two components that always could
 - **Tooling**
@@ -409,8 +407,8 @@ item and nothing else.
 
 **Consumer asks are the head of the board.** Every item a consumer is waiting on is drawn, with its
 before and after, in deck `decision-queue` under *Ждут консьюмеры*; pick there, and the items here
-are the work. Three are open: the control-edge contrast (:230) under *Bugs*, the bar/column extract
-(:518) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1161). The 0.9.0-0.13.3 manifest walk and the eleven
+are the work. Three are open: the control-edge contrast (:228) under *Bugs*, the bar/column extract
+(:500) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1143). The 0.9.0-0.13.3 manifest walk and the eleven
 reached-past styling hooks are both closed.
 
 **Nobody is blocked from installing.** All six consumer repos declare Angular `^21` or `~21`, so the
@@ -529,22 +527,6 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   (`0.11.1`), a ~95-word `restore` paragraph (`0.11.3` — README wants "a literal snippet or
   `null`"). The plugin now treats a non-token `old` as a non-locator, so these degrade safely;
   tidy them when those manifests are next touched, and consider a lint rule for `restore` length.
-
-## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
-
-*This section also has items under **Asks**, **Parked**, **Records**.*
-
-- [ ] **[P2] DOCS for A3: `@defer` needs the deep specifier — the one exception to «no consumer
-  changes an import».** Measured 2026-09-01: a `@defer` block whose component is imported from the root
-  facade defers **nothing** — one `main.js`, no chunks, both deferred components in the initial bundle
-  (153 764 B). Imported from deep specifiers: initial **123 467 B**, four files, only the eager component
-  eagerly. Known Angular issue angular/angular#52554 — a component imported from a barrel gets no lazy
-  chunk because the bundler treats the barrel as one module. The facade IS free for route-level laziness
-  (`loadComponent` / `await import()` in a separate file), measured four times byte-identical. A3
-  shipped in 0.12.0 without this, and the 0.12.0 CHANGELOG tells consumers deep specifiers "buy no
-  bytes", which is wrong for `@defer`; the ds-docs line-chart section already uses the deep form for
-  its `@defer`. The figures above come from a pre-A3 fixture - re-measure against the 0.12+ facade
-  before writing the guidance. No consumer defers a DS component yet.
 
 ## DS-docs
 
@@ -744,7 +726,7 @@ Both found while planning that consumer's move to 0.13.3. Neither blocks it; bot
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
-*This section also has items under **Bugs**, **Parked**, **Records**.*
+*This section also has items under **Parked**, **Records**.*
 
 Priority set by Stas: **dead code out of the bundle first, prototype UI simplification second.** Every
 number below is measured; three records carry the method — **`packaging-diagnosis.md`** (what is
@@ -1608,7 +1590,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
-*This section also has items under **Bugs**, **Asks**, **Records**.*
+*This section also has items under **Asks**, **Records**.*
 
 - [ ] **[P3] `ds-button` pulls `field-message` statically, and it stays cheap only while the two
   share their dependencies.** `button.component.ts:40,46` imports `DsMessageBase` and
@@ -1902,7 +1884,7 @@ Bar and column are settled separately and stay apart.
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
-*This section also has items under **Bugs**, **Asks**, **Parked**.*
+*This section also has items under **Asks**, **Parked**.*
 
 - [ ] **[P3] Six things the bundle fixtures do NOT establish, recorded 2026-09-02 rather than left for
   the next reader to rediscover.** Full text in `packaging-chunking-audit.md` — "What the fixtures do

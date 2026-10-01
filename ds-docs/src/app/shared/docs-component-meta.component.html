@@ -8,6 +8,12 @@
           {{ api.isElement ? '<' + api.selector + '>' : api.selector }}
         </span>
       </span>
+
+      <span
+        class="chip"
+        title="Import from here inside a @defer block">
+        {{ api.entryPoint }}
+      </span>
     </div>
 
     @if (api.summary) {
