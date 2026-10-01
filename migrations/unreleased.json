@@ -66,7 +66,11 @@
       "verify": "pin a stage of a framed ds-funnel-chart and confirm the Unpin pill sits on the caption line at the same inset as on a ds-bar-chart."
     },
     "ds-app-layout's content region draws no focus ring when the app moves focus to it, except under forced colours; it stays focusable from script as the starting point for the next Tab.",
-    "The feedback mixin of styles/press skips .disabled and [aria-disabled='true'] as well as :disabled, [disabled] and .is-disabled, so a stylesheet of yours that includes it plays no press on a control disabled that way."
+    "The feedback mixin of styles/press skips .disabled and [aria-disabled='true'] as well as :disabled, [disabled] and .is-disabled, so a stylesheet of yours that includes it plays no press on a control disabled that way.",
+    {
+      "text": "ds-column-chart and ds-line-chart re-read their geometry tokens (--ds-column-chart-plot-height and the other --ds-column-chart-* geometry, --ds-line-chart-plot-height) whenever the chart's width changes, so a value re-pointed at a breakpoint reaches the plot.",
+      "verify": "resize the window across a breakpoint where your stylesheet changes one of those tokens and confirm the plot height follows without a reload."
+    }
   ],
   "deleteList": []
 }

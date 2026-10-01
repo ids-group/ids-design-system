@@ -18,6 +18,12 @@
 
 ### Fixed
 
+- **`ds-column-chart` and `ds-line-chart` follow a plot-height or geometry token re-pointed at a
+  breakpoint.** They read `--ds-column-chart-*` geometry and `--ds-line-chart-plot-height` once,
+  after the first render, so a media query changing one later never reached the plot; they now
+  re-read whenever the chart's width changes. A token changed while the width stays the same is
+  still picked up only at the next resize.
+
 - **`styles/press`'s `feedback` mixin plays no press on a control disabled by class or ARIA.** It
   skipped `:disabled`, `[disabled]` and `.is-disabled` only; it now also skips `.disabled` and
   `[aria-disabled='true']`, so an anchor or a custom control marked disabled that way no longer

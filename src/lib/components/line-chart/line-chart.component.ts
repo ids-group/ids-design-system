@@ -10,7 +10,6 @@ import {
   ElementRef,
   TemplateRef,
   ViewEncapsulation,
-  afterNextRender,
   booleanAttribute,
   computed,
   contentChild,
@@ -28,6 +27,7 @@ import {
   chartRenderGate,
   CHART_RENDER_GATE_PASSED,
   DsChartBase,
+  readOnHostResize,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import {
@@ -71,6 +71,14 @@ import {
 
 /** Default of `--ds-line-chart-plot-height`, used before the first style read and under SSR. */
 const DEFAULT_PLOT_HEIGHT = 240;
+
+function readPlotHeight(host: HTMLElement): number {
+  const parsed = Number.parseFloat(
+    getComputedStyle(host).getPropertyValue('--_line-chart-plot-height'),
+  );
+
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : DEFAULT_PLOT_HEIGHT;
+}
 import type {
   LineChartAnnotation,
   LineChartStack,
@@ -509,7 +517,12 @@ export class LineChartComponent
       : derived;
   }
 
-  protected readonly plotHeight = signal(DEFAULT_PLOT_HEIGHT);
+  protected readonly plotHeight = readOnHostResize(
+    inject<ElementRef<HTMLElement>>(ElementRef),
+    readPlotHeight,
+    DEFAULT_PLOT_HEIGHT,
+    Object.is,
+  );
 
   protected readonly viewHeightPx = computed(
     () => `${chartViewHeight(this.plotHeight(), CHART_DEFAULT_VALUE_SPACE)}px`,
@@ -531,21 +544,6 @@ export class LineChartComponent
       categoryIndex: reading.categoryIndex,
       category: this.categories()[reading.categoryIndex] ?? '',
       value: reading.value,
-    });
-  }
-
-  constructor() {
-    super();
-    const host = inject<ElementRef<HTMLElement>>(ElementRef);
-    afterNextRender(() => {
-      const parsed = Number.parseFloat(
-        getComputedStyle(host.nativeElement).getPropertyValue(
-          '--_line-chart-plot-height',
-        ),
-      );
-      if (Number.isFinite(parsed) && parsed > 0) {
-        this.plotHeight.set(parsed);
-      }
     });
   }
 
