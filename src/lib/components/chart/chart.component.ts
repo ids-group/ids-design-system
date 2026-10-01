@@ -21,6 +21,7 @@ import {
   bandScale,
   elementWidth,
   labelInterval,
+  nextRovingIndex,
   rotationWouldFit,
   tickValues,
   chartRenderGate,
@@ -721,6 +722,84 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   readonly cursorOrigin = computed<Element | null>(() =>
     this.cursorBand() ? (this.bandElement()?.nativeElement ?? null) : null,
   );
+
+  /** One Tab stop per chart, on a category band; the series markers step back from Tab. */
+  protected readonly keyboardStops = computed(
+    () => this.cursorOn() && this.interactive(),
+  );
+
+  private readonly roving = signal(0);
+
+  readonly focusedCategory = computed(() =>
+    Math.min(this.roving(), Math.max(0, this.categories().length - 1)),
+  );
+
+  protected readonly categoryStops = computed(() => {
+    const toX = this.xPosition();
+    const width = this.bandWidth();
+
+    return this.categories().map((category, index) => ({
+      index,
+      category,
+      x: toX(index) - width / 2,
+      width,
+    }));
+  });
+
+  // Only the active category's readings are known; a stop is named once the cursor is on it, which focusing it does first.
+  protected stopLabel(index: number): string {
+    const category = this.categories()[index] ?? '';
+    const context = this.activeIndex() === index ? this.tooltipContext() : null;
+    const readings =
+      context?.entries.map(
+        (entry) => `${entry.label} ${entry.formatted ?? entry.value}`,
+      ) ?? [];
+
+    return readings.length ? `${category}: ${readings.join(', ')}` : category;
+  }
+
+  protected onStopFocus(index: number, event: FocusEvent): void {
+    this.roving.set(index);
+    this.cursorState.enter(index, event, null, event.target as Element);
+  }
+
+  protected onStopBlur(event: FocusEvent): void {
+    const next = event.relatedTarget;
+    if (!(next instanceof Element) || !this.host.nativeElement.contains(next)) {
+      this.cursorState.leave();
+    }
+  }
+
+  private focusStop(index: number): void {
+    this.roving.set(index);
+    this.cursorState.setIndex(index);
+    this.host.nativeElement
+      .querySelector<SVGElement>(
+        `.category-stop[data-category-index="${index}"]`,
+      )
+      ?.focus();
+  }
+
+  protected onStopKey(event: KeyboardEvent): void {
+    const current = this.focusedCategory();
+    const next =
+      event.key === 'ArrowUp' || event.key === 'ArrowDown'
+        ? null
+        : nextRovingIndex(event.key, current, this.categories().length);
+    if (next !== null) {
+      event.preventDefault();
+      this.focusStop(next);
+
+      return;
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.cursorState.pin(current, event, null, event.target as Element);
+    } else if (event.key === 'Escape') {
+      this.cursorState.release();
+      this.cursorState.leave();
+    }
+  }
 
   setActiveIndex(index: number): void {
     this.cursorState.setIndex(this.clampIndex(index));
