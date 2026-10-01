@@ -477,9 +477,10 @@ function resolves(surface, claim) {
     return (
       surface.symbols.has(claim.name) ||
       (claim.member === true &&
-        [...surface.elements.values()].some((members) =>
-          members.has(claim.name),
-        ))
+        (surface.directives?.has(claim.name) ||
+          [...surface.elements.values()].some((members) =>
+            members.has(claim.name),
+          )))
     );
   if (claim.kind === 'class') return surface.classes.has(claim.name);
   if (claim.kind === 'element') return surface.elements.has(claim.name);

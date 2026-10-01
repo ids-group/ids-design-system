@@ -124,6 +124,14 @@ const rules = [
     unresolved: 0,
   },
   {
+    name: 'HOLDS: a bare camelCase directive selector resolves',
+    item: { id: 'x', kind: 'behavior', old: 'dsChartTooltip', new: null },
+    before: { ...surface({}), directives: new Set(['dsChartTooltip']) },
+    after: { ...surface({}), directives: new Set(['dsChartTooltip']) },
+    expect: 'hold',
+    unresolved: 0,
+  },
+  {
     name: 'HOLDS: a bare camelCase name no element declares is set aside',
     item: { id: 'x', kind: 'behavior', old: 'pinOnClik', new: null },
     before: surface({ elements: { 'ds-line-series': ['pinOnClick'] } }),
