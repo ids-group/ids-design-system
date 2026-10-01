@@ -90,6 +90,11 @@
   padding-right: calc(var(--_app-layout-padding-x) - var(--ds-scrollbar-width, 0px));
   overflow: auto;
   scrollbar-gutter: stable;
+
+  // Only script focuses it, as the next Tab's starting point; a ring round the whole page marks no control.
+  &:focus {
+    outline: none;
+  }
 }
 
 .inner {

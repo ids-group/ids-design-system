@@ -22,6 +22,11 @@
   stood a frame padding further in from the top and the end (41px against 21px with the default
   20px padding); it now lines up with the caption like the rest.
 
+- **`ds-app-layout`'s content region draws no focus ring.** An app that moves focus to the
+  `<main>` after a navigation, so the next Tab starts on the new page, got the base indicator round
+  the whole content area, and with no key pressed first the browser showed it. The region still
+  takes focus; only the ring is gone.
+
 - **`ds-date-picker`'s month arrows have accessible names.** The previous- and next-month buttons in
   the calendar panel are announced as `datePicker.previousMonth` and `datePicker.nextMonth`, where
   they were announced as an unnamed button.
