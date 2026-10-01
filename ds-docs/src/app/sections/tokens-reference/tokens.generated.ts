@@ -5461,6 +5461,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-multi-select-option-bg-color-active",
+        "value": "initial",
+        "notes": "Option row fill under the keyboard cursor and the pointer, for this multi-select's panel only (default --surface-secondary)."
+      },
+      {
         "name": "--ds-multi-select-panel-bg-color",
         "value": "initial",
         "notes": "Dropdown panel surface (default --surface-overlay). The panel is portaled, so set it on the host — a global rule against the pane cannot see the host override."
@@ -5504,11 +5509,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-multi-select-font-size",
         "value": "var(--_field-font-size)",
         "notes": "Trigger text size (default --ds-field-font-size, then --font-size-s)."
-      },
-      {
-        "name": "--ds-multi-select-option-bg-color-active",
-        "value": "var(--surface-secondary)",
-        "notes": "Option row fill while pressed (default --surface-secondary). Separate from hover, which does nothing on touch."
       },
       {
         "name": "--ds-multi-select-check-bg-color",

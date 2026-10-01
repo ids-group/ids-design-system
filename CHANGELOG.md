@@ -22,6 +22,11 @@
   the calendar panel are announced as `datePicker.previousMonth` and `datePicker.nextMonth`, where
   they were announced as an unnamed button.
 
+- **`--ds-multi-select-option-bg-color-active` sets the option fill.** It colours the row under the
+  keyboard cursor and the pointer in that multi-select's panel; it was declared where the panel had
+  already resolved the fill, so setting it changed nothing. Unset, the fill stays
+  `--surface-secondary`.
+
 - **`ds-chart` shows the Unpin control while its category cursor is held.** A click on a band pins
   the cursor by default, and the composable chart now draws the same pill button as the preset
   charts, on its caption's line or, without a caption, over the top end of the plot. Before, Escape,
