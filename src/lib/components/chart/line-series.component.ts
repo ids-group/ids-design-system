@@ -557,7 +557,8 @@ export class LineSeriesComponent implements OnDestroy {
 
   readonly axisPointElements = computed<readonly (Element | null)[]>(() =>
     this.readingsAtCursor().map(
-      ({ markIndex }) => this.markerElements()[markIndex]?.nativeElement ?? null,
+      ({ markIndex }) =>
+        this.markerElements()[markIndex]?.nativeElement ?? null,
     ),
   );
 

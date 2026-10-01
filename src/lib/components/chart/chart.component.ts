@@ -66,6 +66,7 @@ import {
 } from './chart.math';
 import {
   CHART_SCALES,
+  type ChartAxisEntry,
   type ChartPlot,
   type ChartScales,
   type ChartTooltipSource,
@@ -87,6 +88,8 @@ import {
     '[class.framed]': "frameResolved() === 'auto'",
     '[class.measuring]': '!settled()',
     '[style.--_chart-view-height]': "viewHeight() + 'px'",
+    '(keydown)': 'onChartKey($event)',
+    '(focusout)': 'onChartFocusOut($event)',
   },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -415,7 +418,23 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       ) ?? null,
   );
 
+  /** The series a keyboard user picked inside the focused category, by its panel label. */
+  private readonly pickedLabel = signal<string | null>(null);
+
   protected readonly tooltipContext = computed(() => {
+    const merged = this.categoryContext();
+    const picked = this.pickedLabel();
+    if (picked === null || !this.cursorOn() || merged === null) {
+      return merged;
+    }
+    const entry = merged.entries.find(
+      (candidate) => candidate.label === picked,
+    );
+
+    return entry ? { ...merged, entries: [entry] } : merged;
+  });
+
+  private readonly categoryContext = computed(() => {
     const base = this.activeTooltip()?.context() ?? null;
     const categoryIndex = this.activeIndex();
     if (this.cursorResolved() !== 'category' || categoryIndex < 0) {
@@ -451,6 +470,17 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   });
 
   protected readonly tooltipOrigin = computed(() => {
+    const picked = this.pickedLabel();
+    const element =
+      picked === null
+        ? null
+        : (this.readingsTopDown().find((reading) => reading.label === picked)
+            ?.element ?? null);
+
+    return element ?? this.categoryOrigin();
+  });
+
+  private readonly categoryOrigin = computed(() => {
     const own = this.activeTooltip()?.origin() ?? null;
     if (
       this.cursorResolved() !== 'category' ||
@@ -749,7 +779,8 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   // Only the active category's readings are known; a stop is named once the cursor is on it, which focusing it does first.
   protected stopLabel(index: number): string {
     const category = this.categories()[index] ?? '';
-    const context = this.activeIndex() === index ? this.tooltipContext() : null;
+    const context =
+      this.activeIndex() === index ? this.categoryContext() : null;
     const readings =
       context?.entries.map(
         (entry) => `${entry.label} ${entry.formatted ?? entry.value}`,
@@ -760,24 +791,113 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   protected onStopFocus(index: number, event: FocusEvent): void {
     this.roving.set(index);
+    this.pickedLabel.set(null);
     this.cursorState.enter(index, event, null, event.target as Element);
   }
 
-  protected onStopBlur(event: FocusEvent): void {
+  private leavesChart(event: FocusEvent): boolean {
     const next = event.relatedTarget;
-    if (!(next instanceof Element) || !this.host.nativeElement.contains(next)) {
+
+    return (
+      !(next instanceof Element) || !this.host.nativeElement.contains(next)
+    );
+  }
+
+  protected onStopBlur(event: FocusEvent): void {
+    if (this.leavesChart(event)) {
       this.cursorState.leave();
     }
   }
 
+  protected onChartFocusOut(event: FocusEvent): void {
+    if (this.leavesChart(event)) {
+      this.pickedLabel.set(null);
+    }
+  }
+
+  // Index after focus: the marker losing focus clears the series' cursor index on its way out.
   private focusStop(index: number): void {
     this.roving.set(index);
-    this.cursorState.setIndex(index);
     this.host.nativeElement
       .querySelector<SVGElement>(
         `.category-stop[data-category-index="${index}"]`,
       )
       ?.focus();
+    this.cursorState.setIndex(index);
+  }
+
+  /** Every drawn reading at the focused category with its element, highest on screen first. */
+  private readingsTopDown(): readonly { label: string; element: Element }[] {
+    return [...this.tooltipSources().values()]
+      .flatMap((source) => {
+        const elements = source.axisPointElements?.() ?? [];
+
+        return (source.axisEntries?.() ?? []).map((entry, index) => ({
+          entry,
+          element: elements[index] ?? null,
+        }));
+      })
+      .filter(
+        (reading): reading is { entry: ChartAxisEntry; element: Element } =>
+          reading.element !== null,
+      )
+      .sort((a, b) => (a.entry.y ?? 0) - (b.entry.y ?? 0))
+      .map(({ entry, element }) => ({ label: entry.label, element }));
+  }
+
+  /** Keys from a stop or a picked marker: Up/Down pick a reading; from a marker, the rest return to a stop. */
+  protected onChartKey(event: KeyboardEvent): void {
+    if (!this.keyboardStops() || !(event.target instanceof Element)) {
+      return;
+    }
+    const onStop = event.target.closest('.category-stop') !== null;
+    const fromMarker =
+      !onStop && event.target.closest('[data-mark-index]') !== null;
+    if (!onStop && !fromMarker) {
+      return;
+    }
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      const readings = this.readingsTopDown();
+      if (readings.length === 0) {
+        return;
+      }
+      const at = readings.findIndex(
+        (reading) => reading.label === this.pickedLabel(),
+      );
+      const step = event.key === 'ArrowDown' ? 1 : readings.length - 1;
+      const next =
+        at < 0
+          ? event.key === 'ArrowDown'
+            ? 0
+            : readings.length - 1
+          : (at + step) % readings.length;
+      this.pickedLabel.set(readings[next].label);
+      (readings[next].element as SVGElement).focus();
+
+      return;
+    }
+    if (!fromMarker) {
+      return;
+    }
+    if (event.key === 'Tab') {
+      // Moved before the browser acts, so Tab leaves from the stop: a marker sits before it in the DOM.
+      this.focusStop(this.focusedCategory());
+
+      return;
+    }
+    const next =
+      event.key === 'Escape'
+        ? this.focusedCategory()
+        : nextRovingIndex(
+            event.key,
+            this.focusedCategory(),
+            this.categories().length,
+          );
+    if (next !== null) {
+      event.preventDefault();
+      this.focusStop(next);
+    }
   }
 
   protected onStopKey(event: KeyboardEvent): void {
