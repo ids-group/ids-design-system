@@ -45,6 +45,20 @@
       "restore": null,
       "verify": "The app builds with no TS4114 or TS2416 against ChartComponent or TagComponent.",
       "note": "ChartComponent gained the protected drawsUnpin, TagComponent the protected onKeyActivate."
+    },
+    {
+      "id": "tag-interactive-keyboard-own-handlers",
+      "kind": "behavior",
+      "old": "ds-tag[interactive]",
+      "new": null,
+      "surface": "template",
+      "searchHints": ["ds-tag", "interactive", "keydown.enter", "keydown.space"],
+      "detect": ["(keydown.enter)", "(keydown.space)", "tabindex=\"0\"", "role=\"button\""],
+      "action": "None, unless your template wires Enter or Space on an interactive ds-tag itself: remove that handler, and the tabindex=\"0\" and role=\"button\" set with it (delete list: tag-own-keyboard-handling).",
+      "appliesWhen": "Only a ds-tag with interactive set whose element carries a keydown.enter or keydown.space binding of yours. A non-interactive ds-tag, and a key handler on another element, are unaffected.",
+      "pitfall": "Nothing fails to build: the tag now emits toggled on Enter and Space itself, so your handler and your (toggled) handler both run and one key press toggles twice, which reads as the key doing nothing.",
+      "restore": null,
+      "verify": "Every interactive ds-tag toggles exactly once per Enter or Space press, and no template binds keydown.enter or keydown.space on one."
     }
   ],
   "informational": [
@@ -73,5 +87,13 @@
       "verify": "resize the window across a breakpoint where your stylesheet changes one of those tokens and confirm the plot height follows without a reload."
     }
   ],
-  "deleteList": []
+  "deleteList": [
+    {
+      "id": "tag-own-keyboard-handling",
+      "surface": "template",
+      "find": ["(keydown.enter)", "(keydown.space)"],
+      "why": "An interactive ds-tag is a tab stop with role=\"button\" and emits toggled on Enter or Space itself.",
+      "replaceWith": "nothing; the tag's own toggled. Keep a key binding on a ds-tag without interactive, where the tag handles no key."
+    }
+  ]
 }

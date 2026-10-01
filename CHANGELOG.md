@@ -6,7 +6,7 @@
   (`:where(:focus-visible)`), the `ds-focus-ring-in` keyframes, the `data-focus` switch and the
   forced-colours outline moved into `@mixin emit-rules`, which `styles/ds` includes. Before, every
   stylesheet that used a focus mixin re-emitted all of them, so each component carrying one shipped a
-  copy; an app of seven components builds 12.6 kB smaller unminified, 0.9 kB gzip. If your global
+  copy of 1.0 kB of duplicated global rules unminified. If your global
   stylesheet composes the parts instead of `@use 'styles/ds'`, add `@include focus.emit-rules;`
   after `@use 'styles/focus' as focus;`, or focus rings disappear on elements that style none
   themselves and `data-focus` stops switching. `@use 'styles/ds'` needs nothing.
@@ -55,7 +55,10 @@
 
 - **An `interactive` `ds-tag` works from the keyboard.** It is a tab stop with `role="button"` and
   `aria-pressed` following `selected`, and Enter or Space emits `toggled`, as a click does; it took a
-  click only. A key pressed on its close button still only closes it. `TagComponent` gained a
+  click only. If you added your own Enter or Space handler to an interactive `ds-tag` to make it
+  keyboard-operable, remove it, or each key press toggles twice, once through your handler and once
+  through the host's `toggled`; the `tabindex="0"` and `role="button"` you set alongside it are now
+  redundant too. A key pressed on its close button still only closes it. `TagComponent` gained a
   protected `onKeyActivate`, so a subclass declaring that name needs `override`.
 
 - **`ds-chart` shows the Unpin control while its category cursor is held.** A click on a band pins
@@ -70,6 +73,12 @@
 - **A `ds-table` expanded row closes the way it opens.** Collapsing a row folds its panel back over
   `--duration-base`, where the panel used to vanish on the next frame; the row leaves the DOM when
   the fold ends. Under `prefers-reduced-motion` it closes at once, as it opens.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| `(keydown.enter)` and `(keydown.space)` on an interactive `ds-tag`, plus the `tabindex="0"` and `role="button"` set with them | the host is now a tab stop with `role="button"` and emits `toggled` on Enter or Space itself, so your handler and its `(toggled)` both fire on one press | nothing; the tag's own `toggled` |
 
 ## 0.14.6-beta.0 — 2026-09-30
 
