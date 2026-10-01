@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**106 open — 0 P1, 5 P2, 101 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**105 open — 0 P1, 5 P2, 100 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 5
 
@@ -28,7 +28,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 101
+### P3 — 100
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -51,7 +51,6 @@ item and nothing else.
   - Cut the prose in ds-docs (Stas, 2026-09-29: "слишком много и никто это не читает")
 - **Tooling**
   - No pixel comparison was run over the 2026-09-29/30 library comment sweep (recorded 2026-09-30)
-  - changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24)
   - `--picker-maxh` is an abbreviated token name (recorded 2026-09-24)
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
   - Extract what bar and column SHARE; their contracts stay different (Stas, 2026-09-22)
@@ -187,8 +186,8 @@ item and nothing else.
 
 **Consumer asks are the head of the board.** Every item a consumer is waiting on is drawn, with its
 before and after, in deck `decision-queue` under *Ждут консьюмеры*; pick there, and the items here
-are the work. Three are open: the control-edge contrast (:220) under *Bugs*, the bar/column extract
-(:440) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1085). The 0.9.0-0.13.3 manifest walk and the eleven
+are the work. Three are open: the control-edge contrast (:219) under *Bugs*, the bar/column extract
+(:434) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1079). The 0.9.0-0.13.3 manifest walk and the eleven
 reached-past styling hooks are both closed.
 
 **Nobody is blocked from installing.** All six consumer repos declare Angular `^21` or `~21`, so the
@@ -423,11 +422,6 @@ Each has somebody behind it. Nothing here is speculative work.
   empty, and build, lint and every `tools/check.mjs` check are green, but `tools/compare-docs-pixels.mjs` was
   stopped before its first route finished. Run it over every route for `dda7b8bf^1` against `dda7b8bf` (the sweep
   merge alone): any differing block is a rendering change a comment pass must not make.
-
-- [ ] **[P3] changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24).**
-  The published-artefact check for client names reads styles, themes, `src/lib/**/*.ts` and migrations (its closing `by group` line),
-  but not the docs site sources or the agent docs, both of which ship to readers outside the team.
-  Stas: extend it as its own item; the fictional-brand sweep it waited for landed (merge 8e6c9454), so it is actionable.
 
 - [ ] **[P3] `--picker-maxh` is an abbreviated token name (recorded 2026-09-24).**
   The picker list cap is spelled `-maxh`, against the spelled-out naming convention
