@@ -5625,7 +5625,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'reading'",
         "required": false,
-        "description": "Where the tooltip anchors. `'reading'` (default) is the highest reading in the category, so the panel stays put within one band; `'pointer'` follows the cursor."
+        "description": "Where the tooltip anchors while `tooltip` is `'axis'` (default); with `'item'` the panel hangs on the marker and this does nothing. `'reading'` (default) is the highest reading in the category, so the panel stays put within one band; `'pointer'` follows the cursor."
       }
     ],
     "outputs": [
