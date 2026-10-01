@@ -355,8 +355,9 @@ export class LineChartComponent
       'dsChartTooltip',
     );
 
-  /** Where the tooltip anchors. `'reading'` (default) is the highest reading in the category, so
-   *  the panel stays put within one band; `'pointer'` follows the cursor. */
+  /** Where the tooltip anchors while `tooltip` is `'axis'` (default); with `'item'` the panel
+   *  hangs on the marker and this does nothing. `'reading'` (default) is the highest reading in the
+   *  category, so the panel stays put within one band; `'pointer'` follows the cursor. */
   readonly tooltipAnchor = input<'reading' | 'pointer'>('reading');
 
   protected readonly dataTableColumns = computed<readonly string[]>(() => [
