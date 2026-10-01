@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Фокус поля: клик и Tab</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-01">
+<meta name="ds-deck-evidence" content="moot, kept as built: src/lib/components/input/input.component.scss:159 - one .control:focus-within rule for click and Tab">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   /* The ds-input control box, rebuilt from input.component.scss (.control) and styles/_field-box.scss. */
   .f { display: flex; flex-direction: column; gap: var(--space-1); inline-size: 240px; }
@@ -83,6 +85,15 @@
       <span class="modality">последнее действие: <b id="modality">ещё ничего</b></span>
     </div>
   </header>
+
+  <div class="decided">
+    <h2>Решено: один стиль</h2>
+    <p>Сфокусированное текстовое поле показывает рамку и halo одинаково после клика и после Tab, как и было. Трекер «мышь или клавиатура» в библиотеку не добавляется.</p>
+    <p class="evidence">2026-10-01 · src/lib/components/input/input.component.scss:159</p>
+  </div>
+
+  <details class="folded">
+    <summary>Вопрос и оба варианта</summary>
 
   <section class="panel">
     <h2>Сегодня: рамка и halo в обоих случаях</h2>
@@ -162,6 +173,8 @@
       </tbody>
     </table>
   </section>
+
+  </details>
 
   <p class="src"><b>Источники, проверено 2026-10-01 на <code>dev</code>.</b> Поле собрано заново по <code>input.component.scss</code> (<code>.control</code>: рамка <code>--border-default</code>, hover <code>--border-strong</code>, радиус <code>--ds-radius-control</code>, высота <code>--field-h-md</code>) и <code>styles/_field-box.scss</code> (рамка в фокусе <code>--accent</code>); правило сегодня - <code>.control:focus-within</code> с <code>box-shadow: var(--_input-focus-shadow)</code>, которое резолвится в <code>--ds-field-focus-shadow</code> = <code>--focus-field</code> (<code>themes/_semantic.scss:193</code>, <code>0 0 0 3px</code> от <code>--primary</code> при alpha 0.22), а в режиме <code>data-focus="ring"</code> - в <code>--focus-ring</code> (<code>styles/_focus.scss</code>, <code>emit-rules</code>). Замер на ds-docs того же дня, настоящий клик через Chrome DevTools: кнопки, toggle, radio, switch и кнопки сайдбара кольца не дают (<code>:focus-visible</code> false); поле поиска даёт <code>:focus-visible</code> true и halo <code>rgba(46, 84, 255, 0.22) 0 0 0 3px</code>. Правила: WCAG 2.4.7; MDN <code>:focus-visible</code>; bitsofco.de «When is :focus-visible visible?» - текстовое поле получает <code>:focus-visible</code> и от мыши. Вариант «Разделить» в деке держит модальность своим слушателем <code>pointerdown</code>/<code>keydown</code> - ровно то, что пришлось бы добавить в библиотеку.</p>
 

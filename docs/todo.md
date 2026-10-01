@@ -40,7 +40,7 @@ item and nothing else.
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
   - A pressed danger menu item shows its hover colour (recorded 2026-09-24)
 - **The chart family read as an architecture (audited 2026-09-22)**
-  - A focused marker's panel names every series at its category, where the docs say its own (recorded 2026-09-24)
+  - The keyboard walks series markers where the pointer walks categories (recorded 2026-09-24, re-scoped 2026-10-01)
 - **Asked by Stas**
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
   - Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24)
@@ -306,10 +306,11 @@ Constraints and decisions that read as removable and are not.
 
 *This section also has items under **Decisions**, **Parked**, **Records**.*
 
-- [ ] **[P3] A focused marker's panel names every series at its category, where the docs say its own (recorded 2026-09-24).**
-  The category merge in `ds-chart.tooltipContext` adds the other marks' readings to a keyboard-focused
-  marker's panel, so focus and a pointer on that one mark read differently from what the chart docs
-  promise. Decide which is right, then align the other.
+- [ ] **[P3] The keyboard walks series markers where the pointer walks categories (recorded 2026-09-24, re-scoped 2026-10-01).**
+  Under a category cursor the pointer picks the whole category, but Tab lands on one marker per series and
+  the arrows walk that series' points. Stas, 2026-10-01: the keyboard picks the vertical like the pointer -
+  one Tab stop on the plot, arrows across categories. The shape is drawn in deck `chart-keyboard-category`;
+  `components.md` ("a focused marker's tooltip names its own series alone") goes with it.
 
 ## Claude Design upload — what the freeze left open (recorded 2026-09-04)
 
@@ -967,11 +968,9 @@ file** — the number moves; cite the filename.
 | 9 | `9-locale-week-and-hour` | Whether the date picker's first day of the week and the time picker's 12h/24h follow `DS_CONFIG.locale`: fixed as today, both, week only, or hours only, each drawn over six locales. | the locale-defaults Decision (plan-C, task 21) |
 | 10 | `10-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 27 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 | 11 | `11-docs-reasoning-blocks` | What ds-docs does with its ~38 reasoning blocks: keep, fold to the chapter end, move to a proof page, or delete. | none - the Claude Design side is settled in `.design-sync/CARDS.md` |
-| 12 | `12-field-focus-click-vs-tab` | Whether a text field keeps one focused style for click and Tab, or shows the border alone after a click and the halo only after a key; both live in the deck. | none |
-| 13 | `13-status-field-focus-halo` | Whether a focused warning or success field keeps the shared blue halo or takes its status colour, as error already does. | the mismatched-halo P2 under *Bugs* |
-| 14 | `14-focused-marker-tooltip` | Whether a keyboard-focused line marker's panel names the whole category, as the code and the `ds-chart` page do, or its own series alone, as `components.md` promises. | the focused-marker P3 under the chart family |
-| 15 | `15-deerns-atlas-feedback` | Eight design calls and a per-component scope call raised by the Deerns Atlas prototype on the Claude Design bundle; fifteen one-answer fixes (inputs before first CD on React 18 for NG0950 and mount flicker, empty Tabs, `ds-x-*` alias vs tag selectors, `.link` on button, Tag nowrap, agent catalogue) are listed in the deck. | Deerns Atlas feedback |
-| 16 | `16-chart-state-frame` | How much shared layer the bar/column extract builds: docs only, the state frame (unpin, caption, error, skeleton, empty) extracted for all nine charts, or for bar and column alone. Gates the item "Extract what bar and column SHARE". |
+| 12 | `12-chart-keyboard-category` | How the keyboard walks a chart whose pointer picks a category: one Tab stop on the plot and arrows across categories, as the pointer does (Stas, 2026-10-01: Tab picks the vertical, not one point). | the focused-marker P3 under the chart family |
+| 13 | `13-deerns-atlas-feedback` | Eight design calls and a per-component scope call raised by the Deerns Atlas prototype on the Claude Design bundle; fifteen one-answer fixes (inputs before first CD on React 18 for NG0950 and mount flicker, empty Tabs, `ds-x-*` alias vs tag selectors, `.link` on button, Tag nowrap, agent catalogue) are listed in the deck. | Deerns Atlas feedback |
+| 14 | `14-chart-state-frame` | How much shared layer the bar/column extract builds: docs only, the state frame (unpin, caption, error, skeleton, empty) extracted for all nine charts, or for bar and column alone. Gates the item "Extract what bar and column SHARE". |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

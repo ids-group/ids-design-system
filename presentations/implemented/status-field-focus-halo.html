@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Halo статусного поля</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-01">
+<meta name="ds-deck-evidence" content="src/lib/styles/_field-state.scss:30 - CHANGELOG.md">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   /* The ds-input control box, rebuilt from input.component.scss (.control), styles/_field-box.scss and styles/_field-state.scss. */
   .f { display: flex; flex-direction: column; gap: var(--space-1); inline-size: 220px; }
@@ -93,6 +95,15 @@
     </div>
   </header>
 
+  <div class="decided">
+    <h2>Решено: halo цвета статуса</h2>
+    <p>Warning- и success-поле в фокусе берут halo своего статуса (<code>--ds-field-focus-shadow-warning</code> / <code>-success</code>), как error. В режимах ring, edge и inset индикатор красится цветом рамки поля, <code>--warning-text</code> или <code>--success</code>: яркий жёлтый как кольцо на белом не виден.</p>
+    <p class="evidence">2026-10-01 · src/lib/styles/_field-state.scss:30 - CHANGELOG.md</p>
+  </div>
+
+  <details class="folded">
+    <summary>Вопрос и оба варианта</summary>
+
   <section class="panel">
     <h2>Сегодня: только у ошибки свой halo</h2>
     <p>У error-поля в фокусе красный halo, у warning и success - тот же синий, что у обычного поля. Токены <code>--focus-field-warning</code> и <code>--focus-field-success</code> выпущены и описаны в документации, но ни один компонент их не читает.</p>
@@ -169,6 +180,8 @@
       </tbody>
     </table>
   </section>
+
+  </details>
 
   <p class="src" id="sources"><b>Источники, проверено 2026-10-01 на <code>dev</code>.</b> Поле собрано заново по <code>input.component.scss</code> (<code>.control</code>), <code>styles/_field-box.scss</code> и <code>styles/_field-state.scss</code>: warning красит рамку <code>--warning-text</code>, success - <code>--success</code>, error - рамку <code>--error</code>, фон <code>--error-subtitle</code> и halo <code>--ds-field-focus-shadow-error</code>; для warning и success у mixin'а нет аргумента halo. Токены статусов - <code>themes/_semantic.scss:204-217</code> (<code>--focus-ring-warning/-success</code>, <code>--focus-field-warning/-success</code> на <code>--focus-field-alpha</code> 0.22); в <code>src/</code> их не читает никто. Подпись под образцами - <code>box-shadow</code>, считанный в этой деке при загрузке.</p>
 
