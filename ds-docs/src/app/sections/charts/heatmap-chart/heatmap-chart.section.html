@@ -20,7 +20,20 @@
     is read from the STEP between two colours, which is why the heat scale spans
     the full lightness range rather than a band of near-neighbours. It is a
     separate scale from the funnel's ramp, which stays in the middle of the
-    range for the opposite reason.
+    range for the opposite reason. Cells are sized by
+    <code class="t-mono-inline">
+      --ds-heatmap-chart-cell-size
+    </code> (34px),
+    <code class="t-mono-inline">
+      --ds-heatmap-chart-cell-gap
+    </code> (2px) and
+    <code class="t-mono-inline">
+      --ds-heatmap-chart-cell-radius
+    </code>; labels
+    by <code class="t-mono-inline">--ds-heatmap-chart-label-color</code> and
+    <code class="t-mono-inline">
+      --ds-heatmap-chart-label-font-size
+    </code>.
   </p>
 
   <ds-heatmap-chart
@@ -33,18 +46,22 @@
   </h3>
 
   <p class="block-desc t-s">
-    Colour is the only channel carrying the quantity on the grid, so two things
-    are not optional here the way they are on the other charts. The scale under
-    the grid says what a colour is worth - without it the picture is relative
-    warmth with no quantity attached. The annex table is always drawn, never a
+    Colour is the grid's only channel for the quantity, so two things are
+    mandatory: the scale under the grid says what a colour is worth, and the
+    annex table is always drawn (no
     <code class="t-mono-inline">
       dataTable
-    </code> choice, because WCAG 1.4.1 is
-    not satisfied by a grid of coloured squares. Every cell also names its own
+    </code> option), because a grid of
+    coloured squares does not meet WCAG 1.4.1. Every cell also names its
     reading to assistive tech as
     <code class="t-mono-inline">
       row, column: value
     </code>.
+    <code class="t-mono-inline">
+      dimOthers
+    </code> fades every cell but the one
+    under the pointer; <code class="t-mono-inline">tooltip="none"</code> drops
+    the panel.
   </p>
 
   <p class="block-desc t-s">
@@ -58,8 +75,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    A <code class="t-mono-inline">null</code> draws as the surface, not as the
-    heat scale's coldest step, and it is left out of the scale entirely. The
+    A <code class="t-mono-inline">null</code> draws in
+    <code class="t-mono-inline">
+      --ds-heatmap-chart-missing-color
+    </code>
+    (surface-secondary), not as the heat scale's coldest step, and it is left out of the scale entirely. The
     coldest step is a real measurement; painting "we never measured this" with
     it states a figure nobody recorded. Depot F below opened on Thursday and
     nobody reports on Sunday - neither reads as a quiet day.
@@ -69,6 +89,39 @@
     caption="The same week with gaps in the record"
     [columns]="weekdays"
     [data]="partialRows" />
+
+  <h3 class="block-title t-h4">
+    Fixed scale
+  </h3>
+
+  <p class="block-desc t-s">
+    Each grid scales to its own readings, so two grids side by side colour the
+    same value differently. <code class="t-mono-inline">min</code> and
+    <code class="t-mono-inline">
+      max
+    </code> pin the floor and ceiling; they only
+    widen the scale, never narrow it.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-heatmap-chart
+        caption="First half"
+        [min]="0"
+        [max]="40"
+        [columns]="smallColumns"
+        [data]="smallRows" />
+    </div>
+
+    <div class="state-cell">
+      <ds-heatmap-chart
+        caption="Second half"
+        [min]="0"
+        [max]="40"
+        [columns]="smallColumns"
+        [data]="laterRows" />
+    </div>
+  </div>
 
   <h3
     data-claude-design
