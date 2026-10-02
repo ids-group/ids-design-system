@@ -2,6 +2,10 @@
 
 ### Fixed
 
+- **`ds-bar-chart` draws a negative value as an empty track.** A row with a negative `value`
+  drew a bar as long as its absolute value and was labelled `0`; it now draws no bar, and its label,
+  tooltip and accessible name show the real value.
+
 - **Topbar and page-header breadcrumb tokens take effect.** `--ds-topbar-crumb-text-color`,
   `--ds-topbar-crumb-hover-text-color`, `--ds-topbar-crumb-separator-icon-color`,
   `--ds-topbar-crumb-current-text-color`, `--ds-page-header-crumb-text-color` and
