@@ -59,7 +59,7 @@ command -v git > /dev/null || { echo "git is not available, so the upload tree c
 # back with the scripts stripped. Without a browser the build below leaves them LIVE, and a
 # release commits that — which is how 0.12.0 shipped a thawed tree. So install one.
 step "Making a browser available"
-CHROME_BIN="$(command -v chromium-browser || command -v chromium || true)"
+CHROME_BIN="${CHROME_BIN:-$(command -v chromium-browser || command -v chromium || true)}"
 if [ -z "$CHROME_BIN" ]; then
   apk add --no-cache chromium nss freetype harfbuzz ttf-freefont > /dev/null
   CHROME_BIN="$(command -v chromium-browser || command -v chromium || true)"

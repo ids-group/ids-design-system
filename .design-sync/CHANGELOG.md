@@ -26,6 +26,12 @@ holds an entry; what the release bot commits afterwards needs none.
   has a React component of its own, so the docs name `DatePicker` and the field's `hint`, `invalid`,
   `success`, `warning` and `reserveMessage` instead of a component to place.
 
+### Build
+
+- **A card run that fails or is interrupted leaves no Chrome behind.** `measure-cards` and
+  `snapshot-cards` end the headless browser's whole process tree and delete its `ds-cdp-*` profile
+  when they throw or get Ctrl+C, as they already did on a clean finish.
+
 ## 0.14.6-beta.0 — 2026-09-30
 
 ### Cards
