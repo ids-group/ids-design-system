@@ -3,18 +3,14 @@
   eyebrow="Components"
   title="Icon button">
   <span lede>
-    Icon-only action with its own variant taxonomy — distinct from
+    Icon-only action for toolbars, row actions and close/back/overflow, with
+    its own variants (distinct from
     <code class="t-mono-inline">
-      &lt;ds-button&gt;
-    </code>. Use for toolbars,
-    table-row actions, close / back / overflow affordances.
+      ds-button
+    </code>).
     <code class="t-mono-inline">
-      [ariaLabel]
-    </code> is required (an icon has no
-    text label). This replaces the former
-    <code class="t-mono-inline">
-      ds-button iconOnly
-    </code> flag.
+      ariaLabel
+    </code> is required.
   </span>
 
   <h3
@@ -26,18 +22,17 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       variant
-    </code> = fill taxonomy (standard
-    chromeless · filled · tonal · outlined);
+    </code> sets the fill (standard
+    chromeless · filled · tonal · outlined).
     <code class="t-mono-inline">
       color
     </code>
-    = the shared brand/status hue family (same axis as
-    <code class="t-mono-inline">
-      ds-button
-    </code>). All combinations are valid.
-    secondary/tertiary ship distinct default hues (orange / violet), independent
-    of <code class="t-mono-inline">--primary</code>, so the brand rows read as
-    independent roles out of the box.
+    tints <code class="t-mono-inline">filled</code>,
+    <code class="t-mono-inline">tonal</code> and the selected state;
+    <code class="t-mono-inline">standard</code> and
+    <code class="t-mono-inline">outlined</code> stay neutral at rest.
+    secondary/tertiary default to orange/violet, independent of
+    <code class="t-mono-inline">--primary</code>.
   </p>
 
   <div class="brand-demo">
@@ -196,7 +191,10 @@
     <code class="t-mono-inline">
       [selected]
     </code> renders the pressed state
-    and sets <code class="t-mono-inline">aria-pressed</code>. Click to flip.
+    and sets <code class="t-mono-inline">aria-pressed</code>. Click to flip. As
+    a menu trigger bind <code class="t-mono-inline">[ariaExpanded]</code> and
+    <code class="t-mono-inline">[ariaControls]</code> - host attributes would
+    land on a non-focusable wrapper.
   </p>
 
   <div class="row">
@@ -218,14 +216,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    Disabled is a muted tint of the variant's own colour (derived via
+    Disabled is a muted mix of the variant's own colour, not a flat grey. Only
+    <code class="t-mono-inline">filled</code> (and a selected button) derives
+    its fill with
     <code class="t-mono-inline">
       oklch()
-    </code>), not a flat grey. Chromeless
+    </code>;
     <code class="t-mono-inline">
       standard
-    </code> stays boxless — muted icon
-    only.
+    </code> stays boxless with a muted
+    icon.
   </p>
 
   <div class="row">

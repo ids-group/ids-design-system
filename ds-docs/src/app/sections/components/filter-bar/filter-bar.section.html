@@ -7,53 +7,37 @@
   </span>
 
   <p class="block-desc t-s">
-    Every admin list past three filters hits the same wall — the row wraps to a
-    second line on a laptop, or someone hand-rolls an overflow menu. Each filter
-    goes in an
+    Put each filter in an
     <code class="t-mono-inline">
-      ng-template
-    </code> carrying the width it
-    should occupy, and the bar decides the split from those numbers plus one
+      ng-template [dsFilterItem]
+    </code> with its width in px
+    (<code class="t-mono-inline">[dsFilterItem]="170"</code>; bare = 180). The
+    bar splits filters from those widths and one
     <code class="t-mono-inline">
       ResizeObserver
-    </code> on the row. It never
-    measures the filters themselves: they would have to be in the DOM to be
-    measured, so anything that did not fit would flash into view before being
-    taken away.
+    </code> on the row, never by
+    measuring the filters, so nothing flashes before collapsing.
   </p>
 
   <p class="block-desc t-s">
-    Drag the handle to resize the frame — the filters collapse into the panel
-    from the right as room runs out, while anything marked
+    Move the Frame width slider: filters collapse into the panel from the right
+    as room runs out; controls marked
     <code class="t-mono-inline">
       dsFilterBarTrailing
-    </code> keeps its place
-    throughout. Mark each trailing control rather than wrapping them in a div:
-    the bar owns that group's gap and alignment, and a projected wrapper is a
-    plain block whose children would stack. The group sits outside the measured
-    row, so flexbox subtracts its width first and the arithmetic needs no
-    allowance for it.
+    </code> stay put. Mark each
+    trailing control - a wrapper div would stack its children. Anything that is
+    neither a <code class="t-mono-inline">dsFilterItem</code> template nor
+    marked <code class="t-mono-inline">dsFilterBarTrailing</code> is not
+    rendered.
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      If one component genuinely has to hold two trailing controls
-    </strong>
-    — the usual reason was a Clear that must cancel a debounce armed on the
-    search beside it, and that reason is gone:
-    <code class="t-mono-inline">
-      ds-search
-    </code>
-    cancels its own pending keystroke when the host writes
-    <code class="t-mono-inline">
-      value
-    </code>, so a bar-level Clear no longer
-    needs to live in the same component — then mark that component and give its
+    If one component must hold two trailing controls, mark that component
+    <code class="t-mono-inline">dsFilterBarTrailing</code> and give its
     <code class="t-mono-inline">
       :host
-    </code> the three declarations the bar
-    would have applied. They are the bar's own trailing rule, and the gap reads
-    from the same token so the two cannot drift.
+    </code> the bar's own trailing rule
+    (below); the gap reads the same token.
   </p>
 
   <pre class="t-mono-block">{{ trailingWrapperSnippet }}</pre>
@@ -67,23 +51,16 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       triggerSize
-    </code> matches the trigger to the
-    filters beside it — default <code class="t-mono-inline">md</code>. The bar
-    cannot work this out on its own:
-    <code class="t-mono-inline">
-      dsFilterItem
-    </code> carries a WIDTH, and the
-    filters are arbitrary projected controls whose own
+    </code> (default <code class="t-mono-inline">md</code>) sets the "+N"
+    trigger height; match it to the filters'
     <code class="t-mono-inline">
       size
-    </code> it never sees. Left unset beside
+    </code> - the bar cannot read it. Unset
+    beside
     <code class="t-mono-inline">
       sm
-    </code> filters, the trigger stands 8px
-    taller than everything next to it, since the row aligns on
-    <code class="t-mono-inline">
-      flex-end
-    </code>.
+    </code> filters, the trigger is 8px
+    taller.
   </p>
 
   <div class="width-control">
@@ -147,13 +124,13 @@
         placeholder="Search claims"
         [(value)]="term" />
 
-      <ds-button
+      <button
         dsFilterBarTrailing
-        color="neutral"
-        variant="text"
-        (pressed)="clear()">
+        type="button"
+        class="link"
+        (click)="clear()">
         Clear
-      </ds-button>
+      </button>
     </ds-filter-bar>
   </div>
 
@@ -162,24 +139,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    The declared width is a contract rather than a hint: the bar sizes each slot
-    to exactly that number, so the arithmetic that decided the filter fits is
-    true by construction, and a filter is the same width in the panel as it was
-    in the row — no resizing as it crosses over. A control that would rather be
-    wider is narrowed instead of being allowed to break the row.
+    Each slot is exactly its declared width, in the row and in the panel; a
+    wider control is narrowed.
   </p>
 
   <p class="block-desc t-s">
-    Crossing that boundary does destroy and re-create the view, so a control's
-    internal state — an open dropdown, focus — does not survive a resize that
-    collapses it. Its value does: that lives in your own signal or form control,
-    which is why the demo above keeps every selection while you drag. The
-    trigger carries the count as text and
+    Moving into or out of the panel re-creates the filter, so an open dropdown
+    or focus is lost; the value survives in your own signal or form control.
+    The trigger shows the count as text with
     <code class="t-mono-inline">
       aria-expanded
-    </code>, and the panel is a
-    focus-trapped dialog; there is exactly one copy of each filter in the
-    accessibility tree, because the filters move rather than being rendered
-    twice and hidden.
+    </code>; the panel is a focus-trapped
+    dialog, and each filter exists once in the accessibility tree.
   </p>
 </docs-section>

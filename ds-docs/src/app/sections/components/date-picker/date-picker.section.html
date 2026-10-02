@@ -22,7 +22,10 @@
     </code>); the calendar icon or
     <kbd>
       ↓
-    </kbd> opens a one-month panel.
+    </kbd> opens a one-month panel. In the grid, arrows move by day or week,
+    <kbd>Home</kbd>/<kbd>End</kbd> jump to the week start or end,
+    <kbd>PageUp</kbd>/<kbd>PageDown</kbd> move by month, <kbd>Enter</kbd> or
+    <kbd>Space</kbd> selects and <kbd>Esc</kbd> closes.
   </p>
 
   <div class="row">
@@ -69,7 +72,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    New <code class="t-mono-inline">[label]</code> /
+    <code class="t-mono-inline">[label]</code> /
     <code class="t-mono-inline">
       [hint]
     </code> inputs render the field-label
@@ -96,15 +99,43 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Size · full width
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">size</code> takes
+    <code class="t-mono-inline">sm</code>, <code class="t-mono-inline">md</code>
+    or <code class="t-mono-inline">lg</code>. The trigger has a fixed width;
+    <code class="t-mono-inline">[fullWidth]="true"</code> fills the container.
+  </p>
+
+  <div class="row">
+    <ds-date-picker
+      mode="single"
+      size="sm"
+      placeholder="Small" />
+
+    <ds-date-picker
+      mode="single"
+      size="lg"
+      placeholder="Large" />
+  </div>
+
+  <div class="row">
+    <ds-date-picker
+      mode="single"
+      placeholder="Full width"
+      [fullWidth]="true" />
+  </div>
+
+  <h3 class="block-title t-h4">
     Validation states
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [invalid]="true"
-    </code> switches the hint to
-    an error message; <code class="t-mono-inline">[disabled]="true"</code>
-    makes the picker inert.
+    <code class="t-mono-inline">error</code> replaces the hint with an error
+    message; <code class="t-mono-inline">[invalid]</code> paints the state only;
+    <code class="t-mono-inline">[disabled]="true"</code> makes the picker inert.
   </p>
 
   <div class="grid-2">
@@ -132,10 +163,8 @@
     </code> and
     <code class="t-mono-inline">
       [maxDate]
-    </code> disable days outside the
-    allowed window. Days before <code class="t-mono-inline">minDate</code> or
-    after <code class="t-mono-inline">maxDate</code> are rendered as disabled
-    and cannot be selected. The example below restricts to today ± 30 days.
+    </code> (inclusive) disable days
+    outside the window; the example allows today to today + 30 days.
   </p>
 
   <div class="row">
@@ -271,8 +300,8 @@
     mixing. <code class="t-mono-inline">[firstDayOfWeek]</code> (0–6, default
     Monday) shifts the week. Set app-wide via
     <code class="t-mono-inline">
-      provideDsConfig({{ '{' }} datePicker: {{ '{' }} locale {{ '}' }}
-      {{ '}' }})
+      provideDsConfig({{ '{' }} datePicker: {{ '{' }} locale, dateFormat,
+      firstDayOfWeek {{ '}' }} {{ '}' }})
     </code
     >.
   </p>
@@ -325,8 +354,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [allowInput]="false"
-    </code> restores the
-    button-only trigger — no manual typing, selection via the calendar only.
+    </code> makes the trigger a
+    button: the date is picked from the calendar only.
   </p>
 
   <div class="row">
@@ -344,10 +373,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Every individual cell state side-by-side. Static specimens mirroring the
-    internal <code>ds-calendar-day</code> cell (which the picker grid renders) —
-    scoped <code>.day-specimen</code> markup with <code>.is-forced-*</code>
-    hooks pin each transient state for screenshot.
+    Each day-cell state, as static specimens.
   </p>
 
   <div class="states is-cols-4">

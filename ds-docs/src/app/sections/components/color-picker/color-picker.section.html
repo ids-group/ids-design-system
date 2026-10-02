@@ -21,8 +21,8 @@
     saturation/brightness, drag the hue bar, or type a hex. Omit
     <code>
       [presets]
-    </code> to use the built-in palette. The selected hex value
-    is reflected below.
+    </code> to use the built-in palette. The plane and hue bar take
+    arrow keys (Shift for steps of 10).
   </p>
 
   <div class="demo-panel">
@@ -54,8 +54,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    The picker as it looks open: colour plane, hue slider, hex field and
-    presets, holding a preset colour.
+    The open picker, inline.
   </p>
 
   <div class="demo-panel">
@@ -113,9 +112,11 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       hint
-    </code> renders a helper line below the
-    swatch. Paired with <code class="t-mono-inline">[invalid]="true"</code> it
-    switches to an error style with <code>role="alert"</code>.
+    </code> adds a helper line;
+    <code class="t-mono-inline">error</code> replaces it with an error message
+    announced via <code>role="alert"</code>.
+    <code class="t-mono-inline">[invalid]</code> paints the error state without
+    a message.
   </p>
 
   <div class="demo-panel">

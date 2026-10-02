@@ -45,7 +45,7 @@ const MORE_TRIGGER_WIDTH = 132;
  *   </ng-template>
  *
  *   <ds-search dsFilterBarTrailing … />
- *   <ds-button dsFilterBarTrailing variant="text">Clear</ds-button>
+ *   <button dsFilterBarTrailing type="button" class="link">Clear</button>
  * </ds-filter-bar>
  * ```
  */

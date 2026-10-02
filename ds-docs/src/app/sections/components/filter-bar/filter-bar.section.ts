@@ -4,7 +4,6 @@ import {
   ViewEncapsulation,
   signal,
 } from '@angular/core';
-import { ButtonComponent } from 'ds/button';
 import { DatePickerComponent } from 'ds/date-picker';
 import { FilterBarComponent, FilterItemDirective } from 'ds/filter-bar';
 import { SearchComponent } from 'ds/search';
@@ -16,7 +15,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   selector: 'section-components-filter-bar',
   standalone: true,
   imports: [
-    ButtonComponent,
     DatePickerComponent,
     FilterBarComponent,
     FilterItemDirective,

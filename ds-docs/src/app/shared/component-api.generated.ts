@@ -2883,7 +2883,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name for a control with no visible label; overrides `label` when both are set."
+        "description": "Accessible name when no `label` is set; ignored when `label` is set."
       }
     ],
     "outputs": []

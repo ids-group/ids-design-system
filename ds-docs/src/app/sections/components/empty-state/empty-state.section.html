@@ -21,7 +21,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Five canonical variants. Each ships a distinct icon-tile tint.
+    Five variants: <code class="t-mono-inline">error</code>,
+    <code class="t-mono-inline">locked</code> and
+    <code class="t-mono-inline">success</code> tint the icon tile;
+    <code class="t-mono-inline">loading</code> covers the state with a spinner.
+    <code class="t-mono-inline">icon</code> replaces the variant's glyph.
   </p>
 
   <div class="variants-grid">
@@ -56,6 +60,14 @@
         body="Permission denied.">
       </ds-empty-state>
     </div>
+
+    <div class="variant-card">
+      <ds-empty-state
+        variant="success"
+        title="All done"
+        body="Nothing left to review.">
+      </ds-empty-state>
+    </div>
   </div>
 
   <h3
@@ -65,7 +77,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Full demo of each variant with title, body and one primary action.
+    Title, body and one action in the <code class="t-mono-inline">actions</code>
+    slot.
   </p>
 
   <div class="states-grid">

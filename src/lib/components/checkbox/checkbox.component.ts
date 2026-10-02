@@ -53,7 +53,7 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
   readonly required = input(false, { transform: booleanAttribute });
   /** Label beside the box, wired via for/id. Omit to bring your own <label>. */
   readonly label = input<string>('');
-  /** Accessible name for a control with no visible label; overrides `label` when both are set. */
+  /** Accessible name when no `label` is set; ignored when `label` is set. */
   readonly ariaLabel = input<string | null>(null);
 
   protected readonly isDisabled = computed(
