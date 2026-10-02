@@ -949,7 +949,13 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     }
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
       event.preventDefault();
-      // The pointer may have moved the cursor, or Escape cleared it, since the stop took focus.
+      // The pointer may have moved or pinned the cursor elsewhere, or Escape cleared it, since the stop took focus.
+      if (
+        this.cursorPinned() &&
+        this.activeIndex() !== this.focusedCategory()
+      ) {
+        this.cursorState.release();
+      }
       this.cursorState.setIndex(this.focusedCategory());
       const readings = this.readingsTopDown();
       if (readings.length === 0) {
