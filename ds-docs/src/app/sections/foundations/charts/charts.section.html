@@ -3,8 +3,8 @@
   eyebrow="Foundations"
   title="Charts &amp; dataviz">
   <span lede>
-    Categorical, sequential and divergent palettes. Axis / grid / legend tokens.
-    Five reference chart types with empty + loading states.
+    Chart palettes and axis tokens, and the behaviour every chart shares:
+    states, tooltips, pinning, frame, annex table and app-wide defaults.
   </span>
 
   <h3
@@ -14,20 +14,75 @@
   </h3>
 
   <p class="block-desc t-s">
-    Hand-tuned for perceptual distance, not ramp position. First six pass AA
-    against light AND dark surface-default.
+    Hand-tuned for perceptual distance, not ramp position. Every hue clears 3:1
+    (WCAG 1.4.11). Slot 8 is the neutral "rest" / "other" bucket. A chart of
+    one series takes
+    <code class="t-mono-inline">
+      --ds-chart-series-default-color
+    </code>, with
+    <code class="t-mono-inline">
+      --ds-chart-series-accent-color
+    </code> for the
+    row to land on.
   </p>
 
   <div class="palette is-8">
-    @for (n of cats; track n) {
+    @for (n of slots; track n) {
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="'var(--chart-categorical-' + n + ')'">
+          [style.background]="'var(--ds-chart-series-' + n + '-color)'">
         </div>
 
         <code class="t-mono-inline">
-          --chart-categorical-{{ n }}
+          --ds-chart-series-{{ n }}-color
+        </code>
+      </div>
+    }
+  </div>
+
+  <h3
+    data-claude-design
+    class="block-title t-h4">
+    Ramp and heat
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      --ds-chart-ramp-N-color
+    </code> is one hue at
+    mid lightness for the ordered stages of one quantity (funnel stages).
+    <code class="t-mono-inline">
+      --ds-chart-heat-N-color
+    </code> spans the full
+    lightness range, for a grid read from the step between cells (heat map).
+  </p>
+
+  <div class="palette is-8">
+    @for (n of slots; track n) {
+      <div class="swatch">
+        <div
+          class="swatch-chip"
+          [style.background]="'var(--ds-chart-ramp-' + n + '-color)'">
+        </div>
+
+        <code class="t-mono-inline">
+          --ds-chart-ramp-{{ n }}-color
+        </code>
+      </div>
+    }
+  </div>
+
+  <div class="palette is-8">
+    @for (n of slots; track n) {
+      <div class="swatch">
+        <div
+          class="swatch-chip"
+          [style.background]="'var(--ds-chart-heat-' + n + '-color)'">
+        </div>
+
+        <code class="t-mono-inline">
+          --ds-chart-heat-{{ n }}-color
         </code>
       </div>
     }
@@ -41,7 +96,9 @@
 
   <p class="block-desc t-s">
     Single-hue, light → dark. Use for ordinal magnitudes (e.g. utilisation %,
-    days-until-deadline).
+    days-until-deadline). No component reads the sequential or divergent ramps
+    and they have no <code class="t-mono-inline">--ds-chart-*</code> override:
+    they are for hand-drawn visuals.
   </p>
 
   <div class="palette is-6">
@@ -128,6 +185,14 @@
     </tbody>
   </table>
 
+  <p class="block-desc t-s">
+    The rest of the public layer (axis font size, threshold, dim, hover, focus
+    ring, cap radius, bar gap, area and hatch tokens) is described in the
+    <a routerLink="/reference/tokens-reference">
+      tokens reference
+    </a>.
+  </p>
+
   <h3 class="block-title t-h4">
     How a chart arrives
   </h3>
@@ -160,375 +225,74 @@
     Reference charts
   </h3>
 
-  <div class="chart">
-    <div class="head">
-      <h4 class="title">
-        Staff rotas / week
-      </h4>
+  <ds-line-chart
+    caption="Allocations a week"
+    [categories]="allocationWeeks"
+    [series]="allocationSeries" />
 
-      <span class="sub">
-        Q3 2026
-      </span>
-    </div>
+  <div class="grid-2">
+    <ds-column-chart
+      caption="Items out, by event"
+      [data]="eventPoints" />
 
-    <svg
-      class="svg"
-      [attr.viewBox]="'0 0 ' + w + ' ' + h">
-      <g class="grid">
-        @for (t of gridYs; track $index) {
-          <line
-            [attr.x1]="padL"
-            [attr.x2]="w - padR"
-            [attr.y1]="t"
-            [attr.y2]="t" />
-        }
-      </g>
-
-      <g class="axis">
-        <line
-          [attr.x1]="padL"
-          [attr.x2]="padL"
-          [attr.y1]="padT"
-          [attr.y2]="padT + innerH" />
-
-        <line
-          [attr.x1]="padL"
-          [attr.x2]="w - padR"
-          [attr.y1]="padT + innerH"
-          [attr.y2]="padT + innerH" />
-
-        @for (yt of yTicksLine; track yt.v) {
-          <text
-            text-anchor="end"
-            [attr.x]="padL - 8"
-            [attr.y]="yt.y + 4">
-            {{ yt.v }}
-          </text>
-        }
-
-        @for (xt of xTicksLine; track xt.label) {
-          <text
-            text-anchor="middle"
-            [attr.x]="xt.x"
-            [attr.y]="h - 8">
-            {{ xt.label }}
-          </text>
-        }
-      </g>
-
-      <path
-        fill="none"
-        stroke="var(--chart-categorical-1)"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        [attr.d]="linePath()" />
-
-      @for (p of linePoints(); track $index) {
-        <circle
-          r="3"
-          fill="var(--chart-categorical-1)"
-          [attr.cx]="p.x"
-          [attr.cy]="p.y" />
-      }
-    </svg>
-
-    <div class="legend">
-      <span class="item">
-        <span
-          class="dot"
-          style="background: var(--chart-categorical-1)">
-        </span>
-        Allocations
-      </span>
-    </div>
+    <ds-pie-chart
+      caption="Register status"
+      [data]="statusSlices" />
   </div>
 
   <div class="grid-2">
-    <div class="chart">
-      <div class="head">
-        <h4 class="title">
-          Kit out, by event
-        </h4>
+    <ds-column-chart
+      caption="Item mix a week"
+      stack="stacked"
+      [showValues]="false"
+      [data]="mixSeries" />
 
-        <span class="sub">
-          Aug 2026
-        </span>
-      </div>
-
-      <svg
-        class="svg"
-        [attr.viewBox]="'0 0 ' + w + ' ' + h">
-        <g class="grid">
-          @for (t of gridYs; track $index) {
-            <line
-              [attr.x1]="padL"
-              [attr.x2]="w - padR"
-              [attr.y1]="t"
-              [attr.y2]="t" />
-          }
-        </g>
-
-        <g class="axis">
-          <line
-            [attr.x1]="padL"
-            [attr.x2]="w - padR"
-            [attr.y1]="padT + innerH"
-            [attr.y2]="padT + innerH" />
-
-          @for (yt of yTicksBar; track yt.v) {
-            <text
-              text-anchor="end"
-              [attr.x]="padL - 8"
-              [attr.y]="yt.y + 4">
-              {{ yt.v }}
-            </text>
-          }
-
-          @for (b of barRects(); track b.label) {
-            <text
-              text-anchor="middle"
-              [attr.x]="b.cx"
-              [attr.y]="h - 8">
-              {{ b.label }}
-            </text>
-          }
-        </g>
-
-        @for (b of barRects(); track b.label) {
-          <rect
-            fill="var(--chart-categorical-1)"
-            rx="2"
-            [attr.x]="b.x"
-            [attr.y]="b.y"
-            [attr.width]="barW"
-            [attr.height]="b.h" />
-        }
-      </svg>
-    </div>
-
-    <div class="chart">
-      <div class="head">
-        <h4 class="title">
-          Kit register status
-        </h4>
-
-        <span class="sub">
-          412 items
-        </span>
-      </div>
-
-      <div class="pie-row">
-        <svg
-          width="200"
-          height="200"
-          viewBox="0 0 200 200">
-          @for (a of pieArcs(); track a.label) {
-            <path
-              stroke-width="22"
-              fill="none"
-              [attr.d]="a.d"
-              [attr.stroke]="a.c" />
-          }
-
-          <text
-            x="100"
-            y="96"
-            text-anchor="middle"
-            font-size="11"
-            fill="var(--text-tertiary)"
-            font-family="var(--font-sans)">
-            Total
-          </text>
-
-          <text
-            x="100"
-            y="118"
-            text-anchor="middle"
-            font-size="22"
-            font-weight="800"
-            fill="var(--text-primary)"
-            font-family="var(--font-sans)">
-            412
-          </text>
-        </svg>
-
-        <div class="legend pie-legend">
-          @for (s of pie; track s.label) {
-            <span class="item">
-              <span
-                class="dot"
-                [style.background]="s.c">
-              </span>
-              {{ s.label }} <span class="pie-pct">{{ s.v }}%</span>
-            </span>
-          }
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="chart">
-    <div class="head">
-      <h4 class="title">
-        Kit type mix / week
-      </h4>
-    </div>
-
-    <svg
-      class="svg"
-      [attr.viewBox]="'0 0 ' + w + ' ' + h">
-      <g class="axis">
-        <line
-          [attr.x1]="padL"
-          [attr.x2]="w - padR"
-          [attr.y1]="padT + innerH"
-          [attr.y2]="padT + innerH" />
-
-        @for (s of stackBars(); track s.label) {
-          <text
-            text-anchor="middle"
-            [attr.x]="s.cx"
-            [attr.y]="h - 8">
-            {{ s.label }}
-          </text>
-        }
-      </g>
-
-      @for (s of stackBars(); track s.label) {
-        <rect
-          fill="var(--chart-categorical-1)"
-          [attr.x]="s.x"
-          [attr.y]="s.yA"
-          [attr.width]="stackW"
-          [attr.height]="s.hA" />
-
-        <rect
-          fill="var(--chart-categorical-2)"
-          [attr.x]="s.x"
-          [attr.y]="s.yB"
-          [attr.width]="stackW"
-          [attr.height]="s.hB" />
-
-        <rect
-          fill="var(--chart-categorical-3)"
-          [attr.x]="s.x"
-          [attr.y]="s.yC"
-          [attr.width]="stackW"
-          [attr.height]="s.hC" />
-      }
-    </svg>
-
-    <div class="legend">
-      <span class="item">
-        <span
-          class="dot"
-          style="background: var(--chart-categorical-1)">
-        </span
-        >Audio
-      </span>
-
-      <span class="item">
-        <span
-          class="dot"
-          style="background: var(--chart-categorical-2)">
-        </span
-        >Lighting
-      </span>
-
-      <span class="item">
-        <span
-          class="dot"
-          style="background: var(--chart-categorical-3)">
-        </span
-        >Video
-      </span>
-    </div>
-  </div>
-
-  <div class="chart">
-    <div class="head">
-      <h4 class="title">
-        Kit excess / shortage by week (divergent)
-      </h4>
-
-      <span class="sub">
-        Negative = shortage · Positive = excess
-      </span>
-    </div>
-
-    <div class="heat">
-      <span></span>
-
-      @for (w of heatWeeks; track w) {
-        <span class="t-overline heat-col-h">
-          {{ w }}
-        </span>
-      }
-
-      @for (row of heatRows; track row; let r = $index) {
-        <span class="t-s-bold heat-row-h">
-          {{ row }}
-        </span>
-
-        @for (v of heat[r]; track $index) {
-          <div
-            class="heat-cell"
-            [style.background]="divToken(v)"
-            [style.color]="
-              v <= -2 || v >= 2 ? 'var(--neutral-0)' : 'var(--text-primary)'
-            ">
-            {{ v > 0 ? '+' + v : v }}
-          </div>
-        }
-      }
-    </div>
+    <ds-heatmap-chart
+      caption="Shortages a week"
+      [columns]="weeks"
+      [data]="shortageRows" />
   </div>
 
   <h3
     data-claude-design
     class="block-title t-h4">
-    Empty &amp; loading states
+    Empty, loading and error states
   </h3>
 
+  <p class="block-desc t-s">
+    Every chart draws these itself: empty data shows
+    <code class="t-mono-inline">
+      emptyText
+    </code>,
+    <code class="t-mono-inline">
+      [loading]
+    </code> a skeleton, and
+    <code class="t-mono-inline">
+      [error]
+    </code>
+
+    <code class="t-mono-inline">
+      errorText
+    </code>. Unset copy comes from
+    <code class="t-mono-inline">
+      DS_INTL.chart
+    </code>.
+  </p>
+
   <div class="grid-2">
-    <div class="chart empty">
-      <div class="head">
-        <h4 class="title">
-          Allocations / week
-        </h4>
-      </div>
+    <ds-column-chart
+      caption="Empty"
+      [data]="noPoints" />
 
-      <div class="body">
-        <div>
-          <ds-icon
-            name="chart"
-            [size]="32" />
+    <ds-column-chart
+      caption="Loading"
+      loading
+      [data]="eventPoints" />
 
-          <p class="empty-msg">
-            No data for this period.<br />
-
-            <span class="t-xs">
-              Pick a different week range.
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div class="chart">
-      <div class="head">
-        <h4 class="title">
-          Allocations / week
-        </h4>
-
-        <span class="sub">
-          Loading…
-        </span>
-      </div>
-
-      <ds-skeleton height="var(--chart-skeleton-h)" />
-    </div>
+    <ds-column-chart
+      caption="Error"
+      error
+      [data]="eventPoints" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -576,23 +340,18 @@
   </p>
 
   <p class="block-desc t-s">
-    Each reading in the panel carries its series' colour dot while there are two
-    to four readings. A lone reading has nothing to tell it from, and from five
-    the dots read as noise, so in both cases they go and the labels carry the
-    series on their own. A dot takes a ring only when its colour is below 1.5:1
-    against the panel, as the palest heat-map steps are, so it does not vanish
-    into it.
+    Each reading carries its series' colour dot when there are two to four
+    readings; with one or five-plus the labels carry the series alone. A dot
+    gets a ring when it is below 1.5:1 against the panel.
     <code class="t-mono-inline">
       tooltipSwatches
-    </code>, per chart or on
+    </code> (per chart or on
     <code class="t-mono-inline">
       DS_CONFIG.chart
-    </code>, turns them on or off
-    whatever the count. And
+    </code>) forces dots on or off;
     <code class="t-mono-inline">
       tooltip="none"
-    </code> takes the panel away
-    altogether, for a chart whose numbers are printed beside it.
+    </code> removes the panel.
   </p>
 
   <div class="states is-cols-3">
@@ -655,36 +414,116 @@
     [series]="tooltipDemoSeries" />
 
   <p class="block-desc t-s">
-    A click on a mark holds it by default, on every chart: the mark keeps its
+    A click on a mark holds it by default on every chart: the mark keeps its
     tooltip, its highlight and, with
     <code class="t-mono-inline">
       dimOthers
-    </code>, the dimming of everything
-    else, so a comparison survives the pointer leaving the chart entirely. A pin
-    disc marks the held mark, and every chart but a composed
+    </code>, the dimming of the rest. A pin
+    disc marks it, and every chart, a composed
     <code class="t-mono-inline">
       ds-chart
-    </code> shows an Unpin control at its
-    top end. A second click, <kbd> Esc </kbd> or a press elsewhere releases it,
-    and the click output fires either way, because pinning is a state rather
-    than a handler. A key never pins: <kbd>Enter</kbd> and <kbd>Space</kbd> on a
-    focused mark fire its click output and hold nothing. Set
+    </code> included, shows an Unpin
+    control at its top end. A second click, <kbd> Esc </kbd> or a press
+    elsewhere releases it; the click output fires either way.
+    <kbd>
+      Enter
+    </kbd> and <kbd>Space</kbd> on a focused mark fire the click
+    output and never pin.
     <code class="t-mono-inline">
       pinOnClick="false"
-    </code> on one chart,
+    </code> (per chart,
     <code class="t-mono-inline">
       ds-chart
     </code>
-    included, or
+    included) or
     <code class="t-mono-inline">
       DS_CONFIG.chart.pinOnClick: false
-    </code> for
-    an app, to keep marks unheld. On
+    </code> turns
+    holding off; a touch tap still holds the mark, since touch has no hover. On
     <code class="t-mono-inline">
       ds-line-chart
     </code> a press holds the whole
     category under the cursor.
   </p>
+
+  <h3 class="block-title t-h4">
+    Custom tooltip content
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      ds-bar-chart
+    </code>,
+    <code class="t-mono-inline">
+      ds-column-chart
+    </code>,
+    <code class="t-mono-inline">
+      ds-funnel-chart
+    </code>,
+    <code class="t-mono-inline">
+      ds-line-chart
+    </code> and
+    <code class="t-mono-inline">
+      ds-pie-chart
+    </code> read a projected
+    <code class="t-mono-inline">
+      &lt;ng-template #dsChartTooltip&gt;
+    </code> as
+    the panel's body. It receives a
+    <code class="t-mono-inline">
+      ChartTooltipContext
+    </code>:
+    <code class="t-mono-inline">
+      category
+    </code> (empty where the marks are the
+    categories) and <code class="t-mono-inline">entries</code>, each with
+    <code class="t-mono-inline">
+      label
+    </code>,
+    <code class="t-mono-inline">
+      value
+    </code>,
+    <code class="t-mono-inline">
+      formatted
+    </code>,
+    <code class="t-mono-inline">
+      color
+    </code> and an optional
+    <code class="t-mono-inline">
+      detail
+    </code>.
+  </p>
+
+  <ds-line-chart
+    caption="A custom panel"
+    dataTable="none"
+    [categories]="tooltipDemoMonths"
+    [series]="tooltipDemoSeries">
+    <ng-template
+      #dsChartTooltip
+      let-context>
+      <div class="custom-tooltip t-s">
+        <strong>
+          {{ context.category }}
+        </strong>
+
+        @for (entry of context.entries; track entry.label) {
+          <span>
+            {{ entry.label }}: {{ entry.formatted }}
+          </span>
+        }
+      </div>
+    </ng-template>
+  </ds-line-chart>
+
+  <pre class="t-mono"><code ngNonBindable>&lt;ds-line-chart [categories]="months" [series]="series"&gt;
+  &lt;ng-template #dsChartTooltip let-context&gt;
+    &lt;strong&gt;&#123;&#123; context.category &#125;&#125;&lt;/strong&gt;
+    &#64;for (entry of context.entries; track entry.label) &#123;
+      &lt;span&gt;&#123;&#123; entry.label &#125;&#125;: &#123;&#123; entry.formatted &#125;&#125;&lt;/span&gt;
+    &#125;
+  &lt;/ng-template&gt;
+&lt;/ds-line-chart&gt;</code></pre>
 
   <h3
     data-claude-design
@@ -693,16 +532,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    A chart draws its own bordered, padded box by default, because it is read as
-    an object — a plot with axes, a legend and an annex table — and without an
-    edge those parts run into whatever sits beside them. Inside a card the page
-    has already drawn, that is a second box around the first.
+    A chart draws its own bordered, padded box by default so its plot, legend
+    and annex table do not run into neighbours. Inside a card, turn it off with
     <code class="t-mono-inline">
       frame="none"
-    </code> turns it off for one
-    chart; <code class="t-mono-inline"> DS_CONFIG.chart.frame </code> turns it
-    off for an app, which is where the decision usually belongs — whether charts
-    live in cards is settled once per product, not per plot.
+    </code> per chart or
+    <code class="t-mono-inline">
+      DS_CONFIG.chart.frame
+    </code> per app.
   </p>
 
   <div class="states is-cols-2">
@@ -886,38 +723,40 @@
   </h3>
 
   <p class="block-desc t-s">
-    Six things are the same decision for every chart in an app rather than a
-    choice per plot, so they resolve through
+    Eight app-wide decisions resolve through
     <code class="t-mono-inline">
-      DS_CONFIG
+      DS_CONFIG.chart
     </code>:
     <code class="t-mono-inline">
       valueFormat
-    </code> (a number reads one way in
-    a product, and a formatter passed per chart drifts as soon as there are two
-    screens), <code class="t-mono-inline">dataTable</code> (whether the numbers
-    behind a plot have a non-visual route is an accessibility policy),
+    </code>,
+    <code class="t-mono-inline">
+      dataTable
+    </code>,
     <code class="t-mono-inline">
       frame
-    </code> (whether charts live inside
-    cards), <code class="t-mono-inline"> tooltipLingerMs </code> (a property of
-    what the app puts in its tooltips),
+    </code>,
+    <code class="t-mono-inline">
+      tooltipLingerMs
+    </code>,
     <code class="t-mono-inline">
       tooltipSwatches
-    </code> (whether the tooltips
-    carry colour dots), <code class="t-mono-inline"> pinOnClick </code> (whether
-    a click holds a mark) and
+    </code>,
+    <code class="t-mono-inline">
+      pinOnClick
+    </code>,
     <code class="t-mono-inline">
       hoverDelayMs
-    </code> (how long a resting
-    pointer waits before a chart answers it, which has no per-chart input).
-    Precedence is the input, then the config, then the built-in default — so
-    binding one on a single chart still wins. The empty and error copy is
-    wording, so it lives in <code class="t-mono-inline"> DS_INTL.chart </code>,
-    and the number locale is
+    </code> (config only, no per-chart
+    input) and <code class="t-mono-inline">rendering</code> (how charts build
+    on a long page, below). Precedence is input, then config, then built-in
+    default. Empty and error copy lives in
+    <code class="t-mono-inline">
+      DS_INTL.chart
+    </code>; the number locale is
     <code class="t-mono-inline">
       DsConfig.locale
-    </code>, then Angular's
+    </code>, then
     <code class="t-mono-inline">
       LOCALE_ID
     </code>.
