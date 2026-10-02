@@ -4,8 +4,8 @@
   title="Layout primitives"
   [apiKeys]="['layout:StackComponent', 'layout:InlineComponent', 'layout']">
   <span lede>
-    Composable layout building blocks — Stack, Inline, and Container — that
-    replace one-off flexbox utilities with semantic, token-aware wrappers.
+    Stack, Inline and Container: token-aware wrappers in place of one-off
+    flexbox utilities.
   </span>
 
   <h3
@@ -16,11 +16,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Arranges children in a vertical column with consistent gap. Use
-    <code>
-      gap
-    </code> to control spacing and <code>align</code> for cross-axis
-    alignment.
+    A vertical column. <code>gap</code> takes <code>none</code> ·
+    <code>xs</code> · <code>sm</code> · <code>md</code> · <code>lg</code> ·
+    <code>xl</code>; <code>align</code> takes <code>start</code> ·
+    <code>center</code> · <code>end</code> · <code>stretch</code>. Unset
+    <code>gap</code> reads <code>--ds-stack-gap</code>.
   </p>
 
   <div class="demo-panel">
@@ -59,18 +59,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    Lays children out in a horizontal row with wrapping and gap control. Ideal
-    for tag clouds, button groups, and filter chips.
+    A horizontal row for tags, button groups and filter chips. Same
+    <code>gap</code> and <code>align</code> values as Stack; items centre
+    vertically by default and unset <code>gap</code> reads
+    <code>--ds-inline-gap</code>. <code>justify</code> takes
+    <code>start</code> · <code>center</code> · <code>end</code> ·
+    <code>between</code> (pushes the ends apart). The row wraps by default;
+    <code>[wrap]="false"</code> keeps one line and lets it overflow.
   </p>
 
   <div class="demo-panel">
-    <ds-inline
-      gap="xs"
-      [wrap]="true">
+    <ds-inline gap="xs">
       <span
         style="
           background: var(--primary-muted);
-          padding: 4px 10px;
+          padding: var(--space-1) var(--space-2);
           border-radius: var(--radius-full);
           font-size: var(--text-sm);
         ">
@@ -80,7 +83,7 @@
       <span
         style="
           background: var(--primary-muted);
-          padding: 4px 10px;
+          padding: var(--space-1) var(--space-2);
           border-radius: var(--radius-full);
           font-size: var(--text-sm);
         ">
@@ -90,7 +93,7 @@
       <span
         style="
           background: var(--primary-muted);
-          padding: 4px 10px;
+          padding: var(--space-1) var(--space-2);
           border-radius: var(--radius-full);
           font-size: var(--text-sm);
         ">
@@ -100,7 +103,7 @@
       <span
         style="
           background: var(--primary-muted);
-          padding: 4px 10px;
+          padding: var(--space-1) var(--space-2);
           border-radius: var(--radius-full);
           font-size: var(--text-sm);
         ">
@@ -110,12 +113,19 @@
       <span
         style="
           background: var(--primary-muted);
-          padding: 4px 10px;
+          padding: var(--space-1) var(--space-2);
           border-radius: var(--radius-full);
           font-size: var(--text-sm);
         ">
         Accessibility
       </span>
+    </ds-inline>
+  </div>
+
+  <div class="demo-panel">
+    <ds-inline justify="between">
+      <span class="t-s">3 items selected</span>
+      <span class="t-s">Page 1 of 4</span>
     </ds-inline>
   </div>
 
@@ -127,10 +137,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Centers content with a max-width constraint. Choose from <code>sm</code> ·
-    <code>
-      md
-    </code> · <code>lg</code> · <code>xl</code> · <code>full</code>.
+    Centres content under a max width: <code>sm</code> · <code>md</code> ·
+    <code>lg</code> · <code>xl</code> (default) · <code>full</code> (no cap).
+    It also pads inline by <code>--ds-container-padding-x</code>.
   </p>
 
   <div class="demo-panel">
