@@ -32,6 +32,11 @@ holds an entry; what the release bot commits afterwards needs none.
   `snapshot-cards` end the headless browser's whole process tree and delete its `ds-cdp-*` profile
   when they throw or get Ctrl+C, as they already did on a clean finish.
 
+- **`check-manual-surface` reads inline templates when it asks whether a part is rendered.** An
+  internal part placed only by another component's inline template, such as `ds-chart-unpin` in the
+  chart state frame, still needs its doc and section. The projection watch list holds 16 templates:
+  `chart` stamps its slots through the state frame's `<ng-template>`, which the list does not track.
+
 ## 0.14.6-beta.0 — 2026-09-30
 
 ### Cards

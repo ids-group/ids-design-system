@@ -107,14 +107,14 @@ through the UI afterwards renders the bar and its plain content, and drops the n
 
 ### What the manifest list means now
 
-`manual-surface.json` records the 17 templates whose `<ng-content>` sits inside a control-flow
-block. **That is a watch-list, not a defect list** - 16 are green today and the seventeenth,
-`chart`, is unreachable through the boundary for a reason that has nothing to do with its gate
-(below). It exists because the two defects above were invisible until someone looked, and a new
-component that gates its projection deserves the same look. `check-manual-surface.mjs` fails when
-the list changes so the look actually happens.
+`manual-surface.json` records the 16 templates whose `<ng-content>` sits inside a control-flow
+block of their own. **That is a watch-list, not a defect list** - all 16 are green today. It exists
+because the two defects above were invisible until someone looked, and a new component that gates
+its projection deserves the same look. `check-manual-surface.mjs` fails when the list changes so
+the look actually happens. A template whose `<ng-content>` sits in an `<ng-template>` that another
+component stamps is not on it, because the gate lives in the stamper; `chart` is that case (below).
 
-The seventeen, each with the gate its `<ng-content>` sits behind:
+The sixteen, each with the gate its `<ng-content>` sits behind:
 
 | component       | gate              | status                                                                                                 |
 | --------------- | ----------------- | ------------------------------------------------------------------------------------------------------ |
@@ -123,7 +123,6 @@ The seventeen, each with the gate its `<ng-content>` sits behind:
 | `bottom-sheet`  | `rendered()`      | overlay; ✅                                                                                            |
 | `auth-layout`   | `letterGlyph()`   | ✅                                                                                                     |
 | `badge`         | `count()`         | projection in the live @else; ✅                                                                       |
-| `chart`         | the state chain   | gate is live at connect; the marks themselves cannot cross the boundary - see below                    |
 | `checkbox`      | `label()`         | projection in the live @else; ✅                                                                       |
 | `radio`         | `label()`         | projection in the live @else; ✅ — moved under `radio-group/` by the entry-point split, same component |
 | `switch`        | `label()`         | projection in the live @else; ✅                                                                       |
@@ -143,9 +142,10 @@ outside any block, and it is one of the 31 that register under an alias.
 
 `ds-chart` is the container `ds-column-chart` is built inside; the other four charts each still
 draw their own canvas. Its three
-`<ng-content>` slots sit in the last arm of a four-way state chain - `@if (error()) … @else if
-(loading()) … @else if (isEmpty()) … @else { the canvas }` - and by the rule above that arm is live
-at connect: `error`, `loading` and `categories` are all initial props, so an element created with
+`<ng-content>` slots sit in the `<ng-template>` it hands to the shared state frame
+(`figure[dsChartStates]`), which stamps it in the last arm of a four-way state chain -
+`@if (error()) … @else if (pending()) … @else if (empty()) … @else { the canvas }` - and by the rule
+above that arm is live at connect: `error`, `loading` and `categories` are all initial props, so an element created with
 `categories` set has the marks' branch stamped out in the same microtask it upgrades. Nothing is
 toggled after mount.
 
