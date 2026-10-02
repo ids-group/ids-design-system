@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, computed, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ButtonComponent } from 'ds/button';
-import { IconComponent } from 'ds/icons';
 import { SearchComponent } from 'ds/search';
 import { SelectComponent } from 'ds/select';
 import type { SelectOption } from 'ds/select';
@@ -24,7 +24,7 @@ interface RecordRow {
     DocsSectionComponent,
     SearchComponent,
     ButtonComponent,
-    IconComponent,
+    RouterLink,
     SelectComponent,
     TableComponent,
     TagComponent,
