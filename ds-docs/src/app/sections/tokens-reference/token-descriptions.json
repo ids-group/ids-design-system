@@ -910,7 +910,7 @@
   "--ds-stat-value-color": "Value colour.",
   "--ds-stat-value-font-size": "Value size. Applies at every `size`, not just the default — the sm/lg variants move this token rather than restating font-size, so one override reaches all three.",
   "--ds-stat-value-white-space": "Wrapping of the value line (default `nowrap`). Set `normal` when the value is a phrase — a date range or a status — rather than the number the tile was built around. Without it the line does not wrap and, since `.stat` sets no `overflow`, the text runs OUT of the tile rather than being clipped inside it.",
-  "--ds-status-dot-color": "Default = planning.",
+  "--ds-status-dot-color": "Dot colour; default `--icon-muted`. Set per status by `status.define`.",
   "--ds-status-dot-size": "Diameter.",
   "--ds-stepper-connector-color": "Stepper connector line between nodes, pending state.",
   "--ds-stepper-connector-done-color": "Stepper connector line colour, completed segment (defaults to --accent).",
