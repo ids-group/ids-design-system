@@ -22,7 +22,7 @@ const WIDTHS: readonly WidthRow[] = [
   {
     token: '--border-width-strong',
     value: '2 px',
-    use: 'Radio dot, slider thumb, tabs underline, focus ring inner band, dropzone dash',
+    use: 'Radio dot, slider thumb, tabs underline, dropzone dash',
   },
 ];
 

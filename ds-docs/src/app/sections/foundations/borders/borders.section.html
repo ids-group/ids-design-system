@@ -4,9 +4,8 @@
   title="Borders &amp; dividers"
   [apiKeys]="['divider']">
   <span lede>
-    Two widths × six roles. Width carries semantic weight: hairline for
-    everything, regular for inputs, strong for emphasis (selected radio, slider
-    thumb, focus rings).
+    Two widths × six roles: 1px default for every border and field, 2px strong
+    for emphasis (selected radio, slider thumb, tab indicator).
   </span>
 
   <h3 class="block-title t-h4">
@@ -148,7 +147,8 @@
     </code> — pick
     <code class="t-mono-inline">
       "none"
-    </code> when the parent owns spacing.
+    </code> when the parent owns spacing. It applies to horizontal rules only; a vertical
+    divider always takes 12px side margins.
   </p>
 
   <div class="divider-demo">
