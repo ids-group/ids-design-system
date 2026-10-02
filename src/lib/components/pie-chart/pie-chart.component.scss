@@ -17,6 +17,13 @@
 @include chart-data-table.chart-data-table;
 
 
+/* Resolved a level above the overrides below: read on the same element, `--focus-ring-color` and
+   this would reference each other and both compute to nothing. */
+:host {
+  --_pie-chart-focus-color: var(--ds-pie-chart-focus-color, var(--focus-ring-color));
+  --_pie-chart-focus-width: var(--ds-pie-chart-focus-width, var(--focus-ring-width));
+}
+
 .pie-chart {
   --_pie-chart-size: var(--ds-pie-chart-size, 180px);
   --_pie-chart-gap: var(--ds-pie-chart-gap, var(--space-5));
@@ -25,8 +32,6 @@
   --_pie-chart-swatch-size: var(--ds-pie-chart-swatch-size, 10px);
   --_pie-chart-legend-hover-bg-color: var(--ds-chart-legend-hover-bg-color, var(--surface-secondary));
   --_pie-chart-legend-hover-text-color: var(--ds-chart-legend-hover-text-color, var(--text-primary));
-  --_pie-chart-focus-color: var(--ds-pie-chart-focus-color, var(--focus-ring-color));
-  --_pie-chart-focus-width: var(--ds-pie-chart-focus-width, var(--focus-ring-width));
 
   /* The shared mixins read `--focus-ring-*` and `--ds-chart-focus-ring-color`; without these the two
      hooks above reach nothing. */

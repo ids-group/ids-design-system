@@ -16,13 +16,18 @@
 @include chart-frame.no-bounding-box-focus('.stage');
 @include chart-data-table.chart-data-table;
 
+/* Resolved a level above the overrides below: read on the same element, `--focus-ring-color` and
+   this would reference each other and both compute to nothing. */
+:host {
+  --_funnel-chart-focus-color: var(--ds-funnel-chart-focus-color, var(--focus-ring-color));
+  --_funnel-chart-focus-width: var(--ds-funnel-chart-focus-width, var(--focus-ring-width));
+}
+
 .funnel-chart {
   --_chart-message-height: calc(3 * (var(--_funnel-chart-stage-height) + var(--_funnel-chart-stage-gap)));
   --_funnel-chart-stage-height: var(--ds-funnel-chart-stage-height, 44px);
   --_funnel-chart-stage-gap: var(--ds-funnel-chart-stage-gap, var(--ds-chart-bar-gap));
   --_funnel-chart-row-gap: var(--ds-funnel-chart-row-gap, var(--space-4));
-  --_funnel-chart-focus-color: var(--ds-funnel-chart-focus-color, var(--focus-ring-color));
-  --_funnel-chart-focus-width: var(--ds-funnel-chart-focus-width, var(--focus-ring-width));
   --_funnel-chart-row-hover-bg-color: var(--ds-chart-legend-hover-bg-color, var(--surface-secondary));
   --_funnel-chart-row-hover-text-color: var(--ds-chart-legend-hover-text-color, var(--text-primary));
 
