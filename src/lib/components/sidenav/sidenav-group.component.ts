@@ -32,7 +32,7 @@ export class SidenavGroupComponent {
 
   /** Group heading text. */
   readonly label = input<string>('');
-  /** Optional group icon; omit to project custom content via the `[icon]` slot instead. */
+  /** Optional group icon; omit to project custom content via the `[ds-group-icon]` slot instead. */
   readonly icon = input<IconName | null>(null);
   /** When true, the label/icon row becomes a clickable header that expands/collapses the group. */
   readonly expandable = input(false, { transform: booleanAttribute });

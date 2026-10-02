@@ -33,6 +33,13 @@
     to drive scroll-spy.
   </p>
 
+  <p class="block-desc t-s">
+    Projection slots: an item takes <code class="t-mono-inline">[icon]</code>
+    (custom icon, when the <code class="t-mono-inline">icon</code> input is
+    unset) and <code class="t-mono-inline">[trailing]</code> (content before the
+    badge); a group takes <code class="t-mono-inline">[ds-group-icon]</code>.
+  </p>
+
   <div class="stage is-frame">
     <ds-sidenav brand="Atlas">
       <ds-sidenav-item
@@ -179,26 +186,19 @@
     <code class="t-mono-inline">
       dsBrandName
     </code> projects a custom wordmark
-    in place of the plain <code class="t-mono-inline">brand</code> text — here a
+    in place of the plain <code class="t-mono-inline">brand</code> text - here a
     two-tone "AppAdmin" whose accent slice matches the tile. Keep the string
     input alongside as the fallback semantics.
   </p>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      brandRoute
-    </code> makes the brand row a link —
-    normally the app's home. Unset it stays a plain block, because a logo that
-    goes nowhere should not be a link and every app decides for itself whether
-    its mark is a way home. The row announces itself as
-    <code class="t-mono-inline">
-      "&lt;brand&gt;, home"
-    </code>; override that
-    with <code class="t-mono-inline"> brandLinkLabel </code>. Router targets
-    only, and <code class="t-mono-inline"> RouterLink </code> is instantiated
-    only once the input is set, so an app with no router still renders the
-    sidenav. Not demonstrated live here on purpose: a specimen that navigates
-    takes the page with it.
+    <code class="t-mono-inline">brandRoute</code> makes the brand row a router
+    link (usually home); unset, the row is a plain block. It announces
+    <code class="t-mono-inline">"&lt;brand&gt;, home"</code> - override with
+    <code class="t-mono-inline">brandLinkLabel</code>.
+    <code class="t-mono-inline">RouterLink</code> is created only once the
+    input is set, so an app with no router still renders. Not demoed live: a
+    navigating specimen would leave this page.
   </p>
 
   <p class="block-desc t-s">
@@ -215,7 +215,7 @@
         dsBrandName
         class="wordmark">
         <span class="accent">
-          My
+          App
         </span>
 
         <span>
@@ -251,10 +251,8 @@
       &lt;ds-sidenav-group expandable&gt;
     </code>
     renders the header as a toggle button with a caret. Group body collapses
-    when <code class="t-mono-inline">expanded=false</code>. Combine with the new
-    <code class="t-mono-inline">
-      [icon]
-    </code> input to set a group-level icon.
+    when <code class="t-mono-inline">expanded=false</code>. Combine with the
+    <code class="t-mono-inline">icon</code> input to set a group-level icon.
   </p>
 
   <div class="stage is-frame">
@@ -302,15 +300,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Without
-    <code class="t-mono-inline">
-      routerLink
-    </code> the whole header only opens
-    the group — a heading that navigates closes the page being read the moment
-    someone reaches for the section beneath it. Set it and the group becomes a
-    destination as well as a container: the header navigates, and the caret
-    splits off into its own control, because one control cannot both go
-    somewhere and stay to open something.
+    Without <code class="t-mono-inline">routerLink</code> the whole group
+    header only toggles the group. With it, the header navigates and the caret
+    becomes its own toggle button.
   </p>
 
   <p class="block-desc t-s">
