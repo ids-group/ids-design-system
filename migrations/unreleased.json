@@ -61,6 +61,7 @@
   "informational": [
     "--ds-topbar-crumb-text-color, --ds-topbar-crumb-hover-text-color, --ds-topbar-crumb-separator-icon-color, --ds-topbar-crumb-current-text-color, --ds-page-header-crumb-text-color and --ds-page-header-crumb-text-color-hover now recolour the projected ds-breadcrumbs, where they changed nothing; an app that set them sees those colours take effect.",
     "ds-bar-chart draws a row with a negative value as an empty track labelled with that value, where it drew a bar of the absolute value labelled 0.",
-    "ds-button with routerLink or href, disabled and a disabledReason keeps a Tab stop (tabindex 0, role link) so the reason is announced; without disabledReason a disabled link-button still takes tabindex -1."
+    "ds-button with routerLink or href, disabled and a disabledReason keeps a Tab stop (tabindex 0, role link) so the reason is announced; without disabledReason a disabled link-button still takes tabindex -1.",
+    "provideDsIcons calls merge: sibling calls and a lazy route's call add to the icons registered above them, a later call winning a shared name, where each call replaced the previous registry. DS_ICON_REGISTRY now reads the merged registry."
   ]
 }

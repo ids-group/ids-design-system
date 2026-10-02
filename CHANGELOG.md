@@ -2,6 +2,9 @@
 
 ### Fixed
 
+- **`provideDsIcons` calls add up.** A second call, as a sibling or in a lazy route's providers,
+  replaced the icons registered before it; the calls now merge, a later call winning a shared name.
+
 - **A disabled link-button with `disabledReason` stays reachable by Tab.** A `ds-button` with
   `routerLink` or `href`, `disabled` and a `disabledReason` was taken out of the Tab order, so its
   reason was never announced; it now keeps its Tab stop and link role, and still swallows the click.
