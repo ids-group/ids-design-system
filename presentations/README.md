@@ -11,21 +11,22 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 
 | # | Deck | Answering it unblocks |
 | --- | --- | --- |
-| 1 | `1-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
-| 2 | `2-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
-| 3 | `3-interaction-formula` | two pressed-state verdicts, both rendered and measured: the tonal button's pressed recipe and the danger menu item whose pressed equals its hover. The other three are answered and the `.ds-interactive` formula is deferred |
-| 4 | `4-migration-manifest-audit` | ten format practices to ratify — tooling, no consumer pulling on it |
-| 5 | `5-select-native-multi` | the cheapest to close: "keep parked" is a complete answer, and it is the answer already given — it stays only because closing it was declined |
-| 6 | `6-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4", and `docs/todo.md` still carries the measured 4.42:1 failure |
-| 7 | `7-picker-list-height` | which knob caps a picker's list: the public `--ds-dropdown-panel-max-height` lowers the list but cannot raise it past the internal 280px `--picker-maxh`; all three options rendered and measured, one cap recommended |
-| 8 | `8-locale-week-and-hour` | whether the date picker's first day of the week and the time picker's 12h/24h follow the new `DS_CONFIG.locale`: four options drawn over six locales, each computed by `Intl` in the page; the en-US row shows the default every consumer without a locale gets |
-| 9 | `9-decision-queue` | every consumer ask and every open question in one page - 7 asks a consumer waits on, each drawn as today against after, then 27 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
+| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 7 asks a consumer waits on, each drawn as today against after, then 27 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
+| 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
+| 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
+| 4 | `4-interaction-formula` | two pressed-state verdicts, both rendered and measured: the tonal button's pressed recipe and the danger menu item whose pressed equals its hover. The other three are answered and the `.ds-interactive` formula is deferred |
+| 5 | `5-migration-manifest-audit` | ten format practices to ratify — tooling, no consumer pulling on it |
+| 6 | `6-select-native-multi` | the cheapest to close: "keep parked" is a complete answer, and it is the answer already given — it stays only because closing it was declined |
+| 7 | `7-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4", and `docs/todo.md` still carries the measured 4.42:1 failure |
+| 8 | `8-picker-list-height` | which knob caps a picker's list: the public `--ds-dropdown-panel-max-height` lowers the list but cannot raise it past the internal 280px `--picker-maxh`; all three options rendered and measured, one cap recommended |
+| 9 | `9-locale-week-and-hour` | whether the date picker's first day of the week and the time picker's 12h/24h follow the new `DS_CONFIG.locale`: four options drawn over six locales, each computed by `Intl` in the page; the en-US row shows the default every consumer without a locale gets |
 | 10 | `10-docs-reasoning-blocks` | what ds-docs does with its ~38 reasoning blocks (fix proofs, edge-case guards, internals): keep, fold to the chapter end, move to a proof page, or delete - drawn on the real Table chapter |
 | 11 | `11-deerns-atlas-feedback` | the Deerns Atlas prototype feedback and its flicker-on-mount report, every claim checked against the uploaded bundle: eight drawn decisions (missing required input, Badge tone, Stat frame, Timeline spine, narrow Topbar, clipped SidenavItem label, Input in a narrow grid, Alert entrance on screen mount) and a build-extend-recipe-consumer call for each requested component; fifteen one-answer fixes listed |
 
-**Rank 1 is the way in, and ranks 2-4 are the two biggest lanes** — the colour engine, then the interaction formula that reads
-its ramp. Ranks 1-5 are written in Russian; `deck.css`, which sits beside `ds.css` and carries the
-shell, is shared by ranks 3, 4 and 7-11 - ranks 1, 2, 5 and 6 render fully inline instead.
+**Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
+biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
+written in Russian; `deck.css`, which sits beside `ds.css` and carries the shell, is shared by ranks
+1, 4, 5 and 8-11 - ranks 2, 3, 6 and 7 render fully inline instead.
 
 **`implemented/` is where the answers live, and it is worth reading.** A closed deck keeps every word
 of the argument — the next person to ask the same question reads it to find out what was already
@@ -38,7 +39,7 @@ nav, and the scatter's phase — which went to phase 2 with its decimation layer
 **A `tool` here takes no number.** `backlog-board.html` and `rejected-with-numbers.html` — both are
 read whenever rather than at a moment, so they stay unnumbered and sort below the queue.
 
-**`9-decision-queue` carries every open question but the one in `10-docs-reasoning-blocks`** — first every ask a consumer is
+**`1-decision-queue` carries every open question but the one in `10-docs-reasoning-blocks`** — first every ask a consumer is
 waiting on, from any bucket of `docs/todo.md`, most urgent first in three groups (urgent P2, P3,
 parked) with priority, consumer and kind beside each; then each open deck
 plus the whole `Decisions` bucket, grouped by area. Every one has its options rendered rather
