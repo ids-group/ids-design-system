@@ -10693,7 +10693,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Fires on click when `interactive`."
+        "description": "Fires on a click, Enter or Space when `interactive`."
       }
     ]
   },

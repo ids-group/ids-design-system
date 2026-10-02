@@ -49,7 +49,7 @@ export class TagComponent {
   );
   /** Fires when the close button is clicked. */
   readonly closed = output<void>();
-  /** Fires on click when `interactive`. */
+  /** Fires on a click, Enter or Space when `interactive`. */
   readonly toggled = output<void>();
 
   protected onClick(): void {

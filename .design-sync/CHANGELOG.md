@@ -19,6 +19,9 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ### Cards
 
+- **The `Tag` doc says an interactive tag works from the keyboard.** The design agent reads it as a
+  tab stop that toggles on Enter or Space as well as on a click.
+
 - **`ds-chart-unpin` has a usage doc and a section.** The design agent reads it as the pill a chart
   draws while a mark is held, and its card resolves to the `charts/chart` section.
 
