@@ -6,12 +6,14 @@
     1.75-px stroke, rounded caps,
     <code class="t-mono-inline">
       currentColor
-    </code> fills. Sizes derive from a
+    </code> stroke. Sizes derive from a
     fixed scale. Rendered via the
     <code class="t-mono-inline">
       &lt;ds-icon&gt;
     </code> component which inlines
-    SVG paths from <code class="t-mono-inline">ICONS</code>.
+    SVG paths from <code class="t-mono-inline">ICONS</code>. Default 16px
+    (<code class="t-mono-inline">DS_CONFIG.icon.size</code>), stroke 1.75
+    (<code class="t-mono-inline">[stroke]</code>).
   </span>
 
   <h3
@@ -21,7 +23,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Five canonical sizes. Every glyph renders inside a 24-unit viewBox at
+    Five canonical sizes, <code class="t-mono-inline">--icon-2xs</code> to
+    <code class="t-mono-inline">--icon-lg</code>. Every glyph renders inside a 24-unit viewBox at
     <code class="t-mono-inline">
       stroke-width: 1.75
     </code>.
@@ -58,6 +61,16 @@
   <p class="block-desc t-s">
     Every name in the <code class="t-mono-inline">ICONS</code> registry. Pass as
     a string to <code class="t-mono-inline">&lt;ds-icon name="…"&gt;</code>.
+    Register your own with
+    <code class="t-mono-inline">provideDsIcons({{ '{' }} name: '&lt;path …/&gt;' {{ '}' }})</code>;
+    a built-in name wins a clash, and an unknown name renders nothing and warns
+    in dev mode.
+  </p>
+
+  <p class="block-desc t-s">
+    Decorative by default (<code class="t-mono-inline">aria-hidden="true"</code>);
+    pass <code class="t-mono-inline">ariaLabel</code> for a meaningful icon,
+    which adds <code class="t-mono-inline">role="img"</code>.
   </p>
 
   <div class="icon-grid">
