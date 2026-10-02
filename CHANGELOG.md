@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.14.6 — 2026-10-02
+
 ### Breaking
 
 - **A chart whose pointer picks a category is walked by verticals from the keyboard.** In an
@@ -33,6 +35,14 @@
 - **`.link.plain`: a link underlined only on hover and keyboard focus.** For a link that stands on its
   own, such as a row action or a list of links; keep the plain `.link`, underlined at rest, for a link
   inside running text. Every other `.link` renders as before.
+
+- **`ds-breadcrumbs` crumbs can carry a hover surface.** `--ds-breadcrumbs-bg-color-hover` (default
+  `transparent`) tints a link on hover, `--ds-breadcrumbs-padding` (default `0`) pads every crumb,
+  the current one included, so labels stay on one baseline, and `--ds-breadcrumbs-radius` (default
+  `var(--radius-sm)`) rounds the surface and the focus ring. Rendering is unchanged until one is set.
+
+- **A `slash` icon.** `<ds-breadcrumbs separator="slash">` separates crumbs with a "/" in the
+  weight of `chevronRight`.
 
 ### Changed
 
@@ -134,18 +144,6 @@
 | Delete | Why | Replace with |
 | --- | --- | --- |
 | `(keydown.enter)` and `(keydown.space)` on an interactive `ds-tag`, plus the `tabindex="0"` and `role="button"` set with them | the host is now a tab stop with `role="button"` and emits `toggled` on Enter or Space itself, so your handler and its `(toggled)` both fire on one press | nothing; the tag's own `toggled` |
-
-## 0.14.6-beta.0 — 2026-09-30
-
-### Added
-
-- **`ds-breadcrumbs` crumbs can carry a hover surface.** `--ds-breadcrumbs-bg-color-hover` (default
-  `transparent`) tints a link on hover, `--ds-breadcrumbs-padding` (default `0`) pads every crumb,
-  the current one included, so labels stay on one baseline, and `--ds-breadcrumbs-radius` (default
-  `var(--radius-sm)`) rounds the surface and the focus ring. Rendering is unchanged until one is set.
-
-- **A `slash` icon.** `<ds-breadcrumbs separator="slash">` separates crumbs with a "/" in the
-  weight of `chevronRight`.
 
 ## 0.14.5 — 2026-09-30
 

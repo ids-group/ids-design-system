@@ -1,5 +1,5 @@
 {
-  "version": "unreleased",
+  "version": "0.14.6",
   "items": [
     {
       "id": "status-field-focus-halo",
@@ -18,8 +18,16 @@
       "old": "DsIntl",
       "new": null,
       "surface": "typescript",
-      "searchHints": ["DsIntl", "DS_INTL", "previousYears"],
-      "detect": [": DsIntl =", "Signal<DsIntl>", "previousYears:"],
+      "searchHints": [
+        "DsIntl",
+        "DS_INTL",
+        "previousYears"
+      ],
+      "detect": [
+        ": DsIntl =",
+        "Signal<DsIntl>",
+        "previousYears:"
+      ],
       "action": "None, unless your code builds a complete DsIntl object of its own: add datePicker.previousMonth and datePicker.nextMonth, the names of the calendar's month arrows.",
       "appliesWhen": "Only an object or signal typed as the full DsIntl, not as DsIntlOverrides. provideDsIntl with a partial override, and every app that leaves DS_INTL alone, is unaffected.",
       "pitfall": "An object that spreads DS_INTL_DEFAULTS.datePicker compiles, but a datePicker section written out key by key without the spread fails with TS2741 on previousMonth.",
@@ -32,7 +40,10 @@
       "old": "@use 'styles/focus'",
       "new": "@include focus.emit-rules;",
       "surface": "style",
-      "searchHints": ["styles/focus", "emit-rules"],
+      "searchHints": [
+        "styles/focus",
+        "emit-rules"
+      ],
       "detect": [
         "@use 'styles/focus'",
         "@use '@ids-group-ltd/ids-design-system/styles/focus'"
@@ -75,8 +86,18 @@
       "old": "ds-tag[interactive]",
       "new": null,
       "surface": "template",
-      "searchHints": ["ds-tag", "interactive", "keydown.enter", "keydown.space"],
-      "detect": ["(keydown.enter)", "(keydown.space)", "tabindex=\"0\"", "role=\"button\""],
+      "searchHints": [
+        "ds-tag",
+        "interactive",
+        "keydown.enter",
+        "keydown.space"
+      ],
+      "detect": [
+        "(keydown.enter)",
+        "(keydown.space)",
+        "tabindex=\"0\"",
+        "role=\"button\""
+      ],
       "action": "None, unless your template wires Enter or Space on an interactive ds-tag itself: remove that handler, and the tabindex=\"0\" and role=\"button\" set with it (delete list: tag-own-keyboard-handling).",
       "appliesWhen": "Only a ds-tag with interactive set whose element carries a keydown.enter or keydown.space binding of yours. A non-interactive ds-tag, and a key handler on another element, are unaffected.",
       "pitfall": "Nothing fails to build: the tag now emits toggled on Enter and Space itself, so your handler and your (toggled) handler both run and one key press toggles twice, which reads as the key doing nothing.",
@@ -97,6 +118,8 @@
     }
   ],
   "informational": [
+    "ds-breadcrumbs gains --ds-breadcrumbs-bg-color-hover (default transparent), --ds-breadcrumbs-padding (0) and --ds-breadcrumbs-radius (var(--radius-sm)); rendering is unchanged until one is set.",
+    "The slash icon is built in, so ds-breadcrumbs separator=\"slash\" and DS_CONFIG.breadcrumbs.separator: 'slash' render a \"/\" between crumbs.",
     "ds-dropzone emits filesAdded when the same file is picked again from the file dialog, where a repeat pick emitted nothing.",
     "A clickable ds-stepper's step buttons are named by DS_INTL.stepper.step and no longer aria-hidden; a test that queried them by role and name now finds them.",
     "ds-w3w emits copied after the clipboard write succeeds, and not at all when it fails or the browser has no clipboard (an insecure origin, some test environments).",
@@ -142,7 +165,10 @@
     {
       "id": "tag-own-keyboard-handling",
       "surface": "template",
-      "find": ["(keydown.enter)", "(keydown.space)"],
+      "find": [
+        "(keydown.enter)",
+        "(keydown.space)"
+      ],
       "why": "An interactive ds-tag is a tab stop with role=\"button\" and emits toggled on Enter or Space itself.",
       "replaceWith": "nothing; the tag's own toggled. Keep a key binding on a ds-tag without interactive, where the tag handles no key."
     }

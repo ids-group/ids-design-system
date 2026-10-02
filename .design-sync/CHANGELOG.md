@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 0.14.6 — 2026-10-02
+
 ### Cards
 
 - **The `Tag` doc says an interactive tag works from the keyboard.** The design agent reads it as a
@@ -29,6 +31,9 @@ holds an entry; what the release bot commits afterwards needs none.
   has a React component of its own, so the docs name `DatePicker` and the field's `hint`, `invalid`,
   `success`, `warning` and `reserveMessage` instead of a component to place.
 
+- **The `ds-sparkline` card is built from marked blocks.** `data-claude-design` sits on each block
+  title in the `charts/sparkline` section, not on the section, so only those blocks reach the card.
+
 ### Build
 
 - **A card run that fails or is interrupted leaves no Chrome behind.** `measure-cards` and
@@ -39,15 +44,6 @@ holds an entry; what the release bot commits afterwards needs none.
   internal part placed only by another component's inline template, such as `ds-chart-unpin` in the
   chart state frame, still needs its doc and section. The projection watch list holds 16 templates:
   `chart` stamps its slots through the state frame's `<ng-template>`, which the list does not track.
-
-## 0.14.6-beta.0 — 2026-09-30
-
-### Cards
-
-- **The `ds-sparkline` card is built from marked blocks.** `data-claude-design` sits on each block
-  title in the `charts/sparkline` section, not on the section, so only those blocks reach the card.
-
-### Build
 
 - **`check-manual-surface` reads a comma-separated directive selector.** A directive declared as
   `[dsTooltip], [dsTooltipWhenClipped]` counts both attributes as selectors, so `[dsTooltip]` no
