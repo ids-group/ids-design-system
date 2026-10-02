@@ -842,7 +842,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "4",
         "required": false,
-        "description": "Avatars shown before the rest collapse into the `+N` chip."
+        "description": "Avatars shown before the rest collapse into the `+N` chip; projected avatars past it are hidden."
       },
       {
         "name": "total",

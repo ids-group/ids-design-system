@@ -20,6 +20,22 @@
       ],
       "verify": "with followSystem on, an <html> that starts with data-theme keeps that value across an OS colour-scheme change, and one that starts without it follows the OS.",
       "restore": null
+    },
+    {
+      "id": "avatar-group-max-hides-projected",
+      "kind": "behavior",
+      "old": "ds-avatar-group[max]",
+      "new": null,
+      "surface": "template",
+      "action": "None, unless a group projects more avatars than max and all of them should stay visible: raise max to that count.",
+      "appliesWhen": "ds-avatar-group elements projecting more ds-avatar children than max (default 4), or projecting more than max with no total. Groups projecting max or fewer avatars render as before.",
+      "searchHints": [
+        "ds-avatar-group",
+        "[max]=",
+        "[total]="
+      ],
+      "verify": "a group projecting more avatars than max shows max avatars followed by a +N chip whose N is the hidden count, or total - max when total is set.",
+      "restore": null
     }
   ],
   "deleteList": [],
