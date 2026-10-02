@@ -3,7 +3,7 @@
   eyebrow="Foundations"
   title="Radius">
   <span lede>
-    Five-stop scale (0 / sm / md / lg / 2xl) plus pill — but reach for a ROLE,
+    Six-stop scale (0 / sm / md / lg / xl / 2xl) plus pill, but reach for a ROLE,
     not a stop:
     <code class="t-mono-inline">
       --ds-radius-inner
@@ -19,12 +19,8 @@
     </code> are what components
     actually resolve, and they nest in that order. Retheming corners means
     moving the four roles, not editing components.
-    <code class="t-mono-inline">
-      --radius-pill
-    </code> is themable via
-    <code class="t-mono-inline">
-      --radius-pill-value
-    </code>.
+    Set <code class="t-mono-inline">--radius-pill-value</code> (for example to
+    <code class="t-mono-inline">var(--radius-sm)</code>) to square every pill.
   </span>
 
   <h3
@@ -67,8 +63,13 @@
   <p class="block-desc t-s">
     Four role tokens carry every corner in the library; the scale above is what
     they resolve to. Using a stop directly says "this corner belongs to no
-    role", which is almost never true. Occurrence counts are measured across the
-    library.
+    role", which is almost never true.
+  </p>
+
+  <p class="block-desc t-s">
+    There is no <code class="t-mono-inline">field</code> role; scope the control
+    role instead:
+    <code class="t-mono-inline">ds-input {{ '{' }} --ds-radius-control: 4px; {{ '}' }}</code>.
   </p>
 
   <div class="radius-role-table">
@@ -81,9 +82,6 @@
         Resolves to
       </div>
 
-      <div class="t-overline">
-        Uses
-      </div>
 
       <div class="t-overline">
         What it is for
@@ -104,9 +102,6 @@
           {{ role.resolves }}
         </code>
 
-        <div class="t-s radius-role-uses">
-          {{ role.uses }}
-        </div>
 
         <div class="t-s radius-role-desc">
           {{ role.desc }}
@@ -172,8 +167,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Each radius on the surface it actually shapes. Real components — no painted
-    tiles.
+    Each radius on the surface it shapes.
   </p>
 
   <div class="applied-grid">
@@ -195,7 +189,7 @@
       </div>
 
       <div class="applied-cell-label">
-        --radius-0 · group middle
+        --radius-flat · group middle
       </div>
     </div>
 
