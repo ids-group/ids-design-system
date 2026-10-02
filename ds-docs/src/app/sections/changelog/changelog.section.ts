@@ -50,9 +50,15 @@ function dropEmptyUnreleased(markdown: string): string {
         font-family: var(--font-mono);
         font-size: 0.9em;
       }
-      :host ::ng-deep .changelog-body pre {
+      :host ::ng-deep .changelog-body pre,
+      :host ::ng-deep .changelog-body table {
+        display: block;
         max-width: 100%;
         overflow-x: auto;
+      }
+      :host ::ng-deep .changelog-body p code,
+      :host ::ng-deep .changelog-body li code {
+        overflow-wrap: anywhere;
       }
     `,
   ],
