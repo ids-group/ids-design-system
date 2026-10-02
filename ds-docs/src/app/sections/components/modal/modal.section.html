@@ -570,6 +570,49 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Confirm action
+  </h3>
+
+  <p class="block-desc t-s">
+    Put <code class="t-mono-inline">dsModalConfirm</code> on the confirm button and
+    <code class="t-mono-inline">(confirmed)</code> fires when it is pressed - never
+    while it is disabled or loading. The modal stays open; close it when the work
+    is done.
+  </p>
+
+  <div class="row">
+    <ds-button
+      size="sm"
+      (pressed)="renameOpen.set(true)">
+      Rename project
+    </ds-button>
+
+    <span class="t-s">confirmed: {{ renamedTimes() }}</span>
+
+    <ds-modal
+      title="Rename project"
+      [(open)]="renameOpen"
+      (confirmed)="onRenameConfirmed()">
+      <span body>
+        The new name shows everywhere the project is listed.
+      </span>
+
+      <ng-container actions>
+        <ds-button
+          color="neutral"
+          variant="outline"
+          (pressed)="renameOpen.set(false)">
+          Cancel
+        </ds-button>
+
+        <ds-button dsModalConfirm>
+          Rename
+        </ds-button>
+      </ng-container>
+    </ds-modal>
+  </div>
+
+  <h3 class="block-title t-h4">
     Persistent
   </h3>
 

@@ -6139,9 +6139,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Emit this yourself from a confirm action in the projected content; the modal never fires it."
+        "description": "Fires when the projected `dsModalConfirm` action is pressed. The modal stays open."
       }
     ]
+  },
+  "modal:ModalConfirmActionDirective": {
+    "key": "modal",
+    "selector": "[dsModalConfirm]",
+    "isElement": false,
+    "className": "ModalConfirmActionDirective",
+    "status": "stable",
+    "importName": "ModalConfirmActionDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/modal",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
   },
   "multi-select": {
     "key": "multi-select",
