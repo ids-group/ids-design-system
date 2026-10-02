@@ -98,7 +98,7 @@ export class TokensReferenceSection {
     );
   }
 
-  /** True when the default value resolves to a colour token (drives the swatch chip vs "geometry" placeholder). */
+  /** True when the default value resolves to a colour token (drives the swatch chip vs the "-" placeholder). */
   protected isColorValue(value: string): boolean {
     if (value === 'transparent' || value === 'none') {
       return false;
