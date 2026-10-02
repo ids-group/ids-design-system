@@ -3586,7 +3586,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-checkbox-label-font-weight",
         "value": "var(--font-weight-regular)",
-        "notes": "Checkbox label weight — the third label property; size and colour were already hookable."
+        "notes": "Checkbox caption weight (defaults to --font-weight-regular)."
       },
       {
         "name": "--ds-checkbox-label-font-size",
@@ -3626,7 +3626,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-checkbox-radius",
         "value": "var(--ds-radius-inner)",
-        "notes": "Checkbox box corner radius (default --radius-sm). The indeterminate dash keeps its own radius."
+        "notes": "Checkbox box corner radius (defaults to --ds-radius-inner). The indeterminate dash keeps its own radius."
       },
       {
         "name": "--ds-check-mark-enter-duration",
@@ -4048,7 +4048,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-drawer-width",
         "value": "var(--drawer-w-sm)",
-        "notes": "Drawer panel width (defaults to --drawer-w-sm)."
+        "notes": "Panel width for every `size` of a left/right drawer; unset, each size reads --drawer-w-sm|md|lg."
       },
       {
         "name": "--ds-drawer-enter-keyframes",
