@@ -17,7 +17,10 @@
   </h3>
 
   <div class="specimen-stage">
-    <ds-popover [staticPreview]="true">
+    <ds-popover
+      panelRole="dialog"
+      panelLabel="Recompute summary"
+      [staticPreview]="true">
       <h4
         class="t-s-bold"
         style="margin: 0 0 var(--space-1)">
@@ -43,7 +46,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    Click the trigger to open.
+    A panel that holds a button or another interactive element needs
+    <code class="t-mono-inline">panelRole</code> (here
+    <code class="t-mono-inline">"dialog"</code>) and a
+    <code class="t-mono-inline">panelLabel</code>; only then does the panel
+    trap focus and move it inside on open. Escape closes and returns focus to
+    the trigger; call <code class="t-mono-inline">close()</code> on the
+    popover, or inject <code class="t-mono-inline">DsOverlayCloseRef</code> in
+    projected content, to close from inside.
   </p>
 
   <div class="demo">
@@ -56,7 +66,10 @@
       Open summary
     </ds-button>
 
-    <ds-popover #pop>
+    <ds-popover
+      #pop
+      panelRole="dialog"
+      panelLabel="Recompute summary">
       <h4
         class="t-s-bold"
         style="margin: 0 0 var(--space-1)">
@@ -92,7 +105,8 @@
     <code class="t-mono-inline">
       "end"
     </code> when the trigger sits near the
-    right edge of the viewport.
+    right edge of the viewport. Applies to <code class="t-mono-inline">top</code>
+    and <code class="t-mono-inline">bottom</code> placement.
   </p>
 
   <div class="demo is-row">

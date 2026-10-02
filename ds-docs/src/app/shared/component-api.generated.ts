@@ -8592,7 +8592,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Optional group icon; omit to project custom content via the `[icon]` slot instead."
+        "description": "Optional group icon; omit to project custom content via the `[ds-group-icon]` slot instead."
       },
       {
         "name": "expandable",

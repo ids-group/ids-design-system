@@ -15,6 +15,14 @@
 
   <p class="block-desc t-s">
     Bind to a number signal; the current value updates as the thumb moves.
+    Arrows move one <code class="t-mono-inline">step</code>, PageUp/PageDown
+    ten, Home/End to the ends (in range mode, bounded by the other thumb).
+  </p>
+
+  <p class="block-desc t-s">
+    There is no visible label input; <code class="t-mono-inline">ariaLabel</code>
+    names the thumb(s), suffixed "minimum"/"maximum" in
+    <code class="t-mono-inline">range</code> mode.
   </p>
 
   <div class="demo-panel">
@@ -71,11 +79,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      hint
-    </code> renders a helper line below the
-    track. Paired with <code class="t-mono-inline">[invalid]="true"</code> it
-    switches to an error style with <code>role="alert"</code>.
+    <code class="t-mono-inline">hint</code> renders a helper line below the
+    track; <code class="t-mono-inline">error</code> replaces it with an error
+    line announced via <code>role="alert"</code>.
   </p>
 
   <div class="demo-panel">

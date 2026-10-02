@@ -5842,7 +5842,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-password-rules-pending-color",
         "value": "var(--text-tertiary)",
-        "notes": "Colour of a rule not yet evaluated (default --text-tertiary): the user has not typed enough to judge it, which must not read as failure."
+        "notes": "Colour of an unmet rule before [showUnmet] turns on (default --text-tertiary) - must not read as failure."
       },
       {
         "name": "--ds-password-rules-met-color",
@@ -5852,7 +5852,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-password-rules-failed-color",
         "value": "var(--error-text)",
-        "notes": "Colour of a rule the current value breaks (default --error-text). Only after the user has typed — see the pending colour."
+        "notes": "Colour of a rule the current value breaks (default --error-text). Only once [showUnmet] is true - see the pending colour."
       }
     ]
   },
@@ -5921,7 +5921,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-popover-radius",
         "value": "var(--ds-radius-panel)",
-        "notes": "Popover corner radius (defaults to --radius-lg)."
+        "notes": "Popover corner radius (defaults to the --ds-radius-panel role)."
       },
       {
         "name": "--ds-popover-shadow",
@@ -6489,7 +6489,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-skeleton-wave-steps",
         "value": "68",
-        "notes": ""
+        "notes": "Updates per wave pass (default 68); each step is main-thread work."
       },
       {
         "name": "--ds-skeleton-wave-angle",

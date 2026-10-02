@@ -161,10 +161,11 @@
 
   <p class="block-desc t-s">
     Use <code class="t-mono-inline">hint</code> for helper text and
-    <code class="t-mono-inline">
-      [invalid]="true"
-    </code> to surface an error on
-    a standalone <code class="t-mono-inline">&lt;ds-radio&gt;</code>.
+    <code class="t-mono-inline">error</code> for an error message;
+    <code class="t-mono-inline">[invalid]</code> paints the error state without
+    text. A lone <code class="t-mono-inline">&lt;ds-radio&gt;</code> is driven
+    by <code class="t-mono-inline">[(checked)]</code> only; for forms use
+    <code class="t-mono-inline">ds-radio-group</code>.
   </p>
 
   <div class="stack">
