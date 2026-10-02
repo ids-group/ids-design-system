@@ -83,7 +83,9 @@ export class DropzoneComponent {
     if (this.disabled()) {
       return;
     }
-    this.emitPicked((event.target as HTMLInputElement).files);
+    const picker = event.target as HTMLInputElement;
+    this.emitPicked(picker.files);
+    picker.value = '';
   }
 
   private emitPicked(list: FileList | null | undefined): void {

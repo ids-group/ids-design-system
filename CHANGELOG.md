@@ -46,6 +46,10 @@
 
 ### Fixed
 
+- **`ds-dropzone` takes the same file twice.** Picking a file, removing it and picking it again
+  emitted nothing, because the browser fires no change for an unchanged selection; `filesAdded`
+  now fires on every pick.
+
 - **A `clickable` `ds-stepper`'s step buttons have names.** Each was a focusable button hidden
   from assistive technology, so Tab landed on something a screen reader could not announce; the
   button now carries the step's name and state, `DS_INTL.stepper.step`.
