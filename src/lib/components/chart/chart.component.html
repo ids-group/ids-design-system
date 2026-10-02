@@ -60,13 +60,23 @@
       }
 
       @if (cursorBand(); as band) {
+        <rect
+          #cursorBandEl
+          class="cursor-anchor"
+          aria-hidden="true"
+          [attr.x]="band.x"
+          [attr.y]="band.top"
+          [attr.width]="band.width"
+          [attr.height]="band.bottom - band.top" />
+      }
+
+      @if (highlightBand(); as band) {
         <g
           class="cursor"
           aria-hidden="true"
           animate.enter="cursor-in"
           animate.leave="cursor-out">
           <rect
-            #cursorBandEl
             class="category-band"
             [attr.x]="band.x"
             [attr.y]="band.top"
@@ -266,7 +276,7 @@
             'translate(' +
             (band.x + band.width / 2) +
             ',' +
-            bandPinY(band) +
+            bandPinY() +
             ')'
           ">
         </g>
