@@ -163,10 +163,12 @@ const pascalOfTag = (tag) =>
   tag
     .replace(/^ds-/, '')
     .replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase());
-// Every template we ship, so a component can be asked whether anything of ours renders it.
-const libTemplates = walk(join(repo, 'src', 'lib'), '.component.html').map(
-  (file) => readFileSync(file, 'utf8'),
-);
+// Every template we ship, inline ones included, so a component can be asked whether anything of
+// ours renders it.
+const libTemplates = [
+  ...walk(join(repo, 'src', 'lib'), '.component.html'),
+  ...walk(join(repo, 'src', 'lib'), '.component.ts'),
+].map((file) => readFileSync(file, 'utf8'));
 const componentTags = new Set();
 for (const file of walk(join(repo, 'src', 'lib'), '.component.ts')) {
   const source = readFileSync(file, 'utf8');
