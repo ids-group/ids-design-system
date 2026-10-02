@@ -26,7 +26,8 @@ const SIZES: readonly SizeRow[] = [
     use: 'Compact buttons, dense tables',
   },
   { name: 'md', token: '--icon-md', px: 16, use: 'UI default' },
-  { name: 'lg', token: '--icon-lg', px: 20, use: 'Sidenav, larger buttons' },];
+  { name: 'lg', token: '--icon-lg', px: 20, use: 'Sidenav, larger buttons' },
+];
 
 @Component({
   selector: 'section-foundations-icons',
