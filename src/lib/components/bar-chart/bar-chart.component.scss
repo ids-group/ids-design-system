@@ -138,10 +138,10 @@
 
 @include chart-interactive.dims('.segment', ', background-color var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
 
-/* At the bar's start: a badge at the end would hang off the chart on a zero-value row. */
+/* Under the panel, which opens centred over the fill; a zero-value fill keeps it at the bar's start. */
 .fill > .pin-marker {
   position: absolute;
-  inset-inline-start: 0;
+  inset-inline-start: 50%;
   inset-block-start: 50%;
-  translate: 0 -50%;
+  translate: -50% -50%;
 }

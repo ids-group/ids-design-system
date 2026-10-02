@@ -40,21 +40,23 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "AvatarGroupComponent",
+      "old": "AvatarGroupComponent, ChartComponent",
       "new": null,
       "surface": "typescript",
       "searchHints": [
-        "extends AvatarGroupComponent"
+        "extends AvatarGroupComponent",
+        "extends ChartComponent"
       ],
       "detect": [
-        "extends AvatarGroupComponent"
+        "extends AvatarGroupComponent",
+        "extends ChartComponent"
       ],
       "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
-      "appliesWhen": "Only a class of yours that extends AvatarGroupComponent. Template users of ds-avatar-group need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends AvatarGroupComponent or ChartComponent. Template users of ds-avatar-group and ds-chart need nothing; subclassing a DS component is unsupported.",
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it (TS2415); only a rename does.",
       "restore": null,
-      "verify": "The app builds with no TS2415 or TS4114 against AvatarGroupComponent.",
-      "note": "AvatarGroupComponent gained the private avatars."
+      "verify": "The app builds with no TS2415 or TS4114 against AvatarGroupComponent or ChartComponent.",
+      "note": "AvatarGroupComponent gained the private avatars; ChartComponent the protected highlightBand and the private bandAt and hoveredCategory."
     }
   ],
   "deleteList": [],
@@ -63,6 +65,10 @@
     "ds-bar-chart draws a row with a negative value as an empty track labelled with that value, where it drew a bar of the absolute value labelled 0.",
     "ds-button with routerLink or href, disabled and a disabledReason keeps a Tab stop (tabindex 0, role link) so the reason is announced; without disabledReason a disabled link-button still takes tabindex -1.",
     "provideDsIcons calls merge: sibling calls and a lazy route's call add to the icons registered above them, a later call winning a shared name, where each call replaced the previous registry. DS_ICON_REGISTRY now reads the merged registry.",
-    "ds-modal confirmed fires when a projected element carrying the new dsModalConfirm directive (ModalConfirmActionDirective) is pressed; before, nothing emitted it. A handler that emitted confirmed by hand keeps working."
+    "ds-modal confirmed fires when a projected element carrying the new dsModalConfirm directive (ModalConfirmActionDirective) is pressed; before, nothing emitted it. A handler that emitted confirmed by hand keeps working.",
+    {
+      "text": "ds-chart draws a held category's pin at the head of the reading its panel opens over instead of at the plot's foot, and paints its hover band (--ds-chart-hover-bg-color) under a pin only where the pointer is; ds-bar-chart draws a held bar's pin at the middle of the bar instead of its start.",
+      "verify": "pin a category in a composed ds-chart and a row in a ds-bar-chart, move the pointer off the plot, and confirm the pin sits right under the panel and no band stays tinted."
+    }
   ]
 }
