@@ -107,11 +107,8 @@
 
 :root {
   color-scheme: light;
-  /* Neutral family slot — semantic pointer at the active gray ramp from the
-     palette. Default: hand-drawn cool-gray. <html data-neutrals="brand">
-     repoints it at the brand-derived brand-gray ramp,
-     where --primary-h re-tints every gray. Roles below consume --neutral-*
-     so the family switch never touches them. */
+  /* Points at the cool-gray ramp; <html data-neutrals="brand"> repoints it at brand-gray, where
+     --primary-h re-tints every gray. Roles consume --neutral-*, so the switch never touches them. */
   --neutral-0: var(--cool-gray-0);
   --neutral-50: var(--cool-gray-50);
   --neutral-100: var(--cool-gray-100);
@@ -126,16 +123,14 @@
   --neutral-900: var(--cool-gray-900);
   --neutral-950: var(--cool-gray-950);
   --shadow-tint-l: 7%;
-  /* Surfaces — six-stop scale.
+  /* Surfaces.
      · canvas    : page background
-     · default   : cards, sheets, toolbars (the "paper")
+     · default   : cards, sheets, toolbars
      · secondary : hover lanes, table heads, addons, code blocks
      · overlay   : modals, drawers, popovers (paired with scrim)
      · tint      : brand-tinted (active rows, sidenav active item)
      · inverted  : dark-on-light callouts, toasts
-     Conceptual elevation is communicated by SHADOW tokens,
-     not by surface tokens. Hover/pressed states use
-     --opacity-state-* overlays on top of the underlying surface. */
+     Hover/pressed use --opacity-state-* overlays. */
   --surface-canvas: var(--neutral-50);
   --surface-default: var(--neutral-0);
   --surface-secondary: var(--neutral-100);
@@ -145,53 +140,37 @@
   --surface-tint: var(--blue-50);
   --surface-disabled: var(--neutral-100);
   --surface-muted: var(--neutral-150);
-  /* Scrim — modal/drawer backdrop. Derived from inverted surface
-     so dark-mode override flips automatically. */
+  /* Modal/drawer backdrop; the dark theme flips the tint. */
   --surface-scrim: hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%);
-  /* Visible-on-coloured-fill divider. The split-button right-hand chevron
-     sits ON the brand fill, so a transparent white hairline reads correctly
-     across any brand hue. Override per theme if the brand is too light. */
+  /* Divider on a coloured fill (split-button chevron); a translucent white reads on any brand hue. */
   --btn-split-divider: hsl(0deg 0% 100% / 25%);
-  /* Visited link — derives from --primary-muted by default so it sympathetically
-     shifts with the brand hue. Override (e.g. for financial dashboards that
-     want neutral-grey visited links) by setting this token directly. */
   --link-visited: hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%);
-  /* Borders */
   --border-default: var(--neutral-200);
   --border-strong: var(--neutral-300);
   --border-subtitle: var(--neutral-150);
   --border-divider: var(--neutral-150);
   --border-inverted: var(--neutral-700);
   --border-disabled: var(--neutral-150);
-  /* Text */
   --text-primary: var(--neutral-900);
   --text-secondary: var(--neutral-700);
   --text-tertiary: var(--neutral-500);
   --text-muted: var(--neutral-400);
   --text-disabled: var(--neutral-400);
   --text-inverted: var(--neutral-0);
-  /* Text overlaid on arbitrary imagery (camera feeds, photos) — pairs a
-     guaranteed-light colour with a contrast shadow. */
   --text-on-media: white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
   --text-link: var(--blue-700);
   --text-on-primary: white;
   --text-on-success: white;
-  /* Warning fill is yellow (--yellow-400 #F4D43A) — white text on it is only
-     ~1.5:1 (fails WCAG). On-warning text is the darkest neutral (~10:1). */
+  /* White on the yellow warning fill (--yellow-400) is ~1.5:1 and fails WCAG; the darkest neutral is ~10:1. */
   --text-on-warning: var(--static-ink);
   --text-on-error: white;
-  /* Icons */
   --icon-default: var(--neutral-500);
   --icon-strong: var(--neutral-700);
   --icon-muted: var(--neutral-400);
   --icon-on-primary: white;
-  /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
-     (themes/_base-palette.scss) ships the concrete ramps + HSL channels. This
-     is the one place that maps semantic roles onto a concrete palette. A brand
-     re-skins by overriding either the palette (--blue-*, --red-*) or these
-     role tokens directly.
-     Channel mappings let hsla() halos/tints compose from the same hue source. */
+  /* The one place semantic roles map onto the concrete palette. A brand re-skins by overriding the palette
+     (--blue-*, --red-*) or these roles. */
   --primary-h: var(--blue-h);
   --primary-s: var(--blue-s);
   --primary-l: var(--blue-l);
@@ -204,12 +183,8 @@
   --warning-h: var(--yellow-h);
   --warning-s: var(--yellow-s);
   --warning-l: var(--yellow-l);
-  /* Primary roles.
-     Hover / pressed / selected-hover are DERIVED from --primary at runtime via
-     color-mix() so a brand swap (overriding only --primary) propagates to every
-     interaction state automatically. A brand that wants a non-derived hover
-     hue can still override these tokens directly.
-     Step sizes (12% / 24% darker) mirror the blue 600→700→800 ramp. */
+  /* Hover, pressed and selected-hover derive from --primary via color-mix(), so overriding only --primary
+     propagates to every state. Steps (12% / 24% darker) mirror the blue 600, 700, 800 ramp. */
   --primary: var(--blue-600);
   --primary-hover: color-mix(in srgb, var(--primary) 88%, black);
   --primary-pressed: color-mix(in srgb, var(--primary) 76%, black);
@@ -219,11 +194,7 @@
   --primary-muted-strong: var(--blue-200);
   --primary-strong: var(--blue-700);
   --primary-on: white;
-  /* Accent / secondary role — maps onto the palette --orange family (Tier-1),
-     kept distinct from --primary so the brand slots read apart. Override
-     --secondary-h/s/l per-brand to reskin it —
-     --secondary recomposes automatically. Hover/pressed derive from --secondary
-     so any hue change propagates. */
+  /* Override --secondary-h/s/l to reskin; --secondary, hover and pressed recompose. */
   --secondary-h: var(--orange-h);
   --secondary-s: var(--orange-s);
   --secondary-l: var(--orange-l);
@@ -235,13 +206,7 @@
   --secondary-muted: hsl(var(--secondary-h) 95% 94%);
   --secondary-muted-strong: hsl(var(--secondary-h) 95% 89%);
   --secondary-on: var(--primary-on);
-  /* Tertiary — third brand hue. Used by the tertiary button variant and
-     tonal accents (decorative chips, hierarchy tones, indicators). Mirrors
-     the --primary / --secondary token-family shape: HSL channels for halo
-     composition, hover/pressed via color-mix, subtle/muted ramps for tonal
-     surfaces. Maps onto the palette --violet family (Tier-1), distinct from
-     --primary / --secondary. Brands override --tertiary-h/s/l (or --tertiary
-     directly for non-HSL values) to reskin it. */
+  /* Third brand hue (tertiary button, tonal accents). Override --tertiary-h/s/l (or --tertiary for non-HSL values) to reskin. */
   --tertiary-h: var(--violet-h);
   --tertiary-s: var(--violet-s);
   --tertiary-l: var(--violet-l);
@@ -253,11 +218,8 @@
   --tertiary-muted: hsl(var(--tertiary-h) 95% 94%);
   --tertiary-muted-strong: hsl(var(--tertiary-h) 95% 89%);
   --tertiary-on: var(--primary-on);
-  /* Status roles.
-     -hover / -pressed are derived from the base role via the same color-mix()
-     rule as --primary-hover. Override per role if a brand needs a non-derived
-     hue. -text / -border / -subtle / -muted stay as ramp picks because their
-     contrast targets are tuned, not procedural. */
+  /* -hover and -pressed derive from the base role like --primary-hover. -text, -border, -subtitle
+     and -muted are ramp picks: their contrast targets are tuned, not procedural. */
   --success: var(--green-500);
   --success-hover: color-mix(in srgb, var(--success) 88%, black);
   --success-subtitle: var(--green-50);
@@ -278,13 +240,12 @@
   --error-subtitle: var(--red-50);
   --error-muted: var(--red-100);
   --error-muted-strong: var(--red-200);
+  --error-highlight: var(--red-300);
   --error-border: var(--red-200);
   --error-text: var(--red-600);
-  /* -pressed (success/warning) and -on — roles the --accent-* pointer family needs from
-     every ds-color family and the status block above does not spell out. There is
-     deliberately no --<status>-strong: the readable on-tint colour of a status family is
-     what -text already is, and --accent-strong asks for -text by name. The brand families
-     are the ones that carry it as -strong, because they have no -text. */
+  /* -pressed (success/warning) and -on: roles the --accent-* pointers need from every ds-color
+     family. There is no --<status>-strong: for status families -text is the readable on-tint
+     colour and --accent-strong asks for it by name; brand families carry it as -strong. */
   --success-pressed: color-mix(in srgb, var(--success) 76%, black);
   --warning-pressed: color-mix(in srgb, var(--warning) 76%, black);
   --error-on: var(--text-on-error);
@@ -296,28 +257,16 @@
   --info-muted: var(--sky-100);
   --info-border: var(--sky-200);
   --info-text: var(--sky-700);
-  /* Focus rings.
-     Outer halos use hsla() composed from brand/danger HSL channels
-     so re-skinning --primary-h propagates into focus state. */
-  /* Separates the two bands of the FIELD halo, and nothing else — controls draw an
-     `outline`, whose gap needs no colour at all. It cannot be `transparent`: a transparent
-     shadow layer is a no-op, not a hole, so the outer band would show through as one solid
-     4px slab. `--surface-default` and not `--surface-canvas`: a field sits on the surface,
-     and painting the page ground here drew a dark rim around a light card. */
+  /* Separates the two bands of the field halo. Not `transparent`: a transparent shadow layer is a no-op, so
+     the outer band shows as one solid slab. `--surface-default`, not `--surface-canvas`, which draws a dark rim. */
   --focus-ring-inner: var(--surface-default);
   --focus-ring-outer-h: var(--primary-h);
   --focus-ring-outer-s: var(--primary-s);
   --focus-ring-outer-l: var(--primary-l);
   --focus-ring-outer-alpha: 1;
-  /* A flat focus colour, for components that draw an `outline` instead of a shadow (a row
-     inside a clipping list, a swatch grid). It must stay DEFINED: an `outline-color` that
-     falls through resolves to `currentColor`, so a row rings itself in its own text colour.
-
-     `--accent`, not the ring's own primary channels: outside a zone it IS `--primary`, and
-     inside `[ds-color="error"]` it becomes that family, which is the same adaptivity the
-     zone already gives the shadow ring through `--accent-focus-ring`. Composing it from
-     `--focus-ring-outer-*` would have pinned the outline to the brand hue in a zone whose
-     every other accent had moved. */
+  /* Flat focus colour for components drawing an `outline` (a row in a clipping list, a swatch grid); it must
+     stay defined or `outline-color` falls to `currentColor`. `--accent`, not `--focus-ring-outer-*`, so a
+     `ds-color` zone follows the family. */
   --focus-ring-color: var(--accent);
   --focus-ring:
     0 0 0 2px var(--focus-ring-inner),
@@ -328,28 +277,20 @@
   --focus-ring-error:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
-  /* Same ring drawn INSIDE the border box, for a subtree under a clipping
-     ancestor. An outset shadow is outside the box, so any `overflow: hidden`
-     ancestor eats it and leaves the element focusable with no indicator at all —
-     and clipping is the normal way to hold a full-bleed child inside a rounded
-     card. Reached through `[data-focus="inset"]`, not by re-declaring the role. */
+  /* The ring drawn inside the border box for a subtree under a clipping ancestor, where an outset shadow is
+     eaten by `overflow: hidden`. Reached through `[data-focus="inset"]`. */
   --focus-ring-inset:
     inset 0 0 0 2px var(--focus-ring-inner),
     inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));
   --focus-ring-inset-error:
     inset 0 0 0 2px var(--focus-ring-inner),
     inset 0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
-  /* Field focus — coloured halo only (no double-ring). Derived from
-     brand HSL so it tracks rebrand. Alpha is a token so dark themes
-     can boost it for legibility. */
+  /* Field focus: coloured halo only. The alpha is a token so dark themes can boost it. */
   --focus-field-alpha: .22;
   --focus-field:
     0 0 0 3px hsl(var(--primary-h) var(--primary-s) var(--primary-l) / var(--focus-field-alpha));
   --focus-field-error:
     0 0 0 3px hsl(var(--error-h) var(--error-s) var(--error-l) / var(--focus-field-alpha));
-  /* Per-family focus rings/fields — pre-composed once from each family's
-     channels so ds-color flips a single --accent-focus-* pointer (no :root
-     composite re-declaration in the scope). --focus-ring-error exists above. */
   --focus-ring-secondary:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l) / 100%);
@@ -370,10 +311,8 @@
     0 0 0 3px hsl(var(--success-h) var(--success-s) var(--success-l) / var(--focus-field-alpha));
   --focus-field-warning:
     0 0 0 3px hsl(var(--warning-h) var(--warning-s) var(--warning-l) / var(--focus-field-alpha));
-  /* Accent pointer layer — the single indirection ds-color flips. Defaults to
-     the primary family (+ existing focus/tint tokens) so the unbranded theme is
-     pixel-identical. Components read these for their accent instead of
-     --primary* / --focus-* / --surface-tint. */
+  /* The indirection ds-color flips, defaulting to the primary family. Components read these for
+     their accent instead of --primary* / --focus-* / --surface-tint. */
   --accent: var(--primary);
   --accent-hover: var(--primary-hover);
   --accent-pressed: var(--primary-pressed);
@@ -419,16 +358,14 @@
   --neutral-900: #E7EAF2;
   --neutral-950: #F4F6FA;
   --shadow-tint-l: 95%;
-  /* Surfaces — six-stop scale.
+  /* Surfaces.
      · canvas    : page background
-     · default   : cards, sheets, toolbars (the "paper")
+     · default   : cards, sheets, toolbars
      · secondary : hover lanes, table heads, addons, code blocks
      · overlay   : modals, drawers, popovers (paired with scrim)
      · tint      : brand-tinted (active rows, sidenav active item)
      · inverted  : dark-on-light callouts, toasts
-     Conceptual elevation is communicated by SHADOW tokens,
-     not by surface tokens. Hover/pressed states use
-     --opacity-state-* overlays on top of the underlying surface. */
+     Hover/pressed use --opacity-state-* overlays. */
   --surface-canvas: var(--neutral-50);
   --surface-default: var(--neutral-0);
   --surface-secondary: var(--neutral-100);
@@ -438,53 +375,37 @@
   --surface-tint: var(--blue-50);
   --surface-disabled: var(--neutral-100);
   --surface-muted: var(--neutral-150);
-  /* Scrim — modal/drawer backdrop. Derived from inverted surface
-     so dark-mode override flips automatically. */
+  /* Modal/drawer backdrop; the dark theme flips the tint. */
   --surface-scrim: hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%);
-  /* Visible-on-coloured-fill divider. The split-button right-hand chevron
-     sits ON the brand fill, so a transparent white hairline reads correctly
-     across any brand hue. Override per theme if the brand is too light. */
+  /* Divider on a coloured fill (split-button chevron); a translucent white reads on any brand hue. */
   --btn-split-divider: hsl(0deg 0% 100% / 25%);
-  /* Visited link — derives from --primary-muted by default so it sympathetically
-     shifts with the brand hue. Override (e.g. for financial dashboards that
-     want neutral-grey visited links) by setting this token directly. */
   --link-visited: hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%);
-  /* Borders */
   --border-default: var(--neutral-200);
   --border-strong: var(--neutral-300);
   --border-subtitle: var(--neutral-150);
   --border-divider: var(--neutral-150);
   --border-inverted: var(--neutral-700);
   --border-disabled: var(--neutral-150);
-  /* Text */
   --text-primary: var(--neutral-900);
   --text-secondary: var(--neutral-700);
   --text-tertiary: var(--neutral-500);
   --text-muted: var(--neutral-400);
   --text-disabled: var(--neutral-400);
   --text-inverted: var(--neutral-0);
-  /* Text overlaid on arbitrary imagery (camera feeds, photos) — pairs a
-     guaranteed-light colour with a contrast shadow. */
   --text-on-media: white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
   --text-link: var(--blue-700);
   --text-on-primary: white;
   --text-on-success: white;
-  /* Warning fill is yellow (--yellow-400 #F4D43A) — white text on it is only
-     ~1.5:1 (fails WCAG). On-warning text is the darkest neutral (~10:1). */
+  /* White on the yellow warning fill (--yellow-400) is ~1.5:1 and fails WCAG; the darkest neutral is ~10:1. */
   --text-on-warning: var(--static-ink);
   --text-on-error: white;
-  /* Icons */
   --icon-default: var(--neutral-500);
   --icon-strong: var(--neutral-700);
   --icon-muted: var(--neutral-400);
   --icon-on-primary: white;
-  /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
-     (themes/_base-palette.scss) ships the concrete ramps + HSL channels. This
-     is the one place that maps semantic roles onto a concrete palette. A brand
-     re-skins by overriding either the palette (--blue-*, --red-*) or these
-     role tokens directly.
-     Channel mappings let hsla() halos/tints compose from the same hue source. */
+  /* The one place semantic roles map onto the concrete palette. A brand re-skins by overriding the palette
+     (--blue-*, --red-*) or these roles. */
   --primary-h: var(--blue-h);
   --primary-s: var(--blue-s);
   --primary-l: var(--blue-l);
@@ -497,12 +418,8 @@
   --warning-h: var(--yellow-h);
   --warning-s: var(--yellow-s);
   --warning-l: var(--yellow-l);
-  /* Primary roles.
-     Hover / pressed / selected-hover are DERIVED from --primary at runtime via
-     color-mix() so a brand swap (overriding only --primary) propagates to every
-     interaction state automatically. A brand that wants a non-derived hover
-     hue can still override these tokens directly.
-     Step sizes (12% / 24% darker) mirror the blue 600→700→800 ramp. */
+  /* Hover, pressed and selected-hover derive from --primary via color-mix(), so overriding only --primary
+     propagates to every state. Steps (12% / 24% darker) mirror the blue 600, 700, 800 ramp. */
   --primary: var(--blue-600);
   --primary-hover: color-mix(in srgb, var(--primary) 88%, black);
   --primary-pressed: color-mix(in srgb, var(--primary) 76%, black);
@@ -512,11 +429,7 @@
   --primary-muted-strong: var(--blue-200);
   --primary-strong: var(--blue-700);
   --primary-on: white;
-  /* Accent / secondary role — maps onto the palette --orange family (Tier-1),
-     kept distinct from --primary so the brand slots read apart. Override
-     --secondary-h/s/l per-brand to reskin it —
-     --secondary recomposes automatically. Hover/pressed derive from --secondary
-     so any hue change propagates. */
+  /* Override --secondary-h/s/l to reskin; --secondary, hover and pressed recompose. */
   --secondary-h: var(--orange-h);
   --secondary-s: var(--orange-s);
   --secondary-l: var(--orange-l);
@@ -528,13 +441,7 @@
   --secondary-muted: hsl(var(--secondary-h) 95% 94%);
   --secondary-muted-strong: hsl(var(--secondary-h) 95% 89%);
   --secondary-on: var(--primary-on);
-  /* Tertiary — third brand hue. Used by the tertiary button variant and
-     tonal accents (decorative chips, hierarchy tones, indicators). Mirrors
-     the --primary / --secondary token-family shape: HSL channels for halo
-     composition, hover/pressed via color-mix, subtle/muted ramps for tonal
-     surfaces. Maps onto the palette --violet family (Tier-1), distinct from
-     --primary / --secondary. Brands override --tertiary-h/s/l (or --tertiary
-     directly for non-HSL values) to reskin it. */
+  /* Third brand hue (tertiary button, tonal accents). Override --tertiary-h/s/l (or --tertiary for non-HSL values) to reskin. */
   --tertiary-h: var(--violet-h);
   --tertiary-s: var(--violet-s);
   --tertiary-l: var(--violet-l);
@@ -546,11 +453,8 @@
   --tertiary-muted: hsl(var(--tertiary-h) 95% 94%);
   --tertiary-muted-strong: hsl(var(--tertiary-h) 95% 89%);
   --tertiary-on: var(--primary-on);
-  /* Status roles.
-     -hover / -pressed are derived from the base role via the same color-mix()
-     rule as --primary-hover. Override per role if a brand needs a non-derived
-     hue. -text / -border / -subtle / -muted stay as ramp picks because their
-     contrast targets are tuned, not procedural. */
+  /* -hover and -pressed derive from the base role like --primary-hover. -text, -border, -subtitle
+     and -muted are ramp picks: their contrast targets are tuned, not procedural. */
   --success: var(--green-500);
   --success-hover: color-mix(in srgb, var(--success) 88%, black);
   --success-subtitle: var(--green-50);
@@ -571,13 +475,12 @@
   --error-subtitle: var(--red-50);
   --error-muted: var(--red-100);
   --error-muted-strong: var(--red-200);
+  --error-highlight: var(--red-300);
   --error-border: var(--red-200);
   --error-text: var(--red-600);
-  /* -pressed (success/warning) and -on — roles the --accent-* pointer family needs from
-     every ds-color family and the status block above does not spell out. There is
-     deliberately no --<status>-strong: the readable on-tint colour of a status family is
-     what -text already is, and --accent-strong asks for -text by name. The brand families
-     are the ones that carry it as -strong, because they have no -text. */
+  /* -pressed (success/warning) and -on: roles the --accent-* pointers need from every ds-color
+     family. There is no --<status>-strong: for status families -text is the readable on-tint
+     colour and --accent-strong asks for it by name; brand families carry it as -strong. */
   --success-pressed: color-mix(in srgb, var(--success) 76%, black);
   --warning-pressed: color-mix(in srgb, var(--warning) 76%, black);
   --error-on: var(--text-on-error);
@@ -589,28 +492,16 @@
   --info-muted: var(--sky-100);
   --info-border: var(--sky-200);
   --info-text: var(--sky-700);
-  /* Focus rings.
-     Outer halos use hsla() composed from brand/danger HSL channels
-     so re-skinning --primary-h propagates into focus state. */
-  /* Separates the two bands of the FIELD halo, and nothing else — controls draw an
-     `outline`, whose gap needs no colour at all. It cannot be `transparent`: a transparent
-     shadow layer is a no-op, not a hole, so the outer band would show through as one solid
-     4px slab. `--surface-default` and not `--surface-canvas`: a field sits on the surface,
-     and painting the page ground here drew a dark rim around a light card. */
+  /* Separates the two bands of the field halo. Not `transparent`: a transparent shadow layer is a no-op, so
+     the outer band shows as one solid slab. `--surface-default`, not `--surface-canvas`, which draws a dark rim. */
   --focus-ring-inner: var(--surface-default);
   --focus-ring-outer-h: var(--primary-h);
   --focus-ring-outer-s: var(--primary-s);
   --focus-ring-outer-l: var(--primary-l);
   --focus-ring-outer-alpha: 1;
-  /* A flat focus colour, for components that draw an `outline` instead of a shadow (a row
-     inside a clipping list, a swatch grid). It must stay DEFINED: an `outline-color` that
-     falls through resolves to `currentColor`, so a row rings itself in its own text colour.
-
-     `--accent`, not the ring's own primary channels: outside a zone it IS `--primary`, and
-     inside `[ds-color="error"]` it becomes that family, which is the same adaptivity the
-     zone already gives the shadow ring through `--accent-focus-ring`. Composing it from
-     `--focus-ring-outer-*` would have pinned the outline to the brand hue in a zone whose
-     every other accent had moved. */
+  /* Flat focus colour for components drawing an `outline` (a row in a clipping list, a swatch grid); it must
+     stay defined or `outline-color` falls to `currentColor`. `--accent`, not `--focus-ring-outer-*`, so a
+     `ds-color` zone follows the family. */
   --focus-ring-color: var(--accent);
   --focus-ring:
     0 0 0 2px var(--focus-ring-inner),
@@ -621,28 +512,20 @@
   --focus-ring-error:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
-  /* Same ring drawn INSIDE the border box, for a subtree under a clipping
-     ancestor. An outset shadow is outside the box, so any `overflow: hidden`
-     ancestor eats it and leaves the element focusable with no indicator at all —
-     and clipping is the normal way to hold a full-bleed child inside a rounded
-     card. Reached through `[data-focus="inset"]`, not by re-declaring the role. */
+  /* The ring drawn inside the border box for a subtree under a clipping ancestor, where an outset shadow is
+     eaten by `overflow: hidden`. Reached through `[data-focus="inset"]`. */
   --focus-ring-inset:
     inset 0 0 0 2px var(--focus-ring-inner),
     inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));
   --focus-ring-inset-error:
     inset 0 0 0 2px var(--focus-ring-inner),
     inset 0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
-  /* Field focus — coloured halo only (no double-ring). Derived from
-     brand HSL so it tracks rebrand. Alpha is a token so dark themes
-     can boost it for legibility. */
+  /* Field focus: coloured halo only. The alpha is a token so dark themes can boost it. */
   --focus-field-alpha: .22;
   --focus-field:
     0 0 0 3px hsl(var(--primary-h) var(--primary-s) var(--primary-l) / var(--focus-field-alpha));
   --focus-field-error:
     0 0 0 3px hsl(var(--error-h) var(--error-s) var(--error-l) / var(--focus-field-alpha));
-  /* Per-family focus rings/fields — pre-composed once from each family's
-     channels so ds-color flips a single --accent-focus-* pointer (no :root
-     composite re-declaration in the scope). --focus-ring-error exists above. */
   --focus-ring-secondary:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l) / 100%);
@@ -663,10 +546,8 @@
     0 0 0 3px hsl(var(--success-h) var(--success-s) var(--success-l) / var(--focus-field-alpha));
   --focus-field-warning:
     0 0 0 3px hsl(var(--warning-h) var(--warning-s) var(--warning-l) / var(--focus-field-alpha));
-  /* Accent pointer layer — the single indirection ds-color flips. Defaults to
-     the primary family (+ existing focus/tint tokens) so the unbranded theme is
-     pixel-identical. Components read these for their accent instead of
-     --primary* / --focus-* / --surface-tint. */
+  /* The indirection ds-color flips, defaulting to the primary family. Components read these for
+     their accent instead of --primary* / --focus-* / --surface-tint. */
   --accent: var(--primary);
   --accent-hover: var(--primary-hover);
   --accent-pressed: var(--primary-pressed);
@@ -720,6 +601,7 @@
   --error-subtitle: hsl(0deg 45% 16%);
   --error-muted: hsl(0deg 40% 24%);
   --error-muted-strong: hsl(0deg 38% 32%);
+  --error-highlight: hsl(0deg 38% 40%);
   --error-border: hsl(0deg 38% 32%);
   --error-text: hsl(0deg 85% 74%);
   --info-subtitle: hsl(217deg 45% 16%);
@@ -729,9 +611,7 @@
   --surface-scrim: hsl(225deg 39% 4% / 70%);
   --focus-field-alpha: .35;
   --chart-hover-bg-color: hsl(0deg 0% 100% / 6%);
-  --chart-tooltip-bg-color: var(--surface-overlay);
-  --chart-tooltip-text-color: var(--text-primary);
-  --chart-tooltip-border-color: var(--border-strong);
+  --tooltip-border-color: var(--border-strong);
   --chart-categorical-8: hsl(222deg 14% 60%);
   --chart-series-default: hsl(222deg 14% 64%);
   --chart-ramp-1: hsl( 8deg 52% 32%);
@@ -765,9 +645,8 @@
   --chart-divergent-3: hsl(140deg 55% 60%);
 }
 
-/* The theme-INDEPENDENT layer. Tier 1 primitives live in ../themes/_base-palette.scss and each
-   theme's _palette.scss, Tier 2 roles in ../themes/_semantic.scss. Components consume Tier 2/3
-   ONLY — reaching for --blue-600 from a component style is a violation, add or reuse a role. */
+/* The theme-independent layer. Components consume role (Tier 2) and these (Tier 3) tokens only;
+   reaching for --blue-600 from a component style is a violation, add or reuse a role. */
 :root {
   --space-0: 0;
   --space-px: 1px;
@@ -788,8 +667,6 @@
   --space-20: 80px;
   --space-24: 96px;
   --space-32: 128px;
-  /* Default rhythm for the layout primitives (ds-stack / ds-inline); components
-     default their gap here so the rhythm retunes in one place. */
   --space-stack: var(--space-4);
   --space-inline: var(--space-2);
   --radius-0: 0;
@@ -797,34 +674,29 @@
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
-  --radius-2xl: 24px; /* reserved — no current consumer */
-  /* Themes can square every pill-shaped surface (switches, status chips,
-     avatars, segmented thumb) without forking the radius scale:
+  --radius-2xl: 24px;
+  /* Themes can square every pill-shaped surface:
        :root[data-theme="squared"] { --radius-pill-value: var(--radius-sm); } */
   --radius-pill-value: 999px;
   --radius-pill: var(--radius-pill-value);
-  /* Radius ROLES — the layer a consumer retunes; components resolve
-     --ds-<comp>-radius -> role -> value, so a per-component override still wins. No `field` role
-     on purpose: scope the control role instead — `ds-input { --ds-radius-control: 4px; }`. */
+  /* Radius roles: components resolve --ds-<comp>-radius -> role -> value. No `field` role; scope
+     the control role instead: `ds-input { --ds-radius-control: 4px; }`. */
   --ds-radius-inner: var(--radius-sm);
   --ds-radius-control: var(--radius-md);
   --ds-radius-panel: var(--radius-lg);
   --ds-radius-pill: var(--radius-pill);
-  --radius-flat: var(--radius-0); /* explicit "intentionally squared", not an unset radius */
+  --radius-flat: var(--radius-0);
   /* Two stops only: 1.5/2.5 mid-stops read identically to 1/2 on standard displays. */
   --border-width-default: 1px;
   --border-width-strong: 2px;
-  /* 2px is the floor WCAG 2.4.13 measures against, and only the CONTRASTING part counts —
-     an indicator whose 2px is half gap does not meet it. The offset is a real gap: the
-     outline is not painted there, so whatever the control sits on shows through. */
+  /* 2px is the WCAG 2.4.13 floor and only the contrasting part counts. The offset is a real gap:
+     the outline is not painted there. */
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
-  /* The radius a box takes when it exists only to carry the ring. A control with a shape of its
-     own keeps it and ignores this. */
+  /* For a box that exists only to carry the ring; a control with its own shape ignores it. */
   --focus-ring-radius: var(--ds-radius-inner);
-  /* Composed from a channel-split tint so a theme can re-colour them: -h/s come from
-     ../themes/_base-palette.scss, -l from each theme's _palette.scss. The alphas stay constant
-     across themes, which is what makes the same values read as glows over dark surfaces. */
+  /* Composed from a channel-split tint so a theme can re-colour them (-h/-s are theme-independent, -l comes
+     from each theme's palette). Constant alphas make the same values read as glows over dark surfaces. */
   --shadow-1: 0 1px 2px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
               0 1px 3px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 8%);
   --shadow-2: 0 4px 8px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
@@ -833,9 +705,7 @@
               0 16px 32px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 14%);
   --shadow-4: 0 16px 32px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 12%),
               0 24px 48px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 18%);
-  /* Elevation ROLES — the --shadow-<surface> aliases below resolve through these,
-     so setting a role moves every surface at that height while an alias still
-     retunes one family. */
+  /* Elevation roles: setting one moves every --shadow-<surface> alias at that height. */
   --ds-elevation-raised: var(--shadow-1);
   --ds-elevation-overlay: var(--shadow-2);
   --ds-elevation-floating: var(--shadow-3);
@@ -858,32 +728,26 @@
   --layer-tooltip: 1600;
   --table-sticky-header-z: var(--layer-raised);
   --table-sticky-col-z: var(--layer-raised);
-  --table-sticky-corner-z: 2; /* sticky col header sits over both axes */
+  --table-sticky-corner-z: 2;
   --btn-focus-z: var(--layer-raised);
-  --btn-group-focus-z: 2; /* focused button rises above its neighbour */
+  --btn-group-focus-z: 2;
   --duration-instant: 80ms;
   --duration-fast: 120ms;
   --duration-base: 180ms;
   --duration-slow: 260ms;
   --duration-slower: 400ms;
-  /* Loop durations sit outside the transition scale on purpose — they describe
-     rhythm, not response. */
+  --duration-slowest: 600ms;
   --duration-loop-fast: 700ms;
   --duration-loop-slow: 1400ms;
-  /* Easing — which to pick:
-     - standard:   state changes (hover, focus, toggle)
-     - emphasized: overlay / modal / drawer entries and exits; overshoots
-     - decelerate: something appearing (toast, tooltip, popover open)
-     - accelerate: something leaving (toast dismiss, modal close)
-     - spring:     overshoot for small celebratory feedback; sparingly */
+  /* Easing: `settle` is a critically damped spring, so a growing mark never overshoots and never shows a value the data does not hold. */
   --ease-standard: cubic-bezier(.2, 0, 0, 1);
   --ease-emphasized: cubic-bezier(.3, 0, .1, 1.4);
   --ease-decelerate: cubic-bezier(0, 0, 0, 1);
   --ease-accelerate: cubic-bezier(.3, 0, 1, 1);
   --ease-spring: cubic-bezier(.5, 1.5, .5, 1);
-  /* Motion ROLES — name the intent once and every surface at that scale follows. `exit` and
-     `exit-large` stay separate because panel LEAVES run at --duration-base, not fast, and a few
-     resolvers stay on the raw scale where no role carries what they need. */
+  --ease-emphasized-decelerate: cubic-bezier(.05, .7, .1, 1);
+  --ease-settle: linear(0, 0.09 6.3%, 0.265 12.5%, 0.444 18.8%, 0.596 25%, 0.715 31.3%, 0.803 37.5%, 0.867 43.8%, 0.911 50%, 0.942 56.3%, 0.962 62.5%, 0.976 68.8%, 0.986 75%, 0.992 81.3%, 0.996 87.5%, 0.998 93.8%, 1);
+  /* Motion roles: name the intent once and every surface at that scale follows. `exit-large` is separate because panel leaves run at --duration-base. */
   --ds-motion-enter-panel-duration: var(--duration-fast);
   --ds-motion-enter-panel-easing: var(--ease-decelerate);
   --ds-motion-enter-surface-duration: var(--duration-base);
@@ -894,44 +758,44 @@
   --ds-motion-exit-easing: var(--ease-accelerate);
   --ds-motion-exit-large-duration: var(--duration-base);
   --ds-motion-exit-large-easing: var(--ease-accelerate);
-  /* Its own role because the mark overshoots and nothing else at this scale does. Enter and exit
-     differ so it leaves faster than it arrives, which reads as weight rather than lag. */
+  /* Its own role: the mark overshoots. It leaves faster than it arrives, which reads as weight. */
   --ds-motion-check-enter-duration: var(--duration-base);
   --ds-motion-check-enter-easing: var(--ease-spring);
   --ds-motion-check-exit-duration: var(--duration-fast);
   --ds-motion-check-exit-easing: var(--ease-accelerate);
-  /* `state` is a hover or focus answering a pointer, so it runs at the fast step — anything slower
-     reads as lag on a mark the cursor is already leaving. `mark` is a datum changing size, which is
-     a redraw the reader is meant to follow rather than catch up with. */
+  /* `state` answers a pointer, so it runs fast; slower reads as lag. `mark` is a datum changing size. */
   --ds-motion-chart-state-duration: var(--duration-fast);
   --ds-motion-chart-state-easing: var(--ease-standard);
   --ds-motion-chart-mark-duration: var(--duration-base);
   --ds-motion-chart-mark-easing: var(--ease-decelerate);
-  /* A mark arriving and a mark leaving are separate roles because the enter waits out the exit:
-     the two durations are added, and one role could not carry both halves of that sum. */
-  --ds-motion-chart-mark-enter-duration: var(--duration-base);
-  --ds-motion-chart-mark-enter-easing: var(--ease-decelerate);
+  /* Enter and exit are separate roles because the enter waits out the exit (the durations add).
+     `enter`: fades or settles in place; `grow`: grows from a baseline; `sweep`: ring or line
+     drawing on; `detail`: what follows a mark (value label, marker). */
+  --ds-motion-chart-mark-enter-duration: var(--duration-slower);
+  --ds-motion-chart-mark-enter-easing: var(--ease-emphasized-decelerate);
+  --ds-motion-chart-mark-grow-duration: var(--duration-slowest);
+  --ds-motion-chart-mark-grow-easing: var(--ease-settle);
+  --ds-motion-chart-mark-sweep-duration: var(--duration-slowest);
+  --ds-motion-chart-mark-detail-duration: var(--duration-base);
   --ds-motion-chart-mark-exit-duration: var(--duration-fast);
   --ds-motion-chart-mark-exit-easing: var(--ease-accelerate);
+  /* Tooltip glide between marks. Off the duration scale so the reduced-motion block zeroes it by name. */
+  --ds-motion-chart-tooltip-move-duration: 300ms;
+  --ds-motion-chart-tooltip-move-easing: var(--ease-standard);
   --opacity-disabled: 0.5;
-  --opacity-text-disabled: 0.38; /* WCAG-derived */
+  --opacity-text-disabled: 0.38;
   --opacity-scrim: 0.55;
   --opacity-state-hover: 0.08;
   --opacity-state-pressed: 0.16;
-  --opacity-state-active: 0.24; /* deeper than -pressed, for a third press level */
-  /* Breakpoints: the $bp-* Sass aliases and up()/down() mixins live in
-     _breakpoints.scss; the --bp-* runtime mirror comes from its emit-vars mixin,
-     included once by styles/ds. */
-  /* Tier gutters and margins for `.page-grid`; _page-grid.scss owns the tier
-     table and swaps these at the matching min-width breakpoint. */
-  --page-gutter-mobile: var(--space-3); /* 12px */
-  --page-gutter-tablet: var(--space-4); /* 16px */
-  --page-gutter-desktop: var(--space-5); /* 20px */
-  --page-gutter-wide: var(--space-6); /* 24px */
-  --page-margin-mobile: var(--space-4); /* 16px */
-  --page-margin-tablet: var(--space-6); /* 24px */
-  --page-margin-desktop: var(--space-8); /* 32px */
-  --page-margin-wide: var(--space-10); /* 40px */
+  --opacity-state-active: 0.24;
+  --page-gutter-mobile: var(--space-3);
+  --page-gutter-tablet: var(--space-4);
+  --page-gutter-desktop: var(--space-5);
+  --page-gutter-wide: var(--space-6);
+  --page-margin-mobile: var(--space-4);
+  --page-margin-tablet: var(--space-6);
+  --page-margin-desktop: var(--space-8);
+  --page-margin-wide: var(--space-10);
   --scrollbar-w: 10px;
   --scrollbar-thumb: var(--neutral-300);
   --scrollbar-thumb-hover: var(--neutral-400);
@@ -939,8 +803,6 @@
   --select-bg-color: color-mix(in srgb, var(--primary) 22%, transparent);
   --col-cap-text: 720px;
   --col-cap-content: 1280px;
-  /* Font FAMILIES are a theme choice and live in ../themes/_base-palette.scss;
-     the size/weight/leading/tracking scale below is constant across themes. */
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
@@ -974,8 +836,8 @@
   --hit-xs: 24px;
   --hit-sm: 28px;
   --hit-md: 36px;
-  --hit-min: 32px; /* dense desktop default */
-  --hit-cozy: 40px; /* default control height; retuned by every density tier */
+  --hit-min: 32px;
+  --hit-cozy: 40px;
   --hit-comfy: 44px; /* WCAG 2.5.5 minimum for touch */
   --hit-touch: 48px;
   --icon-2xs: 10px;
@@ -985,16 +847,14 @@
   --icon-lg: 20px;
   --field-pad-x: var(--space-3);
   --field-pad-y: 0;
-  /* Components default their own --ds-*-pad to this, so a consumer retunes every
-     surface container (card, stat, …) at once. */
   --ds-surface-padding: var(--space-6);
-  /* Two focus families: fields get the soft halo, interactive controls and nav
-     the crisp ring. Components default their own --ds-*-focus-shadow to these,
-     so a consumer can retune a whole family or a single component. */
-  /* The flat tokens, NOT the --accent-focus-* aliases. A `var()` inside a custom property is
-     substituted where it is DECLARED, so a ds-color zone can never reach what is written here. */
+  /* Fields get the soft halo, controls and nav the crisp ring. Use the flat tokens, not the
+     --accent-focus-* aliases: a `var()` inside a custom property is substituted where it is
+     declared, so a ds-color zone could never reach it. */
   --ds-field-focus-shadow: var(--focus-field);
   --ds-field-focus-shadow-error: var(--focus-field-error);
+  --ds-field-focus-shadow-warning: var(--focus-field-warning);
+  --ds-field-focus-shadow-success: var(--focus-field-success);
   --ds-control-focus-shadow: var(--focus-ring);
   --ds-control-focus-shadow-error: var(--focus-ring-error);
   --table-cell-pad-x: var(--space-4);
@@ -1007,7 +867,7 @@
   --check-indet-h: 2px;
   --radio-dot-size: 10px;
   --radio-bw-checked: var(--border-width-strong);
-  --check-glyph-sm: 14px; /* size-sm / size-lg boxes — fixed, not density-scaled like --check-size */
+  --check-glyph-sm: 14px; /* fixed, not density-scaled like --check-size */
   --check-glyph-lg: 24px;
   --radio-glyph-sm: 14px;
   --radio-glyph-lg: 24px;
@@ -1015,7 +875,7 @@
   --switch-track-h: 20px;
   --switch-thumb-size: 16px;
   --switch-thumb-pad: 2px;
-  --switch-thumb-travel: 16px; /* track-w − thumb − 2*pad */
+  --switch-thumb-travel: 16px; /* track-w - thumb - 2*pad */
   --slider-track-h: 4px;
   --slider-thumb-size: 18px;
   --slider-thumb-border-width: var(--border-width-strong);
@@ -1041,7 +901,7 @@
   --spinner-lg: 24px;
   --spinner-bw: var(--border-width-strong);
   --bar-h: 6px;
-  --stepper-node-size: 28px; /* === --hit-sm */
+  --stepper-node-size: 28px;
   --stepper-bar-w: 56px;
   --stepper-bar-h: 2px;
   --segmented-btn-h: var(--hit-sm);
@@ -1061,114 +921,117 @@
   --drawer-w-lg: 640px;
   --popover-maxh: 360px;
   --field-label-gap: var(--space-1-5); /* both label↔control and control↔hint */
-  --field-gap-req: var(--space-1); /* label↔asterisk */
+  --field-gap-req: var(--space-1);
   --field-h-sm: var(--hit-min);
   --field-h-md: var(--hit-cozy);
   --field-h-lg: var(--hit-touch);
   --field-textarea-min: 96px;
   --field-num-stepper-w: var(--space-8);
-  --otp-cell-w: var(--space-12); /* 48px */
-  --otp-cell-h: var(--space-14); /* 56px */
-  --otp-gap: var(--space-2); /*  8px */
-  --color-picker-swatch: var(--space-6); /* 24px */
-  --color-picker-preview: var(--space-10); /* 40px */
+  --otp-cell-w: var(--space-12);
+  --otp-cell-h: var(--space-14);
+  --otp-gap: var(--space-2);
+  --color-picker-swatch: var(--space-6);
+  --color-picker-preview: var(--space-10);
   --color-picker-panel-w: 240px;
-  --color-picker-sv-h: 160px; /* saturation/value plane height */
-  --color-picker-hue-h: var(--space-3); /* 12px */
+  --color-picker-sv-h: 160px;
+  --color-picker-hue-h: var(--space-3);
   --color-picker-thumb: 14px;
-  --topbar-h: var(--space-14); /* 56px */
+  --topbar-h: var(--space-14);
   --sidenav-pad-brand-y: var(--space-2);
   --sidenav-pad-brand-b: var(--space-6);
-  --sidenav-logo-size: var(--hit-sm); /* 28px */
-  --sidenav-collapsed-item: var(--hit-cozy); /* 40px */
-  --sidenav-collapsed-glyph: var(--icon-lg); /* 20px — must match the size the item template renders its icon at */
+  --sidenav-logo-size: var(--hit-sm);
+  --sidenav-collapsed-item: var(--hit-cozy);
+  --sidenav-collapsed-glyph: var(--icon-lg); /* must match the icon size the item template renders */
   --sidenav-section-pad-b: var(--space-1-5);
   --sidenav-item-rail-width: 3px;
   --form-section-label-w: 280px;
   --page-header-sub-mt: var(--space-1);
   --bottom-sheet-handle-w: 36px;
   --bottom-sheet-handle-h: 4px;
-  --field-textarea-rows-min: 60px; /* the inline textarea inside the field wrapper, not --field-textarea-min */
-  --field-select-pad-r: var(--space-6); /* chevron clearance */
+  --field-textarea-rows-min: 60px;
+  --field-select-pad-r: var(--space-6);
   --field-affix-overlap: var(--border-width-default);
-  --btn-group-overlap: calc(var(--border-width-default) * -1); /* collapses adjacent borders */
-  --btn-link-uloff: 3px; /* underline-offset */
+  --btn-group-overlap: calc(var(--border-width-default) * -1);
+  --btn-link-uloff: 3px;
   --breadcrumbs-link-uloff: 2px;
   --card-hover-lift: 1px;
   --card-title-fs: var(--font-size-h4);
-  --sort-ic-size: var(--icon-xs); /* 12px */
-  --sort-ic-gap: var(--space-1-5); /* 6px */
+  --sort-ic-size: var(--icon-xs);
+  --sort-ic-gap: var(--space-1-5);
   --sort-ic-opacity-idle: 0.4;
   /* The literal svg inside .tag .x, not the button box (--tag-close-size). */
-  --tag-close-glyph: var(--icon-xs); /* 12px */
-  --bulk-bar-offset: var(--space-4); /* sticky offset from the container bottom */
+  --tag-close-glyph: var(--icon-xs);
+  --bulk-bar-offset: var(--space-4);
   --menu-minw: 200px;
   --menu-sep-h: var(--border-width-default);
-  --list-item-pad-y: var(--space-3); /* 12px */
-  --list-item-pad-x: var(--space-4); /* 16px */
-  --list-item-gap: var(--space-3); /* 12px leading↔body↔trailing */
+  --list-item-pad-y: var(--space-3);
+  --list-item-pad-x: var(--space-4);
+  --list-item-gap: var(--space-3);
   --tooltip-maxw: 240px;
-  --tooltip-arrow: var(--space-2); /* 8px — caret edge length, halved for offset */
+  --tooltip-arrow: var(--space-2); /* caret edge length, halved for offset */
+  --tooltip-bg-color: var(--surface-overlay);
+  --tooltip-text-color: var(--text-primary);
+  --tooltip-border-color: var(--border-default);
   --popover-maxw: 320px;
   --toast-minw: 320px;
   --toast-maxw: 480px;
   --toast-bar-w: 3px;
   --toast-enter-y: var(--space-1);
   --banner-bar-w: 4px;
-  --empty-icon-size: var(--space-16); /* 64px */
+  --empty-icon-size: var(--space-16);
   --empty-body-maxw: 360px;
-  /* Pickers — the listbox panel shared by select, autocomplete and multi-select. */
-  --picker-offset: var(--space-1); /* gap below the trigger */
+  --picker-offset: var(--space-1);
   --picker-maxh: 280px;
   --cmdk-w: 560px;
-  --cmdk-list-maxh: var(--popover-maxh); /* alias — keeps cmdk and popover in step */
+  --cmdk-list-maxh: var(--popover-maxh); /* alias, keeps cmdk and popover in step */
   --date-picker-w: 280px;
-  --date-picker-cell-gap: var(--space-0-5); /* 2px */
-  --date-picker-nav-size: var(--hit-xs); /* 24px */
-  --modal-close-size: var(--hit-xs); /* 24px */
-  --modal-enter-y: var(--space-2); /* 8px */
+  --date-picker-cell-gap: var(--space-0-5);
+  --date-picker-nav-size: var(--hit-xs);
+  --modal-close-size: var(--hit-xs);
+  --modal-enter-y: var(--space-2);
   --errorpage-body-maxw: 520px;
   --wizard-body-minh: 200px;
-  --wizard-step-bar-w: var(--space-8); /* 32px */
-  --inline-edit-input-minw: var(--space-20); /* 80px */
-  --inline-edit-btn-size: var(--hit-xs); /* 24px */
+  --wizard-step-bar-w: var(--space-8);
+  --inline-edit-input-minw: var(--space-20);
+  --inline-edit-btn-size: var(--hit-xs);
   --settings-nav-w: 220px;
   --settings-row-label-w: 240px;
-  --settings-row-label-gap: var(--space-0-5); /* 2px */
-  --matrix-maxh: 360px; /* deliberately the same optic as --popover-maxh, not an alias */
-  --matrix-cell-pad-y: var(--space-2); /* 8px */
-  --matrix-cell-pad-x: var(--space-2-5); /* 10px */
-  --matrix-cell-minw: var(--space-16); /* 64px */
+  --settings-row-label-gap: var(--space-0-5);
+  --matrix-maxh: 360px; /* same look as --popover-maxh, deliberately not an alias */
+  --matrix-cell-pad-y: var(--space-2);
+  --matrix-cell-pad-x: var(--space-2-5);
+  --matrix-cell-minw: var(--space-16);
   --matrix-rowhdr-minw: 160px;
   --calendar-rowlabel-w: 160px;
-  --calendar-row-h: var(--hit-touch); /* 48px */
-  --calendar-cell-min: var(--hit-cozy); /* 40px */
-  --calendar-cell-pad: var(--space-1); /* 4px */
-  --calendar-bar-h: var(--space-8); /* 32px */
-  --calendar-bar-inset-y: var(--space-2); /* 8px */
-  --timeline-node-size: var(--hit-sm); /* 28px */
-  --timeline-spine-w: var(--border-width-strong); /* 2px */
+  --calendar-row-h: var(--hit-touch);
+  --calendar-cell-min: var(--hit-cozy);
+  --calendar-cell-pad: var(--space-1);
+  --calendar-bar-h: var(--space-8);
+  --calendar-bar-inset-y: var(--space-2);
+  --timeline-node-size: var(--hit-sm);
+  --timeline-spine-w: var(--border-width-strong);
   --timeline-gap: var(--space-5);
-  --tree-indent: var(--space-5); /* 20px per nesting level */
-  --tree-row-pad-y: var(--space-1-5); /* 6px */
-  --tree-row-pad-x: var(--space-3); /* 12px */
-  --binpack-bay-h: var(--hit-touch); /* 48px */
-  --map-chip-pad-y: var(--space-1-5); /* 6px */
-  --map-chip-pad-x: var(--space-2-5); /* 10px */
-  --map-chip-inset: var(--space-3); /* 12px */
-  --kbd-pad-y: var(--space-0-5); /* 2px */
-  --kbd-pad-x: var(--space-1-5); /* 6px */
+  --tree-indent: var(--space-5);
+  --tree-row-pad-y: var(--space-1-5);
+  --tree-row-pad-x: var(--space-3);
+  --binpack-bay-h: var(--hit-touch);
+  --map-chip-pad-y: var(--space-1-5);
+  --map-chip-pad-x: var(--space-2-5);
+  --map-chip-inset: var(--space-3);
+  --kbd-pad-y: var(--space-0-5);
+  --kbd-pad-x: var(--space-1-5);
   --chart-empty-h: 160px;
   --chart-skeleton-h: 160px;
-  --chart-legend-dot: var(--icon-2xs); /* 10px */
+  --chart-legend-dot: var(--icon-2xs);
   --compare-dt-w: 90px;
   --dodont-stage-minh: 100px;
-  --statemap-arrow-w: var(--space-8); /* 32px */
-  --statemap-arrow-cap: var(--space-1); /* 4px — caret border-width */
-  --grid-table-min: 220px; /* auto-fit minmax floor */
+  --statemap-arrow-w: var(--space-8);
+  --statemap-arrow-cap: var(--space-1);
+  --grid-table-min: 220px;
   --grid-cols-card-minh: 120px;
   --grid-cols-card-thumb: 80px;
   --dl-spec-label-w: 120px;
+  --dl-spec-value-min-w: 14rem;
   --scroll-spec-h: 220px;
   --tab-spec-maxw: 220px;
   --tab-spec-dot-offset: var(--border-width-strong); /* negated at the use site */
@@ -1181,24 +1044,21 @@
     --duration-base: 0ms;
     --duration-slow: 0ms;
     --duration-slower: 0ms;
-    /* Loops are slowed, never frozen: a stopped spinner reads as "hung", not
-       "loading". The one large motion that does halt is the page-wide skeleton
-       sweep, which stops itself in _skeleton-shimmer.scss. */
+    --duration-slowest: 0ms;
+    --ds-motion-chart-tooltip-move-duration: 0ms;
+    /* Loops are slowed, never frozen: a stopped spinner reads as "hung". The skeleton sweep is the
+       one loop that halts, via its own reduced-motion rule. */
     --duration-loop-fast: 1400ms;
     --duration-loop-slow: 2800ms;
   }
-  /* One-shot motion only. Every entrance/transition is token-driven, so zeroing
-     the durations above already makes them instant — loops must NOT be
-     blanket-zeroed here or they freeze. */
+  /* One-shot motion only: zeroing loops here would freeze them. */
   *, *::before, *::after {
     transition-duration: 0ms !important;
   }
 }
 [data-density=ultra-compact] {
-  /* 24px hits sit BELOW WCAG 2.5.5 (44px enhanced) and WCAG 2.5.8 (24px
-     minimum) margins — acceptable only when: (a) the screen is keyboard-first,
-     (b) input is mouse/keys not touch, (c) accidental-tap risk is low, (d) the
-     user opted in. Do not enable for mobile or touch-first layouts. */
+  /* 24px hits sit below WCAG 2.5.5 (44px enhanced) and at the WCAG 2.5.8 minimum. Only for
+     keyboard-first, mouse-driven screens the user opted into; never mobile or touch-first. */
   --hit-cozy: 24px;
   --hit-min: 24px;
   --check-size: 14px;
@@ -1216,8 +1076,7 @@
   --table-cell-pad-x: var(--space-2);
   --table-cell-pad-y: var(--space-1);
   --table-head-pad-y: var(--space-1);
-  /* One rung only — a card's frame reads as padding lost long before its cells
-     do, so 24 → 16 while the cells inside it go 16 → 8. */
+  /* One rung only: a card's frame reads as lost padding before its cells do (24 to 16, cells 16 to 8). */
   --ds-surface-padding: var(--space-4);
 }
 
@@ -1255,30 +1114,12 @@
 
 /* Chart and dataviz tokens.
 
-   Categorical: led by the coral and teal the product's own
-   screens are built on. NO HUE BETWEEN 35 and 130: yellow and
-   lime sit at high luminance by nature, so dragging one down
-   to clear 3:1 on white turns it to mustard — an earlier set
-   tried, and the pie read as mud. Every hue clears 3:1 for
-   WCAG 1.4.11 and sits in a narrow perceptual band (L* 56-62)
-   so no series shouts over another; an older set ran 45% to
-   100% saturation and the first bar drowned the last.
-   Slot 8 is the "rest" / "other" bucket: neutral, and darker
-   than the band on purpose. Neutral, because every eighth HUE
-   that clears the floor lands within dE 4 of one of the seven
-   under protanopia or deuteranopia. Darker, because a mid
-   grey is not safe either — colour-vision deficiency drains
-   the emerald toward grey, and only the lightness gap keeps
-   the two apart.
-
-   Sequential: single-hue ramp (blue) for ordinal data —
-   "low → high" magnitudes.
-
-   Divergent: red ↔ neutral ↔ green for signed data —
-   "bad ← zero → good". Used for Excess / Shortage matrix.
-   ============================================================ */
+   Categorical: no hue between 35 and 130 (yellow and lime sit at high luminance; darkening one to clear
+   3:1 turns it mustard). Every hue clears 3:1 (WCAG 1.4.11) inside a narrow band (L* 56-62) so no series
+   shouts. Slot 8 is the neutral "rest"/"other" bucket, darker than the band because a mid grey is drained
+   toward the emerald by colour-vision deficiency.
+   Sequential: single-hue ramp for ordinal data. Divergent: red, neutral, green for signed data. */
 :root {
-  /* CATEGORICAL (8) ----------------------------------------- */
   --chart-categorical-1: hsl( 8deg 78% 58%); /* coral */
   --chart-categorical-2: hsl(172deg 82% 36%); /* teal */
   --chart-categorical-3: hsl(222deg 70% 62%); /* blue */
@@ -1287,24 +1128,14 @@
   --chart-categorical-6: hsl(148deg 58% 41%); /* emerald */
   --chart-categorical-7: hsl(300deg 62% 60%); /* orchid */
   --chart-categorical-8: hsl(222deg 14% 29%); /* slate */
-  /* SINGLE SERIES — every row of ONE series, plus the accent that marks the
-     row the reader is meant to land on. A categorical slot is the wrong tool
-     here: those separate series from each other, not rows within one. */
+  /* Rows of one series, plus the accent for the row to land on. */
   --chart-series-default: hsl(222deg 16% 42%);
   --chart-series-accent: var(--chart-categorical-2);
-  /* A waterfall's up and down are NOT success and failure - a cost rising is a rise and a bad
-     one - so the pair points at the palette's own two lead hues rather than at --success and
-     --error. The sign is carried by the label and the accessible name as well, because a hue
-     cannot say which direction is the welcome one. */
+  /* A waterfall's up and down are not success and failure, so these point at the lead hues, not --success/--error. */
   --chart-positive: var(--chart-categorical-2);
   --chart-negative: var(--chart-categorical-1);
-  /* RAMP — one hue, light → deep, for the ordered stages of a single
-     quantity. Shares the lead hue so a funnel reads as one object rather
-     than as eight unrelated categories. It stays in the middle of the
-     lightness range, 76% to 51%: a funnel's stages are a shape to read at
-     a glance, and a stage at either extreme reads as a different object
-     rather than as the next step. A scale that needs magnitude read from
-     the step between two colours takes --chart-heat-* instead. */
+  /* RAMP: one hue, light to deep, for the ordered stages of one quantity, kept mid-lightness (76% to 51%) so no
+     stage reads as a different object. Magnitude read from the step between two colours takes --chart-heat-*. */
   --chart-ramp-1: hsl( 8deg 78% 76%);
   --chart-ramp-2: hsl( 8deg 78% 72%);
   --chart-ramp-3: hsl( 8deg 78% 69%);
@@ -1313,12 +1144,9 @@
   --chart-ramp-6: hsl( 8deg 77% 58%);
   --chart-ramp-7: hsl( 8deg 75% 55%);
   --chart-ramp-8: hsl( 8deg 72% 51%);
-  /* HEAT — the same hue across the FULL lightness range, 95% to 31%, for a
-     grid where magnitude is read from the step between two cells and
-     nothing else: adjacent dE 6.9–10.6, first to last 55.0, measured
-     2026-09-19 in OKLab against the ramp's 2.1–3.9 and 20.7. Contrast on
-     white runs 1.14:1 to 9.07:1, so a label over a cell is chosen against
-     that cell's own end of the scale, never once for the whole of it. */
+  /* HEAT: the same hue across lightness 95% to 31%, for a grid where magnitude is read from the step between
+     cells (adjacent OKLab dE 6.9-10.6, measured 2026-09-19). Contrast on white runs 1.14:1 to 9.07:1, so
+     choose a label colour per cell, never once for the grid. */
   --chart-heat-1: hsl( 8deg 60% 95%);
   --chart-heat-2: hsl( 8deg 67% 88%);
   --chart-heat-3: hsl( 8deg 73% 80%);
@@ -1327,17 +1155,13 @@
   --chart-heat-6: hsl( 8deg 78% 51%);
   --chart-heat-7: hsl( 8deg 74% 41%);
   --chart-heat-8: hsl( 8deg 68% 31%);
-  /* SEQUENTIAL — single-hue, light → dark */
   --chart-sequential-1: var(--blue-100);
   --chart-sequential-2: var(--blue-200);
   --chart-sequential-3: var(--blue-300);
   --chart-sequential-4: var(--blue-500);
   --chart-sequential-5: var(--blue-700);
   --chart-sequential-6: var(--blue-900);
-  /* DIVERGENT — red ← neutral → green
-     Explicit HSL keeps the ramp
-     independent of palette retunes — re-skinning brand/red/green
-     should not shift the dataviz colour story. */
+  /* DIVERGENT: explicit HSL keeps the ramp independent of palette retunes. */
   --chart-divergent--3: hsl( 8deg 48% 38%); /* large negative (worst) */
   --chart-divergent--2: hsl( 8deg 42% 56%);
   --chart-divergent--1: hsl( 8deg 34% 80%);
@@ -1345,49 +1169,34 @@
   --chart-divergent-1: hsl(145deg 28% 80%);
   --chart-divergent-2: hsl(145deg 38% 52%);
   --chart-divergent-3: hsl(145deg 46% 34%); /* large positive (best) */
-  /* FRAME — the box a chart draws around itself. On by default: a chart is
-     read as an object on the page, not as a block of text, and without an
-     edge it bleeds into whatever sits under it. A chart already inside a
-     card drops it with --ds-chart-frame-border-width: 0 and
-     --ds-chart-frame-padding: 0. */
+  /* BACKGROUND: the frame and every knockout between marks. Read where it is used: a token deriving
+     from it on :root would ignore one set on a single chart. */
+  --chart-bg-color: var(--surface-default);
+  /* FRAME: inside a card, drop it with --ds-chart-frame-border-width: 0 and --ds-chart-frame-padding: 0. */
   --chart-frame-border-color: var(--border-default);
   --chart-frame-border-width: var(--border-width-default);
   --chart-frame-radius: var(--radius-lg);
   --chart-frame-padding: var(--space-5);
-  --chart-frame-bg-color: var(--surface-default);
-  /* AXIS / GRID / LEGEND */
   --chart-axis-line-color: var(--neutral-300);
   --chart-axis-label-color: var(--text-tertiary);
   --chart-grid-line-color: var(--neutral-150);
   --chart-axis-font-size: var(--font-size-2xs);
-  /* REFERENCE LINES - an annotation, not a series. A neutral stroke and a dash are what keep a
-     target from reading as one more category, and the band's opacity is low enough that a mark
-     drawn over it stays its own colour. */
+  /* REFERENCE LINES: an annotation, not a series; the band opacity keeps marks over it their own colour. */
   --chart-threshold-color: var(--neutral-500);
   --chart-threshold-band-opacity: 0.12;
   --chart-threshold-dashed-pattern: 6 4;
   --chart-threshold-dotted-pattern: 1 5;
-  /* HIGHLIGHT / HOVER */
-  /* Every level of dimming costs the separation BETWEEN the dimmed series: measured 2026-09-13,
-     OKLab dE x100, the worst pair of three dimmed series falls from 14.8 at full opacity to 5.2 at
-     60% and 2.1 at 30%. There is no level that keeps them apart, so this number buys accent
-     loudness, not readable context. 30% is Carbon's. */
+  /* Dimming costs the separation between dimmed series (OKLab dE x100, worst pair of three: 14.8 at full
+     opacity, 2.1 at 30%, measured 2026-09-13): this buys accent loudness, not readable context. */
   --chart-dim-opacity: 0.3;
   --chart-hover-bg-color: hsl(225deg 39% 7% / 4%);
   --chart-cursor-line-color: var(--neutral-400);
-  /* The focus indicator is TWO tones, not one: a single accent ring disappears on a mark of the
-     same hue family, and a chart's marks are exactly the surfaces a ring has to survive. The ring
-     itself is the app's, so a focused mark reads as the same indicator as every other control;
-     the white keyline is what separates it from the mark underneath, and it is the keyline rather
-     than the ring that does the surviving. */
+  /* Two tones: a single ring disappears on a mark of the same hue; the white keyline separates it. */
   --chart-focus-ring-color: var(--focus-ring-color);
-  --chart-focus-halo-color: white;
-  --chart-tooltip-bg-color: var(--neutral-900);
-  --chart-tooltip-text-color: var(--neutral-0);
-  --chart-tooltip-border-color: var(--neutral-700);
-  /* DIMENSIONS */
-  /* Soft, not a pill: the cap squashes with the body while a mark grows in, and 3px is small
-     enough that the squash is not readable. */
+  --chart-tooltip-bg-color: var(--tooltip-bg-color);
+  --chart-tooltip-text-color: var(--tooltip-text-color);
+  --chart-tooltip-border-color: var(--tooltip-border-color);
+  /* Not a pill: the cap squashes with the body while a mark grows in; 3px keeps that unreadable. */
   --chart-mark-cap-radius: 3px;
   --chart-bar-gap: 4px;
   --chart-line-width: 2px;
@@ -1395,19 +1204,12 @@
   --chart-dot-radius: 4px;
   --chart-dot-radius-active: 6px;
   --chart-area-opacity: 0.16;
-  /* Stripes wide enough to survive a 24px-wide mark at a glance, and drawn in the surface colour
-     so they read as gaps cut out of the mark rather than a second hue competing with it. */
-  --chart-hatch-color: var(--surface-default);
+  --chart-area-fade-opacity: 0.32;
+  /* Wide enough to survive a 24px mark; background-coloured so they read as gaps. */
   --chart-hatch-width: 1.5px;
 }
 
-/* Public override layer.
-   The block above is the palette; this block is the contract. A consumer sets
-   --ds-chart-*, never the palette itself, so recolouring one series costs one
-   declaration instead of the whole ramp. Series slots are numbered rather than
-   named after a hue: --ds-chart-series-3-color stays meaningful after a retune,
-   --ds-chart-orange-color would not.
-   ============================================================ */
+/* Public override layer: consumers set --ds-chart-*, never the palette. */
 :root {
   --ds-chart-series-1-color: var(--chart-categorical-1);
   --ds-chart-series-2-color: var(--chart-categorical-2);
@@ -1437,11 +1239,11 @@
   --ds-chart-heat-6-color: var(--chart-heat-6);
   --ds-chart-heat-7-color: var(--chart-heat-7);
   --ds-chart-heat-8-color: var(--chart-heat-8);
+  --ds-chart-bg-color: var(--chart-bg-color);
   --ds-chart-frame-border-color: var(--chart-frame-border-color);
   --ds-chart-frame-border-width: var(--chart-frame-border-width);
   --ds-chart-frame-radius: var(--chart-frame-radius);
   --ds-chart-frame-padding: var(--chart-frame-padding);
-  --ds-chart-frame-bg-color: var(--chart-frame-bg-color);
   --ds-chart-axis-line-color: var(--chart-axis-line-color);
   --ds-chart-axis-label-color: var(--chart-axis-label-color);
   --ds-chart-axis-font-size: var(--chart-axis-font-size);
@@ -1454,7 +1256,6 @@
   --ds-chart-hover-bg-color: var(--chart-hover-bg-color);
   --ds-chart-cursor-line-color: var(--chart-cursor-line-color);
   --ds-chart-focus-ring-color: var(--chart-focus-ring-color);
-  --ds-chart-focus-halo-color: var(--chart-focus-halo-color);
   --ds-chart-tooltip-bg-color: var(--chart-tooltip-bg-color);
   --ds-chart-tooltip-text-color: var(--chart-tooltip-text-color);
   --ds-chart-tooltip-border-color: var(--chart-tooltip-border-color);
@@ -1465,7 +1266,7 @@
   --ds-chart-dot-radius: var(--chart-dot-radius);
   --ds-chart-dot-radius-active: var(--chart-dot-radius-active);
   --ds-chart-area-opacity: var(--chart-area-opacity);
-  --ds-chart-hatch-color: var(--chart-hatch-color);
+  --ds-chart-area-fade-opacity: var(--chart-area-fade-opacity);
   --ds-chart-hatch-width: var(--chart-hatch-width);
 }
 
@@ -1529,9 +1330,6 @@
   box-sizing: border-box;
 }
 
-/* Opt into animating to/from intrinsic sizes (height: auto, max-content).
-   Inherited, so components can transition height:0 ↔ auto natively
-   (accordion, sidenav group) without max-height magic numbers. */
 :root {
   interpolate-size: allow-keywords;
 }
@@ -1543,13 +1341,7 @@ html, body {
   background: var(--surface-canvas);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizelegibility;
-  /* Suppress the native mobile tap-highlight. Android Chrome paints a flat
-     rectangular overlay on tap whose geometry is browser-controlled (ignores
-     border-radius, NOT clipped by overflow), so on pill/rounded controls it
-     pokes square corners out past the shape. We can only set its colour, not
-     reshape it — so we remove it and let each control's own rounded
-     :active/:focus-visible state provide press feedback. Inherited → covers all
-     descendants. */
+  /* Android Chrome's tap overlay is a rectangle that ignores border-radius; controls provide their own :active feedback. */
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -1557,9 +1349,6 @@ button, input, select, textarea {
   font-family: inherit;
 }
 
-/* Zero the browser's default heading margins (~0.83em) — they otherwise leak
-   into consumers and mangle spacing. Headings get their size from .t-* utils;
-   spacing is owned by the surrounding layout (gap / margin), not the element. */
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
 }
@@ -1741,45 +1530,8 @@ h1, h2, h3, h4, h5, h6 {
   border: 0;
 }
 
-:where(:focus-visible) {
-  outline: var(--focus-ring-width) solid var(--focus-ring-color);
-  outline-offset: var(--focus-ring-offset);
-  animation: ds-focus-ring-in var(--duration-fast) var(--ease-standard);
-}
-
-@keyframes ds-focus-ring-in {
-  from {
-    outline-color: transparent;
-  }
-}
-:root[data-focus=ring] {
-  --ds-field-focus-shadow: var(--focus-ring);
-  --ds-field-focus-shadow-error: var(--focus-ring-error);
-}
-
-:root[data-focus=edge] {
-  --focus-ring-offset: 0px;
-  --ds-field-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
-  --ds-field-focus-shadow-error: 0 0 0 var(--border-width-default) var(--error);
-}
-
-[data-focus=inset] {
-  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
-  --ds-field-focus-shadow: var(--focus-ring-inset);
-  --ds-field-focus-shadow-error: var(--focus-ring-inset-error);
-}
-
-@media (forced-colors: active) {
-  :where(:focus-visible) {
-    outline: var(--focus-ring-width) solid CanvasText;
-    outline-offset: var(--focus-ring-offset);
-  }
-}
-/* Global .link helper — pure CSS class (no Angular wrapper) so consumers
-   can apply it to inline anchors inside <p> text without disrupting line
-   flow. Modifiers: .quiet, .inline, .standalone, .xs, .sm, .lg. */
+/* Pure CSS class so inline anchors in <p> text keep their line flow. */
 .link {
-  /* Hover and active derive from the resolved color. */
   --_link-color: var(--ds-link-color, var(--text-link));
   --_link-color-hover: var(--ds-link-color-hover, color-mix(in srgb, var(--_link-color) 80%, black));
   --_link-color-active: var(--ds-link-color-active, color-mix(in srgb, var(--_link-color) 65%, black));
@@ -1818,16 +1570,9 @@ h1, h2, h3, h4, h5, h6 {
   flex-shrink: 0;
 }
 .link {
-  /* ds-button warns `variant="text"` off in favour of this class, and an action
-     that is not navigation has to be a <button> — which arrives with UA chrome
-     none of the rules above touch (measured: 13.3px inside 14px text, plus padding
-     and an outset border). `:where()` keeps the reset at this class's specificity,
-     so a consumer's rule still wins on source order.
-
-     Absences are deliberate and invisible in code: no `font-weight`, so `.quiet` /
-     `.standalone` keep deciding it, and no `display`, because inline-block is what
-     lays a standalone button out predictably. `appearance` is the reverse — no
-     effect in Chrome, needed where native chrome outlives a zeroed border. */
+  /* A `<button>` styled as a link brings UA chrome. `:where()` keeps the reset at this class's specificity
+     so consumer rules win. No `font-weight` (`.quiet`/`.standalone` decide it) and no `display` on purpose.
+     `appearance` is a no-op in Chrome but needed where native chrome outlives a zeroed border. */
 }
 .link:where(button) {
   appearance: none;
@@ -1841,9 +1586,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 .link.quiet {
   color: var(--text-secondary);
-  /* Pull the underline down to match the muted text — the base rule sets
-     text-decoration-color to the link color, which would leave a bright
-     underline under grey text at rest. */
   text-decoration-color: var(--text-secondary);
   font-weight: var(--font-weight-medium);
 }
@@ -1858,6 +1600,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 .link.standalone {
   font-weight: var(--font-weight-bold);
+}
+.link {
+  /* Underlined on hover and keyboard focus only: for a link that stands on its own, such as a row action
+     or a list of links. A link inside running text keeps its underline, the cue that sets it apart from
+     the words around it without relying on colour. */
+}
+.link.plain {
+  text-decoration-line: none;
+}
+.link.plain:hover, .link.plain:focus-visible {
+  text-decoration-line: underline;
 }
 .link.xs {
   font-size: var(--font-size-xs);
@@ -2116,10 +1869,6 @@ html {
 }
 
 .ds-dropdown-panel {
-  /* Every --_* below resolves through a public --ds-* hook and falls back to a
-     semantic role or the panel radius role, so an untouched theme is unchanged.
-     Panel-level, not per-component: this one partial paints the rows for select,
-     autocomplete and multi-select alike. */
   --_option-selected-bg-color: var(--ds-option-selected-bg-color, var(--primary-subtitle));
   --_option-selected-label-color: var(--ds-option-selected-label-color, var(--primary-strong));
   --_option-selected-bg-color-hover: var(--ds-option-selected-bg-color-hover, var(--primary-muted));
@@ -2141,9 +1890,7 @@ html {
   --_dropdown-panel-border-color: var(--ds-dropdown-panel-border-color, var(--border-default));
   --_dropdown-panel-shadow: var(--ds-dropdown-panel-shadow, var(--shadow-popover));
   --_dropdown-panel-max-height: var(--ds-dropdown-panel-max-height, 320px);
-  /* minw/maxw only bite in `content` width mode, where the pane is auto-sized: in
-     `fill` the component pins the pane to the trigger width and there is nothing
-     left to bound. */
+  /* Min/max width only apply in `content` width mode; `fill` pins the pane to the trigger. */
   --_dropdown-panel-min-width: var(--ds-dropdown-panel-min-width, 0);
   --_dropdown-panel-max-width: var(--ds-dropdown-panel-max-width, none);
 }
@@ -2226,12 +1973,8 @@ html {
 .ds-dropdown-panel .option .option-label {
   flex: 1;
   min-width: 0;
-  /* `clip` with a margin, not `hidden`: an ellipsis box needs a non-`visible`
-     overflow, and where the line box is tighter than the glyph box that overflow
-     eats the glyph. Mulish measures 1.257em, so --line-height-flat (1) and -tight
-     (1.1) are both under it and shave EVERY label, not only the ones with
-     descenders. `text-overflow` reads any non-`visible` overflow, so the
-     ellipsis still applies under `clip`. */
+  /* `clip` with a margin, not `hidden`: where the line box is tighter than the glyph box (Mulish is 1.257em;
+     --line-height-flat and -tight are below it) `hidden` shaves every label. `text-overflow` applies under `clip` too. */
   overflow: clip;
   overflow-clip-margin: var(--space-1);
   text-overflow: ellipsis;
@@ -2313,57 +2056,58 @@ html {
   z-index: var(--layer-toast);
 }
 
-/* Opacity only — the calmest entrance. */
+.cdk-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 @keyframes ds-fade-in {
   from {
     opacity: 0;
   }
 }
-/* Grows into place from a micro-scale — reads --_ds-enter-scale, and the
-   surface's transform-origin decides what it grows out of. */
 @keyframes ds-scale-in {
   from {
     opacity: 0;
     transform: scale(var(--_ds-enter-scale, 0.96));
   }
 }
-/* Travels a short distance while fading — reads --_ds-enter-x / --_ds-enter-y. */
 @keyframes ds-slide-in {
   from {
     opacity: 0;
     transform: translate(var(--_ds-enter-x, 0), var(--_ds-enter-y, 0));
   }
 }
-/* Edge-anchored travel with NO fade, for panels that slide fully on-screen
-   (drawer, bottom-sheet) where a fade would read as a flicker. */
+/* No fade: for panels sliding fully on-screen (drawer, bottom-sheet), where a fade flickers. */
 @keyframes ds-slide-edge-in {
   from {
     transform: translate(var(--_ds-enter-x, 0), var(--_ds-enter-y, 0));
   }
 }
-/* ── Exits ───────────────────────────────────────────────────────────────── */
-/* Opacity only — the calmest exit, and what a scrim wants. */
 @keyframes ds-fade-out {
   to {
     opacity: 0;
   }
 }
-/* Shrinks away as it fades — the mirror of ds-scale-in. */
 @keyframes ds-scale-out {
   to {
     opacity: 0;
     transform: scale(var(--_ds-exit-scale, var(--_ds-enter-scale, 0.96)));
   }
 }
-/* Travels a short distance while fading — the mirror of ds-slide-in. */
 @keyframes ds-slide-out {
   to {
     opacity: 0;
     transform: translate(var(--_ds-exit-x, var(--_ds-enter-x, 0)), var(--_ds-exit-y, var(--_ds-enter-y, 0)));
   }
 }
-/* Edge-anchored travel with NO fade, for panels that slide fully off-screen
-   (drawer, bottom-sheet) where a fade would read as a flicker. */
 @keyframes ds-slide-edge-out {
   to {
     transform: translate(var(--_ds-exit-x, var(--_ds-enter-x, 0)), var(--_ds-exit-y, var(--_ds-enter-y, 0)));
@@ -2395,6 +2139,9 @@ html {
   --_ds-enter-y: 0px;
   --_overlay-enter-origin: center left;
 }
+.cdk-overlay-pane.ds-overlay-pane.ds-chart-tooltip-pane {
+  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-fade-in);
+}
 @media (prefers-reduced-motion: reduce) {
   .cdk-overlay-pane.ds-overlay-pane {
     --_overlay-enter-duration: 0ms;
@@ -2407,17 +2154,9 @@ html {
   transform-origin: var(--_overlay-enter-origin);
 }
 .cdk-overlay-pane.ds-overlay-pane {
-  /* Leave, on an AMBIENT DISMISS only — Escape, a press outside, a scroll —
-     which `disposeWithLeave` marks by adding `ds-leaving`. Picking an option
-     still closes instantly: a fade on a deliberate choice reads as the panel
-     lagging behind it, which is why the old unconditional leave was cut. Opacity
-     only, no travel: a dismissal has nowhere to travel to, and movement would
-     re-add exactly the lag this avoids. Reduced motion zeroes the duration at
-     `:root`; at 0s `animationend` is not reliably delivered, and `disposeWithLeave`'s
-     400 ms timer tears the pane down. */
+  /* Ambient dismiss only (Escape, outside press, scroll), marked by `disposeWithLeave` adding `ds-leaving`. Opacity only, no travel. */
 }
 .cdk-overlay-pane.ds-overlay-pane.ds-leaving {
-  /* A fading panel must not swallow the click aimed at what is behind it. */
   pointer-events: none;
 }
 .cdk-overlay-pane.ds-overlay-pane.ds-leaving > * {
@@ -2427,23 +2166,16 @@ html {
   animation-fill-mode: forwards;
 }
 
-/* Global, like the enter presets: a keyframe declared in a component stylesheet
-   is renamed by emulated encapsulation. */
+/* Global: emulated encapsulation renames keyframes declared in a component stylesheet. */
 @keyframes ds-overlay-out {
   to {
     opacity: 0;
   }
 }
-/* The pane is INERT, because it is drawn over the plot it describes: on a funnel or a tight
-   category axis the panel covers the neighbouring marks, and a pane that takes the pointer means
-   the mark underneath never sees it - the reader is over a new segment while the panel still names
-   the old one. Inert, the pointer reaches the mark and the panel follows it.
-
-   WCAG 1.4.13 still holds. Hoverable: moving onto the panel does not dismiss it, because the
-   pointer either stays on the mark under it or the grace period in `chart-active-mark.ts` carries
-   the gap. Dismissible: Escape. Persistent: the panel stays while the mark is hovered, and a press
-   pins it where the chart offers pinning - a pinned pane takes the pointer again so its text can be
-   selected. Drop the grace and the flicker returns. */
+/* Inert: the pane covers neighbouring marks, and a pointer-taking pane hides the mark underneath from the
+   pointer so the panel names a stale segment. WCAG 1.4.13 still holds: hoverable (the pointer stays on the
+   mark, or the hover grace period carries the gap), dismissible (Escape), persistent (stays while the mark
+   is hovered; a pinned pane takes the pointer again so its text can be selected). */
 .cdk-overlay-pane.ds-chart-tooltip-pane {
   pointer-events: none;
 }
@@ -2464,4 +2196,45 @@ html {
   --bp-lg: 1024px;
   --bp-xl: 1441px;
   --bp-2xl: 1536px;
+}
+
+:where(:focus-visible) {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  animation: ds-focus-ring-in var(--duration-fast) var(--ease-standard);
+}
+
+@keyframes ds-focus-ring-in {
+  from {
+    outline-color: transparent;
+  }
+}
+:root[data-focus=ring] {
+  --ds-field-focus-shadow: var(--focus-ring);
+  --ds-field-focus-shadow-error: var(--focus-ring-error);
+  --ds-field-focus-shadow-warning: 0 0 0 2px var(--focus-ring-inner), 0 0 0 4px var(--warning-text);
+  --ds-field-focus-shadow-success: var(--focus-ring-success);
+}
+
+:root[data-focus=edge] {
+  --focus-ring-offset: 0px;
+  --ds-field-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
+  --ds-field-focus-shadow-error: 0 0 0 var(--border-width-default) var(--error);
+  --ds-field-focus-shadow-warning: 0 0 0 var(--border-width-default) var(--warning-text);
+  --ds-field-focus-shadow-success: 0 0 0 var(--border-width-default) var(--success);
+}
+
+[data-focus=inset] {
+  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
+  --ds-field-focus-shadow: var(--focus-ring-inset);
+  --ds-field-focus-shadow-error: var(--focus-ring-inset-error);
+  --ds-field-focus-shadow-warning: inset 0 0 0 2px var(--focus-ring-inner), inset 0 0 0 4px var(--warning-text);
+  --ds-field-focus-shadow-success: inset 0 0 0 2px var(--focus-ring-inner), inset 0 0 0 4px var(--success);
+}
+
+@media (forced-colors: active) {
+  :where(:focus-visible) {
+    outline: var(--focus-ring-width) solid CanvasText;
+    outline-offset: var(--focus-ring-offset);
+  }
 }
