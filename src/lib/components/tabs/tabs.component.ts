@@ -61,7 +61,7 @@ export class TabsComponent {
   /** Visual style of the tab strip. */
   readonly variant = input<TabsVariant>('line');
 
-  /** When true, a tab's content is instantiated on first activation and kept alive. Default renders all panels eagerly. */
+  /** When true, a tab's content is instantiated on first activation and kept alive. Default renders only the active panel. */
   readonly lazy = input(false, { transform: booleanAttribute });
 
   /** When true, a horizontal strip scrolls inside its own box with previous/next arrows
