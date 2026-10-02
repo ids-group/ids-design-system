@@ -4537,6 +4537,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "How long a chart mark takes to fade or settle in. Defaults to --duration-slower (400ms)."
       },
       {
+        "name": "--ds-funnel-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-funnel-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": ""
+      },
+      {
         "name": "--ds-funnel-chart-stage-height",
         "value": "44px",
         "notes": ""
@@ -4550,16 +4560,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-funnel-chart-row-gap",
         "value": "var(--space-4)",
         "notes": ""
-      },
-      {
-        "name": "--ds-funnel-chart-focus-color",
-        "value": "var(--focus-ring-color)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-funnel-chart-focus-width",
-        "value": "var(--focus-ring-width)",
-        "notes": ""
       }
     ]
   },
@@ -4568,6 +4568,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".heatmap-chart",
     "description": "",
     "tokens": [
+      {
+        "name": "--ds-heatmap-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": "Focus-ring colour of an interactive cell (default --focus-ring-color)."
+      },
+      {
+        "name": "--ds-heatmap-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": "Focus-ring thickness of an interactive cell (default --focus-ring-width)."
+      },
       {
         "name": "--ds-heatmap-chart-cell-size",
         "value": "34px",
@@ -4597,16 +4607,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-heatmap-chart-missing-color",
         "value": "var(--surface-secondary)",
         "notes": "Fill of a cell whose value is null, which no step of the heat scale stands for (default --surface-secondary)."
-      },
-      {
-        "name": "--ds-heatmap-chart-focus-color",
-        "value": "var(--focus-ring-color)",
-        "notes": "Focus-ring colour of an interactive cell (default --focus-ring-color)."
-      },
-      {
-        "name": "--ds-heatmap-chart-focus-width",
-        "value": "var(--focus-ring-width)",
-        "notes": "Focus-ring thickness of an interactive cell (default --focus-ring-width)."
       }
     ]
   },
@@ -5862,6 +5862,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-pie-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": "Focus-ring colour for a slice (default --focus-ring-color). The ring is stroked onto the arc by the shared chart mixin, which reads --ds-chart-focus-ring-color, so nothing resolves this one."
+      },
+      {
+        "name": "--ds-pie-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": "Focus-ring thickness for a slice (default --focus-ring-width), with the same caveat: the stroked ring reads --focus-ring-width itself, so nothing resolves this one."
+      },
+      {
         "name": "--ds-pie-chart-size",
         "value": "180px",
         "notes": "Outer diameter of the ring, on both axes (default 180px). The hole is a fraction of it, set by [hole] on the component rather than by a token."
@@ -5885,16 +5895,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-pie-chart-swatch-size",
         "value": "10px",
         "notes": "Side of the round colour chip in a legend row, on both axes (default 10px)."
-      },
-      {
-        "name": "--ds-pie-chart-focus-color",
-        "value": "var(--focus-ring-color)",
-        "notes": "Focus-ring colour for a slice (default --focus-ring-color). The ring is stroked onto the arc by the shared chart mixin, which reads --ds-chart-focus-ring-color, so nothing resolves this one."
-      },
-      {
-        "name": "--ds-pie-chart-focus-width",
-        "value": "var(--focus-ring-width)",
-        "notes": "Focus-ring thickness for a slice (default --focus-ring-width), with the same caveat: the stroked ring reads --focus-ring-width itself, so nothing resolves this one."
       },
       {
         "name": "--ds-pie-chart-outline-width",
