@@ -5,17 +5,17 @@ import * as React from 'react';
  * Inline contextual message for a form or content area. `variant` (info | success | warning | error | neutral, default info) drives the tint, the default icon and the ARIA semantics — error/warning render `role="alert"`/assertive, the rest `role="status"`/polite.
  */
 export interface AlertProps {
-  /** Severity — drives colour, the default icon and the ARIA role/live. */
+  /** Severity: drives colour, the default icon and the ARIA role/live. */
   variant?: ('info' | 'success' | 'warning' | 'error' | 'neutral');
   /** Optional bold heading above the message. */
   title?: string;
   /** Show a close button that emits `closed`. */
   dismissible?: boolean;
   /** Override the variant's default icon. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
   /** Fires when the user dismisses the alert. */
   onClosed?: (value: void) => void;
-  /** Announce this alert to a screen reader when it appears. Unset follows `DS_CONFIG.alert.announce`, then `false` — see `ds-banner`'s `announce` for why, and prefer `ToastService` for anything transient. */
+  /** Announce this alert to a screen reader when it appears. Unset follows `DS_CONFIG.alert.announce`, then `false`. */
   announce?: boolean | null;
   /** Content for the `[actions]` slot. */
   actions?: React.ReactNode;

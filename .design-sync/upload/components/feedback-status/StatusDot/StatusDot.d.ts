@@ -5,9 +5,9 @@ import * as React from 'react';
  * Colour-coded dot atom (role="img"). The DS predefines NO statuses — `status` sets `data-status` on the host and app CSS wires `--ds-status-dot-color` per key; without one the dot is the muted neutral grey.
  */
 export interface StatusDotProps {
-  /** Consumer-defined status key; colours are wired via styles/status. */
+  /** Consumer-defined status key that colours the dot. */
   status?: unknown;
-  /** Override the colour-only status with a human label for assistive tech. */
+  /** Human label for assistive tech; colour alone carries the status otherwise. */
   ariaLabel?: string | null;
   /** Element content. */
   children?: React.ReactNode;

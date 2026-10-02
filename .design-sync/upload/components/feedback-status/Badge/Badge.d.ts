@@ -5,17 +5,17 @@ import * as React from 'react';
  * Status/count chip. Colour comes from the consumer's status wiring — the DS predefines NO statuses; an unset `status` renders the neutral surface. `data-status` is set on the host so app CSS can wire `--ds-badge-bg-color` / `--ds-badge-label-color` per key.
  */
 export interface BadgeProps {
-  /** Consumer-defined status key; colours are wired via styles/status. Unset → neutral. */
+  /** Consumer-defined status key that colours the badge. Unset is neutral. */
   status?: unknown;
-  /** Leading status dot, rendered only while `count` is unset — a count replaces the badge's whole content. Unset falls back to `DS_CONFIG.badge.withDot`, then `false`. */
+  /** Leading status dot, rendered only while `count` is unset (a count replaces the badge's whole content). Unset falls back to `DS_CONFIG.badge.withDot`, then `false`. */
   withDot?: boolean | null;
   /** Solid accent fill instead of the default subtle background. */
   solid?: boolean;
   /** Numeric count to display; overrides projected content when set. */
   count?: number | null;
-  /** Count is capped at this value, shown as `"max+"` beyond it. */
+  /** Counts above this show as `"max+"`. */
   max?: number;
-  /** Noun used in the count's accessible label — set for non-notification counts (cart, results, …). Unset falls back to `DS_INTL.badge.noun`. */
+  /** Noun used in the count's accessible label; set for non-notification counts (cart, results). Unset falls back to `DS_INTL.badge.noun`. */
   countLabel?: string | null;
   /** Element content. */
   children?: React.ReactNode;

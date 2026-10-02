@@ -5,7 +5,7 @@ import * as React from 'react';
  * Term/detail pairs — a flex column of `DescriptionItem` rows for read-only record details (shipment metadata, account fields).
  */
 export interface DescriptionListProps {
-  /** horizontal = label column + value, every item stacking once a value would get less than --ds-description-list-value-min-width; stacked = label above value at every width. */
+  /** `horizontal`: label column + value, each item stacking once its value would get less than --ds-description-list-value-min-width. `stacked`: label above value at every width. */
   orientation?: ('horizontal' | 'stacked');
   /** Element content. */
   children?: React.ReactNode;

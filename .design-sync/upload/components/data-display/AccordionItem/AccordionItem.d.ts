@@ -10,7 +10,7 @@ export interface AccordionItemProps {
   /** Open state, two-way bound. */
   expanded?: boolean;
   onExpandedChange?: (value: boolean) => void;
-  /** Disables the toggle button; state stays as-is. */
+  /** Disables the toggle; `expanded` is left as-is. */
   disabled?: boolean;
   /** Content for the `[badge]` slot. */
   badge?: React.ReactNode;

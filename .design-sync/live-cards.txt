@@ -36,7 +36,7 @@ components/forms-inputs/MultiSelect/Multi Select - Compact trigger.html
 components/forms-inputs/MultiSelect/Multi Select - Custom option and chip content.html
 components/forms-inputs/MultiSelect/Multi Select - Labels in the trigger.html
 components/forms-inputs/MultiSelect/Multi Select - Overflow collapse.html
-components/forms-inputs/Select/Select - Custom dropdown - ds-select.html
+components/forms-inputs/Select/Select - Open panel.html
 components/forms-inputs/Select/Select - Per-option icons.html
 components/forms-inputs/Select/Select - Sizes.html
 components/forms-inputs/Select/Select - States showcase.html
@@ -45,6 +45,8 @@ components/forms-inputs/TimePicker/Time Picker - Range.html
 components/forms-inputs/TimePicker/Time Picker - Single.html
 components/navigation/AppLayout/App Layout - Content-span topbar.html
 components/navigation/AppLayout/App Layout - Full-span topbar.html
+components/navigation/Breadcrumbs/Breadcrumbs - Default.html
+components/navigation/Breadcrumbs/Breadcrumbs - Long trail - ellipsis collapse.html
 components/navigation/Menu/Menu - Standing description.html
 components/navigation/Menu/Menu - Submenus.html
 components/navigation/MenuDivider/Menu Divider - Dividers.html
@@ -59,6 +61,7 @@ components/navigation/Sidenav/Sidenav - Default.html
 components/navigation/SidenavFooter/Sidenav Footer - The rail footer on its own.html
 components/navigation/SidenavGroup/Sidenav Group - Expandable groups.html
 components/navigation/SidenavItem/Sidenav Item - Item states showcase.html
+components/navigation/Topbar/Topbar - With breadcrumb.html
 components/overlays/BottomSheet/Bottom Sheet - Open sheet.html
 components/overlays/Drawer/Drawer - Open drawer.html
 components/overlays/Modal/Modal - Sizes.html
@@ -70,6 +73,7 @@ components/overlays/ModalCard/Modal Card - With form.html
 components/overlays/ModalConfirm/Modal Confirm - Confirmation dialog.html
 components/overlays/Popover/Popover - Static specimen.html
 components/page-structure/FilterBar/Filter Bar - Sizing the +N trigger.html
+components/page-structure/PageHeader/Page Header - With breadcrumb above title.html
 guides/patterns/Filter bar/Filter bar - Inline row.html
 guides/patterns/Filter bar/Filter bar - Stacked variant.html
 guides/patterns/Filter bar/Filter bar - Wired to a table.html

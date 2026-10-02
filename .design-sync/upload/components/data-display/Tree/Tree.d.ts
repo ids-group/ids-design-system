@@ -7,10 +7,10 @@ import * as React from 'react';
 export interface TreeProps {
   /** Root-level nodes; nest via `children`. */
   nodes?: unknown;
-  /** Two-way set of currently expanded node ids. */
+  /** Ids of the expanded nodes. */
   expandedIds?: unknown;
   onExpandedIdsChange?: (value: unknown) => void;
-  /** Two-way id of the currently selected node. */
+  /** Id of the selected node. */
   selectedId?: string | null;
   onSelectedIdChange?: (value: string | null) => void;
   /** Fires with the node when a row is selected (click or Enter/Space). */

@@ -11,7 +11,7 @@ export interface SidenavFooterProps {
   userRole?: string;
   /** Show the unread dot on the Alerts row. */
   alerts?: boolean;
-  /** Mirrors the rail's collapsed state — labels hide, the avatar + icons stay. */
+  /** Mirrors the rail's collapsed state: labels hide, the avatar + icons stay. */
   collapsed?: boolean;
   /** When set, the Search row opens a live results popover; unset keeps it inert. */
   searchProvider?: unknown;
@@ -19,7 +19,7 @@ export interface SidenavFooterProps {
   alertItems?: unknown;
   /** Route for the account menu's "Your profile"; empty = the item is a no-op. */
   profileRoute?: string;
-  /** The collapse control was activated. The footer does not collapse itself — `ds-app-layout` owns the rail state, so the host relays this. */
+  /** The collapse control was activated; the footer does not collapse itself. */
   onCollapseToggled?: (value: void) => void;
   /** Emitted when the Alerts popover is opened, so the layout can mark-all-read. */
   onAlertsOpened?: (value: void) => void;

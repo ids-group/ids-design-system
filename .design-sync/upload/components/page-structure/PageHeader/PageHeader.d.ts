@@ -15,7 +15,7 @@ export interface PageHeaderProps {
   compact?: boolean;
   /** Shows a rule under the whole header. */
   divider?: boolean;
-  /** Shows a rule under the meta row only. */
+  /** Draws a rule above the meta row. */
   metaDivider?: boolean;
   /** Content for the `[breadcrumbs]` slot. */
   breadcrumbs?: React.ReactNode;

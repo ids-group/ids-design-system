@@ -1,5 +1,5 @@
 # Stack - stack
 
-Arranges children in a vertical column with consistent gap. Use gap to control spacing and align for cross-axis alignment.
+A vertical column. gap takes none · xs · sm · md · lg · xl; align takes start · center · end · stretch. Unset gap reads --ds-stack-gap.
 
 Full API: `Stack.d.ts`. How to use the component anywhere: `Stack.prompt.md`.

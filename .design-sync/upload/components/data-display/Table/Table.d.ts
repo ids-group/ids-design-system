@@ -7,61 +7,61 @@ import * as React from 'react';
 export interface TableProps {
   /** Rows to render. */
   data?: unknown;
-  /** Row identity used for tracking, selection, expansion and the active-row highlight. Defaults to `row.id`; pass an accessor for display-only data with no natural key (`[rowId]="row => row.channel + row.sentAt"`), which beats mapping synthetic ids into the data just to satisfy the table. */
+  /** Row identity for tracking, selection, expansion and the active-row highlight. Defaults to `row.id`; pass an accessor (`[rowId]="row => row.channel + row.sentAt"`) for data with no key. */
   rowId?: unknown;
   /** Column definitions driving headers, cells and sorting. */
   columns?: unknown;
   /** Adds a checkbox column for row/select-all selection. */
   selectable?: boolean;
-  /** Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding="none">` don't double-border. Unset falls back to `DS_CONFIG.table.bordered`, then `false`. */
+  /** Opt-in outer border + radius, off so tables flush in a `<ds-card padding="none">` don't double-border. Unset falls back to `DS_CONFIG.table.bordered`, then `false`. */
   bordered?: boolean | null;
-  /** false — no loading state. `true` — the table picks: skeleton rows while it has nothing to show, overlay once rows are on screen. Prefer it; the right choice is a function of the row count, which only the table holds. 'skeleton' — first-load placeholder; rows are replaced with shimmer rows. 'overlay' — re-fetch indicator; existing rows stay visible behind a translucent overlay with a centred spinner. Pin either one only to override the rule deliberately. */
+  /** `false`: no loading state. `true`: the table picks, skeleton rows while it has nothing to show, overlay once rows are on screen. Prefer it. `'skeleton'`: first-load shimmer rows. `'overlay'`: re-fetch spinner over the existing rows. */
   loading?: boolean | 'skeleton' | 'overlay';
   /** Keeps the header row pinned while the body scrolls. */
   stickyHeader?: boolean;
-  /** Caps the scroll body height (any CSS length, e.g. `'320px'`) and scrolls it vertically — pair with `stickyHeader` for a self-contained scroll region. `null` (default) lets the table grow to its content. */
+  /** Caps the scroll body height (any CSS length) and scrolls it vertically; pair with `stickyHeader`. `null` (default) grows to content. */
   maxHeight?: string | null;
-  /** Row density — `'compact'` tightens cell padding for spreadsheet-dense lists. */
+  /** `'compact'` tightens cell padding. */
   density?: 'default' | 'compact';
-  /** Tints odd rows for easier row-tracking across wide tables. */
+  /** Tints odd rows. */
   zebra?: boolean;
-  /** Animate the body height when the row set changes (page/filter) instead of snapping. Opt-in; instant under reduced-motion (the DS zeroes the token). */
+  /** Animate the body height when the row set changes. Instant under reduced motion. */
   animateHeight?: boolean;
   /** Two-way set of currently selected row ids. */
   selectedIds?: unknown;
   onSelectedIdsChange?: (value: unknown) => void;
-  /** Column key currently sorted by; `null` when unsorted. Two-way bindable (`[(sortKey)]`) or one-way from your own state with `(sortChange)`. */
+  /** Column key currently sorted by; `null` when unsorted. Bind `[(sortKey)]` or use `(sortChange)`. */
   sortKey?: string | null;
-  /** Emitted for `[(sortKey)]`. `sortChange` carries the same click with both halves at once, which is usually the one to listen to. */
+  /** Emitted for `[(sortKey)]`. `sortChange` carries both halves at once. */
   onSortKeyChange?: (value: string | null) => void;
   /** Sort direction for `sortKey`. */
   sortDirection?: ('asc' | 'desc' | null);
   /** Emitted for `[(sortDirection)]`. */
   onSortDirectionChange?: (value: ('asc' | 'desc' | null)) => void;
-  /** Sort states a column cycles through on click. Default includes null (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g. server-paged lists). */
+  /** Sort states a column cycles through on click. Pass `['asc','desc']` to forbid unsorted. */
   sortingOrder?: ('asc' | 'desc' | null)[];
-  /** Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing. Unset falls back to `DS_INTL.table.sorted`. */
+  /** Wording for the sort announcement: receives the column label and direction; return `''` to say nothing. Unset falls back to `DS_INTL.table.sorted`. */
   sortAnnouncement?: unknown;
-  /** Wording for the row-range announcement, so it can be translated. Receives the 1-based first and last row on screen and the total. A paged table with no rows announces its empty state's text instead, and calls this with `(0, 0, 0)` only when that state has none; return an empty string to say nothing. Unset falls back to `DS_INTL.pagination.range`. */
+  /** Wording for the row-range announcement: receives the 1-based first and last row on screen and the total; return `''` to say nothing. A paged table with no rows announces its empty state's text instead, calling this with `(0, 0, 0)` only when that state has none. Unset falls back to `DS_INTL.pagination.range`. */
   rangeAnnouncement?: unknown;
   /** Number of shimmer rows rendered while `loading` is `'skeleton'`. */
   skeletonRows?: number;
-  /** Accessible name for the table (rendered as a visually-hidden caption). Without it, screen-reader users get an unlabelled table. */
+  /** Accessible name, rendered as a visually-hidden caption. */
   caption?: string;
-  /** When true, each row becomes a keyboard-operable control (tabindex, Enter/Space → rowClicked) with an accessible name from the first column. Off by default so non-navigating tables don't advertise a false click affordance. Also the gate for the hover/pressed row tints. */
+  /** Each row becomes a keyboard-operable control (Enter/Space emit `rowClicked`) named from the first column. Also gates the hover/pressed row tints. */
   rowInteractive?: boolean;
-  /** Id of the row rendered as current (highlight + `aria-current`) — e.g. the row whose detail drawer or side panel is open. `null` — none. */
+  /** Id of the row rendered as current (highlight + `aria-current`), e.g. the one whose detail panel is open. `null`: none. */
   activeRowId?: string | null;
-  /** Client-side row filter — case-insensitive substring match against cell text. Columns with `filterable: true` restrict the match set (none marked — every column matches, hidden ones included). '' — no filtering. */
+  /** Client-side substring filter (case-insensitive) on cell text. `filterable` columns restrict the match; with none marked every column matches, hidden ones included. */
   filterQuery?: string;
-  /** Two-way per-column set-filters: column key → the still-checked values. A column absent from the map (or with every value checked) is unfiltered. */
+  /** Two-way per-column set-filters: column key to the still-checked values. Absent or full: unfiltered. */
   columnFilters?: unknown;
   onColumnFiltersChange?: (value: unknown) => void;
-  /** Round-trip whatever the column features persist (order, widths, hidden keys) through `localStorage`, so a reader's column layout survives a reload. Needs `storageKey` — without one there is nothing to key a screen by, and two tables would overwrite each other. Off by default. */
+  /** Persist the column layout (order, widths, hidden keys) in `localStorage`. Needs `storageKey`. */
   persistLayout?: boolean;
-  /** Screen id the persisted layout is stored under. Pick something stable per table, not per route instance. */
+  /** Stable per-table id the persisted layout is stored under. */
   storageKey?: string;
-  /** Keeps the horizontal scrollbar reachable on tall tables: the scroll container's native bar is hidden and a proxy stuck to the bottom of the nearest scroll ancestor mirrors it both ways. Off by default. Unset falls back to `DS_CONFIG.table.stickyScrollbar`, then `false`. */
+  /** Keeps the horizontal scrollbar reachable on tall tables: the native bar is hidden and a proxy stuck to the bottom of the nearest scroll ancestor mirrors it. Unset falls back to `DS_CONFIG.table.stickyScrollbar`, then `false`. */
   stickyScrollbar?: boolean | null;
   /** Rows per page. `null` (default) disables pagination — all rows render. */
   pageSize?: number | null;
@@ -71,64 +71,64 @@ export interface TableProps {
   onPageChange?: (value: number) => void;
   /** Selectable page-size choices shown in the pagination control. */
   pageSizeOptions?: number[];
-  /** Shows the page-size picker in the footer pager. Set false for a table whose page size is fixed — the standalone `ds-pagination` has always taken this. */
+  /** Shows the page-size picker in the footer pager. */
   showPageSize?: boolean;
   /** Shows the "N of M" range label in the footer pager. */
   showLabel?: boolean;
-  /** Control height of the footer pager's buttons and picker. Unset falls back to `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `'sm'`. */
+  /** Control height of the footer pager. Unset falls back to `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `'sm'`. */
   paginationSize?: ('sm' | 'md' | 'lg') | null;
-  /** `'spread'` gives the footer pager the table's full width, label at one edge and controls at the other. Unset falls back to `DS_CONFIG.pagination.layout`, then `'grouped'`. */
+  /** `'spread'` stretches the footer pager to the table's full width. Unset falls back to `DS_CONFIG.pagination.layout`, then `'grouped'`. */
   paginationLayout?: ('grouped' | 'spread') | null;
-  /** Server-side total row count. `null` (default) = client paging: the table slices `data()` itself and the pager counts the rows in hand. When set, the host has already sliced to one page — the pager uses this count and the table renders `data()` as-is (no internal slice). */
+  /** Server-side total row count. `null` (default): client paging, the table slices `data()`. When set, the host has sliced to one page and `data()` renders as-is. */
   total?: number | null;
-  /** Scroll the table into view on a page change (opt-in) — keeps a bottom pager from leaving the viewport on the previous page's last rows. */
+  /** Scroll the table into view on a page change. */
   scrollToTopOnPageChange?: boolean;
-  /** Who sorts — see `TableSortMode`. Unset resolves to `'server'`: the table emits `(sortChange)` and reorders nothing, which is what a paged table needs. Declare `'client'` when the table holds every row, or `'none'` to drop the affordance entirely. */
+  /** Who sorts, see `TableSortMode`. Unset resolves to `'server'`: the table emits `(sortChange)` and reorders nothing. */
   sortMode?: ('client' | 'server' | 'none') | null;
-  /** Who filters — see `TableFilterMode`. Unset resolves to `'server'`: the table tracks the selection in `columnFilters` for the host to turn into a request, and runs no local pass. Declare `'client'` when the table holds every row and should filter them itself. */
+  /** Who filters, see `TableFilterMode`. Unset resolves to `'server'`: the table tracks `columnFilters` and runs no local pass. */
   filterMode?: ('client' | 'server' | 'none') | null;
-  /** The full value domain per column key, for a header filter the table cannot derive itself. Without it the checklist is built from the rows in hand, which on a server-paged table offers only the values that happen to be on the current page. */
+  /** Full value domain per column key for a header filter the table cannot derive; without it the checklist offers only the values on the current page. */
   columnFilterOptions?: unknown;
-  /** Where the sticky horizontal scrollbar comes to rest, as any CSS length. Unset, the table measures its scroll container's bottom padding and cancels it, so the bar sits on the edge the reader can see. Set it for a scrollport whose reachable edge is not its padding edge. Falls back to `DS_CONFIG.table.stickyScrollbarOffset`; `--ds-table-sticky-scrollbar-offset` still wins over both, for a rule that has to reach one table from a stylesheet. */
+  /** Where the sticky horizontal scrollbar rests, as a CSS length. Unset, the table cancels its scroll container's bottom padding. Falls back to `DS_CONFIG.table.stickyScrollbarOffset`; `--ds-table-sticky-scrollbar-offset` wins over both. */
   stickyScrollbarOffset?: string | null;
   /** Pin the first data column (and the select column) on horizontal scroll. */
   stickyFirstColumn?: boolean;
-  /** Render only the rows in view, padding the rest with two spacer rows. Opt-in, and it needs `maxHeight` — without a bounded scroller there is no viewport to window against, so nothing is virtualized (dev-warned). Every row must be the same height, which is `virtualRowSize`: the arithmetic that decides what is in view has no other way to know where a row starts. So virtual mode forces `table-layout: fixed` and single-line cells, and the expansion panel is suppressed — a row that can grow breaks the maths. */
+  /** Render only the rows in view, padding the rest with spacer rows. Needs `maxHeight` (dev-warned, nothing virtualizes without a bounded scroller). Every row must be `virtualRowSize` tall, so virtual mode forces `table-layout: fixed`, single-line cells and no expansion panel. */
   virtualScroll?: boolean;
-  /** Row height in px in virtual mode. Must match what the rows actually measure, so it drives the CSS height rather than merely describing it. */
+  /** Row height in px in virtual mode. Drives the CSS height, so it must match the rendered rows. */
   virtualRowSize?: number;
-  /** Fetch rows as they scroll into view instead of receiving them all. `data` becomes a SPARSE array `total` long: put each fetched row at its absolute index and leave the rest empty. Every gap inside the window renders a skeleton row, and `(lazyLoad)` asks for the range covering it. Needs `virtualScroll` — without a window there is nothing to load lazily AGAINST — and `total`, which is what the scrollbar is sized from. */
+  /** Fetch rows as they scroll into view. `data` becomes a SPARSE array `total` long: put each fetched row at its absolute index; every gap in the window renders a skeleton row and `(lazyLoad)` asks for its range. Needs `virtualScroll` and `total`. */
   lazy?: boolean;
-  /** The range now on screen that `data` has gaps in — fetch it and write the rows back at their absolute indices. Re-emits only when the range moves. */
+  /** The on-screen range with gaps in `data`; write fetched rows back at their absolute indices. Re-emits only when the range moves. */
   onLazyLoad?: (value: unknown) => void;
   /** Fires with the row on click (or Enter/Space when `rowInteractive`). */
   onRowClicked?: (value: unknown) => void;
   /** Fires whenever sort key/direction changes, in every `sortMode` but `'none'`. */
   onSortChange?: (value: unknown) => void;
-  /** Row-action menu items rendered as a trailing kebab (⋮) column. Empty (default) — no column. Menu clicks never trigger `rowClicked`. */
+  /** Row-action items rendered as a trailing kebab column; empty: no column. Menu clicks never trigger `rowClicked`. */
   rowActions?: unknown;
   /** Fires with the chosen action and its row when a kebab menu item is selected. */
   onRowActionSelected?: (value: unknown) => void;
   /** Fires when an `editable` cell is committed (Enter or blur) with the new value. */
   onCellEdited?: (value: unknown) => void;
-  /** Cell templates supplied as an explicit map instead of (or in addition to) projected `dsCellTemplate` directives. Lets a wrapper component collect the directives itself and pass them down, since content projected through a wrapper's `<ng-content>` is not seen by this component's content query. Entries here override projected ones. */
+  /** Cell templates as an explicit map, for wrappers whose `<ng-content>` hides projected `dsCellTemplate` directives from this component's content query. Overrides projected ones. */
   cellTemplateMap?: unknown;
-  /** Empty-state template, as an alternative to the `[empty]` content slot — again for wrappers that can't rely on slot re-projection. */
+  /** Empty-state template, alternative to the `[empty]` slot for wrappers that cannot re-project. */
   emptyTemplate?: unknown;
-  /** When true, each row renders a leading chevron button that toggles an inline expansion panel below it. */
+  /** Each row renders a leading chevron that toggles an inline expansion panel. */
   expandableRows?: boolean;
   /** Two-way set of currently expanded row ids. */
   expandedIds?: unknown;
   onExpandedIdsChange?: (value: unknown) => void;
-  /** `'single'` collapses the open row when another expander is clicked. Enforced on interaction only: a set seeded with several ids is left alone (and warned about in dev) rather than silently rewritten under the host. */
+  /** `'single'` collapses the open row when another expands. Enforced on interaction only: a set seeded with several ids is left alone (dev-warned). */
   expandMode?: ('multiple' | 'single');
-  /** Renders an expand-all/collapse-all chevron in the expander column header, page-scoped when paginating, like select-all. Suppressed under `expandMode="single"`, which it would contradict. */
+  /** Expand-all/collapse-all chevron in the expander header, page-scoped when paginating. Suppressed under `expandMode="single"`. */
   expandAllToggle?: boolean;
-  /** Fires with the row when an expander opens it — including each row opened by expand-all, so a host lazy-loading panel content sees every one. */
+  /** Fires with the row when an expander opens it, including each row opened by expand-all. */
   onRowExpanded?: (value: unknown) => void;
-  /** Fires with the row when an expander closes it, the row auto-closed by `expandMode="single"` included. It carries a row, so it cannot speak for an id whose row is no longer in `data()` — under server-side paging that id is cleared silently. `expandedIds` is the complete signal; this one is the convenient one. */
+  /** Fires with the row when an expander closes it, including the row auto-closed by `expandMode="single"`. An id whose row left `data()` (server paging) is cleared silently, so `expandedIds` is the complete signal. */
   onRowCollapsed?: (value: unknown) => void;
-  /** Template rendered inside an expanded row's panel. Context: `$implicit` = row, `row` = row. */
+  /** Template rendered inside an expanded row's panel; `$implicit` and `row` are the row. */
   rowExpandTemplate?: unknown;
   /** Content for the `[toolbar]` slot. */
   toolbar?: React.ReactNode;

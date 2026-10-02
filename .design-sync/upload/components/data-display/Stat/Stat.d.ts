@@ -7,7 +7,7 @@ import * as React from 'react';
 export interface StatProps {
   /** Metric name shown above the value. */
   label?: string;
-  /** Headline metric; `unit` is appended directly after it. Optional because the value can be PROJECTED instead — `[dsStatValue]` takes a badge, a status dot, anything a tile needs where a number would go. The input is the fallback, the same shape `[delta]` already has. Namespaced, unlike `[delta]`: twenty components in this library have a `value` input, so a bare `value` attribute used to slot one of them in would also set that input to the empty string. Takes `null` so `[value]="count | number"` typechecks: Angular's own `number`/`date`/`percent` pipes are typed `string | null`, and without the null the idiomatic form fails `strictTemplates` and pushes consumers to `toLocaleString()` in the template — which hardcodes a locale instead of reading LOCALE_ID. Renders as nothing, like the empty default. */
+  /** Headline metric; `unit` is appended directly after it. Optional: `[dsStatValue]` projects any content in its place. Accepts `null` so pipes returning `string | null` typecheck; renders as nothing. */
   value?: string | number | null;
   /** Change amount; sign drives the up/down arrow and color. */
   delta?: number | null;

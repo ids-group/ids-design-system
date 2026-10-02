@@ -1,5 +1,5 @@
 # Time picker - single
 
-Click the trigger, pick an hour and a minute; the value updates live. label renders the same label row a ds-date-picker uses, so date + time in one form row line up without a hand-rolled label above the trigger.
+The value updates as you pick. label renders the same label row as ds-date-picker, so date and time line up in one form row.
 
 Full API: `TimePicker.d.ts`. How to use the component anywhere: `TimePicker.prompt.md`.

@@ -9,11 +9,11 @@ export interface PasswordRulesProps {
   value?: string;
   /** The rule set, in the order it should read. */
   rules?: unknown;
-  /** Whether an unmet rule may read as FAILED. Bind it to "the user has tried to submit": before that an unmet rule is merely pending, because marking a half-typed password with errors scolds someone who is still typing. */
+  /** Whether an unmet rule may read as failed; bind it to "the user has tried to submit", before that it is only pending. */
   showUnmet?: boolean;
-  /** Lay the rows out in two columns — for a checklist beside a wide form. */
+  /** Lays the rows out in two columns, for a checklist beside a wide form. */
   columns?: 1 | 2;
-  /** Id put on the rule list, for the field's `aria-describedby`. Defaults to a generated one; set it explicitly and both sides can name the same string, which avoids threading a template ref between two siblings. */
+  /** Id on the rule list, for the field's `aria-describedby`. Defaults to a generated one. */
   listId?: string;
   /** Element content. */
   children?: React.ReactNode;

@@ -5,37 +5,45 @@ import * as React from 'react';
  * A running total, bar by bar: what a figure started at, what moved it, and what it ended at. The one variant in the chart family that genuinely cannot be a mode on another — it needs an accumulating level, bars pinned to zero for the totals, and its own three-colour semantic, all at once.
  */
 export interface WaterfallChartProps {
-  /** The bars in the order they are read, which is the order they happened in - a waterfall is never sorted, because the sequence is the meaning. */
+  /** `'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`. */
+  frame?: ('auto' | 'none') | null;
+  /** Visible title above the plot, reused as the annex table's caption. */
+  caption?: string | null;
+  /** Accessible name. Generated from the data when omitted. */
+  summary?: string | null;
+  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize. */
+  loading?: boolean;
+  /** Shows `errorText` in place of the plot. Separate from `loading` and from empty data. */
+  error?: boolean;
+  /** Shown when there is no data. Unset falls back to `DS_INTL.chart.empty`. */
+  emptyText?: string | null;
+  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
+  errorText?: string | null;
+  /** Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`. */
+  valueFormat?: unknown;
+  /** Turns on the click affordance: pointer cursor and hover tint. The click output fires whether or not this is set. */
+  interactive?: boolean;
+  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings. */
+  tooltipSwatches?: boolean | null;
+  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
+  tooltipLingerMs?: number | null;
+  /** Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way. */
+  pinOnClick?: boolean | null;
+  /** The bars in reading order; never sorted. */
   data?: unknown;
   /** Prints each bar's own reading above it, with its sign. */
   showValues?: boolean;
-  /** The dashed rule chaining one bar to the next at the level they share. Without it the bars read as separate columns rather than as one running total. */
+  /** The dashed rule chaining one bar to the next. */
   showConnectors?: boolean;
-  /** Printed above the plot as the visible title, and reused as the annex table's caption. */
-  caption?: string | null;
-  /** The accessible name. Generated from the steps when omitted, naming each one's direction in words and the figure the chain ends at. */
-  summary?: string | null;
-  /** A hint, not a count. Ticks snap to a round step. */
+  /** Dims every OTHER bar while one is hovered or focused. */
+  dimOthers?: boolean;
+  /** Whether a hovered or focused bar opens a tooltip. `'axis'` is not offered: each bar is its own category. */
+  tooltip?: ('item' | 'none');
+  /** How many value-axis ticks to aim for; ticks snap to a round step. */
   tickCount?: number;
-  /** Turns on the click affordance and the keyboard route. `barClicked` fires whether or not this is set. */
-  interactive?: boolean;
-  /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`. */
-  frame?: ('auto' | 'none') | null;
-  /** The annex table under the plot. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. It prints each step's direction, its own reading and the running total. */
+  /** The annex table under the plot: each step's direction, reading and running total. Unset falls back to `DS_CONFIG.chart.dataTable`. */
   dataTable?: unknown;
-  /** Skeleton bars at the real count, so the page does not resize when the data lands. */
-  loading?: boolean;
-  /** Separate from an empty `data`: "the request failed" and "there is nothing to show" read the same and mean opposite things. */
-  error?: boolean;
-  /** Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`. */
-  emptyText?: string | null;
-  /** Shown in place of the plot while `error` is set. Unset falls back to `DS_INTL.chart.error`. */
-  errorText?: string | null;
-  /** Formats every value the chart prints - the axis ticks, the bar labels and the annex table. The sign a delta carries is added around it, so a formatter never has to know about one. */
-  valueFormat?: unknown;
-  /** Holds the clicked step and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `barClicked` fires either way - pinning is a state, not a handler. */
-  pinOnClick?: boolean | null;
-  /** Milliseconds between one step's entrance and the next; a long waterfall narrows the step to arrive within 260ms. `0` is no stagger. */
+  /** Milliseconds between one step's entrance and the next; the step narrows to finish within 260ms. `0` turns it off. */
   staggerMs?: number;
   /** The clicked datum, as it was given. Fires on click and on Enter or Space. */
   onBarClicked?: (value: unknown) => void;

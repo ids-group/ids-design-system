@@ -5,18 +5,18 @@ import * as React from 'react';
  * Fixed-frame application shell — port of `ds-app-layout`. Pins itself to the viewport (`100dvh`, `overflow: hidden`); only the content region scrolls, so the sidenav rail and topbar stay put.
  */
 export interface AppLayoutProps {
-  /** `'content'` (default): the rail spans the full viewport height on the left and the topbar sits above the content column only. `'full'`: the topbar spans the full width and the rail + content sit below it. */
+  /** `'content'` (default): rail spans the full height, topbar sits above the content only. `'full'`: topbar spans the full width. */
   topbarSpan?: 'content' | 'full';
-  /** Whether the rail is open as an overlay. Only meaningful below the `lg` breakpoint — above it the rail is always in the layout and this is ignored. Two-way, so a burger in your topbar can drive it. */
+  /** Whether the rail is open as an overlay. Ignored at and above the `lg` breakpoint. */
   railOpen?: boolean;
   onRailOpenChange?: (value: boolean) => void;
   /** Accessible name for the rail while it is a modal overlay. Unset falls back to `DS_INTL.appLayout.railLabel`. */
   railLabel?: string | null;
-  /** Remember the content scroll per path and restore it on the way BACK. Off by default: a layout that silently moved the scroll would surprise every existing consumer. Only a history traversal restores — following a link into a screen still lands at the top — plus a host that pushes its own "back to list" and says so with `state: { dsRestoreScroll: true }`, and the first navigation after a reload. */
+  /** Remember the content scroll per path and restore it on the way BACK. Off by default. Restores on a history traversal, on `state: { dsRestoreScroll: true }`, and on the first navigation after a reload. */
   restoreScroll?: boolean;
-  /** How long to wait for the restored screen's content to grow tall enough before landing as close as it allows. Only meaningful with `restoreScroll`. */
+  /** Milliseconds to wait for the restored content to grow tall enough. Only with `restoreScroll`. */
   restoreScrollTimeout?: number;
-  /** When the content scroll resets to the top. `'path'` (default) is what the layout has always done; `'always'` also resets on a query- or fragment-only navigation, which is what a server-paged list wants; `'never'` hands the decision to the screen, which can still call `AppLayoutScrollService.scrollToTop()`. It exists because the layout owning the scroll CONTAINER also meant it owned the POLICY: a screen could add a reset but had no way to suppress one. */
+  /** When the content scroll resets to the top: on path change (`'path'`), also on query/fragment-only navigation (`'always'`), or never (`'never'`). */
   scrollReset?: ('path' | 'never' | 'always');
   /** Content for the `[sidenav]` slot. */
   sidenav?: React.ReactNode;

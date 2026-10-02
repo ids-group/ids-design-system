@@ -7,19 +7,19 @@ import * as React from 'react';
 export interface SplitButtonProps {
   /** Label text on the main button. */
   label?: string;
-  /** Visual style — primary (solid) or outline. */
+  /** Visual style - primary (solid) or outline. */
   variant?: ('primary' | 'outline');
-  /** Icon shown on the main button, before the label. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
-  /** Disables both the main button and the dropdown trigger. */
+  /** Icon before the label on the main button. */
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  /** Disables the main button and the dropdown trigger. */
   disabled?: boolean;
   /** Items listed in the dropdown menu. Empty disables the chevron. */
   menuItems?: unknown;
-  /** Accessible name for the dropdown trigger. Unset falls back to `DS_INTL.splitButton.menuLabel`. */
+  /** Accessible name of the dropdown trigger. Unset falls back to `DS_INTL.splitButton.menuLabel`. */
   menuLabel?: string | null;
-  /** Fires when the main button (not the dropdown trigger) is clicked. */
+  /** Fires on a click of the main button, not the dropdown trigger. */
   onPressed?: (value: MouseEvent) => void;
-  /** The menu half only — a press on the main button is `pressed`, never this. */
+  /** Fires for a menu item only; the main button emits `pressed`. */
   onItemSelected?: (value: unknown) => void;
   /** Element content. */
   children?: React.ReactNode;

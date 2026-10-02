@@ -9,9 +9,9 @@ export interface ChartDataTableProps {
   rows?: unknown;
   caption?: string | null;
   open?: boolean;
-  /** Renders each row's first cell as a `<th scope="row">`, for a matrix whose rows are named rather than numbered. */
+  /** First cell of each row as a row header. */
   rowHeader?: boolean;
-  /** Fires with the disclosure's state, so a chart with thousands of readings can build its rows only while they are on screen. */
+  /** Fires with the disclosure's state. */
   onToggled?: (value: boolean) => void;
   /** Element content. */
   children?: React.ReactNode;

@@ -5,42 +5,46 @@ import * as React from 'react';
  * Two continuous quantities against each other — weight against carriage cost, distance against time, volume against conversion. None of the other charts draws this: they all put categories on one axis. It is also the only one whose mark count the CALLER decides, so it is the only one that thins its own data before drawing.
  */
 export interface ScatterChartProps {
-  /** One entry per series, each carrying its own readings. Both scales are continuous, so a point holds its position on each rather than an index into a list of categories. */
+  /** `'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`. */
+  frame?: ('auto' | 'none') | null;
+  /** Visible title above the plot, reused as the annex table's caption. */
+  caption?: string | null;
+  /** Accessible name. Generated from the data when omitted. */
+  summary?: string | null;
+  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize. */
+  loading?: boolean;
+  /** Shows `errorText` in place of the plot. Separate from `loading` and from empty data. */
+  error?: boolean;
+  /** Shown when there is no data. Unset falls back to `DS_INTL.chart.empty`. */
+  emptyText?: string | null;
+  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
+  errorText?: string | null;
+  /** Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`. */
+  valueFormat?: unknown;
+  /** Turns on the click affordance: pointer cursor and hover tint. The click output fires whether or not this is set. */
+  interactive?: boolean;
+  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings. */
+  tooltipSwatches?: boolean | null;
+  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
+  tooltipLingerMs?: number | null;
+  /** Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way. */
+  pinOnClick?: boolean | null;
+  /** One entry per series. */
   data?: unknown;
-  /** Names the horizontal quantity under the plot. Without it the reader has two numbers and no idea which is which - on a scatter that is the whole reading. */
+  /** Names the horizontal quantity under the plot. */
   xLabel?: string | null;
   /** Names the vertical quantity beside the plot. */
   yLabel?: string | null;
-  /** Which decimator thins a series past the budget. `'minMax'` by default, because it is the only one that promises each bucket's extremum survives. */
+  /** Which decimator thins a series past the budget. See `ScatterChartDecimator`. */
   decimator?: ('minMax' | 'lttb' | 'none');
-  /** A hint, not a count, and it applies to BOTH axes. Ticks snap to a round step. */
+  /** A hint, not a count, applied to both axes. Ticks snap to a round step. */
   tickCount?: number;
-  /** Printed above the plot as the visible title, and reused as the annex table's caption. */
-  caption?: string | null;
-  /** The accessible name. Generated when omitted, naming both axes' spans, how many readings were drawn and how many were thinned out. */
-  summary?: string | null;
-  /** Makes every mark a button and gives it a keyboard route. `pointClicked` fires whether or not this is set. */
-  interactive?: boolean;
-  /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`. */
-  frame?: ('auto' | 'none') | null;
-  /** The annex table under the plot. It lists EVERY reading, including the ones decimation left out of the drawing, which is what keeps a thinned chart honest. */
+  /** The annex table under the plot; lists every reading, including those decimation left out. */
   dataTable?: unknown;
-  /** A skeleton at the plot's own height, so the page does not resize when the data lands. */
-  loading?: boolean;
-  /** Separate from empty data: "the request failed" and "there is nothing to show" read the same and mean opposite things. */
-  error?: boolean;
-  /** Shown when no series carries a reading. Unset falls back to `DS_INTL.chart.empty`. */
-  emptyText?: string | null;
-  /** Shown in place of the plot while `error` is set. Unset falls back to `DS_INTL.chart.error`. */
-  errorText?: string | null;
-  /** Formats every number the chart prints - both axes' ticks, the accessible name and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`. */
-  valueFormat?: unknown;
-  /** Whether a hovered or focused mark opens a tooltip. A scatter prints no value beside its marks - there is no room - so this is where a reading is read without the annex table. */
+  /** Whether a hovered or focused mark opens a tooltip. */
   tooltip?: ('item' | 'none');
-  /** Fades every mark but the one under the pointer. Off by default: on a scatter the pile-up IS the reading, and dimming the neighbours takes exactly that away. */
+  /** Fades every mark but the one under the pointer; on a scatter this hides pile-ups. */
   dimOthers?: boolean;
-  /** Holds the hovered mark and its tooltip in place when it is clicked, until a second click, Escape or a press outside releases it. `pointClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
-  pinOnClick?: boolean | null;
   /** The clicked reading, with the series it belongs to. Fires on click and on Enter or Space. */
   onPointClicked?: (value: unknown) => void;
   /** Element content. */
