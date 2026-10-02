@@ -7,8 +7,8 @@
     @if (clickable()) {
       <button
         type="button"
-        aria-hidden="true"
         [class]="nodeClass(i)"
+        [attr.aria-label]="intl().stepper.step(i + 1, label, stepState(i))"
         (click)="onStepClick(i)">
         @if (stepState(i) === 'completed') {
           <ds-icon
@@ -53,8 +53,10 @@
       </span>
     }
 
-    <span class="visually-hidden">
-      {{ intl().stepper.step(i + 1, label, stepState(i)) }}
-    </span>
+    @if (!clickable()) {
+      <span class="visually-hidden">
+        {{ intl().stepper.step(i + 1, label, stepState(i)) }}
+      </span>
+    }
   </span>
 }

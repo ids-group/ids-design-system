@@ -97,6 +97,7 @@
     }
   ],
   "informational": [
+    "A clickable ds-stepper's step buttons are named by DS_INTL.stepper.step and no longer aria-hidden; a test that queried them by role and name now finds them.",
     "ds-w3w emits copied after the clipboard write succeeds, and not at all when it fails or the browser has no clipboard (an insecure origin, some test environments).",
     {
       "text": "--ds-container-max-width takes effect on ds-container and wins over its size; a value set on it before and never seen now applies.",
