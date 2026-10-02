@@ -3,9 +3,10 @@
   eyebrow="Components"
   title="Banner">
   <span lede>
-    Inline page-level message. Six severities — info, success, warning, severe,
-    error, neutral — each with a default icon, optional title, and optional
-    dismiss control.
+    Inline page-level message. Six severities - info, success, warning, severe,
+    error, neutral - each with a default icon
+    (<code class="t-mono-inline">icon</code> overrides it), optional title, and
+    optional dismiss control.
   </span>
 
   <h3
@@ -15,19 +16,34 @@
   </h3>
 
   <p class="block-desc t-s">
-    Every banner severity as a permanent specimen.
+    Every banner severity as a specimen.
+    <code class="t-mono-inline">[dismissible]="true"</code> adds a close
+    button that emits <code class="t-mono-inline">(closed)</code>. The banner
+    does not hide itself - remove it on <code class="t-mono-inline">(closed)</code>.
   </p>
 
   <div class="states is-cols-1">
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-banner
-          variant="info"
-          title="Inventory sync paused"
-          [dismissible]="true"
-          [announce]="true">
-          Last sync 14 minutes ago. Resume to fetch the latest equipment list.
-        </ds-banner>
+        @if (dismissed().has('info')) {
+          <div>
+            <ds-button
+              color="neutral"
+              variant="outline"
+              size="sm"
+              (pressed)="restore('info')">
+              Show again
+            </ds-button>
+          </div>
+        } @else {
+          <ds-banner
+            variant="info"
+            title="Inventory sync paused"
+            [dismissible]="true"
+            (closed)="dismiss('info')">
+            Last sync 14 minutes ago. Resume to fetch the latest equipment list.
+          </ds-banner>
+        }
       </div>
 
       <div class="state-cell-label">
@@ -37,12 +53,25 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-banner
-          variant="success"
-          title="3 delivery schedules recomputed"
-          [dismissible]="true">
-          All allocations are within the 95% capacity limit.
-        </ds-banner>
+        @if (dismissed().has('success')) {
+          <div>
+            <ds-button
+              color="neutral"
+              variant="outline"
+              size="sm"
+              (pressed)="restore('success')">
+              Show again
+            </ds-button>
+          </div>
+        } @else {
+          <ds-banner
+            variant="success"
+            title="3 delivery schedules recomputed"
+            [dismissible]="true"
+            (closed)="dismiss('success')">
+            All allocations are within the 95% capacity limit.
+          </ds-banner>
+        }
       </div>
 
       <div class="state-cell-label">
@@ -52,12 +81,25 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-banner
-          variant="warning"
-          title="Approaching capacity limit"
-          [dismissible]="true">
-          Lane 04 is at 92% of the 95% volume cap.
-        </ds-banner>
+        @if (dismissed().has('warning')) {
+          <div>
+            <ds-button
+              color="neutral"
+              variant="outline"
+              size="sm"
+              (pressed)="restore('warning')">
+              Show again
+            </ds-button>
+          </div>
+        } @else {
+          <ds-banner
+            variant="warning"
+            title="Approaching capacity limit"
+            [dismissible]="true"
+            (closed)="dismiss('warning')">
+            Lane 04 is at 92% of the 95% volume cap.
+          </ds-banner>
+        }
       </div>
 
       <div class="state-cell-label">
@@ -67,13 +109,54 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-banner
-          variant="error"
-          title="Resource conflict detected"
-          [dismissible]="true">
-          2× Conference room kit is allocated to both Alpha (30 Jul) and Delta
-          (5 Aug). Resolve before save.
-        </ds-banner>
+        @if (dismissed().has('severe')) {
+          <div>
+            <ds-button
+              color="neutral"
+              variant="outline"
+              size="sm"
+              (pressed)="restore('severe')">
+              Show again
+            </ds-button>
+          </div>
+        } @else {
+          <ds-banner
+            variant="severe"
+            title="Payment overdue"
+            [dismissible]="true"
+            (closed)="dismiss('severe')">
+            The account is read-only until the outstanding invoice is paid.
+          </ds-banner>
+        }
+      </div>
+
+      <div class="state-cell-label">
+        Severe
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        @if (dismissed().has('error')) {
+          <div>
+            <ds-button
+              color="neutral"
+              variant="outline"
+              size="sm"
+              (pressed)="restore('error')">
+              Show again
+            </ds-button>
+          </div>
+        } @else {
+          <ds-banner
+            variant="error"
+            title="Resource conflict detected"
+            [dismissible]="true"
+            (closed)="dismiss('error')">
+            2× Conference room kit is allocated to both Alpha (30 Jul) and Delta
+            (5 Aug). Resolve before save.
+          </ds-banner>
+        }
       </div>
 
       <div class="state-cell-label">
@@ -83,12 +166,25 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-banner
-          variant="neutral"
-          title="Maintenance window scheduled"
-          [dismissible]="true">
-          Read-only access this Sunday 02:00–04:00 UTC.
-        </ds-banner>
+        @if (dismissed().has('neutral')) {
+          <div>
+            <ds-button
+              color="neutral"
+              variant="outline"
+              size="sm"
+              (pressed)="restore('neutral')">
+              Show again
+            </ds-button>
+          </div>
+        } @else {
+          <ds-banner
+            variant="neutral"
+            title="Maintenance window scheduled"
+            [dismissible]="true"
+            (closed)="dismiss('neutral')">
+            Read-only access this Sunday 02:00–04:00 UTC.
+          </ds-banner>
+        }
       </div>
 
       <div class="state-cell-label">
@@ -102,7 +198,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Banner with a primary follow-up action — used when the user must respond.
+    Project buttons into the <code class="t-mono-inline">actions</code> slot
+    when the user must respond.
   </p>
 
   <div class="states is-cols-1">
@@ -141,17 +238,31 @@
   </h3>
 
   <p class="block-desc t-s">
-    Single-line variant — title and dismiss only, no body.
+    Tighter padding and a one-line, ellipsised title; best with a title and no
+    body.
   </p>
 
   <div class="states is-cols-1">
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-banner
-          variant="info"
-          title="Schedule updated · changes go live in 5 min"
-          [compact]="true"
-          [dismissible]="true" />
+        @if (dismissed().has('compact-info')) {
+          <div>
+            <ds-button
+              color="neutral"
+              variant="outline"
+              size="sm"
+              (pressed)="restore('compact-info')">
+              Show again
+            </ds-button>
+          </div>
+        } @else {
+          <ds-banner
+            variant="info"
+            title="Schedule updated · changes go live in 5 min"
+            [compact]="true"
+            [dismissible]="true"
+            (closed)="dismiss('compact-info')" />
+        }
       </div>
 
       <div class="state-cell-label">
@@ -161,11 +272,24 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-banner
-          variant="warning"
-          title="Unsaved changes — leaving will discard them"
-          [compact]="true"
-          [dismissible]="true" />
+        @if (dismissed().has('compact-warning')) {
+          <div>
+            <ds-button
+              color="neutral"
+              variant="outline"
+              size="sm"
+              (pressed)="restore('compact-warning')">
+              Show again
+            </ds-button>
+          </div>
+        } @else {
+          <ds-banner
+            variant="warning"
+            title="Unsaved changes — leaving will discard them"
+            [compact]="true"
+            [dismissible]="true"
+            (closed)="dismiss('compact-warning')" />
+        }
       </div>
 
       <div class="state-cell-label">
@@ -291,27 +415,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code>
-      announce
-    </code> is off unless bound on the element or set app-wide
-    with
-    <code>
+    <code class="t-mono-inline">announce</code> is off unless bound or set
+    app-wide with
+    <code class="t-mono-inline">
       provideDsConfig(&#123; banner: &#123; announce: true &#125; &#125;)
     </code
-    >: an alert region fires on insertion, so page furniture would interrupt the
-    reader on every route. Dev mode warns in two cases. An <code>error</code>,
-    <code>
-      warning
-    </code> or <code>severe</code> banner left unbound while the
-    key is unset is one a screen reader will not hear; that warning ends the
-    moment the app sets the key, <code>true</code> or <code>false</code>. An
-    <code>
-      info
-    </code>, <code> success </code> or <code>neutral</code> banner
-    that announces only because the key is <code> true </code> is nearly always
-    furniture written after the key was adopted; that warning ends at an
-    <code>
-      [announce]
-    </code> binding. Neither reaches a production build.
+    >, because a live region fires on insertion and page furniture would
+    interrupt on every route. When on, error, warning and severe banners get
+    <code class="t-mono-inline">role="alert"</code> (assertive), the rest
+    <code class="t-mono-inline">role="status"</code> (polite).
+  </p>
+
+  <p class="block-desc t-s">
+    In dev mode only, with <code class="t-mono-inline">announce</code>
+    unbound: an error, warning or severe banner warns while the key is unset;
+    an info, success or neutral banner warns when it announces only because
+    the key is <code class="t-mono-inline">true</code>.
   </p>
 </docs-section>
