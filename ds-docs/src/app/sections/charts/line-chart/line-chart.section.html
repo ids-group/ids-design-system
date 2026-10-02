@@ -718,8 +718,10 @@
     focusable and clickable, and grows an invisible marker on a series drawn
     without one so there is something to land on. The hit area is a transparent
     24px stroke on a fine pointer and 44px on a coarse one — a 4px dot is not a
-    touch target. Tab to a marker and the tooltip names that series alone; hover
-    the plot and it names every series at the category. A tap holds the tooltip
+    touch target. Hover the plot and the tooltip names every series at the
+    category; with <code class="t-mono-inline"> tooltip="item" </code> there is
+    no category band, Tab lands on a marker and the tooltip names that series
+    alone. A tap holds the tooltip
     open: with the default <code class="t-mono-inline"> pinOnClick </code> a
     second tap on the same category lets go, and a tap outside always does.
     <code class="t-mono-inline">
@@ -734,12 +736,15 @@
   <p class="block-desc t-s">
     The keyboard walks the same categories: Tab lands on a category's band,
     ringed, with its panel open, <kbd> ← </kbd> and <kbd> → </kbd> move between
-    bands and wrap, and Tab again leaves the chart. <kbd> ↑ </kbd> and
+    bands and wrap, <kbd> Home </kbd> and <kbd> End </kbd> jump to the ends, and
+    Tab again leaves the chart. <kbd> Enter </kbd> on a band pins it, and moving
+    to another band lets the pin go. <kbd> ↑ </kbd> and
     <kbd>
       ↓
     </kbd> focus one series' marker inside the band, and the panel names
-    that point alone; <kbd> Esc </kbd> steps back to the band, and on the band
-    closes the panel.
+    that point alone; <kbd> Enter </kbd> on it fires
+    <code class="t-mono-inline"> pointClicked </code>, and <kbd> Esc </kbd>
+    steps back to the band, and on the band closes the panel.
   </p>
 
   <p class="block-desc t-s">
