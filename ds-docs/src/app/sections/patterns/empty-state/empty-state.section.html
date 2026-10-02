@@ -23,10 +23,8 @@
           body="Pick from the equipment list to start building this Line item.">
           <ds-button
             actions
-            size="sm">
-            <ds-icon
-              name="plus"
-              [size]="14" />
+            size="sm"
+            icon="plus">
             Allocate resources
           </ds-button>
         </ds-empty-state>
@@ -39,8 +37,11 @@
       </h3>
 
       <p class="block-desc t-s">
-        Data exists but is being refetched. The previous content stays visible
-        behind a dimming layer.
+        The empty state under a blurred loading overlay. To keep previously
+        loaded content visible while refetching, wrap that content in
+        <code class="t-mono-inline">
+          ds-loading-overlay
+        </code> instead.
       </p>
 
       <ds-card padding="none">
@@ -68,10 +69,8 @@
           body="Network error — the request timed out after 30 seconds.">
           <ds-button
             actions
-            size="sm">
-            <ds-icon
-              name="rotate"
-              [size]="14" />
+            size="sm"
+            icon="rotate">
             Retry
           </ds-button>
 
@@ -111,11 +110,27 @@
 
           <ds-button
             actions
-            color="neutral"
-            variant="outline"
             size="sm">
             Request access
           </ds-button>
+        </ds-empty-state>
+      </ds-card>
+    </div>
+
+    <div class="block">
+      <h3 class="block-title t-h4">
+        Success
+      </h3>
+
+      <p class="block-desc t-s">
+        Nothing is left to do because the work is finished.
+      </p>
+
+      <ds-card padding="none">
+        <ds-empty-state
+          variant="success"
+          title="All line items confirmed"
+          body="Every budget on this record is approved.">
         </ds-empty-state>
       </ds-card>
     </div>
@@ -127,18 +142,21 @@
 
   <ul class="rules">
     <li>
-      One primary action per empty state — never more. Pair with a ghost
+      One primary action per empty state, never more. Pair with an outline
       secondary only when retry needs an escape hatch.
     </li>
 
     <li>
-      Concrete subject ("asset"), concrete next step ("pick from the asset
-      register"). Skip generic copy and cheer.
+      Concrete subject ("asset"), concrete next step ("pick from the equipment
+      list"). No generic copy or cheer.
     </li>
 
     <li>
-      Loading overlay reuses the previous content silhouette behind a dim scrim
-      — don't drop to a full skeleton when data was previously visible.
+      When data was previously visible, wrap that content in
+      <code class="t-mono-inline">
+        ds-loading-overlay
+      </code> rather than
+      dropping to a full skeleton.
     </li>
 
     <li>
