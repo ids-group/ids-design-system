@@ -1,5 +1,5 @@
 # Top bar - default
 
-Full composition — brand title, centred search, action cluster with avatar.
+Brand title, search in the middle, actions with an avatar.
 
 Full API: `Topbar.d.ts`. How to use the component anywhere: `Topbar.prompt.md`.

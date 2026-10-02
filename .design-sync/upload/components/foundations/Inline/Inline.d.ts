@@ -7,9 +7,9 @@ import * as React from 'react';
 export interface InlineProps {
   /** Space between children. `null` inherits whatever the enclosing layout set. */
   gap?: ('none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl') | null;
-  /** Cross-axis alignment — vertical, for a row. */
+  /** Cross-axis alignment: vertical, for a row. */
   align?: ('start' | 'center' | 'end' | 'stretch') | null;
-  /** Main-axis distribution — horizontal, for a row. `between` pushes the ends apart. */
+  /** Main-axis distribution: horizontal, for a row. `between` pushes the ends apart. */
   justify?: ('start' | 'center' | 'end' | 'between') | null;
   /** Let the row wrap onto more lines (default). `false` keeps one line and lets it overflow. */
   wrap?: boolean;

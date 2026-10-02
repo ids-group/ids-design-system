@@ -1,5 +1,5 @@
 # Breadcrumbs - long trail · ellipsis collapse
 
-Six levels, capped with [maxItems]="4" — the first and the LAST always survive, and the collapsed crumb says how many it stands for. Worth setting on any trail that can get deep: the row is nowrap with overflow: hidden, so an uncapped overlong trail is clipped from the END — the current page, the one crumb the reader needs most.
+[maxItems]="4" keeps the first and last crumbs and collapses the middle into one crumb that says how many it hides. Set it on any trail that can get deep: the row is nowrap + overflow: hidden, so an uncapped trail clips from the end - the current page.
 
 Full API: `Breadcrumbs.d.ts`. How to use the component anywhere: `Breadcrumbs.prompt.md`.

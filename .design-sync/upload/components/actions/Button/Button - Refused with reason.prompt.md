@@ -2,7 +2,7 @@
 
 Two kinds of refusal, and they take different treatments. The third column is the room the second one needs.
 
-No permission to grant, no integration to connect. Set disabledReason beside disabled: the reason renders as a second line inside the button, and the button switches from the native disabled attribute to aria-disabled so it stays focusable and the reason is announced. Clicks are swallowed either way. Length is uncapped — a long reason wraps and the button grows.
+No permission to grant, no integration to connect. Set disabledReason beside disabled: the reason renders as a second line inside the button, and the button switches from the native disabled attribute to aria-disabled so it stays focusable and the reason is announced. This works on the button form only: a disabled link-button gets tabindex="-1", so its reason cannot be reached by Tab. Clicks are swallowed either way. Length is uncapped - a long reason wraps and the button grows.
 
 Do not disable the button at all: leave it live, judge validity in the submit handler, and carry the text under the button with hint, warning or error — the same three inputs the fields take, with the same message line under them. A message longer than the label widens the pair, button included, the way a field's control spans its own message.
 

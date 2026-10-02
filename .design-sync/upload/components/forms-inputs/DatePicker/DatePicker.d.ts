@@ -7,44 +7,44 @@ import * as React from 'react';
 export interface DatePickerProps {
   /** Helper text shown below the control. */
   hint?: string;
-  /** Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`. */
+  /** Error text. Shown immediately; takes precedence over `errors`. */
   error?: string;
   /** Advisory text, shown when there is no error. */
   warning?: string;
-  /** Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not. */
+  /** Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button. */
   reserveMessage?: boolean | null;
   /** Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone. */
-  messageIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
-  /** Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array. */
+  messageIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  /** Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`. */
   errors?: unknown;
-  /** Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text. */
+  /** Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. */
   invalid?: boolean;
-  /** Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form. */
+  /** Whether the user has interacted with the field. Bound by signal forms; gates `errors`. */
   touched?: boolean;
-  /** Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to. */
+  /** Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display. */
   hidden?: boolean;
-  /** Selection mode — single date or start/end range. */
+  /** Selection mode - single date or start/end range. */
   mode?: ('single' | 'range');
-  /** Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Trigger height; falls back to `DS_CONFIG.control.size`, then `'md'`. */
   size?: ('sm' | 'md' | 'lg') | null;
-  /** Stretch the trigger to fill its container instead of hugging the mask width — opt in when the field shares a grid/flex track with inputs. */
+  /** Stretches the trigger to fill its container instead of hugging the mask width. */
   fullWidth?: boolean;
   /** Selected date (single) or `[start, end]` (range), two-way bound. */
   value?: Date | ([Date | null, Date | null]) | null;
   onValueChange?: (value: Date | ([Date | null, Date | null]) | null) => void;
-  /** Accessible-name fallback only — the mask fills the visible placeholder, not this. Unset falls back to `DS_INTL.datePicker.placeholder`. */
+  /** Accessible-name fallback only; the mask fills the visible placeholder. Falls back to `DS_INTL.datePicker.placeholder`. */
   placeholder?: string | null;
   /** Field label shown above the trigger. */
   label?: string;
-  /** Marks the field required — shows an asterisk and sets `aria-required`. */
+  /** Marks the field required - shows an asterisk and sets `aria-required`. */
   required?: boolean;
-  /** Shows an "(optional)" marker beside the label — ignored when `required` is set. */
+  /** Shows an "(optional)" marker beside the label - ignored when `required` is set. */
   optional?: boolean;
-  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and this component's own `ds-date-picker-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance of it. */
+  /** Extra classes for the portaled panel, the only way to style one instance of it. */
   panelClass?: string | readonly string[];
   /** Disables the picker and blocks all interaction. */
   disabled?: boolean;
-  /** Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning; paints the success border. */
   success?: string;
   /** Accessible name when no visible `label` is provided. */
   ariaLabel?: string | null;
@@ -56,19 +56,19 @@ export interface DatePickerProps {
   minDate?: Date | null;
   /** Latest selectable date (inclusive). Days after this are disabled. */
   maxDate?: Date | null;
-  /** Predicate — return true to disable an individual day. */
+  /** Predicate - return true to disable an individual day. */
   disabledDate?: unknown;
   /** Quick-pick shortcuts shown as a button column inside the calendar panel. */
   presets?: unknown;
-  /** BCP-47 locale driving month/weekday names and the value format. Unset falls back to `DS_CONFIG.datePicker.locale`, then `DS_CONFIG.locale`, then `LOCALE_ID`. */
+  /** BCP-47 locale for names and value format; falls back to `DS_CONFIG.datePicker.locale`, `DS_CONFIG.locale`, then `LOCALE_ID`. */
   locale?: string | null;
   /** Explicit token format e.g. `'MM/DD/YYYY'`; default derived from `locale`. */
   dateFormat?: string | null;
   /** First weekday column: 0=Sunday … 6=Saturday. Default 1 (Monday). */
   firstDayOfWeek?: number | null;
-  /** Date the calendar opens on when the value is empty (e.g. a Date Of Birth): the panel shows its month and grid focus lands on its exact day. Never written to `value` — selection stays with the user. */
+  /** Date the calendar opens on when the value is empty; never written to `value`. */
   defaultDate?: Date | null;
-  /** Allow masked manual typing. When false the field is read-only and a date can only be picked from the calendar. */
+  /** Allow masked manual typing; when false a date can only be picked from the calendar. */
   allowInput?: boolean;
   staticPreview?: boolean;
   /** Element content. */

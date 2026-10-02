@@ -274,6 +274,10 @@
       "sourcePath": "components/forms-inputs/Slider/Slider.jsx"
     },
     {
+      "name": "Sparkline",
+      "sourcePath": "components/charts/Sparkline/Sparkline.jsx"
+    },
+    {
       "name": "Spinner",
       "sourcePath": "components/feedback-status/Spinner/Spinner.jsx"
     },
@@ -380,7 +384,7 @@
       "group": "actions",
       "viewport": "1200x279",
       "name": "Buttons - sizes",
-      "subtitle": "sm · md (default) · lg — 32 / 40 / 48, aligned with the field controls."
+      "subtitle": "sm · md (default; follows DS_CONFIG.control.size) · lg — 32 / 40 / 48, aligned with the field controls."
     },
     {
       "path": "components/actions/Button/Button - States.html",
@@ -422,28 +426,28 @@
       "group": "actions",
       "viewport": "1200x270",
       "name": "Buttons - link-styled action",
-      "subtitle": "A link-styled action is the global .link class on a button (replaces the old variant='text')."
+      "subtitle": "A link-styled action is the global .link class on a button (prefer it over variant='text')."
     },
     {
       "path": "components/actions/Segmented/Segmented - Segmented control.html",
       "group": "actions",
-      "viewport": "1200x608",
+      "viewport": "1200x681",
       "name": "Segmented & button group - segmented control",
       "subtitle": "Binds to a signal; the selected value is reflected below the control."
     },
     {
       "path": "components/actions/ButtonGroup/Button Group - Button group.html",
       "group": "actions",
-      "viewport": "1200x313",
+      "viewport": "1200x352",
       "name": "Button Group - button group",
-      "subtitle": "Groups related outline buttons into a single fused control."
+      "subtitle": "A role='group' wrapper, named by ariaLabel, that fuses projected ds-button s into one row of shared edges."
     },
     {
       "path": "components/actions/IconButton/Icon Button - Color x variant.html",
       "group": "actions",
       "viewport": "1200x700",
       "name": "Icon button - color × variant",
-      "subtitle": "variant = fill taxonomy (standard chromeless · filled · tonal · outlined); color = the shared brand/status hue family (same axis as ds-button)."
+      "subtitle": "variant sets the fill (standard chromeless · filled · tonal · outlined)."
     },
     {
       "path": "components/actions/IconButton/Icon Button - States.html",
@@ -462,7 +466,7 @@
     {
       "path": "components/actions/IconButton/Icon Button - Toggle.html",
       "group": "actions",
-      "viewport": "1200x336",
+      "viewport": "1200x355",
       "name": "Icon button - toggle",
       "subtitle": "[selected] renders the pressed state and sets aria-pressed."
     },
@@ -483,8 +487,9 @@
     {
       "path": "components/actions/Link/Link - States.html",
       "group": "actions",
-      "viewport": "1200x312",
-      "name": "Link - states"
+      "viewport": "1200x413",
+      "name": "Link - states",
+      "subtitle": "Disable with aria-disabled='true'; a native disabled gets no disabled styling."
     },
     {
       "path": "components/actions/Link/Link - Variants.html",
@@ -497,18 +502,18 @@
       "group": "actions",
       "viewport": "1200x250",
       "name": "Link - inline usage",
-      "subtitle": "Use .link.inline when the anchor sits inside body text — it inherits font-weight/size from the surrounding paragraph."
+      "subtitle": "Use .link.inline when the anchor sits inside body text: it inherits font weight and size from the paragraph."
     },
     {
       "path": "components/forms-inputs/Autocomplete/Autocomplete - Single.html",
       "group": "forms-inputs",
-      "viewport": "1200x346",
+      "viewport": "1200x343",
       "name": "Autocomplete - single"
     },
     {
       "path": "components/forms-inputs/Autocomplete/Autocomplete - Multi.html",
       "group": "forms-inputs",
-      "viewport": "1200x267",
+      "viewport": "1200x264",
       "name": "Autocomplete - multi"
     },
     {
@@ -526,9 +531,9 @@
     {
       "path": "components/forms-inputs/Checkbox/Checkbox - A caption with markup in it.html",
       "group": "forms-inputs",
-      "viewport": "1200x361",
+      "viewport": "1200x322",
       "name": "Checkbox - a caption with markup in it",
-      "subtitle": "[label] stays the documented API and is what you want almost always."
+      "subtitle": "[label] is the usual API."
     },
     {
       "path": "components/forms-inputs/ColorPicker/Color Picker - Default presets.html",
@@ -542,12 +547,12 @@
       "group": "forms-inputs",
       "viewport": "1200x657",
       "name": "Color picker - open picker",
-      "subtitle": "The picker as it looks open: colour plane, hue slider, hex field and presets, holding a preset colour."
+      "subtitle": "The open picker, inline."
     },
     {
       "path": "components/forms-inputs/DatePicker/Date Picker - Single date.html",
       "group": "forms-inputs",
-      "viewport": "1200x356",
+      "viewport": "1200x378",
       "name": "Date picker - single date",
       "subtitle": "The field accepts masked typing (the locale mask, e.g."
     },
@@ -570,14 +575,14 @@
       "group": "forms-inputs",
       "viewport": "1200x700",
       "name": "Dropzone - states showcase",
-      "subtitle": "Every dropzone surface state stacked vertically — one per row."
+      "subtitle": "Each surface state, one per row."
     },
     {
       "path": "components/forms-inputs/Dropzone/Dropzone - Single-file mode.html",
       "group": "forms-inputs",
-      "viewport": "1200x458",
+      "viewport": "1200x517",
       "name": "Dropzone - single-file mode",
-      "subtitle": "Narrower variant accepting one file at a time."
+      "subtitle": "multiple is off by default: a pick or drop delivers one file through (filesAdded)."
     },
     {
       "path": "components/forms-inputs/Dropzone/Dropzone - File row states.html",
@@ -612,28 +617,28 @@
       "group": "forms-inputs",
       "viewport": "1200x700",
       "name": "Input - states showcase",
-      "subtitle": "Every field state side-by-side."
+      "subtitle": "Each field state side by side."
     },
     {
       "path": "components/forms-inputs/Input/Input - With icon - prefix - suffix.html",
       "group": "forms-inputs",
-      "viewport": "1200x411",
+      "viewport": "1200x431",
       "name": "Input - with icon · prefix · suffix",
       "subtitle": "Clicking anywhere in the frame — a leading icon, a prefix/suffix add-on, or the padding — focuses the input; only nested controls (a projected button, the clear ✕, the password…"
     },
     {
       "path": "components/forms-inputs/MultiSelect/Multi Select - Basic usage.html",
       "group": "forms-inputs",
-      "viewport": "1200x490",
+      "viewport": "1200x467",
       "name": "Multi-select - basic usage",
       "subtitle": "Chips expand horizontally; all selected values are always visible."
     },
     {
       "path": "components/forms-inputs/MultiSelect/Multi Select - Overflow collapse.html",
       "group": "forms-inputs",
-      "viewport": "1200x619",
+      "viewport": "1200x560",
       "name": "Multi-select - overflow collapse",
-      "subtitle": "maxVisibleChips defaults to 'fit': the trigger keeps as many chips as it is wide and collapses the rest into a '+N more' pill, re-splitting on resize."
+      "subtitle": "maxVisibleChips defaults to 'fit': as many chips as fit, the rest behind '+N more', re-split on resize."
     },
     {
       "path": "components/forms-inputs/MultiSelect/Multi Select - Labels in the trigger.html",
@@ -659,23 +664,23 @@
     {
       "path": "components/forms-inputs/NumberStepper/Number Stepper - Sizes.html",
       "group": "forms-inputs",
-      "viewport": "1200x408",
+      "viewport": "1200x453",
       "name": "Number stepper - sizes",
       "subtitle": "Three sizes aligned with input / select field heights."
     },
     {
       "path": "components/forms-inputs/OtpInput/Otp Input - 6-digit numeric OTP.html",
       "group": "forms-inputs",
-      "viewport": "1200x531",
+      "viewport": "1200x662",
       "name": "OTP input - 6-digit numeric OTP",
-      "subtitle": "Use mode='numeric' with [length]='6' for verification codes."
+      "subtitle": "length defaults to 6 and mode to numeric (digits, numeric keypad); alphanumeric accepts letters."
     },
     {
       "path": "components/forms-inputs/PasswordRules/Password Rules - Live checklist.html",
       "group": "forms-inputs",
-      "viewport": "1200x525",
+      "viewport": "1200x539",
       "name": "Password rules - live checklist",
-      "subtitle": "Each row carries its own predicate, because the POLICY has to mirror your server — the component owns the tri-state glyph, the colours and the type scale, nothing else."
+      "subtitle": "Each rule carries its own test, which must mirror your server; the component owns only the glyph, colours and type scale."
     },
     {
       "path": "components/forms-inputs/Radio/Radio - Radio states showcase.html",
@@ -720,9 +725,9 @@
     {
       "path": "components/forms-inputs/Search/Search - Sizes.html",
       "group": "forms-inputs",
-      "viewport": "1200x300",
+      "viewport": "1200x299",
       "name": "Search - sizes",
-      "subtitle": "size aligns the search-row height with the controls beside it in a filter toolbar."
+      "subtitle": "size matches the row height of ds-input / ds-button beside it in a filter toolbar."
     },
     {
       "path": "components/forms-inputs/Select/Select - Sizes.html",
@@ -738,11 +743,11 @@
       "subtitle": "Every select state side-by-side."
     },
     {
-      "path": "components/forms-inputs/Select/Select - Custom dropdown - ds-select.html",
+      "path": "components/forms-inputs/Select/Select - Open panel.html",
       "group": "forms-inputs",
       "viewport": "1200x700",
-      "name": "Select - custom dropdown — ds-select",
-      "subtitle": "Alternative trigger that opens a fully styled popover via CDK Overlay."
+      "name": "Select - open panel",
+      "subtitle": "Live component with staticPreview — panel rendered inline in normal flow, all option states visible at once."
     },
     {
       "path": "components/forms-inputs/Select/Select - Per-option icons.html",
@@ -754,7 +759,7 @@
     {
       "path": "components/forms-inputs/Slider/Slider - Single slider.html",
       "group": "forms-inputs",
-      "viewport": "1200x472",
+      "viewport": "1200x545",
       "name": "Slider - single slider",
       "subtitle": "Bind to a number signal; the current value updates as the thumb moves."
     },
@@ -778,17 +783,17 @@
       "name": "Switch - sizes"
     },
     {
-      "path": "components/forms-inputs/Textarea/Textarea - Variant states - default - value - error.html",
+      "path": "components/forms-inputs/Textarea/Textarea - Variant states.html",
       "group": "forms-inputs",
-      "viewport": "1200x632",
-      "name": "Textarea - variant states — default · value · error · disabled"
+      "viewport": "1200x700",
+      "name": "Textarea - variant states"
     },
     {
       "path": "components/forms-inputs/TimePicker/Time Picker - Single.html",
       "group": "forms-inputs",
       "viewport": "1200x400",
       "name": "Time picker - single",
-      "subtitle": "Click the trigger, pick an hour and a minute; the value updates live."
+      "subtitle": "The value updates as you pick."
     },
     {
       "path": "components/forms-inputs/TimePicker/Time Picker - Open wheels.html",
@@ -827,7 +832,7 @@
     {
       "path": "components/navigation/SidenavFooter/Sidenav Footer - The rail footer on its own.html",
       "group": "navigation",
-      "viewport": "1200x494",
+      "viewport": "1200x567",
       "name": "Sidenav Footer - the rail footer on its own",
       "subtitle": "ds-sidenav-footer is the one part of the rail a consumer configures rather than composes: it owns the profile row, the alert bell and the collapse handle."
     },
@@ -848,16 +853,16 @@
     {
       "path": "components/navigation/Breadcrumbs/Breadcrumbs - Long trail - ellipsis collapse.html",
       "group": "navigation",
-      "viewport": "1200x363",
+      "viewport": "1200x343",
       "name": "Breadcrumbs - long trail · ellipsis collapse",
-      "subtitle": "Six levels, capped with [maxItems]='4' — the first and the LAST always survive, and the collapsed crumb says how many it stands for."
+      "subtitle": "[maxItems]='4' keeps the first and last crumbs and collapses the middle into one crumb that says how many it hides."
     },
     {
       "path": "components/navigation/Menu/Menu - Standing description.html",
       "group": "navigation",
-      "viewport": "1200x629",
+      "viewport": "1200x570",
       "name": "Menu - standing description",
-      "subtitle": "description puts a second line under the label for a limitation the action carries."
+      "subtitle": "description adds a visible second line under the label for a limitation the action carries ('will not be saved'), unlike a hover-only [dsTooltip]."
     },
     {
       "path": "components/navigation/MenuDivider/Menu Divider - Dividers.html",
@@ -878,21 +883,21 @@
       "group": "navigation",
       "viewport": "1200x700",
       "name": "Menu Item",
-      "subtitle": "Four items with icons — the typical user-account menu shape."
+      "subtitle": "Four items with icons, the usual account-menu shape."
     },
     {
       "path": "components/navigation/Pagination/Pagination - Default.html",
       "group": "navigation",
       "viewport": "1200x305",
       "name": "Pagination - default",
-      "subtitle": "12 pages, current page near the start — two ellipses bracket the centred range: one after 1, one before 12."
+      "subtitle": "12 pages, current page 4: two ellipses bracket the centred range, one after 1 and one before 12."
     },
     {
       "path": "components/navigation/Pagination/Pagination - States showcase.html",
       "group": "navigation",
       "viewport": "1200x700",
       "name": "Pagination - states showcase",
-      "subtitle": "Page-button states side-by-side."
+      "subtitle": "loading disables every control, masks the range label with a skeleton and sets aria-busy on the nav."
     },
     {
       "path": "components/navigation/Pagination/Pagination - Ranges.html",
@@ -904,9 +909,9 @@
     {
       "path": "components/navigation/Pagination/Pagination - Layout and size.html",
       "group": "navigation",
-      "viewport": "1200x645",
+      "viewport": "1200x606",
       "name": "Pagination - layout and size",
-      "subtitle": "layout decides how the pager fills its row."
+      "subtitle": "layout: 'grouped' (default) keeps label and buttons together at natural width; 'spread' goes full width with the label at one end, for a pager under a table."
     },
     {
       "path": "components/navigation/Sidenav/Sidenav - Default.html",
@@ -946,7 +951,7 @@
     {
       "path": "components/navigation/Stepper/Stepper - Default.html",
       "group": "navigation",
-      "viewport": "1200x432",
+      "viewport": "1200x410",
       "name": "Stepper - default"
     },
     {
@@ -976,70 +981,70 @@
     {
       "path": "components/navigation/Tabs/Tabs - Variants.html",
       "group": "navigation",
-      "viewport": "1200x598",
+      "viewport": "1200x612",
       "name": "Tabs - variants",
-      "subtitle": "Line — primary navigation."
+      "subtitle": "Pills look like ds-segmented but are real tabs that own panels, with tablist semantics."
     },
     {
       "path": "components/navigation/Tabs/Tabs - With count badge - icon - disabled.html",
       "group": "navigation",
       "viewport": "1200x362",
       "name": "Tabs - with count badge · icon · disabled",
-      "subtitle": "A trailing count chip, a leading glyph, and a disabled tab — composed on the line variant."
+      "subtitle": "A trailing count chip, a leading icon and a disabled tab on the line variant."
     },
     {
       "path": "components/navigation/Tabs/Tabs - Closable.html",
       "group": "navigation",
       "viewport": "1200x378",
       "name": "Tabs - closable",
-      "subtitle": "When closable is set each tab shows a close button."
+      "subtitle": "closable gives each tab a close button that emits tabClosed with the tab's value, else its label."
     },
     {
       "path": "components/navigation/Tabs/Tabs - Vertical.html",
       "group": "navigation",
       "viewport": "1200x416",
       "name": "Tabs - vertical",
-      "subtitle": "Setting orientation='vertical' places the tab list in a column beside the panel."
+      "subtitle": "orientation='vertical' puts the tab list in a column beside the panel, with the active indicator on its right edge."
     },
     {
       "path": "components/navigation/Tab/Tab - States showcase.html",
       "group": "navigation",
       "viewport": "1200x469",
       "name": "Tab - states showcase",
-      "subtitle": "Every line-tab state side-by-side."
+      "subtitle": "Every line-tab state side by side."
     },
     {
       "path": "components/navigation/Tabs/Tabs - Pills states showcase.html",
       "group": "navigation",
       "viewport": "1200x465",
       "name": "Tabs - pills states showcase",
-      "subtitle": "Same matrix on the pills variant — note the filled active chip."
+      "subtitle": "The same states on the pills variant."
     },
     {
       "path": "components/navigation/Topbar/Topbar - Default.html",
       "group": "navigation",
-      "viewport": "1200x353",
+      "viewport": "1200x376",
       "name": "Top bar - default",
-      "subtitle": "Full composition — brand title, centred search, action cluster with avatar."
+      "subtitle": "Brand title, search in the middle, actions with an avatar."
     },
     {
       "path": "components/navigation/Topbar/Topbar - Minimal.html",
       "group": "navigation",
-      "viewport": "1200x308",
+      "viewport": "1200x289",
       "name": "Top bar - minimal",
-      "subtitle": "Brand + actions only."
+      "subtitle": "Brand and actions only, for dialogs or layouts with a dedicated search route."
     },
     {
       "path": "components/navigation/Topbar/Topbar - With breadcrumb.html",
       "group": "navigation",
       "viewport": "1200x308",
       "name": "Top bar - with breadcrumb",
-      "subtitle": "Breadcrumb trail anchored left next to the brand — common on deep record pages where context outweighs lookup."
+      "subtitle": "The breadcrumb trail sits left, next to the brand."
     },
     {
       "path": "components/data-display/Accordion/Accordion - Default.html",
       "group": "data-display",
-      "viewport": "1200x580",
+      "viewport": "1200x589",
       "name": "Accordion - default"
     },
     {
@@ -1051,19 +1056,21 @@
     {
       "path": "components/data-display/Avatar/Avatar - Sizes.html",
       "group": "data-display",
-      "viewport": "1200x275",
-      "name": "Avatars - sizes"
+      "viewport": "1200x329",
+      "name": "Avatars - sizes",
+      "subtitle": "imageUrl shows an image ahead of initials and fallbackIcon."
     },
     {
       "path": "components/data-display/AvatarGroup/Avatar Group - Group.html",
       "group": "data-display",
-      "viewport": "1200x233",
-      "name": "Avatar Group - group"
+      "viewport": "1200x302",
+      "name": "Avatar Group - group",
+      "subtitle": "The group shows every avatar you project, so project at most max (default 4)."
     },
     {
       "path": "components/data-display/Avatar/Avatar - Status dots.html",
       "group": "data-display",
-      "viewport": "1200x263",
+      "viewport": "1200x302",
       "name": "Avatars - status dots",
       "subtitle": "Pass status to show a presence indicator in the bottom-right corner of the avatar."
     },
@@ -1077,7 +1084,7 @@
     {
       "path": "components/data-display/Avatar/Avatar - Seeded tint.html",
       "group": "data-display",
-      "viewport": "1200x700",
+      "viewport": "1200x645",
       "name": "Avatars - seeded tint",
       "subtitle": "Pass seed (an email or name) for a deterministic hsl(H 50% 62%) colour — the same person always gets the same tint across apps — with WHITE initials on every one."
     },
@@ -1086,7 +1093,7 @@
       "group": "data-display",
       "viewport": "1200x700",
       "name": "Cards - elevations × paddings",
-      "subtitle": "Nine cells."
+      "subtitle": "The three visual elevations against the three padded presets, same content in every cell."
     },
     {
       "path": "components/data-display/Card/Card - Header - body - footer.html",
@@ -1112,16 +1119,16 @@
     {
       "path": "components/data-display/DescriptionItem/Description Item - Copy-to-clipboard value.html",
       "group": "data-display",
-      "viewport": "1200x325",
+      "viewport": "1200x344",
       "name": "Description Item - copy-to-clipboard value",
-      "subtitle": "Pass [copyValue] to render an inline copy button next to the value — useful for API keys, IDs, and tokens."
+      "subtitle": "Pass [copyValue] to render a copy button next to the value, shown on hover or keyboard focus."
     },
     {
       "path": "components/data-display/Icon/Icon - Sizes.html",
       "group": "data-display",
-      "viewport": "1200x365",
+      "viewport": "1200x385",
       "name": "Icon - sizes",
-      "subtitle": "Five canonical sizes."
+      "subtitle": "Recommended sizes; see Foundations › Icons for the scale."
     },
     {
       "path": "components/data-display/Icon/Icon - Sample names.html",
@@ -1133,28 +1140,28 @@
     {
       "path": "components/data-display/List/List - List with leading and trailing icons.html",
       "group": "data-display",
-      "viewport": "1200x544",
+      "viewport": "1200x545",
       "name": "List - list with leading and trailing icons",
       "subtitle": "Use the [leading] and [trailing] slots for icons or avatars."
     },
     {
       "path": "components/data-display/List/List - Selected state.html",
       "group": "data-display",
-      "viewport": "1200x460",
+      "viewport": "1200x562",
       "name": "List - selected state",
-      "subtitle": "Pass [selected]='true' to highlight the active row — useful in navigation lists and option pickers."
+      "subtitle": "A [clickable] row is a button that emits activated; moving the selection is the consumer's job."
     },
     {
       "path": "components/data-display/ListItem/List Item - A row with its own control.html",
       "group": "data-display",
-      "viewport": "1200x638",
+      "viewport": "1200x579",
       "name": "List Item - a row with its own control",
-      "subtitle": "[leading] and [trailing] sit OUTSIDE the row's button, so a row can carry its own controls and still be the thing that selects."
+      "subtitle": "[leading] and [trailing] sit outside the row's button, so a row can carry its own controls (a bulk-action checkbox) and still be the target that selects - two independent targets."
     },
     {
       "path": "components/data-display/Stat/Stat - Stat tiles.html",
       "group": "data-display",
-      "viewport": "1200x410",
+      "viewport": "1200x449",
       "name": "Stats - stat tiles",
       "subtitle": "Label · value · optional delta with directional arrow."
     },
@@ -1170,26 +1177,26 @@
       "group": "data-display",
       "viewport": "1200x404",
       "name": "Stats - a value that is not a number",
-      "subtitle": "Project into [dsStatValue] when the headline is a badge, a status dot or anything else a number slot cannot hold — the tile keeps its geometry, so it sits level with the numeric…"
+      "subtitle": "Project into [dsStatValue] when the headline is a badge, a status dot or other non-text content; the tile keeps its geometry and the value input is the fallback."
     },
     {
       "path": "components/data-display/Table/Table - Default.html",
       "group": "data-display",
-      "viewport": "1200x631",
+      "viewport": "1200x650",
       "name": "Table - default",
-      "subtitle": "Standard table — header, six rows, status pill column."
+      "subtitle": "Header, six rows and a status column."
     },
     {
       "path": "components/data-display/Table/Table - Sortable columns.html",
       "group": "data-display",
-      "viewport": "1200x487",
+      "viewport": "1200x520",
       "name": "Table - sortable columns",
-      "subtitle": "Mark columns sortable: true and add sortMode='client' to let the table order its own rows."
+      "subtitle": "Mark columns sortable: true and set sortMode='client' to let the table order its own rows."
     },
     {
       "path": "components/data-display/Table/Table - Row selection - bulk-action bar.html",
       "group": "data-display",
-      "viewport": "1200x543",
+      "viewport": "1200x562",
       "name": "Table - row selection · bulk-action bar",
       "subtitle": "Leading checkbox column."
     },
@@ -1198,56 +1205,56 @@
       "group": "data-display",
       "viewport": "1200x700",
       "name": "Table - loading · skeleton",
-      "subtitle": "First-load placeholder — rows are replaced with shimmer skeletons that lock-step with every other ds-skeleton on the page."
+      "subtitle": "[loading]=''skeleton'' replaces rows with shimmer rows that pulse in step with every other ds-skeleton."
     },
     {
       "path": "components/data-display/Table/Table - Loading - overlay.html",
       "group": "data-display",
       "viewport": "1200x521",
       "name": "Table - loading · overlay",
-      "subtitle": "Re-fetch indicator — existing rows stay visible behind a translucent overlay with a centred spinner."
+      "subtitle": "[loading]=''overlay'' keeps rows visible behind a translucent overlay with a centred spinner."
     },
     {
       "path": "components/data-display/Table/Table - Empty states.html",
       "group": "data-display",
       "viewport": "1200x700",
       "name": "Table - empty states",
-      "subtitle": "Four canonical row-empty variants."
+      "subtitle": "Four empty-state variants."
     },
     {
       "path": "components/data-display/Table/Table - Dense - zebra.html",
       "group": "data-display",
-      "viewport": "1200x529",
+      "viewport": "1200x510",
       "name": "Table - dense · zebra",
-      "subtitle": "density='compact' tightens cell padding and [zebra]='true' tints odd rows for spreadsheet-style scanning."
+      "subtitle": "density='compact' tightens cell padding; [zebra]='true' tints odd rows."
     },
     {
       "path": "components/data-display/Table/Table - Pagination - sticky column.html",
       "group": "data-display",
       "viewport": "1200x700",
       "name": "Table - pagination · sticky column",
-      "subtitle": "[pageSize] turns on client-side pagination (select-all then scopes to the current page); [stickyFirstColumn] pins the first column on horizontal scroll; sortMode says who sorts —…"
+      "subtitle": "[pageSize] turns on client paging (select-all then covers the current page)."
     },
     {
       "path": "components/data-display/Table/Table - Expandable rows.html",
       "group": "data-display",
-      "viewport": "1200x657",
+      "viewport": "1200x618",
       "name": "Table - expandable rows",
-      "subtitle": "[expandableRows]='true' adds a leading chevron column."
+      "subtitle": "[expandableRows]='true' adds a leading chevron that toggles a panel below the row, rendered from [rowExpandTemplate]."
     },
     {
       "path": "components/data-display/Table/Table - Row actions - kebab menu.html",
       "group": "data-display",
       "viewport": "1200x700",
       "name": "Table - row actions · kebab menu",
-      "subtitle": "[rowActions] renders a trailing ⋮ column — the button opens a menu of the configured items and (rowActionSelected) reports the chosen action together with its row."
+      "subtitle": "[rowActions] adds a trailing kebab column; (rowActionSelected) reports action, row."
     },
     {
       "path": "components/data-display/Table/Table - Toolbar slot - the export button anywhere.html",
       "group": "data-display",
       "viewport": "1200x700",
       "name": "Table - toolbar slot · the export button anywhere",
-      "subtitle": "A row above the table, filled through one [toolbar] slot, for controls that act on THIS table: a search box, a status filter, a refresh."
+      "subtitle": "The [toolbar] slot is a row above the table for controls that act on it: a search box (here bound to [filterQuery]), a status filter, a refresh."
     },
     {
       "path": "components/data-display/Tag/Tag - Variants.html",
@@ -1258,15 +1265,16 @@
     {
       "path": "components/data-display/Tag/Tag - Closable.html",
       "group": "data-display",
-      "viewport": "1200x264",
-      "name": "Tag - closable"
+      "viewport": "1200x313",
+      "name": "Tag - closable",
+      "subtitle": "The close button emits (closed); the host removes the tag."
     },
     {
       "path": "components/data-display/Tag/Tag - Interactive - selectable.html",
       "group": "data-display",
-      "viewport": "1200x313",
+      "viewport": "1200x334",
       "name": "Tag - interactive · selectable",
-      "subtitle": "[interactive] makes the tag a toggle button that emits (toggled) on click; [selected] renders the active state."
+      "subtitle": "[interactive] makes the tag a toggle (role='button', tab stop, aria-pressed = [selected])."
     },
     {
       "path": "components/data-display/Timeline/Timeline - Activity feed.html",
@@ -1285,9 +1293,9 @@
     {
       "path": "components/data-display/Tree/Tree - Interactive tree.html",
       "group": "data-display",
-      "viewport": "1200x600",
+      "viewport": "1200x653",
       "name": "Tree view - interactive tree",
-      "subtitle": "Nodes with children are collapsible."
+      "subtitle": "Pass TreeNode[] (id, label, icon?, children?, disabled?)."
     },
     {
       "path": "components/data-display/Tree/Tree - Single node states.html",
@@ -1319,20 +1327,21 @@
     {
       "path": "components/feedback-status/Badge/Badge - Lifecycle states showcase.html",
       "group": "feedback-status",
-      "viewport": "1200x361",
+      "viewport": "1200x427",
       "name": "Badge - lifecycle states showcase",
-      "subtitle": "Every event-status badge as a specimen."
+      "subtitle": "This site's lifecycle keys as specimens."
     },
     {
       "path": "components/feedback-status/Badge/Badge - Semantic states showcase.html",
       "group": "feedback-status",
-      "viewport": "1200x436",
-      "name": "Badge - semantic states showcase"
+      "viewport": "1200x485",
+      "name": "Badge - semantic states showcase",
+      "subtitle": "The status.semantic-preset keys."
     },
     {
       "path": "components/feedback-status/Badge/Badge - Per-instance tone.html",
       "group": "feedback-status",
-      "viewport": "1200x379",
+      "viewport": "1200x378",
       "name": "Badge - per-instance tone",
       "subtitle": "Override -ds-badge-bg-color / -ds-badge-label-color inline for off-token tones (carrier brands etc)."
     },
@@ -1348,14 +1357,14 @@
       "group": "feedback-status",
       "viewport": "1200x700",
       "name": "Banner - variants",
-      "subtitle": "Every banner severity as a permanent specimen."
+      "subtitle": "Every banner severity as a specimen."
     },
     {
       "path": "components/feedback-status/Banner/Banner - Compact.html",
       "group": "feedback-status",
       "viewport": "1200x497",
       "name": "Banner - compact",
-      "subtitle": "Single-line variant — title and dismiss only, no body."
+      "subtitle": "Tighter padding and a one-line, ellipsised title; best with a title and no body."
     },
     {
       "path": "components/feedback-status/Banner/Banner - Layout.html",
@@ -1380,34 +1389,34 @@
     {
       "path": "components/feedback-status/EmptyState/Empty State - Variants.html",
       "group": "feedback-status",
-      "viewport": "1200x554",
+      "viewport": "1200x700",
       "name": "Empty state - variants",
-      "subtitle": "Five canonical variants."
+      "subtitle": "Five variants: error, locked and success tint the icon tile; loading covers the state with a spinner."
     },
     {
       "path": "components/feedback-status/EmptyState/Empty State - States showcase.html",
       "group": "feedback-status",
       "viewport": "1200x700",
       "name": "Empty state - states showcase",
-      "subtitle": "Full demo of each variant with title, body and one primary action."
+      "subtitle": "Title, body and one action in the actions slot."
     },
     {
       "path": "components/feedback-status/LoadingOverlay/Loading Overlay - Interactive demo.html",
       "group": "feedback-status",
-      "viewport": "1200x449",
+      "viewport": "1200x491",
       "name": "Loading overlay - interactive demo",
-      "subtitle": "The overlay is positioned relative to its host element; toggle it without unmounting the content underneath."
+      "subtitle": "The overlay is positioned relative to its host; toggle it without unmounting the content."
     },
     {
       "path": "components/feedback-status/Skeleton/Skeleton - Common patterns.html",
       "group": "feedback-status",
-      "viewport": "1200x565",
+      "viewport": "1200x587",
       "name": "Skeleton - common patterns"
     },
     {
       "path": "components/feedback-status/Spinner/Spinner - Sizes.html",
       "group": "feedback-status",
-      "viewport": "1200x353",
+      "viewport": "1200x375",
       "name": "Spinner - sizes"
     },
     {
@@ -1419,7 +1428,7 @@
     {
       "path": "components/feedback-status/StatusDot/Status Dot - Variants.html",
       "group": "feedback-status",
-      "viewport": "1200x304",
+      "viewport": "1200x351",
       "name": "Status dots - variants"
     },
     {
@@ -1431,21 +1440,21 @@
     {
       "path": "components/feedback-status/ToastRegion/Toast Region - Toast stack.html",
       "group": "feedback-status",
-      "viewport": "1200x507",
+      "viewport": "1200x527",
       "name": "Toast Region - toast stack",
       "subtitle": "A region holding four toasts at maxVisible: 3: newest on top, and a +1 strip for the one still queued."
     },
     {
       "path": "components/overlays/BottomSheet/Bottom Sheet - Open sheet.html",
       "group": "overlays",
-      "viewport": "1200x557",
+      "viewport": "1200x580",
       "name": "Bottom sheet - open sheet",
       "subtitle": "The sheet as it looks open: grab strip, title, body and stacked full-width actions."
     },
     {
       "path": "components/overlays/Drawer/Drawer - Open drawer.html",
       "group": "overlays",
-      "viewport": "1200x660",
+      "viewport": "1200x615",
       "name": "Drawer - open drawer",
       "subtitle": "A right-edge md drawer as it looks open, with header, body and footer actions."
     },
@@ -1461,35 +1470,35 @@
       "group": "overlays",
       "viewport": "1200x589",
       "name": "Modal Card - title badge · subtitle",
-      "subtitle": "A header richer than one string, without leaving the component: project a status chip into [title-badge] beside the title, and set subtitle for the line under it."
+      "subtitle": "Project a status chip into [title-badge] beside the title, and set subtitle for the line under it."
     },
     {
       "path": "components/overlays/ModalCard/Modal Card - Status.html",
       "group": "overlays",
       "viewport": "1200x700",
       "name": "Modal Card - status",
-      "subtitle": "status takes the same DsStatus vocabulary as the rest of the library, and one word drives four things: the icon-badge tint, the title colour, the DEFAULT icon and the ARIA role."
+      "subtitle": "status takes DsStatus and sets the icon-badge tint, title colour, default icon and ARIA role; the icon is there so severity is not signalled by colour alone."
     },
     {
       "path": "components/overlays/Modal/Modal - Sizes.html",
       "group": "overlays",
       "viewport": "1200x700",
       "name": "Modal - sizes",
-      "subtitle": "sm · md · lg · xl · fullscreen specimens rendered as static cards."
+      "subtitle": "sm, md (default) and lg as static cards; xl and fullscreen open live."
     },
     {
       "path": "components/overlays/ModalCard/Modal Card - Variants.html",
       "group": "overlays",
       "viewport": "1200x700",
       "name": "Modal Card - variants",
-      "subtitle": "Default · danger confirm · impact warning with affected records."
+      "subtitle": "Default · status='error' · impact warning."
     },
     {
       "path": "components/overlays/ModalCard/Modal Card - With form.html",
       "group": "overlays",
       "viewport": "1200x700",
       "name": "Modal Card - with form",
-      "subtitle": "Modal hosting a small form — label, input, select."
+      "subtitle": "A small form in the body: inputs and a select."
     },
     {
       "path": "components/overlays/ModalConfirm/Modal Confirm - Confirmation dialog.html",
@@ -1507,21 +1516,21 @@
     {
       "path": "components/overlays/TooltipPanel/Tooltip Panel - States showcase (static specimens).html",
       "group": "overlays",
-      "viewport": "1200x495",
+      "viewport": "1200x700",
       "name": "Tooltip Panel - states showcase (static specimens)",
       "subtitle": "A value with no place to break, a file name or an ID, breaks inside -ds-tooltip-max-width (240px) rather than running past the panel."
     },
     {
       "path": "components/page-structure/FilterBar/Filter Bar - Sizing the +N trigger.html",
       "group": "page-structure",
-      "viewport": "1200x463",
+      "viewport": "1200x423",
       "name": "Filter bar - sizing the '+N' trigger",
-      "subtitle": "triggerSize matches the trigger to the filters beside it — default md."
+      "subtitle": "triggerSize (default md) sets the '+N' trigger height; match it to the filters' size - the bar cannot read it."
     },
     {
       "path": "components/page-structure/PageFooter/Page Footer - Default.html",
       "group": "page-structure",
-      "viewport": "1200x311",
+      "viewport": "1200x334",
       "name": "Page footer - default"
     },
     {
@@ -1539,30 +1548,30 @@
     {
       "path": "components/page-structure/PageHeader/Page Header - Default.html",
       "group": "page-structure",
-      "viewport": "1200x559",
+      "viewport": "1200x583",
       "name": "Page header - default",
-      "subtitle": "Title, lede, actions row, bottom tabs — the full composition."
+      "subtitle": "Title, subtitle, actions and bottom tabs."
     },
     {
       "path": "components/page-structure/PageHeader/Page Header - Compact.html",
       "group": "page-structure",
-      "viewport": "1200x425",
+      "viewport": "1200x426",
       "name": "Page header - compact",
-      "subtitle": "No lede, single-line title with actions inline."
+      "subtitle": "[compact]='true' uses a smaller title and tighter spacing, for index pages."
     },
     {
       "path": "components/page-structure/PageHeader/Page Header - With breadcrumb above title.html",
       "group": "page-structure",
-      "viewport": "1200x473",
+      "viewport": "1200x534",
       "name": "Page header - with breadcrumb above title",
-      "subtitle": "Full hierarchy demo — breadcrumb trail, eyebrow, title, lede, primary action."
+      "subtitle": "Breadcrumb trail, eyebrow, title, subtitle, a [meta] row and a primary action."
     },
     {
       "path": "components/page-structure/PageHeader/Page Header - With status badge inline with title.html",
       "group": "page-structure",
-      "viewport": "1200x430",
+      "viewport": "1200x431",
       "name": "Page header - with status badge inline with title",
-      "subtitle": "Lifecycle pill sits next to the title."
+      "subtitle": "Project a lifecycle badge into [title-badge] beside the title."
     },
     {
       "path": "components/charts/BarChart/Bar Chart.html",
@@ -1580,9 +1589,9 @@
     {
       "path": "components/charts/Chart/Chart - Annotations.html",
       "group": "charts",
-      "viewport": "1200x653",
+      "viewport": "1200x634",
       "name": "Chart container - annotations",
-      "subtitle": "dsSeriesAnnotation pins a label to one reading, so the point it names is legible with no pointer - in a printed page, or a screenshot."
+      "subtitle": "dsSeriesAnnotation pins a label to one reading so it reads without a pointer, in print or a screenshot."
     },
     {
       "path": "components/charts/ChartDataTable/Chart Data Table - The annex table.html",
@@ -1619,7 +1628,7 @@
     {
       "path": "components/charts/HeatmapChart/Heatmap Chart - Default.html",
       "group": "charts",
-      "viewport": "1200x696",
+      "viewport": "1200x700",
       "name": "Heat map - default",
       "subtitle": "Rows down the side, columns across the top, one reading per cell."
     },
@@ -1641,14 +1650,42 @@
       "group": "charts",
       "viewport": "1200x700",
       "name": "Scatter chart - default",
-      "subtitle": "Both scales are continuous, so a point carries its own position on each rather than an index into a list of categories."
+      "subtitle": "Both scales are continuous: a point carries its own x and y, not a category index."
     },
     {
       "path": "components/charts/ScatterChart/Scatter Chart - Several series.html",
       "group": "charts",
       "viewport": "1200x700",
       "name": "Scatter chart - several series",
-      "subtitle": "Each series takes its own palette slot and the legend keys them."
+      "subtitle": "Each series takes its own palette slot, or its own color, and the legend keys them."
+    },
+    {
+      "path": "components/charts/Sparkline/Sparkline - Default.html",
+      "group": "charts",
+      "viewport": "1200x557",
+      "name": "Sparkline - default",
+      "subtitle": "One svg per instance, with no container to measure, so a table of a thousand rows stays cheap."
+    },
+    {
+      "path": "components/charts/Sparkline/Sparkline - Scale.html",
+      "group": "charts",
+      "viewport": "1200x393",
+      "name": "Sparkline - scale",
+      "subtitle": "One series, two pictures: service availability over a year, 93.1-99.5 %."
+    },
+    {
+      "path": "components/charts/Sparkline/Sparkline - Area.html",
+      "group": "charts",
+      "viewport": "1200x354",
+      "name": "Sparkline - area",
+      "subtitle": "area fills the band under the line down to the baseline: zero on the zero scale, the foot of the box on data."
+    },
+    {
+      "path": "components/charts/Sparkline/Sparkline - Gaps and no tooltip.html",
+      "group": "charts",
+      "viewport": "1200x354",
+      "name": "Sparkline - gaps and no tooltip",
+      "subtitle": "A null breaks the line rather than drawing a zero."
     },
     {
       "path": "components/charts/WaterfallChart/Waterfall Chart - Default.html",
@@ -1662,7 +1699,7 @@
       "group": "charts",
       "viewport": "1200x614",
       "name": "Waterfall chart - subtotals",
-      "subtitle": "A subtotal stands on zero like a total, but the chain carries on past it."
+      "subtitle": "A subtotal draws exactly like a total: on zero, at the running sum, and the chain carries on past either."
     },
     {
       "path": "components/foundations/Divider/Divider - Divider component.html",
@@ -1673,14 +1710,21 @@
     {
       "path": "guides/foundations/Charts & dataviz/Charts & dataviz - Categorical palette (8).html",
       "group": "foundations",
-      "viewport": "1200x397",
+      "viewport": "1200x417",
       "name": "Charts & dataviz - categorical palette (8)",
       "subtitle": "Hand-tuned for perceptual distance, not ramp position."
     },
     {
+      "path": "guides/foundations/Charts & dataviz/Charts & dataviz - Ramp and heat.html",
+      "group": "foundations",
+      "viewport": "1200x446",
+      "name": "Charts & dataviz - ramp and heat",
+      "subtitle": "-ds-chart-ramp-N-color is one hue at mid lightness for the ordered stages of one quantity (funnel stages)."
+    },
+    {
       "path": "guides/foundations/Charts & dataviz/Charts & dataviz - Sequential ramp.html",
       "group": "foundations",
-      "viewport": "1200x303",
+      "viewport": "1200x342",
       "name": "Charts & dataviz - sequential ramp",
       "subtitle": "Single-hue, light → dark."
     },
@@ -1694,8 +1738,9 @@
     {
       "path": "guides/foundations/Charts & dataviz/Charts & dataviz - Axis - grid - legend tokens.html",
       "group": "foundations",
-      "viewport": "1200x555",
-      "name": "Charts & dataviz - axis · grid · legend tokens"
+      "viewport": "1200x655",
+      "name": "Charts & dataviz - axis · grid · legend tokens",
+      "subtitle": "The rest of the public layer (axis font size, threshold, dim, hover, focus ring, cap radius, bar gap, area and hatch tokens) is described in the tokens reference."
     },
     {
       "path": "guides/foundations/Charts & dataviz/Charts & dataviz - Reference charts.html",
@@ -1704,17 +1749,18 @@
       "name": "Charts & dataviz - reference charts"
     },
     {
-      "path": "guides/foundations/Charts & dataviz/Charts & dataviz - Empty & loading states.html",
+      "path": "guides/foundations/Charts & dataviz/Charts & dataviz - Empty, loading and error states.html",
       "group": "foundations",
-      "viewport": "1200x441",
-      "name": "Charts & dataviz - empty & loading states"
+      "viewport": "1200x700",
+      "name": "Charts & dataviz - empty, loading and error states",
+      "subtitle": "Every chart draws these itself: empty data shows emptyText, [loading] a skeleton, and [error] errorText."
     },
     {
       "path": "guides/foundations/Charts & dataviz/Charts & dataviz - The frame a chart draws around itself.html",
       "group": "foundations",
       "viewport": "1200x700",
       "name": "Charts & dataviz - the frame a chart draws around itself",
-      "subtitle": "A chart draws its own bordered, padded box by default, because it is read as an object — a plot with axes, a legend and an annex table — and without an edge those parts run into…"
+      "subtitle": "A chart draws its own bordered, padded box by default so its plot, legend and annex table do not run into neighbours."
     },
     {
       "path": "guides/foundations/Colour/Colour - Secondary role.html",
@@ -1766,7 +1812,7 @@
     {
       "path": "guides/foundations/Elevation/Elevation - Shadow scale - semantic aliases.html",
       "group": "foundations",
-      "viewport": "1200x498",
+      "viewport": "1200x534",
       "name": "Elevation - shadow scale · semantic aliases"
     },
     {
@@ -1779,9 +1825,9 @@
     {
       "path": "guides/foundations/Iconography/Iconography - Size scale.html",
       "group": "foundations",
-      "viewport": "1200x367",
+      "viewport": "1200x409",
       "name": "Iconography - size scale",
-      "subtitle": "Five canonical sizes."
+      "subtitle": "Five canonical sizes, -icon-2xs to -icon-lg."
     },
     {
       "path": "guides/foundations/Iconography/Iconography - Library.html",
@@ -1800,9 +1846,9 @@
     {
       "path": "guides/foundations/Layout/Layout - Breakpoints.html",
       "group": "foundations",
-      "viewport": "1200x690",
+      "viewport": "1200x700",
       "name": "Layout - breakpoints",
-      "subtitle": "A custom property can't be read inside an @media condition, so for media queries use the compile-time Sass aliases instead: after @use 'breakpoints' as bp write @include bp.up(md)…"
+      "subtitle": "A custom property can't be read inside an @media condition, so for media queries use the compile-time Sass aliases instead: after @use 'styles/breakpoints' as bp write @include…"
     },
     {
       "path": "guides/foundations/Layout/Layout - Layout grid.html",
@@ -1826,23 +1872,23 @@
     {
       "path": "components/foundations/Stack/Stack - Stack.html",
       "group": "foundations",
-      "viewport": "1200x363",
+      "viewport": "1200x364",
       "name": "Stack - stack",
-      "subtitle": "Arranges children in a vertical column with consistent gap."
+      "subtitle": "A vertical column."
     },
     {
       "path": "components/foundations/Inline/Inline - Inline.html",
       "group": "foundations",
-      "viewport": "1200x320",
+      "viewport": "1200x416",
       "name": "Inline - inline",
-      "subtitle": "Lays children out in a horizontal row with wrapping and gap control."
+      "subtitle": "A horizontal row for tags, button groups and filter chips."
     },
     {
       "path": "components/foundations/Container/Container - Container.html",
       "group": "foundations",
-      "viewport": "1200x321",
+      "viewport": "1200x342",
       "name": "Container - container",
-      "subtitle": "Centers content with a max-width constraint."
+      "subtitle": "Centres content under a max width: sm · md · lg · xl (default) · full (no cap)."
     },
     {
       "path": "guides/foundations/Motion/Motion - Durations.html",
@@ -1861,20 +1907,20 @@
     {
       "path": "guides/foundations/Opacity & alpha tokens/Opacity & alpha tokens - Semantic opacity tokens.html",
       "group": "foundations",
-      "viewport": "1200x607",
+      "viewport": "1200x662",
       "name": "Opacity & alpha tokens - semantic opacity tokens"
     },
     {
       "path": "guides/foundations/Radius/Radius - Scale.html",
       "group": "foundations",
-      "viewport": "1200x661",
+      "viewport": "1200x684",
       "name": "Radius - scale",
       "subtitle": "One tile per stop."
     },
     {
       "path": "guides/foundations/Radius/Radius - Roles - reach for one of these, not for a stop.html",
       "group": "foundations",
-      "viewport": "1200x527",
+      "viewport": "1200x541",
       "name": "Radius - roles — reach for one of these, not for a stop",
       "subtitle": "Four role tokens carry every corner in the library; the scale above is what they resolve to."
     },
@@ -1895,13 +1941,13 @@
     {
       "path": "guides/foundations/Surface levels/Surface levels.html",
       "group": "foundations",
-      "viewport": "1200x625",
+      "viewport": "1200x700",
       "name": "Surface levels"
     },
     {
       "path": "guides/foundations/Theming & dark mode/Theming & dark mode - Activation.html",
       "group": "foundations",
-      "viewport": "1200x642",
+      "viewport": "1200x700",
       "name": "Theming & dark mode - activation",
       "subtitle": "The active theme is a single attribute on the document root (html) — a whole-document switch, not per-subtree."
     },
@@ -1910,20 +1956,21 @@
       "group": "foundations",
       "viewport": "1200x700",
       "name": "Typography - type ramp",
-      "subtitle": "Every utility class side-by-side."
+      "subtitle": "Every size role side-by-side."
     },
     {
       "path": "guides/foundations/Typography/Typography - Mono family.html",
       "group": "foundations",
-      "viewport": "1200x462",
+      "viewport": "1200x482",
       "name": "Typography - mono family",
       "subtitle": "JetBrains Mono for any literal value the operator might paste, search or read aloud."
     },
     {
       "path": "guides/foundations/Typography/Typography - Families.html",
       "group": "foundations",
-      "viewport": "1200x316",
-      "name": "Typography - families"
+      "viewport": "1200x358",
+      "name": "Typography - families",
+      "subtitle": "Headings read -font-heading, .t-display reads -font-display; both default to -font-sans."
     },
     {
       "path": "guides/foundations/Z-index/Z-index.html",
@@ -1934,7 +1981,7 @@
     {
       "path": "guides/patterns/Page composition/Page composition - Four regions, and three of them are components.html",
       "group": "patterns",
-      "viewport": "1200x700",
+      "viewport": "1200x679",
       "name": "Page composition - four regions, and three of them are components",
       "subtitle": "Nothing on a page sits outside one of these."
     },
@@ -1968,21 +2015,21 @@
     {
       "path": "guides/patterns/Page composition/Page composition - Checking a composition.html",
       "group": "patterns",
-      "viewport": "1200x502",
+      "viewport": "1200x534",
       "name": "Page composition - checking a composition, instead of eyeballing it",
       "subtitle": "In the order that catches the most."
     },
     {
       "path": "guides/patterns/Activity/Activity - Activity stream.html",
       "group": "patterns",
-      "viewport": "1200x644",
+      "viewport": "1200x664",
       "name": "Activity - activity stream",
       "subtitle": "Vertical list of attributed events on a record."
     },
     {
       "path": "guides/patterns/Activity/Activity - Empty state.html",
       "group": "patterns",
-      "viewport": "1200x534",
+      "viewport": "1200x602",
       "name": "Activity - empty state",
       "subtitle": "Newly created records have nothing in the log."
     },
@@ -1995,23 +2042,23 @@
     {
       "path": "guides/patterns/Filter bar/Filter bar - Inline row.html",
       "group": "patterns",
-      "viewport": "1200x458",
+      "viewport": "1200x450",
       "name": "Filter bar - inline row",
       "subtitle": "Search on the left, dropdown facets, applied-filter tags, and a clear-all link — all sitting on one row above the list."
     },
     {
       "path": "guides/patterns/Filter bar/Filter bar - Stacked variant.html",
       "group": "patterns",
-      "viewport": "1200x437",
+      "viewport": "1200x429",
       "name": "Filter bar - stacked variant",
       "subtitle": "On narrow viewports the bar wraps to two rows: search on top, facets and applied tags below."
     },
     {
       "path": "guides/patterns/Filter bar/Filter bar - Wired to a table.html",
       "group": "patterns",
-      "viewport": "1200x699",
+      "viewport": "1200x691",
       "name": "Filter bar - wired to a table",
-      "subtitle": "The same bar driving a live ds-table — the search box feeds the table's built-in client filter ([filterQuery], case-insensitive substring over every column), the status facet…"
+      "subtitle": "The same bar driving a live ds-table — the search box feeds the table's built-in client filter ([filterQuery], case-insensitive substring over the filterable columns, or every…"
     },
     {
       "path": "guides/patterns/Filter bar/Filter bar - Usage.html",
@@ -2031,12 +2078,12 @@
       "group": "patterns",
       "viewport": "1200x356",
       "name": "Form layout - inline edit",
-      "subtitle": "One-line label + control + save/cancel pill."
+      "subtitle": "One-line label + control + save/cancel buttons."
     },
     {
       "path": "guides/patterns/Form layout/Form layout - Validation & messages.html",
       "group": "patterns",
-      "viewport": "1200x510",
+      "viewport": "1200x530",
       "name": "Form layout - validation & messages",
       "subtitle": "Layout is only half a form — this is when feedback appears and where it goes."
     },
@@ -2069,7 +2116,7 @@
     {
       "path": "guides/practice/Do & Don't/Do & Don't - Table density.html",
       "group": "practice",
-      "viewport": "1200x488",
+      "viewport": "1200x508",
       "name": "Do / Don't - table density",
       "subtitle": "Cozy is the default."
     },
@@ -2104,9 +2151,9 @@
     {
       "path": "guides/practice/Token discipline/Token discipline - The rule.html",
       "group": "practice",
-      "viewport": "1200x335",
+      "viewport": "1200x315",
       "name": "Token discipline - the rule",
-      "subtitle": "Every value that has a design role — colour, spacing, radius, border width, motion — consumes a var(-token)."
+      "subtitle": "Every value with a design role (colour, spacing, radius, border width, motion) reads a var(-token)."
     },
     {
       "path": "guides/practice/Token discipline/Token discipline - Comparison tiles.html",
@@ -5374,21 +5421,7 @@
       "scope": ":root[data-theme=dark]"
     },
     {
-      "name": "--chart-tooltip-bg-color",
-      "value": "var(--surface-overlay)",
-      "kind": "color",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-theme=dark]"
-    },
-    {
-      "name": "--chart-tooltip-text-color",
-      "value": "var(--text-primary)",
-      "kind": "color",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-theme=dark]"
-    },
-    {
-      "name": "--chart-tooltip-border-color",
+      "name": "--tooltip-border-color",
       "value": "var(--border-strong)",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
@@ -6266,6 +6299,18 @@
       "definedIn": "_ds_bundle.css"
     },
     {
+      "name": "--ds-motion-chart-tooltip-move-duration",
+      "value": ".3s",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-motion-chart-tooltip-move-easing",
+      "value": "var(--ease-standard)",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
       "name": "--opacity-disabled",
       "value": ".5",
       "kind": "other",
@@ -6670,6 +6715,18 @@
     {
       "name": "--ds-field-focus-shadow-error",
       "value": "var(--focus-field-error)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-field-focus-shadow-warning",
+      "value": "var(--focus-field-warning)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-field-focus-shadow-success",
+      "value": "var(--focus-field-success)",
       "kind": "shadow",
       "definedIn": "_ds_bundle.css"
     },
@@ -7352,6 +7409,24 @@
       "definedIn": "_ds_bundle.css"
     },
     {
+      "name": "--tooltip-bg-color",
+      "value": "var(--surface-overlay)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--tooltip-text-color",
+      "value": "var(--text-primary)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--tooltip-border-color",
+      "value": "var(--border-default)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
       "name": "--popover-maxw",
       "value": "320px",
       "kind": "spacing",
@@ -7761,6 +7836,12 @@
     },
     {
       "name": "--duration-slowest",
+      "value": "0ms",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-motion-chart-tooltip-move-duration",
       "value": "0ms",
       "kind": "other",
       "definedIn": "_ds_bundle.css"
@@ -8311,6 +8392,12 @@
       "definedIn": "_ds_bundle.css"
     },
     {
+      "name": "--chart-bg-color",
+      "value": "var(--surface-default)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
       "name": "--chart-frame-border-color",
       "value": "var(--border-default)",
       "kind": "color",
@@ -8332,12 +8419,6 @@
       "name": "--chart-frame-padding",
       "value": "var(--space-5)",
       "kind": "spacing",
-      "definedIn": "_ds_bundle.css"
-    },
-    {
-      "name": "--chart-frame-bg-color",
-      "value": "var(--surface-default)",
-      "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
     {
@@ -8413,26 +8494,20 @@
       "definedIn": "_ds_bundle.css"
     },
     {
-      "name": "--chart-focus-halo-color",
-      "value": "white",
-      "kind": "color",
-      "definedIn": "_ds_bundle.css"
-    },
-    {
       "name": "--chart-tooltip-bg-color",
-      "value": "var(--neutral-900)",
+      "value": "var(--tooltip-bg-color)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
     {
       "name": "--chart-tooltip-text-color",
-      "value": "var(--neutral-0)",
+      "value": "var(--tooltip-text-color)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
     {
       "name": "--chart-tooltip-border-color",
-      "value": "var(--neutral-700)",
+      "value": "var(--tooltip-border-color)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
@@ -8479,9 +8554,9 @@
       "definedIn": "_ds_bundle.css"
     },
     {
-      "name": "--chart-hatch-color",
-      "value": "var(--surface-default)",
-      "kind": "color",
+      "name": "--chart-area-fade-opacity",
+      "value": ".32",
+      "kind": "other",
       "definedIn": "_ds_bundle.css"
     },
     {
@@ -8659,6 +8734,12 @@
       "definedIn": "_ds_bundle.css"
     },
     {
+      "name": "--ds-chart-bg-color",
+      "value": "var(--chart-bg-color)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
       "name": "--ds-chart-frame-border-color",
       "value": "var(--chart-frame-border-color)",
       "kind": "color",
@@ -8680,12 +8761,6 @@
       "name": "--ds-chart-frame-padding",
       "value": "var(--chart-frame-padding)",
       "kind": "spacing",
-      "definedIn": "_ds_bundle.css"
-    },
-    {
-      "name": "--ds-chart-frame-bg-color",
-      "value": "var(--chart-frame-bg-color)",
-      "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
     {
@@ -8761,12 +8836,6 @@
       "definedIn": "_ds_bundle.css"
     },
     {
-      "name": "--ds-chart-focus-halo-color",
-      "value": "var(--chart-focus-halo-color)",
-      "kind": "color",
-      "definedIn": "_ds_bundle.css"
-    },
-    {
       "name": "--ds-chart-tooltip-bg-color",
       "value": "var(--chart-tooltip-bg-color)",
       "kind": "color",
@@ -8827,9 +8896,9 @@
       "definedIn": "_ds_bundle.css"
     },
     {
-      "name": "--ds-chart-hatch-color",
-      "value": "var(--chart-hatch-color)",
-      "kind": "color",
+      "name": "--ds-chart-area-fade-opacity",
+      "value": "var(--chart-area-fade-opacity)",
+      "kind": "other",
       "definedIn": "_ds_bundle.css"
     },
     {
@@ -9722,6 +9791,20 @@
       "scope": ":root[data-focus=ring]"
     },
     {
+      "name": "--ds-field-focus-shadow-warning",
+      "value": "0 0 0 2px var(--focus-ring-inner), 0 0 0 4px var(--warning-text)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-focus=ring]"
+    },
+    {
+      "name": "--ds-field-focus-shadow-success",
+      "value": "var(--focus-ring-success)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-focus=ring]"
+    },
+    {
       "name": "--focus-ring-offset",
       "value": "0px",
       "kind": "spacing",
@@ -9743,6 +9826,20 @@
       "scope": ":root[data-focus=edge]"
     },
     {
+      "name": "--ds-field-focus-shadow-warning",
+      "value": "0 0 0 var(--border-width-default) var(--warning-text)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-focus=edge]"
+    },
+    {
+      "name": "--ds-field-focus-shadow-success",
+      "value": "0 0 0 var(--border-width-default) var(--success)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-focus=edge]"
+    },
+    {
       "name": "--focus-ring-offset",
       "value": "calc(-1 * var(--focus-ring-width))",
       "kind": "spacing",
@@ -9759,6 +9856,20 @@
     {
       "name": "--ds-field-focus-shadow-error",
       "value": "var(--focus-ring-inset-error)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-focus=inset]"
+    },
+    {
+      "name": "--ds-field-focus-shadow-warning",
+      "value": "inset 0 0 0 2px var(--focus-ring-inner), inset 0 0 0 4px var(--warning-text)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-focus=inset]"
+    },
+    {
+      "name": "--ds-field-focus-shadow-success",
+      "value": "inset 0 0 0 2px var(--focus-ring-inner), inset 0 0 0 4px var(--success)",
       "kind": "shadow",
       "definedIn": "_ds_bundle.css",
       "scope": "[data-focus=inset]"
@@ -9815,6 +9926,20 @@
     {
       "name": "--_date-picker-day-disabled-label-color",
       "value": "var(--ds-date-picker-day-disabled-label-color, var(--text-disabled))",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".day-specimen"
+    },
+    {
+      "name": "--_date-picker-day-label-color",
+      "value": "var(--ds-date-picker-day-label-color, var(--text-primary))",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".day-specimen"
+    },
+    {
+      "name": "--_date-picker-day-muted-label-color",
+      "value": "var(--ds-date-picker-day-muted-label-color, var(--text-muted))",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ".day-specimen"

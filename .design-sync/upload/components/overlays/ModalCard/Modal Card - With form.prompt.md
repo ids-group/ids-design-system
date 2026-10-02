@@ -1,5 +1,5 @@
 # Modal Card - with form
 
-Modal hosting a small form — label, input, select.
+A small form in the body: inputs and a select.
 
 Full API: `ModalCard.d.ts`. How to use the component anywhere: `ModalCard.prompt.md`.

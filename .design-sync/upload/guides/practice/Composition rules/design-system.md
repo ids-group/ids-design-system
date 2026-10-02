@@ -73,7 +73,7 @@ container.
 ### Choose a ROLE, never a raw size
 
 The library ships named roles. Use the class; the size, weight, line-height and tracking
-come with it, and every one is retunable through `--ds-t-<role>-*` without touching the
+come with it, and every one is retunable through `--ds-typography-<role>-*` without touching the
 call site.
 
 | Role | Use for |

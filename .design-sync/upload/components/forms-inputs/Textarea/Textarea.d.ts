@@ -7,26 +7,26 @@ import * as React from 'react';
 export interface TextareaProps {
   /** Helper text shown below the control. */
   hint?: string;
-  /** Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`. */
+  /** Error text. Shown immediately; takes precedence over `errors`. */
   error?: string;
   /** Advisory text, shown when there is no error. */
   warning?: string;
-  /** Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not. */
+  /** Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button. */
   reserveMessage?: boolean | null;
   /** Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone. */
-  messageIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
-  /** Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array. */
+  messageIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  /** Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`. */
   errors?: unknown;
-  /** Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text. */
+  /** Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. */
   invalid?: boolean;
-  /** Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form. */
+  /** Whether the user has interacted with the field. Bound by signal forms; gates `errors`. */
   touched?: boolean;
-  /** Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to. */
+  /** Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display. */
   hidden?: boolean;
   /** Text value, two-way bound. */
   value?: string;
   onValueChange?: (value: string) => void;
-  /** Field height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Field height; falls back to `DS_CONFIG.control.size`, then `'md'`. */
   size?: ('sm' | 'md' | 'lg') | null;
   /** Label shown above the field. */
   label?: string;
@@ -36,15 +36,15 @@ export interface TextareaProps {
   disabled?: boolean;
   /** Prevents editing while still allowing focus and selection. */
   readOnly?: boolean;
-  /** The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed. */
+  /** The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it. */
   readonlyBinding?: boolean;
-  /** Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning; paints the success border. */
   success?: string;
-  /** Marks the field required — shows an asterisk and sets `aria-required`. */
+  /** Marks the field required - shows an asterisk and sets `aria-required`. */
   required?: boolean;
   /** Shows an "(optional)" marker next to the label (ignored when `required`). */
   optional?: boolean;
-  /** Native `rows` attribute — visible line count. */
+  /** Native `rows` attribute - visible line count. */
   rows?: number;
   /** Native `name` attribute. */
   name?: string | null;
@@ -54,19 +54,19 @@ export interface TextareaProps {
   minRows?: number | null;
   /** Maximum height in lines when `autosize`, beyond which it scrolls. */
   maxRows?: number | null;
-  /** Native CSS `resize` behaviour — ignored when `autosize`. */
+  /** Native CSS `resize` behaviour - ignored when `autosize`. */
   resize?: ('none' | 'vertical' | 'horizontal' | 'both');
   /** Accessible name when no visible `label` is provided. */
   ariaLabel?: string | null;
-  /** Character limit - shows a live "{current}/{max}" counter below the field. `maxLengthMode` decides what happens at the limit. Counts `value.length`, the UTF-16 units the native `maxlength` counts, whitespace included, unless `countTrimmed` is set. */
+  /** Character limit with a live "{current}/{max}" counter; `maxLengthMode` decides what happens at the limit. Counts `value.length` (UTF-16 units, as native `maxlength` does) unless `countTrimmed` is set. */
   maxLength?: number | null;
-  /** `'hard'` applies the native maxlength attribute, so typing and paste stop at `maxLength`. `'soft'` lets the text run past it: the counter turns red, the characters past the limit are highlighted, and the field reports invalid (`aria-invalid`, with the counter as its description). Blocking a save on it is the form's job. */
+  /** `'hard'` applies the native maxlength attribute. `'soft'` lets the text run past it: the counter turns red, the excess is highlighted and the field reports invalid (`aria-invalid`). */
   maxLengthMode?: ('hard' | 'soft');
-  /** Leaves whitespace at either end of the text out of the counter, the soft-limit state and the highlight, for a value the server stores trimmed. Whitespace between words still counts. The native `maxlength` of `maxLengthMode="hard"` counts every character regardless. */
+  /** Leaves leading and trailing whitespace out of the counter, soft-limit state and highlight. The native `maxlength` of `maxLengthMode="hard"` counts every character regardless. */
   countTrimmed?: boolean;
   /** Native `minlength` attribute. */
   minLength?: number | null;
-  /** Native `pattern` attribute — signal forms sends the schema's RegExp list. */
+  /** Native `pattern` attribute - signal forms sends the schema's RegExp list. */
   pattern?: readonly RegExp[];
   /** Element content. */
   children?: React.ReactNode;

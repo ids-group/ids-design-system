@@ -1,5 +1,7 @@
 # Scatter chart - default
 
-Both scales are continuous, so a point carries its own position on each rather than an index into a list of categories. xLabel and yLabel are not decoration: without them the reader has two numbers and no idea which is which, and on a scatter that is the whole reading. Marks are drawn semi-transparent, because the interesting thing is where they pile up and at full opacity a cluster of forty and a cluster of four are the same solid disc. Points settle into place together; a scatter has no stagger.
+Both scales are continuous: a point carries its own x and y, not a category index. Set xLabel and yLabel; without them the reader has two numbers and no idea which is which. Marks are semi-transparent (--ds-scatter-chart-dot-opacity, 0.72; radius --ds-scatter-chart-dot-radius) so a pile-up of forty reads darker than four, and they settle in together; a scatter has no stagger.
+
+tickCount is a hint for both axes; ticks snap to a round step. dimOthers fades every mark but the one under the pointer, and tooltip="none" drops the panel.
 
 Full API: `ScatterChart.d.ts`. How to use the component anywhere: `ScatterChart.prompt.md`.

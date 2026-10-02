@@ -5,7 +5,7 @@ import * as React from 'react';
  * what3words pill (`ds-w3w`) — displays a three-word location identifier (`///daring.lion.race`) as a monospace, brand-coloured token with a map icon; the `///` prefix mark is danger-red. Not a text input: it is a read-only, click-to-copy display chip that sits with badges/tags as a pill-family component.
  */
 export interface W3wProps {
-  /** Marker rendered before the address (e.g. the "///" glyph). */
+  /** Marker before the address. */
   prefix?: string;
   /** The three-word address, rendered after `prefix`. */
   address?: string;

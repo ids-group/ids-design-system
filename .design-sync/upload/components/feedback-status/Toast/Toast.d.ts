@@ -5,16 +5,16 @@ import * as React from 'react';
  * Single toast notification pill — port of `ds-toast`. In Angular these are raised at runtime by ToastService; this binding renders the specimen statically wherever you place it (stack several with `ToastRegion`).
  */
 export interface ToastProps {
-  /** Severity — drives colour and the default icon or spinner. */
+  /** Severity: drives colour and the default icon or spinner. */
   variant?: ('info' | 'success' | 'warning' | 'error' | 'loading');
   /** Optional bold heading above the message. */
   title?: string;
-  /** The same field `ToastOptions.body` carries, so a specimen and a raised toast agree. */
+  /** Message text; the same field as `ToastOptions.body`. */
   body?: string;
   /** Show a close button that emits `closed`. */
   dismissible?: boolean;
   /** Override the variant's default icon. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
   /** Optional action button rendered before the dismiss control. */
   action?: unknown;
   /** Fires when the toast is dismissed or its action is invoked. */

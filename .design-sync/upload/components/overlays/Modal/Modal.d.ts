@@ -8,9 +8,9 @@ export interface ModalProps {
   /** Open state, two-way bound. */
   open?: boolean;
   onOpenChange?: (value: boolean) => void;
-  /** Dialog width — sm/md/lg/xl/fullscreen. */
+  /** Dialog width. */
   size?: (('sm' | 'md' | 'lg') | 'xl' | 'fullscreen');
-  /** Severity, forwarded to the card — drives its icon-badge tint, title colour, default icon and ARIA role. Null (default) is a neutral dialog. `false` and `undefined` land on null too, so `[status]="isDangerous && 'error'"` binds. */
+  /** Severity, forwarded to the card. Null (default) is a neutral dialog. `false` and `undefined` land on null too, so `[status]="isDangerous && 'error'"` binds. */
   status?: ('info' | 'success' | 'warning' | 'error') | null;
   /** Dialog title, shown in the header and used for `aria-labelledby`. */
   title?: string;
@@ -18,13 +18,13 @@ export interface ModalProps {
   subtitle?: string | null;
   /** Fires once the close (leave) animation finishes. */
   onClosed?: (value: void) => void;
-  /** Emit this yourself from a confirm action in the projected content — not fired by the modal itself. */
+  /** Emit this yourself from a confirm action in the projected content; the modal never fires it. */
   onConfirmed?: (value: void) => void;
-  /** Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for. Unset falls back to `DS_CONFIG.modal.dividers`, then `true`. */
+  /** Draws the rules under the header and over the actions; off also tightens the vertical padding. Unset falls back to `DS_CONFIG.modal.dividers`, then `true`. */
   dividers?: boolean | null;
   /** When false, clicking the scrim does not close the modal. */
   closeOnBackdrop?: boolean;
-  /** When true, neither backdrop click nor Escape closes the modal — only programmatic or explicit close button. */
+  /** When true, neither backdrop click nor Escape closes the modal. */
   persistent?: boolean;
   staticPreview?: boolean;
   /** Content for the `[eyebrow]` slot. */

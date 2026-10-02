@@ -5,7 +5,7 @@ import * as React from 'react';
  * Page-bottom row (`ds-page-footer`) — the host element itself is the flex row (`justify-content: space-between`, wraps). Three variants via `variant`: `"default"` (plain border-top spread), `"compact"` (subtle bordered card), `"save"` (brand-tinted unsaved-changes bar).
  */
 export interface PageFooterProps {
-  /** Visual style — default, compact, or the accented `save`-bar look. */
+  /** Visual style: default, compact, or the accented `save`-bar look. */
   variant?: ('default' | 'compact' | 'save');
   /** Content for the `[brand]` slot. */
   brand?: React.ReactNode;

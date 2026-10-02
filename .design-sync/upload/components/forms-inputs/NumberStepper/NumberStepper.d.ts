@@ -8,17 +8,17 @@ export interface NumberStepperProps {
   /** Current numeric value, two-way bound. */
   value?: number;
   onValueChange?: (value: number) => void;
-  /** Lower bound — the decrement button and typed input clamp to it. */
+  /** Lower bound; the decrement button and typed input clamp to it. */
   min?: number;
-  /** Upper bound — the increment button and typed input clamp to it; unbounded when null. */
+  /** Upper bound; the increment button and typed input clamp to it. Unbounded when null. */
   max?: number | null;
-  /** Amount added or subtracted per increment/decrement. */
+  /** Amount added or subtracted per click. */
   step?: number;
-  /** Control height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   size?: ('sm' | 'md' | 'lg') | null;
   /** Disables the stepper and blocks all interaction. */
   disabled?: boolean;
-  /** Accessible name for the number input (the stepper has no visible label). */
+  /** Accessible name for the number input; the stepper has no visible label. */
   ariaLabel?: string | null;
   /** Element content. */
   children?: React.ReactNode;

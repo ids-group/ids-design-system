@@ -1,6 +1,6 @@
 # Tabs - closable
 
-When closable is set each tab shows a close button. Clicking it emits tabClosed with the tab's value (or label as fallback). The host is responsible for removing the tab. Closing a tab does not change the active index.
+closable gives each tab a close button that emits tabClosed with the tab's value, else its label. The host removes the tab; the active index does not change. Delete on a focused tab closes it too.
 
 panel.
 

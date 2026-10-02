@@ -7,65 +7,65 @@ import * as React from 'react';
 export interface ButtonProps {
   /** Helper text shown below the control. */
   hint?: string;
-  /** Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`. */
+  /** Error text. Shown immediately; takes precedence over `errors`. */
   error?: string;
   /** Advisory text, shown when there is no error. */
   warning?: string;
-  /** Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not. */
+  /** Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button. */
   reserveMessage?: boolean | null;
   /** Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone. */
-  messageIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
+  messageIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
   /** Brand/status hue family. */
   color?: ('primary' | 'secondary' | 'tertiary' | 'neutral' | 'error' | 'success' | 'warning');
-  /** Fill pattern. Every color×variant pair renders; the discouraged ones dev-warn with the reason. `text` is discouraged for every colour — prefer the global `.link` class, and keep this one only where the ds-button API is needed. */
+  /** Fill pattern. Every color×variant pair renders; the discouraged ones dev-warn with the reason. Prefer the global `.link` class over `text` unless the ds-button API is needed. */
   variant?: ('solid' | 'tonal' | 'ghost' | 'outline' | 'text');
-  /** Where the contents sit once the button is wider than them, which in practice means `fullWidth`. `'between'` pushes the label and a trailing icon to opposite edges. */
+  /** Where the contents sit once the button is wider than them (`fullWidth`, a stretching grid cell). `'between'` pushes the label and a trailing icon to opposite edges. */
   align?: ('center' | 'between');
-  /** Button height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   size?: ('sm' | 'md' | 'lg') | null;
-  /** `RouterLink` target. Set it and the button renders an `<a [routerLink]>` with `routerLinkActive`: middle-click, open-in-new-tab and the announced "link" role depend on the element, not on the look. Accepts a `UrlTree` as well as a path or a command array — `Router.createUrlTree` is the way to reach the `UrlCreationOptions` that have no input of their own here (`relativeTo`, `preserveFragment`). */
+  /** `RouterLink` target. Set it and the button renders an `<a [routerLink]>` with `routerLinkActive`, so middle-click, open-in-new-tab and the "link" role work. Accepts a `UrlTree` as well as a path or command array. */
   routerLink?: unknown;
-  /** Plain `href` target, used when `routerLink` is not set — an external address or a download. Renders an `<a href>`; same reasoning as `routerLink`. */
+  /** Plain `href` target, used when `routerLink` is not set (external address, download). Renders an `<a href>`. */
   href?: string;
-  /** Hash to append to a `routerLink` destination — the section of the page to land on. routerLink-only: on an `href` put it in the URL, and on a plain button it is ignored with a dev warning. */
+  /** Hash to append to a `routerLink` destination. routerLink-only: on an `href` put it in the URL; on a plain button it is ignored with a dev warning. */
   fragment?: string | undefined;
-  /** Query parameters for a `routerLink` destination. routerLink-only, same as `fragment`. */
+  /** Query parameters for a `routerLink` destination. routerLink-only. */
   queryParams?: unknown;
-  /** How the destination's query merges with the current one — `'merge'`, `'preserve'` or `'replace'`. routerLink-only. */
+  /** How the destination's query merges with the current one. routerLink-only. */
   queryParamsHandling?: unknown;
-  /** Browsing context for the link — `'_blank'` and the rest. Both link destinations take it; on a plain button it is ignored with a dev warning. */
+  /** Browsing context for the link (`'_blank'`, ...). Ignored with a dev warning on a plain button. */
   target?: string | undefined;
-  /** `rel` for the link. Pair it with `target="_blank"`: without `noopener` the opened page can reach back through `window.opener`. Both link destinations take it. */
+  /** `rel` for the link; pair with `target="_blank"` (`noopener` blocks `window.opener` access). */
   rel?: string | undefined;
-  /** How `routerLinkActive` decides the `active` CLASS — prefix by default, so a section link stays lit inside its own pages. It also bounds the announcement, because the same directive writes it: narrowed to `{ exact: true }`, a prefix match is no longer active and the link announces nothing rather than `true`. Pass `ariaCurrent` alongside to keep one. */
+  /** How `routerLinkActive` decides the `active` class; prefix by default. It also bounds the announcement: with `{ exact: true }` a prefix match announces nothing rather than `true`. Pass `ariaCurrent` alongside to keep one. */
   routerLinkActiveOptions?: unknown;
-  /** Overrides what the link announces. Unset, an exact match announces `page` and a prefix match announces `true`, which is what ARIA means by each; pass `null` to announce nothing, or one of the other values when the link is a step or a location rather than a page. */
+  /** Overrides what the link announces. Unset, an exact match announces `page` and a prefix match `true`; `null` announces nothing; use `step` or `location` when the link is not a page. */
   ariaCurrent?: ('page' | 'step' | 'location' | 'date' | 'time' | true) | null | undefined;
-  /** Native `type`, defaulting to `'button'` so it never submits an ancestor form by accident. Button-only: ignored on a link, with a dev warning. */
+  /** Native `type`; defaults to `'button'` so it never submits an ancestor form. Button-only: ignored on a link, with a dev warning. */
   type?: ('button' | 'submit' | 'reset');
   /** Disables the button and blocks `pressed`. */
   disabled?: boolean;
-  /** Busy state — disables interaction and sets `aria-busy`. Button-only: a navigation cannot be in flight before it starts, so on an anchor it is ignored with a dev-mode warning. */
+  /** Busy state: disables interaction and sets `aria-busy`. Button-only; ignored on an anchor with a dev warning. */
   loading?: boolean;
-  /** Stretch to fill the container: the host becomes block-level and 100% wide. */
+  /** Fills the container: the host becomes block-level and 100% wide. */
   fullWidth?: boolean;
   /** Accessible name, forwarded as `aria-label`. For an icon-only or non-descriptive label. */
   ariaLabel?: string | null;
-  /** Leading icon, before the projected content. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
-  /** Trailing icon, after the projected content. */
-  trailingIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
-  /** ARIA `aria-haspopup`, forwarded to the inner <button> — set when this button triggers a menu/dialog/listbox overlay. */
+  /** Icon before the projected content. */
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  /** Icon after the projected content. */
+  trailingIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  /** `aria-haspopup` on the inner <button>; set when this button triggers an overlay. */
   ariaHasPopup?: 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' | null;
-  /** ARIA `aria-expanded`, forwarded to the inner <button> — bind to the overlay's open state on a trigger button. */
+  /** `aria-expanded` on the inner <button>; bind to the overlay's open state. */
   ariaExpanded?: boolean | null;
-  /** ARIA `aria-controls`, forwarded to the inner <button> — the id of the panel this button opens, e.g. `ds-app-layout`'s `railId`. */
+  /** `aria-controls` on the inner <button>: the id of the panel this button opens. */
   ariaControls?: string | null;
-  /** Why the button is refused, shown as its second line and read only while `disabled`. Setting it also changes HOW the button is disabled — `aria-disabled` instead of the native attribute, because a natively disabled button cannot be focused and the reason would never be announced, so the click is swallowed in `onClick` instead. Uncapped: the text wraps and the button grows. Same name and meaning as `TableRowAction.disabledReason`. */
+  /** Why the button is refused, shown as its second line and read only while `disabled`. Setting it uses `aria-disabled` instead of the native attribute (a native disabled button cannot be focused, so the reason would go unannounced) and swallows the click. Uncapped: the text wraps. */
   disabledReason?: string;
-  /** ARIA `aria-describedby` — point the button at a description the app renders itself, such as a `ds-field-message` under a form. Merged with the id of `disabledReason` when both are present. */
+  /** `aria-describedby` pointing at a description the app renders itself. Merged with the id of `disabledReason` when both are present. */
   ariaDescribedBy?: string | null;
-  /** Fires on click, unless `disabled` or `loading`. */
+  /** Fires on click unless `disabled` or `loading`. */
   onPressed?: (value: MouseEvent) => void;
   /** Content for the `[dsButtonSubtext]` slot. */
   subtext?: React.ReactNode;
