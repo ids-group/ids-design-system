@@ -43,6 +43,7 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import {
   barExtent,
+  plainValue,
   resolveMax,
   segmentWidths,
   widthPercent,
@@ -221,7 +222,8 @@ export class BarChartComponent
         entries: [
           {
             label: entry.row.label,
-            value: barExtent(entry.row.value).high,
+            value:
+              plainValue(entry.row.value) ?? barExtent(entry.row.value).high,
             formatted: entry.formattedValue,
             color: entry.color,
             detail: this.partOfWhole()
@@ -311,7 +313,7 @@ export class BarChartComponent
         widthPercent: widthPercent(span, max),
         formattedValue: isRange
           ? `${format(extent.low, 'tooltip')} - ${format(extent.high, 'tooltip')}`
-          : format(extent.high, 'tooltip'),
+          : format(plainValue(row.value) ?? extent.high, 'tooltip'),
         targetPercent:
           row.target === undefined ? null : widthPercent(row.target, max),
         formattedTarget:
@@ -342,7 +344,9 @@ export class BarChartComponent
         this.caption() ?? this.intl().chart.title,
         this.data().map((row) => ({
           label: row.label,
-          value: barExtent(row.value).high - barExtent(row.value).low,
+          value:
+            plainValue(row.value) ??
+            barExtent(row.value).high - barExtent(row.value).low,
         })),
         (value) => this.valueFormatResolved()(value, 'tooltip'),
         this.dataTableResolved() !== 'none',
