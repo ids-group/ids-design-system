@@ -17,8 +17,10 @@ import { AppLayoutComponent } from './app-layout.component';
  * PUT IT ON THE FOCUSABLE CONTROL, not on a wrapper: on `<ds-icon-button>` the
  * host is the wrapper, not the inner `<button>`. With a DS button, skip this
  * directive and bind its forwarding inputs instead:
- * `[ariaExpanded]="layout.railOverlay() ? layout.railOpen() : null"` and
- * `[ariaControls]="layout.railId"` off a `<ds-app-layout #layout>` template ref.
+ * `[ariaExpanded]="layout.railOverlay() ? layout.railOpen() : null"`,
+ * `[ariaControls]="layout.railOverlay() ? layout.railId : null"` and
+ * `(pressed)="layout.railOpen.set(!layout.railOpen())"` off a
+ * `<ds-app-layout #layout>` template ref.
  *
  * Both attributes are dropped while the rail is NOT an overlay, since
  * `aria-expanded="false"` would misstate a permanently visible rail.

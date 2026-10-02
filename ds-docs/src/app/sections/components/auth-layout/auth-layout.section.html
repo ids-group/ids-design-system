@@ -11,62 +11,40 @@
   </span>
 
   <p class="block-desc t-s">
-    Sign-in, forgot password, reset and MFA are the same four parts every time:
-    a brand lockup, an optional tagline, one card holding the form, and a
-    support line underneath. The brand row is the sidenav's row — same
-    <code class="t-mono-inline">
-      brand
-    </code> /
-    <code class="t-mono-inline">
-      logoLetter
-    </code> /
-    <code class="t-mono-inline">
-      [dsBrandName]
-    </code> contract, and an accent
-    letter-mark tile of its own — close enough that the mark a user meets on the
-    login screen reads as the mark that greets them in the rail, but not
-    identical: the rail's is a fixed 28px at weight 800, this one 28px at 700,
-    and the two carry separate token hooks, so retinting the mark means setting
-    both.
+    Sign-in, forgot password, reset and MFA share four parts: a brand lockup, an
+    optional tagline, one card holding the form, and a support line. The brand
+    row takes the sidenav's <code class="t-mono-inline">brand</code> /
+    <code class="t-mono-inline">logoLetter</code> /
+    <code class="t-mono-inline">[dsBrandName]</code> contract, but the tile has
+    its own <code class="t-mono-inline">--ds-auth-layout-mark-*</code> hooks, so
+    retinting the mark means setting both.
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      Set the brand once, not per screen.
-    </strong>
+    Project a real logo into <code class="t-mono-inline">[brand]</code> (sized
+    by <code class="t-mono-inline">--ds-auth-layout-brand-max-height</code>).
+    It does not suppress the tile: leave
+    <code class="t-mono-inline">brand</code> /
+    <code class="t-mono-inline">logoLetter</code> unset when you supply a logo.
+  </p>
 
+  <p class="block-desc t-s">
+    Set the brand once:
     <code class="t-mono-inline">
       provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125;
       &#125;)
     </code>
-    answers all three for this layout AND for
-    <code class="t-mono-inline">
-      ds-sidenav
-    </code>, which asks the same
-    questions — an app that has six auth screens was binding the same values six
-    times. Each field resolves on its own: an element input beats the config, so
-    one screen can differ without restating the rest, and
-    <code class="t-mono-inline">
-      brand=""
-    </code> drops the wordmark while a
-    <code class="t-mono-inline">
-      logoLetter
-    </code> in the config still paints
-    its tile. Clear both to give a screen no brand row at all.
+    serves this layout and <code class="t-mono-inline">ds-sidenav</code>. Each
+    field resolves on its own and an element input beats the config;
+    <code class="t-mono-inline">brand=""</code> drops the wordmark while a
+    configured <code class="t-mono-inline">logoLetter</code> still paints the
+    tile. Clear both for no brand row.
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      The two-tone wordmark stays projected
-    </strong> — there is
-    deliberately no accent in the config. A config can only carry a string, so
-    an accent would have to be found by splitting that string back apart, which
-    is exactly the guessing
-    <code class="t-mono-inline">
-      [dsBrandName]
-    </code> exists to avoid. Provide
-    the plain name in the config and project the accented version on the screens
-    that want one; the projection wins over both.
+    The config has no accent: put the plain name in the config and project
+    <code class="t-mono-inline">[dsBrandName]</code> where a two-tone wordmark
+    is wanted; the projection wins over both.
   </p>
 
   <p class="block-desc t-s">
@@ -141,9 +119,20 @@
 
   <p class="block-desc t-s">
     Project <code class="t-mono-inline">[dsBrandName]</code> when one slice of
-    the wordmark carries the brand colour. The layout never splits your brand
-    string for you, because a split has to guess where the accent belongs. The
-    tagline is optional, and a flat card suits a canvas that is already tinted.
+    the wordmark carries the brand colour. Import
+    <code class="t-mono-inline">BrandNameDirective</code> from
+    <code class="t-mono-inline">
+      &#64;ids-group-ltd/ids-design-system/components/sidenav
+    </code>, or the attribute is inert and the projection falls into the card.
+  </p>
+
+  <p class="block-desc t-s">
+    The tagline is optional. <code class="t-mono-inline">cardElevation</code>
+    (default <code class="t-mono-inline">'raised'</code>) and
+    <code class="t-mono-inline">cardPadding</code> (default
+    <code class="t-mono-inline">'lg'</code>) pass through to
+    <code class="t-mono-inline">ds-card</code>; a flat card suits a canvas that
+    is already tinted.
   </p>
 
   <div class="auth-demo">
@@ -181,28 +170,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    A landscape phone leaves about 330px of viewport, and the furniture this
-    layout puts around your card — block padding, the column gap, the wordmark,
-    the masthead's inner gap — used to cost ~219px of that before your form got
-    a single pixel. All of it now clamps against
-    <code class="t-mono-inline">
-      svh
-    </code>, so at ~330px the same chrome costs
-    ~135px. Every multiplier reaches its maximum at a viewport 800px tall or
-    more — which is a viewport height, not a screen size: a 1366x768 laptop
-    lands near 630px after browser and OS chrome, and a 1080p screen at 150%
-    display scaling near 585px, so plenty of desktops render the compressed
-    furniture too. Type is deliberately not part of it: the wordmark, the tile
-    and its glyph stay fixed, because in a row whose height the tile already
-    sets they cost nothing to shrink and only flatten the brand against the
-    tagline.
+    On short viewports the block padding, column gap and masthead gap clamp
+    against <code class="t-mono-inline">svh</code>, reaching full size at 800px
+    of viewport height - which many laptops do not have after browser chrome.
+    Type stays fixed: the wordmark, the tile and its glyph do not shrink.
   </p>
 
   <p class="block-desc t-s">
-    The demos above cannot show it: the clamps read the real VIEWPORT, and a
-    framed demo only shrinks its own box. Make the browser window short — or
-    rotate a phone — and watch the padding, the gap and the wordmark come down
-    together.
+    The demos above cannot show it: the clamps read the real viewport, and a
+    framed demo only shrinks its own box. Make the browser window short, or
+    rotate a phone, and watch the padding, the column gap and the masthead gap
+    come down together.
   </p>
 
   <p class="block-desc t-s">
@@ -212,8 +190,8 @@
     <code class="t-mono-inline">
       dvh
     </code>: the dynamic unit changes as a
-    mobile URL bar hides, which would resize the wordmark and re-space the
-    column while the reader scrolls. Setting either of
+    mobile URL bar hides, which would re-space the column while the reader
+    scrolls. Setting either of
     <code class="t-mono-inline">
       --ds-auth-layout-padding-block
     </code> or
@@ -224,18 +202,10 @@
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      What this does not promise.
-    </strong> A card taller than the space
-    left still scrolls, and should — the fix is for the LAYOUT never to be the
-    reason. Compressing rather than pinning is deliberate: the same exercise
-    elsewhere takes the masthead and footer out of the flow with
-    <code class="t-mono-inline">
-      position: absolute
-    </code>, which frees more
-    room but lets that chrome overlap a tall form instead of scrolling past it.
-    A card here holds whatever you project into it, so overlap is the worse
-    failure.
+    A card taller than the remaining space still scrolls; the chrome stays in
+    the flow rather than being taken out with
+    <code class="t-mono-inline">position: absolute</code>, so it never overlaps
+    a tall form.
   </p>
 
   <h3 class="block-title t-h4">
@@ -243,18 +213,13 @@
   </h3>
 
   <p class="block-desc t-s">
-    The full-height box is the layout's own host, and there is only one of it —
-    the hand-rolled version this replaces nested a 100vh wrapper inside a 100dvh
-    one, which scrolls a page whose content fits. Inside it the column is
-    centred with auto margins rather than centre alignment. On a normal page the
-    two are the same, because the host is free to grow and a tall form simply
-    lengthens it. They differ once the host cannot grow — when you embed the
-    layout by setting its min-height token to 100% in a fixed-height parent.
-    There, centre alignment puts a form taller than the box above the scroll
-    origin, out of reach of any scrolling; auto margins collapse to zero
-    instead, so the form pins to the top padding edge and scrolls from there.
-    Both demos above are the real component with that token lowered to fit this
-    page.
+    The host is the only full-height box. The column centres with auto margins,
+    not <code class="t-mono-inline">align-items: center</code>, so in a
+    fixed-height parent
+    (<code class="t-mono-inline">--ds-auth-layout-min-height: 100%</code>) a
+    form taller than the box pins to the top padding and scrolls instead of
+    landing above the scroll origin. Both demos above are the real component
+    with that token lowered to fit this page.
   </p>
 
   <h3 class="block-title t-h4">

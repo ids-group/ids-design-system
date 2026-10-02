@@ -3,8 +3,10 @@
   eyebrow="Components"
   title="Alert">
   <span lede>
-    Lightweight inline status message. Five variants — info, success, warning,
-    error, neutral — each with a default icon, optional title, optional dismiss
+    Lightweight inline status message. Five variants - info, success, warning,
+    error, neutral - each with a default icon
+    (<code class="t-mono-inline">icon</code> overrides it), optional title,
+    optional dismiss
     control, and an <code class="t-mono-inline">[actions]</code> slot for
     follow-up CTAs.
   </span>
@@ -131,19 +133,30 @@
     <code class="t-mono-inline">
       [dismissible]="true"
     </code> adds a close
-    button; the <code class="t-mono-inline">(closed)</code> output fires when
-    the user clicks it.
+    button; <code class="t-mono-inline">(closed)</code> fires on click. The
+    alert does not hide itself - remove it in the handler.
   </p>
 
   <div class="states is-cols-1">
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-alert
-          variant="info"
-          title="Schedule updated"
-          [dismissible]="true">
-          Changes go live in 5 minutes.
-        </ds-alert>
+        @if (dismissed()) {
+          <ds-button
+            color="neutral"
+            variant="outline"
+            size="sm"
+            (pressed)="dismissed.set(false)">
+            Show the alert again
+          </ds-button>
+        } @else {
+          <ds-alert
+            variant="info"
+            title="Schedule updated"
+            [dismissible]="true"
+            (closed)="dismissed.set(true)">
+            Changes go live in 5 minutes.
+          </ds-alert>
+        }
       </div>
 
       <div class="state-cell-label">
@@ -196,22 +209,20 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code>
-      announce
-    </code> follows <code>DS_CONFIG.alert.announce</code>, then
-    <code>
-      false
-    </code>, for the reason under <code>ds-banner</code>, and dev
-    mode raises the same two warnings, prefixed <code> [ds-alert] </code>: an
-    <code>
-      error
-    </code> or <code>warning</code> alert left unbound while the
-    key is unset, and an <code>info</code>, <code>success</code> or
-    <code>
-      neutral
-    </code> one announcing only because the key is
-    <code>
-      true
-    </code>.
+    <code class="t-mono-inline">announce</code> (unset follows
+    <code class="t-mono-inline">DS_CONFIG.alert.announce</code>, then
+    <code class="t-mono-inline">false</code>) gives an error or warning alert
+    <code class="t-mono-inline">role="alert"</code> +
+    <code class="t-mono-inline">aria-live="assertive"</code> and the others
+    <code class="t-mono-inline">role="status"</code> +
+    <code class="t-mono-inline">polite</code>.
+  </p>
+
+  <p class="block-desc t-s">
+    In dev mode, with <code class="t-mono-inline">announce</code> unbound,
+    <code class="t-mono-inline">[ds-alert]</code> warns when an error or
+    warning alert is silent because the key is unset, and when an info,
+    success or neutral alert announces only because the key is
+    <code class="t-mono-inline">true</code>.
   </p>
 </docs-section>

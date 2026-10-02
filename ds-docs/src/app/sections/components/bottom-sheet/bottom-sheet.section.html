@@ -8,7 +8,10 @@
     <kbd>
       Esc
     </kbd> also closes. Body scroll locks while open. On wider
-    viewports it caps its width and centres.
+    viewports it caps its width
+    (<code class="t-mono-inline">--ds-bottom-sheet-max-width</code>) and
+    centres. The sheet is <code class="t-mono-inline">position: fixed</code>,
+    so a transformed ancestor contains it.
   </span>
 
   <h3 class="block-title t-h4">
@@ -20,6 +23,9 @@
     <code class="t-mono-inline">
       [actions]
     </code> slot holds footer buttons.
+    <code class="t-mono-inline">(closed)</code> fires after the leave
+    animation, when <code class="t-mono-inline">open</code> is already
+    <code class="t-mono-inline">false</code>; use it for post-close work only.
   </p>
 
   <div class="demo">
@@ -29,8 +35,7 @@
 
     <ds-bottom-sheet
       title="Edit registration"
-      [(open)]="open"
-      (closed)="open.set(false)">
+      [(open)]="open">
       <p class="t-s sheet-body">
         Update the vehicle registration. Changes apply to the current event
         only.
@@ -98,7 +103,8 @@
     to enable multi-stop snapping. The sheet opens at the first stop; dragging
     snaps to the nearest stop; dragging below the lowest stop closes. Heights
     are fractions of viewport height (0–1), provided in ascending order.
-    Omitting the input preserves the original single-height behaviour.
+    Without <code class="t-mono-inline">snapPoints</code> the sheet has a
+    single height.
   </p>
 
   <div class="demo">
@@ -109,8 +115,7 @@
     <ds-bottom-sheet
       title="Filter results"
       [snapPoints]="snapPoints"
-      [(open)]="snapOpen"
-      (closed)="snapOpen.set(false)">
+      [(open)]="snapOpen">
       <p class="t-s sheet-body">
         Drag the handle up or down to snap between 35 %, 65 %, and 90 % of the
         viewport height. Drag past the lowest stop or flick down to close.
@@ -154,21 +159,10 @@
 
   <p class="block-desc t-s">
     The sheet pads its bottom by
-    <code class="t-mono-inline">
-      env(safe-area-inset-bottom)
-    </code> so its last
-    action does not sit under the home indicator. That inset reads
-    <strong>
-      0 until the host document opts in
-    </strong>, and a library cannot
-    do it for you — it lives in the viewport meta tag of your
-    <code class="t-mono-inline">
-      index.html
-    </code>. Same requirement as
-    <code class="t-mono-inline">
-      ds-auth-layout
-    </code>, where it is spelled
-    out.
+    <code class="t-mono-inline">env(safe-area-inset-bottom)</code>, which
+    reads 0 until your <code class="t-mono-inline">index.html</code> viewport
+    meta opts in with <code class="t-mono-inline">viewport-fit=cover</code>
+    (see <code class="t-mono-inline">ds-auth-layout</code>).
   </p>
 
   <pre

@@ -4,10 +4,13 @@
   title="Accordion"
   [apiKeys]="['accordion:AccordionItemComponent']">
   <span lede>
-    Collapsible disclosure panel. Each item exposes a head trigger and a body
-    that shows when expanded. Multiple items can be open simultaneously by
-    default — set <code class="t-mono-inline">[multiple]="false"</code> to
-    enforce single-open semantics. Items can also be individually disabled.
+    Collapsible disclosure panels. Several items can be open at once;
+    <code class="t-mono-inline">[multiple]="false"</code> keeps one open, and
+    <code class="t-mono-inline">[disabled]</code> locks an item.
+    <code class="t-mono-inline">expanded</code> is a model - bind
+    <code class="t-mono-inline">[(expanded)]</code> to track state. An element
+    with the <code class="t-mono-inline">badge</code> attribute projects into
+    the item head.
   </span>
 
   <h3
@@ -73,6 +76,9 @@
     </ds-accordion-item>
 
     <ds-accordion-item title="Crew &amp; contacts">
+      <ds-badge badge>
+        3
+      </ds-badge>
       Site lead <strong>A. Brooks</strong> (north gate office); production
       manager <strong>S. Carter</strong> on call for out-of-hours.
       <ul class="acc-facts">

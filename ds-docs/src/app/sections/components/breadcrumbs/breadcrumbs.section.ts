@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { BreadcrumbsComponent } from 'ds/breadcrumbs';
 import type { BreadcrumbItem } from 'ds/breadcrumbs';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
@@ -33,6 +33,14 @@ export class BreadcrumbsSection {
     { label: 'Workspace', href: '/' },
     { label: 'Quarterly planning and budget review', href: '/planning' },
     { label: 'Summary' },
+  ];
+
+  protected readonly lastNavigated = signal('');
+
+  protected readonly iconTrail: BreadcrumbItem[] = [
+    { icon: 'home', ariaLabel: 'Workspace', href: '/' },
+    { label: 'Clients', href: '/clients' },
+    { label: 'P-12894' },
   ];
 
   protected readonly singleLevel: BreadcrumbItem[] = [

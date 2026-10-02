@@ -3,8 +3,10 @@
   eyebrow="Components"
   title="Breadcrumbs">
   <span lede>
-    Trail to root. The last item is the current page (no href). Middle segments
-    collapse to <code class="t-mono-inline">…</code> before the leaf clips.
+    Trail to root. The last item is the current page (no href). With
+    <code class="t-mono-inline">[maxItems]</code>, middle segments collapse to
+    <code class="t-mono-inline">… N more</code>; without it a long trail clips
+    from the end.
   </span>
 
   <h3
@@ -28,20 +30,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    Six levels, capped with
-    <code class="t-mono-inline">
-      [maxItems]="4"
-    </code> — the first and the LAST
-    always survive, and the collapsed crumb says how many it stands for. Worth
-    setting on any trail that can get deep: the row is
-    <code class="t-mono-inline">
-      nowrap
-    </code> with
-    <code class="t-mono-inline">
-      overflow: hidden
-    </code>, so an uncapped
-    overlong trail is clipped from the END — the current page, the one crumb the
-    reader needs most.
+    <code class="t-mono-inline">[maxItems]="4"</code> keeps the first and last
+    crumbs and collapses the middle into one crumb that says how many it hides.
+    Set it on any trail that can get deep: the row is
+    <code class="t-mono-inline">nowrap</code> +
+    <code class="t-mono-inline">overflow: hidden</code>, so an uncapped trail
+    clips from the end - the current page.
   </p>
 
   <div class="stage">
@@ -55,7 +49,7 @@
       <span class="legend-dim">
         Full path:
       </span> Workspace · Clients · Acme
-      Co. · Policies · 2026 Cycle · P-12894
+      Holdings · Policies · Motor fleet · P-12894
     </span>
   </div>
 
@@ -64,12 +58,25 @@
   </h3>
 
   <p class="block-desc t-s">
-    Root + leaf — the shortest meaningful trail. Anything shorter renders no
-    breadcrumb at all.
+    Root + leaf - the shortest meaningful trail.
   </p>
 
   <div class="stage">
     <ds-breadcrumbs [items]="singleLevel" />
+  </div>
+
+  <h3 class="block-title t-h4">
+    Icon crumb
+  </h3>
+
+  <p class="block-desc t-s">
+    A <code class="t-mono-inline">BreadcrumbItem</code> may carry an
+    <code class="t-mono-inline">icon</code>. An icon-only crumb needs an
+    <code class="t-mono-inline">ariaLabel</code>; dev mode warns without one.
+  </p>
+
+  <div class="stage">
+    <ds-breadcrumbs [items]="iconTrail" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -157,7 +164,21 @@
     <code class="t-mono-inline">(navigate)</code>; a Ctrl, Cmd, Shift or Alt
     click, or any non-primary button such as the middle one, leaves
     <code class="t-mono-inline">href</code> to the browser (a new tab or
-    window) and emits nothing.
+    window) and emits nothing. Bind <code class="t-mono-inline">(navigate)</code>
+    and route with
+    <code class="t-mono-inline">Router.navigateByUrl(item.href)</code>;
+    unbound, a plain click does nothing.
+  </p>
+
+  <div class="stage">
+    <ds-breadcrumbs
+      [items]="defaultTrail"
+      (navigate)="lastNavigated.set($event.label ?? '')" />
+  </div>
+
+  <p class="block-desc t-s">
+    Last <code class="t-mono-inline">(navigate)</code>:
+    <code class="t-mono-inline">{{ lastNavigated() || '-' }}</code>
   </p>
 
   <h3 class="block-title t-h4">
@@ -168,8 +189,10 @@
     <code class="t-mono-inline">
       [clickable]="false"
     </code> disables item
-    activation — useful for read-only trails (audit logs, archived snapshots)
-    where you want the path visible but not navigable.
+    activation - useful for read-only trails (audit logs, archived snapshots)
+    where you want the path visible but not navigable. Unset follows
+    <code class="t-mono-inline">DS_CONFIG.breadcrumbs.clickable</code>, then
+    <code class="t-mono-inline">true</code>.
   </p>
 
   <div class="stage">
@@ -186,13 +209,20 @@
     Omit <code class="t-mono-inline">[items]</code> and the component reads from
     <code class="t-mono-inline">
       BreadcrumbsService.items
-    </code> — apps push
-    crumbs from route data or an effect when the page model resolves.
+    </code> - apps push
+    crumbs from route data or an effect when the page model resolves. The
+    service is <code class="t-mono-inline">providedIn: 'root'</code>, so a
+    trail persists across routes until replaced: each page calls
+    <code class="t-mono-inline">set</code> (or
+    <code class="t-mono-inline">clear</code>).
+    <code class="t-mono-inline">push</code>,
+    <code class="t-mono-inline">pop</code> and
+    <code class="t-mono-inline">replaceLast</code> edit the end of the trail.
   </p>
 
   <pre
     class="snippet t-mono"><code>{{ '// in a page component or route effect' }}
-import {{ '{' }} BreadcrumbsService {{ '}' }} from 'ds';
+import {{ '{' }} BreadcrumbsService {{ '}' }} from '&#64;ids-group-ltd/ids-design-system/components/breadcrumbs';
 private readonly crumbs = inject(BreadcrumbsService);
 this.crumbs.set([
   {{ '{' }} label: 'Workspace', href: '/' {{ '}' }},

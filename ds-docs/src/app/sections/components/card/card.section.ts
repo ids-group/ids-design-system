@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { CardComponent } from 'ds/card';
 import type { CardElevation, CardPadding } from 'ds/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
@@ -18,4 +18,5 @@ export class CardSection {
     'hover',
   ];
   protected readonly paddings: readonly CardPadding[] = ['sm', 'md', 'lg'];
+  protected readonly pressedCount = signal(0);
 }
