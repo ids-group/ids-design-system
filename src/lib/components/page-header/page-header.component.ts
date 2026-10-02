@@ -26,7 +26,7 @@ export class PageHeaderComponent {
   readonly compact = input(false, { transform: booleanAttribute });
   /** Shows a rule under the whole header. */
   readonly divider = input(false, { transform: booleanAttribute });
-  /** Shows a rule under the meta row only. */
+  /** Draws a rule above the meta row. */
   readonly metaDivider = input(false, { transform: booleanAttribute });
 
   protected readonly classes = computed(() => {

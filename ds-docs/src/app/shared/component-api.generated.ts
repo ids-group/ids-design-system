@@ -6848,7 +6848,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows a rule under the meta row only."
+        "description": "Draws a rule above the meta row."
       }
     ],
     "outputs": []
