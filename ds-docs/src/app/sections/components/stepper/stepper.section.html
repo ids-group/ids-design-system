@@ -3,24 +3,15 @@
   eyebrow="Components"
   title="Stepper">
   <span lede>
-    Visual indicator of multi-step progress. Pass an array of step labels and a
-    zero-indexed <code class="t-mono-inline">current</code>. Nodes before
-    current render as done (with check icon); the current node fills with brand;
-    later nodes stay as outlined numerals. Each label shows beneath its node,
-    with the current step emphasised — or set
-    <code class="t-mono-inline">
-      labelPosition="inline"
-    </code> for a compact
-    row with the caption beside each node (e.g. a header progress bar). Set
-    <code class="t-mono-inline">
-      orientation="vertical"
-    </code> to stack steps
-    top-to-bottom, <code class="t-mono-inline">[clickable]="true"</code> to make
-    nodes interactive, and
-    <code class="t-mono-inline">
-      [errorSteps]="[...]"
-    </code> to mark steps in
-    error.
+    Multi-step progress from <code class="t-mono-inline">steps</code> (labels) and a zero-based
+    <code class="t-mono-inline">current</code>. Earlier nodes show a check, the current node fills
+    with the accent, later nodes stay outlined numerals.
+    <code class="t-mono-inline">labelPosition="inline"</code> puts captions beside nodes,
+    <code class="t-mono-inline">orientation="vertical"</code> stacks them, and
+    <code class="t-mono-inline">[clickable]="true"</code> makes nodes buttons that emit
+    <code class="t-mono-inline">(stepClicked)</code>.
+    <code class="t-mono-inline">[errorSteps]</code> marks steps in error; error wins over every
+    other state.
   </span>
 
   <h3
