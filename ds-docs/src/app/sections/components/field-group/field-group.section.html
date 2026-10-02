@@ -8,14 +8,13 @@
   </span>
 
   <p class="block-desc t-s">
-    The group owns the border, the radius, the divider and a single focus ring;
-    the controls inside render naked. A segment knows it is inside a group
-    because the group provides
+    The group owns the border, radius, divider and a single focus ring; the
+    controls inside render naked. Each control detects the group by injecting
     <code class="t-mono-inline">
       DS_FIELD_GROUP
-    </code>, which it injects —
-    nothing to remember per child, and no way to forget it on one of them and
-    leave a stray border mid-row.
+    </code>, so there is no per-child flag
+    to forget. <code class="t-mono-inline">disabled</code> dims the box only -
+    disable each control as well.
   </p>
 
   <p class="block-desc t-s">
@@ -33,6 +32,7 @@
         [(value)]="scope" />
 
       <ds-input
+        ariaLabel="Search term"
         grow
         placeholder="Search…"
         [(value)]="term" />
@@ -56,6 +56,7 @@
   <div class="demo-row">
     <ds-field-group>
       <ds-input
+        ariaLabel="Search term"
         grow
         placeholder="Search…"
         [(value)]="term" />
@@ -67,6 +68,7 @@
 
     <ds-field-group>
       <ds-input
+        ariaLabel="Amount"
         grow
         placeholder="0"
         [(value)]="amount" />
@@ -114,11 +116,14 @@
   <div class="demo-row">
     <ds-field-group>
       <ds-search
+        ariaLabel="Quick find"
         grow
         placeholder="Quick find"
         [(value)]="quickFind" />
 
-      <ds-date-picker [(value)]="since" />
+      <ds-date-picker
+        ariaLabel="Since"
+        [(value)]="since" />
     </ds-field-group>
   </div>
 
@@ -147,6 +152,7 @@
         [(value)]="scope" />
 
       <ds-input
+        ariaLabel="Search term"
         grow
         placeholder="Small"
         [(value)]="term" />
@@ -159,6 +165,7 @@
         [(value)]="scope" />
 
       <ds-input
+        ariaLabel="Search term"
         grow
         placeholder="Large"
         [(value)]="term" />
@@ -173,6 +180,7 @@
         [(value)]="scope" />
 
       <ds-input
+        ariaLabel="Search term"
         grow
         placeholder="Full width, in error"
         [(value)]="invalidTerm" />
@@ -186,13 +194,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    The group takes the same pair every field takes.
     <code class="t-mono-inline">
       error
-    </code> is a string: it turns the state
-    on <em> and </em> carries the text, in one message under the whole row
-    rather than one per segment. <code class="t-mono-inline"> invalid </code> is
-    the flag for when the text lives elsewhere — a form-level summary — and
+    </code> turns the state on and shows its
+    text once, under the whole row; <code class="t-mono-inline">invalid</code>
+    paints the state when the text lives elsewhere (a form summary);
     <code class="t-mono-inline">
       hint
     </code>
@@ -207,6 +213,7 @@
         [(value)]="scope" />
 
       <ds-input
+        ariaLabel="Amount"
         grow
         placeholder="1 200,00"
         [(value)]="term" />
@@ -219,6 +226,7 @@
         [(value)]="scope" />
 
       <ds-input
+        ariaLabel="Amount"
         grow
         placeholder="1 200,00"
         [(value)]="invalidTerm" />
@@ -226,16 +234,16 @@
   </div>
 
   <p class="block-desc t-s">
-    Every segment carries
+    Every field segment (not a <code class="t-mono-inline">ds-button</code>)
+    carries
     <code class="t-mono-inline">
       aria-invalid
     </code> while the group is in
-    error, and every segment points at the one message through
+    error and points at the one message through
     <code class="t-mono-inline">
       aria-describedby
-    </code> — a reader who tabs
-    straight to the second segment hears the error there too, which is the whole
-    reason the state is not announced on the group element itself.
+    </code>, so a reader who tabs
+    straight to the second segment hears the error there too.
   </p>
 
   <p class="block-desc t-s">
@@ -246,7 +254,8 @@
     <code class="t-mono-inline">
       hint
     </code>: its message row would break the
-    glued line, so both are suppressed. A group-level label is not built yet —
-    put one above the group with your own markup until it is.
+    glued line, so both are suppressed. Name each segment with
+    <code class="t-mono-inline">ariaLabel</code>. For a group label, put your
+    own markup above the group.
   </p>
 </docs-section>
