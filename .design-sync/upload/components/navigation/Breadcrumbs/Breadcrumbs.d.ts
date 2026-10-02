@@ -8,12 +8,12 @@ export interface BreadcrumbsProps {
   /** Omitted, the component reads `BreadcrumbsService.items`; an explicit array opts out. */
   items?: unknown;
   /** Icon between crumbs; falls back to `DS_CONFIG.breadcrumbs.separator`, then `chevronRight`. */
-  separator?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
+  separator?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
   /** Whether crumbs render as links; falls back to `DS_CONFIG.breadcrumbs.clickable`, then `true`. */
   clickable?: boolean | null;
-  /** Caps how many crumbs render, collapsing the middle — the first and the LAST always survive. Worth setting on any deep trail: the row is `nowrap` with `overflow: hidden`, so uncapped it is clipped from the END, which is the current page. */
+  /** Caps how many crumbs render, collapsing the middle; the first and the LAST always survive. Uncapped, a long trail is clipped from the END, which is the current page. */
   maxItems?: number | null;
-  /** Fires when a clickable crumb with `href` is activated; default navigation is always prevented. */
+  /** Fires when a clickable crumb with `href` is activated by a plain primary click, whose default navigation is prevented; a modified or non-primary click opens `href` in the browser instead. */
   onNavigate?: (value: unknown) => void;
   /** Element content. */
   children?: React.ReactNode;

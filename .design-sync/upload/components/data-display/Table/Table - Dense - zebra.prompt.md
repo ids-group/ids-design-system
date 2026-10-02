@@ -1,5 +1,5 @@
 # Table - dense · zebra
 
-density="compact" tightens cell padding and [zebra]="true" tints odd rows for spreadsheet-style scanning.
+density="compact" tightens cell padding; [zebra]="true" tints odd rows.
 
 Full API: `Table.d.ts`. How to use the component anywhere: `Table.prompt.md`.

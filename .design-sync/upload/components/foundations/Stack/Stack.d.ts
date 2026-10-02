@@ -7,7 +7,7 @@ import * as React from 'react';
 export interface StackProps {
   /** Space between children. `null` inherits whatever the enclosing layout set. */
   gap?: ('none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl') | null;
-  /** Cross-axis alignment — horizontal, for a column. */
+  /** Cross-axis alignment: horizontal, for a column. */
   align?: ('start' | 'center' | 'end' | 'stretch') | null;
   /** Element content. */
   children?: React.ReactNode;

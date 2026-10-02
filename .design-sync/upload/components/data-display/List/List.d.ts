@@ -5,7 +5,7 @@ import * as React from 'react';
  * Vertical stack of `ListItem` rows, rendered as `role="list"`. Purely structural — no border of its own, so it drops straight into a `Card`.
  */
 export interface ListProps {
-  /** Draw a hairline separator between adjacent items. */
+  /** Hairline separator between adjacent items. */
   dividers?: boolean;
   /** Element content. */
   children?: React.ReactNode;

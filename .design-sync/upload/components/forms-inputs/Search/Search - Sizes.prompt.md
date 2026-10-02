@@ -1,5 +1,5 @@
 # Search - sizes
 
-size aligns the search-row height with the controls beside it in a filter toolbar. sm is 32px — matching ds-input / ds-button at sm; md (default) keeps the classic 36px bar; lg steps up to 40px.
+size matches the row height of ds-input / ds-button beside it in a filter toolbar. sm, md (default) and lg resolve --field-h-sm/md/lg: 32, 40 and 48px at the default density, and they follow density.
 
 Full API: `Search.d.ts`. How to use the component anywhere: `Search.prompt.md`.

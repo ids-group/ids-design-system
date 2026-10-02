@@ -5,41 +5,47 @@ import * as React from 'react';
  * A matrix of readings coloured by magnitude — depot by weekday, hour by date, queue by region. Colour is the only channel carrying the quantity on the grid, so every cell names its own reading to assistive tech and the annex table under the grid is always drawn, never an option.
  */
 export interface HeatmapChartProps {
-  /** The column headings, left to right. Their count decides how many readings of a row are drawn: a row longer than this loses its tail, a shorter one ends early. */
-  columns?: readonly string[];
-  /** One entry per row, each carrying one reading per column. A `null` reading is a cell that was never measured and is drawn as the surface rather than as the ramp's coldest step. */
-  data?: unknown;
-  /** Printed above the grid as the visible title. */
-  caption?: string | null;
-  /** Pins the floor of the colour scale. It only ever OPENS the scale further, so a floor above the data cannot push a reading off the ramp. Unset, the scale starts at the lowest reading. */
-  min?: number | null;
-  /** Pins the ceiling of the colour scale, the same way `min` pins its floor. Set both to compare two heat maps by colour: unset, each one spans its own readings and the same hue means a different quantity on each. */
-  max?: number | null;
-  /** Prints each cell's reading inside it. Off by default: a grid dense enough to be worth a heat map has no room for the numbers, which is why the annex table is always there. */
-  showValues?: boolean;
-  /** Makes every measured cell a button. An unmeasured cell stays inert - a grid of buttons with nothing behind them is a tab trap. */
-  interactive?: boolean;
-  /** Fades every cell but the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed cells, which on a ramp is the only thing carrying magnitude. */
-  dimOthers?: boolean;
-  /** Holds the hovered cell and its tooltip in place when it is clicked, until a second click, Escape or a press outside releases it. `cellClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
-  pinOnClick?: boolean | null;
-  /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`. */
+  /** `'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`. */
   frame?: ('auto' | 'none') | null;
-  /** A skeleton at the grid's own height, so the page does not resize when the data lands. */
+  /** Visible title above the plot, reused as the annex table's caption. */
+  caption?: string | null;
+  /** Accessible name. Generated from the data when omitted. */
+  summary?: string | null;
+  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize. */
   loading?: boolean;
-  /** Separate from an empty matrix: "the request failed" and "there is nothing to show" read the same and mean opposite things. */
+  /** Shows `errorText` in place of the plot. Separate from `loading` and from empty data. */
   error?: boolean;
-  /** Shown when there are no rows or no columns. Unset falls back to `DS_INTL.chart.empty`. */
+  /** Shown when there is no data. Unset falls back to `DS_INTL.chart.empty`. */
   emptyText?: string | null;
-  /** Shown in place of the grid while `error` is set. Unset falls back to `DS_INTL.chart.error`. */
+  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
   errorText?: string | null;
-  /** Formats every reading the chart prints - the scale's two ends, each cell's accessible name and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`. */
+  /** Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`. */
   valueFormat?: unknown;
-  /** Whether a hovered or focused cell opens a tooltip. A heat map's cells carry no printed value by default, so this is where a reading is read without reaching for the annex table. */
+  /** Turns on the click affordance: pointer cursor and hover tint. The click output fires whether or not this is set. */
+  interactive?: boolean;
+  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings. */
+  tooltipSwatches?: boolean | null;
+  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
+  tooltipLingerMs?: number | null;
+  /** Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way. */
+  pinOnClick?: boolean | null;
+  /** The column headings, left to right; a row longer than this loses its tail. */
+  columns?: readonly string[];
+  /** One entry per row, one reading per column; a `null` reading is drawn as the surface. */
+  data?: unknown;
+  /** Pins the floor of the colour scale. It only OPENS the scale further; a floor above the data is ignored. Unset, the scale starts at the lowest reading. */
+  min?: number | null;
+  /** Pins the ceiling of the colour scale, as `min` pins the floor. */
+  max?: number | null;
+  /** Prints each cell's reading inside it. */
+  showValues?: boolean;
+  /** Fades every cell but the one under the pointer. */
+  dimOthers?: boolean;
+  /** Whether a hovered or focused cell opens a tooltip. */
   tooltip?: ('item' | 'none');
-  /** Milliseconds between one column's entrance and the next, left to right, `40` by default; `0` turns the stagger off. The whole spread stays within 260ms, so a wide grid narrows the step instead of crawling in. */
+  /** Milliseconds between one column's entrance and the next; `0` turns it off. The spread is capped at 260ms. */
   staggerMs?: number;
-  /** The clicked cell, with the row and the column it sits at. Never fires for an unmeasured cell, which has no reading to drill into. */
+  /** The clicked cell, with its row and column. Never fires for an unmeasured cell. */
   onCellClicked?: (value: unknown) => void;
   /** Element content. */
   children?: React.ReactNode;

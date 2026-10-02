@@ -1,6 +1,8 @@
 # Tabs - variants
 
-Line — primary navigation. Pills — compact filter row. Pills look like a ds-segmented control but are real tabs (they own content panels, with tablist semantics); for a value/view toggle with no panels, use ds-segmented instead.
+Pills look like ds-segmented but are real tabs that own panels, with tablist semantics. For a value toggle with no panels, use ds-segmented.
+
+Arrow keys move and activate (disabled tabs skipped), Home/End jump to the ends.
 
 Project at a glance.
 

@@ -1,5 +1,5 @@
 # Tabs - pills states showcase
 
-Same matrix on the pills variant — note the filled active chip.
+The same states on the pills variant.
 
 Full API: `Tabs.d.ts`. How to use the component anywhere: `Tabs.prompt.md`.

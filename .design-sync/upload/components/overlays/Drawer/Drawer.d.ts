@@ -8,7 +8,7 @@ export interface DrawerProps {
   /** Open state, two-way bound. */
   open?: boolean;
   onOpenChange?: (value: boolean) => void;
-  /** Panel size — sm/md/lg. */
+  /** Panel size. */
   size?: ('sm' | 'md' | 'lg');
   /** Edge the panel slides in from. */
   placement?: ('right' | 'left' | 'top' | 'bottom');

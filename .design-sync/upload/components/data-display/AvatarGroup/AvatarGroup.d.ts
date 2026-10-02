@@ -5,7 +5,7 @@ import * as React from 'react';
  * Stacked row of `Avatar`s with overlapping ring borders. The group's CSS reaches into the child `ds-avatar` hosts, so plain `<Avatar />` children compose directly — no wrapper needed.
  */
 export interface AvatarGroupProps {
-  /** Maximum avatars shown before the rest collapse into an overflow chip. */
+  /** Avatars shown before the rest collapse into the `+N` chip. */
   max?: number;
   /** Total avatar count driving the `+N` overflow; null counts the projected children. */
   total?: number | null;

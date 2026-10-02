@@ -5,7 +5,7 @@ import * as React from 'react';
  * Bordered stack of collapsible sections. Wraps `AccordionItem` children; the host itself carries the outer border + `radius-lg`, and a hairline divider renders between adjacent items automatically.
  */
 export interface AccordionProps {
-  /** When false, opening one item automatically closes all others. */
+  /** When false, opening one item closes the others. */
   multiple?: boolean;
   /** Which way the closed chevron points on every item: `right` turns down when an item opens, `down` turns up. */
   chevron?: ('right' | 'down');

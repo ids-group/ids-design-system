@@ -7,10 +7,10 @@ import * as React from 'react';
 export interface TimelineItemProps {
   /** Primary text for the entry. */
   heading?: string;
-  /** Timestamp or date label shown below the content. */
+  /** Timestamp or date label below the content. */
   time?: string;
-  /** Icon shown in the marker; omit for a plain dot. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
+  /** Marker icon; omit for a plain dot. */
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
   /** Semantic accent color for the marker. */
   tone?: ('default' | 'primary' | 'success' | 'warning' | 'error' | 'muted');
   /** Element content. */

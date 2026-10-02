@@ -1,5 +1,7 @@
 # Table - sortable columns
 
-Mark columns sortable: true and add sortMode="client" to let the table order its own rows. Click a header to cycle asc → desc → none; the active column shows a coloured chevron. Pass [sortingOrder]="['asc', 'desc']" to drop the “none” step where an unsorted state isn't legal (e.g. a server-paged list).
+Mark columns sortable: true and set sortMode="client" to let the table order its own rows. A header click cycles asc → desc → none.
+
+[sortingOrder]="['asc', 'desc']" drops the none step where unsorted is not legal. sortValue: row => row.budget sorts by the raw value instead of the rendered text; blanks sort last in both directions.
 
 Full API: `Table.d.ts`. How to use the component anywhere: `Table.prompt.md`.

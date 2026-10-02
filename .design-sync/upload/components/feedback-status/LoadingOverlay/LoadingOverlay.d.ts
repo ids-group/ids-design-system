@@ -13,9 +13,9 @@ export interface LoadingOverlayProps {
   blur?: boolean;
   /** Size of the spinner shown in the scrim. */
   spinnerSize?: ('sm' | 'md' | 'lg');
-  /** Offset the scrim top edge — useful when a sticky header should stay uncovered. */
+  /** Offset the scrim top edge, e.g. to keep a sticky header uncovered. */
   insetTop?: string;
-  /** Whether the projected content goes `inert` while the scrim is up. On by default, because a scrim that only stops the POINTER is the bug this exists to prevent: focus walks straight under it, and a keyboard user activates a control the mouse cannot even reach. Turn it off only when the scrim covers part of the content (`insetTop`), and then mark the covered subtree `inert` yourself — a blanket flag would take the uncovered part with it. `ds-table` does exactly that: the scrim starts below the header, so sorting during a refresh stays possible. */
+  /** Whether the projected content goes `inert` while the scrim is up. On by default, so focus cannot walk under the scrim. Turn it off only when the scrim covers part of the content (`insetTop`) and mark the covered subtree `inert` yourself. */
   inertContent?: boolean;
   /** Element content. */
   children?: React.ReactNode;

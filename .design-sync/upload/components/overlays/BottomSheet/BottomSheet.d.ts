@@ -12,7 +12,7 @@ export interface BottomSheetProps {
   title?: string;
   /** Fires once the close (leave) animation finishes. */
   onClosed?: (value: void) => void;
-  /** Snap-point heights as fractions of viewport height (0–1), ascending. e.g. [0.4, 0.9]. When provided the sheet opens at the first snap point; dragging snaps to the nearest point; dragging below the lowest closes. When empty (default) the original single-height behavior is preserved. */
+  /** Snap-point heights as fractions of viewport height (0-1), ascending, e.g. [0.4, 0.9]. The sheet opens at the first snap point; dragging snaps to the nearest point; dragging below the lowest closes. Empty (default) means a single height. */
   snapPoints?: readonly number[];
   staticPreview?: boolean;
   /** Content for the `[actions]` slot. */

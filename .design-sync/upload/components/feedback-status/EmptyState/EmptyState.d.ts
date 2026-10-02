@@ -5,10 +5,10 @@ import * as React from 'react';
  * Centred placeholder for regions with nothing (or nothing yet) to show: icon tile + `title` + `body` text + an `actions` CTA slot. `variant` (none | loading | error | locked | success, default none) tints the icon tile and picks the default icon (package / package / warn / lock / success); `variant="loading"` additionally covers the whole block with a LoadingOverlay scrim.
  */
 export interface EmptyStateProps {
-  /** State — drives the default icon and shows a loading overlay when `'loading'`. */
+  /** Drives the default icon; `'loading'` shows a loading overlay. */
   variant?: ('none' | 'loading' | 'error' | 'locked' | 'success');
   /** Override the variant's default icon. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
   /** Optional heading below the icon. */
   title?: string;
   /** Optional supporting text below the title. */

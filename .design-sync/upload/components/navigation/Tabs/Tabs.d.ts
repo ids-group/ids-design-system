@@ -10,19 +10,19 @@ export interface TabsProps {
   onSelectedIndexChange?: (value: number) => void;
   /** Visual style of the tab strip. */
   variant?: ('line' | 'pills');
-  /** When true, a tab's content is instantiated only on first activation and kept alive thereafter. When false (default), all panels render eagerly. */
+  /** When true, a tab's content is instantiated on first activation and kept alive. Default renders only the active panel. */
   lazy?: boolean;
-  /** When true, a horizontal strip scrolls inside its own box and shows previous/next arrows while tabs lie beyond its edges, each arrow hidden at its own edge. The active tab is scrolled into view on selection. When false, tabs keep their width and a strip too long for its container overflows it. */
+  /** When true, a horizontal strip scrolls inside its own box with previous/next arrows while tabs lie beyond its edges, and the active tab is scrolled into view. When false, an overlong strip overflows its container. */
   scrollable?: boolean;
-  /** When true, each tab shows a close button. Clicking it emits tabClosed with the tab's value (or label as fallback) and does not switch to that tab. */
+  /** When true, each tab shows a close button; clicking it emits `tabClosed` and does not switch to that tab. */
   closable?: boolean;
-  /** Controls whether the tab list and panel are stacked horizontally (default) or the tab list runs vertically beside the panel. */
+  /** Tab list above the panel (`horizontal`, default) or beside it (`vertical`). */
   orientation?: ('horizontal' | 'vertical');
-  /** Keep the active tab in a query parameter, so it survives F5, a shared link and the Back button: `urlParam="tab"` gives `?tab=activity`. Empty (the default) leaves the URL alone, and the strip works exactly as before. The names come from each `ds-tab`'s `value` (falling back to its `label`), so there is no second list to keep in step. **Names, not indices** — writing `?tab=1` would silently repoint every old link the moment a tab is inserted. The FIRST tab writes no parameter and every write REPLACES the history entry, so a pristine screen keeps a clean address and flipping tabs does not fill the Back button. An unknown or missing name lands on the first tab rather than throwing: a URL is user input, and a stale bookmark should still open the screen. Outside a routed context the input is inert. Nothing router-shaped is even resolved until you set it — no DI lookup and, more to the point, no subscription — so a strip that never uses this costs exactly what it did before the input existed. */
+  /** Keep the active tab in a query parameter so it survives reload and sharing: `urlParam="tab"` gives `?tab=activity`. Empty (default) leaves the URL alone. Names come from each `ds-tab`'s `value` (falling back to its `label`), not indices, so inserting a tab does not repoint old links. The FIRST tab writes no parameter and every write REPLACES the history entry. An unknown name lands on the first tab. Outside a routed context the input is inert. */
   urlParam?: string;
-  /** Reopen the tab this screen was last left on, per path, from `sessionStorage`. Off by default, and needs `urlParam` for the names — a remembered INDEX would repoint the moment a tab is inserted. A link always wins: the parameter is read first, memory only fills the gap the first tab leaves in the URL. Session, not local, so tomorrow is a fresh visit. */
+  /** Reopen the tab this screen was last left on, per path, from `sessionStorage`. Off by default; needs `urlParam` for the names. A link always wins: memory only fills the gap the first tab leaves in the URL. */
   rememberLastTab?: boolean;
-  /** Emitted when a close button is clicked. Carries the tab's value input, or its label when value is not set. The host is responsible for removing the tab from its list. */
+  /** Emitted when a close button is clicked, with the tab's value (or label). The host removes the tab. */
   onTabClosed?: (value: string) => void;
   /** Element content. */
   children?: React.ReactNode;

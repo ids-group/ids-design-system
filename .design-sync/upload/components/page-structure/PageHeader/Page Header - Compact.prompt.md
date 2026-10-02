@@ -1,5 +1,5 @@
 # Page header - compact
 
-No lede, single-line title with actions inline. Used on index pages and inside dialogs.
+[compact]="true" uses a smaller title and tighter spacing, for index pages.
 
 Full API: `PageHeader.d.ts`. How to use the component anywhere: `PageHeader.prompt.md`.

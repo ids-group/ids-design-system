@@ -5,9 +5,9 @@ import * as React from 'react';
  * One term/detail pair inside a `DescriptionList` (`role="group"` with a `role="term"` label and `role="definition"` value). Layout (side-by-side vs stacked) follows the parent list's `orientation` — don't set it here.
  */
 export interface DescriptionItemProps {
-  /** The label. Plain text; rich values go in the projected content. */
+  /** The label, plain text. Rich values go in the projected content. */
   term?: string;
-  /** When set, a copy button appears that copies this string to the clipboard. */
+  /** When set, a copy button copies this string to the clipboard. */
   copyValue?: string | null;
   /** Element content. */
   children?: React.ReactNode;

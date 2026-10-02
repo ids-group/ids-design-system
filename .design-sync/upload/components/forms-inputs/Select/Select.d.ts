@@ -7,54 +7,54 @@ import * as React from 'react';
 export interface SelectProps {
   /** Helper text shown below the control. */
   hint?: string;
-  /** Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`. */
+  /** Error text. Shown immediately; takes precedence over `errors`. */
   error?: string;
   /** Advisory text, shown when there is no error. */
   warning?: string;
-  /** Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not. */
+  /** Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button. */
   reserveMessage?: boolean | null;
   /** Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone. */
-  messageIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | 'warn' | (string & {}) /* +68 more */ | null;
-  /** Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array. */
+  messageIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  /** Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`. */
   errors?: unknown;
-  /** Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text. */
+  /** Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. */
   invalid?: boolean;
-  /** Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form. */
+  /** Whether the user has interacted with the field. Bound by signal forms; gates `errors`. */
   touched?: boolean;
-  /** Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to. */
+  /** Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display. */
   hidden?: boolean;
   /** Selected option's value, two-way bound. */
   value?: string;
   onValueChange?: (value: string) => void;
   /** Flat options or option groups rendered in the dropdown panel. */
   options?: unknown;
-  /** Trigger width — `fill` stretches to the container and pins the panel to the trigger's width; `content` hugs the trigger's own content and takes that width as the panel's FLOOR, so the panel can still grow to its options. */
+  /** Trigger width: `fill` stretches to the container and pins the panel to it; `content` hugs the trigger and uses its width as the panel's floor. */
   width?: (('fill' | 'content'));
   /** Shown in the trigger when nothing is selected. */
   placeholder?: string;
-  /** Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Trigger height; falls back to `DS_CONFIG.control.size`, then `'md'`. */
   size?: ('sm' | 'md' | 'lg') | null;
   /** Label shown above the trigger. */
   label?: string;
   /** Disables the trigger and blocks all interaction. */
   disabled?: boolean;
-  /** Options are still being fetched. The panel shows a spinner instead of the empty row — which would otherwise claim there are no matches — and the list reports `aria-busy`. */
+  /** Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`. */
   loading?: boolean;
-  /** The panel opened. The moment to fetch options for a picker whose list is loaded on demand. */
+  /** The panel opened. */
   onOpened?: (value: void) => void;
-  /** The panel closed, for any reason — a pick, Escape, an outside click, a scroll. */
+  /** The panel closed, for any reason - a pick, Escape, an outside click, a scroll. */
   onClosed?: (value: void) => void;
-  /** Scrolls the keyboard cursor's row into view. On by default: a list longer than the panel otherwise walks the cursor out of sight. Set `false` only if you are driving the scroll position yourself. */
+  /** Scrolls the keyboard cursor's row into view. Set `false` only when driving the scroll position yourself. */
   scrollActiveIntoView?: boolean;
-  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and this component's own `ds-select-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance of it. */
+  /** Extra classes for the portaled panel, the only way to style one instance of it. */
   panelClass?: string | readonly string[];
   /** Prevents opening the dropdown while still allowing focus. */
   readOnly?: boolean;
   /** The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it. */
   readonlyBinding?: boolean;
-  /** Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning; paints the success border. */
   success?: string;
-  /** Marks the field required — shows an asterisk and sets `aria-required`. */
+  /** Marks the field required - shows an asterisk and sets `aria-required`. */
   required?: boolean;
   /** Shows an "(optional)" marker next to the label (ignored when `required`). */
   optional?: boolean;

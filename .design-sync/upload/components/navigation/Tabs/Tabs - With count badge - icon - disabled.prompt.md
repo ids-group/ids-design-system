@@ -1,6 +1,6 @@
 # Tabs - with count badge · icon · disabled
 
-A trailing count chip, a leading glyph, and a disabled tab — composed on the line variant.
+A trailing count chip, a leading icon and a disabled tab on the line variant.
 
 Inbox items.
 

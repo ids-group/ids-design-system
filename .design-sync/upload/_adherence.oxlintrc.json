@@ -127,6 +127,7 @@
               "components/*/SidenavItem/**",
               "components/*/Skeleton/**",
               "components/*/Slider/**",
+              "components/*/Sparkline/**",
               "components/*/Spinner/**",
               "components/*/SplitButton/**",
               "components/*/Stack/**",
@@ -216,8 +217,8 @@
         "message": "<Bar> doesn't accept that prop. Declared props: value, max, semantics, variant, indeterminate, color, ariaLabel, target, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='BarChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|max|frame|tooltipLingerMs|caption|summary|dataTable|partOfWhole|showPercent|loading|emptyText|error|errorText|valueFormat|pinOnClick|interactive|onRowClicked|dimOthers|highlighted|staggerMs|tooltip|children|key|ref|className|style)$/]",
-        "message": "<BarChart> doesn't accept that prop. Declared props: data, max, frame, tooltipLingerMs, caption, summary, dataTable, partOfWhole, showPercent, loading, emptyText, error, errorText, valueFormat, pinOnClick, interactive, onRowClicked, dimOthers, highlighted, staggerMs, tooltip, children."
+        "selector": "JSXOpeningElement[name.name='BarChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|max|dataTable|partOfWhole|showPercent|onRowClicked|dimOthers|highlighted|staggerMs|tooltip|children|key|ref|className|style)$/]",
+        "message": "<BarChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, max, dataTable, partOfWhole, showPercent, onRowClicked, dimOthers, highlighted, staggerMs, tooltip, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='BottomSheet'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|title|onClosed|snapPoints|staticPreview|onOpenChange|actions|children|key|ref|className|style)$/]",
@@ -240,16 +241,16 @@
         "message": "<Card> doesn't accept that prop. Declared props: elevation, padding, onPressed, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Chart'] > JSXAttribute > JSXIdentifier[name!=/^(?:categories|tickCount|min|max|cursor|cursorPin|tooltipLingerMs|maxSecondary|plotHeight|axisGutter|valueSpace|caption|interactive|summary|frame|loading|emptyText|error|errorText|valueFormat|secondaryAxisMode|axisColor|secondaryAxisColor|axisLabel|secondaryAxisLabel|tooltipTemplate|tooltipExtraGap|referenceLine|referenceLabel|seriesAnnotation|children|key|ref|className|style)$/]",
-        "message": "<Chart> doesn't accept that prop. Declared props: categories, tickCount, min, max, cursor, cursorPin, tooltipLingerMs, maxSecondary, plotHeight, axisGutter, valueSpace, caption, interactive, summary, frame, loading, emptyText, error, errorText, valueFormat, secondaryAxisMode, axisColor, secondaryAxisColor, axisLabel, secondaryAxisLabel, tooltipTemplate, tooltipExtraGap, referenceLine, referenceLabel, seriesAnnotation, children."
+        "selector": "JSXOpeningElement[name.name='Chart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|categories|tickCount|min|max|cursor|maxSecondary|plotHeight|axisGutter|valueSpace|secondaryAxisMode|axisColor|secondaryAxisColor|axisLabel|secondaryAxisLabel|tooltipTemplate|tooltipExtraGap|referenceLine|referenceLabel|seriesAnnotation|children|key|ref|className|style)$/]",
+        "message": "<Chart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, categories, tickCount, min, max, cursor, maxSecondary, plotHeight, axisGutter, valueSpace, secondaryAxisMode, axisColor, secondaryAxisColor, axisLabel, secondaryAxisLabel, tooltipTemplate, tooltipExtraGap, referenceLine, referenceLabel, seriesAnnotation, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='ChartDataTable'] > JSXAttribute > JSXIdentifier[name!=/^(?:columns|rows|caption|open|rowHeader|onToggled|children|key|ref|className|style)$/]",
         "message": "<ChartDataTable> doesn't accept that prop. Declared props: columns, rows, caption, open, rowHeader, onToggled, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='ChartTooltipPanel'] > JSXAttribute > JSXIdentifier[name!=/^(?:context|template|children|key|ref|className|style)$/]",
-        "message": "<ChartTooltipPanel> doesn't accept that prop. Declared props: context, template, children."
+        "selector": "JSXOpeningElement[name.name='ChartTooltipPanel'] > JSXAttribute > JSXIdentifier[name!=/^(?:context|template|swatches|children|key|ref|className|style)$/]",
+        "message": "<ChartTooltipPanel> doesn't accept that prop. Declared props: context, template, swatches, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Checkbox'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|checked|indeterminate|disabled|name|inputId|size|required|label|ariaLabel|onCheckedChange|children|key|ref|className|style)$/]",
@@ -260,8 +261,8 @@
         "message": "<ColorPicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, presets, panelClass, disabled, ariaLabel, success, staticPreview, onValueChange, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='ColumnChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|stack|thresholds|showValues|tickCount|frame|tooltipLingerMs|caption|summary|dataTable|partOfWhole|loading|emptyText|error|errorText|valueFormat|interactive|onPointClicked|pinOnClick|dimOthers|staggerMs|tooltip|tooltipAnchor|children|key|ref|className|style)$/]",
-        "message": "<ColumnChart> doesn't accept that prop. Declared props: data, stack, thresholds, showValues, tickCount, frame, tooltipLingerMs, caption, summary, dataTable, partOfWhole, loading, emptyText, error, errorText, valueFormat, interactive, onPointClicked, pinOnClick, dimOthers, staggerMs, tooltip, tooltipAnchor, children."
+        "selector": "JSXOpeningElement[name.name='ColumnChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|stack|thresholds|showValues|tickCount|dataTable|partOfWhole|onPointClicked|dimOthers|staggerMs|tooltip|tooltipAnchor|children|key|ref|className|style)$/]",
+        "message": "<ColumnChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, stack, thresholds, showValues, tickCount, dataTable, partOfWhole, onPointClicked, dimOthers, staggerMs, tooltip, tooltipAnchor, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Container'] > JSXAttribute > JSXIdentifier[name!=/^(?:size|children|key|ref|className|style)$/]",
@@ -304,12 +305,12 @@
         "message": "<FilterBar> doesn't accept that prop. Declared props: moreLabel, panelLabel, triggerSize, trailing, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='FunnelChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|shape|showTable|frame|tooltipLingerMs|caption|summary|dataTable|drop|loading|emptyText|error|errorText|valueFormat|pinOnClick|interactive|onStageClicked|dimOthers|staggerMs|tooltip|children|key|ref|className|style)$/]",
-        "message": "<FunnelChart> doesn't accept that prop. Declared props: data, shape, showTable, frame, tooltipLingerMs, caption, summary, dataTable, drop, loading, emptyText, error, errorText, valueFormat, pinOnClick, interactive, onStageClicked, dimOthers, staggerMs, tooltip, children."
+        "selector": "JSXOpeningElement[name.name='FunnelChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|shape|showTable|dataTable|drop|onStageClicked|dimOthers|staggerMs|tooltip|children|key|ref|className|style)$/]",
+        "message": "<FunnelChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, shape, showTable, dataTable, drop, onStageClicked, dimOthers, staggerMs, tooltip, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='HeatmapChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:columns|data|caption|min|max|showValues|interactive|dimOthers|pinOnClick|frame|loading|error|emptyText|errorText|valueFormat|tooltip|staggerMs|onCellClicked|children|key|ref|className|style)$/]",
-        "message": "<HeatmapChart> doesn't accept that prop. Declared props: columns, data, caption, min, max, showValues, interactive, dimOthers, pinOnClick, frame, loading, error, emptyText, errorText, valueFormat, tooltip, staggerMs, onCellClicked, children."
+        "selector": "JSXOpeningElement[name.name='HeatmapChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|columns|data|min|max|showValues|dimOthers|tooltip|staggerMs|onCellClicked|children|key|ref|className|style)$/]",
+        "message": "<HeatmapChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, columns, data, min, max, showValues, dimOthers, tooltip, staggerMs, onCellClicked, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Icon'] > JSXAttribute > JSXIdentifier[name!=/^(?:name|size|stroke|ariaLabel|children|key|ref|className|style)$/]",
@@ -328,8 +329,8 @@
         "message": "<Input> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, type, size, label, placeholder, disabled, readOnly, readonlyBinding, success, loading, required, optional, name, min, max, step, autocomplete, autofocus, ariaLabel, ariaDescribedBy, maxLength, minLength, pattern, enterKeyHint, inputMode, onBlurred, clearable, passwordToggle, passwordVisible, onValueChange, onPasswordVisibleChange, prefix, suffix, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='LineChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:categories|series|yAxisMode|showMarkers|outline|annotations|interactive|onPointClicked|pinOnClick|dimOthers|gaps|curve|stack|yAxisLabel|secondaryAxisLabel|tickCount|frame|tooltipLingerMs|caption|summary|dataTable|max|maxSecondary|loading|emptyText|error|errorText|valueFormat|hiddenSeries|rescaleOnHide|legendFilters|legendMode|noVisibleSeriesText|patterns|staggerMs|tooltip|tooltipAnchor|onHiddenSeriesChange|children|key|ref|className|style)$/]",
-        "message": "<LineChart> doesn't accept that prop. Declared props: categories, series, yAxisMode, showMarkers, outline, annotations, interactive, onPointClicked, pinOnClick, dimOthers, gaps, curve, stack, yAxisLabel, secondaryAxisLabel, tickCount, frame, tooltipLingerMs, caption, summary, dataTable, max, maxSecondary, loading, emptyText, error, errorText, valueFormat, hiddenSeries, rescaleOnHide, legendFilters, legendMode, noVisibleSeriesText, patterns, staggerMs, tooltip, tooltipAnchor, onHiddenSeriesChange, children."
+        "selector": "JSXOpeningElement[name.name='LineChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|categories|series|yAxisMode|showMarkers|outline|annotations|onPointClicked|dimOthers|gaps|curve|stack|yAxisLabel|secondaryAxisLabel|tickCount|dataTable|max|maxSecondary|hiddenSeries|rescaleOnHide|legendFilters|legendMode|noVisibleSeriesText|patterns|staggerMs|tooltip|tooltipAnchor|onHiddenSeriesChange|children|key|ref|className|style)$/]",
+        "message": "<LineChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, categories, series, yAxisMode, showMarkers, outline, annotations, onPointClicked, dimOthers, gaps, curve, stack, yAxisLabel, secondaryAxisLabel, tickCount, dataTable, max, maxSecondary, hiddenSeries, rescaleOnHide, legendFilters, legendMode, noVisibleSeriesText, patterns, staggerMs, tooltip, tooltipAnchor, onHiddenSeriesChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='List'] > JSXAttribute > JSXIdentifier[name!=/^(?:dividers|children|key|ref|className|style)$/]",
@@ -396,8 +397,8 @@
         "message": "<PasswordRules> doesn't accept that prop. Declared props: value, rules, showUnmet, columns, listId, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='PieChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|centerValue|centerLabel|legend|maxSlices|otherLabel|innerRadius|frame|tooltipLingerMs|caption|summary|dataTable|partOfWhole|loading|emptyText|error|errorText|valueFormat|pinOnClick|interactive|onSliceClicked|dimOthers|staggerMs|tooltip|children|key|ref|className|style)$/]",
-        "message": "<PieChart> doesn't accept that prop. Declared props: data, centerValue, centerLabel, legend, maxSlices, otherLabel, innerRadius, frame, tooltipLingerMs, caption, summary, dataTable, partOfWhole, loading, emptyText, error, errorText, valueFormat, pinOnClick, interactive, onSliceClicked, dimOthers, staggerMs, tooltip, children."
+        "selector": "JSXOpeningElement[name.name='PieChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|centerValue|centerLabel|legend|maxSlices|otherLabel|innerRadius|dataTable|partOfWhole|onSliceClicked|dimOthers|tooltip|children|key|ref|className|style)$/]",
+        "message": "<PieChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, centerValue, centerLabel, legend, maxSlices, otherLabel, innerRadius, dataTable, partOfWhole, onSliceClicked, dimOthers, tooltip, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Popover'] > JSXAttribute > JSXIdentifier[name!=/^(?:align|placement|arrow|panelRole|panelLabel|staticPreview|children|key|ref|className|style)$/]",
@@ -412,8 +413,8 @@
         "message": "<RadioGroup> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, name, disabled, ariaLabel, label, onValueChange, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='ScatterChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|xLabel|yLabel|decimator|tickCount|caption|summary|interactive|frame|dataTable|loading|error|emptyText|errorText|valueFormat|tooltip|dimOthers|pinOnClick|onPointClicked|children|key|ref|className|style)$/]",
-        "message": "<ScatterChart> doesn't accept that prop. Declared props: data, xLabel, yLabel, decimator, tickCount, caption, summary, interactive, frame, dataTable, loading, error, emptyText, errorText, valueFormat, tooltip, dimOthers, pinOnClick, onPointClicked, children."
+        "selector": "JSXOpeningElement[name.name='ScatterChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|xLabel|yLabel|decimator|tickCount|dataTable|tooltip|dimOthers|onPointClicked|children|key|ref|className|style)$/]",
+        "message": "<ScatterChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, xLabel, yLabel, decimator, tickCount, dataTable, tooltip, dimOthers, onPointClicked, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Search'] > JSXAttribute > JSXIdentifier[name!=/^(?:hidden|value|placeholder|shortcut|showIcon|clearable|ariaLabel|disabled|size|onSubmitted|debounce|onValueChange|children|key|ref|className|style)$/]",
@@ -450,6 +451,10 @@
       {
         "selector": "JSXOpeningElement[name.name='Slider'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|value|min|max|step|range|disabled|ariaLabel|onValueChange|children|key|ref|className|style)$/]",
         "message": "<Slider> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, min, max, step, range, disabled, ariaLabel, onValueChange, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Sparkline'] > JSXAttribute > JSXIdentifier[name!=/^(?:area|data|categories|label|scale|tooltip|valueFormat|children|key|ref|className|style)$/]",
+        "message": "<Sparkline> doesn't accept that prop. Declared props: area, data, categories, label, scale, tooltip, valueFormat, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Spinner'] > JSXAttribute > JSXIdentifier[name!=/^(?:size|children|key|ref|className|style)$/]",
@@ -544,8 +549,8 @@
         "message": "<W3w> doesn't accept that prop. Declared props: prefix, address, copyable, onCopied, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='WaterfallChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|showValues|showConnectors|caption|summary|tickCount|interactive|frame|dataTable|loading|error|emptyText|errorText|valueFormat|pinOnClick|staggerMs|onBarClicked|children|key|ref|className|style)$/]",
-        "message": "<WaterfallChart> doesn't accept that prop. Declared props: data, showValues, showConnectors, caption, summary, tickCount, interactive, frame, dataTable, loading, error, emptyText, errorText, valueFormat, pinOnClick, staggerMs, onBarClicked, children."
+        "selector": "JSXOpeningElement[name.name='WaterfallChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|showValues|showConnectors|dimOthers|tooltip|tickCount|dataTable|staggerMs|onBarClicked|children|key|ref|className|style)$/]",
+        "message": "<WaterfallChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, showValues, showConnectors, dimOthers, tooltip, tickCount, dataTable, staggerMs, onBarClicked, children."
       }
     ]
   },
@@ -787,6 +792,9 @@
           "input[type=range]"
         ]
       },
+      "Sparkline": {
+        "replaces": []
+      },
       "Spinner": {
         "replaces": []
       },
@@ -871,6 +879,8 @@
       "--_check-mark-exit-easing",
       "--_date-picker-day-disabled-label-color",
       "--_date-picker-day-hover-bg-color",
+      "--_date-picker-day-label-color",
+      "--_date-picker-day-muted-label-color",
       "--_date-picker-day-range-bg-color",
       "--_date-picker-day-range-label-color",
       "--_date-picker-day-selected-bg-color",
@@ -1003,11 +1013,13 @@
       "--calendar-rowlabel-w",
       "--card-hover-lift",
       "--card-title-fs",
+      "--chart-area-fade-opacity",
       "--chart-area-opacity",
       "--chart-axis-font-size",
       "--chart-axis-label-color",
       "--chart-axis-line-color",
       "--chart-bar-gap",
+      "--chart-bg-color",
       "--chart-categorical-1",
       "--chart-categorical-2",
       "--chart-categorical-3",
@@ -1028,15 +1040,12 @@
       "--chart-dot-radius",
       "--chart-dot-radius-active",
       "--chart-empty-h",
-      "--chart-focus-halo-color",
       "--chart-focus-ring-color",
-      "--chart-frame-bg-color",
       "--chart-frame-border-color",
       "--chart-frame-border-width",
       "--chart-frame-padding",
       "--chart-frame-radius",
       "--chart-grid-line-color",
-      "--chart-hatch-color",
       "--chart-hatch-width",
       "--chart-heat-1",
       "--chart-heat-2",
@@ -1121,24 +1130,23 @@
       "--drawer-w-sm",
       "--ds-badge-bg-color",
       "--ds-badge-label-color",
+      "--ds-chart-area-fade-opacity",
       "--ds-chart-area-opacity",
       "--ds-chart-axis-font-size",
       "--ds-chart-axis-label-color",
       "--ds-chart-axis-line-color",
       "--ds-chart-bar-gap",
+      "--ds-chart-bg-color",
       "--ds-chart-cursor-line-color",
       "--ds-chart-dim-opacity",
       "--ds-chart-dot-radius",
       "--ds-chart-dot-radius-active",
-      "--ds-chart-focus-halo-color",
       "--ds-chart-focus-ring-color",
-      "--ds-chart-frame-bg-color",
       "--ds-chart-frame-border-color",
       "--ds-chart-frame-border-width",
       "--ds-chart-frame-padding",
       "--ds-chart-frame-radius",
       "--ds-chart-grid-line-color",
-      "--ds-chart-hatch-color",
       "--ds-chart-hatch-width",
       "--ds-chart-heat-1-color",
       "--ds-chart-heat-2-color",
@@ -1187,6 +1195,8 @@
       "--ds-control-focus-shadow-error",
       "--ds-date-picker-day-disabled-label-color",
       "--ds-date-picker-day-hover-bg-color",
+      "--ds-date-picker-day-label-color",
+      "--ds-date-picker-day-muted-label-color",
       "--ds-date-picker-day-range-bg-color",
       "--ds-date-picker-day-range-label-color",
       "--ds-date-picker-day-selected-bg-color",
@@ -1208,6 +1218,8 @@
       "--ds-elevation-raised",
       "--ds-field-focus-shadow",
       "--ds-field-focus-shadow-error",
+      "--ds-field-focus-shadow-success",
+      "--ds-field-focus-shadow-warning",
       "--ds-icon-size",
       "--ds-link-color",
       "--ds-link-color-active",
@@ -1224,6 +1236,8 @@
       "--ds-motion-chart-mark-sweep-duration",
       "--ds-motion-chart-state-duration",
       "--ds-motion-chart-state-easing",
+      "--ds-motion-chart-tooltip-move-duration",
+      "--ds-motion-chart-tooltip-move-easing",
       "--ds-motion-check-enter-duration",
       "--ds-motion-check-enter-easing",
       "--ds-motion-check-exit-duration",
@@ -1789,7 +1803,10 @@
       "--toast-maxw",
       "--toast-minw",
       "--tooltip-arrow",
+      "--tooltip-bg-color",
+      "--tooltip-border-color",
       "--tooltip-maxw",
+      "--tooltip-text-color",
       "--topbar-h",
       "--tree-indent",
       "--tree-row-pad-x",
@@ -2088,9 +2105,7 @@
       "--accent-focus-field": "other",
       "--accent-surface-tint": "other",
       "--chart-hover-bg-color": "color",
-      "--chart-tooltip-bg-color": "other",
-      "--chart-tooltip-text-color": "other",
-      "--chart-tooltip-border-color": "other",
+      "--tooltip-border-color": "other",
       "--chart-categorical-8": "color",
       "--chart-series-default": "color",
       "--chart-ramp-1": "color",
@@ -2231,6 +2246,8 @@
       "--ds-motion-chart-mark-detail-duration": "other",
       "--ds-motion-chart-mark-exit-duration": "other",
       "--ds-motion-chart-mark-exit-easing": "other",
+      "--ds-motion-chart-tooltip-move-duration": "other",
+      "--ds-motion-chart-tooltip-move-easing": "other",
       "--opacity-disabled": "number",
       "--opacity-text-disabled": "number",
       "--opacity-scrim": "number",
@@ -2299,6 +2316,8 @@
       "--ds-surface-padding": "other",
       "--ds-field-focus-shadow": "shadow",
       "--ds-field-focus-shadow-error": "shadow",
+      "--ds-field-focus-shadow-warning": "shadow",
+      "--ds-field-focus-shadow-success": "shadow",
       "--ds-control-focus-shadow": "other",
       "--ds-control-focus-shadow-error": "other",
       "--table-cell-pad-x": "other",
@@ -2412,6 +2431,8 @@
       "--list-item-gap": "other",
       "--tooltip-maxw": "length",
       "--tooltip-arrow": "other",
+      "--tooltip-bg-color": "other",
+      "--tooltip-text-color": "other",
       "--popover-maxw": "length",
       "--toast-minw": "length",
       "--toast-maxw": "length",
@@ -2485,11 +2506,11 @@
       "--chart-series-accent": "other",
       "--chart-positive": "other",
       "--chart-negative": "other",
+      "--chart-bg-color": "other",
       "--chart-frame-border-color": "other",
       "--chart-frame-border-width": "other",
       "--chart-frame-radius": "other",
       "--chart-frame-padding": "other",
-      "--chart-frame-bg-color": "other",
       "--chart-axis-line-color": "other",
       "--chart-axis-label-color": "other",
       "--chart-grid-line-color": "other",
@@ -2501,7 +2522,9 @@
       "--chart-dim-opacity": "number",
       "--chart-cursor-line-color": "other",
       "--chart-focus-ring-color": "other",
-      "--chart-focus-halo-color": "other",
+      "--chart-tooltip-bg-color": "other",
+      "--chart-tooltip-text-color": "other",
+      "--chart-tooltip-border-color": "other",
       "--chart-mark-cap-radius": "length",
       "--chart-bar-gap": "length",
       "--chart-line-width": "length",
@@ -2509,7 +2532,7 @@
       "--chart-dot-radius": "length",
       "--chart-dot-radius-active": "length",
       "--chart-area-opacity": "number",
-      "--chart-hatch-color": "other",
+      "--chart-area-fade-opacity": "number",
       "--chart-hatch-width": "length",
       "--ds-chart-series-1-color": "other",
       "--ds-chart-series-2-color": "other",
@@ -2539,11 +2562,11 @@
       "--ds-chart-heat-6-color": "other",
       "--ds-chart-heat-7-color": "other",
       "--ds-chart-heat-8-color": "other",
+      "--ds-chart-bg-color": "other",
       "--ds-chart-frame-border-color": "other",
       "--ds-chart-frame-border-width": "other",
       "--ds-chart-frame-radius": "other",
       "--ds-chart-frame-padding": "other",
-      "--ds-chart-frame-bg-color": "other",
       "--ds-chart-axis-line-color": "other",
       "--ds-chart-axis-label-color": "other",
       "--ds-chart-axis-font-size": "other",
@@ -2556,7 +2579,6 @@
       "--ds-chart-hover-bg-color": "other",
       "--ds-chart-cursor-line-color": "other",
       "--ds-chart-focus-ring-color": "other",
-      "--ds-chart-focus-halo-color": "other",
       "--ds-chart-tooltip-bg-color": "other",
       "--ds-chart-tooltip-text-color": "other",
       "--ds-chart-tooltip-border-color": "other",
@@ -2567,7 +2589,7 @@
       "--ds-chart-dot-radius": "other",
       "--ds-chart-dot-radius-active": "other",
       "--ds-chart-area-opacity": "other",
-      "--ds-chart-hatch-color": "other",
+      "--ds-chart-area-fade-opacity": "other",
       "--ds-chart-hatch-width": "other",
       "--_link-color": "other",
       "--_link-color-hover": "other",
@@ -2626,6 +2648,8 @@
       "--_date-picker-day-range-label-color": "other",
       "--_date-picker-day-selected-bg-color-hover": "other",
       "--_date-picker-day-disabled-label-color": "other",
+      "--_date-picker-day-label-color": "other",
+      "--_date-picker-day-muted-label-color": "other",
       "--_scroll-wrap-bg-color": "other",
       "--_scroll-wrap-radius": "other",
       "--ds-badge-bg-color": "other",
@@ -2781,6 +2805,8 @@
       "--ds-date-picker-day-range-label-color": "color",
       "--ds-date-picker-day-selected-bg-color-hover": "other",
       "--ds-date-picker-day-disabled-label-color": "color",
+      "--ds-date-picker-day-label-color": "color",
+      "--ds-date-picker-day-muted-label-color": "color",
       "--docs-scroll-wrap-bg-color": "color",
       "--docs-scroll-wrap-radius": "length"
     },
