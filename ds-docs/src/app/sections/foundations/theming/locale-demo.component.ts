@@ -30,6 +30,10 @@ import { PaginationComponent } from 'ds/pagination';
         rowsPerPage: 'Zeilen pro Seite',
       },
       chart: { empty: 'Keine Daten' },
+      datePicker: {
+        previousMonth: 'Vorheriger Monat',
+        nextMonth: 'Nächster Monat',
+      },
     }),
   ],
   template: `
