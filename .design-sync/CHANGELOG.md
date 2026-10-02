@@ -17,6 +17,29 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **The `Tag` doc says an interactive tag works from the keyboard.** The design agent reads it as a
+  tab stop that toggles on Enter or Space as well as on a click.
+
+- **`ds-chart-unpin` has a usage doc and a section.** The design agent reads it as the pill a chart
+  draws while a mark is held, and its card resolves to the `charts/chart` section.
+
+- **The `CalendarDay` and `FieldMessage` docs send the design agent to the parent.** Neither part
+  has a React component of its own, so the docs name `DatePicker` and the field's `hint`, `invalid`,
+  `success`, `warning` and `reserveMessage` instead of a component to place.
+
+### Build
+
+- **A card run that fails or is interrupted leaves no Chrome behind.** `measure-cards` and
+  `snapshot-cards` end the headless browser's whole process tree and delete its `ds-cdp-*` profile
+  when they throw or get Ctrl+C, as they already did on a clean finish.
+
+- **`check-manual-surface` reads inline templates when it asks whether a part is rendered.** An
+  internal part placed only by another component's inline template, such as `ds-chart-unpin` in the
+  chart state frame, still needs its doc and section. The projection watch list holds 16 templates:
+  `chart` stamps its slots through the state frame's `<ng-template>`, which the list does not track.
+
 ## 0.14.6-beta.0 — 2026-09-30
 
 ### Cards

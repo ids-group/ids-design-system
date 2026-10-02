@@ -1,254 +1,276 @@
-<figure class="chart">
-  @if (caption()) {
-    <figcaption>
-      {{ caption() }}
-    </figcaption>
-  }
+<figure
+  class="chart"
+  dsChartStates
+  messageAxes
+  [unpin]="drawsUnpin"
+  [pinned]="cursorPinned()"
+  [caption]="caption()"
+  [error]="error()"
+  [errorText]="errorTextResolved()"
+  [pending]="loading() || !renderReady()"
+  [empty]="isEmpty()"
+  [emptyText]="emptyTextResolved()"
+  [skeleton]="skeleton"
+  [body]="body"
+  (release)="releaseCursor()">
+</figure>
 
-  @if (error()) {
-    <p
-      class="empty is-error"
-      role="status">
-      {{ errorTextResolved() }}
-    </p>
-  } @else if (loading() || !renderReady()) {
-    <div
-      class="skeleton"
-      aria-hidden="true">
-      <ds-skeleton
-        height="var(--_chart-view-height)"
-        [shimmer]="loading()" />
-    </div>
-  } @else if (isEmpty()) {
-    <p class="empty">
-      {{ emptyTextResolved() }}
-    </p>
-  } @else {
-    <div
-      class="plot"
-      [attr.role]="interactive() ? 'group' : 'img'"
-      [attr.aria-label]="accessibleName()"
-      [dsChartTooltip]="tooltipContext()"
-      [dsChartTooltipSwatches]="tooltipSwatchesResolved()"
-      [dsChartTooltipExtraGap]="tooltipExtraGap()"
-      [dsChartTooltipPinned]="tooltipPinned()"
-      [dsChartTooltipOrigin]="tooltipOrigin()"
-      [dsChartTooltipTemplate]="tooltipTemplate()">
-      <svg
-        #canvasEl
-        class="canvas"
-        preserveAspectRatio="xMidYMid meet"
-        [class.pins]="bandPins()"
-        [style.block-size.px]="viewHeight()"
-        [attr.viewBox]="viewBox()">
+<ng-template #skeleton>
+  <div
+    class="skeleton"
+    aria-hidden="true">
+    <ds-skeleton
+      height="var(--_chart-view-height)"
+      [shimmer]="loading()" />
+  </div>
+</ng-template>
+
+<ng-template #body>
+  <div
+    class="plot"
+    [attr.role]="interactive() ? 'group' : 'img'"
+    [attr.aria-label]="accessibleName()"
+    [dsChartTooltip]="tooltipContext()"
+    [dsChartTooltipSwatches]="tooltipSwatchesResolved()"
+    [dsChartTooltipExtraGap]="tooltipExtraGap()"
+    [dsChartTooltipPinned]="tooltipPinned()"
+    [dsChartTooltipOrigin]="tooltipOrigin()"
+    [dsChartTooltipTemplate]="tooltipTemplate()">
+    <svg
+      #canvasEl
+      class="canvas"
+      preserveAspectRatio="xMidYMid meet"
+      [class.pins]="bandPins()"
+      [style.block-size.px]="viewHeight()"
+      [attr.viewBox]="viewBox()">
+      <rect
+        class="plot-bg"
+        [attr.x]="plot().left"
+        [attr.y]="plot().top"
+        [attr.width]="plot().width"
+        [attr.height]="plot().height" />
+
+      @if (secondaryPlot().top !== plot().top) {
         <rect
           class="plot-bg"
-          [attr.x]="plot().left"
-          [attr.y]="plot().top"
-          [attr.width]="plot().width"
-          [attr.height]="plot().height" />
+          [attr.x]="secondaryPlot().left"
+          [attr.y]="secondaryPlot().top"
+          [attr.width]="secondaryPlot().width"
+          [attr.height]="secondaryPlot().height" />
+      }
 
-        @if (secondaryPlot().top !== plot().top) {
-          <rect
-            class="plot-bg"
-            [attr.x]="secondaryPlot().left"
-            [attr.y]="secondaryPlot().top"
-            [attr.width]="secondaryPlot().width"
-            [attr.height]="secondaryPlot().height" />
-        }
-
-        @if (cursorBand(); as band) {
-          <g
-            class="cursor"
-            aria-hidden="true"
-            animate.enter="cursor-in"
-            animate.leave="cursor-out">
-            <rect
-              #cursorBandEl
-              class="category-band"
-              [attr.x]="band.x"
-              [attr.y]="band.top"
-              [attr.width]="band.width"
-              [attr.height]="band.bottom - band.top" />
-
-            <line
-              class="cursor-line"
-              [attr.x1]="band.x + band.width / 2"
-              [attr.x2]="band.x + band.width / 2"
-              [attr.y1]="band.top"
-              [attr.y2]="band.bottom" />
-          </g>
-        }
-
-        <!-- Not on the svg: an aria-hidden ancestor leaves a focusable projected mark
-             reachable by Tab yet invisible to a reader. -->
+      @if (cursorBand(); as band) {
         <g
-          class="axes"
-          aria-hidden="true">
-          @for (tick of ticks(); track tick.value) {
+          class="cursor"
+          aria-hidden="true"
+          animate.enter="cursor-in"
+          animate.leave="cursor-out">
+          <rect
+            #cursorBandEl
+            class="category-band"
+            [attr.x]="band.x"
+            [attr.y]="band.top"
+            [attr.width]="band.width"
+            [attr.height]="band.bottom - band.top" />
+
+          <line
+            class="cursor-line"
+            [attr.x1]="band.x + band.width / 2"
+            [attr.x2]="band.x + band.width / 2"
+            [attr.y1]="band.top"
+            [attr.y2]="band.bottom" />
+        </g>
+      }
+
+      <!-- Not on the svg: an aria-hidden ancestor leaves a focusable projected mark
+           reachable by Tab yet invisible to a reader. -->
+      <g
+        class="axes"
+        aria-hidden="true">
+        @for (tick of ticks(); track tick.value) {
+          <line
+            class="grid-line"
+            [attr.x1]="plot().left"
+            [attr.x2]="plotRight()"
+            [attr.y1]="tick.y"
+            [attr.y2]="tick.y" />
+        }
+
+        <line
+          class="axis-line"
+          [attr.x1]="plot().left"
+          [attr.x2]="plotRight()"
+          [attr.y1]="plotBottom()"
+          [attr.y2]="plotBottom()" />
+
+        <line
+          class="axis-line"
+          [attr.x1]="plot().left"
+          [attr.x2]="plot().left"
+          [attr.y1]="plot().top"
+          [attr.y2]="plotBottom()" />
+
+        @if (showSecondaryGridlines()) {
+          @for (tick of secondaryTicks(); track tick.value) {
             <line
-              class="grid-line"
+              class="grid-line is-secondary"
               [attr.x1]="plot().left"
               [attr.x2]="plotRight()"
               [attr.y1]="tick.y"
               [attr.y2]="tick.y" />
           }
+        }
 
+        @if (stacked()) {
           <line
             class="axis-line"
             [attr.x1]="plot().left"
             [attr.x2]="plotRight()"
-            [attr.y1]="plotBottom()"
-            [attr.y2]="plotBottom()" />
+            [attr.y1]="secondaryPlotBottom()"
+            [attr.y2]="secondaryPlotBottom()" />
 
           <line
             class="axis-line"
             [attr.x1]="plot().left"
             [attr.x2]="plot().left"
-            [attr.y1]="plot().top"
-            [attr.y2]="plotBottom()" />
-
-          @if (showSecondaryGridlines()) {
-            @for (tick of secondaryTicks(); track tick.value) {
-              <line
-                class="grid-line is-secondary"
-                [attr.x1]="plot().left"
-                [attr.x2]="plotRight()"
-                [attr.y1]="tick.y"
-                [attr.y2]="tick.y" />
-            }
-          }
-
-          @if (stacked()) {
-            <line
-              class="axis-line"
-              [attr.x1]="plot().left"
-              [attr.x2]="plotRight()"
-              [attr.y1]="secondaryPlotBottom()"
-              [attr.y2]="secondaryPlotBottom()" />
-
-            <line
-              class="axis-line"
-              [attr.x1]="plot().left"
-              [attr.x2]="plot().left"
-              [attr.y1]="secondaryPlot().top"
-              [attr.y2]="secondaryPlotBottom()" />
-          }
-
-          @if (reachesBelowZero()) {
-            <line
-              class="zero-line"
-              [attr.x1]="plot().left"
-              [attr.x2]="plotRight()"
-              [attr.y1]="zeroOffset()"
-              [attr.y2]="zeroOffset()" />
-          }
-        </g>
-
-        <!-- Two slots so a reference line paints under the marks in any source order. Both stay
-             inside `.marks`, which the boot transition guard is keyed on. -->
-        <g class="marks">
-          <ng-content select="[dsReferenceLine]" />
-
-          <ng-content />
-        </g>
-
-        <g
-          class="labels"
-          aria-hidden="true">
-          @if (axisLabel()) {
-            <text
-              class="axis-title"
-              text-anchor="middle"
-              [style.fill]="axisLabelFill()"
-              [attr.transform]="
-                'rotate(-90 ' +
-                axisTitleX() +
-                ' ' +
-                (plot().top + plot().height / 2) +
-                ')'
-              "
-              [attr.x]="axisTitleX()"
-              [attr.y]="plot().top + plot().height / 2">
-              {{ axisLabel() }}
-            </text>
-          }
-
-          @if (secondaryAxisLabel() && hasSecondaryAxis()) {
-            <text
-              class="axis-title"
-              text-anchor="middle"
-              [style.fill]="secondaryAxisLabelFill()"
-              [attr.transform]="
-                'rotate(90 ' +
-                secondaryTitleX() +
-                ' ' +
-                (plot().top + plot().height / 2) +
-                ')'
-              "
-              [attr.x]="secondaryTitleX()"
-              [attr.y]="plot().top + plot().height / 2">
-              {{ secondaryAxisLabel() }}
-            </text>
-          }
-
-          @for (tick of ticks(); track tick.value) {
-            <text
-              class="axis-label is-primary"
-              text-anchor="end"
-              [style.fill]="axisLabelFill()"
-              [attr.x]="axisLabelX()"
-              [attr.y]="tick.y">
-              {{ tick.label }}
-            </text>
-          }
-
-          @for (tick of secondaryTicks(); track tick.value) {
-            <text
-              class="axis-label is-secondary"
-              [style.fill]="secondaryAxisLabelFill()"
-              [attr.text-anchor]="secondaryLabelAnchor()"
-              [attr.x]="secondaryLabelX()"
-              [attr.y]="tick.y">
-              {{ tick.label }}
-            </text>
-          }
-
-          @for (label of categoryLabels(); track label.index) {
-            <text
-              class="category-label"
-              [class.is-rotated]="categoryLabelsRotated()"
-              [attr.text-anchor]="categoryLabelsRotated() ? 'end' : 'middle'"
-              [attr.x]="label.x"
-              [attr.y]="categoryLabelY()"
-              [attr.transform]="
-                categoryLabelsRotated()
-                  ? 'rotate(-45 ' + label.x + ' ' + categoryLabelY() + ')'
-                  : null
-              "
-              (pointerenter)="onCategoryLabelEnter(label.index, $event)"
-              (pointerleave)="onCategoryLabelLeave()">
-              {{ label.text }}
-            </text>
-          }
-
-          <!-- Over the marks so an annotation's name survives a column drawn through it. -->
-          <ng-content select="[dsReferenceLabel], [dsSeriesAnnotation]" />
-        </g>
-
-        @if (cursorPinned() && cursorBand(); as band) {
-          <g
-            dsChartPinMarker
-            [attr.transform]="
-              'translate(' +
-              (band.x + band.width / 2) +
-              ',' +
-              bandPinY(band) +
-              ')'
-            ">
-          </g>
+            [attr.y1]="secondaryPlot().top"
+            [attr.y2]="secondaryPlotBottom()" />
         }
-      </svg>
-    </div>
-  }
-</figure>
+
+        @if (reachesBelowZero()) {
+          <line
+            class="zero-line"
+            [attr.x1]="plot().left"
+            [attr.x2]="plotRight()"
+            [attr.y1]="zeroOffset()"
+            [attr.y2]="zeroOffset()" />
+        }
+      </g>
+
+      <!-- Two slots so a reference line paints under the marks in any source order. Both stay
+           inside `.marks`, which the boot transition guard is keyed on. -->
+      <g class="marks">
+        <ng-content select="[dsReferenceLine]" />
+
+        <ng-content />
+      </g>
+
+      <!-- After the marks, so a stop's ring paints over them. -->
+      @if (keyboardStops()) {
+        <g
+          class="category-stops"
+          (keydown)="onStopKey($event)">
+          @for (stop of categoryStops(); track stop.index) {
+            <rect
+              class="category-stop"
+              [attr.data-category-index]="stop.index"
+              [attr.x]="stop.x"
+              [attr.y]="plot().top"
+              [attr.width]="stop.width"
+              [attr.height]="plot().height"
+              [attr.tabindex]="stop.index === focusedCategory() ? 0 : -1"
+              [attr.aria-label]="stopLabel(stop.index)"
+              (focus)="onStopFocus(stop.index, $event)"
+              (blur)="onStopBlur($event)" />
+          }
+        </g>
+      }
+
+      <g
+        class="labels"
+        aria-hidden="true">
+        @if (axisLabel()) {
+          <text
+            class="axis-title"
+            text-anchor="middle"
+            [style.fill]="axisLabelFill()"
+            [attr.transform]="
+              'rotate(-90 ' +
+              axisTitleX() +
+              ' ' +
+              (plot().top + plot().height / 2) +
+              ')'
+            "
+            [attr.x]="axisTitleX()"
+            [attr.y]="plot().top + plot().height / 2">
+            {{ axisLabel() }}
+          </text>
+        }
+
+        @if (secondaryAxisLabel() && hasSecondaryAxis()) {
+          <text
+            class="axis-title"
+            text-anchor="middle"
+            [style.fill]="secondaryAxisLabelFill()"
+            [attr.transform]="
+              'rotate(90 ' +
+              secondaryTitleX() +
+              ' ' +
+              (plot().top + plot().height / 2) +
+              ')'
+            "
+            [attr.x]="secondaryTitleX()"
+            [attr.y]="plot().top + plot().height / 2">
+            {{ secondaryAxisLabel() }}
+          </text>
+        }
+
+        @for (tick of ticks(); track tick.value) {
+          <text
+            class="axis-label is-primary"
+            text-anchor="end"
+            [style.fill]="axisLabelFill()"
+            [attr.x]="axisLabelX()"
+            [attr.y]="tick.y">
+            {{ tick.label }}
+          </text>
+        }
+
+        @for (tick of secondaryTicks(); track tick.value) {
+          <text
+            class="axis-label is-secondary"
+            [style.fill]="secondaryAxisLabelFill()"
+            [attr.text-anchor]="secondaryLabelAnchor()"
+            [attr.x]="secondaryLabelX()"
+            [attr.y]="tick.y">
+            {{ tick.label }}
+          </text>
+        }
+
+        @for (label of categoryLabels(); track label.index) {
+          <text
+            class="category-label"
+            [class.is-rotated]="categoryLabelsRotated()"
+            [attr.text-anchor]="categoryLabelsRotated() ? 'end' : 'middle'"
+            [attr.x]="label.x"
+            [attr.y]="categoryLabelY()"
+            [attr.transform]="
+              categoryLabelsRotated()
+                ? 'rotate(-45 ' + label.x + ' ' + categoryLabelY() + ')'
+                : null
+            "
+            (pointerenter)="onCategoryLabelEnter(label.index, $event)"
+            (pointerleave)="onCategoryLabelLeave()">
+            {{ label.text }}
+          </text>
+        }
+
+        <!-- Over the marks so an annotation's name survives a column drawn through it. -->
+        <ng-content select="[dsReferenceLabel], [dsSeriesAnnotation]" />
+      </g>
+
+      @if (cursorPinned() && cursorBand(); as band) {
+        <g
+          dsChartPinMarker
+          [attr.transform]="
+            'translate(' +
+            (band.x + band.width / 2) +
+            ',' +
+            bandPinY(band) +
+            ')'
+          ">
+        </g>
+      }
+    </svg>
+  </div>
+</ng-template>

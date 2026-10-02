@@ -15,7 +15,13 @@
   <p class="block-desc t-s">
     Vertical list of attributed events on a record. Each row: avatar, bold
     subject (actor + verb + object), one-line body, optional inline status
-    badge, and a relative timestamp on the trailing edge.
+    badge, and a relative timestamp on the trailing edge. For a vertical event
+    log with icons and tones, use
+    <a
+      routerLink="/components/timeline"
+      class="t-link">
+      ds-timeline
+    </a>.
   </p>
 
   <div class="stage">
@@ -70,32 +76,20 @@
   </p>
 
   <div class="stage">
-    <div class="empty">
-      <div class="empty-icon">
-        <ds-icon
-          name="clock"
-          [size]="24" />
-      </div>
-
-      <p class="t-m empty-title">
-        No recent activity
-      </p>
-
-      <p class="t-s empty-body">
-        Edits, status changes and allocations will appear here. Make the first
-        change to kick off the log.
-      </p>
-
+    <ds-empty-state
+      class="empty"
+      icon="clock"
+      title="No recent activity"
+      body="Edits, status changes and allocations will appear here. Make the first change to kick off the log.">
       <ds-button
+        actions
         color="neutral"
         variant="outline"
-        size="sm">
-        <ds-icon
-          name="edit"
-          [size]="14" />
+        size="sm"
+        icon="edit">
         Edit record
       </ds-button>
-    </div>
+    </ds-empty-state>
   </div>
 
   <h3

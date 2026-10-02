@@ -13,8 +13,19 @@
     <code class="t-mono-inline">
       save
     </code> (brand-tinted unsaved-changes
-    affordance).
+    bar). Project into <code class="t-mono-inline">brand</code>,
+    <code class="t-mono-inline">nav</code> and
+    <code class="t-mono-inline">actions</code> (in that order, then the default
+    slot); the row spreads them with <code>space-between</code> and wraps.
   </span>
+
+  <p class="block-desc t-s">
+    The host has no role: wrap it in <code>&lt;footer&gt;</code> for a
+    landmark, and announce an unsaved-changes bar yourself. Tokens:
+    <code>--ds-page-footer-bg-color</code>, <code>-border-color</code>,
+    <code>-save-bg-color</code>, <code>-save-border-color</code>,
+    <code>-radius</code>.
+  </p>
 
   <h3
     data-claude-design

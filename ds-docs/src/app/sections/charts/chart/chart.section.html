@@ -4,7 +4,8 @@
   title="Chart container"
   [apiKeys]="['chart-data-table']">
   <span lede>
-    The container the column chart is built inside. It owns the plot, the axes,
+    The container the column, line and waterfall charts are built inside. It
+    owns the plot, the axes,
     the grid, the value domain and the loading, empty and error states, and
     draws no marks of its own - reach for it directly when no preset offers the
     combination you need.
@@ -58,61 +59,6 @@
     input is what it builds.
   </p>
 
-  <h3 class="block-title t-h4">
-    Category cursor
-  </h3>
-
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      cursor="category"
-    </code> draws a band and a
-    crosshair down the category under the pointer, and reports that category to
-    every mark through the shared scales. The default,
-    <code class="t-mono-inline">
-      cursor="auto"
-    </code>, turns it on for a plot
-    of two or more marks that show a tooltip, whose panel then names every
-    mark's reading at the category wherever in it the pointer is, and for a mark
-    set to <code class="t-mono-inline"> tooltip="axis" </code>, which reads that
-    same category and names every series at it. Any other plot of one mark stays
-    off: its marks are themselves the hover targets and already answer per mark,
-    and two affordances on one plot read as two different questions.
-  </p>
-
-  <p class="block-desc t-s">
-    Under the cursor the category's band is the one hover area: the pointer
-    anywhere in it opens the band and the tooltip together, on a plot of one
-    mark as on a composed one, and every point of the plot belongs to its
-    nearest category, so the pointer moves from one band straight to the next. A
-    mark inside the band opens no panel of its own on hover and does not pin on
-    click. Focus opens the category's band and its panel, naming every mark's
-    reading there,
-    <code class="t-mono-inline">
-      pointClicked
-    </code> still fires, and
-    <code class="t-mono-inline">
-      pinOnClick
-    </code> holds the category.
-  </p>
-
-  <ds-chart
-    cursor="category"
-    caption="Hover the plot, not a mark"
-    [categories]="orderMonths"
-    [summary]="ordersSummary">
-    <svg:g
-      dsColumnSeries
-      tooltip="none"
-      seriesLabel="Sessions"
-      [data]="orderColumns"
-      [showValues]="false" />
-
-    <svg:g
-      dsLineSeries
-      tooltip="axis"
-      [data]="basketSeries" />
-  </ds-chart>
-
   <ds-chart
     cursor="category"
     caption="Response time against the agreed range"
@@ -131,12 +77,318 @@
       [thresholds]="latencyThresholds" />
   </ds-chart>
 
+  <h3 class="block-title t-h4">
+    Mark inputs
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsColumnSeries
+    </code>
+  </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        data
+      </code> - the points, one per category.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        showValues
+      </code> - prints each value above its column (default on).
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        interactive
+      </code> - pointer cursor and hover tint; <code class="t-mono-inline">pointClicked</code> fires either way.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        pinOnClick
+      </code> - holds the clicked mark; unset falls back to <code class="t-mono-inline">DS_CONFIG.chart.pinOnClick</code>, then true.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        dimOthers
+      </code> - fades every mark but the one under the pointer.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        staggerMs
+      </code> - delay between marks' entrances (default 40, <code class="t-mono-inline">0</code> off).
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        partOfWhole
+      </code> - adds each mark's share to the tooltip.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        tooltip
+      </code> - whether a hovered or focused column opens a tooltip.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        tooltipAnchor
+      </code> - <code class="t-mono-inline">'mark'</code> (default) or <code class="t-mono-inline">'cell'</code>, the full-height category cell.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        tooltipLingerMs
+      </code> - how long the panel survives the pointer leaving.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        valueFormat
+      </code> - formats every value the series prints.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        columnWidthRatio
+      </code> - the mark's share of its slot before the maximum width caps it (default 0.8).
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        slot
+      </code> / <code class="t-mono-inline">slotCount</code> - this series' position among the slots a category is divided into, and how many; grouped columns by hand.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        offsets
+      </code> - where each mark starts and ends on the value axis; stacked columns by hand. Unset, marks run from zero.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        soleSeries
+      </code> - the only series in its slot; each mark answers over the whole plot height.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        axis
+      </code> - <code class="t-mono-inline">'primary'</code> (default) or <code class="t-mono-inline">'secondary'</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        seriesColor
+      </code> / <code class="t-mono-inline">seriesFill</code> - one colour or fill (<code class="t-mono-inline">'solid'</code> / <code class="t-mono-inline">'hatched'</code>) for the series; a point's own wins.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        seriesLabel
+      </code> - names the series in the tooltip.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        seriesKey
+      </code> / <code class="t-mono-inline">highlighted</code> - identifies the series to a legend; every series but the highlighted one fades.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        pointClicked
+      </code> - output: the clicked point, on click, Enter or Space.
+    </li>
+  </ul>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsLineSeries
+    </code>
+  </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        data
+      </code> - the series; a <code class="t-mono-inline">null</code> reading is missing. Each entry takes <code class="t-mono-inline">axis</code>, <code class="t-mono-inline">area</code>, <code class="t-mono-inline">lower</code> and <code class="t-mono-inline">color</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        showMarkers
+      </code> - a marker at every reading (default on).
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        outline
+      </code> - a background-colour band under the line (default on).
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        interactive
+      </code>, <code class="t-mono-inline">pinOnClick</code>, <code class="t-mono-inline">dimOthers</code>, <code class="t-mono-inline">staggerMs</code>, <code class="t-mono-inline">tooltipLingerMs</code>, <code class="t-mono-inline">valueFormat</code> - as on a column series.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        highlighted
+      </code> - the series to single out, whatever <code class="t-mono-inline">dimOthers</code> says.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        patterns
+      </code> - a dash pattern per series, in series order.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        stacked
+      </code> - fills each area from the series below it.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        gaps
+      </code> - what a <code class="t-mono-inline">null</code> draws: <code class="t-mono-inline">'break'</code> (default) or <code class="t-mono-inline">'zero'</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        curve
+      </code> - <code class="t-mono-inline">'linear'</code> (default), <code class="t-mono-inline">'step'</code> or <code class="t-mono-inline">'smooth'</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        tooltip
+      </code> - <code class="t-mono-inline">'item'</code> (default) names the marker, <code class="t-mono-inline">'axis'</code> every series at the category.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        tooltipAnchor
+      </code> - where an <code class="t-mono-inline">'axis'</code> panel hangs: <code class="t-mono-inline">'reading'</code> (default) or <code class="t-mono-inline">'pointer'</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        pointClicked
+      </code> - output: the reading, its series and its category position.
+    </li>
+  </ul>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsReferenceLine
+    </code> /
+    <code class="t-mono-inline">
+      dsReferenceLabel
+    </code>
+  </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        thresholds
+      </code> - the same <code class="t-mono-inline">ChartThreshold</code> list on both: <code class="t-mono-inline">value</code>, optional <code class="t-mono-inline">label</code>, <code class="t-mono-inline">color</code> (default <code class="t-mono-inline">--ds-chart-threshold-color</code>), <code class="t-mono-inline">dash</code> (<code class="t-mono-inline">'solid'</code> / <code class="t-mono-inline">'dashed'</code>, the default, / <code class="t-mono-inline">'dotted'</code>) and <code class="t-mono-inline">to</code>, which makes it a band. Each widens the value axis.
+    </li>
+  </ul>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsSeriesAnnotation
+    </code>
+  </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        annotations
+      </code> - <code class="t-mono-inline">ChartAnnotation</code> entries: <code class="t-mono-inline">categoryIndex</code> (0-based), <code class="t-mono-inline">value</code>, <code class="t-mono-inline">label</code>, optional <code class="t-mono-inline">axis</code>.
+    </li>
+  </ul>
+
+  <h3 class="block-title t-h4">
+    Category cursor
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      cursor="category"
+    </code> draws a band and crosshair
+    down the category under the pointer and reports it to every mark. The
+    default <code class="t-mono-inline"> 'auto' </code> turns it on for two or
+    more tooltip-showing marks, or a mark with
+    <code class="t-mono-inline">
+      tooltip="axis"
+    </code>; the panel then names
+    every reading at that category. A single mark otherwise answers per mark.
+  </p>
+
+  <p class="block-desc t-s">
+    Under the cursor the category's band is the one hover area: the pointer
+    anywhere in it opens the band and the tooltip together, on a plot of one
+    mark as on a composed one, and every point of the plot belongs to its
+    nearest category, so the pointer moves from one band straight to the next. A
+    mark inside the band opens no panel of its own on hover and does not pin on
+    click. With <code class="t-mono-inline"> interactive </code> set on the
+    chart and on its marks, Tab lands on the category's band, ringed, and opens
+    its panel naming every mark's reading there; <kbd> ← </kbd> and
+    <kbd>
+      →
+    </kbd> walk the bands and wrap, <kbd> Home </kbd> and <kbd> End </kbd>
+    jump to the ends, Tab again leaves the chart, and <kbd> ↑ </kbd> and
+    <kbd>
+      ↓
+    </kbd> focus one mark's reading, whose panel names it alone. A click
+    on a mark, or <kbd> Enter </kbd> on a focused one, still fires
+    <code class="t-mono-inline">
+      pointClicked
+    </code>, and with
+    <code class="t-mono-inline">
+      pinOnClick
+    </code> a click on the band holds the category; so does <kbd> Enter </kbd>
+    or <kbd> Space </kbd> on a focused band, until the focus moves to another
+    band. <kbd> Esc </kbd> steps
+    back from a mark to its band, and on the band closes the panel.
+  </p>
+
+  <ds-chart
+    cursor="category"
+    caption="Hover the plot, not a mark"
+    [categories]="orderMonths"
+    [summary]="ordersSummary">
+    <svg:g
+      dsColumnSeries
+      tooltip="none"
+      seriesLabel="Orders"
+      [data]="orderColumns"
+      [showValues]="false" />
+
+    <svg:g
+      dsLineSeries
+      tooltip="axis"
+      [data]="basketSeries" />
+  </ds-chart>
+
   <div class="states is-cols-2">
     <div class="state-cell">
       <ds-chart [categories]="orderMonths">
         <svg:g
           dsColumnSeries
-          seriesLabel="Sessions"
+          seriesLabel="Orders"
           [data]="orderColumns"
           [showValues]="false" />
       </ds-chart>
@@ -152,7 +404,7 @@
         [categories]="orderMonths">
         <svg:g
           dsColumnSeries
-          seriesLabel="Sessions"
+          seriesLabel="Orders"
           [data]="orderColumns"
           [showValues]="false" />
 
@@ -187,8 +439,17 @@
     first axis's own gridlines at a round step, so both marks share one plot;
     <code class="t-mono-inline">
       'split'
-    </code> gives up on sharing and draws
-    two plots over the same category axis.
+    </code> draws two plots over the same
+    category axis;
+    <code class="t-mono-inline">
+      'exact'
+    </code> keeps one set of gridlines
+    but ends the second axis at its largest reading, so its labels are not
+    round;
+    <code class="t-mono-inline">
+      'dual-grid'
+    </code> scales and grids each axis
+    on its own.
     <code class="t-mono-inline">
       axisColor
     </code> and
@@ -299,11 +560,8 @@
   </ds-chart>
 
   <p class="block-desc t-s">
-    The dressed version of the single-plot case - both marks answering the
-    pointer, a cumulative line over the columns it sums - is on the column chart
-    page under "Columns and a line, on two scales". It is kept there rather than
-    moved here because a reader arrives at it while reading about columns, which
-    is where the question is asked.
+    The dressed single-plot case, a cumulative line over the columns it sums,
+    is on the column chart page under "Columns and a line, on two scales".
   </p>
 
   <h3
@@ -316,21 +574,25 @@
     <code class="t-mono-inline">
       dsSeriesAnnotation
     </code> pins a label to one
-    reading, so the point it names is legible with no pointer - in a printed
-    page, or a screenshot. It takes the readings rather than finding them: a
-    mark never sees the other marks, so the caller that owns the series is the
-    one that knows which value a label belongs to. It reports no domain, because
-    the series it annotates already did.
+    reading so it reads without a pointer, in print or a screenshot. The caller
+    passes the reading (<code class="t-mono-inline">categoryIndex</code>,
+    <code class="t-mono-inline">
+      value
+    </code>, optional
+    <code class="t-mono-inline">
+      axis
+    </code>), since a mark never sees the other
+    marks; it reports no domain.
   </p>
 
   <ds-chart
     cursor="category"
     caption="p95 response time, with the week that moved it named"
     [categories]="latencyWeeks"
-    [summary]="latencySummary">
+    [summary]="latencyLineSummary">
     <svg:g
       dsLineSeries
-      [data]="basketSeries" />
+      [data]="latencySeries" />
 
     <svg:g
       dsSeriesAnnotation
@@ -355,7 +617,11 @@
     already formatted, because how a value reads is the chart's decision and not
     the table's. <code class="t-mono-inline"> rowHeader </code> renders each
     row's first cell as a <code class="t-mono-inline"> th scope="row" </code>,
-    for a matrix whose rows are named rather than numbered, and
+    for a matrix whose rows are named rather than numbered;
+    <code class="t-mono-inline">
+      nested
+    </code> on a row draws it as a part
+    of the row above; and
     <code class="t-mono-inline">
       toggled
     </code> fires when the disclosure
@@ -391,14 +657,16 @@
     holds the category cursor where it is, by default, with a pin disc at the
     foot of its band: press again, Escape, or a press outside the plot to let
     go. Set <code class="t-mono-inline"> pinOnClick="false" </code> to keep it
-    moving with the pointer. A composed chart draws no Unpin control;
+    moving with the pointer. While the cursor is held the chart draws an Unpin
+    pill on its caption's line, or without a caption over the top end of the
+    plot, as the preset charts do;
     <code class="t-mono-inline">
       cursorPinned()
     </code> and
     <code class="t-mono-inline">
       releaseCursor()
-    </code> let you render your
-    own.
+    </code> read and release the
+    pin from code of your own.
   </p>
 
   <p class="block-desc t-s">
@@ -412,7 +680,7 @@
 
   <ds-chart
     cursor="category"
-    axisLabel="Sessions"
+    axisLabel="Orders"
     secondaryAxisLabel="Average order value, GBP"
     [categories]="orderMonths"
     [maxSecondary]="150"
@@ -555,7 +823,12 @@
     <code class="t-mono-inline">
       'axis'
     </code> panel hangs over the highest
-    reading or follows the pointer.
+    reading or follows the pointer. A series entry's
+    <code class="t-mono-inline">
+      area
+    </code> takes <code class="t-mono-inline">true</code>
+    for a flat tint or <code class="t-mono-inline">'fade'</code> for a tint that
+    fades out at the baseline, as on the line chart page under "Area fill".
   </p>
 
   <div class="demo-row">
@@ -576,7 +849,6 @@
   </div>
 
   <ds-chart
-    cursor="category"
     axisLabel="Sessions"
     summary="Organic and paid sessions a month, six months."
     [categories]="orderMonths"

@@ -154,9 +154,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Use <code class="t-mono-inline">hint</code> to add helper text below the
-    checkbox, and <code class="t-mono-inline">[invalid]="true"</code> to switch
-    it to an error message.
+    Use <code class="t-mono-inline">hint</code> for helper text and
+    <code class="t-mono-inline">error</code> for an error message.
+    <code class="t-mono-inline">[invalid]</code> paints the error state without
+    text.
   </p>
 
   <div class="stack">
@@ -178,19 +179,16 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [label]
-    </code> stays the documented API and is
-    what you want almost always. When the caption needs a link or emphasis in
-    it, project the caption instead — the natural markup now works rather than
-    rendering nothing. The two are exclusive: a
+    </code> is the usual API. For a caption with a
+    link or emphasis, project the markup instead;
     <code class="t-mono-inline">
       [label]
-    </code> wins and the projected content
-    is ignored. Note that the required asterisk comes with
+    </code> wins when both are set. The required
+    asterisk comes only with
     <code class="t-mono-inline">
       [label]
-    </code> only; a projected caption owns
-    its own marker, since the DS cannot know where in your markup it belongs.
-    The same applies to <code class="t-mono-inline">ds-switch</code> and
+    </code> - a projected caption adds its own.
+    Same for <code class="t-mono-inline">ds-switch</code> and
     <code class="t-mono-inline">
       ds-radio
     </code>.

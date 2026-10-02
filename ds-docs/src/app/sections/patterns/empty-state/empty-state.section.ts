@@ -2,7 +2,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { ButtonComponent } from 'ds/button';
 import { CardComponent } from 'ds/card';
 import { EmptyStateComponent } from 'ds/empty-state';
-import { IconComponent } from 'ds/icons';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
@@ -13,7 +12,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
     CardComponent,
     DocsSectionComponent,
     EmptyStateComponent,
-    IconComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './empty-state.section.html',
@@ -21,5 +19,5 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 })
 export class EmptyStateSection {
   protected readonly lede =
-    'Four canonical variants. Each has a distinct icon background, a clear message, and at most one primary action.';
+    'Five variants: none, loading, error, locked and success. Error, locked and success tint the icon tile; none and loading use the accent tint. Each carries a clear message and at most one primary action.';
 }

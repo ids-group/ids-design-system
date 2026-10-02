@@ -3,8 +3,11 @@
   eyebrow="Components"
   title="Badge">
   <span lede>
-    Stable status language across the product: Planning · Confirmed · Active ·
-    Completed.
+    A status pill, coloured by its <code>status</code> key. The DS ships no
+    status keys: the app declares them with
+    <code>&#64;include status.define((key: (bg:, text?, dot?)))</code>
+    (<code>status.semantic-preset</code> adds info, success, warning, error and
+    neutral), and the keys below are this site's own.
   </span>
 
   <h3
@@ -14,7 +17,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    Every event-status badge as a specimen.
+    This site's lifecycle keys as specimens.
+    <code class="t-mono-inline">withDot</code> adds a leading dot (unset
+    follows <code class="t-mono-inline">DS_CONFIG.badge.withDot</code>, then
+    <code class="t-mono-inline">false</code>); a
+    <code class="t-mono-inline">count</code> replaces the dot along with all
+    content.
   </p>
 
   <docs-specimens [items]="lifecycleVariants">
@@ -32,6 +40,12 @@
     class="block-title t-h4">
     Semantic states showcase
   </h3>
+
+  <p class="block-desc t-s">
+    The <code class="t-mono-inline">status.semantic-preset</code> keys.
+    <code class="t-mono-inline">solid</code> fills with the accent only on a
+    badge without a status: a status's colours win over it.
+  </p>
 
   <div class="states is-cols-4">
     <div class="state-cell">
@@ -96,9 +110,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-badge
-          status="neutral"
-          [solid]="true">
+        <ds-badge [solid]="true">
           New
         </ds-badge>
       </div>
@@ -110,9 +122,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-badge
-          status="neutral"
-          [solid]="true">
+        <ds-badge [solid]="true">
           12
         </ds-badge>
       </div>
@@ -142,11 +152,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Override <code>--ds-badge-bg-color</code> /
-    <code>
-      --ds-badge-label-color
-    </code> inline for off-token tones (carrier
-    brands etc). Prefer semantic variants for design-system tones.
+    Override <code class="t-mono-inline">--ds-badge-bg-color</code> /
+    <code class="t-mono-inline">--ds-badge-label-color</code> inline for
+    off-token tones (carrier brands etc). Prefer a declared status for
+    recurring tones.
   </p>
 
   <div class="states is-cols-4">
@@ -155,12 +164,12 @@
         <ds-badge
           [style.--ds-badge-bg-color]="'#E1EFFF'"
           [style.--ds-badge-label-color]="'#0A6DB3'">
-          Aflac
+          Acme Life
         </ds-badge>
       </div>
 
       <div class="state-cell-label">
-        Carrier · Aflac
+        Carrier · Acme Life
       </div>
     </div>
 
@@ -169,12 +178,12 @@
         <ds-badge
           [style.--ds-badge-bg-color]="'#D8F1EA'"
           [style.--ds-badge-label-color]="'#15805A'">
-          Guardian
+          Acme Health
         </ds-badge>
       </div>
 
       <div class="state-cell-label">
-        Carrier · Guardian
+        Carrier · Acme Health
       </div>
     </div>
 
@@ -183,12 +192,12 @@
         <ds-badge
           [style.--ds-badge-bg-color]="'#FFF1D7'"
           [style.--ds-badge-label-color]="'#A86B1A'">
-          Assurity
+          Acme Mutual
         </ds-badge>
       </div>
 
       <div class="state-cell-label">
-        Carrier · Assurity
+        Carrier · Acme Mutual
       </div>
     </div>
   </div>

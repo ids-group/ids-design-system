@@ -23,7 +23,12 @@ import type { TagVariant } from './tag.types';
     '[class.closable]': 'closable()',
     '[class.interactive]': 'interactive()',
     '[class.is-active]': 'selected()',
+    '[attr.role]': "interactive() ? 'button' : null",
+    '[attr.tabindex]': 'interactive() ? 0 : null',
+    '[attr.aria-pressed]': 'interactive() ? selected() : null',
     '(click)': 'onClick()',
+    '(keydown.enter)': 'onKeyActivate($event)',
+    '(keydown.space)': 'onKeyActivate($event)',
   },
 })
 export class TagComponent {
@@ -44,12 +49,21 @@ export class TagComponent {
   );
   /** Fires when the close button is clicked. */
   readonly closed = output<void>();
-  /** Fires on click when `interactive`. */
+  /** Fires on a click, Enter or Space when `interactive`. */
   readonly toggled = output<void>();
 
   protected onClick(): void {
     if (this.interactive()) {
       this.toggled.emit();
     }
+  }
+
+  // A key pressed on the close button bubbles here and must not toggle the tag as well.
+  protected onKeyActivate(event: Event): void {
+    if (!this.interactive() || event.target !== event.currentTarget) {
+      return;
+    }
+    event.preventDefault();
+    this.toggled.emit();
   }
 }

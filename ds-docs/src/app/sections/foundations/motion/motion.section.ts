@@ -27,6 +27,12 @@ interface Ease {
   readonly use: string;
 }
 
+interface MotionRole {
+  readonly role: string;
+  readonly timing: string;
+  readonly readers: string;
+}
+
 interface CombinedDemo {
   readonly label: string;
   readonly tokens: string;
@@ -39,12 +45,52 @@ const DURATIONS: Duration[] = [
   { name: 'instant', value: '80ms', use: 'Hover / instant feedback' },
   { name: 'fast', value: '120ms', use: 'Toggles, micro-state' },
   { name: 'base', value: '180ms', use: 'Default UI transitions' },
-  { name: 'slow', value: '260ms', use: 'Drawer, dialog enter' },
+  { name: 'slow', value: '260ms', use: 'Drawer, toast enter' },
   { name: 'slower', value: '400ms', use: 'Page transitions, large reveals' },
   {
     name: 'slowest',
     value: '600ms',
     use: 'A chart mark growing or drawing on',
+  },
+  { name: 'loop-fast', value: '700ms', use: 'Loop: spinner turn' },
+  { name: 'loop-slow', value: '1400ms', use: 'Loop: indeterminate bar' },
+];
+
+const MOTION_ROLES: readonly MotionRole[] = [
+  {
+    role: 'enter-panel',
+    timing: '--duration-fast + --ease-decelerate',
+    readers: 'Overlay panels, scrims',
+  },
+  {
+    role: 'enter-surface',
+    timing: '--duration-base + --ease-decelerate',
+    readers: 'Modal, alert, banner, bottom sheet',
+  },
+  {
+    role: 'enter-large',
+    timing: '--duration-slow + --ease-decelerate',
+    readers: 'Drawer, toast',
+  },
+  {
+    role: 'exit',
+    timing: '--duration-fast + --ease-accelerate',
+    readers: 'Overlay panels, modal, scrims',
+  },
+  {
+    role: 'exit-large',
+    timing: '--duration-base + --ease-accelerate',
+    readers: 'Drawer, bottom sheet',
+  },
+  {
+    role: 'check-enter',
+    timing: '--duration-base + --ease-spring',
+    readers: 'Option check mark (multi-select, autocomplete)',
+  },
+  {
+    role: 'check-exit',
+    timing: '--duration-fast + --ease-accelerate',
+    readers: 'Option check mark (multi-select, autocomplete)',
   },
 ];
 
@@ -98,15 +144,15 @@ const COMBINED: CombinedDemo[] = [
   },
   {
     label: 'Modal enter',
-    tokens: '--duration-slow + --ease-emphasized',
-    duration: '260ms',
-    easing: 'cubic-bezier(.3, 0, .1, 1.4)',
+    tokens: '--duration-base + --ease-decelerate',
+    duration: '180ms',
+    easing: 'cubic-bezier(0, 0, 0, 1)',
     kind: 'scale',
   },
   {
     label: 'Hover lift',
-    tokens: '--duration-fast + --ease-standard',
-    duration: '120ms',
+    tokens: '--duration-base + --ease-standard',
+    duration: '180ms',
     easing: 'cubic-bezier(.2, 0, 0, 1)',
     kind: 'fade',
   },
@@ -177,6 +223,7 @@ const DEMO_OPTIONS: SelectItem[] = [
 export class MotionSection {
   protected readonly durations = DURATIONS;
   protected readonly eases = EASES;
+  protected readonly motionRoles = MOTION_ROLES;
   protected readonly combined = COMBINED;
   protected readonly enterPresets = ENTER_PRESETS;
   protected readonly demoOptions = DEMO_OPTIONS;

@@ -39,6 +39,7 @@ import {
   CHART_PIN_RADIUS,
   ChartPinMarkerComponent,
   ChartTooltipDirective,
+  ChartStatesComponent,
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
@@ -94,6 +95,7 @@ interface PlacedSeries {
     ChartLegendComponent,
     ChartTooltipDirective,
     ChartPinMarkerComponent,
+    ChartStatesComponent,
     SkeletonComponent,
     ChartDataTableComponent,
   ],

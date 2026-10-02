@@ -3,8 +3,8 @@
   eyebrow="Components"
   title="Time picker">
   <span lede>
-    A time field (HH:MM) that opens column wheels — Hours / Minutes (and AM·PM
-    in 12-hour mode). Value is a canonical 24-hour
+    A time field that opens hour and minute wheels, plus AM/PM in 12-hour mode. The value is a
+    24-hour
     <code class="t-mono-inline">
       "HH:MM"
     </code>
@@ -25,14 +25,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Click the trigger, pick an hour and a minute; the value updates live.
-    <code class="t-mono-inline">
-      label
-    </code> renders the same label row a
-    <code class="t-mono-inline">
-      ds-date-picker
-    </code> uses, so date + time in
-    one form row line up without a hand-rolled label above the trigger.
+    The value updates as you pick.
+    <code class="t-mono-inline">label</code> renders the same label row as
+    <code class="t-mono-inline">ds-date-picker</code>, so date and time line up in one form row.
   </p>
 
   <div class="row">
@@ -69,12 +64,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Normally set globally via
-    <code class="t-mono-inline">
-      DsConfig.timePicker.format
-    </code>; the
-    per-instance <code class="t-mono-inline">[format]</code> input overrides it
-    here.
+    <code class="t-mono-inline">[format]</code> overrides
+    <code class="t-mono-inline">DsConfig.timePicker.format</code> for one instance.
   </p>
 
   <div class="row">
@@ -143,6 +134,8 @@
       [clearable]="true"
     </code> shows a clear button
     when a value is set. Heights follow the field scale (sm 32 / md 40 / lg 48).
+    <code class="t-mono-inline">fullWidth</code> stretches the trigger;
+    <code class="t-mono-inline">panelClass</code> styles this instance's panel.
   </p>
 
   <div class="row">
@@ -196,13 +189,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Binds with <code class="t-mono-inline">[formControl]</code>;
-    <code class="t-mono-inline">
-      [invalid]
-    </code> switches the
-    <code class="t-mono-inline">
-      [hint]
-    </code> to an error line.
+    Binds with <code class="t-mono-inline">[formControl]</code>.
+    <code class="t-mono-inline">error</code> (or the control's
+    <code class="t-mono-inline">errors</code> once touched) shows the error line;
+    <code class="t-mono-inline">[invalid]</code> paints the state without text.
   </p>
 
   <div class="row">

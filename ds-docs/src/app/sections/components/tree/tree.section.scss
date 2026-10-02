@@ -1,7 +1,2 @@
     /* State pins — force visual states on live ds-tree rows. */
     :host ::ng-deep .pin-hover .row:first-child { background-color: var(--surface-secondary); }
-    :host ::ng-deep .pin-selected .row:first-child {
-      background-color: var(--surface-tint);
-      color: var(--primary-strong);
-      font-weight: var(--font-weight-semibold);
-    }

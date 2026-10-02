@@ -50,6 +50,8 @@ export interface DsIntl {
     readonly selectYear: string;
     readonly previousYears: string;
     readonly nextYears: string;
+    readonly previousMonth: string;
+    readonly nextMonth: string;
     readonly invalidDate: (mask: string) => string;
   };
   readonly timePicker: {

@@ -27,6 +27,7 @@ import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/compon
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import {
   ChartTooltipDirective,
+  ChartStatesComponent,
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
@@ -60,6 +61,7 @@ interface PlacedRow {
   exportAs: 'dsHeatmapChart',
   imports: [
     ChartTooltipDirective,
+    ChartStatesComponent,
     SkeletonComponent,
     ChartDataTableComponent,
     IconComponent,

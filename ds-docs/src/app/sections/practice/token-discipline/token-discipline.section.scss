@@ -41,9 +41,9 @@
       gap: var(--space-2);
       min-width: 0;
     }
-    .tile.is-good { background: var(--success-subtitle, var(--surface-subtitle)); }
+    .tile.is-good { background: var(--success-subtitle); }
     .tile.is-bad {
-      background: var(--error-subtitle, var(--surface-subtitle));
+      background: var(--error-subtitle);
       border-left: var(--border-width-default) solid var(--border-divider);
 
       @include bp.down(sm) {

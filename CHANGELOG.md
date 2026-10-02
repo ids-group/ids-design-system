@@ -1,5 +1,140 @@
 ## Unreleased
 
+### Breaking
+
+- **A chart whose pointer picks a category is walked by verticals from the keyboard.** In an
+  `interactive` `ds-line-chart` and an `interactive` `ds-chart` with a category cursor, Tab lands
+  on the category band (ringed), Left and Right move between bands and wrap, Home and End jump to
+  the ends, and Tab leaves the chart in one press. Up and Down focus one series' marker inside the
+  band and the panel shows that point alone; Enter on it fires `pointClicked` as a click does.
+  Enter on a band pins it and moving to another band lets the pin go; Escape steps back from a
+  marker to the band and then closes the panel. The series markers are no longer Tab stops there;
+  charts whose pointer picks a mark are unchanged. A class extending `ChartComponent`,
+  `LineSeriesComponent` or `ColumnSeriesComponent` may collide with the members they gained
+  (`focusedCategory`, `axisPointElements` and the keyboard handlers); a colliding private one must
+  be renamed, since `override` cannot reach it.
+
+- **`styles/focus` emits its global rules only through `emit-rules`.** The base focus indicator
+  (`:where(:focus-visible)`), the `ds-focus-ring-in` keyframes, the `data-focus` switch and the
+  forced-colours outline moved into `@mixin emit-rules`, which `styles/ds` includes. Before, every
+  stylesheet that used a focus mixin re-emitted all of them, so each component carrying one shipped a
+  copy of 1.0 kB of duplicated global rules unminified. If your global stylesheet composes the parts
+  instead of `@use 'styles/ds'`, add `@include focus.emit-rules;` after
+  `@use 'styles/focus' as focus;`, or focus rings disappear on elements that style none themselves
+  and `data-focus` stops switching. `@use 'styles/ds'` needs nothing.
+
+- **`DsIntl` gains two required keys: `datePicker.previousMonth` and `datePicker.nextMonth`**
+  (defaults `'Previous month'` and `'Next month'`). A complete `DsIntl` dictionary, or a complete
+  `datePicker` section of one, declared as a typed object stops compiling until it lists them.
+  Overrides passed to `provideDsIntl` are partial and need nothing.
+
+### Added
+
+- **`.link.plain`: a link underlined only on hover and keyboard focus.** For a link that stands on its
+  own, such as a row action or a list of links; keep the plain `.link`, underlined at rest, for a link
+  inside running text. Every other `.link` renders as before.
+
+### Changed
+
+- **A focused warning or success field shows its state's colour.** Its halo is
+  `--ds-field-focus-shadow-warning` or `--ds-field-focus-shadow-success` (defaults
+  `--focus-field-warning` and `--focus-field-success`), as an error field's already was, where both
+  showed the blue halo of a plain field. Under `data-focus="ring"`, `"edge"` and `"inset"` the
+  indicator takes the field's border colour, `--warning-text` or `--success`. Set either token to
+  `var(--ds-field-focus-shadow)` to keep the blue. The `field-state` mixin of `styles/field-state`
+  takes them as two new trailing arguments, `$warning-focus-shadow` and `$success-focus-shadow`.
+
+### Fixed
+
+- **`ds-dropzone` takes the same file twice.** Picking a file, removing it and picking it again
+  emitted nothing, because the browser fires no change for an unchanged selection; `filesAdded`
+  now fires on every pick.
+
+- **A `clickable` `ds-stepper`'s step buttons have names.** Each was a focusable button hidden
+  from assistive technology, so Tab landed on something a screen reader could not announce; the
+  button now carries the step's name and state, `DS_INTL.stepper.step`.
+
+- **`ds-w3w` emits `copied` only once the address is on the clipboard.** It fired on every click,
+  before the copy settled and also where the browser has no clipboard, so a "Copied" message could
+  report a copy that never happened.
+
+- **`--ds-container-max-width` sets `ds-container`'s width.** Every `size`, the default `xl`
+  included, wrote its own width over the token, so setting it changed nothing; the token now wins
+  over `size`.
+
+- **`ds-number-stepper` steps by `step` and stops at `min` and `max`.** A button step that would
+  pass a bound now lands on it: with `max` 100 and `step` 5, 98 goes to 100, where it went to 103.
+  The arrow keys in the field step by `step` too, where they moved by 1. Typed values were already
+  clamped.
+
+- **`ds-funnel-chart`, `ds-heatmap-chart` and `ds-pie-chart` draw their keyboard focus ring.** The
+  ring's colour and width resolved to nothing inside these charts, so a focused stage, cell or
+  slice showed no indicator. It now takes `--focus-ring-color` and `--focus-ring-width`, and
+  `--ds-funnel-chart-focus-color`, `--ds-heatmap-chart-focus-color`, `--ds-pie-chart-focus-color`
+  and their `-focus-width` pairs restyle it as documented.
+
+- **A pinned chart tooltip leaves the screen with its chart.** Scrolled past, the chart's pinned
+  panel stayed held at the edge of the viewport; it now hides while the chart is out of sight and
+  shows beside it again when it scrolls back. The pin itself is kept. The internal
+  `ChartTooltipDirective` gained a private `detachOffscreen`, so a subclass declaring that name
+  must rename it: `override` cannot reach a private member.
+
+- **`ds-column-chart` and `ds-line-chart` follow a plot-height or geometry token re-pointed at a
+  breakpoint.** They read `--ds-column-chart-*` geometry and `--ds-line-chart-plot-height` once,
+  after the first render, so a media query changing one later never reached the plot; they now
+  re-read whenever the chart's width changes. A token changed while the width stays the same is
+  still picked up only at the next resize.
+
+- **`styles/press`'s `feedback` mixin plays no press on a control disabled by class or ARIA.** It
+  skipped `:disabled`, `[disabled]` and `.is-disabled` only; it now also skips `.disabled` and
+  `[aria-disabled='true']`, so an anchor or a custom control marked disabled that way no longer
+  darkens and shrinks on press.
+
+- **`ds-funnel-chart`'s Unpin control sits where every other chart's does.** In a framed funnel it
+  stood a frame padding further in from the top and the end (41px against 21px with the default
+  20px padding); it now lines up with the caption like the rest.
+
+- **`ds-app-layout`'s content region draws no focus ring.** An app that moves focus to the
+  `<main>` after a navigation, so the next Tab starts on the new page, got the base indicator round
+  the whole content area, and with no key pressed first the browser showed it. The region still
+  takes focus; only the ring is gone, except under forced colours, where it stays.
+
+- **`ds-date-picker`'s month arrows have accessible names.** The previous- and next-month buttons in
+  the calendar panel are announced as `datePicker.previousMonth` and `datePicker.nextMonth`, where
+  they were announced as an unnamed button.
+
+- **`--ds-multi-select-option-bg-color-active` sets the option fill.** It colours the row under the
+  keyboard cursor and the pointer in that multi-select's panel; it was declared where the panel had
+  already resolved the fill, so setting it changed nothing. Unset, the fill stays
+  `--surface-secondary`.
+
+- **An `interactive` `ds-tag` works from the keyboard.** It is a tab stop with `role="button"` and
+  `aria-pressed` following `selected`, and Enter or Space emits `toggled`, as a click does; it took a
+  click only. If you added your own Enter or Space handler to an interactive `ds-tag` to make it
+  keyboard-operable, remove it, or each key press toggles twice, once through your handler and once
+  through the host's `toggled`; the `tabindex="0"` and `role="button"` you set alongside it are now
+  redundant too. A key pressed on its close button still only closes it. `TagComponent` gained a
+  protected `onKeyActivate`, so a subclass declaring that name needs `override`.
+
+- **`ds-chart` shows the Unpin control while its category cursor is held.** A click on a band pins
+  the cursor by default, and the composable chart now draws the same pill button as the preset
+  charts, on its caption's line or, without a caption, over the top end of the plot. Before, Escape,
+  a press outside the plot or a second click on the band released the pin, and nothing on screen
+  said so. In every chart the `.pin-reset` button now sits inside an internal `ds-chart-unpin`
+  element rendered `display: contents`, so a rule selecting it as a direct child of the chart's
+  `figure` no longer matches; select `.pin-reset` alone. `ChartComponent` gained a protected
+  `drawsUnpin`, so a subclass declaring that name needs `override`.
+
+- **A `ds-table` expanded row closes the way it opens.** Collapsing a row folds its panel back over
+  `--duration-base`, where the panel used to vanish on the next frame; the row leaves the DOM when
+  the fold ends. Under `prefers-reduced-motion` it closes at once, as it opens.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| `(keydown.enter)` and `(keydown.space)` on an interactive `ds-tag`, plus the `tabindex="0"` and `role="button"` set with them | the host is now a tab stop with `role="button"` and emits `toggled` on Enter or Space itself, so your handler and its `(toggled)` both fire on one press | nothing; the tag's own `toggled` |
+
 ## 0.14.6-beta.0 — 2026-09-30
 
 ### Added
@@ -4271,9 +4406,10 @@
   else, so a bundler sees straight through it. There is no migration here and no reason to rewrite
   an import.
 
-- **Per-component specifiers do resolve** (`@ids-group-ltd/ids-design-system/button`), for a codebase
-  that prefers a file's dependencies spelled out. They are not the recommended form and they buy no
-  bytes. If you want them shorter, one line in your own `tsconfig.json` does it, with no change on
+- **Per-component specifiers do resolve** (`@ids-group-ltd/ids-design-system/components/button`),
+  for a codebase that prefers a file's dependencies spelled out. They buy no bytes, except inside a
+  `@defer` block: a component imported from the package root there stays in the initial bundle, so
+  import it from its own specifier. If you want them shorter, one line in your own `tsconfig.json` does it, with no change on
   our side:
 
   ```json

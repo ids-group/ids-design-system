@@ -67,6 +67,15 @@ const RAMP: readonly TypeRampRow[] = [
     tracking: 'normal',
   },
   {
+    cls: 't-card-title',
+    sizeToken: '--card-title-fs',
+    sample: 'Weekly capacity',
+    size: '22',
+    lineHeight: '1.25',
+    weight: 'bold',
+    tracking: 'normal',
+  },
+  {
     cls: 't-l',
     sizeToken: '--font-size-l',
     sample:
@@ -74,6 +83,15 @@ const RAMP: readonly TypeRampRow[] = [
     size: '18',
     lineHeight: '1.4',
     weight: 'regular',
+    tracking: 'normal',
+  },
+  {
+    cls: 't-l-bold',
+    sizeToken: '--font-size-l',
+    sample: 'Three schedules will recompute.',
+    size: '18',
+    lineHeight: '1.4',
+    weight: 'bold',
     tracking: 'normal',
   },
   {
@@ -86,6 +104,15 @@ const RAMP: readonly TypeRampRow[] = [
     tracking: 'normal',
   },
   {
+    cls: 't-m-bold',
+    sizeToken: '--font-size-m',
+    sample: 'Three schedules will recompute.',
+    size: '16',
+    lineHeight: '1.4',
+    weight: 'bold',
+    tracking: 'normal',
+  },
+  {
     cls: 't-s',
     sizeToken: '--font-size-s',
     sample: 'Sam Carter changed Project Alpha access dates two minutes ago.',
@@ -95,12 +122,30 @@ const RAMP: readonly TypeRampRow[] = [
     tracking: 'normal',
   },
   {
+    cls: 't-s-bold',
+    sizeToken: '--font-size-s',
+    sample: 'Access dates changed',
+    size: '14',
+    lineHeight: '1.4',
+    weight: 'bold',
+    tracking: 'normal',
+  },
+  {
     cls: 't-xs',
     sizeToken: '--font-size-xs',
     sample: 'Last synced 4 minutes ago',
     size: '12',
     lineHeight: '1.4',
     weight: 'regular',
+    tracking: 'normal',
+  },
+  {
+    cls: 't-xs-bold',
+    sizeToken: '--font-size-xs',
+    sample: 'Synced',
+    size: '12',
+    lineHeight: '1.4',
+    weight: 'bold',
     tracking: 'normal',
   },
   {

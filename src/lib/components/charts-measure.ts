@@ -4,6 +4,7 @@ import {
   PLATFORM_ID,
   Signal,
   WritableSignal,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -27,6 +28,27 @@ export function elementWidth(host: ElementRef<HTMLElement>): Signal<number> {
   });
 
   return width.asReadonly();
+}
+
+/** `read(host)` as a signal, re-read whenever the host's width changes, so a geometry token re-pointed
+ *  at a breakpoint reaches the chart. `initial` until the host is laid out, and under SSR.
+ *
+ *  @internal */
+export function readOnHostResize<T>(
+  host: ElementRef<HTMLElement>,
+  read: (element: HTMLElement) => T,
+  initial: T,
+  equal: (previous: T, next: T) => boolean,
+): Signal<T> {
+  const width = elementWidth(host);
+  const value = signal(initial, { equal });
+  effect(() => {
+    if (width() > 0) {
+      value.set(read(host.nativeElement));
+    }
+  });
+
+  return value.asReadonly();
 }
 
 const widths = new WeakMap<Element, WritableSignal<number>>();

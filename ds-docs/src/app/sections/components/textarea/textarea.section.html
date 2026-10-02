@@ -3,13 +3,15 @@
   eyebrow="Components"
   title="Textarea">
   <span lede>
-    Multi-line text input with state variants and content-driven autosize.
+    Multi-line text input with state variants and content-driven autosize. Themed through the
+    <code class="t-mono-inline">--ds-input-*</code> tokens shared with
+    <code class="t-mono-inline">ds-input</code>.
   </span>
 
   <h3
     data-claude-design
     class="block-title t-h4">
-    Variant states — default · value · error · disabled
+    Variant states
   </h3>
 
   <div class="states is-cols-2">
@@ -56,6 +58,34 @@
       <div class="state-cell-stage">
         <ds-textarea
           label="Brief"
+          value="Covers scope, schedule and budget."
+          success="Brief looks complete."
+          [rows]="3" />
+      </div>
+
+      <div class="state-cell-label">
+        Textarea · success
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-textarea
+          label="Brief"
+          value="Scope only."
+          warning="Add a schedule before review."
+          [rows]="3" />
+      </div>
+
+      <div class="state-cell-label">
+        Textarea · warning
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-textarea
+          label="Brief"
           value="Auto-generated from event template."
           [rows]="3"
           [disabled]="true" />
@@ -68,26 +98,14 @@
   </div>
 
   <h3 class="block-title t-h4">
-    With value
-  </h3>
-
-  <div class="grid-2">
-    <ds-textarea
-      label="Notes"
-      value="Site map TBC — confirmed via Sam Carter 2 May."
-      [rows]="3" />
-  </div>
-
-  <h3 class="block-title t-h4">
     Read-only
   </h3>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [readOnly]="true"
-    </code> renders the field on
-    a muted <code class="t-mono-inline">--surface-secondary</code> background —
-    value is visible but not editable.
+    </code> shows the value on a muted
+    <code class="t-mono-inline">--surface-secondary</code> background, not editable.
   </p>
 
   <div class="grid-2">
@@ -106,8 +124,8 @@
     <code class="t-mono-inline">
       [maxLength]
     </code> caps input length natively
-    and shows a live <code class="t-mono-inline">current/max</code> counter
-    below the field — right-aligned, aligned with the hint.
+    and shows a live <code class="t-mono-inline">current/max</code> counter, right-aligned on the
+    hint row.
   </p>
 
   <div class="grid-2">
@@ -182,11 +200,10 @@
     <code class="t-mono-inline">
       [autosize]="true"
     </code> grows the textarea
-    with its content (forces <code class="t-mono-inline">resize="none"</code>).
-    Bound by <code class="t-mono-inline">[minRows]</code> /
-    <code class="t-mono-inline">
-      [maxRows]
-    </code>.
+    with its content between <code class="t-mono-inline">[minRows]</code> and
+    <code class="t-mono-inline">[maxRows]</code>. <code class="t-mono-inline">resize</code> sets the
+    native handle (default <code class="t-mono-inline">vertical</code>); ignored under
+    <code class="t-mono-inline">autosize</code>.
   </p>
 
   <div class="grid-2">

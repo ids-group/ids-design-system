@@ -3,9 +3,16 @@
   eyebrow="Components"
   title="Status dots">
   <span lede>
-    Tiny coloured atom paired with a label. Same palette as lifecycle badges —
-    use when a full pill is too heavy.
+    Coloured dot beside a label, for where a badge pill is too heavy. The DS ships no status keys:
+    the app declares them with <code>&#64;include status.define((key: (bg:, text?, dot?)))</code>
+    (<code>status.semantic-preset</code> adds info, success, warning, error and neutral), and the
+    keys below are this site's own.
   </span>
+
+  <p class="block-desc t-s">
+    The host is <code>role="img"</code> named by <code>ariaLabel</code>, else by the raw
+    <code>status</code> key. Set <code>ariaLabel</code> when the dot stands alone.
+  </p>
 
   <h3
     data-claude-design

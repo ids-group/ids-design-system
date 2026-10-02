@@ -50,6 +50,16 @@ function dropEmptyUnreleased(markdown: string): string {
         font-family: var(--font-mono);
         font-size: 0.9em;
       }
+      :host ::ng-deep .changelog-body pre,
+      :host ::ng-deep .changelog-body table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+      }
+      :host ::ng-deep .changelog-body p code,
+      :host ::ng-deep .changelog-body li code {
+        overflow-wrap: anywhere;
+      }
     `,
   ],
 })
@@ -63,7 +73,13 @@ export class ChangelogSection {
     // different URL does that. The file only changes on release, so the package
     // version is exactly the right key.
     fetch(new URL(`CHANGELOG.md?v=${DS_VERSION}`, document.baseURI))
-      .then((response) => response.text())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        return response.text();
+      })
       .then((markdown) =>
         Promise.resolve(marked.parse(dropEmptyUnreleased(markdown))),
       )

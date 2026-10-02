@@ -46,4 +46,48 @@
       }
     </tbody>
   </table>
+
+  <p class="block-desc t-s">
+    Which layer each component sits on:
+  </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Token
+        </th>
+
+        <th>
+          Value
+        </th>
+
+        <th>
+          Use
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (l of componentLayers; track l.token) {
+        <tr>
+          <td>
+            <code class="t-mono-inline">
+              {{ l.token }}
+            </code>
+          </td>
+
+          <td>
+            <code class="t-mono-inline">
+              {{ l.value }}
+            </code>
+          </td>
+
+          <td>
+            {{ l.use }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
 </docs-section>

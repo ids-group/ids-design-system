@@ -4,5 +4,5 @@
 Group: Form & input
 
 <!-- inputs:ng-template[dsFilterItem] -->
-All inputs: `width: unknown`
+All inputs: `dsFilterItem: unknown`
 <!-- /inputs -->

@@ -11,8 +11,7 @@
       align-items: baseline;
     }
 
-    /* State pins — read the link's own resolvers; fixes drift from old hooks
-       that incorrectly pinned --primary / --primary-strong directly. */
+    /* State pins read the link's own resolvers. */
     .link.pin-hover  { color: var(--_link-color-hover); text-decoration-color: var(--_link-color-hover); }
     .link.pin-active { color: var(--_link-color-active); text-decoration-color: var(--_link-color-active); }
 

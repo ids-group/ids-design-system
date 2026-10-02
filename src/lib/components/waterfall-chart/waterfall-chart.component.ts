@@ -22,6 +22,7 @@ import {
 import type { ColumnSeriesPoint } from '@ids-group-ltd/ids-design-system/components/chart';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import type { ChartDataTable } from '@ids-group-ltd/ids-design-system/core';
+import { ChartStatesComponent } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type { ChartItemTooltipTrigger } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { waterfallSteps } from './waterfall-chart.math';
 import { WaterfallMarksComponent } from './waterfall-marks.component';
@@ -51,6 +52,7 @@ const DIRECTION_COLORS: Record<WaterfallChartStep['direction'], string> = {
   exportAs: 'dsWaterfallChart',
   imports: [
     ChartComponent,
+    ChartStatesComponent,
     ColumnSeriesComponent,
     SkeletonComponent,
     WaterfallMarksComponent,

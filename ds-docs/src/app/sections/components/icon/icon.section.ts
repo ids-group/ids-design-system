@@ -42,6 +42,15 @@ const SAMPLES: readonly IconName[] = [
   styleUrl: './icon.section.scss',
 })
 export class IconSection {
+  protected readonly customIconsSnippet = `import { provideDsIcons } from '@ids-group-ltd/ids-design-system/icons';
+
+providers: [
+  provideDsIcons({
+    'brand-mark': '<circle cx="12" cy="12" r="8" />',
+  }),
+];
+
+<ds-icon name="brand-mark" />`;
   protected readonly sizes = SIZES;
   protected readonly samples = SAMPLES;
   protected readonly strokes = [1.5, 1.75, 2] as const;

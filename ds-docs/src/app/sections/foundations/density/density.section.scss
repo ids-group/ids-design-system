@@ -36,8 +36,6 @@
       margin-top: var(--space-3);
     }
     .dens-sandbox {
-      --hit-cozy: 40px;
-
       display: grid;
       gap: var(--space-3);
       padding: var(--space-4);
@@ -45,9 +43,6 @@
       border-radius: var(--radius-md);
       background: var(--surface-default);
     }
-    .dens-sandbox[data-density="compact"] { --hit-cozy: 32px; }
-    .dens-sandbox[data-density="regular"] { --hit-cozy: 40px; }
-    .dens-sandbox[data-density="comfy"]   { --hit-cozy: 48px; }
     .dens-sandbox-head { display: grid; gap: var(--space-0-5); }
     .dens-sandbox-attr { color: var(--text-tertiary); font-size: 11px; }
     .dens-sandbox-body { display: grid; gap: var(--space-3); }

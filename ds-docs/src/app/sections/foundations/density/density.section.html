@@ -75,8 +75,8 @@
     Each sandbox wraps content in a
     <code class="t-mono-inline">
       [data-density]
-    </code> container. The same UI
-    renders at four tiers — only the hit-target token changes.
+    </code> container. The same UI renders at four tiers; here only
+    <code class="t-mono-inline">--hit-cozy</code> is visible.
   </p>
 
   <div class="dens-grid">
@@ -168,7 +168,8 @@
 
   <ul class="dens-rewrites">
     <li>
-      Hit targets — <code class="t-mono-inline">--hit-cozy</code>
+      Hit targets - <code class="t-mono-inline">--hit-cozy</code> (all tiers),
+      <code class="t-mono-inline">--hit-min</code> (<code class="t-mono-inline">ultra-compact</code>)
     </li>
 
     <li>
@@ -207,6 +208,11 @@
     not on <code class="t-mono-inline">&lt;html&gt;</code>.
   </p>
 
+  <p class="block-desc t-s">
+    Control <code class="t-mono-inline">size</code> (sm/md/lg) is a separate
+    axis, defaulted by <code class="t-mono-inline">DS_CONFIG.control.size</code>.
+  </p>
+
   <h3 class="block-title t-h4">
     A 32px toolbar — use compact, not a per-control pin
   </h3>
@@ -214,7 +220,7 @@
   <p class="block-desc t-s">
     <strong>
       <code class="t-mono-inline">
-        density="compact"
+        data-density="compact"
       </code> levels a toolbar at
       32px, and it is the supported way to get one.
     </strong>
@@ -232,18 +238,14 @@
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      The known limit is at the bottom of the scale.
-    </strong> Controls
-    that grow with their content — multi-select and autocomplete, which hold
-    chips — set a <code class="t-mono-inline">min-height</code> rather than a
-    height, so once the tier floor drops below what the text needs they stop
-    following it. Under <code class="t-mono-inline">ultra-compact</code> they
-    measure 33px and 29px where the rest reach 24px, because a density tier
-    scales hit targets and padding but <strong>not the type scale</strong> — the
-    line box stays 19.6px at a 14px font. Compact is unaffected in practice
-    (33px against 32px). If you need a genuinely 24px row, shrink the type for
-    that container as well.
+    Controls that hold chips (multi-select, autocomplete) set
+    <code class="t-mono-inline">min-height</code>, not
+    <code class="t-mono-inline">height</code>, so they stop following the tier
+    once it drops below the text line. Under
+    <code class="t-mono-inline">ultra-compact</code> they measure 33px and 29px
+    against 24px, because density does not scale type (a 14px font keeps a
+    19.6px line box). Under compact the gap is 33px vs 32px. For a true 24px row,
+    shrink the type in that container too.
   </p>
 
   <p class="block-desc t-s">

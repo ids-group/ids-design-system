@@ -24,23 +24,6 @@
       max-width: 480px;
     }
 
-    /* Wrapper for raw .dropdown cells that need an external label / hint. */
-    .field-stack {
-      display: flex; flex-direction: column;
-      gap: var(--space-1-5);
-      width: 100%;
-    }
-    .field-label {
-      font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-      color: var(--text-secondary);
-    }
-    .field-hint {
-      font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-      color: var(--text-tertiary);
-
-      &.error { color: var(--error-text); }
-    }
-
     .sub-title {
       margin-top: var(--space-5);
       color: var(--text-tertiary);
@@ -48,22 +31,10 @@
       text-transform: uppercase;
       font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
     }
-    .cell-wrap {
-      display: flex; flex-direction: column;
-      gap: var(--space-2);
-    }
-    .caption {
-      color: var(--text-tertiary);
-      letter-spacing: var(--letter-spacing-wider);
-      text-transform: uppercase;
-      font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
-    }
 
-    /* State pins — ds-select trigger has no --_* resolvers; restate the bare role
-       tokens the component's own rules use (hover: --border-strong;
-       focus: --primary + --focus-field). */
-    :host ::ng-deep .pin-hover .dropdown:not(:disabled, .disabled, .open) { border-color: var(--border-strong); }
-    :host ::ng-deep .pin-focus .dropdown:not(.disabled) { outline: none; border-color: var(--primary); box-shadow: var(--focus-field); }
+    /* State pins through the trigger's own --_select-* resolvers, so they track the component. */
+    :host ::ng-deep .pin-hover .dropdown:not(:disabled, .disabled, .open) { border-color: var(--_select-border-color-hover); }
+    :host ::ng-deep .pin-focus .dropdown:not(.disabled) { outline: none; border-color: var(--_select-border-color-focus); box-shadow: var(--_select-focus-shadow); }
 
     /* staticPreview open specimen wrappers */
     .preview-wrap {
@@ -75,6 +46,3 @@
        Restates is-active token from _dropdown-overlay.scss:
        &.is-active:not(.is-disabled) { background: var(--surface-secondary) } */
     :host ::ng-deep .open-specimen .dropdown-list li:nth-child(3) .option { background: var(--surface-secondary); }
-
-    /* The "Open" trigger-state cell panel overflows its min-height stage box. */
-    .state-cell-stage.is-overflow { overflow: visible; align-items: flex-start; }

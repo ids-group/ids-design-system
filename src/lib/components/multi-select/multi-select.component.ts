@@ -116,7 +116,6 @@ export class MultiSelectComponent
   protected readonly intl = inject(DS_INTL);
   private readonly panelTokens = [
     '--ds-multi-select-panel-bg-color',
-    '--ds-multi-select-option-bg-color-active',
     '--ds-multi-select-check-bg-color',
     '--ds-dropdown-panel-bg-color',
     '--ds-dropdown-panel-min-width',

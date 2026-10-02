@@ -23,10 +23,10 @@ const CHAIN: readonly Step[] = [
   },
   {
     command: 'node .design-sync/elements/tools/gen.mjs',
-    does: 'Reads every component AST and emits the custom-element registrations plus one typed React wrapper per component. 85 elements, 630 inputs and outputs. Nothing here is hand-maintained.',
+    does: 'Reads every component AST and emits the custom-element registrations plus one typed React wrapper per component. Nothing here is hand-maintained.',
   },
   {
-    command: 'ng build ds-elements',
+    command: 'CI=true npx ng build ds-elements',
     does: 'Angular AOT and the Ivy linker — the slow step, and the one plain esbuild cannot do. Emits main.js and styles.css.',
   },
   {
@@ -35,7 +35,7 @@ const CHAIN: readonly Step[] = [
   },
   {
     command: 'node tools/check.mjs manual-surface',
-    does: 'The gate over what generation cannot cover: doc and preview coverage for all 85 components, the conditional-projection watch-list, and the attribute directives.',
+    does: 'The gate over what generation cannot cover: doc coverage for every component, the conditional-projection watch-list, and the attribute directives.',
   },
 ];
 
@@ -43,17 +43,17 @@ const FILES: readonly FileRole[] = [
   {
     path: '.design-sync/config.json',
     role: 'input',
-    what: 'Project id, the bundle entry, the CSS entry, the docs directory, and per-component card shape.',
+    what: 'Project id, the bundle entry, the CSS entry, the docs directory, and the ds-docs section that documents each component.',
   },
   {
     path: '.design-sync/docs/<Name>.md',
     role: 'input',
-    what: 'One usage doc per component. Its frontmatter category is the group the card lands in.',
+    what: 'One usage doc per component, published as its <Name>.prompt.md.',
   },
   {
-    path: '.design-sync/previews/<Name>.tsx',
+    path: 'ds-docs/src/app/sections/**/*.section.html',
     role: 'input',
-    what: 'The authored stories. A component with no preview gets no card at all — which is why the gate covers them.',
+    what: 'A block marked data-claude-design becomes a card; see .design-sync/CARDS.md.',
   },
   {
     path: '.design-sync/elements/gen/**',
@@ -61,9 +61,9 @@ const FILES: readonly FileRole[] = [
     what: 'Registrations and wrappers. Regenerated every build; never edited.',
   },
   {
-    path: '_ds_bundle.js · _preview/*.js · _vendor/react*.js',
-    role: 'remote',
-    what: 'What the publish step produces in the project. Their absence from this repo is by design, not drift.',
+    path: '_ds_bundle.js · _ds_bundle.css · _vendor/react*.js · components/** · guides/**',
+    role: 'generated',
+    what: 'What build-cards writes into .design-sync/upload/, committed so a release carries exactly what a publish sends.',
   },
   {
     path: '_ds_sync.json',

@@ -6,7 +6,7 @@
 // Declares no `transition`, which would clobber the host's own; add `filter`/`transform` to yours for an eased release.
 
 @mixin feedback {
-  &:active:not(:disabled, [disabled], .is-disabled) {
+  &:active:not(:disabled, [disabled], .is-disabled, .disabled, [aria-disabled='true']) {
     filter: brightness(var(--ds-press-brightness, 0.9));
     transform: scale(var(--ds-press-scale, 0.97));
   }

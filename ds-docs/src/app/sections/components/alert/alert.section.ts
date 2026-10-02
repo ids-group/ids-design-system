@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { AlertComponent } from 'ds/alert';
 import { ButtonComponent } from 'ds/button';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
@@ -11,4 +11,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   templateUrl: './alert.section.html',
   styleUrls: ['../../../shared/section-demo.scss', './alert.section.scss'],
 })
-export class AlertSection {}
+export class AlertSection {
+  protected readonly dismissed = signal(false);
+}

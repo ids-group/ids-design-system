@@ -3,7 +3,6 @@
     "src/lib/components/auth-layout/auth-layout.component.html",
     "src/lib/components/badge/badge.component.html",
     "src/lib/components/bottom-sheet/bottom-sheet.component.html",
-    "src/lib/components/chart/chart.component.html",
     "src/lib/components/checkbox/checkbox.component.html",
     "src/lib/components/drawer/drawer.component.html",
     "src/lib/components/dropzone/dropzone.component.html",

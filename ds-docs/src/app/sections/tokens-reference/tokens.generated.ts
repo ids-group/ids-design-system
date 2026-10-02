@@ -1208,7 +1208,7 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--ds-chart-bg-color",
     "value": "var(--chart-bg-color)",
-    "notes": ""
+    "notes": "Chart background: the frame fill and every knockout between marks - line halos, stacked-band seams, hatch stripes, label halos (default --surface-default). Set this, not --chart-bg-color."
   },
   {
     "name": "--ds-chart-frame-border-color",
@@ -1343,7 +1343,7 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--ds-chart-area-fade-opacity",
     "value": "var(--chart-area-fade-opacity)",
-    "notes": ""
+    "notes": "Opacity an `area: 'fade'` band starts at beside its line before it fades to nothing at the baseline (default 0.32). Set this, not --chart-area-fade-opacity."
   },
   {
     "name": "--ds-chart-hatch-width",
@@ -2837,17 +2837,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-bar-height",
         "value": "var(--bar-h)",
-        "notes": ""
+        "notes": "ds-bar track height (defaults to --bar-h, 6px)."
       },
       {
         "name": "--ds-bar-track-color",
         "value": "var(--surface-muted)",
-        "notes": ""
+        "notes": "ds-bar track background (defaults to --surface-muted)."
       },
       {
         "name": "--ds-bar-fill-color",
         "value": "var(--accent)",
-        "notes": ""
+        "notes": "ds-bar fill colour (defaults to --accent)."
       },
       {
         "name": "--ds-bar-target-color",
@@ -2872,22 +2872,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-bar-fill-color-success",
         "value": "var(--success)",
-        "notes": ""
+        "notes": "ds-bar fill - success state (defaults to --success)."
       },
       {
         "name": "--ds-bar-fill-color-warning",
         "value": "var(--yellow-500)",
-        "notes": ""
+        "notes": "ds-bar fill - warning state (defaults to --yellow-500)."
       },
       {
         "name": "--ds-bar-fill-color-error",
         "value": "var(--error)",
-        "notes": ""
+        "notes": "ds-bar fill - error state (defaults to --error)."
       },
       {
         "name": "--bar-h",
         "value": "6px",
-        "notes": ""
+        "notes": "ds-bar track height (6px)."
       }
     ]
   },
@@ -3411,27 +3411,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-chart-plot-bg-color",
         "value": "transparent",
-        "notes": ""
+        "notes": "Fill of the plot rectangle inside the axes in ds-chart and ds-scatter-chart (unset by default, so it is transparent and the chart background shows through)."
       },
       {
         "name": "--ds-column-chart-column-max-width",
         "value": "48px",
-        "notes": ""
+        "notes": "Widest a column grows, however wide its category slot (default 48px)."
       },
       {
         "name": "--ds-column-chart-column-gap",
         "value": "var(--ds-chart-bar-gap)",
-        "notes": ""
+        "notes": "Space between the columns of grouped series in one category, and between skeleton columns (defaults to --ds-chart-bar-gap)."
       },
       {
         "name": "--ds-column-chart-cap-radius",
         "value": "var(--ds-chart-mark-cap-radius)",
-        "notes": ""
+        "notes": "Corner radius of a column's rounded cap, held to half the column's height (defaults to --ds-chart-mark-cap-radius, 3px)."
       },
       {
         "name": "--ds-chart-hatch-color",
         "value": "var(--ds-chart-bg-color)",
-        "notes": ""
+        "notes": "Stripe colour of a `fill: 'hatched'` column and of its tooltip swatch (defaults to --ds-chart-bg-color on the column, --surface-default in the tooltip)."
       },
       {
         "name": "--ds-motion-chart-mark-detail-duration",
@@ -3451,7 +3451,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-chart-area-color",
         "value": "var(--_series-area-color)",
-        "notes": ""
+        "notes": "Fill of a line series' area band, flat or fading (unset by default, so each band takes its own series colour)."
       },
       {
         "name": "--ds-chart-annotation-color",
@@ -3471,7 +3471,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-chart-annotation-halo-color",
         "value": "var(--ds-chart-bg-color)",
-        "notes": "Colour of the halo painted under an annotation label so it survives over a line or a mark (default --surface-default)."
+        "notes": "Colour of the halo painted under an annotation label so it survives over a line or a mark (default --ds-chart-bg-color)."
       },
       {
         "name": "--ds-chart-annotation-halo-width",
@@ -3488,12 +3488,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-chart-frame-bg-color",
         "value": "var(--ds-chart-bg-color)",
-        "notes": ""
+        "notes": "Fill of a framed chart's box (defaults to --ds-chart-bg-color)."
       },
       {
         "name": "--ds-chart-focus-halo-color",
         "value": "var(--ds-chart-bg-color)",
-        "notes": ""
+        "notes": "Glow drawn round a chart mark's focus ring so it stands apart from a same-hue mark (defaults to --ds-chart-bg-color)."
       },
       {
         "name": "--ds-chart-pin-size",
@@ -3586,7 +3586,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-checkbox-label-font-weight",
         "value": "var(--font-weight-regular)",
-        "notes": "Checkbox label weight — the third label property; size and colour were already hookable."
+        "notes": "Checkbox caption weight (defaults to --font-weight-regular)."
       },
       {
         "name": "--ds-checkbox-label-font-size",
@@ -3626,7 +3626,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-checkbox-radius",
         "value": "var(--ds-radius-inner)",
-        "notes": "Checkbox box corner radius (default --radius-sm). The indeterminate dash keeps its own radius."
+        "notes": "Checkbox box corner radius (defaults to --ds-radius-inner). The indeterminate dash keeps its own radius."
       },
       {
         "name": "--ds-check-mark-enter-duration",
@@ -3765,27 +3765,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-column-chart-plot-height",
         "value": "200px",
-        "notes": ""
+        "notes": "Height of the ds-column-chart plot, axis labels and headroom excluded (default 200px). Read back as a number, so it takes a px length only."
       },
       {
         "name": "--ds-column-chart-axis-width",
         "value": "40px",
-        "notes": ""
+        "notes": "Minimum width of the ds-column-chart value-axis gutter, which widens to fit the widest tick label (default 40px). Read back as a number, so it takes a px length only."
       },
       {
         "name": "--ds-column-chart-value-space",
         "value": "var(--space-5)",
-        "notes": ""
+        "notes": "Room reserved above the plot, and below it once a value goes negative, for the column value labels (default --space-5, 20px). Read back as a number, so it takes a px length only."
       },
       {
         "name": "--ds-column-chart-column-width",
         "value": "80%",
-        "notes": ""
+        "notes": "Share of its category slot a column fills, as a percentage (default 80%). Read back as a number."
       },
       {
         "name": "--ds-column-chart-grid-line-color",
         "value": "var(--ds-chart-grid-line-color, var(--chart-grid-line-color))",
-        "notes": ""
+        "notes": "Gridline colour of a ds-column-chart, which re-points --ds-chart-grid-line-color on its plot (defaults to --ds-chart-grid-line-color)."
       }
     ]
   },
@@ -4048,7 +4048,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-drawer-width",
         "value": "var(--drawer-w-sm)",
-        "notes": "Drawer panel width (defaults to --drawer-w-sm)."
+        "notes": "Panel width for every `size` of a left/right drawer; unset, each size reads --drawer-w-sm|md|lg."
       },
       {
         "name": "--ds-drawer-enter-keyframes",
@@ -4422,6 +4422,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-focus-shadow-error",
         "value": "—",
         "notes": "Field focus ring shadow in error state (defaults to --focus-field-error)."
+      },
+      {
+        "name": "--ds-field-focus-shadow-warning",
+        "value": "—",
+        "notes": "Field focus shadow in warning state (defaults to --focus-field-warning)."
+      },
+      {
+        "name": "--ds-field-focus-shadow-success",
+        "value": "—",
+        "notes": "Field focus shadow in success state (defaults to --focus-field-success)."
       }
     ]
   },
@@ -4527,6 +4537,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "How long a chart mark takes to fade or settle in. Defaults to --duration-slower (400ms)."
       },
       {
+        "name": "--ds-funnel-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-funnel-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": ""
+      },
+      {
         "name": "--ds-funnel-chart-stage-height",
         "value": "44px",
         "notes": ""
@@ -4540,16 +4560,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-funnel-chart-row-gap",
         "value": "var(--space-4)",
         "notes": ""
-      },
-      {
-        "name": "--ds-funnel-chart-focus-color",
-        "value": "var(--focus-ring-color)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-funnel-chart-focus-width",
-        "value": "var(--focus-ring-width)",
-        "notes": ""
       }
     ]
   },
@@ -4558,6 +4568,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".heatmap-chart",
     "description": "",
     "tokens": [
+      {
+        "name": "--ds-heatmap-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": "Focus-ring colour of an interactive cell (default --focus-ring-color)."
+      },
+      {
+        "name": "--ds-heatmap-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": "Focus-ring thickness of an interactive cell (default --focus-ring-width)."
+      },
       {
         "name": "--ds-heatmap-chart-cell-size",
         "value": "34px",
@@ -4587,16 +4607,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-heatmap-chart-missing-color",
         "value": "var(--surface-secondary)",
         "notes": "Fill of a cell whose value is null, which no step of the heat scale stands for (default --surface-secondary)."
-      },
-      {
-        "name": "--ds-heatmap-chart-focus-color",
-        "value": "var(--focus-ring-color)",
-        "notes": "Focus-ring colour for a cell (default --focus-ring-color). The cell rings through the shared focus mixin, which reads --focus-ring-color itself, so nothing resolves this one."
-      },
-      {
-        "name": "--ds-heatmap-chart-focus-width",
-        "value": "var(--focus-ring-width)",
-        "notes": "Focus-ring thickness for a cell (default --focus-ring-width), with the same caveat: the shared mixin reads --focus-ring-width itself, so nothing resolves this one."
       }
     ]
   },
@@ -4803,7 +4813,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-container-max-width",
-        "value": "var(--col-cap-content)",
+        "value": "var(--_container-size-width)",
         "notes": "Page container max width (defaults to --col-cap-content)."
       },
       {
@@ -5461,6 +5471,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-multi-select-option-bg-color-active",
+        "value": "initial",
+        "notes": "Option row fill under the keyboard cursor and the pointer, for this multi-select's panel only (default --surface-secondary)."
+      },
+      {
         "name": "--ds-multi-select-panel-bg-color",
         "value": "initial",
         "notes": "Dropdown panel surface (default --surface-overlay). The panel is portaled, so set it on the host — a global rule against the pane cannot see the host override."
@@ -5504,11 +5519,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-multi-select-font-size",
         "value": "var(--_field-font-size)",
         "notes": "Trigger text size (default --ds-field-font-size, then --font-size-s)."
-      },
-      {
-        "name": "--ds-multi-select-option-bg-color-active",
-        "value": "var(--surface-secondary)",
-        "notes": "Option row fill while pressed (default --surface-secondary). Separate from hover, which does nothing on touch."
       },
       {
         "name": "--ds-multi-select-check-bg-color",
@@ -5832,7 +5842,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-password-rules-pending-color",
         "value": "var(--text-tertiary)",
-        "notes": "Colour of a rule not yet evaluated (default --text-tertiary): the user has not typed enough to judge it, which must not read as failure."
+        "notes": "Colour of an unmet rule before [showUnmet] turns on (default --text-tertiary) - must not read as failure."
       },
       {
         "name": "--ds-password-rules-met-color",
@@ -5842,7 +5852,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-password-rules-failed-color",
         "value": "var(--error-text)",
-        "notes": "Colour of a rule the current value breaks (default --error-text). Only after the user has typed — see the pending colour."
+        "notes": "Colour of a rule the current value breaks (default --error-text). Only once [showUnmet] is true - see the pending colour."
       }
     ]
   },
@@ -5851,6 +5861,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".pie-chart",
     "description": "",
     "tokens": [
+      {
+        "name": "--ds-pie-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": "Focus-ring colour for a slice (default --focus-ring-color). The ring is stroked onto the arc by the shared chart mixin, which reads --ds-chart-focus-ring-color, so nothing resolves this one."
+      },
+      {
+        "name": "--ds-pie-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": "Focus-ring thickness for a slice (default --focus-ring-width), with the same caveat: the stroked ring reads --focus-ring-width itself, so nothing resolves this one."
+      },
       {
         "name": "--ds-pie-chart-size",
         "value": "180px",
@@ -5877,16 +5897,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Side of the round colour chip in a legend row, on both axes (default 10px)."
       },
       {
-        "name": "--ds-pie-chart-focus-color",
-        "value": "var(--focus-ring-color)",
-        "notes": "Focus-ring colour for a slice (default --focus-ring-color). The ring is stroked onto the arc by the shared chart mixin, which reads --ds-chart-focus-ring-color, so nothing resolves this one."
-      },
-      {
-        "name": "--ds-pie-chart-focus-width",
-        "value": "var(--focus-ring-width)",
-        "notes": "Focus-ring thickness for a slice (default --focus-ring-width), with the same caveat: the stroked ring reads --focus-ring-width itself, so nothing resolves this one."
-      },
-      {
         "name": "--ds-pie-chart-outline-width",
         "value": "calc(var(--border-width-strong) + var(--border-width-default))",
         "notes": "Border thickness of the placeholder ring drawn while the chart is empty or errored, and over the real ring when every slice is zero (defaults to --border-width-strong plus --border-width-default); the hole's inner border scales from it by the hole fraction."
@@ -5911,7 +5921,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-popover-radius",
         "value": "var(--ds-radius-panel)",
-        "notes": "Popover corner radius (defaults to --radius-lg)."
+        "notes": "Popover corner radius (defaults to the --ds-radius-panel role)."
       },
       {
         "name": "--ds-popover-shadow",
@@ -6479,7 +6489,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-skeleton-wave-steps",
         "value": "68",
-        "notes": ""
+        "notes": "Updates per wave pass (default 68); each step is main-thread work."
       },
       {
         "name": "--ds-skeleton-wave-angle",
@@ -6558,37 +6568,37 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-sparkline-width",
         "value": "80px",
-        "notes": ""
+        "notes": "Width of a ds-sparkline (default 80px)."
       },
       {
         "name": "--ds-sparkline-height",
         "value": "24px",
-        "notes": ""
+        "notes": "Height of a ds-sparkline (default 24px)."
       },
       {
         "name": "--ds-sparkline-line-color",
         "value": "var(--ds-chart-series-1-color)",
-        "notes": ""
+        "notes": "Stroke colour of a ds-sparkline line (defaults to --ds-chart-series-1-color)."
       },
       {
         "name": "--ds-sparkline-line-width",
         "value": "1.5px",
-        "notes": ""
+        "notes": "Stroke width of a ds-sparkline line (default 1.5px)."
       },
       {
         "name": "--ds-sparkline-dot-radius",
         "value": "2.5px",
-        "notes": ""
+        "notes": "Radius of the dot on the last reading of a ds-sparkline (default 2.5px)."
       },
       {
         "name": "--ds-sparkline-area-color",
         "value": "var(--_sparkline-line-color)",
-        "notes": ""
+        "notes": "Fill of the area under a ds-sparkline line (defaults to the line colour, --ds-sparkline-line-color)."
       },
       {
         "name": "--ds-sparkline-area-opacity",
         "value": "var(--ds-chart-area-opacity)",
-        "notes": ""
+        "notes": "Opacity of that area fill (defaults to --ds-chart-area-opacity)."
       }
     ]
   },
@@ -6761,7 +6771,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-status-dot-color",
         "value": "var(--icon-muted)",
-        "notes": "Default = planning."
+        "notes": "Dot colour; default `--icon-muted`. Set per status by `status.define`."
       },
       {
         "name": "--ds-status-dot-size",
@@ -7788,7 +7798,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-tag-bg-color",
         "value": "var(--accent)",
-        "notes": "Surface fill — interactive/ghost re-point to --surface-secondary."
+        "notes": "Tag fill; default `--accent`, `--surface-secondary` for `neutral`."
       },
       {
         "name": "--ds-tag-label-color",
@@ -7917,7 +7927,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-time-picker-focus-shadow",
         "value": "var(--ds-control-focus-shadow)",
-        "notes": "Time picker focus ring shadow (defaults to --ds-control-focus-shadow) — read directly by the portaled panel, where a :host-scoped private token cannot reach."
+        "notes": "Time picker trigger focus ring shadow (defaults to --ds-control-focus-shadow)."
       },
       {
         "name": "--ds-time-picker-trigger-bg-color",
@@ -8277,12 +8287,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-tooltip-radius",
         "value": "var(--ds-radius-control)",
-        "notes": "Tooltip corner radius (defaults to --radius-md)."
+        "notes": "Tooltip corner radius (defaults to --ds-radius-control)."
       },
       {
         "name": "--ds-tooltip-shadow",
         "value": "var(--ds-elevation-overlay)",
-        "notes": "Tooltip drop shadow (defaults to --shadow-2)."
+        "notes": "Tooltip drop shadow (defaults to --ds-elevation-overlay)."
       },
       {
         "name": "--ds-tooltip-max-width",

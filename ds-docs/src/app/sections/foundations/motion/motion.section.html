@@ -3,11 +3,12 @@
   eyebrow="Foundations"
   title="Motion">
   <span lede>
-    Six durations, seven eases. All motion respects
+    Six durations, two loop durations, seven eases. All motion respects
     <code class="t-mono-inline">
       prefers-reduced-motion
-    </code> — durations
-    collapse to 0 so components don't need to opt in. Pair durations with the
+    </code>: one-shot durations collapse to 0; loops
+    (<code class="t-mono-inline">--duration-loop-*</code>) slow down instead of
+    stopping. Pair durations with the
     right easing per direction: <em>decelerate</em> for enter,
     <em>
       accelerate
@@ -81,6 +82,35 @@
 
         <div class="t-caption token-desc">
           {{ e.use }}
+        </div>
+      </div>
+    }
+  </div>
+
+  <h3 class="block-title t-h4">
+    Motion roles
+  </h3>
+
+  <p class="block-desc t-s">
+    Components default to these roles, not to raw durations. Each role is a
+    <code class="t-mono-inline">--ds-motion-&lt;role&gt;-duration</code> /
+    <code class="t-mono-inline">-easing</code> pair; set one and every surface on
+    it follows.
+  </p>
+
+  <div class="motion-preset-grid">
+    @for (r of motionRoles; track r.role) {
+      <div class="motion-preset-cell">
+        <code class="t-mono-inline token-name">
+          --ds-motion-{{ r.role }}-*
+        </code>
+
+        <code class="t-mono-inline token-value">
+          {{ r.timing }}
+        </code>
+
+        <div class="t-caption token-desc">
+          {{ r.readers }}
         </div>
       </div>
     }
@@ -271,9 +301,20 @@
     </code> and
     <code class="t-mono-inline">
       -leave-easing
-    </code>. Set them globally, per
-    theme, or on a single component instance — portaled panels forward them onto
+    </code>; modal, drawer and bottom sheet also take
+    <code class="t-mono-inline">-leave-keyframes</code>
+    (<code class="t-mono-inline">ds-fade-out</code>,
+    <code class="t-mono-inline">ds-scale-out</code>,
+    <code class="t-mono-inline">ds-slide-out</code>,
+    <code class="t-mono-inline">ds-slide-edge-out</code>). Set them globally, per
+    theme, or on a single component instance; portaled panels forward them onto
     their overlay pane on open. See the token reference for the full per-surface
     list.
+  </p>
+
+  <p class="block-desc t-s">
+    Your own <code class="t-mono-inline">&#64;keyframes</code> must be global:
+    emulated encapsulation renames a keyframe declared in a component stylesheet,
+    so a scoped name passed through the token plays no animation.
   </p>
 </docs-section>

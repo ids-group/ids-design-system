@@ -34,6 +34,12 @@ const MEMBERS: readonly AutocompleteOption<string>[] = [
   { value: 'copperleaf', label: 'Copperleaf Concerts' },
 ];
 
+const CITIES: readonly AutocompleteOption<string>[] = [
+  { value: 'lisbon', label: 'Lisbon' },
+  { value: 'oslo', label: 'Oslo' },
+  { value: 'vienna', label: 'Vienna' },
+];
+
 const PRODUCTS: readonly AutocompleteOption<string>[] = [
   { value: 'beer', label: 'Beer kegs' },
   { value: 'cider', label: 'Cider' },
@@ -111,6 +117,7 @@ export class AutocompleteSection {
   }
 
   protected readonly members = MEMBERS;
+  protected readonly cities = CITIES;
   protected readonly products = PRODUCTS;
   protected readonly channels = CHANNELS;
   protected readonly venueGroups = VENUE_GROUPS;

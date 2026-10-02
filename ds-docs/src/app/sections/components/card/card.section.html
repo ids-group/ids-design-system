@@ -3,8 +3,15 @@
   eyebrow="Components"
   title="Cards">
   <span lede>
-    Surface container for compositions — header, body, footer slots. Three
-    paddings, three elevations.
+    Surface container; compose header, body and footer inside it. Four
+    paddings (<code class="t-mono-inline">none</code>,
+    <code class="t-mono-inline">sm</code>,
+    <code class="t-mono-inline">md</code>,
+    <code class="t-mono-inline">lg</code>), four elevations
+    (<code class="t-mono-inline">flat</code>,
+    <code class="t-mono-inline">raised</code>,
+    <code class="t-mono-inline">hover</code>,
+    <code class="t-mono-inline">interactive</code>).
   </span>
 
   <h3
@@ -14,7 +21,24 @@
   </h3>
 
   <p class="block-desc t-s">
-    Nine cells. Same content, every combination of elevation and padding.
+    The three visual elevations against the three padded presets, same
+    content in every cell. <code class="t-mono-inline">sm</code> /
+    <code class="t-mono-inline">md</code> /
+    <code class="t-mono-inline">lg</code> pad by
+    <code class="t-mono-inline">--space-4</code> /
+    <code class="t-mono-inline">-6</code> /
+    <code class="t-mono-inline">-8</code>,
+    <code class="t-mono-inline">none</code> by 0;
+    <code class="t-mono-inline">--ds-card-padding</code> overrides any preset.
+  </p>
+
+  <p class="block-desc t-s">
+    Unset <code class="t-mono-inline">elevation</code> follows
+    <code class="t-mono-inline">DS_CONFIG.card.elevation</code>, then
+    <code class="t-mono-inline">'flat'</code>. Unset
+    <code class="t-mono-inline">padding</code> follows
+    <code class="t-mono-inline">DS_CONFIG.card.padding</code>, then
+    <code class="t-mono-inline">--ds-surface-padding</code>.
   </p>
 
   <div class="matrix">
@@ -177,36 +201,49 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Interactive
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">elevation="interactive"</code> makes the whole
+    card a <code class="t-mono-inline">role="button"</code> with
+    <code class="t-mono-inline">tabindex="0"</code>: a click, Enter or Space
+    emits <code class="t-mono-inline">(pressed)</code>. Keep links, buttons and
+    fields out of it, since a button cannot hold other controls.
+  </p>
+
+  <div class="grid-2">
+    <ds-card
+      elevation="interactive"
+      padding="md"
+      (pressed)="pressedCount.set(pressedCount() + 1)">
+      <div class="t-overline">
+        Project
+      </div>
+
+      <h4 class="t-h5 card-body-title">
+        Project Alpha
+      </h4>
+
+      <p class="t-s card-body-text">
+        Pressed {{ pressedCount() }} times
+      </p>
+    </ds-card>
+  </div>
+
+  <h3 class="block-title t-h4">
     A full-bleed child needs the card to clip
   </h3>
 
   <p class="block-desc t-s">
-    A child whose background runs to the card’s edge paints its square corners
-    over the card’s radius, and the host cannot fix it: the rounded box is the
-    card’s own inner element. Set
-    <code class="t-mono-inline">
-      --ds-card-overflow: clip
-    </code> on the card.
-    <code class="t-mono-inline">
-      clip
-    </code> rather than
-    <code class="t-mono-inline">
-      hidden
-    </code>, so the card does not become a
-    scroll container.
-  </p>
-
-  <p class="block-desc t-s">
-    <strong>
-      It is opt-in, and that is deliberate.
-    </strong>
-    A clipped card also cuts the focus ring off any child sitting at its edge —
-    the ring is an outset shadow, and this is the exact case Foundations →
-    Colour names. If the clipped card holds focusable content, put
-    <code class="t-mono-inline">
-      data-focus="inset"
-    </code> on it and the
-    indicator moves inside the box instead of disappearing.
+    A full-bleed child paints square corners over the card's radius; set
+    <code class="t-mono-inline">--ds-card-overflow: clip</code> on the card
+    (<code class="t-mono-inline">clip</code>, not
+    <code class="t-mono-inline">hidden</code>, so it is not a scroll
+    container). It is opt-in because clipping also cuts the outset focus ring
+    of children at the edge - add
+    <code class="t-mono-inline">data-focus="inset"</code> to a clipped card
+    that holds focusable content.
   </p>
 
   <div class="grid-2">

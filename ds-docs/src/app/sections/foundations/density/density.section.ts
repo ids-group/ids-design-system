@@ -15,7 +15,7 @@ const TIERS: readonly Tier[] = [
     label: 'Ultra-compact',
     hit: '24 px',
     use: 'Financial dashboards, log viewers, dense data grids — keyboard/mouse only, never touch',
-    wcag: 'Below WCAG 2.5.8 — opt-in only',
+    wcag: 'At the WCAG 2.5.8 minimum (24px), below 2.5.5 - opt-in only',
   },
   {
     key: 'compact',

@@ -14,25 +14,61 @@
   </h3>
 
   <p class="block-desc t-s">
-    A preview card in the project is a plain HTML page loading four classic
-    scripts, in this order, and rendering a React element from a global:
-  </p>
-
-  <pre class="cd-chain t-mono-block">
-_vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&lt;Name&gt;.js
-  </pre>
-
-  <p class="block-desc t-s">
-    So the contract is narrow:
+    The agent's code renders
+    <code class="t-mono-inline">
+      React.createElement(window.IdsDs.&lt;Component&gt;)
+    </code>.
+    The contract is narrow:
     <strong>
       expose React components on
       <code class="t-mono-inline">
         window.IdsDs
       </code>, and React arrives
-      separately as a global.
+      separately as a global
     </strong>
-    React is deliberately NOT inside the library bundle. Nothing inspects what
-    else is in there, which is what makes the second route below possible.
+    (the project's <code class="t-mono-inline">_vendor/react*.js</code>). React
+    is not inside <code class="t-mono-inline">_ds_bundle.js</code>, and nothing
+    inspects what else is, so an Angular runtime can ride along inside it.
+  </p>
+
+  <p class="block-desc t-s">
+    A card holds no React. It is one HTML page per
+    <code class="t-mono-inline">
+      data-claude-design
+    </code> block of a ds-docs
+    chapter, rendering that chapter's section tag on the bundle:
+  </p>
+
+  <pre class="cd-chain t-mono-block">
+&lt;script&gt;window.__dsSectionsOnly = true&lt;/script&gt;
+&lt;script src="_ds_bundle.js"&gt;&lt;/script&gt;
+&lt;div class="ds-page"&gt;&lt;ds-docs-components-button&gt;&lt;/ds-docs-components-button&gt;&lt;/div&gt;
+  </pre>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      build-cards.mjs
+    </code> writes the cards into
+    <code class="t-mono-inline">
+      .design-sync/upload/
+    </code>, and
+    <code class="t-mono-inline">
+      measure-cards.mjs
+    </code> records their heights in
+    <code class="t-mono-inline">
+      viewports.json
+    </code>.
+    <code class="t-mono-inline">
+      snapshot-cards.mjs
+    </code> runs last: it freezes
+    every card outside <code class="t-mono-inline">live-cards.txt</code> into
+    static HTML that links the shared
+    <code class="t-mono-inline">
+      _ds_cards.css
+    </code>. What to mark is in
+    <code class="t-mono-inline">
+      .design-sync/CARDS.md
+    </code>.
   </p>
 
   <h3 class="block-title t-h4">
@@ -40,29 +76,12 @@ _vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&
   </h3>
 
   <p class="block-desc t-s">
-    The first attempt re-implemented every component in React over the compiled
-    CSS — around 11 000 hand-written lines. It was correct when written and
-    needed a parity gate, because nothing else can tell that a template has
-    moved on. One month of upstream drift cost it
-    <strong>
-      213 divergences
-    </strong>: 53 components with changed sources, 122
-    missing props, 6 components with no counterpart at all. It was deleted on
-    2026-09-01.
-  </p>
-
-  <p class="block-desc t-s">
-    What replaced it registers every component as a custom element and generates
-    the React layer from the AST. There is no second implementation, so there is
-    nothing to drift: the same month of upstream cost it one
+    Every component is registered as a custom element and its React wrapper is
+    generated from the AST by
     <code class="t-mono-inline">
       gen.mjs
-    </code> run, and the surface grew from
-    81 elements to 85 on its own. The price is about
-    <strong>
-      135 KB gzip
-    </strong> more over the wire for the Angular runtime —
-    fixed, while the library keeps growing.
+    </code>, so there is no second implementation to drift. The cost is the
+    Angular runtime inside the bundle, fixed as the library grows.
   </p>
 
   <h3 class="block-title t-h4">
@@ -84,6 +103,14 @@ _vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&
   </div>
 
   <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      npm run check:cards
+    </code> is the whole chain
+    above in one command, and the only form that works in a tree which has not
+    built yet.
+  </p>
+
+  <p class="block-desc t-s">
     Publishing is a separate, deliberately gated flow: read the project, lock a
     plan, then write. The tool rejects any path outside the locked plan, and the
     plan is shown to a human before anything is written.
@@ -94,9 +121,14 @@ _vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&
   </h3>
 
   <p class="block-desc t-s">
-    The repository commits sync INPUTS only. Everything with an underscore
-    prefix in the project is an output of the publish step — reading their
-    absence here as drift is a mistake that has been made.
+    The repository commits the sync inputs and the built tree at
+    <code class="t-mono-inline">
+      .design-sync/upload/
+    </code>. Only
+    <code class="t-mono-inline">
+      _ds_sync.json
+    </code> lives in the project alone,
+    so its absence here is not drift.
   </p>
 
   <div class="cd-table">
@@ -126,20 +158,20 @@ _vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&
   <ul class="cd-list t-s">
     <li>
       <strong>
-        A preview sets its state as INITIAL props — never toggles it after
-        mount.
+        An agent composition sets its state as INITIAL props, never toggles
+        it after mount.
       </strong>
       A slot behind a condition works, nested DS components included, as long as
       the gate is true when the element connects. Toggle it later and the
       projected wrapper survives while the custom elements inside it are
-      destroyed. So an overlay preview passes
+      destroyed. So an overlay passes
       <code class="t-mono-inline">
         staticPreview
       </code> or
       <code class="t-mono-inline">
         open
-      </code> at creation, and a table preview
-      that shows bulk actions passes its selection at creation.
+      </code> at creation, and a table that
+      shows bulk actions passes its selection at creation.
     </li>
 
     <li>
@@ -151,15 +183,15 @@ _vendor/react.js  →  _vendor/react-dom.js  →  _ds_bundle.js  →  _preview/&
       content and its inputs, so the generator gives those an
       <code class="t-mono-inline">
         ds-x-
-      </code> tag no template mentions — 31
-      of 85. The React wrapper emits the alias, so nothing changes for a caller
+      </code> tag no template mentions. The React wrapper emits the alias, so nothing changes for a caller
       and the tag never surfaces in a design.
     </li>
   </ul>
 
   <p class="block-desc t-s">
-    Attribute directives have no tag to register, so the fifteen of them are
-    absent from the generated surface. Only
+    Attribute directives have no tag to register, so they are absent from the
+    generated surface; <code class="t-mono-inline">manual-surface.json</code>
+    lists them. Only
     <code class="t-mono-inline">
       dsTooltip
     </code> would be missed, and a

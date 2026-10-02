@@ -6,6 +6,7 @@ import {
   minLength,
   readonly,
   required,
+  submit,
 } from '@angular/forms/signals';
 import { ButtonComponent } from 'ds/button';
 import { CheckboxComponent } from 'ds/checkbox';
@@ -58,9 +59,13 @@ export class SignalFormsSection {
     readonly(path.reference);
   });
 
+  protected sendInvite(): void {
+    void submit(this.demoForm, async () => undefined);
+  }
+
   protected readonly snippet = `import { form, required, email } from '@angular/forms/signals';
 
-model = signal({ email: '', role: '' });
+model = signal({ email: '', role: '', terms: false });
 
 loginForm = form(this.model, (path) => {
   required(path.email, { message: 'We need an email' });
@@ -94,7 +99,7 @@ loginForm = form(this.model, (path) => {
     {
       member: 'readonly',
       state: 'yes',
-      note: 'Text controls only — input, textarea, select. The DS also spells it readOnly for hand-binding; either sets it.',
+      note: 'Input, textarea, select, autocomplete and multi-select. The DS also spells it readOnly for hand-binding; either sets it.',
     },
     {
       member: 'hidden',

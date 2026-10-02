@@ -1,172 +1,162 @@
-<figure class="funnel-chart">
-  @if (activeMark.pinned()) {
-    <button
-      class="pin-reset"
-      type="button"
-      (click)="activeMark.release()">
-      {{ intl().chart.unpin }}
-    </button>
-  }
+<figure
+  class="funnel-chart"
+  dsChartStates
+  [pinned]="activeMark.pinned()"
+  [caption]="caption()"
+  [error]="error()"
+  [errorText]="errorTextResolved()"
+  [pending]="loading() || !renderReady()"
+  [empty]="isEmpty()"
+  [emptyText]="emptyTextResolved()"
+  [skeleton]="skeleton"
+  [body]="body"
+  (release)="activeMark.release()">
+</figure>
 
-  @if (caption()) {
-    <figcaption>
-      {{ caption() }}
-    </figcaption>
-  }
+<ng-template #skeleton>
+  <div
+    class="skeleton"
+    aria-hidden="true">
+    @for (placeholderWidth of skeletonStages(); track $index) {
+      <ds-skeleton
+        height="calc(var(--_funnel-chart-stage-height) - var(--_funnel-chart-stage-gap))"
+        [shimmer]="loading()"
+        [width]="placeholderWidth" />
+    }
+  </div>
+</ng-template>
 
-  @if (error()) {
-    <p
-      class="empty is-error"
-      role="status">
-      {{ errorTextResolved() }}
-    </p>
-  } @else if (loading() || !renderReady()) {
-    <div
-      class="skeleton"
-      aria-hidden="true">
-      @for (placeholderWidth of skeletonStages(); track $index) {
-        <ds-skeleton
-          height="calc(var(--_funnel-chart-stage-height) - var(--_funnel-chart-stage-gap))"
-          [shimmer]="loading()"
-          [width]="placeholderWidth" />
+<ng-template #body>
+  <div
+    class="shape"
+    [class.dims-others]="dimOthers()"
+    [attr.role]="interactive() ? 'group' : 'img'"
+    [attr.aria-label]="accessibleName()"
+    [dsChartTooltip]="tooltipContext()"
+    [dsChartTooltipSwatches]="defaults.tooltipSwatches()"
+    [dsChartTooltipPinned]="activeMark.pinned()"
+    [dsChartTooltipOrigin]="activeMark.origin()"
+    [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
+    <svg
+      preserveAspectRatio="none"
+      [attr.aria-hidden]="interactive() ? null : true"
+      [attr.viewBox]="viewBox"
+      [style.block-size]="chartHeight()">
+      @for (entry of stages(); track entry.stage.id; let index = $index) {
+        <polygon
+          class="stage"
+          [attr.stroke-width]="hitGapUnits()"
+          [style.--_chart-mark-stagger]="markStagger(index)"
+          [class.interactive]="interactive()"
+          [class.pins]="defaults.pinOnClick()"
+          [class.is-active]="activeMark.index() === index"
+          [class.is-pinned]="
+            activeMark.pinned() && activeMark.index() === index
+          "
+          [class.is-dimmed]="isDimmed(index)"
+          [attr.points]="entry.points"
+          [attr.fill]="entry.color"
+          [attr.role]="interactive() ? 'button' : null"
+          [attr.tabindex]="
+            interactive() ? (index === roving.tabStop() ? 0 : -1) : null
+          "
+          [attr.data-mark-index]="index"
+          [attr.aria-label]="interactive() ? entryLabel(entry) : null"
+          (animate.leave)="leaveMark($event)"
+          (pointerenter)="activeMark.enter(index, $event)"
+          (pointerleave)="activeMark.leave()"
+          (focus)="onMarkFocus(index, $event)"
+          (blur)="activeMark.leave()"
+          (keydown)="onMarkNavigation($event, index)"
+          (click)="onMarkClick(entry.stage, index, $event)"
+          (keydown.enter)="onStageKey(entry.stage, $event)"
+          (keydown.space)="onStageKey(entry.stage, $event)">
+        </polygon>
       }
-    </div>
-  } @else if (isEmpty()) {
-    <p class="empty">
-      {{ emptyTextResolved() }}
-    </p>
-  } @else {
-    <div
-      class="shape"
-      [class.dims-others]="dimOthers()"
-      [attr.role]="interactive() ? 'group' : 'img'"
-      [attr.aria-label]="accessibleName()"
-      [dsChartTooltip]="tooltipContext()"
-      [dsChartTooltipSwatches]="defaults.tooltipSwatches()"
-      [dsChartTooltipPinned]="activeMark.pinned()"
-      [dsChartTooltipOrigin]="activeMark.origin()"
-      [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
-      <svg
-        preserveAspectRatio="none"
-        [attr.aria-hidden]="interactive() ? null : true"
-        [attr.viewBox]="viewBox"
-        [style.block-size]="chartHeight()">
+    </svg>
+
+    @if (pinnedCenter(); as center) {
+      <span
+        class="pin-marker"
+        [style.left.%]="center.xPercent"
+        [style.top.%]="center.yPercent">
+        <ds-icon
+          name="pin"
+          [size]="13" />
+      </span>
+    }
+  </div>
+
+  @if (showTable()) {
+    <table class="stage-table">
+      <caption class="visually-hidden">
+        {{
+          intl().chart.funnelCaption
+        }}
+      </caption>
+
+      <thead>
+        <tr>
+          <th scope="col">
+            {{ intl().chart.stageColumn }}
+          </th>
+
+          <th scope="col">
+            {{ intl().chart.valueColumn }}
+          </th>
+
+          <th scope="col">
+            {{ intl().chart.percentColumn }}
+          </th>
+
+          @if (drop() !== 'none') {
+            <th scope="col">
+              {{ intl().chart.dropColumn }}
+            </th>
+          }
+        </tr>
+      </thead>
+
+      <tbody>
         @for (entry of stages(); track entry.stage.id; let index = $index) {
-          <polygon
-            class="stage"
-            [attr.stroke-width]="hitGapUnits()"
+          <tr
             [style.--_chart-mark-stagger]="markStagger(index)"
-            [class.interactive]="interactive()"
-            [class.pins]="defaults.pinOnClick()"
-            [class.is-active]="activeMark.index() === index"
-            [class.is-pinned]="
-              activeMark.pinned() && activeMark.index() === index
-            "
-            [class.is-dimmed]="isDimmed(index)"
-            [attr.points]="entry.points"
-            [attr.fill]="entry.color"
-            [attr.role]="interactive() ? 'button' : null"
-            [attr.tabindex]="
-              interactive() ? (index === roving.tabStop() ? 0 : -1) : null
-            "
-            [attr.data-mark-index]="index"
-            [attr.aria-label]="interactive() ? entryLabel(entry) : null"
-            (animate.leave)="leaveMark($event)"
-            (pointerenter)="activeMark.enter(index, $event)"
-            (pointerleave)="activeMark.leave()"
-            (focus)="onMarkFocus(index, $event)"
-            (blur)="activeMark.leave()"
-            (keydown)="onMarkNavigation($event, index)"
-            (click)="onMarkClick(entry.stage, index, $event)"
-            (keydown.enter)="onStageKey(entry.stage, $event)"
-            (keydown.space)="onStageKey(entry.stage, $event)">
-          </polygon>
-        }
-      </svg>
+            (pointerenter)="onRowEnter(index, $event)"
+            (pointerleave)="onRowLeave()">
+            <th scope="row">
+              <span
+                class="swatch"
+                aria-hidden="true"
+                [style.background]="entry.color">
+              </span>
 
-      @if (pinnedCenter(); as center) {
-        <span
-          class="pin-marker"
-          [style.left.%]="center.xPercent"
-          [style.top.%]="center.yPercent">
-          <ds-icon
-            name="pin"
-            [size]="13" />
-        </span>
-      }
-    </div>
-
-    @if (showTable()) {
-      <table class="stage-table">
-        <caption class="visually-hidden">
-          {{
-            intl().chart.funnelCaption
-          }}
-        </caption>
-
-        <thead>
-          <tr>
-            <th scope="col">
-              {{ intl().chart.stageColumn }}
+              {{ entry.stage.label }}
             </th>
 
-            <th scope="col">
-              {{ intl().chart.valueColumn }}
-            </th>
+            <td>
+              {{ entry.formattedValue }}
+            </td>
 
-            <th scope="col">
-              {{ intl().chart.percentColumn }}
-            </th>
+            <td>
+              {{ entry.formattedPercent }}
+            </td>
 
             @if (drop() !== 'none') {
-              <th scope="col">
-                {{ intl().chart.dropColumn }}
-              </th>
+              <td>
+                {{ entry.formattedDrop }}
+              </td>
             }
           </tr>
-        </thead>
-
-        <tbody>
-          @for (entry of stages(); track entry.stage.id; let index = $index) {
-            <tr
-              [style.--_chart-mark-stagger]="markStagger(index)"
-              (pointerenter)="onRowEnter(index, $event)"
-              (pointerleave)="onRowLeave()">
-              <th scope="row">
-                <span
-                  class="swatch"
-                  aria-hidden="true"
-                  [style.background]="entry.color">
-                </span>
-
-                {{ entry.stage.label }}
-              </th>
-
-              <td>
-                {{ entry.formattedValue }}
-              </td>
-
-              <td>
-                {{ entry.formattedPercent }}
-              </td>
-
-              @if (drop() !== 'none') {
-                <td>
-                  {{ entry.formattedDrop }}
-                </td>
-              }
-            </tr>
-          }
-        </tbody>
-      </table>
-    }
-
-    @if (showDataTable()) {
-      <ds-chart-data-table
-        [columns]="[intl().chart.labelColumn, intl().chart.valueColumn]"
-        [rows]="tableRows()"
-        [caption]="caption()"
-        [open]="dataTableResolved() === 'visible'" />
-    }
+        }
+      </tbody>
+    </table>
   }
-</figure>
+
+  @if (showDataTable()) {
+    <ds-chart-data-table
+      [columns]="[intl().chart.labelColumn, intl().chart.valueColumn]"
+      [rows]="tableRows()"
+      [caption]="caption()"
+      [open]="dataTableResolved() === 'visible'" />
+  }
+</ng-template>

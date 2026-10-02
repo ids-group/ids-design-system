@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   NgZone,
   PLATFORM_ID,
@@ -15,12 +16,14 @@ import {
   numberAttribute,
   TemplateRef,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import {
   bandScale,
   elementWidth,
   labelInterval,
+  nextRovingIndex,
   rotationWouldFit,
   tickValues,
   chartRenderGate,
@@ -31,8 +34,10 @@ import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/s
 import {
   CHART_PIN_GAP,
   CHART_PIN_RADIUS,
+  CHART_UNPIN_DRAWN_BY_HOST,
   ChartPinMarkerComponent,
   ChartTooltipDirective,
+  ChartStatesComponent,
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type { ChartTooltipContext } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
@@ -63,6 +68,7 @@ import {
 } from './chart.math';
 import {
   CHART_SCALES,
+  type ChartAxisEntry,
   type ChartPlot,
   type ChartScales,
   type ChartTooltipSource,
@@ -72,13 +78,20 @@ import {
   selector: 'ds-chart',
   standalone: true,
   exportAs: 'dsChart',
-  imports: [SkeletonComponent, ChartTooltipDirective, ChartPinMarkerComponent],
+  imports: [
+    SkeletonComponent,
+    ChartTooltipDirective,
+    ChartPinMarkerComponent,
+    ChartStatesComponent,
+  ],
   templateUrl: './chart.component.html',
   styleUrl: './chart.component.scss',
   host: {
     '[class.framed]': "frameResolved() === 'auto'",
     '[class.measuring]': '!settled()',
     '[style.--_chart-view-height]': "viewHeight() + 'px'",
+    '(keydown)': 'onChartKey($event)',
+    '(focusout)': 'onChartFocusOut($event)',
   },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -198,6 +211,28 @@ export class ChartComponent extends DsChartBase implements ChartScales {
         cancelAnimationFrame(first);
         cancelAnimationFrame(second);
       });
+    });
+
+    // Before the view drops the stops past the new end, while the focused one is still in the DOM.
+    effect(() => {
+      const last = this.categories().length - 1;
+      untracked(() => {
+        if (this.activeIndex() > last) {
+          this.cursorState.release();
+          this.cursorState.setIndex(last);
+        }
+        if (this.roving() > last && this.keyboardFocusInside()) {
+          this.refocusStop = true;
+        }
+      });
+    });
+
+    afterRenderEffect(() => {
+      this.categories();
+      if (this.refocusStop) {
+        this.refocusStop = false;
+        untracked(() => this.focusStop(this.focusedCategory()));
+      }
     });
 
     effect((onCleanup) => {
@@ -407,7 +442,28 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       ) ?? null,
   );
 
+  // By source and position, not label: two marks may read under one label.
+  private readonly pickedKey = signal<string | null>(null);
+
+  private readonly pickedReading = computed(() => {
+    const picked = this.pickedKey();
+
+    return picked === null
+      ? null
+      : (this.readingsTopDown().find((reading) => reading.key === picked) ??
+          null);
+  });
+
   protected readonly tooltipContext = computed(() => {
+    const merged = this.categoryContext();
+    const picked = this.pickedReading();
+
+    return picked === null || !this.cursorOn() || merged === null
+      ? merged
+      : { ...merged, entries: [picked.entry] };
+  });
+
+  private readonly categoryContext = computed(() => {
     const base = this.activeTooltip()?.context() ?? null;
     const categoryIndex = this.activeIndex();
     if (this.cursorResolved() !== 'category' || categoryIndex < 0) {
@@ -442,7 +498,11 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     };
   });
 
-  protected readonly tooltipOrigin = computed(() => {
+  protected readonly tooltipOrigin = computed(
+    () => this.pickedReading()?.element ?? this.categoryOrigin(),
+  );
+
+  private readonly categoryOrigin = computed(() => {
     const own = this.activeTooltip()?.origin() ?? null;
     if (
       this.cursorResolved() !== 'category' ||
@@ -630,6 +690,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   /** Whether the cursor is held. */
   readonly cursorPinned = this.cursorState.pinned;
 
+  protected readonly drawsUnpin = !inject(CHART_UNPIN_DRAWN_BY_HOST, {
+    optional: true,
+  });
+
   releaseCursor(): void {
     this.cursorState.release();
   }
@@ -686,7 +750,12 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       window.removeEventListener('scroll', forgetRect, { capture: true });
       forgetRect();
       this.pointerInBand.set(false);
-      this.cursorState.leave();
+      // The panel goes back to the band the keyboard holds, which keeps it open while focus stays.
+      if (this.keyboardFocusInside()) {
+        this.cursorState.setIndex(this.focusedCategory());
+      } else {
+        this.cursorState.leave();
+      }
     };
     this.zone.runOutsideAngular(() => {
       canvas.addEventListener('pointerenter', onEnter);
@@ -710,6 +779,248 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   readonly cursorOrigin = computed<Element | null>(() =>
     this.cursorBand() ? (this.bandElement()?.nativeElement ?? null) : null,
   );
+
+  protected readonly keyboardStops = computed(
+    () => this.cursorOn() && this.interactive(),
+  );
+
+  private readonly roving = signal(0);
+
+  private refocusStop = false;
+
+  readonly focusedCategory = computed(() =>
+    Math.min(this.roving(), Math.max(0, this.categories().length - 1)),
+  );
+
+  protected readonly categoryStops = computed(() => {
+    const toX = this.xPosition();
+    const width = this.bandWidth();
+
+    return this.categories().map((category, index) => ({
+      index,
+      category,
+      x: toX(index) - width / 2,
+      width,
+    }));
+  });
+
+  // Only the active category's readings are known; a stop is named once the cursor is on it, which focusing it does first.
+  protected stopLabel(index: number): string {
+    const category = this.categories()[index] ?? '';
+    const context =
+      this.activeIndex() === index ? this.categoryContext() : null;
+    const readings =
+      context?.entries.map(
+        (entry) => `${entry.label} ${entry.formatted ?? entry.value}`,
+      ) ?? [];
+
+    return readings.length ? `${category}: ${readings.join(', ')}` : category;
+  }
+
+  protected onStopFocus(index: number, event: FocusEvent): void {
+    this.roving.set(index);
+    this.pickedKey.set(null);
+    this.cursorState.enter(index, event, null, event.target as Element);
+  }
+
+  private leavesChart(event: FocusEvent): boolean {
+    const next = event.relatedTarget;
+
+    return (
+      !(next instanceof Element) || !this.host.nativeElement.contains(next)
+    );
+  }
+
+  protected onStopBlur(event: FocusEvent): void {
+    if (this.leavesChart(event)) {
+      this.cursorState.leave();
+    }
+  }
+
+  protected onChartFocusOut(event: FocusEvent): void {
+    if (this.leavesChart(event)) {
+      this.pickedKey.set(null);
+    }
+  }
+
+  // Index after focus: the marker losing focus clears the series' cursor index on its way out.
+  // Moving to another band lets a pin go; returning to the held band keeps it.
+  private focusStop(index: number): void {
+    this.roving.set(index);
+    this.host.nativeElement
+      .querySelector<SVGElement>(
+        `.category-stop[data-category-index="${index}"]`,
+      )
+      ?.focus();
+    if (this.cursorPinned() && this.activeIndex() !== index) {
+      this.cursorState.release();
+    }
+    this.cursorState.setIndex(index);
+  }
+
+  private keyboardFocusInside(): boolean {
+    const focused = this.host.nativeElement.ownerDocument.activeElement;
+
+    return (
+      this.keyboardStops() &&
+      focused !== null &&
+      this.host.nativeElement.contains(focused) &&
+      focused.closest('.category-stop, [data-mark-index]') !== null
+    );
+  }
+
+  // Ahead of the pin's own document-capture Escape, which would release the pin before the marker steps back.
+  private readonly stepBackOnEscape = this.listenForEscapeFromMarker();
+
+  private listenForEscapeFromMarker(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+    const document = this.host.nativeElement.ownerDocument;
+    const onKey = (event: KeyboardEvent): void => {
+      const target = event.target;
+      if (
+        event.key !== 'Escape' ||
+        !this.keyboardStops() ||
+        !this.cursorPinned() ||
+        !(target instanceof Element) ||
+        !this.host.nativeElement.contains(target) ||
+        target.closest('.category-stop') !== null ||
+        target.closest('[data-mark-index]') === null
+      ) {
+        return;
+      }
+      event.stopImmediatePropagation();
+      event.preventDefault();
+      this.pickedKey.set(null);
+      this.focusStop(this.focusedCategory());
+    };
+    document.addEventListener('keydown', onKey, true);
+    inject(DestroyRef).onDestroy(() =>
+      document.removeEventListener('keydown', onKey, true),
+    );
+  }
+
+  // Held by the canvas, as a pointer pin is: a press on the band then releases it instead of re-pinning.
+  private pinFromKeyboard(index: number, event: Event): void {
+    const canvas = this.canvasElement()?.nativeElement;
+    this.cursorState.pin(index, event, null, canvas);
+  }
+
+  private readingsTopDown(): readonly {
+    key: string;
+    entry: ChartAxisEntry;
+    element: Element;
+  }[] {
+    return (
+      [...this.tooltipSources()]
+        .flatMap(([sourceId, source]) => {
+          const elements = source.axisPointElements?.() ?? [];
+
+          return (source.axisEntries?.() ?? []).map((entry, index) => ({
+            key: `${sourceId}:${index}`,
+            entry,
+            element: elements[index] ?? null,
+          }));
+        })
+        // A mark without `interactive` has no tabindex and would swallow the focus call.
+        .filter(
+          (
+            reading,
+          ): reading is {
+            key: string;
+            entry: ChartAxisEntry;
+            element: Element;
+          } => reading.element?.hasAttribute('tabindex') ?? false,
+        )
+        .sort((a, b) => (a.entry.y ?? 0) - (b.entry.y ?? 0))
+    );
+  }
+
+  protected onChartKey(event: KeyboardEvent): void {
+    if (!this.keyboardStops() || !(event.target instanceof Element)) {
+      return;
+    }
+    const onStop = event.target.closest('.category-stop') !== null;
+    const fromMarker =
+      !onStop && event.target.closest('[data-mark-index]') !== null;
+    if (!onStop && !fromMarker) {
+      return;
+    }
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      // The pointer may have moved or pinned the cursor elsewhere, or Escape cleared it, since the stop took focus.
+      if (
+        this.cursorPinned() &&
+        this.activeIndex() !== this.focusedCategory()
+      ) {
+        this.cursorState.release();
+      }
+      this.cursorState.setIndex(this.focusedCategory());
+      const readings = this.readingsTopDown();
+      if (readings.length === 0) {
+        return;
+      }
+      const at = readings.findIndex(
+        (reading) => reading.key === this.pickedKey(),
+      );
+      const step = event.key === 'ArrowDown' ? 1 : readings.length - 1;
+      const next =
+        at < 0
+          ? event.key === 'ArrowDown'
+            ? 0
+            : readings.length - 1
+          : (at + step) % readings.length;
+      this.pickedKey.set(readings[next].key);
+      (readings[next].element as SVGElement).focus();
+
+      return;
+    }
+    if (!fromMarker) {
+      return;
+    }
+    if (event.key === 'Tab') {
+      // Moved before the browser acts, so Tab leaves from the stop: a marker sits before it in the DOM.
+      this.focusStop(this.focusedCategory());
+
+      return;
+    }
+    const next =
+      event.key === 'Escape'
+        ? this.focusedCategory()
+        : nextRovingIndex(
+            event.key,
+            this.focusedCategory(),
+            this.categories().length,
+          );
+    if (next !== null) {
+      event.preventDefault();
+      this.focusStop(next);
+    }
+  }
+
+  protected onStopKey(event: KeyboardEvent): void {
+    const current = this.focusedCategory();
+    const next =
+      event.key === 'ArrowUp' || event.key === 'ArrowDown'
+        ? null
+        : nextRovingIndex(event.key, current, this.categories().length);
+    if (next !== null) {
+      event.preventDefault();
+      this.focusStop(next);
+
+      return;
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (this.pinOnClickResolved()) {
+        this.pinFromKeyboard(current, event);
+      }
+    } else if (event.key === 'Escape') {
+      this.cursorState.release();
+      this.cursorState.leave();
+    }
+  }
 
   setActiveIndex(index: number): void {
     this.cursorState.setIndex(this.clampIndex(index));

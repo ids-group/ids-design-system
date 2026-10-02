@@ -94,8 +94,9 @@
     The hole as a fraction of the outer radius, 0.68 by default;
     <code class="t-mono-inline">
       0
-    </code> closes it and gives you a pie, centre
-    content included.
+    </code> closes it and gives you a solid pie,
+    with no centre content. Valid from 0 up to but not including 1; anything
+    else falls back to 0.68.
   </p>
 
   <div class="states is-cols-2">
@@ -187,7 +188,7 @@
       otherLabel
     </code>. Off by default, the tail is
     summed rather than dropped, and the slices you keep stay in the order you
-    gave them.
+    gave them. The summed slice takes palette slot 8.
   </p>
 
   <div class="states is-cols-2">
@@ -223,26 +224,37 @@
     <code class="t-mono-inline">
       interactive
     </code> turns on the hover tint and
-    makes each slice a control. The pointer cursor shows wherever a click does
-    something: on an <code class="t-mono-inline">interactive</code> slice, and
-    on any slice a click would hold.
+    makes each slice a control; the pointer cursor shows on an interactive
+    slice and on any slice a click would hold.
     <code class="t-mono-inline">
       sliceClicked
     </code> fires whether or not it is
-    set. <code class="t-mono-inline">tooltip</code> chooses whether a hovered
-    slice opens a panel — <code class="t-mono-inline">'item'</code> by default,
+    set. <code class="t-mono-inline">tooltip</code> is
+    <code class="t-mono-inline">
+      'item'
+    </code> by default,
     <code class="t-mono-inline">
       'none'
-    </code> to suppress it.
+    </code> suppresses the panel.
     <code class="t-mono-inline">
       dimOthers
-    </code> fades every slice but the one
-    the chart is answering: the hovered slice once the pointer has rested on it,
-    or the focused one. The ring turns into place as one object, with no
-    per-slice stagger: arcs share their edges, and arriving one at a time would
-    show the background through every seam. Hovering or focusing a legend item
-    reads as hovering the arc it names: the same tooltip opens over the ARC, and
-    the rest of the ring dims with it.
+    </code> fades every slice but the hovered
+    (after the pointer rests) or focused one. The ring turns into place as one
+    object, with no per-slice stagger, because arcs share edges. Hovering or
+    focusing a legend item opens the same tooltip over its arc and dims the
+    rest of the ring.
+  </p>
+
+  <p class="block-desc t-s">
+    The slices are one tab stop: arrow keys move between them (wrapping),
+    Home and End jump to the ends, Enter or Space fires
+    <code class="t-mono-inline">
+      sliceClicked
+    </code>. With a legend, focus
+    travels the legend items; at
+    <code class="t-mono-inline">
+      legend="none"
+    </code> it travels the arcs.
   </p>
 
   <div class="states is-cols-2">
@@ -336,17 +348,16 @@
     </code>, the default, renders no table at
     all; <code class="t-mono-inline">toggle</code> puts one behind a closed
     disclosure; <code class="t-mono-inline">visible</code> renders it open. The
-    table is the non-visual route to the numbers, so
+    table is the non-visual route to the numbers, so use
     <code class="t-mono-inline">
       none
-    </code> belongs only where the same
-    figures are already in a table on the page. Every share column here is on by
-    default, unlike the other charts:
+    </code> only where the same figures are
+    already in a table on the page.
     <code class="t-mono-inline">
       partOfWhole
-    </code> starts true on a ring,
-    because a ring IS parts of one whole. Set it false to drop the percentage
-    from the legend, the tooltip and the table alike.
+    </code> defaults to true here (false
+    on other charts); set it false to drop the percentage from the legend, the
+    tooltip and the table.
   </p>
 
   <div class="states is-cols-2">
@@ -476,17 +487,6 @@
         </div>
 
         <docs-chart-data-editor [(rows)]="nineSlices" />
-      </div>
-
-      <div class="state-cell">
-        <ds-pie-chart
-          dataTable="none"
-          error
-          [data]="specimenSlices()" />
-
-        <div class="state-cell-label">
-          Error
-        </div>
       </div>
     </div>
   </details>

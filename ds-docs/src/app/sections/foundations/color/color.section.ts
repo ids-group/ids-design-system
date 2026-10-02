@@ -49,16 +49,19 @@ export class ColorSection {
   box-shadow: var(--ds-field-focus-shadow);
 }
 
-.my-field input {
-  outline: 0;          /* does NOT cancel the base rule — it is a box-shadow */
+@media not (forced-colors: active) {
+  .my-field input:where(:focus-visible) {
+    outline: none;
+  }
 }
 
-.my-field input:where(:focus-visible) {
-  box-shadow: none;    /* this is what silences it */
+/* The same in Sass: */
+.my-field {
+  @include focus.owns-the-focus-ring('input');
 }
 
 /* Name the ONE control. A blanket takes the ring off the tab stops too:
-   .my-field :where(:focus-visible) { box-shadow: none }   <-- kills the clear button */`;
+   .my-field :where(:focus-visible) { outline: none }   <-- kills the clear button */`;
 
   protected readonly groups: readonly SemanticGroup[] = [
     {
@@ -151,7 +154,7 @@ export class ColorSection {
     },
     {
       label: 'Neutral',
-      desc: 'Backgrounds, borders, text, dividers. 13 stops cover tables, hover lanes and dark headers.',
+      desc: 'Backgrounds, borders, text, dividers. 13 stops cover tables, hover lanes and dark headers. Points at --cool-gray-*; <html data-neutrals="brand"> repoints it at --brand-gray-*, tinted by --primary-h (light theme only).',
       prefix: 'neutral',
       stops: [0, 50, 100, 150, 200, 300, 400, 500, 600, 700, 800, 900, 950],
     },
@@ -172,6 +175,12 @@ export class ColorSection {
       desc: 'Warnings, soft conflicts, pending state.',
       prefix: 'yellow',
       stops: [50, 100, 200, 300, 400, 500, 600, 700],
+    },
+    {
+      label: 'Secondary · Orange',
+      desc: 'The default theme maps --secondary onto this ramp.',
+      prefix: 'orange',
+      stops: [50, 100, 200, 300, 400, 500, 600, 700, 800],
     },
     {
       label: 'Sky',

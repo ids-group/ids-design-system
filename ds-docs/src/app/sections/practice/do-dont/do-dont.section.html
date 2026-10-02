@@ -22,8 +22,8 @@
       </div>
 
       <p class="t-s caption">
-        One primary action per view. Everything else is secondary or ghost —
-        Cancel never competes with Save.
+        One primary action per view. Everything else is tonal, outline or
+        ghost - Cancel never competes with Save.
       </p>
 
       <div class="stage is-row">
@@ -161,8 +161,10 @@
         content.
       </p>
 
-      <div class="stage">
-        <div class="row is-cozy">
+      <div
+        class="stage"
+        data-density="cozy">
+        <div class="row">
           <span>
             Project Alpha
           </span>
@@ -172,7 +174,7 @@
           </span>
         </div>
 
-        <div class="row is-cozy">
+        <div class="row">
           <span>
             Project Beta
           </span>
@@ -182,7 +184,7 @@
           </span>
         </div>
 
-        <div class="row is-cozy">
+        <div class="row">
           <span>
             Project Gamma
           </span>
@@ -207,8 +209,10 @@
         control, not the silent default.
       </p>
 
-      <div class="stage">
-        <div class="row is-tight">
+      <div
+        class="stage"
+        data-density="ultra-compact">
+        <div class="row">
           <span>
             Project Alpha
           </span>
@@ -218,7 +222,7 @@
           </span>
         </div>
 
-        <div class="row is-tight">
+        <div class="row">
           <span>
             Project Beta
           </span>
@@ -228,7 +232,7 @@
           </span>
         </div>
 
-        <div class="row is-tight">
+        <div class="row">
           <span>
             Project Gamma
           </span>
@@ -238,7 +242,7 @@
           </span>
         </div>
 
-        <div class="row is-tight">
+        <div class="row">
           <span>
             Project Delta
           </span>
@@ -248,7 +252,7 @@
           </span>
         </div>
 
-        <div class="row is-tight">
+        <div class="row">
           <span>
             Project Epsilon
           </span>
@@ -282,7 +286,7 @@
       </p>
 
       <div class="stage">
-        <div class="row is-cozy">
+        <div class="row">
           <span>
             Project Alpha
           </span>
@@ -294,7 +298,7 @@
           </ds-badge>
         </div>
 
-        <div class="row is-cozy">
+        <div class="row">
           <span>
             Project Beta
           </span>
@@ -489,21 +493,11 @@
       </p>
 
       <div class="stage">
-        <div class="mock-banner">
-          <ds-icon
-            name="warn"
-            [size]="16" />
-
-          <div>
-            <strong class="t-s">
-              Approval required
-            </strong>
-
-            <p class="t-s">
-              2 line items have unconfirmed budgets.
-            </p>
-          </div>
-        </div>
+        <ds-banner
+          variant="warning"
+          title="Approval required">
+          2 line items have unconfirmed budgets.
+        </ds-banner>
       </div>
     </div>
 

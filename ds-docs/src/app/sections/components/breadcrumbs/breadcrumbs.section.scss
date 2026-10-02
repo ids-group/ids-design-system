@@ -37,3 +37,9 @@
       --ds-breadcrumbs-padding: var(--space-1) var(--space-2);
       --ds-breadcrumbs-radius: var(--radius-md);
     }
+
+    .sized {
+      --ds-breadcrumbs-font-size: var(--font-size-m);
+      --ds-breadcrumbs-gap: var(--space-3);
+      --ds-breadcrumbs-label-max-width: 8ch;
+    }

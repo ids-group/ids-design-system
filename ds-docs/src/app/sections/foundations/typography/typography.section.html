@@ -14,11 +14,23 @@
   </h3>
 
   <p class="block-desc t-s">
-    Every utility class side-by-side. Headings are reserved for marketing
-    surfaces and large section titles. Default UI runs on
+    Every size role side-by-side. Headings carry the document hierarchy; a page
+    title is usually <code class="t-mono-inline">.t-h2</code>. Default UI runs on
     <code class="t-mono-inline">
       .t-s
     </code> (14).
+  </p>
+
+  <p class="block-desc t-s">
+    Each class reads
+    <code class="t-mono-inline">--ds-typography-&lt;role&gt;-font-weight</code>,
+    <code class="t-mono-inline">-font-size</code>,
+    <code class="t-mono-inline">-line-height</code>,
+    <code class="t-mono-inline">-font-family</code> (and
+    <code class="t-mono-inline">-letter-spacing</code> or
+    <code class="t-mono-inline">-color</code> where it sets them), so one axis
+    retunes in a scope:
+    <code class="t-mono-inline">.my-scope .t-h3 {{ '{' }} --ds-typography-h3-font-weight: var(--font-weight-bold) {{ '}' }}</code>.
   </p>
 
   <div class="ramp">
@@ -91,11 +103,12 @@
 
   <p class="block-desc t-s">
     JetBrains Mono for any literal value the operator might paste, search or
-    read aloud. <code class="t-mono-inline">.t-mono</code> for inline tokens;
-    <code class="t-mono-inline">
-      .t-mono-block
-    </code> wraps a code-snippet
-    style frame.
+    read aloud. <code class="t-mono-inline">.t-mono</code> for mono data in
+    running UI, <code class="t-mono-inline">.t-mono-inline</code> for an inline
+    token chip, <code class="t-mono-inline">.t-mono-block</code> for a snippet
+    frame. Ligatures are off; set
+    <code class="t-mono-inline">--ds-typography-mono-ligatures: normal</code> to
+    restore them.
   </p>
 
   <div class="mono-grid">
@@ -126,7 +139,7 @@ WHERE  project_id = 'alpha'
       </pre>
 
       <div class="t-caption">
-        13 / 1.6 / regular · pre-wrap, no clip
+        13 / 1.6 / regular · scrolls horizontally, no wrap
       </div>
     </div>
   </div>
@@ -170,4 +183,11 @@ WHERE  project_id = 'alpha'
       </code>
     </div>
   </div>
+
+  <p class="block-desc t-s">
+    Headings read <code class="t-mono-inline">--font-heading</code>,
+    <code class="t-mono-inline">.t-display</code> reads
+    <code class="t-mono-inline">--font-display</code>; both default to
+    <code class="t-mono-inline">--font-sans</code>.
+  </p>
 </docs-section>

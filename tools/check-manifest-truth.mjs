@@ -19,11 +19,12 @@ import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { previousBoundary, releaseTags } from './release-tags.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ONLY = process.argv
   .slice(2)
-  .find((arg) => /^(\d+\.\d+\.\d+|unreleased)$/.test(arg));
+  .find((arg) => /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)$/.test(arg));
 
 const git = (args) =>
   execFileSync('git', ['-C', ROOT, ...args], {
@@ -40,13 +41,7 @@ const tags = (() => {
   // tags present, half the manifests are unreadable, and the branch that says so had no coverage.
   if (process.env.DS_TRUTH_TAGS)
     return process.env.DS_TRUTH_TAGS.split(',').filter(Boolean);
-  try {
-    return git(['tag', '--list', 'v*', '--sort=v:refname'])
-      .split('\n')
-      .filter(Boolean);
-  } catch {
-    return [];
-  }
+  return releaseTags(ROOT);
 })();
 
 // One `git cat-file --batch` per tag, not one `git show` per file: a tag's surface is ~400 files
@@ -265,7 +260,8 @@ function buildSurface(files) {
         // puts THERE — `ds-table dsTableExport`. Without it the surface knows only the component's
         // own inputs, and an item whose `new` is a directive was accused of naming a member that
         // does not exist on the element it sits on.
-        const attribute = /^\s*\[([A-Za-z][A-Za-z0-9]*)\]\s*$/.exec(part);
+        const attribute =
+          /^\s*(?:[a-z][a-z0-9-]*)?\[([A-Za-z][A-Za-z0-9]*)\]\s*$/.exec(part);
         if (attribute) {
           directives.add(attribute[1]);
           continue;
@@ -418,7 +414,7 @@ function claims(value) {
     });
 
   if (/^[a-z][a-z0-9]*[A-Z][A-Za-z0-9]*$/.test(text))
-    return [{ kind: 'symbol', name: text, bare: false }];
+    return [{ kind: 'symbol', name: text, bare: false, member: true }];
 
   for (const match of text.matchAll(/\b[A-Z][A-Za-z0-9_]{3,}\b/g))
     found.push({ kind: 'symbol', name: match[0], bare: text === match[0] });
@@ -478,7 +474,15 @@ function resolves(surface, claim) {
     return surface.partials ? surface.partials.has(claim.name) : null;
   if (claim.kind === 'keyframes')
     return surface.keyframes ? surface.keyframes.has(claim.name) : null;
-  if (claim.kind === 'symbol') return surface.symbols.has(claim.name);
+  if (claim.kind === 'symbol')
+    return (
+      surface.symbols.has(claim.name) ||
+      (claim.member === true &&
+        (surface.directives?.has(claim.name) ||
+          [...surface.elements.values()].some((members) =>
+            members.has(claim.name),
+          )))
+    );
   if (claim.kind === 'class') return surface.classes.has(claim.name);
   if (claim.kind === 'element') return surface.elements.has(claim.name);
   if (claim.kind === 'member') {
@@ -521,7 +525,9 @@ function sweep() {
   const unresolved = [];
 
   const manifests = readdirSync(join(ROOT, 'migrations'))
-    .filter((f) => /^(\d+\.\d+\.\d+|unreleased)\.json$/.test(f))
+    .filter((f) =>
+      /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)\.json$/.test(f),
+    )
     .filter((f) => !ONLY || f === `${ONLY}.json`)
     .sort();
 
@@ -555,7 +561,7 @@ function sweep() {
       );
       continue;
     }
-    const prev = tags[index - 1];
+    const prev = draft ? tags.at(-1) : previousBoundary(tags, version);
     const before = surfaceAt(prev);
     const after = draft ? surfaceOfWorkingTree() : surfaceAt(`v${version}`);
     if (!before || !after) {

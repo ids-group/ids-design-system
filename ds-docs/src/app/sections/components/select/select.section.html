@@ -59,8 +59,6 @@
     </div>
 
     <div class="state-cell">
-      <!-- Live ds-select; pin-focus on the stage reads bare tokens from
-               the component's own .dropdown rules via ::ng-deep. -->
       <div class="state-cell-stage pin-focus">
         <ds-select
           label="Owner"
@@ -129,17 +127,11 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <div class="field-stack">
-          <ds-select
-            label="Tier"
-            placeholder="Choose tier…"
-            [options]="tierOptions"
-            [invalid]="true" />
-
-          <span class="field-hint error">
-            Pick one
-          </span>
-        </div>
+        <ds-select
+          label="Tier"
+          placeholder="Choose tier…"
+          error="Pick one"
+          [options]="tierOptions" />
       </div>
 
       <div class="state-cell-label">
@@ -149,16 +141,11 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <div class="field-stack">
-          <ds-select
-            label="Tier"
-            value="t2"
-            [options]="tierOptions" />
-
-          <span class="field-hint">
-            OK
-          </span>
-        </div>
+        <ds-select
+          label="Tier"
+          value="t2"
+          success="OK"
+          [options]="tierOptions" />
       </div>
 
       <div class="state-cell-label">
@@ -207,54 +194,8 @@
   <h3
     data-claude-design
     class="block-title t-h4">
-    Custom dropdown — &lt;ds-select&gt;
+    Open panel
   </h3>
-
-  <p class="block-desc t-s">
-    Alternative trigger that opens a fully styled popover via CDK Overlay. Use
-    when the showcase or product needs branded options, leading icons, or a
-    consistent panel across browsers. &lt;ds-select&gt; is the form-field
-    variant of the same CDK Overlay engine — use it inside Angular forms where
-    you need a label, required/optional markers, and grouped options.
-  </p>
-
-  <h4 class="sub-title t-overline">
-    Closed trigger · sizes
-  </h4>
-
-  <div class="grid-3">
-    <div class="cell-wrap">
-      <ds-select
-        size="sm"
-        placeholder="Pick a product · sm"
-        [options]="productOptions" />
-
-      <div class="caption t-overline">
-        sm
-      </div>
-    </div>
-
-    <div class="cell-wrap">
-      <ds-select
-        placeholder="Pick a product · md"
-        [options]="productOptions" />
-
-      <div class="caption t-overline">
-        md
-      </div>
-    </div>
-
-    <div class="cell-wrap">
-      <ds-select
-        size="lg"
-        placeholder="Pick a product · lg"
-        [options]="productOptions" />
-
-      <div class="caption t-overline">
-        lg
-      </div>
-    </div>
-  </div>
 
   <h4 class="sub-title t-overline">
     Open · static specimen
@@ -267,6 +208,7 @@
 
   <div class="preview-wrap open-specimen">
     <ds-select
+      ariaLabel="Product"
       value="hi"
       [staticPreview]="true"
       [options]="openSpecimenOptions" />
@@ -278,111 +220,39 @@
 
   <div class="preview-wrap">
     <ds-select
+      ariaLabel="Product"
       value="hi"
       [staticPreview]="true"
       [options]="iconOptions" />
   </div>
 
-  <h4 class="sub-title t-overline">
-    Trigger states
-  </h4>
-
-  <div class="states is-cols-4">
-    <div class="state-cell">
-      <div class="state-cell-stage">
-        <ds-select
-          placeholder="Pick a product…"
-          [options]="productOptions" />
-      </div>
-
-      <div class="state-cell-label">
-        Empty default
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <!-- Custom-dropdown variant: same ::ng-deep pin mechanism as above; hover/focus route through bare tokens here too. -->
-      <div class="state-cell-stage pin-hover">
-        <ds-select
-          placeholder="Pick a product…"
-          [options]="productOptions" />
-      </div>
-
-      <div class="state-cell-label">
-        Hover
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell-stage pin-focus">
-        <ds-select
-          value="hi"
-          [options]="productOptions" />
-      </div>
-
-      <div class="state-cell-label">
-        Focus
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell-stage is-overflow">
-        <ds-select
-          value="hi"
-          [staticPreview]="true"
-          [options]="productOptions" />
-      </div>
-
-      <div class="state-cell-label">
-        Open
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell-stage">
-        <ds-select
-          placeholder="Pick a product…"
-          [options]="productOptions"
-          [invalid]="true" />
-      </div>
-
-      <div class="state-cell-label">
-        Error
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell-stage">
-        <ds-select
-          value="hi"
-          [options]="productOptions"
-          [disabled]="true" />
-      </div>
-
-      <div class="state-cell-label">
-        Disabled
-      </div>
-    </div>
-  </div>
-
-  <h4 class="sub-title t-overline">
-    Long list · live
-  </h4>
+  <h3 class="block-title t-h4">
+    Option groups
+  </h3>
 
   <p class="block-desc t-s">
-    Open the trigger — the panel caps at 320px and scrolls internally.
+    <code class="t-mono-inline">options</code> also takes
+    <code class="t-mono-inline">SelectOptionGroup</code> entries
+    (<code class="t-mono-inline">label</code>,
+    <code class="t-mono-inline">options</code>, optional
+    <code class="t-mono-inline">disabled</code>), mixed with flat options;
+    <code class="t-mono-inline">isSelectOptionGroup()</code> tells them apart.
+    <code class="t-mono-inline">loading</code> shows a spinner in the panel and
+    sets <code class="t-mono-inline">aria-busy</code>;
+    <code class="t-mono-inline">dsEmptyTemplate</code> replaces the "no
+    options" row. The projected
+    <code class="t-mono-inline">dsOptionTemplate</code>,
+    <code class="t-mono-inline">dsGroupLabelTemplate</code>,
+    <code class="t-mono-inline">dsPanelHeaderTemplate</code> and
+    <code class="t-mono-inline">dsPickerTrigger</code> are demoed in
+    <a href="#section-multi-select">Multi-select</a>.
   </p>
 
   <div class="grid-3">
-    <div class="cell-wrap">
-      <ds-select
-        placeholder="Pick a region…"
-        [options]="regionOptions" />
-
-      <div class="caption t-overline">
-        15 options · scrolls
-      </div>
-    </div>
+    <ds-select
+      label="Team"
+      placeholder="Pick a team…"
+      [options]="groupedOptions" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -390,11 +260,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      hint
-    </code> renders a helper line below the
-    control. Paired with <code class="t-mono-inline">[invalid]="true"</code> it
-    switches to an error style with <code>role="alert"</code>.
+    <code class="t-mono-inline">hint</code> renders a helper line;
+    <code class="t-mono-inline">error</code> replaces it with an error line
+    announced via <code>role="alert"</code>.
   </p>
 
   <div class="grid-3">
@@ -470,37 +338,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    Typing a letter on the closed trigger jumps to the first option starting
-    with it and commits, the way a native
-    <code class="t-mono-inline">
-      &lt;select&gt;
-    </code> does; repeating the
-    letter cycles. With the panel open the same keys move the cursor, and the
-    active row scrolls itself into view — try <kbd>ArrowDown</kbd> through this
-    list, which is longer than the panel.
-    <code class="t-mono-inline">
-      scrollActiveIntoView="false"
-    </code> hands the
-    scroll position back to you.
+    Typing a letter on the closed trigger selects the first option starting
+    with it, like a native <code class="t-mono-inline">&lt;select&gt;</code>;
+    repeating it cycles. With the panel open the same keys move the cursor and
+    the active row scrolls into view;
+    <code class="t-mono-inline">scrollActiveIntoView="false"</code> hands
+    scrolling back to you.
   </p>
 
   <p class="block-desc t-s">
-    <kbd>
-      PageDown
-    </kbd> and <kbd>PageUp</kbd> move ten rows — the native
-    <code class="t-mono-inline">
-      &lt;select&gt;
-    </code> step, a fixed number
-    rather than a measured screenful so the jump does not change with the
-    panel's height. <kbd>Home</kbd> and <kbd>End</kbd> go to the first and last
-    option a reader can actually pick, skipping a disabled one.
-  </p>
-
-  <p class="block-desc t-s">
-    The scroll follows the KEYBOARD only. The rows set the active row on hover
-    too, and scrolling for that would pull a half-visible row up under the
-    pointer while you were reading with the mouse — try hovering the bottom row
-    here: nothing jumps.
+    <kbd>PageDown</kbd>/<kbd>PageUp</kbd> move ten rows;
+    <kbd>Home</kbd>/<kbd>End</kbd> go to the first/last enabled option. Hover
+    sets the active row but never scrolls.
   </p>
 
   <div class="demo-panel">
@@ -546,25 +395,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      clear()
-    </code> empties the value from a
-    template reference — a "reset filters" button, a form the app clears itself.
-    All three pickers have it now;
-    <code class="t-mono-inline">
-      ds-autocomplete
-    </code> was the only one
-    before, so an app with its own reset had to write the empty value by hand
-    and guess what empty means for each control. It deliberately does not move
-    focus; where the host moves on after clearing, follow it with
-    <code class="t-mono-inline">
-      blur()
-    </code>, the counterpart of
-    <code class="t-mono-inline">
-      focus()
-    </code> that every field control has.
-    It drops focus from whichever part of the control holds it and leaves an
-    open panel alone.
+    <code class="t-mono-inline">clear()</code> empties the value from a
+    template reference (a reset-filters button) and closes an open panel,
+    without moving focus. Follow it with
+    <code class="t-mono-inline">blur()</code> where the host moves on; it drops
+    focus from the control and leaves an open panel alone.
   </p>
 
   <div class="demo-panel">
@@ -579,7 +414,7 @@
     <ds-button
       size="sm"
       variant="ghost"
-      (clicked)="resettable.clear()">
+      (pressed)="resettable.clear()">
       Reset
     </ds-button>
   </div>

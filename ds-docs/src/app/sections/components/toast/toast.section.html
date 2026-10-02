@@ -4,13 +4,16 @@
   title="Toast"
   [apiKeys]="['toast:ToastRegionComponent']">
   <span lede>
-    Auto-dismissing notification anchored to top-right of the viewport. Stacks
-    vertically. Trigger imperatively via
-    <code class="t-mono-inline">
-      ToastService.show()
-    </code> — one variant per
-    system event severity.
+    Auto-dismissing notification in a vertical stack, one variant per event severity. Trigger it
+    with <code class="t-mono-inline">ToastService.show()</code>.
   </span>
+
+  <p class="block-desc t-s">
+    The stack sits top-right by default. Move it with
+    <code class="t-mono-inline">provideDsConfig({{ '{' }} toast: {{ '{' }} position: {{ '{' }}
+      horizontalPosition, verticalPosition, offset {{ '}' }} {{ '}' }} {{ '}' }})</code>; the
+    newest toast sits nearest the anchor edge.
+  </p>
 
   <h3
     data-claude-design
@@ -51,15 +54,15 @@
   </h3>
 
   <p class="block-desc t-s">
-    Click a button to trigger a toast. It dismisses itself after 5 s, and the
-    clock stops while the pointer or the keyboard is inside the stack — a toast
-    being read is not a toast that has been read. Pass
-    <code class="t-mono-inline">
-      durationMs
-    </code> to change it, or
-    <code class="t-mono-inline">
-      0
-    </code> to keep it until dismissed.
+    A toast dismisses itself after 5 s; the clock stops while the pointer or keyboard is inside
+    the stack. Pass <code class="t-mono-inline">durationMs</code> to change it, or
+    <code class="t-mono-inline">0</code> to keep it until dismissed.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">show()</code> returns a <code class="t-mono-inline">ToastRef</code>
+    with <code class="t-mono-inline">dismiss()</code>;
+    <code class="t-mono-inline">dismissAll()</code> clears the stack.
   </p>
 
   <div class="demo">
@@ -105,14 +108,9 @@
     <code class="t-mono-inline">
       action: {{ '{' }} label, handler {{ '}' }}
     </code>
-    to <code class="t-mono-inline">ToastService.show()</code> to render a
-    trailing action button (e.g. Undo). An action toast
-    <strong>
-      does not auto-dismiss
-    </strong> and is always dismissible: the
-    button is the only way to take the action, and the region is the last child
-    of <code class="t-mono-inline">body</code>, so a keyboard user cannot cross
-    a page to reach it inside five seconds.
+    to <code class="t-mono-inline">show()</code> for a trailing button (e.g. Undo). An action toast
+    never auto-dismisses and is always dismissible, since a keyboard user cannot reach the region
+    (last child of <code class="t-mono-inline">body</code>) within five seconds.
   </p>
 
   <div class="demo">
@@ -133,11 +131,8 @@
     <code class="t-mono-inline">
       ToastService.promise()
     </code> shows a loading
-    toast while the promise is pending and updates it in-place to
-    <strong>
-      success
-    </strong> or <strong>error</strong> when it settles (60 %
-    chance of success in this demo).
+    toast while the promise is pending and turns it into success or error when it settles. This
+    demo succeeds 60 % of the time.
   </p>
 
   <div class="demo">
@@ -156,32 +151,22 @@
   </h3>
 
   <p class="block-desc t-s">
-    Announcements do <strong>not</strong> ride the toast element. A live region
-    has to exist before its text arrives, and a toast is created with its
-    message already in it — which announces nothing in NVDA or JAWS. So
-    <code class="t-mono-inline">
-      ToastService
-    </code> speaks through the CDK
-    <code class="t-mono-inline">
-      LiveAnnouncer
-    </code>: errors and warnings
-    assertively, the rest politely, and a burst is read as one announcement.
+    <code class="t-mono-inline">ToastService</code> announces through the CDK
+    <code class="t-mono-inline">LiveAnnouncer</code>, not the toast element: a live region created
+    with its text already in it is silent in NVDA and JAWS. Errors and warnings are assertive, the
+    rest polite, and a burst is one announcement.
   </p>
 
   <p class="block-desc t-s">
-    Two consequences. A
-    <code class="t-mono-inline">
-      &lt;ds-toast&gt;
-    </code> you place yourself
-    carries no <code class="t-mono-inline">role</code> or
-    <code class="t-mono-inline">
-      aria-live
-    </code> and is silent to a reader —
-    it is a specimen, not an event, so route anything that should be announced
-    through the service. And the stack stays above a modal, drawer or confirm
-    opened after it: <code class="t-mono-inline">--layer-toast</code> cannot do
-    that on its own, because overlays live in the browser's top layer where
-    z-index does not apply.
+    A <code class="t-mono-inline">&lt;ds-toast&gt;</code> placed by hand has no
+    <code class="t-mono-inline">role</code> or <code class="t-mono-inline">aria-live</code> and is
+    silent, so route real events through the service.
+  </p>
+
+  <p class="block-desc t-s">
+    The service also keeps the stack above a modal, drawer or confirm opened after it.
+    <code class="t-mono-inline">--layer-toast</code> cannot, because overlays live in the top layer
+    where z-index does not apply.
   </p>
 
   <h3
@@ -192,8 +177,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    A region holding four toasts at <code>maxVisible: 3</code>: newest on top,
-    and a <code>+1</code> strip for the one still queued.
+    A region holding four toasts at <code>maxVisible: 3</code>: newest on top, and a
+    <code>+1</code> strip for the one still queued.
+    <code class="t-mono-inline">toast.showQueueCount: false</code> hides the strip.
   </p>
 
   <div class="states">
@@ -207,19 +193,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Set
-    <code class="t-mono-inline">
-      toast.maxVisible
-    </code> through
-    <code class="t-mono-inline">
-      provideDsConfig
-    </code> to cap concurrent
-    toasts. Extras queue and appear as earlier ones dismiss. A region shows
-    <code class="t-mono-inline">
-      maxVisible
-    </code> at once, five by default —
-    fire the button below twice and the sixth onwards wait their turn. Change it
-    there, or pass <code class="t-mono-inline">0</code> for no cap at all.
+    <code class="t-mono-inline">toast.maxVisible</code> in
+    <code class="t-mono-inline">provideDsConfig</code> caps concurrent toasts (default 5,
+    <code class="t-mono-inline">0</code> for no cap). Extras queue and appear as earlier ones
+    dismiss; fire the button twice to see the queue.
   </p>
 
   <div class="demo">

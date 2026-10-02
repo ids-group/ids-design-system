@@ -4,8 +4,8 @@
   title="Tabs"
   [apiKeys]="['tabs:TabComponent']">
   <span lede>
-    Switch among peer panels. Two visual variants — line for primary navigation,
-    pills for compact filters. Optional icon and count chip per tab.
+    Switch among peer panels. Line for primary navigation, pills for compact filters; each tab
+    takes an optional icon and count chip.
   </span>
 
   <h3
@@ -15,15 +15,13 @@
   </h3>
 
   <p class="block-desc t-s">
-    Line — primary navigation. Pills — compact filter row. Pills look like a
-    <code class="t-mono-inline">
-      ds-segmented
-    </code> control but are real tabs
-    (they own content panels, with <code class="t-mono-inline">tablist</code>
-    semantics); for a value/view toggle with no panels, use
-    <code class="t-mono-inline">
-      ds-segmented
-    </code> instead.
+    Pills look like <code class="t-mono-inline">ds-segmented</code> but are real tabs that own
+    panels, with <code class="t-mono-inline">tablist</code> semantics. For a value toggle with no
+    panels, use <code class="t-mono-inline">ds-segmented</code>.
+  </p>
+
+  <p class="block-desc t-s">
+    Arrow keys move and activate (disabled tabs skipped), Home/End jump to the ends.
   </p>
 
   <div class="variant-row">
@@ -99,8 +97,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    A trailing count chip, a leading glyph, and a disabled tab — composed on the
-    line variant.
+    A trailing count chip, a leading icon and a disabled tab on the line variant.
   </p>
 
   <div class="variant-row">
@@ -144,11 +141,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    When <code class="t-mono-inline">scrollable</code> is set the tab strip
-    clips to its bounds and scrolls horizontally. While tabs lie beyond an edge,
-    an arrow on that side turns the strip by a page; a strip that fits shows no
-    arrows. The active tab is always scrolled into view. Works for both
-    variants.
+    <code class="t-mono-inline">scrollable</code> clips the strip and scrolls it horizontally,
+    with a page-turn arrow on each side that has hidden tabs. The active tab is kept in view.
+    Both variants.
   </p>
 
   <div class="variant-row">
@@ -309,16 +304,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    When <code class="t-mono-inline">closable</code> is set each tab shows a
-    close button. Clicking it emits
-    <code class="t-mono-inline">
-      tabClosed
-    </code> with the tab's
-    <code class="t-mono-inline">
-      value
-    </code> (or label as fallback). The host
-    is responsible for removing the tab. Closing a tab does not change the
-    active index.
+    <code class="t-mono-inline">closable</code> gives each tab a close button that emits
+    <code class="t-mono-inline">tabClosed</code> with the tab's
+    <code class="t-mono-inline">value</code>, else its label. The host removes the tab; the
+    active index does not change. Delete on a focused tab closes it too.
   </p>
 
   <div class="variant-row">
@@ -346,10 +335,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Setting <code class="t-mono-inline">orientation="vertical"</code> places the
-    tab list in a column beside the panel. The active indicator runs along the
-    right edge. Arrow-key navigation follows the axis (Up / Down moves between
-    tabs).
+    <code class="t-mono-inline">orientation="vertical"</code> puts the tab list in a column
+    beside the panel, with the active indicator on its right edge.
   </p>
 
   <div class="variant-row">
@@ -387,10 +374,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    When <code class="t-mono-inline">lazy</code> is set, each tab's content is
-    instantiated only the first time that tab is activated, then kept alive (not
-    destroyed on switch). Without <code class="t-mono-inline">lazy</code>
-    only the active panel renders (default).
+    <code class="t-mono-inline">lazy</code> creates a panel on its first activation and keeps it
+    alive after. Without it only the active panel renders.
   </p>
 
   <div class="variant-row">
@@ -404,7 +389,7 @@
 
         <ds-tab label="Second">
           <p class="t-s muted pad">
-            Not created until you switch here — then stays mounted.
+            Not created until you switch here, then stays mounted.
           </p>
         </ds-tab>
 
@@ -425,7 +410,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Every line-tab state side-by-side. Static specimens — no interaction needed.
+    Every line-tab state side by side.
   </p>
 
   <div class="states is-cols-4">
@@ -508,7 +493,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Same matrix on the pills variant — note the filled active chip.
+    The same states on the pills variant.
   </p>
 
   <div class="states is-cols-4">
@@ -596,13 +581,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Set
-    <code class="t-mono-inline">
-      urlParam
-    </code> and the strip keeps the active
-    tab in a query parameter, so it survives F5, a shared link and the Back
-    button. The input both switches the behaviour on and names the parameter;
-    leave it out and the URL is untouched.
+    <code class="t-mono-inline">urlParam="tab"</code> keeps the active tab in
+    <code class="t-mono-inline">?tab=&lt;name&gt;</code>, so it survives reload, sharing and Back.
+    Leave it out and the URL is untouched; outside a routed context it is inert.
   </p>
 
   <pre class="t-mono-block"><code>&lt;ds-tabs urlParam="tab"&gt;
@@ -613,84 +594,24 @@
 &lt;!-- second tab active --&gt;  ?tab=activity</code></pre>
 
   <p class="block-desc t-s">
-    The names come from each tab's
-    <code class="t-mono-inline">
-      value
-    </code>, falling back to a SLUG of its
-    <code class="t-mono-inline">
-      label
-    </code> — kebab, lowercased, diacritics
-    dropped, so "License Verification Status" gives
-    <code class="t-mono-inline">
-      ?tab=license-verification-status
-    </code> rather
-    than a percent-encoded sentence. That is not the identifier
-    <code class="t-mono-inline">
-      tabClosed
-    </code> emits: closing still carries
-    the raw label, because a host matches it against its own list. And a slug is
-    still derived from copy, so renaming a tab still breaks saved links —
-    <code class="t-mono-inline">
-      value
-    </code> is the only fix for that. Three
-    decisions are baked in. <strong>Names, not indices:</strong>
-
-    <code class="t-mono-inline">
-      ?tab=1
-    </code> would silently repoint every old
-    link the moment a tab is inserted.
-    <strong>
-      The first tab writes no parameter and every write replaces:
-    </strong>
-    a pristine screen keeps a clean address, and flipping tabs does not fill the
-    Back button with entries to walk one at a time.
-    <strong>
-      An unknown or missing name lands on the first tab
-    </strong>
-    rather than throwing — a URL is user input, and a stale bookmark should
-    still open the screen.
+    Names come from each tab's <code class="t-mono-inline">value</code>, else a slug of its
+    <code class="t-mono-inline">label</code> ("License Verification Status" gives
+    <code class="t-mono-inline">license-verification-status</code>). Set
+    <code class="t-mono-inline">value</code> so renaming a tab does not break links. Without
+    <code class="t-mono-inline">value</code>, <code class="t-mono-inline">tabClosed</code> emits
+    the raw label, not the slug.
   </p>
 
   <p class="block-desc t-s">
-    Outside a routed context the input is inert, and a strip that never sets it
-    costs exactly what it did before the input existed: nothing router-shaped is
-    resolved until you set it — no DI lookup, and no subscription to the query
-    parameters. Setting it later switches both on; clearing it drops the
-    subscription again. It also pairs with
-    <code class="t-mono-inline">
-      ds-app-layout
-    </code> — the write is
-    query-only, and that layout's
-    <code class="t-mono-inline">
-      pathChanged
-    </code> ignores query-only
-    navigations, so switching tabs cannot trip its scroll reset. There is
-    deliberately no live demo here: it would write
-    <code class="t-mono-inline">
-      ?tab=
-    </code> into the docs' own address while
-    the sidebar rewrites the path from the scroll position, and the two would
-    read as fighting.
+    The first tab writes no parameter, every write replaces the history entry, and an unknown
+    name opens the first tab. Query-only writes do not trip
+    <code class="t-mono-inline">ds-app-layout</code>'s
+    <code class="t-mono-inline">pathChanged</code> scroll reset.
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      One strip per parameter name.
-    </strong> Two
-    <code class="t-mono-inline">
-      ds-tabs
-    </code> sharing a name on the same
-    screen erase each other — both write the same parameter, and a reload
-    restores whichever wrote last. It is the easy mistake to make when turning
-    this on across an app, because <code class="t-mono-inline">"tab"</code> is
-    the obvious name every time, so a dev-mode warning names the clash. Nested
-    or sibling strips need distinct names —
-    <code class="t-mono-inline">
-      tab
-    </code> and
-    <code class="t-mono-inline">
-      subtab
-    </code>.
+    Use one strip per parameter name (<code class="t-mono-inline">tab</code>,
+    <code class="t-mono-inline">subtab</code>); a dev-mode warning names a clash.
   </p>
 
   <h3 class="block-title t-h4">
@@ -698,26 +619,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      rememberLastTab
-    </code> stores the active tab
-    per path in <code class="t-mono-inline">sessionStorage</code>, so returning
-    to a record reopens where you left it. Off by default, and it only does
-    anything alongside <code class="t-mono-inline">urlParam</code>, which
-    supplies the names — a remembered INDEX would repoint the moment a tab is
-    inserted, for the same reason the parameter carries names rather than
-    numbers.
-  </p>
-
-  <p class="block-desc t-s">
-    <strong>
-      A link always wins.
-    </strong> The parameter is read first; memory
-    only fills the gap the first tab deliberately leaves, since that case writes
-    no parameter at all. Tab one is remembered too — otherwise going back to it
-    would be forgotten, and the next visit would reopen the tab before it.
-    Session storage rather than local, so tomorrow is a fresh visit rather than
-    a stale one, and every access is guarded: Safari in private mode throws on
-    write, and a strip that cannot store simply stops remembering.
+    <code class="t-mono-inline">rememberLastTab</code> (needs
+    <code class="t-mono-inline">urlParam</code>) reopens the last tab per path from
+    <code class="t-mono-inline">sessionStorage</code>. A link always wins over memory, and storage
+    failures are ignored.
   </p>
 </docs-section>

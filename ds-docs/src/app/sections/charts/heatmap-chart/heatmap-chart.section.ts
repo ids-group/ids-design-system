@@ -39,6 +39,11 @@ const SMALL_ROWS: readonly HeatmapChartRow[] = [
   { id: 'q2', label: 'Q2', data: [22, 7, 15] },
 ];
 
+const LATER_ROWS: readonly HeatmapChartRow[] = [
+  { id: 'q3', label: 'Q3', data: [31, 24, 38] },
+  { id: 'q4', label: 'Q4', data: [27, 35, 20] },
+];
+
 @Component({
   selector: 'section-charts-heatmap-chart',
   standalone: true,
@@ -54,6 +59,7 @@ export class HeatmapChartSection {
   protected readonly partialRows = PARTIAL_ROWS;
   protected readonly smallColumns = ['North', 'Central', 'South'];
   protected readonly smallRows = SMALL_ROWS;
+  protected readonly laterRows = LATER_ROWS;
 
   protected readonly lastClicked = signal<string>('nothing yet');
 

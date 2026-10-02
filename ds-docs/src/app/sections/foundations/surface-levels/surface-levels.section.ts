@@ -16,7 +16,7 @@ const SURFACES: readonly SurfaceRow[] = [
   {
     token: '--surface-default',
     name: 'Default',
-    desc: 'Cards, tables, modals — the standard content surface.',
+    desc: 'Cards, tables, sheets, toolbars - the standard content surface.',
   },
   {
     token: '--surface-secondary',
@@ -24,19 +24,29 @@ const SURFACES: readonly SurfaceRow[] = [
     desc: 'Hover lanes, table heads, code blocks, addon backgrounds.',
   },
   {
+    token: '--surface-muted',
+    name: 'Muted',
+    desc: 'Pressed lanes, tracks, skeleton, chip fills.',
+  },
+  {
     token: '--surface-overlay',
     name: 'Overlay',
-    desc: 'Popovers, dropdowns, toast region — anything CDK-portaled.',
+    desc: 'Modals, drawers, popovers, dropdowns, toasts.',
   },
   {
     token: '--surface-inverted',
     name: 'Inverted',
-    desc: 'Bulk-action bar, dark callout cards, tooltip background.',
+    desc: 'Bulk-action bar, dark callouts.',
+  },
+  {
+    token: '--surface-inverted-hover',
+    name: 'Inverted hover',
+    desc: 'Hover on an inverted surface (bulk-action bar buttons).',
   },
   {
     token: '--surface-tint',
     name: 'Tint',
-    desc: 'Brand-tinted callouts (banners, page-footer save state).',
+    desc: 'Brand-tinted selection: active list/tree rows, empty-state badge; follows ds-color via --accent-surface-tint.',
   },
   {
     token: '--surface-disabled',

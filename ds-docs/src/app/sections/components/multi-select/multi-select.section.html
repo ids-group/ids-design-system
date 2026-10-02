@@ -12,11 +12,10 @@
     'empty-template',
   ]">
   <span lede>
-    Chip-based multi-value selector with search filtering, keyboard navigation,
-    and optional overflow collapse. For a set too large to scan — where typing
-    is how you narrow it — reach for autocomplete instead; this one shows the
-    options as a checkbox list, so a reader sees the whole choice at once and
-    what is not selected.
+    Chip-based multi-value selector with search filtering, keyboard navigation
+    and overflow collapse. It shows the options as a checkbox list, so the whole
+    choice is visible at once; for a set too large to scan, where typing is how
+    you narrow it, use autocomplete.
   </span>
 
   <docs-nonmodal-note />
@@ -60,15 +59,11 @@
   <p class="block-desc t-s">
     <code>
       maxVisibleChips
-    </code> defaults to <code>"fit"</code>: the trigger
-    keeps as many chips as it is wide and collapses the rest into a "+N more"
-    pill, re-splitting on resize. A <strong>number</strong> is a CEILING — at
-    most that many, and fewer when the trigger is too narrow to hold them beside
-    the count and still fit what comes after; it measures for the same reason
-    the default does. Only <code>maxVisibleChips="all"</code> skips measuring:
-    it shows every chip and lets the trigger grow a line per selection. Same
-    input and same default on <code>ds-autocomplete</code>, so the two
-    multi-value pickers do not diverge.
+    </code> defaults to <code>"fit"</code>: as many chips as
+    fit, the rest behind "+N more", re-split on resize. A number is a ceiling -
+    fewer when the trigger is too narrow. <code>"all"</code> shows every chip
+    and grows the trigger. Same input and default on
+    <code>ds-autocomplete</code>.
   </p>
 
   <div class="demo-panel">
@@ -124,7 +119,13 @@
   </p>
 
   <div class="demo-panel">
-    <div style="display: flex; gap: var(--space-3); align-items: flex-start">
+    <div
+      style="
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+        align-items: flex-start;
+      ">
       <ds-multi-select
         data-testid="ms-labels"
         triggerDisplay="labels"
@@ -165,6 +166,8 @@
       DS_CONFIG.picker.searchable
     </code> to give the
     whole app one threshold and override it per panel.
+    <code class="t-mono-inline">searchPlaceholder</code> sets the filter
+    input's placeholder (default <code>DS_INTL.picker.filterPlaceholder</code>).
   </p>
 
   <p class="block-desc t-s">
@@ -346,16 +349,25 @@
     <code class="t-mono-inline">
       width="content"
     </code> hugs the trigger's own
-    content and takes that width as the panel's floor instead — so a short
-    trigger no longer forces a panel too narrow to read.
+    content and takes that width as the panel's floor.
     <code class="t-mono-inline">
       --ds-dropdown-panel-min-width
     </code> and
     <code class="t-mono-inline">
       --ds-dropdown-panel-max-width
     </code> bound the
-    panel in that mode. An option label too long for the panel is cut with an
-    ellipsis and shows in full in a tooltip on hover; one that fits shows none.
+    panel in that mode. A label too long for the panel is cut with an ellipsis
+    and shows in full in a tooltip on hover; one that fits gets no tooltip.
+  </p>
+
+  <p class="block-desc t-s">
+    The panel is portaled: <code class="t-mono-inline">panelClass</code> is the
+    only way to style one instance, and it reads
+    <code class="t-mono-inline">--ds-multi-select-panel-bg-color</code>,
+    <code class="t-mono-inline">--ds-multi-select-check-bg-color</code>, the
+    <code class="t-mono-inline">--ds-dropdown-panel-*</code> tokens and the
+    shared <code class="t-mono-inline">--ds-option-*</code> selected and check
+    colours.
   </p>
 
   <div style="display: flex; gap: var(--space-4); align-items: flex-start">
@@ -382,8 +394,15 @@
     <code class="t-mono-inline">
       hint
     </code> renders a helper line below the
-    control. Paired with <code class="t-mono-inline">[invalid]="true"</code> it
-    switches to an error style with <code>role="alert"</code>.
+    control; <code class="t-mono-inline">error</code> replaces it with error
+    text announced via <code>role="alert"</code>, and
+    <code class="t-mono-inline">warning</code> /
+    <code class="t-mono-inline">success</code> show their own states.
+    <code class="t-mono-inline">[invalid]</code> paints the error border
+    without text. <code class="t-mono-inline">size</code> takes
+    <code>sm</code> · <code>md</code> · <code>lg</code> and falls back to
+    <code>DS_CONFIG.control.size</code>; <code>required</code> and
+    <code>optional</code> mark the label.
   </p>
 
   <div class="demo-panel">
@@ -411,33 +430,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    An option carries an optional
+    An option's optional
     <code class="t-mono-inline">
       icon
-    </code>, rendered before its label at
-    16px. Same field and same markup as
+    </code> renders before its label at 16px -
+    the same
+    <code class="t-mono-inline">
+      DsOption
+    </code> field as
     <code class="t-mono-inline">
       ds-select
     </code> and
     <code class="t-mono-inline">
       ds-autocomplete
-    </code> — all three read one
-    <code class="t-mono-inline">
-      DsOption
-    </code> shape, so a field added for
-    one picker is not missing from the other two. Use it for a set the reader
-    recognises by glyph, like a priority scale; it is decoration for anything
-    else, and an icon per row costs scanning speed.
-  </p>
-
-  <p class="block-desc t-s">
-    The chips stay text-only. A glyph inside a chip eats the width the label
-    needs, and the chips are already the part of the trigger that runs out of
-    room —
-    <code class="t-mono-inline">
-      maxVisibleChips
-    </code> exists for exactly
-    that.
+    </code>. Use it for a set recognised by glyph (a priority scale). Chips stay
+    text-only: they are the part of the trigger that runs out of room.
   </p>
 
   <div class="demo-panel">
@@ -461,11 +468,12 @@
     <code class="t-mono-inline">
       filterWith="none"
     </code> stops the panel
-    narrowing the list a second time — the options you hand back are the ones
-    rendered. <code class="t-mono-inline">loading</code> replaces the empty row
-    with a spinner, because "No matches" during a request in flight is a lie.
-    The panel also emits <code class="t-mono-inline">opened</code>, which is
-    where the first fetch belongs.
+    narrowing the list again: the options you hand back are the ones rendered.
+    <code class="t-mono-inline">loading</code> replaces the empty row with a
+    spinner while a request is in flight, and
+    <code class="t-mono-inline">dsEmptyTemplate</code> replaces the No-matches
+    row. The panel emits <code class="t-mono-inline">opened</code> (where the
+    first fetch belongs) and <code class="t-mono-inline">closed</code>.
   </p>
 
   <div class="demo-panel">
@@ -528,7 +536,7 @@
           <ds-button
             size="sm"
             variant="ghost"
-            (clicked)="slotLabels.set([])">
+            (pressed)="slotLabels.set([])">
             Clear all
           </ds-button>
         </ng-template>
@@ -578,18 +586,13 @@
   </h3>
 
   <p class="block-desc t-s">
-    The last three form-contract members that were
-    <code class="t-mono-inline">
-      ds-select
-    </code>'s alone.
     <code class="t-mono-inline">
       readOnly
     </code> takes focus without opening,
     <code class="t-mono-inline">
       clearable
-    </code> shows the same clear button
-    the other fields use, and <code class="t-mono-inline">name</code> reaches
-    the trigger.
+    </code> shows the shared clear button,
+    and <code class="t-mono-inline">name</code> reaches the trigger.
   </p>
 
   <div class="demo-panel">

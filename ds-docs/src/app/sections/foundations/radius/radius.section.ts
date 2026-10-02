@@ -29,6 +29,11 @@ const RADII: readonly RadiusStop[] = [
     desc: 'Menus, popovers, dropdowns, cards, modals, drawers, toasts, empty-state icons',
   },
   {
+    name: 'xl',
+    value: '16px',
+    desc: 'Reserved, no current consumer',
+  },
+  {
     name: '2xl',
     value: '24px',
     desc: 'Heroic surfaces — reserved, no current consumer',
@@ -43,35 +48,28 @@ const RADII: readonly RadiusStop[] = [
 interface RadiusRole {
   readonly token: string;
   readonly resolves: string;
-  readonly uses: number;
   readonly desc: string;
 }
 
-// Occurrence counts measured across the library 2026-09-01. They are in the table
-// because they answer the question the scale cannot: which role a surface actually takes.
 const ROLES: readonly RadiusRole[] = [
   {
     token: '--ds-radius-inner',
     resolves: '--radius-sm',
-    uses: 37,
     desc: 'Nested INSIDE a control — a tick, a kbd cap, a focus halo, a segment',
   },
   {
     token: '--ds-radius-control',
     resolves: '--radius-md',
-    uses: 26,
     desc: 'The control itself — button, field, tag, tooltip, segmented, search',
   },
   {
     token: '--ds-radius-panel',
     resolves: '--radius-lg',
-    uses: 16,
     desc: 'A surface that CONTAINS controls — card, menu, popover, modal, drawer, toast',
   },
   {
     token: '--ds-radius-pill',
     resolves: '--radius-pill',
-    uses: 4,
     desc: 'Round by meaning, not by size — avatar, badge, radio, progress track',
   },
 ];

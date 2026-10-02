@@ -11,7 +11,10 @@
   margin: 0;
 }
 
-@include chart-frame.message-box(240px, true);
+:host {
+  --_chart-message-height: 240px;
+}
+
 @include chart-frame.pin-reset;
 
 .skeleton {

@@ -13,21 +13,23 @@ import { DocsLocaleDemo } from './locale-demo.component';
 export class ThemingSection {
   // Code samples live as strings (rendered via interpolation) so braces / @ / < >
   // are literal text and don't trip Angular's ICU / interpolation parser.
-  protected readonly osFollowSnippet = `const mq = matchMedia('(prefers-color-scheme: dark)');
-const apply = () =>
-  document.documentElement.setAttribute('data-theme', mq.matches ? 'dark' : 'light');
-apply();
-mq.addEventListener('change', apply);`;
+  protected readonly osFollowSnippet = `// app.config.ts
+import { provideDsTheme } from '@ids-group-ltd/ids-design-system';
+
+providers: [provideDsTheme({ followSystem: true })]`;
 
   protected readonly activationSnippet = `:root                    { @include light.theme; }   // default
 :root[data-theme='dark'] { @include dark.theme; }     // opt-in — complete set, fully wins`;
 
-  protected readonly brandSnippet = `// _brand-acme.scss — authored on the light theme
+  protected readonly brandSnippet = `// _brand-acme.scss - on <html>, authored on the light theme
 [data-brand='acme'] {
-  --blue-600: #6b3fd4;     // brand hue → --primary and friends retint
-  --primary:  #6b3fd4;     // (optional) pin the exact stop
+  // Palette channels: the --blue-* ramp, --primary and every --primary-h/s/l
+  // reader (focus rings, field halos, links, dark tints) recompose from them.
+  --blue-h: 258;
+  --blue-s: 63%;
+  --blue-l: 54%;
 }
-// only if the brand also needs a dark skin:
+// a role override needs the dark selector too, or the dark block wins:
 [data-theme='dark'][data-brand='acme'] { --primary: #8a63e8; }`;
 
   protected readonly squareSnippet = `// A square brand — three roles.
@@ -36,14 +38,13 @@ mq.addEventListener('change', apply);`;
   --ds-radius-control: 0;   // buttons, fields, triggers
   --ds-radius-panel: 0;     // menus, modals, dropdown panels
   // Not --radius-pill: switch tracks, avatars and status dots are round
-  // by shape, not by style. Add --radius-sm/md/lg/xl: 0 as well if you
-  // also want square focus rings.
+  // by shape, not by style.
 }`;
 
   protected readonly squarePartialSnippet = `// Square the controls, keep panels rounded — this is what the ROLES are for.
 :root {
-  --ds-radius-control: 0;   // buttons, fields, triggers — 21 components
-  --ds-radius-panel: 12px;  // menus, modals, dropdown panels — 10 components
+  --ds-radius-control: 0;   // buttons, fields, triggers
+  --ds-radius-panel: 12px;  // menus, modals, dropdown panels
 }`;
 
   protected readonly consumerSnippet = `// styles.scss — light out of the box, dark opt-in via data-theme
@@ -65,7 +66,7 @@ providers: [
     badge: { withDot: true },
     modal: { dividers: false },
     picker: { searchable: 12 },            // threshold: filter row past 12 options
-    toast: { maxVisible: 3, position: { verticalPosition: 'bottom' } },
+    toast: { maxVisible: 3, showQueueCount: false, position: { verticalPosition: 'bottom' } },
     field: {
       reserveMessage: true,
       // Per state, independent of each other: error / warning / success carry a

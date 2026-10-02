@@ -12,7 +12,7 @@ import {
   existsSync,
 } from 'node:fs';
 import { entryPoints, internalSymbols } from './lib-entry-points.mjs';
-import { join, dirname, basename } from 'node:path';
+import { join, dirname, basename, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -171,12 +171,29 @@ function hasNumberAttribute(init) {
   return hasTransform(init, 'numberAttribute');
 }
 
+// The name a template binds: `input(x, { alias: 'readonly' })` is `[readonly]`, not the property.
+function inputAlias(init) {
+  for (const arg of init.arguments) {
+    if (!ts.isObjectLiteralExpression(arg)) continue;
+    for (const prop of arg.properties) {
+      if (
+        ts.isPropertyAssignment(prop) &&
+        prop.name.getText() === 'alias' &&
+        ts.isStringLiteral(prop.initializer)
+      ) {
+        return prop.initializer.text;
+      }
+    }
+  }
+  return null;
+}
+
 function propFromMember(member, sf, aliases) {
   if (!ts.isPropertyDeclaration(member) || !member.initializer) return null;
   const info = callKind(member.initializer);
   if (!info) return null;
   const init = member.initializer;
-  const name = member.name.getText(sf);
+  const name = inputAlias(init) ?? member.name.getText(sf);
   const typeNode = init.typeArguments?.[0];
   const typeArg = typeNode?.getText(sf) ?? '';
   const boolAttr = hasBooleanAttribute(init);
@@ -368,6 +385,13 @@ const aliases = collectAliasNodes();
 const { map: classIndex } = indexClasses(allTsFiles);
 const editorial = JSON.parse(readFileSync(EDITORIAL, 'utf8'));
 const importPathDefault = editorial.$importPathDefault;
+const entryPointsDeepestFirst = entryPoints().sort(
+  (a, b) => b.directory.length - a.directory.length,
+);
+const entryPointOf = (file) =>
+  entryPointsDeepestFirst.find((entry) =>
+    file.startsWith(entry.directory + sep),
+  )?.moduleId ?? importPathDefault;
 
 const exported = exportedClassNames();
 // A guard, not politeness: if the barrels ever stop parsing, dropping every
@@ -417,6 +441,7 @@ for (const file of files) {
       status: ed.status ?? 'stable',
       importName: ed.importName ?? node.name.text,
       importPath: ed.importPath ?? importPathDefault,
+      entryPoint: entryPointOf(file),
       summary: ed.summary ?? null,
       inputs: props.filter((p) => p.kind !== 'output').map(finalize),
       outputs: props.filter((p) => p.kind === 'output').map(finalize),

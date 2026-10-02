@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { ButtonComponent } from 'ds/button';
 import { DsPanelFooterTemplateDirective } from 'ds/components';
 import { SelectComponent } from 'ds/select';
-import type { SelectOption } from 'ds/select';
+import type { SelectItem, SelectOption } from 'ds/select';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 
@@ -70,12 +70,22 @@ export class SelectSection {
     { label: 'Tier 3', value: 't3' },
   ];
 
-  protected readonly productOptions: SelectOption[] = [
-    { label: 'All Products', value: 'all' },
-    { label: 'Hospital Indemnity', value: 'hi' },
-    { label: 'Critical Illness', value: 'ci' },
-    { label: 'Accident', value: 'acc' },
-    { label: 'Life Insurance', value: 'life' },
+  protected readonly groupedOptions: SelectItem[] = [
+    { label: 'Unassigned', value: 'none' },
+    {
+      label: 'Engineering',
+      options: [
+        { label: 'Platform', value: 'platform' },
+        { label: 'Mobile', value: 'mobile' },
+      ],
+    },
+    {
+      label: 'Operations',
+      options: [
+        { label: 'Support', value: 'support' },
+        { label: 'Logistics', value: 'logistics' },
+      ],
+    },
   ];
 
   protected readonly openSpecimenOptions: SelectOption[] = [

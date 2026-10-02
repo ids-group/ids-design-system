@@ -4,14 +4,17 @@
   title="Link">
   <span lede>
     Anchor styling via the <code class="t-mono-inline">.link</code> CSS class.
-    No Angular wrapper — apply directly to any
+    No Angular wrapper: apply it to any
     <code class="t-mono-inline">
       &lt;a&gt;
     </code> or
     <code class="t-mono-inline">
       &lt;button&gt;
-    </code>. Five modifiers cover
-    quiet, inline, standalone (bold), small and large sizes.
+    </code>. Modifiers: quiet, inline, standalone (bold), plain (underlined
+    only on hover and focus) and the sizes <code>xs</code> · <code>sm</code> ·
+    <code>lg</code>. Recolour with <code>--ds-link-color</code>; hover and
+    active derive from it unless <code>--ds-link-color-hover</code> /
+    <code>--ds-link-color-active</code> are set.
   </span>
 
   <h3
@@ -54,6 +57,11 @@
     </a>
   </div>
 
+  <p class="block-desc t-s">
+    Disable with <code>aria-disabled="true"</code>; a native
+    <code>disabled</code> gets no disabled styling.
+  </p>
+
   <h3
     data-claude-design
     class="block-title t-h4">
@@ -80,6 +88,18 @@
     </a>
 
     <a
+      class="link plain"
+      href="javascript:void(0)">
+      Plain (underline on hover)
+    </a>
+
+    <a
+      class="link xs"
+      href="javascript:void(0)">
+      Extra-small link
+    </a>
+
+    <a
       class="link sm"
       href="javascript:void(0)">
       Small link
@@ -100,8 +120,8 @@
 
   <p class="block-desc t-s">
     Use <code class="t-mono-inline">.link.inline</code> when the anchor sits
-    inside body text — it inherits font-weight/size from the surrounding
-    paragraph. For example, read the
+    inside body text: it inherits font weight and size from the paragraph.
+    For example, read the
     <a
       class="link inline"
       href="javascript:void(0)">
@@ -121,21 +141,20 @@
     <code class="t-mono-inline">
       variant="text"
     </code> off in favour of this
-    class, and anything that acts rather than navigates has to be a
+    class, and an action that does not navigate must be a
     <code class="t-mono-inline">
       &lt;button&gt;
-    </code> — so the class resets
-    the browser's button chrome itself. It did not until 2026-08-11: every
-    consumer who took that advice wrote the same padding/border/background/font
-    reset by hand. Both of these are the same class, and the button below
-    matches the anchor beside it on every measured property except
+    </code>, so <code>.link</code> resets the browser's button chrome
+    (padding, border, background, font). A
+    <code class="t-mono-inline">
+      &lt;button class="link"&gt;
+    </code> matches the anchor except
     <code class="t-mono-inline">
       display
     </code>, which stays
     <code class="t-mono-inline">
       inline-block
-    </code> so a standalone one lays
-    out predictably.
+    </code>.
   </p>
 
   <p class="block-desc t-s">

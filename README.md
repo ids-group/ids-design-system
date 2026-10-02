@@ -84,6 +84,19 @@ import { ButtonComponent } from '@ids-group-ltd/ids-design-system';
 export class ExampleComponent {}
 ```
 
+**Inside a `@defer` block, import the deferred component from its own entry point**, which each
+component page on the docs site shows beside its selector:
+
+```ts
+import { TableComponent } from '@ids-group-ltd/ids-design-system/components/table';
+```
+
+Imported from the package root, a component in a `@defer` block stays in the initial bundle and
+nothing is deferred ([angular/angular#52554](https://github.com/angular/angular/issues/52554)). On a
+page with an eager `ds-button` and a deferred `ds-table` and `ds-line-chart`, the initial bundle is
+175 kB gzip with root imports and 110 kB with entry-point imports. Everywhere else, including a route
+behind `loadComponent`, the package root costs nothing extra.
+
 ## License
 
 MIT © IDS Group Ltd

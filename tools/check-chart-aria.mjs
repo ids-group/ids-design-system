@@ -31,8 +31,9 @@ function ariaOf(template) {
       ...attributes.matchAll(
         /(\[?attr\.)?(role|aria-[\w-]+)\]?\s*=\s*"([^"]*)"/g,
       ),
-    ].map(([, bound, name, value]) =>
-      `${name}=${bound ? `{${squash(value)}}` : squash(value)}`,
+    ].map(
+      ([, bound, name, value]) =>
+        `${name}=${bound ? `{${squash(value)}}` : squash(value)}`,
     );
     if (bindings.length) {
       found.push(`${tag}: ${bindings.join(', ')}`);
@@ -42,9 +43,28 @@ function ariaOf(template) {
   return found;
 }
 
+// A chart on `figure[dsChartStates]` renders the shared frame's error and empty states, so their
+// roles belong to that chart's snapshot.
+const statesFrame = ariaOf(
+  templateOf(
+    join(
+      ROOT,
+      'src',
+      'lib',
+      'components',
+      'chart-tooltip',
+      'chart-states.component',
+    ),
+  ),
+);
+
 const snapshot = {};
 for (const { name, base } of chartComponents()) {
-  snapshot[name] = ariaOf(templateOf(base));
+  const template = templateOf(base);
+  snapshot[name] = [
+    ...(template.includes('dsChartStates') ? statesFrame : []),
+    ...ariaOf(template),
+  ];
 }
 
 if (update) {

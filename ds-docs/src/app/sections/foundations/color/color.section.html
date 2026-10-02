@@ -3,7 +3,7 @@
   eyebrow="Foundations"
   title="Colour">
   <span lede>
-    Three layers: raw ramps (50&ndash;950) &rarr; semantic role tokens (surface,
+    Three layers: raw ramps &rarr; semantic role tokens (surface,
     border, text, status) &rarr; component tokens. Components only consume role
     tokens, so a brand re-skin propagates without code changes.
   </span>
@@ -17,17 +17,14 @@
   <p class="block-desc t-s">
     The <code class="t-mono-inline">--secondary</code> family is the DS's
     secondary colour role &mdash; a complementary tone for non-interactive
-    emphasis (active rails, decorative indicators, accent pills). Defaults at
-    <code class="t-mono-inline">
-      :root
-    </code> alias
-    <code class="t-mono-inline">
-      --secondary
-    </code> to
+    emphasis (active rails, decorative indicators, accent pills). It defaults to
+    the orange family, distinct from
     <code class="t-mono-inline">
       --primary
-    </code> so unbranded apps render
-    unchanged; per-brand overrides introduce a true secondary hue. Secondary is
+    </code>; override
+    <code class="t-mono-inline">
+      --secondary-h/s/l
+    </code> to reskin it. Secondary is
     <em>
       not
     </em> a second CTA &mdash; primary action stays on
@@ -272,11 +269,8 @@
     <code class="t-mono-inline">
       --primary
     </code>, so these examples already
-    read apart from the blue accent. Under
-    <code class="t-mono-inline">
-      [data-brand="acme"]
-    </code>
-
+    read apart from the blue accent. In this docs app's preview brand (Tweaks
+    panel, Acme)
     <code class="t-mono-inline">
       --secondary
     </code> moves to the red family.
@@ -465,25 +459,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    Outer halo is composed from brand HSL channels &mdash; a re-skin of
+    The outer band composes from brand HSL channels, so a re-skin of
     <code class="t-mono-inline">
       --primary-h
-    </code> propagates straight into
-    focus state. Inner ring reads
+    </code> reaches focus state. The inner band reads
     <code class="t-mono-inline">
-      --surface-canvas
-    </code> so it stays visible
-    across themes.
+      --surface-default
+    </code>.
   </p>
 
   <div class="halo-stage">
     <div class="halo-cell">
       <div class="halo-stage-well">
-        <button
-          class="halo-demo is-ring"
-          type="button">
+        <span class="halo-demo is-ring">
           Focus ring
-        </button>
+        </span>
       </div>
 
       <div class="halo-cell-label">
@@ -492,18 +482,16 @@
         </div>
 
         <code class="t-mono-inline">
-          2px canvas + 4px brand
+          2px surface + 4px brand
         </code>
       </div>
     </div>
 
     <div class="halo-cell">
       <div class="halo-stage-well">
-        <button
-          class="halo-demo is-field"
-          type="button">
+        <span class="halo-demo is-field">
           Field halo
-        </button>
+        </span>
       </div>
 
       <div class="halo-cell-label">
@@ -519,11 +507,9 @@
 
     <div class="halo-cell">
       <div class="halo-stage-well">
-        <button
-          class="halo-demo is-error"
-          type="button">
+        <span class="halo-demo is-error">
           Danger ring
-        </button>
+        </span>
       </div>
 
       <div class="halo-cell-label">
@@ -532,18 +518,16 @@
         </div>
 
         <code class="t-mono-inline">
-          2px canvas + 4px danger
+          2px surface + 4px danger
         </code>
       </div>
     </div>
 
     <div class="halo-cell">
       <div class="halo-stage-well is-inverted">
-        <button
-          class="halo-demo is-inverted"
-          type="button">
+        <span class="halo-demo is-inverted">
           Inverted
-        </button>
+        </span>
       </div>
 
       <div class="halo-cell-label">
@@ -563,159 +547,77 @@
   </h3>
 
   <p class="block-desc t-s">
-    The two families above are the default split — a soft halo on fields, a
-    crisp double ring on controls. Set
-    <code class="t-mono-inline">
-      data-focus
-    </code> on
-    <code class="t-mono-inline">
-      &lt;html&gt;
-    </code> to change it everywhere at
-    once: <code class="t-mono-inline">ring</code> puts the double ring on fields
-    too, <code class="t-mono-inline">field</code> puts the halo on controls,
-    <code class="t-mono-inline">
-      edge
-    </code> is a hairline flush against the
-    element, and <code class="t-mono-inline">outline</code> swaps the shadow for
-    a real <code class="t-mono-inline">outline</code>. Omit the attribute and
-    nothing changes. It works because 20 components already resolve through the
-    <code class="t-mono-inline">
-      --ds-field-focus-shadow
-    </code> /
-    <code class="t-mono-inline">
-      --ds-control-focus-shadow
-    </code> roles, so the
-    switch only has to retarget two roles rather than reach every component.
+    Fields take a halo (<code class="t-mono-inline">--ds-field-focus-shadow</code>);
+    everything else takes a <code class="t-mono-inline">--focus-ring-width</code>
+    outline in <code class="t-mono-inline">--focus-ring-color</code>. Set
+    <code class="t-mono-inline">data-focus</code> on
+    <code class="t-mono-inline">&lt;html&gt;</code> to change it everywhere:
+    <code class="t-mono-inline">ring</code> gives fields the double ring,
+    <code class="t-mono-inline">edge</code> makes both flush (offset 0, 1px field
+    ring). Omit it and nothing changes.
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      Anything focusable that styles nothing itself still gets a ring.
-    </strong>
-    The library emits one base rule —
-    <code class="t-mono-inline">
-      :where(:focus-visible)
-    </code> with
-    <code class="t-mono-inline">
-      --ds-control-focus-shadow
-    </code> — at zero
-    specificity, so a component rule and your own CSS both out-rank it. Without
-    it a close button inside <code class="t-mono-inline">ds-alert</code>, a link
-    in projected content, or a plain
-    <code class="t-mono-inline">
-      &lt;button&gt;
-    </code> of yours fell through to
-    the browser default, which in Chrome is a black
-    <code class="t-mono-inline">
-      outline: auto
-    </code> — visibly foreign beside
-    the DS ring. Audited across the docs: 247 focusable elements on one page,
-    none left without an indicator.
+    Anything focusable that styles nothing itself still gets a ring:
+    <code class="t-mono-inline">focus.emit-rules</code> emits
+    <code class="t-mono-inline">:where(:focus-visible)</code> with the outline at
+    zero specificity, so a component rule or your own CSS out-ranks it. Without
+    it a close button in <code class="t-mono-inline">ds-alert</code>, a link in
+    projected content or your own <code class="t-mono-inline">&lt;button&gt;</code>
+    falls back to the browser's <code class="t-mono-inline">outline: auto</code>.
   </p>
 
   <h3 class="block-title t-h4">
-    Building your own ringed shell? Silence the control inside — and name it
+    Building a ringed shell: silence the one control inside
   </h3>
 
   <p class="block-desc t-s">
-    <strong>
-      The base rule is a box-shadow, so
-      <code class="t-mono-inline">
-        outline: 0
-      </code> cannot cancel it.
-    </strong>
-    If your composite control paints a ring on
-    <code class="t-mono-inline">
-      :focus-within
-    </code> — a field box, a
-    segmented row, a toolbar cell — the element inside it still gets the base
-    ring, and the result is two: a tight one on the control and the halo on the
-    box. This is the trap the DS itself fell into twice, in
-    <code class="t-mono-inline">
-      ds-input
-    </code> and
-    <code class="t-mono-inline">
-      ds-textarea
-    </code>, both found by measuring in
-    a browser rather than by reading the styles.
-  </p>
-
-  <p class="block-desc t-s">
-    <strong>
-      Silence one named control, never the whole box.
-    </strong>
-    A box-wide reset also hits the tab stops living inside — a clear button, a
-    password toggle, a stepper arrow — and then tabbing from the field to that
-    button changes nothing on screen, so a keyboard user cannot tell what has
-    focus. That is a WCAG 2.4.7 failure, and it is the same defect seen from the
-    other side. The DS ships
-    <code class="t-mono-inline">
-      focus.owns-the-focus-ring($control)
-    </code> for
-    its own shells and fails its build when one is missing.
+    A composite that rings on <code class="t-mono-inline">:focus-within</code>
+    (field box, segmented row, toolbar cell) must turn the base outline off on its
+    one inner control, or two rings show. Name that control, never the whole box:
+    a box-wide reset also removes the ring from inner tab stops (clear button,
+    password toggle, stepper), a WCAG 2.4.7 failure. The DS shells use
+    <code class="t-mono-inline">focus.owns-the-focus-ring($control)</code> or
+    <code class="t-mono-inline">focus.ring-for($control)</code>.
   </p>
 
   <pre class="t-mono-block">{{ shellRingSnippet }}</pre>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      outline
-    </code> is the one style that also
-    emits a rule, because an outline cannot be carried by a box-shadow token; it
-    is written at zero specificity with
-    <code class="t-mono-inline">
-      :where()
-    </code> so a component or your own CSS
-    still wins. Separately, and regardless of which style is set: under
-    <code class="t-mono-inline">
-      forced-colors
-    </code> every focused element
-    gets a <code class="t-mono-inline">CanvasText</code> outline, because
-    Windows High Contrast DROPS box-shadow and a shadow-only indicator
-    disappears there completely. Consumers who
+    Under <code class="t-mono-inline">forced-colors</code> every focused element
+    gets a <code class="t-mono-inline">CanvasText</code> outline, because Windows
+    High Contrast drops box-shadow, so the silencing rule stays out of that mode.
+    Consumers who
     <code class="t-mono-inline">
       &#64;use
     </code> the DS partials à la carte
-    need <code class="t-mono-inline"> &#64;use 'styles/focus' </code> to get
-    either; the bundled <code class="t-mono-inline">styles/ds</code> entry
-    already includes it.
+    need <code class="t-mono-inline"> &#64;use 'styles/focus' as focus; </code>
+    and then <code class="t-mono-inline"> &#64;include focus.emit-rules; </code>
+    in their one global stylesheet to get these rules; the bundled
+    <code class="t-mono-inline">styles/ds</code> entry already includes them.
   </p>
 
   <h3 class="block-title t-h4">
-    A clipping ancestor eats the ring —
+    A clipping ancestor eats the ring:
     <code class="t-mono-inline">
       data-focus="inset"
-    </code> is the answer
+    </code>
   </h3>
 
   <p class="block-desc t-s">
-    Every style above draws OUTSIDE the border box, so an ancestor with
-    <code class="t-mono-inline">
-      overflow: hidden
-    </code> cuts the indicator
-    away and leaves the element focusable with nothing to see. That ancestor is
-    not exotic: clipping a card is how a full-bleed child stays inside a rounded
-    corner, and <code class="t-mono-inline">ds-card</code> with
-    <code class="t-mono-inline">
-      padding="none"
-    </code> invites it.
-    <code class="t-mono-inline">
-      inset
-    </code> draws the same two rings INSIDE
-    the box instead, where nothing can clip them.
+    Every style above draws outside the border box, so an ancestor with
+    <code class="t-mono-inline">overflow: hidden</code> (a
+    <code class="t-mono-inline">ds-card</code> with
+    <code class="t-mono-inline">padding="none"</code> clipping a full-bleed
+    child) cuts the indicator away.
+    <code class="t-mono-inline">inset</code> pulls the control outline inside
+    (negative offset) and turns the field halo into an inset double ring.
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      It is the one style not pinned to
-      <code class="t-mono-inline">
-        &lt;html&gt;
-      </code>.
-    </strong>
-    A clip is local, so put the attribute on the clipping element and the two
-    roles inherit into everything below it — Tab into both wells to see it.
-    Setting it brand-wide would move every ring inside its control, which is a
-    different look, not a fix.
+    It is the one style not pinned to
+    <code class="t-mono-inline">&lt;html&gt;</code>: put it on the clipping
+    element and everything inside inherits it. Tab into both wells to see it.
   </p>
 
   <div class="halo-stage">

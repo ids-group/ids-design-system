@@ -67,7 +67,7 @@
      from it on :root would ignore one set on a single chart. */
   --chart-bg-color: var(--surface-default);
 
-  /* FRAME: inside a card, drop it with --ds-chart-frame-border-width: 0 and --ds-chart-frame-padding: 0. */
+  /* FRAME: inside a card use frame="none" / DS_CONFIG.chart.frame; these tokens size the frame when it is on. */
   --chart-frame-border-color: var(--border-default);
   --chart-frame-border-width: var(--border-width-default);
   --chart-frame-radius: var(--radius-lg);

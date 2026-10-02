@@ -18,6 +18,7 @@
     "ChartDataTable": "charts/chart",
     "ChartLegend": "charts/line-chart",
     "ChartTooltipPanel": "charts/line-chart",
+    "ChartUnpin": "charts/chart",
     "ColumnChart": "charts/column-chart",
     "Container": "components/layout-primitives",
     "DescriptionItem": "components/description-list",

@@ -1,199 +1,192 @@
 <figure
   class="pie-chart"
-  [style.--_pie-chart-hole-fraction]="hole()">
-  @if (activeMark.pinned()) {
-    <button
-      class="pin-reset"
-      type="button"
-      (click)="activeMark.release()">
-      {{ intl().chart.unpin }}
-    </button>
-  }
+  dsChartStates
+  [style.--_pie-chart-hole-fraction]="hole()"
+  [pinned]="activeMark.pinned()"
+  [caption]="caption()"
+  [error]="error()"
+  [errorText]="errorTextResolved()"
+  [pending]="loading() || !renderReady()"
+  [empty]="isEmpty()"
+  [emptyText]="emptyTextResolved()"
+  [skeleton]="skeleton"
+  [body]="body"
+  [message]="message"
+  (release)="activeMark.release()">
+</figure>
 
-  @if (caption()) {
-    <figcaption>
-      {{ caption() }}
-    </figcaption>
-  }
+<ng-template #skeleton>
+  <div
+    class="skeleton"
+    aria-hidden="true"
+    [class.legend-bottom]="legend() === 'bottom'">
+    <ds-skeleton
+      circle
+      width="var(--_pie-chart-size)"
+      height="var(--_pie-chart-size)"
+      [shimmer]="loading()" />
 
-  @if (error()) {
-    <div class="empty">
-      <div
-        class="empty-ring"
-        aria-hidden="true">
+    @if (legend() !== 'none') {
+      <div class="skeleton-legend">
+        @for (placeholder of skeletonRows(); track $index) {
+          <ds-skeleton
+            height="var(--_pie-chart-legend-row-height)"
+            [shimmer]="loading()" />
+        }
       </div>
+    }
+  </div>
+</ng-template>
 
-      <p
-        class="empty-text is-error"
-        role="status">
-        {{ errorTextResolved() }}
-      </p>
-    </div>
-  } @else if (loading() || !renderReady()) {
+<ng-template #body>
+  <div
+    class="chart"
+    [attr.role]="interactive() ? 'group' : 'img'"
+    [class.legend-bottom]="legend() === 'bottom'"
+    [attr.aria-label]="accessibleName()"
+    [dsChartTooltip]="tooltipContext()"
+    [dsChartTooltipSwatches]="defaults.tooltipSwatches()"
+    [dsChartTooltipPinned]="activeMark.pinned()"
+    [dsChartTooltipOrigin]="activeMark.origin()"
+    [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
     <div
-      class="skeleton"
-      aria-hidden="true"
-      [class.legend-bottom]="legend() === 'bottom'">
-      <ds-skeleton
-        circle
-        width="var(--_pie-chart-size)"
-        height="var(--_pie-chart-size)"
-        [shimmer]="loading()" />
+      class="ring"
+      [class.ring-outline]="total() === 0">
+      <svg
+        class="ring-svg"
+        [class.dims-others]="dimOthers()"
+        [attr.aria-hidden]="ringCarriesTheRoute() ? null : true"
+        [attr.viewBox]="viewBox">
+        @for (entry of slices(); track entry.slice.id; let index = $index) {
+          <path
+            class="slice"
+            [class.interactive]="interactive()"
+            [class.pins]="defaults.pinOnClick()"
+            [class.is-active]="activeMark.index() === index"
+            [class.is-pinned]="
+              activeMark.pinned() && activeMark.index() === index
+            "
+            [class.is-dimmed]="isDimmed(index)"
+            [class.focusable]="ringCarriesTheRoute()"
+            [attr.d]="entry.path"
+            [style.fill]="entry.color"
+            [attr.role]="ringCarriesTheRoute() ? 'button' : null"
+            [attr.tabindex]="
+              ringCarriesTheRoute()
+                ? index === roving.tabStop()
+                  ? 0
+                  : -1
+                : null
+            "
+            [attr.data-mark-index]="index"
+            [attr.aria-label]="ringCarriesTheRoute() ? entryLabel(entry) : null"
+            (pointerenter)="activeMark.enter(index, $event)"
+            (pointerleave)="activeMark.leave()"
+            (focus)="onMarkFocus(index, $event)"
+            (blur)="activeMark.leave()"
+            (keydown)="onMarkNavigation($event, index, '.ring-svg')"
+            (click)="onMarkClick(entry.slice, index, $event)"
+            (keydown.enter)="onSliceKey(entry.slice, $event)"
+            (keydown.space)="onSliceKey(entry.slice, $event)">
+          </path>
+        }
+      </svg>
 
-      @if (legend() !== 'none') {
-        <div class="skeleton-legend">
-          @for (placeholder of skeletonRows(); track $index) {
-            <ds-skeleton
-              height="var(--_pie-chart-legend-row-height)"
-              [shimmer]="loading()" />
+      @if (hole() > 0) {
+        <div class="center">
+          <span class="center-value">
+            {{ resolvedCenterValue() }}
+          </span>
+
+          @if (centerLabel()) {
+            <span class="center-label">
+              {{ centerLabel() }}
+            </span>
           }
         </div>
       }
-    </div>
-  } @else if (isEmpty()) {
-    <div class="empty">
-      <div
-        class="empty-ring"
-        aria-hidden="true">
-      </div>
 
-      <p class="empty-text">
-        {{ emptyTextResolved() }}
-      </p>
-    </div>
-  } @else {
-    <div
-      class="chart"
-      [attr.role]="interactive() ? 'group' : 'img'"
-      [class.legend-bottom]="legend() === 'bottom'"
-      [attr.aria-label]="accessibleName()"
-      [dsChartTooltip]="tooltipContext()"
-      [dsChartTooltipSwatches]="defaults.tooltipSwatches()"
-      [dsChartTooltipPinned]="activeMark.pinned()"
-      [dsChartTooltipOrigin]="activeMark.origin()"
-      [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
-      <div
-        class="ring"
-        [class.ring-outline]="total() === 0">
-        <svg
-          class="ring-svg"
-          [class.dims-others]="dimOthers()"
-          [attr.aria-hidden]="ringCarriesTheRoute() ? null : true"
-          [attr.viewBox]="viewBox">
-          @for (entry of slices(); track entry.slice.id; let index = $index) {
-            <path
-              class="slice"
-              [class.interactive]="interactive()"
-              [class.pins]="defaults.pinOnClick()"
-              [class.is-active]="activeMark.index() === index"
-              [class.is-pinned]="
-                activeMark.pinned() && activeMark.index() === index
-              "
-              [class.is-dimmed]="isDimmed(index)"
-              [class.focusable]="ringCarriesTheRoute()"
-              [attr.d]="entry.path"
-              [style.fill]="entry.color"
-              [attr.role]="ringCarriesTheRoute() ? 'button' : null"
-              [attr.tabindex]="
-                ringCarriesTheRoute()
-                  ? index === roving.tabStop()
-                    ? 0
-                    : -1
-                  : null
-              "
-              [attr.data-mark-index]="index"
-              [attr.aria-label]="
-                ringCarriesTheRoute() ? entryLabel(entry) : null
-              "
-              (pointerenter)="activeMark.enter(index, $event)"
-              (pointerleave)="activeMark.leave()"
-              (focus)="onMarkFocus(index, $event)"
-              (blur)="activeMark.leave()"
-              (keydown)="onMarkNavigation($event, index, '.ring-svg')"
-              (click)="onMarkClick(entry.slice, index, $event)"
-              (keydown.enter)="onSliceKey(entry.slice, $event)"
-              (keydown.space)="onSliceKey(entry.slice, $event)">
-            </path>
-          }
-        </svg>
-
-        @if (hole() > 0) {
-          <div class="center">
-            <span class="center-value">
-              {{ resolvedCenterValue() }}
-            </span>
-
-            @if (centerLabel()) {
-              <span class="center-label">
-                {{ centerLabel() }}
-              </span>
-            }
-          </div>
-        }
-
-        @if (pinnedEntry(); as entry) {
-          <span
-            class="pin-marker"
-            [style.left.%]="entry.center.x"
-            [style.top.%]="entry.center.y">
-            <ds-icon
-              name="pin"
-              [size]="14" />
-          </span>
-        }
-      </div>
-
-      @if (legend() !== 'none') {
-        <ul class="legend">
-          @for (entry of slices(); track entry.slice.id; let index = $index) {
-            <li
-              class="legend-item"
-              [class.interactive]="interactive()"
-              [class.pins]="defaults.pinOnClick()"
-              [attr.role]="interactive() ? 'button' : null"
-              [attr.tabindex]="
-                interactive() ? (index === roving.tabStop() ? 0 : -1) : null
-              "
-              [attr.data-mark-index]="index"
-              [attr.aria-label]="interactive() ? entryLabel(entry) : null"
-              (pointerenter)="onLegendEnter(index, $event)"
-              (pointerleave)="onLegendLeave()"
-              (focus)="onLegendFocus(index, $event)"
-              (blur)="onLegendLeave()"
-              (keydown)="onMarkNavigation($event, index, '.legend')"
-              (click)="onLegendClick(entry.slice, index, $event)"
-              (keydown.enter)="onSliceKey(entry.slice, $event)"
-              (keydown.space)="onSliceKey(entry.slice, $event)">
-              <span
-                class="swatch"
-                [style.background]="entry.color">
-              </span>
-
-              <span class="legend-label">
-                {{ entry.slice.label }}
-              </span>
-
-              <span class="legend-value">
-                {{ entry.formattedValue }}
-              </span>
-
-              @if (partOfWhole()) {
-                <span class="legend-percent">
-                  {{ entry.formattedPercent }}
-                </span>
-              }
-            </li>
-          }
-        </ul>
+      @if (pinnedEntry(); as entry) {
+        <span
+          class="pin-marker"
+          [style.left.%]="entry.center.x"
+          [style.top.%]="entry.center.y">
+          <ds-icon
+            name="pin"
+            [size]="14" />
+        </span>
       }
     </div>
 
-    @if (dataTableResolved() !== 'none') {
-      <ds-chart-data-table
-        [columns]="dataTableColumns()"
-        [rows]="dataTableRows()"
-        [caption]="caption()"
-        [open]="dataTableResolved() === 'visible'" />
+    @if (legend() !== 'none') {
+      <ul class="legend">
+        @for (entry of slices(); track entry.slice.id; let index = $index) {
+          <li
+            class="legend-item"
+            [class.interactive]="interactive()"
+            [class.pins]="defaults.pinOnClick()"
+            [attr.role]="interactive() ? 'button' : null"
+            [attr.tabindex]="
+              interactive() ? (index === roving.tabStop() ? 0 : -1) : null
+            "
+            [attr.data-mark-index]="index"
+            [attr.aria-label]="interactive() ? entryLabel(entry) : null"
+            (pointerenter)="onLegendEnter(index, $event)"
+            (pointerleave)="onLegendLeave()"
+            (focus)="onLegendFocus(index, $event)"
+            (blur)="onLegendLeave()"
+            (keydown)="onMarkNavigation($event, index, '.legend')"
+            (click)="onLegendClick(entry.slice, index, $event)"
+            (keydown.enter)="onSliceKey(entry.slice, $event)"
+            (keydown.space)="onSliceKey(entry.slice, $event)">
+            <span
+              class="swatch"
+              [style.background]="entry.color">
+            </span>
+
+            <span class="legend-label">
+              {{ entry.slice.label }}
+            </span>
+
+            <span class="legend-value">
+              {{ entry.formattedValue }}
+            </span>
+
+            @if (partOfWhole()) {
+              <span class="legend-percent">
+                {{ entry.formattedPercent }}
+              </span>
+            }
+          </li>
+        }
+      </ul>
     }
+  </div>
+
+  @if (dataTableResolved() !== 'none') {
+    <ds-chart-data-table
+      [columns]="dataTableColumns()"
+      [rows]="dataTableRows()"
+      [caption]="caption()"
+      [open]="dataTableResolved() === 'visible'" />
   }
-</figure>
+</ng-template>
+
+<ng-template
+  #message
+  let-text
+  let-error="error">
+  <div class="empty">
+    <div
+      class="empty-ring"
+      aria-hidden="true">
+    </div>
+
+    <p
+      class="empty-text"
+      [class.is-error]="error"
+      [attr.role]="error ? 'status' : null">
+      {{ text }}
+    </p>
+  </div>
+</ng-template>

@@ -7,15 +7,14 @@
   </span>
 
   <p class="block-desc t-s">
-    The overflow half of this pattern now ships as a component —
-    <code class="t-mono-inline">
+    <a
+      routerLink="/components/filter-bar"
+      class="t-link">
       ds-filter-bar
-    </code> renders as many filters
-    as fit and collapses the rest behind a "+N more" panel. The "More filters"
-    button in the compositions below is a stub, kept because these demos are
-    about the whole composition: search, facets, applied tags and clear-all.
-    Reach for the component when the facets are what runs out of room, and keep
-    the applied-tag row beside it.
+    </a> ships the overflow half of this pattern: it renders the filters that
+    fit and folds the rest into a "+N more" panel. The "More filters" buttons
+    below are stubs; use the component when facets run out of room, with the
+    applied-tag row beside it.
   </p>
 
   <h3
@@ -33,7 +32,10 @@
   <div class="stage">
     <div class="filterbar">
       <div class="search-slot">
-        <ds-search placeholder="Search events…" />
+        <ds-search
+          placeholder="Search events…"
+          ariaLabel="Search events"
+          size="sm" />
       </div>
 
       <ds-select
@@ -49,10 +51,8 @@
       <ds-button
         color="neutral"
         variant="outline"
-        size="sm">
-        <ds-icon
-          name="filter"
-          [size]="14" />
+        size="sm"
+        icon="filter">
         More filters
       </ds-button>
 
@@ -95,7 +95,10 @@
     <div class="filterbar is-stacked">
       <div class="row is-top">
         <div class="search-slot is-full">
-          <ds-search placeholder="Search events…" />
+          <ds-search
+            placeholder="Search events…"
+            ariaLabel="Search events"
+            size="sm" />
         </div>
       </div>
 
@@ -113,10 +116,8 @@
         <ds-button
           color="neutral"
           variant="outline"
-          size="sm">
-          <ds-icon
-            name="filter"
-            [size]="14" />
+          size="sm"
+          icon="filter">
           More
         </ds-button>
 
@@ -152,10 +153,15 @@
     </code> — the search box feeds the
     table's built-in client filter (<code class="t-mono-inline"
       >[filterQuery]</code
-    >, case-insensitive substring over every column), the status facet narrows
+    >, case-insensitive substring over the <code class="t-mono-inline"
+      >filterable</code
+    > columns, or every column when none is marked), the status facet narrows
     the data app-side, applied tags mirror the active filters and clear
-    individually. When nothing matches, the table's empty slot shows the
-    filtered variant. Against a real backend, skip
+    individually. When nothing matches, the table shows its
+    <code class="t-mono-inline">
+      [empty]
+    </code> slot; project a filter-specific
+    message there. Against a real backend, skip
     <code class="t-mono-inline">
       [filterQuery]
     </code> and flip
@@ -170,6 +176,8 @@
       <div class="search-slot">
         <ds-search
           placeholder="Search records…"
+          ariaLabel="Search records"
+          size="sm"
           [clearable]="true"
           [(value)]="filterQuery" />
       </div>

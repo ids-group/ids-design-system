@@ -1,0 +1,150 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "status-field-focus-halo",
+      "kind": "behavior",
+      "old": "data-field-state",
+      "new": null,
+      "surface": "none",
+      "action": "None, unless your design wants a focused warning or success field to keep the blue focus halo: set --ds-field-focus-shadow-warning and --ds-field-focus-shadow-success to var(--ds-field-focus-shadow).",
+      "appliesWhen": "Fields showing a warning or success state - ds-input, ds-textarea, ds-select, ds-multi-select, ds-autocomplete, ds-date-picker, ds-time-picker, ds-color-picker and ds-otp-input - while focused. Error fields and fields with no state are unchanged.",
+      "restore": ":root { --ds-field-focus-shadow-warning: var(--ds-field-focus-shadow); --ds-field-focus-shadow-success: var(--ds-field-focus-shadow); }",
+      "verify": "focus a field in warning state and confirm its halo is the warning colour, or the blue one if you restored it."
+    },
+    {
+      "id": "intl-date-picker-month-nav-required",
+      "kind": "behavior",
+      "old": "DsIntl",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": ["DsIntl", "DS_INTL", "previousYears"],
+      "detect": [": DsIntl =", "Signal<DsIntl>", "previousYears:"],
+      "action": "None, unless your code builds a complete DsIntl object of its own: add datePicker.previousMonth and datePicker.nextMonth, the names of the calendar's month arrows.",
+      "appliesWhen": "Only an object or signal typed as the full DsIntl, not as DsIntlOverrides. provideDsIntl with a partial override, and every app that leaves DS_INTL alone, is unaffected.",
+      "pitfall": "An object that spreads DS_INTL_DEFAULTS.datePicker compiles, but a datePicker section written out key by key without the spread fails with TS2741 on previousMonth.",
+      "restore": null,
+      "verify": "The app builds, and every complete DsIntl object it declares has datePicker.previousMonth and datePicker.nextMonth."
+    },
+    {
+      "id": "focus-global-rules-behind-emit-rules",
+      "kind": "scss-api",
+      "old": "@use 'styles/focus'",
+      "new": "@include focus.emit-rules;",
+      "surface": "style",
+      "searchHints": ["styles/focus", "emit-rules"],
+      "detect": [
+        "@use 'styles/focus'",
+        "@use '@ids-group-ltd/ids-design-system/styles/focus'"
+      ],
+      "action": "In the ONE global stylesheet that composes the parts instead of `@use 'styles/ds'`, write `@use 'styles/focus' as focus;` and `@include focus.emit-rules;` after it. Change nothing in a component stylesheet that uses focus mixins.",
+      "appliesWhen": "Only a global stylesheet that pulls in `styles/focus` itself rather than through `styles/ds`. Ships in `styles/focus`, which `styles/ds` forwards and whose rules `styles/ds` now includes; an app on `@use 'styles/ds'` needs nothing.",
+      "pitfall": "Nothing fails to build: without the include, links, plain buttons and other elements that style no focus themselves lose their ring, and setting `data-focus` on `<html>` changes nothing.",
+      "verify": "The app's BUILT global CSS contains a bare `:where(:focus-visible)` rule and `@keyframes ds-focus-ring-in`, each once."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "ChartComponent, LineSeriesComponent, ColumnSeriesComponent, TagComponent, ChartTooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends ChartComponent",
+        "extends LineSeriesComponent",
+        "extends ColumnSeriesComponent",
+        "extends TagComponent",
+        "extends ChartTooltipDirective"
+      ],
+      "detect": [
+        "extends ChartComponent",
+        "extends LineSeriesComponent",
+        "extends ColumnSeriesComponent",
+        "extends TagComponent",
+        "extends ChartTooltipDirective"
+      ],
+      "action": "Build after upgrading, and rename or mark `override` a member of yours the compiler reports as colliding.",
+      "appliesWhen": "Only a class of yours that extends ChartComponent, LineSeriesComponent, ColumnSeriesComponent, TagComponent or the internal ChartTooltipDirective. Template users of ds-chart, dsLineSeries, dsColumnSeries and ds-tag need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does. Against a private one, such as detachOffscreen or ChartComponent's focusStop, `override` still fails with TS2415; only a rename resolves it.",
+      "restore": null,
+      "verify": "The app builds with no TS4114, TS2415 or TS2416 against ChartComponent, LineSeriesComponent, ColumnSeriesComponent, TagComponent or the internal ChartTooltipDirective.",
+      "note": "ChartComponent gained the public focusedCategory, the protected drawsUnpin, keyboardStops, categoryStops, stopLabel, onStopFocus, onStopBlur, onStopKey, onChartKey and onChartFocusOut, and the private roving, refocusStop, pickedKey, pickedReading, categoryContext, categoryOrigin, leavesChart, focusStop, pinFromKeyboard, keyboardFocusInside, stepBackOnEscape, listenForEscapeFromMarker and readingsTopDown; LineSeriesComponent the public axisPointElements; ColumnSeriesComponent the public axisPointElements and the private host; TagComponent the protected onKeyActivate; the internal ChartTooltipDirective the private detachOffscreen."
+    },
+    {
+      "id": "tag-interactive-keyboard-own-handlers",
+      "kind": "behavior",
+      "old": "ds-tag[interactive]",
+      "new": null,
+      "surface": "template",
+      "searchHints": ["ds-tag", "interactive", "keydown.enter", "keydown.space"],
+      "detect": ["(keydown.enter)", "(keydown.space)", "tabindex=\"0\"", "role=\"button\""],
+      "action": "None, unless your template wires Enter or Space on an interactive ds-tag itself: remove that handler, and the tabindex=\"0\" and role=\"button\" set with it (delete list: tag-own-keyboard-handling).",
+      "appliesWhen": "Only a ds-tag with interactive set whose element carries a keydown.enter or keydown.space binding of yours. A non-interactive ds-tag, and a key handler on another element, are unaffected.",
+      "pitfall": "Nothing fails to build: the tag now emits toggled on Enter and Space itself, so your handler and your (toggled) handler both run and one key press toggles twice, which reads as the key doing nothing.",
+      "restore": null,
+      "verify": "Every interactive ds-tag toggles exactly once per Enter or Space press, and no template binds keydown.enter or keydown.space on one."
+    },
+    {
+      "id": "chart-keyboard-by-category",
+      "kind": "behavior",
+      "old": "ds-line-chart",
+      "new": null,
+      "surface": "none",
+      "action": "None, unless your own code or tests focus a series marker inside a line chart or a category-cursor ds-chart by Tab order: they now reach the category band first and a marker through Up/Down.",
+      "appliesWhen": "ds-line-chart and a ds-chart whose cursor resolves to category, interactive. Charts whose pointer picks a mark are unaffected.",
+      "pitfall": "An end-to-end test that tabs to a marker and presses Enter now lands on the band and pins it instead of firing pointClicked.",
+      "restore": null,
+      "verify": "Tab into a line chart: the band is ringed, Up focuses a marker, Enter fires pointClicked."
+    }
+  ],
+  "informational": [
+    "ds-dropzone emits filesAdded when the same file is picked again from the file dialog, where a repeat pick emitted nothing.",
+    "A clickable ds-stepper's step buttons are named by DS_INTL.stepper.step and no longer aria-hidden; a test that queried them by role and name now finds them.",
+    "ds-w3w emits copied after the clipboard write succeeds, and not at all when it fails or the browser has no clipboard (an insecure origin, some test environments).",
+    {
+      "text": "--ds-container-max-width takes effect on ds-container and wins over its size; a value set on it before and never seen now applies.",
+      "verify": "where your styles set --ds-container-max-width, confirm the container is that wide rather than its size's width."
+    },
+    "ds-number-stepper's buttons clamp to min and max, so a step that would pass a bound lands on it, and the arrow keys in its field step by step instead of 1.",
+    {
+      "text": "ds-funnel-chart, ds-heatmap-chart and ds-pie-chart draw their keyboard focus ring, in --focus-ring-color and --focus-ring-width unless --ds-funnel-chart-focus-color, --ds-heatmap-chart-focus-color or --ds-pie-chart-focus-color (and the -focus-width tokens) say otherwise; a focused mark showed no indicator before.",
+      "verify": "Tab into an interactive funnel, heat map and pie chart and confirm the focused stage, cell or slice is ringed."
+    },
+    ".link.plain is new: a link underlined only on hover and keyboard focus, for a link that stands on its own. A .link without it renders as before.",
+    {
+      "text": "ds-chart draws the Unpin control while its category cursor is pinned, on its caption's line or, without a caption, over the top end of the plot. In every chart the .pin-reset button now sits inside an internal ds-chart-unpin element rendered display: contents, so a consumer rule selecting it as a direct child of the chart's figure no longer matches; select .pin-reset alone.",
+      "verify": "click a band of a ds-chart and confirm an Unpin pill appears at the top end of the chart, and that pressing it releases the cursor and removes the pill."
+    },
+    {
+      "text": "A ds-table expanded row folds closed over --duration-base, mirroring its opening, and its panel row stays in the DOM until the fold ends.",
+      "verify": "collapse an expanded row and confirm the panel folds shut rather than disappearing, and that code reading the table's rows right after the collapse does not depend on the panel row being gone in the same frame."
+    },
+    {
+      "text": "--ds-multi-select-option-bg-color-active takes effect: it colours the option row under the keyboard cursor and the pointer in that multi-select panel. A value set on the token before and never seen now shows.",
+      "verify": "open a ds-multi-select whose host or an ancestor sets the token, move the keyboard cursor onto an unselected option, and confirm the row takes that colour."
+    },
+    "ds-date-picker's previous- and next-month buttons are named by datePicker.previousMonth and datePicker.nextMonth, where a screen reader announced an unnamed button.",
+    {
+      "text": "A framed ds-funnel-chart draws its Unpin control at the frame padding from the top and end, like the other charts, where it stood twice that far in.",
+      "verify": "pin a stage of a framed ds-funnel-chart and confirm the Unpin pill sits on the caption line at the same inset as on a ds-bar-chart."
+    },
+    "ds-app-layout's content region draws no focus ring when the app moves focus to it, except under forced colours; it stays focusable from script as the starting point for the next Tab.",
+    "The feedback mixin of styles/press skips .disabled and [aria-disabled='true'] as well as :disabled, [disabled] and .is-disabled, so a stylesheet of yours that includes it plays no press on a control disabled that way.",
+    {
+      "text": "ds-column-chart and ds-line-chart re-read their geometry tokens (--ds-column-chart-plot-height and the other --ds-column-chart-* geometry, --ds-line-chart-plot-height) whenever the chart's width changes, so a value re-pointed at a breakpoint reaches the plot.",
+      "verify": "resize the window across a breakpoint where your stylesheet changes one of those tokens and confirm the plot height follows without a reload."
+    },
+    {
+      "text": "A pinned chart tooltip hides while its chart is scrolled out of sight and shows again beside it when the chart returns; the pin is kept.",
+      "verify": "pin a chart's tooltip, scroll until the chart is gone, and confirm no panel stays on screen; scroll back and confirm it is there again."
+    }
+  ],
+  "deleteList": [
+    {
+      "id": "tag-own-keyboard-handling",
+      "surface": "template",
+      "find": ["(keydown.enter)", "(keydown.space)"],
+      "why": "An interactive ds-tag is a tab stop with role=\"button\" and emits toggled on Enter or Space itself.",
+      "replaceWith": "nothing; the tag's own toggled. Keep a key binding on a ds-tag without interactive, where the tag handles no key."
+    }
+  ]
+}

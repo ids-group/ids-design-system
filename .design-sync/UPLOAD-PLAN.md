@@ -25,7 +25,7 @@ sent; what the tree holds now is different in four ways.
 3. **`_ds_manifest.json` is ours.** `build-manifest.mjs` writes it. The copy on the project came
    from the retired CLI and had gone stale — 79 components including `AppShell` — and since the pane
    indexes from the manifest, that alone was enough to keep showing the previous showcase.
-4. **376 of the cards are static HTML.** `snapshot-cards.mjs` freezes every chapter except the ones
+4. **185 of the 264 cards are static HTML (measured 2026-10-02).** `snapshot-cards.mjs` freezes every chapter except the ones
    in `live-chapters.txt`, and the 185 distinct component stylesheets became the single
    `_ds_cards.css` the cards link. See COMMANDS.md — this file is the record of the first upload,
    not the description of the tree.

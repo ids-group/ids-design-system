@@ -12,6 +12,15 @@ cd "$(dirname "$0")/../.."
 setup_bun
 install_deps
 
+# The image ships without git, and Bitbucket clones 50 commits with only the tags inside them;
+# the manifest and class-surface checks read every release tag's tree.
+command -v git > /dev/null || apk add --no-cache git > /dev/null
+if [ -f "$(git rev-parse --git-dir)/shallow" ]; then
+  git fetch --unshallow --tags origin --quiet
+else
+  git fetch --tags origin --quiet
+fi
+
 # Before the slow work: the manifests are what a consumer's upgrade executes, and an
 # undetectable entry reaches them in silence.
 echo "===== migration-lint ====="

@@ -1,145 +1,133 @@
-<figure class="bar-chart">
-  @if (activeMark.pinned()) {
-    <button
-      class="pin-reset"
-      type="button"
-      (click)="activeMark.release()">
-      {{ intl().chart.unpin }}
-    </button>
-  }
+<figure
+  class="bar-chart"
+  dsChartStates
+  [pinned]="activeMark.pinned()"
+  [caption]="caption()"
+  [error]="error()"
+  [errorText]="errorTextResolved()"
+  [pending]="loading() || !renderReady()"
+  [empty]="isEmpty()"
+  [emptyText]="emptyTextResolved()"
+  [skeleton]="skeleton"
+  [body]="body"
+  (release)="activeMark.release()">
+</figure>
 
-  @if (caption()) {
-    <figcaption>
-      {{ caption() }}
-    </figcaption>
-  }
+<ng-template #skeleton>
+  <div
+    class="skeleton"
+    aria-hidden="true">
+    @for (placeholder of skeletonRows(); track $index) {
+      <ds-skeleton
+        height="var(--_bar-chart-track-height)"
+        [shimmer]="loading()" />
+    }
+  </div>
+</ng-template>
 
-  @if (error()) {
-    <p
-      class="empty is-error"
-      role="status">
-      {{ errorTextResolved() }}
-    </p>
-  } @else if (loading() || !renderReady()) {
-    <div
-      class="skeleton"
-      aria-hidden="true">
-      @for (placeholder of skeletonRows(); track $index) {
-        <ds-skeleton
-          height="var(--_bar-chart-track-height)"
-          [shimmer]="loading()" />
-      }
-    </div>
-  } @else if (isEmpty()) {
-    <p class="empty">
-      {{ emptyTextResolved() }}
-    </p>
-  } @else {
-    <div
-      class="rows"
-      [class.dims-others]="dimOthers()"
-      [attr.role]="interactive() ? 'group' : 'img'"
-      [attr.aria-label]="accessibleName()"
-      [dsChartTooltip]="tooltipContext()"
-      [dsChartTooltipSwatches]="defaults.tooltipSwatches()"
-      [dsChartTooltipPinned]="activeMark.pinned()"
-      [dsChartTooltipOrigin]="activeMark.origin()"
-      [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
-      @for (entry of rows(); track entry.key; let index = $index) {
-        <div
-          class="row"
-          [style.--_chart-mark-stagger]="markStagger(index)"
-          [class.interactive]="interactive()"
-          [class.pins]="defaults.pinOnClick()"
-          [class.is-active]="activeMark.index() === index"
-          [class.is-pinned]="
-            activeMark.pinned() && activeMark.index() === index
-          "
-          [attr.role]="interactive() ? 'button' : null"
-          [attr.tabindex]="
-            interactive() ? (index === roving.tabStop() ? 0 : -1) : null
-          "
-          [attr.data-mark-index]="index"
-          [attr.aria-label]="interactive() ? entryLabel(entry) : null"
-          (animate.leave)="leaveMark($event)"
-          (pointerenter)="activeMark.enter(index, $event, '.fill')"
-          (pointerleave)="activeMark.leave()"
-          (focus)="onMarkFocus(index, $event)"
-          (blur)="activeMark.leave()"
-          (keydown)="onMarkNavigation($event, index)"
-          (click)="onMarkClick(entry.row, index, $event)"
-          (keydown.enter)="onRowKey(entry.row, $event)"
-          (keydown.space)="onRowKey(entry.row, $event)">
-          <span class="label">
-            {{ entry.row.label }}
+<ng-template #body>
+  <div
+    class="rows"
+    [class.dims-others]="dimOthers()"
+    [attr.role]="interactive() ? 'group' : 'img'"
+    [attr.aria-label]="accessibleName()"
+    [dsChartTooltip]="tooltipContext()"
+    [dsChartTooltipSwatches]="defaults.tooltipSwatches()"
+    [dsChartTooltipPinned]="activeMark.pinned()"
+    [dsChartTooltipOrigin]="activeMark.origin()"
+    [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
+    @for (entry of rows(); track entry.key; let index = $index) {
+      <div
+        class="row"
+        [style.--_chart-mark-stagger]="markStagger(index)"
+        [class.interactive]="interactive()"
+        [class.pins]="defaults.pinOnClick()"
+        [class.is-active]="activeMark.index() === index"
+        [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
+        [attr.role]="interactive() ? 'button' : null"
+        [attr.tabindex]="
+          interactive() ? (index === roving.tabStop() ? 0 : -1) : null
+        "
+        [attr.data-mark-index]="index"
+        [attr.aria-label]="interactive() ? entryLabel(entry) : null"
+        (animate.leave)="leaveMark($event)"
+        (pointerenter)="activeMark.enter(index, $event, '.fill')"
+        (pointerleave)="activeMark.leave()"
+        (focus)="onMarkFocus(index, $event)"
+        (blur)="activeMark.leave()"
+        (keydown)="onMarkNavigation($event, index)"
+        (click)="onMarkClick(entry.row, index, $event)"
+        (keydown.enter)="onRowKey(entry.row, $event)"
+        (keydown.space)="onRowKey(entry.row, $event)">
+        <span class="label">
+          {{ entry.row.label }}
 
-            @if (entry.row.detail) {
-              <span class="detail">
-                {{ entry.row.detail }}
-              </span>
-            }
+          @if (entry.row.detail) {
+            <span class="detail">
+              {{ entry.row.detail }}
+            </span>
+          }
+        </span>
+
+        <span class="value">
+          {{ entry.formattedValue }}
+        </span>
+
+        @if (showPercent()) {
+          <span class="percent">
+            {{ entry.formattedPercent }}
           </span>
+        }
 
-          <span class="value">
-            {{ entry.formattedValue }}
-          </span>
-
-          @if (showPercent()) {
-            <span class="percent">
-              {{ entry.formattedPercent }}
+        <span class="track">
+          @for (band of entry.bands; track band.key) {
+            <span
+              class="band"
+              [style.width.%]="band.widthPercent"
+              [style.opacity]="band.opacity">
             </span>
           }
 
-          <span class="track">
-            @for (band of entry.bands; track band.key) {
-              <span
-                class="band"
-                [style.width.%]="band.widthPercent"
-                [style.opacity]="band.opacity">
-              </span>
-            }
-
-            @if (entry.targetPercent !== null) {
-              <span
-                class="target"
-                role="img"
-                [style.inset-inline-start.%]="entry.targetPercent"
-                [attr.aria-label]="intl().chart.target(entry.formattedTarget)">
-              </span>
-            }
-
+          @if (entry.targetPercent !== null) {
             <span
-              class="fill"
-              [style.margin-inline-start.%]="entry.offsetPercent"
-              [style.width.%]="entry.widthPercent"
-              [style.background]="entry.segments.length ? null : entry.color">
-              @for (part of entry.segments; track part.key) {
-                <span
-                  class="segment"
-                  [class.is-dimmed]="isSegmentDimmed(part.key)"
-                  [style.width.%]="part.widthPercent"
-                  [style.background]="part.color">
-                </span>
-              }
-
-              @if (activeMark.pinned() && activeMark.index() === index) {
-                <ds-icon
-                  class="pin-marker"
-                  name="pin"
-                  [size]="14" />
-              }
+              class="target"
+              role="img"
+              [style.inset-inline-start.%]="entry.targetPercent"
+              [attr.aria-label]="intl().chart.target(entry.formattedTarget)">
             </span>
-          </span>
-        </div>
-      }
-    </div>
+          }
 
-    @if (dataTableResolved() !== 'none') {
-      <ds-chart-data-table
-        [columns]="dataTableColumns()"
-        [rows]="dataTableRows()"
-        [caption]="caption()"
-        [open]="dataTableResolved() === 'visible'" />
+          <span
+            class="fill"
+            [style.margin-inline-start.%]="entry.offsetPercent"
+            [style.width.%]="entry.widthPercent"
+            [style.background]="entry.segments.length ? null : entry.color">
+            @for (part of entry.segments; track part.key) {
+              <span
+                class="segment"
+                [class.is-dimmed]="isSegmentDimmed(part.key)"
+                [style.width.%]="part.widthPercent"
+                [style.background]="part.color">
+              </span>
+            }
+
+            @if (activeMark.pinned() && activeMark.index() === index) {
+              <ds-icon
+                class="pin-marker"
+                name="pin"
+                [size]="14" />
+            }
+          </span>
+        </span>
+      </div>
     }
+  </div>
+
+  @if (dataTableResolved() !== 'none') {
+    <ds-chart-data-table
+      [columns]="dataTableColumns()"
+      [rows]="dataTableRows()"
+      [caption]="caption()"
+      [open]="dataTableResolved() === 'visible'" />
   }
-</figure>
+</ng-template>

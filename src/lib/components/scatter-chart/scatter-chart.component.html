@@ -1,174 +1,165 @@
-<figure class="scatter-chart">
-  @if (activeMark.pinned()) {
-    <button
-      class="pin-reset"
-      type="button"
-      (click)="activeMark.release()">
-      {{ intl().chart.unpin }}
-    </button>
-  }
+<figure
+  class="scatter-chart"
+  dsChartStates
+  messageAxes
+  [pinned]="activeMark.pinned()"
+  [caption]="caption()"
+  [error]="error()"
+  [errorText]="errorTextResolved()"
+  [pending]="loading() || !renderReady()"
+  [empty]="isEmpty()"
+  [emptyText]="emptyTextResolved()"
+  [skeleton]="skeleton"
+  [body]="body"
+  (release)="activeMark.release()">
+</figure>
 
-  @if (caption()) {
-    <figcaption>
-      {{ caption() }}
-    </figcaption>
-  }
+<ng-template #skeleton>
+  <ds-skeleton
+    class="skeleton"
+    width="100%"
+    [shimmer]="loading()"
+    [height]="skeletonHeight + 'px'" />
+</ng-template>
 
-  @if (error()) {
-    <p
-      class="empty is-error"
-      role="status">
-      {{ errorTextResolved() }}
-    </p>
-  } @else if (loading() || !renderReady()) {
-    <ds-skeleton
-      class="skeleton"
-      width="100%"
-      [shimmer]="loading()"
-      [height]="skeletonHeight + 'px'" />
-  } @else if (isEmpty()) {
-    <p class="empty">
-      {{ emptyTextResolved() }}
-    </p>
-  } @else {
-    <svg
-      class="canvas"
-      [attr.viewBox]="viewBox"
-      [class.dims-others]="dimOthers()"
-      [attr.role]="interactive() ? 'group' : 'img'"
-      [attr.aria-label]="accessibleName()"
-      [dsChartTooltip]="tooltipContext()"
-      [dsChartTooltipSwatches]="defaults.tooltipSwatches()"
-      [dsChartTooltipPinned]="activeMark.pinned()"
-      [dsChartTooltipOrigin]="activeMark.origin()"
-      (pointerover)="onCanvasPointer($event)"
-      (pointermove)="onCanvasPointer($event)"
-      (pointerleave)="onCanvasLeave()">
-      <rect
-        class="plot-bg"
-        [attr.x]="plot.left"
-        [attr.y]="plot.top"
-        [attr.width]="plot.width"
-        [attr.height]="plot.height" />
+<ng-template #body>
+  <svg
+    class="canvas"
+    [attr.viewBox]="viewBox"
+    [class.dims-others]="dimOthers()"
+    [attr.role]="interactive() ? 'group' : 'img'"
+    [attr.aria-label]="accessibleName()"
+    [dsChartTooltip]="tooltipContext()"
+    [dsChartTooltipSwatches]="defaults.tooltipSwatches()"
+    [dsChartTooltipPinned]="activeMark.pinned()"
+    [dsChartTooltipOrigin]="activeMark.origin()"
+    (pointerover)="onCanvasPointer($event)"
+    (pointermove)="onCanvasPointer($event)"
+    (pointerleave)="onCanvasLeave()">
+    <rect
+      class="plot-bg"
+      [attr.x]="plot.left"
+      [attr.y]="plot.top"
+      [attr.width]="plot.width"
+      [attr.height]="plot.height" />
 
-      @for (tick of yTicks(); track tick.value) {
-        <line
-          class="grid-line"
-          [attr.x1]="plot.left"
-          [attr.x2]="plotRight"
-          [attr.y1]="tick.y"
-          [attr.y2]="tick.y" />
-
-        <text
-          class="axis-label"
-          text-anchor="end"
-          [attr.x]="plot.left - 8"
-          [attr.y]="tick.y">
-          {{ tick.label }}
-        </text>
-      }
-
-      @for (tick of xTicks(); track tick.value) {
-        <text
-          class="axis-label is-horizontal"
-          text-anchor="middle"
-          [attr.x]="tick.x"
-          [attr.y]="plotBottom + 18">
-          {{ tick.label }}
-        </text>
-      }
-
+    @for (tick of yTicks(); track tick.value) {
       <line
-        class="axis-line"
+        class="grid-line"
         [attr.x1]="plot.left"
         [attr.x2]="plotRight"
-        [attr.y1]="plotBottom"
-        [attr.y2]="plotBottom" />
+        [attr.y1]="tick.y"
+        [attr.y2]="tick.y" />
 
-      @for (entry of series(); track entry.key) {
-        @let start = seriesStart().get(entry.key) ?? 0;
-
-        <g
-          [class.is-dimmed]="
-            highlightedSeries() !== null &&
-            highlightedSeries() !== entry.series.id
-          "
-          [style.--_scatter-series-color]="entry.color"
-          (click)="onPointPress($event)"
-          (keydown.enter)="onPointActivate($event)"
-          (keydown.space)="onPointActivate($event)">
-          @for (mark of entry.points; track mark.key; let index = $index) {
-            <circle
-              class="point"
-              [class.interactive]="interactive()"
-              [class.pins]="defaults.pinOnClick()"
-              [class.is-active]="activeMark.index() === start + index"
-              [class.is-pinned]="
-                activeMark.pinned() && activeMark.index() === start + index
-              "
-              [attr.cx]="mark.cx"
-              [attr.cy]="mark.cy"
-              [attr.role]="interactive() ? 'button' : null"
-              [attr.tabindex]="interactive() ? 0 : null"
-              [attr.data-mark-index]="start + index"
-              [attr.aria-label]="
-                interactive() ? pointLabel(entry.series, mark.point) : null
-              " />
-          }
-        </g>
-      }
-
-      @if (pinnedPoint(); as point) {
-        <svg:g
-          dsChartPinMarker
-          [attr.transform]="
-            'translate(' + point.cx + ',' + (point.cy - pinLift) + ')'
-          " />
-      }
-
-      @if (yLabel()) {
-        <text
-          class="axis-title"
-          text-anchor="middle"
-          [attr.transform]="
-            'rotate(-90) translate(' + -(plot.top + plot.height / 2) + ', 12)'
-          ">
-          {{ yLabel() }}
-        </text>
-      }
-
-      @if (xLabel()) {
-        <text
-          class="axis-title"
-          text-anchor="middle"
-          [attr.x]="plot.left + plot.width / 2"
-          [attr.y]="plotBottom + 32">
-          {{ xLabel() }}
-        </text>
-      }
-    </svg>
-
-    @if (droppedCount() > 0) {
-      <p
-        class="thinned"
-        role="status">
-        {{ intl().chart.scatterThinned(droppedCount()) }}
-      </p>
+      <text
+        class="axis-label"
+        text-anchor="end"
+        [attr.x]="plot.left - 8"
+        [attr.y]="tick.y">
+        {{ tick.label }}
+      </text>
     }
 
-    @if (multiSeries()) {
-      <ds-chart-legend
-        [items]="legendItems()"
-        [(highlighted)]="highlightedSeries" />
+    @for (tick of xTicks(); track tick.value) {
+      <text
+        class="axis-label is-horizontal"
+        text-anchor="middle"
+        [attr.x]="tick.x"
+        [attr.y]="plotBottom + 18">
+        {{ tick.label }}
+      </text>
     }
 
-    @if (dataTableResolved() !== 'none') {
-      <ds-chart-data-table
-        [columns]="dataTableColumns()"
-        [rows]="dataTableRows()"
-        [caption]="caption()"
-        [open]="dataTableResolved() === 'visible'"
-        (toggled)="tableOpen.set($event)" />
+    <line
+      class="axis-line"
+      [attr.x1]="plot.left"
+      [attr.x2]="plotRight"
+      [attr.y1]="plotBottom"
+      [attr.y2]="plotBottom" />
+
+    @for (entry of series(); track entry.key) {
+      @let start = seriesStart().get(entry.key) ?? 0;
+
+      <g
+        [class.is-dimmed]="
+          highlightedSeries() !== null &&
+          highlightedSeries() !== entry.series.id
+        "
+        [style.--_scatter-series-color]="entry.color"
+        (click)="onPointPress($event)"
+        (keydown.enter)="onPointActivate($event)"
+        (keydown.space)="onPointActivate($event)">
+        @for (mark of entry.points; track mark.key; let index = $index) {
+          <circle
+            class="point"
+            [class.interactive]="interactive()"
+            [class.pins]="defaults.pinOnClick()"
+            [class.is-active]="activeMark.index() === start + index"
+            [class.is-pinned]="
+              activeMark.pinned() && activeMark.index() === start + index
+            "
+            [attr.cx]="mark.cx"
+            [attr.cy]="mark.cy"
+            [attr.role]="interactive() ? 'button' : null"
+            [attr.tabindex]="interactive() ? 0 : null"
+            [attr.data-mark-index]="start + index"
+            [attr.aria-label]="
+              interactive() ? pointLabel(entry.series, mark.point) : null
+            " />
+        }
+      </g>
     }
+
+    @if (pinnedPoint(); as point) {
+      <svg:g
+        dsChartPinMarker
+        [attr.transform]="
+          'translate(' + point.cx + ',' + (point.cy - pinLift) + ')'
+        " />
+    }
+
+    @if (yLabel()) {
+      <text
+        class="axis-title"
+        text-anchor="middle"
+        [attr.transform]="
+          'rotate(-90) translate(' + -(plot.top + plot.height / 2) + ', 12)'
+        ">
+        {{ yLabel() }}
+      </text>
+    }
+
+    @if (xLabel()) {
+      <text
+        class="axis-title"
+        text-anchor="middle"
+        [attr.x]="plot.left + plot.width / 2"
+        [attr.y]="plotBottom + 32">
+        {{ xLabel() }}
+      </text>
+    }
+  </svg>
+
+  @if (droppedCount() > 0) {
+    <p
+      class="thinned"
+      role="status">
+      {{ intl().chart.scatterThinned(droppedCount()) }}
+    </p>
   }
-</figure>
+
+  @if (multiSeries()) {
+    <ds-chart-legend
+      [items]="legendItems()"
+      [(highlighted)]="highlightedSeries" />
+  }
+
+  @if (dataTableResolved() !== 'none') {
+    <ds-chart-data-table
+      [columns]="dataTableColumns()"
+      [rows]="dataTableRows()"
+      [caption]="caption()"
+      [open]="dataTableResolved() === 'visible'"
+      (toggled)="tableOpen.set($event)" />
+  }
+</ng-template>

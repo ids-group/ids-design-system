@@ -255,6 +255,10 @@ export class TableSection {
     new Set(this.events.slice(0, 3).map((row) => row.id)),
   );
 
+  protected clearBulkSelection(): void {
+    this.bulkSelected.set(new Set());
+  }
+
   protected readonly stateRow: readonly EventRow[] = this.events.slice(0, 1);
   protected readonly stateSelectedIds = signal(new Set([this.events[0].id]));
   protected readonly sortableRows: readonly EventRow[] = this.events.slice(
@@ -300,6 +304,7 @@ export class TableSection {
       sortable: true,
       align: 'right',
       cell: (row) => '£' + row.budget.toLocaleString(),
+      sortValue: (row) => row.budget,
     },
   ];
 
@@ -392,6 +397,7 @@ export class TableSection {
 
   protected readonly projectSelected = signal(new Set<string>());
   protected readonly emptyAnnouncementQuery = signal('');
+  protected readonly toolbarQuery = signal('');
   protected readonly pagerSkeletonLoading = signal(false);
 
   // Deliberately keyless: an audit line has no id of its own, which is the case `[rowId]` exists
@@ -677,7 +683,9 @@ export class TableSection {
   );
 
   protected onRowAction(event: TableRowActionEvent<EventRow>): void {
-    this.lastRowAction.set(`${event.action.label} · ${event.row.project}`);
+    const { label } = event.action;
+    const actionLabel = typeof label === 'function' ? label(event.row) : label;
+    this.lastRowAction.set(`${actionLabel} · ${event.row.project}`);
   }
 
   /** Lazy demo: the same 10 000 records, but the table starts with NONE of them

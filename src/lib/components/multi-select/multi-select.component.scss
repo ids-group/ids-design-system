@@ -10,6 +10,9 @@
 :host {
   @include field-box.field-box-tokens;
 
+  /* The pane resolves the option fill from this, so the alias sits on the host it is forwarded from. `initial` leaves it unset, which keeps a fallback from being pinned inline on the pane. */
+  --ds-option-bg-color-active: var(--ds-multi-select-option-bg-color-active, initial); /* void-ok */
+
   display: flex;
   flex-direction: column;
   gap: var(--field-label-gap);
@@ -151,11 +154,6 @@
 
 /* Qualified with the pane class so it outranks the shared dropdown overlay styles by specificity, not stylesheet order. */
 .dropdown-panel {
-  --ds-option-bg-color-active: var(
-    --ds-multi-select-option-bg-color-active,
-    var(--surface-secondary)
-  );
-
   --_multi-select-check-bg-color: var(--ds-multi-select-check-bg-color, var(--accent));
 }
 

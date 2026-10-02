@@ -8,6 +8,11 @@
     .palette.is-8 { grid-template-columns: repeat(8, minmax(0, 1fr)); }
     .palette.is-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
     .palette.is-7 { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+    .palette.is-8,
+    .palette.is-7,
+    .palette.is-6 {
+      @include bp.down(md) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
     .swatch { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
     .swatch-chip { width: 100%; height: 56px; border-radius: var(--radius-md); }
     .swatch code {
@@ -34,84 +39,6 @@
       color: var(--text-tertiary);
     }
 
-    .chart {
-      background: var(--surface-default);
-      border: var(--border-width-default) solid var(--border-divider);
-      border-radius: var(--radius-lg);
-      padding: var(--space-4);
-      margin-top: var(--space-4);
-      min-width: 0;
-      max-width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
-
-      .head {
-        display: flex;
-        align-items: baseline;
-        gap: var(--space-3);
-      }
-
-      .title {
-        font: var(--font-weight-bold) var(--font-size-s) / 1 var(--font-sans);
-        margin: 0;
-      }
-
-      .sub {
-        font: var(--font-weight-regular) var(--font-size-xs) / 1 var(--font-sans);
-        color: var(--text-tertiary);
-        margin-left: auto;
-      }
-
-      .legend {
-        display: flex;
-        gap: var(--space-3);
-        flex-wrap: wrap;
-        font: var(--font-weight-medium) var(--font-size-xs) / 1 var(--font-sans);
-        color: var(--text-secondary);
-
-        .item {
-          display: inline-flex;
-          align-items: center;
-          gap: var(--space-2);
-        }
-
-        .dot {
-          width: var(--chart-legend-dot);
-          height: var(--chart-legend-dot);
-          border-radius: var(--radius-sm);
-          flex-shrink: 0;
-        }
-      }
-
-      .svg {
-        width: 100%;
-        height: auto;
-        display: block;
-
-        .axis line,
-        .axis path { stroke: var(--chart-axis-line-color); }
-
-        .axis text {
-          fill: var(--chart-axis-label-color);
-          font: var(--font-weight-medium) var(--chart-axis-font-size) / 1 var(--font-sans);
-        }
-
-        .grid line { stroke: var(--chart-grid-line-color); }
-      }
-
-      &.empty .body {
-        height: var(--chart-empty-h);
-        display: grid;
-        place-items: center;
-        background: var(--surface-secondary);
-        border-radius: var(--radius-md);
-        color: var(--text-tertiary);
-        font: var(--font-weight-medium) var(--font-size-s) / 1.4 var(--font-sans);
-        text-align: center;
-      }
-    }
-
     .grid-2 {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -121,26 +48,11 @@
       @include bp.down(md) { grid-template-columns: 1fr; }
     }
 
-    .pie-row { display: flex; align-items: center; gap: var(--space-6); flex-wrap: wrap; min-width: 0; }
-    .pie-legend { flex-direction: column; align-items: flex-start; min-width: 0; }
-    .pie-pct { color: var(--text-tertiary); margin-left: var(--space-2); }
-
-    .heat {
-      display: grid;
-      grid-template-columns: 120px repeat(5, 1fr);
-      gap: var(--space-1);
-    }
-    .heat-col-h { text-align: center; padding: var(--space-1) 0; color: var(--text-tertiary); }
-    .heat-row-h { padding: var(--space-2) 0; color: var(--text-primary); }
-    .heat-cell {
-      height: 36px;
-      border-radius: var(--radius-sm);
-      display: grid;
-      place-items: center;
-      font: var(--font-weight-bold) 11px / 1 var(--font-mono);
-    }
-
-    .empty-msg { margin: var(--space-2) 0 0; }
+.custom-tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
 
 .dark-tooltip {
   --ds-chart-tooltip-bg-color: var(--neutral-900);

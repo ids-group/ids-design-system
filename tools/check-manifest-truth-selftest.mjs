@@ -10,6 +10,7 @@
 //
 //   node tools/check-manifest-truth-selftest.mjs
 import { execFileSync } from 'node:child_process';
+import { existsSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkItem, surfaceAt } from './check-manifest-truth.mjs';
@@ -111,6 +112,30 @@ const rules = [
     },
     before: surface({ symbols: ['avatarTint'] }),
     after: surface({ symbols: ['avatarTint'] }),
+    expect: 'hold',
+    unresolved: 1,
+  },
+  {
+    name: 'HOLDS: a bare camelCase input name resolves against element members',
+    item: { id: 'x', kind: 'behavior', old: 'pinOnClick', new: null },
+    before: surface({ elements: { 'ds-line-series': ['pinOnClick'] } }),
+    after: surface({ elements: { 'ds-line-series': ['pinOnClick'] } }),
+    expect: 'hold',
+    unresolved: 0,
+  },
+  {
+    name: 'HOLDS: a bare camelCase directive selector resolves',
+    item: { id: 'x', kind: 'behavior', old: 'dsChartTooltip', new: null },
+    before: { ...surface({}), directives: new Set(['dsChartTooltip']) },
+    after: { ...surface({}), directives: new Set(['dsChartTooltip']) },
+    expect: 'hold',
+    unresolved: 0,
+  },
+  {
+    name: 'HOLDS: a bare camelCase name no element declares is set aside',
+    item: { id: 'x', kind: 'behavior', old: 'pinOnClik', new: null },
+    before: surface({ elements: { 'ds-line-series': ['pinOnClick'] } }),
+    after: surface({ elements: { 'ds-line-series': ['pinOnClick'] } }),
     expect: 'hold',
     unresolved: 1,
   },
@@ -546,6 +571,14 @@ for (const [version, what, budget] of readOnly) {
     );
   }
   ran++;
+  const tagQualified = Boolean(
+    surfaceAt('v0.14.0')?.directives.has('dsLineSeries'),
+  );
+  if (!tagQualified) failed++;
+  console.log(
+    `${tagQualified ? 'ok   ' : 'FAIL '} v0.14.0 g[dsLineSeries] is read as a directive selector`,
+  );
+  ran++;
   // The set has to EXIST for its not-containing something to mean anything: `!undefined` is
   // true, so an empty surface used to pass this control while proving nothing.
   const present = members('ds-input');
@@ -577,7 +610,25 @@ for (const [version, what] of UNCHECKABLE) {
   ran++;
   // The draft is the one manifest that can still be corrected, and it used to be excluded from the
   // sweep by a filter that demanded an existing tag.
-  const out = run('unreleased', { text: true });
+  // Straight after a release there is no draft, so the case brings an empty one of its own.
+  const draftPath = join(ROOT, 'migrations', 'unreleased.json');
+  const ownDraft = !existsSync(draftPath);
+  if (ownDraft)
+    writeFileSync(
+      draftPath,
+      JSON.stringify({
+        version: 'unreleased',
+        items: [],
+        informational: [],
+        deleteList: [],
+      }),
+    );
+  let out;
+  try {
+    out = run('unreleased', { text: true });
+  } finally {
+    if (ownDraft) rmSync(draftPath);
+  }
   const covered = /1 manifest\(s\) against/.test(out);
   if (!covered) failed++;
   console.log(
