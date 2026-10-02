@@ -54,9 +54,10 @@
   included, wrote its own width over the token, so setting it changed nothing; the token now wins
   over `size`.
 
-- **`ds-number-stepper`'s buttons stop at `min` and `max`.** A step that would pass a bound now
-  lands on it: with `max` 100 and `step` 5, 98 goes to 100, where it went to 103. Typed values
-  were already clamped.
+- **`ds-number-stepper` steps by `step` and stops at `min` and `max`.** A button step that would
+  pass a bound now lands on it: with `max` 100 and `step` 5, 98 goes to 100, where it went to 103.
+  The arrow keys in the field step by `step` too, where they moved by 1. Typed values were already
+  clamped.
 
 - **`ds-funnel-chart`, `ds-heatmap-chart` and `ds-pie-chart` draw their keyboard focus ring.** The
   ring's colour and width resolved to nothing inside these charts, so a focused stage, cell or
