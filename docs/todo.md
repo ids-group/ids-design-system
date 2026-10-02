@@ -74,7 +74,7 @@ item and nothing else.
   - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
   - `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green
-  - Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of deck `4-migration-manifest-audit`)
+  - Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of deck `5-migration-manifest-audit`)
 - **The field system — the two controls outside it, and the five with no box to paint**
   - `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in, or say they are not fields (Stas asked 2026-08-20)
 - **Colour, interaction and typography tokens**
@@ -295,7 +295,7 @@ Constraints and decisions that read as removable and are not.
 - [ ] **[P3] A pressed danger menu item shows its hover colour (recorded 2026-09-24).**
   `.menu-item.error:hover` comes after `.menu-item:active:not(.disabled)` at equal specificity
   (`menu-item.component.scss:78`, `:101`, same order in the compiled menu chunk), so pressing a
-  danger item paints hover, a step of ΔE 0. The fix is Stas's pick in deck `3-interaction-formula`
+  danger item paints hover, a step of ΔE 0. The fix is Stas's pick in deck `4-interaction-formula`
   (grey like the neighbours, or `--error-muted`, the error ghost button's pressed pair).
 
 ## The chart family read as an architecture (audited 2026-09-22)
@@ -358,7 +358,7 @@ Each has somebody behind it. Nothing here is speculative work.
 
 - [ ] **[P3] Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24).** Reverses the name kept in
   `presentations/implemented/ds-bar-name-collision.html`, whose decided block is now superseded. The
-  type name is drawn in `9-decision-queue`'s `row-chart-row-type` section. Migration: a
+  type name is drawn in `1-decision-queue`'s `row-chart-row-type` section. Migration: a
   `selector-rename`, one `type-rename` per exported symbol, a `token-rename` for the
   `--ds-bar-chart-*` prefix and a `class-rename` for the internal `.bar-chart` class - the same shape
   as the `ds-waterfall-chart` item above.
@@ -920,7 +920,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one. **`presentations/9-decision-queue.html` carries every open question** — every open
+in 1..N, and an `implemented` deck still carrying one. **`presentations/1-decision-queue.html` carries every open question** — every open
 deck's question with its options in that deck's own words, the recommendation starred, a link back
 for the argument, and the two questions that have no deck. It duplicates no argument, so it cannot
 contradict a deck; re-check it when a deck's OPTIONS change. **Never cite a deck by number from this
@@ -928,15 +928,15 @@ file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
 | --- | --- | --- | --- |
-| 1 | `1-color-engine-derivation` | One source token per role, derived. | the colour-engine P3 |
-| 2 | `2-color-engine-relative` | The prototype half of the same question. | as above |
-| 3 | `3-interaction-formula` | The pressed recipe of the tonal button, and of the danger menu item. | the pressed-danger-menu P3 and the `.ds-interactive` P3 |
-| 4 | `4-migration-manifest-audit` | Which of ten format practices marked *Adopt* are worth the tooling. | the manifest-practices P3 |
-| 5 | `5-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
-| 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
-| 7 | `7-picker-list-height` | Which knob caps a picker's list: one cap, `panelClass`, or a new list token, all three drawn and measured. | the picker-cap Decision (task 53) |
-| 8 | `8-locale-week-and-hour` | Whether the date picker's first day of the week and the time picker's 12h/24h follow `DS_CONFIG.locale`: fixed as today, both, week only, or hours only, each drawn over six locales. | the locale-defaults Decision (plan-C, task 21) |
-| 9 | `9-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 27 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 5 asks in three groups, then 26 decisions in six, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 2 | `2-color-engine-derivation` | One source token per role, derived. | the colour-engine P3 |
+| 3 | `3-color-engine-relative` | The prototype half of the same question. | as above |
+| 4 | `4-interaction-formula` | The pressed recipe of the tonal button, and of the danger menu item. | the pressed-danger-menu P3 and the `.ds-interactive` P3 |
+| 5 | `5-migration-manifest-audit` | Which of ten format practices marked *Adopt* are worth the tooling. | the manifest-practices P3 |
+| 6 | `6-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
+| 7 | `7-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
+| 8 | `8-picker-list-height` | Which knob caps a picker's list: one cap, `panelClass`, or a new list token, all three drawn and measured. | the picker-cap Decision (task 53) |
+| 9 | `9-locale-week-and-hour` | Whether the date picker's first day of the week and the time picker's 12h/24h follow `DS_CONFIG.locale`: fixed as today, both, week only, or hours only, each drawn over six locales. | the locale-defaults Decision (plan-C, task 21) |
 | 10 | `10-docs-reasoning-blocks` | What ds-docs does with its ~38 reasoning blocks: keep, fold to the chapter end, move to a proof page, or delete. | none - the Claude Design side is settled in `.design-sync/CARDS.md` |
 | 11 | `11-deerns-atlas-feedback` | Eight design calls and a per-component scope call raised by the Deerns Atlas prototype on the Claude Design bundle; fifteen one-answer fixes (inputs before first CD on React 18 for NG0950 and mount flicker, empty Tabs, `ds-x-*` alias vs tag selectors, `.link` on button, Tag nowrap, agent catalogue) are listed in the deck. | Deerns Atlas feedback |
 
@@ -955,8 +955,8 @@ same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was 
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
 answer, and it has already been given — the deck stays only because closing it was declined.
 
-**Every rank is written in Russian; ranks 3, 4 and 7-11 share `presentations/deck.css`**, and ranks
-1, 2, 5 and 6 carry their own inline styles. `presentations/README.md` holds the authoring contract
+**Every rank is written in Russian; ranks 1, 4, 5 and 8-11 share `presentations/deck.css`**, and ranks
+2, 3, 6 and 7 carry their own inline styles. `presentations/README.md` holds the authoring contract
 and the fifteen lint rules.
 
 ## Tooling
@@ -986,7 +986,7 @@ and the fifteen lint rules.
   **The fix is one glob, and it needs a decision because it is a policy file.** Drop `html` from `format:fix` so prettier owns ts/json/md and the two `ds/template/*` rules own templates, which is the shape `lint:all` already assumes. The alternatives are to drop the two ds rules and let prettier own html (bigger diff, loses the attribute-order convention the repo chose), or to leave it and say so in the script so nobody expects `fix:all` to converge.
   **Earlier measurements, still valid as evidence:** prettier reformatted 140 files (115 html + 25 ts) and eslint pulled 77 back (2026-08-25); in the order prettier → stylelint → eslint, `eslint --fix` reverted 111 of prettier's 112, leaving 8 files of whitespace inside inline elements that Angular discards. The tree has been in eslint's shape all along.
 
-- [ ] **[P3] Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of deck `4-migration-manifest-audit`).** The audit's own header says it: "the verdict column is a judgement about this repo, not about the practice." So *Adopt* there is a recommendation, not a decision — and the recommendations have sat only inside a deck since 2026-08-25, which is the shape of a verdict nobody executes. **The decision is which of the ten, if any**, not whether each is defensible; every one was sourced from a primary doc, so they are all defensible and adopting all ten is a tooling project no consumer is pulling on.
+- [ ] **[P3] Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of deck `5-migration-manifest-audit`).** The audit's own header says it: "the verdict column is a judgement about this repo, not about the practice." So *Adopt* there is a recommendation, not a decision — and the recommendations have sat only inside a deck since 2026-08-25, which is the shape of a verdict nobody executes. **The decision is which of the ten, if any**, not whether each is defensible; every one was sourced from a primary doc, so they are all defensible and adopting all ten is a tooling project no consumer is pulling on.
   **Three of the thirteen are already settled and are NOT part of this item:** the instruction/rationale split shipped as `action` (the prose-split pass, 2026-08-25); package reachability shipped — `package.json` already exports `"./migrations/*"`; and `schemaVersion` was **rejected** in the prose-split session along with `author`, `place`, `outcome`, `unchanged` and `source`.
   **The ten, with what each would cost, verified as absent today** (grep: none of these keys or checks exists in `tools/migration-lint.mjs` or `migrations/AUTHORING.md`):
   (1) **precondition guard** — a no-op check each runbook opens with, so an item cannot half-apply (OpenRewrite `Preconditions.check`, Nx agentic runbooks); (2) **`replaceIn` polarity** — CDK's `CssTokenUpgradeData` defaults to ALL files and narrows; no manifest or tool here has a `replaceIn` key, so this must be re-grounded on whatever key actually scopes files before it can be decided; (3) **executable verification** — Polaris ships a literal alternation `RegExp` per token group, where our `verify` is prose; (4) **runtime signal ids** — Vue/Ember collect what actually fired per app, and `devWarn` already exists here, so this is wiring rather than a mechanism; (5) **escalation marker** — Next.js codemods write a comment that breaks the build until removed (adopt the comment half only); (6) **explicit "no replacement"** — ESLint's `replacedBy` may be an empty array to SAY there is none, and the back-fill count has not been re-run against today's 36 manifests; (7) **`deprecatedIn`** — one half of ESLint `deprecatedSince` / Ember RFC 0649 `since`; the `availableUntil` half was rejected; (8) **provenance link** — CDK makes the PR link a required member; adopt it optional and lint it only on `unreleased`; (9) **`ng-update` requirements key** — the hard pre-flight the Angular CLI enforces (adopt the key, NOT a port to real schematics); (10) **dry-run hit counts** — jscodeshift prints per-file outcomes and Next.js warns that a wrong path reports 0 rather than failing; this one lands in the plugin, not the lint.
@@ -1006,9 +1006,9 @@ and the fifteen lint rules.
 
 ## Colour, interaction and typography tokens
 
-- [ ] **[P3] Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24).** ROOT CAUSE (surfaced when a consumer scoped `--primary-h/s/l` on a checkbox and ONLY the focus halo moved): "primary" has TWO decoupled reps — (a) `--primary` + hand-picked ramp shades read by component FILLS; (b) `--primary-h/s/l` HSL channels feeding ONLY math-derived halos/ramp/gray-tint — with **no live link**, so a coherent scoped recolour needs BOTH the channels AND a `--primary` re-composition (the 3-/4-token footgun). **Re-verified true 2026-09-23** (`src/lib/themes/_semantic.scss:89-91` channels; `:109-110` hover/pressed already `color-mix`; halos `:214`, `:257`; gray tint `_base-palette.scss:28`). **IDEA:** one colour token per role as the only source; shades via `color-mix()`, hue via `hsl(from var(--primary) h <S> <L>)` keeping each step's hand-tuned S/L (see [[feedback-handtuned-colors-beat-formulas]] — only the HUE is single-sourced); drop `--primary-h/s/l` as PUBLIC API. Scoped recolour becomes ONE declaration; the `ds-color`/`--accent-*` indirection this would have unblocked already shipped in `src/lib/styles/_ds-color.scss`. **OPEN for the spec:** (a) colour space (`oklch`/`oklab` perceptual vs `srgb`/`hsl` matches today) — verify each derived role visually; (b) pure-derived vs hand-pick per role; (c) relative-colour + `var()` edge cases in the 3 target engines; (d) dark-theme interplay. Prototype: decks `2-color-engine-relative` and `1-color-engine-derivation`.
+- [ ] **[P3] Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24).** ROOT CAUSE (surfaced when a consumer scoped `--primary-h/s/l` on a checkbox and ONLY the focus halo moved): "primary" has TWO decoupled reps — (a) `--primary` + hand-picked ramp shades read by component FILLS; (b) `--primary-h/s/l` HSL channels feeding ONLY math-derived halos/ramp/gray-tint — with **no live link**, so a coherent scoped recolour needs BOTH the channels AND a `--primary` re-composition (the 3-/4-token footgun). **Re-verified true 2026-09-23** (`src/lib/themes/_semantic.scss:89-91` channels; `:109-110` hover/pressed already `color-mix`; halos `:214`, `:257`; gray tint `_base-palette.scss:28`). **IDEA:** one colour token per role as the only source; shades via `color-mix()`, hue via `hsl(from var(--primary) h <S> <L>)` keeping each step's hand-tuned S/L (see [[feedback-handtuned-colors-beat-formulas]] — only the HUE is single-sourced); drop `--primary-h/s/l` as PUBLIC API. Scoped recolour becomes ONE declaration; the `ds-color`/`--accent-*` indirection this would have unblocked already shipped in `src/lib/styles/_ds-color.scss`. **OPEN for the spec:** (a) colour space (`oklch`/`oklab` perceptual vs `srgb`/`hsl` matches today) — verify each derived role visually; (b) pure-derived vs hand-pick per role; (c) relative-colour + `var()` edge cases in the 3 target engines; (d) dark-theme interplay. Prototype: decks `3-color-engine-relative` and `2-color-engine-derivation`.
 
-- [ ] **[P3] `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]]).** Stas 2026-09-24: the formula is not built now, the override slot comes later; deck `3-interaction-formula` keeps only the two pressed verdicts. Replace per-component `--ds-*-bg-hover/-active` + scattered `color-mix()` with ONE contract: a `.ds-interactive` class + presets driven by `--state-step-*` tokens in a NEW `src/lib/styles/_interaction.scss` (**still absent — verified 2026-07-24**), with an override slot (`--interactive-*-set`). Then migrate interactive components off their local recipes. **NEXT — blocking two verdicts** (live demo in deck `3-interaction-formula`): the tonal button's pressed state (28% vs 34% tint) and the danger menu item's pressed hover (the formula vs `--error-subtitle`). **Rewritten 2026-07-24:** the old "retire `_forced-states` duplication" clause is now MOOT — `_forced-states.scss` no longer exists (docs state-forcing is per-section `:host ::ng-deep .pin-*` reading each component's `--_*` resolvers). What survives is the broader "should presentational/state styling live in global partials (like `_link.scss`) with components as thin sugar" question. (Housekeeping DONE — re-grepped 2026-08-10, the stale `_forced-states` refs are gone from `README.md` and `table.component.scss`; nothing outside `.claude/` mentions it.)
+- [ ] **[P3] `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]]).** Stas 2026-09-24: the formula is not built now, the override slot comes later; deck `4-interaction-formula` keeps only the two pressed verdicts. Replace per-component `--ds-*-bg-hover/-active` + scattered `color-mix()` with ONE contract: a `.ds-interactive` class + presets driven by `--state-step-*` tokens in a NEW `src/lib/styles/_interaction.scss` (**still absent — verified 2026-07-24**), with an override slot (`--interactive-*-set`). Then migrate interactive components off their local recipes. **NEXT — blocking two verdicts** (live demo in deck `4-interaction-formula`): the tonal button's pressed state (28% vs 34% tint) and the danger menu item's pressed hover (the formula vs `--error-subtitle`). **Rewritten 2026-07-24:** the old "retire `_forced-states` duplication" clause is now MOOT — `_forced-states.scss` no longer exists (docs state-forcing is per-section `:host ::ng-deep .pin-*` reading each component's `--_*` resolvers). What survives is the broader "should presentational/state styling live in global partials (like `_link.scss`) with components as thin sugar" question. (Housekeeping DONE — re-grepped 2026-08-10, the stale `_forced-states` refs are gone from `README.md` and `table.component.scss`; nothing outside `.claude/` mentions it.)
 
 - [ ] **[P3] Theme recipe vs hand-tuned picks — alignment decision.** Button/icon-button state derivation uses the theme's 88%/76% mix-to-black recipe (**verified `button.component.scss:57-58`, `icon-button.component.scss:113-114,172-173`, `themes/_semantic.scss:109-110`, 2026-09-23**). If the single-source-colour calibration replaces `--primary-hover/-pressed` with hand-tuned values, the button defaults (color-mix off the resolved bg) diverge from the theme roles — decide then: components read role tokens again, or theme keeps the formula. **This is a concrete instance of the single-source item's open question (b); resolve it inside that spec, not separately.**
 
@@ -1457,8 +1457,9 @@ Bar and column are settled separately and stay apart.
   byte-identical in five files each.
   **The cost of moving them is the documentation, not the code.** `extract-docs` turns each
   docblock into that chart's own input table, so a base class buys ~450 lines and makes every
-  chart's API page open with a shared preamble. The extraction that does NOT cost that is the
-  template and style duplication below, which no generator reads.
+  chart's API page open with a shared preamble. The template and style duplication no generator
+  reads is already shared: the state frame is `figure[dsChartStates]`
+  (`chart-tooltip/chart-states.component.ts`) on top of `styles/_chart-frame.scss`.
 
 ## Thirteen inputs the chart family declares component by component (measured 2026-09-22)
 
