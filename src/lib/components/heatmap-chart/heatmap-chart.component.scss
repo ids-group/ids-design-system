@@ -9,6 +9,13 @@
 @include chart-data-table.chart-data-table;
 
 
+/* Resolved a level above the overrides below: read on the same element, `--focus-ring-color` and
+   this would reference each other and both compute to nothing. */
+:host {
+  --_heatmap-chart-focus-color: var(--ds-heatmap-chart-focus-color, var(--focus-ring-color));
+  --_heatmap-chart-focus-width: var(--ds-heatmap-chart-focus-width, var(--focus-ring-width));
+}
+
 .heatmap-chart {
   --_chart-message-height: calc(4 * var(--_heatmap-chart-cell-size));
   --_heatmap-chart-cell-size: var(--ds-heatmap-chart-cell-size, 34px);
@@ -17,8 +24,6 @@
   --_heatmap-chart-label-color: var(--ds-heatmap-chart-label-color, var(--ds-chart-axis-label-color));
   --_heatmap-chart-label-font-size: var(--ds-heatmap-chart-label-font-size, var(--ds-chart-axis-font-size));
   --_heatmap-chart-missing-color: var(--ds-heatmap-chart-missing-color, var(--surface-secondary));
-  --_heatmap-chart-focus-color: var(--ds-heatmap-chart-focus-color, var(--focus-ring-color));
-  --_heatmap-chart-focus-width: var(--ds-heatmap-chart-focus-width, var(--focus-ring-width));
 
   /* The shared mixins read these; without them the hooks above reach nothing. */
   --ds-chart-focus-ring-color: var(--_heatmap-chart-focus-color);

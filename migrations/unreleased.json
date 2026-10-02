@@ -97,6 +97,10 @@
     }
   ],
   "informational": [
+    {
+      "text": "ds-funnel-chart, ds-heatmap-chart and ds-pie-chart draw their keyboard focus ring, in --focus-ring-color and --focus-ring-width unless --ds-funnel-chart-focus-color, --ds-heatmap-chart-focus-color or --ds-pie-chart-focus-color (and the -focus-width tokens) say otherwise; a focused mark showed no indicator before.",
+      "verify": "Tab into an interactive funnel, heat map and pie chart and confirm the focused stage, cell or slice is ringed."
+    },
     ".link.plain is new: a link underlined only on hover and keyboard focus, for a link that stands on its own. A .link without it renders as before.",
     {
       "text": "ds-chart draws the Unpin control while its category cursor is pinned, on its caption's line or, without a caption, over the top end of the plot. In every chart the .pin-reset button now sits inside an internal ds-chart-unpin element rendered display: contents, so a consumer rule selecting it as a direct child of the chart's figure no longer matches; select .pin-reset alone.",

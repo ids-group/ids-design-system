@@ -46,6 +46,12 @@
 
 ### Fixed
 
+- **`ds-funnel-chart`, `ds-heatmap-chart` and `ds-pie-chart` draw their keyboard focus ring.** The
+  ring's colour and width resolved to nothing inside these charts, so a focused stage, cell or
+  slice showed no indicator. It now takes `--focus-ring-color` and `--focus-ring-width`, and
+  `--ds-funnel-chart-focus-color`, `--ds-heatmap-chart-focus-color`, `--ds-pie-chart-focus-color`
+  and their `-focus-width` pairs restyle it as documented.
+
 - **A pinned chart tooltip leaves the screen with its chart.** Scrolled past, the chart's pinned
   panel stayed held at the edge of the viewport; it now hides while the chart is out of sight and
   shows beside it again when it scrolls back. The pin itself is kept. The internal
