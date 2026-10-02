@@ -133,9 +133,9 @@
   <div class="lane">
     <div class="lane-head"><h2>🔥 P2 - сначала это</h2><span class="count c-a11y">12</span><span class="why">Все двенадцать P2 индекса: баги в том, что консюмер уже читает, и два инструмента с датой.</span></div>
     <div class="cards">
-      <div class="card a11y"><span class="chip ch-p0">P2 · консюмер</span><div class="t">ds-table: раскрытая строка исчезает без анимации</div><p class="d">Открытие анимирует <code>grid-template-rows</code> от <code>0fr</code> к <code>1fr</code> за 180 мс, а закрытие снимает <code>&lt;tr&gt;</code> структурным <code>@if</code> на следующем кадре - keyframe не играет на удаляемом элементе. Оба образца уже в библиотеке: <code>ds-accordion</code> (контент смонтирован, переход по классу) и <code>disposeWithLeave</code> у оверлеев. Меньшая правка - как у аккордеона.</p><div class="meta">10-decision-queue.html</div></div>
-      <div class="card a11y"><span class="chip ch-p0">P2 · консюмер</span><div class="t">Контур контрола и --secondary-on не проходят контраст</div><p class="d"><code>--border-default</code> (<code>--neutral-200</code>) - граница <code>ds-input</code> и ещё 25 компонентов: <b>1,31:1</b> на белом при пороге 3:1 (WCAG 1.4.11). <code>--secondary-on</code> - всегда белый, а <code>--secondary</code> пересобирается из каналов, и золотой бренд получает белый текст на <b>1,91:1</b>. ids-europe-landing переопределяет оба.</p><div class="meta">10-decision-queue.html</div></div>
-      <div class="card a11y"><span class="chip ch-p0">P2 · консюмер</span><div class="t">Сузившийся контекст шаблона не считается actionable</div><p class="d">0.14.0 дала <code>CellTemplateDirective</code> <code>ngTemplateContextGuard</code> и <code>T = unknown</code>: каждый <code>let-row</code> консюмера стал <code>unknown</code> под <code>strictTemplates</code>, и сборка mm-ecm упала на 194 + 6 ошибках, а манифест записал это как informational. Нужны правило в AUTHORING.md (behavior на <code>surface: template</code>) и гейт на новый <code>ngTemplateContextGuard</code>.</p><div class="meta">10-decision-queue.html</div></div>
+      <div class="card a11y"><span class="chip ch-p0">P2 · консюмер</span><div class="t">ds-table: раскрытая строка исчезает без анимации</div><p class="d">Открытие анимирует <code>grid-template-rows</code> от <code>0fr</code> к <code>1fr</code> за 180 мс, а закрытие снимает <code>&lt;tr&gt;</code> структурным <code>@if</code> на следующем кадре - keyframe не играет на удаляемом элементе. Оба образца уже в библиотеке: <code>ds-accordion</code> (контент смонтирован, переход по классу) и <code>disposeWithLeave</code> у оверлеев. Меньшая правка - как у аккордеона.</p><div class="meta">9-decision-queue.html</div></div>
+      <div class="card a11y"><span class="chip ch-p0">P2 · консюмер</span><div class="t">Контур контрола и --secondary-on не проходят контраст</div><p class="d"><code>--border-default</code> (<code>--neutral-200</code>) - граница <code>ds-input</code> и ещё 25 компонентов: <b>1,31:1</b> на белом при пороге 3:1 (WCAG 1.4.11). <code>--secondary-on</code> - всегда белый, а <code>--secondary</code> пересобирается из каналов, и золотой бренд получает белый текст на <b>1,91:1</b>. ids-europe-landing переопределяет оба.</p><div class="meta">9-decision-queue.html</div></div>
+      <div class="card a11y"><span class="chip ch-p0">P2 · консюмер</span><div class="t">Сузившийся контекст шаблона не считается actionable</div><p class="d">0.14.0 дала <code>CellTemplateDirective</code> <code>ngTemplateContextGuard</code> и <code>T = unknown</code>: каждый <code>let-row</code> консюмера стал <code>unknown</code> под <code>strictTemplates</code>, и сборка mm-ecm упала на 194 + 6 ошибках, а манифест записал это как informational. Нужны правило в AUTHORING.md (behavior на <code>surface: template</code>) и гейт на новый <code>ngTemplateContextGuard</code>.</p><div class="meta">9-decision-queue.html</div></div>
       <div class="card a11y"><span class="chip ch-p0">P2 · a11y</span><div class="t">Warning-пара не проходит AA: 4,42:1</div><p class="d"><code>#8A7400</code> на <code>#FFFBEA</code> (<code>_status.scss:53</code>) - единственная статусная пара ниже 4,5:1; error 5,92, success 6,42, primary 6,16. Темнее шага в рампе нет: <code>--warning-text</code> уже <code>--yellow-700</code>. Та же пара у <code>ds-alert</code> и <code>ds-banner</code>. Какой цвет положить на тинт - в деке, четыре кандидата.</p><div class="meta">6-warning-text-colour.html</div></div>
       <div class="card a11y"><span class="chip ch-p0">P2 · фокус</span><div class="t">_focus.scss копируется в 48 бандлов компонентов</div><p class="d">Замерено 23.09 на <code>dist/ds/fesm2022/</code>: 48 из 90 бандлов несут глобальное <code>:where(:focus-visible)</code>, блоки <code>data-focus</code>, keyframes и forced-colors - каждый <code>@use</code> ради миксинов переизлучает верхний уровень партиала. Цена в опубликованном пакете <b>не замерена</b>; вероятный ответ - разделить партиал на миксины и правила.</p></div>
       <div class="card a11y"><span class="chip ch-p0">P2 · фокус</span><div class="t">Warning и success поля: чужое гало фокуса</div><p class="d"><code>_field-state.scss</code> даёт вложенный блок фокуса только error, поэтому warning-поле в фокусе - жёлтая рамка с синим гало. Токены <code>--focus-field-warning</code> и <code>--focus-field-success</code> уже отгружены и документированы, и их никто не читает.</p></div>
@@ -151,13 +151,13 @@
   <div class="lane">
     <div class="lane-head"><h2>⏳ Ждёт твоего решения</h2><span class="count c-you">13</span><span class="why">Твой вход. У открытых дек по карточке; очередь решений собирает все вопросы на одной странице.</span></div>
     <div class="cards">
-      <div class="card you"><span class="chip ch-you">решить</span><div class="t">Очередь решений - всё открытое на одной странице</div><p class="d">7 асков, которых ждёт консюмер, в трёх группах, и 27 решений в шести - каждый вопрос нарисован как «сейчас» против «после», со ссылкой на деку с аргументом. Выборы запоминаются в браузере, панель внизу отдаёт их одной строкой.</p><div class="meta">10-decision-queue.html</div></div>
+      <div class="card you"><span class="chip ch-you">решить</span><div class="t">Очередь решений - всё открытое на одной странице</div><p class="d">7 асков, которых ждёт консюмер, в трёх группах, и 27 решений в шести - каждый вопрос нарисован как «сейчас» против «после», со ссылкой на деку с аргументом. Выборы запоминаются в браузере, панель внизу отдаёт их одной строкой.</p><div class="meta">9-decision-queue.html</div></div>
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">Single-source colour engine</div><p class="d">«primary» живёт в двух расцепленных видах: <code>--primary</code> с ручными пиками рампы для заливок и каналы <code>--primary-h/s/l</code> для гало и серых. <b>Перепроверено 23.09</b> (<code>_semantic.scss:89-91</code>). Открыто для спеки: цветовое пространство, чистая деривация против ручных пиков, тёмная тема. Recipe-vs-hand-tuned - вопрос (b) внутри этой спеки. Прототип-половина - дека 2.</p><div class="meta">1-color-engine-derivation.html</div></div>
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">.ds-interactive: два вердикта нажатия</div><p class="d">Stas 24.09: формулу сейчас не строим, слот переопределения - позже. В деке остались два pressed-вердикта, оба нарисованы и замерены: нажатие tonal-кнопки (тинт 28% или 34%) и нажатие danger-пункта меню. <code>_interaction.scss</code> по-прежнему не существует.</p><div class="meta">3-interaction-formula.html</div></div>
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">Нажатый danger-пункт меню красится в hover</div><p class="d"><code>.menu-item.error:hover</code> идёт после <code>.menu-item:active</code> при равной специфичности (<code>menu-item.component.scss:78</code>, <code>:101</code>), поэтому нажатие рисует hover - шаг ΔE 0. Фикс - выбор в деке: серый, как у соседей, или <code>--error-muted</code>, пара нажатия error ghost-кнопки.</p><div class="meta">3-interaction-formula.html</div></div>
-      <div class="card you"><span class="chip ch-you">решить</span><div class="t">Высота списка пикера: публичный токен или panelClass</div><p class="d">На панели два потолка: публичный <code>--ds-dropdown-panel-max-height</code> форвардится, но строки режет внутренний <code>--picker-maxh</code> (280px). Варианты: (a) один потолок - список заполняет панель, select показывает до 310px вместо 280; (b) только <code>panelClass</code>; (c) новый <code>--ds-picker-list-max-height</code>. Stas склоняется к (a), вердикт позже.</p><div class="meta">8-picker-list-height.html</div></div>
-      <div class="card you"><span class="chip ch-you">решить</span><div class="t">Первый день недели и 12h/24h из локали</div><p class="d">Сегодня оба фиксированы: понедельник и <code>'24h'</code>. <code>DS_CONFIG.locale</code> по умолчанию берёт <code>LOCALE_ID</code>, то есть <code>en-US</code>, так что деривация даст каждому такому приложению воскресенье и 12h. Четыре варианта над шестью локалями; дека рекомендует оба из локали, с понедельником там, где у движка нет данных о неделе.</p><div class="meta">9-locale-week-and-hour.html</div></div>
-      <div class="card you"><span class="chip ch-you">решить</span><div class="t">Неопределённый ds-bar: один вердикт</div><p class="d">Причина исправлена: цикл шёл на <code>--ease-standard</code>, теперь <code>linear</code> - чанк на дорожке 86,7% цикла вместо 48,3%. Остался вкус: 13,3% цикла чанк вне дорожки. Три варианта: оставить чанк, сделать бегущую полосу дефолтом или спрятать её за инпут. Полоса mm-ecm - единственное место, где они не взяли <code>ds-progress</code>.</p><div class="meta">10-decision-queue.html</div></div>
+      <div class="card you"><span class="chip ch-you">решить</span><div class="t">Высота списка пикера: публичный токен или panelClass</div><p class="d">На панели два потолка: публичный <code>--ds-dropdown-panel-max-height</code> форвардится, но строки режет внутренний <code>--picker-maxh</code> (280px). Варианты: (a) один потолок - список заполняет панель, select показывает до 310px вместо 280; (b) только <code>panelClass</code>; (c) новый <code>--ds-picker-list-max-height</code>. Stas склоняется к (a), вердикт позже.</p><div class="meta">7-picker-list-height.html</div></div>
+      <div class="card you"><span class="chip ch-you">решить</span><div class="t">Первый день недели и 12h/24h из локали</div><p class="d">Сегодня оба фиксированы: понедельник и <code>'24h'</code>. <code>DS_CONFIG.locale</code> по умолчанию берёт <code>LOCALE_ID</code>, то есть <code>en-US</code>, так что деривация даст каждому такому приложению воскресенье и 12h. Четыре варианта над шестью локалями; дека рекомендует оба из локали, с понедельником там, где у движка нет данных о неделе.</p><div class="meta">8-locale-week-and-hour.html</div></div>
+      <div class="card you"><span class="chip ch-you">решить</span><div class="t">Неопределённый ds-bar: один вердикт</div><p class="d">Причина исправлена: цикл шёл на <code>--ease-standard</code>, теперь <code>linear</code> - чанк на дорожке 86,7% цикла вместо 48,3%. Остался вкус: 13,3% цикла чанк вне дорожки. Три варианта: оставить чанк, сделать бегущую полосу дефолтом или спрятать её за инпут. Полоса mm-ecm - единственное место, где они не взяли <code>ds-progress</code>.</p><div class="meta">9-decision-queue.html</div></div>
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">Десять практик манифестов, помеченных Adopt</div><p class="d">«Adopt» в аудите - рекомендация, а не решение, и с 25.08 она живёт только в деке. Решать, <b>какие из десяти</b>, если какие-то: precondition guard, полярность <code>replaceIn</code>, исполняемая verify, runtime signal ids, escalation marker, явное «нет замены», <code>deprecatedIn</code>, provenance link, ng-update requirements, dry-run counts. Дешевле всего начать с (6) и (7).</p><div class="meta">4-migration-manifest-audit.html</div></div>
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">fix:all переформатирует HTML, который eslint возвращает</div><p class="d"><code>lint:all</code> зелёный - сломан только фиксер: <code>format:fix</code> добавляет <code>html</code> в глоб, и prettier переписывает ~112 шаблонов, которые два правила <code>ds/template/*</code> тут же хотят назад. Замерено 10.09: один <code>prettier --write</code> по трём файлам секций дал 63 предупреждения eslint. Фикс - убрать <code>html</code> из <code>format:fix</code>, но это файл политики.</p></div>
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">ds-number-stepper и ds-dropzone вне field-message</div><p class="d">Не «полям не хватает фичи» - <b>обёртки не было никогда</b>: ни <code>label</code>, ни <code>hint</code>, ни <code>error</code>, ни <code>ds-field-message</code>, тогда как у остальных четырнадцати полей есть всё. Значит, это добавление возможности, а не унификация, и вступление делает оба forms CVA. Образец уже есть: <code>ds-button</code> вшил message-половину в компонент, который полем не был.</p></div>
@@ -169,8 +169,7 @@
   <div class="lane">
     <div class="lane-head"><h2>🧭 Решено или решать не нужно - ждут рук</h2><span class="count c-raw">9</span><span class="why">P3, записаны 22-24.09: аски Stas и находки чартов и инструментов.</span></div>
     <div class="cards">
-      <div class="card raw"><span class="chip ch-raw">аск · решено</span><div class="t">Бар и колонка: вынести общее, контракты разные</div><p class="d">Решено Stas 22.09, не построено. Это разные чарты, и они не сливаются: строка бара - одна метка и значение с <code>segments</code>, серия колонок - N марок по категориям с <code>stack</code>. Общее уходит в модуль с точкой расширения; два видимых расхождения - где объявлен стек и одна серия против N категорий в палитре - документируются, а не убираются.</p><div class="meta">7-bar-column-contracts.html</div></div>
-      <div class="card raw"><span class="chip ch-raw">аск Stas</span><div class="t">ds-bar-chart → ds-row-chart</div><p class="d">Отменяет имя, сохранённое в <code>implemented/ds-bar-name-collision.html</code>. Имя типа нарисовано в деке очереди, секция <code>row-chart-row-type</code>. Миграция той же формы, что у waterfall: <code>selector-rename</code>, <code>type-rename</code> на каждый символ, <code>token-rename</code> для <code>--ds-bar-chart-*</code>, <code>class-rename</code>.</p><div class="meta">10-decision-queue.html</div></div>
+      <div class="card raw"><span class="chip ch-raw">аск Stas</span><div class="t">ds-bar-chart → ds-row-chart</div><p class="d">Отменяет имя, сохранённое в <code>implemented/ds-bar-name-collision.html</code>. Имя типа нарисовано в деке очереди, секция <code>row-chart-row-type</code>. Миграция той же формы, что у waterfall: <code>selector-rename</code>, <code>type-rename</code> на каждый символ, <code>token-rename</code> для <code>--ds-bar-chart-*</code>, <code>class-rename</code>.</p><div class="meta">9-decision-queue.html</div></div>
       <div class="card raw"><span class="chip ch-raw">аск Stas</span><div class="t">ds-waterfall-chart → ds-cascade-chart</div><p class="d">Вкус, а не исправление: <code>waterfall</code> - стандартное слово поля (Excel, Power BI, Highcharts, ECharts). Едут селектор, типы, entry point, <code>g[dsWaterfallMarks]</code> и токены <code>--ds-waterfall-chart-*</code>; миграция по образцу <code>donut-chart</code> → <code>pie-chart</code> из 0.13.4. Консюмеров пока нет, но пропущенный тег молча рисует пустоту.</p></div>
       <div class="card raw"><span class="chip ch-raw">чарты</span><div class="t">Панель категории не закрывается, когда фокус уходит с маркера</div><p class="d">В <code>ds-chart</code> с <code>cursor="category"</code> Tab с маркера оставляет панель оси и полосу на экране: blur не сбрасывает <code>activeIndex</code>. Уход указателя с плота её чистит, уход фокуса - нет.</p></div>
       <div class="card raw"><span class="chip ch-raw">чарты</span><div class="t">Панель маркера в фокусе называет все серии</div><p class="d">Слияние по категории в <code>ds-chart.tooltipContext</code> добавляет чтения других марок в панель маркера с клавиатурным фокусом, а доки чартов обещают только его собственное. Фокус и указатель на одной марке читаются по-разному: решить, что верно, и выровнять второе.</p></div>
@@ -226,7 +225,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**102 open — 0 P1, 4 P2, 98 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**101 open — 0 P1, 4 P2, 97 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 4
 
@@ -238,7 +237,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 98
+### P3 — 97
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -259,8 +258,6 @@ item and nothing else.
 - **Tooling**
   - No pixel comparison was run over the 2026-09-29/30 library comment sweep (recorded 2026-09-30)
   - `--picker-maxh` is an abbreviated token name (recorded 2026-09-24)
-- **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
-  - Extract what bar and column SHARE; their contracts stay different (Stas, 2026-09-22)
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A2 - column filters and persisted layout out of `ds-table`
   - B1 - `DS_CONFIG.prototype: true` is BEHAVIOUR only. For bytes, use a build-time flag
@@ -393,8 +390,8 @@ item and nothing else.
 
 **Consumer asks are the head of the board.** Every item a consumer is waiting on is drawn, with its
 before and after, in deck `decision-queue` under *Ждут консьюмеры*; pick there, and the items here
-are the work. Three are open: the control-edge contrast (:216) under *Bugs*, the bar/column extract
-(:416) under *Two chart names that collide*, and the indeterminate bar's stripe verdict (:1064). The 0.9.0-0.13.3 manifest walk and the eleven
+are the work. Two are open: the control-edge contrast (:212) under *Bugs* and the indeterminate
+bar's stripe verdict (:1031). The 0.9.0-0.13.3 manifest walk and the eleven
 reached-past styling hooks are both closed.
 
 **Nobody is blocked from installing.** All six consumer repos declare Angular `^21` or `~21`, so the
@@ -572,7 +569,7 @@ Each has somebody behind it. Nothing here is speculative work.
 
 - [ ] **[P3] Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24).** Reverses the name kept in
   `presentations/implemented/ds-bar-name-collision.html`, whose decided block is now superseded. The
-  type name is drawn in `10-decision-queue`'s `row-chart-row-type` section. Migration: a
+  type name is drawn in `9-decision-queue`'s `row-chart-row-type` section. Migration: a
   `selector-rename`, one `type-rename` per exported symbol, a `token-rename` for the
   `--ds-bar-chart-*` prefix and a `class-rename` for the internal `.bar-chart` class - the same shape
   as the `ds-waterfall-chart` item above.
@@ -613,25 +610,6 @@ Each has somebody behind it. Nothing here is speculative work.
 - [ ] **[P3] `--picker-maxh` is an abbreviated token name (recorded 2026-09-24).**
   The picker list cap is spelled `-maxh`, against the spelled-out naming convention
   (`-max-height`); check-abbreviated-tokens reads only `--ds-*` names, so it does not catch it.
-
-## Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)
-
-Both found while planning that consumer's move to 0.13.3. Neither blocks it; both cost a reader.
-
-- [ ] **[P3] Extract what bar and column SHARE; their contracts stay different (Stas, 2026-09-22).**
-  **The two are different charts and are not merged.** Neither grows the other's data model: a bar
-  row is one label and one value with an optional `segments` breakdown, a column series is N marks
-  across categories with `stack` deciding how they share a band
-  (`column-chart.component.ts:162`, `'none' | 'grouped' | 'stacked' | 'normalized'`). The phase-1
-  spec calling them twins is what made the divergence read as an accident; it is not one.
-  **What the verdict asks for is the layer underneath.** Whatever both implement is extracted into a
-  shared module, reused by both, and given a way to be EXTENDED where one of them needs to differ -
-  so a chart adapts rather than forks. Whatever is unique to one stays unique to that one.
-  **Two divergences are visible to a consumer and are documented rather than removed:** stacking
-  arrives in the datum on one side and in an input on the other, and the same flat array is one
-  series in the bar, where every row takes `--ds-chart-series-default-color`, against N categories
-  in the column, where each mark takes its own palette slot (`bar-chart.component.ts:407` against
-  `column-chart.component.ts:312-322`). Both drawn in deck `7-bar-column-contracts`.
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
@@ -1153,7 +1131,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one. **`presentations/10-decision-queue.html` carries every open question** — every open
+in 1..N, and an `implemented` deck still carrying one. **`presentations/9-decision-queue.html` carries every open question** — every open
 deck's question with its options in that deck's own words, the recommendation starred, a link back
 for the argument, and the two questions that have no deck. It duplicates no argument, so it cannot
 contradict a deck; re-check it when a deck's OPTIONS change. **Never cite a deck by number from this
@@ -1167,13 +1145,11 @@ file** — the number moves; cite the filename.
 | 4 | `4-migration-manifest-audit` | Which of ten format practices marked *Adopt* are worth the tooling. | the manifest-practices P3 |
 | 5 | `5-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
 | 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
-| 7 | `7-bar-column-contracts` | Decided (Stas, 2026-09-22): extract what bar and column share, keep their contracts different; not yet built. | the bar/column extract under *Two chart names that collide* |
-| 8 | `8-picker-list-height` | Which knob caps a picker's list: one cap, `panelClass`, or a new list token, all three drawn and measured. | the picker-cap Decision (task 53) |
-| 9 | `9-locale-week-and-hour` | Whether the date picker's first day of the week and the time picker's 12h/24h follow `DS_CONFIG.locale`: fixed as today, both, week only, or hours only, each drawn over six locales. | the locale-defaults Decision (plan-C, task 21) |
-| 10 | `10-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 27 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
-| 11 | `11-docs-reasoning-blocks` | What ds-docs does with its ~38 reasoning blocks: keep, fold to the chapter end, move to a proof page, or delete. | none - the Claude Design side is settled in `.design-sync/CARDS.md` |
-| 12 | `12-deerns-atlas-feedback` | Eight design calls and a per-component scope call raised by the Deerns Atlas prototype on the Claude Design bundle; fifteen one-answer fixes (inputs before first CD on React 18 for NG0950 and mount flicker, empty Tabs, `ds-x-*` alias vs tag selectors, `.link` on button, Tag nowrap, agent catalogue) are listed in the deck. | Deerns Atlas feedback |
-| 13 | `13-chart-state-frame` | How much shared layer the bar/column extract builds: docs only, the state frame (unpin, caption, error, skeleton, empty) extracted for all nine charts, or for bar and column alone. Gates the item "Extract what bar and column SHARE". |
+| 7 | `7-picker-list-height` | Which knob caps a picker's list: one cap, `panelClass`, or a new list token, all three drawn and measured. | the picker-cap Decision (task 53) |
+| 8 | `8-locale-week-and-hour` | Whether the date picker's first day of the week and the time picker's 12h/24h follow `DS_CONFIG.locale`: fixed as today, both, week only, or hours only, each drawn over six locales. | the locale-defaults Decision (plan-C, task 21) |
+| 9 | `9-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 27 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 10 | `10-docs-reasoning-blocks` | What ds-docs does with its ~38 reasoning blocks: keep, fold to the chapter end, move to a proof page, or delete. | none - the Claude Design side is settled in `.design-sync/CARDS.md` |
+| 11 | `11-deerns-atlas-feedback` | Eight design calls and a per-component scope call raised by the Deerns Atlas prototype on the Claude Design bundle; fifteen one-answer fixes (inputs before first CD on React 18 for NG0950 and mount flicker, empty Tabs, `ds-x-*` alias vs tag selectors, `.link` on button, Tag nowrap, agent catalogue) are listed in the deck. | Deerns Atlas feedback |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -5822,9 +5798,9 @@ mark, because each is waiting on a deck verdict rather than on work.
   (function () {
     // card title (substring) → [ todo bullet key, deck file ]
     const MAP = [
-      ["ds-table: раскрытая строка исчезает без анимации",           "A `ds-table` expanded row animates open and vanishes on close",               "10-decision-queue.html"],
-      ["Контур контрола и --secondary-on не проходят контраст",      "The stock control edge and `--secondary-on` fail contrast",                   "10-decision-queue.html"],
-      ["Сузившийся контекст шаблона не считается actionable",        "Nothing classifies a tightened template context as actionable",               "10-decision-queue.html"],
+      ["ds-table: раскрытая строка исчезает без анимации",           "A `ds-table` expanded row animates open and vanishes on close",               "9-decision-queue.html"],
+      ["Контур контрола и --secondary-on не проходят контраст",      "The stock control edge and `--secondary-on` fail contrast",                   "9-decision-queue.html"],
+      ["Сузившийся контекст шаблона не считается actionable",        "Nothing classifies a tightened template context as actionable",               "9-decision-queue.html"],
       ["Warning-пара не проходит AA: 4,42:1",                        "The warning status pair fails WCAG AA for normal text",                       "6-warning-text-colour.html"],
       ["_focus.scss копируется в 48 бандлов компонентов",            "`_focus.scss`'s top-level CSS is copied into 48 component style strings",     ""],
       ["Warning и success поля: чужое гало фокуса",                  "Warning and success fields show a mismatched halo",                           ""],
@@ -5834,21 +5810,20 @@ mark, because each is waiting on a deck verdict rather than on work.
       ["14 фокусируемых элементов в ds-docs без имени",              "Fourteen focusable elements in ds-docs still have no accessible name",        ""],
       ["Публикация в npm перестанет работать в январе 2027",         "Publishing to npm stops working in January 2027",                             ""],
       ["Устаревший presentations/ds.css никто не ловит",             "Nothing catches a stale `presentations/ds.css`",                              ""],
-      ["Очередь решений - всё открытое на одной странице",           "carries every open question",                                                 "10-decision-queue.html"],
+      ["Очередь решений - всё открытое на одной странице",           "carries every open question",                                                 "9-decision-queue.html"],
       ["Single-source colour engine",                                "Single-source colour engine",                                                 "1-color-engine-derivation.html"],
       [".ds-interactive: два вердикта нажатия",                      "global state-interaction contract",                                           "3-interaction-formula.html"],
       ["Нажатый danger-пункт меню красится в hover",                 "A pressed danger menu item shows its hover colour",                           "3-interaction-formula.html"],
-      ["Высота списка пикера: публичный токен или panelClass",       "Does the picker list height become a public token",                           "8-picker-list-height.html"],
-      ["Первый день недели и 12h/24h из локали",                     "Do the date picker's first day of the week and the time picker's 12h/24h",   "9-locale-week-and-hour.html"],
-      ["Неопределённый ds-bar: один вердикт",                        "An indeterminate `ds-bar` is never empty, or 86.7% is enough",                "10-decision-queue.html"],
+      ["Высота списка пикера: публичный токен или panelClass",       "Does the picker list height become a public token",                           "7-picker-list-height.html"],
+      ["Первый день недели и 12h/24h из локали",                     "Do the date picker's first day of the week and the time picker's 12h/24h",   "8-locale-week-and-hour.html"],
+      ["Неопределённый ds-bar: один вердикт",                        "An indeterminate `ds-bar` is never empty, or 86.7% is enough",                "9-decision-queue.html"],
       ["Десять практик манифестов, помеченных Adopt",                "Ten manifest-format practices the audit marked *Adopt*",                      "4-migration-manifest-audit.html"],
       ["fix:all переформатирует HTML, который eslint возвращает",    "`fix:all` reformats HTML that eslint then fights",                            ""],
       ["ds-number-stepper и ds-dropzone вне field-message",          "outside the field-message system entirely",                                   ""],
       ["Signal Forms: dirty и pending (disabledReasons отвечен)",    "blocked on a LOOK, not on wiring",                                            "implemented/button-refusal-reason.html"],
       ["Мульти-пин: закреплять больше одной метки",                  "Pin more than one mark at a time",                                            ""],
       ["Сократить тексты в ds-docs",                                 "Cut the prose in ds-docs",                                                    ""],
-      ["Бар и колонка: вынести общее, контракты разные",             "Extract what bar and column SHARE",                                           "7-bar-column-contracts.html"],
-      ["ds-bar-chart → ds-row-chart",                                "Rename `ds-bar-chart` to `ds-row-chart`",                                     "10-decision-queue.html"],
+      ["ds-bar-chart → ds-row-chart",                                "Rename `ds-bar-chart` to `ds-row-chart`",                                     "9-decision-queue.html"],
       ["ds-waterfall-chart → ds-cascade-chart",                      "`ds-waterfall-chart` is `ds-cascade-chart`",                                  ""],
       ["Панель категории не закрывается, когда фокус уходит с маркера", "The category panel stays open after keyboard focus leaves a line marker",   ""],
       ["Панель маркера в фокусе называет все серии",                 "A focused marker's panel names every series at its category",                 ""],

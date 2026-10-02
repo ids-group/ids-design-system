@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Обвязка состояний чартов</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-02">
+<meta name="ds-deck-evidence" content="src/lib/components/chart-tooltip/chart-states.component.ts:34">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2); }
   .tile { border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); padding: var(--space-2); background: var(--surface-default); display: grid; gap: var(--space-1); }
@@ -58,6 +60,13 @@
 </head>
 <body>
 <main>
+  <div class="decided">
+    <h2>Решено: общая обвязка у всех девяти</h2>
+    <p>Кнопка снятия пина, подпись и состояния error, loading и empty рисуются одним внутренним компонентом <code>figure[dsChartStates]</code>, который сидит на собственной <code>&lt;figure&gt;</code> каждого чарта, так что подпись остаётся её прямым ребёнком. Скелетон и тело чарта объявлены в шаблоне чарта и сохраняют его стили; у pie свой шаблон сообщения с кольцом. Разница в стеке у bar и column названа в <code>components.md</code>.</p>
+    <p>Проверено в браузере 2026-10-02: 9 чартов × 4 состояния на dev и на ветке, 36 ячеек, расхождений в размерах и вычисленных стилях 0; отступ подписи под закреплённой меткой 88px до и после.</p>
+    <p class="evidence">2026-10-02 · src/lib/components/chart-tooltip/chart-states.component.ts:34</p>
+  </div>
+
   <header class="masthead">
     <h1>Обвязка состояний скопирована в каждый из 9 чартов, а разница в стеке bar и column нигде не названа</h1>
     <p class="lede">Одно решение: сколько общего слоя строить под пунктом «Extract what bar and column share». Консьюмер ни в одном варианте ничего не увидит - выбор между объёмом рефакторинга и тем, сколько копий останется.</p>
