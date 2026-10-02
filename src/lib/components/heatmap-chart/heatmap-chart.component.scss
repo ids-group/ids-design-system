@@ -10,6 +10,7 @@
 
 
 .heatmap-chart {
+  --_chart-message-height: calc(4 * var(--_heatmap-chart-cell-size));
   --_heatmap-chart-cell-size: var(--ds-heatmap-chart-cell-size, 34px);
   --_heatmap-chart-cell-gap: var(--ds-heatmap-chart-cell-gap, 2px);
   --_heatmap-chart-cell-radius: var(--ds-heatmap-chart-cell-radius, var(--ds-radius-control));
@@ -26,11 +27,6 @@
 
   margin: 0;
 }
-
-@include chart-frame.message-box(
-  calc(4 * var(--_heatmap-chart-cell-size)),
-  false
-);
 
 .skeleton {
   display: grid;

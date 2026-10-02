@@ -17,3 +17,5 @@ export {
   CHART_UNPIN_DRAWN_BY_HOST,
   ChartUnpinComponent,
 } from './chart-unpin.component';
+export { ChartStatesComponent } from './chart-states.component';
+export type { ChartStatesMessageContext } from './chart-states.component';

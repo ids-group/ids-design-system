@@ -1,104 +1,100 @@
-<figure class="column-chart">
-  <ds-chart-unpin
-    [pinned]="!!pinnedSeries()"
-    (release)="pinnedSeries()?.activeMark?.release()" />
-
-  @if (caption()) {
-    <figcaption>
-      {{ caption() }}
-    </figcaption>
-  }
-
-  @if (error()) {
-    <p
-      class="empty is-error"
-      role="status">
-      {{ errorTextResolved() }}
-    </p>
-  } @else if (loading() || !renderReady()) {
-    <div
-      class="skeleton"
-      aria-hidden="true">
-      @for (placeholder of skeletonColumns(); track $index) {
-        <ds-skeleton
-          [shimmer]="loading()"
-          [height]="skeletonHeightPx()" />
-      }
-    </div>
-  } @else if (isEmpty()) {
-    <p class="empty">
-      {{ emptyTextResolved() }}
-    </p>
-  } @else {
-    <ds-chart
-      frame="none"
-      cursor="none"
-      [tooltipSwatches]="tooltipSwatches()"
-      [tooltipTemplate]="tooltipTemplate() ?? null"
-      [tooltipExtraGap]="valueClearance()"
-      [categories]="categories()"
-      [tickCount]="tickCount()"
-      [valueFormat]="axisFormat()"
-      [interactive]="interactive()"
-      [summary]="accessibleName()"
-      [plotHeight]="geometry().plotHeight"
-      [axisGutter]="geometry().axisGutter"
-      [valueSpace]="geometry().valueSpace">
-      @if (thresholds().length) {
-        <svg:g
-          dsReferenceLine
-          [thresholds]="thresholds()" />
-      }
-
-      @for (
-        series of resolvedSeries();
-        track series.key;
-        let seriesIndex = $index
-      ) {
-        <svg:g
-          dsColumnSeries
-          [data]="series.points"
-          [seriesKey]="series.key"
-          [highlighted]="highlightedSeries()"
-          [slot]="slotCount() > 1 ? seriesIndex : 0"
-          [slotCount]="slotCount()"
-          [offsets]="offsetsFor(seriesIndex)"
-          [seriesColor]="series.color"
-          [seriesFill]="series.fill"
-          [seriesLabel]="multiSeries() ? series.label : null"
-          [columnWidthRatio]="geometry().columnWidthRatio"
-          [showValues]="showValues()"
-          [interactive]="interactive()"
-          [pinOnClick]="pinOnClick()"
-          [dimOthers]="dimOthers()"
-          [staggerMs]="staggerMs()"
-          [partOfWhole]="partOfWhole()"
-          [tooltip]="tooltip()"
-          [tooltipAnchor]="tooltipAnchor()"
-          [tooltipLingerMs]="tooltipLingerResolved()"
-          [valueFormat]="valueFormatResolved()"
-          (pointClicked)="pointClicked.emit($event)" />
-      }
-
-      @if (thresholds().length) {
-        <svg:g
-          dsReferenceLabel
-          [thresholds]="thresholds()" />
-      }
-    </ds-chart>
-
-    @if (multiSeries()) {
-      <ds-chart-legend
-        [items]="legendItems()"
-        [(highlighted)]="highlightedSeries" />
-    }
-
-    @if (dataTableResolved() !== 'none') {
-      <ds-chart-data-table
-        [columns]="dataTableColumns()"
-        [rows]="dataTableRows()"
-        [caption]="caption()"
-        [open]="dataTableResolved() === 'visible'" />
-    }
-  }
+<figure
+  class="column-chart"
+  dsChartStates
+  messageAxes
+  [pinned]="!!pinnedSeries()"
+  [caption]="caption()"
+  [error]="error()"
+  [errorText]="errorTextResolved()"
+  [pending]="loading() || !renderReady()"
+  [empty]="isEmpty()"
+  [emptyText]="emptyTextResolved()"
+  [skeleton]="skeleton"
+  [body]="body"
+  (release)="pinnedSeries()?.activeMark?.release()">
 </figure>
+
+<ng-template #skeleton>
+  <div
+    class="skeleton"
+    aria-hidden="true">
+    @for (placeholder of skeletonColumns(); track $index) {
+      <ds-skeleton
+        [shimmer]="loading()"
+        [height]="skeletonHeightPx()" />
+    }
+  </div>
+</ng-template>
+
+<ng-template #body>
+  <ds-chart
+    frame="none"
+    cursor="none"
+    [tooltipSwatches]="tooltipSwatches()"
+    [tooltipTemplate]="tooltipTemplate() ?? null"
+    [tooltipExtraGap]="valueClearance()"
+    [categories]="categories()"
+    [tickCount]="tickCount()"
+    [valueFormat]="axisFormat()"
+    [interactive]="interactive()"
+    [summary]="accessibleName()"
+    [plotHeight]="geometry().plotHeight"
+    [axisGutter]="geometry().axisGutter"
+    [valueSpace]="geometry().valueSpace">
+    @if (thresholds().length) {
+      <svg:g
+        dsReferenceLine
+        [thresholds]="thresholds()" />
+    }
+
+    @for (
+      series of resolvedSeries();
+      track series.key;
+      let seriesIndex = $index
+    ) {
+      <svg:g
+        dsColumnSeries
+        [data]="series.points"
+        [seriesKey]="series.key"
+        [highlighted]="highlightedSeries()"
+        [slot]="slotCount() > 1 ? seriesIndex : 0"
+        [slotCount]="slotCount()"
+        [offsets]="offsetsFor(seriesIndex)"
+        [seriesColor]="series.color"
+        [seriesFill]="series.fill"
+        [seriesLabel]="multiSeries() ? series.label : null"
+        [columnWidthRatio]="geometry().columnWidthRatio"
+        [showValues]="showValues()"
+        [interactive]="interactive()"
+        [pinOnClick]="pinOnClick()"
+        [dimOthers]="dimOthers()"
+        [staggerMs]="staggerMs()"
+        [partOfWhole]="partOfWhole()"
+        [tooltip]="tooltip()"
+        [tooltipAnchor]="tooltipAnchor()"
+        [tooltipLingerMs]="tooltipLingerResolved()"
+        [valueFormat]="valueFormatResolved()"
+        (pointClicked)="pointClicked.emit($event)" />
+    }
+
+    @if (thresholds().length) {
+      <svg:g
+        dsReferenceLabel
+        [thresholds]="thresholds()" />
+    }
+  </ds-chart>
+
+  @if (multiSeries()) {
+    <ds-chart-legend
+      [items]="legendItems()"
+      [(highlighted)]="highlightedSeries" />
+  }
+
+  @if (dataTableResolved() !== 'none') {
+    <ds-chart-data-table
+      [columns]="dataTableColumns()"
+      [rows]="dataTableRows()"
+      [caption]="caption()"
+      [open]="dataTableResolved() === 'visible'" />
+  }
+</ng-template>

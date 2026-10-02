@@ -23,7 +23,9 @@ ds-chart {
   --ds-chart-grid-line-color: var(--_column-chart-grid-line-color);
 }
 
-@include chart-frame.message-box(var(--_column-chart-view-height), true);
+:host {
+  --_chart-message-height: var(--_column-chart-view-height);
+}
 
 .skeleton {
   display: grid;

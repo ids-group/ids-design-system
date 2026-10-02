@@ -39,6 +39,10 @@
 
 @include chart-frame.message-box(var(--_line-chart-message-height), true);
 
+:host {
+  --_chart-message-height: var(--_line-chart-message-height);
+}
+
 // Re-points the shared names on `ds-chart`; both names on one element would be a custom-property cycle.
 ds-chart {
   --ds-chart-grid-line-color: var(--_line-chart-grid-line-color);

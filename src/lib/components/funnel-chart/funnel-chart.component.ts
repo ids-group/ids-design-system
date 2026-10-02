@@ -37,7 +37,7 @@ import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/c
 import type { ChartDataTable } from '@ids-group-ltd/ids-design-system/core';
 import {
   ChartTooltipDirective,
-  ChartUnpinComponent,
+  ChartStatesComponent,
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
@@ -84,7 +84,7 @@ const SKELETON_STAGE_WIDTHS = ['88%', '62%', '80%', '54%', '72%'] as const;
   imports: [
     SkeletonComponent,
     ChartTooltipDirective,
-    ChartUnpinComponent,
+    ChartStatesComponent,
     IconComponent,
     ChartDataTableComponent,
   ],
