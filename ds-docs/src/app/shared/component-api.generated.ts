@@ -581,7 +581,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prevents opening the panel while still allowing focus."
       },
       {
-        "name": "readonlyBinding",
+        "name": "readonly",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -4124,7 +4124,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
-        "name": "width",
+        "name": "dsFilterItem",
         "kind": "input",
         "type": "unknown",
         "union": null,
@@ -4892,7 +4892,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prevents editing while still allowing focus and selection."
       },
       {
-        "name": "readonlyBinding",
+        "name": "readonly",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -6308,7 +6308,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prevents opening the panel while still allowing focus."
       },
       {
-        "name": "readonlyBinding",
+        "name": "readonly",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -8391,7 +8391,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prevents opening the dropdown while still allowing focus."
       },
       {
-        "name": "readonlyBinding",
+        "name": "readonly",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -10848,7 +10848,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prevents editing while still allowing focus and selection."
       },
       {
-        "name": "readonlyBinding",
+        "name": "readonly",
         "kind": "input",
         "type": "boolean",
         "union": null,

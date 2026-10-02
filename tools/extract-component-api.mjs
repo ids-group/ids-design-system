@@ -171,12 +171,29 @@ function hasNumberAttribute(init) {
   return hasTransform(init, 'numberAttribute');
 }
 
+// The name a template binds: `input(x, { alias: 'readonly' })` is `[readonly]`, not the property.
+function inputAlias(init) {
+  for (const arg of init.arguments) {
+    if (!ts.isObjectLiteralExpression(arg)) continue;
+    for (const prop of arg.properties) {
+      if (
+        ts.isPropertyAssignment(prop) &&
+        prop.name.getText() === 'alias' &&
+        ts.isStringLiteral(prop.initializer)
+      ) {
+        return prop.initializer.text;
+      }
+    }
+  }
+  return null;
+}
+
 function propFromMember(member, sf, aliases) {
   if (!ts.isPropertyDeclaration(member) || !member.initializer) return null;
   const info = callKind(member.initializer);
   if (!info) return null;
   const init = member.initializer;
-  const name = member.name.getText(sf);
+  const name = inputAlias(init) ?? member.name.getText(sf);
   const typeNode = init.typeArguments?.[0];
   const typeArg = typeNode?.getText(sf) ?? '';
   const boolAttr = hasBooleanAttribute(init);
