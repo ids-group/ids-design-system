@@ -16,7 +16,7 @@
         _brand-&lt;client&gt;.scss
       </code> file (see
       <code class="t-mono-inline">
-        src/app/styles/_brand-acme.scss
+        ds-docs/src/styles/_preview-brand-acme.scss
       </code>);
       domain-specific copy and status taxonomies stay in the app itself.
     </p>
@@ -58,17 +58,14 @@
     </h2>
 
     <p class="lede-secondary">
-      A white-label boilerplate design system. Re-skin per consumer app via a
+      Re-skin per consumer app with a
       <code class="t-mono-inline">
         _brand-&lt;client&gt;.scss
       </code> partial
-      that overrides DS palette + font tokens under a
+      that overrides palette and font tokens under
       <code class="t-mono-inline">
         [data-brand="&lt;client&gt;"]
-      </code>
-      attribute selector. Default contents are generic admin-tool components —
-      tables, forms, banners, sidenav, page headers. Re-theme without touching
-      components by overriding tokens.
+      </code>; components stay untouched.
     </p>
 
     <div class="block">
@@ -115,7 +112,7 @@
           <div class="howto-foot">
             Reference:
             <code class="t-mono-inline">
-              src/app/styles/_brand-acme.scss
+              ds-docs/src/styles/_preview-brand-acme.scss
             </code>
           </div>
         </article>
@@ -156,15 +153,15 @@
           </h4>
 
           <p class="howto-body">
-            Linear top-to-bottom: Components → Foundations → Patterns → Practice
-            → Reference. Each component block reads as a self-contained unit.
-            Use the left TOC for jumps. The Tweaks panel (bottom-right) flips
-            brand, density and font size live.
+            Linear top-to-bottom: Components → Charts → Foundations → Patterns
+            → Practice → Reference. Each component block reads as a
+            self-contained unit. Use the left TOC for jumps. The Tweaks panel
+            flips brand, density and font size live.
           </p>
 
           <div class="howto-foot">
             Open it with the <span class="t-mono">⚙ Tweaks</span> button,
-            bottom-right
+            top-right
           </div>
         </article>
       </div>
@@ -222,7 +219,7 @@
         </a>
 
         <a
-          routerLink="/patterns/pattern-page-header"
+          routerLink="/patterns/pattern-page-composition"
           class="start-link">
           <div class="start-link-num">
             C
@@ -234,7 +231,8 @@
             </div>
 
             <div class="start-link-desc">
-              Page headers, filter bars, form layouts, activity.
+              Page composition, headers, filter bars, form layouts, empty
+              states, activity.
             </div>
           </div>
 
@@ -244,7 +242,7 @@
         </a>
 
         <a
-          routerLink="/practice/practice-token-discipline"
+          routerLink="/practice/practice-rules"
           class="start-link">
           <div class="start-link-num">
             D
@@ -256,7 +254,8 @@
             </div>
 
             <div class="start-link-desc">
-              Token discipline, do/don't catalogue.
+              Composition rules, do/don't, token discipline, Signal Forms,
+              Claude Design sync.
             </div>
           </div>
 
@@ -299,7 +298,7 @@
 
             <div class="start-link-desc">
               Brand, density and font size sit in the Tweaks panel,
-              bottom-right. Try brand swap — components reflow without code
+              top-right. Try brand swap: components reflow without code
               changes.
             </div>
           </div>

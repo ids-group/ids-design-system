@@ -61,7 +61,11 @@ const CHECKS: readonly CompositionCheck[] = [
   },
   {
     rule: 'One primary per region',
-    how: 'And prose capped at --col-cap-text (720px) regardless of grid width.',
+    how: 'One solid button per header, card and modal footer.',
+  },
+  {
+    rule: 'Prose is capped',
+    how: '--col-cap-text (720px) regardless of grid width.',
   },
 ];
 

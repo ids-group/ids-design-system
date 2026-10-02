@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { BadgeComponent } from 'ds/badge';
+import { BannerComponent } from 'ds/banner';
 import { ButtonComponent } from 'ds/button';
 import { IconComponent } from 'ds/icons';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
@@ -9,6 +10,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   standalone: true,
   imports: [
     BadgeComponent,
+    BannerComponent,
     ButtonComponent,
     DocsSectionComponent,
     IconComponent,

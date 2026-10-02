@@ -2837,17 +2837,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-bar-height",
         "value": "var(--bar-h)",
-        "notes": ""
+        "notes": "ds-bar track height (defaults to --bar-h, 6px)."
       },
       {
         "name": "--ds-bar-track-color",
         "value": "var(--surface-muted)",
-        "notes": ""
+        "notes": "ds-bar track background (defaults to --surface-muted)."
       },
       {
         "name": "--ds-bar-fill-color",
         "value": "var(--accent)",
-        "notes": ""
+        "notes": "ds-bar fill colour (defaults to --accent)."
       },
       {
         "name": "--ds-bar-target-color",
@@ -2872,22 +2872,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-bar-fill-color-success",
         "value": "var(--success)",
-        "notes": ""
+        "notes": "ds-bar fill - success state (defaults to --success)."
       },
       {
         "name": "--ds-bar-fill-color-warning",
         "value": "var(--yellow-500)",
-        "notes": ""
+        "notes": "ds-bar fill - warning state (defaults to --yellow-500)."
       },
       {
         "name": "--ds-bar-fill-color-error",
         "value": "var(--error)",
-        "notes": ""
+        "notes": "ds-bar fill - error state (defaults to --error)."
       },
       {
         "name": "--bar-h",
         "value": "6px",
-        "notes": ""
+        "notes": "ds-bar track height (6px)."
       }
     ]
   },

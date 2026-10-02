@@ -13,17 +13,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    Every value that has a design role — colour, spacing, radius, border width,
-    motion — consumes a <code class="t-mono-inline">var(--token)</code>.
-    Literals (<code class="t-mono-inline">#ccc</code>,
+    Every value with a design role (colour, spacing, radius, border width,
+    motion) reads a <code class="t-mono-inline">var(--token)</code>. A literal
+    (<code class="t-mono-inline">#ccc</code>,
     <code class="t-mono-inline">
       12px
     </code>,
     <code class="t-mono-inline">
       200ms
-    </code>) inside component CSS are a token
-    gap to fix, never a shortcut to take. Dark mode, density and rebrand all
-    rely on this contract.
+    </code>) in component CSS is a token gap
+    to fix; dark mode, density and rebrand depend on it.
   </p>
 
   <h3

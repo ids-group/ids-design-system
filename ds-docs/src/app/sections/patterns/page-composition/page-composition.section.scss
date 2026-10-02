@@ -1,3 +1,5 @@
+@use 'styles/breakpoints' as bp;
+
     /* Every class here carries a pc- prefix: ds-docs section styles are global, and the
        unprefixed names collided with the borders and practice sections on first attempt. */
 
@@ -10,7 +12,7 @@
       border: var(--border-width-default) solid var(--border-default);
       border-radius: var(--ds-radius-panel);
 
-      @media (width < 768px) {
+      @include bp.down(md) {
         flex-direction: column;
       }
     }
@@ -40,7 +42,7 @@
       width: 132px;
       flex: none;
 
-      @media (width < 768px) {
+      @include bp.down(md) {
         width: auto;
       }
     }
@@ -76,7 +78,7 @@
       padding-bottom: var(--space-2);
       border-bottom: var(--border-width-default) solid var(--border-default);
 
-      @media (width < 1024px) {
+      @include bp.down(lg) {
         grid-template-columns: 1fr;
         gap: var(--space-1);
       }
@@ -85,7 +87,7 @@
       color: var(--text-secondary);
       border-bottom-color: var(--border-strong);
 
-      @media (width < 1024px) {
+      @include bp.down(lg) {
         display: none;
       }
     }

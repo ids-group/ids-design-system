@@ -3,8 +3,7 @@
   eyebrow="Reference"
   title="Tokens reference">
   <span lede>
-    Every CSS custom property in the design system. Search-friendly catalogue
-    grouped by purpose.
+    Every CSS custom property in the design system, grouped by purpose.
   </span>
 
   @if (newTokens.length) {
@@ -211,12 +210,14 @@
   </div>
 
   <p class="block-desc t-s">
-    Third brand hue — tertiary button fill, tonal chips, hierarchy tones,
-    indicators. Ships a distinct default hue (a cool violet), independent of
+    Third brand hue (tertiary fills, tonal chips, hierarchy tones, indicators),
+    a cool violet by default and independent of
     <code class="t-mono-inline">
       --primary
-    </code>; brands reskin it by
-    overriding <code class="t-mono-inline"> --tertiary-h/s/l </code>.
+    </code>; reskin via
+    <code class="t-mono-inline">
+      --tertiary-h/s/l
+    </code>.
   </p>
 
   <div class="scroll-wrap">
@@ -612,7 +613,7 @@
                   </span>
                 } @else {
                   <span class="literal-value t-mono">
-                    geometry
+                    -
                   </span>
                 }
               </td>
@@ -2244,7 +2245,7 @@
                     </span>
                   } @else {
                     <span class="literal-value t-mono">
-                      geometry
+                      -
                     </span>
                   }
                 </td>
@@ -2342,7 +2343,7 @@
                     </span>
                   } @else {
                     <span class="literal-value t-mono">
-                      geometry
+                      -
                     </span>
                   }
                 </td>
