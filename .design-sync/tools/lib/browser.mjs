@@ -10,7 +10,7 @@
 // thing per target: `Emulation.setVirtualTimePolicy`. It is not an optimisation, it is required —
 // the page scripts wait on `setTimeout` chains of up to 20s, and on a real clock a run that took
 // three minutes took twenty-five instead.
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -44,6 +44,36 @@ export async function launchBrowser({
     ],
     { stdio: ['ignore', 'ignore', 'pipe'] },
   );
+
+  // A run that throws or is interrupted before `close()` would leave Chrome and its profile
+  // behind. Synchronous because an `exit` handler gets no turn of the loop, and on Windows the
+  // renderer processes keep the profile locked unless the whole tree goes first. Even then the
+  // lock outlives taskkill by a moment, and `rmSync` does not retry an EPERM, hence the loop.
+  const abandon = () => {
+    if (child.exitCode === null && child.signalCode === null) {
+      if (process.platform === 'win32')
+        spawnSync('taskkill', ['/pid', String(child.pid), '/t', '/f'], {
+          stdio: 'ignore',
+        });
+      else child.kill('SIGKILL');
+    }
+    const pause = new Int32Array(new SharedArrayBuffer(4));
+    for (let attempt = 0; attempt < 50; attempt++) {
+      try {
+        rmSync(profile, { recursive: true, force: true });
+        return;
+      } catch {
+        Atomics.wait(pause, 0, 0, 100);
+      }
+    }
+  };
+  const interrupted = (signal) => {
+    abandon();
+    process.exit(signal === 'SIGINT' ? 130 : 143);
+  };
+  process.once('exit', abandon);
+  process.once('SIGINT', interrupted);
+  process.once('SIGTERM', interrupted);
 
   const endpoint = await new Promise((resolve, reject) => {
     let buffered = '';
@@ -277,6 +307,9 @@ export async function launchBrowser({
         });
       }
       rmSync(profile, { recursive: true, force: true });
+      process.off('exit', abandon);
+      process.off('SIGINT', interrupted);
+      process.off('SIGTERM', interrupted);
     },
   };
 }
