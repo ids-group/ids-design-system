@@ -193,7 +193,7 @@ HTML holds nothing but `<ds-docs-components-select>` — every element inside it
 appears when Angular renders. Per CARD, not per chapter: the chapter list would
 drag 130 cards live to keep the 85 that have a panel, and Table alone is 35 for 5.
 What a run kept is written to `live-cards.txt`, which is what `check-frozen`
-asserts against rather than re-deriving the rule. **291 frozen, 118 live.**
+asserts against rather than re-deriving the rule. **185 frozen, 79 live (measured 2026-10-02).**
 
 Angular inlines a component's styles into every document that renders it, so the
 same block arrived in card after card: 185 distinct blocks against 4005 tags.

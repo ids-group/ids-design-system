@@ -32,7 +32,7 @@ all failed.
 **Fix, per upstream's own advice — do not nest them.** `gen.mjs` scans every
 `*.component.html` and `*.component.ts` under `src/lib` for `<ds-…` tags; a component used
 inside another component's template registers under an alias, `ds-x-<name>`, that no template
-mentions, so Angular renders it as an ordinary component there. **31 of 85** take an alias.
+mentions, so Angular renders it as an ordinary component there. **32 of 95** take an alias (measured 2026-10-02).
 The React wrapper emits the alias, so `<Modal>` and `<Button>` are unchanged for a caller and
 the tag never surfaces in a preview or a design. Angular's component styles are
 attribute-scoped, so the alias costs no CSS.
