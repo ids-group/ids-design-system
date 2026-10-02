@@ -14,8 +14,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    Nodes with children are collapsible. Expanded and selected state are two-way
-    bound so the host can read or set them programmatically.
+    Pass <code class="t-mono-inline">TreeNode[]</code> (<code class="t-mono-inline">id</code>,
+    <code class="t-mono-inline">label</code>, <code class="t-mono-inline">icon?</code>,
+    <code class="t-mono-inline">children?</code>, <code class="t-mono-inline">disabled?</code>).
+    <code class="t-mono-inline">[(expandedIds)]</code> and
+    <code class="t-mono-inline">[(selectedId)]</code> are two-way;
+    <code class="t-mono-inline">(nodeSelected)</code> emits the whole node. Clicking a parent
+    selects and toggles it.
+  </p>
+
+  <p class="block-desc t-s">
+    One tab stop. ArrowUp/Down move, Home/End jump, ArrowRight expands then steps in, ArrowLeft
+    collapses then goes to the parent, Enter/Space select.
   </p>
 
   <div class="demo-panel">
@@ -23,10 +33,10 @@
       [nodes]="nodes"
       [(expandedIds)]="expanded"
       [(selectedId)]="selected"
-      (nodeSelected)="onSelect($event)" />
+      (nodeSelected)="selectedLabel.set($event.label)" />
 
     <p class="block-desc t-s">
-      Selected: {{ selected() }}
+      Selected: {{ selected() }} ({{ selectedLabel() }})
     </p>
   </div>
 
@@ -58,7 +68,7 @@
     </div>
 
     <div class="state-cell">
-      <div class="state-cell-stage pin-selected">
+      <div class="state-cell-stage">
         <ds-tree
           [nodes]="singleNode"
           [selectedId]="'node'" />

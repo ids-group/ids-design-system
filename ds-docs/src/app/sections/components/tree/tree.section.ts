@@ -40,6 +40,7 @@ export class TreeSection {
 
   protected readonly expanded = signal(new Set(['src', 'components']));
   protected readonly selected = signal<string | null>('tokens');
+  protected readonly selectedLabel = signal('tokens.scss');
 
   protected readonly singleNode: TreeNode[] = [
     { id: 'node', label: 'Node label', icon: 'file' },
@@ -48,8 +49,4 @@ export class TreeSection {
   protected readonly singleNodeDisabled: TreeNode[] = [
     { id: 'node', label: 'Node label', icon: 'file', disabled: true },
   ];
-
-  onSelect(node: TreeNode): void {
-    this.selected.set(node.id);
-  }
 }
