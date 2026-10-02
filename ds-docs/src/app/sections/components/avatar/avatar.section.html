@@ -29,7 +29,18 @@
     <ds-avatar
       size="lg"
       initials="AB" />
+
+    <ds-avatar
+      size="lg"
+      imageUrl="apple-touch-icon.png"
+      ariaLabel="Workspace logo" />
   </div>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">imageUrl</code> shows an image ahead of
+    <code class="t-mono-inline">initials</code> and
+    <code class="t-mono-inline">fallbackIcon</code>.
+  </p>
 
   <h3
     data-claude-design
@@ -37,6 +48,16 @@
     data-for="avatar-group">
     Group
   </h3>
+
+  <p class="block-desc t-s">
+    The group shows every avatar you project, so project at most
+    <code class="t-mono-inline">max</code> (default 4). Set
+    <code class="t-mono-inline">total</code> to the full count and a
+    <code class="t-mono-inline">+N</code> chip shows the rest
+    (<code class="t-mono-inline">total - max</code>); unset, no chip renders.
+    <code class="t-mono-inline">tint="neutral"</code> gives an avatar the
+    overflow-chip look.
+  </p>
 
   <div class="row">
     <ds-avatar-group
@@ -62,7 +83,12 @@
 
   <p class="block-desc t-s">
     Pass <code class="t-mono-inline">status</code> to show a presence indicator
-    in the bottom-right corner of the avatar.
+    in the bottom-right corner of the avatar. Set
+    <code class="t-mono-inline">ariaLabel</code> to name the person and their
+    status (e.g. "Alice Brown, Online"): the labelled avatar is
+    <code class="t-mono-inline">role="img"</code>, so the dot's own label is
+    not read. Without <code class="t-mono-inline">ariaLabel</code> the avatar
+    is decorative.
   </p>
 
   <div class="row">
@@ -137,21 +163,14 @@
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      The trade this makes, stated plainly.
-    </strong>
-    HSL lightness is not perceptually even, so a yellow lands far lighter than a
-    blue at the same 62% — and that unevenness is what makes the row read as
-    bright rather than uniform. White initials on the lighter hues measure as
-    little as <strong>1.65:1</strong>, under the 4.5:1 WCAG AA asks of text. Use
-    it where the avatar is decoration beside a name that is written out anyway;
-    where the initials are the only identifier, pass your own
+    HSL lightness is not perceptually even, so white initials on the lighter
+    hues measure as low as <strong>1.65:1</strong>, under WCAG AA's 4.5:1. Use
+    the default where a written name sits beside the avatar; where the initials
+    are the only identifier, bind
     <code class="t-mono-inline">
-      lightness
-    </code> and
-    <code class="t-mono-inline">
-      foreground
-    </code>.
+      [tint]="avatarTint(seed, &#123; lightness: 50 &#125;)"
+    </code>
+    - white then measures 5.3-6.6:1.
   </p>
 
   <p class="block-desc t-s">
@@ -171,18 +190,13 @@
   </p>
 
   <p class="block-desc t-s">
-    The built-in rule takes the first two words, and that is all it claims to be
-    — a Latin-script guess. Reading a name is a cultural convention rather than
-    a UI decision: a Spanish reader wants MG from "María José García López", a
-    club's members want BR from "Bramley Rovers Football Club". So the rule is
-    replaceable, not configurable-by-mode —
-    <code class="t-mono-inline">
-      [initialsRule]
-    </code> for one table,
+    The built-in rule takes the first letters of the first two words - a
+    Latin-script guess (a Spanish reader wants MG from "María José García
+    López"). Replace it per instance with
+    <code class="t-mono-inline">[initialsRule]</code> or app-wide with
     <code class="t-mono-inline">
       provideDsConfig(&#123; avatar: &#123; initials &#125; &#125;)
-    </code>
-    for the app. An explicit
+    </code>; an explicit
     <code class="t-mono-inline">
       initials
     </code> still wins over both.
