@@ -1,6 +1,27 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "theme-follow-system-keeps-preset-attribute",
+      "kind": "behavior",
+      "old": "provideDsTheme",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "action": "None, unless the app sets data-theme on <html> before startup and still wants the OS to drive the theme: set that attribute before startup only when the user has saved a choice.",
+      "appliesWhen": "Apps calling provideDsTheme({ followSystem: true }) whose <html> already carries data-theme when the app starts, from index.html or a pre-bootstrap script. Apps without followSystem, or with no data-theme at startup, are unchanged.",
+      "pitfall": "A data-theme hard-coded in index.html now pins the theme for every user, so the OS switch silently stops working.",
+      "detect": [
+        "<html data-theme=",
+        "followSystem: true",
+        "setAttribute('data-theme'"
+      ],
+      "verify": "with followSystem on, an <html> that starts with data-theme keeps that value across an OS colour-scheme change, and one that starts without it follows the OS.",
+      "restore": null
+    }
+  ],
   "deleteList": [],
   "informational": [
     "--ds-topbar-crumb-text-color, --ds-topbar-crumb-hover-text-color, --ds-topbar-crumb-separator-icon-color, --ds-topbar-crumb-current-text-color, --ds-page-header-crumb-text-color and --ds-page-header-crumb-text-color-hover now recolour the projected ds-breadcrumbs, where they changed nothing; an app that set them sees those colours take effect.",

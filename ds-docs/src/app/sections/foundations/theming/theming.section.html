@@ -66,8 +66,10 @@
     </strong>: light is deterministic by default. To follow the OS, add
     <code class="t-mono-inline">provideDsTheme({{ '{' }} followSystem: true {{ '}' }})</code>.
     It sets <code class="t-mono-inline">data-theme</code> at startup and on every
-    OS change, and does nothing on the server. It owns the attribute: a value you
-    set yourself is overwritten at startup and on the next OS change.
+    OS change, and does nothing on the server. A
+    <code class="t-mono-inline">data-theme</code> already on
+    <code class="t-mono-inline">&lt;html&gt;</code> at startup is kept, and OS
+    changes leave it alone.
   </p>
 
   <pre class="t-mono-block">{{ osFollowSnippet }}</pre>
