@@ -1208,7 +1208,7 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--ds-chart-bg-color",
     "value": "var(--chart-bg-color)",
-    "notes": ""
+    "notes": "Chart background: the frame fill and every knockout between marks - line halos, stacked-band seams, hatch stripes, label halos (default --surface-default). Set this, not --chart-bg-color."
   },
   {
     "name": "--ds-chart-frame-border-color",
@@ -1343,7 +1343,7 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--ds-chart-area-fade-opacity",
     "value": "var(--chart-area-fade-opacity)",
-    "notes": ""
+    "notes": "Opacity an `area: 'fade'` band starts at beside its line before it fades to nothing at the baseline (default 0.32). Set this, not --chart-area-fade-opacity."
   },
   {
     "name": "--ds-chart-hatch-width",
@@ -3411,27 +3411,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-chart-plot-bg-color",
         "value": "transparent",
-        "notes": ""
+        "notes": "Fill of the plot rectangle inside the axes in ds-chart and ds-scatter-chart (unset by default, so it is transparent and the chart background shows through)."
       },
       {
         "name": "--ds-column-chart-column-max-width",
         "value": "48px",
-        "notes": ""
+        "notes": "Widest a column grows, however wide its category slot (default 48px)."
       },
       {
         "name": "--ds-column-chart-column-gap",
         "value": "var(--ds-chart-bar-gap)",
-        "notes": ""
+        "notes": "Space between the columns of grouped series in one category, and between skeleton columns (defaults to --ds-chart-bar-gap)."
       },
       {
         "name": "--ds-column-chart-cap-radius",
         "value": "var(--ds-chart-mark-cap-radius)",
-        "notes": ""
+        "notes": "Corner radius of a column's rounded cap, held to half the column's height (defaults to --ds-chart-mark-cap-radius, 3px)."
       },
       {
         "name": "--ds-chart-hatch-color",
         "value": "var(--ds-chart-bg-color)",
-        "notes": ""
+        "notes": "Stripe colour of a `fill: 'hatched'` column and of its tooltip swatch (defaults to --ds-chart-bg-color on the column, --surface-default in the tooltip)."
       },
       {
         "name": "--ds-motion-chart-mark-detail-duration",
@@ -3451,7 +3451,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-chart-area-color",
         "value": "var(--_series-area-color)",
-        "notes": ""
+        "notes": "Fill of a line series' area band, flat or fading (unset by default, so each band takes its own series colour)."
       },
       {
         "name": "--ds-chart-annotation-color",
@@ -3471,7 +3471,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-chart-annotation-halo-color",
         "value": "var(--ds-chart-bg-color)",
-        "notes": "Colour of the halo painted under an annotation label so it survives over a line or a mark (default --surface-default)."
+        "notes": "Colour of the halo painted under an annotation label so it survives over a line or a mark (default --ds-chart-bg-color)."
       },
       {
         "name": "--ds-chart-annotation-halo-width",
@@ -3488,12 +3488,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-chart-frame-bg-color",
         "value": "var(--ds-chart-bg-color)",
-        "notes": ""
+        "notes": "Fill of a framed chart's box (defaults to --ds-chart-bg-color)."
       },
       {
         "name": "--ds-chart-focus-halo-color",
         "value": "var(--ds-chart-bg-color)",
-        "notes": ""
+        "notes": "Glow drawn round a chart mark's focus ring so it stands apart from a same-hue mark (defaults to --ds-chart-bg-color)."
       },
       {
         "name": "--ds-chart-pin-size",
@@ -3765,27 +3765,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-column-chart-plot-height",
         "value": "200px",
-        "notes": ""
+        "notes": "Height of the ds-column-chart plot, axis labels and headroom excluded (default 200px). Read back as a number, so it takes a px length only."
       },
       {
         "name": "--ds-column-chart-axis-width",
         "value": "40px",
-        "notes": ""
+        "notes": "Minimum width of the ds-column-chart value-axis gutter, which widens to fit the widest tick label (default 40px). Read back as a number, so it takes a px length only."
       },
       {
         "name": "--ds-column-chart-value-space",
         "value": "var(--space-5)",
-        "notes": ""
+        "notes": "Room reserved above the plot, and below it once a value goes negative, for the column value labels (default --space-5, 20px). Read back as a number, so it takes a px length only."
       },
       {
         "name": "--ds-column-chart-column-width",
         "value": "80%",
-        "notes": ""
+        "notes": "Share of its category slot a column fills, as a percentage (default 80%). Read back as a number."
       },
       {
         "name": "--ds-column-chart-grid-line-color",
         "value": "var(--ds-chart-grid-line-color, var(--chart-grid-line-color))",
-        "notes": ""
+        "notes": "Gridline colour of a ds-column-chart, which re-points --ds-chart-grid-line-color on its plot (defaults to --ds-chart-grid-line-color)."
       }
     ]
   },
@@ -6593,12 +6593,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-sparkline-area-color",
         "value": "var(--_sparkline-line-color)",
-        "notes": ""
+        "notes": "Fill of the area under a ds-sparkline line (defaults to the line colour, --ds-sparkline-line-color)."
       },
       {
         "name": "--ds-sparkline-area-opacity",
         "value": "var(--ds-chart-area-opacity)",
-        "notes": ""
+        "notes": "Opacity of that area fill (defaults to --ds-chart-area-opacity)."
       }
     ]
   },
