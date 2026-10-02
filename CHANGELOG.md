@@ -2,6 +2,11 @@
 
 ### Fixed
 
+- **`provideDsTheme({ followSystem: true })` keeps a `data-theme` set before startup.** A
+  `data-theme` already on `<html>` when the app starts, from `index.html` or a script that restores a
+  saved choice, is kept, and OS colour-scheme changes no longer override it. Without the attribute,
+  the theme follows the OS as before.
+
 - **`ds-bar-chart` draws a negative value as an empty track.** A row with a negative `value`
   drew a bar as long as its absolute value and was labelled `0`; it now draws no bar, and its label,
   tooltip and accessible name show the real value.

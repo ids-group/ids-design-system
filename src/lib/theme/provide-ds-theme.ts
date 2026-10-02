@@ -10,7 +10,8 @@ import { isPlatformBrowser } from '@angular/common';
 export interface DsThemeOptions {
   /**
    * Follow the operating-system colour scheme: sets `data-theme` on `<html>`
-   * from `prefers-color-scheme` at startup and on every OS change.
+   * from `prefers-color-scheme` at startup and on every OS change, unless
+   * `<html>` already carries `data-theme` at startup.
    * Default `false`: light, with dark opt-in via `<html data-theme="dark">`.
    */
   followSystem?: boolean;
@@ -27,14 +28,19 @@ export interface DsThemeOptions {
  * ```
  *
  * Light is the default with no provider; `followSystem` opts into OS-driven
- * switching. A manual `<html data-theme="dark">` wins over the initial value.
+ * switching. A `data-theme` already on `<html>` at startup is an explicit
+ * choice: it is kept, and OS changes do not override it.
  */
 export function provideDsTheme(
   options: DsThemeOptions = {},
 ): EnvironmentProviders {
   return makeEnvironmentProviders([
     provideEnvironmentInitializer((): void => {
-      if (!options.followSystem || !isPlatformBrowser(inject(PLATFORM_ID))) {
+      if (
+        !options.followSystem ||
+        !isPlatformBrowser(inject(PLATFORM_ID)) ||
+        document.documentElement.hasAttribute('data-theme')
+      ) {
         return;
       }
       const query = window.matchMedia('(prefers-color-scheme: dark)');
