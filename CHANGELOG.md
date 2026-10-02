@@ -46,6 +46,10 @@
 
 ### Fixed
 
+- **`ds-number-stepper`'s buttons stop at `min` and `max`.** A step that would pass a bound now
+  lands on it: with `max` 100 and `step` 5, 98 goes to 100, where it went to 103. Typed values
+  were already clamped.
+
 - **`ds-funnel-chart`, `ds-heatmap-chart` and `ds-pie-chart` draw their keyboard focus ring.** The
   ring's colour and width resolved to nothing inside these charts, so a focused stage, cell or
   slice showed no indicator. It now takes `--focus-ring-color` and `--focus-ring-width`, and

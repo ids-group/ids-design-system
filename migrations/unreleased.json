@@ -97,6 +97,7 @@
     }
   ],
   "informational": [
+    "ds-number-stepper's increment and decrement buttons clamp to min and max, so a step that would pass a bound lands on it instead of overshooting.",
     {
       "text": "ds-funnel-chart, ds-heatmap-chart and ds-pie-chart draw their keyboard focus ring, in --focus-ring-color and --focus-ring-width unless --ds-funnel-chart-focus-color, --ds-heatmap-chart-focus-color or --ds-pie-chart-focus-color (and the -focus-width tokens) say otherwise; a focused mark showed no indicator before.",
       "verify": "Tab into an interactive funnel, heat map and pie chart and confirm the focused stage, cell or slice is ringed."

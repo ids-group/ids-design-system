@@ -16,6 +16,12 @@ import {
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
+function clampToBounds(value: number, min: number, max: number | null): number {
+  const atLeastMin = Math.max(min, value);
+
+  return max == null ? atLeastMin : Math.min(max, atLeastMin);
+}
+
 @Component({
   selector: 'ds-number-stepper',
   standalone: true,
@@ -70,24 +76,24 @@ export class NumberStepperComponent {
     if (this.atMax() || this.disabled()) {
       return;
     }
-    this.value.set(this.value() + this.step());
+    this.value.set(
+      clampToBounds(this.value() + this.step(), this.min(), this.max()),
+    );
   }
 
   dec(): void {
     if (this.atMin() || this.disabled()) {
       return;
     }
-    this.value.set(this.value() - this.step());
+    this.value.set(
+      clampToBounds(this.value() - this.step(), this.min(), this.max()),
+    );
   }
 
   protected setRaw(raw: string): void {
     const parsed = Number.parseInt(raw, 10);
-    const number = Number.isNaN(parsed) ? 0 : parsed;
-    let clamped = Math.max(this.min(), number);
-    const max = this.max();
-    if (max != null) {
-      clamped = Math.min(max, clamped);
-    }
-    this.value.set(clamped);
+    this.value.set(
+      clampToBounds(Number.isNaN(parsed) ? 0 : parsed, this.min(), this.max()),
+    );
   }
 }
