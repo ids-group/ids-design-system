@@ -26,7 +26,7 @@ const STOPS: readonly OpacityStop[] = [
   {
     token: '--opacity-scrim',
     value: 0.55,
-    use: 'Modal / drawer backdrop overlay',
+    use: 'Loading-overlay veil',
   },
   {
     token: '--opacity-state-hover',
@@ -37,6 +37,11 @@ const STOPS: readonly OpacityStop[] = [
     token: '--opacity-state-pressed',
     value: 0.16,
     use: 'Active / pressed layer',
+  },
+  {
+    token: '--opacity-state-active',
+    value: 0.24,
+    use: 'Selected / active layer',
   },
 ];
 
@@ -49,12 +54,12 @@ const LITERALS: readonly AlphaRef[] = [
   {
     alpha: '--focus-field-alpha (0.22)',
     where:
-      'Field focus halo alpha; composes hsla(--primary-h, --primary-s, --primary-l, …) inside --focus-field. Dark themes may override it.',
+      'Field focus halo alpha; composes hsla(--primary-h, --primary-s, --primary-l, …) inside --focus-field. 0.22 light, 0.35 dark.',
   },
   {
     alpha: '--surface-scrim',
     where:
-      'Modal / drawer backdrop. Consumes --opacity-scrim (0.55) over neutral substrate.',
+      'Modal / drawer backdrop: a literal 55% (light), 70% (dark); does not read --opacity-scrim.',
   },
 ];
 

@@ -3,8 +3,8 @@
   eyebrow="Foundations"
   title="Elevation">
   <span lede>
-    Four primitive tiers plus four semantic aliases for popover, modal, toast,
-    card. Shadows are channel-split through
+    Four primitive tiers, four elevation roles and four surface aliases for
+    popover, modal, toast, card. Shadows are channel-split through
     <code class="t-mono-inline">
       --shadow-tint-h/s/l
     </code> so a re-skin can
@@ -19,6 +19,39 @@
 
   <div class="shadow-grid">
     @for (tier of primitive; track tier.name) {
+      <div class="shadow-cell">
+        <div
+          class="shadow-card"
+          [style.boxShadow]="'var(--' + tier.name + ')'">
+        </div>
+
+        <code class="t-mono-inline token-name">
+          --{{ tier.name }}
+        </code>
+
+        <div class="t-caption token-desc">
+          {{ tier.desc }}
+        </div>
+
+        <code class="t-mono-inline token-value">
+          {{ tier.value }}
+        </code>
+      </div>
+    }
+  </div>
+
+  <h3 class="block-title t-h4">
+    Elevation roles
+  </h3>
+
+  <p class="block-desc t-s">
+    Setting a role moves every
+    <code class="t-mono-inline">--shadow-&lt;surface&gt;</code> alias at that
+    height, and the components that read the role directly.
+  </p>
+
+  <div class="shadow-grid">
+    @for (tier of roles; track tier.name) {
       <div class="shadow-cell">
         <div
           class="shadow-card"
@@ -149,13 +182,13 @@
                 </div>
 
                 <div class="demo-modal-actions">
-                  <button class="demo-btn is-ghost">
+                  <span class="demo-btn is-ghost">
                     Cancel
-                  </button>
+                  </span>
 
-                  <button class="demo-btn">
+                  <span class="demo-btn">
                     Dispatch
-                  </button>
+                  </span>
                 </div>
               </div>
             </div>
@@ -172,4 +205,9 @@
       </div>
     }
   </div>
+
+  <p class="block-desc t-s">
+    Backdrop blur: <code class="t-mono-inline">--blur-sm</code> 4px,
+    <code class="t-mono-inline">--blur-md</code> 8px.
+  </p>
 </docs-section>

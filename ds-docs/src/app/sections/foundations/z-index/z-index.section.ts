@@ -16,39 +16,71 @@ const LAYERS: readonly LayerRow[] = [
   {
     token: '--layer-raised',
     value: '1',
-    use: 'Subtle elevation — table sticky cells, hover lifts.',
+    use: 'Table sticky cells, button focus, loading overlay.',
   },
   {
     token: '--layer-sticky',
     value: '100',
-    use: 'Sticky page headers, sticky filters.',
+    use: 'Reserved for app use; no DS component reads it.',
   },
   {
     token: '--layer-dropdown',
     value: '1000',
-    use: '<ds-select>, <ds-menu>, <ds-date-picker> panels.',
+    use: 'Reserved; DS dropdown panels sit at --layer-popover.',
   },
   {
     token: '--layer-overlay',
     value: '1100',
-    use: 'Generic CDK overlay panels.',
+    use: 'Reserved for app use; no DS component reads it.',
   },
   {
     token: '--layer-drawer',
     value: '1200',
-    use: '<ds-drawer> slide-in panel.',
+    use: '<ds-app-layout> mobile rail.',
   },
-  { token: '--layer-modal', value: '1300', use: '<ds-modal> + scrim layer.' },
+  {
+    token: '--layer-modal',
+    value: '1300',
+    use: '<ds-modal>, <ds-drawer>, <ds-bottom-sheet> + scrim.',
+  },
   {
     token: '--layer-popover',
     value: '1400',
-    use: '<ds-popover> + <ds-autocomplete> dropdown.',
+    use: '<ds-popover> and the shared dropdown panel (select, multi-select, autocomplete).',
   },
   { token: '--layer-toast', value: '1500', use: '<ds-toast-region> portal.' },
   {
     token: '--layer-tooltip',
     value: '1600',
     use: '[dsTooltip] panel — must sit above toasts.',
+  },
+];
+
+const COMPONENT_LAYERS: readonly LayerRow[] = [
+  {
+    token: '--table-sticky-header-z',
+    value: '--layer-raised',
+    use: 'Sticky table header cells.',
+  },
+  {
+    token: '--table-sticky-col-z',
+    value: '--layer-raised',
+    use: 'Sticky table column cells.',
+  },
+  {
+    token: '--table-sticky-corner-z',
+    value: '2',
+    use: 'Cell where a sticky header meets a sticky column.',
+  },
+  {
+    token: '--btn-focus-z',
+    value: '--layer-raised',
+    use: 'A focused button above its neighbours.',
+  },
+  {
+    token: '--btn-group-focus-z',
+    value: '2',
+    use: 'A focused segment in a button group or split button.',
   },
 ];
 
@@ -62,4 +94,5 @@ const LAYERS: readonly LayerRow[] = [
 })
 export class ZIndexSection {
   protected readonly layers = LAYERS;
+  protected readonly componentLayers = COMPONENT_LAYERS;
 }

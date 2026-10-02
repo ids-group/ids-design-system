@@ -3,8 +3,11 @@
   eyebrow="Foundations"
   title="Spacing">
   <span lede>
-    4-pixel base. Component padding lives at s-2 / s-3 / s-4. Page gutters at
-    s-5 / s-6. Section breaks at s-10+.
+    4px base. Component padding <code class="t-mono-inline">--space-2/3/4</code>;
+    page gutters <code class="t-mono-inline">--page-gutter-*</code>
+    (<code class="t-mono-inline">--space-3</code> to
+    <code class="t-mono-inline">--space-6</code>); section breaks
+    <code class="t-mono-inline">--space-10</code>+.
   </span>
 
   <h3
@@ -38,4 +41,11 @@
       </div>
     }
   </div>
+
+  <p class="block-desc t-s">
+    Aliases: <code class="t-mono-inline">--space-stack</code> (16px,
+    <code class="t-mono-inline">--space-4</code>) and
+    <code class="t-mono-inline">--space-inline</code> (8px,
+    <code class="t-mono-inline">--space-2</code>).
+  </p>
 </docs-section>

@@ -51,15 +51,23 @@
   </ul>
 
   <p class="block-desc t-s">
+    <code class="t-mono-inline">&lt;html data-neutrals="brand"&gt;</code>
+    re-tints the neutral ramp from <code class="t-mono-inline">--primary-h</code>;
+    light theme only, dark keeps its own ramp.
+  </p>
+
+  <p class="block-desc t-s">
     There is
     <strong>
       no automatic
       <code class="t-mono-inline">
         prefers-color-scheme
       </code> switch
-    </strong>
-    — light is deterministic by default. To follow the OS, opt in from your app
-    bootstrap; set the attribute before first paint to avoid a flash:
+    </strong>: light is deterministic by default. To follow the OS, add
+    <code class="t-mono-inline">provideDsTheme({{ '{' }} followSystem: true {{ '}' }})</code>.
+    It sets <code class="t-mono-inline">data-theme</code> at startup and on every
+    OS change, and does nothing on the server. It owns the attribute: a value you
+    set yourself is overwritten at startup and on the next OS change.
   </p>
 
   <pre class="t-mono-block">{{ osFollowSnippet }}</pre>
@@ -166,12 +174,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    Two levers. A <strong>brand</strong> is a thin overlay scoped by attribute
-    (<code class="t-mono-inline">[data-brand="X"]</code>) — override the brand
-    hue ramp (<code class="t-mono-inline">--blue-*</code>) and/or
-    <code class="t-mono-inline">
-      --primary
-    </code> plus a few roles. A full
+    Two levers. A <strong>brand</strong> is a thin overlay on
+    <code class="t-mono-inline">&lt;html&gt;</code> scoped by attribute
+    (<code class="t-mono-inline">[data-brand="X"]</code>): re-point the palette
+    channels (<code class="t-mono-inline">--blue-h/s/l</code>, which
+    <code class="t-mono-inline">--primary-h/s/l</code> read) and, if needed, a few
+    roles. A full
     <strong>
       theme
     </strong> is a new sibling role map.
@@ -179,17 +187,15 @@
 
   <p class="block-desc t-s">
     <strong>
-      You author on light — the default.
-    </strong> Dark is a
-    self-contained sibling, so a light-authored brand does
-    <strong>
-      not
-    </strong> automatically carry into dark. If the brand must also
-    restyle dark, add a separate
+      You author on light, the default.
+    </strong> Palette and channel overrides carry into dark. Role overrides
+    (<code class="t-mono-inline">--primary</code>,
+    <code class="t-mono-inline">--primary-h/s/l</code>,
+    <code class="t-mono-inline">--surface-*</code>) lose to the dark block, so
+    restate those under
     <code class="t-mono-inline">
       [data-theme='dark'][data-brand="X"]
-    </code>
-    block.
+    </code>.
   </p>
 
   <pre class="t-mono-block">{{ brandSnippet }}</pre>
@@ -219,29 +225,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    Tokens answer “what does it look like”. This answers the other repetition:
-    <strong>
-      an input whose value an app writes identically on every element.
-    </strong>
-    One consumer binds
-    <code class="t-mono-inline">
-      [stickyScrollbar]="true"
-    </code> on all 35 of
-    its tables and <code class="t-mono-inline">size="sm"</code> on 146 buttons —
-    not a per-element decision, a house default restated 146 times, and every
-    new element is one forgotten binding away from looking wrong.
+    Tokens answer how a thing looks;
+    <code class="t-mono-inline">provideDsConfig</code> answers inputs an app sets
+    identically everywhere (a house <code class="t-mono-inline">size="sm"</code>,
+    <code class="t-mono-inline">[stickyScrollbar]="true"</code> on every table),
+    so a new element cannot forget them.
   </p>
 
   <p class="block-desc t-s">
-    Precedence is <strong>input → config → built-in</strong>, so a screen that
-    differs still binds the attribute and wins. Nothing changes for an app that
-    provides nothing: every built-in default is what it always was. Provide it
-    at the app root, on a <code class="t-mono-inline">Route</code>, or on a
-    component — the config resolves through the injector chain and a nested call
-    MERGES with the one above it, section by section. Several calls in one
-    <code class="t-mono-inline">providers</code> array merge too, in order, the
-    later call winning per key; <code class="t-mono-inline">provideDsIntl</code>
-    merges the same way.
+    Precedence: <strong>input → config → built-in</strong>. Provide it at the
+    root, on a <code class="t-mono-inline">Route</code> or on a component; nested
+    and repeated calls merge section by section, the later winning per key.
+    <code class="t-mono-inline">provideDsIntl</code> merges the same way.
   </p>
 
   <pre class="t-mono-block">{{ configSnippet }}</pre>
@@ -291,66 +286,25 @@
   </h3>
 
   <p class="block-desc t-s">
-    The most common whole-brand change, and the one most often done the long
-    way: a consumer audit found <strong>twelve</strong> scattered
-    <code class="t-mono-inline">
-      --ds-&lt;component&gt;-radius: 0
-    </code>
-    declarations written one component at a time. Four lines replace all of
-    them.
+    Square every corner from the roles instead of one
+    <code class="t-mono-inline">--ds-&lt;component&gt;-radius: 0</code> per
+    component.
   </p>
 
   <pre class="t-mono-block">{{ squareSnippet }}</pre>
 
   <p class="block-desc t-s">
-    <strong>
-      Three role declarations do it, and as of 2026-08-10 that is finally true.
-    </strong>
-    Measured: on a component page, zeroing
-    <code class="t-mono-inline">
-      --ds-radius-inner
-    </code>,
-    <code class="t-mono-inline">
-      -control
-    </code> and
-    <code class="t-mono-inline">
-      -panel
-    </code> squares
-    <strong>
-      most
-    </strong> rounded surfaces, and it is worth knowing which ones
-    it does not. Thirty-one declarations across nineteen components still read
-    the scale directly rather than a role — the menu panel, the toast,
-    split-button and button-group segment corners, the sidenav footer, the
-    colour-picker swatches and a dozen others. Zeroing the three roles leaves
-    those at their scale value.
-    <code class="t-mono-inline">
-      --radius-pill
-    </code> is out of scope by
-    design: switch tracks, avatars and status dots are round by shape, not by
-    style.
+    Zeroing the three roles squares most rounded surfaces. A few components
+    still read the scale directly (menu panel, toast, split-button and
+    button-group segments, sidenav footer, colour-picker swatches) and keep
+    their radius; zeroing the <code class="t-mono-inline">--radius-*</code> scale
+    as well reaches them.
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      Zeroing the SCALE instead is the blunter option, and it reaches everything
-      the roles miss:
-    </strong>
-    those thirty-one declarations, plus the focus-ring radii, which deliberately
-    follow the scale rather than a role — a ring traces a box, it is not a
-    surface a brand designs. Use it if you want the corners squared everywhere.
-  </p>
-
-  <p class="block-desc t-s">
-    <strong>
-      Leave
-      <code class="t-mono-inline">
-        --radius-pill
-      </code> alone either way.
-    </strong>
-    A switch track, an avatar and a status dot are round because of what they
-    are, not because of the brand — verified: with the scale zeroed, the switch
-    track stays fully rounded because it resolves the pill token instead.
+    Leave <code class="t-mono-inline">--radius-pill</code> alone either way:
+    switch tracks, avatars and status dots are round by shape, and the switch
+    track resolves the pill token, so it stays round even with the scale zeroed.
   </p>
 
   <p class="block-desc t-s">

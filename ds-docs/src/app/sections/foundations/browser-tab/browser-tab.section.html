@@ -5,7 +5,8 @@
   <span lede>
     Title, favicon, theme-color and tab grouping — the off-canvas surface the
     user sees in their tab bar. Long URLs and breadcrumb paths clip with
-    ellipsis; full path is exposed via title attribute or copy-to-clipboard.
+    ellipsis; expose the full path yourself via a <code class="t-mono-inline">title</code>
+    attribute or a copy action.
   </span>
 
   <h3 class="block-title t-h4">
@@ -105,14 +106,8 @@
     </dt>
 
     <dd>
-      Brand letter on brand surface; alert dot via
-      <code class="t-mono-inline">
-        .fav.alert
-      </code> nested under
-      <code class="t-mono-inline">
-        .tab-spec
-      </code> for unread count or
-      attention state. Size matches
+      Brand letter on brand surface; add an alert dot to the favicon for an
+      unread or attention state. Size matches
       <code class="t-mono-inline">
         --icon-md
       </code> so it reads legibly at
