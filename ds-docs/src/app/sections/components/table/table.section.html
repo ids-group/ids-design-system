@@ -1626,11 +1626,19 @@
     <code class="t-mono-inline">
       exportFetcher
     </code> call, the download, the
-    in-flight state and the live-region announcement. Leave
+    in-flight state and the live-region announcement. The export still needs
+    the directive: keep
     <code class="t-mono-inline">
-      dsTableExport
-    </code> off and drive it
-    yourself.
+      [dsTableExport]="false"
+    </code> on the table, which
+    keeps the export and hides the built-in button, and drive it from your own
+    control with
+    <code class="t-mono-inline">
+      runExport()
+    </code> or
+    <code class="t-mono-inline">
+      exportCsv()
+    </code>.
   </p>
 
   <ds-table
