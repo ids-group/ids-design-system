@@ -50,7 +50,7 @@ export class ModalComponent implements OnDestroy {
   readonly subtitle = input<string | null>(null);
   /** Fires once the close (leave) animation finishes. */
   readonly closed = output<void>();
-  /** Emit this yourself from a confirm action in the projected content; the modal never fires it. */
+  /** Fires when the projected `dsModalConfirm` action is pressed. The modal stays open. */
   readonly confirmed = output<void>();
   /** Draws the rules under the header and over the actions; off also tightens the vertical padding.
    *  Unset falls back to `DS_CONFIG.modal.dividers`, then `true`. */

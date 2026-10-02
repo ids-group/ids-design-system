@@ -4,7 +4,12 @@ import { BannerComponent } from 'ds/banner';
 import { ButtonComponent } from 'ds/button';
 import type { DsStatus } from 'ds/core';
 import { InputComponent } from 'ds/input';
-import { ModalCardComponent, ModalComponent, ModalService } from 'ds/modal';
+import {
+  ModalCardComponent,
+  ModalComponent,
+  ModalConfirmActionDirective,
+  ModalService,
+} from 'ds/modal';
 import { SelectComponent } from 'ds/select';
 import type { SelectOption } from 'ds/select';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
@@ -20,6 +25,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
     InputComponent,
     ModalCardComponent,
     ModalComponent,
+    ModalConfirmActionDirective,
     DocsSectionComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
@@ -72,6 +78,13 @@ export class ModalSection {
   protected readonly xlOpen = signal(false);
   protected readonly fullscreenOpen = signal(false);
   protected readonly persistentOpen = signal(false);
+  protected readonly renameOpen = signal(false);
+  protected readonly renamedTimes = signal(0);
+
+  protected onRenameConfirmed(): void {
+    this.renamedTimes.update((count) => count + 1);
+    this.renameOpen.set(false);
+  }
 
   protected async askDelete(): Promise<void> {
     const ok = await this.modal.confirm({

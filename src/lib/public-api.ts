@@ -215,6 +215,7 @@ export {
 export {
   ModalCardComponent,
   ModalComponent,
+  ModalConfirmActionDirective,
   ModalService,
 } from '@ids-group-ltd/ids-design-system/components/modal';
 export type {

@@ -1,5 +1,13 @@
 ## Unreleased
 
+### Added
+
+- **`dsModalConfirm` fires a modal's `confirmed`.** Put it on the confirm action inside `ds-modal`
+  (`ModalConfirmActionDirective`, exported from the modal entry point) and `(confirmed)` fires when
+  that action is pressed. On a `ds-button` it follows `pressed`, so a disabled or loading button never
+  confirms; on another element it follows `click` and skips `aria-disabled="true"`. The modal stays
+  open until you close it.
+
 ### Fixed
 
 - **`provideDsIcons` calls add up.** A second call, as a sibling or in a lazy route's providers,
