@@ -1902,11 +1902,19 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
+      dsTableExport
+    </code> on the table enables
+    export: with it,
+    <code class="t-mono-inline">
       exportCsv()
     </code> downloads the visible
     columns of the filtered + sorted rows (all rows, not just the current page).
-    It's a public method — wire it to your own toolbar button via a template
-    reference.
+    Without the directive the call downloads nothing and logs a warning. It's a
+    public method, so wire it to your own button via a template reference;
+    <code class="t-mono-inline">
+      [dsTableExport]="false"
+    </code> keeps the export and
+    hides the built-in toolbar button.
   </p>
 
   <div class="export-row">
@@ -1925,7 +1933,8 @@
     caption="Records"
     [data]="events"
     [columns]="defaultColumns"
-    [stickyHeader]="false">
+    [stickyHeader]="false"
+    [dsTableExport]="false">
     <ng-template
       let-row
       dsCellTemplate="project">
