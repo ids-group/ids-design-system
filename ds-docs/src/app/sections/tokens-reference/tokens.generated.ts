@@ -4813,7 +4813,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-container-max-width",
-        "value": "var(--col-cap-content)",
+        "value": "var(--_container-size-width)",
         "notes": "Page container max width (defaults to --col-cap-content)."
       },
       {
