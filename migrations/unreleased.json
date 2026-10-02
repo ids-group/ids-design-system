@@ -97,6 +97,10 @@
     }
   ],
   "informational": [
+    {
+      "text": "--ds-container-max-width takes effect on ds-container and wins over its size; a value set on it before and never seen now applies.",
+      "verify": "where your styles set --ds-container-max-width, confirm the container is that wide rather than its size's width."
+    },
     "ds-number-stepper's increment and decrement buttons clamp to min and max, so a step that would pass a bound lands on it instead of overshooting.",
     {
       "text": "ds-funnel-chart, ds-heatmap-chart and ds-pie-chart draw their keyboard focus ring, in --focus-ring-color and --focus-ring-width unless --ds-funnel-chart-focus-color, --ds-heatmap-chart-focus-color or --ds-pie-chart-focus-color (and the -focus-width tokens) say otherwise; a focused mark showed no indicator before.",
