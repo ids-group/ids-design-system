@@ -108,12 +108,27 @@
     than running past the panel.
   </p>
 
+  <p class="block-desc t-s">
+    On the light theme the panel is light, with a border. To keep the dark,
+    inverted panel, set the three hooks on <code class="t-mono-inline">:root</code>:
+  </p>
+
+  <pre
+    class="t-mono-block"><code>:root {{ '{' }}
+  --ds-tooltip-bg-color: var(--surface-inverted);
+  --ds-tooltip-text-color: var(--text-inverted);
+  --ds-tooltip-border-color: transparent;
+{{ '}' }}</code></pre>
+
   <h3 class="block-title t-h4">
     Live demo
   </h3>
 
   <p class="block-desc t-s">
-    Hover or tab into the button to trigger the directive.
+    Hover or tab into the button to trigger the directive. With no room on the
+    <code class="t-mono-inline">dsTooltipPlacement</code> side, the tip opens on
+    the opposite side, 8px clear of the viewport edge, with its arrow turned to
+    match.
   </p>
 
   <div class="demo">

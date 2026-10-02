@@ -178,6 +178,30 @@
   </p>
 
   <h3 class="block-title t-h4">
+    Dimming and the tooltip
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dimOthers
+    </code> fades every step but the
+    hovered or focused one, and beside a pin the rest stays down too. It is off
+    by default. <code class="t-mono-inline">tooltip="none"</code> takes the
+    panel away, for a chart whose values are printed beside it;
+    <code class="t-mono-inline">
+      'item'
+    </code>, the default, opens it on
+    each step. There is no <code class="t-mono-inline">'axis'</code>: each bar
+    is its own category.
+  </p>
+
+  <ds-waterfall-chart
+    caption="Hover a step"
+    dimOthers
+    dataTable="none"
+    [data]="settlement" />
+
+  <h3 class="block-title t-h4">
     Stagger
   </h3>
 

@@ -579,7 +579,9 @@
     Each reading in the panel carries its series' colour dot while there are two
     to four readings. A lone reading has nothing to tell it from, and from five
     the dots read as noise, so in both cases they go and the labels carry the
-    series on their own.
+    series on their own. A dot takes a ring only when its colour is below 1.5:1
+    against the panel, as the palest heat-map steps are, so it does not vanish
+    into it.
     <code class="t-mono-inline">
       tooltipSwatches
     </code>, per chart or on
@@ -871,7 +873,8 @@
     <code class="t-mono-inline">
       summary
     </code> replaces the generated sentence
-    outright, on all five charts. Reach for it where the generated one is true
+    outright, on all nine charts; <code class="t-mono-inline">ds-sparkline</code>
+    has no generated sentence and takes its name from <code class="t-mono-inline">label</code>. Reach for it where the generated one is true
     and useless — forty categories read out one by one, or a plot whose point is
     a shape rather than its values ("Conversion falls sharply after the third
     step"). Leave it alone otherwise: the generated sentence follows the data,
