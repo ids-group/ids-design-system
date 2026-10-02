@@ -57,7 +57,13 @@
     <code class="t-mono-inline">
       [selected]
     </code> renders the active state.
-    Use for filter-chip rows.
+    Use for filter-chip rows. It is a tab stop with
+    <code class="t-mono-inline">role="button"</code> and
+    <code class="t-mono-inline">aria-pressed</code> following
+    <code class="t-mono-inline">[selected]</code>, and
+    <kbd> Enter </kbd> or <kbd> Space </kbd> emits
+    <code class="t-mono-inline">(toggled)</code> as a click does, so add no
+    key handler of your own.
   </p>
 
   <div class="row">
