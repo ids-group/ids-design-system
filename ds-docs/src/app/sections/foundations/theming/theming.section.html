@@ -238,7 +238,10 @@
     provides nothing: every built-in default is what it always was. Provide it
     at the app root, on a <code class="t-mono-inline">Route</code>, or on a
     component — the config resolves through the injector chain and a nested call
-    MERGES with the one above it, section by section.
+    MERGES with the one above it, section by section. Several calls in one
+    <code class="t-mono-inline">providers</code> array merge too, in order, the
+    later call winning per key; <code class="t-mono-inline">provideDsIntl</code>
+    merges the same way.
   </p>
 
   <pre class="t-mono-block">{{ configSnippet }}</pre>
