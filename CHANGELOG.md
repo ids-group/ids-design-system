@@ -46,6 +46,10 @@
 
 ### Fixed
 
+- **A `clickable` `ds-stepper`'s step buttons have names.** Each was a focusable button hidden
+  from assistive technology, so Tab landed on something a screen reader could not announce; the
+  button now carries the step's name and state, `DS_INTL.stepper.step`.
+
 - **`ds-w3w` emits `copied` only once the address is on the clipboard.** It fired on every click,
   before the copy settled and also where the browser has no clipboard, so a "Copied" message could
   report a copy that never happened.
