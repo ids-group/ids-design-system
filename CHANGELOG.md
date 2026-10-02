@@ -46,6 +46,10 @@
 
 ### Fixed
 
+- **`--ds-container-max-width` sets `ds-container`'s width.** Every `size`, the default `xl`
+  included, wrote its own width over the token, so setting it changed nothing; the token now wins
+  over `size`.
+
 - **`ds-number-stepper`'s buttons stop at `min` and `max`.** A step that would pass a bound now
   lands on it: with `max` 100 and `step` 5, 98 goes to 100, where it went to 103. Typed values
   were already clamped.
