@@ -90,17 +90,20 @@
     its panel naming every mark's reading there; <kbd> ← </kbd> and
     <kbd>
       →
-    </kbd> walk the bands and wrap, and <kbd> ↑ </kbd> and
+    </kbd> walk the bands and wrap, <kbd> Home </kbd> and <kbd> End </kbd>
+    jump to the ends, Tab again leaves the chart, and <kbd> ↑ </kbd> and
     <kbd>
       ↓
     </kbd> focus one mark's reading, whose panel names it alone. A click
     on a mark, or <kbd> Enter </kbd> on a focused one, still fires
     <code class="t-mono-inline">
       pointClicked
-    </code>, and
+    </code>, and with
     <code class="t-mono-inline">
       pinOnClick
-    </code> holds the category.
+    </code> a click on the band holds the category; so does <kbd> Enter </kbd>
+    on a focused band, until the focus moves to another band. <kbd> Esc </kbd> steps
+    back from a mark to its band, and on the band closes the panel.
   </p>
 
   <ds-chart
@@ -399,14 +402,16 @@
     holds the category cursor where it is, by default, with a pin disc at the
     foot of its band: press again, Escape, or a press outside the plot to let
     go. Set <code class="t-mono-inline"> pinOnClick="false" </code> to keep it
-    moving with the pointer. A composed chart draws no Unpin control;
+    moving with the pointer. While the cursor is held the chart draws an Unpin
+    pill on its caption's line, or without a caption over the top end of the
+    plot, as the preset charts do;
     <code class="t-mono-inline">
       cursorPinned()
     </code> and
     <code class="t-mono-inline">
       releaseCursor()
-    </code> let you render your
-    own.
+    </code> read and release the
+    pin from code of your own.
   </p>
 
   <p class="block-desc t-s">
