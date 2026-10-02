@@ -113,6 +113,54 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Type, gap and clip width
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">--ds-breadcrumbs-font-size</code>,
+    <code class="t-mono-inline">--ds-breadcrumbs-font-weight</code>,
+    <code class="t-mono-inline">--ds-breadcrumbs-current-label-font-weight</code>,
+    <code class="t-mono-inline">--ds-breadcrumbs-gap</code>,
+    <code class="t-mono-inline">--ds-breadcrumbs-label-max-width</code> and
+    <code class="t-mono-inline">--ds-breadcrumbs-current-label-max-width</code>
+    resize the trail; here the font is larger, the gap wider and the label
+    width capped at 8ch.
+  </p>
+
+  <div class="stage">
+    <ds-breadcrumbs
+      class="sized"
+      [items]="defaultTrail" />
+  </div>
+
+  <h3 class="block-title t-h4">
+    Clipped label
+  </h3>
+
+  <p class="block-desc t-s">
+    A label past <code class="t-mono-inline">16ch</code> (the current page
+    past <code class="t-mono-inline">32ch</code>) ends in an ellipsis, and
+    hovering it or focusing its link from the keyboard opens a tooltip with the
+    whole label; a label that fits opens none.
+  </p>
+
+  <div class="stage">
+    <ds-breadcrumbs [items]="clippedTrail" />
+  </div>
+
+  <h3 class="block-title t-h4">
+    Modified clicks
+  </h3>
+
+  <p class="block-desc t-s">
+    A plain primary click on a crumb link prevents the default and emits
+    <code class="t-mono-inline">(navigate)</code>; a Ctrl, Cmd, Shift or Alt
+    click, or any non-primary button such as the middle one, leaves
+    <code class="t-mono-inline">href</code> to the browser (a new tab or
+    window) and emits nothing.
+  </p>
+
+  <h3 class="block-title t-h4">
     Non-clickable
   </h3>
 
