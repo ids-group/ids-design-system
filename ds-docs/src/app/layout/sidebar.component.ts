@@ -461,7 +461,6 @@ export class SidebarComponent {
     return segments.length >= 2 ? segments[1] : '';
   }
 
-  /** The `#chapter` of `/<area>/<anchor>#<chapter>`, else ''. */
   /** Path with the query and the fragment cut off — a chapter fragment must not be read as part
    *  of the anchor segment, or every group lookup fails the moment one is in the URL. */
   private pathOf(url: string): string {
