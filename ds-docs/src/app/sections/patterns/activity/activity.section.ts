@@ -1,9 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AvatarComponent } from 'ds/avatar';
 import { BadgeComponent } from 'ds/badge';
 import { ButtonComponent } from 'ds/button';
 import type { DsStatusKey } from 'ds/core';
-import { IconComponent } from 'ds/icons';
+import { EmptyStateComponent } from 'ds/empty-state';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface ActivityEntry {
@@ -24,7 +25,8 @@ interface ActivityEntry {
     BadgeComponent,
     ButtonComponent,
     DocsSectionComponent,
-    IconComponent,
+    EmptyStateComponent,
+    RouterLink,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './activity.section.html',
