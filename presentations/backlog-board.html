@@ -1668,8 +1668,9 @@ Bar and column are settled separately and stay apart.
   byte-identical in five files each.
   **The cost of moving them is the documentation, not the code.** `extract-docs` turns each
   docblock into that chart's own input table, so a base class buys ~450 lines and makes every
-  chart's API page open with a shared preamble. The extraction that does NOT cost that is the
-  template and style duplication below, which no generator reads.
+  chart's API page open with a shared preamble. The template and style duplication no generator
+  reads is already shared: the state frame is `figure[dsChartStates]`
+  (`chart-tooltip/chart-states.component.ts`) on top of `styles/_chart-frame.scss`.
 
 ## Thirteen inputs the chart family declares component by component (measured 2026-09-22)
 
