@@ -14,16 +14,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    The overlay is positioned relative to its host element; toggle it without
-    unmounting the content underneath.
+    The overlay is positioned relative to its host; toggle it without
+    unmounting the content. <code>[blur]="false"</code> drops the backdrop
+    blur; <code>spinnerSize</code> takes <code>sm</code> · <code>md</code>
+    (default) · <code>lg</code>. Tokens:
+    <code>--ds-loading-overlay-scrim-color</code>, <code>-label-color</code>
+    and <code>-enter-keyframes/-duration/-easing/-scale</code>.
   </p>
 
   <div class="demo-panel">
     <ds-loading-overlay
       label="Saving…"
-      [loading]="busy()"
-      [blur]="true"
-      [spinnerSize]="'md'">
+      [loading]="busy()">
       <div
         style="
           height: 14px;
@@ -70,32 +72,24 @@
   </h3>
 
   <p class="block-desc t-s">
-    <strong>
-      A scrim that only stops the pointer is a trap.
-    </strong> The scrim
-    is painted over the content, so it intercepts every click — but focus walked
-    straight under it, and a keyboard user could reach and activate a control
-    the mouse could not even touch, while its data was being replaced. So the
-    covered content goes <code class="t-mono-inline">inert</code> while loading:
-    not tabbable, and out of the accessibility tree.
+    The scrim blocks the pointer; while loading the covered content also goes
+    <code class="t-mono-inline">inert</code> (not tabbable, out of the
+    accessibility tree), so a keyboard user cannot reach controls under it.
     <code class="t-mono-inline">
       aria-busy
-    </code> stays on the host, so a
-    reader is still told why the content went quiet.
+    </code> stays on the host.
   </p>
 
   <p class="block-desc t-s">
+    For a scrim over only part of the content, offset its top edge with
+    <code class="t-mono-inline">insetTop</code>, set
     <code class="t-mono-inline">
       [inertContent]="false"
-    </code> turns that off,
-    and is for a scrim that covers only PART of its content — a blanket flag
-    would take the uncovered part with it. The consumer then marks the covered
-    subtree itself. <code class="t-mono-inline">ds-table</code> does exactly
-    this: its scrim starts below the header, because re-sorting is what puts the
-    scrim up in the first place, so only its
+    </code> and mark the covered subtree <code class="t-mono-inline">inert</code>
+    yourself. <code class="t-mono-inline">ds-table</code> does this: its scrim
+    starts below the header, so only
     <code class="t-mono-inline">
       &lt;tbody&gt;
-    </code> goes inert and the header
-    stays operable.
+    </code> goes inert and sorting stays operable.
   </p>
 </docs-section>
