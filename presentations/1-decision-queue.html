@@ -1912,7 +1912,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
   <section class="q" data-q="manifest-practices">
     <div class="q-head">
       <span class="q-num">27</span>
-      <h2 class="q-title">Какие из восьми практик формата манифестов берём</h2>
+      <h2 class="q-title">Какие из десяти практик формата манифестов берём</h2>
       <a class="q-src" href="5-migration-manifest-audit.html">дека migration-manifest-audit</a>
     </div>
     <p class="q-sub">Все 23 находки аудита закрыты, осталась ратификация. Контракт держится на 609 строках регэкспов - первые две практики лечат именно это. Можно отметить несколько.</p>
@@ -1940,13 +1940,26 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
   "absent": "--ds-button-border(?![-\\w])"
 }</span></p>
         <p class="says">как у Polaris: RegExp на группу</p></div>
-      <div class="opt"><h3>schemaVersion</h3>
+      <div class="opt"><h3>Guard-предусловие</h3>
+        <p class="cap">проверка перед миграцией</p>
         <p class="css">{
-<span class="mp-add">  "schemaVersion": 2,</span>
-  "version": "0.13.0",
-  "items": [ … ]
+  "id": "button-border-token-names-the-colour",
+<span class="mp-add">  "guard": {
+    "present": "--ds-button-border(?![-\\w])"
+  },</span>
+  "kind": "token-rename", …
 }</p>
-        <p class="mp-warn">дека migration-manifest-audit: отклонён</p></div>
+        <p class="says">нет совпадения - пункт не применяется вовсе, полу-применения не бывает</p>
+        <p class="mp-warn">форма ключа - пример</p></div>
+      <div class="opt"><h3>Полярность replaceIn</h3>
+        <p class="cap">область файлов пункта</p>
+        <p class="css">{
+  "id": "button-border-token-names-the-colour",
+<span class="mp-add">  "replaceIn": [ "**/*.scss", "**/*.css" ],</span>
+  "detect": [ "--ds-button-border" ], …
+}</p>
+        <p class="says">сегодня ключа области нет ни в одном манифесте и ни в одном инструменте - сначала завести, потом решать полярность</p>
+        <p class="mp-warn">форма ключа - пример</p></div>
       <div class="opt"><h3>Явное «замены нет»</h3>
         <p class="css">"id": "chart-strong-gridline-token-removed",
 "old": "--chart-grid-line-strong",
@@ -1982,6 +1995,14 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
   "items": [ … ]
 }</p>
         <p class="says">пре-флайт, который исполняет Angular CLI</p></div>
+      <div class="opt"><h3>Счётчик dry-run</h3>
+        <p class="cap">отчёт плагина по файлам</p>
+        <p class="css">button-border-token-names-the-colour
+<span class="mp-add">  src/app/order.scss       3 замены
+  src/app/theme.scss       1 замена
+  src/app/shell.scss       0 - совпадений нет</span></p>
+        <p class="says">ноль печатается, а не молчит; живёт в плагине, не в линте</p>
+        <p class="mp-warn">имена файлов - пример</p></div>
       <div class="opt"><h3>Ни одну</h3>
         <p class="css">"verify": "No stylesheet names …"</p>
         <p class="says">контракт: <span class="mp-pill">609 строк</span> migration-lint.mjs</p></div>
