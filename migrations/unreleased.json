@@ -97,6 +97,7 @@
     }
   ],
   "informational": [
+    "--ds-topbar-crumb-text-color, --ds-topbar-crumb-hover-text-color, --ds-topbar-crumb-separator-icon-color, --ds-topbar-crumb-current-text-color, --ds-page-header-crumb-text-color and --ds-page-header-crumb-text-color-hover now recolour the projected ds-breadcrumbs, where they changed nothing; an app that set them sees those colours take effect.",
     "ds-dropzone emits filesAdded when the same file is picked again from the file dialog, where a repeat pick emitted nothing.",
     "A clickable ds-stepper's step buttons are named by DS_INTL.stepper.step and no longer aria-hidden; a test that queried them by role and name now finds them.",
     "ds-w3w emits copied after the clipboard write succeeds, and not at all when it fails or the browser has no clipboard (an insecure origin, some test environments).",

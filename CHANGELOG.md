@@ -46,6 +46,12 @@
 
 ### Fixed
 
+- **Topbar and page-header breadcrumb tokens take effect.** `--ds-topbar-crumb-text-color`,
+  `--ds-topbar-crumb-hover-text-color`, `--ds-topbar-crumb-separator-icon-color`,
+  `--ds-topbar-crumb-current-text-color`, `--ds-page-header-crumb-text-color` and
+  `--ds-page-header-crumb-text-color-hover` changed nothing; they now recolour the projected
+  `ds-breadcrumbs`. Unset, the breadcrumbs keep their own `--ds-breadcrumbs-*` colours.
+
 - **`ds-dropzone` takes the same file twice.** Picking a file, removing it and picking it again
   emitted nothing, because the browser fires no change for an unchanged selection; `filesAdded`
   now fires on every pick.

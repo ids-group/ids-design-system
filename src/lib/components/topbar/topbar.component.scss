@@ -1,23 +1,29 @@
-@use '../../styles/text-clip' as text-clip;
-
 /* Truncation contract: the app / account label is single-line with ellipsis; the search
-   input never clips while focused; middle breadcrumb segments collapse before the leaf
-   truncates; action icons have no visible label (it lives in aria-label and the tooltip). */
+   input never clips while focused; action icons have no visible label (it lives in
+   aria-label and the tooltip). */
 
 :host {
   --_topbar-height:   var(--ds-topbar-height,   var(--topbar-h));
   --_topbar-bg-color:       var(--ds-topbar-bg-color,       var(--surface-default));
   --_topbar-border:   var(--ds-topbar-border,   var(--border-divider));
   --_topbar-title-text-color: var(--ds-topbar-title-text-color, var(--text-primary));
-  --_topbar-crumb-text-color: var(--ds-topbar-crumb-text-color, var(--text-tertiary));
-  --_topbar-crumb-hover-text-color: var(--ds-topbar-crumb-hover-text-color, var(--accent));
-  --_topbar-crumb-separator-icon-color: var(--ds-topbar-crumb-separator-icon-color, var(--icon-muted));
-  --_topbar-crumb-current-text-color: var(--ds-topbar-crumb-current-text-color, var(--text-primary));
+
+  /* No fallback of their own: unset, they pass the breadcrumbs' own value (or an app's) through. */
+  --_topbar-crumb-text-color: var(--ds-topbar-crumb-text-color, var(--ds-breadcrumbs-label-color));
+  --_topbar-crumb-hover-text-color: var(--ds-topbar-crumb-hover-text-color, var(--ds-breadcrumbs-label-color-hover));
+  --_topbar-crumb-separator-icon-color: var(--ds-topbar-crumb-separator-icon-color, var(--ds-breadcrumbs-separator-icon-color));
+  --_topbar-crumb-current-text-color: var(--ds-topbar-crumb-current-text-color, var(--ds-breadcrumbs-current-label-color));
 
   display: block;
 }
 
 .topbar {
+  /* Read by the projected ds-breadcrumbs, a child of this element. */
+  --ds-breadcrumbs-label-color: var(--_topbar-crumb-text-color);
+  --ds-breadcrumbs-label-color-hover: var(--_topbar-crumb-hover-text-color);
+  --ds-breadcrumbs-separator-icon-color: var(--_topbar-crumb-separator-icon-color);
+  --ds-breadcrumbs-current-label-color: var(--_topbar-crumb-current-text-color);
+
   display: flex;
   align-items: center;
   gap: var(--space-4);
@@ -42,36 +48,4 @@
     gap: var(--space-2);
     margin-left: auto;
   }
-
-  .crumbs-trail {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-    color: var(--_topbar-crumb-text-color);
-    min-width: 0;
-    max-width: 100%;
-    flex-wrap: nowrap;
-    overflow: hidden;
-  }
-  .crumb {
-    color: var(--_topbar-crumb-text-color);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-
-    @include text-clip.single-line-ellipsis;
-
-    max-width: 24ch;
-    transition: color var(--duration-fast) var(--ease-standard);
-
-    &:hover { color: var(--_topbar-crumb-hover-text-color); }
-    &.crumb--current {
-      color: var(--_topbar-crumb-current-text-color);
-      font-weight: var(--font-weight-bold);
-      max-width: 32ch;
-    }
-  }
-  .crumb-sep { color: var(--_topbar-crumb-separator-icon-color); display: inline-flex; align-items: center; }
 }
