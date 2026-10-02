@@ -36,11 +36,31 @@
       ],
       "verify": "a group projecting more avatars than max shows max avatars followed by a +N chip whose N is the hidden count, or total - max when total is set.",
       "restore": null
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "AvatarGroupComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends AvatarGroupComponent"
+      ],
+      "detect": [
+        "extends AvatarGroupComponent"
+      ],
+      "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
+      "appliesWhen": "Only a class of yours that extends AvatarGroupComponent. Template users of ds-avatar-group need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it (TS2415); only a rename does.",
+      "restore": null,
+      "verify": "The app builds with no TS2415 or TS4114 against AvatarGroupComponent.",
+      "note": "AvatarGroupComponent gained the private avatars."
     }
   ],
   "deleteList": [],
   "informational": [
     "--ds-topbar-crumb-text-color, --ds-topbar-crumb-hover-text-color, --ds-topbar-crumb-separator-icon-color, --ds-topbar-crumb-current-text-color, --ds-page-header-crumb-text-color and --ds-page-header-crumb-text-color-hover now recolour the projected ds-breadcrumbs, where they changed nothing; an app that set them sees those colours take effect.",
-    "ds-bar-chart draws a row with a negative value as an empty track labelled with that value, where it drew a bar of the absolute value labelled 0."
+    "ds-bar-chart draws a row with a negative value as an empty track labelled with that value, where it drew a bar of the absolute value labelled 0.",
+    "ds-button with routerLink or href, disabled and a disabledReason keeps a Tab stop (tabindex 0, role link) so the reason is announced; without disabledReason a disabled link-button still takes tabindex -1."
   ]
 }

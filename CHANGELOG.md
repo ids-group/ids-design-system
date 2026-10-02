@@ -2,9 +2,15 @@
 
 ### Fixed
 
+- **A disabled link-button with `disabledReason` stays reachable by Tab.** A `ds-button` with
+  `routerLink` or `href`, `disabled` and a `disabledReason` was taken out of the Tab order, so its
+  reason was never announced; it now keeps its Tab stop and link role, and still swallows the click.
+
 - **`ds-avatar-group` applies `max` to the projected avatars.** Avatars past `max` are hidden,
   and with `total` unset the `+N` chip counts the projected avatars; the group showed every
-  projected avatar and drew no chip without `total`.
+  projected avatar and drew no chip without `total`. `AvatarGroupComponent` gained a private
+  `avatars`, so a subclass declaring that name must rename it: `override` cannot reach a private
+  member.
 
 - **`provideDsTheme({ followSystem: true })` keeps a `data-theme` set before startup.** A
   `data-theme` already on `<html>` when the app starts, from `index.html` or a script that restores a
