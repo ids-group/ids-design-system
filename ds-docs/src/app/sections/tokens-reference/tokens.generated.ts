@@ -6771,7 +6771,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-status-dot-color",
         "value": "var(--icon-muted)",
-        "notes": "Default = planning."
+        "notes": "Dot colour; default `--icon-muted`. Set per status by `status.define`."
       },
       {
         "name": "--ds-status-dot-size",
@@ -7798,7 +7798,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-tag-bg-color",
         "value": "var(--accent)",
-        "notes": "Surface fill — interactive/ghost re-point to --surface-secondary."
+        "notes": "Tag fill; default `--accent`, `--surface-secondary` for `neutral`."
       },
       {
         "name": "--ds-tag-label-color",

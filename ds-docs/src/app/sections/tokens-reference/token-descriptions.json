@@ -1091,7 +1091,7 @@
   "--ds-tag-active-bg-color": "Selected fill.",
   "--ds-tag-active-border": "Selected border.",
   "--ds-tag-active-label-color": "Selected label.",
-  "--ds-tag-bg-color": "Surface fill — interactive/ghost re-point to --surface-secondary.",
+  "--ds-tag-bg-color": "Tag fill; default `--accent`, `--surface-secondary` for `neutral`.",
   "--ds-tag-border-color": "Tag border colour (defaults to --border-divider).",
   "--ds-tag-font-size": "Label size.",
   "--ds-tag-font-weight": "Label weight.",
