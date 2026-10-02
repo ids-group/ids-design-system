@@ -8287,12 +8287,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-tooltip-radius",
         "value": "var(--ds-radius-control)",
-        "notes": "Tooltip corner radius (defaults to --radius-md)."
+        "notes": "Tooltip corner radius (defaults to --ds-radius-control)."
       },
       {
         "name": "--ds-tooltip-shadow",
         "value": "var(--ds-elevation-overlay)",
-        "notes": "Tooltip drop shadow (defaults to --shadow-2)."
+        "notes": "Tooltip drop shadow (defaults to --ds-elevation-overlay)."
       },
       {
         "name": "--ds-tooltip-max-width",
