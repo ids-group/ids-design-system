@@ -97,6 +97,7 @@
     }
   ],
   "informational": [
+    "ds-w3w emits copied after the clipboard write succeeds, and not at all when it fails or the browser has no clipboard (an insecure origin, some test environments).",
     {
       "text": "--ds-container-max-width takes effect on ds-container and wins over its size; a value set on it before and never seen now applies.",
       "verify": "where your styles set --ds-container-max-width, confirm the container is that wide rather than its size's width."

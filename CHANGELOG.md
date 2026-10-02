@@ -46,6 +46,10 @@
 
 ### Fixed
 
+- **`ds-w3w` emits `copied` only once the address is on the clipboard.** It fired on every click,
+  before the copy settled and also where the browser has no clipboard, so a "Copied" message could
+  report a copy that never happened.
+
 - **`--ds-container-max-width` sets `ds-container`'s width.** Every `size`, the default `xl`
   included, wrote its own width over the token, so setting it changed nothing; the token now wins
   over `size`.

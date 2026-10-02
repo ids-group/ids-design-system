@@ -47,10 +47,13 @@ export class W3wComponent {
     if (!this.copyable()) {
       return;
     }
-    const text = `${this.prefix()}${this.address()}`;
-    if (typeof navigator !== 'undefined' && navigator.clipboard) {
-      void navigator.clipboard.writeText(text);
+    if (typeof navigator === 'undefined' || !navigator.clipboard) {
+      return;
     }
-    this.copied.emit(this.address());
+    const address = this.address();
+    navigator.clipboard.writeText(`${this.prefix()}${address}`).then(
+      () => this.copied.emit(address),
+      () => undefined,
+    );
   }
 }
