@@ -1,79 +1,75 @@
-<figure class="waterfall-chart">
-  <ds-chart-unpin
-    [pinned]="pinned()"
-    (release)="series()?.activeMark?.release()" />
-
-  @if (caption()) {
-    <figcaption>
-      {{ caption() }}
-    </figcaption>
-  }
-
-  @if (error()) {
-    <p
-      class="empty is-error"
-      role="status">
-      {{ errorTextResolved() }}
-    </p>
-  } @else if (loading() || !renderReady()) {
-    <div
-      class="skeleton"
-      aria-hidden="true">
-      @for (placeholder of skeletonBars(); track $index) {
-        <ds-skeleton
-          height="var(--_waterfall-chart-skeleton-height)"
-          [shimmer]="loading()" />
-      }
-    </div>
-  } @else if (isEmpty()) {
-    <p class="empty">
-      {{ emptyTextResolved() }}
-    </p>
-  } @else {
-    <ds-chart
-      frame="none"
-      [tooltipSwatches]="tooltipSwatches()"
-      [categories]="categories()"
-      [tickCount]="tickCount()"
-      [valueFormat]="valueFormatResolved()"
-      [interactive]="interactive()"
-      [summary]="accessibleName()">
-      <svg:g
-        dsWaterfallMarks
-        [steps]="steps()"
-        [labelValues]="labelValues()"
-        [showValues]="showValues()"
-        [showConnectors]="showConnectors()"
-        [staggerMs]="staggerMs()"
-        [valueFormat]="valueFormatResolved()" />
-
-      <svg:g
-        dsColumnSeries
-        showValues="false"
-        soleSeries
-        [data]="points()"
-        [offsets]="offsets()"
-        [interactive]="interactive()"
-        [pinOnClick]="pinOnClick()"
-        [dimOthers]="dimOthers()"
-        [tooltip]="tooltip()"
-        [tooltipLingerMs]="defaults.tooltipLingerMs()"
-        [staggerMs]="staggerMs()"
-        [valueFormat]="valueFormatResolved()"
-        (pointClicked)="onPointClicked($event)" />
-    </ds-chart>
-
-    @if (dataTableResolved() !== 'none') {
-      <ds-chart-data-table
-        [columns]="[
-          intl().chart.stepColumn,
-          intl().chart.directionColumn,
-          intl().chart.valueColumn,
-          intl().chart.runningTotalColumn,
-        ]"
-        [rows]="dataTableRows()"
-        [caption]="caption()"
-        [open]="dataTableResolved() === 'visible'" />
-    }
-  }
+<figure
+  class="waterfall-chart"
+  dsChartStates
+  messageAxes
+  [pinned]="pinned()"
+  [caption]="caption()"
+  [error]="error()"
+  [errorText]="errorTextResolved()"
+  [pending]="loading() || !renderReady()"
+  [empty]="isEmpty()"
+  [emptyText]="emptyTextResolved()"
+  [skeleton]="skeleton"
+  [body]="body"
+  (release)="series()?.activeMark?.release()">
 </figure>
+
+<ng-template #skeleton>
+  <div
+    class="skeleton"
+    aria-hidden="true">
+    @for (placeholder of skeletonBars(); track $index) {
+      <ds-skeleton
+        height="var(--_waterfall-chart-skeleton-height)"
+        [shimmer]="loading()" />
+    }
+  </div>
+</ng-template>
+
+<ng-template #body>
+  <ds-chart
+    frame="none"
+    [tooltipSwatches]="tooltipSwatches()"
+    [categories]="categories()"
+    [tickCount]="tickCount()"
+    [valueFormat]="valueFormatResolved()"
+    [interactive]="interactive()"
+    [summary]="accessibleName()">
+    <svg:g
+      dsWaterfallMarks
+      [steps]="steps()"
+      [labelValues]="labelValues()"
+      [showValues]="showValues()"
+      [showConnectors]="showConnectors()"
+      [staggerMs]="staggerMs()"
+      [valueFormat]="valueFormatResolved()" />
+
+    <svg:g
+      dsColumnSeries
+      showValues="false"
+      soleSeries
+      [data]="points()"
+      [offsets]="offsets()"
+      [interactive]="interactive()"
+      [pinOnClick]="pinOnClick()"
+      [dimOthers]="dimOthers()"
+      [tooltip]="tooltip()"
+      [tooltipLingerMs]="defaults.tooltipLingerMs()"
+      [staggerMs]="staggerMs()"
+      [valueFormat]="valueFormatResolved()"
+      (pointClicked)="onPointClicked($event)" />
+  </ds-chart>
+
+  @if (dataTableResolved() !== 'none') {
+    <ds-chart-data-table
+      [columns]="[
+        intl().chart.stepColumn,
+        intl().chart.directionColumn,
+        intl().chart.valueColumn,
+        intl().chart.runningTotalColumn,
+      ]"
+      [rows]="dataTableRows()"
+      [caption]="caption()"
+      [open]="dataTableResolved() === 'visible'" />
+  }
+</ng-template>

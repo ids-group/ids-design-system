@@ -3,9 +3,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Бар и колонка - насколько сводить контракты</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-22">
+<meta name="ds-deck-evidence" content="components.md:895 - src/lib/components/chart-tooltip/chart-states.component.ts:34">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <style>
   .plot {
@@ -90,6 +92,12 @@
 </style>
 
 <main>
+  <div class="decided">
+    <h2>Построено: общий слой под bar и column, контракты разные</h2>
+    <p>Разница в стеке названа у обоих чартов в <code>components.md</code> и <code>docs/agent</code>: bar стекует внутри строки через <code>segments</code>, column - серии через <code>stack</code>. Разница в цвете была названа раньше. Общий слой: логика в <code>DsChartBase</code> и модулях <code>charts-*</code>, обвязка состояний - в <code>figure[dsChartStates]</code> (дека <code>chart-state-frame</code>).</p>
+    <p class="evidence">2026-10-02 · components.md:895 - src/lib/components/chart-tooltip/chart-states.component.ts:34</p>
+  </div>
+
   <div class="masthead">
     <h1>Бар и колонка из одних данных рисуют разные картинки</h1>
     <p class="lede">

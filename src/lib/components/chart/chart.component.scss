@@ -13,7 +13,9 @@
 }
 
 /* `--_chart-view-height` (px, from the TS geometry) must match the plot height, or the card jumps when data lands. */
-@include chart-frame.message-box(var(--_chart-view-height), true);
+:host {
+  --_chart-message-height: var(--_chart-view-height);
+}
 
 /* Measured, not ratio-sized: the viewBox width comes from the ResizeObserver, so deriving one axis from the other is circular. */
 .canvas {

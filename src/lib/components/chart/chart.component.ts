@@ -37,7 +37,7 @@ import {
   CHART_UNPIN_DRAWN_BY_HOST,
   ChartPinMarkerComponent,
   ChartTooltipDirective,
-  ChartUnpinComponent,
+  ChartStatesComponent,
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type { ChartTooltipContext } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
@@ -82,7 +82,7 @@ import {
     SkeletonComponent,
     ChartTooltipDirective,
     ChartPinMarkerComponent,
-    ChartUnpinComponent,
+    ChartStatesComponent,
   ],
   templateUrl: './chart.component.html',
   styleUrl: './chart.component.scss',

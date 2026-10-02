@@ -32,7 +32,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import type { ChartDataTable } from '@ids-group-ltd/ids-design-system/core';
 import {
   ChartTooltipDirective,
-  ChartUnpinComponent,
+  ChartStatesComponent,
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
@@ -65,7 +65,7 @@ const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
   imports: [
     SkeletonComponent,
     ChartTooltipDirective,
-    ChartUnpinComponent,
+    ChartStatesComponent,
     IconComponent,
     ChartDataTableComponent,
   ],

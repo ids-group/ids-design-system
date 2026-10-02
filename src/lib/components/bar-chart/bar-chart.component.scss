@@ -8,6 +8,7 @@
 @include chart-data-table.chart-data-table;
 
 .bar-chart {
+  --_chart-message-height: calc(3 * (var(--_bar-chart-track-height) + var(--_bar-chart-row-gap)));
   --_bar-chart-band-color: var(--ds-bar-chart-band-color, var(--ds-chart-grid-line-color));
   --_bar-chart-target-color: var(--ds-bar-chart-target-color, var(--text-primary));
   --_bar-chart-target-width: var(--ds-bar-chart-target-width, 2px);
@@ -46,10 +47,6 @@
   gap: var(--_bar-chart-label-gap) var(--space-2);
   align-items: baseline;
 }
-
-@include chart-frame.message-box(
-  calc(3 * (var(--_bar-chart-track-height) + var(--_bar-chart-row-gap)))
-);
 
 // Sized to its text: hovering the label fades the other rows, so the empty column beside it must not.
 .label {

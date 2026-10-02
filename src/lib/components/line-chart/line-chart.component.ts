@@ -56,7 +56,7 @@ import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/compon
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import {
   CHART_UNPIN_DRAWN_BY_HOST,
-  ChartUnpinComponent,
+  ChartStatesComponent,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
   ChartTooltipContext,
@@ -118,7 +118,7 @@ const SERIES_DASH_ARRAYS = [
     SeriesAnnotationComponent,
     ChartLegendComponent,
     ChartDataTableComponent,
-    ChartUnpinComponent,
+    ChartStatesComponent,
   ],
   templateUrl: './line-chart.component.html',
   styleUrl: './line-chart.component.scss',

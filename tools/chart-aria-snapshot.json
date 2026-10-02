@@ -40,14 +40,14 @@
     "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? markerLabel(marker) : null}"
   ],
   "pie-chart": [
-    "div: aria-hidden=true",
     "p: role=status",
-    "div: aria-hidden=true",
     "div: aria-hidden=true",
     "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
     "svg: aria-hidden={ringCarriesTheRoute() ? null : true}",
     "path: role={ringCarriesTheRoute() ? 'button' : null}, aria-label={ringCarriesTheRoute() ? entryLabel(entry) : null}",
-    "li: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}"
+    "li: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}",
+    "div: aria-hidden=true",
+    "p: role={error ? 'status' : null}"
   ],
   "reference-label": [],
   "reference-line": ["svg: aria-hidden=true"],
