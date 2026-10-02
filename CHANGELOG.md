@@ -2,6 +2,10 @@
 
 ### Fixed
 
+- **`ds-avatar-group` applies `max` to the projected avatars.** Avatars past `max` are hidden,
+  and with `total` unset the `+N` chip counts the projected avatars; the group showed every
+  projected avatar and drew no chip without `total`.
+
 - **`provideDsTheme({ followSystem: true })` keeps a `data-theme` set before startup.** A
   `data-theme` already on `<html>` when the app starts, from `index.html` or a script that restores a
   saved choice, is kept, and OS colour-scheme changes no longer override it. Without the attribute,

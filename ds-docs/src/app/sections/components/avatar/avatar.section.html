@@ -50,11 +50,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    The group shows every avatar you project, so project at most
-    <code class="t-mono-inline">max</code> (default 4). Set
-    <code class="t-mono-inline">total</code> to the full count and a
-    <code class="t-mono-inline">+N</code> chip shows the rest
-    (<code class="t-mono-inline">total - max</code>); unset, no chip renders.
+    The group shows the first
+    <code class="t-mono-inline">max</code> avatars (default 4) and a
+    <code class="t-mono-inline">+N</code> chip for the rest, counted from the
+    projected avatars or from <code class="t-mono-inline">total</code> when only
+    some are loaded.
     <code class="t-mono-inline">tint="neutral"</code> gives an avatar the
     overflow-chip look.
   </p>
@@ -72,6 +72,22 @@
       <ds-avatar
         initials="SK"
         [tint]="{ bg: 'var(--green-100)', fg: 'var(--green-700)' }" />
+    </ds-avatar-group>
+
+    <ds-avatar-group [max]="3">
+      <ds-avatar initials="AB" />
+
+      <ds-avatar
+        initials="JR"
+        [tint]="{ bg: 'var(--orange-100)', fg: 'var(--orange-700)' }" />
+
+      <ds-avatar
+        initials="SK"
+        [tint]="{ bg: 'var(--green-100)', fg: 'var(--green-700)' }" />
+
+      <ds-avatar initials="MT" />
+
+      <ds-avatar initials="LP" />
     </ds-avatar-group>
   </div>
 
