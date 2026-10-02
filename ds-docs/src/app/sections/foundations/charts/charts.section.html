@@ -579,7 +579,9 @@
     Each reading in the panel carries its series' colour dot while there are two
     to four readings. A lone reading has nothing to tell it from, and from five
     the dots read as noise, so in both cases they go and the labels carry the
-    series on their own.
+    series on their own. A dot takes a ring only when its colour is below 1.5:1
+    against the panel, as the palest heat-map steps are, so it does not vanish
+    into it.
     <code class="t-mono-inline">
       tooltipSwatches
     </code>, per chart or on
