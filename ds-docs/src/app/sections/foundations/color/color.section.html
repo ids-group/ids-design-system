@@ -676,9 +676,10 @@
     <code class="t-mono-inline">
       &#64;use
     </code> the DS partials à la carte
-    need <code class="t-mono-inline"> &#64;use 'styles/focus' </code> to get
-    either; the bundled <code class="t-mono-inline">styles/ds</code> entry
-    already includes it.
+    need <code class="t-mono-inline"> &#64;use 'styles/focus' as focus; </code>
+    and then <code class="t-mono-inline"> &#64;include focus.emit-rules; </code>
+    in their one global stylesheet to get either; the bundled
+    <code class="t-mono-inline">styles/ds</code> entry already includes both.
   </p>
 
   <h3 class="block-title t-h4">
