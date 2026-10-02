@@ -3,9 +3,18 @@
   eyebrow="Components"
   title="Pagination">
   <span lede>
-    Page navigation for tabular data — ellipsis when ranges exceed 7 visible
-    items.
+    Page navigation for tabular data, with an ellipsis once there are more
+    than 7 pages.
   </span>
+
+  <p class="block-desc t-s">
+    The <code>&lt;nav&gt;</code> is named by
+    <code>DS_INTL.pagination.label</code> and the current page button carries
+    <code>aria-current="page"</code>. Previous, next, page and rows-per-page
+    labels come from <code>DS_INTL.pagination.*</code>; override them to
+    localise. Tokens: <code>--ds-pagination-*</code> (button bg/label/border
+    and hover, active bg/label and hover, radius, label font).
+  </p>
 
   <h3
     data-claude-design
@@ -14,8 +23,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    12 pages, current page near the start — two ellipses bracket the centred
-    range: one after 1, one before 12.
+    12 pages, current page 4: two ellipses bracket the centred range, one after
+    1 and one before 12.
   </p>
 
   <div class="row">
@@ -33,18 +42,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    Page-button states side-by-side. Live <code>ds-pagination</code> — pin
-    classes target non-active buttons via ::ng-deep (see styles below).
     <code>
       loading
-    </code> disables every control, masks the range label and
-    sets <code> aria-busy </code> on the nav. With a <code> total </code> of 0
-    the label reads Showing 0 of 0, every button is disabled and none is marked
-    current. The label comes from
-    <code>
-      DS_INTL.pagination.range(0, 0, 0)
-    </code>, so a <code>range</code> of
-    your own handles that call.
+    </code> disables every control, masks the range label with a
+    skeleton and sets <code>aria-busy</code> on the nav. With
+    <code>total</code> 0 the label reads "Showing 0 of 0"
+    (<code>DS_INTL.pagination.range(0, 0, 0)</code>, so your own
+    <code>range</code> handles that call), every button is disabled and none
+    is current.
   </p>
 
   <div class="states is-cols-1">
@@ -59,7 +64,7 @@
       </div>
 
       <div class="state-cell-label">
-        Default
+        Default · prev disabled on page 1
       </div>
     </div>
 
@@ -88,21 +93,6 @@
 
       <div class="state-cell-label">
         Active · current page
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <!-- currentPage=1 disables the prev button via [disabled] on the component -->
-      <div class="state-cell-stage">
-        <ds-pagination
-          [total]="40"
-          [pageSize]="10"
-          [currentPage]="1"
-          [showLabel]="false" />
-      </div>
-
-      <div class="state-cell-label">
-        Prev · disabled (page 1)
       </div>
     </div>
 
@@ -197,15 +187,15 @@
   </div>
 
   <h3 class="block-title t-h4">
-    With page-size select
+    Rows per page
   </h3>
 
   <p class="block-desc t-s">
-    Pager with the built-in items-per-page selector. The
-    <code>
-      &lt;ds-pagination&gt;
-    </code> component renders its own size control
-    — no external dropdown needed.
+    The rows-per-page select is on by default;
+    <code>[showPageSize]="false"</code> hides it when the host fixes the size.
+    Choices come from <code>pageSizeOptions</code> (default
+    <code>[10, 25, 50, 100]</code>); a <code>pageSize</code> outside them is
+    merged in. Changing the size resets <code>currentPage</code> to 1.
   </p>
 
   <div class="page-size-row">
@@ -214,6 +204,15 @@
       [showLabel]="false"
       [(pageSize)]="pageSizeWith"
       [(currentPage)]="pageWith" />
+  </div>
+
+  <div class="page-size-row">
+    <ds-pagination
+      [total]="500"
+      [pageSize]="10"
+      [currentPage]="1"
+      [showLabel]="false"
+      [showPageSize]="false" />
   </div>
 
   <h3
@@ -225,18 +224,15 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       layout
-    </code> decides how the pager fills its
-    row. <code class="t-mono-inline"> 'grouped' </code>, the default, keeps the
-    label and the buttons together at their natural width;
+    </code>: <code class="t-mono-inline">'grouped'</code> (default) keeps
+    label and buttons together at natural width;
     <code class="t-mono-inline">
       'spread'
-    </code> goes full width and pushes the
-    label to one end, which is what a pager under a table wants so the controls
-    land under the same edge as the table's own.
+    </code> goes full width with the label at
+    one end, for a pager under a table. Unset,
     <code class="t-mono-inline">
       size
-    </code> takes the control scale - unset it
-    falls back to
+    </code> falls back to
     <code class="t-mono-inline">
       DS_CONFIG.pagination.size
     </code>, then
@@ -254,11 +250,10 @@
     </code>, then
     <code class="t-mono-inline">
       'grouped'
-    </code>. Both reach the pager inside
+    </code>. Both also reach the pager inside
     <code class="t-mono-inline">
       ds-table
-    </code> as well, so one config line
-    sets every pager in the app.
+    </code>.
   </p>
 
   <div class="ranges">

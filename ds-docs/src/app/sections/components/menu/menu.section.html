@@ -4,12 +4,12 @@
   title="Menu"
   [apiKeys]="['menu:MenuDividerComponent', 'menu:MenuItemComponent']">
   <span lede>
-    Inline list of actions. Used inside modals, popovers, or any container that
-    already provides its own surface. Each item is a full-width button with an
-    optional leading icon. <code>error</code> turns the item red for destructive
-    actions (Sign out, Delete); <code>disabled</code> dims it and blocks clicks.
-    To float it from a trigger, host it in a <code>ds-popover</code> — see the
-    first demo.
+    Inline list of actions for modals, popovers or any container with its own
+    surface. Each item is a full-width button with an optional leading
+    <code>icon</code>; project a custom graphic with the <code>icon</code>
+    attribute when no <code>IconName</code> fits. <code>error</code> marks a
+    destructive action, <code>quiet</code> mutes an item that stays
+    actionable, <code>disabled</code> blocks activation.
   </span>
 
   <h3 class="block-title t-h4">
@@ -17,9 +17,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    The real usage — a button opens the menu in a <code>ds-popover</code>.
-    Selecting an item closes the overlay automatically (the item finds it via
-    DI, no wiring needed). Click outside or press <code>Esc</code> to dismiss.
+    A button opens the menu in a <code>ds-popover</code>. An item emits
+    <code>pressed</code> on click (not when disabled or when it opens a
+    submenu) and closes the overlay itself; click outside or press
+    <code>Esc</code> to dismiss.
+  </p>
+
+  <p class="block-desc t-s">
+    The menu is one Tab stop with roving focus: <kbd>ArrowUp</kbd> /
+    <kbd>ArrowDown</kbd> wrap, <kbd>Home</kbd> / <kbd>End</kbd> jump, and a
+    typed character moves to the next item starting with it. Disabled items
+    stay in the roving order.
   </p>
 
   <div class="demo">
@@ -37,25 +45,36 @@
       #acct
       align="start">
       <ds-menu>
-        <ds-menu-item icon="users">
+        <ds-menu-item
+          icon="users"
+          (pressed)="lastAction.set('Profile settings')">
           Profile settings
         </ds-menu-item>
 
-        <ds-menu-item icon="settings">
+        <ds-menu-item
+          icon="settings"
+          (pressed)="lastAction.set('Preferences')">
           Preferences
         </ds-menu-item>
 
-        <ds-menu-item icon="bell">
+        <ds-menu-item
+          icon="bell"
+          (pressed)="lastAction.set('Notifications')">
           Notifications
         </ds-menu-item>
 
         <ds-menu-item
           icon="x"
-          [error]="true">
+          [error]="true"
+          (pressed)="lastAction.set('Sign out')">
           Sign out
         </ds-menu-item>
       </ds-menu>
     </ds-popover>
+
+    <p class="t-s">
+      Last action: {{ lastAction() }}
+    </p>
   </div>
 
   <h3
@@ -67,21 +86,16 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       description
-    </code> puts a second line under
-    the label for a limitation the action carries. Unlike a
+    </code> adds a visible second line
+    under the label for a limitation the action carries ("will not be saved"),
+    unlike a hover-only
     <code class="t-mono-inline">
       [dsTooltip]
-    </code>, it is visible without
-    hover or focus — which is the whole point of a caveat like "will not be
-    saved".
-    <br />
-    It reaches assistive tech as
+    </code>. It is announced through
     <code class="t-mono-inline">
       aria-describedby
     </code>, not as part of the
-    item's name: the label names the action, the description describes it. So a
-    screen reader announces "Export as CSV" and then the caveat, rather than one
-    run-on name.
+    item's name.
   </p>
 
   <div class="showcase-grid">
@@ -235,7 +249,7 @@
       </h3>
 
       <p class="block-desc t-s">
-        Four items with icons — the typical user-account menu shape.
+        Four items with icons, the usual account-menu shape.
       </p>
 
       <div class="stage">
@@ -267,11 +281,10 @@
       </h3>
 
       <p class="block-desc t-s">
-        A row blocked from interaction — still keyboard-focusable (<code
+        Activation is blocked, but the item stays focusable (<code
           class="t-mono-inline"
           >aria-disabled</code
-        >), so a <code class="t-mono-inline">dsTooltip</code> can explain why on
-        hover/focus. Activation stays blocked.
+        >), so a <code class="t-mono-inline">dsTooltip</code> can explain why.
       </p>
 
       <div class="stage">
@@ -300,7 +313,7 @@
       </h3>
 
       <p class="block-desc t-s">
-        Destructive action — colour pulled from <code>--error-text</code>.
+        Destructive action, coloured from <code>--error-text</code>.
       </p>
 
       <div class="stage">
@@ -316,11 +329,35 @@
 
     <div class="showcase-cell">
       <h3 class="block-title t-h4">
+        Quiet
+      </h3>
+
+      <p class="block-desc t-s">
+        Muted, still actionable.
+      </p>
+
+      <div class="stage">
+        <ds-menu>
+          <ds-menu-item icon="edit">
+            Rename
+          </ds-menu-item>
+
+          <ds-menu-item
+            icon="eye"
+            [quiet]="true">
+            Show hidden columns
+          </ds-menu-item>
+        </ds-menu>
+      </div>
+    </div>
+
+    <div class="showcase-cell">
+      <h3 class="block-title t-h4">
         Text only
       </h3>
 
       <p class="block-desc t-s">
-        Icons are optional — omit for a compact text-only list.
+        Icons are optional.
       </p>
 
       <div class="stage">
@@ -344,4 +381,11 @@
       </div>
     </div>
   </div>
+
+  <p class="block-desc t-s">
+    Tokens: <code>--ds-menu-*</code> (bg/border colour, min/max width, gap,
+    radius), <code>--ds-menu-item-*</code> (label, hover, error and quiet
+    colours, padding, font, description colour/size/max width, icon size,
+    radius) and <code>--ds-menu-divider-color/-spacing</code>.
+  </p>
 </docs-section>

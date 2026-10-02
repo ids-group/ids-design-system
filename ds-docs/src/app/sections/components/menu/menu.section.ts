@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { ButtonComponent } from 'ds/button';
 import {
   MenuComponent,
@@ -25,4 +25,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   templateUrl: './menu.section.html',
   styleUrl: './menu.section.scss',
 })
-export class MenuSection {}
+export class MenuSection {
+  protected readonly lastAction = signal('none');
+}

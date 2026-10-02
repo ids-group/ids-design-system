@@ -3,10 +3,20 @@
   eyebrow="Components"
   title="Page header">
   <span lede>
-    Top of every page: title, optional lede, primary action area, optional
-    bottom tabs. Distinct from the Page header pattern, which documents the full
-    page composition around this block.
+    Top of every page: title, optional <code>subtitle</code>, actions, optional
+    bottom tabs. It renders a <code>&lt;header&gt;</code> with the title as the
+    page's <code>&lt;h1&gt;</code>, so do not add another <code>h1</code>. The
+    Page header pattern documents the page composition around this block.
   </span>
+
+  <p class="block-desc t-s">
+    Title, subtitle and breadcrumb segments are single-line with ellipsis. One
+    status badge per header; beyond two ghost actions and one primary, collapse
+    the rest into an overflow menu. The host class
+    <code>eyebrow-secondary</code> colours the eyebrow
+    <code>--secondary-strong</code>; colours, divider, title/subtitle font size
+    and title gap retune through <code>--ds-page-header-*</code>.
+  </p>
 
   <h3
     data-claude-design
@@ -15,7 +25,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Title, lede, actions row, bottom tabs — the full composition.
+    Title, subtitle, actions and bottom tabs.
   </p>
 
   <div class="stage">
@@ -81,8 +91,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    No lede, single-line title with actions inline. Used on index pages and
-    inside dialogs.
+    <code>[compact]="true"</code> uses a smaller title and tighter spacing, for
+    index pages.
   </p>
 
   <div class="stage">
@@ -117,18 +127,32 @@
   </h3>
 
   <p class="block-desc t-s">
-    Full hierarchy demo — breadcrumb trail, eyebrow, title, lede, primary
-    action.
+    Breadcrumb trail, eyebrow, title, subtitle, a <code>[meta]</code> row and a
+    primary action. <code>[metaDivider]="true"</code> draws a rule above the
+    meta row.
   </p>
 
   <div class="stage">
     <ds-page-header
       eyebrow="Record · 2026 Cycle"
       title="Project Alpha"
-      subtitle="30 Apr – 3 May · North Site · 4 line items">
+      subtitle="30 Apr – 3 May · North Site · 4 line items"
+      [metaDivider]="true">
       <ds-breadcrumbs
         breadcrumbs
         [items]="trail" />
+
+      <span
+        meta
+        class="t-s">
+        Owner: Facilities
+      </span>
+
+      <span
+        meta
+        class="t-s">
+        Updated 2 days ago
+      </span>
 
       <ng-container actions>
         <ds-button icon="plus">
@@ -151,7 +175,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Lifecycle pill sits next to the title. Max one status badge per header.
+    Project a lifecycle badge into <code>[title-badge]</code> beside the title.
   </p>
 
   <div class="stage">
@@ -186,10 +210,9 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [divider]="true"
-    </code> draws a hairline rule
-    beneath the meta row, separating the header from the page content. Default
-    is flush (no divider) — opt in when the content below doesn't supply its own
-    framing.
+    </code> draws a rule under the
+    whole header, separating it from the page content; it is dropped when tabs
+    are projected, since they bring their own. Off by default.
   </p>
 
   <div class="stage">

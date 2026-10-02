@@ -1,5 +1,4 @@
-/* Outside the card on purpose: the scrim covers what it is loading, and a control that toggles it
-   cannot live under it — pressing it once left the button behind the blur. */
+/* Outside the card: the toggle must not sit under the scrim it raises. */
 .demo-toggle {
   margin-top: var(--space-4);
 }

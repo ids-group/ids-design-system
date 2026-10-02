@@ -5,9 +5,12 @@
   [apiKeys]="['modal:ModalCardComponent']"
   [serviceKeys]="['BodyScrollLockService']">
   <span lede>
-    Centered dialog over a scrim. Three sizes plus a danger variant for
-    destructive confirmations. Inline specimens render the modal card without
-    the backdrop so all sizes can be compared side by side.
+    Centered dialog over a scrim, in five sizes (<code>sm</code> ·
+    <code>md</code> · <code>lg</code> · <code>xl</code> ·
+    <code>fullscreen</code>), with a <code>status</code> for severity.
+    <code>ds-modal</code> is the overlay; it renders a
+    <code>ds-modal-card</code>, which the specimens below use on its own,
+    without the backdrop.
   </span>
 
   <h3
@@ -34,7 +37,7 @@
           size="sm"
           [showClose]="false">
           <span eyebrow>
-            My activity · Robert Thompson
+            My activity · Policy 1042
           </span>
 
           <span body>
@@ -70,16 +73,15 @@
   </h3>
 
   <p class="block-desc t-s">
-    A header richer than one string, without leaving the component: project a
-    status chip into
+    Project a status chip into
     <code class="t-mono-inline">
       [title-badge]
     </code> beside the title, and set
     <code class="t-mono-inline">
       subtitle
     </code> for the line under it. The
-    accessible name stays the <code class="t-mono-inline">title</code> string
-    either way — projected markup never enters
+    accessible name stays the <code class="t-mono-inline">title</code> string;
+    projected markup never enters
     <code class="t-mono-inline">
       aria-labelledby
     </code>. Same shape as
@@ -133,39 +135,28 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       status
-    </code> takes the same
+    </code> takes
     <code class="t-mono-inline">
       DsStatus
-    </code> vocabulary as the rest of the
-    library, and one word drives four things: the icon-badge tint, the title
-    colour, the DEFAULT icon and the ARIA role. The icon comes with the status
-    on purpose — a tint alone signals by colour only, which a colour-blind
-    reader cannot act on. Pass <code class="t-mono-inline">icon</code> to
-    override the glyph, or <code class="t-mono-inline">dialogRole</code> to
-    override the role.
+    </code> and sets the icon-badge tint,
+    title colour, default icon and ARIA role; the icon is there so severity is
+    not signalled by colour alone. <code class="t-mono-inline">error</code> and
+    <code class="t-mono-inline">warning</code> become
+    <code class="t-mono-inline">alertdialog</code>, the rest
+    <code class="t-mono-inline">dialog</code> - the same split as
+    <code class="t-mono-inline">ds-alert</code>'s
+    <code class="t-mono-inline">alert</code> /
+    <code class="t-mono-inline">status</code>.
   </p>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      error
-    </code> and
-    <code class="t-mono-inline">
-      warning
-    </code> resolve to
-    <code class="t-mono-inline">
-      alertdialog
-    </code> — the role for a dialog
-    that interrupts with something the reader must act on — and everything else
-    stays <code class="t-mono-inline"> dialog </code>. Same split
-    <code class="t-mono-inline">
-      ds-alert
-    </code> makes between
-    <code class="t-mono-inline">
-      alert
-    </code> and
-    <code class="t-mono-inline">
-      status
-    </code>.
+    <code class="t-mono-inline">icon</code> (overrides the glyph),
+    <code class="t-mono-inline">dialogRole</code> (overrides the role) and
+    <code class="t-mono-inline">showClose</code> are inputs of
+    <code class="t-mono-inline">ds-modal-card</code> only;
+    <code class="t-mono-inline">ds-modal</code> always picks icon and role from
+    <code class="t-mono-inline">status</code> and always shows the close
+    button.
   </p>
 
   <div class="modal-grid is-2">
@@ -208,42 +199,22 @@
     <code class="t-mono-inline">
       [dividers]="false"
     </code> drops the rules and
-    tightens the vertical padding in one move, because those are one design
-    decision. Hiding the rules alone —
+    the body's vertical padding together;
     <code class="t-mono-inline">
       --ds-modal-divider: transparent
-    </code> —
-    leaves the header and body padding stacked into a gap sized for a rule that
-    is no longer drawn.
+    </code> alone leaves the gap. The header and actions keep their padding,
+    because the body scrolls and a gap in it would scroll away.
   </p>
 
   <p class="block-desc t-s">
-    Which padding collapses is deliberate: the BODY's goes to zero and the
-    header and actions keep theirs. The body is the scroll container, so a gap
-    living in its padding would scroll away and content would meet the title;
-    the header's own padding-bottom cannot, so it separates the two at every
-    scroll position.
-  </p>
-
-  <p class="block-desc t-s">
-    <strong>
-      For a whole-app opinion, set it once
-    </strong> —
+    Set it app-wide with
     <code class="t-mono-inline">
       provideDsConfig(&#123; modal: &#123; dividers: false &#125; &#125;)
-    </code>
-    rather than a binding on every modal. It also reaches where an attribute
-    cannot: a <code class="t-mono-inline">ModalService</code> confirm renders a
-    <code class="t-mono-inline">
-      ds-modal-card
-    </code> with no
-    <code class="t-mono-inline">
-      ds-modal
-    </code> ancestor to bind, and the
-    injected default gets there. An explicit
+    </code>, which also reaches <code class="t-mono-inline">ModalService</code>
+    confirms; an explicit
     <code class="t-mono-inline">
       [dividers]
-    </code> on the element still wins.
+    </code> still wins.
   </p>
 
   <div class="modal-grid is-2">
@@ -434,7 +405,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    sm · md · lg · xl · fullscreen specimens rendered as static cards.
+    <code>sm</code>, <code>md</code> (default) and <code>lg</code> as static
+    cards; <code>xl</code> and <code>fullscreen</code> open live.
   </p>
 
   <div class="modal-grid is-1">
@@ -604,34 +576,26 @@
   <p class="block-desc t-s">
     <code>
       [persistent]="true"
-    </code> disables both backdrop click and
+    </code> disables backdrop click and
     <kbd>
       Esc
-    </kbd> — only an explicit close button or programmatic
+    </kbd>; only a close button or
     <code>
       open.set(false)
-    </code> can dismiss the dialog. Use for multi-step
-    wizards or save-required flows where accidental dismissal causes data loss.
+    </code> dismisses, for wizards and save-required flows.
     <code>
       [closeOnBackdrop]="false"
-    </code> disables only the backdrop click
-    while keeping <kbd>Esc</kbd> active.
+    </code> disables only the backdrop click.
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      A backdrop dismissal needs the press AND the release on the backdrop.
-    </strong>
-    Selecting text in the body and letting go past the edge does not close the
-    dialog, and neither does a slider drag that overshoots — the browser reports
-    that gesture as a click on the backdrop, which is what used to dismiss it.
+    A backdrop dismissal needs both press and release on the backdrop, so a
+    text selection or slider drag that ends outside does not close it (same in
     <code class="t-mono-inline">
       ds-bottom-sheet
-    </code> behaves the same way;
-    <code class="t-mono-inline">
-      ds-drawer
-    </code> never had the problem,
-    because its scrim is a sibling of the panel rather than its parent.
+    </code>). <code>ds-modal</code> emits <code>closed</code> after its leave
+    animation ends; <code>ds-modal-card</code> emits <code>closed</code> when
+    its header close button is clicked.
   </p>
 
   <div class="modal-grid is-1">
@@ -685,7 +649,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Default · danger confirm · impact warning with affected records.
+    Default · <code>status="error"</code> · impact warning. Project a
+    <code>ds-banner</code> with the <code>impact</code> attribute to list
+    affected records under the body.
   </p>
 
   <div class="modal-grid is-1">
@@ -744,7 +710,7 @@
       </div>
 
       <div class="state-cell-label">
-        Danger confirm
+        status="error"
       </div>
     </div>
 
@@ -806,7 +772,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Modal hosting a small form — label, input, select.
+    A small form in the body: inputs and a select.
   </p>
 
   <div class="modal-grid is-1">
@@ -942,14 +908,33 @@
   </h3>
 
   <p class="block-desc t-s">
-    Inject <code>ModalService</code> and call <code>modal.confirm()</code> for a
-    destructive or irreversible action — it resolves <code>true</code> on
-    confirm, <code>false</code> on cancel or dismiss.
-    <code>
-      typeToConfirm
-    </code> requires the user to type a phrase before the
-    confirm button enables.
+    For a destructive or irreversible action, call
+    <code>inject(ModalService).confirm(options)</code>. It returns a
+    <code>Promise&lt;boolean&gt;</code>: <code>true</code> on confirm,
+    <code>false</code> on cancel, backdrop click or <kbd>Esc</kbd>. The dialog
+    is always an <code>alertdialog</code> without a close button.
   </p>
+
+  <p class="block-desc t-s">
+    <code>ModalConfirmOptions</code>: <code>title</code> (required),
+    <code>message</code>, <code>confirmLabel</code> and
+    <code>cancelLabel</code> (defaults from <code>DS_INTL.dialog</code>),
+    <code>tone</code> (<code>'default'</code> | <code>'error'</code>),
+    <code>icon</code>, and <code>typeToConfirm</code>, which keeps the confirm
+    button disabled until the user types that phrase.
+  </p>
+
+  <pre
+    class="t-mono-block"><code>private readonly modal = inject(ModalService);
+
+const ok = await this.modal.confirm(&#123;
+  title: 'Delete database?',
+  message: 'Type the database name to confirm.',
+  confirmLabel: 'Delete',
+  tone: 'error',
+  icon: 'trash',
+  typeToConfirm: 'production-db',
+&#125;);</code></pre>
 
   <div class="modal-grid is-1">
     <div class="state-cell">
@@ -976,4 +961,12 @@
       </div>
     </div>
   </div>
+
+  <p class="block-desc t-s">
+    Tokens: <code>--ds-modal-*</code> covers bg-color, radius, shadow,
+    backdrop, padding-x, header/body/actions padding, title font and
+    title-text-color (with <code>-error</code>/<code>-warning</code>/<code>-success</code>/<code>-info</code>),
+    subtitle font and colour, close-icon colours, icon-badge colours,
+    impact-text-color, eyebrow, divider and the enter/leave motion.
+  </p>
 </docs-section>
