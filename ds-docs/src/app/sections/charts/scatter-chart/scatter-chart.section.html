@@ -17,19 +17,30 @@
   </h3>
 
   <p class="block-desc t-s">
-    Both scales are continuous, so a point carries its own position on each
-    rather than an index into a list of categories.
+    Both scales are continuous: a point carries its own x and y, not a
+    category index. Set
     <code class="t-mono-inline">
       xLabel
     </code> and
     <code class="t-mono-inline">
       yLabel
-    </code> are not decoration: without them
-    the reader has two numbers and no idea which is which, and on a scatter that
-    is the whole reading. Marks are drawn semi-transparent, because the
-    interesting thing is where they pile up and at full opacity a cluster of
-    forty and a cluster of four are the same solid disc. Points settle into
-    place together; a scatter has no stagger.
+    </code>; without them the reader has two
+    numbers and no idea which is which. Marks are semi-transparent
+    (<code class="t-mono-inline">--ds-scatter-chart-dot-opacity</code>, 0.72;
+    radius <code class="t-mono-inline">--ds-scatter-chart-dot-radius</code>)
+    so a pile-up of forty reads darker than four, and they settle in together;
+    a scatter has no stagger.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      tickCount
+    </code> is a hint for both axes;
+    ticks snap to a round step. <code class="t-mono-inline">dimOthers</code>
+    fades every mark but the one under the pointer, and
+    <code class="t-mono-inline">
+      tooltip="none"
+    </code> drops the panel.
   </p>
 
   <ds-scatter-chart
@@ -45,7 +56,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Each series takes its own palette slot and the legend keys them. Two clouds
+    Each series takes its own palette slot, or its own
+    <code class="t-mono-inline">
+      color
+    </code>, and the legend keys them. Two
+    clouds
     that overlap are the reading, not a defect - it is the case the transparency
     exists for.
   </p>
@@ -61,16 +76,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    SVG degrades by the number of NODES, not by the number of readings: the same
-    data as a line is one
+    SVG cost scales with nodes, not readings: a line is one
     <code class="t-mono-inline">
       &lt;path&gt;
-    </code>, and as a scatter it is
-    one node per point. Lighthouse warns at about 800 nodes and errors at about
-    1400, on a page that may hold four more charts. So past four times the
-    plot's width in marks the series is decimated - and the chart says so on its
-    face, because a quiet decimation leaves the reader counting points that were
-    never drawn. Every reading is still in the data table.
+    </code>, a scatter one node per point
+    (Lighthouse warns near 800, errors near 1400). Past four times the plot's
+    width in marks a series is decimated, and the chart prints how many
+    readings it dropped. With <code class="t-mono-inline">dataTable</code> set,
+    the table still lists every reading.
   </p>
 
   <p class="block-desc t-s">
@@ -127,9 +140,12 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       interactive
-    </code> makes every mark a button
-    and fires <code class="t-mono-inline">pointClicked</code> with the series
-    and the reading.
+    </code> adds the pointer
+    affordance and makes each mark a focusable button.
+    <code class="t-mono-inline">
+      pointClicked
+    </code> fires on every click,
+    with or without it, with the series and the reading.
   </p>
 
   <ds-scatter-chart

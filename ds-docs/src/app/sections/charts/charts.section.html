@@ -5,7 +5,7 @@
   title="Bar chart"
   [chapters]="true">
   <span lede>
-    Horizontal bars: each row draws its value as a share of the longest row.
+    Horizontal bars: each row draws its value as a share of the track's maximum.
   </span>
 
   <h3 class="block-title t-h4">
@@ -13,9 +13,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Rows keep the order you pass them — the chart never sorts. Track length is a
-    share of the largest value in the set, not of a total, so the longest row
-    always fills its track.
+    Rows keep the order you pass them; the chart never sorts. Track length and
+    the printed percent are shares of
+    <code class="t-mono-inline">
+      max
+    </code>: the input when set, else the largest bar end, target or band.
   </p>
 
   <ds-bar-chart
@@ -56,14 +58,12 @@
     <code class="t-mono-inline">
       target
     </code> draws a tick across the bar at
-    one reading - a goal, a budget, last period - and
+    one reading (a goal, a budget, last period);
     <code class="t-mono-inline">
       ranges
     </code> paints qualitative bands behind
-    it, given as their upper bounds. Together they are the bullet chart, which
-    is a bar with two extras rather than a chart type of its own. The bands take
-    one neutral hue at rising opacity: a band is a backdrop and the bar is the
-    reading, so a second palette behind them would compete with the bars.
+    it, given as upper bounds. Together they make a bullet chart. Bands use one
+    neutral hue at rising opacity so they stay a backdrop to the bar.
   </p>
 
   <ds-bar-chart
@@ -96,21 +96,22 @@
     A row that carries
     <code class="t-mono-inline">
       segments
-    </code> divides its bar into parts, so
-    the bar still says how the row compares with the rest of the chart and the
-    parts say what it is made of — how one department spends its budget, on a
-    bar whose length is still that department's share of the largest. The parts
-    are sized against their own sum and always fill the bar: a set that does not
-    add up to the row's <code class="t-mono-inline"> value </code> is a data
-    error, and a gap left to show it would read as one more category. Segments
-    are categories, so they take the categorical palette in order; the row's own
-    colour is unused. Each part reaches the data table as its own row under the
-    one it belongs to. The parts carry no text of their own, so draw a key
-    beside the chart from the same
+    </code> divides its bar into parts: the
+    bar keeps the row's length, the parts show its make-up. Parts are sized
+    against their own sum and always fill the bar; a sum that differs from
+    <code class="t-mono-inline">
+      value
+    </code> is a data error, not a gap.
+    They take the categorical palette in order unless a segment sets its own
+    <code class="t-mono-inline">
+      color
+    </code>; the row's colour is unused.
+    Each part reaches the data table as a nested row, and the tooltip lists
+    each part with its share of the row. Parts carry no text, so draw a key
+    from the same
     <code class="t-mono-inline">
       --ds-chart-series-N-color
-    </code> values, in
-    the order the segments are passed.
+    </code> values in segment order.
   </p>
 
   <div class="states is-cols-1">
@@ -201,17 +202,17 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       partOfWhole
-    </code> says the rows add up to
-    something a reader can name — a budget, a headcount, a quarter's revenue.
-    Only then does the chart state each row's share of that total, on the
-    tooltip's second line and as a
+    </code> declares that the rows add
+    up to a nameable total (a budget, a headcount); only then does the chart
+    print each row's share of it, on the tooltip's second line and as a
     <code class="t-mono-inline">
       Share of total
-    </code> column in the data
-    table. It is off by default because rows that are a funnel or a time series
-    sum to a number nobody can point at, and a percentage of that is arithmetic
-    dressed as a fact. Note that the percentage printed beside each row is a
-    different figure: that one is the share of the LARGEST row.
+    </code> table column. It is off by
+    default because a funnel or a time series sums to nothing real. The percent
+    beside each row is a different figure: the share of
+    <code class="t-mono-inline">
+      max
+    </code>.
   </p>
 
   <ds-bar-chart
@@ -258,13 +259,13 @@
     <code class="t-mono-inline">
       showPercent
     </code> is on by default and prints
-    each row's share of the LARGEST row beside its value — a quick read of how
-    the rows compare to the biggest one. Turn it off where the rows are too
-    narrow to hold a second figure, or where it would be confused with
+    each row's share of <code class="t-mono-inline"> max </code> beside its
+    value. Turn it off where rows are too narrow for a second figure, or where
+    it would be confused with
     <code class="t-mono-inline">
       partOfWhole
-    </code>, which is a share of the
-    sum rather than of the maximum. A row can also carry its own
+    </code>, a share of the sum. A row
+    can also carry its own
     <code class="t-mono-inline">
       percent
     </code>, which is printed instead of
@@ -302,7 +303,16 @@
     <code class="t-mono-inline">
       interactive
     </code> turns on the hover tint and
-    makes each row a tab stop. The pointer cursor shows wherever a click does
+    makes the rows one tab stop, with the rows' role switching from
+    <code class="t-mono-inline">
+      img
+    </code> to a
+    <code class="t-mono-inline">
+      group
+    </code> of buttons. Arrow keys move
+    between rows (wrapping), Home and End jump to the ends, Enter or Space
+    fires <code class="t-mono-inline">rowClicked</code>. The pointer cursor
+    shows wherever a click does
     something: on an <code class="t-mono-inline">interactive</code> row, and on
     any row a click would hold.
     <code class="t-mono-inline">

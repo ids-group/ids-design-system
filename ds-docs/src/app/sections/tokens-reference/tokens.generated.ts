@@ -4601,12 +4601,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-heatmap-chart-focus-color",
         "value": "var(--focus-ring-color)",
-        "notes": "Focus-ring colour for a cell (default --focus-ring-color). The cell rings through the shared focus mixin, which reads --focus-ring-color itself, so nothing resolves this one."
+        "notes": "Focus-ring colour of an interactive cell (default --focus-ring-color)."
       },
       {
         "name": "--ds-heatmap-chart-focus-width",
         "value": "var(--focus-ring-width)",
-        "notes": "Focus-ring thickness for a cell (default --focus-ring-width), with the same caveat: the shared mixin reads --focus-ring-width itself, so nothing resolves this one."
+        "notes": "Focus-ring thickness of an interactive cell (default --focus-ring-width)."
       }
     ]
   },
@@ -6568,27 +6568,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-sparkline-width",
         "value": "80px",
-        "notes": ""
+        "notes": "Width of a ds-sparkline (default 80px)."
       },
       {
         "name": "--ds-sparkline-height",
         "value": "24px",
-        "notes": ""
+        "notes": "Height of a ds-sparkline (default 24px)."
       },
       {
         "name": "--ds-sparkline-line-color",
         "value": "var(--ds-chart-series-1-color)",
-        "notes": ""
+        "notes": "Stroke colour of a ds-sparkline line (defaults to --ds-chart-series-1-color)."
       },
       {
         "name": "--ds-sparkline-line-width",
         "value": "1.5px",
-        "notes": ""
+        "notes": "Stroke width of a ds-sparkline line (default 1.5px)."
       },
       {
         "name": "--ds-sparkline-dot-radius",
         "value": "2.5px",
-        "notes": ""
+        "notes": "Radius of the dot on the last reading of a ds-sparkline (default 2.5px)."
       },
       {
         "name": "--ds-sparkline-area-color",

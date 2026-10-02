@@ -56,6 +56,10 @@ const LATENCY_COLUMNS: readonly ColumnSeriesPoint[] = [
   { id: 'wk6', label: 'Wk 6', value: 290 },
 ];
 
+const LATENCY_SERIES: readonly LineSeriesData[] = [
+  { id: 'p95', label: 'p95', data: [210, 260, 240, 330, 480, 290] },
+];
+
 const LATENCY_THRESHOLDS: readonly ChartThreshold[] = [
   { value: 0, to: 300, label: 'Within target' },
   { value: 500, label: 'Breach', dash: 'dotted' },
@@ -137,6 +141,9 @@ const TRAFFIC_SERIES: readonly LineSeriesData[] = [
 export class ChartSection {
   protected readonly latencyWeeks = LATENCY_WEEKS;
   protected readonly latencyColumns = LATENCY_COLUMNS;
+  protected readonly latencySeries = LATENCY_SERIES;
+  protected readonly latencyLineSummary =
+    'p95 response time over six weeks: 210, 260, 240, 330, 480, 290 milliseconds. Week 5 is labelled Cache eviction.';
   protected readonly latencyThresholds = LATENCY_THRESHOLDS;
   protected readonly latencyNotes = LATENCY_NOTES;
   protected readonly latencyTableRows = LATENCY_TABLE_ROWS;

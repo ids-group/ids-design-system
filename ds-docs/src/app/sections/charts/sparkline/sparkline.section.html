@@ -21,8 +21,25 @@
     that already says the number, the line only adds the shape. With a
     <code class="t-mono-inline">
       label
-    </code> it is also a tab stop: focus
-    opens the tooltip on the last reading, the arrow keys, Home and End move it.
+    </code> and <code class="t-mono-inline">tooltip</code> on (the default) it
+    is also a tab stop: focus opens the tooltip on the last reading, Left and
+    Right arrows, Home and End move it. Sized by
+    <code class="t-mono-inline">
+      --ds-sparkline-width
+    </code> /
+    <code class="t-mono-inline">
+      --ds-sparkline-height
+    </code>, 80 x 24px by
+    default; the line takes
+    <code class="t-mono-inline">
+      --ds-sparkline-line-color
+    </code> (series 1),
+    <code class="t-mono-inline">
+      --ds-sparkline-line-width
+    </code> (1.5px) and
+    <code class="t-mono-inline">
+      --ds-sparkline-dot-radius
+    </code> (2.5px).
   </p>
 
   <table class="spark-table t-s">
@@ -67,7 +84,8 @@
     <code class="t-mono-inline">
       zero
     </code> where the amount matters more than
-    the movement.
+    the movement. <code class="t-mono-inline">valueFormat</code> formats the
+    tooltip value; unset, the locale's number format.
   </p>
 
   <div class="states is-cols-2">
