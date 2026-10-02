@@ -12,10 +12,15 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 })
 export class TagSection {
   protected readonly selectedSites = signal<Set<string>>(new Set(['north']));
-  protected readonly closableTags = signal<readonly string[]>(['Project Alpha', 'Site North']);
+  protected readonly closableTags = signal<readonly string[]>([
+    'Project Alpha',
+    'Site North',
+  ]);
 
   protected removeTag(tag: string): void {
-    this.closableTags.update((tags) => tags.filter((current) => current !== tag));
+    this.closableTags.update((tags) =>
+      tags.filter((current) => current !== tag),
+    );
   }
 
   protected isSelected(site: string): boolean {

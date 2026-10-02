@@ -18,11 +18,16 @@ export class DropzoneSection {
   protected readonly singleFile = signal<DropzoneFile[]>([]);
 
   protected addLiveFiles(files: File[]): void {
-    this.liveFiles.update((list) => [...list, ...files.map((file) => this.toRow(file))]);
+    this.liveFiles.update((list) => [
+      ...list,
+      ...files.map((file) => this.toRow(file)),
+    ]);
   }
 
   protected removeLiveFile(file: DropzoneFile): void {
-    this.liveFiles.update((list) => list.filter((entry) => entry.id !== file.id));
+    this.liveFiles.update((list) =>
+      list.filter((entry) => entry.id !== file.id),
+    );
   }
 
   protected replaceSingleFile(files: File[]): void {
