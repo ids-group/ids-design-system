@@ -429,6 +429,60 @@
       placeholder="My-Workspace" />
   </div>
 
+  <p class="block-desc t-s">
+    Focused, a field keeps its state's colour: the halo is
+    <code class="t-mono-inline">--ds-field-focus-shadow-error</code>,
+    <code class="t-mono-inline">--ds-field-focus-shadow-warning</code> or
+    <code class="t-mono-inline">--ds-field-focus-shadow-success</code>, where a
+    plain field takes the blue
+    <code class="t-mono-inline">--ds-field-focus-shadow</code>. Under
+    <code class="t-mono-inline">data-focus</code> ring, edge and inset the
+    indicator takes the field's border colour instead. Set a state's token to
+    <code class="t-mono-inline">var(--ds-field-focus-shadow)</code> to keep the
+    blue for it.
+  </p>
+
+  <div class="grid-3">
+    <div class="state-cell">
+      <div class="state-cell-stage force-focus-warning">
+        <ds-input
+          label="Workspace"
+          warning="This name is close to an existing one"
+          value="my-workspace" />
+      </div>
+
+      <div class="state-cell-label">
+        Warning · focus
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage force-focus-success">
+        <ds-input
+          label="Workspace"
+          success="Available"
+          value="north-region" />
+      </div>
+
+      <div class="state-cell-label">
+        Success · focus
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage force-focus-error">
+        <ds-input
+          label="Workspace"
+          error="Uppercase letters are not allowed"
+          value="My-Workspace" />
+      </div>
+
+      <div class="state-cell-label">
+        Error · focus
+      </div>
+    </div>
+  </div>
+
   <h3
     class="block-title t-h4"
     data-for="field-message">
