@@ -118,7 +118,9 @@ export class DocsSectionComponent {
           slug = `${slug}-${suffix}`;
         }
         seen.add(slug);
-        heading.id = slug;
+        // A group page mounts every section, so the slug alone repeats across it; the fragment stays
+        // the bare slug because the sidebar resolves it within the active section.
+        heading.id = `${anchor}-${slug}`;
 
         return { slug, label, headingText, heading };
       });

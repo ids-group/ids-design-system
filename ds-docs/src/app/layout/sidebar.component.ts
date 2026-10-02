@@ -2,9 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import {
   Component,
   DestroyRef,
-  Injector,
   ViewEncapsulation,
-  afterNextRender,
   computed,
   effect,
   inject,
@@ -67,7 +65,6 @@ export class SidebarComponent {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
-  private readonly injector = inject(Injector);
   private readonly layoutScroll = inject(AppLayoutScrollService);
   protected readonly layout = inject(AppLayoutComponent);
 
@@ -101,7 +98,8 @@ export class SidebarComponent {
   /** Read once, before anything can rewrite it: the scroll-spy republishes the URL from the
    *  active anchor, and with no chapter known yet that write dropped the fragment a deep link
    *  arrived with. */
-  private readonly initialChapter = this.chapterFromUrl(this.router.url);
+  // From the location, not the router: before the first navigation settles, router.url is `/`.
+  private readonly initialChapter = this.document.location.hash.slice(1);
   protected readonly activeChapter = signal<string>(this.initialChapter);
   // A group page mounts EVERY section it holds, so every item has chapters to show — 67 of them on
   // Data display. Only the section being read opens its own, the way a group holding the active
@@ -151,6 +149,11 @@ export class SidebarComponent {
     const main = this.layoutScroll.scroller() as HTMLElement | null;
     if (!main) {
       return;
+    }
+    // A chapter folded into a <details> would land on its summary with nothing under it.
+    const folded = chapter.heading.closest('details');
+    if (folded) {
+      folded.open = true;
     }
     const topbarHeight = this.computeTopbarHeight();
     const containerTop = main.getBoundingClientRect().top;
@@ -335,35 +338,28 @@ export class SidebarComponent {
   private scrollToAnchorOnLoad(): void {
     const anchor = this.anchorFromUrl(this.router.url);
     this.scrollToAnchor(anchor);
-    this.holdAnchorWhileContentGrows(anchor);
-    // A `#chapter` fragment is finer-grained than the section, so it wins — but the chapters are
-    // published after render, so wait for them rather than reading an empty list.
-    const wanted = this.initialChapter;
-    if (!wanted) {
-      return;
-    }
-    afterNextRender(
-      () => {
-        const chapter = this.chaptersService
-          .chaptersOf(this.activeAnchor())
-          .find((each) => each.slug === wanted);
-        if (chapter) {
-          this.onChapter(chapter);
-        }
-      },
-      { injector: this.injector },
-    );
+    this.holdAnchorWhileContentGrows(anchor, this.initialChapter);
   }
 
   /** A chart builds only once it is on screen, and until then it stands at its placeholder
    *  height - so the charts that build around a deep link's target can move it after the first
-   *  scroll. Re-aims until the target is sitting under the topbar, and lets a real gesture take
-   *  over at any point. */
-  private holdAnchorWhileContentGrows(anchor: string): void {
+   *  scroll. Keeps the target - the `#chapter` when the URL names one, else the section - under
+   *  the topbar for a few seconds, and lets a real gesture take over at any point. */
+  private holdAnchorWhileContentGrows(
+    anchor: string,
+    chapterSlug: string,
+  ): void {
     const main = this.layoutScroll.scroller() as HTMLElement | null;
     if (!anchor || !main) {
       return;
     }
+    // Chapters are published after their section renders, so this stays null for the first ticks.
+    const chapter = (): SectionChapter | null =>
+      chapterSlug
+        ? (this.chaptersService
+            .chaptersOf(anchor)
+            .find((each) => each.slug === chapterSlug) ?? null)
+        : null;
     const stop = (): void => {
       window.clearInterval(timer);
       window.clearTimeout(deadline);
@@ -372,26 +368,36 @@ export class SidebarComponent {
       }
     };
     const settled = (): boolean => {
-      const section = this.document.querySelector(
-        `[data-anchor="${anchor}"]`,
-      ) as HTMLElement | null;
-      if (!section) {
+      if (chapterSlug && !chapter()) {
+        return false;
+      }
+      const target =
+        chapter()?.heading ??
+        (this.document.querySelector(
+          `[data-anchor="${anchor}"]`,
+        ) as HTMLElement | null);
+      if (!target) {
         return false;
       }
       const offset =
-        section.getBoundingClientRect().top - main.getBoundingClientRect().top;
+        target.getBoundingClientRect().top - main.getBoundingClientRect().top;
 
       return (
         Math.abs(offset - this.computeTopbarHeight()) <= ANCHOR_SETTLE_SLACK_PX
       );
     };
+    // Holds for the whole window rather than stopping on the first hit: charts above the target
+    // keep building after it first lines up, and each one pushes it down again.
     const timer = window.setInterval(() => {
       if (settled()) {
-        stop();
-
         return;
       }
-      this.scrollToAnchor(anchor);
+      const found = chapter();
+      if (found) {
+        this.onChapter(found);
+      } else {
+        this.scrollToAnchor(anchor);
+      }
     }, ANCHOR_SETTLE_INTERVAL_MS);
     const deadline = window.setTimeout(stop, ANCHOR_SETTLE_MS);
     for (const name of ['wheel', 'touchstart', 'keydown']) {
@@ -456,10 +462,6 @@ export class SidebarComponent {
   }
 
   /** The `#chapter` of `/<area>/<anchor>#<chapter>`, else ''. */
-  private chapterFromUrl(url: string): string {
-    return url.split('?')[0].split('#')[1] ?? '';
-  }
-
   /** Path with the query and the fragment cut off — a chapter fragment must not be read as part
    *  of the anchor segment, or every group lookup fails the moment one is in the URL. */
   private pathOf(url: string): string {
