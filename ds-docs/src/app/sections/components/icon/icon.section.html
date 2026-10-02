@@ -159,7 +159,8 @@
     names: each value is the SVG body inside the 24x24 stroke
     <code class="t-mono-inline">&lt;svg&gt;</code>, without a
     <code class="t-mono-inline">stroke</code> attribute. Built-in names win on a
-    clash; an unknown name renders nothing and warns in dev mode.
+    clash; an unknown name renders nothing and warns in dev mode. Calls add up,
+    including a lazy route's, and a later call wins a shared name.
   </p>
 
   <pre class="t-mono-block">{{ customIconsSnippet }}</pre>
