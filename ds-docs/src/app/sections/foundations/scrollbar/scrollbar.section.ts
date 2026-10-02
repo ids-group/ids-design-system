@@ -7,10 +7,10 @@ interface ScrollToken {
 }
 
 const TOKENS: readonly ScrollToken[] = [
-  { token: '--scrollbar-w', use: '10 px — global scrollbar width' },
+  { token: '--scrollbar-w', use: '10 px - ::-webkit-scrollbar width' },
   {
     token: '--scrollbar-thumb',
-    use: 'Thumb at rest (neutral-300 light / neutral-600 dark)',
+    use: 'Thumb at rest, also the scrollbar-color thumb (neutral-300)',
   },
   { token: '--scrollbar-thumb-hover', use: 'Thumb on hover (neutral-400)' },
   {
