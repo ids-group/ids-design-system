@@ -4,6 +4,26 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The ds-docs audit's eleven open findings, closed (2026-10-02)
+
+- `ds-bar-chart` draws a negative `value` as an empty track, its label, tooltip and name showing the
+  real value (`bar-chart.math.ts` `barExtent`, `plainValue`).
+- `--ds-topbar-crumb-*` and `--ds-page-header-crumb-text-color(-hover)` forward to the projected
+  `ds-breadcrumbs`, which they never reached under Emulated encapsulation.
+- `ds-modal`'s `confirmed` fires from a `dsModalConfirm` action (`modal-confirm-action.directive.ts`),
+  following `pressed` on a `ds-button`, so a disabled or loading one never confirms.
+- `provideDsTheme({ followSystem: true })` keeps a `data-theme` present on `<html>` at startup, at
+  init and across OS changes.
+- Chapter headings take `<anchor>-<slug>` ids, page-unique on a group page; a `#chapter` deep link
+  reads `location.hash`, holds the chapter under the topbar while charts build, and opens a folded
+  `<details>`.
+- `ds-avatar-group` hides projected avatars past `max` and, with `total` unset, counts them.
+- A disabled link-button with `disabledReason` keeps a Tab stop (`tabindex="0"`, `role="link"`).
+- `provideDsIcons` calls merge across injectors, a later call winning a shared name.
+- `tools/check-focus-rings.mjs` was already in the `lint` and `release` groups: no change.
+- Public tokens the library never reads: open, in deck `unread-tokens` and `docs/todo.md`.
+- `ds-docs` charts left on their skeleton sat inside folded `<details>`: not a defect.
+
 ## A tightened template context is classified as actionable, and the cut gates it (2026-09-30)
 
 `migrations/AUTHORING.md` states that a directive gaining a static `ngTemplateContextGuard` or a
