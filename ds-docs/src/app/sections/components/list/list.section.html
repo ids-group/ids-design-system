@@ -4,22 +4,22 @@
   title="List"
   [apiKeys]="['list:ListItemComponent']">
   <span lede>
-    A vertically stacked set of content rows — supports
+    A vertical stack of rows with
     <code class="t-mono-inline">
       [leading]
     </code> /
     <code class="t-mono-inline">
       [trailing]
-    </code> slots, optional
-    <code class="t-mono-inline">
-      [dividers]
-    </code>,
+    </code> slots,
     <code class="t-mono-inline">
       [clickable]
-    </code> items, and a
+    </code> items and a
     <code class="t-mono-inline">
       [selected]
-    </code> state.
+    </code> state. Dividers are on by default;
+    <code class="t-mono-inline">
+      [dividers]="false"
+    </code> removes them.
   </span>
 
   <h3
@@ -30,12 +30,13 @@
 
   <p class="block-desc t-s">
     Use the <code>[leading]</code> and <code>[trailing]</code> slots for icons
-    or avatars. Set <code>[dividers]="true"</code> for a separator between
-    items.
+    or avatars. Tokens: <code>--ds-list-divider-color</code> and
+    <code>--ds-list-item-*</code> (padding-y/x, gap, hover-bg-color,
+    selected-bg/label/icon-color, label/subtitle-color).
   </p>
 
   <div class="demo-panel">
-    <ds-list [dividers]="true">
+    <ds-list>
       <ds-list-item
         title="Account settings"
         subtitle="Manage profile and security"
@@ -88,17 +89,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    Pass <code>[selected]="true"</code> to highlight the active row — useful in
-    navigation lists and option pickers.
+    A <code>[clickable]</code> row is a button that emits
+    <code>activated</code>; moving the selection is the consumer's job.
+    <code>[selected]</code> tints the row and sets <code>aria-current</code>.
+    <code>[disabled]</code> disables the row's button; projected controls keep
+    their own state.
   </p>
 
   <div class="demo-panel">
-    <ds-list [dividers]="true">
+    <ds-list>
       <ds-list-item
         title="Notifications"
         subtitle="Email and push preferences"
         [selected]="selectedItem() === 'notifications'"
-        [clickable]="true">
+        [clickable]="true"
+        (activated)="selectedItem.set('notifications')">
         <ds-icon
           leading
           name="bell"
@@ -109,7 +114,8 @@
         title="Documents"
         subtitle="Uploaded files and exports"
         [selected]="selectedItem() === 'documents'"
-        [clickable]="true">
+        [clickable]="true"
+        (activated)="selectedItem.set('documents')">
         <ds-icon
           leading
           name="folder"
@@ -120,10 +126,22 @@
         title="Starred"
         subtitle="Items you have bookmarked"
         [selected]="selectedItem() === 'starred'"
-        [clickable]="true">
+        [clickable]="true"
+        (activated)="selectedItem.set('starred')">
         <ds-icon
           leading
           name="star"
+          [size]="18" />
+      </ds-list-item>
+
+      <ds-list-item
+        title="Archive"
+        subtitle="Unavailable on this plan"
+        [clickable]="true"
+        [disabled]="true">
+        <ds-icon
+          leading
+          name="folder"
           [size]="18" />
       </ds-list-item>
     </ds-list>
@@ -139,28 +157,20 @@
   <p class="block-desc t-s">
     <code>
       [leading]
-    </code> and <code>[trailing]</code> sit OUTSIDE the row's
-    button, so a row can carry its own controls and still be the thing that
-    selects. That is the master–detail shape: a checkbox per row for a bulk
-    action, the row itself choosing what the detail pane shows. Two independent
-    targets, never one.
+    </code> and <code>[trailing]</code> sit outside the row's
+    button, so a row can carry its own controls (a bulk-action checkbox) and
+    still be the target that selects - two independent targets.
   </p>
 
   <p class="block-desc t-s">
-    This is why the row is not a single <code>&lt;button&gt;</code>: a checkbox
-    nested in one is invalid HTML, its click would bubble into
-    <code>
-      activated
-    </code>, and a screen reader would fold it into the
-    button's name and never announce its checked state. Note it is a
-    <code>
-      role="list"
-    </code> and NOT a <code>listbox</code> — the ARIA spec
-    says a <code>listbox</code> option cannot hold interactive content at all.
+    A checkbox inside a <code>&lt;button&gt;</code> would be invalid HTML,
+    bubble into <code>activated</code> and lose its checked state for screen
+    readers. The host is <code>role="list"</code>, not <code>listbox</code>: a
+    <code>listbox</code> option cannot hold interactive content.
   </p>
 
   <div class="demo-panel">
-    <ds-list [dividers]="true">
+    <ds-list>
       @for (carrier of carriers; track carrier) {
         <ds-list-item
           [title]="carrier"
@@ -181,7 +191,8 @@
             icon="chevronRight"
             variant="standard"
             size="sm"
-            [ariaLabel]="'Open ' + carrier" />
+            [ariaLabel]="'Open ' + carrier"
+            (pressed)="viewing.set(carrier)" />
         </ds-list-item>
       }
     </ds-list>
