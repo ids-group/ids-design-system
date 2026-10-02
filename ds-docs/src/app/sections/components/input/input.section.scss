@@ -41,6 +41,15 @@
     .state-cell-stage.force-hover ::ng-deep .control {
       border-color: var(--border-strong);
     }
+    .state-cell-stage.force-focus-error ::ng-deep .control {
+      box-shadow: var(--ds-field-focus-shadow-error);
+    }
+    .state-cell-stage.force-focus-warning ::ng-deep .control {
+      box-shadow: var(--ds-field-focus-shadow-warning);
+    }
+    .state-cell-stage.force-focus-success ::ng-deep .control {
+      box-shadow: var(--ds-field-focus-shadow-success);
+    }
 
 /* The reserved-row demo is about the HEIGHT difference, so the two cells must
    hug their content — a stretched grid row would make both look identical. */
