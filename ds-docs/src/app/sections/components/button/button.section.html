@@ -6,12 +6,26 @@
   <span lede>
     Two axes: <code class="t-mono-inline">color</code> (brand/status hue family)
     × <code class="t-mono-inline">variant</code> (solid · tonal · outline ·
-    ghost). Loudness is the variant (solid &gt; tonal &gt; outline/ghost);
-    colour is orthogonal. Plus sizes, states, leading icon, subtext, full-width
-    and toggle. For icon-only actions see the Icon button component; for a
-    link-styled action use the global <code class="t-mono-inline">.link</code>
-    class on a button.
+    ghost · text). Loudness is the variant (solid &gt; tonal &gt;
+    outline/ghost); colour is orthogonal. Plus sizes, states, leading icon,
+    subtext, full-width and toggle. For icon-only actions see the Icon button
+    component; for a link-styled action use the global
+    <code class="t-mono-inline">.link</code> class on a button.
   </span>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">type</code> defaults to
+    <code class="t-mono-inline">'button'</code>, so a ds-button inside a form
+    never submits it; set <code class="t-mono-inline">type="submit"</code> on
+    the form's submit button. When the button opens an overlay, bind
+    <code class="t-mono-inline">ariaHasPopup</code>,
+    <code class="t-mono-inline">ariaExpanded</code> and
+    <code class="t-mono-inline">ariaControls</code>; they and
+    <code class="t-mono-inline">ariaLabel</code> land on the inner control.
+    To group buttons under one label, see
+    <code class="t-mono-inline">ds-button-group</code> on the Segmented &amp;
+    button group page.
+  </p>
 
   <p class="block-desc t-s">
     <strong>
@@ -59,57 +73,25 @@
   </p>
 
   <p class="block-desc t-s">
-    The whole <strong>text</strong> column is marked ⚠ on purpose:
-    <code class="t-mono-inline">
-      variant="text"
-    </code> is a no-chrome,
-    underlined, link-styled button, which is exactly what the global
-    <code class="t-mono-inline">
-      .link
-    </code> class already gives any
-    <code class="t-mono-inline">
-      &lt;a&gt;
-    </code>/<code class="t-mono-inline"
+    The whole <strong>text</strong> column is ⚠:
+    <code class="t-mono-inline">variant="text"</code> is the link look the
+    global <code class="t-mono-inline">.link</code> class already gives any
+    <code class="t-mono-inline">&lt;a&gt;</code>/<code class="t-mono-inline"
       >&lt;button&gt;</code
-    >. For a link-styled action
-    <strong>
-      prefer <code class="t-mono-inline">.link</code>
-    </strong> (lighter,
-    no component) — reach for
-    <code class="t-mono-inline">
-      variant="text"
-    </code> only when you genuinely
-    need the ds-button API on a link look (<code class="t-mono-inline"
-      >loading</code
-    >, <code class="t-mono-inline">fullWidth</code>, the typed
-    <code class="t-mono-inline">
-      (pressed)
-    </code> output, leading/trailing
-    icons). It's kept, not removed — just not the default choice.
+    >. Prefer <code class="t-mono-inline">.link</code>; use
+    <code class="t-mono-inline">variant="text"</code> only when you need the
+    ds-button API on that look (<code class="t-mono-inline">loading</code>,
+    <code class="t-mono-inline">fullWidth</code>,
+    <code class="t-mono-inline">(pressed)</code>, icons).
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      secondary
-    </strong> and <strong>tertiary</strong> are brand hue
-    <em>
-      roles
-    </em>, not fixed colours — they ship distinct default hues (a
-    warm orange, a cool violet), independent of
-    <code class="t-mono-inline">
-      --primary
-    </code>, so the three brand rows read
-    apart out of the box. Changing
-    <code class="t-mono-inline">
-      --primary
-    </code> alone won't recolour them — a
-    brand reskins each by overriding
-    <code class="t-mono-inline">
-      --secondary-h/s/l
-    </code> /
-    <code class="t-mono-inline">
-      --tertiary-h/s/l
-    </code>.
+    <code class="t-mono-inline">secondary</code> and
+    <code class="t-mono-inline">tertiary</code> are brand roles with their own
+    default hues (warm orange, cool violet), independent of
+    <code class="t-mono-inline">--primary</code>; recolour them with
+    <code class="t-mono-inline">--secondary-h/s/l</code> and
+    <code class="t-mono-inline">--tertiary-h/s/l</code>.
   </p>
 
   <div class="brand-demo">
@@ -122,6 +104,7 @@
 
     <docs-matrix
       cornerLabel="color \ variant"
+      minColWidth="max-content"
       [cols]="variants"
       [rows]="combos">
       <ng-template
@@ -149,7 +132,8 @@
     </code> ·
     <code class="t-mono-inline">
       md
-    </code> (default) ·
+    </code> (default; follows
+    <code class="t-mono-inline">DS_CONFIG.control.size</code>) ·
     <code class="t-mono-inline">
       lg
     </code> — 32 / 40 / 48, aligned with the
@@ -342,8 +326,10 @@
         <code class="t-mono-inline">
           aria-disabled
         </code> so it stays focusable
-        and the reason is announced. Clicks are swallowed either way. Length is
-        uncapped — a long reason wraps and the button grows.
+        and the reason is announced. This works on the button form only: a
+        disabled link-button gets <code class="t-mono-inline">tabindex="-1"</code>,
+        so its reason cannot be reached by Tab. Clicks are swallowed either way.
+        Length is uncapped - a long reason wraps and the button grows.
       </p>
 
       <div class="refusal-stage">
@@ -450,10 +436,8 @@
     <code class="t-mono-inline">
       ds-icon-button
     </code>: an icon button has no
-    room for a second line. It gained
-    <code class="t-mono-inline">
-      ariaDescribedBy
-    </code> instead, to point at
+    room for a second line. It takes
+    <code class="t-mono-inline">ariaDescribedBy</code> instead, pointing at
     text the page already shows.
   </p>
 
@@ -601,7 +585,6 @@
     <ds-button
       variant="tonal"
       routerLink="/components/table"
-      disabledReason="Pick a row first"
       [disabled]="true">
       Open the row
     </ds-button>
@@ -656,12 +639,8 @@
 &lt;ds-button [routerLink]="tree" /&gt;   <i>// tree = router.createUrlTree(…)</i></code></pre>
 
   <p class="block-desc t-s">
-    No live demo for
-    <code class="t-mono-inline">
-      fragment
-    </code> on this site: a docs URL
-    already names its section in the path, so a fragment here would be a no-op —
-    which its own link check enforces.
+    No live <code class="t-mono-inline">fragment</code> demo: docs URLs name
+    the section in the path, so a fragment would be a no-op.
   </p>
 
   <div class="row">
@@ -703,8 +682,10 @@
     <code class="t-mono-inline">
       routerLinkActiveOptions
     </code> moves the class
-    without touching the announcement. Both buttons below are active on this
-    page; only the first one IS this page.
+    without touching the announcement;
+    <code class="t-mono-inline">ariaCurrent</code> overrides the announcement
+    itself. Both buttons below are active on this page; only the first one IS
+    this page.
   </p>
 
   <div class="row">
@@ -717,7 +698,7 @@
     <ds-button
       variant="outline"
       routerLink="/">
-      Everything under the root — says "true"
+      Root - says "true"
     </ds-button>
   </div>
 
@@ -734,7 +715,7 @@
     </code> class on a
     <code class="t-mono-inline">
       &lt;button&gt;
-    </code> (replaces the old
+    </code> (prefer it over
     <code class="t-mono-inline">
       variant="text"
     </code>). It is an action, not
