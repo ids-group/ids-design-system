@@ -10553,7 +10553,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "When true, a tab's content is instantiated on first activation and kept alive. Default renders all panels eagerly."
+        "description": "When true, a tab's content is instantiated on first activation and kept alive. Default renders only the active panel."
       },
       {
         "name": "scrollable",

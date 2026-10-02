@@ -6771,7 +6771,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-status-dot-color",
         "value": "var(--icon-muted)",
-        "notes": "Default = planning."
+        "notes": "Dot colour; default `--icon-muted`. Set per status by `status.define`."
       },
       {
         "name": "--ds-status-dot-size",
@@ -7798,7 +7798,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-tag-bg-color",
         "value": "var(--accent)",
-        "notes": "Surface fill — interactive/ghost re-point to --surface-secondary."
+        "notes": "Tag fill; default `--accent`, `--surface-secondary` for `neutral`."
       },
       {
         "name": "--ds-tag-label-color",
@@ -8287,12 +8287,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-tooltip-radius",
         "value": "var(--ds-radius-control)",
-        "notes": "Tooltip corner radius (defaults to --radius-md)."
+        "notes": "Tooltip corner radius (defaults to --ds-radius-control)."
       },
       {
         "name": "--ds-tooltip-shadow",
         "value": "var(--ds-elevation-overlay)",
-        "notes": "Tooltip drop shadow (defaults to --shadow-2)."
+        "notes": "Tooltip drop shadow (defaults to --ds-elevation-overlay)."
       },
       {
         "name": "--ds-tooltip-max-width",
