@@ -59,20 +59,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    A click holds the column and its tooltip in place, with a pin disc on it, so
-    the reading stays while you look away from the chart. An Unpin control
-    appears at the top end, on the caption's line.
+    A click holds the column and its tooltip, with a pin disc on it and an
+    Unpin control on the caption's line. Escape, a second click or a press
+    outside releases it, and <code class="t-mono-inline"> pointClicked </code>
+    fires either way.
     <code class="t-mono-inline">
       dimOthers
     </code> fades every column but the
-    one the chart is answering: the hovered column once the pointer has rested
-    on it, or the focused one. Beside a pin the rest of the plot stays down too,
-    which is what makes the comparison survive the pointer leaving. Escape, a
-    second click or a press anywhere outside the mark releases it, and the click
-    output fires either way. The pointer cursor shows on any column a click
-    would hold, and on an <code class="t-mono-inline"> interactive </code> one.
-    Set <code class="t-mono-inline"> pinOnClick="false" </code> to keep columns
-    unheld.
+    one the chart answers (hovered after the pointer rests, focused, or
+    pinned). <code class="t-mono-inline"> pinOnClick="false" </code> keeps
+    columns unheld.
   </p>
 
   <ds-column-chart
@@ -126,13 +122,10 @@
     A point that sets
     <code class="t-mono-inline">
       fill="hatched"
-    </code> keeps its colour and
-    takes a striped texture over it, which separates a projection from a settled
-    figure without spending a second hue on it. Texture is the encoding that
-    survives greyscale, print and colour-vision deficiency, so it carries the
-    distinction where a lighter tint of the same colour would not. The chart
-    reads nothing into the flag: which columns are projections is a fact only
-    the caller has.
+    </code> on a point keeps its colour
+    under a striped texture, separating a projection from a settled figure in
+    greyscale, print and colour-vision deficiency. The chart infers nothing:
+    the caller marks which points are projections.
   </p>
 
   <ds-column-chart
@@ -152,13 +145,17 @@
       data
     </code> a list of NAMED SERIES instead of
     a flat list of points and every category carries one column per series,
-    keyed by the legend under the plot.
+    keyed by the legend under the plot; hovering or focusing a legend item
+    singles its series out.
     <code class="t-mono-inline">
       stack
     </code> decides how they share the band:
     <code class="t-mono-inline">
+      'none'
+    </code> (default) and
+    <code class="t-mono-inline">
       grouped
-    </code> stands them side by side,
+    </code> stand them side by side,
     <code class="t-mono-inline">
       stacked
     </code> puts each on top of the one
@@ -222,38 +219,35 @@
   </h3>
 
   <p class="block-desc t-s">
-    Two charts in one plot: a figure per month on the left axis, and the running
-    total of those months on the right. They are different quantities at
-    different magnitudes, so one axis cannot carry both - the total dwarfs every
-    month it is made of, and on a shared scale the columns flatten to nothing.
-    Each axis therefore takes the colour of the series measured against it,
-    which is the only thing on the canvas that says which numbers a mark is read
-    against.
+    A figure per month on the left axis and its running total on the right:
+    one axis cannot carry both, so each axis takes the colour of the series
+    read against it.
   </p>
 
   <p class="block-desc t-s">
-    There is no combo component. This is
+    There is no combo component: this is
     <code class="t-mono-inline">
       ds-chart
-    </code> - the container this chart is
-    built inside - with a
+    </code> with a
     <code class="t-mono-inline">
       dsColumnSeries
     </code> and a
     <code class="t-mono-inline">
       dsLineSeries
-    </code> projected into it. A
-    series that sets <code class="t-mono-inline">axis: 'secondary'</code> is
-    measured against the second axis;
+    </code> projected in. A series with
+    <code class="t-mono-inline">
+      axis: 'secondary'
+    </code> reads the second axis,
+    related to the first by
     <code class="t-mono-inline">
       secondaryAxisMode
-    </code> decides how that axis
-    relates to the first, and <code class="t-mono-inline"> 'aligned' </code>,
-    the default, hangs it on the first axis's own gridlines at a round step. The
-    line is written after the columns because a projected mark paints in the
-    order it is written, and a cumulative line belongs over the readings it
-    sums. Two marks make it one comparison, so the pointer anywhere in a month
-    names both readings in one panel over the taller of the two.
+    </code> (default
+    <code class="t-mono-inline">
+      'aligned'
+    </code>, on the first axis's
+    gridlines at a round step). Marks paint in source order, so the line is
+    written after the columns; with two marks the pointer anywhere in a month
+    names both readings in one panel.
   </p>
 
   <ds-chart
@@ -287,19 +281,19 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       thresholds
-    </code> draws a target, a budget or
-    an SLA across the plot, behind the columns. Each entry is ONE number, so the
-    two ends of a horizontal line cannot drift apart;
+    </code> draws a target, budget or
+    SLA behind the columns. Each entry is one
+    <code class="t-mono-inline">
+      value
+    </code>;
     <code class="t-mono-inline">
       dash
-    </code> picks how it is stroked, and
+    </code> sets its stroke and
     <code class="t-mono-inline">
       to
-    </code> turns the same object into a band
-    between two readings. A threshold also opens the value axis far enough to
-    hold it, so a target above every column still lands on the plot, and it is
-    named in the chart's generated description rather than being drawn and left
-    unsaid.
+    </code> turns it into a band between two
+    readings. A threshold widens the value axis to stay on the plot and is
+    named in the generated description.
   </p>
 
   <div class="demo-stack">
@@ -342,7 +336,9 @@
     </kbd> and <kbd>Space</kbd> fire it on an
     <code class="t-mono-inline">
       interactive
-    </code> column, and never pin.
+    </code> column, and never pin. An
+    interactive chart is one tab stop: arrow keys move between columns
+    (wrapping), Home and End jump to the ends.
   </p>
 
   <div class="states is-cols-2">
@@ -376,6 +372,41 @@
   </p>
 
   <h3 class="block-title t-h4">
+    Sizing
+  </h3>
+
+  <p class="block-desc t-s">
+    Geometry is set by tokens, not inputs:
+    <code class="t-mono-inline">
+      --ds-column-chart-plot-height
+    </code> (200px),
+    <code class="t-mono-inline">
+      --ds-column-chart-axis-width
+    </code> (40px) and
+    <code class="t-mono-inline">
+      --ds-column-chart-value-space
+    </code> are read
+    back as numbers, so they take a px length only;
+    <code class="t-mono-inline">
+      --ds-column-chart-column-width
+    </code> is a
+    percentage of the slot (80%).
+    <code class="t-mono-inline">
+      --ds-column-chart-column-max-width
+    </code>,
+    <code class="t-mono-inline">
+      --ds-column-chart-column-gap
+    </code>,
+    <code class="t-mono-inline">
+      --ds-column-chart-cap-radius
+    </code> and
+    <code class="t-mono-inline">
+      --ds-column-chart-grid-line-color
+    </code>
+    finish the set.
+  </p>
+
+  <h3 class="block-title t-h4">
     Data table
   </h3>
 
@@ -394,6 +425,7 @@
 
   <ds-column-chart
     partOfWhole
+    dataTable="visible"
     caption="Revenue by month, as a share of the five months shown"
     [data]="dataTablePoints()" />
 
