@@ -29,6 +29,12 @@ export class BreadcrumbsSection {
     { label: 'P-12894' },
   ];
 
+  protected readonly clippedTrail: BreadcrumbItem[] = [
+    { label: 'Workspace', href: '/' },
+    { label: 'Quarterly planning and budget review', href: '/planning' },
+    { label: 'Summary' },
+  ];
+
   protected readonly singleLevel: BreadcrumbItem[] = [
     { label: 'Workspace', href: '/' },
     { label: 'Settings' },
