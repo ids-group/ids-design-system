@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**101 open — 0 P1, 4 P2, 97 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**102 open — 0 P1, 4 P2, 98 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 4
 
@@ -26,7 +26,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 97
+### P3 — 98
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -66,7 +66,8 @@ item and nothing else.
   - Thirteen obsolete paths on the project can only be deleted by its owner
 - **The field system — the two controls outside it, and the five with no box to paint**
   - `ds-autocomplete`'s arrow keys walk a private copy of the list cursor
-- **Three open verdicts, each drawn in a deck**
+- **Open verdicts, each drawn in a deck**
+  - Which public tokens the library never reads go?
   - Does the picker list height become a public token, or stay behind `panelClass`?
   - Do the date picker's first day of the week and the time picker's 12h/24h default from …
   - Should the `ds-breadcrumbs` hover colour derive from `--text-link`, like the `.link` helper?
@@ -876,7 +877,14 @@ that already existed, because both are the kind of ask that comes back.
 
 # Decisions — waiting on Stas, not on work
 
-## Three open verdicts, each drawn in a deck
+## Open verdicts, each drawn in a deck
+
+- [ ] **[P3] Which public tokens the library never reads go?** Drawn in deck `unread-tokens`.
+  Measured 2026-10-02 (`var(--name` over `src/lib` and `ds-docs/src`): of 746 tokens in `styles/`
+  and `themes/`, 119 have no reader in the library - 51 sizes of components and patterns that do not
+  exist (`--cmdk-*`, `--wizard-*`, `--matrix-*`, `--calendar-*`, `--settings-*` and others, two of
+  them read only by ds-docs), and 68 scale, palette and role names. In pinkmoon, mm-ecm and mm-broker
+  the 51 have 0 readers; 12 of the 68 are read. Options: none, the 51 dead sizes, or all 119.
 
 - [ ] **[P3] Does the picker list height become a public token, or stay behind `panelClass`?** Drawn
   in deck `picker-list-height`. Two caps sit on one panel and the settable-looking one is not the
