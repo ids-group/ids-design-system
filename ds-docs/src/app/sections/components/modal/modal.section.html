@@ -575,7 +575,9 @@
 
   <p class="block-desc t-s">
     Put <code class="t-mono-inline">dsModalConfirm</code> on the confirm button and
-    <code class="t-mono-inline">(confirmed)</code> fires when it is pressed - never
+    <code class="t-mono-inline">
+      (confirmed)
+    </code> fires when it is pressed - never
     while it is disabled or loading. The modal stays open; close it when the work
     is done. On a plain element it follows <code class="t-mono-inline">click</code>
     and skips <code class="t-mono-inline">aria-disabled="true"</code>.
@@ -588,7 +590,9 @@
       Rename project
     </ds-button>
 
-    <span class="t-s">confirmed: {{ renamedTimes() }}</span>
+    <span class="t-s">
+      confirmed: {{ renamedTimes() }}
+    </span>
 
     <ds-modal
       title="Rename project"
@@ -626,7 +630,9 @@
       Archive project
     </ds-button>
 
-    <span class="t-s">confirmed: {{ archivedTimes() }}</span>
+    <span class="t-s">
+      confirmed: {{ archivedTimes() }}
+    </span>
 
     <ds-modal
       title="Archive project"
