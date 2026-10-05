@@ -127,6 +127,69 @@
   .alert-demo[data-mode="enter"] .al { animation: deck-scale-in 180ms ease-out both; }
   @keyframes deck-scale-in { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
   .replay { align-self: flex-start; border: var(--border-width-default) solid var(--border-default); background: var(--surface-default); border-radius: var(--ds-radius-control); padding: 2px var(--space-2); font: var(--font-size-xs) / 1.5 var(--font-sans); cursor: pointer; color: var(--text-secondary); }
+  .frame { border: 1px solid var(--border-divider); border-radius: var(--ds-radius-control); background: var(--surface-canvas); padding: var(--space-3); display: grid; gap: var(--space-2); }
+  .console { font: var(--font-size-2xs) / 1.5 var(--font-mono, monospace); padding: 6px 8px; border-radius: 6px; background: #161a28; color: #e8ecf2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .console.err { color: #ff8a8a; } .console.warn { color: #ffd76a; } .console.none { color: #6b7388; }
+  .skel { border-radius: 6px; background: linear-gradient(90deg, var(--surface-secondary), var(--border-divider), var(--surface-secondary)); background-size: 200% 100%; animation: deck-skel 1.4s linear infinite; }
+  @keyframes deck-skel { to { background-position: -200% 0; } }
+  .stat.blank .l { min-height: 1.4em; }
+  .mini-ico { display: inline-block; inline-size: 18px; block-size: 18px; border-radius: 4px; background: var(--accent); opacity: .8; vertical-align: middle; }
+  .mini-ico.missing { background: none; outline: 1px dashed var(--border-strong); opacity: 1; }
+  .tabs-strip { display: flex; gap: var(--space-4); border-bottom: 1px solid var(--border-divider); min-block-size: 34px; font: var(--font-weight-medium) var(--font-size-s) / 1 var(--font-sans); color: var(--text-secondary); }
+  .tabs-strip span { padding: 10px 2px; }
+  .tabs-strip span.on { color: var(--accent-strong); box-shadow: inset 0 -2px 0 var(--accent); }
+  .tabs-strip.empty::after { content: "пусто: 0 вкладок"; align-self: center; font: var(--font-size-2xs) var(--font-sans); color: var(--error-text); }
+  .codebox { font: var(--font-size-2xs) / 1.5 var(--font-mono, monospace); background: var(--surface-secondary); border-radius: 6px; padding: 6px 8px; color: var(--text-secondary); white-space: pre; overflow: hidden; }
+  .mdfile { border: 1px solid var(--border-divider); border-radius: var(--ds-radius-control); background: var(--surface-default); font: var(--font-size-xs) / 1.4 var(--font-sans); overflow: hidden; }
+  .mdfile .fh { background: var(--surface-secondary); padding: 4px 8px; font-family: var(--font-mono, monospace); color: var(--text-tertiary); }
+  .mdfile table { inline-size: 100%; border-collapse: collapse; margin: 0; }
+  .mdfile td { padding: 4px 8px; border-top: 1px solid var(--border-divider); }
+  .mdfile .empty { padding: 14px 8px; color: var(--text-tertiary); font-style: italic; }
+  .mdfile tr.stale td { background: var(--warning-subtitle); }
+  .dotok, .dotno { display: inline-block; inline-size: 8px; block-size: 8px; border-radius: 50%; margin-inline-end: 4px; }
+  .dotok { background: var(--success); } .dotno { background: var(--error); }
+  .note-bubble { font: var(--font-size-xs) / 1.4 var(--font-sans); background: var(--warning-subtitle); color: var(--warning-text); border-radius: 6px; padding: 6px 8px; }
+  .btn-text { display: inline-flex; align-items: center; block-size: 36px; padding: 0 12px; border-radius: var(--ds-radius-control); color: var(--accent-strong); font: var(--font-weight-semibold) var(--font-size-s) / 1 var(--font-sans); background: none; border: 0; }
+  .btn-text:hover { background: var(--accent-subtitle, var(--surface-secondary)); }
+  .lint { font: var(--font-size-2xs) / 1.4 var(--font-sans); padding: 3px 8px; border-radius: 6px; }
+  .lint.bad { background: var(--error-subtitle); color: var(--error-text); } .lint.ok { background: var(--success-subtitle); color: var(--success-text); }
+  .cap2 { display: block; margin-top: 4px; color: var(--text-tertiary); font: var(--font-size-2xs) / 1.4 var(--font-sans); }
+  .arrow { color: var(--text-tertiary); margin: 0 6px; }
+  .mini-pop { position: relative; display: inline-grid; gap: 4px; border: 1px solid var(--border-divider); border-radius: var(--ds-radius-control); box-shadow: var(--shadow-popover); background: var(--surface-default); padding: 6px; inline-size: 170px; font: var(--font-size-2xs) / 1.3 var(--font-sans); vertical-align: top; }
+  .mini-pop div { padding: 4px; border-radius: 4px; } .mini-pop div:hover { background: var(--surface-secondary); }
+  .bell { display: inline-grid; place-items: center; inline-size: 30px; block-size: 30px; border: 1px solid var(--border-default); border-radius: var(--ds-radius-control); vertical-align: top; position: relative; }
+  .bell b { position: absolute; inset-block-start: -5px; inset-inline-end: -5px; background: var(--error); color: #fff; border-radius: 9px; font-size: 9px; padding: 0 4px; }
+  .sfoot { inline-size: 200px; border: 1px solid var(--border-divider); border-radius: var(--ds-radius-control); background: var(--surface-default); font: var(--font-size-xs) / 1.3 var(--font-sans); }
+  .sfoot > div { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; border-top: 1px solid var(--border-divider); }
+  .sfoot > div:first-child { border-top: 0; }
+  .sel-mini { border: 1px solid var(--border-default); border-radius: 6px; padding: 2px 6px; font: var(--font-size-2xs) var(--font-sans); }
+  .thumb { position: relative; inline-size: 180px; aspect-ratio: 4 / 3; border: 1px solid var(--border-divider); border-radius: var(--ds-radius-control); background: var(--surface-secondary); overflow: hidden; }
+  .thumb svg { position: absolute; inset-block: 30px 32px; inset-inline: 10px; inline-size: calc(100% - 20px); block-size: calc(100% - 62px); }
+  .thumb .tag-o { position: absolute; inset-block-start: 6px; inset-inline-start: 6px; }
+  .thumb .capx { position: absolute; inset-inline: 0; inset-block-end: 0; padding: 4px 8px; background: var(--surface-default); font: var(--font-size-2xs) var(--font-sans); border-top: 1px solid var(--border-divider); }
+  .range { display: flex; align-items: center; gap: 6px; font: var(--font-size-xs) var(--font-sans); color: var(--text-tertiary); }
+  .range .inx { display: flex; align-items: center; justify-content: space-between; inline-size: 96px; block-size: 30px; border: 1px solid var(--border-default); border-radius: 6px; padding: 0 8px; color: var(--text-primary); background: var(--surface-default); }
+  .range .inx i { font-style: normal; color: var(--text-tertiary); }
+  .filerow { display: grid; grid-template-columns: 28px 1fr auto auto; gap: 8px; align-items: center; inline-size: 300px; padding: 6px 8px; border: 1px solid var(--border-divider); border-radius: var(--ds-radius-control); background: var(--surface-default); font: var(--font-size-xs) / 1.3 var(--font-sans); }
+  .filerow .ft { inline-size: 28px; block-size: 32px; border-radius: 4px; background: var(--info-subtitle); color: var(--info-text); display: grid; place-items: center; font-size: 9px; font-weight: 700; }
+  .filerow small { display: block; color: var(--text-tertiary); }
+  .meter { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; inline-size: 220px; font: var(--font-size-xs) var(--font-sans); align-items: center; }
+  .meter .tr { grid-column: 1 / -1; position: relative; block-size: 6px; border-radius: 3px; background: var(--surface-secondary); }
+  .meter .tr span { position: absolute; inset-block: 0; inset-inline-start: 0; border-radius: 3px; background: var(--success); }
+  .meter .tr i { position: absolute; inset-block: -3px; inline-size: 2px; background: var(--text-primary); }
+  .crit { border-collapse: collapse; font: var(--font-size-xs) / 1.3 var(--font-sans); inline-size: 280px; margin: 0; }
+  .crit td { padding: 4px 6px; border-top: 1px solid var(--border-divider); }
+  .ok { color: var(--success-text); } .wn { color: var(--warning-text); } .no { color: var(--error-text); }
+  .flagbox { display: inline-flex; gap: 6px; align-items: center; font: var(--font-size-xs) var(--font-sans); }
+  .flag { display: inline-block; inline-size: 20px; block-size: 14px; border-radius: 2px; box-shadow: 0 0 0 1px var(--border-divider); }
+  .flag.nl { background: linear-gradient(#ae1c28 33%, #fff 33% 66%, #21468b 66%); }
+  .flag.de { background: linear-gradient(#000 33%, #dd0000 33% 66%, #ffce00 66%); }
+  .flag.gb { background: #012169; }
+  .unitv { font: var(--font-weight-semibold) var(--font-size-s) var(--font-sans); }
+  .unitv small { font-weight: 400; color: var(--text-tertiary); }
+  .actrow { display: grid; grid-template-columns: 10px 1fr; gap: 8px; inline-size: 300px; font: var(--font-size-xs) / 1.35 var(--font-sans); }
+  .actrow .dt { inline-size: 10px; block-size: 10px; border-radius: 50%; background: var(--warning); margin-top: 3px; }
+  .actrow small { color: var(--text-tertiary); }
 </style>
 </head>
 <body>
@@ -204,7 +267,8 @@
       <article class="opt is-today" tabindex="0">
         <span class="badge is-same">как сейчас</span>
         <h3>Ошибка Angular</h3>
-        <p class="says">Uncaught Error: NG0950 at _ds_bundle.js:4:70189</p>
+        <div class="frame"><div class="stat blank"><div class="l"></div><div class="v">128</div></div><div><span class="mini-ico missing"></span> <span class="t-caption">иконка не нарисована, потом появляется</span></div></div>
+        <p class="console err">Uncaught Error: NG0950 at _ds_bundle.js:4:70189</p>
         <div class="pills"><span class="pill bad">без имени компонента</span><span class="pill bad">шум в консоли</span><span class="pill good">ноль работы</span></div>
         <dl class="layer"><dt>Рендер</dt><dd class="none">пустой элемент, потом восстанавливается</dd></dl>
         <span class="chosen-mark">выбрано</span>
@@ -212,7 +276,8 @@
       <article class="opt is-pick" tabindex="0">
         <span class="badge is-pick">рекомендую</span>
         <h3>Обёртка ждёт и предупреждает</h3>
-        <p class="says">[IdsDs] Icon: required prop "name" is undefined - not mounted yet</p>
+        <div class="frame"><div class="skel" style="block-size:70px"></div><div><span class="skel" style="display:inline-block;inline-size:18px;block-size:18px;vertical-align:middle"></span> <span class="t-caption">место держится, рисуется, когда придёт значение</span></div></div>
+        <p class="console warn">[IdsDs] Icon: required prop "name" is undefined - not mounted yet</p>
         <div class="pills"><span class="pill good">имя компонента и пропа</span><span class="pill good">один warning</span><span class="pill good">Angular не трогаем</span></div>
         <dl class="layer"><dt>Рендер</dt><dd class="gain">пустое место, монтируется, когда значение придёт</dd><dt>Типы</dt><dd class="gain">required пропы в .d.ts без «?»</dd></dl>
         <span class="chosen-mark">выбрано</span>
@@ -220,7 +285,8 @@
       <article class="opt" tabindex="0">
         <span class="badge is-no">вариант</span>
         <h3>Всё необязательно в бандле</h3>
-        <p class="says">(тишина)</p>
+        <div class="frame"><div class="stat blank"><div class="l"></div><div class="v">128</div></div><div><span class="mini-ico missing"></span> <span class="t-caption">пустая подпись и пустая иконка навсегда</span></div></div>
+        <p class="console none">(тишина)</p>
         <div class="pills"><span class="pill mid">бандл расходится с библиотекой</span><span class="pill bad">настоящий пропуск не виден</span></div>
         <dl class="layer"><dt>Рендер</dt><dd class="none">Stat без label молча рисует пустую подпись</dd></dl>
         <span class="chosen-mark">выбрано</span>
@@ -475,7 +541,8 @@
       <article class="opt is-today" tabindex="0">
         <span class="badge is-same">как сейчас</span>
         <h3>Ничего не делать</h3>
-        <p class="says">&lt;Tabs&gt;&lt;Tab label="Overview"/&gt;&lt;/Tabs&gt; → пустой tablist</p>
+        <div class="tabs-strip empty"></div>
+        
         <div class="pills"><span class="pill bad">4 компонента не работают в Claude Design</span><span class="pill bad">агент собирает клоны</span></div>
         <dl class="layer"><dt>Трогает</dt><dd class="none">ничего</dd></dl>
         <span class="chosen-mark">выбрано</span>
@@ -483,7 +550,10 @@
       <article class="opt is-pick" tabindex="0">
         <span class="badge is-pick">рекомендую</span>
         <h3>Родитель находит детей сам</h3>
-        <p class="says">&lt;Tabs&gt;&lt;Tab label="Overview"/&gt;&lt;/Tabs&gt; → 1 вкладка, тот же API</p>
+        <div class="tabs-strip"><span class="on">Overview</span><span>Annotations</span><span>History</span></div><div class="codebox">&lt;Tabs&gt;
+  &lt;Tab label="Overview"/&gt; …
+&lt;/Tabs&gt;   // как в Angular</div>
+        
         <div class="pills"><span class="pill good">один API в Angular и в бандле</span><span class="pill good">handoff в код без правок</span><span class="pill mid">правка в src/lib у 4 компонентов</span><span class="pill mid">нужен общий механизм регистрации</span></div>
         <dl class="layer"><dt>Трогает</dt><dd class="gain">tabs, menu, accordion, filter-bar: дети регистрируются у ближайшего родителя по DOM, а не через запрос Angular</dd></dl>
         <span class="chosen-mark">выбрано</span>
@@ -491,7 +561,10 @@
       <article class="opt" tabindex="0">
         <span class="badge is-no">вариант</span>
         <h3>Обёртки принимают массивы</h3>
-        <p class="says">&lt;Tabs tabs={[{ label: 'Overview', content }]}/&gt;</p>
+        <div class="tabs-strip"><span class="on">Overview</span><span>Annotations</span><span>History</span></div><div class="codebox">&lt;Tabs tabs={[
+  { label: "Overview", content }, …
+]}/&gt;   // только в бандле</div>
+        
         <div class="pills"><span class="pill good">src/lib не трогаем</span><span class="pill bad">в бандле другой API, чем в Angular</span><span class="pill bad">перенос прототипа в код переписывается</span></div>
         <dl class="layer"><dt>Трогает</dt><dd class="gain">gen.mjs: особые обёртки для 4 компонентов</dd></dl>
         <span class="chosen-mark">выбрано</span>
@@ -564,14 +637,16 @@
       <article class="opt is-today" tabindex="0">
         <span class="badge is-same">как сейчас</span>
         <h3>Никак</h3>
-        <p class="says">(в загрузке ничего; агент находит сам и пишет в AGENT-NOTES)</p>
+        <div class="mdfile"><div class="fh">known-limits.md</div><div class="empty">файла нет</div></div><div class="note-bubble">AGENT-NOTES.md агента: «Use Tabs for section navigation»</div>
+        
         <div class="pills"><span class="pill bad">«Tabs для разделов» → пустой tablist</span><span class="pill bad">каждый проект учится заново</span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
       <article class="opt" tabindex="0">
         <span class="badge is-no">вариант</span>
         <h3>Рукописный known-limits.md</h3>
-        <p class="says">Tabs - does not render through React 18 (0 tabs). Workaround: Segmented.</p>
+        <div class="mdfile"><div class="fh">known-limits.md · правлено руками 2026-10-06</div><table><tr><td>Tabs</td><td>does not render</td></tr><tr class="stale"><td>Popover</td><td>cannot open <small>(уже починен в 0.14.9)</small></td></tr><tr><td>FilterBar</td><td>children ignored</td></tr></table></div>
+        
         <div class="pills"><span class="pill good">день работы</span><span class="pill mid">гейт проверяет только, что компонент упомянут</span><span class="pill bad">устаревает молча после фикса</span></div>
         <dl class="layer"><dt>CI</dt><dd class="none">check-manual-surface требует строку на компонент</dd></dl>
         <span class="chosen-mark">выбрано</span>
@@ -579,7 +654,8 @@
       <article class="opt is-pick" tabindex="0">
         <span class="badge is-pick">рекомендую</span>
         <h3>Дымовой тест обёрток генерирует список</h3>
-        <p class="says">Tabs - renders: no (0 role=tab) · measured 0.14.8 · with host wrapper: no</p>
+        <div class="mdfile"><div class="fh">known-limits.md · generated · 0.14.9</div><table><tr><td><span class="dotno"></span>Tabs</td><td>0 role=tab</td></tr><tr><td><span class="dotok"></span>Popover</td><td>opens, Esc closes</td></tr><tr><td><span class="dotno"></span>FilterBar</td><td>0 items</td></tr></table></div>
+        
         <div class="pills"><span class="pill good">список пишет тест, не человек</span><span class="pill good">фикс сразу снимает строку</span><span class="pill good">регрессия ломает CI</span><span class="pill mid">headless Chrome в CI</span></div>
         <dl class="layer"><dt>CI</dt><dd class="gain">каждую обёртку рендерит React 18 с обёрткой хоста и без, на ключевое действие; пишет known-limits.md и падает, если работавшее перестало работать</dd><dt>Основа</dt><dd class="gain">тот же замер, которым проверены 27 компонентов аудита; <code>tools/headless-chrome.mjs</code> уже есть</dd></dl>
         <span class="chosen-mark">выбрано</span>
@@ -594,14 +670,16 @@
       <article class="opt" tabindex="0">
         <span class="badge is-no">вариант</span>
         <h3>Разрешить button.link</h3>
-        <p class="says">&lt;button className="link" type="button"&gt;Save as draft&lt;/button&gt;</p>
+        <div class="frame"><div><button type="button" class="link">Save as draft</button></div><span class="lint ok">adherence: ok (исключение для .link)</span></div><div class="codebox">&lt;button className="link"&gt;Save as draft&lt;/button&gt;</div>
+        
         <div class="pills"><span class="pill good">как в ds-docs</span><span class="pill mid">исключение в правиле adherence</span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
       <article class="opt is-pick" tabindex="0">
         <span class="badge is-pick">рекомендую</span>
         <h3>Пример на Button variant="text"</h3>
-        <p class="says">&lt;Button variant="text"&gt;Save as draft&lt;/Button&gt;</p>
+        <div class="frame"><div><button type="button" class="btn-text">Save as draft</button></div><span class="lint ok">adherence: ok без исключений</span></div><div class="codebox">&lt;Button variant="text"&gt;Save as draft&lt;/Button&gt;</div>
+        
         <div class="pills"><span class="pill good">одно правило без исключений</span><span class="pill good">агент берёт компонент, а не класс</span><span class="pill mid"><code>.link</code> остаётся для прозы и <code>&lt;a&gt;</code></span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
@@ -618,19 +696,19 @@
         <tr class="cq" data-q="c-facet" data-rec="Расширить"><th class="rowlabel">FacetGroup</th><td class="spec-cell"><div class="cbr"><span class="box on"></span>Laws<span class="num">12</span></div><div class="cbr"><span class="box"></span>Guidelines<span class="num">4</span></div></td><td><div class="choice" data-for="Checkbox: слот [trailing] для счётчика"></div></td></tr>
         <tr class="cq" data-q="c-view" data-rec="Расширить"><th class="rowlabel">ViewToggle</th><td class="spec-cell"><div class="seg"><span class="on"><i></i>List</span><span><i></i>Grid</span></div> → <div class="seg"><span class="on"><i></i></span><span><i></i></span></div></td><td><div class="choice" data-for="Segmented: icon-only сегменты с aria-label"></div></td></tr>
         <tr class="cq" data-q="c-stepper" data-rec="Расширить"><th class="rowlabel">ApprovalFlow</th><td class="spec-cell"><div class="steps"><div><b>✓</b>Design<small>J. Smith · 12 Sep</small></div><div class="cur"><b>2</b>Review<small>QA lead</small></div><div class="lock"><b>3</b>Approve<small>blocked</small></div></div></td><td><div class="choice" data-for="Stepper: шаги {label, caption}, состояние blocked; роли и подписи у приложения"></div></td></tr>
-        <tr class="cq" data-q="c-tabs" data-rec="Расширить"><th class="rowlabel">Tabs с «More»</th><td class="spec-cell"><span class="pill info">scrollable уже есть</span> → <span class="pill mid">Overview · Annotations · Fit · More ▾</span></td><td><div class="choice" data-for="Tabs: overflow в меню More"></div></td></tr>
-        <tr class="cq" data-q="c-popover" data-rec="Расширить"><th class="rowlabel">Панель у колокольчика</th><td class="spec-cell">в бандле Popover нельзя открыть: нет пропа <code>open</code>, только метод <code>toggle()</code></td><td><div class="choice" data-for="Popover-обёртка: open / trigger"></div></td></tr>
-        <tr class="cq" data-q="c-sidefoot" data-rec="Расширить"><th class="rowlabel">SidenavFooter с контентом</th><td class="spec-cell">состав фиксирован, ng-content нет</td><td><div class="choice" data-for="SidenavFooter: проецируемый слот"></div></td></tr>
-        <tr class="cq" data-q="c-media" data-rec="Компонент в DS"><th class="rowlabel">Thumbnail / Media</th><td class="spec-cell">нет; в todo «Image / lightbox, спроса нет» - теперь спрос есть</td><td><div class="choice" data-for="Новый ds-media: соотношение сторон, подпись, оверлей-метки, плейсхолдер"></div></td></tr>
-        <tr class="cq" data-q="c-range" data-rec="Рецепт"><th class="rowlabel">RangeInput</th><td class="spec-cell">FieldGroup + Input suffix, или Slider range</td><td><div class="choice" data-for="рецепт min-max с единицами"></div></td></tr>
-        <tr class="cq" data-q="c-file" data-rec="Рецепт"><th class="rowlabel">FileRow</th><td class="spec-cell">ListItem с leading-иконкой и trailing-действиями</td><td><div class="choice" data-for="рецепт на ListItem"></div></td></tr>
-        <tr class="cq" data-q="c-match" data-rec="Рецепт"><th class="rowlabel">MatchScore</th><td class="spec-cell">Bar semantics="meter" + target</td><td><div class="choice" data-for="рецепт meter с подписью; пороги у приложения"></div></td></tr>
-        <tr class="cq" data-q="c-criteria" data-rec="Рецепт"><th class="rowlabel">CriteriaTable</th><td class="spec-cell">Table + колонка статуса</td><td><div class="choice" data-for="рецепт колонки ✓ ⚠ ✕"></div></td></tr>
-        <tr class="cq" data-q="c-lang" data-rec="Рецепт"><th class="rowlabel">Language / Unit switcher</th><td class="spec-cell">Select sm или Menu</td><td><div class="choice" data-for="рецепт компактного переключателя"></div></td></tr>
-        <tr class="cq" data-q="c-flag" data-rec="У приложения"><th class="rowlabel">CountryFlag</th><td class="spec-cell">большой лицензируемый набор, живёт по своему графику</td><td><div class="choice" data-for="у приложения"></div></td></tr>
-        <tr class="cq" data-q="c-unit" data-rec="У приложения"><th class="rowlabel">UnitValue SI ↔ Imperial</th><td class="spec-cell">показ уже закрыт <code>Stat.unit</code> / <code>Input suffix</code>, конвертация - логика предметной области</td><td><div class="choice" data-for="у приложения"></div></td></tr>
-        <tr class="cq" data-q="c-sheet" data-rec="У приложения"><th class="rowlabel">Превью чертежей</th><td class="spec-cell">2D-планы и схемы рисует приложение токенами; общего примитива рисования в DS нет и не просили до сих пор</td><td><div class="choice" data-for="у приложения; Thumbnail / Media даст рамку, подпись и плейсхолдер"></div></td></tr>
-        <tr class="cq" data-q="c-alert" data-rec="У приложения"><th class="rowlabel">AlertCard / ActivityItem</th><td class="spec-cell">TimelineItem + гайд Activity stream; поля SLA и «откуда → куда» предметные</td><td><div class="choice" data-for="у приложения на TimelineItem/ListItem"></div></td></tr>
+        <tr class="cq" data-q="c-tabs" data-rec="Расширить"><th class="rowlabel">Tabs с «More»</th><td class="spec-cell"><div class="tabs-strip" style="max-inline-size:260px;overflow:hidden"><span class="on">Overview</span><span>Annotations</span><span>Fit</span><span>Standards…</span></div><span class="arrow">→</span><div class="tabs-strip" style="max-inline-size:260px"><span class="on">Overview</span><span>Annotations</span><span>Fit</span><span>More ▾</span></div><small class="cap2">scrollable уже есть; не хватает «More»</small></td><td><div class="choice" data-for="Tabs: overflow в меню More"></div></td></tr>
+        <tr class="cq" data-q="c-popover" data-rec="Расширить"><th class="rowlabel">Панель у колокольчика</th><td class="spec-cell"><span class="bell">🔔<b>4</b></span> <span class="mini-pop"><div>EN 13779 superseded · 2h</div><div>Review due · PRJ-031</div><div>New item in HVAC</div></span><small class="cap2">в бандле Popover нельзя открыть: нет пропа open, только метод toggle()</small></td><td><div class="choice" data-for="Popover-обёртка: open / trigger"></div></td></tr>
+        <tr class="cq" data-q="c-sidefoot" data-rec="Расширить"><th class="rowlabel">SidenavFooter с контентом</th><td class="spec-cell"><div class="sfoot"><div>Language <span class="sel-mini">EN ▾</span></div><div>Units <span class="sel-mini">SI ▾</span></div><div>Sanne de Vries</div></div><small class="cap2">состав фиксирован, ng-content нет</small></td><td><div class="choice" data-for="SidenavFooter: проецируемый слот"></div></td></tr>
+        <tr class="cq" data-q="c-media" data-rec="Компонент в DS"><th class="rowlabel">Thumbnail / Media</th><td class="spec-cell"><div class="thumb"><span class="b info tag-o">DWG</span><svg viewBox="0 0 100 60"><rect x="5" y="5" width="90" height="50" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/><line x1="40" y1="5" x2="40" y2="55" stroke="currentColor" opacity=".4"/><line x1="40" y1="30" x2="95" y2="30" stroke="currentColor" opacity=".4"/></svg><div class="capx">AHU plant room · 4:3</div></div><small class="cap2">нет; в todo «Image / lightbox, спроса нет» - теперь спрос есть</small></td><td><div class="choice" data-for="Новый ds-media: соотношение сторон, подпись, оверлей-метки, плейсхолдер"></div></td></tr>
+        <tr class="cq" data-q="c-range" data-rec="Рецепт"><th class="rowlabel">RangeInput</th><td class="spec-cell"><div class="range">Supply air <span class="inx">8 000 <i>m³/h</i></span> – <span class="inx">14 000 <i>m³/h</i></span></div><small class="cap2">FieldGroup + Input suffix, или Slider range</small></td><td><div class="choice" data-for="рецепт min-max с единицами"></div></td></tr>
+        <tr class="cq" data-q="c-file" data-rec="Рецепт"><th class="rowlabel">FileRow</th><td class="spec-cell"><div class="filerow"><span class="ft">PDF</span><span>EN 13779 ventilation.pdf<small>v3 · P. Bakker</small></span><span class="b success">Approved</span><span>⋯</span></div><small class="cap2">ListItem с leading-иконкой и trailing-действиями</small></td><td><div class="choice" data-for="рецепт на ListItem"></div></td></tr>
+        <tr class="cq" data-q="c-match" data-rec="Рецепт"><th class="rowlabel">MatchScore</th><td class="spec-cell"><div class="meter"><span>Fit to PRJ-2026-031</span><b>82%</b><div class="tr"><span style="inline-size:82%"></span><i style="inset-inline-start:70%"></i></div><small style="grid-column:1/-1;color:var(--text-tertiary)">Strong · порог 70% - у приложения</small></div><small class="cap2">Bar semantics="meter" + target</small></td><td><div class="choice" data-for="рецепт meter с подписью; пороги у приложения"></div></td></tr>
+        <tr class="cq" data-q="c-criteria" data-rec="Рецепт"><th class="rowlabel">CriteriaTable</th><td class="spec-cell"><table class="crit"><tr><td class="ok">✓</td><td>Air changes ≥ 20/h</td><td>24/h</td></tr><tr><td class="wn">⚠</td><td>Pressure cascade</td><td>+10 Pa</td></tr><tr><td class="no">✕</td><td>HEPA H14</td><td>H13</td></tr></table><small class="cap2">Table + колонка статуса</small></td><td><div class="choice" data-for="рецепт колонки ✓ ⚠ ✕"></div></td></tr>
+        <tr class="cq" data-q="c-lang" data-rec="Рецепт"><th class="rowlabel">Language / Unit switcher</th><td class="spec-cell"><span class="sel-mini" style="font-size:12px;padding:4px 8px">EN ▾</span> <span class="sel-mini" style="font-size:12px;padding:4px 8px">SI ▾</span><small class="cap2">Select sm или Menu</small></td><td><div class="choice" data-for="рецепт компактного переключателя"></div></td></tr>
+        <tr class="cq" data-q="c-flag" data-rec="У приложения"><th class="rowlabel">CountryFlag</th><td class="spec-cell"><span class="flagbox"><span class="flag nl"></span>NL <span class="flag de"></span>DE <span class="flag gb"></span>UK</span><small class="cap2">большой лицензируемый набор, живёт по своему графику</small></td><td><div class="choice" data-for="у приложения"></div></td></tr>
+        <tr class="cq" data-q="c-unit" data-rec="У приложения"><th class="rowlabel">UnitValue SI ↔ Imperial</th><td class="spec-cell"><span class="unitv">14 000 <small>m³/h</small></span><span class="arrow">↔</span><span class="unitv">8 240 <small>cfm</small></span><small class="cap2">показ уже закрыт Stat.unit / Input suffix, конвертация - логика предметной области</small></td><td><div class="choice" data-for="у приложения"></div></td></tr>
+        <tr class="cq" data-q="c-sheet" data-rec="У приложения"><th class="rowlabel">Превью чертежей</th><td class="spec-cell"><div class="thumb"><svg viewBox="0 0 100 60"><rect x="5" y="5" width="55" height="50" fill="none" stroke="currentColor" opacity=".55"/><rect x="60" y="5" width="35" height="25" fill="none" stroke="currentColor" opacity=".55"/><circle cx="30" cy="30" r="8" fill="none" stroke="currentColor" opacity=".55"/></svg><div class="capx">Plan · drawn by the app</div></div><small class="cap2">2D-планы и схемы рисует приложение токенами; общего примитива рисования в DS нет и не просили до сих пор</small></td><td><div class="choice" data-for="у приложения; Thumbnail / Media даст рамку, подпись и плейсхолдер"></div></td></tr>
+        <tr class="cq" data-q="c-alert" data-rec="У приложения"><th class="rowlabel">AlertCard / ActivityItem</th><td class="spec-cell"><div class="actrow"><span class="dt"></span><span><b>Standards → HVAC Delft</b><br>EN 13779 superseded by EN 16798 · impact 3 projects<br><small>SLA 5 days · 2h ago</small></span></div><small class="cap2">TimelineItem + гайд Activity stream; поля SLA и «откуда → куда» предметные</small></td><td><div class="choice" data-for="у приложения на TimelineItem/ListItem"></div></td></tr>
       </tbody>
     </table>
   </section>
