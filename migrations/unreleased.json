@@ -71,6 +71,10 @@
     {
       "text": "ds-chart draws a held category's pin at the head of the reading its panel opens over instead of at the plot's foot (over a column too short to hold it, with the panel lifted over the disc), and paints its hover band (--ds-chart-hover-bg-color) under a pin only where the pointer is; ds-bar-chart draws a held bar's pin at the middle of the bar instead of its start.",
       "verify": "pin a category in a composed ds-chart and a row in a ds-bar-chart, move the pointer off the plot, and confirm the pin sits right under the panel and no band stays tinted."
+    },
+    {
+      "text": "ds-banner centres its icon on the capitals of the title and body instead of on their line boxes, and drops the title-to-body gap when there is no title, so a banner with no title and a body of more than one line is up to 4px shorter; every other banner keeps its height.",
+      "verify": "open a compact and a regular ds-banner with body text and no title, and confirm the icon's middle sits level with the middle of the capital letters, not above them."
     }
   ]
 }
