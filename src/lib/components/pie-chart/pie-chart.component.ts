@@ -6,8 +6,10 @@ import type {
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   TemplateRef,
   ViewEncapsulation,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   contentChild,
@@ -15,7 +17,10 @@ import {
   numberAttribute,
   output,
   signal,
+  untracked,
+  viewChild,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import {
   CHART_SERIES_COLORS,
   chartDwell,
@@ -26,6 +31,7 @@ import {
   rovingMarks,
   chartRenderGate,
   DsChartBase,
+  watchElementWidth,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
@@ -42,6 +48,7 @@ import type {
 import {
   DEFAULT_INNER_RADIUS,
   arcPath,
+  fitCenterValue,
   groupSmallest,
   holeFraction,
   paletteIndex,
@@ -51,18 +58,34 @@ import {
   ringCoords,
   sliceArcs,
 } from './pie-chart.math';
-import type { PieChartSlice } from './pie-chart.types';
+import type { CenterValueFit } from './pie-chart.math';
+import type { PieChartCenterPlacement, PieChartSlice } from './pie-chart.types';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 
 const RING_VIEW_BOX_SIZE = 100;
 const RING_CENTER = RING_VIEW_BOX_SIZE / 2;
 const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
+// The value keeps a margin from the inner edge of the ring.
+const CENTER_VALUE_HOLE_SHARE = 0.9;
+
+// One canvas and one font-load wait for every pie chart on the page.
+let measureContext: CanvasRenderingContext2D | null | undefined;
+const fontsLoaded = signal(false);
+let fontsWatched = false;
+
+function watchFontsOnce(): void {
+  if (!fontsWatched) {
+    fontsWatched = true;
+    void document.fonts?.ready.then(() => fontsLoaded.set(true));
+  }
+}
 
 @Component({
   selector: 'ds-pie-chart',
   standalone: true,
   imports: [
+    NgTemplateOutlet,
     SkeletonComponent,
     ChartTooltipDirective,
     ChartStatesComponent,
@@ -89,6 +112,14 @@ export class PieChartComponent
 
   /** Caption under the centre value. */
   readonly centerLabel = input<string | null>(null);
+
+  /** When the sum does not fit the hole even at `--ds-pie-chart-center-value-min-font-size`, prints
+   *  it in the `'tick'` form of `valueFormat` (`32.4K`). A `centerValue` string is never shortened. */
+  readonly centerCompact = input(true, { transform: booleanAttribute });
+
+  /** `'below'` prints the value and its caption under the ring at full size, never shrunk or
+   *  shortened. */
+  readonly centerPlacement = input<PieChartCenterPlacement>('inside');
 
   /** Legend placement, logical so it flips in right-to-left. */
   readonly legend = input<'end' | 'bottom' | 'none'>('end');
@@ -343,6 +374,74 @@ export class PieChartComponent
       this.centerValue() ?? this.valueFormatResolved()(this.total(), 'tooltip'),
   );
 
+  private readonly compactCenterValue = computed(() =>
+    this.centerCompact() && this.centerValue() === null
+      ? this.valueFormatResolved()(this.total(), 'tick')
+      : null,
+  );
+
+  private readonly ringElement = viewChild<ElementRef<HTMLElement>>('ring');
+  private readonly centerValueElement =
+    viewChild<ElementRef<HTMLElement>>('centerValue');
+
+  private readonly centerFit = signal<CenterValueFit | null>(null, {
+    equal: (previous, next) =>
+      previous?.text === next?.text && previous?.fontSize === next?.fontSize,
+  });
+
+  protected readonly centerText = computed(
+    () => this.centerFit()?.text ?? this.resolvedCenterValue(),
+  );
+
+  protected readonly centerFontSize = computed(
+    () => this.centerFit()?.fontSize ?? null,
+  );
+
+  private readonly ringWidth = signal(0);
+
+  private readonly fitsInside = computed(
+    () => this.hole() > 0 && this.centerPlacement() === 'inside',
+  );
+
+  private fitCenter(
+    value: HTMLElement,
+    ringWidth: number,
+    full: string,
+    compact: string | null,
+    hole: number,
+  ): CenterValueFit | null {
+    const style = getComputedStyle(value);
+    const maxFontSize = parseFloat(
+      style.getPropertyValue('--_pie-chart-center-value-max-font-size'),
+    );
+    const minFontSize = parseFloat(
+      style.getPropertyValue('--_pie-chart-center-value-min-font-size'),
+    );
+    measureContext ??= document.createElement('canvas').getContext('2d');
+    const context = measureContext;
+    if (!context || !(maxFontSize > 0) || !(minFontSize > 0)) {
+      return null;
+    }
+    context.font = `${style.fontWeight} ${maxFontSize}px ${style.fontFamily}`;
+    const measure = (text: string) => ({
+      text,
+      width: context.measureText(text).width,
+    });
+    const availableWidth = ringWidth * hole * CENTER_VALUE_HOLE_SHARE;
+    const floor = Math.min(minFontSize, maxFontSize);
+    const measuredFull = measure(full);
+    const fitsAtFloor =
+      (measuredFull.width * floor) / maxFontSize <= availableWidth;
+
+    return fitCenterValue(
+      measuredFull,
+      compact === null || fitsAtFloor ? null : measure(compact),
+      availableWidth,
+      maxFontSize,
+      floor,
+    );
+  }
+
   protected readonly accessibleName = computed(
     () =>
       this.summary() ??
@@ -359,6 +458,34 @@ export class PieChartComponent
   );
 
   protected readonly hole = computed(() => holeFraction(this.innerRadius()));
+
+  // Only the ring is observed, and only while the value sits inside it: its box is set by
+  // `--ds-pie-chart-size` alone, so the fitted value never resizes what is observed.
+  private readonly watchRing = afterRenderEffect((onCleanup) => {
+    const ring = this.ringElement()?.nativeElement;
+    if (ring && this.fitsInside()) {
+      onCleanup(watchElementWidth(ring, this.ringWidth));
+    }
+  });
+
+  // Refits once per change of what decides the fit; an unchanged ring width writes nothing.
+  private readonly refit = afterRenderEffect(() => {
+    const value = this.centerValueElement()?.nativeElement;
+    const ringWidth = this.ringWidth();
+    const full = this.resolvedCenterValue();
+    const compact = this.compactCenterValue();
+    const hole = this.hole();
+    fontsLoaded();
+    if (!value || !this.fitsInside() || ringWidth === 0) {
+      this.centerFit.set(null);
+
+      return;
+    }
+    watchFontsOnce();
+    this.centerFit.set(
+      untracked(() => this.fitCenter(value, ringWidth, full, compact, hole)),
+    );
+  });
 
   protected entryLabel(entry: {
     slice: PieChartSlice;

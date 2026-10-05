@@ -776,6 +776,7 @@
   "--ds-pie-chart-legend-row-gap": "Vertical gap between legend rows, and the wrap gap when the legend sits below the ring (default --space-2).",
   "--ds-pie-chart-legend-row-height": "Height of one legend row in the loading skeleton only (default 16px); a real row is sized by its own text.",
   "--ds-pie-chart-outline-width": "Border thickness of the placeholder ring drawn while the chart is empty or errored, and over the real ring when every slice is zero (defaults to --border-width-strong plus --border-width-default); the hole's inner border scales from it by the hole fraction.",
+  "--ds-pie-chart-center-value-min-font-size": "Smallest size the centre value shrinks to in a narrow hole (default --font-size-s, 14px). Past it the sum prints in its compact form, unless centerCompact is off.",
   "--ds-pie-chart-size": "Outer diameter of the ring, on both axes (default 180px). The hole is a fraction of it, set by [hole] on the component rather than by a token.",
   "--ds-pie-chart-swatch-size": "Side of the round colour chip in a legend row, on both axes (default 10px).",
   "--ds-popover-arrow-size": "Popover pointer arrow size (7px).",

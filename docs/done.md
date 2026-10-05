@@ -4,6 +4,17 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The pie chart's centre value fits the hole (2026-10-05)
+
+- `ds-pie-chart` keeps the centre value on one line: it shrinks to the hole down to
+  `--ds-pie-chart-center-value-min-font-size` (default `--font-size-s`), then prints the sum in the
+  `'tick'` form of `valueFormat`; `[centerCompact]="false"` keeps the full sum at the floor, and
+  `centerPlacement="below"` prints value and caption under the ring at full size
+  (`src/lib/components/pie-chart/pie-chart.component.ts`, `fitCenterValue` in `pie-chart.math.ts`).
+- The fit runs only when what decides it changes: the ring's width through the charts' shared
+  `ResizeObserver` (`watchElementWidth`), observed only while the value sits inside, plus the text,
+  the hole and the font load. Stas picked option K in deck `pie-chart-center-value`.
+
 ## Content without a slot renders in the overlay body (2026-10-05)
 
 - `ds-modal`, `ds-modal-card` and `ds-drawer` render content without a slot attribute in the body

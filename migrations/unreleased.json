@@ -80,7 +80,7 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent, DrawerComponent",
+      "old": "AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent, DrawerComponent, PieChartComponent",
       "new": null,
       "surface": "typescript",
       "searchHints": [
@@ -90,6 +90,7 @@
         "extends ModalComponent",
         "extends ModalCardComponent",
         "extends DrawerComponent",
+        "extends PieChartComponent",
         "bandPinY("
       ],
       "detect": [
@@ -99,18 +100,24 @@
         "extends ModalComponent",
         "extends ModalCardComponent",
         "extends DrawerComponent",
+        "extends PieChartComponent",
         "bandPinY("
       ],
       "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
-      "appliesWhen": "Only a class of yours that extends AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent or DrawerComponent. Template users of ds-avatar-group, ds-chart, dsColumnSeries, ds-modal, ds-modal-card and ds-drawer need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent, DrawerComponent or PieChartComponent. Template users of ds-avatar-group, ds-chart, dsColumnSeries, ds-modal, ds-modal-card, ds-drawer and ds-pie-chart need nothing; subclassing a DS component is unsupported.",
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it (TS2415); only a rename does.",
       "restore": null,
-      "verify": "The app builds with no TS2415 or TS4114 against AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent or DrawerComponent, and no TS2554 or TS2425 on bandPinY.",
-      "note": "AvatarGroupComponent gained the private avatars; ChartComponent the protected highlightBand and tooltipGap and the private bandAt, hoveredCategory and pinRise; ColumnSeriesComponent the private pinYOf; ModalComponent, ModalCardComponent and DrawerComponent the private unslotted. ChartComponent's protected bandPinY is now a computed signal read as bandPinY(), where it was a method taking the band."
+      "verify": "The app builds with no TS2415 or TS4114 against AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent, DrawerComponent or PieChartComponent, and no TS2554 or TS2425 on bandPinY.",
+      "note": "AvatarGroupComponent gained the private avatars; ChartComponent the protected highlightBand and tooltipGap and the private bandAt, hoveredCategory and pinRise; ColumnSeriesComponent the private pinYOf; ModalComponent, ModalCardComponent and DrawerComponent the private unslotted; PieChartComponent the inputs centerCompact and centerPlacement, the protected centerText and centerFontSize, and the private compactCenterValue, ringElement, centerValueElement, centerFit, ringWidth, fitsInside, fitCenter, watchRing and refit. ChartComponent's protected bandPinY is now a computed signal read as bandPinY(), where it was a method taking the band."
     }
   ],
   "deleteList": [],
   "informational": [
+    {
+      "text": "ds-pie-chart no longer wraps its centre value: it stays on one line and shrinks to the hole, down to --ds-pie-chart-center-value-min-font-size (14px); past that floor the computed sum prints in the 'tick' form of valueFormat (32.4K), unless [centerCompact]=\"false\". A centerValue string is shrunk but never shortened.",
+      "verify": "render a donut at --ds-pie-chart-size: 120px with innerRadius 0.61 and a sum of 32,397, and confirm the value sits on one line inside the hole; at 90px with a sum of 1,234,567 it reads 1.2M."
+    },
+    "ds-pie-chart takes centerCompact (default true) and centerPlacement ('inside' | 'below', default 'inside'; type PieChartCenterPlacement), and the --ds-pie-chart-center-value-min-font-size token.",
     "--ds-topbar-crumb-text-color, --ds-topbar-crumb-hover-text-color, --ds-topbar-crumb-separator-icon-color, --ds-topbar-crumb-current-text-color, --ds-page-header-crumb-text-color and --ds-page-header-crumb-text-color-hover now recolour the projected ds-breadcrumbs, where they changed nothing; an app that set them sees those colours take effect.",
     "ds-bar-chart draws a row with a negative value as an empty track labelled with that value, where it drew a bar of the absolute value labelled 0.",
     "ds-button with routerLink or href, disabled and a disabledReason keeps a Tab stop (tabindex 0, role link) so the reason is announced; without disabledReason a disabled link-button still takes tabindex -1; a disabled routerLink button carries role link with or without a reason.",

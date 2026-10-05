@@ -4,8 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Число в кольце</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-05">
+<meta name="ds-deck-evidence" content="src/lib/components/pie-chart/pie-chart.component.ts:472 - CHANGELOG.md">
+<link rel="stylesheet" href="../ds.css">
 <style>
 :root {
   --bg: #f6f7f9; --surface: #ffffff; --text: #1b1f24; --muted: #5b6470; --border: #dde1e6;
@@ -99,12 +101,25 @@ summary { cursor: pointer; }
 .bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bar-bg); color: var(--bar-text); padding: 10px 16px; display: flex; gap: 12px; align-items: center; justify-content: center; }
 .bar code { font: 13px/1.4 ui-monospace, Consolas, monospace; overflow-wrap: anywhere; }
 .bar button { font: inherit; font-size: 13px; border: 1px solid currentColor; background: transparent; color: inherit; border-radius: 6px; padding: 4px 12px; cursor: pointer; flex-shrink: 0; }
+.decided { background: var(--surface); border: 2px solid var(--good-text); border-radius: 12px; padding: 14px 16px; margin: 0 0 16px; }
+.decided h2 { font-size: 17px; margin: 0 0 6px; }
+.decided p { margin: 0 0 6px; }
+.decided .evidence { color: var(--muted); font-size: 12px; margin: 0; }
+details.folded > summary { font-weight: 600; margin-bottom: 12px; }
 </style>
 </head>
 <body>
 <main>
   <h1>Число в центре кольца</h1>
-  <p class="chat">Ответ нести в чат: «Acc2 · pp-review: ревью тикетов по очереди»</p>
+  <div class="decided">
+    <h2>Решено: адаптивная лестница, вариант K</h2>
+    <p>Число в центре не переносится. Шрифт уменьшается под дырку до <code>--ds-pie-chart-center-value-min-font-size</code> (14px); если и так не влезает, сумма печатается в форме <code>'tick'</code> из <code>valueFormat</code> (32.4K); это выключается через <code>[centerCompact]="false"</code>. Строку из <code>centerValue</code> компонент только уменьшает. <code>centerPlacement="below"</code> выносит число под кольцо в полный размер, без подгонки.</p>
+    <p>Подгонка запускается только при изменении того, что её решает: ширины кольца (общий для всех чартов <code>ResizeObserver</code>, только пока число внутри), текста, дырки и загрузки шрифтов.</p>
+    <p class="evidence">2026-10-05 · src/lib/components/pie-chart/pie-chart.component.ts:472 - CHANGELOG.md</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
   <p class="lead">Кольца отрисованы с CSS из <code>ds-pie-chart</code> (Mulish 700 22px, дырка 0.61, как в ECM на Microsites &amp; CTA). Метка под каждым кольцом посчитана в браузере: число строк и вылезает ли число за дырку. Кликни вариант, чтобы выбрать.</p>
   <p class="lead"><b>Обязательное</b> (первая пилюля варианта, посчитана по меткам): число не рвётся между цифрами, не заходит на кольцо, точное значение где-то доступно. <b>Вкусовое</b> (остальные пилюли): один шрифт у соседних карточек, точность прямо в центре, раскладка не прыгает, без JS.</p>
 
@@ -133,8 +148,9 @@ summary { cursor: pointer; }
     <summary>Как считаются метки</summary>
     <p>«1 строка / 2 строки»: число прямоугольников текста у значения. «Вылезает»: ширина числа больше диаметра дырки (размер × 0.61), то есть цифры заходят на цветное кольцо; ореол (text-shadow) сохраняет читаемость, но выглядит хуже. Блок центра в DS шире дырки: max(56%, дырка × 70%), поэтому до 56% число может стоять на кольце и сейчас.</p>
   </details>
+  </details>
 </main>
-<div class="bar"><span class="bar-chat">чат «Acc2 · pp-review: ревью тикетов по очереди»</span><code id="out">Вариант не выбран</code><button id="copy" type="button">Копировать</button></div>
+<div class="bar"><code id="out">Вариант не выбран</code><button id="copy" type="button">Копировать</button></div>
 
 <script>
 const SIZES = [90, 110, 130, 160, 200];
@@ -333,7 +349,8 @@ function render() {
 }
 document.getElementById('copy').addEventListener('click', () => navigator.clipboard?.writeText(out.textContent));
 
-document.fonts.ready.then(() => {
+// The variants sit in the closed accordion and have no boxes there, so they are measured on first open.
+const measureAll = () => {
   for (const sec of root.children) {
     const v = VARIANTS.find((x) => x.id === sec.dataset.id);
     for (const cell of sec.querySelectorAll('.cell')) {
@@ -359,6 +376,14 @@ document.fonts.ready.then(() => {
   for (const id of ['play-size', 'play-value', 'play-compact', 'play-below']) document.getElementById(id).addEventListener('input', update);
   update();
   render();
+};
+const folded = document.querySelector('details.folded');
+let measured = false;
+folded.addEventListener('toggle', () => {
+  if (folded.open && !measured) {
+    measured = true;
+    document.fonts.ready.then(measureAll);
+  }
 });
 </script>
 </body>

@@ -17,6 +17,18 @@ const SPECIMEN_SLICES: readonly PieChartSlice[] = [
   { id: 'starter', label: 'Starter', value: 1290 },
 ];
 
+const VISIT_SLICES: readonly PieChartSlice[] = [
+  { id: 'email', label: 'Email link', value: 28510 },
+  { id: 'qr', label: 'QR scan', value: 2591 },
+  { id: 'purl', label: 'Personal URL', value: 1296 },
+];
+
+const LARGE_SLICES: readonly PieChartSlice[] = [
+  { id: 'email', label: 'Email link', value: 1086419 },
+  { id: 'qr', label: 'QR scan', value: 98765 },
+  { id: 'purl', label: 'Personal URL', value: 49383 },
+];
+
 const ONE_SLICE: readonly PieChartSlice[] = [
   { id: 'enterprise', label: 'Enterprise', value: 11860 },
 ];
@@ -90,6 +102,10 @@ export class PieChartSection {
     signal<readonly PieChartSlice[]>(SPECIMEN_SLICES);
   protected readonly centerValueSlices =
     signal<readonly PieChartSlice[]>(SPECIMEN_SLICES);
+  protected readonly visitSlices =
+    signal<readonly PieChartSlice[]>(VISIT_SLICES);
+  protected readonly largeSlices =
+    signal<readonly PieChartSlice[]>(LARGE_SLICES);
   protected readonly slotSlices = signal<readonly PieChartSlice[]>(SLOT_SLICES);
   protected readonly dataTableSlices =
     signal<readonly PieChartSlice[]>(SPECIMEN_SLICES);

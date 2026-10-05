@@ -172,6 +172,89 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Centre value fit
+  </h3>
+
+  <p class="block-desc t-s">
+    The value never wraps. Wider than the hole, it shrinks to fit, down to
+    <code class="t-mono-inline">
+      --ds-pie-chart-center-value-min-font-size
+    </code>; past that floor the sum prints in its
+    <code class="t-mono-inline">
+      'tick'
+    </code> form unless
+    <code class="t-mono-inline">
+      [centerCompact]="false"
+    </code>. A
+    <code class="t-mono-inline">
+      centerValue
+    </code> string is never shortened.
+    <code class="t-mono-inline">
+      centerPlacement="below"
+    </code> prints the value under the ring at full size.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-pie-chart
+        style="--ds-pie-chart-size: 120px"
+        centerLabel="visits"
+        legend="none"
+        dataTable="none"
+        [innerRadius]="0.61"
+        [data]="visitSlices()" />
+
+      <div class="state-cell-label">
+        120px ring - the value shrinks to the hole
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-pie-chart
+        style="--ds-pie-chart-size: 90px"
+        centerLabel="visits"
+        legend="none"
+        dataTable="none"
+        [innerRadius]="0.61"
+        [data]="largeSlices()" />
+
+      <div class="state-cell-label">
+        90px ring - past the floor, the compact form
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-pie-chart
+        style="--ds-pie-chart-size: 90px"
+        centerLabel="visits"
+        legend="none"
+        dataTable="none"
+        [centerCompact]="false"
+        [innerRadius]="0.61"
+        [data]="largeSlices()" />
+
+      <div class="state-cell-label">
+        Compact off - the full value at the floor
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-pie-chart
+        style="--ds-pie-chart-size: 120px"
+        centerLabel="visits"
+        centerPlacement="below"
+        legend="none"
+        dataTable="none"
+        [innerRadius]="0.61"
+        [data]="largeSlices()" />
+
+      <div class="state-cell-label">
+        Below the ring - full size, never shortened
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Legend length
   </h3>
 

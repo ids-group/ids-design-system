@@ -5877,6 +5877,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Outer diameter of the ring, on both axes (default 180px). The hole is a fraction of it, set by [hole] on the component rather than by a token."
       },
       {
+        "name": "--ds-pie-chart-center-value-min-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Smallest size the centre value shrinks to in a narrow hole (default --font-size-s, 14px). Past it the sum prints in its compact form, unless centerCompact is off."
+      },
+      {
         "name": "--ds-pie-chart-gap",
         "value": "var(--space-5)",
         "notes": "Space between the ring and its legend, whichever side the legend sits on (default --space-5)."

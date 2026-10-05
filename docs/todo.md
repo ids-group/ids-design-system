@@ -14,16 +14,15 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**105 open — 0 P1, 6 P2, 99 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**104 open — 0 P1, 5 P2, 99 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 6
+### P2 — 5
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Open verdicts, each drawn in a deck**
-  - How `ds-pie-chart` keeps a centre value wider than the hole on one line
   - Six Unreleased behaviour changes shipped without a choice between alternatives
 - **Tooling**
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
@@ -883,13 +882,6 @@ that already existed, because both are the kind of ask that comes back.
 
 ## Open verdicts, each drawn in a deck
 
-- [ ] **[P2] How `ds-pie-chart` keeps a centre value wider than the hole on one line.** Drawn in
-  deck `pie-chart-center-value`: a consumer's donut at about 120px (`innerRadius` 0.61) splits `32,397`
-  into `32,39` over `7`, because `.center` carries `overflow-wrap: anywhere`. Eleven options drawn at
-  90-200px. Option K (the value shrinks to the hole down to `--ds-pie-chart-center-value-min-font-size`,
-  then prints `32.4K` unless `[centerCompact]="false"`; `centerPlacement="below"` apart) is built on
-  `fix/pie-chart-center-value-wrap`, not merged, and waits on the pick.
-
 - [ ] **[P2] Six Unreleased behaviour changes shipped without a choice between alternatives.** Drawn in
   deck `unasked-decisions`: `provideDsTheme` keeps a preset `data-theme`, `dsModalConfirm`, avatar-group
   hides past `max`, a disabled link with `disabledReason` keeps a Tab stop, `provideDsIcons` calls merge,
@@ -959,7 +951,7 @@ file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
 | --- | --- | --- | --- |
-| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 38 decisions in six, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 37 decisions in six, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 | 2 | `2-color-engine-derivation` | One source token per role, derived. | the colour-engine P3 |
 | 3 | `3-color-engine-relative` | The prototype half of the same question. | as above |
 | 4 | `4-interaction-formula` | The pressed recipe of the tonal button, and of the danger menu item. | the pressed-danger-menu P3 and the `.ds-interactive` P3 |
@@ -974,7 +966,6 @@ file** — the number moves; cite the filename.
 | 13 | `13-chart-motion-extras` | Which of ten motion and hover additions to build if a motion level is chosen in `chart-motion`; all on by default, each one live. | the chart-motion Decision |
 | 14 | `14-unread-tokens` | Which public tokens the library never reads to remove: none, the 51 dead component and pattern sizes, or all 121. | none |
 | 15 | `15-unasked-decisions` | Six Unreleased behaviour changes made without a choice: keep, adjust or revert each. | none |
-| 16 | `16-pie-chart-center-value` | How the pie chart keeps a wide centre value on one line: eleven options, each drawn at five ring sizes, with a live playground. | the pie-chart centre-value P2 |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -986,6 +977,8 @@ same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was 
 **Closed on 2026-09-19 and moved to `implemented/`:** the chart lane in one pass - `chart-composition-model` (marks project into the container, one `<svg>` per chart), `chart-phase-2-marks` (the whole Phase 2 layer built), `chart-dual-axis` (a second axis rises only when a mark contributes values to it), `chart-axis-mode-names` (`yAxisMode` renamed), `chart-area-mode-or-component` (a mode on the line chart, not its own tag), `chart-rescale-on-hide` (the domain drops a hidden series) - plus `docs-chapter-nav`.
 
 **Closed on 2026-09-21 and moved to `implemented/`:** `chart-palette-v2` - the two greens moved apart by one token (`--chart-categorical-6`, 152deg to 148deg), and `tools/check-chart-palette-separation.mjs` went into `lint:all` holding the 6 floor under normal vision. Colour-vision deficiency is reported by that gate and not enforced: Stas confirmed the system never took that commitment on, which is why the full repaint was declined.
+
+**Closed on 2026-10-05 and moved to `implemented/`:** `pie-chart-center-value` - option K: the centre value shrinks to the hole down to `--ds-pie-chart-center-value-min-font-size`, then prints the `'tick'` form unless `[centerCompact]="false"`; `centerPlacement="below"` prints it under the ring.
 
 **Ranks 1-10 have a twin on this board, so one answer closes two lines** — which is what
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete

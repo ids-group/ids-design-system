@@ -81,6 +81,45 @@ export function resolveInnerRadius(
   return outerRadius * holeFraction(innerRadius);
 }
 
+/** A centre-value text with its width at the largest font size. */
+export interface MeasuredText {
+  readonly text: string;
+  readonly width: number;
+}
+
+export interface CenterValueFit {
+  readonly text: string;
+  readonly fontSize: number;
+}
+
+/** The largest font size, between `minFontSize` and `maxFontSize`, at which the value fits
+ *  `availableWidth`; past the floor, the compact text in its place when there is one. */
+export function fitCenterValue(
+  full: MeasuredText,
+  compact: MeasuredText | null,
+  availableWidth: number,
+  maxFontSize: number,
+  minFontSize: number,
+): CenterValueFit {
+  const sizeFor = (width: number) =>
+    width <= availableWidth
+      ? maxFontSize
+      : (maxFontSize * availableWidth) / width;
+
+  const fullSize = sizeFor(full.width);
+  if (fullSize >= minFontSize) {
+    return { text: full.text, fontSize: fullSize };
+  }
+  if (compact && compact.text !== full.text) {
+    return {
+      text: compact.text,
+      fontSize: Math.max(sizeFor(compact.width), minFontSize),
+    };
+  }
+
+  return { text: full.text, fontSize: minFontSize };
+}
+
 export function paletteIndex(
   slot: number | undefined,
   index: number,

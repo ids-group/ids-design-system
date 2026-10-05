@@ -49,74 +49,17 @@
     [dsChartTooltipPinned]="activeMark.pinned()"
     [dsChartTooltipOrigin]="activeMark.origin()"
     [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
-    <div
-      class="ring"
-      [class.ring-outline]="total() === 0">
-      <svg
-        class="ring-svg"
-        [class.dims-others]="dimOthers()"
-        [attr.aria-hidden]="ringCarriesTheRoute() ? null : true"
-        [attr.viewBox]="viewBox">
-        @for (entry of slices(); track entry.slice.id; let index = $index) {
-          <path
-            class="slice"
-            [class.interactive]="interactive()"
-            [class.pins]="defaults.pinOnClick()"
-            [class.is-active]="activeMark.index() === index"
-            [class.is-pinned]="
-              activeMark.pinned() && activeMark.index() === index
-            "
-            [class.is-dimmed]="isDimmed(index)"
-            [class.focusable]="ringCarriesTheRoute()"
-            [attr.d]="entry.path"
-            [style.fill]="entry.color"
-            [attr.role]="ringCarriesTheRoute() ? 'button' : null"
-            [attr.tabindex]="
-              ringCarriesTheRoute()
-                ? index === roving.tabStop()
-                  ? 0
-                  : -1
-                : null
-            "
-            [attr.data-mark-index]="index"
-            [attr.aria-label]="ringCarriesTheRoute() ? entryLabel(entry) : null"
-            (pointerenter)="activeMark.enter(index, $event)"
-            (pointerleave)="activeMark.leave()"
-            (focus)="onMarkFocus(index, $event)"
-            (blur)="activeMark.leave()"
-            (keydown)="onMarkNavigation($event, index, '.ring-svg')"
-            (click)="onMarkClick(entry.slice, index, $event)"
-            (keydown.enter)="onSliceKey(entry.slice, $event)"
-            (keydown.space)="onSliceKey(entry.slice, $event)">
-          </path>
-        }
-      </svg>
+    @if (hole() > 0 && centerPlacement() === 'below') {
+      <div class="ring-stack">
+        <ng-container [ngTemplateOutlet]="ringBlock" />
 
-      @if (hole() > 0) {
-        <div class="center">
-          <span class="center-value">
-            {{ resolvedCenterValue() }}
-          </span>
-
-          @if (centerLabel()) {
-            <span class="center-label">
-              {{ centerLabel() }}
-            </span>
-          }
+        <div class="center-below">
+          <ng-container [ngTemplateOutlet]="centerContent" />
         </div>
-      }
-
-      @if (pinnedEntry(); as entry) {
-        <span
-          class="pin-marker"
-          [style.left.%]="entry.center.x"
-          [style.top.%]="entry.center.y">
-          <ds-icon
-            name="pin"
-            [size]="14" />
-        </span>
-      }
-    </div>
+      </div>
+    } @else {
+      <ng-container [ngTemplateOutlet]="ringBlock" />
+    }
 
     @if (legend() !== 'none') {
       <ul class="legend">
@@ -189,4 +132,79 @@
       {{ text }}
     </p>
   </div>
+</ng-template>
+
+<ng-template #ringBlock>
+  <div
+    #ring
+    class="ring"
+    [class.ring-outline]="total() === 0">
+    <svg
+      class="ring-svg"
+      [class.dims-others]="dimOthers()"
+      [attr.aria-hidden]="ringCarriesTheRoute() ? null : true"
+      [attr.viewBox]="viewBox">
+      @for (entry of slices(); track entry.slice.id; let index = $index) {
+        <path
+          class="slice"
+          [class.interactive]="interactive()"
+          [class.pins]="defaults.pinOnClick()"
+          [class.is-active]="activeMark.index() === index"
+          [class.is-pinned]="
+            activeMark.pinned() && activeMark.index() === index
+          "
+          [class.is-dimmed]="isDimmed(index)"
+          [class.focusable]="ringCarriesTheRoute()"
+          [attr.d]="entry.path"
+          [style.fill]="entry.color"
+          [attr.role]="ringCarriesTheRoute() ? 'button' : null"
+          [attr.tabindex]="
+            ringCarriesTheRoute() ? (index === roving.tabStop() ? 0 : -1) : null
+          "
+          [attr.data-mark-index]="index"
+          [attr.aria-label]="ringCarriesTheRoute() ? entryLabel(entry) : null"
+          (pointerenter)="activeMark.enter(index, $event)"
+          (pointerleave)="activeMark.leave()"
+          (focus)="onMarkFocus(index, $event)"
+          (blur)="activeMark.leave()"
+          (keydown)="onMarkNavigation($event, index, '.ring-svg')"
+          (click)="onMarkClick(entry.slice, index, $event)"
+          (keydown.enter)="onSliceKey(entry.slice, $event)"
+          (keydown.space)="onSliceKey(entry.slice, $event)">
+        </path>
+      }
+    </svg>
+
+    @if (hole() > 0 && centerPlacement() === 'inside') {
+      <div class="center">
+        <ng-container [ngTemplateOutlet]="centerContent" />
+      </div>
+    }
+
+    @if (pinnedEntry(); as entry) {
+      <span
+        class="pin-marker"
+        [style.left.%]="entry.center.x"
+        [style.top.%]="entry.center.y">
+        <ds-icon
+          name="pin"
+          [size]="14" />
+      </span>
+    }
+  </div>
+</ng-template>
+
+<ng-template #centerContent>
+  <span
+    #centerValue
+    class="center-value"
+    [style.font-size.px]="centerFontSize()">
+    {{ centerText() }}
+  </span>
+
+  @if (centerLabel()) {
+    <span class="center-label">
+      {{ centerLabel() }}
+    </span>
+  }
 </ng-template>
