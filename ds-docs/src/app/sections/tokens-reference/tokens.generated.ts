@@ -114,6 +114,11 @@ export const SEMANTIC_TERTIARY: readonly ColourRow[] = [
 
 export const SEMANTIC_ERROR: readonly ColourRow[] = [
   {
+    "name": "--errorpage-body-maxw",
+    "value": "520px",
+    "notes": "520px — error page body max width."
+  },
+  {
     "name": "--error",
     "value": "var(--red-500)",
     "notes": "Destructive action fill, error border."
@@ -695,6 +700,21 @@ export const SEMANTIC_LINK: readonly ColourRow[] = [
 ];
 
 export const CHARTS: readonly ColourRow[] = [
+  {
+    "name": "--chart-empty-h",
+    "value": "160px",
+    "notes": "Chart empty-state placeholder height (160px)."
+  },
+  {
+    "name": "--chart-skeleton-h",
+    "value": "160px",
+    "notes": "Chart loading skeleton height (160px)."
+  },
+  {
+    "name": "--chart-legend-dot",
+    "value": "var(--icon-2xs)",
+    "notes": "Chart legend swatch dot size (defaults to --icon-2xs, showcase)."
+  },
   {
     "name": "--chart-categorical-1",
     "value": "hsl(  8deg 78% 58%)",
@@ -5170,6 +5190,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-menu-clip-radius",
         "value": "var(--radius-flat)",
         "notes": "Radius a ds-menu clips its rows to when it sits inside a rounded panel. Published by ds-popover as its own radius less the border it contains, so the rows stay concentric with the panel; a bare menu leaves it flat and rounds its edge rows from --ds-menu-radius instead."
+      },
+      {
+        "name": "--menu-minw",
+        "value": "200px",
+        "notes": "Menu panel minimum width (200px)."
+      },
+      {
+        "name": "--menu-sep-h",
+        "value": "var(--border-width-default)",
+        "notes": "Menu separator line thickness (var(--border-width-default))."
       }
     ]
   },
@@ -5427,6 +5457,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--modal-close-size",
         "value": "var(--hit-xs)",
         "notes": "Modal close button hit size (24px)."
+      },
+      {
+        "name": "--modal-enter-y",
+        "value": "var(--space-2)",
+        "notes": "Modal enter-transition vertical offset (8px)."
       }
     ]
   },
@@ -5704,6 +5739,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-page-header-title-gap",
         "value": "var(--space-1-5)",
         "notes": "Gap below title."
+      },
+      {
+        "name": "--page-header-sub-mt",
+        "value": "var(--space-1)",
+        "notes": "Page header subtitle top margin (4px)."
       }
     ]
   },
@@ -6856,6 +6896,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--switch-thumb-pad",
         "value": "2px",
         "notes": "Switch thumb inset from track edge (2px)."
+      },
+      {
+        "name": "--switch-thumb-travel",
+        "value": "16px",
+        "notes": "Switch thumb slide distance between off/on (16px)."
       }
     ]
   },
@@ -7826,9 +7871,19 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Tag icon/label gap (var(--space-1-5))."
       },
       {
+        "name": "--tag-close-size",
+        "value": "14px",
+        "notes": "Tag close button size (14px)."
+      },
+      {
         "name": "--tag-close-pad",
         "value": "2px",
         "notes": "Tag close button internal padding (2px)."
+      },
+      {
+        "name": "--tag-close-glyph",
+        "value": "var(--icon-xs)",
+        "notes": "Tag close icon size (var(--icon-xs), 12px)."
       }
     ]
   },
@@ -8142,6 +8197,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--toast-bar-w",
         "value": "3px",
         "notes": "Toast left accent bar width (3px)."
+      },
+      {
+        "name": "--toast-enter-y",
+        "value": "var(--space-1)",
+        "notes": "Toast enter-animation vertical offset (var(--space-1))."
       }
     ]
   },
@@ -8443,6 +8503,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "length"
   },
   {
+    "name": "--binpack-bay-h",
+    "value": "var(--hit-touch)",
+    "kind": "length"
+  },
+  {
     "name": "--brand-gray-0",
     "value": "#FFF",
     "kind": "color"
@@ -8510,6 +8575,51 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--bulk-bar-offset",
     "value": "var(--space-4)",
+    "kind": "length"
+  },
+  {
+    "name": "--calendar-bar-h",
+    "value": "var(--space-8)",
+    "kind": "length"
+  },
+  {
+    "name": "--calendar-bar-inset-y",
+    "value": "var(--space-2)",
+    "kind": "length"
+  },
+  {
+    "name": "--calendar-cell-min",
+    "value": "var(--hit-cozy)",
+    "kind": "length"
+  },
+  {
+    "name": "--calendar-cell-pad",
+    "value": "var(--space-1)",
+    "kind": "length"
+  },
+  {
+    "name": "--calendar-row-h",
+    "value": "var(--hit-touch)",
+    "kind": "length"
+  },
+  {
+    "name": "--calendar-rowlabel-w",
+    "value": "160px",
+    "kind": "length"
+  },
+  {
+    "name": "--cmdk-list-maxh",
+    "value": "var(--popover-maxh)",
+    "kind": "other"
+  },
+  {
+    "name": "--cmdk-w",
+    "value": "560px",
+    "kind": "length"
+  },
+  {
+    "name": "--compare-dt-w",
+    "value": "90px",
     "kind": "length"
   },
   {
@@ -8585,6 +8695,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--dl-spec-value-min-w",
     "value": "14rem",
+    "kind": "length"
+  },
+  {
+    "name": "--dodont-stage-minh",
+    "value": "100px",
     "kind": "length"
   },
   {
@@ -8733,6 +8848,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "length"
   },
   {
+    "name": "--field-num-stepper-w",
+    "value": "var(--space-8)",
+    "kind": "length"
+  },
+  {
     "name": "--field-pad-x",
     "value": "var(--space-3)",
     "kind": "length"
@@ -8743,8 +8863,38 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "other"
   },
   {
+    "name": "--field-select-pad-r",
+    "value": "var(--space-6)",
+    "kind": "length"
+  },
+  {
+    "name": "--field-textarea-min",
+    "value": "96px",
+    "kind": "length"
+  },
+  {
     "name": "--field-textarea-rows-min",
     "value": "60px",
+    "kind": "length"
+  },
+  {
+    "name": "--form-section-label-w",
+    "value": "280px",
+    "kind": "length"
+  },
+  {
+    "name": "--grid-cols-card-minh",
+    "value": "120px",
+    "kind": "length"
+  },
+  {
+    "name": "--grid-cols-card-thumb",
+    "value": "80px",
+    "kind": "length"
+  },
+  {
+    "name": "--grid-table-min",
+    "value": "220px",
     "kind": "length"
   },
   {
@@ -8766,6 +8916,16 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--icon-strong",
     "value": "var(--neutral-700)",
     "kind": "color"
+  },
+  {
+    "name": "--inline-edit-btn-size",
+    "value": "var(--hit-xs)",
+    "kind": "length"
+  },
+  {
+    "name": "--inline-edit-input-minw",
+    "value": "var(--space-20)",
+    "kind": "length"
   },
   {
     "name": "--kbd-pad-x",
@@ -8826,6 +8986,46 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--layer-tooltip",
     "value": "1600",
     "kind": "other"
+  },
+  {
+    "name": "--map-chip-inset",
+    "value": "var(--space-3)",
+    "kind": "length"
+  },
+  {
+    "name": "--map-chip-pad-x",
+    "value": "var(--space-2-5)",
+    "kind": "length"
+  },
+  {
+    "name": "--map-chip-pad-y",
+    "value": "var(--space-1-5)",
+    "kind": "length"
+  },
+  {
+    "name": "--matrix-cell-minw",
+    "value": "var(--space-16)",
+    "kind": "length"
+  },
+  {
+    "name": "--matrix-cell-pad-x",
+    "value": "var(--space-2-5)",
+    "kind": "length"
+  },
+  {
+    "name": "--matrix-cell-pad-y",
+    "value": "var(--space-2)",
+    "kind": "length"
+  },
+  {
+    "name": "--matrix-maxh",
+    "value": "360px",
+    "kind": "length"
+  },
+  {
+    "name": "--matrix-rowhdr-minw",
+    "value": "160px",
+    "kind": "length"
   },
   {
     "name": "--neutral-h",
@@ -8903,6 +9103,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "length"
   },
   {
+    "name": "--picker-offset",
+    "value": "var(--space-1)",
+    "kind": "length"
+  },
+  {
     "name": "--radio-bw-checked",
     "value": "var(--border-width-strong)",
     "kind": "color"
@@ -8920,6 +9125,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--radio-glyph-sm",
     "value": "14px",
+    "kind": "length"
+  },
+  {
+    "name": "--scroll-spec-h",
+    "value": "220px",
     "kind": "length"
   },
   {
@@ -8943,8 +9153,53 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "length"
   },
   {
+    "name": "--settings-nav-w",
+    "value": "220px",
+    "kind": "length"
+  },
+  {
+    "name": "--settings-row-label-gap",
+    "value": "var(--space-0-5)",
+    "kind": "length"
+  },
+  {
+    "name": "--settings-row-label-w",
+    "value": "240px",
+    "kind": "length"
+  },
+  {
+    "name": "--statemap-arrow-cap",
+    "value": "var(--space-1)",
+    "kind": "length"
+  },
+  {
+    "name": "--statemap-arrow-w",
+    "value": "var(--space-8)",
+    "kind": "length"
+  },
+  {
     "name": "--static-ink",
     "value": "#161A28",
     "kind": "color"
+  },
+  {
+    "name": "--tab-spec-dot-offset",
+    "value": "var(--border-width-strong)",
+    "kind": "color"
+  },
+  {
+    "name": "--tab-spec-maxw",
+    "value": "220px",
+    "kind": "length"
+  },
+  {
+    "name": "--wizard-body-minh",
+    "value": "200px",
+    "kind": "length"
+  },
+  {
+    "name": "--wizard-step-bar-w",
+    "value": "var(--space-8)",
+    "kind": "length"
   }
 ];
