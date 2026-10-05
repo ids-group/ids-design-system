@@ -39,3 +39,18 @@ kbd {
   margin: 0;
   color: var(--text-secondary);
 }
+
+.plain-confirm {
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--surface-default);
+  color: var(--text-primary);
+  font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
+  cursor: pointer;
+
+  &[aria-disabled='true'] {
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
+}

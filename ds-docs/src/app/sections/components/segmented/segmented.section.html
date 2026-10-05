@@ -15,10 +15,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Binds to a signal; the selected value is reflected below the control. Each
-    option takes an optional <code class="t-mono-inline">icon</code> and
-    <code class="t-mono-inline">disabled</code>. Arrow keys and Home/End move
-    the selection and skip disabled segments; the group is one tab stop.
+    Options take optional <code class="t-mono-inline">icon</code> and
+    <code class="t-mono-inline">
+      disabled
+    </code>. One tab stop; arrow keys and
+    Home/End move the selection, skipping disabled segments.
   </p>
 
   <div class="demo-panel">
@@ -35,19 +36,31 @@
   </div>
 
   <p class="block-desc t-s">
-    It is a form control: <code class="t-mono-inline">[formControl]</code> and
-    <code class="t-mono-inline">ngModel</code> bind, and
-    <code class="t-mono-inline">label</code>,
-    <code class="t-mono-inline">hint</code> and
-    <code class="t-mono-inline">error</code> render like any field.
+    A form control: binds <code class="t-mono-inline">[formControl]</code> and
+    <code class="t-mono-inline">
+      ngModel
+    </code>;
+    <code class="t-mono-inline">
+      label
+    </code>,
+    <code class="t-mono-inline">
+      hint
+    </code> and
+    <code class="t-mono-inline">
+      error
+    </code> render like any field.
   </p>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">joined</code> drops the padded track: segments
-    share edges, borders collapse into one hairline and only the outer ends
-    round - the shape for a row of filter chips. It needs
-    <code class="t-mono-inline">--ds-segmented-segment-border</code> set,
-    because the shared edge is that border.
+    <code class="t-mono-inline">
+      joined
+    </code> drops the padded track: segments
+    share one hairline edge and only the outer ends round, for a row of filter
+    chips. It requires
+    <code class="t-mono-inline">
+      --ds-segmented-segment-border
+    </code>, which
+    draws the shared edge.
   </p>
 
   <div
@@ -68,13 +81,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    A <code class="t-mono-inline">role="group"</code> wrapper, named by
-    <code class="t-mono-inline">ariaLabel</code>, that fuses projected
-    <code class="t-mono-inline">ds-button</code>s into one row of shared
-    edges. It holds no state; for an on/off action use
-    <code class="t-mono-inline">ds-toggle-button</code>
+    A <code class="t-mono-inline">role="group"</code> wrapper named by
+    <code class="t-mono-inline">
+      ariaLabel
+    </code>, fusing projected
+    <code class="t-mono-inline">
+      ds-button
+    </code>s into one row. Stateless; for
+    an on/off action use
+    <code class="t-mono-inline">
+      ds-toggle-button
+    </code>
     (<code class="t-mono-inline">[(pressed)]</code>, announced via
-    <code class="t-mono-inline">aria-pressed</code>).
+    <code class="t-mono-inline">
+      aria-pressed
+    </code>).
   </p>
 
   <div class="demo-panel">

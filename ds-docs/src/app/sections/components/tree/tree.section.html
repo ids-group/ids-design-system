@@ -3,8 +3,7 @@
   eyebrow="Components"
   title="Tree view">
   <span lede>
-    Hierarchical node tree for navigating nested structures such as file
-    systems, category trees, and organisation charts.
+    Navigates nested structures: file systems, categories, org charts.
   </span>
 
   <h3
@@ -15,17 +14,24 @@
 
   <p class="block-desc t-s">
     Pass <code class="t-mono-inline">TreeNode[]</code> (<code class="t-mono-inline">id</code>,
-    <code class="t-mono-inline">label</code>, <code class="t-mono-inline">icon?</code>,
-    <code class="t-mono-inline">children?</code>, <code class="t-mono-inline">disabled?</code>).
-    <code class="t-mono-inline">[(expandedIds)]</code> and
-    <code class="t-mono-inline">[(selectedId)]</code> are two-way;
-    <code class="t-mono-inline">(nodeSelected)</code> emits the whole node. Clicking a parent
-    selects and toggles it.
-  </p>
-
-  <p class="block-desc t-s">
-    One tab stop. ArrowUp/Down move, Home/End jump, ArrowRight expands then steps in, ArrowLeft
-    collapses then goes to the parent, Enter/Space select.
+    <code class="t-mono-inline">
+      label
+    </code>, <code class="t-mono-inline">icon?</code>,
+    <code class="t-mono-inline">
+      children?
+    </code>, <code class="t-mono-inline">disabled?</code>).
+    <code class="t-mono-inline">
+      [(expandedIds)]
+    </code> and
+    <code class="t-mono-inline">
+      [(selectedId)]
+    </code> are two-way;
+    <code class="t-mono-inline">
+      (nodeSelected)
+    </code> emits the whole node.
+    Clicking a parent selects and toggles it. One tab stop: ArrowUp/Down move,
+    Home/End jump, ArrowRight expands then steps in, ArrowLeft collapses then
+    goes to the parent, Enter/Space select.
   </p>
 
   <div class="demo-panel">

@@ -4,10 +4,10 @@
   title="Layout"
   [api]="false">
   <span lede>
-    Six min-width breakpoint tokens, one column-count per tier, content caps for
-    prose and page width. Page gutters scale with the viewport. Content caps at
-    <code class="t-mono-inline">--col-cap-content</code> (1280px) at every tier;
-    it first binds above 1280px.
+    Breakpoints, page grid and content caps. Content caps at
+    <code class="t-mono-inline">
+      --col-cap-content
+    </code> (1280px) at every tier.
   </span>
 
   <h3
@@ -17,12 +17,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    A custom property can't be read inside an
+    Custom properties do not work in
     <code class="t-mono-inline">
       &#64;media
     </code>
-    condition, so for media queries use the compile-time Sass aliases instead:
-    after
+    conditions; use the Sass aliases. After
     <code class="t-mono-inline">
       &#64;use 'styles/breakpoints' as bp
     </code> write
@@ -32,13 +31,15 @@
     <code class="t-mono-inline">
       bp.down(sm)
     </code> (<code class="t-mono-inline">up</code> inclusive,
-    <code class="t-mono-inline">down</code> exclusive), or read
+    <code class="t-mono-inline">
+      down
+    </code> exclusive), or read
     <code class="t-mono-inline">
       bp.$bp-md
     </code> directly. The
     <code class="t-mono-inline">
       --bp-*
-    </code> custom properties below stay for
+    </code> custom properties below are for
     regular rules and JS.
   </p>
 
@@ -74,18 +75,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    One column-count per breakpoint. Page gutters and margins scale with the
-    viewport. Use these tracks for the primary page grid — sub-regions inherit,
-    never invent a local grid.
-  </p>
-
-  <p class="block-desc t-s">
-    Apply it with <code class="t-mono-inline">.page-grid</code> and
-    <code class="t-mono-inline">.col-span-1</code> to
-    <code class="t-mono-inline">.col-span-12</code>; a span wider than the active
-    tier wraps to its own row. <code class="t-mono-inline">.grid-2</code>,
-    <code class="t-mono-inline">.grid-3</code> and
-    <code class="t-mono-inline">.grid-4</code> are helper grids that collapse at
+    One column count per breakpoint; gutters and margins scale with the
+    viewport. Apply it with <code class="t-mono-inline">.page-grid</code> and
+    <code class="t-mono-inline">
+      .col-span-1
+    </code> to
+    <code class="t-mono-inline">
+      .col-span-12
+    </code>; a span wider than the
+    active tier wraps to its own row. <code class="t-mono-inline">.grid-2</code>,
+    <code class="t-mono-inline">
+      .grid-3
+    </code> and
+    <code class="t-mono-inline">
+      .grid-4
+    </code> are helper grids that collapse at
     smaller breakpoints.
   </p>
 
@@ -183,30 +187,28 @@
     <li>
       <strong>
         One grid per page.
-      </strong> Sub-regions align to the same column
-      track they inherit — never invent a local grid.
+      </strong> Sub-regions use the inherited tracks,
+      never a local grid.
     </li>
 
     <li>
       <strong>
         Snap to columns, not to pixels.
-      </strong> Two-column splits at
-      desktop are 8 + 4 or 6 + 6 — never 7 + 5.
+      </strong> Desktop splits are 8 + 4 or
+      6 + 6, never 7 + 5.
     </li>
 
     <li>
       <strong>
         Sidenav lives outside the grid.
       </strong> Reserve a fixed rail
-      (collapsed 64 px / open 240 px), then start the grid in the remaining
-      width.
+      (collapsed 64 px / open 240 px); the grid fills the rest.
     </li>
 
     <li>
       <strong>
         Content cap.
-      </strong> Body text never exceeds 720 px width
-      regardless of grid — use
+      </strong> Body text stays within 720 px:
       <code class="t-mono-inline">
         --col-cap-text
       </code>.
@@ -215,9 +217,8 @@
     <li>
       <strong>
         Asymmetric layouts.
-      </strong> 8 + 4 is canonical for
-      record-detail pages (main + meta sidebar). 9 + 3 reserved for kit /
-      track-plan picker rails.
+      </strong> 8 + 4 for record-detail
+      pages (main + meta sidebar); 9 + 3 for kit / track-plan picker rails.
     </li>
   </ul>
 </docs-section>

@@ -23,13 +23,12 @@
       </summary>
 
       <p class="component-token-desc t-s">
-        Live tokens the generator could not file into a section below. They are
-        surfaced here so a newly-added token can never silently go missing — add
-        a prefix rule in
+        Live tokens the generator could not file into a section below. Add a
+        prefix rule in
         <code class="t-mono-inline">
           tools/extract-tokens.mjs
         </code> to route
-        each into its proper section.
+        each one.
       </p>
 
       <div class="scroll-wrap">
@@ -83,8 +82,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Role tokens that components consume. Re-skinning means remapping these to a
-    different ramp.
+    Role tokens components consume. Re-skin by remapping them to another ramp.
   </p>
 
   <div class="cat-sub t-overline">
@@ -210,11 +208,8 @@
   </div>
 
   <p class="block-desc t-s">
-    Third brand hue (tertiary fills, tonal chips, hierarchy tones, indicators),
-    a cool violet by default and independent of
-    <code class="t-mono-inline">
-      --primary
-    </code>; reskin via
+    Fills, tonal chips, hierarchy tones, indicators. Cool violet by default,
+    independent of <code class="t-mono-inline">--primary</code>; reskin via
     <code class="t-mono-inline">
       --tertiary-h/s/l
     </code>.
@@ -991,10 +986,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Raw primitive ramps. Stop names map 1:1 to CSS custom properties (e.g.
-    <code class="t-mono-inline">
-      --blue-600
-    </code>).
+    Raw primitive ramps; each stop is a custom property
+    (<code class="t-mono-inline">--blue-600</code>).
   </p>
 
   @for (ramp of ramps; track ramp.prefix) {
@@ -1365,8 +1358,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    4px base scale with named half-steps where atoms need them. Bars render at
-    the true CSS value.
+    4px base scale plus named half-steps for atoms. Bars render at true size.
   </p>
 
   <div class="scroll-wrap">
@@ -1429,7 +1421,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Six-stop scale. Each step is functionally distinct at standard zoom.
+    Six stops, each distinct at standard zoom.
   </p>
 
   <div class="scroll-wrap">
@@ -1492,8 +1484,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Channel-split substrate so a re-skin can re-tint shadows. Alphas constant
-    across themes.
+    Channel-split so a re-skin can re-tint shadows. Alphas are constant across
+    themes.
   </p>
 
   <div class="scroll-wrap">
@@ -1562,8 +1554,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Durations describe response time; loop durations describe rhythm. Easings
-    shape the curve.
+    Durations set response time, loop durations rhythm, easings the curve.
   </p>
 
   <div class="cat-sub t-overline">
@@ -1685,10 +1676,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Canonical size scale for interactive height. Density tiers rewrite these at
+    Interactive height scale, rewritten at
     <code class="t-mono-inline">
       :root
-    </code> via
+    </code> per density tier via
     <code class="t-mono-inline">
       [data-density]
     </code>.
@@ -1937,7 +1928,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Icon size scale. Squares render at the true CSS value.
+    Icon sizes; squares render at true size.
   </p>
 
   <div class="scroll-wrap">
@@ -2183,9 +2174,8 @@
     </h3>
 
     <p class="block-desc t-s">
-      Data-visualization colour and geometry — categorical/sequential/diverging
-      series, axes, gridlines, tooltips. Mostly colour; a few size rows render
-      without a swatch.
+      Categorical/sequential/diverging series, axes, gridlines, tooltips. Size
+      rows have no swatch.
     </p>
 
     <details class="component-token-group">
@@ -2269,13 +2259,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    Per-component
     <code class="t-mono-inline">
       --ds-&lt;component&gt;-*
-    </code> custom
-    properties. Each defaults to a global semantic token (see above). Override
-    at <code class="t-mono-inline">:root</code>, on a scoped ancestor, or inline
-    on the host to re-skin a component without forking its class internals.
+    </code> properties,
+    each defaulting to a semantic token above. Override at
+    <code class="t-mono-inline">
+      :root
+    </code>, on a scoped ancestor, or inline on
+    the host to re-skin a component without forking it.
   </p>
 
   @for (group of componentTokens; track group.component) {

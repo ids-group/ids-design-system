@@ -4,13 +4,22 @@
   title="Accordion"
   [apiKeys]="['accordion:AccordionItemComponent']">
   <span lede>
-    Collapsible disclosure panels. Several items can be open at once;
-    <code class="t-mono-inline">[multiple]="false"</code> keeps one open, and
-    <code class="t-mono-inline">[disabled]</code> locks an item.
-    <code class="t-mono-inline">expanded</code> is a model - bind
-    <code class="t-mono-inline">[(expanded)]</code> to track state. An element
-    with the <code class="t-mono-inline">badge</code> attribute projects into
-    the item head.
+    Collapsible disclosure panels, several open at once;
+    <code class="t-mono-inline">
+      [multiple]="false"
+    </code> keeps one open,
+    <code class="t-mono-inline">
+      [disabled]
+    </code> locks an item, the
+    <code class="t-mono-inline">
+      expanded
+    </code> model binds as
+    <code class="t-mono-inline">
+      [(expanded)]
+    </code>, and a
+    <code class="t-mono-inline">
+      badge
+    </code> element projects into the head.
   </span>
 
   <h3

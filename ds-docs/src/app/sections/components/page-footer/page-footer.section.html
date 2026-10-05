@@ -3,28 +3,39 @@
   eyebrow="Components"
   title="Page footer">
   <span lede>
-    Layout helper for page-bottom rows. Three variants:
+    A page-bottom row:
     <code class="t-mono-inline">
       default
-    </code> (border-top + spread),
+    </code> (border-top),
     <code class="t-mono-inline">
       compact
-    </code> (subtle card),
+    </code> (subtle card) or
     <code class="t-mono-inline">
       save
     </code> (brand-tinted unsaved-changes
-    bar). Project into <code class="t-mono-inline">brand</code>,
-    <code class="t-mono-inline">nav</code> and
-    <code class="t-mono-inline">actions</code> (in that order, then the default
-    slot); the row spreads them with <code>space-between</code> and wraps.
+    bar).
   </span>
 
   <p class="block-desc t-s">
-    The host has no role: wrap it in <code>&lt;footer&gt;</code> for a
-    landmark, and announce an unsaved-changes bar yourself. Tokens:
-    <code>--ds-page-footer-bg-color</code>, <code>-border-color</code>,
-    <code>-save-bg-color</code>, <code>-save-border-color</code>,
-    <code>-radius</code>.
+    Slots <code class="t-mono-inline">brand</code>,
+    <code class="t-mono-inline">
+      nav
+    </code>,
+    <code class="t-mono-inline">
+      actions
+    </code>, then the default slot, spread
+    with <code>space-between</code> and wrapping. The host has no role: wrap it
+    in <code>&lt;footer&gt;</code> for a landmark, and announce a save bar
+    yourself. Tokens:
+    <code>
+      --ds-page-footer-bg-color
+    </code>, <code>-border-color</code>,
+    <code>
+      -save-bg-color
+    </code>, <code>-save-border-color</code>,
+    <code>
+      -radius
+    </code>.
   </p>
 
   <h3

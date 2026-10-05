@@ -3,8 +3,7 @@
   eyebrow="Components"
   title="Search">
   <span lede>
-    Top-bar search affordance — leading magnifier icon, mid-content control,
-    optional ⌘K keyboard hint.
+    Top-bar search field with a magnifier icon and an optional ⌘K hint.
   </span>
 
   <h3
@@ -14,8 +13,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Three static specimens — the empty bar, a typed query, and a forced-focus
-    visual.
+    Static specimens; focus is forced.
   </p>
 
   <div class="states is-cols-3">
@@ -57,8 +55,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Trailing <code>kbd</code> chip advertises the global open shortcut. Set
-    <code class="t-mono-inline">ariaLabel</code>; the placeholder is only a
+    A trailing <code>kbd</code> chip shows the global shortcut. Set
+    <code class="t-mono-inline">
+      ariaLabel
+    </code>; the placeholder is only a
     fallback name.
   </p>
 
@@ -75,7 +75,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Icon may be omitted when the bar is inside a section labelled "Search".
+    Fine inside a section labelled "Search".
   </p>
 
   <div class="row">
@@ -93,7 +93,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Narrower container for sidebar / inline placements — no kbd hint.
+    For sidebars and inline use; no kbd hint.
   </p>
 
   <div class="row">
@@ -109,13 +109,25 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">size</code> matches the row height of
-    <code>ds-input</code> / <code>ds-button</code> beside it in a filter
-    toolbar. <code class="t-mono-inline">sm</code>,
-    <code class="t-mono-inline">md</code> (default) and
-    <code class="t-mono-inline">lg</code> resolve
-    <code class="t-mono-inline">--field-h-sm/md/lg</code>: 32, 40 and 48px at
-    the default density, and they follow density.
+    <code class="t-mono-inline">
+      size
+    </code> matches
+    <code>
+      ds-input
+    </code> / <code>ds-button</code> in a toolbar.
+    <code class="t-mono-inline">
+      sm
+    </code>,
+    <code class="t-mono-inline">
+      md
+    </code> (default) and
+    <code class="t-mono-inline">
+      lg
+    </code> resolve
+    <code class="t-mono-inline">
+      --field-h-sm/md/lg
+    </code>: 32, 40 and 48px at
+    default density, following density.
   </p>
 
   <div class="row">
@@ -139,28 +151,35 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [debounce]="200"
-    </code> holds each keystroke
-    back before <code class="t-mono-inline">value</code> updates, so a list
-    screen stops firing a request per character. Default
-    <code class="t-mono-inline">0</code> writes every keystroke through.
+    </code> delays
+    <code class="t-mono-inline">
+      value
+    </code> updates, so a list screen does not
+    fire a request per character. Default <code class="t-mono-inline">0</code>
+    writes every keystroke. The displayed text is never delayed.
   </p>
 
   <p class="block-desc t-s">
-    Three things skip the timer: clearing the field, Enter (flushes the pending
-    keystroke, then emits <code class="t-mono-inline">submitted</code>), and
-    the public <code class="t-mono-inline">clear()</code>. For a Clear button
-    outside the control, <code class="t-mono-inline">clear()</code> empties the
-    field, drops the armed keystroke, publishes
-    <code class="t-mono-inline">''</code> at once and keeps focus in the field.
-  </p>
-
-  <p class="block-desc t-s">
-    Writing <code class="t-mono-inline">''</code> into
-    <code class="t-mono-inline">value</code> is not equivalent: the timer is
-    cancelled only when the incoming text differs from the last pushed value.
-    The displayed text is never delayed.
-    <code class="t-mono-inline">blur()</code> drops focus, the counterpart of
-    <code class="t-mono-inline">focus()</code>.
+    Clearing the field, Enter (flushes the pending keystroke, then emits
+    <code class="t-mono-inline">
+      submitted
+    </code>) and
+    <code class="t-mono-inline">
+      clear()
+    </code> skip the timer. For an external
+    Clear button, <code class="t-mono-inline">clear()</code> empties the field,
+    drops the pending keystroke, publishes <code class="t-mono-inline">''</code>
+    at once and keeps focus. Writing <code class="t-mono-inline">''</code> into
+    <code class="t-mono-inline">
+      value
+    </code> is not equivalent: it cancels the
+    timer only if it differs from the last pushed value.
+    <code class="t-mono-inline">
+      blur()
+    </code> drops focus, the counterpart of
+    <code class="t-mono-inline">
+      focus()
+    </code>.
   </p>
 
   <div class="demo-stack">
@@ -182,24 +201,30 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">[formControl]</code>,
-    <code class="t-mono-inline">formControlName</code>,
-    <code class="t-mono-inline">[(ngModel)]</code> and signal forms all bind,
-    alongside <code class="t-mono-inline">[(value)]</code>.
-    <code class="t-mono-inline">disabled</code> combines with the form's
-    disabled state and paints the disabled surface.
+    <code class="t-mono-inline">
+      [formControl]
+    </code>,
+    <code class="t-mono-inline">
+      formControlName
+    </code>,
+    <code class="t-mono-inline">
+      [(ngModel)]
+    </code> and signal forms all bind,
+    as does <code class="t-mono-inline">[(value)]</code>.
+    <code class="t-mono-inline">
+      disabled
+    </code> combines with the form's
+    disabled state.
   </p>
 
   <p class="block-desc t-s">
     <strong>
       Deliberately no label and no message row.
     </strong>
-    A toolbar filter is not a validated field, and giving it the field chrome
-    would restyle every toolbar it sits in. Where a search needs a label or an
-    error line, that is what
+    A toolbar filter is not a validated field. For a label or error line, use
     <code class="t-mono-inline">
       ds-input
-    </code> is for.
+    </code>.
   </p>
 
   <div class="demo-stack">

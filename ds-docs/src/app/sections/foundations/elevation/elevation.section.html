@@ -3,12 +3,12 @@
   eyebrow="Foundations"
   title="Elevation">
   <span lede>
-    Four primitive tiers, four elevation roles and four surface aliases for
-    popover, modal, toast, card. Shadows are channel-split through
+    Four primitive tiers, four elevation roles and four surface aliases
+    (popover, modal, toast, card). Shadows split channels through
     <code class="t-mono-inline">
       --shadow-tint-h/s/l
-    </code> so a re-skin can
-    re-tint them and dark themes can render the same alphas as soft glows.
+    </code>, so a re-skin can
+    re-tint them and dark themes render the same alphas as glows.
   </span>
 
   <h3
@@ -45,9 +45,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Setting a role moves every
-    <code class="t-mono-inline">--shadow-&lt;surface&gt;</code> alias at that
-    height, and the components that read the role directly.
+    A role moves every
+    <code class="t-mono-inline">
+      --shadow-&lt;surface&gt;
+    </code> alias at its
+    height, and components reading it directly.
   </p>
 
   <div class="shadow-grid">
@@ -109,7 +111,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    How each semantic shadow reads on a real surface.
+    Each semantic shadow on a real surface.
   </p>
 
   <div class="applied-grid">
@@ -208,6 +210,8 @@
 
   <p class="block-desc t-s">
     Backdrop blur: <code class="t-mono-inline">--blur-sm</code> 4px,
-    <code class="t-mono-inline">--blur-md</code> 8px.
+    <code class="t-mono-inline">
+      --blur-md
+    </code> 8px.
   </p>
 </docs-section>

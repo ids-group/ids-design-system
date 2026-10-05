@@ -3,16 +3,15 @@
   eyebrow="Foundations"
   title="Motion">
   <span lede>
-    Six durations, two loop durations, seven eases. All motion respects
+    Six durations, two loop durations, seven eases. Under
     <code class="t-mono-inline">
       prefers-reduced-motion
-    </code>: one-shot durations collapse to 0; loops
-    (<code class="t-mono-inline">--duration-loop-*</code>) slow down instead of
-    stopping. Pair durations with the
-    right easing per direction: <em>decelerate</em> for enter,
+    </code> one-shot durations drop to 0 and loops
+    (<code class="t-mono-inline">--duration-loop-*</code>) slow down. Enter
+    with <em>decelerate</em>, exit with
     <em>
       accelerate
-    </em> for exit.
+    </em>.
   </span>
 
   <h3
@@ -22,8 +21,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Hover over each card to play the animation. Each puck travels the same
-    distance over its duration with a shared easing.
+    Hover a card to play it. Same distance and easing; only duration varies.
   </p>
 
   <div class="motion-grid">
@@ -58,8 +56,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Hover over each card to play the animation. Same duration, same distance —
-    easing alone changes the feel.
+    Hover a card to play it. Same duration and distance; only easing varies.
   </p>
 
   <div class="motion-grid">
@@ -92,10 +89,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    Components default to these roles, not to raw durations. Each role is a
-    <code class="t-mono-inline">--ds-motion-&lt;role&gt;-duration</code> /
-    <code class="t-mono-inline">-easing</code> pair; set one and every surface on
-    it follows.
+    Components read these roles, not raw durations. Each is a
+    <code class="t-mono-inline">
+      --ds-motion-&lt;role&gt;-duration
+    </code> /
+    <code class="t-mono-inline">
+      -easing
+    </code> pair; set it and every surface on
+    the role follows.
   </p>
 
   <div class="motion-preset-grid">
@@ -188,26 +189,24 @@
   </h3>
 
   <p class="block-desc t-s">
-    A chart times each arrival by what arrives.
     <code class="t-mono-inline">
       --ds-motion-chart-mark-enter-duration
     </code>
-    (400ms, on <code class="t-mono-inline">--ease-emphasized-decelerate</code>)
-    is a mark that fades or settles in place;
+    (400ms, <code class="t-mono-inline">--ease-emphasized-decelerate</code>):
+    marks that fade or settle in place.
     <code class="t-mono-inline">
       -grow-duration
-    </code> (600ms, on
+    </code> (600ms,
     <code class="t-mono-inline">
       --ease-settle
-    </code>) a column or bar growing
-    out of its baseline; <code class="t-mono-inline">-sweep-duration</code>
-    (600ms) a ring turning in or a line drawing on;
+    </code>): columns and bars growing
+    from the baseline. <code class="t-mono-inline">-sweep-duration</code>
+    (600ms): rings and lines.
     <code class="t-mono-inline">
       -detail-duration
-    </code> (180ms) what follows a
-    mark, its value label or marker. A series' arrivals spread across 260ms,
-    however many marks it has. Under reduced motion every mark appears at once,
-    delays included.
+    </code> (180ms): value labels and
+    markers. A series' arrivals spread across 260ms regardless of mark count.
+    Reduced motion shows every mark at once, with no delays.
   </p>
 
   <h3 class="block-title t-h4">
@@ -215,10 +214,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Every DS surface names its entrance through a token, so a consumer can
-    retune or replace it without touching the component. Pick a preset below,
-    then open the dropdown (a portaled panel) and replay the alert (an inline
-    surface) — both read the same vocabulary.
+    Every surface names its entrance in a token you can retune or replace. Pick
+    a preset, then open the dropdown (portaled) and replay the alert (inline):
+    both read the same tokens.
   </p>
 
   <ds-segmented
@@ -279,7 +277,7 @@
   </div>
 
   <p class="block-desc t-s">
-    The knobs are the same on every surface —
+    Every surface takes
     <code class="t-mono-inline">
       --ds-&lt;surface&gt;-enter-keyframes
     </code>,
@@ -294,27 +292,34 @@
     </code> or
     <code class="t-mono-inline">
       -enter-scale
-    </code> for the travel/scale a
-    preset reads. Surfaces that animate on close also take
+    </code> for the preset's travel or
+    scale. Surfaces that animate on close add
     <code class="t-mono-inline">
       -leave-duration
     </code> and
     <code class="t-mono-inline">
       -leave-easing
-    </code>; modal, drawer and bottom sheet also take
-    <code class="t-mono-inline">-leave-keyframes</code>
+    </code>; modal, drawer and bottom sheet add
+    <code class="t-mono-inline">
+      -leave-keyframes
+    </code>
     (<code class="t-mono-inline">ds-fade-out</code>,
-    <code class="t-mono-inline">ds-scale-out</code>,
-    <code class="t-mono-inline">ds-slide-out</code>,
-    <code class="t-mono-inline">ds-slide-edge-out</code>). Set them globally, per
-    theme, or on a single component instance; portaled panels forward them onto
-    their overlay pane on open. See the token reference for the full per-surface
-    list.
+    <code class="t-mono-inline">
+      ds-scale-out
+    </code>,
+    <code class="t-mono-inline">
+      ds-slide-out
+    </code>,
+    <code class="t-mono-inline">
+      ds-slide-edge-out
+    </code>). Set them globally, per
+    theme or per instance; portaled panels forward them to their overlay pane.
+    The token reference lists every surface.
   </p>
 
   <p class="block-desc t-s">
     Your own <code class="t-mono-inline">&#64;keyframes</code> must be global:
-    emulated encapsulation renames a keyframe declared in a component stylesheet,
-    so a scoped name passed through the token plays no animation.
+    emulated encapsulation renames component-scoped keyframes, so a scoped name
+    passed through the token never plays.
   </p>
 </docs-section>

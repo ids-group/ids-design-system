@@ -13,7 +13,7 @@
       </h3>
 
       <p class="block-desc t-s">
-        The default — section is empty because nothing exists yet.
+        The default: nothing exists yet.
       </p>
 
       <ds-card padding="none">
@@ -37,11 +37,12 @@
       </h3>
 
       <p class="block-desc t-s">
-        The empty state under a blurred loading overlay. To keep previously
-        loaded content visible while refetching, wrap that content in
+        The empty state under a blurred overlay. When content was already
+        visible, wrap it in
         <code class="t-mono-inline">
           ds-loading-overlay
-        </code> instead.
+        </code> instead of dropping to a
+        full skeleton.
       </p>
 
       <ds-card padding="none">
@@ -59,7 +60,7 @@
       </h3>
 
       <p class="block-desc t-s">
-        Network or server failure. Retry is the only sensible primary action.
+        Network or server failure. Retry is the primary action.
       </p>
 
       <ds-card padding="none">
@@ -91,8 +92,8 @@
       </h3>
 
       <p class="block-desc t-s">
-        The user is authenticated but their role doesn't grant access to this
-        resource. Don't suggest "log in again" — give them an escape route.
+        Authenticated, but the role lacks access. Never suggest "log in again";
+        give a real escape route.
       </p>
 
       <ds-card padding="none">
@@ -123,7 +124,7 @@
       </h3>
 
       <p class="block-desc t-s">
-        Nothing is left to do because the work is finished.
+        The work is finished.
       </p>
 
       <ds-card padding="none">
@@ -142,26 +143,13 @@
 
   <ul class="rules">
     <li>
-      One primary action per empty state, never more. Pair with an outline
-      secondary only when retry needs an escape hatch.
+      One primary action at most. Add an outline secondary only when retry
+      needs an escape hatch.
     </li>
 
     <li>
-      Concrete subject ("asset"), concrete next step ("pick from the equipment
+      Concrete subject ("asset") and next step ("pick from the equipment
       list"). No generic copy or cheer.
-    </li>
-
-    <li>
-      When data was previously visible, wrap that content in
-      <code class="t-mono-inline">
-        ds-loading-overlay
-      </code> rather than
-      dropping to a full skeleton.
-    </li>
-
-    <li>
-      Permission denied never suggests "log in again" — the user is already
-      authenticated; give them a real escape route.
     </li>
   </ul>
 </docs-section>

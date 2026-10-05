@@ -15,7 +15,7 @@ export const CHART_PIN_RADIUS = 11;
 /** Gap between a disc and the top edge of what it holds.
  *
  *  @internal */
-export const CHART_PIN_GAP = 4;
+export const CHART_PIN_GAP = 8;
 
 const GLYPH_SIZE = 14;
 

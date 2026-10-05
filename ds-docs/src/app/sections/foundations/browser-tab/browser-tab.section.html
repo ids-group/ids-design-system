@@ -3,10 +3,11 @@
   eyebrow="Foundations"
   title="Browser tab &amp; document">
   <span lede>
-    Title, favicon, theme-color and tab grouping — the off-canvas surface the
-    user sees in their tab bar. Long URLs and breadcrumb paths clip with
-    ellipsis; expose the full path yourself via a <code class="t-mono-inline">title</code>
-    attribute or a copy action.
+    Title, favicon, theme-color and tab grouping in the browser tab bar. Long
+    URLs and paths clip with ellipsis; expose the full path via a
+    <code class="t-mono-inline">
+      title
+    </code> attribute or a copy action.
   </span>
 
   <h3 class="block-title t-h4">
@@ -82,11 +83,11 @@
       <code class="t-mono-inline">
         {{ '{Record} · {Section} · Acme' }}
       </code>
-      — leaf first, brand last so multi-tab triage works. Index pages:
+      — leaf first, brand last. Index pages:
       <code class="t-mono-inline">
         {{ '{Section} · Acme' }}
       </code
-      >. Login: <code class="t-mono-inline">Acme</code> only.
+      >. Login: <code class="t-mono-inline">Acme</code>.
     </dd>
 
     <dt>
@@ -94,10 +95,10 @@
     </dt>
 
     <dd>
-      Prefix with <code class="t-mono-inline">●</code> for unsaved (<code
+      Prefix <code class="t-mono-inline">●</code> when unsaved (<code
         class="t-mono-inline"
         >● Project Alpha · Projects · Acme</code
-      >); prefix with <code class="t-mono-inline">(N)</code> for unread alerts
+      >), <code class="t-mono-inline">(N)</code> for unread alerts
       (<code class="t-mono-inline">(3) Delivery schedule · Acme</code>).
     </dd>
 
@@ -106,12 +107,11 @@
     </dt>
 
     <dd>
-      Brand letter on brand surface; add an alert dot to the favicon for an
-      unread or attention state. Size matches
+      Brand letter on brand surface, plus an alert dot for unread or attention.
+      Size matches
       <code class="t-mono-inline">
         --icon-md
-      </code> so it reads legibly at
-      retina + sub-retina densities.
+      </code>.
     </dd>
 
     <dt>
@@ -123,8 +123,7 @@
         &lt;meta name="theme-color"&gt;
       </code>
       matches <code class="t-mono-inline">--primary</code> for branded chrome;
-      reset to <code class="t-mono-inline">--surface-default</code> on logout to
-      avoid carry-over branding.
+      reset to <code class="t-mono-inline">--surface-default</code> on logout.
     </dd>
 
     <dt>
@@ -132,9 +131,8 @@
     </dt>
 
     <dd>
-      Cap at 7 tabs per group; suggest the browser's native tab-grouping when
-      the user opens more. Tabs in the same group share the favicon brand
-      colour.
+      Cap at 7 tabs per group; beyond that, suggest native tab grouping. A
+      group shares the favicon brand colour.
     </dd>
   </dl>
 </docs-section>

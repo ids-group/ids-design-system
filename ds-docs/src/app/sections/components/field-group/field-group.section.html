@@ -8,17 +8,15 @@
   </span>
 
   <p class="block-desc t-s">
-    The group owns the border, radius, divider and a single focus ring; the
-    controls inside render naked. Each control detects the group by injecting
+    The group owns the border, radius, divider and one focus ring; controls
+    inside render naked, detecting the group by injecting
     <code class="t-mono-inline">
       DS_FIELD_GROUP
-    </code>, so there is no per-child flag
-    to forget. <code class="t-mono-inline">disabled</code> dims the box only -
-    disable each control as well.
-  </p>
-
-  <p class="block-desc t-s">
-    Segments hug their content. Mark the one that should take the slack with
+    </code> - no per-child flag.
+    <code class="t-mono-inline">
+      disabled
+    </code> dims the box only - disable each control as well. Segments hug
+    their content; mark the one that takes the slack with
     <code class="t-mono-inline">
       grow
     </code>.
@@ -46,11 +44,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Any supported control can be a segment, in any order — a
+    Segments go in any order, e.g. a
     <code class="t-mono-inline">
       ds-button
-    </code> at the end is the same
-    mechanism as a <code class="t-mono-inline">ds-select</code> at the start.
+    </code> at the end.
   </p>
 
   <div class="demo-row">
@@ -108,9 +105,8 @@
     </code>. Not
     <code class="t-mono-inline">
       ds-number-stepper
-    </code> (already a composite
-    of its own) or <code class="t-mono-inline">ds-multi-select</code> (its chips
-    wrap, which a fixed-height row cannot take).
+    </code> (already a composite)
+    or <code class="t-mono-inline">ds-multi-select</code> (its chips wrap).
   </p>
 
   <div class="demo-row">
@@ -136,12 +132,12 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       size
-    </code> is the field family's scale, so a
-    group lines up with a plain field beside it.
+    </code> matches the field scale, so a
+    group lines up with a plain field.
     <code class="t-mono-inline">
       invalid
-    </code> colours the whole box: a single
-    segment cannot be in error on its own, because the border is not its own.
+    </code> colours the whole box; a single
+    segment cannot be in error alone.
   </p>
 
   <div class="demo-row demo-stack">
@@ -196,9 +192,9 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       error
-    </code> turns the state on and shows its
-    text once, under the whole row; <code class="t-mono-inline">invalid</code>
-    paints the state when the text lives elsewhere (a form summary);
+    </code> sets the state and shows its
+    text once, under the row; <code class="t-mono-inline">invalid</code>
+    paints the state when the text is elsewhere (a form summary);
     <code class="t-mono-inline">
       hint
     </code>
@@ -239,23 +235,25 @@
     <code class="t-mono-inline">
       aria-invalid
     </code> while the group is in
-    error and points at the one message through
+    error and references the message via
     <code class="t-mono-inline">
       aria-describedby
-    </code>, so a reader who tabs
-    straight to the second segment hears the error there too.
+    </code>, so tabbing to any segment
+    announces it.
   </p>
 
   <p class="block-desc t-s">
-    Do not give a grouped control a
+    A grouped control's
     <code class="t-mono-inline">
       label
-    </code> or a
+    </code> and
     <code class="t-mono-inline">
       hint
-    </code>: its message row would break the
-    glued line, so both are suppressed. Name each segment with
-    <code class="t-mono-inline">ariaLabel</code>. For a group label, put your
-    own markup above the group.
+    </code> are suppressed - do not set
+    them. Name each segment with
+    <code class="t-mono-inline">
+      ariaLabel
+    </code>; put a group label in your own
+    markup above.
   </p>
 </docs-section>

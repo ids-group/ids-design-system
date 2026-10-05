@@ -6,9 +6,8 @@
     Four density tiers, applied via
     <code class="t-mono-inline">
       [data-density]
-    </code> on a route container.
-    They rewrite hit-target and component-scoped tokens — components consume the
-    same role tokens, so no component CSS changes.
+    </code> on a route container; they
+    rewrite hit-target and component tokens, with no component CSS changes.
   </span>
 
   <h3
@@ -72,11 +71,13 @@
   </h3>
 
   <p class="block-desc t-s">
-    Each sandbox wraps content in a
+    The same UI in four
     <code class="t-mono-inline">
       [data-density]
-    </code> container. The same UI renders at four tiers; here only
-    <code class="t-mono-inline">--hit-cozy</code> is visible.
+    </code> containers; only
+    <code class="t-mono-inline">
+      --hit-cozy
+    </code> is visible here.
   </p>
 
   <div class="dens-grid">
@@ -169,7 +170,9 @@
   <ul class="dens-rewrites">
     <li>
       Hit targets - <code class="t-mono-inline">--hit-cozy</code> (all tiers),
-      <code class="t-mono-inline">--hit-min</code> (<code class="t-mono-inline">ultra-compact</code>)
+      <code class="t-mono-inline">
+        --hit-min
+      </code> (<code class="t-mono-inline">ultra-compact</code>)
     </li>
 
     <li>
@@ -200,17 +203,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    Density is a <strong>screen-level decision</strong>, not user-global. The
-    Tweaks panel exposes it for prototyping — in the product, set
+    Density is a <strong>screen-level decision</strong>, not user-global (the
+    Tweaks panel exposes it only for prototyping). Set
     <code class="t-mono-inline">
       [data-density]
     </code> on the route container,
-    not on <code class="t-mono-inline">&lt;html&gt;</code>.
-  </p>
-
-  <p class="block-desc t-s">
-    Control <code class="t-mono-inline">size</code> (sm/md/lg) is a separate
-    axis, defaulted by <code class="t-mono-inline">DS_CONFIG.control.size</code>.
+    not on <code class="t-mono-inline">&lt;html&gt;</code>. Control
+    <code class="t-mono-inline">
+      size
+    </code> (sm/md/lg) is a separate axis, defaulted by
+    <code class="t-mono-inline">
+      DS_CONFIG.control.size
+    </code>.
   </p>
 
   <h3 class="block-title t-h4">
@@ -222,30 +226,36 @@
       <code class="t-mono-inline">
         data-density="compact"
       </code> levels a toolbar at
-      32px, and it is the supported way to get one.
+      32px - the supported way to get one.
     </strong>
-    Measured on a nine-control row at default size: search, input, select,
-    autocomplete, date picker, time picker, multi-select, number stepper and
-    button are all <strong>40px</strong> out of the box and all
+    Search, input, select, autocomplete, date picker, time picker,
+    multi-select, number stepper and button measure <strong>40px</strong> at
+    default and
     <strong>
       32px
-    </strong> under compact. So a screen whose controls should be
-    32px sets density once on its container, rather than pinning
+    </strong> under compact. Set density once on the container instead of
+    pinning
     <code class="t-mono-inline">
       --ds-search-height
     </code> and its siblings per
-    component — which is what the height contract exists to remove.
+    component.
   </p>
 
   <p class="block-desc t-s">
-    Controls that hold chips (multi-select, autocomplete) set
-    <code class="t-mono-inline">min-height</code>, not
-    <code class="t-mono-inline">height</code>, so they stop following the tier
+    Chip-holding controls (multi-select, autocomplete) set
+    <code class="t-mono-inline">
+      min-height
+    </code>, not
+    <code class="t-mono-inline">
+      height
+    </code>, so they stop following the tier
     once it drops below the text line. Under
-    <code class="t-mono-inline">ultra-compact</code> they measure 33px and 29px
-    against 24px, because density does not scale type (a 14px font keeps a
-    19.6px line box). Under compact the gap is 33px vs 32px. For a true 24px row,
-    shrink the type in that container too.
+    <code class="t-mono-inline">
+      ultra-compact
+    </code> they measure 33px and 29px
+    against 24px, since density does not scale type (a 14px font keeps a
+    19.6px line box); under compact, 33px vs 32px. For a true 24px row, shrink
+    the type in that container too.
   </p>
 
   <p class="block-desc t-s">
@@ -258,20 +268,22 @@
     </code> and
     <code class="t-mono-inline">
       comfy
-    </code> resize controls and leave padding
-    alone; <code class="t-mono-inline">ultra-compact</code> also compresses
-    field padding, table cells and
+    </code> leave padding alone;
+    <code class="t-mono-inline">
+      ultra-compact
+    </code> also compresses field padding, table cells and
     <code class="t-mono-inline">
       --ds-surface-padding
-    </code> — the inner
-    padding <code class="t-mono-inline"> ds-card </code> and
+    </code> (shared by
+    <code class="t-mono-inline">
+      ds-card
+    </code> and
     <code class="t-mono-inline">
       ds-stat
-    </code> share — from 24px to 16px. For
-    a surface padding between the two rungs, set that one token at
+    </code>) from 24px to 16px. For a
+    value in between, set that token at
     <code class="t-mono-inline">
       :root
-    </code>; it is the lever both components
-    default to.
+    </code>.
   </p>
 </docs-section>

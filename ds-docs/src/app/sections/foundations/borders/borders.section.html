@@ -4,8 +4,8 @@
   title="Borders &amp; dividers"
   [apiKeys]="['divider']">
   <span lede>
-    Two widths × six roles: 1px default for every border and field, 2px strong
-    for emphasis (selected radio, slider thumb, tab indicator).
+    Two widths × six roles: 1px for borders and fields, 2px for emphasis
+    (selected radio, slider thumb, tab indicator).
   </span>
 
   <h3 class="block-title t-h4">
@@ -140,15 +140,15 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [spacing]
-    </code> controls the vertical gap
-    above and below the rule. Defaults to
+    </code> sets the gap above and below a
+    horizontal rule (default
     <code class="t-mono-inline">
       "md"
-    </code> — pick
+    </code>;
     <code class="t-mono-inline">
       "none"
-    </code> when the parent owns spacing. It applies to horizontal rules only; a vertical
-    divider always takes 12px side margins.
+    </code> when the parent owns spacing). A
+    vertical divider always takes 12px side margins.
   </p>
 
   <div class="divider-demo">

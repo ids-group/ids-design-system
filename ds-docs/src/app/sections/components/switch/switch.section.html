@@ -160,9 +160,15 @@
   </h3>
 
   <p class="block-desc t-s">
-    Use <code class="t-mono-inline">hint</code> for helper text and
-    <code class="t-mono-inline">error</code> for an error message;
-    <code class="t-mono-inline">[invalid]</code> paints the error state without text.
+    <code class="t-mono-inline">
+      hint
+    </code> is helper text,
+    <code class="t-mono-inline">
+      error
+    </code> an error message;
+    <code class="t-mono-inline">
+      [invalid]
+    </code> paints the error state alone.
   </p>
 
   <div class="stack">
@@ -188,8 +194,8 @@
     </code> puts it. A click emits
     <code class="t-mono-inline">
       (checkedRequested)
-    </code> with the value the
-    user asked for, and the host flips the state once it has confirmed.
+    </code> with the requested
+    value; the host flips the state after confirming.
   </p>
 
   <div class="stack">

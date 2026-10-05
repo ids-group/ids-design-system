@@ -3,8 +3,8 @@
   eyebrow="Foundations"
   title="Typography">
   <span lede>
-    Mulish for UI and prose, JetBrains Mono for IDs, dates and any monospace
-    data. Weights: 400 / 500 / 600 / 700 / 800.
+    Mulish for UI and prose, JetBrains Mono for IDs, dates and other mono data.
+    Weights 400 / 500 / 600 / 700 / 800.
   </span>
 
   <h3
@@ -14,8 +14,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Every size role side-by-side. Headings carry the document hierarchy; a page
-    title is usually <code class="t-mono-inline">.t-h2</code>. Default UI runs on
+    A page title is usually <code class="t-mono-inline">.t-h2</code>; default
+    UI is
     <code class="t-mono-inline">
       .t-s
     </code> (14).
@@ -23,14 +23,28 @@
 
   <p class="block-desc t-s">
     Each class reads
-    <code class="t-mono-inline">--ds-typography-&lt;role&gt;-font-weight</code>,
-    <code class="t-mono-inline">-font-size</code>,
-    <code class="t-mono-inline">-line-height</code>,
-    <code class="t-mono-inline">-font-family</code> (and
-    <code class="t-mono-inline">-letter-spacing</code> or
-    <code class="t-mono-inline">-color</code> where it sets them), so one axis
-    retunes in a scope:
-    <code class="t-mono-inline">.my-scope .t-h3 {{ '{' }} --ds-typography-h3-font-weight: var(--font-weight-bold) {{ '}' }}</code>.
+    <code class="t-mono-inline">
+      --ds-typography-&lt;role&gt;-font-weight
+    </code>,
+    <code class="t-mono-inline">
+      -font-size
+    </code>,
+    <code class="t-mono-inline">
+      -line-height
+    </code>,
+    <code class="t-mono-inline">
+      -font-family
+    </code> (and
+    <code class="t-mono-inline">
+      -letter-spacing
+    </code> or
+    <code class="t-mono-inline">
+      -color
+    </code> where set); retune one axis in a
+    scope:
+    <code class="t-mono-inline">
+      .my-scope .t-h3 {{ '{' }} --ds-typography-h3-font-weight: var(--font-weight-bold) {{ '}' }}
+    </code>.
   </p>
 
   <div class="ramp">
@@ -102,13 +116,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    JetBrains Mono for any literal value the operator might paste, search or
-    read aloud. <code class="t-mono-inline">.t-mono</code> for mono data in
-    running UI, <code class="t-mono-inline">.t-mono-inline</code> for an inline
-    token chip, <code class="t-mono-inline">.t-mono-block</code> for a snippet
-    frame. Ligatures are off; set
-    <code class="t-mono-inline">--ds-typography-mono-ligatures: normal</code> to
-    restore them.
+    For literal values users paste, search or read aloud.
+    <code class="t-mono-inline">
+      .t-mono
+    </code> for data in UI,
+    <code class="t-mono-inline">
+      .t-mono-inline
+    </code> for a token chip,
+    <code class="t-mono-inline">
+      .t-mono-block
+    </code> for a snippet. Ligatures
+    are off;
+    <code class="t-mono-inline">
+      --ds-typography-mono-ligatures: normal
+    </code>
+    restores them.
   </p>
 
   <div class="mono-grid">
@@ -186,8 +208,14 @@ WHERE  project_id = 'alpha'
 
   <p class="block-desc t-s">
     Headings read <code class="t-mono-inline">--font-heading</code>,
-    <code class="t-mono-inline">.t-display</code> reads
-    <code class="t-mono-inline">--font-display</code>; both default to
-    <code class="t-mono-inline">--font-sans</code>.
+    <code class="t-mono-inline">
+      .t-display
+    </code> reads
+    <code class="t-mono-inline">
+      --font-display
+    </code>; both default to
+    <code class="t-mono-inline">
+      --font-sans
+    </code>.
   </p>
 </docs-section>
