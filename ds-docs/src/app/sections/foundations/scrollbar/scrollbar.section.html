@@ -3,10 +3,10 @@
   eyebrow="Foundations"
   title="Scrollbar">
   <span lede>
-    System chrome the user touches every minute — has to feel like part of the
-    product, not the OS. The global scrollbar styling is auto-applied (forwarded
-    into <code class="t-mono-inline">ds.scss</code>); no per-component opt-in is
-    needed.
+    Global scrollbar styling, applied automatically through
+    <code class="t-mono-inline">
+      ds.scss
+    </code>; no per-component opt-in.
   </span>
 
   <h3 class="block-title t-h4">
@@ -14,8 +14,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Drag the thumb in either pane below. Vertical scroll on the left, horizontal
-    on the right.
+    Drag the thumb: vertical on the left, horizontal on the right.
   </p>
 
   <div class="demo-grid">
@@ -89,9 +88,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    The stylesheet declares two sets of rules; which one a browser applies is
-    the browser's choice. Overlay or inline scrollbars are an OS setting the DS
-    does not change.
+    Two rule sets; the browser picks which applies. Overlay versus inline
+    scrollbars is an OS setting the DS leaves alone.
   </p>
 
   <dl class="spec">
@@ -100,8 +98,12 @@
     </dt>
 
     <dd>
-      <code class="t-mono-inline">scrollbar-width: thin</code> and
-      <code class="t-mono-inline">scrollbar-color: var(--scrollbar-thumb) transparent</code>
+      <code class="t-mono-inline">
+        scrollbar-width: thin
+      </code> and
+      <code class="t-mono-inline">
+        scrollbar-color: var(--scrollbar-thumb) transparent
+      </code>
       on <code class="t-mono-inline">html</code>
     </dd>
 
@@ -111,7 +113,9 @@
 
     <dd>
       10 px (<code class="t-mono-inline">--scrollbar-w</code>) on
-      <code class="t-mono-inline">::-webkit-scrollbar</code>
+      <code class="t-mono-inline">
+        ::-webkit-scrollbar
+      </code>
     </dd>
 
     <dt>
@@ -127,10 +131,18 @@
     </dt>
 
     <dd>
-      <code class="t-mono-inline">--scrollbar-thumb</code>; hover
-      <code class="t-mono-inline">--scrollbar-thumb-hover</code>; active
-      <code class="t-mono-inline">--scrollbar-thumb-active</code>;
-      <code class="t-mono-inline">--radius-pill</code> with a 2px transparent
+      <code class="t-mono-inline">
+        --scrollbar-thumb
+      </code>; hover
+      <code class="t-mono-inline">
+        --scrollbar-thumb-hover
+      </code>; active
+      <code class="t-mono-inline">
+        --scrollbar-thumb-active
+      </code>;
+      <code class="t-mono-inline">
+        --radius-pill
+      </code> with a 2px transparent
       border
     </dd>
 
@@ -139,9 +151,11 @@
     </dt>
 
     <dd>
-      Same tokens; the neutral ramp flips, so the thumb reads
-      <code class="t-mono-inline">--neutral-300</code> = #3A4252 and the track
-      stays transparent
+      Same tokens on the flipped neutral ramp: thumb
+      <code class="t-mono-inline">
+        --neutral-300
+      </code> = #3A4252, track
+      transparent
     </dd>
   </dl>
 </docs-section>

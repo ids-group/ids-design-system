@@ -4,9 +4,8 @@
   title="Waterfall chart"
   [chapters]="true">
   <span lede>
-    A running total, bar by bar: what a figure started at, what moved it, and
-    what it ended at. The one chart in the family that cannot be a mode on
-    another.
+    A running total, bar by bar: where a figure started, what moved it, where
+    it ended.
   </span>
 
   <h3
@@ -16,21 +15,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    Each bar carries a
+    Each bar's
     <code class="t-mono-inline">
       value
-    </code> that is added to the running
-    total wherever it sits. A <code class="t-mono-inline"> delta </code>, the
-    default, hangs from the level the bar before it left off at; a
+    </code> adds to the running total. A
+    <code class="t-mono-inline">
+      delta
+    </code> (default) hangs from the previous bar's end; a
     <code class="t-mono-inline">
       total
-    </code> stands on zero at the sum
-    reached, which is what makes it a figure in its own right rather than a
-    change. A closing total usually carries
+    </code> stands on zero at the sum.
+    A closing total usually carries
     <code class="t-mono-inline">
       value: 0
     </code>: it prints the sum, not a
-    change of its own.
+    change.
   </p>
 
   <ds-waterfall-chart
@@ -42,18 +41,15 @@
   </h3>
 
   <p class="block-desc t-s">
-    Three meanings, three colours, and none is load-bearing alone: every delta
-    prints its signed change above it and every bar's accessible name says
-    "increase", "decrease" or "total", so the chart survives forced colours,
-    monochrome print and colour-blind readers. The pair uses the palette's lead
-    hues, not
+    Deltas print a signed change and accessible names say "increase",
+    "decrease" or "total", surviving forced colours and monochrome. Rise and
+    fall use the palette's lead hues, not
     <code class="t-mono-inline">
       --success
     </code> /
     <code class="t-mono-inline">
       --error
-    </code>, because a rise is a direction,
-    not a verdict. Recolour with
+    </code>: a change is a direction, not a verdict. Recolour with
     <code class="t-mono-inline">
       --ds-chart-positive-color
     </code> and
@@ -75,9 +71,8 @@
     A <code class="t-mono-inline"> subtotal </code> draws exactly like a
     <code class="t-mono-inline">
       total
-    </code>: on zero, at the running sum,
-    and the chain carries on past either. The two kinds differ only in what
-    they say to the reader of your data.
+    </code>, and the chain continues past
+    either; they differ only in meaning.
   </p>
 
   <ds-waterfall-chart
@@ -89,13 +84,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    A chain that falls past zero opens the axis downwards rather than clipping,
-    and the dashed connector stays at the level the two bars share whichever
-    side of the baseline that is.
+    Below zero the axis extends instead of clipping.
     <code class="t-mono-inline">
       tickCount
-    </code> (default 5) sets how many
-    value-axis ticks to aim for; they snap to a round step.
+    </code> (default 5) targets a tick
+    count, snapped to a round step.
   </p>
 
   <ds-waterfall-chart
@@ -109,12 +102,12 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       showValues
-    </code> prints each delta's change,
-    with its sign, and each total's running sum above the bar; <code class="t-mono-inline"> showConnectors </code> draws the
-    dashed rule from one bar's end to where the next begins. Both are on by
-    default. Turn the values off where the chart sits beside a table that
-    already carries them, and the connectors off where bars are too close for
-    the rule to read.
+    </code> prints changes and sums above
+    bars;
+    <code class="t-mono-inline">
+      showConnectors
+    </code> draws dashed rules between
+    them. Both default on; turn off beside a table, or when bars are cramped.
   </p>
 
   <div class="states is-cols-3">
@@ -154,14 +147,12 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       interactive
-    </code> turns on the affordance and
-    the keyboard route, and
+    </code> adds the affordance and
+    keyboard route;
     <code class="t-mono-inline">
       barClicked
-    </code> hands back the datum that
-    was clicked. Every point of the plot answers its nearest step, the step's
-    label on the axis included, so the pointer never crosses ground that opens
-    nothing.
+    </code> emits the datum. Any point,
+    axis labels included, hits its nearest step.
   </p>
 
   <ds-waterfall-chart
@@ -180,15 +171,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    A click on a bar holds it and its tooltip in place, with a pin disc on it
-    and an <code class="t-mono-inline">Unpin</code> control at the top end of
-    the chart. A second click, <kbd>Esc</kbd> or a press elsewhere lets go, and
+    A click holds a bar and tooltip (pin disc,
+    <code class="t-mono-inline">
+      Unpin
+    </code> control at the top end); a
+    second click, <kbd>Esc</kbd> or a press elsewhere releases;
     <code class="t-mono-inline">
       barClicked
     </code> fires either way. Set
     <code class="t-mono-inline">
       pinOnClick="false"
-    </code> to keep bars unheld,
+    </code> to disable holding,
     or <code class="t-mono-inline">DS_CONFIG.chart.pinOnClick: false</code> for
     every chart.
   </p>
@@ -200,15 +193,16 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       dimOthers
-    </code> fades every step but the
-    hovered or focused one, and beside a pin the rest stays down too. It is off
-    by default. <code class="t-mono-inline">tooltip="none"</code> takes the
-    panel away, for a chart whose values are printed beside it;
+    </code> (default off) fades all
+    steps but the hovered, focused or pinned one.
+    <code class="t-mono-inline">
+      tooltip="none"
+    </code> removes the panel;
     <code class="t-mono-inline">
       'item'
-    </code>, the default, opens it on
-    each step. There is no <code class="t-mono-inline">'axis'</code>: each bar
-    is its own category.
+    </code> (default) opens it per step.
+    There is no <code class="t-mono-inline">'axis'</code>: each bar is its own
+    category.
   </p>
 
   <ds-waterfall-chart
@@ -222,12 +216,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Steps grow out of their baseline one after another.
     <code class="t-mono-inline">
       staggerMs
-    </code> sets the step between two
-    bars, <code class="t-mono-inline">40</code> by default, and the whole spread
-    fits inside 260ms, so a long series narrows the step instead of crawling in.
+    </code> delays each bar's growth
+    (<code class="t-mono-inline">40</code> by default), capped so the spread
+    fits 260ms.
     <code class="t-mono-inline">
       0
     </code> brings every step in at once.

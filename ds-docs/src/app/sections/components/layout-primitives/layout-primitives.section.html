@@ -16,11 +16,19 @@
   </h3>
 
   <p class="block-desc t-s">
-    A vertical column. <code>gap</code> takes <code>none</code> ·
-    <code>xs</code> · <code>sm</code> · <code>md</code> · <code>lg</code> ·
-    <code>xl</code>; <code>align</code> takes <code>start</code> ·
-    <code>center</code> · <code>end</code> · <code>stretch</code>. Unset
-    <code>gap</code> reads <code>--ds-stack-gap</code>.
+    A vertical column. <code>gap</code>: <code>none</code> ·
+    <code>
+      xs
+    </code> · <code>sm</code> · <code>md</code> · <code>lg</code> ·
+    <code>
+      xl
+    </code>; <code>align</code>: <code>start</code> ·
+    <code>
+      center
+    </code> · <code>end</code> · <code>stretch</code>. Unset
+    <code>
+      gap
+    </code> reads <code>--ds-stack-gap</code>.
   </p>
 
   <div class="demo-panel">
@@ -59,13 +67,20 @@
   </h3>
 
   <p class="block-desc t-s">
-    A horizontal row for tags, button groups and filter chips. Same
-    <code>gap</code> and <code>align</code> values as Stack; items centre
-    vertically by default and unset <code>gap</code> reads
-    <code>--ds-inline-gap</code>. <code>justify</code> takes
-    <code>start</code> · <code>center</code> · <code>end</code> ·
-    <code>between</code> (pushes the ends apart). The row wraps by default;
-    <code>[wrap]="false"</code> keeps one line and lets it overflow.
+    A horizontal row for tags, button groups, filter chips. Stack's
+    <code>
+      gap
+    </code> and <code>align</code> values; items centre vertically by
+    default; unset <code>gap</code> reads <code>--ds-inline-gap</code>.
+    <code>
+      justify
+    </code>: <code>start</code> · <code>center</code> ·
+    <code>
+      end
+    </code> · <code>between</code>. Wraps by default;
+    <code>
+      [wrap]="false"
+    </code> keeps one line and overflows.
   </p>
 
   <div class="demo-panel">
@@ -124,8 +139,13 @@
 
   <div class="demo-panel">
     <ds-inline justify="between">
-      <span class="t-s">3 items selected</span>
-      <span class="t-s">Page 1 of 4</span>
+      <span class="t-s">
+        3 items selected
+      </span>
+
+      <span class="t-s">
+        Page 1 of 4
+      </span>
     </ds-inline>
   </div>
 
@@ -138,8 +158,10 @@
 
   <p class="block-desc t-s">
     Centres content under a max width: <code>sm</code> · <code>md</code> ·
-    <code>lg</code> · <code>xl</code> (default) · <code>full</code> (no cap).
-    It also pads inline by <code>--ds-container-padding-x</code>.
+    <code>
+      lg
+    </code> · <code>xl</code> (default) · <code>full</code> (no cap).
+    Inline padding: <code>--ds-container-padding-x</code>.
   </p>
 
   <div class="demo-panel">

@@ -5,8 +5,7 @@
   title="Column chart"
   [chapters]="true">
   <span lede>
-    Vertical columns for a short series read left to right — months, stages,
-    teams.
+    Vertical columns for a short left-to-right series: months, stages, teams.
   </span>
 
   <h3 class="block-title t-h4">
@@ -14,9 +13,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Columns keep the order you pass them and share one axis niced to a round
-    step, which is why the tallest column usually stops short of the top
-    gridline.
+    Input order, one axis niced to a round step: the tallest column usually
+    ends below the top gridline.
   </p>
 
   <ds-column-chart
@@ -33,9 +31,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       tickCount
-    </code> is a hint: ticks snap to a
-    round step, so an axis asked for three ends up with five and one asked for
-    ten stops at eight.
+    </code> is a hint; ticks snap to a
+    round step (3 may give 5, 10 may give 8).
   </p>
 
   <div class="demo-pair">
@@ -59,16 +56,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    A click holds the column and its tooltip, with a pin disc on it and an
-    Unpin control on the caption's line. Escape, a second click or a press
-    outside releases it, and <code class="t-mono-inline"> pointClicked </code>
-    fires either way.
+    A click pins the column and tooltip (pin disc, Unpin on the caption
+    line); Escape, a second click or an outside press releases.
+    <code class="t-mono-inline">
+      pointClicked
+    </code> fires either way.
     <code class="t-mono-inline">
       dimOthers
-    </code> fades every column but the
-    one the chart answers (hovered after the pointer rests, focused, or
-    pinned). <code class="t-mono-inline"> pinOnClick="false" </code> keeps
-    columns unheld.
+    </code> fades all but the active
+    column (rested hover, focus or pin).
+    <code class="t-mono-inline">
+      pinOnClick="false"
+    </code> disables pinning.
   </p>
 
   <ds-column-chart
@@ -84,9 +83,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Turn <code class="t-mono-inline">showValues</code> off where the columns are
-    too narrow to hold a figure, or where an open annex table already prints the
-    same numbers.
+    Turn <code class="t-mono-inline">showValues</code> off for narrow columns
+    or when an open table shows the numbers.
   </p>
 
   <ds-column-chart
@@ -101,11 +99,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Columns take the categorical palette in list order and wrap past the eighth,
-    so dropping a point recolours everything after it; a point that sets
+    Palette colours go in list order, wrapping after eight, so removing a
+    point recolours later ones; a point's own
     <code class="t-mono-inline">
       color
-    </code> pins its own.
+    </code> overrides.
   </p>
 
   <ds-column-chart
@@ -119,13 +117,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    A point that sets
+    A point with
     <code class="t-mono-inline">
       fill="hatched"
-    </code> on a point keeps its colour
-    under a striped texture, separating a projection from a settled figure in
-    greyscale, print and colour-vision deficiency. The chart infers nothing:
-    the caller marks which points are projections.
+    </code> adds stripes over its colour,
+    marking a projection in greyscale, print and colour-vision deficiency. The
+    caller marks projections.
   </p>
 
   <ds-column-chart
@@ -143,38 +140,33 @@
     Hand
     <code class="t-mono-inline">
       data
-    </code> a list of NAMED SERIES instead of
-    a flat list of points and every category carries one column per series,
-    keyed by the legend under the plot; hovering or focusing a legend item
-    singles its series out.
+    </code> NAMED SERIES for one column per
+    series per category, with a legend; hovering or focusing an item
+    highlights its series.
     <code class="t-mono-inline">
       stack
-    </code> decides how they share the band:
+    </code>:
     <code class="t-mono-inline">
       'none'
     </code> (default) and
     <code class="t-mono-inline">
       grouped
-    </code> stand them side by side,
+    </code> side by side,
     <code class="t-mono-inline">
       stacked
-    </code> puts each on top of the one
-    before it, and <code class="t-mono-inline"> normalized </code> stacks then
-    divides by the category's own total, so every band is full and the axis
-    reads in shares. A flat list of points is still one series and still takes
-    the whole band, so nothing about a single-series chart changes.
+    </code> stacked,
+    <code class="t-mono-inline">
+      normalized
+    </code> stacked as shares of the
+    category total. A flat list is one full-band series.
   </p>
 
   <p class="block-desc t-s">
-    A series takes one colour for all of its marks, where a flat list colours
-    each mark by its own position — the marks of a single-series chart ARE the
-    categories, and the marks of a grouped one are not. A series-wide
+    A series has one colour; a flat list colours by position (its marks ARE
+    the categories). A series-wide
     <code class="t-mono-inline">
       fill
-    </code> paints every one of its columns,
-    so the pair below separates a settled figure from a committed one by texture
-    as well as by hue. The chart reads nothing into either: what the two columns
-    MEAN is the caller's fact.
+    </code> applies to all its columns.
   </p>
 
   <ds-column-chart
@@ -186,16 +178,12 @@
     [thresholds]="pairedThresholds" />
 
   <p class="block-desc t-s">
-    Stacked, the band's full height is the category's total; normalized, it is
-    always the whole axis and only the SHARES move. The boundary between two
-    segments is a 2px gap in the surface colour rather than a drawn rule — a gap
-    survives print and colour-vision deficiency, and it is the second encoding
-    the palette's separation band asks for. The value printed beside a segment
-    stays the reading even under
+    Segments are split by a 2px surface-colour gap, the palette's second
+    encoding for print and colour-vision deficiency. Under
     <code class="t-mono-inline">
       normalized
-    </code>, where the axis is the only
-    thing that switches to shares.
+    </code> only the axis shows shares;
+    segment values stay readings.
   </p>
 
   <div class="demo-pair">
@@ -219,13 +207,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    A figure per month on the left axis and its running total on the right:
-    one axis cannot carry both, so each axis takes the colour of the series
-    read against it.
-  </p>
-
-  <p class="block-desc t-s">
-    There is no combo component: this is
+    Each axis takes its series' colour. No combo component: this is
     <code class="t-mono-inline">
       ds-chart
     </code> with a
@@ -234,20 +216,18 @@
     </code> and a
     <code class="t-mono-inline">
       dsLineSeries
-    </code> projected in. A series with
+    </code>.
     <code class="t-mono-inline">
       axis: 'secondary'
-    </code> reads the second axis,
-    related to the first by
+    </code> uses the second axis, tied by
     <code class="t-mono-inline">
       secondaryAxisMode
     </code> (default
     <code class="t-mono-inline">
       'aligned'
-    </code>, on the first axis's
-    gridlines at a round step). Marks paint in source order, so the line is
-    written after the columns; with two marks the pointer anywhere in a month
-    names both readings in one panel.
+    </code>: first axis's gridlines,
+    round step). Marks paint in source order, so the line comes last. One
+    panel shows both readings.
   </p>
 
   <ds-chart
@@ -282,7 +262,7 @@
     <code class="t-mono-inline">
       thresholds
     </code> draws a target, budget or
-    SLA behind the columns. Each entry is one
+    SLA behind the columns: one
     <code class="t-mono-inline">
       value
     </code>;
@@ -291,9 +271,8 @@
     </code> sets its stroke and
     <code class="t-mono-inline">
       to
-    </code> turns it into a band between two
-    readings. A threshold widens the value axis to stay on the plot and is
-    named in the generated description.
+    </code> makes a band. The axis widens to
+    fit it; the description names it.
   </p>
 
   <div class="demo-stack">
@@ -317,28 +296,30 @@
   </h3>
 
   <p class="block-desc t-s">
-    The box that catches the pointer is the column's full-height share of its
-    category's step, not the drawn column, which keeps a short column reachable
-    and leaves no ground between two columns that answers nothing.
+    The hit box is the full-height category cell, so short columns stay
+    reachable.
     <code class="t-mono-inline">
       tooltipAnchor
-    </code> decides which of the two
-    the panel points at: <code class="t-mono-inline">'mark'</code>, the default,
-    puts it over the column, and <code class="t-mono-inline">'cell'</code> puts
-    it at the top of the cell, which is where it lands if you anchor to the box
-    rather than the mark.
+    </code>:
+    <code class="t-mono-inline">
+      'mark'
+    </code> (default) the column,
+    <code class="t-mono-inline">
+      'cell'
+    </code> the top of the cell.
     <code class="t-mono-inline">
       pointClicked
-    </code> fires on every click
-    whether or not <code class="t-mono-inline"> interactive </code> is set;
+    </code> fires on every click,
+    <code class="t-mono-inline">
+      interactive
+    </code> or not;
     <kbd>
       Enter
     </kbd> and <kbd>Space</kbd> fire it on an
     <code class="t-mono-inline">
       interactive
-    </code> column, and never pin. An
-    interactive chart is one tab stop: arrow keys move between columns
-    (wrapping), Home and End jump to the ends.
+    </code> column, never pinning. One tab
+    stop; arrows move (wrapping), Home / End jump to the ends.
   </p>
 
   <div class="states is-cols-2">
@@ -376,7 +357,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Geometry is set by tokens, not inputs:
+    Tokens, not inputs:
     <code class="t-mono-inline">
       --ds-column-chart-plot-height
     </code> (200px),
@@ -385,12 +366,11 @@
     </code> (40px) and
     <code class="t-mono-inline">
       --ds-column-chart-value-space
-    </code> are read
-    back as numbers, so they take a px length only;
+    </code> px only;
     <code class="t-mono-inline">
       --ds-column-chart-column-width
     </code> is a
-    percentage of the slot (80%).
+    slot percentage (80%).
     <code class="t-mono-inline">
       --ds-column-chart-column-max-width
     </code>,
@@ -402,8 +382,7 @@
     </code> and
     <code class="t-mono-inline">
       --ds-column-chart-grid-line-color
-    </code>
-    finish the set.
+    </code>.
   </p>
 
   <h3 class="block-title t-h4">
@@ -413,14 +392,18 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       none
-    </code>, the default, renders no table at
-    all; <code class="t-mono-inline">toggle</code> puts one behind a closed
-    disclosure; <code class="t-mono-inline">visible</code> renders it open. The
-    table is the non-visual route to the numbers, so
+    </code> (default) no table,
+    <code class="t-mono-inline">
+      toggle
+    </code> collapsed,
+    <code class="t-mono-inline">
+      visible
+    </code> open. It is the non-visual
+    route to the numbers: use
     <code class="t-mono-inline">
       none
-    </code> belongs only where the same
-    figures are already in a table on the page.
+    </code> only if the page already has
+    them in a table.
   </p>
 
   <ds-column-chart
@@ -436,23 +419,19 @@
   </h3>
 
   <p class="block-desc t-s">
-    A mark that leaves finishes leaving before a mark that arrives starts, so a
-    vanishing column and a new one are never on screen together.
+    Leaving marks finish before arrivals start.
     <code class="t-mono-inline">
       staggerMs
-    </code> spaces the arrivals out.
+    </code> spaces arrivals:
     <code class="t-mono-inline">
       40
-    </code> is the default and
+    </code> default,
     <code class="t-mono-inline">
       0
-    </code> turns it off. The whole spread fits
-    inside 260ms, so a long series narrows the step instead of crawling in. Edit
-    the data below to watch it. Under
+    </code> off; the spread caps at 260ms.
     <code class="t-mono-inline">
       prefers-reduced-motion
-    </code> every duration
-    is zero and each column lands straight on its final size.
+    </code> zeroes all durations.
   </p>
 
   <div class="states is-cols-2">
@@ -496,9 +475,7 @@
     </summary>
 
     <p class="block-desc t-s">
-      The axis reaches below zero when the data does, and a negative point draws
-      a column that grows down from the zero baseline rather than from the plot
-      floor.
+      Negative values extend the axis; their columns grow down from zero.
     </p>
 
     <div class="states is-cols-2">
