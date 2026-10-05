@@ -53,6 +53,12 @@
   <div class="body">
     <ng-content select="[body]"></ng-content>
 
+    <div
+      #unslotted
+      class="unslotted">
+      <ng-content></ng-content>
+    </div>
+
     <div class="impact">
       <ng-content select="[impact]"></ng-content>
     </div>
