@@ -3,14 +3,7 @@
   eyebrow="Components"
   title="Time picker">
   <span lede>
-    A time field with hour, minute and (12-hour) AM/PM wheels. The value is a
-    24-hour <code class="t-mono-inline">"HH:MM"</code> string; set 24h/12h
-    display app-wide via
-    <code class="t-mono-inline">
-      provideDsConfig({{ '{' }} timePicker: {{ '{' }} format {{ '}' }}
-      {{ '}' }})
-    </code
-    >.
+    Time field with hour, minute and (12-hour) AM/PM wheels.
   </span>
 
   <docs-nonmodal-note />
@@ -47,10 +40,6 @@
     Open wheels
   </h3>
 
-  <p class="block-desc t-s">
-    Hour, minute and AM/PM wheels open at 2:30 PM.
-  </p>
-
   <div class="row">
     <ds-time-picker
       staticPreview
@@ -65,12 +54,16 @@
   </h3>
 
   <p class="block-desc t-s">
+    The value is always a 24-hour <code class="t-mono-inline">"HH:MM"</code>
+    string. Set the display app-wide with
+    <code class="t-mono-inline">
+      provideDsConfig({{ '{' }} timePicker: {{ '{' }} format {{ '}' }}
+      {{ '}' }})
+    </code
+    >;
     <code class="t-mono-inline">
       [format]
-    </code> overrides
-    <code class="t-mono-inline">
-      DsConfig.timePicker.format
-    </code> for one instance.
+    </code> overrides it per instance.
   </p>
 
   <div class="row">

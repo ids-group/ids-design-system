@@ -3,13 +3,7 @@
   eyebrow="Components"
   title="Badge">
   <span lede>
-    A status pill coloured by its <code>status</code> key. The app declares the
-    keys with
-    <code>
-      &#64;include status.define((key: (bg:, text?, dot?)))
-    </code>
-    (<code>status.semantic-preset</code> adds info, success, warning, error and
-    neutral); the keys below are this site's.
+    A status pill coloured by its <code>status</code> key.
   </span>
 
   <h3
@@ -17,6 +11,17 @@
     class="block-title t-h4">
     Lifecycle states showcase
   </h3>
+
+  <p class="block-desc t-s">
+    The app declares keys with
+    <code>
+      &#64;include status.define((key: (bg:, text?, dot?)))
+    </code>; these are this site's.
+    <code>
+      status.semantic-preset
+    </code> adds info, success, warning,
+    error and neutral (next section).
+  </p>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
@@ -48,7 +53,6 @@
   </h3>
 
   <p class="block-desc t-s">
-    The <code class="t-mono-inline">status.semantic-preset</code> keys.
     <code class="t-mono-inline">
       solid
     </code> fills with the accent only
@@ -164,7 +168,7 @@
     <code class="t-mono-inline">
       --ds-badge-label-color
     </code> inline for
-    one-off tones (carrier brands). Declare a status for recurring ones.
+    one-off tones (carrier brands); declare a status for recurring ones.
   </p>
 
   <div class="states is-cols-4">

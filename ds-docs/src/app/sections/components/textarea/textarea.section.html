@@ -3,7 +3,7 @@
   eyebrow="Components"
   title="Textarea">
   <span lede>
-    Multi-line text input with states and autosize, themed by the
+    Multi-line text input, themed by the
     <code class="t-mono-inline">
       --ds-input-*
     </code> tokens of
@@ -153,11 +153,11 @@
     <code class="t-mono-inline">
       maxLengthMode="soft"
     </code> allows text past the
-    limit: the counter turns red, the excess is highlighted, and the field sets
+    limit: the counter turns red, the excess is highlighted, the field sets
     <code class="t-mono-inline">
       aria-invalid
     </code>, described by the counter.
-    The form decides whether to block a save.
+    The form decides whether to block saving.
   </p>
 
   <div class="grid-2">
@@ -239,7 +239,7 @@
       setSelectionRange(start, end, direction?)
     </code>
     and <code class="t-mono-inline"> select() </code> forward to the native
-    textarea, so toolbars need not touch its DOM.
+    textarea; toolbars need not touch its DOM.
   </p>
 
   <div class="stack">

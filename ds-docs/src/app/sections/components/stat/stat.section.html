@@ -3,8 +3,7 @@
   eyebrow="Components"
   title="Stats">
   <span lede>
-    Headline metric with an optional delta arrow for movement against a
-    baseline.
+    Headline metric, with an optional delta against a baseline.
   </span>
 
   <h3
@@ -96,12 +95,18 @@
     <code class="t-mono-inline">
       [dsStatValue]
     </code>; the tile keeps its
-    geometry and <code class="t-mono-inline">value</code> is the fallback. As
-    with the <code class="t-mono-inline">[delta]</code> slot, projection
-    replaces the input's text - but <code class="t-mono-inline">[delta]</code>
-    still needs a numeric <code class="t-mono-inline">[delta]</code> input to
-    show the row. <code class="t-mono-inline">unit</code> applies only to the
-    input value; put a suffix in the projected content.
+    geometry, <code class="t-mono-inline">value</code> is the fallback.
+    Projection replaces the input's text, as in the
+    <code class="t-mono-inline">
+      [delta]
+    </code> slot, which still needs a numeric
+    <code class="t-mono-inline">
+      [delta]
+    </code> input to show the row.
+    <code class="t-mono-inline">
+      unit
+    </code> applies only to the input value;
+    put a suffix in the projection.
   </p>
 
   <div class="grid-4">
@@ -122,7 +127,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    The value clips to one line, with the rest in a tooltip on hover, and on
+    The value clips to one line; the rest shows in a tooltip on hover, or on
     focus inside a focusable element. Three hooks compose:
     <code class="t-mono-inline">
       --ds-stat-value-white-space:

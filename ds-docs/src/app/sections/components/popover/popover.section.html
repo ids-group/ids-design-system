@@ -3,8 +3,8 @@
   eyebrow="Components"
   title="Popover">
   <span lede>
-    Light panel anchored to a trigger, for a few lines of context and at most
-    one action; anything richer is a modal or drawer.
+    Panel on a trigger for a few lines and at most one action; richer content
+    is a modal or drawer.
   </span>
 
   <docs-nonmodal-note />
@@ -45,16 +45,13 @@
   </h3>
 
   <p class="block-desc t-s">
-    A panel with interactive content needs
+    Interactive content needs
     <code class="t-mono-inline">
       panelRole
-    </code> (here
-    <code class="t-mono-inline">
-      "dialog"
-    </code>) and
+    </code> and
     <code class="t-mono-inline">
       panelLabel
-    </code>; only then it traps focus
+    </code>; only then the panel traps focus
     and moves it inside on open. Escape closes and refocuses the trigger. To
     close from inside, call <code class="t-mono-inline">close()</code> or
     inject <code class="t-mono-inline">DsOverlayCloseRef</code> in projected
@@ -107,7 +104,7 @@
     <code class="t-mono-inline">
       align="end"
     </code> to its right, for triggers near
-    the viewport's right edge. Applies to
+    the viewport's right edge. Only for
     <code class="t-mono-inline">
       top
     </code> and
@@ -179,8 +176,7 @@
     </code>, or
     <code class="t-mono-inline">
       'right'
-    </code>. It flips when space runs
-    out.
+    </code>. Flips when space runs out.
   </p>
 
   <div class="demo is-placement">
