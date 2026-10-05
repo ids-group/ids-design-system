@@ -12,29 +12,30 @@
   </h3>
 
   <p class="block-desc t-s">
-    The agent's code renders
+    The agent renders
     <code class="t-mono-inline">
       React.createElement(window.IdsDs.&lt;Component&gt;)
     </code>.
-    The contract:
+    Contract:
     <strong>
-      expose React components on
+      React components on
       <code class="t-mono-inline">
         window.IdsDs
-      </code>, and React arrives
-      separately as a global
+      </code>; React loads separately as a global
     </strong>
-    (<code class="t-mono-inline">_vendor/react*.js</code>). Nothing inspects
-    the rest of <code class="t-mono-inline">_ds_bundle.js</code>, so it can
-    carry an Angular runtime.
+    (<code class="t-mono-inline">_vendor/react*.js</code>). The rest of
+    <code class="t-mono-inline">
+      _ds_bundle.js
+    </code> is never inspected, so
+    it can carry an Angular runtime.
   </p>
 
   <p class="block-desc t-s">
-    A card holds no React: it is one HTML page per
+    A card holds no React: one HTML page per
     <code class="t-mono-inline">
       data-claude-design
-    </code> block of a ds-docs
-    chapter, rendering that chapter's section tag on the bundle:
+    </code> block, rendering its
+    chapter's section tag on the bundle:
   </p>
 
   <pre class="cd-chain t-mono-block">
@@ -78,8 +79,8 @@
     AST by
     <code class="t-mono-inline">
       gen.mjs
-    </code>, so no second implementation can drift. The cost is a fixed-size
-    Angular runtime in the bundle.
+    </code>: no second implementation to drift. Cost: a fixed-size Angular
+    runtime in the bundle.
   </p>
 
   <h3 class="block-title t-h4">
@@ -103,8 +104,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       npm run check:cards
-    </code> runs the whole chain, and is
-    the only form that works in an unbuilt tree.
+    </code> runs the whole chain; only it
+    works in an unbuilt tree.
   </p>
 
   <p class="block-desc t-s">
@@ -157,15 +158,15 @@
         An agent composition sets its state as INITIAL props, never toggles
         it after mount.
       </strong>
-      A conditional slot works, nested DS components included, if the gate is
-      true when the element connects; toggled later, the custom elements inside
-      are destroyed. So an overlay passes
+      A conditional slot works (nested DS components too) if its gate is true
+      at connect; toggled later, the custom elements inside are destroyed. An
+      overlay passes
       <code class="t-mono-inline">
         staticPreview
       </code> or
       <code class="t-mono-inline">
         open
-      </code> at creation, and a table with
+      </code> at creation; a table with
       bulk actions passes its selection.
     </li>
 
@@ -174,8 +175,8 @@
         A component used inside another component's template registers under an
         alias.
       </strong>
-      Nested in another's template, a custom element loses its content and
-      inputs, so the generator gives it an
+      Nested, a custom element loses its content and inputs, so the generator
+      gives it a
       <code class="t-mono-inline">
         ds-x-
       </code> tag no template mentions. The React wrapper emits the alias;
@@ -184,12 +185,13 @@
   </ul>
 
   <p class="block-desc t-s">
-    Attribute directives have no tag, so they are missing from the generated
-    surface; <code class="t-mono-inline">manual-surface.json</code> lists them.
-    Only
+    Attribute directives have no tag, so the generated surface lacks them;
+    <code class="t-mono-inline">
+      manual-surface.json
+    </code> lists them. Only
     <code class="t-mono-inline">
       dsTooltip
-    </code> would be missed, and a static card has
-    no hover to show it.
+    </code> would be missed, and a static card
+    cannot hover.
   </p>
 </docs-section>

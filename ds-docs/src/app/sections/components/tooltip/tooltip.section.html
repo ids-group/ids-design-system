@@ -4,8 +4,7 @@
   title="Tooltip"
   [apiKeys]="['tooltip:TooltipPanelComponent']">
   <span lede>
-    Small hover or focus popup for truncated text, keyboard hints and short clarifications, via
-    the
+    Hover or focus popup for truncated text, keyboard hints and short clarifications, via
     <code class="t-mono-inline">
       [dsTooltip]
     </code> directive.
@@ -101,16 +100,15 @@
   </div>
 
   <p class="block-desc t-s">
-    An unbreakable value, such as a file name or ID, breaks inside
+    Unbreakable values (file names, IDs) break inside
     <code class="t-mono-inline">
       --ds-tooltip-max-width
-    </code> (240px) instead
-    of overflowing.
+    </code> (240px).
   </p>
 
   <p class="block-desc t-s">
-    The light theme has a light, bordered panel. For the dark inverted one, set
-    three hooks on <code class="t-mono-inline">:root</code>:
+    Light theme: light, bordered panel. For a dark inverted one, set three hooks
+    on <code class="t-mono-inline">:root</code>:
   </p>
 
   <pre
@@ -125,8 +123,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    The tip opens after <code class="t-mono-inline">dsTooltipDelay</code> (120 ms) and hides at
-    once; Escape closes it. Without room on the
+    Opens after <code class="t-mono-inline">dsTooltipDelay</code> (120 ms), hides at once;
+    Escape closes it. Without room on the
     <code class="t-mono-inline">
       dsTooltipPlacement
     </code> side it flips, arrow included, 8px clear
@@ -190,11 +188,11 @@
   </div>
 
   <p class="block-desc t-s">
-    A clipped host that cannot take focus (a label in a button, a cell of a clickable row) opens
-    when keyboard focus lands on its nearest focusable ancestor, and closes on its blur, a click
-    or any key. That ancestor must be a Tab-reachable control: native, or a widget role (button,
-    link, tab, option, row, combobox). A focusable container (tab panel, scroll region), a
-    negative tabindex or a click opens nothing. Only the first clipped value per control opens.
+    A clipped host that cannot take focus (label in a button, cell of a clickable row) opens when
+    keyboard focus lands on its nearest focusable ancestor; blur, a click or any key closes it.
+    That ancestor must be a Tab-reachable control: native, or a widget role (button, link, tab,
+    option, row, combobox). A focusable container (tab panel, scroll region), negative tabindex
+    or click opens nothing. Only the first clipped value per control opens.
   </p>
 
   <div class="demo">

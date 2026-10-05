@@ -5,8 +5,7 @@
   [chapters]="true">
   <span lede>
     Two continuous quantities against each other, such as weight against
-    carriage cost. The caller decides the mark count, and the chart thins its
-    own data before drawing.
+    carriage cost.
   </span>
 
   <h3
@@ -16,7 +15,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Both scales are continuous: a point carries its own x and y. Always set
+    Always set
     <code class="t-mono-inline">
       xLabel
     </code> and
@@ -55,8 +54,8 @@
     Each series takes its own palette slot, or its own
     <code class="t-mono-inline">
       color
-    </code>; the legend keys them.
-    Overlapping clouds are the reading, not a defect.
+    </code>. Overlapping clouds are the
+    reading, not a defect.
   </p>
 
   <ds-scatter-chart
@@ -70,12 +69,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    A scatter costs one SVG node per point, unlike one
+    One SVG node per point, not one
     <code class="t-mono-inline">
       &lt;path&gt;
     </code> per line (Lighthouse warns
     near 800, errors near 1400). Past four times the plot width in marks, a
-    series is decimated and the chart prints how many readings it dropped.
+    series is decimated; the chart prints how many readings it dropped.
     <code class="t-mono-inline">
       dataTable
     </code> still lists every reading.
@@ -138,8 +137,8 @@
     affordance and makes marks focusable buttons.
     <code class="t-mono-inline">
       pointClicked
-    </code> fires on every click, with or
-    without interactive, with series and reading.
+    </code> fires on every click,
+    interactive or not, with series and reading.
   </p>
 
   <ds-scatter-chart
@@ -159,18 +158,15 @@
   </h3>
 
   <p class="block-desc t-s">
-    A click pins the point and its tooltip, with a pin disc and an
+    A click pins point and tooltip, with a pin disc and an
     <code class="t-mono-inline">
       Unpin
     </code> control at the chart's top end. A
-    second click, <kbd>Esc</kbd> or a press elsewhere releases; a click fires
-    <code class="t-mono-inline">
-      pointClicked
-    </code> whether it pins or releases. Enter and Space fire it
-    without pinning. Set
+    second click, <kbd>Esc</kbd> or a press elsewhere releases. Enter and
+    Space fire the click without pinning.
     <code class="t-mono-inline">
       pinOnClick="false"
-    </code> to disable pinning, or
+    </code> disables pinning,
     <code class="t-mono-inline">
       DS_CONFIG.chart.pinOnClick: false
     </code> for

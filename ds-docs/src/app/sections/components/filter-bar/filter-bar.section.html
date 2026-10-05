@@ -12,16 +12,15 @@
       ng-template [dsFilterItem]
     </code> with its width in px
     (<code class="t-mono-inline">[dsFilterItem]="170"</code>; bare = 180). The
-    split uses those widths and one
+    split reads those widths and one
     <code class="t-mono-inline">
       ResizeObserver
-    </code> on the row, never measuring
-    filters, so nothing flashes.
+    </code> on the row; filters are never
+    measured, so nothing flashes.
   </p>
 
   <p class="block-desc t-s">
-    Filters collapse into the panel from the right as room runs out; controls
-    marked
+    Filters collapse into the panel from the right; controls marked
     <code class="t-mono-inline">
       dsFilterBarTrailing
     </code> stay. Mark each trailing
@@ -58,8 +57,8 @@
     trigger height; match it to the filters'
     <code class="t-mono-inline">
       size
-    </code> - the bar cannot read it
-    (left unset beside
+    </code>, which the bar cannot read
+    (unset beside
     <code class="t-mono-inline">
       sm
     </code> filters, it is 8px taller).
@@ -142,9 +141,9 @@
 
   <p class="block-desc t-s">
     Each slot is exactly its declared width, in row and panel; a wider control
-    is narrowed. Moving between row and panel re-creates the filter, losing an
-    open dropdown or focus; the value survives in your signal or form control.
-    The trigger shows the count as text with
+    is narrowed. Moving between them re-creates the filter: an open dropdown
+    or focus is lost, the value survives in your signal or form control. The
+    trigger shows the count as text with
     <code class="t-mono-inline">
       aria-expanded
     </code>; the panel is a focus-trapped

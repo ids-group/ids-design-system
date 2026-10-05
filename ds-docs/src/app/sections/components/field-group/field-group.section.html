@@ -3,23 +3,22 @@
   eyebrow="Components"
   title="Field group">
   <span lede>
-    Several controls, one bordered box — scope + search, amount + unit, input +
-    action.
+    Several controls in one bordered box.
   </span>
 
   <p class="block-desc t-s">
-    The group owns the border, radius, divider and one focus ring; controls
-    inside render naked, detecting the group by injecting
+    The group owns border, radius, divider and one focus ring. Controls inside
+    detect it via
     <code class="t-mono-inline">
       DS_FIELD_GROUP
-    </code> - no per-child flag.
+    </code> and render naked; no per-child flag.
     <code class="t-mono-inline">
       disabled
-    </code> dims the box only - disable each control as well. Segments hug
-    their content; mark the one that takes the slack with
+    </code> dims the box only; disable each control too. Segments hug their
+    content;
     <code class="t-mono-inline">
       grow
-    </code>.
+    </code> marks the one that takes the slack.
   </p>
 
   <div class="demo-row">
@@ -84,7 +83,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Six controls can be segments:
+    Segments:
     <code class="t-mono-inline">
       ds-input
     </code>,
@@ -136,8 +135,8 @@
     group lines up with a plain field.
     <code class="t-mono-inline">
       invalid
-    </code> colours the whole box; a single
-    segment cannot be in error alone.
+    </code> colours the whole box; no
+    segment errors alone.
   </p>
 
   <div class="demo-row demo-stack">
@@ -238,7 +237,7 @@
     error and references the message via
     <code class="t-mono-inline">
       aria-describedby
-    </code>, so tabbing to any segment
+    </code>: tabbing to any segment
     announces it.
   </p>
 
@@ -249,7 +248,7 @@
     </code> and
     <code class="t-mono-inline">
       hint
-    </code> are suppressed - do not set
+    </code> are suppressed; do not set
     them. Name each segment with
     <code class="t-mono-inline">
       ariaLabel

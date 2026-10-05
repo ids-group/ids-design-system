@@ -4,8 +4,7 @@
   title="Sparkline"
   [chapters]="true">
   <span lede>
-    A word-sized trend line for a table cell or stat: no axes or frame, a dot on
-    the last reading, a tooltip on hover.
+    A word-sized trend line for a table cell or stat.
   </span>
 
   <h3
@@ -15,8 +14,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    One <code class="t-mono-inline">svg</code>, no container to measure, so a
-    thousand-row table stays cheap. Decorative unless it gets a
+    One <code class="t-mono-inline">svg</code>, no container to measure: cheap
+    in a thousand-row table. A tooltip shows on hover. Decorative unless it
+    gets a
     <code class="t-mono-inline">
       label
     </code>. With a
@@ -77,15 +77,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    Availability over a year, 93.1-99.5 %.
     <code class="t-mono-inline">
       data
-    </code> (default) spans the readings' range
-    and shows the May dip.
+    </code> (default) spans the readings'
+    range;
     <code class="t-mono-inline">
       zero
-    </code> keeps zero on the scale: use it
-    where amount matters more than movement.
+    </code> keeps zero on the scale, for
+    when amount matters more than movement.
     <code class="t-mono-inline">
       valueFormat
     </code> formats the tooltip value;
@@ -186,9 +185,11 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       null
-    </code> breaks the line instead of drawing
-    zero. <code class="t-mono-inline">[tooltip]="false"</code> makes it inert,
-    for a row that is a link.
+    </code> breaks the line, not zero.
+    <code class="t-mono-inline">
+      [tooltip]="false"
+    </code> makes it inert, for a row that
+    is a link.
   </p>
 
   <div class="states is-cols-2">

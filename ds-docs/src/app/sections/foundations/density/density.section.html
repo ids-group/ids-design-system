@@ -3,11 +3,11 @@
   eyebrow="Foundations"
   title="Density">
   <span lede>
-    Four density tiers, applied via
+    Four density tiers, set by
     <code class="t-mono-inline">
       [data-density]
-    </code> on a route container; they
-    rewrite hit-target and component tokens, with no component CSS changes.
+    </code>; they rewrite tokens, not
+    component CSS.
   </span>
 
   <h3
@@ -192,9 +192,7 @@
     </li>
 
     <li>
-      Field, table-cell and surface padding (<code class="t-mono-inline"
-        >--ds-surface-padding</code
-      >) — <code class="t-mono-inline">ultra-compact</code> only
+      Field, table-cell and surface padding - <code class="t-mono-inline">ultra-compact</code> only
     </li>
   </ul>
 
@@ -204,7 +202,7 @@
 
   <p class="block-desc t-s">
     Density is a <strong>screen-level decision</strong>, not user-global (the
-    Tweaks panel exposes it only for prototyping). Set
+    Tweaks panel offers it for prototyping only). Set
     <code class="t-mono-inline">
       [data-density]
     </code> on the route container,
@@ -226,15 +224,13 @@
       <code class="t-mono-inline">
         data-density="compact"
       </code> levels a toolbar at
-      32px - the supported way to get one.
+      32px.
     </strong>
     Search, input, select, autocomplete, date picker, time picker,
-    multi-select, number stepper and button measure <strong>40px</strong> at
-    default and
+    multi-select, number stepper and button go from <strong>40px</strong> to
     <strong>
       32px
-    </strong> under compact. Set density once on the container instead of
-    pinning
+    </strong>. Do not pin
     <code class="t-mono-inline">
       --ds-search-height
     </code> and its siblings per
@@ -248,8 +244,8 @@
     </code>, not
     <code class="t-mono-inline">
       height
-    </code>, so they stop following the tier
-    once it drops below the text line. Under
+    </code>: they stop following a tier
+    below the text line. Under
     <code class="t-mono-inline">
       ultra-compact
     </code> they measure 33px and 29px

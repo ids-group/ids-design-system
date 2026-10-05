@@ -3,8 +3,7 @@
   eyebrow="Components"
   title="OTP input">
   <span lede>
-    One-time password and PIN entry, with configurable length, mode and
-    masking.
+    One-time password and PIN entry.
   </span>
 
   <h3
@@ -20,13 +19,13 @@
     <code>
       numeric
     </code> (digits, numeric keypad); <code>alphanumeric</code>
-    accepts letters. <code>(completed)</code> fires with the code each time it
-    goes from partial to complete, not on edits of a full code.
+    accepts letters. <code>(completed)</code> fires with the code when it goes
+    from partial to complete, not on edits of a full code.
   </p>
 
   <p class="block-desc t-s">
-    Paste spreads across cells, <kbd>Backspace</kbd> on an empty cell clears the
-    previous one, <kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd> move, focus snaps
+    Paste spreads across cells; <kbd>Backspace</kbd> on an empty cell clears the
+    previous one; <kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd> move; focus snaps
     to the first empty cell. The first cell has
     <code>
       autocomplete="one-time-code"

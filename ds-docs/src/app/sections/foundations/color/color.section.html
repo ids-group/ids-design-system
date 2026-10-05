@@ -3,9 +3,8 @@
   eyebrow="Foundations"
   title="Colour">
   <span lede>
-    Raw ramps &rarr; role tokens (surface, border, text, status) &rarr;
-    component tokens. Components read only role tokens, so re-skins need no
-    code.
+    Raw ramps &rarr; role tokens &rarr; component tokens; components read only
+    role tokens.
   </span>
 
   <h3
@@ -18,23 +17,16 @@
     <code class="t-mono-inline">
       --secondary
     </code>: non-interactive emphasis
-    (active rails, indicators, accent pills), orange by default; reskin via
+    (active rails, indicators, accent pills), orange by default. Reskin via
     <code class="t-mono-inline">
       --secondary-h/s/l
     </code>.
     <em>
       Not
-    </em> a second CTA - primary action stays
+    </em> a second CTA: actions stay
     <code class="t-mono-inline">
       --primary
-    </code>. Opt-in:
-    <code class="t-mono-inline">
-      &lt;ds-tabs class="secondary"&gt;
-    </code>,
-    <code class="t-mono-inline">
-      &lt;ds-status-dot [style.--ds-status-dot-color]="'var(--secondary)'"&gt;
-    </code>,
-    sidenav active rail, stat delta neutral.
+    </code>.
   </p>
 
   <div class="role-grid">
@@ -132,13 +124,6 @@
   <h3 class="block-title t-h4">
     Secondary in use
   </h3>
-
-  <p class="block-desc t-s">
-    Live adoptions; a brand can also reskin
-    <code class="t-mono-inline">
-      --secondary
-    </code>.
-  </p>
 
   <div class="role-demos">
     <div class="demo">
@@ -252,8 +237,8 @@
   </div>
 
   <p class="block-desc t-s">
-    Each needs a class or variant input. The docs preview brand (Tweaks panel,
-    Acme) turns <code class="t-mono-inline">--secondary</code> red.
+    Each is opt-in via a class or input. The Acme preview brand (Tweaks
+    panel) turns <code class="t-mono-inline">--secondary</code> red.
   </p>
 
   <h3
@@ -265,8 +250,6 @@
   <p class="block-desc t-s">
     Third brand hue (violet), full ramp
     (<code class="t-mono-inline">-hover / -strong / -subtitle / -muted</code>).
-    Drives the <code class="t-mono-inline">tertiary</code> button colour and
-    tonal accents.
   </p>
 
   <div class="role-demos">
@@ -342,7 +325,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    What components consume; re-skin by remapping them to another ramp.
+    What components consume. Re-skin by remapping to another ramp.
   </p>
 
   <div class="role-grid">
@@ -391,7 +374,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Raw colour ramps; each stop is a custom property
+    Each stop is a custom property
     (<code class="t-mono-inline">--blue-600</code>).
   </p>
 
@@ -432,11 +415,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    The outer band uses brand HSL channels, so
+    Outer band: brand HSL, so
     <code class="t-mono-inline">
       --primary-h
-    </code> recolours it; the inner band
-    reads <code class="t-mono-inline">--surface-default</code>.
+    </code> recolours it. Inner band: <code class="t-mono-inline">--surface-default</code>.
   </p>
 
   <div class="halo-stage">
@@ -542,12 +524,12 @@
     <code class="t-mono-inline">
       focus.emit-rules
     </code> rings any unstyled
-    focusable via <code class="t-mono-inline">:where(:focus-visible)</code> at
-    zero specificity, so any CSS out-ranks it. Without it, an
+    focusable via <code class="t-mono-inline">:where(:focus-visible)</code>;
+    zero specificity, so any CSS wins. Without it, an
     <code class="t-mono-inline">
       ds-alert
-    </code> close button, a projected link
-    or your own <code class="t-mono-inline">&lt;button&gt;</code> gets the
+    </code> close button, projected link
+    or own <code class="t-mono-inline">&lt;button&gt;</code> gets the
     browser's <code class="t-mono-inline">outline: auto</code>.
   </p>
 
@@ -557,10 +539,10 @@
 
   <p class="block-desc t-s">
     A composite ringed on <code class="t-mono-inline">:focus-within</code>
-    (field box, segmented row, toolbar cell) must drop the base outline on its
-    one inner control, or two rings show. Never reset the whole box: inner tab
-    stops (clear button, password toggle, stepper) lose their ring, failing
-    WCAG 2.4.7. DS shells use
+    (field box, segmented row, toolbar cell) must drop the base outline on its one
+    inner control, or two rings show. Never reset the whole box: inner tab
+    stops (clear button, password toggle, stepper) lose their ring (WCAG
+    2.4.7). DS shells use
     <code class="t-mono-inline">
       focus.owns-the-focus-ring($control)
     </code> or
@@ -573,8 +555,8 @@
 
   <p class="block-desc t-s">
     Under <code class="t-mono-inline">forced-colors</code> every focused element
-    gets a <code class="t-mono-inline">CanvasText</code> outline (High Contrast
-    drops box-shadow) and the silencing rule is off. À-la-carte
+    gets a <code class="t-mono-inline">CanvasText</code> outline (box-shadow is
+    dropped) and silencing is off. À-la-carte
     <code class="t-mono-inline">
       &#64;use
     </code> consumers add
@@ -583,9 +565,9 @@
     </code> and
     <code class="t-mono-inline">
       &#64;include focus.emit-rules;
-    </code> to their
-    one global stylesheet; <code class="t-mono-inline">styles/ds</code>
-    includes them.
+    </code> to one
+    global stylesheet; <code class="t-mono-inline">styles/ds</code> includes
+    them.
   </p>
 
   <h3 class="block-title t-h4">

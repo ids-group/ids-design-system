@@ -3,8 +3,7 @@
   eyebrow="Components"
   title="Date picker">
   <span lede>
-    Calendar popover on a date field, for a single day or a range (the usual
-    choice for Build / Access / Strike scheduling).
+    Calendar popover on a date field, for a single day or a range.
   </span>
 
   <docs-nonmodal-note />
@@ -16,10 +15,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Typing follows the locale mask (e.g.
-    <code class="t-mono-inline">
-      MM/DD/YYYY
-    </code>); the calendar icon or
+    The calendar icon or
     <kbd>
       ↓
     </kbd> opens a one-month panel. In the grid, arrows move by day or week,
@@ -28,10 +24,10 @@
     </kbd>/<kbd>End</kbd> to week start or end,
     <kbd>
       PageUp
-    </kbd>/<kbd>PageDown</kbd> move by month, <kbd>Enter</kbd> or
+    </kbd>/<kbd>PageDown</kbd> by month, <kbd>Enter</kbd> or
     <kbd>
       Space
-    </kbd> selects and <kbd>Esc</kbd> closes.
+    </kbd> selects, <kbd>Esc</kbd> closes.
   </p>
 
   <div class="row">
@@ -45,10 +41,6 @@
     class="block-title t-h4">
     Open calendar
   </h3>
-
-  <p class="block-desc t-s">
-    The open range calendar, five days selected.
-  </p>
 
   <div class="row">
     <ds-date-picker
@@ -64,7 +56,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Two clicks set start and end; days between are tinted.
+    Two clicks set start and end.
   </p>
 
   <div class="row">
@@ -83,8 +75,7 @@
     </code> /
     <code class="t-mono-inline">
       [hint]
-    </code> add a label above and a hint
-    below, as on input and select.
+    </code> work as on input and select.
     <code class="t-mono-inline">
       [required]="true"
     </code> adds the asterisk,
@@ -267,11 +258,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    The trigger is a text field by default (<code class="t-mono-inline"
+    By default (<code class="t-mono-inline"
       >[allowInput]="true"</code
-    >), masked to the locale format: non-numeric characters are rejected, and
-    an impossible or out-of-range date errors on blur. Range mode uses one
-    field for both ends. Clicking the field or icon opens the panel.
+    >) the trigger is a text field masked to the locale format. Non-digits are
+    rejected; an impossible or out-of-range date errors on blur. Range mode
+    uses one field for both ends. Clicking field or icon opens the panel.
   </p>
 
   <div class="grid-2">
@@ -295,9 +286,11 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [maxDate]="today"
-    </code> rejects future dates,
-    and <code class="t-mono-inline">[defaultDate]</code> opens the panel focused
-    on that day, without selecting it.
+    </code> rejects future dates;
+    <code class="t-mono-inline">
+      [defaultDate]
+    </code> opens the panel focused
+    on that day without selecting it.
   </p>
 
   <div class="row">
@@ -318,7 +311,7 @@
       [locale]
     </code> drives month names, weekday
     headers and value format via <code>Intl</code>, never mixed with the OS
-    locale. <code class="t-mono-inline">[firstDayOfWeek]</code> (0–6, default
+    locale. <code class="t-mono-inline">[firstDayOfWeek]</code> (0-6, default
     Monday) shifts the week. App-wide:
     <code class="t-mono-inline">
       provideDsConfig({{ '{' }} datePicker: {{ '{' }} locale, dateFormat,

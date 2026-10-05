@@ -3,11 +3,7 @@
   eyebrow="Foundations"
   title="Browser tab &amp; document">
   <span lede>
-    Title, favicon, theme-color and tab grouping in the browser tab bar. Long
-    URLs and paths clip with ellipsis; expose the full path via a
-    <code class="t-mono-inline">
-      title
-    </code> attribute or a copy action.
+    Title, favicon, theme-color and tab grouping in the browser tab bar.
   </span>
 
   <h3 class="block-title t-h4">
@@ -83,7 +79,7 @@
       <code class="t-mono-inline">
         {{ '{Record} · {Section} · Acme' }}
       </code>
-      — leaf first, brand last. Index pages:
+      - leaf first, brand last. Index pages:
       <code class="t-mono-inline">
         {{ '{Section} · Acme' }}
       </code
@@ -107,7 +103,7 @@
     </dt>
 
     <dd>
-      Brand letter on brand surface, plus an alert dot for unread or attention.
+      Brand letter on brand surface; alert dot for unread or attention.
       Size matches
       <code class="t-mono-inline">
         --icon-md
@@ -133,6 +129,17 @@
     <dd>
       Cap at 7 tabs per group; beyond that, suggest native tab grouping. A
       group shares the favicon brand colour.
+    </dd>
+
+    <dt>
+      Long URLs and paths
+    </dt>
+
+    <dd>
+      Clip with ellipsis; expose the full path via a
+      <code class="t-mono-inline">
+        title
+      </code> attribute or a copy action.
     </dd>
   </dl>
 </docs-section>
