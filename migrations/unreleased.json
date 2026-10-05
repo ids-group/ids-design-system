@@ -55,6 +55,29 @@
       "verify": "With the app in dev mode, open every ds-modal and ds-drawer and confirm the console logs no [ds-modal], [ds-modal-card] or [ds-drawer] warning about content without a slot or an unknown slot."
     },
     {
+      "id": "toast-mirrors-dev-warnings",
+      "kind": "behavior",
+      "old": "ToastService",
+      "new": null,
+      "surface": "config",
+      "searchHints": [
+        "ToastService",
+        "provideDsConfig",
+        "toast:"
+      ],
+      "detect": [
+        "inject(ToastService)",
+        "toast: {",
+        "toBeVisible()",
+        "toHaveScreenshot("
+      ],
+      "action": "None, unless tests or screenshots run against a dev build and a toast in view breaks them: set provideDsConfig({ toast: { mirrorDevWarnings: false } }) in that build.",
+      "appliesWhen": "Apps that inject ToastService, in dev mode only. A production build, and an app that never injects ToastService, shows no such toast.",
+      "pitfall": "The toasts appear only when a library warning fires, so a test suite can pass on one screen and fail on the next one that warns.",
+      "restore": "provideDsConfig({ toast: { mirrorDevWarnings: false } })",
+      "verify": "In a dev build with ToastService injected, a library warning in the console is matched by one warning toast titled Dev warning, and with mirrorDevWarnings: false by none."
+    },
+    {
       "id": "exported-class-members-grew",
       "kind": "behavior",
       "old": "AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent, DrawerComponent",
@@ -102,6 +125,7 @@
     {
       "text": "ds-modal, ds-modal-card and ds-drawer render content without a slot inside a display: contents wrapper placed after the [body] / [drawer-body] content; slotted content keeps its place and spacing.",
       "verify": "open a ds-modal and a ds-drawer whose content is all slotted and confirm the body spacing and scrolling are unchanged."
-    }
+    },
+    "A library dev warning logs once per page instead of once per instance; the ds-table export warning now starts with [ds-table], and the ds-app-layout --bp-lg message is logged with console.warn instead of console.error."
   ]
 }

@@ -8,6 +8,12 @@
   confirms; on another element it follows `click` and skips `aria-disabled="true"`. The modal stays
   open until you close it.
 
+- **Dev warnings show as toasts too.** In dev mode every library warning that reaches the console is
+  also shown as a `warning` toast titled "Dev warning", once per message, as soon as the app has
+  injected `ToastService`; warnings raised before that show then, up to 50. A production build
+  shows none. On by default; `provideDsConfig({ toast: { mirrorDevWarnings: false } })` keeps them
+  in the console only.
+
 ### Fixed
 
 - **A chart's pin sits under its panel.** `ds-chart` drew the disc of a held category at the foot of
@@ -65,6 +71,11 @@
   `[body]` for its body and `[actions]` for its footer, the slot names of `ds-modal`.
   `ModalComponent`, `ModalCardComponent` and `DrawerComponent` gained the private `unslotted`,
   so a subclass declaring that name must rename it.
+
+- **A dev warning logs once per page.** An identical warning from many instances, such as one per
+  `ds-button` with the same discouraged `color` and `variant`, reached the console once per
+  instance; it now logs once. The `ds-table` export warning starts with `[ds-table]` like the
+  others, and the `ds-app-layout` missing `--bp-lg` message is a warning rather than an error.
 
 ## 0.14.6 — 2026-10-02
 
