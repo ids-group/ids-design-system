@@ -94,11 +94,30 @@
   </section>
 
   <section class="panel q" data-q="unslotted">
-    <h2>Четыре способа не потерять тело</h2>
-    <p>В каждой карточке: что пишет консьюмер, что рисует диалог, что в консоли и что меняется в библиотеке. Выбор - клик по карточке.</p>
+    <h2>Четыре способа не потерять тело и все четыре вместе</h2>
+    <p>Все четыре совместимы. Слот по умолчанию рисует тело, а предупреждение в dev-режиме говорит не «не отрисовано», а «отрисовано, поставьте слот». Опечатка в имени слота тоже уходит в тело и тоже предупреждается. Единые имена у drawer убирают ложное предупреждение на <code>[actions]</code>, документация описывает итог. В каждой карточке: что пишет консьюмер, что рисует диалог, что в консоли и что меняется в библиотеке. Выбор - клик по карточке.</p>
     <div class="opts">
       <article class="opt is-pick" tabindex="0">
         <span class="badge is-pick">рекомендую</span>
+        <h3>Всё вместе</h3>
+        <p class="code">&lt;ds-modal title="..."&gt;
+  @if (program()) { ... }
+  &lt;div footer&gt;...&lt;/div&gt;
+&lt;/ds-modal&gt;</p>
+        <p class="cap">рисует</p>
+        <div class="mm" data-dialog="full"></div>
+        <p class="console warn">⚠ [ds-modal] Content without a slot attribute is rendered into the body, but give it a slot (first node: &lt;p class="unarc__lead"&gt;). Wrap it in &lt;div body&gt;.</p>
+        <p class="console warn">⚠ [ds-modal] Unknown slot [footer] on &lt;div&gt;: rendered into the body. Slots: [eyebrow], [title-badge], [body], [impact], [actions].</p>
+        <div class="pills"><span class="pill good">не ломает</span><span class="pill good">тело видно и в prod</span><span class="pill good">ошибка и опечатка видны в dev</span><span class="pill good">[actions] на drawer - футер</span><span class="pill mid">проверка в 3 компонентах</span></div>
+        <dl class="layer">
+          <dt>Что меняется в библиотеке</dt><dd class="gain">всё из «Слот по умолчанию и единые имена», плюс проверка под ngDevMode после рендера: узлы в слоте по умолчанию дают первое предупреждение, узел с атрибутом без значения не из HTML - второе</dd>
+          <dt>Что ещё может пропасть</dt><dd class="gain">ничего</dd>
+        </dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+
+      <article class="opt" tabindex="0">
+        <span class="badge is-same">вариант</span>
         <h3>Слот по умолчанию = тело</h3>
         <p class="code">&lt;ds-modal title="..."&gt;
   @if (program()) { ... }
@@ -172,22 +191,23 @@
 
     <table>
       <thead>
-        <tr><th>Что</th><th>Слот по умолчанию = тело</th><th>Предупреждение в dev-режиме</th><th>Слот по умолчанию и единые имена</th><th>Только документация</th></tr>
+        <tr><th>Что</th><th>Всё вместе</th><th>Слот по умолчанию = тело</th><th>Предупреждение в dev-режиме</th><th>Слот по умолчанию и единые имена</th><th>Только документация</th></tr>
       </thead>
       <tbody>
-        <tr><th class="rowlabel">тело без слота видно</th><td><span class="dot on"></span></td><td><span class="dot off"></span></td><td><span class="dot on"></span></td><td><span class="dot off"></span></td></tr>
-        <tr><th class="rowlabel">ошибка заметна в dev</th><td><span class="dot on"></span> нет ошибки</td><td><span class="dot on"></span> console.warn</td><td><span class="dot on"></span> нет ошибки</td><td><span class="dot off"></span></td></tr>
-        <tr><th class="rowlabel">[actions] на drawer - футер</th><td><span class="dot off"></span> уходит в тело</td><td><span class="dot off"></span> пропадает</td><td><span class="dot on"></span></td><td><span class="dot off"></span> пропадает</td></tr>
-        <tr><th class="rowlabel">ломает консьюмеров</th><td>нет</td><td>нет</td><td>нет</td><td>нет</td></tr>
-        <tr><th class="rowlabel">шаблоны библиотеки</th><td>3</td><td>3 + проверка</td><td>3</td><td>0</td></tr>
+        <tr><th class="rowlabel">тело без слота видно</th><td><span class="dot on"></span></td><td><span class="dot on"></span></td><td><span class="dot off"></span></td><td><span class="dot on"></span></td><td><span class="dot off"></span></td></tr>
+        <tr><th class="rowlabel">забытый слот заметен в dev</th><td><span class="dot on"></span> console.warn</td><td><span class="dot off"></span> молча в теле</td><td><span class="dot on"></span> console.warn</td><td><span class="dot off"></span> молча в теле</td><td><span class="dot off"></span></td></tr>
+        <tr><th class="rowlabel">опечатка в имени слота заметна</th><td><span class="dot on"></span> console.warn</td><td><span class="dot off"></span> молча в теле</td><td><span class="dot on"></span> console.warn</td><td><span class="dot off"></span> молча в теле</td><td><span class="dot off"></span> пропадает</td></tr>
+        <tr><th class="rowlabel">[actions] на drawer - футер</th><td><span class="dot on"></span></td><td><span class="dot off"></span> уходит в тело</td><td><span class="dot off"></span> пропадает</td><td><span class="dot on"></span></td><td><span class="dot off"></span> пропадает</td></tr>
+        <tr><th class="rowlabel">ломает консьюмеров</th><td>нет</td><td>нет</td><td>нет</td><td>нет</td><td>нет</td></tr>
+        <tr><th class="rowlabel">шаблоны библиотеки</th><td>3 + проверка</td><td>3</td><td>3 + проверка</td><td>3</td><td>0</td></tr>
       </tbody>
     </table>
   </section>
 
   <section class="panel verdict is-done">
     <h2>Рекомендация</h2>
-    <p class="pick"><strong>Слот по умолчанию = тело.</strong> Он закрывает сам класс ошибки: контенту без атрибута больше некуда пропасть, консьюмеру ничего править не нужно, и модалка с drawer начинают вести себя как bottom-sheet. «Предупреждение в dev-режиме» оставляет пустое тело в prod и ловит только того, кто смотрит в консоль; «Только документация» не ловит никого.</p>
-    <p>«Слот по умолчанию и единые имена» сверху чинит только одно: <code>&lt;div actions&gt;</code> на drawer после слота по умолчанию окажется в теле, а не в футере - видно и сразу заметно, а не потеряно. Это вопрос имён, а не пропадающего контента, и ему хватит отдельной правки, если консьюмер на него наступит.</p>
+    <p class="pick"><strong>Всё вместе.</strong> Слот по умолчанию закрывает сам класс ошибки: контенту без атрибута больше некуда пропасть, и в prod тело на месте. Предупреждение поверх него не про потерю, а про порядок: «отрисовано, поставьте слот» и «такого слота нет». Так забытый и опечатанный слот видны в dev, а не всплывают позже как контент не на своём месте. Единые имена у drawer нужны, чтобы <code>&lt;div actions&gt;</code> попадал в футер и не давал ложного предупреждения.</p>
+    <p>Цена - одна проверка под <code>ngDevMode</code> на три компонента, по образцу <code>warnAnnounceOversight</code> у ds-alert. В prod-сборку она не попадает. Если проверку не делать, лучший одиночный вариант - «Слот по умолчанию = тело»: «Предупреждение в dev-режиме» без него оставляет пустое тело в prod, а «Только документация» не ловит никого.</p>
   </section>
 
   <section class="panel">
@@ -195,12 +215,12 @@
     <table>
       <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
       <tbody>
-        <tr class="row-pick"><th class="rowlabel">Как оверлей перестаёт терять контент без слота</th><td>Слот по умолчанию = тело · Предупреждение в dev-режиме · Слот по умолчанию и единые имена · Только документация</td><td>Слот по умолчанию = тело</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Как оверлей перестаёт терять контент без слота</th><td>Всё вместе · Слот по умолчанию = тело · Предупреждение в dev-режиме · Слот по умолчанию и единые имена · Только документация</td><td>Всё вместе</td></tr>
       </tbody>
     </table>
   </section>
 
-  <p class="src"><b>Источники, проверено 2026-10-05 на <code>dev</code> (0.14.6).</b> Слоты: <code>components/modal/modal.component.html:20-36</code> - <code>[eyebrow]</code>, <code>[title-badge]</code>, <code>[body]</code>, <code>[impact]</code>, <code>[actions]</code>, переброшенные в <code>ds-modal-card</code>; <code>modal-card.component.html:19-64</code> - те же пять; <code>drawer/drawer.component.html:43,47</code> - <code>[drawer-body]</code>, <code>[drawer-footer]</code>; <code>bottom-sheet/bottom-sheet.component.html:44,48</code> - <code>&lt;ng-content /&gt;</code> и <code>[actions]</code>. Слота по умолчанию в html модалки и drawer нет ни в одном из 43 тегов <code>v0.1.0</code> - <code>v0.14.6</code> (<code>git show</code> по каждому тегу). Ни один из трёх компонентов не пишет в консоль; dev-предупреждения в библиотеке живут под <code>ngDevMode</code> (<code>alert.component.ts:76</code>). <code>docs/agent/overlays/ds-modal.md:8</code> перечисляет слоты и не говорит, что контент без слота не рисуется. Консьюмер: mm-ecm, <code>ecm-portal/.../unarchive-program-dialog.component.html</code>, создан в <code>e9db383c</code> 2026-09-17 при DS 0.8.0 с телом без слота, обёрнут в <code>&lt;div body&gt;</code> в <code>3ad2df09</code> 2026-10-05. Отсутствие других таких модалок в mm-ecm, pinkmoon, mm-broker и DS - скан из постановки, здесь не повторён. Образцы диалога собраны заново из <code>modal.component.scss</code> (header, body, actions, разделители) на токенах <code>ds.css</code> в уменьшенном размере; заштрихованная полоса - пустой <code>.body</code>, у которого, в отличие от <code>.actions</code>, нет <code>:empty { display: none }</code>. Текст предупреждения - предлагаемый, такого кода нет.</p>
+  <p class="src"><b>Источники, проверено 2026-10-05 на <code>dev</code> (0.14.6).</b> Слоты: <code>components/modal/modal.component.html:20-36</code> - <code>[eyebrow]</code>, <code>[title-badge]</code>, <code>[body]</code>, <code>[impact]</code>, <code>[actions]</code>, переброшенные в <code>ds-modal-card</code>; <code>modal-card.component.html:19-64</code> - те же пять; <code>drawer/drawer.component.html:43,47</code> - <code>[drawer-body]</code>, <code>[drawer-footer]</code>; <code>bottom-sheet/bottom-sheet.component.html:44,48</code> - <code>&lt;ng-content /&gt;</code> и <code>[actions]</code>. Слота по умолчанию в html модалки и drawer нет ни в одном из 43 тегов <code>v0.1.0</code> - <code>v0.14.6</code> (<code>git show</code> по каждому тегу). Ни один из трёх компонентов не пишет в консоль; dev-предупреждения в библиотеке живут под <code>ngDevMode</code> (<code>alert.component.ts:76</code>). <code>docs/agent/overlays/ds-modal.md:8</code> перечисляет слоты и не говорит, что контент без слота не рисуется. Консьюмер: mm-ecm, <code>ecm-portal/.../unarchive-program-dialog.component.html</code>, создан в <code>e9db383c</code> 2026-09-17 при DS 0.8.0 с телом без слота, обёрнут в <code>&lt;div body&gt;</code> в <code>3ad2df09</code> 2026-10-05. Отсутствие других таких модалок в mm-ecm, pinkmoon, mm-broker и DS - скан из постановки, здесь не повторён. Образцы диалога собраны заново из <code>modal.component.scss</code> (header, body, actions, разделители) на токенах <code>ds.css</code> в уменьшенном размере; заштрихованная полоса - пустой <code>.body</code>, у которого, в отличие от <code>.actions</code>, нет <code>:empty { display: none }</code>. Тексты предупреждений - предлагаемые, такого кода нет; формулировка «отрисовано, но поставьте слот» и предупреждение на несуществующий слот - от Стаса. Опечатка в имени слота определяется эвристикой: атрибут без значения на узле верхнего уровня, которого нет в HTML; <code>footer="x"</code> со значением она пропустит.</p>
 
   <div class="bar-fixed">
     <span class="count" id="count">0 из 1</span>
