@@ -185,6 +185,18 @@ consumer's code forever. **A family renamed one member at a time**: naming one t
 moved leaves the other seven undocumented, and the search that would have found them was spent on
 the one you named.
 
+**Every line added to a published manifest is written from that boundary's diff**, a line added only
+to close a `--audit` coverage gap included. Three shortcuts look like verification and are not:
+
+- **The version's own `## <version>` block is a pointer, not a source.** It can be looser than the
+  code: the 0.4.0 block says a clear button "stays visible when the field is blurred", and the diff
+  shows only its colour and opacity changed. Write what `git diff v<prev> v<version>` shows for the
+  component the line names.
+- **Presence proves the name, never the behaviour.** A selector found at both tags says nothing about
+  what the line claims it does.
+- **One grep returns fragments.** Before stating what an element did at a tag, read every rule that
+  targets it in that tree, the global partials included, not the lines the first search returned.
+
 Only `unreleased.json` is written and checked against HEAD, because HEAD is the version it
 describes.
 
