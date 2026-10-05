@@ -93,6 +93,7 @@
 .ring {
   position: relative;
   flex: none;
+  container-type: inline-size;
   inline-size: var(--_pie-chart-size);
   block-size: var(--_pie-chart-size);
 }
@@ -133,10 +134,12 @@
     0 0 var(--space-0-5) var(--ds-chart-bg-color);
 }
 
+// A figure never breaks between its digits; on a ring under ~170px it shrinks with the ring instead.
 .center-value {
   color: var(--text-primary);
-  font-size: var(--font-size-h4);
+  font-size: min(var(--font-size-h4), 13cqi);
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .center-label {

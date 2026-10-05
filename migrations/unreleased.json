@@ -63,6 +63,10 @@
   ],
   "deleteList": [],
   "informational": [
+    {
+      "text": "ds-pie-chart no longer wraps its centre value: the figure stays on one line, and on a ring smaller than about 170px its font scales down with the ring (13% of the ring width, never above --font-size-h4).",
+      "verify": "render a donut with --ds-pie-chart-size: 120px and a centerValue such as 32,397, and confirm the figure sits on one line inside the hole."
+    },
     "--ds-topbar-crumb-text-color, --ds-topbar-crumb-hover-text-color, --ds-topbar-crumb-separator-icon-color, --ds-topbar-crumb-current-text-color, --ds-page-header-crumb-text-color and --ds-page-header-crumb-text-color-hover now recolour the projected ds-breadcrumbs, where they changed nothing; an app that set them sees those colours take effect.",
     "ds-bar-chart draws a row with a negative value as an empty track labelled with that value, where it drew a bar of the absolute value labelled 0.",
     "ds-button with routerLink or href, disabled and a disabledReason keeps a Tab stop (tabindex 0, role link) so the reason is announced; without disabledReason a disabled link-button still takes tabindex -1.",

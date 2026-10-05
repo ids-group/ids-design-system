@@ -10,6 +10,10 @@
 
 ### Fixed
 
+- **`ds-pie-chart` keeps its centre figure on one line.** A `centerValue` wider than the hole broke
+  between its digits, so `32,397` read as `32,39` over `7`; the figure no longer wraps, and on a ring
+  under about 170px its font shrinks with the ring, so a six-character figure stays inside the hole.
+
 - **A chart's pin sits under its panel.** `ds-chart` drew the disc of a held category at the foot of
   the plot, far from its panel; it now sits at the head of the reading the panel
   opens over, 8px inside a column's top or 8px below a marker; over a column too short to hold it,
