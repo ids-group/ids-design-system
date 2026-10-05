@@ -183,14 +183,16 @@ express.
 ## 2. Attribute directives — no element to register
 
 A directive has no tag, so `@angular/elements` has nothing to define and it is
-absent from the generated surface entirely. Twenty of them:
+absent from the generated surface entirely. Twenty-one of them:
 
 `[dsBrandName]` · `[dsCellTemplate]` · `[dsChartTooltip]` · `[dsChipTemplate]` · `[dsCreateTemplate]` ·
 `[dsEmptyTemplate]` · `[dsFieldClickFocus]` · `[dsGroupLabelTemplate]` ·
-`[dsOptionTemplate]` · `[dsPanelFooterTemplate]` · `[dsPanelHeaderTemplate]` ·
+`[dsModalConfirm]` · `[dsOptionTemplate]` · `[dsPanelFooterTemplate]` · `[dsPanelHeaderTemplate]` ·
 `[dsPickerTrigger]` · `[dsProjectionDropped]` · `[dsRailTrigger]` ·
 `[dsReserveMessages]` · `[dsTableColumns]` · `[dsTableExport]` ·
 `[dsTableResize]` · `[dsTooltip]` · `[dsTooltipWhenClipped]`
+
+`[dsModalConfirm]` wires a projected action to `ds-modal`'s `confirmed` output: behaviour with nothing to draw, so a static card loses nothing by its absence and the confirm button renders as the plain button it sits on.
 
 Most are template-slot markers for the picker family (`dsOptionTemplate`,
 `dsPanelHeaderTemplate`, …) and are meaningless without an Angular template
