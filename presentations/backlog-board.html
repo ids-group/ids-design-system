@@ -1097,7 +1097,8 @@ that already existed, because both are the kind of ask that comes back.
 - [ ] **[P2] How `ds-pie-chart` keeps a centre value wider than the hole on one line.** Drawn in
   deck `pie-chart-center-value`: a consumer's donut at about 120px (`innerRadius` 0.61) splits `32,397`
   into `32,39` over `7`, because `.center` carries `overflow-wrap: anywhere`. Eleven options drawn at
-  90-200px, K an adaptive ladder (fit font, compact, below); option C (`nowrap` plus a font of `min(--font-size-h4, 13cqi)`) is built on
+  90-200px. Option K (the value shrinks to the hole down to `--ds-pie-chart-center-value-min-font-size`,
+  then prints `32.4K` unless `[centerCompact]="false"`; `centerPlacement="below"` apart) is built on
   `fix/pie-chart-center-value-wrap`, not merged, and waits on the pick.
 
 - [ ] **[P2] Six Unreleased behaviour changes shipped without a choice between alternatives.** Drawn in
