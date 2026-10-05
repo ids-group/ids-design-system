@@ -22,6 +22,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { devWarn } from '@ids-group-ltd/ids-design-system/core';
+import { reportDevWarning } from '@ids-group-ltd/ids-design-system/core';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type {
@@ -1719,8 +1720,8 @@ export class TableComponent<T extends object> {
   // A click handler is outside an injection context, where `devWarn`'s effect throws.
   private warnNoExport(called: string): void {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      console.warn(
-        `ds-table: ${called}() found no export feature. Add the dsTableExport directive to the table.`,
+      reportDevWarning(
+        `[ds-table] ${called}() found no export feature. Add the dsTableExport directive to the table.`,
       );
     }
   }

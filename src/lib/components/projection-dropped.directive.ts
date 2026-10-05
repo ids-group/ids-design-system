@@ -5,6 +5,7 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { reportDevWarning } from '@ids-group-ltd/ids-design-system/core';
 
 /**
  * Dev-only guard for a component that DROPS whatever is projected into it: warns instead of
@@ -41,9 +42,11 @@ export class ProjectionDroppedDirective {
       const reason =
         this.reason() ||
         `the caption comes from the [label] input only, so \`<${selector}>Some text</${selector}>\` shows no caption at all. Move the text into [label].`;
-      console.warn(
-        `[${selector}] Projected content renders nothing — ${reason}`,
-      );
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        reportDevWarning(
+          `[${selector}] Projected content renders nothing — ${reason}`,
+        );
+      }
     });
   }
 }

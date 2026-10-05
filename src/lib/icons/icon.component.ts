@@ -4,13 +4,13 @@ import {
   computed,
   inject,
   input,
-  isDevMode,
   numberAttribute,
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { DS_ICON_REGISTRY } from './icon-registry';
 import { ICONS, type IconName } from '@ids-group-ltd/ids-design-system/core';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import { reportDevWarning } from '@ids-group-ltd/ids-design-system/core';
 
 /* Truncation contract:
    Glyph - Never clipped - the SVG sits in a square frame at one of the fixed sizes.
@@ -60,10 +60,12 @@ export class IconComponent {
     const body =
       (ICONS as Record<string, string>)[key] ?? this.registry[key] ?? '';
     // IconName is open (`| (string & {})`) for consumer-registered names, so the type cannot catch a typo; this warning is the only check.
-    if (!body && isDevMode()) {
-      console.warn(
-        `[ds-icon] Unknown icon name "${key}" — not in the DS set and not registered through provideDsIcons(), so nothing renders.`,
-      );
+    if (!body) {
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        reportDevWarning(
+          `[ds-icon] Unknown icon name "${key}" — not in the DS set and not registered through provideDsIcons(), so nothing renders.`,
+        );
+      }
     }
 
     return this.sanitizer.bypassSecurityTrustHtml(body);

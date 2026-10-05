@@ -11,7 +11,6 @@ import {
   inject,
   Injector,
   input,
-  isDevMode,
   model,
   output,
   signal,
@@ -20,6 +19,7 @@ import {
 import { ActivatedRoute, Router, type ParamMap } from '@angular/router';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
+import { reportDevWarning } from '@ids-group-ltd/ids-design-system/core';
 import { TabComponent } from './tab.component';
 import type { TabsOrientation, TabsVariant } from './tabs.types';
 
@@ -138,7 +138,7 @@ export class TabsComponent {
     });
 
     // Two strips sharing a parameter silently erase each other's tab.
-    if (isDevMode()) {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
       effect((onCleanup) => {
         const param = this.urlParam();
         if (!param) {
@@ -146,7 +146,7 @@ export class TabsComponent {
         }
         const held = claimedUrlParams.get(param) ?? 0;
         if (held > 0) {
-          console.warn(
+          reportDevWarning(
             `[ds-tabs] urlParam="${param}" is already used by another ds-tabs on this screen. Both strips write the same query parameter, so each one erases the other's tab and a reload restores whichever wrote last. Give each strip its own name.`,
           );
         }
