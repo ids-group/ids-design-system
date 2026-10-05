@@ -12,6 +12,7 @@
   var(--ds-motion-chart-mark-detail-duration)
 );
 @include chart-motion.follows('.center', var(--ds-motion-chart-mark-sweep-duration));
+@include chart-motion.follows('.center-below', var(--ds-motion-chart-mark-sweep-duration));
 @include chart-frame.chart-frame;
 @include chart-frame.no-bounding-box-focus('.slice');
 @include chart-data-table.chart-data-table;
@@ -26,6 +27,8 @@
 
 .pie-chart {
   --_pie-chart-size: var(--ds-pie-chart-size, 180px);
+  --_pie-chart-center-value-max-font-size: var(--font-size-h4);
+  --_pie-chart-center-value-min-font-size: var(--ds-pie-chart-center-value-min-font-size, var(--font-size-s));
   --_pie-chart-gap: var(--ds-pie-chart-gap, var(--space-5));
   --_pie-chart-legend-row-gap: var(--ds-pie-chart-legend-row-gap, var(--space-2));
   --_pie-chart-legend-row-height: var(--ds-pie-chart-legend-row-height, 16px);
@@ -93,7 +96,6 @@
 .ring {
   position: relative;
   flex: none;
-  container-type: inline-size;
   inline-size: var(--_pie-chart-size);
   block-size: var(--_pie-chart-size);
 }
@@ -134,12 +136,25 @@
     0 0 var(--space-0-5) var(--ds-chart-bg-color);
 }
 
-// A figure never breaks between its digits; on a ring under ~170px it shrinks with the ring instead.
+// A figure never breaks between its digits: the component shrinks it to the hole instead.
 .center-value {
   color: var(--text-primary);
-  font-size: min(var(--font-size-h4), 13cqi);
+  font-size: var(--_pie-chart-center-value-max-font-size);
   font-weight: 700;
   white-space: nowrap;
+}
+
+.ring-stack {
+  display: grid;
+  flex: none;
+  gap: var(--space-2);
+  justify-items: center;
+}
+
+.center-below {
+  display: grid;
+  justify-items: center;
+  text-align: center;
 }
 
 .center-label {

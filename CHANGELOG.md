@@ -2,6 +2,12 @@
 
 ### Added
 
+- **`ds-pie-chart` takes `centerCompact` and `centerPlacement`.** `[centerCompact]="false"` keeps the
+  full sum at the floor font size instead of the compact form. `centerPlacement="below"` prints the
+  value and its caption under the ring at full size, never shrunk or shortened; the default is
+  `'inside'`. `PieChartCenterPlacement` is the type of the latter. The
+  `--ds-pie-chart-center-value-min-font-size` token sets the smallest size the value shrinks to.
+
 - **`dsModalConfirm` fires a modal's `confirmed`.** Put it on the confirm action inside `ds-modal`
   (`ModalConfirmActionDirective`, exported from the modal entry point) and `(confirmed)` fires when
   that action is pressed. On a `ds-button` it follows `pressed`, so a disabled or loading button never
@@ -16,9 +22,11 @@
 
 ### Fixed
 
-- **`ds-pie-chart` keeps its centre figure on one line.** A `centerValue` wider than the hole broke
-  between its digits, so `32,397` read as `32,39` over `7`; the figure no longer wraps, and on a ring
-  under about 170px its font shrinks with the ring, so a six-character figure stays inside the hole.
+- **`ds-pie-chart` keeps its centre value on one line.** A value wider than the hole broke between
+  its digits, so `32,397` read as `32,39` over `7`. The value no longer wraps: it shrinks to the hole,
+  down to `--ds-pie-chart-center-value-min-font-size` (default `14px`), and past that floor the sum
+  prints in the `'tick'` form of `valueFormat` (`32.4K`). A `centerValue` string is shrunk but never
+  shortened.
 
 - **A chart's pin sits under its panel.** `ds-chart` drew the disc of a held category at the foot of
   the plot, far from its panel; it now sits at the head of the reading the panel

@@ -7216,6 +7216,27 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Caption under the centre value."
       },
       {
+        "name": "centerCompact",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "When the sum does not fit the hole even at `--ds-pie-chart-center-value-min-font-size`, prints it in the `'tick'` form of `valueFormat` (`32.4K`). A `centerValue` string is never shortened."
+      },
+      {
+        "name": "centerPlacement",
+        "kind": "input",
+        "type": "PieChartCenterPlacement",
+        "union": [
+          "inside",
+          "below"
+        ],
+        "default": "'inside'",
+        "required": false,
+        "description": "`'below'` prints the value and its caption under the ring at full size, never shrunk or shortened."
+      },
+      {
         "name": "legend",
         "kind": "input",
         "type": "'end' | 'bottom' | 'none'",

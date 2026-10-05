@@ -1,2 +1,2 @@
 export { PieChartComponent } from './pie-chart.component';
-export type { PieChartSlice } from './pie-chart.types';
+export type { PieChartCenterPlacement, PieChartSlice } from './pie-chart.types';
