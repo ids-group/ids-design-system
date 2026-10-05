@@ -3,11 +3,13 @@
   eyebrow="Components"
   title="Badge">
   <span lede>
-    A status pill, coloured by its <code>status</code> key. The DS ships no
-    status keys: the app declares them with
-    <code>&#64;include status.define((key: (bg:, text?, dot?)))</code>
+    A status pill coloured by its <code>status</code> key. The app declares the
+    keys with
+    <code>
+      &#64;include status.define((key: (bg:, text?, dot?)))
+    </code>
     (<code>status.semantic-preset</code> adds info, success, warning, error and
-    neutral), and the keys below are this site's own.
+    neutral); the keys below are this site's.
   </span>
 
   <h3
@@ -17,12 +19,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    This site's lifecycle keys as specimens.
-    <code class="t-mono-inline">withDot</code> adds a leading dot (unset
+    <code class="t-mono-inline">
+      withDot
+    </code> adds a leading dot (unset
     follows <code class="t-mono-inline">DS_CONFIG.badge.withDot</code>, then
-    <code class="t-mono-inline">false</code>); a
-    <code class="t-mono-inline">count</code> replaces the dot along with all
-    content.
+    <code class="t-mono-inline">
+      false
+    </code>); a
+    <code class="t-mono-inline">
+      count
+    </code> replaces the dot and all content.
   </p>
 
   <docs-specimens [items]="lifecycleVariants">
@@ -43,8 +49,10 @@
 
   <p class="block-desc t-s">
     The <code class="t-mono-inline">status.semantic-preset</code> keys.
-    <code class="t-mono-inline">solid</code> fills with the accent only on a
-    badge without a status: a status's colours win over it.
+    <code class="t-mono-inline">
+      solid
+    </code> fills with the accent only
+    without a status; a status's colours win.
   </p>
 
   <div class="states is-cols-4">
@@ -152,10 +160,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Override <code class="t-mono-inline">--ds-badge-bg-color</code> /
-    <code class="t-mono-inline">--ds-badge-label-color</code> inline for
-    off-token tones (carrier brands etc). Prefer a declared status for
-    recurring tones.
+    Set <code class="t-mono-inline">--ds-badge-bg-color</code> /
+    <code class="t-mono-inline">
+      --ds-badge-label-color
+    </code> inline for
+    one-off tones (carrier brands). Declare a status for recurring ones.
   </p>
 
   <div class="states is-cols-4">
@@ -209,14 +218,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    Pass <code class="t-mono-inline">count</code> to render a compact circular
-    count chip. Numbers above <code class="t-mono-inline">max</code> (default
-    99) display as <code class="t-mono-inline">99+</code>. The count's
-    screen-reader label reads “N notifications” by default; set
+    <code class="t-mono-inline">
+      count
+    </code> renders a circular chip; values
+    above <code class="t-mono-inline">max</code> (default 99) show as
+    <code class="t-mono-inline">
+      99+
+    </code>. Screen readers hear “N
+    notifications”; set
     <code class="t-mono-inline">
       countLabel
-    </code> for other nouns (e.g. “items
-    in cart”, “unread”).
+    </code> for another noun (“unread”).
   </p>
 
   <div class="states is-cols-4">

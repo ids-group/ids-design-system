@@ -5,8 +5,7 @@
   [chapters]="true">
   <span lede>
     A matrix of readings coloured by magnitude - depot by weekday, hour by date,
-    queue by region. The least code per unit of insight of anything in the
-    family, and the strictest about what has to sit beside it.
+    queue by region.
   </span>
 
   <h3
@@ -16,21 +15,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    Rows down the side, columns across the top, one reading per cell. Magnitude
-    is read from the STEP between two colours, which is why the heat scale spans
-    the full lightness range rather than a band of near-neighbours. It is a
-    separate scale from the funnel's ramp, which stays in the middle of the
-    range for the opposite reason. Cells are sized by
+    One reading per cell. Magnitude reads from the STEP between colours, so the
+    heat scale spans the full lightness range (unlike the funnel's mid-range
+    ramp). Cells:
     <code class="t-mono-inline">
       --ds-heatmap-chart-cell-size
     </code> (34px),
     <code class="t-mono-inline">
       --ds-heatmap-chart-cell-gap
-    </code> (2px) and
+    </code> (2px),
     <code class="t-mono-inline">
       --ds-heatmap-chart-cell-radius
-    </code>; labels
-    by <code class="t-mono-inline">--ds-heatmap-chart-label-color</code> and
+    </code>; labels:
+    <code class="t-mono-inline">
+      --ds-heatmap-chart-label-color
+    </code>,
     <code class="t-mono-inline">
       --ds-heatmap-chart-label-font-size
     </code>.
@@ -46,14 +45,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    Colour is the grid's only channel for the quantity, so two things are
-    mandatory: the scale under the grid says what a colour is worth, and the
-    annex table is always drawn (no
+    Colour is the only channel for the quantity, so two things are mandatory:
+    the scale under the grid, and the annex table, always drawn (no
     <code class="t-mono-inline">
       dataTable
-    </code> option), because a grid of
-    coloured squares does not meet WCAG 1.4.1. Every cell also names its
-    reading to assistive tech as
+    </code> option) because coloured
+    squares alone fail WCAG 1.4.1. Each cell announces
     <code class="t-mono-inline">
       row, column: value
     </code>.
@@ -65,9 +62,7 @@
   </p>
 
   <p class="block-desc t-s">
-    Point at a step of the scale and it stands taller while every cell outside
-    that step fades, so the scale also answers where a range of readings sits on
-    the grid.
+    Pointing at a scale step raises it and fades every cell outside that step.
   </p>
 
   <h3 class="block-title t-h4">
@@ -79,10 +74,9 @@
     <code class="t-mono-inline">
       --ds-heatmap-chart-missing-color
     </code>
-    (surface-secondary), not as the heat scale's coldest step, and it is left out of the scale entirely. The
-    coldest step is a real measurement; painting "we never measured this" with
-    it states a figure nobody recorded. Depot F below opened on Thursday and
-    nobody reports on Sunday - neither reads as a quiet day.
+    (surface-secondary), not the coldest step, and is left out of the scale.
+    Below, depot F opened on Thursday and nobody reports on Sunday - neither
+    reads as a quiet day.
   </p>
 
   <ds-heatmap-chart
@@ -95,11 +89,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Each grid scales to its own readings, so two grids side by side colour the
-    same value differently. <code class="t-mono-inline">min</code> and
+    Each grid scales to its own readings, so two grids colour the same value
+    differently. <code class="t-mono-inline">min</code> and
     <code class="t-mono-inline">
       max
-    </code> pin the floor and ceiling; they only
+    </code> pin floor and ceiling; they only
     widen the scale, never narrow it.
   </p>
 
@@ -132,11 +126,10 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       showValues
-    </code> puts each reading inside its
-    own cell. Off by default because a grid dense enough to be worth a heat map
-    has no room for the numbers. The glyph takes the cell's own colour inverted,
-    which is what keeps it legible at both ends of a scale running 1.14:1 to
-    9.07:1 against white.
+    </code> prints each reading in its
+    cell. Off by default: a dense grid has no room. The glyph takes the cell's
+    colour inverted, legible across a scale running 1.14:1 to 9.07:1 against
+    white.
   </p>
 
   <ds-heatmap-chart
@@ -153,9 +146,8 @@
     <code class="t-mono-inline">
       interactive
     </code> makes every MEASURED cell a
-    button and fires <code class="t-mono-inline">cellClicked</code> with the
-    row, the column and the reading. An unmeasured cell stays inert: a grid of
-    buttons with nothing behind them is a tab trap.
+    button firing <code class="t-mono-inline">cellClicked</code> with row,
+    column and reading. Unmeasured cells stay inert, so they are no tab trap.
   </p>
 
   <ds-heatmap-chart
@@ -174,18 +166,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    A click on a measured cell holds it and its tooltip in place, with a pin
-    disc on it and an <code class="t-mono-inline">Unpin</code> control at the
-    top end of the chart. A second click, <kbd>Esc</kbd> or a press elsewhere
-    lets go, and on an <code class="t-mono-inline">interactive</code> heat map
+    Clicking a measured cell pins it and its tooltip, with a pin disc and an
+    <code class="t-mono-inline">
+      Unpin
+    </code> control at the chart's top end. A
+    second click, <kbd>Esc</kbd> or a press elsewhere releases it; on an
+    <code class="t-mono-inline">
+      interactive
+    </code> heat map
     <code class="t-mono-inline">
       cellClicked
     </code> fires either way. Enter and
-    Space on a cell only click it; they do not pin. Set
+    Space click without pinning. Disable with
     <code class="t-mono-inline">
       pinOnClick="false"
-    </code> to keep cells
-    unheld, or
+    </code>, or
     <code class="t-mono-inline">
       DS_CONFIG.chart.pinOnClick: false
     </code> for
@@ -200,10 +195,11 @@
     Cells fade in column by column, left to right.
     <code class="t-mono-inline">
       staggerMs
-    </code> sets the step between two
-    columns, <code class="t-mono-inline">40</code> by default, and the whole
-    spread fits inside 260ms, so a wide grid narrows the step instead of
-    crawling in. <code class="t-mono-inline"> 0 </code> has the grid arrive at
-    once.
+    </code> sets the step between columns
+    (default <code class="t-mono-inline">40</code>); the whole spread fits in
+    260ms, so wide grids get a smaller step.
+    <code class="t-mono-inline">
+      0
+    </code> shows the grid at once.
   </p>
 </docs-section>

@@ -12,10 +12,8 @@
     'empty-template',
   ]">
   <span lede>
-    Chip-based multi-value selector with search filtering, keyboard navigation
-    and overflow collapse. It shows the options as a checkbox list, so the whole
-    choice is visible at once; for a set too large to scan, where typing is how
-    you narrow it, use autocomplete.
+    Chip multi-select over a checkbox list, with search, keyboard navigation
+    and overflow collapse; for sets too large to scan, use autocomplete.
   </span>
 
   <docs-nonmodal-note />
@@ -27,11 +25,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Chips expand horizontally; all selected values are always visible.
     <code>
       [selectAll]
     </code> adds a row that toggles every filter-matching
-    option at once (shows an indeterminate state on a partial selection).
+    option, indeterminate on a partial selection.
   </p>
 
   <div class="demo-panel">
@@ -59,11 +56,15 @@
   <p class="block-desc t-s">
     <code>
       maxVisibleChips
-    </code> defaults to <code>"fit"</code>: as many chips as
-    fit, the rest behind "+N more", re-split on resize. A number is a ceiling -
-    fewer when the trigger is too narrow. <code>"all"</code> shows every chip
-    and grows the trigger. Same input and default on
-    <code>ds-autocomplete</code>.
+    </code> defaults to <code>"fit"</code>: chips that fit,
+    the rest behind "+N more", re-split on resize. A number is a ceiling,
+    lowered when the trigger is narrow.
+    <code>
+      "all"
+    </code> shows every chip and grows the trigger. Same on
+    <code>
+      ds-autocomplete
+    </code>.
   </p>
 
   <div class="demo-panel">
@@ -92,7 +93,7 @@
     </div>
 
     <p style="margin-top: var(--space-3); font-size: var(--font-size-s)">
-      Drag the handle — the split moves with the width.
+      Drag the handle to re-split.
     </p>
   </div>
 
@@ -105,17 +106,17 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       triggerDisplay="labels"
-    </code> keeps the
-    compact footprint but names what is selected instead of counting it, cut to
-    the width with the rest behind &laquo;+N&raquo; — the same measurement the
-    chips use. <code class="t-mono-inline">selectAll</code> takes
+    </code> names the selection in
+    the compact footprint, cut to width with the rest behind &laquo;+N&raquo;.
+    <code class="t-mono-inline">
+      selectAll
+    </code> takes
     <code class="t-mono-inline">
       'group'
     </code> or
     <code class="t-mono-inline">
       'both'
-    </code> to head each group with its own
-    row.
+    </code> for a row per group.
   </p>
 
   <div class="demo-panel">
@@ -160,23 +161,25 @@
     </code> (never), or a
     <strong>
       number
-    </strong> — the threshold at which the row appears, stated
-    where it applies. Set
+    </strong> - the threshold at which the row appears.
     <code class="t-mono-inline">
       DS_CONFIG.picker.searchable
-    </code> to give the
-    whole app one threshold and override it per panel.
-    <code class="t-mono-inline">searchPlaceholder</code> sets the filter
-    input's placeholder (default <code>DS_INTL.picker.filterPlaceholder</code>).
+    </code> sets it app-wide; inputs
+    override it.
+    <code class="t-mono-inline">
+      searchPlaceholder
+    </code> defaults to
+    <code>
+      DS_INTL.picker.filterPlaceholder
+    </code>.
   </p>
 
   <p class="block-desc t-s">
-    Hiding the row moves the panel's keyboard model onto the trigger: arrows,
-    Enter, Escape and
+    Arrows, Enter, Escape and
     <code class="t-mono-inline">
       aria-activedescendant
     </code> belong to the
-    filter input when it is there.
+    filter input; without the row they move to the trigger.
   </p>
 
   <div class="demo-panel">
@@ -208,16 +211,14 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       triggerDisplay="count"
-    </code> swaps the chip
-    field for a caption and a selected-count badge at intrinsic width — a fixed
-    footprint for a filter toolbar, where a field that grows with the selection
-    does not fit. A projected
+    </code> shows a caption and
+    count badge at intrinsic width, fixed for filter toolbars. A projected
     <code class="t-mono-inline">
       dsPickerTrigger
-    </code> WINS over it, and
+    </code> WINS:
     <code class="t-mono-inline">
       triggerDisplay
-    </code> is then not read at all.
+    </code> is then ignored.
   </p>
 
   <div class="demo-panel">
@@ -261,9 +262,8 @@
     <code class="t-mono-inline">
       dsOptionTemplate
     </code> fills an option row's
-    label area, <code class="t-mono-inline">dsChipTemplate</code> fills the
-    selected chip — so a visual that identifies the option does not vanish the
-    moment it is picked. Both are honoured by
+    label, <code class="t-mono-inline">dsChipTemplate</code> the chip, so a
+    visual survives selection. Both work in
     <code class="t-mono-inline">
       ds-select
     </code> (rows only),
@@ -276,14 +276,14 @@
   </p>
 
   <p class="block-desc t-s">
-    The row and the chip stay library-owned:
+    Not projected, library-owned:
     <code class="t-mono-inline">
       role="option"
     </code>,
     <code class="t-mono-inline">
       aria-selected
     </code>, the checkbox, the check
-    glyph and the chip's close button are not projected.
+    glyph and the chip's close button.
   </p>
 
   <div class="demo-panel">
@@ -322,10 +322,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Groups go in the same <code class="t-mono-inline">options</code> input as
-    flat options and render in the order given, so the two may be mixed. A
-    group's own <code class="t-mono-inline">disabled</code> disables every
-    option in it. Filtering hides a group whose options all fail the query.
+    Groups and flat options mix in one <code class="t-mono-inline">options</code>
+    input, in the order given. A group's <code class="t-mono-inline">disabled</code>
+    disables all its options. Filtering hides a group with no matches.
   </p>
 
   <div class="demo-panel">
@@ -344,28 +343,35 @@
   </h3>
 
   <p class="block-desc t-s">
-    Default <code class="t-mono-inline">width="fill"</code> stretches to the
-    container and pins the panel to the trigger.
+    Default <code class="t-mono-inline">width="fill"</code> fills the
+    container, panel matching the trigger.
     <code class="t-mono-inline">
       width="content"
-    </code> hugs the trigger's own
-    content and takes that width as the panel's floor.
+    </code> hugs the trigger's content,
+    which floors the panel width;
     <code class="t-mono-inline">
       --ds-dropdown-panel-min-width
     </code> and
     <code class="t-mono-inline">
       --ds-dropdown-panel-max-width
-    </code> bound the
-    panel in that mode. A label too long for the panel is cut with an ellipsis
-    and shows in full in a tooltip on hover; one that fits gets no tooltip.
+    </code> bound it. Overlong
+    labels get an ellipsis and hover tooltip.
   </p>
 
   <p class="block-desc t-s">
-    The panel is portaled: <code class="t-mono-inline">panelClass</code> is the
-    only way to style one instance, and it reads
-    <code class="t-mono-inline">--ds-multi-select-panel-bg-color</code>,
-    <code class="t-mono-inline">--ds-multi-select-check-bg-color</code>, the
-    <code class="t-mono-inline">--ds-dropdown-panel-*</code> tokens and the
+    The panel is portaled: style one instance via
+    <code class="t-mono-inline">
+      panelClass
+    </code>. It reads
+    <code class="t-mono-inline">
+      --ds-multi-select-panel-bg-color
+    </code>,
+    <code class="t-mono-inline">
+      --ds-multi-select-check-bg-color
+    </code>, the
+    <code class="t-mono-inline">
+      --ds-dropdown-panel-*
+    </code> tokens and the
     shared <code class="t-mono-inline">--ds-option-*</code> selected and check
     colours.
   </p>
@@ -393,16 +399,30 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       hint
-    </code> renders a helper line below the
-    control; <code class="t-mono-inline">error</code> replaces it with error
-    text announced via <code>role="alert"</code>, and
-    <code class="t-mono-inline">warning</code> /
-    <code class="t-mono-inline">success</code> show their own states.
-    <code class="t-mono-inline">[invalid]</code> paints the error border
+    </code> adds a helper line below;
+    <code class="t-mono-inline">
+      error
+    </code> replaces it with text announced
+    via <code>role="alert"</code>;
+    <code class="t-mono-inline">
+      warning
+    </code> /
+    <code class="t-mono-inline">
+      success
+    </code> show their states.
+    <code class="t-mono-inline">
+      [invalid]
+    </code> paints the error border
     without text. <code class="t-mono-inline">size</code> takes
-    <code>sm</code> · <code>md</code> · <code>lg</code> and falls back to
-    <code>DS_CONFIG.control.size</code>; <code>required</code> and
-    <code>optional</code> mark the label.
+    <code>
+      sm
+    </code> · <code>md</code> · <code>lg</code> and falls back to
+    <code>
+      DS_CONFIG.control.size
+    </code>; <code>required</code> and
+    <code>
+      optional
+    </code> mark the label.
   </p>
 
   <div class="demo-panel">
@@ -443,8 +463,8 @@
     </code> and
     <code class="t-mono-inline">
       ds-autocomplete
-    </code>. Use it for a set recognised by glyph (a priority scale). Chips stay
-    text-only: they are the part of the trigger that runs out of room.
+    </code>. Use it for glyph-recognised sets like priority. Chips stay
+    text-only to save room.
   </p>
 
   <div class="demo-panel">
@@ -464,16 +484,17 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       filterChange
-    </code> reports what was typed and
+    </code> reports the query;
     <code class="t-mono-inline">
       filterWith="none"
-    </code> stops the panel
-    narrowing the list again: the options you hand back are the ones rendered.
-    <code class="t-mono-inline">loading</code> replaces the empty row with a
-    spinner while a request is in flight, and
-    <code class="t-mono-inline">dsEmptyTemplate</code> replaces the No-matches
-    row. The panel emits <code class="t-mono-inline">opened</code> (where the
-    first fetch belongs) and <code class="t-mono-inline">closed</code>.
+    </code> renders your options
+    unfiltered.
+    <code class="t-mono-inline">
+      loading
+    </code> swaps the empty row for a
+    spinner; <code class="t-mono-inline">dsEmptyTemplate</code> replaces the
+    No-matches row. The panel emits <code class="t-mono-inline">opened</code>
+    (fetch first here) and <code class="t-mono-inline">closed</code>.
   </p>
 
   <div class="demo-panel">
@@ -512,8 +533,7 @@
     <code class="t-mono-inline">
       query
     </code> in context. Both sit outside the
-    listbox, so nothing here is counted as an option, and neither scrolls with
-    the list.
+    listbox: not counted as options, not scrolled with the list.
   </p>
 
   <div class="demo-panel">
@@ -552,16 +572,14 @@
     <code class="t-mono-inline">
       dsGroupLabelTemplate
     </code> fills a group's
-    heading — the element itself stays ours, so the id the group is named by
-    cannot be detached from it. An option's
+    heading; the element and its naming id stay library-owned. An option's
     <code class="t-mono-inline">
       disabledReason
     </code> reaches the row as
     <code class="t-mono-inline">
       aria-describedby
-    </code>: the row already looks
-    disabled, the sentence is for whoever cannot see that. Open the panel and
-    read the "On leave" rows with a screen reader.
+    </code> for screen readers - try the
+    "On leave" rows.
   </p>
 
   <div class="demo-panel">

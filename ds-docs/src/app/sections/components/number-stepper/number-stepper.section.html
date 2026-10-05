@@ -3,14 +3,18 @@
   eyebrow="Components"
   title="Number stepper">
   <span lede>
-    Spinbox for small bounded whole-number quantities: increment / decrement
-    buttons around a numeric input. Bind it with
+    Spinbox for small bounded whole numbers: -/+ buttons around a numeric
+    input. Bind with
     <code class="t-mono-inline">
       &lt;ds-number-stepper [(value)]="qty"&gt;
     </code
-    >; it is not a form control (no <code>formControlName</code>, no
-    <code>hint</code> / <code>error</code>). It renders no label, so always
-    set <code class="t-mono-inline">ariaLabel</code>.
+    >; not a form control (no <code>formControlName</code>, no
+    <code>
+      hint
+    </code> / <code>error</code>). No label, so always set
+    <code class="t-mono-inline">
+      ariaLabel
+    </code>.
   </span>
 
   <h3
@@ -20,10 +24,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    Three sizes aligned with input / select field heights. Unset
-    <code>size</code> falls back to <code>DS_CONFIG.control.size</code>, then
-    <code>md</code>. The focus ring reads
-    <code>--ds-number-stepper-focus-shadow</code>.
+    Heights match input / select. Unset
+    <code>
+      size
+    </code> falls back to <code>DS_CONFIG.control.size</code>, then
+    <code>
+      md
+    </code>. Focus ring:
+    <code>
+      --ds-number-stepper-focus-shadow
+    </code>.
   </p>
 
   <div class="row">
@@ -70,11 +80,10 @@
     </code> /
     <code class="t-mono-inline">
       [max]
-    </code> clamp the value; the buttons
+    </code> clamp the value; buttons
     disable at the bounds. <code class="t-mono-inline">min</code> defaults to
-    0, so the value cannot go negative unless you set it;
-    <code class="t-mono-inline">max</code> defaults to none.
-    <code class="t-mono-inline">[step]</code> sets the button increment.
+    0 (no negatives unless set); <code class="t-mono-inline">max</code> to
+    none. <code class="t-mono-inline">[step]</code> sets the increment.
   </p>
 
   <div class="row">

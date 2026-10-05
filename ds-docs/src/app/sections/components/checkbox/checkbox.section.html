@@ -154,10 +154,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Use <code class="t-mono-inline">hint</code> for helper text and
-    <code class="t-mono-inline">error</code> for an error message.
-    <code class="t-mono-inline">[invalid]</code> paints the error state without
-    text.
+    <code class="t-mono-inline">
+      hint
+    </code> shows helper text, <code class="t-mono-inline">error</code> an
+    error message; <code class="t-mono-inline">[invalid]</code> paints the
+    error state without text.
   </p>
 
   <div class="stack">
@@ -179,15 +180,12 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [label]
-    </code> is the usual API. For a caption with a
-    link or emphasis, project the markup instead;
+    </code> is the usual API; for a link or
+    emphasis, project markup instead.
     <code class="t-mono-inline">
       [label]
-    </code> wins when both are set. The required
-    asterisk comes only with
-    <code class="t-mono-inline">
-      [label]
-    </code> - a projected caption adds its own.
+    </code> wins when both are set and is the
+    only source of the required asterisk - a projected caption adds its own.
     Same for <code class="t-mono-inline">ds-switch</code> and
     <code class="t-mono-inline">
       ds-radio
