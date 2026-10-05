@@ -49,6 +49,12 @@
   `--ds-page-header-crumb-text-color-hover` changed nothing; they now recolour the projected
   `ds-breadcrumbs`. Unset, the breadcrumbs keep their own `--ds-breadcrumbs-*` colours.
 
+- **The `ds-banner` icon centres on the capitals of the text.** It centred on the line boxes, leading
+  included, and a banner with no `title` kept the title-to-body gap above its body, so the icon sat
+  up to 2px above the letters. Where `text-box` is supported (Chromium, Safari) the icon now lines up
+  with the capitals, compact or not, with or without a title. A banner with no `title` is 4px
+  shorter; every other banner keeps its height.
+
 ## 0.14.6 — 2026-10-02
 
 ### Breaking
