@@ -1,4 +1,5 @@
 import { afterRenderEffect, isDevMode } from '@angular/core';
+import { reportDevWarning } from './dev-warning';
 
 // Empty-valued attributes HTML itself defines, so they are never mistaken for a slot name.
 const HTML_BOOLEAN_ATTRIBUTES = new Set([
@@ -46,7 +47,7 @@ function slotLikeAttribute(element: Element): string | undefined {
  * Warns when content reaches an overlay's default slot: it renders in the body, but it carries no
  * slot attribute, or one the overlay does not have. `container` is the element wrapping the
  * default `<ng-content />`; content that appears later (an `@if` resolving) is caught by a
- * MutationObserver. Once per distinct message, dev mode only; the caller wraps the call in the
+ * MutationObserver. Reported through `reportDevWarning`, dev mode only; the caller wraps the call in the
  * `typeof ngDevMode` guard (see `devWarn`). Must be called from an injection context.
  * @internal
  */
@@ -59,13 +60,6 @@ export function warnUnslottedContent(
   if (!isDevMode()) {
     return;
   }
-  const seen = new Set<string>();
-  const warn = (text: string) => {
-    if (!seen.has(text)) {
-      seen.add(text);
-      console.warn(text);
-    }
-  };
   const check = (root: HTMLElement) => {
     const nodes = [...root.childNodes].filter(
       (node) =>
@@ -77,7 +71,7 @@ export function warnUnslottedContent(
       const attribute =
         node instanceof Element ? slotLikeAttribute(node) : undefined;
       if (attribute) {
-        warn(
+        reportDevWarning(
           `[${tag}] Unknown slot [${attribute}] on <${(node as Element).localName}>: rendered into the body. Slots: ${slots.map((slot) => `[${slot}]`).join(', ')}.`,
         );
       } else {
@@ -85,7 +79,7 @@ export function warnUnslottedContent(
       }
     }
     if (unnamed.length) {
-      warn(
+      reportDevWarning(
         `[${tag}] Content without a slot attribute is rendered into the body, but give it a slot (first node: ${describe(unnamed[0])}). Wrap it in <div ${bodySlot}>.`,
       );
     }

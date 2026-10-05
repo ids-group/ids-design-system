@@ -195,6 +195,21 @@
     <ds-toast-region [maxVisible]="3" />
   </div>
 
+  <h3 class="block-title t-h4">
+    Dev warnings
+  </h3>
+
+  <p class="block-desc t-s">
+    In dev mode every library warning that reaches the console also shows as a
+    <code class="t-mono-inline">
+      warning
+    </code> toast titled "Dev warning", once per message, as soon as
+    the app injects <code class="t-mono-inline">ToastService</code>. A production build shows none.
+    <code class="t-mono-inline">
+      toast.mirrorDevWarnings: false
+    </code> keeps them in the console only.
+  </p>
+
   <h3
     class="block-title t-h4"
     data-for="toast-region">
