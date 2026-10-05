@@ -8,6 +8,24 @@
   confirms; on another element it follows `click` and skips `aria-disabled="true"`. The modal stays
   open until you close it.
 
+### Removed
+
+- **51 tokens nothing read.** No rule in the library styled anything with them:
+  `--switch-thumb-travel`, `--tag-close-size`, `--field-textarea-min`, `--field-num-stepper-w`,
+  `--form-section-label-w`, `--page-header-sub-mt`, `--field-select-pad-r`, `--tag-close-glyph`,
+  `--menu-minw`, `--menu-sep-h`, `--toast-enter-y`, `--picker-offset`, `--cmdk-w`,
+  `--cmdk-list-maxh`, `--modal-enter-y`, `--errorpage-body-maxw`, `--wizard-body-minh`,
+  `--wizard-step-bar-w`, `--inline-edit-input-minw`, `--inline-edit-btn-size`, `--settings-nav-w`,
+  `--settings-row-label-w`, `--settings-row-label-gap`, `--matrix-maxh`, `--matrix-cell-pad-y`,
+  `--matrix-cell-pad-x`, `--matrix-cell-minw`, `--matrix-rowhdr-minw`, `--calendar-rowlabel-w`,
+  `--calendar-row-h`, `--calendar-cell-min`, `--calendar-cell-pad`, `--calendar-bar-h`,
+  `--calendar-bar-inset-y`, `--binpack-bay-h`, `--map-chip-pad-y`, `--map-chip-pad-x`,
+  `--map-chip-inset`, `--chart-empty-h`, `--chart-skeleton-h`, `--chart-legend-dot`,
+  `--compare-dt-w`, `--dodont-stage-minh`, `--statemap-arrow-w`, `--statemap-arrow-cap`,
+  `--grid-table-min`, `--grid-cols-card-minh`, `--grid-cols-card-thumb`, `--scroll-spec-h`,
+  `--tab-spec-maxw`, `--tab-spec-dot-offset`. A stylesheet that reads one gets an invalid value; the
+  manifest item carries the old values.
+
 ### Fixed
 
 - **A chart's pin sits under its panel.** `ds-chart` drew the disc of a held category at the foot of
