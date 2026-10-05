@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**114 open — 0 P1, 5 P2, 109 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**115 open — 0 P1, 5 P2, 110 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 5
 
@@ -28,7 +28,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 109
+### P3 — 110
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -57,6 +57,7 @@ item and nothing else.
   - Hooks in toasts (Vanya's AI deck, 2026-10-05)
   - Styles in cascade layers (Vanya's AI deck, 2026-10-05)
 - **Tooling**
+  - `build-cards.mjs` cannot slice a chapter that nests a `block-title` heading inside `details.edge-cases`
   - No pixel comparison was run over the 2026-09-29/30 library comment sweep (recorded 2026-09-30)
   - `--picker-maxh` is an abbreviated token name (recorded 2026-09-24)
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
@@ -443,6 +444,13 @@ Each has somebody behind it. Nothing here is speculative work.
 ## Tooling
 
 *This section also has items under **Decisions**, **Parked**, **Records**.*
+
+- [ ] **[P3] `build-cards.mjs` cannot slice a chapter that nests a `block-title` heading inside `details.edge-cases`.**
+  Pie, line, column and funnel chart publish as one whole-chapter card each, so a block such as pie's
+  "Centre value fit" cannot be its own card: block-level marks fail the build ("nests a block the cards cannot
+  address"). Teach `blocksOf()` to skip the nested edge-cases heading, then mark those four chapters per block
+  (pie: Default, Centre content, Centre value fit) and list the withdrawn whole-chapter cards in
+  `.design-sync/obsolete.txt`. Stas asked for it.
 
 - [ ] **[P3] No pixel comparison was run over the 2026-09-29/30 library comment sweep (recorded 2026-09-30).**
   Two passes rewrote comments in 370+ files of `src/lib`; a comment-stripped code diff against the base came out
