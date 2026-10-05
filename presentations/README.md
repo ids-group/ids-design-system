@@ -11,7 +11,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 
 | # | Deck | Answering it unblocks |
 | --- | --- | --- |
-| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 7 asks a consumer waits on, then 36 decisions across six groups, every option drawn in its own card; answered asks sit under «Уже решено» |
+| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 7 asks a consumer waits on, then 37 decisions across six groups, every option drawn in its own card; answered asks sit under «Уже решено» |
 | 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
 | 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
 | 4 | `4-interaction-formula` | two pressed-state verdicts, both rendered and measured: the tonal button's pressed recipe and the danger menu item whose pressed equals its hover. The other three are answered and the `.ds-interactive` formula is deferred |
@@ -26,11 +26,12 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 13 | `13-chart-motion-extras` | which of ten additions ship with the motion level picked in `chart-motion`: axis answers the hover, pie centre shows the slice, legend collapses a series, heatmap crosshair, scatter nearest point, marker halo, skeleton crossfade, scatter and heatmap stagger, gliding keyboard focus, columns that move on sort - each live |
 | 14 | `14-unread-tokens` | which of the 121 public tokens the library never reads to remove: none, the 51 sizes of components and patterns that do not exist (0 reads in three consumers), or all 121 (12 of them read by a consumer) |
 | 15 | `15-unasked-decisions` | six behaviour changes already in Unreleased that shipped without a choice between alternatives - theme attribute ownership, modal confirm, avatar-group max, disabled link reason, icon registry merge, chart pin geometry - each with its options drawn |
+| 16 | `16-pie-chart-center-value` | how `ds-pie-chart` keeps a centre value wider than the hole on one line: today's wrap between digits, `nowrap`, `nowrap` with a ring-scaled font (built on a branch), a length-fitted font, a compact `32.4K`, the value below the ring, or a consumer-side minimum ring - each drawn at 110-200px with its line count measured in the page |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
 written in Russian; `deck.css`, which sits beside `ds.css` and carries the shell, is shared by ranks
-1, 4, 5 and 8-15 - ranks 2, 3, 6 and 7 render fully inline instead.
+1, 4, 5 and 8-15 - ranks 2, 3, 6, 7 and 16 render fully inline instead.
 
 **`implemented/` is where the answers live, and it is worth reading.** A closed deck keeps every word
 of the argument — the next person to ask the same question reads it to find out what was already
