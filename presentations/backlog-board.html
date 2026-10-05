@@ -1096,8 +1096,8 @@ that already existed, because both are the kind of ask that comes back.
 
 - [ ] **[P2] How `ds-pie-chart` keeps a centre value wider than the hole on one line.** Drawn in
   deck `pie-chart-center-value`: a consumer's donut at about 120px (`innerRadius` 0.61) splits `32,397`
-  into `32,39` over `7`, because `.center` carries `overflow-wrap: anywhere`. Ten options drawn at
-  90-200px; option C (`nowrap` plus a font of `min(--font-size-h4, 13cqi)`) is built on
+  into `32,39` over `7`, because `.center` carries `overflow-wrap: anywhere`. Eleven options drawn at
+  90-200px, K an adaptive ladder (fit font, compact, below); option C (`nowrap` plus a font of `min(--font-size-h4, 13cqi)`) is built on
   `fix/pie-chart-center-value-wrap`, not merged, and waits on the pick.
 
 - [ ] **[P2] Six Unreleased behaviour changes shipped without a choice between alternatives.** Drawn in
@@ -1184,7 +1184,7 @@ file** — the number moves; cite the filename.
 | 13 | `13-chart-motion-extras` | Which of ten motion and hover additions to build if a motion level is chosen in `chart-motion`; all on by default, each one live. | the chart-motion Decision |
 | 14 | `14-unread-tokens` | Which public tokens the library never reads to remove: none, the 51 dead component and pattern sizes, or all 121. | none |
 | 15 | `15-unasked-decisions` | Six Unreleased behaviour changes made without a choice: keep, adjust or revert each. | none |
-| 16 | `16-pie-chart-center-value` | How the pie chart keeps a wide centre value on one line: ten options, each drawn at five ring sizes. | the pie-chart centre-value P2 |
+| 16 | `16-pie-chart-center-value` | How the pie chart keeps a wide centre value on one line: eleven options, each drawn at five ring sizes, with a live playground. | the pie-chart centre-value P2 |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

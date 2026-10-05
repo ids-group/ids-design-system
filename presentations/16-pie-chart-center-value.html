@@ -78,6 +78,14 @@ summary { cursor: pointer; }
 .v-cqi-floor .ring { container-type: inline-size; }
 .v-cqi-floor .center-value { white-space: nowrap; font-size: clamp(14px, 13cqi, 22px); }
 .must { font-weight: 600; }
+.play { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 16px; align-items: center; margin-top: 10px; }
+@media (max-width: 760px) { .play { grid-template-columns: 1fr; } }
+.play-stage { display: grid; place-items: center; min-block-size: 280px; background: var(--chart-bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px; }
+.play-controls { display: grid; gap: 10px; font-size: 13px; }
+.play-controls label { display: grid; gap: 4px; }
+.play-controls .row-check { display: flex; gap: 8px; align-items: center; }
+.play-controls input[type=text] { font: inherit; padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); }
+.play-step { font-size: 12px; color: var(--muted); }
 .v-fit .center-value, .v-compact .center-value { white-space: nowrap; }
 
 .ecm { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 16px; align-items: stretch; margin-top: 4px; }
@@ -131,7 +139,11 @@ summary { cursor: pointer; }
 <script>
 const SIZES = [90, 110, 130, 160, 200];
 const VALUES = ['32,397', '1,234,567'];
+const MIN_FONT = 14;
 const VARIANTS = [
+  { id: 'K', cls: 'v-ladder', title: 'Адаптивная лестница: D, потом E, потом F', where: 'DS, замер в компоненте + два флага',
+    pills: [['good', 'не ломает'], ['good', 'подстраивается под кольцо и длину'], ['warn', 'JS-замер на ресайз'], ['warn', 'шрифт разный у соседних карточек'], ['warn', 'E только для числа, не для строки']],
+    more: 'Ступени по очереди, пока число не войдёт в 90% дырки: 1) 22px; 2) шрифт уменьшается под длину числа, но не мельче 14px (D); 3) если включено сокращение - 32.4K, тоже с подгонкой шрифта (E); 4) если включён вынос - число под кольцом, 22px (F); 5) иначе 14px и число заходит на кольцо. Сокращать компонент может только своё число (сумма слайсов): строку из centerValue он не знает как сократить. В ECM centerValue и сумма слайсов - одно и то же число, так что ECM может его не передавать. В сетке обе ступени включены; в песочнице ниже их можно выключить.' },
   { id: 'A', cls: '', title: 'Как сейчас (баг)', where: 'DS 0.14.3, без изменений',
     pills: [['bad', 'ломает число по цифрам'], ['good', 'ничего не менять']],
     more: 'overflow-wrap: anywhere на всём центре. Как только число шире блока, оно рвётся посреди цифр: «32,39 / 7».' },
@@ -178,6 +190,15 @@ function pie(size, value) {
   return `<div class="pie"><div class="ring" style="--size:${size}px">${ringSvg()}<div class="center"><span class="center-value">${value}</span><span class="center-label">visits</span></div></div></div>`;
 }
 
+const naturalWidthOf = (text, fontSize) => {
+  const m = document.createElement('span');
+  m.style.cssText = `position:absolute;visibility:hidden;white-space:nowrap;font:700 ${fontSize}px ${getComputedStyle(document.documentElement).getPropertyValue('--font-sans')}`;
+  m.textContent = text;
+  document.body.append(m);
+  const w = m.getBoundingClientRect().width;
+  m.remove();
+  return w;
+};
 const naturalWidth = (el, fontSize) => {
   const m = document.createElement('span');
   m.style.cssText = `position:absolute;visibility:hidden;white-space:nowrap;font:700 ${fontSize}px ${getComputedStyle(document.documentElement).getPropertyValue('--font-sans')}`;
@@ -188,7 +209,39 @@ const naturalWidth = (el, fontSize) => {
   return w;
 };
 
+function ladder(text, size, { compact, below }) {
+  const avail = size * 0.61 * 0.9;
+  const fitFont = (t) => Math.min(22, 22 * avail / naturalWidthOf(t, 22));
+  const full = fitFont(text);
+  if (full >= MIN_FONT) return { text, font: full, place: 'center', step: full >= 22 ? '1: 22px' : '2: шрифт под длину (D)' };
+  const n = Number(String(text).replace(/,/g, ''));
+  if (compact && Number.isFinite(n)) {
+    const short = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(n);
+    const f = fitFont(short);
+    if (f >= MIN_FONT) return { text: short, font: f, place: 'center', step: '3: сокращение (E)' };
+  }
+  if (below) return { text, font: 22, place: 'below', step: '4: под кольцом (F)' };
+  return { text, font: MIN_FONT, place: 'center', step: '5: 14px, заходит на кольцо' };
+}
+
+function renderLadder(cell, size, opts) {
+  const value = cell.querySelector('.center-value');
+  const full = value.dataset.full ?? value.textContent;
+  value.dataset.full = full;
+  const r = ladder(full, size, opts);
+  if (r.place === 'below') {
+    cell.querySelector('.center').remove();
+    cell.querySelector('.pie').insertAdjacentHTML('beforeend', `<span class="below-value">${r.text}</span><span class="below-label">visits</span>`);
+  } else {
+    value.textContent = r.text;
+    value.style.whiteSpace = 'nowrap';
+    value.style.fontSize = r.font.toFixed(1) + 'px';
+  }
+  return r;
+}
+
 function applyBehaviour(variant, cell, size) {
+  if (variant.id === 'K') { renderLadder(cell, size, { compact: true, below: true }); return; }
   const value = cell.querySelector('.center-value');
   value.dataset.full = value.textContent;
   const hole = size * 0.61;
@@ -249,7 +302,19 @@ for (const v of VARIANTS) {
     grid.append(cell);
     cell.dataset.size = effective;
   }
-  sec.addEventListener('click', (e) => { if (!e.target.closest('details')) choose(v.id); });
+  if (v.id === 'K') {
+    grid.insertAdjacentHTML('afterend', `<div class="play">
+      <div class="play-stage" id="play-stage"></div>
+      <div class="play-controls">
+        <label>Кольцо: <b id="play-size-out">120</b>px<input id="play-size" type="range" min="70" max="260" value="120"></label>
+        <label>Число<input id="play-value" type="text" value="32,397"></label>
+        <span class="row-check"><input id="play-compact" type="checkbox" checked><label for="play-compact">сокращение (E)</label></span>
+        <span class="row-check"><input id="play-below" type="checkbox" checked><label for="play-below">вынос под кольцо (F)</label></span>
+        <span class="play-step" id="play-step"></span>
+      </div>
+    </div>`);
+  }
+  sec.addEventListener('click', (e) => { if (!e.target.closest('details, .play')) choose(v.id); });
   sec.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(v.id); } });
   root.append(sec);
 }
@@ -281,6 +346,18 @@ document.fonts.ready.then(() => {
       ? `<span class="pill pill-bad must">обязательное: нет - ${failed.textContent.split(' · ')[0]}</span>`
       : '<span class="pill pill-good must">обязательное: выполнено</span>');
   }
+  const stage = document.getElementById('play-stage');
+  const sizeIn = document.getElementById('play-size');
+  const update = () => {
+    const size = Number(sizeIn.value);
+    document.getElementById('play-size-out').textContent = size;
+    stage.innerHTML = `<div class="cell" style="border:0;background:transparent">${pie(size, document.getElementById('play-value').value || '0')}</div>`;
+    const cell = stage.firstElementChild;
+    const r = renderLadder(cell, size, { compact: document.getElementById('play-compact').checked, below: document.getElementById('play-below').checked });
+    document.getElementById('play-step').textContent = `ступень ${r.step} · шрифт ${r.font.toFixed(1)}px`;
+  };
+  for (const id of ['play-size', 'play-value', 'play-compact', 'play-below']) document.getElementById(id).addEventListener('input', update);
+  update();
   render();
 });
 </script>
