@@ -8,9 +8,8 @@
   `'inside'`. `PieChartCenterPlacement` is the type of the latter. The
   `--ds-pie-chart-center-value-min-font-size` token sets the smallest size the value shrinks to.
   `PieChartComponent` gained the protected `centerText` and `centerFontSize` and the private
-  `compactCenterValue`, `ringElement`, `centerValueElement`, `centerFit`, `measureContext`,
-  `fitCenter`, `refitOnRingResize` and `refitOnValueChange`, so a subclass declaring one of those
-  names must rename it.
+  `compactCenterValue`, `ringElement`, `centerValueElement`, `centerFit`, `ringWidth`, `fitsInside`,
+  `fitCenter`, `watchRing` and `refit`, so a subclass declaring one of those names must rename it.
 
 - **`dsModalConfirm` fires a modal's `confirmed`.** Put it on the confirm action inside `ds-modal`
   (`ModalConfirmActionDirective`, exported from the modal entry point) and `(confirmed)` fires when
