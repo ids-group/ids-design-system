@@ -30,10 +30,13 @@
 
 - **A chart's pin sits under its panel.** `ds-chart` drew the disc of a held category at the foot of
   the plot, far from its panel; it now sits at the head of the reading the panel
-  opens over, 8px inside a column's top or 8px below a marker. `ds-bar-chart` draws it at the middle of the
+  opens over, 8px inside a column's top or 8px below a marker; over a column too short to hold it,
+  the disc sits 8px above the column and its value and the panel rises over the disc. The same holds
+  for a column pinned in `ds-column-chart`. `ds-bar-chart` draws it at the middle of the
   held bar, under its panel, rather than at the bar's start. `ChartComponent` gained the protected
-  `highlightBand` and the private `bandAt` and `hoveredCategory`, so a subclass declaring one of
-  those names must rename it.
+  `highlightBand` and `tooltipGap` and the private `bandAt`, `hoveredCategory` and `pinRise`, and
+  `ColumnSeriesComponent` the private `pinYOf`, so a subclass declaring one of those names must
+  rename it.
 
 - **A held category is not highlighted.** The hover band of `ds-chart` stayed painted on a pinned
   category after the pointer left; under a pin the band now follows the pointer alone, and nothing

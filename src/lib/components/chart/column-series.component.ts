@@ -60,6 +60,8 @@ export interface ColumnSeriesPoint {
 
 /** Distance from a mark's tip to its value label's baseline. */
 const VALUE_LABEL_GAP = 8;
+// The printed value's cap height at `--font-size-xs`.
+const VALUE_LABEL_HEIGHT = 10;
 
 /** Blank at a stacked segment's lower end: a background-colour gap, not a drawn rule (which vanishes in print). */
 const STACK_SEGMENT_GAP = 2;
@@ -354,7 +356,7 @@ export class ColumnSeriesComponent implements OnDestroy {
         top: Math.min(tip, baseline),
         height: Math.abs(tip - baseline),
         labelY: below ? tip + VALUE_LABEL_GAP : tip - VALUE_LABEL_GAP,
-        pinY: Math.min(tip, baseline) + CHART_PIN_RADIUS + CHART_PIN_GAP,
+        pinY: this.pinYOf(tip, baseline, below),
         origin: below ? 'top' : 'bottom',
         formattedValue: format(point.value, 'tooltip'),
         color,
@@ -362,6 +364,20 @@ export class ColumnSeriesComponent implements OnDestroy {
       };
     });
   });
+
+  /** Inside the column's top when it holds the disc - the panel opens there - and over the column
+   *  and its printed value when it is too short, so the disc never crosses the baseline. */
+  private pinYOf(tip: number, baseline: number, below: boolean): number {
+    const inset = CHART_PIN_RADIUS + CHART_PIN_GAP;
+    const top = Math.min(tip, baseline);
+    if (Math.abs(tip - baseline) >= 2 * inset) {
+      return top + inset;
+    }
+    const value =
+      this.showValues() && !below ? VALUE_LABEL_GAP + VALUE_LABEL_HEIGHT : 0;
+
+    return top - value - inset;
+  }
 
   protected markStagger(index: number): string {
     return `${staggerDelay(index, this.marks().length, this.staggerMs())}ms`;
