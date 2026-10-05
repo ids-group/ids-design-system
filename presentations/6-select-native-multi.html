@@ -325,7 +325,7 @@
     <ul class="notes">
       <li class="good">Чекбокс говорит «можно несколько» самой своей формой — инструкция не нужна.</li>
       <li class="good">Клик не разрушает выбранное: каждая опция независима.</li>
-      <li class="good">С клавиатуры любые несмежные опции доступны — Tab/Space по чекбоксам.</li>
+      <li class="good">С клавиатуры любые несмежные опции доступны - стрелками и Enter по списку.</li>
       <li class="good">Чипы показывают выбранное, не открывая список, и снимаются по одному.</li>
       <li class="good">Поиск и «выбрать все» — то, чего у нативного нет в принципе.</li>
       <li class="good">Наши токены, наша высота, одинаково на всех платформах.</li>
@@ -433,7 +433,7 @@
     <b>чипы или «N выбрано» в триггере</b>. Если консюмеру нужна компактность,
     честный ответ на это - не второй компонент, а вход <code>triggerDisplay</code> на
     существующем: он уже есть (<code>'full' | 'count' | 'labels'</code>,
-    <code>multi-select.component.ts:269</code>, <code>72521345</code>), не плодит
+    <code>multi-select.component.ts:228</code>, <code>72521345</code>), не плодит
     развилку в доках и включается по требованию.
   </p>
   <p>
@@ -445,6 +445,7 @@
 </div>
 
 <div class="sources">
+  <p>Код сверен 2026-10-05: у <code>ds-select</code> нет входа <code>multi</code>; <code>ds-multi-select</code> рисует опции чекбоксами (<code>role="option"</code> в <code>aria-multiselectable</code> листбоксе), чипы снимаются по одному, есть поиск и <code>selectAll</code>, клавиатура - стрелки, Enter, Home/End, PageUp/PageDown, Backspace снимает последний чип; <code>triggerDisplay</code> - <code>src/lib/core/trigger-display.ts:11</code>.</p>
   <b>Источники по нативному multiple:</b>
   <ul>
     <li><a href="https://uxpatterns.dev/patterns/forms/multi-select-input">UX Patterns for Developers — Multi-select Input</a></li>
