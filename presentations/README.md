@@ -41,8 +41,8 @@ Eight closed on 2026-09-19 with the charts phase-2 work: the composition model, 
 four axis modes and their names, the rescale-on-hide default, the phase-2 marks, the docs chapter
 nav, and the scatter's phase — which went to phase 2 with its decimation layer rather than to 3.
 
-**A `tool` here takes no number.** `backlog-board.html` and `rejected-with-numbers.html` — both are
-read whenever rather than at a moment, so they stay unnumbered and sort below the queue.
+**A `tool` here takes no number.** `rejected-with-numbers.html` is read whenever rather than at a
+moment, so it stays unnumbered and sorts below the queue.
 
 **`1-decision-queue` carries every open question but the one in `10-docs-reasoning-blocks`** — first every ask a consumer is
 waiting on, from any bucket of `docs/todo.md`, most urgent first in three groups (urgent P2, P3,
@@ -155,7 +155,6 @@ check. It is in `lint:all`, and every rule is a defect that actually shipped:
 | D012 | `var(--token)` that resolves to nothing: no fallback, undeclared here, absent from `ds.css` |
 | D013 | `ds-deck-evidence` citing a path that does not exist |
 | D015 | no `<title>`, so the tab and every listing show a filename |
-| D016 | `backlog-board.html` links a deck path that does not exist — a rank moved and the card now opens nothing |
 
 **D012 is the one with real blood on it.** On 2026-09-01 ten decks referenced four tokens the DS does
 not define — `--space-7`, `--border-subtle` (missed by the `subtle`→`subtitle` rename), `--shadow-md`

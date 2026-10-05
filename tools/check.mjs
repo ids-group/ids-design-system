@@ -44,7 +44,7 @@ const EXTRA = {
 export const GROUPS = {
   // `lint:all` runs this, then prettier, stylelint and eslint. Out deliberately: `manifest-truth`
   // and `delete-tables` answer about a release boundary that cannot move without a commit touching
-  // the manifests, and the first reads 27 release trees; `todo-index` and `board-embed` compare
+  // the manifests, and the first reads 27 release trees; `todo-index` compares
   // against `docs/todo.md`, which parallel sessions edit in a shared checkout.
   lint: [
     'tools-parse',
