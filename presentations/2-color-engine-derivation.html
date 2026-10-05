@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="only light">
 <title>Color engine — все подходы 2026 (single-source)</title>
 <meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="docs/todo.md - Single-source colour engine (P2): colour space still undecided">
+<meta name="ds-deck-evidence" content="docs/todo.md - Single-source colour engine (P3): colour space still undecided">
 <style>
   :root {
     color-scheme: only light;
@@ -175,7 +175,7 @@
 </head>
 <body>
   <h1>Цвет-движок: все подходы 2026</h1>
-  <p class="lede"><b>Проблема.</b> Сегодня «primary» существует в двух расцепленных видах — ручные пики рампы и отдельные каналы <code>--primary-h/s/l</code>. Единого рычага перекраски нет: консьюмерский override каналов красит только halo, а не заливку.<br /><b>Решение.</b> Один публичный токен на роль (<code>--primary: #2E54FF</code>) → ДС выводит всё семейство в light+dark, каналы вытаскиваются из hex через relative color.<br /><b>Выбрать надо метод деривации.</b> Колонки ниже живут от одной ручки — крути её и смотри, какой держит нарисованный лук.</p>
+  <p class="lede"><b>Проблема.</b> Сегодня «primary» существует в двух расцепленных видах — ручные пики рампы и отдельные каналы <code>--primary-h/s/l</code>. Единого рычага перекраски нет: консьюмерский override <code>--primary-h</code> красит halo, фокус-кольцо, ссылки, brand-серые и тёмные тинты, но не заливку <code>--primary</code> (<code>--blue-600</code>) и не светлые тинты (<code>--blue-50/100/200</code>).<br /><b>Решение.</b> Один публичный токен на роль (<code>--primary: #2E54FF</code>) → ДС выводит всё семейство в light+dark, каналы вытаскиваются из hex через relative color.<br /><b>Выбрать надо метод деривации.</b> Колонки ниже живут от одной ручки — крути её и смотри, какой держит нарисованный лук.</p>
 
   <div class="unsupported">⚠ Браузер не поддерживает <code>oklch(from …)</code> — часть демо не пересчитается. Открой в свежем Chrome/Edge 125+ / Firefox 128+ / Safari 18+.</div>
 
@@ -430,7 +430,7 @@
     { name:'warning', base:'#F4D43A', warn:'проверял именно тут', verdict:'<b>Поправка — я был неправ:</b> «болота» у HSL тут НЕТ. Состояния = <code>color-mix(in srgb, base, black)</code> (пропорц. затемнение) → <b>тон сохраняется</b> (OKLCH-hue дрейф ≤1.2°, посчитано). Реальная разница <b>мелкая</b>: HSL-тинты у светлого жёлтого <b>вымываются почти в белый</b> (subtitle 255,252,240 — едва жёлтый), OKLCH-тинты читаются жёлтыми чётче. И всё.' },
     { name:'success', base:'#22A33A', verdict:'HSL держит зелёный (тот же srgb-mix, тон сохраняется). Разница мелкая — OKLCH-тинты чуть насыщеннее/ровнее.' },
     { name:'error',   base:'hsl(0 75% 49%)', verdict:'Практически идентичны; красный устойчив в обоих.' },
-    { name:'info',    base:'#2BA8E0', verdict:'Оба читаемо; OKLCH перцептивно чуть ровнее по светлоте — разница едва заметна.' },
+    { name:'info',    base:'#3B82F6', verdict:'Оба читаемо; OKLCH перцептивно чуть ровнее по светлоте — разница едва заметна.' },
   ];
   const FAM_METHODS = [ {k:'hsl',t:'HSL'}, {k:'oklhFam',t:'OKLCH (калибр. под семейство)',rec:true} ];
   function buildFamilies() {
