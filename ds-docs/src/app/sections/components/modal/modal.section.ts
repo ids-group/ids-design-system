@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { BadgeComponent } from 'ds/badge';
 import { BannerComponent } from 'ds/banner';
 import { ButtonComponent } from 'ds/button';
+import { CheckboxComponent } from 'ds/checkbox';
 import type { DsStatus } from 'ds/core';
 import { InputComponent } from 'ds/input';
 import {
@@ -21,6 +22,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
     BadgeComponent,
     BannerComponent,
     ButtonComponent,
+    CheckboxComponent,
     SelectComponent,
     InputComponent,
     ModalCardComponent,
@@ -80,10 +82,21 @@ export class ModalSection {
   protected readonly persistentOpen = signal(false);
   protected readonly renameOpen = signal(false);
   protected readonly renamedTimes = signal(0);
+  protected readonly newName = signal('');
+  protected readonly archiveOpen = signal(false);
+  protected readonly archiveAcknowledged = signal(false);
+  protected readonly archivedTimes = signal(0);
 
   protected onRenameConfirmed(): void {
     this.renamedTimes.update((count) => count + 1);
     this.renameOpen.set(false);
+    this.newName.set('');
+  }
+
+  protected onArchiveConfirmed(): void {
+    this.archivedTimes.update((count) => count + 1);
+    this.archiveOpen.set(false);
+    this.archiveAcknowledged.set(false);
   }
 
   protected async askDelete(): Promise<void> {

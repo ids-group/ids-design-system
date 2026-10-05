@@ -577,7 +577,8 @@
     Put <code class="t-mono-inline">dsModalConfirm</code> on the confirm button and
     <code class="t-mono-inline">(confirmed)</code> fires when it is pressed - never
     while it is disabled or loading. The modal stays open; close it when the work
-    is done.
+    is done. On a plain element it follows <code class="t-mono-inline">click</code>
+    and skips <code class="t-mono-inline">aria-disabled="true"</code>.
   </p>
 
   <div class="row">
@@ -593,9 +594,11 @@
       title="Rename project"
       [(open)]="renameOpen"
       (confirmed)="onRenameConfirmed()">
-      <span body>
-        The new name shows everywhere the project is listed.
-      </span>
+      <div body>
+        <ds-input
+          label="New name"
+          [(value)]="newName" />
+      </div>
 
       <ng-container actions>
         <ds-button
@@ -605,9 +608,44 @@
           Cancel
         </ds-button>
 
-        <ds-button dsModalConfirm>
+        <ds-button
+          dsModalConfirm
+          disabledReason="Enter a new name"
+          [disabled]="!newName().trim()">
           Rename
         </ds-button>
+      </ng-container>
+    </ds-modal>
+  </div>
+
+  <div class="row">
+    <ds-button
+      size="sm"
+      variant="outline"
+      (pressed)="archiveOpen.set(true)">
+      Archive project
+    </ds-button>
+
+    <span class="t-s">confirmed: {{ archivedTimes() }}</span>
+
+    <ds-modal
+      title="Archive project"
+      [(open)]="archiveOpen"
+      (confirmed)="onArchiveConfirmed()">
+      <div body>
+        <ds-checkbox
+          label="Members lose access"
+          [(checked)]="archiveAcknowledged" />
+      </div>
+
+      <ng-container actions>
+        <button
+          type="button"
+          class="plain-confirm"
+          dsModalConfirm
+          [attr.aria-disabled]="archiveAcknowledged() ? null : 'true'">
+          Archive
+        </button>
       </ng-container>
     </ds-modal>
   </div>
