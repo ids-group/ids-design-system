@@ -38,27 +38,50 @@
       "restore": null
     },
     {
+      "id": "overlay-unslotted-content-renders",
+      "kind": "behavior",
+      "old": "ds-modal, ds-modal-card, ds-drawer",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "<ds-modal",
+        "<ds-modal-card",
+        "<ds-drawer"
+      ],
+      "action": "None, unless one of these overlays projects content that was meant to stay hidden: put it behind an @if or take it out of the overlay. Move any other content without a slot into its slot (<div body> on ds-modal and ds-modal-card, <div drawer-body> on ds-drawer) to clear the dev-mode warning.",
+      "appliesWhen": "Direct children of ds-modal or ds-modal-card without [eyebrow], [title-badge], [body], [impact] or [actions], and of ds-drawer without [drawer-body], [body], [drawer-footer] or [actions]; a ds-drawer child carrying [body] or [actions] now renders too. Slotted content renders as before; ds-bottom-sheet is not affected.",
+      "pitfall": "The content shows in production as well, and the console warning is the only signal, so an app that is never run in dev mode shows it with no warning.",
+      "restore": null,
+      "verify": "With the app in dev mode, open every ds-modal and ds-drawer and confirm the console logs no [ds-modal], [ds-modal-card] or [ds-drawer] warning about content without a slot or an unknown slot."
+    },
+    {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "AvatarGroupComponent, ChartComponent, ColumnSeriesComponent",
+      "old": "AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent, DrawerComponent",
       "new": null,
       "surface": "typescript",
       "searchHints": [
         "extends AvatarGroupComponent",
         "extends ChartComponent",
-        "extends ColumnSeriesComponent"
+        "extends ColumnSeriesComponent",
+        "extends ModalComponent",
+        "extends ModalCardComponent",
+        "extends DrawerComponent"
       ],
       "detect": [
         "extends AvatarGroupComponent",
         "extends ChartComponent",
-        "extends ColumnSeriesComponent"
+        "extends ColumnSeriesComponent",
+        "extends ModalComponent",
+        "extends ModalCardComponent",
+        "extends DrawerComponent"
       ],
       "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
-      "appliesWhen": "Only a class of yours that extends AvatarGroupComponent, ChartComponent or ColumnSeriesComponent. Template users of ds-avatar-group, ds-chart and dsColumnSeries need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent or DrawerComponent. Template users of ds-avatar-group, ds-chart, dsColumnSeries, ds-modal, ds-modal-card and ds-drawer need nothing; subclassing a DS component is unsupported.",
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it (TS2415); only a rename does.",
       "restore": null,
-      "verify": "The app builds with no TS2415 or TS4114 against AvatarGroupComponent, ChartComponent or ColumnSeriesComponent.",
-      "note": "AvatarGroupComponent gained the private avatars; ChartComponent the protected highlightBand and tooltipGap and the private bandAt, hoveredCategory and pinRise; ColumnSeriesComponent the private pinYOf."
+      "verify": "The app builds with no TS2415 or TS4114 against AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent or DrawerComponent.",
+      "note": "AvatarGroupComponent gained the private avatars; ChartComponent the protected highlightBand and tooltipGap and the private bandAt, hoveredCategory and pinRise; ColumnSeriesComponent the private pinYOf; ModalComponent, ModalCardComponent and DrawerComponent the private unslotted."
     }
   ],
   "deleteList": [],
@@ -75,6 +98,10 @@
     {
       "text": "ds-banner centres its icon on the capitals of the title and body instead of on their line boxes, and drops the title-to-body gap when there is no title, so a banner with no title and a body of more than one line is up to 4px shorter; every other banner keeps its height.",
       "verify": "open a compact and a regular ds-banner with body text and no title, and confirm the icon's middle sits level with the middle of the capital letters, not above them."
+    },
+    {
+      "text": "ds-modal, ds-modal-card and ds-drawer render content without a slot inside a display: contents wrapper placed after the [body] / [drawer-body] content; slotted content keeps its place and spacing.",
+      "verify": "open a ds-modal and a ds-drawer whose content is all slotted and confirm the body spacing and scrolling are unchanged."
     }
   ]
 }

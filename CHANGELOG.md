@@ -58,6 +58,14 @@
   with the capitals, compact or not, with or without a title. A banner with no `title` and a body of
   more than one line is up to 4px shorter; every other banner keeps its height.
 
+- **Content without a slot attribute shows in `ds-modal`, `ds-modal-card` and `ds-drawer`.** A
+  child with no slot attribute, or with one the overlay does not have, was dropped silently; it now
+  renders in the body after `[body]` / `[drawer-body]`, and in dev mode the console asks for its
+  slot (`<div body>`, `<div drawer-body>`) or names the unknown one. `ds-drawer` also takes
+  `[body]` for its body and `[actions]` for its footer, the slot names of `ds-modal`.
+  `ModalComponent`, `ModalCardComponent` and `DrawerComponent` gained the private `unslotted`,
+  so a subclass declaring that name must rename it.
+
 ## 0.14.6 — 2026-10-02
 
 ### Breaking

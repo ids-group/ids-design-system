@@ -47,10 +47,14 @@
     X,
     <kbd>
       Esc
-    </kbd> or a scrim click closes it; focus is trapped while open. Only
+    </kbd> or a scrim click closes it; focus is trapped while open. The body takes
     <code>
       drawer-body
-    </code> and <code>drawer-footer</code> content renders.
+    </code> or <code>body</code>, the footer
+    <code>
+      drawer-footer
+    </code> or <code>actions</code>. Content without a slot renders in the body,
+    and in dev mode the console asks for its slot or names an unknown one.
   </p>
 
   <div class="demo">

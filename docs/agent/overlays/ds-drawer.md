@@ -6,7 +6,7 @@ Group: Overlay
 Side panel (no `side` input — always anchored right).
 Inputs: `open: model<boolean> = false`, `size: 'md' | 'lg' = 'md'`, `title: string = ''`
 Output: `(closed): void`
-Content slots: `[drawer-body]`, `[drawer-footer]`.
+Content slots: `[drawer-body]` (or `[body]`), `[drawer-footer]` (or `[actions]`). Content with no slot attribute renders in the body; in dev mode it logs a warning, as does an unknown slot name.
 
 <!-- inputs:ds-drawer -->
 All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' = 'md'`, `placement: 'right' | 'left' | 'top' | 'bottom' = 'right'`, `title: required string`, `staticPreview: boolean = false`

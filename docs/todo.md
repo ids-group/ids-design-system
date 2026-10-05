@@ -14,9 +14,9 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**106 open — 0 P1, 7 P2, 99 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**105 open — 0 P1, 6 P2, 99 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 7
+### P2 — 6
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -24,7 +24,6 @@ item and nothing else.
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Open verdicts, each drawn in a deck**
   - How `ds-pie-chart` keeps a centre value wider than the hole on one line
-  - Content that matches no overlay slot vanishes silently
   - Six Unreleased behaviour changes shipped without a choice between alternatives
 - **Tooling**
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
@@ -890,12 +889,6 @@ that already existed, because both are the kind of ask that comes back.
   110-200px; option C (`nowrap` plus a font of `min(--font-size-h4, 13cqi)`) is built on
   `fix/pie-chart-center-value-wrap`, not merged, and waits on the pick.
 
-- [ ] **[P2] Content that matches no overlay slot vanishes silently.** Drawn in deck `unslotted-content`.
-  `ds-modal` and `ds-modal-card` project only `[eyebrow]`, `[title-badge]`, `[body]`, `[impact]` and
-  `[actions]`; Angular drops anything else, with no dev warning. mm-ecm's unarchive dialog lost its whole
-  body that way from 2026-09-17 until 2026-10-05. The three overlays disagree: bottom-sheet takes its body
-  through the default slot, drawer through `[drawer-body]`, modal through `[body]`.
-
 - [ ] **[P2] Six Unreleased behaviour changes shipped without a choice between alternatives.** Drawn in
   deck `unasked-decisions`: `provideDsTheme` keeps a preset `data-theme`, `dsModalConfirm`, avatar-group
   hides past `max`, a disabled link with `disabledReason` keeps a Tab stop, `provideDsIcons` calls merge,
@@ -981,7 +974,6 @@ file** — the number moves; cite the filename.
 | 14 | `14-unread-tokens` | Which public tokens the library never reads to remove: none, the 51 dead component and pattern sizes, or all 121. | none |
 | 15 | `15-unasked-decisions` | Six Unreleased behaviour changes made without a choice: keep, adjust or revert each. | none |
 | 16 | `16-pie-chart-center-value` | How the pie chart keeps a wide centre value on one line: seven options, each drawn at four ring sizes. | the pie-chart centre-value P2 |
-| 17 | `17-unslotted-content` | How overlays stop dropping unslotted content: default slot, dev warning, default slot plus one naming, docs only, or all four together. | the unslotted-content Decision |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

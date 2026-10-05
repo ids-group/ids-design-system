@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Контент без слота</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-05">
+<meta name="ds-deck-evidence" content="src/lib/core/unslotted-content-warning.ts:36 - CHANGELOG.md">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   /* The dialog, rebuilt from modal.component.scss (.modal, .header, .body, .actions) at reduced size. */
   .mm { inline-size: 100%; max-inline-size: 340px; background: var(--surface-overlay); border-radius: var(--ds-radius-panel); box-shadow: var(--ds-elevation-modal); overflow: hidden; }
@@ -67,7 +69,7 @@
   <header class="masthead">
     <h1>Тело диалога без атрибута слота молча не рисуется</h1>
     <p class="lede">Одно решение: как библиотека перестаёт молча выбрасывать контент оверлея, который не попал ни в один слот. Каждый вариант нарисован на одной и той же задаче консьюмера - диалоге Unarchive program из ecm-portal: что видно на экране и что пишет консоль.</p>
-    <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">ds-modal · ds-modal-card · ds-drawer</span><span class="chip">актуально на 2026-10-05</span></div>
+    <div class="chips"><span class="chip">решено 2026-10-05: Всё вместе</span><span class="chip">ds-modal · ds-modal-card · ds-drawer</span><span class="chip">актуально на 2026-10-05</span></div>
   </header>
 
   <section class="panel">

@@ -4,6 +4,15 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Content without a slot renders in the overlay body (2026-10-05)
+
+- `ds-modal`, `ds-modal-card` and `ds-drawer` render content without a slot attribute in the body
+  (a default `<ng-content>` after `[body]` / `[drawer-body]`); `ds-drawer` also takes `[body]` and
+  `[actions]`. Stas picked "Всё вместе" in deck `unslotted-content`.
+- In dev mode `warnUnslottedContent` (`src/lib/core/unslotted-content-warning.ts`) warns once per
+  message: content without a slot ("rendered into the body, but give it a slot") and an unknown slot
+  name, detected as an empty-valued attribute that HTML does not define.
+
 ## The ds-docs audit's eleven open findings, closed (2026-10-02)
 
 - `ds-bar-chart` draws a negative `value` as an empty track, its label, tooltip and name showing the

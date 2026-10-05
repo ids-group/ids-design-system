@@ -40,11 +40,17 @@
       </header>
 
       <div class="body">
-        <ng-content select="[drawer-body]"></ng-content>
+        <ng-content select="[drawer-body], [body]"></ng-content>
+
+        <div
+          #unslotted
+          class="unslotted">
+          <ng-content></ng-content>
+        </div>
       </div>
 
       <div class="footer">
-        <ng-content select="[drawer-footer]"></ng-content>
+        <ng-content select="[drawer-footer], [actions]"></ng-content>
       </div>
     </div>
   </div>
