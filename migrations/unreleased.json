@@ -73,7 +73,7 @@
       "verify": "pin a category in a composed ds-chart and a row in a ds-bar-chart, move the pointer off the plot, and confirm the pin sits right under the panel and no band stays tinted."
     },
     {
-      "text": "ds-banner centres its icon on the capitals of the title and body instead of on their line boxes, and drops the title-to-body gap when there is no title, so a banner with no title is 4px shorter; banners with a title keep their height.",
+      "text": "ds-banner centres its icon on the capitals of the title and body instead of on their line boxes, and drops the title-to-body gap when there is no title, so a banner with no title and a body of more than one line is up to 4px shorter; every other banner keeps its height.",
       "verify": "open a compact and a regular ds-banner with body text and no title, and confirm the icon's middle sits level with the middle of the capital letters, not above them."
     }
   ]
