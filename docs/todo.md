@@ -14,7 +14,12 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**115 open — 0 P1, 5 P2, 110 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**116 open — 1 P1, 5 P2, 110 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+
+### P1 — 1
+
+- **Asked by Stas**
+  - Review branch `fix/published-manifests-audit` before it is merged (Stas, 2026-10-06)
 
 ### P2 — 5
 
@@ -355,6 +360,16 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 Each has somebody behind it. Nothing here is speculative work.
 
 ## Asked by Stas
+
+- [ ] **[P1] Review branch `fix/published-manifests-audit` before it is merged (Stas, 2026-10-06).**
+  It corrects 35 published `migrations/<version>.json` files (`5d99ede5`, +236/-201 lines) from an
+  audit of every manifest against its own release diff: 128 findings, each re-derived by a sceptic
+  agent, none checked by hand. The review answers two questions per changed line: was the defect
+  real, and is the new text true for the code at that version (`git diff v<prev> v<version>`, never
+  HEAD). Everything a reviewing agent needs - the findings, the verdicts, the briefs, the lines decided
+  without an auditor and the review steps - is in `.claude/local/todo/manifest-audit-review.md` and
+  `.claude/local/from-scratchpad/2026-10-06-manifest-audit/` (local to this checkout, not in git).
+  The branch stays out of dev until Stas approves it.
 
 - [ ] **[P3] `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23).** The English `waterfall`
   is the field's standard word - Excel, Power BI, Tableau, Highcharts and ECharts all use it, with
