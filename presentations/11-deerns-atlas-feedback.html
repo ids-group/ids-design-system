@@ -133,7 +133,7 @@
 <main>
   <header class="masthead">
     <h1>Прототип на бандле: самый громкий баг сидит в нашем elements-рантайме, а не в компонентах</h1>
-    <p class="lede">Проверены около 40 пунктов основного фидбека, 15 пунктов отчёта о мигании при монтировании, аудит прототипа (27 рекомендованных компонентов проверены через бандл), выжимка блокеров из него и правила, которые агент Claude Design записал себе в <code>AGENT-NOTES.md</code>. 23 исправления имеют один верный ответ и сделаю их без выбора (список ниже). Решить нужно 9 вопросов, плюс таблица компонентов.</p>
+    <p class="lede">Проверены около 40 пунктов основного фидбека, 15 пунктов отчёта о мигании при монтировании, аудит прототипа (27 рекомендованных компонентов проверены через бандл), выжимка блокеров из него и правила, которые агент Claude Design записал себе в <code>AGENT-NOTES.md</code>. 29 исправлений имеют один верный ответ и сделаю их без выбора (список ниже). Решить нужно 11 вопросов, плюс таблица компонентов.</p>
     <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">актуально на 2026-10-05</span><span class="chip">бандл cad10e7d = dev</span></div>
   </header>
 
@@ -173,17 +173,23 @@
       <li><b>Tag в одну строку</b>: <code>nowrap</code> по умолчанию и хук <code>--ds-tag-white-space</code>, как у Badge.</li>
       <li><b>SidenavItem</b>: <code>.trailing:empty</code> скрыт, лишние 12px уходят.</li>
       <li><b>Иконки</b>: в <code>Icon.d.ts</code> один полный закрытый <code>IconName</code>, иконочные пропы ссылаются на него, счёт генерируется.</li>
-      <li><b>Каталог для агента</b>: в <code>conventions.md</code> строка «компонент - зачем» на каждый компонент, описания в <code>_ds_manifest.json</code>. Заодно убрать ложное «Statuses ship empty by design» (<code>conventions.md:33</code>, <code>upload/README.md:33</code>, <code>NOTES.md:56</code>).</li>
+      <li><b>Каталог компонентов генерируется</b>: <code>build-cards</code> уже держит имя, группу и текст каждого <code>docs/&lt;Name&gt;.md</code> (<code>build-cards.mjs:960-991</code>); он пишет в README таблицу «компонент - зачем» из первого абзаца и кладёт то же в <code>description</code> манифеста (сейчас там только <code>{name, sourcePath}</code>, <code>build-manifest.mjs:89-95</code>). Фраза «Statuses ship empty by design» уходит; список ключей <code>data-status</code> генерируется из CSS бандла (их 9, <code>docs-globals.scss:12-15</code>).</li>
       <li><b>Документация</b>: раздел «Поверхности» (кто рисует рамку сам: Card, Stat, Table, графики; кто тонирован: Alert, Banner, EmptyState), правило про обязательные пропы, карточка Tabs <code>scrollable</code>, правка <code>SidenavFooter</code> prompt (документирует пропы, которых нет), рецепты: страница сущности с вкладками и очередь согласований.</li>
-      <li><b>Бандл для прототипов без разделов ds-docs</b>: два бандла, для карточек и для прототипов. Минус около 45% по stats-сборке.</li>
+      <li><b>Бандл для прототипов без разделов ds-docs</b>: два бандла, для карточек и для прототипов. Минус около 45% по stats-сборке. Плюс бюджет размера в <code>build-design-sync.sh</code>: сейчас бандл 2 908 942 байта и ограничения нет.</li>
       <li><b>Timeline не зависит от разметки вокруг пунктов</b>: линию решает сам <code>ds-timeline</code>, а не <code>:host(:last-child)</code> пункта. Обёртки хоста, <code>@for</code> с обёрткой, <code>ng-container</code> перестают её гасить. Из 4 компонентов с <code>contentChildren</code> (Accordion, Menu, RadioGroup, Tabs) обёртка не ломает Accordion, Menu и RadioGroup; Tabs пустые и без обёртки.</li>
       <li><b>Без позиционных селекторов между DS-элементами</b>: разделители List и Accordion, наложение AvatarGroup и ButtonGroup, линия Timeline не зависят от <code>:last-child</code>, <code>:host + :host</code> и полей на непосредственном потомке. С обёрткой хоста сейчас: List 0 разделителей из 2, AvatarGroup отступы 0 вместо -8px (замер); ButtonGroup теряет перекрытие, потому что поля <code>display:contents</code> не применяются (по спецификации, не замер). Stepper и Segmented не задеты: у них <code>:first-child</code> про собственную разметку.</li>
       <li><b>Слоты Modal, Drawer, Popover остаются подключёнными, пока окно закрыто</b>: сейчас <code>@if</code> и <code>ng-template</code> отцепляют DS-элементы внутри, и <code>@angular/elements</code> уничтожает их через 10 мс. Замер: DS-компоненты в слоте пропадают после закрытия и открытия, <code>Popover &gt; Menu</code> открывается пустым. Popover получает публичный <code>open</code>.</li>
       <li><b>Сервисы в бандле</b>: <code>IdsDs.toast()</code> и <code>IdsDs.modal.confirm()</code> из инжектора elements-приложения. Сейчас из React нельзя показать тост в <code>ToastRegion</code>, а <code>ModalConfirm</code> падает с <code>NG0201</code>. Директива <code>dsModalConfirm</code>, появившаяся в 0.14.7, это не меняет: из React директиву не повесить.</li>
       <li><b>Table в бандле</b>: <code>cell</code> возвращает React-узел (бейдж, кнопка), <code>Table.md</code> переписан по реальному <code>.d.ts</code>. Сейчас он документирует <code>cellTemplates</code>, <code>sortDir</code>, <code>clientSort</code>, которых в обёртке нет, и строки по нему не сортируются.</li>
-      <li><b>Страница «Известные проблемы бандла» в загрузке</b>: что сейчас не работает через React (Tabs, Popover, FilterBar, ModalConfirm, тосты, позиционные селекторы) и что работает вопреки слухам (скрытые через <code>display:none</code> экраны, <code>animation-duration: 0s</code>). Статус обновляется с каждой загрузкой. Без неё агент пишет себе неверные правила: «Tabs для разделов» ведёт в пустой tablist, «не держать экраны смонтированными» добавляет повторные монтирования и NG0950.</li>
-      <li><b>Справочник токенов в загрузке</b>: имя, роль и значение каждого публичного токена, включая фокус (<code>--focus-ring</code>, <code>--ds-control-focus-shadow</code>) и слои (<code>--layer-*</code>), и ссылка на него из README. Сейчас README отправляет искать токены в скомпилированном <code>_ds_bundle.css</code>, ни один гайд не упоминает <code>--focus-ring</code>, и агент придумал <code>--border-focus</code>.</li>
+      <li><b>Страница «Известные проблемы бандла» в загрузке</b> (чем её наполнять - вопрос 10): что сейчас не работает через React (Tabs, Popover, FilterBar, ModalConfirm, тосты, позиционные селекторы) и что работает вопреки слухам (скрытые через <code>display:none</code> экраны, <code>animation-duration: 0s</code>). Статус обновляется с каждой загрузкой. Без неё агент пишет себе неверные правила: «Tabs для разделов» ведёт в пустой tablist, «не держать экраны смонтированными» добавляет повторные монтирования и NG0950.</li>
+      <li><b>Справочник токенов генерируется</b>: <code>upload/tokens.md</code> из <code>tokens.generated.ts</code> (<code>tools/extract-tokens.mjs</code>: имя, значение и роль из поля <code>notes</code>), README:38 ведёт туда, а не в скомпилированный CSS. Сырые данные уже лежат в загрузке - 1233 записи в <code>_ds_manifest.json.tokens</code>, - но о них нигде не сказано, а ролей там нет.</li>
       <li><b><code>_adherence.oxlintrc.json</code> не спорит с README</b>: правило запрещает <code>&lt;button&gt;</code> («Use &lt;Button&gt;»), а README загрузки сам показывает <code>&lt;button className="link"&gt;</code> как правильный способ. Разрешить <code>button.link</code>.</li>
+      <li><b><code>check-doc-api</code> читает TSX парсером</b>: сейчас регулярка рвёт тег на <code>=&gt;</code> стрелочной функции и пропускает его целиком (<code>check-doc-api.mjs:78,90</code>). Поэтому CI пишет «95 docs OK», а <code>Table.md</code> и <code>SidenavFooter</code> документируют несуществующие <code>sortDir</code>, <code>clientSort</code>, <code>onNavigate</code>. С <code>ts.createSourceFile</code> проверяется каждый <code>JsxAttribute</code>.</li>
+      <li><b>Все 87 иконок в типах</b>: регулярка <code>gen.mjs:832</code> пропускает ключи в кавычках, и <code>eye-off</code>, <code>check-circle</code>, <code>wifi-off</code> выпали из всех типов (84 из 87). Плюс <code>build-cards.mjs:932-951</code> обрезает union до 15 имён. Рукописные «86» и «85» в <code>conventions.md</code> и <code>Icon.md</code> заменяются сгенерированным числом.</li>
+      <li><b>Обязательные пропы обязательны в типах</b>: <code>extract-component-api.mjs:134-147</code> уже находит 18 <code>input.required()</code>; флаг доходит до <code>surface.json</code>, и <code>gen.mjs:603</code> / <code>build-cards.mjs:865</code> перестают ставить <code>?</code> всем подряд.</li>
+      <li><b>Версия видна агенту</b>: номер пакета в шапке README и поле <code>version</code> в манифесте (номер, не дата - дерево остаётся побайтно стабильным). Предупреждающая проверка: <code>last-upload.json.treeCommit</code> отстаёт от последнего коммита дерева загрузки. Сейчас проект в Claude Design на дереве 0.14.3, в репозитории 0.14.6, выпущена 0.14.7.</li>
+      <li><b>Разобрать падение after-release #151</b>: на 0.14.7 упал шаг «Build Claude Design bundle», поэтому дерева 0.14.7 нет и «Sync dev with main» не выполнился. Лог через API не отдаётся (HTTP 406), причина пока неизвестна.</li>
+      <li><b>Неизвестные токены ловит adherence</b>: правило <code>no-restricted-syntax</code> по списку из 967 имён в <code>x-omelette.tokens</code>; на ESLint оно ловит <code>var(--border-focus)</code> и пропускает <code>var(--focus-ring)</code> (замер). Сначала узнать, применяет ли хост наши selector-правила вообще: штатный oxlint такой конфиг не загружает (<code>x-omelette</code>, <code>no-restricted-syntax</code>), а значит, неизвестно, работают ли и уже отгружаемые правила про hex, px и шрифты.</li>
       <li><b>Проверка на мигание</b>: <code>tools/check-mount-flicker.mjs</code> в <code>check.mjs</code> на собранном бандле. Сравнивает вычисленные стили в первом кадре и через 500 мс и падает, если в первом кадре идёт анимация. Без скриншотов, на <code>tools/headless-chrome.mjs</code>.</li>
       <li><b>Keep-alive через <code>display:none</code></b> записать как поддерживаемый: замер на 10 скрытых экранах (256 элементов) дал 0 long tasks за 5 с простоя, ни одного зацикленного ResizeObserver или rAF.</li>
       <li><b>Бренд</b>: в загрузку идёт готовый рецепт <code>[data-brand]</code> из <code>themes/README.md</code> и замер, что смена одного hue ломает контраст. Сам движок цвета остаётся в деке <code>color-engine-derivation</code>.</li>
@@ -533,7 +539,77 @@
   </section>
 
   <section class="panel">
-    <h2>10. Компоненты, которых «не хватило»</h2>
+    <h2>Загрузка для агентов собирается и проверяет себя сама</h2>
+    <p>Почти каждая ошибка агента в этой истории - место, где мы дали ему рукописный текст вместо сгенерированного, или проверку, которая молча пропустила расхождение. Конвейер сегодня: CI после релиза собирает бандл, гоняет <code>check-manual-surface</code> и <code>check-doc-api</code>, коммитит дерево загрузки; заливка в Claude Design - вручную, под личным <code>/design-login</code>.</p>
+    <table class="verdicts">
+      <thead><tr><th>Узкое место</th><th>Что получил агент</th><th>Источник правды уже есть</th><th>Что падает при расхождении</th></tr></thead>
+      <tbody>
+        <tr><td>Токены</td><td>«ищи в скомпилированном CSS» → выдумал <code>--border-focus</code></td><td><code>tokens.generated.ts</code> с ролями</td><td>adherence-правило на неизвестный <code>var(--…)</code></td></tr>
+        <tr><td>Каталог</td><td>только имена → не нашёл List, Breadcrumbs, EmptyState</td><td>первый абзац <code>docs/&lt;Name&gt;.md</code></td><td>сборка падает на компоненте без абзаца</td></tr>
+        <tr><td>Пропы в доках</td><td>несуществующие пропы Table → строки не сортируются</td><td><code>surface.json</code></td><td><code>check-doc-api</code> на парсере TSX</td></tr>
+        <tr><td>Иконки</td><td>84 из 87, union обрезан до 15</td><td><code>icon-names.ts</code></td><td>число в доках генерируется, рукописного нет</td></tr>
+        <tr><td>Обязательные пропы</td><td>все с <code>?</code> → <code>undefined</code> на первом рендере</td><td><code>extract-component-api</code></td><td>тип без <code>?</code> - ошибка ещё в редакторе</td></tr>
+        <tr><td>Что не работает через React</td><td>ничего → вредные правила в <code>AGENT-NOTES.md</code></td><td>нет</td><td>вопрос 10</td></tr>
+        <tr><td>Ошибки в консоли</td><td>«NG0950 at 4:70189», без имени</td><td>исходники + <code>isDevMode()</code></td><td>dev-бандл рядом с prod</td></tr>
+        <tr><td>Версия</td><td>нигде не видна; проект на 0.14.3</td><td><code>package.json</code></td><td>предупреждение об устаревшей заливке</td></tr>
+        <tr><td>Пример в README</td><td><code>&lt;button className="link"&gt;</code>, который запрещает наш же adherence</td><td><code>config.json:53-57</code></td><td>сборка adherence падает, если пример нарушает правило; вопрос 11</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel q" data-q="limits">
+    <h2>10. Кто знает, что работает через React</h2>
+    <p>Агенту нужен список «это через бандл не работает». Вопрос - откуда он берётся. То, что видит агент в загрузке, в каждом варианте:</p>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Никак</h3>
+        <p class="says">(в загрузке ничего; агент находит сам и пишет в AGENT-NOTES)</p>
+        <div class="pills"><span class="pill bad">«Tabs для разделов» → пустой tablist</span><span class="pill bad">каждый проект учится заново</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <span class="badge is-no">вариант</span>
+        <h3>Рукописный known-limits.md</h3>
+        <p class="says">Tabs - does not render through React 18 (0 tabs). Workaround: Segmented.</p>
+        <div class="pills"><span class="pill good">день работы</span><span class="pill mid">гейт проверяет только, что компонент упомянут</span><span class="pill bad">устаревает молча после фикса</span></div>
+        <dl class="layer"><dt>CI</dt><dd class="none">check-manual-surface требует строку на компонент</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Дымовой тест обёрток генерирует список</h3>
+        <p class="says">Tabs - renders: no (0 role=tab) · measured 0.14.8 · with host wrapper: no</p>
+        <div class="pills"><span class="pill good">список пишет тест, не человек</span><span class="pill good">фикс сразу снимает строку</span><span class="pill good">регрессия ломает CI</span><span class="pill mid">headless Chrome в CI</span></div>
+        <dl class="layer"><dt>CI</dt><dd class="gain">каждую обёртку рендерит React 18 с обёрткой хоста и без, на ключевое действие; пишет known-limits.md и падает, если работавшее перестало работать</dd><dt>Основа</dt><dd class="gain">тот же замер, которым проверены 27 компонентов аудита; <code>tools/headless-chrome.mjs</code> уже есть</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel q" data-q="buttonlink">
+    <h2>11. Кнопка-ссылка в примерах для агента</h2>
+    <p>README загрузки показывает <code>&lt;button className="link"&gt;</code>, а наш же <code>_adherence.oxlintrc.json</code> на него ругается «Use &lt;Button&gt;» (замер на oxlint 1.87.0). Агент получает два противоречащих правила.</p>
+    <div class="opts">
+      <article class="opt" tabindex="0">
+        <span class="badge is-no">вариант</span>
+        <h3>Разрешить button.link</h3>
+        <p class="says">&lt;button className="link" type="button"&gt;Save as draft&lt;/button&gt;</p>
+        <div class="pills"><span class="pill good">как в ds-docs</span><span class="pill mid">исключение в правиле adherence</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Пример на Button variant="text"</h3>
+        <p class="says">&lt;Button variant="text"&gt;Save as draft&lt;/Button&gt;</p>
+        <div class="pills"><span class="pill good">одно правило без исключений</span><span class="pill good">агент берёт компонент, а не класс</span><span class="pill mid"><code>.link</code> остаётся для прозы и <code>&lt;a&gt;</code></span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>12. Компоненты, которых «не хватило»</h2>
     <p>В каждой строке - что есть сегодня и что получится. Обведённая кнопка - рекомендация, клик выбирает. Три компонента уже есть и не входят: List/ListItem, Breadcrumbs, EmptyState - их чинит каталог из списка выше.</p>
     <table class="comp">
       <thead><tr><th>Запрос</th><th>Сегодня → после</th><th>Решение</th></tr></thead>
@@ -561,7 +637,7 @@
 
   <section class="panel verdict is-done">
     <h2>Рекомендация</h2>
-    <p class="pick"><strong>Обёртка ждёт и предупреждает; Встроенный tone; frame="none", как у графиков; Border-strong; Минимум поиску, действия обрезаются; Тултип при обрезке; Только документация; Переключатель data-ds-motion; Родитель находит детей сам.</strong> Компоненты: расширить семь существующих, новый компонент один (Thumbnail / Media), пять рецептов, три остаются у приложения. Каждый выбор либо повторяет механизм, который в DS уже есть (<code>frame</code>, <code>dsTooltipWhenClipped</code>, токены статусов), либо обходится без нового API. Где новый API нужен, он opt-in.</p>
+    <p class="pick"><strong>Обёртка ждёт и предупреждает; Встроенный tone; frame="none", как у графиков; Border-strong; Минимум поиску, действия обрезаются; Тултип при обрезке; Только документация; Переключатель data-ds-motion; Родитель находит детей сам; Дымовой тест обёрток генерирует список; Пример на Button variant="text".</strong> Компоненты: расширить семь существующих, новый компонент один (Thumbnail / Media), пять рецептов, три остаются у приложения. Каждый выбор либо повторяет механизм, который в DS уже есть (<code>frame</code>, <code>dsTooltipWhenClipped</code>, токены статусов), либо обходится без нового API. Где новый API нужен, он opt-in.</p>
   </section>
 
   <section class="panel">
@@ -578,6 +654,8 @@
         <tr class="row-pick"><th class="rowlabel">Input в панели 176px</th><td>Распирает · Только документация · Поле тянется по контейнеру</td><td>Только документация</td></tr>
         <tr class="row-pick"><th class="rowlabel">Alert вместе с экраном</th><td>Появляется каждый раз · Без появления по умолчанию · Переключатель data-ds-motion</td><td>Переключатель data-ds-motion</td></tr>
         <tr class="row-pick"><th class="rowlabel">Составные компоненты в бандле</th><td>Ничего не делать · Родитель находит детей сам · Обёртки принимают массивы</td><td>Родитель находит детей сам</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Кто знает, что работает через React</th><td>Никак · Рукописный known-limits.md · Дымовой тест обёрток генерирует список</td><td>Дымовой тест обёрток генерирует список</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Кнопка-ссылка в примерах для агента</th><td>Разрешить button.link · Пример на Button variant="text"</td><td>Пример на Button variant="text"</td></tr>
         <tr class="row-pick"><th class="rowlabel">Компоненты</th><td>по строке: Компонент в DS · Расширить · Рецепт · У приложения</td><td>как обведено в таблице</td></tr>
       </tbody>
     </table>
