@@ -1135,7 +1135,7 @@
       <h2 class="q-title">Как кольцо держит число шире дырки</h2>
       <a class="q-src" href="16-pie-chart-center-value.html">дека pie-chart-center-value</a>
     </div>
-    <p class="q-sub">У консьюмера кольцо около 120px, и <code>32,397</code> рвётся на <code>32,39</code> и <code>7</code>: на <code>.center</code> стоит <code>overflow-wrap: anywhere</code>. Семь вариантов; C уже собран в ветке <code>fix/pie-chart-center-value-wrap</code> и ждёт выбора.</p>
+    <p class="q-sub">У консьюмера кольцо около 120px, и <code>32,397</code> рвётся на <code>32,39</code> и <code>7</code>: на <code>.center</code> стоит <code>overflow-wrap: anywhere</code>. Десять вариантов; C уже собран в ветке <code>fix/pie-chart-center-value-wrap</code> и ждёт выбора.</p>
     <div class="opts">
       <div class="opt"><h3>A. Как сейчас</h3>
         <div class="pcv-ring "><div class="pcv-center"><span class="pcv-value">32,397</span><span class="pcv-label">visits</span></div></div>
@@ -1165,6 +1165,18 @@
         <div class="pcv-ring" style="inline-size:160px;block-size:160px"><div class="pcv-center"><span class="pcv-value">1,234,567</span><span class="pcv-label">visits</span></div></div>
         <p class="cap">длинное всё равно рвётся</p>
         <p>Без релиза DS.</p></div>
+      <div class="opt"><h3>H. Только в ECM: карточка выше</h3>
+        <div class="pcv-ring" style="inline-size:180px;block-size:180px"><div class="pcv-center"><span class="pcv-value">1,234,567</span><span class="pcv-label">visits</span></div></div>
+        <p class="cap">длинное всё равно рвётся</p>
+        <p>Кольцо получает свои 180px.</p></div>
+      <div class="opt"><h3>I. C в DS + 32.4K от потребителя</h3>
+        <div class="pcv-ring pcv-nowrap"><div class="pcv-center"><span class="pcv-value" style="font-size:14.3px">1.2M</span><span class="pcv-label">visits</span></div></div>
+        <p class="cap">без нового API</p>
+        <p>Экран сокращает через centerValue, точное число в шапке.</p></div>
+      <div class="opt"><h3>J. C с нижней границей 14px</h3>
+        <div class="pcv-ring pcv-nowrap" style="inline-size:90px;block-size:90px"><div class="pcv-center"><span class="pcv-value" style="font-size:14px">32,397</span><span class="pcv-label">visits</span></div></div>
+        <p class="cap">не мельчит</p>
+        <p>clamp(14px, 13cqi, 22px).</p></div>
     </div>
   </section>
 

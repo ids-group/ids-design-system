@@ -52,7 +52,7 @@ h1 { font-size: 24px; margin: 0 0 8px; }
 .pill-good { background: var(--good-bg); color: var(--good-text); }
 .pill-bad { background: var(--bad-bg); color: var(--bad-text); }
 .pill-warn { background: var(--warn-bg); color: var(--warn-text); }
-.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; overflow-x: auto; }
+.grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; overflow-x: auto; }
 @media (max-width: 760px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .cell { background: var(--chart-bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; }
 .cell-cap { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -75,6 +75,9 @@ summary { cursor: pointer; }
 .v-nowrap .center-value { white-space: nowrap; }
 .v-cqi .ring { container-type: inline-size; }
 .v-cqi .center-value { white-space: nowrap; font-size: min(22px, 13cqi); }
+.v-cqi-floor .ring { container-type: inline-size; }
+.v-cqi-floor .center-value { white-space: nowrap; font-size: clamp(14px, 13cqi, 22px); }
+.must { font-weight: 600; }
 .v-fit .center-value, .v-compact .center-value { white-space: nowrap; }
 
 .ecm { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 16px; align-items: stretch; margin-top: 4px; }
@@ -95,6 +98,7 @@ summary { cursor: pointer; }
   <h1>Число в центре кольца</h1>
   <p class="chat">Ответ нести в чат: «Acc2 · pp-review: ревью тикетов по очереди»</p>
   <p class="lead">Кольца отрисованы с CSS из <code>ds-pie-chart</code> (Mulish 700 22px, дырка 0.61, как в ECM на Microsites &amp; CTA). Метка под каждым кольцом посчитана в браузере: число строк и вылезает ли число за дырку. Кликни вариант, чтобы выбрать.</p>
+  <p class="lead"><b>Обязательное</b> (первая пилюля варианта, посчитана по меткам): число не рвётся между цифрами, не заходит на кольцо, точное значение где-то доступно. <b>Вкусовое</b> (остальные пилюли): один шрифт у соседних карточек, точность прямо в центре, раскладка не прыгает, без JS.</p>
 
   <section class="variant" style="cursor:default">
     <div class="variant-head"><h2>Как сейчас в ECM</h2><span class="where">карточка 240px, высота по таблице</span></div>
@@ -112,6 +116,12 @@ summary { cursor: pointer; }
   <div id="variants"></div>
 
   <details>
+    <summary>Как выбирать</summary>
+    <p>Сначала отсеять всё, что не выполняет обязательное: эта пилюля посчитана по меткам вариантов. Потом найти корень: компонент рвёт цифры (чинится в DS), а потребитель ужал кольцо высотой карточки (чинится в ECM). Каждый чинится на своём уровне.</p>
+    <p>В DS кладётся одно поведение, которое не ломается ни на каком размере, без переключателей. Решение, которое зависит от экрана (сокращать ли до 32.4K), остаётся потребителю через уже существующий <code>centerValue</code>: компонент не знает, есть ли точное число рядом, экран знает. Новый input появляется, когда двум потребителям нужно разное поведение, а не заранее.</p>
+  </details>
+
+  <details>
     <summary>Как считаются метки</summary>
     <p>«1 строка / 2 строки»: число прямоугольников текста у значения. «Вылезает»: ширина числа больше диаметра дырки (размер × 0.61), то есть цифры заходят на цветное кольцо; ореол (text-shadow) сохраняет читаемость, но выглядит хуже. Блок центра в DS шире дырки: max(56%, дырка × 70%), поэтому до 56% число может стоять на кольце и сейчас.</p>
   </details>
@@ -119,7 +129,7 @@ summary { cursor: pointer; }
 <div class="bar"><span class="bar-chat">чат «Acc2 · pp-review: ревью тикетов по очереди»</span><code id="out">Вариант не выбран</code><button id="copy" type="button">Копировать</button></div>
 
 <script>
-const SIZES = [110, 130, 160, 200];
+const SIZES = [90, 110, 130, 160, 200];
 const VALUES = ['32,397', '1,234,567'];
 const VARIANTS = [
   { id: 'A', cls: '', title: 'Как сейчас (баг)', where: 'DS 0.14.3, без изменений',
@@ -130,10 +140,10 @@ const VARIANTS = [
     more: 'white-space: nowrap на значении. Размер шрифта всегда 22px; длинное число заходит на цветное кольцо, читается за счёт ореола.' },
   { id: 'C', cls: 'v-cqi', title: 'nowrap + шрифт по размеру кольца', where: 'DS, ветка fix/pie-chart-center-value-wrap',
     pills: [['good', 'не ломает'], ['good', 'без JS'], ['good', 'на 180px+ как сейчас'], ['warn', 'шрифт не знает длину числа']],
-    more: 'Кольцо становится контейнером, font-size: min(22px, 13cqi). На 160px шрифт уже 20.8px вместо 22px. Оба числа здесь, до 9 символов, остаются внутри дырки на всех четырёх размерах; более длинные не проверялись.' },
+    more: 'Кольцо становится контейнером, font-size: min(22px, 13cqi). На 160px шрифт уже 20.8px вместо 22px, на 90px 11.7px. Оба числа здесь, до 9 символов, остаются внутри дырки на всех пяти размерах; более длинные не проверялись.' },
   { id: 'D', cls: 'v-fit', title: 'nowrap + шрифт по длине числа', where: 'DS, ResizeObserver в компоненте',
-    pills: [['good', 'не ломает'], ['good', 'любая длина влезает'], ['bad', 'JS-замер на каждый ресайз'], ['warn', 'шрифт пляшет между карточками']],
-    more: 'Компонент меряет число и уменьшает шрифт, пока оно не войдёт в 90% дырки (не меньше 12px). Два соседних кольца с разными числами получат разный размер шрифта.' },
+    pills: [['good', 'не ломает'], ['warn', 'подгоняет под длину, не мельче 12px'], ['bad', 'JS-замер на каждый ресайз'], ['warn', 'шрифт пляшет между карточками']],
+    more: 'Компонент меряет число и уменьшает шрифт, пока оно не войдёт в 90% дырки, но не мельче 12px: на 90px «1,234,567» на 12px уже заходит на кольцо. Два соседних кольца с разными числами получат разный размер шрифта.' },
   { id: 'E', cls: 'v-compact', title: 'Сокращать, если не влезает: 32.4K', where: 'DS, новый input или формат у потребителя',
     pills: [['good', 'не ломает'], ['good', 'шрифт 22px всегда'], ['warn', 'точное число только в подсказке / таблице'], ['bad', 'новое API']],
     more: 'Если число шире дырки, показывается компактная запись (Intl compact): 32.4K, 1.2M. Полное значение остаётся в aria-label и в таблице рядом.' },
@@ -143,6 +153,15 @@ const VARIANTS = [
   { id: 'G', cls: 'v-min', title: 'Только в ECM: кольцо не меньше 160px', where: 'ECM, без релиза DS',
     pills: [['good', 'без релиза DS'], ['bad', 'длинное число всё равно рвётся'], ['warn', 'карточка выше таблицы']],
     more: '--ds-pie-chart-size: max(160px, min(100cqw, 100cqh)). «32,397» перестаёт рваться, но «1,234,567» на 160px всё ещё ломается: баг остаётся в DS для всех.' },
+  { id: 'H', cls: '', title: 'Только в ECM: карточка выше, кольцо 180px', where: 'ECM, без релиза DS',
+    pills: [['good', 'без релиза DS'], ['good', 'шрифт 22px'], ['bad', 'длинное число всё равно рвётся'], ['warn', 'карточка выше таблицы']],
+    more: 'Корень у потребителя: высота карточки равна высоте таблицы, и кольцо ужато до ~120px. С карточкой выше кольцо получает свои 180px. «32,397» влезает, «1,234,567» на 180px всё ещё рвётся: дефект компонента остаётся.' },
+  { id: 'I', cls: 'v-cqi', title: 'C в DS + 32.4K от потребителя', where: 'DS как C, ECM передаёт centerValue',
+    pills: [['good', 'не ломает'], ['good', 'без нового API'], ['good', 'точное число в шапке ECM'], ['warn', 'сокращение решает каждый экран']],
+    more: 'DS делает C. Экран, у которого точное число уже есть рядом (в ECM: «Total visits» в шапке панели), передаёт в centerValue компактную запись, когда она короче. Сокращать или нет, знает экран, а не компонент.' },
+  { id: 'J', cls: 'v-cqi-floor', title: 'C с нижней границей шрифта 14px', where: 'DS, clamp(14px, 13cqi, 22px)',
+    pills: [['good', 'не ломает'], ['good', 'без JS'], ['good', 'не мельчит на крошечном кольце'], ['warn', 'на 90px длинное заходит на кольцо']],
+    more: 'Как C, но шрифт не опускается ниже 14px. До ~108px кольца (14 / 0.13) поведение как у C, ниже шрифт стоит на 14px, и длинное число может зайти на кольцо.' },
 ];
 
 const slices = [[0.88, 'var(--c1)'], [0.08, 'var(--c2)'], [0.04, 'var(--c3)']];
@@ -177,7 +196,8 @@ function applyBehaviour(variant, cell, size) {
     const fit = Math.max(12, Math.min(22, 22 * (hole * 0.9) / naturalWidth(value, 22)));
     value.style.fontSize = fit.toFixed(1) + 'px';
   }
-  if (variant.id === 'E' && naturalWidth(value, 22) > hole * 0.9) {
+  const fontNow = parseFloat(getComputedStyle(value).fontSize);
+  if ((variant.id === 'E' && naturalWidth(value, 22) > hole * 0.9) || (variant.id === 'I' && naturalWidth(value, fontNow) > hole * 0.9)) {
     const n = Number(value.textContent.replace(/,/g, ''));
     value.textContent = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(n);
   }
@@ -222,10 +242,10 @@ for (const v of VARIANTS) {
     <details><summary>Подробнее</summary><p>${v.more}</p></details>`;
   const grid = sec.querySelector('.grid');
   for (const value of VALUES) for (const size of SIZES) {
-    const effective = v.id === 'G' ? Math.max(160, size) : size;
+    const effective = v.id === 'G' ? Math.max(160, size) : v.id === 'H' ? Math.max(180, size) : size;
     const cell = document.createElement('div');
     cell.className = 'cell';
-    cell.innerHTML = pie(effective, value) + `<span class="cell-cap">кольцо ${effective}px${v.id === 'G' && effective !== size ? ` (было ${size})` : ''}</span>`;
+    cell.innerHTML = pie(effective, value) + `<span class="cell-cap">кольцо ${effective}px${effective !== size ? ` (было ${size})` : ''}</span>`;
     grid.append(cell);
     cell.dataset.size = effective;
   }
@@ -256,6 +276,10 @@ document.fonts.ready.then(() => {
       applyBehaviour(v, cell, size);
       cell.insertAdjacentHTML('beforeend', verdict(cell, size));
     }
+    const failed = sec.querySelector('.cell .verdict.pill-bad, .cell .verdict.pill-warn');
+    sec.querySelector('.pills').insertAdjacentHTML('afterbegin', failed
+      ? `<span class="pill pill-bad must">обязательное: нет - ${failed.textContent.split(' · ')[0]}</span>`
+      : '<span class="pill pill-good must">обязательное: выполнено</span>');
   }
   render();
 });
