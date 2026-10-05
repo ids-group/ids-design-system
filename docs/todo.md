@@ -14,15 +14,16 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**105 open — 0 P1, 6 P2, 99 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**106 open — 0 P1, 7 P2, 99 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 6
+### P2 — 7
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Open verdicts, each drawn in a deck**
+  - How `ds-pie-chart` keeps a centre value wider than the hole on one line
   - Content that matches no overlay slot vanishes silently
   - Six Unreleased behaviour changes shipped without a choice between alternatives
 - **Tooling**
@@ -883,6 +884,12 @@ that already existed, because both are the kind of ask that comes back.
 
 ## Open verdicts, each drawn in a deck
 
+- [ ] **[P2] How `ds-pie-chart` keeps a centre value wider than the hole on one line.** Drawn in
+  deck `pie-chart-center-value`: a consumer's donut at about 120px (`innerRadius` 0.61) splits `32,397`
+  into `32,39` over `7`, because `.center` carries `overflow-wrap: anywhere`. Seven options drawn at
+  110-200px; option C (`nowrap` plus a font of `min(--font-size-h4, 13cqi)`) is built on
+  `fix/pie-chart-center-value-wrap`, not merged, and waits on the pick.
+
 - [ ] **[P2] Content that matches no overlay slot vanishes silently.** Drawn in deck `unslotted-content`.
   `ds-modal` and `ds-modal-card` project only `[eyebrow]`, `[title-badge]`, `[body]`, `[impact]` and
   `[actions]`; Angular drops anything else, with no dev warning. mm-ecm's unarchive dialog lost its whole
@@ -958,7 +965,7 @@ file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
 | --- | --- | --- | --- |
-| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 37 decisions in six, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 38 decisions in six, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 | 2 | `2-color-engine-derivation` | One source token per role, derived. | the colour-engine P3 |
 | 3 | `3-color-engine-relative` | The prototype half of the same question. | as above |
 | 4 | `4-interaction-formula` | The pressed recipe of the tonal button, and of the danger menu item. | the pressed-danger-menu P3 and the `.ds-interactive` P3 |
@@ -973,6 +980,7 @@ file** — the number moves; cite the filename.
 | 13 | `13-chart-motion-extras` | Which of ten motion and hover additions to build if a motion level is chosen in `chart-motion`; all on by default, each one live. | the chart-motion Decision |
 | 14 | `14-unread-tokens` | Which public tokens the library never reads to remove: none, the 51 dead component and pattern sizes, or all 121. | none |
 | 15 | `15-unasked-decisions` | Six Unreleased behaviour changes made without a choice: keep, adjust or revert each. | none |
+| 16 | `16-pie-chart-center-value` | How the pie chart keeps a wide centre value on one line: seven options, each drawn at four ring sizes. | the pie-chart centre-value P2 |
 | 17 | `17-unslotted-content` | How overlays stop dropping unslotted content: default slot, dev warning, default slot plus one naming, or docs only. | the unslotted-content Decision |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
