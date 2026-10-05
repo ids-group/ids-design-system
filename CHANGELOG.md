@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.14.7 — 2026-10-05
+
 ### Added
 
 - **`ds-pie-chart` takes `centerCompact` and `centerPlacement`.** `[centerCompact]="false"` keeps the
