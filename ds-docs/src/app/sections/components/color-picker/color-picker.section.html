@@ -3,9 +3,8 @@
   eyebrow="Components"
   title="Color picker">
   <span lede>
-    Swatch trigger that opens a full picker overlay — a saturation/brightness
-    plane, a hue slider, a hex field and an optional preset palette. Backed by a
-    hex value; drag, type a hex, or pick a preset.
+    A swatch that opens a picker for a hex value: saturation/brightness plane,
+    hue slider, hex field and optional presets.
   </span>
 
   <docs-nonmodal-note />
@@ -17,12 +16,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Click the swatch to open the picker: drag on the plane to set
-    saturation/brightness, drag the hue bar, or type a hex. Omit
+    Omit
     <code>
       [presets]
-    </code> to use the built-in palette. The plane and hue bar take
-    arrow keys (Shift for steps of 10).
+    </code> for the built-in palette. The plane and hue bar take arrow
+    keys (Shift for steps of 10).
   </p>
 
   <div class="demo-panel">
@@ -69,8 +67,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Pass a <code>[presets]</code> array to restrict the palette to a curated set
-    — useful for label-colour pickers.
+    A <code>[presets]</code> array restricts the palette, e.g. for label
+    colours.
   </p>
 
   <div class="demo-panel">
@@ -113,10 +111,13 @@
     <code class="t-mono-inline">
       hint
     </code> adds a helper line;
-    <code class="t-mono-inline">error</code> replaces it with an error message
-    announced via <code>role="alert"</code>.
-    <code class="t-mono-inline">[invalid]</code> paints the error state without
-    a message.
+    <code class="t-mono-inline">
+      error
+    </code> replaces it, announced via
+    <code>
+      role="alert"
+    </code>; <code class="t-mono-inline">[invalid]</code>
+    paints the error state without a message.
   </p>
 
   <div class="demo-panel">

@@ -255,6 +255,21 @@ export class ChartComponent extends DsChartBase implements ChartScales {
         );
       },
     });
+
+    afterRenderEffect({
+      read: () => {
+        const origin = this.tooltipOrigin();
+        const pin = this.tooltipPinned()
+          ? this.host.nativeElement.querySelector('[dschartpinmarker]')
+          : null;
+        const rise =
+          origin instanceof Element && pin
+            ? origin.getBoundingClientRect().top -
+              pin.getBoundingClientRect().top
+            : 0;
+        this.pinRise.set(Math.max(0, Math.round(rise)));
+      },
+    });
   }
 
   private widestLabel(selector: string): number {
@@ -645,8 +660,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   readonly zeroOffset = computed(() => this.yPosition()(0));
 
-  protected readonly cursorBand = computed(() => {
-    const index = this.activeIndex();
+  private bandAt(index: number) {
     if (this.cursorResolved() !== 'category' || index < 0) {
       return null;
     }
@@ -659,7 +673,19 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       top: plot.top,
       bottom: plot.top + plot.height,
     };
-  });
+  }
+
+  /** The band the panel reads from, drawn invisible as its fallback anchor. */
+  protected readonly cursorBand = computed(() =>
+    this.bandAt(this.activeIndex()),
+  );
+
+  // A held band is not highlighted: under a pin the highlight follows the pointer alone.
+  protected readonly highlightBand = computed(() =>
+    this.bandAt(
+      this.tooltipPinned() ? this.hoveredCategory() : this.activeIndex(),
+    ),
+  );
 
   /** The same state machine the element marks run on; here the index counts categories. */
   private readonly cursorState = chartActiveMark(
@@ -674,10 +700,43 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   // Set at once, not after the hover delay.
   private readonly pointerInBand = signal(false);
 
-  // At the band's foot: its head is where the panel opens, over the tallest reading.
-  protected bandPinY(band: { readonly bottom: number }): number {
-    return band.bottom - CHART_PIN_RADIUS - CHART_PIN_GAP;
-  }
+  private readonly hoveredCategory = signal(-1);
+
+  /** Under the panel: it opens over the tallest reading, so the disc sits at that reading's head -
+   *  inside a column, below a marker, and over a column too short to hold it. */
+  protected readonly bandPinY = computed(() => {
+    const band = this.cursorBand();
+    const inset = CHART_PIN_RADIUS + CHART_PIN_GAP;
+    const origin = this.tooltipOrigin();
+    const canvas = this.canvasElement()?.nativeElement;
+    if (!band || !canvas || !(origin instanceof Element)) {
+      return (band?.top ?? 0) + inset;
+    }
+    const frame = canvas.getBoundingClientRect();
+    const scale = frame.height > 0 ? this.viewHeight() / frame.height : 1;
+    const head = origin.getBoundingClientRect();
+    const top = (head.top - frame.top) * scale;
+    const height = head.height * scale;
+    if (height >= 2 * inset) {
+      return top + inset;
+    }
+    if (!origin.matches('.bar')) {
+      return top + height + inset;
+    }
+    const value = origin.parentElement?.querySelector(':scope > .value');
+    const valueTop = value
+      ? (value.getBoundingClientRect().top - frame.top) * scale
+      : top;
+
+    return Math.min(top, valueTop) - inset;
+  });
+
+  /** How far a held pin sits above the panel's anchor; the panel rises by as much to stay over it. */
+  private readonly pinRise = signal(0);
+
+  protected readonly tooltipGap = computed(() =>
+    Math.max(this.tooltipExtraGap(), this.pinRise()),
+  );
 
   protected readonly bandPins = computed(
     () => this.pinOnClickResolved() && this.pointerInBand(),
@@ -717,6 +776,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     );
     this.pointerAt.set({ x: event.clientX, y: event.clientY });
     this.pointerInBand.set(index >= 0);
+    this.hoveredCategory.set(index);
     if (index < 0) {
       if (event.type === 'pointerdown' && this.cursorPinned()) {
         this.cursorState.release();
@@ -750,6 +810,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       window.removeEventListener('scroll', forgetRect, { capture: true });
       forgetRect();
       this.pointerInBand.set(false);
+      this.hoveredCategory.set(-1);
       // The panel goes back to the band the keyboard holds, which keeps it open while focus stays.
       if (this.keyboardFocusInside()) {
         this.cursorState.setIndex(this.focusedCategory());

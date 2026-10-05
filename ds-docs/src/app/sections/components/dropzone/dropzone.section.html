@@ -3,8 +3,7 @@
   eyebrow="Components"
   title="Dropzone">
   <span lede>
-    Drag-and-drop or click-to-browse file picker with a file list whose upload
-    state and progress the consumer sets.
+    Drag-and-drop or click-to-browse file picker with a file list.
   </span>
 
   <h3 class="block-title t-h4">
@@ -12,14 +11,28 @@
   </h3>
 
   <p class="block-desc t-s">
-    The dropzone never holds files itself. A pick or drop emits the raw files
-    through <code class="t-mono-inline">(filesAdded)</code>; the handler adds
-    <code class="t-mono-inline">DropzoneFile</code> rows to
-    <code class="t-mono-inline">[files]</code> and updates their
-    <code class="t-mono-inline">state</code>,
-    <code class="t-mono-inline">progress</code> and
-    <code class="t-mono-inline">message</code>. The remove X emits
-    <code class="t-mono-inline">(fileRemoved)</code>; the handler drops the
+    It holds no files: a pick or drop emits raw files via
+    <code class="t-mono-inline">
+      (filesAdded)
+    </code>; your handler adds
+    <code class="t-mono-inline">
+      DropzoneFile
+    </code> rows to
+    <code class="t-mono-inline">
+      [files]
+    </code> and updates their
+    <code class="t-mono-inline">
+      state
+    </code>,
+    <code class="t-mono-inline">
+      progress
+    </code> and
+    <code class="t-mono-inline">
+      message
+    </code>. The remove X emits
+    <code class="t-mono-inline">
+      (fileRemoved)
+    </code>; your handler drops the
     entry.
   </p>
 
@@ -39,10 +52,6 @@
     class="block-title t-h4">
     States showcase
   </h3>
-
-  <p class="block-desc t-s">
-    Each surface state, one per row.
-  </p>
 
   <div class="states is-cols-1">
     <div class="state-cell">
@@ -101,15 +110,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">multiple</code> is off by default: a pick or
-    drop delivers one file through
-    <code class="t-mono-inline">(filesAdded)</code>. Replacing the existing
-    entry is up to the handler; this one does.
-    <code class="t-mono-inline">accept</code> limits the file picker to the
-    listed types; a drop is not filtered. An element with the
-    <code class="t-mono-inline">hint</code> attribute shows under the default
-    text while the list is empty.
-    <code class="t-mono-inline">--ds-dropzone-max-width</code> caps the width.
+    <code class="t-mono-inline">
+      multiple
+    </code> is off by default: one file per
+    <code class="t-mono-inline">
+      (filesAdded)
+    </code>; your handler replaces the
+    existing entry.
+    <code class="t-mono-inline">
+      accept
+    </code> filters the file picker, not
+    drops. A <code class="t-mono-inline">hint</code> element shows under the
+    default text while the list is empty.
+    <code class="t-mono-inline">
+      --ds-dropzone-max-width
+    </code> caps the width.
   </p>
 
   <div class="single-wrap">
@@ -132,10 +147,6 @@
     class="block-title t-h4">
     File row states
   </h3>
-
-  <p class="block-desc t-s">
-    Individual file cell variants — stacked vertically, one per row.
-  </p>
 
   <div class="states is-cols-1 is-file-rows">
     <div class="state-cell">

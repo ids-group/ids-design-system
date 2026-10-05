@@ -9,7 +9,14 @@ setup_bun
 install_deps
 
 echo "Building ds library..."
-bun run build:lib
+# POSIX sh has no pipefail, so the build status crosses the pipe through a file.
+total=$(find src/lib -name ng-package.json | wc -l | tr -d " ")
+status_file=$(mktemp)
+{ bun run build:lib 2>&1; echo $? > "$status_file"; } |
+  awk -v total="$total" '/^Building entry point/ { printf "[%d/%d] ", ++built, total } { print; fflush() }'
+build_status=$(cat "$status_file")
+rm -f "$status_file"
+[ "$build_status" -eq 0 ] || exit "$build_status"
 
 [ -f dist/ds/package.json ] || { echo "Expected artifact missing: dist/ds/package.json"; exit 1; }
 

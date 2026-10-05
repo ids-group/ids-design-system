@@ -3,16 +3,8 @@
   eyebrow="Foundations"
   title="Theming &amp; dark mode">
   <span lede>
-    Colour is layered in three concerns — a theme-independent
-    <strong>
-      base palette
-    </strong>, the <strong>theme</strong> role maps (light
-    / dark), and optional <strong>brand</strong> overlays.
-    <strong>
-      Light is the default; dark is opt-in.
-    </strong> Components only
-    ever read semantic roles, so swapping a theme or brand re-skins everything
-    without touching component code.
+    Three colour layers (base palette, light / dark role maps, brand
+    overlays) let a theme or brand re-skin every component.
   </span>
 
   <h3
@@ -22,21 +14,19 @@
   </h3>
 
   <p class="block-desc t-s">
-    The active theme is a single attribute on the document root (<code
-      class="t-mono-inline"
-      >&lt;html&gt;</code
-    >) — a whole-document switch, not per-subtree.
+    One attribute on <code class="t-mono-inline">&lt;html&gt;</code> switches
+    the whole document, not a subtree.
   </p>
 
   <ul class="theming-list t-s">
     <li>
-      nothing — <strong>light</strong> (default)
+      nothing - <strong>light</strong> (default)
     </li>
 
     <li>
       <code class="t-mono-inline">
         &lt;html data-theme="dark"&gt;
-      </code> —
+      </code> -
       <strong>
         dark
       </strong>
@@ -45,29 +35,37 @@
     <li>
       <code class="t-mono-inline">
         &lt;html data-theme="light"&gt;
-      </code> —
-      explicit light (same as the default)
+      </code> -
+      explicit light
     </li>
   </ul>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">&lt;html data-neutrals="brand"&gt;</code>
+    <code class="t-mono-inline">
+      &lt;html data-neutrals="brand"&gt;
+    </code>
     re-tints the neutral ramp from <code class="t-mono-inline">--primary-h</code>;
     light theme only, dark keeps its own ramp.
   </p>
 
   <p class="block-desc t-s">
-    There is
     <strong>
-      no automatic
+      No automatic
       <code class="t-mono-inline">
         prefers-color-scheme
       </code> switch
-    </strong>: light is deterministic by default. To follow the OS, add
-    <code class="t-mono-inline">provideDsTheme({{ '{' }} followSystem: true {{ '}' }})</code>.
-    It sets <code class="t-mono-inline">data-theme</code> at startup and on every
-    OS change, and does nothing on the server. It owns the attribute: a value you
-    set yourself is overwritten at startup and on the next OS change.
+    </strong>. To follow the OS, add
+    <code class="t-mono-inline">
+      provideDsTheme({{ '{' }} followSystem: true {{ '}' }})
+    </code>:
+    it sets <code class="t-mono-inline">data-theme</code> at startup and on each
+    OS change, not on the server. A
+    <code class="t-mono-inline">
+      data-theme
+    </code> already on
+    <code class="t-mono-inline">
+      &lt;html&gt;
+    </code> at startup wins.
   </p>
 
   <pre class="t-mono-block">{{ osFollowSnippet }}</pre>
@@ -81,7 +79,7 @@
       Base palette
     </strong> (<code class="t-mono-inline"
       >themes/_base-palette</code
-    >) — theme-independent primitives at
+    >) - theme-independent primitives at
     <code class="t-mono-inline">
       :root
     </code>: hue ramps + HSL channels,
@@ -95,7 +93,7 @@
     </strong> (<code class="t-mono-inline"
       >themes/_semantic</code
     >
-    + <code class="t-mono-inline">themes/&lt;t&gt;/</code>) — the semantic role
+    + <code class="t-mono-inline">themes/&lt;t&gt;/</code>) - role
     map (<code class="t-mono-inline">--primary</code>,
     <code class="t-mono-inline">
       --surface-*
@@ -121,7 +119,7 @@
       Component / scale
     </strong> (<code class="t-mono-inline"
       >styles/_tokens</code
-    >, <code class="t-mono-inline">*.component.scss</code>) —
+    >, <code class="t-mono-inline">*.component.scss</code>) -
     <code class="t-mono-inline">
       --space-*
     </code>,
@@ -137,7 +135,7 @@
     <strong>
       Hard rule:
     </strong> components never read base-palette primitives
-    (<code class="t-mono-inline">--blue-600</code>) directly — only Tier-2 roles
+    (<code class="t-mono-inline">--blue-600</code>), only Tier-2 roles
     (<code class="t-mono-inline">--primary</code>,
     <code class="t-mono-inline">
       --text-secondary
@@ -149,22 +147,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    Light and dark are <strong>sibling role maps</strong> sharing the base
-    palette and the same role structure. The dark block declares the
+    Light and dark are <strong>sibling role maps</strong> over one base
+    palette. The dark block declares the
     <strong>
       complete
-    </strong> token set, so
-    <code class="t-mono-inline">
-      :root[data-theme='dark']
-    </code> fully
+    </strong> token set: it
     <em>
       replaces
-    </em> light rather than delta-patching it. On-fill text is the
-    literal <code class="t-mono-inline">white</code>, or the theme-stable
+    </em> light, not patches it. On-fill text is
+    <code class="t-mono-inline">
+      white
+    </code>, or
     <code class="t-mono-inline">
       --static-ink
-    </code> where the fill is light,
-    so neither flips with the neutrals.
+    </code> on light fills;
+    neither flips.
   </p>
 
   <pre class="t-mono-block">{{ activationSnippet }}</pre>
@@ -174,12 +171,15 @@
   </h3>
 
   <p class="block-desc t-s">
-    Two levers. A <strong>brand</strong> is a thin overlay on
-    <code class="t-mono-inline">&lt;html&gt;</code> scoped by attribute
-    (<code class="t-mono-inline">[data-brand="X"]</code>): re-point the palette
-    channels (<code class="t-mono-inline">--blue-h/s/l</code>, which
-    <code class="t-mono-inline">--primary-h/s/l</code> read) and, if needed, a few
-    roles. A full
+    A <strong>brand</strong> is a thin overlay on
+    <code class="t-mono-inline">
+      &lt;html&gt;
+    </code>
+    (<code class="t-mono-inline">[data-brand="X"]</code>): re-point palette
+    channels (<code class="t-mono-inline">--blue-h/s/l</code>, read by
+    <code class="t-mono-inline">
+      --primary-h/s/l
+    </code>), optionally a few roles. A
     <strong>
       theme
     </strong> is a new sibling role map.
@@ -187,12 +187,16 @@
 
   <p class="block-desc t-s">
     <strong>
-      You author on light, the default.
+      Author on light.
     </strong> Palette and channel overrides carry into dark. Role overrides
     (<code class="t-mono-inline">--primary</code>,
-    <code class="t-mono-inline">--primary-h/s/l</code>,
-    <code class="t-mono-inline">--surface-*</code>) lose to the dark block, so
-    restate those under
+    <code class="t-mono-inline">
+      --primary-h/s/l
+    </code>,
+    <code class="t-mono-inline">
+      --surface-*
+    </code>) lose to the dark block; restate
+    them under
     <code class="t-mono-inline">
       [data-theme='dark'][data-brand="X"]
     </code>.
@@ -225,18 +229,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    Tokens answer how a thing looks;
-    <code class="t-mono-inline">provideDsConfig</code> answers inputs an app sets
-    identically everywhere (a house <code class="t-mono-inline">size="sm"</code>,
-    <code class="t-mono-inline">[stickyScrollbar]="true"</code> on every table),
-    so a new element cannot forget them.
-  </p>
-
-  <p class="block-desc t-s">
-    Precedence: <strong>input → config → built-in</strong>. Provide it at the
-    root, on a <code class="t-mono-inline">Route</code> or on a component; nested
-    and repeated calls merge section by section, the later winning per key.
-    <code class="t-mono-inline">provideDsIntl</code> merges the same way.
+    Tokens set looks; <code class="t-mono-inline">provideDsConfig</code> sets
+    app-wide input defaults (a house <code class="t-mono-inline">size="sm"</code>,
+    <code class="t-mono-inline">
+      [stickyScrollbar]="true"
+    </code> on every table).
+    Precedence: <strong>input → config → built-in</strong>. Provide at the root,
+    on a <code class="t-mono-inline">Route</code> or a component; calls merge per
+    section, the later winning per key.
+    <code class="t-mono-inline">
+      provideDsIntl
+    </code> merges the same way.
   </p>
 
   <pre class="t-mono-block">{{ configSnippet }}</pre>
@@ -250,9 +253,8 @@
         [data-density]
       </code>.
     </strong>
-    The density tier rewrites hit targets and padding in CSS for a route; this
-    picks which of the three declared sizes a control renders at. An app can use
-    both.
+    Density rewrites hit targets and padding in CSS per route; size picks one of
+    three control sizes. Both can apply.
   </p>
 
   <h3 class="block-title t-h4">
@@ -261,18 +263,21 @@
 
   <p class="block-desc t-s">
     Numbers and dates follow <code class="t-mono-inline">DsConfig.locale</code>,
-    then Angular's <code class="t-mono-inline">LOCALE_ID</code>: chart values
-    and percentages, the date picker, file sizes. Words follow
+    then Angular's <code class="t-mono-inline">LOCALE_ID</code> (charts,
+    percentages, date picker, file sizes). Library strings follow
     <code class="t-mono-inline">
       DS_INTL
-    </code>: every string the library
-    renders itself, English until an app provides
+    </code>, English until
     <code class="t-mono-inline">
       provideDsIntl
-    </code>. Set both once, at the
-    root; a factory returning a signal switches language live. The demo below
-    provides <code class="t-mono-inline">locale: 'de-DE'</code> and a few German
-    words. A <code class="t-mono-inline">range</code> of your own also receives
+    </code>. Set both once at the
+    root; a factory returning a signal switches language live. Demo:
+    <code class="t-mono-inline">
+      locale: 'de-DE'
+    </code>. A custom
+    <code class="t-mono-inline">
+      range
+    </code> also receives
     <code class="t-mono-inline">
       (0, 0, 0)
     </code> for an empty list, from the
@@ -286,32 +291,29 @@
   </h3>
 
   <p class="block-desc t-s">
-    Square every corner from the roles instead of one
-    <code class="t-mono-inline">--ds-&lt;component&gt;-radius: 0</code> per
+    Square corners via the roles, not a
+    <code class="t-mono-inline">
+      --ds-&lt;component&gt;-radius: 0
+    </code> per
     component.
   </p>
 
   <pre class="t-mono-block">{{ squareSnippet }}</pre>
 
   <p class="block-desc t-s">
-    Zeroing the three roles squares most rounded surfaces. A few components
-    still read the scale directly (menu panel, toast, split-button and
-    button-group segments, sidenav footer, colour-picker swatches) and keep
-    their radius; zeroing the <code class="t-mono-inline">--radius-*</code> scale
-    as well reaches them.
-  </p>
-
-  <p class="block-desc t-s">
-    Leave <code class="t-mono-inline">--radius-pill</code> alone either way:
-    switch tracks, avatars and status dots are round by shape, and the switch
-    track resolves the pill token, so it stays round even with the scale zeroed.
+    Zeroing the three roles squares most surfaces. Menu panel, toast,
+    split-button and button-group segments, sidenav footer and colour-picker
+    swatches read the scale directly; zero <code class="t-mono-inline">--radius-*</code>
+    too to reach them. Leave <code class="t-mono-inline">--radius-pill</code>
+    alone: switch tracks, avatars and status dots are round by shape, and the
+    switch track reads that token.
   </p>
 
   <p class="block-desc t-s">
     <strong>
-      The roles also give you the partial case
-    </strong>, which the scale
-    cannot — one declaration moves a family and leaves its neighbour alone:
+      Roles also allow the partial case
+    </strong> the scale cannot: one declaration moves a family, not its
+    neighbour:
   </p>
 
   <pre class="t-mono-block">{{ squarePartialSnippet }}</pre>

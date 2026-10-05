@@ -1,5 +1,101 @@
 ## Unreleased
 
+### Added
+
+- **`ds-pie-chart` takes `centerCompact` and `centerPlacement`.** `[centerCompact]="false"` keeps the
+  full sum at the floor font size instead of the compact form. `centerPlacement="below"` prints the
+  value and its caption under the ring at full size, never shrunk or shortened; the default is
+  `'inside'`. `PieChartCenterPlacement` is the type of the latter. The
+  `--ds-pie-chart-center-value-min-font-size` token sets the smallest size the value shrinks to.
+  `PieChartComponent` gained the protected `centerText` and `centerFontSize` and the private
+  `compactCenterValue`, `ringElement`, `centerValueElement`, `centerFit`, `ringWidth`, `fitsInside`,
+  `fitCenter`, `watchRing` and `refit`, so a subclass declaring one of those names must rename it.
+
+- **`dsModalConfirm` fires a modal's `confirmed`.** Put it on the confirm action inside `ds-modal`
+  (`ModalConfirmActionDirective`, exported from the modal entry point) and `(confirmed)` fires when
+  that action is pressed. On a `ds-button` it follows `pressed`, so a disabled or loading button never
+  confirms; on another element it follows `click` and skips `aria-disabled="true"`. The modal stays
+  open until you close it.
+
+- **Dev warnings show as toasts too.** In dev mode every library warning that reaches the console is
+  also shown as a `warning` toast titled "Dev warning", once per message, as soon as the app has
+  injected `ToastService`; warnings raised before that show then, up to 50. A production build
+  shows none. On by default; `provideDsConfig({ toast: { mirrorDevWarnings: false } })` keeps them
+  in the console only.
+
+### Fixed
+
+- **`ds-pie-chart` keeps its centre value on one line.** A value wider than the hole broke between
+  its digits, so `32,397` read as `32,39` over `7`. The value no longer wraps: it shrinks to the hole,
+  down to `--ds-pie-chart-center-value-min-font-size` (default `14px`), and past that floor the sum
+  prints in the `'tick'` form of `valueFormat` (`32.4K`). A `centerValue` string is shrunk but never
+  shortened.
+
+- **A chart's pin sits under its panel.** `ds-chart` drew the disc of a held category at the foot of
+  the plot, far from its panel; it now sits at the head of the reading the panel
+  opens over, 8px inside a column's top or 8px below a marker; over a column too short to hold it,
+  the disc sits 8px above the column and its value and the panel rises over the disc. The same holds
+  for a column pinned in `ds-column-chart` or a `dsColumnSeries`. `ds-bar-chart` draws it at the
+  middle of the held bar, under its panel, rather than at the bar's start. In `ds-line-chart`, a line
+  series in `ds-chart` and `ds-scatter-chart`, the disc over a held marker or point sits 4px higher.
+  `ChartComponent` gained the protected `highlightBand` and `tooltipGap` and the private `bandAt`,
+  `hoveredCategory` and `pinRise`, and `ColumnSeriesComponent` the private `pinYOf`, so a subclass
+  declaring one of those names must rename it. `ChartComponent`'s protected `bandPinY` is now a
+  computed signal read as `bandPinY()`, where it was a method taking the band, so a subclass that
+  calls `bandPinY(band)` or overrides it as a method must read or override the signal instead.
+
+- **A held category is not highlighted.** The hover band of `ds-chart` stayed painted on a pinned
+  category after the pointer left; under a pin the band now follows the pointer alone, and nothing
+  stays highlighted once it leaves the plot.
+
+- **`provideDsIcons` calls add up.** A second call, as a sibling or in a lazy route's providers,
+  replaced the icons registered before it; the calls now merge, a later call winning a shared name.
+
+- **A disabled link-button with `disabledReason` stays reachable by Tab.** A `ds-button` with
+  `routerLink` or `href`, `disabled` and a `disabledReason` was taken out of the Tab order, so its
+  reason was never announced; it now keeps its Tab stop and link role, and still swallows the click.
+  A disabled `routerLink` button is announced as a link with or without a reason.
+
+- **`ds-avatar-group` applies `max` to the projected avatars.** Avatars past `max` are hidden,
+  and with `total` unset the `+N` chip counts the projected avatars; the group showed every
+  projected avatar and drew no chip without `total`. `AvatarGroupComponent` gained a private
+  `avatars`, so a subclass declaring that name must rename it: `override` cannot reach a private
+  member.
+
+- **`provideDsTheme({ followSystem: true })` keeps a `data-theme` set before startup.** A
+  `data-theme` already on `<html>` when the app starts, from `index.html` or a script that restores a
+  saved choice, is kept, and OS colour-scheme changes no longer override it. Without the attribute,
+  the theme follows the OS as before.
+
+- **`ds-bar-chart` draws a negative value as an empty track.** A row with a negative `value`
+  drew a bar as long as its absolute value and was labelled `0`; it now draws no bar, and its label,
+  tooltip and accessible name show the real value.
+
+- **Topbar and page-header breadcrumb tokens take effect.** `--ds-topbar-crumb-text-color`,
+  `--ds-topbar-crumb-hover-text-color`, `--ds-topbar-crumb-separator-icon-color`,
+  `--ds-topbar-crumb-current-text-color`, `--ds-page-header-crumb-text-color` and
+  `--ds-page-header-crumb-text-color-hover` changed nothing; they now recolour the projected
+  `ds-breadcrumbs`. Unset, the breadcrumbs keep their own `--ds-breadcrumbs-*` colours.
+
+- **The `ds-banner` icon centres on the capitals of the text.** It centred on the line boxes, leading
+  included, and a banner with no `title` kept the title-to-body gap above its body, so the icon sat
+  up to 2px above the letters. Where `text-box` is supported (Chromium, Safari) the icon now lines up
+  with the capitals, compact or not, with or without a title. A banner with no `title` and a body of
+  more than one line is up to 4px shorter; every other banner keeps its height.
+
+- **Content without a slot attribute shows in `ds-modal`, `ds-modal-card` and `ds-drawer`.** A
+  child with no slot attribute, or with one the overlay does not have, was dropped silently; it now
+  renders in the body after `[body]` / `[drawer-body]`, and in dev mode the console asks for its
+  slot (`<div body>`, `<div drawer-body>`) or names the unknown one. `ds-drawer` also takes
+  `[body]` for its body and `[actions]` for its footer, the slot names of `ds-modal`.
+  `ModalComponent`, `ModalCardComponent` and `DrawerComponent` gained the private `unslotted`,
+  so a subclass declaring that name must rename it.
+
+- **A dev warning logs once per page.** An identical warning from many instances, such as one per
+  `ds-button` with the same discouraged `color` and `variant`, reached the console once per
+  instance; it now logs once. The `ds-table` export warning starts with `[ds-table]` like the
+  others, and the `ds-app-layout` missing `--bp-lg` message is a warning rather than an error.
+
 ## 0.14.6 — 2026-10-02
 
 ### Breaking

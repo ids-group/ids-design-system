@@ -4,8 +4,7 @@
   title="Description list"
   [apiKeys]="['description-list:DescriptionItemComponent']">
   <span lede>
-    Pairs of labels and values for displaying structured metadata — account
-    details, record summaries, and settings panels.
+    Label-value pairs for structured metadata.
   </span>
 
   <h3
@@ -15,8 +14,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Terms and values sit side-by-side. Best for dense record details where
-    vertical space is limited.
+    For dense record details where height is tight.
   </p>
 
   <div class="demo-panel">
@@ -52,7 +50,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Term above, value below. Suits narrow containers or when values are long.
+    For narrow containers or long values.
   </p>
 
   <div class="demo-panel">
@@ -82,13 +80,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    Once a value would get less than
+    If a value would get less than
     <code class="t-mono-inline">
       --ds-description-list-value-min-width
     </code>
-    (14rem) beside the label, every item puts its label above its value at once.
-    The switch follows the list's own width and its label width. Drag the
-    handles: the second list has a 180px label, so it switches wider.
+    (14rem) beside the label, all items stack; the list's own width and label
+    width decide. The second list (180px label) stacks at a wider width.
   </p>
 
   <div class="demo-panel">
@@ -133,8 +130,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Pass <code>[copyValue]</code> to render a copy button next to the value,
-    shown on hover or keyboard focus. Useful for API keys, IDs and tokens.
+    <code>
+      [copyValue]
+    </code> adds a copy button beside the value, shown on
+    hover or focus. For API keys, IDs, tokens.
   </p>
 
   <div class="demo-panel">

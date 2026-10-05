@@ -3,15 +3,8 @@
   eyebrow="Components"
   title="Bottom sheet">
   <span lede>
-    Mobile-first panel anchored to the bottom edge — the touch equivalent of a
-    drawer / modal. Drag the grab strip down or tap the scrim to dismiss;
-    <kbd>
-      Esc
-    </kbd> also closes. Body scroll locks while open. On wider
-    viewports it caps its width
-    (<code class="t-mono-inline">--ds-bottom-sheet-max-width</code>) and
-    centres. The sheet is <code class="t-mono-inline">position: fixed</code>,
-    so a transformed ancestor contains it.
+    Mobile-first panel on the bottom edge, the touch equivalent of a drawer /
+    modal.
   </span>
 
   <h3 class="block-title t-h4">
@@ -19,13 +12,29 @@
   </h3>
 
   <p class="block-desc t-s">
-    Two-way <code class="t-mono-inline">[(open)]</code> drives visibility; the
+    Drag the grab strip down, tap the scrim or press
+    <kbd>
+      Esc
+    </kbd> to close. Body scroll locks while open. Wide viewports centre it,
+    capped at <code class="t-mono-inline">--ds-bottom-sheet-max-width</code>.
+    It is <code class="t-mono-inline">position: fixed</code>: a transformed
+    ancestor contains it.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [(open)]
+    </code> drives visibility; the
     <code class="t-mono-inline">
       [actions]
     </code> slot holds footer buttons.
-    <code class="t-mono-inline">(closed)</code> fires after the leave
-    animation, when <code class="t-mono-inline">open</code> is already
-    <code class="t-mono-inline">false</code>; use it for post-close work only.
+    <code class="t-mono-inline">
+      (closed)
+    </code> fires after the leave
+    animation, with <code class="t-mono-inline">open</code> already
+    <code class="t-mono-inline">
+      false
+    </code>: for post-close work only.
   </p>
 
   <div class="demo">
@@ -65,11 +74,6 @@
     Open sheet
   </h3>
 
-  <p class="block-desc t-s">
-    The sheet as it looks open: grab strip, title, body and stacked full-width
-    actions.
-  </p>
-
   <div class="demo static-demo">
     <ds-bottom-sheet
       staticPreview
@@ -99,12 +103,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Pass <code class="t-mono-inline">[snapPoints]="[0.35, 0.65, 0.9]"</code>
-    to enable multi-stop snapping. The sheet opens at the first stop; dragging
-    snaps to the nearest stop; dragging below the lowest stop closes. Heights
-    are fractions of viewport height (0–1), provided in ascending order.
-    Without <code class="t-mono-inline">snapPoints</code> the sheet has a
-    single height.
+    <code class="t-mono-inline">
+      [snapPoints]="[0.35, 0.65, 0.9]"
+    </code>:
+    ascending fractions of viewport height (0-1). It opens at the first stop;
+    drags snap to the nearest; below the lowest, it closes. Without <code class="t-mono-inline">snapPoints</code> it has one height.
   </p>
 
   <div class="demo">
@@ -158,11 +161,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    The sheet pads its bottom by
-    <code class="t-mono-inline">env(safe-area-inset-bottom)</code>, which
-    reads 0 until your <code class="t-mono-inline">index.html</code> viewport
-    meta opts in with <code class="t-mono-inline">viewport-fit=cover</code>
-    (see <code class="t-mono-inline">ds-auth-layout</code>).
+    The bottom padding
+    <code class="t-mono-inline">
+      env(safe-area-inset-bottom)
+    </code> reads 0
+    until your <code class="t-mono-inline">index.html</code> viewport meta adds
+    <code class="t-mono-inline">
+      viewport-fit=cover
+    </code> (see
+    <code class="t-mono-inline">
+      ds-auth-layout
+    </code>).
   </p>
 
   <pre

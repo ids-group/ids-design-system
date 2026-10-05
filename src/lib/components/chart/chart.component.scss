@@ -81,6 +81,11 @@
   fill: var(--ds-chart-hover-bg-color);
 }
 
+.cursor-anchor {
+  fill: none;
+  pointer-events: none;
+}
+
 .category-stop {
   fill: transparent;
   pointer-events: none;

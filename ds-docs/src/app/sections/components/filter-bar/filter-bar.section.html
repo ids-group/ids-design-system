@@ -12,32 +12,34 @@
       ng-template [dsFilterItem]
     </code> with its width in px
     (<code class="t-mono-inline">[dsFilterItem]="170"</code>; bare = 180). The
-    bar splits filters from those widths and one
+    split reads those widths and one
     <code class="t-mono-inline">
       ResizeObserver
-    </code> on the row, never by
-    measuring the filters, so nothing flashes before collapsing.
+    </code> on the row; filters are never
+    measured, so nothing flashes.
   </p>
 
   <p class="block-desc t-s">
-    Move the Frame width slider: filters collapse into the panel from the right
-    as room runs out; controls marked
+    Filters collapse into the panel from the right; controls marked
     <code class="t-mono-inline">
       dsFilterBarTrailing
-    </code> stay put. Mark each
-    trailing control - a wrapper div would stack its children. Anything that is
-    neither a <code class="t-mono-inline">dsFilterItem</code> template nor
-    marked <code class="t-mono-inline">dsFilterBarTrailing</code> is not
-    rendered.
+    </code> stay. Mark each trailing
+    control - a wrapper div would stack its children. Anything neither a
+    <code class="t-mono-inline">
+      dsFilterItem
+    </code> template nor marked <code class="t-mono-inline">dsFilterBarTrailing</code>
+    is not rendered.
   </p>
 
   <p class="block-desc t-s">
-    If one component must hold two trailing controls, mark that component
-    <code class="t-mono-inline">dsFilterBarTrailing</code> and give its
+    For one component holding two trailing controls, mark it
+    <code class="t-mono-inline">
+      dsFilterBarTrailing
+    </code> and give its
     <code class="t-mono-inline">
       :host
-    </code> the bar's own trailing rule
-    (below); the gap reads the same token.
+    </code> the bar's trailing rule
+    (below).
   </p>
 
   <pre class="t-mono-block">{{ trailingWrapperSnippet }}</pre>
@@ -55,12 +57,11 @@
     trigger height; match it to the filters'
     <code class="t-mono-inline">
       size
-    </code> - the bar cannot read it. Unset
-    beside
+    </code>, which the bar cannot read
+    (unset beside
     <code class="t-mono-inline">
       sm
-    </code> filters, the trigger is 8px
-    taller.
+    </code> filters, it is 8px taller).
   </p>
 
   <div class="width-control">
@@ -139,17 +140,13 @@
   </h3>
 
   <p class="block-desc t-s">
-    Each slot is exactly its declared width, in the row and in the panel; a
-    wider control is narrowed.
-  </p>
-
-  <p class="block-desc t-s">
-    Moving into or out of the panel re-creates the filter, so an open dropdown
-    or focus is lost; the value survives in your own signal or form control.
-    The trigger shows the count as text with
+    Each slot is exactly its declared width, in row and panel; a wider control
+    is narrowed. Moving between them re-creates the filter: an open dropdown
+    or focus is lost, the value survives in your signal or form control. The
+    trigger shows the count as text with
     <code class="t-mono-inline">
       aria-expanded
     </code>; the panel is a focus-trapped
-    dialog, and each filter exists once in the accessibility tree.
+    dialog; each filter exists once in the accessibility tree.
   </p>
 </docs-section>

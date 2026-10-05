@@ -6,7 +6,13 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import ts from 'typescript';
 
-const GUARDED = new Set(['devWarn', 'warnAnnounceOversight']);
+const GUARDED = new Set([
+  'devWarn',
+  'warnAnnounceOversight',
+  'warnUnslottedContent',
+  'reportDevWarning',
+  'addDevWarningSink',
+]);
 const GUARD = "typeof ngDevMode === 'undefined' || ngDevMode";
 
 const ROOTS = process.argv.slice(2).length

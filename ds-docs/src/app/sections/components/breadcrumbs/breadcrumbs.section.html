@@ -3,10 +3,7 @@
   eyebrow="Components"
   title="Breadcrumbs">
   <span lede>
-    Trail to root. The last item is the current page (no href). With
-    <code class="t-mono-inline">[maxItems]</code>, middle segments collapse to
-    <code class="t-mono-inline">… N more</code>; without it a long trail clips
-    from the end.
+    Trail to root; the last item is the current page (no href).
   </span>
 
   <h3
@@ -14,10 +11,6 @@
     class="block-title t-h4">
     Default
   </h3>
-
-  <p class="block-desc t-s">
-    Four levels — leaf is the current page, bold and non-interactive.
-  </p>
 
   <div class="stage">
     <ds-breadcrumbs [items]="defaultTrail" />
@@ -30,12 +23,15 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">[maxItems]="4"</code> keeps the first and last
-    crumbs and collapses the middle into one crumb that says how many it hides.
-    Set it on any trail that can get deep: the row is
-    <code class="t-mono-inline">nowrap</code> +
-    <code class="t-mono-inline">overflow: hidden</code>, so an uncapped trail
-    clips from the end - the current page.
+    <code class="t-mono-inline">
+      [maxItems]="4"
+    </code> keeps first and last crumbs
+    and collapses the middle to <code class="t-mono-inline">… N more</code>. Set
+    it on any deep trail: the row is <code class="t-mono-inline">nowrap</code> +
+    <code class="t-mono-inline">
+      overflow: hidden
+    </code>; uncapped, the current page
+    clips off the end.
   </p>
 
   <div class="stage">
@@ -57,10 +53,6 @@
     Single level
   </h3>
 
-  <p class="block-desc t-s">
-    Root + leaf - the shortest meaningful trail.
-  </p>
-
   <div class="stage">
     <ds-breadcrumbs [items]="singleLevel" />
   </div>
@@ -71,8 +63,12 @@
 
   <p class="block-desc t-s">
     A <code class="t-mono-inline">BreadcrumbItem</code> may carry an
-    <code class="t-mono-inline">icon</code>. An icon-only crumb needs an
-    <code class="t-mono-inline">ariaLabel</code>; dev mode warns without one.
+    <code class="t-mono-inline">
+      icon
+    </code>. An icon-only crumb needs an
+    <code class="t-mono-inline">
+      ariaLabel
+    </code>; dev mode warns without one.
   </p>
 
   <div class="stage">
@@ -84,9 +80,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Default separator is <code class="t-mono-inline">chevronRight</code>.
-    Override via the <code class="t-mono-inline">[separator]</code> input or
-    globally via
+    Default <code class="t-mono-inline">chevronRight</code>. Override with
+    <code class="t-mono-inline">
+      [separator]
+    </code> or globally with
     <code class="t-mono-inline">
       provideDsConfig({{ '{' }} breadcrumbs: {{ '{' }} separator: 'arrowRight'
       {{ '}' }} {{ '}' }})
@@ -105,11 +102,19 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">separator="slash"</code> with
-    <code class="t-mono-inline">--ds-breadcrumbs-bg-color-hover</code>,
-    <code class="t-mono-inline">--ds-breadcrumbs-padding</code> and
-    <code class="t-mono-inline">--ds-breadcrumbs-radius</code> set turns each
-    crumb into a pill on hover.
+    <code class="t-mono-inline">
+      separator="slash"
+    </code> with
+    <code class="t-mono-inline">
+      --ds-breadcrumbs-bg-color-hover
+    </code>,
+    <code class="t-mono-inline">
+      --ds-breadcrumbs-padding
+    </code> and
+    <code class="t-mono-inline">
+      --ds-breadcrumbs-radius
+    </code> makes each crumb
+    a pill on hover.
   </p>
 
   <div class="stage">
@@ -124,14 +129,25 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">--ds-breadcrumbs-font-size</code>,
-    <code class="t-mono-inline">--ds-breadcrumbs-font-weight</code>,
-    <code class="t-mono-inline">--ds-breadcrumbs-current-label-font-weight</code>,
-    <code class="t-mono-inline">--ds-breadcrumbs-gap</code>,
-    <code class="t-mono-inline">--ds-breadcrumbs-label-max-width</code> and
-    <code class="t-mono-inline">--ds-breadcrumbs-current-label-max-width</code>
-    resize the trail; here the font is larger, the gap wider and the label
-    width capped at 8ch.
+    <code class="t-mono-inline">
+      --ds-breadcrumbs-font-size
+    </code>,
+    <code class="t-mono-inline">
+      --ds-breadcrumbs-font-weight
+    </code>,
+    <code class="t-mono-inline">
+      --ds-breadcrumbs-current-label-font-weight
+    </code>,
+    <code class="t-mono-inline">
+      --ds-breadcrumbs-gap
+    </code>,
+    <code class="t-mono-inline">
+      --ds-breadcrumbs-label-max-width
+    </code> and
+    <code class="t-mono-inline">
+      --ds-breadcrumbs-current-label-max-width
+    </code>
+    resize the trail; here larger font, wider gap, labels capped at 8ch.
   </p>
 
   <div class="stage">
@@ -145,10 +161,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    A label past <code class="t-mono-inline">16ch</code> (the current page
-    past <code class="t-mono-inline">32ch</code>) ends in an ellipsis, and
-    hovering it or focusing its link from the keyboard opens a tooltip with the
-    whole label; a label that fits opens none.
+    Labels past <code class="t-mono-inline">16ch</code> (current page
+    <code class="t-mono-inline">
+      32ch
+    </code>) get an ellipsis and a full-label
+    tooltip on hover or keyboard focus. Labels that fit get none.
   </p>
 
   <div class="stage">
@@ -160,13 +177,15 @@
   </h3>
 
   <p class="block-desc t-s">
-    A plain primary click on a crumb link prevents the default and emits
-    <code class="t-mono-inline">(navigate)</code>; a Ctrl, Cmd, Shift or Alt
-    click, or any non-primary button such as the middle one, leaves
-    <code class="t-mono-inline">href</code> to the browser (a new tab or
-    window) and emits nothing. Bind <code class="t-mono-inline">(navigate)</code>
-    and route with
-    <code class="t-mono-inline">Router.navigateByUrl(item.href)</code>;
+    A plain click prevents the default and emits
+    <code class="t-mono-inline">
+      (navigate)
+    </code>. Ctrl, Cmd, Shift, Alt or a
+    non-primary button (middle) leaves <code class="t-mono-inline">href</code>
+    to the browser and emits nothing. Bind it and route with
+    <code class="t-mono-inline">
+      Router.navigateByUrl(item.href)
+    </code>;
     unbound, a plain click does nothing.
   </p>
 
@@ -178,7 +197,9 @@
 
   <p class="block-desc t-s">
     Last <code class="t-mono-inline">(navigate)</code>:
-    <code class="t-mono-inline">{{ lastNavigated() || '-' }}</code>
+    <code class="t-mono-inline">
+      {{ lastNavigated() || '-' }}
+    </code>
   </p>
 
   <h3 class="block-title t-h4">
@@ -188,11 +209,14 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [clickable]="false"
-    </code> disables item
-    activation - useful for read-only trails (audit logs, archived snapshots)
-    where you want the path visible but not navigable. Unset follows
-    <code class="t-mono-inline">DS_CONFIG.breadcrumbs.clickable</code>, then
-    <code class="t-mono-inline">true</code>.
+    </code> shows the path
+    without navigation (audit logs, archived snapshots). Unset follows
+    <code class="t-mono-inline">
+      DS_CONFIG.breadcrumbs.clickable
+    </code>, then
+    <code class="t-mono-inline">
+      true
+    </code>.
   </p>
 
   <div class="stage">
@@ -206,18 +230,30 @@
   </h3>
 
   <p class="block-desc t-s">
-    Omit <code class="t-mono-inline">[items]</code> and the component reads from
+    Without <code class="t-mono-inline">[items]</code> the component reads
     <code class="t-mono-inline">
       BreadcrumbsService.items
-    </code> - apps push
-    crumbs from route data or an effect when the page model resolves. The
-    service is <code class="t-mono-inline">providedIn: 'root'</code>, so a
-    trail persists across routes until replaced: each page calls
-    <code class="t-mono-inline">set</code> (or
-    <code class="t-mono-inline">clear</code>).
-    <code class="t-mono-inline">push</code>,
-    <code class="t-mono-inline">pop</code> and
-    <code class="t-mono-inline">replaceLast</code> edit the end of the trail.
+    </code>, fed from route
+    data or an effect. It is
+    <code class="t-mono-inline">
+      providedIn: 'root'
+    </code>, so a trail persists
+    across routes; each page calls
+    <code class="t-mono-inline">
+      set
+    </code> (or
+    <code class="t-mono-inline">
+      clear
+    </code>).
+    <code class="t-mono-inline">
+      push
+    </code>,
+    <code class="t-mono-inline">
+      pop
+    </code> and
+    <code class="t-mono-inline">
+      replaceLast
+    </code> edit the end of the trail.
   </p>
 
   <pre

@@ -3,10 +3,8 @@
   eyebrow="Practice"
   title="Claude Design sync">
   <span lede>
-    A Claude Design project can hold this library itself, so its agent builds
-    screens out of the real components rather than something in their style.
-    This page is how that works, what you run, and which files are authored
-    versus generated.
+    Loads this library into a Claude Design project, so its agent builds
+    screens from the real components.
   </span>
 
   <h3 class="block-title t-h4">
@@ -14,29 +12,30 @@
   </h3>
 
   <p class="block-desc t-s">
-    The agent's code renders
+    The agent renders
     <code class="t-mono-inline">
       React.createElement(window.IdsDs.&lt;Component&gt;)
     </code>.
-    The contract is narrow:
+    Contract:
     <strong>
-      expose React components on
+      React components on
       <code class="t-mono-inline">
         window.IdsDs
-      </code>, and React arrives
-      separately as a global
+      </code>; React loads separately as a global
     </strong>
-    (the project's <code class="t-mono-inline">_vendor/react*.js</code>). React
-    is not inside <code class="t-mono-inline">_ds_bundle.js</code>, and nothing
-    inspects what else is, so an Angular runtime can ride along inside it.
+    (<code class="t-mono-inline">_vendor/react*.js</code>). The rest of
+    <code class="t-mono-inline">
+      _ds_bundle.js
+    </code> is never inspected, so
+    it can carry an Angular runtime.
   </p>
 
   <p class="block-desc t-s">
-    A card holds no React. It is one HTML page per
+    A card holds no React: one HTML page per
     <code class="t-mono-inline">
       data-claude-design
-    </code> block of a ds-docs
-    chapter, rendering that chapter's section tag on the bundle:
+    </code> block, rendering its
+    chapter's section tag on the bundle:
   </p>
 
   <pre class="cd-chain t-mono-block">
@@ -60,12 +59,12 @@
     </code>.
     <code class="t-mono-inline">
       snapshot-cards.mjs
-    </code> runs last: it freezes
-    every card outside <code class="t-mono-inline">live-cards.txt</code> into
-    static HTML that links the shared
+    </code> runs last, freezing every
+    card outside <code class="t-mono-inline">live-cards.txt</code> into static
+    HTML linking
     <code class="t-mono-inline">
       _ds_cards.css
-    </code>. What to mark is in
+    </code>. What to mark:
     <code class="t-mono-inline">
       .design-sync/CARDS.md
     </code>.
@@ -76,12 +75,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    Every component is registered as a custom element and its React wrapper is
-    generated from the AST by
+    Each component is a custom element with a React wrapper generated from the
+    AST by
     <code class="t-mono-inline">
       gen.mjs
-    </code>, so there is no second implementation to drift. The cost is the
-    Angular runtime inside the bundle, fixed as the library grows.
+    </code>: no second implementation to drift. Cost: a fixed-size Angular
+    runtime in the bundle.
   </p>
 
   <h3 class="block-title t-h4">
@@ -105,15 +104,13 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       npm run check:cards
-    </code> is the whole chain
-    above in one command, and the only form that works in a tree which has not
-    built yet.
+    </code> runs the whole chain; only it
+    works in an unbuilt tree.
   </p>
 
   <p class="block-desc t-s">
-    Publishing is a separate, deliberately gated flow: read the project, lock a
-    plan, then write. The tool rejects any path outside the locked plan, and the
-    plan is shown to a human before anything is written.
+    Publishing is a separate gated flow: read the project, lock a plan, show it
+    to a human, then write. Paths outside the plan are rejected.
   </p>
 
   <h3 class="block-title t-h4">
@@ -121,14 +118,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    The repository commits the sync inputs and the built tree at
+    The repo commits the sync inputs and the built tree at
     <code class="t-mono-inline">
       .design-sync/upload/
     </code>. Only
     <code class="t-mono-inline">
       _ds_sync.json
-    </code> lives in the project alone,
-    so its absence here is not drift.
+    </code> lives in the project alone;
+    its absence here is not drift.
   </p>
 
   <div class="cd-table">
@@ -161,17 +158,16 @@
         An agent composition sets its state as INITIAL props, never toggles
         it after mount.
       </strong>
-      A slot behind a condition works, nested DS components included, as long as
-      the gate is true when the element connects. Toggle it later and the
-      projected wrapper survives while the custom elements inside it are
-      destroyed. So an overlay passes
+      A conditional slot works (nested DS components too) if its gate is true
+      at connect; toggled later, the custom elements inside are destroyed. An
+      overlay passes
       <code class="t-mono-inline">
         staticPreview
       </code> or
       <code class="t-mono-inline">
         open
-      </code> at creation, and a table that
-      shows bulk actions passes its selection at creation.
+      </code> at creation; a table with
+      bulk actions passes its selection.
     </li>
 
     <li>
@@ -179,23 +175,23 @@
         A component used inside another component's template registers under an
         alias.
       </strong>
-      A custom element nested in another's template loses both its projected
-      content and its inputs, so the generator gives those an
+      Nested, a custom element loses its content and inputs, so the generator
+      gives it a
       <code class="t-mono-inline">
         ds-x-
-      </code> tag no template mentions. The React wrapper emits the alias, so nothing changes for a caller
-      and the tag never surfaces in a design.
+      </code> tag no template mentions. The React wrapper emits the alias;
+      callers and designs never see it.
     </li>
   </ul>
 
   <p class="block-desc t-s">
-    Attribute directives have no tag to register, so they are absent from the
-    generated surface; <code class="t-mono-inline">manual-surface.json</code>
-    lists them. Only
+    Attribute directives have no tag, so the generated surface lacks them;
+    <code class="t-mono-inline">
+      manual-surface.json
+    </code> lists them. Only
     <code class="t-mono-inline">
       dsTooltip
-    </code> would be missed, and a
-    tooltip is hover-revealed — a static design card has no hover, so it would
-    show nothing anyway.
+    </code> would be missed, and a static card
+    cannot hover.
   </p>
 </docs-section>

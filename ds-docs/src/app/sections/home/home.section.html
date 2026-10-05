@@ -9,16 +9,9 @@
     </h1>
 
     <p class="lede">
-      A reusable starting point for any admin product — tokens, components and
-      patterns. Built tokens-first so a client theme propagates without touching
-      components. Brand tokens — palette and fonts — live in the consumer app's
-      <code class="t-mono-inline">
-        _brand-&lt;client&gt;.scss
-      </code> file (see
-      <code class="t-mono-inline">
-        ds-docs/src/styles/_preview-brand-acme.scss
-      </code>);
-      domain-specific copy and status taxonomies stay in the app itself.
+      Tokens, components and patterns for any admin product. A client theme
+      changes tokens, never components; domain copy and status taxonomies stay
+      in the app.
     </p>
 
     <div class="badges">
@@ -57,17 +50,6 @@
       Start here
     </h2>
 
-    <p class="lede-secondary">
-      Re-skin per consumer app with a
-      <code class="t-mono-inline">
-        _brand-&lt;client&gt;.scss
-      </code> partial
-      that overrides palette and font tokens under
-      <code class="t-mono-inline">
-        [data-brand="&lt;client&gt;"]
-      </code>; components stay untouched.
-    </p>
-
     <div class="block">
       <h3 class="t-h4 block-title">
         How to
@@ -88,25 +70,25 @@
             <code class="t-mono-inline">
               _brand-&lt;client&gt;.scss
             </code> in
-            the consumer app's styles folder. Inside
+            the app's styles folder. Inside
             <code class="t-mono-inline">
               [data-brand="&lt;client&gt;"]
             </code>,
-            override the brand tokens — palette ramp (<code
+            override palette ramp (<code
               class="t-mono-inline"
               >--blue-50…900</code
             >), brand HSL channels (<code class="t-mono-inline"
               >--primary-h/s/l</code
-            >), the <code class="t-mono-inline">--primary*</code> roles and
-            other semantic tokens (surfaces, text,
+            >), <code class="t-mono-inline">--primary*</code> roles, other
+            semantic tokens (surfaces, text,
             <code class="t-mono-inline">
               --secondary*
-            </code>), and the font
+            </code>) and the font
             stack. Activate with
             <code class="t-mono-inline">
               &lt;html data-brand="&lt;client&gt;"&gt;
             </code
-            >. Components stay untouched.
+            >.
           </p>
 
           <div class="howto-foot">
@@ -127,10 +109,11 @@
           </h4>
 
           <p class="howto-body">
-            Author against tokens — never raw values. Use idiomatic class names
-            with <code class="t-mono-inline">&amp;.modifier</code> nesting. Pair
-            tokens correctly (background + matching foreground). Add a
-            per-component section to this docs site.
+            Tokens, never raw values; plain class names with
+            <code class="t-mono-inline">
+              &amp;.modifier
+            </code> nesting; each background
+            with its matching foreground. Add a docs section.
           </p>
 
           <div class="howto-foot">
@@ -153,10 +136,8 @@
           </h4>
 
           <p class="howto-body">
-            Linear top-to-bottom: Components → Charts → Foundations → Patterns
-            → Practice → Reference. Each component block reads as a
-            self-contained unit. Use the left TOC for jumps. The Tweaks panel
-            flips brand, density and font size live.
+            Components → Charts → Foundations → Patterns → Practice →
+            Reference; each block stands alone. Jump via the left TOC.
           </p>
 
           <div class="howto-foot">
@@ -186,8 +167,8 @@
             </div>
 
             <div class="start-link-desc">
-              Buttons, fields, tables, banners, navigation —
-              {{ componentCount }} in total.
+              Buttons, fields, tables, banners, navigation:
+              {{ componentCount }}.
             </div>
           </div>
 
@@ -277,7 +258,7 @@
             </div>
 
             <div class="start-link-desc">
-              Token catalogue — names, values, intended use.
+              Token catalogue: names, values, use.
             </div>
           </div>
 
@@ -297,9 +278,8 @@
             </div>
 
             <div class="start-link-desc">
-              Brand, density and font size sit in the Tweaks panel,
-              top-right. Try brand swap: components reflow without code
-              changes.
+              The Tweaks panel, top-right, switches brand, density and font
+              size live.
             </div>
           </div>
         </div>

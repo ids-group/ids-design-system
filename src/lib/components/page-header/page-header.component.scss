@@ -1,10 +1,8 @@
-/* Truncation contract: title, subtitle and breadcrumb segments are single-line with
-   ellipsis (middle breadcrumb segments collapse before the leaf clips); eyebrow and
+/* Truncation contract: title and subtitle are single-line with ellipsis; eyebrow and
    status badge never clip and are short by spec, one badge per header; beyond two
    ghost + one primary action, collapse the rest into an overflow menu. */
 
 @use '../../styles/breakpoints' as bp;
-@use '../../styles/text-clip' as text-clip;
 
 :host {
   --_page-header-eyebrow-text-color:   var(--ds-page-header-eyebrow-text-color,   var(--text-tertiary));
@@ -12,8 +10,10 @@
   --_page-header-subtitle-text-color:  var(--ds-page-header-subtitle-text-color,  var(--text-secondary));
   --_page-header-meta-text-color:      var(--ds-page-header-meta-text-color,      var(--text-secondary));
   --_page-header-meta-icon-color: var(--ds-page-header-meta-icon-color, var(--icon-default));
-  --_page-header-crumb-text-color: var(--ds-page-header-crumb-text-color, var(--text-tertiary));
-  --_page-header-crumb-text-color-hover: var(--ds-page-header-crumb-text-color-hover, var(--accent));
+
+  /* No fallback of their own: unset, they pass the breadcrumbs' own value (or an app's) through. */
+  --_page-header-crumb-text-color: var(--ds-page-header-crumb-text-color, var(--ds-breadcrumbs-label-color));
+  --_page-header-crumb-text-color-hover: var(--ds-page-header-crumb-text-color-hover, var(--ds-breadcrumbs-label-color-hover));
   --_page-header-divider:      var(--ds-page-header-divider,      var(--border-divider));
   --_page-header-title-font-size:     var(--ds-page-header-title-font-size,     var(--font-size-h3));
   --_page-header-subtitle-font-size: var(--ds-page-header-subtitle-font-size, var(--font-size-s));
@@ -27,6 +27,10 @@
 }
 
 .page-header {
+  /* Read by the projected ds-breadcrumbs, a child of this element. */
+  --ds-breadcrumbs-label-color: var(--_page-header-crumb-text-color);
+  --ds-breadcrumbs-label-color-hover: var(--_page-header-crumb-text-color-hover);
+
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -80,38 +84,6 @@
     gap: var(--space-3);
     flex-wrap: wrap;
   }
-
-  .crumbs-trail {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-    color: var(--text-tertiary);
-    min-width: 0;
-    flex-wrap: nowrap;
-    overflow: hidden;
-    padding-bottom: var(--space-1);
-  }
-  .crumb {
-    color: var(--_page-header-crumb-text-color);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-
-    @include text-clip.single-line-ellipsis;
-
-    max-width: 24ch;
-    transition: color var(--duration-fast) var(--ease-standard);
-
-    &:hover { color: var(--_page-header-crumb-text-color-hover); }
-    &.crumb--current {
-      color: var(--text-primary);
-      font-weight: var(--font-weight-bold);
-      max-width: 32ch;
-    }
-  }
-  .crumb-sep { color: var(--icon-muted); display: inline-flex; align-items: center; }
 
   .subtitle {
     font: var(--font-weight-regular) var(--_page-header-subtitle-font-size) / var(--line-height-base) var(--font-sans);

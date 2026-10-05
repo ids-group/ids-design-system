@@ -3,9 +3,8 @@
   eyebrow="Components"
   title="Empty state">
   <span lede>
-    The base component for any "nothing-to-show" state. One icon, a title that
-    names what is missing, one sentence of body, and at most two actions. For
-    richer scenarios (loading overlay, error retry, permission denied) see
+    Base for any "nothing to show" state: one icon, a title naming what is
+    missing, one body sentence, at most two actions. Richer cases:
     <a
       class="link"
       routerLink="/patterns/pattern-empty-state">
@@ -21,11 +20,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    Five variants: <code class="t-mono-inline">error</code>,
-    <code class="t-mono-inline">locked</code> and
-    <code class="t-mono-inline">success</code> tint the icon tile;
-    <code class="t-mono-inline">loading</code> covers the state with a spinner.
-    <code class="t-mono-inline">icon</code> replaces the variant's glyph.
+    <code class="t-mono-inline">
+      error
+    </code>,
+    <code class="t-mono-inline">
+      locked
+    </code> and
+    <code class="t-mono-inline">
+      success
+    </code> tint the icon tile;
+    <code class="t-mono-inline">
+      loading
+    </code> covers the state with a spinner.
+    <code class="t-mono-inline">
+      icon
+    </code> replaces the variant's glyph.
   </p>
 
   <div class="variants-grid">
@@ -77,8 +86,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Title, body and one action in the <code class="t-mono-inline">actions</code>
-    slot.
+    One action in the <code class="t-mono-inline">actions</code> slot.
   </p>
 
   <div class="states-grid">

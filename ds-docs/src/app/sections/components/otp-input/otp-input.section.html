@@ -3,8 +3,7 @@
   eyebrow="Components"
   title="OTP input">
   <span lede>
-    One-time password and PIN entry fields with configurable length, mode, and
-    optional masking.
+    One-time password and PIN entry.
   </span>
 
   <h3
@@ -14,23 +13,30 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code>length</code> defaults to 6 and <code>mode</code> to
-    <code>numeric</code> (digits, numeric keypad); <code>alphanumeric</code>
+    <code>
+      length
+    </code> defaults to 6 and <code>mode</code> to
+    <code>
+      numeric
+    </code> (digits, numeric keypad); <code>alphanumeric</code>
     accepts letters. <code>(completed)</code> fires with the code when it goes
-    from partial to complete, not on every edit of a full code.
+    from partial to complete, not on edits of a full code.
   </p>
 
   <p class="block-desc t-s">
-    Paste spreads across the cells, <kbd>Backspace</kbd> on an empty cell clears
-    the previous one, <kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd> move, and
-    focus snaps to the first empty cell. The first cell has
-    <code>autocomplete="one-time-code"</code> for SMS autofill.
-  </p>
-
-  <p class="block-desc t-s">
-    The row is a <code>role="group"</code> named by <code>ariaLabel</code>,
-    falling back to <code>DS_INTL.otpInput.label</code>; each cell is labelled
-    "digit N" or "character N" from <code>DS_INTL.otpInput</code>.
+    Paste spreads across cells; <kbd>Backspace</kbd> on an empty cell clears the
+    previous one; <kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd> move; focus snaps
+    to the first empty cell. The first cell has
+    <code>
+      autocomplete="one-time-code"
+    </code> for SMS autofill. The row is a
+    <code>
+      role="group"
+    </code> named by <code>ariaLabel</code> (fallback
+    <code>
+      DS_INTL.otpInput.label
+    </code>); cells are labelled "digit N" or
+    "character N" from <code>DS_INTL.otpInput</code>.
   </p>
 
   <div class="demo-panel">
@@ -54,8 +60,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code>[mask]="true"</code> obscures digits as they are typed, for PIN
-    entry.
+    <code>
+      [mask]="true"
+    </code> obscures digits as typed.
   </p>
 
   <div class="demo-panel">
@@ -72,15 +79,29 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       hint
-    </code> renders a helper line below the
-    cells; <code class="t-mono-inline">error</code> replaces it, announced via
-    <code>role="alert"</code>, and <code class="t-mono-inline">warning</code> /
-    <code class="t-mono-inline">success</code> show their own states.
-    <code class="t-mono-inline">[invalid]</code> paints the error border
+    </code> adds a helper line;
+    <code class="t-mono-inline">
+      error
+    </code> replaces it, announced via
+    <code>
+      role="alert"
+    </code>; <code class="t-mono-inline">warning</code> /
+    <code class="t-mono-inline">
+      success
+    </code> show their own states.
+    <code class="t-mono-inline">
+      [invalid]
+    </code> paints the error border
     without text. Cell tokens: <code>--ds-otp-cell-width</code>,
-    <code>-height</code>, <code>--ds-otp-gap</code>,
-    <code>--ds-otp-cell-bg-color</code>,
-    <code>--ds-otp-cell-border-color</code> and <code>-focus</code>.
+    <code>
+      -height
+    </code>, <code>--ds-otp-gap</code>,
+    <code>
+      --ds-otp-cell-bg-color
+    </code>,
+    <code>
+      --ds-otp-cell-border-color
+    </code> and <code>-focus</code>.
   </p>
 
   <div class="demo-panel">

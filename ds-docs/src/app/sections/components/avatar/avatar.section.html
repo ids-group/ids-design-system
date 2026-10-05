@@ -4,7 +4,7 @@
   title="Avatars"
   [apiKeys]="['avatar-group']">
   <span lede>
-    Initials and image avatars in four sizes, plus stacked groups with overflow.
+    Initials or image avatars, plus stacked groups.
   </span>
 
   <h3
@@ -37,9 +37,15 @@
   </div>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">imageUrl</code> shows an image ahead of
-    <code class="t-mono-inline">initials</code> and
-    <code class="t-mono-inline">fallbackIcon</code>.
+    <code class="t-mono-inline">
+      imageUrl
+    </code> shows an image ahead of
+    <code class="t-mono-inline">
+      initials
+    </code> and
+    <code class="t-mono-inline">
+      fallbackIcon
+    </code>.
   </p>
 
   <h3
@@ -50,28 +56,36 @@
   </h3>
 
   <p class="block-desc t-s">
-    The group shows every avatar you project, so project at most
-    <code class="t-mono-inline">max</code> (default 4). Set
-    <code class="t-mono-inline">total</code> to the full count and a
-    <code class="t-mono-inline">+N</code> chip shows the rest
-    (<code class="t-mono-inline">total - max</code>); unset, no chip renders.
-    <code class="t-mono-inline">tint="neutral"</code> gives an avatar the
-    overflow-chip look.
+    Shows the first <code class="t-mono-inline">max</code> avatars (default 4)
+    and a <code class="t-mono-inline">+N</code> chip for the rest, counted from
+    the projected avatars or from <code class="t-mono-inline">total</code>.
+    <code class="t-mono-inline">
+      tint="neutral"
+    </code> gives an avatar the chip
+    look.
   </p>
 
   <div class="row">
     <ds-avatar-group
       [max]="3"
       [total]="7">
-      <ds-avatar initials="AB" />
+      <ds-avatar name="Anna Berg" />
 
-      <ds-avatar
-        initials="JR"
-        [tint]="{ bg: 'var(--orange-100)', fg: 'var(--orange-700)' }" />
+      <ds-avatar name="Jonas Reed" />
 
-      <ds-avatar
-        initials="SK"
-        [tint]="{ bg: 'var(--green-100)', fg: 'var(--green-700)' }" />
+      <ds-avatar name="Sara Kim" />
+    </ds-avatar-group>
+
+    <ds-avatar-group [max]="3">
+      <ds-avatar name="Anna Berg" />
+
+      <ds-avatar name="Jonas Reed" />
+
+      <ds-avatar name="Sara Kim" />
+
+      <ds-avatar name="Mia Tran" />
+
+      <ds-avatar name="Leo Park" />
     </ds-avatar-group>
   </div>
 
@@ -82,13 +96,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    Pass <code class="t-mono-inline">status</code> to show a presence indicator
-    in the bottom-right corner of the avatar. Set
-    <code class="t-mono-inline">ariaLabel</code> to name the person and their
-    status (e.g. "Alice Brown, Online"): the labelled avatar is
-    <code class="t-mono-inline">role="img"</code>, so the dot's own label is
-    not read. Without <code class="t-mono-inline">ariaLabel</code> the avatar
-    is decorative.
+    <code class="t-mono-inline">
+      status
+    </code> adds a presence dot. Put person
+    and status in <code class="t-mono-inline">ariaLabel</code>
+    ("Alice Brown, Online"): a labelled avatar is
+    <code class="t-mono-inline">
+      role="img"
+    </code>, so the dot's label is not
+    read. Without <code class="t-mono-inline">ariaLabel</code> the avatar is
+    decorative.
   </p>
 
   <div class="row">
@@ -120,11 +137,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    When neither <code class="t-mono-inline">imageUrl</code> nor
+    Shown when neither <code class="t-mono-inline">imageUrl</code> nor
     <code class="t-mono-inline">
       initials
-    </code> are provided, the avatar
-    renders the <code class="t-mono-inline">fallbackIcon</code>.
+    </code> is set.
   </p>
 
   <div class="row">
@@ -152,54 +168,54 @@
   </h3>
 
   <p class="block-desc t-s">
-    Pass <code class="t-mono-inline">seed</code> (an email or name) for a
-    deterministic <code class="t-mono-inline">hsl(H 50% 62%)</code> colour — the
-    same person always gets the same tint across apps — with WHITE initials on
-    every one. The helpers <code class="t-mono-inline">avatarTint</code> and
+    <code class="t-mono-inline">
+      seed
+    </code> (an email or name) gives a
+    deterministic <code class="t-mono-inline">hsl(H 50% 62%)</code> tint,
+    identical across apps, with white initials.
+    <code class="t-mono-inline">
+      avatarTint
+    </code> and
     <code class="t-mono-inline">
       initialsFrom
-    </code> (which also accepts a
-    single full name) are exported for use outside the component.
+    </code> (also takes one full name)
+    are exported.
   </p>
 
   <p class="block-desc t-s">
-    HSL lightness is not perceptually even, so white initials on the lighter
-    hues measure as low as <strong>1.65:1</strong>, under WCAG AA's 4.5:1. Use
-    the default where a written name sits beside the avatar; where the initials
-    are the only identifier, bind
+    White on lighter hues drops to <strong>1.65:1</strong> (WCAG AA: 4.5:1).
+    Keep the default beside a written name; when initials are the only
+    identifier, bind
     <code class="t-mono-inline">
       [tint]="avatarTint(seed, &#123; lightness: 50 &#125;)"
     </code>
-    - white then measures 5.3-6.6:1.
+    (5.3-6.6:1).
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      Or pass the name and let the avatar do both.
-    </strong>
-
     <code class="t-mono-inline">
       name
-    </code> replaces the two bindings this
-    demo wires by hand: it derives the initials AND seeds the tint.
+    </code> replaces both bindings in this
+    demo: it derives initials and seeds the tint.
     <strong>
       The tint hashes the NAME, never the initials
-    </strong> — two
-    letters collide wholesale, so Alice Brown and Adam Bell would otherwise
-    share one colour. Measured: same "AB", hues 198° and 356°.
+    </strong>: Alice
+    Brown and Adam Bell (both "AB") get hues 198° and 356°.
   </p>
 
   <p class="block-desc t-s">
-    The built-in rule takes the first letters of the first two words - a
-    Latin-script guess (a Spanish reader wants MG from "María José García
-    López"). Replace it per instance with
-    <code class="t-mono-inline">[initialsRule]</code> or app-wide with
+    Default initials: first letters of the first two words, a Latin-script
+    guess (Spanish wants MG for "María José García López"). Override per
+    instance with
+    <code class="t-mono-inline">
+      [initialsRule]
+    </code> or app-wide with
     <code class="t-mono-inline">
       provideDsConfig(&#123; avatar: &#123; initials &#125; &#125;)
-    </code>; an explicit
+    </code>; explicit
     <code class="t-mono-inline">
       initials
-    </code> still wins over both.
+    </code> wins.
   </p>
 
   <div class="row">
@@ -215,9 +231,8 @@
     Same seeds with
     <code class="t-mono-inline">
       [avoidHues]="[[310, 360], [0, 20]]"
-    </code> —
-    pink and red hues are skipped so seeded avatars never clash with a brand
-    colour:
+    </code>,
+    skipping a brand's pink and red:
   </p>
 
   <div class="row">

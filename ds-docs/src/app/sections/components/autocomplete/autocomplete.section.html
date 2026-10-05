@@ -4,31 +4,25 @@
   title="Autocomplete"
   [apiKeys]="['create-template']">
   <span lede>
-    Text input that filters a token-tagged list. Single-select for picking a
-    record (a Member, a venue); multi-select for picking a set (allowed
-    products, audience tags). Distinct from
+    Typing filters a list to pick one record or a set. Not
     <code class="t-mono-inline">
       &lt;ds-select&gt;
     </code> (fixed-list dropdown)
-    and Command palette (global search).
+    or Command palette (global search).
   </span>
 
   <docs-nonmodal-note />
 
   <p class="block-desc t-s">
-    Autocomplete or <code class="t-mono-inline">ds-multi-select</code>: choose
-    by the list, not the count. Use autocomplete when the set is too big to
-    scan and typing narrows it (a member, a venue, one product of thousands);
-    use <code class="t-mono-inline">ds-multi-select</code> when the options are
-    few enough to read as a checkbox list, which also shows what is not
-    selected.
-  </p>
-
-  <p class="block-desc t-s">
-    The same rule decides against
-    <code class="t-mono-inline">ds-select</code>: once a value is chosen,
-    autocomplete collapses its filter input and reads like a picker; opened, it
-    lets you type and <code class="t-mono-inline">ds-select</code> does not.
+    Use autocomplete for lists too big to scan;
+    <code class="t-mono-inline">
+      ds-multi-select
+    </code> when options fit a
+    checkbox list (it shows the unselected too). The same rule decides against
+    <code class="t-mono-inline">
+      ds-select
+    </code>: both read as pickers, but
+    only autocomplete lets you type.
   </p>
 
   <h3
@@ -65,14 +59,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">maxVisibleChips</code> keeps the trigger one
-    line. <code class="t-mono-inline">"fit"</code> (default) shows as many
-    chips as fit, the rest behind "+N more", re-split on resize; a number is a
-    ceiling, reduced further when the trigger is too narrow;
-    <code class="t-mono-inline">"all"</code> shows every chip and lets the
-    trigger grow. Same input and default on
-    <code class="t-mono-inline">ds-multi-select</code>. Backspace removes the
-    last selected chip, not the last visible one.
+    <code class="t-mono-inline">
+      maxVisibleChips
+    </code> keeps the trigger one
+    line: <code class="t-mono-inline">"fit"</code> (default) shows what fits
+    plus "+N more", re-split on resize; a number is a ceiling, lowered if
+    narrow; <code class="t-mono-inline">"all"</code> grows the trigger. Same
+    on <code class="t-mono-inline">ds-multi-select</code>. Backspace removes
+    the last selected chip, not the last visible.
   </p>
 
   <div class="autocomplete-field-wrap">
@@ -86,7 +80,7 @@
   </div>
 
   <p class="block-desc t-s">
-    Drag the handle to watch the default split move with the width.
+    Drag the handle to resize.
   </p>
 
   <div class="autocomplete-resizable">
@@ -106,22 +100,26 @@
   </h3>
 
   <p class="block-desc t-s">
-    Default <code class="t-mono-inline">width="fill"</code> stretches to the
-    container. <code class="t-mono-inline">width="content"</code> hugs the
-    chips/value plus a minimum typing area — for filter toolbars where a
-    full-width trigger looks broken next to one short chip.
+    <code class="t-mono-inline">
+      width="fill"
+    </code> (default) stretches;
+    <code class="t-mono-inline">
+      width="content"
+    </code> hugs chips/value plus a
+    typing area, for toolbars.
     <code class="t-mono-inline">
       --ds-autocomplete-input-min-width
-    </code> tunes
-    the typing area (default 40px),
+    </code> (default 40px) sizes the
+    typing area;
     <code class="t-mono-inline">
       --ds-autocomplete-max-width
     </code>
-    caps the trigger in either mode. A settled single value wider than the
-    trigger ellipsises; <code class="t-mono-inline">valueOverflow="wrap"</code>
-    wraps it onto a second line. An option label too long for the panel, the
-    create row's included, is cut with an ellipsis and shows in full in a
-    tooltip on hover; one that fits shows none.
+    caps both modes. Long values ellipsise;
+    <code class="t-mono-inline">
+      valueOverflow="wrap"
+    </code> wraps to a second
+    line. Long option labels, create row included, ellipsise with a hover
+    tooltip.
   </p>
 
   <div class="autocomplete-toolbar-row">
@@ -146,14 +144,25 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       hint
-    </code> renders a helper line below the
-    field. <code class="t-mono-inline">error</code>,
-    <code class="t-mono-inline">warning</code> and
-    <code class="t-mono-inline">success</code> show a message in that state;
-    <code class="t-mono-inline">[invalid]="true"</code> paints the error state
-    without one. <code class="t-mono-inline">[disabled]="true"</code> makes the
-    control inert; <code class="t-mono-inline">readOnly</code> keeps it
-    focusable but stops the panel opening.
+    </code> adds a helper line.
+    <code class="t-mono-inline">
+      error
+    </code>,
+    <code class="t-mono-inline">
+      warning
+    </code> and
+    <code class="t-mono-inline">
+      success
+    </code> show a message;
+    <code class="t-mono-inline">
+      [invalid]="true"
+    </code> is error without one.
+    <code class="t-mono-inline">
+      [disabled]="true"
+    </code> is inert;
+    <code class="t-mono-inline">
+      readOnly
+    </code> is focusable, panel closed.
   </p>
 
   <div class="autocomplete-field-wrap">
@@ -182,13 +191,22 @@
   </div>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">clearable</code> adds a clear affordance once
-    there is a value. <code class="t-mono-inline">size</code> sets the trigger
-    height (unset follows
-    <code class="t-mono-inline">DS_CONFIG.control.size</code>, then
-    <code class="t-mono-inline">'md'</code>).
-    <code class="t-mono-inline">[showChevron]="false"</code> drops the
-    trailing chevron, for a search field.
+    <code class="t-mono-inline">
+      clearable
+    </code> adds a clear button once set.
+    <code class="t-mono-inline">
+      size
+    </code> sets height (unset:
+    <code class="t-mono-inline">
+      DS_CONFIG.control.size
+    </code>, then
+    <code class="t-mono-inline">
+      'md'
+    </code>).
+    <code class="t-mono-inline">
+      [showChevron]="false"
+    </code> suits a search
+    field.
   </p>
 
   <h3 class="block-title t-h4">
@@ -196,9 +214,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Put groups in the same <code class="t-mono-inline">options</code> input —
-    flat options and groups may be mixed, and render in the order given.
-    Filtering hides a group whose options produce no matches.
+    Groups mix with flat <code class="t-mono-inline">options</code>, in order.
+    Groups without matches hide.
   </p>
 
   <div class="autocomplete-field-wrap">
@@ -214,13 +231,13 @@
   </h3>
 
   <p class="block-desc t-s">
-    Add <code class="t-mono-inline">allowCreate</code> to show a
+    <code class="t-mono-inline">
+      allowCreate
+    </code> shows a
     <em>
       Create «text»
-    </em> row when the typed text has no exact match.
-    Selecting it emits a <code class="t-mono-inline">create</code> output — the
-    consumer decides how to add the item. In this demo the new tag is appended
-    to the list and auto-selected.
+    </em> row for text with no exact match,
+    emitting <code class="t-mono-inline">create</code>; you add the item.
   </p>
 
   <div class="autocomplete-field-wrap">
@@ -239,23 +256,38 @@
   </h3>
 
   <p class="block-desc t-s">
-    An option may carry <code class="t-mono-inline">icon</code> (16px, before
-    the label) and <code class="t-mono-inline">disabled</code> (greyed,
-    <code class="t-mono-inline">aria-disabled</code>, unclickable, skipped by
-    the arrow keys) - the same <code class="t-mono-inline">DsOption</code>
-    shape as <code class="t-mono-inline">ds-select</code> and
-    <code class="t-mono-inline">ds-multi-select</code>. Only
-    <code class="t-mono-inline">ds-select</code> repeats the icon in its
-    trigger; here the leading slot belongs to
-    <code class="t-mono-inline">[dsAutocompletePrefix]</code>.
+    <code class="t-mono-inline">
+      DsOption
+    </code> (as in
+    <code class="t-mono-inline">
+      ds-select
+    </code> and
+    <code class="t-mono-inline">
+      ds-multi-select
+    </code>) takes
+    <code class="t-mono-inline">
+      icon
+    </code> (16px, before the label) and
+    <code class="t-mono-inline">
+      disabled
+    </code> (greyed,
+    <code class="t-mono-inline">
+      aria-disabled
+    </code>, unclickable, skipped by
+    arrows). The trigger shows no option icon; its leading slot is
+    <code class="t-mono-inline">
+      [dsAutocompletePrefix]
+    </code>.
   </p>
 
   <p class="block-desc t-s">
-    Project an element with
-    <code class="t-mono-inline">dsAutocompletePrefix</code> to place it at the
-    start of the trigger, or with
-    <code class="t-mono-inline">dsAutocompleteSuffix</code> to place it after
-    the input, before the clear and chevron.
+    <code class="t-mono-inline">
+      dsAutocompletePrefix
+    </code>: trigger start;
+    <code class="t-mono-inline">
+      dsAutocompleteSuffix
+    </code>: after the input,
+    before clear and chevron.
   </p>
 
   <div class="autocomplete-field-wrap">
@@ -273,11 +305,11 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       compareWith
-    </code> decides when two values are
-    the same one. The default is <code class="t-mono-inline">===</code>, which
-    for an object is reference identity — so a re-fetch returning equal data as
-    new objects would drop the selection. Key the comparator on whatever
-    identifies the value. Press <em>Refetch</em>: the selection survives.
+    </code> matches values. The default
+    <code class="t-mono-inline">
+      ===
+    </code> drops a selection when a re-fetch
+    returns new objects; compare by identity key. Try <em>Refetch</em>.
   </p>
 
   <div class="demo-panel">
@@ -306,10 +338,13 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">searchPlaceholder</code> replaces
-    <code class="t-mono-inline">placeholder</code> while typing over a settled
-    value; empty keeps <code class="t-mono-inline">placeholder</code>. Pick a
-    city, then focus the field again.
+    <code class="t-mono-inline">
+      searchPlaceholder
+    </code> replaces
+    <code class="t-mono-inline">
+      placeholder
+    </code> when typing over a value;
+    empty keeps <code class="t-mono-inline">placeholder</code>.
   </p>
 
   <div class="demo-panel">
@@ -328,15 +363,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">filterWith</code> decides how the query narrows
-    the list (default: case-insensitive substring of
-    <code class="t-mono-inline">label</code>);
-    <code class="t-mono-inline">'none'</code> renders every option as given.
-    <code class="t-mono-inline">(filterChange)</code> emits the typed query on
-    every change, so pair it with <code class="t-mono-inline">'none'</code> and
-    fetch the options yourself.
-    <code class="t-mono-inline">[loading]="true"</code> shows a spinner instead
-    of the empty row and sets <code class="t-mono-inline">aria-busy</code> on
+    <code class="t-mono-inline">
+      filterWith
+    </code> narrows (default: case-insensitive
+    substring of <code class="t-mono-inline">label</code>);
+    <code class="t-mono-inline">
+      'none'
+    </code> shows options as given: fetch
+    them on <code class="t-mono-inline">(filterChange)</code>, which emits each
+    query. <code class="t-mono-inline">[loading]="true"</code> shows a spinner
+    for the empty row and sets <code class="t-mono-inline">aria-busy</code> on
     the listbox.
   </p>
 
@@ -345,22 +381,40 @@
   </h3>
 
   <p class="block-desc t-s">
-    Template directives come from
+    Directives from
     <code class="t-mono-inline">
       &#64;ids-group-ltd/ids-design-system/components
-    </code>.
-    <code class="t-mono-inline">dsOptionTemplate</code> fills an option row's
-    label area (context: the option); the row's role, selection and check stay
-    library-owned. <code class="t-mono-inline">dsEmptyTemplate</code> replaces
-    the "no matches" row (context: <code class="t-mono-inline">query</code>);
-    the row keeps <code class="t-mono-inline">role="status"</code>.
-    <code class="t-mono-inline">dsCreateTemplate</code> fills the create row
-    (context: <code class="t-mono-inline">query</code>); picking it still emits
-    <code class="t-mono-inline">create</code>.
-    <code class="t-mono-inline">dsChipTemplate</code>,
-    <code class="t-mono-inline">dsGroupLabelTemplate</code>,
-    <code class="t-mono-inline">dsPanelHeaderTemplate</code> and
-    <code class="t-mono-inline">dsPanelFooterTemplate</code> fill the chip,
-    the group label and the panel's header and footer.
+    </code>:
+    <code class="t-mono-inline">
+      dsOptionTemplate
+    </code> the option label
+    (context: the option; role, selection, check stay library-owned);
+    <code class="t-mono-inline">
+      dsEmptyTemplate
+    </code> the "no matches" row
+    (context: <code class="t-mono-inline">query</code>; keeps
+    <code class="t-mono-inline">
+      role="status"
+    </code>);
+    <code class="t-mono-inline">
+      dsCreateTemplate
+    </code> the create row
+    (context: <code class="t-mono-inline">query</code>; still emits
+    <code class="t-mono-inline">
+      create
+    </code>).
+    <code class="t-mono-inline">
+      dsChipTemplate
+    </code>,
+    <code class="t-mono-inline">
+      dsGroupLabelTemplate
+    </code>,
+    <code class="t-mono-inline">
+      dsPanelHeaderTemplate
+    </code> and
+    <code class="t-mono-inline">
+      dsPanelFooterTemplate
+    </code> fill what they
+    name.
   </p>
 </docs-section>

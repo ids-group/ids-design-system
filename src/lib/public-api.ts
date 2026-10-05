@@ -215,6 +215,7 @@ export {
 export {
   ModalCardComponent,
   ModalComponent,
+  ModalConfirmActionDirective,
   ModalService,
 } from '@ids-group-ltd/ids-design-system/components/modal';
 export type {
@@ -246,7 +247,10 @@ export type {
   DsPasswordRuleState,
 } from '@ids-group-ltd/ids-design-system/components/password-rules';
 export { PieChartComponent } from '@ids-group-ltd/ids-design-system/components/pie-chart';
-export type { PieChartSlice } from '@ids-group-ltd/ids-design-system/components/pie-chart';
+export type {
+  PieChartCenterPlacement,
+  PieChartSlice,
+} from '@ids-group-ltd/ids-design-system/components/pie-chart';
 export { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
 export type {
   PopoverAlign,

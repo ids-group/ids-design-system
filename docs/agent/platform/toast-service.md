@@ -11,6 +11,7 @@ Section: Services
 Defaults come from `provideDsConfig({ toast: … })`:
 - `maxVisible?: number` — cap on concurrently visible toasts. Default `5`; `0` means unlimited. Extras queue and appear as earlier ones dismiss.
 - `position?: { horizontalPosition?: 'left' | 'center' | 'right', verticalPosition?: 'top' | 'bottom', offset?: string }` — merged field by field over `right` / `top` / `var(--space-6)`, so naming one key keeps the other two.
+- `mirrorDevWarnings?: boolean` — in dev mode, every library warning that reaches the console also shows as a `warning` toast titled "Dev warning" for 10s, once per message, from the moment the app first injects `ToastService` (warnings raised before that show then, up to 50). Default `true`; never in a production build, and an app that never injects `ToastService` gets the console only.
 
 The `toast` section resolves **once, at the root injector**, when the service is first used — unlike every other section, which a `Route` or a component can narrow. `ToastService` is `providedIn: 'root'`, so a route-level `provideDsConfig` never reaches it, and the position cannot change after the first `show()`.
 

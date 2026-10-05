@@ -3,14 +3,7 @@
   eyebrow="Components"
   title="Icon button">
   <span lede>
-    Icon-only action for toolbars, row actions and close/back/overflow, with
-    its own variants (distinct from
-    <code class="t-mono-inline">
-      ds-button
-    </code>).
-    <code class="t-mono-inline">
-      ariaLabel
-    </code> is required.
+    Icon-only action for toolbars, row actions and close/back/overflow.
   </span>
 
   <h3
@@ -21,6 +14,13 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
+      ariaLabel
+    </code> is required. Variants are its
+    own, not
+    <code class="t-mono-inline">
+      ds-button
+    </code>'s:
+    <code class="t-mono-inline">
       variant
     </code> sets the fill (standard
     chromeless · filled · tonal · outlined).
@@ -28,11 +28,19 @@
       color
     </code>
     tints <code class="t-mono-inline">filled</code>,
-    <code class="t-mono-inline">tonal</code> and the selected state;
-    <code class="t-mono-inline">standard</code> and
-    <code class="t-mono-inline">outlined</code> stay neutral at rest.
+    <code class="t-mono-inline">
+      tonal
+    </code> and the selected state;
+    <code class="t-mono-inline">
+      standard
+    </code> and
+    <code class="t-mono-inline">
+      outlined
+    </code> stay neutral at rest.
     secondary/tertiary default to orange/violet, independent of
-    <code class="t-mono-inline">--primary</code>.
+    <code class="t-mono-inline">
+      --primary
+    </code>.
   </p>
 
   <div class="brand-demo">
@@ -67,9 +75,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    The primary colour in every variant (rows) across every state (columns).
-    Hover, focus and active are pinned for display — the pins read the
-    component's own resolvers, so no values are duplicated here.
+    Primary colour. Hover, focus and active are pinned via the component's
+    own resolvers.
   </p>
 
   <div class="matrix-scroll">
@@ -141,7 +148,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    sm 32 · md 40 (default) · lg 48 — aligned with the field / button scale.
+    sm 32 · md 40 (default) · lg 48, matching the field and button scale.
   </p>
 
   <div class="row">
@@ -191,10 +198,12 @@
     <code class="t-mono-inline">
       [selected]
     </code> renders the pressed state
-    and sets <code class="t-mono-inline">aria-pressed</code>. Click to flip. As
-    a menu trigger bind <code class="t-mono-inline">[ariaExpanded]</code> and
-    <code class="t-mono-inline">[ariaControls]</code> - host attributes would
-    land on a non-focusable wrapper.
+    and sets <code class="t-mono-inline">aria-pressed</code>. As a menu
+    trigger, bind <code class="t-mono-inline">[ariaExpanded]</code> and
+    <code class="t-mono-inline">
+      [ariaControls]
+    </code>; host attributes land on
+    a non-focusable wrapper.
   </p>
 
   <div class="row">
@@ -216,16 +225,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    Disabled is a muted mix of the variant's own colour, not a flat grey. Only
-    <code class="t-mono-inline">filled</code> (and a selected button) derives
-    its fill with
+    A muted mix of the variant's colour, not flat grey. Only
+    <code class="t-mono-inline">
+      filled
+    </code> (and selected) derives its fill
+    with
     <code class="t-mono-inline">
       oklch()
     </code>;
     <code class="t-mono-inline">
       standard
-    </code> stays boxless with a muted
-    icon.
+    </code> stays boxless, icon muted.
   </p>
 
   <div class="row">

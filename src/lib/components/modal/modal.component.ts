@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   type OnDestroy,
   ViewEncapsulation,
   booleanAttribute,
@@ -9,15 +10,19 @@ import {
   model,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
 import { ModalCardComponent } from './modal-card.component';
-import { resolveDividers } from './modal-defaults';
+import { MODAL_SLOTS, resolveDividers } from './modal-defaults';
 import { DsStaticPreview } from '@ids-group-ltd/ids-design-system/components';
 import { BodyScrollLockService } from '@ids-group-ltd/ids-design-system/overlay';
 import type { ModalSize } from './modal.types';
 import type { DsStatus } from '@ids-group-ltd/ids-design-system/core';
-import { backdropDismiss } from '@ids-group-ltd/ids-design-system/core';
+import {
+  backdropDismiss,
+  warnUnslottedContent,
+} from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-modal',
@@ -50,7 +55,7 @@ export class ModalComponent implements OnDestroy {
   readonly subtitle = input<string | null>(null);
   /** Fires once the close (leave) animation finishes. */
   readonly closed = output<void>();
-  /** Emit this yourself from a confirm action in the projected content; the modal never fires it. */
+  /** Fires when the projected `dsModalConfirm` action is pressed. The modal stays open. */
   readonly confirmed = output<void>();
   /** Draws the rules under the header and over the actions; off also tightens the vertical padding.
    *  Unset falls back to `DS_CONFIG.modal.dividers`, then `true`. */
@@ -68,8 +73,17 @@ export class ModalComponent implements OnDestroy {
   protected readonly closing = signal(false);
   private wasOpen = false;
   private closeFallbackTimer: ReturnType<typeof setTimeout> | null = null;
+  private readonly unslotted = viewChild<ElementRef<HTMLElement>>('unslotted');
 
   constructor() {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      warnUnslottedContent(
+        'ds-modal',
+        'body',
+        MODAL_SLOTS,
+        () => this.unslotted()?.nativeElement,
+      );
+    }
     // Skipped in preview, which is always shown.
     effect(() => {
       if (this.preview.staticPreview()) {

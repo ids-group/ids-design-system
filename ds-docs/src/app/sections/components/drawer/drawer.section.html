@@ -3,9 +3,8 @@
   eyebrow="Components"
   title="Drawer">
   <span lede>
-    Slide-in panel for inline edit flows: sizes sm/md/lg (320/480/640 px) from
-    the right, left, top or bottom edge. Prefer it to a modal when the form
-    needs room or works alongside the page.
+    Slide-in edit panel; prefer it to a modal when the form needs room or sits
+    beside the page.
   </span>
 
   <!-- Shared drawer instance — placement and size are driven by the active signals. -->
@@ -45,12 +44,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    Click to open the drawer at the right edge (md). X,
+    X,
     <kbd>
       Esc
-    </kbd> or a click on the scrim closes it; focus stays trapped inside while
-    open. Project content with the <code>drawer-body</code> and
-    <code>drawer-footer</code> attributes; anything else is not rendered.
+    </kbd> or a scrim click closes it; focus is trapped while open. The body takes
+    <code>
+      drawer-body
+    </code> or <code>body</code>, the footer
+    <code>
+      drawer-footer
+    </code> or <code>actions</code>. Content without a slot renders in the body,
+    and in dev mode the console asks for its slot or names an unknown one.
   </p>
 
   <div class="demo">
@@ -66,11 +70,6 @@
     class="block-title t-h4">
     Open drawer
   </h3>
-
-  <p class="block-desc t-s">
-    A right-edge md drawer as it looks open, with header, body and footer
-    actions.
-  </p>
 
   <div class="demo static-demo">
     <ds-drawer
@@ -105,13 +104,13 @@
   <p class="block-desc t-s">
     <code>
       placement
-    </code> controls which edge the drawer slides in from.
+    </code> sets the edge.
     <code>
       right
     </code> (default) and <code>left</code> use the width token;
     <code>
       top
-    </code> and <code>bottom</code> span full-width at up to 80 vh.
+    </code> and <code>bottom</code> span full width, up to 80 vh.
   </p>
 
   <div class="demo placement-demo">
@@ -151,7 +150,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Widths for left/right placements.
+    sm/md/lg widths for left/right.
   </p>
 
   <div class="demo size-demo">

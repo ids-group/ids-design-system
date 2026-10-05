@@ -67,6 +67,8 @@ providers: [
     modal: { dividers: false },
     picker: { searchable: 12 },            // threshold: filter row past 12 options
     toast: { maxVisible: 3, showQueueCount: false, position: { verticalPosition: 'bottom' } },
+    // dev mode only: library warnings go to the console alone, not to a toast as well
+    // toast: { mirrorDevWarnings: false },
     field: {
       reserveMessage: true,
       // Per state, independent of each other: error / warning / success carry a

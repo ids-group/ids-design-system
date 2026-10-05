@@ -13,11 +13,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Two-column section pattern: title and description on the left, fields on the
-    right. Fields stack vertically; naturally-paired controls (Start / End, City
-    / Country) sit side-by-side. A footer anchors every form with a secondary
-    Discard and a primary Save. The date fields are plain inputs because this
-    demo shows layout; real forms use
+    Title and description left, fields right. Demo dates are plain inputs; real
+    forms use
     <code class="t-mono-inline">
       ds-date-picker
     </code> (with
@@ -164,8 +161,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    One-line label + control + save/cancel buttons. Use when a single field is the
-    entire unit of work — renames, status flips, single-cell table edits.
+    Suits renames, status flips, single-cell table edits.
   </p>
 
   <div class="stage">
@@ -205,48 +201,43 @@
     Validation &amp; messages
   </h3>
 
-  <p class="block-desc t-s">
-    Layout is only half a form — this is when feedback appears and where it
-    goes. These rules keep the happy path unblocked and errors legible.
-  </p>
-
   <ul class="rules">
     <li>
-      Gate submit on presence + not-in-flight only, never on format validity — a
-      half-typed email must not disable the button, or the user faces a dead
-      control with no explanation.
+      Gate submit on presence and not-in-flight only, never format validity: a
+      half-typed email must not leave a dead button.
     </li>
 
     <li>
-      Judge validity inside the submit handler; that attempt is what reveals the
-      messages. An early <code class="t-mono-inline">return</code> from the
-      handler that renders nothing is the silent-no-op bug.
+      Check validity in the submit handler; the attempt reveals the messages. An
+      early <code class="t-mono-inline">return</code> that renders nothing is a
+      silent no-op.
     </li>
 
     <li>
-      Field errors live in the field's own message row. On a form that
-      validates, turn on <code class="t-mono-inline">reserveMessage</code> (off
-      by default; per field, per form with
+      Field errors go in the field's message row. On validating forms turn on
+      <code class="t-mono-inline">
+        reserveMessage
+      </code> (off by default; per field,
+      per form via
       <code class="t-mono-inline">
         dsReserveMessages
-      </code>, or app-wide via
+      </code>, app-wide via
       <code class="t-mono-inline">
         DS_CONFIG.field.reserveMessage
-      </code>) so
-      the first error does not shift the controls below it, and
-      stack those fields with
+      </code>) so the first error shifts nothing. Stack those fields in
       <code class="t-mono-inline">
         &lt;ds-stack gap="none"&gt;
-      </code>, since a
-      reserved row already carries ~23px of trailing rhythm. Whole-request
-      failures go in a <code class="t-mono-inline">ds-alert</code> after the
-      submit button — an error region above the inputs pushes every control
-      down.
+      </code>: a reserved row carries ~23px of trailing rhythm.
     </li>
 
     <li>
-      A rule checklist must change its icon, not only its colour — colour alone
-      fails colour-blind users and forced-colors mode.
+      Whole-request failures go in a <code class="t-mono-inline">ds-alert</code>
+      after the submit button, not above the inputs.
+    </li>
+
+    <li>
+      A rule checklist changes icon, not only colour: colour alone fails
+      colour-blind users and forced-colors mode.
     </li>
   </ul>
 
@@ -255,18 +246,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    Both columns hold the same three fields with
-    <code class="t-mono-inline">
+    Same fields, <code class="t-mono-inline">
       reserveMessage
     </code> on. Left,
     <code class="t-mono-inline">
       gap="md"
-    </code> doubles the rhythm because the
-    reserved row already carries the trailing space; right,
+    </code> doubles the rhythm; right,
     <code class="t-mono-inline">
       gap="none"
-    </code> reads correctly. Toggle the
-    error: neither column shifts.
+    </code> is correct. Toggle the error:
+    neither shifts.
   </p>
 
   <div class="gap-demo">
@@ -335,13 +324,12 @@
     A mixed stack goes ragged: under
     <code class="t-mono-inline">
       gap="none"
-    </code>, a child with no message row
-    of its own (a
+    </code>, a child without a message row
+    (a
     <code class="t-mono-inline">
       [reserveMessage]="false"
-    </code> field, a switch, a button
-    row, a divider) sits flush against its neighbour. Below, the switch and the
-    button row are those children.
+    </code> field, switch, button row,
+    divider) sits flush against its neighbour.
   </p>
 
   <div class="gap-demo">
@@ -399,13 +387,8 @@
   </div>
 
   <p class="block-desc t-s">
-    The fix is per-child rather than per-stack: give the children that carry no
-    message row the same trailing space the reserved ones have, and leave the
-    stack at <code class="t-mono-inline">gap="none"</code>. Reaching for
-    <code class="t-mono-inline">
-      gap="md"
-    </code> to rescue the odd child
-    re-adds the doubled rhythm to every field.
+    Fix it per child: give those children the reserved rows' trailing space;
+    keep <code class="t-mono-inline">gap="none"</code>.
   </p>
 
   <h3
@@ -416,23 +399,20 @@
 
   <ul class="rules">
     <li>
-      Section description fits on one line — if you need two, the section is
-      doing too much.
+      Section description fits one line; two means the section does too much.
     </li>
 
     <li>
-      Pair natural counterparts (Start/End, City/Country) horizontally;
-      everything else stacks.
+      Pair natural counterparts horizontally; everything else stacks.
     </li>
 
     <li>
-      Footer stays visible without scroll on common viewports; sticky-footer is
-      acceptable on tall forms.
+      Footer visible without scroll on common viewports; tall forms may stick
+      it.
     </li>
 
     <li>
-      Inline edit is for single-field changes. Promote to a full form once two
-      or more fields move together.
+      Inline edit for one field; a full form once two or more move together.
     </li>
   </ul>
 </docs-section>

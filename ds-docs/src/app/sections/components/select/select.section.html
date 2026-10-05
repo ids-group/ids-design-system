@@ -3,8 +3,7 @@
   eyebrow="Components"
   title="Select">
   <span lede>
-    Custom dropdown built on CDK Overlay, with a custom chevron. Sizes, states,
-    with-value, disabled, error.
+    Custom dropdown on CDK Overlay for picking one option.
   </span>
 
   <docs-nonmodal-note />
@@ -41,7 +40,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Every select state side-by-side. Static specimens — no interaction needed.
+    Every state as a static specimen.
   </p>
 
   <div class="states is-cols-3">
@@ -159,8 +158,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    15 options demonstrate the styled popover — the panel caps at 320px and
-    scrolls internally, with width matched to the trigger.
+    Panel: max 320px tall, scrolls, trigger-wide.
   </p>
 
   <div class="grid-3">
@@ -175,13 +173,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    A label too long for its space is cut with an ellipsis, and hovering it
-    shows the whole text in a tooltip; a label that fits shows none. That covers
-    the trigger value and every option, so a
-    <code class="t-mono-inline">
-      [title]
-    </code> that repeats the label is not
-    needed; keep one only where it says more than the label.
+    Overflowing labels (trigger or option) get an ellipsis and a full-text
+    hover tooltip. Add <code class="t-mono-inline">[title]</code> only to say
+    more than the label.
   </p>
 
   <div class="grid-3">
@@ -202,8 +196,10 @@
   </h4>
 
   <p class="block-desc t-s">
-    Live component with <code>staticPreview</code> — panel rendered inline in
-    normal flow, all option states visible at once.
+    <code>
+      staticPreview
+    </code> renders the panel inline, all option states at
+    once.
   </p>
 
   <div class="preview-wrap open-specimen">
@@ -231,21 +227,46 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">options</code> also takes
-    <code class="t-mono-inline">SelectOptionGroup</code> entries
+    <code class="t-mono-inline">
+      options
+    </code> accepts
+    <code class="t-mono-inline">
+      SelectOptionGroup
+    </code>
     (<code class="t-mono-inline">label</code>,
-    <code class="t-mono-inline">options</code>, optional
-    <code class="t-mono-inline">disabled</code>), mixed with flat options;
-    <code class="t-mono-inline">isSelectOptionGroup()</code> tells them apart.
-    <code class="t-mono-inline">loading</code> shows a spinner in the panel and
-    sets <code class="t-mono-inline">aria-busy</code>;
-    <code class="t-mono-inline">dsEmptyTemplate</code> replaces the "no
-    options" row. The projected
-    <code class="t-mono-inline">dsOptionTemplate</code>,
-    <code class="t-mono-inline">dsGroupLabelTemplate</code>,
-    <code class="t-mono-inline">dsPanelHeaderTemplate</code> and
-    <code class="t-mono-inline">dsPickerTrigger</code> are demoed in
-    <a href="#section-multi-select">Multi-select</a>.
+    <code class="t-mono-inline">
+      options
+    </code>, optional
+    <code class="t-mono-inline">
+      disabled
+    </code>) mixed with flat options;
+    <code class="t-mono-inline">
+      isSelectOptionGroup()
+    </code> tells them apart.
+    <code class="t-mono-inline">
+      loading
+    </code>: panel spinner,
+    <code class="t-mono-inline">
+      aria-busy
+    </code>.
+    <code class="t-mono-inline">
+      dsEmptyTemplate
+    </code> replaces "no options".
+    <code class="t-mono-inline">
+      dsOptionTemplate
+    </code>,
+    <code class="t-mono-inline">
+      dsGroupLabelTemplate
+    </code>,
+    <code class="t-mono-inline">
+      dsPanelHeaderTemplate
+    </code> and
+    <code class="t-mono-inline">
+      dsPickerTrigger
+    </code>: see
+    <a href="#section-multi-select">
+      Multi-select
+    </a>.
   </p>
 
   <div class="grid-3">
@@ -260,9 +281,15 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">hint</code> renders a helper line;
-    <code class="t-mono-inline">error</code> replaces it with an error line
-    announced via <code>role="alert"</code>.
+    <code class="t-mono-inline">
+      error
+    </code> replaces the
+    <code class="t-mono-inline">
+      hint
+    </code> line, announced via
+    <code>
+      role="alert"
+    </code>.
   </p>
 
   <div class="grid-3">
@@ -284,9 +311,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Add <code class="t-mono-inline">clearable</code> to show an ✕ button inside
-    the trigger when a value is set. Clicking it resets the value without
-    opening the panel.
+    <code class="t-mono-inline">
+      clearable
+    </code> adds an ✕ that resets a set
+    value without opening the panel.
   </p>
 
   <div class="grid-3">
@@ -311,11 +339,13 @@
   </h3>
 
   <p class="block-desc t-s">
-    Add an <code class="t-mono-inline">icon</code> property to each
     <code class="t-mono-inline">
       SelectOption
-    </code>. The icon appears in both
-    the option list and the trigger when that option is selected.
+    </code>
+
+    <code class="t-mono-inline">
+      icon
+    </code> shows in the list and trigger.
   </p>
 
   <div class="grid-3">
@@ -338,18 +368,20 @@
   </h3>
 
   <p class="block-desc t-s">
-    Typing a letter on the closed trigger selects the first option starting
-    with it, like a native <code class="t-mono-inline">&lt;select&gt;</code>;
-    repeating it cycles. With the panel open the same keys move the cursor and
-    the active row scrolls into view;
-    <code class="t-mono-inline">scrollActiveIntoView="false"</code> hands
-    scrolling back to you.
-  </p>
-
-  <p class="block-desc t-s">
-    <kbd>PageDown</kbd>/<kbd>PageUp</kbd> move ten rows;
-    <kbd>Home</kbd>/<kbd>End</kbd> go to the first/last enabled option. Hover
-    sets the active row but never scrolls.
+    Closed, a letter selects the first match, as a native
+    <code class="t-mono-inline">
+      &lt;select&gt;
+    </code>; repeats cycle. Open, it
+    moves the cursor and scrolls the active row into view (off:
+    <code class="t-mono-inline">
+      scrollActiveIntoView="false"
+    </code>).
+    <kbd>
+      PageDown
+    </kbd>/<kbd>PageUp</kbd>: ten rows;
+    <kbd>
+      Home
+    </kbd>/<kbd>End</kbd>: first/last enabled. Hover never scrolls.
   </p>
 
   <div class="demo-panel">
@@ -368,11 +400,9 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       dsPanelFooterTemplate
-    </code> puts a strip
-    under the options, outside the listbox so it is not counted as one. An
-    option's <code class="t-mono-inline"> disabledReason </code> is announced
-    through <code class="t-mono-inline"> aria-describedby </code> — the row
-    already looks disabled, the sentence is for whoever cannot see it.
+    </code>: a strip below
+    the listbox. <code class="t-mono-inline">disabledReason</code> is announced
+    via <code class="t-mono-inline">aria-describedby</code>.
   </p>
 
   <div class="demo-panel">
@@ -395,11 +425,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">clear()</code> empties the value from a
-    template reference (a reset-filters button) and closes an open panel,
-    without moving focus. Follow it with
-    <code class="t-mono-inline">blur()</code> where the host moves on; it drops
-    focus from the control and leaves an open panel alone.
+    <code class="t-mono-inline">
+      clear()
+    </code> (via a template reference)
+    empties the value and closes the panel, keeping focus. Call
+    <code class="t-mono-inline">
+      blur()
+    </code> after it when the host moves on;
+    it drops focus and leaves an open panel alone.
   </p>
 
   <div class="demo-panel">

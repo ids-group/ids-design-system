@@ -11,10 +11,9 @@
       routerLink="/components/filter-bar"
       class="t-link">
       ds-filter-bar
-    </a> ships the overflow half of this pattern: it renders the filters that
-    fit and folds the rest into a "+N more" panel. The "More filters" buttons
-    below are stubs; use the component when facets run out of room, with the
-    applied-tag row beside it.
+    </a> ships the overflow half: filters that fit, the rest in a "+N more"
+    panel. The "More filters" buttons below are stubs; when facets run out of
+    room, use the component beside the applied-tag row.
   </p>
 
   <h3
@@ -24,9 +23,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Search on the left, dropdown facets, applied-filter tags, and a clear-all
-    link — all sitting on one row above the list. Sits above the list it
-    filters, never below.
+    Search, dropdown facets, applied tags and a clear-all link on one row.
   </p>
 
   <div class="stage">
@@ -87,8 +84,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    On narrow viewports the bar wraps to two rows: search on top, facets and
-    applied tags below. Same composition, vertical reflow.
+    Narrow viewports wrap it to two rows: search on top, facets and tags below.
   </p>
 
   <div class="stage is-narrow">
@@ -147,28 +143,25 @@
   </h3>
 
   <p class="block-desc t-s">
-    The same bar driving a live
+    Search feeds the
     <code class="t-mono-inline">
       ds-table
-    </code> — the search box feeds the
-    table's built-in client filter (<code class="t-mono-inline"
-      >[filterQuery]</code
-    >, case-insensitive substring over the <code class="t-mono-inline"
-      >filterable</code
-    > columns, or every column when none is marked), the status facet narrows
-    the data app-side, applied tags mirror the active filters and clear
-    individually. When nothing matches, the table shows its
+    </code> client filter
+    (<code class="t-mono-inline">[filterQuery]</code>: case-insensitive
+    substring over <code class="t-mono-inline">filterable</code> columns, or
+    all if none is marked). The status facet filters app-side; tags mirror
+    active filters and clear one by one. No match shows the table's
     <code class="t-mono-inline">
       [empty]
     </code> slot; project a filter-specific
-    message there. Against a real backend, skip
+    message. With a real backend, skip
     <code class="t-mono-inline">
       [filterQuery]
-    </code> and flip
+    </code> and set
     <code class="t-mono-inline">
       [loading]="'overlay'"
     </code> while the query
-    runs instead.
+    runs.
   </p>
 
   <div class="stage">
@@ -244,26 +237,23 @@
 
   <ul class="rules">
     <li>
-      Sits above the list it filters, never below — search is read top-down.
+      Place it above the list it filters, never below.
     </li>
 
     <li>
-      Don't mix free-text search with non-text facets inside the same input.
-      Expose facets as siblings.
+      Keep facets out of the search input; make them siblings.
     </li>
 
     <li>
-      Each applied tag is individually removable; the right-side link is the
-      escape hatch for everything at once.
+      Each applied tag is removable; the link clears all.
     </li>
 
     <li>
-      On narrow widths, collapse the facets that do not fit into an overflow
-      panel — that is what
+      On narrow widths, fold facets that do not fit into an overflow panel (as
       <code class="t-mono-inline">
         ds-filter-bar
-      </code> does — rather than
-      wrapping a single facet onto a second line.
+      </code> does), never wrap one facet
+      onto a second line.
     </li>
   </ul>
 </docs-section>

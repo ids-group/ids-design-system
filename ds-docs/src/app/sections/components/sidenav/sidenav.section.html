@@ -4,9 +4,7 @@
   title="Sidenav"
   [apiKeys]="['sidenav:SidenavGroupComponent', 'sidenav:SidenavItemComponent']">
   <span lede>
-    App-level vertical navigation. Items carry an icon, a label, an optional
-    count badge or alert dot. Collapsed mode keeps the icon and pushes the label
-    into a tooltip.
+    App-level vertical navigation.
   </span>
 
   <h3
@@ -16,28 +14,34 @@
   </h3>
 
   <p class="block-desc t-s">
-    Three groups, brand mark at the top, one item active. Each item exposes an
+    Each item emits
     <code class="t-mono-inline">
       (activate)
-    </code> output (the click
+    </code> with the click
     <code class="t-mono-inline">
       MouseEvent
-    </code>) —
+    </code>;
     <code class="t-mono-inline">
       preventDefault()
-    </code> intercepts navigation
-    on an <code class="t-mono-inline">href</code> item (a
+    </code> stops navigation on an
+    <code class="t-mono-inline">
+      href
+    </code> item, e.g. for scroll-spy;
+    a
     <code class="t-mono-inline">
       routerLink
-    </code> navigates regardless), e.g.
-    to drive scroll-spy.
+    </code> navigates regardless.
   </p>
 
   <p class="block-desc t-s">
-    Projection slots: an item takes <code class="t-mono-inline">[icon]</code>
-    (custom icon, when the <code class="t-mono-inline">icon</code> input is
-    unset) and <code class="t-mono-inline">[trailing]</code> (content before the
-    badge); a group takes <code class="t-mono-inline">[ds-group-icon]</code>.
+    Slots: an item takes <code class="t-mono-inline">[icon]</code> (when the
+    <code class="t-mono-inline">
+      icon
+    </code> input is unset) and
+    <code class="t-mono-inline">
+      [trailing]
+    </code> (before the badge); a group
+    takes <code class="t-mono-inline">[ds-group-icon]</code>.
   </p>
 
   <div class="stage is-frame">
@@ -90,15 +94,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    Project a logo image or inline SVG into the
+    Project an image or SVG into the
     <code class="t-mono-inline">
       [brand]
-    </code> slot instead of the string
+    </code> slot instead of the
     <code class="t-mono-inline">
       brand
-    </code> input — the auto letter-mark is
-    skipped. When the rail collapses, the consumer hides its own wordmark and
-    keeps the mark.
+    </code> input; the letter-mark is
+    skipped. On collapse, hide your own wordmark and keep the mark.
   </p>
 
   <div class="logo-demos">
@@ -181,24 +184,31 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       logoLetter
-    </code> sets the tile glyph when it
-    differs from the brand's first letter, and markup marked
+    </code> overrides the tile glyph
+    (default: the brand's first letter);
     <code class="t-mono-inline">
       dsBrandName
-    </code> projects a custom wordmark
-    in place of the plain <code class="t-mono-inline">brand</code> text - here a
-    two-tone "AppAdmin" whose accent slice matches the tile. Keep the string
-    input alongside as the fallback semantics.
+    </code> markup replaces the plain
+    <code class="t-mono-inline">
+      brand
+    </code> text with a custom wordmark. Keep the string input for
+    semantics.
   </p>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">brandRoute</code> makes the brand row a router
-    link (usually home); unset, the row is a plain block. It announces
-    <code class="t-mono-inline">"&lt;brand&gt;, home"</code> - override with
-    <code class="t-mono-inline">brandLinkLabel</code>.
-    <code class="t-mono-inline">RouterLink</code> is created only once the
-    input is set, so an app with no router still renders. Not demoed live: a
-    navigating specimen would leave this page.
+    <code class="t-mono-inline">
+      brandRoute
+    </code> makes the brand row a router link (usually home). It announces
+    <code class="t-mono-inline">
+      "&lt;brand&gt;, home"
+    </code> - override with
+    <code class="t-mono-inline">
+      brandLinkLabel
+    </code>.
+    <code class="t-mono-inline">
+      RouterLink
+    </code> exists only when it is set, so an app without a router still
+    renders.
   </p>
 
   <p class="block-desc t-s">
@@ -250,9 +260,10 @@
     <code class="t-mono-inline">
       &lt;ds-sidenav-group expandable&gt;
     </code>
-    renders the header as a toggle button with a caret. Group body collapses
-    when <code class="t-mono-inline">expanded=false</code>. Combine with the
-    <code class="t-mono-inline">icon</code> input to set a group-level icon.
+    makes the header a toggle with a caret; the body collapses when
+    <code class="t-mono-inline">
+      expanded=false
+    </code>; <code class="t-mono-inline">icon</code> sets a group icon.
   </p>
 
   <div class="stage is-frame">
@@ -300,9 +311,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Without <code class="t-mono-inline">routerLink</code> the whole group
-    header only toggles the group. With it, the header navigates and the caret
-    becomes its own toggle button.
+    With <code class="t-mono-inline">routerLink</code> the header navigates and
+    the caret becomes a separate toggle; without it, the header toggles.
   </p>
 
   <p class="block-desc t-s">
@@ -349,8 +359,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Labels and group headings hide; icons survive. Hover or focus an item to see
-    the full label in a tooltip.
+    Labels and group headings hide; hover or focus shows the label in a
+    tooltip.
   </p>
 
   <div class="stage is-frame">
@@ -391,10 +401,6 @@
     data-for="sidenav-item">
     Item states showcase
   </h3>
-
-  <p class="block-desc t-s">
-    Every item state side-by-side. Static specimens — no interaction needed.
-  </p>
 
   <div class="states is-cols-4">
     <div class="state-cell">

@@ -180,7 +180,8 @@ export class ButtonComponent extends DsMessageBase {
   readonly ariaControls = input<string | null>(null);
   /** Why the button is refused, shown as its second line and read only while `disabled`. Setting
    *  it uses `aria-disabled` instead of the native attribute (a native disabled button cannot be
-   *  focused, so the reason would go unannounced) and swallows the click. Uncapped: the text wraps. */
+   *  focused, so the reason would go unannounced) and swallows the click; a link-button keeps its
+   *  Tab stop the same way. Uncapped: the text wraps. */
   readonly disabledReason = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });

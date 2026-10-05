@@ -4,22 +4,7 @@
   title="List"
   [apiKeys]="['list:ListItemComponent']">
   <span lede>
-    A vertical stack of rows with
-    <code class="t-mono-inline">
-      [leading]
-    </code> /
-    <code class="t-mono-inline">
-      [trailing]
-    </code> slots,
-    <code class="t-mono-inline">
-      [clickable]
-    </code> items and a
-    <code class="t-mono-inline">
-      [selected]
-    </code> state. Dividers are on by default;
-    <code class="t-mono-inline">
-      [dividers]="false"
-    </code> removes them.
+    Vertical rows, optionally clickable and selected.
   </span>
 
   <h3
@@ -29,9 +14,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    Use the <code>[leading]</code> and <code>[trailing]</code> slots for icons
-    or avatars. Tokens: <code>--ds-list-divider-color</code> and
-    <code>--ds-list-item-*</code> (padding-y/x, gap, hover-bg-color,
+    <code>
+      [leading]
+    </code> and <code>[trailing]</code> take icons or avatars. Dividers are on
+    until
+    <code class="t-mono-inline">
+      [dividers]="false"
+    </code>. Tokens: <code>--ds-list-divider-color</code> and
+    <code>
+      --ds-list-item-*
+    </code> (padding-y/x, gap, hover-bg-color,
     selected-bg/label/icon-color, label/subtitle-color).
   </p>
 
@@ -89,11 +81,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    A <code>[clickable]</code> row is a button that emits
-    <code>activated</code>; moving the selection is the consumer's job.
-    <code>[selected]</code> tints the row and sets <code>aria-current</code>.
-    <code>[disabled]</code> disables the row's button; projected controls keep
-    their own state.
+    A <code>[clickable]</code> row is a button emitting
+    <code>
+      activated
+    </code>; you move the selection.
+    <code>
+      [selected]
+    </code> tints the row and sets <code>aria-current</code>.
+    <code>
+      [disabled]
+    </code> disables the row's button, not projected controls.
   </p>
 
   <div class="demo-panel">
@@ -158,15 +155,15 @@
     <code>
       [leading]
     </code> and <code>[trailing]</code> sit outside the row's
-    button, so a row can carry its own controls (a bulk-action checkbox) and
-    still be the target that selects - two independent targets.
+    button, so a row can hold its own control (a bulk-action checkbox) and
+    still select.
   </p>
 
   <p class="block-desc t-s">
-    A checkbox inside a <code>&lt;button&gt;</code> would be invalid HTML,
-    bubble into <code>activated</code> and lose its checked state for screen
-    readers. The host is <code>role="list"</code>, not <code>listbox</code>: a
-    <code>listbox</code> option cannot hold interactive content.
+    A checkbox inside a <code>&lt;button&gt;</code> is invalid HTML, bubbles
+    into <code>activated</code> and loses its checked state for screen
+    readers. The host is <code>role="list"</code>, not <code>listbox</code>,
+    whose options cannot hold interactive content.
   </p>
 
   <div class="demo-panel">

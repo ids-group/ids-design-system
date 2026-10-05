@@ -80,6 +80,10 @@ export interface DsConfig {
     maxVisible?: number;
     /** Show a `+N` strip while toasts wait behind `maxVisible`. Default `true`. */
     showQueueCount?: boolean;
+    /** In dev mode, also show each library warning from the console as a warning toast, once the
+     *  app has injected `ToastService`; warnings raised earlier show when it is. Never in a
+     *  production build. Default `true`. */
+    mirrorDevWarnings?: boolean;
   };
   picker?: {
     /** Default for `ds-multi-select`'s `searchable`. `true` always shows the panel's filter row,

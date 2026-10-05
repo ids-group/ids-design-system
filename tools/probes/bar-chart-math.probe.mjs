@@ -1,5 +1,6 @@
 import {
   barExtent,
+  plainValue,
   resolveMax,
   segmentWidths,
   widthPercent,
@@ -12,7 +13,10 @@ check('a pair spans between its ends', barExtent([10, 40]), { low: 10, high: 40 
 // A reader who writes the ends the other way round means the same band, and a bar of negative
 // width draws nothing at all - so the pair is normalised rather than refused.
 check('a reversed pair is normalised', barExtent([40, 10]), { low: 10, high: 40 });
-check('a negative number hangs from zero', barExtent(-25), { low: -25, high: 0 });
+check('a negative number draws an empty track', barExtent(-25), { low: 0, high: 0 });
+check('a negative number is still reported', plainValue(-25), -25);
+check('a pair has no plain value', plainValue([10, 40]), null);
+check('a non-finite number has no plain value', plainValue(Number.NaN), null);
 check('a pair of one reading is a zero-width band', barExtent([12, 12]), { low: 12, high: 12 });
 check('a non-finite number is nothing', barExtent(Number.NaN), { low: 0, high: 0 });
 check('a pair with a non-finite end is nothing', barExtent([5, Number.NaN]), { low: 0, high: 0 });

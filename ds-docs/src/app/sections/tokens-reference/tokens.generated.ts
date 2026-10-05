@@ -5712,13 +5712,13 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-page-header-crumb-text-color",
-        "value": "var(--text-tertiary)",
-        "notes": "Page header breadcrumb text colour (defaults to --text-tertiary)."
+        "value": "var(--ds-breadcrumbs-label-color)",
+        "notes": "Breadcrumb link colour in the page header; unset uses --ds-breadcrumbs-label-color."
       },
       {
         "name": "--ds-page-header-crumb-text-color-hover",
-        "value": "var(--accent)",
-        "notes": "Page header breadcrumb text colour on hover (defaults to --accent)."
+        "value": "var(--ds-breadcrumbs-label-color-hover)",
+        "notes": "Breadcrumb link hover colour in the page header; unset uses --ds-breadcrumbs-label-color-hover."
       },
       {
         "name": "--ds-page-header-divider",
@@ -5875,6 +5875,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-pie-chart-size",
         "value": "180px",
         "notes": "Outer diameter of the ring, on both axes (default 180px). The hole is a fraction of it, set by [hole] on the component rather than by a token."
+      },
+      {
+        "name": "--ds-pie-chart-center-value-min-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Smallest size the centre value shrinks to in a narrow hole (default --font-size-s, 14px). Past it the sum prints in its compact form, unless centerCompact is off."
       },
       {
         "name": "--ds-pie-chart-gap",
@@ -8358,23 +8363,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-topbar-crumb-text-color",
-        "value": "var(--text-tertiary)",
-        "notes": "Breadcrumb link colour (defaults to --text-tertiary)."
+        "value": "var(--ds-breadcrumbs-label-color)",
+        "notes": "Breadcrumb link colour in the topbar; unset uses --ds-breadcrumbs-label-color."
       },
       {
         "name": "--ds-topbar-crumb-hover-text-color",
-        "value": "var(--accent)",
-        "notes": "Breadcrumb link hover colour (defaults to --accent)."
+        "value": "var(--ds-breadcrumbs-label-color-hover)",
+        "notes": "Breadcrumb link hover colour in the topbar; unset uses --ds-breadcrumbs-label-color-hover."
       },
       {
         "name": "--ds-topbar-crumb-separator-icon-color",
-        "value": "var(--icon-muted)",
-        "notes": "Breadcrumb separator chevron colour (defaults to --icon-muted)."
+        "value": "var(--ds-breadcrumbs-separator-icon-color)",
+        "notes": "Breadcrumb separator colour in the topbar; unset uses --ds-breadcrumbs-separator-icon-color."
       },
       {
         "name": "--ds-topbar-crumb-current-text-color",
-        "value": "var(--text-primary)",
-        "notes": "Current (last) breadcrumb text colour (defaults to --text-primary)."
+        "value": "var(--ds-breadcrumbs-current-label-color)",
+        "notes": "Current breadcrumb colour in the topbar; unset uses --ds-breadcrumbs-current-label-color."
       },
       {
         "name": "--topbar-h",

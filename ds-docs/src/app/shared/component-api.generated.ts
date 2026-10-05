@@ -842,7 +842,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "4",
         "required": false,
-        "description": "Avatars shown before the rest collapse into the `+N` chip."
+        "description": "Avatars shown before the rest collapse into the `+N` chip; projected avatars past it are hidden."
       },
       {
         "name": "total",
@@ -1777,7 +1777,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Why the button is refused, shown as its second line and read only while `disabled`. Setting it uses `aria-disabled` instead of the native attribute (a native disabled button cannot be focused, so the reason would go unannounced) and swallows the click. Uncapped: the text wraps."
+        "description": "Why the button is refused, shown as its second line and read only while `disabled`. Setting it uses `aria-disabled` instead of the native attribute (a native disabled button cannot be focused, so the reason would go unannounced) and swallows the click; a link-button keeps its Tab stop the same way. Uncapped: the text wraps."
       },
       {
         "name": "ariaDescribedBy",
@@ -6139,9 +6139,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Emit this yourself from a confirm action in the projected content; the modal never fires it."
+        "description": "Fires when the projected `dsModalConfirm` action is pressed. The modal stays open."
       }
     ]
+  },
+  "modal:ModalConfirmActionDirective": {
+    "key": "modal",
+    "selector": "[dsModalConfirm]",
+    "isElement": false,
+    "className": "ModalConfirmActionDirective",
+    "status": "stable",
+    "importName": "ModalConfirmActionDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/modal",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
   },
   "multi-select": {
     "key": "multi-select",
@@ -7201,6 +7214,27 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Caption under the centre value."
+      },
+      {
+        "name": "centerCompact",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "When the sum does not fit the hole even at `--ds-pie-chart-center-value-min-font-size`, prints it in the `'tick'` form of `valueFormat` (`32.4K`). A `centerValue` string is never shortened."
+      },
+      {
+        "name": "centerPlacement",
+        "kind": "input",
+        "type": "PieChartCenterPlacement",
+        "union": [
+          "inside",
+          "below"
+        ],
+        "default": "'inside'",
+        "required": false,
+        "description": "`'below'` prints the value and its caption under the ring at full size, never shrunk or shortened."
       },
       {
         "name": "legend",

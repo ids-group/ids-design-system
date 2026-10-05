@@ -12,21 +12,36 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">semantics</code> says what the bar claims.
-    <code class="t-mono-inline">'progress'</code> (default): how far a task has
-    got, <code class="t-mono-inline">role="progressbar"</code>.
-    <code class="t-mono-inline">'meter'</code>: a measurement on a known scale
-    (a rate, a score, a count against a ceiling),
-    <code class="t-mono-inline">role="meter"</code>.
-    <code class="t-mono-inline">'none'</code>: drawn only, hidden from
-    assistive technology, for a cell that prints its figure beside it.
+    <code class="t-mono-inline">
+      semantics
+    </code>:
+    <code class="t-mono-inline">
+      'progress'
+    </code> (default), task completion,
+    <code class="t-mono-inline">
+      role="progressbar"
+    </code>;
+    <code class="t-mono-inline">
+      'meter'
+    </code>, a measurement (rate, score,
+    count against a ceiling),
+    <code class="t-mono-inline">
+      role="meter"
+    </code>;
+    <code class="t-mono-inline">
+      'none'
+    </code>, hidden from assistive technology,
+    for a cell that prints its figure beside it.
   </p>
 
   <p class="block-desc t-s">
-    Give a progress or meter bar an
-    <code class="t-mono-inline">ariaLabel</code>: the role has no name of its
-    own. With a <code class="t-mono-inline">target</code>, name the comparison
-    in it.
+    Progress and meter bars need an
+    <code class="t-mono-inline">
+      ariaLabel
+    </code> (the role has no name); with a
+    <code class="t-mono-inline">
+      target
+    </code>, name the comparison in it.
   </p>
 
   <h3
@@ -154,14 +169,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    A chart is a block with a caption, a legend and an annex table; in a 60px
-    cell that chrome is the whole cell. This is the mark on its own.
+    No chart chrome (caption, legend, annex table) to fill a 60px cell. Set <code class="t-mono-inline">max</code>
+    to the column's largest value so the longest bar fills its track. The figure prints beside it, so bars are
     <code class="t-mono-inline">
-      max
-    </code> is the ceiling the column is read
-    against — usually the column's own largest value, so the longest bar fills
-    its track and the rest are its share. The figure is printed beside it, so
-    the bars are <code class="t-mono-inline"> semantics="none" </code>.
+      semantics="none"
+    </code>.
   </p>
 
   <ds-table
@@ -190,13 +202,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    The bar fills its box, so the column sets its width. In a content-sized box
+    The bar fills its box; in a content-sized box
     (<code class="t-mono-inline">width: 'content'</code> on
-    <code class="t-mono-inline">ds-table</code>, a shrink-to-fit flex/grid
-    item) a 100%-wide bar contributes nothing, so the host has
-    <code class="t-mono-inline">min-inline-size: 3rem</code>, overridable with
-    <code class="t-mono-inline">--ds-bar-min-width</code>. Give it an explicit
-    width where it should be fixed - the table above uses a 4rem track.
+    <code class="t-mono-inline">
+      ds-table
+    </code>, a shrink-to-fit flex/grid
+    item) it falls back to
+    <code class="t-mono-inline">
+      min-inline-size: 3rem
+    </code>
+    (<code class="t-mono-inline">--ds-bar-min-width</code>). Set a fixed width
+    explicitly; the table above uses 4rem.
   </p>
 
   <h3 class="block-title t-h4">
@@ -204,14 +220,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">variant</code> is the semantic route and
-    should be the first reach. Without one the fill takes
-    <code class="t-mono-inline">--ds-bar-fill-color</code>; each variant takes
-    its own <code class="t-mono-inline">--ds-bar-fill-color-success</code>,
-    <code class="t-mono-inline">-warning</code> or
-    <code class="t-mono-inline">-error</code>. Set these in a stylesheet to
-    colour a whole column once. The <code class="t-mono-inline">color</code>
-    input overrides the fill on one bar.
+    Prefer <code class="t-mono-inline">variant</code>. Default fill is
+    <code class="t-mono-inline">
+      --ds-bar-fill-color
+    </code>; variants use
+    <code class="t-mono-inline">
+      --ds-bar-fill-color-success
+    </code>,
+    <code class="t-mono-inline">
+      -warning
+    </code>,
+    <code class="t-mono-inline">
+      -error
+    </code>; set these in a stylesheet to
+    colour a whole column. <code class="t-mono-inline">color</code> overrides
+    one bar's fill. Also:
     <code class="t-mono-inline">
       --ds-bar-height
     </code>,
@@ -220,17 +243,17 @@
     </code>,
     <code class="t-mono-inline">
       --ds-bar-target-color
-    </code> and
+    </code>,
     <code class="t-mono-inline">
       --ds-bar-target-width
-    </code> set the rest, and
+    </code>, and
     <code class="t-mono-inline">
       --ds-bar-radius
-    </code> rounds the track and
-    the fill together - a pill by default, square corners at
+    </code> for track and fill
+    together (pill by default, square at
     <code class="t-mono-inline">
       var(--radius-0)
-    </code>.
+    </code>).
   </p>
 
   <div class="states">
@@ -268,15 +291,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    A value past
+    A value past <code class="t-mono-inline">max</code> fills the track without
+    overflowing; a negative one draws nothing; a
     <code class="t-mono-inline">
       max
-    </code> fills the track rather than
-    overflowing it, a negative one draws nothing, and a
-    <code class="t-mono-inline">
-      max
-    </code> of zero or less falls back to 100 —
-    a scale with no width has no fraction to draw.
+    </code> of zero or less falls back to 100.
     <code class="t-mono-inline">
       indeterminate
     </code> is ignored unless
@@ -285,8 +304,7 @@
     </code> is
     <code class="t-mono-inline">
       'progress'
-    </code>: only a task has an unknown
-    duration.
+    </code>.
   </p>
 
   <div class="states">

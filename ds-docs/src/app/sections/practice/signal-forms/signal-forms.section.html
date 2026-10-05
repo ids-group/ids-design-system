@@ -11,20 +11,20 @@
   </h3>
 
   <p class="block-desc t-s">
-    Describe the shape and rules in the component, then put
+    Describe shape and rules in the component; put
     <code class="t-mono-inline">
       [formField]
     </code> (from
     <code class="t-mono-inline">
       &#64;angular/forms/signals
     </code>, not this library) on
-    each control. A DS control takes part because it exposes
+    each control. DS controls expose
     <code class="t-mono-inline">
       value
     </code> as a
     <code class="t-mono-inline">
       model()
-    </code>, the whole
+    </code>: the whole
     <code class="t-mono-inline">
       FormValueControl
     </code> contract.
@@ -62,16 +62,15 @@
   </div>
 
   <p class="block-desc t-s">
-    Type an invalid address and leave the field: the message appears once the
-    field is touched, the border turns and
+    Once a field is touched, the message shows, the border turns and
     <code class="t-mono-inline">
       aria-invalid
     </code> flips. The button gates on
-    presence and in-flight only, never on validity:
+    presence and in-flight only, never validity:
     <code class="t-mono-inline">
       submit()
-    </code> touches every field, so pressing
-    it reveals the remaining messages and sends only a valid form.
+    </code> touches every field and sends
+    only a valid form.
   </p>
 
   <h3 class="block-title t-h4">
@@ -79,10 +78,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    A field knows it is invalid, but only your validator knows what to say.
-    Without a message the field turns red with no words — deliberately, since
-    the alternative is the library inventing copy for your domain. Two ways to
-    supply it: per rule, as
+    The library invents no copy: without a message the field turns red,
+    wordless. Supply one per rule,
     <code class="t-mono-inline">
       required(path.email, &#123; message: '…' &#125;)
     </code
@@ -92,9 +89,8 @@
   <pre class="t-mono-block">{{ messagesSnippet }}</pre>
 
   <p class="block-desc t-s">
-    In dev, a field that is invalid with no resolvable message logs a warning
-    naming the error kinds it could not resolve, so this fails loudly rather
-    than silently.
+    Dev mode warns on an invalid field with no resolvable message, naming the
+    error kinds.
   </p>
 
   <h3 class="block-title t-h4">
@@ -102,9 +98,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Signal forms binds these by input NAME, so a control takes part in whichever
-    of them it happens to expose. This is the measured state, not the intended
-    one.
+    Signal forms binds these by input NAME, so a control joins whichever it
+    exposes. Measured state, not intended.
   </p>
 
   <div class="contract">
@@ -132,7 +127,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Nothing here replaces anything. Every control still provides a
+    Every control provides a
     <code class="t-mono-inline">
       ControlValueAccessor
     </code>, so
@@ -141,8 +136,7 @@
     </code> and
     <code class="t-mono-inline">
       ngModel
-    </code> bind exactly as before, and the
-    same message row serves both. A given field is driven by one form system at
-    a time, so the two cannot disagree.
+    </code> bind as usual, with the same
+    message row. One form system drives a field at a time.
   </p>
 </docs-section>

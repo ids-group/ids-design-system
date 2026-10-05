@@ -3,10 +3,9 @@
   eyebrow="Foundations"
   title="Opacity &amp; alpha tokens">
   <span lede>
-    Six semantic opacity tokens for component states (purpose-named, not an
-    abstract scale). Composite alphas (shadows, focus rings) are channel-split
-    so a re-skin propagates. Literal alphas only survive where they're local to
-    a single token.
+    Six purpose-named opacity tokens for component states. Composite alphas
+    (shadows, focus rings) are channel-split so a re-skin propagates; literal
+    alphas stay only inside a single token.
   </span>
 
   <h3
@@ -73,8 +72,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Non-tokenised alphas used inside other tokens. Don't reach for these
-    directly — consume the parent token (<code class="t-mono-inline"
+    Alphas inside other tokens. Do not use them directly; consume the parent
+    token (<code class="t-mono-inline"
       >--shadow-modal</code
     >, <code class="t-mono-inline">--focus-field</code>,
     <code class="t-mono-inline">

@@ -3,10 +3,7 @@
   eyebrow="Components"
   title="Banner">
   <span lede>
-    Inline page-level message. Six severities - info, success, warning, severe,
-    error, neutral - each with a default icon
-    (<code class="t-mono-inline">icon</code> overrides it), optional title, and
-    optional dismiss control.
+    Inline page-level message in six severities, each with a default icon.
   </span>
 
   <h3
@@ -16,10 +13,13 @@
   </h3>
 
   <p class="block-desc t-s">
-    Every banner severity as a specimen.
-    <code class="t-mono-inline">[dismissible]="true"</code> adds a close
-    button that emits <code class="t-mono-inline">(closed)</code>. The banner
-    does not hide itself - remove it on <code class="t-mono-inline">(closed)</code>.
+    Title is optional; <code class="t-mono-inline">icon</code> overrides the
+    icon.
+    <code class="t-mono-inline">
+      [dismissible]="true"
+    </code> adds a close
+    button emitting <code class="t-mono-inline">(closed)</code>; the banner
+    does not hide itself, so remove it there.
   </p>
 
   <div class="states is-cols-1">
@@ -198,8 +198,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Project buttons into the <code class="t-mono-inline">actions</code> slot
-    when the user must respond.
+    Buttons the user must answer go in the
+    <code class="t-mono-inline">
+      actions
+    </code> slot.
   </p>
 
   <div class="states is-cols-1">
@@ -238,8 +240,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Tighter padding and a one-line, ellipsised title; best with a title and no
-    body.
+    Tighter padding, one-line ellipsised title; best with a title and no body.
   </p>
 
   <div class="states is-cols-1">
@@ -307,13 +308,12 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       layout="stacked"
-    </code> (default) wraps
-    actions onto a new line; use for multi-line messages or several CTAs.
+    </code> (default): actions on a new
+    line, for long messages or several CTAs.
     <code class="t-mono-inline">
       layout="row"
-    </code> keeps actions on the right
-    edge, vertically centred with the body; use for one-line messages with a
-    single trailing CTA.
+    </code>: actions right, centred, for
+    one line and one CTA.
   </p>
 
   <div class="states is-cols-1">
@@ -373,9 +373,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [accentRail]="true"
-    </code> (default) renders a
-    coloured rail on the left edge to amplify variant. Toggle off for borderless
-    / minimal contexts.
+    </code> (default) adds a
+    variant-coloured left rail; turn off in minimal contexts.
   </p>
 
   <div class="states is-cols-1">
@@ -415,21 +414,26 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">announce</code> is off unless bound or set
-    app-wide with
+    <code class="t-mono-inline">
+      announce
+    </code> is off unless bound or set via
     <code class="t-mono-inline">
       provideDsConfig(&#123; banner: &#123; announce: true &#125; &#125;)
     </code
-    >, because a live region fires on insertion and page furniture would
-    interrupt on every route. When on, error, warning and severe banners get
-    <code class="t-mono-inline">role="alert"</code> (assertive), the rest
-    <code class="t-mono-inline">role="status"</code> (polite).
+    >: a live region fires on insertion, so page furniture would interrupt
+    every route. On, error, warning and severe get
+    <code class="t-mono-inline">
+      role="alert"
+    </code> (assertive), the rest
+    <code class="t-mono-inline">
+      role="status"
+    </code> (polite).
   </p>
 
   <p class="block-desc t-s">
-    In dev mode only, with <code class="t-mono-inline">announce</code>
-    unbound: an error, warning or severe banner warns while the key is unset;
-    an info, success or neutral banner warns when it announces only because
-    the key is <code class="t-mono-inline">true</code>.
+    Dev mode, <code class="t-mono-inline">announce</code> unbound: error,
+    warning and severe warn while the key is unset; info, success and neutral
+    warn when they announce only via a <code class="t-mono-inline">true</code>
+    key.
   </p>
 </docs-section>

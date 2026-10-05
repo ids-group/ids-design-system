@@ -144,9 +144,9 @@ for (const dir of [DECKS, ARCHIVE]) {
         'an archived deck keeps no rank — the number is a queue position, and this one has left the queue.',
       );
     }
-    // A `tool` may carry a rank or not — `backlog-board` does not, because it is read
-    // whenever rather than at a moment. Either way a rank that exists joins the one
-    // contiguous run, so a gap means a rename somebody left half-done.
+    // A `tool` may carry a rank or not: one read whenever rather than at a moment takes none.
+    // Either way a rank that exists joins the one contiguous run, so a gap means a rename somebody
+    // left half-done.
     if (!archived && rank !== undefined) {
       const clash = ranks.get(rank);
       if (clash)
@@ -196,31 +196,6 @@ for (const dir of [DECKS, ARCHIVE]) {
         `ds-deck-evidence cites ${cited}, which does not exist.`,
       );
     }
-  }
-}
-
-// The two `text/plain` blobs are CUT OUT rather than scanned up to: they carry docs/todo.md and
-// docs/done.md verbatim, whose prose names `index.html` and the like, and the `MAP` array that
-// drives the card links sits AFTER both of them.
-const board = join(DECKS, 'backlog-board.html');
-if (existsSync(board)) {
-  const html = readFileSync(board, 'utf8');
-  const code = html
-    .split(/<script type="text\/plain"[^>]*>/)
-    .map((part, index) =>
-      index === 0 ? part : part.slice(part.indexOf('</script>') + 1),
-    )
-    .join('\n');
-  for (const cited of new Set(
-    code.match(/(?:implemented\/)?\d*-?[a-z0-9-]+\.html/g) ?? [],
-  )) {
-    if (cited === 'backlog-board.html') continue;
-    if (existsSync(join(DECKS, cited))) continue;
-    fail(
-      'D016',
-      'presentations/backlog-board.html',
-      `links ${cited}, which does not exist — a rank moved and the card now opens nothing.`,
-    );
   }
 }
 

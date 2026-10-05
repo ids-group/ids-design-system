@@ -1,13 +1,14 @@
 import type { BarChartValue } from './bar-chart.types';
 
-/** Where a row's bar starts and ends on the value axis. A pair is normalised (a negative width draws
- *  nothing); a non-finite end collapses the extent to zero.
+/** Where a row's bar starts and ends on the value axis. The track has no side below zero, so a
+ *  negative number draws an empty track; a pair is normalised (a negative width draws nothing); a
+ *  non-finite end collapses the extent to zero.
  *
  *  @internal */
 export function barExtent(value: BarChartValue): { low: number; high: number } {
   if (typeof value === 'number') {
     return Number.isFinite(value)
-      ? { low: Math.min(0, value), high: Math.max(0, value) }
+      ? { low: 0, high: Math.max(0, value) }
       : { low: 0, high: 0 };
   }
   const [first, second] = value;
@@ -15,6 +16,13 @@ export function barExtent(value: BarChartValue): { low: number; high: number } {
   return Number.isFinite(first) && Number.isFinite(second)
     ? { low: Math.min(first, second), high: Math.max(first, second) }
     : { low: 0, high: 0 };
+}
+
+/** A plain row's value as given, so a negative one is still reported; null for a pair or a non-finite value.
+ *
+ *  @internal */
+export function plainValue(value: BarChartValue): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }
 
 /** Largest finite value, or `explicitMax` when usable. One `Infinity` row must not become the track length. */

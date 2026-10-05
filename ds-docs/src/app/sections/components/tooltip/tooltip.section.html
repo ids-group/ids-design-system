@@ -4,8 +4,7 @@
   title="Tooltip"
   [apiKeys]="['tooltip:TooltipPanelComponent']">
   <span lede>
-    Small popup on hover or focus, for truncated text, keyboard hints and short clarifications.
-    Apply via the
+    Hover or focus popup for truncated text, keyboard hints and short clarifications, via
     <code class="t-mono-inline">
       [dsTooltip]
     </code> directive.
@@ -101,16 +100,15 @@
   </div>
 
   <p class="block-desc t-s">
-    A value with no place to break, a file name or an ID, breaks inside
+    Unbreakable values (file names, IDs) break inside
     <code class="t-mono-inline">
       --ds-tooltip-max-width
-    </code> (240px) rather
-    than running past the panel.
+    </code> (240px).
   </p>
 
   <p class="block-desc t-s">
-    On the light theme the panel is light, with a border. To keep the dark,
-    inverted panel, set the three hooks on <code class="t-mono-inline">:root</code>:
+    Light theme: light, bordered panel. For a dark inverted one, set three hooks
+    on <code class="t-mono-inline">:root</code>:
   </p>
 
   <pre
@@ -125,10 +123,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    Hover or tab into a button. The tip opens after
-    <code class="t-mono-inline">dsTooltipDelay</code> (120 ms) and hides at once; Escape closes it.
-    With no room on the <code class="t-mono-inline">dsTooltipPlacement</code> side it opens on the
-    opposite side, 8px clear of the viewport edge, with its arrow turned to match.
+    Opens after <code class="t-mono-inline">dsTooltipDelay</code> (120 ms), hides at once;
+    Escape closes it. Without room on the
+    <code class="t-mono-inline">
+      dsTooltipPlacement
+    </code> side it flips, arrow included, 8px clear
+    of the viewport edge.
   </p>
 
   <div class="demo">
@@ -156,11 +156,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">dsTooltipWhenClipped</code> shows the tip only while the host is
-    cut off (re-tested on every open, so it follows a resize). Without
-    <code class="t-mono-inline">dsTooltip</code> it discloses the host's own text.
-    <code class="t-mono-inline">dsTooltipTextSelector</code> points the clip test and the
-    disclosed text at a descendant; while nothing matches, no tip opens.
+    <code class="t-mono-inline">
+      dsTooltipWhenClipped
+    </code> shows the tip only while the host is
+    clipped, re-tested on every open. Without <code class="t-mono-inline">dsTooltip</code> it
+    shows the host's own text. <code class="t-mono-inline">dsTooltipTextSelector</code> aims the
+    clip test and text at a descendant; no match, no tip.
   </p>
 
   <div class="demo">
@@ -187,12 +188,11 @@
   </div>
 
   <p class="block-desc t-s">
-    A clipped host that cannot take focus (a label in a button, a cell of a clickable row) opens
-    when keyboard focus lands on its nearest focusable ancestor, and closes on that ancestor's
-    blur, a click or any key. The ancestor must be a control (native, or a widget role such as
-    button, link, tab, option, row, combobox) reachable by Tab. A focusable container (tab panel,
-    scroll region), a negative tabindex or a click opens nothing. Only the first clipped value in
-    one control opens.
+    A clipped host that cannot take focus (label in a button, cell of a clickable row) opens when
+    keyboard focus lands on its nearest focusable ancestor; blur, a click or any key closes it.
+    That ancestor must be a Tab-reachable control: native, or a widget role (button, link, tab,
+    option, row, combobox). A focusable container (tab panel, scroll region), negative tabindex
+    or click opens nothing. Only the first clipped value per control opens.
   </p>
 
   <div class="demo">

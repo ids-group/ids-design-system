@@ -15,7 +15,11 @@ export {
   describeShare,
   shareOfTotal,
 } from './charts-format';
-export { elementWidth, readOnHostResize } from './charts-measure';
+export {
+  elementWidth,
+  readOnHostResize,
+  watchElementWidth,
+} from './charts-measure';
 export {
   CHART_RENDER_GATE_PASSED,
   chartRenderGate,

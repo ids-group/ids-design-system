@@ -1,7 +1,8 @@
 import { Injectable, signal } from '@angular/core';
 
 export interface SectionChapter {
-  /** `id` given to the heading, and the URL fragment that reaches it. */
+  /** The URL fragment that reaches the heading, unique within its section; the heading's `id` is
+   *  `<anchor>-<slug>`. */
   slug: string;
   /** What the nav shows — the heading's own `data-nav`, else its text. */
   label: string;

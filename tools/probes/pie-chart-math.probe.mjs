@@ -1,5 +1,6 @@
 import {
   arcPath,
+  fitCenterValue,
   groupSmallest,
   holeFraction,
   paletteIndex,
@@ -314,5 +315,17 @@ check(
   groupSmallest([...TAIL.slice(0, 4), { id: 'f', label: 'F', value: -100 }], 3, 'Other')[2].value,
   15,
 );
+
+// fitCenterValue: widths are at the 22px maximum, the hole takes 66px, the floor is 14px.
+const FULL = { text: '32,397', width: 71 };
+const SHORT = { text: '32.4K', width: 60 };
+check('a value that fits keeps the largest size', fitCenterValue({ text: '7', width: 12 }, null, 66, 22, 14), { text: '7', fontSize: 22 });
+check('a wider value shrinks to the hole', fitCenterValue(FULL, SHORT, 66, 22, 14).fontSize, (22 * 66) / 71);
+check('a shrunk value keeps its full text', fitCenterValue(FULL, SHORT, 66, 22, 14).text, '32,397');
+check('past the floor the compact text takes its place', fitCenterValue(FULL, SHORT, 40, 22, 14), { text: '32.4K', fontSize: (22 * 40) / 60 });
+check('a compact text too wide still stops at the floor', fitCenterValue(FULL, SHORT, 20, 22, 14), { text: '32.4K', fontSize: 14 });
+// The negative arms: without a compact text, or with one equal to the full text, the full text stays at the floor.
+check('no compact text leaves the full text at the floor', fitCenterValue(FULL, null, 40, 22, 14), { text: '32,397', fontSize: 14 });
+check('an identical compact text is not a fallback', fitCenterValue(FULL, { text: '32,397', width: 71 }, 40, 22, 14), { text: '32,397', fontSize: 14 });
 
 finish('pie-chart-math');

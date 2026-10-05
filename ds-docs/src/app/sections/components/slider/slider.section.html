@@ -3,8 +3,7 @@
   eyebrow="Components"
   title="Slider">
   <span lede>
-    Single-value and range sliders for selecting a numeric value or interval
-    within a bounded scale.
+    Picks a number or interval on a bounded scale.
   </span>
 
   <h3
@@ -14,15 +13,19 @@
   </h3>
 
   <p class="block-desc t-s">
-    Bind to a number signal; the current value updates as the thumb moves.
-    Arrows move one <code class="t-mono-inline">step</code>, PageUp/PageDown
-    ten, Home/End to the ends (in range mode, bounded by the other thumb).
+    Binds a number signal, updated as the thumb moves. Arrows move one
+    <code class="t-mono-inline">
+      step
+    </code>, PageUp/PageDown ten, Home/End to
+    the ends (in range mode, bounded by the other thumb).
   </p>
 
   <p class="block-desc t-s">
-    There is no visible label input; <code class="t-mono-inline">ariaLabel</code>
-    names the thumb(s), suffixed "minimum"/"maximum" in
-    <code class="t-mono-inline">range</code> mode.
+    No visible label input: <code class="t-mono-inline">ariaLabel</code> names
+    the thumb(s), suffixed "minimum"/"maximum" in
+    <code class="t-mono-inline">
+      range
+    </code> mode.
   </p>
 
   <div class="demo-panel">
@@ -51,8 +54,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Set <code>[range]="true"</code> and bind a <code>[number, number]</code>
-    tuple to select a low–high interval.
+    <code>
+      [range]="true"
+    </code> binds a <code>[number, number]</code> tuple.
   </p>
 
   <div class="demo-panel">
@@ -79,9 +83,15 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">hint</code> renders a helper line below the
-    track; <code class="t-mono-inline">error</code> replaces it with an error
-    line announced via <code>role="alert"</code>.
+    <code class="t-mono-inline">
+      hint
+    </code> is a helper line under the track;
+    <code class="t-mono-inline">
+      error
+    </code> replaces it, announced via
+    <code>
+      role="alert"
+    </code>.
   </p>
 
   <div class="demo-panel">

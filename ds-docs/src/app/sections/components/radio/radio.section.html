@@ -160,12 +160,22 @@
   </h3>
 
   <p class="block-desc t-s">
-    Use <code class="t-mono-inline">hint</code> for helper text and
-    <code class="t-mono-inline">error</code> for an error message;
-    <code class="t-mono-inline">[invalid]</code> paints the error state without
-    text. A lone <code class="t-mono-inline">&lt;ds-radio&gt;</code> is driven
-    by <code class="t-mono-inline">[(checked)]</code> only; for forms use
-    <code class="t-mono-inline">ds-radio-group</code>.
+    <code class="t-mono-inline">
+      hint
+    </code> is helper text,
+    <code class="t-mono-inline">
+      error
+    </code> an error message;
+    <code class="t-mono-inline">
+      [invalid]
+    </code> paints the error state without
+    text. A lone <code class="t-mono-inline">&lt;ds-radio&gt;</code> binds its value only through
+    <code class="t-mono-inline">
+      [(checked)]
+    </code>; for forms use
+    <code class="t-mono-inline">
+      ds-radio-group
+    </code>.
   </p>
 
   <div class="stack">
@@ -190,14 +200,15 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       &lt;ds-radio-group&gt;
-    </code> is the primary
-    form-control container. It manages roving focus, name propagation, and
-    implements <code class="t-mono-inline">ControlValueAccessor</code> for
-    reactive-forms integration. Project
+    </code> is the form
+    control: roving focus, name propagation,
+    <code class="t-mono-inline">
+      ControlValueAccessor
+    </code>. Project
     <code class="t-mono-inline">
       &lt;ds-radio&gt;
     </code>
-    children directly inside.
+    children directly.
   </p>
 
   <div class="stack">

@@ -4,6 +4,46 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The pie chart's centre value fits the hole (2026-10-05)
+
+- `ds-pie-chart` keeps the centre value on one line: it shrinks to the hole down to
+  `--ds-pie-chart-center-value-min-font-size` (default `--font-size-s`), then prints the sum in the
+  `'tick'` form of `valueFormat`; `[centerCompact]="false"` keeps the full sum at the floor, and
+  `centerPlacement="below"` prints value and caption under the ring at full size
+  (`src/lib/components/pie-chart/pie-chart.component.ts`, `fitCenterValue` in `pie-chart.math.ts`).
+- The fit runs only when what decides it changes: the ring's width through the charts' shared
+  `ResizeObserver` (`watchElementWidth`), observed only while the value sits inside, plus the text,
+  the hole and the font load. Stas picked option K in deck `pie-chart-center-value`.
+
+## Content without a slot renders in the overlay body (2026-10-05)
+
+- `ds-modal`, `ds-modal-card` and `ds-drawer` render content without a slot attribute in the body
+  (a default `<ng-content>` after `[body]` / `[drawer-body]`); `ds-drawer` also takes `[body]` and
+  `[actions]`. Stas picked "Всё вместе" in deck `unslotted-content`.
+- In dev mode `warnUnslottedContent` (`src/lib/core/unslotted-content-warning.ts`) warns once per
+  message: content without a slot ("rendered into the body, but give it a slot") and an unknown slot
+  name, detected as an empty-valued attribute that HTML does not define.
+
+## The ds-docs audit's eleven open findings, closed (2026-10-02)
+
+- `ds-bar-chart` draws a negative `value` as an empty track, its label, tooltip and name showing the
+  real value (`bar-chart.math.ts` `barExtent`, `plainValue`).
+- `--ds-topbar-crumb-*` and `--ds-page-header-crumb-text-color(-hover)` forward to the projected
+  `ds-breadcrumbs`, which they never reached under Emulated encapsulation.
+- `ds-modal`'s `confirmed` fires from a `dsModalConfirm` action (`modal-confirm-action.directive.ts`),
+  following `pressed` on a `ds-button`, so a disabled or loading one never confirms.
+- `provideDsTheme({ followSystem: true })` keeps a `data-theme` present on `<html>` at startup, at
+  init and across OS changes.
+- Chapter headings take `<anchor>-<slug>` ids, page-unique on a group page; a `#chapter` deep link
+  reads `location.hash`, holds the chapter under the topbar while charts build, and opens a folded
+  `<details>`.
+- `ds-avatar-group` hides projected avatars past `max` and, with `total` unset, counts them.
+- A disabled link-button with `disabledReason` keeps a Tab stop (`tabindex="0"`, `role="link"`).
+- `provideDsIcons` calls merge across injectors, a later call winning a shared name.
+- `tools/check-focus-rings.mjs` was already in the `lint` and `release` groups: no change.
+- Public tokens the library never reads: open, in deck `unread-tokens` and `docs/todo.md`.
+- `ds-docs` charts left on their skeleton sat inside folded `<details>`: not a defect.
+
 ## A tightened template context is classified as actionable, and the cut gates it (2026-09-30)
 
 `migrations/AUTHORING.md` states that a directive gaining a static `ngTemplateContextGuard` or a

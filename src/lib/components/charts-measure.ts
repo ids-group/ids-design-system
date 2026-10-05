@@ -19,15 +19,26 @@ export function elementWidth(host: ElementRef<HTMLElement>): Signal<number> {
     return width.asReadonly();
   }
 
-  const element = host.nativeElement;
-  widths.set(element, width);
-  sharedObserver().observe(element);
-  inject(DestroyRef).onDestroy(() => {
-    sharedObserver().unobserve(element);
-    widths.delete(element);
-  });
+  inject(DestroyRef).onDestroy(watchElementWidth(host.nativeElement, width));
 
   return width.asReadonly();
+}
+
+/** Writes `element`'s rounded content width into `width` on every change, through the one observer
+ *  every chart shares. Returns the call that stops it.
+ *
+ *  @internal */
+export function watchElementWidth(
+  element: Element,
+  width: WritableSignal<number>,
+): () => void {
+  widths.set(element, width);
+  sharedObserver().observe(element);
+
+  return () => {
+    sharedObserver().unobserve(element);
+    widths.delete(element);
+  };
 }
 
 /** `read(host)` as a signal, re-read whenever the host's width changes, so a geometry token re-pointed

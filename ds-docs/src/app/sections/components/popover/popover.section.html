@@ -3,9 +3,8 @@
   eyebrow="Components"
   title="Popover">
   <span lede>
-    Light surface panel anchored to a trigger element. Use for contextual info
-    that needs a few lines of content and at most one action — for richer
-    interactions use a modal or drawer instead.
+    Panel on a trigger for a few lines and at most one action; richer content
+    is a modal or drawer.
   </span>
 
   <docs-nonmodal-note />
@@ -46,14 +45,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    A panel that holds a button or another interactive element needs
-    <code class="t-mono-inline">panelRole</code> (here
-    <code class="t-mono-inline">"dialog"</code>) and a
-    <code class="t-mono-inline">panelLabel</code>; only then does the panel
-    trap focus and move it inside on open. Escape closes and returns focus to
-    the trigger; call <code class="t-mono-inline">close()</code> on the
-    popover, or inject <code class="t-mono-inline">DsOverlayCloseRef</code> in
-    projected content, to close from inside.
+    Interactive content needs
+    <code class="t-mono-inline">
+      panelRole
+    </code> and
+    <code class="t-mono-inline">
+      panelLabel
+    </code>; only then the panel traps focus
+    and moves it inside on open. Escape closes and refocuses the trigger. To
+    close from inside, call <code class="t-mono-inline">close()</code> or
+    inject <code class="t-mono-inline">DsOverlayCloseRef</code> in projected
+    content.
   </p>
 
   <div class="demo">
@@ -97,16 +99,18 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       align="start"
-    </code> (default) anchors the
-    panel to the trigger's left edge;
+    </code> (default) aligns to the
+    trigger's left edge;
     <code class="t-mono-inline">
       align="end"
-    </code> anchors to the right. Use
+    </code> to its right, for triggers near
+    the viewport's right edge. Only for
     <code class="t-mono-inline">
-      "end"
-    </code> when the trigger sits near the
-    right edge of the viewport. Applies to <code class="t-mono-inline">top</code>
-    and <code class="t-mono-inline">bottom</code> placement.
+      top
+    </code> and
+    <code class="t-mono-inline">
+      bottom
+    </code> placement.
   </p>
 
   <div class="demo is-row">
@@ -160,8 +164,10 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       placement
-    </code> controls which side of the
-    trigger the panel prefers. Accepts <code class="t-mono-inline">'top'</code>,
+    </code> sets the preferred side:
+    <code class="t-mono-inline">
+      'top'
+    </code>,
     <code class="t-mono-inline">
       'bottom'
     </code> (default),
@@ -170,8 +176,7 @@
     </code>, or
     <code class="t-mono-inline">
       'right'
-    </code>. The overlay flips
-    automatically if there is not enough space.
+    </code>. Flips when space runs out.
   </p>
 
   <div class="demo is-placement">
@@ -261,9 +266,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Add <code class="t-mono-inline">arrow</code> to render a caret pointing at
-    the trigger. Combine with <code class="t-mono-inline">placement</code> for
-    directional emphasis.
+    <code class="t-mono-inline">
+      arrow
+    </code> adds a caret pointing at the
+    trigger.
   </p>
 
   <div class="demo is-placement">

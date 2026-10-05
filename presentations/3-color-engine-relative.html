@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Color engine — один источник через color-mix + relative color</title>
 <meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="docs/todo.md - Single-source colour engine (P2), named there as the prototype">
+<meta name="ds-deck-evidence" content="docs/todo.md - Single-source colour engine (P3), named there as the prototype">
 <style>
   :root {
     --ink: #161A28; --ink-2: #353B4D; --ink-3: #6B7388;
@@ -83,7 +83,7 @@
 </head>
 <body>
   <h1>Цвет-движок: один источник вместо канал-дубля</h1>
-  <p class="lede">Сегодня «primary» в DS живёт в двух расцепленных видах: <b>ручные пики рампы</b> (<code>--primary</code> = <code>--blue-600</code>, оттенки тоже пики) и <b>HSL-каналы</b> (<code>--primary-h/s/l</code>). Из-за этого нет одного рычага перекраски, а консьюмерский <code>--primary-h/s/l</code>-override красит только halo, не заливку. Современный CSS (<code>color-mix()</code> + relative color) позволяет держать <b>один</b> токен на роль и выводить остальное математически — сохраняя ручную калибровку.</p>
+  <p class="lede">Сегодня «primary» в DS живёт в двух расцепленных видах: <b>ручные пики рампы</b> (<code>--primary</code> = <code>--blue-600</code>, оттенки тоже пики) и <b>HSL-каналы</b> (<code>--primary-h/s/l</code>). Из-за этого нет одного рычага перекраски, а консьюмерский <code>--primary-h/s/l</code>-override красит halo полей, ссылки и тёмные тинты, но не заливку. Современный CSS (<code>color-mix()</code> + relative color) позволяет держать <b>один</b> токен на роль и выводить остальное математически — сохраняя ручную калибровку.</p>
 
   <div class="unsupported">⚠ Твой браузер не поддерживает relative color syntax (<code>hsl(from …)</code>) — свотчи ниже не пересчитаются. Открой в свежем Chrome/Edge/Safari/Firefox.</div>
 
@@ -91,14 +91,14 @@
   <section>
     <span class="tag bad">проблема сегодня</span>
     <h2>Два расцепленных представления одного «primary»</h2>
-    <pre><span class="c">/* themes/_base-palette.scss:45-55 — рампа генерится из ОДНОГО hue-канала --blue-h */</span>
+    <pre><span class="c">/* themes/_base-palette.scss:37-50 - рампа генерится из ОДНОГО hue-канала --blue-h */</span>
 --blue-h: 229;  --blue-600: hsl(<span class="k">var(--blue-h)</span> var(--blue-s) var(--blue-l));
 
-<span class="c">/* themes/_semantic.scss:89-91,107 — но «primary» = ПИК рампы, а каналы — отдельный набор */</span>
---primary:    var(--blue-600);          <span class="c">// (a) читают заливки: checkbox, button…</span>
---primary-h:  var(--blue-h);            <span class="c">// (b) читают halo/кольцо/серые/рампа</span>
+<span class="c">/* themes/_semantic.scss:62,77,193 - но «primary» = ПИК рампы, а каналы - отдельный набор */</span>
+--primary:    var(--blue-600);          <span class="c">// (a) через --accent читают заливки: checkbox, button…</span>
+--primary-h:  var(--blue-h);            <span class="c">// (b) читают halo полей, ссылки, серые, тёмные тинты</span>
 --focus-field: …hsl(<span class="k">var(--primary-h)</span> var(--primary-s) var(--primary-l) / .22);</pre>
-    <p class="note">Связи нет: <code>--primary</code> зависит от <code>--blue-h</code>, а не от <code>--primary-h</code>. Поэтому консьюмерский <code>ds-checkbox { --primary-h: 5; … }</code> перекрашивает <b>только кольцо фокуса</b> (оно из каналов), а заливка галочки (<code>var(--primary)</code>) <b>остаётся синей</b>. Чтобы перекрасить когерентно, нужно лезть и в каналы, и пере-собирать <code>--primary</code> — те самые 3–4 токена.</p>
+    <p class="note">Связи нет: <code>--primary</code> зависит от <code>--blue-h</code>, а не от <code>--primary-h</code>. Заливка галочки читает <code>var(--accent)</code>, кольцо фокуса - <code>outline</code> цвета <code>--focus-ring-color</code>, и оба указателя разрешаются на <code>:root</code> (<code>themes/_semantic.scss:170,221</code>). Поэтому консьюмерский <code>ds-checkbox { --primary-h: 5; … }</code> не перекрашивает <b>ни заливку, ни кольцо</b>, а тот же override на <code>:root</code> красит halo полей, ссылки и тёмные тинты, но заливка <b>остаётся синей</b>. Чтобы перекрасить когерентно, нужно лезть и в каналы, и пере-собирать <code>--primary</code> — те самые 3–4 токена.</p>
   </section>
 
   <!-- ===== TOOLS ===== -->
@@ -110,7 +110,7 @@
 --primary-pressed:<span class="k">color-mix</span>(in srgb, var(--primary) 76%, black);
 --focus-halo:     <span class="k">color-mix</span>(in srgb, var(--primary) 22%, transparent);<span class="c"> // вместо hsl(h s l / .22)</span>
 --primary-strong: <span class="k">hsl(from</span> var(--primary) <span class="k">h</span> 85% 42%);          <span class="c">// hue из --primary, S/L — ручные</span>
---primary-subtle: <span class="k">hsl(from</span> var(--primary) <span class="k">h</span> 100% 97%);</pre>
+--primary-subtitle: <span class="k">hsl(from</span> var(--primary) <span class="k">h</span> 100% 97%);</pre>
     <p class="note">Relative color — Baseline (Chrome 119 / Safari 16.4 / Firefox 128, с 2023–24), <code>color-mix()</code> ещё раньше. <code>hsl(from var(--primary) h … …)</code> вытаскивает <b>только hue</b> из одного токена — S/L каждого шага остаются рукотворными, так что дизайнерская рампа не превращается в формулу.</p>
   </section>
 
@@ -135,7 +135,7 @@
       <div class="sw"><div class="chip" style="background:var(--p-pressed)"></div><div class="l"><b>pressed</b><code>mix 76% black</code></div></div>
       <div class="sw"><div class="chip" style="background:var(--p-strong)"></div><div class="l"><b>strong</b><code>from h 85% 42%</code></div></div>
       <div class="sw"><div class="chip" style="background:var(--p-muted)"></div><div class="l"><b>muted</b><code>from h 95% 90%</code></div></div>
-      <div class="sw"><div class="chip" style="background:var(--p-subtle)"></div><div class="l"><b>subtle</b><code>from h 100% 97%</code></div></div>
+      <div class="sw"><div class="chip" style="background:var(--p-subtle)"></div><div class="l"><b>subtitle</b><code>from h 100% 97%</code></div></div>
     </div>
 
     <div class="uikit">
@@ -144,7 +144,7 @@
         <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
         Чекбокс + halo
       </span>
-      <span class="badge-demo">Badge (subtle + strong)</span>
+      <span class="badge-demo">Badge (subtitle + strong)</span>
     </div>
     <p class="note" style="margin-top:14px">Заливка чекбокса = <code>var(--primary)</code>, halo = <code>color-mix(… 22%, transparent)</code> — <b>оба</b> следуют за одной ручкой. Это и есть то, чего сегодня нельзя одной строкой.</p>
   </section>
@@ -160,8 +160,8 @@
   <span class="x">--primary-h: 5;</span>
   <span class="x">--primary-s: 92%;</span>
   <span class="x">--primary-l: 64%;</span>
-  <span class="c">/* + ещё пере-собрать --primary,</span>
-<span class="c">     иначе заливка синяя */</span>
+  <span class="c">/* + ещё пере-собрать --primary, --accent</span>
+<span class="c">     и --focus-ring-color, иначе синие */</span>
 }</pre>
       </div>
       <div class="col next">

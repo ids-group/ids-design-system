@@ -730,11 +730,20 @@
   [data-q="waterfall-rename"] .wf-pills { margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-1); }
   [data-q="waterfall-rename"] .wf-pill { padding: 1px var(--space-1); border-radius: 3px; background: var(--surface-secondary); color: var(--text-secondary); font: var(--font-size-2xs) / 1.5 var(--font-sans); }
   [data-q="waterfall-rename"] .wf-pill.is-move { background: var(--warning-subtitle); color: var(--text-primary); font-family: var(--font-mono); }
+  .pcv-ring { position: relative; inline-size: 110px; block-size: 110px; border-radius: 50%; margin: 4px auto 0;
+    background: conic-gradient(var(--chart-categorical-1) 0 88%, var(--chart-categorical-2) 0 96%, var(--chart-categorical-3) 0); }
+  .pcv-ring::before { content: ""; position: absolute; inset: 19.5%; border-radius: 50%; background: var(--surface-primary, #fff); }
+  .pcv-center { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; inline-size: 56%;
+    margin-inline: auto; overflow-wrap: anywhere; text-align: center; font-family: var(--font-sans); }
+  .pcv-value { color: var(--text-primary); font-size: 22px; font-weight: 700; }
+  .pcv-label { color: var(--text-tertiary); font-size: 12px; }
+  .pcv-nowrap .pcv-value { white-space: nowrap; }
+  .pcv-below { text-align: center; font-family: var(--font-sans); font-weight: 700; font-size: 22px; color: var(--text-primary); }
 </style>
 
 <main>
   <div class="masthead">
-    <h1>7 асков консьюмеров и 27 решений, каждое с нарисованными вариантами</h1>
+    <h1>7 асков консьюмеров и 36 решений, каждое с нарисованными вариантами</h1>
     <p class="lede">
       Сверху - всё, чего ждёт консьюмер: фиксы, хуки и фичи из бэклога, каждый показан как есть
       сейчас и как будет после. Ниже - открытые деки и бакет <code>Decisions</code>. Вариант
@@ -1132,7 +1141,7 @@
     <div class="stage">
       <div class="spec"><p class="cap">сегодня: два источника</p>
         <div class="ce-src"><span class="ce-box"></span><code>--primary-h: 22</code></div>
-        <p class="says">override каналов на чекбоксе: halo оранжевый, заливка синяя</p></div>
+        <p class="says">override <code>--primary-h</code>: halo, кольцо фокуса и ссылки оранжевые, заливка синяя</p></div>
       <div class="spec"><p class="cap">шаги рампы в каждой карточке</p><div class="ce-steps"><span>subtitle</span><span>muted</span><span>m-strong</span><span>base</span><span>hover</span><span>pressed</span><span>strong</span></div><p class="says">формулы по шагам - из деки color-engine-derivation, светлая тема; бренды #2E54FF и #FF6B2E</p></div>
     </div>
 
@@ -1624,11 +1633,66 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
     </div>
   </section>
 
+  <section class="q" data-q="chart-motion">
+    <div class="q-head">
+      <span class="q-num">20</span>
+      <h2 class="q-title">Сколько движения добавить в графики</h2>
+      <a class="q-src" href="12-chart-motion.html">дека chart-motion</a>
+    </div>
+    <p class="q-sub">Колонки плавно меняют высоту, а линия, подписи, пин, сетка и полоса курсора перескакивают; наведённая колонка не отвечает. Живые мини-графики каждого варианта - в деке.</p>
+    <div class="opts">
+      <div class="opt"><h3>Ничего</h3><p class="says">элементы расходятся</p><p>Как сейчас.</p></div>
+      <div class="opt"><h3>Синхрон</h3><p class="says">всё движется вместе</p><p>Нового поведения нет.</p></div>
+      <div class="opt"><h3>Синхрон и отклик</h3><p class="says">ответ на каждое наведение</p><p>Рекомендую.</p></div>
+      <div class="opt"><h3>Полный</h3><p class="says">числа докручиваются</p><p>Читать цифры сложнее.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="chart-motion-extras">
+    <div class="q-head">
+      <span class="q-num">21</span>
+      <h2 class="q-title">Какие дополнения строить к выбранному объёму движения</h2>
+      <a class="q-src" href="13-chart-motion-extras.html">дека chart-motion-extras</a>
+    </div>
+    <p class="q-sub">Десять дополнений, каждое живое в деке: ось и центр pie отвечают на наведение, серия схлопывается, крест в heatmap, ближайшая точка в scatter, ореол точки, переход от скелетона, поочерёдное появление, плывущий фокус, переезд колонок при сортировке.</p>
+    <div class="opts">
+      <div class="opt"><h3>Все десять</h3><p class="says">рекомендую</p></div>
+      <div class="opt"><h3>Часть</h3><p class="says">снять лишние кликом в деке</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="unread-tokens">
+    <div class="q-head">
+      <span class="q-num">22</span>
+      <h2 class="q-title">121 публичный токен не читает сама библиотека</h2>
+      <a class="q-src" href="14-unread-tokens.html">дека unread-tokens</a>
+    </div>
+    <p class="q-sub">Измерено 2026-10-02: 51 размер компонентов и паттернов, которых нет, и 68 имён шкал, палитры и ролей. Списки токенов и замеры по консьюмерам - в деке.</p>
+    <div class="opts">
+      <div class="opt"><h3>Ничего</h3><p class="says">0 правок у консьюмеров</p><p>51 имя без смысла остаётся в справочнике.</p></div>
+      <div class="opt"><h3>Только мёртвые размеры</h3><p class="says">0 чтений в pinkmoon, mm-ecm, mm-broker</p><p>Уходят 51 размер; словарь цел. Рекомендую.</p></div>
+      <div class="opt"><h3>Всё без читателя</h3><p class="says">12 имён читают консьюмеры</p><p>Уходят 121, дыры в шкалах и палитре.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="unasked-decisions">
+    <div class="q-head">
+      <span class="q-num">23</span>
+      <h2 class="q-title">Шесть изменений поведения, сделанных без выбора</h2>
+      <a class="q-src" href="15-unasked-decisions.html">дека unasked-decisions</a>
+    </div>
+    <p class="q-sub">Уже в Unreleased: ручной <code>data-theme</code>, <code>dsModalConfirm</code>, <code>max</code> у avatar-group, Tab-остановка у ссылки с причиной, слияние <code>provideDsIcons</code>, геометрия пина. Шесть отдельных выборов, у каждого варианты нарисованы в деке.</p>
+    <div class="opts">
+      <div class="opt"><h3>Оставить как сделано</h3><p class="says">по каждому пункту отдельно</p></div>
+      <div class="opt"><h3>Переделать</h3><p class="says">до выпуска релиза</p></div>
+    </div>
+  </section>
+
   <p class="group">Релиз и публикация</p>
 
   <section class="q" data-q="angular-22">
     <div class="q-head">
-      <span class="q-num">20</span>
+      <span class="q-num">24</span>
       <h2 class="q-title">Когда переходим на Angular 22</h2>
       <a class="q-src" href="../docs/todo.md">апгрейд на Angular 22, P3</a>
     </div>
@@ -1667,7 +1731,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="npm-2027">
     <div class="q-head">
-      <span class="q-num">21</span>
+      <span class="q-num">25</span>
       <h2 class="q-title">Чем заменить публикацию в npm с января 2027</h2>
       <a class="q-src" href="../docs/todo.md">публикация в npm после января 2027</a>
     </div>
@@ -1712,7 +1776,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="claude-design-ci">
     <div class="q-head">
-      <span class="q-num">22</span>
+      <span class="q-num">26</span>
       <h2 class="q-title">Публикация в Claude Design из Bitbucket</h2>
       <a class="q-src" href="../docs/todo.md">публикация в Claude Design из CI</a>
     </div>
@@ -1746,7 +1810,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="changelog-wrap">
     <div class="q-head">
-      <span class="q-num">23</span>
+      <span class="q-num">27</span>
       <h2 class="q-title">Перевёрстывать ли CHANGELOG в 100 колонок</h2>
       <a class="q-src" href="../docs/todo.md">перевёрстка CHANGELOG в 100 колонок</a>
     </div>
@@ -1792,7 +1856,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="fix-all-html">
     <div class="q-head">
-      <span class="q-num">24</span>
+      <span class="q-num">28</span>
       <h2 class="q-title">fix:all переформатирует HTML, с которым потом спорит eslint</h2>
       <a class="q-src" href="../docs/todo.md">fix:all против eslint на HTML</a>
     </div>
@@ -1833,7 +1897,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="stale-ds-css">
     <div class="q-head">
-      <span class="q-num">25</span>
+      <span class="q-num">29</span>
       <h2 class="q-title">Ничто не ловит устаревший presentations/ds.css</h2>
       <a class="q-src" href="../docs/todo.md">устаревший presentations/ds.css</a>
     </div>
@@ -1871,7 +1935,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="todo-index-gate">
     <div class="q-head">
-      <span class="q-num">26</span>
+      <span class="q-num">30</span>
       <h2 class="q-title">todo-index --check вне lint:all</h2>
       <a class="q-src" href="../docs/todo.md">todo-index --check вне lint:all</a>
     </div>
@@ -1911,7 +1975,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="manifest-practices">
     <div class="q-head">
-      <span class="q-num">27</span>
+      <span class="q-num">31</span>
       <h2 class="q-title">Какие из десяти практик формата манифестов берём</h2>
       <a class="q-src" href="5-migration-manifest-audit.html">дека migration-manifest-audit</a>
     </div>
@@ -2011,7 +2075,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="automation-coverage">
     <div class="q-head">
-      <span class="q-num">28</span>
+      <span class="q-num">32</span>
       <h2 class="q-title">Три пути ds-table и пять групп компонентов ни разу не прокликаны</h2>
       <a class="q-src" href="../docs/todo.md">непрокликанные пути ds-table</a>
     </div>
@@ -2061,7 +2125,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="schematics-tsconfig">
     <div class="q-head">
-      <span class="q-num">29</span>
+      <span class="q-num">33</span>
       <h2 class="q-title">schematics/tsconfig просит moduleResolution: node</h2>
       <a class="q-src" href="../docs/todo.md">schematics/tsconfig moduleResolution</a>
     </div>
@@ -2098,7 +2162,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="design-manifest-templates">
     <div class="q-head">
-      <span class="q-num">30</span>
+      <span class="q-num">34</span>
       <h2 class="q-title">templates и startingPoints в манифесте Claude Design</h2>
       <a class="q-src" href="../docs/todo.md">templates и startingPoints в манифесте</a>
     </div>
@@ -2134,7 +2198,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="docs-blocks">
     <div class="q-head">
-      <span class="q-num">31</span>
+      <span class="q-num">35</span>
       <h2 class="q-title">TimeColumns без собственного блока в ds-docs</h2>
       <a class="q-src" href="../docs/todo.md">компоненты без блока в ds-docs</a>
     </div>
@@ -2296,6 +2360,65 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
     растит модель данных другого. Общий слой под ними выносится, переиспользуется и получает
     способ расширяться там, где одному нужно иначе; уникальное остаётся уникальным. Работа
     записана в бэклоге - это уже руки, а не вопрос.</p>
+  </section>
+
+  <section class="q is-settled">
+    <div class="q-head">
+      <span class="q-num">--</span>
+      <h2 class="q-title">Как кольцо держит число шире дырки</h2>
+      <a class="q-src" href="implemented/pie-chart-center-value.html">дека pie-chart-center-value</a>
+    </div>
+    <p class="q-sub">У консьюмера кольцо около 120px, и <code>32,397</code> рвётся на <code>32,39</code> и <code>7</code>: на <code>.center</code> стоит <code>overflow-wrap: anywhere</code>. Одиннадцать вариантов, K - адаптивная лестница из D, E и F, собрана в ветке <code>fix/pie-chart-center-value-wrap</code>: шрифт по длине до токена-минимума, затем 32.4K (выключается <code>[centerCompact]</code>), отдельно <code>centerPlacement="below"</code>.</p>
+    <div class="opts">
+      <div class="opt"><h3>K. Адаптивная лестница</h3>
+        <div class="pcv-ring pcv-nowrap"><div class="pcv-center"><span class="pcv-value" style="font-size:18.6px">32,397</span><span class="pcv-label">visits</span></div></div>
+        <p class="cap">22px, шрифт по длине, 32.4K, под кольцо</p>
+        <p>Замер в компоненте, сокращение и вынос включаются флагами.</p></div>
+      <div class="opt"><h3>A. Как сейчас</h3>
+        <div class="pcv-ring "><div class="pcv-center"><span class="pcv-value">32,397</span><span class="pcv-label">visits</span></div></div>
+        <p class="cap">ломает по цифрам</p>
+        <p>Ничего не менять.</p></div>
+      <div class="opt"><h3>B. Только nowrap</h3>
+        <div class="pcv-ring pcv-nowrap"><div class="pcv-center"><span class="pcv-value">1,234,567</span><span class="pcv-label">visits</span></div></div>
+        <p class="cap">длинное заходит на кольцо</p>
+        <p>Одна строка CSS, шрифт 22px.</p></div>
+      <div class="opt"><h3>C. nowrap + шрифт по кольцу</h3>
+        <div class="pcv-ring pcv-nowrap"><div class="pcv-center"><span class="pcv-value" style="font-size:14.3px">32,397</span><span class="pcv-label">visits</span></div></div>
+        <p class="cap">построено в ветке</p>
+        <p>font-size: min(22px, 13cqi); на 180px+ как сейчас.</p></div>
+      <div class="opt"><h3>D. Шрифт по длине числа</h3>
+        <div class="pcv-ring pcv-nowrap"><div class="pcv-center"><span class="pcv-value" style="font-size:18.6px">32,397</span><span class="pcv-label">visits</span></div></div>
+        <p class="cap">JS-замер</p>
+        <p>Компонент подгоняет шрифт под дырку.</p></div>
+      <div class="opt"><h3>E. Сокращать: 32.4K</h3>
+        <div class="pcv-ring pcv-nowrap"><div class="pcv-center"><span class="pcv-value">32.4K</span><span class="pcv-label">visits</span></div></div>
+        <p class="cap">новое API</p>
+        <p>Точное число только в подсказке.</p></div>
+      <div class="opt"><h3>F. Число под кольцом</h3>
+        <div class="pcv-ring "></div><p class="pcv-below">32,397</p>
+        <p class="cap">раскладка прыгает</p>
+        <p>Кольцо меньше на высоту подписи.</p></div>
+      <div class="opt"><h3>G. Только в ECM: кольцо от 160px</h3>
+        <div class="pcv-ring" style="inline-size:160px;block-size:160px"><div class="pcv-center"><span class="pcv-value">1,234,567</span><span class="pcv-label">visits</span></div></div>
+        <p class="cap">длинное всё равно рвётся</p>
+        <p>Без релиза DS.</p></div>
+      <div class="opt"><h3>H. Только в ECM: карточка выше</h3>
+        <div class="pcv-ring" style="inline-size:180px;block-size:180px"><div class="pcv-center"><span class="pcv-value">1,234,567</span><span class="pcv-label">visits</span></div></div>
+        <p class="cap">длинное всё равно рвётся</p>
+        <p>Кольцо получает свои 180px.</p></div>
+      <div class="opt"><h3>I. C в DS + 32.4K от потребителя</h3>
+        <div class="pcv-ring pcv-nowrap"><div class="pcv-center"><span class="pcv-value" style="font-size:14.3px">1.2M</span><span class="pcv-label">visits</span></div></div>
+        <p class="cap">без нового API</p>
+        <p>Экран сокращает через centerValue, точное число в шапке.</p></div>
+      <div class="opt"><h3>J. C с нижней границей 14px</h3>
+        <div class="pcv-ring pcv-nowrap" style="inline-size:90px;block-size:90px"><div class="pcv-center"><span class="pcv-value" style="font-size:14px">32,397</span><span class="pcv-label">visits</span></div></div>
+        <p class="cap">не мельчит</p>
+        <p>clamp(14px, 13cqi, 22px).</p></div>
+    </div>
+    <p class="q-sub"><strong>Решено 2026-10-05.</strong> Вариант K: шрифт числа подгоняется под дырку до
+    <code>--ds-pie-chart-center-value-min-font-size</code>, дальше сумма сокращается (<code>32.4K</code>,
+    выключается <code>[centerCompact]="false"</code>); <code>centerPlacement="below"</code> выносит число под
+    кольцо. Пересчёт только при ресайзе кольца.</p>
   </section>
 
   <div class="bar-fixed">

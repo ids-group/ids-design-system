@@ -13,7 +13,8 @@
     <div class="chips">
       <span class="chip is-open">нужен вердикт</span>
       <span class="chip is-done">23 из 23 находок исправлено</span>
-      <span class="chip">36 манифестов · 438 пунктов</span>
+      <span class="chip">43 манифеста · 496 пунктов</span>
+      <span class="chip">актуально на 2026-10-05</span>
     </div>
     <h1>Манифесты миграций — десять практик на ратификацию</h1>
     <p class="lede">
@@ -43,7 +44,7 @@
       </tr>
       <tr>
         <th>Исполняемая проверка</th>
-        <td><code>verify</code> сейчас — <b>проза во всех 36 манифестах</b>. Стала бы проверкой, которая выполняется, а не читается.</td>
+        <td><code>verify</code> сейчас — <b>проза: 323 пункта в 37 из 43 манифестов</b>, исполняемого нет ни одного. Стала бы проверкой, которая выполняется, а не читается.</td>
         <td>Polaris</td>
       </tr>
       <tr>
@@ -58,7 +59,7 @@
       </tr>
       <tr>
         <th>Явное «замены нет»</th>
-        <td>Сейчас поле просто опускается, поэтому «ничего не заменяет» и «автор забыл» читаются одинаково. Частично уже покрыто: <code>restore: null</code> и <code>deleteList</code>'s <code>replaceWith: "nothing"</code> (<code>migrations/AUTHORING.md</code>); счёт заново по 36 манифестам не проводился.</td>
+        <td>Сейчас поле просто опускается, поэтому «ничего не заменяет» и «автор забыл» читаются одинаково. Частично уже покрыто: <code>restore: null</code> и <code>deleteList</code>'s <code>replaceWith: "nothing"</code> (<code>migrations/AUTHORING.md</code>): <code>restore: null</code> у 236 из 496 пунктов, <code>replaceWith: "nothing"</code> у 19 из 139 строк <code>deleteList</code>.</td>
         <td>ESLint</td>
       </tr>
       <tr>
@@ -99,7 +100,7 @@
     <tbody>
       <tr><th>Окно депрекации</th><td>отклонено до 1.0</td></tr>
       <tr><th>Смена значения как <code>kind</code></th><td><b>4 кандидата, у всех четырёх уже есть <code>restore</code></b>. Новый kind добавляет ярлык и ноль проверок</td></tr>
-      <tr><th><code>new</code> массивом</th><td><b>0 из 78 переименований</b> имеют больше одного кандидата</td></tr>
+      <tr><th><code>new</code> массивом</th><td><b>1 из 228 переименований</b> имеет больше одного кандидата (<code>0.11.1#autocomplete-option-hover-token-removed</code>, один токен на четыре хука)</td></tr>
       <tr><th>Ось уверенности · URL на пункт</th><td>отклонены</td></tr>
     </tbody>
   </table>
@@ -114,8 +115,7 @@
   </section>
 
   <p class="src">
-    Все 23 находки построчно, разбор по ярусам и коммиты — <code>docs/two-wave-review.md</code> и
-    история <code>migrations/</code>. Источники практик: <code>migrations/AUTHORING.md</code>,
-    <code>migrations/README.md</code>. Открытый хвост — <code>docs/todo.md</code>, одна строка P3.
+    Все 23 находки и их коммиты - история <code>migrations/</code> и <code>tools/migration-lint.mjs</code> (правила M034-M037, M039-M046). Источники практик: <code>migrations/AUTHORING.md</code>,
+    <code>migrations/README.md</code>. Открытый хвост — <code>docs/todo.md</code>, одна строка P3. Счёт манифестов, пунктов, <code>verify</code>, <code>restore</code>, <code>replaceWith</code> и переименований - по <code>migrations/*.json</code> на 2026-10-05.
   </p>
 </main>

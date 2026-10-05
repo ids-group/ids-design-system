@@ -220,6 +220,11 @@
   display: contents;
 }
 
+// Top level, not under .modal: ds-modal renders this wrapper inside ds-modal-card, whose .modal does not carry ds-modal's scope.
+.unslotted {
+  display: contents;
+}
+
 .modal-backdrop {
   --_modal-backdrop: var(--ds-modal-backdrop, var(--surface-scrim));
 

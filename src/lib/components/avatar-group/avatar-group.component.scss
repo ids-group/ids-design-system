@@ -17,6 +17,10 @@
       margin-left: 0;
     }
   }
+
+  & > ::ng-deep [data-avatar-group-hidden] {
+    display: none;
+  }
 }
 
 .avatar-overflow {

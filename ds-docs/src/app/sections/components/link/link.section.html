@@ -3,18 +3,13 @@
   eyebrow="Components"
   title="Link">
   <span lede>
-    Anchor styling via the <code class="t-mono-inline">.link</code> CSS class.
-    No Angular wrapper: apply it to any
+    The <code class="t-mono-inline">.link</code> CSS class, for any
     <code class="t-mono-inline">
       &lt;a&gt;
     </code> or
     <code class="t-mono-inline">
       &lt;button&gt;
-    </code>. Modifiers: quiet, inline, standalone (bold), plain (underlined
-    only on hover and focus) and the sizes <code>xs</code> · <code>sm</code> ·
-    <code>lg</code>. Recolour with <code>--ds-link-color</code>; hover and
-    active derive from it unless <code>--ds-link-color-hover</code> /
-    <code>--ds-link-color-active</code> are set.
+    </code>.
   </span>
 
   <h3
@@ -59,7 +54,9 @@
 
   <p class="block-desc t-s">
     Disable with <code>aria-disabled="true"</code>; a native
-    <code>disabled</code> gets no disabled styling.
+    <code>
+      disabled
+    </code> gets no disabled styling.
   </p>
 
   <h3
@@ -67,6 +64,23 @@
     class="block-title t-h4">
     Variants
   </h3>
+
+  <p class="block-desc t-s">
+    Modifiers: quiet, inline, standalone (bold), plain (underlined only on
+    hover and focus), sizes <code>xs</code> · <code>sm</code> ·
+    <code>
+      lg
+    </code>. Recolour with
+    <code>
+      --ds-link-color
+    </code>; hover and active derive from it unless
+    <code>
+      --ds-link-color-hover
+    </code> /
+    <code>
+      --ds-link-color-active
+    </code> are set.
+  </p>
 
   <div class="row">
     <a
@@ -119,9 +133,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Use <code class="t-mono-inline">.link.inline</code> when the anchor sits
-    inside body text: it inherits font weight and size from the paragraph.
-    For example, read the
+    <code class="t-mono-inline">
+      .link.inline
+    </code> inherits font weight and size inside body text. For example, read
+    the
     <a
       class="link inline"
       href="javascript:void(0)">
@@ -137,18 +152,15 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       ds-button
-    </code> warns
+    </code> warns against
     <code class="t-mono-inline">
       variant="text"
-    </code> off in favour of this
-    class, and an action that does not navigate must be a
+    </code> in favour of this class.
+    A non-navigating action must be a
     <code class="t-mono-inline">
       &lt;button&gt;
-    </code>, so <code>.link</code> resets the browser's button chrome
-    (padding, border, background, font). A
-    <code class="t-mono-inline">
-      &lt;button class="link"&gt;
-    </code> matches the anchor except
+    </code>; <code>.link</code> resets its chrome (padding, border,
+    background, font) and matches the anchor except
     <code class="t-mono-inline">
       display
     </code>, which stays

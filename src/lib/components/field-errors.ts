@@ -5,7 +5,6 @@ import {
   afterNextRender,
   computed,
   inject,
-  isDevMode,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -16,6 +15,7 @@ import {
   type ValidationErrors,
 } from '@angular/forms';
 import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
+import { reportDevWarning } from '@ids-group-ltd/ids-design-system/core';
 import type { FieldMessageState } from '@ids-group-ltd/ids-design-system/components/field-message';
 
 /**
@@ -303,8 +303,8 @@ function textFor(
       return text;
     }
   }
-  if (isDevMode()) {
-    console.warn(
+  if (typeof ngDevMode === 'undefined' || ngDevMode) {
+    reportDevWarning(
       `[ds-field] The control is invalid but no message could be resolved for ${errors
         .map((error) => `"${error.kind}"`)
         .join(

@@ -4,12 +4,7 @@
   title="Menu"
   [apiKeys]="['menu:MenuDividerComponent', 'menu:MenuItemComponent']">
   <span lede>
-    Inline list of actions for modals, popovers or any container with its own
-    surface. Each item is a full-width button with an optional leading
-    <code>icon</code>; project a custom graphic with the <code>icon</code>
-    attribute when no <code>IconName</code> fits. <code>error</code> marks a
-    destructive action, <code>quiet</code> mutes an item that stays
-    actionable, <code>disabled</code> blocks activation.
+    A list of actions for modals, popovers or any surfaced container.
   </span>
 
   <h3 class="block-title t-h4">
@@ -18,16 +13,16 @@
 
   <p class="block-desc t-s">
     A button opens the menu in a <code>ds-popover</code>. An item emits
-    <code>pressed</code> on click (not when disabled or when it opens a
-    submenu) and closes the overlay itself; click outside or press
-    <code>Esc</code> to dismiss.
+    <code>
+      pressed
+    </code> on click (unless disabled or opening a submenu) and
+    closes the overlay; click outside or <code>Esc</code> dismisses it.
   </p>
 
   <p class="block-desc t-s">
-    The menu is one Tab stop with roving focus: <kbd>ArrowUp</kbd> /
-    <kbd>ArrowDown</kbd> wrap, <kbd>Home</kbd> / <kbd>End</kbd> jump, and a
-    typed character moves to the next item starting with it. Disabled items
-    stay in the roving order.
+    One Tab stop with roving focus: <kbd>ArrowUp</kbd> / <kbd>ArrowDown</kbd>
+    wrap, <kbd>Home</kbd> / <kbd>End</kbd> jump, a typed character moves to the
+    next item starting with it. Disabled items stay in the roving order.
   </p>
 
   <div class="demo">
@@ -87,15 +82,14 @@
     <code class="t-mono-inline">
       description
     </code> adds a visible second line
-    under the label for a limitation the action carries ("will not be saved"),
-    unlike a hover-only
+    for a limitation ("will not be saved"), unlike hover-only
     <code class="t-mono-inline">
       [dsTooltip]
-    </code>. It is announced through
+    </code>. Announced via
     <code class="t-mono-inline">
       aria-describedby
-    </code>, not as part of the
-    item's name.
+    </code>, not in the item's
+    name.
   </p>
 
   <div class="showcase-grid">
@@ -135,12 +129,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Use <code class="t-mono-inline">ds-menu-divider</code> between item groups
-    to create visual sections. It renders a thin
     <code class="t-mono-inline">
-      role="separator"
-    </code> rule and is ignored by
-    keyboard navigation.
+      ds-menu-divider
+    </code> separates item groups
+    with a <code class="t-mono-inline">role="separator"</code> rule that
+    keyboard navigation skips.
   </p>
 
   <div class="showcase-grid">
@@ -180,14 +173,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    Pass a <code class="t-mono-inline">TemplateRef</code> to
-    <code class="t-mono-inline">
-      [submenu]
-    </code> on a
+    Pass a <code class="t-mono-inline">TemplateRef</code> to a
     <code class="t-mono-inline">
       ds-menu-item
-    </code>. The nested menu opens on
-    hover or <kbd>ArrowRight</kbd> and closes on <kbd>ArrowLeft</kbd> /
+    </code>'s
+    <code class="t-mono-inline">
+      [submenu]
+    </code>. It opens on hover or
+    <kbd>
+      ArrowRight
+    </kbd> and closes on <kbd>ArrowLeft</kbd> /
     <kbd>
       Escape
     </kbd>.
@@ -249,7 +244,7 @@
       </h3>
 
       <p class="block-desc t-s">
-        Four items with icons, the usual account-menu shape.
+        Each item is a full-width button.
       </p>
 
       <div class="stage">
@@ -281,10 +276,8 @@
       </h3>
 
       <p class="block-desc t-s">
-        Activation is blocked, but the item stays focusable (<code
-          class="t-mono-inline"
-          >aria-disabled</code
-        >), so a <code class="t-mono-inline">dsTooltip</code> can explain why.
+        Blocked but focusable (<code class="t-mono-inline">aria-disabled</code>)
+        so <code class="t-mono-inline">dsTooltip</code> can explain why.
       </p>
 
       <div class="stage">
@@ -357,7 +350,13 @@
       </h3>
 
       <p class="block-desc t-s">
-        Icons are optional.
+        <code>
+          icon
+        </code> is optional; when no
+        <code>
+          IconName
+        </code> fits, project a graphic with the <code>icon</code>
+        attribute.
       </p>
 
       <div class="stage">
@@ -384,8 +383,10 @@
 
   <p class="block-desc t-s">
     Tokens: <code>--ds-menu-*</code> (bg/border colour, min/max width, gap,
-    radius), <code>--ds-menu-item-*</code> (label, hover, error and quiet
-    colours, padding, font, description colour/size/max width, icon size,
-    radius) and <code>--ds-menu-divider-color/-spacing</code>.
+    radius), <code>--ds-menu-item-*</code> (label/hover/error/quiet colours,
+    padding, font, description colour/size/max width, icon size, radius),
+    <code>
+      --ds-menu-divider-color/-spacing
+    </code>.
   </p>
 </docs-section>
