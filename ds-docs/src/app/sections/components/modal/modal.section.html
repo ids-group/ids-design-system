@@ -14,6 +14,36 @@
     </code>; specimens show the card alone.
   </span>
 
+  <h3 class="block-title t-h4">
+    Slots
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [eyebrow]
+    </code>, <code class="t-mono-inline">[title-badge]</code>,
+    <code class="t-mono-inline">
+      [body]
+    </code>, <code class="t-mono-inline">[impact]</code> and
+    <code class="t-mono-inline">
+      [actions]
+    </code>. Content without a slot renders in the body after
+    <code class="t-mono-inline">
+      [body]
+    </code>. In dev mode the console asks for
+    <code class="t-mono-inline">
+      &lt;div body&gt;
+    </code>, and names an unknown slot such as
+    <code class="t-mono-inline">
+      &lt;div footer&gt;
+    </code>.
+  </p>
+
+  <pre class="t-mono-block"><code>&lt;ds-modal title="Unarchive program" [(open)]="open"&gt;
+  &lt;div body&gt;...&lt;/div&gt;
+  &lt;div actions&gt;...&lt;/div&gt;
+&lt;/ds-modal&gt;</code></pre>
+
   <h3
     data-claude-design
     class="block-title t-h4"
