@@ -89,7 +89,8 @@
         "extends ColumnSeriesComponent",
         "extends ModalComponent",
         "extends ModalCardComponent",
-        "extends DrawerComponent"
+        "extends DrawerComponent",
+        "bandPinY("
       ],
       "detect": [
         "extends AvatarGroupComponent",
@@ -97,26 +98,27 @@
         "extends ColumnSeriesComponent",
         "extends ModalComponent",
         "extends ModalCardComponent",
-        "extends DrawerComponent"
+        "extends DrawerComponent",
+        "bandPinY("
       ],
       "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
       "appliesWhen": "Only a class of yours that extends AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent or DrawerComponent. Template users of ds-avatar-group, ds-chart, dsColumnSeries, ds-modal, ds-modal-card and ds-drawer need nothing; subclassing a DS component is unsupported.",
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it (TS2415); only a rename does.",
       "restore": null,
-      "verify": "The app builds with no TS2415 or TS4114 against AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent or DrawerComponent.",
-      "note": "AvatarGroupComponent gained the private avatars; ChartComponent the protected highlightBand and tooltipGap and the private bandAt, hoveredCategory and pinRise; ColumnSeriesComponent the private pinYOf; ModalComponent, ModalCardComponent and DrawerComponent the private unslotted."
+      "verify": "The app builds with no TS2415 or TS4114 against AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent or DrawerComponent, and no TS2554 or TS2425 on bandPinY.",
+      "note": "AvatarGroupComponent gained the private avatars; ChartComponent the protected highlightBand and tooltipGap and the private bandAt, hoveredCategory and pinRise; ColumnSeriesComponent the private pinYOf; ModalComponent, ModalCardComponent and DrawerComponent the private unslotted. ChartComponent's protected bandPinY is now a computed signal read as bandPinY(), where it was a method taking the band."
     }
   ],
   "deleteList": [],
   "informational": [
     "--ds-topbar-crumb-text-color, --ds-topbar-crumb-hover-text-color, --ds-topbar-crumb-separator-icon-color, --ds-topbar-crumb-current-text-color, --ds-page-header-crumb-text-color and --ds-page-header-crumb-text-color-hover now recolour the projected ds-breadcrumbs, where they changed nothing; an app that set them sees those colours take effect.",
     "ds-bar-chart draws a row with a negative value as an empty track labelled with that value, where it drew a bar of the absolute value labelled 0.",
-    "ds-button with routerLink or href, disabled and a disabledReason keeps a Tab stop (tabindex 0, role link) so the reason is announced; without disabledReason a disabled link-button still takes tabindex -1.",
+    "ds-button with routerLink or href, disabled and a disabledReason keeps a Tab stop (tabindex 0, role link) so the reason is announced; without disabledReason a disabled link-button still takes tabindex -1; a disabled routerLink button carries role link with or without a reason.",
     "provideDsIcons calls merge: sibling calls and a lazy route's call add to the icons registered above them, a later call winning a shared name, where each call replaced the previous registry. DS_ICON_REGISTRY now reads the merged registry.",
     "ds-modal confirmed fires when a projected element carrying the new dsModalConfirm directive (ModalConfirmActionDirective) is pressed; before, nothing emitted it. A handler that emitted confirmed by hand keeps working.",
     {
-      "text": "ds-chart draws a held category's pin at the head of the reading its panel opens over instead of at the plot's foot (over a column too short to hold it, with the panel lifted over the disc), and paints its hover band (--ds-chart-hover-bg-color) under a pin only where the pointer is; ds-bar-chart draws a held bar's pin at the middle of the bar instead of its start.",
-      "verify": "pin a category in a composed ds-chart and a row in a ds-bar-chart, move the pointer off the plot, and confirm the pin sits right under the panel and no band stays tinted."
+      "text": "ds-chart, ds-column-chart and dsColumnSeries draw a held category's pin at the head of the reading its panel opens over instead of at the plot's foot (over a column too short to hold it, with the panel lifted over the disc), and paints its hover band (--ds-chart-hover-bg-color) under a pin only where the pointer is; ds-bar-chart draws a held bar's pin at the middle of the bar instead of its start; ds-line-chart, a line series in ds-chart and ds-scatter-chart draw a held marker's or point's pin 4px higher.",
+      "verify": "pin a category in a composed ds-chart and a row in a ds-bar-chart, move the pointer off the plot, and confirm the pin sits right under the panel and no band stays tinted; pin a marker in a ds-line-chart and confirm its disc sits 8px clear of the marker."
     },
     {
       "text": "ds-banner centres its icon on the capitals of the title and body instead of on their line boxes, and drops the title-to-body gap when there is no title, so a banner with no title and a body of more than one line is up to 4px shorter; every other banner keeps its height.",
