@@ -91,6 +91,20 @@ stops meaning anything.
 moment the evidence is known for certain. `avatar-tints.html` is the shape to copy: deck and
 implementation landed together in `63aa3954`.
 
+## A deck names the chat its answer goes back to
+
+A deck is answered later, opened from a listing, and the pick has to reach the chat that holds the
+work, its branch and its measurements. So every `open` deck says, in visible text, which chat to bring
+the answer to: one line under the `<h1>`, and the same name in the fixed bar beside the answer line.
+
+```html
+<p class="chat">Ответ нести в чат: «Acc2 · pp-review: ревью тикетов по очереди»</p>
+```
+
+The name is the chat title exactly as its tab shows it when the deck is written. The chat that writes
+the deck writes the line; a deck handed to another chat gets that chat's name. Decks written before
+this rule carry no line and are not back-filled.
+
 ## Moving a deck - validate, never trust the marker
 
 The marker is a claim, not proof. Before moving anything into `implemented/`, confirm it in this

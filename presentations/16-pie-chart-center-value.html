@@ -38,6 +38,8 @@
 body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, "Segoe UI", sans-serif; padding: 24px 16px 96px; }
 main { max-width: 1120px; margin: 0 auto; }
 h1 { font-size: 24px; margin: 0 0 8px; }
+.chat { margin: 0 0 8px; font-weight: 600; }
+.bar-chat { font-size: 13px; opacity: .8; }
 .lead { color: var(--muted); margin: 0 0 16px; max-width: 760px; }
 .variant { background: var(--surface); border: 2px solid var(--border); border-radius: 12px; padding: 14px 16px; margin: 0 0 16px; cursor: pointer; }
 .variant[aria-checked="true"] { border-color: var(--deck-accent); }
@@ -91,6 +93,7 @@ summary { cursor: pointer; }
 <body>
 <main>
   <h1>Число в центре кольца</h1>
+  <p class="chat">Ответ нести в чат: «Acc2 · pp-review: ревью тикетов по очереди»</p>
   <p class="lead">Кольца отрисованы с CSS из <code>ds-pie-chart</code> (Mulish 700 22px, дырка 0.61, как в ECM на Microsites &amp; CTA). Метка под каждым кольцом посчитана в браузере: число строк и вылезает ли число за дырку. Кликни вариант, чтобы выбрать.</p>
 
   <section class="variant" style="cursor:default">
@@ -113,7 +116,7 @@ summary { cursor: pointer; }
     <p>«1 строка / 2 строки»: число прямоугольников текста у значения. «Вылезает»: ширина числа больше диаметра дырки (размер × 0.61), то есть цифры заходят на цветное кольцо; ореол (text-shadow) сохраняет читаемость, но выглядит хуже. Блок центра в DS шире дырки: max(56%, дырка × 70%), поэтому до 56% число может стоять на кольце и сейчас.</p>
   </details>
 </main>
-<div class="bar"><code id="out">Вариант не выбран</code><button id="copy" type="button">Копировать</button></div>
+<div class="bar"><span class="bar-chat">чат «Acc2 · pp-review: ревью тикетов по очереди»</span><code id="out">Вариант не выбран</code><button id="copy" type="button">Копировать</button></div>
 
 <script>
 const SIZES = [110, 130, 160, 200];
