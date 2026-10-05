@@ -981,7 +981,7 @@ file** — the number moves; cite the filename.
 | 14 | `14-unread-tokens` | Which public tokens the library never reads to remove: none, the 51 dead component and pattern sizes, or all 121. | none |
 | 15 | `15-unasked-decisions` | Six Unreleased behaviour changes made without a choice: keep, adjust or revert each. | none |
 | 16 | `16-pie-chart-center-value` | How the pie chart keeps a wide centre value on one line: seven options, each drawn at four ring sizes. | the pie-chart centre-value P2 |
-| 17 | `17-unslotted-content` | How overlays stop dropping unslotted content: default slot, dev warning, default slot plus one naming, or docs only. | the unslotted-content Decision |
+| 17 | `17-unslotted-content` | How overlays stop dropping unslotted content: default slot, dev warning, default slot plus one naming, docs only, or all four together. | the unslotted-content Decision |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
