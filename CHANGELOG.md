@@ -12,7 +12,7 @@
 
 - **A chart's pin sits under its panel.** `ds-chart` drew the disc of a held category at the foot of
   the plot, far from its panel; it now sits at the head of the reading the panel
-  opens over, inside a column or just below a marker. `ds-bar-chart` draws it at the middle of the
+  opens over, 8px inside a column's top or 8px below a marker. `ds-bar-chart` draws it at the middle of the
   held bar, under its panel, rather than at the bar's start. `ChartComponent` gained the protected
   `highlightBand` and the private `bandAt` and `hoveredCategory`, so a subclass declaring one of
   those names must rename it.
