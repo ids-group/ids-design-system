@@ -11,7 +11,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 
 | # | Deck | Answering it unblocks |
 | --- | --- | --- |
-| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 7 asks a consumer waits on, then 28 decisions across six groups, every option drawn in its own card; answered asks sit under «Уже решено» |
+| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 7 asks a consumer waits on, then 29 decisions across six groups, every option drawn in its own card; answered asks sit under «Уже решено» |
 | 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
 | 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
 | 4 | `4-interaction-formula` | two pressed-state verdicts, both rendered and measured: the tonal button's pressed recipe and the danger menu item whose pressed equals its hover. The other three are answered and the `.ds-interactive` formula is deferred |
@@ -23,11 +23,12 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 10 | `10-docs-reasoning-blocks` | what ds-docs does with its ~38 reasoning blocks (fix proofs, edge-case guards, internals): keep, fold to the chapter end, move to a proof page, or delete - drawn on the real Table chapter |
 | 11 | `11-deerns-atlas-feedback` | the Deerns Atlas prototype feedback and its flicker-on-mount report, every claim checked against the uploaded bundle: eight drawn decisions (missing required input, Badge tone, Stat frame, Timeline spine, narrow Topbar, clipped SidenavItem label, Input in a narrow grid, Alert entrance on screen mount) and a build-extend-recipe-consumer call for each requested component; fifteen one-answer fixes listed |
 | 12 | `12-chart-motion` | how much motion the charts get: none, sync (line, labels, pin, grid and crosshair follow the columns), sync plus a response to every hover, or full with counting numbers - four live mini charts to hover, pin and re-feed |
+| 13 | `13-chart-motion-extras` | which of ten additions ship with the chosen full motion: axis answers the hover, pie centre shows the slice, legend collapses a series, heatmap crosshair, scatter nearest point, marker halo, skeleton crossfade, scatter and heatmap stagger, gliding keyboard focus, columns that move on sort - each live |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
 written in Russian; `deck.css`, which sits beside `ds.css` and carries the shell, is shared by ranks
-1, 4, 5 and 8-12 - ranks 2, 3, 6 and 7 render fully inline instead.
+1, 4, 5 and 8-13 - ranks 2, 3, 6 and 7 render fully inline instead.
 
 **`implemented/` is where the answers live, and it is worth reading.** A closed deck keeps every word
 of the argument — the next person to ask the same question reads it to find out what was already

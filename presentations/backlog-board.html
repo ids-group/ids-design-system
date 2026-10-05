@@ -1095,6 +1095,7 @@ that already existed, because both are the kind of ask that comes back.
   gridlines and the crosshair band snap; the tooltip glides 300ms past a band that jumps; no column,
   bar, slice, stage or cell answers a hover unless `dimOthers` is set; heatmap, scatter and pie bind
   no `animate.leave`. Options: none, sync, sync and response (recommended), full with counting numbers.
+  **Stas, 2026-10-05: full**, plus every extra drawn in deck `chart-motion-extras`; not built yet.
 
 - [ ] **[P3] Does the picker list height become a public token, or stay behind `panelClass`?** Drawn
   in deck `picker-list-height`. Two caps sit on one panel and the settable-looking one is not the
@@ -1146,7 +1147,7 @@ file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
 | --- | --- | --- | --- |
-| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 28 decisions in six, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 29 decisions in six, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 | 2 | `2-color-engine-derivation` | One source token per role, derived. | the colour-engine P3 |
 | 3 | `3-color-engine-relative` | The prototype half of the same question. | as above |
 | 4 | `4-interaction-formula` | The pressed recipe of the tonal button, and of the danger menu item. | the pressed-danger-menu P3 and the `.ds-interactive` P3 |
@@ -1158,6 +1159,7 @@ file** — the number moves; cite the filename.
 | 10 | `10-docs-reasoning-blocks` | What ds-docs does with its ~38 reasoning blocks: keep, fold to the chapter end, move to a proof page, or delete. | none - the Claude Design side is settled in `.design-sync/CARDS.md` |
 | 11 | `11-deerns-atlas-feedback` | Eight design calls and a per-component scope call raised by the Deerns Atlas prototype on the Claude Design bundle; fifteen one-answer fixes (inputs before first CD on React 18 for NG0950 and mount flicker, empty Tabs, `ds-x-*` alias vs tag selectors, `.link` on button, Tag nowrap, agent catalogue) are listed in the deck. | Deerns Atlas feedback |
 | 12 | `12-chart-motion` | How much motion the charts get: none, sync, sync and response, or full; each drawn as a live mini chart. | the chart-motion Decision |
+| 13 | `13-chart-motion-extras` | Which of ten motion and hover additions to build with the chosen full motion; all on by default, each one live. | the chart-motion Decision |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
