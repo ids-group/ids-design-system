@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**102 open — 0 P1, 4 P2, 98 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**101 open — 0 P1, 4 P2, 97 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 4
 
@@ -26,7 +26,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 98
+### P3 — 97
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -67,7 +67,6 @@ item and nothing else.
 - **The field system — the two controls outside it, and the five with no box to paint**
   - `ds-autocomplete`'s arrow keys walk a private copy of the list cursor
 - **Open verdicts, each drawn in a deck**
-  - Which public tokens the library never reads go?
   - Does the picker list height become a public token, or stay behind `panelClass`?
   - Do the date picker's first day of the week and the time picker's 12h/24h default from …
   - Should the `ds-breadcrumbs` hover colour derive from `--text-link`, like the `.link` helper?
@@ -879,13 +878,6 @@ that already existed, because both are the kind of ask that comes back.
 
 ## Open verdicts, each drawn in a deck
 
-- [ ] **[P3] Which public tokens the library never reads go?** Drawn in deck `unread-tokens`.
-  Measured 2026-10-02 (`var(--name` over `src/lib` and `ds-docs/src`): of 746 tokens in `styles/`
-  and `themes/`, 119 have no reader in the library - 51 sizes of components and patterns that do not
-  exist (`--cmdk-*`, `--wizard-*`, `--matrix-*`, `--calendar-*`, `--settings-*` and others, two of
-  them read only by ds-docs), and 68 scale, palette and role names. In pinkmoon, mm-ecm and mm-broker
-  the 51 have 0 readers; 12 of the 68 are read. Options: none, the 51 dead sizes, or all 119.
-
 - [ ] **[P3] Does the picker list height become a public token, or stay behind `panelClass`?** Drawn
   in deck `picker-list-height`. Two caps sit on one panel and the settable-looking one is not the
   one that governs the visible rows: `--ds-dropdown-panel-max-height` caps the box and is forwarded,
@@ -936,7 +928,7 @@ file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
 | --- | --- | --- | --- |
-| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 28 decisions in six, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 27 decisions in six, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 | 2 | `2-color-engine-derivation` | One source token per role, derived. | the colour-engine P3 |
 | 3 | `3-color-engine-relative` | The prototype half of the same question. | as above |
 | 4 | `4-interaction-formula` | The pressed recipe of the tonal button, and of the danger menu item. | the pressed-danger-menu P3 and the `.ds-interactive` P3 |
@@ -947,7 +939,6 @@ file** — the number moves; cite the filename.
 | 9 | `9-locale-week-and-hour` | Whether the date picker's first day of the week and the time picker's 12h/24h follow `DS_CONFIG.locale`: fixed as today, both, week only, or hours only, each drawn over six locales. | the locale-defaults Decision (plan-C, task 21) |
 | 10 | `10-docs-reasoning-blocks` | What ds-docs does with its ~38 reasoning blocks: keep, fold to the chapter end, move to a proof page, or delete. | none - the Claude Design side is settled in `.design-sync/CARDS.md` |
 | 11 | `11-deerns-atlas-feedback` | Eight design calls and a per-component scope call raised by the Deerns Atlas prototype on the Claude Design bundle; fifteen one-answer fixes (inputs before first CD on React 18 for NG0950 and mount flicker, empty Tabs, `ds-x-*` alias vs tag selectors, `.link` on button, Tag nowrap, agent catalogue) are listed in the deck. | Deerns Atlas feedback |
-| 12 | `12-unread-tokens` | Which public tokens the library never reads to remove: none, the 51 dead component and pattern sizes, or all 119. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

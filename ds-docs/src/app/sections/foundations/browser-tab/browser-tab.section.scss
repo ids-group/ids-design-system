@@ -28,7 +28,7 @@
         font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
         color: var(--text-secondary);
         min-width: 0;
-        max-width: var(--tab-spec-maxw);
+        max-width: 220px;
 
         &.is-active {
           background: var(--surface-default);
@@ -52,8 +52,8 @@
         &.alert::after {
           content: "";
           position: absolute;
-          top: calc(var(--tab-spec-dot-offset) * -1);
-          right: calc(var(--tab-spec-dot-offset) * -1);
+          top: calc(var(--border-width-strong) * -1);
+          right: calc(var(--border-width-strong) * -1);
           width: var(--space-2);
           height: var(--space-2);
           background: var(--error);

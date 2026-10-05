@@ -21,7 +21,8 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 - A disabled link-button with `disabledReason` keeps a Tab stop (`tabindex="0"`, `role="link"`).
 - `provideDsIcons` calls merge across injectors, a later call winning a shared name.
 - `tools/check-focus-rings.mjs` was already in the `lint` and `release` groups: no change.
-- Public tokens the library never reads: open, in deck `unread-tokens` and `docs/todo.md`.
+- 49 size tokens of components and patterns that do not exist left `styles/_tokens.scss`, and
+  `--tab-spec-*` became ds-docs values (deck `unread-tokens`); scale, palette and role names stay.
 - `ds-docs` charts left on their skeleton sat inside folded `<details>`: not a defect.
 
 ## A tightened template context is classified as actionable, and the cut gates it (2026-09-30)
