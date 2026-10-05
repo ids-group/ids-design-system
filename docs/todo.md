@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**104 open — 0 P1, 5 P2, 99 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**114 open — 0 P1, 5 P2, 109 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 5
 
@@ -28,7 +28,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 99
+### P3 — 109
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -46,6 +46,16 @@ item and nothing else.
   - Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24)
   - Pin more than one mark at a time (Stas, 2026-09-29)
   - Cut the prose in ds-docs (Stas, 2026-09-29: "слишком много и никто это не читает")
+  - Measure an IDS start from `ai-sdlc-prototype` against Vanya's from-scratch run (Stas
+  - Cut the tokens a consumer's agent spends finding its way in IDS (Stas, 2026-10-05)
+  - Agents and skills inside the DS repo for its own tasks (Stas, 2026-10-05)
+  - Split IDS into rules/design system and a UI kit? An idea to think through (Stas
+  - Fix what the Claude Design run surfaced (Stas, 2026-10-05)
+  - Collect concrete ideas from the live integration runs (Stas, 2026-10-05)
+  - Pass attributes through to the native elements (Vanya's AI deck, 2026-10-05)
+  - An accessible stepper (Vanya's AI deck, 2026-10-05)
+  - Hooks in toasts (Vanya's AI deck, 2026-10-05)
+  - Styles in cascade layers (Vanya's AI deck, 2026-10-05)
 - **Tooling**
   - No pixel comparison was run over the 2026-09-29/30 library comment sweep (recorded 2026-09-30)
   - `--picker-maxh` is an abbreviated token name (recorded 2026-09-24)
@@ -389,6 +399,46 @@ Each has somebody behind it. Nothing here is speculative work.
   files are `table` (5080), `line-chart` (2422), `charts` (2082), `tokens-reference` (1548) and
   `chart` (1504). Start with those. Re-measure with the same command, which pipes `find`, then
   `sed 's/<[^>]*>/ /g'`, then `wc -w`.
+
+- [ ] **[P3] Measure an IDS start from `ai-sdlc-prototype` against Vanya's from-scratch run (Stas,
+  2026-10-05).** Vanya did not use the starter: he repeated Fedya's case one to one, with the whole
+  setup handed to the AI from scratch, autonomously in one prompt (no fix iterations), following the
+  `REPLICATE.md` protocol in his project (machine labels pc1/pc2/pc3, stacks in the order vue,
+  angular, svelte, three repeats, detached long chains, a final comparison in `RESULTS.md` section
+  9). His code and prompt are in `itb-frontend-frameworks-pc2.zip` (from the chat). Once the starter
+  carries the fixes from Vanya's and Fedya's feedback, rerun the same protocol from
+  `ai-sdlc-prototype` and compare time and tokens; the expectation is a several-fold faster and
+  cheaper setup.
+- [ ] **[P3] Cut the tokens a consumer's agent spends finding its way in IDS (Stas, 2026-10-05).**
+  Stas is testing ways to give Claude a ready map of what lives where, what each part is for and how
+  to use it, so an integrating agent stops reading the library to orient itself. Overlaps the md
+  ARCHITECTURE item under "Agent-facing docs"; measure tokens per integration task before and after.
+- [ ] **[P3] Agents and skills inside the DS repo for its own tasks (Stas, 2026-10-05).**
+  Task-specific agents/skills shipped with the repo, so an outside agent does not explore the
+  library on its own time and tokens. Inventory the recurring consumer tasks first.
+- [ ] **[P3] Split IDS into rules/design system and a UI kit? An idea to think through (Stas,
+  2026-10-05).** No advantage found yet. Angles to weigh: a framework-neutral rules/tokens package
+  could serve the non-Angular stacks the live runs already use (vue, svelte) and Claude Design,
+  which reads rules rather than components; an agent integrating IDS could load only the layer it
+  needs, cutting tokens; the two could version separately (a token change without a component
+  release). Against: two packages to publish and keep in step, and a consumer that wants everything
+  installs two. Settle what each consumer actually reads before deciding.
+- [ ] **[P3] Fix what the Claude Design run surfaced (Stas, 2026-10-05).** IDS worked well in Claude
+  Design; the lessons and review generated from its misses are being fixed now and feed the next
+  upload. Link the lesson list here when it lands.
+- [ ] **[P3] Collect concrete ideas from the live integration runs (Stas, 2026-10-05).** Vanya's
+  docs and the live runs are useful input; ask the team for specific proposals and brainstorm them
+  together.
+- [ ] **[P3] Pass attributes through to the native elements (Vanya's AI deck, 2026-10-05).** From
+  the last slide of the deck in the dev chat: attributes set on an IDS component should reach the
+  native element it wraps. Think through which components and which attributes first.
+- [ ] **[P3] An accessible stepper (Vanya's AI deck, 2026-10-05).** Same slide: the stepper needs
+  accessibility work. Audit `ds-stepper` (roles, current step, keyboard) before choosing the fix.
+- [ ] **[P3] Hooks in toasts (Vanya's AI deck, 2026-10-05).** Same slide: consumers want hooks into
+  the toast (custom content or lifecycle callbacks). Find out which hook his run reached for.
+- [ ] **[P3] Styles in cascade layers (Vanya's AI deck, 2026-10-05).** Same slide: ship the library
+  CSS inside `@layer` so a consumer's styles win without specificity fights. Weigh the effect on
+  existing consumers' overrides.
 
 ## Tooling
 
