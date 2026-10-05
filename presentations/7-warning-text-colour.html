@@ -122,8 +122,9 @@
 
   <h2>Что не проходит</h2>
   <p>
-    <code>_status.scss</code> ставит <code>--warning-text</code> на <code>--warning-subtitle</code> —
-    <code>#8A7400</code> на <code>#FFFBEA</code>. Это <strong>4.42:1</strong>, порог AA для обычного
+    <code>ds-alert</code>, <code>ds-banner</code> и <code>ds-sidenav-footer</code> в варнинге ставят
+    <code>--warning-text</code> на <code>--warning-subtitle</code>, так же их сводит opt-in
+    <code>semantic-preset</code> из <code>_status.scss</code> - <code>#8A7400</code> на <code>#FFFBEA</code>. Это <strong>4.42:1</strong>, порог AA для обычного
     текста 4.5. Единственная статусная пара, которая падает: ошибка даёт 5.92, успех 6.42, primary 6.16.
   </p>
   <p>
@@ -148,10 +149,10 @@
   <div class="grid">
     <div class="swatch">
       <span class="num">1</span>
-      <span class="big" style="color: #1F2933">Внимание</span>
-      <span class="line" style="color: #1F2933">Срок действия полиса истекает через 14 дней</span>
-      <span class="small" style="color: #1F2933">Мелкая подпись, 13px</span>
-      <div class="meta"><span><code>#1F2933</code> основной текст</span><span class="ratio">14.22:1</span><span class="pass">AA</span></div>
+      <span class="big" style="color: #161A28">Внимание</span>
+      <span class="line" style="color: #161A28">Срок действия полиса истекает через 14 дней</span>
+      <span class="small" style="color: #161A28">Мелкая подпись, 13px</span>
+      <div class="meta"><span><code>#161A28</code> основной текст</span><span class="ratio">16.69:1</span><span class="pass">AA</span></div>
     </div>
 
     <div class="swatch">
@@ -180,12 +181,13 @@
   </div>
 
   <div class="note">
-    <strong>Что выбор не закрывает.</strong> <code>--warning-text</code> читают одиннадцать мест —
+    <strong>Что выбор не закрывает.</strong> <code>--warning-text</code> читают шестнадцать мест -
     <code>ds-alert</code>, <code>ds-banner</code> (два), <code>ds-button</code>, <code>ds-checkbox</code>
     (два), <code>ds-field-message</code>, <code>ds-icon-button</code>, <code>ds-modal</code> (два),
-    <code>ds-radio-group</code>, <code>ds-sidenav-footer</code> и <code>_field-state.scss</code>. Не
-    каждое ставит его на <code>--warning-subtitle</code>; замерена пара из <code>_status.scss</code>,
-    остальные сайты нужно мерить отдельно, прежде чем называть их сломанными.
+    <code>ds-radio-group</code>, <code>ds-sidenav-footer</code>, <code>_field-state.scss</code> и
+    <code>_focus.scss</code> (три). На <code>--warning-subtitle</code> его ставят <code>ds-alert</code>,
+    <code>ds-banner</code> и <code>ds-sidenav-footer</code> - это та же пара, 4.42:1; остальные сайты
+    нужно мерить отдельно, прежде чем называть их сломанными.
   </div>
 
   <div class="note">
@@ -199,6 +201,11 @@
     <li>Назови номер: <strong>1</strong>, <strong>2</strong>, <strong>3</strong> или
       <strong>4</strong>.</li>
   </ul>
+
+  <p class="lede">Сверено с кодом 2026-10-05: <code>--warning-text</code> = <code>--yellow-700</code>
+    (<code>themes/_semantic.scss:131</code>), <code>--warning-subtitle</code> = <code>--yellow-50</code>
+    (<code>:127</code>), <code>--text-primary</code> = <code>--neutral-900</code> = <code>#161A28</code>; отношения
+    посчитаны по формуле WCAG из этих значений. 4.42:1 в браузере - замер 2026-08-27.</p>
 
 </div>
 </body>
