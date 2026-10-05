@@ -875,6 +875,7 @@
   --switch-track-h: 20px;
   --switch-thumb-size: 16px;
   --switch-thumb-pad: 2px;
+  --switch-thumb-travel: 16px; /* track-w - thumb - 2*pad */
   --slider-track-h: 4px;
   --slider-thumb-size: 18px;
   --slider-thumb-border-width: var(--border-width-strong);
@@ -888,6 +889,7 @@
   --tag-pad-x: 10px;
   --tag-pad-x-close: 6px;
   --tag-gap: var(--space-1-5);
+  --tag-close-size: 14px;
   --tag-close-pad: 2px;
   --avatar-xs: 20px;
   --avatar-sm: 24px;
@@ -923,6 +925,8 @@
   --field-h-sm: var(--hit-min);
   --field-h-md: var(--hit-cozy);
   --field-h-lg: var(--hit-touch);
+  --field-textarea-min: 96px;
+  --field-num-stepper-w: var(--space-8);
   --otp-cell-w: var(--space-12);
   --otp-cell-h: var(--space-14);
   --otp-gap: var(--space-2);
@@ -940,9 +944,12 @@
   --sidenav-collapsed-glyph: var(--icon-lg); /* must match the icon size the item template renders */
   --sidenav-section-pad-b: var(--space-1-5);
   --sidenav-item-rail-width: 3px;
+  --form-section-label-w: 280px;
+  --page-header-sub-mt: var(--space-1);
   --bottom-sheet-handle-w: 36px;
   --bottom-sheet-handle-h: 4px;
   --field-textarea-rows-min: 60px;
+  --field-select-pad-r: var(--space-6);
   --field-affix-overlap: var(--border-width-default);
   --btn-group-overlap: calc(var(--border-width-default) * -1);
   --btn-link-uloff: 3px;
@@ -952,7 +959,11 @@
   --sort-ic-size: var(--icon-xs);
   --sort-ic-gap: var(--space-1-5);
   --sort-ic-opacity-idle: 0.4;
+  /* The literal svg inside .tag .x, not the button box (--tag-close-size). */
+  --tag-close-glyph: var(--icon-xs);
   --bulk-bar-offset: var(--space-4);
+  --menu-minw: 200px;
+  --menu-sep-h: var(--border-width-default);
   --list-item-pad-y: var(--space-3);
   --list-item-pad-x: var(--space-4);
   --list-item-gap: var(--space-3);
@@ -965,24 +976,65 @@
   --toast-minw: 320px;
   --toast-maxw: 480px;
   --toast-bar-w: 3px;
+  --toast-enter-y: var(--space-1);
   --banner-bar-w: 4px;
   --empty-icon-size: var(--space-16);
   --empty-body-maxw: 360px;
+  --picker-offset: var(--space-1);
   --picker-maxh: 280px;
+  --cmdk-w: 560px;
+  --cmdk-list-maxh: var(--popover-maxh); /* alias, keeps cmdk and popover in step */
   --date-picker-w: 280px;
   --date-picker-cell-gap: var(--space-0-5);
   --date-picker-nav-size: var(--hit-xs);
   --modal-close-size: var(--hit-xs);
+  --modal-enter-y: var(--space-2);
+  --errorpage-body-maxw: 520px;
+  --wizard-body-minh: 200px;
+  --wizard-step-bar-w: var(--space-8);
+  --inline-edit-input-minw: var(--space-20);
+  --inline-edit-btn-size: var(--hit-xs);
+  --settings-nav-w: 220px;
+  --settings-row-label-w: 240px;
+  --settings-row-label-gap: var(--space-0-5);
+  --matrix-maxh: 360px; /* same look as --popover-maxh, deliberately not an alias */
+  --matrix-cell-pad-y: var(--space-2);
+  --matrix-cell-pad-x: var(--space-2-5);
+  --matrix-cell-minw: var(--space-16);
+  --matrix-rowhdr-minw: 160px;
+  --calendar-rowlabel-w: 160px;
+  --calendar-row-h: var(--hit-touch);
+  --calendar-cell-min: var(--hit-cozy);
+  --calendar-cell-pad: var(--space-1);
+  --calendar-bar-h: var(--space-8);
+  --calendar-bar-inset-y: var(--space-2);
   --timeline-node-size: var(--hit-sm);
   --timeline-spine-w: var(--border-width-strong);
   --timeline-gap: var(--space-5);
   --tree-indent: var(--space-5);
   --tree-row-pad-y: var(--space-1-5);
   --tree-row-pad-x: var(--space-3);
+  --binpack-bay-h: var(--hit-touch);
+  --map-chip-pad-y: var(--space-1-5);
+  --map-chip-pad-x: var(--space-2-5);
+  --map-chip-inset: var(--space-3);
   --kbd-pad-y: var(--space-0-5);
   --kbd-pad-x: var(--space-1-5);
+  --chart-empty-h: 160px;
+  --chart-skeleton-h: 160px;
+  --chart-legend-dot: var(--icon-2xs);
+  --compare-dt-w: 90px;
+  --dodont-stage-minh: 100px;
+  --statemap-arrow-w: var(--space-8);
+  --statemap-arrow-cap: var(--space-1);
+  --grid-table-min: 220px;
+  --grid-cols-card-minh: 120px;
+  --grid-cols-card-thumb: 80px;
   --dl-spec-label-w: 120px;
   --dl-spec-value-min-w: 14rem;
+  --scroll-spec-h: 220px;
+  --tab-spec-maxw: 220px;
+  --tab-spec-dot-offset: var(--border-width-strong); /* negated at the use site */
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1013,6 +1065,7 @@
   --switch-track-w: 24px;
   --switch-track-h: 14px;
   --switch-thumb-size: 10px;
+  --switch-thumb-travel: 10px;
   --avatar-md: 20px;
   --badge-dot-size: 4px;
   --status-dot-size: 5px;
@@ -1033,6 +1086,7 @@
   --switch-track-w: 30px;
   --switch-track-h: 16px;
   --switch-thumb-size: 12px;
+  --switch-thumb-travel: 14px;
   --avatar-md: 24px;
   --badge-dot-size: 5px;
   --status-dot-size: 6px;
@@ -1050,6 +1104,7 @@
   --switch-track-w: 44px;
   --switch-track-h: 24px;
   --switch-thumb-size: 20px;
+  --switch-thumb-travel: 20px;
   --avatar-md: 36px;
   --badge-dot-size: 8px;
   --status-dot-size: 10px;
@@ -1117,7 +1172,7 @@
   /* BACKGROUND: the frame and every knockout between marks. Read where it is used: a token deriving
      from it on :root would ignore one set on a single chart. */
   --chart-bg-color: var(--surface-default);
-  /* FRAME: inside a card use frame="none" / DS_CONFIG.chart.frame; these tokens size the frame when it is on. */
+  /* FRAME: inside a card, drop it with --ds-chart-frame-border-width: 0 and --ds-chart-frame-padding: 0. */
   --chart-frame-border-color: var(--border-default);
   --chart-frame-border-width: var(--border-width-default);
   --chart-frame-radius: var(--radius-lg);
