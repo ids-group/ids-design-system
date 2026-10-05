@@ -207,7 +207,9 @@
     "ds-button overlay-trigger inputs (ariaHasPopup/ariaExpanded/buttonRef); date-picker month/year grid pickers; table pagination/clientSort/stickyFirstColumn; ModalService.confirm(); dropzone per-file message + queued state — additive.",
     "$bp-* Sass breakpoint aliases + up()/down() mixins; new disabled-state and press-scale override tokens — additive (a-la-carte styles/tokens importers also need styles/breakpoints now).",
     "Visual-only: button/icon-button press is darken + micro scale-down; [disabled] is a per-variant muted tint (override --ds-*-disabled tokens to restore flat grey); smooth motion pass across components; reduced-motion no longer freezes spinners; overlay scroll-lock release fix.",
-    "A collapsed ds-accordion item now collapses to nothing, where its padding stayed behind on the clipped wrapper and left a strip of empty height; the padding is restored when the item expands. If you zeroed that padding to hide the strip, the item will now be flat when open. NO ACTION otherwise."
+    "A collapsed ds-accordion item now collapses to nothing, where its padding stayed behind on the clipped wrapper and left a strip of empty height; the padding is restored when the item expands. If you zeroed that padding to hide the strip, the item will now be flat when open. NO ACTION otherwise.",
+    "ds-input and ds-search draw the clear button at full contrast while the field is blurred, where it showed only on focus.",
+    "ds-combobox truncates a long option label with an ellipsis instead of wrapping it in a narrow panel, and its multi-select option row fills the panel width."
   ],
   "deleteList": []
 }

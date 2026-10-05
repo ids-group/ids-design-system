@@ -5,20 +5,44 @@
   [apiKeys]="['modal:ModalCardComponent']"
   [serviceKeys]="['BodyScrollLockService']">
   <span lede>
-    Centered dialog over a scrim: five sizes (<code>sm</code> ·
-    <code>
-      md
-    </code> · <code>lg</code> · <code>xl</code> ·
-    <code>
-      fullscreen
-    </code>), a <code>status</code> for severity.
+    Centered dialog over a scrim.
     <code>
       ds-modal
-    </code> is the overlay around a
+    </code> wraps a
     <code>
       ds-modal-card
-    </code>; the specimens show the card alone.
+    </code>; specimens show the card alone.
   </span>
+
+  <h3 class="block-title t-h4">
+    Slots
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [eyebrow]
+    </code>, <code class="t-mono-inline">[title-badge]</code>,
+    <code class="t-mono-inline">
+      [body]
+    </code>, <code class="t-mono-inline">[impact]</code> and
+    <code class="t-mono-inline">
+      [actions]
+    </code>. Content without a slot renders in the body after
+    <code class="t-mono-inline">
+      [body]
+    </code>. In dev mode the console asks for
+    <code class="t-mono-inline">
+      &lt;div body&gt;
+    </code>, and names an unknown slot such as
+    <code class="t-mono-inline">
+      &lt;div footer&gt;
+    </code>.
+  </p>
+
+  <pre class="t-mono-block"><code>&lt;ds-modal title="Unarchive program" [(open)]="open"&gt;
+  &lt;div body&gt;...&lt;/div&gt;
+  &lt;div actions&gt;...&lt;/div&gt;
+&lt;/ds-modal&gt;</code></pre>
 
   <h3
     data-claude-design
@@ -31,7 +55,7 @@
     <code class="t-mono-inline">
       [eyebrow]
     </code> names the record acted on;
-    empty, it renders nothing. Uppercase, tracked; tune with
+    empty renders nothing. Tune with
     <code class="t-mono-inline">
       --ds-modal-eyebrow-*
     </code>.
@@ -81,18 +105,19 @@
   </h3>
 
   <p class="block-desc t-s">
-    A chip goes in
+    Chip in
     <code class="t-mono-inline">
       [title-badge]
     </code>,
     <code class="t-mono-inline">
       subtitle
-    </code> sits below. The accessible
-    name is the <code class="t-mono-inline">title</code> string only, never
-    in
+    </code> below. Only
+    <code class="t-mono-inline">
+      title
+    </code> enters
     <code class="t-mono-inline">
       aria-labelledby
-    </code>. As in
+    </code>, as in
     <code class="t-mono-inline">
       ds-page-header
     </code>.
@@ -146,8 +171,8 @@
     </code> takes
     <code class="t-mono-inline">
       DsStatus
-    </code>: icon-badge tint, title colour,
-    default icon (severity beyond colour) and role:
+    </code> and sets icon-badge tint, title colour,
+    default icon and role:
     <code class="t-mono-inline">
       error
     </code> and
@@ -311,8 +336,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Labels never wrap. A row that fits is right-aligned; one that does not
-    stacks full-width in DOM order, confirm at the bottom.
+    Labels never wrap. A row that does not fit stacks full-width in DOM
+    order, confirm at the bottom.
     <code>
       --ds-modal-actions-stacked-direction: column-reverse
     </code> puts
@@ -602,11 +627,11 @@
     </code> on a button fires
     <code class="t-mono-inline">
       (confirmed)
-    </code> on press, not while disabled
-    or loading; the modal stays open until you close it. On a plain element:
+    </code> on press, unless disabled
+    or loading; the modal stays open. On a plain element:
     <code class="t-mono-inline">
       click
-    </code>, skipping
+    </code>, unless
     <code class="t-mono-inline">
       aria-disabled="true"
     </code>.
@@ -698,14 +723,14 @@
     </kbd>; only a close button or
     <code>
       open.set(false)
-    </code> dismisses (wizards, save-required flows).
+    </code> dismisses.
     <code>
       [closeOnBackdrop]="false"
     </code> disables only the backdrop.
   </p>
 
   <p class="block-desc t-s">
-    Backdrop dismissal needs press and release on it, so a drag ending
+    Backdrop dismissal needs press and release on it; a drag ending
     outside never closes (as in
     <code class="t-mono-inline">
       ds-bottom-sheet
@@ -885,10 +910,6 @@
     data-for="modal-card">
     With form
   </h3>
-
-  <p class="block-desc t-s">
-    Inputs and a select in the body.
-  </p>
 
   <div class="modal-grid is-1">
     <div class="state-cell">

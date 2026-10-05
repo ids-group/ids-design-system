@@ -6,7 +6,10 @@ import {
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_CONFIG,
+  addDevWarningSink,
+} from '@ids-group-ltd/ids-design-system/core';
 import { ToastRegionComponent } from './toast-region.component';
 import { DS_TOAST_POSITION_DEFAULT } from './toast.config';
 import type {
@@ -22,6 +25,7 @@ const SETTLED_ERROR_MS = 6000;
 
 // Must outlast the loop that fires a burst.
 const ANNOUNCE_COALESCE_MS = 120;
+const DEV_WARNING_MS = 10000;
 
 @Injectable({ providedIn: 'root' })
 export class ToastService {
@@ -37,6 +41,22 @@ export class ToastService {
   private scrimWatcher: MutationObserver | null = null;
 
   constructor() {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      if (this.toastConfig?.mirrorDevWarnings ?? true) {
+        // Deferred: a warning raised inside an effect or a render hook must not build the toast region there.
+        const unregister = addDevWarningSink((message) =>
+          setTimeout(() =>
+            this.show({
+              title: 'Dev warning',
+              body: message,
+              variant: 'warning',
+              durationMs: DEV_WARNING_MS,
+            }),
+          ),
+        );
+        inject(DestroyRef).onDestroy(unregister);
+      }
+    }
     inject(DestroyRef).onDestroy(() => {
       clearTimeout(this.announceTimer);
       this.scrimWatcher?.disconnect();

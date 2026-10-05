@@ -4,19 +4,23 @@
   title="Page header">
   <span lede>
     Top of every page: title, optional <code>subtitle</code>, actions, optional
-    bottom tabs. Renders a <code>&lt;header&gt;</code> with the title as the
-    page's <code>&lt;h1&gt;</code>; do not add another <code>h1</code>. For the
-    surrounding composition see the Page header pattern.
+    bottom tabs.
   </span>
 
   <p class="block-desc t-s">
-    Title, subtitle and breadcrumb segments truncate to one line. One status
-    badge per header; past two ghost actions and one primary, use an overflow
-    menu. Host class <code>eyebrow-secondary</code> colours the eyebrow
+    Renders a <code>&lt;header&gt;</code> with the title as the page's <code>&lt;h1&gt;</code>;
+    add no other. Title, subtitle and breadcrumb
+    segments truncate to one line. One status badge per header; past two ghost
+    actions and one primary, use an overflow menu.
+  </p>
+
+  <p class="block-desc t-s">
+    Host class <code>eyebrow-secondary</code> colours the eyebrow
     <code>
       --secondary-strong
     </code>; <code>--ds-page-header-*</code> retunes
-    colours, divider, title/subtitle font size and title gap.
+    colours, divider, title/subtitle font size and title gap. Composition: see
+    the Page header pattern.
   </p>
 
   <h3
@@ -24,10 +28,6 @@
     class="block-title t-h4">
     Default
   </h3>
-
-  <p class="block-desc t-s">
-    Title, subtitle, actions, bottom tabs.
-  </p>
 
   <div class="stage">
     <ds-page-header
@@ -130,8 +130,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Breadcrumbs, eyebrow, title, subtitle, a <code>[meta]</code> row, a primary
-    action. <code>[metaDivider]="true"</code> draws a rule above the meta row.
+    Adds breadcrumbs, an eyebrow and a <code>[meta]</code> row;
+    <code>
+      [metaDivider]="true"
+    </code> draws a rule above the meta row.
   </p>
 
   <div class="stage">
@@ -212,9 +214,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [divider]="true"
-    </code> (off by default) rules off the
-    header from the content; dropped when tabs are projected, which bring their
-    own.
+    </code> (off by default) rules the header
+    off from content; dropped when projected tabs bring their own.
   </p>
 
   <div class="stage">

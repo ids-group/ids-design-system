@@ -38,27 +38,75 @@
       "restore": null
     },
     {
+      "id": "overlay-unslotted-content-renders",
+      "kind": "behavior",
+      "old": "ds-modal, ds-modal-card, ds-drawer",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "<ds-modal",
+        "<ds-modal-card",
+        "<ds-drawer"
+      ],
+      "action": "None, unless one of these overlays projects content that was meant to stay hidden: put it behind an @if or take it out of the overlay. Move any other content without a slot into its slot (<div body> on ds-modal and ds-modal-card, <div drawer-body> on ds-drawer) to clear the dev-mode warning.",
+      "appliesWhen": "Direct children of ds-modal or ds-modal-card without [eyebrow], [title-badge], [body], [impact] or [actions], and of ds-drawer without [drawer-body], [body], [drawer-footer] or [actions]; a ds-drawer child carrying [body] or [actions] now renders too. Slotted content renders as before; ds-bottom-sheet is not affected.",
+      "pitfall": "The content shows in production as well, and the console warning is the only signal, so an app that is never run in dev mode shows it with no warning.",
+      "restore": null,
+      "verify": "With the app in dev mode, open every ds-modal and ds-drawer and confirm the console logs no [ds-modal], [ds-modal-card] or [ds-drawer] warning about content without a slot or an unknown slot."
+    },
+    {
+      "id": "toast-mirrors-dev-warnings",
+      "kind": "behavior",
+      "old": "ToastService",
+      "new": null,
+      "surface": "config",
+      "searchHints": [
+        "ToastService",
+        "provideDsConfig",
+        "toast:"
+      ],
+      "detect": [
+        "inject(ToastService)",
+        "toast: {",
+        "toBeVisible()",
+        "toHaveScreenshot("
+      ],
+      "action": "None, unless tests or screenshots run against a dev build and a toast in view breaks them: set provideDsConfig({ toast: { mirrorDevWarnings: false } }) in that build.",
+      "appliesWhen": "Apps that inject ToastService, in dev mode only. A production build, and an app that never injects ToastService, shows no such toast.",
+      "pitfall": "The toasts appear only when a library warning fires, so a test suite can pass on one screen and fail on the next one that warns.",
+      "restore": "provideDsConfig({ toast: { mirrorDevWarnings: false } })",
+      "verify": "In a dev build with ToastService injected, a library warning in the console is matched by one warning toast titled Dev warning, and with mirrorDevWarnings: false by none."
+    },
+    {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "AvatarGroupComponent, ChartComponent, ColumnSeriesComponent",
+      "old": "AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent, DrawerComponent",
       "new": null,
       "surface": "typescript",
       "searchHints": [
         "extends AvatarGroupComponent",
         "extends ChartComponent",
-        "extends ColumnSeriesComponent"
+        "extends ColumnSeriesComponent",
+        "extends ModalComponent",
+        "extends ModalCardComponent",
+        "extends DrawerComponent",
+        "bandPinY("
       ],
       "detect": [
         "extends AvatarGroupComponent",
         "extends ChartComponent",
-        "extends ColumnSeriesComponent"
+        "extends ColumnSeriesComponent",
+        "extends ModalComponent",
+        "extends ModalCardComponent",
+        "extends DrawerComponent",
+        "bandPinY("
       ],
       "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
-      "appliesWhen": "Only a class of yours that extends AvatarGroupComponent, ChartComponent or ColumnSeriesComponent. Template users of ds-avatar-group, ds-chart and dsColumnSeries need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent or DrawerComponent. Template users of ds-avatar-group, ds-chart, dsColumnSeries, ds-modal, ds-modal-card and ds-drawer need nothing; subclassing a DS component is unsupported.",
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it (TS2415); only a rename does.",
       "restore": null,
-      "verify": "The app builds with no TS2415 or TS4114 against AvatarGroupComponent, ChartComponent or ColumnSeriesComponent.",
-      "note": "AvatarGroupComponent gained the private avatars; ChartComponent the protected highlightBand and tooltipGap and the private bandAt, hoveredCategory and pinRise; ColumnSeriesComponent the private pinYOf."
+      "verify": "The app builds with no TS2415 or TS4114 against AvatarGroupComponent, ChartComponent, ColumnSeriesComponent, ModalComponent, ModalCardComponent or DrawerComponent, and no TS2554 or TS2425 on bandPinY.",
+      "note": "AvatarGroupComponent gained the private avatars; ChartComponent the protected highlightBand and tooltipGap and the private bandAt, hoveredCategory and pinRise; ColumnSeriesComponent the private pinYOf; ModalComponent, ModalCardComponent and DrawerComponent the private unslotted. ChartComponent's protected bandPinY is now a computed signal read as bandPinY(), where it was a method taking the band."
     }
   ],
   "deleteList": [],
@@ -69,12 +117,21 @@
     },
     "--ds-topbar-crumb-text-color, --ds-topbar-crumb-hover-text-color, --ds-topbar-crumb-separator-icon-color, --ds-topbar-crumb-current-text-color, --ds-page-header-crumb-text-color and --ds-page-header-crumb-text-color-hover now recolour the projected ds-breadcrumbs, where they changed nothing; an app that set them sees those colours take effect.",
     "ds-bar-chart draws a row with a negative value as an empty track labelled with that value, where it drew a bar of the absolute value labelled 0.",
-    "ds-button with routerLink or href, disabled and a disabledReason keeps a Tab stop (tabindex 0, role link) so the reason is announced; without disabledReason a disabled link-button still takes tabindex -1.",
+    "ds-button with routerLink or href, disabled and a disabledReason keeps a Tab stop (tabindex 0, role link) so the reason is announced; without disabledReason a disabled link-button still takes tabindex -1; a disabled routerLink button carries role link with or without a reason.",
     "provideDsIcons calls merge: sibling calls and a lazy route's call add to the icons registered above them, a later call winning a shared name, where each call replaced the previous registry. DS_ICON_REGISTRY now reads the merged registry.",
     "ds-modal confirmed fires when a projected element carrying the new dsModalConfirm directive (ModalConfirmActionDirective) is pressed; before, nothing emitted it. A handler that emitted confirmed by hand keeps working.",
     {
-      "text": "ds-chart draws a held category's pin at the head of the reading its panel opens over instead of at the plot's foot (over a column too short to hold it, with the panel lifted over the disc), and paints its hover band (--ds-chart-hover-bg-color) under a pin only where the pointer is; ds-bar-chart draws a held bar's pin at the middle of the bar instead of its start.",
-      "verify": "pin a category in a composed ds-chart and a row in a ds-bar-chart, move the pointer off the plot, and confirm the pin sits right under the panel and no band stays tinted."
-    }
+      "text": "ds-chart, ds-column-chart and dsColumnSeries draw a held category's pin at the head of the reading its panel opens over instead of at the plot's foot (over a column too short to hold it, with the panel lifted over the disc), and paints its hover band (--ds-chart-hover-bg-color) under a pin only where the pointer is; ds-bar-chart draws a held bar's pin at the middle of the bar instead of its start; ds-line-chart, a line series in ds-chart and ds-scatter-chart draw a held marker's or point's pin 4px higher.",
+      "verify": "pin a category in a composed ds-chart and a row in a ds-bar-chart, move the pointer off the plot, and confirm the pin sits right under the panel and no band stays tinted; pin a marker in a ds-line-chart and confirm its disc sits 8px clear of the marker."
+    },
+    {
+      "text": "ds-banner centres its icon on the capitals of the title and body instead of on their line boxes, and drops the title-to-body gap when there is no title, so a banner with no title and a body of more than one line is up to 4px shorter; every other banner keeps its height.",
+      "verify": "open a compact and a regular ds-banner with body text and no title, and confirm the icon's middle sits level with the middle of the capital letters, not above them."
+    },
+    {
+      "text": "ds-modal, ds-modal-card and ds-drawer render content without a slot inside a display: contents wrapper placed after the [body] / [drawer-body] content; slotted content keeps its place and spacing.",
+      "verify": "open a ds-modal and a ds-drawer whose content is all slotted and confirm the body spacing and scrolling are unchanged."
+    },
+    "A library dev warning logs once per page instead of once per instance; the ds-table export warning now starts with [ds-table], and the ds-app-layout --bp-lg message is logged with console.warn instead of console.error."
   ]
 }

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Нажатое состояние: тон и danger</title>
 <meta name="ds-deck-status" content="open">
-<meta name="ds-deck-evidence" content="src/lib/components/button/button.component.scss:249 - tonal pressed; src/lib/components/menu/menu-item.component.scss:78,101 - danger item pressed; no interaction partial exists in src/lib/styles">
+<meta name="ds-deck-evidence" content="src/lib/components/button/button.component.scss:214 - tonal pressed; src/lib/components/menu/menu-item.component.scss:68,87 - danger item pressed; no interaction partial exists in src/lib/styles">
 <link rel="stylesheet" href="ds.css">
 <link rel="stylesheet" href="deck.css">
 <style>
@@ -44,21 +44,21 @@
   .row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
   .row > .name { width: 64px; flex: none; font: var(--font-weight-semibold) var(--font-size-2xs) / 1.3 var(--font-sans); color: var(--text-tertiary); }
 
-  /* ds-button tonal: rest --_family-muted, hover --_family-muted-strong (button.component.scss:245-249). */
+  /* ds-button tonal: rest --_family-muted, hover --_family-muted-strong (button.component.scss:210-214). */
   .tonal { --state-rest: var(--family-muted); --state-hover: var(--family-muted-strong); --specimen-label: var(--family-strong); }
   .pressed-black .tonal { --state-pressed: color-mix(in srgb, var(--family-muted-strong) 90%, black); }
   .pressed-own-28 .tonal { --state-pressed: color-mix(in srgb, var(--family-muted) 72%, var(--family-base)); }
   .pressed-own-34 .tonal { --state-pressed: color-mix(in srgb, var(--family-muted) 66%, var(--family-base)); }
 
-  /* ds-icon-button tonal: hover goes lighter, pressed lands on muted-strong (icon-button.component.scss:119-123). */
+  /* ds-icon-button tonal: hover goes lighter, pressed lands on muted-strong (icon-button.component.scss:106-110). */
   .icon-tonal { --state-rest: var(--family-muted); --state-hover: var(--family-subtitle); --state-pressed: var(--family-muted-strong); --specimen-label: var(--family-strong); min-width: 0; width: var(--hit-cozy); padding: 0; }
 
-  /* ds-button solid: 88% / 76% toward black for every colour (button.component.scss:57-58). */
+  /* ds-button solid: 88% / 76% toward black for every colour (button.component.scss:49-50). */
   .solid { --state-rest: var(--family-base); --state-hover: color-mix(in srgb, var(--family-base) 88%, black); --state-pressed: color-mix(in srgb, var(--family-base) 76%, black); }
   .solid.family-success { --specimen-label: var(--text-on-success); }
   .solid.family-warning { --specimen-label: var(--text-on-warning); }
 
-  /* ds-menu-item, the three compiled rules in their shipped order (menu-item.component.scss:76-101). */
+  /* ds-menu-item, the three compiled rules in their shipped order (menu-item.component.scss:66-87). */
   .menu { width: 100%; max-width: 220px; padding: 0; background: var(--surface-overlay); border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-popover); overflow: hidden; }
   .menu-item { display: block; width: 100%; padding: var(--space-2) var(--space-3); border: 0; text-align: left; cursor: pointer; user-select: none; font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-primary); background-image: linear-gradient(transparent, transparent); }
   .menu-item:hover { background-image: linear-gradient(var(--surface-secondary), var(--surface-secondary)); }
@@ -103,7 +103,7 @@
   <header class="masthead">
     <h1>Нажатая тональная кнопка сереет, а нажатый danger-пункт меню не отличается от наведённого</h1>
     <p class="lede">Одно решение и одна правка на подтверждение. Остальные три вопроса этой деки уже закрыты кодом или решены - таблица ниже. Наведи и зажми любой образец: состояния живые, собраны из токенов библиотеки.</p>
-    <div class="chips"><span class="chip is-open">открыто: 2</span><span class="chip is-done">закрыто: 3</span><span class="chip">актуально на 2026-09-24</span></div>
+    <div class="chips"><span class="chip is-open">открыто: 2</span><span class="chip is-done">закрыто: 3</span><span class="chip">актуально на 2026-10-05</span></div>
     <div class="theme-switch" role="group" aria-label="Тема">
       <button type="button" data-theme-pick="light" aria-pressed="true">Светлая</button>
       <button type="button" data-theme-pick="dark" aria-pressed="false">Тёмная</button>
@@ -115,9 +115,9 @@
     <table>
       <thead><tr><th>Вопрос</th><th>Ответ</th><th>Статус</th><th>Где видно</th></tr></thead>
       <tbody>
-        <tr><th class="rowlabel">Pressed у success / warning</th><td>Уже есть и отличается от hover: solid темнеет на 12% к чёрному при hover и на 24% при нажатии, для любого цвета. Прежняя дека рисовала pressed = hover по ошибке.</td><td><span class="chip is-done">в коде</span></td><td><code>button.component.scss:57-58</code>, <code>_semantic.scss:191-192</code></td></tr>
-        <tr><th class="rowlabel">Pressed у нейтральных поверхностей</th><td>Меню, аккордеон, список, дерево и ещё 17 строк и кнопок, у которых нажатия не было, нажимаются в <code>--surface-muted</code>, без формулы. Интерактивный <code>ds-tag</code> получил общий эффект нажатия.</td><td><span class="chip is-done">в коде</span></td><td><code>menu-item.component.scss:78</code>; merge <code>3fa0f2a9</code></td></tr>
-        <tr><th class="rowlabel">Слот ручного override</th><td>Stas: слот понадобится позже, общая формула сейчас не нужна. Пока каждый компонент уже принимает свои <code>--ds-*-hover</code> / <code>-active</code>.</td><td><span class="chip">записано, не строим</span></td><td>plan-F, Task 46; <code>button.component.scss:57-58</code></td></tr>
+        <tr><th class="rowlabel">Pressed у success / warning</th><td>Уже есть и отличается от hover: solid темнеет на 12% к чёрному при hover и на 24% при нажатии, для любого цвета. Прежняя дека рисовала pressed = hover по ошибке.</td><td><span class="chip is-done">в коде</span></td><td><code>button.component.scss:49-50</code>, <code>_semantic.scss:146-147</code></td></tr>
+        <tr><th class="rowlabel">Pressed у нейтральных поверхностей</th><td>Меню, аккордеон, список, дерево и ещё 17 строк и кнопок, у которых нажатия не было, нажимаются в <code>--surface-muted</code>, без формулы. Интерактивный <code>ds-tag</code> получил общий эффект нажатия.</td><td><span class="chip is-done">в коде</span></td><td><code>menu-item.component.scss:68</code>; merge <code>3fa0f2a9</code></td></tr>
+        <tr><th class="rowlabel">Слот ручного override</th><td>Stas: слот понадобится позже, общая формула сейчас не нужна. Пока каждый компонент уже принимает свои <code>--ds-*-hover</code> / <code>-active</code>.</td><td><span class="chip">записано, не строим</span></td><td>plan-F, Task 46; <code>button.component.scss:49-50</code></td></tr>
         <tr><th class="rowlabel">Общая формула <code>.ds-interactive</code></th><td>Отложена вместе со слотом. Файла <code>_interaction.scss</code> нет, состояния остаются локальными в компонентах.</td><td><span class="chip">отложено</span></td><td><code>src/lib/styles/</code> - файла нет</td></tr>
       </tbody>
     </table>
@@ -249,7 +249,7 @@
       </article>
     </div>
     <div class="panel verdict">
-      <p><b>Здесь, скорее всего, один правильный ответ - «Красный на шаг глубже».</b> Это ровно пара, которую уже носит ghost-кнопка цвета error: hover <code>--error-subtitle</code>, pressed <code>--error-muted</code> (<code>button.component.scss:261-262</code>). Серый pressed на красном hover читается как смена смысла, а не как нажатие. Контраст текста <code>--error-text</code> на <code>--error-muted</code>: 5.51:1 в светлой теме, 5.05:1 в тёмной (сейчас на hover 5.92:1 и 6.49:1). Скажи, если не согласен.</p>
+      <p><b>Здесь, скорее всего, один правильный ответ - «Красный на шаг глубже».</b> Это ровно пара, которую уже носит ghost-кнопка цвета error: hover <code>--error-subtitle</code>, pressed <code>--error-muted</code> (<code>button.component.scss:199, 224-225</code>). Серый pressed на красном hover читается как смена смысла, а не как нажатие. Контраст текста <code>--error-text</code> на <code>--error-muted</code>: 5.51:1 в светлой теме, 5.05:1 в тёмной (сейчас на hover 5.92:1 и 6.49:1). Скажи, если не согласен.</p>
     </div>
   </section>
 
@@ -265,7 +265,7 @@
     <p>Выбор - клик по карточке мимо образцов (образцы только для нажатия), он сохраняется в браузере; полоса внизу отдаёт его одной строкой.</p>
   </section>
 
-  <p class="src"><b>Источники, проверено 2026-09-24 на <code>dev</code> (195bb883).</b> Образцы собраны из токенов <code>ds.css</code> по рецептам компонентов: tonal и solid - <code>button.component.scss:57-58, 245-249</code>; tonal icon-button - <code>icon-button.component.scss:119-123</code>; меню - три скомпилированных правила <code>menu-item.component.scss:76, 78, 101</code> в их порядке из <code>dist/ds/fesm2022/…-components-menu.mjs</code>. Имена слотов - после переименования <code>--c-*</code> → <code>--_family-*</code>, <code>.c-*</code> → <code>.color-*</code>, <code>.v-*</code> → <code>.variant-*</code> (<code>refactor/button-family-slots</code>, слито <code>97c7cfe5</code>). Pressed для 17 нейтральных поверхностей - <code>feat/pressed-neutral-surfaces</code>, слито <code>3fa0f2a9</code>. Файла <code>src/lib/styles/_interaction.scss</code> нет. Числа: замер 2026-09-24 в Chrome 153 (общий chrome-devtools, file:// этой деки), <code>evaluate_script</code>: <code>getComputedStyle</code> каждой плашки триады → sRGB → OKLab; ΔE - евклидово расстояние в OKLab ×100, chroma - √(a²+b²)×100, контраст - формула WCAG 2 от относительной яркости; тёмная тема - тот же прогон с <code>data-theme="dark"</code> на <code>&lt;html&gt;</code>. Прежняя версия деки с формулой, отраслевым сравнением и калибровкой - в истории git этого файла; исследование - <code>docs/interaction-states-research.md</code>.</p>
+  <p class="src"><b>Источники, проверено 2026-10-05 на <code>dev</code>.</b> Образцы собраны из токенов <code>ds.css</code> по рецептам компонентов: tonal и solid - <code>button.component.scss:49-50, 210-214</code>; tonal icon-button - <code>icon-button.component.scss:106-110</code>; меню - три скомпилированных правила <code>menu-item.component.scss:66, 68, 87</code> в их порядке из <code>dist/ds/fesm2022/…-components-menu.mjs</code>. Имена слотов - после переименования <code>--c-*</code> → <code>--_family-*</code>, <code>.c-*</code> → <code>.color-*</code>, <code>.v-*</code> → <code>.variant-*</code> (<code>refactor/button-family-slots</code>, слито <code>97c7cfe5</code>). Pressed для 17 нейтральных поверхностей - <code>feat/pressed-neutral-surfaces</code>, слито <code>3fa0f2a9</code>. Файла <code>src/lib/styles/_interaction.scss</code> нет. Числа: замер 2026-09-24 в Chrome 153 (общий chrome-devtools, file:// этой деки), <code>evaluate_script</code>: <code>getComputedStyle</code> каждой плашки триады → sRGB → OKLab; ΔE - евклидово расстояние в OKLab ×100, chroma - √(a²+b²)×100, контраст - формула WCAG 2 от относительной яркости; тёмная тема - тот же прогон с <code>data-theme="dark"</code> на <code>&lt;html&gt;</code>. Прежняя версия деки с формулой, отраслевым сравнением и калибровкой - в истории git этого файла; исследование - <code>docs/interaction-states-research.md</code>.</p>
 
   <div class="bar-fixed">
     <span class="count" id="count">0 из 2</span>

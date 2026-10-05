@@ -13,9 +13,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    The default <code class="t-mono-inline">area</code> shape makes each band's
-    area proportional to its value, so a small stage gains depth instead of
-    shrinking to a sliver.
+    Default shape <code class="t-mono-inline">area</code>: a small stage gains
+    depth instead of shrinking to a sliver.
   </p>
 
   <ds-funnel-chart
@@ -30,8 +29,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    A fixed silhouette: <code class="t-mono-inline">taper</code> encodes
-    nothing in width. Use it only when the numbers are read from the table.
+    Fixed silhouette; width encodes nothing. Use it only when values are read
+    from the table.
   </p>
 
   <ds-funnel-chart
@@ -46,8 +45,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Widths are fractions of the largest stage, so a near-empty stage collapses
-    to a sliver with no room for its label.
+    Width is a fraction of the largest stage; a near-empty stage collapses to
+    a sliver with no room for its label.
   </p>
 
   <ds-funnel-chart
@@ -62,8 +61,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    The default: taper's silhouette, with each band's area proportional to its
-    value.
+    Taper's silhouette, each band's area proportional to its value.
   </p>
 
   <ds-funnel-chart
@@ -110,8 +108,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    On by default; under <code class="t-mono-inline">taper</code> it is the only
-    place the values exist. Turn
+    On by default; under <code class="t-mono-inline">taper</code> it alone
+    holds the values. Turn
     <code class="t-mono-inline">
       showTable
     </code> off only with a shape that
@@ -152,8 +150,7 @@
     <code class="t-mono-inline">
       relative
     </code> (default) is the share lost at
-    this stage, <code class="t-mono-inline">absolute</code> the count lost
-    (otherwise only found by subtracting rows),
+    this stage, <code class="t-mono-inline">absolute</code> the count lost,
     <code class="t-mono-inline">
       none
     </code> removes the column.
@@ -201,7 +198,7 @@
     <code class="t-mono-inline">
       interactive
     </code> adds the hover tint and
-    makes the bands one tab stop: arrow keys move (wrapping),
+    makes the bands one tab stop: arrows move (wrapping),
     <kbd>
       Home
     </kbd> / <kbd> End </kbd> jump to the ends,
@@ -210,8 +207,8 @@
     </kbd> or
     <kbd>
       Space
-    </kbd> activates. The pointer cursor shows on any band a click would
-    activate or hold.
+    </kbd> activates. Any band a click would activate or hold shows the
+    pointer.
     <code class="t-mono-inline">
       stageClicked
     </code> fires regardless of
@@ -242,8 +239,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    A click holds the band and tooltip, marked by a pin disc, with an Unpin
-    control on the caption's line.
+    A click holds band and tooltip (pin disc; Unpin control on the caption
+    line).
     <kbd>
       Esc
     </kbd>, a second click or a press elsewhere releases it. With
@@ -291,9 +288,9 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       staggerMs
-    </code> staggers the bands as they
-    rise in. <code class="t-mono-inline">60</code> is the default; the spread
-    fits inside 260ms;
+    </code> staggers the bands' rise-in.
+    Default <code class="t-mono-inline">60</code>; the spread fits inside
+    260ms;
     <code class="t-mono-inline">
       0
     </code> brings all bands in together.
@@ -336,8 +333,8 @@
     </summary>
 
     <p class="block-desc t-s">
-      Shares are measured against the first stage; if it is zero, the
-      percentage column has nothing to divide by.
+      Shares are of the first stage; if it is zero, the percentage column has
+      nothing to divide by.
     </p>
 
     <div class="states is-cols-2">

@@ -13,7 +13,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Positioned over its host; toggles without unmounting the content.
+    Sits over its host; toggling never unmounts the content.
     <code>
       [blur]="false"
     </code> drops the backdrop
@@ -75,11 +75,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    The scrim blocks the pointer, and while loading the covered content goes
+    The scrim blocks the pointer; while loading, the covered content goes
     <code class="t-mono-inline">
       inert
     </code> (not tabbable, out of the
-    accessibility tree), so the keyboard cannot reach it either.
+    accessibility tree).
     <code class="t-mono-inline">
       aria-busy
     </code> stays on the host.

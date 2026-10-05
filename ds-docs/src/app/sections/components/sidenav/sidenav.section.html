@@ -4,8 +4,7 @@
   title="Sidenav"
   [apiKeys]="['sidenav:SidenavGroupComponent', 'sidenav:SidenavItemComponent']">
   <span lede>
-    App-level vertical navigation: items with an icon, a label, and an optional
-    count badge or alert dot; collapsed, labels move into tooltips.
+    App-level vertical navigation.
   </span>
 
   <h3
@@ -27,11 +26,11 @@
     </code> stops navigation on an
     <code class="t-mono-inline">
       href
-    </code> item (a
+    </code> item, e.g. for scroll-spy;
+    a
     <code class="t-mono-inline">
       routerLink
-    </code> navigates regardless), e.g.
-    for scroll-spy.
+    </code> navigates regardless.
   </p>
 
   <p class="block-desc t-s">
@@ -192,8 +191,8 @@
     </code> markup replaces the plain
     <code class="t-mono-inline">
       brand
-    </code> text with a custom wordmark. Keep the string input as the
-    fallback semantics.
+    </code> text with a custom wordmark. Keep the string input for
+    semantics.
   </p>
 
   <p class="block-desc t-s">
@@ -208,8 +207,8 @@
     </code>.
     <code class="t-mono-inline">
       RouterLink
-    </code> is created only when the input is set, so an app without a router
-    still renders. Not demoed live.
+    </code> exists only when it is set, so an app without a router still
+    renders.
   </p>
 
   <p class="block-desc t-s">
@@ -264,8 +263,7 @@
     makes the header a toggle with a caret; the body collapses when
     <code class="t-mono-inline">
       expanded=false
-    </code>. The <code class="t-mono-inline">icon</code> input sets a group
-    icon.
+    </code>; <code class="t-mono-inline">icon</code> sets a group icon.
   </p>
 
   <div class="stage is-frame">
@@ -403,10 +401,6 @@
     data-for="sidenav-item">
     Item states showcase
   </h3>
-
-  <p class="block-desc t-s">
-    Every item state, static.
-  </p>
 
   <div class="states is-cols-4">
     <div class="state-cell">

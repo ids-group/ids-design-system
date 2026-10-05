@@ -3,8 +3,7 @@
   eyebrow="Patterns"
   title="Page composition">
   <span lede>
-    Which region holds what, in what order, and how to check a page before
-    review. The grid is in Foundations &rarr; Layout.
+    Which region holds what, and in what order.
   </span>
 
   <h3
@@ -14,8 +13,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Everything sits in one of these. Dashed: the sidenav (OUTSIDE the page
-    grid) and the topbar (global, not per-page).
+    Everything sits in one of these; dashed ones are app chrome, not per-page.
+    The grid is in Foundations &rarr; Layout.
   </p>
 
   <div class="pc-regions">
@@ -98,8 +97,8 @@
       [actions]
     </code> right-aligned on the title
     line, <code class="t-mono-inline">[tabs]</code> last, on the header's
-    bottom edge. Page actions go nowhere else: not a floating button, not a row
-    above the header.
+    bottom edge. Page actions go nowhere else: no floating button, no row above
+    the header.
   </p>
 
   <h3
@@ -113,17 +112,16 @@
       <strong>
         Filters sit directly above the data they filter
       </strong> -
-      between header and content, full width, no wrapper that could clip the
-      overflow popover. Not in a sidebar or the table's card. The 9+3 split is
-      reserved for a genuine filter RAIL.
+      between header and content, full width, in no wrapper that could clip
+      the overflow popover. Not in a sidebar or the table's card; the 9+3 split
+      is for a genuine filter RAIL.
     </li>
 
     <li>
       <strong>
         One primary per region, once
       </strong> - page header, each card,
-      modal actions. Two primaries in a region make neither primary. Secondary
-      takes
+      modal actions. Secondary takes
       <code class="t-mono-inline">
         outline
       </code>, dismissive
@@ -140,7 +138,7 @@
       <code class="t-mono-inline">
         --space-1
       </code>. Beside is for actions.
-      Never a tooltip: hover-only, it cannot hold what the user needs to act.
+      Never a tooltip: it is hover-only.
     </li>
   </ul>
 
@@ -151,9 +149,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    A card is for a UNIT that could be moved, collapsed or repeated: a record
-    summary, a KPI tile, a form section. Not for "content": a full-width table
-    has its own frame, and a card double-borders it. Default: no card.
+    A card holds a UNIT that could be moved, collapsed or repeated: record
+    summary, KPI tile, form section. Not a full-width table: it has its own
+    frame, so a card double-borders it. Default: no card.
   </p>
 
   <h3

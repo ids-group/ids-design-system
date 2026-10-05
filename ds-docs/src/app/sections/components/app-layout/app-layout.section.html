@@ -5,15 +5,7 @@
   [apiKeys]="['sidenav-footer']">
   <span lede>
     The fixed app frame: rail and topbar stay pinned, only the content
-    scrolls. Project your chrome into
-    <code class="t-mono-inline">
-      [sidenav]
-    </code>,
-    <code class="t-mono-inline">
-      [topbar]
-    </code> and the default slot; the layout
-    renders <code class="t-mono-inline">&lt;main&gt;</code> and compensates
-    the scrollbar to keep insets symmetric.
+    scrolls.
   </span>
 
   <h3
@@ -23,9 +15,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    Default: the rail spans full height; the topbar covers the content column
-    only. The footer's Search and Alerts rows open live popovers; opening
-    Alerts clears the unread dot.
+    Project chrome into
+    <code class="t-mono-inline">
+      [sidenav]
+    </code>,
+    <code class="t-mono-inline">
+      [topbar]
+    </code> and the default slot. The layout
+    renders <code class="t-mono-inline">&lt;main&gt;</code> and compensates
+    the scrollbar, so insets stay symmetric. By default the rail spans full
+    height and the topbar only the content column.
   </p>
 
   <div class="layout-demo">
@@ -94,7 +93,7 @@
     <code class="t-mono-inline">
       topbarSpan="full"
     </code>
-    spans the topbar across the full width, over rail and content.
+    spans the topbar over rail and content.
   </p>
 
   <div class="layout-demo">
@@ -159,21 +158,23 @@
 
   <p class="block-desc t-s">
     Below <code class="t-mono-inline">lg</code> the rail is an overlay opened
-    from your topbar. On a native
-    <code class="t-mono-inline">
-      button
-    </code>, add
+    from your topbar.
     <code class="t-mono-inline">
       dsRailTrigger
-    </code>: it toggles the rail and
-    syncs <code class="t-mono-inline">aria-expanded</code> /
+    </code> on a native
+    <code class="t-mono-inline">
+      button
+    </code> toggles it and syncs
+    <code class="t-mono-inline">
+      aria-expanded
+    </code> /
     <code class="t-mono-inline">
       aria-controls
-    </code>. Not on a
+    </code>. Not on
     <code class="t-mono-inline">
       ds-icon-button
-    </code> (the attributes land on
-    the wrapper); bind its forwarding inputs off a
+    </code>: the attributes would land on
+    the wrapper; bind its forwarding inputs off a
     <code class="t-mono-inline">
       &lt;ds-app-layout #layout&gt;
     </code> ref:
@@ -187,7 +188,7 @@
   (pressed)="layout.railOpen.set(!layout.railOpen())" /&gt;</code></pre>
 
   <p class="block-desc t-s">
-    Both attributes drop while the rail is not an overlay;
+    Both drop when the rail is not an overlay:
     <code class="t-mono-inline">
       aria-expanded="false"
     </code> would misstate a
@@ -197,17 +198,16 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [(railOpen)]
-    </code> is the open state.
+    </code> is the open state;
     <code class="t-mono-inline">
       railLabel
     </code> names the overlay dialog
     (default
     <code class="t-mono-inline">
       DS_INTL.appLayout.railLabel
-    </code>). The open
-    overlay traps focus; Escape or a scrim click closes it and refocuses the
-    trigger. Requires the router
-    (<code class="t-mono-inline">provideRouter</code>).
+    </code>). The overlay
+    traps focus; Escape or a scrim click closes it and refocuses the trigger.
+    Requires <code class="t-mono-inline">provideRouter</code>.
   </p>
 
   <h3 class="block-title t-h4">
@@ -259,15 +259,15 @@
   </p>
 
   <p class="block-desc t-s">
-    The offset applies once content is tall enough, watched by a
+    The offset waits for content to grow tall enough (a
     <code class="t-mono-inline">
       ResizeObserver
-    </code> and capped at
+    </code>, capped at
     <code class="t-mono-inline">
       restoreScrollTimeout
-    </code>, so a list with 8
-    of 40 rows loaded still lands close. A page that sets its own scroll (a
-    virtualizer picks rows BEFORE it can scroll) should take the offset itself:
+    </code>), so a list with 8
+    of 40 rows loaded still lands close. A page that sets its own scroll, such
+    as a virtualizer, must take the offset itself:
     <code class="t-mono-inline code-wrap">
       inject(AppLayoutScrollService).consumePendingOffset()
     </code
@@ -285,19 +285,22 @@
     <code class="t-mono-inline">
       &lt;ds-sidenav-footer&gt;
     </code> is the rail part
-    you configure rather than compose: profile row, alert bell, collapse
-    handle.
+    you configure, not compose: profile row, alert bell, collapse handle.
     <code class="t-mono-inline">
       [collapsed]
-    </code> switches between the two
-    states below. Width comes from the sidenav; outside one, give it a frame.
+    </code> picks the state. Width comes
+    from the sidenav; outside one, give it a frame.
   </p>
 
   <p class="block-desc t-s">
-    The footer only emits collapse
-    (<code class="t-mono-inline">collapseToggled</code>) and sign-out
-    (<code class="t-mono-inline">signOutSelected</code>); the parent acts, so
-    the unbound collapse row here does nothing. A null
+    It only emits
+    <code class="t-mono-inline">
+      collapseToggled
+    </code> and
+    <code class="t-mono-inline">
+      signOutSelected
+    </code>; the parent acts, so the
+    unbound collapse row here does nothing. A null
     <code class="t-mono-inline">
       searchProvider
     </code> or
