@@ -26,7 +26,9 @@
   .mini .pin { transform-box: fill-box; transform-origin: center; }
   .mini.pop .pin.is-new { animation: pin-pop var(--ds-motion-chart-mark-duration) var(--ease-spring, var(--ease-emphasized-decelerate)); }
   @keyframes pin-pop { from { scale: 0.4; opacity: 0; } to { scale: 1; opacity: 1; } }
-  .mini .slice { stroke: var(--surface-default); stroke-width: 2; transition: translate var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing); }
+  .mini .slice { stroke: var(--surface-default); stroke-width: 2; pointer-events: none; transition: translate var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing); }
+  /* The hover target stays put while the drawn slice moves; a moving target leaves the pointer and comes back. */
+  .mini .slice-hit { fill: transparent; }
   .mini .pie-total { fill: var(--text-primary); font: var(--font-weight-bold) var(--font-size-s) / 1 var(--font-sans); text-anchor: middle; }
   .mini .pie-caption { fill: var(--text-tertiary); font: var(--font-size-2xs) / 1 var(--font-sans); text-anchor: middle; }
   .mini .tip {
@@ -268,6 +270,7 @@
     pair.append(pieWrap);
     const pieSvg = el('svg', { viewBox: '0 0 140 140', role: 'img', 'aria-label': 'Share by channel' }, pieWrap);
     const slices = PIE[0].map((_, i) => el('path', { class: 'slice', fill: PIE_COLORS[i] }, pieSvg));
+    const hits = PIE[0].map(() => el('path', { class: 'slice-hit' }, pieSvg));
     const total = el('text', { class: 'pie-total', x: 70, y: 72 }, pieSvg);
     const caption = el('text', { class: 'pie-caption', x: 70, y: 86 }, pieSvg);
     caption.textContent = 'leads';
@@ -388,7 +391,9 @@
         const r0 = 34, r1 = 60, cx = 70, cy = 70;
         const large = sweep > Math.PI ? 1 : 0;
         const p = (r, a) => `${cx + r * Math.cos(a)} ${cy + r * Math.sin(a)}`;
-        slices[i].setAttribute('d', `M${p(r1, a0)} A${r1} ${r1} 0 ${large} 1 ${p(r1, a1)} L${p(r0, a1)} A${r0} ${r0} 0 ${large} 0 ${p(r0, a0)}Z`);
+        const arc = `M${p(r1, a0)} A${r1} ${r1} 0 ${large} 1 ${p(r1, a1)} L${p(r0, a1)} A${r0} ${r0} 0 ${large} 0 ${p(r0, a0)}Z`;
+        slices[i].setAttribute('d', arc);
+        hits[i].setAttribute('d', arc);
         const mid = (a0 + a1) / 2;
         slices[i].dataset.dx = (Math.cos(mid) * 5).toFixed(2);
         slices[i].dataset.dy = (Math.sin(mid) * 5).toFixed(2);
@@ -474,11 +479,12 @@
       pin.classList.add('is-new');
       showTip(i, false);
     });
-    slices.forEach((slice) => {
-      slice.addEventListener('pointerenter', () => {
+    hits.forEach((hit, i) => {
+      const slice = slices[i];
+      hit.addEventListener('pointerenter', () => {
         if (tier.respond) slice.style.translate = `${slice.dataset.dx}px ${slice.dataset.dy}px`;
       });
-      slice.addEventListener('pointerleave', () => { slice.style.translate = '0 0'; });
+      hit.addEventListener('pointerleave', () => { slice.style.translate = '0 0'; });
     });
     actions.querySelector('button').addEventListener('click', (event) => {
       event.stopPropagation();
