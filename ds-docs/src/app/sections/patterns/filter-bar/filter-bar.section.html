@@ -12,8 +12,8 @@
       class="t-link">
       ds-filter-bar
     </a> ships the overflow half: filters that fit, the rest in a "+N more"
-    panel. The "More filters" buttons below are stubs; use the component, with
-    the applied-tag row beside it, when facets run out of room.
+    panel. The "More filters" buttons below are stubs; when facets run out of
+    room, use the component beside the applied-tag row.
   </p>
 
   <h3
@@ -23,8 +23,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Search, dropdown facets, applied-filter tags and a clear-all link on one
-    row above the list.
+    Search, dropdown facets, applied tags and a clear-all link on one row.
   </p>
 
   <div class="stage">
@@ -150,8 +149,8 @@
     </code> client filter
     (<code class="t-mono-inline">[filterQuery]</code>: case-insensitive
     substring over <code class="t-mono-inline">filterable</code> columns, or
-    all when none is marked); the status facet filters app-side; tags mirror
-    active filters and clear one by one. With no match the table shows its
+    all if none is marked). The status facet filters app-side; tags mirror
+    active filters and clear one by one. No match shows the table's
     <code class="t-mono-inline">
       [empty]
     </code> slot; project a filter-specific

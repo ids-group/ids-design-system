@@ -3,12 +3,7 @@
   eyebrow="Foundations"
   title="Elevation">
   <span lede>
-    Four primitive tiers, four elevation roles and four surface aliases
-    (popover, modal, toast, card). Shadows split channels through
-    <code class="t-mono-inline">
-      --shadow-tint-h/s/l
-    </code>, so a re-skin can
-    re-tint them and dark themes render the same alphas as glows.
+    Shadow tiers, elevation roles and surface aliases.
   </span>
 
   <h3
@@ -16,6 +11,14 @@
     class="block-title t-h4">
     Shadow scale · primitive tiers
   </h3>
+
+  <p class="block-desc t-s">
+    Shadows split channels through
+    <code class="t-mono-inline">
+      --shadow-tint-h/s/l
+    </code>: a re-skin re-tints them, and
+    dark themes render the same alphas as glows.
+  </p>
 
   <div class="shadow-grid">
     @for (tier of primitive; track tier.name) {
@@ -109,10 +112,6 @@
     class="block-title t-h4">
     Applied
   </h3>
-
-  <p class="block-desc t-s">
-    Each semantic shadow on a real surface.
-  </p>
 
   <div class="applied-grid">
     @for (demo of applied; track demo.token) {

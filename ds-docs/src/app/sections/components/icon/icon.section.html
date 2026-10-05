@@ -3,17 +3,13 @@
   eyebrow="Components"
   title="Icon">
   <span lede>
-    Inline SVG icons via
-    <code class="t-mono-inline">
-      &lt;ds-icon&gt;
-    </code>: 1.75-px stroke,
-    rounded caps, <code class="t-mono-inline">currentColor</code>, set by
+    Inline SVG icons by
     <code class="t-mono-inline">
       name
-    </code> and
+    </code>: rounded caps,
     <code class="t-mono-inline">
-      size
-    </code> in px.
+      currentColor
+    </code>.
   </span>
 
   <h3
@@ -23,7 +19,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    The recommended <code class="t-mono-inline">--icon-*</code> scale.
+    Recommended <code class="t-mono-inline">--icon-*</code> scale.
     <code class="t-mono-inline">
       size
     </code> takes any px value; unset, it reads
@@ -65,8 +61,7 @@
     24px; default
     <code class="t-mono-inline">
       1.75
-    </code>. Pick what reads best beside
-    small text.
+    </code>.
   </p>
 
   <div class="stroke-compare">
@@ -111,7 +106,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    The most common glyphs. Full library:
+    Common glyphs. Full library:
     <a
       class="link"
       routerLink="/foundations/icons">
@@ -139,13 +134,13 @@
 
   <p class="block-desc t-s">
     Decorative by default (<code class="t-mono-inline">aria-hidden</code>). A
-    meaningful icon without text gets an
+    meaningful icon without text takes an
     <code class="t-mono-inline">
       ariaLabel
     </code> and renders as
     <code class="t-mono-inline">
       role="img"
-    </code> with that name.
+    </code>.
   </p>
 
   <div class="sample-grid">

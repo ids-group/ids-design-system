@@ -36,12 +36,6 @@
       margin: var(--space-3) 0 var(--space-4);
       color: var(--text-primary);
     }
-    .lede-secondary {
-      font: var(--font-weight-regular) var(--font-size-l) / var(--line-height-base) var(--font-sans);
-      color: var(--text-secondary);
-      max-width: 720px;
-      margin: 0;
-    }
 
     .block { margin-top: var(--space-10); display: block; }
     .block-title { margin: 0 0 var(--space-4); }

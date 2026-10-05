@@ -12,10 +12,6 @@
     Default · filled · focus
   </h3>
 
-  <p class="block-desc t-s">
-    Static specimens; focus is forced.
-  </p>
-
   <div class="states is-cols-3">
     <div class="state-cell">
       <div class="state-cell-stage">
@@ -127,7 +123,7 @@
     <code class="t-mono-inline">
       --field-h-sm/md/lg
     </code>: 32, 40 and 48px at
-    default density, following density.
+    default density.
   </p>
 
   <div class="row">
@@ -154,9 +150,11 @@
     </code> delays
     <code class="t-mono-inline">
       value
-    </code> updates, so a list screen does not
-    fire a request per character. Default <code class="t-mono-inline">0</code>
-    writes every keystroke. The displayed text is never delayed.
+    </code> updates; default
+    <code class="t-mono-inline">
+      0
+    </code> writes every keystroke. The
+    displayed text never lags.
   </p>
 
   <p class="block-desc t-s">
@@ -167,19 +165,19 @@
     <code class="t-mono-inline">
       clear()
     </code> skip the timer. For an external
-    Clear button, <code class="t-mono-inline">clear()</code> empties the field,
+    Clear button: <code class="t-mono-inline">clear()</code> empties the field,
     drops the pending keystroke, publishes <code class="t-mono-inline">''</code>
     at once and keeps focus. Writing <code class="t-mono-inline">''</code> into
     <code class="t-mono-inline">
       value
-    </code> is not equivalent: it cancels the
-    timer only if it differs from the last pushed value.
+    </code> cancels the timer only if it
+    differs from the last pushed value.
     <code class="t-mono-inline">
       blur()
-    </code> drops focus, the counterpart of
+    </code> drops focus;
     <code class="t-mono-inline">
       focus()
-    </code>.
+    </code> sets it.
   </p>
 
   <div class="demo-stack">
@@ -209,8 +207,10 @@
     </code>,
     <code class="t-mono-inline">
       [(ngModel)]
-    </code> and signal forms all bind,
-    as does <code class="t-mono-inline">[(value)]</code>.
+    </code>, signal forms and
+    <code class="t-mono-inline">
+      [(value)]
+    </code> all bind.
     <code class="t-mono-inline">
       disabled
     </code> combines with the form's
@@ -221,7 +221,7 @@
     <strong>
       Deliberately no label and no message row.
     </strong>
-    A toolbar filter is not a validated field. For a label or error line, use
+    For a label or error line, use
     <code class="t-mono-inline">
       ds-input
     </code>.

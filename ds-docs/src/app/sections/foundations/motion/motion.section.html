@@ -3,15 +3,7 @@
   eyebrow="Foundations"
   title="Motion">
   <span lede>
-    Six durations, two loop durations, seven eases. Under
-    <code class="t-mono-inline">
-      prefers-reduced-motion
-    </code> one-shot durations drop to 0 and loops
-    (<code class="t-mono-inline">--duration-loop-*</code>) slow down. Enter
-    with <em>decelerate</em>, exit with
-    <em>
-      accelerate
-    </em>.
+    Duration, easing and role tokens behind every transition.
   </span>
 
   <h3
@@ -21,7 +13,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Hover a card to play it. Same distance and easing; only duration varies.
+    Hover to play. Under
+    <code class="t-mono-inline">
+      prefers-reduced-motion
+    </code> one-shot durations drop to 0; loops
+    (<code class="t-mono-inline">--duration-loop-*</code>) slow down.
   </p>
 
   <div class="motion-grid">
@@ -56,7 +52,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Hover a card to play it. Same duration and distance; only easing varies.
+    Hover to play. Enter with <em>decelerate</em>, exit with
+    <em>
+      accelerate
+    </em>.
   </p>
 
   <div class="motion-grid">
@@ -89,14 +88,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    Components read these roles, not raw durations. Each is a
+    Components read these roles, not raw durations. Set a
     <code class="t-mono-inline">
       --ds-motion-&lt;role&gt;-duration
     </code> /
     <code class="t-mono-inline">
       -easing
-    </code> pair; set it and every surface on
-    the role follows.
+    </code> pair and every surface on the
+    role follows.
   </p>
 
   <div class="motion-preset-grid">
@@ -122,7 +121,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Hover any tile to replay the transition.
+    Hover to replay.
   </p>
 
   <div class="combined-grid">
@@ -206,7 +205,7 @@
       -detail-duration
     </code> (180ms): value labels and
     markers. A series' arrivals spread across 260ms regardless of mark count.
-    Reduced motion shows every mark at once, with no delays.
+    Reduced motion shows every mark at once.
   </p>
 
   <h3 class="block-title t-h4">
@@ -214,9 +213,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Every surface names its entrance in a token you can retune or replace. Pick
-    a preset, then open the dropdown (portaled) and replay the alert (inline):
-    both read the same tokens.
+    Each surface's entrance is a token. Pick a preset, then open the dropdown
+    (portaled) or replay the alert (inline): both read the same tokens.
   </p>
 
   <ds-segmented
@@ -277,7 +275,7 @@
   </div>
 
   <p class="block-desc t-s">
-    Every surface takes
+    Each surface takes
     <code class="t-mono-inline">
       --ds-&lt;surface&gt;-enter-keyframes
     </code>,
@@ -318,8 +316,8 @@
   </p>
 
   <p class="block-desc t-s">
-    Your own <code class="t-mono-inline">&#64;keyframes</code> must be global:
-    emulated encapsulation renames component-scoped keyframes, so a scoped name
-    passed through the token never plays.
+    Custom <code class="t-mono-inline">&#64;keyframes</code> must be global:
+    emulated encapsulation renames scoped ones, so they never play through the
+    token.
   </p>
 </docs-section>

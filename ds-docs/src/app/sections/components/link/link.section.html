@@ -9,15 +9,7 @@
     </code> or
     <code class="t-mono-inline">
       &lt;button&gt;
-    </code>. Modifiers: quiet, inline, standalone (bold), plain (underlined
-    only on hover and focus) and sizes <code>xs</code> · <code>sm</code> ·
-    <code>
-      lg
-    </code>. Recolour with <code>--ds-link-color</code>; hover and
-    active derive from it unless <code>--ds-link-color-hover</code> /
-    <code>
-      --ds-link-color-active
-    </code> are set.
+    </code>.
   </span>
 
   <h3
@@ -72,6 +64,23 @@
     class="block-title t-h4">
     Variants
   </h3>
+
+  <p class="block-desc t-s">
+    Modifiers: quiet, inline, standalone (bold), plain (underlined only on
+    hover and focus), sizes <code>xs</code> · <code>sm</code> ·
+    <code>
+      lg
+    </code>. Recolour with
+    <code>
+      --ds-link-color
+    </code>; hover and active derive from it unless
+    <code>
+      --ds-link-color-hover
+    </code> /
+    <code>
+      --ds-link-color-active
+    </code> are set.
+  </p>
 
   <div class="row">
     <a
@@ -146,15 +155,12 @@
     </code> warns against
     <code class="t-mono-inline">
       variant="text"
-    </code> in favour of this class,
-    and a non-navigating action must be a
+    </code> in favour of this class.
+    A non-navigating action must be a
     <code class="t-mono-inline">
       &lt;button&gt;
-    </code>, so <code>.link</code> resets button chrome (padding, border,
-    background, font). A
-    <code class="t-mono-inline">
-      &lt;button class="link"&gt;
-    </code> matches the anchor except
+    </code>; <code>.link</code> resets its chrome (padding, border,
+    background, font) and matches the anchor except
     <code class="t-mono-inline">
       display
     </code>, which stays

@@ -4,7 +4,7 @@
   title="Avatars"
   [apiKeys]="['avatar-group']">
   <span lede>
-    Initials and image avatars in four sizes, plus stacked groups with overflow.
+    Initials or image avatars, plus stacked groups.
   </span>
 
   <h3
@@ -98,9 +98,9 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       status
-    </code> adds a bottom-right presence dot.
-    Put the person and status in <code class="t-mono-inline">ariaLabel</code>
-    ("Alice Brown, Online"): the labelled avatar is
+    </code> adds a presence dot. Put person
+    and status in <code class="t-mono-inline">ariaLabel</code>
+    ("Alice Brown, Online"): a labelled avatar is
     <code class="t-mono-inline">
       role="img"
     </code>, so the dot's label is not
@@ -171,8 +171,8 @@
     <code class="t-mono-inline">
       seed
     </code> (an email or name) gives a
-    deterministic <code class="t-mono-inline">hsl(H 50% 62%)</code> tint, the
-    same across apps, with white initials. The helpers
+    deterministic <code class="t-mono-inline">hsl(H 50% 62%)</code> tint,
+    identical across apps, with white initials.
     <code class="t-mono-inline">
       avatarTint
     </code> and
@@ -183,39 +183,39 @@
   </p>
 
   <p class="block-desc t-s">
-    White on the lighter hues measures as low as <strong>1.65:1</strong>, under
-    WCAG AA's 4.5:1. Keep the default when a written name sits beside the
-    avatar; when the initials are the only identifier, bind
+    White on lighter hues drops to <strong>1.65:1</strong> (WCAG AA: 4.5:1).
+    Keep the default beside a written name; when initials are the only
+    identifier, bind
     <code class="t-mono-inline">
       [tint]="avatarTint(seed, &#123; lightness: 50 &#125;)"
     </code>
-    (white measures 5.3-6.6:1).
+    (5.3-6.6:1).
   </p>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       name
     </code> replaces both bindings in this
-    demo: it derives the initials and seeds the tint.
+    demo: it derives initials and seeds the tint.
     <strong>
       The tint hashes the NAME, never the initials
-    </strong>, so Alice
-    Brown and Adam Bell get different colours (both "AB": hues 198° and 356°).
+    </strong>: Alice
+    Brown and Adam Bell (both "AB") get hues 198° and 356°.
   </p>
 
   <p class="block-desc t-s">
-    The default initials are the first letters of the first two words, a
-    Latin-script guess (Spanish wants MG for "María José García López").
-    Replace it per instance with
+    Default initials: first letters of the first two words, a Latin-script
+    guess (Spanish wants MG for "María José García López"). Override per
+    instance with
     <code class="t-mono-inline">
       [initialsRule]
     </code> or app-wide with
     <code class="t-mono-inline">
       provideDsConfig(&#123; avatar: &#123; initials &#125; &#125;)
-    </code>; an explicit
+    </code>; explicit
     <code class="t-mono-inline">
       initials
-    </code> wins over both.
+    </code> wins.
   </p>
 
   <div class="row">
@@ -232,7 +232,7 @@
     <code class="t-mono-inline">
       [avoidHues]="[[310, 360], [0, 20]]"
     </code>,
-    skipping pink and red to avoid a brand colour:
+    skipping a brand's pink and red:
   </p>
 
   <div class="row">

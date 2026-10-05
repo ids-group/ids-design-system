@@ -4,22 +4,7 @@
   title="List"
   [apiKeys]="['list:ListItemComponent']">
   <span lede>
-    Vertical rows with
-    <code class="t-mono-inline">
-      [leading]
-    </code> /
-    <code class="t-mono-inline">
-      [trailing]
-    </code> slots,
-    <code class="t-mono-inline">
-      [clickable]
-    </code> items and a
-    <code class="t-mono-inline">
-      [selected]
-    </code> state; dividers are on until
-    <code class="t-mono-inline">
-      [dividers]="false"
-    </code>.
+    Vertical rows, optionally clickable and selected.
   </span>
 
   <h3
@@ -31,8 +16,11 @@
   <p class="block-desc t-s">
     <code>
       [leading]
-    </code> and <code>[trailing]</code> take icons or avatars.
-    Tokens: <code>--ds-list-divider-color</code> and
+    </code> and <code>[trailing]</code> take icons or avatars. Dividers are on
+    until
+    <code class="t-mono-inline">
+      [dividers]="false"
+    </code>. Tokens: <code>--ds-list-divider-color</code> and
     <code>
       --ds-list-item-*
     </code> (padding-y/x, gap, hover-bg-color,
@@ -168,7 +156,7 @@
       [leading]
     </code> and <code>[trailing]</code> sit outside the row's
     button, so a row can hold its own control (a bulk-action checkbox) and
-    still select - two independent targets.
+    still select.
   </p>
 
   <p class="block-desc t-s">
