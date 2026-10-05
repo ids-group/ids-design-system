@@ -20,11 +20,14 @@
   the plot, far from its panel; it now sits at the head of the reading the panel
   opens over, 8px inside a column's top or 8px below a marker; over a column too short to hold it,
   the disc sits 8px above the column and its value and the panel rises over the disc. The same holds
-  for a column pinned in `ds-column-chart`. `ds-bar-chart` draws it at the middle of the
-  held bar, under its panel, rather than at the bar's start. `ChartComponent` gained the protected
-  `highlightBand` and `tooltipGap` and the private `bandAt`, `hoveredCategory` and `pinRise`, and
-  `ColumnSeriesComponent` the private `pinYOf`, so a subclass declaring one of those names must
-  rename it.
+  for a column pinned in `ds-column-chart` or a `dsColumnSeries`. `ds-bar-chart` draws it at the
+  middle of the held bar, under its panel, rather than at the bar's start. In `ds-line-chart`, a line
+  series in `ds-chart` and `ds-scatter-chart`, the disc over a held marker or point sits 4px higher.
+  `ChartComponent` gained the protected `highlightBand` and `tooltipGap` and the private `bandAt`,
+  `hoveredCategory` and `pinRise`, and `ColumnSeriesComponent` the private `pinYOf`, so a subclass
+  declaring one of those names must rename it. `ChartComponent`'s protected `bandPinY` is now a
+  computed signal read as `bandPinY()`, where it was a method taking the band, so a subclass that
+  calls `bandPinY(band)` or overrides it as a method must read or override the signal instead.
 
 - **A held category is not highlighted.** The hover band of `ds-chart` stayed painted on a pinned
   category after the pointer left; under a pin the band now follows the pointer alone, and nothing
@@ -36,6 +39,7 @@
 - **A disabled link-button with `disabledReason` stays reachable by Tab.** A `ds-button` with
   `routerLink` or `href`, `disabled` and a `disabledReason` was taken out of the Tab order, so its
   reason was never announced; it now keeps its Tab stop and link role, and still swallows the click.
+  A disabled `routerLink` button is announced as a link with or without a reason.
 
 - **`ds-avatar-group` applies `max` to the projected avatars.** Avatars past `max` are hidden,
   and with `total` unset the `+N` chip counts the projected avatars; the group showed every
