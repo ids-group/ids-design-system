@@ -11599,6 +11599,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Selector for the element inside the host whose clipping `dsTooltipWhenClipped` tests and whose text it discloses. Resolved on every open; while nothing matches, no clipped tip opens."
+      },
+      {
+        "name": "dsTooltipClippedLead",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Opens the tip with this line above `dsTooltip` while the host shows less text than it holds. The tip keeps its own line break, so the two read as separate lines."
       }
     ],
     "outputs": []

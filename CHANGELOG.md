@@ -5,9 +5,15 @@
 - **`TableColumn.hint` defines a column's term.** Set it and the header label of `ds-table` gets a
   dotted underline in `--text-tertiary` and shows the hint in a tooltip on hover and keyboard focus,
   announced as the label's description. A sortable label keeps its sort button as the single Tab
-  stop; a plain label with a hint renders as a `<button type="button">` styled like the label. The
-  hint replaces the tooltip that shows a clipped label in full. A column without `hint` renders as
-  before.
+  stop; a plain label with a hint renders as a `<button type="button">` styled like the label. While
+  the label is clipped, the tooltip shows the label on its first line and the hint under it;
+  otherwise it shows the hint alone. A column without `hint` renders as before.
+
+- **`dsTooltipClippedLead` puts a line above a tooltip while its host is clipped.** Set it to the
+  host's own text and the tip reads that text, a line break, then `dsTooltip`; while the host shows
+  all of its text the tip is `dsTooltip` alone. A tooltip now keeps a line break written into its
+  text. `TooltipDirective` gained the public `dsTooltipClippedLead`, so a subclass declaring that
+  name must rename it.
 
 ### Fixed
 

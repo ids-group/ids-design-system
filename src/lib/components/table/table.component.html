@@ -95,6 +95,7 @@
                   class="th-label"
                   [class.has-hint]="!!col.hint"
                   [dsTooltip]="col.hint ?? ''"
+                  [dsTooltipClippedLead]="col.label"
                   (click)="onSort(col)">
                   <span class="th-text">
                     @if (col.label) {
@@ -116,7 +117,8 @@
                 <button
                   type="button"
                   class="th-label has-hint"
-                  [dsTooltip]="col.hint">
+                  [dsTooltip]="col.hint"
+                  [dsTooltipClippedLead]="col.label">
                   <span class="th-text">
                     @if (col.label) {
                       {{ col.label }}

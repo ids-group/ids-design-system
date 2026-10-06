@@ -95,6 +95,10 @@ export class TooltipDirective implements OnDestroy {
    *  whose text it discloses. Resolved on every open; while nothing matches, no clipped tip opens. */
   readonly dsTooltipTextSelector = input<string | null>(null);
 
+  /** Opens the tip with this line above `dsTooltip` while the host shows less text than it holds.
+   *  The tip keeps its own line break, so the two read as separate lines. */
+  readonly dsTooltipClippedLead = input<string>('');
+
   get hostElement(): HTMLElement {
     return this.host.nativeElement;
   }
@@ -115,6 +119,11 @@ export class TooltipDirective implements OnDestroy {
 
   private tipText(): string {
     const given = this.dsTooltip();
+    const lead = this.dsTooltipClippedLead();
+    if (given && lead && this.isClipped()) {
+      return `${lead}
+${given}`;
+    }
     if (given || !this.dsTooltipWhenClipped()) {
       return given;
     }
