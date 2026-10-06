@@ -61,7 +61,7 @@ export interface ButtonProps {
   ariaExpanded?: boolean | null;
   /** `aria-controls` on the inner <button>: the id of the panel this button opens. */
   ariaControls?: string | null;
-  /** Why the button is refused, shown as its second line and read only while `disabled`. Setting it uses `aria-disabled` instead of the native attribute (a native disabled button cannot be focused, so the reason would go unannounced) and swallows the click. Uncapped: the text wraps. */
+  /** Why the button is refused, shown as its second line and read only while `disabled`. Setting it uses `aria-disabled` instead of the native attribute (a native disabled button cannot be focused, so the reason would go unannounced) and swallows the click; a link-button keeps its Tab stop the same way. Uncapped: the text wraps. */
   disabledReason?: string;
   /** `aria-describedby` pointing at a description the app renders itself. Merged with the id of `disabledReason` when both are present. */
   ariaDescribedBy?: string | null;

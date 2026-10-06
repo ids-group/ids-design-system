@@ -18,7 +18,7 @@ export interface ModalProps {
   subtitle?: string | null;
   /** Fires once the close (leave) animation finishes. */
   onClosed?: (value: void) => void;
-  /** Emit this yourself from a confirm action in the projected content; the modal never fires it. */
+  /** Fires when the projected `dsModalConfirm` action is pressed. The modal stays open. */
   onConfirmed?: (value: void) => void;
   /** Draws the rules under the header and over the actions; off also tightens the vertical padding. Unset falls back to `DS_CONFIG.modal.dividers`, then `true`. */
   dividers?: boolean | null;

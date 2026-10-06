@@ -1,5 +1,5 @@
 # Do / Don't - tooltips vs banners
 
-Banner for warnings and errors that affect the current section. Persistent until the user resolves them.
+Banner for section-level warnings and errors; stays until resolved.
 
-Hide critical info inside a tooltip. Tooltips are ephemeral context, never required content for completing a task.
+Critical info in a tooltip: tooltips are ephemeral, never needed to finish a task.

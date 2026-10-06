@@ -1,5 +1,5 @@
 # Modal Card - eyebrow · context above the title
 
-Project into [eyebrow] when the dialog needs to name the record it acts on. Nothing renders when the slot is unfilled; it is uppercase and tracked by default, retunable through the --ds-modal-eyebrow-* tokens.
+[eyebrow] names the record acted on; empty renders nothing. Tune with --ds-modal-eyebrow-*.
 
 Full API: `ModalCard.d.ts`. How to use the component anywhere: `ModalCard.prompt.md`.
