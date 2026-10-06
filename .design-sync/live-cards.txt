@@ -9,7 +9,6 @@ components/data-display/Table/Table - Dense - zebra.html
 components/data-display/Table/Table - Empty states.html
 components/data-display/Table/Table - Expandable rows.html
 components/data-display/Table/Table - Loading - overlay.html
-components/data-display/Table/Table - Loading - skeleton.html
 components/data-display/Table/Table - Pagination - sticky column.html
 components/data-display/Table/Table - Row actions - kebab menu.html
 components/data-display/Table/Table - Row selection - bulk-action bar.html

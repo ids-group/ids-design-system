@@ -1,5 +1,5 @@
 # Do / Don't - badge proliferation
 
-One status per record at the title-row level. Badges signal real state, not metadata.
+One status per record, on the title row. Badges show state, not metadata.
 
-Every column wrapped in a coloured pill. Signal-to-noise collapses and the real status badge stops being noticed.
+A pill on every column buries the real status.

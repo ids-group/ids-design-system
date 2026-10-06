@@ -19,8 +19,12 @@ export interface DrawerProps {
   staticPreview?: boolean;
   /** Content for the `[drawer-body]` slot. */
   drawerBody?: React.ReactNode;
+  /** Content for the `[body]` slot. */
+  body?: React.ReactNode;
   /** Content for the `[drawer-footer]` slot. */
   drawerFooter?: React.ReactNode;
+  /** Content for the `[actions]` slot. */
+  actions?: React.ReactNode;
   /** Element content. */
   children?: React.ReactNode;
   className?: string;

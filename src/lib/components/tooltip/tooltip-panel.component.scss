@@ -21,6 +21,7 @@
   border-radius: var(--_tooltip-radius);
   max-width: var(--_tooltip-max-width);
   overflow-wrap: anywhere;
+  white-space: pre-line;
   z-index: var(--layer-tooltip);
   box-shadow: var(--_tooltip-shadow);
 

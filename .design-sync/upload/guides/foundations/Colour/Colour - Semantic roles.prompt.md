@@ -1,3 +1,3 @@
 # Colour - semantic roles
 
-What components actually consume. Re-skinning means remapping these to a different ramp — the components don't change.
+What components consume. Re-skin by remapping to another ramp.

@@ -1,11 +1,11 @@
 # Buttons - refused with reason
 
-Two kinds of refusal, and they take different treatments. The third column is the room the second one needs.
+Two refusals, treated differently, plus the room the second needs.
 
-No permission to grant, no integration to connect. Set disabledReason beside disabled: the reason renders as a second line inside the button, and the button switches from the native disabled attribute to aria-disabled so it stays focusable and the reason is announced. This works on the button form only: a disabled link-button gets tabindex="-1", so its reason cannot be reached by Tab. Clicks are swallowed either way. Length is uncapped - a long reason wraps and the button grows.
+disabledReason with disabled adds the reason as a second line and swaps native disabled for aria-disabled: still tabbable (links too), reason announced, clicks swallowed. Long reasons wrap.
 
-Do not disable the button at all: leave it live, judge validity in the submit handler, and carry the text under the button with hint, warning or error — the same three inputs the fields take, with the same message line under them. A message longer than the label widens the pair, button included, the way a field's control spans its own message.
+Keep it live, validate on submit, and explain with the fields' hint, warning or error line. A longer message widens the button.
 
-reserveMessage holds the line's height while it is empty, so a button that gains an error mid-form does not shove the layout below it. Same input, same DS_CONFIG.field.reserveMessage fallback as the fields.
+reserveMessage holds the empty line, so a late error does not shift layout. Falls back to DS_CONFIG.field.reserveMessage, as on fields.
 
 Full API: `Button.d.ts`. How to use the component anywhere: `Button.prompt.md`.

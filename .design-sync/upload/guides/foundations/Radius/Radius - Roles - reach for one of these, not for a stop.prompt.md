@@ -1,5 +1,5 @@
 # Radius - roles — reach for one of these, not for a stop
 
-Four role tokens carry every corner in the library; the scale above is what they resolve to. Using a stop directly says "this corner belongs to no role", which is almost never true.
+Components resolve only these four roles. Retheme corners by moving them. A raw stop says "no role", almost never true. Set --radius-pill-value (e.g. var(--radius-sm)) to square every pill.
 
-There is no field role; scope the control role instead: ds-input --ds-radius-control: 4px;.
+No field role; scope the control role: ds-input --ds-radius-control: 4px;.

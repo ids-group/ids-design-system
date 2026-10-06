@@ -27,6 +27,8 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 14 | `14-unread-tokens` | which of the 121 public tokens the library never reads to remove: none, the 51 sizes of components and patterns that do not exist (0 reads in three consumers), or all 121 (12 of them read by a consumer) |
 | 15 | `15-unasked-decisions` | six behaviour changes already in Unreleased that shipped without a choice between alternatives - theme attribute ownership, modal confirm, avatar-group max, disabled link reason, icon registry merge, chart pin geometry - each with its options drawn |
 | 16 | `16-column-chart-filter` | how `ds-column-chart` gets a caption under each column and a persistent selection - point fields, chart inputs with a template, or nothing - each written as the same consumer task with its rendering |
+| 17 | `17-table-column-hint` | what a `ds-table` header with `hint` shows when its label does not fit the column: only the hint as today, the full label over the hint, or a header that wraps instead - before/after screenshots of the docs demo at `8eb6ab9e` and `e0ff159f`, the three options drawn |
+| 18 | `18-table-header-clip` | the `ds-table` header label that clips with an ellipsis inside its column and the tooltip of a clipped hinted header (label, then hint) - before/after screenshots of the docs demo on dev and on `fix/table-header-clip`: narrow headers, focus ring, plain and hinted tooltip, with the measurements |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is

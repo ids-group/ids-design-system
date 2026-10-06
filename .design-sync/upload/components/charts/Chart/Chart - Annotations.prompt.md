@@ -1,5 +1,5 @@
 # Chart container - annotations
 
-dsSeriesAnnotation pins a label to one reading so it reads without a pointer, in print or a screenshot. The caller passes the reading (categoryIndex, value, optional axis), since a mark never sees the other marks; it reports no domain.
+dsSeriesAnnotation pins a label to a reading, legible without a pointer or in print. Pass the reading (categoryIndex, value, optional axis): marks never see each other. It reports no domain.
 
 Full API: `Chart.d.ts`. How to use the component anywhere: `Chart.prompt.md`.

@@ -1,5 +1,5 @@
 # Split button - primary variant
 
-The main action fires immediately; the chevron reveals alternative actions. Last triggered action is shown below.
+The main action fires at once; the chevron opens the alternatives.
 
 Full API: `SplitButton.d.ts`. How to use the component anywhere: `SplitButton.prompt.md`.
