@@ -14,12 +14,13 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**121 open — 5 P1, 5 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**122 open — 6 P1, 5 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P1 — 5
+### P1 — 6
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer)
+  - A clipped hinted header shows its label and hint as two plain lines; the label should be a bold line of its own (asked by Stas, 2026-10-06)
 - **Asked by Stas**
   - Review branch `fix/published-manifests-audit` before it is merged (Stas, 2026-10-06)
   - A click pins a tooltip: hover shows it at once, a click keeps it open (Stas, 2026-10-06)
@@ -240,6 +241,7 @@ Defects a consumer hit - from a QA pass, or from reading a consumer tree for a r
 
 - [ ] **[P3] The tooltip arrow stays at the panel centre when CDK pushes the panel off a viewport edge, so it does not point at the trigger (from the mm-ecm consumer, an info icon near the right edge).** `tooltip-panel.component.scss` placed the arrow at `left: 50%` / `top: 50%`. Branch `fix/tooltip-arrow-anchor` (worktree `ids-design-system-arrow`), commit `326dbbda`: the directive measures trigger and pane on every pane style write and sets `--_tooltip-arrow-x/-y`, clamped clear of the radius; `build:lib` passes. **Left, parked by Stas until asked:** browser check at the left edge, right edge, centre and after a flip (arrow centre vs trigger centre, before and after); CHANGELOG Unreleased Fixed and `migrations/unreleased.json`; the before/after deck; lint gates.
 - [ ] **[P1] `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer).** `components.md` (bar chart, "Behaviour") says a non-finite value draws no bar and prints a dash. `bar-chart.component.ts` formats `plainValue(row.value) ?? extent.high`, and `extent.high` of NaN is 0, so the label and the share read `0 / 0.0%`. Seen in a docs build at `e0ff159f` (2026-10-06, a NaN row in the bar chart demo). **Wanted:** the dash the doc describes, in the value, the share and the generated summary. Raised to P1 (Stas, 2026-10-06): it is one of the gaps in the "`ds-bar-chart` customization asked by mm-ecm" item (work branch `feat/bar-chart-customization`).
+- [ ] **[P1] A clipped hinted header shows its label and hint as two plain lines; the label should be a bold line of its own (asked by Stas, 2026-10-06).** `dsTooltipClippedLead` joins lead and hint with a newline and `tooltip-panel.component.scss` sets `white-space: pre-line` for every tooltip, so any tooltip text with a newline now breaks there and the label is the same weight as the hint. **Wanted:** a `lead` input on `TooltipPanelComponent` rendered as a bold line, set by the directive only while the host is clipped, and `pre-line` reverted. Work branch `fix/tooltip-arrow-anchor` (tooltip group). A started, unverified patch: mm-ecm-platform `.claude/local/from-scratchpad/2026-10-06-tooltip-lead-bold/tooltip-lead-bold.wip.patch` (local, not in git).
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
