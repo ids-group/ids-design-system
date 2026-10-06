@@ -230,27 +230,19 @@
       text-underline-offset: 3px;
     }
 
-    span.th-label.has-hint {
-      &:focus-visible {
-        @include focus.ring;
+    button.th-label:focus-visible {
+      @include focus.ring;
 
-        border-radius: var(--radius-sm);
-      }
+      border-radius: var(--radius-sm);
     }
 
-    button.th-label {
+    &.sortable button.th-label {
       cursor: pointer;
       user-select: none;
       transition: color var(--duration-fast) var(--ease-standard);
 
       &:hover {
         color: var(--text-secondary);
-      }
-
-      &:focus-visible {
-        @include focus.ring;
-
-        border-radius: var(--radius-sm);
       }
     }
 

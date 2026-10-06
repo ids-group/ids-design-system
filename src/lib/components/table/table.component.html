@@ -110,12 +110,21 @@
                     [size]="12">
                   </ds-icon>
                 </button>
+              } @else if (col.hint) {
+                <button
+                  type="button"
+                  class="th-label has-hint"
+                  [dsTooltip]="col.hint">
+                  @if (col.label) {
+                    {{ col.label }}
+                  } @else if (col.screenReaderLabel) {
+                    <span class="visually-hidden">
+                      {{ col.screenReaderLabel }}
+                    </span>
+                  }
+                </button>
               } @else {
-                <span
-                  class="th-label"
-                  [class.has-hint]="!!col.hint"
-                  [attr.tabindex]="col.hint ? 0 : null"
-                  [dsTooltip]="col.hint ?? ''">
+                <span class="th-label">
                   @if (col.label) {
                     {{ col.label }}
                   } @else if (col.screenReaderLabel) {
