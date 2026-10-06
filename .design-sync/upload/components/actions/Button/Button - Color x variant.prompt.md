@@ -1,9 +1,9 @@
 # Buttons - color × variant
 
-Every color × variant combination — all of them render. Defaults are color="primary" variant="solid". Cells marked ⚠ are UX-discouraged: they work (and emit a dev-mode warning), but read poorly — grey solid looks disabled; quiet success/warning (outline/ghost) is too low-contrast — prefer solid/tonal there.
+Defaults: color="primary" variant="solid". ⚠ cells work (with a dev warning) but read poorly: grey solid looks disabled; outline/ghost success/warning lack contrast; use solid/tonal there.
 
-The whole text column is ⚠: variant="text" is the link look the global .link class already gives any <a> / <button>. Prefer .link; use variant="text" only when you need the ds-button API on that look (loading, fullWidth, (pressed), icons).
+The text column is ⚠: it duplicates .link on <a> / <button>. Use variant="text" only for loading, fullWidth, (pressed) or icons on that look.
 
-secondary and tertiary are brand roles with their own default hues (warm orange, cool violet), independent of --primary; recolour them with --secondary-h/s/l and --tertiary-h/s/l.
+secondary (orange) and tertiary (violet) are independent of --primary; recolour via --secondary-h/s/l, --tertiary-h/s/l.
 
 Full API: `Button.d.ts`. How to use the component anywhere: `Button.prompt.md`.

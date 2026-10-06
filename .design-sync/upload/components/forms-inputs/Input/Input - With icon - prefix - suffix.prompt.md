@@ -1,5 +1,5 @@
 # Input - with icon · prefix · suffix
 
-Clicking anywhere in the frame — a leading icon, a prefix/suffix add-on, or the padding — focuses the input; only nested controls (a projected button, the clear ✕, the password toggle) keep their own click. Same behaviour on ds-search and ds-textarea. Put dsFieldClickFocus on your own field wrapper and a click anywhere in it focuses the input or textarea inside.
+A click in the frame focuses the input, except on nested controls (button, clear ✕, password toggle). Same on ds-search and ds-textarea; on your own wrapper, add dsFieldClickFocus.
 
 Full API: `Input.d.ts`. How to use the component anywhere: `Input.prompt.md`.

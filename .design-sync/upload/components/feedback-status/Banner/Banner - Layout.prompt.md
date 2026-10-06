@@ -1,5 +1,5 @@
 # Banner - layout
 
-layout="stacked" (default) wraps actions onto a new line; use for multi-line messages or several CTAs. layout="row" keeps actions on the right edge, vertically centred with the body; use for one-line messages with a single trailing CTA.
+layout="stacked" (default): actions on a new line, for long messages or several CTAs. layout="row": actions right, centred, for one line and one CTA.
 
 Full API: `Banner.d.ts`. How to use the component anywhere: `Banner.prompt.md`.

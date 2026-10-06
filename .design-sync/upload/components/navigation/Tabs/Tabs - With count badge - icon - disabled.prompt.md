@@ -1,7 +1,5 @@
 # Tabs - with count badge · icon · disabled
 
-A trailing count chip, a leading icon and a disabled tab on the line variant.
-
 Inbox items.
 
 Flagged items.

@@ -1,7 +1,7 @@
 # Modal Card - status
 
-status takes DsStatus and sets the icon-badge tint, title colour, default icon and ARIA role; the icon is there so severity is not signalled by colour alone. error and warning become alertdialog, the rest dialog - the same split as ds-alert 's alert / status.
+status takes DsStatus and sets icon-badge tint, title colour, default icon and role: error and warning get alertdialog, the rest dialog, as in ds-alert.
 
-icon (overrides the glyph), dialogRole (overrides the role) and showClose are inputs of ds-modal-card only; ds-modal always picks icon and role from status and always shows the close button.
+icon, dialogRole and showClose: ds-modal-card only; ds-modal derives icon and role from status, always with close.
 
 Full API: `ModalCard.d.ts`. How to use the component anywhere: `ModalCard.prompt.md`.

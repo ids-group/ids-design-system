@@ -1,3 +1,3 @@
 # Iconography - size scale
 
-Five canonical sizes, --icon-2xs to --icon-lg. Every glyph renders inside a 24-unit viewBox at stroke-width: 1.75.
+Five sizes, --icon-2xs to --icon-lg; glyphs use a 24-unit viewBox. Default 16px (DS_CONFIG.icon.size); stroke 1.75 ([stroke]), rounded caps.

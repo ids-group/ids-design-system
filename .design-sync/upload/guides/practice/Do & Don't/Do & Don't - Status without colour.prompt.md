@@ -1,5 +1,5 @@
 # Do / Don't - status without colour
 
-Dot + label. Readable when copied, read aloud, or seen by a colour-blind user.
+Dot + label: survives copying, screen readers and colour blindness.
 
-Dot alone — colour-blind users have no signal, and the label is invisible to a screen reader.
+Dot alone: no signal for colour-blind or screen-reader users.

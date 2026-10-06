@@ -1,7 +1,7 @@
 # Auth layout - two-tone wordmark, flat card
 
-Project [dsBrandName] when one slice of the wordmark carries the brand colour. Import BrandNameDirective from @ids-group-ltd/ids-design-system/components/sidenav, or the attribute is inert and the projection falls into the card.
+For [dsBrandName], import BrandNameDirective from @ids-group-ltd/ids-design-system/components/sidenav; without it the attribute is inert and the projection lands in the card.
 
-The tagline is optional. cardElevation (default 'raised') and cardPadding (default 'lg') pass through to ds-card; a flat card suits a canvas that is already tinted.
+cardElevation (default 'raised') and cardPadding (default 'lg') pass through to ds-card; flat suits a tinted canvas.
 
 Full API: `AuthLayout.d.ts`. How to use the component anywhere: `AuthLayout.prompt.md`.

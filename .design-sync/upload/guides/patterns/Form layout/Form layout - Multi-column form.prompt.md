@@ -1,6 +1,6 @@
 # Form layout - multi-column form
 
-Two-column section pattern: title and description on the left, fields on the right. Fields stack vertically; naturally-paired controls (Start / End, City / Country) sit side-by-side. A footer anchors every form with a secondary Discard and a primary Save. The date fields are plain inputs because this demo shows layout; real forms use ds-date-picker (with mode="range" for a start/end pair) and ds-time-picker.
+Title and description left, fields right. Demo dates are plain inputs; real forms use ds-date-picker (with mode="range" for a start/end pair) and ds-time-picker.
 
 The display name and ID used across the operations stack.
 

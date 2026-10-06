@@ -1,5 +1,5 @@
 # Do / Don't - button hierarchy
 
-One primary action per view. Everything else is tonal, outline or ghost - Cancel never competes with Save.
+One primary per view; the rest tonal, outline or ghost.
 
-Three solid primaries fight each other — the user has to read every label to find the canonical path.
+Three solid primaries: no main path stands out.

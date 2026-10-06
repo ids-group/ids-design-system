@@ -1,5 +1,5 @@
 # Sidenav Group - expandable groups
 
-<ds-sidenav-group expandable> renders the header as a toggle button with a caret. Group body collapses when expanded=false. Combine with the icon input to set a group-level icon.
+<ds-sidenav-group expandable> makes the header a toggle with a caret; the body collapses when expanded=false; icon sets a group icon.
 
 Full API: `SidenavGroup.d.ts`. How to use the component anywhere: `SidenavGroup.prompt.md`.
