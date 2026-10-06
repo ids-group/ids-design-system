@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.14.8 — 2026-10-06
+
 ### Added
 
 - **`TableColumn.hint` defines a column's term.** Set it and the header label of `ds-table` gets a
