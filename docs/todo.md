@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**118 open — 1 P1, 6 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**119 open — 1 P1, 6 P2, 112 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
@@ -34,10 +34,11 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 111
+### P3 — 112
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The tooltip arrow stays at the panel centre when CDK pushes the panel off a viewport edge, so it does not point at the trigger (from the mm-ecm consumer, an info icon near the right edge)
+  - `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer)
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
@@ -236,6 +237,7 @@ Defects a consumer hit - from a QA pass, or from reading a consumer tree for a r
 
 - [ ] **[P2] A `ds-table` header label wider than its column spills over the next header instead of clipping (from the mm-ecm consumer).** `thead th` is `white-space: nowrap` with no overflow clip (`table.component.scss` `thead th`), so a narrow column's label runs past its edge and overlaps the neighbouring label; the last column is cut by the table's scroll edge. Measured 2026-10-06 in the docs build at `8eb6ab9e` and `e0ff159f`, column `width: 96`: th clientWidth / scrollWidth 96 / 209 ("Event date and time slot"), 99 / 244 ("Booking confirmation status") - same before and after `TableColumn.hint`. Branch `feat/table-truncate-column-clip` holds only deck 17 and does not change the header. **Blocks** the clipped-header pick (A/B/C) in deck `17-table-column-hint` on `docs/table-column-hint-deck`, which assumes a clean ellipsis. mm-ecm Marketing channels puts 16 hints on headers, some on narrow columns.
 - [ ] **[P3] The tooltip arrow stays at the panel centre when CDK pushes the panel off a viewport edge, so it does not point at the trigger (from the mm-ecm consumer, an info icon near the right edge).** `tooltip-panel.component.scss` placed the arrow at `left: 50%` / `top: 50%`. Branch `fix/tooltip-arrow-anchor` (worktree `ids-design-system-arrow`), commit `326dbbda`: the directive measures trigger and pane on every pane style write and sets `--_tooltip-arrow-x/-y`, clamped clear of the radius; `build:lib` passes. **Left, parked by Stas until asked:** browser check at the left edge, right edge, centre and after a flip (arrow centre vs trigger centre, before and after); CHANGELOG Unreleased Fixed and `migrations/unreleased.json`; the before/after deck; lint gates.
+- [ ] **[P3] `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer).** `components.md` (bar chart, "Behaviour") says a non-finite value draws no bar and prints a dash. `bar-chart.component.ts` formats `plainValue(row.value) ?? extent.high`, and `extent.high` of NaN is 0, so the label and the share read `0 / 0.0%`. Seen in a docs build at `e0ff159f` (2026-10-06, a NaN row in the bar chart demo). **Wanted:** the dash the doc describes, in the value, the share and the generated summary.
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
