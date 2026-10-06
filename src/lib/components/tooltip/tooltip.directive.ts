@@ -319,6 +319,7 @@ export class TooltipDirective implements OnDestroy {
       ),
     );
     cmpRef.setInput('panelId', this.tipId);
+    this.pointArrowAtHost(this.ref, cmpRef.location.nativeElement);
     if (this.disclosesOwnText(text)) {
       return;
     }
@@ -329,6 +330,28 @@ export class TooltipDirective implements OnDestroy {
       'aria-describedby',
       existing ? `${existing} ${this.tipId}` : this.tipId,
     );
+  }
+
+  // positionChanges skips a re-apply that only pushes the pane; the styles CDK writes do not.
+  // The pane is measured, not the panel: the panel's enter animation scales it.
+  private pointArrowAtHost(ref: OverlayRef, panel: HTMLElement): void {
+    const pane = ref.overlayElement;
+    const point = () => {
+      const trigger = this.hostElement.getBoundingClientRect();
+      const box = pane.getBoundingClientRect();
+      panel.style.setProperty(
+        '--_tooltip-arrow-x',
+        `${trigger.left + trigger.width / 2 - box.left - panel.clientLeft}px`,
+      );
+      panel.style.setProperty(
+        '--_tooltip-arrow-y',
+        `${trigger.top + trigger.height / 2 - box.top - panel.clientTop}px`,
+      );
+    };
+    const observer = new MutationObserver(point);
+    observer.observe(ref.hostElement, { attributeFilter: ['style'] });
+    observer.observe(pane, { attributeFilter: ['style'] });
+    ref.detachments().subscribe({ complete: () => observer.disconnect() });
   }
 
   private positionFor(placement: TooltipPlacement) {
