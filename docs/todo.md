@@ -14,12 +14,17 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**119 open — 1 P1, 6 P2, 112 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**122 open — 5 P1, 6 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P1 — 1
+### P1 — 5
 
+- **Defects consumers work around today (swept 2026-09-23)**
+  - `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer)
 - **Asked by Stas**
   - Review branch `fix/published-manifests-audit` before it is merged (Stas, 2026-10-06)
+  - A click pins a tooltip: hover shows it at once, a click keeps it open (Stas, 2026-10-06)
+  - A definition-term directive: an inline term that opens a tooltip on hover and focus and pins on click (Stas, 2026-10-06)
+  - `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
 
 ### P2 — 6
 
@@ -34,11 +39,10 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 112
+### P3 — 111
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The tooltip arrow stays at the panel centre when CDK pushes the panel off a viewport edge, so it does not point at the trigger (from the mm-ecm consumer, an info icon near the right edge)
-  - `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer)
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
@@ -237,7 +241,7 @@ Defects a consumer hit - from a QA pass, or from reading a consumer tree for a r
 
 - [ ] **[P2] A `ds-table` header label wider than its column spills over the next header instead of clipping (from the mm-ecm consumer).** `thead th` is `white-space: nowrap` with no overflow clip (`table.component.scss` `thead th`), so a narrow column's label runs past its edge and overlaps the neighbouring label; the last column is cut by the table's scroll edge. Measured 2026-10-06 in the docs build at `8eb6ab9e` and `e0ff159f`, column `width: 96`: th clientWidth / scrollWidth 96 / 209 ("Event date and time slot"), 99 / 244 ("Booking confirmation status") - same before and after `TableColumn.hint`. Branch `feat/table-truncate-column-clip` holds only deck 17 and does not change the header. **Blocks** the clipped-header pick (A/B/C) in deck `17-table-column-hint` on `docs/table-column-hint-deck`, which assumes a clean ellipsis. mm-ecm Marketing channels puts 16 hints on headers, some on narrow columns.
 - [ ] **[P3] The tooltip arrow stays at the panel centre when CDK pushes the panel off a viewport edge, so it does not point at the trigger (from the mm-ecm consumer, an info icon near the right edge).** `tooltip-panel.component.scss` placed the arrow at `left: 50%` / `top: 50%`. Branch `fix/tooltip-arrow-anchor` (worktree `ids-design-system-arrow`), commit `326dbbda`: the directive measures trigger and pane on every pane style write and sets `--_tooltip-arrow-x/-y`, clamped clear of the radius; `build:lib` passes. **Left, parked by Stas until asked:** browser check at the left edge, right edge, centre and after a flip (arrow centre vs trigger centre, before and after); CHANGELOG Unreleased Fixed and `migrations/unreleased.json`; the before/after deck; lint gates.
-- [ ] **[P3] `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer).** `components.md` (bar chart, "Behaviour") says a non-finite value draws no bar and prints a dash. `bar-chart.component.ts` formats `plainValue(row.value) ?? extent.high`, and `extent.high` of NaN is 0, so the label and the share read `0 / 0.0%`. Seen in a docs build at `e0ff159f` (2026-10-06, a NaN row in the bar chart demo). **Wanted:** the dash the doc describes, in the value, the share and the generated summary.
+- [ ] **[P1] `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer).** `components.md` (bar chart, "Behaviour") says a non-finite value draws no bar and prints a dash. `bar-chart.component.ts` formats `plainValue(row.value) ?? extent.high`, and `extent.high` of NaN is 0, so the label and the share read `0 / 0.0%`. Seen in a docs build at `e0ff159f` (2026-10-06, a NaN row in the bar chart demo). **Wanted:** the dash the doc describes, in the value, the share and the generated summary. Raised to P1 (Stas, 2026-10-06): it is one of the gaps in the "`ds-bar-chart` customization asked by mm-ecm" item (work branch `feat/bar-chart-customization`).
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
@@ -378,6 +382,39 @@ Each has somebody behind it. Nothing here is speculative work.
   without an auditor and the review steps - is in `.claude/local/todo/manifest-audit-review.md` and
   `.claude/local/from-scratchpad/2026-10-06-manifest-audit/` (local to this checkout, not in git).
   The branch stays out of dev until Stas approves it.
+
+- [ ] **[P1] A click pins a tooltip: hover shows it at once, a click keeps it open (Stas, 2026-10-06).** Work branch `fix/tooltip-arrow-anchor` (parked; its code is not touched by this item).
+  Hover shows the tooltip at once. A click on the trigger keeps it open after the pointer leaves; a click outside, `Esc` or blur closes it - the way `ds-select` or a date picker panel stays open. No visual "pinned" marker. Today `tooltip.directive.ts` closes on click (`@HostListener('click')` -> `onClose`).
+  **Opt-in** for info and definition triggers only: a tooltip on a control with its own action must not pin.
+  **References:** Inclusive Components, "Tooltips & Toggletips" https://inclusive-components.design/tooltips-toggletips/ ; Carbon `DefinitionTooltip` (button trigger, click toggles, `openOnHover`) https://github.com/carbon-design-system/carbon/blob/main/packages/react/src/components/Tooltip/DefinitionTooltip.tsx
+
+- [ ] **[P1] A definition-term directive: an inline term that opens a tooltip on hover and focus and pins on click (Stas, 2026-10-06).** Work branch `fix/tooltip-arrow-anchor`. Depends on the pin item above.
+  Carbon's "definition tooltip": the term is rendered as `<button type="button">` with a dotted underline in `--text-tertiary`; the tooltip shows on hover and focus, a click pins it, `Esc` closes. For labels and table cells where an icon per term is noise.
+  `ds-table` `TableColumn.hint` (branch `feat/table-column-hint-term`) is the same pattern inside the header and should reuse it.
+  **Consumer today hand-rolls it:** mm-ecm-platform `src/frontend/projects/ecm-portal/src/styles.scss` (`.term-hint`) and the `term-hint` buttons in `src/frontend/projects/ecm-portal/src/app/features/programs/pages/analyze/journey-outcomes/journey-waterfall.component.html`.
+
+- [ ] **[P1] `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06).** Work branch `feat/bar-chart-customization` (empty marker branch from dev).
+  The consumer draws "label + bar + number" rows in Analyze (the journey waterfall and the exit reasons) by hand because `ds-bar-chart` cannot be configured to match. **Two implementation routes, the DS team decides:** (a) extend `ds-bar-chart` with the options below, or (b) a new `ds-bar-list` row component for label + bar + number rows. `ds-funnel-chart` is not a fit: the consumer cannot change the chart type.
+  **Gaps:**
+  - label to the left of the bar on the same line (today above it);
+  - an expandable group row with a chevron and sub-rows;
+  - configurable bar height;
+  - per-row bar colour supplied by the consumer;
+  - a term label with a dotted underline and a hint (the definition-term item above);
+  - per-row emphasis (bold first and last row);
+  - per-row percent visibility (`showPercent` today is all-or-none);
+  - an empty value shows a dash, not `0` - the defect item "`ds-bar-chart` prints `0` and `0.0%` for a non-finite value" in "Defects consumers work around today", raised to P1 by this ask;
+  - a row outside the chain (for example "Completed or exited");
+  - loading that dims the rows instead of a skeleton.
+  **ECM source** (mm-ecm-platform repo root), `src/frontend/projects/ecm-portal/src/app/features/programs/pages/analyze/journey-outcomes/`:
+  - `journey-waterfall.component.ts`, `.html`, `.scss`
+  - `journey-exits.component.ts`, `.html`, `.scss`
+  **Screenshots** (`docs/asks/bar-chart/`):
+  - `ecm-journey-waterfall-expanded.webp` - the ECM waterfall with a group row expanded
+  - `ecm-journey-waterfall-live-data.webp` - the same on live programme data
+  - `ecm-exit-reasons.webp` - the exit and suppression reasons
+  - `compare-ecm-waterfall.webp` against `compare-ds-bar-chart-waterfall-rows.webp` - ECM and `ds-bar-chart` with the same rows
+  - `compare-ds-bar-chart-exit-reasons.webp` - `ds-bar-chart` with the exit reasons (one colour, `0` for an empty value)
 
 - [ ] **[P3] `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23).** The English `waterfall`
   is the field's standard word - Excel, Power BI, Tableau, Highcharts and ECharts all use it, with
