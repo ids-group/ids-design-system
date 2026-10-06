@@ -225,6 +225,19 @@
       text-align: left;
     }
 
+    .th-label.has-hint {
+      text-decoration: underline dotted var(--border-strong);
+      text-underline-offset: 3px;
+    }
+
+    span.th-label.has-hint {
+      &:focus-visible {
+        @include focus.ring;
+
+        border-radius: var(--radius-sm);
+      }
+    }
+
     button.th-label {
       cursor: pointer;
       user-select: none;

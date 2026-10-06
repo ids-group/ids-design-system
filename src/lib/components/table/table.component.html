@@ -78,7 +78,6 @@
           @for (col of visibleColumns(); track col.key; let first = $first) {
             <th
               scope="col"
-              dsTooltipWhenClipped
               [class]="headerClasses(col)"
               [class.numeric]="col.align === 'right'"
               [class.pin-first]="first && stickyFirstColumn()"
@@ -88,11 +87,14 @@
               [style.max-width.px]="columnWidth(col)"
               [attr.aria-sort]="ariaSort(col)"
               [attr.data-col-key]="col.key"
-              [dsTooltip]="col.label">
+              [dsTooltipWhenClipped]="!col.hint"
+              [dsTooltip]="col.hint ? '' : col.label">
               @if (sortableCol(col)) {
                 <button
                   type="button"
                   class="th-label"
+                  [class.has-hint]="!!col.hint"
+                  [dsTooltip]="col.hint ?? ''"
                   (click)="onSort(col)">
                   @if (col.label) {
                     {{ col.label }}
@@ -109,7 +111,11 @@
                   </ds-icon>
                 </button>
               } @else {
-                <span class="th-label">
+                <span
+                  class="th-label"
+                  [class.has-hint]="!!col.hint"
+                  [attr.tabindex]="col.hint ? 0 : null"
+                  [dsTooltip]="col.hint ?? ''">
                   @if (col.label) {
                     {{ col.label }}
                   } @else if (col.screenReaderLabel) {

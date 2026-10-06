@@ -94,6 +94,24 @@
   </ds-table>
 
   <h3 class="block-title t-h4">
+    Column hint
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      hint: '…'
+    </code> defines a column's term: the label gets a dotted underline and shows the hint on hover
+    and keyboard focus. On a sortable column the sort button carries it, with no extra Tab stop.
+  </p>
+
+  <ds-table
+    caption="Records with column hints"
+    sortMode="client"
+    [data]="sortableRows"
+    [columns]="hintColumns"
+    [stickyHeader]="false" />
+
+  <h3 class="block-title t-h4">
     Header sort states
   </h3>
 
