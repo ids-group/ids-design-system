@@ -9,6 +9,13 @@
   hint replaces the tooltip that shows a clipped label in full. A column without `hint` renders as
   before.
 
+### Fixed
+
+- **A `ds-table` header label wider than its column ends in an ellipsis.** It ran past the column over
+  the next header, and the last column's was cut by the scroll edge. The label now clips inside its
+  column; the sort icon and the filter button stay visible, and the clipped label still shows in a
+  tooltip. A header that fits is unchanged.
+
 ## 0.14.7 — 2026-10-05
 
 ### Added

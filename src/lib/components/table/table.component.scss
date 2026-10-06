@@ -223,6 +223,17 @@
       text-transform: inherit;
       color: inherit;
       text-align: left;
+      max-width: 100%;
+    }
+
+    .th-label:has(+ .col-filter-btn) {
+      max-width: calc(100% - var(--space-1) - 12px);
+    }
+
+    .th-text {
+      min-width: 0;
+
+      @include text-clip.single-line-ellipsis;
     }
 
     .th-label.has-hint {
@@ -252,6 +263,7 @@
       height: var(--sort-ic-size);
       margin-left: var(--sort-ic-gap);
       vertical-align: middle;
+      flex-shrink: 0;
 
       /* vertical-align:middle aligns to x-height centre, but the UPPERCASE label centres ~1px
          higher. */

@@ -96,13 +96,15 @@
                   [class.has-hint]="!!col.hint"
                   [dsTooltip]="col.hint ?? ''"
                   (click)="onSort(col)">
-                  @if (col.label) {
-                    {{ col.label }}
-                  } @else if (col.screenReaderLabel) {
-                    <span class="visually-hidden">
-                      {{ col.screenReaderLabel }}
-                    </span>
-                  }
+                  <span class="th-text">
+                    @if (col.label) {
+                      {{ col.label }}
+                    } @else if (col.screenReaderLabel) {
+                      <span class="visually-hidden">
+                        {{ col.screenReaderLabel }}
+                      </span>
+                    }
+                  </span>
 
                   <ds-icon
                     class="sort-icon"
@@ -115,23 +117,27 @@
                   type="button"
                   class="th-label has-hint"
                   [dsTooltip]="col.hint">
-                  @if (col.label) {
-                    {{ col.label }}
-                  } @else if (col.screenReaderLabel) {
-                    <span class="visually-hidden">
-                      {{ col.screenReaderLabel }}
-                    </span>
-                  }
+                  <span class="th-text">
+                    @if (col.label) {
+                      {{ col.label }}
+                    } @else if (col.screenReaderLabel) {
+                      <span class="visually-hidden">
+                        {{ col.screenReaderLabel }}
+                      </span>
+                    }
+                  </span>
                 </button>
               } @else {
                 <span class="th-label">
-                  @if (col.label) {
-                    {{ col.label }}
-                  } @else if (col.screenReaderLabel) {
-                    <span class="visually-hidden">
-                      {{ col.screenReaderLabel }}
-                    </span>
-                  }
+                  <span class="th-text">
+                    @if (col.label) {
+                      {{ col.label }}
+                    } @else if (col.screenReaderLabel) {
+                      <span class="visually-hidden">
+                        {{ col.screenReaderLabel }}
+                      </span>
+                    }
+                  </span>
                 </span>
               }
 

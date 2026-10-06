@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**122 open — 5 P1, 6 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**121 open — 5 P1, 5 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 5
 
@@ -26,11 +26,10 @@ item and nothing else.
   - A definition-term directive: an inline term that opens a tooltip on hover and focus and pins on click (Stas, 2026-10-06)
   - `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
 
-### P2 — 6
+### P2 — 5
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
-  - A `ds-table` header label wider than its column spills over the next header instead of clipping (from the mm-ecm consumer)
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Open verdicts, each drawn in a deck**
@@ -239,7 +238,6 @@ Defects a consumer hit - from a QA pass, or from reading a consumer tree for a r
 
 - [ ] **[P2] The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer).** `--border-default` is `var(--neutral-200)` (`_semantic.scss:49`, #DCE1EA) and is the resting edge of `ds-input` (`input.component.scss:17`) and 25 more components: 1.31:1 on white in the stock theme against the 3:1 WCAG 1.4.11 floor for a control boundary. `--secondary-on` is the constant `var(--primary-on)` = white (`:134`, `:116`) while `--secondary` recomposes from `--secondary-h/s/l`, so a gold secondary (#FBAC18) gets white text at 1.91:1 - and the stock theme already fails: white on the stock `--secondary` #FF7B2E (`hsl(22 100% 59%)`) is 2.59:1 against 4.5:1 (computed 2026-10-02). ids-europe-landing rebinds both (`_theme.scss:44-57`, `:89`). **Wanted:** a control-edge role that clears 3:1 in both themes (or `--border-default` moved to it), and `--secondary-on` derived from `--secondary`'s lightness or listed in the brand must-rebind checklist of the brand-unsafe item.
 
-- [ ] **[P2] A `ds-table` header label wider than its column spills over the next header instead of clipping (from the mm-ecm consumer).** `thead th` is `white-space: nowrap` with no overflow clip (`table.component.scss` `thead th`), so a narrow column's label runs past its edge and overlaps the neighbouring label; the last column is cut by the table's scroll edge. Measured 2026-10-06 in the docs build at `8eb6ab9e` and `e0ff159f`, column `width: 96`: th clientWidth / scrollWidth 96 / 209 ("Event date and time slot"), 99 / 244 ("Booking confirmation status") - same before and after `TableColumn.hint`. Branch `feat/table-truncate-column-clip` holds only deck 17 and does not change the header. **Blocks** the clipped-header pick (A/B/C) in deck `17-table-column-hint` on `docs/table-column-hint-deck`, which assumes a clean ellipsis. mm-ecm Marketing channels puts 16 hints on headers, some on narrow columns.
 - [ ] **[P3] The tooltip arrow stays at the panel centre when CDK pushes the panel off a viewport edge, so it does not point at the trigger (from the mm-ecm consumer, an info icon near the right edge).** `tooltip-panel.component.scss` placed the arrow at `left: 50%` / `top: 50%`. Branch `fix/tooltip-arrow-anchor` (worktree `ids-design-system-arrow`), commit `326dbbda`: the directive measures trigger and pane on every pane style write and sets `--_tooltip-arrow-x/-y`, clamped clear of the radius; `build:lib` passes. **Left, parked by Stas until asked:** browser check at the left edge, right edge, centre and after a flip (arrow centre vs trigger centre, before and after); CHANGELOG Unreleased Fixed and `migrations/unreleased.json`; the before/after deck; lint gates.
 - [ ] **[P1] `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer).** `components.md` (bar chart, "Behaviour") says a non-finite value draws no bar and prints a dash. `bar-chart.component.ts` formats `plainValue(row.value) ?? extent.high`, and `extent.high` of NaN is 0, so the label and the share read `0 / 0.0%`. Seen in a docs build at `e0ff159f` (2026-10-06, a NaN row in the bar chart demo). **Wanted:** the dash the doc describes, in the value, the share and the generated summary. Raised to P1 (Stas, 2026-10-06): it is one of the gaps in the "`ds-bar-chart` customization asked by mm-ecm" item (work branch `feat/bar-chart-customization`).
 
