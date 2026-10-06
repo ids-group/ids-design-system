@@ -90,6 +90,7 @@
               [dsTooltipWhenClipped]="!col.hint"
               [dsTooltip]="col.hint ? '' : col.label">
               @if (sortableCol(col)) {
+                <!-- TODO(definition-term): render this through the definition-term directive once it exists (docs/todo.md P1) -->
                 <button
                   type="button"
                   class="th-label"
@@ -114,6 +115,7 @@
                   </ds-icon>
                 </button>
               } @else if (col.hint) {
+                <!-- TODO(definition-term): render this through the definition-term directive once it exists (docs/todo.md P1) -->
                 <button
                   type="button"
                   class="th-label has-hint"
