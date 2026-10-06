@@ -2,7 +2,7 @@
   "version": "unreleased",
   "items": [],
   "informational": [
-    "TableColumn takes an optional hint: the ds-table header label gets a dotted underline and shows the hint in a tooltip on hover and keyboard focus. A non-sortable label with a hint gains tabindex 0; a sortable one keeps its button as the only Tab stop. A column with a hint shows no clipped-label tooltip."
+    "TableColumn takes an optional hint: the ds-table header label gets a dotted underline and shows the hint in a tooltip on hover and keyboard focus. A non-sortable label with a hint renders as a button styled like the label; a sortable one keeps its sort button as the only Tab stop. A column with a hint shows no clipped-label tooltip."
   ],
   "deleteList": []
 }

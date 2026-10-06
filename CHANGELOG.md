@@ -3,10 +3,11 @@
 ### Added
 
 - **`TableColumn.hint` defines a column's term.** Set it and the header label of `ds-table` gets a
-  dotted underline and shows the hint in a tooltip on hover and keyboard focus, announced as the
-  label's description. A sortable label keeps its single Tab stop; a plain label becomes focusable.
-  The hint replaces the tooltip that shows a clipped label in full. A column without `hint` renders
-  as before.
+  dotted underline in `--text-tertiary` and shows the hint in a tooltip on hover and keyboard focus,
+  announced as the label's description. A sortable label keeps its sort button as the single Tab
+  stop; a plain label with a hint renders as a `<button type="button">` styled like the label. The
+  hint replaces the tooltip that shows a clipped label in full. A column without `hint` renders as
+  before.
 
 ## 0.14.7 — 2026-10-05
 
