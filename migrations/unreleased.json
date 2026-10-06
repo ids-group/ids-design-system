@@ -1,6 +1,26 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends TooltipDirective"
+      ],
+      "detect": [
+        "extends TooltipDirective"
+      ],
+      "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
+      "appliesWhen": "Only a class of yours that extends TooltipDirective. Template users of dsTooltip need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it (TS2415); only a rename does.",
+      "restore": null,
+      "verify": "The app builds with no TS2415 or TS4114 against TooltipDirective.",
+      "note": "TooltipDirective gained the public dsTooltipClippedLead."
+    }
+  ],
   "informational": [
     "TableColumn takes an optional hint: the ds-table header label gets a dotted underline and shows the hint in a tooltip on hover and keyboard focus. A non-sortable label with a hint renders as a button styled like the label; a sortable one keeps its sort button as the only Tab stop. While the label is clipped the tooltip shows the label and then the hint; otherwise the hint alone.",
     {
