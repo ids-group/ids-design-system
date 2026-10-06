@@ -17,6 +17,12 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Build
+
+- **`[dsModalConfirm]` is on the hand-maintained surface.** The elements route generates no
+  wrapper for it: it wires a projected action to `ds-modal`'s `confirmed` output, so a card draws
+  the confirm button as a plain one and loses nothing.
+
 ## 0.14.6 — 2026-10-02
 
 ### Cards
