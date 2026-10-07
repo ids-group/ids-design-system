@@ -30,6 +30,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 17 | `17-table-column-hint` | what a `ds-table` header with `hint` shows when its label does not fit the column: only the hint as today, the full label over the hint, or a header that wraps instead - before/after screenshots of the docs demo at `8eb6ab9e` and `e0ff159f`, the three options drawn |
 | 18 | `18-table-header-clip` | the `ds-table` header label that clips with an ellipsis inside its column and the tooltip of a clipped hinted header (label, then hint) - before/after screenshots of the docs demo on dev and on `fix/table-header-clip`: narrow headers, focus ring, plain and hinted tooltip, with the measurements |
 | 19 | `19-tooltip-markup` | what the tooltip of a `ds-table` header with `hint` shows once `dsTooltipClippedLead` goes and `dsTooltip` understands only `**bold**`: label and hint always, hint only, label only while clipped and measured by the table, or the input stays - each drawn on a clipped and a fitting header |
+| 20 | `20-date-picker-width` | the `--ds-date-picker-max-width` cap on a `fullWidth` `ds-date-picker` - before/after screenshots of the docs "Size · full width" demo on dev and on `feat/date-picker-width`, with the widths measured |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
