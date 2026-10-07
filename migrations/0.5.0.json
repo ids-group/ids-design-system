@@ -147,10 +147,11 @@
       "kind": "token-rename",
       "old": "--ds-datepicker-",
       "new": "--ds-date-picker-",
-      "action": "Replace the prefix `--ds-datepicker-` with `--ds-date-picker-` inside each full token name - twelve tokens.",
+      "action": "Replace the prefix `--ds-datepicker-` with `--ds-date-picker-` inside each full token name - twelve tokens - and the prefix `--datepicker-` of the globals `--datepicker-w`, `--datepicker-cell-gap` and `--datepicker-nav-size` with `--date-picker-`.",
       "note": "Names only: the prefix matches the selector now, and every value and CSS property is byte-identical.",
       "searchHints": [
-        "--ds-datepicker-"
+        "--ds-datepicker-",
+        "--datepicker-"
       ],
       "surface": "style"
     },
@@ -255,10 +256,11 @@
       "kind": "behavior",
       "old": "ds-search",
       "new": null,
-      "action": "To keep the old cap, set `--ds-search-maxw: 320px` on the host or in your theme.",
+      "action": "To keep the old cap, set `--ds-search-maxw: 320px` on the host or in your theme. Move an override of the global `--search-maxw`, which is gone, to `--ds-search-maxw`.",
       "note": "The default max-width went from 320px to none, so ds-search stretches like the rest of the field family.",
       "searchHints": [
-        "<ds-search"
+        "<ds-search",
+        "--search-maxw"
       ],
       "surface": "style",
       "restore": "--ds-search-maxw: 320px on the host or the theme",
