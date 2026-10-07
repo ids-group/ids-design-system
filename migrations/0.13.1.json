@@ -75,7 +75,7 @@
         "ChartTooltipDirective"
       ],
       "verify": "No subclass of the internal `ChartTooltipDirective` declares a member named `detachScrollClose` of its own; the app builds with no TS4114 or TS2416 on that class.",
-      "note": "The directive is internal: it tears down its own scroll subscription when the panel closes, which is what the new member holds. Subclassing a DS directive is unsupported, but a release that only adds can still fail such a build on a name collision."
+      "note": "The directive is internal: it tears down its own scroll subscription when the panel closes, which is what the new member, `detachScrollClose`, holds. Subclassing a DS directive is unsupported, but a release that only adds can still fail such a build on a name collision."
     },
     {
       "id": "date-time-picker-panes-carry-dropdown-panel-class",
@@ -202,6 +202,38 @@
       ],
       "verify": "No file imports the internal `ChartActiveMark` from `@ids-group-ltd/ids-design-system`; every import of it names the chart-tooltip entry point.",
       "note": "The type is internal, so the package root no longer exports it. Its `enter` also takes an optional third argument, which an existing implementation still satisfies."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "BarChartComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename your own member or mark it `override` wherever the compiler reports a collision with a class in `detect`. Delete an override of a member the class lost.",
+      "appliesWhen": "Only a class that extends one of the classes in `detect`. A consumer who uses the chart elements in templates needs nothing from this item.",
+      "pitfall": "`private` and `protected` give no protection: a member you redeclare collides with a base member of any visibility. A member of yours that replaced a lost one no longer replaces anything, and the component stops calling it.",
+      "note": "`BarChartComponent`, `ColumnChartComponent`, `DonutChartComponent`, `FunnelChartComponent` and `LineChartComponent` each gained `dataTableResolved`, `emptyTextResolved`, `errorTextResolved` and `valueFormatResolved`, the resolvers behind the inputs that now default to `null`, and the `dimOthers` input. `ColumnChartComponent` also gained `onMarkEnter` and `tooltipAnchor`, `FunnelChartComponent` `hitGapUnits`, and `LineChartComponent` `cursorBottomY`, `readingAnchor` and `tooltipAnchor`. `DonutChartComponent` lost `markStagger`.",
+      "verify": "The app builds with no error naming a class listed in `detect`, and every member of such a subclass that shares a base member's name is marked `override`.",
+      "searchHints": [
+        "extends BarChartComponent",
+        "extends ColumnChartComponent",
+        "extends DonutChartComponent",
+        "extends FunnelChartComponent",
+        "extends LineChartComponent"
+      ],
+      "detect": [
+        "extends BarChartComponent",
+        "BarChartComponent",
+        "extends ColumnChartComponent",
+        "ColumnChartComponent",
+        "extends DonutChartComponent",
+        "DonutChartComponent",
+        "extends FunnelChartComponent",
+        "FunnelChartComponent",
+        "extends LineChartComponent",
+        "LineChartComponent"
+      ],
+      "restore": null
     }
   ],
   "informational": [
