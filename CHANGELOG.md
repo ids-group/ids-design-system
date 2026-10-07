@@ -2554,7 +2554,8 @@
   on a coloured band read as an artefact rather than as a focus indicator. It is
   `--focus-ring-color` with a light keyline around it now — the keyline is what separates it from
   a mark of the same hue family, which is why the indicator is two tones either way.
-  `--ds-chart-focus-ring-color` and `--ds-chart-focus-halo-color` still set both.
+  `--ds-chart-focus-ring-color` and `--ds-chart-focus-halo-color` still set both; `white` and
+  `var(--static-ink)` are the old pair.
 
 - **A chart with nothing to draw keeps its axes.** `ds-line-chart` and `ds-column-chart` render
   the value axis and the category axis behind the empty, error and no-visible-series messages, so
@@ -3065,10 +3066,13 @@
 
   `ds-drawer` and `ds-bottom-sheet` keep `ds-slide-edge-in`, because sliding in from an edge is
   what they are, and `ds-modal` keeps `ds-scale-in`. Any surface takes its old entrance back with
-  one declaration:
+  one declaration, the panels at the root and `ds-alert` / `ds-banner` / `ds-toast` each on its own
+  hook:
 
   ```scss
   :root { --ds-overlay-enter-keyframes: ds-slide-in; }
+  ds-alert { --ds-alert-enter-keyframes: ds-slide-in; }
+  ds-banner { --ds-banner-enter-keyframes: ds-slide-in; }
   ds-toast { --ds-toast-enter-keyframes: ds-slide-in; }
   ```
 
@@ -8527,7 +8531,8 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   binding consumers are unaffected.
 - **`ds-button` tonal fill — `:active` now darkens past `:hover`.** The `tonal` variant reused the
   same token (`--c-muted-strong`) for both hover and active, so the pressed background was identical
-  to hover; active now mixes that tint ~10% toward black for a distinct pressed step.
+  to hover; active now mixes that tint ~10% toward black for a distinct pressed step
+  (`--ds-button-bg-color-active` restores the old one).
 - **Per-instance overlay panel token overrides now reach the portaled pane.** `--ds-*` panel tokens
   set on the host of `ds-autocomplete`, `ds-multi-select`, `ds-date-picker`, `ds-color-picker`,
   `ds-popover`, and `ds-time-picker` were ignored because the panel renders in a CDK overlay
@@ -8546,7 +8551,9 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   mask (two dates) is no longer cut off.
 - **`ultra-compact` density tier gained full token coverage.** `[data-density="ultra-compact"]` now
   also scales avatar size, sidenav width, badge / status-dot sizes, and switch geometry — previously
-  left at the cozy defaults, so those controls didn't shrink with the tier.
+  left at the cozy defaults, so those controls didn't shrink with the tier. Its switch goes from
+  24×20 px with a 12px thumb to 24×14 px with a 10px one (`--switch-track-h` /
+  `--switch-thumb-size` / `--switch-thumb-travel`).
 
 ## 0.5.0 — 2026-07-08
 
@@ -8576,7 +8583,8 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   `--ds-status-dot-*` (`color`, `size`); `--ds-pagehdr-*` → `--ds-page-header-*` (~10 tokens:
   eyebrow / title / subtitle / meta / crumb text colors, `meta-icon-color`, `divider`, `title-fs`,
   `title-gap`); `--ds-avatargroup-*` → `--ds-avatar-group-*` (`overlap`, `ring`, `overflow-bg-color`,
-  `overflow-label-color`). Only the names changed — the CSS property each feeds and every default
+  `overflow-label-color`); the globals `--datepicker-w` / `-cell-gap` / `-nav-size` →
+  `--date-picker-*`. Only the names changed — the CSS property each feeds and every default
   value are byte-identical; purely a naming-consistency fix.
 
 ### Added
@@ -8688,7 +8696,8 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 - **`ds-search` fills its container by default.** Default `max-width` changed from `320px` to `none` —
   `ds-search` now stretches to `width: 100%` like the rest of the field family (input / select /
   textarea) instead of being capped at 320px. New public `--ds-search-maxw` override token (default
-  `none`) to opt back into a fixed cap, e.g. `ds-search { --ds-search-maxw: 320px }`.
+  `none`) to opt back into a fixed cap, e.g. `ds-search { --ds-search-maxw: 320px }`; it replaces
+  the global `--search-maxw`, which is gone.
 - **Rounded press feedback + native tap-highlight suppression.** Interactive controls now show a
   rounded `:active` press state (`filter: brightness(0.9)` + `transform: scale(0.97)`) that follows
   each control's own border-radius/shape rather than a square box-shadow/background overlay — applied
@@ -8728,7 +8737,8 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   **discouraged** (dev-mode `console.warn` — prefer the global `.link` class); a small set of
   low-contrast `color × variant` combos (e.g. `neutral` solid, `success` / `warning` ghost/outline)
   render with a discouraged ⚠ marker rather than being banned. Each instance now sources its accent
-  from the `--accent-*` pointer layer (see ds-color).
+  from the `--accent-*` pointer layer (see ds-color). A migrated `outline` button presses to a
+  14% `--text-secondary` tint, was `--surface-secondary` (restore via `--ds-button-bg-color-active`).
 - **Reactive-forms radio now uses `<ds-radio-group>` as the group container and form control.**
   Standalone `<ds-radio [(checked)]>` continues to work for non-group usage, but a group of
   radios that participates in a reactive form should now be wrapped in `<ds-radio-group>`.
@@ -8830,7 +8840,10 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   no automatic `prefers-color-scheme` switch — to follow the OS, opt in at the app root with the new
   **`provideDsTheme({ followSystem: true })`** provider. Each theme declares `color-scheme` so native
   UI (scrollbars, form controls) matches. Adds theme-stable `--static-white` / `--static-ink` tokens
-  so on-fill text keeps correct contrast across themes. Non-breaking — additive, light output unchanged.
+  so on-fill text keeps correct contrast across themes: `--primary-on`, `--icon-on-primary` and
+  `--text-on-*` read them instead of `--neutral-0` / `--neutral-900`, so under
+  `data-neutrals="brand"` `--text-on-warning` is `#161A28`, not the brand-gray 900.
+  Non-breaking — additive, light output unchanged.
   Light and dark are **sibling themes** — a shared base palette (`themes/_base-palette`) + a shared
   role map (`themes/_semantic`); light applies at `:root`, dark at `:root[data-theme='dark']` (the
   dark block declares the complete token set, so it fully replaces light, not patches it).
@@ -8858,6 +8871,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   floating-label layout.
 - **`--field-label-gap` token** (single source for label↔control and control↔hint vertical
   rhythm, defaults to `--space-1-5`); every field control now routes its spacing through it.
+  It replaces `--field-gap-label`, which is gone.
 
 #### Components — new capabilities
 
@@ -8930,7 +8944,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 - **`prefers-reduced-motion` no longer freezes looping indicators.** A blanket
   `animation-duration: 0 !important` was stopping spinners and the indeterminate progress
   bar (a frozen spinner reads as "hung", not "loading"). Looping status indicators are now
-  slowed instead of zeroed; one-shot entrance/transition motion stays instant. The page-wide
+  slowed instead of zeroed (`--duration-loop-fast` / `-slow` 1400ms / 2800ms there, were 0ms); one-shot entrance/transition motion stays instant. The page-wide
   skeleton sweep still halts (large-area motion, the one reduced-motion should remove).
 - **Overlay scroll-lock is now released on dismiss.** The scoped `@keyframes` name guard now
   matches Angular's emulated-encapsulation suffix (`endsWith`, not `===`), so the page no
@@ -8954,13 +8968,14 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   dropzone, empty-state, icon-button, input, modal, pagination, search, sidenav, stat,
   table, tabs, tag, toast and topbar — plus global tokens (`--select-bg`, `--chart-hover-bg`,
   `--chart-tooltip-bg`, the `--status-*-bg` set) and private `--_*` tokens. Consumers
-  overriding e.g. `--ds-toast-bg` must rename to `--ds-toast-bg-color`.
+  overriding e.g. `--ds-toast-bg` must rename to `--ds-toast-bg-color`; the state variants
+  `--ds-*-bg-<state>` take it after `-bg` (`--ds-button-bg-hover` → `--ds-button-bg-color-hover`).
 - **Renamed `--*-fg` tokens → semantic `-text-color` / `-label-color` / `-icon-color`.**
   The unclear `fg` abbreviation is gone: text/titles/inputs → `-text-color`, control & nav
   labels → `-label-color`, icons/glyphs → `-icon-color`. Affects all public `--ds-*-fg`
   hooks — avatar, badge, banner, breadcrumbs, button, date-picker, dropzone, empty-state,
   icon-button, input, menu, modal, page-header, pagination, search, sidenav, table, tabs,
-  tag and topbar — plus the `--status-*` and chart-tooltip globals. Examples:
+  tag and topbar — plus the `--status-*` globals and `--chart-tooltip-fg`. Examples:
   `--ds-modal-title-fg` → `--ds-modal-title-text-color`, `--ds-sidenav-group-fg` →
   `--ds-sidenav-group-label-color`, `--ds-icon-button-fg` → `--ds-icon-button-icon-color`.
 

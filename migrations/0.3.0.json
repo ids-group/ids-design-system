@@ -6,13 +6,14 @@
       "kind": "token-rename",
       "old": "--ds-*-bg",
       "new": "--ds-*-bg-color",
-      "action": "Append `-color` to every DS token whose name ends in `-bg`. Covers the public `--ds-<component>-…-bg` hooks on avatar, badge, banner, button, card, date-picker, dropzone, empty-state, icon-button, input, modal, pagination, search, sidenav, stat, table, tabs, tag, toast and topbar, plus the globals `--select-bg`, `--chart-hover-bg`, `--chart-tooltip-bg` and the `--status-<x>-bg` set.",
+      "action": "Append `-color` to every DS token whose name ends in `-bg`, and insert it after `-bg` in the state variants `--ds-*-bg-<state>` (`--ds-button-bg-hover` becomes `--ds-button-bg-color-hover`, `--ds-toast-bg-error` becomes `--ds-toast-bg-color-error`). Covers the public `--ds-<component>-…-bg` hooks on avatar, badge, banner, button, card, date-picker, dropzone, empty-state, icon-button, input, modal, pagination, search, sidenav, stat, table, tabs, tag, toast and topbar, plus the globals `--select-bg`, `--chart-hover-bg`, `--chart-tooltip-bg` and the `--status-<x>-bg` set.",
       "appliesWhen": "Only to DS-owned tokens. Your own variables ending in `-bg` are untouched, and the private `--_*` internals renamed in lockstep have no public hook, so they need nothing.",
       "pitfall": "A blind search-and-replace on `-bg` renames YOUR variables too, and the result still compiles — a custom property resolves to nothing and the element silently loses its background. Before replacing a name, confirm the `-color` spelling exists in the installed 0.3.0 package under `themes/` or `styles/`; if it does not, the token was yours.",
       "note": "The tokens held only a colour and now feed `background-color`, so the name says which property it reaches.",
       "searchHints": [
         "-bg:",
         "-bg)",
+        "-bg-",
         "--select-bg",
         "--chart-hover-bg",
         "--chart-tooltip-bg",
@@ -28,10 +29,11 @@
       "action": "For each `-fg` token you override, look the replacement up in the 0.3.0 token reference on the documentation site, which lists every `--ds-*`; the global roles are also readable in the installed package under `themes/` and `styles/`. Three suffixes are in play and the split is real: at 0.3.0 the package exposes 16 `--ds-*-text-color`, 30 `-label-color` and 10 `-icon-color` hooks (state variants such as `-hover` included).",
       "appliesWhen": "Only to DS-owned tokens. A variable of your own ending in `-fg` is untouched.",
       "pitfall": "The suffix is NOT derivable from the old name, so guessing produces a name nothing reads and a silently unstyled element. Same shape, three answers: `--ds-modal-title-fg` became `-text-color`, `--ds-sidenav-group-fg` became `-label-color`, `--ds-icon-button-fg` became `-icon-color`.",
-      "note": "The `fg` abbreviation was dropped for a suffix that says what the token paints — text, a control or nav label, or a glyph. It covers the public `--ds-<component>-…-fg` hooks on avatar, badge, banner, breadcrumbs, button, date-picker, dropzone, empty-state, icon-button, input, menu, modal, page-header, pagination, search, sidenav, table, tabs, tag and topbar, plus the `--status-*` and chart-tooltip globals.",
+      "note": "The `fg` abbreviation was dropped for a suffix that says what the token paints — text, a control or nav label, or a glyph. It covers the public `--ds-<component>-…-fg` hooks on avatar, badge, banner, breadcrumbs, button, date-picker, dropzone, empty-state, icon-button, input, menu, modal, page-header, pagination, search, sidenav, table, tabs, tag and topbar, plus the `--status-*` globals and `--chart-tooltip-fg`.",
       "searchHints": [
         "-fg:",
         "-fg)",
+        "--chart-tooltip-fg",
         "--status-"
       ],
       "surface": "style",
