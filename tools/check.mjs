@@ -38,6 +38,7 @@ const EXTRA = {
   'deck-lint:selftest': ['tools/deck-lint-selftest.mjs'],
   // Sweeps published history and never fails: triage, not a gate.
   'manifest-coverage:audit': ['tools/check-manifest-coverage.mjs', '--audit'],
+  'manifest-claims:audit': ['tools/check-manifest-claims.mjs', '--audit'],
   probes: ['tools/run-probes.mjs'],
 };
 
@@ -45,7 +46,8 @@ export const GROUPS = {
   // `lint:all` runs this, then prettier, stylelint and eslint. Out deliberately: `manifest-truth`
   // and `delete-tables` answer about a release boundary that cannot move without a commit touching
   // the manifests, and the first reads 27 release trees; `todo-index` compares
-  // against `docs/todo.md`, which parallel sessions edit in a shared checkout.
+  // against `docs/todo.md`, which parallel sessions edit in a shared checkout. `manifest-claims`
+  // is in: it reads only the draft manifest and `## Unreleased`, which every PR can change.
   lint: [
     'tools-parse',
     'entry-point-imports',
@@ -64,6 +66,7 @@ export const GROUPS = {
     'dev-guards',
     'changelog-lint',
     'manifest-coverage',
+    'manifest-claims',
     'design-sync-log',
     'docs-attrs',
     'doc-tokens',
@@ -77,7 +80,8 @@ export const GROUPS = {
   // selftest runs before its lint: a green lint means the data satisfies the rules, not that the
   // rules can still fire. `manifest-coverage` and `manifest-truth` are here because the cut is the
   // last moment to catch them: once a block is published, a consumer has read the manifest's
-  // silence as "this release does not touch me". The PR gate runs most of the rest too, but it is
+  // silence as "this release does not touch me". `manifest-claims` for the same reason: a claim
+  // nobody measured is read as a fact the moment it ships. The PR gate runs most of the rest too, but it is
   // manual, so a release can be cut from a branch where it never fired. Left out: deck-lint, whose
   // subject is internal decks that never reach the package.
   release: [
@@ -91,6 +95,8 @@ export const GROUPS = {
     'manifest-coverage',
     'manifest-truth:selftest',
     'manifest-truth',
+    'manifest-claims:selftest',
+    'manifest-claims',
     'changelog-lint:selftest',
     'changelog-lint',
     'focus-rings',
