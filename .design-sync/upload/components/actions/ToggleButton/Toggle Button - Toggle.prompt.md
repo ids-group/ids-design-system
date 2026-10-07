@@ -1,5 +1,5 @@
 # Toggle Button - toggle
 
-A two-state action that stays pressed: [pressed] is the state and the button carries aria-pressed for it.
+[pressed] holds the on/off state, exposed as aria-pressed.
 
 Full API: `ToggleButton.d.ts`. How to use the component anywhere: `ToggleButton.prompt.md`.

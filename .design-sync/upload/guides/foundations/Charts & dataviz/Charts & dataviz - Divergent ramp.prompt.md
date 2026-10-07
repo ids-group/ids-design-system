@@ -1,3 +1,3 @@
 # Charts & dataviz - divergent ramp
 
-Red ← neutral → green for signed values where 0 is neutral.
+Red ← neutral → green for signed values around 0.

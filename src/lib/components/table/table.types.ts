@@ -25,6 +25,10 @@ export interface TableColumn<T = unknown> {
   label: string;
   /** Visually-hidden header name, for an intentionally empty `label`. */
   screenReaderLabel?: string;
+  /** Defines the column's term: the header label gets a dotted underline, a Tab stop, and shows
+   *  this text in a tooltip on hover and keyboard focus, announced as the label's description.
+   *  Replaces the tooltip that otherwise shows a clipped label in full. */
+  hint?: string;
   sortable?: boolean;
   /** Include the column in `filterQuery` matching; when none is marked, all match. Works on `hidden` columns. */
   filterable?: boolean;

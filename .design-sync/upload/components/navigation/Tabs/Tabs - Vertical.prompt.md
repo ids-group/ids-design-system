@@ -1,6 +1,6 @@
 # Tabs - vertical
 
-orientation="vertical" puts the tab list in a column beside the panel, with the active indicator on its right edge.
+orientation="vertical" stacks the tabs beside the panel, indicator on the right edge.
 
 Project at a glance.
 

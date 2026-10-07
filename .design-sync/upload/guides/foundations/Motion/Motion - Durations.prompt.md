@@ -1,3 +1,3 @@
 # Motion - durations
 
-Hover over each card to play the animation. Each puck travels the same distance over its duration with a shared easing.
+Hover to play. Under prefers-reduced-motion one-shot durations drop to 0; loops (--duration-loop-*) slow down.

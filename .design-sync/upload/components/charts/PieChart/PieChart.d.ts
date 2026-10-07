@@ -35,6 +35,10 @@ export interface PieChartProps {
   centerValue?: string | null;
   /** Caption under the centre value. */
   centerLabel?: string | null;
+  /** When the sum does not fit the hole even at `--ds-pie-chart-center-value-min-font-size`, prints it in the `'tick'` form of `valueFormat` (`32.4K`). A `centerValue` string is never shortened. */
+  centerCompact?: boolean;
+  /** `'below'` prints the value and its caption under the ring at full size, never shrunk or shortened. */
+  centerPlacement?: ('inside' | 'below');
   /** Legend placement, logical so it flips in right-to-left. */
   legend?: 'end' | 'bottom' | 'none';
   /** Longest legend to draw; past it the smallest slices are summed into one. Values below 2 are ignored. */
