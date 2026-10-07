@@ -491,8 +491,9 @@
   `ChartTooltipPanelComponent` gained `showsSwatches` and `swatches`; and the internal
   `ChartTooltipDirective` gained `dsChartTooltipSwatches`, `glide` and `glideFrom`. The `min` and
   `max` inputs of `HeatmapChartComponent` and the `max` and `maxSecondary` inputs of
-  `LineChartComponent` now carry a `numberAttribute` transform, so a subclass that redeclares one
-  must declare the same transform, and `tooltipLingerMs` on `ColumnSeriesComponent` and
+  `LineChartComponent` now carry a `numberAttribute` transform with the write type still
+  `number | null`, so a subclass that redeclares one compiles unchanged, and `tooltipLingerMs` on
+  `ColumnSeriesComponent` and
   `LineSeriesComponent` defaults to `500`. Build after upgrading; rename or mark `override` every member the
   compiler reports colliding. Subclassing a DS component is unsupported.
 
@@ -1032,8 +1033,7 @@
   `ChartComponent.tooltipPreferBelow`, `ColumnSeriesComponent.onMarkBlur`,
   `LineSeriesComponent.onMarkerBlur` and the internal `ChartTooltipDirective.dsChartTooltipPreferBelow`.
   Build after upgrading; rename or mark `override` every member the compiler reports colliding
-  (TS4114, or TS2416 where the signature differs - `AuthLayoutComponent`'s `landmark` default moved),
-  and delete an override whose base member is gone. A method named like a removed member and declared
+  (TS4114, or TS2416 where the signature differs), and delete an override whose base member is gone. A method named like a removed member and declared
   without `override` still compiles and is never called again. Subclassing a DS component is
   unsupported.
 

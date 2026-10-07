@@ -199,7 +199,7 @@
       "surface": "typescript",
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
       "appliesWhen": "Only a class of yours that extends one of the listed charts. Template users need nothing; subclassing a DS component is unsupported.",
-      "pitfall": "A subclass that overrode a shared input such as caption or frame now shadows the base class member: it compiles only with `override`, and a redeclared input.required data breaks against the optional base.",
+      "pitfall": "A subclass that overrode a shared input such as caption or frame now overrides the base class member and still compiles with `override`, and a redeclared input.required data still compiles against the optional base.",
       "restore": null,
       "searchHints": [
         "extends BarChartComponent",
