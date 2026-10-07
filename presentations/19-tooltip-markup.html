@@ -36,7 +36,7 @@
   }
   .th__text { display: block; overflow: clip; text-overflow: ellipsis; white-space: nowrap; }
   .case { display: grid; gap: var(--space-1); }
-  .case .tip { margin-top: var(--space-1); }
+  .case .tip { margin-top: var(--space-1); max-width: 100%; }
   .case + .case { margin-top: var(--space-3); }
   .cases { display: flex; flex-direction: column; }
   .why-none { margin: var(--space-1) 0 0; font: var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--error-text); }
@@ -56,7 +56,7 @@
   .opt.is-chosen { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
   .opt .chosen-mark { display: none; font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--accent-strong); }
   .opt.is-chosen .chosen-mark { display: block; }
-  .opts { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+  .opts { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
   .pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
   .pill { padding: 2px var(--space-2); border-radius: var(--radius-pill); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.5 var(--font-sans); }
   .pill.good { background: var(--success-subtitle); color: var(--success-text); }
@@ -101,7 +101,7 @@
   </section>
 
   <section class="panel q" data-q="lead">
-    <h2>Тултип заголовка с hint: четыре варианта</h2>
+    <h2>Тултип заголовка с hint: пять вариантов</h2>
     <p>В каждой карточке один и тот же заголовок в двух положениях: название обрезано узкой колонкой и название помещается. Под ним то, что покажет тултип. Колонка у консьюмера везде одна: <code>{ label: 'Registered attendee count', hint: 'People who confirmed a seat' }</code>. Выбор - клик по карточке.</p>
     <div class="opts">
       <article class="opt is-pick" tabindex="0">
@@ -158,6 +158,25 @@ People who confirmed a seat</span></div>
       </article>
 
       <article class="opt" tabindex="0">
+        <span class="badge is-same">вариант</span>
+        <h3>Директива сама: текст хоста жирным при обрезке</h3>
+        <div class="cases">
+          <div class="case"><p class="cap">Название обрезано</p><span class="th is-narrow"><span class="th__label" style="max-width:100%"><span class="th__text">Registered attendee count</span></span></span><span class="tip"><strong>Registered attendee count</strong>
+People who confirmed a seat</span></div>
+          <div class="case"><p class="cap">Название помещается</p><span class="th is-fits"><span class="th__label"><span class="th__text">Capacity</span></span></span><span class="tip">Seats in the hall</span></div>
+        </div>
+        <div class="pills"><span class="pill good">ни входа, ни состояния в таблице</span><span class="pill good">вид 0.14.8, подпись жирная</span><span class="pill bad">правило действует на любой dsTooltip на обрезанном тексте</span><span class="pill mid">исключение: подпись не добавляется, если dsTooltip уже содержит текст хоста</span></div>
+        <dl class="layer">
+          <dt>Что уходит из API</dt><dd><code>dsTooltipClippedLead</code></dd>
+          <dt>Кого затрагивает</dt><dd>в библиотеке только заголовки таблицы (проверено перебором всех dsTooltip в src/lib); у консьюмеров любой dsTooltip на обрезанном тексте получит жирный текст сверху</dd>
+        </dl>
+        <details class="inside"><summary>как устроено внутри директивы</summary><p class="code">// при открытии, в tipText()
+if (clipped && !given.includes(hostText))
+  text = '**' + hostText + '**\n' + given</p></details>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+
+      <article class="opt" tabindex="0">
         <span class="badge is-no">отклонено</span>
         <h3>Оставить dsTooltipClippedLead</h3>
         <div class="cases">
@@ -187,7 +206,7 @@ People who confirmed a seat</span><p class="why-none">подпись не жир
     <table>
       <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
       <tbody>
-        <tr class="row-pick"><th class="rowlabel">Тултип заголовка ds-table с hint</th><td>Подпись и hint, всегда · Только hint · Подпись при обрезке, считает таблица · Оставить dsTooltipClippedLead</td><td>Подпись и hint, всегда</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Тултип заголовка ds-table с hint</th><td>Подпись и hint, всегда · Только hint · Подпись при обрезке, считает таблица · Директива сама: текст хоста жирным при обрезке · Оставить dsTooltipClippedLead</td><td>Подпись и hint, всегда</td></tr>
       </tbody>
     </table>
   </section>
