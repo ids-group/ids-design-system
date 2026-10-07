@@ -3639,6 +3639,61 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "definition-term": {
+    "key": "definition-term",
+    "selector": "button[dsDefinitionTerm]",
+    "isElement": true,
+    "className": "DefinitionTermComponent",
+    "status": "stable",
+    "importName": "DefinitionTermComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/definition-term",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Keeps the definition open after a click until a click outside, `Escape` or blur. Turn it off where the click already does something, such as sorting a table column."
+      },
+      {
+        "name": "dsDefinitionTerm",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Tip text. An empty string turns the tooltip off."
+      },
+      {
+        "name": "dsTooltipPlacement",
+        "kind": "input",
+        "type": "TooltipPlacement",
+        "union": [
+          "top",
+          "bottom",
+          "left",
+          "right"
+        ],
+        "default": "'top'",
+        "required": false,
+        "description": "Which side the tip opens on. With no room there it opens on the opposite side."
+      },
+      {
+        "name": "dsTooltipClippedLead",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Opens the tip with this line, in bold, above `dsTooltip` while the host shows less text than it holds."
+      }
+    ],
+    "outputs": []
+  },
   "description-list:DescriptionItemComponent": {
     "key": "description-list",
     "selector": "ds-description-item",
@@ -4723,6 +4778,38 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fires on click unless disabled."
       }
     ]
+  },
+  "info-hint": {
+    "key": "info-hint",
+    "selector": "ds-info-hint",
+    "isElement": true,
+    "className": "InfoHintComponent",
+    "status": "stable",
+    "importName": "InfoHintComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/info-hint",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "text",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "The supplementary text, shown on hover and focus and kept open by a click."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "Accessible name of the icon button, such as \"About conversion rate\"."
+      }
+    ],
+    "outputs": []
   },
   "input": {
     "key": "input",
@@ -11607,7 +11694,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Opens the tip with this line above `dsTooltip` while the host shows less text than it holds. The tip keeps its own line break, so the two read as separate lines."
+        "description": "Opens the tip with this line, in bold, above `dsTooltip` while the host shows less text than it holds."
+      },
+      {
+        "name": "dsTooltipPinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip."
       }
     ],
     "outputs": []
@@ -11631,6 +11727,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": true,
         "description": "Tooltip text content."
+      },
+      {
+        "name": "lead",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Bold line shown above `text`."
       },
       {
         "name": "placement",
