@@ -38,6 +38,8 @@ const EXTRA = {
   'deck-lint:selftest': ['tools/deck-lint-selftest.mjs'],
   // Sweeps published history and never fails: triage, not a gate.
   'manifest-coverage:audit': ['tools/check-manifest-coverage.mjs', '--audit'],
+  // The prose-name and unread-value rules over published manifests, which fail only the draft.
+  'manifest-truth:audit': ['tools/check-manifest-truth.mjs', '--audit'],
   probes: ['tools/run-probes.mjs'],
 };
 
