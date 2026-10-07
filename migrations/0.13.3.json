@@ -58,7 +58,7 @@
     {
       "id": "bar-semantics-says-what-the-bar-is",
       "kind": "behavior",
-      "old": "ds-bar[semantics]",
+      "old": "ds-meter",
       "new": null,
       "surface": "template",
       "action": "Add `semantics=\"none\"` to every `ds-bar` rendered per row of a table or list whose figure is printed beside it, and `semantics=\"meter\"` to one that is the only place a measurement appears. A bar reporting how far a task has got needs nothing — that is the default.",
@@ -215,7 +215,7 @@
   ],
   "informational": [
     "`ds-column-chart` takes a list of named series on `data` as well as the flat list of points it already took, and a `stack` input (`'none'` | `'grouped'` | `'stacked'` | `'normalized'`) deciding how they share a category's band. A chart passing a flat list is unaffected: it stays one series across the whole band, coloured by point position, and `stack` defaults to `'none'`. A series list draws a legend under the plot and colours each series as a whole. See `column-chart-data-accepts-a-series-list` for the only code this can break.",
-    "`stack=\"stacked\"` on `ds-column-chart` and `axisMode=\"stacked\"` on `ds-line-chart` are different things: series drawn on top of each other, against two plots one above the other. Neither input changed; the words collide only when read side by side.",
+    "`stack=\"stacked\"` on `ds-column-chart` and `yAxisMode=\"stacked\"` on `ds-line-chart` are different things: series drawn on top of each other, against two plots one above the other. Neither input changed; the words collide only when read side by side.",
     "`ds-bar` carries everything `ds-progress` had — `value`, `max`, `variant`, `indeterminate`, `target` and `ariaLabel` keep their names and defaults — so for a progress bar the rename alone is the whole upgrade. It adds `semantics` and `color`.",
     "`indeterminate` is now ignored unless `semantics` is `progress`. Only a task has an unknown duration, and the input was never meaningful on a measurement. Nothing that used it on `ds-progress` is affected, because that is the default.",
     "The bar carries `min-inline-size: 3rem` (`--ds-bar-min-width`). `ds-progress` had none, so a bar inside a content-sized column or a shrink-to-fit flex item that used to collapse to nothing is now visible. Set the property to `0` to get the old collapsing behaviour back.",
