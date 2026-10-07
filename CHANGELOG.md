@@ -37,8 +37,8 @@
 - **A `ds-table` header label wider than its column ends in an ellipsis.** It ran past the column over
   the next header, and the last column's was cut by the scroll edge. The label now clips inside its
   column; the sort icon and the filter button stay visible, and the clipped label still shows in a
-  tooltip. A header that fits looks the same, but every label now sits in a `.th-text` span inside
-  `.th-label`, which carries the ellipsis.
+  tooltip. A header that fits looks the same, but every label now sits in a `.th-text` span, which
+  carries the ellipsis, inside `.th-label`.
 
 ## 0.14.7 — 2026-10-05
 
@@ -149,10 +149,11 @@
   band and the panel shows that point alone; Enter on it fires `pointClicked` as a click does.
   Enter on a band pins it and moving to another band lets the pin go; Escape steps back from a
   marker to the band and then closes the panel. The series markers are no longer Tab stops there;
-  charts whose pointer picks a mark are unchanged. A class extending `ChartComponent`,
-  `LineSeriesComponent` or `ColumnSeriesComponent` may collide with the members they gained
-  (`focusedCategory`, `axisPointElements` and the keyboard handlers); a colliding private one must
-  be renamed, since `override` cannot reach it.
+  charts whose pointer picks a mark keep their Tab stops and keys, except that Space on a line
+  marker no longer scrolls the page. A class extending `ChartComponent`, `LineSeriesComponent` or
+  `ColumnSeriesComponent` may collide with the members they gained (`focusedCategory`,
+  `axisPointElements` and the keyboard handlers); a colliding private one must be renamed, since
+  `override` cannot reach it.
 
 - **`styles/focus` emits its global rules only through `emit-rules`.** The base focus indicator
   (`:where(:focus-visible)`), the `ds-focus-ring-in` keyframes, the `data-focus` switch and the
@@ -993,9 +994,10 @@
   still gets en-US. To keep en-US: `provideDsConfig({ datePicker: { locale: 'en-US' } })`.
 
 - **`ds-dropzone` formats file sizes in the locale.** A listed file's size reads `DsConfig.locale`,
-  then `LOCALE_ID`; under a de-DE locale `1.5 MB` reads `1,5 MB`. Under en-US the text is unchanged
-  below 1000 MB and gains a group separator from 1000 MB (`1,024.0 MB`). To pin a dot decimal:
-  `provideDsConfig({ locale: 'en-US' })`, which also pins chart numbers and `ds-date-picker`.
+  then `LOCALE_ID`; under a de-DE locale `1.5 MB` reads `1,5 MB`. Under en-US the text gains a group
+  separator from 1000 KB up to 1 MB and from 1000 MB up (`1,000.0 KB`, `1,024.0 MB`), and is
+  unchanged everywhere else. To pin a dot decimal: `provideDsConfig({ locale: 'en-US' })`, which
+  also pins chart numbers and `ds-date-picker`.
 
 - **`ds-textarea` text size resolves `--ds-input-font-size`, then `--ds-field-font-size`, then
   `--font-size-s` (was fixed at `--font-size-s`).** A `ds-textarea` under an ancestor that sets
@@ -1009,9 +1011,10 @@
   under neither draws exactly what it drew. To restore the grey hover: `ds-search {
   --ds-search-border-hover: var(--border-default); }`.
 
-- **Subclassing one of these breaks on a name collision.** Every one gained a member - most an
-  `intl` accessor and the `...Resolved` readbacks that pair with the nullable text inputs above, the
-  nine chart components also `renderReady`: `AccordionComponent`, `AccordionItemComponent`,
+- **Subclassing one of these breaks on a name collision.** Every one but `AuthLayoutComponent`,
+  `LineSeriesComponent` and the internal `ChartTooltipDirective` gained a member - most an `intl`
+  accessor and the `...Resolved` readbacks that pair with the nullable text inputs above, the nine
+  chart components also `renderReady`: `AccordionComponent`, `AccordionItemComponent`,
   `AlertComponent`, `AppLayoutComponent`, `AuthLayoutComponent`, `AutocompleteComponent`,
   `AvatarComponent`, `AvatarGroupComponent`, `BadgeComponent`, `BannerComponent`,
   `BarChartComponent`, `BreadcrumbsComponent`, `ChartComponent`, `ColumnSeriesComponent`,
@@ -1073,9 +1076,11 @@
 - **Six field-family tokens sit under every text-entry field's own token.** `--ds-field-border-color`,
   `--ds-field-border-color-hover`, `--ds-field-border-color-focus`, `--ds-field-text-color`,
   `--ds-field-placeholder-color` and `--ds-field-font-size` reach `ds-input`, `ds-textarea`,
-  `ds-select`, `ds-multi-select`, `ds-autocomplete` and `ds-search`; a per-component token such as
-  `--ds-input-border` still wins where set. The date, time and colour pickers, the number stepper and
-  the OTP cells are not in the family. Every default is the value each field already drew.
+  `ds-select`, `ds-multi-select`, `ds-autocomplete` and `ds-search`, all but
+  `--ds-field-border-color-hover` on `ds-search`, whose hover border follows its resting one; a
+  per-component token such as `--ds-input-border` still wins where set. The date, time and colour
+  pickers, the number stepper and the OTP cells are not in the family. Every default is the value
+  each field already drew.
 
 - **`ds-select`, `ds-multi-select` and `ds-search` take their own size and colour hooks.**
   `ds-select`: `--ds-select-border-color-focus` (read by the focused and the open trigger alike),
@@ -1469,7 +1474,7 @@
   first word. The grid and the `ds-table-expand` animation sit on `.expand-panel-inner`, and the
   projected template is wrapped in `.expand-panel-content`, the track the reveal clips. A rule of
   yours that reached your template's root through `.expand-panel-inner >` selects
-  `.expand-panel-content` now; `.expand-panel-cell > .expand-panel-inner` is unchanged.
+  `.expand-panel-content` now; `.expand-panel-cell > .expand-panel-inner` still matches.
 
 ### What you can now DELETE
 
@@ -1574,7 +1579,7 @@
 
   An unknown custom property is not an error. The declaration stays in the stylesheet, the
   component reads its own fallback, and the element draws at its default with no build error and
-  no console warning, so a missed rename is silent. Grep for the six spellings and the three
+  no console warning, so a missed rename is silent. Grep for the twelve spellings and the three
   named tokens above.
 
 - **`--ds-container-pad` is `--ds-surface-padding`.** It is the padding every surface component
@@ -1899,9 +1904,10 @@
   ```
 
   It only shows once something widens the button past its contents, so on an inline button the two
-  values are identical. Named values rather than a `justify-content` token: the shape a full-width
-  action wants is the label at one edge and the arrow at the other, and publishing the CSS property
-  would publish every other flex arrangement with it.
+  values are identical unless a message longer than the label widens it. Named values rather than a
+  `justify-content` token: the shape a full-width action wants is the label at one edge and the
+  arrow at the other, and publishing the CSS property would publish every other flex arrangement
+  with it.
 
 - **`ds-pagination` takes `size` and `layout`.** `size` is the sm/md/lg control scale the rest of
   the library uses, unset resolving `DS_CONFIG.control.size` and then `sm`, which is the height the
@@ -1930,9 +1936,10 @@
   `--ds-dropdown-empty-font-size` for the panel's no-results line; and
   `--ds-autocomplete-input-font-size`.
 
-  Every default is the value the component already drew, so a chart of the surface before and
-  after is identical. The no-results line takes `inherit` as its size default, which is what it
-  resolved to when it declared none.
+  Every default is the value the component already drew, except the pagination label's: `normal`
+  and `none` replace the `letter-spacing` and `text-transform` it inherited, so a label under an
+  ancestor that sets either stops following it. The no-results line takes `inherit` as its size
+  default, which is what it resolved to when it declared none.
 
   The empty line's tokens are named for the dropdown panel rather than spelled `--ds-empty-*`,
   because `--ds-empty-state-*` is a different component and the two would have sat one hyphen
@@ -1978,12 +1985,12 @@
   ```
 
   **It is the only chart whose mark count the caller decides**, so it is the only one that thins its
-  own data. SVG degrades by the number of NODES, not readings: the same data as a line is one
-  `<path>` and as a scatter it is one node per point, while Lighthouse warns at about 800 nodes and
-  errors at about 1400 on a page that may hold four more charts. Past FOUR times the plot's width in
-  marks - not two, where the saving is invisible and the loss of detail is not - the series is
-  decimated, a line under the plot says how many readings were thinned, and the annex table still
-  lists every one.
+  own data. SVG degrades by the number of NODES, not readings: the same data as a line with no
+  markers and no `interactive` is one `<path>` and as a scatter it is one node per point, while
+  Lighthouse warns at about 800 nodes and errors at about 1400 on a page that may hold four more
+  charts. Past FOUR times the plot's width in marks - not two, where the saving is invisible and the
+  loss of detail is not - the series is decimated, a line under the plot says how many readings
+  were thinned, and the annex table still lists every one.
 
   `decimator` picks how. `'minMax'`, the default, keeps each bucket's highest and lowest reading by
   construction, so the spike a reader is looking for cannot be the point that was dropped; it also
@@ -2085,7 +2092,7 @@
   separate. The heat scale runs the same hue across the full lightness range, 95% to 31%, which is
   6.9-10.6 with 55.0 end to end (OKLab).
 
-  **`--ds-chart-ramp-*` is unchanged and `ds-funnel-chart` looks exactly as it did.** The two scales
+  **`--ds-chart-ramp-*` is unchanged, so `ds-funnel-chart` keeps its stage colours.** The two scales
   want opposite things: a funnel's stages are a shape read at a glance, where a stage at either
   extreme reads as a different object rather than as the next step, and a heat map needs every step
   the eye can hold. `ds-heatmap-chart` is the only thing painting with the heat scale.
@@ -2210,7 +2217,7 @@
   `tooltipLingerMs` and `defaults` among them. `LineChartComponent` gained 24 (`curve`, `stack`,
   `yAxisLabel`, `secondaryAxisLabel`, `plot`, `plotHeight` and the rest) and lost 51 protected and
   private geometry members now that its plot is drawn by `ds-chart`, so a subclass that overrode one
-  of those overrides nothing. `LineSeriesComponent`, public now, gained 17 (`curve`, `dimOthers`,
+  of those overrides nothing. `LineSeriesComponent`, public now, gained 18 (`curve`, `dimOthers`,
   `highlighted`, `patterns`, `pinOnClick`, `stacked`, `tooltipAnchor` and their helpers). Every
   chart gained the `defaults` and the table rows it hands `ds-chart-data-table`:
   `BarChartComponent`, `ColumnChartComponent`, `FunnelChartComponent`, `PieChartComponent` and
@@ -2500,8 +2507,8 @@
 - **Hovering a legend item behaves as hovering the mark it names.** On `ds-donut-chart` the panel
   opened over the legend row rather than over the arc, so the reader was pointed at the label
   instead of the slice; on `ds-funnel-chart` the stage rows did nothing at all. Both now open the
-  same panel over the MARK and dim the rest of the plot, identical to pointing at the arc or the bar
-  directly, and the keyboard route follows wherever the legend carries it.
+  same panel over the MARK and, under `dimOthers`, dim the rest of the plot, identical to pointing
+  at the arc or the bar directly, and the keyboard route follows wherever the legend carries it.
 
 - **A chart tooltip opens against its mark, not against the row that holds it.** `ds-bar-chart`
   anchored the panel to the whole row — label, value and track — so it opened a row-height above
@@ -2754,7 +2761,7 @@
   <ds-line-chart [max]="5000" [categories]="months" [series]="series" />
   ```
 
-  Null, the default, keeps the derived axis, so every existing chart is unchanged. A maximum below
+  Null, the default, keeps the derived axis, so an existing axis is unchanged. A maximum below
   the data does not clip it — the larger of the two wins, because hiding a reading is worse than
   more headroom than you asked for. `maxSecondary` does the same for the axis a series reaches with
   `axis: 'secondary'`.

@@ -239,7 +239,7 @@
       "new": null,
       "surface": "style",
       "action": "None, unless a screen relies on the inverted ds-tooltip: set the three --ds-tooltip-* colours on :root as in restore.",
-      "appliesWhen": "Every ds-tooltip, on both themes. The chart tooltip already took the same colours and is unchanged by this item.",
+      "appliesWhen": "Every ds-tooltip, on both themes. The chart tooltip moves to the same colours in this release, under its own item, and is unchanged by this one.",
       "pitfall": "A screenshot test of an open ds-tooltip changes, and a --ds-tooltip-bg-color override now meets a --tooltip-border-color border it did not have.",
       "restore": ":root { --ds-tooltip-bg-color: var(--surface-inverted); --ds-tooltip-text-color: var(--text-inverted); --ds-tooltip-border-color: transparent; }",
       "searchHints": [

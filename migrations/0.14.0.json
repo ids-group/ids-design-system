@@ -30,7 +30,7 @@
       "new": null,
       "surface": "style",
       "action": "If you style or hit-test .cdk-overlay-pane.ds-chart-tooltip-pane, scope the interactive half to .is-pinned. Ships in styles/overlay-motion, which styles/ds forwards.",
-      "appliesWhen": "Only an app with its own rule on the chart tooltip pane, or one that relied on the pane catching the pointer. The panel's content, position and dismissal are unchanged.",
+      "appliesWhen": "Only an app with its own rule on the chart tooltip pane, or one that relied on the pane catching the pointer. Making the pane inert leaves the panel's content, position and dismissal alone.",
       "pitfall": "An unpinned pane no longer takes the pointer, so moving onto the panel reaches the plot beneath it; a pinned pane still takes it. The panel's own content takes the pointer in neither case, so its text cannot be selected.",
       "restore": ".cdk-overlay-pane.ds-chart-tooltip-pane { pointer-events: auto; }",
       "searchHints": [
@@ -131,7 +131,7 @@
       "new": null,
       "surface": "none",
       "action": "None. A category panel now lists every series at that category rather than only the one that opened it.",
-      "appliesWhen": "Only a ds-chart with cursor=\"category\" holding more than one mark. A per-mark tooltip is unchanged.",
+      "appliesWhen": "Only a ds-chart with cursor=\"category\" holding more than one mark. A per-mark tooltip still names only its own mark.",
       "pitfall": "A panel that named one series now names several, so a custom tooltipTemplate that assumed a single entry renders more rows than it did.",
       "restore": null,
       "searchHints": [
