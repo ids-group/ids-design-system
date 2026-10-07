@@ -379,6 +379,31 @@ export function diffDefaults(before, after) {
       ...verdict,
     });
   }
+  // A key on one side only whose name the other side still declares is a context that came or
+  // went (`dark theme`, `[data-density="compact"]`, a changed `@media` prelude): the name lives
+  // on, so that context's default was updated from or to nothing.
+  const contextOnly = (side, other, names) =>
+    [...side.entries]
+      .filter(
+        ([key, entry]) => !other.entries.has(key) && names.has(entry.name),
+      )
+      .map(([, entry]) => entry);
+  const contextChange = (entry, beforeText, afterText) =>
+    changes.push({
+      change: 'updated',
+      name: entry.name,
+      kind: entry.kind,
+      where: label(entry),
+      before: beforeText,
+      after: afterText,
+      level: 0,
+      cosmetic: null,
+      via: [],
+    });
+  for (const old of contextOnly(before, after, namesAfter))
+    contextChange(old, valuesText(old), '(none)');
+  for (const current of contextOnly(after, before, namesBefore))
+    contextChange(current, '(none)', valuesText(current));
 
   const gone = [...before.entries.values()].filter(
     (entry) => !namesAfter.has(entry.name),
