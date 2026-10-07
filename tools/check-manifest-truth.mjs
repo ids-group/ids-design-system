@@ -55,7 +55,7 @@ const tags = (() => {
 
 // One `git cat-file --batch` per tag, not one `git show` per file: a tag's surface is ~400 files
 // and the per-spawn cost dominates everything else. Nothing is written to disk.
-function readTreeAt(tag) {
+export function readTreeAt(tag) {
   let paths;
   try {
     paths = git(['ls-tree', '-r', '--name-only', tag, '--', 'src/lib'])
@@ -117,6 +117,11 @@ export function surfaceAt(tag) {
 // The same parser over the files on disk. `migrations/unreleased.json` describes the boundary
 // between the last tag and HEAD, so the AFTER side of it is the working tree and not a tag.
 export function surfaceOfWorkingTree() {
+  const files = workingTreeFiles();
+  return files?.length ? buildSurface(files) : null;
+}
+
+export function workingTreeFiles() {
   const files = [];
   const crawl = (dir) => {
     for (const item of readdirSync(dir, { withFileTypes: true })) {
@@ -134,7 +139,7 @@ export function surfaceOfWorkingTree() {
   } catch {
     return null;
   }
-  return files.length ? buildSurface(files) : null;
+  return files;
 }
 
 function buildSurface(files) {

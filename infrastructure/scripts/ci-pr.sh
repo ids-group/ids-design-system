@@ -76,6 +76,14 @@ node tools/changelog-lint.mjs
 echo "===== changelog-lint selftest ====="
 node tools/changelog-lint-selftest.mjs
 
+# A public change merged without a line under `## Unreleased` is reconstructed from the diff at the
+# cut, weeks later, by someone who did not make it. Compared with the last release tag rather than
+# the PR's target: every unreleased change has to be described, and the tags are what this clone
+# is guaranteed to hold.
+echo "===== changelog pending ====="
+node tools/check-changelog-pending-selftest.mjs
+node tools/check-changelog-pending.mjs
+
 # A doc comment pushed off its symbol still compiles and still lints clean, and the extractor
 # prints it under whatever member now follows it.
 echo "===== docblock drift ====="

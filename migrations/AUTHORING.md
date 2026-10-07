@@ -474,6 +474,10 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       symbol that resolves against the library tree, and a manifest that mentions none of them. So
       it cannot be answered with prose — name the surface, or the entry needed no line and is not
       asked for one.
+- [ ] Every public change since the last tag - a class member, an exported symbol, an element, a
+      `--ds-*` hook or its fallback - is named under `## Unreleased` or in `unreleased.json` by the
+      change that makes it; a commit that changes none carries the trailer `Changelog: none`.
+      (`tools/check-changelog-pending.mjs`, in lint, the PR gate and the preflight)
 
 ## Why the format is shaped this way
 

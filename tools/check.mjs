@@ -40,6 +40,7 @@ const EXTRA = {
   'manifest-coverage:audit': ['tools/check-manifest-coverage.mjs', '--audit'],
   // The prose-name and unread-value rules over published manifests, which fail only the draft.
   'manifest-truth:audit': ['tools/check-manifest-truth.mjs', '--audit'],
+  'changelog-pending:audit': ['tools/check-changelog-pending.mjs', '--audit'],
   probes: ['tools/run-probes.mjs'],
 };
 
@@ -47,7 +48,9 @@ export const GROUPS = {
   // `lint:all` runs this, then prettier, stylelint and eslint. Out deliberately: `manifest-truth`
   // and `delete-tables` answer about a release boundary that cannot move without a commit touching
   // the manifests, and the first reads 27 release trees; `todo-index` compares
-  // against `docs/todo.md`, which parallel sessions edit in a shared checkout.
+  // against `docs/todo.md`, which parallel sessions edit in a shared checkout. `changelog-pending`
+  // is in: it reads one tag's tree and the working tree in about a second, and a change is cheapest
+  // to describe in the session that made it.
   lint: [
     'tools-parse',
     'entry-point-imports',
@@ -65,6 +68,7 @@ export const GROUPS = {
     'docblock-drift',
     'dev-guards',
     'changelog-lint',
+    'changelog-pending',
     'manifest-coverage',
     'design-sync-log',
     'docs-attrs',
@@ -80,8 +84,10 @@ export const GROUPS = {
   // rules can still fire. `manifest-coverage` and `manifest-truth` are here because the cut is the
   // last moment to catch them: once a block is published, a consumer has read the manifest's
   // silence as "this release does not touch me". The PR gate runs most of the rest too, but it is
-  // manual, so a release can be cut from a branch where it never fired. Left out: deck-lint, whose
-  // subject is internal decks that never reach the package.
+  // manual, so a release can be cut from a branch where it never fired. `changelog-pending` is here
+  // because the cut folds `## Unreleased` into the release block, and a change it never named
+  // leaves with nothing describing it. Left out: deck-lint, whose subject is internal decks that
+  // never reach the package.
   release: [
     'tools-parse',
     'class-surface-entry',
@@ -95,6 +101,8 @@ export const GROUPS = {
     'manifest-truth',
     'changelog-lint:selftest',
     'changelog-lint',
+    'changelog-pending:selftest',
+    'changelog-pending',
     'focus-rings',
     'docs-attrs',
     'color-families',
