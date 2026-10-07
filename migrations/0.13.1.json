@@ -62,9 +62,9 @@
       "old": "ChartTooltipDirective",
       "new": null,
       "surface": "typescript",
-      "action": "Only if you SUBCLASS the internal `ChartTooltipDirective`, which the package root does not export, and declare a member called `detachScrollClose`: rename yours, or add `override` where your member genuinely means the scroll-close teardown.",
+      "action": "Only if you SUBCLASS the internal `ChartTooltipDirective`, which the package root does not export, and declare a member called `detachScrollClose`: rename yours. The new member is private, so `override` does not clear the collision.",
       "appliesWhen": "Only a class extending the internal `ChartTooltipDirective`. It is not exported from the package root — `@ids-group-ltd/ids-design-system/components/chart-tooltip` is the only specifier that reaches it — and a chart that uses it through the five chart components needs nothing.",
-      "pitfall": "The collision is a compile error, not a silent one — TS4114 for a same-named member, TS2416 where the signature differs — so a build that passes has none.",
+      "pitfall": "The collision is a compile error, not a silent one — TS2415 on the class for a same-named member, with or without `override`, and TS2416 where the signature differs — so a build that passes has none.",
       "restore": null,
       "searchHints": [
         "detachScrollClose",
@@ -74,7 +74,7 @@
         "extends ChartTooltipDirective",
         "ChartTooltipDirective"
       ],
-      "verify": "No subclass of the internal `ChartTooltipDirective` declares a member named `detachScrollClose` of its own; the app builds with no TS4114 or TS2416 on that class.",
+      "verify": "No subclass of the internal `ChartTooltipDirective` declares a member named `detachScrollClose` of its own; the app builds with no TS2415, TS4114 or TS2416 on that class.",
       "note": "The directive is internal: it tears down its own scroll subscription when the panel closes, which is what the new member holds. Subclassing a DS directive is unsupported, but a release that only adds can still fail such a build on a name collision."
     },
     {
