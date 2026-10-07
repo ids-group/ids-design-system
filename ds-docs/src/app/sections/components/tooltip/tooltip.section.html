@@ -2,7 +2,7 @@
   anchor="tooltip"
   eyebrow="Components"
   title="Tooltip"
-  [apiKeys]="['tooltip:TooltipPanelComponent']">
+  [apiKeys]="['tooltip:TooltipPanelComponent', 'info-hint', 'definition-term']">
   <span lede>
     Hover or focus popup for truncated text, keyboard hints and short clarifications, via
     <code class="t-mono-inline">
@@ -149,6 +149,87 @@
       [dsTooltip]="'Last synced 14m ago'">
       Hover me · bottom
     </ds-button>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Pin on click
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsTooltipPinOnClick
+    </code> opens at once on hover and focus, and a
+    click keeps the tip open after the pointer leaves. A click outside,
+    <code class="t-mono-inline">
+      Escape
+    </code> or blur closes it; a second click on the trigger too.
+    Opt in only where the click does nothing else: without it a click closes the tip.
+  </p>
+
+  <div class="demo">
+    <ds-button
+      dsTooltipPinOnClick
+      color="neutral"
+      variant="outline"
+      size="sm"
+      [dsTooltip]="'Stays open after a click'">
+      Click to pin
+    </ds-button>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Info hint
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      &lt;ds-info-hint&gt;
+    </code> is an info icon button with an
+    <code class="t-mono-inline">
+      ariaLabel
+    </code>; its <code class="t-mono-inline">text</code> shows
+    on hover and focus and pins on click.
+  </p>
+
+  <div class="demo">
+    <span class="t-s info-row">
+      Conversion rate
+      <ds-info-hint
+        ariaLabel="About conversion rate"
+        text="Share of contacts who reached the goal step, of all who entered the journey." />
+    </span>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Definition term
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      &lt;button dsDefinitionTerm="…"&gt;
+    </code> marks a term with a
+    dotted underline and shows its definition on hover and focus; a click pins it.
+    <code class="t-mono-inline">
+      [pinOnClick]="false"
+    </code> where the click already acts, as on a
+    sortable <code class="t-mono-inline">ds-table</code> header.
+  </p>
+
+  <div class="demo">
+    <p class="t-s">
+      Contacts who
+      <button
+        type="button"
+        dsDefinitionTerm="Left the journey before the goal step, by any exit rule.">
+        exited
+      </button>
+      the journey are not counted as
+      <button
+        type="button"
+        dsDefinitionTerm="Reached the goal step within the attribution window.">
+        converted
+      </button>
+    </p>
   </div>
 
   <h3 class="block-title t-h4">

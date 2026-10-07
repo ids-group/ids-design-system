@@ -41,3 +41,9 @@
       border-radius: var(--radius-md);
       cursor: pointer;
     }
+
+    .info-row {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
