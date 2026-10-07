@@ -13,16 +13,24 @@
 
 - **`dsTooltipClippedLead` puts a line above a tooltip while its host is clipped.** Set it to the
   host's own text and the tip reads that text, a line break, then `dsTooltip`; while the host shows
-  all of its text the tip is `dsTooltip` alone. A tooltip now keeps a line break written into its
-  text. `TooltipDirective` gained the public `dsTooltipClippedLead`, so a subclass declaring that
-  name must rename it.
+  all of its text the tip is `dsTooltip` alone. `TooltipDirective` gained the public
+  `dsTooltipClippedLead`, so a subclass declaring that name must rename it.
+
+### Changed
+
+- **A tooltip keeps a line break written into its text.** A `dsTooltip` string, or the text a
+  `dsTooltipWhenClipped` host discloses, that holds a newline now breaks there; it read as a space
+  before. Runs of spaces still collapse, and a text on one line is unchanged. A string built from a
+  data value with a newline, or from a template literal written across several lines, now shows one
+  row per line; join the lines with a space to keep the old look.
 
 ### Fixed
 
 - **A `ds-table` header label wider than its column ends in an ellipsis.** It ran past the column over
   the next header, and the last column's was cut by the scroll edge. The label now clips inside its
   column; the sort icon and the filter button stay visible, and the clipped label still shows in a
-  tooltip. A header that fits is unchanged.
+  tooltip. A header that fits looks the same, but every label now sits in a `.th-text` span inside
+  `.th-label`, which carries the ellipsis.
 
 ## 0.14.7 — 2026-10-05
 

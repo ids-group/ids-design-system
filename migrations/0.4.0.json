@@ -75,8 +75,8 @@
       "kind": "behavior",
       "old": "ds-radio",
       "new": null,
-      "action": "Wrap every group of `<ds-radio value>` that is bound into a reactive or template-driven form in `<ds-radio-group>`, and move `formControlName` / `[formControl]` / `[(ngModel)]` onto the group.",
-      "appliesWhen": "A standalone `<ds-radio [(checked)]>` outside a form is unaffected.",
+      "action": "Optional. A radio set wired to a form by hand (`[checked]` / `(checkedChange)` on each `ds-radio`, which has no ControlValueAccessor at 0.3.0) can move into `<ds-radio-group>` and bind `formControlName` / `[formControl]` / `[(ngModel)]` on the group.",
+      "appliesWhen": "Only radio sets you synchronise with a form by hand. A standalone `<ds-radio [(checked)]>` is unaffected.",
       "note": "`ds-radio-group` is the container and the form control now: it owns the ControlValueAccessor, the roving tabindex, the `name`, and the group label, invalid and hint.",
       "searchHints": [
         "<ds-radio",
@@ -89,7 +89,7 @@
         "formControlName",
         "[(ngModel)]"
       ],
-      "verify": "Every radio group bound into a form sits inside a ds-radio-group that owns the control, the name and the roving tabindex."
+      "verify": "Every radio set moved into a ds-radio-group binds its form control on the group, not on the individual radios."
     },
     {
       "id": "input-hint-color-token",
@@ -153,15 +153,15 @@
       "kind": "behavior",
       "old": "ds-button",
       "new": null,
-      "action": "Look at the disabled state of every button variant you actually use. To go back to the flat grey, pin the per-variant `--ds-button-*-disabled` / `--ds-icon-button-*-disabled` hooks.",
+      "action": "Look at the disabled state of every button variant you actually use. To go back to the flat grey, pin the shared `--ds-button-*-disabled` / `--ds-icon-button-*-disabled` hooks - one set covers every variant, so scope it to a selector to limit it.",
       "pitfall": "The tint is derived from each variant's own colour, so a brand that recoloured one variant gets a disabled state it never chose — and because nothing in the API moved, no build or type check points at it.",
-      "note": "Disabled is a per-variant muted tint now rather than one flat grey: solid and text take a flat pale oklch tint, while tonal, ghost, outline and the icon-button tonal and outlined variants use `color-mix` with `--surface-disabled`.",
+      "note": "Disabled is a per-variant muted tint now rather than one flat grey: solid fills with a pale oklch tint of its own hue; tonal and outline (and icon-button tonal/outlined) mix their fill 28% into `--surface-disabled`; ghost and text stay transparent with an oklch-derived label.",
       "searchHints": [
         "<ds-button",
         "<ds-icon-button"
       ],
       "surface": "style",
-      "restore": "the per-variant disabled colour hooks pinned to the old flat values",
+      "restore": "--ds-button-bg-color-disabled: var(--surface-disabled); --ds-button-label-color-disabled: var(--text-disabled); --ds-button-border-disabled: transparent; --ds-icon-button-bg-color-disabled: transparent; --ds-icon-button-icon-color-disabled: var(--text-disabled); --ds-icon-button-border-disabled: transparent;",
       "verify": "The disabled state of every variant in use was looked at once - it derives from the variant's own colour now rather than one shared grey."
     },
     {
@@ -171,7 +171,7 @@
       "new": null,
       "action": "Read every close-related handler on `ds-modal` and `ds-drawer` and check it does not depend on running in the same tick as the dismiss.",
       "pitfall": "Same shape as the bottom sheet: an immediate re-open races the leave animation, and a focus hand-off made in the handler lands while the panel is still visible.",
-      "note": "Both animate their close now — animate-then-remove, like ds-bottom-sheet — and honour `prefers-reduced-motion`, so close-related outputs fire at the end of the leave animation.",
+      "note": "Both animate their close now — animate-then-remove, like ds-bottom-sheet — and honour `prefers-reduced-motion`; `(closed)` fires at the end of the leave animation, while `(openChange)` / `[(open)]` still update on the dismiss itself.",
       "searchHints": [
         "<ds-modal",
         "<ds-drawer"
@@ -183,7 +183,7 @@
         "ds-modal",
         "ds-drawer"
       ],
-      "verify": "No teardown or focus move assumes the dismiss is synchronous: close-related outputs fire at the END of the leave animation."
+      "verify": "No `(closed)` handler assumes it fires synchronously on the dismiss."
     },
     {
       "id": "styles-tokens-a-la-carte-needs-breakpoints",
@@ -203,11 +203,11 @@
   "informational": [
     "Many new components (multi-select, slider, otp-input, color-picker, tree, segmented, button-group, split-button, toggle-button, list, timeline, description-list, stack/inline/container, loading-overlay, radio-group, alert) — additive.",
     "ds-color scoped-accent system (--accent-* pointer layer, [ds-color] attribute, ds.color() mixin) + dark theme (opt-in via data-theme=dark, provideDsTheme({followSystem})) — additive, light output unchanged.",
-    "Reactive-forms (CVA) + invalid/hint on checkbox, switch, combobox, date-picker; hint/invalid on select; inline [label] on checkbox/radio/switch; input [loading]/[floating]; --field-label-gap — additive.",
+    "Reactive-forms (CVA) on checkbox, switch, combobox, date-picker; invalid/hint on checkbox, switch, combobox; invalid on date-picker; hint on select; inline [label] on checkbox/radio/switch; input [loading]/[floating]; --field-label-gap — additive.",
     "ds-button overlay-trigger inputs (ariaHasPopup/ariaExpanded/buttonRef); date-picker month/year grid pickers; table pagination/clientSort/stickyFirstColumn; ModalService.confirm(); dropzone per-file message + queued state — additive.",
     "$bp-* Sass breakpoint aliases + up()/down() mixins; new disabled-state and press-scale override tokens — additive (a-la-carte styles/tokens importers also need styles/breakpoints now).",
     "Visual-only: button/icon-button press is darken + micro scale-down; [disabled] is a per-variant muted tint (override --ds-*-disabled tokens to restore flat grey); smooth motion pass across components; reduced-motion no longer freezes spinners; overlay scroll-lock release fix.",
-    "A collapsed ds-accordion item now collapses to nothing, where its padding stayed behind on the clipped wrapper and left a strip of empty height; the padding is restored when the item expands. If you zeroed that padding to hide the strip, the item will now be flat when open. NO ACTION otherwise.",
+    "An open ds-accordion body gains top padding (`--space-2`, was 0) and expands via `grid-template-rows` instead of `height`; collapsed it still shows nothing. NO ACTION unless you added top padding to the body yourself.",
     "ds-input draws its clear button in --text-secondary instead of --text-tertiary, and ds-search shows its clear button at full opacity at rest instead of 0.7, so it reads without hover or focus.",
     "ds-combobox truncates a long option label with an ellipsis instead of wrapping it in a narrow panel, and its multi-select option row fills the panel width."
   ],

@@ -18,7 +18,7 @@
         ".autocomplete-optgroup",
         ".autocomplete-optgroup-label"
       ],
-      "verify": "The autocomplete's open panel carries `ds-dropdown-panel` on its `.cdk-overlay-pane`, and its rows have 4px padding and a 4px radius without any rule of yours.",
+      "verify": "The autocomplete's open panel carries `ds-dropdown-panel` on its `.cdk-overlay-pane`, the panel has 4px padding and its rows a 4px radius without any rule of yours.",
       "restore": "To keep a rule on one picker, scope it by something outside the pane - a container class on the page - and re-narrow it once a per-picker panel class is available. To set that picker's own radius or background, write it on the host: `ds-autocomplete { --ds-autocomplete-panel-radius: <value>; }`, which is copied onto the pane and wins.",
       "note": "The panel now renders through the same shared partial as ds-select and ds-multi-select, so it inherits their padding, row radius, selected-row hooks and pressed states. An override that existed only to close that gap is dead weight, and one that names an old class silently stops matching. A `panelClass` input on each picker arrives in 0.13.1 and is the scoped route; until then a widened rule is the only expressible form, so mark it where you write it and narrow it when you reach that version.",
       "action": "Retarget every rule that names an old class, then delete the ones that only restored padding or row radius."
@@ -67,7 +67,7 @@
       "old": "SelectComponent, MultiSelectComponent, AutocompleteComponent",
       "new": null,
       "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the `<ds-…>` elements need nothing.",
-      "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does. Separately, seven symbols are newly exported and can shadow a local name of the same spelling rather than collide with a member: `DsControlWidth`, `DsTriggerDisplay`, `DsChipTemplateDirective`, `DsCreateTemplateDirective`, `DsEmptyTemplateDirective`, `DsOptionTemplateDirective`, `DsPickerTriggerDirective`. Those are new names, not changed ones — nothing of yours breaks unless you already had one.",
+      "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does. Separately, seventeen symbols are newly exported and can shadow a local name of the same spelling rather than collide with a member: `DsControlWidth`, `DsTriggerDisplay`, `DsChipTemplateDirective`, `DsCreateTemplateDirective`, `DsEmptyTemplateDirective`, `DsOptionTemplateDirective`, `DsPickerTriggerDirective`, `DsOptionGroup`, `DsOptionItem`, `isDsOptionGroup`, `flattenDsOptions`, `AutocompleteItem`, `AutocompleteValueOverflow`, `MultiSelectItem`, `MultiSelectOptionGroup`, `MultiSelectWidth`, `SelectWidth`. Those are new names, not changed ones — nothing of yours breaks unless you already had one.",
       "searchHints": [
         "extends SelectComponent",
         "extends MultiSelectComponent",
@@ -78,7 +78,17 @@
         "DsCreateTemplateDirective",
         "DsEmptyTemplateDirective",
         "DsOptionTemplateDirective",
-        "DsPickerTriggerDirective"
+        "DsPickerTriggerDirective",
+        "DsOptionGroup",
+        "DsOptionItem",
+        "isDsOptionGroup",
+        "flattenDsOptions",
+        "AutocompleteItem",
+        "AutocompleteValueOverflow",
+        "MultiSelectItem",
+        "MultiSelectOptionGroup",
+        "MultiSelectWidth",
+        "SelectWidth"
       ],
       "surface": "typescript",
       "detect": [
@@ -88,7 +98,7 @@
       ],
       "verify": "The app builds with no TS2415 or TS2416 naming a picker component.",
       "restore": null,
-      "note": "All three pickers gained members: ds-select a width input and a private panelTokens field, ds-multi-select and ds-autocomplete a label/required/optional block plus projection slots. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check and no list here could stay current.",
+      "note": "All three pickers gained members: ds-select `width`, a private panelTokens field and projection slots; ds-multi-select `searchable`, `width`, `size`, `triggerDisplay`, a label/required/optional block and slots; ds-autocomplete `valueOverflow`, a label/required/optional block and slots. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check and no list here could stay current.",
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding."
     },
     {
@@ -239,7 +249,7 @@
     "selectAll on ds-multi-select accepts 'group' and 'both' beside true/false.",
     "All three pickers now forward the four panel-level --ds-option-* hooks onto their portaled pane, so a per-instance override reaches the panel.",
     "The dropdown panel geometry now lives only in styles/_dropdown-overlay.scss, behind --ds-dropdown-panel-bg-color/-radius/-maxh/-minw/-maxw. The per-picker names (--ds-multi-select-panel-bg-color, --ds-autocomplete-panel-bg-color/-radius/-maxh) are aliases of those and still work; a global rule of yours that relied on a component stylesheet out-ranking the partial no longer has a competing rule to beat.",
-    "A bare searchable attribute on a picker now means true, where it meant \"unset\" and so could not override an app-level DS_CONFIG.picker.searchable of false — the one case that key exists for. If you set that key to false and wrote a bare searchable on a picker to opt it back in, that picker was not searchable before and is now, which is what the markup asked for. Write searchable=\"false\" where you want the app-level default to stand. NO ACTION otherwise."
+    "ds-multi-select gained `searchable`: true shows the filter row, false hides it, a number sets an option-count threshold. A bare attribute means true. Unset falls back to the new DS_CONFIG.picker.searchable, then true, so nothing changes by default."
   ],
   "deleteList": [
     {

@@ -79,15 +79,21 @@
       "searchHints": [
         "--ds-chart-frame-bg-color",
         "--ds-chart-focus-halo-color",
-        "--ds-chart-hatch-color"
+        "--ds-chart-hatch-color",
+        "--chart-frame-bg-color",
+        "--chart-focus-halo-color",
+        "--chart-hatch-color"
       ],
       "detect": [
         "var(--ds-chart-frame-bg-color",
         "var(--ds-chart-focus-halo-color",
-        "var(--ds-chart-hatch-color"
+        "var(--ds-chart-hatch-color",
+        "--chart-frame-bg-color",
+        "--chart-focus-halo-color",
+        "--chart-hatch-color"
       ],
       "verify": "The built CSS declares --ds-chart-bg-color on :root, and no rule of yours reads one of the three tokens without a fallback.",
-      "note": "The three no longer declare a default; each chart reads var(--token, var(--ds-chart-bg-color)), and --ds-chart-bg-color defaults to var(--surface-default)."
+      "note": "The three no longer declare a default, and their theme tokens --chart-frame-bg-color, --chart-focus-halo-color and --chart-hatch-color are gone, so setting one changes nothing; set the --ds-chart-* token or --ds-chart-bg-color instead. Each chart reads var(--token, var(--ds-chart-bg-color)), and --ds-chart-bg-color defaults to var(--surface-default)."
     },
     {
       "id": "bar-chart-row-label-dims-only-under-dim-others",
@@ -125,7 +131,7 @@
       "new": null,
       "surface": "typescript",
       "action": "Replace cursorPinResolved() with pinOnClickResolved() wherever your code reads it from a ds-chart reference.",
-      "appliesWhen": "Only TypeScript reading the resolved pin setting back from a ChartComponent through viewChild or a template reference. The preset charts already exposed pinOnClickResolved.",
+      "appliesWhen": "Only TypeScript reading the resolved pin setting back from a ChartComponent through viewChild or a template reference. dsColumnSeries and dsLineSeries already exposed pinOnClickResolved; the preset charts expose none.",
       "restore": null,
       "searchHints": [
         "cursorPinResolved"
@@ -224,7 +230,7 @@
         "extends ChartTooltipDirective"
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS chart class.",
-      "note": "The shared chart inputs and their resolved signals moved to an internal base class, DsChartBase, together with the protected defaults and intl. ChartComponent lost cursorPin and cursorPinResolved and gained pinOnClickResolved, BarChartComponent lost dimsOthers and hoveredLabel, LineChartComponent lost markAnchor, PieChartComponent lost staggerMs; the internal ChartTooltipDirective gained host, LineSeriesComponent fadeId, SparklineComponent area, WaterfallChartComponent dimOthers and tooltip; data, categories and series became optional. The compiler names every collision."
+      "note": "The shared chart inputs and their resolved signals moved to an internal base class, DsChartBase, together with the protected defaults and intl. ChartComponent lost cursorPin and cursorPinResolved and gained pinOnClickResolved, BarChartComponent lost dimsOthers and hoveredLabel, LineChartComponent lost markAnchor, PieChartComponent lost staggerMs; the internal ChartTooltipDirective gained host, LineSeriesComponent fadeId, SparklineComponent area, WaterfallChartComponent dimOthers and tooltip; HeatmapChartComponent also gained summary and tooltipLingerMs, ScatterChartComponent and WaterfallChartComponent tooltipLingerMs, and ChartComponent pinOnClick, all from the base class; data, categories and series became optional. The compiler names every collision."
     },
     {
       "id": "tooltip-light-panel",

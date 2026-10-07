@@ -14,22 +14,21 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**126 open — 8 P1, 7 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**126 open — 7 P1, 8 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P1 — 8
+### P1 — 7
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer)
   - A clipped hinted header shows its label and hint as two plain lines; the label should be a bold line of its own (asked by Stas, 2026-10-06)
 - **Asked by Stas**
   - A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
-  - Review branch `fix/published-manifests-audit` before it is merged (Stas, 2026-10-06)
   - A click pins a tooltip: hover shows it at once, a click keeps it open (Stas, 2026-10-06)
   - A definition-term directive: an inline term that opens a tooltip on hover and focus and pins on click (Stas, 2026-10-06)
   - An info-hint (toggletip) component: an info icon button that shows supplementary text on hover and focus and pins on click (Stas, 2026-10-06)
   - `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
 
-### P2 — 7
+### P2 — 8
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -37,6 +36,7 @@ item and nothing else.
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Asked by Stas**
   - Document how to build `ds-modal` actions (Stas, 2026-10-06)
+  - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
   - `ds-date-picker` has no width control (Stas, 2026-10-06)
 - **Open verdicts, each drawn in a deck**
   - Six Unreleased behaviour changes shipped without a choice between alternatives
@@ -385,15 +385,12 @@ Each has somebody behind it. Nothing here is speculative work.
 - [ ] **[P2] Document how to build `ds-modal` actions (Stas, 2026-10-06).** Work branch `fix/table-auto-column-clip`.
   `components.md` says only "`[actions]` (footer button row)". The slot is a flex row with `gap: var(--space-3)`, so each button must be a direct projected child with `actions` on it. A consumer who wrapped the buttons in `<div actions>` got one flex child, no gap, and buttons stuck together (mm-ecm ME-502, `unarchive-program-dialog.component.html`). Wanted: one sentence and one example in the `ds-modal` section (also `ds-modal-card`, `ds-drawer`) saying that `actions` goes on each button, not on a wrapper; a dev-mode warning for a wrapper is optional.
 
-- [ ] **[P1] Review branch `fix/published-manifests-audit` before it is merged (Stas, 2026-10-06).**
-  It corrects 35 published `migrations/<version>.json` files (`5d99ede5`, +236/-201 lines) from an
-  audit of every manifest against its own release diff: 128 findings, each re-derived by a sceptic
-  agent, none checked by hand. The review answers two questions per changed line: was the defect
-  real, and is the new text true for the code at that version (`git diff v<prev> v<version>`, never
-  HEAD). Everything a reviewing agent needs - the findings, the verdicts, the briefs, the lines decided
-  without an auditor and the review steps - is in `.claude/local/todo/manifest-audit-review.md` and
-  `.claude/local/from-scratchpad/2026-10-06-manifest-audit/` (local to this checkout, not in git).
-  The branch stays out of dev until Stas approves it.
+- [ ] **[P2] Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07).** The starter
+  repo (`C:/Repositories/ai-sdlc-prototype`, last commit 2026-09-05) has fallen behind. Take the
+  mm-broker frontend (`C:/Repositories/mm-broker-platform/src/frontend`) as the reference for code
+  and project base - structure, tooling, lint and format setup, Claude config, the current design-system
+  version and how it is consumed - carry its best practices into `ai-sdlc-prototype`, and finish what is
+  left there. Tracked here because Stas does not open that repository; the work itself happens in it.
 
 - [ ] **[P1] A click pins a tooltip: hover shows it at once, a click keeps it open (Stas, 2026-10-06).** Work branch `fix/tooltip-arrow-anchor` (parked; its code is not touched by this item).
   Hover shows the tooltip at once. A click on the trigger keeps it open after the pointer leaves; a click outside, `Esc` or blur closes it - the way `ds-select` or a date picker panel stays open. No visual "pinned" marker. Today `tooltip.directive.ts` closes on click (`@HostListener('click')` -> `onClose`).
@@ -1105,6 +1102,7 @@ file** — the number moves; cite the filename.
 | 16 | `16-column-chart-filter` | How `ds-column-chart` takes a caption under each column and a persistent selection, so a consumer's filter chart can move onto it: point fields, chart inputs with a template, or nothing; `value: number | null` is settled. | none |
 | 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
+| 19 | `19-tooltip-markup` | What the `dsTooltip` string understands with no tags, no `TemplateRef` and no new input, and who puts the label above the hint of a hinted header once `dsTooltipClippedLead` goes. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
