@@ -46,7 +46,7 @@ const tags = (() => {
 
 // One `git cat-file --batch` per tag, not one `git show` per file: a tag's surface is ~400 files
 // and the per-spawn cost dominates everything else. Nothing is written to disk.
-function readTreeAt(tag) {
+export function readTreeAt(tag) {
   let paths;
   try {
     paths = git(['ls-tree', '-r', '--name-only', tag, '--', 'src/lib'])
