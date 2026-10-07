@@ -236,11 +236,6 @@
       @include text-clip.single-line-ellipsis;
     }
 
-    .th-label.has-hint {
-      text-decoration: underline dotted var(--text-tertiary);
-      text-underline-offset: 3px;
-    }
-
     button.th-label:focus-visible {
       @include focus.ring;
 

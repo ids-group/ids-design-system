@@ -89,25 +89,31 @@
               [attr.data-col-key]="col.key"
               [dsTooltipWhenClipped]="!col.hint"
               [dsTooltip]="col.hint ? '' : col.label">
-              @if (sortableCol(col)) {
-                <!-- TODO(definition-term): render this through the definition-term directive once it exists (docs/todo.md P1) -->
+              @if (sortableCol(col) && col.hint) {
                 <button
                   type="button"
                   class="th-label"
-                  [class.has-hint]="!!col.hint"
-                  [dsTooltip]="col.hint ?? ''"
+                  [dsDefinitionTerm]="col.hint"
+                  [pinOnClick]="false"
                   [dsTooltipClippedLead]="col.label"
                   (click)="onSort(col)">
-                  <span class="th-text">
-                    @if (col.label) {
-                      {{ col.label }}
-                    } @else if (col.screenReaderLabel) {
-                      <span class="visually-hidden">
-                        {{ col.screenReaderLabel }}
-                      </span>
-                    }
-                  </span>
-
+                  <ng-container
+                    [ngTemplateOutlet]="thText"
+                    [ngTemplateOutletContext]="{ $implicit: col }" />
+                  <ds-icon
+                    class="sort-icon"
+                    [name]="sortIcon(col)"
+                    [size]="12">
+                  </ds-icon>
+                </button>
+              } @else if (sortableCol(col)) {
+                <button
+                  type="button"
+                  class="th-label"
+                  (click)="onSort(col)">
+                  <ng-container
+                    [ngTemplateOutlet]="thText"
+                    [ngTemplateOutletContext]="{ $implicit: col }" />
                   <ds-icon
                     class="sort-icon"
                     [name]="sortIcon(col)"
@@ -115,33 +121,20 @@
                   </ds-icon>
                 </button>
               } @else if (col.hint) {
-                <!-- TODO(definition-term): render this through the definition-term directive once it exists (docs/todo.md P1) -->
                 <button
                   type="button"
-                  class="th-label has-hint"
-                  [dsTooltip]="col.hint"
+                  class="th-label"
+                  [dsDefinitionTerm]="col.hint"
                   [dsTooltipClippedLead]="col.label">
-                  <span class="th-text">
-                    @if (col.label) {
-                      {{ col.label }}
-                    } @else if (col.screenReaderLabel) {
-                      <span class="visually-hidden">
-                        {{ col.screenReaderLabel }}
-                      </span>
-                    }
-                  </span>
+                  <ng-container
+                    [ngTemplateOutlet]="thText"
+                    [ngTemplateOutletContext]="{ $implicit: col }" />
                 </button>
               } @else {
                 <span class="th-label">
-                  <span class="th-text">
-                    @if (col.label) {
-                      {{ col.label }}
-                    } @else if (col.screenReaderLabel) {
-                      <span class="visually-hidden">
-                        {{ col.screenReaderLabel }}
-                      </span>
-                    }
-                  </span>
+                  <ng-container
+                    [ngTemplateOutlet]="thText"
+                    [ngTemplateOutletContext]="{ $implicit: col }" />
                 </span>
               }
 
@@ -643,4 +636,18 @@
       <td class="actions-col"></td>
     }
   </tr>
+</ng-template>
+
+<ng-template
+  #thText
+  let-col>
+  <span class="th-text">
+    @if (col.label) {
+      {{ col.label }}
+    } @else if (col.screenReaderLabel) {
+      <span class="visually-hidden">
+        {{ col.screenReaderLabel }}
+      </span>
+    }
+  </span>
 </ng-template>
