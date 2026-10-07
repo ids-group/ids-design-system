@@ -1,0 +1,11 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    {
+      "text": "ds-date-picker reads --ds-date-picker-max-width (default 100%) as the max-width of its host. A fullWidth date picker fills its container up to that width; without fullWidth the field stays as wide as its date format.",
+      "verify": "set --ds-date-picker-max-width on a fullWidth ds-date-picker in a wide container and confirm the field stops at that width with the calendar icon at its right edge, and that a date picker without fullWidth keeps its width."
+    }
+  ],
+  "deleteList": []
+}

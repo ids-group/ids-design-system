@@ -1,5 +1,12 @@
 ## Unreleased
 
+### Added
+
+- **`--ds-date-picker-max-width` caps the width of `ds-date-picker`.** It defaults to `100%`, so
+  nothing changes until it is set. With `fullWidth`, the field fills its container up to the cap,
+  which keeps it from spanning a wide dialog or form column; without `fullWidth`, the field stays as
+  wide as its date format and never gets narrower than it.
+
 ## 0.14.8 — 2026-10-06
 
 ### Added

@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**126 open — 7 P1, 8 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**125 open — 7 P1, 7 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 7
 
@@ -28,7 +28,7 @@ item and nothing else.
   - An info-hint (toggletip) component: an info icon button that shows supplementary text on hover and focus and pins on click (Stas, 2026-10-06)
   - `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
 
-### P2 — 8
+### P2 — 7
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -37,7 +37,6 @@ item and nothing else.
 - **Asked by Stas**
   - Document how to build `ds-modal` actions (Stas, 2026-10-06)
   - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
-  - `ds-date-picker` has no width control (Stas, 2026-10-06)
 - **Open verdicts, each drawn in a deck**
   - Six Unreleased behaviour changes shipped without a choice between alternatives
 - **Tooling**
@@ -404,9 +403,6 @@ Each has somebody behind it. Nothing here is speculative work.
 
 - [ ] **[P1] An info-hint (toggletip) component: an info icon button that shows supplementary text on hover and focus and pins on click (Stas, 2026-10-06).** Work branch `fix/tooltip-arrow-anchor`. Depends on the pin item above.
   An icon button with an `aria-label` that shows supplementary text on hover and focus and keeps it open on click. Consumer hand-rolls it: mm-ecm-platform `src/frontend/projects/ecm-portal/src/app/features/programs/pages/analyze/info-hint.component.ts`, used in 8 Analyze components.
-
-- [ ] **[P2] `ds-date-picker` has no width control (Stas, 2026-10-06).** Work branch `feat/date-picker-width` (empty marker branch from dev).
-  `size` changes the height only. Consumers either stretch the picker to full width or hard-code a max-width: mm-ecm ME-501 Unarchive dialog (`src/frontend/projects/ecm-portal/src/app/features/programs/**/unarchive-program-dialog.component.*`) and the wrapper `app-date-field`, which forces `fullWidth`. Wanted: a width token (e.g. `--ds-date-picker-max-width`) or intrinsic width logic in the lib sized to the date format.
 
 - [ ] **[P1] `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06).** Work branch `feat/bar-chart-customization` (empty marker branch from dev).
   The consumer draws "label + bar + number" rows in Analyze (the journey waterfall and the exit reasons) by hand because `ds-bar-chart` cannot be configured to match. **Two implementation routes, the DS team decides:** (a) extend `ds-bar-chart` with the options below, or (b) a new `ds-bar-list` row component for label + bar + number rows. `ds-funnel-chart` is not a fit: the consumer cannot change the chart type.
