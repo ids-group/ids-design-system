@@ -19,13 +19,27 @@
     overflow-wrap: anywhere; white-space: pre-line;
   }
   .tip strong { font-weight: var(--font-weight-bold); }
-  .tip em { font-style: italic; }
-  .tip code { font: var(--font-size-2xs) / 1 var(--font-mono); padding: 1px var(--space-1); border-radius: var(--radius-xs, 2px); background: var(--surface-muted); border: var(--border-width-default) solid var(--border-divider); }
-  .tip ul { margin: 0; padding-left: var(--space-4); white-space: normal; }
-  .specs { display: grid; gap: var(--space-3); }
-  .specs .cap { margin-bottom: var(--space-1); }
-  .spec-row { display: grid; gap: var(--space-1); }
-  .gone { margin: 0; font: var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--error-text); }
+
+  /* A ds-table header cell: uppercase label, dotted underline for a hint, ellipsis when the column is narrow. */
+  .th {
+    display: block; padding: var(--space-2) var(--space-3);
+    background: var(--surface-muted); border-bottom: var(--border-width-default) solid var(--border-default);
+    font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
+    letter-spacing: var(--letter-spacing-wider); text-transform: uppercase; color: var(--text-tertiary);
+    white-space: nowrap;
+  }
+  .th.is-narrow { width: 150px; }
+  .th.is-fits { width: max-content; }
+  .th__label {
+    display: inline-block; max-width: 100%; vertical-align: top;
+    text-decoration: underline dotted var(--text-tertiary); text-underline-offset: 3px;
+  }
+  .th__text { display: block; overflow: clip; text-overflow: ellipsis; white-space: nowrap; }
+  .case { display: grid; gap: var(--space-1); }
+  .case .tip { margin-top: var(--space-1); }
+  .case + .case { margin-top: var(--space-3); }
+  .cases { display: flex; flex-direction: column; }
+  .why-none { margin: var(--space-1) 0 0; font: var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--error-text); }
 
   .code {
     margin: 0; padding: var(--space-2) var(--space-3);
@@ -33,13 +47,16 @@
     font: var(--font-size-2xs) / 1.55 var(--font-mono); color: var(--text-primary);
     white-space: pre; overflow-x: auto;
   }
+  details.inside > summary { cursor: pointer; font: var(--font-weight-semibold) var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--text-secondary); }
+  details.inside > .code { margin-top: var(--space-1-5); }
+
   .opt { cursor: pointer; }
   .opt > .badge { align-self: flex-start; }
   .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
   .opt.is-chosen { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
   .opt .chosen-mark { display: none; font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--accent-strong); }
   .opt.is-chosen .chosen-mark { display: block; }
-  .opts { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .opts { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
   .pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
   .pill { padding: 2px var(--space-2); border-radius: var(--radius-pill); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.5 var(--font-sans); }
   .pill.good { background: var(--success-subtitle); color: var(--success-text); }
@@ -67,164 +84,93 @@
 <body>
 <main>
   <header class="masthead">
-    <h1>В тултипе нельзя выделить слово: строка плоская, а подпись обрезанного заголовка не жирная</h1>
-    <p class="lede">Два решения: что понимает сама строка <code>dsTooltip</code> и как подпись заголовка попадает в тултип. Тегов, шаблонов, новых входов и новых директив нет; <code>dsTooltipClippedLead</code> уходит.</p>
-    <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">dsTooltip</span><span class="chip">0 новых входов, −1 старый</span><span class="chip">актуально на 2026-10-07</span></div>
+    <h1>Подпись заголовка таблицы не может быть жирной: ей нужен отдельный вход, а входов под оформление библиотека не хочет</h1>
+    <p class="lede">Одно решение: что показывает тултип заголовка <code>ds-table</code> с <code>hint</code>, когда <code>dsTooltipClippedLead</code> уходит. Разметка уже решена: строка <code>dsTooltip</code> понимает только <code>**жирный**</code>.</p>
+    <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">ds-table hint</span><span class="chip">0 новых входов, −1 старый</span><span class="chip">актуально на 2026-10-07</span></div>
   </header>
 
   <section class="panel">
-    <h2>Сегодня</h2>
+    <h2>Решено: строка понимает только жирный</h2>
     <div class="stage">
-      <div class="spec specs">
-        <div class="spec-row"><p class="cap">Подсказка обрезанного заголовка</p>
-          <span class="tip">Registered attendee count
-People who confirmed a seat</span></div>
-        <div class="spec-row"><p class="cap">Слово внутри строки</p>
-          <span class="tip">Counts only confirmed seats</span>
-          <p class="gone">выделить «only confirmed» нечем</p></div>
+      <div class="spec">
+        <p class="cap">Считает <code>**только подтверждённые**</code> места</p>
+        <span class="tip">Считает <strong>только подтверждённые</strong> места</span>
       </div>
     </div>
-    <p class="src">Панель рисует <code>{{ text() }}</code> - просто строку. Подпись над подсказкой собирает вход <code>dsTooltipClippedLead</code> и склеивает с подсказкой переносом, жирной она не бывает: это P1 в <code>docs/todo.md</code>. Вход нужен только таблице, а новый микро-вход под каждое оформление - то, чего библиотека не хочет.</p>
-  </section>
-
-  <section class="panel q" data-q="markup">
-    <h2>Что понимает строка: три набора</h2>
-    <p>Во всех трёх карточках одна и та же задача записана одной строкой, как её писал бы консьюмер. Жирный пишется <code>**так**</code>, перенос - <code>\n</code>. Выбор - клик по карточке.</p>
-    <div class="opts">
-      <article class="opt is-pick" tabindex="0">
-        <span class="badge is-pick">рекомендую</span>
-        <h3>Только жирный</h3>
-        <p class="code">[dsTooltip]="'Считает **только подтверждённые** места'"
-
-[dsTooltip]="'**' + label + '**\n' + hint"</p>
-        <div class="specs">
-          <div class="spec-row"><p class="cap">Обрезанный заголовок</p><span class="tip"><strong>Registered attendee count</strong>
-People who confirmed a seat</span></div>
-          <div class="spec-row"><p class="cap">Слово внутри строки</p><span class="tip">Считает <strong>только подтверждённые</strong> места</span></div>
-        </div>
-        <div class="pills"><span class="pill good">закрывает единственную просьбу: жирное слово и подпись</span><span class="pill good">почти не пересекается с обычным текстом</span><span class="pill mid">кода и курсива нет</span></div>
-        <dl class="layer">
-          <dt>Что разбирается</dt><dd><code>**текст**</code> и перенос строки; <code>__текст__</code> не разбирается, потому что <code>__init__</code> и подобные имена встречаются в данных</dd>
-          <dt>Что может сломать в готовых строках</dt><dd>строку с парными <code>**</code> в данных; экранируется как <code>\*\*</code></dd>
-          <dt>Новых входов</dt><dd class="none">0</dd>
-          <dt>Скринридер</dt><dd>описание получает текст без маркеров</dd>
-        </dl>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-
-      <article class="opt" tabindex="0">
-        <span class="badge is-same">вариант</span>
-        <h3>Жирный, курсив и код</h3>
-        <p class="code">[dsTooltip]="'Закрыть: `Esc`, сохранить: _Enter_'"
-
-[dsTooltip]="'**' + label + '**\n' + hint"</p>
-        <div class="specs">
-          <div class="spec-row"><p class="cap">Обрезанный заголовок</p><span class="tip"><strong>Registered attendee count</strong>
-People who confirmed a seat</span></div>
-          <div class="spec-row"><p class="cap">Слово внутри строки</p><span class="tip">Закрыть: <code>Esc</code>, сохранить: <em>Enter</em></span></div>
-        </div>
-        <div class="pills"><span class="pill good">клавиши и идентификаторы в подсказке</span><span class="pill bad"><code>user_id_value</code> в данных станет курсивом</span><span class="pill mid">три разбираемых знака</span></div>
-        <dl class="layer">
-          <dt>Что разбирается</dt><dd><code>**жирный**</code>, <code>_курсив_</code>, <code>`код`</code>, перенос</dd>
-          <dt>Что может сломать в готовых строках</dt><dd>подчёркивания внутри snake_case и обратные кавычки в данных</dd>
-          <dt>Новых входов</dt><dd class="none">0</dd>
-          <dt>Скринридер</dt><dd>описание получает текст без маркеров; код и курсив не озвучиваются</dd>
-        </dl>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-
-      <article class="opt" tabindex="0">
-        <span class="badge is-same">вариант</span>
-        <h3>Ещё и список</h3>
-        <p class="code">[dsTooltip]="'Не посчитано:\n- отказы\n- черновики'"
-
-[dsTooltip]="'**' + label + '**\n' + hint"</p>
-        <div class="specs">
-          <div class="spec-row"><p class="cap">Обрезанный заголовок</p><span class="tip"><strong>Registered attendee count</strong>
-People who confirmed a seat</span></div>
-          <div class="spec-row"><p class="cap">Список</p><span class="tip">Не посчитано:<ul><li>отказы</li><li>черновики</li></ul></span></div>
-        </div>
-        <div class="pills"><span class="pill good">короткий перечень в подсказке</span><span class="pill bad">любая строка данных с «- » в начале строки станет пунктом</span><span class="pill bad">самый большой разбор, его не убрать без поломки</span></div>
-        <dl class="layer">
-          <dt>Что разбирается</dt><dd>всё из предыдущего и строки с <code>- </code></dd>
-          <dt>Что может сломать в готовых строках</dt><dd>многострочные данные, где строка начинается с дефиса</dd>
-          <dt>Новых входов</dt><dd class="none">0</dd>
-          <dt>Скринридер</dt><dd>пункты читаются как строки одного текста, число пунктов не объявляется</dd>
-        </dl>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-    </div>
-
-    <table>
-      <thead><tr><th>Набор</th><th>Что умеет</th><th>Чем рискует</th></tr></thead>
-      <tbody>
-        <tr class="row-pick"><th class="rowlabel">Только жирный</th><td>выделить слово, жирная подпись</td><td>строки с парными <code>**</code></td></tr>
-        <tr><th class="rowlabel">Жирный, курсив и код</th><td>плюс клавиши и идентификаторы</td><td>snake_case и кавычки в данных</td></tr>
-        <tr><th class="rowlabel">Ещё и список</th><td>плюс перечень из пунктов</td><td>строки с дефисом в начале, самый большой разбор</td></tr>
-      </tbody>
-    </table>
+    <p class="src">Пишется <code>**текст**</code>; перенос <code>\n</code> уже работает; <code>\*\*</code> остаётся звёздочками; непарные <code>**</code> остаются как есть. Курсива, кода, списка и <code>__текст__</code> нет: любой новый знак потом добавляется без поломки, а убрать его нельзя. Панель режет строку на куски и рисует жирные как <code>strong</code> из шаблона, <code>innerHTML</code> не нужен, поэтому HTML через данные не внедрить. Описание для скринридера получает текст без маркеров. Ни тегов, ни <code>TemplateRef</code>, ни входов.</p>
   </section>
 
   <section class="panel q" data-q="lead">
-    <h2>Подпись заголовка: кто её ставит</h2>
-    <p>Консьюмер пишет колонку один раз: <code>{ label: 'Registered attendee count', hint: 'People who confirmed a seat' }</code>. Без входа <code>dsTooltipClippedLead</code> подпись над подсказкой собирается одной строкой с <code>**</code> и <code>\n</code>; вопрос в том, всегда ли и кто решает. Выбор - клик по карточке.</p>
+    <h2>Тултип заголовка с hint: четыре варианта</h2>
+    <p>В каждой карточке один и тот же заголовок в двух положениях: название обрезано узкой колонкой и название помещается. Под ним то, что покажет тултип. Колонка у консьюмера везде одна: <code>{ label: 'Registered attendee count', hint: 'People who confirmed a seat' }</code>. Выбор - клик по карточке.</p>
     <div class="opts">
       <article class="opt is-pick" tabindex="0">
         <span class="badge is-pick">рекомендую</span>
-        <h3>Подпись и определение всегда</h3>
-        <p class="code">// внутри ds-table, у любой колонки с hint
-[dsTooltip]="'**' + col.label + '**\n' + col.hint"</p>
-        <div class="specs">
-          <div class="spec-row"><p class="cap">Название обрезано</p><span class="tip"><strong>Registered attendee count</strong>
+        <h3>Подпись и hint, всегда</h3>
+        <div class="cases">
+          <div class="case"><p class="cap">Название обрезано</p><span class="th is-narrow"><span class="th__label" style="max-width:100%"><span class="th__text">Registered attendee count</span></span></span><span class="tip"><strong>Registered attendee count</strong>
 People who confirmed a seat</span></div>
-          <div class="spec-row"><p class="cap">Название помещается</p><span class="tip"><strong>Registered attendee count</strong>
-People who confirmed a seat</span></div>
+          <div class="case"><p class="cap">Название помещается</p><span class="th is-fits"><span class="th__label"><span class="th__text">Capacity</span></span></span><span class="tip"><strong>Capacity</strong>
+Seats in the hall</span></div>
         </div>
-        <div class="pills"><span class="pill good">ни измерения обрезки, ни состояния в таблице</span><span class="pill good">привычный вид «термин и определение»</span><span class="pill mid">на помещающемся заголовке подпись повторяет видимый текст</span></div>
+        <div class="pills"><span class="pill good">таблица ничего не измеряет</span><span class="pill good">привычный вид «термин и определение»</span><span class="pill mid">помещающееся название повторяется</span></div>
         <dl class="layer">
-          <dt>Что уходит из API</dt><dd><code>dsTooltipClippedLead</code>; новых входов нет</dd>
-          <dt>Заголовок, где подпись помещается</dt><dd>подпись и определение (сегодня одно определение)</dd>
-          <dt>Скринридер</dt><dd>описание читает подпись и определение; название заголовка он уже прочёл</dd>
+          <dt>Что уходит из API</dt><dd><code>dsTooltipClippedLead</code></dd>
+          <dt>Что меняется в 0.14.8</dt><dd>заголовок, где название помещается, теперь тоже показывает подпись</dd>
         </dl>
+        <details class="inside"><summary>как устроено внутри таблицы</summary><p class="code">[dsTooltip]="'**' + col.label + '**\n' + col.hint"</p></details>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+
+      <article class="opt" tabindex="0">
+        <span class="badge is-same">вариант</span>
+        <h3>Только hint</h3>
+        <div class="cases">
+          <div class="case"><p class="cap">Название обрезано</p><span class="th is-narrow"><span class="th__label" style="max-width:100%"><span class="th__text">Registered attendee count</span></span></span><span class="tip">People who confirmed a seat</span><p class="why-none">название нигде не прочесть</p></div>
+          <div class="case"><p class="cap">Название помещается</p><span class="th is-fits"><span class="th__label"><span class="th__text">Capacity</span></span></span><span class="tip">Seats in the hall</span></div>
+        </div>
+        <div class="pills"><span class="pill good">ничего не склеиваем и не измеряем</span><span class="pill bad">обрезанное название нечем показать</span></div>
+        <dl class="layer">
+          <dt>Что уходит из API</dt><dd><code>dsTooltipClippedLead</code></dd>
+          <dt>Что меняется в 0.14.8</dt><dd>заголовок с обрезанным названием перестаёт показывать название</dd>
+        </dl>
+        <details class="inside"><summary>как устроено внутри таблицы</summary><p class="code">[dsTooltip]="col.hint"</p></details>
         <span class="chosen-mark">выбрано</span>
       </article>
 
       <article class="opt" tabindex="0">
         <span class="badge is-same">вариант</span>
         <h3>Подпись при обрезке, считает таблица</h3>
-        <p class="code">// внутри ds-table: измерить заголовок при наведении и фокусе
-[dsTooltip]="clipped(col)
-  ? '**' + col.label + '**\n' + col.hint
-  : col.hint"</p>
-        <div class="specs">
-          <div class="spec-row"><p class="cap">Название обрезано</p><span class="tip"><strong>Registered attendee count</strong>
+        <div class="cases">
+          <div class="case"><p class="cap">Название обрезано</p><span class="th is-narrow"><span class="th__label" style="max-width:100%"><span class="th__text">Registered attendee count</span></span></span><span class="tip"><strong>Registered attendee count</strong>
 People who confirmed a seat</span></div>
-          <div class="spec-row"><p class="cap">Название помещается</p><span class="tip">People who confirmed a seat</span></div>
+          <div class="case"><p class="cap">Название помещается</p><span class="th is-fits"><span class="th__label"><span class="th__text">Capacity</span></span></span><span class="tip">Seats in the hall</span></div>
         </div>
-        <div class="pills"><span class="pill good">вид 0.14.8 сохраняется целиком</span><span class="pill bad">таблица хранит состояние обрезки каждой колонки</span><span class="pill bad">строка должна успеть обновиться до открытия тултипа</span></div>
+        <div class="pills"><span class="pill good">вид 0.14.8 сохраняется целиком, подпись жирная</span><span class="pill bad">таблица хранит обрезку каждой колонки</span><span class="pill bad">строка должна успеть обновиться до открытия</span></div>
         <dl class="layer">
-          <dt>Что уходит из API</dt><dd><code>dsTooltipClippedLead</code>; новых входов нет</dd>
-          <dt>Заголовок, где подпись помещается</dt><dd>только определение, как сегодня</dd>
-          <dt>Пересчёт</dt><dd>на изменение ширины колонки и окна</dd>
+          <dt>Что уходит из API</dt><dd><code>dsTooltipClippedLead</code></dd>
+          <dt>Пересчёт</dt><dd>на ширину колонки и окна</dd>
         </dl>
+        <details class="inside"><summary>как устроено внутри таблицы</summary><p class="code">[dsTooltip]="clipped(col)
+  ? '**' + col.label + '**\n' + col.hint
+  : col.hint"</p></details>
         <span class="chosen-mark">выбрано</span>
       </article>
 
       <article class="opt" tabindex="0">
         <span class="badge is-no">отклонено</span>
         <h3>Оставить dsTooltipClippedLead</h3>
-        <p class="code">[dsTooltip]="hint"
-[dsTooltipClippedLead]="label"</p>
-        <div class="specs">
-          <div class="spec-row"><p class="cap">Название обрезано</p><span class="tip">Registered attendee count
-People who confirmed a seat</span></div>
-          <div class="spec-row"><p class="cap">Название помещается</p><span class="tip">People who confirmed a seat</span></div>
+        <div class="cases">
+          <div class="case"><p class="cap">Название обрезано</p><span class="th is-narrow"><span class="th__label" style="max-width:100%"><span class="th__text">Registered attendee count</span></span></span><span class="tip">Registered attendee count
+People who confirmed a seat</span><p class="why-none">подпись не жирная</p></div>
+          <div class="case"><p class="cap">Название помещается</p><span class="th is-fits"><span class="th__label"><span class="th__text">Capacity</span></span></span><span class="tip">Seats in the hall</span></div>
         </div>
-        <div class="pills"><span class="pill bad">подпись не жирная</span><span class="pill bad">отдельный вход под один случай таблицы</span></div>
+        <div class="pills"><span class="pill bad">отдельный вход под один случай таблицы</span><span class="pill bad">жирная подпись потребует ещё входа</span></div>
         <dl class="layer">
-          <dt>Что уходит из API</dt><dd class="none">ничего, вход остаётся</dd>
-          <dt>Жирная подпись</dt><dd>потребует ещё одного входа или правила в панели</dd>
+          <dt>Что уходит из API</dt><dd class="none">ничего</dd>
         </dl>
+        <details class="inside"><summary>как устроено внутри таблицы</summary><p class="code">[dsTooltip]="col.hint"
+[dsTooltipClippedLead]="col.label"</p></details>
         <span class="chosen-mark">выбрано</span>
       </article>
     </div>
@@ -232,8 +178,8 @@ People who confirmed a seat</span></div>
 
   <section class="panel verdict is-done">
     <h2>Рекомендация</h2>
-    <p class="pick"><strong>Только жирный</strong> и <strong>Подпись и определение всегда</strong>. Конкретная просьба одна: жирная подпись у заголовка. Новый знак разметки потом добавить можно без поломки (minor), убрать знак после выхода нельзя без поломки; курсив и код имеет смысл брать, когда появится строка, которая без них не читается. Подпись всегда - это вид «термин и определение», и он убирает всё, что нужно было ради обрезки: вход, измерение и состояние.</p>
-    <p>Что делаю сам, без вопроса, и пишу в Unreleased с пунктом в миграциях: разбор без <code>innerHTML</code> (сегменты <code>strong</code> в панели из Angular-шаблона, поэтому внедрить HTML через данные нельзя); экранирование <code>\*\*</code>; <code>dsTooltipClippedLead</code> удаляется (<code>removed-api</code> с заменой строкой <code>'**' + label + '**\n' + hint</code>); описание для скринридера берёт текст без маркеров. Это уже не про выбор: скажи, если не согласен.</p>
+    <p class="pick"><strong>Подпись и hint, всегда.</strong> Это вид «термин и определение», и он убирает всё, что было нужно ради обрезки: вход, измерение и состояние. Цена одна и видна в карточке: у заголовка, где название помещается, тултип теперь тоже начинается с него.</p>
+    <p>Что делаю сам, без вопроса, и пишу в Unreleased с пунктом в миграциях: разбор <code>**</code> в панели, экранирование <code>\*\*</code>, удаление <code>dsTooltipClippedLead</code> (<code>removed-api</code>, замена - один <code>dsTooltip</code> со строкой <code>**подпись**</code>, перенос и hint), текст без маркеров для скринридера, строка про перенос и жирный в <code>components.md</code> и каталоге. Скажи, если не согласен.</p>
   </section>
 
   <section class="panel">
@@ -241,16 +187,15 @@ People who confirmed a seat</span></div>
     <table>
       <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
       <tbody>
-        <tr class="row-pick"><th class="rowlabel">Что понимает строка <code>dsTooltip</code></th><td>Только жирный · Жирный, курсив и код · Ещё и список</td><td>Только жирный</td></tr>
-        <tr class="row-pick"><th class="rowlabel">Кто ставит подпись заголовка</th><td>Подпись и определение всегда · Подпись при обрезке, считает таблица · Оставить dsTooltipClippedLead</td><td>Подпись и определение всегда</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Тултип заголовка ds-table с hint</th><td>Подпись и hint, всегда · Только hint · Подпись при обрезке, считает таблица · Оставить dsTooltipClippedLead</td><td>Подпись и hint, всегда</td></tr>
       </tbody>
     </table>
   </section>
 
-  <p class="src"><b>Источники, проверено 2026-10-07 на <code>dev</code>.</b> <code>tooltip-panel.component.ts</code> - шаблон <code>{{ text() }}</code>; <code>tooltip-panel.component.scss</code> - <code>white-space: pre-line</code> на панели, откуда взяты токены образцов; <code>tooltip.directive.ts</code> - <code>tipText()</code> склеивает подпись и подсказку через перенос; <code>docs/todo.md</code> - P1 «подпись обрезанного заголовка должна быть жирной отдельной строкой». Образцы собраны из SCSS панели на токенах <code>ds.css</code>, не из самого компонента. Пересечения разметки с готовыми строками выведены из синтаксиса, на данных консьюмеров не измерялись. Вид «Название + определение» взят из <code>17-table-column-hint</code>. Ограничение: одна директива и один вход <code>dsTooltip</code>, поэтому структурные входы вроде <code>dsTooltipTitle</code>, <code>TemplateRef</code> и входы под оформление в выбор не вошли.</p>
+  <p class="src"><b>Источники, проверено 2026-10-07 на <code>dev</code>.</b> <code>tooltip-panel.component.ts</code> - шаблон <code>{{ text() }}</code>; <code>tooltip-panel.component.scss</code> - <code>white-space: pre-line</code> и токены образцов; <code>tooltip.directive.ts</code> - <code>tipText()</code> склеивает подпись и подсказку через перенос и решает по <code>isClipped()</code>; <code>table.component.html</code> - у колонки с <code>hint</code> тултип кнопки получает <code>dsTooltipClippedLead</code>; <code>docs/todo.md</code> - P1 «подпись обрезанного заголовка должна быть жирной отдельной строкой». Заголовок и панель собраны из SCSS таблицы и панели на токенах <code>ds.css</code>, не из самого компонента. Вид «Название + определение» взят из <code>17-table-column-hint</code>. Ограничение: одна директива и один вход <code>dsTooltip</code>.</p>
 
   <div class="bar-fixed">
-    <span class="count" id="count">0 из 2</span>
+    <span class="count" id="count">0 из 1</span>
     <output id="line">пока ничего не выбрано</output>
     <button type="button" id="copy">Скопировать</button>
     <button type="button" id="reset">Сбросить</button>
@@ -261,7 +206,7 @@ People who confirmed a seat</span></div>
   const PICK_KEY = 'ds-deck-tooltip-markup-picks';
   const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
   const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private window */ } };
-  const labels = { markup: 'Что понимает строка dsTooltip', lead: 'Подпись заголовка' };
+  const labels = { lead: 'Тултип заголовка ds-table с hint' };
   const state = read(PICK_KEY, {});
   const sections = [...document.querySelectorAll('.q[data-q]')];
   const optionName = (card) => card.querySelector('h3').textContent.trim();
@@ -289,7 +234,7 @@ People who confirmed a seat</span></div>
   for (const section of sections) {
     for (const card of section.querySelectorAll('.opt')) {
       card.setAttribute('role', 'button');
-      card.addEventListener('click', (event) => { if (!event.target.closest('.code, .tip')) pick(section, card); });
+      card.addEventListener('click', (event) => { if (!event.target.closest('.code, .tip, .th, details')) pick(section, card); });
       card.addEventListener('keydown', (event) => {
         if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); pick(section, card); }
       });
