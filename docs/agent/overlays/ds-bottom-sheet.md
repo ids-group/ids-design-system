@@ -6,7 +6,7 @@ Group: Overlay
 Mobile-first panel anchored to the bottom edge (touch equivalent of drawer/modal). Drag-down on the grab strip, scrim tap, or Esc dismisses; body scroll locks while open; caps width + centres on wide viewports.
 Inputs: `open: model<boolean> = false`, `title: string = ''`
 Output: `(closed): void`
-Content slots: default (body), `[actions]` (footer).
+Content slots: default (body), `[actions]` (footer: a column with a gap, so `actions` goes on each button, not on a wrapper).
 
 <!-- inputs:ds-bottom-sheet -->
 All inputs: `open: boolean = false`, `title: required string`, `snapPoints: readonly number[] = []`, `staticPreview: boolean = false`

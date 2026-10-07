@@ -772,12 +772,22 @@ Inputs: `open: model<boolean> = false`, `size: 'sm' | 'md' | 'lg' = 'md'`, `dang
 Output: `(closed): void` — fires on backdrop click, close button, or `open` being set to false. `(confirmed)` is declared on the component but no internal handler emits it; treat it as not implemented and emit confirmation from the consumer-side action button instead.
 Content slots: `[eyebrow]`, `[title-badge]`, `[body]`, `[impact]` (highlighted strip under the body for destructive consequences), `[actions]` (footer button row). Content with no slot attribute renders in the body after `[body]`; in dev mode it logs a warning asking for `<div body>`, and an unknown slot name such as `<div footer>` logs its own warning. Backdrop click + close button close the dialog.
 
+`actions` goes on each button, not on a wrapper: the footer is a flex row with `gap: var(--space-3)`, so a `<div actions>` around the buttons is one flex item and the buttons touch. Group them with `<ng-container actions>`, which adds no element.
+
+```html
+<ds-modal title="Unarchive program" [(open)]="open">
+  <div body>...</div>
+  <ds-button actions variant="outline" (pressed)="open.set(false)">Cancel</ds-button>
+  <ds-button actions (pressed)="confirm()">Unarchive</ds-button>
+</ds-modal>
+```
+
 <!-- inputs:ds-modal -->
 All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' | 'xl' | 'fullscreen' = 'md'`, `status: 'info' | 'success' | 'warning' | 'error' = null`, `title: required string`, `subtitle: string | null = null`, `dividers: boolean | null = null`, `closeOnBackdrop: boolean = true`, `persistent: boolean = false`, `staticPreview: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-modal-card>` — `ModalCardComponent`
-The visual card the `<ds-modal>` host renders inside its backdrop. Exposed as a separate selector for cases where you need custom positioning (e.g. inside a drawer) without re-implementing the dialog chrome. Inputs: `size`, `danger`, `title: required`, `showClose: boolean = true`. Output: `(closed)`. Slots: `[eyebrow]`, `[title-badge]`, `[body]`, `[impact]`, `[actions]`; content with no slot attribute renders in the body, with the same dev-mode warnings as `<ds-modal>`.
+The visual card the `<ds-modal>` host renders inside its backdrop. Exposed as a separate selector for cases where you need custom positioning (e.g. inside a drawer) without re-implementing the dialog chrome. Inputs: `size`, `danger`, `title: required`, `showClose: boolean = true`. Output: `(closed)`. Slots: `[eyebrow]`, `[title-badge]`, `[body]`, `[impact]`, `[actions]`; content with no slot attribute renders in the body, with the same dev-mode warnings as `<ds-modal>`. `[actions]` goes on each button, as on `<ds-modal>`.
 
 <!-- inputs:ds-modal-card -->
 All inputs: `size: 'sm' | 'md' | 'lg' | 'xl' | 'fullscreen' = 'md'`, `status: 'info' | 'success' | 'warning' | 'error' = null`, `title: required string`, `subtitle: string | null = null`, `showClose: boolean = true`, `dividers: boolean | null = null`, `icon: IconName | null = null`, `dialogRole: 'dialog' | 'alertdialog' = null`
@@ -787,7 +797,7 @@ All inputs: `size: 'sm' | 'md' | 'lg' | 'xl' | 'fullscreen' = 'md'`, `status: 'i
 Side panel (no `side` input — always anchored right).
 Inputs: `open: model<boolean> = false`, `size: 'md' | 'lg' = 'md'`, `title: string = ''`
 Output: `(closed): void`
-Content slots: `[drawer-body]` (or `[body]`), `[drawer-footer]` (or `[actions]`). Content with no slot attribute renders in the body; in dev mode it logs a warning, as does an unknown slot name.
+Content slots: `[drawer-body]` (or `[body]`), `[drawer-footer]` (or `[actions]`). Content with no slot attribute renders in the body; in dev mode it logs a warning, as does an unknown slot name. The footer is a flex row with a gap, so `drawer-footer` or `actions` goes on each button, not on a wrapper; `<ng-container actions>` groups them without an element.
 
 <!-- inputs:ds-drawer -->
 All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' = 'md'`, `placement: 'right' | 'left' | 'top' | 'bottom' = 'right'`, `title: required string`, `staticPreview: boolean = false`
@@ -797,7 +807,7 @@ All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' = 'md'`, `placeme
 Mobile-first panel anchored to the bottom edge (touch equivalent of drawer/modal). Drag-down on the grab strip, scrim tap, or Esc dismisses; body scroll locks while open; caps width + centres on wide viewports.
 Inputs: `open: model<boolean> = false`, `title: string = ''`
 Output: `(closed): void`
-Content slots: default (body), `[actions]` (footer).
+Content slots: default (body), `[actions]` (footer: a column with a gap, so `actions` goes on each button, not on a wrapper).
 
 <!-- inputs:ds-bottom-sheet -->
 All inputs: `open: boolean = false`, `title: required string`, `snapPoints: readonly number[] = []`, `staticPreview: boolean = false`

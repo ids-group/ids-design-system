@@ -120,7 +120,7 @@ and token names.** These leaves are for orientation and usage.
 
 ## overlays
 
-- [<ds-modal> — ModalComponent](overlays/ds-modal.md) — <!-- inputs:ds-modal -->
+- [<ds-modal> — ModalComponent](overlays/ds-modal.md) — actions goes on each button, not on a wrapper: the footer is a flex row with gap: var(--space-3), so a <div ac
 - [<ds-modal-card> — ModalCardComponent](overlays/ds-modal-card.md) — The visual card the <ds-modal> host renders inside its backdrop. Exposed as a separate selector for cases wher
 - [<ds-drawer> — DrawerComponent](overlays/ds-drawer.md) — Side panel (no side input — always anchored right).
 - [<ds-bottom-sheet> — BottomSheetComponent](overlays/ds-bottom-sheet.md) — Mobile-first panel anchored to the bottom edge (touch equivalent of drawer/modal). Drag-down on the grab strip

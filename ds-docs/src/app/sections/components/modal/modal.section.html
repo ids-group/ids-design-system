@@ -39,9 +39,24 @@
     </code>.
   </p>
 
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      actions
+    </code> goes on each button: the row is a flex row with a gap, so a
+    wrapping
+    <code class="t-mono-inline">
+      &lt;div actions&gt;
+    </code>
+    is one flex item and its buttons touch. To group them, use
+    <code class="t-mono-inline">
+      &lt;ng-container actions&gt;
+    </code>, which adds no element.
+  </p>
+
   <pre class="t-mono-block"><code>&lt;ds-modal title="Unarchive program" [(open)]="open"&gt;
   &lt;div body&gt;...&lt;/div&gt;
-  &lt;div actions&gt;...&lt;/div&gt;
+  &lt;ds-button actions variant="outline"&gt;Cancel&lt;/ds-button&gt;
+  &lt;ds-button actions&gt;Unarchive&lt;/ds-button&gt;
 &lt;/ds-modal&gt;</code></pre>
 
   <h3

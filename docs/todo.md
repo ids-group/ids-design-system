@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**126 open — 7 P1, 8 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**125 open — 7 P1, 7 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 7
 
@@ -28,14 +28,13 @@ item and nothing else.
   - An info-hint (toggletip) component: an info icon button that shows supplementary text on hover and focus and pins on click (Stas, 2026-10-06)
   - `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
 
-### P2 — 8
+### P2 — 7
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Asked by Stas**
-  - Document how to build `ds-modal` actions (Stas, 2026-10-06)
   - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
   - `ds-date-picker` has no width control (Stas, 2026-10-06)
 - **Open verdicts, each drawn in a deck**
@@ -381,9 +380,6 @@ Each has somebody behind it. Nothing here is speculative work.
 - [ ] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `fix/table-auto-column-clip` (empty marker branch from dev).
   A long value (an email, a name) stretches the column and pushes the table past its container. Wanted: a default clip width for a column that sets no `width`, with the full text still reachable. The choice is drawn in deck `17-table-truncate-clip.html` on branch `feat/table-truncate-column-clip` (renumber to 19 when merged; 17 and 18 are taken on dev).
   **Consumer workaround today** (mm-ecm ME-493, Delta review): `src/frontend/projects/ecm-portal/src/app/features/**/delta-records-table.component.*` sets `width: 'content'` on the columns, wraps the value in `.value { display: block; width: 0; min-width: 100% }` and adds `dsTooltipWhenClipped`. Marked `TODO(ds-clip-default)` there; it goes once the DS clips by default.
-
-- [ ] **[P2] Document how to build `ds-modal` actions (Stas, 2026-10-06).** Work branch `fix/table-auto-column-clip`.
-  `components.md` says only "`[actions]` (footer button row)". The slot is a flex row with `gap: var(--space-3)`, so each button must be a direct projected child with `actions` on it. A consumer who wrapped the buttons in `<div actions>` got one flex child, no gap, and buttons stuck together (mm-ecm ME-502, `unarchive-program-dialog.component.html`). Wanted: one sentence and one example in the `ds-modal` section (also `ds-modal-card`, `ds-drawer`) saying that `actions` goes on each button, not on a wrapper; a dev-mode warning for a wrapper is optional.
 
 - [ ] **[P2] Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07).** The starter
   repo (`C:/Repositories/ai-sdlc-prototype`, last commit 2026-09-05) has fallen behind. Take the
