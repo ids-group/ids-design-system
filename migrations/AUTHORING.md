@@ -417,6 +417,9 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
 - [ ] Default-value / timing / event-payload changes are their own `behavior` entry, with `restore`
       (or an explicit `null`) AND a `deleteList` entry for whatever the flip made redundant. (lint,
       for the `restore` half)
+- [ ] Every token or hook whose DEFAULT moved, was deleted or renamed in the boundary is named in
+      the manifest; `node tools/token-diff.mjs v<prev> v<version>` lists them, old and new value.
+      (`tools/check-token-defaults.mjs`, in `lint` and the preflight)
 - [ ] An entry that reverses an earlier release's guidance carries `supersedes` naming it; the earlier
       file stays untouched, and `supersededBy` is rejected. (lint, M028 + reference resolution)
 - [ ] Substring-colliding renames: longer has its own entry; shorter's `note` says "rename longer first".

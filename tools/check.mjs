@@ -43,6 +43,7 @@ const EXTRA = {
   'changelog-pending:audit': ['tools/check-changelog-pending.mjs', '--audit'],
   'manifest-claims:audit': ['tools/check-manifest-claims.mjs', '--audit'],
   'manifest-compile:audit': ['tools/check-manifest-compile.mjs', '--audit'],
+  'token-defaults:audit': ['tools/check-token-defaults.mjs', '--audit'],
   probes: ['tools/run-probes.mjs'],
 };
 
@@ -54,7 +55,8 @@ export const GROUPS = {
   // compares against `docs/todo.md`, which parallel sessions edit in a shared checkout.
   // `changelog-pending` is in: it reads one tag's tree and the working tree in about a second, and
   // a change is cheapest to describe in the session that made it. `manifest-claims` is in: it reads
-  // only the draft manifest and `## Unreleased`, which every PR can change.
+  // only the draft manifest and `## Unreleased`, which every PR can change. `token-defaults` is in:
+  // any stylesheet edit can move a default, and it reads one tag and the working tree.
   lint: [
     'tools-parse',
     'entry-point-imports',
@@ -75,6 +77,7 @@ export const GROUPS = {
     'changelog-pending',
     'manifest-coverage',
     'manifest-claims',
+    'token-defaults',
     'design-sync-log',
     'docs-attrs',
     'doc-tokens',
@@ -88,12 +91,13 @@ export const GROUPS = {
   // selftest runs before its lint: a green lint means the data satisfies the rules, not that the
   // rules can still fire. `manifest-coverage`, `manifest-truth` and `manifest-compile` are here
   // because the cut is the last moment to catch them: once a block is published, a consumer has
-  // read the manifest's silence as "this release does not touch me". `manifest-claims` for the same
-  // reason: a claim nobody measured is read as a fact the moment it ships. The PR gate runs most of
-  // the rest too, but it is manual, so a release can be cut from a branch where it never fired.
-  // `changelog-pending` is here because the cut folds `## Unreleased` into the release block, and a
-  // change it never named leaves with nothing describing it. Left out: deck-lint, whose subject is
-  // internal decks that never reach the package.
+  // read the manifest's silence as "this release does not touch me". `manifest-claims` and
+  // `token-defaults` for the same reason: an unmeasured claim and a default that moved unnamed both
+  // read as facts the moment they ship. The PR gate runs most of the rest too, but it is manual, so a
+  // release can be cut from a branch where it never fired. `changelog-pending` is here because the
+  // cut folds `## Unreleased` into the release block, and a change it never named leaves with
+  // nothing describing it. Left out: deck-lint, whose subject is internal decks that never reach the
+  // package.
   release: [
     'tools-parse',
     'class-surface-entry',
@@ -109,6 +113,8 @@ export const GROUPS = {
     'manifest-claims',
     'manifest-compile:selftest',
     'manifest-compile',
+    'token-defaults:selftest',
+    'token-defaults',
     'changelog-lint:selftest',
     'changelog-lint',
     'changelog-pending:selftest',
