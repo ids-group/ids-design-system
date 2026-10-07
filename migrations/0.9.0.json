@@ -169,14 +169,14 @@
       "kind": "code-add",
       "old": "ds-tabs",
       "new": "urlParam=\"tab\"",
-      "action": "Per strip, and worth a deliberate pass. (1) Give each `ds-tab` a `value` if it has none. (2) Use one strip per parameter name — nested or sibling strips need distinct names, such as `tab` and `subtab`. (3) Delete any hand-rolled wiring: a queryParamMap subscription plus a `navigate()` on `tabChanged` is exactly what this replaces.",
+      "action": "Per strip, and worth a deliberate pass. (1) Give each `ds-tab` a `value` if it has none. (2) Use one strip per parameter name — nested or sibling strips need distinct names, such as `tab` and `subtab`. (3) Delete any hand-rolled wiring: a queryParamMap subscription plus a `navigate()` on `(selectedIndexChange)` is exactly what this replaces.",
       "appliesWhen": "Nothing changes until you set `urlParam`.",
       "pitfall": "Two traps, both silent until someone shares a link. Without a `value` the URL is written from the LABEL, so the link breaks the moment the label is translated or reworded. And two strips sharing a parameter name erase each other — both write the same query parameter and a reload restores whichever wrote last. A dev-mode warning names that clash.",
       "note": "Setting `urlParam=\"tab\"` makes the strip write `?tab=<name>`, so the active tab survives F5, a shared link and the Back button.",
       "searchHints": [
         "<ds-tabs",
         "ds-tabs",
-        "tabChanged",
+        "selectedIndexChange",
         "queryParamMap"
       ],
       "surface": [

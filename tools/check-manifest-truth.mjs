@@ -699,6 +699,22 @@ const DELIBERATE_PHANTOMS = new Set([
   'v0.11.3 banner-dismissed-output-never-existed dismissed',
   'v0.11.3 toast-dismissed-output-never-existed dismissed',
   'v0.11.3 table-row-click-output-never-existed rowClick',
+  // A consumer's own example name, a parameter name, an element a release before this one removed,
+  // or the spelling a blind replace would produce.
+  'v0.2.0 surface-subtle-token-rename --surface-subtle',
+  'v0.7.0 size-type-icon-button-to-dssize IconDsSize',
+  'v0.7.1 table-sortkey-non-null-when-unsorted orderBy',
+  'v0.8.0 informational myError',
+  'v0.10.0 link-button-local-reset link-button',
+  'v0.10.0 auth-brand-adapter brandAccent',
+  'v0.10.1 fields-warning-kind-is-reserved warningLimit',
+  'v0.10.1 fields-warning-kind-is-reserved softLimit',
+  'v0.11.4 toast-promise-messages-generic Saved',
+  'v0.13.0 chart-strong-gridline-token-removed --chart-grid-line-color-strong',
+  'v0.13.2 chart-active-mark-gains-release anchorWithin',
+  'v0.13.4 donut-chart-renamed-to-pie-chart chart-block',
+  'v0.14.0 bar-radius-hook ds-meter',
+  'v0.14.0 cell-template-context-typed-unknown Row',
 ]);
 
 // Names the platform owns, which no tag of ours declares. Each one was read out of a published

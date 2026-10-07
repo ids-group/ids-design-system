@@ -2428,7 +2428,7 @@
   single-series chart ARE the categories and the marks of a grouped one are not. A flat list still
   takes the whole band, so a chart that was passing one stays exactly as it was. Stacked segments
   are separated by a 2px gap in the surface colour rather than a drawn rule, which survives print
-  and colour-vision deficiency. `stack="stacked"` and `ds-line-chart`'s `axisMode="stacked"` are
+  and colour-vision deficiency. `stack="stacked"` and `ds-line-chart`'s `yAxisMode="stacked"` are
   different things: series on top of each other, against two plots one above the other.
 
 - **`ds-donut-chart` takes `partOfWhole`, so its percentages can be turned off.** A ring always
