@@ -917,8 +917,7 @@
   `ChartComponent.tooltipPreferBelow` is now `tooltipPinned`, and the internal
   `ChartTooltipDirective` drops `dsChartTooltipPreferBelow` for `dsChartTooltipPinned`. Delete every
   `[dsChartTooltipPreferBelow]` binding. A custom mark that hands `CHART_SCALES.reportTooltip` a
-  source renames its `preferBelow` field to `pinned`; a `pinned` panel takes the pointer so its text
-  can be selected. A `preferBelow` reached through a variable still compiles and is ignored. The
+  source renames its `preferBelow` field to `pinned`; a `pinned` panel's pane takes the pointer. A `preferBelow` reached through a variable still compiles and is ignored. The
   library's own charts need nothing.
 
 - **`--ds-chart-hatch-width` defaults to `1.5px` (was `3px`), and the stripe runs down the middle of
@@ -1237,7 +1236,7 @@
 - **The chart tooltip pane is inert unless the reading is pinned.** The pane is drawn over the plot
   it describes, so on a funnel or a tight category axis it covered the neighbouring marks and the
   mark underneath never saw the pointer - the panel named a segment the reader had already left.
-  A pinned pane takes the pointer again, so its text can still be selected. A rule of yours on
+  A pinned pane takes the pointer again; the panel's own content does not. A rule of yours on
   `.cdk-overlay-pane.ds-chart-tooltip-pane` that assumed `pointer-events: auto` needs
   `.is-pinned` added to it.
 
@@ -2565,6 +2564,9 @@
 - **`indeterminate` is ignored unless `semantics` is `'progress'`.** Only a task has an unknown
   duration. Nothing that set it on `ds-progress` is affected, because that is the default.
 
+- **An indeterminate `ds-bar` holds still under reduced motion.** With `prefers-reduced-motion:
+  reduce` it fills its track without moving; `ds-progress` kept its sweep, at half speed.
+
 ### Fixed
 
 - **A pinned tooltip survives a scroll.** Every chart tore its panel down on any scroll of the page,
@@ -2836,21 +2838,22 @@
   `legendMode="toggle"` to keep the checkboxes. `hiddenSeries` is unchanged in both modes, so a page
   driving it from a URL parameter needs nothing.
 
-- **A chart tooltip can be selected and dismissed with Escape, and reached with the pointer where
-  you ask for it.** The pane was inert and closed the instant the pointer left the mark, which left
+- **A chart tooltip can be dismissed with Escape, and reached with the pointer where you ask for
+  it.** The pane was inert and closed the instant the pointer left the mark, which left
   it unreadable at high zoom, unselectable, and impossible to clear without moving the pointer away.
 
   The pane takes the pointer now, and Escape closes the panel — it stays closed until the pointer
   visits another mark, so a reader who clears the screen keeps it cleared. Reaching the panel is
   `tooltipLingerMs`, which is `0`: the panel goes when the pointer does, because one left behind
   sits over the plot the reader has moved on to. WCAG 1.4.13's hoverable clause only bites where the
-  panel holds something to reach — a link, a figure, a selectable string — so set
+  panel holds something to reach — a link, a figure — so set
   `[tooltipLingerMs]="140"` on those charts, or `DS_CONFIG.chart.tooltipLingerMs` for an app whose
   tooltips all carry one. 140ms is what crossing the gap to a portaled panel takes at an ordinary
-  pointer speed.
+  pointer speed. The panel's own content does not take the pointer, so its text cannot be selected
+  and a link in a `tooltipTemplate` is clickable only with `pointer-events: auto` set on it.
 
   If you styled `.ds-chart-tooltip-pane` with `pointer-events`, that rule now decides whether the
-  panel can be selected at all — the pane must stay `auto`.
+  pointer can reach the panel at all — the pane must stay `auto`.
 
 - **A chart tooltip's second line is opt-in.** `0.13.1` gave every `ds-bar-chart` and
   `ds-column-chart` tooltip a `18.6% of total` line whether or not the marks were parts of a whole.
@@ -8920,8 +8923,9 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 - **Overlay scroll-lock is now released on dismiss.** The scoped `@keyframes` name guard now
   matches Angular's emulated-encapsulation suffix (`endsWith`, not `===`), so the page no
   longer stays scroll-locked after an overlay closes.
-- **`ds-input` / `ds-search` clear button stays visible when the field is blurred** — its
-  contrast was bumped so it reads at rest, not only on focus.
+- **`ds-input` / `ds-search` clear button reads at rest.** `ds-input` draws it in
+  `--text-secondary` instead of `--text-tertiary`, and `ds-search` shows it at full opacity instead
+  of 0.7, so it no longer needs hover or focus to be seen.
 - **`ds-combobox`** truncates long option labels with an ellipsis instead of wrapping in
   narrow panels, and its multi-select option row now fills the panel width (label no longer
   clipped to zero).
