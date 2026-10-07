@@ -182,6 +182,26 @@
       ],
       "verify": "No rule targets `.empty.is-error` within `ds-donut-chart`; the error message still takes your styling.",
       "note": "The error branch moved from a bare paragraph to the same ring-sized box the no-data state uses, so `.empty` is now the wrapper and the message carries `.empty-text`."
+    },
+    {
+      "id": "chart-active-mark-leaves-the-package-root",
+      "kind": "behavior",
+      "old": "ChartActiveMark",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if you import the internal `ChartActiveMark` from `@ids-group-ltd/ids-design-system`: import it from `@ids-group-ltd/ids-design-system/components/chart-tooltip` instead.",
+      "appliesWhen": "Only a file that imports the internal `ChartActiveMark` type from the package root. The chart-tooltip entry point still exports it, and code that uses the charts through their elements needs nothing.",
+      "pitfall": "The import fails the build with TS2305 rather than going quiet, so a build that passes has none.",
+      "restore": null,
+      "searchHints": [
+        "ChartActiveMark"
+      ],
+      "detect": [
+        "ChartActiveMark",
+        "has no exported member 'ChartActiveMark'"
+      ],
+      "verify": "No file imports the internal `ChartActiveMark` from `@ids-group-ltd/ids-design-system`; every import of it names the chart-tooltip entry point.",
+      "note": "The type is internal, so the package root no longer exports it. Its `enter` also takes an optional third argument, which an existing implementation still satisfies."
     }
   ],
   "informational": [
@@ -198,11 +218,11 @@
     "Fading the marks that are not singled out is now the `dimOthers` input rather than something `interactive` brought with it, and it is OFF by default on all five charts. On `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart` the pointer or focus picks the mark; `ds-line-chart` has no mark between two readings, so its fade follows the legend's highlight. The fade costs the separation between the faded marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at the default dim opacity — so it is a trade to make deliberately. A chart that had it back: `<ds-donut-chart interactive dimOthers …>`.",
     "Every chart holds the height of its plot while it shows a message — empty data, an error, or a legend that switched the last series off. What reserves that height differs: `ds-column-chart` and `ds-line-chart` use `--ds-column-chart-plot-height` / `--ds-line-chart-plot-height`, `ds-donut-chart` uses `--ds-donut-chart-size`, and `ds-bar-chart` and `ds-funnel-chart` reserve three rows or stages — so a bar chart that normally draws ten rows still shrinks to that reserve. A layout that relied on a chart collapsing to a line of text in those states will now see a reserved box.",
     "A chart tooltip's default content carries a second line per reading, for what the chart does not already print beside the mark: the mark's share of the total on `ds-bar-chart` and `ds-column-chart`, and the drop into the stage on `ds-funnel-chart`. A mark whose value is zero or negative gets no second line. `ds-donut-chart` carries none — its panel and its legend both already print the percentage. `ChartTooltipEntry` takes an optional `detail` for it. A projected `#dsChartTooltip` template is unaffected — it replaces the panel's contents entirely.",
-    "The dropdown panel's hooks all forward from the host onto the portaled pane per instance, the two new ones included — `--ds-dropdown-panel-border-color`, `--ds-dropdown-panel-shadow`, `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family` join `--ds-dropdown-panel-bg-color`, `--ds-dropdown-panel-minw`, `--ds-dropdown-panel-maxw`, `--ds-option-selected-bg-color`, `--ds-option-selected-label-color`, `--ds-option-selected-bg-color-hover` and `--ds-option-check-color`. Setting any of them on one picker reaches that picker's pane with no global rule.",
+    "The dropdown panel's hooks all forward from the host onto the portaled pane per instance, the two new ones included — `--ds-dropdown-panel-border-color`, `--ds-dropdown-panel-shadow`, `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family` join the hooks already forwarded: `--ds-dropdown-panel-bg-color`, `--ds-dropdown-panel-radius`, `--ds-dropdown-panel-maxh`, `--ds-dropdown-panel-minw`, `--ds-dropdown-panel-maxw`, `--ds-option-padding`, `--ds-option-gap`, `--ds-option-radius`, `--ds-option-row-gap`, `--ds-option-bg-color-active`, `--ds-option-selected-bg-color`, `--ds-option-selected-label-color`, `--ds-option-selected-bg-color-hover` and `--ds-option-check-color`. Setting any of them on one picker reaches that picker's pane with no global rule.",
     "`staggerMs` on `ds-donut-chart` has no effect. The ring fades as one object — arcs share their edges, and fading them one at a time shows the background through every seam — so there is nothing for a per-mark step to stagger. The input stays for parity with the other four charts.",
     "A legend's colour chips now fade in with the marks they name, on the same curve and delay: `ds-chart-legend`'s swatch and, where the legend toggles, its checkbox; `ds-donut-chart`'s legend swatch; and `ds-funnel-chart`'s stage-table swatch. They used to be solid from the first frame. Nothing in your code changes; a screenshot test that captures a chart mid-entrance will differ.",
     "`ds-donut-chart`'s error state holds the ring's height instead of collapsing to a line of text, matching the no-data state. The message element carries `empty-text is-error` where it carried `empty is-error`, so a rule written against `.empty.is-error` inside this chart no longer matches it.",
-    "The internal `describeStanding` is renamed: the internal `describeShare` replaces it, returning the share alone with no rank clause, and returning an empty string for a zero or negative reading. Neither name is exported from the package root — `@ids-group-ltd/ids-design-system/components` exports them — so only code reaching in through that specifier has an import to rename."
+    "The internal `describeShare` is new: it returns one mark's share of the total, or an empty string for a lone mark or a zero or negative reading. It is not exported from the package root - only `@ids-group-ltd/ids-design-system/components` exports it. Nothing to change."
   ],
   "deleteList": [
     {

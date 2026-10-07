@@ -34,8 +34,8 @@
       "new": null,
       "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding.",
       "appliesWhen": "Only a class that extends ButtonComponent, CheckboxComponent, RadioComponent or SwitchComponent. A consumer who uses the elements in a template needs nothing from this item.",
-      "pitfall": "Two of the four are not public API, which is no protection: a redeclared private or protected member fails with TS2415 exactly as a public collision does, and a same-named method whose signature differs fails with TS2416 instead.",
-      "note": "ButtonComponent gained `routerLink` and `href`, the two destination inputs; `controlRef`, the view child that replaces `buttonRef`; and `destination`, the computed that decides which of the three elements renders. It also LOST `buttonRef`, so a subclass that overrode that one now overrides nothing and its member is dead rather than broken. CheckboxComponent, RadioComponent and SwitchComponent each gained `ariaLabel` and `resolvedAriaLabel`.",
+      "pitfall": "Two of the six new names (`destination`, `resolvedAriaLabel`) are not public API, which is no protection: a redeclared private or protected member fails with TS2415 exactly as a public collision does, and a same-named method whose signature differs fails with TS2416 instead.",
+      "note": "ButtonComponent gained `routerLink` and `href`, the two destination inputs; `controlRef`, the view child that replaces `buttonRef`; and `destination`, the computed that decides which of the three elements renders. It also LOST `buttonRef`: a subclass `override buttonRef` now fails with TS4113, and a redeclaration without `override` compiles but is dead. CheckboxComponent, RadioComponent and SwitchComponent each gained `ariaLabel` and `resolvedAriaLabel`.",
       "verify": "The app builds with no TS2415 or TS2416 naming ButtonComponent, CheckboxComponent, RadioComponent or SwitchComponent, and no member of your subclass is called routerLink, href, controlRef, destination, ariaLabel or resolvedAriaLabel.",
       "searchHints": [
         "extends ButtonComponent",
