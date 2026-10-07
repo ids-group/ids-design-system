@@ -49,7 +49,7 @@
         </tbody>
       </table>
       <p>Пиксели: разница снимков dev и ветки при увеличении 4x и масштабе 1,6875 только под строкой, в хвосте p: 9 на 9 px при 14px и 8 на 8 px при 13px (1,2-1,4 px CSS). Остальное совпадает до пикселя, высота строки 14 px и 13 px на обеих.</p>
-      <p>Причина: у <code>.label</code> уже стоял <code>text-clip.single-line-ellipsis</code> (<code>overflow: clip</code> с запасом 4 px), но вся строка <code>nav.breadcrumbs</code> была <code>overflow: hidden</code> при <code>line-height: 1</code> и срезала глиф-бокс сверху и снизу. Теперь у строки <code>overflow-x: clip; overflow-y: visible</code>: длинная цепочка по-прежнему обрезается справа (ширина 128 px, scrollWidth 319 px), а по вертикали ничего не режется.</p>
+      <p>Причина: у <code>.label</code> уже стоял <code>text-clip.single-line-ellipsis</code> (<code>overflow: clip</code> с запасом 4 px), но вся строка <code>nav.breadcrumbs</code> была <code>overflow: hidden</code> при <code>line-height: 1</code> и срезала глиф-бокс сверху и снизу. Теперь у строки <code>overflow: clip visible</code>: по горизонтали clip, по вертикали visible: длинная цепочка по-прежнему обрезается справа (ширина 128 px, scrollWidth 319 px), а по вертикали ничего не режется.</p>
       <p>Кольцо фокуса: <code>:focus-visible</code> на первой ссылке, <code>outline-offset</code> отрицательный, кольцо внутри ссылки на обеих сборках.</p>
       <p>Снято с ds-docs на ветке (<code>ng serve</code>, порт 4432), раздел Breadcrumbs, первое демо, окно 1506 на 803. Снимок «было» сделан с файлом стилей из dev, подложенным на время в ту же сборку; в коммит это не вошло. Для 13px на хост поставлен <code>--ds-breadcrumbs-font-size: 13px</code>.</p>
     </details>

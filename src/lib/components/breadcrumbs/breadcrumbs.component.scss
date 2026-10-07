@@ -35,8 +35,7 @@
   flex-wrap: nowrap;
 
   // Horizontal only: the line box is shorter than the glyph box, so a vertical clip cuts every descender.
-  overflow-x: clip;
-  overflow-y: visible;
+  overflow: clip visible;
 
   // Inward ring: the overflow clips an outer one.
   --focus-ring-offset: calc(-1 * var(--focus-ring-width));
