@@ -91,16 +91,6 @@
   .opt .chosen-mark { display: none; font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--accent-strong); }
   .opt.is-chosen .chosen-mark { display: block; }
   .opts { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
-  .bar-fixed {
-    position: fixed; inset-inline: 0; inset-block-end: 0; display: flex; align-items: center;
-    gap: var(--space-3); padding: var(--space-3) var(--space-5); background: var(--surface-default);
-    border-top: var(--border-width-default) solid var(--border-divider); box-shadow: var(--shadow-popover);
-    font: var(--font-size-2xs) / 1.4 var(--font-sans); z-index: 10;
-  }
-  .bar-fixed .chatname { flex: none; color: var(--text-tertiary); }
-  .bar-fixed output { flex: 1 1 auto; min-width: 0; color: var(--text-secondary); font-family: var(--font-mono); overflow-x: auto; white-space: nowrap; }
-  .bar-fixed button { flex: none; padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-primary); font: inherit; cursor: pointer; }
-  .bar-fixed button:hover { background: var(--surface-secondary); }
   @media (max-width: 860px) {
     .pair, .gap { grid-template-columns: minmax(0, 1fr); }
     .bc.is-start .row { grid-template-columns: minmax(6em, 9em) 1fr auto; }
@@ -108,8 +98,6 @@
   }
   @media (max-width: 520px) {
     body { padding-inline: var(--space-4); }
-    .bar-fixed { padding: var(--space-2) var(--space-3); gap: var(--space-2); }
-    .bar-fixed .chatname { display: none; }
     .opts { grid-template-columns: minmax(0, 1fr); }
   }
 </style>
@@ -119,12 +107,12 @@
   <header class="masthead">
     <p class="parked">Отложено: ME-510 Won't Do 07.10, графики Analyze переделывают в pivot-таблицу</p>
     <h1>Строки <code>ds-bar-chart</code>: прочерк вместо нуля и запросы mm-ecm</h1>
-    <p class="chat">Ответ нести в чат: «ME-495: подсказки Analyze и DS»</p>
+    <p class="chat">Ответ нести в чат: «Acc2 · DS-аски, хвосты ECM, pp-ревью»</p>
     <p class="lede">Сверху исправленный баг: строка с <code>NaN</code> печатала <code>0</code> и <code>0.0%</code>, теперь прочерк, как обещает <code>components.md</code>. Ниже девять пробелов, из-за которых Analyze рисует строки вручную: у каждого макет того, как выглядел бы <code>ds-bar-chart</code>, рядом скриншот ECM. Внизу выбор пути.</p>
-    <div class="chips"><span class="chip is-done">баг исправлен на ветке</span><span class="chip">feat/bar-chart-customization</span><span class="chip">запросы отложены, P3</span><span class="chip">актуально на 2026-10-07</span></div>
+    <div class="chips"><span class="chip is-done">баг исправлен на ветке</span><span class="chip">ecm-feat/bar-chart-customization</span><span class="chip">запросы отложены, P3</span><span class="chip">актуально на 2026-10-07</span></div>
   </header>
 
-  <section class="panel">
+  <section class="panel" data-review="Прочерк вместо NaN">
     <h2>Баг: значение не число</h2>
     <p>Docs-сборка, демо «Visitor funnel» и «Spend by department», в одну строку подставлен <code>NaN</code>. Слева <code>dev</code>, справа ветка.</p>
     <div class="pair">
@@ -330,12 +318,6 @@ BarChartRow: children, emphasis, showPercent, detached</p>
 
   <p class="src"><b>Источники, проверено 2026-10-07 на ветке <code>feat/bar-chart-customization</code>.</b> <code>bar-chart.component.ts</code>, <code>bar-chart.component.scss</code> (<code>--ds-bar-chart-track-height</code>), <code>bar-chart.types.ts</code> (<code>BarChartRow.color</code>); <code>docs/todo.md</code> - P3 «<code>ds-bar-chart</code> customization asked by mm-ecm»; скриншоты ECM из <code>docs/asks/bar-chart/</code>. Макеты собраны из SCSS компонента на токенах <code>ds.css</code>, не из самого компонента.</p>
 
-  <div class="bar-fixed">
-    <span class="chatname">«ME-495: подсказки Analyze и DS»</span>
-    <output id="line">Дека bar-chart: путь не выбран</output>
-    <button type="button" id="copy">Скопировать</button>
-    <button type="button" id="reset">Сбросить</button>
-  </div>
 </main>
 
 <script>
@@ -381,7 +363,7 @@ BarChartRow: children, emphasis, showPercent, detached</p>
       card.classList.toggle('is-chosen', isChosen);
       card.setAttribute('aria-pressed', String(isChosen));
     }
-    document.getElementById('line').textContent = 'Дека bar-chart: ' + (chosen ? `путь - ${chosen} (отложено до нового запроса после pivot-таблицы)` : 'путь не выбран');
+    window.deckReview?.refresh();
   }
   function pick(card) {
     chosen = chosen === nameOf(card) ? '' : nameOf(card);
@@ -395,9 +377,118 @@ BarChartRow: children, emphasis, showPercent, detached</p>
       if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); pick(card); }
     });
   }
-  document.getElementById('copy').addEventListener('click', () => { navigator.clipboard?.writeText(document.getElementById('line').textContent); });
-  document.getElementById('reset').addEventListener('click', () => { chosen = ''; write(''); render(); });
+  window.deckReviewHooks = {
+    extra: () => (chosen ? `путь - ${chosen} (отложено до нового запроса после pivot-таблицы)` : ''),
+    onReset: () => { chosen = ''; write(''); render(); },
+  };
   render();
 </script>
+<!-- deck-review -->
+<script>
+// deck-review: verdict per [data-review] block, a textarea for remarks, one answer line in a fixed bar.
+// Inlined into a deck by ~/.claude/bin/deck-review-inline; contract in ~/.claude/docs/deck-review.md.
+(() => {
+  const KEY = 'deck-review:' + (document.documentElement.dataset.deck || document.title);
+  const ACCEPT = 'принято';
+  const REMARK = 'есть замечание';
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) ?? {}; } catch { return {}; } };
+  const write = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* private window */ } };
+  const state = read();
+
+  document.head.insertAdjacentHTML('beforeend', `<style>
+    .dr-row { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px 0; }
+    .dr-btn { padding: 4px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 999px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-btn[aria-pressed="true"] { background: var(--accent-subtitle, #e6efff); border-color: var(--accent-strong, #2457c5); color: var(--accent-strong, #2457c5); }
+    .dr-btn[data-v="${REMARK}"][aria-pressed="true"] { background: var(--error-subtitle, #fdecec); border-color: var(--error-text, #b42318); color: var(--error-text, #b42318); }
+    .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--error-text, #b42318); border-radius: 8px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
+    .dr-note[hidden] { display: none; }
+    .dr-bar { position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; padding: 10px 20px; background: var(--surface-default, #fff); border-top: 1px solid var(--border-divider, #e3e6eb); box-shadow: 0 -4px 16px rgb(0 0 0 / .08); color: var(--text-primary, #1d2330); font: 13px/1.4 var(--font-sans, system-ui, sans-serif); }
+    .dr-bar b { flex: none; }
+    .dr-bar .dr-chat { flex: none; color: var(--text-tertiary, #6b7280); }
+    .dr-bar output { flex: 1 1 auto; min-inline-size: 0; overflow-x: auto; white-space: nowrap; color: var(--text-secondary, #4b5563); font-family: var(--font-mono, ui-monospace, monospace); }
+    .dr-bar button { flex: none; padding: 6px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 6px; background: var(--surface-default, #fff); color: inherit; font: 600 13px/1.4 inherit; cursor: pointer; }
+    body { padding-block-end: 72px; }
+    @media (max-width: 640px) { .dr-bar { padding: 8px 12px; gap: 8px; } .dr-bar .dr-chat { display: none; } }
+  </style>`);
+
+  let items = [...document.querySelectorAll('[data-review]')];
+  if (!items.length) {
+    const whole = document.createElement('section');
+    whole.dataset.review = 'Дека в целом';
+    whole.innerHTML = '<h3>Дека в целом</h3>';
+    (document.querySelector('main') ?? document.body).append(whole);
+    items = [whole];
+  }
+
+  const controls = new Map();
+  for (const item of items) {
+    const label = item.dataset.review;
+    const row = document.createElement('div');
+    row.className = 'dr-row';
+    const verdicts = item.hasAttribute('data-review-note-only') ? [REMARK] : [ACCEPT, REMARK];
+    const buttons = verdicts.map((verdict) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'dr-btn';
+      button.dataset.v = verdict;
+      button.textContent = verdict === ACCEPT ? 'Принято' : 'Есть замечание';
+      button.addEventListener('click', () => {
+        const entry = (state[label] ??= {});
+        entry.v = entry.v === verdict ? '' : verdict;
+        write();
+        render();
+        if (entry.v === REMARK) note.focus();
+      });
+      return button;
+    });
+    const note = document.createElement('textarea');
+    note.className = 'dr-note';
+    note.placeholder = 'Что не так';
+    note.setAttribute('aria-label', `Замечание: ${label}`);
+    note.addEventListener('input', () => { (state[label] ??= {}).note = note.value; write(); render(); });
+    row.append(...buttons);
+    item.append(row, note);
+    controls.set(label, { buttons, note });
+  }
+
+  const chat = document.querySelector('.chat')?.textContent.replace(/^[^«]*/, '') ?? '';
+  const bar = document.createElement('div');
+  bar.className = 'dr-bar';
+  bar.innerHTML = `<b></b><span class="dr-chat"></span><output></output><button type="button" data-a="copy">Скопировать</button><button type="button" data-a="reset">Сбросить</button>`;
+  bar.querySelector('.dr-chat').textContent = chat;
+  document.body.append(bar);
+  const line = bar.querySelector('output');
+
+  const hooks = (window.deckReviewHooks ??= {});
+  window.deckReview = { refresh: () => render() };
+
+  function render() {
+    const parts = [];
+    let done = 0;
+    for (const [label, { buttons, note }] of controls) {
+      const entry = state[label] ?? {};
+      for (const button of buttons) button.setAttribute('aria-pressed', String(entry.v === button.dataset.v));
+      note.hidden = entry.v !== REMARK;
+      if (note.value !== (entry.note ?? '')) note.value = entry.note ?? '';
+      if (!entry.v) continue;
+      done++;
+      const text = entry.note?.trim().replace(/\s+/g, ' ');
+      parts.push(entry.v === REMARK ? `${label} - замечание${text ? `: «${text}»` : ''}` : `${label} - принято`);
+    }
+    const extra = hooks.extra?.();
+    if (extra) parts.push(extra);
+    bar.querySelector('b').textContent = `${done} из ${controls.size}`;
+    line.textContent = parts.length ? `Дека ${document.title}: ${parts.join('; ')}` : 'пока ничего не выбрано';
+  }
+
+  bar.addEventListener('click', (event) => {
+    const action = event.target.closest('button')?.dataset.a;
+    if (action === 'copy') navigator.clipboard?.writeText(line.textContent);
+    if (action === 'reset') { for (const label of Object.keys(state)) delete state[label]; write(); hooks.onReset?.(); render(); }
+  });
+  render();
+})();
+</script>
+<!-- /deck-review -->
 </body>
 </html>
