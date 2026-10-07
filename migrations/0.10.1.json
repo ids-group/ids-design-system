@@ -125,9 +125,9 @@
       "kind": "behavior",
       "old": "TextareaComponent, InputComponent",
       "new": null,
-      "action": "Nothing for the seven moved members - a subclass already inherited them from the field class. Only `success` is new on eight fields, and a string on ds-input: a subclass declaring it now needs `override` under noImplicitOverride (TS4114) and a compatible type (else TS2416).",
+      "action": "Nothing for `errors`, `invalid`, `touched` and `reserveMessage` - a subclass already inherited them from the field class. `hint`, `error` and `warning` moved too, but their write type widened to `string | null | undefined` with a trim transform, so an override still typed `input<string>` fails with TS2416 - retype it to `input<string, string | null | undefined>('', { transform: (value) => value?.trim() ?? '' })` or drop the redeclaration. `success` is new on eight fields, and a string on ds-input: a subclass declaring it now needs `override` under noImplicitOverride (TS4114) and a compatible type (else TS2416).",
       "appliesWhen": "No input was removed - every input keeps its name and default; hint, error and warning now also accept null/undefined and trim, and the generated docs reference lost nothing. `success`, `label`, `required` and `optional` were deliberately NOT lifted and remain per-component.",
-      "pitfall": "Seven members were not lost, they moved UP onto an internal shared base, and every field still has them by inheritance — so an override of one of those needs no change. The genuine new collision is different: `success` is a NEW member on the eight bordered fields that lacked it, so a subclass of any of those declaring `success` needs `override` under noImplicitOverride (TS4114), and an incompatible type fails with TS2416.",
+      "pitfall": "Seven members were not lost, they moved up onto an internal shared base, and every field still has them by inheritance - an override of `errors`, `invalid`, `touched` or `reserveMessage` needs no change, while one of `hint`, `error` or `warning` typed `input<string>` now fails with TS2416 because the write type widened to `string | null | undefined`. The genuine new collision is different: `success` is a NEW member on the eight bordered fields that lacked it, so a subclass of any of those declaring `success` needs `override` under noImplicitOverride (TS4114), and an incompatible type fails with TS2416.",
       "note": "The seven shared inputs and the `reserveMessageResolved` helper are declared once on a new internal shared base instead of being hand-copied into each of the fourteen fields. Every field reaches them by inheritance.",
       "searchHints": [
         "extends TextareaComponent",
@@ -147,7 +147,7 @@
         "extends InputComponent",
         "extends "
       ],
-      "verify": "A typecheck reports no TS4114 or TS2416 on a subclass of a DS field declaring `success` - on ds-input or one of the eight bordered fields that just gained it."
+      "verify": "A typecheck reports no TS4114 or TS2416 on a subclass of a DS field declaring `success` - on ds-input or one of the eight bordered fields that just gained it - and no TS2416 on an override of `hint`, `error` or `warning`."
     },
     {
       "id": "fields-invalid-no-longer-recolours-hint",
