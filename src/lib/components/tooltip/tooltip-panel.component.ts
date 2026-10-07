@@ -6,7 +6,9 @@ import type { TooltipPlacement } from './tooltip.types';
   standalone: true,
   template: `
     @if (lead(); as leadText) {
-      <span class="lead">{{ leadText }}</span>
+      <span class="lead">
+        {{ leadText }}
+      </span>
     }
     {{ text() }}
   `,

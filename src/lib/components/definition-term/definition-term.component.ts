@@ -12,6 +12,7 @@ import {
 } from '@ids-group-ltd/ids-design-system/components/tooltip';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'button[dsDefinitionTerm]',
   standalone: true,
   template: '<ng-content />',
