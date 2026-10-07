@@ -3654,7 +3654,8 @@
   `messageId`, `message`, `fieldMessage` and `uid` — it shares the fields' message base now;
   `InputComponent` gained `groupMessage`, and `SelectComponent`, `AutocompleteComponent` and
   `DatePickerComponent` gained `groupMessage` and `describedByIds`. Being public API or not is no protection:
-  `private` and `protected` collide with TS2415 exactly as a public name does.
+  a `private` name collides with TS2415, and a `protected` one with TS4114 or TS2416, exactly as a
+  public name does.
 
   `routerLink` also widened on the three navigating components — `string | readonly unknown[] |
   null` became `DsRouterLink`, which adds `UrlTree`. Writing it is unaffected; code that READS the
@@ -3935,8 +3936,9 @@
   gained `routerLink`, `href`, `controlRef` and `destination`, which decides which of the three
   elements renders; `buttonRef` is gone from its surface, so a subclass that overrode it now
   overrides nothing. `CheckboxComponent`, `RadioComponent` and `SwitchComponent` each gained
-  `ariaLabel` and `resolvedAriaLabel`. Being public API or not is no protection: `private` and
-  `protected` collide with TS2415 exactly as a public name does. Nothing changes for a consumer who
+  `ariaLabel` and `resolvedAriaLabel`. Being public API or not is no protection: a `private` name
+  collides with TS2415, and a `protected` one with TS4114 or TS2416, exactly as a public name does.
+  Nothing changes for a consumer who
   only uses the elements.
 
 ### Fixed
@@ -4091,7 +4093,8 @@
   `stickyScrollbarOffsetResolved`. `SidenavGroupComponent` gained the
   new `routerLink` input and `headerNavigates`, the computed that decides whether the header splits
   into a link and a caret. Only `routerLink` is public API and that is no protection for the rest:
-  `private` and `protected` collide with TS2415 exactly as a public name does, so a member of yours
+  a `private` name collides with TS2415, and a `protected` one with TS4114 or TS2416, exactly as a
+  public name does, so a member of yours
   sharing one of those names stops the build. Nothing changes for a consumer who only uses the
   elements — no existing input, output or token changed name or type.
 
@@ -5482,7 +5485,7 @@ this package ships under `migrations/`.
   `SidenavComponent` gained `brandRoute`, `brandLinkLabel` and the protected `brandAriaLabel`; and
   `CheckboxComponent` and `RadioGroupComponent` each gained the protected `controlState`.
   A subclass that happens to declare the same name now fails with TS4114 (“must have an ‘override’
-  modifier”), or TS2415 if the signature differs — and `protected` is no protection, since a
+  modifier”), or TS2416 if the signature differs — and `protected` is no protection, since a
   redeclared protected member collides exactly as a public one does.
   Subclassing a DS component stays unsupported (`components.md` § Components); compose instead.
 
