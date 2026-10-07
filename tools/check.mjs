@@ -41,6 +41,7 @@ const EXTRA = {
   // The prose-name and unread-value rules over published manifests, which fail only the draft.
   'manifest-truth:audit': ['tools/check-manifest-truth.mjs', '--audit'],
   'changelog-pending:audit': ['tools/check-changelog-pending.mjs', '--audit'],
+  'manifest-claims:audit': ['tools/check-manifest-claims.mjs', '--audit'],
   probes: ['tools/run-probes.mjs'],
 };
 
@@ -50,7 +51,8 @@ export const GROUPS = {
   // the manifests, and the first reads 27 release trees; `todo-index` compares
   // against `docs/todo.md`, which parallel sessions edit in a shared checkout. `changelog-pending`
   // is in: it reads one tag's tree and the working tree in about a second, and a change is cheapest
-  // to describe in the session that made it.
+  // to describe in the session that made it. `manifest-claims` is in: it reads only the draft
+  // manifest and `## Unreleased`, which every PR can change.
   lint: [
     'tools-parse',
     'entry-point-imports',
@@ -70,6 +72,7 @@ export const GROUPS = {
     'changelog-lint',
     'changelog-pending',
     'manifest-coverage',
+    'manifest-claims',
     'design-sync-log',
     'docs-attrs',
     'doc-tokens',
@@ -83,9 +86,10 @@ export const GROUPS = {
   // selftest runs before its lint: a green lint means the data satisfies the rules, not that the
   // rules can still fire. `manifest-coverage` and `manifest-truth` are here because the cut is the
   // last moment to catch them: once a block is published, a consumer has read the manifest's
-  // silence as "this release does not touch me". The PR gate runs most of the rest too, but it is
-  // manual, so a release can be cut from a branch where it never fired. `changelog-pending` is here
-  // because the cut folds `## Unreleased` into the release block, and a change it never named
+  // silence as "this release does not touch me". `manifest-claims` for the same reason: a claim
+  // nobody measured is read as a fact the moment it ships. The PR gate runs most of the rest too, but
+  // it is manual, so a release can be cut from a branch where it never fired. `changelog-pending` is
+  // here because the cut folds `## Unreleased` into the release block, and a change it never named
   // leaves with nothing describing it. Left out: deck-lint, whose subject is internal decks that
   // never reach the package.
   release: [
@@ -99,6 +103,8 @@ export const GROUPS = {
     'manifest-coverage',
     'manifest-truth:selftest',
     'manifest-truth',
+    'manifest-claims:selftest',
+    'manifest-claims',
     'changelog-lint:selftest',
     'changelog-lint',
     'changelog-pending:selftest',

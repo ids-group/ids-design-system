@@ -448,6 +448,10 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
 - [ ] The boundary is in `appliesWhen` and the silent-failure mode in `pitfall`, not buried in the note.
 - [ ] `note` is under 120 words and carries no ALL-CAPS structural marker. (lint, M040 / M041)
 - [ ] No key outside the allowlist. (lint, M042)
+- [ ] A sentence asserting that rendering or behaviour did not change, a compile outcome, or a count
+      of things is backed by `evidence` on its item or object-form `informational` entry, and a
+      `## Unreleased` sentence making one by such an entry naming its code. (`node tools/check.mjs
+      manifest-claims`, in the lint and release gates)
 - [ ] An `informational` entry whose change is to rendering alone carries `verify`; an object entry
       has a non-empty `text` and `verify` and no other key. (lint, M046 for the shape)
 - [ ] `old` resolves at the PREVIOUS tag, is gone at this one for a rename or a removal, and `new`
