@@ -14,16 +14,15 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**127 open — 8 P1, 8 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**126 open — 7 P1, 8 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P1 — 8
+### P1 — 7
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer)
   - A clipped hinted header shows its label and hint as two plain lines; the label should be a bold line of its own (asked by Stas, 2026-10-06)
 - **Asked by Stas**
   - A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
-  - Review branch `fix/published-manifests-audit` before it is merged (Stas, 2026-10-06)
   - A click pins a tooltip: hover shows it at once, a click keeps it open (Stas, 2026-10-06)
   - A definition-term directive: an inline term that opens a tooltip on hover and focus and pins on click (Stas, 2026-10-06)
   - An info-hint (toggletip) component: an info icon button that shows supplementary text on hover and focus and pins on click (Stas, 2026-10-06)
@@ -385,16 +384,6 @@ Each has somebody behind it. Nothing here is speculative work.
 
 - [ ] **[P2] Document how to build `ds-modal` actions (Stas, 2026-10-06).** Work branch `fix/table-auto-column-clip`.
   `components.md` says only "`[actions]` (footer button row)". The slot is a flex row with `gap: var(--space-3)`, so each button must be a direct projected child with `actions` on it. A consumer who wrapped the buttons in `<div actions>` got one flex child, no gap, and buttons stuck together (mm-ecm ME-502, `unarchive-program-dialog.component.html`). Wanted: one sentence and one example in the `ds-modal` section (also `ds-modal-card`, `ds-drawer`) saying that `actions` goes on each button, not on a wrapper; a dev-mode warning for a wrapper is optional.
-
-- [ ] **[P1] Review branch `fix/published-manifests-audit` before it is merged (Stas, 2026-10-06).**
-  It corrects 35 published `migrations/<version>.json` files (`5d99ede5`, +236/-201 lines) from an
-  audit of every manifest against its own release diff: 128 findings, each re-derived by a sceptic
-  agent, none checked by hand. The review answers two questions per changed line: was the defect
-  real, and is the new text true for the code at that version (`git diff v<prev> v<version>`, never
-  HEAD). Everything a reviewing agent needs - the findings, the verdicts, the briefs, the lines decided
-  without an auditor and the review steps - is in `.claude/local/todo/manifest-audit-review.md` and
-  `.claude/local/from-scratchpad/2026-10-06-manifest-audit/` (local to this checkout, not in git).
-  The branch stays out of dev until Stas approves it.
 
 - [ ] **[P2] Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07).** The starter
   repo (`C:/Repositories/ai-sdlc-prototype`, last commit 2026-09-05) has fallen behind. Take the
