@@ -241,7 +241,7 @@
         "SkeletonComponent"
       ],
       "verify": "The app builds with no TS2415, TS2416 or TS4114 naming a class listed in detect, and no member of a subclass is named like a removed member listed in the note.",
-      "note": "Every listed class gained intl except AccordionComponent, AccordionItemComponent, AuthLayoutComponent, LineSeriesComponent and ChartTooltipDirective (internal); each nullable text input gained a matching ...Resolved readback. Also gained: AccordionComponent chevron; AccordionItemComponent chevronDown, chevronName; AlertComponent and BannerComponent liveRole; BarChartComponent highlighted, isSegmentDimmed; ChartComponent composed, cursorResolved, tooltipPinned; ColumnSeriesComponent axis, barElements, hatchInUse, locale; DatePickerComponent appLocale; DropzoneComponent sizeFormat; PieChartComponent legendHighlight, onLegendLeave, pinnedEntry. Lost: ChartComponent tooltipPreferBelow; ColumnSeriesComponent onMarkBlur; LineSeriesComponent onMarkerBlur; ChartTooltipDirective (internal) dsChartTooltipPreferBelow. AuthLayoutComponent's landmark default changes the type an override must match. Internal classes in detect are reached through their entry points. The nine chart components gained renderReady, and SkeletonComponent the shimmer input."
+      "note": "Every listed class gained intl except AccordionComponent, AccordionItemComponent, AuthLayoutComponent, LineSeriesComponent and ChartTooltipDirective (internal); each nullable text input gained a matching ...Resolved readback. Also gained: AccordionComponent chevron; AccordionItemComponent chevronDown, chevronName; AlertComponent and BannerComponent liveRole; BarChartComponent highlighted, isSegmentDimmed; ChartComponent composed, cursorResolved, tooltipPinned; ColumnSeriesComponent axis, barElements, hatchInUse, locale; DatePickerComponent appLocale; DropzoneComponent sizeFormat; PieChartComponent legendHighlight, onLegendLeave, pinnedEntry. Lost: ChartComponent tooltipPreferBelow; ColumnSeriesComponent onMarkBlur; LineSeriesComponent onMarkerBlur; ChartTooltipDirective (internal) dsChartTooltipPreferBelow. AuthLayoutComponent's `landmark` keeps its type and changes its default to `'main'`, so an override that restated `'none'` now differs from the base default. Internal classes in detect are reached through their entry points. The nine chart components gained renderReady, and SkeletonComponent the shimmer input."
     },
     {
       "id": "chart-cursor-default-auto",
@@ -535,7 +535,7 @@
         "none"
       ],
       "action": "None, unless a test or a screen expects a file size with a dot decimal under a non-English locale: pin it with provideDsConfig({ locale: 'en-US' }), which also pins chart numbers and ds-date-picker.",
-      "appliesWhen": "Only the size line of a listed file in ds-dropzone, in an app that provides LOCALE_ID or DS_CONFIG.locale. Under en-US the text is unchanged below 1000 MB; from 1000 MB it gains a group separator (1,024.0 MB).",
+      "appliesWhen": "Only the size line of a listed file in ds-dropzone, in an app that provides LOCALE_ID or DS_CONFIG.locale. Under en-US the text gains a group separator from 1000 KB up to 1 MB and from 1000 MB up (1,000.0 KB, 1,024.0 MB), and is unchanged everywhere else.",
       "pitfall": "A test asserting \"1.5 MB\" fails under a de-DE locale, where the size reads 1,5 MB, with no build error.",
       "restore": "provideDsConfig({ locale: 'en-US' })",
       "searchHints": [

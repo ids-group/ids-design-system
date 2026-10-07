@@ -34,7 +34,6 @@
       "old": "ComboboxOption",
       "new": "AutocompleteOption",
       "action": "Replace `ComboboxOption` with `AutocompleteOption`, matching whole identifiers.",
-      "pitfall": "`ComboboxOptionGroup` CONTAINS `ComboboxOption`. A substring replace run on the short name first corrupts the long one into a name that exists nowhere. Apply the group item first, or match whole identifiers.",
       "searchHints": [
         "ComboboxOption"
       ],
@@ -56,7 +55,7 @@
       "kind": "token-rename",
       "old": "--ds-combobox-",
       "new": "--ds-autocomplete-",
-      "action": "Replace the prefix `--ds-combobox-` with `--ds-autocomplete-` inside each full token name: `-focus-shadow`, `-maxw`, `-input-minw`.",
+      "action": "Replace `--ds-combobox-focus-shadow` with `--ds-autocomplete-focus-shadow` - the only `--ds-combobox-*` hook at 0.4.0.",
       "searchHints": [
         "--ds-combobox-"
       ],
@@ -87,7 +86,7 @@
       "kind": "selector-rename",
       "old": "ds-dropdown",
       "new": "ds-select",
-      "action": "Replace `ds-dropdown` with `ds-select` in templates and in any stylesheet rule that names the element, then apply `dropdown-error-input-rename` and `dropdown-option-groups-fold` to the same elements.",
+      "action": "Replace `ds-dropdown` with `ds-select` in templates and in any stylesheet rule that names the element, then apply `dropdown-error-input-rename` to the same elements. Set `placeholder=\"Select…\"` where you relied on the dropdown's default (ds-select defaults to empty), and rename `--ds-dropdown-focus-shadow(-error)` to `--ds-select-focus-shadow(-error)`.",
       "note": "ds-dropdown is gone; ds-select is the one select-only picker, and it carries the CVA, invalid and hint, required and optional, per-option icons and readOnly.",
       "searchHints": [
         "<ds-dropdown",
@@ -127,7 +126,6 @@
       "old": "DropdownOption",
       "new": "SelectOption",
       "action": "Replace `DropdownOption` with `SelectOption`, matching whole identifiers.",
-      "pitfall": "`DropdownOptionGroup` contains `DropdownOption`. Apply the group item first, or match whole identifiers — a substring replace corrupts the longer name.",
       "searchHints": [
         "DropdownOption"
       ],
@@ -149,7 +147,7 @@
       "kind": "token-rename",
       "old": "--ds-datepicker-",
       "new": "--ds-date-picker-",
-      "action": "Replace the prefix `--ds-datepicker-` with `--ds-date-picker-` inside each full token name — about fourteen tokens.",
+      "action": "Replace the prefix `--ds-datepicker-` with `--ds-date-picker-` inside each full token name - twelve tokens.",
       "note": "Names only: the prefix matches the selector now, and every value and CSS property is byte-identical.",
       "searchHints": [
         "--ds-datepicker-"
@@ -185,7 +183,7 @@
       "kind": "token-rename",
       "old": "--ds-avatargroup-",
       "new": "--ds-avatar-group-",
-      "action": "Replace the prefix `--ds-avatargroup-` with `--ds-avatar-group-` inside each full token name — `-overlap`, `-ring`, `-overflow-bg-color` and `-overflow-label-color`.",
+      "action": "Replace the prefix `--ds-avatargroup-` with `--ds-avatar-group-` inside each full token name - `-overlap` and `-ring` (the two 0.4.0 hooks; `-overflow-bg-color` / `-overflow-label-color` are new in 0.5.0).",
       "note": "Names only: the prefix matches the selector now, and every value and CSS property is byte-identical.",
       "searchHints": [
         "--ds-avatargroup-"
@@ -294,7 +292,7 @@
   "informational": [
     "New ds-time-picker (24h/12h via provideDsConfig, range mode, CVA) — additive.",
     "Selection controls gain size + required; standalone ds-radio gains invalid/hint; input/textarea maxLength counter; date-picker minDate/maxDate/disabledDate/presets + locale/dateFormat/firstDayOfWeek/defaultMonth manual masked entry; select clearable/icons/readOnly; autocomplete optionGroups/allowCreate/width=content; table expandable rows; modal closeOnBackdrop/persistent/xl/fullscreen; drawer placement/sm; bottom-sheet snapPoints; toast loading/promise/maxVisible; menu dividers/submenus; popover arrow/placement; tabs lazy/scrollable/closable/vertical; accordion single-open/item disabled; stepper clickable/errorSteps/vertical; sidenav collapsed tooltip; badge count/max; avatar status/fallbackIcon — all additive.",
-    "Public --ds-* customization token sweep across ~44 components (~160-180 new names) — purely additive resolvers, zero visual change when unset.",
+    "Public --ds-* customization token sweep across some 47 existing components (about 200 new names) — purely additive resolvers, zero visual change when unset.",
     "Visual-only: rounded press feedback (+ --ds-press-brightness/--ds-press-scale tuning tokens) and native tap-highlight suppression; accessibility hardening across overlays/pickers/fields/cards (dialog semantics, Tab close, role=alert re-announce, labels)."
   ],
   "deleteList": []
