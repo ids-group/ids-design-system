@@ -1,5 +1,49 @@
 ## Unreleased
 
+### Added
+
+- **`dsTooltipPinOnClick` keeps a tooltip open after a click.** With it the tip opens on hover and
+  focus with no delay, and a click on the host keeps it open after the pointer leaves until a click
+  outside, `Escape` or blur; a second click closes it. Without it a click closes the tip as before.
+  Use it on info and definition triggers only, never on a control whose click acts.
+  `TooltipDirective` gained the public `dsTooltipPinOnClick`, protected `onClick` and
+  `onPointerLeave`, and the private `document`, `hostPinOnClick`, `pinsOnClick`, `clippedLead`,
+  `pin`, `unpin` and `pointArrowAtHost`; `TooltipPanelComponent` gained the public `lead`. A
+  subclass declaring one of those names must rename it.
+
+- **`ds-info-hint` is an info icon button with a pinned tooltip.** `<ds-info-hint
+  ariaLabel="About conversion rate" text="…" />` renders a 14px `info` icon button named by
+  `ariaLabel`; `text` shows on hover and focus, describes the button, and stays open after a click.
+  `InfoHintComponent` is exported from the package root.
+
+- **`button[dsDefinitionTerm]` marks a term that carries its definition.** `<button type="button"
+  dsDefinitionTerm="…">term</button>` looks like the surrounding text with a dotted underline in
+  `--text-tertiary`, takes the focus ring, shows the definition on hover and focus, and pins it on
+  click. `[pinOnClick]="false"` turns the pin off where the click already acts.
+  `DefinitionTermComponent` is exported from the package root.
+
+### Changed
+
+- **A tooltip shows its text on one line again, and a clipped lead in bold.** A line break in a
+  `dsTooltip` string, or in the text a `dsTooltipWhenClipped` host discloses, reads as a space.
+  `dsTooltipClippedLead` renders as a bold line of its own above the tip. A `ds-table` header label
+  with a `hint` is a `button[dsDefinitionTerm]`: a plain label pins its hint on click, a sortable
+  one sorts on click and pins nothing; a clipped label shows in bold above the hint.
+
+### Fixed
+
+- **A tooltip's arrow points at the centre of its trigger.** It sat at the middle of the panel, so
+  a panel pushed off a viewport edge pointed past a trigger near that edge, 41px off for a button
+  at the right edge. A tooltip whose panel is centred on its trigger looks the same.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| `.replace(/\s*\n\s*/g, ' ')` on a value bound to `dsTooltip` | a tooltip reads a line break as a space | nothing |
+| a hand-built info button: `name="info"` on a `ds-icon` inside a `<button>` that carries `dsTooltip` | `ds-info-hint` renders the button, the icon and the pinned tooltip | `<ds-info-hint ariaLabel="…" text="…" />` |
+| a hand-built term button styled with `underline dotted` that carries `dsTooltip` | `button[dsDefinitionTerm]` carries the reset, the underline, the focus ring and the pinned tooltip | `<button type="button" dsDefinitionTerm="…">` |
+
 ## 0.14.8 — 2026-10-06
 
 ### Added
