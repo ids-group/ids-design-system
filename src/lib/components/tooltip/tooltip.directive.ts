@@ -95,8 +95,7 @@ export class TooltipDirective implements OnDestroy {
    *  whose text it discloses. Resolved on every open; while nothing matches, no clipped tip opens. */
   readonly dsTooltipTextSelector = input<string | null>(null);
 
-  /** Opens the tip with this line above `dsTooltip` while the host shows less text than it holds.
-   *  The tip keeps its own line break, so the two read as separate lines. */
+  /** Opens the tip with this line, in bold, above `dsTooltip` while the host shows less text than it holds. */
   readonly dsTooltipClippedLead = input<string>('');
 
   get hostElement(): HTMLElement {
@@ -117,13 +116,14 @@ export class TooltipDirective implements OnDestroy {
     return textElement !== null && isTextClipped(textElement);
   }
 
+  private clippedLead(): string | null {
+    const lead = this.dsTooltipClippedLead();
+
+    return lead && this.dsTooltip() && this.isClipped() ? lead : null;
+  }
+
   private tipText(): string {
     const given = this.dsTooltip();
-    const lead = this.dsTooltipClippedLead();
-    if (given && lead && this.isClipped()) {
-      return `${lead}
-${given}`;
-    }
     if (given || !this.dsTooltipWhenClipped()) {
       return given;
     }
@@ -320,6 +320,7 @@ ${given}`;
     const cmpRef = this.ref.attach(new ComponentPortal(TooltipPanelComponent));
     const text = this.tipText();
     cmpRef.setInput('text', text);
+    cmpRef.setInput('lead', this.clippedLead());
     cmpRef.setInput('placement', placement);
     positionStrategy.positionChanges.subscribe(({ connectionPair }) =>
       cmpRef.setInput(
