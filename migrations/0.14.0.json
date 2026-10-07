@@ -31,7 +31,7 @@
       "surface": "style",
       "action": "If you style or hit-test .cdk-overlay-pane.ds-chart-tooltip-pane, scope the interactive half to .is-pinned. Ships in styles/overlay-motion, which styles/ds forwards.",
       "appliesWhen": "Only an app with its own rule on the chart tooltip pane, or one that relied on the pane catching the pointer. The panel's content, position and dismissal are unchanged.",
-      "pitfall": "Text selection inside an unpinned panel no longer works, because the pane does not take the pointer. A pinned panel still does, and that is the supported way to reach the text.",
+      "pitfall": "An unpinned pane no longer takes the pointer, so moving onto the panel reaches the plot beneath it; a pinned pane still takes it. The panel's own content takes the pointer in neither case, so its text cannot be selected.",
       "restore": ".cdk-overlay-pane.ds-chart-tooltip-pane { pointer-events: auto; }",
       "searchHints": [
         "ds-chart-tooltip-pane",
