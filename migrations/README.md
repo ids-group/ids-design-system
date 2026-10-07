@@ -103,6 +103,27 @@ behaviour back. **Every published manifest meets this contract**, back to the ea
 legacy tier and no warning level: `surface`, `detect`, `verify` and `restore` are present wherever
 they apply.
 
+**Compile fixtures.** A sentence that states a compile outcome - "fails with TS2416", "TS2353
+inline, silent through a prebuilt object", "compiles but never runs" - is backed by
+`migrations/fixtures/<version>/<item-id>.ts` (`unreleased/` for the draft): consumer-side
+TypeScript importing from `@ids-group-ltd/ids-design-system` and its secondary entry points, as an
+app would. It is type-checked against the library source at both ends of the boundary, the
+previous stable tag and this one, with `strict`, `noImplicitOverride` (the Angular CLI scaffolds
+it, and it is what turns a new base member into TS4114) and `skipLibCheck`. A line expected to fail
+carries a directive on the line above, naming the side and the exact codes:
+
+```ts
+// @ts-expect-error after TS2353          this release reports TS2353 here, the previous is clean
+// @ts-expect-error before TS4114         the other way round: "compiles but never runs"
+// @ts-expect-error both TS4114 TS2416    both report exactly these
+```
+
+The codes reported on a line must equal the codes named, and a line with no directive must compile
+clean at both tags; TypeScript's own `@ts-expect-error` accepts any error, so the directive is
+stripped before compiling. Every TS code an item names must be one its fixture asserts. Fixtures
+are kept in the repository and not shipped. Only `.ts` is compiled: template fixtures
+(`strictTemplates`, `.html`) are not supported yet.
+
 The prose CHANGELOG is the human copy of a release; the manifest is its machine mirror of the
 same release. Where the two disagree, the CHANGELOG is the one to trust.
 

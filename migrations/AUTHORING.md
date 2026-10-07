@@ -467,6 +467,9 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       a clean run vouches for those only. Published hits of those two rules are reported by
       `node tools/check.mjs manifest-truth:audit`.
       (`tools/check-manifest-truth.mjs`, in the PR gate and the preflight)
+- [ ] Every TS code an item names is asserted by `migrations/fixtures/<version>/<item-id>.ts`,
+      compiled at both tags (README, "Compile fixtures"). (`node tools/check.mjs manifest-compile`,
+      at the cut)
 - [ ] A published record that described something which never worked is resolved by one question —
       does anything the consumer DOES change? Yes → an item with an `action` here, in the library's
       voice. No → nothing, and a quiet correction to the old file if it still misleads. Never a line
