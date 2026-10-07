@@ -1,5 +1,13 @@
 ## Unreleased
 
+### Fixed
+
+- **A pinned chart tooltip takes the pointer.** Its text can be selected and a link in a
+  `tooltipTemplate` clicked; the panel's content ignored the pointer even while its pane was pinned,
+  so a press on it went through to the pane. An unpinned tooltip still lets the pointer through to
+  the plot, and a `pointer-events: auto` you set on an element of your `tooltipTemplate` is still
+  what makes it clickable while `tooltipLingerMs` keeps an unpinned panel open.
+
 ## 0.14.8 — 2026-10-06
 
 ### Added
