@@ -29,13 +29,29 @@ const AVATAR = `import { avatarTint } from '@ids-group-ltd/ids-design-system';
 export const inline = avatarTint('Ann', { chroma: 0.1 });
 `;
 
-const draft = (claim) =>
+const draft = (claim, rest = {}) =>
   JSON.stringify({
     version: 'unreleased',
     items: [
       { id: 'draft-claim', kind: 'behavior', action: 'None.', note: claim },
     ],
+    ...rest,
   });
+
+const claimsOutsideItems = {
+  informational: [
+    'Nothing to do.',
+    { text: 'A spread config object fails with TS2353.' },
+  ],
+  deleteList: [
+    {
+      id: 'chroma-shim',
+      surface: 'typescript',
+      find: ['chroma'],
+      why: 'Passing it inline fails with TS2353.',
+    },
+  ],
+};
 
 function run(name, files) {
   const migrations = join(BASE, name);
@@ -69,14 +85,22 @@ const expect = (label, condition) => {
 try {
   const good = run('good', {
     'fixtures/0.10.0/avatar-tint-chroma-to-saturation.ts': AVATAR,
-    'unreleased.json': draft('An inline `chroma` fails with TS2353.'),
+    'unreleased.json': draft(
+      'An inline `chroma` fails with TS2353.',
+      claimsOutsideItems,
+    ),
     'fixtures/unreleased/draft-claim.ts': AVATAR.replace('after', 'both'),
+    'fixtures/unreleased/informational-2.ts': AVATAR.replace('after', 'both'),
+    'fixtures/unreleased/chroma-shim.ts': AVATAR.replace('after', 'both'),
   });
   console.log(
     'HOLDS on fixtures that match, at v0.9.1..v0.10.0 and v<last>..the working tree',
   );
   expect('exits 0', good.status === 0);
-  expect('compiles both fixtures', /2 fixture\(s\) compiled/.test(good.output));
+  expect(
+    'compiles all four fixtures',
+    /4 fixture\(s\) compiled/.test(good.output),
+  );
 
   const bad = run('bad', {
     'fixtures/0.10.0/avatar-tint-chroma-to-saturation.ts':
@@ -87,7 +111,10 @@ try {
     'fixtures/0.10.0/no-such-item.ts': 'export {};\n',
     'fixtures/0.10.0/table-column-width-type-widened-for-readers.html':
       '<ds-table />\n',
-    'unreleased.json': draft('A subclass member fails with TS2416.'),
+    'unreleased.json': draft(
+      'A subclass member fails with TS2416.',
+      claimsOutsideItems,
+    ),
   });
   console.log('FIRES on each defect');
   expect('exits 1', bad.status === 1);
@@ -104,8 +131,8 @@ try {
     bad.output.includes('write `// @ts-expect-error before|after|both'),
   );
   expect(
-    'an item id the manifest does not have',
-    bad.output.includes('has no item "no-such-item"'),
+    'an id the manifest does not have',
+    bad.output.includes('has no entry "no-such-item"'),
   );
   expect(
     'a template fixture',
@@ -114,6 +141,15 @@ try {
   expect(
     'a draft TS code no fixture asserts',
     bad.output.includes('draft-claim  no fixture for TS2416'),
+  );
+
+  expect(
+    'a draft informational TS code no fixture asserts',
+    bad.output.includes('informational-2  no fixture for TS2353 (text)'),
+  );
+  expect(
+    'a draft deleteList TS code no fixture asserts',
+    bad.output.includes('chroma-shim  no fixture for TS2353 (why)'),
   );
 
   const cache = join(ROOT, 'node_modules', '.cache');
