@@ -7596,7 +7596,9 @@ genuine gap worth reporting.
 - **`ds-radio-group`’s label now looks like every other field label.** It was the one component drawing
   its own type (`medium` weight at `--font-size-s` on `--line-height-flat`) rather than the family’s
   `bold`/`--font-size-xs`; in a form beside an input or a select it read as a different kind of thing.
-  Restore the old look with `ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); }`.
+  Restore the old look with `ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); }`
+  and `ds-radio-group .label { line-height: var(--line-height-flat); }`: the label now sits on
+  `--line-height-base`, which has no hook.
 - **Fields no longer expose a `protected messageState`;** the resolved `message` (text + state) and
   `invalidResolved` replace it. Only reachable by subclassing a field component, which is not a
   supported extension point, but noted for parity with the class-member changes in 0.7.0.
