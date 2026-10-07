@@ -38,6 +38,7 @@ const EXTRA = {
   'deck-lint:selftest': ['tools/deck-lint-selftest.mjs'],
   // Sweeps published history and never fails: triage, not a gate.
   'manifest-coverage:audit': ['tools/check-manifest-coverage.mjs', '--audit'],
+  'token-defaults:audit': ['tools/check-token-defaults.mjs', '--audit'],
   probes: ['tools/run-probes.mjs'],
 };
 
@@ -45,7 +46,8 @@ export const GROUPS = {
   // `lint:all` runs this, then prettier, stylelint and eslint. Out deliberately: `manifest-truth`
   // and `delete-tables` answer about a release boundary that cannot move without a commit touching
   // the manifests, and the first reads 27 release trees; `todo-index` compares
-  // against `docs/todo.md`, which parallel sessions edit in a shared checkout.
+  // against `docs/todo.md`, which parallel sessions edit in a shared checkout. `token-defaults` is
+  // in: any stylesheet edit can move a default, and it reads one tag and the working tree.
   lint: [
     'tools-parse',
     'entry-point-imports',
@@ -64,6 +66,7 @@ export const GROUPS = {
     'dev-guards',
     'changelog-lint',
     'manifest-coverage',
+    'token-defaults',
     'design-sync-log',
     'docs-attrs',
     'doc-tokens',
@@ -77,9 +80,10 @@ export const GROUPS = {
   // selftest runs before its lint: a green lint means the data satisfies the rules, not that the
   // rules can still fire. `manifest-coverage` and `manifest-truth` are here because the cut is the
   // last moment to catch them: once a block is published, a consumer has read the manifest's
-  // silence as "this release does not touch me". The PR gate runs most of the rest too, but it is
-  // manual, so a release can be cut from a branch where it never fired. Left out: deck-lint, whose
-  // subject is internal decks that never reach the package.
+  // silence as "this release does not touch me". `token-defaults` is here for the same reason: a
+  // default that moved unnamed reads as "renders identically". The PR gate runs most of the rest
+  // too, but it is manual, so a release can be cut from a branch where it never fired. Left out:
+  // deck-lint, whose subject is internal decks that never reach the package.
   release: [
     'tools-parse',
     'class-surface-entry',
@@ -91,6 +95,8 @@ export const GROUPS = {
     'manifest-coverage',
     'manifest-truth:selftest',
     'manifest-truth',
+    'token-defaults:selftest',
+    'token-defaults',
     'changelog-lint:selftest',
     'changelog-lint',
     'focus-rings',
