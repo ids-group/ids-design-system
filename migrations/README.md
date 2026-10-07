@@ -12,12 +12,13 @@ One file per released version — `migrations/<version>.json` — mirroring that
                "detect": ["<shape written the way the CONSUMER writes it>", "..."],
                "verify": "<the positive assertion that proves this landed>",
                "restore": "<literal snippet that brings the old behaviour back | null>",
-               "supersedes": ["<version>#<id>"] } ],
+               "supersedes": ["<version>#<id>"],
+               "evidence": ["commit:<sha> | fixture:<path> | pixels:<block id> | tokens:<name> | command:<shell>"] } ],
   "deleteList": [ { "id": "<slug>", "surface": "<surface>", "find": ["<shape>", "..."],
                     "why": "<what made it unnecessary>",
                     "replaceWith": "<the API that replaces it>" } ],
   "informational": [ "<one-line FYI per non-actionable change group>" |
-                      { "text": "...", "verify": "<one concrete eyeball check>" } ] }
+                      { "text": "...", "verify": "<one concrete eyeball check>", "evidence": ["..."] } ] }
 ```
 
 - `kind` ∈ `selector-rename | type-rename | input-rename | output-rename | token-rename |
@@ -50,10 +51,15 @@ One file per released version — `migrations/<version>.json` — mirroring that
   affected, so an item can be ruled out without searching.
 - **`pitfall`** — the way to apply the item mechanically correctly and still ship a broken app.
   Read it before deciding a clean build means done.
+- **`evidence`** - what measured the outcome the entry's prose asserts: that rendering or behaviour
+  did not change, a compile outcome, or a count of things. `commit:<sha>` inside the boundary the
+  manifest describes, `fixture:<path>` under `migrations/fixtures/`, `pixels:<docs block id>`,
+  `tokens:<token name>`, or `command:<shell command>`. Optional on an item and on an object-form
+  `informational` entry, and required wherever the prose makes such a claim.
 - **`deleteList`** — the structured form of "what you can now delete" (see below).
 - **`informational`** — a non-actionable FYI, a bare string or `{ "text": "...", "verify": "..." }`
   where `verify` is the one eyeball check for a change to rendering alone (no symbol for a grep or
-  a build to catch).
+  a build to catch); the object carries `evidence` when `text` asserts a measured outcome.
 
 **Why:** an upgrade tool can read the plan out of the prose changelog, but it re-derives it on
 every run. A shipped manifest makes it deterministic: the tool validates and prefers the
