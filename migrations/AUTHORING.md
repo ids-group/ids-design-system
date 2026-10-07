@@ -455,8 +455,13 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       `-subtle` token that never existed and every other check passed it. The same check reads
       every `--ds-*` name in `action`, `appliesWhen`, `note`, `pitfall`, `informational` and each
       `deleteList` field, and fails one that exists at neither tag; prose that names a token to say
-      it does not exist is listed in its `DELIBERATE_PHANTOMS`. Its closing line says how many
-      values it read - a clean run vouches for those only.
+      it does not exist is listed in its `DELIBERATE_PHANTOMS`. In the draft it also fails every
+      backticked name in those fields, `verify` and `restore` included - a token of any prefix, a
+      PascalCase symbol, a `ds-*` element or its `[member]`, a `.class`, a camelCase member - that
+      exists at neither tag (platform names are in its `FRAMEWORK_NAMES`), and an `old`/`new` it
+      cannot read unless `UNREAD_ALLOWED` says why. Its closing line says how many values it read -
+      a clean run vouches for those only. Published hits of those two rules are reported by
+      `node tools/check.mjs manifest-truth:audit`.
       (`tools/check-manifest-truth.mjs`, in the PR gate and the preflight)
 - [ ] A published record that described something which never worked is resolved by one question —
       does anything the consumer DOES change? Yes → an item with an `action` here, in the library's
