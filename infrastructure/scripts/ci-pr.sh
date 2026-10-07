@@ -84,6 +84,18 @@ echo "===== changelog pending ====="
 node tools/check-changelog-pending-selftest.mjs
 node tools/check-changelog-pending.mjs
 
+# A draft line asserting "renders identically" or a count with nothing that measured it, and a
+# default that moved with no line naming it, both reach a consumer as "nothing to do". Each reads
+# only the draft against the last tag, in about a second. manifest-compile stays at the cut: its
+# selftest and check type-check two trees each, about 32s together, more than manifest truth.
+echo "===== manifest claims ====="
+node tools/check-manifest-claims-selftest.mjs
+node tools/check-manifest-claims.mjs
+
+echo "===== token defaults ====="
+node tools/check-token-defaults-selftest.mjs
+node tools/check-token-defaults.mjs
+
 # A doc comment pushed off its symbol still compiles and still lints clean, and the extractor
 # prints it under whatever member now follows it.
 echo "===== docblock drift ====="
