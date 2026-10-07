@@ -2556,6 +2556,9 @@
 
 - **`indeterminate` is ignored unless `semantics` is `'progress'`.** Only a task has an unknown
   duration. Nothing that set it on `ds-progress` is affected, because that is the default.
+- **An indeterminate `ds-bar` holds still under reduced motion.** With `prefers-reduced-motion:
+  reduce` it fills its track without moving; `ds-progress` kept its sweep, at half speed.
+
 
 ### Fixed
 
