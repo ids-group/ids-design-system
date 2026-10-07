@@ -21,7 +21,8 @@
 //
 // CHANGELOG prose cannot carry evidence. A `## Unreleased` entry whose sentence fires a rule
 // passes only when an evidence-carrying entry of `migrations/unreleased.json` fires the same rule
-// and names one of the CHANGELOG entry's code spans; otherwise the author is told to back it there.
+// and names one of the CHANGELOG entry's code spans (a whole token, three characters or more);
+// otherwise the author is told to back it there.
 //
 //   node tools/check-manifest-claims.mjs           # unreleased.json and ## Unreleased, fails on a hit
 //   node tools/check-manifest-claims.mjs --audit   # every published manifest and block, reports only
@@ -312,6 +313,16 @@ function changelogBlocks() {
   return blocks;
 }
 
+// A span names the backing entry only as a whole token of at least three characters: `x` or
+// `rob` sits inside nearly any evidence-carrying text.
+const namesSpan = (text, span) =>
+  span.length >= 3 &&
+  new RegExp(
+    String.raw`(?<![\w-])` +
+      span.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`) +
+      String.raw`(?![\w-])`,
+  ).test(text);
+
 function checkChangelogBlock(block, backed) {
   const hits = [];
   for (const entry of block.entries) {
@@ -322,7 +333,7 @@ function checkChangelogBlock(block, backed) {
       const isBacked = backed.some(
         (record) =>
           record.rule === claim.rule &&
-          spans.some((span) => record.text.includes(span)),
+          spans.some((span) => namesSpan(record.text, span)),
       );
       if (!isBacked)
         hits.push({

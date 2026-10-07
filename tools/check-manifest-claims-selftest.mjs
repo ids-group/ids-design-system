@@ -164,6 +164,19 @@ const cases = [
     expect: null,
   },
   {
+    label:
+      '## Unreleased claim whose code spans are only substrings of the backing still fires',
+    changelog:
+      '## Unreleased\n\n### Fixed\n\n- **`ro` and `rob` fix.** It renders identically.\n',
+    manifest: draft([
+      item({
+        appliesWhen: 'A probe renders identically.',
+        evidence: ['command:npm run build'],
+      }),
+    ]),
+    expect: 'sameness',
+  },
+  {
     label: '## Unreleased claim backed by a different rule still fires',
     changelog: unreleasedSaying('It renders identically.'),
     manifest: draft([
