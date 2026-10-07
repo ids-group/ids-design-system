@@ -1,8 +1,11 @@
 import {
+  DOCUMENT,
   Directive,
   ElementRef,
   HostListener,
+  InjectionToken,
   OnDestroy,
+  Signal,
   afterNextRender,
   booleanAttribute,
   inject,
@@ -71,6 +74,11 @@ function firstClippedHost(
 
 let nextId = 0;
 
+/** @internal Lets a component that hosts the tooltip decide `dsTooltipPinOnClick` for it. */
+export const TOOLTIP_PIN_ON_CLICK = new InjectionToken<Signal<boolean>>(
+  'TOOLTIP_PIN_ON_CLICK',
+);
+
 @Directive({
   selector: '[dsTooltip], [dsTooltipWhenClipped]',
   standalone: true,
@@ -78,6 +86,11 @@ let nextId = 0;
 export class TooltipDirective implements OnDestroy {
   private readonly overlay = inject(Overlay);
   private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly document = inject(DOCUMENT);
+  private readonly hostPinOnClick = inject(TOOLTIP_PIN_ON_CLICK, {
+    self: true,
+    optional: true,
+  });
 
   /** Tip text. An empty string turns the tooltip off. */
   readonly dsTooltip = input<string>('');
@@ -98,6 +111,10 @@ export class TooltipDirective implements OnDestroy {
   /** Opens the tip with this line, in bold, above `dsTooltip` while the host shows less text than it holds. */
   readonly dsTooltipClippedLead = input<string>('');
 
+  /** Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves
+   *  until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip. */
+  readonly dsTooltipPinOnClick = input(false, { transform: booleanAttribute });
+
   get hostElement(): HTMLElement {
     return this.host.nativeElement;
   }
@@ -114,6 +131,10 @@ export class TooltipDirective implements OnDestroy {
     const textElement = this.textElement();
 
     return textElement !== null && isTextClipped(textElement);
+  }
+
+  private pinsOnClick(): boolean {
+    return this.hostPinOnClick?.() ?? this.dsTooltipPinOnClick();
   }
 
   private clippedLead(): string | null {
@@ -145,6 +166,7 @@ export class TooltipDirective implements OnDestroy {
 
   private ref: OverlayRef | null = null;
   private timer: number | null = null;
+  private unpin: (() => void) | null = null;
   private readonly tipId = `ds-tooltip-${++nextId}`;
 
   /**
@@ -241,7 +263,10 @@ export class TooltipDirective implements OnDestroy {
   }
 
   private scheduleShow(): void {
-    if (!this.tipText()) {
+    if (this.unpin || !this.tipText()) {
+      return;
+    }
+    if (this.pinsOnClick() && this.ref?.hasAttached()) {
       return;
     }
     if (this.dsTooltipWhenClipped() && !this.isClipped()) {
@@ -250,18 +275,70 @@ export class TooltipDirective implements OnDestroy {
     if (this.timer !== null) {
       clearTimeout(this.timer);
     }
-    this.timer = window.setTimeout(() => this.show(), this.dsTooltipDelay());
+    this.timer = window.setTimeout(
+      () => this.show(),
+      this.pinsOnClick() ? 0 : this.dsTooltipDelay(),
+    );
+  }
+
+  @HostListener('mouseleave')
+  protected onPointerLeave(): void {
+    if (!this.unpin) {
+      this.onClose();
+    }
   }
 
   // Close on click too: a re-rendered anchor under a stationary cursor fires no mouseleave.
-  @HostListener('mouseleave')
   @HostListener('click')
+  protected onClick(): void {
+    if (this.pinsOnClick() && !this.unpin) {
+      this.pin();
+    } else {
+      this.onClose();
+    }
+  }
+
   protected onClose(): void {
     if (this.timer !== null) {
       clearTimeout(this.timer);
       this.timer = null;
     }
+    this.unpin?.();
     this.disposeRef();
+  }
+
+  private pin(): void {
+    if (this.timer !== null) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+    if (!this.ref?.hasAttached()) {
+      if (!this.tipText()) {
+        return;
+      }
+      this.show();
+    }
+    const closeOutside = (event: Event) => {
+      const target = event.target as Node;
+      if (
+        !this.hostElement.contains(target) &&
+        !this.ref?.overlayElement.contains(target)
+      ) {
+        this.onClose();
+      }
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        this.onClose();
+      }
+    };
+    this.document.addEventListener('pointerdown', closeOutside, true);
+    this.document.addEventListener('keydown', closeOnEscape, true);
+    this.unpin = () => {
+      this.unpin = null;
+      this.document.removeEventListener('pointerdown', closeOutside, true);
+      this.document.removeEventListener('keydown', closeOnEscape, true);
+    };
   }
 
   private disposeRef(): void {
@@ -330,6 +407,7 @@ export class TooltipDirective implements OnDestroy {
     );
     cmpRef.setInput('panelId', this.tipId);
     this.pointArrowAtHost(this.ref, cmpRef.location.nativeElement);
+    this.ref.detachments().subscribe(() => this.unpin?.());
     if (this.disclosesOwnText(text)) {
       return;
     }
