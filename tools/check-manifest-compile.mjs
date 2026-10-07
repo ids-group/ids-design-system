@@ -40,7 +40,7 @@ import ts from 'typescript';
 import { previousBoundary, releaseTags } from './release-tags.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const MIGRATIONS = process.env.DS_MIGRATIONS_DIR ?? join(ROOT, 'migrations');
+const MIGRATIONS = process.env.DS_MIGRATIONS_DIR || join(ROOT, 'migrations');
 const FIXTURES = join(MIGRATIONS, 'fixtures');
 const AUDIT = process.argv.includes('--audit');
 const PACKAGE = '@ids-group-ltd/ids-design-system';

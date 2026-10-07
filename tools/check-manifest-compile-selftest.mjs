@@ -152,6 +152,23 @@ try {
     bad.output.includes('chroma-shim  no fixture for TS2353 (why)'),
   );
 
+  // An empty variable is unset, as in the other manifest checks, not a directory named "".
+  const emptyDirectory = spawnSync(
+    process.execPath,
+    [join(ROOT, 'tools', 'check-manifest-compile.mjs')],
+    {
+      cwd: ROOT,
+      encoding: 'utf8',
+      env: { ...process.env, DS_MIGRATIONS_DIR: '' },
+    },
+  );
+  console.log('READS migrations/ when DS_MIGRATIONS_DIR is empty');
+  expect(
+    'compiles the repository fixtures',
+    !/\b0 fixture\(s\) compiled/.test(emptyDirectory.stdout) &&
+      /\d+ fixture\(s\) compiled/.test(emptyDirectory.stdout),
+  );
+
   const cache = join(ROOT, 'node_modules', '.cache');
   expect(
     'leaves no extracted tree behind',
