@@ -7,6 +7,7 @@
 import {
   exemptFromLog,
   judge,
+  parseArguments,
   pendingChanges,
   unreleasedBlock,
 } from './check-changelog-pending.mjs';
@@ -222,10 +223,31 @@ for (const [
   }
 }
 
+// [argv, must be rejected]: an unread option would fall back to the last tag and pass.
+const argumentCases = [
+  [['--bse', 'origin/dev'], true],
+  [['--base'], true],
+  [['--from', '--to', 'v0.1.0'], true],
+  [['--base', 'origin/dev'], false],
+  [['--from', 'v0.1.0', '--to', 'v0.2.0'], false],
+  [['--audit'], false],
+];
+for (const [argv, mustReject] of argumentCases) {
+  const rejected = Boolean(parseArguments(argv).error);
+  if (rejected !== mustReject) {
+    failures++;
+    console.error(
+      `FAIL arguments ${argv.join(' ')}: expected ${mustReject ? 'a rejection' : 'acceptance'}`,
+    );
+  }
+}
+
 if (failures) {
   console.error(
-    `\nchangelog-pending selftest: ${failures} of ${cases.length} case(s) wrong.`,
+    `\nchangelog-pending selftest: ${failures} of ${cases.length + argumentCases.length} case(s) wrong.`,
   );
   process.exit(1);
 }
-console.log(`changelog-pending selftest: ${cases.length} case(s) hold.`);
+console.log(
+  `changelog-pending selftest: ${cases.length + argumentCases.length} case(s) hold.`,
+);

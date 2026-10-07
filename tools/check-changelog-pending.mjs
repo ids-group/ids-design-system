@@ -408,13 +408,37 @@ function boundary(from, to) {
   };
 }
 
+// A misspelt option or one missing its value must stop the run: falling back to the last tag would
+// check a different range from the one asked for and pass.
+export function parseArguments(argv) {
+  const options = {};
+  let audit = false;
+  for (let index = 0; index < argv.length; index++) {
+    const argument = argv[index];
+    if (argument === '--audit') audit = true;
+    else if (['--base', '--from', '--to'].includes(argument)) {
+      const value = argv[++index];
+      if (value === undefined || value.startsWith('--'))
+        return { error: `${argument} needs a ref after it.` };
+      options[argument] = value;
+    } else
+      return {
+        error: `"${argument}" is not --audit, --base <ref>, --from <ref> or --to <ref>.`,
+      };
+  }
+  return { options, audit };
+}
+
 function main() {
-  const argv = process.argv.slice(2);
-  const option = (name) =>
-    argv.includes(name) ? argv[argv.indexOf(name) + 1] : null;
+  const parsed = parseArguments(process.argv.slice(2));
+  if (parsed.error) {
+    console.error(`changelog-pending: ${parsed.error}`);
+    return 1;
+  }
+  const option = (name) => parsed.options[name] ?? null;
   const tags = releaseTags(ROOT);
 
-  if (argv.includes('--audit') || option('--from')) {
+  if (parsed.audit || option('--from')) {
     const pairs = option('--from')
       ? [[option('--from'), option('--to') ?? 'HEAD']]
       : tags
