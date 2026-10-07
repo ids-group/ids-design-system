@@ -2547,7 +2547,8 @@
   on a coloured band read as an artefact rather than as a focus indicator. It is
   `--focus-ring-color` with a light keyline around it now — the keyline is what separates it from
   a mark of the same hue family, which is why the indicator is two tones either way.
-  `--ds-chart-focus-ring-color` and `--ds-chart-focus-halo-color` still set both.
+  `--ds-chart-focus-ring-color` and `--ds-chart-focus-halo-color` still set both; `white` and
+  `var(--static-ink)` are the old pair.
 
 - **A chart with nothing to draw keeps its axes.** `ds-line-chart` and `ds-column-chart` render
   the value axis and the category axis behind the empty, error and no-visible-series messages, so
@@ -3058,10 +3059,13 @@
 
   `ds-drawer` and `ds-bottom-sheet` keep `ds-slide-edge-in`, because sliding in from an edge is
   what they are, and `ds-modal` keeps `ds-scale-in`. Any surface takes its old entrance back with
-  one declaration:
+  one declaration, the panels at the root and `ds-alert` / `ds-banner` / `ds-toast` each on its own
+  hook:
 
   ```scss
   :root { --ds-overlay-enter-keyframes: ds-slide-in; }
+  ds-alert { --ds-alert-enter-keyframes: ds-slide-in; }
+  ds-banner { --ds-banner-enter-keyframes: ds-slide-in; }
   ds-toast { --ds-toast-enter-keyframes: ds-slide-in; }
   ```
 
