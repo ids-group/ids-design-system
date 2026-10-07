@@ -285,8 +285,8 @@
         "message": "<Divider> doesn't accept that prop. Declared props: variant, spacing, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Drawer'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|size|placement|title|onClosed|staticPreview|onOpenChange|drawerBody|drawerFooter|children|key|ref|className|style)$/]",
-        "message": "<Drawer> doesn't accept that prop. Declared props: open, size, placement, title, onClosed, staticPreview, onOpenChange, drawerBody, drawerFooter, children."
+        "selector": "JSXOpeningElement[name.name='Drawer'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|size|placement|title|onClosed|staticPreview|onOpenChange|drawerBody|body|drawerFooter|actions|children|key|ref|className|style)$/]",
+        "message": "<Drawer> doesn't accept that prop. Declared props: open, size, placement, title, onClosed, staticPreview, onOpenChange, drawerBody, body, drawerFooter, actions, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Dropzone'] > JSXAttribute > JSXIdentifier[name!=/^(?:accept|multiple|files|disabled|onFilesAdded|onFileRemoved|onFilesChange|hint|children|key|ref|className|style)$/]",
@@ -397,8 +397,8 @@
         "message": "<PasswordRules> doesn't accept that prop. Declared props: value, rules, showUnmet, columns, listId, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='PieChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|centerValue|centerLabel|legend|maxSlices|otherLabel|innerRadius|dataTable|partOfWhole|onSliceClicked|dimOthers|tooltip|children|key|ref|className|style)$/]",
-        "message": "<PieChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, centerValue, centerLabel, legend, maxSlices, otherLabel, innerRadius, dataTable, partOfWhole, onSliceClicked, dimOthers, tooltip, children."
+        "selector": "JSXOpeningElement[name.name='PieChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|centerValue|centerLabel|centerCompact|centerPlacement|legend|maxSlices|otherLabel|innerRadius|dataTable|partOfWhole|onSliceClicked|dimOthers|tooltip|children|key|ref|className|style)$/]",
+        "message": "<PieChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, centerValue, centerLabel, centerCompact, centerPlacement, legend, maxSlices, otherLabel, innerRadius, dataTable, partOfWhole, onSliceClicked, dimOthers, tooltip, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Popover'] > JSXAttribute > JSXIdentifier[name!=/^(?:align|placement|arrow|panelRole|panelLabel|staticPreview|children|key|ref|className|style)$/]",

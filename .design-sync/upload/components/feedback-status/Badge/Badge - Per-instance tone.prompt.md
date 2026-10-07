@@ -1,5 +1,5 @@
 # Badge - per-instance tone
 
-Override --ds-badge-bg-color / --ds-badge-label-color inline for off-token tones (carrier brands etc). Prefer a declared status for recurring tones.
+Set --ds-badge-bg-color / --ds-badge-label-color inline for one-off tones (carrier brands); declare a status for recurring ones.
 
 Full API: `Badge.d.ts`. How to use the component anywhere: `Badge.prompt.md`.

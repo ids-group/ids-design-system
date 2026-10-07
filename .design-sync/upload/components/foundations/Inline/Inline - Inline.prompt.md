@@ -1,5 +1,5 @@
 # Inline - inline
 
-A horizontal row for tags, button groups and filter chips. Same gap and align values as Stack; items centre vertically by default and unset gap reads --ds-inline-gap. justify takes start · center · end · between (pushes the ends apart). The row wraps by default; [wrap]="false" keeps one line and lets it overflow.
+Horizontal row for tags, button groups, filter chips. Stack's gap and align values; items centre vertically by default. Unset gap reads --ds-inline-gap. justify: start · center · end · between. Wraps by default; [wrap]="false" keeps one line and overflows.
 
 Full API: `Inline.d.ts`. How to use the component anywhere: `Inline.prompt.md`.
