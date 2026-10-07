@@ -3265,8 +3265,9 @@
 
   Every `--ds-field-group-*` token is unchanged and still declared on the host, so an override
   written through the tokens needs nothing. The host's own box is unchanged too while the group has
-  no message: measured in the docs app, the row stays 40px and the host stays 40px — it grows to
-  57px only once `error` or `hint` is bound.
+  no message and reserves none: measured in the docs app, the row stays 40px and the host stays
+  40px — it grows to 57px once `error`, `warning` or `hint` is bound, and it reserves that message
+  row on a clean group whenever `reserveMessage` is on, `DS_CONFIG.field.reserveMessage` included.
 
 - **`--ds-button-border` is `--ds-button-border-color`, and `--ds-button-border-disabled` is
   `--ds-button-border-color-disabled`.** Both name a COLOUR, and since the width moved out to
@@ -3316,9 +3317,11 @@
   `--chart-grid-line-strong` before `--chart-grid-line`: the short name is a prefix of the long
   one, and a prefix-blind sweep renames this one instead of deleting it.
 
-  The sequential and divergent VALUES are unchanged in both themes; the eight categorical values are
-  not — they are retuned in this same release, so a rename there lands a different colour rather than
-  the same one under a new name. `--chart-bar-gap`, `--chart-hover-bg-color`, `--chart-tooltip-bg-color` and
+  The sequential VALUES are unchanged in both themes, and so are the divergent zero step and the
+  dark-theme divergent steps; the six light-theme signed divergent steps and the eight categorical
+  values are not — they are retuned in this same release, so a rename there lands a different
+  colour rather than the same one under a new name. `--chart-bar-gap`, `--chart-hover-bg-color`,
+  `--chart-tooltip-bg-color` and
   `--chart-tooltip-text-color` keep their names. Recolouring a series
   is better done through the `--ds-chart-` layer below than through the palette.
 
@@ -3386,16 +3389,17 @@
 - **`ds-line-chart` takes `patterns`, a second encoding channel.** Each series gets a dash of its
   own from a fixed list, in the same order as the palette slots, so the lines are told apart by
   shape as well as by colour — WCAG technique G111. Slot 1 stays solid, so a single-series chart is
-  unchanged by turning it on. Off by default: the shipped palette clears the colour-blind
-  separation threshold on its own, and this is for monochrome print, a retuned palette, or a reader
-  who asks for it.
+  unchanged by turning it on while its `slot` is unset or 1. Off by default: the shipped palette
+  clears the colour-blind separation threshold on its own, and this is for monochrome print, a
+  retuned palette, or a reader who asks for it.
 
   ```html
   <ds-line-chart patterns [series]="series" [categories]="months" />
   ```
 
-  The other four charts print a label beside every mark already — a bar's row, a column's category,
-  a donut's legend row, a funnel's stage — so colour is not what identifies a mark there.
+  The other four charts print a label beside every mark by default — a bar's row, a column's
+  category, a donut's legend row unless `legend="none"`, a funnel's stage in its table unless
+  `showTable` is off — so colour is not what identifies a mark there.
 
 - **A tap answers the way a hover does, and stays put.** Tapping a mark opens its tooltip and
   LATCHES it: a touch fires `pointerleave` the instant the finger lifts, so without this the panel
@@ -3412,7 +3416,7 @@
 - **A mark that arrives and a mark that leaves are now two staged phases.** Removals run first, at
   `--ds-motion-chart-mark-exit-duration`; additions wait that long and then run at
   `--ds-motion-chart-mark-enter-duration`, so a vanishing mark and an arriving one are never on
-  screen together. The update phase — a mark changing size — is unchanged and still runs on
+  screen together. The update phase — a mark changing size — runs on
   `--ds-motion-chart-mark-duration`.
 
   `staggerMs` spaces the arrivals out. `0` is the default and means no stagger; `40` is the
@@ -3457,8 +3461,8 @@
   hidden" by default — carried on a `role="status"` line, with the legend still rendered so the
   reader can switch one back on. Without it the reader is left looking at an empty grid.
 
-  A legend without a filter is unchanged: `ds-line-chart` still draws one whenever there is more
-  than one series, and it is now `ds-chart-legend` rather than markup of its own.
+  Without `legendFilters`, `ds-line-chart` draws a `ds-chart-legend` whenever there is more than
+  one series.
 
 - **Every chart answers a hover, a tap and a keyboard focus with a tooltip.** `ds-bar-chart`,
   `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart` default to `tooltip="item"` — the mark
