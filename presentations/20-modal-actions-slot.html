@@ -80,11 +80,22 @@ Content slots: `[eyebrow]`, `[title-badge]`, `[body]`, `[impact]` (highlighted s
 // deck-review: verdict per [data-review] block, a textarea for remarks, one answer line in a fixed bar.
 // Inlined into a deck by ~/.claude/bin/deck-review-inline; contract in ~/.claude/docs/deck-review.md.
 (() => {
-  const KEY = 'deck-review:' + (document.documentElement.dataset.deck || document.title);
+  // Every key under deck-review: is a disposable reviewer answer, kept 7 days after its last change.
+  const PREFIX = 'deck-review:v1:';
+  const KEY = PREFIX + (document.documentElement.dataset.deck || document.title);
+  const KEEP_MS = 7 * 24 * 60 * 60 * 1000;
   const ACCEPT = 'принято';
   const REMARK = 'есть замечание';
-  const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) ?? {}; } catch { return {}; } };
-  const write = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* private window */ } };
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith('deck-review:')) continue;
+      let expires = 0;
+      try { if (key.startsWith(PREFIX)) expires = JSON.parse(localStorage.getItem(key))?.expires; } catch { /* malformed: drop */ }
+      if (!(expires > Date.now())) localStorage.removeItem(key);
+    }
+  } catch { /* private window */ }
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY))?.answers ?? {}; } catch { return {}; } };
+  const write = () => { try { localStorage.setItem(KEY, JSON.stringify({ expires: Date.now() + KEEP_MS, answers: state })); } catch { /* private window */ } };
   const state = read();
 
   document.head.insertAdjacentHTML('beforeend', `<style>
