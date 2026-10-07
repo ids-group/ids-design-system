@@ -1,5 +1,13 @@
 ## Unreleased
 
+### Fixed
+
+- **`ds-bar-chart` prints `—` for a row with a non-finite value.** A `NaN` or `Infinity` value, or a
+  `[low, high]` pair with a non-finite end, printed `0` and `0.0%` as though it were a reading of zero.
+  The row now draws no bar and shows `—` as its value, as its percentage (unless the row sets
+  `percent`) and as its share in the data table under `partOfWhole`. The generated summary leaves
+  such a row out of its lowest and highest readings, and reads `—` when no row has a value.
+
 ## 0.14.8 — 2026-10-06
 
 ### Added

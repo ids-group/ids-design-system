@@ -1,5 +1,6 @@
 import {
   barExtent,
+  isMissing,
   plainValue,
   resolveMax,
   segmentWidths,
@@ -20,6 +21,11 @@ check('a non-finite number has no plain value', plainValue(Number.NaN), null);
 check('a pair of one reading is a zero-width band', barExtent([12, 12]), { low: 12, high: 12 });
 check('a non-finite number is nothing', barExtent(Number.NaN), { low: 0, high: 0 });
 check('a pair with a non-finite end is nothing', barExtent([5, Number.NaN]), { low: 0, high: 0 });
+check('a NaN number is missing', isMissing(Number.NaN), true);
+check('an Infinity number is missing', isMissing(Number.POSITIVE_INFINITY), true);
+check('a pair with a non-finite end is missing', isMissing([5, Number.NaN]), true);
+check('a zero is a reading, not missing', isMissing(0), false);
+check('a finite pair is not missing', isMissing([10, 40]), false);
 
 
 // A normal dataset: the largest row fills the track, the rest take their share.

@@ -1,0 +1,8 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    "A ds-bar-chart row whose value is NaN, Infinity, or a [low, high] pair with a non-finite end shows — for its value, its derived percentage and its partOfWhole share instead of 0 and 0.0%, and draws no bar; an explicit percent on the row still prints. The generated summary leaves such a row out of its lowest and highest readings."
+  ],
+  "deleteList": []
+}

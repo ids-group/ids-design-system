@@ -43,6 +43,7 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import {
   barExtent,
+  isMissing,
   plainValue,
   resolveMax,
   segmentWidths,
@@ -51,6 +52,8 @@ import {
 import type { BarChartRow, BarChartSegment } from './bar-chart.types';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+
+const MISSING_VALUE = '—';
 
 function segmentsOf(
   row: BarChartRow,
@@ -222,8 +225,10 @@ export class BarChartComponent
         entries: [
           {
             label: entry.row.label,
-            value:
-              plainValue(entry.row.value) ?? barExtent(entry.row.value).high,
+            value: entry.missing
+              ? Number.NaN
+              : (plainValue(entry.row.value) ??
+                barExtent(entry.row.value).high),
             formatted: entry.formattedValue,
             color: entry.color,
             detail: this.partOfWhole()
@@ -305,15 +310,19 @@ export class BarChartComponent
       const extent = barExtent(row.value);
       const span = extent.high - extent.low;
       const isRange = typeof row.value !== 'number';
+      const missing = isMissing(row.value);
 
       return {
         key: row.id ?? String(index),
         row,
+        missing,
         offsetPercent: widthPercent(extent.low, max),
         widthPercent: widthPercent(span, max),
-        formattedValue: isRange
-          ? `${format(extent.low, 'tooltip')} - ${format(extent.high, 'tooltip')}`
-          : format(plainValue(row.value) ?? extent.high, 'tooltip'),
+        formattedValue: missing
+          ? MISSING_VALUE
+          : isRange
+            ? `${format(extent.low, 'tooltip')} - ${format(extent.high, 'tooltip')}`
+            : format(plainValue(row.value) ?? extent.high, 'tooltip'),
         targetPercent:
           row.target === undefined ? null : widthPercent(row.target, max),
         formattedTarget:
@@ -326,32 +335,44 @@ export class BarChartComponent
         formattedPercent:
           row.percent !== undefined
             ? formatPercent(row.percent, 100, this.defaults.locale)
-            : formatPercent(span, max, this.defaults.locale),
-        share: this.partOfWhole()
-          ? shareOfTotal(values, index, this.defaults.locale)
-          : '',
+            : missing
+              ? MISSING_VALUE
+              : formatPercent(span, max, this.defaults.locale),
+        share: !this.partOfWhole()
+          ? ''
+          : missing
+            ? MISSING_VALUE
+            : shareOfTotal(values, index, this.defaults.locale),
         segments: segmentsOf(row, (value) => format(value, 'tooltip')),
         color: row.color ?? chartColors.seriesDefault,
       };
     });
   });
 
-  protected readonly accessibleName = computed(
-    () =>
-      this.summary() ??
-      describeSeries(
-        this.intl().chart,
-        this.caption() ?? this.intl().chart.title,
-        this.data().map((row) => ({
-          label: row.label,
-          value:
-            plainValue(row.value) ??
-            barExtent(row.value).high - barExtent(row.value).low,
-        })),
-        (value) => this.valueFormatResolved()(value, 'tooltip'),
-        this.dataTableResolved() !== 'none',
-      ),
-  );
+  protected readonly accessibleName = computed(() => {
+    const summary = this.summary();
+    if (summary !== null) {
+      return summary;
+    }
+    const points = this.data().map((row) => ({
+      label: row.label,
+      value: isMissing(row.value)
+        ? Number.NaN
+        : (plainValue(row.value) ??
+          barExtent(row.value).high - barExtent(row.value).low),
+    }));
+    const measured = points.filter((point) => Number.isFinite(point.value));
+    const format = this.valueFormatResolved();
+
+    return describeSeries(
+      this.intl().chart,
+      this.caption() ?? this.intl().chart.title,
+      measured.length ? measured : points,
+      (value) =>
+        Number.isFinite(value) ? format(value, 'tooltip') : MISSING_VALUE,
+      this.dataTableResolved() !== 'none',
+    );
+  });
 
   protected entryLabel(entry: { row: BarChartRow; formattedValue: string }) {
     return `${entry.row.label}, ${entry.formattedValue}`;

@@ -25,6 +25,15 @@ export function plainValue(value: BarChartValue): number | null {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }
 
+/** True when a row has no reading to draw: a non-finite number, or a pair with a non-finite end.
+ *
+ *  @internal */
+export function isMissing(value: BarChartValue): boolean {
+  return typeof value === 'number'
+    ? !Number.isFinite(value)
+    : !value.every((end) => Number.isFinite(end));
+}
+
 /** Largest finite value, or `explicitMax` when usable. One `Infinity` row must not become the track length. */
 export function resolveMax(
   explicitMax: number | null,

@@ -14,19 +14,17 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**126 open — 7 P1, 8 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**125 open — 5 P1, 8 P2, 112 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P1 — 7
+### P1 — 5
 
 - **Defects consumers work around today (swept 2026-09-23)**
-  - `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer)
   - A clipped hinted header shows its label and hint as two plain lines; the label should be a bold line of its own (asked by Stas, 2026-10-06)
 - **Asked by Stas**
   - A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
   - A click pins a tooltip: hover shows it at once, a click keeps it open (Stas, 2026-10-06)
   - A definition-term directive: an inline term that opens a tooltip on hover and focus and pins on click (Stas, 2026-10-06)
   - An info-hint (toggletip) component: an info icon button that shows supplementary text on hover and focus and pins on click (Stas, 2026-10-06)
-  - `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
 
 ### P2 — 8
 
@@ -44,7 +42,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 111
+### P3 — 112
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The tooltip arrow stays at the panel centre when CDK pushes the panel off a viewport edge, so it does not point at the trigger (from the mm-ecm consumer, an info icon near the right edge)
@@ -60,6 +58,7 @@ item and nothing else.
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
   - A pressed danger menu item shows its hover colour (recorded 2026-09-24)
 - **Asked by Stas**
+  - `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
   - Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24)
   - Pin more than one mark at a time (Stas, 2026-09-29)
@@ -245,7 +244,6 @@ Defects a consumer hit - from a QA pass, or from reading a consumer tree for a r
 - [ ] **[P2] The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer).** `--border-default` is `var(--neutral-200)` (`_semantic.scss:49`, #DCE1EA) and is the resting edge of `ds-input` (`input.component.scss:17`) and 25 more components: 1.31:1 on white in the stock theme against the 3:1 WCAG 1.4.11 floor for a control boundary. `--secondary-on` is the constant `var(--primary-on)` = white (`:134`, `:116`) while `--secondary` recomposes from `--secondary-h/s/l`, so a gold secondary (#FBAC18) gets white text at 1.91:1 - and the stock theme already fails: white on the stock `--secondary` #FF7B2E (`hsl(22 100% 59%)`) is 2.59:1 against 4.5:1 (computed 2026-10-02). ids-europe-landing rebinds both (`_theme.scss:44-57`, `:89`). **Wanted:** a control-edge role that clears 3:1 in both themes (or `--border-default` moved to it), and `--secondary-on` derived from `--secondary`'s lightness or listed in the brand must-rebind checklist of the brand-unsafe item.
 
 - [ ] **[P3] The tooltip arrow stays at the panel centre when CDK pushes the panel off a viewport edge, so it does not point at the trigger (from the mm-ecm consumer, an info icon near the right edge).** `tooltip-panel.component.scss` placed the arrow at `left: 50%` / `top: 50%`. Branch `fix/tooltip-arrow-anchor` (worktree `ids-design-system-arrow`), commit `326dbbda`: the directive measures trigger and pane on every pane style write and sets `--_tooltip-arrow-x/-y`, clamped clear of the radius; `build:lib` passes. **Left, parked by Stas until asked:** browser check at the left edge, right edge, centre and after a flip (arrow centre vs trigger centre, before and after); CHANGELOG Unreleased Fixed and `migrations/unreleased.json`; the before/after deck; lint gates.
-- [ ] **[P1] `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer).** `components.md` (bar chart, "Behaviour") says a non-finite value draws no bar and prints a dash. `bar-chart.component.ts` formats `plainValue(row.value) ?? extent.high`, and `extent.high` of NaN is 0, so the label and the share read `0 / 0.0%`. Seen in a docs build at `e0ff159f` (2026-10-06, a NaN row in the bar chart demo). **Wanted:** the dash the doc describes, in the value, the share and the generated summary. Raised to P1 (Stas, 2026-10-06): it is one of the gaps in the "`ds-bar-chart` customization asked by mm-ecm" item (work branch `feat/bar-chart-customization`).
 - [ ] **[P1] A clipped hinted header shows its label and hint as two plain lines; the label should be a bold line of its own (asked by Stas, 2026-10-06).** `dsTooltipClippedLead` joins lead and hint with a newline and `tooltip-panel.component.scss` sets `white-space: pre-line` for every tooltip, so any tooltip text with a newline now breaks there and the label is the same weight as the hint. **Wanted:** a `lead` input on `TooltipPanelComponent` rendered as a bold line, set by the directive only while the host is clipped, and `pre-line` reverted. Work branch `fix/tooltip-arrow-anchor` (tooltip group). A started, unverified patch: mm-ecm-platform `.claude/local/from-scratchpad/2026-10-06-tooltip-lead-bold/tooltip-lead-bold.wip.patch` (local, not in git).
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
@@ -408,7 +406,8 @@ Each has somebody behind it. Nothing here is speculative work.
 - [ ] **[P2] `ds-date-picker` has no width control (Stas, 2026-10-06).** Work branch `feat/date-picker-width` (empty marker branch from dev).
   `size` changes the height only. Consumers either stretch the picker to full width or hard-code a max-width: mm-ecm ME-501 Unarchive dialog (`src/frontend/projects/ecm-portal/src/app/features/programs/**/unarchive-program-dialog.component.*`) and the wrapper `app-date-field`, which forces `fullWidth`. Wanted: a width token (e.g. `--ds-date-picker-max-width`) or intrinsic width logic in the lib sized to the date format.
 
-- [ ] **[P1] `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06).** Work branch `feat/bar-chart-customization` (empty marker branch from dev).
+- [ ] **[P3] `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06).** Work branch `feat/bar-chart-customization`.
+  Parked (Stas, 2026-10-07): mm-ecm ME-510 Won't Do, Analyze charts are reworked into a pivot table; re-raise against what ships.
   The consumer draws "label + bar + number" rows in Analyze (the journey waterfall and the exit reasons) by hand because `ds-bar-chart` cannot be configured to match. **Two implementation routes, the DS team decides:** (a) extend `ds-bar-chart` with the options below, or (b) a new `ds-bar-list` row component for label + bar + number rows. `ds-funnel-chart` is not a fit: the consumer cannot change the chart type.
   **Gaps:**
   - label to the left of the bar on the same line (today above it);
@@ -418,7 +417,7 @@ Each has somebody behind it. Nothing here is speculative work.
   - a term label with a dotted underline and a hint (the definition-term item above);
   - per-row emphasis (bold first and last row);
   - per-row percent visibility (`showPercent` today is all-or-none);
-  - an empty value shows a dash, not `0` - the defect item "`ds-bar-chart` prints `0` and `0.0%` for a non-finite value" in "Defects consumers work around today", raised to P1 by this ask;
+  - an empty value shows a dash, not `0` - fixed on `feat/bar-chart-customization` (CHANGELOG Unreleased, Fixed);
   - a row outside the chain (for example "Completed or exited");
   - loading that dims the rows instead of a skeleton.
   **ECM source** (mm-ecm-platform repo root), `src/frontend/projects/ecm-portal/src/app/features/programs/pages/analyze/journey-outcomes/`:
