@@ -179,7 +179,7 @@
       "kind": "behavior",
       "old": "size()",
       "new": null,
-      "action": "Keep the value you bound and read that, or resolve `DS_CONFIG.control.size` yourself. The built-in fallbacks are unchanged: `md` for size, `flat` for card elevation, 16 for icon size, false for badge withDot and for table bordered / stickyScrollbar.",
+      "action": "Keep the value you bound and read that, or resolve `DS_CONFIG.control.size` yourself. The built-in fallbacks are unchanged: `md` for size, `flat` for card elevation, 16 for icon size, false for badge withDot and for table bordered / stickyScrollbar, true for modal dividers, `''` for the brand strings, and the card's own padding when padding is unset.",
       "appliesWhen": "NOTHING changes in a template — `size=\"sm\"` binds as before and an unsized control still renders md. Only reading the signal back changes. The same nullable-plus-protected-resolver shape now applies to ds-card elevation and padding, ds-icon size, ds-badge withDot, ds-table bordered / stickyScrollbar, dividers on ds-modal and ds-modal-card, brand / logoLetter on ds-sidenav and brand / logoLetter / tagline on ds-auth-layout.",
       "pitfall": "There is NO public replacement accessor. Each component holds a `sizeResolved()` but declares it `protected`, so `cmp.sizeResolved()` from a host, a viewChild or a test does not compile (TS2445) — ds-field-group is the one exception, where it is public. So `size()` returning null where it used to return `md` has no one-line fix. Separately, if you implement DsFieldGroupContext yourself, its member is `sizeResolved` now rather than `size`.",
       "note": "The size input on fourteen controls is typed `DsSize | null` and defaults to null, so an unbound size can fall through to the new `DS_CONFIG.control.size`.",
@@ -231,7 +231,7 @@
       "old": "ds-button[variant=outline]",
       "new": null,
       "action": "Only if a button sits on a photo, a gradient or any busy ground and needed the opaque fill: set `--ds-button-bg-color: var(--surface-default)` on that instance, or the `--ds-icon-button-bg-color` / `--ds-split-button-outline-bg-color` equivalent.",
-      "appliesWhen": "Only buttons placed on a non-white ground; on the default page surface the rendering is identical. Hover fills are unchanged and all still opaque.",
+      "appliesWhen": "Only buttons placed on a non-white ground, the page's own `--surface-canvas` included; on a `--surface-default` ground the enabled rendering is identical. Hover fills are unchanged and all still opaque.",
       "pitfall": "The disabled state is transparent too on ds-button and ds-icon-button — mixing a transparent fill toward `--surface-disabled` would give a 72%-alpha box — so the border and label carry it. A disabled outlined ds-split-button is the EXCEPTION and still paints `--surface-muted`, because its outline rules are gated on `:not(:disabled)`. Two components that look alike now disable differently.",
       "note": "The outlined variants default their fill to `transparent` instead of `--surface-default`. An opaque white fill is invisible on a white page and wrong on every tinted one; Material 3 and Bootstrap both specify a transparent container for this variant.",
       "searchHints": [

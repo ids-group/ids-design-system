@@ -294,7 +294,7 @@
   "informational": [
     "New ds-time-picker (24h/12h via provideDsConfig, range mode, CVA) — additive.",
     "Selection controls gain size + required; standalone ds-radio gains invalid/hint; input/textarea maxLength counter; date-picker minDate/maxDate/disabledDate/presets + locale/dateFormat/firstDayOfWeek/defaultMonth manual masked entry; select clearable/icons/readOnly; autocomplete optionGroups/allowCreate/width=content; table expandable rows; modal closeOnBackdrop/persistent/xl/fullscreen; drawer placement/sm; bottom-sheet snapPoints; toast loading/promise/maxVisible; menu dividers/submenus; popover arrow/placement; tabs lazy/scrollable/closable/vertical; accordion single-open/item disabled; stepper clickable/errorSteps/vertical; sidenav collapsed tooltip; badge count/max; avatar status/fallbackIcon — all additive.",
-    "Public --ds-* customization token sweep across some 47 existing components (about 200 new names) — purely additive resolvers, zero visual change when unset.",
+    "Public --ds-* customization token sweep across 47 existing components (182 new names) — purely additive resolvers, zero visual change when unset, except --ds-search-maxw, whose default moved from 320px to none (its own item).",
     "Visual-only: rounded press feedback (+ --ds-press-brightness/--ds-press-scale tuning tokens) and native tap-highlight suppression; accessibility hardening across overlays/pickers/fields/cards (dialog semantics, Tab close, role=alert re-announce, labels)."
   ],
   "deleteList": []
