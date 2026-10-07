@@ -44,6 +44,7 @@ const EXTRA = {
   'manifest-claims:audit': ['tools/check-manifest-claims.mjs', '--audit'],
   'manifest-compile:audit': ['tools/check-manifest-compile.mjs', '--audit'],
   'token-defaults:audit': ['tools/check-token-defaults.mjs', '--audit'],
+  'class-member-notes:audit': ['tools/check-class-member-notes.mjs', '--audit'],
   probes: ['tools/run-probes.mjs'],
 };
 
@@ -52,7 +53,9 @@ export const GROUPS = {
   // and `delete-tables` answer about a release boundary that cannot move without a commit touching
   // the manifests, and the first reads 27 release trees; `manifest-compile` type-checks every
   // fixture at two extracted release trees (9 s for three fixtures, 2026-10-07); `todo-index`
-  // compares against `docs/todo.md`, which parallel sessions edit in a shared checkout.
+  // compares against `docs/todo.md`, which parallel sessions edit in a shared checkout;
+  // `class-member-notes` reads `migrations/unreleased.json`, which is drafted at the cut, so
+  // mid-cycle it would be red on every commit that adds a member.
   // `changelog-pending` is in: it reads one tag's tree and the working tree in about a second, and
   // a change is cheapest to describe in the session that made it. `manifest-claims` is in: it reads
   // only the draft manifest and `## Unreleased`, which every PR can change. `token-defaults` is in:
@@ -93,14 +96,17 @@ export const GROUPS = {
   // because the cut is the last moment to catch them: once a block is published, a consumer has
   // read the manifest's silence as "this release does not touch me". `manifest-claims` and
   // `token-defaults` for the same reason: an unmeasured claim and a default that moved unnamed both
-  // read as facts the moment they ship. The PR gate runs most of the rest too, but it is manual, so a
-  // release can be cut from a branch where it never fired. `changelog-pending` is here because the
-  // cut folds `## Unreleased` into the release block, and a change it never named leaves with
-  // nothing describing it. Left out: deck-lint, whose subject is internal decks that never reach the
-  // package.
+  // read as facts the moment they ship. `class-member-notes` follows `class-surface-entry`: that one
+  // asks whether a class is named, this one whether every member it gained or lost is. The PR gate
+  // runs most of the rest too, but it is manual, so a release can be cut from a branch where it never
+  // fired. `changelog-pending` is here because the cut folds `## Unreleased` into the release block,
+  // and a change it never named leaves with nothing describing it. Left out: deck-lint, whose subject
+  // is internal decks that never reach the package.
   release: [
     'tools-parse',
     'class-surface-entry',
+    'class-member-notes:selftest',
+    'class-member-notes',
     'release-fold:selftest',
     'migration-lint:selftest',
     'migration-lint',

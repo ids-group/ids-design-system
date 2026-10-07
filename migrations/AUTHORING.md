@@ -426,6 +426,10 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
 - [ ] Non-mechanical entries carry the decision rule + where to read the real new name, not "review".
 - [ ] Widened/changed exported types each have a `behavior` entry naming who breaks
       (run `npm run class-surface` — do not assemble the list by eye).
+- [ ] For every exported class whose members moved, a `behavior` item's `detect` names it and that
+      item's `note` names every gained and lost member, or states the count beside the class
+      ("`LineSeriesComponent` gained 18", "... lost 2"); a count must match, and a member the
+      note lists as changed must have changed. (`tools/check-class-member-notes.mjs`, at the cut)
 - [ ] A directive that gained a template context guard or an `unknown`-defaulting generic has a
       `behavior` item on `surface: template` with the consumer's build error in `detect`.
       (`tools/check-class-surface-entry.mjs`, for the guard half, at the cut)
