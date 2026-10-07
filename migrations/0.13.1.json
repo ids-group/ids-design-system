@@ -169,7 +169,7 @@
       "new": "ds-donut-chart .empty-text.is-error",
       "surface": "style",
       "action": "Retarget any rule written against `.empty.is-error` inside `ds-donut-chart` to `.empty-text.is-error`.",
-      "appliesWhen": "Only a stylesheet of yours reaching the donut error message by class. The other four charts still use `.empty.is-error` and are unchanged.",
+      "appliesWhen": "Only a stylesheet of yours reaching the donut error message by class. The other four charts still use `.empty.is-error`, so a rule written against it there still matches.",
       "pitfall": "Nothing errors — the rule simply stops matching, and the message falls back to the library default.",
       "restore": null,
       "searchHints": [
