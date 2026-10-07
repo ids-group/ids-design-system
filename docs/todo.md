@@ -1071,7 +1071,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-24)
 
-**Fourteen** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Twenty** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1102,6 +1102,7 @@ file** — the number moves; cite the filename.
 | 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
 | 19 | `19-tooltip-markup` | What the tooltip of a `ds-table` header with `hint` shows once `dsTooltipClippedLead` goes and `dsTooltip` understands only `**bold**`: label and hint always, hint only, label only while clipped, or the input stays. | none |
+| 20 | `20-bar-chart` | Parked until mm-ecm re-raises it: extend `ds-bar-chart` or add a `ds-bar-list` for label + bar + number rows; nine gaps drawn beside the ECM screenshots, two of them already covered by `--ds-bar-chart-track-height` and `BarChartRow.color`. | the mm-ecm bar-chart customization ask |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
