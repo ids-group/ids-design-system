@@ -1,0 +1,71 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "tooltip-class-members-grew",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": ["extends TooltipDirective", "extends TooltipPanelComponent"],
+      "detect": ["extends TooltipDirective", "extends TooltipPanelComponent"],
+      "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
+      "appliesWhen": "Only a class of yours that extends TooltipDirective or TooltipPanelComponent. Template users of dsTooltip need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it (TS2415); only a rename does.",
+      "restore": null,
+      "verify": "The app builds with no TS2415 or TS4114 against TooltipDirective or TooltipPanelComponent.",
+      "note": "TooltipDirective gained the public dsTooltipPinOnClick, the protected onClick and onPointerLeave, and the private document, hostPinOnClick, pinsOnClick, clippedLead, pin, unpin and pointArrowAtHost. TooltipPanelComponent gained the public lead."
+    },
+    {
+      "id": "tooltip-line-breaks-collapse",
+      "kind": "behavior",
+      "old": "dsTooltip",
+      "new": null,
+      "surface": ["template", "typescript"],
+      "searchHints": ["dsTooltip", "dsTooltipWhenClipped"],
+      "detect": ["[dsTooltip]=\"`", "\\n", ".join('\\n')"],
+      "action": "None, unless a tooltip of yours relies on a line break in its text: give it one line, or move the first line into dsTooltipClippedLead where it is the host's own clipped label.",
+      "appliesWhen": "A dsTooltip string, or the text a dsTooltipWhenClipped host discloses, that contains a newline. A text on one line is unchanged.",
+      "pitfall": "A list joined with newlines reads as one run-on line; the build and a unit test both pass over it.",
+      "restore": null,
+      "verify": "Hover each tooltip whose text comes from data joined with newlines and confirm it reads as one line.",
+      "supersedes": ["0.14.8#tooltip-keeps-line-breaks"]
+    }
+  ],
+  "informational": [
+    "dsTooltipPinOnClick opens a tooltip on hover and focus with no delay and keeps it open after a click until a click outside, Escape or blur; a second click closes it. Without it a click closes the tooltip as before.",
+    "ds-info-hint (InfoHintComponent) is an info icon button: ariaLabel names it, text shows on hover and focus and stays open after a click.",
+    "button[dsDefinitionTerm] (DefinitionTermComponent) styles a button as a term with a dotted underline in --text-tertiary and shows its definition on hover and focus, pinned on click; [pinOnClick]=\"false\" turns the pin off.",
+    {
+      "text": "dsTooltipClippedLead renders as a bold line above the tooltip text. A ds-table header label with a hint is a button[dsDefinitionTerm]: a plain label pins its hint on click, a sortable one sorts on click and pins nothing.",
+      "verify": "narrow a hinted ds-table column until its label clips, hover it and confirm the label is bold on the first line with the hint under it; click a plain hinted label, move the pointer away and confirm the hint stays until a click outside."
+    },
+    {
+      "text": "A tooltip's arrow points at the centre of its trigger when the panel is pushed off a viewport edge; a panel centred on its trigger looks the same.",
+      "verify": "open a tooltip on a trigger near the left and the right viewport edge and confirm the arrow sits under the trigger's centre."
+    }
+  ],
+  "deleteList": [
+    {
+      "id": "tooltip-newline-collapse-replace",
+      "surface": "template",
+      "find": [".replace(/\\s*\\n\\s*/g, ' ')"],
+      "why": "A tooltip reads a line break as a space.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "hand-built-info-hint",
+      "surface": ["template", "typescript"],
+      "find": ["name=\"info\""],
+      "why": "ds-info-hint renders the icon button, its accessible name and the pinned tooltip.",
+      "replaceWith": "<ds-info-hint ariaLabel=\"...\" text=\"...\" />; keep a hand-built button whose click does something besides showing the text"
+    },
+    {
+      "id": "hand-built-definition-term",
+      "surface": ["template", "style"],
+      "find": ["underline dotted"],
+      "why": "button[dsDefinitionTerm] carries the button reset, the dotted underline, the focus ring and the pinned tooltip.",
+      "replaceWith": "<button type=\"button\" dsDefinitionTerm=\"...\">; keep a dotted underline that marks something other than a term with a definition"
+    }
+  ]
+}
