@@ -8912,8 +8912,9 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 - **Overlay scroll-lock is now released on dismiss.** The scoped `@keyframes` name guard now
   matches Angular's emulated-encapsulation suffix (`endsWith`, not `===`), so the page no
   longer stays scroll-locked after an overlay closes.
-- **`ds-input` / `ds-search` clear button stays visible when the field is blurred** — its
-  contrast was bumped so it reads at rest, not only on focus.
+- **`ds-input` / `ds-search` clear button reads at rest.** `ds-input` draws it in
+  `--text-secondary` instead of `--text-tertiary`, and `ds-search` shows it at full opacity instead
+  of 0.7, so it no longer needs hover or focus to be seen.
 - **`ds-combobox`** truncates long option labels with an ellipsis instead of wrapping in
   narrow panels, and its multi-select option row now fills the panel width (label no longer
   clipped to zero).
