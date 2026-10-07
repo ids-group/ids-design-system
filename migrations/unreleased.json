@@ -1,0 +1,31 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "overlay-classes-lost-unslotted",
+      "kind": "behavior",
+      "old": "ModalComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends ModalComponent",
+        "extends ModalCardComponent",
+        "extends DrawerComponent"
+      ],
+      "detect": [
+        "extends ModalComponent",
+        "extends ModalCardComponent",
+        "extends DrawerComponent"
+      ],
+      "action": "None. A subclass that declares its own `unslotted` no longer collides with ours.",
+      "appliesWhen": "Only a class of yours that extends ModalComponent, ModalCardComponent or DrawerComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "restore": null,
+      "verify": "The app builds, and no subclass of ModalComponent, ModalCardComponent or DrawerComponent reads `this.unslotted`.",
+      "note": "ModalComponent, ModalCardComponent and DrawerComponent each lost the private `unslotted`."
+    }
+  ],
+  "informational": [
+    "`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a slot, or about an attribute that names no slot. That content still renders in the body. A test or screenshot that waited for the `Dev warning` toast these raised has nothing to wait for."
+  ],
+  "deleteList": []
+}
