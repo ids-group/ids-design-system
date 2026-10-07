@@ -3861,7 +3861,7 @@
 
 - **`ds-button`'s `buttonRef` is `controlRef`, and it is typed `HTMLElement`.** The element the
   component renders now follows its destination, so the old name described one of three cases and
-  the old type described the same one. Rename the reference; the property behind it is unchanged.
+  the old type described the same one. Rename the reference; the property behind it is the same `#btn` view child.
   A read of `.nativeElement` that expects a `<button>` — `.disabled`, `.form`, `.type` — no longer
   type-checks and needs a narrow of your own, because the element may be an `<a>`.
 
@@ -3932,8 +3932,10 @@
 
 - **A clickable `ds-table` row, a `ds-tree` row and a `ds-list` activator draw a rounded focus
   ring.** All three ringed a square-cornered box while every control around them was rounded; they
-  now carry `--focus-ring-radius`. None of the three paints anything itself — the table row's tints
-  sit on its cells — so the radius shapes the ring and nothing else, and it sits on the resting rule
+  now carry `--focus-ring-radius`. The table row and the list activator paint nothing themselves -
+  the table row's tints sit on its cells - so there the radius shapes the ring and nothing else; a
+  `ds-tree` row paints its own hover, pressed and selected fill, and that fill now takes the same
+  rounded corners. The radius sits on the resting rule
   rather than inside `:focus-visible`, or the shape would appear only while focused. Reachable by
   keyboard only.
 
@@ -4103,7 +4105,8 @@
   button whether the panel showing belongs to it, and the new `stickyScrollbarOffset` input with its
   `stickyScrollbarOffsetResolved`. `SidenavGroupComponent` gained the
   new `routerLink` input and `headerNavigates`, the computed that decides whether the header splits
-  into a link and a caret. Only `routerLink` is public API and that is no protection for the rest:
+  into a link and a caret. Only `routerLink`, `stickyScrollbarOffset` and
+  `stickyScrollbarOffsetResolved` are public API, and that is no protection for the rest:
   a `private` name collides with TS2415, and a `protected` one with TS4114 or TS2416, exactly as a
   public name does, so a member of yours
   sharing one of those names stops the build. Nothing changes for a consumer who only uses the
@@ -4365,7 +4368,7 @@
   `--ds-motion-check-enter-duration`, `--ds-motion-check-enter-easing`, `--ds-motion-check-exit-duration`,
   `--ds-motion-check-exit-easing` — with per-scope hooks `--ds-check-mark-*` beneath it, so a dense
   option list can stay calm while forms overshoot. To put the previous motion back, set the four
-  tokens to the linear timing they replaced. Both durations resolve through the `--duration-*`
+  tokens to the timing they replaced, `--duration-fast` on `--ease-standard` both ways. Both durations resolve through the `--duration-*`
   scale, which `prefers-reduced-motion` already zeroes, so the mark goes instant on its own.
 - **The tick and the indeterminate bar are painted as a mask over `currentcolor`, not as a hardcoded
   white stroke.** One path serves a filled box and a bare row — white on the accent fill, the row's
@@ -4433,7 +4436,7 @@
   member left to override; one you declared without the modifier still compiles, overrides nothing
   and runs never.
 
-  Three new classes come with those directives, and all three are internal: `DsTableLayout` is
+  Four new classes come with those directives, and all four are internal: `DsTableLayout` is
   internal, the seam a feature registers with; `TableColumnsPanelComponent` is internal, the
   column panel; `TableColumnsTriggerComponent` is internal, its header button; and
   `TableExportButtonComponent` is internal, the toolbar button. None is API, none appears in the
@@ -4521,8 +4524,8 @@
   a flex row with a gap, and an item that projected no icon collapsed its wrapper to zero width while
   the gap stayed, so a mixed menu had two text axes and an unindented row read as a different kind of
   thing. The menu decides it now rather than the item — an item cannot see its siblings — so one
-  item with an icon makes every item reserve the slot. A menu with no icons anywhere is unchanged and
-  stays flush to its padding. The new `--ds-menu-item-icon-size` sets the width the slot reserves.
+  item with an icon makes every item reserve the slot. A menu with no icons anywhere moves
+  flush to its padding, because the empty icon slot no longer costs the row's 10px gap. The new `--ds-menu-item-icon-size` sets the width the slot reserves.
 
 - **`ds-split-button` answers a press on either half.** Both segments were missing the darken-plus-
   micro-scale that every other button in the library gives a press, so the one control built from two
@@ -4605,7 +4608,7 @@ this package ships under `migrations/`.
   response to an event; for anything transient use `ToastService`, which owns a region built for it.
 
 - **`<ds-toast>`'s `message` input is now `body`**, matching `ToastOptions.body` and `ToastEntry.body`.
-  One concept had three spellings across the family; `body` wins because it is the one every consumer
+  One concept had two spellings across the family; `body` wins because it is the one every consumer
   already passes to the service.
 
 - **Five toast border tokens gain the `-color` the rest of the library uses**:
@@ -4718,8 +4721,9 @@ this package ships under `migrations/`.
   another component's template has to be renamed (angular/angular#24536), all three
   avatars came back `margin-left: 0` with no ring, and the joined buttons lost their overlap
   margin and every flattened radius. They match the direct child now, so the grouping holds whatever the child is rendered
-  as. Computed output in an ordinary Angular app is unchanged — verified identical before and
-  after.
+  as. Computed output in an ordinary Angular app is unchanged when every child is a `ds-avatar` /
+  `ds-button` placed directly in the group - verified identical before and after. Any other direct
+  child, such as a wrapper element or a `ds-icon-button`, now takes the group styling itself.
 
 - **Six connected-panel tokens did nothing when scoped to one picker.** `--ds-option-padding`,
   `-gap`, `-radius`, `-row-gap`, `--ds-option-bg-color-active` and `--ds-dropdown-panel-maxh` are read
@@ -4811,7 +4815,9 @@ this package ships under `migrations/`.
 - **The banner and toast icon now centres on the message block**, where most shapes aligned it to
   the first line of text. The two rules agree on a one-line message — which is most toasts — and
   diverge as the text grows: the icon sat some 12px above the block centre at two lines and 21px at
-  three. A `compact` banner was already centred and does not move.
+  three. A `compact` banner was already centred and does not move. A `layout="row"` banner with
+  actions beside the text moves even at one line: its icon was pinned to the top of the row and now
+  centres with the text.
 
   It is `align-self` on the icon rather than `align-items` on the row, so the close button and the
   action buttons keep the positions they had. `--banner-ic-mt` is **removed**; it existed only to
@@ -4971,10 +4977,10 @@ this package ships under `migrations/`.
   position back to you. It uses `block: 'nearest'`, so a row that is already visible does not move and
   the mouse is never fought.
 
-- **`Home` and `End` on every picker.** They existed on `ds-select` alone, while ten other components
-  in the library already had them. The index arithmetic all three had written out separately — next,
-  previous, first, last, skipping disabled and wrapping — is one shared helper now, so the three
-  behave identically. It is internal: nothing new is exported.
+- **`Home` and `End` on every picker.** They existed on `ds-select` alone, while seven other components
+  in the library already had them. The index arithmetic for Home, End, PageUp and PageDown is one
+  shared helper now, and `ds-select` and `ds-multi-select` step their arrow keys through it too;
+  `ds-autocomplete` keeps its own arrow stepping, which also reaches the create row. It is internal: nothing new is exported.
 
 - **`compareWith` on `ds-autocomplete`.** The component is generic over its value type but compared
   with `===`, which is reference identity: a re-fetch that returned equal data as new objects silently
@@ -5219,15 +5225,16 @@ this package ships under `migrations/`.
 
 ### Changed
 
-- **One stylesheet owns the dropdown panel.** The panel is portaled to `document.body`, where
-  Angular's encapsulation does not reach, so the shared partial and two component stylesheets were
-  all declaring its `background`, `border-radius`, `max-height`, `overflow` and `display` at
-  identical specificity — which rule won depended on the order the stylesheets happened to load. The
+- **One stylesheet owns the dropdown panel.** `ds-autocomplete` and `ds-multi-select` each styled their own
+  panel class (`.autocomplete-list`, `.panel`) in their own stylesheet, with their own `background`,
+  `border-radius`, `max-height` and `overflow`, so the shared partial that paints `ds-select` never
+  reached them. The
   partial owns that geometry now, behind `--ds-dropdown-panel-bg-color` beside the `-radius`,
   `-maxh`, `-minw` and `-maxw` knobs, and each picker declares its own name as an ALIAS of the
   shared token on its host and forwards it onto the pane. `--ds-multi-select-panel-bg-color`,
-  `--ds-autocomplete-panel-bg-color`, `-radius` and `-maxh` all still work; what changed is that
-  they reach the panel through one rule instead of a second competing one.
+  `--ds-autocomplete-panel-bg-color`, `-radius` and `-maxh` all still work. On `ds-autocomplete` the
+  host's alias also shadows a `--ds-dropdown-panel-radius` set on `:root`, so set
+  `--ds-autocomplete-panel-radius` there instead.
 
   The panel is also the flex column and the LIST is the scroller, so a filter row or a select-all row
   stays put while the options move under it. `ds-multi-select` did that per-component before and the
@@ -5313,18 +5320,11 @@ this package ships under `migrations/`.
   144px trigger took the trigger from **40px to 63px** — the text
   broke onto a second line and the chevron onto a third. Single mode has no chip row to wrap for, so
   the wrapping had nothing to protect. The ellipsized value carries a `title`, so the full text is
-  still there on hover. `valueOverflow="wrap"` restores wrapping; multi mode is untouched,
-  its chips already had a measured cap.
+  still there on hover. `valueOverflow="wrap"` restores wrapping. Multi mode with the default chip
+  fit is untouched, its chips already had a measured cap; with `maxVisibleChips="all"` the trigger no
+  longer wraps either, until `valueOverflow="wrap"` is set.
 
 ### Fixed
-
-- **A compact trigger showed one chip where several fitted.** `triggerDisplay="count"` and
-  `"labels"` make the trigger hug its content, so the width the chip fit measured was decided by the
-  chips it was about to cut — each pass shrank its own input and the split settled on one. The fit
-  reads the space AVAILABLE now (the trigger's parent), which no cut can move. `ds-autocomplete` gets
-  the same correction, since both pickers measure through one helper, and a `width="fill"` trigger is
-  unaffected because there the two numbers are identical.
-
 
 - **With the filter row hidden, there was no keyboard way to pick an option.** `Enter` and `Space`
   were consumed by the trigger before the panel's own handler saw them, so the panel toggled shut
@@ -5426,7 +5426,10 @@ this package ships under `migrations/`.
   reason living only in the accessibility tree reproduces exactly the invisibility this closes.
   **Nothing changes for a button that sets none of these.** Without `disabledReason` the native
   `disabled` attribute stays and focus still skips it; without a message the host keeps the
-  `inline-flex` box every existing layout was built against. A message-bearing button becomes a column,
+  `inline-flex` box every existing layout was built against. The exception is an app that sets
+  `DS_CONFIG.field.reserveMessage: true`: `reserveMessage` falls back to it, so every such button
+  reserves an empty message line and becomes a column; set `[reserveMessage]="false"` on those
+  buttons to keep the old box. A message-bearing button becomes a column,
   and since the host shrinks to fit, a message longer than the label widens the pair — button included,
   exactly as a field's control spans its own message.
 
@@ -5630,8 +5633,9 @@ workaround written against a hook that only landed in this release.
   `ds-autocomplete` panels are unaffected.
 - **`ds-search`'s clear button had no focus indicator at all — introduced by 0.10.2's own ring fix.**
   That fix silenced the base indicator with a shell-wide reset, which also hit `.search-clear`, a
-  `tabindex="0"` tab stop: with the field's halo already lit, tabbing from the input to the × changed
-  no paint property anywhere on screen, so a keyboard user could not tell the × had focus. A WCAG
+  `tabindex="0"` tab stop: with the field's halo already lit, in every shadow-based focus style
+  tabbing from the input to the × changed no paint property anywhere on screen (only
+  `data-focus="outline"` and forced colours still drew an outline), so a keyboard user could not tell the × had focus. A WCAG
   2.4.7 failure, and the same defect as the double ring seen from the other side. Every shell now
   names the one control it speaks for through the new `focus.owns-the-focus-ring($control)` mixin
   instead of blanketing its box, and `ds-field-group` drops its blanket entirely — each segment
@@ -5708,23 +5712,6 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 
 ### Changed
 
-- **`ds-search` no longer takes the field message inputs, because it never rendered them.**
-  Since it gained form binding it extended the internal `DsControlValueAccessor`, which sits on the equally internal `DsFieldBase` — so
-  the API reference advertised `hint`, `error`, `warning`, `errors`, `invalid`, `touched`,
-  `reserveMessage` and `messageIcon` on a component whose template has no `ds-field-message` and whose
-  class reads none of them. **A consumer binding `error="Too short"` on a `ds-search` got silence, and
-  the reference had told them it would work.** Those eight inputs are gone from it now; the reference
-  lists the ten it actually implements.
-  **BREAKING only if you bound one:** it used to compile and do nothing, and now it is a template type
-  error, which is the point. Where a search needs a label or an error line, that is `ds-input` — a
-  toolbar filter is not a validated field, which is the same reasoning that kept the message row off it
-  in the first place.
-  **How the split works, since it is a shape other controls may want:** the `ControlValueAccessor`
-  plumbing is a function rather than a base class, so a control can bind to a form without
-  inheriting the message API; the internal CVA base is that function plus the shared field base and
-  delegates to it, so the logic exists once rather than twice. `hidden` stayed on `ds-search`: it
-  belongs to the forms contract — signal forms reaches every control through it — not to the
-  message API.
 - **A field's message line now carries a glyph for `error`, `warning` and `success` — and not for
   `hint`.** Colour was the whole signal before, which fails WCAG 1.4.1: in the light theme warning
   (#8A7400) against success (#156822) is a hue apart and nothing else. Four of six major design
@@ -5771,10 +5758,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   `number | 'fit' | 'all' | null`, default now `null`), internal `FieldMessageComponent.icon` (widened to
   `IconName | false | null`, so `false` can mean "no glyph" against a state that supplies one),
   `DsConfig.field` (its shape grew the glyph defaults), `SearchComponent.clear` (`protected` →
-  public), `StatComponent.value` (widened to `string | number | null`) and
-  `TimeColumnsComponent.onKey` (internal, and its parameter list changed). **One more break outside this list:**
-  `ds-search` no longer extends the field base, so it loses eight inherited inputs — documented in
-  its own entry above.
+  public) and `StatComponent.value` (widened to `string | number | null`).
 
 - **Every readback that resolves through `DS_CONFIG` is now public.** `sizeResolved` on fourteen
   controls, plus `elevationResolved` / `paddingResolved` (card), `withDotResolved` (badge),
@@ -5897,10 +5881,9 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   description said an unwrapped phrase is clipped when it escapes the tile instead, and `ds-badge`
   carried a superseded docblock. **No API changed** — only what the shipped documentation says about it.
 
-- **Five more overlays dismiss on a click in the host's own empty width.** `ds-select`,
-  `ds-multi-select`, `ds-autocomplete`, `ds-time-picker` and `ds-color-picker` all tested the whole
-  HOST in their outside-pointer guard, which is the defect `ds-date-picker` was fixed for in 0.10.1 —
-  the trigger box hugs its own content while the host takes whatever width a consumer's
+- **Six overlays dismiss on a click in the host's own empty width.** `ds-select`,
+  `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker` and `ds-color-picker` all
+  tested the whole HOST in their outside-pointer guard - the trigger box hugs its own content while the host takes whatever width a consumer's
   layout gives it, so the label, the message row and any bare strip beside the trigger swallowed the
   dismiss instead of performing it. Each guard now tests its TRIGGER, as `ds-popover` always did;
   `ds-time-picker` tests whichever of its three triggers are present, since a range renders two.
@@ -5991,8 +5974,8 @@ workaround written against a hook that only landed in this release.
 - **`success` exists on all nine bordered fields, and it is now a STRING that carries its own text.**
   Added to `ds-textarea`, `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`,
   `ds-time-picker`, `ds-otp-input` and `ds-color-picker` — it was on `ds-input` alone, so a form could
-  not use the state consistently. The three box-less controls (`ds-checkbox`, `ds-radio-group`,
-  `ds-switch`) and `ds-slider` deliberately do NOT get it: they have no box for a border to appear on,
+  not use the state consistently. The four box-less controls (`ds-checkbox`, `ds-radio`,
+  `ds-radio-group`, `ds-switch`) and `ds-slider` deliberately do NOT get it: they have no box for a border to appear on,
   so the state would show in the message line alone and read as a different treatment.
   **BREAKING for `ds-input`, the one field that already had it:** `success` was
   `input(false, { transform: booleanAttribute })` and is now `input<string>('')`. Replace
@@ -6081,17 +6064,18 @@ workaround written against a hook that only landed in this release.
   reaches either directly or through the internal
   `DsControlValueAccessor` / `DsBooleanControlValueAccessor`. All fourteen still carry all eight by
   inheritance, so a template binding, a TS read and an existing `override` all behave exactly as
-  before. A member that moves to a base class is easy to misread as removed; it is not.
+  before, except an override of `hint`, `error` or `warning` typed `input<string>`, which now fails
+  with TS2416 because their write type widened to `string | null | undefined`. A member that moves to a base class is easy to misread as removed; it is not.
   What genuinely grew is smaller: **eight bordered fields gained `success`** (`ds-autocomplete`,
   `ds-color-picker`, `ds-date-picker`, `ds-multi-select`, `ds-otp-input`, `ds-select`,
   `ds-textarea`, `ds-time-picker`), `ds-input` having had it all along. **Only the universal inputs moved:** `success`, `label`, `required` and `optional` stay on the
-  components, because they exist on 9, 9, 7 and 5 fields respectively — lifting them would hand a
+  components, because they exist on 9, 9, 8 and 5 fields respectively — lifting them would hand a
   checkbox a `success` or a slider a `label` it never had. `ds-segmented`
   is the tenth grown class and the one with real new surface — joining the form systems gave it
   `label`, `disabled`, `isDisabled`, `message`, `invalidResolved`, `fieldMessage`, `hintId` and
   `uid`. A subclass declaring `success` on one of those eight now fails with TS4114; declaring any
-  of the eight moved names still collides exactly as it did, because an inherited member collides
-  the same way an own one does.
+  of the eight moved names still collides, because an inherited member collides the same way an
+  own one does.
   `DsFieldBase` is internal and deliberately not exported.
 
 ### Removed
