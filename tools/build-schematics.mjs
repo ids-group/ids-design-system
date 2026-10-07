@@ -129,10 +129,16 @@ if (existsSync('migrations')) {
   console.log('▶ Copying migrations/ into dist/ds/migrations…');
   // Published manifests and the format note only. `unreleased.json` describes changes that are
   // NOT in this tarball, and an upgrade tool reading it would apply a version the consumer does
-  // not have; AUTHORING.md is written for whoever edits these files, not for whoever runs them.
+  // not have; AUTHORING.md is written for whoever edits these files, not for whoever runs them,
+  // and `fixtures/` is the evidence tools/check-manifest-compile.mjs compiles, read by nobody else.
   mkdirSync('dist/ds/migrations', { recursive: true });
   for (const entry of readdirSync('migrations')) {
-    if (entry === 'unreleased.json' || entry === 'AUTHORING.md') continue;
+    if (
+      entry === 'unreleased.json' ||
+      entry === 'AUTHORING.md' ||
+      entry === 'fixtures'
+    )
+      continue;
     cpSync(`migrations/${entry}`, `dist/ds/migrations/${entry}`, {
       recursive: true,
     });
