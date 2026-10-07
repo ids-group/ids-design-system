@@ -1,0 +1,22 @@
+:host {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.info-hint {
+  display: inline-flex;
+  align-items: center;
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--icon-default);
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    color: var(--icon-strong);
+  }
+}
