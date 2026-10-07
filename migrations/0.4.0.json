@@ -49,7 +49,7 @@
       },
       "surface": "template",
       "restore": "nothing to restore - the 24px tier is gone; its callers take sm (32px), and an attribute-less button keeps the same 40px it had as `l`",
-      "verify": "No ds-button binds size=\"s\", \"m\" or \"l\". A button left without size renders at the md height (40px), and every button that previously said \"l\" now says \"md\" and is unchanged on screen."
+      "verify": "No ds-button binds size=\"s\", \"m\" or \"l\". A button left without size renders at the md height (40px), and every button that previously said \"l\" now says \"md\" and keeps its 40px height, padding and font size."
     },
     {
       "id": "ds-button-ts-types-retyped",
