@@ -170,7 +170,7 @@
       "action": "Build after upgrading, then rename your own member or mark it `override` wherever the compiler reports a collision with a class in `detect`. Delete an override of a member the class lost.",
       "appliesWhen": "Only a class that extends one of the classes in `detect`. A consumer who uses the chart elements in templates needs nothing from this item.",
       "pitfall": "A member of yours that replaced a lost one no longer replaces anything, and the component stops calling it.",
-      "note": "`ColumnChartComponent` lost 15 when its drawing moved into the shared container, among them `columns`, `ticks`, `onMarkClick` and `tooltipContext`. `DonutChartComponent` gained `onLegendClick`, `onLegendEnter` and `onLegendFocus`, its three legend handlers. `ChartTooltipDirective` gained `detachScrollReposition` and `dsChartTooltipPreferBelow` and lost `detachScrollClose`.",
+      "note": "`ColumnChartComponent` lost 15 when its drawing moved into the shared container, among them `columns`, `ticks`, `onMarkClick` and `tooltipContext`. `DonutChartComponent` gained `onLegendClick`, `onLegendEnter` and `onLegendFocus`, its three legend handlers. The internal `ChartTooltipDirective` gained `detachScrollReposition` and `dsChartTooltipPreferBelow` and lost `detachScrollClose`.",
       "verify": "The app builds with no error naming a class listed in `detect`, and no member of such a subclass overrides a member the class lost.",
       "searchHints": [
         "extends ColumnChartComponent",
