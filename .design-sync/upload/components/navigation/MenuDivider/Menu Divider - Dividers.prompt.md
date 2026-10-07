@@ -1,5 +1,5 @@
 # Menu Divider - dividers
 
-Use ds-menu-divider between item groups to create visual sections. It renders a thin role="separator" rule and is ignored by keyboard navigation.
+ds-menu-divider separates item groups with a role="separator" rule that keyboard navigation skips.
 
 Full API: `MenuDivider.d.ts`. How to use the component anywhere: `MenuDivider.prompt.md`.

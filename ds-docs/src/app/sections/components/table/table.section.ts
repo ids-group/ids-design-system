@@ -148,6 +148,22 @@ export class TableSection {
     { key: 'capacity', label: 'Capacity', align: 'right', sortable: true },
   ];
 
+  protected readonly hintColumns: TableColumn<EventRow>[] = [
+    { key: 'project', label: 'Record', sortable: true },
+    {
+      key: 'venue',
+      label: 'Venue',
+      hint: 'Where the event takes place; a site with several halls is listed once.',
+    },
+    {
+      key: 'capacity',
+      label: 'Capacity',
+      align: 'right',
+      sortable: true,
+      hint: 'Seated places at the venue, not tickets sold.',
+    },
+  ];
+
   protected readonly noRows: readonly EventRow[] = [];
 
   protected readonly events: readonly EventRow[] = [

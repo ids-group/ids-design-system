@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Разметка в строке тултипа</title>
+<meta name="ds-deck-status" content="open">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+<style>
+  /* The tooltip panel rebuilt from tooltip-panel.component.scss on the same tokens. */
+  .tip {
+    display: block; position: relative; max-width: var(--tooltip-maxw); width: max-content;
+    padding: var(--space-1-5) var(--space-2-5);
+    background: var(--tooltip-bg-color); color: var(--tooltip-text-color);
+    border: var(--border-width-default) solid var(--tooltip-border-color); border-radius: var(--ds-radius-control);
+    box-shadow: var(--ds-elevation-overlay);
+    font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
+    overflow-wrap: anywhere; white-space: pre-line;
+  }
+  .tip strong { font-weight: var(--font-weight-bold); }
+
+  /* A ds-table header cell: uppercase label, dotted underline for a hint, ellipsis when the column is narrow. */
+  .th {
+    display: block; padding: var(--space-2) var(--space-3);
+    background: var(--surface-muted); border-bottom: var(--border-width-default) solid var(--border-default);
+    font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
+    letter-spacing: var(--letter-spacing-wider); text-transform: uppercase; color: var(--text-tertiary);
+    white-space: nowrap;
+  }
+  .th.is-narrow { width: 150px; }
+  .th.is-fits { width: max-content; }
+  .th__label {
+    display: inline-block; max-width: 100%; vertical-align: top;
+    text-decoration: underline dotted var(--text-tertiary); text-underline-offset: 3px;
+  }
+  .th__text { display: block; overflow: clip; text-overflow: ellipsis; white-space: nowrap; }
+  .case { display: grid; gap: var(--space-1); }
+  .case .tip { margin-top: var(--space-1); }
+  .case + .case { margin-top: var(--space-3); }
+  .cases { display: flex; flex-direction: column; }
+  .why-none { margin: var(--space-1) 0 0; font: var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--error-text); }
+
+  .code {
+    margin: 0; padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm); background: var(--surface-muted);
+    font: var(--font-size-2xs) / 1.55 var(--font-mono); color: var(--text-primary);
+    white-space: pre; overflow-x: auto;
+  }
+  details.inside > summary { cursor: pointer; font: var(--font-weight-semibold) var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--text-secondary); }
+  details.inside > .code { margin-top: var(--space-1-5); }
+
+  .opt { cursor: pointer; }
+  .opt > .badge { align-self: flex-start; }
+  .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+  .opt.is-chosen { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+  .opt .chosen-mark { display: none; font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--accent-strong); }
+  .opt.is-chosen .chosen-mark { display: block; }
+  .opts { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+  .pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  .pill { padding: 2px var(--space-2); border-radius: var(--radius-pill); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.5 var(--font-sans); }
+  .pill.good { background: var(--success-subtitle); color: var(--success-text); }
+  .pill.bad { background: var(--error-subtitle); color: var(--error-text); }
+  .pill.mid { background: var(--warning-subtitle); color: var(--warning-text); }
+
+  main { padding-bottom: 72px; }
+  .bar-fixed {
+    position: fixed; inset-inline: 0; inset-block-end: 0; display: flex; align-items: center;
+    gap: var(--space-3); padding: var(--space-3) var(--space-5); background: var(--surface-default);
+    border-top: var(--border-width-default) solid var(--border-divider); box-shadow: var(--shadow-popover);
+    font: var(--font-size-2xs) / 1.4 var(--font-sans); z-index: 10;
+  }
+  .bar-fixed .count { font-weight: var(--font-weight-bold); flex: none; color: var(--text-primary); }
+  .bar-fixed output { flex: 1 1 auto; min-width: 0; color: var(--text-secondary); font-family: var(--font-mono); overflow-x: auto; white-space: nowrap; }
+  .bar-fixed button { flex: none; padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-primary); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.4 var(--font-sans); cursor: pointer; }
+  .bar-fixed button:hover { background: var(--surface-secondary); }
+  @media (max-width: 520px) {
+    body { padding-inline: var(--space-4); }
+    .bar-fixed { padding: var(--space-2) var(--space-3); gap: var(--space-2); }
+    .opts { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1>Подпись заголовка таблицы не может быть жирной: ей нужен отдельный вход, а входов под оформление библиотека не хочет</h1>
+    <p class="lede">Одно решение: что показывает тултип заголовка <code>ds-table</code> с <code>hint</code>, когда <code>dsTooltipClippedLead</code> уходит. Разметка уже решена: строка <code>dsTooltip</code> понимает только <code>**жирный**</code>.</p>
+    <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">ds-table hint</span><span class="chip">0 новых входов, −1 старый</span><span class="chip">актуально на 2026-10-07</span></div>
+  </header>
+
+  <section class="panel">
+    <h2>Решено: строка понимает только жирный</h2>
+    <div class="stage">
+      <div class="spec">
+        <p class="cap">Считает <code>**только подтверждённые**</code> места</p>
+        <span class="tip">Считает <strong>только подтверждённые</strong> места</span>
+      </div>
+    </div>
+    <p class="src">Пишется <code>**текст**</code>; перенос <code>\n</code> уже работает; <code>\*\*</code> остаётся звёздочками; непарные <code>**</code> остаются как есть. Курсива, кода, списка и <code>__текст__</code> нет: любой новый знак потом добавляется без поломки, а убрать его нельзя. Панель режет строку на куски и рисует жирные как <code>strong</code> из шаблона, <code>innerHTML</code> не нужен, поэтому HTML через данные не внедрить. Описание для скринридера получает текст без маркеров. Ни тегов, ни <code>TemplateRef</code>, ни входов.</p>
+  </section>
+
+  <section class="panel q" data-q="lead">
+    <h2>Тултип заголовка с hint: четыре варианта</h2>
+    <p>В каждой карточке один и тот же заголовок в двух положениях: название обрезано узкой колонкой и название помещается. Под ним то, что покажет тултип. Колонка у консьюмера везде одна: <code>{ label: 'Registered attendee count', hint: 'People who confirmed a seat' }</code>. Выбор - клик по карточке.</p>
+    <div class="opts">
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Подпись и hint, всегда</h3>
+        <div class="cases">
+          <div class="case"><p class="cap">Название обрезано</p><span class="th is-narrow"><span class="th__label" style="max-width:100%"><span class="th__text">Registered attendee count</span></span></span><span class="tip"><strong>Registered attendee count</strong>
+People who confirmed a seat</span></div>
+          <div class="case"><p class="cap">Название помещается</p><span class="th is-fits"><span class="th__label"><span class="th__text">Capacity</span></span></span><span class="tip"><strong>Capacity</strong>
+Seats in the hall</span></div>
+        </div>
+        <div class="pills"><span class="pill good">таблица ничего не измеряет</span><span class="pill good">привычный вид «термин и определение»</span><span class="pill mid">помещающееся название повторяется</span></div>
+        <dl class="layer">
+          <dt>Что уходит из API</dt><dd><code>dsTooltipClippedLead</code></dd>
+          <dt>Что меняется в 0.14.8</dt><dd>заголовок, где название помещается, теперь тоже показывает подпись</dd>
+        </dl>
+        <details class="inside"><summary>как устроено внутри таблицы</summary><p class="code">[dsTooltip]="'**' + col.label + '**\n' + col.hint"</p></details>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+
+      <article class="opt" tabindex="0">
+        <span class="badge is-same">вариант</span>
+        <h3>Только hint</h3>
+        <div class="cases">
+          <div class="case"><p class="cap">Название обрезано</p><span class="th is-narrow"><span class="th__label" style="max-width:100%"><span class="th__text">Registered attendee count</span></span></span><span class="tip">People who confirmed a seat</span><p class="why-none">название нигде не прочесть</p></div>
+          <div class="case"><p class="cap">Название помещается</p><span class="th is-fits"><span class="th__label"><span class="th__text">Capacity</span></span></span><span class="tip">Seats in the hall</span></div>
+        </div>
+        <div class="pills"><span class="pill good">ничего не склеиваем и не измеряем</span><span class="pill bad">обрезанное название нечем показать</span></div>
+        <dl class="layer">
+          <dt>Что уходит из API</dt><dd><code>dsTooltipClippedLead</code></dd>
+          <dt>Что меняется в 0.14.8</dt><dd>заголовок с обрезанным названием перестаёт показывать название</dd>
+        </dl>
+        <details class="inside"><summary>как устроено внутри таблицы</summary><p class="code">[dsTooltip]="col.hint"</p></details>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+
+      <article class="opt" tabindex="0">
+        <span class="badge is-same">вариант</span>
+        <h3>Подпись при обрезке, считает таблица</h3>
+        <div class="cases">
+          <div class="case"><p class="cap">Название обрезано</p><span class="th is-narrow"><span class="th__label" style="max-width:100%"><span class="th__text">Registered attendee count</span></span></span><span class="tip"><strong>Registered attendee count</strong>
+People who confirmed a seat</span></div>
+          <div class="case"><p class="cap">Название помещается</p><span class="th is-fits"><span class="th__label"><span class="th__text">Capacity</span></span></span><span class="tip">Seats in the hall</span></div>
+        </div>
+        <div class="pills"><span class="pill good">вид 0.14.8 сохраняется целиком, подпись жирная</span><span class="pill bad">таблица хранит обрезку каждой колонки</span><span class="pill bad">строка должна успеть обновиться до открытия</span></div>
+        <dl class="layer">
+          <dt>Что уходит из API</dt><dd><code>dsTooltipClippedLead</code></dd>
+          <dt>Пересчёт</dt><dd>на ширину колонки и окна</dd>
+        </dl>
+        <details class="inside"><summary>как устроено внутри таблицы</summary><p class="code">[dsTooltip]="clipped(col)
+  ? '**' + col.label + '**\n' + col.hint
+  : col.hint"</p></details>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+
+      <article class="opt" tabindex="0">
+        <span class="badge is-no">отклонено</span>
+        <h3>Оставить dsTooltipClippedLead</h3>
+        <div class="cases">
+          <div class="case"><p class="cap">Название обрезано</p><span class="th is-narrow"><span class="th__label" style="max-width:100%"><span class="th__text">Registered attendee count</span></span></span><span class="tip">Registered attendee count
+People who confirmed a seat</span><p class="why-none">подпись не жирная</p></div>
+          <div class="case"><p class="cap">Название помещается</p><span class="th is-fits"><span class="th__label"><span class="th__text">Capacity</span></span></span><span class="tip">Seats in the hall</span></div>
+        </div>
+        <div class="pills"><span class="pill bad">отдельный вход под один случай таблицы</span><span class="pill bad">жирная подпись потребует ещё входа</span></div>
+        <dl class="layer">
+          <dt>Что уходит из API</dt><dd class="none">ничего</dd>
+        </dl>
+        <details class="inside"><summary>как устроено внутри таблицы</summary><p class="code">[dsTooltip]="col.hint"
+[dsTooltipClippedLead]="col.label"</p></details>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel verdict is-done">
+    <h2>Рекомендация</h2>
+    <p class="pick"><strong>Подпись и hint, всегда.</strong> Это вид «термин и определение», и он убирает всё, что было нужно ради обрезки: вход, измерение и состояние. Цена одна и видна в карточке: у заголовка, где название помещается, тултип теперь тоже начинается с него.</p>
+    <p>Что делаю сам, без вопроса, и пишу в Unreleased с пунктом в миграциях: разбор <code>**</code> в панели, экранирование <code>\*\*</code>, удаление <code>dsTooltipClippedLead</code> (<code>removed-api</code>, замена - один <code>dsTooltip</code> со строкой <code>**подпись**</code>, перенос и hint), текст без маркеров для скринридера, строка про перенос и жирный в <code>components.md</code> и каталоге. Скажи, если не согласен.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Что решить</h2>
+    <table>
+      <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
+      <tbody>
+        <tr class="row-pick"><th class="rowlabel">Тултип заголовка ds-table с hint</th><td>Подпись и hint, всегда · Только hint · Подпись при обрезке, считает таблица · Оставить dsTooltipClippedLead</td><td>Подпись и hint, всегда</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <p class="src"><b>Источники, проверено 2026-10-07 на <code>dev</code>.</b> <code>tooltip-panel.component.ts</code> - шаблон <code>{{ text() }}</code>; <code>tooltip-panel.component.scss</code> - <code>white-space: pre-line</code> и токены образцов; <code>tooltip.directive.ts</code> - <code>tipText()</code> склеивает подпись и подсказку через перенос и решает по <code>isClipped()</code>; <code>table.component.html</code> - у колонки с <code>hint</code> тултип кнопки получает <code>dsTooltipClippedLead</code>; <code>docs/todo.md</code> - P1 «подпись обрезанного заголовка должна быть жирной отдельной строкой». Заголовок и панель собраны из SCSS таблицы и панели на токенах <code>ds.css</code>, не из самого компонента. Вид «Название + определение» взят из <code>17-table-column-hint</code>. Ограничение: одна директива и один вход <code>dsTooltip</code>.</p>
+
+  <div class="bar-fixed">
+    <span class="count" id="count">0 из 1</span>
+    <output id="line">пока ничего не выбрано</output>
+    <button type="button" id="copy">Скопировать</button>
+    <button type="button" id="reset">Сбросить</button>
+  </div>
+</main>
+
+<script>
+  const PICK_KEY = 'ds-deck-tooltip-markup-picks';
+  const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
+  const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private window */ } };
+  const labels = { lead: 'Тултип заголовка ds-table с hint' };
+  const state = read(PICK_KEY, {});
+  const sections = [...document.querySelectorAll('.q[data-q]')];
+  const optionName = (card) => card.querySelector('h3').textContent.trim();
+  function render() {
+    for (const section of sections) {
+      for (const card of section.querySelectorAll('.opt')) {
+        const chosen = state[section.dataset.q] === optionName(card);
+        card.classList.toggle('is-chosen', chosen);
+        card.setAttribute('aria-pressed', String(chosen));
+      }
+    }
+    const done = sections.filter((section) => state[section.dataset.q]);
+    document.getElementById('count').textContent = `${done.length} из ${sections.length}`;
+    document.getElementById('line').textContent = done.length
+      ? 'Дека tooltip-markup: ' + done.map((section) => `${labels[section.dataset.q]} - ${state[section.dataset.q]}`).join('; ')
+      : 'пока ничего не выбрано';
+  }
+  function pick(section, card) {
+    const key = section.dataset.q;
+    const name = optionName(card);
+    if (state[key] === name) { delete state[key]; } else { state[key] = name; }
+    write(PICK_KEY, state);
+    render();
+  }
+  for (const section of sections) {
+    for (const card of section.querySelectorAll('.opt')) {
+      card.setAttribute('role', 'button');
+      card.addEventListener('click', (event) => { if (!event.target.closest('.code, .tip, .th, details')) pick(section, card); });
+      card.addEventListener('keydown', (event) => {
+        if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); pick(section, card); }
+      });
+    }
+  }
+  document.getElementById('copy').addEventListener('click', () => { navigator.clipboard?.writeText(document.getElementById('line').textContent); });
+  document.getElementById('reset').addEventListener('click', () => { for (const key of Object.keys(state)) delete state[key]; write(PICK_KEY, state); render(); });
+  render();
+</script>
+</body>
+</html>

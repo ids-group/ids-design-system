@@ -1,3 +1,3 @@
 # Activity - activity stream
 
-Vertical list of attributed events on a record. Each row: avatar, bold subject (actor + verb + object), one-line body, optional inline status badge, and a relative timestamp on the trailing edge. For a vertical event log with icons and tones, use ds-timeline.
+Attributed events on a record. Row: avatar, bold actor + verb + object, one-line body, optional status badge, relative time. For an event log with icons and tones, use ds-timeline.

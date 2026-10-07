@@ -1,7 +1,7 @@
 # Sidenav Footer - the rail footer on its own
 
-<ds-sidenav-footer> is the one part of the rail a consumer configures rather than composes: it owns the profile row, the alert bell and the collapse handle. Both states below are the same element — [collapsed] switches it. The width comes from the sidenav, so a footer shown outside one needs a frame of its own.
+<ds-sidenav-footer> is the rail part you configure, not compose: profile row, alert bell, collapse handle. [collapsed] picks the state. Width comes from the sidenav; outside one, give it a frame.
 
-The footer only emits collapse (collapseToggled) and sign-out (signOutSelected); the parent acts on them, so the collapse row here, left unbound, does nothing. A null searchProvider or alertItems keeps that row inert, and an empty profileRoute makes "Your profile" a no-op.
+It only emits collapseToggled and signOutSelected; the parent acts, so the unbound collapse row here does nothing. A null searchProvider or alertItems makes that row inert; an empty profileRoute makes "Your profile" a no-op.
 
 Full API: `SidenavFooter.d.ts`. How to use the component anywhere: `SidenavFooter.prompt.md`.

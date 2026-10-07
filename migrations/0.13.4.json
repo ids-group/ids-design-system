@@ -17,7 +17,7 @@
         "exact": "yAxisMode=\"exact\""
       },
       "action": "On every `ds-line-chart`, rewrite `yAxisMode=\"rounded\"` to `yAxisMode=\"aligned\"`, `yAxisMode=\"independent\"` to `yAxisMode=\"dual-grid\"` and `yAxisMode=\"stacked\"` to `yAxisMode=\"split\"`. `yAxisMode=\"exact\"` is unchanged. Retype any field, constant or return value that supplies one of those strings.",
-      "appliesWhen": "Only `yAxisMode` on `ds-line-chart`, and any TypeScript typed as `ChartAxisMode` or `ChartAxisMode` that feeds it. `stack` on `ds-column-chart` keeps its own `\"stacked\"`, which is a different input with a different meaning and is NOT renamed.",
+      "appliesWhen": "Only `yAxisMode` on `ds-line-chart`, and any TypeScript typed as `ChartAxisMode` or `LineChartAxisMode` that feeds it. `stack` on `ds-column-chart` keeps its own `\"stacked\"`, which is a different input with a different meaning and is NOT renamed.",
       "pitfall": "An unknown string does not error. Angular assigns it, no mode matches, and the plot silently falls back to one shared grid - a chart that still renders and is measured against the wrong axis. A build that passes proves nothing here; only the three old strings being gone does.",
       "restore": null,
       "searchHints": [
@@ -33,6 +33,7 @@
         "yAxisMode=\"stacked\"",
         "[yAxisMode]=",
         "ChartAxisMode",
+        "LineChartAxisMode",
         ": 'rounded'",
         "= 'rounded'",
         "'independent'",
@@ -148,7 +149,7 @@
         "ToastRegionComponent"
       ],
       "verify": "Every subclass of the listed components builds, and any member it declares that the base now also declares carries `override`.",
-      "note": "`ChartComponent` gained 21 members and `LineChartComponent` 24 behind the new axis, cursor, curve and stack inputs, while `LineChartComponent` lost 51 geometry members now drawn by `ds-chart`; `LineSeriesComponent` gained 17. `ButtonComponent` gained `align`, `PaginationComponent` `size`, `layout`, `sizeResolved` and `navClass`, `SegmentedComponent` `joined`, `DropzoneComponent` `emitPicked`, `ToastRegionComponent` `showQueueCount` and `queuedLabel`, `AlertComponent` and `BannerComponent` `announceResolved`, and every chart the defaults and table rows it hands `ds-chart-data-table`. `DropzoneComponent` lost `single`; `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` for `sortDirection`; `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames. A subclass overriding an old name now overrides nothing."
+      "note": "`ChartComponent` gained 21 members and `LineChartComponent` 24 behind the new axis, cursor, curve and stack inputs, while `LineChartComponent` lost 51 geometry members now drawn by `ds-chart`; `LineSeriesComponent` gained 18 and lost `rovingIndex` and `tabStopIndex`. `ButtonComponent` gained `align`, `PaginationComponent` `size`, `layout`, `sizeResolved` and `navClass`, `SegmentedComponent` `joined`, `DropzoneComponent` `emitPicked`, `ToastRegionComponent` `showQueueCount` and `queuedLabel`, `AlertComponent` and `BannerComponent` `announceResolved`, and every chart the defaults and table rows it hands `ds-chart-data-table`. `DropzoneComponent` lost `single`; `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` for `sortDirection`; `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames. A subclass overriding an old name now overrides nothing."
     },
     {
       "id": "bar-chart-value-accepts-a-range",
@@ -2171,7 +2172,7 @@
       "surface": "template",
       "action": "Rename the `multi` binding on every `ds-accordion` to `multiple`.",
       "appliesWhen": "Only `ds-accordion`. `ds-multi-select` is a component name and is unchanged, and `ds-autocomplete[multiple]` already spelled it out.",
-      "pitfall": "The default is `true`, so a `multi` attribute left behind reads as unset and the accordion keeps opening several panels - which is what most callers wanted anyway. A consumer who wrote `[multi]=\"false\"` to get a single-open accordion silently gets the opposite, with no error.",
+      "pitfall": "The default is `true`, so a `multi` attribute left behind reads as unset and the accordion keeps opening several panels - which is what most callers wanted anyway. A static `multi=\"false\"` attribute left behind is silently ignored and the accordion opens several panels again; a `[multi]` binding fails the build.",
       "restore": null,
       "searchHints": [
         "multi",
@@ -2410,7 +2411,7 @@
       "new": null,
       "surface": "style",
       "action": "None, unless a toast, a banner or an inline alert should keep fading in: then set its `--ds-<surface>-enter-keyframes` to `ds-fade-in`. Separately, remove any `--ds-toast-enter-scale`, `--ds-banner-enter-scale` or `--ds-alert-enter-scale` value that was not meant to take effect.",
-      "appliesWhen": "Only the entrance of ds-toast, ds-banner and ds-alert. ds-modal and the overlay panels already grew and are unchanged; ds-drawer and ds-bottom-sheet keep ds-slide-edge-in, and the loading overlay keeps ds-fade-in. An app that already set --ds-toast-enter-keyframes, --ds-banner-enter-keyframes or --ds-alert-enter-keyframes sees no change.",
+      "appliesWhen": "Only the entrance of ds-toast, ds-banner and ds-alert. ds-modal already grew and is unchanged; the overlay panels change in the same release under overlay-pane-enters-with-scale-in; ds-drawer and ds-bottom-sheet keep ds-slide-edge-in, and the loading overlay keeps ds-fade-in. An app that already set --ds-toast-enter-keyframes, --ds-banner-enter-keyframes or --ds-alert-enter-keyframes sees no change.",
       "pitfall": "The growth reads --ds-<surface>-enter-scale, which these three have declared all along while ds-fade-in ignored it. An app that set that token expecting it to do nothing now gets the scale it asked for - a value like 0.5 was inert before and is a visible lurch now.",
       "restore": ":root { --ds-toast-enter-keyframes: ds-fade-in; --ds-banner-enter-keyframes: ds-fade-in; --ds-alert-enter-keyframes: ds-fade-in; }",
       "searchHints": [
@@ -2470,7 +2471,7 @@
     "The internal `--_*` custom properties now mirror the public token they read: `--_alert-padding-y` resolves `--ds-alert-padding-y`, so an inspector showing the internal name gives the settable one by dropping `--_` for `--ds-`. 171 were brought into line; 25 keep a different name because they carry a distinction the public token does not, such as the drawer's three widths behind one `--ds-drawer-width`. Internal names are not API and nothing supported reads them - nothing to change.",
     "`ds-checkbox` takes three styling hooks its label already half had: `--ds-checkbox-row-align` for the box-and-label cross-alignment, `--ds-checkbox-gap` for the space between them, and `--ds-checkbox-message-indent` for the hint, which sits under the box by default and lines up with the label when set to the box plus the gap. Every default draws what the component drew before. Purely additive - nothing to change.",
     "`ds-segmented` takes `joined`. Off by default, which is the padded track every consumer draws today. On, the segments share their edges, adjacent borders collapse into one hairline and only the two ends carry the group radius - the shape a row of bordered chips wants. It needs `--ds-segmented-segment-border` set, because the shared edge IS the border. Purely additive.",
-    "`ChartStackOffset` and `stackOffsets` are published from the package root. The mark that takes them, `g[dsColumnSeries]`, was already published there, so its `offsets` input could be bound and not typed. Purely additive - nothing to change.",
+    "`ChartStackOffset` and `stackOffsets` are published from the package root, beside the `g[dsColumnSeries]` mark that takes them, which joins the root in this release too. Purely additive - nothing to change.",
     "`g[dsLineSeries]` takes `pinOnClick`, `dimOthers`, `patterns` and `stacked`, which brings it level with `g[dsColumnSeries]` and with what `ds-line-chart` draws. A consumer composing a plot out of the marks can now pin a reading, fade the other series, dash a line and stack the areas. Every default is off. Purely additive - nothing to change.",
     "`ds-chart` takes `maxSecondary`, which pins the ceiling of the second value axis the way `max` pins the first. Two plots read against each other need both pinned, or the second rescales under them when one loses its tallest reading. Purely additive - nothing to change.",
     "`ds-chart` takes `cursor`. `'category'` draws a band and a crosshair down the category under the pointer and reports it to every mark through the shared scales; `'none'`, the default, leaves the plot alone, which is what every chart drew before. Purely additive - nothing to change.",

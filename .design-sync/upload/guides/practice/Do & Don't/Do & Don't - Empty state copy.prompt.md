@@ -1,7 +1,7 @@
 # Do / Don't - empty state copy
 
-Concrete subject ("allocation rule"), concrete next step. The CTA matches the verb in the title.
+Concrete subject and next step; the CTA reuses the title's verb.
 
-Passive ("nothing here yet"), padded with cheer, instructs the user to find a button rather than offering one.
+Passive, cheery, no action.
 
 Looks like you haven't created anything!

@@ -1,3 +1,3 @@
 # Charts & dataviz - sequential ramp
 
-Single-hue, light → dark. Use for ordinal magnitudes (e.g. utilisation %, days-until-deadline). No component reads the sequential or divergent ramps and they have no --ds-chart-* override: they are for hand-drawn visuals.
+Light → dark, for ordinal magnitudes (utilisation %). Sequential and divergent ramps are for hand-drawn visuals: no component reads them, no --ds-chart-* override.

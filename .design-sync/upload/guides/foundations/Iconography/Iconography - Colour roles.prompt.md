@@ -1,3 +1,3 @@
 # Iconography - colour roles
 
-Icons inherit currentColor. The role tokens below set the parent color.
+Icons use currentColor; set these roles on the parent's color.
