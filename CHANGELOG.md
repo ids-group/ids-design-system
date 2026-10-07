@@ -1033,8 +1033,8 @@
   `ChartComponent.tooltipPreferBelow`, `ColumnSeriesComponent.onMarkBlur`,
   `LineSeriesComponent.onMarkerBlur` and the internal `ChartTooltipDirective.dsChartTooltipPreferBelow`.
   Build after upgrading; rename or mark `override` every member the compiler reports colliding
-  (TS4114, or TS2416 where the signature differs), and delete an override whose base member is gone. A method named like a removed member and declared
-  without `override` still compiles and is never called again. Subclassing a DS component is
+  (TS4114, or TS2416 where the signature differs), and delete an override whose base member is
+  gone. A method named like a removed member and declared without `override` still compiles and is never called again. Subclassing a DS component is
   unsupported.
 
 ### Added
