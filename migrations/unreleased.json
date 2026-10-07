@@ -1,0 +1,11 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    {
+      "text": "The ds-breadcrumbs row clips horizontally only, so the descenders of g, j, p, q and y below its line box are no longer cut flat; the row's height is unchanged.",
+      "verify": "open a page with breadcrumbs whose labels hold g, j, p, q or y and confirm the descenders are whole, the row height is as before, and a keyboard focus ring on a crumb is fully visible."
+    }
+  ],
+  "deleteList": []
+}

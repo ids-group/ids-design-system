@@ -1,5 +1,11 @@
 ## Unreleased
 
+### Fixed
+
+- **`ds-breadcrumbs` shows the descenders of its labels.** The row clipped on both axes and its line
+  box is shorter than the glyph box, so g, j, p, q and y were cut flat. The row now clips
+  horizontally only; its height is unchanged. A long trail still clips at the row's end.
+
 ## 0.14.8 — 2026-10-06
 
 ### Added
