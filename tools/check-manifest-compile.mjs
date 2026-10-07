@@ -1,0 +1,409 @@
+#!/usr/bin/env node
+// A manifest sentence that states a compile outcome - "fails with TS2416", "TS2353 inline, silent
+// through a prebuilt object" - is a claim about two trees, and only a compiler can vouch for it.
+// This check compiles the consumer code behind each such claim at both ends of the boundary.
+//
+// Reads `migrations/fixtures/<version>/<item-id>.ts`: consumer-side TypeScript importing from
+// `@ids-group-ltd/ids-design-system` and its secondary entry points. A line expected to fail carries
+// a directive on the line above, naming the side of the boundary and the exact codes:
+//
+//   // @ts-expect-error after TS2353           v<version> reports TS2353 here; v<prev> is clean
+//   // @ts-expect-error before TS2339          the other way round
+//   // @ts-expect-error both TS4114 TS2416     both tags report exactly these two
+//
+// Each fixture is type-checked at v<prev> and v<version> (`unreleased`: the last tag and the
+// working tree) against that tag's `src/`, mapped through that tag's own tsconfig `paths`. The
+// directives are stripped before compiling, because TypeScript's `@ts-expect-error` swallows ANY
+// error: the codes reported on each line must equal the codes the directive names, and every line
+// without one must be clean.
+//
+// Fails on: a code mismatch on any line at either tag, a fixture whose item id is not in its
+// manifest, a fixture that is not `.ts`, and an item of `migrations/unreleased.json` naming a TS
+// code that its fixture does not assert.
+//
+//   node tools/check-manifest-compile.mjs            # every fixture, plus the unreleased draft
+//   node tools/check-manifest-compile.mjs --audit    # the same, then every published item whose
+//                                                    # TS-code claim no fixture asserts; exits 0
+import { execFileSync } from 'node:child_process';
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+} from 'node:fs';
+import { dirname, extname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import ts from 'typescript';
+import { previousBoundary, releaseTags } from './release-tags.mjs';
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const MIGRATIONS = process.env.DS_MIGRATIONS_DIR ?? join(ROOT, 'migrations');
+const FIXTURES = join(MIGRATIONS, 'fixtures');
+const AUDIT = process.argv.includes('--audit');
+const PACKAGE = '@ids-group-ltd/ids-design-system';
+const WORKING_TREE = 'the working tree';
+const VERSION_FOLDER = /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)$/;
+
+const DIRECTIVE = /^\s*\/\/\s*@ts-expect-error\b(.*)$/;
+const DIRECTIVE_BODY = /^\s+(before|after|both)((?:\s+TS\d{4})+)\s*$/;
+const SUPPRESSION = /@ts-(ignore|nocheck)\b/;
+const CLAIMED_CODE = /\bTS\d{4}\b/g;
+
+// The options a consumer's Angular app compiles with, minus emit. `noImplicitOverride` is in
+// because the Angular CLI scaffolds it, and it is what turns a new base member into TS4114.
+const COMPILER_OPTIONS = {
+  strict: true,
+  noImplicitOverride: true,
+  skipLibCheck: true,
+  experimentalDecorators: true,
+  noEmit: true,
+  target: ts.ScriptTarget.ES2022,
+  module: ts.ModuleKind.Preserve,
+  moduleResolution: ts.ModuleResolutionKind.Bundler,
+};
+
+const tags = releaseTags(ROOT);
+const problems = [];
+const results = [];
+
+function parseFixture(path) {
+  const lines = readFileSync(path, 'utf8').split(/\r?\n/);
+  const expected = { before: new Map(), after: new Map() };
+  const errors = [];
+  let pending = [];
+  lines.forEach((line, index) => {
+    if (SUPPRESSION.test(line))
+      errors.push(
+        `line ${index + 1}: @ts-${SUPPRESSION.exec(line)[1]} hides the diagnostics this check reads`,
+      );
+    const directive = DIRECTIVE.exec(line);
+    if (directive) {
+      const body = DIRECTIVE_BODY.exec(directive[1]);
+      if (!body)
+        errors.push(
+          `line ${index + 1}: write \`// @ts-expect-error before|after|both TS<code> ...\``,
+        );
+      else pending.push({ side: body[1], codes: body[2].trim().split(/\s+/) });
+      return;
+    }
+    for (const { side, codes } of pending)
+      for (const which of side === 'both' ? ['before', 'after'] : [side]) {
+        const set = expected[which].get(index + 1) ?? new Set();
+        for (const code of codes) set.add(Number(code.slice(2)));
+        expected[which].set(index + 1, set);
+      }
+    pending = [];
+  });
+  if (pending.length)
+    errors.push('the last directive has no line under it to apply to');
+  // Same line count, so diagnostic lines still match the file on disk.
+  const stripped = lines
+    .map((line) => line.replace('@ts-expect-error', 'ts-expect-error'))
+    .join('\n');
+  const asserted = new Set(
+    [...expected.before.values(), ...expected.after.values()].flatMap((set) => [
+      ...set,
+    ]),
+  );
+  return { expected, stripped, errors, asserted };
+}
+
+// The tag's own tsconfig decides where the package resolves: before 0.12 the alias was `ds` onto
+// `src/public-api.ts`, from 0.12 on `src/lib/public-api.ts` plus one folder per entry point.
+function pathsFor(treeRoot) {
+  const config = ts.parseConfigFileTextToJson(
+    'tsconfig.json',
+    readFileSync(join(treeRoot, 'tsconfig.json'), 'utf8'),
+  ).config;
+  const paths = config?.compilerOptions?.paths ?? {};
+  const primary = paths[PACKAGE] ?? paths.ds;
+  if (!primary?.some((target) => existsSync(join(treeRoot, target))))
+    return null;
+  const secondary = [
+    ...new Set([...(paths[`${PACKAGE}/*`] ?? []), ...(paths['ds/*'] ?? [])]),
+  ];
+  return {
+    [PACKAGE]: primary,
+    ...(secondary.length ? { [`${PACKAGE}/*`]: secondary } : {}),
+  };
+}
+
+function compile(treeRoot, label, fixtures) {
+  const paths = pathsFor(treeRoot);
+  if (!paths) {
+    for (const fixture of fixtures)
+      problems.push(
+        `${fixture.name}: ${label} has no source entry point for ${PACKAGE} in its tsconfig paths`,
+      );
+    return new Map();
+  }
+  const options = { ...COMPILER_OPTIONS, baseUrl: treeRoot, paths };
+  const host = ts.createCompilerHost(options);
+  const texts = new Map(
+    fixtures.map((fixture) => [
+      resolve(fixture.path).toLowerCase(),
+      fixture.parsed.stripped,
+    ]),
+  );
+  const readFile = host.readFile.bind(host);
+  host.readFile = (file) =>
+    texts.get(resolve(file).toLowerCase()) ?? readFile(file);
+  const program = ts.createProgram(
+    fixtures.map((fixture) => fixture.path),
+    options,
+    host,
+  );
+  for (const diagnostic of program.getOptionsDiagnostics())
+    problems.push(
+      `${label}: ${ts.flattenDiagnosticMessageText(diagnostic.messageText, ' ')}`,
+    );
+  const reported = new Map();
+  for (const fixture of fixtures) {
+    const source = program.getSourceFile(fixture.path);
+    const byLine = new Map();
+    for (const diagnostic of [
+      ...program.getSyntacticDiagnostics(source),
+      ...program.getSemanticDiagnostics(source),
+    ]) {
+      const line =
+        source.getLineAndCharacterOfPosition(diagnostic.start ?? 0).line + 1;
+      const entry = byLine.get(line) ?? { codes: new Set(), messages: [] };
+      entry.codes.add(diagnostic.code);
+      entry.messages.push(
+        `TS${diagnostic.code} ${ts.flattenDiagnosticMessageText(diagnostic.messageText, ' ')}`,
+      );
+      byLine.set(line, entry);
+    }
+    reported.set(fixture, byLine);
+  }
+  return reported;
+}
+
+const codes = (set) =>
+  set?.size
+    ? [...set]
+        .sort()
+        .map((code) => `TS${code}`)
+        .join(' ')
+    : 'clean';
+
+function compare(fixture, side, label, byLine) {
+  const expected = fixture.parsed.expected[side];
+  const lines = new Set([...expected.keys(), ...byLine.keys()]);
+  const mismatches = [];
+  for (const line of [...lines].sort((a, b) => a - b)) {
+    const want = codes(expected.get(line));
+    const got = codes(byLine.get(line)?.codes);
+    if (want !== got)
+      mismatches.push(
+        `line ${line} at ${label}: expected ${want}, got ${got}` +
+          (byLine.get(line)
+            ? `\n        ${byLine.get(line).messages.join('\n        ')}`
+            : ''),
+      );
+  }
+  return mismatches;
+}
+
+function manifestItems(version) {
+  const file = join(MIGRATIONS, `${version}.json`);
+  if (!existsSync(file)) return null;
+  return JSON.parse(readFileSync(file, 'utf8')).items ?? [];
+}
+
+function collectFixtures() {
+  if (!existsSync(FIXTURES)) return [];
+  const fixtures = [];
+  for (const folder of readdirSync(FIXTURES, { withFileTypes: true })) {
+    if (!folder.isDirectory() || !VERSION_FOLDER.test(folder.name)) {
+      problems.push(
+        `fixtures/${folder.name}: not a <version> or unreleased folder`,
+      );
+      continue;
+    }
+    const version = folder.name;
+    const items = manifestItems(version);
+    for (const file of readdirSync(join(FIXTURES, version))) {
+      const name = `fixtures/${version}/${file}`;
+      if (extname(file) !== '.ts' || file.endsWith('.d.ts')) {
+        problems.push(
+          `${name}: only .ts fixtures are compiled; a template (.html, strictTemplates) fixture is not supported`,
+        );
+        continue;
+      }
+      const id = file.slice(0, -'.ts'.length);
+      if (!items) {
+        problems.push(`${name}: there is no migrations/${version}.json`);
+        continue;
+      }
+      if (!items.some((item) => item.id === id)) {
+        problems.push(
+          `${name}: migrations/${version}.json has no item "${id}"`,
+        );
+        continue;
+      }
+      const path = join(FIXTURES, version, file);
+      const parsed = parseFixture(path);
+      if (parsed.errors.length) {
+        problems.push(...parsed.errors.map((error) => `${name}: ${error}`));
+        continue;
+      }
+      const draft = version === 'unreleased';
+      const after = draft ? WORKING_TREE : `v${version}`;
+      const before = draft ? tags.at(-1) : previousBoundary(tags, version);
+      if (!before || (!draft && !tags.includes(after))) {
+        problems.push(
+          `${name}: no tagged boundary for ${version} in this checkout`,
+        );
+        continue;
+      }
+      fixtures.push({ name, version, id, path, parsed, before, after });
+    }
+  }
+  return fixtures;
+}
+
+// Every tag's src is extracted under node_modules/.cache, not the OS temp dir: the library sources
+// import @angular/* and friends, and resolution walks up from the importing file to find them.
+function runFixtures(fixtures) {
+  const scratch = join(ROOT, 'node_modules', '.cache');
+  mkdirSync(scratch, { recursive: true });
+  const trees = mkdtempSync(join(scratch, 'manifest-compile-'));
+  const cleanUp = () => rmSync(trees, { recursive: true, force: true });
+  process.once('SIGINT', () => {
+    cleanUp();
+    process.exit(130);
+  });
+  try {
+    const bySide = new Map();
+    for (const fixture of fixtures)
+      for (const [side, label] of [
+        ['before', fixture.before],
+        ['after', fixture.after],
+      ]) {
+        const group = bySide.get(label) ?? [];
+        group.push({ fixture, side });
+        bySide.set(label, group);
+      }
+    const mismatches = new Map(fixtures.map((fixture) => [fixture, []]));
+    for (const [label, entries] of bySide) {
+      let treeRoot = ROOT;
+      if (label !== WORKING_TREE) {
+        treeRoot = join(trees, label);
+        mkdirSync(treeRoot);
+        const archive = execFileSync(
+          'git',
+          [
+            '-C',
+            ROOT,
+            'archive',
+            '--format=tar',
+            label,
+            'src',
+            'tsconfig.json',
+          ],
+          { maxBuffer: 1 << 30 },
+        );
+        execFileSync('tar', ['-x', '-f', '-'], {
+          cwd: treeRoot,
+          input: archive,
+        });
+      }
+      const unique = [...new Set(entries.map((entry) => entry.fixture))];
+      const reported = compile(treeRoot, label, unique);
+      for (const { fixture, side } of entries)
+        if (reported.has(fixture))
+          mismatches
+            .get(fixture)
+            .push(...compare(fixture, side, label, reported.get(fixture)));
+    }
+    for (const fixture of fixtures) {
+      const found = mismatches.get(fixture);
+      results.push(
+        `${found.length ? 'FAIL' : 'ok  '}  ${fixture.name}  (${fixture.before} .. ${fixture.after})` +
+          found.map((line) => `\n      ${line}`).join(''),
+      );
+      problems.push(...found.map((line) => `${fixture.name}: ${line}`));
+    }
+  } finally {
+    cleanUp();
+  }
+}
+
+function claimsOf(item) {
+  const claims = [];
+  for (const [field, value] of Object.entries(item))
+    for (const text of [value].flat())
+      if (typeof text === 'string')
+        for (const code of text.match(CLAIMED_CODE) ?? [])
+          claims.push({ field, code });
+  return claims;
+}
+
+// Which TS codes an item names that no fixture of its version asserts.
+function uncovered(version, fixtures) {
+  const asserted = new Map(
+    fixtures
+      .filter((fixture) => fixture.version === version)
+      .map((fixture) => [fixture.id, fixture.parsed.asserted]),
+  );
+  const gaps = [];
+  for (const item of manifestItems(version) ?? []) {
+    const missing = new Map();
+    for (const { field, code } of claimsOf(item)) {
+      if (asserted.get(item.id)?.has(Number(code.slice(2)))) continue;
+      missing.set(code, [...new Set([...(missing.get(code) ?? []), field])]);
+    }
+    if (missing.size)
+      gaps.push(
+        `migrations/${version}.json  ${item.id}  ${asserted.has(item.id) ? 'fixture lacks' : 'no fixture for'} ` +
+          [...missing]
+            .map(([code, fields]) => `${code} (${fields.join(', ')})`)
+            .join(', '),
+      );
+  }
+  return gaps;
+}
+
+const fixtures = collectFixtures();
+runFixtures(fixtures);
+
+const draftGaps = uncovered('unreleased', fixtures);
+problems.push(
+  ...draftGaps.map(
+    (gap) =>
+      `${gap}\n      a TS code in the draft is a compile claim: add the line that produces it to migrations/fixtures/unreleased/<item-id>.ts`,
+  ),
+);
+
+console.log(
+  `check-manifest-compile: ${fixtures.length} fixture(s) compiled at both ends of their boundary`,
+);
+for (const line of results) console.log(`  ${line}`);
+
+if (AUDIT) {
+  const published = readdirSync(MIGRATIONS)
+    .filter((file) => /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?\.json$/.test(file))
+    .map((file) => file.slice(0, -'.json'.length))
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  const gaps = published.flatMap((version) => uncovered(version, fixtures));
+  console.log(
+    `\ncheck-manifest-compile --audit: ${gaps.length} published item(s) name a TS code no fixture asserts`,
+  );
+  for (const gap of gaps) console.log(`  ${gap}`);
+  if (problems.length) {
+    console.log(`\n${problems.length} problem(s) in the fixtures themselves:`);
+    for (const problem of problems) console.log(`  ${problem}`);
+  }
+  process.exit(0);
+}
+
+if (problems.length) {
+  console.error(
+    `\ncheck-manifest-compile: ${problems.length} problem(s)\n  ${problems.join('\n  ')}`,
+  );
+  process.exit(1);
+}
+console.log('check-manifest-compile: every compile claim held.');
