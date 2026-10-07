@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**126 open — 8 P1, 7 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**127 open — 8 P1, 8 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 8
 
@@ -29,7 +29,7 @@ item and nothing else.
   - An info-hint (toggletip) component: an info icon button that shows supplementary text on hover and focus and pins on click (Stas, 2026-10-06)
   - `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
 
-### P2 — 7
+### P2 — 8
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -37,6 +37,7 @@ item and nothing else.
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Asked by Stas**
   - Document how to build `ds-modal` actions (Stas, 2026-10-06)
+  - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
   - `ds-date-picker` has no width control (Stas, 2026-10-06)
 - **Open verdicts, each drawn in a deck**
   - Six Unreleased behaviour changes shipped without a choice between alternatives
@@ -394,6 +395,13 @@ Each has somebody behind it. Nothing here is speculative work.
   without an auditor and the review steps - is in `.claude/local/todo/manifest-audit-review.md` and
   `.claude/local/from-scratchpad/2026-10-06-manifest-audit/` (local to this checkout, not in git).
   The branch stays out of dev until Stas approves it.
+
+- [ ] **[P2] Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07).** The starter
+  repo (`C:/Repositories/ai-sdlc-prototype`, last commit 2026-09-05) has fallen behind. Take the
+  mm-broker frontend (`C:/Repositories/mm-broker-platform/src/frontend`) as the reference for code
+  and project base - structure, tooling, lint and format setup, Claude config, the current design-system
+  version and how it is consumed - carry its best practices into `ai-sdlc-prototype`, and finish what is
+  left there. Tracked here because Stas does not open that repository; the work itself happens in it.
 
 - [ ] **[P1] A click pins a tooltip: hover shows it at once, a click keeps it open (Stas, 2026-10-06).** Work branch `fix/tooltip-arrow-anchor` (parked; its code is not touched by this item).
   Hover shows the tooltip at once. A click on the trigger keeps it open after the pointer leaves; a click outside, `Esc` or blur closes it - the way `ds-select` or a date picker panel stays open. No visual "pinned" marker. Today `tooltip.directive.ts` closes on click (`@HostListener('click')` -> `onClose`).
