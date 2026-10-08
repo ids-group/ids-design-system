@@ -426,8 +426,9 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
 - [ ] A `*-rename` or `value-remap` item is a pure swap of `old` for `new` (or through `map`): the
       upgrade plugin's `scripts/apply-mechanical.mjs` rewrites it before any agent reads `action`.
       A rename that also changes a value, adds an import or spells out a suffix the pattern does
-      not carry is a `behavior` item, or two items. (`node tools/check.mjs plugin-apply` tests the
-      script)
+      not carry is a `behavior` item, or two items. (lint, M047: a `new` that is not one name per
+      old name, a family whose expansion at the boundary names a token the release lacks, an
+      `action` that deletes or re-values; `node tools/check.mjs plugin-apply` tests the script)
 - [ ] Non-mechanical entries carry the decision rule + where to read the real new name, not "review".
 - [ ] Widened/changed exported types each have a `behavior` entry naming who breaks
       (run `npm run class-surface` — do not assemble the list by eye).
