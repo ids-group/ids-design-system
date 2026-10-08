@@ -1,0 +1,14 @@
+{
+  "left": [
+    "0.10.0#modal-error-to-status page.html:1",
+    "0.10.0#modal-error-to-status page.html:3",
+    "0.10.0#family-to-one-name theme.scss:1",
+    "0.10.0#one-pair-refused theme.scss:2",
+    "0.10.0#one-pair-refused theme.scss:2"
+  ],
+  "refused": [
+    "0.10.0#modal-error-to-status",
+    "0.10.0#family-to-one-name",
+    "0.10.0#one-pair-refused"
+  ]
+}

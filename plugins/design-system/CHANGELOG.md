@@ -15,8 +15,9 @@ source, agent); **major** = a change to the workflow's behavior contract. Bump `
   multi-line tags; TypeScript identifiers on word boundaries, only where imported from the package
   root; the longer name first where one contains another. It prints per item the files and edits it
   made and every occurrence it left: a dynamic binding, a class not written directly under its
-  element, a type imported from a secondary entry point. Published rename items whose swap alone
-  would ship a wrong value are skipped by id. `--dry-run` writes nothing. Phase B step 2 runs it
+  element, a type imported from a secondary entry point. An item whose `old`/`new` is not an exact
+  swap of one name for another is refused: it rewrites nothing and reports every occurrence of
+  `old` as left, with the reason. `--dry-run` writes nothing. Phase B step 2 runs it
   first and hands the agents only what it left; a dry run runs it once over the whole chain.
   `scripts/apply-mechanical.test.mjs` runs the fixture cases in `apply-mechanical.fixtures/`.
 
