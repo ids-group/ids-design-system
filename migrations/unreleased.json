@@ -115,8 +115,22 @@
   "informational": [
     "`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a slot, or about an attribute that names no slot. That content still renders in the body. A test or screenshot that waited for the `Dev warning` toast these raised has nothing to wait for.",
     {
-      "text": "The ds-breadcrumbs row clips horizontally only, so the descenders of g, j, p, q and y below its line box are no longer cut flat; the row's height is unchanged.",
-      "verify": "open a page with breadcrumbs whose labels hold g, j, p, q or y and confirm the descenders are whole, the row height is as before, and a keyboard focus ring on a crumb is fully visible."
+      "text": "Text that truncates or clips keeps its ascenders and descenders under any font: `ds-breadcrumbs`, the `ds-stat` label and value, every label ending in an ellipsis (`ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-sidenav-item`, `ds-sidenav-footer`, `ds-tree`, `ds-banner`, `ds-table` headers and cells), fit-mode chips, the `ds-date-picker` value, the `ds-filter-bar` row and resizable `ds-table` headers clip along the inline axis only. Their boxes keep their size.",
+      "verify": "set `--font-sans` to a font taller than its line box (a script or display face) and confirm the tails of g, j, p, q and y show whole in breadcrumbs, select values, table cells and a stat value, and that no row changed height.",
+      "evidence": [
+        "command:node tools/measure-glyph-clip.mjs <after-docs> <out> <before-run>/glyph-clip.json"
+      ]
+    },
+    {
+      "text": "`text-clip.single-line-ellipsis` from `styles/text-clip` now clips the inline axis only; ink above and below the box paints over its neighbours as in any unclipped box. `text-clip.inline-axis` and `text-clip.line-clamp($lines)` are new in the same partial.",
+      "verify": "where a rule of yours includes `text-clip.single-line-ellipsis` in a box shorter than its text, confirm no glyph now paints over a neighbour."
+    },
+    {
+      "text": "A `ds-stat` value clamped with `--ds-stat-value-lines` uses `line-height: normal`, so its tile is taller: two lines at the default size grow the tile from 147 to 165px in Mulish. In a browser without container style queries an unclamped value takes `line-height: normal` too.",
+      "verify": "open a stat that sets `--ds-stat-value-lines` and confirm the value shows whole lines with no accent of the next line peeking under the last, and that the tile's height fits its card.",
+      "evidence": [
+        "command:node tools/measure-glyph-clip.mjs <after-docs> <out> <before-run>/glyph-clip.json"
+      ]
     }
   ],
   "deleteList": []
