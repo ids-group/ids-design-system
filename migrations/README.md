@@ -127,6 +127,15 @@ asserts. Fixtures
 are kept in the repository and not shipped. Only `.ts` is compiled: template fixtures
 (`strictTemplates`, `.html`) are not supported yet.
 
+**Locator fixtures.** `migrations/fixtures/<version>/<id>.found.<ext>` holds consumer code an item
+must locate, and `<id>.ignored.<ext>` a look-alike it must not count (the same attribute on another
+element), `ext` being `html`, `ts` or `scss`. They are searched the way the usage finder searches: a
+literal grep for `old` (the attribute of an `element[attr]`), every `searchHints` entry and every
+`detect` shape, where a hit from `old` or a hint counts only inside the element `old` names, and a
+`detect` hit is scoped the same way only on a template-only item. A `.found` snippet nothing locates
+is a locator defect in the manifest, and an `.ignored` one a hit survives in is a scope defect.
+Every item of the draft carries a `.found` fixture; they are kept in the repository and not shipped.
+
 The prose CHANGELOG is the human copy of a release; the manifest is its machine mirror of the
 same release. Where the two disagree, the CHANGELOG is the one to trust.
 
