@@ -25,6 +25,7 @@ import type { AccordionChevron } from './accordion.types';
         display: block;
         border: var(--border-width-default) solid var(--border-divider);
         border-radius: var(--radius-lg);
+        /* glyph-clip-guard: rounds the corners; every head and body pads its text off this edge */
         overflow: hidden;
       }
     `,

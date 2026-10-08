@@ -1,6 +1,8 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ButtonComponent } from 'ds/button';
 import { TabComponent, TabsComponent } from 'ds/tabs';
+import { InfoHintComponent } from 'ds/info-hint';
+import { DefinitionTermDirective } from 'ds/definition-term';
 import { TooltipDirective, TooltipPanelComponent } from 'ds/tooltip';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
@@ -9,7 +11,9 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   standalone: true,
   imports: [
     ButtonComponent,
+    DefinitionTermDirective,
     DocsSectionComponent,
+    InfoHintComponent,
     TabComponent,
     TabsComponent,
     TooltipDirective,

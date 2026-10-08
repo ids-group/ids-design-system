@@ -1,8 +1,11 @@
 import {
+  DOCUMENT,
   Directive,
   ElementRef,
   HostListener,
+  InjectionToken,
   OnDestroy,
+  Signal,
   afterNextRender,
   booleanAttribute,
   inject,
@@ -13,6 +16,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { TooltipPanelComponent } from './tooltip-panel.component';
 import { escapeTooltipMarkup, plainTooltipText } from './tooltip-markup';
 import {
+  closeOnScroll,
   overlayPlacementOf,
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
@@ -70,7 +74,19 @@ function firstClippedHost(
     .find((tooltip) => tooltip.isClipped());
 }
 
+const PINNED_ATTRIBUTE = 'data-ds-tooltip-pinned';
+
 let nextId = 0;
+
+/** @internal Lets a component that hosts the tooltip make a clipped host lead the tip with its own text. */
+export const TOOLTIP_LEADS_WITH_OWN_TEXT = new InjectionToken<boolean>(
+  'TOOLTIP_LEADS_WITH_OWN_TEXT',
+);
+
+/** @internal Lets a component that hosts the tooltip decide `dsTooltipPinOnClick` for it. */
+export const TOOLTIP_PIN_ON_CLICK = new InjectionToken<Signal<boolean>>(
+  'TOOLTIP_PIN_ON_CLICK',
+);
 
 @Directive({
   selector: '[dsTooltip], [dsTooltipWhenClipped]',
@@ -79,6 +95,14 @@ let nextId = 0;
 export class TooltipDirective implements OnDestroy {
   private readonly overlay = inject(Overlay);
   private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly document = inject(DOCUMENT);
+  private readonly hostPinOnClick = inject(TOOLTIP_PIN_ON_CLICK, {
+    self: true,
+    optional: true,
+  });
+  private readonly leadsWithOwnText =
+    inject(TOOLTIP_LEADS_WITH_OWN_TEXT, { self: true, optional: true }) ??
+    false;
 
   /** Tip text. An empty string turns the tooltip off. */
   readonly dsTooltip = input<string>('');
@@ -98,6 +122,11 @@ export class TooltipDirective implements OnDestroy {
    *  whose text it discloses. Resolved on every open; while nothing matches, no clipped tip opens. */
   readonly dsTooltipTextSelector = input<string | null>(null);
 
+  /** Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves
+   *  until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip.
+   *  While pinned the host carries `data-ds-tooltip-pinned`, a hook for styling the pinned trigger. */
+  readonly dsTooltipPinOnClick = input(false, { transform: booleanAttribute });
+
   get hostElement(): HTMLElement {
     return this.host.nativeElement;
   }
@@ -116,11 +145,15 @@ export class TooltipDirective implements OnDestroy {
     return textElement !== null && isTextClipped(textElement);
   }
 
+  private pinsOnClick(): boolean {
+    return this.hostPinOnClick?.() ?? this.dsTooltipPinOnClick();
+  }
+
   private ownText(): string {
     return (this.textElement()?.textContent ?? '').trim();
   }
 
-  /** A clipped host puts its own text, in bold, above the tip unless the tip already says it. */
+  /** A host that leads with its own text puts it, in bold, above the tip while it is clipped, unless the tip already says it. */
   private tipText(): string {
     const given = this.dsTooltip();
     const own = this.ownText();
@@ -128,6 +161,7 @@ export class TooltipDirective implements OnDestroy {
       return this.dsTooltipWhenClipped() ? escapeTooltipMarkup(own) : '';
     }
     if (
+      this.leadsWithOwnText &&
       own &&
       this.isClipped() &&
       !this.contains(plainTooltipText(given), own)
@@ -156,6 +190,7 @@ ${given}`;
 
   private ref: OverlayRef | null = null;
   private timer: number | null = null;
+  private unpin: (() => void) | null = null;
   private readonly tipId = `ds-tooltip-${++nextId}`;
 
   /**
@@ -252,7 +287,10 @@ ${given}`;
   }
 
   private scheduleShow(): void {
-    if (!this.tipText()) {
+    if (this.unpin || !this.tipText()) {
+      return;
+    }
+    if (this.pinsOnClick() && this.ref?.hasAttached()) {
       return;
     }
     if (this.dsTooltipWhenClipped() && !this.isClipped()) {
@@ -261,18 +299,72 @@ ${given}`;
     if (this.timer !== null) {
       clearTimeout(this.timer);
     }
-    this.timer = window.setTimeout(() => this.show(), this.dsTooltipDelay());
+    this.timer = window.setTimeout(
+      () => this.show(),
+      this.pinsOnClick() ? 0 : this.dsTooltipDelay(),
+    );
+  }
+
+  @HostListener('mouseleave')
+  protected onPointerLeave(): void {
+    if (!this.unpin) {
+      this.onClose();
+    }
   }
 
   // Close on click too: a re-rendered anchor under a stationary cursor fires no mouseleave.
-  @HostListener('mouseleave')
   @HostListener('click')
+  protected onClick(): void {
+    if (this.pinsOnClick() && !this.unpin) {
+      this.pin();
+    } else {
+      this.onClose();
+    }
+  }
+
   protected onClose(): void {
     if (this.timer !== null) {
       clearTimeout(this.timer);
       this.timer = null;
     }
+    this.unpin?.();
     this.disposeRef();
+  }
+
+  private pin(): void {
+    if (this.timer !== null) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+    if (!this.ref?.hasAttached()) {
+      if (!this.tipText()) {
+        return;
+      }
+      this.show();
+    }
+    const closeOutside = (event: Event) => {
+      const target = event.target as Node;
+      if (
+        !this.hostElement.contains(target) &&
+        !this.ref?.overlayElement.contains(target)
+      ) {
+        this.onClose();
+      }
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        this.onClose();
+      }
+    };
+    this.document.addEventListener('pointerdown', closeOutside, true);
+    this.document.addEventListener('keydown', closeOnEscape, true);
+    this.hostElement.setAttribute(PINNED_ATTRIBUTE, '');
+    this.unpin = () => {
+      this.unpin = null;
+      this.hostElement.removeAttribute(PINNED_ATTRIBUTE);
+      this.document.removeEventListener('pointerdown', closeOutside, true);
+      this.document.removeEventListener('keydown', closeOnEscape, true);
+    };
   }
 
   private disposeRef(): void {
@@ -327,6 +419,9 @@ ${given}`;
       scrollStrategy: this.overlay.scrollStrategies.close(),
     });
     prepareOverlayEnter(this.ref, this.host.nativeElement, positionStrategy);
+    // The CDK strategy sees only the window and cdkScrollable ancestors, not a plain overflow container.
+    const stopScrollClose = closeOnScroll(this.ref, () => this.onClose());
+    this.ref.detachments().subscribe(stopScrollClose);
 
     const cmpRef = this.ref.attach(new ComponentPortal(TooltipPanelComponent));
     const text = this.tipText();
@@ -340,6 +435,8 @@ ${given}`;
       ),
     );
     cmpRef.setInput('panelId', this.tipId);
+    this.pointArrowAtHost(this.ref, cmpRef.location.nativeElement);
+    this.ref.detachments().subscribe(() => this.unpin?.());
     if (this.disclosesOwnText(text)) {
       return;
     }
@@ -350,6 +447,28 @@ ${given}`;
       'aria-describedby',
       existing ? `${existing} ${this.tipId}` : this.tipId,
     );
+  }
+
+  // positionChanges skips a re-apply that only pushes the pane; the styles CDK writes do not.
+  // The pane is measured, not the panel: the panel's enter animation scales it.
+  private pointArrowAtHost(ref: OverlayRef, panel: HTMLElement): void {
+    const pane = ref.overlayElement;
+    const point = () => {
+      const trigger = this.hostElement.getBoundingClientRect();
+      const box = pane.getBoundingClientRect();
+      panel.style.setProperty(
+        '--_tooltip-arrow-x',
+        `${trigger.left + trigger.width / 2 - box.left - panel.clientLeft}px`,
+      );
+      panel.style.setProperty(
+        '--_tooltip-arrow-y',
+        `${trigger.top + trigger.height / 2 - box.top - panel.clientTop}px`,
+      );
+    };
+    const observer = new MutationObserver(point);
+    observer.observe(ref.hostElement, { attributeFilter: ['style'] });
+    observer.observe(pane, { attributeFilter: ['style'] });
+    ref.detachments().subscribe({ complete: () => observer.disconnect() });
   }
 
   private positionFor(placement: TooltipPlacement) {

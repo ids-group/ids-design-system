@@ -1,0 +1,65 @@
+@use '../../styles/focus';
+@use '../../styles/pinned';
+
+// `[dsDefinitionTerm]` on any element. The states only recolour: padding or a border would shift the
+// running text around the term.
+
+.ds-definition-term {
+  --_term-line-color: var(--text-tertiary);
+  --_term-line-color-hover: var(--text-secondary);
+  --_term-color-pressed: var(--text-primary);
+  --_term-bg-pressed: var(--surface-muted);
+
+  cursor: pointer;
+  text-decoration: underline dotted var(--_term-line-color);
+  text-underline-offset: 3px;
+  border-radius: var(--radius-sm);
+  box-decoration-break: clone;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard),
+    text-decoration-color var(--duration-fast) var(--ease-standard);
+
+  &:where(button) {
+    appearance: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    text-align: inherit;
+    color: inherit;
+  }
+
+  &:hover {
+    text-decoration: underline solid var(--_term-line-color-hover);
+  }
+
+  &:focus-visible {
+    @include focus.ring;
+  }
+
+  &:active,
+  &[data-ds-pressed] {
+    color: var(--_term-color-pressed);
+    background: var(--_term-bg-pressed);
+    box-shadow: 0 0 0 2px var(--_term-bg-pressed);
+    text-decoration: underline solid var(--_term-color-pressed);
+  }
+
+  &[data-ds-tooltip-pinned] {
+    @include pinned.cue;
+
+    &:hover {
+      @include pinned.cue-hover(2px);
+    }
+
+    &:active,
+    &[data-ds-pressed] {
+      @include pinned.cue-pressed(2px);
+    }
+  }
+}

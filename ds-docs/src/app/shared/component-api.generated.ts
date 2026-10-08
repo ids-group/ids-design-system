@@ -3639,6 +3639,52 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "definition-term": {
+    "key": "definition-term",
+    "selector": "[dsDefinitionTerm]",
+    "isElement": false,
+    "className": "DefinitionTermDirective",
+    "status": "stable",
+    "importName": "DefinitionTermDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/definition-term",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Keeps the definition open after a click until a click outside, `Escape` or blur. Turn it off where the click already does something, such as sorting a table column."
+      },
+      {
+        "name": "dsDefinitionTerm",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Tip text. An empty string turns the tooltip off."
+      },
+      {
+        "name": "dsTooltipPlacement",
+        "kind": "input",
+        "type": "TooltipPlacement",
+        "union": [
+          "top",
+          "bottom",
+          "left",
+          "right"
+        ],
+        "default": "'top'",
+        "required": false,
+        "description": "Which side the tip opens on. With no room there it opens on the opposite side."
+      }
+    ],
+    "outputs": []
+  },
   "description-list:DescriptionItemComponent": {
     "key": "description-list",
     "selector": "ds-description-item",
@@ -4723,6 +4769,50 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fires on click unless disabled."
       }
     ]
+  },
+  "info-hint": {
+    "key": "info-hint",
+    "selector": "ds-info-hint",
+    "isElement": true,
+    "className": "InfoHintComponent",
+    "status": "stable",
+    "importName": "InfoHintComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/info-hint",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "text",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "The supplementary text, shown on hover and focus and kept open by a click."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "Accessible name of the icon button, such as \"About conversion rate\"."
+      },
+      {
+        "name": "icon",
+        "kind": "input",
+        "type": "'help' | 'info'",
+        "union": [
+          "help",
+          "info"
+        ],
+        "default": "'help'",
+        "required": false,
+        "description": "`'help'` draws a question mark in a circle, `'info'` an \"i\"."
+      }
+    ],
+    "outputs": []
   },
   "input": {
     "key": "input",
@@ -11608,6 +11698,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Selector for the element inside the host whose clipping `dsTooltipWhenClipped` tests and whose text it discloses. Resolved on every open; while nothing matches, no clipped tip opens."
+      },
+      {
+        "name": "dsTooltipPinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip. While pinned the host carries `data-ds-tooltip-pinned`, a hook for styling the pinned trigger."
       }
     ],
     "outputs": []

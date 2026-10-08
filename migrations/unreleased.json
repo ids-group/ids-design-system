@@ -42,13 +42,13 @@
         "extends TooltipDirective",
         "dsTooltipClippedLead"
       ],
-      "action": "Delete the `dsTooltipClippedLead` binding. Where it carried the host's own text, nothing replaces it. Where it carried other text, write it into the tooltip string as `'**' + lead + '**\n' + tip`. A subclass of TooltipDirective that declared `dsTooltipClippedLead` has nothing to rename any more.",
-      "appliesWhen": "Only an element that binds `dsTooltipClippedLead`, and a class that extends TooltipDirective. `dsTooltip`, `dsTooltipWhenClipped` and `dsTooltipTextSelector` are unchanged, and a `ds-table` header with a `hint` needs nothing.",
+      "action": "Delete the `dsTooltipClippedLead` binding. A `ds-table` header with a `hint` needs nothing in its place. Where it carried other text, write it into the tooltip string as `'**' + lead + '**\n' + tip`. A subclass of TooltipDirective that declared `dsTooltipClippedLead` has nothing to rename any more.",
+      "appliesWhen": "Only an element that binds `dsTooltipClippedLead`, and a class that extends TooltipDirective. `dsTooltip`, `dsTooltipWhenClipped` and `dsTooltipTextSelector` are unchanged.",
       "evidence": [
         "command:node tools/public-api-golden.mjs --diff v0.14.8"
       ],
-      "pitfall": "Deleting the binding drops the lead line where it was text other than the host's own; a clipped host leads with its own text in bold, never with a different one.",
-      "verify": "No template or class binds `dsTooltipClippedLead`, the app compiles, and a clipped host that used it shows its text in bold above the tip."
+      "pitfall": "Deleting the binding drops the lead line; a tooltip never adds the host's text by itself, only a `dsDefinitionTerm` does.",
+      "verify": "No template or class binds `dsTooltipClippedLead`, the app compiles, and a tooltip that used it shows its lead line, written into the string."
     },
     {
       "id": "tooltip-bold-markup",
@@ -75,24 +75,6 @@
       "verify": "Every tooltip string whose text contains `**` shows the asterisks, or bold where bold was meant."
     },
     {
-      "id": "tooltip-clipped-host-leads-with-own-text",
-      "kind": "behavior",
-      "old": "dsTooltipWhenClipped",
-      "new": null,
-      "surface": "none",
-      "searchHints": [
-        "dsTooltip",
-        "dsTooltipWhenClipped",
-        "text-overflow: ellipsis"
-      ],
-      "detect": [],
-      "action": "None. To keep one tooltip from repeating the host's text, include that text in its `dsTooltip` string.",
-      "appliesWhen": "A host with `dsTooltip` or `dsTooltipWhenClipped` that shows less text than it holds and whose tip does not already contain that text. A host that fits, and a tip that already contains the host's text, read as before.",
-      "pitfall": "A screenshot of a clipped button or label with a tooltip gains a bold first line.",
-      "restore": null,
-      "verify": "Narrow a button or label that has a `dsTooltip` until it clips and open the tooltip: its text is bold on the first line, the tip below."
-    },
-    {
       "id": "tooltip-classes-member-surface",
       "kind": "behavior",
       "old": "TooltipPanelComponent",
@@ -111,7 +93,7 @@
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
       "restore": null,
       "verify": "The app builds with no member-collision error against TooltipDirective or TooltipPanelComponent.",
-      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 3: the private contains and ownText and the public dsTooltipArrow; it lost dsTooltipClippedLead."
+      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 13: contains, document, dsTooltipArrow, dsTooltipPinOnClick, hostPinOnClick, leadsWithOwnText, onClick, onPointerLeave, ownText, pin, pinsOnClick, pointArrowAtHost and unpin; it lost dsTooltipClippedLead."
     }
   ],
   "informational": [
@@ -119,7 +101,69 @@
       "text": "A `<div actions>` (or `<div drawer-footer>`) wrapper in the footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet` gets `display: contents` at zero specificity, so its buttons take the footer's gap, alignment and `ds-modal-card` stacking. A `display` set on the wrapper in your own styles still wins.",
       "verify": "Open a dialog, drawer or bottom sheet whose buttons sit in a `<div actions>` and confirm they are spaced like buttons that carry `actions` themselves, not touching."
     },
-    "`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a slot, or about an attribute that names no slot. That content still renders in the body. A test or screenshot that waited for the `Dev warning` toast these raised has nothing to wait for."
+    "`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a slot, or about an attribute that names no slot. That content still renders in the body. A test or screenshot that waited for the `Dev warning` toast these raised has nothing to wait for.",
+    {
+      "text": "dsDefinitionTerm loads its own .ds-definition-term styles when the first term renders, so an app that assembles the style partials one by one instead of using styles/ds needs nothing.",
+      "verify": "in an app that does not import styles/ds, open a ds-table with a hinted column and confirm the header label has a dotted underline and turns accent with a 2px underline after a click."
+    },
+    {
+      "text": "A ds-table header label with a hint is a button[dsDefinitionTerm]: a plain label pins its hint on click and takes the term's hover, pressed and pinned states; a sortable one sorts on click and pins nothing.",
+      "verify": "click a plain hinted ds-table header label, move the pointer away and confirm the hint stays open and the label shows the pinned accent until a click outside; click a sortable hinted label and confirm it sorts and no hint stays open."
+    },
+    {
+      "text": "A tooltip's arrow points at the centre of its trigger when the panel is pushed off a viewport edge.",
+      "verify": "open a tooltip on a trigger near the left and the right viewport edge and confirm the arrow sits under the trigger's centre."
+    },
+    {
+      "text": "Text that truncates or clips keeps its ascenders and descenders under any font: `ds-breadcrumbs`, the `ds-stat` label and value, every label ending in an ellipsis (`ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-sidenav-item`, `ds-sidenav-footer`, `ds-tree`, `ds-banner`, `ds-table` headers and cells), fit-mode chips, the `ds-date-picker` value, the `ds-filter-bar` row and resizable `ds-table` headers clip along the inline axis only. Their boxes keep their size.",
+      "verify": "set `--font-sans` to a font taller than its line box (a script or display face) and confirm the tails of g, j, p, q and y show whole in breadcrumbs, select values, table cells and a stat value, and that no row changed height.",
+      "evidence": [
+        "command:node tools/measure-glyph-clip.mjs <after-docs> <out> <before-run>/glyph-clip.json"
+      ]
+    },
+    {
+      "text": "`text-clip.single-line-ellipsis` from `styles/text-clip` now clips the inline axis only; ink above and below the box paints over its neighbours as in any unclipped box. `text-clip.inline-axis` and `text-clip.line-clamp($lines)` are new in the same partial.",
+      "verify": "where a rule of yours includes `text-clip.single-line-ellipsis` in a box shorter than its text, confirm no glyph now paints over a neighbour."
+    },
+    {
+      "text": "A `ds-stat` value clamped with `--ds-stat-value-lines` uses `line-height: normal`, so its tile is taller: two lines at the default size grow the tile from 147 to 165px in Mulish. In a browser without container style queries an unclamped value takes `line-height: normal` too.",
+      "verify": "open a stat that sets `--ds-stat-value-lines` and confirm the value shows whole lines with no accent of the next line peeking under the last, and that the tile's height fits its card.",
+      "evidence": [
+        "command:node tools/measure-glyph-clip.mjs <after-docs> <out> <before-run>/glyph-clip.json"
+      ]
+    },
+    "dsTooltipPinOnClick opens a tooltip on hover and focus with no delay and keeps it open after a click until a click outside, Escape or blur; a second click closes it. Without it a click closes the tooltip as before. While pinned the host carries data-ds-tooltip-pinned, a styling hook for the pinned trigger. Every pinned trigger of the library shows --accent-strong ink with no fill, plus a 2px solid accent underline on a text trigger; hover thickens the line to 3px and a press adds the --surface-muted fill (an icon takes a --surface-muted circle on hover and a --border-default circle on press). @include pinned.cue(), pinned.cue-hover() and pinned.cue-pressed() from styles/pinned give a trigger of your own the same cue, its hover and its press.",
+    "ds-info-hint (InfoHintComponent) is a question-mark icon button (icon=\"info\" draws an \"i\"): ariaLabel names it, text shows on hover and focus and stays open after a click. The icon darkens on hover, sits on a muted circle while pressed and turns --accent-strong while pinned.",
+    "dsDefinitionTerm (DefinitionTermDirective) marks a term on any element with a dotted underline in --text-tertiary and shows its definition on hover and focus, pinned on click; on a host other than button it adds tabindex=\"0\", role=\"button\" and Enter / Space; [pinOnClick]=\"false\" turns the pin off. Hover makes the underline solid, a press tints the term with --surface-muted, and a pinned term turns --accent-strong with a 2px solid accent underline; no state changes its size.",
+    {
+      "text": "A tooltip (dsTooltip, ds-info-hint, dsDefinitionTerm, a hinted ds-table header) and a ds-menu-item submenu close on a scroll of the window or of any scroll container under them; a pinned tooltip unpins.",
+      "verify": "open a tooltip and pin another inside a scrolling panel of your app, scroll the panel and confirm both close instead of staying where they opened."
+    }
   ],
-  "deleteList": []
+  "deleteList": [
+    {
+      "id": "hand-built-info-hint",
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "find": [
+        "name=\"info\""
+      ],
+      "why": "ds-info-hint renders the icon button, its accessible name and the pinned tooltip.",
+      "replaceWith": "<ds-info-hint ariaLabel=\"...\" text=\"...\" />; keep a hand-built button whose click does something besides showing the text"
+    },
+    {
+      "id": "hand-built-definition-term",
+      "surface": [
+        "template",
+        "style"
+      ],
+      "find": [
+        "underline dotted"
+      ],
+      "why": "dsDefinitionTerm carries the dotted underline, the focus ring, the keyboard access and the pinned tooltip.",
+      "replaceWith": "<span dsDefinitionTerm=\"...\">; keep a dotted underline that marks something other than a term with a definition"
+    }
+  ]
 }
