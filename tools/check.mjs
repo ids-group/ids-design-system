@@ -43,6 +43,7 @@ const EXTRA = {
   'changelog-pending:audit': ['tools/check-changelog-pending.mjs', '--audit'],
   'manifest-claims:audit': ['tools/check-manifest-claims.mjs', '--audit'],
   'manifest-compile:audit': ['tools/check-manifest-compile.mjs', '--audit'],
+  'manifest-detect:audit': ['tools/check-manifest-detect.mjs', '--audit'],
   'token-defaults:audit': ['tools/check-token-defaults.mjs', '--audit'],
   'class-member-notes:audit': ['tools/check-class-member-notes.mjs', '--audit'],
   probes: ['tools/run-probes.mjs'],
@@ -60,6 +61,8 @@ export const GROUPS = {
   // a change is cheapest to describe in the session that made it. `manifest-claims` is in: it reads
   // only the draft manifest and `## Unreleased`, which every PR can change. `token-defaults` is in:
   // any stylesheet edit can move a default, and it reads one tag and the working tree.
+  // `manifest-detect` is in: it greps a few fixture files with no tree to extract, and the draft
+  // item it asks a fixture for is cheapest to give one in the session that wrote the item.
   lint: [
     'tools-parse',
     'entry-point-imports',
@@ -80,6 +83,7 @@ export const GROUPS = {
     'changelog-pending',
     'manifest-coverage',
     'manifest-claims',
+    'manifest-detect',
     'token-defaults',
     'design-sync-log',
     'docs-attrs',
@@ -96,8 +100,10 @@ export const GROUPS = {
   // because the cut is the last moment to catch them: once a block is published, a consumer has
   // read the manifest's silence as "this release does not touch me". `manifest-claims` and
   // `token-defaults` for the same reason: an unmeasured claim and a default that moved unnamed both
-  // read as facts the moment they ship. `class-member-notes` follows `class-surface-entry`: that one
-  // asks whether a class is named, this one whether every member it gained or lost is. The PR gate
+  // read as facts the moment they ship. `manifest-detect` too: a locator that finds nothing is
+  // recorded "not applicable" by the consumer's upgrade, and a clean re-check agrees.
+  // `class-member-notes` follows `class-surface-entry`: that one asks whether a class is named, this
+  // one whether every member it gained or lost is. The PR gate
   // runs most of the rest too, but it is manual, so a release can be cut from a branch where it never
   // fired. `changelog-pending` is here because the cut folds `## Unreleased` into the release block,
   // and a change it never named leaves with nothing describing it. Left out: deck-lint, whose subject
@@ -119,6 +125,8 @@ export const GROUPS = {
     'manifest-claims',
     'manifest-compile:selftest',
     'manifest-compile',
+    'manifest-detect:selftest',
+    'manifest-detect',
     'token-defaults:selftest',
     'token-defaults',
     'changelog-lint:selftest',
