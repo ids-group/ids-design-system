@@ -215,9 +215,21 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      &lt;button dsDefinitionTerm="…"&gt;
-    </code> marks a term with a
-    dotted underline and shows its definition on hover and focus; a click pins it.
+      dsDefinitionTerm="…"
+    </code> on any element marks a term with a
+    dotted underline and shows its definition on hover and focus; a click pins it. On a
+    <code class="t-mono-inline">
+      &lt;span&gt;
+    </code> it adds
+    <code class="t-mono-inline">
+      tabindex="0"
+    </code>,
+    <code class="t-mono-inline">
+      role="button"
+    </code> and Enter / Space; a
+    <code class="t-mono-inline">
+      &lt;button&gt;
+    </code> has those already.
     <code class="t-mono-inline">
       [pinOnClick]="false"
     </code> where the click already acts, as on a
@@ -226,12 +238,7 @@
 
   <div class="demo">
     <p class="t-s">
-      Contacts who
-      <button
-        type="button"
-        dsDefinitionTerm="Left the journey before the goal step, by any exit rule.">
-        exited
-      </button>
+      Contacts who <span dsDefinitionTerm="Left the journey before the goal step, by any exit rule.">exited</span>
       the journey are not counted as
       <button
         type="button"
@@ -263,11 +270,9 @@
       </span>
 
       <div class="state-stage is-horiz t-s">
-        <button
-          type="button"
-          dsDefinitionTerm="Left the journey before the goal step.">
+        <span dsDefinitionTerm="Left the journey before the goal step.">
           exited
-        </button>
+        </span>
 
         <ds-info-hint
           ariaLabel="About conversion rate"
@@ -281,12 +286,9 @@
       </span>
 
       <div class="state-stage is-horiz t-s">
-        <button
-          type="button"
-          class="pin-hover"
-          dsDefinitionTerm="Left the journey before the goal step.">
+        <span class="pin-hover" dsDefinitionTerm="Left the journey before the goal step.">
           exited
-        </button>
+        </span>
 
         <ds-info-hint
           class="pin-hover"
@@ -301,12 +303,9 @@
       </span>
 
       <div class="state-stage is-horiz t-s">
-        <button
-          type="button"
-          class="pin-active"
-          dsDefinitionTerm="Left the journey before the goal step.">
+        <span class="pin-active" dsDefinitionTerm="Left the journey before the goal step.">
           exited
-        </button>
+        </span>
 
         <ds-info-hint
           class="pin-active"
@@ -321,12 +320,9 @@
       </span>
 
       <div class="state-stage is-horiz t-s">
-        <button
-          type="button"
-          class="pin-pinned"
-          dsDefinitionTerm="Left the journey before the goal step.">
+        <span class="pin-pinned" dsDefinitionTerm="Left the journey before the goal step.">
           exited
-        </button>
+        </span>
 
         <ds-info-hint
           class="pin-pinned"
@@ -341,12 +337,9 @@
       </span>
 
       <div class="state-stage is-horiz t-s">
-        <button
-          type="button"
-          class="pin-focus"
-          dsDefinitionTerm="Left the journey before the goal step.">
+        <span class="pin-focus" dsDefinitionTerm="Left the journey before the goal step.">
           exited
-        </button>
+        </span>
 
         <ds-info-hint
           class="pin-focus"
@@ -367,7 +360,9 @@
     clipped, re-tested on every open. Without <code class="t-mono-inline">dsTooltip</code> it
     shows the host's own text. <code class="t-mono-inline">dsTooltipTextSelector</code> aims the
     clip test and text at a descendant; no match, no tip. A clipped host that also has a
-    <code class="t-mono-inline">dsTooltip</code> leads the tip with its own text in bold.
+    <code class="t-mono-inline">
+      dsTooltip
+    </code> leads the tip with its own text in bold.
   </p>
 
   <div class="demo">
