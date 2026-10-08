@@ -25,14 +25,16 @@
   `--accent-strong` on an `--accent-muted` circle while pinned.
   `InfoHintComponent` is exported from the package root.
 
-- **`button[dsDefinitionTerm]` marks a term that carries its definition.** `<button type="button"
-  dsDefinitionTerm="…">term</button>` looks like the surrounding text with a dotted underline in
-  `--text-tertiary`, takes the focus ring, shows the definition on hover and focus, and pins it on
-  click. Hover makes the underline solid in `--text-secondary`, a press tints the term with
-  `--surface-muted`, and a pinned term is `--accent-strong` on `--accent-subtitle` with a solid
+- **`dsDefinitionTerm` marks a term that carries its definition, on any element.**
+  `<span dsDefinitionTerm="…">term</span>` keeps the surrounding text style with a dotted underline
+  in `--text-tertiary`, takes the focus ring, shows the definition on hover and focus, and pins it
+  on click; the attribute value is the tooltip text. On a host other than `<button>` it adds
+  `tabindex="0"`, `role="button"`, and `Enter` / `Space` act as a click; on a `<button>` it sets
+  `type="button"`. Hover makes the underline solid in `--text-secondary`, a press tints the term
+  with `--surface-muted`, and a pinned term is `--accent-strong` on `--accent-subtitle` with a solid
   underline; no state changes its size. `[pinOnClick]="false"` turns the pin off where the click
-  already acts.
-  `DefinitionTermComponent` is exported from the package root.
+  already acts. The styles ship as `.ds-definition-term` in `styles/ds`.
+  `DefinitionTermDirective` is exported from the package root.
 
 - **`dsTooltip` renders `**bold**`.** Text between a pair of `**` is bold; `\*\*` is a literal `**`
   and an unpaired `**` stays as typed. The panel builds its content from the parsed text, so no
@@ -95,7 +97,7 @@
 | Delete | Why | Replace with |
 | --- | --- | --- |
 | a hand-built info button: `name="info"` on a `ds-icon` inside a `<button>` that carries `dsTooltip` | `ds-info-hint` renders the button, the icon and the pinned tooltip | `<ds-info-hint ariaLabel="…" text="…" />` |
-| a hand-built term button styled with `underline dotted` that carries `dsTooltip` | `button[dsDefinitionTerm]` carries the reset, the underline, the focus ring and the pinned tooltip | `<button type="button" dsDefinitionTerm="…">` |
+| a hand-built term button styled with `underline dotted` that carries `dsTooltip` | `dsDefinitionTerm` carries the underline, the focus ring, the keyboard access and the pinned tooltip | `<span dsDefinitionTerm="…">` |
 
 ## 0.14.8 — 2026-10-06
 
