@@ -72,6 +72,8 @@ function firstClippedHost(
     .find((tooltip) => tooltip.isClipped());
 }
 
+const PINNED_ATTRIBUTE = 'data-ds-tooltip-pinned';
+
 let nextId = 0;
 
 /** @internal Lets a component that hosts the tooltip decide `dsTooltipPinOnClick` for it. */
@@ -112,7 +114,8 @@ export class TooltipDirective implements OnDestroy {
   readonly dsTooltipClippedLead = input<string>('');
 
   /** Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves
-   *  until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip. */
+   *  until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip.
+   *  While pinned the host carries `data-ds-tooltip-pinned`, a hook for styling the pinned trigger. */
   readonly dsTooltipPinOnClick = input(false, { transform: booleanAttribute });
 
   get hostElement(): HTMLElement {
@@ -334,8 +337,10 @@ export class TooltipDirective implements OnDestroy {
     };
     this.document.addEventListener('pointerdown', closeOutside, true);
     this.document.addEventListener('keydown', closeOnEscape, true);
+    this.hostElement.setAttribute(PINNED_ATTRIBUTE, '');
     this.unpin = () => {
       this.unpin = null;
+      this.hostElement.removeAttribute(PINNED_ATTRIBUTE);
       this.document.removeEventListener('pointerdown', closeOutside, true);
       this.document.removeEventListener('keydown', closeOnEscape, true);
     };
