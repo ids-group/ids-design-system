@@ -139,7 +139,7 @@ export type {
   DateRangeValue,
   DateValue,
 } from '@ids-group-ltd/ids-design-system/components/date-picker';
-export { DefinitionTermComponent } from '@ids-group-ltd/ids-design-system/components/definition-term';
+export { DefinitionTermDirective } from '@ids-group-ltd/ids-design-system/components/definition-term';
 export {
   DescriptionItemComponent,
   DescriptionListComponent,

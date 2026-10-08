@@ -127,7 +127,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-popover> — PopoverComponent](overlays/ds-popover.md) — Floating panel anchored to a trigger via CDK overlay. Input: align: 'start' | 'end' = 'start' — controls overl
 - [[dsTooltip] — TooltipDirective](overlays/ds-tooltip.md) — Attribute directive, applied by dsTooltip or by dsTooltipWhenClipped alone. Apply to any focusable element; wi
 - [<ds-info-hint> — InfoHintComponent](overlays/ds-info-hint.md) — An info icon button (14px info icon) that shows supplementary text on hover and focus and keeps it open on cli
-- [button[dsDefinitionTerm] — DefinitionTermComponent](overlays/definition-term-component.md) — A term inside running text or a label that carries its definition: <button type="button" dsDefinitionTerm="Lef
+- [[dsDefinitionTerm] — DefinitionTermDirective](overlays/ds-definition-term.md) — Directive, on any element: a term inside running text or a label that carries its definition, <span dsDefiniti
 - [<ds-menu> + <ds-menu-item> — MenuComponent, MenuItemComponent](overlays/ds-menu.md) — Menu is a container. Item inputs: icon: IconName | null = null, disabled: boolean = false, danger: boolean = f
 - [<ds-tooltip-panel> — TooltipPanelComponent](overlays/ds-tooltip-panel.md) — <!-- inputs:ds-tooltip-panel -->
 

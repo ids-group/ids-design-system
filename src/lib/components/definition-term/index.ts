@@ -1,1 +1,1 @@
-export { DefinitionTermComponent } from './definition-term.component';
+export { DefinitionTermDirective } from './definition-term.directive';

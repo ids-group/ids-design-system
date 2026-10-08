@@ -1172,7 +1172,7 @@
   /* BACKGROUND: the frame and every knockout between marks. Read where it is used: a token deriving
      from it on :root would ignore one set on a single chart. */
   --chart-bg-color: var(--surface-default);
-  /* FRAME: inside a card, drop it with --ds-chart-frame-border-width: 0 and --ds-chart-frame-padding: 0. */
+  /* FRAME: inside a card use frame="none" / DS_CONFIG.chart.frame; these tokens size the frame when it is on. */
   --chart-frame-border-color: var(--border-default);
   --chart-frame-border-width: var(--border-width-default);
   --chart-frame-radius: var(--radius-lg);
@@ -1620,6 +1620,48 @@ h1, h2, h3, h4, h5, h6 {
 }
 .link.lg {
   font-size: var(--font-size-l);
+}
+
+.ds-definition-term {
+  --_term-line-color: var(--text-tertiary);
+  --_term-line-color-hover: var(--text-secondary);
+  --_term-color-pressed: var(--text-primary);
+  --_term-bg-pressed: var(--surface-muted);
+  --_term-color-pinned: var(--accent-strong);
+  --_term-bg-pinned: var(--accent-subtitle);
+  cursor: pointer;
+  text-decoration: underline dotted var(--_term-line-color);
+  text-underline-offset: 3px;
+  border-radius: var(--radius-sm);
+  box-decoration-break: clone;
+  transition: color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard), text-decoration-color var(--duration-fast) var(--ease-standard);
+}
+.ds-definition-term:where(button) {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-align: inherit;
+  color: inherit;
+}
+.ds-definition-term:hover {
+  text-decoration: underline solid var(--_term-line-color-hover);
+}
+.ds-definition-term:active {
+  color: var(--_term-color-pressed);
+  background: var(--_term-bg-pressed);
+  box-shadow: 0 0 0 2px var(--_term-bg-pressed);
+  text-decoration: underline solid var(--_term-color-pressed);
+}
+.ds-definition-term[data-ds-tooltip-pinned] {
+  color: var(--_term-color-pinned);
+  background: var(--_term-bg-pinned);
+  box-shadow: 0 0 0 2px var(--_term-bg-pinned);
+  text-decoration: underline solid var(--_term-color-pinned);
 }
 
 [ds-color=secondary] {
