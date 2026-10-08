@@ -4,8 +4,8 @@
     {
       "id": "leave-keyframes-renamed",
       "kind": "token-rename",
-      "old": "modal-out / ds-sheet-down / ds-sheet-fade-out / drawer-panel-close-right|left|top|bottom / drawer-scrim-out",
-      "new": "ds-fade-out / ds-scale-out / ds-slide-out / ds-slide-edge-out",
+      "old": "modal-out / ds-sheet-down / ds-sheet-fade-out / drawer-panel-close-right / drawer-panel-close-left / drawer-panel-close-top / drawer-panel-close-bottom / drawer-scrim-out",
+      "new": "ds-fade-out / ds-slide-edge-out / ds-fade-out / ds-slide-edge-out / ds-slide-edge-out / ds-slide-edge-out / ds-slide-edge-out / ds-fade-out",
       "action": "Only if you referenced an old name from a GLOBAL stylesheet: `modal-out`, `ds-sheet-fade-out` and `drawer-scrim-out` map to `ds-fade-out`; `ds-sheet-down` and all four `drawer-panel-close-*` map to `ds-slide-edge-out`. After upgrading, open and close a modal, a drawer and a bottom sheet and confirm the page scrolls again afterwards.",
       "appliesWhen": "The old names were view-encapsulated, so only a global stylesheet could ever have referenced them. You also gain `--ds-modal-leave-keyframes`, `--ds-drawer-leave-keyframes` and `--ds-bottom-sheet-leave-keyframes`, the exit counterparts of the enter hooks.",
       "pitfall": "Point a leave hook at your own GLOBAL `@keyframes` only — Angular renames a component-scoped animation name, so a scoped one never resolves. And check the scroll after closing: teardown used to match the animation NAME on animationend, and a teardown that does not fire leaks the body-scroll lock. That is the failure this change could cause and the one it was tested for.",
