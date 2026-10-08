@@ -51,7 +51,9 @@ export class DefinitionTermDirective {
 
   constructor() {
     const app = inject(ApplicationRef);
-    if (appsWithTermStyles.has(app)) return;
+    if (appsWithTermStyles.has(app)) {
+      return;
+    }
     appsWithTermStyles.add(app);
     const styles = createComponent(DefinitionTermStylesComponent, {
       environmentInjector: inject(EnvironmentInjector),
