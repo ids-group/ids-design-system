@@ -1696,7 +1696,7 @@
 
   **Two of these fail quietly.** A static `sortDir="asc"` left behind is an unknown attribute:
   Angular leaves it on the DOM, the input keeps its default, and the table sorts by nothing with
-  no warning. And `[multi]="false"`, written to get a single-open accordion, becomes an unknown
+  no warning. And `multi="false"`, written to get a single-open accordion, becomes an unknown
   attribute against a default of `true` - the accordion opens several panels instead, silently.
   A property binding fails the build; a plain attribute does not.
 

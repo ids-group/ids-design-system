@@ -490,6 +490,9 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       `migrations/fixtures/<version>/<id>.found.<ext>`, and drop a look-alike in
       `<id>.ignored.<ext>` (README, "Locator fixtures").
       (`node tools/check.mjs manifest-detect`, in lint and the preflight)
+- [ ] A template outcome - an NG code, or a TS code only `strictTemplates` reports - is asserted by
+      `migrations/fixtures/<version>/<id>.component.ts`, its template inline and compiled by the
+      Angular compiler at both tags. (`node tools/check.mjs manifest-compile`, at the cut)
 - [ ] A published record that described something which never worked is resolved by one question —
       does anything the consumer DOES change? Yes → an item with an `action` here, in the library's
       voice. No → nothing, and a quiet correction to the old file if it still misleads. Never a line

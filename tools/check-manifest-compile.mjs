@@ -12,6 +12,12 @@
 //   // @ts-expect-error before TS2339          the other way round
 //   // @ts-expect-error both TS4114 TS2416     both tags report exactly these two
 //
+// `<id>.component.ts` is an Angular component whose inline `template:` is the consumer's
+// template. It goes through the Angular compiler with `strictTemplates`, and a template line
+// expected to fail carries the same directive as an HTML comment, codes TS or NG:
+//
+//   <!-- expect: after NG8002 -->             v<version> reports NG8002 on the next line
+//
 // Each fixture is type-checked at v<prev> and v<version> (`unreleased`: the last tag and the
 // working tree) against that tag's `src/`, mapped through that tag's own tsconfig `paths`. The
 // directives are stripped before compiling, because TypeScript's `@ts-expect-error` swallows ANY
@@ -20,11 +26,12 @@
 //
 // Fails on: a code mismatch on any line at either tag, a fixture whose id is not in its
 // manifest, a fixture that is not `.ts`, and an entry of `migrations/unreleased.json` naming a TS
-// code that its fixture does not assert.
+// or compile-time NG code that its fixture does not assert.
 //
 //   node tools/check-manifest-compile.mjs            # every fixture, plus the unreleased draft
 //   node tools/check-manifest-compile.mjs --audit    # the same, then every published entry whose
-//                                                    # TS-code claim no fixture asserts; exits 0
+//                                                    # TS/NG-code claim no fixture asserts; exits 0
+import { NgtscProgram } from '@angular/compiler-cli';
 import { execFileSync } from 'node:child_process';
 import {
   existsSync,
@@ -40,17 +47,22 @@ import ts from 'typescript';
 import { previousBoundary, releaseTags } from './release-tags.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const MIGRATIONS = process.env.DS_MIGRATIONS_DIR || join(ROOT, 'migrations');
+const MIGRATIONS = resolve(
+  process.env.DS_MIGRATIONS_DIR || join(ROOT, 'migrations'),
+);
 const FIXTURES = join(MIGRATIONS, 'fixtures');
 const AUDIT = process.argv.includes('--audit');
 const PACKAGE = '@ids-group-ltd/ids-design-system';
 const WORKING_TREE = 'the working tree';
 const VERSION_FOLDER = /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)$/;
 
-const DIRECTIVE = /^\s*\/\/\s*@ts-expect-error\b(.*)$/;
-const DIRECTIVE_BODY = /^\s+(before|after|both)((?:\s+TS\d{4})+)\s*$/;
+const DIRECTIVE =
+  /^\s*(?:\/\/\s*@ts-expect-error\b(.*)|<!--\s*expect:(.*?)-->\s*)$/;
+const DIRECTIVE_BODY = /^\s+(before|after|both)((?:\s+(?:TS|NG)\d{4})+)\s*$/;
 const SUPPRESSION = /@ts-(ignore|nocheck)\b/;
-const CLAIMED_CODE = /\bTS\d{4}\b/g;
+// NG0xxx are runtime errors; compile-time Angular codes start at NG1000.
+const CLAIMED_CODE = /\b(?:TS\d{4}|NG[1-9]\d{3})\b/g;
+const TEMPLATE_FIXTURE = '.component.ts';
 
 // The options a consumer's Angular app compiles with, minus emit. `noImplicitOverride` is in
 // because the Angular CLI scaffolds it, and it is what turns a new base member into TS4114.
@@ -81,10 +93,10 @@ function parseFixture(path) {
       );
     const directive = DIRECTIVE.exec(line);
     if (directive) {
-      const body = DIRECTIVE_BODY.exec(directive[1]);
+      const body = DIRECTIVE_BODY.exec(directive[1] ?? ` ${directive[2]}`);
       if (!body)
         errors.push(
-          `line ${index + 1}: write \`// @ts-expect-error before|after|both TS<code> ...\``,
+          `line ${index + 1}: write \`// @ts-expect-error before|after|both TS<code> ...\` or \`<!-- expect: before|after|both NG<code> ... -->\``,
         );
       else pending.push({ side: body[1], codes: body[2].trim().split(/\s+/) });
       return;
@@ -92,7 +104,7 @@ function parseFixture(path) {
     for (const { side, codes } of pending)
       for (const which of side === 'both' ? ['before', 'after'] : [side]) {
         const set = expected[which].get(index + 1) ?? new Set();
-        for (const code of codes) set.add(Number(code.slice(2)));
+        for (const code of codes) set.add(code);
         expected[which].set(index + 1, set);
       }
     pending = [];
@@ -131,7 +143,11 @@ function pathsFor(treeRoot) {
   };
 }
 
-function compile(treeRoot, label, fixtures) {
+// Angular reports its own diagnostics as negative codes, -99<NNNN> for NG<NNNN>.
+const codeName = (code) =>
+  code < 0 ? `NG${String(-code).slice(2)}` : `TS${code}`;
+
+function compile(treeRoot, label, fixtures, angular) {
   const paths = pathsFor(treeRoot);
   if (!paths) {
     for (const fixture of fixtures)
@@ -140,7 +156,12 @@ function compile(treeRoot, label, fixtures) {
       );
     return new Map();
   }
-  const options = { ...COMPILER_OPTIONS, baseUrl: treeRoot, paths };
+  const options = {
+    ...COMPILER_OPTIONS,
+    baseUrl: treeRoot,
+    paths,
+    ...(angular ? { strictTemplates: true } : {}),
+  };
   const host = ts.createCompilerHost(options);
   const texts = new Map(
     fixtures.map((fixture) => [
@@ -151,12 +172,17 @@ function compile(treeRoot, label, fixtures) {
   const readFile = host.readFile.bind(host);
   host.readFile = (file) =>
     texts.get(resolve(file).toLowerCase()) ?? readFile(file);
-  const program = ts.createProgram(
-    fixtures.map((fixture) => fixture.path),
-    options,
-    host,
-  );
-  for (const diagnostic of program.getOptionsDiagnostics())
+  const rootNames = fixtures.map((fixture) => fixture.path);
+  const angularProgram = angular && new NgtscProgram(rootNames, options, host);
+  const program = angularProgram
+    ? angularProgram.getTsProgram()
+    : ts.createProgram(rootNames, options, host);
+  for (const diagnostic of angularProgram
+    ? [
+        ...angularProgram.getTsOptionDiagnostics(),
+        ...angularProgram.getNgOptionDiagnostics(),
+      ]
+    : program.getOptionsDiagnostics())
     problems.push(
       `${label}: ${ts.flattenDiagnosticMessageText(diagnostic.messageText, ' ')}`,
     );
@@ -164,16 +190,22 @@ function compile(treeRoot, label, fixtures) {
   for (const fixture of fixtures) {
     const source = program.getSourceFile(fixture.path);
     const byLine = new Map();
-    for (const diagnostic of [
-      ...program.getSyntacticDiagnostics(source),
-      ...program.getSemanticDiagnostics(source),
-    ]) {
+    for (const diagnostic of angularProgram
+      ? [
+          ...angularProgram.getTsSyntacticDiagnostics(source),
+          ...angularProgram.getTsSemanticDiagnostics(source),
+          ...angularProgram.getNgSemanticDiagnostics(source.fileName),
+        ]
+      : [
+          ...program.getSyntacticDiagnostics(source),
+          ...program.getSemanticDiagnostics(source),
+        ]) {
       const line =
         source.getLineAndCharacterOfPosition(diagnostic.start ?? 0).line + 1;
       const entry = byLine.get(line) ?? { codes: new Set(), messages: [] };
-      entry.codes.add(diagnostic.code);
+      entry.codes.add(codeName(diagnostic.code));
       entry.messages.push(
-        `TS${diagnostic.code} ${ts.flattenDiagnosticMessageText(diagnostic.messageText, ' ')}`,
+        `${codeName(diagnostic.code)} ${ts.flattenDiagnosticMessageText(diagnostic.messageText, ' ')}`,
       );
       byLine.set(line, entry);
     }
@@ -182,13 +214,7 @@ function compile(treeRoot, label, fixtures) {
   return reported;
 }
 
-const codes = (set) =>
-  set?.size
-    ? [...set]
-        .sort()
-        .map((code) => `TS${code}`)
-        .join(' ')
-    : 'clean';
+const codes = (set) => (set?.size ? [...set].sort().join(' ') : 'clean');
 
 function compare(fixture, side, label, byLine) {
   const expected = fixture.parsed.expected[side];
@@ -243,11 +269,12 @@ function collectFixtures() {
       if (/\.(found|ignored)\.[a-z]+$/.test(file)) continue;
       if (extname(file) !== '.ts' || file.endsWith('.d.ts')) {
         problems.push(
-          `${name}: only .ts fixtures are compiled; a template (.html, strictTemplates) fixture is not supported`,
+          `${name}: only .ts fixtures are compiled; a template goes inline in <id>${TEMPLATE_FIXTURE}`,
         );
         continue;
       }
-      const id = file.slice(0, -'.ts'.length);
+      const template = file.endsWith(TEMPLATE_FIXTURE);
+      const id = file.slice(0, -(template ? TEMPLATE_FIXTURE : '.ts').length);
       if (!entries) {
         problems.push(`${name}: there is no migrations/${version}.json`);
         continue;
@@ -273,7 +300,16 @@ function collectFixtures() {
         );
         continue;
       }
-      fixtures.push({ name, version, id, path, parsed, before, after });
+      fixtures.push({
+        name,
+        version,
+        id,
+        path,
+        parsed,
+        before,
+        after,
+        template,
+      });
     }
   }
   return fixtures;
@@ -326,7 +362,12 @@ function runFixtures(fixtures) {
         });
       }
       const unique = [...new Set(entries.map((entry) => entry.fixture))];
-      const reported = compile(treeRoot, label, unique);
+      const plain = unique.filter((fixture) => !fixture.template);
+      const templated = unique.filter((fixture) => fixture.template);
+      const reported = new Map([
+        ...(plain.length ? compile(treeRoot, label, plain, false) : []),
+        ...(templated.length ? compile(treeRoot, label, templated, true) : []),
+      ]);
       for (const { fixture, side } of entries)
         if (reported.has(fixture))
           mismatches
@@ -367,7 +408,7 @@ function uncovered(version, fixtures) {
   for (const entry of manifestEntries(version) ?? []) {
     const missing = new Map();
     for (const { field, code } of claimsOf(entry)) {
-      if (asserted.get(entry.id)?.has(Number(code.slice(2)))) continue;
+      if (asserted.get(entry.id)?.has(code)) continue;
       missing.set(code, [...new Set([...(missing.get(code) ?? []), field])]);
     }
     if (missing.size)
@@ -404,7 +445,7 @@ if (AUDIT) {
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
   const gaps = published.flatMap((version) => uncovered(version, fixtures));
   console.log(
-    `\ncheck-manifest-compile --audit: ${gaps.length} published entr(ies) name a TS code no fixture asserts`,
+    `\ncheck-manifest-compile --audit: ${gaps.length} published entr(ies) name a TS/NG code no fixture asserts`,
   );
   for (const gap of gaps) console.log(`  ${gap}`);
   if (problems.length) {
