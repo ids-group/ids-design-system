@@ -13,7 +13,7 @@ import { cpSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { verdicts } from './check-token-defaults.mjs';
+import { hooksDefaultingTo, verdicts } from './check-token-defaults.mjs';
 import { defaultsOf, diffDefaults } from './token-diff.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -209,6 +209,111 @@ const cases = [
       '{ "informational": ["`--hit-md` is 24px under compact density."] }',
     expect: { '--hit-md': true },
   },
+  {
+    name: 'HOLDS: `--x-h/s/l` names each channel it spells',
+    before: {
+      'styles/_tokens.scss': ROOTS('  --tone-s: 100%;\n  --tone-l: 59%;'),
+    },
+    after: {
+      'styles/_tokens.scss': ROOTS('  --tone-s: 70%;\n  --tone-l: 56%;'),
+    },
+    manifest:
+      '{ "informational": ["`--tone-h/s/l` follow the violet ramp now."] }',
+    expect: { '--tone-s': true, '--tone-l': true },
+  },
+  {
+    name: 'FIRES: `--x-h` alone does not name `--x-s`',
+    before: { 'styles/_tokens.scss': ROOTS('  --tone-s: 100%;') },
+    after: { 'styles/_tokens.scss': ROOTS('  --tone-s: 70%;') },
+    manifest: '{ "informational": ["`--tone-h` moved."] }',
+    expect: { '--tone-s': false },
+  },
+  {
+    name: 'HOLDS: `--x(-suffix)` names the name with the suffix',
+    before: {
+      'components/pick/pick.component.scss':
+        ':host { --_r: var(--ds-pick-ring, none); --_e: var(--ds-pick-ring-error, none); }',
+    },
+    after: { 'components/pick/pick.component.scss': ':host { color: red; }' },
+    manifest:
+      '{ "items": [{ "action": "Rename `--ds-pick-ring(-error)` to `--ds-choose-ring(-error)`." }] }',
+    expect: { '--ds-pick-ring': true, '--ds-pick-ring-error': true },
+  },
+  {
+    name: 'FIRES: `--x` alone does not name `--x-error`',
+    before: {
+      'components/pick/pick.component.scss':
+        ':host { --_r: var(--ds-pick-ring, none); --_e: var(--ds-pick-ring-error, none); }',
+    },
+    after: { 'components/pick/pick.component.scss': ':host { color: red; }' },
+    manifest:
+      '{ "items": [{ "action": "Rename `--ds-pick-ring` to `--ds-choose-ring`." }] }',
+    expect: { '--ds-pick-ring': true, '--ds-pick-ring-error': false },
+  },
+  {
+    name: 'HOLDS: a moved global is named through the root hook declared as exactly its var()',
+    before: {
+      'styles/_tokens.scss': ROOTS(
+        '  --tip-text: var(--neutral-0);\n  --ds-tip-text-color: var(--tip-text);',
+      ),
+    },
+    after: {
+      'styles/_tokens.scss': ROOTS(
+        '  --tip-text: var(--neutral-900);\n  --ds-tip-text-color: var(--tip-text);',
+      ),
+    },
+    manifest:
+      '{ "items": [{ "restore": ":root { --ds-tip-text-color: var(--neutral-0); }" }] }',
+    expect: { '--tip-text': true, '--ds-tip-text-color': true },
+  },
+  {
+    name: 'FIRES: a component fallback that reads the global does not name it',
+    before: {
+      'styles/_tokens.scss': ROOTS('  --tip-text: var(--neutral-0);'),
+      'components/tip/tip.component.scss':
+        '.x { color: var(--ds-tip-label-color, var(--tip-text)); }',
+    },
+    after: {
+      'styles/_tokens.scss': ROOTS('  --tip-text: var(--neutral-900);'),
+      'components/tip/tip.component.scss':
+        '.x { color: var(--ds-tip-label-color, var(--tip-text)); }',
+    },
+    manifest:
+      '{ "informational": ["`--ds-tip-label-color` follows the tooltip text."] }',
+    expect: { '--tip-text': false, '--ds-tip-label-color': true },
+  },
+  {
+    name: 'HOLDS: equal two levels of var() down is cosmetic',
+    before: {
+      'styles/_tokens.scss': ROOTS(
+        '  --gray-0: #fff;\n  --neutral-0: var(--gray-0);\n  --static-white: #fff;\n  --on-primary: var(--neutral-0);',
+      ),
+    },
+    after: {
+      'styles/_tokens.scss': ROOTS(
+        '  --gray-0: #fff;\n  --neutral-0: var(--gray-0);\n  --static-white: #fff;\n  --on-primary: var(--static-white);',
+      ),
+    },
+    manifest: '{ "items": [] }',
+    expect: { '--on-primary': null },
+  },
+  {
+    name: 'FIRES: equal two levels down at the root, through a token another context redeclares',
+    before: {
+      'styles/_tokens.scss':
+        ROOTS(
+          '  --gray-0: #fff;\n  --neutral-0: var(--gray-0);\n  --static-white: #fff;\n  --on-primary: var(--neutral-0);',
+        ) + ":root[data-neutrals='brand'] {\n  --neutral-0: #f4f4f0;\n}",
+    },
+    after: {
+      'styles/_tokens.scss':
+        ROOTS(
+          '  --gray-0: #fff;\n  --neutral-0: var(--gray-0);\n  --static-white: #fff;\n  --on-primary: var(--static-white);',
+        ) + ":root[data-neutrals='brand'] {\n  --neutral-0: #f4f4f0;\n}",
+    },
+    manifest: '{ "items": [] }',
+    expect: { '--on-primary': false },
+  },
 ];
 
 let ran = 0;
@@ -222,8 +327,13 @@ const report = (ok, name, detail = '') => {
 };
 
 for (const testCase of cases) {
-  const changes = diffDefaults(tree(testCase.before), tree(testCase.after));
-  const results = verdicts(changes, testCase.manifest);
+  const before = tree(testCase.before);
+  const after = tree(testCase.after);
+  const results = verdicts(
+    diffDefaults(before, after),
+    testCase.manifest,
+    hooksDefaultingTo(before, after),
+  );
   const got = Object.fromEntries(
     results.map(({ change, named }) => [change.name, named]),
   );

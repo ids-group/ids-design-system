@@ -10,8 +10,9 @@
 //   * `deleted`: the property;
 //   * `renamed`: the OLD name. A consumer who set it is setting nothing now, which is a deletion
 //     to them; and where the default moved too, it is the 0.13.3 meter -> bar case.
-// A `cosmetic` update needs nothing: equal once notation is set aside, or once one level of
-// `var()` is resolved.
+// A global also counts as named through a named `--ds-` hook whose default is `var(<global>)`.
+// A `cosmetic` update needs nothing: equal once notation is set aside, or once up to two levels
+// of `var()` are resolved.
 //
 //   node tools/check-token-defaults.mjs             # migrations/unreleased.json vs the working tree
 //   node tools/check-token-defaults.mjs --audit     # every published boundary, reports only
@@ -21,15 +22,33 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { patternsIn } from './check-manifest-coverage.mjs';
 import { previousBoundary, releaseTags } from './release-tags.mjs';
-import { describe, tokenDiff } from './token-diff.mjs';
+import { defaultsAt, describe, tokenDiff } from './token-diff.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const MIGRATIONS = process.env.DS_MIGRATIONS_DIR || join(ROOT, 'migrations');
 
+// Two shorthands spell several names at once: alternative last segments `--secondary-h/s/l`
+// (`--secondary-h`, `--secondary-s`, `--secondary-l`) and an optional suffix
+// `--ds-dropdown-focus-shadow(-error)` (the name with and without it).
+function spelledOut(text) {
+  const names = [];
+  for (const [, stem, first, rest] of text.matchAll(
+    /(--[a-z0-9-]*-)([a-z0-9]+)((?:\/[a-z0-9]+)+)/g,
+  ))
+    for (const last of [first, ...rest.split('/').slice(1)])
+      names.push(stem + last);
+  for (const [, name, suffix] of text.matchAll(
+    /(--[a-z0-9-]*[a-z0-9])\((-[a-z0-9-]*[a-z0-9])\)/g,
+  ))
+    names.push(name, name + suffix);
+  return names;
+}
+
 // A name, a placeholder family (`--ds-*-bg`, `--status-<x>-bg`), or a prefix family written with
 // its trailing hyphen (`--ds-datepicker-`), the form manifest-truth also reads as a family. The
 // bare namespace `--ds-` is a prefix of everything and names nothing.
-export function namesIn(text) {
+export function namesIn(manifestText) {
+  const text = [manifestText, ...spelledOut(manifestText)].join('\n');
   const patterns = patternsIn(text);
   const prefixes = [...text.matchAll(/--[a-z0-9-]*[a-z0-9]-(?![\w*<-])/g)]
     .map((match) => match[0])
@@ -52,15 +71,41 @@ export function namesToCite(change) {
   return [change.name];
 }
 
+// Global -> the `--ds-` hooks declared at the root as exactly `var(<global>)`, on any side given:
+// the global's public face, through which a consumer restores it, so naming the hook names it. A
+// component fallback such as `var(--ds-avatar-bg-color, var(--primary-muted))` only reads the
+// global and answers for nothing else that reads it.
+export function hooksDefaultingTo(...sides) {
+  const hooks = new Map();
+  for (const side of sides)
+    for (const entry of side.entries.values()) {
+      if (
+        !entry.name.startsWith('--ds-') ||
+        entry.kind !== 'token' ||
+        entry.group !== 'root'
+      )
+        continue;
+      for (const value of entry.values.keys()) {
+        const global = /^var\((--(?!ds-)[a-z0-9-]+)\)$/.exec(value)?.[1];
+        if (!global) continue;
+        if (!hooks.has(global)) hooks.set(global, new Set());
+        hooks.get(global).add(entry.name);
+      }
+    }
+  return hooks;
+}
+
 // Every change but an addition, with whether the manifest text answers it: `null` for a cosmetic
 // one, which has nothing to answer.
-export function verdicts(changes, manifestText) {
+export function verdicts(changes, manifestText, hooksOfGlobal = new Map()) {
   const names = manifestText === null ? () => false : namesIn(manifestText);
+  const answered = (name) =>
+    names(name) || [...(hooksOfGlobal.get(name) ?? [])].some(names);
   return changes
     .filter((change) => change.change !== 'added')
     .map((change) => ({
       change,
-      named: change.cosmetic ? null : namesToCite(change).some(names),
+      named: change.cosmetic ? null : namesToCite(change).some(answered),
     }));
 }
 
@@ -139,6 +184,10 @@ function main() {
       const results = verdicts(
         tokenDiff(boundary.before, boundary.after),
         readFileSync(file, 'utf8'),
+        hooksDefaultingTo(
+          defaultsAt(boundary.before),
+          defaultsAt(boundary.after),
+        ),
       );
       owed += results.filter((result) => result.named !== null).length;
       missing += results.filter((result) => result.named === false).length;
@@ -160,7 +209,11 @@ function main() {
 
   const file = join(MIGRATIONS, 'unreleased.json');
   const manifest = existsSync(file) ? readFileSync(file, 'utf8') : null;
-  const results = verdicts(tokenDiff(tags.at(-1), null), manifest);
+  const results = verdicts(
+    tokenDiff(tags.at(-1), null),
+    manifest,
+    hooksDefaultingTo(defaultsAt(tags.at(-1)), defaultsAt(null)),
+  );
   const missing = results.filter((result) => result.named === false);
   if (missing.length) {
     console.error(
