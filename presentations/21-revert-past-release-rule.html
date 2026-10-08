@@ -126,6 +126,9 @@ describes.
     .dr-btn[data-v="${REMARK}"][aria-pressed="true"] { background: var(--error-subtitle, #fdecec); border-color: var(--error-text, #b42318); color: var(--error-text, #b42318); }
     .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--error-text, #b42318); border-radius: 8px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
     .dr-note[hidden] { display: none; }
+    [data-dr-folded] > :not(h1, h2, h3, h4, .dr-row, .dr-note) { display: none !important; }
+    .dr-fold { padding: 4px 8px; border: 0; background: none; color: var(--accent-strong, #2457c5); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-fold[hidden] { display: none; }
     .dr-bar { position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; padding: 10px 20px; background: var(--surface-default, #fff); border-top: 1px solid var(--border-divider, #e3e6eb); box-shadow: 0 -4px 16px rgb(0 0 0 / .08); color: var(--text-primary, #1d2330); font: 13px/1.4 var(--font-sans, system-ui, sans-serif); }
     .dr-bar b { flex: none; }
     .dr-bar .dr-chat { flex: none; color: var(--text-tertiary, #6b7280); }
@@ -145,6 +148,7 @@ describes.
   }
 
   const controls = new Map();
+  const unfolded = new Set();
   for (const item of items) {
     const label = item.dataset.review;
     const row = document.createElement('div');
@@ -170,9 +174,13 @@ describes.
     note.placeholder = 'Что не так';
     note.setAttribute('aria-label', `Замечание: ${label}`);
     note.addEventListener('input', () => { (state[label] ??= {}).note = note.value; write(); render(); });
-    row.append(...buttons);
+    const fold = document.createElement('button');
+    fold.type = 'button';
+    fold.className = 'dr-fold';
+    fold.addEventListener('click', () => { unfolded.has(label) ? unfolded.delete(label) : unfolded.add(label); render(); });
+    row.append(...buttons, fold);
     item.append(row, note);
-    controls.set(label, { buttons, note });
+    controls.set(label, { item, buttons, note, fold });
   }
 
   const chat = document.querySelector('.chat')?.textContent.replace(/^[^«]*/, '') ?? '';
@@ -189,8 +197,12 @@ describes.
   function render() {
     const parts = [];
     let done = 0;
-    for (const [label, { buttons, note }] of controls) {
+    for (const [label, { item, buttons, note, fold }] of controls) {
       const entry = state[label] ?? {};
+      const accepted = entry.v === ACCEPT;
+      item.toggleAttribute('data-dr-folded', accepted && !unfolded.has(label));
+      fold.hidden = !accepted;
+      fold.textContent = unfolded.has(label) ? 'Свернуть' : 'Развернуть';
       for (const button of buttons) button.setAttribute('aria-pressed', String(entry.v === button.dataset.v));
       note.hidden = entry.v !== REMARK;
       if (note.value !== (entry.note ?? '')) note.value = entry.note ?? '';
