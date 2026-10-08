@@ -53,7 +53,7 @@
     {
       "id": "tooltip-text-selector-merged-into-when-clipped",
       "kind": "removed-api",
-      "old": "dsTooltipTextSelector",
+      "old": "[dsTooltipTextSelector]",
       "new": null,
       "surface": "template",
       "searchHints": [
