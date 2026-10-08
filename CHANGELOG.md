@@ -13,11 +13,12 @@
   focus with no delay, and a click on the host keeps it open after the pointer leaves until a click
   outside, `Escape` or blur; a second click closes it. Without it a click closes the tip as before.
   While pinned the host carries `data-ds-tooltip-pinned`. Every pinned trigger of the library shows
-  the same cue: `--accent-strong` ink on a translucent accent wash that tints whatever surface it
-  sits on. Hovering a pinned trigger deepens the wash by 8 percentage points and pressing it by 16.
-  `--pinned-wash-amount` (default `12%`) sets the share of the accent in the wash, and
-  `@include pinned.cue()`, `pinned.cue-hover()` and `pinned.cue-pressed()` from `styles/pinned` give
-  your own pin-capable trigger the same cue, its hover and its press.
+  the same cue, with no fill: `--accent-strong` ink, and for a text trigger a 2px solid accent
+  underline. Hovering a pinned text trigger thickens the underline to 3px, and pressing it adds the
+  `--surface-muted` press fill; a pinned icon takes a `--surface-muted` circle on hover and a
+  `--border-default` circle on press. `@include pinned.cue()`, `pinned.cue-hover()` and
+  `pinned.cue-pressed()` from `styles/pinned` (`$underline: false` for an icon) give your own
+  pin-capable trigger the same cue, its hover and its press.
   Use it on info and definition triggers only, never on a control whose click acts.
   `TooltipDirective` gained the public `dsTooltipPinOnClick`, protected `onClick` and
   `onPointerLeave`, and the private `document`, `hostPinOnClick`, `pinsOnClick`, `pin`, `unpin`
@@ -26,8 +27,8 @@
 - **`ds-info-hint` is an icon button with a pinned tooltip.** `<ds-info-hint
   ariaLabel="About conversion rate" text="…" />` renders a 14px question-mark icon button named by
   `ariaLabel`, and `icon="info"` swaps the question mark for an "i"; `text` shows on hover and focus, describes the button, and stays open after a click.
-  The icon darkens on hover, sits on a `--surface-muted` circle while pressed, and shows the
-  pinned cue on a circle while pinned.
+  The icon darkens on hover, sits on a `--surface-muted` circle while pressed, and turns
+  `--accent-strong` while pinned.
   `InfoHintComponent` is exported from the package root.
 
 - **`dsDefinitionTerm` marks a term that carries its definition, on any element.**
@@ -39,7 +40,7 @@
   `tabindex="0"`, `role="button"`, and `Enter` / `Space` act as a click; on a `<button>` it sets
   `type="button"`. Hover makes the underline solid in `--text-secondary`, a press (a click held, or
   `Enter` / `Space` held on a non-button) tints the term
-  with `--surface-muted`, and a pinned term shows the pinned cue with a solid accent underline; no
+  with `--surface-muted`, and a pinned term turns `--accent-strong` with a 2px solid accent underline; no
   state changes its size. `[pinOnClick]="false"` turns the pin off where the click
   already acts. The directive brings its own styles: no stylesheet import is needed, including in an app that
   assembles the style partials one by one.
@@ -78,6 +79,11 @@
   click and pins nothing.
 
 ### Fixed
+
+- **A tooltip and a `ds-menu-item` submenu close when anything under them scrolls.** Inside an
+  `overflow: auto` container they stayed where they opened while their trigger scrolled away, a
+  pinned tooltip included. They close now on a scroll of the window or of any scroll container, as
+  `ds-popover` and the picker panels already did; a pinned tooltip unpins.
 
 - **A tooltip's arrow points at the centre of its trigger.** It sat at the middle of the panel, so
   a panel pushed off a viewport edge pointed past a trigger near that edge, 41px off for a button
