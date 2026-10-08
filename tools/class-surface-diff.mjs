@@ -155,7 +155,8 @@ function stripComments(text) {
 }
 
 // Whitespace inside brackets is collapsed too — a prettier rewrap of an unchanged
-// declaration (`input<\n  readonly RegExp[]…`) must not read as a type change.
+// declaration (`input<\n  readonly RegExp[]…`) must not read as a type change, nor must the
+// trailing comma prettier adds when it wraps a list.
 // …but never inside a string literal: collapsing there reads `'No  data'` and `'No data'`
 // as the same default.
 const normalize = (text) =>
@@ -167,7 +168,8 @@ const normalize = (text) =>
         : part
             .replace(/\s+/g, ' ')
             .replace(/([<([{]) /g, '$1')
-            .replace(/ ([>)\]},;])/g, '$1'),
+            .replace(/ ([>)\]},;])/g, '$1')
+            .replace(/,([>)\]}])/g, '$1'),
     )
     .join('')
     .trim();
@@ -183,6 +185,24 @@ function statementText(source, from) {
     if (ch === '(' || ch === '{' || ch === '[') depth++;
     else if (ch === ')' || ch === '}' || ch === ']') depth--;
     else if (ch === ';' && depth <= 0) return source.slice(from, i + 1);
+  }
+  return source.slice(from);
+}
+
+// A method's signature, from its name to the brace opening its body (or the `;` ending a bodiless
+// one), across however many lines prettier wrapped it onto. A `{` right after `:`, `|`, `&`, `,`,
+// `<`, `(` or `=>` opens an object type in the return annotation, not the body.
+function methodHead(source, from) {
+  let depth = 0;
+  for (let i = from; i < source.length; i++) {
+    const ch = source[i];
+    if (ch === '(' || ch === '[') depth++;
+    else if (ch === ')' || ch === ']' || ch === '}') depth--;
+    else if (ch === '{') {
+      const before = source.slice(from, i).trimEnd();
+      if (depth > 0 || /(?:[:|&,<(]|=>)$/.test(before)) depth++;
+      else return source.slice(from, i);
+    } else if (ch === ';' && depth === 0) return source.slice(from, i);
   }
   return source.slice(from);
 }
@@ -253,18 +273,7 @@ function classSurface(source) {
     if (NOT_A_MEMBER.has(name)) continue;
     names.add(name);
     if (visibility.startsWith('private')) continue;
-    // First line only: a param type changed on a wrapped continuation line is not
-    // seen — partial coverage beats the flood of whole-body diffs.
-    const lineEnd = source.indexOf('\n', match.index);
-    const line = source.slice(
-      match.index,
-      lineEnd === -1 ? source.length : lineEnd,
-    );
-    const bodyStart = line.indexOf('{');
-    heads.set(
-      name,
-      normalize(bodyStart === -1 ? line : line.slice(0, bodyStart)),
-    );
+    heads.set(name, normalize(methodHead(source, match.index)));
   }
   return { names, heads };
 }
