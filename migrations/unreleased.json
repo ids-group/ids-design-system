@@ -93,7 +93,7 @@
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
       "restore": null,
       "verify": "The app builds with no member-collision error against TooltipDirective or TooltipPanelComponent.",
-      "note": "TooltipPanelComponent gained the protected segments. TooltipDirective gained the private contains, ownText and leadsWithOwnText and lost dsTooltipClippedLead."
+      "note": "TooltipPanelComponent gained the protected segments. TooltipDirective gained 12: contains, document, dsTooltipPinOnClick, hostPinOnClick, leadsWithOwnText, onClick, onPointerLeave, ownText, pin, pinsOnClick, pointArrowAtHost and unpin; it lost dsTooltipClippedLead."
     }
   ],
   "informational": [
