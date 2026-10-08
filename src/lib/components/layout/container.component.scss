@@ -1,3 +1,7 @@
+@use '../../styles/breakpoints' as bp;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 :host {
   --_container-size-width: var(--col-cap-content);
   --_container-max-width: var(--ds-container-max-width, var(--_container-size-width));
@@ -13,13 +17,13 @@
 }
 
 :host([data-size='sm']) {
-  --_container-size-width: var(--bp-sm);
+  --_container-size-width: var(--bp-sm, #{bp.$bp-sm});
 }
 :host([data-size='md']) {
-  --_container-size-width: var(--bp-md);
+  --_container-size-width: var(--bp-md, #{bp.$bp-md});
 }
 :host([data-size='lg']) {
-  --_container-size-width: var(--bp-lg);
+  --_container-size-width: var(--bp-lg, #{bp.$bp-lg});
 }
 :host([data-size='xl']) {
   --_container-size-width: var(--col-cap-content);
