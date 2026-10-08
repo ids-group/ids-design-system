@@ -17,9 +17,7 @@ import { DsStaticPreview } from '@ids-group-ltd/ids-design-system/components';
 import { BodyScrollLockService } from '@ids-group-ltd/ids-design-system/overlay';
 import type { ModalSize } from './modal.types';
 import type { DsStatus } from '@ids-group-ltd/ids-design-system/core';
-import {
-  backdropDismiss,
-} from '@ids-group-ltd/ids-design-system/core';
+import { backdropDismiss } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-modal',
