@@ -81,8 +81,8 @@
     {
       "id": "progress-and-meter-tokens-renamed-to-bar",
       "kind": "token-rename",
-      "old": "--ds-progress-*",
-      "new": "--ds-bar-*",
+      "old": "--ds-progress-height, --ds-progress-track-color, --ds-progress-target-color, --ds-progress-target-width, --ds-progress-bar-color, --ds-progress-bar-color-success, --ds-progress-bar-color-warning, --ds-progress-bar-color-error, --ds-meter-height, --ds-meter-min-width, --ds-meter-track-color, --ds-meter-fill-color, --progress-h",
+      "new": "--ds-bar-height, --ds-bar-track-color, --ds-bar-target-color, --ds-bar-target-width, --ds-bar-fill-color, --ds-bar-fill-color-success, --ds-bar-fill-color-warning, --ds-bar-fill-color-error, --ds-bar-height, --ds-bar-min-width, --ds-bar-track-color, --ds-bar-fill-color, --bar-h",
       "surface": "style",
       "action": "Rename `--ds-progress-height`, `-track-color`, `-target-color` and `-target-width` to `--ds-bar-…` with the same suffix. `--ds-progress-bar-color` and its `-success` / `-warning` / `-error` siblings become `--ds-bar-fill-color`, `--ds-bar-fill-color-success`, `--ds-bar-fill-color-warning`, `--ds-bar-fill-color-error`. The `--ds-meter-*` names go the same way: `-height`, `-min-width` and `-track-color` keep their suffix and `--ds-meter-fill-color` becomes `--ds-bar-fill-color`. `--ds-meter-radius` has no `--ds-bar-*` counterpart and is removed: see `meter-radius-removed`. The global `--progress-h` is now `--bar-h`.",
       "appliesWhen": "Any stylesheet setting one of those names. DS tokens only — a consumer's own `--progress-…` variable is untouched, and so are `--stepper-bar-h` and `--calendar-bar-h`, which are different tokens that merely end in `-bar-h`.",

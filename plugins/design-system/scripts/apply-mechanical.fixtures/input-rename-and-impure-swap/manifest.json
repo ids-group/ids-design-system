@@ -1,4 +1,0 @@
-{ "version": "0.13.4", "items": [
-  { "id": "accordion-multi-is-multiple", "kind": "input-rename", "old": "ds-accordion[multi]", "new": "multiple" },
-  { "id": "pie-chart-thickness-is-now-inner-radius", "kind": "input-rename", "old": "ds-donut-chart[thickness]", "new": "ds-pie-chart[innerRadius]" }
-] }

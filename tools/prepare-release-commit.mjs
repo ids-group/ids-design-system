@@ -7,9 +7,9 @@
 //
 //   1. stamp the CHANGELOG and promote the migration manifest  (tools/changelog-release.mjs)
 //   2. copy the bumped version into the library manifest       (tools/sync-lib-package.mjs)
-//   3. regenerate the stylelint token list from the promoted manifest
-//                                                              (tools/generate-token-deprecations.mjs)
-//   4. stage both, so the release commit carries them
+//   3. regenerate the stylelint token list and the ESLint API list from the promoted manifest
+//                          (tools/generate-token-deprecations.mjs, tools/generate-api-deprecations.mjs)
+//   4. stage them, so the release commit carries them
 //
 // Step 2 exists because ng-packagr reads the published manifest from src/lib, not the workspace
 // root: `npm version` bumps the root alone, so without this the committed library manifest keeps
@@ -29,4 +29,10 @@ const run = (command, args) =>
 run(process.execPath, ['tools/changelog-release.mjs']);
 run(process.execPath, ['tools/sync-lib-package.mjs']);
 run(process.execPath, ['tools/generate-token-deprecations.mjs']);
-run('git', ['add', 'src/lib/package.json', 'stylelint/deprecated-tokens.json']);
+run(process.execPath, ['tools/generate-api-deprecations.mjs']);
+run('git', [
+  'add',
+  'src/lib/package.json',
+  'stylelint/deprecated-tokens.json',
+  'eslint/deprecated-api.json',
+]);

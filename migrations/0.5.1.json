@@ -335,9 +335,9 @@
     },
     {
       "id": "badge-variant-to-status-rename",
-      "kind": "input-rename",
+      "kind": "behavior",
       "old": "ds-badge[variant]",
-      "new": "status",
+      "new": null,
       "action": "Three coupled steps. (1) Rename the input, keeping the value: `variant=\"active\"` → `status=\"active\"`, `[variant]=\"expr\"` → `[status]=\"expr\"`. Exception: `variant=\"solid\"` becomes the bare `solid` attribute and `variant=\"count\"` becomes `[count]=\"n\"` with the number moved out of the content - they were a fill and a shape, not statuses. (2) Wire the colours through the `styles/status` SCSS API keyed on `[data-status]` — see status-lifecycle-tokens-removed for the snippet. (3) Augment DsStatusRegistry with your keys so DsStatusKey narrows from an open string to your union. Full guide: migrations/0.5.1/badge-statuses.md.",
       "appliesWhen": "`[count]`, `[solid]`, `[withDot]`, `[max]` and every `--ds-badge-*` hook are unchanged. If you coloured badges through your OWN class (`class=\"chip {{ status }}\"`), that keeps working — but any value that used to fall through to a factory colour is now uncoloured.",
       "pitfall": "Step 1 alone leaves every badge UNCOLOURED, because the component ships no built-in colour for any value. And a static `variant=\"x\"` left behind fails silently: Angular ignores an unknown attribute instead of erroring, so the badge renders plain with nothing in the console. Grep `variant=` scoped to ds-badge.",
@@ -346,6 +346,12 @@
         "<ds-badge",
         "variant=\"",
         "[variant]="
+      ],
+      "detect": [
+        "variant=\"solid\"",
+        "variant=\"count\"",
+        "[variant]=\"",
+        "variant: '"
       ],
       "surface": [
         "template",

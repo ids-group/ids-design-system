@@ -1,0 +1,3 @@
+{ "version": "0.13.4", "items": [
+  { "id": "accordion-multi-is-multiple", "kind": "input-rename", "old": "ds-accordion[multi]", "new": "multiple" }
+] }
