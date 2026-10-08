@@ -14,15 +14,12 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**123 open — 4 P1, 8 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**119 open — 1 P1, 8 P2, 110 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P1 — 4
+### P1 — 1
 
 - **Asked by Stas**
   - A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
-  - A click pins a tooltip: hover shows it at once, a click keeps it open (Stas, 2026-10-06)
-  - A definition-term directive: an inline term that opens a tooltip on hover and focus and pins on click (Stas, 2026-10-06)
-  - An info-hint (toggletip) component: an info icon button that shows supplementary text on hover and focus and pins on click (Stas, 2026-10-06)
 
 ### P2 — 8
 
@@ -40,10 +37,8 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 111
+### P3 — 110
 
-- **Defects consumers work around today (swept 2026-09-23)**
-  - The tooltip arrow stays at the panel centre when CDK pushes the panel off a viewport edge, so it does not point at the trigger (from the mm-ecm consumer, an info icon near the right edge)
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
@@ -240,7 +235,6 @@ Defects a consumer hit - from a QA pass, or from reading a consumer tree for a r
 
 - [ ] **[P2] The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer).** `--border-default` is `var(--neutral-200)` (`_semantic.scss:49`, #DCE1EA) and is the resting edge of `ds-input` (`input.component.scss:17`) and 25 more components: 1.31:1 on white in the stock theme against the 3:1 WCAG 1.4.11 floor for a control boundary. `--secondary-on` is the constant `var(--primary-on)` = white (`:134`, `:116`) while `--secondary` recomposes from `--secondary-h/s/l`, so a gold secondary (#FBAC18) gets white text at 1.91:1 - and the stock theme already fails: white on the stock `--secondary` #FF7B2E (`hsl(22 100% 59%)`) is 2.59:1 against 4.5:1 (computed 2026-10-02). ids-europe-landing rebinds both (`_theme.scss:44-57`, `:89`). **Wanted:** a control-edge role that clears 3:1 in both themes (or `--border-default` moved to it), and `--secondary-on` derived from `--secondary`'s lightness or listed in the brand must-rebind checklist of the brand-unsafe item.
 
-- [ ] **[P3] The tooltip arrow stays at the panel centre when CDK pushes the panel off a viewport edge, so it does not point at the trigger (from the mm-ecm consumer, an info icon near the right edge).** `tooltip-panel.component.scss` placed the arrow at `left: 50%` / `top: 50%`. Branch `ecm-fix/tooltip-arrow-anchor` (worktree `ids-design-system-arrow`), commit `326dbbda`: the directive measures trigger and pane on every pane style write and sets `--_tooltip-arrow-x/-y`, clamped clear of the radius; `build:lib` passes. **Left, parked by Stas until asked:** browser check at the left edge, right edge, centre and after a flip (arrow centre vs trigger centre, before and after); CHANGELOG Unreleased Fixed and `migrations/unreleased.json`; the before/after deck; lint gates.
 - [x] **[P1] A clipped hinted header shows its label and hint as two plain lines; the label should be a bold line of its own (asked by Stas, 2026-10-06).** `dsTooltipClippedLead` joins lead and hint with a newline and `tooltip-panel.component.scss` sets `white-space: pre-line` for every tooltip, so any tooltip text with a newline now breaks there and the label is the same weight as the hint. **Wanted:** a `lead` input on `TooltipPanelComponent` rendered as a bold line, set by the directive only while the host is clipped, and `pre-line` reverted. Work branch `ecm-fix/tooltip-arrow-anchor` (tooltip group). A started, unverified patch: mm-ecm-platform `.claude/local/from-scratchpad/2026-10-06-tooltip-lead-bold/tooltip-lead-bold.wip.patch` (local, not in git).
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
@@ -387,20 +381,7 @@ Each has somebody behind it. Nothing here is speculative work.
   version and how it is consumed - carry its best practices into `ai-sdlc-prototype`, and finish what is
   left there. Tracked here because Stas does not open that repository; the work itself happens in it.
 
-- [ ] **[P1] A click pins a tooltip: hover shows it at once, a click keeps it open (Stas, 2026-10-06).** Work branch `ecm-fix/tooltip-arrow-anchor` (parked; its code is not touched by this item).
-  Hover shows the tooltip at once. A click on the trigger keeps it open after the pointer leaves; a click outside, `Esc` or blur closes it - the way `ds-select` or a date picker panel stays open. No visual "pinned" marker. Today `tooltip.directive.ts` closes on click (`@HostListener('click')` -> `onClose`).
-  **Opt-in** for info and definition triggers only: a tooltip on a control with its own action must not pin.
-  **References:** Inclusive Components, "Tooltips & Toggletips" https://inclusive-components.design/tooltips-toggletips/ ; Carbon `DefinitionTooltip` (button trigger, click toggles, `openOnHover`) https://github.com/carbon-design-system/carbon/blob/main/packages/react/src/components/Tooltip/DefinitionTooltip.tsx
-
-- [ ] **[P1] A definition-term directive: an inline term that opens a tooltip on hover and focus and pins on click (Stas, 2026-10-06).** Work branch `ecm-fix/tooltip-arrow-anchor`. Depends on the pin item above.
-  Carbon's "definition tooltip": the term is rendered as `<button type="button">` with a dotted underline in `--text-tertiary`; the tooltip shows on hover and focus, a click pins it, `Esc` closes. For labels and table cells where an icon per term is noise.
-  `ds-table` `TableColumn.hint` (branch `feat/table-column-hint-term`) is the same pattern inside the header and should reuse it.
-  **Consumer today hand-rolls it:** mm-ecm-platform `src/frontend/projects/ecm-portal/src/styles.scss` (`.term-hint`) and the `term-hint` buttons in `src/frontend/projects/ecm-portal/src/app/features/programs/pages/analyze/journey-outcomes/journey-waterfall.component.html`.
-
-- [ ] **[P1] An info-hint (toggletip) component: an info icon button that shows supplementary text on hover and focus and pins on click (Stas, 2026-10-06).** Work branch `ecm-fix/tooltip-arrow-anchor`. Depends on the pin item above.
-  An icon button with an `aria-label` that shows supplementary text on hover and focus and keeps it open on click. Consumer hand-rolls it: mm-ecm-platform `src/frontend/projects/ecm-portal/src/app/features/programs/pages/analyze/info-hint.component.ts`, used in 8 Analyze components.
-
-- [ ] **[P2] Loading in the other data components: skeleton without data, overlay on a reload (Stas, 2026-10-08).** Stas: «может продумать для всех таблиц». `ds-table` (`loading=true`) and `ds-bar-chart` (branch `ecm-feat/bar-chart-customization`) already draw skeleton rows only while there is no data and keep the data under `ds-loading-overlay` on a reload. The other eight charts pass `[pending]="loading() || !renderReady()"` to `ChartStatesComponent`, so a reload blanks the plot into a skeleton; `ds-select`, `ds-multi-select` and `ds-autocomplete` show a spinner row rather than skeleton options. Three options drawn in deck `20-bar-chart` («Где ещё так же»): all charts through `ChartStatesComponent`, charts plus the pickers, or nothing. `ds-pagination` stays: its skeleton hides a stale total by design.
+- [ ] **[P2] Loading in the other data components: skeleton without data, overlay on a reload (Stas, 2026-10-08).** Stas: «может продумать для всех таблиц». `ds-table` (`loading=true`) and `ds-bar-chart` (branch `ecm-feat/bar-chart-customization`) already draw skeleton rows only while there is no data and keep the data under `ds-loading-overlay` on a reload. The other eight charts pass `[pending]="loading() || !renderReady()"` to `ChartStatesComponent`, so a reload blanks the plot into a skeleton; `ds-select`, `ds-multi-select` and `ds-autocomplete` show a spinner row rather than skeleton options. Three options drawn in deck `22-bar-chart` («Где ещё так же»): all charts through `ChartStatesComponent`, charts plus the pickers, or nothing. `ds-pagination` stays: its skeleton hides a stale total by design.
 
 - [ ] **[P3] `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23).** The English `waterfall`
   is the field's standard word - Excel, Power BI, Tableau, Highcharts and ECharts all use it, with
@@ -1073,8 +1054,10 @@ file** — the number moves; cite the filename.
 | 16 | `16-column-chart-filter` | How `ds-column-chart` takes a caption under each column and a persistent selection, so a consumer's filter chart can move onto it: point fields, chart inputs with a template, or nothing; `value: number | null` is settled. | none |
 | 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
-| 19 | `19-tooltip-mechanism` | Everything about the tooltip in one deck: what is settled, live examples of the term and the info icon, and three open questions (who writes the bold label of a clipped header, whether to split the tooltip file, when to merge the tooltip-group branch). | none |
-| 20 | `20-bar-chart` | Whether the other charts and the pickers take the loading rule `ds-table` and `ds-bar-chart` follow (skeleton without data, overlay on a reload); the bar-chart rows and its loading are built and folded under «Принято», the loading render in light and dark with the skeleton measured against the rows. | the mm-ecm bar-chart ask, Stas's loading remark |
+| 19 | `19-tooltip-mechanism` | Everything about the tooltip in one deck: what is settled and in dev, live examples of the term and the info icon, and two open questions (who writes the bold label of a clipped header, whether to split the tooltip file). | none |
+| 20 | `20-tooltip-group` | Before and after of `fix/tooltip-arrow-anchor`: the arrow under the trigger centre, a click that pins a tooltip, `ds-info-hint`, `button[dsDefinitionTerm]` with its states and the three ways it could be built, the hinted `ds-table` header and its bold clipped label. | none |
+| 21 | `21-interaction-states` | General rules for the states of interactive elements as levels on three channels, with live sliders for the step numbers; one neutral hover surface; a check against empty cells; where to start. | none |
+| 22 | `22-bar-chart` | Whether the other charts and the pickers take the loading rule `ds-table` and `ds-bar-chart` follow (skeleton without data, overlay on a reload); the bar-chart rows and its loading are built and folded under «Принято», the loading render in light and dark with the skeleton measured against the rows. | the mm-ecm bar-chart ask, Stas's loading remark |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

@@ -9138,6 +9138,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "length"
   },
   {
+    "name": "--pinned-wash-amount",
+    "value": "12%",
+    "kind": "length"
+  },
+  {
     "name": "--radio-bw-checked",
     "value": "var(--border-width-strong)",
     "kind": "color"
