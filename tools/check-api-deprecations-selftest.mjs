@@ -52,7 +52,10 @@ run(template, 'no-removed-inputs', {
       },
     ]),
     html('<ds-table sortDir="asc" [(sortDir)]="direction"></ds-table>', 2),
-    html('<ds-modal danger></ds-modal>', [{ message: /use status/ }]),
+    html('<ds-modal danger></ds-modal>', [{ message: /use error/ }]),
+    html('<ds-modal error></ds-modal>', [
+      { message: /0.10.0#modal-error-boolean-to-status/ },
+    ]),
     html('<div dsChartTooltipPreferBelow></div>', [
       { message: /was removed in 0\.14\.1/ },
     ]),

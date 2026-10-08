@@ -107,7 +107,8 @@ export function buildApiDeprecations({ report = [] } = {}) {
       if (
         item.kind === 'input-rename' ||
         item.kind === 'output-rename' ||
-        (item.kind === 'removed-api' && SCOPED.test(old))
+        ((item.kind === 'removed-api' || item.kind === 'behavior') &&
+          SCOPED.test(old))
       ) {
         const [, element = '*', name] = SCOPED.exec(old) ?? [];
         if (!name) {
@@ -115,6 +116,10 @@ export function buildApiDeprecations({ report = [] } = {}) {
           continue;
         }
         const list = item.kind === 'output-rename' ? 'outputs' : 'inputs';
+        // A behavior item that names a binding a rename already covers adds nothing: the rename's
+        // replacement is the more useful message.
+        if (item.kind === 'behavior' && lists[list].has(`${element}[${name}]`))
+          continue;
         add(list, `${element}[${name}]`, {
           element,
           name,
@@ -206,13 +211,14 @@ export function buildApiDeprecations({ report = [] } = {}) {
     }
   }
 
-  // `ds-modal[danger]` -> `error` -> `status`: a binding renamed twice points at the live name.
+  // `a` -> `b` -> `c`: a binding renamed twice points at the live name. The chain stops at a name
+  // whose own change is not a rename (no replacement), so the message names the last real rename.
   for (const list of ['inputs', 'outputs'])
     for (const entry of lists[list].values())
       for (
         let next = lists[list].get(`${entry.element}[${entry.replacement}]`),
           guard = 0;
-        next && next !== entry && guard < 10;
+        next && next !== entry && next.replacement && guard < 10;
         next = lists[list].get(`${entry.element}[${entry.replacement}]`),
           guard++
       )
