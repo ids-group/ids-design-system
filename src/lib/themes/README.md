@@ -88,7 +88,6 @@ On-fill text is the literal `white`, or the theme-stable `--static-ink` where th
 @use 'styles/toast-overlay';
 @use 'styles/surface-motion';
 @use 'styles/overlay-motion';
-@use 'styles/skeleton-shimmer';
 
 @include bp.emit-vars; // REQUIRED, and not implied by the @use above
 ```

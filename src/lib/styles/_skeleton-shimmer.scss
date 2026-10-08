@@ -1,8 +1,2 @@
-// Reduced-motion opt-out for the skeleton shimmer; the travel is per-element in the skeleton component.
-// Not driven from one animated `:root` custom property: a registered property is a computed value, so animating it invalidates style for the whole document every frame.
-// `!important`: the travel is declared as `[_nghost-...]::after`, which outranks `ds-skeleton::after`.
-@media (prefers-reduced-motion: reduce) {
-  ds-skeleton::after {
-    animation: none !important;
-  }
-}
+// Deprecated: emits nothing. `ds-skeleton` carries its own reduced-motion opt-out, so this partial
+// is no longer needed; it stays so that `@use 'styles/skeleton-shimmer'` keeps compiling.

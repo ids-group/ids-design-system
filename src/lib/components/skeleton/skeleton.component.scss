@@ -79,3 +79,9 @@
       calc(var(--_skeleton-wave-period) / 1.4142);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  :host::after {
+    animation: none;
+  }
+}
