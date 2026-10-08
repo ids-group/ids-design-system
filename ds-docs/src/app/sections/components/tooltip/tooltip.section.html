@@ -130,6 +130,8 @@
     </code> side it flips, arrow included, 8px clear
     of the viewport edge. Text between a pair of
     <code class="t-mono-inline">**</code> is bold, and a line break shows as a line break.
+    <code class="t-mono-inline">dsTooltipArrow</code> set to <code class="t-mono-inline">false</code>
+    leaves the arrow out.
   </p>
 
   <div class="demo">
@@ -157,6 +159,15 @@
       size="sm"
       [dsTooltip]="'Counts **only confirmed** seats'">
       Hover me · bold
+    </ds-button>
+
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm"
+      [dsTooltipArrow]="false"
+      [dsTooltip]="'No arrow on this one'">
+      Hover me · no arrow
     </ds-button>
   </div>
 

@@ -18,7 +18,8 @@
     "./styles/*": "./styles/*",
     "./themes/*": "./themes/*",
     "./migrations/*": "./migrations/*",
-    "./stylelint": "./stylelint/index.mjs"
+    "./stylelint": "./stylelint/index.mjs",
+    "./eslint": "./eslint/index.mjs"
   },
   "scripts": {
     "agent-catalogue": "node tools/split-agent-catalogue.mjs",
