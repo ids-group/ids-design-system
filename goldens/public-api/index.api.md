@@ -103,7 +103,7 @@ export { DatePickerPreset } from '@ids-group-ltd/ids-design-system/components/da
 export { DatePickerValue } from '@ids-group-ltd/ids-design-system/components/date-picker'; // type
 export { DateRangeValue } from '@ids-group-ltd/ids-design-system/components/date-picker'; // type
 export { DateValue } from '@ids-group-ltd/ids-design-system/components/date-picker'; // type
-export { DefinitionTermComponent } from '@ids-group-ltd/ids-design-system/components/definition-term'; // component
+export { DefinitionTermDirective } from '@ids-group-ltd/ids-design-system/components/definition-term'; // directive
 export { DescriptionItemComponent } from '@ids-group-ltd/ids-design-system/components/description-list'; // component
 export { DescriptionListComponent } from '@ids-group-ltd/ids-design-system/components/description-list'; // component
 export { DescriptionListOrientation } from '@ids-group-ltd/ids-design-system/components/description-list'; // type

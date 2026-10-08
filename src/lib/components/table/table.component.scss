@@ -225,7 +225,7 @@
     }
 
     // A definition term paints its own colour and background for its pressed and pinned states.
-    .th-label:not(.th-term) {
+    .th-label:not(.ds-definition-term) {
       background: none;
       color: inherit;
     }
