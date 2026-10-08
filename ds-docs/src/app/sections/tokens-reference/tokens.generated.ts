@@ -2947,6 +2947,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-bar-chart-label-column-max-width",
+        "value": "40%",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-chart-child-fill-opacity",
+        "value": "0.55",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-chart-divider-color",
+        "value": "var(--border-default)",
+        "notes": ""
+      },
+      {
         "name": "--ds-motion-chart-mark-duration",
         "value": "—",
         "notes": ""

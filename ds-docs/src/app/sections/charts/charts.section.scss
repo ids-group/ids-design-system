@@ -26,3 +26,7 @@
   block-size: 10px;
   border-radius: var(--radius-pill);
 }
+
+.track-height-slider {
+  inline-size: min(16rem, 100%);
+}
