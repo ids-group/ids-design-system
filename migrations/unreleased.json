@@ -33,9 +33,9 @@
     }
   ],
   "informational": [
-    "dsTooltipPinOnClick opens a tooltip on hover and focus with no delay and keeps it open after a click until a click outside, Escape or blur; a second click closes it. Without it a click closes the tooltip as before.",
-    "ds-info-hint (InfoHintComponent) is an info icon button: ariaLabel names it, text shows on hover and focus and stays open after a click.",
-    "button[dsDefinitionTerm] (DefinitionTermComponent) styles a button as a term with a dotted underline in --text-tertiary and shows its definition on hover and focus, pinned on click; [pinOnClick]=\"false\" turns the pin off.",
+    "dsTooltipPinOnClick opens a tooltip on hover and focus with no delay and keeps it open after a click until a click outside, Escape or blur; a second click closes it. Without it a click closes the tooltip as before. While pinned the host carries data-ds-tooltip-pinned, a styling hook for the pinned trigger.",
+    "ds-info-hint (InfoHintComponent) is an info icon button: ariaLabel names it, text shows on hover and focus and stays open after a click. The icon darkens on hover, sits on a muted circle while pressed and turns accent on an --accent-muted circle while pinned.",
+    "button[dsDefinitionTerm] (DefinitionTermComponent) styles a button as a term with a dotted underline in --text-tertiary and shows its definition on hover and focus, pinned on click; [pinOnClick]=\"false\" turns the pin off. Hover makes the underline solid, a press tints the term with --surface-muted, and a pinned term is --accent-strong on --accent-subtitle; no state changes its size.",
     {
       "text": "dsTooltipClippedLead renders as a bold line above the tooltip text. A ds-table header label with a hint is a button[dsDefinitionTerm]: a plain label pins its hint on click, a sortable one sorts on click and pins nothing.",
       "verify": "narrow a hinted ds-table column until its label clips, hover it and confirm the label is bold on the first line with the hint under it; click a plain hinted label, move the pointer away and confirm the hint stays until a click outside."
