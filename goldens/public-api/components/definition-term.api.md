@@ -5,6 +5,7 @@
 ```ts
 @Directive({ selector: '[dsDefinitionTerm]' })
 export class DefinitionTermDirective {
+    public constructor();
     protected holdSpace(event: Event): void;
     private readonly host;
     protected readonly isButton = this.host.tagName === 'BUTTON';
