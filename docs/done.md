@@ -12,8 +12,11 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
   (`src/lib/components/bar-chart/`, placement helpers `placeRows`, `shownRows`, `partSpans` in
   `bar-chart.math.ts`, probed in `tools/probes/bar-chart-math.probe.mjs`).
 - Bar height and per-row colour were already `--ds-bar-chart-track-height` and `BarChartRow.color`.
-- Asked by the mm-ecm consumer; Stas accepted every drawn variant in deck `21-bar-chart`. Loading
-  that dims the rows stays open in `docs/todo.md`.
+- Loading follows `ds-table`: skeleton rows in the drawn row markup while `data` is empty,
+  `ds-loading-overlay` over the rows on a reload (`showsSkeleton` in `bar-chart.component.ts`); no
+  `loadingStyle` input. Stas picked the skeleton and asked for the double logic in deck `21-bar-chart`.
+- Asked by the mm-ecm consumer; Stas accepted every drawn variant in deck `21-bar-chart`. The same rule for the
+  other charts and the pickers is open in `docs/todo.md`.
 
 ## The pie chart's centre value fits the hole (2026-10-05)
 

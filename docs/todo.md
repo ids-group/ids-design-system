@@ -14,18 +14,17 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**123 open — 5 P1, 7 P2, 111 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**123 open — 4 P1, 8 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P1 — 5
+### P1 — 4
 
 - **Asked by Stas**
   - A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
   - A click pins a tooltip: hover shows it at once, a click keeps it open (Stas, 2026-10-06)
   - A definition-term directive: an inline term that opens a tooltip on hover and focus and pins on click (Stas, 2026-10-06)
   - An info-hint (toggletip) component: an info icon button that shows supplementary text on hover and focus and pins on click (Stas, 2026-10-06)
-  - ½ `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
 
-### P2 — 7
+### P2 — 8
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -34,6 +33,7 @@ item and nothing else.
 - **Asked by Stas**
   - Document how to build `ds-modal` actions (Stas, 2026-10-06)
   - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
+  - Loading in the other data components: skeleton without data, overlay on a reload (Stas, 2026-10-08)
 - **Open verdicts, each drawn in a deck**
   - Six Unreleased behaviour changes shipped without a choice between alternatives
 - **Tooling**
@@ -400,9 +400,7 @@ Each has somebody behind it. Nothing here is speculative work.
 - [ ] **[P1] An info-hint (toggletip) component: an info icon button that shows supplementary text on hover and focus and pins on click (Stas, 2026-10-06).** Work branch `ecm-fix/tooltip-arrow-anchor`. Depends on the pin item above.
   An icon button with an `aria-label` that shows supplementary text on hover and focus and keeps it open on click. Consumer hand-rolls it: mm-ecm-platform `src/frontend/projects/ecm-portal/src/app/features/programs/pages/analyze/info-hint.component.ts`, used in 8 Analyze components.
 
-- [~] **[P1] `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06).** Work branch `ecm-feat/bar-chart-customization`.
-  Stas, 2026-10-08: route (a), extend `ds-bar-chart`; the dash for an empty value and gaps 1-8 are built on the branch (CHANGELOG Unreleased; `docs/done.md`). **Left:** loading that dims the rows instead of a skeleton, opt-in. Four variants are drawn live in deck `21-bar-chart` (dim, skeleton, dim plus a progress line, shimmer over the bars) with the proposed input `loadingStyle: 'skeleton' | 'dim' | 'dim-progress' | 'shimmer' = 'skeleton'`; build the one he picks. The consumer today dims to opacity 0.6 while a newer scope loads (mm-ecm-platform `src/frontend/projects/ecm-portal/src/app/features/programs/pages/analyze/journey-outcomes/journey-waterfall.component.ts`, input `busy`).
-  **Screenshots** of the original ask: `docs/asks/bar-chart/`.
+- [ ] **[P2] Loading in the other data components: skeleton without data, overlay on a reload (Stas, 2026-10-08).** Stas: «может продумать для всех таблиц». `ds-table` (`loading=true`) and `ds-bar-chart` (branch `ecm-feat/bar-chart-customization`) already draw skeleton rows only while there is no data and keep the data under `ds-loading-overlay` on a reload. The other eight charts pass `[pending]="loading() || !renderReady()"` to `ChartStatesComponent`, so a reload blanks the plot into a skeleton; `ds-select`, `ds-multi-select` and `ds-autocomplete` show a spinner row rather than skeleton options. Three options drawn in deck `21-bar-chart` («Где ещё так же»): all charts through `ChartStatesComponent`, charts plus the pickers, or nothing. `ds-pagination` stays: its skeleton hides a stale total by design.
 
 - [ ] **[P3] `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23).** The English `waterfall`
   is the field's standard word - Excel, Power BI, Tableau, Highcharts and ECharts all use it, with
@@ -1077,7 +1075,7 @@ file** — the number moves; cite the filename.
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
 | 19 | `19-tooltip-markup` | What the tooltip of a `ds-table` header with `hint` shows once `dsTooltipClippedLead` goes and `dsTooltip` understands only `**bold**`: label and hint always, hint only, or label only while clipped; and for the third, whether the directive or the table owns the rule. | none |
 | 20 | `20-tooltip-mechanism` | How deep to refactor the tooltip, with the whole mechanism drawn: keep as is, split the directive's internals with the same API, or also merge `dsTooltipWhenClipped` and `dsTooltipTextSelector` into one input. | none |
-| 21 | `21-bar-chart` | Which loading look `ds-bar-chart` gets: dim, skeleton, dim plus a progress line, or shimmer, each live with a toggle; the dash fix and gaps 1-8 are built and folded under «Принято» with mockup beside the ds-docs render. | the mm-ecm bar-chart customization ask |
+| 21 | `21-bar-chart` | Whether the other charts and the pickers take the loading rule `ds-table` and `ds-bar-chart` follow (skeleton without data, overlay on a reload); the bar-chart rows and its loading are built and folded under «Принято», the loading render in light and dark with the skeleton measured against the rows. | the mm-ecm bar-chart ask, Stas's loading remark |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
