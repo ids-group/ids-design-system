@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**125 open — 5 P1, 8 P2, 112 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**125 open — 5 P1, 8 P2, 112 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 5
 
@@ -58,7 +58,7 @@ item and nothing else.
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
   - A pressed danger menu item shows its hover colour (recorded 2026-09-24)
 - **Asked by Stas**
-  - `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
+  - ½ `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
   - Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24)
   - Pin more than one mark at a time (Stas, 2026-09-29)
@@ -406,29 +406,9 @@ Each has somebody behind it. Nothing here is speculative work.
 - [ ] **[P2] `ds-date-picker` has no width control (Stas, 2026-10-06).** Work branch `feat/date-picker-width` (empty marker branch from dev).
   `size` changes the height only. Consumers either stretch the picker to full width or hard-code a max-width: mm-ecm ME-501 Unarchive dialog (`src/frontend/projects/ecm-portal/src/app/features/programs/**/unarchive-program-dialog.component.*`) and the wrapper `app-date-field`, which forces `fullWidth`. Wanted: a width token (e.g. `--ds-date-picker-max-width`) or intrinsic width logic in the lib sized to the date format.
 
-- [ ] **[P3] `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06).** Work branch `feat/bar-chart-customization`.
-  Parked (Stas, 2026-10-07): mm-ecm ME-510 Won't Do, Analyze charts are reworked into a pivot table; re-raise against what ships.
-  The consumer draws "label + bar + number" rows in Analyze (the journey waterfall and the exit reasons) by hand because `ds-bar-chart` cannot be configured to match. **Two implementation routes, the DS team decides:** (a) extend `ds-bar-chart` with the options below, or (b) a new `ds-bar-list` row component for label + bar + number rows. `ds-funnel-chart` is not a fit: the consumer cannot change the chart type.
-  **Gaps:**
-  - label to the left of the bar on the same line (today above it);
-  - an expandable group row with a chevron and sub-rows;
-  - configurable bar height;
-  - per-row bar colour supplied by the consumer;
-  - a term label with a dotted underline and a hint (the definition-term item above);
-  - per-row emphasis (bold first and last row);
-  - per-row percent visibility (`showPercent` today is all-or-none);
-  - an empty value shows a dash, not `0` - fixed on `feat/bar-chart-customization` (CHANGELOG Unreleased, Fixed);
-  - a row outside the chain (for example "Completed or exited");
-  - loading that dims the rows instead of a skeleton.
-  **ECM source** (mm-ecm-platform repo root), `src/frontend/projects/ecm-portal/src/app/features/programs/pages/analyze/journey-outcomes/`:
-  - `journey-waterfall.component.ts`, `.html`, `.scss`
-  - `journey-exits.component.ts`, `.html`, `.scss`
-  **Screenshots** (`docs/asks/bar-chart/`):
-  - `ecm-journey-waterfall-expanded.webp` - the ECM waterfall with a group row expanded
-  - `ecm-journey-waterfall-live-data.webp` - the same on live programme data
-  - `ecm-exit-reasons.webp` - the exit and suppression reasons
-  - `compare-ecm-waterfall.webp` against `compare-ds-bar-chart-waterfall-rows.webp` - ECM and `ds-bar-chart` with the same rows
-  - `compare-ds-bar-chart-exit-reasons.webp` - `ds-bar-chart` with the exit reasons (one colour, `0` for an empty value)
+- [~] **[P3] `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06).** Work branch `ecm-feat/bar-chart-customization`.
+  Stas, 2026-10-08: route (a), extend `ds-bar-chart`; the dash for an empty value and gaps 1-8 are built on the branch (CHANGELOG Unreleased; `docs/done.md`). **Left:** loading that dims the rows instead of a skeleton, opt-in. Four variants are drawn live in deck `20-bar-chart` (dim, skeleton, dim plus a progress line, shimmer over the bars) with the proposed input `loadingStyle: 'skeleton' | 'dim' | 'dim-progress' | 'shimmer' = 'skeleton'`; build the one he picks. The consumer today dims to opacity 0.6 while a newer scope loads (mm-ecm-platform `src/frontend/projects/ecm-portal/src/app/features/programs/pages/analyze/journey-outcomes/journey-waterfall.component.ts`, input `busy`).
+  **Screenshots** of the original ask: `docs/asks/bar-chart/`.
 
 - [ ] **[P3] `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23).** The English `waterfall`
   is the field's standard word - Excel, Power BI, Tableau, Highcharts and ECharts all use it, with
@@ -1102,7 +1082,7 @@ file** — the number moves; cite the filename.
 | 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
 | 19 | `19-tooltip-markup` | What the tooltip of a `ds-table` header with `hint` shows once `dsTooltipClippedLead` goes and `dsTooltip` understands only `**bold**`: label and hint always, hint only, label only while clipped, or the input stays. | none |
-| 20 | `20-bar-chart` | Parked until mm-ecm re-raises it: extend `ds-bar-chart` or add a `ds-bar-list` for label + bar + number rows; nine gaps drawn beside the ECM screenshots, two of them already covered by `--ds-bar-chart-track-height` and `BarChartRow.color`. | the mm-ecm bar-chart customization ask |
+| 20 | `20-bar-chart` | Which loading look `ds-bar-chart` gets: dim, skeleton, dim plus a progress line, or shimmer, each live with a toggle; the dash fix and gaps 1-8 are built and folded under «Принято» with mockup beside the ds-docs render. | the mm-ecm bar-chart customization ask |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
