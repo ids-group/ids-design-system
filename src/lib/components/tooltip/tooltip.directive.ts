@@ -16,6 +16,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { TooltipPanelComponent } from './tooltip-panel.component';
 import { escapeTooltipMarkup, plainTooltipText } from './tooltip-markup';
 import {
+  closeOnScroll,
   overlayPlacementOf,
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
@@ -418,6 +419,9 @@ ${given}`;
       scrollStrategy: this.overlay.scrollStrategies.close(),
     });
     prepareOverlayEnter(this.ref, this.host.nativeElement, positionStrategy);
+    // The CDK strategy sees only the window and cdkScrollable ancestors, not a plain overflow container.
+    const stopScrollClose = closeOnScroll(this.ref, () => this.onClose());
+    this.ref.detachments().subscribe(stopScrollClose);
 
     const cmpRef = this.ref.attach(new ComponentPortal(TooltipPanelComponent));
     const text = this.tipText();
