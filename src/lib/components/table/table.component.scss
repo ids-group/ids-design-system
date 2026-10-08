@@ -5,7 +5,7 @@
 @use '../../styles/text-clip' as text-clip;
 
 /* Truncation contract:
-   Cell text - Single line, ellipsis at column width (truncate + width), full value in a tooltip.
+   Cell text - Single line, ellipsis at column width (truncate), full value in a tooltip.
    Header label - Single line, no clip.
    Action column - No clip - icon-only buttons. */
 
@@ -443,6 +443,17 @@
     }
 
     .cell-clip {
+      display: block;
+    }
+
+    /* A track from 0 to the text's width, capped by `fitGrowingClips` to what the other columns
+       leave, so the column never forces horizontal scroll. */
+    .cell-clip.grows {
+      display: grid;
+      grid-template-columns: minmax(0, max-content);
+    }
+
+    .cell-clip-text {
       display: block;
 
       /* `scrollWidth > clientWidth` still reports true under `clip`, which is how

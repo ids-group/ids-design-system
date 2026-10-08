@@ -60,7 +60,7 @@ const VIRTUAL_FALLBACK_HEIGHT = 720;
 
 const VIRTUAL_OVERSCAN = 6;
 
-const DEFAULT_CLIP_WIDTH_PX = 240;
+const clipCapProperty = (index: number): string => `--_table-clip-cap-${index}`;
 
 const BLANK_CELL = new Set(['', '—', '-', '–', 'n/a', 'never', 'none']);
 
@@ -689,12 +689,102 @@ export class TableComponent<T extends object> {
     this.editingCell.set(null);
   }
 
-  protected clipWidth(col: TableColumn<T>): number | null {
-    return typeof col.width === 'number'
-      ? col.width
-      : col.width === 'content'
-        ? null
-        : DEFAULT_CLIP_WIDTH_PX;
+  /** A dragged column clips at its dragged width too, not at the declared one. */
+  protected clipGrows(col: TableColumn<T>): boolean {
+    return (
+      col.width === undefined ||
+      this.layout.resize()?.widthOverride(col.key) !== undefined
+    );
+  }
+
+  protected clipMaxWidth(col: TableColumn<T>, index: number): string | null {
+    if (this.clipGrows(col)) {
+      return `var(${clipCapProperty(index)}, none)`;
+    }
+
+    return typeof col.width === 'number' ? `${col.width}px` : null;
+  }
+
+  private readonly growingClipColumns = computed(() =>
+    this.virtualizing()
+      ? []
+      : this.visibleColumns().flatMap((col, index) =>
+          col.truncate &&
+          col.width === undefined &&
+          this.layout.resize()?.widthOverride(col.key) === undefined
+            ? [{ index, key: col.key }]
+            : [],
+        ),
+  );
+
+  private clipCapsSet: readonly string[] = [];
+
+  /** Two forced layouts: the table at its own width, then at max-content with every growing
+   *  column at its header, which leaves what the other columns need to show their content. */
+  private fitGrowingClips(
+    table: HTMLTableElement,
+    growing: readonly { index: number; key: string }[],
+  ): void {
+    for (const property of this.clipCapsSet) {
+      table.style.removeProperty(property);
+    }
+    this.clipCapsSet = growing.map(({ index }) => clipCapProperty(index));
+    if (growing.length === 0) {
+      return;
+    }
+    for (const property of this.clipCapsSet) {
+      table.style.setProperty(property, '0px');
+    }
+    const available = table.getBoundingClientRect().width;
+    table.style.width = 'max-content';
+    table.style.minWidth = '0';
+    const natural = table.getBoundingClientRect().width;
+    const columns = growing.map(({ index, key }) => {
+      const head = table.querySelector<HTMLElement>(
+        `thead th[data-col-key="${CSS.escape(key)}"]`,
+      );
+      let text = 0;
+      let padding = 0;
+      for (const row of Array.from(table.tBodies[0]?.rows ?? [])) {
+        const cell = head
+          ? row.cells[(head as HTMLTableCellElement).cellIndex]
+          : undefined;
+        const clip = cell?.querySelector<HTMLElement>('.cell-clip-text');
+        if (!cell || !clip) {
+          continue;
+        }
+        text = Math.max(text, clip.scrollWidth);
+        if (!padding) {
+          const style = getComputedStyle(cell);
+          padding =
+            parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+        }
+      }
+      const floor = head?.getBoundingClientRect().width ?? 0;
+
+      return {
+        property: clipCapProperty(index),
+        floor,
+        padding,
+        need: Math.max(0, text + padding - floor),
+      };
+    });
+    table.style.width = '';
+    table.style.minWidth = '';
+    const leftover = Math.max(0, available - natural);
+    const needed = columns.reduce((sum, column) => sum + column.need, 0);
+    for (const column of columns) {
+      if (leftover >= needed) {
+        table.style.removeProperty(column.property);
+        continue;
+      }
+      // A pixel short of the share: a neighbour given a fraction less than its text wraps.
+      const share = (leftover * column.need) / needed;
+      table.style.setProperty(
+        column.property,
+        `${Math.max(0, Math.floor(column.floor + share - column.padding) - 1)}px`,
+      );
+    }
   }
 
   protected readonly filteredData = computed<readonly T[]>(() => {
@@ -1083,6 +1173,28 @@ export class TableComponent<T extends object> {
         childList: true,
         characterData: true,
       });
+      onCleanup(() => observer.disconnect());
+    });
+    // Auto layout alone shares the room by text length, so a long clipped value would wrap a
+    // neighbour that fits; a growing column takes only what the others leave, up to its text.
+    afterRenderEffect((onCleanup) => {
+      this.rowSlots();
+      const growing = this.growingClipColumns();
+      const wrap = this.scrollWrap().nativeElement;
+      const table = wrap.querySelector('table');
+      if (!table) {
+        return;
+      }
+      if (growing.length === 0 || typeof ResizeObserver === 'undefined') {
+        this.fitGrowingClips(table, []);
+
+        return;
+      }
+      const observer = new ResizeObserver(() =>
+        this.fitGrowingClips(table, growing),
+      );
+      observer.observe(wrap);
+      this.fitGrowingClips(table, growing);
       onCleanup(() => observer.disconnect());
     });
     afterRenderEffect(() => {

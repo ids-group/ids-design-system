@@ -34,7 +34,9 @@ export interface TableColumn<T = unknown> {
   filterable?: boolean;
   /** Adds a header filter menu; `'set'` is a searchable checkbox list of distinct values. */
   filter?: 'set';
-  /** Ellipsis-clip long cell text at `width` (240px when unset); the full value shows in a tooltip. */
+  /** Ellipsis-clip long cell text at the column's width; the full value shows in a tooltip.
+   *  Without `width` the column takes what the other columns leave at their content width, up to
+   *  its text, down to its header label; it never causes horizontal scroll. */
   truncate?: boolean;
   /** Column width in px, also the clip width for `truncate`.
    *

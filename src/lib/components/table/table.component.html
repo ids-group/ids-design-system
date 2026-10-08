@@ -295,10 +295,11 @@
                 @for (
                   col of visibleColumns();
                   track col.key;
-                  let first = $first
+                  let first = $first;
+                  let index = $index
                 ) {
                   <td
-                    dsTooltipTextSelector=":scope > .cell-clip"
+                    dsTooltipTextSelector=":scope > .cell-clip > .cell-clip-text"
                     [class.numeric]="col.align === 'right'"
                     [class.pin-first]="first && stickyFirstColumn()"
                     [class.editable-cell]="col.editable"
@@ -322,14 +323,17 @@
                       @if (col.truncate) {
                         <span
                           class="cell-clip"
-                          [style.max-width.px]="clipWidth(col)">
-                          <ng-container
-                            [ngTemplateOutlet]="tpl"
-                            [ngTemplateOutletContext]="{
-                              $implicit: row,
-                              row: row,
-                            }">
-                          </ng-container>
+                          [class.grows]="clipGrows(col)"
+                          [style.max-width]="clipMaxWidth(col, index)">
+                          <span class="cell-clip-text">
+                            <ng-container
+                              [ngTemplateOutlet]="tpl"
+                              [ngTemplateOutletContext]="{
+                                $implicit: row,
+                                row: row,
+                              }">
+                            </ng-container>
+                          </span>
                         </span>
                       } @else {
                         <ng-container
@@ -343,17 +347,20 @@
                     } @else if (col.truncate) {
                       <span
                         class="cell-clip"
-                        [style.max-width.px]="clipWidth(col)">
-                        @if (cellLink(row, col); as target) {
-                          <a
-                            class="cell-link"
-                            [routerLink]="target"
-                            (click)="$event.stopPropagation()">
+                        [class.grows]="clipGrows(col)"
+                        [style.max-width]="clipMaxWidth(col, index)">
+                        <span class="cell-clip-text">
+                          @if (cellLink(row, col); as target) {
+                            <a
+                              class="cell-link"
+                              [routerLink]="target"
+                              (click)="$event.stopPropagation()">
+                              {{ cellValue(row, col) }}
+                            </a>
+                          } @else {
                             {{ cellValue(row, col) }}
-                          </a>
-                        } @else {
-                          {{ cellValue(row, col) }}
-                        }
+                          }
+                        </span>
                       </span>
                     } @else if (cellLink(row, col); as target) {
                       <a

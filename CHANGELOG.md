@@ -33,6 +33,16 @@
   reported as an unknown slot. Rendering is the same. `ModalComponent`, `ModalCardComponent` and
   `DrawerComponent` lost the private `unslotted`, so a subclass member of that name no longer collides.
 
+- **A `ds-table` column with `truncate` and no `width` grows to its text instead of clipping at
+  240px.** The other columns get their content width first; such a column takes what they leave, up
+  to its own text, and clips at its column width when there is less. Its floor is its header label,
+  so it no longer pushes the table into horizontal scroll. A value that was cut at 240px beside empty
+  space now shows whole, and a table that scrolled sideways because of these columns fits its
+  container with their text cut shorter. To keep the 240px cap, set `width: 240` on the column.
+  `TableComponent` lost the protected `clipWidth` and gained the protected `clipGrows` and
+  `clipMaxWidth` and the private `growingClipColumns`, `clipCapsSet` and `fitGrowingClips`, so a
+  subclass declaring one of those names must rename it.
+
 ### Fixed
 
 - **A pinned chart tooltip takes the pointer.** Its text can be selected and a link in a
@@ -40,6 +50,15 @@
   so a press on it went through to the pane. An unpinned tooltip still lets the pointer through to
   the plot, and a `pointer-events: auto` you set on an element of your `tooltipTemplate` is still
   what makes it clickable while `tooltipLingerMs` keeps an unpinned panel open.
+- **A `truncate` column dragged with `dsTableResize` clips at its dragged width.** A column with a
+  `width` kept cutting its text at that width after being dragged wider, and could not be dragged
+  narrower than it plus its padding.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| a cell template wrapping the value in an element styled `width: 0; min-width: 100%` with an ellipsis, plus `dsTooltipWhenClipped` on it, so a column without `width` clips at its own width | `truncate: true` on a column without `width` clips at the column width and shows the full value in a tooltip | `truncate: true` on the column; keep the template only for markup it adds besides the value |
 
 ## 0.14.8 — 2026-10-06
 
