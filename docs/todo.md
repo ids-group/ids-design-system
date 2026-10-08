@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**123 open — 3 P1, 9 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
+**122 open — 3 P1, 9 P2, 110 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 3
 
@@ -40,7 +40,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 111
+### P3 — 110
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -191,7 +191,6 @@ is stale. Closing an item means deleting the item and nothing else.
   - Zone COLOUR and `data-focus` SHAPE cannot both reach one role, and the reason is a …
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The resize handle still eats a finger swipe on a HYBRID device, which the touch fix does not reach
-  - A `done.md` heading's own numbers do not reconcile, and the true breakdown is not recoverable from the record
 - **Claude Design upload — what the freeze left open (recorded 2026-09-04)**
   - Where a check mark is drawn, and which ones are the shared one
   - The upload tree tracks `src/lib`, and lags it between a library commit and the next CI
@@ -225,7 +224,7 @@ will swallow every release since in one pass, so those manifests are what has to
 
 **Two habits that keep catching real defects, worth reading before opening anything.** A number
 measured in ONE theme carried into the other unchecked - twice, both wrong: the `tonal` disabled fill
-(4.32:1 light, 1.20:1 dark) and the neutral disabled label (`docs/done.md:1590`, `:1720`). And a capability
+(4.32:1 light, 1.20:1 dark) and the neutral disabled label. And a capability
 that shipped with zero adoption twice traced to one missing field in a contract: when adoption is
 zero, read the consumer's hand-rolled version rather than re-reading our own API.
 
@@ -562,7 +561,7 @@ the service was just the one somebody noticed. Full table and every tested hypot
 `packaging-diagnosis.md`.
 
 - [ ] **[P3] A2 - column filters and persisted layout out of `ds-table`.** A1 is priced (a fixed
-  923 B seam, `done.md:3477`); resizing, reorder with the picker and `@angular/cdk/drag-drop`, and CSV
+  923 B seam); resizing, reorder with the picker and `@angular/cdk/drag-drop`, and CSV
   export already moved out as `dsTableResize`, `dsTableColumns` and `dsTableExport` (0.12.1). Still on
   `ds-table`: `filterMode` / `columnFilterOptions` / `filterQuery` and `persistLayout` / `storageKey`
   (`table.component.ts:273-342`). Three questions the ablation left open: does `truncate` stay in the
@@ -1424,7 +1423,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
   `FieldMessageComponent`, so every button ships the message line whether or not it binds `hint`,
   `warning` or `error`. Today that is hundreds of bytes: `field-message.component.ts:9-11` needs
   only `IconComponent` and `DS_CONFIG`, both already in the button's closure, and the opt-in
-  directive seam measured 308 B gzip worse (done.md:3507). Re-measure the button with and without the
+  directive seam measured 308 B gzip worse. Re-measure the button with and without the
   line when `field-message` gains an import the button does not carry, or the button stops rendering
   `ds-icon`; the directive seam is the known way out.
 
@@ -1673,8 +1672,6 @@ Bar and column are settled separately and stay apart.
 *This section also has items under **Bugs**.*
 
 - [ ] **[P3] The resize handle still eats a finger swipe on a HYBRID device, which the touch fix does not reach.** `table.component.scss` hides the handle under `@media (hover: none) and (pointer: coarse)`, which is the right test for a phone — but a touch laptop reports `hover: hover` and `pointer: fine` because its PRIMARY input is the mouse, so the query is false, the handle renders, and its `touch-action: none` still takes the horizontal swipe that scrolls the table. The 8px strip is dead there for exactly the same reason it was dead on a phone. Not a regression: before 2026-09-02 it behaved this way on every device. The options are not equivalent — `(any-pointer: coarse)` catches hybrids but would also strip the handle from a mouse user who merely HAS a touchscreen, which is worse; dropping `touch-action: none` and calling `preventDefault` only once a drag has actually started keeps the handle usable by mouse AND returns the swipe, but needs the pointer-event sequence reworked and measured on a real hybrid, not emulated. Nobody has reported it; recorded so the narrow query is a known choice rather than an oversight.
-
-- [ ] **[P3] A `done.md` heading's own numbers do not reconcile, and the true breakdown is not recoverable from the record.** *"The review round on the picker lane — 43 findings, 42 fixed"* says 42 fixed, while its body says three were rejected as overstated: 42 + 3 is 45 against 43 found. The deck it points at has all seven sections `closed` and its §11 lists exactly three rejected findings, so there is NO deferred finding hiding in the gap — the count is what is wrong, not the work. Left uncorrected deliberately: inventing the missing breakdown to make the arithmetic close would be the same error as the claim it produced (a subtraction reported as an observation — see the session's memory on derived numbers). Whoever has the review round's source list can fix the heading; until then the numbers should not be quoted.
 
 ## Claude Design upload — what the freeze left open (recorded 2026-09-04)
 
