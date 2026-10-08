@@ -88,5 +88,5 @@ if (problems.length) {
   process.exit(1);
 }
 console.log(
-  `check-glyph-clip: OK — ${checked} block-axis clip(s) outside the mixins, every one waived with a reason (${waived}).`,
+  `check-glyph-clip: OK - ${checked} block-axis clip(s) outside the mixins, every one waived with a reason (${waived}).`,
 );

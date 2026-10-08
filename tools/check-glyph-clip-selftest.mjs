@@ -93,5 +93,5 @@ if (failures > 0) {
 }
 const firing = cases.filter(([, , mustFire]) => mustFire).length;
 console.log(
-  `\ncheck-glyph-clip-selftest: OK — ${cases.length} cases, ${firing} firing shapes and ${cases.length - firing} sound ones.`,
+  `\ncheck-glyph-clip-selftest: OK - ${cases.length} cases, ${firing} firing shapes and ${cases.length - firing} sound ones.`,
 );
