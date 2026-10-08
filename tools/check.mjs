@@ -133,6 +133,8 @@ export const GROUPS = {
   // (167 to 388 s over four runs, 2026-10-08). It is the only gate that applies the draft to an app and
   // builds it, so a break no item names, or an item that migrates into a broken build, surfaces at the
   // cut and not at a consumer's.
+  // `render-evidence` sees a rendering change no token or member diff carries; it builds the docs twice
+  // and screenshots every block, minutes rather than seconds, so it is here and not in `lint`.
   release: [
     'tools-parse',
     'class-surface-entry',
@@ -171,6 +173,8 @@ export const GROUPS = {
     'schematics',
     'upgrade-canary:selftest',
     'upgrade-canary',
+    'render-evidence:selftest',
+    'render-evidence',
   ],
   // The checkers' own tests: they prove a gate still goes red, the half a green run cannot show.
   // Discovery appends every `tools/check-*-selftest.mjs` except `overrides:selftest`, which needs a
