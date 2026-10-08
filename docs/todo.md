@@ -1060,6 +1060,7 @@ file** — the number moves; cite the filename.
 | 19 | `19-tooltip-mechanism` | Everything about the tooltip in one deck, the open questions on top: what is settled and in dev, live examples of the term and the info icon, and two open questions (who writes the bold label of a clipped header, whether to split the tooltip file). | none |
 | 20 | `20-interaction-states` | General rules for the states of interactive elements as levels on three channels, with live sliders for the step numbers; one neutral hover surface; a check against empty cells; whether to merge the pilot; open questions on top. | none |
 | 21 | `21-loading-states` | The next-release loading fix for the eight other charts and the three pickers, each drawn now and under the shared rule. | the loading item in Asked by Stas |
+| 22 | `22-focus-ring-radius` | Before and after of `ecm-fix/focus-ring-radius`: the focus ring takes `--focus-ring-radius` wherever an element declares no radius, and the stepper buttons follow the box corners. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
