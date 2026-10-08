@@ -68,9 +68,9 @@
 <body>
 <main>
   <header class="masthead">
-    <h1>Три способа сделать термин с определением: нажми и проверь каждый</h1>
+    <h1>Три способа сделать термин: ты выбрал директиву на любом элементе, проверь каждый вживую</h1>
     <p class="chat">Ответ нести в чат: «Тултип: разметка и подпись»</p>
-    <p class="lede">Каждый вариант ниже живой. Наводи мышь, жми Tab, Enter, Space, Esc и щёлкай. Под примером строка пишет, что произошло, и что услышит скринридер. Решить надо одно: какой из трёх способов делает библиотека.</p>
+    <p class="lede">Каждый вариант ниже живой. Наводи мышь, жми Tab, Enter, Space, Esc и щёлкай. Под примером строка пишет, что произошло, и что услышит скринридер. Ты уже выбрал директиву в деке 20-tooltip-group; здесь все три способа рядом, чтобы увидеть разницу руками. Код директивы лежит в ветке ecm-fix/tooltip-arrow-anchor и ещё не влит.</p>
     <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">dsDefinitionTerm</span><span class="chip">ds-info-hint</span><span class="chip">актуально на 2026-10-08</span></div>
   </header>
 
@@ -90,15 +90,16 @@
     <p>У каждого способа два примера: слово в тексте и заголовок таблицы. Щёлкни по заголовку: у кнопки определение закрепляется, а у сортируемого столбца клик сортирует и ничего не закрепляет. Выбор - клик по рамке карточки, не по примеру.</p>
     <div class="opts">
 
-      <article class="opt" tabindex="0" data-variant="span">
+      <article class="opt is-pick" tabindex="0" data-variant="span">
+        <span class="badge is-pick">выбрано тобой</span>
         <h3>Директива на любом элементе</h3>
-        <p class="youpick"><b>Ты выбираешь</b><code>&lt;span dsDefinitionTerm&gt;</code>: директива даёт подчёркивание и тултип, но span остаётся не кнопкой.</p>
-        <p class="sample">Контакты, которые <span class="anchor"><span class="term" data-kind="span">вышли</span><span class="tip" hidden></span></span> до цели, не считаются.</p>
-        <div class="th-demo"><span class="anchor"><span class="term" data-kind="span">Покинувшие</span><span class="tip" hidden></span></span></div>
-        <p class="log" data-log>Наведи мышь на слово. Нажми Tab.</p>
+        <p class="youpick"><b>Ты выбираешь</b><code>&lt;span dsDefinitionTerm&gt;</code>: директива даёт подчёркивание и тултип, а на span сама ставит <code>tabindex="0"</code>, <code>role="button"</code> и Enter, Space как клик.</p>
+        <p class="sample">Контакты, которые <span class="anchor"><span class="term" data-kind="span" tabindex="0" role="button">вышли</span><span class="tip" hidden></span></span> до цели, не считаются.</p>
+        <div class="th-demo"><span class="anchor"><span class="term" data-kind="span" tabindex="0" role="button">Покинувшие</span><span class="tip" hidden></span></span></div>
+        <p class="log" data-log>Наведи, нажми Tab, Enter, Space, Esc. В заголовке клик закрепляет.</p>
         <p class="says" data-says></p>
         <p class="code">&lt;span dsDefinitionTerm="Покинули путь до шага цели."&gt;вышли&lt;/span&gt;</p>
-        <div class="pills"><span class="pill good">работает на любом теге</span><span class="pill bad">Tab не доходит, с клавиатуры не открыть</span><span class="pill bad">скринридер определения не прочтёт</span></div>
+        <div class="pills"><span class="pill good">работает на любом теге</span><span class="pill good">Tab, Enter, Space, Esc работают</span><span class="pill good">скринридер читает определение</span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
 
@@ -114,8 +115,8 @@
         <span class="chosen-mark">выбрано</span>
       </article>
 
-      <article class="opt is-pick" tabindex="0" data-variant="button">
-        <span class="badge is-pick">уже сделано в ветке</span>
+      <article class="opt" tabindex="0" data-variant="button">
+        <span class="badge is-no">заменён директивой</span>
         <h3>Компонент на кнопке</h3>
         <p class="youpick"><b>Ты выбираешь</b><code>&lt;button dsDefinitionTerm&gt;</code>: это настоящая кнопка с подчёркиванием, фокусом, закреплением кликом и подсказкой.</p>
         <p class="sample">Контакты, которые <span class="anchor"><button type="button" class="term" data-kind="button">вышли</button><span class="tip" hidden></span></span> до цели, не считаются.</p>
@@ -124,7 +125,7 @@
         <p class="says" data-says></p>
         <p class="code">&lt;button type="button"
         dsDefinitionTerm="Покинули путь до шага цели."&gt;вышли&lt;/button&gt;</p>
-        <div class="pills"><span class="pill good">Tab, Enter, Space, Esc работают</span><span class="pill good">скринридер читает определение</span><span class="pill mid">новый компонент в публичном API</span></div>
+        <div class="pills"><span class="pill good">Tab, Enter, Space, Esc работают</span><span class="pill bad">только на кнопке: в тексте с другим тегом не поставить</span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
     </div>
@@ -132,7 +133,7 @@
 
   <section class="panel verdict is-done">
     <h2>Рекомендация</h2>
-    <p class="pick"><strong>Компонент на кнопке.</strong> Только у него есть всё сразу: фокус с клавиатуры, закрепление кликом, подсказка при наведении, состояния и определение для скринридера. У директивы на span фокуса нет, у класса нет поведения вовсе. Он уже сделан в ветке <code>ecm-fix/tooltip-arrow-anchor</code>.</p>
+    <p class="pick"><strong>Директива на любом элементе, как ты выбрал.</strong> Она даёт то же, что кнопка: фокус, закрепление кликом, подсказку и определение для скринридера, и работает на любом теге, а на <code>&lt;button&gt;</code> просто ставит <code>type="button"</code>. Класс остаётся только видом без поведения.</p>
   </section>
 
   <p class="src"><b>Источники, проверено 2026-10-08.</b> <code>definition-term.component.ts</code>, <code>definition-term.component.scss</code>, <code>info-hint.component.ts</code>, <code>tooltip.directive.ts</code> в ветке <code>feat/tooltip-term-lead</code>; цвета и состояния термина взяты из <code>definition-term.component.scss</code>. Примеры воспроизводят поведение скриптом: наведение и фокус показывают подсказку, клик закрепляет, Esc и щелчок мимо закрывают; это модель, а не сам компонент.</p>
@@ -167,8 +168,7 @@
     function unpinAll() { for (const term of terms) { if (state.get(term)?.pinned) setPinned(term, false); } }
     function note(message) { log.textContent = message; }
     function announce(term) {
-      if (variant === 'button') says.innerHTML = '<b>Скринридер:</b> «кнопка, ' + term.textContent + '», описание: «' + DEFINITION + '».';
-      else if (variant === 'span') says.innerHTML = '<b>Скринридер:</b> читает слово как обычный текст. Определение к нему не привязано, потому что span не получает фокус.';
+      if (variant !== 'class') says.innerHTML = '<b>Скринридер:</b> «кнопка, ' + term.textContent + '», описание: «' + DEFINITION + '».';
       else says.innerHTML = '<b>Скринридер:</b> читает слово как обычный текст.';
     }
 
@@ -196,15 +196,13 @@
         note(pinned ? 'Клик: определение закреплено, мышь можно убрать.' : 'Второй клик: определение закрыто.');
       });
       term.addEventListener('keydown', (event) => {
+        if (variant === 'span' && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); term.click(); return; }
         if (event.key === 'Escape') { setPinned(term, false); tipOf(term).hidden = true; note('Esc: определение закрыто.'); }
       });
     }
     document.addEventListener('click', (event) => {
       if (!event.target.closest('.term')) { unpinAll(); }
     });
-    if (variant === 'span') {
-      note('Наведи мышь. Нажми Tab: слово в фокус не попадёт.');
-    }
   }
   for (const card of document.querySelectorAll('.opt[data-variant]')) wire(card);
 
