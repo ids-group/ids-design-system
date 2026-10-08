@@ -71,6 +71,12 @@ gap. The number is the rank and nothing else: it is not an id,
 so never keep a stale one to preserve a link. There is deliberately no `ds-deck-rank` meta — one more
 marker is one more thing to drift, and the filename cannot drift from itself.
 
+**Two branches that add a deck under the same rank: whoever merges into `dev` last takes the last
+number.** The deck already in `dev` keeps its rank; the later branch renames its deck to the next free
+rank at merge time and fixes its rows in the table above and in the `docs/todo.md` deck table. Check
+before merging: `ls presentations | grep -E '^[0-9]+-' | sort -n | tail -3`. `deck-lint` D007 is what
+fails when this is skipped.
+
 ## A deck declares its own status, and that is what moves it
 
 A settled decision must not sit here looking like an open question. Every deck carries its status in
