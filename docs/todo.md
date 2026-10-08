@@ -1098,7 +1098,7 @@ file** — the number moves; cite the filename.
 | 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
 | 19 | `19-tooltip-mechanism` | Whether and when to split the tooltip code into files, and when to merge the tooltip-group branch into dev; the label-and-hint question is settled. | none |
-| 20 | `20-tooltip-term-variants` | Which of three builds the library ships for a term with a definition, each as a live example; the tooltip, the info icon and the term share one engine. | none |
+| 20 | `20-tooltip-term-variants` | The three builds of a term with a definition as live examples; a directive on any element is chosen and built on `ecm-fix/tooltip-arrow-anchor`; the tooltip, the info icon and the term share one engine. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
