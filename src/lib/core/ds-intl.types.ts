@@ -282,6 +282,8 @@ export interface DsIntl {
     /** `'All series are hidden'` - line `noVisibleSeriesText` default. */
     readonly noVisibleSeries: string;
     readonly target: (value: string) => string;
+    /** `'Rows under {label}'` - name of a bar-chart group's disclosure button. */
+    readonly rowsUnder: (label: string) => string;
     readonly noted: (notes: readonly string[]) => string;
     readonly noData: (label: string) => string;
     readonly onePoint: (label: string, value: string, at: string) => string;

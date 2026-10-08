@@ -72,6 +72,7 @@ export type {
 } from '@ids-group-ltd/ids-design-system/components/bar';
 export { BarChartComponent } from '@ids-group-ltd/ids-design-system/components/bar-chart';
 export type {
+  BarChartLabelPosition,
   BarChartRow,
   BarChartSegment,
   BarChartValue,

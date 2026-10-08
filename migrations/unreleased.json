@@ -1,7 +1,55 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "intl-chart-rows-under-required",
+      "kind": "behavior",
+      "old": "DsIntl",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "DsIntl",
+        "DS_INTL",
+        "shareOfTotal"
+      ],
+      "detect": [
+        ": DsIntl =",
+        "Signal<DsIntl>",
+        "shareOfTotal:"
+      ],
+      "action": "None, unless your code builds a complete DsIntl object of its own: add chart.rowsUnder, the name of a bar-chart group's disclosure button.",
+      "appliesWhen": "Only an object or signal typed as the full DsIntl, not as DsIntlOverrides. provideDsIntl with a partial override, and every app that leaves DS_INTL alone, is unaffected.",
+      "pitfall": "An object that spreads DS_INTL_DEFAULTS.chart compiles, but a chart section written out key by key without the spread fails with TS2741 on rowsUnder.",
+      "restore": null,
+      "verify": "The app builds, and every complete DsIntl object it declares has chart.rowsUnder."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "BarChartComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends BarChartComponent"
+      ],
+      "detect": [
+        "extends BarChartComponent"
+      ],
+      "action": "Build after upgrading, and rename or mark `override` a member of yours the compiler reports as colliding.",
+      "appliesWhen": "Only a class of yours that extends BarChartComponent. Template users of ds-bar-chart need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does. Against a private one, such as expanded, `override` still fails with TS2415; only a rename resolves it.",
+      "restore": null,
+      "verify": "The app builds with no TS4114, TS2415 or TS2416 against BarChartComponent.",
+      "note": "BarChartComponent gained the public labelPosition, the protected isExpanded, toggleRow, hintId, holdsControls, percentColumn and entries, and the private idPrefix and expanded."
+    }
+  ],
   "informational": [
+    "ds-bar-chart takes labelPosition ('top' | 'start', default 'top', type BarChartLabelPosition): 'start' puts each label in a column before its bar and aligns labels, bars, values and percents across rows. --ds-bar-chart-label-column-max-width caps the label column.",
+    "BarChartRow takes children (rows nested behind a disclosure button, each measured against its parent's value), hint (a defined-term label with a tooltip), emphasis (a bold label), showPercent (a per-row override of the chart's showPercent) and detached (a row set apart by a divider and given no partOfWhole share). --ds-bar-chart-child-fill-opacity and --ds-bar-chart-divider-color style the new rows. A chart without these fields renders as before.",
+    {
+      "text": "A ds-bar-chart whose data has any hint or children renders its rows container with role=\"group\" instead of role=\"img\", so the disclosure and term buttons inside it stay reachable to assistive technology; a chart without them keeps role=\"img\".",
+      "verify": "Open a bar chart with a hinted or grouped row and confirm Tab reaches the term and the disclosure button, and that a screen reader announces the term's hint."
+    },
     "A ds-bar-chart row whose value is NaN, Infinity, or a [low, high] pair with a non-finite end shows — for its value, its derived percentage and its partOfWhole share instead of 0 and 0.0%, and draws no bar; an explicit percent on the row still prints. The generated summary leaves such a row out of its lowest and highest readings."
   ],
   "deleteList": []

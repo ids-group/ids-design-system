@@ -1,5 +1,40 @@
 ## Unreleased
 
+### Added
+
+- **`ds-bar-chart` takes `labelPosition`.** `labelPosition="start"` puts each label in a column
+  before its bar, on the bar's line, and lines up labels, bars, values and percents in columns
+  across rows; the default `'top'` keeps the label above the bar. `BarChartLabelPosition` is its
+  type. `--ds-bar-chart-label-column-max-width` (default `40%`) caps the label column, and the row gap
+  under `'start'` defaults to `--space-3`.
+
+- **A `ds-bar-chart` row can hold rows of its own.** `BarChartRow.children` nests rows under a row
+  behind a disclosure button after its label, closed at first. A child's bar and derived percent
+  are shares of its parent's value, not of `max`; it takes the parent's `color` and `showPercent`
+  unless it sets its own, draws at `--ds-bar-chart-child-fill-opacity` (default `0.55`), and is
+  listed in the data table whether or not its group is open. One level deep. With `interactive`,
+  the row carries `aria-expanded`, and Right opens a closed group and Left closes an open one.
+
+- **`BarChartRow` takes `hint`, `emphasis`, `showPercent` and `detached`.** `hint` turns the label
+  into a defined term: a dotted underline, and the hint in a tooltip on hover and keyboard focus,
+  announced as the label's description. `emphasis` prints the label in bold. `showPercent` prints
+  or hides that row's percent, overriding the chart's. `detached` marks a row that is not a part of
+  the others, such as a total of those who finished or left: a dashed divider in
+  `--ds-bar-chart-divider-color` separates it from the row before, and `partOfWhole` gives it no
+  share. A chart with any `hint` or `children` takes `role="group"` instead of `role="img"`, so the
+  buttons inside stay reachable. A chart without the new fields renders as before.
+  `BarChartComponent` gained the public `labelPosition`, the protected `isExpanded`, `toggleRow`,
+  `hintId`, `holdsControls`, `percentColumn` and `entries`, and the private `idPrefix` and
+  `expanded`, so a subclass declaring one of those names must rename it.
+
+### Changed
+
+- **`DsIntl` gains a required key: `chart.rowsUnder: (label: string) => string`** (default
+  `` (label) => `Rows under ${label}` ``), the name of a bar-chart group's disclosure button. A
+  complete `DsIntl` dictionary, or a complete `chart` section of one, declared as a typed object
+  stops compiling until it lists it. Overrides passed to `provideDsIntl` are partial and need
+  nothing.
+
 ### Fixed
 
 - **`ds-bar-chart` prints `—` for a row with a non-finite value.** A `NaN` or `Infinity` value, or a

@@ -29,7 +29,9 @@
   <div
     class="rows"
     [class.dims-others]="dimOthers()"
-    [attr.role]="interactive() ? 'group' : 'img'"
+    [class.labels-start]="labelPosition() === 'start'"
+    [class.has-percent]="percentColumn()"
+    [attr.role]="interactive() || holdsControls() ? 'group' : 'img'"
     [attr.aria-label]="accessibleName()"
     [dsChartTooltip]="tooltipContext()"
     [dsChartTooltipSwatches]="defaults.tooltipSwatches()"
@@ -37,9 +39,18 @@
     [dsChartTooltipOrigin]="activeMark.origin()"
     [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
     @for (entry of rows(); track entry.key; let index = $index) {
+      @if (entry.startsDetached) {
+        <div
+          class="divider"
+          aria-hidden="true">
+        </div>
+      }
+
       <div
         class="row"
         [style.--_chart-mark-stagger]="markStagger(index)"
+        [class.is-child]="entry.parentKey !== null"
+        [class.is-emphasis]="entry.row.emphasis"
         [class.interactive]="interactive()"
         [class.pins]="defaults.pinOnClick()"
         [class.is-active]="activeMark.index() === index"
@@ -50,6 +61,12 @@
         "
         [attr.data-mark-index]="index"
         [attr.aria-label]="interactive() ? entryLabel(entry) : null"
+        [attr.aria-expanded]="
+          interactive() && entry.hasChildren ? isExpanded(entry.key) : null
+        "
+        [attr.aria-describedby]="
+          interactive() && entry.row.hint ? hintId(entry.key) : null
+        "
         (animate.leave)="leaveMark($event)"
         (pointerenter)="activeMark.enter(index, $event, '.fill')"
         (pointerleave)="activeMark.leave()"
@@ -60,7 +77,46 @@
         (keydown.enter)="onRowKey(entry.row, $event)"
         (keydown.space)="onRowKey(entry.row, $event)">
         <span class="label">
-          {{ entry.row.label }}
+          @if (!entry.row.hint) {
+            {{ entry.row.label }}
+          } @else if (interactive()) {
+            <span
+              class="term"
+              [dsTooltip]="entry.row.hint"
+              (pointerenter)="activeMark.leave()">
+              {{ entry.row.label }}
+            </span>
+
+            <span
+              hidden
+              [id]="hintId(entry.key)">
+              {{ entry.row.hint }}
+            </span>
+          } @else {
+            <button
+              type="button"
+              class="term"
+              [dsTooltip]="entry.row.hint"
+              (pointerenter)="activeMark.leave()"
+              (click)="$event.stopPropagation()">
+              {{ entry.row.label }}
+            </button>
+          }
+
+          @if (entry.hasChildren) {
+            <button
+              type="button"
+              class="toggle"
+              [attr.aria-expanded]="isExpanded(entry.key)"
+              [attr.aria-label]="intl().chart.rowsUnder(entry.row.label)"
+              [attr.tabindex]="interactive() ? -1 : null"
+              [attr.aria-hidden]="interactive() ? 'true' : null"
+              (click)="toggleRow(entry.key, $event)">
+              <ds-icon
+                [name]="isExpanded(entry.key) ? 'chevronDown' : 'chevronRight'"
+                [size]="14" />
+            </button>
+          }
 
           @if (entry.row.detail) {
             <span class="detail">
@@ -73,7 +129,7 @@
           {{ entry.formattedValue }}
         </span>
 
-        @if (showPercent()) {
+        @if (entry.showsPercent) {
           <span class="percent">
             {{ entry.formattedPercent }}
           </span>
