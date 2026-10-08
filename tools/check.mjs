@@ -29,6 +29,7 @@ const EXTRA = {
   'lib-package': ['tools/sync-lib-package.mjs', '--check'],
   'public-api': ['tools/generate-public-api.mjs', '--check'],
   'todo-index': ['tools/todo-index.mjs', '--check'],
+  'token-deprecations': ['tools/generate-token-deprecations.mjs', '--check'],
   'manual-surface': ['.design-sync/tools/check-manual-surface.mjs'],
   'changelog-lint': ['tools/changelog-lint.mjs'],
   'changelog-lint:selftest': ['tools/changelog-lint-selftest.mjs'],
@@ -55,7 +56,9 @@ export const GROUPS = {
   // fixture at two extracted release trees (9 s for three fixtures, 2026-10-07); `todo-index`
   // compares against `docs/todo.md`, which parallel sessions edit in a shared checkout;
   // `class-member-notes` reads `migrations/unreleased.json`, which is drafted at the cut, so
-  // mid-cycle it would be red on every commit that adds a member.
+  // mid-cycle it would be red on every commit that adds a member. `token-deprecations` reads every
+  // release tree (42 s, 2026-10-08) and moves only with a manifest; its selftest is in, because the
+  // rule it tests ships to consumers and runs in under 3 s.
   // `changelog-pending` is in: it reads one tag's tree and the working tree in about a second, and
   // a change is cheapest to describe in the session that made it. `manifest-claims` is in: it reads
   // only the draft manifest and `## Unreleased`, which every PR can change. `token-defaults` is in:
@@ -88,6 +91,7 @@ export const GROUPS = {
     'void-tokens',
     'abbreviated-tokens',
     'deck-lint',
+    'token-deprecations:selftest',
   ],
   // The `preversion` gate, run by `tools/preflight.mjs` in this order and stopping at the first
   // failure. `tools-parse` is first because every check after it is one of those files. Each
@@ -99,7 +103,9 @@ export const GROUPS = {
   // read as facts the moment they ship. `class-member-notes` follows `class-surface-entry`: that one
   // asks whether a class is named, this one whether every member it gained or lost is. The PR gate
   // runs most of the rest too, but it is manual, so a release can be cut from a branch where it never
-  // fired. `changelog-pending` is here because the cut folds `## Unreleased` into the release block,
+  // fired. `token-deprecations` is here because the stylelint list ships in the package, and a
+  // manifest edited without regenerating it would publish a list that misses the release's own
+  // renames. `changelog-pending` is here because the cut folds `## Unreleased` into the release block,
   // and a change it never named leaves with nothing describing it. Left out: deck-lint, whose subject
   // is internal decks that never reach the package.
   release: [
@@ -121,6 +127,8 @@ export const GROUPS = {
     'manifest-compile',
     'token-defaults:selftest',
     'token-defaults',
+    'token-deprecations:selftest',
+    'token-deprecations',
     'changelog-lint:selftest',
     'changelog-lint',
     'changelog-pending:selftest',
