@@ -53,8 +53,9 @@ One file per released version — `migrations/<version>.json` — mirroring that
   Read it before deciding a clean build means done.
 - **`evidence`** - what measured the outcome the entry's prose asserts: that rendering or behaviour
   did not change, a compile outcome, or a count of things. `commit:<sha>` inside the boundary the
-  manifest describes, `fixture:<path>` under `migrations/fixtures/`, `pixels:<docs block id>`,
-  `tokens:<token name>`, or `command:<shell command>`. Optional on an item and on an object-form
+  manifest describes, `fixture:<path>` under `migrations/fixtures/`, `pixels:<docs block id>`
+  (`<section anchor>/<chapter slug>`, such as `button/sizes`, whose pixels did not change across
+  the boundary), `tokens:<token name>`, or `command:<shell command>`. Optional on an item and on an object-form
   `informational` entry, and required wherever the prose makes such a claim.
 - **`deleteList`** — the structured form of "what you can now delete" (see below).
 - **`informational`** — a non-actionable FYI, a bare string or `{ "text": "...", "verify": "..." }`
@@ -122,10 +123,33 @@ carries a directive on the line above, naming the side and the exact codes:
 
 The codes reported on a line must equal the codes named, and a line with no directive must compile
 clean at both tags; TypeScript's own `@ts-expect-error` accepts any error, so the directive is
-stripped before compiling. Every TS code an item, a `deleteList` row or an `informational` line names must be one its fixture
-asserts. Fixtures
-are kept in the repository and not shipped. Only `.ts` is compiled: template fixtures
-(`strictTemplates`, `.html`) are not supported yet.
+stripped before compiling. Every TS code, and every compile-time NG code (`NG1000` and up), an
+item, a `deleteList` row or an `informational` line names must be one its fixture asserts. Fixtures
+are kept in the repository and not shipped.
+
+A template outcome is backed by `<id>.component.ts` instead: a standalone component importing what
+it uses, its template inline in `template:`, compiled by the Angular compiler with
+`strictTemplates`. A template line expected to fail carries the directive as an HTML comment on the
+line above, with TS or NG codes, and the TypeScript part of the file takes `// @ts-expect-error`
+as before:
+
+```ts
+template: `
+  <!-- expect: after NG8002 -->
+  <ds-accordion [multi]="false"></ds-accordion>
+`,
+```
+
+An `.html` fixture is not compiled.
+
+**Locator fixtures.** `migrations/fixtures/<version>/<id>.found.<ext>` holds consumer code an item
+must locate, and `<id>.ignored.<ext>` a look-alike it must not count (the same attribute on another
+element), `ext` being `html`, `ts` or `scss`. They are searched the way the usage finder searches: a
+literal grep for `old` (the attribute of an `element[attr]`), every `searchHints` entry and every
+`detect` shape, where a hit from `old` or a hint counts only inside the element `old` names, and a
+`detect` hit is scoped the same way only on a template-only item. A `.found` snippet nothing locates
+is a locator defect in the manifest, and an `.ignored` one a hit survives in is a scope defect.
+Every item of the draft carries a `.found` fixture; they are kept in the repository and not shipped.
 
 The prose CHANGELOG is the human copy of a release; the manifest is its machine mirror of the
 same release. Where the two disagree, the CHANGELOG is the one to trust.

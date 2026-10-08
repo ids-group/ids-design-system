@@ -5,6 +5,18 @@
 //
 //   node tools/check-class-member-notes-selftest.mjs
 import { boundaryChanges, checkManifest } from './check-class-member-notes.mjs';
+import { classMembers } from './class-surface-diff.mjs';
+
+// The head `class-surface-diff` records for a protected method, before and after: the retyped set
+// this check reads to tell a phantom from a real change is built from those heads.
+const methodHead = (...methods) =>
+  methods.map((method) =>
+    classMembers(
+      `export class Probe {\n  protected ${method}\n    return;\n  }\n}\n`,
+    )
+      .get('Probe')
+      .heads.get(/^\w+/.exec(method)[0]),
+  );
 
 const PACKAGE = '@ids-group-ltd/ids-design-system';
 
@@ -223,6 +235,62 @@ const cases = [
         boundary,
       ).length,
     expect: 0,
+  },
+  {
+    name: 'a method signature rewrapped over several lines keeps its head',
+    run: () =>
+      methodHead(
+        'onKey(event: KeyboardEvent, index: number): void {',
+        'onKey(\n    event: KeyboardEvent,\n    index: number,\n  ): void {',
+      ),
+    expect: [
+      'protected onKey(event: KeyboardEvent, index: number): void',
+      'protected onKey(event: KeyboardEvent, index: number): void',
+    ],
+  },
+  {
+    name: 'a parameter type changed on a wrapped line changes the head',
+    run: () =>
+      methodHead(
+        'onKey(\n    event: KeyboardEvent,\n    index: number,\n  ): void {',
+        'onKey(\n    event: KeyboardEvent,\n    index: string,\n  ): void {',
+      ),
+    expect: [
+      'protected onKey(event: KeyboardEvent, index: number): void',
+      'protected onKey(event: KeyboardEvent, index: string): void',
+    ],
+  },
+  {
+    name: 'an object return type is part of the head, not the body',
+    run: () =>
+      methodHead(
+        'size(): { width: number } {',
+        'size(): { width: number; height: number } {',
+      ),
+    expect: [
+      'protected size(): {width: number}',
+      'protected size(): {width: number; height: number}',
+    ],
+  },
+  {
+    name: 'a decorated method split in two reads as lost and gained',
+    run: () => {
+      const memberNames = (body) =>
+        [
+          ...classMembers(`export class TipDirective {\n${body}}\n`).get(
+            'TipDirective',
+          ).names,
+        ].sort();
+      return [
+        memberNames(
+          "  @HostListener('mouseenter')\n  @HostListener('focusin')\n  protected onOpen(): void {\n    this.show();\n  }\n",
+        ),
+        memberNames(
+          "  @HostListener('mouseenter')\n  protected onPointerEnter(): void {\n    this.show();\n  }\n\n  @HostListener('focusin', ['$event'])\n  protected onFocusIn(event: FocusEvent): void {\n    this.show();\n  }\n",
+        ),
+      ];
+    },
+    expect: [['onOpen'], ['onFocusIn', 'onPointerEnter']],
   },
 ];
 

@@ -369,7 +369,7 @@
     }
   ],
   "informational": [
-    "ds-time-picker: the protected `TimeColumnsComponent.onKey` changed its parameter list. The class is internal to the time picker and not exported, so no consumer can subclass it and there is nothing to migrate.",
+    "ds-time-picker: in the internal `TimeColumnsComponent`, the protected `onKey` keeps its signature; only its parameter list is wrapped across lines. The class is internal to the time picker and not exported, so no consumer can subclass it and there is nothing to migrate.",
     "ds-table: `TableRowAction` gained `hidden?: (row) => boolean` and `disabledReason?: string | ((row) => string)`. Purely additive -- an existing config behaves exactly as before. Reach for `hidden` where an action does not APPLY to a row rather than `disabled`, which greys an item that is always present; a row with every item hidden now renders no kebab instead of an empty menu.",
     "ds-menu-item: new `description` input renders a standing second line and wires `aria-describedby`. If you hand-rolled that line by projecting your own span into the item, move it to the input -- yours lands INSIDE the accessible name, the input's does not.",
     "ds-search: `clear()` is now public. A host-owned Clear button should call it rather than writing '' into `value`, which does not cancel an armed debounce when the text already matches what the control last pushed.",
