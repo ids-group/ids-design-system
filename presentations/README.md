@@ -30,6 +30,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 17 | `17-table-column-hint` | what a `ds-table` header with `hint` shows when its label does not fit the column: only the hint as today, the full label over the hint, or a header that wraps instead - before/after screenshots of the docs demo at `8eb6ab9e` and `e0ff159f`, the three options drawn |
 | 18 | `18-table-header-clip` | the `ds-table` header label that clips with an ellipsis inside its column and the tooltip of a clipped hinted header (label, then hint) - before/after screenshots of the docs demo on dev and on `fix/table-header-clip`: narrow headers, focus ring, plain and hinted tooltip, with the measurements |
 | 19 | `19-tooltip-mechanism` | how deep to refactor the tooltip: the whole mechanism drawn (flow, three modes, every input and who sets it in 19 places of 7 components), then keep as is, split the directive's internals with the same API, or also merge `dsTooltipWhenClipped` and `dsTooltipTextSelector` into one input |
+| 20 | `20-table-truncate-result` | sign-off of the `ds-table` `truncate` column without `width` that now grows to its text: before/after screenshots of 23 harness tables, the measured table of every difference labelled intended or fixed, the regressions found and how each was fixed, and the consumer tables reproduced |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
