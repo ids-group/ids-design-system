@@ -37,6 +37,10 @@
   }
 }
 
+:host(.no-arrow)::after {
+  display: none;
+}
+
 :host(.bottom)::after { top:    calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); left: 50%; margin-left: calc(var(--tooltip-arrow) / -2); border-top-width: var(--border-width-default); border-left-width: var(--border-width-default); }
 :host(.top)::after    { bottom: calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); left: 50%; margin-left: calc(var(--tooltip-arrow) / -2); border-bottom-width: var(--border-width-default); border-right-width: var(--border-width-default); }
 :host(.left)::after   { right:  calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); top: 50%;  margin-top:  calc(var(--tooltip-arrow) / -2); border-top-width: var(--border-width-default); border-right-width: var(--border-width-default); }

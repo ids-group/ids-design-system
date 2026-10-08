@@ -11583,6 +11583,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Milliseconds before the tip appears. Hiding is immediate."
       },
       {
+        "name": "dsTooltipArrow",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Draws the arrow that points at the host. Turn it off where the tip sits flush against it."
+      },
+      {
         "name": "dsTooltipWhenClipped",
         "kind": "input",
         "type": "boolean",
@@ -11636,6 +11645,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": true,
         "description": "Side of the trigger the panel is positioned on; also drives the arrow class."
+      },
+      {
+        "name": "arrow",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Whether the arrow pointing at the trigger is drawn."
       },
       {
         "name": "panelId",

@@ -86,6 +86,8 @@ export class TooltipDirective implements OnDestroy {
   readonly dsTooltipPlacement = input<TooltipPlacement>('top');
   /** Milliseconds before the tip appears. Hiding is immediate. */
   readonly dsTooltipDelay = input<number>(120);
+  /** Draws the arrow that points at the host. Turn it off where the tip sits flush against it. */
+  readonly dsTooltipArrow = input(true, { transform: booleanAttribute });
   /** Show the tip only while the host shows less text than it holds. Re-tested on every open.
    *
    *  Applies the tooltip on its own: without a `dsTooltip` the host's own text is disclosed. A tip
@@ -330,6 +332,7 @@ ${given}`;
     const text = this.tipText();
     cmpRef.setInput('text', text);
     cmpRef.setInput('placement', placement);
+    cmpRef.setInput('arrow', this.dsTooltipArrow());
     positionStrategy.positionChanges.subscribe(({ connectionPair }) =>
       cmpRef.setInput(
         'placement',
