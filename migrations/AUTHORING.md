@@ -493,6 +493,11 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
 - [ ] A template outcome - an NG code, or a TS code only `strictTemplates` reports - is asserted by
       `migrations/fixtures/<version>/<id>.component.ts`, its template inline and compiled by the
       Angular compiler at both tags. (`node tools/check.mjs manifest-compile`, at the cut)
+- [ ] `canary/`, an app written against the last release's API, still builds under
+      `strictTemplates` once the draft is applied to it; each error is printed beside the item
+      that edited or names its line, or as covered by none. Keep `canary/` on the last release:
+      a cut whose draft rewrites it carries the rewritten canary. (`node tools/check.mjs
+      upgrade-canary`, at the cut)
 - [ ] A published record that described something which never worked is resolved by one question —
       does anything the consumer DOES change? Yes → an item with an `action` here, in the library's
       voice. No → nothing, and a quiet correction to the old file if it still misleads. Never a line
