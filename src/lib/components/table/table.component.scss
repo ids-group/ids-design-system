@@ -219,16 +219,20 @@
       align-items: center;
       vertical-align: middle;
       appearance: none;
-      background: none;
       border: 0;
       margin: 0;
       padding: 0;
       font: inherit;
       letter-spacing: inherit;
       text-transform: inherit;
-      color: inherit;
       text-align: left;
       max-width: 100%;
+    }
+
+    // A definition term paints its own colour and background for its pressed and pinned states.
+    .th-label:not(.ds-definition-term) {
+      background: none;
+      color: inherit;
     }
 
     .th-label:has(+ .col-filter-btn) {
@@ -239,11 +243,6 @@
       min-width: 0;
 
       @include text-clip.single-line-ellipsis;
-    }
-
-    .th-label.has-hint {
-      text-decoration: underline dotted var(--text-tertiary);
-      text-underline-offset: 3px;
     }
 
     button.th-label:focus-visible {

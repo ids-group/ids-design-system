@@ -2,7 +2,7 @@
   anchor="tooltip"
   eyebrow="Components"
   title="Tooltip"
-  [apiKeys]="['tooltip:TooltipPanelComponent']">
+  [apiKeys]="['tooltip:TooltipPanelComponent', 'info-hint', 'definition-term']">
   <span lede>
     Hover or focus popup for truncated text, keyboard hints and short clarifications, via
     <code class="t-mono-inline">
@@ -129,8 +129,12 @@
       dsTooltipPlacement
     </code> side it flips, arrow included, 8px clear
     of the viewport edge. Text between a pair of
-    <code class="t-mono-inline">**</code> is bold, and a line break shows as a line break.
-    <code class="t-mono-inline">dsTooltipArrow</code> set to <code class="t-mono-inline">false</code>
+    <code class="t-mono-inline">
+      **
+    </code> is bold, and a line break shows as a line break.
+    <code class="t-mono-inline">
+      dsTooltipArrow
+    </code> set to <code class="t-mono-inline">false</code>
     leaves the arrow out.
   </p>
 
@@ -172,6 +176,240 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Pin on click
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsTooltipPinOnClick
+    </code> opens at once on hover and focus, and a
+    click keeps the tip open after the pointer leaves. A click outside,
+    <code class="t-mono-inline">
+      Escape
+    </code> or blur closes it; a second click on the trigger too.
+    Opt in only where the click does nothing else: without it a click closes the tip.
+  </p>
+
+  <div class="demo">
+    <ds-button
+      dsTooltipPinOnClick
+      color="neutral"
+      variant="outline"
+      size="sm"
+      [dsTooltip]="'Stays open after a click'">
+      Click to pin
+    </ds-button>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Info hint
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      &lt;ds-info-hint&gt;
+    </code> is an icon button with an
+    <code class="t-mono-inline">
+      ariaLabel
+    </code>; its <code class="t-mono-inline">text</code> shows
+    on hover and focus and pins on click. The icon is a question mark;
+    <code class="t-mono-inline">
+      icon="info"
+    </code> draws an "i" instead.
+  </p>
+
+  <div class="demo">
+    <span class="t-s info-row">
+      Conversion rate
+      <ds-info-hint
+        ariaLabel="About conversion rate"
+        text="Share of contacts who reached the goal step, of all who entered the journey." />
+    </span>
+
+    <span class="t-s info-row">
+      Conversion rate
+      <ds-info-hint
+        icon="info"
+        ariaLabel="About conversion rate, info icon"
+        text="The same hint with the info icon." />
+    </span>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Definition term
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsDefinitionTerm="…"
+    </code> on any element marks a term with a
+    dotted underline and shows its definition on hover and focus; a click pins it. On a
+    <code class="t-mono-inline">
+      &lt;span&gt;
+    </code> it adds
+    <code class="t-mono-inline">
+      tabindex="0"
+    </code>,
+    <code class="t-mono-inline">
+      role="button"
+    </code> and Enter / Space; a
+    <code class="t-mono-inline">
+      &lt;button&gt;
+    </code> has those already.
+    <code class="t-mono-inline">
+      [pinOnClick]="false"
+    </code> where the click already acts, as on a
+    sortable <code class="t-mono-inline">ds-table</code> header.
+  </p>
+
+  <div class="demo">
+    <p class="t-s">
+      Contacts who <span dsDefinitionTerm="Left the journey before the goal step, by any exit rule.">exited</span>
+      the journey are not counted as
+      <button
+        type="button"
+        dsDefinitionTerm="Reached the goal step within the attribution window.">
+        converted
+      </button>
+    </p>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Trigger states
+  </h3>
+
+  <p class="block-desc t-s">
+    Hover makes the underline solid and darker; a press tints the term; a pinned tip paints its
+    trigger in the accent until it closes. The pinned trigger carries
+    <code class="t-mono-inline">
+      data-ds-tooltip-pinned
+    </code>, which any
+    <code class="t-mono-inline">
+      dsTooltipPinOnClick
+    </code> host can style. No state changes the size of the term, so the line around it never moves.
+  </p>
+
+  <div class="states is-surface">
+    <div class="state">
+      <span class="state-lbl">
+        Rest
+      </span>
+
+      <div class="state-stage is-horiz t-s">
+        <span dsDefinitionTerm="Left the journey before the goal step.">
+          exited
+        </span>
+
+        <ds-info-hint
+          ariaLabel="About conversion rate"
+          text="Share of contacts who reached the goal step." />
+      </div>
+    </div>
+
+    <div class="state">
+      <span class="state-lbl">
+        Hover (forced)
+      </span>
+
+      <div class="state-stage is-horiz t-s">
+        <span class="pin-hover" dsDefinitionTerm="Left the journey before the goal step.">
+          exited
+        </span>
+
+        <ds-info-hint
+          class="pin-hover"
+          ariaLabel="About conversion rate"
+          text="Share of contacts who reached the goal step." />
+      </div>
+    </div>
+
+    <div class="state">
+      <span class="state-lbl">
+        Pressed (forced)
+      </span>
+
+      <div class="state-stage is-horiz t-s">
+        <span class="pin-active" dsDefinitionTerm="Left the journey before the goal step.">
+          exited
+        </span>
+
+        <ds-info-hint
+          class="pin-active"
+          ariaLabel="About conversion rate"
+          text="Share of contacts who reached the goal step." />
+      </div>
+    </div>
+
+    <div class="state">
+      <span class="state-lbl">
+        Pinned (forced)
+      </span>
+
+      <div class="state-stage is-horiz t-s">
+        <span class="pin-pinned" dsDefinitionTerm="Left the journey before the goal step.">
+          exited
+        </span>
+
+        <ds-info-hint
+          class="pin-pinned"
+          ariaLabel="About conversion rate"
+          text="Share of contacts who reached the goal step." />
+      </div>
+    </div>
+
+    <div class="state">
+      <span class="state-lbl">
+        Pinned and hovered (forced)
+      </span>
+
+      <div class="state-stage is-horiz t-s">
+        <span class="pin-pinned-hover" dsDefinitionTerm="Left the journey before the goal step.">
+          exited
+        </span>
+
+        <ds-info-hint
+          class="pin-pinned-hover"
+          ariaLabel="About conversion rate"
+          text="Share of contacts who reached the goal step." />
+      </div>
+    </div>
+
+    <div class="state">
+      <span class="state-lbl">
+        Pinned and pressed (forced)
+      </span>
+
+      <div class="state-stage is-horiz t-s">
+        <span class="pin-pinned-active" dsDefinitionTerm="Left the journey before the goal step.">
+          exited
+        </span>
+
+        <ds-info-hint
+          class="pin-pinned-active"
+          ariaLabel="About conversion rate"
+          text="Share of contacts who reached the goal step." />
+      </div>
+    </div>
+
+    <div class="state">
+      <span class="state-lbl">
+        Focus (forced)
+      </span>
+
+      <div class="state-stage is-horiz t-s">
+        <span class="pin-focus" dsDefinitionTerm="Left the journey before the goal step.">
+          exited
+        </span>
+
+        <ds-info-hint
+          class="pin-focus"
+          ariaLabel="About conversion rate"
+          text="Share of contacts who reached the goal step." />
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Only while clipped
   </h3>
 
@@ -181,8 +419,7 @@
     </code> shows the tip only while the host is
     clipped, re-tested on every open. Without <code class="t-mono-inline">dsTooltip</code> it
     shows the host's own text. <code class="t-mono-inline">dsTooltipTextSelector</code> aims the
-    clip test and text at a descendant; no match, no tip. A clipped host that also has a
-    <code class="t-mono-inline">dsTooltip</code> leads the tip with its own text in bold.
+    clip test and text at a descendant; no match, no tip.
   </p>
 
   <div class="demo">

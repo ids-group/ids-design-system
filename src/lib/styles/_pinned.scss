@@ -1,0 +1,38 @@
+// The pinned-tooltip cue every pin-capable trigger shares: accent ink and a light accent wash. The wash is
+// mixed at the use site, so a `ds-color` zone recolours it, and it is translucent, so it reads on any surface.
+// Include inside `&[data-ds-tooltip-pinned]`. `$spread` widens the wash past the trigger's box without
+// moving the layout. `cue-hover` goes inside `&[data-ds-tooltip-pinned]:hover` and `cue-pressed` inside
+// `&[data-ds-tooltip-pinned]:active`: the same cue with a stronger wash, so a pinned trigger still
+// answers the pointer and the press.
+
+@mixin cue($spread: 2px) {
+  $wash: color-mix(in srgb, var(--accent) var(--pinned-wash-amount), transparent);
+
+  color: var(--accent-strong);
+  background-color: $wash;
+  box-shadow: 0 0 0 $spread $wash;
+}
+
+@mixin cue-pressed($spread: 2px) {
+  $wash: color-mix(
+    in srgb,
+    var(--accent) calc(var(--pinned-wash-amount) + 16%),
+    transparent
+  );
+
+  color: var(--accent-strong);
+  background-color: $wash;
+  box-shadow: 0 0 0 $spread $wash;
+}
+
+@mixin cue-hover($spread: 2px) {
+  $wash: color-mix(
+    in srgb,
+    var(--accent) calc(var(--pinned-wash-amount) + 8%),
+    transparent
+  );
+
+  color: var(--accent-strong);
+  background-color: $wash;
+  box-shadow: 0 0 0 $spread $wash;
+}
