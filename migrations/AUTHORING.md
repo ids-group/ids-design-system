@@ -488,6 +488,9 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       `node tools/generate-token-deprecations.mjs` after editing a published manifest's
       `token-rename`, `removed-api` or `deleteList` token, and commit `stylelint/deprecated-tokens.json`.
       (`node tools/check.mjs token-deprecations`, at the cut; the release commit regenerates it)
+- [ ] A renamed or removed input, output, value, element or exported symbol reaches the shipped
+      ESLint list: run `node tools/generate-api-deprecations.mjs` and commit `eslint/deprecated-api.json`.
+      (`node tools/check.mjs api-deprecations`, in lint and the preflight; the release commit regenerates it)
 - [ ] Every TS code an entry names is asserted by `migrations/fixtures/<version>/<id>.ts`,
       compiled at both tags (README, "Compile fixtures"). (`node tools/check.mjs manifest-compile`,
       at the cut)

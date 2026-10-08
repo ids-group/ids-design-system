@@ -114,8 +114,46 @@ your editor instead of silently doing nothing. Add it to `.stylelintrc.json` (wr
 Each report names the replacement, the version and the manifest item
 (`"--ds-card-pad" was renamed to "--ds-card-padding" in 0.13.4 (0.13.4#card-pad-is-card-padding)`).
 `stylelint --fix` renames a token that has a single replacement; a removed token is reported and left
-for you to resolve. Only stylesheets are read: a token set from TypeScript or a template binding is
-not checked.
+for you to resolve. Only stylesheets are read; the ESLint plugin below covers TypeScript and templates.
+
+### 4. Removed and renamed API (ESLint)
+
+The package also ships an ESLint flat-config plugin with the same purpose for `.ts` files and
+Angular templates. It catches what the compiler does not: a listener on a renamed output (it compiles
+and never fires), a binding in a template built without `strictTemplates`, a token set from code, a
+remapped attribute value, a subclass member that now overrides nothing. Templates are read by
+`@angular-eslint/template-parser`, which an Angular ESLint setup already has; inline templates need
+`angular.processInlineTemplates` on your `.ts` block, as `angular-eslint` configures it.
+
+```js
+// eslint.config.mjs
+import idsDesignSystem from '@ids-group-ltd/ids-design-system/eslint';
+
+export default [
+  // ...your TypeScript and template blocks
+  idsDesignSystem.configs.recommended,
+];
+```
+
+`recommended` turns every rule on as an error for `**/*.ts` and `**/*.html`. To pick rules, register
+the plugin as `plugins: { 'ids-design-system': idsDesignSystem }` and name them:
+
+- `ids-design-system/no-removed-inputs` - a template binding (`[x]`, `[(x)]`, `x="..."`) to an input
+  removed or renamed on that element; the same name on another element is not reported.
+- `ids-design-system/no-removed-outputs` - a `(x)` listener on an output removed or renamed on that
+  element.
+- `ids-design-system/no-removed-values` - a static value a release remapped (`variant="secondary"` on
+  `ds-button`), with the replacement attribute; a bound expression is not read.
+- `ids-design-system/no-renamed-selectors` - a renamed element in a template, and in a TypeScript
+  `selector:`, `querySelector`, `querySelectorAll`, `closest`, `matches` or `By.css` string.
+- `ids-design-system/no-renamed-imports` - an import from this package of a removed or renamed
+  symbol; `--fix` renames a pure rename and its uses in the file.
+- `ids-design-system/no-removed-members` - a member of a class extending or implementing one of ours
+  that was removed or renamed in the base.
+- `ids-design-system/no-removed-tokens` - a removed or renamed custom property in a TypeScript string
+  or a template attribute (`[style.--x]`, `style="..."`, `[ngStyle]`); `--fix` renames a pure rename.
+
+Each report names the replacement, the version and the manifest item, like the stylelint rule.
 
 ## License
 
