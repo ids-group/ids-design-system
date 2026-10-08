@@ -127,6 +127,8 @@ describes.
     .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--border-default, #c9ced6); border-radius: var(--radius-md, 8px); background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
     .dr-note:focus { outline: none; border-color: var(--accent, #2457c5); box-shadow: var(--ds-field-focus-shadow, 0 0 0 3px rgb(36 87 197 / .25)); }
     .dr-note[hidden] { display: none; }
+    .dr-history { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 4px; color: var(--text-secondary, #4b5563); font: 13px/1.45 var(--font-sans, system-ui, sans-serif); }
+    .dr-history::before { content: 'История замечаний'; display: block; margin-left: -1.2em; color: var(--text-primary, #1d2330); font-weight: 600; }
     [data-dr-folded] > :not(h1, h2, h3, h4, .dr-row, .dr-note) { display: none !important; }
     .dr-fold { padding: 4px 8px; border: 0; background: none; color: var(--accent-strong, #2457c5); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
     .dr-fold[hidden] { display: none; }
@@ -152,6 +154,11 @@ describes.
   const unfolded = new Set();
   for (const item of items) {
     const label = item.dataset.review;
+    // A deck bumps data-review-round once it has worked through the remarks of a round; answers stored
+    // for an earlier round are already in the block's history, so they leave the input.
+    const round = Number(item.dataset.reviewRound) || 1;
+    if (state[label] && (state[label].round ?? 1) !== round) { delete state[label]; write(); }
+    const own = () => Object.assign((state[label] ??= {}), { round });
     const row = document.createElement('div');
     row.className = 'dr-row';
     const verdicts = item.hasAttribute('data-review-note-only') ? [REMARK] : [ACCEPT, REMARK];
@@ -162,7 +169,7 @@ describes.
       button.dataset.v = verdict;
       button.textContent = verdict === ACCEPT ? 'Принято' : 'Есть замечание';
       button.addEventListener('click', () => {
-        const entry = (state[label] ??= {});
+        const entry = own();
         entry.v = entry.v === verdict ? '' : verdict;
         write();
         render();
@@ -174,13 +181,15 @@ describes.
     note.className = 'dr-note';
     note.placeholder = 'Что не так';
     note.setAttribute('aria-label', `Замечание: ${label}`);
-    note.addEventListener('input', () => { (state[label] ??= {}).note = note.value; write(); render(); });
+    note.addEventListener('input', () => { own().note = note.value; write(); render(); });
     const fold = document.createElement('button');
     fold.type = 'button';
     fold.className = 'dr-fold';
     fold.addEventListener('click', () => { unfolded.has(label) ? unfolded.delete(label) : unfolded.add(label); render(); });
     row.append(...buttons, fold);
     item.append(row, note);
+    const history = item.querySelector(':scope > [data-review-history]');
+    if (history) { history.classList.add('dr-history'); item.append(history); }
     controls.set(label, { item, buttons, note, fold });
   }
 
