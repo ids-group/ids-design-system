@@ -1325,6 +1325,7 @@ export class TableComponent<T extends object> {
         observer.disconnect();
         heightAnim?.cancel();
         wrap.style.height = `${fromHeight}px`;
+        // glyph-clip-guard: only while the height animates between two row sets; cleared on finish
         wrap.style.overflowY = 'clip';
         heightAnim = wrap.animate(
           [{ height: `${fromHeight}px` }, { height: `${nextHeight}px` }],

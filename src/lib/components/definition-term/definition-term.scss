@@ -51,9 +51,7 @@
   }
 
   &[data-ds-tooltip-pinned] {
-    @include pinned.cue(2px);
-
-    text-decoration: underline solid var(--accent-strong);
+    @include pinned.cue;
 
     &:hover {
       @include pinned.cue-hover(2px);

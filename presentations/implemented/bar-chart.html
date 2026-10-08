@@ -4,8 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Строки ds-bar-chart</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-08">
+<meta name="ds-deck-evidence" content="src/lib/components/bar-chart/bar-chart.component.html:2 wraps the card in ds-loading-overlay - CHANGELOG.md">
+<link rel="stylesheet" href="../ds.css">
 <link rel="stylesheet" href="deck.css">
 <style>
   main { max-width: 1400px; padding-bottom: 80px; }
@@ -139,7 +141,7 @@
     <div class="chips"><span class="chip is-done">пункты 1-8 и загрузка сделаны</span><span class="chip">ecm-feat/bar-chart-customization</span><span class="chip is-open">оверлей: проверить</span><span class="chip">актуально на 2026-10-08</span></div>
   </header>
 
-  <section class="panel" data-review="Загрузка: оверлей как у таблицы">
+  <section class="panel" data-review="Загрузка: оверлей как у таблицы" data-review-round="2">
     <h2>Загрузка: оверлей до краёв карточки</h2>
     <p>Как у таблицы: оверлей закрывает весь контейнер, его край совпадает с краем карточки и повторяет скругление. Внутри карточки резких граней больше нет.</p>
     <h3>Как это у таблицы</h3>
@@ -200,11 +202,11 @@
       <p><code>ds-table</code> оборачивает свою прокручиваемую область в <code>ds-loading-overlay</code>: полупрозрачный слой <code>--surface-canvas</code> с <code>--opacity-scrim</code> и размытием <code>--blur-sm</code> (4px), спиннер по центру, содержимое <code>inert</code>, на хосте <code>aria-busy</code>. Слой начинается под шапкой (<code>insetTop</code>) и доходит до краёв таблицы, поэтому граница размытия совпадает с краем самой таблицы. Без рамки скругления нет. С рамкой нижние углы слоя были квадратными поверх скругления 8px.</p>
       <p>У графика слой стоял на строках внутри поля карточки, и граница размытия шла прямоугольником посреди карточки. Теперь <code>ds-loading-overlay</code> оборачивает всю карточку, поле карточки вынесено из-под слоя, а углы слоя берут радиус карточки через новый токен <code>--ds-loading-overlay-radius</code>. Таблица с рамкой ставит туда свой радиус на нижние углы. Размытие и цвет слоя те же, что у таблицы. Мерили в Chrome на ds-docs этой ветки 2026-10-08, карточки по 480px, <code>getBoundingClientRect</code> и <code>getComputedStyle</code>.</p>
     </details>
-  </section>
+  <ol data-review-history><li>2026-10-08 · «можно ли скелетоны допилить чтобы они того же размера были что и линии ... если данных нет никаких то скелетон ... перезагрузка ... то overlay. двойная логика» → скелетон по размеру строк, нет данных - скелетон, перезагрузка - слой поверх, как у таблицы</li><li>2026-10-08 · «мне не нравится что overlay блюрит и оставляет резкие грани. как это сделано у таблицы?» → слой на всю карточку по её скруглению, как у таблицы; у таблицы с рамкой скругление тоже поправлено</li></ol></section>
 
   <section class="panel">
     <h2>Остальные компоненты</h2>
-    <p>Отдельная дека <code>23-loading-states.html</code>: каждый компонент сейчас и по общему правилу. Правка в следующем релизе.</p>
+    <p>Отдельная дека <code>21-loading-states.html</code>: каждый компонент сейчас и по общему правилу. Правка в следующем релизе.</p>
   </section>
 
 
@@ -217,7 +219,7 @@
       <figure class="shot"><figcaption><span class="tag now">ds-docs, тёмная</span>воронка целиком</figcaption><img data-shot="real-funnel-dark" alt="ds-docs: та же воронка, тёмная тема"></figure>
     </div>
       <h3>Остальные компоненты</h3>
-      <p><span class="tag now">решено</span>поправить в следующем релизе, дека <code>23-loading-states.html</code></p>
+      <p><span class="tag now">решено</span>поправить в следующем релизе, дека <code>21-loading-states.html</code></p>
       <h3>Загрузка</h3>
       <p><span class="tag now">выбрано</span>скелет; с данными на экране - оверлей, как у таблицы</p>
       <h3>Путь</h3>
@@ -468,6 +470,8 @@
     .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--border-default, #c9ced6); border-radius: var(--radius-md, 8px); background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
     .dr-note:focus { outline: none; border-color: var(--accent, #2457c5); box-shadow: var(--ds-field-focus-shadow, 0 0 0 3px rgb(36 87 197 / .25)); }
     .dr-note[hidden] { display: none; }
+    .dr-history { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 4px; color: var(--text-secondary, #4b5563); font: 13px/1.45 var(--font-sans, system-ui, sans-serif); }
+    .dr-history::before { content: 'История замечаний'; display: block; margin-left: -1.2em; color: var(--text-primary, #1d2330); font-weight: 600; }
     [data-dr-folded] > :not(h1, h2, h3, h4, .dr-row, .dr-note) { display: none !important; }
     .dr-fold { padding: 4px 8px; border: 0; background: none; color: var(--accent-strong, #2457c5); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
     .dr-fold[hidden] { display: none; }
@@ -493,6 +497,11 @@
   const unfolded = new Set();
   for (const item of items) {
     const label = item.dataset.review;
+    // A deck bumps data-review-round once it has worked through the remarks of a round; answers stored
+    // for an earlier round are already in the block's history, so they leave the input.
+    const round = Number(item.dataset.reviewRound) || 1;
+    if (state[label] && (state[label].round ?? 1) !== round) { delete state[label]; write(); }
+    const own = () => Object.assign((state[label] ??= {}), { round });
     const row = document.createElement('div');
     row.className = 'dr-row';
     const verdicts = item.hasAttribute('data-review-note-only') ? [REMARK] : [ACCEPT, REMARK];
@@ -503,7 +512,7 @@
       button.dataset.v = verdict;
       button.textContent = verdict === ACCEPT ? 'Принято' : 'Есть замечание';
       button.addEventListener('click', () => {
-        const entry = (state[label] ??= {});
+        const entry = own();
         entry.v = entry.v === verdict ? '' : verdict;
         write();
         render();
@@ -515,13 +524,15 @@
     note.className = 'dr-note';
     note.placeholder = 'Что не так';
     note.setAttribute('aria-label', `Замечание: ${label}`);
-    note.addEventListener('input', () => { (state[label] ??= {}).note = note.value; write(); render(); });
+    note.addEventListener('input', () => { own().note = note.value; write(); render(); });
     const fold = document.createElement('button');
     fold.type = 'button';
     fold.className = 'dr-fold';
     fold.addEventListener('click', () => { unfolded.has(label) ? unfolded.delete(label) : unfolded.add(label); render(); });
     row.append(...buttons, fold);
     item.append(row, note);
+    const history = item.querySelector(':scope > [data-review-history]');
+    if (history) { history.classList.add('dr-history'); item.append(history); }
     controls.set(label, { item, buttons, note, fold });
   }
 

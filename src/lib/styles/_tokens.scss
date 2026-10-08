@@ -55,10 +55,6 @@
   --focus-ring-width:     2px;
   --focus-ring-offset:    2px;
 
-  /* Share of the accent in the wash behind a trigger whose tooltip is pinned. The wash is translucent, so it
-     tints whatever surface the trigger sits on, in both themes. */
-  --pinned-wash-amount:   12%;
-
   /* For a box that exists only to carry the ring; a control with its own shape ignores it. */
   --focus-ring-radius:    var(--ds-radius-inner);
 
