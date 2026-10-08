@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**121 open — 3 P1, 8 P2, 110 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**120 open — 3 P1, 7 P2, 110 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 3
 
@@ -24,7 +24,7 @@ item and nothing else.
   - A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
   - `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
 
-### P2 — 8
+### P2 — 7
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -33,7 +33,6 @@ item and nothing else.
 - **Asked by Stas**
   - Document how to build `ds-modal` actions (Stas, 2026-10-06)
   - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
-  - `ds-date-picker` has no width control (Stas, 2026-10-06)
 - **Open verdicts, each drawn in a deck**
   - Six Unreleased behaviour changes shipped without a choice between alternatives
 - **Tooling**
@@ -238,7 +237,8 @@ Defects a consumer hit - from a QA pass, or from reading a consumer tree for a r
 
 - [ ] **[P2] The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer).** `--border-default` is `var(--neutral-200)` (`_semantic.scss:49`, #DCE1EA) and is the resting edge of `ds-input` (`input.component.scss:17`) and 25 more components: 1.31:1 on white in the stock theme against the 3:1 WCAG 1.4.11 floor for a control boundary. `--secondary-on` is the constant `var(--primary-on)` = white (`:134`, `:116`) while `--secondary` recomposes from `--secondary-h/s/l`, so a gold secondary (#FBAC18) gets white text at 1.91:1 - and the stock theme already fails: white on the stock `--secondary` #FF7B2E (`hsl(22 100% 59%)`) is 2.59:1 against 4.5:1 (computed 2026-10-02). ids-europe-landing rebinds both (`_theme.scss:44-57`, `:89`). **Wanted:** a control-edge role that clears 3:1 in both themes (or `--border-default` moved to it), and `--secondary-on` derived from `--secondary`'s lightness or listed in the brand must-rebind checklist of the brand-unsafe item.
 
-- [ ] **[P1] `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer).** `components.md` (bar chart, "Behaviour") says a non-finite value draws no bar and prints a dash. `bar-chart.component.ts` formats `plainValue(row.value) ?? extent.high`, and `extent.high` of NaN is 0, so the label and the share read `0 / 0.0%`. Seen in a docs build at `e0ff159f` (2026-10-06, a NaN row in the bar chart demo). **Wanted:** the dash the doc describes, in the value, the share and the generated summary. Raised to P1 (Stas, 2026-10-06): it is one of the gaps in the "`ds-bar-chart` customization asked by mm-ecm" item (work branch `feat/bar-chart-customization`).
+- [ ] **[P1] `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer).** `components.md` (bar chart, "Behaviour") says a non-finite value draws no bar and prints a dash. `bar-chart.component.ts` formats `plainValue(row.value) ?? extent.high`, and `extent.high` of NaN is 0, so the label and the share read `0 / 0.0%`. Seen in a docs build at `e0ff159f` (2026-10-06, a NaN row in the bar chart demo). **Wanted:** the dash the doc describes, in the value, the share and the generated summary. Raised to P1 (Stas, 2026-10-06): it is one of the gaps in the "`ds-bar-chart` customization asked by mm-ecm" item (work branch `ecm-feat/bar-chart-customization`).
+- [x] **[P1] A clipped hinted header shows its label and hint as two plain lines; the label should be a bold line of its own (asked by Stas, 2026-10-06).** `dsTooltipClippedLead` joins lead and hint with a newline and `tooltip-panel.component.scss` sets `white-space: pre-line` for every tooltip, so any tooltip text with a newline now breaks there and the label is the same weight as the hint. **Wanted:** a `lead` input on `TooltipPanelComponent` rendered as a bold line, set by the directive only while the host is clipped, and `pre-line` reverted. Work branch `ecm-fix/tooltip-arrow-anchor` (tooltip group). A started, unverified patch: mm-ecm-platform `.claude/local/from-scratchpad/2026-10-06-tooltip-lead-bold/tooltip-lead-bold.wip.patch` (local, not in git).
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
@@ -370,11 +370,11 @@ Each has somebody behind it. Nothing here is speculative work.
 
 ## Asked by Stas
 
-- [ ] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `fix/table-auto-column-clip` (empty marker branch from dev).
-  A long value (an email, a name) stretches the column and pushes the table past its container. Wanted: a default clip width for a column that sets no `width`, with the full text still reachable. The choice is drawn in deck `17-table-truncate-clip.html` on branch `feat/table-truncate-column-clip` (renumber to 19 when merged; 17 and 18 are taken on dev).
+- [ ] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `ecm-fix/table-auto-column-clip` (empty marker branch from dev).
+  A long value (an email, a name) stretches the column and pushes the table past its container. Wanted: a default clip width for a column that sets no `width`, with the full text still reachable. The choice is drawn in deck `17-table-truncate-clip.html` on branch `ecm-feat/table-truncate-column-clip` (renumber to 19 when merged; 17 and 18 are taken on dev).
   **Consumer workaround today** (mm-ecm ME-493, Delta review): `src/frontend/projects/ecm-portal/src/app/features/**/delta-records-table.component.*` sets `width: 'content'` on the columns, wraps the value in `.value { display: block; width: 0; min-width: 100% }` and adds `dsTooltipWhenClipped`. Marked `TODO(ds-clip-default)` there; it goes once the DS clips by default.
 
-- [ ] **[P2] Document how to build `ds-modal` actions (Stas, 2026-10-06).** Work branch `fix/table-auto-column-clip`.
+- [ ] **[P2] Document how to build `ds-modal` actions (Stas, 2026-10-06).** Work branch `ecm-fix/table-auto-column-clip`.
   `components.md` says only "`[actions]` (footer button row)". The slot is a flex row with `gap: var(--space-3)`, so each button must be a direct projected child with `actions` on it. A consumer who wrapped the buttons in `<div actions>` got one flex child, no gap, and buttons stuck together (mm-ecm ME-502, `unarchive-program-dialog.component.html`). Wanted: one sentence and one example in the `ds-modal` section (also `ds-modal-card`, `ds-drawer`) saying that `actions` goes on each button, not on a wrapper; a dev-mode warning for a wrapper is optional.
 
 - [ ] **[P2] Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07).** The starter
@@ -384,10 +384,7 @@ Each has somebody behind it. Nothing here is speculative work.
   version and how it is consumed - carry its best practices into `ai-sdlc-prototype`, and finish what is
   left there. Tracked here because Stas does not open that repository; the work itself happens in it.
 
-- [ ] **[P2] `ds-date-picker` has no width control (Stas, 2026-10-06).** Work branch `feat/date-picker-width` (empty marker branch from dev).
-  `size` changes the height only. Consumers either stretch the picker to full width or hard-code a max-width: mm-ecm ME-501 Unarchive dialog (`src/frontend/projects/ecm-portal/src/app/features/programs/**/unarchive-program-dialog.component.*`) and the wrapper `app-date-field`, which forces `fullWidth`. Wanted: a width token (e.g. `--ds-date-picker-max-width`) or intrinsic width logic in the lib sized to the date format.
-
-- [ ] **[P1] `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06).** Work branch `feat/bar-chart-customization` (empty marker branch from dev).
+- [ ] **[P1] `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06).** Work branch `ecm-feat/bar-chart-customization` (empty marker branch from dev).
   The consumer draws "label + bar + number" rows in Analyze (the journey waterfall and the exit reasons) by hand because `ds-bar-chart` cannot be configured to match. **Two implementation routes, the DS team decides:** (a) extend `ds-bar-chart` with the options below, or (b) a new `ds-bar-list` row component for label + bar + number rows. `ds-funnel-chart` is not a fit: the consumer cannot change the chart type.
   **Gaps:**
   - label to the left of the bar on the same line (today above it);
@@ -1081,8 +1078,9 @@ file** — the number moves; cite the filename.
 | 16 | `16-column-chart-filter` | How `ds-column-chart` takes a caption under each column and a persistent selection, so a consumer's filter chart can move onto it: point fields, chart inputs with a template, or nothing; `value: number | null` is settled. | none |
 | 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
-| 19 | `19-tooltip-markup` | What the `dsTooltip` string understands with no tags, no `TemplateRef` and no new input, and who puts the label above the hint of a hinted header once `dsTooltipClippedLead` goes. | none |
-| 20 | `20-tooltip-group` | Before and after of `fix/tooltip-arrow-anchor`: the arrow under the trigger centre, a click that pins a tooltip, `ds-info-hint`, `button[dsDefinitionTerm]` with its states and the three ways it could be built, the hinted `ds-table` header and its bold clipped label. | none |
+| 19 | `19-tooltip-markup` | What the tooltip of a `ds-table` header with `hint` shows once `dsTooltipClippedLead` goes and `dsTooltip` understands only `**bold**`: label and hint always, hint only, or label only while clipped; and for the third, whether the directive or the table owns the rule. | none |
+| 20 | `20-tooltip-mechanism` | How deep to refactor the tooltip, with the whole mechanism drawn: keep as is, split the directive's internals with the same API, or also merge `dsTooltipWhenClipped` and `dsTooltipTextSelector` into one input. | none |
+| 21 | `21-tooltip-group` | Before and after of `fix/tooltip-arrow-anchor`: the arrow under the trigger centre, a click that pins a tooltip, `ds-info-hint`, `button[dsDefinitionTerm]` with its states and the three ways it could be built, the hinted `ds-table` header and its bold clipped label. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

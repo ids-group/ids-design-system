@@ -23,8 +23,8 @@ import { SECTION_ORDER, sectionSlot } from './changelog-sections.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-// Kept in step with tools/build-schematics.mjs. `AUTHORING.md` is excluded from the
-// tarball and from here; `unreleased.json` is excluded from the tarball but linted anyway,
+// Kept in step with tools/build-schematics.mjs. `AUTHORING.md` and `fixtures/` are excluded
+// from the tarball and from here; `unreleased.json` is excluded from the tarball but linted anyway,
 // because it BECOMES a published manifest at the next release.
 function publishedFiles() {
   const files = [
@@ -36,7 +36,7 @@ function publishedFiles() {
   const migrations = join(ROOT, 'migrations');
   if (existsSync(migrations)) {
     for (const entry of readdirSync(migrations, { withFileTypes: true })) {
-      if (entry.name === 'AUTHORING.md') continue;
+      if (entry.name === 'AUTHORING.md' || entry.name === 'fixtures') continue;
       if (entry.isDirectory()) {
         for (const nested of readdirSync(join(migrations, entry.name))) {
           files.push(`migrations/${entry.name}/${nested}`);

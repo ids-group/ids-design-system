@@ -3681,15 +3681,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'top'",
         "required": false,
         "description": "Which side the tip opens on. With no room there it opens on the opposite side."
-      },
-      {
-        "name": "dsTooltipClippedLead",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Opens the tip with this line, in bold, above `dsTooltip` while the host shows less text than it holds."
       }
     ],
     "outputs": []
@@ -11688,15 +11679,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Selector for the element inside the host whose clipping `dsTooltipWhenClipped` tests and whose text it discloses. Resolved on every open; while nothing matches, no clipped tip opens."
       },
       {
-        "name": "dsTooltipClippedLead",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Opens the tip with this line, in bold, above `dsTooltip` while the host shows less text than it holds."
-      },
-      {
         "name": "dsTooltipPinOnClick",
         "kind": "input",
         "type": "boolean",
@@ -11726,16 +11708,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": "Tooltip text content."
-      },
-      {
-        "name": "lead",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Bold line shown above `text`."
+        "description": "Tooltip text; `**bold**` runs render bold."
       },
       {
         "name": "placement",

@@ -2,68 +2,154 @@
   "version": "unreleased",
   "items": [
     {
-      "id": "tooltip-class-members-grew",
+      "id": "overlay-classes-lost-unslotted",
       "kind": "behavior",
-      "old": "TooltipDirective",
+      "old": "ModalComponent",
       "new": null,
       "surface": "typescript",
-      "searchHints": ["extends TooltipDirective", "extends TooltipPanelComponent"],
-      "detect": ["extends TooltipDirective", "extends TooltipPanelComponent"],
-      "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
-      "appliesWhen": "Only a class of yours that extends TooltipDirective or TooltipPanelComponent. Template users of dsTooltip need nothing; subclassing a DS component is unsupported.",
-      "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it (TS2415); only a rename does.",
+      "searchHints": [
+        "extends ModalComponent",
+        "extends ModalCardComponent",
+        "extends DrawerComponent"
+      ],
+      "detect": [
+        "extends ModalComponent",
+        "extends ModalCardComponent",
+        "extends DrawerComponent"
+      ],
+      "action": "None. A subclass that declares its own `unslotted` no longer collides with ours.",
+      "appliesWhen": "Only a class of yours that extends ModalComponent, ModalCardComponent or DrawerComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
-      "verify": "The app builds with no TS2415 or TS4114 against TooltipDirective or TooltipPanelComponent.",
-      "note": "TooltipDirective gained the public dsTooltipPinOnClick, the protected onClick and onPointerLeave, and the private document, hostPinOnClick, pinsOnClick, clippedLead, pin, unpin and pointArrowAtHost. TooltipPanelComponent gained the public lead."
+      "verify": "The app builds, and no subclass of ModalComponent, ModalCardComponent or DrawerComponent reads `this.unslotted`.",
+      "note": "ModalComponent, ModalCardComponent and DrawerComponent each lost the private `unslotted`."
     },
     {
-      "id": "tooltip-line-breaks-collapse",
+      "id": "tooltip-clipped-lead-removed",
+      "kind": "removed-api",
+      "old": "dsTooltipClippedLead",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "searchHints": [
+        "dsTooltipClippedLead",
+        "extends TooltipDirective"
+      ],
+      "detect": [
+        "[dsTooltipClippedLead]=",
+        "dsTooltipClippedLead=",
+        "extends TooltipDirective",
+        "dsTooltipClippedLead"
+      ],
+      "action": "Delete the `dsTooltipClippedLead` binding. Where it carried the host's own text, nothing replaces it. Where it carried other text, write it into the tooltip string as `'**' + lead + '**\n' + tip`. A subclass of TooltipDirective that declared `dsTooltipClippedLead` has nothing to rename any more.",
+      "appliesWhen": "Only an element that binds `dsTooltipClippedLead`, and a class that extends TooltipDirective. `dsTooltip`, `dsTooltipWhenClipped` and `dsTooltipTextSelector` are unchanged, and a `ds-table` header with a `hint` needs nothing.",
+      "evidence": [
+        "command:node tools/public-api-golden.mjs --diff v0.14.8"
+      ],
+      "pitfall": "Deleting the binding drops the lead line where it was text other than the host's own; a clipped host leads with its own text in bold, never with a different one.",
+      "verify": "No template or class binds `dsTooltipClippedLead`, the app compiles, and a clipped host that used it shows its text in bold above the tip."
+    },
+    {
+      "id": "tooltip-bold-markup",
       "kind": "behavior",
       "old": "dsTooltip",
       "new": null,
-      "surface": ["template", "typescript"],
-      "searchHints": ["dsTooltip", "dsTooltipWhenClipped"],
-      "detect": ["[dsTooltip]=\"`", "\\n", ".join('\\n')"],
-      "action": "None, unless a tooltip of yours relies on a line break in its text: give it one line, or move the first line into dsTooltipClippedLead where it is the host's own clipped label.",
-      "appliesWhen": "A dsTooltip string, or the text a dsTooltipWhenClipped host discloses, that contains a newline. A text on one line is unchanged.",
-      "pitfall": "A list joined with newlines reads as one run-on line; the build and a unit test both pass over it.",
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "searchHints": [
+        "dsTooltip",
+        "[dsTooltip]"
+      ],
+      "detect": [
+        "[dsTooltip]=\"`",
+        "'**",
+        "\"**"
+      ],
+      "action": "None, unless a tooltip string holds `**` meant literally: write `\\*\\*` there.",
+      "appliesWhen": "Every `dsTooltip` string, including one a component builds from data. `dsTooltipWhenClipped` with no `dsTooltip` shows the host's text as written and is unaffected.",
+      "pitfall": "A string with two `**` loses both and the text between them turns bold, with no error; user-supplied text reaching a tooltip needs its `**` escaped.",
+      "restore": "[dsTooltip]=\"text().replaceAll('**', '\\*\\*')\"",
+      "verify": "Every tooltip string whose text contains `**` shows the asterisks, or bold where bold was meant."
+    },
+    {
+      "id": "tooltip-clipped-host-leads-with-own-text",
+      "kind": "behavior",
+      "old": "dsTooltipWhenClipped",
+      "new": null,
+      "surface": "none",
+      "searchHints": [
+        "dsTooltip",
+        "dsTooltipWhenClipped",
+        "text-overflow: ellipsis"
+      ],
+      "detect": [],
+      "action": "None. To keep one tooltip from repeating the host's text, include that text in its `dsTooltip` string.",
+      "appliesWhen": "A host with `dsTooltip` or `dsTooltipWhenClipped` that shows less text than it holds and whose tip does not already contain that text. A host that fits, and a tip that already contains the host's text, read as before.",
+      "pitfall": "A screenshot of a clipped button or label with a tooltip gains a bold first line.",
       "restore": null,
-      "verify": "Hover each tooltip whose text comes from data joined with newlines and confirm it reads as one line.",
-      "supersedes": ["0.14.8#tooltip-keeps-line-breaks"]
+      "verify": "Narrow a button or label that has a `dsTooltip` until it clips and open the tooltip: its text is bold on the first line, the tip below."
+    },
+    {
+      "id": "tooltip-classes-member-surface",
+      "kind": "behavior",
+      "old": "TooltipPanelComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends TooltipDirective",
+        "extends TooltipPanelComponent"
+      ],
+      "detect": [
+        "extends TooltipDirective",
+        "extends TooltipPanelComponent"
+      ],
+      "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
+      "appliesWhen": "Only a class of yours that extends TooltipDirective or TooltipPanelComponent. Template users of dsTooltip need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error against TooltipDirective or TooltipPanelComponent.",
+      "note": "TooltipPanelComponent gained the protected segments. TooltipDirective gained the public dsTooltipPinOnClick, the protected onClick and onPointerLeave, and the private document, hostPinOnClick, pinsOnClick, pin, unpin, pointArrowAtHost, contains and ownText, and lost dsTooltipClippedLead."
     }
   ],
   "informational": [
+    "`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a slot, or about an attribute that names no slot. That content still renders in the body. A test or screenshot that waited for the `Dev warning` toast these raised has nothing to wait for.",
     "dsTooltipPinOnClick opens a tooltip on hover and focus with no delay and keeps it open after a click until a click outside, Escape or blur; a second click closes it. Without it a click closes the tooltip as before. While pinned the host carries data-ds-tooltip-pinned, a styling hook for the pinned trigger.",
     "ds-info-hint (InfoHintComponent) is an info icon button: ariaLabel names it, text shows on hover and focus and stays open after a click. The icon darkens on hover, sits on a muted circle while pressed and turns accent on an --accent-muted circle while pinned.",
     "button[dsDefinitionTerm] (DefinitionTermComponent) styles a button as a term with a dotted underline in --text-tertiary and shows its definition on hover and focus, pinned on click; [pinOnClick]=\"false\" turns the pin off. Hover makes the underline solid, a press tints the term with --surface-muted, and a pinned term is --accent-strong on --accent-subtitle; no state changes its size.",
     {
-      "text": "dsTooltipClippedLead renders as a bold line above the tooltip text. A ds-table header label with a hint is a button[dsDefinitionTerm]: a plain label pins its hint on click, a sortable one sorts on click and pins nothing.",
-      "verify": "narrow a hinted ds-table column until its label clips, hover it and confirm the label is bold on the first line with the hint under it; click a plain hinted label, move the pointer away and confirm the hint stays until a click outside."
+      "text": "A ds-table header label with a hint is a button[dsDefinitionTerm]: a plain label pins its hint on click and takes the term's hover, pressed and pinned states; a sortable one sorts on click and pins nothing.",
+      "verify": "click a plain hinted ds-table header label, move the pointer away and confirm the hint stays open and the label shows the pinned accent until a click outside; click a sortable hinted label and confirm it sorts and no hint stays open."
     },
     {
-      "text": "A tooltip's arrow points at the centre of its trigger when the panel is pushed off a viewport edge; a panel centred on its trigger looks the same.",
+      "text": "A tooltip's arrow points at the centre of its trigger when the panel is pushed off a viewport edge.",
       "verify": "open a tooltip on a trigger near the left and the right viewport edge and confirm the arrow sits under the trigger's centre."
     }
   ],
   "deleteList": [
     {
-      "id": "tooltip-newline-collapse-replace",
-      "surface": "template",
-      "find": [".replace(/\\s*\\n\\s*/g, ' ')"],
-      "why": "A tooltip reads a line break as a space.",
-      "replaceWith": "nothing"
-    },
-    {
       "id": "hand-built-info-hint",
-      "surface": ["template", "typescript"],
-      "find": ["name=\"info\""],
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "find": [
+        "name=\"info\""
+      ],
       "why": "ds-info-hint renders the icon button, its accessible name and the pinned tooltip.",
       "replaceWith": "<ds-info-hint ariaLabel=\"...\" text=\"...\" />; keep a hand-built button whose click does something besides showing the text"
     },
     {
       "id": "hand-built-definition-term",
-      "surface": ["template", "style"],
-      "find": ["underline dotted"],
+      "surface": [
+        "template",
+        "style"
+      ],
+      "find": [
+        "underline dotted"
+      ],
       "why": "button[dsDefinitionTerm] carries the button reset, the dotted underline, the focus ring and the pinned tooltip.",
       "replaceWith": "<button type=\"button\" dsDefinitionTerm=\"...\">; keep a dotted underline that marks something other than a term with a definition"
     }

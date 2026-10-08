@@ -39,7 +39,7 @@
       ],
       "verify": "A :root or ds-autocomplete override of --ds-option-selected-bg-color repaints the selected row in ds-select and ds-autocomplete. ds-multi-select marks selection with a checkbox, so it answers to --ds-multi-select-check-* instead.",
       "restore": null,
-      "note": "The autocomplete had no separate selected treatment, so one token painted both hover and selection. The panel-level hooks reach all three pickers and separate the two states, which is what the 0.9.0 notes already claimed was true.",
+      "note": "The autocomplete had no separate selected treatment, so one token painted both hover and selection. The panel-level hooks paint the selected row and its hover in ds-select and ds-autocomplete; ds-multi-select marks selection with a checkbox and answers to --ds-multi-select-check-* instead, and an unselected row's hover is a fixed --surface-secondary with no hook.",
       "action": "Replace --ds-autocomplete-option-bg-color-hover with the panel-level --ds-option-* hooks."
     },
     {
@@ -48,7 +48,7 @@
       "old": "ds-autocomplete",
       "new": null,
       "appliesWhen": "You use `<ds-autocomplete>` in single mode in a narrow column.",
-      "pitfall": "Multi mode is unchanged — its chips already had a measured cap. This only affects the settled single value.",
+      "pitfall": "Multi mode with the default chip fit is unchanged - its chips already had a measured cap. `maxVisibleChips=\"all\"` is not: the trigger no longer wraps, so its chips stay on one line unless `valueOverflow=\"wrap\"` is set.",
       "searchHints": [
         "ds-autocomplete"
       ],
@@ -58,7 +58,7 @@
       ],
       "verify": "A long value in a 144px-wide single-select autocomplete keeps the trigger one row tall and ends in an ellipsis, with the full text on the element's title.",
       "restore": "valueOverflow=\"wrap\"",
-      "note": "A settled single value now clips with an ellipsis and keeps the trigger one row tall, with the full text on the element title. Multi mode is untouched — its chips already had a measured cap. Nothing in your markup has to change unless the wrapping was deliberate.",
+      "note": "A settled single value now clips with an ellipsis and keeps the trigger one row tall, with the full text on the element title. Multi mode with the default chip fit is untouched - its chips already had a measured cap; with maxVisibleChips=\"all\" the trigger no longer wraps unless valueOverflow=\"wrap\" is set. Nothing in your markup has to change unless the wrapping was deliberate.",
       "action": "Do nothing, or set valueOverflow=\"wrap\" on the pickers that relied on the value wrapping."
     },
     {
@@ -67,7 +67,7 @@
       "old": "SelectComponent, MultiSelectComponent, AutocompleteComponent",
       "new": null,
       "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the `<ds-…>` elements need nothing.",
-      "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does. Separately, seventeen symbols are newly exported and can shadow a local name of the same spelling rather than collide with a member: `DsControlWidth`, `DsTriggerDisplay`, `DsChipTemplateDirective`, `DsCreateTemplateDirective`, `DsEmptyTemplateDirective`, `DsOptionTemplateDirective`, `DsPickerTriggerDirective`, `DsOptionGroup`, `DsOptionItem`, `isDsOptionGroup`, `flattenDsOptions`, `AutocompleteItem`, `AutocompleteValueOverflow`, `MultiSelectItem`, `MultiSelectOptionGroup`, `MultiSelectWidth`, `SelectWidth`. Those are new names, not changed ones — nothing of yours breaks unless you already had one.",
+      "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does. Separately, seventeen symbols are newly exported and can shadow a local name of the same spelling rather than collide with a member: `DsControlWidth`, `DsTriggerDisplay`, `DsChipTemplateDirective`, `DsCreateTemplateDirective`, `DsEmptyTemplateDirective`, `DsOptionTemplateDirective`, `DsPickerTriggerDirective`, `DsOptionGroup`, `DsOptionItem`, `isDsOptionGroup`, `flattenDsOptions`, `AutocompleteItem`, `AutocompleteValueOverflow`, `MultiSelectItem`, `MultiSelectOptionGroup`, `MultiSelectWidth`, `SelectWidth`. Those are new names, not changed ones — nothing of yours breaks unless you already had one. ds-autocomplete also lost the protected computed `filteredGroups`: a subclass member of that name marked `override` fails with TS4113, and one without the modifier compiles and never runs, so check for it by hand.",
       "searchHints": [
         "extends SelectComponent",
         "extends MultiSelectComponent",
@@ -98,7 +98,7 @@
       ],
       "verify": "The app builds with no TS2415 or TS2416 naming a picker component.",
       "restore": null,
-      "note": "All three pickers gained members: ds-select `width`, a private panelTokens field and projection slots; ds-multi-select `searchable`, `width`, `size`, `triggerDisplay`, a label/required/optional block and slots; ds-autocomplete `valueOverflow`, a label/required/optional block and slots. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check and no list here could stay current.",
+      "note": "All three pickers gained members. ds-select, 5: `width`, `panelTokens`, `optionTemplate`, `emptyTemplate` and `pickerTrigger`. ds-multi-select, 29: `searchable`, `searchableResolved`, `width`, `size`, `sizeResolved`, `triggerDisplay`, `label`, `labelId`, `required`, `optional`, `optionTemplate`, `chipTemplate`, `emptyTemplate`, `pickerTrigger`, `allOptions`, `filteredItems`, `enabledIn`, the private `firstEnabledIndex`, `flatIndexOf`, `isGroup`, `groupAllSelected`, `groupSomeSelected`, `toggleGroup`, `showsCompactTrigger`, `showsGroupSelectAll`, `showsPanelSelectAll`, `showsSearch`, `triggerActiveDescendant` and `triggerCaption`. ds-autocomplete, 16: `valueOverflow`, `label`, `labelId`, `required`, `optional`, `optionTemplate`, `chipTemplate`, `createTemplate`, `emptyTemplate`, `pickerTrigger`, `filteredItems`, `isGroup`, `hasSingleValue`, `selectedOption`, `triggerSelection` and `resolvedAriaLabel`. It lost `optionGroups`, which has its own item, and the protected `filteredGroups`. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check and no list here could stay current.",
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding."
     },
     {
@@ -247,7 +247,7 @@
     "ds-multi-select and ds-autocomplete gained `label`, `required` and `optional`, which existed on ds-select alone; ds-multi-select gained `size`, which the other two already had.",
     "New slots: dsEmptyTemplate on all three pickers, dsCreateTemplate on ds-autocomplete. ds-select shows an empty row when it has no options, where it used to open a blank panel.",
     "selectAll on ds-multi-select accepts 'group' and 'both' beside true/false.",
-    "All three pickers now forward the four panel-level --ds-option-* hooks onto their portaled pane, so a per-instance override reaches the panel.",
+    "All three pickers now forward the four panel-level --ds-option-* hooks onto their portaled pane, so a per-instance override reaches the panel. They paint only ds-select and ds-autocomplete: ds-multi-select marks selection with a checkbox and takes --ds-multi-select-check-* instead.",
     "The dropdown panel geometry now lives only in styles/_dropdown-overlay.scss, behind --ds-dropdown-panel-bg-color/-radius/-maxh/-minw/-maxw. The per-picker names (--ds-multi-select-panel-bg-color, --ds-autocomplete-panel-bg-color/-radius/-maxh) are aliases of those and still work; a global rule of yours that relied on a component stylesheet out-ranking the partial no longer has a competing rule to beat.",
     "ds-multi-select gained `searchable`: true shows the filter row, false hides it, a number sets an option-count threshold. A bare attribute means true. Unset falls back to the new DS_CONFIG.picker.searchable, then true, so nothing changes by default."
   ],

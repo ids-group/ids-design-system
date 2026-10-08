@@ -4,6 +4,22 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.12.0 - 2026-10-08
+
+### Added
+
+- **The mechanical items are applied by a script before any agent runs.**
+  `scripts/apply-mechanical.mjs` rewrites a version's `token-rename`, `selector-rename`,
+  `input-rename`, `output-rename`, `class-rename`, `type-rename` and `value-remap` items by exact,
+  boundary-safe replacement: attributes and values only on the element `old` names, across
+  multi-line tags; TypeScript identifiers on word boundaries, only where imported from the package
+  root; the longer name first where one contains another. It prints per item the files and edits it
+  made and every occurrence it left: a dynamic binding, a class not written directly under its
+  element, a type imported from a secondary entry point. Published rename items whose swap alone
+  would ship a wrong value are skipped by id. `--dry-run` writes nothing. Phase B step 2 runs it
+  first and hands the agents only what it left; a dry run runs it once over the whole chain.
+  `scripts/apply-mechanical.test.mjs` runs the fixture cases in `apply-mechanical.fixtures/`.
+
 ## 1.11.0 - 2026-09-30
 
 ### Added

@@ -111,10 +111,14 @@
     <code class="t-mono-inline">
       sm
     </code>, <code class="t-mono-inline">md</code>
-    or <code class="t-mono-inline">lg</code>. The trigger has a fixed width;
+    or <code class="t-mono-inline">lg</code>. The field is as wide as its date format;
     <code class="t-mono-inline">
       [fullWidth]="true"
-    </code> fills the container.
+    </code> fills the container, up to
+    <code class="t-mono-inline">
+      --ds-date-picker-max-width
+    </code>
+    when set.
   </p>
 
   <div class="row">
@@ -133,6 +137,14 @@
     <ds-date-picker
       mode="single"
       placeholder="Full width"
+      [fullWidth]="true" />
+  </div>
+
+  <div class="row">
+    <ds-date-picker
+      mode="single"
+      placeholder="Full width, capped"
+      style="--ds-date-picker-max-width: 240px"
       [fullWidth]="true" />
   </div>
 

@@ -95,7 +95,6 @@
                   class="th-label"
                   [dsDefinitionTerm]="col.hint"
                   [pinOnClick]="false"
-                  [dsTooltipClippedLead]="col.label"
                   (click)="onSort(col)">
                   <ng-container
                     [ngTemplateOutlet]="thText"
@@ -126,8 +125,7 @@
                 <button
                   type="button"
                   class="th-label"
-                  [dsDefinitionTerm]="col.hint"
-                  [dsTooltipClippedLead]="col.label">
+                  [dsDefinitionTerm]="col.hint">
                   <ng-container
                     [ngTemplateOutlet]="thText"
                     [ngTemplateOutletContext]="{ $implicit: col }" />

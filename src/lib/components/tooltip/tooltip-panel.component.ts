@@ -1,16 +1,18 @@
-import { Component, ViewEncapsulation, input } from '@angular/core';
+import { Component, ViewEncapsulation, computed, input } from '@angular/core';
+import { parseTooltipMarkup } from './tooltip-markup';
 import type { TooltipPlacement } from './tooltip.types';
 
 @Component({
   selector: 'ds-tooltip-panel',
   standalone: true,
   template: `
-    @if (lead(); as leadText) {
-      <span class="lead">
-        {{ leadText }}
-      </span>
+    @for (segment of segments(); track $index) {
+      @if (segment.bold) {
+        <strong [textContent]="segment.text"></strong>
+      } @else {
+        <span [textContent]="segment.text"></span>
+      }
     }
-    {{ text() }}
   `,
   styleUrl: './tooltip-panel.component.scss',
   host: {
@@ -24,10 +26,9 @@ import type { TooltipPlacement } from './tooltip.types';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class TooltipPanelComponent {
-  /** Tooltip text content. */
+  /** Tooltip text; `**bold**` runs render bold. */
   readonly text = input.required<string>();
-  /** Bold line shown above `text`. */
-  readonly lead = input<string | null>(null);
+  protected readonly segments = computed(() => parseTooltipMarkup(this.text()));
   /** Side of the trigger the panel is positioned on; also drives the arrow class. */
   readonly placement = input.required<TooltipPlacement>();
   /** Element `id`, referenced by the trigger's `aria-describedby`. */

@@ -14,6 +14,7 @@ import {
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { TooltipPanelComponent } from './tooltip-panel.component';
+import { escapeTooltipMarkup, plainTooltipText } from './tooltip-markup';
 import {
   overlayPlacementOf,
   prepareOverlayEnter,
@@ -110,9 +111,6 @@ export class TooltipDirective implements OnDestroy {
    *  whose text it discloses. Resolved on every open; while nothing matches, no clipped tip opens. */
   readonly dsTooltipTextSelector = input<string | null>(null);
 
-  /** Opens the tip with this line, in bold, above `dsTooltip` while the host shows less text than it holds. */
-  readonly dsTooltipClippedLead = input<string>('');
-
   /** Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves
    *  until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip.
    *  While pinned the host carries `data-ds-tooltip-pinned`, a hook for styling the pinned trigger. */
@@ -140,19 +138,33 @@ export class TooltipDirective implements OnDestroy {
     return this.hostPinOnClick?.() ?? this.dsTooltipPinOnClick();
   }
 
-  private clippedLead(): string | null {
-    const lead = this.dsTooltipClippedLead();
-
-    return lead && this.dsTooltip() && this.isClipped() ? lead : null;
+  private ownText(): string {
+    return (this.textElement()?.textContent ?? '').trim();
   }
 
+  /** A clipped host puts its own text, in bold, above the tip unless the tip already says it. */
   private tipText(): string {
     const given = this.dsTooltip();
-    if (given || !this.dsTooltipWhenClipped()) {
-      return given;
+    const own = this.ownText();
+    if (!given) {
+      return this.dsTooltipWhenClipped() ? escapeTooltipMarkup(own) : '';
+    }
+    if (
+      own &&
+      this.isClipped() &&
+      !this.contains(plainTooltipText(given), own)
+    ) {
+      return `**${escapeTooltipMarkup(own)}**
+${given}`;
     }
 
-    return (this.textElement()?.textContent ?? '').trim();
+    return given;
+  }
+
+  private contains(haystack: string, needle: string): boolean {
+    const collapse = (value: string) => value.replace(/\s+/g, ' ').trim();
+
+    return collapse(haystack).includes(collapse(needle));
   }
 
   /** A clipped host's full text is already in the DOM; describing it again would announce it twice. */
@@ -160,11 +172,8 @@ export class TooltipDirective implements OnDestroy {
     if (!this.dsTooltipWhenClipped()) {
       return false;
     }
-    const collapse = (value: string) => value.replace(/\s+/g, ' ').trim();
 
-    return collapse(this.textElement()?.textContent ?? '').includes(
-      collapse(text),
-    );
+    return this.contains(this.ownText(), plainTooltipText(text));
   }
 
   private ref: OverlayRef | null = null;
@@ -402,7 +411,6 @@ export class TooltipDirective implements OnDestroy {
     const cmpRef = this.ref.attach(new ComponentPortal(TooltipPanelComponent));
     const text = this.tipText();
     cmpRef.setInput('text', text);
-    cmpRef.setInput('lead', this.clippedLead());
     cmpRef.setInput('placement', placement);
     positionStrategy.positionChanges.subscribe(({ connectionPair }) =>
       cmpRef.setInput(

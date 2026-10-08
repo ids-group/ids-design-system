@@ -22,11 +22,7 @@ import {
   hostDirectives: [
     {
       directive: TooltipDirective,
-      inputs: [
-        'dsTooltip: dsDefinitionTerm',
-        'dsTooltipPlacement',
-        'dsTooltipClippedLead',
-      ],
+      inputs: ['dsTooltip: dsDefinitionTerm', 'dsTooltipPlacement'],
     },
   ],
   providers: [
