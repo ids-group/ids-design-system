@@ -202,7 +202,9 @@
             Export as
           </ds-menu-item>
 
-          <ds-menu-item icon="download">
+          <ds-menu-item
+            icon="download"
+            [submenu]="downloadSubmenu">
             Download
           </ds-menu-item>
 
@@ -233,6 +235,18 @@
       </div>
     </div>
   </div>
+
+        <ng-template #downloadSubmenu>
+          <ds-menu>
+            <ds-menu-item>
+              Original file
+            </ds-menu-item>
+
+            <ds-menu-item>
+              Compressed (.zip)
+            </ds-menu-item>
+          </ds-menu>
+        </ng-template>
 
   <div
     data-claude-design
