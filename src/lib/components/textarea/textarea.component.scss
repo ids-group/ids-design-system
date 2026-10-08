@@ -120,6 +120,8 @@
 
   &.autosize .control textarea {
     field-sizing: content;
+
+    // glyph-clip-guard: the textarea grows to its content, so nothing reaches the edge
     overflow: hidden;
   }
 
@@ -165,6 +167,8 @@
     inset: 0;
     box-sizing: border-box;
     padding-inline: inherit;
+
+    // glyph-clip-guard: mirrors the textarea, which clips its own text at this same edge
     overflow: hidden;
     scrollbar-gutter: stable;
     font: var(--_textarea-font);
