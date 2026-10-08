@@ -56,6 +56,8 @@
   // otherwise widen the page.
   position: relative;
   width: 100%;
+
+  // glyph-clip-guard: x scrolls, so y cannot stay visible; every cell pads its text off this edge
   overflow: auto hidden;
 
   // Rows and header buttons sit flush against this box, so a ring drawn outward is eaten.
@@ -82,7 +84,8 @@
 
 :host(.resizable) thead th {
   position: relative;
-  overflow: hidden;
+
+  @include text-clip.inline-axis;
 }
 
 /* A coarse pointer paints no `:hover`, so the handle is invisible while `touch-action: none` still
@@ -138,6 +141,8 @@
       calc(-1 * var(--_table-scroller-pad-bottom, 0px))
     )
   );
+
+  // glyph-clip-guard: the proxy scrollbar, no text
   overflow: auto hidden;
 }
 
@@ -419,6 +424,7 @@
     }
 
     .expand-panel-content {
+      // glyph-clip-guard: collapses the expanded row; open, the panel pads its text off this edge
       overflow: hidden;
       min-height: 0;
     }
