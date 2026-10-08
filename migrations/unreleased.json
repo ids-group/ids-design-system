@@ -118,7 +118,7 @@
     "`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a slot, or about an attribute that names no slot. That content still renders in the body. A test or screenshot that waited for the `Dev warning` toast these raised has nothing to wait for.",
     "dsTooltipPinOnClick opens a tooltip on hover and focus with no delay and keeps it open after a click until a click outside, Escape or blur; a second click closes it. Without it a click closes the tooltip as before. While pinned the host carries data-ds-tooltip-pinned, a styling hook for the pinned trigger.",
     "ds-info-hint (InfoHintComponent) is an info icon button: ariaLabel names it, text shows on hover and focus and stays open after a click. The icon darkens on hover, sits on a muted circle while pressed and turns accent on an --accent-muted circle while pinned.",
-    "button[dsDefinitionTerm] (DefinitionTermComponent) styles a button as a term with a dotted underline in --text-tertiary and shows its definition on hover and focus, pinned on click; [pinOnClick]=\"false\" turns the pin off. Hover makes the underline solid, a press tints the term with --surface-muted, and a pinned term is --accent-strong on --accent-subtitle; no state changes its size.",
+    "dsDefinitionTerm (DefinitionTermDirective) marks a term on any element with a dotted underline in --text-tertiary and shows its definition on hover and focus, pinned on click; on a host other than button it adds tabindex=\"0\", role=\"button\" and Enter / Space; [pinOnClick]=\"false\" turns the pin off. Hover makes the underline solid, a press tints the term with --surface-muted, and a pinned term is --accent-strong on --accent-subtitle; no state changes its size. The styles ship as .ds-definition-term in styles/ds.",
     {
       "text": "A ds-table header label with a hint is a button[dsDefinitionTerm]: a plain label pins its hint on click and takes the term's hover, pressed and pinned states; a sortable one sorts on click and pins nothing.",
       "verify": "click a plain hinted ds-table header label, move the pointer away and confirm the hint stays open and the label shows the pinned accent until a click outside; click a sortable hinted label and confirm it sorts and no hint stays open."
@@ -150,8 +150,8 @@
       "find": [
         "underline dotted"
       ],
-      "why": "button[dsDefinitionTerm] carries the button reset, the dotted underline, the focus ring and the pinned tooltip.",
-      "replaceWith": "<button type=\"button\" dsDefinitionTerm=\"...\">; keep a dotted underline that marks something other than a term with a definition"
+      "why": "dsDefinitionTerm carries the dotted underline, the focus ring, the keyboard access and the pinned tooltip.",
+      "replaceWith": "<span dsDefinitionTerm=\"...\">; keep a dotted underline that marks something other than a term with a definition"
     }
   ]
 }
