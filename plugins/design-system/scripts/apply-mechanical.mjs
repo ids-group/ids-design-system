@@ -15,8 +15,9 @@
 //   { dryRun, root, items: [{ version, id, kind, status, reason?, files: { path: count },
 //     edits: [{ loc, before, after }], left: [{ loc, match, el, dynamic?, reason }] }] }
 // status: applied (rewrote, left nothing) | partial (rewrote and left some) | left (rewrote
-// nothing, left some) | untouched (saw nothing) | skipped (an item shape this script does not
-// rewrite; `reason` says which). `left` is the finder's hit shape, ready for an applier.
+// nothing, left some) | untouched (saw nothing). An item whose `old`/`new` this script cannot
+// apply as an exact, scoped swap of one name for another is refused before any rewrite: `reason`
+// says why, and every occurrence of `old` is reported as left. `left` is the finder's hit shape, ready for an applier.
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
 
@@ -24,28 +25,6 @@ const SKIP_DIRECTORIES = new Set(['node_modules', 'dist', '.angular', '.git']);
 const EXTENSIONS = new Set(['.html', '.ts', '.scss', '.css']);
 const STYLE = new Set(['.scss', '.css']);
 const PACKAGE = '@ids-group-ltd/ids-design-system';
-
-// Published items whose kind says rename but whose swap alone would ship a wrong value. A
-// manifest is frozen once published, so these stay listed here; a new item of a rename kind is a
-// pure swap by contract (migrations/AUTHORING.md).
-const NOT_A_PURE_SWAP = {
-  '0.5.1#badge-variant-to-status-rename':
-    '`solid` and `count` values move to other inputs',
-  '0.10.0#modal-error-boolean-to-status':
-    'the boolean value becomes `status="error"`',
-  '0.12.1#table-export-behind-directive':
-    'the input becomes a directive attribute with an import',
-  '0.12.2#table-hscroll-bottom-token-renamed':
-    'a negative-offset value is deleted instead',
-  '0.13.0#chart-categorical-tokens-renamed':
-    'a re-declaration takes `--ds-chart-series-N-color` instead',
-  '0.13.3#progress-and-meter-tokens-renamed-to-bar':
-    '`--ds-progress-bar-color*` does not follow the prefix pattern',
-  '0.13.4#description-item-tokens-leave-the-list-namespace':
-    'three suffixes are spelled out as well',
-  '0.13.4#pie-chart-thickness-is-now-inner-radius':
-    'the value becomes 1 minus it',
-};
 
 const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const lineAt = (text, offset) => text.slice(0, offset).split('\n').length;
@@ -158,6 +137,50 @@ class Run {
       ...(extra.dynamic ? { dynamic: true } : {}),
       reason,
     });
+  }
+
+  // A refused item rewrites nothing, so each place `old` appears goes to the agents instead.
+  leaveEveryOccurrence(report, item, reason) {
+    const scoped = SCOPED_ATTRIBUTE.exec(item.old ?? '');
+    if (scoped) {
+      const [, element, name] = scoped;
+      const bare = (attribute) =>
+        attribute.replace(/^(?:bind-|on-)|^\[\(|\)\]$|^[[(]|[\])]$/g, '');
+      for (const path of this.templateFiles())
+        for (const tag of startTags(this.files.get(path), element))
+          for (const attribute of tag.attributes)
+            if (bare(attribute.name) === name)
+              this.leave(
+                report,
+                path,
+                attribute.start,
+                attribute.name,
+                reason,
+                {
+                  el: element,
+                },
+              );
+
+      return;
+    }
+    const names = String(item.old ?? '')
+      .split(/\s*[,|]\s*/)
+      .map((name) => name.trim().split(/\s+/).at(-1))
+      .filter(Boolean);
+    const seen = new Set();
+    for (const name of names) {
+      const body = name.split('*').map(escapeRegex).join('[A-Za-z0-9_-]+');
+      const pattern = new RegExp(
+        `${/^[\w-]/.test(name) ? '(?<![\\w$-])' : ''}${body}${name.endsWith('-') ? '[A-Za-z0-9_-]*' : '(?![\\w$-])'}`,
+        'g',
+      );
+      for (const [path, text] of this.files)
+        for (const match of text.matchAll(pattern))
+          if (!seen.has(`${path}:${match.index}`)) {
+            seen.add(`${path}:${match.index}`);
+            this.leave(report, path, match.index, match[0], reason);
+          }
+    }
   }
 
   // Every regex match in the selected files becomes a replacement; `rewrite` returns the new
@@ -401,10 +424,18 @@ class Run {
       return 'not a list of custom-property names';
     const pattern = (token) =>
       token.endsWith('-') && !token.includes('*') ? `${token}*` : token;
-    for (const [oldToken, newToken] of paired) {
-      const [oldPattern, newPattern] = [pattern(oldToken), pattern(newToken)];
-      if (oldPattern.includes('*') !== newPattern.includes('*'))
-        return 'a family renamed to a single name';
+    const patterns = paired.map(([oldToken, newToken]) => [
+      pattern(oldToken),
+      pattern(newToken),
+    ]);
+    if (
+      patterns.some(
+        ([oldPattern, newPattern]) =>
+          oldPattern.includes('*') !== newPattern.includes('*'),
+      )
+    )
+      return 'a family renamed to a single name';
+    for (const [oldPattern, newPattern] of patterns) {
       const regexOf = (token) =>
         token.split('*').map(escapeRegex).join('([A-Za-z0-9_-]+)');
       const old = new RegExp(
@@ -599,12 +630,12 @@ const main = () => {
         edits: [],
         left: [],
       };
-      const reason =
-        NOT_A_PURE_SWAP[`${version}#${item.id}`] ?? apply(run, item, report);
+      const reason = apply(run, item, report);
       if (reason) {
-        report.status = 'skipped';
         report.reason = reason;
-      } else if (report.edits.length > 0)
+        run.leaveEveryOccurrence(report, item, reason);
+      }
+      if (report.edits.length > 0)
         report.status = report.left.length > 0 ? 'partial' : 'applied';
       else report.status = report.left.length > 0 ? 'left' : 'untouched';
       items.push(report);
@@ -612,7 +643,7 @@ const main = () => {
   }
   if (!dryRun) run.write();
   for (const report of items) {
-    if (report.status === 'untouched') continue;
+    if (report.status === 'untouched' && !report.reason) continue;
     const files = Object.entries(report.files)
       .map(([path, count]) => `${path} (${count})`)
       .join(', ');
