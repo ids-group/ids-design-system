@@ -2,7 +2,8 @@
 // Runs apply-mechanical.mjs over every case in apply-mechanical.fixtures/. A case holds its
 // manifest(s) (`manifest*.json`, applied in name order), a `before/` tree, the `after/` tree the
 // script must leave, and an optional `expected.json` naming the occurrences it must report as left
-// (`<version>#<id> <loc>`) and the items it must skip; an absent list means none.
+// (`<version>#<id> <loc>`) and the items it must refuse as not an exact swap; an absent list
+// means none.
 //
 //   node apply-mechanical.test.mjs     # exit 0 = every case matches, and a dry run writes nothing
 import { execFileSync } from 'node:child_process';
@@ -85,11 +86,11 @@ try {
       );
       assert.deepEqual(
         items
-          .filter((item) => item.status === 'skipped')
+          .filter((item) => item.reason)
           .map((item) => `${item.version}#${item.id}`)
           .sort(),
-        (expected.skipped ?? []).sort(),
-        'skipped items',
+        (expected.refused ?? []).sort(),
+        'refused items',
       );
     } catch (error) {
       failures.push(`${name}: ${error.message}`);
