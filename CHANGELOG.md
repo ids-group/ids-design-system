@@ -17,6 +17,11 @@
   `TooltipDirective` the private `contains` and `ownText`, so a subclass declaring one of those
   names must rename it.
 
+- **`--ds-date-picker-max-width` caps the width of `ds-date-picker`.** It defaults to `100%`, so
+  nothing changes until it is set. With `fullWidth`, the field fills its container up to the cap,
+  which keeps it from spanning a wide dialog or form column; without `fullWidth`, the field stays as
+  wide as its date format and never gets narrower than it.
+
 ### Changed
 
 - **A tooltip on a clipped host leads with the host's own text in bold.** On any host that carries
@@ -2645,7 +2650,6 @@
   leading digit of every tick - `3,5 тыс.` printed as `,5 тыс.`. The gutter is measured from the
   widest label that actually rendered, and `axisGutter` is the floor it will not go below.
 
-
 ## 0.13.2 — 2026-09-15
 
 ### Added
@@ -3640,7 +3644,6 @@
   These are the last two of the four pieces asked for on 2026-08-18; `hidden` and `disabledReason`
   shipped on 2026-08-21.
 
-
 - **`ds-field-group` takes `error`, `hint` and `warning`, so the error it shows has words.** The
   group suppresses its segments' own labels and message rows — they would break the glued line — and
   until now it had nowhere for the text to go, which left colour as the only channel and 1.4.1
@@ -3756,7 +3759,6 @@
   renders, is showing less than it holds. Horizontal only — a clamped block hides whole lines and
   its `scrollWidth` matches its `clientWidth`.
 
-
 - **Five charts: `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart`, `ds-funnel-chart` and
   `ds-line-chart`.** Each takes a `caption`, a `summary` for the accessible name, a `loading`
   skeleton sized to the real data so the chart does not resize when the numbers land, an `emptyText`
@@ -3819,7 +3821,6 @@
   because levelling the two makes the eye group a bar with the label BELOW it and read every row off
   by one.
 
-
 - **Chart colour is three families, and reaching for the wrong one is the usual chart bug.** The
   eight `--ds-chart-series-N-color` hooks are CATEGORICAL — they separate marks that are DIFFERENT
   THINGS, such as donut slices or line series. A bar chart's rows are not different things; they are
@@ -3877,7 +3878,6 @@
   focusable, and that is the permission this rests on. Nothing in the API changed — a page that
   bound `interactive` and an output needs no edit — but a test that counted `[tabindex="0"]` inside
   a chart will now see one per series.
-
 
 ### Fixed
 
@@ -4497,7 +4497,6 @@
   component reference, and each is created imperatively — they are named here only so a name
   collision in a subclass is greppable from the first release that has them.
 
-
 - **The focus ring eases in instead of appearing at full strength.** Only its colour moves — the
   ring's geometry is already in place, so nothing shifts and the indicator lands where it will stay.
   `outline-offset` is deliberately not animated: an expanding ring lags the caret on a fast Tab, and
@@ -4811,7 +4810,6 @@ this package ships under `migrations/`.
   `ToastPromiseMessages` is generic, so `promise<T>` stops discarding `T` and a `success` callback
   receives the resolved value instead of `unknown`.
 
-
 - **A modal, drawer, confirm or bottom sheet opened after a toast covered it and swallowed its action
   button.** `--layer-toast: 1500` could not prevent it and never could: CDK 21 gives every overlay host
   `popover="manual"` and calls `showPopover()`, so hosts live in the browser's top layer, which paints
@@ -4822,7 +4820,6 @@ this package ships under `migrations/`.
 
   Only *scrimmed* overlays trigger it. A tooltip or dropdown neither covers the toast meaningfully nor
   eats a click, and the documented scale deliberately puts `--layer-tooltip` above the toast.
-
 
 - **Typing on a CLOSED `ds-select` did nothing.** Type-ahead landed with the jump wired only for
   an open panel: the closed branch of the key handler returned before reaching it, so a letter
@@ -4988,7 +4985,6 @@ this package ships under `migrations/`.
   value by hand and guess what empty means for that control. It does NOT move focus, deliberately:
   the caller may be navigating away.
 
-
 - **Panel header and footer slots.** The panel was a closed box between the filter row and the
   options: "3 of 40 selected", a "clear all" button, a hint or a link under the list had nowhere to
   go. `dsPanelHeaderTemplate` and `dsPanelFooterTemplate` fill a strip above and below, with
@@ -5025,7 +5021,6 @@ this package ships under `migrations/`.
   field is on the shared `DsOption`, so `SelectOption`, `MultiSelectOption` and `AutocompleteOption`
   all accept it and it type-checks on all three pickers; `ds-multi-select` and `ds-autocomplete` do
   not yet render it, so a reason set there is carried and not shown.
-
 
 - **The keyboard cursor keeps its row in view.** On a list longer than the panel the arrows walked the
   cursor out of sight — the reader pressed down and could not see where they were. All three pickers
@@ -5066,7 +5061,6 @@ this package ships under `migrations/`.
   the same `readonly` binding alias `ds-select` has for signal forms; `clearable` uses the same button
   and the same accessible name as `ds-select`'s.
 
-
 - **`ds-table` row expansion: one-at-a-time, expand-all, and events.** The base feature shipped
   already; these are the three edges it was missing. `expandMode="single"` collapses the open row
   when another expander is clicked, so a detail panel cannot stack up down the page — enforced when
@@ -5079,7 +5073,6 @@ this package ships under `migrations/`.
   row, and there is none to carry. Opening two rows or more now also reaches the table's live
   region, which a full page of panels appearing from one keypress previously did not.
 
-
 - **Column resizing works on a touch device, where the drag handle never could.** The handle
   paints its line on `:hover` and `:focus-visible`; a coarse pointer produces neither, so it was
   invisible — while `touch-action: none` still took the horizontal swipe that scrolls the table,
@@ -5089,7 +5082,6 @@ this package ships under `migrations/`.
   opens as a `ds-bottom-sheet` rather than a popover. The buttons render on desktop as well, where
   the handle remains the primary route. All three routes share one step, so drag, arrow keys and
   buttons move a column by the same amount, and all three clamp at the scroll viewport.
-
 
 ### Changed
 
@@ -5296,7 +5288,6 @@ this package ships under `migrations/`.
   stays put while the options move under it. `ds-multi-select` did that per-component before and the
   other two did not.
 
-
 - **BREAKING for code that READS `ds-autocomplete`'s `options`: the element type is now
   `AutocompleteItem<T>`, not `AutocompleteOption<T>`.** The input holds flat options OR groups,
   so a reader — or a subclass overriding a member typed against the element — that assumed
@@ -5421,7 +5412,6 @@ this package ships under `migrations/`.
 
 - **`ds-select` accepts a `readonly` options array**, which the other two already did, and tracks
   its top-level items by index rather than by label, which is not unique.
-
 
 ### What you can now DELETE
 
@@ -5630,7 +5620,6 @@ this package ships under `migrations/`.
   in inline flow that leading/trailing whitespace collapses to a rendered space. The mark row is a flex
   container now, which drops whitespace-only text nodes outright, so the identifier renders flush and
   the template stays free to be formatted for reading. No API change, and nothing to do on your side.
-
 
 ### What you can now DELETE
 

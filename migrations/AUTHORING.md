@@ -465,6 +465,10 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       of things is backed by `evidence` on its item or object-form `informational` entry, and a
       `## Unreleased` sentence making one by such an entry naming its code. (`node tools/check.mjs
       manifest-claims`, in the lint and release gates)
+- [ ] Every docs block whose pixels changed across the boundary has a `ds-*` element, class or
+      token it renders named in the manifest or the CHANGELOG block, and a `pixels:<block id>`
+      evidence names a block that did not change. (`node tools/check.mjs render-evidence`, at the
+      cut)
 - [ ] An `informational` entry whose change is to rendering alone carries `verify`; an object entry
       has a non-empty `text` and `verify` and no other key. (lint, M046 for the shape)
 - [ ] `old` resolves at the PREVIOUS tag, is gone at this one for a rename or a removal, and `new`

@@ -53,8 +53,9 @@ One file per released version — `migrations/<version>.json` — mirroring that
   Read it before deciding a clean build means done.
 - **`evidence`** - what measured the outcome the entry's prose asserts: that rendering or behaviour
   did not change, a compile outcome, or a count of things. `commit:<sha>` inside the boundary the
-  manifest describes, `fixture:<path>` under `migrations/fixtures/`, `pixels:<docs block id>`,
-  `tokens:<token name>`, or `command:<shell command>`. Optional on an item and on an object-form
+  manifest describes, `fixture:<path>` under `migrations/fixtures/`, `pixels:<docs block id>`
+  (`<section anchor>/<chapter slug>`, such as `button/sizes`, whose pixels did not change across
+  the boundary), `tokens:<token name>`, or `command:<shell command>`. Optional on an item and on an object-form
   `informational` entry, and required wherever the prose makes such a claim.
 - **`deleteList`** — the structured form of "what you can now delete" (see below).
 - **`informational`** — a non-actionable FYI, a bare string or `{ "text": "...", "verify": "..." }`
