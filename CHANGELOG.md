@@ -51,6 +51,12 @@
   `TooltipDirective` gained the public `dsTooltipArrow` and `TooltipPanelComponent` the public
   `arrow`, so a subclass declaring either name must rename it.
 
+- **`text-clip.inline-axis` and `text-clip.line-clamp($lines)`** join
+  `text-clip.single-line-ellipsis` in `styles/text-clip`. `inline-axis` clips a row sideways and
+  leaves the block axis visible; `line-clamp` clamps a block to `$lines` lines at
+  `line-height: normal`, the one line-height every font sizes to its own glyphs, so neither cuts a
+  glyph whatever the font.
+
 - **`dsTooltip` renders `**bold**`.** Text between a pair of `**` is bold; `\*\*` is a literal `**`
   and an unpaired `**` stays as typed. The panel builds its content from the parsed text, so no
   markup in a string is interpreted as HTML. Nothing else is parsed: no italics, code, lists or
@@ -66,6 +72,16 @@
 
 ### Changed
 
+
+- **`text-clip.single-line-ellipsis` clips the inline axis only.** It clipped both axes with a
+  4px margin, which a font taller than the line box by more than that overran. Ink above and
+  below the box now paints over whatever sits there, as it would in any unclipped box.
+- **A `ds-stat` value clamped with `--ds-stat-value-lines` sets `line-height: normal`.** At a
+  flat line-height the clamp's edge ran through the strip where the last line's descenders and
+  the next line's accents overlap. A clamped value is taller: a tile whose value fills two
+  lines at the default size grows from 147 to 165px in Mulish. An unclamped value keeps its flat
+  line in a browser with container style queries; in one without, it takes `line-height: normal`
+  as well.
 - **A `**` in an existing tooltip string now makes text bold.** Write `\*\*` where the asterisks
   are meant literally.
 - **`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a
@@ -95,6 +111,17 @@
   and, in `ds-modal-card`, its stacking when the row runs out of width. The wrapper gets
   `display: contents` at zero specificity, so a `display` you set on it yourself still wins and keeps
   your own layout.
+
+- **Text keeps its ascenders and descenders under any font.** A box that truncates text clipped
+  both axes, so where the font's ascent plus descent is taller than the line-height, the tails of
+  g, j, p, q and y and the marks above Й, Ё and Å were cut flat, by more the taller the font you
+  set in `--font-sans`. These now clip along the inline axis only and keep their size:
+  `ds-breadcrumbs` (the row and each label), the `ds-stat` label and value, every label that ends
+  in an ellipsis (`ds-select`, `ds-multi-select` and `ds-autocomplete` values and options,
+  `ds-sidenav-item`, `ds-sidenav-footer`, `ds-tree`, `ds-banner`, `ds-table` headers and
+  cells), the chips of a `ds-multi-select` or `ds-autocomplete` in fit mode, the `ds-date-picker`
+  value, the `ds-filter-bar` row, and `ds-table` headers with resizable columns. A long label
+  still ends in an ellipsis and a long trail still clips at the row's end.
 
 - **A pinned chart tooltip takes the pointer.** Its text can be selected and a link in a
   `tooltipTemplate` clicked; the panel's content ignored the pointer even while its pane was pinned,

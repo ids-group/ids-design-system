@@ -42,6 +42,7 @@
 
   // The four end-aligned columns have a minimum width; below it the table scrolls. Y is hidden
   // because a scrolling x computes a visible y to `auto`, and rows rising in overshoot the bottom edge.
+  // glyph-clip-guard: x scrolls, so y cannot stay visible; the rows pad their text off this edge
   overflow: auto hidden;
   margin: 0;
 }

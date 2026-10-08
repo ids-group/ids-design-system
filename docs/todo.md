@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**121 open — 3 P1, 8 P2, 110 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**122 open — 3 P1, 8 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 3
 
@@ -40,7 +40,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 110
+### P3 — 111
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -119,6 +119,7 @@ item and nothing else.
   - `.design-sync/conventions.md` is a generator INPUT, and nothing stops a reflow desyncing it
   - Which of the 8 live chapters can also be frozen
 - **Component feature gaps**
+  - What the glyph-clip fix leaves to measure or decide
   - `ds-select` cannot offer "create «what I typed»", and the reason is that it has no place to type (recorded 2026-09-09, Stas)
   - `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's original framing, endorsed by Stas 2026-09-01: «ds config тоже можно. как я и говорю prototype: true»)
   - Three edges left open on `ds-table` row expansion and the resize handle, each a judgement call rather than a defect
@@ -1082,6 +1083,7 @@ file** — the number moves; cite the filename.
 | 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
 | 19 | `19-tooltip-mechanism` | Everything about the tooltip in one deck: what is settled and in dev, live examples of the term and the info icon, and two open questions (who writes the bold label of a clipped header, whether to split the tooltip file). | none |
+| 20 | `20-interaction-states` | General rules for the states of interactive elements as levels on three channels, with live sliders for the step numbers; one neutral hover surface; a check against empty cells; where to start. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1227,6 +1229,8 @@ and the fifteen lint rules.
 ## Component feature gaps
 
 *This section also has items under **Asks**, **Parked**.*
+
+- [ ] **[P3] What the glyph-clip fix leaves to measure or decide.** Every block-axis clip in `src/lib` goes through `styles/_text-clip.scss` or carries a `glyph-clip-guard:` reason (`node tools/check.mjs glyph-clip`), and `node tools/measure-glyph-clip.mjs` finds no clipped line on the eight component and chart pages under Mulish, Segoe Script, Mulish at line-height 1 and Javanese Text, in either theme, except three that CSS cannot reach. (a) A native `<input>` (`ds-input`, `ds-number-stepper`) and the `ds-field-group` row: with Javanese Text (ascent plus descent 2.27em) at 14px the font's box exceeds the control's padding box by up to 10px. The ink stays whole in the screenshots, because that face's ink is far shorter than its metrics, but a fixed-height control cannot hold an unbounded glyph box. **Wanted:** a verdict on whether a field's height should grow with the font (`min-block-size` from `1lh` plus padding) or stay fixed. (b) Only Chromium was measured. `text-overflow` under `overflow: clip visible` and container style queries are specified and shipped in Firefox and Safari; confirm the ellipsis and the `ds-stat` clamp there. (c) A panel that opens on demand (menu, select list, tooltip, toast) is measured only where the docs render it inline; the open state is held by the lint, not by a measurement.
 
 - [ ] **[P3] `ds-select` cannot offer "create «what I typed»", and the reason is that it has no place to type (recorded 2026-09-09, Stas).** `[dsCreateTemplate]` and `[dsChipTemplate]` exist in the library and `ds-select` reads neither — correctly, because both decorate features it does not have. Chips show MANY values and a single select holds one; create needs typed text and `ds-select`'s template contains **no `<input>` at all**. What looks like typing there is `createTypeAhead`, a keystroke buffer that jumps to the option whose label matches, so there is no query to turn into a new value.
   **So this is a feature request, not a missing template binding, and it arrives in that order:** first a panel filter field (the thing `ds-multi-select` already has as `.search-row`), then `allowCreate` plus a `created` output and the no-match branch — `ds-autocomplete` carries all three already and is the model to copy rather than re-derive. Only then does reading `[dsCreateTemplate]` mean anything.

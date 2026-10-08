@@ -15,6 +15,7 @@ export class BodyScrollLockService {
   lock(): void {
     if (this.count === 0) {
       this.previousOverflow = this.doc.body.style.overflow;
+      // glyph-clip-guard: locks page scroll on <body>
       this.doc.body.style.overflow = 'hidden';
     }
     this.count += 1;
