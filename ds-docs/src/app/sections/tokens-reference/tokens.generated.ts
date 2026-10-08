@@ -2345,8 +2345,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-alert-enter-keyframes",
-        "value": "ds-scale-in",
-        "notes": "Alert entrance @keyframes (default ds-scale-in, growing from the alert's centre)."
+        "value": "ds-fade-in",
+        "notes": "Alert entrance @keyframes (default ds-fade-in, fading in where the alert stands)."
       },
       {
         "name": "--ds-alert-enter-duration",
@@ -2361,12 +2361,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-alert-enter-offset",
         "value": "2px",
-        "notes": "How far the alert travels in, and from where: negative means it settles down from above. The default ds-scale-in does not travel, so this applies once --ds-alert-enter-keyframes names a preset that does, such as ds-slide-in (default 2px)."
+        "notes": "How far the alert travels in, and from where: negative means it settles down from above. The default ds-fade-in does not travel, so this applies once --ds-alert-enter-keyframes names a preset that does, such as ds-slide-in (default 2px)."
       },
       {
         "name": "--ds-alert-enter-scale",
         "value": "0.96",
-        "notes": "Start scale of the default ds-scale-in entrance (default 0.96)."
+        "notes": "Start scale once --ds-alert-enter-keyframes is ds-scale-in (default 0.96)."
       }
     ]
   },
@@ -2799,8 +2799,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-banner-enter-keyframes",
-        "value": "ds-scale-in",
-        "notes": "Banner entrance @keyframes (default ds-scale-in, growing from the banner's centre)."
+        "value": "ds-fade-in",
+        "notes": "Banner entrance @keyframes (default ds-fade-in, fading in where the banner stands)."
       },
       {
         "name": "--ds-banner-enter-duration",
@@ -2815,12 +2815,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-banner-enter-offset",
         "value": "4px",
-        "notes": "How far the banner travels in, and from where: negative means it settles down from above. The default ds-scale-in does not travel, so this applies once --ds-banner-enter-keyframes names a preset that does, such as ds-slide-in (default 4px)."
+        "notes": "How far the banner travels in, and from where: negative means it settles down from above. The default ds-fade-in does not travel, so this applies once --ds-banner-enter-keyframes names a preset that does, such as ds-slide-in (default 4px)."
       },
       {
         "name": "--ds-banner-enter-scale",
         "value": "0.96",
-        "notes": "Start scale of the default ds-scale-in entrance (default 0.96)."
+        "notes": "Start scale once --ds-banner-enter-keyframes is ds-scale-in (default 0.96)."
       },
       {
         "name": "--banner-bar-w",
@@ -5355,8 +5355,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-modal-enter-keyframes",
-        "value": "ds-scale-in",
-        "notes": "Modal card entrance @keyframes (default ds-scale-in); the backdrop always fades."
+        "value": "ds-fade-in",
+        "notes": "Modal card entrance @keyframes (default ds-fade-in); the backdrop always fades."
       },
       {
         "name": "--ds-modal-enter-duration",
@@ -5441,7 +5441,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-modal-enter-scale",
         "value": "0.97",
-        "notes": "Start scale for the modal card with ds-scale-in (default 0.97)."
+        "notes": "Start scale for the modal card once --ds-modal-enter-keyframes is ds-scale-in (default 0.97)."
       },
       {
         "name": "--ds-modal-backdrop",
@@ -5638,8 +5638,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-overlay-enter-keyframes",
-        "value": "ds-scale-in",
-        "notes": "Entrance @keyframes for every portaled panel — default ds-scale-in, which grows the panel out of its trigger edge; also ds-slide-in / ds-fade-in, your own GLOBAL keyframes, or none."
+        "value": "ds-fade-in",
+        "notes": "Entrance @keyframes for every portaled panel — default ds-fade-in, which fades the panel in where it stands; also ds-slide-in / ds-scale-in, your own GLOBAL keyframes, or none."
       },
       {
         "name": "--ds-overlay-enter-duration",
@@ -5659,7 +5659,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-overlay-enter-scale",
         "value": "0.96",
-        "notes": "Start scale when a panel enters with ds-scale-in (default 0.96)."
+        "notes": "Start scale when a panel enters with ds-scale-in (default 0.96); read only after --ds-overlay-enter-keyframes is set to ds-scale-in."
       },
       {
         "name": "--ds-overlay-leave-duration",
@@ -8140,8 +8140,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-enter-keyframes",
-        "value": "ds-scale-in",
-        "notes": "Toast entrance @keyframes (default ds-scale-in, growing from the toast's centre)."
+        "value": "ds-fade-in",
+        "notes": "Toast entrance @keyframes (default ds-fade-in, fading in where the toast stands)."
       },
       {
         "name": "--ds-toast-enter-duration",
@@ -8156,7 +8156,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-toast-enter-offset",
         "value": "var(--space-2)",
-        "notes": "How far the toast travels in, and from where: positive means it rises from below its resting spot. The default ds-scale-in does not travel, so this applies once --ds-toast-enter-keyframes names a preset that does, such as ds-slide-in (default --space-2)."
+        "notes": "How far the toast travels in, and from where: positive means it rises from below its resting spot. The default ds-fade-in does not travel, so this applies once --ds-toast-enter-keyframes names a preset that does, such as ds-slide-in (default --space-2)."
       },
       {
         "name": "--ds-toast-min-width",
@@ -8171,7 +8171,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-toast-enter-scale",
         "value": "0.96",
-        "notes": "Start scale of the default ds-scale-in entrance (default 0.96)."
+        "notes": "Start scale once --ds-toast-enter-keyframes is ds-scale-in (default 0.96)."
       },
       {
         "name": "--ds-toast-bg-color-info",

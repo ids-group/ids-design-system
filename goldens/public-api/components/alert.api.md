@@ -35,7 +35,7 @@ ds-alert {
     --ds-alert-close-icon-color-hover: var(--icon-strong);
     --ds-alert-enter-duration: var(--ds-motion-enter-surface-duration);
     --ds-alert-enter-easing: var(--ds-motion-enter-surface-easing);
-    --ds-alert-enter-keyframes: ds-scale-in;
+    --ds-alert-enter-keyframes: ds-fade-in;
     --ds-alert-enter-offset: 2px;
     --ds-alert-enter-scale: 0.96;
     --ds-alert-padding-x: var(--space-3);

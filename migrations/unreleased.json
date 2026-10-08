@@ -141,6 +141,118 @@
       "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn rows stay, inert under the overlay, until loading clears.",
       "restore": "[data]=\"loading ? [] : rows\"",
       "verify": "A ds-bar-chart reloading with rows on screen shows those rows under a scrim and spinner, and one loading with empty data shows skeleton rows."
+    },
+    {
+      "id": "overlay-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-overlay-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-overlay-enter-keyframes",
+        "--ds-overlay-enter-scale",
+        "--ds-overlay-enter-offset"
+      ],
+      "detect": [
+        "--ds-overlay-enter-scale:",
+        "--ds-overlay-enter-offset:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless overlay panels must keep growing or travelling: set `--ds-overlay-enter-keyframes` to `ds-scale-in` or `ds-slide-in`.",
+      "appliesWhen": "Every CDK overlay panel the library opens: tooltip, popover, select, multi-select, autocomplete, the date, time and colour picker panels, and a `ds-menu-item` submenu. Ships in `styles/overlay-motion`, which `styles/ds` forwards. a chart tooltip faded in already.",
+      "pitfall": "A `--ds-overlay-enter-scale` or `--ds-overlay-enter-offset` set on its own now changes nothing: each is read only by the keyframes that use it.",
+      "restore": ":root { --ds-overlay-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an opened tooltip or select panel fades in where it stands, and neither grows nor moves."
+    },
+    {
+      "id": "modal-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-modal-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-modal-enter-keyframes",
+        "--ds-modal-enter-scale"
+      ],
+      "detect": [
+        "--ds-modal-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless a modal must keep growing in: set `--ds-modal-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every `ds-modal` card; the backdrop faded already.",
+      "pitfall": "A `--ds-modal-enter-scale` set on its own now changes nothing: it is read only while `--ds-modal-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-modal-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an opened `ds-modal` fades in where it stands and does not grow."
+    },
+    {
+      "id": "toast-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-toast-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-toast-enter-keyframes",
+        "--ds-toast-enter-scale"
+      ],
+      "detect": [
+        "--ds-toast-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless a toast must keep growing in: set `--ds-toast-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every `ds-toast` in the toast region.",
+      "pitfall": "A `--ds-toast-enter-scale` set on its own now changes nothing: it is read only while `--ds-toast-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-toast-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an opened `ds-toast` fades in where it stands and does not grow."
+    },
+    {
+      "id": "banner-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-banner-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-banner-enter-keyframes",
+        "--ds-banner-enter-scale"
+      ],
+      "detect": [
+        "--ds-banner-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless a banner must keep growing in: set `--ds-banner-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every `ds-banner` as it is inserted.",
+      "pitfall": "A `--ds-banner-enter-scale` set on its own now changes nothing: it is read only while `--ds-banner-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-banner-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an inserted `ds-banner` fades in where it stands and does not grow."
+    },
+    {
+      "id": "alert-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-alert-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-alert-enter-keyframes",
+        "--ds-alert-enter-scale"
+      ],
+      "detect": [
+        "--ds-alert-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless a alert must keep growing in: set `--ds-alert-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every `ds-alert` as it is inserted.",
+      "pitfall": "A `--ds-alert-enter-scale` set on its own now changes nothing: it is read only while `--ds-alert-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-alert-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an inserted `ds-alert` fades in where it stands and does not grow."
     }
   ],
   "informational": [
@@ -205,6 +317,14 @@
     {
       "text": "A reloading ds-bar-chart covers the whole card with the overlay, to the frame's rounded corners, instead of a scrim over the rows inside the padding.",
       "verify": "Open a framed ds-bar-chart with rows and loading set, and confirm the blurred scrim reaches the card's edges and corners."
+    },
+    {
+      "text": "A closing `ds-toast` fades where it stands instead of rising 8px while it fades.",
+      "verify": "Dismiss a toast and confirm it fades without moving."
+    },
+    {
+      "text": "A `ds-funnel-chart` stage grows from 96% while it fades in instead of rising 4px, and the value labels of the bar, column, waterfall, heatmap, pie and funnel charts and the funnel's table rows fade in where they stand. A `ds-pie-chart` ring grows from 96% while it fades in, without the 30° turn.",
+      "verify": "Load a funnel and a pie chart and confirm stages, ring and labels appear without travelling or turning."
     }
   ],
   "deleteList": [
@@ -231,6 +351,61 @@
       ],
       "why": "dsDefinitionTerm carries the dotted underline, the focus ring, the keyboard access and the pinned tooltip.",
       "replaceWith": "<span dsDefinitionTerm=\"...\">; keep a dotted underline that marks something other than a term with a definition"
+    },
+    {
+      "id": "overlay-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-overlay-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of overlay panels.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "modal-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-modal-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of `ds-modal`.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "toast-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-toast-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of `ds-toast`.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "banner-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-banner-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of `ds-banner`.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "alert-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-alert-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of `ds-alert`.",
+      "replaceWith": "nothing"
     }
   ]
 }
