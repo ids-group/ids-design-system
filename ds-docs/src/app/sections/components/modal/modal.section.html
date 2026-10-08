@@ -36,22 +36,146 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       actions
-    </code> goes on each button: the row is a flex row with a gap, so a
-    wrapping
+    </code> goes on each button or on one
     <code class="t-mono-inline">
       &lt;div actions&gt;
     </code>
-    is one flex item and its buttons touch. To group them, use
-    <code class="t-mono-inline">
-      &lt;ng-container actions&gt;
-    </code>, which adds no element.
+    around them; both lay the buttons out the same, with the row's gap.
   </p>
 
   <pre class="t-mono-block"><code>&lt;ds-modal title="Unarchive program" [(open)]="open"&gt;
   &lt;div body&gt;...&lt;/div&gt;
   &lt;ds-button actions variant="outline"&gt;Cancel&lt;/ds-button&gt;
   &lt;ds-button actions&gt;Unarchive&lt;/ds-button&gt;
+&lt;/ds-modal&gt;
+
+&lt;ds-modal title="Unarchive program" [(open)]="open"&gt;
+  &lt;div body&gt;...&lt;/div&gt;
+  &lt;div actions&gt;
+    &lt;ds-button variant="outline"&gt;Cancel&lt;/ds-button&gt;
+    &lt;ds-button&gt;Unarchive&lt;/ds-button&gt;
+  &lt;/div&gt;
 &lt;/ds-modal&gt;</code></pre>
+
+  <h3
+    class="block-title t-h4"
+    data-for="modal-card">
+    Actions · on each button or on a wrapper
+  </h3>
+
+  <div class="modal-grid is-2">
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-modal
+          staticPreview
+          title="Unarchive program"
+          size="sm">
+          <span body>
+            The program returns to the active list.
+          </span>
+
+          <ds-button
+            actions
+            color="neutral"
+            variant="outline">
+            Cancel
+          </ds-button>
+
+          <ds-button actions>
+            Unarchive
+          </ds-button>
+        </ds-modal>
+      </div>
+
+      <div class="state-cell-label">
+        ds-modal · actions on each button
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-modal
+          staticPreview
+          title="Unarchive program"
+          size="sm">
+          <span body>
+            The program returns to the active list.
+          </span>
+
+          <div actions>
+            <ds-button
+              color="neutral"
+              variant="outline">
+              Cancel
+            </ds-button>
+
+            <ds-button>
+              Unarchive
+            </ds-button>
+          </div>
+        </ds-modal>
+      </div>
+
+      <div class="state-cell-label">
+        ds-modal · &lt;div actions&gt; wrapper
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-modal-card
+          title="Unarchive program"
+          size="sm">
+          <span body>
+            The program returns to the active list.
+          </span>
+
+          <ds-button
+            actions
+            color="neutral"
+            variant="outline">
+            Cancel
+          </ds-button>
+
+          <ds-button actions>
+            Unarchive
+          </ds-button>
+        </ds-modal-card>
+      </div>
+
+      <div class="state-cell-label">
+        ds-modal-card · actions on each button
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-modal-card
+          title="Unarchive program"
+          size="sm">
+          <span body>
+            The program returns to the active list.
+          </span>
+
+          <div actions>
+            <ds-button
+              color="neutral"
+              variant="outline">
+              Cancel
+            </ds-button>
+
+            <ds-button>
+              Unarchive
+            </ds-button>
+          </div>
+        </ds-modal-card>
+      </div>
+
+      <div class="state-cell-label">
+        ds-modal-card · &lt;div actions&gt; wrapper
+      </div>
+    </div>
+  </div>
 
   <h3
     data-claude-design
