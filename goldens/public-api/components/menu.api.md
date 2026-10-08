@@ -19,13 +19,13 @@ export class MenuDividerComponent {
 }
 
 @Component({ selector: 'ds-menu-item' })
-export class MenuItemComponent implements OnDestroy {
+export class MenuItemComponent implements OnDestroy, AimHoverTarget {
+    public activateHover(): void;
+    private readonly aim;
     private readonly button;
-    private clearCloseTimer;
     private clearOpenTimer;
     private readonly closeRef;
     public closeSubmenu(): void;
-    private closeTimer;
     public contains(node: Node | null): boolean;
     public readonly description = input<string>('');
     protected readonly descriptionId = nextControlId(…);
