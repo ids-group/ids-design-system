@@ -155,6 +155,11 @@ if (existsSync('migrations')) {
   }
 }
 
+// The consumer stylelint plugin and the token list it reads, exported as
+// `@ids-group-ltd/ids-design-system/stylelint`.
+console.log('▶ Copying stylelint/ into dist/ds/stylelint…');
+cpSync('stylelint', 'dist/ds/stylelint', { recursive: true });
+
 console.log(
   '✔ schematics built into dist/ds/schematics + package.json registered.',
 );

@@ -479,6 +479,10 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       a clean run vouches for those only. Published hits of those two rules are reported by
       `node tools/check.mjs manifest-truth:audit`.
       (`tools/check-manifest-truth.mjs`, in the PR gate and the preflight)
+- [ ] A renamed or removed token reaches the shipped stylelint list: run
+      `node tools/generate-token-deprecations.mjs` after editing a published manifest's
+      `token-rename`, `removed-api` or `deleteList` token, and commit `stylelint/deprecated-tokens.json`.
+      (`node tools/check.mjs token-deprecations`, at the cut; the release commit regenerates it)
 - [ ] Every TS code an entry names is asserted by `migrations/fixtures/<version>/<id>.ts`,
       compiled at both tags (README, "Compile fixtures"). (`node tools/check.mjs manifest-compile`,
       at the cut)

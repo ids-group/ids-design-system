@@ -17,7 +17,8 @@
   "exports": {
     "./styles/*": "./styles/*",
     "./themes/*": "./themes/*",
-    "./migrations/*": "./migrations/*"
+    "./migrations/*": "./migrations/*",
+    "./stylelint": "./stylelint/index.mjs"
   },
   "scripts": {
     "agent-catalogue": "node tools/split-agent-catalogue.mjs",
