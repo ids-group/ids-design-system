@@ -7,6 +7,15 @@
   above the hint. Anywhere else, delete the binding, or write the lead into the string:
   `[dsTooltip]="'**' + lead + '**\n' + tip"`.
 
+- **`dsTooltipTextSelector` is removed; `dsTooltipWhenClipped` takes the selector.** One attribute
+  now says both "only while clipped" and "which element to test": `dsTooltipWhenClipped=".label"`
+  tests and discloses the element it matches inside the host, and a boolean or the bare attribute
+  still tests the host. Replace the pair `dsTooltipWhenClipped dsTooltipTextSelector=".label"` with
+  `dsTooltipWhenClipped=".label"`. Where the clip test is bound, bind the selector or `false`:
+  `[dsTooltipWhenClipped]="truncate ? ':scope > .cell' : false"`. The input type widens from
+  `boolean` to `boolean | string`, and `TooltipDirective` no longer exposes `hostElement` and
+  `isClipped()`.
+
 ### Added
 
 - **`--ds-loading-overlay-radius` rounds the corners of the `ds-loading-overlay` scrim.** It

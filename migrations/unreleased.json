@@ -51,6 +51,52 @@
       "verify": "No template or class binds `dsTooltipClippedLead`, the app compiles, and a tooltip that used it shows its lead line, written into the string."
     },
     {
+      "id": "tooltip-text-selector-merged-into-when-clipped",
+      "kind": "removed-api",
+      "old": "dsTooltipTextSelector",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "dsTooltipTextSelector",
+        "dsTooltipWhenClipped"
+      ],
+      "detect": [
+        "dsTooltipTextSelector=",
+        "[dsTooltipTextSelector]="
+      ],
+      "action": "Move the selector into `dsTooltipWhenClipped` and delete `dsTooltipTextSelector`: `dsTooltipWhenClipped dsTooltipTextSelector=\".label\"` becomes `dsTooltipWhenClipped=\".label\"`. Where `[dsTooltipWhenClipped]` is bound to a condition, bind the selector when it holds and `false` when it does not: `[dsTooltipWhenClipped]=\"truncate ? ':scope > .cell' : false\"`.",
+      "appliesWhen": "Only an element that sets `dsTooltipTextSelector`. A `dsTooltipWhenClipped` with no selector, `dsTooltip` and `dsDefinitionTerm` are unchanged.",
+      "evidence": [
+        "command:node tools/public-api-golden.mjs --diff v0.14.8"
+      ],
+      "pitfall": "A leftover `dsTooltipTextSelector=\"...\"` attribute is an inert HTML attribute and raises no error: the clip test then measures the whole host, and a row whose inner label is clipped inside an unclipped row never shows its tip.",
+      "verify": "No template sets `dsTooltipTextSelector`, and a row whose inner label is clipped still shows its tip on hover and on keyboard focus."
+    },
+    {
+      "id": "tooltip-when-clipped-input-widened",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends TooltipDirective",
+        "dsTooltipWhenClipped()",
+        "hostElement",
+        "isClipped()"
+      ],
+      "detect": [
+        "extends TooltipDirective",
+        "this.dsTooltipWhenClipped()",
+        "this.hostElement",
+        "this.isClipped()"
+      ],
+      "action": "None, unless a subclass of TooltipDirective reads `dsTooltipWhenClipped()` as a boolean or calls `hostElement` or `isClipped()`: read your own state instead.",
+      "appliesWhen": "Only a class of yours that extends TooltipDirective; subclassing a DS component is unsupported. Template users bind `dsTooltipWhenClipped` as before: a boolean, the bare attribute, or now a selector string.",
+      "pitfall": "`dsTooltipWhenClipped` now holds a target object or null, so a read compared with `true` or `false` is never equal and the clip test never runs.",
+      "restore": null,
+      "verify": "No subclass of TooltipDirective reads `dsTooltipWhenClipped()` as a boolean or touches `hostElement` or `isClipped()`."
+    },
+    {
       "id": "tooltip-bold-markup",
       "kind": "behavior",
       "old": "dsTooltip",
@@ -95,7 +141,7 @@
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
       "restore": null,
       "verify": "The app builds with no member-collision error against TooltipDirective, TooltipPanelComponent or BarChartComponent.",
-      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 13: contains, document, dsTooltipArrow, dsTooltipPinOnClick, hostPinOnClick, leadsWithOwnText, onClick, onPointerLeave, ownText, pin, pinsOnClick, pointArrowAtHost and unpin; it lost dsTooltipClippedLead. BarChartComponent gained the public labelPosition, the protected isExpanded, toggleRow, hintId, holdsControls, percentColumn, entries, showsSkeleton and reloading, and the private idPrefix and expanded."
+      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 13: ancestorFocusTrigger, document, dsTooltipArrow, dsTooltipPinOnClick, hostPinOnClick, leadsWithOwnText, onClick, onPointerLeave, ownText, pin, pinsOnClick, pointArrowAtHost and unpin; it lost 4: dsTooltipClippedLead, dsTooltipTextSelector, listenToFocusableAncestor and textElement. BarChartComponent gained the public labelPosition, the protected isExpanded, toggleRow, hintId, holdsControls, percentColumn, entries, showsSkeleton and reloading, and the private idPrefix and expanded."
     },
     {
       "id": "intl-chart-rows-under-required",
