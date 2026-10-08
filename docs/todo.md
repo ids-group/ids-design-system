@@ -1082,7 +1082,7 @@ file** — the number moves; cite the filename.
 | 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
 | 19 | `19-tooltip-markup` | What the `dsTooltip` string understands with no tags, no `TemplateRef` and no new input, and who puts the label above the hint of a hinted header once `dsTooltipClippedLead` goes. | none |
-| 20 | `20-tooltip-group` | Before and after of `fix/tooltip-arrow-anchor`: the arrow under the trigger centre, a click that pins a tooltip, `ds-info-hint`, `button[dsDefinitionTerm]`, the hinted `ds-table` header and its bold clipped label. | none |
+| 20 | `20-tooltip-group` | Before and after of `fix/tooltip-arrow-anchor`: the arrow under the trigger centre, a click that pins a tooltip, `ds-info-hint`, `button[dsDefinitionTerm]` with its states and the three ways it could be built, the hinted `ds-table` header and its bold clipped label. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
