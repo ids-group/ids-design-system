@@ -1,0 +1,98 @@
+<form class="form">
+  <ds-input
+    label="Name"
+    [formControl]="name"
+    required
+    [clearable]="true" />
+  <ds-select
+    label="Region"
+    [options]="regions"
+    [formControl]="region" />
+  <ds-checkbox [formControl]="agreed">I agree</ds-checkbox>
+</form>
+
+<div class="buttons">
+  @for (color of buttonColors; track color) {
+    @for (variant of buttonVariants; track variant) {
+      <ds-button
+        [color]="color"
+        [variant]="variant"
+        >{{ color }} {{ variant }}</ds-button
+      >
+    }
+  }
+  @for (size of buttonSizes; track size) {
+    <ds-button
+      [size]="size"
+      icon="download"
+      appTooltip
+      dsTooltip="Export"
+      appTooltipTone="emphasis">
+      Export
+    </ds-button>
+  }
+  <ds-button
+    variant="outline"
+    color="neutral"
+    size="sm"
+    loading
+    fullWidth
+    >Saving</ds-button
+  >
+</div>
+
+<ds-table
+  [data]="invoices"
+  [columns]="columns"
+  [rowId]="invoiceId"
+  sortMode="client"
+  [sortKey]="sortKey()"
+  (sortKeyChange)="sortKey.set($event)"
+  zebra>
+  <ng-template
+    dsCellTemplate="status"
+    [dsCellTemplateOf]="invoices"
+    let-row>
+    <span
+      [class.due]="row.status === 'due'"
+      [title]="invoiceTotal(row)"
+      >{{ row.status }}</span
+    >
+  </ng-template>
+</ds-table>
+
+<ds-button (click)="modalOpen.set(true)">Open</ds-button>
+<ds-modal
+  [(open)]="modalOpen"
+  title="Delete invoice"
+  subtitle="This cannot be undone"
+  size="lg"
+  status="error">
+  <span eyebrow>Invoices</span>
+  <p body>Invoice a1 will be removed.</p>
+  <div actions>
+    <ds-button
+      variant="ghost"
+      color="neutral"
+      (click)="modalOpen.set(false)"
+      >Cancel</ds-button
+    >
+    <ds-button color="error">Delete</ds-button>
+  </div>
+</ds-modal>
+
+<ds-line-chart
+  [categories]="categories"
+  [series]="series"
+  curve="smooth"
+  yAxisLabel="Revenue">
+  <ng-template
+    #dsChartTooltip
+    let-context>
+    <strong>{{ context.category }}</strong>
+    @for (entry of context.entries; track entry.label) {
+      <div>{{ entry.label }}: {{ entry.formatted }}</div>
+    }
+    <div>Total {{ tooltipTotal(context) }}</div>
+  </ng-template>
+</ds-line-chart>

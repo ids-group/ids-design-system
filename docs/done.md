@@ -12,7 +12,7 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
   (`src/lib/components/bar-chart/`, placement helpers `placeRows`, `shownRows`, `partSpans` in
   `bar-chart.math.ts`, probed in `tools/probes/bar-chart-math.probe.mjs`).
 - Bar height and per-row colour were already `--ds-bar-chart-track-height` and `BarChartRow.color`.
-- Asked by the mm-ecm consumer; Stas accepted every drawn variant in deck `20-bar-chart`. Loading
+- Asked by the mm-ecm consumer; Stas accepted every drawn variant in deck `21-bar-chart`. Loading
   that dims the rows stays open in `docs/todo.md`.
 
 ## The pie chart's centre value fits the hole (2026-10-05)

@@ -24,6 +24,8 @@ import { execFileSync } from 'node:child_process';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const MIGRATIONS = join(tmpdir(), `migration-lint-selftest.${process.pid}`);
 rmSync(MIGRATIONS, { recursive: true, force: true });
+// The dirty-baseline branch leaves through process.exit, before the cleanup at the end.
+process.on('exit', () => rmSync(MIGRATIONS, { recursive: true, force: true }));
 cpSync(join(ROOT, 'migrations'), MIGRATIONS, { recursive: true });
 const F = join(MIGRATIONS, '0.9.0.json');
 const PRISTINE = readFileSync(F, 'utf8');

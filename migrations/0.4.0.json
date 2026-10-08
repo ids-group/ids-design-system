@@ -49,7 +49,7 @@
       },
       "surface": "template",
       "restore": "nothing to restore - the 24px tier is gone; its callers take sm (32px), and an attribute-less button keeps the same 40px it had as `l`",
-      "verify": "No ds-button binds size=\"s\", \"m\" or \"l\". A button left without size renders at the md height (40px), and every button that previously said \"l\" now says \"md\" and is unchanged on screen."
+      "verify": "No ds-button binds size=\"s\", \"m\" or \"l\". A button left without size renders at the md height (40px), and every button that previously said \"l\" now says \"md\" and keeps its 40px height, padding and font size."
     },
     {
       "id": "ds-button-ts-types-retyped",
@@ -198,18 +198,86 @@
         "@use '@ids-group-ltd/ids-design-system/styles/tokens'"
       ],
       "surface": "style"
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "BottomSheetComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename your own member or mark it `override` wherever the compiler reports a collision with a class in `detect`. Delete an override of a member the class lost.",
+      "appliesWhen": "Only a class that extends one of the classes in `detect`. A consumer who uses the elements in templates needs nothing from this item.",
+      "pitfall": "`private` and `protected` give no protection: a member you redeclare collides with a base member of any visibility. A member of yours that replaced a lost one no longer replaces anything, and the component stops calling it.",
+      "note": "`BottomSheetComponent`, `DrawerComponent` and `ModalComponent` each gained `closing`, `rendered`, `wasOpen` and `onLeaveEnd`. `ButtonComponent` gained `color`, `ariaExpanded`, `ariaHasPopup` and `buttonRef`. `CheckboxComponent` and `SwitchComponent` each gained 18 and `ComboboxComponent` gained 16, most of them the reactive-forms bridge (`writeValue`, `registerOnChange`, `setDisabledState`). `DatePickerComponent` gained 36 and lost `cellClasses` and `monthLabel`. `DropzoneComponent` gained `fileMeta`. `IconButtonComponent` gained `color`. `InputComponent` gained `floating`, `loading` and `messageState`. `ModalCardComponent` gained `dialogRole` and `icon`. `RadioComponent` gained 11 and lost `onChange`. `SelectComponent` gained `hint`, `hintId` and `messageState`. `TableComponent` gained 9. `TextareaComponent` gained `messageState`.",
+      "verify": "The app builds with no error naming a class listed in `detect`, and every member of such a subclass that shares a base member's name is marked `override`.",
+      "searchHints": [
+        "extends BottomSheetComponent",
+        "extends ButtonComponent",
+        "extends CheckboxComponent",
+        "extends ComboboxComponent",
+        "extends DatePickerComponent",
+        "extends DrawerComponent",
+        "extends DropzoneComponent",
+        "extends IconButtonComponent",
+        "extends InputComponent",
+        "extends ModalCardComponent",
+        "extends ModalComponent",
+        "extends RadioComponent",
+        "extends SelectComponent",
+        "extends SwitchComponent",
+        "extends TableComponent",
+        "extends TextareaComponent"
+      ],
+      "detect": [
+        "extends BottomSheetComponent",
+        "BottomSheetComponent",
+        "extends ButtonComponent",
+        "ButtonComponent",
+        "extends CheckboxComponent",
+        "CheckboxComponent",
+        "extends ComboboxComponent",
+        "ComboboxComponent",
+        "extends DatePickerComponent",
+        "DatePickerComponent",
+        "extends DrawerComponent",
+        "DrawerComponent",
+        "extends DropzoneComponent",
+        "DropzoneComponent",
+        "extends IconButtonComponent",
+        "IconButtonComponent",
+        "extends InputComponent",
+        "InputComponent",
+        "extends ModalCardComponent",
+        "ModalCardComponent",
+        "extends ModalComponent",
+        "ModalComponent",
+        "extends RadioComponent",
+        "RadioComponent",
+        "extends SelectComponent",
+        "SelectComponent",
+        "extends SwitchComponent",
+        "SwitchComponent",
+        "extends TableComponent",
+        "TableComponent",
+        "extends TextareaComponent",
+        "TextareaComponent"
+      ],
+      "restore": null
     }
   ],
   "informational": [
     "Many new components (multi-select, slider, otp-input, color-picker, tree, segmented, button-group, split-button, toggle-button, list, timeline, description-list, stack/inline/container, loading-overlay, radio-group, alert) — additive.",
     "ds-color scoped-accent system (--accent-* pointer layer, [ds-color] attribute, ds.color() mixin) + dark theme (opt-in via data-theme=dark, provideDsTheme({followSystem})) — additive, light output unchanged.",
-    "Reactive-forms (CVA) on checkbox, switch, combobox, date-picker; invalid/hint on checkbox, switch, combobox; invalid on date-picker; hint on select; inline [label] on checkbox/radio/switch; input [loading]/[floating]; --field-label-gap — additive.",
+    "Reactive-forms (CVA) on checkbox, switch, combobox, date-picker; invalid/hint on checkbox, switch, combobox; invalid on date-picker; hint on select; inline [label] on checkbox/radio/switch; input [loading]/[floating] — additive. `--field-gap-label` is renamed `--field-label-gap`, same `--space-1-5` default, and every field control now reads it: rename any read or override of the old name.",
     "ds-button overlay-trigger inputs (ariaHasPopup/ariaExpanded/buttonRef); date-picker month/year grid pickers; table pagination/clientSort/stickyFirstColumn; ModalService.confirm(); dropzone per-file message + queued state — additive.",
     "$bp-* Sass breakpoint aliases + up()/down() mixins; new disabled-state and press-scale override tokens — additive (a-la-carte styles/tokens importers also need styles/breakpoints now).",
-    "Visual-only: button/icon-button press is darken + micro scale-down; [disabled] is a per-variant muted tint (override --ds-*-disabled tokens to restore flat grey); smooth motion pass across components; reduced-motion no longer freezes spinners; overlay scroll-lock release fix.",
+    "Visual-only: button/icon-button press is darken + micro scale-down; [disabled] is a per-variant muted tint (override --ds-*-disabled tokens to restore flat grey); smooth motion pass across components; reduced-motion no longer freezes spinners (under `prefers-reduced-motion: reduce` `--duration-loop-fast` / `--duration-loop-slow` are 1400ms / 2800ms, were 0ms; set them back to `0ms` there to stop them again); overlay scroll-lock release fix.",
     "An open ds-accordion body gains top padding (`--space-2`, was 0) and expands via `grid-template-rows` instead of `height`; collapsed it still shows nothing. NO ACTION unless you added top padding to the body yourself.",
     "ds-input draws its clear button in --text-secondary instead of --text-tertiary, and ds-search shows its clear button at full opacity at rest instead of 0.7, so it reads without hover or focus.",
-    "ds-combobox truncates a long option label with an ellipsis instead of wrapping it in a narrow panel, and its multi-select option row fills the panel width."
+    "ds-combobox truncates a long option label with an ellipsis instead of wrapping it in a narrow panel, and its multi-select option row fills the panel width.",
+    "On-fill text reads the theme-stable tokens: `--primary-on`, `--icon-on-primary`, `--text-on-primary`, `--text-on-error`, `--text-on-success` and `--text-on-media` default to `var(--static-white)` (was `var(--neutral-0)`), `--text-on-warning` to `var(--static-ink)` (was `var(--neutral-900)`). The light theme renders the same; under `data-neutrals=\"brand\"` `--text-on-warning` is `#161A28` instead of the brand-gray 900, and none of them follows a repointed `--neutral-0` / `--neutral-900` any more. Restore one by pointing it back, e.g. `--text-on-warning: var(--neutral-900)`.",
+    "A `ds-button` migrated from `variant=\"outline\"` to `color=\"neutral\" variant=\"outline\"` presses to `color-mix(in srgb, var(--text-secondary) 14%, var(--surface-default))`, was `var(--surface-secondary)` (its hover fill); restore with `--ds-button-bg-color-active: var(--surface-secondary)` on a selector that reaches only those buttons.",
+    "`--ds-datepicker-day-selected-bg-color-hover` defaults to `var(--accent-hover)`, was `var(--primary-selected-hover)`: the same colour outside a `[ds-color]` zone, but an override of `--primary-selected-hover` no longer reaches the date picker. Set the hook itself, or `--ds-datepicker-day-selected-bg-color-hover: var(--primary-selected-hover)` to restore."
   ],
   "deleteList": []
 }

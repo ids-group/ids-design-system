@@ -1,6 +1,13 @@
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import {
+  Rule,
+  SchematicContext,
+  SchematicsException,
+  Tree,
+} from '@angular-devkit/schematics';
 
 const DS_IMPORT = "@use '@ids-group-ltd/ids-design-system/styles/ds';";
+// Any quote style, with or without `as`/`with`: a second `@use` of the module is a Sass error.
+const DS_USE = /@use\s+(['"])@ids-group-ltd\/ids-design-system\/styles\/ds\1/;
 
 interface NgAddSchema {
   project?: string;
@@ -27,6 +34,11 @@ export function ngAdd(options: NgAddSchema): Rule {
       projects: Record<string, ProjectDef>;
     };
     const projects = workspace.projects ?? {};
+    if (options.project && !projects[options.project]) {
+      throw new SchematicsException(
+        `ng-add: angular.json has no project named "${options.project}".`,
+      );
+    }
     const projectName =
       options.project ??
       workspace.defaultProject ??
@@ -47,7 +59,7 @@ export function ngAdd(options: NgAddSchema): Rule {
     }
 
     const current = tree.read(stylesEntry)!.toString();
-    if (current.includes(DS_IMPORT)) {
+    if (DS_USE.test(current)) {
       context.logger.info(
         'ng-add: design system already imported — nothing to do.',
       );

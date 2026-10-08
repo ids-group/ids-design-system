@@ -11,6 +11,7 @@ import {
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { TooltipPanelComponent } from './tooltip-panel.component';
+import { escapeTooltipMarkup, plainTooltipText } from './tooltip-markup';
 import {
   overlayPlacementOf,
   prepareOverlayEnter,
@@ -95,10 +96,6 @@ export class TooltipDirective implements OnDestroy {
    *  whose text it discloses. Resolved on every open; while nothing matches, no clipped tip opens. */
   readonly dsTooltipTextSelector = input<string | null>(null);
 
-  /** Opens the tip with this line above `dsTooltip` while the host shows less text than it holds.
-   *  The tip keeps its own line break, so the two read as separate lines. */
-  readonly dsTooltipClippedLead = input<string>('');
-
   get hostElement(): HTMLElement {
     return this.host.nativeElement;
   }
@@ -117,18 +114,33 @@ export class TooltipDirective implements OnDestroy {
     return textElement !== null && isTextClipped(textElement);
   }
 
+  private ownText(): string {
+    return (this.textElement()?.textContent ?? '').trim();
+  }
+
+  /** A clipped host puts its own text, in bold, above the tip unless the tip already says it. */
   private tipText(): string {
     const given = this.dsTooltip();
-    const lead = this.dsTooltipClippedLead();
-    if (given && lead && this.isClipped()) {
-      return `${lead}
+    const own = this.ownText();
+    if (!given) {
+      return this.dsTooltipWhenClipped() ? escapeTooltipMarkup(own) : '';
+    }
+    if (
+      own &&
+      this.isClipped() &&
+      !this.contains(plainTooltipText(given), own)
+    ) {
+      return `**${escapeTooltipMarkup(own)}**
 ${given}`;
     }
-    if (given || !this.dsTooltipWhenClipped()) {
-      return given;
-    }
 
-    return (this.textElement()?.textContent ?? '').trim();
+    return given;
+  }
+
+  private contains(haystack: string, needle: string): boolean {
+    const collapse = (value: string) => value.replace(/\s+/g, ' ').trim();
+
+    return collapse(haystack).includes(collapse(needle));
   }
 
   /** A clipped host's full text is already in the DOM; describing it again would announce it twice. */
@@ -136,11 +148,8 @@ ${given}`;
     if (!this.dsTooltipWhenClipped()) {
       return false;
     }
-    const collapse = (value: string) => value.replace(/\s+/g, ' ').trim();
 
-    return collapse(this.textElement()?.textContent ?? '').includes(
-      collapse(text),
-    );
+    return this.contains(this.ownText(), plainTooltipText(text));
   }
 
   private ref: OverlayRef | null = null;

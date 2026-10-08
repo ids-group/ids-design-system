@@ -13,11 +13,3 @@ export function resolveDividers(
 
   return computed(() => dividers() ?? config.modal?.dividers ?? true);
 }
-
-export const MODAL_SLOTS = [
-  'eyebrow',
-  'title-badge',
-  'body',
-  'impact',
-  'actions',
-] as const;

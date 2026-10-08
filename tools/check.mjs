@@ -29,6 +29,7 @@ const EXTRA = {
   'lib-package': ['tools/sync-lib-package.mjs', '--check'],
   'public-api': ['tools/generate-public-api.mjs', '--check'],
   'todo-index': ['tools/todo-index.mjs', '--check'],
+  'token-deprecations': ['tools/generate-token-deprecations.mjs', '--check'],
   'manual-surface': ['.design-sync/tools/check-manual-surface.mjs'],
   'changelog-lint': ['tools/changelog-lint.mjs'],
   'changelog-lint:selftest': ['tools/changelog-lint-selftest.mjs'],
@@ -36,16 +37,45 @@ const EXTRA = {
   'migration-lint:selftest': ['tools/migration-lint-selftest.mjs'],
   'deck-lint': ['tools/deck-lint.mjs'],
   'deck-lint:selftest': ['tools/deck-lint-selftest.mjs'],
+  // The upgrade plugin's mechanical-apply script, run over its fixture cases.
+  'plugin-apply': ['plugins/design-system/scripts/apply-mechanical.test.mjs'],
+  'upgrade-canary': ['tools/run-upgrade-canary.mjs'],
+  'upgrade-canary:selftest': ['tools/run-upgrade-canary-selftest.mjs'],
   // Sweeps published history and never fails: triage, not a gate.
   'manifest-coverage:audit': ['tools/check-manifest-coverage.mjs', '--audit'],
+  // The prose-name and unread-value rules over published manifests, which fail only the draft.
+  'manifest-truth:audit': ['tools/check-manifest-truth.mjs', '--audit'],
+  'changelog-pending:audit': ['tools/check-changelog-pending.mjs', '--audit'],
+  'manifest-claims:audit': ['tools/check-manifest-claims.mjs', '--audit'],
+  'manifest-compile:audit': ['tools/check-manifest-compile.mjs', '--audit'],
+  'manifest-detect:audit': ['tools/check-manifest-detect.mjs', '--audit'],
+  'token-defaults:audit': ['tools/check-token-defaults.mjs', '--audit'],
+  'class-member-notes:audit': ['tools/check-class-member-notes.mjs', '--audit'],
   probes: ['tools/run-probes.mjs'],
+  schematics: ['tools/run-schematic-tests.mjs'],
 };
 
 export const GROUPS = {
   // `lint:all` runs this, then prettier, stylelint and eslint. Out deliberately: `manifest-truth`
   // and `delete-tables` answer about a release boundary that cannot move without a commit touching
-  // the manifests, and the first reads 27 release trees; `todo-index` compares
-  // against `docs/todo.md`, which parallel sessions edit in a shared checkout.
+  // the manifests, and the first reads 27 release trees; `manifest-compile` type-checks every
+  // fixture at two extracted release trees (3 min for 73 fixtures, 2026-10-08); `todo-index`
+  // compares against `docs/todo.md`, which parallel sessions edit in a shared checkout;
+  // `class-member-notes` reads `migrations/unreleased.json`, which is drafted at the cut, so
+  // mid-cycle it would be red on every commit that adds a member. `token-deprecations` reads every
+  // release tree (42 s, 2026-10-08) and moves only with a manifest; its selftest is in, because the
+  // rule it tests ships to consumers and runs in under 3 s.
+  // `changelog-pending` is in: it reads one tag's tree and the working tree in about a second, and
+  // a change is cheapest to describe in the session that made it. `manifest-claims` is in: it reads
+  // only the draft manifest and `## Unreleased`, which every PR can change. `token-defaults` is in:
+  // any stylesheet edit can move a default, and it reads one tag and the working tree.
+  // `public-api-golden` is in: it parses the working tree alone in under 3 s, and the golden has to
+  // move in the commit that moves the surface.
+  // `manifest-detect` is in: it greps a few fixture files with no tree to extract, and the draft
+  // item it asks a fixture for is cheapest to give one in the session that wrote the item.
+  // `plugin-apply` is in: its fixtures run in about 3 s (2026-10-08), and a consumer's upgrade runs
+  // the script before any agent, so a broken rewrite reaches their code unless the PR that made it
+  // fails.
   lint: [
     'tools-parse',
     'entry-point-imports',
@@ -63,7 +93,12 @@ export const GROUPS = {
     'docblock-drift',
     'dev-guards',
     'changelog-lint',
+    'changelog-pending',
+    'public-api-golden',
     'manifest-coverage',
+    'manifest-claims',
+    'manifest-detect',
+    'token-defaults',
     'design-sync-log',
     'docs-attrs',
     'doc-tokens',
@@ -71,18 +106,40 @@ export const GROUPS = {
     'void-tokens',
     'abbreviated-tokens',
     'deck-lint',
+    'plugin-apply',
+    'token-deprecations:selftest',
   ],
   // The `preversion` gate, run by `tools/preflight.mjs` in this order and stopping at the first
   // failure. `tools-parse` is first because every check after it is one of those files. Each
   // selftest runs before its lint: a green lint means the data satisfies the rules, not that the
-  // rules can still fire. `manifest-coverage` and `manifest-truth` are here because the cut is the
-  // last moment to catch them: once a block is published, a consumer has read the manifest's
-  // silence as "this release does not touch me". The PR gate runs most of the rest too, but it is
-  // manual, so a release can be cut from a branch where it never fired. Left out: deck-lint, whose
-  // subject is internal decks that never reach the package.
+  // rules can still fire. `manifest-coverage`, `manifest-truth` and `manifest-compile` are here
+  // because the cut is the last moment to catch them: once a block is published, a consumer has
+  // read the manifest's silence as "this release does not touch me". `manifest-claims` and
+  // `token-defaults` for the same reason: an unmeasured claim and a default that moved unnamed both
+  // read as facts the moment they ship. `manifest-detect` too: a locator that finds nothing is
+  // recorded "not applicable" by the consumer's upgrade, and a clean re-check agrees.
+  // `class-member-notes` follows `class-surface-entry`: that one asks whether a class is named, this
+  // one whether every member it gained or lost is. The PR gate
+  // runs most of the rest too, but it is manual, so a release can be cut from a branch where it never
+  // fired. `token-deprecations` is here because the stylelint list ships in the package, and a
+  // manifest edited without regenerating it would publish a list that misses the release's own
+  // renames. `changelog-pending` is here because the cut folds `## Unreleased` into the release block,
+  // and a change it never named leaves with nothing describing it. `public-api-golden` because the
+  // golden at a tag is what the next release's surface diff starts from. `schematics` runs the shipped
+  // `ng add` and `check-overrides` on in-memory workspaces; it is out of `lint` because the compile
+  // alone takes most of 4.7-5.1 s (three runs, 2026-10-08). Left out: deck-lint, whose subject is
+  // internal decks that never reach the package.
+  // `upgrade-canary` is last because it is the slow one, two library builds and two app builds
+  // (167 to 388 s over four runs, 2026-10-08). It is the only gate that applies the draft to an app and
+  // builds it, so a break no item names, or an item that migrates into a broken build, surfaces at the
+  // cut and not at a consumer's.
+  // `render-evidence` sees a rendering change no token or member diff carries; it builds the docs twice
+  // and screenshots every block, minutes rather than seconds, so it is here and not in `lint`.
   release: [
     'tools-parse',
     'class-surface-entry',
+    'class-member-notes:selftest',
+    'class-member-notes',
     'release-fold:selftest',
     'migration-lint:selftest',
     'migration-lint',
@@ -91,14 +148,33 @@ export const GROUPS = {
     'manifest-coverage',
     'manifest-truth:selftest',
     'manifest-truth',
+    'manifest-claims:selftest',
+    'manifest-claims',
+    'manifest-compile:selftest',
+    'manifest-compile',
+    'manifest-detect:selftest',
+    'manifest-detect',
+    'token-defaults:selftest',
+    'token-defaults',
+    'token-deprecations:selftest',
+    'token-deprecations',
     'changelog-lint:selftest',
     'changelog-lint',
+    'changelog-pending:selftest',
+    'changelog-pending',
+    'public-api-golden:selftest',
+    'public-api-golden',
     'focus-rings',
     'docs-attrs',
     'color-families',
     'docblock-drift',
     'lib-package',
     'entry-point-imports',
+    'schematics',
+    'upgrade-canary:selftest',
+    'upgrade-canary',
+    'render-evidence:selftest',
+    'render-evidence',
   ],
   // The checkers' own tests: they prove a gate still goes red, the half a green run cannot show.
   // Discovery appends every `tools/check-*-selftest.mjs` except `overrides:selftest`, which needs a
@@ -107,6 +183,7 @@ export const GROUPS = {
     'changelog-lint:selftest',
     'migration-lint:selftest',
     'deck-lint:selftest',
+    'upgrade-canary:selftest',
   ],
 };
 
