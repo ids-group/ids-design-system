@@ -2487,7 +2487,7 @@
     "An indeterminate ds-bar keeps its sliding chunk on the track for most of the cycle: the loop runs at a constant speed instead of on an ease curve that parked it at the extremes. Visual only, no code change.",
     "The table's loading scrim now starts below a head pinned with `--ds-table-head-height` (spelled `--ds-table-head-h` before this release, renamed by `table-head-h-is-table-head-height`); the order is your value, then the measured head row, then 40px. Nothing to change beyond that rename.",
     "`ds-chart` prints its error message in `--error` red rather than in the grey of its empty message, like the presets always did. The rule ships in `styles/chart-frame`. Nothing to change.",
-    "`--ds-funnel-chart-focus-color` / `-width` and `--ds-pie-chart-focus-color` / `-width` (spelled `--ds-donut-chart-` before this release) now reach the focus ring. They parsed and did nothing before, so a value already set for them starts taking effect."
+    "`--ds-funnel-chart-focus-color` / `-width` and `--ds-pie-chart-focus-color` / `-width` (spelled `--ds-donut-chart-` before this release) now reach the focus ring. They parsed and did nothing before, so a value already set for them starts taking effect. With neither pair set, a focused funnel stage or pie slice draws no ring: each chart's private pair falls back to `--focus-ring-color` / `--focus-ring-width`, which the same chart sets from that pair, a custom-property cycle that leaves both invalid. Set the chart's color and width tokens to get the ring back."
   ],
   "deleteList": []
 }

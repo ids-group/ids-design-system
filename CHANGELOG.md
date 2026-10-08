@@ -537,9 +537,10 @@
   over the top end of the plot, and the chart keeps its height when a mark is held. A captioned
   chart is unchanged, its control on the caption line.
 
-- **`ds-heatmap-chart`'s `min` and `max` and `ds-line-chart`'s `max` and `maxSecondary` accept a
-  static attribute.** Written as `min="0"` they now coerce through `numberAttribute`; before, only a
-  bound number (`[min]="0"`) compiled. A bound number still works.
+- **`ds-heatmap-chart`'s `min` and `max` and `ds-line-chart`'s `max` and `maxSecondary` coerce a
+  static attribute.** Written as `min="0"` they now pass through `numberAttribute` and hold a number;
+  before, they held the string. Their write type is still `number | null`, so under
+  `strictTemplates` the static attribute fails with TS2322 as before; keep `[min]="0"` there.
 
 ### Fixed
 
@@ -2255,7 +2256,10 @@
   the pie's pair (`--ds-donut-chart-focus-color` / `-width` before the rename, now
   `--ds-pie-chart-focus-color` / `-width`), resolved into a private name no rule read: an override
   parsed, cascaded and changed no pixel. Each now points its pair at `--ds-chart-focus-ring-color`
-  and `--focus-ring-*`, which draws the ring.
+  and `--focus-ring-*`, which draws the ring. With neither pair set, a focused funnel stage or pie
+  slice draws no ring: the private pair falls back to `--focus-ring-*`, which the same chart sets
+  from that pair, and the cycle leaves both invalid. Set the chart's color and width tokens to get
+  the ring back.
 
 - **`--ds-table-head-height` is in the token reference, and the loading scrim honours it.** The
   hook, spelled `--ds-table-head-h` before this release, only ever existed as a string inside a
@@ -2355,7 +2359,8 @@
   `ProgressComponent` and `MeterComponent` are both `BarComponent`, and `ProgressVariant` is
   `BarVariant` — all from `@ids-group-ltd/ids-design-system/components/bar`. A subclass of either
   old class stops building; there is one class to extend now, and it carries every member both of
-  them had.
+  them had, except that `MeterComponent`'s protected `clamped` and `percent` are `clampedValue` and
+  `valuePercent` there.
 
   **A renamed `ds-meter` needs one more edit.** It was `aria-hidden` unless `ariaLabel` named it;
   `ds-bar` announces as a progress bar by default. Add `semantics="none"` where the figure is
@@ -2534,7 +2539,8 @@
 
 - **Exported class member surface moved — only matters if you SUBCLASS one of these.**
   `ProgressComponent` and `MeterComponent` are gone; `BarComponent` carries every member both of
-  them had. `ChartTooltipDirective`, internal and not exported from the package root, gains
+  them had, with `MeterComponent`'s `clamped` and `percent` renamed `clampedValue` and
+  `valuePercent`. `ChartTooltipDirective`, internal and not exported from the package root, gains
   `dsChartTooltipPreferBelow`. `ColumnChartComponent` moved its drawing into the shared container
   and took several series, so it gained `thresholds`, `categories`, `geometry`, `tableRows`,
   `viewHeightPx`, `skeletonHeightPx`, `stack`, `resolvedSeries`, `seriesRefs`, `pinnedSeries`,
@@ -2790,12 +2796,11 @@
   How long the panel stays after the pointer leaves the mark. See the tooltip entry under Changed
   for what the default does and when to raise it.
 
-- **A pinned mark offers an `Unpin` control, and says which mark it is.** `ds-bar-chart`,
-  `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart` render a pill button above the plot
-  while a mark is pinned — Escape already released one, and a control that says so is what a reader
-  finds without knowing the key. `ds-donut-chart` and `ds-funnel-chart` also draw a pin glyph at the
-  pinned slice's or band's centre, so the plot itself carries which one is held rather than leaving
-  it to the panel; the glyph takes no pointer events. `--ds-chart-pin-size` sizes it, and the button
+- **A pinned mark offers an `Unpin` control, and says which mark it is.** All five charts render
+  a pill button above the plot while a mark is pinned — Escape already released one, and a control
+  that says so is what a reader finds without knowing the key. `ds-bar-chart`, `ds-column-chart`,
+  `ds-donut-chart` and `ds-funnel-chart` also draw a pin glyph on the pinned bar, column, slice or
+  band, so the plot itself carries which one is held rather than leaving it to the panel; the glyph takes no pointer events. `--ds-chart-pin-size` sizes it, and the button
   is `.pin-reset`.
 
   The internal mark-state interface behind it — not exported from the package root — gains a
@@ -7333,7 +7338,7 @@ skipping it leaves working code that is merely redundant.
 | Absolutely positioning a search glyph over an autocomplete, or hiding `.autocomplete-chevron` | `dsAutocompletePrefix` and `[showChevron]="false"` |
 | Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it | `clear()` |
 | A hand-built KPI tile — a `kpi` block pairing your own markup with `ds-badge`, where `ds-stat` now fits | `ds-stat` takes a projected `[dsStatValue]` |
-| A pinned `--ds-search-height` (or any sibling) to get a shorter control row | `density="compact"` on the container — every field control is 32px there, measured |
+| A pinned `--ds-search-height` (or any sibling) to get a shorter control row | `data-density="compact"` on the root element — every field control is 32px there, measured; `--field-h-*` resolve on `:root`, so an inner container keeps 40px |
 | A hand-rolled `.scrim` + `.panel` dialog, written because the modal header could not hold a badge or a second line | `ds-modal` projects `[title-badge]` and takes a `subtitle`. You get back the focus trap, focus restore, the scroll lock, Escape and the footer |
 | `[value]="f.x().value()" (valueChange)="f.x().value.set($event)"` on every field of a signal form | `[formField]="f.x"` — the control implements the contract already |
 | `white-space: normal` forced onto a badge in a table cell | `--ds-badge-white-space` |
@@ -7791,11 +7796,11 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   blurred into `<body>` and restarted Tab order at the top of the document. Also gives forms a way to
   focus the first invalid field.
 
-- **Five override tokens that were previously hardcoded:** `--ds-modal-title-font-size` (pairs with the
+- **Four override tokens that were previously hardcoded:** `--ds-modal-title-font-size` (pairs with the
   existing `-title-weight`), `--ds-date-picker-trigger-radius` (the counterpart of
   `--ds-time-picker-trigger-radius`), `--ds-date-picker-panel-radius` (forwarded onto the portaled pane),
-  `--ds-checkbox-radius` (the box only — the indeterminate dash keeps its own), and `--ds-menu-max-width`.
-  `ds-toast` also gains `--ds-toast-min-width` / `--ds-toast-max-width` as per-instance hooks over the
+  and `--ds-checkbox-radius` (the box only — the indeterminate dash keeps its own). `ds-menu` gains
+  `--ds-menu-max-width`, defaulting to `none`, where it had no max-width. `ds-toast` also gains `--ds-toast-min-width` / `--ds-toast-max-width` as per-instance hooks over the
   global `--toast-minw` / `--toast-maxw` geometry. All default to the current values.
 
 - **`--ds-popover-min-width` and `--ds-menu-min-width`.** A popover (or a `ds-menu` projected into one)
