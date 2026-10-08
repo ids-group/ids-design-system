@@ -2,10 +2,11 @@
 
 ### Breaking
 
-- **`dsTooltipClippedLead` is removed from `TooltipDirective`.** A host whose text is clipped now
-  puts that text in bold above its tooltip without an input, so a `ds-table` header with a `hint`
-  needs nothing. Delete the binding where the lead was the host's own text; where it was other
-  text, write it into the string: `[dsTooltip]="'**' + lead + '**\n' + tip"`.
+- **`dsTooltipClippedLead` is removed from `TooltipDirective`.** A `ds-table` header with a `hint`
+  needs nothing in its place: its `button[dsDefinitionTerm]` shows its own clipped label in bold
+  above the hint. Anywhere else, delete the binding, or write the lead into the string:
+  `[dsTooltip]="'**' + lead + '**
+' + tip"`.
 
 ### Added
 
@@ -28,7 +29,9 @@
 - **`button[dsDefinitionTerm]` marks a term that carries its definition.** `<button type="button"
   dsDefinitionTerm="…">term</button>` looks like the surrounding text with a dotted underline in
   `--text-tertiary`, takes the focus ring, shows the definition on hover and focus, and pins it on
-  click. Hover makes the underline solid in `--text-secondary`, a press tints the term with
+  click. While the term is clipped, its definition opens with the term's own text in bold, a line
+  break, then the definition; a definition that already contains the term's text is left as it is.
+  Hover makes the underline solid in `--text-secondary`, a press tints the term with
   `--surface-muted`, and a pinned term is `--accent-strong` on `--accent-subtitle` with a solid
   underline; no state changes its size. `[pinOnClick]="false"` turns the pin off where the click
   already acts.
@@ -39,7 +42,7 @@
   markup in a string is interpreted as HTML. Nothing else is parsed: no italics, code, lists or
   tags. `dsTooltipWhenClipped` with no `dsTooltip` shows the host's text exactly as written, even
   where it contains `**`. `TooltipPanelComponent` gained the protected `segments`, and
-  `TooltipDirective` the private `contains` and `ownText`, so a subclass declaring one of those
+  `TooltipDirective` the private `contains`, `ownText` and `leadsWithOwnText`, so a subclass declaring one of those
   names must rename it.
 
 - **`--ds-date-picker-max-width` caps the width of `ds-date-picker`.** It defaults to `100%`, so
@@ -49,12 +52,6 @@
 
 ### Changed
 
-- **A tooltip on a clipped host leads with the host's own text in bold.** On any host that carries
-  `dsTooltip` or `dsTooltipWhenClipped` and shows less text than it holds, the tip is the host's text
-  in bold, a line break, then the tip text; a tip that already contains the host's text is left as it
-  is. A `ds-table` header with a `hint` and a clipped label is the case that ships: the label was
-  plain text above the hint and is now bold, a header that fits still shows the hint alone. Screen
-  readers get the text without the markers.
 - **A `**` in an existing tooltip string now makes text bold.** Write `\*\*` where the asterisks
   are meant literally.
 - **`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a

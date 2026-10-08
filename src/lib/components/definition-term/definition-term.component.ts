@@ -7,6 +7,7 @@ import {
   input,
 } from '@angular/core';
 import {
+  TOOLTIP_LEADS_WITH_OWN_TEXT,
   TOOLTIP_PIN_ON_CLICK,
   TooltipDirective,
 } from '@ids-group-ltd/ids-design-system/components/tooltip';
@@ -30,6 +31,7 @@ import {
       provide: TOOLTIP_PIN_ON_CLICK,
       useFactory: () => inject(DefinitionTermComponent).pinOnClick,
     },
+    { provide: TOOLTIP_LEADS_WITH_OWN_TEXT, useValue: true },
   ],
   host: { type: 'button' },
 })
