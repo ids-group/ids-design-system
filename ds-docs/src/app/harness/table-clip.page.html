@@ -210,3 +210,115 @@
     [data]="people"
     [columns]="brokerColumns" />
 </section>
+
+@for (item of deltaReviewCases; track item.id) {
+  <section
+    class="case delta-review"
+    [attr.data-case]="item.id"
+    [style.width.px]="item.width">
+    <h3>
+      {{ item.id }} - Consumer: delta review ({{ item.width }}px)
+    </h3>
+
+    <ds-table
+      [caption]="item.id"
+      [data]="item.data"
+      [columns]="item.columns">
+      <ng-template
+        let-row
+        dsCellTemplate="policyholder"
+        [dsCellTemplateOf]="item.data">
+        <div class="ph-cell">
+          <span class="ph-cell__name">
+            {{ row.name }}
+          </span>
+
+          <span class="ph-cell__meta">
+            {{ row.id }} · {{ row.policy }}
+          </span>
+        </div>
+      </ng-template>
+
+      @if (item.shipped) {
+        <ng-template
+          let-row
+          dsCellTemplate="email"
+          [dsCellTemplateOf]="item.data">
+          <span
+            class="value"
+            dsTooltipWhenClipped>
+            {{ row.email ?? '—' }}
+          </span>
+        </ng-template>
+      }
+
+      <ng-template
+        let-row
+        dsCellTemplate="step"
+        [dsCellTemplateOf]="item.data">
+        <div class="step-cell">
+          <span>
+            {{ row.step }}
+          </span>
+
+          <span class="step-cell__meta">
+            {{ row.enrollment }}
+          </span>
+        </div>
+      </ng-template>
+    </ds-table>
+  </section>
+}
+
+<section
+  class="case"
+  data-case="expand-truncate"
+  [style.width.px]="900">
+  <h3>
+    expand-truncate - expandable rows, selectable, truncate without width (900px)
+  </h3>
+
+  <ds-table
+    caption="Expandable"
+    [selectable]="true"
+    [expandableRows]="true"
+    [rowExpandTemplate]="expandPanel"
+    [data]="people"
+    [columns]="expandColumns" />
+
+  <ng-template
+    #expandPanel
+    let-row>
+    {{ row.notes }}
+  </ng-template>
+</section>
+
+<section
+  class="case min-width-token"
+  data-case="min-width-token"
+  [style.width.px]="700">
+  <h3>
+    min-width-token - --ds-table-min-width 1100px, truncate without width (700px)
+  </h3>
+
+  <ds-table
+    caption="Min width"
+    [data]="people"
+    [columns]="containerColumns" />
+</section>
+
+<section
+  class="case"
+  data-case="resize-content"
+  [style.width.px]="900">
+  <h3>
+    resize-content - dsTableResize on content, truncate, wrapping and numeric columns (900px)
+  </h3>
+
+  <ds-table
+    caption="Resizable content"
+    dsTableResize
+    [data]="people"
+    [columns]="resizeContentColumns"
+    [stickyHeader]="false" />
+</section>

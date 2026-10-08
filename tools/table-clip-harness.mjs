@@ -6,6 +6,7 @@
 //   node tools/table-clip-harness.mjs check <outDir> [baseDir]    exit 1 when an invariant fails
 //
 // Serve the docs app first (`ng serve ds-docs --port <port>`); the route exists in dev mode only.
+// With CDP_BROWSER_URL set, `run` drives a tab of that running Chrome instead of launching one.
 // `check` pins the truncate contract: a `truncate` column without `width` clips at its own column
 // width, never causes horizontal overflow, and every case with no such column renders exactly as
 // in `baseDir`.
@@ -20,6 +21,14 @@ const measureCase = `(id) => {
   const section = document.querySelector('[data-case="' + id + '"]');
   const wrap = section.querySelector('.scroll-wrap');
   const headRow = section.querySelector('thead tr');
+  const textBox = (node) => { const range = document.createRange(); range.selectNodeContents(node); return range.getBoundingClientRect(); };
+  const shaves = (element) => {
+    if (getComputedStyle(element).overflowY === 'visible' || !element.textContent.trim()) return false;
+    const box = element.getBoundingClientRect();
+    const text = textBox(element);
+    return text.top < box.top - 0.5 || text.bottom > box.bottom + 0.5;
+  };
+  const DS_CLIP = '.cell-clip, .cell-clip-text, .th-label, .th-text';
   const bodyRows = [...section.querySelectorAll('tbody tr')].filter((row) => !row.classList.contains('spacer') && row.cells.length > 1);
   const columns = [...headRow.querySelectorAll('th[data-col-key]')].map((th) => {
     const cells = bodyRows.map((row) => row.cells[th.cellIndex]).filter(Boolean);
@@ -39,6 +48,14 @@ const measureCase = `(id) => {
         return element && element.scrollWidth > element.clientWidth ? index : -1;
       }).filter((index) => index >= 0),
       visible: cells.map((td) => { const element = clip(td); return element ? element.clientWidth : null; }),
+      textMax: Math.round(Math.max(0, ...cells.map((td) => {
+        const walker = document.createTreeWalker(td, NodeFilter.SHOW_TEXT);
+        let widest = 0;
+        while (walker.nextNode()) if (walker.currentNode.textContent.trim()) widest = Math.max(widest, textBox(walker.currentNode).width);
+        return widest;
+      }))),
+      shaved: cells.filter((td) => [...td.querySelectorAll(DS_CLIP)].some(shaves)).length + ([...th.querySelectorAll(DS_CLIP)].some(shaves) ? 1 : 0),
+      shavedConsumer: cells.filter((td) => [...td.querySelectorAll('*')].some((element) => !element.matches(DS_CLIP) && shaves(element))).length,
       spill: cells.map((td, index) => (!truncate && td.scrollWidth > td.clientWidth + 1 ? index : -1)).filter((index) => index >= 0),
     };
   });
@@ -80,9 +97,17 @@ async function run(url, outDir) {
         `() => { const section = document.querySelector('[data-case="${id}"]'); section.scrollIntoView({ block: 'start' }); const box = section.getBoundingClientRect(); return { x: box.x, y: box.y, width: box.width, height: Math.min(box.height, 1250) }; }`,
       );
       await wait(150);
+      // A browser zoomed to other than 100% takes the clip in device pixels, not CSS pixels.
+      const { zoom = 1 } = (await s('Page.getLayoutMetrics')).cssVisualViewport;
       const { data } = await s('Page.captureScreenshot', {
         format: 'png',
-        clip: { ...rect, scale: 1 },
+        clip: {
+          x: rect.x * zoom,
+          y: rect.y * zoom,
+          width: rect.width * zoom,
+          height: rect.height * zoom,
+          scale: 1 / zoom,
+        },
       });
       writeFileSync(file, Buffer.from(data, 'base64'));
     };
@@ -172,6 +197,9 @@ async function run(url, outDir) {
       ['ecm-microsites-cta', 'name', 1],
       ['templates-hints', 'email', 0],
       ['trunc-room', 'email', 1],
+      ['delta-review-removed-shipped-663', 'email', 0],
+      ['delta-review-removed-truncate-663', 'email', 0],
+      ['delta-review-unchanged-truncate', 'email', 0],
     ]) {
       const point = await evaluate(
         `() => { const th = document.querySelector('[data-case="${id}"] th[data-col-key="${key}"]'); const cell = th.closest('table').tBodies[0].rows[${row}].cells[th.cellIndex]; cell.scrollIntoView({ block: 'center', inline: 'center' }); const box = cell.getBoundingClientRect(); return { x: box.x + box.width / 2, y: box.y + box.height / 2 }; }`,
@@ -201,6 +229,13 @@ async function run(url, outDir) {
         ['email', 120],
         ['email', -200],
         ['name', 80],
+      ],
+      'resize-content': [
+        ['name', 80],
+        ['notes', -120],
+        ['email', -80],
+        ['amount', 60],
+        ['name', 'home'],
       ],
     };
     for (const [id, list] of Object.entries(steps)) {
@@ -290,7 +325,14 @@ function check(outDir, baseDir) {
     'select-sort-actions': { status: 100 },
     'ecm-audit-history': { when: 180, version: 90 },
     'ecm-microsite-errors': { when: 170, code: 80 },
-    'ecm-microsites-cta': { city: 170 },
+    'ecm-microsites-cta': { city: 170, name: 200 },
+    'broker-ai-stats': { email: 240 },
+    resize: { notes: 240 },
+    'sticky-many': { name: 160, city: 140, status: 120, amount: 140 },
+    'numeric-truncate-narrow': { email: 160 },
+    'delta-review-removed-truncate': { step: 200 },
+    'expand-truncate': { amount: 120 },
+    'resize-content': { amount: 120 },
   };
   for (const [id, widths] of Object.entries(declared)) {
     for (const [key, width] of Object.entries(widths)) {
@@ -317,6 +359,22 @@ function check(outDir, baseDir) {
     'ecm-delta-truncate',
     'virtual',
     'resize',
+    'delta-review-unchanged-truncate',
+    'delta-review-removed-truncate',
+    'delta-review-removed-truncate-919',
+    'delta-review-removed-truncate-663',
+    'delta-review-unchanged-both-auto',
+    'expand-truncate',
+    'resize-content',
+  ]);
+  // min-width-token is wider than its container by declaration; the other three clip inside a
+  // numeric width that used to get the cell padding on top.
+  const widthChanging = new Set([
+    ...autoTruncate,
+    'min-width-token',
+    'ecm-microsites-cta',
+    'broker-ai-stats',
+    'numeric-truncate-narrow',
   ]);
   const fixedTruncate = {
     'ecm-microsites-cta': ['name'],
@@ -335,14 +393,19 @@ function check(outDir, baseDir) {
       }
     }
   };
-  for (const id of autoTruncate) fair(id, result.cases[id]);
+  for (const id of widthChanging) fair(id, result.cases[id]);
   for (const [width, measured] of Object.entries(result.container))
     fair(`container ${width}`, measured);
   for (const [id, keys] of Object.entries(fixedTruncate))
     fair(id, {
       columns: columnsOf(id).filter((column) => keys.includes(column.key)),
     });
-  for (const id of ['trunc-room', 'few-wide']) {
+  for (const id of [
+    'trunc-room',
+    'few-wide',
+    'delta-review-unchanged-truncate',
+    'delta-review-removed-truncate',
+  ]) {
     for (const column of columnsOf(id))
       if (column.clipped.length)
         fail(
@@ -372,6 +435,9 @@ function check(outDir, baseDir) {
     'ecm-delta-truncate',
     'trunc-room',
     'few-wide',
+    'delta-review-unchanged-truncate',
+    'delta-review-removed-truncate',
+    'delta-review-removed-truncate-919',
   ]) {
     if (result.cases[id].overflow > 0)
       fail(`${id}: horizontal overflow ${result.cases[id].overflow}px`);
@@ -418,6 +484,22 @@ function check(outDir, baseDir) {
   expectTip('ecm-microsites-cta name 1', 'Jordan Avery');
   expectTip('templates-hints email 0', 'alexandra.montgomery-fitzgerald@');
   expectTip('trunc-room email 1', null);
+  expectTip('delta-review-removed-truncate-663 email 0', 'margaret.whitfield@');
+  expectTip('delta-review-unchanged-truncate email 0', null);
+  const glyphs = (label, measured) => {
+    for (const column of measured.columns)
+      if (column.shaved)
+        fail(
+          `${label}: ${column.key} clips the glyphs of ${column.shaved} cell(s) top or bottom`,
+        );
+  };
+  for (const [id, measured] of Object.entries(result.cases)) glyphs(id, measured);
+  for (const [id, measured] of Object.entries(result.dark))
+    glyphs(`dark ${id}`, measured);
+  for (const [width, measured] of Object.entries(result.container))
+    glyphs(`container ${width}`, measured);
+  for (const [id, steps] of Object.entries(result.drags))
+    steps.forEach((step, index) => glyphs(`${id} #${index + 1}`, step));
   if (baseDir) {
     const base = load(baseDir);
     const taller = (label, before, after) => {
@@ -451,7 +533,7 @@ function check(outDir, baseDir) {
         result.container[width],
       );
     for (const id of Object.keys(base.cases).filter(
-      (candidate) => !autoTruncate.has(candidate),
+      (candidate) => !widthChanging.has(candidate),
     )) {
       for (const line of differences(base.cases[id], result.cases[id], id))
         fail(`unchanged case moved - ${line}`);

@@ -3,6 +3,7 @@ import { BadgeComponent } from 'ds/badge';
 import { CellTemplateDirective, TableComponent } from 'ds/table';
 import type { TableColumn, TableRowAction } from 'ds/table';
 import { DsTableResize } from 'ds/table-resize';
+import { TooltipDirective } from 'ds/tooltip';
 
 interface Row {
   readonly id: string;
@@ -12,6 +13,9 @@ interface Row {
   readonly status?: string;
   readonly amount?: string;
   readonly notes?: string;
+  readonly policy?: string;
+  readonly step?: string;
+  readonly enrollment?: string;
   readonly [field: string]: string | undefined;
 }
 
@@ -126,6 +130,32 @@ const records: readonly Row[] = Array.from({ length: 6 }, (_, index) => ({
   renewal_date: '2026-11-01',
 }));
 
+const deltaNames = [
+  ['Margaret', 'Whitfield'],
+  ['Oluwaseun', 'Adeyemi-Clarke'],
+  ['Hannah', 'Kowalczyk'],
+  ['Rajesh', 'Venkataraman'],
+  ['Siobhan', "O'Donoghue"],
+  ['Tomasz', 'Wojciechowski'],
+  ['Grace', 'Pemberton'],
+  ['Mateo', 'Fernandez-Lopez'],
+  ['Yuki', 'Tanaka'],
+  ['Elif', 'Yilmaz'],
+  ['Joseph', 'Quigley'],
+];
+// A consumer's delta review records: name + key/policy line, one address of about 290px per row.
+const deltaRecords: readonly Row[] = deltaNames.map(([first, last], index) => ({
+  id: `NYL-QA308-${String(index + 1).padStart(4, '0')}`,
+  name: `${first} ${last}`,
+  policy: `POL-308-${String(117 + index * 7).padStart(6, '0')}`,
+  email: `${first}.${last}@nyl-qa308.example.com`
+    .toLowerCase()
+    .replace("'", ''),
+  step: index % 2 ? 'Wave 2 · Reminder email' : 'Wave 1 · Welcome pack',
+  enrollment: index % 3 ? 'active' : 'completed',
+  comms: String(index % 4),
+}));
+
 const ACTIONS: readonly TableRowAction<Row>[] = [
   { id: 'open', label: 'Open' },
   { id: 'delete', label: 'Delete', error: true },
@@ -139,6 +169,7 @@ const ACTIONS: readonly TableRowAction<Row>[] = [
     CellTemplateDirective,
     DsTableResize,
     BadgeComponent,
+    TooltipDirective,
   ],
   encapsulation: ViewEncapsulation.None,
   templateUrl: './table-clip.page.html',
@@ -176,6 +207,36 @@ const ACTIONS: readonly TableRowAction<Row>[] = [
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    page-table-clip-harness .delta-review .ph-cell {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    page-table-clip-harness .delta-review .ph-cell__name {
+      font-weight: var(--font-weight-medium);
+    }
+    page-table-clip-harness .delta-review .ph-cell__meta {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    page-table-clip-harness .delta-review .step-cell {
+      display: flex;
+      flex-direction: column;
+    }
+    page-table-clip-harness .delta-review .step-cell__meta {
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+    page-table-clip-harness [data-case='delta-review-unchanged-hug'] table {
+      width: auto !important;
+    }
+    page-table-clip-harness .min-width-token {
+      --ds-table-min-width: 1100px;
+    }
     page-table-clip-harness .value {
       display: block;
       width: 0;
@@ -190,6 +251,8 @@ export class TableClipHarnessPage {
   protected readonly people = people;
   protected readonly many = many(200);
   protected readonly records = records;
+  protected readonly deltaRecords = deltaRecords;
+  protected readonly deltaRemoved = deltaRecords.slice(0, 1);
 
   protected readonly cases: readonly HarnessCase[] = [
     {
@@ -403,6 +466,60 @@ export class TableClipHarnessPage {
         truncate: true,
       })),
     },
+    {
+      id: 'equal-stretch',
+      title: 'Three short auto columns share the slack',
+      width: 1200,
+      data: people,
+      columns: [
+        { key: 'name', label: 'Name' },
+        { key: 'city', label: 'City' },
+        { key: 'status', label: 'Status' },
+      ],
+    },
+    {
+      id: 'header-longer',
+      title: 'Header labels longer than their content',
+      width: 900,
+      data: people,
+      columns: [
+        { key: 'name', label: 'Name' },
+        {
+          key: 'status',
+          label: 'Current enrolment status',
+          truncate: true,
+        },
+        {
+          key: 'amount',
+          label: 'Communications received',
+          width: 'content',
+          align: 'right',
+        },
+        { key: 'city', label: 'Preferred branch city' },
+      ],
+    },
+    {
+      id: 'content-wide',
+      title: "width 'content' without truncate, long text, 600px",
+      width: 600,
+      data: people,
+      columns: [
+        { key: 'name', label: 'Name' },
+        { key: 'email', label: 'Email', width: 'content' },
+        { key: 'status', label: 'Status' },
+      ],
+    },
+    {
+      id: 'numeric-truncate-narrow',
+      title: 'Numeric width with truncate and auto wrap, 600px',
+      width: 600,
+      data: people,
+      columns: [
+        { key: 'email', label: 'Email', width: 160, truncate: true },
+        { key: 'notes', label: 'Notes' },
+        { key: 'amount', label: 'Amount', width: 110, align: 'right' },
+      ],
+    },
   ];
 
   protected readonly ctaColumns: readonly TableColumn<Row>[] = [
@@ -489,6 +606,77 @@ export class TableClipHarnessPage {
       cell: () => '120,400 / 8,210',
     },
     { key: 'amount', label: 'Cost', sortable: true, align: 'right' },
+  ];
+
+  protected readonly expandColumns: readonly TableColumn<Row>[] = [
+    { key: 'name', label: 'Name' },
+    { key: 'email', label: 'Email', truncate: true },
+    { key: 'amount', label: 'Amount', align: 'right', width: 120 },
+  ];
+
+  protected readonly resizeContentColumns: readonly TableColumn<Row>[] = [
+    { key: 'name', label: 'Name', width: 'content' },
+    { key: 'email', label: 'Email', truncate: true },
+    { key: 'notes', label: 'Notes' },
+    { key: 'amount', label: 'Amount', width: 120, align: 'right' },
+  ];
+
+  protected readonly deltaReviewUnchanged: readonly TableColumn<Row>[] = [
+    { key: 'policyholder', label: 'Policyholder', width: 'content' },
+    { key: 'email', label: 'Email' },
+  ];
+
+  protected readonly deltaReviewRemoved: readonly TableColumn<Row>[] = [
+    { key: 'policyholder', label: 'Policyholder', width: 'content' },
+    { key: 'email', label: 'Email' },
+    { key: 'step', label: 'Journey step', width: 200 },
+    {
+      key: 'comms',
+      label: 'Communications received',
+      width: 'content',
+      align: 'right',
+    },
+  ];
+
+  protected readonly deltaReviewUnchangedTruncate: readonly TableColumn<Row>[] = [
+    { key: 'policyholder', label: 'Policyholder', width: 'content' },
+    { key: 'email', label: 'Email', truncate: true },
+  ];
+
+  protected readonly deltaReviewRemovedTruncate: readonly TableColumn<Row>[] = [
+    { key: 'policyholder', label: 'Policyholder', width: 'content' },
+    { key: 'email', label: 'Email', truncate: true },
+    { key: 'step', label: 'Journey step', width: 200 },
+    {
+      key: 'comms',
+      label: 'Communications received',
+      width: 'content',
+      align: 'right',
+    },
+  ];
+
+  protected readonly deltaReviewUnchangedPlain: readonly TableColumn<Row>[] = [
+    { key: 'policyholder', label: 'Policyholder' },
+    { key: 'email', label: 'Email' },
+  ];
+
+  protected readonly deltaReviewUnchangedBothAuto: readonly TableColumn<Row>[] = [
+    { key: 'policyholder', label: 'Policyholder' },
+    { key: 'email', label: 'Email', truncate: true },
+  ];
+
+  /** A consumer's delta review at the panel widths of a 1710, 1280 and 1024 px window. `shipped` renders its
+   *  zero-width `.value` span; without it the column is `truncate: true` and nothing else. */
+  protected readonly deltaReviewCases = [
+    { id: 'delta-review-unchanged-shipped', width: 1349, columns: this.deltaReviewUnchanged, data: deltaRecords, shipped: true },
+    { id: 'delta-review-removed-shipped', width: 1349, columns: this.deltaReviewRemoved, data: deltaRecords.slice(0, 1), shipped: true },
+    { id: 'delta-review-removed-shipped-663', width: 663, columns: this.deltaReviewRemoved, data: deltaRecords.slice(0, 1), shipped: true },
+    { id: 'delta-review-unchanged-truncate', width: 1349, columns: this.deltaReviewUnchangedTruncate, data: deltaRecords, shipped: false },
+    { id: 'delta-review-removed-truncate', width: 1349, columns: this.deltaReviewRemovedTruncate, data: deltaRecords.slice(0, 1), shipped: false },
+    { id: 'delta-review-removed-truncate-919', width: 919, columns: this.deltaReviewRemovedTruncate, data: deltaRecords.slice(0, 1), shipped: false },
+    { id: 'delta-review-removed-truncate-663', width: 663, columns: this.deltaReviewRemovedTruncate, data: deltaRecords.slice(0, 1), shipped: false },
+    { id: 'delta-review-unchanged-hug', width: 1349, columns: this.deltaReviewUnchangedPlain, data: deltaRecords, shipped: false },
+    { id: 'delta-review-unchanged-both-auto', width: 1349, columns: this.deltaReviewUnchangedBothAuto, data: deltaRecords, shipped: false },
   ];
 
   protected readonly deltaWorkaroundColumns: readonly TableColumn<Row>[] = [
