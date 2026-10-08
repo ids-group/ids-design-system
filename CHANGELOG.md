@@ -101,6 +101,14 @@
 
 ### Changed
 
+- **A `ds-menu-item` submenu stays open while the pointer heads for it.** Moving diagonally from
+  the item to its submenu crosses the items below it, and a crossing slower than 150ms closed the
+  submenu and opened the next one. The pointer may now cross them for as long as it stays inside
+  the triangle from where it left the item to the submenu's near edge; the submenu closes once
+  the pointer leaves that triangle or rests in it for 300ms, and an item it rested on then opens
+  its own submenu. Moving from the submenu back onto its item keeps it open.
+  `MenuItemComponent` gained the public `activateHover` and the private `aim`. A subclass
+  declaring one of those names must rename it.
 
 - **`text-clip.single-line-ellipsis` clips the inline axis only.** It clipped both axes with a
   4px margin, which a font taller than the line box by more than that overran. Ink above and
