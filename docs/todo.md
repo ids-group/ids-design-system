@@ -624,7 +624,7 @@ the service was just the one somebody noticed. Full table and every tested hypot
   It cannot.** Checked what the globally-forwarded partials actually define: `link` (533 B gz),
   `page-grid` (312 B) and `layout-utils` (184 B) are **public utility classes** — part of the API, they
   stay; `scrollbar` (297 B) styles `html` and `::-webkit-scrollbar`, document level, impossible to scope;
-  `skeleton-shimmer` (207 B) is deliberately ONE `:root` animation so every skeleton stays in lock-step;
+  `skeleton-shimmer` emits nothing (the reduced-motion stop lives in `ds-skeleton`);
   `surface-motion` (192 B) is `@keyframes`, and emulated encapsulation renames keyframes, which would
   break cross-component reference. Only `icon-base` could move, and it is 92 bytes. **The real lever is
   `dropdown-overlay` (1 043 B) + `overlay-motion` (458 B) + `toast-overlay` (91 B) = ~1.6 KB gzip, made
@@ -1099,6 +1099,7 @@ file** — the number moves; cite the filename.
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
 | 19 | `19-tooltip-mechanism` | Whether and when to split the tooltip code into files, and when to merge the tooltip-group branch into dev; the label-and-hint question is settled. | none |
 | 20 | `20-tooltip-term-variants` | The three builds of a term with a definition as live examples; a directive on any element is chosen and built on `ecm-fix/tooltip-arrow-anchor`; the tooltip, the info icon and the term share one engine. | none |
+| 21 | `21-component-owned-styles` | Two dependencies of components on global partials found by the audit: the form controls' `box-sizing` from `styles/reset`, and the `.icon` of `styles/icon-base` shrinking ds-banner's icon to 16 px; each with options and a recommendation. The empty-row and skeleton fixes are shown before/after. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
