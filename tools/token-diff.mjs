@@ -15,15 +15,16 @@
 // Classified as Adobe Spectrum's token diff does: added, deleted, renamed (a deleted and an added
 // name with the same default in the same component, or with the same suffix where the component
 // itself was renamed), updated (same name, default changed). Values compare as text with notation
-// set aside (whitespace, case, colour-function syntax: `canonical`), then once more with ONE level
-// of `var()` resolved on either side:
-//   * text differs, equal within one level -> `cosmetic` (a fallback rewritten through a private
+// set aside (whitespace, case, colour-function syntax: `canonical`), then with `var()` resolved
+// on either side:
+//   * text differs, equal within two levels -> `cosmetic` (a fallback rewritten through a private
 //     variable that holds the same value, `var(--primary)` -> `var(--accent)` while `--accent`
-//     is `var(--primary)`);
-//   * text equal, resolved text differs -> `updated` at level 1, `via` naming the referenced
-//     property whose own value moved (a hook defaulting to `--accent` when `--accent` moved).
+//     is `var(--primary)`, or a lockstep rename of a private variable inside a value);
+//   * text equal, text resolved one level differs -> `updated` at level 1, `via` naming the
+//     referenced property whose own value moved (a hook defaulting to `--accent` when `--accent`
+//     moved).
 // Deeper chains are not followed: a level-2 move shows up on the level-1 property itself, and a
-// refactor two levels deep reads as `updated`.
+// refactor three levels deep reads as `updated`.
 //
 //   node tools/token-diff.mjs v0.13.2 v0.13.3        # two tags
 //   node tools/token-diff.mjs v0.14.8                # a tag against the working tree
@@ -226,6 +227,11 @@ export function defaultsOf(files) {
     locals,
     roots: new Map([...roots].map(([name, { value }]) => [name, value])),
     partials,
+    contextual: new Set(
+      [...entries.values()]
+        .filter((entry) => entry.kind === 'token' && entry.group !== 'root')
+        .map((entry) => entry.name),
+    ),
   };
 }
 
@@ -275,27 +281,39 @@ const label = (entry) =>
 const valuesText = (entry) => [...entry.values.keys()].sort().join(' | ');
 
 // `same`: equal as written, notation aside. `resolvedSame`: every old value meets a new one at
-// most one level of `var()` apart, on either side, so `var(--primary)` -> `var(--accent)` holds
+// most two levels of `var()` apart, on either side, so `var(--primary)` -> `var(--accent)` holds
 // while `--accent` is declared as `var(--primary)`. `via`: the properties whose declaration moved.
 function compare(old, oldSide, current, currentSide) {
   const texts = (values) => values.map(canonical).sort().join('|');
+  // Two depths meet when their text is equal AND they resolved through the same properties that
+  // have a context of their own: the root value of `--neutral-0` equals `--static-white`, its
+  // `[data-neutrals='brand']` one does not, while two reads of `--ds-control-focus-shadow` agree
+  // under every `data-focus`.
   const forms = (entry, side) =>
     [...entry.values].map(([value, path]) => {
       const resolved = resolveOnce(value, path, side);
+      const second = resolveOnce(resolved.text, path, side);
+      const once = [...resolved.used.keys()];
+      const depth = (text, through) =>
+        `${canonical(text)}\n${[...new Set(through)]
+          .filter((name) => side.contextual.has(name))
+          .sort()
+          .join()}`;
       return {
         raw: canonical(value),
         resolved: canonical(resolved.text),
+        depths: [
+          depth(value, []),
+          depth(resolved.text, once),
+          depth(second.text, [...once, ...second.used.keys()]),
+        ],
         used: resolved.used,
         path,
       };
     });
   const oldForms = forms(old, oldSide);
   const newForms = forms(current, currentSide);
-  const meets = (a, b) =>
-    a.raw === b.raw ||
-    a.resolved === b.resolved ||
-    a.resolved === b.raw ||
-    a.raw === b.resolved;
+  const meets = (a, b) => a.depths.some((depth) => b.depths.includes(depth));
   // Both directions rather than one-to-one: the values are a SET, and two fallbacks rewritten to
   // the same text collapse into one.
   const everyValueMeetsOne =
@@ -349,7 +367,7 @@ function classify(verdict) {
   if (verdict.resolvedSame)
     return {
       level: 0,
-      cosmetic: 'equal after one level of var() resolution',
+      cosmetic: 'equal within two levels of var() resolution',
       via: [],
     };
   return { level: 0, cosmetic: null, via: [] };
