@@ -36,6 +36,8 @@ const EXTRA = {
   'migration-lint:selftest': ['tools/migration-lint-selftest.mjs'],
   'deck-lint': ['tools/deck-lint.mjs'],
   'deck-lint:selftest': ['tools/deck-lint-selftest.mjs'],
+  'upgrade-canary': ['tools/run-upgrade-canary.mjs'],
+  'upgrade-canary:selftest': ['tools/run-upgrade-canary-selftest.mjs'],
   // Sweeps published history and never fails: triage, not a gate.
   'manifest-coverage:audit': ['tools/check-manifest-coverage.mjs', '--audit'],
   // The prose-name and unread-value rules over published manifests, which fail only the draft.
@@ -101,7 +103,10 @@ export const GROUPS = {
   // runs most of the rest too, but it is manual, so a release can be cut from a branch where it never
   // fired. `changelog-pending` is here because the cut folds `## Unreleased` into the release block,
   // and a change it never named leaves with nothing describing it. Left out: deck-lint, whose subject
-  // is internal decks that never reach the package.
+  // is internal decks that never reach the package. `upgrade-canary` is last because it is the
+  // slow one, two library builds and two app builds (167 to 388 s over four runs, 2026-10-08).
+  // It is the only gate that applies the draft to an app and builds it, so a break no item names,
+  // or an item that migrates into a broken build, surfaces at the cut and not at a consumer's.
   release: [
     'tools-parse',
     'class-surface-entry',
@@ -131,6 +136,8 @@ export const GROUPS = {
     'docblock-drift',
     'lib-package',
     'entry-point-imports',
+    'upgrade-canary:selftest',
+    'upgrade-canary',
   ],
   // The checkers' own tests: they prove a gate still goes red, the half a green run cannot show.
   // Discovery appends every `tools/check-*-selftest.mjs` except `overrides:selftest`, which needs a
@@ -139,6 +146,7 @@ export const GROUPS = {
     'changelog-lint:selftest',
     'migration-lint:selftest',
     'deck-lint:selftest',
+    'upgrade-canary:selftest',
   ],
 };
 
