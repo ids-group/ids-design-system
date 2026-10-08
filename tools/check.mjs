@@ -100,8 +100,10 @@ export const GROUPS = {
   // asks whether a class is named, this one whether every member it gained or lost is. The PR gate
   // runs most of the rest too, but it is manual, so a release can be cut from a branch where it never
   // fired. `changelog-pending` is here because the cut folds `## Unreleased` into the release block,
-  // and a change it never named leaves with nothing describing it. Left out: deck-lint, whose subject
-  // is internal decks that never reach the package.
+  // and a change it never named leaves with nothing describing it. `render-evidence` is last: it is
+  // the only gate that sees a rendering change no token or member diff carries, and it builds the
+  // docs twice and screenshots every block, minutes rather than seconds, so it is here and not in
+  // `lint`. Left out: deck-lint, whose subject is internal decks that never reach the package.
   release: [
     'tools-parse',
     'class-surface-entry',
@@ -131,6 +133,8 @@ export const GROUPS = {
     'docblock-drift',
     'lib-package',
     'entry-point-imports',
+    'render-evidence:selftest',
+    'render-evidence',
   ],
   // The checkers' own tests: they prove a gate still goes red, the half a green run cannot show.
   // Discovery appends every `tools/check-*-selftest.mjs` except `overrides:selftest`, which needs a
