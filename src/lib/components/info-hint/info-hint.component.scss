@@ -1,3 +1,5 @@
+@use '../../styles/pinned';
+
 :host {
   display: inline-flex;
   vertical-align: middle;
@@ -7,8 +9,6 @@
 .info-hint {
   --_info-hint-color-hover: var(--icon-strong);
   --_info-hint-bg-pressed: var(--surface-muted);
-  --_info-hint-color-pinned: var(--accent-strong);
-  --_info-hint-bg-pinned: var(--accent-muted);
 
   display: inline-flex;
   align-items: center;
@@ -36,8 +36,6 @@
   }
 
   &[data-ds-tooltip-pinned] {
-    color: var(--_info-hint-color-pinned);
-    background: var(--_info-hint-bg-pinned);
-    box-shadow: 0 0 0 3px var(--_info-hint-bg-pinned);
+    @include pinned.cue(3px);
   }
 }
