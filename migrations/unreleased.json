@@ -115,6 +115,10 @@
     }
   ],
   "informational": [
+    {
+      "text": "A `<div actions>` (or `<div drawer-footer>`) wrapper in the footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet` gets `display: contents` at zero specificity, so its buttons take the footer's gap, alignment and `ds-modal-card` stacking. A `display` set on the wrapper in your own styles still wins.",
+      "verify": "Open a dialog, drawer or bottom sheet whose buttons sit in a `<div actions>` and confirm they are spaced like buttons that carry `actions` themselves, not touching."
+    },
     "`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a slot, or about an attribute that names no slot. That content still renders in the body. A test or screenshot that waited for the `Dev warning` toast these raised has nothing to wait for."
   ],
   "deleteList": []
