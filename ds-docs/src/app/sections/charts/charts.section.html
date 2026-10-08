@@ -284,6 +284,271 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Label beside the bar
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      labelPosition="start"
+    </code> puts each label in
+    a column before its bar; labels, bars, values and percents line up across
+    rows.
+  </p>
+
+  <ds-bar-chart
+    caption="Reach"
+    labelPosition="start"
+    dataTable="none"
+    [data]="startRows()" />
+
+  <h3 class="block-title t-h4">
+    Bar height
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      --ds-bar-chart-track-height
+    </code> sets the
+    bar's thickness (default <code class="t-mono-inline">12px</code>).
+  </p>
+
+  <div class="demo-row">
+    <ds-slider
+      class="track-height-slider"
+      ariaLabel="Track height"
+      [min]="4"
+      [max]="28"
+      [(value)]="trackHeight" />
+  </div>
+
+  <ds-bar-chart
+    caption="Why the journey ended"
+    labelPosition="start"
+    dataTable="none"
+    [showPercent]="false"
+    [style.--ds-bar-chart-track-height.px]="trackHeight()"
+    [data]="exitRows()" />
+
+  <h3 class="block-title t-h4">
+    Rows inside a row
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      children
+    </code> nests rows under one, behind a
+    disclosure button after its label, closed at first. A child's bar and
+    percent are shares of its parent's value, not of
+    <code class="t-mono-inline">
+      max
+    </code>; it takes the parent's colour and
+    <code class="t-mono-inline">
+      showPercent
+    </code> unless it sets its own. The
+    data table lists every child, open or closed. One level deep.
+  </p>
+
+  <ds-bar-chart
+    caption="Engagement"
+    labelPosition="start"
+    dataTable="toggle"
+    [showPercent]="false"
+    [data]="groupRows()" />
+
+  <h3 class="block-title t-h4">
+    A defined term
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      hint
+    </code> turns the label into a term: a
+    dotted underline, and the hint in a tooltip on hover and keyboard focus,
+    announced as the label's description.
+  </p>
+
+  <ds-bar-chart
+    caption="Reach"
+    labelPosition="start"
+    dataTable="none"
+    tooltip="none"
+    [showPercent]="false"
+    [data]="termRows()" />
+
+  <h3 class="block-title t-h4">
+    Bold rows
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      emphasis
+    </code> prints a row's label in bold, as
+    for the first and last rows of a funnel.
+  </p>
+
+  <ds-bar-chart
+    caption="Journey"
+    labelPosition="start"
+    dataTable="none"
+    [showPercent]="false"
+    [data]="emphasisRows()" />
+
+  <h3 class="block-title t-h4">
+    Percent on some rows
+  </h3>
+
+  <p class="block-desc t-s">
+    A row's own <code class="t-mono-inline">showPercent</code> overrides the
+    chart's: here the chart hides percents and one group shows them.
+  </p>
+
+  <ds-bar-chart
+    caption="Engagement, group open"
+    labelPosition="start"
+    dataTable="none"
+    [showPercent]="false"
+    [data]="groupRows()" />
+
+  <h3 class="block-title t-h4">
+    A row apart
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      detached
+    </code> marks a row that is not a step
+    of the others, such as a total of those who finished or left: a dashed
+    divider sets it apart, and
+    <code class="t-mono-inline">
+      partOfWhole
+    </code> gives it no share.
+  </p>
+
+  <ds-bar-chart
+    caption="Outcome"
+    labelPosition="start"
+    dataTable="none"
+    [showPercent]="false"
+    [data]="detachedRows()" />
+
+  <h3 class="block-title t-h4">
+    All together: a journey funnel
+  </h3>
+
+  <ds-bar-chart
+    caption="Customer journey"
+    labelPosition="start"
+    dataTable="toggle"
+    tooltip="none"
+    [showPercent]="false"
+    [data]="journeyRows()" />
+
+  <h3 class="block-title t-h4">
+    Loading
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      loading
+    </code> with no rows yet draws skeleton rows
+    in the real row geometry; with rows on screen it keeps them under the
+    overlay
+    <code class="t-mono-inline">
+      ds-table
+    </code> uses on a reload.
+  </p>
+
+  <div class="states is-cols-2">
+    <div
+      class="state-cell"
+      data-loading-cell="top-first">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="top"
+        loading
+        [data]="[]" />
+
+      <div class="state-cell-label">
+        top: first load
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="top-loaded">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="top"
+        [data]="loadingCompareRows()" />
+
+      <div class="state-cell-label">
+        top: loaded
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="start-first">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="start"
+        loading
+        [data]="[]" />
+
+      <div class="state-cell-label">
+        start: first load
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="start-loaded">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="start"
+        [data]="loadingCompareRows()" />
+
+      <div class="state-cell-label">
+        start: loaded
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="top-reload">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="top"
+        loading
+        [data]="loadingCompareRows()" />
+
+      <div class="state-cell-label">
+        top: reload
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="start-reload">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="start"
+        loading
+        [data]="loadingCompareRows()" />
+
+      <div class="state-cell-label">
+        start: reload
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Interaction
   </h3>
 
@@ -423,7 +688,7 @@
           [data]="loadingRows()" />
 
         <div class="state-cell-label">
-          Loading
+          Loading with rows
         </div>
 
         <docs-chart-data-editor [(rows)]="loadingRows" />

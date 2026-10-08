@@ -2947,6 +2947,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-bar-chart-label-column-max-width",
+        "value": "40%",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-chart-child-fill-opacity",
+        "value": "0.55",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-chart-divider-color",
+        "value": "var(--border-default)",
+        "notes": ""
+      },
+      {
         "name": "--ds-motion-chart-mark-duration",
         "value": "—",
         "notes": ""
@@ -5058,6 +5073,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-loading-overlay-label-color",
         "value": "var(--text-secondary)",
         "notes": "Loading overlay status text colour (defaults to --text-secondary)."
+      },
+      {
+        "name": "--ds-loading-overlay-radius",
+        "value": "0",
+        "notes": ""
       },
       {
         "name": "--ds-loading-overlay-enter-keyframes",
@@ -7412,14 +7432,14 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Overrides the header-row height the table measures for itself; the loading scrim insets its top by it, so the spinner sits below the header rather than behind it (falls back to the measured height, then 40px)."
       },
       {
-        "name": "--ds-table-border",
-        "value": "var(--border-default)",
-        "notes": "Outer border."
-      },
-      {
         "name": "--ds-table-radius",
         "value": "var(--ds-radius-control)",
         "notes": "Outer corner radius."
+      },
+      {
+        "name": "--ds-table-border",
+        "value": "var(--border-default)",
+        "notes": "Outer border."
       },
       {
         "name": "--ds-table-bg-color",
@@ -9115,11 +9135,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--picker-offset",
     "value": "var(--space-1)",
-    "kind": "length"
-  },
-  {
-    "name": "--pinned-wash-amount",
-    "value": "12%",
     "kind": "length"
   },
   {

@@ -2,8 +2,10 @@
   "bar-chart": [
     "p: role=status",
     "div: aria-hidden=true",
-    "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
-    "div: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}",
+    "div: role={interactive() || holdsControls() ? 'group' : 'img'}, aria-label={accessibleName()}",
+    "div: aria-hidden=true",
+    "div: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}, aria-expanded={interactive() && entry.hasChildren ? isExpanded(entry.key) : null}, aria-describedby={interactive() && entry.row.hint ? hintId(entry.key) : null}",
+    "button: aria-expanded={isExpanded(entry.key)}, aria-label={intl().chart.rowsUnder(entry.row.label)}, aria-hidden={interactive() ? 'true' : null}",
     "span: role=img, aria-label={intl().chart.target(entry.formattedTarget)}"
   ],
   "chart": [

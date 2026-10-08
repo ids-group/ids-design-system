@@ -18,7 +18,10 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { DsOverlayCloseRef } from '@ids-group-ltd/ids-design-system/overlay';
-import { prepareOverlayEnter } from '@ids-group-ltd/ids-design-system/components';
+import {
+  closeOnScroll,
+  prepareOverlayEnter,
+} from '@ids-group-ltd/ids-design-system/components';
 
 @Component({
   selector: 'ds-menu-item',
@@ -185,6 +188,10 @@ export class MenuItemComponent implements OnDestroy {
     });
 
     this.submenuRef.outsidePointerEvents().subscribe(() => this.closeSubmenu());
+    const stopScrollClose = closeOnScroll(this.submenuRef, () =>
+      this.closeSubmenu(),
+    );
+    this.submenuRef.detachments().subscribe(stopScrollClose);
 
     this.submenuRef.attach(new TemplatePortal(this.submenu()!, this.vcr));
 
