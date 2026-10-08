@@ -3,20 +3,41 @@
   vertical-align: middle;
 }
 
+// The circle is a box-shadow, so the 14px button keeps its box in every state.
 .info-hint {
+  --_info-hint-color-hover: var(--icon-strong);
+  --_info-hint-bg-pressed: var(--surface-muted);
+  --_info-hint-color-pinned: var(--accent-strong);
+  --_info-hint-bg-pinned: var(--accent-muted);
+
   display: inline-flex;
   align-items: center;
   appearance: none;
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   background: none;
   color: var(--icon-default);
   cursor: pointer;
-  transition: color var(--duration-fast) var(--ease-standard);
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
 
   &:hover {
-    color: var(--icon-strong);
+    color: var(--_info-hint-color-hover);
+  }
+
+  &:active {
+    color: var(--_info-hint-color-hover);
+    background: var(--_info-hint-bg-pressed);
+    box-shadow: 0 0 0 3px var(--_info-hint-bg-pressed);
+  }
+
+  &[data-ds-tooltip-pinned] {
+    color: var(--_info-hint-color-pinned);
+    background: var(--_info-hint-bg-pinned);
+    box-shadow: 0 0 0 3px var(--_info-hint-bg-pinned);
   }
 }
