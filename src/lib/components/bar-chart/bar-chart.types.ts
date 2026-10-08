@@ -1,6 +1,9 @@
 /** A row's reading: one number spanning from zero, or a `[low, high]` pair for a floating bar. The pair's ends may be given in either order. */
 export type BarChartValue = number | readonly [low: number, high: number];
 
+/** Where a row's label sits: on its own line above the bar, or in a column before it. */
+export type BarChartLabelPosition = 'top' | 'start';
+
 /** One part of a row that is a distribution rather than a single quantity. */
 export interface BarChartSegment {
   /** Falls back to the segment's position when left out. */
@@ -33,4 +36,19 @@ export interface BarChartRow {
   detail?: string;
   /** Overrides this row's colour, usually `var(--ds-chart-series-accent-color)` to accent it. */
   color?: string;
+  /** Rows nested under this one, shown by a disclosure button after the label and closed at first.
+   *  Each child's bar and derived percent are measured against this row's value, not `max`; a child
+   *  takes this row's colour unless it sets its own. One level: a child's own `children` are ignored. */
+  children?: readonly BarChartRow[];
+  /** Turns the label into a defined term: a dotted underline, and this text in a tooltip on hover
+   *  and keyboard focus, announced as the label's description. */
+  hint?: string;
+  /** Prints the label in bold, as for the first and last rows of a funnel. */
+  emphasis?: boolean;
+  /** Prints or hides this row's percent, overriding the chart's `showPercent`; a child without its
+   *  own takes its parent's. */
+  showPercent?: boolean;
+  /** Marks a row that is not a part of the others, such as a total of those who finished or left:
+   *  a divider separates it from the row before, and `partOfWhole` gives it no share. */
+  detached?: boolean;
 }

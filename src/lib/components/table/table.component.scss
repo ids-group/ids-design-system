@@ -44,6 +44,12 @@
   @include visually-hidden.visually-hidden;
 }
 
+// The scrim starts under the header, so only its bottom corners meet the rounded border.
+:host(.bordered) ds-loading-overlay {
+  --ds-loading-overlay-radius: 0 0 var(--ds-table-radius, var(--ds-radius-control))
+    var(--ds-table-radius, var(--ds-radius-control));
+}
+
 :host(.bordered) .scroll-wrap {
   border: var(--border-width-default) solid var(--_table-border);
   border-radius: var(--_table-radius);
