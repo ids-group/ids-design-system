@@ -33,6 +33,7 @@ export class BarChartComponent extends DsChartBase implements ChartDimmable, Cha
     protected onRowKey(row: BarChartRow, event: Event): void;
     public readonly partOfWhole = input(false, { transform: booleanAttribute });
     protected readonly percentColumn = computed(…);
+    protected readonly reloading = computed(…);
     protected readonly renderReady = chartRenderGate(…);
     protected readonly resolvedMax = computed(…);
     protected readonly roving = rovingMarks(…);
@@ -98,6 +99,9 @@ ds-bar-chart {
     --ds-bar-chart-track-color: var(--ds-chart-grid-line-color);
     --ds-bar-chart-track-height: 12px;
     --ds-chart-bg-color: (none);
+    --ds-chart-frame-border-width: (none);
+    --ds-chart-frame-padding: (none);
+    --ds-chart-frame-radius: (none);
     --ds-motion-chart-mark-duration: (none);
     --ds-motion-chart-mark-easing: (none);
     --ds-motion-chart-mark-grow-duration: (none);

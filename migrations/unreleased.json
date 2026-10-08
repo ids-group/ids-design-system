@@ -113,7 +113,7 @@
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
       "restore": null,
       "verify": "The app builds with no member-collision error against TooltipDirective, TooltipPanelComponent or BarChartComponent.",
-      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 3: the private contains and ownText and the public dsTooltipArrow; it lost dsTooltipClippedLead. BarChartComponent gained the public labelPosition, the protected isExpanded, toggleRow, hintId, holdsControls, percentColumn, entries and showsSkeleton, and the private idPrefix and expanded."
+      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 3: the private contains and ownText and the public dsTooltipArrow; it lost dsTooltipClippedLead. BarChartComponent gained the public labelPosition, the protected isExpanded, toggleRow, hintId, holdsControls, percentColumn, entries, showsSkeleton and reloading, and the private idPrefix and expanded."
     },
     {
       "id": "intl-chart-rows-under-required",
@@ -177,6 +177,15 @@
     {
       "text": "ds-bar-chart skeleton rows use the drawn row markup: a label, value and percent placeholder and a placeholder filling the track, so each skeleton row is as tall as a drawn row and the track keeps its height and cap. Under labelPosition 'start' the placeholder label column takes --ds-bar-chart-label-column-max-width, because no label text exists yet to size it.",
       "verify": "Open a ds-bar-chart with loading and empty data, then give it rows, and confirm the rows land where the skeleton rows were."
+    },
+    "ds-loading-overlay takes --ds-loading-overlay-radius (default 0) for the corners of its scrim; set it to the radius of the container the overlay covers.",
+    {
+      "text": "A bordered ds-table's reload overlay rounds its bottom corners to the table's radius (--ds-table-radius, else --ds-radius-control) instead of ending square outside the rounded border.",
+      "verify": "Open a bordered ds-table with rows and loading set, and confirm the scrim's bottom corners follow the table's rounded border."
+    },
+    {
+      "text": "A reloading ds-bar-chart covers the whole card with the overlay, to the frame's rounded corners, instead of a scrim over the rows inside the padding.",
+      "verify": "Open a framed ds-bar-chart with rows and loading set, and confirm the blurred scrim reaches the card's edges and corners."
     }
   ],
   "deleteList": []

@@ -39,6 +39,16 @@
   display: grid;
 }
 
+// The overlay reaches the card's edge and follows its corners: the padding is pulled back out from under it.
+:host(.framed) .reload-overlay {
+  --ds-loading-overlay-radius: calc(
+    var(--ds-chart-frame-radius) - var(--ds-chart-frame-border-width)
+  );
+
+  margin: calc(-1 * var(--ds-chart-frame-padding));
+  padding: var(--ds-chart-frame-padding);
+}
+
 .is-skeleton {
   .label {
     inline-size: 100%;

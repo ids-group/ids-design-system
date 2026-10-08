@@ -9,6 +9,10 @@
 
 ### Added
 
+- **`--ds-loading-overlay-radius` rounds the corners of the `ds-loading-overlay` scrim.** It
+  defaults to `0`. Set it to the radius of the container the overlay covers, so the blurred scrim
+  ends at the container's own rounded edge instead of in square corners.
+
 - **`dsTooltipArrow` turns a tooltip's arrow off.** `[dsTooltipArrow]="false"` draws the panel with no
   arrow pointing at the host; the default is `true`, so every tooltip keeps its arrow until it is set.
   `TooltipDirective` gained the public `dsTooltipArrow` and `TooltipPanelComponent` the public
@@ -49,14 +53,15 @@
   share. A chart with any `hint` or `children` takes `role="group"` instead of `role="img"`, so the
   buttons inside stay reachable. A chart without the new fields renders as before.
   `BarChartComponent` gained the public `labelPosition`, the protected `isExpanded`, `toggleRow`,
-  `hintId`, `holdsControls`, `percentColumn`, `entries` and `showsSkeleton`, and the private `idPrefix` and
+  `hintId`, `holdsControls`, `percentColumn`, `entries`, `showsSkeleton` and `reloading`, and the private `idPrefix` and
   `expanded`, so a subclass declaring one of those names must rename it.
 
 ### Changed
 
 - **`ds-bar-chart` keeps its rows on screen while it reloads.** With `loading` set and rows in
   `data`, the rows stay under the scrim and spinner of `ds-loading-overlay`, the one `ds-table`
-  uses on a reload, and take no focus or pointer until `loading` clears; it drew skeleton rows in
+  uses on a reload, which covers the whole card to its rounded corners; the chart takes no focus or
+  pointer until `loading` clears. It drew skeleton rows in
   their place. Skeleton rows show only while `data` is empty, and now take the label, value,
   percent and track boxes of a drawn row, so the rows keep their height when data arrives. To show
   the skeleton on every load, pass an empty `data` while `loading` is set.
@@ -82,6 +87,10 @@
   nothing.
 
 ### Fixed
+
+- **A bordered `ds-table`'s reload overlay follows its rounded corners.** The scrim over the rows
+  ended in square bottom corners outside the rounded border; it now takes the table's radius,
+  `--ds-table-radius` or `--ds-radius-control`.
 
 - **A `<div actions>` wrapper lays its buttons out like buttons projected one by one.** In the
   footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet`, the buttons inside a

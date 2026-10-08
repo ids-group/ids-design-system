@@ -479,6 +479,10 @@ export class BarChartComponent
     () => (this.loading() && this.data().length === 0) || !this.renderReady(),
   );
 
+  protected readonly reloading = computed(
+    () => this.loading() && !this.showsSkeleton(),
+  );
+
   /** One label width per placeholder row, varied so the column does not read as a solid block. */
   protected readonly skeletonRows = computed(() =>
     Array.from(

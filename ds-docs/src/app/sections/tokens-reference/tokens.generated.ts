@@ -5075,6 +5075,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Loading overlay status text colour (defaults to --text-secondary)."
       },
       {
+        "name": "--ds-loading-overlay-radius",
+        "value": "0",
+        "notes": ""
+      },
+      {
         "name": "--ds-loading-overlay-enter-keyframes",
         "value": "ds-fade-in",
         "notes": "Loading-scrim entrance @keyframes (default ds-fade-in)."
@@ -7427,14 +7432,14 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Overrides the header-row height the table measures for itself; the loading scrim insets its top by it, so the spinner sits below the header rather than behind it (falls back to the measured height, then 40px)."
       },
       {
-        "name": "--ds-table-border",
-        "value": "var(--border-default)",
-        "notes": "Outer border."
-      },
-      {
         "name": "--ds-table-radius",
         "value": "var(--ds-radius-control)",
         "notes": "Outer corner radius."
+      },
+      {
+        "name": "--ds-table-border",
+        "value": "var(--border-default)",
+        "notes": "Outer border."
       },
       {
         "name": "--ds-table-bg-color",
