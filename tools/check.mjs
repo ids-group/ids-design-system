@@ -47,6 +47,7 @@ const EXTRA = {
   'token-defaults:audit': ['tools/check-token-defaults.mjs', '--audit'],
   'class-member-notes:audit': ['tools/check-class-member-notes.mjs', '--audit'],
   probes: ['tools/run-probes.mjs'],
+  schematics: ['tools/run-schematic-tests.mjs'],
 };
 
 export const GROUPS = {
@@ -110,8 +111,10 @@ export const GROUPS = {
   // runs most of the rest too, but it is manual, so a release can be cut from a branch where it never
   // fired. `changelog-pending` is here because the cut folds `## Unreleased` into the release block,
   // and a change it never named leaves with nothing describing it. `public-api-golden` because the
-  // golden at a tag is what the next release's surface diff starts from. Left out: deck-lint, whose
-  // subject is internal decks that never reach the package.
+  // golden at a tag is what the next release's surface diff starts from. `schematics` runs the shipped
+  // `ng add` and `check-overrides` on in-memory workspaces; it is out of `lint` because the compile
+  // alone takes most of 4.7-5.1 s (three runs, 2026-10-08). Left out: deck-lint, whose subject is
+  // internal decks that never reach the package.
   release: [
     'tools-parse',
     'class-surface-entry',
@@ -145,6 +148,7 @@ export const GROUPS = {
     'docblock-drift',
     'lib-package',
     'entry-point-imports',
+    'schematics',
   ],
   // The checkers' own tests: they prove a gate still goes red, the half a green run cannot show.
   // Discovery appends every `tools/check-*-selftest.mjs` except `overrides:selftest`, which needs a

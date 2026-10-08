@@ -53,13 +53,33 @@ function linesWithoutComments(text: string): string[] {
   });
 }
 
+const DECLARED_TOKEN = /(--ds-[a-z0-9-]+)\s*:/g;
+// `[style.--ds-x]="…"` in a template, `el.style.setProperty('--ds-x', …)` in code: neither is
+// followed by a colon, so a declaration pattern never sees them.
+const BOUND_TOKEN = /(?:style\.|setProperty\(\s*['"`])(--ds-[a-z0-9-]+)/g;
+
 export function findWriteOnlyTokens(
   text: string,
   readTokens: ReadonlySet<string>,
 ): WriteOnlyTokenHit[] {
+  return findUnreadTokens(text, readTokens, DECLARED_TOKEN);
+}
+
+export function findWriteOnlyBoundTokens(
+  text: string,
+  readTokens: ReadonlySet<string>,
+): WriteOnlyTokenHit[] {
+  return findUnreadTokens(text, readTokens, BOUND_TOKEN);
+}
+
+function findUnreadTokens(
+  text: string,
+  readTokens: ReadonlySet<string>,
+  pattern: RegExp,
+): WriteOnlyTokenHit[] {
   const hits: WriteOnlyTokenHit[] = [];
   linesWithoutComments(text).forEach((line, index) => {
-    for (const match of line.matchAll(/(--ds-[a-z0-9-]+)\s*:/g)) {
+    for (const match of line.matchAll(pattern)) {
       const token = match[1];
       if (!readTokens.has(token)) hits.push({ token, line: index + 1 });
     }
