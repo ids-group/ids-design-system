@@ -62,16 +62,14 @@
 
 .main {
   padding: 0 var(--space-4);
-  border-top-left-radius: var(--radius-md);
-  border-bottom-left-radius: var(--radius-md);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
   transform-origin: right center;
 }
 
 .toggle {
   padding: 0 var(--space-2);
   margin-left: var(--btn-group-overlap);
-  border-top-right-radius: var(--radius-md);
-  border-bottom-right-radius: var(--radius-md);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
   transform-origin: left center;
 }
 
