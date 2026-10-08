@@ -9,6 +9,11 @@
 
 ### Added
 
+- **`dsTooltipArrow` turns a tooltip's arrow off.** `[dsTooltipArrow]="false"` draws the panel with no
+  arrow pointing at the host; the default is `true`, so every tooltip keeps its arrow until it is set.
+  `TooltipDirective` gained the public `dsTooltipArrow` and `TooltipPanelComponent` the public
+  `arrow`, so a subclass declaring either name must rename it.
+
 - **`text-clip.inline-axis` and `text-clip.line-clamp($lines)`** join
   `text-clip.single-line-ellipsis` in `styles/text-clip`. `inline-axis` clips a row sideways and
   leaves the block axis visible; `line-clamp` clamps a block to `$lines` lines at
@@ -55,6 +60,13 @@
   `DrawerComponent` lost the private `unslotted`, so a subclass member of that name no longer collides.
 
 ### Fixed
+
+- **A `<div actions>` wrapper lays its buttons out like buttons projected one by one.** In the
+  footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet`, the buttons inside a
+  `<div actions>` (or a `<div drawer-footer>`) touched; they now take the footer's gap, alignment
+  and, in `ds-modal-card`, its stacking when the row runs out of width. The wrapper gets
+  `display: contents` at zero specificity, so a `display` you set on it yourself still wins and keeps
+  your own layout.
 
 - **Text keeps its ascenders and descenders under any font.** A box that truncates text clipped
   both axes, so where the font's ascent plus descent is taller than the line-height, the tails of

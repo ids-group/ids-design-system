@@ -144,3 +144,8 @@
     margin-top: var(--space-3);
   }
 }
+
+// A `<div actions>` wrapper hands its buttons to the column. Zero specificity: a display set on it wins.
+:where(.sheet-actions) > ::ng-deep :where(div[actions]) {
+  display: contents;
+}

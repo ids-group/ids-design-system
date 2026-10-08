@@ -19,6 +19,16 @@ import type { DsStatus } from '@ids-group-ltd/ids-design-system/core';
 
 let nextId = 0;
 
+function* flexItems(parent: Element): Generator<Element> {
+  for (const child of parent.children) {
+    if (getComputedStyle(child).display === 'contents') {
+      yield* flexItems(child);
+    } else {
+      yield child;
+    }
+  }
+}
+
 @Component({
   selector: 'ds-modal-card',
   standalone: true,
@@ -105,8 +115,8 @@ export class ModalCardComponent {
       parseFloat(styles.paddingRight);
     const gap = parseFloat(styles.columnGap) || 0;
     let needed = -gap;
-    for (const child of row.children) {
-      needed += child.getBoundingClientRect().width + gap;
+    for (const item of flexItems(row)) {
+      needed += item.getBoundingClientRect().width + gap;
     }
     row.classList.toggle('stacked', needed > available);
   }

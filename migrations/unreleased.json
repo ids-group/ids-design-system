@@ -44,7 +44,9 @@
       ],
       "action": "Delete the `dsTooltipClippedLead` binding. Where it carried the host's own text, nothing replaces it. Where it carried other text, write it into the tooltip string as `'**' + lead + '**\n' + tip`. A subclass of TooltipDirective that declared `dsTooltipClippedLead` has nothing to rename any more.",
       "appliesWhen": "Only an element that binds `dsTooltipClippedLead`, and a class that extends TooltipDirective. `dsTooltip`, `dsTooltipWhenClipped` and `dsTooltipTextSelector` are unchanged, and a `ds-table` header with a `hint` needs nothing.",
-      "evidence": ["command:node tools/public-api-golden.mjs --diff v0.14.8"],
+      "evidence": [
+        "command:node tools/public-api-golden.mjs --diff v0.14.8"
+      ],
       "pitfall": "Deleting the binding drops the lead line where it was text other than the host's own; a clipped host leads with its own text in bold, never with a different one.",
       "verify": "No template or class binds `dsTooltipClippedLead`, the app compiles, and a clipped host that used it shows its text in bold above the tip."
     },
@@ -109,10 +111,14 @@
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
       "restore": null,
       "verify": "The app builds with no member-collision error against TooltipDirective or TooltipPanelComponent.",
-      "note": "TooltipPanelComponent gained the protected segments. TooltipDirective gained the private contains and ownText and lost dsTooltipClippedLead."
+      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 3: the private contains and ownText and the public dsTooltipArrow; it lost dsTooltipClippedLead."
     }
   ],
   "informational": [
+    {
+      "text": "A `<div actions>` (or `<div drawer-footer>`) wrapper in the footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet` gets `display: contents` at zero specificity, so its buttons take the footer's gap, alignment and `ds-modal-card` stacking. A `display` set on the wrapper in your own styles still wins.",
+      "verify": "Open a dialog, drawer or bottom sheet whose buttons sit in a `<div actions>` and confirm they are spaced like buttons that carry `actions` themselves, not touching."
+    },
     "`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a slot, or about an attribute that names no slot. That content still renders in the body. A test or screenshot that waited for the `Dev warning` toast these raised has nothing to wait for.",
     {
       "text": "Text that truncates or clips keeps its ascenders and descenders under any font: `ds-breadcrumbs`, the `ds-stat` label and value, every label ending in an ellipsis (`ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-sidenav-item`, `ds-sidenav-footer`, `ds-tree`, `ds-banner`, `ds-table` headers and cells), fit-mode chips, the `ds-date-picker` value, the `ds-filter-bar` row and resizable `ds-table` headers clip along the inline axis only. Their boxes keep their size.",

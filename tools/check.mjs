@@ -18,6 +18,7 @@ import { readdirSync, existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { acquireHeavyLock } from './heavy-lock.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -52,9 +53,24 @@ const EXTRA = {
   'manifest-detect:audit': ['tools/check-manifest-detect.mjs', '--audit'],
   'token-defaults:audit': ['tools/check-token-defaults.mjs', '--audit'],
   'class-member-notes:audit': ['tools/check-class-member-notes.mjs', '--audit'],
+  'heavy-lock:selftest': ['tools/heavy-lock-selftest.mjs'],
   probes: ['tools/run-probes.mjs'],
   schematics: ['tools/run-schematic-tests.mjs'],
 };
+
+// Checks that take one machine-wide slot (tools/heavy-lock.mjs), so parallel worktrees queue for
+// them instead of running them side by side. Peak memory, measured 2026-10-08: manifest-compile up to
+// 1085 MB in its own process plus the Angular compiler; upgrade-canary and render-evidence build the
+// library and an app or the docs twice. Every other check stayed under 350 MB.
+const HEAVY = new Set([
+  'manifest-compile',
+  'manifest-compile:audit',
+  'manifest-compile:selftest',
+  'upgrade-canary',
+  'render-evidence',
+  'render-evidence:selftest',
+  'schematics',
+]);
 
 export const GROUPS = {
   // `lint:all` runs this, then prettier, stylelint and eslint. Out deliberately: `manifest-truth`
@@ -190,6 +206,7 @@ export const GROUPS = {
   // Discovery appends every `tools/check-*-selftest.mjs` except `overrides:selftest`, which needs a
   // built dist/ds.
   selftests: [
+    'heavy-lock:selftest',
     'changelog-lint:selftest',
     'migration-lint:selftest',
     'deck-lint:selftest',
@@ -239,12 +256,19 @@ export const run = (name) => {
     return 1;
   }
 
-  return (
-    spawnSync(process.execPath, [join(ROOT, script), ...rest], {
-      cwd: ROOT,
-      stdio: 'inherit',
-    }).status ?? 1
-  );
+  const release = HEAVY.has(name)
+    ? acquireHeavyLock(`check ${name}`)
+    : () => {};
+  try {
+    return (
+      spawnSync(process.execPath, [join(ROOT, script), ...rest], {
+        cwd: ROOT,
+        stdio: 'inherit',
+      }).status ?? 1
+    );
+  } finally {
+    release();
+  }
 };
 
 const main = () => {
