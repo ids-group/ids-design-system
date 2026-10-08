@@ -7,7 +7,7 @@
       "old": "SelectComponent, MultiSelectComponent, AutocompleteComponent",
       "new": null,
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
-      "note": "All three pickers gained members for the new inputs and outputs. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check and no list here could stay current.",
+      "note": "All three pickers gained members for the new inputs and outputs: `AutocompleteComponent` gained 21, `MultiSelectComponent` gained 22 and `SelectComponent` gained 15, among them the `opened` and `closed` outputs, `loading` and the private `setOpen`. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check and no list here could stay current.",
       "appliesWhen": "You subclass a picker component. Template users of the `<ds-...>` elements need nothing.",
       "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does.",
       "searchHints": [
@@ -30,7 +30,7 @@
       "old": "TableComponent",
       "new": null,
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
-      "note": "TableComponent gained members for row expansion (expandMode, expandAllToggle, rowExpanded, rowCollapsed and the protected helpers behind the header toggle) and for bounded and touch column resizing (resizeRange, onResizeFocus, onResizeBlur, onColumnWidthStep, resizeStep, columnSheetOpen, coarsePointer and private helpers). A redeclared member collides whether it is public or protected, and the compiler enumerates every one, so a build is the whole check.",
+      "note": "TableComponent gained members for row expansion (expandMode, expandAllToggle, rowExpanded, rowCollapsed and the protected helpers behind the header toggle) and for bounded and touch column resizing (resizeRange, onResizeFocus, onResizeBlur, onColumnWidthStep, resizeStep, columnSheetOpen, coarsePointer and private helpers). `TableComponent` gained 24 in all and lost the protected `windowData`. A redeclared member collides whether it is public or protected, and the compiler enumerates every one, so a build is the whole check.",
       "appliesWhen": "You subclass TableComponent. Template users of `<ds-table>` need nothing.",
       "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does.",
       "searchHints": [

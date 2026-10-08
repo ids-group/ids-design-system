@@ -1,6 +1,27 @@
 {
   "version": "0.6.1",
-  "items": [],
+  "items": [
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "DatePickerComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename your own member or mark it `override` wherever the compiler reports a collision with `DatePickerComponent`.",
+      "appliesWhen": "Only a class that extends `DatePickerComponent`. A consumer who uses `ds-date-picker` in templates needs nothing from this item.",
+      "pitfall": "`private` and `protected` give no protection: a member you redeclare collides with a base member of any visibility.",
+      "note": "`DatePickerComponent` gained `mobileEdit`, `onFieldBeforeInput` and `runSegmentEdit`, the beforeinput path for soft keyboards.",
+      "verify": "The app builds with no error naming `DatePickerComponent`, and no member of a subclass of it is called mobileEdit, onFieldBeforeInput or runSegmentEdit unless marked `override`.",
+      "searchHints": [
+        "extends DatePickerComponent"
+      ],
+      "detect": [
+        "extends DatePickerComponent",
+        "DatePickerComponent"
+      ],
+      "restore": null
+    }
+  ],
   "informational": [
     "ds-date-picker's panel now closes when ANY ancestor scroll container scrolls, not only the one 0.6.0 watched. Nothing to change: a panel that used to hang over the page while a nested pane scrolled underneath now dismisses itself.",
     "ds-date-picker masked typing works on mobile keyboards. Segment-aware editing was wired to keydown, which soft keyboards (Gboard among them) do not report faithfully; the mobile path now goes through beforeinput. If you shipped a workaround that bypassed the masked field on touch devices, it can go. (delete list: date-picker-touch-bypass-workaround)",

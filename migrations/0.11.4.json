@@ -209,20 +209,20 @@
       "old": "BannerComponent.ariaRole, AlertComponent.ariaRole",
       "new": null,
       "appliesWhen": "Only a class extending BannerComponent or AlertComponent that reads or overrides ariaRole or ariaLive. Nothing in a template sees these.",
-      "pitfall": "A widening breaks the READER, not the writer: an override that still declares the narrow return type fails, and code that fed the value somewhere non-nullable fails too, both at a site that did not change.",
+      "pitfall": "A widening breaks the READER, not the writer: code that fed the value somewhere non-nullable fails with TS2322 at a site that did not change, while an override that still declares the narrow return type compiles, because a narrower return type still satisfies the base.",
       "searchHints": [
         "ariaRole",
         "ariaLive",
         "extends BannerComponent",
         "extends AlertComponent",
-        "TS2416"
+        "TS2322"
       ],
       "surface": "typescript",
       "detect": [
         "ariaRole",
         "ariaLive"
       ],
-      "verify": "The app builds with no TS2416 naming ariaRole or ariaLive, and any code consuming either handles null.",
+      "verify": "The app builds with no TS2322 naming ariaRole or ariaLive, and any code consuming either handles null.",
       "restore": null,
       "note": "Both getters widened from `'alert' | 'status'` and `'assertive' | 'polite'` to include `null`, and return null while `announce` is false, which is the default - that is how the attribute is left off entirely rather than set to an empty value.",
       "action": "Widen your own declaration to include null, and handle null wherever you read either getter."

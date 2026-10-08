@@ -143,6 +143,26 @@
       "restore": null
     },
     {
+      "id": "table-subclass-members-moved",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "TableComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding. Delete an override of a member the table lost.",
+      "appliesWhen": "Only a class that extends `TableComponent`. Template users of `<ds-table>` need nothing from this item.",
+      "pitfall": "A member of yours named like a lost one no longer replaces anything, and the table stops calling it.",
+      "note": "`TableComponent` gained 7 and lost 50. The gains are `anySelected`, `columnWidthControls`, `layout`, the private `warnNoExport` and the anchors `headerUtilityAnchor`, `overlaysAnchor` and `toolbarAnchor`. The losses are the data-grid half that moved to `dsTableColumns`, `dsTableResize` and `dsTableExport`, among them `moveColumn`, `toggleColumn`, `resetColumns` and the resize handlers, plus the removed `exportStatus`.",
+      "verify": "The app builds with no error naming `TableComponent`, and no member of a subclass of it overrides a member the table lost.",
+      "searchHints": [
+        "extends TableComponent"
+      ],
+      "detect": [
+        "extends TableComponent",
+        "TableComponent"
+      ],
+      "restore": null
+    },
+    {
       "id": "selection-controls-ring-the-row",
       "kind": "behavior",
       "surface": "style",

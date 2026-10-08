@@ -30,7 +30,7 @@
       ],
       "action": "None, unless your code builds a complete DsIntl object of its own: add datePicker.previousMonth and datePicker.nextMonth, the names of the calendar's month arrows.",
       "appliesWhen": "Only an object or signal typed as the full DsIntl, not as DsIntlOverrides. provideDsIntl with a partial override, and every app that leaves DS_INTL alone, is unaffected.",
-      "pitfall": "An object that spreads DS_INTL_DEFAULTS.datePicker compiles, but a datePicker section written out key by key without the spread fails with TS2741 on previousMonth.",
+      "pitfall": "An object that spreads DS_INTL_DEFAULTS.datePicker compiles, but a datePicker section written out key by key without the spread fails with TS2739 on previousMonth and nextMonth.",
       "restore": null,
       "verify": "The app builds, and every complete DsIntl object it declares has datePicker.previousMonth and datePicker.nextMonth."
     },

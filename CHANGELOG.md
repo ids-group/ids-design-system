@@ -5,7 +5,8 @@
 - **`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a
   slot.** Such content renders in the body by design, so neither the console nor a mirrored toast
   reports it any more, and an attribute that names no slot (a directive such as `cdkDrag`) is not
-  reported as an unknown slot. Rendering is the same.
+  reported as an unknown slot. Rendering is the same. `ModalComponent`, `ModalCardComponent` and
+  `DrawerComponent` lost the private `unslotted`, so a subclass member of that name no longer collides.
 
 ### Fixed
 
@@ -499,8 +500,9 @@
   `ChartTooltipPanelComponent` gained `showsSwatches` and `swatches`; and the internal
   `ChartTooltipDirective` gained `dsChartTooltipSwatches`, `glide` and `glideFrom`. The `min` and
   `max` inputs of `HeatmapChartComponent` and the `max` and `maxSecondary` inputs of
-  `LineChartComponent` now carry a `numberAttribute` transform, so a subclass that redeclares one
-  must declare the same transform, and `tooltipLingerMs` on `ColumnSeriesComponent` and
+  `LineChartComponent` now carry a `numberAttribute` transform with the write type still
+  `number | null`, so a subclass that redeclares one compiles unchanged, and `tooltipLingerMs` on
+  `ColumnSeriesComponent` and
   `LineSeriesComponent` defaults to `500`. Build after upgrading; rename or mark `override` every member the
   compiler reports colliding. Subclassing a DS component is unsupported.
 
@@ -1042,9 +1044,8 @@
   `ChartComponent.tooltipPreferBelow`, `ColumnSeriesComponent.onMarkBlur`,
   `LineSeriesComponent.onMarkerBlur` and the internal `ChartTooltipDirective.dsChartTooltipPreferBelow`.
   Build after upgrading; rename or mark `override` every member the compiler reports colliding
-  (TS4114, or TS2416 where the signature differs - `AuthLayoutComponent`'s `landmark` default moved),
-  and delete an override whose base member is gone. A method named like a removed member and declared
-  without `override` still compiles and is never called again. Subclassing a DS component is
+  (TS4114, or TS2416 where the signature differs), and delete an override whose base member is
+  gone. A method named like a removed member and declared without `override` still compiles and is never called again. Subclassing a DS component is
   unsupported.
 
 ### Added
@@ -4673,8 +4674,9 @@ this package ships under `migrations/`.
   read. `TableComponent` gained `eventsAtExport`,
   `eventMessages`, `tableHead`, `hostElement` and `announceExport`; its inputs, outputs, models
   and exported types are unchanged. `BannerComponent` and `AlertComponent` each gained
-  `announce`, and their `ariaRole` and `ariaLive` now return `null` as well — a subclass that
-  narrowed either type back, or code that assumed the getter is never null, stops compiling.
+  `announce`, and their `ariaRole` and `ariaLive` now return `null` as well — code that assumed
+  the getter is never null stops compiling, while a subclass that narrowed either type back still
+  compiles.
   The compiler enumerates every collision, so building after the upgrade is the whole check.
 
 - **The stack no longer jumps when a toast is added.** Its neighbours are put back where they were
@@ -4858,8 +4860,9 @@ this package ships under `migrations/`.
   collision, so building after the upgrade is the whole check.
 
   Worth flagging for anyone who followed 0.11.2's note: `startCountdown` was announced there as a
-  member the region had just gained, so an `override startCountdown` added one release ago now
-  overrides nothing and silently never runs. There is no public replacement to call — the countdown
+  member the region had just gained, so a `startCountdown` of yours added one release ago now
+  overrides nothing: marked `override` it fails with TS4113, unmarked it compiles and never runs.
+  There is no public replacement to call — the countdown
   is the region's own business now. Delete the override.
 
 - **Four event bindings are silently dead, and there is no `<ds-dropdown>`.** `ds-banner` and
@@ -5292,9 +5295,9 @@ this package ships under `migrations/`.
   `DsEmptyTemplateDirective` and `DsCreateTemplateDirective` are new classes. Subclassing is unsupported but consumers do it, and a member of yours that shares a name
   with one of ours stops the build. Rename yours, or add `override` if you meant to replace ours —
   the compiler enumerates every collision, so building after the upgrade is the whole check.
-  `AutocompleteComponent` also LOST a member — the protected computed `filteredGroups` — and that
-  loss fails silently: a subclass that overrode it now overrides nothing and still compiles. It is
-  the one case the build will not flag, so check for it by hand.
+  `AutocompleteComponent` also LOST a member — the protected computed `filteredGroups`: a subclass
+  that overrode it with `override` now fails with TS4113, and one declared without the modifier
+  compiles and never runs, so delete yours.
 
 - **BREAKING for `ds-autocomplete`: one `options` input takes groups on all three pickers.**
   `ds-multi-select` had no groups at

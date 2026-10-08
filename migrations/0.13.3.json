@@ -162,6 +162,32 @@
       "note": "Merging the progress bar and the measurement bar moved every member of both onto one class, and the tooltip directive gained the input that opens a pinned panel below its mark. The three chart components grew as well: the column chart moved its drawing into the shared container and took several series, gaining `thresholds`, `categories`, `geometry`, `tableRows`, `viewHeightPx`, `skeletonHeightPx`, `stack`, `resolvedSeries`, `seriesRefs`, `pinnedSeries`, `slotCount`, `offsets`, `offsetsFor`, `multiSeries`, `legendItems` and `axisFormat` while losing the members that drew its marks; the donut gained `partOfWhole`, `arcAt`, `isDimmed` and three legend handlers; the funnel gained `isDimmed` and `onRowEnter`. Subclassing a DS component is unsupported, but a release that only merges and adds can still fail such a build on a name collision."
     },
     {
+      "id": "chart-classes-members-lost",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "ColumnChartComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename your own member or mark it `override` wherever the compiler reports a collision with a class in `detect`. Delete an override of a member the class lost.",
+      "appliesWhen": "Only a class that extends one of the classes in `detect`. A consumer who uses the chart elements in templates needs nothing from this item.",
+      "pitfall": "A member of yours that replaced a lost one no longer replaces anything, and the component stops calling it.",
+      "note": "`ColumnChartComponent` lost 15 when its drawing moved into the shared container, among them `columns`, `ticks`, `onMarkClick` and `tooltipContext`. `DonutChartComponent` gained `onLegendClick`, `onLegendEnter` and `onLegendFocus`, its three legend handlers. The internal `ChartTooltipDirective` gained `detachScrollReposition` and `dsChartTooltipPreferBelow` and lost `detachScrollClose`.",
+      "verify": "The app builds with no error naming a class listed in `detect`, and no member of such a subclass overrides a member the class lost.",
+      "searchHints": [
+        "extends ColumnChartComponent",
+        "extends DonutChartComponent",
+        "extends ChartTooltipDirective"
+      ],
+      "detect": [
+        "extends ColumnChartComponent",
+        "ColumnChartComponent",
+        "extends DonutChartComponent",
+        "DonutChartComponent",
+        "extends ChartTooltipDirective",
+        "ChartTooltipDirective"
+      ],
+      "restore": null
+    },
+    {
       "id": "chart-value-format-receives-tick-or-tooltip-location",
       "kind": "behavior",
       "old": "ChartValueFormat",
