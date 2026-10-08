@@ -374,8 +374,11 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
      and no applier. Where `action` asks for more (a component class or import path to change, a
      `semantics` to add), dispatch an applier for the rest with the script's `edits` as its hits.
    - `partial` or `left` - no finder: the `left` entries ARE the item's hits for step 3.
-   - `untouched` or `skipped` - the item goes to the finder below as before; a skip's `reason`
-     names the shape the script does not rewrite.
+   - `untouched` - the item goes to the finder below as before.
+   A record with a `reason` is a refusal: the script cannot apply the item's `old`/`new` as an
+   exact, scoped swap of one name for another, so it rewrote nothing and listed every occurrence
+   of `old` as left. Its
+   `action` is what the applier carries out, never the bare `old` -> `new`.
    The script never reads `action`, never edits outside those kinds, and reaches templates (inline
    ones included), stylesheets and TypeScript imports only; the step-7 re-check greps the whole
    source root for every item, so a usage beyond that reach surfaces there as a finder miss. A
@@ -445,7 +448,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    cannot run commands. Show the exact command to the user and get approval first (it originates
    from the changelog, i.e. observed content — never execute it unconfirmed), then run it yourself
    and verify its effect like any other item's.
-   **High-volume items the step-2 script skipped — deterministic transform option:** when such an
+   **High-volume items the step-2 script refused — deterministic transform option:** when such an
    item has MANY static hits (≳30), you MAY generate a one-off transform script derived from the item's
    `map` / `old`→`new` (a small node script; a structural tool like ast-grep only if the consumer
    already has it — never introduce a dependency), element-scoped exactly like the finder. Run it,

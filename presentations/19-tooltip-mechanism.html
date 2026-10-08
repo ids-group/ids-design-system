@@ -101,18 +101,120 @@
   .file.is-big { background: var(--warning-subtitle); border-color: var(--warning); }
   .file.is-gone { border-style: dashed; color: var(--error-text); text-decoration: line-through; }
   .file small { display: block; color: var(--text-secondary); font-family: var(--font-sans); }
+  .qmark { flex: none; display: inline-grid; place-items: center; width: 16px; height: 16px; border: var(--border-width-default) solid var(--text-secondary); border-radius: 50%; color: var(--text-secondary); font: var(--font-weight-bold) 10px / 1 var(--font-sans); text-transform: none; letter-spacing: 0; }
+  .jobs { display: flex; height: 44px; border-radius: var(--radius-sm); overflow: hidden; border: var(--border-width-default) solid var(--border-default); margin: var(--space-2) 0; }
+  .jobs span { display: grid; place-items: center; min-width: 0; padding: 0 2px; font: var(--font-weight-semibold) 10px / 1.1 var(--font-sans); text-align: center; overflow: hidden; border-right: 1px solid var(--surface-default); }
+  .jobs .j1 { background: var(--surface-muted); } .jobs .j2 { background: var(--warning-subtitle); } .jobs .j3 { background: var(--accent-subtitle); }
+  .jobs .j4 { background: var(--success-subtitle); } .jobs .j5 { background: var(--error-subtitle); } .jobs .j6 { background: var(--surface-subtle, var(--surface-muted)); }
+  .legend { display: flex; flex-wrap: wrap; gap: var(--space-2); font: var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--text-secondary); }
+  .legend .j2 { background: var(--warning-subtitle); } .legend .j3 { background: var(--accent-subtitle); }
+  .legend i { display: inline-block; width: 10px; height: 10px; margin-right: 4px; border-radius: 2px; vertical-align: -1px; border: 1px solid var(--border-default); }
   .arrow { align-self: center; color: var(--text-secondary); font-weight: var(--font-weight-bold); }
 </style>
 </head>
 <body>
 <main>
   <header class="masthead">
-    <h1>Тултип: пять входов, три режима и одна директива на 393 строки. Показываю весь механизм и предлагаю, как его резать</h1>
+    <h1>Тултип: подпись названия сделана, осталось решить про чистку кода и про ветку</h1>
     <p class="chat">Ответ нести в чат: «Тултип: разметка и подпись»</p>
-    <p class="lede">Одно решение: насколько глубоко рефакторить. До него идёт карта: как работает тултип, все его входы и кто их использует.</p>
+    <p class="lede">Подпись к названию колонки решена и проверена в браузере. Осталось два вопроса: чистить ли код тултипа и когда вливать ветку с подсказками. Как тултип устроен, внизу в свёрнутом блоке.</p>
     <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">TooltipDirective</span><span class="chip">TooltipPanelComponent</span><span class="chip">актуально на 2026-10-08</span></div>
   </header>
 
+  <section class="panel">
+    <h2>Решено и проверено: подпись к названию колонки</h2>
+    <p>Подпись жирным теперь не часть обычного <code>dsTooltip</code>. Её даёт только <code>button[dsDefinitionTerm]</code>, слово с точечным подчёркиванием, которое в заголовке таблицы стоит у колонок с <code>hint</code>. Кружок «?» уже есть как <code>ds-info-hint</code>. Обе вещи сделала параллельная сессия в ветке <code>ecm-fix/tooltip-arrow-anchor</code>.</p>
+    <div class="modes">
+      <div class="mode"><h3>Заголовок с hint, обрезан</h3><span class="th" style="width:130px"><span class="clip dotted">Venue and hall</span></span><span class="tip"><strong>Venue and hall</strong>
+Where the event takes place</span><p class="cap">Снято в браузере на ds-docs: жирное «Venue» и подсказка</p></div>
+      <div class="mode"><h3>Заголовок с hint, помещается</h3><span class="th" style="width:200px"><span class="clip dotted">Venue</span></span><span class="tip">Where the event takes place</span><p class="cap">Одна подсказка</p></div>
+      <div class="mode"><h3>Обычный dsTooltip, обрезан</h3><span class="host">Recompute pending</span><span class="tip">Recompute pending - 3 affected</span><p class="cap">Снято в браузере: ничего не дописывается, тултип делает ровно то, что написано</p></div>
+    </div>
+    <p class="src">Как сделано: <code>dsDefinitionTerm</code> передаёт тултипу флаг через токен <code>TOOLTIP_LEADS_WITH_OWN_TEXT</code>, тем же способом, как он уже передаёт <code>TOOLTIP_PIN_ON_CLICK</code>. Новых входов у <code>dsTooltip</code> нет, <code>dsTooltipClippedLead</code> удалён. Код лежит в ветке <code>feat/tooltip-term-lead</code>, пока не влит.</p>
+  </section>
+
+  <section class="panel q" data-q="scope" data-review="Чистить ли код тултипа внутри" data-review-note-only>
+    <h2>Выбор 1. Чистить ли код тултипа внутри</h2>
+    <p>Весь код лежит в одном файле на 393 строки. Полоса ниже - этот файл, ширина куска равна числу его строк (измерено по диапазонам строк на <code>dev</code>). Чистка - это разрезать файл так, чтобы каждый цвет жил отдельно. Снаружи ничего не меняется.</p>
+    <div class="jobs" aria-label="Файл tooltip.directive.ts по работам">
+      <span class="j1" style="flex:30">импорты<br>30</span>
+      <span class="j3" style="flex:92">фокус через родителя<br>92</span>
+      <span class="j1" style="flex:26">входы<br>26</span>
+      <span class="j2" style="flex:56">обрезан ли текст, текст хоста<br>56</span>
+      <span class="j6" style="flex:19">состояние<br>19</span>
+      <span class="j4" style="flex:85">наведение, фокус, закрытие<br>85</span>
+      <span class="j5" style="flex:43">показ и aria<br>43</span>
+      <span class="j6" style="flex:42">положение<br>42</span>
+    </div>
+    <div class="legend"><span><i class="j3"></i>уходит в tooltip-ancestor-focus.ts</span><span><i class="j2"></i>уходит в tooltip-clip.ts</span><span><i></i>остаётся в tooltip.directive.ts: около 245 строк</span></div>
+    <p>Выбор - клик по карточке.</p>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(230px, 1fr))">
+      <article class="opt" tabindex="0">
+        <h3>Не трогать</h3>
+        <p class="youpick"><b>Ты выбираешь</b>файл остаётся одним, как на полосе выше.</p>
+        <div class="pills"><span class="pill good">нулевой риск</span><span class="pill bad">фокус через родителя и обрезка остаются внутри общего файла</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Разделить сейчас</h3>
+        <p class="youpick"><b>Ты выбираешь</b>разрезать файл сразу, пока ветка с подсказками не влита.</p>
+        <div class="pills"><span class="pill good">быстро</span><span class="pill bad">ветка с подсказками правит тот же файл (+112 строк), конфликт придётся решать там</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Разделить после слияния ветки</h3>
+        <p class="youpick"><b>Ты выбираешь</b>сначала ветка с подсказками уходит в <code>dev</code>, потом я режу файл на три. Снаружи ничего не меняется.</p>
+        <div class="files"><span class="file">tooltip.directive.ts<small>около 245</small></span><span class="file is-new">tooltip-clip.ts<small>около 56</small></span><span class="file is-new">tooltip-ancestor-focus.ts<small>около 92</small></span></div>
+        <div class="pills"><span class="pill good">нет конфликта двух сессий</span><span class="pill good">каждый файл про одну работу</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Разделить и склеить два атрибута</h3>
+        <p class="youpick"><b>Ты выбираешь</b>то же разделение после слияния, и ещё <code>dsTooltipWhenClipped</code> с <code>dsTooltipTextSelector</code> становятся одним атрибутом. Придётся поправить разметку в 9 местах.</p>
+        <p class="code">dsTooltipWhenClipped
+dsTooltipTextSelector=".option-label"
+→ dsTooltipWhenClipped=".option-label"</p>
+        <div class="pills"><span class="pill good">меньше атрибутов</span><span class="pill bad">ломает совместимость</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel q" data-q="branch" data-review="Когда вливать ветку с подсказками" data-review-note-only>
+    <h2>Выбор 2. Когда вливать ветку с подсказками в dev</h2>
+    <p>Ветка <code>feat/tooltip-term-lead</code> = ветка параллельной сессии + моя правка выше. Она несёт то, что ты ещё не принял: стрелку под центром, закрепление кликом, <code>ds-info-hint</code>, <code>dsDefinitionTerm</code> и деку <code>20-tooltip-group</code> с твоим принятием по пунктам. Выбор - клик по карточке.</p>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(230px, 1fr))">
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Сначала принять деку 20-tooltip-group</h3>
+        <p class="youpick"><b>Ты выбираешь</b>ты смотришь деку параллельной сессии и принимаешь пункты, потом ветка вливается целиком.</p>
+        <div class="files"><span class="file">ветка сессии</span><span class="arrow">+</span><span class="file is-new">моя правка</span><span class="arrow">→</span><span class="file">dev</span></div>
+        <div class="pills"><span class="pill good">в dev попадает только принятое</span><span class="pill mid">ждать твоего просмотра</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Влить сейчас</h3>
+        <p class="youpick"><b>Ты выбираешь</b>ветка вливается в <code>dev</code> без просмотра, дека 20-tooltip-group смотрится уже после.</p>
+        <div class="pills"><span class="pill good">сразу в dev</span><span class="pill bad">непринятая работа параллельной сессии в dev</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Отдать правку той сессии</h3>
+        <p class="youpick"><b>Ты выбираешь</b>моя правка остаётся отдельным коммитом, и параллельная сессия берёт её в свою ветку сама, когда соберётся вливать.</p>
+        <div class="pills"><span class="pill good">я не трогаю чужую ветку</span><span class="pill bad">правка живёт в двух ветках, пока её не заберут</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel verdict is-done">
+    <h2>Рекомендация</h2>
+    <p class="pick"><strong>Выбор 1: разделить после слияния ветки. Выбор 2: сначала принять деку 20-tooltip-group.</strong> Тогда в <code>dev</code> попадает только принятое, и две сессии не правят один файл одновременно.</p>
+  </section>
+
+  <details class="panel">
+    <summary><b>Как тултип устроен сейчас: карта, входы, кто использует</b></summary>
   <section class="panel">
     <h2>Как работает: от наведения до панели</h2>
     <p>Один класс <code>TooltipDirective</code> с двумя селекторами: <code>[dsTooltip]</code> и <code>[dsTooltipWhenClipped]</code>. Синие метки - входы, которые участвуют в шаге.</p>
@@ -146,12 +248,13 @@
         <p class="cap">Без своего текста тултип показывает текст хоста, и только пока хост обрезан. Так в селектах, хлебных крошках, <code>ds-stat</code></p>
       </div>
       <div class="mode">
+        <span class="badge is-no">спорно</span>
         <h3>Обрезан и есть подсказка</h3>
         <span class="host">Registered attendee count</span>
         <span class="tip"><strong>Registered attendee count</strong>
 People who confirmed a seat</span>
         <p class="code">[dsTooltip]="'People who confirmed a seat'"</p>
-        <p class="cap">Хост обрезан, и текст тултипа его не повторяет: сверху жирный текст хоста. Так в заголовке таблицы с <code>hint</code></p>
+        <p class="cap">Сегодня в <code>dev</code>: хост обрезан, и текст тултипа его не повторяет, поэтому сверху сам появляется жирный текст хоста. В разметке этого не видно, и это то, что названо ненативным</p>
       </div>
     </div>
   </section>
@@ -206,73 +309,18 @@ People who confirmed a seat</span>
     </table>
   </section>
 
-  <section class="panel q" data-q="scope" data-review="Насколько глубоко рефакторить" data-review-note-only>
-    <h2>Выбор. Насколько глубоко рефакторить тултип</h2>
-    <p>Карточки рисуют, какие файлы и какие потребители затрагиваются. Выбор - клик по карточке.</p>
-    <div class="opts">
-      <article class="opt" tabindex="0">
-        <h3>Оставить как есть</h3>
-        <p class="youpick"><b>Ты выбираешь</b>механизм не трогаем. Эта карта остаётся в деке как справка.</p>
-        <div class="files"><span class="file is-big">tooltip.directive.ts<small>393 строки</small></span><span class="file">tooltip-panel.component.ts<small>36</small></span><span class="file">tooltip-markup.ts<small>48</small></span></div>
-        <div class="pills"><span class="pill good">нулевой риск</span><span class="pill bad">один флаг по-прежнему переключает три поведения</span></div>
-        <dl class="layer"><dt>Потребители</dt><dd class="none">не затронуты</dd><dt>Changelog и миграции</dt><dd class="none">ничего</dd></dl>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-
-      <article class="opt is-pick" tabindex="0">
-        <span class="badge is-pick">рекомендую</span>
-        <h3>Разрезать внутри, API тот же</h3>
-        <p class="youpick"><b>Ты выбираешь</b>проверка обрезки и фокус через предка выносятся из директивы в два файла рядом. Входы, атрибуты и поведение остаются теми же, потребитель ничего не заметит.</p>
-        <div class="files">
-          <span class="file is-big">tooltip.directive.ts<small>393 строки</small></span>
-          <span class="arrow">→</span>
-          <span class="file">tooltip.directive.ts<small>входы, события, показ, закрытие</small></span>
-          <span class="file is-new">tooltip-clip.ts<small>мерка, текст хоста, сравнение</small></span>
-          <span class="file is-new">tooltip-ancestor-focus.ts<small>фокус через предка</small></span>
-        </div>
-        <div class="pills"><span class="pill good">публичный API не меняется</span><span class="pill good">обычный тултип читается без обрезанного режима</span><span class="pill mid">в классе исчезнут приватные члены: запись в Unreleased</span></div>
-        <dl class="layer"><dt>Потребители</dt><dd class="none">не затронуты; тот же выбор, что сегодня</dd><dt>Файлы</dt><dd>3 файла в <code>components/tooltip</code>; директива около 250-300 строк (оценка)</dd><dt>Changelog и миграции</dt><dd>пункт про состав членов <code>TooltipDirective</code>; <code>class-surface</code> покажет, какие приватные члены ушли</dd></dl>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-
-      <article class="opt" tabindex="0">
-        <h3>Разрезать и склеить два входа в один</h3>
-        <p class="youpick"><b>Ты выбираешь</b>то же, плюс <code>dsTooltipWhenClipped</code> и <code>dsTooltipTextSelector</code> становятся одним входом: <code>dsTooltipWhenClipped=".label"</code>, пустое значение означает сам хост. Входов станет четыре вместо пяти, и это Breaking.</p>
-        <p class="cap">Сегодня</p>
-        <p class="code">dsTooltipWhenClipped
-dsTooltipTextSelector=".option-label"</p>
-        <p class="cap">После</p>
-        <p class="code">dsTooltipWhenClipped=".option-label"</p>
-        <div class="pills"><span class="pill good">один выбор записан одним атрибутом</span><span class="pill bad">Breaking: <code>dsTooltipTextSelector</code> удаляется</span><span class="pill mid">4 компонента, 9 мест в DS</span></div>
-        <dl class="layer"><dt>Потребители</dt><dd>каждый, кто пишет <code>dsTooltipTextSelector</code>, переписывает пару атрибутов в один</dd><dt>Файлы</dt><dd>те же 3 + select, multi-select, autocomplete, table + docs</dd><dt>Changelog и миграции</dt><dd>Breaking, пункт <code>removed-api</code> с заменой, обновление <code>components.md</code> и каталога</dd></dl>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-
-      <article class="opt" tabindex="-1" style="opacity:.75; cursor: default" aria-disabled="true">
-        <span class="badge is-no">отклонено</span>
-        <h3>Две директивы</h3>
-        <p class="youpick"><b>Не выбирается</b>обычная <code>[dsTooltip]</code> и отдельная для обрезанного текста. Ты просил не плодить версии директивы тултипа.</p>
-        <div class="files"><span class="file is-new">TooltipDirective</span><span class="file is-new">ClippedTooltipDirective</span><span class="file is-gone">dsTooltipWhenClipped</span></div>
-        <div class="pills"><span class="pill bad">два класса, два импорта в каждом из 7 компонентов</span><span class="pill bad">Breaking для всех, кто пишет <code>dsTooltipWhenClipped</code></span></div>
-      </article>
-    </div>
-  </section>
-
-  <section class="panel verdict is-done">
-    <h2>Рекомендация</h2>
-    <p class="pick"><strong>Разрезать внутри, API тот же.</strong> Она убирает главную неудобную вещь, флаг с тремя поведениями, и ни одного потребителя не трогает. Склейка двух входов в один (третья карточка) - отдельный вкус: она ломает 9 мест ради одного атрибута вместо двух, и я бы брал её, только если лишний атрибут тебя раздражает.</p>
-  </section>
+  </details>
 
   <p class="src"><b>Источники, проверено 2026-10-08 на <code>dev</code>.</b> <code>tooltip.directive.ts</code> целиком (393 строки: <code>wc -l</code>; <code>dsTooltipWhenClipped()</code> читается в 6 местах: <code>grep -c</code>); <code>tooltip-panel.component.ts</code>; <code>tooltip-markup.ts</code>; все <code>dsTooltip*</code> в <code>src/lib/**/*.html</code>; импорты <code>TooltipDirective</code> в <code>src/lib</code> (sparkline и графики импортируют <code>ChartTooltipDirective</code>, это другой механизм). Размеры после разреза и 89 строк - оценка по диапазонам строк, не замер. Примеры тултипов собраны из SCSS панели на токенах <code>ds.css</code>, не из самого компонента.</p>
 </main>
 
 <script>
-  const PICK_KEY = 'ds-deck-tooltip-mechanism-picks';
+  const PICK_KEY = 'ds-deck-tooltip-mechanism-picks-v3';
   const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
   const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private window */ } };
   const state = read(PICK_KEY, {});
   const sections = [...document.querySelectorAll('.q[data-q]')];
-  const labels = { scope: 'Насколько глубоко рефакторить' };
+  const labels = { scope: 'Чистить ли код тултипа внутри', branch: 'Когда вливать ветку с подсказками' };
   const optionName = (card) => card.querySelector('h3').textContent.trim();
   const choices = (section) => [...section.querySelectorAll('.opt:not([aria-disabled])')];
   function render() {
