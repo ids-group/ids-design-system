@@ -423,6 +423,11 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
 - [ ] An entry that reverses an earlier release's guidance carries `supersedes` naming it; the earlier
       file stays untouched, and `supersededBy` is rejected. (lint, M028 + reference resolution)
 - [ ] Substring-colliding renames: longer has its own entry; shorter's `note` says "rename longer first".
+- [ ] A `*-rename` or `value-remap` item is a pure swap of `old` for `new` (or through `map`): the
+      upgrade plugin's `scripts/apply-mechanical.mjs` rewrites it before any agent reads `action`.
+      A rename that also changes a value, adds an import or spells out a suffix the pattern does
+      not carry is a `behavior` item, or two items. (`node tools/check.mjs plugin-apply` tests the
+      script)
 - [ ] Non-mechanical entries carry the decision rule + where to read the real new name, not "review".
 - [ ] Widened/changed exported types each have a `behavior` entry naming who breaks
       (run `npm run class-surface` — do not assemble the list by eye).
@@ -459,6 +464,10 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       of things is backed by `evidence` on its item or object-form `informational` entry, and a
       `## Unreleased` sentence making one by such an entry naming its code. (`node tools/check.mjs
       manifest-claims`, in the lint and release gates)
+- [ ] Every docs block whose pixels changed across the boundary has a `ds-*` element, class or
+      token it renders named in the manifest or the CHANGELOG block, and a `pixels:<block id>`
+      evidence names a block that did not change. (`node tools/check.mjs render-evidence`, at the
+      cut)
 - [ ] An `informational` entry whose change is to rendering alone carries `verify`; an object entry
       has a non-empty `text` and `verify` and no other key. (lint, M046 for the shape)
 - [ ] `old` resolves at the PREVIOUS tag, is gone at this one for a rename or a removal, and `new`
@@ -474,9 +483,25 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       a clean run vouches for those only. Published hits of those two rules are reported by
       `node tools/check.mjs manifest-truth:audit`.
       (`tools/check-manifest-truth.mjs`, in the PR gate and the preflight)
+- [ ] A renamed or removed token reaches the shipped stylelint list: run
+      `node tools/generate-token-deprecations.mjs` after editing a published manifest's
+      `token-rename`, `removed-api` or `deleteList` token, and commit `stylelint/deprecated-tokens.json`.
+      (`node tools/check.mjs token-deprecations`, at the cut; the release commit regenerates it)
 - [ ] Every TS code an entry names is asserted by `migrations/fixtures/<version>/<id>.ts`,
       compiled at both tags (README, "Compile fixtures"). (`node tools/check.mjs manifest-compile`,
       at the cut)
+- [ ] The item's locators find the consumer code it targets in
+      `migrations/fixtures/<version>/<id>.found.<ext>`, and drop a look-alike in
+      `<id>.ignored.<ext>` (README, "Locator fixtures").
+      (`node tools/check.mjs manifest-detect`, in lint and the preflight)
+- [ ] A template outcome - an NG code, or a TS code only `strictTemplates` reports - is asserted by
+      `migrations/fixtures/<version>/<id>.component.ts`, its template inline and compiled by the
+      Angular compiler at both tags. (`node tools/check.mjs manifest-compile`, at the cut)
+- [ ] `canary/`, an app written against the last release's API, still builds under
+      `strictTemplates` once the draft is applied to it; each error is printed beside the item
+      that edited or names its line, or as covered by none. Keep `canary/` on the last release:
+      a cut whose draft rewrites it carries the rewritten canary. (`node tools/check.mjs
+      upgrade-canary`, at the cut)
 - [ ] A published record that described something which never worked is resolved by one question —
       does anything the consumer DOES change? Yes → an item with an `action` here, in the library's
       voice. No → nothing, and a quiet correction to the old file if it still misleads. Never a line

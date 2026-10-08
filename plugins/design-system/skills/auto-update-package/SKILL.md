@@ -25,10 +25,13 @@ only when a version cannot be made green.
 - **A semver** (e.g. `0.4.0`, or a beta such as `0.15.1-beta.2`) → target version: end the chain
   there instead of the latest. A beta target has its own rules in Phase A step 6.
 - **`dry-run`** (or `plan`) → **plan-only mode**: run Phase A read-only (no branch, no
-  AskUserQuestion about git strategy), then for each chain version run plan + find + a read-only
+  AskUserQuestion about git strategy), then run the step-2 script ONCE with `--dry-run` and every
+  chain version's manifest in chain order (it carries each version's edits into the next in memory
+  and writes nothing), and for each chain version run plan + find on what it left + a read-only
   customization-drift scan (the extracted `v<V>` tree lets you check consumer deep
   selectors/tokens against V's internals WITHOUT installing anything). Report per version: the
-  MigrationItems, which are applicable (with file/hit counts), which are not, expected drift, and
+  MigrationItems, which are applicable (with file/hit counts and the script's edit and left
+  counts), which are not, expected drift, and
   any command-type items (the real run will pause for approval on those) — and
   make NO edits, NO bump/install, NO commits. Phase D still runs: it writes the feedback files
   to the OS temp dir and offers only "Just give me the file" or "Skip".
@@ -104,7 +107,8 @@ passing them through undetectable.
 Every actionable item is **auto-applied**; items differ only in how they're VERIFIED:
 
 - **mechanical** = the rename kinds + `value-remap` + `scss-api` + `code-add` → verified by grep
-  (`ds-recheck`); a `value-remap` ALSO carries a `verify` the re-check tests — it changes what a
+  (`ds-recheck`); the rename kinds and `value-remap` are applied first by a script (Phase B step 2),
+  and only what it leaves reaches an agent; a `value-remap` ALSO carries a `verify` the re-check tests — it changes what a
   binding MEANS with no symbol removed, so a clean grep alone proves nothing there. Element-scoped items (a `value-remap` targeting `element[attr]`) MUST be
   searched/re-checked **scoped to that target element** — the same attribute or class name can exist
   on other components, so an unscoped grep false-positives on the wrong element and would wrongly
@@ -356,7 +360,28 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    version carries the `v<V>` tree and the tree of the tag before it. If `items` is empty, V is a
    no-migration version: skip steps 2-3 and go to step 4, but a non-empty `deleteList` still gets
    its step-8 pass before the commit.
-2. **Find (parallel, sonnet).** Batch V's items by surface or component family, 3-4 per batch,
+2. **Mechanical pre-pass (script), then find.** Before any agent, run
+   `node <plugin-root>/scripts/apply-mechanical.mjs <source root> <clone>/migrations/<V>.json`
+   (`<plugin-root>` as for the drift scan in step 5; a version without a manifest skips this). It
+   rewrites the token-, selector-, input-, output-, class- and type-renames and the `value-remap`s
+   by exact, boundary-safe replacement, element-scoped where `old` is `element[attr]`, and prints
+   one JSON record per item: `status`, the `edits` it made with their `loc`, and `left` - every
+   occurrence it saw and would not rewrite (a dynamic binding, a class not written directly under
+   its element, a type imported from a secondary entry point), in the finder's hit shape. Add every
+   edited file to the touched-files union. Then, per item:
+   - `applied` - the swap is done. Where the item's `action` asks for nothing beyond it, record the
+     item `applied` (mode `replaced`) and send it straight to the step-7 re-check, with no finder
+     and no applier. Where `action` asks for more (a component class or import path to change, a
+     `semantics` to add), dispatch an applier for the rest with the script's `edits` as its hits.
+   - `partial` or `left` - no finder: the `left` entries ARE the item's hits for step 3.
+   - `untouched` or `skipped` - the item goes to the finder below as before; a skip's `reason`
+     names the shape the script does not rewrite.
+   The script never reads `action`, never edits outside those kinds, and reaches templates (inline
+   ones included), stylesheets and TypeScript imports only; the step-7 re-check greps the whole
+   source root for every item, so a usage beyond that reach surfaces there as a finder miss. A
+   script edit that the build or the re-check shows wrong is a feedback entry on
+   `tool:apply-mechanical`.
+   **Find (parallel, sonnet).** Batch the remaining items by surface or component family, 3-4 per batch,
    and dispatch one `ds-usage-finder` per batch with the target's source
    root — passing each MigrationItem **verbatim** (`id` / `kind` / `old` / `new` / `searchHints` /
    `map` / `surface` / `detect` / `appliesWhen` as the planner emitted them — `new` is what lets the
@@ -393,7 +418,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    An item in the Phase A supersedes skip set is skipped here, for every item kind, with its
    reason recorded.
 
-3. **Apply (parallel, sonnet).** Group the finder's hits by file; dispatch one
+3. **Apply (parallel, sonnet).** Group the finder's hits and the script's `left` entries by file; dispatch one
    `ds-migration-applier` per file — or per **small disjoint batch** of files (≤~5) when many small
    files carry the same items. The invariant is disjointness: a file is NEVER shared between
    concurrent appliers. Pass each applier the items affecting its file(s) **AND those files' finder
@@ -420,8 +445,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    cannot run commands. Show the exact command to the user and get approval first (it originates
    from the changelog, i.e. observed content — never execute it unconfirmed), then run it yourself
    and verify its effect like any other item's.
-   **High-volume mechanical items — deterministic transform option:** when a mechanical item has
-   MANY static hits (≳30), you MAY generate a one-off transform script derived from the item's
+   **High-volume items the step-2 script skipped — deterministic transform option:** when such an
+   item has MANY static hits (≳30), you MAY generate a one-off transform script derived from the item's
    `map` / `old`→`new` (a small node script; a structural tool like ast-grep only if the consumer
    already has it — never introduce a dependency), element-scoped exactly like the finder. Run it,
    then diff-review the result yourself. LLM appliers still handle everything a script can't judge:
@@ -529,7 +554,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    related items per `ds-recheck`, each item judged on its own; a redo of one item goes out alone.
    Re-attach its full MigrationItem by `id` from the plan (the applier's report is id-keyed
    only) — plus the applier's reported mode (`replaced | inserted | no-op` — it decides what the
-   re-check greps for, and a `no-op` is confirmed by checking the condition, not the edit), and the
+   re-check greps for, and a `no-op` is confirmed by checking the condition, not the edit; an item
+   the step-2 script applied alone is `replaced`, and its script `edits` go with it), and the
    applier's `needsReview` entries with their `locs` (the only occurrences the re-check may
    excuse), and the two extracted tree paths. To re-check a change that is already COMMITTED, save
    `git -C <target> show <sha>` to a file in the scratchpad and pass that path too; the re-checker

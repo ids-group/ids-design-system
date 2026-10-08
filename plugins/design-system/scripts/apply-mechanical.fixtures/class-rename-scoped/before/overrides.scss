@@ -1,0 +1,7 @@
+ds-modal .danger { border-color: red; }
+:host ::ng-deep ds-modal .danger .title { color: red; }
+ds-progress.warn { --x: 1; }
+ds-modal {
+  .danger { outline: 0; }
+}
+.panel { padding: 0; }

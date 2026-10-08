@@ -206,7 +206,7 @@
       "text": "The ds-funnel-chart figure clips its vertical overflow, so stage rows rising in the entrance no longer flash a vertical scrollbar; horizontal scrolling is kept.",
       "verify": "Replay a funnel chart's entrance and confirm no vertical scrollbar appears while a narrow one still scrolls horizontally."
     },
-    "min and max on ds-heatmap-chart and max and maxSecondary on ds-line-chart accept a static attribute such as min=\"0\", coerced with numberAttribute."
+    "min and max on ds-heatmap-chart and max and maxSecondary on ds-line-chart coerce a static attribute such as min=\"0\" with numberAttribute. Their write type stays number | null, so under strictTemplates the static attribute still fails with TS2322; bind [min]=\"0\" there."
   ],
   "deleteList": [
     {

@@ -97,6 +97,26 @@ page with an eager `ds-button` and a deferred `ds-table` and `ds-line-chart`, th
 175 kB gzip with root imports and 110 kB with entry-point imports. Everywhere else, including a route
 behind `loadComponent`, the package root costs nothing extra.
 
+### 3. Stale token overrides (stylelint)
+
+The package ships a stylelint plugin that reports every custom property this library has removed
+or renamed, wherever your stylesheets declare it or read it through `var()`. The list is generated
+from the published migration manifests, so after an upgrade an override of a renamed token is red in
+your editor instead of silently doing nothing. Add it to `.stylelintrc.json` (written for stylelint 17):
+
+```json
+{
+  "plugins": ["@ids-group-ltd/ids-design-system/stylelint"],
+  "rules": { "ids-design-system/no-removed-tokens": true }
+}
+```
+
+Each report names the replacement, the version and the manifest item
+(`"--ds-card-pad" was renamed to "--ds-card-padding" in 0.13.4 (0.13.4#card-pad-is-card-padding)`).
+`stylelint --fix` renames a token that has a single replacement; a removed token is reported and left
+for you to resolve. Only stylesheets are read: a token set from TypeScript or a template binding is
+not checked.
+
 ## License
 
 MIT © IDS Group Ltd

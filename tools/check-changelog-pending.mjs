@@ -46,7 +46,7 @@ const DECL =
 const EXPORTED_CLASS =
   /^export\s+(?:abstract\s+)?class\s+([A-Za-z_][A-Za-z0-9_]*)/gm;
 
-const withoutComments = (text) =>
+export const withoutComments = (text) =>
   text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|\s)\/\/.*$/gm, '$1');
 
 function selectorsIn(text) {
@@ -62,7 +62,7 @@ function selectorsIn(text) {
 // `var(--ds-x, <fallback>)` with the fallback read to its closing paren. A hook read inside another
 // hook's fallback is part of that hook's default, not a read of its own, so the scan resumes after
 // the outer paren. Whitespace is collapsed so a rewrap is not a change.
-function hookReads(text) {
+export function hookReads(text) {
   const reads = [];
   const hook = /var\(\s*(--ds-[a-z0-9-]*[a-z0-9])\s*(,?)/g;
   for (let match = hook.exec(text); match; match = hook.exec(text)) {

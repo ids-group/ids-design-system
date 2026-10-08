@@ -44,6 +44,7 @@
       ],
       "action": "Delete the `dsTooltipClippedLead` binding. Where it carried the host's own text, nothing replaces it. Where it carried other text, write it into the tooltip string as `'**' + lead + '**\n' + tip`. A subclass of TooltipDirective that declared `dsTooltipClippedLead` has nothing to rename any more.",
       "appliesWhen": "Only an element that binds `dsTooltipClippedLead`, and a class that extends TooltipDirective. `dsTooltip`, `dsTooltipWhenClipped` and `dsTooltipTextSelector` are unchanged, and a `ds-table` header with a `hint` needs nothing.",
+      "evidence": ["command:node tools/public-api-golden.mjs --diff v0.14.8"],
       "pitfall": "Deleting the binding drops the lead line where it was text other than the host's own; a clipped host leads with its own text in bold, never with a different one.",
       "verify": "No template or class binds `dsTooltipClippedLead`, the app compiles, and a clipped host that used it shows its text in bold above the tip."
     },
