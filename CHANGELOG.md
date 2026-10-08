@@ -9,6 +9,11 @@
 
 ### Added
 
+- **`styles/component-base` gives a component of yours the base the library's components carry.**
+  `@include component-base.rules` first in a component stylesheet sets `border-box`, the inherited
+  font on form controls, zero heading margins and the base focus ring on that component's own
+  elements, whether or not the app loads `styles/reset` and `styles/focus`.
+
 - **`dsTooltipArrow` turns a tooltip's arrow off.** `[dsTooltipArrow]="false"` draws the panel with no
   arrow pointing at the host; the default is `true`, so every tooltip keeps its arrow until it is set.
   `TooltipDirective` gained the public `dsTooltipArrow` and `TooltipPanelComponent` the public
@@ -85,6 +90,21 @@
   unstyled page). `styles/dropdown-overlay` sets them now, from the same `--ds-typography-s-*`
   hooks, and the row no longer carries `t-s`; with typography loaded it renders as before. A rule
   of yours that reached the row through `.t-s` matches nothing: select `.ds-dropdown-panel .empty`.
+
+- **Components keep their size, fonts and focus ring in an app that does not load `styles/reset`
+  or `styles/focus`.** Each component now sets `box-sizing: border-box` on its host and its own
+  elements, puts its form controls in the inherited font, clears its heading margins and draws the
+  base focus ring on its own focusable elements. Without `styles/reset`, fields such as `ds-input`
+  and `ds-select` grew from 38.8px to 40px tall and a host with a border took the browser's
+  `content-box`; without `styles/focus`, buttons such as the `ds-number-stepper` steps and the close
+  buttons of `ds-banner`, `ds-toast`, `ds-modal-card` and `ds-drawer` showed the browser's own focus
+  ring. A height animation such as an expanding `ds-sidenav-group` animates without the reset as
+  well.
+
+- **`ds-container` with `size="sm|md|lg"` and the responsive rail of `ds-app-layout` work without
+  `bp.emit-vars`.** Both fall back to the library's breakpoints; `ds-container` went full-bleed
+  and the rail stayed in desktop layout. Your own `--bp-*` still win where you set them, and the
+  dev-mode warning about a missing `--bp-lg` is gone.
 
 ### What you can now DELETE
 
