@@ -94,7 +94,8 @@
   to its own text, and clips at its column width when there is less. Its floor is its header label,
   so it no longer pushes the table into horizontal scroll. A value that was cut at 240px beside empty
   space now shows whole, and a table that scrolled sideways because of these columns fits its
-  container with their text cut shorter. To keep the 240px cap, set `width: 240` on the column.
+  container with their text cut shorter. To keep the 240px cap, set `width: 272` on the column
+  (240 plus the cell padding).
   `TableComponent` lost the protected `clipWidth` and gained the protected `clipGrows` and
   `clipMaxWidth` and the private `growingClipColumns`, `clipCapsSet` and `fitGrowingClips`, so a
   subclass declaring one of those names must rename it.
@@ -135,12 +136,10 @@
 - **A `truncate` column dragged with `dsTableResize` clips at its dragged width.** A column with a
   `width` kept cutting its text at that width after being dragged wider, and could not be dragged
   narrower than it plus its padding.
-
-### What you can now DELETE
-
-| Delete | Why | Replace with |
-| --- | --- | --- |
-| a cell template wrapping the value in an element styled `width: 0; min-width: 100%` with an ellipsis, plus `dsTooltipWhenClipped` on it, so a column without `width` clips at its own width | `truncate: true` on a column without `width` clips at the column width and shows the full value in a tooltip | `truncate: true` on the column; keep the template only for markup it adds besides the value |
+- **A `truncate` column with a numeric `width` is that wide.** Its text was clipped at `width`
+  and the cell padding came on top, so `width: 240` rendered a 272px column (264px at compact
+  density) while a column without `truncate` rendered 240px. The text now clips inside the
+  declared width, 32px shorter at the default density.
 
 - **`ng add` with a `--project` that does not exist stops with an error naming it.** It printed the
   generic "add it manually" message and changed nothing, which hid the typo.
@@ -159,6 +158,7 @@
 | --- | --- | --- |
 | a hand-built info button: `name="info"` on a `ds-icon` inside a `<button>` that carries `dsTooltip` | `ds-info-hint` renders the button, the icon and the pinned tooltip | `<ds-info-hint ariaLabel="…" text="…" />` |
 | a hand-built term button styled with `underline dotted` that carries `dsTooltip` | `dsDefinitionTerm` carries the underline, the focus ring, the keyboard access and the pinned tooltip | `<span dsDefinitionTerm="…">` |
+| a cell template wrapping the value in an element styled `width: 0; min-width: 100%` with an ellipsis, plus `dsTooltipWhenClipped` on it, so a column without `width` clips at its own width | `truncate: true` on a column without `width` clips at the column width and shows the full value in a tooltip | `truncate: true` on the column; keep the template only for markup it adds besides the value |
 
 ## 0.14.8 — 2026-10-06
 

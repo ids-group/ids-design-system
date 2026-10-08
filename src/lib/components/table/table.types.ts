@@ -38,7 +38,7 @@ export interface TableColumn<T = unknown> {
    *  Without `width` the column takes what the other columns leave at their content width, up to
    *  its text, down to its header label; it never causes horizontal scroll. */
   truncate?: boolean;
-  /** Column width in px, also the clip width for `truncate`.
+  /** Column width in px, padding included; a `truncate` column clips its text inside it.
    *
    *  `'content'` sizes the column to its widest cell without wrapping and leaves the rest to
    *  the other columns. Dragging the edge overrides it. */

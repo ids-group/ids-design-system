@@ -704,7 +704,10 @@ export class TableComponent<T extends object> {
       return `var(${clipCapProperty(index)}, none)`;
     }
 
-    return typeof col.width === 'number' ? `${col.width}px` : null;
+    // `width` is the cell's border box, as for a column without `truncate`.
+    return typeof col.width === 'number'
+      ? `calc(${col.width}px - var(--_table-cell-padding-left) - var(--_table-cell-padding-right))`
+      : null;
   }
 
   private readonly growingClipColumns = computed(() =>

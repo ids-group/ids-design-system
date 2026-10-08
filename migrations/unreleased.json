@@ -108,11 +108,30 @@
       "detect": [
         "truncate: true"
       ],
-      "action": "None, unless a column needs the old 240px cap: add `width: 240` to it.",
+      "action": "None, unless a column needs the old 240px cap: add `width: 272` to it (240 plus the cell padding at the default density).",
       "appliesWhen": "A `ds-table` column with `truncate: true` and no `width`. A column with a numeric `width` or `width: 'content'` clips as before, and a column without `truncate` is unaffected.",
       "pitfall": "A column of long values now takes the room the other columns leave, so a screenshot shows it wider when the table has room and narrower, down to its header label, when it does not; a table that scrolled sideways because of such columns now fits its container.",
-      "restore": "{ key: 'email', label: 'Email', truncate: true, width: 240 }",
+      "restore": "{ key: 'email', label: 'Email', truncate: true, width: 272 }",
       "verify": "Open a table with a `truncate` column without `width`: a short value shows whole, a long one is cut at the column's edge with no empty space after the ellipsis, and the table scrolls sideways only where its headers or fixed-width columns are wider than the container."
+    },
+    {
+      "id": "table-truncate-width-includes-padding",
+      "kind": "behavior",
+      "old": "TableColumn.width",
+      "new": null,
+      "surface": "none",
+      "searchHints": [
+        "truncate: true",
+        "width:"
+      ],
+      "detect": [
+        "truncate: true"
+      ],
+      "action": "None, unless a `truncate` column with a numeric `width` must keep its old size: add the horizontal cell padding to its `width` (32 at the default density, 24 at compact).",
+      "appliesWhen": "A `ds-table` column with `truncate: true` and a numeric `width`. A column without `truncate`, one with `width: 'content'` and one without `width` are unaffected.",
+      "pitfall": "The column and its clip are 32px narrower at the default density, so a value that used to show whole within a few pixels of the old clip now ends in an ellipsis.",
+      "restore": "{ key: 'model', label: 'Model', truncate: true, width: 272 }",
+      "verify": "Open a table with a `truncate` column whose `width` is 240: the column measures 240px, the same as a column of `width: 240` without `truncate`, and its text ends in an ellipsis inside it."
     },
     {
       "id": "table-component-member-surface",
