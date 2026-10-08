@@ -160,6 +160,11 @@ if (existsSync('migrations')) {
 console.log('▶ Copying stylelint/ into dist/ds/stylelint…');
 cpSync('stylelint', 'dist/ds/stylelint', { recursive: true });
 
+// The consumer ESLint plugin and the API list it reads, exported as
+// `@ids-group-ltd/ids-design-system/eslint`. It reads the token list from `../stylelint/`.
+console.log('▶ Copying eslint/ into dist/ds/eslint…');
+cpSync('eslint', 'dist/ds/eslint', { recursive: true });
+
 console.log(
   '✔ schematics built into dist/ds/schematics + package.json registered.',
 );

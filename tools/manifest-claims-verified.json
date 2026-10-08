@@ -1675,9 +1675,9 @@
     "version": "0.13.0",
     "file": "migrations/0.13.0.json",
     "location": "chart-color-tokens-gain-color-suffix action",
-    "hash": "c7d791d89922d60f",
-    "sentence": "Add `-color` to the end of all five names, after deleting `--chart-grid-line-strong`.",
-    "source": "claims-verdicts-late.txt:169"
+    "hash": "03721ca604d183ac",
+    "sentence": "Add `-color` to the end of all five names.",
+    "source": "impure-renames-verdicts.txt:13"
   },
   {
     "version": "0.13.0",

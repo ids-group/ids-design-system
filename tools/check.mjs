@@ -18,6 +18,7 @@ import { readdirSync, existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { acquireHeavyLock } from './heavy-lock.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -30,6 +31,7 @@ const EXTRA = {
   'public-api': ['tools/generate-public-api.mjs', '--check'],
   'todo-index': ['tools/todo-index.mjs', '--check'],
   'token-deprecations': ['tools/generate-token-deprecations.mjs', '--check'],
+  'api-deprecations': ['tools/generate-api-deprecations.mjs', '--check'],
   'manual-surface': ['.design-sync/tools/check-manual-surface.mjs'],
   'changelog-lint': ['tools/changelog-lint.mjs'],
   'changelog-lint:selftest': ['tools/changelog-lint-selftest.mjs'],
@@ -51,9 +53,24 @@ const EXTRA = {
   'manifest-detect:audit': ['tools/check-manifest-detect.mjs', '--audit'],
   'token-defaults:audit': ['tools/check-token-defaults.mjs', '--audit'],
   'class-member-notes:audit': ['tools/check-class-member-notes.mjs', '--audit'],
+  'heavy-lock:selftest': ['tools/heavy-lock-selftest.mjs'],
   probes: ['tools/run-probes.mjs'],
   schematics: ['tools/run-schematic-tests.mjs'],
 };
+
+// Checks that take one machine-wide slot (tools/heavy-lock.mjs), so parallel worktrees queue for
+// them instead of running them side by side. Peak memory, measured 2026-10-08: manifest-compile up to
+// 1085 MB in its own process plus the Angular compiler; upgrade-canary and render-evidence build the
+// library and an app or the docs twice. Every other check stayed under 350 MB.
+const HEAVY = new Set([
+  'manifest-compile',
+  'manifest-compile:audit',
+  'manifest-compile:selftest',
+  'upgrade-canary',
+  'render-evidence',
+  'render-evidence:selftest',
+  'schematics',
+]);
 
 export const GROUPS = {
   // `lint:all` runs this, then prettier, stylelint and eslint. Out deliberately: `manifest-truth`
@@ -65,6 +82,9 @@ export const GROUPS = {
   // mid-cycle it would be red on every commit that adds a member. `token-deprecations` reads every
   // release tree (42 s, 2026-10-08) and moves only with a manifest; its selftest is in, because the
   // rule it tests ships to consumers and runs in under 3 s.
+  // `api-deprecations` and its selftest are in: the generator reads the manifests and the working
+  // tree alone (1.0 s and 1.7 s, 2026-10-08), and a PR that brings a listed input or symbol back
+  // has to take it off the shipped ESLint list in the same commit.
   // `changelog-pending` is in: it reads one tag's tree and the working tree in about a second, and
   // a change is cheapest to describe in the session that made it. `manifest-claims` is in: it reads
   // only the draft manifest and `## Unreleased`, which every PR can change. `token-defaults` is in:
@@ -108,6 +128,8 @@ export const GROUPS = {
     'deck-lint',
     'plugin-apply',
     'token-deprecations:selftest',
+    'api-deprecations:selftest',
+    'api-deprecations',
   ],
   // The `preversion` gate, run by `tools/preflight.mjs` in this order and stopping at the first
   // failure. `tools-parse` is first because every check after it is one of those files. Each
@@ -123,7 +145,7 @@ export const GROUPS = {
   // runs most of the rest too, but it is manual, so a release can be cut from a branch where it never
   // fired. `token-deprecations` is here because the stylelint list ships in the package, and a
   // manifest edited without regenerating it would publish a list that misses the release's own
-  // renames. `changelog-pending` is here because the cut folds `## Unreleased` into the release block,
+  // renames; `api-deprecations` for the same reason, with the ESLint list. `changelog-pending` is here because the cut folds `## Unreleased` into the release block,
   // and a change it never named leaves with nothing describing it. `public-api-golden` because the
   // golden at a tag is what the next release's surface diff starts from. `schematics` runs the shipped
   // `ng add` and `check-overrides` on in-memory workspaces; it is out of `lint` because the compile
@@ -158,6 +180,8 @@ export const GROUPS = {
     'token-defaults',
     'token-deprecations:selftest',
     'token-deprecations',
+    'api-deprecations:selftest',
+    'api-deprecations',
     'changelog-lint:selftest',
     'changelog-lint',
     'changelog-pending:selftest',
@@ -180,6 +204,7 @@ export const GROUPS = {
   // Discovery appends every `tools/check-*-selftest.mjs` except `overrides:selftest`, which needs a
   // built dist/ds.
   selftests: [
+    'heavy-lock:selftest',
     'changelog-lint:selftest',
     'migration-lint:selftest',
     'deck-lint:selftest',
@@ -229,12 +254,19 @@ export const run = (name) => {
     return 1;
   }
 
-  return (
-    spawnSync(process.execPath, [join(ROOT, script), ...rest], {
-      cwd: ROOT,
-      stdio: 'inherit',
-    }).status ?? 1
-  );
+  const release = HEAVY.has(name)
+    ? acquireHeavyLock(`check ${name}`)
+    : () => {};
+  try {
+    return (
+      spawnSync(process.execPath, [join(ROOT, script), ...rest], {
+        cwd: ROOT,
+        stdio: 'inherit',
+      }).status ?? 1
+    );
+  } finally {
+    release();
+  }
 };
 
 const main = () => {

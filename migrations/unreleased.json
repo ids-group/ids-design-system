@@ -113,7 +113,7 @@
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
       "restore": null,
       "verify": "The app builds with no member-collision error against TooltipDirective, TooltipPanelComponent or BarChartComponent.",
-      "note": "TooltipPanelComponent gained the protected segments. TooltipDirective gained the private contains and ownText and lost dsTooltipClippedLead. BarChartComponent gained the public labelPosition, the protected isExpanded, toggleRow, hintId, holdsControls, percentColumn, entries and showsSkeleton, and the private idPrefix and expanded."
+      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 3: the private contains and ownText and the public dsTooltipArrow; it lost dsTooltipClippedLead. BarChartComponent gained the public labelPosition, the protected isExpanded, toggleRow, hintId, holdsControls, percentColumn, entries and showsSkeleton, and the private idPrefix and expanded."
     },
     {
       "id": "intl-chart-rows-under-required",
@@ -162,6 +162,10 @@
     }
   ],
   "informational": [
+    {
+      "text": "A `<div actions>` (or `<div drawer-footer>`) wrapper in the footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet` gets `display: contents` at zero specificity, so its buttons take the footer's gap, alignment and `ds-modal-card` stacking. A `display` set on the wrapper in your own styles still wins.",
+      "verify": "Open a dialog, drawer or bottom sheet whose buttons sit in a `<div actions>` and confirm they are spaced like buttons that carry `actions` themselves, not touching."
+    },
     "`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a slot, or about an attribute that names no slot. That content still renders in the body. A test or screenshot that waited for the `Dev warning` toast these raised has nothing to wait for.",
     "ds-bar-chart takes labelPosition ('top' | 'start', default 'top', type BarChartLabelPosition): 'start' puts each label in a column before its bar and aligns labels, bars, values and percents across rows. --ds-bar-chart-label-column-max-width caps the label column. Under 'start', --ds-bar-chart-row-gap defaults to var(--space-3) instead of var(--space-5); set --ds-bar-chart-row-gap: var(--space-5) to keep the wider rhythm. A chart left on 'top' keeps var(--space-5).",
     "BarChartRow takes children (rows nested behind a disclosure button, each measured against its parent's value), hint (a defined-term label with a tooltip), emphasis (a bold label), showPercent (a per-row override of the chart's showPercent) and detached (a row set apart by a divider and given no partOfWhole share). --ds-bar-chart-child-fill-opacity and --ds-bar-chart-divider-color style the new rows. A chart without these fields renders as before.",

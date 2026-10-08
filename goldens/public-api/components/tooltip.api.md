@@ -12,6 +12,7 @@ export class TooltipDirective implements OnDestroy {
     private disclosesOwnText;
     private disposeRef;
     public readonly dsTooltip = input<string>('');
+    public readonly dsTooltipArrow = input(true, { transform: booleanAttribute });
     public readonly dsTooltipDelay = input<number>(120);
     public readonly dsTooltipPlacement = input<TooltipPlacement>('top');
     public readonly dsTooltipTextSelector = input<string | null>(null);
@@ -42,6 +43,7 @@ export class TooltipDirective implements OnDestroy {
 
 @Component({ selector: 'ds-tooltip-panel' })
 export class TooltipPanelComponent {
+    public readonly arrow = input(true);
     public readonly panelId = input<string>('');
     public readonly placement = input.required<TooltipPlacement>();
     protected readonly segments = computed(…);
