@@ -68,6 +68,8 @@
   max-width: calc(100vw - var(--space-6));
   max-height: 90vh;
   max-height: 90dvh;
+
+  // glyph-clip-guard: rounds the corners; header, body and footer pad their text off this edge
   overflow: hidden;
   animation-name: var(--_modal-enter-keyframes);
   animation-duration: var(--_modal-enter-duration);

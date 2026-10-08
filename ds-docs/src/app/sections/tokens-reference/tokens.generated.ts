@@ -3850,6 +3850,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Weight of the date value and its ghost mask (default --font-weight-regular)."
       },
       {
+        "name": "--ds-date-picker-max-width",
+        "value": "100%",
+        "notes": "Cap on the field width (default 100%); with fullWidth the field fills its container up to this width."
+      },
+      {
         "name": "--ds-date-picker-bg-color",
         "value": "var(--surface-overlay)",
         "notes": "Popover fill."
@@ -9110,6 +9115,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--picker-offset",
     "value": "var(--space-1)",
+    "kind": "length"
+  },
+  {
+    "name": "--pinned-wash-amount",
+    "value": "12%",
     "kind": "length"
   },
   {

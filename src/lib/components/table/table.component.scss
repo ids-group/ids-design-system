@@ -56,6 +56,8 @@
   // otherwise widen the page.
   position: relative;
   width: 100%;
+
+  // glyph-clip-guard: x scrolls, so y cannot stay visible; every cell pads its text off this edge
   overflow: auto hidden;
 
   // Rows and header buttons sit flush against this box, so a ring drawn outward is eaten.
@@ -82,7 +84,8 @@
 
 :host(.resizable) thead th {
   position: relative;
-  overflow: hidden;
+
+  @include text-clip.inline-axis;
 }
 
 /* A coarse pointer paints no `:hover`, so the handle is invisible while `touch-action: none` still
@@ -138,6 +141,8 @@
       calc(-1 * var(--_table-scroller-pad-bottom, 0px))
     )
   );
+
+  // glyph-clip-guard: the proxy scrollbar, no text
   overflow: auto hidden;
 }
 
@@ -214,16 +219,20 @@
       align-items: center;
       vertical-align: middle;
       appearance: none;
-      background: none;
       border: 0;
       margin: 0;
       padding: 0;
       font: inherit;
       letter-spacing: inherit;
       text-transform: inherit;
-      color: inherit;
       text-align: left;
       max-width: 100%;
+    }
+
+    // A definition term paints its own colour and background for its pressed and pinned states.
+    .th-label:not(.ds-definition-term) {
+      background: none;
+      color: inherit;
     }
 
     .th-label:has(+ .col-filter-btn) {
@@ -234,11 +243,6 @@
       min-width: 0;
 
       @include text-clip.single-line-ellipsis;
-    }
-
-    .th-label.has-hint {
-      text-decoration: underline dotted var(--text-tertiary);
-      text-underline-offset: 3px;
     }
 
     button.th-label:focus-visible {
@@ -419,6 +423,7 @@
     }
 
     .expand-panel-content {
+      // glyph-clip-guard: collapses the expanded row; open, the panel pads its text off this edge
       overflow: hidden;
       min-height: 0;
     }

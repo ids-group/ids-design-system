@@ -100,8 +100,12 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       hint: '…'
-    </code> defines a column's term: the label gets a dotted underline and shows the hint on hover
-    and keyboard focus. On a sortable column the sort button carries it, with no extra Tab stop.
+    </code> defines a column's term: the label is a
+    <code class="t-mono-inline">
+      dsDefinitionTerm
+    </code> with a dotted underline that shows the hint
+    on hover and keyboard focus, and a click pins it. On a sortable column the sort button carries
+    it, with no extra Tab stop, and a click sorts.
   </p>
 
   <ds-table

@@ -22,6 +22,8 @@
 
   display: block;
   position: relative;
+
+  // glyph-clip-guard: a placeholder, no text
   overflow: hidden;
   background: var(--_skeleton-bg-color);
   border-radius: var(--radius-md);
