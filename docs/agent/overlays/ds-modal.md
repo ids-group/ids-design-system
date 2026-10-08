@@ -5,7 +5,7 @@ Group: Overlay
 
 Inputs: `open: model<boolean> = false`, `size: 'sm' | 'md' | 'lg' = 'md'`, `danger: boolean = false`, `title: required string`
 Output: `(closed): void` — fires on backdrop click, close button, or `open` being set to false. `(confirmed)` is declared on the component but no internal handler emits it; treat it as not implemented and emit confirmation from the consumer-side action button instead.
-Content slots: `[eyebrow]`, `[title-badge]`, `[body]`, `[impact]` (highlighted strip under the body for destructive consequences), `[actions]` (footer button row). Content with no slot attribute renders in the body after `[body]`; in dev mode it logs a warning asking for `<div body>`, and an unknown slot name such as `<div footer>` logs its own warning. Backdrop click + close button close the dialog.
+Content slots: `[eyebrow]`, `[title-badge]`, `[body]`, `[impact]` (highlighted strip under the body for destructive consequences), `[actions]` (footer button row). Content with no slot attribute, or with an attribute that names no slot, renders in the body after `[body]`. Backdrop click + close button close the dialog.
 
 `actions` goes on each button, not on a wrapper: the footer is a flex row with `gap: var(--space-3)`, so a `<div actions>` around the buttons is one flex item and the buttons touch. Group them with `<ng-container actions>`, which adds no element.
 

@@ -6,7 +6,7 @@ Group: Overlay
 Side panel (no `side` input — always anchored right).
 Inputs: `open: model<boolean> = false`, `size: 'md' | 'lg' = 'md'`, `title: string = ''`
 Output: `(closed): void`
-Content slots: `[drawer-body]` (or `[body]`), `[drawer-footer]` (or `[actions]`). Content with no slot attribute renders in the body; in dev mode it logs a warning, as does an unknown slot name. The footer is a flex row with a gap, so `drawer-footer` or `actions` goes on each button, not on a wrapper; `<ng-container actions>` groups them without an element.
+Content slots: `[drawer-body]` (or `[body]`), `[drawer-footer]` (or `[actions]`). Content with no slot attribute, or with an attribute that names no slot, renders in the body. The footer is a flex row with a gap, so `drawer-footer` or `actions` goes on each button, not on a wrapper; `<ng-container actions>` groups them without an element.
 
 <!-- inputs:ds-drawer -->
 All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' = 'md'`, `placement: 'right' | 'left' | 'top' | 'bottom' = 'right'`, `title: required string`, `staticPreview: boolean = false`

@@ -435,6 +435,7 @@
   "--ds-date-picker-day-today-label-color": "Today label.",
   "--ds-date-picker-focus-shadow": "Date picker focus ring shadow (defaults to --ds-control-focus-shadow).",
   "--ds-date-picker-header-label-color": "Calendar month/year header label colour.",
+  "--ds-date-picker-max-width": "Cap on the field width (default 100%); with fullWidth the field fills its container up to this width.",
   "--ds-date-picker-nav-icon-color": "Calendar prev/next navigation icon colour.",
   "--ds-date-picker-panel-radius": "Calendar panel corner radius (default --radius-lg). Forwarded onto the portaled pane on open.",
   "--ds-date-picker-placeholder-color": "Date picker trigger placeholder text colour.",

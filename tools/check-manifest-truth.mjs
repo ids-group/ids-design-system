@@ -15,6 +15,11 @@
 //
 //   node tools/check-manifest-truth.mjs             # every published manifest
 //   node tools/check-manifest-truth.mjs 0.11.4      # one of them
+//   node tools/check-manifest-truth.mjs --audit     # every hit, the rules below included; exits 0
+//
+// Two rule classes fail `unreleased.json` only, and reach a published manifest through `--audit`:
+// a backticked name in prose that exists at neither tag, and an `old`/`new` the surface could not
+// read that `UNREAD_ALLOWED` does not answer for.
 import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -25,6 +30,10 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ONLY = process.argv
   .slice(2)
   .find((arg) => /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)$/.test(arg));
+const AUDIT = process.argv.includes('--audit');
+// Overridable so the selftest can run the strict and audit sweeps over a synthetic draft without
+// writing into the checkout.
+const MIGRATIONS = process.env.DS_TRUTH_MIGRATIONS ?? join(ROOT, 'migrations');
 
 const git = (args) =>
   execFileSync('git', ['-C', ROOT, ...args], {
@@ -46,14 +55,16 @@ const tags = (() => {
 
 // One `git cat-file --batch` per tag, not one `git show` per file: a tag's surface is ~400 files
 // and the per-spawn cost dominates everything else. Nothing is written to disk.
-function readTreeAt(tag) {
+export function readTreeAt(
+  tag,
+  pathspecs = ['src/lib'],
+  keep = (path) => /\.(ts|scss|html)$/.test(path) && !path.endsWith('.spec.ts'),
+) {
   let paths;
   try {
-    paths = git(['ls-tree', '-r', '--name-only', tag, '--', 'src/lib'])
+    paths = git(['ls-tree', '-r', '--name-only', tag, '--', ...pathspecs])
       .split('\n')
-      .filter(
-        (path) => /\.(ts|scss|html)$/.test(path) && !path.endsWith('.spec.ts'),
-      );
+      .filter(keep);
   } catch {
     return null;
   }
@@ -108,6 +119,11 @@ export function surfaceAt(tag) {
 // The same parser over the files on disk. `migrations/unreleased.json` describes the boundary
 // between the last tag and HEAD, so the AFTER side of it is the working tree and not a tag.
 export function surfaceOfWorkingTree() {
+  const files = workingTreeFiles();
+  return files?.length ? buildSurface(files) : null;
+}
+
+export function workingTreeFiles() {
   const files = [];
   const crawl = (dir) => {
     for (const item of readdirSync(dir, { withFileTypes: true })) {
@@ -125,7 +141,7 @@ export function surfaceOfWorkingTree() {
   } catch {
     return null;
   }
-  return files.length ? buildSurface(files) : null;
+  return files;
 }
 
 function buildSurface(files) {
@@ -138,10 +154,38 @@ function buildSurface(files) {
   const elementClass = new Map();
   const tokenPrefixes = new Set();
   const directives = new Set();
+  const directiveClass = new Map();
+  // Every name a class or interface declares, whatever its visibility: a subclass collides with a
+  // protected or private member as surely as with an input, and the manifests name those.
+  const members = new Set();
+  // Declared at top level, exported or not. `symbols` stays exported-only, because a removal is
+  // proved by the export going away while the class itself may stay.
+  const declared = new Set();
+  const dataAttributes = new Set();
+  const sassCallables = new Set();
+  // A class built by interpolation, `.c-#{$color}` or `` `variant-${variant}` ``: absent from
+  // `classes`, so a member of the family is set aside rather than declared missing.
+  const classPrefixes = new Set();
+  // Quoted `ds-*` strings: overlay panel classes and series ids a consumer's stylesheet or
+  // test names, which no selector or template class attribute declares.
+  const quotedNames = new Set();
 
   for (const { path: file, text } of files) {
-    for (const match of text.matchAll(/--[a-z][a-z0-9-]*/g))
+    for (const match of text.matchAll(/--_?[a-z][a-z0-9-]*/g))
       if (!match[0].endsWith('-')) tokens.add(match[0]);
+    for (const match of text.matchAll(
+      /(?<![\w-])data-[a-z][a-z0-9-]*[a-z0-9]/g,
+    ))
+      dataAttributes.add(match[0]);
+    for (const match of text.matchAll(/['"](ds-[a-z0-9]+(?:-[a-z0-9]+)*)['"]/g))
+      quotedNames.add(match[1]);
+    for (const match of text.matchAll(
+      /\.([a-z][a-z0-9-]*-)#\{|`([a-z][a-z0-9-]*-)\$\{/g,
+    ))
+      classPrefixes.add(match[1] ?? match[2]);
+    // A content slot is an attribute the consumer writes on their own element: `<p dsAuthSupport>`.
+    for (const match of text.matchAll(/select="\[([A-Za-z][\w-]*)\]"/g))
+      directives.add(match[1]);
 
     // A name cut off by interpolation — `--bp-#{$name}`, `--focus-ring-#{$family}` — reads as a
     // trailing hyphen and is dropped above, so the whole family is missing from the surface and
@@ -169,6 +213,10 @@ function buildSurface(files) {
     for (const bound of text.matchAll(/\[class\.([a-z][a-z0-9-]*)\]/g))
       classes.add(bound[1]);
     if (!file.endsWith('.ts')) {
+      for (const callable of text.matchAll(
+        /@(?:mixin|function)\s+([a-z][\w-]*)/g,
+      ))
+        sassCallables.add(callable[1]);
       // Two precise readings rather than one loose one. A template's `items().length,` and a
       // comment naming `input.component.scss` both match a bare `.name` pattern, and a
       // `class-rename` claiming a class that never existed would resolve against that noise.
@@ -192,6 +240,23 @@ function buildSurface(files) {
     }
     for (const decl of text.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(DECL))
       symbols.add(decl[1]);
+    for (const decl of text.matchAll(
+      /^(?:export\s+)?(?:declare\s+)?(?:abstract\s+)?(?:class|interface|type|const|function|enum)\s+([A-Za-z_][A-Za-z0-9_]*)/gm,
+    ))
+      declared.add(decl[1]);
+    // Two-space indent is a class or interface body under prettier, so a method body's statements,
+    // indented further, are not read as members. A property signature is read at any depth: the
+    // nested `pagination: { range: ... }` of an intl interface is a name a consumer overrides.
+    for (const member of text.matchAll(
+      /^ {2}(?:(?:public|protected|private|readonly|static|override|abstract|async|declare|get|set|accessor)\s+)*#?([A-Za-z_$][\w$]*)\s*[?!]?\s*[(<:=;]/gm,
+    ))
+      members.add(member[1]);
+    for (const member of text.matchAll(
+      /^\s+(?:readonly\s+)?([A-Za-z_][A-Za-z0-9_]*)\??:\s/gm,
+    ))
+      members.add(member[1]);
+    for (const exported of text.matchAll(/exportAs:\s*'([^']+)'/g))
+      directives.add(exported[1]);
 
     // Every signal-based member a template can bind, indexed by the class that declares it, not
     // by the file: a field's `error`, `hint` and `touched` live on DsFieldBase in another file
@@ -264,6 +329,8 @@ function buildSurface(files) {
           /^\s*(?:[a-z][a-z0-9-]*)?\[([A-Za-z][A-Za-z0-9]*)\]\s*$/.exec(part);
         if (attribute) {
           directives.add(attribute[1]);
+          if (declarations.length)
+            directiveClass.set(attribute[1], declarations[0][1]);
           continue;
         }
         const tag_ = /^\s*([a-z][a-z0-9-]*)\s*$/.exec(part);
@@ -274,16 +341,25 @@ function buildSurface(files) {
     }
   }
 
-  for (const [tag_, className] of elementClass) {
-    const members = new Set(elements.get(tag_));
+  const bindable = (className) => {
+    const names = new Set(classOwn.get(className));
     for (
       let parent = classParent.get(className), guard = 0;
       parent && guard < 20;
       parent = classParent.get(parent), guard++
     )
-      for (const name of classOwn.get(parent) ?? []) members.add(name);
-    elements.set(tag_, members);
+      for (const name of classOwn.get(parent) ?? []) names.add(name);
+    return names;
+  };
+  for (const [tag_, className] of elementClass) {
+    const names = bindable(className);
+    for (const name of elements.get(tag_) ?? []) names.add(name);
+    elements.set(tag_, names);
   }
+  // `dsLineSeries[highlighted]` binds an input of the directive, not of the element it sits on.
+  const directiveMembers = new Map(
+    [...directiveClass].map(([name, className]) => [name, bindable(className)]),
+  );
 
   const partials = new Set();
   const keyframes = new Set();
@@ -306,12 +382,19 @@ function buildSurface(files) {
     elements,
     tokenPrefixes,
     directives,
+    directiveMembers,
     partials,
     keyframes,
+    members,
+    declared,
+    dataAttributes,
+    sassCallables,
+    classPrefixes,
+    quotedNames,
   };
 }
 
-function claims(value) {
+function shapeClaims(value) {
   if (typeof value !== 'string' || !value.trim()) return [];
   const text = value.trim();
   const openingTag = /^<(ds-[a-z0-9]+(?:-[a-z0-9]+)*)\s*\/?>$/.exec(text);
@@ -321,7 +404,7 @@ function claims(value) {
   const lines = text.split('\n').map((line) => line.trim());
   const partials = lines.map(
     (line) =>
-      /^@use\s+'@ids-group-ltd\/ids-design-system\/((?:styles|themes)\/[a-z0-9/-]+)'(?:\s+as\s+[\w-]+)?;?$/.exec(
+      /^@use\s+'(?:@ids-group-ltd\/ids-design-system\/)?((?:styles|themes)\/[a-z0-9/-]+)'(?:\s+as\s+[\w-]+)?;?$/.exec(
         line,
       )?.[1],
   );
@@ -420,8 +503,81 @@ function claims(value) {
     found.push({ kind: 'symbol', name: match[0], bare: text === match[0] });
   // An exported function is called, not imported by type: `avatarTint(seed, { chroma })`.
   for (const match of text.matchAll(/(?<![.\w])([a-z][A-Za-z0-9]{3,})\(/g))
-    found.push({ kind: 'symbol', name: match[1], bare: false });
+    found.push({ kind: 'symbol', name: match[1], bare: false, member: true });
   return found;
+}
+
+function claims(value) {
+  const found = shapeClaims(value).filter(
+    (claim) => !FRAMEWORK_NAMES.has(claim.name),
+  );
+  return found.length ? found : readableShapes(value);
+}
+
+// Shapes `shapeClaims` gives up on, read only when it found nothing. Each claim is `extended`, so
+// what it proves wrong is reported through `--audit` until the published hits are corrected.
+function readableShapes(value) {
+  if (typeof value !== 'string' || !value.trim()) return [];
+  const text = value.trim();
+  const extended = (claimList) =>
+    claimList
+      .filter((claim) => !FRAMEWORK_NAMES.has(claim.name))
+      .map((claim) => ({ ...claim, extended: true }));
+
+  const classFamily =
+    /^(?:(ds-[a-z0-9]+(?:-[a-z0-9]+)*)\s+)?\.([a-z][a-z0-9]*-)\*$/.exec(text);
+  if (classFamily)
+    return extended([
+      ...(classFamily[1]
+        ? [{ kind: 'element', name: classFamily[1], bare: false, scope: true }]
+        : []),
+      { kind: 'class-family', name: `.${classFamily[2]}*`, bare: false },
+    ]);
+
+  const sass =
+    /^(?:@include\s+[a-z][\w-]*\.([a-z][\w-]*)(?:\(.*\))?|[a-z][\w-]*\.([a-z][\w-]*)\(.*)\s*;?$/.exec(
+      text,
+    );
+  if (sass)
+    return extended([{ kind: 'sass', name: sass[1] ?? sass[2], bare: false }]);
+
+  if (/^data-[a-z][a-z0-9-]*[a-z0-9]$/.test(text))
+    return extended([{ kind: 'attribute', name: text, bare: false }]);
+
+  // `pagination.range`: a path through a config or intl interface, every segment a declared member.
+  if (/^[a-z][A-Za-z0-9]*(?:\.[a-z][A-Za-z0-9]*)+$/.test(text))
+    return extended(
+      text
+        .split('.')
+        .map((name) => ({ kind: 'symbol', name, bare: false, member: true })),
+    );
+
+  const keyValue = /^([a-z][A-Za-z0-9]*)\s*:\s*\S/.exec(text);
+  if (keyValue)
+    return extended([
+      { kind: 'symbol', name: keyValue[1], bare: false, member: true },
+    ]);
+
+  // A run of template attributes with no element: `[invalid]="true" hint="<message>"`,
+  // `tooltip="axis"`, `[data-density="compact"]`. Every one must parse, or the value is not one.
+  const binding =
+    /\s*(?:\[\(?([A-Za-z][\w-]*)\)?\](?:\s*=\s*(?:"[^"]*"|'[^']*'))?|\[([a-z][\w-]*)\s*=\s*(?:"[^"]*"|'[^']*')\]|\(([A-Za-z][\w-]*)\)(?:\s*=\s*(?:"[^"]*"|'[^']*'))?|([A-Za-z][\w-]*)\s*=\s*(?:"[^"]*"|'[^']*'))/y;
+  const names = [];
+  binding.lastIndex = 0;
+  while (binding.lastIndex < text.length) {
+    const match = binding.exec(text);
+    if (!match) return [];
+    names.push(match[1] ?? match[2] ?? match[3] ?? match[4]);
+  }
+  return extended(
+    names
+      .filter((name) => !/^(?:aria-|attr\.|class\.|style\.)/.test(name))
+      .map((name) =>
+        name.startsWith('data-')
+          ? { kind: 'attribute', name, bare: false }
+          : { kind: 'symbol', name, bare: false, member: true },
+      ),
+  );
 }
 
 // `--ds-*-bg`, `--<role>-subtle`, `--ds-combobox-` and `--ds-*-w | -h | -maxw`: each part is a
@@ -479,17 +635,43 @@ function resolves(surface, claim) {
       surface.symbols.has(claim.name) ||
       (claim.member === true &&
         (surface.directives?.has(claim.name) ||
+          surface.members?.has(claim.name) ||
           [...surface.elements.values()].some((members) =>
             members.has(claim.name),
           )))
     );
-  if (claim.kind === 'class') return surface.classes.has(claim.name);
+  if (claim.kind === 'class-family') {
+    const prefix = claim.name.slice(1, -1);
+    if (
+      [...surface.classes].some(
+        (name) => name.startsWith(prefix) && name.length > prefix.length,
+      )
+    )
+      return true;
+    return [...(surface.classPrefixes ?? [])].some((built) =>
+      built.startsWith(prefix),
+    );
+  }
+  if (claim.kind === 'attribute')
+    return surface.dataAttributes
+      ? surface.dataAttributes.has(claim.name)
+      : null;
+  if (claim.kind === 'sass')
+    return surface.sassCallables ? surface.sassCallables.has(claim.name) : null;
+  if (claim.kind === 'class') {
+    if (surface.classes.has(claim.name)) return true;
+    for (const prefix of surface.classPrefixes ?? [])
+      if (claim.name.startsWith(prefix)) return null;
+    return false;
+  }
   if (claim.kind === 'element') return surface.elements.has(claim.name);
   if (claim.kind === 'member') {
     // A directive selector is bindable on any element it is applied to, so it answers before the
     // element's own member list is consulted.
     if (surface.directives?.has(claim.name)) return true;
-    const members = surface.elements.get(claim.element);
+    const members =
+      surface.elements.get(claim.element) ??
+      surface.directiveMembers?.get(claim.element);
     return members ? members.has(claim.name) : null; // null: the element itself is unknown here
   }
   return null;
@@ -507,24 +689,244 @@ const GONE_AFTER = new Set([
   'selector-rename',
 ]);
 
-// Prose that names a token in order to say it does not exist: the spelling a blind replace
-// produces, a name the text explains away. Keyed `<tag> <item or row id | informational> <token>`.
+// Prose that names a token or a member in order to say it does not exist: the spelling a blind
+// replace produces, a name the text explains away. Keyed `<tag> <item or row id | informational>
+// <name>`.
 const DELIBERATE_PHANTOMS = new Set([
   'v0.9.0 dropdown-panel-radius --ds-select-panel-radius',
   'v0.10.0 informational --ds-pagehdr',
   'v0.10.0 informational --ds-topbar-margin-b',
   'v0.13.0 button-border-token-names-the-colour --ds-button-border-color-width',
   'v0.13.3 progress-and-meter-tokens-renamed-to-bar --ds-bar-bar-color',
+  'v0.11.3 banner-dismissed-output-never-existed dismissed',
+  'v0.11.3 toast-dismissed-output-never-existed dismissed',
+  'v0.11.3 table-row-click-output-never-existed rowClick',
+  // A consumer's own example name, a parameter name, an element a release before this one removed,
+  // or the spelling a blind replace would produce.
+  'v0.2.0 surface-subtle-token-rename --surface-subtle',
+  'v0.7.0 size-type-icon-button-to-dssize IconDsSize',
+  'v0.7.1 table-sortkey-non-null-when-unsorted orderBy',
+  'v0.8.0 informational myError',
+  'v0.10.0 link-button-local-reset link-button',
+  'v0.10.0 auth-brand-adapter brandAccent',
+  'v0.10.1 fields-warning-kind-is-reserved warningLimit',
+  'v0.10.1 fields-warning-kind-is-reserved softLimit',
+  'v0.11.4 toast-promise-messages-generic Saved',
+  'v0.13.0 chart-strong-gridline-token-removed --chart-grid-line-color-strong',
+  'v0.13.2 chart-active-mark-gains-release anchorWithin',
+  'v0.13.4 donut-chart-renamed-to-pie-chart chart-block',
+  'v0.14.0 bar-radius-hook ds-meter',
+  'v0.14.0 cell-template-context-typed-unknown Row',
+]);
+
+// Names the platform owns, which no tag of ours declares. Each one was read out of a published
+// manifest by the prose and value rules below; a name joins only after the audit shows it.
+const FRAMEWORK_NAMES = new Set([
+  // Angular core, forms and router
+  'booleanAttribute',
+  'ControlValueAccessor',
+  'formControl',
+  'formControlName',
+  'formField',
+  'FormUiControl',
+  'InputSignal',
+  'InputSignalWithTransform',
+  'NgControl',
+  'ngModel',
+  'numberAttribute',
+  'preserveFragment',
+  'RouterLink',
+  'routerLinkActive',
+  'Signal',
+  'strictTemplates',
+  'UrlTree',
+  'useValue',
+  'ValidationErrors',
+  'viewChild',
+  // Angular CDK
+  'backdropElement',
+  'cdk-overlay-container',
+  'cdkScrollable',
+  // DOM: an event, attributes and properties of native elements, browser APIs
+  'click',
+  'clientWidth',
+  'currentTarget',
+  'form',
+  'ResizeObserver',
+  'scrollWidth',
+  'sessionStorage',
+  'stopPropagation',
+  'type',
+  // JavaScript and TypeScript built-ins
+  'Date',
+  'indexOf',
+  'Intl',
+  'Math',
+  'NaN',
+  'null',
+  'Parameters',
+  'toLocaleString',
+  // CSS
+  'translateX',
+  // File extensions, read as classes by their leading dot
+  'cjs',
+  'cts',
+  'ts',
+  // Keys of the manifest schema itself
+  'appliesWhen',
+  'deleteList',
+]);
+
+// An `old` or `new` the surface cannot read, keyed `<version> <item id> <field>`, each with the
+// reason no name in it can be looked up. A value whose name resolves at neither tag, or only at
+// the wrong one, is never listed here: that is a defect in the manifest, not in the reader.
+const UNREAD_ALLOWED = new Map([
+  [
+    '0.5.0 combobox-docs-anchor old',
+    'a docs-site anchor, not a name in src/lib',
+  ],
+  [
+    '0.5.1 static-white-token-removed new',
+    'the CSS colour keyword that replaces the token',
+  ],
+  [
+    '0.8.0 ng-add-schematic-now-loads old',
+    'a CLI command; the schematic lives in schematics/, outside src/lib',
+  ],
+  [
+    '0.8.0 focus-partial-needs-use-line old',
+    'an unterminated `@use` path, a search prefix that names no single partial',
+  ],
+  ['0.10.0 universal-focus-ring-base-rule old', 'a CSS pseudo-class'],
+  [
+    '0.10.0 input-signal-types-widened-for-explicit-typings old',
+    'an Angular type; the inputs whose typing widened are named in the prose',
+  ],
+  ['0.10.1 fields-warning-kind-is-reserved old', 'an Angular forms type'],
+  [
+    '0.12.0 package-ships-one-bundle-per-entry-point old',
+    'a folder of the built package, which src/lib does not contain',
+  ],
 ]);
 
 const label = (claim) =>
-  claim.kind === 'member' ? `${claim.element}[${claim.name}]` : claim.name;
+  claim.kind === 'member' && claim.element
+    ? `${claim.element}[${claim.name}]`
+    : claim.name;
+
+// Every name a backticked span carries. A span is what a reader copies into a search, so a name
+// in it that exists at neither tag finds nothing in their code and says nothing about ours.
+function proseNames(text) {
+  if (typeof text !== 'string') return [];
+  const found = new Map();
+  const add = (claim) => found.set(`${claim.kind} ${label(claim)}`, claim);
+  for (const [, span] of text.matchAll(/`([^`]+)`/g)) {
+    for (const match of span.matchAll(
+      /(?<![\w-])--_?[a-z][a-z0-9-]*[a-z0-9](?![\w*-])/g,
+    ))
+      add({ kind: 'token', name: match[0] });
+    for (const match of span.matchAll(
+      /(?<![\w/@.-])(ds-[a-z0-9]+(?:-[a-z0-9]+)*)(?![\w*-])(?:\[\(?([A-Za-z][A-Za-z0-9]*)\)?\])?/g,
+    )) {
+      add({ kind: 'element', name: match[1] });
+      if (match[2]) add({ kind: 'member', element: match[1], name: match[2] });
+    }
+    // `dsLineSeries[highlighted]`: an input of the directive the attribute names.
+    for (const match of span.matchAll(
+      /(?<![\w-])([a-z][a-z0-9]*[A-Z][A-Za-z0-9]*)\[\(?([A-Za-z][A-Za-z0-9]*)\)?\]/g,
+    ))
+      add({ kind: 'member', element: match[1], name: match[2] });
+    // A binding with no element in front, `[invalid]` or `(closed)`; `(row) =>` is a parameter.
+    for (const match of span.matchAll(
+      /(?<![\w)\]-])\[\(?([a-z][A-Za-z0-9]*)\)?\]|(?<![\w)\]])\(([a-z][A-Za-z0-9]*)\)(?!\s*=>)/g,
+    ))
+      add({ kind: 'member', name: match[1] ?? match[2] });
+    for (const match of span.matchAll(
+      /(?<![\w$.#'"/@*=-])[a-z][a-z0-9]*[A-Z][A-Za-z0-9]*(?![\w-])/g,
+    ))
+      add({ kind: 'member', name: match[0] });
+    for (const match of span.matchAll(
+      /(?<![\w$.#'"/@*=-])([A-Z][a-z][A-Za-z0-9]*|DS_[A-Z0-9_]+)(?![\w-])(?:\.([a-z][A-Za-z0-9]*))?/g,
+    )) {
+      // A span of plain words under a capital is a label a component renders, `Share of total`.
+      if (/^[A-Z][a-z]*(?:\s+[a-z]+)*$/.test(span.trim())) continue;
+      add({ kind: 'symbol', name: match[1] });
+      if (match[2]) add({ kind: 'member', name: match[2] });
+    }
+    for (const match of span.matchAll(
+      /(?<![\w$)\].?!*/-])((?:\.[a-z](?:[a-z0-9-]*[a-z0-9])?)+)(?![\w(*-])/g,
+    ))
+      for (const name of match[1].split('.').filter(Boolean))
+        add({ kind: 'class', name });
+  }
+  return [...found.values()].filter(
+    (claim) => !FRAMEWORK_NAMES.has(claim.name),
+  );
+}
+
+// true, false, or null when this tag cannot say. A bare member answers to anything a template,
+// a subclass or a config object can name: an input, a directive, a class member, a declaration.
+function proseResolves(surface, claim) {
+  if (claim.kind === 'member' && !claim.element)
+    return (
+      surface.symbols.has(claim.name) ||
+      surface.declared.has(claim.name) ||
+      surface.members.has(claim.name) ||
+      surface.directives.has(claim.name) ||
+      [...surface.elements.values(), ...surface.directiveMembers.values()].some(
+        (members) => members.has(claim.name),
+      )
+    );
+  if (claim.kind === 'symbol')
+    return surface.symbols.has(claim.name) || surface.declared.has(claim.name);
+  // A `ds-*` word in prose is an element, a keyframe, a panel class or a partial; the prose does
+  // not say which, so any of them answers.
+  if (claim.kind === 'element')
+    return (
+      surface.elements.has(claim.name) ||
+      surface.keyframes.has(claim.name) ||
+      surface.classes.has(claim.name) ||
+      surface.quotedNames.has(claim.name) ||
+      [...surface.partials].some((partial) =>
+        partial.endsWith(`/${claim.name}`),
+      )
+    );
+  return resolves(surface, claim);
+}
+
+// `skipDsTokens` is set on the fields `phantomTokens` already reads, so a `--ds-*` name there is
+// reported once, by the rule that fails published manifests too.
+function phantomNames(text, before, after, location, skipDsTokens) {
+  const knownTokens = [...before.tokens, ...after.tokens];
+  const phantoms = [];
+  for (const claim of proseNames(text)) {
+    if (
+      skipDsTokens &&
+      claim.kind === 'token' &&
+      claim.name.startsWith('--ds-')
+    )
+      continue;
+    if (DELIBERATE_PHANTOMS.has(`${location} ${label(claim)}`)) continue;
+    const verdicts = [
+      proseResolves(before, claim),
+      proseResolves(after, claim),
+    ];
+    if (verdicts.some((verdict) => verdict !== false)) continue;
+    if (
+      claim.kind === 'token' &&
+      knownTokens.some((known) => known.startsWith(`${claim.name}-`))
+    )
+      continue;
+    phantoms.push(label(claim));
+  }
+  return phantoms;
+}
 
 function sweep() {
   const defects = [];
   const unresolved = [];
 
-  const manifests = readdirSync(join(ROOT, 'migrations'))
+  const manifests = readdirSync(MIGRATIONS)
     .filter((f) =>
       /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)\.json$/.test(f),
     )
@@ -541,6 +943,9 @@ function sweep() {
   const unreadable = [];
   const unchecked = [];
   const coverage = { values: 0, read: 0 };
+  const published = [];
+  const allowed = [];
+  const allowedUsed = new Set();
   let checked = 0;
 
   for (const file of manifests) {
@@ -572,9 +977,7 @@ function sweep() {
     }
     checked++;
 
-    const doc = JSON.parse(
-      readFileSync(join(ROOT, 'migrations', file), 'utf8'),
-    );
+    const doc = JSON.parse(readFileSync(join(MIGRATIONS, file), 'utf8'));
     for (const item of doc.items ?? []) {
       const verdict = checkItem(
         item,
@@ -586,6 +989,25 @@ function sweep() {
       defects.push(
         ...verdict.defects.map((line) => `${file}  ${item.id}\n      ${line}`),
       );
+      const findings = [...verdict.findings];
+      for (const { field, value, reason } of verdict.unread) {
+        const key = `${version} ${item.id} ${field}`;
+        if (reason === 'unreadable' && UNREAD_ALLOWED.has(key)) {
+          allowedUsed.add(key);
+          allowed.push(`${key}: \`${value}\` - ${UNREAD_ALLOWED.get(key)}`);
+          continue;
+        }
+        findings.push(
+          {
+            neither: `${field} \`${value}\` names nothing declared at ${prev} or at ${draft ? 'the working tree' : `v${version}`}`,
+            'wrong-tag': `${field} \`${value}\` resolves only on the other side of the boundary`,
+            unreadable: `${field} \`${value}\` could not be read, and UNREAD_ALLOWED gives no reason why`,
+          }[reason],
+        );
+      }
+      (draft ? defects : published).push(
+        ...findings.map((line) => `${file}  ${item.id}\n      ${line}`),
+      );
       unresolved.push(
         ...verdict.unresolved.map((line) => `${file} ${item.id}: ${line}`),
       );
@@ -593,16 +1015,25 @@ function sweep() {
       coverage.values += verdict.values;
       coverage.read += verdict.readValues;
     }
-    defects.push(
-      ...checkFileProse(
-        doc,
-        before,
-        after,
-        prev,
-        draft ? 'the working tree' : `v${version}`,
-      ).map((line) => `${file}\n      ${line}`),
+    const prose = checkFileProse(
+      doc,
+      before,
+      after,
+      prev,
+      draft ? 'the working tree' : `v${version}`,
+    );
+    defects.push(...prose.defects.map((line) => `${file}\n      ${line}`));
+    (draft ? defects : published).push(
+      ...prose.findings.map((line) => `${file}\n      ${line}`),
     );
   }
+  // Only a full sweep meets every key, so only a full sweep can call one stale.
+  if (!ONLY)
+    for (const key of UNREAD_ALLOWED.keys())
+      if (!allowedUsed.has(key))
+        defects.push(
+          `UNREAD_ALLOWED ${key}\n      answers for no unread value: the value is read now, or the item is gone`,
+        );
   if (ONLY && !manifests.length) {
     console.error(
       `check-manifest-truth: there is no migrations/${ONLY}.json to check.`,
@@ -618,7 +1049,16 @@ function sweep() {
         `boundary, so nothing is known about them:\n  ${unreadable.join('\n  ')}`,
     );
     if (defects.length)
-      report(defects, unresolved, checked, skipped, unchecked, coverage);
+      report({
+        defects,
+        unresolved,
+        count: checked,
+        skipped,
+        unchecked,
+        coverage,
+        allowed,
+        published,
+      });
     process.exit(1);
   }
   if (!checked) {
@@ -628,13 +1068,25 @@ function sweep() {
     );
     process.exit(1);
   }
-  report(defects, unresolved, checked, skipped, unchecked, coverage);
+  report({
+    defects,
+    unresolved,
+    count: checked,
+    skipped,
+    unchecked,
+    coverage,
+    allowed,
+    published,
+  });
 }
 
 // Exported so the selftest can exercise the rules against synthetic surfaces: the checkout is
 // shared with other sessions, so a test that mutates a real manifest can lose a race for the file.
 export function checkItem(item, before, after, prevTag, tag) {
   const defects = [];
+  // What the prose-name and unread-value rules find. The caller fails the draft on these and
+  // reports them for a published manifest, which is corrected by hand before they can gate it.
+  const findings = [];
   const unresolved = [];
   // A composite selector (`ds-list-item ::ng-deep .activator`) or a call signature
   // (`avatarTint(seed, { chroma })`) yields no single name to look up. Counting them is the
@@ -720,7 +1172,7 @@ export function checkItem(item, before, after, prevTag, tag) {
         continue;
       // A scope element renamed in the same release carries its new name in both halves.
       if (claim.scope && resolves(after, claim) === true) continue;
-      defects.push(
+      (claim.extended ? findings : defects).push(
         targetExists
           ? `old \`${label(claim)}\` does not exist at ${prevTag} — \`new\` is real, so the item renames something that was never there`
           : `old \`${label(claim)}\` does not exist at ${prevTag}, and \`new\` names nothing that does — the item migrates from nowhere to nowhere`,
@@ -733,7 +1185,7 @@ export function checkItem(item, before, after, prevTag, tag) {
       // Reached by `X` -> `X<T>` too, and that is deliberate: a type that gains a parameter with
       // a default is not a rename, so the bare name is meant to survive and the item is
       // mis-filed. Firing here is what says so; the fix is `behavior`, not an exemption.
-      defects.push(
+      (claim.extended ? findings : defects).push(
         `old \`${label(claim)}\` still resolves at ${tag} — the ${item.kind} did not happen`,
       );
     }
@@ -741,7 +1193,7 @@ export function checkItem(item, before, after, prevTag, tag) {
   for (const claim of newClaims) {
     const isThere = resolves(after, claim);
     if (isThere === false)
-      defects.push(
+      (claim.extended ? findings : defects).push(
         `new \`${label(claim)}\` does not exist at ${tag} — the target is not there`,
       );
   }
@@ -759,6 +1211,24 @@ export function checkItem(item, before, after, prevTag, tag) {
       `${tag} ${item.id}`,
     ))
       defects.push(
+        `${field} names \`${name}\`, which exists at neither ${prevTag} nor ${tag}`,
+      );
+  for (const field of [
+    'action',
+    'appliesWhen',
+    'note',
+    'pitfall',
+    'verify',
+    'restore',
+  ])
+    for (const name of phantomNames(
+      item[field],
+      before,
+      after,
+      `${tag} ${item.id}`,
+      !['verify', 'restore'].includes(field),
+    ))
+      findings.push(
         `${field} names \`${name}\`, which exists at neither ${prevTag} nor ${tag}`,
       );
   // A value counts as read when at least one name in it resolved at its tag, true or false.
@@ -781,8 +1251,29 @@ export function checkItem(item, before, after, prevTag, tag) {
   const values = ['old', 'new'].filter(
     (field) => typeof item[field] === 'string' && item[field].trim(),
   ).length;
+  // Why a value went unread decides whether an allowlist may answer for it. A name found at
+  // neither tag, or only at the other one, is a claim the tree contradicts.
+  const unread = [];
+  for (const [field, list, read, own, other] of [
+    ['old', claims(item.old), oldRead, before, after],
+    ['new', newClaims, newRead, after, before],
+  ]) {
+    if (read || typeof item[field] !== 'string' || !item[field].trim())
+      continue;
+    const reason = list.some(declaredAtNeither)
+      ? 'neither'
+      : list.some(
+            (claim) =>
+              resolves(own, claim) !== true && resolves(other, claim) === true,
+          )
+        ? 'wrong-tag'
+        : 'unreadable';
+    unread.push({ field, value: item[field].trim(), reason });
+  }
   return {
     defects,
+    findings,
+    unread,
     unresolved,
     unchecked,
     values,
@@ -807,6 +1298,19 @@ function phantomTokens(text, before, after, location) {
 
 export function checkFileProse(doc, before, after, prevTag, tag) {
   const defects = [];
+  const findings = [];
+  const proseHits = (text, location, skipDsTokens, where) => {
+    for (const name of phantomNames(
+      text,
+      before,
+      after,
+      location,
+      skipDsTokens,
+    ))
+      findings.push(
+        `${where} names \`${name}\`, which exists at neither ${prevTag} nor ${tag}`,
+      );
+  };
   for (const [index, line] of (doc.informational ?? []).entries())
     for (const name of phantomTokens(
       typeof line === 'string' ? line : line?.text,
@@ -817,9 +1321,30 @@ export function checkFileProse(doc, before, after, prevTag, tag) {
       defects.push(
         `informational[${index}] names \`${name}\`, which exists at neither ${prevTag} nor ${tag}`,
       );
+  for (const [index, line] of (doc.informational ?? []).entries()) {
+    proseHits(
+      typeof line === 'string' ? line : line?.text,
+      `${tag} informational`,
+      true,
+      `informational[${index}]`,
+    );
+    proseHits(
+      line?.verify,
+      `${tag} informational`,
+      false,
+      `informational[${index}] verify`,
+    );
+  }
   for (const row of doc.deleteList ?? [])
     for (const field of ['find', 'why', 'replaceWith']) {
       const values = Array.isArray(row[field]) ? row[field] : [row[field]];
+      for (const value of values)
+        proseHits(
+          value,
+          `${tag} ${row.id}`,
+          true,
+          `deleteList ${row.id} ${field}`,
+        );
       for (const value of values)
         for (const name of phantomTokens(
           value,
@@ -831,17 +1356,19 @@ export function checkFileProse(doc, before, after, prevTag, tag) {
             `deleteList ${row.id} ${field} names \`${name}\`, which exists at neither ${prevTag} nor ${tag}`,
           );
     }
-  return defects;
+  return { defects, findings };
 }
 
-function report(
+function report({
   defects,
   unresolved,
   count,
   skipped = [],
   unchecked = [],
   coverage = null,
-) {
+  allowed = [],
+  published = [],
+}) {
   console.log(
     `check-manifest-truth: ${count} manifest(s) against ${surfaceCache.size} tree(s).`,
   );
@@ -862,22 +1389,40 @@ function report(
     );
     for (const line of unresolved) console.log(`  ${line}`);
   }
-  if (defects.length) {
-    console.error(`\n${defects.length} claim(s) the tree does not support:\n`);
-    for (const line of defects) console.error(`  ${line}`);
-    console.error(
-      '\nA published manifest is executed. Correct the file so it reads as the final instruction, ' +
-        'and say nothing anywhere about the repair.',
+  if (allowed.length) {
+    console.log(
+      `\n${allowed.length} unread value(s) UNREAD_ALLOWED answers for, each with its reason:`,
     );
-    process.exit(1);
+    for (const line of allowed) console.log(`  ${line}`);
+  }
+  if (published.length)
+    console.log(
+      AUDIT
+        ? `\n${published.length} hit(s) of the prose-name and unread-value rules in published manifests:\n\n  ${published.join('\n  ')}`
+        : `\n${published.length} hit(s) of the prose-name and unread-value rules in published manifests, ` +
+            'reported by `--audit` and not failing this run.',
+    );
+  if (defects.length) {
+    const print = AUDIT ? console.log : console.error;
+    print(`\n${defects.length} claim(s) the tree does not support:\n`);
+    for (const line of defects) print(`  ${line}`);
+    if (!AUDIT) {
+      console.error(
+        '\nA published manifest is executed. Correct the file so it reads as the final instruction, ' +
+          'and say nothing anywhere about the repair.',
+      );
+      process.exit(1);
+    }
   }
   const read = coverage
     ? `${coverage.read} of ${coverage.values} old/new value(s) were read against their boundary`
     : 'every old/new was read against its boundary';
+  const unread = coverage ? coverage.values - coverage.read : 0;
   console.log(
-    coverage && coverage.read < coverage.values
-      ? `${read} and hold; the other ${coverage.values - coverage.read} are listed above and nothing is known about them.`
-      : `${read} and hold.`,
+    unread
+      ? `${read}; of the other ${unread}, ${allowed.length} allowlisted with a reason and ` +
+          `${unread - allowed.length} ${AUDIT ? 'listed above as hits' : 'reported as hits'}.`
+      : `${read}.`,
   );
 }
 

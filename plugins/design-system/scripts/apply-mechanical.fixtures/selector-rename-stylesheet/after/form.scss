@@ -1,0 +1,4 @@
+.form ds-autocomplete { width: 100%; }
+ds-autocomplete.compact,
+:host ::ng-deep ds-autocomplete > .panel { --ds-combobox-focus-shadow: none; }
+.ds-combobox-wrapper { display: block; }

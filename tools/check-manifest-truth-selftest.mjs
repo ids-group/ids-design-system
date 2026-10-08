@@ -10,7 +10,8 @@
 //
 //   node tools/check-manifest-truth-selftest.mjs
 import { execFileSync } from 'node:child_process';
-import { existsSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkItem, surfaceAt } from './check-manifest-truth.mjs';
@@ -24,6 +25,11 @@ const surface = ({
   elements = {},
   partials = [],
   keyframes = [],
+  members = [],
+  declared = [],
+  directives = [],
+  directiveMembers = {},
+  classPrefixes = [],
 }) => ({
   tokens: new Set(tokens),
   symbols: new Set(symbols),
@@ -33,6 +39,19 @@ const surface = ({
   elements: new Map(
     Object.entries(elements).map(([tag, members]) => [tag, new Set(members)]),
   ),
+  members: new Set(members),
+  declared: new Set(declared),
+  directives: new Set(directives),
+  directiveMembers: new Map(
+    Object.entries(directiveMembers).map(([name, inputs]) => [
+      name,
+      new Set(inputs),
+    ]),
+  ),
+  classPrefixes: new Set(classPrefixes),
+  quotedNames: new Set(),
+  dataAttributes: new Set(),
+  sassCallables: new Set(),
 });
 
 const rules = [
@@ -474,6 +493,141 @@ const rules = [
     after: surface({ elements: { 'ds-color-picker': [] } }),
     expect: 'hold',
   },
+  // The prose-name rule: every backticked name, in every prose field including `verify` and
+  // `restore`, is looked up at both tags. It reports through `findings`, which fail only the
+  // draft, so its verdict is read there and not from `defects`.
+  {
+    name: 'FINDS a backticked symbol in `verify` that neither tag declares',
+    item: {
+      id: 'x',
+      kind: 'behavior',
+      old: 'ds-table[sortKey]',
+      new: null,
+      verify: 'Every subclass of `TableComponent` reads `NeverDeclared` back.',
+    },
+    before: surface({
+      elements: { 'ds-table': ['sortKey'] },
+      symbols: ['TableComponent'],
+    }),
+    after: surface({
+      elements: { 'ds-table': ['sortKey'] },
+      symbols: ['TableComponent'],
+    }),
+    expect: 'hold',
+    findings: 1,
+  },
+  {
+    // A subclass collides with a protected member as surely as with an input, so a manifest
+    // naming one is naming something real.
+    name: 'HOLDS: a camelCase name that is a protected class member at one tag',
+    item: {
+      id: 'x',
+      kind: 'behavior',
+      old: 'ds-table[sortKey]',
+      new: null,
+      note: 'A subclass that declares `rowTrackBy` collides with ours.',
+    },
+    before: surface({ elements: { 'ds-table': ['sortKey'] } }),
+    after: surface({
+      elements: { 'ds-table': ['sortKey'] },
+      members: ['rowTrackBy'],
+    }),
+    expect: 'hold',
+    findings: 0,
+  },
+  {
+    name: 'FINDS a global token of another prefix that neither tag declares',
+    item: {
+      id: 'x',
+      kind: 'behavior',
+      old: 'ds-table[sortKey]',
+      new: null,
+      restore: 'Set `--chart-never-gap` back to 4px.',
+    },
+    before: surface({
+      elements: { 'ds-table': ['sortKey'] },
+      tokens: ['--chart-bar-gap'],
+    }),
+    after: surface({
+      elements: { 'ds-table': ['sortKey'] },
+      tokens: ['--chart-bar-gap'],
+    }),
+    expect: 'hold',
+    findings: 1,
+  },
+  {
+    name: 'HOLDS: framework names in prose are not looked up',
+    item: {
+      id: 'x',
+      kind: 'behavior',
+      old: 'ds-table[sortKey]',
+      new: null,
+      pitfall:
+        'An `InputSignal` override in a `ControlValueAccessor` fails under `strictTemplates`.',
+    },
+    before: surface({ elements: { 'ds-table': ['sortKey'] } }),
+    after: surface({ elements: { 'ds-table': ['sortKey'] } }),
+    expect: 'hold',
+    findings: 0,
+  },
+  // The unread-value rule: why a value went unread decides whether an allowlist may answer.
+  {
+    name: 'UNREAD: a pseudo-class holds no name, so only an allowlist can answer for it',
+    item: { id: 'x', kind: 'behavior', old: ':focus-visible', new: null },
+    before: surface({}),
+    after: surface({}),
+    expect: 'hold',
+    unread: 'unreadable',
+  },
+  {
+    name: 'UNREAD: an element that exists only at the later tag is a claim, not a gap',
+    item: { id: 'x', kind: 'behavior', old: 'ds-bar[semantics]', new: null },
+    before: surface({ elements: { 'ds-meter': [] } }),
+    after: surface({ elements: { 'ds-bar': ['semantics'] } }),
+    expect: 'hold',
+    unread: 'wrong-tag',
+  },
+  {
+    name: 'READS an interface member written as `key: value`',
+    item: { id: 'x', kind: 'behavior', old: null, new: 'durationMs: 5000' },
+    before: surface({ members: ['durationMs'] }),
+    after: surface({ members: ['durationMs'] }),
+    expect: 'hold',
+    unread: '',
+  },
+  {
+    name: 'READS an input of an attribute directive, `dsLineSeries[highlighted]`',
+    item: {
+      id: 'x',
+      kind: 'behavior',
+      old: 'dsLineSeries[highlighted]',
+      new: null,
+    },
+    before: surface({ directiveMembers: { dsLineSeries: ['highlighted'] } }),
+    after: surface({ directiveMembers: { dsLineSeries: ['highlighted'] } }),
+    expect: 'hold',
+    unread: '',
+  },
+  {
+    name: 'FINDS a class family that matches nothing, while an interpolated one is read',
+    item: {
+      id: 'x',
+      kind: 'class-rename',
+      old: 'ds-button .c-*',
+      new: '.never-*',
+    },
+    before: surface({
+      elements: { 'ds-button': [] },
+      classPrefixes: ['c-'],
+    }),
+    after: surface({
+      elements: { 'ds-button': [] },
+      classes: ['color-primary'],
+    }),
+    expect: 'hold',
+    findings: 1,
+    unread: '',
+  },
 ];
 
 let failed = 0;
@@ -494,12 +648,23 @@ for (const testCase of rules) {
     verdict.unresolved.length !== testCase.unresolved
   )
     ok = false;
+  if (
+    testCase.findings !== undefined &&
+    verdict.findings.length !== testCase.findings
+  )
+    ok = false;
+  const unread = verdict.unread.map((value) => value.reason).join(',');
+  if (testCase.unread !== undefined && unread !== testCase.unread) ok = false;
   if (!ok) failed++;
   console.log(
     `${ok ? 'ok   ' : 'FAIL '} ${testCase.name} — expected ${testCase.expect}, got ${got}` +
       (testCase.unresolved !== undefined
         ? ` (${verdict.unresolved.length} set aside)`
-        : ''),
+        : '') +
+      (testCase.findings !== undefined
+        ? ` (${verdict.findings.length} finding(s))`
+        : '') +
+      (testCase.unread !== undefined ? ` (unread: ${unread || 'none'})` : ''),
   );
 }
 
@@ -660,10 +825,101 @@ for (const [version, what] of UNCHECKABLE) {
   );
 }
 
+// The new rule classes fail the draft and only report a published manifest. Each case runs the
+// real sweep over a scratch migrations folder, so nothing in the checkout is written; the output
+// has to name the phantom too, or a red for any other reason would pass.
+{
+  const scratch = mkdtempSync(join(tmpdir(), 'manifest-truth-'));
+  const sweepOver = (version, verify, args = []) => {
+    const file = join(scratch, `${version}.json`);
+    writeFileSync(
+      file,
+      JSON.stringify({
+        version,
+        items: [
+          {
+            id: 'prose-names-a-name',
+            kind: 'behavior',
+            old: 'ds-button[variant]',
+            new: null,
+            verify,
+          },
+        ],
+        informational: [],
+        deleteList: [],
+      }),
+    );
+    try {
+      const output = execFileSync(
+        'node',
+        ['tools/check-manifest-truth.mjs', version, ...args],
+        {
+          cwd: ROOT,
+          encoding: 'utf8',
+          stdio: 'pipe',
+          env: { ...process.env, DS_TRUTH_MIGRATIONS: scratch },
+        },
+      );
+      return { status: 'green', output };
+    } catch (error) {
+      return {
+        status: 'red',
+        output: (error.stdout ?? '') + (error.stderr ?? ''),
+      };
+    } finally {
+      rmSync(file);
+    }
+  };
+  const phantom = '`NeverDeclaredAnywhere` is gone.';
+  const real = '`ds-button[variant]` is bound.';
+  try {
+    for (const [what, run, expected, mustSay] of [
+      [
+        'a draft naming a phantom in prose',
+        sweepOver('unreleased', phantom),
+        'red',
+        'NeverDeclaredAnywhere',
+      ],
+      [
+        'a draft naming only real names',
+        sweepOver('unreleased', real),
+        'green',
+        '',
+      ],
+      [
+        'a published manifest naming a phantom',
+        sweepOver('0.14.8', phantom),
+        'green',
+        '1 hit(s)',
+      ],
+      [
+        'the same under --audit',
+        sweepOver('0.14.8', phantom, ['--audit']),
+        'green',
+        'NeverDeclaredAnywhere',
+      ],
+    ]) {
+      ran++;
+      const ok = run.status === expected && run.output.includes(mustSay);
+      if (!ok) failed++;
+      console.log(
+        `${ok ? 'ok   ' : 'FAIL '} ${what}: expected ${expected}${mustSay ? ` naming ${mustSay}` : ''}, got ${run.status}`,
+      );
+    }
+  } finally {
+    rmSync(scratch, { recursive: true, force: true });
+  }
+}
+
 // Counted from what actually ran, never off the arrays: two of the assertions below live outside
 // them, and an array-derived tally can never disagree with itself — it is decoration, not a check.
 const fires =
-  rules.filter((rule) => rule.expect === 'fire').length + UNCHECKABLE.length;
+  rules.filter(
+    (rule) =>
+      rule.expect === 'fire' || rule.findings > 0 || Boolean(rule.unread),
+  ).length +
+  UNCHECKABLE.length +
+  1;
 if (failed) {
   console.error(`\n${failed} case(s) wrong.`);
   process.exit(1);

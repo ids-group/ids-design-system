@@ -1,0 +1,10 @@
+.header {
+  --ds-page-header-title-color: red;
+  padding: var(--ds-page-header-padding-x);
+  --my-pagehdr-gap: 0;
+  --ds-field-label-text-transform: none;
+  --ds-tab-label-text-transform: none;
+  stroke-width: var(--chart-line-width);
+  font-size: var(--chart-axis-font-size, 12px);
+  --chart-line-width-bold: 2px;
+}
