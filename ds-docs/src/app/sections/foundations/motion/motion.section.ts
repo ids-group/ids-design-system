@@ -183,13 +183,13 @@ const ENTER_PRESETS: readonly EnterPreset[] = [
     keyframes: 'ds-scale-in',
     label: 'Scale',
     feel: 'Grows into place from a micro-scale, out of the trigger edge — no travel.',
-    defaultFor: 'Modal, toast, banner, alert',
+    defaultFor: 'Banner, alert',
   },
   {
     keyframes: 'ds-fade-in',
     label: 'Fade',
     feel: 'Opacity only — the calmest option, and the steadiest on dense screens.',
-    defaultFor: 'Overlay panels, scrims, loading overlay',
+    defaultFor: 'Overlay panels, modal, toast, scrims, loading overlay',
   },
   {
     keyframes: 'ds-slide-edge-in',

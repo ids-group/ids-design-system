@@ -165,6 +165,50 @@
       "pitfall": "A `--ds-overlay-enter-scale` or `--ds-overlay-enter-offset` set on its own now changes nothing: each is read only by the keyframes that use it.",
       "restore": ":root { --ds-overlay-enter-keyframes: ds-scale-in; }",
       "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an opened tooltip or select panel fades in where it stands, and neither grows nor moves."
+    },
+    {
+      "id": "modal-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-modal-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-modal-enter-keyframes",
+        "--ds-modal-enter-scale"
+      ],
+      "detect": [
+        "--ds-modal-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless a modal must keep growing in: set `--ds-modal-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every `ds-modal` card; the backdrop faded already. `ds-banner` and `ds-alert` keep `ds-scale-in`.",
+      "pitfall": "A `--ds-modal-enter-scale` set on its own now changes nothing: it is read only while `--ds-modal-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-modal-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an opened `ds-modal` fades in where it stands and does not grow."
+    },
+    {
+      "id": "toast-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-toast-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-toast-enter-keyframes",
+        "--ds-toast-enter-scale"
+      ],
+      "detect": [
+        "--ds-toast-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless a toast must keep growing in: set `--ds-toast-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every `ds-toast` in the toast region. `ds-banner` and `ds-alert` keep `ds-scale-in`.",
+      "pitfall": "A `--ds-toast-enter-scale` set on its own now changes nothing: it is read only while `--ds-toast-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-toast-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an opened `ds-toast` fades in where it stands and does not grow."
     }
   ],
   "informational": [
@@ -265,6 +309,28 @@
         "--ds-overlay-enter-keyframes: ds-fade-in"
       ],
       "why": "ds-fade-in is the default entrance of overlay panels.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "modal-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-modal-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of `ds-modal`.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "toast-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-toast-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of `ds-toast`.",
       "replaceWith": "nothing"
     }
   ]

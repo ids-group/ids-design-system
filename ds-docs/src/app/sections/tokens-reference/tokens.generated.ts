@@ -5355,8 +5355,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-modal-enter-keyframes",
-        "value": "ds-scale-in",
-        "notes": "Modal card entrance @keyframes (default ds-scale-in); the backdrop always fades."
+        "value": "ds-fade-in",
+        "notes": "Modal card entrance @keyframes (default ds-fade-in); the backdrop always fades."
       },
       {
         "name": "--ds-modal-enter-duration",
@@ -5441,7 +5441,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-modal-enter-scale",
         "value": "0.97",
-        "notes": "Start scale for the modal card with ds-scale-in (default 0.97)."
+        "notes": "Start scale for the modal card once --ds-modal-enter-keyframes is ds-scale-in (default 0.97)."
       },
       {
         "name": "--ds-modal-backdrop",
@@ -8140,8 +8140,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-enter-keyframes",
-        "value": "ds-scale-in",
-        "notes": "Toast entrance @keyframes (default ds-scale-in, growing from the toast's centre)."
+        "value": "ds-fade-in",
+        "notes": "Toast entrance @keyframes (default ds-fade-in, fading in where the toast stands)."
       },
       {
         "name": "--ds-toast-enter-duration",
@@ -8156,7 +8156,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-toast-enter-offset",
         "value": "var(--space-2)",
-        "notes": "How far the toast travels in, and from where: positive means it rises from below its resting spot. The default ds-scale-in does not travel, so this applies once --ds-toast-enter-keyframes names a preset that does, such as ds-slide-in (default --space-2)."
+        "notes": "How far the toast travels in, and from where: positive means it rises from below its resting spot. The default ds-fade-in does not travel, so this applies once --ds-toast-enter-keyframes names a preset that does, such as ds-slide-in (default --space-2)."
       },
       {
         "name": "--ds-toast-min-width",
@@ -8171,7 +8171,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-toast-enter-scale",
         "value": "0.96",
-        "notes": "Start scale of the default ds-scale-in entrance (default 0.96)."
+        "notes": "Start scale once --ds-toast-enter-keyframes is ds-scale-in (default 0.96)."
       },
       {
         "name": "--ds-toast-bg-color-info",
