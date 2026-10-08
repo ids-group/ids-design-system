@@ -30,6 +30,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 17 | `17-table-column-hint` | what a `ds-table` header with `hint` shows when its label does not fit the column: only the hint as today, the full label over the hint, or a header that wraps instead - before/after screenshots of the docs demo at `8eb6ab9e` and `e0ff159f`, the three options drawn |
 | 18 | `18-table-header-clip` | the `ds-table` header label that clips with an ellipsis inside its column and the tooltip of a clipped hinted header (label, then hint) - before/after screenshots of the docs demo on dev and on `fix/table-header-clip`: narrow headers, focus ring, plain and hinted tooltip, with the measurements |
 | 19 | `19-tooltip-mechanism` | whether and when to split the tooltip code into files (the file drawn as coloured jobs with measured line counts), and when to merge the tooltip-group branch into dev; the label-and-hint question is settled and checked in the browser, and the whole mechanism is drawn in a folded block |
+| 20 | `20-tooltip-term-variants` | which of three builds the library ships for a term with a definition (a directive on any element, a class for the look only, or a component on a button), each as a live example with hover, Tab, Enter, Esc, click-to-pin and a sortable table header; the tooltip, the info icon and the term share one engine |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
