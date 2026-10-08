@@ -111,10 +111,14 @@
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
       "restore": null,
       "verify": "The app builds with no member-collision error against TooltipDirective or TooltipPanelComponent.",
-      "note": "TooltipPanelComponent gained the protected segments. TooltipDirective gained the public dsTooltipPinOnClick, the protected onClick and onPointerLeave, and the private document, hostPinOnClick, pinsOnClick, pin, unpin, pointArrowAtHost, contains and ownText, and lost dsTooltipClippedLead."
+      "note": "TooltipPanelComponent gained the protected segments and the public arrow. TooltipDirective gained the public dsTooltipPinOnClick and dsTooltipArrow, the protected onClick and onPointerLeave, and the private document, hostPinOnClick, pinsOnClick, pin, unpin, pointArrowAtHost, contains and ownText, and lost dsTooltipClippedLead."
     }
   ],
   "informational": [
+    {
+      "text": "A `<div actions>` (or `<div drawer-footer>`) wrapper in the footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet` gets `display: contents` at zero specificity, so its buttons take the footer's gap, alignment and `ds-modal-card` stacking. A `display` set on the wrapper in your own styles still wins.",
+      "verify": "Open a dialog, drawer or bottom sheet whose buttons sit in a `<div actions>` and confirm they are spaced like buttons that carry `actions` themselves, not touching."
+    },
     "`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a slot, or about an attribute that names no slot. That content still renders in the body. A test or screenshot that waited for the `Dev warning` toast these raised has nothing to wait for.",
     "dsTooltipPinOnClick opens a tooltip on hover and focus with no delay and keeps it open after a click until a click outside, Escape or blur; a second click closes it. Without it a click closes the tooltip as before. While pinned the host carries data-ds-tooltip-pinned, a styling hook for the pinned trigger. Every pinned trigger of the library shows --accent-strong ink on a translucent accent wash; --pinned-wash-amount (default 12%) sets the share of the accent, and @include pinned.cue() from styles/pinned gives a trigger of your own the same cue.",
     "ds-info-hint (InfoHintComponent) is an info icon button: ariaLabel names it, text shows on hover and focus and stays open after a click. The icon darkens on hover, sits on a muted circle while pressed and shows the pinned cue on a circle while pinned.",

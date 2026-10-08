@@ -226,9 +226,9 @@
     },
     {
       "id": "pie-chart-thickness-is-now-inner-radius",
-      "kind": "input-rename",
+      "kind": "behavior",
       "old": "ds-donut-chart[thickness]",
-      "new": "ds-pie-chart[innerRadius]",
+      "new": null,
       "surface": [
         "template",
         "typescript"
@@ -1867,10 +1867,10 @@
     {
       "id": "token-tracking-spelled-out-as-letter-spacing",
       "kind": "token-rename",
-      "old": "--ds-*-tracking",
-      "new": "--ds-*-letter-spacing",
+      "old": "--ds-button-tracking, --ds-field-label-tracking, --ds-modal-eyebrow-tracking, --ds-sidenav-footer-head-tracking, --ds-table-head-tracking",
+      "new": "--ds-button-letter-spacing, --ds-field-label-letter-spacing, --ds-modal-eyebrow-letter-spacing, --ds-sidenav-footer-head-letter-spacing, --ds-table-head-letter-spacing",
       "surface": "style",
-      "action": "Rewrite a `--ds-*` custom property ending in `-tracking` to end in `-letter-spacing`: `--ds-button-tracking` becomes `--ds-button-letter-spacing`.",
+      "action": "Rewrite each of the five to end in `-letter-spacing`: `--ds-button-tracking` becomes `--ds-button-letter-spacing`.",
       "appliesWhen": "5 tokens. `tracking` is typographic jargon, not a CSS property, so nothing else is affected. The description list's term and details tokens change prefix as well as suffix and are covered end to end by `description-item-tokens-leave-the-list-namespace`, so do not apply this rule to them.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
       "restore": null,
@@ -1884,10 +1884,10 @@
     {
       "id": "token-transform-spelled-out-as-text-transform",
       "kind": "token-rename",
-      "old": "--ds-*-transform",
-      "new": "--ds-*-text-transform",
+      "old": "--ds-field-label-transform, --ds-modal-eyebrow-transform",
+      "new": "--ds-field-label-text-transform, --ds-modal-eyebrow-text-transform",
       "surface": "style",
-      "action": "Rewrite a `--ds-*` custom property ending in `-transform` to end in `-text-transform`: `--ds-field-label-transform` becomes `--ds-field-label-text-transform`.",
+      "action": "Rewrite each of the two to end in `-text-transform`: `--ds-field-label-transform` becomes `--ds-field-label-text-transform`.",
       "appliesWhen": "2 tokens, both of them casing hooks. Neither ever carried the CSS `transform` property, which is what the old name read as. The description list's term and details tokens change prefix as well as suffix and are covered end to end by `description-item-tokens-leave-the-list-namespace`, so do not apply this rule to them.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
       "restore": null,
@@ -1919,8 +1919,8 @@
     {
       "id": "description-item-tokens-leave-the-list-namespace",
       "kind": "token-rename",
-      "old": "--ds-description-list-term-* | --ds-description-list-details-*",
-      "new": "--ds-description-item-term-* | --ds-description-item-details-*",
+      "old": "--ds-description-list-term-color, --ds-description-list-term-font-size, --ds-description-list-term-weight, --ds-description-list-term-tracking, --ds-description-list-term-transform, --ds-description-list-details-color, --ds-description-list-details-font-size, --ds-description-list-details-weight",
+      "new": "--ds-description-item-term-color, --ds-description-item-term-font-size, --ds-description-item-term-font-weight, --ds-description-item-term-letter-spacing, --ds-description-item-term-text-transform, --ds-description-item-details-color, --ds-description-item-details-font-size, --ds-description-item-details-font-weight",
       "surface": "style",
       "action": "Rewrite the eight term and details tokens onto the item, spelling out the three abbreviated suffixes as you go: `--ds-description-list-term-color` becomes `--ds-description-item-term-color`, `-term-font-size` keeps its name under the new prefix, and `-term-weight`, `-term-tracking`, `-term-transform`, `-details-weight` become `--ds-description-item-term-font-weight`, `-term-letter-spacing`, `-term-text-transform` and `-details-font-weight`. `-details-color` and `-details-font-size` change prefix only.",
       "appliesWhen": "Only those eight, and this item replaces the weight, tracking and transform spell-out rules for them: they change prefix as well as suffix, so applying both would leave a name that has never existed. `--ds-description-list-label-w`, `-row-gap` and `-col-gap` stay on the list, because the list is what they size.",
@@ -1944,8 +1944,8 @@
     {
       "id": "segmented-parts-are-segments",
       "kind": "token-rename",
-      "old": "--ds-segmented-btn-*",
-      "new": "--ds-segmented-segment-*",
+      "old": "--ds-segmented-btn-border, --ds-segmented-btn-h, --ds-segmented-btn-pad-x",
+      "new": "--ds-segmented-segment-border, --ds-segmented-segment-height, --ds-segmented-segment-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` to `--ds-segmented-segment-border`, `--ds-segmented-segment-height` and `--ds-segmented-segment-padding-x`.",
       "appliesWhen": "Only the segmented control's three part tokens, and it replaces the `-btn`, dimension and padding renames for them: those three carry a namespace change as well as a spelling one, so this item is the whole instruction and the others do not apply. `--ds-button-*`, `--ds-split-button-*`, `--ds-icon-button-*` and the pagination buttons all style real buttons and keep their names.",

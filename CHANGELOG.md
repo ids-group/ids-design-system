@@ -9,6 +9,11 @@
 
 ### Added
 
+- **`dsTooltipArrow` turns a tooltip's arrow off.** `[dsTooltipArrow]="false"` draws the panel with no
+  arrow pointing at the host; the default is `true`, so every tooltip keeps its arrow until it is set.
+  `TooltipDirective` gained the public `dsTooltipArrow` and `TooltipPanelComponent` the public
+  `arrow`, so a subclass declaring either name must rename it.
+
 - **`dsTooltipPinOnClick` keeps a tooltip open after a click.** With it the tip opens on hover and
   focus with no delay, and a click on the host keeps it open after the pointer leaves until a click
   outside, `Escape` or blur; a second click closes it. Without it a click closes the tip as before.
@@ -74,6 +79,13 @@
   click and pins nothing.
 
 ### Fixed
+
+- **A `<div actions>` wrapper lays its buttons out like buttons projected one by one.** In the
+  footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet`, the buttons inside a
+  `<div actions>` (or a `<div drawer-footer>`) touched; they now take the footer's gap, alignment
+  and, in `ds-modal-card`, its stacking when the row runs out of width. The wrapper gets
+  `display: contents` at zero specificity, so a `display` you set on it yourself still wins and keeps
+  your own layout.
 
 - **A tooltip's arrow points at the centre of its trigger.** It sat at the middle of the panel, so
   a panel pushed off a viewport edge pointed past a trigger near that edge, 41px off for a button

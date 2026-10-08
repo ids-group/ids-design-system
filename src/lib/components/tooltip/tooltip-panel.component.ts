@@ -22,6 +22,7 @@ import type { TooltipPlacement } from './tooltip.types';
     '[class.bottom]': "placement() === 'bottom'",
     '[class.left]': "placement() === 'left'",
     '[class.right]': "placement() === 'right'",
+    '[class.no-arrow]': '!arrow()',
   },
   encapsulation: ViewEncapsulation.Emulated,
 })
@@ -31,6 +32,8 @@ export class TooltipPanelComponent {
   protected readonly segments = computed(() => parseTooltipMarkup(this.text()));
   /** Side of the trigger the panel is positioned on; also drives the arrow class. */
   readonly placement = input.required<TooltipPlacement>();
+  /** Whether the arrow pointing at the trigger is drawn. */
+  readonly arrow = input(true);
   /** Element `id`, referenced by the trigger's `aria-describedby`. */
   readonly panelId = input<string>('');
 }

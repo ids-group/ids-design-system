@@ -187,6 +187,7 @@
 
       // ::ng-deep for projected children; a ds-button's own `width: fit-content` opts out of the stretch.
       & > ::ng-deep * { width: 100%; }
+      & > ::ng-deep div[actions] > * { width: 100%; }
     }
   }
 
@@ -214,6 +215,11 @@
       color: var(--_modal-impact-text-color);
     }
   }
+}
+
+// A `<div actions>` wrapper hands its buttons to the row. Zero specificity: a display set on it wins.
+:where(.actions) > ::ng-deep :where(div[actions]) {
+  display: contents;
 }
 
 .modal-static {
