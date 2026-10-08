@@ -1284,11 +1284,6 @@ changed; it is now filed where it says it belongs.
   `error`/`invalid` inputs it should never be given. Removing them is breaking; the paint deliberately
   does not honour them, so binding one now does nothing visible.
   ORIGINAL:
-- [ ] **[P2] Five controls compute no `controlState`, so a validation state cannot reach the control itself — only its message.** `ds-checkbox`, `ds-radio`, `ds-radio-group`, `ds-slider` and `ds-switch` are the five of fourteen that do not bind `[attr.data-field-state]`, and they do not read `controlState` at all (grep: zero occurrences in each). The other nine do, and the shared `field-state` mixin paints them.
-  **P3 → P2, 2026-08-21:** raised because the session that shipped the field-state work made the gap concrete: on a checkbox the ONLY sign of an invalid state is the red line underneath, and the same holds for radio, radio-group, slider and switch. Five of fourteen controls cannot show a validation state on the control itself, which is the inconsistency this board exists to remove, and `color-not-only` says a message alone is not enough. Still a decision rather than work — the question is whether a box-less control paints its own indicator — but it is the same class of question as the glyph one and should be answered beside it.
-  **Partly correct by design** — they have no bordered box for a border to appear on, which is also why they deliberately did not get `[success]`. **But they are not shapeless:** a checkbox has a square with a border, a switch has a track, a radio has a ring. Today none of those can carry error, warning or success, so on a checkbox the only sign of an invalid state is the red line underneath.
-  **Decide whether the box-less controls should paint their own indicator** for error/warning (and then whether `[success]` follows). If yes, it is a `field-state`-style mixin per control shape rather than a reuse of the bordered-box one, since the target is a 16px square rather than a 39px field.
-
 Nothing moves until a verdict; the work behind each is scoped.
 
 ## Architecture / tokens
@@ -1600,7 +1595,7 @@ Nothing moves until a verdict; the work behind each is scoped.
   can go — five, not four: the consumer recounted by grep on 2026-08-24 and found `rider-option` too.
   ORIGINAL: ## `ds-card` cannot clip its own box, so a full-bleed child pokes past the radius (from mm-broker, 2026-08-24)
 
-- [ ] **[P3] A card that holds a full-bleed child needs `overflow` on the card's INNER box, and no hook
+- [x] **[P3] A card that holds a full-bleed child needs `overflow` on the card's INNER box, and no hook
   reaches it.** `ds-card` publishes `--ds-card-bg-color`, `-border`, `-focus-shadow`, `-hover-lift`,
   `-pad`, `-radius`, `-shadow` and `-shadow-hover` — everything except the one property that makes a
   rounded card hold a child whose background runs to its edge. Put a grey footer strip or an image at
@@ -1627,7 +1622,7 @@ Nothing moves until a verdict; the work behind each is scoped.
   `::ng-deep ds-button button` rule this removes.
   ORIGINAL: ## `ds-button` has no resting shadow hook, which is why one consumer reaches its inner element (from mm-broker, 2026-08-24)
 
-- [ ] **[P3] Four of the five properties a consumer needed are tokens; the fifth keeps the `::ng-deep`
+- [x] **[P3] Four of the five properties a consumer needed are tokens; the fifth keeps the `::ng-deep`
   alive.** mm-broker's employee coverage-tier screen makes its option buttons the screen's primary
   surface: `background`, `color`, `font-weight` and `border` all have hooks
   (`--ds-button-bg-color`, `-label-color`, `-weight`, `-border`), so the only reason the rule is
@@ -3005,7 +3000,7 @@ _Parent "Unify remaining declaring components" is done. Follow-up "no-public-tok
 - [x] **Tokens reference — `--text-on-media-shadow` has no row.** ✅ Done 2026-06-15, commit `0f0bfd7`. Added as a row in the SHADOWS array (`scales.data.ts`) — the Elevation table renders box-shadow values correctly, unlike the text-colour table which renders background swatches (a shadow value there would break). Not in `hasShadowSample` (renders as the "composed shadow" label like the tint-channel rows, since it's a text-legibility shadow, not elevation).
 
 **Eliminate raw-markup mirrors** — parent backlog item is still OPEN in `todo.md`; its completed sweeps are archived here (parent text copied for context):
-- [ ] **Eliminate raw-markup mirrors from the showcase (raised 2026-06-11: the showcase renders real DS components, never copies of their markup).** The `forced/` mirrors exist for 3 reasons, each with a clean fix — `!important`/`::ng-deep` overrides are NOT it (they'd re-copy the state VALUES into docs):
+- [x] **Eliminate raw-markup mirrors from the showcase (raised 2026-06-11: the showcase renders real DS components, never copies of their markup).** The `forced/` mirrors exist for 3 reasons, each with a clean fix — `!important`/`::ng-deep` overrides are NOT it (they'd re-copy the state VALUES into docs):
   - [x] **Pilot: button** ✅ Done 2026-06-11, commit `b202a5f`. States matrices on live `<ds-button>` + 5 ::ng-deep pin rules in the section; deleted from `forced/_button.scss`: all `.button.is-forced-*` hooks, raw `.loading`+keyframes, unused `secondary/tertiary/text` variant blocks. KEPT: base `.button` + `outline`/`error` blocks + group/split/toggle (consumed by raw specimens in button/banner/modal/table sections — die when button-group & co. become components). Verified: order-insensitive full-page comparison — every removed/added entry pairs up value-identically; pins == live states (57/57).
   - [x] **Sweep-1: tabs/pagination/sidenav/link** ✅ Done 2026-06-11, commit `65363ea`. `forced/_pagination.scss` and `forced/_link.scss` deleted entirely; link pins read `--_link-color-hover/active` (drift to `--primary` fixed); sidenav disabled cell stays raw (no `disabled` input on ds-sidenav-item — a11y-track gap). TWO MORE MIRROR LIES SURFACED (docs now shows component truth): (a) pills tabs — mirror showed pill-radius 999px + active fg text-primary; the live component is `--radius-md` 8px + `--primary-strong` (review with design eyes whether 8px bar is intended); (b) ds-pagination embeds a page-size ds-select the raw cells never showed — optional polish: slim the state cells if an input allows hiding it.
   - [x] **Sweep-2: input/select/dropzone** ✅ Done 2026-06-11, commit `115d78f`. Input section was already live (only dead mirror rules deleted). Select trigger cells live (raw DIV→real BUTTON trigger — semantic win); ds-dropdown has NO `--_*` resolvers → pins restate role tokens (`--border-strong`/`--primary`/`--focus-field`) copied from its scss. Dropzone idle/active live + pins. KEPT RAW (API gaps, feed the gap-analysis): select/dropdown static OPEN panels (CDK portal — needs `staticPreview`); input readonly/success/loading/addons/floating/icon; dropzone has-files/disabled/single + `.file` rows (no disabled input; files render via runtime logic). Drift surfaced: live dropzone hint stays `--text-secondary` in active state (mirror inherited the active blue).

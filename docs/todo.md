@@ -8,13 +8,11 @@ is not tidied away. `[Pn]` sorts inside a bucket. A `[~]` item is half-done and 
 ## The index
 
 Generated — `node tools/todo-index.mjs` rewrites it from the items, and `--check` fails when it
-is stale. It was hand-kept until 2026-09-10 and drifted every time: 44 lines against 66 items,
-and two archived items reading as open for three days. Closing an item now means deleting the
-item and nothing else.
+is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**122 open — 3 P1, 8 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**123 open — 3 P1, 9 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 3
 
@@ -24,7 +22,7 @@ item and nothing else.
   - A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
   - `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
 
-### P2 — 8
+### P2 — 9
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -39,6 +37,8 @@ item and nothing else.
 - **Tooling**
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
+- **The field system — the two controls outside it, and the two with no box to paint**
+  - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
 ### P3 — 111
 
@@ -89,7 +89,7 @@ item and nothing else.
   - Transitions are missing or wrong in places, and nothing says where (Stas, 2026-09-04)
 - **Claude Design upload — what the freeze left open (recorded 2026-09-04)**
   - Thirteen obsolete paths on the project can only be deleted by its owner
-- **The field system — the two controls outside it, and the five with no box to paint**
+- **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-autocomplete`'s arrow keys walk a private copy of the list cursor
 - **Open verdicts, each drawn in a deck**
   - Which public tokens the library never reads go?
@@ -102,7 +102,7 @@ item and nothing else.
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
   - `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green
   - Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of deck `5-migration-manifest-audit`)
-- **The field system — the two controls outside it, and the five with no box to paint**
+- **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in, or say they are not fields (Stas asked 2026-08-20)
 - **Colour, interaction and typography tokens**
   - Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24)
@@ -162,7 +162,7 @@ item and nothing else.
   - Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck attached (not built, not closed)
 - **DS-docs**
   - Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below)
-- **The field system — the two controls outside it, and the five with no box to paint**
+- **The field system — the two controls outside it, and the two with no box to paint**
   - CDK Menu adoption (option B) — parked
 - **Tooling**
   - `templates` and `startingPoints` in the Claude Design manifest are unexplored, and so is what feeds the pane's "Usage notes for Claude" (recorded 2026-09-03)
@@ -796,7 +796,7 @@ beside another lane changing those three files.
   "Messages error, warning, hint", "Reserved message row" and "The glyph on the message line". Blanked and
   unregistered from here; `delete_files` answers 403 for a non-owner by every route tested.
 
-## The field system — the two controls outside it, and the five with no box to paint
+## The field system — the two controls outside it, and the two with no box to paint
 
 *This section also has items under **Decisions**, **Parked**.*
 
@@ -1140,9 +1140,11 @@ and the fifteen lint rules.
   **Why it is P3 and not higher:** the audit's damaging findings are all fixed (23 of 23), the lint gained M034–M037 and M039–M046, and the delete-table parity gate is green — so nothing here is protecting a consumer from a live defect. It is the difference between a format that is ahead of the field and one whose *enforcement posture* is too, which is the audit's own summary of the gap.
   **Cheapest honest first cut if it is picked up:** (6) and (7) are additive keys with a lint rule each and, pending a re-count over the 36 manifests, no back-fill. (1), (3) and (4) are the ones that change what the gate actually PROVES, and the board's own rule applies — a gate proves nothing until you have watched it fail.
 
-## The field system — the two controls outside it, and the five with no box to paint
+## The field system — the two controls outside it, and the two with no box to paint
 
 *This section also has items under **Asks**, **Parked**.*
+
+- [ ] **[P2] `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message.** They are the two field controls that do not bind `[attr.data-field-state]`; `ds-checkbox` and `ds-radio-group` do, and paint error and warning from it. A switch has a track and a slider a rail, and today neither can carry error, warning or success, so the only sign of an invalid state is the message line underneath, which `color-not-only` says is not enough. **Decide whether each paints its own indicator** for error/warning (and then whether `[success]` follows), the way `checkbox.component.scss` does for its box.
 
 - [ ] **[P3] `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in, or say they are not fields (Stas asked 2026-08-20).** Audited, and they are not "fields missing a feature" — they never had the wrapper. **`ds-number-stepper`** exposes `value`, `min`, `max`, `step`, `size`, `disabled`, `ariaLabel` and nothing else; **`ds-dropzone`** exposes `accept`, `multiple`, `files`, `disabled` plus two outputs, and a projected `[hint]` content slot (`dropzone.component.html:30`, used by mm-broker). Neither has a `label`, `hint` or `error` input, a `ds-field-message`, `resolveFieldMessage`, or the `field-label` mixin — verified by grep, all zero. Every other one of the fourteen fields has all of it.
   **So this is a feature addition, not a unification**, and that is why it is a decision rather than work: both would gain `label`, `hint`, `error`, `errors`, `invalid`, `touched`, `reserveMessage`, a message row, and the label/required/optional block.
@@ -1447,7 +1449,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 
 - [ ] **[P3] Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below).** A section-heading toggle that draws a visual "inspect" overlay on the live demos: colour-coded lines/boxes for paddings, gaps, sizes with values+units, plus WHICH token/class drives each value. Read computed styles + `getBoundingClientRect`; map values back to the `--space-*`/`--radius-*`/`--font-size-*` scales. **Rewritten 2026-07-24 → start as a scoped pilot:** spacing-only on ONE section (e.g. button), then generalize. Greenfield, docs-only, no product impact. _(Verified: nothing exists today.)_
 
-## The field system — the two controls outside it, and the five with no box to paint
+## The field system — the two controls outside it, and the two with no box to paint
 
 *This section also has items under **Asks**, **Decisions**.*
 
