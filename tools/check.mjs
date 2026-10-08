@@ -60,6 +60,8 @@ export const GROUPS = {
   // a change is cheapest to describe in the session that made it. `manifest-claims` is in: it reads
   // only the draft manifest and `## Unreleased`, which every PR can change. `token-defaults` is in:
   // any stylesheet edit can move a default, and it reads one tag and the working tree.
+  // `public-api-golden` is in: it parses the working tree alone in under 3 s, and the golden has to
+  // move in the commit that moves the surface.
   lint: [
     'tools-parse',
     'entry-point-imports',
@@ -78,6 +80,7 @@ export const GROUPS = {
     'dev-guards',
     'changelog-lint',
     'changelog-pending',
+    'public-api-golden',
     'manifest-coverage',
     'manifest-claims',
     'token-defaults',
@@ -100,8 +103,9 @@ export const GROUPS = {
   // asks whether a class is named, this one whether every member it gained or lost is. The PR gate
   // runs most of the rest too, but it is manual, so a release can be cut from a branch where it never
   // fired. `changelog-pending` is here because the cut folds `## Unreleased` into the release block,
-  // and a change it never named leaves with nothing describing it. Left out: deck-lint, whose subject
-  // is internal decks that never reach the package.
+  // and a change it never named leaves with nothing describing it. `public-api-golden` because the
+  // golden at a tag is what the next release's surface diff starts from. Left out: deck-lint, whose
+  // subject is internal decks that never reach the package.
   release: [
     'tools-parse',
     'class-surface-entry',
@@ -125,6 +129,8 @@ export const GROUPS = {
     'changelog-lint',
     'changelog-pending:selftest',
     'changelog-pending',
+    'public-api-golden:selftest',
+    'public-api-golden',
     'focus-rings',
     'docs-attrs',
     'color-families',
