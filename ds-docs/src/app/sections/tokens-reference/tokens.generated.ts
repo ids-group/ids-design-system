@@ -5638,8 +5638,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-overlay-enter-keyframes",
-        "value": "ds-slide-in",
-        "notes": "Entrance @keyframes for every portaled panel — default ds-slide-in, which fades the panel in while it travels from its trigger edge; also ds-scale-in / ds-fade-in, your own GLOBAL keyframes, or none."
+        "value": "ds-fade-in",
+        "notes": "Entrance @keyframes for every portaled panel — default ds-fade-in, which fades the panel in where it stands; also ds-slide-in / ds-scale-in, your own GLOBAL keyframes, or none."
       },
       {
         "name": "--ds-overlay-enter-duration",

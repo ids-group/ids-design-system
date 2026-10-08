@@ -143,7 +143,7 @@
       "verify": "A ds-bar-chart reloading with rows on screen shows those rows under a scrim and spinner, and one loading with empty data shows skeleton rows."
     },
     {
-      "id": "overlay-enter-keyframes-default-slide-in",
+      "id": "overlay-enter-keyframes-default-fade-in",
       "kind": "behavior",
       "old": "--ds-overlay-enter-keyframes",
       "new": null,
@@ -152,17 +152,19 @@
       ],
       "searchHints": [
         "--ds-overlay-enter-keyframes",
-        "--ds-overlay-enter-scale"
+        "--ds-overlay-enter-scale",
+        "--ds-overlay-enter-offset"
       ],
       "detect": [
         "--ds-overlay-enter-scale:",
+        "--ds-overlay-enter-offset:",
         "ds-scale-in"
       ],
-      "action": "None, unless overlay panels must keep growing from a smaller scale: set `--ds-overlay-enter-keyframes: ds-scale-in`.",
-      "appliesWhen": "Every CDK overlay panel the library opens: tooltip, popover, select, multi-select, autocomplete, the date, time and colour picker panels, and a `ds-menu-item` submenu. Ships in `styles/overlay-motion`, which `styles/ds` forwards. `ds-modal`, `ds-toast`, `ds-banner` and `ds-alert` keep `ds-scale-in`; a chart tooltip keeps `ds-fade-in`.",
-      "pitfall": "A `--ds-overlay-enter-scale` set on its own now changes nothing: it is read only while `--ds-overlay-enter-keyframes` is `ds-scale-in`.",
+      "action": "None, unless overlay panels must keep growing or travelling: set `--ds-overlay-enter-keyframes` to `ds-scale-in` or `ds-slide-in`.",
+      "appliesWhen": "Every CDK overlay panel the library opens: tooltip, popover, select, multi-select, autocomplete, the date, time and colour picker panels, and a `ds-menu-item` submenu. Ships in `styles/overlay-motion`, which `styles/ds` forwards. `ds-modal`, `ds-toast`, `ds-banner` and `ds-alert` keep `ds-scale-in`; a chart tooltip faded in already.",
+      "pitfall": "A `--ds-overlay-enter-scale` or `--ds-overlay-enter-offset` set on its own now changes nothing: each is read only by the keyframes that use it.",
       "restore": ":root { --ds-overlay-enter-keyframes: ds-scale-in; }",
-      "verify": "The default was `ds-scale-in` and is now `ds-slide-in`: an opened tooltip or select panel fades in while moving 4px from its trigger, and does not grow."
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an opened tooltip or select panel fades in where it stands, and neither grows nor moves."
     }
   ],
   "informational": [
@@ -255,14 +257,14 @@
       "replaceWith": "<span dsDefinitionTerm=\"...\">; keep a dotted underline that marks something other than a term with a definition"
     },
     {
-      "id": "overlay-enter-keyframes-slide-in",
+      "id": "overlay-enter-keyframes-fade-in",
       "surface": [
         "style"
       ],
       "find": [
-        "--ds-overlay-enter-keyframes: ds-slide-in"
+        "--ds-overlay-enter-keyframes: ds-fade-in"
       ],
-      "why": "ds-slide-in is the default entrance of overlay panels.",
+      "why": "ds-fade-in is the default entrance of overlay panels.",
       "replaceWith": "nothing"
     }
   ]
