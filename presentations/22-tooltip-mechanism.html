@@ -4,11 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Механизм тултипа</title>
-<meta name="ds-deck-status" content="implemented">
-<meta name="ds-deck-decided" content="2026-10-09">
-<meta name="ds-deck-evidence" content="src/lib/components/tooltip/tooltip-clip.ts - src/lib/components/tooltip/tooltip-ancestor-focus.ts - CHANGELOG.md Unreleased (Breaking)">
-<link rel="stylesheet" href="../ds.css">
-<link rel="stylesheet" href="../deck.css">
+<meta name="ds-deck-status" content="open">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
 <style>
   /* The tooltip panel rebuilt from tooltip-panel.component.scss on the same tokens. */
   .tip {
@@ -139,26 +137,169 @@
   .decided { width: 100%; border-collapse: collapse; font-size: var(--font-size-2xs); }
   .decided th, .decided td { padding: var(--space-1-5) var(--space-3); text-align: left; border-bottom: var(--border-width-default) solid var(--border-divider); vertical-align: top; }
   .decided td:first-child { font-family: var(--font-mono); white-space: nowrap; }
+  .bars2 { display: grid; gap: var(--space-1-5); margin: var(--space-2) 0; }
+  .bars2 .r { display: grid; grid-template-columns: 220px 1fr 70px; gap: var(--space-2); align-items: center; font: var(--font-size-xs) / 1.3 var(--font-sans); }
+  .bars2 .bar { height: 14px; background: var(--surface-muted); border-radius: var(--radius-sm); overflow: hidden; }
+  .bars2 .bar i { display: block; height: 100%; background: var(--accent); }
+  .bars2 .bar i.bad { background: var(--error); }
+  .bars2 .n { font-family: var(--font-mono); color: var(--text-secondary); text-align: right; }
 </style>
 </head>
 <body>
 <main>
   <header class="masthead">
-    <h1>Тултип: решено и сделано</h1>
-        <p class="lede">Оба вопроса закрыты, ниже что решено, что сделано и как это выбиралось. Как тултип устроен внутри - в свёрнутом блоке в конце.</p>
-    <div class="chips"><span class="chip is-done">Решено</span><span class="chip">TooltipDirective</span><span class="chip">dsDefinitionTerm</span><span class="chip">ds-info-hint</span><span class="chip">актуально на 2026-10-08</span></div>
+    <h1>Тултип: четыре предложения что улучшить</h1>
+    <p class="chat">Ответ нести в чат: «Тултип и состояния: деки»</p>
+    <p class="lede">Жирное название и разрезание файла уже решены и сделаны, они внизу. Сверху четыре предложения, что ещё можно унифицировать, ускорить или почистить. У каждого есть рекомендация и честная цена.</p>
+    <div class="chips"><span class="chip is-open">Нужно решение: 4</span><span class="chip">TooltipDirective</span><span class="chip">overlay</span><span class="chip">актуально на 2026-10-09</span></div>
   </header>
 
+  <section class="panel verdict">
+    <h2>Что от тебя нужно</h2>
+    <ol class="todo">
+      <li>
+        <span class="ask">Вынести положение панели и стрелку в четвёртый файл?</span>
+        <p class="mine"><b>Моё предложение:</b> да, как и с первыми двумя вырезками: каждый файл про одну работу.</p>
+        <p class="where"><a href="#q-position">К вопросу 1</a></p>
+      </li>
+      <li>
+        <span class="ask">Сначала замерить цену слушателей на ячейку таблицы?</span>
+        <p class="mine"><b>Моё предложение:</b> да, замер, а оптимизация только если он покажет проблему.</p>
+        <p class="where"><a href="#q-listeners">К вопросу 2</a></p>
+      </li>
+      <li>
+        <span class="ask">Сделать панель ленивой, чтобы она не грузилась до первого наведения?</span>
+        <p class="mine"><b>Моё предложение:</b> нет. Выигрыш около 2 КБ в gzip, цена - асинхронный показ.</p>
+        <p class="where"><a href="#q-lazy">К вопросу 3</a></p>
+      </li>
+      <li>
+        <span class="ask">Вынести общий помощник для «закрыть по Escape» из тултипа и подсказки графика?</span>
+        <p class="mine"><b>Моё предложение:</b> нет, выигрыш около 10 строк при риске для ветки без документа.</p>
+        <p class="where"><a href="#q-escape">К вопросу 4</a></p>
+      </li>
+    </ol>
+    <p class="cap">Согласен с предложением - нажми карточку «рекомендую» у каждого вопроса. Не согласен - нажми другую или напиши замечание. Внизу появится одна строка для чата.</p>
+  </section>
+
+  <section class="panel q" id="q-position" data-q="position" data-review="Вынести положение панели" data-review-note-only>
+    <h2>Вопрос 1. Вынести положение панели и стрелку в отдельный файл</h2>
+    <p>В <code>tooltip.directive.ts</code> осталось 444 строки. Около 66 из них (оценка по диапазонам строк: <code>positionFor</code>, <code>pointArrowAtHost</code>, три константы) только считают, где стоять панели и куда смотреть стрелке, и не знают про события и текст. Снаружи ничего не меняется.</p>
+    <div class="jobs" aria-label="Файл tooltip.directive.ts после первой нарезки">
+      <span class="j6" style="flex:66">положение и стрелка<br>около 66</span>
+      <span class="j4" style="flex:378">всё остальное<br>около 378</span>
+    </div>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Вынести в tooltip-position.ts</h3>
+        <p class="youpick"><b>Ты выбираешь</b>положение панели и стрелка живут в своём файле, директива вызывает их. Основной файл станет около 378 строк (оценка).</p>
+        <div class="files"><span class="file">tooltip.directive.ts<small>около 378</small></span><span class="file is-new">tooltip-position.ts<small>около 66</small></span></div>
+        <div class="pills"><span class="pill good">каждый файл про одну работу</span><span class="pill good">снаружи ничего</span><span class="pill mid">ещё один файл в папке</span></div>
+        <dl class="layer"><dt>Потребители</dt><dd class="none">не затронуты</dd><dt>Changelog и миграции</dt><dd>строка про состав членов <code>TooltipDirective</code>: <code>pointArrowAtHost</code> и <code>positionFor</code> уходят</dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Оставить как есть</h3>
+        <p class="youpick"><b>Ты выбираешь</b>положение остаётся в директиве, как сейчас.</p>
+        <div class="pills"><span class="pill good">ничего не трогать</span><span class="pill mid">444 строки в одном файле</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel q" id="q-listeners" data-q="listeners" data-review="Замер слушателей" data-review-note-only>
+    <h2>Вопрос 2. Цена слушателей на каждую ячейку таблицы</h2>
+    <p>Директива вешает 7 слушателей на свой элемент (<code>mouseenter</code>, <code>mouseleave</code>, <code>focusin</code>, <code>focusout</code>, <code>click</code>, <code>keydown</code>, <code>keydown.escape</code>; <code>grep -c</code> по <code>@HostListener</code>). Её ставит каждая ячейка колонки с обрезкой, и ещё 4 слушателя встаёт на фокусируемого родителя, если ячейка внутри него. Ниже расчёт, не замер: 5 колонок с обрезкой.</p>
+    <div class="bars2">
+      <div class="r"><span>100 строк</span><span class="bar"><i style="width:10%"></i></span><span class="n">3 500</span></div>
+      <div class="r"><span>500 строк</span><span class="bar"><i class="bad" style="width:50%"></i></span><span class="n">17 500</span></div>
+      <div class="r"><span>1000 строк</span><span class="bar"><i class="bad" style="width:100%"></i></span><span class="n">35 000</span></div>
+    </div>
+    <p class="cap">Расчёт: строки × 5 колонок × 7 слушателей. Реальная цена в миллисекундах и в памяти не измерена.</p>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Сначала замерить</h3>
+        <p class="youpick"><b>Ты выбираешь</b>я рисую таблицу на 500 и 1000 строк с обрезкой в 5 колонках и мерю время отрисовки и память. Если цифры плохие, возвращаюсь с решением.</p>
+        <div class="pills"><span class="pill good">решаем по цифрам</span><span class="pill mid">один замер, без правок кода</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Сразу делегировать события</h3>
+        <p class="youpick"><b>Ты выбираешь</b>один слушатель на таблицу вместо слушателей на каждую ячейку, директива регистрируется в общем реестре.</p>
+        <div class="pills"><span class="pill good">меньше слушателей</span><span class="pill bad">большая перестройка директивы</span><span class="pill bad">выигрыш не доказан</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Не трогать</h3>
+        <p class="youpick"><b>Ты выбираешь</b>считаем цену приемлемой.</p>
+        <div class="pills"><span class="pill mid">без цифр это догадка</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel q" id="q-lazy" data-q="lazy" data-review="Ленивая панель" data-review-note-only>
+    <h2>Вопрос 3. Ленивая загрузка панели</h2>
+    <p>Панель с разметкой и стилями лежит в той же сборке, что директива. Измерено на собранной библиотеке: весь тултип 30 962 байта (7 473 в gzip), из них панель с разметкой около 10 КБ, сжатая отдельно 2 140 байт (срез файла по смещениям, оценка доли).</p>
+    <div class="bars2">
+      <div class="r"><span>Весь тултип, gzip</span><span class="bar"><i style="width:100%"></i></span><span class="n">7 473</span></div>
+      <div class="r"><span>Панель с разметкой</span><span class="bar"><i class="bad" style="width:29%"></i></span><span class="n">около 2 140</span></div>
+    </div>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Не делать</h3>
+        <p class="youpick"><b>Ты выбираешь</b>панель остаётся в сборке. Показ остаётся синхронным.</p>
+        <div class="pills"><span class="pill good">без гонок при первом наведении</span><span class="pill mid">около 2 КБ в gzip лишние до первого показа</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Грузить панель по первому наведению</h3>
+        <p class="youpick"><b>Ты выбираешь</b>панель подгружается динамическим импортом, пока идёт задержка в 120 мс.</p>
+        <div class="pills"><span class="pill good">около 2 КБ в gzip уходят из начальной сборки</span><span class="pill bad">показ становится асинхронным: гонка с закрытием и закреплением</span><span class="pill bad">запрос на первое наведение</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel q" id="q-escape" data-q="escape" data-review="Общий помощник для Escape" data-review-note-only>
+    <h2>Вопрос 4. Общий помощник для «закрыть по Escape»</h2>
+    <p>Закрепление тултипа слушает <code>Escape</code> на документе в фазе перехвата, и подсказка графика (<code>ChartTooltipDirective.closeOnEscape</code>) делает то же самое с проверкой на отсутствие документа. Остальные оверлеи библиотеки используют <code>keydownEvents()</code> самого оверлея. Общие помощники уже есть и работают: <code>closeOnScroll</code> в 10 компонентах, <code>prepareOverlayEnter</code> в 9, <code>overlayPlacementOf</code> в 2 (считал по <code>git grep -l</code>, без файлов индекса и самого модуля).</p>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Не трогать</h3>
+        <p class="youpick"><b>Ты выбираешь</b>два места остаются каждое со своим кодом.</p>
+        <div class="pills"><span class="pill good">нулевой риск для графиков</span><span class="pill mid">около 10 строк дублируются</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Вынести в overlay-motion.ts</h3>
+        <p class="youpick"><b>Ты выбираешь</b>одна функция «слушать Escape на документе, вернуть отписку» для тултипа и графика.</p>
+        <p class="code">const stop = listenForEscape(document, () =&gt; this.close());</p>
+        <div class="pills"><span class="pill good">один код вместо двух</span><span class="pill bad">правка подсказки графика ради около 10 строк</span></div>
+        <dl class="layer"><dt>Потребители</dt><dd class="none">не затронуты</dd><dt>Changelog и миграции</dt><dd>строка про состав членов <code>ChartTooltipDirective</code> и <code>TooltipDirective</code></dd></dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <h2 class="band">Уже решено и сделано</h2>
+  <p class="cap">Здесь отвечать не нужно. Два первых вопроса этой деки закрыты, их аргументы свёрнуты.</p>
+
   <section class="decided">
-    <h2>Решено и сделано</h2>
+    <h2>Решено и сделано, в dev</h2>
     <p><b>Жирное название при обрезке пишет только <code>dsDefinitionTerm</code>.</b> Обычный <code>dsTooltip</code> показывает ровно то, что написано.</p>
-    <p><b>Код тултипа разрезан на три файла, два атрибута склеены в один.</b> <code>dsTooltipWhenClipped=".label"</code> заменил пару с <code>dsTooltipTextSelector</code>; клип-тест лежит в <code>tooltip-clip.ts</code>, фокус через родителя в <code>tooltip-ancestor-focus.ts</code>, основной файл остался на 444 строки (было 515, обещал около 360).</p>
+    <p><b>Код тултипа разрезан на три файла, два атрибута склеены в один.</b> <code>dsTooltipWhenClipped=".label"</code> заменил пару с <code>dsTooltipTextSelector</code>. Клип-тест лежит в <code>tooltip-clip.ts</code>, фокус через родителя в <code>tooltip-ancestor-focus.ts</code>, основной файл остался на 444 строках (было 515, обещал около 360). Старую разметку ловят ESLint и запись миграции.</p>
     <p class="evidence">src/lib/components/tooltip/tooltip-clip.ts - src/lib/components/tooltip/tooltip-ancestor-focus.ts - CHANGELOG.md Unreleased (Breaking)</p>
   </section>
 
-  <section class="panel q" id="q-label" data-q="label" data-review="Подпись названия при обрезке" data-review-note-only>
+  <details class="folded">
+    <summary>Решено: кто пишет жирное название при обрезке</summary>
+  <section class="panel">
     <h2>Вопрос 1. Кто пишет жирное название, когда оно обрезано</h2>
-    <p>У колонки есть название <b>Registered attendee count</b> и подсказка <b>People who confirmed a seat</b>. Колонка узкая, название обрезано. Тултип должен показать название жирным сверху, а подсказку под ним. Вопрос: кто за это отвечает. Картинки у всех вариантов одинаковые, потому что снаружи результат один; различается то, что написано в разметке и кто решает. Вариант «только у термина» уже сделан в <code>dev</code>. Выбор - клик по карточке.</p>
+    <p>У колонки есть название <b>Registered attendee count</b> и подсказка <b>People who confirmed a seat</b>. Колонка узкая, название обрезано. Тултип должен показать название жирным сверху, а подсказку под ним. Вопрос: кто за это отвечает. Картинки у всех вариантов одинаковые, потому что снаружи результат один; различается то, что написано в разметке и кто решает. Вариант «только у термина» уже сделан в <code>dev</code>. Выбрано то, что с рамкой.</p>
     <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(230px, 1fr))">
       <article class="opt" tabindex="0">
         <span class="badge is-same">так было раньше</span>
@@ -171,7 +312,7 @@ People who confirmed a seat</span></div>
         <dl class="layer"><dt>Что меняется в коде</dt><dd>убранный токен <code>TOOLTIP_LEADS_WITH_OWN_TEXT</code> возвращается как правило для любого хоста</dd></dl>
         <span class="chosen-mark">выбрано</span>
       </article>
-      <article class="opt is-pick" tabindex="0">
+      <article class="opt is-pick is-chosen" tabindex="0">
         <span class="badge is-pick">рекомендую, уже сделано в dev</span>
         <h3>Только у dsDefinitionTerm</h3>
         <p class="youpick"><b>Ты выбираешь</b>обычный <code>dsTooltip</code> делает ровно то, что написано. Жирное название при обрезке даёт только термин, то есть заголовок таблицы с <code>hint</code>.</p>
@@ -203,9 +344,13 @@ People who confirmed a seat</span></div>
     </div>
   </section>
 
-  <section class="panel q" id="q-split" data-q="split" data-review="Чистить ли код тултипа внутри" data-review-note-only>
+  </details>
+
+  <details class="folded">
+    <summary>Решено: нарезать код на файлы и склеить два атрибута</summary>
+  <section class="panel">
     <h2>Вопрос 2. Разрезать ли код тултипа на файлы</h2>
-    <p>Весь код директивы лежит в одном файле на 515 строк (<code>wc -l</code> на <code>dev</code>; до слияния параллельной ветки было 396). В нём перемешаны несколько работ. Вопрос: разрезать ли файл так, чтобы каждая работа жила отдельно. Снаружи ничего не меняется, это уборка внутри. На полосе ширина куска равна числу его строк, границы по диапазонам строк (оценка: сумма кусков 510, остальное пустые строки между блоками). Выбор - клик по карточке.</p>
+    <p>Весь код директивы лежит в одном файле на 515 строк (<code>wc -l</code> на <code>dev</code>; до слияния параллельной ветки было 396). В нём перемешаны несколько работ. Вопрос: разрезать ли файл так, чтобы каждая работа жила отдельно. Снаружи ничего не меняется, это уборка внутри. На полосе ширина куска равна числу его строк, границы по диапазонам строк (оценка: сумма кусков 510, остальное пустые строки между блоками). Выбрано то, что с рамкой.</p>
     <div class="jobs" aria-label="Файл tooltip.directive.ts по работам">
       <span class="j1" style="flex:34">импорты<br>34</span>
       <span class="j3" style="flex:94">фокус через родителя<br>94</span>
@@ -216,7 +361,7 @@ People who confirmed a seat</span></div>
       <span class="j5" style="flex:51">показ и aria<br>51</span>
       <span class="j6" style="flex:62">положение и стрелка<br>62</span>
     </div>
-    <div class="legend"><span><i class="j3"></i>уходит в tooltip-ancestor-focus.ts: около 94</span><span><i class="j2"></i>уходит в tooltip-clip.ts: около 60</span><span><i></i>остаётся в tooltip.directive.ts: около 360</span></div>
+    <div class="legend"><span><i class="j3"></i>уходит в tooltip-ancestor-focus.ts: 96 строк</span><span><i class="j2"></i>уходит в tooltip-clip.ts: 47 строк</span><span><i></i>остаётся в tooltip.directive.ts: 444 строки, оценка была 360</span></div>
     <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(230px, 1fr))">
       <article class="opt" tabindex="0">
         <h3>Не трогать</h3>
@@ -225,16 +370,17 @@ People who confirmed a seat</span></div>
         <dl class="layer"><dt>Потребители</dt><dd class="none">не затронуты</dd><dt>Changelog и миграции</dt><dd class="none">ничего</dd></dl>
         <span class="chosen-mark">выбрано</span>
       </article>
-      <article class="opt is-pick" tabindex="0">
+      <article class="opt is-pick is-chosen" tabindex="0">
         <span class="badge is-pick">рекомендую</span>
         <h3>Нарезать на три файла</h3>
         <p class="youpick"><b>Ты выбираешь</b>режу файл на три сейчас. Ветка параллельной сессии уже влита в <code>dev</code>, делить файл с ней больше не нужно. Снаружи ничего не меняется.</p>
-        <div class="files"><span class="file">tooltip.directive.ts<small>около 360</small></span><span class="file is-new">tooltip-clip.ts<small>около 60</small></span><span class="file is-new">tooltip-ancestor-focus.ts<small>около 94</small></span></div>
-        <div class="pills"><span class="pill good">каждый файл про одну работу</span><span class="pill good">нет конфликта двух сессий</span><span class="pill mid">основной файл остаётся около 360 строк</span></div>
+        <div class="files"><span class="file">tooltip.directive.ts<small>444</small></span><span class="file is-new">tooltip-clip.ts<small>47</small></span><span class="file is-new">tooltip-ancestor-focus.ts<small>96</small></span></div>
+        <div class="pills"><span class="pill good">каждый файл про одну работу</span><span class="pill good">нет конфликта двух сессий</span><span class="pill mid">основной файл остался на 444 строках</span></div>
         <dl class="layer"><dt>Потребители</dt><dd class="none">не затронуты</dd><dt>Changelog и миграции</dt><dd>строка про состав членов <code>TooltipDirective</code>; <code>class-surface</code> покажет, какие приватные члены ушли</dd></dl>
         <span class="chosen-mark">выбрано</span>
       </article>
-      <article class="opt" tabindex="0">
+      <article class="opt is-chosen" tabindex="0">
+        <span class="badge is-pick">выбрано тоже</span>
         <h3>Нарезать и склеить два атрибута</h3>
         <p class="youpick"><b>Ты выбираешь</b>то же, и ещё <code>dsTooltipWhenClipped</code> с <code>dsTooltipTextSelector</code> становятся одним атрибутом. Разметку придётся поправить в 9 местах.</p>
         <p class="code">dsTooltipWhenClipped
@@ -248,8 +394,7 @@ dsTooltipTextSelector=".option-label"
   </section>
 
 
-  <h2 class="band">Уже решено и сделано</h2>
-  <p class="cap">Здесь отвечать не нужно. Живые примеры раскрываются по клику.</p>
+  </details>
 
   <section class="panel">
     <h2>Решено и лежит в dev</h2>
@@ -258,7 +403,8 @@ dsTooltipTextSelector=".option-label"
       <tbody>
         <tr><td>**жирный** в dsTooltip</td><td>работает, <code>\*\*</code> даёт звёздочки; больше ничего не разбирается</td><td>в <code>dev</code></td></tr>
         <tr><td>dsTooltipClippedLead</td><td>удалён, нового входа вместо него нет</td><td>в <code>dev</code> (Breaking)</td></tr>
-        <tr><td>dsTooltipTextSelector, dsTooltipPlacement</td><td>остаются как есть</td><td>в <code>dev</code></td></tr>
+        <tr><td>dsTooltipPlacement</td><td>остаётся как есть</td><td>в <code>dev</code></td></tr>
+        <tr><td>dsTooltipTextSelector</td><td>удалён, селектор пишется в <code>dsTooltipWhenClipped=".label"</code>; ESLint и миграция предупреждают о старой разметке</td><td>в <code>dev</code> (Breaking)</td></tr>
         <tr><td>dsTooltipDelay</td><td>остаётся как есть</td><td>в <code>dev</code></td></tr>
         <tr><td>dsTooltipArrow</td><td>флаг, <code>[dsTooltipArrow]="false"</code> убирает стрелку</td><td>в <code>dev</code></td></tr>
         <tr><td>термин с определением</td><td>одна директива <code>dsDefinitionTerm</code> на любом теге: span, button, p. «Только класс» отклонён: нужно готовое решение</td><td>в <code>dev</code></td></tr>
@@ -334,7 +480,7 @@ dsTooltipTextSelector=".option-label"
     <p>Один класс <code>TooltipDirective</code> с двумя селекторами: <code>[dsTooltip]</code> и <code>[dsTooltipWhenClipped]</code>. Синие метки - входы, которые участвуют в шаге.</p>
     <div class="pipe">
       <div class="st"><b>Триггер</b><small>mouseenter, focusin. Обрезанный хост без фокуса слушает фокус своего ближайшего фокусного предка</small></div>
-      <div class="st"><b>Ворота</b><small>нет текста - не открываем; с <span class="inp">dsTooltipWhenClipped</span> ещё и «обрезан ли хост» (<span class="inp">dsTooltipTextSelector</span> указывает, какой внутренний элемент мерить)</small></div>
+      <div class="st"><b>Ворота</b><small>нет текста - не открываем; с <span class="inp">dsTooltipWhenClipped</span> ещё и «обрезан ли хост» (если в нём селектор, <span class="inp">dsTooltipWhenClipped=".label"</span> мерит внутренний элемент)</small></div>
       <div class="st"><b>Задержка</b><small><span class="inp">dsTooltipDelay</span>, 120 мс. Закрытие мгновенное</small></div>
       <div class="st"><b>Текст</b><small><span class="inp">dsTooltip</span>; пусто и обрезан - текст самого хоста; обрезан, хост - <code>dsDefinitionTerm</code> и тултип его не содержит - жирный текст хоста сверху</small></div>
       <div class="st"><b>Панель</b><small>CDK overlay рядом с хостом, <span class="inp">dsTooltipPlacement</span>, при нехватке места переворот. <code>**жирный**</code> режется на сегменты</small></div>
@@ -379,13 +525,13 @@ People who confirmed a seat</span>
       <thead><tr><th>Что</th><th>Тип, по умолчанию</th><th>Что делает</th><th>Кто задаёт внутри DS</th></tr></thead>
       <tbody>
         <tr><td>dsTooltip</td><td>string, ''</td><td>текст; пусто выключает; <code>**жирный**</code>, <code>\n</code></td><td>sidenav-item (3 места), table (4 места)</td></tr>
-        <tr><td>dsTooltipWhenClipped</td><td>boolean, false</td><td>открывать только пока хост показывает меньше текста, чем держит; без <code>dsTooltip</code> раскрывает текст хоста</td><td>6 компонентов, 14 мест</td></tr>
-        <tr><td>dsTooltipTextSelector</td><td>string | null, null</td><td>внутренний элемент, который мерить и чей текст раскрывать</td><td>4 компонента, 9 мест</td></tr>
+        <tr><td>dsTooltipWhenClipped</td><td>boolean | string, выключено</td><td>открывать только пока хост показывает меньше текста, чем держит; строка-селектор мерит внутренний элемент; без <code>dsTooltip</code> раскрывает проверяемый текст</td><td>6 компонентов, 14 мест</td></tr>
+        <tr class="is-gone"><td>dsTooltipTextSelector</td><td>удалён</td><td>селектор теперь пишется в <code>dsTooltipWhenClipped=".label"</code></td><td>9 мест в 4 компонентах переписаны</td></tr>
         <tr><td>dsTooltipPlacement</td><td>top | bottom | left | right, top</td><td>сторона; при нехватке места противоположная</td><td>sidenav-item (3 места, <code>right</code>)</td></tr>
         <tr><td>dsTooltipArrow</td><td>boolean, true</td><td><code>false</code> убирает стрелку панели</td><td><span class="tag same">никто</span> флаг для приложений</td></tr>
         <tr><td>dsTooltipPinOnClick</td><td>boolean, false</td><td>клик закрепляет тултип до клика мимо, Esc или потери фокуса; пока закреплён, хост несёт <code>data-ds-tooltip-pinned</code></td><td>задают <code>dsDefinitionTerm</code> и <code>ds-info-hint</code></td></tr>
         <tr><td>dsTooltipDelay</td><td>number, 120</td><td>миллисекунды до появления</td><td><span class="tag same">никто</span> решено оставить</td></tr>
-        <tr><td>hostElement, isClipped()</td><td>публичный геттер и метод</td><td>нужны только чтобы один экземпляр спрашивал другой, какой из обрезанных хостов предка первый в документе</td><td>только сама директива</td></tr>
+        <tr><td>hostElement, isClipped()</td><td>теперь приватные</td><td>нужны только чтобы один экземпляр спрашивал другой, какой из обрезанных хостов предка первый в документе</td><td>только сама директива</td></tr>
         <tr><td>aria-describedby, id</td><td>пишет директива</td><td><code>ds-tooltip-N</code> на панели; ссылка на неё на хосте или на сфокусированном элементе, снимается при закрытии</td><td>-</td></tr>
         <tr><td>TooltipPanelComponent</td><td>text, placement, panelId</td><td>директива задаёт все три; <code>placement</code> обновляется после переворота</td><td>только директива</td></tr>
         <tr><td>tooltip-markup.ts</td><td>parse, escape, plain</td><td>разбор <code>**</code>, экранирование текста хоста, текст без маркеров для сравнения. Не экспортируется</td><td>директива и панель</td></tr>
@@ -397,7 +543,7 @@ People who confirmed a seat</span>
   <section class="panel">
     <h2>Кто как использует: 19 мест в 7 компонентах</h2>
     <table class="matrix">
-      <thead><tr><th>Компонент</th><th class="c">dsTooltip</th><th class="c">WhenClipped</th><th class="c">TextSelector</th><th class="c">Placement</th><th class="c">Delay</th></tr></thead>
+      <thead><tr><th>Компонент</th><th class="c">dsTooltip</th><th class="c">WhenClipped</th><th class="c">WhenClipped с селектором</th><th class="c">Placement</th><th class="c">Delay</th></tr></thead>
       <tbody>
         <tr><td>ds-select<span class="n">3</span></td><td class="c"><span class="dot off"></span></td><td class="c"><span class="dot on"></span></td><td class="c"><span class="dot on"></span></td><td class="c"><span class="dot off"></span></td><td class="c"><span class="dot off"></span></td></tr>
         <tr><td>ds-multi-select<span class="n">2</span></td><td class="c"><span class="dot off"></span></td><td class="c"><span class="dot on"></span></td><td class="c"><span class="dot on"></span></td><td class="c"><span class="dot off"></span></td><td class="c"><span class="dot off"></span></td></tr>
@@ -409,7 +555,7 @@ People who confirmed a seat</span>
       </tbody>
       <tfoot><tr><td>Всего</td><td class="c">2 компонента</td><td class="c">6</td><td class="c">4</td><td class="c">1</td><td class="c">0</td></tr></tfoot>
     </table>
-    <p class="src">Число у компонента - места использования. Считал по <code>src/lib/**/*.html</code>: 14 мест с <code>dsTooltipWhenClipped</code> и 5 с одним <code>dsTooltip</code> дают 19, девять мест с <code>dsTooltipTextSelector</code> входят в первые 14.</p>
+    <p class="src">Число у компонента - места использования. Считал по <code>src/lib/**/*.html</code>: 14 мест с <code>dsTooltipWhenClipped</code> и 5 с одним <code>dsTooltip</code> дают 19, девять мест с селектором (раньше <code>dsTooltipTextSelector</code>) входят в первые 14.</p>
   </section>
 
   <section class="panel">
@@ -418,16 +564,16 @@ People who confirmed a seat</span>
       <thead><tr><th>Что</th><th>Где в коде</th><th>Чем мешает</th></tr></thead>
       <tbody>
         <tr><td>Один флаг, три поведения</td><td><code>dsTooltipWhenClipped()</code> читается в 6 местах директивы</td><td>он переключает источник текста, фокус через предка, ворота открытия, закрытие по клавише и подсчёт <code>aria-describedby</code>: внутри директивы живёт вторая директива</td></tr>
-        <tr><td>Фокус через предка нужен только обрезанному режиму</td><td>константы и <code>firstClippedHost</code> в начале файла, <code>listenToFocusableAncestor</code> и общий <code>WeakMap</code></td><td>около 94 из 515 строк (оценка по диапазонам строк 35-75 и 209-261), и тест обычного тултипа тянет их за собой</td></tr>
-        <tr><td>Публичное только ради себя</td><td><code>hostElement</code>, <code>isClipped()</code></td><td>попали в публичный класс, потому что экземпляр спрашивает соседний; подкласс может на них опереться</td></tr>
-        <tr><td>Селектор без смысла в одиночку</td><td><code>dsTooltipTextSelector</code></td><td>во всех 9 местах DS стоит вместе с <code>dsTooltipWhenClipped</code>; это один выбор, записанный двумя атрибутами</td></tr>
+        <tr><td>Фокус через предка нужен только обрезанному режиму</td><td>константы и <code>firstClippedHost</code> в начале файла, <code>listenToFocusableAncestor</code> и общий <code>WeakMap</code></td><td>около 94 строк, теперь в <code>tooltip-ancestor-focus.ts</code> (96), и тест обычного тултипа тянет их за собой</td></tr>
+        <tr><td>Публичное только ради себя</td><td><code>hostElement</code>, <code>isClipped()</code></td><td>решено: стали приватными, соседей опрашивает <code>tooltip-ancestor-focus.ts</code></td></tr>
+        <tr><td>Селектор без смысла в одиночку</td><td><code>dsTooltipTextSelector</code></td><td>решено: один атрибут, <code>dsTooltipWhenClipped=".label"</code></td></tr>
       </tbody>
     </table>
   </section>
 
   </details>
 
-  <p class="src"><b>Источники, проверено 2026-10-08 на <code>dev</code>.</b> <code>tooltip.directive.ts</code> целиком (515 строк: <code>wc -l</code>; <code>dsTooltipWhenClipped()</code> читается в 6 местах: <code>grep -c</code>); <code>tooltip-panel.component.ts</code>; <code>tooltip-markup.ts</code>; все <code>dsTooltip*</code> в <code>src/lib/**/*.html</code>; импорты <code>TooltipDirective</code> в <code>src/lib</code> (sparkline и графики импортируют <code>ChartTooltipDirective</code>, это другой механизм). Размеры после разреза и 94 строки на фокус через родителя - оценка по диапазонам строк, не замер. Примеры тултипов собраны из SCSS панели на токенах <code>ds.css</code>, не из самого компонента.</p>
+  <p class="src"><b>Источники, проверено 2026-10-09 на <code>dev</code>.</b> <code>tooltip.directive.ts</code> целиком (444 строки после разреза: <code>wc -l</code>; <code>dsTooltipWhenClipped()</code> читается в 6 местах: <code>grep -c</code>); <code>tooltip-panel.component.ts</code>; <code>tooltip-markup.ts</code>; все <code>dsTooltip*</code> в <code>src/lib/**/*.html</code>; импорты <code>TooltipDirective</code> в <code>src/lib</code> (sparkline и графики импортируют <code>ChartTooltipDirective</code>, это другой механизм). Размер панели в gzip и 66 строк на положение - оценка по срезам собранного файла и диапазонам строк, не замер; число слушателей - расчёт. Примеры тултипов собраны из SCSS панели на токенах <code>ds.css</code>, не из самого компонента.</p>
 </main>
 
 <script>
@@ -486,12 +632,12 @@ People who confirmed a seat</span>
   }
   for (const card of document.querySelectorAll('[data-live]')) wire(card);
 
-  const PICK_KEY = 'ds-deck-tooltip-mechanism-picks-v6';
+  const PICK_KEY = 'ds-deck-tooltip-mechanism-picks-v7';
   const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
   const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private window */ } };
   const state = read(PICK_KEY, {});
   const sections = [...document.querySelectorAll('.q[data-q]')];
-  const labels = { label: 'Подпись названия при обрезке', split: 'Нарезать ли код тултипа' };
+  const labels = { position: 'Вынести положение панели', listeners: 'Слушатели на ячейку', lazy: 'Ленивая панель', escape: 'Помощник для Escape' };
   const optionName = (card) => card.querySelector('h3').textContent.trim();
   const choices = (section) => [...section.querySelectorAll('.opt:not([aria-disabled])')];
   function render() {
