@@ -7,6 +7,24 @@ Inputs: `open: model<boolean> = false`, `size: 'sm' | 'md' | 'lg' = 'md'`, `dang
 Output: `(closed): void` — fires on backdrop click, close button, or `open` being set to false. `(confirmed)` is declared on the component but no internal handler emits it; treat it as not implemented and emit confirmation from the consumer-side action button instead.
 Content slots: `[eyebrow]`, `[title-badge]`, `[body]`, `[impact]` (highlighted strip under the body for destructive consequences), `[actions]` (footer button row). Content with no slot attribute, or with an attribute that names no slot, renders in the body after `[body]`. Backdrop click + close button close the dialog.
 
+`actions` goes on each button or on one `<div actions>` around them; the wrapper's children lay out as the row's own items, with the same gap, alignment and stacking. A `display` you set on the wrapper replaces that.
+
+```html
+<ds-modal title="Unarchive program" [(open)]="open">
+  <div body>...</div>
+  <ds-button actions variant="outline" (pressed)="open.set(false)">Cancel</ds-button>
+  <ds-button actions (pressed)="confirm()">Unarchive</ds-button>
+</ds-modal>
+
+<ds-modal title="Unarchive program" [(open)]="open">
+  <div body>...</div>
+  <div actions>
+    <ds-button variant="outline" (pressed)="open.set(false)">Cancel</ds-button>
+    <ds-button (pressed)="confirm()">Unarchive</ds-button>
+  </div>
+</ds-modal>
+```
+
 <!-- inputs:ds-modal -->
 All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' | 'xl' | 'fullscreen' = 'md'`, `status: 'info' | 'success' | 'warning' | 'error' = null`, `title: required string`, `subtitle: string | null = null`, `dividers: boolean | null = null`, `closeOnBackdrop: boolean = true`, `persistent: boolean = false`, `staticPreview: boolean = false`
 <!-- /inputs -->

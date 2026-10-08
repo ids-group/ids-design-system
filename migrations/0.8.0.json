@@ -115,10 +115,9 @@
       "kind": "class-rename",
       "old": "ds-radio-group .group-label",
       "new": ".label",
-      "action": "Retarget `.group-label` to `.label` under ds-radio-group, or delete the rule. To keep the old look, scope the family tokens and set the line height, which has no hook: `ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); } ds-radio-group > .label { line-height: var(--line-height-flat); }`.",
-      "appliesWhen": "None of this is needed for most screens — matching the family is the point of the change.",
+      "action": "Retarget `.group-label` to `.label` under ds-radio-group.",
+      "appliesWhen": "Only a rule of yours scoped under ds-radio-group that names `.group-label`. The label's new type is `radio-group-label-type-joins-field-labels`.",
       "pitfall": "`.group-label` is ALSO the class `ds-sidenav-group` uses for its heading, and that one is unchanged. A repo-wide rename takes the sidenav heading with it. Only rules scoped under ds-radio-group are affected.",
-      "note": "Two changes to one element: the class, and the type — the label draws `--font-weight-bold` at `--font-size-xs` on `--line-height-base` now instead of its own medium weight at `--font-size-s` on `--line-height-flat`. It was the only field label drawing its own, and beside an input it read as a different kind of element.",
       "searchHints": [
         "group-label",
         ".group-label",
@@ -126,7 +125,21 @@
         "radio-group",
         "label"
       ],
+      "surface": "style"
+    },
+    {
+      "id": "radio-group-label-type-joins-field-labels",
+      "kind": "behavior",
+      "old": "ds-radio-group",
+      "new": null,
+      "action": "None, unless a screen needs the old look: scope the family tokens and set the line height, which has no hook, as in `restore`.",
+      "appliesWhen": "Every ds-radio-group label. None of this is needed for most screens — matching the family is the point of the change.",
+      "note": "The label draws `--font-weight-bold` at `--font-size-xs` on `--line-height-base` now instead of its own medium weight at `--font-size-s` on `--line-height-flat`. It was the only field label drawing its own, and beside an input it read as a different kind of element.",
+      "searchHints": [
+        "ds-radio-group"
+      ],
       "surface": "style",
+      "verify": "A ds-radio-group label renders at the weight, size and line height of a ds-input label beside it, or at the old medium weight and size where the restore snippet is in place.",
       "restore": "ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); } ds-radio-group > .label { line-height: var(--line-height-flat); }"
     },
     {

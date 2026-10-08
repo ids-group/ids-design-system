@@ -9,6 +9,11 @@
 
 ### Added
 
+- **`dsTooltipArrow` turns a tooltip's arrow off.** `[dsTooltipArrow]="false"` draws the panel with no
+  arrow pointing at the host; the default is `true`, so every tooltip keeps its arrow until it is set.
+  `TooltipDirective` gained the public `dsTooltipArrow` and `TooltipPanelComponent` the public
+  `arrow`, so a subclass declaring either name must rename it.
+
 - **`dsTooltip` renders `**bold**`.** Text between a pair of `**` is bold; `\*\*` is a literal `**`
   and an unpaired `**` stays as typed. The panel builds its content from the parsed text, so no
   markup in a string is interpreted as HTML. Nothing else is parsed: no italics, code, lists or
@@ -39,6 +44,13 @@
   `DrawerComponent` lost the private `unslotted`, so a subclass member of that name no longer collides.
 
 ### Fixed
+
+- **A `<div actions>` wrapper lays its buttons out like buttons projected one by one.** In the
+  footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet`, the buttons inside a
+  `<div actions>` (or a `<div drawer-footer>`) touched; they now take the footer's gap, alignment
+  and, in `ds-modal-card`, its stacking when the row runs out of width. The wrapper gets
+  `display: contents` at zero specificity, so a `display` you set on it yourself still wins and keeps
+  your own layout.
 
 - **A pinned chart tooltip takes the pointer.** Its text can be selected and a link in a
   `tooltipTemplate` clicked; the panel's content ignored the pointer even while its pane was pinned,

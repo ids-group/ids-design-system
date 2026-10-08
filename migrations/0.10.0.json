@@ -170,10 +170,10 @@
     },
     {
       "id": "modal-error-boolean-to-status",
-      "kind": "input-rename",
+      "kind": "behavior",
       "old": "ds-modal[error]",
-      "new": "ds-modal[status]",
-      "action": "`[error]=\"true\"` and a bare `error` become `status=\"error\"`. `[error]=\"false\"` and any unset case become nothing at all. A computed `[error]=\"expr\"` becomes `[status]=\"expr && 'error'\"` — the input takes false and undefined as \"no status\", so the short form binds under strictTemplates; `[status]=\"expr ? 'error' : null\"` is equally correct.",
+      "new": null,
+      "action": "On `ds-modal` and `ds-modal-card` alike: `[error]=\"true\"` and a bare `error` become `status=\"error\"`. `[error]=\"false\"` and any unset case become nothing at all. A computed `[error]=\"expr\"` becomes `[status]=\"expr && 'error'\"` — the input takes false and undefined as \"no status\", so the short form binds under strictTemplates; `[status]=\"expr ? 'error' : null\"` is equally correct.",
       "pitfall": "The mapping is mechanical but the RESULT is not the same dialog. A status drives four things now rather than one: the icon-badge tint, the title colour, a default icon, and the ARIA role — error and warning make the dialog an `alertdialog`, which changes how assistive tech announces and traps it. On ds-modal-card both are overridable (`icon` beats the status pick, an explicit `dialogRole` beats the status role); ds-modal has neither input, so its status icon and role are fixed. The default icon is deliberate: a tint alone signals by colour only.",
       "note": "`error: boolean` became `status: DsStatus` (`info | success | warning | error`), because a boolean cannot express a warning or an info dialog, and the library's `DsStatus` vocabulary already can.",
       "searchHints": [
@@ -184,7 +184,8 @@
         "ModalComponent",
         "dialogRole"
       ],
-      "surface": "template"
+      "surface": "template",
+      "verify": "No `ds-modal` or `ds-modal-card` binds `error`, and each one that did carries `status=\"error\"` or a `[status]` expression that yields `'error'` exactly where the old binding was true."
     },
     {
       "id": "chips-cap-by-width-by-default",

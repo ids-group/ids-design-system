@@ -97,6 +97,67 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Footer · actions on each button or on a wrapper
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      actions
+    </code> goes on each button or on one
+    <code class="t-mono-inline">
+      &lt;div actions&gt;
+    </code>
+    around them; both lay the buttons out the same.
+  </p>
+
+  <div class="demo static-demo">
+    <ds-drawer
+      staticPreview
+      title="actions on each button">
+      <p
+        class="t-s"
+        style="color: var(--text-secondary); margin: 0">
+        Update the start time and assigned crew for the Lane 04 morning shift.
+      </p>
+
+      <ds-button
+        actions
+        color="neutral"
+        variant="outline">
+        Cancel
+      </ds-button>
+
+      <ds-button actions>
+        Save
+      </ds-button>
+    </ds-drawer>
+  </div>
+
+  <div class="demo static-demo">
+    <ds-drawer
+      staticPreview
+      title="&lt;div actions&gt; wrapper">
+      <p
+        class="t-s"
+        style="color: var(--text-secondary); margin: 0">
+        Update the start time and assigned crew for the Lane 04 morning shift.
+      </p>
+
+      <div actions>
+        <ds-button
+          color="neutral"
+          variant="outline">
+          Cancel
+        </ds-button>
+
+        <ds-button>
+          Save
+        </ds-button>
+      </div>
+    </ds-drawer>
+  </div>
+
+  <h3 class="block-title t-h4">
     Placements
   </h3>
 
