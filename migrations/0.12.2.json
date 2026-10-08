@@ -206,9 +206,9 @@
       "surface": "style",
       "old": "--ds-table-hscroll-bottom",
       "new": "--ds-table-sticky-scrollbar-offset",
-      "action": "Rename `--ds-table-hscroll-bottom` to `--ds-table-sticky-scrollbar-offset`, keeping the value — unless the value is a negative offset equal to your scroll container's bottom padding, which is deleted instead (delete list: table-hscroll-bottom-workaround).",
+      "action": "Rename `--ds-table-hscroll-bottom` to `--ds-table-sticky-scrollbar-offset`, keeping the value.",
       "appliesWhen": "Only a stylesheet of yours that sets the token. Nothing in a template or in TypeScript changes, and `stickyScrollbar` itself, the bar's behaviour and every other `--ds-table-*` token are untouched.",
-      "pitfall": "The old name is inert rather than invalid, so a declaration left behind is not an error anywhere — the bar simply stops taking your offset and falls back to the measured one, which on most pages looks almost right.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind is not an error anywhere — the bar simply stops taking your offset and falls back to the measured one, which on most pages looks almost right. A negative value equal to your scroll container's bottom padding keeps working after the rename and moves the bar a second time, because the table now cancels that padding itself (delete list: table-hscroll-bottom-workaround).",
       "note": "The knob now carries the name of the feature it belongs to, beside `stickyScrollbar` and the new `[stickyScrollbarOffset]` input, so the three greppable spellings of one idea agree. The same value is also reachable per table through that input and app-wide through `DS_CONFIG.table.stickyScrollbarOffset`; the token still out-ranks both.",
       "verify": "No stylesheet declares `--ds-table-hscroll-bottom`, and every offset the sticky scrollbar takes comes from `--ds-table-sticky-scrollbar-offset`, `[stickyScrollbarOffset]` or `DS_CONFIG.table.stickyScrollbarOffset`.",
       "searchHints": [
@@ -275,9 +275,10 @@
       "id": "table-hscroll-bottom-workaround",
       "surface": "style",
       "find": [
-        "--ds-table-hscroll-bottom: -"
+        "--ds-table-hscroll-bottom: -",
+        "--ds-table-sticky-scrollbar-offset: -"
       ],
-      "why": "The table measures its scroll container's bottom padding and cancels it itself. A negative offset written to do that job is dead under the old name and would move the bar a second time if carried over to --ds-table-sticky-scrollbar-offset, so delete it rather than rename it. The token stays legitimate for a scrollport whose reachable edge is not its padding edge — only the value that duplicates the measurement is dead.",
+      "why": "The table measures its scroll container's bottom padding and cancels it itself. A negative offset written to do that job is dead under the old name and moves the bar a second time once renamed to --ds-table-sticky-scrollbar-offset, so delete it under either name. The token stays legitimate for a scrollport whose reachable edge is not its padding edge — only the value that duplicates the measurement is dead.",
       "replaceWith": "nothing"
     },
     {
