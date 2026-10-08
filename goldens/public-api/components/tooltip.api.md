@@ -6,12 +6,12 @@
 @Directive({ selector: '[dsTooltip], [dsTooltipWhenClipped]' })
 export class TooltipDirective implements OnDestroy {
     public constructor();
+    private contains;
     private describedElement;
     private detachAncestor;
     private disclosesOwnText;
     private disposeRef;
     public readonly dsTooltip = input<string>('');
-    public readonly dsTooltipClippedLead = input<string>('');
     public readonly dsTooltipDelay = input<number>(120);
     public readonly dsTooltipPlacement = input<TooltipPlacement>('top');
     public readonly dsTooltipTextSelector = input<string | null>(null);
@@ -29,6 +29,7 @@ export class TooltipDirective implements OnDestroy {
     protected onKeydown(): void;
     protected onPointerEnter(): void;
     private readonly overlay;
+    private ownText;
     private positionFor;
     private ref;
     private scheduleShow;
@@ -43,6 +44,7 @@ export class TooltipDirective implements OnDestroy {
 export class TooltipPanelComponent {
     public readonly panelId = input<string>('');
     public readonly placement = input.required<TooltipPlacement>();
+    protected readonly segments = computed(…);
     public readonly text = input.required<string>();
 }
 
