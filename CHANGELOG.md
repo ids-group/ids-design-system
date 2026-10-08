@@ -14,8 +14,10 @@
   outside, `Escape` or blur; a second click closes it. Without it a click closes the tip as before.
   While pinned the host carries `data-ds-tooltip-pinned`. Every pinned trigger of the library shows
   the same cue: `--accent-strong` ink on a translucent accent wash that tints whatever surface it
-  sits on. `--pinned-wash-amount` (default `12%`) sets the share of the accent in the wash, and
-  `@include pinned.cue()` from `styles/pinned` gives your own pin-capable trigger the same cue.
+  sits on. Hovering a pinned trigger deepens the wash by 8 percentage points. `--pinned-wash-amount`
+  (default `12%`) sets the share of the accent in the wash, and `@include pinned.cue()` and
+  `@include pinned.cue-hover()` from `styles/pinned` give your own pin-capable trigger the same
+  cue and its hover.
   Use it on info and definition triggers only, never on a control whose click acts.
   `TooltipDirective` gained the public `dsTooltipPinOnClick`, protected `onClick` and
   `onPointerLeave`, and the private `document`, `hostPinOnClick`, `pinsOnClick`, `pin`, `unpin`
