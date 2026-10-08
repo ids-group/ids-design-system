@@ -13,10 +13,17 @@ export class BarChartComponent extends DsChartBase implements ChartDimmable, Cha
     public readonly dataTableResolved = this.defaults.dataTable;
     protected readonly dataTableRows = computed<readonly ChartDataRow[]>(…);
     public readonly dimOthers = input(false, { transform: booleanAttribute });
+    protected readonly entries = computed(…);
     protected entryLabel(entry: { row: BarChartRow; formattedValue: string; });
+    private readonly expanded;
     public readonly highlighted = input<string | null>(null);
+    protected hintId(key: string): string;
+    protected readonly holdsControls = computed(…);
+    private readonly idPrefix;
     protected readonly isEmpty = computed(…);
+    protected isExpanded(key: string): boolean;
     protected isSegmentDimmed(key: string): boolean;
+    public readonly labelPosition = input<BarChartLabelPosition>('top');
     protected readonly leaveMark = leaveMark;
     protected markStagger(index: number): string;
     public readonly max = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
@@ -25,19 +32,25 @@ export class BarChartComponent extends DsChartBase implements ChartDimmable, Cha
     protected onMarkNavigation(event: KeyboardEvent, index: number): void;
     protected onRowKey(row: BarChartRow, event: Event): void;
     public readonly partOfWhole = input(false, { transform: booleanAttribute });
+    protected readonly percentColumn = computed(…);
+    protected readonly reloading = computed(…);
     protected readonly renderReady = chartRenderGate(…);
     protected readonly resolvedMax = computed(…);
     protected readonly roving = rovingMarks(…);
     public readonly rowClicked = output<BarChartRow>();
     protected readonly rows = computed(…);
     public readonly showPercent = input(true, { transform: booleanAttribute });
+    protected readonly showsSkeleton = computed(…);
     protected readonly skeletonRows = computed(…);
     public readonly staggerMs = input(40, { transform: numberAttribute });
+    protected toggleRow(key: string, event?: Event): void;
     public readonly tooltip = input<ChartItemTooltipTrigger>('item');
     protected readonly tooltipContext = computed<ChartTooltipContext | null>(…);
     private readonly tooltipLingerResolved;
     protected readonly tooltipTemplate = contentChild<TemplateRef<{ $implicit: ChartTooltipContext; }>>(…);
 }
+
+export type BarChartLabelPosition = 'top' | 'start';
 
 export interface BarChartRow {
     id?: string;
@@ -49,6 +62,11 @@ export interface BarChartRow {
     segments?: readonly BarChartSegment[];
     detail?: string;
     color?: string;
+    children?: readonly BarChartRow[];
+    hint?: string;
+    emphasis?: boolean;
+    showPercent?: boolean;
+    detached?: boolean;
 }
 
 export interface BarChartSegment {
@@ -70,14 +88,20 @@ export type BarChartValue = number | readonly [
 ds-bar-chart {
     --ds-bar-chart-band-color: var(--ds-chart-grid-line-color);
     --ds-bar-chart-cap-radius: var(--ds-chart-mark-cap-radius);
+    --ds-bar-chart-child-fill-opacity: 0.55;
+    --ds-bar-chart-divider-color: var(--border-default);
+    --ds-bar-chart-label-column-max-width: 40%;
     --ds-bar-chart-label-gap: var(--space-1);
-    --ds-bar-chart-row-gap: var(--space-5);
+    --ds-bar-chart-row-gap: var(--space-3) | var(--space-5);
     --ds-bar-chart-target-color: var(--text-primary);
     --ds-bar-chart-target-overhang: 3px;
     --ds-bar-chart-target-width: 2px;
     --ds-bar-chart-track-color: var(--ds-chart-grid-line-color);
     --ds-bar-chart-track-height: 12px;
     --ds-chart-bg-color: (none);
+    --ds-chart-frame-border-width: (none);
+    --ds-chart-frame-padding: (none);
+    --ds-chart-frame-radius: (none);
     --ds-motion-chart-mark-duration: (none);
     --ds-motion-chart-mark-easing: (none);
     --ds-motion-chart-mark-grow-duration: (none);

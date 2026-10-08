@@ -77,23 +77,70 @@
     {
       "id": "tooltip-classes-member-surface",
       "kind": "behavior",
-      "old": "TooltipPanelComponent",
+      "old": "TooltipPanelComponent, TooltipDirective, BarChartComponent",
       "new": null,
       "surface": "typescript",
       "searchHints": [
         "extends TooltipDirective",
-        "extends TooltipPanelComponent"
+        "extends TooltipPanelComponent",
+        "extends BarChartComponent"
       ],
       "detect": [
         "extends TooltipDirective",
-        "extends TooltipPanelComponent"
+        "extends TooltipPanelComponent",
+        "extends BarChartComponent"
       ],
       "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
-      "appliesWhen": "Only a class of yours that extends TooltipDirective or TooltipPanelComponent. Template users of dsTooltip need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends TooltipDirective, TooltipPanelComponent or BarChartComponent. Template users of dsTooltip and ds-bar-chart need nothing; subclassing a DS component is unsupported.",
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
       "restore": null,
-      "verify": "The app builds with no member-collision error against TooltipDirective or TooltipPanelComponent.",
-      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 13: contains, document, dsTooltipArrow, dsTooltipPinOnClick, hostPinOnClick, leadsWithOwnText, onClick, onPointerLeave, ownText, pin, pinsOnClick, pointArrowAtHost and unpin; it lost dsTooltipClippedLead."
+      "verify": "The app builds with no member-collision error against TooltipDirective, TooltipPanelComponent or BarChartComponent.",
+      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 13: contains, document, dsTooltipArrow, dsTooltipPinOnClick, hostPinOnClick, leadsWithOwnText, onClick, onPointerLeave, ownText, pin, pinsOnClick, pointArrowAtHost and unpin; it lost dsTooltipClippedLead. BarChartComponent gained the public labelPosition, the protected isExpanded, toggleRow, hintId, holdsControls, percentColumn, entries, showsSkeleton and reloading, and the private idPrefix and expanded."
+    },
+    {
+      "id": "intl-chart-rows-under-required",
+      "kind": "behavior",
+      "old": "DsIntl",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "DsIntl",
+        "DS_INTL",
+        "shareOfTotal"
+      ],
+      "detect": [
+        ": DsIntl =",
+        "Signal<DsIntl>",
+        "shareOfTotal:"
+      ],
+      "action": "None, unless your code builds a complete DsIntl object of its own: add chart.rowsUnder, the name of a bar-chart group's disclosure button.",
+      "appliesWhen": "Only an object or signal typed as the full DsIntl, not as DsIntlOverrides. provideDsIntl with a partial override, and every app that leaves DS_INTL alone, is unaffected.",
+      "pitfall": "An object that spreads DS_INTL_DEFAULTS.chart compiles, but a chart section written out key by key without the spread fails with TS2741 on rowsUnder.",
+      "restore": null,
+      "verify": "The app builds, and every complete DsIntl object it declares has chart.rowsUnder.",
+      "evidence": [
+        "fixture:unreleased/intl-chart-rows-under-required.ts"
+      ]
+    },
+    {
+      "id": "bar-chart-reload-keeps-rows",
+      "kind": "behavior",
+      "old": "ds-bar-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-bar-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing rows that are already drawn: bind data to an empty array while loading is set.",
+      "appliesWhen": "Only a ds-bar-chart whose loading is set while its data still holds rows, such as a reload or a filter change. A first load with empty data still draws skeleton rows.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn rows stay, inert under the overlay, until loading clears.",
+      "restore": "[data]=\"loading ? [] : rows\"",
+      "verify": "A ds-bar-chart reloading with rows on screen shows those rows under a scrim and spinner, and one loading with empty data shows skeleton rows."
     }
   ],
   "informational": [
@@ -138,6 +185,26 @@
     {
       "text": "A tooltip (dsTooltip, ds-info-hint, dsDefinitionTerm, a hinted ds-table header) and a ds-menu-item submenu close on a scroll of the window or of any scroll container under them; a pinned tooltip unpins.",
       "verify": "open a tooltip and pin another inside a scrolling panel of your app, scroll the panel and confirm both close instead of staying where they opened."
+    },
+    "ds-bar-chart takes labelPosition ('top' | 'start', default 'top', type BarChartLabelPosition): 'start' puts each label in a column before its bar and aligns labels, bars, values and percents across rows. --ds-bar-chart-label-column-max-width caps the label column. Under 'start', --ds-bar-chart-row-gap defaults to var(--space-3) instead of var(--space-5); set --ds-bar-chart-row-gap: var(--space-5) to keep the wider rhythm. A chart left on 'top' keeps var(--space-5).",
+    "BarChartRow takes children (rows nested behind a disclosure button, each measured against its parent's value), hint (a defined-term label with a tooltip), emphasis (a bold label), showPercent (a per-row override of the chart's showPercent) and detached (a row set apart by a divider and given no partOfWhole share). --ds-bar-chart-child-fill-opacity and --ds-bar-chart-divider-color style the new rows. A chart without these fields renders as before.",
+    {
+      "text": "A ds-bar-chart whose data has any hint or children renders its rows container with role=\"group\" instead of role=\"img\", so the disclosure and term buttons inside it stay reachable to assistive technology; a chart without them keeps role=\"img\".",
+      "verify": "Open a bar chart with a hinted or grouped row and confirm Tab reaches the term and the disclosure button, and that a screen reader announces the term's hint."
+    },
+    "A ds-bar-chart row whose value is NaN, Infinity, or a [low, high] pair with a non-finite end shows — for its value, its derived percentage and its partOfWhole share instead of 0 and 0.0%, and draws no bar; an explicit percent on the row still prints. The generated summary leaves such a row out of its lowest and highest readings.",
+    {
+      "text": "ds-bar-chart skeleton rows use the drawn row markup: a label, value and percent placeholder and a placeholder filling the track, so each skeleton row is as tall as a drawn row and the track keeps its height and cap. Under labelPosition 'start' the placeholder label column takes --ds-bar-chart-label-column-max-width, because no label text exists yet to size it.",
+      "verify": "Open a ds-bar-chart with loading and empty data, then give it rows, and confirm the rows land where the skeleton rows were."
+    },
+    "ds-loading-overlay takes --ds-loading-overlay-radius (default 0) for the corners of its scrim; set it to the radius of the container the overlay covers.",
+    {
+      "text": "A bordered ds-table's reload overlay rounds its bottom corners to the table's radius (--ds-table-radius, else --ds-radius-control) instead of ending square outside the rounded border.",
+      "verify": "Open a bordered ds-table with rows and loading set, and confirm the scrim's bottom corners follow the table's rounded border."
+    },
+    {
+      "text": "A reloading ds-bar-chart covers the whole card with the overlay, to the frame's rounded corners, instead of a scrim over the rows inside the padding.",
+      "verify": "Open a framed ds-bar-chart with rows and loading set, and confirm the blurred scrim reaches the card's edges and corners."
     }
   ],
   "deleteList": [

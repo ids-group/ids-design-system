@@ -1294,7 +1294,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Prints each row's share of `max` beside its value."
+        "description": "Prints each row's share of `max` beside its value. A row's own `showPercent` overrides it."
+      },
+      {
+        "name": "labelPosition",
+        "kind": "input",
+        "type": "BarChartLabelPosition",
+        "union": [
+          "top",
+          "start"
+        ],
+        "default": "'top'",
+        "required": false,
+        "description": "`'start'` puts each label in a column before its bar, on the bar's line, with the values in aligned columns after it; `'top'` keeps the label on its own line above the bar."
       },
       {
         "name": "dimOthers",
