@@ -43,6 +43,12 @@
   reported as an unknown slot. Rendering is the same. `ModalComponent`, `ModalCardComponent` and
   `DrawerComponent` lost the private `unslotted`, so a subclass member of that name no longer collides.
 
+### Deprecated
+
+- **`styles/skeleton-shimmer` emits nothing, and `styles/ds` no longer forwards it.** `ds-skeleton`
+  carries its own reduced-motion opt-out. The partial stays in the package as an empty file; delete your
+  `@use 'styles/skeleton-shimmer'`.
+
 ### Fixed
 
 - **A pinned chart tooltip takes the pointer.** Its text can be selected and a link in a
@@ -61,6 +67,23 @@
 - **`check-overrides` reports `--ds-*` values set from templates and code.** `[style.--ds-*]`
   bindings and `setProperty('--ds-*', …)` calls were never matched, so a stale token set that way
   went unreported.
+
+- **Reduced motion stops the skeleton shimmer in an app that does not load `styles/ds`.** The opt-out
+  lived in `styles/skeleton-shimmer`, so an app assembling the partials one by one kept the wave
+  running for readers who asked for less motion. `ds-skeleton` carries it in its own styles now.
+
+- **The "no matches" row of `ds-select`, `ds-multi-select` and `ds-autocomplete` keeps its type
+  without `styles/typography`.** Its family, weight and line height came from the `.t-s` class,
+  so without that partial the row fell back to the page's font (the browser's serif on an
+  unstyled page). `styles/dropdown-overlay` sets them now, from the same `--ds-typography-s-*`
+  hooks, and the row no longer carries `t-s`; with typography loaded it renders as before. A rule
+  of yours that reached the row through `.t-s` matches nothing: select `.ds-dropdown-panel .empty`.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| `@use 'styles/skeleton-shimmer'` | the partial emits nothing; `ds-skeleton` styles its own reduced-motion stop | nothing |
 
 ## 0.14.8 — 2026-10-06
 

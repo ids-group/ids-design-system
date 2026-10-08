@@ -112,10 +112,46 @@
       "restore": null,
       "verify": "The app builds with no member-collision error against TooltipDirective or TooltipPanelComponent.",
       "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 3: the private contains and ownText and the public dsTooltipArrow; it lost dsTooltipClippedLead."
+    },
+    {
+      "id": "dropdown-empty-row-drops-t-s",
+      "kind": "behavior",
+      "old": ".ds-dropdown-panel .empty",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        ".empty.t-s",
+        ".ds-dropdown-panel .empty"
+      ],
+      "detect": [
+        ".empty.t-s",
+        ".ds-dropdown-panel .t-s"
+      ],
+      "action": "None, unless a stylesheet of yours reaches the \"no matches\" row of a picker panel through `.t-s`: select `.ds-dropdown-panel .empty` instead.",
+      "appliesWhen": "Only a rule of yours whose selector combines the picker panel or its `.empty` row with `.t-s`. Ships in `styles/dropdown-overlay`, which `styles/ds` forwards. Other elements carrying `.t-s` are not affected.",
+      "pitfall": "A selector such as `.ds-dropdown-panel .empty.t-s` still parses and matches nothing, so the override stops applying with no error.",
+      "restore": null,
+      "verify": "The built CSS holds no selector combining `.empty` with `.t-s`, and the \"no matches\" row of an open `ds-select` with no options shows your override."
     }
   ],
   "informational": [
-    "`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a slot, or about an attribute that names no slot. That content still renders in the body. A test or screenshot that waited for the `Dev warning` toast these raised has nothing to wait for."
+    "`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a slot, or about an attribute that names no slot. That content still renders in the body. A test or screenshot that waited for the `Dev warning` toast these raised has nothing to wait for.",
+    "`styles/skeleton-shimmer` emits nothing and `styles/ds` no longer forwards it; `ds-skeleton` stops its shimmer under `prefers-reduced-motion: reduce` from its own styles, so an app that assembles the partials itself gets the stop too (delete list: skeleton-shimmer-use).",
+    {
+      "text": "The \"no matches\" row of `ds-select`, `ds-multi-select` and `ds-autocomplete` takes its font family, weight and line height from `styles/dropdown-overlay` (the `--ds-typography-s-*` hooks) instead of the `.t-s` class, so it keeps its type in an app that does not load `styles/typography`.",
+      "verify": "Open a picker with a query that matches nothing and confirm the row is set in the app's sans face, not a serif."
+    }
   ],
-  "deleteList": []
+  "deleteList": [
+    {
+      "id": "skeleton-shimmer-use",
+      "surface": "style",
+      "find": [
+        "@use 'styles/skeleton-shimmer'",
+        "styles/skeleton-shimmer"
+      ],
+      "why": "The partial emits nothing; `ds-skeleton` carries its own reduced-motion stop.",
+      "replaceWith": "nothing"
+    }
+  ]
 }
