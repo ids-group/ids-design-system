@@ -103,8 +103,9 @@
         <tr class="is-changed"><td>dsTooltip</td><td>текст тултипа; перенос строки сохраняется</td><td><span class="tag new">меняется</span> то же, плюс <code>**жирный**</code></td></tr>
         <tr class="is-gone"><td>dsTooltipClippedLead</td><td>подпись над подсказкой, когда текст обрезан</td><td><span class="tag gone">удаляется</span></td></tr>
         <tr><td>dsTooltipWhenClipped</td><td>показывать тултип только когда текст обрезан</td><td><span class="tag same">без изменений</span></td></tr>
-        <tr><td>dsTooltipTextSelector</td><td>какой элемент внутри проверять на обрезку</td><td><span class="tag same">без изменений</span></td></tr>
-        <tr><td>dsTooltipPlacement, dsTooltipDelay</td><td>сторона и задержка</td><td><span class="tag same">без изменений</span></td></tr>
+        <tr><td>dsTooltipTextSelector</td><td>какой элемент внутри хоста проверять на обрезку. Нужен, когда многоточие стоит не на самом хосте, а на вложенном span: так в <code>ds-select</code> (триггер и пункты), <code>ds-multi-select</code>, <code>ds-autocomplete</code> и в ячейках таблицы. Без него эти пять компонентов не узнают, что текст обрезан</td><td><span class="tag same">без изменений</span> нужен</td></tr>
+        <tr><td>dsTooltipPlacement</td><td>сторона тултипа. Внутри библиотеки его задаёт <code>ds-sidenav-item</code> (справа от свёрнутой рейки); у остальных по умолчанию сверху</td><td><span class="tag same">без изменений</span> нужен</td></tr>
+        <tr><td>dsTooltipDelay</td><td>задержка до появления, 120 мс по умолчанию. Внутри библиотеки его не задаёт никто; это ручка только для приложений</td><td><span class="tag same">без изменений</span> внутри не используется</td></tr>
       </tbody>
     </table>
     <p class="src">Новых атрибутов нет ни в одном из вариантов ниже.</p>
@@ -148,7 +149,7 @@
       <article class="opt is-pick" tabindex="0" data-mode="directive">
         <span class="badge is-pick">рекомендую</span>
         <h3>Правило в тултипе, для всех</h3>
-        <p class="youpick"><b>Ты выбираешь</b>сам тултип смотрит: если текст под ним обрезан, он добавляет этот текст жирным сверху. Так будет везде, где стоит <code>dsTooltip</code>, не только в таблице.</p>
+        <p class="youpick"><b>Ты выбираешь</b>сам тултип смотрит: если текст под ним обрезан, он добавляет этот текст жирным сверху. Правило одно и то же для <code>dsTooltip</code> и для <code>dsTooltipWhenClipped</code>: это один класс, и срабатывает оно, когда у хоста есть свой текст тултипа, а сам хост обрезан. Если текст тултипа уже содержит текст хоста, ничего не добавляется.</p>
         <div class="live" data-demo="where"><span class="state"></span><span class="demo-btn"><span class="clip">Export all customers to a file</span></span><span class="tip"></span></div>
         <p class="cap">Что написано в приложении</p>
         <p class="code">&lt;button [dsTooltip]="'Download CSV'"&gt;
@@ -169,6 +170,15 @@
         <span class="chosen-mark">выбрано</span>
       </article>
     </div>
+    <table class="attrs">
+      <thead><tr><th>Где стоит</th><th>Что покажет тултип при обрезке</th><th>Меняется ли</th></tr></thead>
+      <tbody>
+        <tr><td><code>dsTooltip</code> с текстом, который не повторяет текст хоста (подсказка заголовка, кнопка Export)</td><td>жирный текст хоста, ниже подсказка</td><td><span class="tag new">меняется</span></td></tr>
+        <tr><td><code>dsTooltip</code> с текстом, который уже содержит текст хоста (сайднав, заголовок без подсказки)</td><td>как сейчас</td><td><span class="tag same">нет</span></td></tr>
+        <tr><td><code>dsTooltipWhenClipped</code> без своего текста (select, breadcrumbs, stat, ячейки)</td><td>текст хоста, как сейчас</td><td><span class="tag same">нет</span></td></tr>
+        <tr><td><code>dsTooltipWhenClipped</code> вместе с текстом тултипа, который не повторяет текст хоста</td><td>жирный текст хоста, ниже текст тултипа</td><td><span class="tag new">меняется</span></td></tr>
+      </tbody>
+    </table>
     <p class="src">Если в выборе 1 взят первый или второй вариант, выбор 2 не нужен: таблица склеивает название и подсказку сама, измерять нечего.</p>
   </section>
 
