@@ -118,6 +118,8 @@
   .x-term:hover { text-decoration: underline solid var(--text-secondary); }
   .x-term:active { color: var(--text-primary); background: var(--surface-muted); box-shadow: 0 0 0 2px var(--surface-muted); text-decoration: underline solid var(--text-primary); }
   .x-term[data-pinned] { color: var(--accent-strong); background: var(--accent-subtitle); box-shadow: 0 0 0 2px var(--accent-subtitle); text-decoration: underline solid var(--accent-strong); }
+  .x-term[data-pinned]:hover { background: color-mix(in srgb, var(--accent) 20%, transparent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent); }
+  .x-hint[data-pinned]:hover { background: color-mix(in srgb, var(--accent) 20%, transparent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
   .x-term:focus-visible, .x-hint:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
   .x-term.is-plain { cursor: default; } .x-term.is-plain:hover { text-decoration: underline dotted var(--text-tertiary); }
   .x-sample { margin: 0; padding: var(--space-3); background: var(--surface-muted); border-radius: var(--radius-md); font: var(--font-size-s) / 1.7 var(--font-sans); min-height: 76px; }
@@ -142,7 +144,7 @@
   <header class="masthead">
     <h1>Тултип, подсказка и термин: всё в одной деке</h1>
     <p class="chat">Ответ нести в чат: «Тултип: разметка и подпись»</p>
-    <p class="lede">Сверху то, что уже решено и где лежит. Дальше живые примеры термина и три вопроса, которые ещё ждут тебя: подпись названия, чистка кода и когда вливать ветку. Как тултип устроен, внизу в свёрнутом блоке.</p>
+    <p class="lede">Сверху то, что уже решено и где лежит. Дальше живые примеры термина и два вопроса, которые ещё ждут тебя: подпись названия и нарезка кода. Как тултип устроен, внизу в свёрнутом блоке.</p>
     <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">TooltipDirective</span><span class="chip">dsDefinitionTerm</span><span class="chip">ds-info-hint</span><span class="chip">актуально на 2026-10-08</span></div>
   </header>
 
@@ -155,8 +157,10 @@
         <tr><td>dsTooltipClippedLead</td><td>удалён, нового входа вместо него нет</td><td>в <code>dev</code> (Breaking)</td></tr>
         <tr><td>dsTooltipDelay</td><td>остаётся как есть</td><td>в <code>dev</code></td></tr>
         <tr><td>dsTooltipArrow</td><td>флаг, <code>[dsTooltipArrow]="false"</code> убирает стрелку</td><td>в <code>dev</code></td></tr>
-        <tr><td>термин с определением</td><td>одна директива <code>dsDefinitionTerm</code> на любом теге: span, button, p. «Только класс» отклонён: нужно готовое решение</td><td>ветка <code>ecm-fix/tooltip-arrow-anchor</code></td></tr>
-        <tr><td>ds-info-hint</td><td>по умолчанию кружок «?», <code>icon="info"</code> меняет на «i»</td><td>ветка <code>feat/tooltip-term-lead</code></td></tr>
+        <tr><td>термин с определением</td><td>одна директива <code>dsDefinitionTerm</code> на любом теге: span, button, p. «Только класс» отклонён: нужно готовое решение</td><td>в <code>dev</code></td></tr>
+        <tr><td>ds-info-hint</td><td>по умолчанию кружок «?», <code>icon="info"</code> меняет на «i»</td><td>в <code>dev</code></td></tr>
+        <tr><td>закреплённый триггер</td><td>наведение на закреплённый термин или значок усиливает подсветку с 12% до 20%</td><td>в <code>dev</code></td></tr>
+        <tr><td>две ветки с подсказками</td><td>обе попадают в <code>dev</code>, одинаковые коммиты сливаются сами (Stas)</td><td>ветка термина влита, ветка <code>ecm-fix/tooltip-arrow-anchor</code> вливает <code>dev</code> и идёт следом</td></tr>
       </tbody>
     </table>
   </section>
@@ -217,7 +221,7 @@
 
   <section class="panel q" data-q="label" data-review="Подпись названия при обрезке" data-review-note-only>
     <h2>Выбор 1. Кто дописывает жирное название, когда оно обрезано</h2>
-    <p>У колонки есть название <b>Registered attendee count</b> и подсказка <b>People who confirmed a seat</b>. На картинках узкая колонка с обрезанным названием и то, что видит пользователь. Вариант «только у термина» уже сделан в ветке <code>feat/tooltip-term-lead</code> по моей рекомендации; скажи, если нужен другой. Выбор - клик по карточке.</p>
+    <p>У колонки есть название <b>Registered attendee count</b> и подсказка <b>People who confirmed a seat</b>. На картинках узкая колонка с обрезанным названием и то, что видит пользователь. Вариант «только у термина» уже сделан в <code>dev</code> по моей рекомендации; скажи, если нужен другой. Выбор - клик по карточке.</p>
     <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(230px, 1fr))">
       <article class="opt" tabindex="0">
         <h3>Как сейчас в dev: любой dsTooltip дописывает сам</h3>
@@ -230,7 +234,7 @@ People who confirmed a seat</span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
       <article class="opt is-pick" tabindex="0">
-        <span class="badge is-pick">рекомендую, уже сделано в ветке</span>
+        <span class="badge is-pick">рекомендую, уже сделано в dev</span>
         <h3>Только у dsDefinitionTerm</h3>
         <p class="youpick"><b>Ты выбираешь</b>обычный <code>dsTooltip</code> делает ровно то, что написано. Жирное название при обрезке даёт только термин, то есть заголовок таблицы с <code>hint</code>.</p>
         <div class="live"><span class="th" style="width:150px"><span class="clip dotted">Registered attendee count</span></span><span class="tip"><strong>Registered attendee count</strong>
@@ -285,15 +289,15 @@ People who confirmed a seat</span></div>
       </article>
       <article class="opt" tabindex="0">
         <h3>Нарезать сейчас</h3>
-        <p class="youpick"><b>Ты выбираешь</b>резать файл сразу, пока ветка с подсказками не влита.</p>
-        <div class="pills"><span class="pill good">быстро</span><span class="pill bad">ветка с подсказками правит тот же файл, конфликт придётся решать там</span></div>
+        <p class="youpick"><b>Ты выбираешь</b>резать файл сразу, пока ветка параллельной сессии ещё не влита.</p>
+        <div class="pills"><span class="pill good">быстро</span><span class="pill bad">та ветка правит тот же файл, конфликт придётся решать там</span></div>
         <dl class="layer"><dt>Потребители</dt><dd class="none">не затронуты</dd><dt>Файлы</dt><dd>3 файла в <code>components/tooltip</code></dd></dl>
         <span class="chosen-mark">выбрано</span>
       </article>
       <article class="opt is-pick" tabindex="0">
         <span class="badge is-pick">рекомендую</span>
-        <h3>Нарезать после слияния ветки</h3>
-        <p class="youpick"><b>Ты выбираешь</b>сначала ветка с подсказками уходит в <code>dev</code>, потом я режу файл на три. Снаружи ничего не меняется.</p>
+        <h3>Нарезать, когда вторая ветка вольётся</h3>
+        <p class="youpick"><b>Ты выбираешь</b>сначала ветка параллельной сессии вливает <code>dev</code> и сама уходит в него, потом я режу файл на три. Снаружи ничего не меняется.</p>
         <div class="files"><span class="file">tooltip.directive.ts<small>около 250</small></span><span class="file is-new">tooltip-clip.ts<small>около 56</small></span><span class="file is-new">tooltip-ancestor-focus.ts<small>около 92</small></span></div>
         <div class="pills"><span class="pill good">нет конфликта двух сессий</span><span class="pill good">каждый файл про одну работу</span></div>
         <dl class="layer"><dt>Потребители</dt><dd class="none">не затронуты</dd><dt>Changelog и миграции</dt><dd>строка про состав членов <code>TooltipDirective</code>; <code>class-surface</code> покажет, какие приватные члены ушли</dd></dl>
@@ -312,36 +316,9 @@ dsTooltipTextSelector=".option-label"
     </div>
   </section>
 
-  <section class="panel q" data-q="branch" data-review="Когда вливать ветку с подсказками" data-review-note-only>
-    <h2>Выбор 3. Когда вливать ветку с подсказками в dev</h2>
-    <p>Ветка <code>feat/tooltip-term-lead</code> = ветка параллельной сессии + две мои правки (подпись только у термина, «?» в <code>ds-info-hint</code>). Она несёт то, что ты ещё не принял: стрелку под центром, закрепление кликом, <code>ds-info-hint</code>, <code>dsDefinitionTerm</code> и деку <code>20-tooltip-group</code>. Выбор - клик по карточке.</p>
-    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(230px, 1fr))">
-      <article class="opt is-pick" tabindex="0">
-        <span class="badge is-pick">рекомендую</span>
-        <h3>Сначала принять деку 20-tooltip-group</h3>
-        <p class="youpick"><b>Ты выбираешь</b>ты смотришь деку параллельной сессии и принимаешь пункты, потом ветка вливается целиком.</p>
-        <div class="files"><span class="file">ветка сессии</span><span class="arrow">+</span><span class="file is-new">мои правки</span><span class="arrow">→</span><span class="file">dev</span></div>
-        <div class="pills"><span class="pill good">в dev попадает только принятое</span><span class="pill mid">ждать твоего просмотра</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-      <article class="opt" tabindex="0">
-        <h3>Влить сейчас</h3>
-        <p class="youpick"><b>Ты выбираешь</b>ветка вливается в <code>dev</code> без просмотра, дека 20-tooltip-group смотрится уже после.</p>
-        <div class="pills"><span class="pill good">сразу в dev</span><span class="pill bad">непринятая работа параллельной сессии в dev</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-      <article class="opt" tabindex="0">
-        <h3>Отдать правки той сессии</h3>
-        <p class="youpick"><b>Ты выбираешь</b>мои правки остаются отдельными коммитами, и параллельная сессия берёт их в свою ветку сама.</p>
-        <div class="pills"><span class="pill good">я не трогаю чужую ветку</span><span class="pill bad">правки живут в двух ветках, пока их не заберут</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-    </div>
-  </section>
-
   <section class="panel verdict is-done">
     <h2>Рекомендация</h2>
-    <p class="pick"><strong>Выбор 1: только у dsDefinitionTerm. Выбор 2: нарезать после слияния ветки. Выбор 3: сначала принять деку 20-tooltip-group.</strong> Обычный тултип делает ровно то, что написано, определение имеет своё имя, и в <code>dev</code> попадает только принятое.</p>
+    <p class="pick"><strong>Выбор 1: только у dsDefinitionTerm. Выбор 2: нарезать, когда вторая ветка вольётся.</strong> Обычный тултип делает ровно то, что написано, определение имеет своё имя, и два сеанса не правят один файл одновременно.</p>
   </section>
 
   <details class="panel">
@@ -501,12 +478,12 @@ People who confirmed a seat</span>
   }
   for (const card of document.querySelectorAll('[data-live]')) wire(card);
 
-  const PICK_KEY = 'ds-deck-tooltip-mechanism-picks-v4';
+  const PICK_KEY = 'ds-deck-tooltip-mechanism-picks-v5';
   const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
   const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private window */ } };
   const state = read(PICK_KEY, {});
   const sections = [...document.querySelectorAll('.q[data-q]')];
-  const labels = { label: 'Подпись названия при обрезке', split: 'Нарезать ли код тултипа', branch: 'Когда вливать ветку с подсказками' };
+  const labels = { label: 'Подпись названия при обрезке', split: 'Нарезать ли код тултипа' };
   const optionName = (card) => card.querySelector('h3').textContent.trim();
   const choices = (section) => [...section.querySelectorAll('.opt:not([aria-disabled])')];
   function render() {
