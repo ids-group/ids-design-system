@@ -182,7 +182,7 @@
 @mixin follows($detail, $after) {
   @include enters(
     '#{$detail}',
-    ds-chart-mark-rise,
+    ds-chart-mark-fade-in,
     var(--ds-motion-chart-mark-detail-duration),
     var(--ds-motion-chart-mark-enter-easing),
     $after

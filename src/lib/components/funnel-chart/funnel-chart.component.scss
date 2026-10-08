@@ -4,7 +4,7 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
-@include chart-motion.enters('.stage', ds-chart-mark-rise);
+@include chart-motion.enters('.stage', ds-chart-mark-settle);
 
 .stage {
   transform-box: fill-box;

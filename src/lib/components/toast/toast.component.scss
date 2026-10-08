@@ -13,14 +13,9 @@
     transform var(--_toast-shift-duration) var(--_toast-shift-easing);
 }
 
-/* Restates the transform timing rather than inheriting the shift's. */
 :host(.leaving) {
   opacity: 0;
-  transform: translateY(calc(var(--space-2) * -1));
   pointer-events: none;
-  transition:
-    opacity var(--_toast-leave-duration) var(--_toast-leave-easing),
-    transform var(--_toast-leave-duration) var(--_toast-leave-easing);
 }
 
 /* Inverted half of the region's FLIP; the transition is suppressed so the jump-back is not animated. */

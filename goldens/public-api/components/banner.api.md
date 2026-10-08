@@ -41,7 +41,7 @@ ds-banner {
     --ds-banner-close-icon-color-hover: var(--icon-strong);
     --ds-banner-enter-duration: var(--ds-motion-enter-surface-duration);
     --ds-banner-enter-easing: var(--ds-motion-enter-surface-easing);
-    --ds-banner-enter-keyframes: ds-scale-in;
+    --ds-banner-enter-keyframes: ds-fade-in;
     --ds-banner-enter-offset: 4px;
     --ds-banner-enter-scale: 0.96;
     --ds-banner-padding-x: var(--space-3) | var(--space-4);
