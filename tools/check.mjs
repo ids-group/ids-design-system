@@ -85,6 +85,8 @@ export const GROUPS = {
     'public-api',
     'probes',
     'focus-rings',
+    'glyph-clip:selftest',
+    'glyph-clip',
     'chart-interaction',
     'chart-aria',
     'chart-mark-budget',
