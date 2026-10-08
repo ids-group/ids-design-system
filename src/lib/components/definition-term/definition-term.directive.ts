@@ -42,8 +42,10 @@ const appsWithTermStyles = new WeakSet<ApplicationRef>();
     '[attr.tabindex]': 'isButton ? null : 0',
     '[attr.role]': "isButton ? null : 'button'",
     '(keydown.enter)': 'pressFromKeyboard($event)',
+    '(keyup.enter)': 'release()',
     '(keydown.space)': 'holdSpace($event)',
-    '(keyup.space)': 'pressFromKeyboard($event)',
+    '(keyup.space)': 'releaseFromSpace($event)',
+    '(blur)': 'release()',
   },
 })
 export class DefinitionTermDirective {
@@ -70,6 +72,7 @@ export class DefinitionTermDirective {
   protected holdSpace(event: Event): void {
     if (!this.isButton) {
       event.preventDefault();
+      this.host.toggleAttribute('data-ds-pressed', true);
     }
   }
 
@@ -78,6 +81,19 @@ export class DefinitionTermDirective {
       return;
     }
     event.preventDefault();
+    this.host.toggleAttribute('data-ds-pressed', true);
     this.host.click();
+  }
+
+  protected releaseFromSpace(event: Event): void {
+    this.release();
+    if (!this.isButton) {
+      event.preventDefault();
+      this.host.click();
+    }
+  }
+
+  protected release(): void {
+    this.host.toggleAttribute('data-ds-pressed', false);
   }
 }

@@ -41,5 +41,9 @@
     &:hover {
       @include pinned.cue-hover(3px);
     }
+
+    &:active {
+      @include pinned.cue-pressed(3px);
+    }
   }
 }
