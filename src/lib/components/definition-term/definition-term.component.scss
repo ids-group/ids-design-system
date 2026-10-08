@@ -1,4 +1,12 @@
+// The states only recolour: padding or a border would shift the running text around the term.
 :host {
+  --_term-line-color: var(--text-tertiary);
+  --_term-line-color-hover: var(--text-secondary);
+  --_term-color-pressed: var(--text-primary);
+  --_term-bg-pressed: var(--surface-muted);
+  --_term-color-pinned: var(--accent-strong);
+  --_term-bg-pinned: var(--accent-subtitle);
+
   appearance: none;
   margin: 0;
   padding: 0;
@@ -10,7 +18,31 @@
   text-align: inherit;
   color: inherit;
   cursor: pointer;
-  text-decoration: underline dotted var(--text-tertiary);
+  text-decoration: underline dotted var(--_term-line-color);
   text-underline-offset: 3px;
   border-radius: var(--radius-sm);
+  box-decoration-break: clone;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard),
+    text-decoration-color var(--duration-fast) var(--ease-standard);
+}
+
+:host(:hover) {
+  text-decoration: underline solid var(--_term-line-color-hover);
+}
+
+:host(:active) {
+  color: var(--_term-color-pressed);
+  background: var(--_term-bg-pressed);
+  box-shadow: 0 0 0 2px var(--_term-bg-pressed);
+  text-decoration: underline solid var(--_term-color-pressed);
+}
+
+:host([data-ds-tooltip-pinned]) {
+  color: var(--_term-color-pinned);
+  background: var(--_term-bg-pinned);
+  box-shadow: 0 0 0 2px var(--_term-bg-pinned);
+  text-decoration: underline solid var(--_term-color-pinned);
 }
