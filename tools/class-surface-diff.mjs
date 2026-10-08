@@ -22,10 +22,7 @@
  * nothing but a clean line when no surface moved.
  */
 import { execFileSync } from 'node:child_process';
-
-const base =
-  process.argv[2] ?? git(['describe', '--tags', '--abbrev=0']).trim();
-const head = process.argv[3] ?? 'HEAD';
+import { pathToFileURL } from 'node:url';
 
 function git(args) {
   return execFileSync('git', args, {
@@ -158,7 +155,8 @@ function stripComments(text) {
 }
 
 // Whitespace inside brackets is collapsed too — a prettier rewrap of an unchanged
-// declaration (`input<\n  readonly RegExp[]…`) must not read as a type change.
+// declaration (`input<\n  readonly RegExp[]…`) must not read as a type change, nor must the
+// trailing comma prettier adds when it wraps a list.
 // …but never inside a string literal: collapsing there reads `'No  data'` and `'No data'`
 // as the same default.
 const normalize = (text) =>
@@ -170,7 +168,8 @@ const normalize = (text) =>
         : part
             .replace(/\s+/g, ' ')
             .replace(/([<([{]) /g, '$1')
-            .replace(/ ([>)\]},;])/g, '$1'),
+            .replace(/ ([>)\]},;])/g, '$1')
+            .replace(/,([>)\]}])/g, '$1'),
     )
     .join('')
     .trim();
@@ -186,6 +185,24 @@ function statementText(source, from) {
     if (ch === '(' || ch === '{' || ch === '[') depth++;
     else if (ch === ')' || ch === '}' || ch === ']') depth--;
     else if (ch === ';' && depth <= 0) return source.slice(from, i + 1);
+  }
+  return source.slice(from);
+}
+
+// A method's signature, from its name to the brace opening its body (or the `;` ending a bodiless
+// one), across however many lines prettier wrapped it onto. A `{` right after `:`, `|`, `&`, `,`,
+// `<`, `(` or `=>` opens an object type in the return annotation, not the body.
+function methodHead(source, from) {
+  let depth = 0;
+  for (let i = from; i < source.length; i++) {
+    const ch = source[i];
+    if (ch === '(' || ch === '[') depth++;
+    else if (ch === ')' || ch === ']' || ch === '}') depth--;
+    else if (ch === '{') {
+      const before = source.slice(from, i).trimEnd();
+      if (depth > 0 || /(?:[:|&,<(]|=>)$/.test(before)) depth++;
+      else return source.slice(from, i);
+    } else if (ch === ';' && depth === 0) return source.slice(from, i);
   }
   return source.slice(from);
 }
@@ -256,18 +273,7 @@ function classSurface(source) {
     if (NOT_A_MEMBER.has(name)) continue;
     names.add(name);
     if (visibility.startsWith('private')) continue;
-    // First line only: a param type changed on a wrapped continuation line is not
-    // seen — partial coverage beats the flood of whole-body diffs.
-    const lineEnd = source.indexOf('\n', match.index);
-    const line = source.slice(
-      match.index,
-      lineEnd === -1 ? source.length : lineEnd,
-    );
-    const bodyStart = line.indexOf('{');
-    heads.set(
-      name,
-      normalize(bodyStart === -1 ? line : line.slice(0, bodyStart)),
-    );
+    heads.set(name, normalize(methodHead(source, match.index)));
   }
   return { names, heads };
 }
@@ -298,132 +304,177 @@ function typeSurface(source) {
   return { decls, heritage };
 }
 
-const files = git(['diff', '--name-only', `${base}..${head}`, '--', 'src/lib'])
-  .split('\n')
-  .filter((path) => path.endsWith('.ts') && !path.endsWith('.spec.ts'));
-
-// A moved class has to be read at its OLD path, or every member it already had counts as gained:
-// the entry-point split moved two components and the report asked for a behavior entry on 48
-// members that had not changed. Git's own rename detection decides it rather than a basename
-// guess, so a class that genuinely did not exist at `base` still arrives as an addition.
-const renamedFrom = new Map();
-for (const row of git([
-  'diff',
-  '-M',
-  '--name-status',
-  `${base}..${head}`,
-  '--',
-  'src/lib',
-]).split('\n')) {
-  const [status, from, to] = row.split('\t');
-  if (status?.startsWith('R') && to) renamedFrom.set(to, from);
+// Per exported class rather than per file, with the class it extends: a consumer subclasses one
+// class and inherits from its whole chain, so a caller that wants that class's real surface has to
+// walk `parent` itself. Each slice runs from one `export class` to the next, and classSurface()
+// cuts it at the class's own closing brace.
+export function classMembers(source) {
+  const classes = new Map();
+  const opens = [...source.matchAll(/^export (?:abstract )?class (\w+)/gm)];
+  opens.forEach((open, index) => {
+    const slice = source.slice(open.index, opens[index + 1]?.index);
+    // The generic parameter list is skipped by angle depth, so `<T extends object>` is not read
+    // as the superclass and a `{` inside a constraint does not end the header.
+    let header = '';
+    let depth = 0;
+    for (const character of slice.slice(open[0].length)) {
+      if (character === '<') depth++;
+      else if (character === '>') depth = Math.max(0, depth - 1);
+      else if (depth === 0) {
+        if (character === '{') break;
+        header += character;
+      }
+    }
+    const { names, heads } = classSurface(slice);
+    classes.set(open[1], {
+      names,
+      heads,
+      parent: /\bextends\s+(\w+)/.exec(header)?.[1] ?? null,
+    });
+  });
+  return classes;
 }
 
-const grew = [];
-const shrank = [];
-const changed = [];
-for (const path of files) {
-  const beforeSource = show(base, renamedFrom.get(path) ?? path);
-  const afterSource = show(head, path);
-  const before = classSurface(beforeSource);
-  const after = classSurface(afterSource);
-  if (after === null) {
-    // A deleted file is the loudest LOST there is — skipping it printed
-    // "no exported member changed" over a removed consumer-extension base.
-    if (before?.names.size) {
-      shrank.push([
-        `${path.replace('src/lib/', '')}  (file deleted)`,
-        [...before.names].sort(),
-      ]);
-    }
-    continue;
-  }
-  const known = before?.names ?? new Set();
-  const added = [...after.names].filter((name) => !known.has(name)).sort();
-  const removed = [...known].filter((name) => !after.names.has(name)).sort();
-  const label = path.replace('src/lib/', '');
-  if (added.length) grew.push([label, added, before === null]);
-  if (removed.length) shrank.push([label, removed]);
+function main() {
+  const base =
+    process.argv[2] ?? git(['describe', '--tags', '--abbrev=0']).trim();
+  const head = process.argv[3] ?? 'HEAD';
 
-  if (before === null) continue;
-  const changedHere = [];
-  for (const [name, headDecl] of after.heads) {
-    const oldDecl = before.heads.get(name);
-    if (oldDecl && oldDecl !== headDecl) {
-      changedHere.push(`${name}: ${clip(oldDecl)}  →  ${clip(headDecl)}`);
-    }
+  const files = git([
+    'diff',
+    '--name-only',
+    `${base}..${head}`,
+    '--',
+    'src/lib',
+  ])
+    .split('\n')
+    .filter((path) => path.endsWith('.ts') && !path.endsWith('.spec.ts'));
+
+  // A moved class has to be read at its OLD path, or every member it already had counts as gained:
+  // the entry-point split moved two components and the report asked for a behavior entry on 48
+  // members that had not changed. Git's own rename detection decides it rather than a basename
+  // guess, so a class that genuinely did not exist at `base` still arrives as an addition.
+  const renamedFrom = new Map();
+  for (const row of git([
+    'diff',
+    '-M',
+    '--name-status',
+    `${base}..${head}`,
+    '--',
+    'src/lib',
+  ]).split('\n')) {
+    const [status, from, to] = row.split('\t');
+    if (status?.startsWith('R') && to) renamedFrom.set(to, from);
   }
-  const typesBefore = typeSurface(beforeSource);
-  const typesAfter = typeSurface(afterSource);
-  for (const [key, decl] of typesAfter.decls) {
-    const oldDecl = typesBefore.decls.get(key);
-    if (oldDecl && oldDecl !== decl) {
-      changedHere.push(`${key}: ${clip(oldDecl)}  →  ${clip(decl)}`);
+
+  const grew = [];
+  const shrank = [];
+  const changed = [];
+  for (const path of files) {
+    const beforeSource = show(base, renamedFrom.get(path) ?? path);
+    const afterSource = show(head, path);
+    const before = classSurface(beforeSource);
+    const after = classSurface(afterSource);
+    if (after === null) {
+      // A deleted file is the loudest LOST there is — skipping it printed
+      // "no exported member changed" over a removed consumer-extension base.
+      if (before?.names.size) {
+        shrank.push([
+          `${path.replace('src/lib/', '')}  (file deleted)`,
+          [...before.names].sort(),
+        ]);
+      }
+      continue;
     }
-  }
-  for (const name of new Set([
-    ...typesBefore.heritage.keys(),
-    ...typesAfter.heritage.keys(),
-  ])) {
-    const oldClause = typesBefore.heritage.get(name);
-    const clause = typesAfter.heritage.get(name);
-    if (oldClause !== clause)
+    const known = before?.names ?? new Set();
+    const added = [...after.names].filter((name) => !known.has(name)).sort();
+    const removed = [...known].filter((name) => !after.names.has(name)).sort();
+    const label = path.replace('src/lib/', '');
+    if (added.length) grew.push([label, added, before === null]);
+    if (removed.length) shrank.push([label, removed]);
+
+    if (before === null) continue;
+    const changedHere = [];
+    for (const [name, headDecl] of after.heads) {
+      const oldDecl = before.heads.get(name);
+      if (oldDecl && oldDecl !== headDecl) {
+        changedHere.push(`${name}: ${clip(oldDecl)}  →  ${clip(headDecl)}`);
+      }
+    }
+    const typesBefore = typeSurface(beforeSource);
+    const typesAfter = typeSurface(afterSource);
+    for (const [key, decl] of typesAfter.decls) {
+      const oldDecl = typesBefore.decls.get(key);
+      if (oldDecl && oldDecl !== decl) {
+        changedHere.push(`${key}: ${clip(oldDecl)}  →  ${clip(decl)}`);
+      }
+    }
+    for (const name of new Set([
+      ...typesBefore.heritage.keys(),
+      ...typesAfter.heritage.keys(),
+    ])) {
+      const oldClause = typesBefore.heritage.get(name);
+      const clause = typesAfter.heritage.get(name);
+      if (oldClause !== clause)
+        changedHere.push(
+          `${name}: ${oldClause ?? '(no heritage)'}  →  ${clause ?? '(heritage removed — its inherited members are gone)'}`,
+        );
+    }
+    for (const key of typesBefore.decls.keys()) {
+      if (typesAfter.decls.has(key)) continue;
+      // A member gone from the body but whose interface (still or newly) extends a
+      // base has usually MOVED there, not vanished — say so instead of crying removal.
+      const base = typesAfter.heritage.get(key.split('.')[0]);
       changedHere.push(
-        `${name}: ${oldClause ?? '(no heritage)'}  →  ${clause ?? '(heritage removed — its inherited members are gone)'}`,
+        base ? `${key}: gone from the body — check ${base}` : `${key}: removed`,
       );
+    }
+    if (changedHere.length) changed.push([label, changedHere.sort()]);
   }
-  for (const key of typesBefore.decls.keys()) {
-    if (typesAfter.decls.has(key)) continue;
-    // A member gone from the body but whose interface (still or newly) extends a
-    // base has usually MOVED there, not vanished — say so instead of crying removal.
-    const base = typesAfter.heritage.get(key.split('.')[0]);
-    changedHere.push(
-      base ? `${key}: gone from the body — check ${base}` : `${key}: removed`,
+
+  if (!grew.length && !shrank.length && !changed.length) {
+    console.log(
+      `class-surface: no exported member or type changed since ${base}.`,
     );
+    process.exit(0);
   }
-  if (changedHere.length) changed.push([label, changedHere.sort()]);
+
+  console.log(`class-surface: comparing ${base}..${head}\n`);
+  if (grew.length) {
+    console.log(
+      'GAINED members — a subclass declaring the same name stops building:',
+    );
+    for (const [label, names, isNew] of grew) {
+      console.log(`  ${label}${isNew ? '  (new file)' : ''}`);
+      console.log(`    ${names.join(', ')}`);
+    }
+    console.log('');
+  }
+  if (shrank.length) {
+    console.log(
+      'LOST members — a subclass that overrode one now overrides nothing:',
+    );
+    for (const [label, names] of shrank) {
+      console.log(`  ${label}\n    ${names.join(', ')}`);
+    }
+    console.log('');
+  }
+  if (changed.length) {
+    console.log(
+      'CHANGED types — same name, different type; readers and overriders may stop compiling:',
+    );
+    for (const [label, entries] of changed) {
+      console.log(`  ${label}`);
+      for (const entry of entries) console.log(`    ${entry}`);
+    }
+    console.log('');
+  }
+  console.log(
+    'Mirror GAINED/LOST into ONE `behavior` entry (see 0.8.0 / 0.9.0\n' +
+      '`exported-class-members-grew`), and each CHANGED type into its own `behavior` entry naming\n' +
+      'who breaks (AUTHORING.md § widening). Still invisible here: a member whose BEHAVIOR changed\n' +
+      'under the same signature, and a member that moved to a base class — check the diff by hand.',
+  );
 }
 
-if (!grew.length && !shrank.length && !changed.length) {
-  console.log(
-    `class-surface: no exported member or type changed since ${base}.`,
-  );
-  process.exit(0);
-}
-
-console.log(`class-surface: comparing ${base}..${head}\n`);
-if (grew.length) {
-  console.log(
-    'GAINED members — a subclass declaring the same name stops building:',
-  );
-  for (const [label, names, isNew] of grew) {
-    console.log(`  ${label}${isNew ? '  (new file)' : ''}`);
-    console.log(`    ${names.join(', ')}`);
-  }
-  console.log('');
-}
-if (shrank.length) {
-  console.log(
-    'LOST members — a subclass that overrode one now overrides nothing:',
-  );
-  for (const [label, names] of shrank) {
-    console.log(`  ${label}\n    ${names.join(', ')}`);
-  }
-  console.log('');
-}
-if (changed.length) {
-  console.log(
-    'CHANGED types — same name, different type; readers and overriders may stop compiling:',
-  );
-  for (const [label, entries] of changed) {
-    console.log(`  ${label}`);
-    for (const entry of entries) console.log(`    ${entry}`);
-  }
-  console.log('');
-}
-console.log(
-  'Mirror GAINED/LOST into ONE `behavior` entry (see 0.8.0 / 0.9.0\n' +
-    '`exported-class-members-grew`), and each CHANGED type into its own `behavior` entry naming\n' +
-    'who breaks (AUTHORING.md § widening). Still invisible here: a member whose BEHAVIOR changed\n' +
-    'under the same signature, and a member that moved to a base class — check the diff by hand.',
-);
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) main();

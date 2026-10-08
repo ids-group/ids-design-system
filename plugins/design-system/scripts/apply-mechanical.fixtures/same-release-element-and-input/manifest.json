@@ -1,0 +1,17 @@
+{
+  "version": "0.5.0",
+  "items": [
+    {
+      "id": "dropdown-removed-use-select",
+      "kind": "selector-rename",
+      "old": "ds-dropdown",
+      "new": "ds-select"
+    },
+    {
+      "id": "dropdown-error-input-rename",
+      "kind": "input-rename",
+      "old": "ds-dropdown[error]",
+      "new": "ds-select[invalid]"
+    }
+  ]
+}

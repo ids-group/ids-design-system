@@ -6,6 +6,7 @@
 import { execSync } from 'node:child_process';
 import {
   existsSync,
+  mkdirSync,
   readdirSync,
   readFileSync,
   rmSync,
@@ -161,6 +162,27 @@ if (existsSync(draftGuide)) {
   renameSync(draftGuide, guideTarget);
   execSync(`git add ${draftGuide} ${guideTarget}`);
   console.log(`changelog: promoted ${draftGuide}/ -> ${guideTarget}/.`);
+}
+
+// Compile fixtures are keyed by the manifest they back, so they follow it: the draft's and every
+// folded prerelease's land in `migrations/fixtures/<version>/`.
+const fixtureTarget = `migrations/fixtures/${version}`;
+for (const source of [...prereleaseManifests, 'unreleased']
+  .map((name) => `migrations/fixtures/${name}`)
+  .filter((path) => existsSync(path))) {
+  mkdirSync(fixtureTarget, { recursive: true });
+  for (const file of readdirSync(source)) {
+    if (existsSync(`${fixtureTarget}/${file}`)) {
+      console.error(
+        `changelog: ${fixtureTarget}/${file} already exists - refusing to overwrite the fixture.`,
+      );
+      process.exit(1);
+    }
+    renameSync(`${source}/${file}`, `${fixtureTarget}/${file}`);
+  }
+  rmSync(source, { recursive: true });
+  execSync(`git add ${source} ${fixtureTarget}`);
+  console.log(`changelog: promoted ${source}/ -> ${fixtureTarget}/.`);
 }
 
 // .design-sync/elements/package.json carries the same version, and nothing but a gate

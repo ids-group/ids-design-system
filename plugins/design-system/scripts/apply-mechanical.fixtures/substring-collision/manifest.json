@@ -1,0 +1,6 @@
+{ "version": "0.7.0", "items": [
+  { "id": "button-size", "kind": "type-rename", "old": "ButtonSize", "new": "DsSize" },
+  { "id": "icon-button-size", "kind": "type-rename", "old": "IconButtonSize", "new": "DsSize" },
+  { "id": "line-width", "kind": "token-rename", "old": "--chart-line-w", "new": "--chart-line-width" },
+  { "id": "line-width-bold", "kind": "token-rename", "old": "--chart-line-w-bold", "new": "--chart-line-width-bold" }
+] }

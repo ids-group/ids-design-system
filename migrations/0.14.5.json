@@ -199,7 +199,7 @@
       "surface": "typescript",
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
       "appliesWhen": "Only a class of yours that extends one of the listed charts. Template users need nothing; subclassing a DS component is unsupported.",
-      "pitfall": "A subclass that overrode a shared input such as caption or frame now shadows the base class member: it compiles only with `override`, and a redeclared input.required data breaks against the optional base.",
+      "pitfall": "A subclass that overrode a shared input such as caption or frame now overrides the base class member and still compiles with `override`, and a redeclared input.required data still compiles against the optional base.",
       "restore": null,
       "searchHints": [
         "extends BarChartComponent",
@@ -239,7 +239,7 @@
       "new": null,
       "surface": "style",
       "action": "None, unless a screen relies on the inverted ds-tooltip: set the three --ds-tooltip-* colours on :root as in restore.",
-      "appliesWhen": "Every ds-tooltip, on both themes. The chart tooltip already took the same colours and is unchanged by this item.",
+      "appliesWhen": "Every ds-tooltip, on both themes. The chart tooltip moves to the same colours in this release, under its own item, and is unchanged by this one.",
       "pitfall": "A screenshot test of an open ds-tooltip changes, and a --ds-tooltip-bg-color override now meets a --tooltip-border-color border it did not have.",
       "restore": ":root { --ds-tooltip-bg-color: var(--surface-inverted); --ds-tooltip-text-color: var(--text-inverted); --ds-tooltip-border-color: transparent; }",
       "searchHints": [

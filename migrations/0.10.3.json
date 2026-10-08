@@ -25,7 +25,7 @@
       "old": "ds-search",
       "new": null,
       "action": "Only if you re-added a ring to that button yourself — that rule can go. (delete list: search-clear-button-focus-rule)",
-      "note": "0.10.2's ring fix silenced the base indicator with a shell-wide reset, which also hit `.search-clear`, a `tabindex=0` tab stop: tabbing from the input to the clear button changed nothing on screen — box-shadow, outline, border, background and colour all identical — so a keyboard user could not tell it had focus. A WCAG 2.4.7 failure. Every shell names the single control it silences now.",
+      "note": "0.10.2's ring fix silenced the base indicator with a shell-wide reset, which also hit `.search-clear`, a `tabindex=0` tab stop: in every shadow-based focus style, tabbing from the input to the clear button changed nothing on screen — box-shadow, outline, border, background and colour all identical (only `data-focus=\"outline\"` and forced colours still drew an outline) — so a keyboard user could not tell it had focus. A WCAG 2.4.7 failure. Every shell names the single control it silences now.",
       "surface": "style",
       "verify": "Type into a ds-search so the clear button appears, then Tab: the × shows its own ring on top of the field halo. Same for a chip close button in ds-autocomplete or ds-multi-select, and for the arrows in ds-number-stepper.",
       "searchHints": [
