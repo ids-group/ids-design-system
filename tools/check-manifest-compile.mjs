@@ -239,6 +239,8 @@ function collectFixtures() {
     const entries = manifestEntries(version);
     for (const file of readdirSync(join(FIXTURES, version))) {
       const name = `fixtures/${version}/${file}`;
+      // Locator fixtures, read by tools/check-manifest-detect.mjs.
+      if (/\.(found|ignored)\.[a-z]+$/.test(file)) continue;
       if (extname(file) !== '.ts' || file.endsWith('.d.ts')) {
         problems.push(
           `${name}: only .ts fixtures are compiled; a template (.html, strictTemplates) fixture is not supported`,
