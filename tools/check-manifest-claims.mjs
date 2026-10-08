@@ -24,12 +24,20 @@
 // and names one of the CHANGELOG entry's code spans (a whole token, three characters or more);
 // otherwise the author is told to back it there.
 //
+// A published sentence verified by hand against its tags is recorded in
+// tools/manifest-claims-verified.json, which does not ship: version, file, location (`<item id>
+// <field>`, `informational[<n>] text`, or the lead of the CHANGELOG entry) and a hash of the
+// sentence with whitespace collapsed. `--audit` lists only the hits no entry matches, so an edited
+// sentence is listed again, and reports every entry that matches no published hit, so the ledger
+// cannot keep a sentence that is gone.
+//
 //   node tools/check-manifest-claims.mjs           # unreleased.json and ## Unreleased, fails on a hit
 //   node tools/check-manifest-claims.mjs --audit   # every published manifest and block, reports only
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { previousBoundary, releaseTags } from './release-tags.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -37,6 +45,9 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const MIGRATIONS = process.env.DS_MIGRATIONS_DIR || join(ROOT, 'migrations');
 const CHANGELOG = process.env.DS_CHANGELOG_PATH || join(ROOT, 'CHANGELOG.md');
 const FIXTURES = join(MIGRATIONS, 'fixtures');
+const LEDGER =
+  process.env.DS_CLAIMS_LEDGER_PATH ||
+  join(ROOT, 'tools', 'manifest-claims-verified.json');
 const AUDIT = process.argv.includes('--audit');
 
 const unknownArgument = process.argv.slice(2).find((arg) => arg !== '--audit');
@@ -107,6 +118,14 @@ const RULES = {
     },
   },
 };
+
+export const sentenceHash = (sentence) =>
+  createHash('sha256')
+    .update(sentence.replace(/\s+/g, ' ').trim())
+    .digest('hex')
+    .slice(0, 16);
+const ledgerKey = ({ version, file, location, hash }) =>
+  [version, file, location, hash].join('\n');
 
 const sentencesOf = (text) =>
   String(text ?? '')
@@ -233,7 +252,8 @@ function entriesOf(manifest) {
 
 function checkManifest(name) {
   const path = join(MIGRATIONS, `${name}.json`);
-  const where = relative(ROOT, path).split(sep).join('/');
+  // Named as in the repository even when DS_MIGRATIONS_DIR points elsewhere, so a ledger entry matches.
+  const where = `migrations/${name}.json`;
   const manifest = JSON.parse(readFileSync(path, 'utf8'));
   const boundary = boundaryOf(name);
   const hits = [];
@@ -242,6 +262,8 @@ function checkManifest(name) {
     for (const problem of evidenceProblems(record.evidence, boundary))
       hits.push({
         where,
+        version: name,
+        location: `${record.label} evidence`,
         label: record.label,
         field: 'evidence',
         rule: 'evidence',
@@ -256,6 +278,8 @@ function checkManifest(name) {
         else
           hits.push({
             where,
+            version: name,
+            location: `${record.label} ${field}`,
             label: record.label,
             field,
             rule: claim.rule,
@@ -338,6 +362,9 @@ function checkChangelogBlock(block, backed) {
       if (!isBacked)
         hits.push({
           where: 'CHANGELOG.md',
+          version: block.version,
+          // Line numbers move with every release, the lead of the entry does not.
+          location: sentencesOf(entry.text)[0].trim().slice(0, 80),
           label: `line ${entry.line}`,
           field: block.version === 'unreleased' ? 'Unreleased' : block.version,
           rule: claim.rule,
@@ -351,31 +378,47 @@ function checkChangelogBlock(block, backed) {
 const format = (hit) =>
   `    ${hit.where}  ${hit.label}  ${hit.field}: ${hit.text.length > 220 ? `${hit.text.slice(0, 220)}...` : hit.text}`;
 
-function audit() {
+export function publishedHits() {
   const manifests = readdirSync(MIGRATIONS)
     .filter((file) => file.endsWith('.json') && file !== 'unreleased.json')
     .map((file) => file.replace(/\.json$/, ''));
-  const byVersion = new Map();
-  const add = (version, hit) => {
-    if (!byVersion.has(version)) byVersion.set(version, []);
-    byVersion.get(version).push(hit);
-  };
-  for (const name of manifests)
-    for (const hit of checkManifest(name).hits) add(name, hit);
+  const hits = manifests.flatMap((name) => checkManifest(name).hits);
   // Released blocks are judged as they stand: their manifests carry no evidence to back a sentence.
   for (const block of changelogBlocks())
     if (block.version !== 'unreleased')
-      for (const hit of checkChangelogBlock(block, [])) add(block.version, hit);
+      hits.push(...checkChangelogBlock(block, []));
+  for (const hit of hits) hit.hash = sentenceHash(hit.text);
+  return hits;
+}
 
+function audit() {
+  const ledger = existsSync(LEDGER)
+    ? JSON.parse(readFileSync(LEDGER, 'utf8'))
+    : [];
+  const verifiedKeys = new Set(ledger.map(ledgerKey));
+  const hits = publishedHits();
+  const hitKeys = new Set(
+    hits.map((hit) => ledgerKey({ ...hit, file: hit.where })),
+  );
+  const unverified = hits.filter(
+    (hit) => !verifiedKeys.has(ledgerKey({ ...hit, file: hit.where })),
+  );
+  const stale = ledger.filter((entry) => !hitKeys.has(ledgerKey(entry)));
+
+  const byVersion = new Map();
+  for (const hit of unverified) {
+    if (!byVersion.has(hit.version)) byVersion.set(hit.version, []);
+    byVersion.get(hit.version).push(hit);
+  }
   const totals = {};
   const versions = [...byVersion.keys()].sort((a, b) =>
     b.localeCompare(a, undefined, { numeric: true }),
   );
   for (const version of versions) {
-    const hits = byVersion.get(version);
-    console.log(`\n${version}  (${hits.length})`);
+    const ofVersion = byVersion.get(version);
+    console.log(`\n${version}  (${ofVersion.length})`);
     for (const rule of [...Object.keys(RULES), 'evidence']) {
-      const ofRule = hits.filter((hit) => hit.rule === rule);
+      const ofRule = ofVersion.filter((hit) => hit.rule === rule);
       if (!ofRule.length) continue;
       totals[rule] = (totals[rule] ?? 0) + ofRule.length;
       console.log(
@@ -384,14 +427,23 @@ function audit() {
       for (const hit of ofRule) console.log(format(hit));
     }
   }
-  const total = Object.values(totals).reduce((sum, count) => sum + count, 0);
+  if (stale.length) {
+    console.log(
+      `\nstale - a ledger entry that matches no published hit (${stale.length})`,
+    );
+    for (const entry of stale)
+      console.log(
+        `    ${entry.version}  ${entry.file}  ${entry.location}  ${entry.hash}: ${entry.sentence ?? ''}`,
+      );
+  }
   console.log(
-    `\ncheck-manifest-claims --audit: ${total} unmeasured claim(s) across ${versions.length} version(s) - ` +
+    `\ncheck-manifest-claims --audit: ${unverified.length} unverified claim(s) across ${versions.length} version(s) - ` +
       `${
         Object.entries(totals)
           .map(([rule, count]) => `${rule} ${count}`)
           .join(', ') || 'none'
-      }. ` +
+      }; ${hits.length - unverified.length} verified in ${relative(ROOT, LEDGER).split(sep).join('/')}; ` +
+      `${stale.length} stale ledger entr(ies). ` +
       'Advisory only: each hit is verified by hand before a published line changes.',
   );
 }
@@ -434,5 +486,7 @@ function strict() {
   );
 }
 
-if (AUDIT) audit();
-else strict();
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+  if (AUDIT) audit();
+  else strict();
+}

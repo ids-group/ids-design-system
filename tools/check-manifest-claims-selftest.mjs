@@ -10,6 +10,7 @@ import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { sentenceHash } from './check-manifest-claims.mjs';
 import { releaseTags } from './release-tags.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -219,6 +220,7 @@ const prepare = ({ manifest, changelog, fixture }) => {
   if (fixture)
     writeFileSync(join(WORK, 'migrations', 'fixtures', fixture), '// probe\n');
   writeFileSync(join(WORK, 'CHANGELOG.md'), changelog ?? UNRELEASED_CLEAN);
+  writeFileSync(join(WORK, 'ledger.json'), '[]');
 };
 const runCheck = (...args) =>
   spawnSync(
@@ -231,6 +233,7 @@ const runCheck = (...args) =>
         ...process.env,
         DS_MIGRATIONS_DIR: join(WORK, 'migrations'),
         DS_CHANGELOG_PATH: join(WORK, 'CHANGELOG.md'),
+        DS_CLAIMS_LEDGER_PATH: join(WORK, 'ledger.json'),
       },
     },
   );
@@ -272,6 +275,71 @@ try {
     failures.push(
       `--audit reports published hits grouped by version and rule, exit 0\n      exit ${audit.status}: ${auditOutput.trim().slice(0, 300)}`,
     );
+
+  // The ledger: an entry silences exactly its sentence, an edit brings the sentence back, and an
+  // entry whose sentence is gone is reported as stale.
+  const VERIFIED = 'All seventeen tokens render identically.';
+  const ledgerEntry = (sentence) => ({
+    version: '0.0.1',
+    file: 'migrations/0.0.1.json',
+    location: 'probe note',
+    hash: sentenceHash(sentence),
+  });
+  const auditWithLedger = (note, ledger) => {
+    prepare({ changelog: UNRELEASED_CLEAN });
+    writeFileSync(
+      join(WORK, 'migrations', '0.0.1.json'),
+      JSON.stringify(draft([item({ note })])),
+    );
+    writeFileSync(join(WORK, 'ledger.json'), JSON.stringify(ledger));
+    const run = runCheck('--audit');
+    return { status: run.status, output: run.stdout + run.stderr };
+  };
+  const ledgerCases = [
+    {
+      label: 'a ledger entry silences its sentence',
+      run: auditWithLedger(VERIFIED, [ledgerEntry(VERIFIED)]),
+      passes: (output) =>
+        !/0\.0\.1\.json  probe  note/.test(output) &&
+        /: 0 unverified claim\(s\)/.test(output) &&
+        /2 verified in /.test(output) &&
+        /0 stale ledger/.test(output),
+    },
+    {
+      label: 'whitespace alone does not unsilence a sentence',
+      run: auditWithLedger(VERIFIED.replace(' ', '  '), [
+        ledgerEntry(VERIFIED),
+      ]),
+      passes: (output) => /: 0 unverified claim\(s\)/.test(output),
+    },
+    {
+      label: 'an edited sentence is reported again and its entry is stale',
+      run: auditWithLedger('All eighteen tokens render identically.', [
+        ledgerEntry(VERIFIED),
+      ]),
+      passes: (output) =>
+        /0\.0\.1\.json  probe  note: All eighteen/.test(output) &&
+        /stale - .*\(1\)\n {4}0\.0\.1 {2}migrations\/0\.0\.1\.json {2}probe note/.test(
+          output,
+        ),
+    },
+    {
+      label: 'an entry whose sentence no longer exists is reported as stale',
+      run: auditWithLedger(VERIFIED, [
+        ledgerEntry(VERIFIED),
+        { ...ledgerEntry('Gone.'), location: 'gone note' },
+      ]),
+      passes: (output) =>
+        /: 0 unverified claim\(s\)/.test(output) &&
+        /1 stale ledger/.test(output) &&
+        /    0\.0\.1  migrations\/0\.0\.1\.json  gone note/.test(output),
+    },
+  ];
+  for (const { label, run, passes } of ledgerCases)
+    if (run.status !== 0 || !passes(run.output))
+      failures.push(
+        `${label}\n      exit ${run.status}: ${run.output.trim().slice(0, 300)}`,
+      );
 } finally {
   rmSync(WORK, { recursive: true, force: true });
 }
@@ -283,5 +351,5 @@ if (failures.length) {
   process.exit(1);
 }
 console.log(
-  `manifest-claims selftest: ${cases.length + 1} case(s), every rule fired and every control stayed quiet.`,
+  `manifest-claims selftest: ${cases.length + 5} case(s), every rule fired and every control stayed quiet.`,
 );
