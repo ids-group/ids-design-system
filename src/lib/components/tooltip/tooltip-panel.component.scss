@@ -22,6 +22,10 @@
   z-index: var(--layer-tooltip);
   box-shadow: var(--_tooltip-shadow);
 
+  strong {
+    font-weight: var(--font-weight-bold);
+  }
+
   &::after {
     content: "";
     position: absolute;
