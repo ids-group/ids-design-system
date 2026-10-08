@@ -3,7 +3,7 @@
 
 Group: Overlay
 
-A term inside running text or a label that carries its definition: `<button type="button" dsDefinitionTerm="Left the journey before the goal step.">exited</button>`. The button looks like the surrounding text with a dotted underline in `--text-tertiary`, takes the focus ring, and shows the definition in a tooltip on hover and focus; a click pins it until a click outside, `Escape` or blur. `[pinOnClick]="false"` where the click already acts, such as a sort button. Also takes `dsTooltipPlacement` and `dsTooltipClippedLead`.
+A term inside running text or a label that carries its definition: `<button type="button" dsDefinitionTerm="Left the journey before the goal step.">exited</button>`. The button looks like the surrounding text with a dotted underline in `--text-tertiary`, takes the focus ring, and shows the definition in a tooltip on hover and focus; a click pins it until a click outside, `Escape` or blur. Hover makes the underline solid in `--text-secondary`, a press tints the term with `--surface-muted`, and while pinned it is `--accent-strong` on `--accent-subtitle` with a solid underline; no state changes its size. `[pinOnClick]="false"` where the click already acts, such as a sort button. Also takes `dsTooltipPlacement` and `dsTooltipClippedLead`.
 
 <!-- inputs:button[dsDefinitionTerm] -->
 All inputs: `pinOnClick: boolean = true`, `dsDefinitionTerm: string = ''`, `dsTooltipPlacement: 'top' | 'bottom' | 'left' | 'right' = 'top'`, `dsTooltipClippedLead: string = ''`
