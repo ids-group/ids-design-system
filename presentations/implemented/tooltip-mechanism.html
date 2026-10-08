@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Механизм тултипа</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-09">
+<meta name="ds-deck-evidence" content="src/lib/components/tooltip/tooltip-clip.ts - src/lib/components/tooltip/tooltip-ancestor-focus.ts - CHANGELOG.md Unreleased (Breaking)">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   /* The tooltip panel rebuilt from tooltip-panel.component.scss on the same tokens. */
   .tip {
@@ -142,27 +144,16 @@
 <body>
 <main>
   <header class="masthead">
-    <h1>Тултип: осталось решить две вещи</h1>
-    <p class="chat">Ответ нести в чат: «Тултип и состояния: деки»</p>
-    <p class="lede">Две вещи ждут тебя, они сразу ниже. Всё остальное уже решено и сделано, оно собрано под ними. Как тултип устроен внутри - в свёрнутом блоке в конце.</p>
-    <div class="chips"><span class="chip is-open">Нужно решение: 2</span><span class="chip">TooltipDirective</span><span class="chip">dsDefinitionTerm</span><span class="chip">ds-info-hint</span><span class="chip">актуально на 2026-10-08</span></div>
+    <h1>Тултип: решено и сделано</h1>
+        <p class="lede">Оба вопроса закрыты, ниже что решено, что сделано и как это выбиралось. Как тултип устроен внутри - в свёрнутом блоке в конце.</p>
+    <div class="chips"><span class="chip is-done">Решено</span><span class="chip">TooltipDirective</span><span class="chip">dsDefinitionTerm</span><span class="chip">ds-info-hint</span><span class="chip">актуально на 2026-10-08</span></div>
   </header>
 
-  <section class="panel verdict">
-    <h2>Что от тебя нужно</h2>
-    <ol class="todo">
-      <li>
-        <span class="ask">Кто пишет жирное название над подсказкой, когда название в колонке обрезано?</span>
-        <p class="mine"><b>Моё предложение:</b> только <code>dsDefinitionTerm</code>. Это уже сделано в <code>dev</code>, нужно твоё «да».</p>
-        <p class="where"><a href="#q-label">К вопросу 1</a></p>
-      </li>
-      <li>
-        <span class="ask">Разрезать ли код тултипа на три файла?</span>
-        <p class="mine"><b>Моё предложение:</b> да. Ветка параллельной сессии уже влита, ждать нечего. Снаружи ничего не меняется.</p>
-        <p class="where"><a href="#q-split">К вопросу 2</a></p>
-      </li>
-    </ol>
-    <p class="cap">Согласен с предложением - нажми у каждого вопроса карточку «рекомендую». Не согласен - нажми другую или напиши замечание под вопросом. Внизу появится одна строка для чата.</p>
+  <section class="decided">
+    <h2>Решено и сделано</h2>
+    <p><b>Жирное название при обрезке пишет только <code>dsDefinitionTerm</code>.</b> Обычный <code>dsTooltip</code> показывает ровно то, что написано.</p>
+    <p><b>Код тултипа разрезан на три файла, два атрибута склеены в один.</b> <code>dsTooltipWhenClipped=".label"</code> заменил пару с <code>dsTooltipTextSelector</code>; клип-тест лежит в <code>tooltip-clip.ts</code>, фокус через родителя в <code>tooltip-ancestor-focus.ts</code>, основной файл остался на 446 строк (было 515, обещал около 360).</p>
+    <p class="evidence">src/lib/components/tooltip/tooltip-clip.ts - src/lib/components/tooltip/tooltip-ancestor-focus.ts - CHANGELOG.md Unreleased (Breaking)</p>
   </section>
 
   <section class="panel q" id="q-label" data-q="label" data-review="Подпись названия при обрезке" data-review-note-only>
