@@ -59,6 +59,9 @@ run(template, 'no-removed-inputs', {
     html('<div dsChartTooltipPreferBelow></div>', [
       { message: /was removed in 0\.14\.1/ },
     ]),
+    html('<div dsTooltipWhenClipped dsTooltipTextSelector=".label"></div>', [
+      { message: /dsTooltipTextSelector.* was removed in/ },
+    ]),
   ],
 });
 

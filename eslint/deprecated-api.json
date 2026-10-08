@@ -8,6 +8,13 @@
       "itemId": "0.14.1#chart-tooltip-prefer-below-removed"
     },
     {
+      "element": "*",
+      "name": "dsTooltipTextSelector",
+      "replacement": null,
+      "since": "the next release",
+      "itemId": "unreleased#tooltip-text-selector-merged-into-when-clipped"
+    },
+    {
       "element": "ds-accordion",
       "name": "multi",
       "replacement": "multiple",
@@ -567,6 +574,13 @@
       "renamed": true,
       "since": "0.13.4",
       "itemId": "0.13.4#app-layout-services-carry-their-component"
+    },
+    {
+      "name": "dsTooltipClippedLead",
+      "replacement": null,
+      "renamed": false,
+      "since": "the next release",
+      "itemId": "unreleased#tooltip-clipped-lead-removed"
     },
     {
       "name": "IconButtonSize",
