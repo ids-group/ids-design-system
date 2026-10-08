@@ -697,7 +697,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 ## Architecture and tokens (2026-06-25)
 - Button and icon-button read public `--ds-*` tokens through private `--_button-*` resolvers; hover and pressed derive via `color-mix` from the bg token (`ds-button`, `ds-icon-button`)
 - `_tokens.scss` is pure tokens; `ds.scss` forwards `fonts` and `link`, and `ds-docs/src/styles.scss` composes them explicitly (`styles/ds`)
-- Token names expanded to full words (`--fw` to `--font-weight`, `--s` to `--space`, `--r` to `--radius`, `--dur` to `--duration`, and the rest); no aliases (Stas; breaking)
+- Token names spelled out: `--fw`, `--fs`, `--lh`, `--ls`, `--s`, `--r`, `--bw`, `--dur` became `--font-weight`, `--font-size`, `--line-height`, `--letter-spacing`, `--space`, `--radius`, `--border-width`, `--duration`; no aliases (Stas; breaking)
 - Elevation primitives `--z100..z400` renamed `--shadow-1..4`; `--layer-*` kept as the z-index scale (`_tokens.scss`; breaking)
 - Decided: `subtitle` is the canonical tint role name (`--*-subtitle`); swatch labels in `color.section.ts` aligned (Stas)
 - `ButtonSize` is `sm|md|lg` (32/40/48), default `md`; legacy `s/m/l` dropped (Stas, `ds-button`; breaking)
