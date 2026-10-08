@@ -22,13 +22,6 @@
       "itemId": "0.11.1#autocomplete-option-groups-input-removed"
     },
     {
-      "element": "ds-badge",
-      "name": "variant",
-      "replacement": "status",
-      "since": "0.5.1",
-      "itemId": "0.5.1#badge-variant-to-status-rename"
-    },
-    {
       "element": "ds-chart",
       "name": "cursorPin",
       "replacement": "pinOnClick",
@@ -41,13 +34,6 @@
       "replacement": "defaultDate",
       "since": "0.6.3",
       "itemId": "0.6.3#date-picker-default-month-input-rename"
-    },
-    {
-      "element": "ds-donut-chart",
-      "name": "thickness",
-      "replacement": "ds-pie-chart[innerRadius]",
-      "since": "0.13.4",
-      "itemId": "0.13.4#pie-chart-thickness-is-now-inner-radius"
     },
     {
       "element": "ds-dropdown",
@@ -101,16 +87,9 @@
     {
       "element": "ds-modal",
       "name": "danger",
-      "replacement": "status",
+      "replacement": "error",
       "since": "0.5.1",
       "itemId": "0.5.1#modal-danger-input-rename"
-    },
-    {
-      "element": "ds-modal",
-      "name": "error",
-      "replacement": "status",
-      "since": "0.10.0",
-      "itemId": "0.10.0#modal-error-boolean-to-status"
     },
     {
       "element": "ds-pie-chart",
@@ -125,13 +104,6 @@
       "replacement": "sortMode",
       "since": "0.8.0",
       "itemId": "0.8.0#table-client-sort-replaced-by-sort-mode"
-    },
-    {
-      "element": "ds-table",
-      "name": "exportButton",
-      "replacement": "dsTableExport",
-      "since": "0.12.1",
-      "itemId": "0.12.1#table-export-behind-directive"
     },
     {
       "element": "ds-table",
@@ -776,7 +748,7 @@
     {
       "owner": "ModalComponent",
       "name": "danger",
-      "replacement": "status",
+      "replacement": "error",
       "since": "0.5.1",
       "itemId": "0.5.1#modal-danger-input-rename"
     },
@@ -814,13 +786,6 @@
       "replacement": "sortMode",
       "since": "0.8.0",
       "itemId": "0.8.0#table-client-sort-replaced-by-sort-mode"
-    },
-    {
-      "owner": "TableComponent",
-      "name": "exportButton",
-      "replacement": "dsTableExport",
-      "since": "0.12.1",
-      "itemId": "0.12.1#table-export-behind-directive"
     },
     {
       "owner": "TableComponent",
