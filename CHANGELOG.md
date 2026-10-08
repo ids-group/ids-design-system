@@ -4361,7 +4361,8 @@
 
 - **Thirteen `--ds-<component>-focus-shadow` tokens are gone**, on button, icon-button, card,
   checkbox, radio, switch, tabs, toast, breadcrumbs, pagination, sidenav-item, sidenav-group and
-  menu-item. Each resolved to `--ds-control-focus-shadow`, which controls no longer read. Set
+  menu-item. Each resolved to `--ds-control-focus-shadow`, which controls no longer read; nor does
+  the error button read `--ds-control-focus-shadow-error`. Set
   `--focus-ring-color`, `--focus-ring-width` or `--focus-ring-offset` on the component's own scope
   instead. Field tokens — `--ds-input-focus-shadow` and its siblings — are unchanged, because fields
   keep the soft halo. An override of a removed token still parses and cascades and changes nothing,
@@ -8559,7 +8560,9 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   also scales avatar size, sidenav width, badge / status-dot sizes, and switch geometry — previously
   left at the cozy defaults, so those controls didn't shrink with the tier. Its switch goes from
   24×20 px with a 12px thumb to 24×14 px with a 10px one (`--switch-track-h` /
-  `--switch-thumb-size` / `--switch-thumb-travel`).
+  `--switch-thumb-size` / `--switch-thumb-travel`). The rest go from the root 32px / 6px / 8px /
+  240px / 8px to `--avatar-md` 20px, `--badge-dot-size` 4px, `--status-dot-size` 5px, `--sidenav-w`
+  200px and `--field-floating-label-top` 4px.
 
 ## 0.5.0 — 2026-07-08
 
