@@ -5,7 +5,8 @@
 - **`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a
   slot.** Such content renders in the body by design, so neither the console nor a mirrored toast
   reports it any more, and an attribute that names no slot (a directive such as `cdkDrag`) is not
-  reported as an unknown slot. Rendering is the same.
+  reported as an unknown slot. Rendering is the same. `ModalComponent`, `ModalCardComponent` and
+  `DrawerComponent` lost the private `unslotted`, so a subclass member of that name no longer collides.
 
 ### Fixed
 
