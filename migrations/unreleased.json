@@ -102,12 +102,9 @@
       "verify": "Open a dialog, drawer or bottom sheet whose buttons sit in a `<div actions>` and confirm they are spaced like buttons that carry `actions` themselves, not touching."
     },
     "`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a slot, or about an attribute that names no slot. That content still renders in the body. A test or screenshot that waited for the `Dev warning` toast these raised has nothing to wait for.",
-    "dsTooltipPinOnClick opens a tooltip on hover and focus with no delay and keeps it open after a click until a click outside, Escape or blur; a second click closes it. Without it a click closes the tooltip as before. While pinned the host carries data-ds-tooltip-pinned, a styling hook for the pinned trigger. Every pinned trigger of the library shows --accent-strong ink on a translucent accent wash; Hovering a pinned trigger deepens the wash by 8 percentage points and pressing it by 16. --pinned-wash-amount (default 12%) sets the share of the accent, and @include pinned.cue(), pinned.cue-hover() and pinned.cue-pressed() from styles/pinned give a trigger of your own the same cue, its hover and its press.",
-    "ds-info-hint (InfoHintComponent) is a question-mark icon button (icon=\"info\" draws an \"i\"): ariaLabel names it, text shows on hover and focus and stays open after a click. The icon darkens on hover, sits on a muted circle while pressed and shows the pinned cue on a circle while pinned.",
-    "dsDefinitionTerm (DefinitionTermDirective) marks a term on any element with a dotted underline in --text-tertiary and shows its definition on hover and focus, pinned on click; on a host other than button it adds tabindex=\"0\", role=\"button\" and Enter / Space; [pinOnClick]=\"false\" turns the pin off. Hover makes the underline solid, a press tints the term with --surface-muted, and a pinned term shows the pinned cue; no state changes its size.",
     {
       "text": "dsDefinitionTerm loads its own .ds-definition-term styles when the first term renders, so an app that assembles the style partials one by one instead of using styles/ds needs nothing.",
-      "verify": "in an app that does not import styles/ds, open a ds-table with a hinted column and confirm the header label has a dotted underline and turns accent on a light wash after a click."
+      "verify": "in an app that does not import styles/ds, open a ds-table with a hinted column and confirm the header label has a dotted underline and turns accent with a 2px underline after a click."
     },
     {
       "text": "A ds-table header label with a hint is a button[dsDefinitionTerm]: a plain label pins its hint on click and takes the term's hover, pressed and pinned states; a sortable one sorts on click and pins nothing.",
@@ -134,6 +131,13 @@
       "evidence": [
         "command:node tools/measure-glyph-clip.mjs <after-docs> <out> <before-run>/glyph-clip.json"
       ]
+    },
+    "dsTooltipPinOnClick opens a tooltip on hover and focus with no delay and keeps it open after a click until a click outside, Escape or blur; a second click closes it. Without it a click closes the tooltip as before. While pinned the host carries data-ds-tooltip-pinned, a styling hook for the pinned trigger. Every pinned trigger of the library shows --accent-strong ink with no fill, plus a 2px solid accent underline on a text trigger; hover thickens the line to 3px and a press adds the --surface-muted fill (an icon takes a --surface-muted circle on hover and a --border-default circle on press). @include pinned.cue(), pinned.cue-hover() and pinned.cue-pressed() from styles/pinned give a trigger of your own the same cue, its hover and its press.",
+    "ds-info-hint (InfoHintComponent) is a question-mark icon button (icon=\"info\" draws an \"i\"): ariaLabel names it, text shows on hover and focus and stays open after a click. The icon darkens on hover, sits on a muted circle while pressed and turns --accent-strong while pinned.",
+    "dsDefinitionTerm (DefinitionTermDirective) marks a term on any element with a dotted underline in --text-tertiary and shows its definition on hover and focus, pinned on click; on a host other than button it adds tabindex=\"0\", role=\"button\" and Enter / Space; [pinOnClick]=\"false\" turns the pin off. Hover makes the underline solid, a press tints the term with --surface-muted, and a pinned term turns --accent-strong with a 2px solid accent underline; no state changes its size.",
+    {
+      "text": "A tooltip (dsTooltip, ds-info-hint, dsDefinitionTerm, a hinted ds-table header) and a ds-menu-item submenu close on a scroll of the window or of any scroll container under them; a pinned tooltip unpins.",
+      "verify": "open a tooltip and pin another inside a scrolling panel of your app, scroll the panel and confirm both close instead of staying where they opened."
     }
   ],
   "deleteList": [
