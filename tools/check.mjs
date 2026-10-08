@@ -36,6 +36,8 @@ const EXTRA = {
   'migration-lint:selftest': ['tools/migration-lint-selftest.mjs'],
   'deck-lint': ['tools/deck-lint.mjs'],
   'deck-lint:selftest': ['tools/deck-lint-selftest.mjs'],
+  // The upgrade plugin's mechanical-apply script, run over its fixture cases.
+  'plugin-apply': ['plugins/design-system/scripts/apply-mechanical.test.mjs'],
   // Sweeps published history and never fails: triage, not a gate.
   'manifest-coverage:audit': ['tools/check-manifest-coverage.mjs', '--audit'],
   // The prose-name and unread-value rules over published manifests, which fail only the draft.
@@ -66,6 +68,9 @@ export const GROUPS = {
   // move in the commit that moves the surface.
   // `manifest-detect` is in: it greps a few fixture files with no tree to extract, and the draft
   // item it asks a fixture for is cheapest to give one in the session that wrote the item.
+  // `plugin-apply` is in: its fixtures run in about 3 s (2026-10-08), and a consumer's upgrade runs
+  // the script before any agent, so a broken rewrite reaches their code unless the PR that made it
+  // fails.
   lint: [
     'tools-parse',
     'entry-point-imports',
@@ -96,6 +101,7 @@ export const GROUPS = {
     'void-tokens',
     'abbreviated-tokens',
     'deck-lint',
+    'plugin-apply',
   ],
   // The `preversion` gate, run by `tools/preflight.mjs` in this order and stopping at the first
   // failure. `tools-parse` is first because every check after it is one of those files. Each

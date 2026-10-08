@@ -76,6 +76,10 @@ documented mechanism for marketplace fetches — do not rely on it.
   the release's tree and delete the dead ones; one per group of rows with disjoint files.
 - `agents/ds-visual-check.md` (sonnet) - measure a rendering change on a consumer screen in a real
   browser; dispatched only when the session has browser tools.
+- `scripts/apply-mechanical.mjs` - applies a version's token-, selector-, input-, output-, class-
+  and type-renames and `value-remap`s by exact, element-scoped replacement before any agent runs,
+  and reports what it left for them (`--dry-run` writes nothing). Its fixture cases live in
+  `apply-mechanical.fixtures/`, run by `apply-mechanical.test.mjs`.
 - `scripts/drift-scan.mjs` - the `--ds-*` tokens and CSS classes a release dropped, and every
   consumer line still naming one (plain `node`, no dependencies; `drift-scan-selftest.mjs` beside it).
 - `skills/triage-feedback/SKILL.md` - for the DS maintainer: triage `feedback/inbox/` into one fix
