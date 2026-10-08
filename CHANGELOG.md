@@ -146,6 +146,15 @@
 
 ### Fixed
 
+- **The keyboard focus ring is rounded on elements that declare no radius.** The close buttons of
+  `ds-banner`, `ds-alert`, `ds-toast`, `ds-drawer` and `ds-modal-card`, the `ds-dropzone` remove
+  button, the `ds-table` column filter button and cell link, a focusable `ds-sparkline` and
+  `ds-tabs` panel, and a middle `ds-accordion-item` header drew a square ring; they take
+  `--focus-ring-radius` now. The `ds-number-stepper` step buttons follow the box's rounded corners.
+  The radius is set at zero specificity in `styles/focus`, so any radius an element declares wins;
+  an element of yours that paints a fill or border and declares none rounds its corners while
+  focused. Declare its `border-radius` to keep it square.
+
 - **A tooltip and a `ds-menu-item` submenu close when anything under them scrolls.** Inside an
   `overflow: auto` container they stayed where they opened while their trigger scrolled away, a
   pinned tooltip included. They close now on a scroll of the window or of any scroll container, as

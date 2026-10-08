@@ -141,6 +141,27 @@
       "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn rows stay, inert under the overlay, until loading clears.",
       "restore": "[data]=\"loading ? [] : rows\"",
       "verify": "A ds-bar-chart reloading with rows on screen shows those rows under a scrim and spinner, and one loading with empty data shows skeleton rows."
+    },
+    {
+      "id": "focus-ring-default-radius",
+      "kind": "behavior",
+      "old": "--focus-ring-radius",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        ":focus-visible",
+        "outline"
+      ],
+      "detect": [
+        ":focus-visible {",
+        ":focus-visible{",
+        "&:focus-visible"
+      ],
+      "action": "None, unless an element of yours paints a background or border, declares no border-radius and must stay square while focused: declare `border-radius: 0` on it.",
+      "appliesWhen": "Ships in `styles/focus`, which `styles/ds` forwards. Every keyboard-focused element that declares no border-radius takes `--focus-ring-radius` through `:where(:focus-visible)`; an element that declares any radius, `0` included, is unaffected.",
+      "pitfall": "A full-width row or flat button with a fill and no declared radius shows rounded fill corners only while focused, so a screenshot taken at rest looks unchanged.",
+      "restore": ":where(:focus-visible) { border-radius: 0; }",
+      "verify": "The built CSS has `border-radius:var(--focus-ring-radius)` inside `:where(:focus-visible)`, and a focused element with a fill keeps the corners it shows at rest."
     }
   ],
   "informational": [
