@@ -454,7 +454,7 @@ styles/_link.scss {
 styles/_overlay-motion.scss {
     --ds-overlay-enter-duration: var(--ds-motion-enter-panel-duration);
     --ds-overlay-enter-easing: var(--ds-motion-enter-panel-easing);
-    --ds-overlay-enter-keyframes: ds-fade-in | ds-scale-in;
+    --ds-overlay-enter-keyframes: ds-fade-in | ds-slide-in;
     --ds-overlay-enter-offset: 4px;
     --ds-overlay-enter-scale: 0.96;
     --ds-overlay-leave-duration: var(--ds-motion-exit-duration);

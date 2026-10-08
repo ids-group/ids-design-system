@@ -177,13 +177,13 @@ const ENTER_PRESETS: readonly EnterPreset[] = [
     keyframes: 'ds-slide-in',
     label: 'Slide',
     feel: 'Fades while travelling a short distance — for a panel, in from the trigger edge.',
-    defaultFor: 'Nothing — opt in with --ds-<surface>-enter-keyframes',
+    defaultFor: 'Overlay panels',
   },
   {
     keyframes: 'ds-scale-in',
     label: 'Scale',
     feel: 'Grows into place from a micro-scale, out of the trigger edge — no travel.',
-    defaultFor: 'Overlay panels, modal, toast, banner, alert',
+    defaultFor: 'Modal, toast, banner, alert',
   },
   {
     keyframes: 'ds-fade-in',
@@ -230,8 +230,7 @@ export class MotionSection {
   protected readonly presetOptions: SegmentedOption[] = ENTER_PRESETS.map(
     (preset) => ({ label: preset.label, value: preset.keyframes }),
   );
-  // Opens on what the library actually does with no configuration, so the demo is not read as
-  // the default.
+  // Opens on the alert's default; the panel beside it defaults to ds-slide-in.
   protected readonly preset = signal('ds-scale-in');
   protected readonly alertShown = signal(true);
   private readonly injector = inject(Injector);

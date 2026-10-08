@@ -5638,8 +5638,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-overlay-enter-keyframes",
-        "value": "ds-scale-in",
-        "notes": "Entrance @keyframes for every portaled panel — default ds-scale-in, which grows the panel out of its trigger edge; also ds-slide-in / ds-fade-in, your own GLOBAL keyframes, or none."
+        "value": "ds-slide-in",
+        "notes": "Entrance @keyframes for every portaled panel — default ds-slide-in, which fades the panel in while it travels from its trigger edge; also ds-scale-in / ds-fade-in, your own GLOBAL keyframes, or none."
       },
       {
         "name": "--ds-overlay-enter-duration",
@@ -5659,7 +5659,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-overlay-enter-scale",
         "value": "0.96",
-        "notes": "Start scale when a panel enters with ds-scale-in (default 0.96)."
+        "notes": "Start scale when a panel enters with ds-scale-in (default 0.96); read only after --ds-overlay-enter-keyframes is set to ds-scale-in."
       },
       {
         "name": "--ds-overlay-leave-duration",

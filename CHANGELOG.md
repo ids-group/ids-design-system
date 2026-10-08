@@ -101,6 +101,12 @@
 
 ### Changed
 
+- **Overlay panels enter with `ds-slide-in` instead of `ds-scale-in`.** A tooltip, popover, select
+  or menu panel and a submenu now fade in while travelling 4px from their trigger edge. The scale
+  entrance re-rasterised the text as it ended, so the glyphs drew heavier during the entrance and
+  then thinned and stepped a pixel: at 150% display scale, 741 changed pixels on the tooltip and
+  1346 on a submenu in the frame the animation ended, 0 with the slide. `--ds-overlay-enter-scale`
+  still works once `--ds-overlay-enter-keyframes: ds-scale-in` brings the scale back.
 - **A `ds-menu-item` submenu stays open while the pointer heads for it.** Moving diagonally from
   the item to its submenu crosses the items below it, and a crossing slower than 150ms closed the
   submenu and opened the next one. The pointer may now cross them for as long as it stays inside
@@ -205,6 +211,7 @@
 | --- | --- | --- |
 | a hand-built info button: `name="info"` on a `ds-icon` inside a `<button>` that carries `dsTooltip` | `ds-info-hint` renders the button, the icon and the pinned tooltip | `<ds-info-hint ariaLabel="…" text="…" />` |
 | a hand-built term button styled with `underline dotted` that carries `dsTooltip` | `dsDefinitionTerm` carries the underline, the focus ring, the keyboard access and the pinned tooltip | `<span dsDefinitionTerm="…">` |
+| `--ds-overlay-enter-keyframes: ds-slide-in` | `ds-slide-in` is the default entrance of overlay panels | nothing |
 
 ## 0.14.8 — 2026-10-06
 

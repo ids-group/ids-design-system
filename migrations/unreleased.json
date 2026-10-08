@@ -141,6 +141,28 @@
       "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn rows stay, inert under the overlay, until loading clears.",
       "restore": "[data]=\"loading ? [] : rows\"",
       "verify": "A ds-bar-chart reloading with rows on screen shows those rows under a scrim and spinner, and one loading with empty data shows skeleton rows."
+    },
+    {
+      "id": "overlay-enter-keyframes-default-slide-in",
+      "kind": "behavior",
+      "old": "--ds-overlay-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-overlay-enter-keyframes",
+        "--ds-overlay-enter-scale"
+      ],
+      "detect": [
+        "--ds-overlay-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless overlay panels must keep growing from a smaller scale: set `--ds-overlay-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every CDK overlay panel the library opens: tooltip, popover, select, multi-select, autocomplete, the date, time and colour picker panels, and a `ds-menu-item` submenu. Ships in `styles/overlay-motion`, which `styles/ds` forwards. `ds-modal`, `ds-toast`, `ds-banner` and `ds-alert` keep `ds-scale-in`; a chart tooltip keeps `ds-fade-in`.",
+      "pitfall": "A `--ds-overlay-enter-scale` set on its own now changes nothing: it is read only while `--ds-overlay-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-overlay-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-slide-in`: an opened tooltip or select panel fades in while moving 4px from its trigger, and does not grow."
     }
   ],
   "informational": [
@@ -231,6 +253,17 @@
       ],
       "why": "dsDefinitionTerm carries the dotted underline, the focus ring, the keyboard access and the pinned tooltip.",
       "replaceWith": "<span dsDefinitionTerm=\"...\">; keep a dotted underline that marks something other than a term with a definition"
+    },
+    {
+      "id": "overlay-enter-keyframes-slide-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-overlay-enter-keyframes: ds-slide-in"
+      ],
+      "why": "ds-slide-in is the default entrance of overlay panels.",
+      "replaceWith": "nothing"
     }
   ]
 }
