@@ -1097,7 +1097,7 @@ file** — the number moves; cite the filename.
 | 16 | `16-column-chart-filter` | How `ds-column-chart` takes a caption under each column and a persistent selection, so a consumer's filter chart can move onto it: point fields, chart inputs with a template, or nothing; `value: number | null` is settled. | none |
 | 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
-| 19 | `19-tooltip-mechanism` | How a column's label and hint are given to the tooltip without hidden behaviour (the directive adds it, a `dsHint` directive with an underline or a question-mark circle, or a `dsTooltipTitle` input), and whether to split the tooltip code into files; the whole mechanism drawn first. | none |
+| 19 | `19-tooltip-mechanism` | Whether and when to split the tooltip code into files, and when to merge the tooltip-group branch into dev; the label-and-hint question is settled. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
