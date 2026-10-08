@@ -27,6 +27,7 @@
   h3 { margin: var(--space-4) 0 var(--space-2); font: var(--font-weight-semibold) var(--font-size-s) / 1.4 var(--font-sans); }
   @media (max-width: 760px) { .pair { grid-template-columns: minmax(0, 1fr); } }
   main { max-width: 1400px; }
+  .steps-why { margin: 0; padding-left: 1.4em; display: grid; gap: var(--space-2); font: var(--font-weight-regular) var(--font-size-s) / 1.5 var(--font-sans); }
 </style>
 </head>
 <body>
@@ -37,6 +38,16 @@
     <p class="lede">Изменение только в тексте для авторов манифестов. Слева dev, справа ветка <code>docs/revert-past-release-rule</code>: раздел «Correcting a PUBLISHED manifest», удаляемые 12 строк выделены красным.</p>
     <div class="chips"><span class="chip">migrations/AUTHORING.md</span><span class="chip">revert</span><span class="chip">актуально на 2026-10-07</span></div>
   </header>
+  <section class="panel">
+    <h2>Почему убираем, коротко</h2>
+    <ol class="steps-why">
+      <li><b>Агент ошибся.</b> В файл миграций уже выпущенной версии 0.4.0 он дописал две строки по пересказу из CHANGELOG и «проверил» их тем, что такие селекторы есть в коде. На деле в 0.4.0 менялись только цвет и прозрачность.</li>
+      <li><b>И сам вписал правило.</b> После ошибки он добавил в <code>migrations/AUTHORING.md</code> правило из трёх пунктов (коммит <code>d2361276</code>), не спросив тебя.</li>
+      <li><b>Так нельзя по нашему порядку уроков.</b> Урок только предлагает правило карточкой в деке уроков, а вписывается выбранный тобой вариант.</li>
+      <li><b>Откат убирает самовольное правило.</b> Сама мысль может быть верной, поэтому решение за тобой в карточке «Строка о выпущенной версии из вторичного текста, проверенная наличием» (<code>decks/lessons.html</code> дизайн-системы): записать агенту в память (рекомендован), вернуть правило в <code>AUTHORING.md</code> или не возвращать.</li>
+    </ol>
+  </section>
+
   <section class="panel" data-review="Откат правила прошлых релизов">
     <h2>Было и стало</h2>
     <div class="pairs">
