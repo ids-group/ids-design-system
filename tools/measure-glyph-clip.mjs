@@ -193,10 +193,14 @@ const spanOf = `async () => { await document.fonts.ready; const s = document.cre
 
 async function shoot(s, evaluate, { component, index, crop }, file) {
   const find = `document.getElementsByTagName(${JSON.stringify(component)})[${index}]`;
-  const found = await evaluate(`() => { const element = ${find}; if (!element) return false; for (let scroller = element.parentElement; scroller; scroller = scroller.parentElement) { if (scroller.scrollHeight > scroller.clientHeight && /auto|scroll/.test(getComputedStyle(scroller).overflowY)) { const top = element.getBoundingClientRect().top - scroller.getBoundingClientRect().top; scroller.scrollTop += top - scroller.clientHeight / 3; } } return true; }`);
+  const found = await evaluate(
+    `() => { const element = ${find}; if (!element) return false; for (let scroller = element.parentElement; scroller; scroller = scroller.parentElement) { if (scroller.scrollHeight > scroller.clientHeight && /auto|scroll/.test(getComputedStyle(scroller).overflowY)) { const top = element.getBoundingClientRect().top - scroller.getBoundingClientRect().top; scroller.scrollTop += top - scroller.clientHeight / 3; } } return true; }`,
+  );
   if (!found) return null;
   await wait(400);
-  const rect = await evaluate(`() => { ${settle} const origin = ${find}.getBoundingClientRect(); return { x: Math.max(0, origin.left + ${crop.x}), y: Math.max(0, origin.top + ${crop.y}), width: ${crop.width}, height: ${crop.height} }; }`);
+  const rect = await evaluate(
+    `() => { ${settle} const origin = ${find}.getBoundingClientRect(); return { x: Math.max(0, origin.left + ${crop.x}), y: Math.max(0, origin.top + ${crop.y}), width: ${crop.width}, height: ${crop.height} }; }`,
+  );
   if (rect.width < 4 || rect.height < 4) return null;
   const { data } = await s('Page.captureScreenshot', {
     format: 'webp',
@@ -213,16 +217,15 @@ const worstOf = (hits) => {
     const key = `${hit.font}	${hit.component}	${hit.clipper}`;
     const entry = worst.get(key) ?? { ...hit, lines: 0 };
     entry.lines += 1;
-    if (hit.clipped > entry.clipped) Object.assign(entry, hit, { lines: entry.lines });
+    if (hit.clipped > entry.clipped)
+      Object.assign(entry, hit, { lines: entry.lines });
     worst.set(key, entry);
   }
   return [...worst.values()];
 };
 
 const previous = shotsFrom ? JSON.parse(readFileSync(shotsFrom, 'utf8')) : null;
-const wanted = shotsFrom
-  ? previous.summary
-  : null;
+const wanted = shotsFrom ? previous.summary : null;
 const theme = process.env.DS_THEME || 'light';
 const result = { baseUrl, theme, fonts: {}, hits: [], measured: 0, boxes: {} };
 const moved = [];
@@ -239,7 +242,9 @@ for (const [font, css] of Object.entries(FONTS)) {
     try {
       await wait(7000);
       await evaluate(walkPage);
-      await evaluate(`() => { document.documentElement.dataset.theme = '${theme}'; }`);
+      await evaluate(
+        `() => { document.documentElement.dataset.theme = '${theme}'; }`,
+      );
       result.fonts[font] ??= await evaluate(spanOf);
       const run = await evaluate(measure);
       const hits = run.hits.map((hit) => ({ font, page, ...hit }));
@@ -249,10 +254,15 @@ for (const [font, css] of Object.entries(FONTS)) {
       const before = previous?.boxes?.[`${font} ${page}`];
       if (before) {
         if (before.length !== run.boxes.length)
-          moved.push(`${font} ${page}: ${before.length} ds-* elements, now ${run.boxes.length}`);
+          moved.push(
+            `${font} ${page}: ${before.length} ds-* elements, now ${run.boxes.length}`,
+          );
         else
           run.boxes.forEach((box, index) => {
-            if (box !== before[index]) moved.push(`${font} ${page}: #${index} ${before[index]} -> ${box}`);
+            if (box !== before[index])
+              moved.push(
+                `${font} ${page}: #${index} ${before[index]} -> ${box}`,
+              );
           });
       }
       if (!outDir) continue;
@@ -264,7 +274,10 @@ for (const [font, css] of Object.entries(FONTS)) {
           s,
           evaluate,
           target,
-          join(outDir, `${target.component}-${target.index}-${target.clipper.replace(/[^a-z0-9-]+/g, '-')}.${font}.${theme}.webp`),
+          join(
+            outDir,
+            `${target.component}-${target.index}-${target.clipper.replace(/[^a-z0-9-]+/g, '-')}.${font}.${theme}.webp`,
+          ),
         );
       }
     } finally {
@@ -284,12 +297,17 @@ for (const entry of result.summary)
     `${entry.font.padEnd(6)} ${(entry.component + '#' + entry.index).padEnd(24)} ${entry.clipper.padEnd(32)} max ${String(entry.clipped).padStart(5)} px of ${entry.lineHeight} (top ${entry.top}, bottom ${entry.bottom}) over ${entry.lines} line(s)`,
   );
 if (previous) {
-  console.log(`boxes: ${Object.values(result.boxes).flat().length} ds-* elements compared with ${shotsFrom}, ${moved.length} changed size`);
+  console.log(
+    `boxes: ${Object.values(result.boxes).flat().length} ds-* elements compared with ${shotsFrom}, ${moved.length} changed size`,
+  );
   for (const line of moved.slice(0, 40)) console.log(`  ${line}`);
 }
 console.log(
   `measure-glyph-clip: ${result.hits.length} clipped of ${result.measured} line(s) measured across ${PAGES.length} pages x ${Object.keys(FONTS).length} fonts, ${theme} theme.`,
 );
 if (outDir)
-  writeFileSync(join(outDir, 'glyph-clip.json'), JSON.stringify(result, null, 2));
+  writeFileSync(
+    join(outDir, 'glyph-clip.json'),
+    JSON.stringify(result, null, 2),
+  );
 process.exit(result.hits.length || moved.length ? 1 : 0);
