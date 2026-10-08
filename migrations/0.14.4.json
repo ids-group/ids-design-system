@@ -124,7 +124,7 @@
       "old": "HeatmapChartComponent, LineChartComponent",
       "new": null,
       "surface": "typescript",
-      "action": "Only in a subclass that redeclares min or max of HeatmapChartComponent, or max or maxSecondary of LineChartComponent: declare it input<number | null, unknown> with the same numberAttribute transform.",
+      "action": "Nothing to change in a subclass that redeclares min or max of HeatmapChartComponent, or max or maxSecondary of LineChartComponent as input<number | null>: it still compiles. Do not retype it input<number | null, unknown>, which fails with TS2416.",
       "appliesWhen": "A class of yours that extends ds-heatmap-chart or ds-line-chart and redeclares one of those four inputs. Reading the value back and binding it in a template are unaffected.",
       "restore": null,
       "searchHints": [
@@ -136,7 +136,7 @@
         "extends LineChartComponent"
       ],
       "verify": "The app builds with no TS2416 on min, max or maxSecondary of a chart subclass.",
-      "note": "The write type widened from number | null to unknown; the value read back is still number | null. Subclassing a DS component is unsupported."
+      "note": "The inputs gained a numberAttribute transform, but their declared write type stays number | null, and so does the value read back. Subclassing a DS component is unsupported."
     },
     {
       "id": "exported-class-members-grew",
@@ -206,7 +206,7 @@
       "text": "The ds-funnel-chart figure clips its vertical overflow, so stage rows rising in the entrance no longer flash a vertical scrollbar; horizontal scrolling is kept.",
       "verify": "Replay a funnel chart's entrance and confirm no vertical scrollbar appears while a narrow one still scrolls horizontally."
     },
-    "min and max on ds-heatmap-chart and max and maxSecondary on ds-line-chart accept a static attribute such as min=\"0\", coerced with numberAttribute."
+    "min and max on ds-heatmap-chart and max and maxSecondary on ds-line-chart coerce a static attribute such as min=\"0\" with numberAttribute. Their write type stays number | null, so under strictTemplates the static attribute still fails with TS2322; bind [min]=\"0\" there."
   ],
   "deleteList": [
     {

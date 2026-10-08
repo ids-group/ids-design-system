@@ -124,6 +124,7 @@ const ITEM_KEYS = new Set([
   'restore',
   'map',
   'supersedes',
+  'evidence',
 ]);
 const DELETE_KEYS = new Set(['id', 'surface', 'find', 'why', 'replaceWith']);
 const TOP_KEYS = new Set(['version', 'items', 'informational', 'deleteList']);
@@ -202,27 +203,33 @@ for (const [name, manifest] of manifests) {
       'no `informational` array (use [] when there is nothing)',
     );
   } else {
-    // An entry is a bare string (the FYI) or `{ text, verify }` — the object shape carries the
-    // one eyeball check a rendering-only change has no symbol to grep for.
+    // An entry is a bare string (the FYI) or `{ text, verify, evidence }` - the object shape
+    // carries the one eyeball check a rendering-only change has no symbol to grep for, or the
+    // measurement behind a claim in `text` (tools/check-manifest-claims.mjs reads `evidence`).
     manifest.informational.forEach((entry, index) => {
       if (typeof entry === 'string') return;
       const at046 = (message) =>
         report(errors, file, 'M046', `informational[${index}] ${message}`);
       if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
-        at046('must be a string or a `{ text, verify }` object');
+        at046('must be a string or a `{ text, verify, evidence }` object');
         return;
       }
       const badKey = Object.keys(entry).find(
-        (key) => key !== 'text' && key !== 'verify',
+        (key) => !['text', 'verify', 'evidence'].includes(key),
       );
       if (badKey) {
-        at046(`has unknown key \`${badKey}\` — only text/verify are allowed`);
+        at046(
+          `has unknown key \`${badKey}\` - only text/verify/evidence are allowed`,
+        );
       }
       if (typeof entry.text !== 'string' || !entry.text.trim()) {
         at046('is an object with no non-empty `text`');
       }
-      if (typeof entry.verify !== 'string' || !entry.verify.trim()) {
-        at046('is an object with no non-empty `verify` - an entry with nothing to eyeball is a bare string; write it as one');
+      if (
+        entry.evidence === undefined &&
+        (typeof entry.verify !== 'string' || !entry.verify.trim())
+      ) {
+        at046('is an object with neither `verify` nor `evidence` - an entry with nothing to eyeball or back is a bare string; write it as one');
       }
     });
   }

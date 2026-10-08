@@ -11,7 +11,7 @@
         "style"
       ],
       "action": "Look at every screen with a ds-stat whose value is longer than its tile, and decide per tile whether the clipped value is acceptable or the value should wrap. Shorten any label that was relying on two lines, or widen its tile — the label clips with no hook to undo it.",
-      "appliesWhen": "Any ds-stat, and only where the label or value is wider than the card. A tile whose value fits renders identically and needs nothing. Tiles that already set --ds-stat-value-white-space are unaffected in shape — they wrapped before and wrap now.",
+      "appliesWhen": "Any ds-stat, and only where the label or value is wider than the card. A tile whose label and value both fit renders identically and needs nothing. Tiles that already set --ds-stat-value-white-space are unaffected in shape — they wrapped before and wrap now.",
       "pitfall": "Nothing fails to build and nothing is lost to a screen reader, so this only shows on the screen: a tile that read in full because its value painted over the neighbouring card now ends in an ellipsis, and the text is reachable only by hovering or focusing it.",
       "restore": "ds-stat { --ds-stat-value-white-space: normal; }",
       "searchHints": [
@@ -90,7 +90,7 @@
         "extends SelectComponent"
       ],
       "verify": "The consumer app type-checks, and no subclass declares `override` on a member the base no longer has.",
-      "note": "TooltipDirective gained `dsTooltipWhenClipped` and `tipText`; ButtonComponent the five destination modifiers plus `routerLinkActiveOptions`, `ariaCurrent` and two resolvers; SidenavItemComponent and SidenavGroupComponent each `ariaCurrent` and two resolvers. TableComponent lost `cellPopoverText`, `cellTextPopover`, `isClipped`, `onCellClipClick` and `onHeaderEnter`, now one directive, and gained `actionLabel`. FieldGroupComponent now extends the internal DsMessageBase and gained `invalidResolved`, `messageId`, `message`, two private fields and, from that base, `hint`, `error`, `warning`, `messageIcon`, `reserveMessage` and `reserveMessageResolved`; InputComponent gained `groupMessage`, and SelectComponent, AutocompleteComponent and DatePickerComponent `groupMessage` and an internal `describedByIds`. The compiler enumerates every collision on the first build."
+      "note": "TooltipDirective gained `dsTooltipWhenClipped` and `tipText`; ButtonComponent the five destination modifiers (`target`, `rel`, `queryParams`, `queryParamsHandling`, `fragment`) plus `routerLinkActiveOptions`, `ariaCurrent` and two resolvers (`ariaCurrentResolved`, `linkModifiers`); SidenavItemComponent and SidenavGroupComponent each `ariaCurrent` and two resolvers (`ariaCurrentResolved`, `noModifiers`). TableComponent lost `cellPopoverText`, `cellTextPopover`, `isClipped`, `onCellClipClick` and `onHeaderEnter`, now one directive, and gained `actionLabel`. FieldGroupComponent now extends the internal DsMessageBase and gained `invalidResolved`, `messageId`, `message`, two private fields (`uid`, `fieldMessage`) and, from that base, `hint`, `error`, `warning`, `messageIcon`, `reserveMessage` and `reserveMessageResolved`; InputComponent gained `groupMessage`, and SelectComponent, AutocompleteComponent and DatePickerComponent `groupMessage` and an internal `describedByIds`. The compiler enumerates every collision on the first build."
     },
     {
       "id": "button-border-token-names-the-colour",
@@ -196,7 +196,7 @@
         "::ng-deep ds-field-group"
       ],
       "verify": "The group renders with your border/radius as before, and the message row sits outside the bordered box.",
-      "note": "The group carries its own message row now, and that line has to sit outside the border — so the host became the column that stacks the two and `.row` became the bordered box. A group with no message keeps the same outer box it had: measured at 40px row and 40px host, growing to 57px only once `error` or `hint` is bound."
+      "note": "The group carries its own message row now, and that line has to sit outside the border — so the host became the column that stacks the two and `.row` became the bordered box. A group with no message and no reserved row keeps the same outer box it had: measured at 40px row and 40px host, growing to 57px once `error`, `warning` or `hint` is bound. `reserveMessage`, `DS_CONFIG.field.reserveMessage` included, reserves that row on a clean group too."
     },
     {
       "id": "chart-categorical-tokens-renamed",
@@ -281,7 +281,7 @@
       "surface": "style",
       "old": "--chart-axis-line, --chart-axis-label, --chart-grid-line, --chart-cursor-line, --chart-tooltip-border",
       "new": "--chart-axis-line-color, --chart-axis-label-color, --chart-grid-line-color, --chart-cursor-line-color, --chart-tooltip-border-color",
-      "action": "Add `-color` to the end of all five names, after renaming `--chart-grid-line-strong`.",
+      "action": "Add `-color` to the end of all five names, after deleting `--chart-grid-line-strong`.",
       "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the five, including a theme block. `--chart-hover-bg-color`, `--chart-tooltip-bg-color` and `--chart-tooltip-text-color` already carried the suffix and keep their names; `--chart-axis-title` is removed rather than renamed and has its own entry.",
       "pitfall": "The old name is inert, not invalid: a gridline or an axis rule simply stops being painted, and an axis with no line reads as a deliberately minimal chart rather than as a broken override.",
       "note": "`--chart-grid-line` is a prefix of `--chart-grid-line-strong`, so handle the longer identifier first — it has an entry of its own. The five values are unchanged in both themes.",
@@ -452,7 +452,7 @@
     "`ds-stat` takes two more hooks beside the existing `--ds-stat-value-white-space`: `--ds-stat-value-lines` puts the ellipsis on the line you name once the value wraps, and `--ds-stat-value-wrap: anywhere` breaks a word wider than the tile. Both default to the shape the component already had, so a tile that sets neither is unaffected by them.",
     "`dsTooltipWhenClipped` is public on the tooltip directive: the tip opens only while its host is showing less text than it holds, and with no `dsTooltip` text it discloses the host's own text. `isTextClipped(element)` from `/core` is the same test on its own — horizontal only, descendants included. Additive; an existing `[dsTooltip]` binding behaves exactly as before.",
     "`ds-button` forwards `fragment`, `queryParams`, `queryParamsHandling`, `target` and `rel` to the anchor it renders, and `routerLink` on it, `ds-sidenav-item` and `ds-sidenav-group` now also accepts a `UrlTree` for the options with no input of their own. All additive. If you kept a hand-written button class for controls that needed one of these, it can go (delete list: hand-written-button-class-for-modifiers).",
-    "`routerLinkActiveOptions` and `ariaCurrent` are public on the same three components — the first moves what the `active` class matches, the second overrides what the link announces. Neither is needed for the corrected default.",
+    "`ariaCurrent` is public on the same three components and overrides what the link announces; `routerLinkActiveOptions`, on `ds-button` alone, moves what the `active` class matches. Neither is needed for the corrected default.",
     "`ds-field-group` takes `error`, `hint` and `warning` — the same message inputs every field takes, resolved by the same code. `error` turns the state on and carries the text; `invalid` stays the flag for when the text lives in a form-level summary. Every segment gains `aria-invalid` while the group is in error and points at the one message through `aria-describedby`. Additive: a group binding neither renders exactly as before.",
     "`ds-bar-chart` is new — horizontal bars with a label, a value and a percentage per row, an optional data table, and a `color` override per row.",
     "A public override layer sits over the chart palette: `--ds-chart-series-1-color` through `--ds-chart-series-8-color`, plus `--ds-chart-axis-line-color`, `--ds-chart-axis-label-color`, `--ds-chart-axis-font-size`, `--ds-chart-grid-line-color`, `--ds-chart-hover-bg-color`, `--ds-chart-cursor-line-color`, `--ds-chart-tooltip-bg-color`, `--ds-chart-tooltip-text-color`, `--ds-chart-tooltip-border-color`, `--ds-chart-bar-gap`, `--ds-chart-line-width`, `--ds-chart-line-width-bold`, `--ds-chart-dot-radius` and `--ds-chart-dot-radius-active`. Each defaults to the palette token behind it, so nothing moves until you set one; set these rather than the palette, and recolouring one series costs one declaration instead of the whole ramp.",

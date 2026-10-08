@@ -23,7 +23,7 @@ export function findChrome() {
 
 export async function open(
   url,
-  { throttle = 1, initScript = '', chromePath = findChrome() } = {},
+  { throttle = 1, initScript = '', chromePath = findChrome(), args = [] } = {},
 ) {
   const profile = mkdtempSync(join(tmpdir(), 'ds-headless-'));
   const chrome = spawn(
@@ -33,6 +33,7 @@ export async function open(
       `--user-data-dir=${profile}`,
       '--window-size=1440,900',
       '--remote-debugging-port=0',
+      ...args,
       'about:blank',
     ],
     { stdio: ['ignore', 'ignore', 'pipe'] },
