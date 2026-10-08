@@ -1,3 +1,4 @@
+import { isDevMode } from '@angular/core';
 import type { Routes } from '@angular/router';
 import { NAV, areaOfPath, urlForGroupPath } from './core/nav.config';
 
@@ -21,6 +22,18 @@ export const routes: Routes = [
   { path: '', pathMatch: 'full', loadComponent: load, data: { path: '' } },
   { path: 'changelog', loadComponent: load, data: { path: 'changelog' } },
   ...areaRedirects,
+  // A regression harness driven by tools/table-clip-harness.mjs; dev server only, never deployed.
+  ...(isDevMode()
+    ? [
+        {
+          path: 'harness/table-clip',
+          loadComponent: () =>
+            import('./harness/table-clip.page').then(
+              (m) => m.TableClipHarnessPage,
+            ),
+        },
+      ]
+    : []),
   { path: ':area/:anchor', loadComponent: load },
   { path: '**', redirectTo: '' },
 ];
