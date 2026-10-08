@@ -11703,7 +11703,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip."
+        "description": "Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip. While pinned the host carries `data-ds-tooltip-pinned`, a hook for styling the pinned trigger."
       }
     ],
     "outputs": []

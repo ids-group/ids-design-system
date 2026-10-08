@@ -47,3 +47,15 @@
       align-items: center;
       gap: var(--space-1);
     }
+
+.states.is-surface { background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider); }
+
+/* State pins read the triggers' own resolvers. */
+[dsDefinitionTerm].pin-hover { text-decoration: underline solid var(--_term-line-color-hover); }
+[dsDefinitionTerm].pin-active { color: var(--_term-color-pressed); background: var(--_term-bg-pressed); box-shadow: 0 0 0 2px var(--_term-bg-pressed); text-decoration: underline solid var(--_term-color-pressed); }
+[dsDefinitionTerm].pin-pinned { color: var(--_term-color-pinned); background: var(--_term-bg-pinned); box-shadow: 0 0 0 2px var(--_term-bg-pinned); text-decoration: underline solid var(--_term-color-pinned); }
+[dsDefinitionTerm].pin-focus { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); }
+:host ::ng-deep .pin-hover .info-hint { color: var(--_info-hint-color-hover); }
+:host ::ng-deep .pin-active .info-hint { color: var(--_info-hint-color-hover); background: var(--_info-hint-bg-pressed); box-shadow: 0 0 0 3px var(--_info-hint-bg-pressed); }
+:host ::ng-deep .pin-pinned .info-hint { color: var(--_info-hint-color-pinned); background: var(--_info-hint-bg-pinned); box-shadow: 0 0 0 3px var(--_info-hint-bg-pinned); }
+:host ::ng-deep .pin-focus .info-hint { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); }
