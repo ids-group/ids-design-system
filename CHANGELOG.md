@@ -210,12 +210,12 @@
 - **Components keep their size, fonts and focus ring in an app that does not load `styles/reset`
   or `styles/focus`.** Each component now sets `box-sizing: border-box` on its host and its own
   elements, puts its form controls in the inherited font, clears its heading margins and draws the
-  base focus ring on its own focusable elements. Without `styles/reset`, fields such as `ds-input`
-  and `ds-select` grew from 38.8px to 40px tall and a host with a border took the browser's
-  `content-box`; without `styles/focus`, buttons such as the `ds-number-stepper` steps and the close
-  buttons of `ds-banner`, `ds-toast`, `ds-modal-card` and `ds-drawer` showed the browser's own focus
-  ring. A height animation such as an expanding `ds-sidenav-group` animates without the reset as
-  well.
+  base focus ring on its own focusable elements. Without `styles/reset`, a default `ds-input` field
+  grew from 40px to 41.2px tall, a `ds-input` inside `ds-field-group` from 38.8px to 40px, and a
+  host with a border took the browser's `content-box`; without `styles/focus`, buttons such as the
+  `ds-number-stepper` steps and the close buttons of `ds-banner`, `ds-toast`, `ds-modal-card` and
+  `ds-drawer` showed the browser's own focus ring. A height animation such as an expanding
+  `ds-sidenav-group` animates without the reset as well.
 
 - **`ds-container` with `size="sm|md|lg"` and the responsive rail of `ds-app-layout` work without
   `bp.emit-vars`.** Both fall back to the library's breakpoints; `ds-container` went full-bleed

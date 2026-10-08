@@ -232,8 +232,8 @@
       "verify": "Open a picker with a query that matches nothing and confirm the row is set in the app's sans face, not a serif."
     },
     {
-      "text": "Every component sets `box-sizing: border-box` on its host and its own elements, the inherited font on its form controls, zero margins on its headings and the base focus ring on its own focusable elements. An app that does not load `styles/reset` or `styles/focus` sees fields such as `ds-input` at 38.8px instead of 40px tall and the library's focus ring where the browser's showed.",
-      "verify": "In an app without `styles/reset`, open a form and confirm a `ds-input` field is 38.8px tall; tab to a `ds-number-stepper` step button and confirm the ring is the library's, not the browser's."
+      "text": "Every component sets `box-sizing: border-box` on its host and its own elements, the inherited font on its form controls, zero margins on its headings and the base focus ring on its own focusable elements. An app that does not load `styles/reset` or `styles/focus` sees a default `ds-input` field at 40px instead of 41.2px tall, and one inside `ds-field-group` at 38.8px instead of 40px, and the library's focus ring where the browser's showed.",
+      "verify": "In an app without `styles/reset`, open a form and confirm a default `ds-input` field is 40px tall; tab to a `ds-number-stepper` step button and confirm the ring is the library's, not the browser's."
     },
     {
       "text": "`ds-container` with `size=\"sm|md|lg\"` and the responsive rail of `ds-app-layout` fall back to the library's breakpoints when `--bp-*` is not set, so they work without `bp.emit-vars`; a `--bp-*` of yours still wins. The dev-mode warning about a missing `--bp-lg` is gone.",
