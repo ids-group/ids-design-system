@@ -41,6 +41,17 @@
   the plot, and a `pointer-events: auto` you set on an element of your `tooltipTemplate` is still
   what makes it clickable while `tooltipLingerMs` keeps an unpinned panel open.
 
+- **`ng add` with a `--project` that does not exist stops with an error naming it.** It printed the
+  generic "add it manually" message and changed nothing, which hid the typo.
+
+- **`ng add` no longer adds a second `@use` of the package styles.** A line you wrote yourself with
+  double quotes, `as` or `with (...)` was not recognised, and Sass then refused the duplicate
+  namespace.
+
+- **`check-overrides` reports `--ds-*` values set from templates and code.** `[style.--ds-*]`
+  bindings and `setProperty('--ds-*', …)` calls were never matched, so a stale token set that way
+  went unreported.
+
 ## 0.14.8 — 2026-10-06
 
 ### Added
