@@ -1,4 +1,6 @@
 @use '../../styles/press' as press;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract: title is single-line with ellipsis and never hides the close
    button; body wraps and scrolls inside the modal; action labels are single-line and

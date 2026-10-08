@@ -1,4 +1,6 @@
 @use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract: item labels, brand name and user name are single-line with
    ellipsis; collapsed, labels hide and move to a tooltip; count badge and group label

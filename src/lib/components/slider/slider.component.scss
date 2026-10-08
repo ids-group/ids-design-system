@@ -1,4 +1,6 @@
 @use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 :host {
   --_slider-track-height: var(--ds-slider-track-height, var(--slider-track-h));
   --_slider-thumb-size: var(--ds-slider-thumb-size, var(--slider-thumb-size));
