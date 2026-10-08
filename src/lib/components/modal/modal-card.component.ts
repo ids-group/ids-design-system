@@ -11,9 +11,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import {
-  DS_INTL,
-} from '@ids-group-ltd/ids-design-system/core';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { resolveDividers } from './modal-defaults';
 import type { ModalSize } from './modal.types';
