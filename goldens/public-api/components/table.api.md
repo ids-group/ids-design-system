@@ -142,7 +142,9 @@ export class TableComponent<T extends object> {
     protected readonly cellTemplates = computed<Record<string, TemplateRef<{ $implicit: unknown; row: unknown; }>>>(…);
     protected cellValue(row: T, col: TableColumn<T>): string;
     protected clearColumnFilter(): void;
-    protected clipWidth(col: TableColumn<T>): number | null;
+    private clipCapsSet;
+    protected clipGrows(col: TableColumn<T>): boolean;
+    protected clipMaxWidth(col: TableColumn<T>, index: number): string | null;
     public readonly columnFilterOptions = input<ReadonlyMap<string, readonly string[]>>(new Map());
     private readonly columnFilterPopover;
     public readonly columnFilters = model<Map<string, ReadonlySet<string>>>(new Map());
@@ -180,7 +182,9 @@ export class TableComponent<T extends object> {
     protected readonly filterSelectedCount = computed<number>(…);
     protected readonly filterValues = computed<readonly string[]>(…);
     protected readonly filteredData = computed<readonly T[]>(…);
+    private fitGrowingClips;
     protected fitsContent(col: TableColumn<T>): boolean;
+    private readonly growingClipColumns;
     protected hasActionsFor(row: T): boolean;
     protected readonly hasAnyColumnFilter = computed(…);
     protected hasColumnFilter(col: TableColumn<T>): boolean;
