@@ -149,7 +149,10 @@
         ".modal.danger",
         "&.danger"
       ],
-      "surface": "style"
+      "surface": "style",
+      "detect": [
+        "ds-modal-card"
+      ]
     },
     {
       "id": "menu-item-danger-class-rename",
