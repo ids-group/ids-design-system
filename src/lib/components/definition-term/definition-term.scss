@@ -1,3 +1,4 @@
+@use '../../styles/focus';
 @use '../../styles/pinned';
 
 // `[dsDefinitionTerm]` on any element. The states only recolour: padding or a border would shift the
@@ -37,7 +38,12 @@
     text-decoration: underline solid var(--_term-line-color-hover);
   }
 
-  &:active {
+  &:focus-visible {
+    @include focus.ring;
+  }
+
+  &:active,
+  &[data-ds-pressed] {
     color: var(--_term-color-pressed);
     background: var(--_term-bg-pressed);
     box-shadow: 0 0 0 2px var(--_term-bg-pressed);
@@ -51,6 +57,11 @@
 
     &:hover {
       @include pinned.cue-hover(2px);
+    }
+
+    &:active,
+    &[data-ds-pressed] {
+      @include pinned.cue-pressed(2px);
     }
   }
 }
