@@ -51,6 +51,13 @@
 
 ### Fixed
 
+- **A `<div actions>` wrapper lays its buttons out like buttons projected one by one.** In the
+  footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet`, the buttons inside a
+  `<div actions>` (or a `<div drawer-footer>`) touched; they now take the footer's gap, alignment
+  and, in `ds-modal-card`, its stacking when the row runs out of width. The wrapper gets
+  `display: contents` at zero specificity, so a `display` you set on it yourself still wins and keeps
+  your own layout.
+
 - **A pinned chart tooltip takes the pointer.** Its text can be selected and a link in a
   `tooltipTemplate` clicked; the panel's content ignored the pointer even while its pane was pinned,
   so a press on it went through to the pane. An unpinned tooltip still lets the pointer through to
