@@ -14,10 +14,10 @@
   outside, `Escape` or blur; a second click closes it. Without it a click closes the tip as before.
   While pinned the host carries `data-ds-tooltip-pinned`. Every pinned trigger of the library shows
   the same cue: `--accent-strong` ink on a translucent accent wash that tints whatever surface it
-  sits on. Hovering a pinned trigger deepens the wash by 8 percentage points. `--pinned-wash-amount`
-  (default `12%`) sets the share of the accent in the wash, and `@include pinned.cue()` and
-  `@include pinned.cue-hover()` from `styles/pinned` give your own pin-capable trigger the same
-  cue and its hover.
+  sits on. Hovering a pinned trigger deepens the wash by 8 percentage points and pressing it by 16.
+  `--pinned-wash-amount` (default `12%`) sets the share of the accent in the wash, and
+  `@include pinned.cue()`, `pinned.cue-hover()` and `pinned.cue-pressed()` from `styles/pinned` give
+  your own pin-capable trigger the same cue, its hover and its press.
   Use it on info and definition triggers only, never on a control whose click acts.
   `TooltipDirective` gained the public `dsTooltipPinOnClick`, protected `onClick` and
   `onPointerLeave`, and the private `document`, `hostPinOnClick`, `pinsOnClick`, `pin`, `unpin`
@@ -37,7 +37,8 @@
   with the term's own text in bold, a line break, then the definition; a definition that already
   contains the term's text is left as it is. On a host other than `<button>` it adds
   `tabindex="0"`, `role="button"`, and `Enter` / `Space` act as a click; on a `<button>` it sets
-  `type="button"`. Hover makes the underline solid in `--text-secondary`, a press tints the term
+  `type="button"`. Hover makes the underline solid in `--text-secondary`, a press (a click held, or
+  `Enter` / `Space` held on a non-button) tints the term
   with `--surface-muted`, and a pinned term shows the pinned cue with a solid accent underline; no
   state changes its size. `[pinOnClick]="false"` turns the pin off where the click
   already acts. The directive brings its own styles: no stylesheet import is needed, including in an app that

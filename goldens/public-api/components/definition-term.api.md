@@ -11,5 +11,7 @@ export class DefinitionTermDirective {
     protected readonly isButton = this.host.tagName === 'BUTTON';
     public readonly pinOnClick = input(true, { transform: booleanAttribute });
     protected pressFromKeyboard(event: Event): void;
+    protected release(): void;
+    protected releaseFromSpace(event: Event): void;
 }
 ```
