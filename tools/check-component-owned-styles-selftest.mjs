@@ -21,9 +21,11 @@ const BASE = {
   'styles/_link.scss': '.link { color: blue; &.quiet { color: gray; } }',
   'styles/_dropdown-overlay.scss': '.ds-dropdown-panel { .empty { padding: 4px; } }',
   'styles/_mixins.scss': '@mixin frame { .frame-empty { margin: 0; } }',
+  'styles/_component-base.scss': '@mixin rules { :host { box-sizing: border-box; } }',
   'components/foo/foo.component.ts':
     "@Component({ selector: 'ds-foo', templateUrl: './foo.component.html' })\nexport class Foo {}",
-  'components/foo/foo.component.scss': ':host { display: block; }\n.label { color: red; }',
+  'components/foo/foo.component.scss':
+    "@use '../../styles/component-base';\n@include component-base.rules;\n:host { display: block; }\n.label { color: red; }",
 };
 
 const run = (files) => {
@@ -92,7 +94,7 @@ const cases = [
     'a class the component defines itself passes, even when a partial defines it too',
     {
       ...html('<span class="link">x</span>'),
-      'components/foo/foo.component.scss': '.link { color: red; }',
+      'components/foo/foo.component.scss': "@use '../../styles/component-base';\n@include component-base.rules;\n.link { color: red; }",
     },
     false,
   ],
@@ -100,7 +102,8 @@ const cases = [
     'a class the component gets through a mixin it includes is its own',
     {
       ...html('<p class="frame-empty">x</p>'),
-      'components/foo/foo.component.scss': "@use '../../styles/mixins';\n@include mixins.frame;",
+      'components/foo/foo.component.scss':
+        "@use '../../styles/component-base';\n@use '../../styles/mixins';\n@include component-base.rules;\n@include mixins.frame;",
     },
     false,
   ],
@@ -130,6 +133,20 @@ const cases = [
   [
     'a keyframes name that starts like a host is not a selector',
     { 'styles/_motion.scss': '@keyframes ds-foo-in { from { opacity: 0; } }' },
+    false,
+  ],
+  [
+    'a component stylesheet without the component base',
+    { 'components/foo/foo.component.scss': ':host { display: block; }' },
+    true,
+    'does not include `component-base.rules`',
+  ],
+  [
+    'a component stylesheet that waives the base with a reason',
+    {
+      'components/foo/foo.component.scss':
+        '/* component-owned-styles: base the host only toggles display */\n:host { display: none; }',
+    },
     false,
   ],
   ['NEGATIVE CONTROL - own classes only, must stay green', html('<span class="label">x</span>'), false],

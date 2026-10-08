@@ -1,13 +1,17 @@
 #!/usr/bin/env node
 // A component's look must ship with the component. A consumer may assemble the global partials one
 // by one instead of `styles/ds`, and whatever a component borrows from a partial they left out
-// disappears without an error. Two shapes of that borrowing fail here:
+// disappears without an error. Three shapes of that borrowing fail here:
 //
 //   1. A library template (src/lib/components/**/*.html, or an inline `template:`) uses a class that
 //      only a global partial defines - `.t-s` from typography, `.grid-2`, `.page-grid`, `.link`. A
 //      class the component's own stylesheets also define is the component's, and passes.
 //   2. A global partial targets a component's host element - `ds-skeleton::after` - so the rule
 //      reaches the component only where that partial is loaded.
+//   3. A component stylesheet (`*.component.scss`) that does not include `component-base.rules`,
+//      which gives the component's own elements what `styles/reset` and `styles/focus` give a page:
+//      `border-box`, form controls in the inherited font, heading margins and the base focus ring.
+//      A stylesheet that genuinely needs none of it says so: `component-owned-styles: base <reason>`.
 //
 // A partial that IS a component's stylesheet and can only be global is listed in GLOBAL_BY_NECESSITY
 // with its reason, and both rules skip it. The list lives here rather than as a marker in the
@@ -185,6 +189,24 @@ for (const { partial, host, selector } of hostRules) {
   violations.push(
     `${partial}  \`${selector}\` targets the host of <${host}> from a global partial, so the rule ` +
       `reaches it only where that partial is loaded. Move it into the component's own stylesheet.`,
+  );
+}
+
+const BASE_WAIVER = /component-owned-styles:\s*base\s+(\S[^\n]*?)\s*(?:\*\/|$)/m;
+for (const file of libFiles.filter(
+  (path) => path.startsWith(COMPONENTS) && path.endsWith('.component.scss'),
+)) {
+  const text = readFileSync(file, 'utf8');
+  if (/@include\s+component-base\.rules\b/.test(withoutComments(text))) continue;
+  const waiver = text.match(BASE_WAIVER);
+  if (waiver) {
+    waived.push(`${name(file)} base - ${waiver[1]}`);
+    continue;
+  }
+  violations.push(
+    `${name(file)}  does not include \`component-base.rules\`, so its elements take box-sizing, form ` +
+      `fonts, heading margins and the base focus ring from whatever the page loads. Add ` +
+      `\`@use '../../styles/component-base'; @include component-base.rules;\` first in the file.`,
   );
 }
 
