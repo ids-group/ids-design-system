@@ -173,6 +173,42 @@ const cases = [
     manifest: '{ "items": [] }',
     expect: { '--surface-default': false },
   },
+  {
+    name: 'FIRES when only a context of a surviving token comes or goes',
+    before: {
+      'styles/_tokens.scss':
+        ':root {\n  --hit-md: 32px;\n  --gap: 8px;\n}\n@media (min-width: 600px) {\n  :root { --gap: 12px; }\n}',
+      'themes/dark/_theme.scss':
+        '@mixin theme {\n  --surface-default: #111;\n}',
+      'themes/light/_theme.scss':
+        '@mixin theme {\n  --surface-default: #fff;\n}',
+    },
+    after: {
+      'styles/_tokens.scss':
+        ':root {\n  --hit-md: 32px;\n  --gap: 8px;\n}\n[data-density="compact"] {\n  --hit-md: 24px;\n}\n@media (min-width: 720px) {\n  :root { --gap: 12px; }\n}',
+      'themes/light/_theme.scss':
+        '@mixin theme {\n  --surface-default: #fff;\n}',
+    },
+    manifest: '{ "items": [] }',
+    expect: {
+      '--hit-md': false,
+      '--gap': false,
+      '--surface-default': false,
+    },
+  },
+  {
+    name: 'HOLDS when the manifest names the token whose context changed',
+    before: {
+      'styles/_tokens.scss': ROOTS('  --hit-md: 32px;'),
+    },
+    after: {
+      'styles/_tokens.scss':
+        ':root {\n  --hit-md: 32px;\n}\n[data-density="compact"] {\n  --hit-md: 24px;\n}',
+    },
+    manifest:
+      '{ "informational": ["`--hit-md` is 24px under compact density."] }',
+    expect: { '--hit-md': true },
+  },
 ];
 
 let ran = 0;

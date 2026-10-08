@@ -3,7 +3,8 @@
 // through a prebuilt object" - is a claim about two trees, and only a compiler can vouch for it.
 // This check compiles the consumer code behind each such claim at both ends of the boundary.
 //
-// Reads `migrations/fixtures/<version>/<item-id>.ts`: consumer-side TypeScript importing from
+// Reads `migrations/fixtures/<version>/<id>.ts`, named by an item or `deleteList` id, or
+// `informational-<n>` for the n-th `informational` line: consumer-side TypeScript importing from
 // `@ids-group-ltd/ids-design-system` and its secondary entry points. A line expected to fail carries
 // a directive on the line above, naming the side of the boundary and the exact codes:
 //
@@ -17,12 +18,12 @@
 // error: the codes reported on each line must equal the codes the directive names, and every line
 // without one must be clean.
 //
-// Fails on: a code mismatch on any line at either tag, a fixture whose item id is not in its
-// manifest, a fixture that is not `.ts`, and an item of `migrations/unreleased.json` naming a TS
+// Fails on: a code mismatch on any line at either tag, a fixture whose id is not in its
+// manifest, a fixture that is not `.ts`, and an entry of `migrations/unreleased.json` naming a TS
 // code that its fixture does not assert.
 //
 //   node tools/check-manifest-compile.mjs            # every fixture, plus the unreleased draft
-//   node tools/check-manifest-compile.mjs --audit    # the same, then every published item whose
+//   node tools/check-manifest-compile.mjs --audit    # the same, then every published entry whose
 //                                                    # TS-code claim no fixture asserts; exits 0
 import { execFileSync } from 'node:child_process';
 import {
@@ -39,7 +40,7 @@ import ts from 'typescript';
 import { previousBoundary, releaseTags } from './release-tags.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const MIGRATIONS = process.env.DS_MIGRATIONS_DIR ?? join(ROOT, 'migrations');
+const MIGRATIONS = process.env.DS_MIGRATIONS_DIR || join(ROOT, 'migrations');
 const FIXTURES = join(MIGRATIONS, 'fixtures');
 const AUDIT = process.argv.includes('--audit');
 const PACKAGE = '@ids-group-ltd/ids-design-system';
@@ -207,10 +208,21 @@ function compare(fixture, side, label, byLine) {
   return mismatches;
 }
 
-function manifestItems(version) {
+// Every entry that can carry a compile claim, keyed as its fixture is named: an item or a
+// `deleteList` row by its id, an `informational` line, which has none, as `informational-<n>`
+// counted from 1.
+function manifestEntries(version) {
   const file = join(MIGRATIONS, `${version}.json`);
   if (!existsSync(file)) return null;
-  return JSON.parse(readFileSync(file, 'utf8')).items ?? [];
+  const manifest = JSON.parse(readFileSync(file, 'utf8'));
+  return [
+    ...(manifest.items ?? []),
+    ...(manifest.deleteList ?? []),
+    ...(manifest.informational ?? []).map((entry, index) => ({
+      ...(typeof entry === 'string' ? { text: entry } : entry),
+      id: `informational-${index + 1}`,
+    })),
+  ];
 }
 
 function collectFixtures() {
@@ -224,7 +236,7 @@ function collectFixtures() {
       continue;
     }
     const version = folder.name;
-    const items = manifestItems(version);
+    const entries = manifestEntries(version);
     for (const file of readdirSync(join(FIXTURES, version))) {
       const name = `fixtures/${version}/${file}`;
       if (extname(file) !== '.ts' || file.endsWith('.d.ts')) {
@@ -234,13 +246,13 @@ function collectFixtures() {
         continue;
       }
       const id = file.slice(0, -'.ts'.length);
-      if (!items) {
+      if (!entries) {
         problems.push(`${name}: there is no migrations/${version}.json`);
         continue;
       }
-      if (!items.some((item) => item.id === id)) {
+      if (!entries.some((entry) => entry.id === id)) {
         problems.push(
-          `${name}: migrations/${version}.json has no item "${id}"`,
+          `${name}: migrations/${version}.json has no entry "${id}"`,
         );
         continue;
       }
@@ -332,9 +344,9 @@ function runFixtures(fixtures) {
   }
 }
 
-function claimsOf(item) {
+function claimsOf(entry) {
   const claims = [];
-  for (const [field, value] of Object.entries(item))
+  for (const [field, value] of Object.entries(entry))
     for (const text of [value].flat())
       if (typeof text === 'string')
         for (const code of text.match(CLAIMED_CODE) ?? [])
@@ -342,7 +354,7 @@ function claimsOf(item) {
   return claims;
 }
 
-// Which TS codes an item names that no fixture of its version asserts.
+// Which TS codes an entry names that no fixture of its version asserts.
 function uncovered(version, fixtures) {
   const asserted = new Map(
     fixtures
@@ -350,15 +362,15 @@ function uncovered(version, fixtures) {
       .map((fixture) => [fixture.id, fixture.parsed.asserted]),
   );
   const gaps = [];
-  for (const item of manifestItems(version) ?? []) {
+  for (const entry of manifestEntries(version) ?? []) {
     const missing = new Map();
-    for (const { field, code } of claimsOf(item)) {
-      if (asserted.get(item.id)?.has(Number(code.slice(2)))) continue;
+    for (const { field, code } of claimsOf(entry)) {
+      if (asserted.get(entry.id)?.has(Number(code.slice(2)))) continue;
       missing.set(code, [...new Set([...(missing.get(code) ?? []), field])]);
     }
     if (missing.size)
       gaps.push(
-        `migrations/${version}.json  ${item.id}  ${asserted.has(item.id) ? 'fixture lacks' : 'no fixture for'} ` +
+        `migrations/${version}.json  ${entry.id}  ${asserted.has(entry.id) ? 'fixture lacks' : 'no fixture for'} ` +
           [...missing]
             .map(([code, fields]) => `${code} (${fields.join(', ')})`)
             .join(', '),
@@ -374,7 +386,7 @@ const draftGaps = uncovered('unreleased', fixtures);
 problems.push(
   ...draftGaps.map(
     (gap) =>
-      `${gap}\n      a TS code in the draft is a compile claim: add the line that produces it to migrations/fixtures/unreleased/<item-id>.ts`,
+      `${gap}\n      a TS code in the draft is a compile claim: add the line that produces it to migrations/fixtures/unreleased/<id>.ts`,
   ),
 );
 
@@ -390,7 +402,7 @@ if (AUDIT) {
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
   const gaps = published.flatMap((version) => uncovered(version, fixtures));
   console.log(
-    `\ncheck-manifest-compile --audit: ${gaps.length} published item(s) name a TS code no fixture asserts`,
+    `\ncheck-manifest-compile --audit: ${gaps.length} published entr(ies) name a TS code no fixture asserts`,
   );
   for (const gap of gaps) console.log(`  ${gap}`);
   if (problems.length) {

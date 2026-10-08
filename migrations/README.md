@@ -105,7 +105,9 @@ they apply.
 
 **Compile fixtures.** A sentence that states a compile outcome - "fails with TS2416", "TS2353
 inline, silent through a prebuilt object", "compiles but never runs" - is backed by
-`migrations/fixtures/<version>/<item-id>.ts` (`unreleased/` for the draft): consumer-side
+`migrations/fixtures/<version>/<id>.ts` (`unreleased/` for the draft), named by the item's or the
+`deleteList` row's `id`, or `informational-<n>` for the n-th `informational` line, counted from 1
+(an informational line has no id, so inserting one above renumbers the fixtures below it): consumer-side
 TypeScript importing from `@ids-group-ltd/ids-design-system` and its secondary entry points, as an
 app would. It is type-checked against the library source at both ends of the boundary, the
 previous stable tag and this one, with `strict`, `noImplicitOverride` (the Angular CLI scaffolds
@@ -120,7 +122,8 @@ carries a directive on the line above, naming the side and the exact codes:
 
 The codes reported on a line must equal the codes named, and a line with no directive must compile
 clean at both tags; TypeScript's own `@ts-expect-error` accepts any error, so the directive is
-stripped before compiling. Every TS code an item names must be one its fixture asserts. Fixtures
+stripped before compiling. Every TS code an item, a `deleteList` row or an `informational` line names must be one its fixture
+asserts. Fixtures
 are kept in the repository and not shipped. Only `.ts` is compiled: template fixtures
 (`strictTemplates`, `.html`) are not supported yet.
 
