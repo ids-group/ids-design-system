@@ -39,9 +39,32 @@
   display: grid;
 }
 
-.skeleton {
-  display: grid;
-  row-gap: var(--_bar-chart-row-gap);
+.is-skeleton {
+  .label {
+    inline-size: 100%;
+  }
+
+  .label > .text-skeleton {
+    max-inline-size: 100%;
+  }
+
+  // The placeholder fills the track, which keeps the track's own size and cap.
+  .track-skeleton {
+    border-radius: var(--_bar-chart-cap-radius);
+  }
+
+  .text-skeleton {
+    border-radius: var(--radius-sm);
+  }
+}
+
+// Under `start` the label column has no text to size it yet, so the placeholders hold it at its cap.
+.rows.is-skeleton.labels-start {
+  grid-template-columns: var(--_bar-chart-label-column-max-width) minmax(0, 1fr) auto;
+
+  &.has-percent {
+    grid-template-columns: var(--_bar-chart-label-column-max-width) minmax(0, 1fr) auto auto;
+  }
 }
 
 .row {

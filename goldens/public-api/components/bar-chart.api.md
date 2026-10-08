@@ -39,6 +39,7 @@ export class BarChartComponent extends DsChartBase implements ChartDimmable, Cha
     public readonly rowClicked = output<BarChartRow>();
     protected readonly rows = computed(…);
     public readonly showPercent = input(true, { transform: booleanAttribute });
+    protected readonly showsSkeleton = computed(…);
     protected readonly skeletonRows = computed(…);
     public readonly staggerMs = input(40, { transform: numberAttribute });
     protected toggleRow(key: string, event?: Event): void;

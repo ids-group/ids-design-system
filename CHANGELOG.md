@@ -44,10 +44,17 @@
   share. A chart with any `hint` or `children` takes `role="group"` instead of `role="img"`, so the
   buttons inside stay reachable. A chart without the new fields renders as before.
   `BarChartComponent` gained the public `labelPosition`, the protected `isExpanded`, `toggleRow`,
-  `hintId`, `holdsControls`, `percentColumn` and `entries`, and the private `idPrefix` and
+  `hintId`, `holdsControls`, `percentColumn`, `entries` and `showsSkeleton`, and the private `idPrefix` and
   `expanded`, so a subclass declaring one of those names must rename it.
 
 ### Changed
+
+- **`ds-bar-chart` keeps its rows on screen while it reloads.** With `loading` set and rows in
+  `data`, the rows stay under the scrim and spinner of `ds-loading-overlay`, the one `ds-table`
+  uses on a reload, and take no focus or pointer until `loading` clears; it drew skeleton rows in
+  their place. Skeleton rows show only while `data` is empty, and now take the label, value,
+  percent and track boxes of a drawn row, so the rows keep their height when data arrives. To show
+  the skeleton on every load, pass an empty `data` while `loading` is set.
 
 - **A tooltip on a clipped host leads with the host's own text in bold.** On any host that carries
   `dsTooltip` or `dsTooltipWhenClipped` and shows less text than it holds, the tip is the host's text

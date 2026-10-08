@@ -31,6 +31,7 @@ import {
   DsChartBase,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import type { ChartDataTable } from '@ids-group-ltd/ids-design-system/core';
@@ -97,6 +98,7 @@ function segmentsOf(
   standalone: true,
   imports: [
     SkeletonComponent,
+    LoadingOverlayComponent,
     ChartTooltipDirective,
     ChartStatesComponent,
     IconComponent,
@@ -472,7 +474,16 @@ export class BarChartComponent
 
   protected readonly isEmpty = computed(() => this.data().length === 0);
 
+  /** Skeleton rows only before there is a row to show; a reload keeps the rows under an overlay, as `ds-table` does. */
+  protected readonly showsSkeleton = computed(
+    () => (this.loading() && this.data().length === 0) || !this.renderReady(),
+  );
+
+  /** One label width per placeholder row, varied so the column does not read as a solid block. */
   protected readonly skeletonRows = computed(() =>
-    Array.from({ length: Math.max(this.data().length, 3) }),
+    Array.from(
+      { length: Math.max(this.data().length, 3) },
+      (_, index) => `${[70, 90, 55][index % 3]}%`,
+    ),
   );
 }
