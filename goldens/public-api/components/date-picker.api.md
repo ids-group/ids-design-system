@@ -172,6 +172,7 @@ ds-date-picker {
     --ds-date-picker-day-today-label-color: var(--accent);
     --ds-date-picker-focus-shadow: var(--ds-field-focus-shadow);
     --ds-date-picker-header-label-color: var(--text-primary);
+    --ds-date-picker-max-width: 100%;
     --ds-date-picker-nav-icon-color: var(--icon-default);
     --ds-date-picker-panel-radius: var(--ds-radius-panel);
     --ds-date-picker-placeholder-color: var(--text-tertiary);
