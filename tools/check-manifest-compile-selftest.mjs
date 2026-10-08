@@ -1,10 +1,12 @@
 #!/usr/bin/env node
-// Does the compile check still FIRE on a wrong code, a missing error, an unknown item, a template
-// fixture, a malformed directive and an unbacked draft claim - and stay green on fixtures that
-// hold, at a tag pair and at the last tag against the working tree?
+// Does the compile check still FIRE on a wrong code, a missing error, an unknown item, an .html
+// fixture, a wrong NG code in a component template, a malformed directive and an unbacked draft
+// claim - and stay green on fixtures that hold, at a tag pair and at the last tag against the
+// working tree?
 //
-// Nothing tracked is written: each case builds its own migrations directory under the OS temp dir
-// and points the check at it through DS_MIGRATIONS_DIR.
+// Nothing tracked is written: each case builds its own migrations directory under
+// node_modules/.cache, where a component fixture's `@angular/core` import resolves, and points the
+// check at it through DS_MIGRATIONS_DIR.
 //
 //   node tools/check-manifest-compile-selftest.mjs
 import { spawnSync } from 'node:child_process';
@@ -16,17 +18,35 @@ import {
   rmSync,
   writeFileSync,
 } from 'node:fs';
-import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const BASE = join(tmpdir(), `manifest-compile-selftest.${process.pid}`);
+const BASE = join(
+  ROOT,
+  'node_modules',
+  '.cache',
+  `selftest-manifest-compile.${process.pid}`,
+);
 
 const AVATAR = `import { avatarTint } from '@ids-group-ltd/ids-design-system';
 
 // @ts-expect-error after TS2353
 export const inline = avatarTint('Ann', { chroma: 0.1 });
+`;
+
+const ACCORDION = `import { Component } from '@angular/core';
+import { AccordionComponent } from '@ids-group-ltd/ids-design-system';
+
+@Component({
+  selector: 'app-accordion',
+  imports: [AccordionComponent],
+  template: \`
+    <!-- expect: after NG8002 -->
+    <ds-accordion [multi]="false"></ds-accordion>
+  \`,
+})
+export class AppAccordion {}
 `;
 
 const draft = (claim, rest = {}) =>
@@ -56,10 +76,11 @@ const claimsOutsideItems = {
 function run(name, files) {
   const migrations = join(BASE, name);
   mkdirSync(migrations, { recursive: true });
-  cpSync(
-    join(ROOT, 'migrations', '0.10.0.json'),
-    join(migrations, '0.10.0.json'),
-  );
+  for (const version of ['0.10.0', '0.13.4'])
+    cpSync(
+      join(ROOT, 'migrations', `${version}.json`),
+      join(migrations, `${version}.json`),
+    );
   for (const [path, text] of Object.entries(files)) {
     mkdirSync(dirname(join(migrations, path)), { recursive: true });
     writeFileSync(join(migrations, path), text);
@@ -85,6 +106,7 @@ const expect = (label, condition) => {
 try {
   const good = run('good', {
     'fixtures/0.10.0/avatar-tint-chroma-to-saturation.ts': AVATAR,
+    'fixtures/0.13.4/accordion-multi-is-multiple.component.ts': ACCORDION,
     'unreleased.json': draft(
       'An inline `chroma` fails with TS2353.',
       claimsOutsideItems,
@@ -94,12 +116,18 @@ try {
     'fixtures/unreleased/chroma-shim.ts': AVATAR.replace('after', 'both'),
   });
   console.log(
-    'HOLDS on fixtures that match, at v0.9.1..v0.10.0 and v<last>..the working tree',
+    'HOLDS on fixtures that match, at v0.9.1..v0.10.0, v0.13.3..v0.13.4 and v<last>..the working tree',
   );
   expect('exits 0', good.status === 0);
   expect(
-    'compiles all four fixtures',
-    /4 fixture\(s\) compiled/.test(good.output),
+    'compiles all five fixtures',
+    /5 fixture\(s\) compiled/.test(good.output),
+  );
+  expect(
+    'a component template under strictTemplates',
+    good.output.includes(
+      'ok    fixtures/0.13.4/accordion-multi-is-multiple.component.ts',
+    ),
   );
 
   const bad = run('bad', {
@@ -111,8 +139,10 @@ try {
     'fixtures/0.10.0/no-such-item.ts': 'export {};\n',
     'fixtures/0.10.0/table-column-width-type-widened-for-readers.html':
       '<ds-table />\n',
+    'fixtures/0.13.4/accordion-multi-is-multiple.component.ts':
+      ACCORDION.replace('after', 'before'),
     'unreleased.json': draft(
-      'A subclass member fails with TS2416.',
+      'A subclass member fails with TS2416, a binding with NG8002.',
       claimsOutsideItems,
     ),
   });
@@ -135,12 +165,19 @@ try {
     bad.output.includes('has no entry "no-such-item"'),
   );
   expect(
-    'a template fixture',
+    'an .html fixture',
     bad.output.includes('only .ts fixtures are compiled'),
   );
   expect(
-    'a draft TS code no fixture asserts',
-    bad.output.includes('draft-claim  no fixture for TS2416'),
+    'an NG code on the wrong side of a template line',
+    bad.output.includes('line 9 at v0.13.3: expected NG8002, got clean') &&
+      bad.output.includes('line 9 at v0.13.4: expected clean, got NG8002'),
+  );
+  expect(
+    'a draft TS or NG code no fixture asserts',
+    bad.output.includes(
+      'draft-claim  no fixture for TS2416 (note), NG8002 (note)',
+    ),
   );
 
   expect(

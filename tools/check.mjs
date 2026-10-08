@@ -52,7 +52,7 @@ export const GROUPS = {
   // `lint:all` runs this, then prettier, stylelint and eslint. Out deliberately: `manifest-truth`
   // and `delete-tables` answer about a release boundary that cannot move without a commit touching
   // the manifests, and the first reads 27 release trees; `manifest-compile` type-checks every
-  // fixture at two extracted release trees (9 s for three fixtures, 2026-10-07); `todo-index`
+  // fixture at two extracted release trees (3 min for 73 fixtures, 2026-10-08); `todo-index`
   // compares against `docs/todo.md`, which parallel sessions edit in a shared checkout;
   // `class-member-notes` reads `migrations/unreleased.json`, which is drafted at the cut, so
   // mid-cycle it would be red on every commit that adds a member.
