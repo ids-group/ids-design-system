@@ -4,6 +4,9 @@
 
 ```ts
 // @internal
+export const TOOLTIP_LEADS_WITH_OWN_TEXT = new InjectionToken<boolean>('TOOLTIP_LEADS_WITH_OWN_TEXT');
+
+// @internal
 export const TOOLTIP_PIN_ON_CLICK = new InjectionToken<Signal<boolean>>('TOOLTIP_PIN_ON_CLICK');
 
 @Directive({ selector: '[dsTooltip], [dsTooltipWhenClipped]' })
@@ -27,6 +30,7 @@ export class TooltipDirective implements OnDestroy {
     public get hostElement(): HTMLElement;
     private readonly hostPinOnClick;
     public isClipped(): boolean;
+    private readonly leadsWithOwnText;
     private listenToFocusableAncestor;
     public ngOnDestroy(): void;
     protected onClick(): void;

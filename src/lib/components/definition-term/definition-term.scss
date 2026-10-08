@@ -48,5 +48,9 @@
     @include pinned.cue(2px);
 
     text-decoration: underline solid var(--accent-strong);
+
+    &:hover {
+      @include pinned.cue-hover(2px);
+    }
   }
 }

@@ -77,6 +77,11 @@ const PINNED_ATTRIBUTE = 'data-ds-tooltip-pinned';
 
 let nextId = 0;
 
+/** @internal Lets a component that hosts the tooltip make a clipped host lead the tip with its own text. */
+export const TOOLTIP_LEADS_WITH_OWN_TEXT = new InjectionToken<boolean>(
+  'TOOLTIP_LEADS_WITH_OWN_TEXT',
+);
+
 /** @internal Lets a component that hosts the tooltip decide `dsTooltipPinOnClick` for it. */
 export const TOOLTIP_PIN_ON_CLICK = new InjectionToken<Signal<boolean>>(
   'TOOLTIP_PIN_ON_CLICK',
@@ -94,6 +99,9 @@ export class TooltipDirective implements OnDestroy {
     self: true,
     optional: true,
   });
+  private readonly leadsWithOwnText =
+    inject(TOOLTIP_LEADS_WITH_OWN_TEXT, { self: true, optional: true }) ??
+    false;
 
   /** Tip text. An empty string turns the tooltip off. */
   readonly dsTooltip = input<string>('');
@@ -144,7 +152,7 @@ export class TooltipDirective implements OnDestroy {
     return (this.textElement()?.textContent ?? '').trim();
   }
 
-  /** A clipped host puts its own text, in bold, above the tip unless the tip already says it. */
+  /** A host that leads with its own text puts it, in bold, above the tip while it is clipped, unless the tip already says it. */
   private tipText(): string {
     const given = this.dsTooltip();
     const own = this.ownText();
@@ -152,6 +160,7 @@ export class TooltipDirective implements OnDestroy {
       return this.dsTooltipWhenClipped() ? escapeTooltipMarkup(own) : '';
     }
     if (
+      this.leadsWithOwnText &&
       own &&
       this.isClipped() &&
       !this.contains(plainTooltipText(given), own)

@@ -2,33 +2,30 @@
 
 ### Breaking
 
-- **`dsTooltipClippedLead` is removed from `TooltipDirective`.** A host whose text is clipped now
-  puts that text in bold above its tooltip without an input, so a `ds-table` header with a `hint`
-  needs nothing. Delete the binding where the lead was the host's own text; where it was other
-  text, write it into the string: `[dsTooltip]="'**' + lead + '**\n' + tip"`.
+- **`dsTooltipClippedLead` is removed from `TooltipDirective`.** A `ds-table` header with a `hint`
+  needs nothing in its place: its `dsDefinitionTerm` button shows its own clipped label in bold
+  above the hint. Anywhere else, delete the binding, or write the lead into the string:
+  `[dsTooltip]="'**' + lead + '**\n' + tip"`.
 
 ### Added
-
-- **`dsTooltipArrow` turns a tooltip's arrow off.** `[dsTooltipArrow]="false"` draws the panel with no
-  arrow pointing at the host; the default is `true`, so every tooltip keeps its arrow until it is set.
-  `TooltipDirective` gained the public `dsTooltipArrow` and `TooltipPanelComponent` the public
-  `arrow`, so a subclass declaring either name must rename it.
 
 - **`dsTooltipPinOnClick` keeps a tooltip open after a click.** With it the tip opens on hover and
   focus with no delay, and a click on the host keeps it open after the pointer leaves until a click
   outside, `Escape` or blur; a second click closes it. Without it a click closes the tip as before.
   While pinned the host carries `data-ds-tooltip-pinned`. Every pinned trigger of the library shows
   the same cue: `--accent-strong` ink on a translucent accent wash that tints whatever surface it
-  sits on. `--pinned-wash-amount` (default `12%`) sets the share of the accent in the wash, and
-  `@include pinned.cue()` from `styles/pinned` gives your own pin-capable trigger the same cue.
+  sits on. Hovering a pinned trigger deepens the wash by 8 percentage points. `--pinned-wash-amount`
+  (default `12%`) sets the share of the accent in the wash, and `@include pinned.cue()` and
+  `@include pinned.cue-hover()` from `styles/pinned` give your own pin-capable trigger the same
+  cue and its hover.
   Use it on info and definition triggers only, never on a control whose click acts.
   `TooltipDirective` gained the public `dsTooltipPinOnClick`, protected `onClick` and
   `onPointerLeave`, and the private `document`, `hostPinOnClick`, `pinsOnClick`, `pin`, `unpin`
   and `pointArrowAtHost`. A subclass declaring one of those names must rename it.
 
-- **`ds-info-hint` is an info icon button with a pinned tooltip.** `<ds-info-hint
-  ariaLabel="About conversion rate" text="…" />` renders a 14px `info` icon button named by
-  `ariaLabel`; `text` shows on hover and focus, describes the button, and stays open after a click.
+- **`ds-info-hint` is an icon button with a pinned tooltip.** `<ds-info-hint
+  ariaLabel="About conversion rate" text="…" />` renders a 14px question-mark icon button named by
+  `ariaLabel`, and `icon="info"` swaps the question mark for an "i"; `text` shows on hover and focus, describes the button, and stays open after a click.
   The icon darkens on hover, sits on a `--surface-muted` circle while pressed, and shows the
   pinned cue on a circle while pinned.
   `InfoHintComponent` is exported from the package root.
@@ -36,7 +33,9 @@
 - **`dsDefinitionTerm` marks a term that carries its definition, on any element.**
   `<span dsDefinitionTerm="…">term</span>` keeps the surrounding text style with a dotted underline
   in `--text-tertiary`, takes the focus ring, shows the definition on hover and focus, and pins it
-  on click; the attribute value is the tooltip text. On a host other than `<button>` it adds
+  on click; the attribute value is the tooltip text. While the term is clipped, its definition opens
+  with the term's own text in bold, a line break, then the definition; a definition that already
+  contains the term's text is left as it is. On a host other than `<button>` it adds
   `tabindex="0"`, `role="button"`, and `Enter` / `Space` act as a click; on a `<button>` it sets
   `type="button"`. Hover makes the underline solid in `--text-secondary`, a press tints the term
   with `--surface-muted`, and a pinned term shows the pinned cue with a solid accent underline; no
@@ -45,12 +44,17 @@
   assembles the style partials one by one.
   `DefinitionTermDirective` is exported from the package root.
 
+- **`dsTooltipArrow` turns a tooltip's arrow off.** `[dsTooltipArrow]="false"` draws the panel with no
+  arrow pointing at the host; the default is `true`, so every tooltip keeps its arrow until it is set.
+  `TooltipDirective` gained the public `dsTooltipArrow` and `TooltipPanelComponent` the public
+  `arrow`, so a subclass declaring either name must rename it.
+
 - **`dsTooltip` renders `**bold**`.** Text between a pair of `**` is bold; `\*\*` is a literal `**`
   and an unpaired `**` stays as typed. The panel builds its content from the parsed text, so no
   markup in a string is interpreted as HTML. Nothing else is parsed: no italics, code, lists or
   tags. `dsTooltipWhenClipped` with no `dsTooltip` shows the host's text exactly as written, even
   where it contains `**`. `TooltipPanelComponent` gained the protected `segments`, and
-  `TooltipDirective` the private `contains` and `ownText`, so a subclass declaring one of those
+  `TooltipDirective` the private `contains`, `ownText` and `leadsWithOwnText`, so a subclass declaring one of those
   names must rename it.
 
 - **`--ds-date-picker-max-width` caps the width of `ds-date-picker`.** It defaults to `100%`, so
@@ -60,12 +64,6 @@
 
 ### Changed
 
-- **A tooltip on a clipped host leads with the host's own text in bold.** On any host that carries
-  `dsTooltip` or `dsTooltipWhenClipped` and shows less text than it holds, the tip is the host's text
-  in bold, a line break, then the tip text; a tip that already contains the host's text is left as it
-  is. A `ds-table` header with a `hint` and a clipped label is the case that ships: the label was
-  plain text above the hint and is now bold, a header that fits still shows the hint alone. Screen
-  readers get the text without the markers.
 - **A `**` in an existing tooltip string now makes text bold.** Write `\*\*` where the asterisks
   are meant literally.
 - **`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a
@@ -80,16 +78,16 @@
 
 ### Fixed
 
+- **A tooltip's arrow points at the centre of its trigger.** It sat at the middle of the panel, so
+  a panel pushed off a viewport edge pointed past a trigger near that edge, 41px off for a button
+  at the right edge.
+
 - **A `<div actions>` wrapper lays its buttons out like buttons projected one by one.** In the
   footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet`, the buttons inside a
   `<div actions>` (or a `<div drawer-footer>`) touched; they now take the footer's gap, alignment
   and, in `ds-modal-card`, its stacking when the row runs out of width. The wrapper gets
   `display: contents` at zero specificity, so a `display` you set on it yourself still wins and keeps
   your own layout.
-
-- **A tooltip's arrow points at the centre of its trigger.** It sat at the middle of the panel, so
-  a panel pushed off a viewport edge pointed past a trigger near that edge, 41px off for a button
-  at the right edge.
 
 - **A pinned chart tooltip takes the pointer.** Its text can be selected and a link in a
   `tooltipTemplate` clicked; the panel's content ignored the pointer even while its pane was pinned,

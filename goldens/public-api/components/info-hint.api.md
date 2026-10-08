@@ -6,6 +6,7 @@
 @Component({ selector: 'ds-info-hint' })
 export class InfoHintComponent {
     public readonly ariaLabel = input.required<string>();
+    public readonly icon = input<'help' | 'info'>('help');
     public readonly text = input.required<string>();
 }
 ```
