@@ -128,7 +128,8 @@
     <code class="t-mono-inline">
       dsTooltipPlacement
     </code> side it flips, arrow included, 8px clear
-    of the viewport edge.
+    of the viewport edge. Text between a pair of
+    <code class="t-mono-inline">**</code> is bold, and a line break shows as a line break.
   </p>
 
   <div class="demo">
@@ -149,6 +150,14 @@
       [dsTooltip]="'Last synced 14m ago'">
       Hover me · bottom
     </ds-button>
+
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm"
+      [dsTooltip]="'Counts **only confirmed** seats'">
+      Hover me · bold
+    </ds-button>
   </div>
 
   <h3 class="block-title t-h4">
@@ -161,7 +170,8 @@
     </code> shows the tip only while the host is
     clipped, re-tested on every open. Without <code class="t-mono-inline">dsTooltip</code> it
     shows the host's own text. <code class="t-mono-inline">dsTooltipTextSelector</code> aims the
-    clip test and text at a descendant; no match, no tip.
+    clip test and text at a descendant; no match, no tip. A clipped host that also has a
+    <code class="t-mono-inline">dsTooltip</code> leads the tip with its own text in bold.
   </p>
 
   <div class="demo">

@@ -22,6 +22,72 @@
       "restore": null,
       "verify": "The app builds, and no subclass of ModalComponent, ModalCardComponent or DrawerComponent reads `this.unslotted`.",
       "note": "ModalComponent, ModalCardComponent and DrawerComponent each lost the private `unslotted`."
+    },
+    {
+      "id": "tooltip-clipped-lead-removed",
+      "kind": "removed-api",
+      "old": "dsTooltipClippedLead",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "searchHints": [
+        "dsTooltipClippedLead",
+        "extends TooltipDirective"
+      ],
+      "detect": [
+        "[dsTooltipClippedLead]=",
+        "dsTooltipClippedLead=",
+        "extends TooltipDirective",
+        "dsTooltipClippedLead"
+      ],
+      "action": "Delete the `dsTooltipClippedLead` binding. Where it carried the host's own text, nothing replaces it. Where it carried other text, write it into the tooltip string as `'**' + lead + '**\n' + tip`. A subclass of TooltipDirective that declared `dsTooltipClippedLead` has nothing to rename any more.",
+      "appliesWhen": "Only an element that binds `dsTooltipClippedLead`, and a class that extends TooltipDirective. `dsTooltip`, `dsTooltipWhenClipped` and `dsTooltipTextSelector` are unchanged, and a `ds-table` header with a `hint` needs nothing.",
+      "pitfall": "Deleting the binding drops the lead line where it was text other than the host's own; a clipped host leads with its own text in bold, never with a different one.",
+      "verify": "No template or class binds `dsTooltipClippedLead`, the app compiles, and a clipped host that used it shows its text in bold above the tip."
+    },
+    {
+      "id": "tooltip-bold-markup",
+      "kind": "behavior",
+      "old": "dsTooltip",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "searchHints": [
+        "dsTooltip",
+        "[dsTooltip]"
+      ],
+      "detect": [
+        "[dsTooltip]=\"`",
+        "'**",
+        "\"**"
+      ],
+      "action": "None, unless a tooltip string holds `**` meant literally: write `\\*\\*` there.",
+      "appliesWhen": "Every `dsTooltip` string, including one a component builds from data. `dsTooltipWhenClipped` with no `dsTooltip` shows the host's text as written and is unaffected.",
+      "pitfall": "A string with two `**` loses both and the text between them turns bold, with no error; user-supplied text reaching a tooltip needs its `**` escaped.",
+      "restore": "[dsTooltip]=\"text().replaceAll('**', '\\*\\*')\"",
+      "verify": "Every tooltip string whose text contains `**` shows the asterisks, or bold where bold was meant."
+    },
+    {
+      "id": "tooltip-clipped-host-leads-with-own-text",
+      "kind": "behavior",
+      "old": "dsTooltipWhenClipped",
+      "new": null,
+      "surface": "none",
+      "searchHints": [
+        "dsTooltip",
+        "dsTooltipWhenClipped",
+        "text-overflow: ellipsis"
+      ],
+      "detect": [],
+      "action": "None. To keep one tooltip from repeating the host's text, include that text in its `dsTooltip` string.",
+      "appliesWhen": "A host with `dsTooltip` or `dsTooltipWhenClipped` that shows less text than it holds and whose tip does not already contain that text. A host that fits, and a tip that already contains the host's text, read as before.",
+      "pitfall": "A screenshot of a clipped button or label with a tooltip gains a bold first line.",
+      "restore": null,
+      "verify": "Narrow a button or label that has a `dsTooltip` until it clips and open the tooltip: its text is bold on the first line, the tip below."
     }
   ],
   "informational": [

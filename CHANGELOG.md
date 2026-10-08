@@ -1,7 +1,30 @@
 ## Unreleased
 
+### Breaking
+
+- **`dsTooltipClippedLead` is removed from `TooltipDirective`.** A host whose text is clipped now
+  puts that text in bold above its tooltip without an input, so a `ds-table` header with a `hint`
+  needs nothing. Delete the binding where the lead was the host's own text; where it was other
+  text, write it into the string: `[dsTooltip]="'**' + lead + '**\n' + tip"`.
+
+### Added
+
+- **`dsTooltip` renders `**bold**`.** Text between a pair of `**` is bold; `\*\*` is a literal `**`
+  and an unpaired `**` stays as typed. The panel builds its content from the parsed text, so no
+  markup in a string is interpreted as HTML. Nothing else is parsed: no italics, code, lists or
+  tags. `dsTooltipWhenClipped` with no `dsTooltip` shows the host's text exactly as written, even
+  where it contains `**`.
+
 ### Changed
 
+- **A tooltip on a clipped host leads with the host's own text in bold.** On any host that carries
+  `dsTooltip` or `dsTooltipWhenClipped` and shows less text than it holds, the tip is the host's text
+  in bold, a line break, then the tip text; a tip that already contains the host's text is left as it
+  is. A `ds-table` header with a `hint` and a clipped label is the case that ships: the label was
+  plain text above the hint and is now bold, a header that fits still shows the hint alone. Screen
+  readers get the text without the markers.
+- **A `**` in an existing tooltip string now makes text bold.** Write `\*\*` where the asterisks
+  are meant literally.
 - **`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a
   slot.** Such content renders in the body by design, so neither the console nor a mirrored toast
   reports it any more, and an attribute that names no slot (a directive such as `cdkDrag`) is not
