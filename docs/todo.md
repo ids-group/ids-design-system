@@ -1027,7 +1027,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-24)
 
-**Twenty** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Twenty-two** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1060,6 +1060,7 @@ file** — the number moves; cite the filename.
 | 19 | `19-tooltip-mechanism` | Everything about the tooltip in one deck: what is settled and in dev, live examples of the term and the info icon, and two open questions (who writes the bold label of a clipped header, whether to split the tooltip file). | none |
 | 20 | `20-interaction-states` | General rules for the states of interactive elements as levels on three channels, with live sliders for the step numbers; one neutral hover surface; a check against empty cells; where to start. | none |
 | 21 | `21-loading-states` | The next-release loading fix for the eight other charts and the three pickers, each drawn now and under the shared rule. | the loading item in Asked by Stas |
+| 22 | `22-text-snap-scale` | How a scaling animation ends without the text snapping a pixel: press (as today for now), card hover, the scaling rule, the funnel stage step. | the overlay-enter-snap fix |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
