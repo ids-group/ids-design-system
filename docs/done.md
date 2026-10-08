@@ -15,7 +15,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - Decided: option K, refit only on ring width, text, hole or font-load change (Stas, deck `pie-chart-center-value`)
 
 ## Unslotted overlay content (2026-10-05)
-- `ds-modal`, `ds-modal-card` and `ds-drawer` render slotless content in the body; `ds-drawer` also takes `[body]` and `[actions]` (Stas, deck `unslotted-content`)
+- `ds-modal`, `ds-modal-card` and `ds-drawer` render slotless content in the body; `ds-drawer` also takes `[body]` and `[actions]` (Stas picked the all-together option, deck `unslotted-content`)
 - Dev mode warns once per message on unslotted content and on unknown slot names (`core/unslotted-content-warning.ts`, `warnUnslottedContent`)
 
 ## ds-docs audit findings (2026-10-02)
@@ -99,7 +99,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 ## Announce oversight dev warning (2026-09-24)
 - `ds-banner` and `ds-alert` warn in dev mode when `announce` is undecided under an assertive variant, or polite but announcing only via config `true` (`core/announce-warning.ts`, `warnAnnounceOversight`)
 - ds-docs sets `banner.announce` and `alert.announce` to `false` at the root (ds-docs)
-- Decided: the warning ends when the key is set either way (Stas, deck `banner-announce-warning`)
+- Decided: the assertive warning fires while `announce` is unset and stops once the key is set to either value (Stas, deck `banner-announce-warning`)
 
 ## Closing overlays are click-through (2026-09-24)
 - `.modal-backdrop.closing`, `.drawer-root.closing` and `.sheet-overlay.closing` carry `pointer-events: none` for the whole leave (`ds-modal`, `ds-drawer`, `ds-bottom-sheet`)
@@ -383,7 +383,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - `AUTHORING.md` requires a `behavior` manifest entry for widened exported types, and `tools/class-surface-diff.mjs` diffs member types (`migrations/AUTHORING.md`)
 - `ds-menu-item` has a `description` input rendered under the label, `aria-describedby`, width cap `--ds-menu-item-description-max-width` (`ds-menu-item`)
 - `ds-list-item` renders `[leading]` and `[trailing]` outside the button; `selected` puts `aria-current` on the host; migration entry written (`ds-list-item`)
-- Decided: keep the error/warning/success ladder, border only with no field fill (Stas, `field-validation-states.html`)
+- Decided: border only, no field fill (Stas, 2026-08-13); the error/warning/success ladder stays, closed on six-system evidence (`field-validation-states.html`)
 - `ds-segmented` is a form control with `NG_VALUE_ACCESSOR`, `resolveFieldMessage` and an inner `.track` (`ds-segmented`)
 - `ds-search` has a form accessor, a `disabled` input, `markTouched()` on blur and a disabled style (`ds-search`)
 - Decided: standalone `ds-radio` stays `[(checked)]`-only and the docs say so on `checked`; the group is the form control (`ds-radio`)
@@ -838,7 +838,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - Closed: 77-way facade name collisions and Angular 22 packaging risks checked and dismissed
 - Closed unbuilt: splitting the icon map (whole set is 2.5 KB gzip, per-icon exports would break `IconName`)
 - Decided: A3 stands; an eager-shell consumer saves about 72 KB gzip with per-component entries (`packaging-chunking-audit.md`)
-- Decided: one package, no basic/advanced split (Stas, deck 5)
+- Decided: no basic/advanced split if the measurement favours the table's opt-in directives, and the work moved to directives A1/A2 (Stas, deck 5)
 - Closed unbuilt: `DsButtonMessage` directive for `ds-button` (built and reverted, probe bundle 308 B worse)
 - `ds-stat` `variant="error"` recolours the value by moving the `--_stat-value-color` resolver (`ds-stat`)
 - `ds-sidenav-footer` collapse button and icon-only `ds-breadcrumbs` crumbs get accessible names; `BreadcrumbItem` can name an icon-only crumb (`BreadcrumbItem`)
