@@ -97,10 +97,15 @@
     gap: var(--_option-row-gap);
   }
 
+  // The row carries its whole type here rather than through a typography class, so it renders the
+  // same whether or not `styles/typography` is loaded.
   .empty {
     padding: var(--space-3) var(--space-4);
     color: var(--_dropdown-empty-color);
+    font-family: var(--ds-typography-s-font-family, var(--font-sans));
+    font-weight: var(--ds-typography-s-font-weight, var(--font-weight-regular));
     font-size: var(--_dropdown-empty-font-size);
+    line-height: var(--ds-typography-s-line-height, var(--line-height-base));
     text-align: center;
   }
 

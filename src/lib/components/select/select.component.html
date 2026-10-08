@@ -267,13 +267,13 @@
 
       @if (loading()) {
         <li
-          class="empty t-s"
+          class="empty"
           role="presentation">
           <ds-spinner size="sm" />
         </li>
       } @else if (options().length === 0) {
         <li
-          class="empty t-s"
+          class="empty"
           role="presentation">
           @if (emptyTemplate(); as tpl) {
             <ng-container [ngTemplateOutlet]="tpl" />
