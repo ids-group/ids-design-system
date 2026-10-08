@@ -9,6 +9,10 @@
 
 ### Added
 
+- **`--ds-loading-overlay-radius` rounds the corners of the `ds-loading-overlay` scrim.** It
+  defaults to `0`. Set it to the radius of the container the overlay covers, so the blurred scrim
+  ends at the container's own rounded edge instead of in square corners.
+
 - **`dsTooltipPinOnClick` keeps a tooltip open after a click.** With it the tip opens on hover and
   focus with no delay, and a click on the host keeps it open after the pointer leaves until a click
   outside, `Escape` or blur; a second click closes it. Without it a click closes the tip as before.
@@ -70,6 +74,31 @@
   which keeps it from spanning a wide dialog or form column; without `fullWidth`, the field stays as
   wide as its date format and never gets narrower than it.
 
+- **`ds-bar-chart` takes `labelPosition`.** `labelPosition="start"` puts each label in a column
+  before its bar, on the bar's line, and lines up labels, bars, values and percents in columns
+  across rows; the default `'top'` keeps the label above the bar. `BarChartLabelPosition` is its
+  type. `--ds-bar-chart-label-column-max-width` (default `40%`) caps the label column, and under
+  `'start'` `--ds-bar-chart-row-gap` defaults to `--space-3` (`--space-5` under `'top'`).
+
+- **A `ds-bar-chart` row can hold rows of its own.** `BarChartRow.children` nests rows under a row
+  behind a disclosure button after its label, closed at first. A child's bar and derived percent
+  are shares of its parent's value, not of `max`; it takes the parent's `color` and `showPercent`
+  unless it sets its own, draws at `--ds-bar-chart-child-fill-opacity` (default `0.55`), and is
+  listed in the data table whether or not its group is open. One level deep. With `interactive`,
+  the row carries `aria-expanded`, and Right opens a closed group and Left closes an open one.
+
+- **`BarChartRow` takes `hint`, `emphasis`, `showPercent` and `detached`.** `hint` turns the label
+  into a defined term: a dotted underline, and the hint in a tooltip on hover and keyboard focus,
+  announced as the label's description. `emphasis` prints the label in bold. `showPercent` prints
+  or hides that row's percent, overriding the chart's. `detached` marks a row that is not a part of
+  the others, such as a total of those who finished or left: a dashed divider in
+  `--ds-bar-chart-divider-color` separates it from the row before, and `partOfWhole` gives it no
+  share. A chart with any `hint` or `children` takes `role="group"` instead of `role="img"`, so the
+  buttons inside stay reachable. A chart without the new fields renders as before.
+  `BarChartComponent` gained the public `labelPosition`, the protected `isExpanded`, `toggleRow`,
+  `hintId`, `holdsControls`, `percentColumn`, `entries`, `showsSkeleton` and `reloading`, and the private `idPrefix` and
+  `expanded`, so a subclass declaring one of those names must rename it.
+
 ### Changed
 
 
@@ -82,6 +111,13 @@
   lines at the default size grows from 147 to 165px in Mulish. An unclamped value keeps its flat
   line in a browser with container style queries; in one without, it takes `line-height: normal`
   as well.
+- **`ds-bar-chart` keeps its rows on screen while it reloads.** With `loading` set and rows in
+  `data`, the rows stay under the scrim and spinner of `ds-loading-overlay`, the one `ds-table`
+  uses on a reload, which covers the whole card to its rounded corners; the chart takes no focus or
+  pointer until `loading` clears. It drew skeleton rows in
+  their place. Skeleton rows show only while `data` is empty, and now take the label, value,
+  percent and track boxes of a drawn row, so the rows keep their height when data arrives. To show
+  the skeleton on every load, pass an empty `data` while `loading` is set.
 - **A `**` in an existing tooltip string now makes text bold.** Write `\*\*` where the asterisks
   are meant literally.
 - **`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a
@@ -89,6 +125,12 @@
   reports it any more, and an attribute that names no slot (a directive such as `cdkDrag`) is not
   reported as an unknown slot. Rendering is the same. `ModalComponent`, `ModalCardComponent` and
   `DrawerComponent` lost the private `unslotted`, so a subclass member of that name no longer collides.
+
+- **`DsIntl` gains a required key: `chart.rowsUnder: (label: string) => string`** (default
+  `` (label) => `Rows under ${label}` ``), the name of a bar-chart group's disclosure button. A
+  complete `DsIntl` dictionary, or a complete `chart` section of one, declared as a typed object
+  stops compiling until it lists it. Overrides passed to `provideDsIntl` are partial and need
+  nothing.
 
 - **A `ds-table` header label with a `hint` is a `button[dsDefinitionTerm]`.** A plain label pins
   its hint on click and takes the term's hover, pressed and pinned states; a sortable one sorts on
@@ -100,6 +142,9 @@
   `overflow: auto` container they stayed where they opened while their trigger scrolled away, a
   pinned tooltip included. They close now on a scroll of the window or of any scroll container, as
   `ds-popover` and the picker panels already did; a pinned tooltip unpins.
+- **A bordered `ds-table`'s reload overlay follows its rounded corners.** The scrim over the rows
+  ended in square bottom corners outside the rounded border; it now takes the table's radius,
+  `--ds-table-radius` or `--ds-radius-control`.
 
 - **A tooltip's arrow points at the centre of its trigger.** It sat at the middle of the panel, so
   a panel pushed off a viewport edge pointed past a trigger near that edge, 41px off for a button
@@ -139,6 +184,12 @@
 - **`check-overrides` reports `--ds-*` values set from templates and code.** `[style.--ds-*]`
   bindings and `setProperty('--ds-*', …)` calls were never matched, so a stale token set that way
   went unreported.
+
+- **`ds-bar-chart` prints `—` for a row with a non-finite value.** A `NaN` or `Infinity` value, or a
+  `[low, high]` pair with a non-finite end, printed `0` and `0.0%` as though it were a reading of zero.
+  The row now draws no bar and shows `—` as its value, as its percentage (unless the row sets
+  `percent`) and as its share in the data table under `partOfWhole`. The generated summary leaves
+  such a row out of its lowest and highest readings, and reads `—` when no row has a value.
 
 ### What you can now DELETE
 

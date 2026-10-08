@@ -23,6 +23,7 @@ ds-loading-overlay {
     --ds-loading-overlay-enter-keyframes: ds-fade-in;
     --ds-loading-overlay-enter-scale: 0.96;
     --ds-loading-overlay-label-color: var(--text-secondary);
+    --ds-loading-overlay-radius: 0;
     --ds-loading-overlay-scrim-color: color-mix( in srgb, var(--surface-canvas) calc(var(--opacity-scrim) * 100%), transparent );
 }
 ```

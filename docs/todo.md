@@ -14,17 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**122 open — 3 P1, 8 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**121 open — 1 P1, 9 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P1 — 3
+### P1 — 1
 
-- **Defects consumers work around today (swept 2026-09-23)**
-  - `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer)
 - **Asked by Stas**
   - A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
-  - `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
 
-### P2 — 8
+### P2 — 9
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -34,6 +31,7 @@ item and nothing else.
   - Tooltips and trigger-anchored overlays should follow their trigger on scroll, not close (Stas, 2026-10-08)
   - Document how to build `ds-modal` actions (Stas, 2026-10-06)
   - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
+  - Loading in the other data components: skeleton without data, overlay on a reload (Stas, 2026-10-08)
 - **Open verdicts, each drawn in a deck**
   - Six Unreleased behaviour changes shipped without a choice between alternatives
 - **Tooling**
@@ -239,7 +237,6 @@ Defects a consumer hit - from a QA pass, or from reading a consumer tree for a r
 
 - [ ] **[P2] The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer).** `--border-default` is `var(--neutral-200)` (`_semantic.scss:49`, #DCE1EA) and is the resting edge of `ds-input` (`input.component.scss:17`) and 25 more components: 1.31:1 on white in the stock theme against the 3:1 WCAG 1.4.11 floor for a control boundary. `--secondary-on` is the constant `var(--primary-on)` = white (`:134`, `:116`) while `--secondary` recomposes from `--secondary-h/s/l`, so a gold secondary (#FBAC18) gets white text at 1.91:1 - and the stock theme already fails: white on the stock `--secondary` #FF7B2E (`hsl(22 100% 59%)`) is 2.59:1 against 4.5:1 (computed 2026-10-02). ids-europe-landing rebinds both (`_theme.scss:44-57`, `:89`). **Wanted:** a control-edge role that clears 3:1 in both themes (or `--border-default` moved to it), and `--secondary-on` derived from `--secondary`'s lightness or listed in the brand must-rebind checklist of the brand-unsafe item.
 
-- [ ] **[P1] `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer).** `components.md` (bar chart, "Behaviour") says a non-finite value draws no bar and prints a dash. `bar-chart.component.ts` formats `plainValue(row.value) ?? extent.high`, and `extent.high` of NaN is 0, so the label and the share read `0 / 0.0%`. Seen in a docs build at `e0ff159f` (2026-10-06, a NaN row in the bar chart demo). **Wanted:** the dash the doc describes, in the value, the share and the generated summary. Raised to P1 (Stas, 2026-10-06): it is one of the gaps in the "`ds-bar-chart` customization asked by mm-ecm" item (work branch `ecm-feat/bar-chart-customization`).
 - [x] **[P1] A clipped hinted header shows its label and hint as two plain lines; the label should be a bold line of its own (asked by Stas, 2026-10-06).** `dsTooltipClippedLead` joins lead and hint with a newline and `tooltip-panel.component.scss` sets `white-space: pre-line` for every tooltip, so any tooltip text with a newline now breaks there and the label is the same weight as the hint. **Wanted:** a `lead` input on `TooltipPanelComponent` rendered as a bold line, set by the directive only while the host is clipped, and `pre-line` reverted. Work branch `ecm-fix/tooltip-arrow-anchor` (tooltip group). A started, unverified patch: mm-ecm-platform `.claude/local/from-scratchpad/2026-10-06-tooltip-lead-bold/tooltip-lead-bold.wip.patch` (local, not in git).
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
@@ -388,28 +385,7 @@ Each has somebody behind it. Nothing here is speculative work.
   version and how it is consumed - carry its best practices into `ai-sdlc-prototype`, and finish what is
   left there. Tracked here because Stas does not open that repository; the work itself happens in it.
 
-- [ ] **[P1] `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06).** Work branch `ecm-feat/bar-chart-customization` (empty marker branch from dev).
-  The consumer draws "label + bar + number" rows in Analyze (the journey waterfall and the exit reasons) by hand because `ds-bar-chart` cannot be configured to match. **Two implementation routes, the DS team decides:** (a) extend `ds-bar-chart` with the options below, or (b) a new `ds-bar-list` row component for label + bar + number rows. `ds-funnel-chart` is not a fit: the consumer cannot change the chart type.
-  **Gaps:**
-  - label to the left of the bar on the same line (today above it);
-  - an expandable group row with a chevron and sub-rows;
-  - configurable bar height;
-  - per-row bar colour supplied by the consumer;
-  - a term label with a dotted underline and a hint (`button[dsDefinitionTerm]` on `fix/tooltip-arrow-anchor`);
-  - per-row emphasis (bold first and last row);
-  - per-row percent visibility (`showPercent` today is all-or-none);
-  - an empty value shows a dash, not `0` - the defect item "`ds-bar-chart` prints `0` and `0.0%` for a non-finite value" in "Defects consumers work around today", raised to P1 by this ask;
-  - a row outside the chain (for example "Completed or exited");
-  - loading that dims the rows instead of a skeleton.
-  **ECM source** (mm-ecm-platform repo root), `src/frontend/projects/ecm-portal/src/app/features/programs/pages/analyze/journey-outcomes/`:
-  - `journey-waterfall.component.ts`, `.html`, `.scss`
-  - `journey-exits.component.ts`, `.html`, `.scss`
-  **Screenshots** (`docs/asks/bar-chart/`):
-  - `ecm-journey-waterfall-expanded.webp` - the ECM waterfall with a group row expanded
-  - `ecm-journey-waterfall-live-data.webp` - the same on live programme data
-  - `ecm-exit-reasons.webp` - the exit and suppression reasons
-  - `compare-ecm-waterfall.webp` against `compare-ds-bar-chart-waterfall-rows.webp` - ECM and `ds-bar-chart` with the same rows
-  - `compare-ds-bar-chart-exit-reasons.webp` - `ds-bar-chart` with the exit reasons (one colour, `0` for an empty value)
+- [ ] **[P2] Loading in the other data components: skeleton without data, overlay on a reload (Stas, 2026-10-08).** Stas: «где не так, и не общее поведение - сделай деку и покажи как будет. в следующем релизе поправим». The rule, as `ds-table` (`loading=true`) and `ds-bar-chart` follow it: skeleton rows while there is no data; on a reload the data stays under `ds-loading-overlay`, which covers the whole container and takes its radius through `--ds-loading-overlay-radius`. **Next release:** the other eight charts (`ds-chart`, column, line, pie, funnel, waterfall, heatmap, scatter) pass `[pending]="loading() || !renderReady()"` to `ChartStatesComponent`, so a reload blanks the plot into a skeleton - move the bar chart's rule into `ChartStatesComponent`; `ds-select`, `ds-multi-select` and `ds-autocomplete` show a spinner row - skeleton options while empty, the overlay over the list on a reload. `ds-pagination` stays: its skeleton hides a stale total by design. Each drawn now and under the rule in deck `21-loading-states`.
 
 - [ ] **[P3] `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23).** The English `waterfall`
   is the field's standard word - Excel, Power BI, Tableau, Highcharts and ECharts all use it, with
@@ -1052,7 +1028,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-24)
 
-**Fourteen** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Twenty** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1084,7 +1060,8 @@ file** — the number moves; cite the filename.
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
 | 19 | `19-tooltip-mechanism` | Everything about the tooltip in one deck: what is settled and in dev, live examples of the term and the info icon, and two open questions (who writes the bold label of a clipped header, whether to split the tooltip file). | none |
 | 20 | `20-interaction-states` | General rules for the states of interactive elements as levels on three channels, with live sliders for the step numbers; one neutral hover surface; a check against empty cells; where to start. | none |
-| 21 | `21-revert-past-release-rule` | Before and after of `docs/revert-past-release-rule`: the "Every line added to a published manifest is written from that boundary's diff" rule leaves `migrations/AUTHORING.md`, and what that changes for an author. | none |
+| 21 | `21-loading-states` | The next-release loading fix for the eight other charts and the three pickers, each drawn now and under the shared rule. | the loading item in Asked by Stas |
+| 22 | `22-revert-past-release-rule` | Before and after of `docs/revert-past-release-rule`: the "Every line added to a published manifest is written from that boundary's diff" rule leaves `migrations/AUTHORING.md`, and what that changes for an author. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
