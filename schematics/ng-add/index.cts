@@ -59,7 +59,7 @@ export function ngAdd(options: NgAddSchema): Rule {
     }
 
     const current = tree.read(stylesEntry)!.toString();
-    if (current.includes(DS_IMPORT)) {
+    if (DS_USE.test(current)) {
       context.logger.info(
         'ng-add: design system already imported — nothing to do.',
       );
