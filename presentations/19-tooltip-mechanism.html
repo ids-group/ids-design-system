@@ -142,95 +142,42 @@
 <body>
 <main>
   <header class="masthead">
-    <h1>Тултип, подсказка и термин: всё в одной деке</h1>
-    <p class="chat">Ответ нести в чат: «Тултип: разметка и подпись»</p>
-    <p class="lede">Сверху то, что уже решено и где лежит. Дальше живые примеры термина и два вопроса, которые ещё ждут тебя: подпись названия и нарезка кода. Как тултип устроен, внизу в свёрнутом блоке.</p>
-    <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">TooltipDirective</span><span class="chip">dsDefinitionTerm</span><span class="chip">ds-info-hint</span><span class="chip">актуально на 2026-10-08</span></div>
+    <h1>Тултип: осталось решить две вещи</h1>
+    <p class="chat">Ответ нести в чат: «Тултип и состояния: деки»</p>
+    <p class="lede">Две вещи ждут тебя, они сразу ниже. Всё остальное уже решено и сделано, оно собрано под ними. Как тултип устроен внутри - в свёрнутом блоке в конце.</p>
+    <div class="chips"><span class="chip is-open">Нужно решение: 2</span><span class="chip">TooltipDirective</span><span class="chip">dsDefinitionTerm</span><span class="chip">ds-info-hint</span><span class="chip">актуально на 2026-10-08</span></div>
   </header>
 
-  <section class="panel">
-    <h2>Уже решено</h2>
-    <table class="decided">
-      <thead><tr><th>Что</th><th>Решение</th><th>Где лежит</th></tr></thead>
-      <tbody>
-        <tr><td>**жирный** в dsTooltip</td><td>работает, <code>\*\*</code> даёт звёздочки; больше ничего не разбирается</td><td>в <code>dev</code></td></tr>
-        <tr><td>dsTooltipClippedLead</td><td>удалён, нового входа вместо него нет</td><td>в <code>dev</code> (Breaking)</td></tr>
-        <tr><td>dsTooltipDelay</td><td>остаётся как есть</td><td>в <code>dev</code></td></tr>
-        <tr><td>dsTooltipArrow</td><td>флаг, <code>[dsTooltipArrow]="false"</code> убирает стрелку</td><td>в <code>dev</code></td></tr>
-        <tr><td>термин с определением</td><td>одна директива <code>dsDefinitionTerm</code> на любом теге: span, button, p. «Только класс» отклонён: нужно готовое решение</td><td>в <code>dev</code></td></tr>
-        <tr><td>ds-info-hint</td><td>по умолчанию кружок «?», <code>icon="info"</code> меняет на «i»</td><td>в <code>dev</code></td></tr>
-        <tr><td>закреплённый триггер</td><td>наведение на закреплённый термин или значок усиливает подсветку с 12% до 20%</td><td>в <code>dev</code></td></tr>
-        <tr><td>две ветки с подсказками</td><td>обе попадают в <code>dev</code>, одинаковые коммиты сливаются сами (Stas)</td><td>ветка термина влита, ветка <code>ecm-fix/tooltip-arrow-anchor</code> вливает <code>dev</code> и идёт следом</td></tr>
-      </tbody>
-    </table>
+  <section class="panel verdict">
+    <h2>Что от тебя нужно</h2>
+    <ol class="todo">
+      <li>
+        <span class="ask">Кто пишет жирное название над подсказкой, когда название в колонке обрезано?</span>
+        <p class="mine"><b>Моё предложение:</b> только <code>dsDefinitionTerm</code>. Это уже сделано в <code>dev</code>, нужно твоё «да».</p>
+        <p class="where"><a href="#q-label">К вопросу 1</a></p>
+      </li>
+      <li>
+        <span class="ask">Разрезать ли код тултипа на три файла?</span>
+        <p class="mine"><b>Моё предложение:</b> да. Ветка параллельной сессии уже влита, ждать нечего. Снаружи ничего не меняется.</p>
+        <p class="where"><a href="#q-split">К вопросу 2</a></p>
+      </li>
+    </ol>
+    <p class="cap">Согласен с предложением - нажми у каждого вопроса карточку «рекомендую». Не согласен - нажми другую или напиши замечание под вопросом. Внизу появится одна строка для чата.</p>
   </section>
 
-  <section class="panel">
-    <h2>Термин живьём: одна директива на span, button и p</h2>
-    <p>Да, директиву можно повесить на любой тег, и всё работает: фокус, Tab, Enter, Space, Esc, закрепление кликом, подсказка и определение для скринридера. На не-кнопке она сама ставит <code>tabindex="0"</code>, <code>role="button"</code> и превращает Enter и Space в клик, на <code>&lt;button&gt;</code> ставит <code>type="button"</code>. Наводи, жми Tab и щёлкай. Под примером строка пишет, что произошло. Оговорка про <code>p</code>: целый абзац становится кнопкой, поэтому слово внутри текста лучше оборачивать в <code>span</code>.</p>
-    <div class="modes">
-      <div class="mode" data-live="term">
-        <h3>На span</h3>
-        <p class="x-sample">Контакты, которые <span class="x-anchor"><span class="x-term" tabindex="0" role="button">вышли</span><span class="x-tip" hidden></span></span> до цели, не считаются.</p>
-        <div class="x-th"><span class="x-anchor"><span class="x-term" tabindex="0" role="button">Покинувшие</span><span class="x-tip" hidden></span></span></div>
-        <p class="x-log" data-log>Наведи, Tab, Enter, Space, Esc.</p><p class="x-says" data-says></p>
-        <p class="code">&lt;span dsDefinitionTerm="Покинули путь до шага цели."&gt;вышли&lt;/span&gt;</p>
-      </div>
-      <div class="mode" data-live="term">
-        <h3>На button</h3>
-        <p class="x-sample">Контакты, которые <span class="x-anchor"><button type="button" class="x-term">вышли</button><span class="x-tip" hidden></span></span> до цели, не считаются.</p>
-        <div class="x-th"><span class="x-anchor"><button type="button" class="x-term" data-sortable>Покинувшие</button><span class="x-tip" hidden></span></span><span class="sort" data-sort>↕</span></div>
-        <p class="x-log" data-log>В заголовке клик сортирует и ничего не закрепляет: <code>[pinOnClick]="false"</code>.</p><p class="x-says" data-says></p>
-        <p class="code">&lt;button dsDefinitionTerm="Покинули путь до шага цели."&gt;вышли&lt;/button&gt;</p>
-      </div>
-      <div class="mode" data-live="term">
-        <h3>На p</h3>
-        <div class="x-sample"><span class="x-anchor"><p class="x-term" tabindex="0" role="button" style="margin:0">Контакты, которые вышли до цели, не считаются.</p><span class="x-tip" hidden></span></span></div>
-        <p class="x-log" data-log>Весь абзац стал кнопкой.</p><p class="x-says" data-says></p>
-        <p class="code">&lt;p dsDefinitionTerm="Покинули путь до шага цели."&gt;...&lt;/p&gt;</p>
-      </div>
-      <div class="mode" data-live="plain">
-        <span class="badge is-no">отклонено</span>
-        <h3>Только класс для вида</h3>
-        <p class="x-sample">Контакты, которые <span class="x-anchor"><span class="x-term is-plain">вышли</span><span class="x-tip" hidden></span></span> до цели, не считаются.</p>
-        <p class="x-log" data-log>Наведи и щёлкни: ничего не произойдёт.</p><p class="x-says" data-says></p>
-        <p class="code">&lt;span class="term"&gt;вышли&lt;/span&gt;</p>
-        <p class="cap">Подсказку и фокус каждый раз собирает приложение. Ты сказал: нужно готовое решение</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="panel">
-    <h2>ds-info-hint живьём: по умолчанию «?», по желанию «i»</h2>
-    <p>Тот же движок, что у термина: кнопка-значок, закрепление кликом. Попробуй оба.</p>
-    <div class="modes">
-      <div class="mode" data-live="hint">
-        <h3>Кружок «?» (по умолчанию)</h3>
-        <p class="x-sample"><span class="x-hintrow">Conversion rate <span class="x-anchor"><button type="button" class="x-hint" aria-label="About conversion rate"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4M12 17v.01"/></svg></button><span class="x-tip" hidden></span></span></span></p>
-        <p class="x-log" data-log>Наведи, Tab, Enter, Esc.</p><p class="x-says" data-says></p>
-        <p class="code">&lt;ds-info-hint ariaLabel="About conversion rate" text="..." /&gt;</p>
-      </div>
-      <div class="mode" data-live="hint">
-        <h3>Буква «i»</h3>
-        <p class="x-sample"><span class="x-hintrow">Conversion rate <span class="x-anchor"><button type="button" class="x-hint" aria-label="About conversion rate"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v4h1"/></svg></button><span class="x-tip" hidden></span></span></span></p>
-        <p class="x-log" data-log>Наведи, Tab, Enter, Esc.</p><p class="x-says" data-says></p>
-        <p class="code">&lt;ds-info-hint icon="info" ariaLabel="About conversion rate" text="..." /&gt;</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="panel q" data-q="label" data-review="Подпись названия при обрезке" data-review-note-only>
-    <h2>Выбор 1. Кто дописывает жирное название, когда оно обрезано</h2>
-    <p>У колонки есть название <b>Registered attendee count</b> и подсказка <b>People who confirmed a seat</b>. На картинках узкая колонка с обрезанным названием и то, что видит пользователь. Вариант «только у термина» уже сделан в <code>dev</code> по моей рекомендации; скажи, если нужен другой. Выбор - клик по карточке.</p>
+  <section class="panel q" id="q-label" data-q="label" data-review="Подпись названия при обрезке" data-review-note-only>
+    <h2>Вопрос 1. Кто пишет жирное название, когда оно обрезано</h2>
+    <p>У колонки есть название <b>Registered attendee count</b> и подсказка <b>People who confirmed a seat</b>. Колонка узкая, название обрезано. Тултип должен показать название жирным сверху, а подсказку под ним. Вопрос: кто за это отвечает. Картинки у всех вариантов одинаковые, потому что снаружи результат один; различается то, что написано в разметке и кто решает. Вариант «только у термина» уже сделан в <code>dev</code>. Выбор - клик по карточке.</p>
     <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(230px, 1fr))">
       <article class="opt" tabindex="0">
-        <h3>Как сейчас в dev: любой dsTooltip дописывает сам</h3>
-        <p class="youpick"><b>Ты выбираешь</b>ничего не менять: любая кнопка с обрезанным текстом и тултипом получает жирный текст сверху.</p>
+        <span class="badge is-same">так было раньше</span>
+        <h3>Любой dsTooltip дописывает сам</h3>
+        <p class="youpick"><b>Ты выбираешь</b>вернуть как было: любой элемент с <code>dsTooltip</code> и обрезанным текстом сам получает жирный текст сверху.</p>
         <div class="live"><span class="th" style="width:150px"><span class="clip dotted">Registered attendee count</span></span><span class="tip"><strong>Registered attendee count</strong>
 People who confirmed a seat</span></div>
         <p class="code">&lt;span [dsTooltip]="hint"&gt;{{ label }}&lt;/span&gt;</p>
-        <div class="pills"><span class="pill good">ничего делать</span><span class="pill bad">магия: в разметке не видно</span></div>
-        <dl class="layer"><dt>Что меняется в коде</dt><dd class="none">ничего</dd></dl>
+        <div class="pills"><span class="pill bad">магия: в разметке не видно</span><span class="pill mid">нужно вернуть убранное</span></div>
+        <dl class="layer"><dt>Что меняется в коде</dt><dd>убранный токен <code>TOOLTIP_LEADS_WITH_OWN_TEXT</code> возвращается как правило для любого хоста</dd></dl>
         <span class="chosen-mark">выбрано</span>
       </article>
       <article class="opt is-pick" tabindex="0">
@@ -265,20 +212,20 @@ People who confirmed a seat</span></div>
     </div>
   </section>
 
-  <section class="panel q" data-q="split" data-review="Чистить ли код тултипа внутри" data-review-note-only>
-    <h2>Выбор 2. Нарезать ли код тултипа на файлы</h2>
-    <p>Весь код лежит в одном файле на 396 строк. Полоса ниже - этот файл, ширина куска равна числу его строк (измерено по диапазонам строк на <code>dev</code>). Нарезка - разрезать файл так, чтобы каждый цвет жил отдельно. Снаружи ничего не меняется. Выбор - клик по карточке.</p>
+  <section class="panel q" id="q-split" data-q="split" data-review="Чистить ли код тултипа внутри" data-review-note-only>
+    <h2>Вопрос 2. Разрезать ли код тултипа на файлы</h2>
+    <p>Весь код директивы лежит в одном файле на 515 строк (<code>wc -l</code> на <code>dev</code>; до слияния параллельной ветки было 396). В нём перемешаны несколько работ. Вопрос: разрезать ли файл так, чтобы каждая работа жила отдельно. Снаружи ничего не меняется, это уборка внутри. На полосе ширина куска равна числу его строк, границы по диапазонам строк (оценка: сумма кусков 510, остальное пустые строки между блоками). Выбор - клик по карточке.</p>
     <div class="jobs" aria-label="Файл tooltip.directive.ts по работам">
-      <span class="j1" style="flex:30">импорты<br>30</span>
-      <span class="j3" style="flex:92">фокус через родителя<br>92</span>
-      <span class="j1" style="flex:28">входы<br>28</span>
-      <span class="j2" style="flex:56">обрезан ли текст, текст хоста<br>56</span>
-      <span class="j6" style="flex:19">состояние<br>19</span>
-      <span class="j4" style="flex:85">наведение, фокус, закрытие<br>85</span>
-      <span class="j5" style="flex:44">показ и aria<br>44</span>
-      <span class="j6" style="flex:42">положение<br>42</span>
+      <span class="j1" style="flex:34">импорты<br>34</span>
+      <span class="j3" style="flex:94">фокус через родителя<br>94</span>
+      <span class="j1" style="flex:52">токены и входы<br>52</span>
+      <span class="j2" style="flex:60">обрезан ли текст, текст хоста<br>60</span>
+      <span class="j6" style="flex:17">состояние<br>17</span>
+      <span class="j4" style="flex:140">наведение, фокус, закрытие<br>140</span>
+      <span class="j5" style="flex:51">показ и aria<br>51</span>
+      <span class="j6" style="flex:62">положение и стрелка<br>62</span>
     </div>
-    <div class="legend"><span><i class="j3"></i>уходит в tooltip-ancestor-focus.ts</span><span><i class="j2"></i>уходит в tooltip-clip.ts</span><span><i></i>остаётся в tooltip.directive.ts: около 250 строк</span></div>
+    <div class="legend"><span><i class="j3"></i>уходит в tooltip-ancestor-focus.ts: около 94</span><span><i class="j2"></i>уходит в tooltip-clip.ts: около 60</span><span><i></i>остаётся в tooltip.directive.ts: около 360</span></div>
     <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(230px, 1fr))">
       <article class="opt" tabindex="0">
         <h3>Не трогать</h3>
@@ -287,25 +234,18 @@ People who confirmed a seat</span></div>
         <dl class="layer"><dt>Потребители</dt><dd class="none">не затронуты</dd><dt>Changelog и миграции</dt><dd class="none">ничего</dd></dl>
         <span class="chosen-mark">выбрано</span>
       </article>
-      <article class="opt" tabindex="0">
-        <h3>Нарезать сейчас</h3>
-        <p class="youpick"><b>Ты выбираешь</b>резать файл сразу, пока ветка параллельной сессии ещё не влита.</p>
-        <div class="pills"><span class="pill good">быстро</span><span class="pill bad">та ветка правит тот же файл, конфликт придётся решать там</span></div>
-        <dl class="layer"><dt>Потребители</dt><dd class="none">не затронуты</dd><dt>Файлы</dt><dd>3 файла в <code>components/tooltip</code></dd></dl>
-        <span class="chosen-mark">выбрано</span>
-      </article>
       <article class="opt is-pick" tabindex="0">
         <span class="badge is-pick">рекомендую</span>
-        <h3>Нарезать, когда вторая ветка вольётся</h3>
-        <p class="youpick"><b>Ты выбираешь</b>сначала ветка параллельной сессии вливает <code>dev</code> и сама уходит в него, потом я режу файл на три. Снаружи ничего не меняется.</p>
-        <div class="files"><span class="file">tooltip.directive.ts<small>около 250</small></span><span class="file is-new">tooltip-clip.ts<small>около 56</small></span><span class="file is-new">tooltip-ancestor-focus.ts<small>около 92</small></span></div>
-        <div class="pills"><span class="pill good">нет конфликта двух сессий</span><span class="pill good">каждый файл про одну работу</span></div>
+        <h3>Нарезать на три файла</h3>
+        <p class="youpick"><b>Ты выбираешь</b>режу файл на три сейчас. Ветка параллельной сессии уже влита в <code>dev</code>, делить файл с ней больше не нужно. Снаружи ничего не меняется.</p>
+        <div class="files"><span class="file">tooltip.directive.ts<small>около 360</small></span><span class="file is-new">tooltip-clip.ts<small>около 60</small></span><span class="file is-new">tooltip-ancestor-focus.ts<small>около 94</small></span></div>
+        <div class="pills"><span class="pill good">каждый файл про одну работу</span><span class="pill good">нет конфликта двух сессий</span><span class="pill mid">основной файл остаётся около 360 строк</span></div>
         <dl class="layer"><dt>Потребители</dt><dd class="none">не затронуты</dd><dt>Changelog и миграции</dt><dd>строка про состав членов <code>TooltipDirective</code>; <code>class-surface</code> покажет, какие приватные члены ушли</dd></dl>
         <span class="chosen-mark">выбрано</span>
       </article>
       <article class="opt" tabindex="0">
         <h3>Нарезать и склеить два атрибута</h3>
-        <p class="youpick"><b>Ты выбираешь</b>то же после слияния, и ещё <code>dsTooltipWhenClipped</code> с <code>dsTooltipTextSelector</code> становятся одним атрибутом. Разметку придётся поправить в 9 местах.</p>
+        <p class="youpick"><b>Ты выбираешь</b>то же, и ещё <code>dsTooltipWhenClipped</code> с <code>dsTooltipTextSelector</code> становятся одним атрибутом. Разметку придётся поправить в 9 местах.</p>
         <p class="code">dsTooltipWhenClipped
 dsTooltipTextSelector=".option-label"
 → dsTooltipWhenClipped=".option-label"</p>
@@ -316,13 +256,88 @@ dsTooltipTextSelector=".option-label"
     </div>
   </section>
 
-  <section class="panel verdict is-done">
-    <h2>Рекомендация</h2>
-    <p class="pick"><strong>Выбор 1: только у dsDefinitionTerm. Выбор 2: нарезать, когда вторая ветка вольётся.</strong> Обычный тултип делает ровно то, что написано, определение имеет своё имя, и два сеанса не правят один файл одновременно.</p>
+
+  <h2 class="band">Уже решено и сделано</h2>
+  <p class="cap">Здесь отвечать не нужно. Живые примеры раскрываются по клику.</p>
+
+  <section class="panel">
+    <h2>Решено и лежит в dev</h2>
+    <table class="decided">
+      <thead><tr><th>Что</th><th>Решение</th><th>Где лежит</th></tr></thead>
+      <tbody>
+        <tr><td>**жирный** в dsTooltip</td><td>работает, <code>\*\*</code> даёт звёздочки; больше ничего не разбирается</td><td>в <code>dev</code></td></tr>
+        <tr><td>dsTooltipClippedLead</td><td>удалён, нового входа вместо него нет</td><td>в <code>dev</code> (Breaking)</td></tr>
+        <tr><td>dsTooltipTextSelector, dsTooltipPlacement</td><td>остаются как есть</td><td>в <code>dev</code></td></tr>
+        <tr><td>dsTooltipDelay</td><td>остаётся как есть</td><td>в <code>dev</code></td></tr>
+        <tr><td>dsTooltipArrow</td><td>флаг, <code>[dsTooltipArrow]="false"</code> убирает стрелку</td><td>в <code>dev</code></td></tr>
+        <tr><td>термин с определением</td><td>одна директива <code>dsDefinitionTerm</code> на любом теге: span, button, p. «Только класс» отклонён: нужно готовое решение</td><td>в <code>dev</code></td></tr>
+        <tr><td>ds-info-hint</td><td>по умолчанию кружок «?», <code>icon="info"</code> меняет на «i»</td><td>в <code>dev</code></td></tr>
+        <tr><td>закреплённый триггер</td><td>наведение на закреплённый термин или значок усиливает подсветку с 12% до 20%; нажатие ещё сильнее</td><td>в <code>dev</code></td></tr>
+        <tr><td>две ветки с подсказками</td><td>обе попадают в <code>dev</code>, одинаковые коммиты сливаются сами (Stas)</td><td>обе ветки влиты в <code>dev</code></td></tr>
+      </tbody>
+    </table>
   </section>
 
-  <details class="panel">
-    <summary><b>Как тултип устроен сейчас: карта, входы, кто использует</b></summary>
+  <details class="folded">
+    <summary>Термин живьём: одна директива на span, button и p</summary>
+    <section class="panel">
+    <p>Да, директиву можно повесить на любой тег, и всё работает: фокус, Tab, Enter, Space, Esc, закрепление кликом, подсказка и определение для скринридера. На не-кнопке она сама ставит <code>tabindex="0"</code>, <code>role="button"</code> и превращает Enter и Space в клик, на <code>&lt;button&gt;</code> ставит <code>type="button"</code>. Наводи, жми Tab и щёлкай. Под примером строка пишет, что произошло. Оговорка про <code>p</code>: целый абзац становится кнопкой, поэтому слово внутри текста лучше оборачивать в <code>span</code>.</p>
+    <div class="modes">
+      <div class="mode" data-live="term">
+        <h3>На span</h3>
+        <p class="x-sample">Контакты, которые <span class="x-anchor"><span class="x-term" tabindex="0" role="button">вышли</span><span class="x-tip" hidden></span></span> до цели, не считаются.</p>
+        <div class="x-th"><span class="x-anchor"><span class="x-term" tabindex="0" role="button">Покинувшие</span><span class="x-tip" hidden></span></span></div>
+        <p class="x-log" data-log>Наведи, Tab, Enter, Space, Esc.</p><p class="x-says" data-says></p>
+        <p class="code">&lt;span dsDefinitionTerm="Покинули путь до шага цели."&gt;вышли&lt;/span&gt;</p>
+      </div>
+      <div class="mode" data-live="term">
+        <h3>На button</h3>
+        <p class="x-sample">Контакты, которые <span class="x-anchor"><button type="button" class="x-term">вышли</button><span class="x-tip" hidden></span></span> до цели, не считаются.</p>
+        <div class="x-th"><span class="x-anchor"><button type="button" class="x-term" data-sortable>Покинувшие</button><span class="x-tip" hidden></span></span><span class="sort" data-sort>↕</span></div>
+        <p class="x-log" data-log>В заголовке клик сортирует и ничего не закрепляет: <code>[pinOnClick]="false"</code>.</p><p class="x-says" data-says></p>
+        <p class="code">&lt;button dsDefinitionTerm="Покинули путь до шага цели."&gt;вышли&lt;/button&gt;</p>
+      </div>
+      <div class="mode" data-live="term">
+        <h3>На p</h3>
+        <div class="x-sample"><span class="x-anchor"><p class="x-term" tabindex="0" role="button" style="margin:0">Контакты, которые вышли до цели, не считаются.</p><span class="x-tip" hidden></span></span></div>
+        <p class="x-log" data-log>Весь абзац стал кнопкой.</p><p class="x-says" data-says></p>
+        <p class="code">&lt;p dsDefinitionTerm="Покинули путь до шага цели."&gt;...&lt;/p&gt;</p>
+      </div>
+      <div class="mode" data-live="plain">
+        <span class="badge is-no">отклонено</span>
+        <h3>Только класс для вида</h3>
+        <p class="x-sample">Контакты, которые <span class="x-anchor"><span class="x-term is-plain">вышли</span><span class="x-tip" hidden></span></span> до цели, не считаются.</p>
+        <p class="x-log" data-log>Наведи и щёлкни: ничего не произойдёт.</p><p class="x-says" data-says></p>
+        <p class="code">&lt;span class="term"&gt;вышли&lt;/span&gt;</p>
+        <p class="cap">Подсказку и фокус каждый раз собирает приложение. Ты сказал: нужно готовое решение</p>
+      </div>
+    </div>
+  </section>
+  </details>
+
+  <details class="folded">
+    <summary>ds-info-hint живьём: по умолчанию «?», по желанию «i»</summary>
+    <section class="panel">
+    <p>Тот же движок, что у термина: кнопка-значок, закрепление кликом. Попробуй оба.</p>
+    <div class="modes">
+      <div class="mode" data-live="hint">
+        <h3>Кружок «?» (по умолчанию)</h3>
+        <p class="x-sample"><span class="x-hintrow">Conversion rate <span class="x-anchor"><button type="button" class="x-hint" aria-label="About conversion rate"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4M12 17v.01"/></svg></button><span class="x-tip" hidden></span></span></span></p>
+        <p class="x-log" data-log>Наведи, Tab, Enter, Esc.</p><p class="x-says" data-says></p>
+        <p class="code">&lt;ds-info-hint ariaLabel="About conversion rate" text="..." /&gt;</p>
+      </div>
+      <div class="mode" data-live="hint">
+        <h3>Буква «i»</h3>
+        <p class="x-sample"><span class="x-hintrow">Conversion rate <span class="x-anchor"><button type="button" class="x-hint" aria-label="About conversion rate"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v4h1"/></svg></button><span class="x-tip" hidden></span></span></span></p>
+        <p class="x-log" data-log>Наведи, Tab, Enter, Esc.</p><p class="x-says" data-says></p>
+        <p class="code">&lt;ds-info-hint icon="info" ariaLabel="About conversion rate" text="..." /&gt;</p>
+      </div>
+    </div>
+  </section>
+  </details>
+
+  <details class="folded">
+    <summary>Как тултип устроен сейчас: карта, входы, кто использует</summary>
   <section class="panel">
     <h2>Как работает: от наведения до панели</h2>
     <p>Один класс <code>TooltipDirective</code> с двумя селекторами: <code>[dsTooltip]</code> и <code>[dsTooltipWhenClipped]</code>. Синие метки - входы, которые участвуют в шаге.</p>
@@ -330,7 +345,7 @@ dsTooltipTextSelector=".option-label"
       <div class="st"><b>Триггер</b><small>mouseenter, focusin. Обрезанный хост без фокуса слушает фокус своего ближайшего фокусного предка</small></div>
       <div class="st"><b>Ворота</b><small>нет текста - не открываем; с <span class="inp">dsTooltipWhenClipped</span> ещё и «обрезан ли хост» (<span class="inp">dsTooltipTextSelector</span> указывает, какой внутренний элемент мерить)</small></div>
       <div class="st"><b>Задержка</b><small><span class="inp">dsTooltipDelay</span>, 120 мс. Закрытие мгновенное</small></div>
-      <div class="st"><b>Текст</b><small><span class="inp">dsTooltip</span>; пусто и обрезан - текст самого хоста; обрезан и тултип его не содержит - жирный текст хоста сверху</small></div>
+      <div class="st"><b>Текст</b><small><span class="inp">dsTooltip</span>; пусто и обрезан - текст самого хоста; обрезан, хост - <code>dsDefinitionTerm</code> и тултип его не содержит - жирный текст хоста сверху</small></div>
       <div class="st"><b>Панель</b><small>CDK overlay рядом с хостом, <span class="inp">dsTooltipPlacement</span>, при нехватке места переворот. <code>**жирный**</code> режется на сегменты</small></div>
       <div class="st"><b>Скринридер</b><small><code>aria-describedby</code> на хосте или на сфокусированном элементе; не ставится, если текст уже есть в DOM хоста</small></div>
       <div class="st is-close"><b>Закрытие</b><small>mouseleave, click, focusout, Esc; у обрезанного хоста ещё любая клавиша</small></div>
@@ -356,13 +371,13 @@ dsTooltipTextSelector=".option-label"
         <p class="cap">Без своего текста тултип показывает текст хоста, и только пока хост обрезан. Так в селектах, хлебных крошках, <code>ds-stat</code></p>
       </div>
       <div class="mode">
-        <span class="badge is-no">спорно</span>
+        <span class="badge is-pick">решено</span>
         <h3>Обрезан и есть подсказка</h3>
         <span class="host">Registered attendee count</span>
         <span class="tip"><strong>Registered attendee count</strong>
 People who confirmed a seat</span>
-        <p class="code">[dsTooltip]="'People who confirmed a seat'"</p>
-        <p class="cap">Сегодня в <code>dev</code>: хост обрезан, и текст тултипа его не повторяет, поэтому сверху сам появляется жирный текст хоста. В разметке этого не видно, и это то, что названо ненативным</p>
+        <p class="code">[dsDefinitionTerm]="'People who confirmed a seat'"</p>
+        <p class="cap">Сегодня в <code>dev</code> так делает только <code>dsDefinitionTerm</code>: хост обрезан, текст тултипа его не повторяет, поэтому сверху появляется жирный текст хоста. У обычного <code>dsTooltip</code> с тем же текстом этого нет. Это ответ на «ненативно»: имя директивы говорит, что она определение</p>
       </div>
     </div>
   </section>
@@ -376,6 +391,8 @@ People who confirmed a seat</span>
         <tr><td>dsTooltipWhenClipped</td><td>boolean, false</td><td>открывать только пока хост показывает меньше текста, чем держит; без <code>dsTooltip</code> раскрывает текст хоста</td><td>6 компонентов, 14 мест</td></tr>
         <tr><td>dsTooltipTextSelector</td><td>string | null, null</td><td>внутренний элемент, который мерить и чей текст раскрывать</td><td>4 компонента, 9 мест</td></tr>
         <tr><td>dsTooltipPlacement</td><td>top | bottom | left | right, top</td><td>сторона; при нехватке места противоположная</td><td>sidenav-item (3 места, <code>right</code>)</td></tr>
+        <tr><td>dsTooltipArrow</td><td>boolean, true</td><td><code>false</code> убирает стрелку панели</td><td><span class="tag same">никто</span> флаг для приложений</td></tr>
+        <tr><td>dsTooltipPinOnClick</td><td>boolean, false</td><td>клик закрепляет тултип до клика мимо, Esc или потери фокуса; пока закреплён, хост несёт <code>data-ds-tooltip-pinned</code></td><td>задают <code>dsDefinitionTerm</code> и <code>ds-info-hint</code></td></tr>
         <tr><td>dsTooltipDelay</td><td>number, 120</td><td>миллисекунды до появления</td><td><span class="tag same">никто</span> решено оставить</td></tr>
         <tr><td>hostElement, isClipped()</td><td>публичный геттер и метод</td><td>нужны только чтобы один экземпляр спрашивал другой, какой из обрезанных хостов предка первый в документе</td><td>только сама директива</td></tr>
         <tr><td>aria-describedby, id</td><td>пишет директива</td><td><code>ds-tooltip-N</code> на панели; ссылка на неё на хосте или на сфокусированном элементе, снимается при закрытии</td><td>-</td></tr>
@@ -410,7 +427,7 @@ People who confirmed a seat</span>
       <thead><tr><th>Что</th><th>Где в коде</th><th>Чем мешает</th></tr></thead>
       <tbody>
         <tr><td>Один флаг, три поведения</td><td><code>dsTooltipWhenClipped()</code> читается в 6 местах директивы</td><td>он переключает источник текста, фокус через предка, ворота открытия, закрытие по клавише и подсчёт <code>aria-describedby</code>: внутри директивы живёт вторая директива</td></tr>
-        <tr><td>Фокус через предка нужен только обрезанному режиму</td><td>константы и <code>firstClippedHost</code> в начале файла, <code>listenToFocusableAncestor</code> и общий <code>WeakMap</code></td><td>около 89 из 393 строк (оценка по диапазонам строк 31-74 и 179-223), и тест обычного тултипа тянет их за собой</td></tr>
+        <tr><td>Фокус через предка нужен только обрезанному режиму</td><td>константы и <code>firstClippedHost</code> в начале файла, <code>listenToFocusableAncestor</code> и общий <code>WeakMap</code></td><td>около 94 из 515 строк (оценка по диапазонам строк 35-75 и 209-261), и тест обычного тултипа тянет их за собой</td></tr>
         <tr><td>Публичное только ради себя</td><td><code>hostElement</code>, <code>isClipped()</code></td><td>попали в публичный класс, потому что экземпляр спрашивает соседний; подкласс может на них опереться</td></tr>
         <tr><td>Селектор без смысла в одиночку</td><td><code>dsTooltipTextSelector</code></td><td>во всех 9 местах DS стоит вместе с <code>dsTooltipWhenClipped</code>; это один выбор, записанный двумя атрибутами</td></tr>
       </tbody>
@@ -419,7 +436,7 @@ People who confirmed a seat</span>
 
   </details>
 
-  <p class="src"><b>Источники, проверено 2026-10-08 на <code>dev</code>.</b> <code>tooltip.directive.ts</code> целиком (396 строк: <code>wc -l</code>; <code>dsTooltipWhenClipped()</code> читается в 6 местах: <code>grep -c</code>); <code>tooltip-panel.component.ts</code>; <code>tooltip-markup.ts</code>; все <code>dsTooltip*</code> в <code>src/lib/**/*.html</code>; импорты <code>TooltipDirective</code> в <code>src/lib</code> (sparkline и графики импортируют <code>ChartTooltipDirective</code>, это другой механизм). Размеры после разреза и 89 строк - оценка по диапазонам строк, не замер. Примеры тултипов собраны из SCSS панели на токенах <code>ds.css</code>, не из самого компонента.</p>
+  <p class="src"><b>Источники, проверено 2026-10-08 на <code>dev</code>.</b> <code>tooltip.directive.ts</code> целиком (515 строк: <code>wc -l</code>; <code>dsTooltipWhenClipped()</code> читается в 6 местах: <code>grep -c</code>); <code>tooltip-panel.component.ts</code>; <code>tooltip-markup.ts</code>; все <code>dsTooltip*</code> в <code>src/lib/**/*.html</code>; импорты <code>TooltipDirective</code> в <code>src/lib</code> (sparkline и графики импортируют <code>ChartTooltipDirective</code>, это другой механизм). Размеры после разреза и 94 строки на фокус через родителя - оценка по диапазонам строк, не замер. Примеры тултипов собраны из SCSS панели на токенах <code>ds.css</code>, не из самого компонента.</p>
 </main>
 
 <script>
@@ -478,7 +495,7 @@ People who confirmed a seat</span>
   }
   for (const card of document.querySelectorAll('[data-live]')) wire(card);
 
-  const PICK_KEY = 'ds-deck-tooltip-mechanism-picks-v5';
+  const PICK_KEY = 'ds-deck-tooltip-mechanism-picks-v6';
   const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
   const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private window */ } };
   const state = read(PICK_KEY, {});
