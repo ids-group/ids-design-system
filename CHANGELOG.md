@@ -9,6 +9,11 @@
 
 ### Added
 
+- **`dsTooltipArrow` turns a tooltip's arrow off.** `[dsTooltipArrow]="false"` draws the panel with no
+  arrow pointing at the host; the default is `true`, so every tooltip keeps its arrow until it is set.
+  `TooltipDirective` gained the public `dsTooltipArrow` and `TooltipPanelComponent` the public
+  `arrow`, so a subclass declaring either name must rename it.
+
 - **`dsTooltip` renders `**bold**`.** Text between a pair of `**` is bold; `\*\*` is a literal `**`
   and an unpaired `**` stays as typed. The panel builds its content from the parsed text, so no
   markup in a string is interpreted as HTML. Nothing else is parsed: no italics, code, lists or
