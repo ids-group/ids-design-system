@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**120 open — 3 P1, 7 P2, 110 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**121 open — 3 P1, 8 P2, 110 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 3
 
@@ -24,13 +24,14 @@ item and nothing else.
   - A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
   - `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
 
-### P2 — 7
+### P2 — 8
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Asked by Stas**
+  - Tooltips and trigger-anchored overlays should follow their trigger on scroll, not close (Stas, 2026-10-08)
   - Document how to build `ds-modal` actions (Stas, 2026-10-06)
   - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
 - **Open verdicts, each drawn in a deck**
@@ -373,6 +374,8 @@ Each has somebody behind it. Nothing here is speculative work.
 - [ ] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `ecm-fix/table-auto-column-clip` (empty marker branch from dev).
   A long value (an email, a name) stretches the column and pushes the table past its container. Wanted: a default clip width for a column that sets no `width`, with the full text still reachable. The choice is drawn in deck `17-table-truncate-clip.html` on branch `ecm-feat/table-truncate-column-clip` (renumber to 19 when merged; 17 and 18 are taken on dev).
   **Consumer workaround today** (mm-ecm ME-493, Delta review): `src/frontend/projects/ecm-portal/src/app/features/**/delta-records-table.component.*` sets `width: 'content'` on the columns, wraps the value in `.value { display: block; width: 0; min-width: 100% }` and adds `dsTooltipWhenClipped`. Marked `TODO(ds-clip-default)` there; it goes once the DS clips by default.
+
+- [ ] **[P2] Tooltips and trigger-anchored overlays should follow their trigger on scroll, not close (Stas, 2026-10-08).** Today every one closes: `TooltipDirective` and the `ds-menu-item` submenu call `closeOnScroll` (`overlay-motion.ts`), as `ds-popover`, `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker` and `ds-color-picker` already did; only a pinned chart tooltip repositions. The cause of the earlier detach: CDK's `close()` and `reposition()` scroll strategies hear only the window and `cdkScrollable` ancestors, not a plain `overflow: auto` container such as the ds-docs content pane - measured 2026-10-08 in the ds-docs build: before the fix a hover tip, a pinned tip and an open submenu stayed put (pane moved 0px) while their trigger moved 59.7-60.3px; a pinned chart tooltip moved 59.7px with its mark. **Wanted:** follow the trigger (the chart tooltip's `closeOnScroll` + `updatePosition()` is the shape), close only when the trigger leaves the visible part of its scroll container.
 
 - [ ] **[P2] Document how to build `ds-modal` actions (Stas, 2026-10-06).** Work branch `ecm-fix/table-auto-column-clip`.
   `components.md` says only "`[actions]` (footer button row)". The slot is a flex row with `gap: var(--space-3)`, so each button must be a direct projected child with `actions` on it. A consumer who wrapped the buttons in `<div actions>` got one flex child, no gap, and buttons stuck together (mm-ecm ME-502, `unarchive-program-dialog.component.html`). Wanted: one sentence and one example in the `ds-modal` section (also `ds-modal-card`, `ds-drawer`) saying that `actions` goes on each button, not on a wrapper; a dev-mode warning for a wrapper is optional.
@@ -1079,7 +1082,6 @@ file** — the number moves; cite the filename.
 | 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
 | 19 | `19-tooltip-mechanism` | Everything about the tooltip in one deck: what is settled and in dev, live examples of the term and the info icon, and two open questions (who writes the bold label of a clipped header, whether to split the tooltip file). | none |
-| 20 | `20-tooltip-group` | Before and after of `fix/tooltip-arrow-anchor`: the arrow under the trigger centre, a click that pins a tooltip, `ds-info-hint`, `button[dsDefinitionTerm]` with its states and the three ways it could be built, the hinted `ds-table` header and its bold clipped label. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
