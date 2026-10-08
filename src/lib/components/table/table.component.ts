@@ -36,6 +36,7 @@ import { PaginationComponent } from '@ids-group-ltd/ids-design-system/components
 import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
 import { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
 import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
+import { DefinitionTermDirective } from '@ids-group-ltd/ids-design-system/components/definition-term';
 import { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { MenuDividerComponent } from '@ids-group-ltd/ids-design-system/components/menu';
@@ -114,6 +115,7 @@ function compareSortValues(
     LoadingOverlayComponent,
     PopoverComponent,
     TooltipDirective,
+    DefinitionTermDirective,
     MenuComponent,
     MenuItemComponent,
     MenuDividerComponent,

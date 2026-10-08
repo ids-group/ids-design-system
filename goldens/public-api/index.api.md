@@ -103,6 +103,7 @@ export { DatePickerPreset } from '@ids-group-ltd/ids-design-system/components/da
 export { DatePickerValue } from '@ids-group-ltd/ids-design-system/components/date-picker'; // type
 export { DateRangeValue } from '@ids-group-ltd/ids-design-system/components/date-picker'; // type
 export { DateValue } from '@ids-group-ltd/ids-design-system/components/date-picker'; // type
+export { DefinitionTermDirective } from '@ids-group-ltd/ids-design-system/components/definition-term'; // directive
 export { DescriptionItemComponent } from '@ids-group-ltd/ids-design-system/components/description-list'; // component
 export { DescriptionListComponent } from '@ids-group-ltd/ids-design-system/components/description-list'; // component
 export { DescriptionListOrientation } from '@ids-group-ltd/ids-design-system/components/description-list'; // type
@@ -175,6 +176,7 @@ export { IconButtonType } from '@ids-group-ltd/ids-design-system/components/icon
 export { IconButtonVariant } from '@ids-group-ltd/ids-design-system/components/icon-button'; // type
 export { IconComponent } from '@ids-group-ltd/ids-design-system/icons'; // component
 export { IconName } from '@ids-group-ltd/ids-design-system/core'; // type
+export { InfoHintComponent } from '@ids-group-ltd/ids-design-system/components/info-hint'; // component
 export { InlineComponent } from '@ids-group-ltd/ids-design-system/components/layout'; // component
 export { InputComponent } from '@ids-group-ltd/ids-design-system/components/input'; // component
 export { InputType } from '@ids-group-ltd/ids-design-system/components/input'; // type
