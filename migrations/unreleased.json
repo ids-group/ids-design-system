@@ -323,8 +323,8 @@
       "verify": "Dismiss a toast and confirm it fades without moving."
     },
     {
-      "text": "A `ds-funnel-chart` stage grows from 96% while it fades in instead of rising 4px, and the value labels of the bar, column, waterfall, heatmap, pie and funnel charts and the funnel's table rows fade in where they stand.",
-      "verify": "Load a funnel chart and confirm its stages and labels appear without travelling."
+      "text": "A `ds-funnel-chart` stage grows from 96% while it fades in instead of rising 4px, and the value labels of the bar, column, waterfall, heatmap, pie and funnel charts and the funnel's table rows fade in where they stand. A `ds-pie-chart` ring grows from 96% while it fades in, without the 30° turn.",
+      "verify": "Load a funnel and a pie chart and confirm stages, ring and labels appear without travelling or turning."
     }
   ],
   "deleteList": [

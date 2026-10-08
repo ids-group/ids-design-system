@@ -113,7 +113,8 @@
 - **A closing `ds-toast` fades where it stands.** It rose 8px while it faded.
 - **Chart marks and their labels no longer travel in.** A `ds-funnel-chart` stage grows from 96% while
   it fades in instead of rising 4px, and the value labels of the bar, column, waterfall, heatmap,
-  pie and funnel charts and the funnel's table rows fade in where they stand.
+  pie and funnel charts and the funnel's table rows fade in where they stand. A `ds-pie-chart` ring
+  grows from 96% while it fades in, without the 30° turn.
 - **A `ds-menu-item` submenu stays open while the pointer heads for it.** Moving diagonally from
   the item to its submenu crosses the items below it, and a crossing slower than 150ms closed the
   submenu and opened the next one. The pointer may now cross them for as long as it stays inside

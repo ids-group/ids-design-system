@@ -5,7 +5,7 @@
 @use '../../styles/chart-motion' as chart-motion;
 
 // The ring arrives, not the slices: semi-transparent arcs sharing an edge show the background through the seam.
-@include chart-motion.sweeps-in('.ring-svg');
+@include chart-motion.settles-ring-in('.ring-svg');
 @include chart-motion.fades-in(
   '.swatch',
   var(--ds-motion-chart-mark-sweep-duration),
