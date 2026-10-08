@@ -43,6 +43,7 @@
 
   /* clip, not hidden: the sliding panel must not add scrollable overflow to ancestor
      frames, where the focus-trap's initial focus() would scroll the host app. */
+  // glyph-clip-guard: the viewport-sized root around the padded panel
   overflow: clip;
 
   &.closing {

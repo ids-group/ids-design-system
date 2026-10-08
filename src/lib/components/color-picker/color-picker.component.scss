@@ -108,6 +108,8 @@
   border-radius: var(--radius-md);
   cursor: crosshair;
   touch-action: none;
+
+  // glyph-clip-guard: a colour plane, no text
   overflow: hidden;
 
   &::before {

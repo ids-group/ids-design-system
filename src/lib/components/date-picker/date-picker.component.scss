@@ -1,3 +1,4 @@
+@use '../../styles/text-clip' as text-clip;
 @use '../../styles/breakpoints' as bp;
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
@@ -163,7 +164,8 @@
   font-variant-numeric: tabular-nums;
   white-space: pre;
   pointer-events: none;
-  overflow: hidden;
+
+  @include text-clip.inline-axis;
 
   .muted {
     color: var(--_date-picker-placeholder-color);

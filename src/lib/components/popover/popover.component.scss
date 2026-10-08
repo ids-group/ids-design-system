@@ -39,6 +39,8 @@
   position: absolute;
   width: calc(var(--_popover-arrow-size) * 2);
   height: calc(var(--_popover-arrow-size) * 2);
+
+  // glyph-clip-guard: the arrow, no text
   overflow: hidden;
   pointer-events: none;
 

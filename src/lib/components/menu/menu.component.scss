@@ -17,6 +17,8 @@
 
   // Rows run edge to edge, so this clipping radius rounds the first and last row's hover fill.
   padding: 0;
+
+  // glyph-clip-guard: rounds the corners; every row pads its text off this edge
   overflow: hidden;
 }
 

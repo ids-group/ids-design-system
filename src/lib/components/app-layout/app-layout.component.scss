@@ -25,6 +25,8 @@
 
   // Own stacking context: a nested layout's rail otherwise paints over the outer open rail.
   isolation: isolate;
+
+  // glyph-clip-guard: the page frame; text sits in the padded topbar, rail and content inside it
   overflow: hidden;
 }
 

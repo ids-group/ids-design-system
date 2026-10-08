@@ -50,6 +50,8 @@
     max-height: var(--_dropdown-panel-max-height);
     display: flex;
     flex-direction: column;
+
+    // glyph-clip-guard: rounds the corners; every option pads its text off this edge
     overflow: hidden;
     z-index: var(--layer-popover);
   }

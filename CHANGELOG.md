@@ -2,10 +2,10 @@
 
 ### Breaking
 
-- **`dsTooltipClippedLead` is removed from `TooltipDirective`.** A host whose text is clipped now
-  puts that text in bold above its tooltip without an input, so a `ds-table` header with a `hint`
-  needs nothing. Delete the binding where the lead was the host's own text; where it was other
-  text, write it into the string: `[dsTooltip]="'**' + lead + '**\n' + tip"`.
+- **`dsTooltipClippedLead` is removed from `TooltipDirective`.** A `ds-table` header with a `hint`
+  needs nothing in its place: its `dsDefinitionTerm` button shows its own clipped label in bold
+  above the hint. Anywhere else, delete the binding, or write the lead into the string:
+  `[dsTooltip]="'**' + lead + '**\n' + tip"`.
 
 ### Added
 
@@ -14,17 +14,60 @@
   font on form controls, zero heading margins and the base focus ring on that component's own
   elements, whether or not the app loads `styles/reset` and `styles/focus`.
 
+- **`dsTooltipPinOnClick` keeps a tooltip open after a click.** With it the tip opens on hover and
+  focus with no delay, and a click on the host keeps it open after the pointer leaves until a click
+  outside, `Escape` or blur; a second click closes it. Without it a click closes the tip as before.
+  While pinned the host carries `data-ds-tooltip-pinned`. Every pinned trigger of the library shows
+  the same cue, with no fill: `--accent-strong` ink, and for a text trigger a 2px solid accent
+  underline. Hovering a pinned text trigger thickens the underline to 3px, and pressing it adds the
+  `--surface-muted` press fill; a pinned icon takes a `--surface-muted` circle on hover and a
+  `--border-default` circle on press. `@include pinned.cue()`, `pinned.cue-hover()` and
+  `pinned.cue-pressed()` from `styles/pinned` (`$underline: false` for an icon) give your own
+  pin-capable trigger the same cue, its hover and its press.
+  Use it on info and definition triggers only, never on a control whose click acts.
+  `TooltipDirective` gained the public `dsTooltipPinOnClick`, protected `onClick` and
+  `onPointerLeave`, and the private `document`, `hostPinOnClick`, `pinsOnClick`, `pin`, `unpin`
+  and `pointArrowAtHost`. A subclass declaring one of those names must rename it.
+
+- **`ds-info-hint` is an icon button with a pinned tooltip.** `<ds-info-hint
+  ariaLabel="About conversion rate" text="…" />` renders a 14px question-mark icon button named by
+  `ariaLabel`, and `icon="info"` swaps the question mark for an "i"; `text` shows on hover and focus, describes the button, and stays open after a click.
+  The icon darkens on hover, sits on a `--surface-muted` circle while pressed, and turns
+  `--accent-strong` while pinned.
+  `InfoHintComponent` is exported from the package root.
+
+- **`dsDefinitionTerm` marks a term that carries its definition, on any element.**
+  `<span dsDefinitionTerm="…">term</span>` keeps the surrounding text style with a dotted underline
+  in `--text-tertiary`, takes the focus ring, shows the definition on hover and focus, and pins it
+  on click; the attribute value is the tooltip text. While the term is clipped, its definition opens
+  with the term's own text in bold, a line break, then the definition; a definition that already
+  contains the term's text is left as it is. On a host other than `<button>` it adds
+  `tabindex="0"`, `role="button"`, and `Enter` / `Space` act as a click; on a `<button>` it sets
+  `type="button"`. Hover makes the underline solid in `--text-secondary`, a press (a click held, or
+  `Enter` / `Space` held on a non-button) tints the term
+  with `--surface-muted`, and a pinned term turns `--accent-strong` with a 2px solid accent underline; no
+  state changes its size. `[pinOnClick]="false"` turns the pin off where the click
+  already acts. The directive brings its own styles: no stylesheet import is needed, including in an app that
+  assembles the style partials one by one.
+  `DefinitionTermDirective` is exported from the package root.
+
 - **`dsTooltipArrow` turns a tooltip's arrow off.** `[dsTooltipArrow]="false"` draws the panel with no
   arrow pointing at the host; the default is `true`, so every tooltip keeps its arrow until it is set.
   `TooltipDirective` gained the public `dsTooltipArrow` and `TooltipPanelComponent` the public
   `arrow`, so a subclass declaring either name must rename it.
+
+- **`text-clip.inline-axis` and `text-clip.line-clamp($lines)`** join
+  `text-clip.single-line-ellipsis` in `styles/text-clip`. `inline-axis` clips a row sideways and
+  leaves the block axis visible; `line-clamp` clamps a block to `$lines` lines at
+  `line-height: normal`, the one line-height every font sizes to its own glyphs, so neither cuts a
+  glyph whatever the font.
 
 - **`dsTooltip` renders `**bold**`.** Text between a pair of `**` is bold; `\*\*` is a literal `**`
   and an unpaired `**` stays as typed. The panel builds its content from the parsed text, so no
   markup in a string is interpreted as HTML. Nothing else is parsed: no italics, code, lists or
   tags. `dsTooltipWhenClipped` with no `dsTooltip` shows the host's text exactly as written, even
   where it contains `**`. `TooltipPanelComponent` gained the protected `segments`, and
-  `TooltipDirective` the private `contains` and `ownText`, so a subclass declaring one of those
+  `TooltipDirective` the private `contains`, `ownText` and `leadsWithOwnText`, so a subclass declaring one of those
   names must rename it.
 
 - **`--ds-date-picker-max-width` caps the width of `ds-date-picker`.** It defaults to `100%`, so
@@ -34,12 +77,16 @@
 
 ### Changed
 
-- **A tooltip on a clipped host leads with the host's own text in bold.** On any host that carries
-  `dsTooltip` or `dsTooltipWhenClipped` and shows less text than it holds, the tip is the host's text
-  in bold, a line break, then the tip text; a tip that already contains the host's text is left as it
-  is. A `ds-table` header with a `hint` and a clipped label is the case that ships: the label was
-  plain text above the hint and is now bold, a header that fits still shows the hint alone. Screen
-  readers get the text without the markers.
+
+- **`text-clip.single-line-ellipsis` clips the inline axis only.** It clipped both axes with a
+  4px margin, which a font taller than the line box by more than that overran. Ink above and
+  below the box now paints over whatever sits there, as it would in any unclipped box.
+- **A `ds-stat` value clamped with `--ds-stat-value-lines` sets `line-height: normal`.** At a
+  flat line-height the clamp's edge ran through the strip where the last line's descenders and
+  the next line's accents overlap. A clamped value is taller: a tile whose value fills two
+  lines at the default size grows from 147 to 165px in Mulish. An unclamped value keeps its flat
+  line in a browser with container style queries; in one without, it takes `line-height: normal`
+  as well.
 - **A `**` in an existing tooltip string now makes text bold.** Write `\*\*` where the asterisks
   are meant literally.
 - **`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a
@@ -47,6 +94,10 @@
   reports it any more, and an attribute that names no slot (a directive such as `cdkDrag`) is not
   reported as an unknown slot. Rendering is the same. `ModalComponent`, `ModalCardComponent` and
   `DrawerComponent` lost the private `unslotted`, so a subclass member of that name no longer collides.
+
+- **A `ds-table` header label with a `hint` is a `button[dsDefinitionTerm]`.** A plain label pins
+  its hint on click and takes the term's hover, pressed and pinned states; a sortable one sorts on
+  click and pins nothing.
 
 ### Deprecated
 
@@ -56,12 +107,32 @@
 
 ### Fixed
 
+- **A tooltip and a `ds-menu-item` submenu close when anything under them scrolls.** Inside an
+  `overflow: auto` container they stayed where they opened while their trigger scrolled away, a
+  pinned tooltip included. They close now on a scroll of the window or of any scroll container, as
+  `ds-popover` and the picker panels already did; a pinned tooltip unpins.
+
+- **A tooltip's arrow points at the centre of its trigger.** It sat at the middle of the panel, so
+  a panel pushed off a viewport edge pointed past a trigger near that edge, 41px off for a button
+  at the right edge.
+
 - **A `<div actions>` wrapper lays its buttons out like buttons projected one by one.** In the
   footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet`, the buttons inside a
   `<div actions>` (or a `<div drawer-footer>`) touched; they now take the footer's gap, alignment
   and, in `ds-modal-card`, its stacking when the row runs out of width. The wrapper gets
   `display: contents` at zero specificity, so a `display` you set on it yourself still wins and keeps
   your own layout.
+
+- **Text keeps its ascenders and descenders under any font.** A box that truncates text clipped
+  both axes, so where the font's ascent plus descent is taller than the line-height, the tails of
+  g, j, p, q and y and the marks above Й, Ё and Å were cut flat, by more the taller the font you
+  set in `--font-sans`. These now clip along the inline axis only and keep their size:
+  `ds-breadcrumbs` (the row and each label), the `ds-stat` label and value, every label that ends
+  in an ellipsis (`ds-select`, `ds-multi-select` and `ds-autocomplete` values and options,
+  `ds-sidenav-item`, `ds-sidenav-footer`, `ds-tree`, `ds-banner`, `ds-table` headers and
+  cells), the chips of a `ds-multi-select` or `ds-autocomplete` in fit mode, the `ds-date-picker`
+  value, the `ds-filter-bar` row, and `ds-table` headers with resizable columns. A long label
+  still ends in an ellipsis and a long trail still clips at the row's end.
 
 - **A pinned chart tooltip takes the pointer.** Its text can be selected and a link in a
   `tooltipTemplate` clicked; the panel's content ignored the pointer even while its pane was pinned,
@@ -111,6 +182,8 @@
 | Delete | Why | Replace with |
 | --- | --- | --- |
 | `@use 'styles/skeleton-shimmer'` | the partial emits nothing; `ds-skeleton` styles its own reduced-motion stop | nothing |
+| a hand-built info button: `name="info"` on a `ds-icon` inside a `<button>` that carries `dsTooltip` | `ds-info-hint` renders the button, the icon and the pinned tooltip | `<ds-info-hint ariaLabel="…" text="…" />` |
+| a hand-built term button styled with `underline dotted` that carries `dsTooltip` | `dsDefinitionTerm` carries the underline, the focus ring, the keyboard access and the pinned tooltip | `<span dsDefinitionTerm="…">` |
 
 ## 0.14.8 — 2026-10-06
 

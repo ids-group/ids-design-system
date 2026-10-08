@@ -1,0 +1,43 @@
+// The pinned-tooltip cue every pin-capable trigger shares: `--accent-strong` ink, and for a text trigger a
+// 2px solid accent underline. No fill, so it reads the same on any surface. Include inside
+// `&[data-ds-tooltip-pinned]`; pass `$underline: false` for an icon. `cue-hover` goes inside
+// `&[data-ds-tooltip-pinned]:hover` and `cue-pressed` inside `&[data-ds-tooltip-pinned]:active`, so a
+// pinned trigger still answers the pointer and the press. `$spread` widens a fill past the trigger's box
+// without moving the layout.
+
+@mixin -ink($underline, $thickness) {
+  color: var(--accent-strong);
+
+  @if $underline {
+    text-decoration: underline solid var(--accent-strong);
+    text-decoration-thickness: $thickness;
+  }
+}
+
+@mixin -fill($color, $spread) {
+  background-color: $color;
+  box-shadow: 0 0 0 $spread $color;
+}
+
+@mixin cue($underline: true) {
+  @include -ink($underline, 2px);
+}
+
+// A text trigger thickens its underline; an icon has no line, so it takes the neutral circle instead.
+@mixin cue-hover($spread: 2px, $underline: true) {
+  @include -ink($underline, 3px);
+
+  @if not $underline {
+    @include -fill(var(--surface-muted), $spread);
+  }
+}
+
+@mixin cue-pressed($spread: 2px, $underline: true) {
+  @include -ink($underline, 3px);
+
+  @if $underline {
+    @include -fill(var(--surface-muted), $spread);
+  } @else {
+    @include -fill(var(--border-default), $spread);
+  }
+}

@@ -23,6 +23,8 @@
   block-size: var(--_bar-height);
   background: var(--_bar-track-color);
   border-radius: var(--_bar-radius);
+
+  // glyph-clip-guard: the track holds no text
   overflow: hidden;
 
   > span {

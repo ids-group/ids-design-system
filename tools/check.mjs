@@ -106,6 +106,8 @@ export const GROUPS = {
     'probes',
     'focus-rings',
     'component-owned-styles',
+    'glyph-clip:selftest',
+    'glyph-clip',
     'chart-interaction',
     'chart-aria',
     'chart-mark-budget',

@@ -35,7 +35,8 @@
   min-width: 0;
   max-width: 100%;
   flex-wrap: nowrap;
-  overflow: hidden;
+
+  @include text-clip.inline-axis;
 
   // Inward ring: the overflow clips an outer one.
   --focus-ring-offset: calc(-1 * var(--focus-ring-width));
