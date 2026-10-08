@@ -108,12 +108,110 @@
 <body>
 <main>
   <header class="masthead">
-    <h1>Тултип: пять входов, три режима и одна директива на 393 строки. Показываю весь механизм и предлагаю, как его резать</h1>
+    <h1>Тултип: нужно решить две вещи</h1>
     <p class="chat">Ответ нести в чат: «Тултип: разметка и подпись»</p>
-    <p class="lede">Два решения. Первое: как задавать подсказку к названию колонки, чтобы это не было скрытой магией. Второе: чистить ли код тултипа внутри. Перед ними карта: как работает тултип, все его входы и кто их использует.</p>
+    <p class="lede">1. Как задавать подсказку к названию колонки. 2. Чистить ли код тултипа. Как он устроен сейчас, внизу в свёрнутом блоке.</p>
     <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">TooltipDirective</span><span class="chip">TooltipPanelComponent</span><span class="chip">актуально на 2026-10-08</span></div>
   </header>
 
+  <section class="panel q" data-q="hint" data-review="Как задавать подсказку к названию" data-review-note-only>
+    <h2>Выбор 1. Как задавать подсказку к названию колонки</h2>
+    <p>Сейчас <code>dsTooltip</code> сам дописывает название жирным, и в разметке этого не видно. Ниже четыре способа. На картинке: узкая колонка с обрезанным названием и то, что видит пользователь.</p>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(230px, 1fr))">
+      <article class="opt" tabindex="0">
+        <h3>Как сейчас: тултип дописывает сам</h3>
+        <p class="youpick"><b>Ты выбираешь</b>Ничего не менять: тултип сам дописывает название жирным, когда оно обрезано.</p>
+        <div class="live"><span class="th" style="width:150px"><span class="clip dotted">Registered attendee count</span></span><span class="tip"><strong>Registered attendee count</strong>
+People who confirmed a seat</span></div>
+        <p class="cap">Что пишет разработчик</p>
+        <p class="code">&lt;span [dsTooltip]="hint"&gt;{{ label }}&lt;/span&gt;</p>
+        <div class="pills"><span class="pill good">ничего делать</span><span class="pill bad">магия: в разметке не видно</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Отдельная директива dsHint, подчёркивание</h3>
+        <p class="youpick"><b>Ты выбираешь</b>Новая директива <code>dsHint</code> для «слово и его определение», слово подчёркнуто точками. Обычный <code>dsTooltip</code> ничего не дописывает.</p>
+        <div class="live"><span class="th" style="width:150px"><span class="clip dotted">Registered attendee count</span></span><span class="tip"><strong>Registered attendee count</strong>
+People who confirmed a seat</span></div>
+        <p class="cap">Что пишет разработчик</p>
+        <p class="code">&lt;span [dsHint]="hint"&gt;{{ label }}&lt;/span&gt;</p>
+        <div class="pills"><span class="pill good">явно: имя говорит, что это определение</span><span class="pill good">вид таблицы как в 0.14.8</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+
+      <article class="opt" tabindex="0">
+        <h3>Директива dsHint, кружок с вопросом</h3>
+        <p class="youpick"><b>Ты выбираешь</b>Тот же <code>dsHint</code>, но определение открывается по кружку «?» рядом с названием. Название обрезано - у него свой обычный тултип.</p>
+        <div class="live"><span class="th" style="width:170px; display:flex; gap:6px; align-items:center"><span class="clip" style="flex:1; min-width:0">Registered attendee count</span><span class="qmark">?</span></span><span class="tip">People who confirmed a seat</span></div>
+        <p class="cap">Что пишет разработчик</p>
+        <p class="code">&lt;span dsTooltipWhenClipped&gt;{{ label }}&lt;/span&gt;
+&lt;button dsHint="hint"&gt;?&lt;/button&gt;</p>
+        <div class="pills"><span class="pill good">ничего не склеивается</span><span class="pill bad">кружок занимает ширину, вид меняется</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+
+      <article class="opt" tabindex="0">
+        <h3>Явный второй вход у dsTooltip</h3>
+        <p class="youpick"><b>Ты выбираешь</b>Название передаётся отдельным атрибутом <code>dsTooltipTitle</code> рядом с подсказкой.</p>
+        <div class="live"><span class="th" style="width:150px"><span class="clip dotted">Registered attendee count</span></span><span class="tip"><strong>Registered attendee count</strong>
+People who confirmed a seat</span></div>
+        <p class="cap">Что пишет разработчик</p>
+        <p class="code">&lt;span [dsTooltip]="hint"
+      [dsTooltipTitle]="label"&gt;...&lt;/span&gt;</p>
+        <div class="pills"><span class="pill good">всё видно в разметке</span><span class="pill bad">ещё один вход, ты просил не плодить</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel q" data-q="scope" data-review="Чистить ли код тултипа внутри" data-review-note-only>
+    <h2>Выбор 2. Чистить ли код тултипа внутри</h2>
+    <p>Весь код тултипа лежит в одном файле на 393 строки. Выбор не зависит от первого.</p>
+    <div class="opts">
+      <article class="opt" tabindex="0">
+        <h3>Не трогать</h3>
+        <p class="youpick"><b>Ты выбираешь</b>Оставить один файл, как сейчас.</p>
+        <div class="files"><span class="file is-big">tooltip.directive.ts<small>393 строки: показ, закрытие и вся логика обрезки</small></span></div>
+        <div class="pills"><span class="pill good">нулевой риск</span><span class="pill bad">всё перемешано</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Разнести по файлам, снаружи ничего не меняется</h3>
+        <p class="youpick"><b>Ты выбираешь</b>Разделить на три файла: сам тултип, «обрезан ли текст», фокус через родителя. Снаружи ничего не меняется.</p>
+        <div class="files">
+          <span class="file">tooltip.directive.ts<small>показ и закрытие</small></span>
+          <span class="file is-new">tooltip-clip.ts<small>обрезан ли текст</small></span>
+          <span class="file is-new">tooltip-ancestor-focus.ts<small>фокус через родителя</small></span>
+        </div>
+        <div class="pills"><span class="pill good">снаружи не меняется</span><span class="pill good">каждый файл про одно</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+
+      <article class="opt" tabindex="0">
+        <h3>Склеить два атрибута в один</h3>
+        <p class="youpick"><b>Ты выбираешь</b>Разделить, и два атрибута про обрезку склеить в один. Придётся поправить разметку в 9 местах.</p>
+        <p class="cap">Сегодня</p>
+        <p class="code">dsTooltipWhenClipped
+dsTooltipTextSelector=".option-label"</p>
+        <p class="cap">После</p>
+        <p class="code">dsTooltipWhenClipped=".option-label"</p>
+        <div class="pills"><span class="pill good">меньше атрибутов</span><span class="pill bad">ломает совместимость</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel verdict is-done">
+    <h2>Рекомендация</h2>
+    <p class="pick"><strong>Выбор 1: dsHint с подчёркиванием. Выбор 2: разделить на три файла.</strong> Тултип делает ровно то, что написано, определение имеет своё имя, и ничего не ломается.</p>
+  </section>
+
+  <details class="panel">
+    <summary><b>Как тултип устроен сейчас: карта, входы, кто использует</b></summary>
   <section class="panel">
     <h2>Как работает: от наведения до панели</h2>
     <p>Один класс <code>TooltipDirective</code> с двумя селекторами: <code>[dsTooltip]</code> и <code>[dsTooltipWhenClipped]</code>. Синие метки - входы, которые участвуют в шаге.</p>
@@ -208,105 +306,7 @@ People who confirmed a seat</span>
     </table>
   </section>
 
-  <section class="panel q" data-q="hint" data-review="Как задавать подсказку к названию" data-review-note-only>
-    <h2>Выбор 1. Как задавать подсказку к названию колонки</h2>
-    <p>У колонки есть название <b>Registered attendee count</b> и подсказка <b>People who confirmed a seat</b>. Сегодня достаточно написать <code>[dsTooltip]</code> с подсказкой, а библиотека сама дописывает название жирным, когда оно обрезано. Это не видно в разметке и не похоже на обычный тултип. Ниже четыре способа, как сделать явнее. В каждой карточке нарисована узкая колонка, где название обрезано, и что видит пользователь. Выбор - клик по карточке.</p>
-    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(230px, 1fr))">
-      <article class="opt" tabindex="0">
-        <h3>Как сейчас: тултип дописывает сам</h3>
-        <p class="youpick"><b>Ты выбираешь</b>ничего не менять: пишется один <code>dsTooltip</code>, а библиотека сама решает дописать название жирным, если оно обрезано.</p>
-        <div class="live"><span class="th" style="width:150px"><span class="clip dotted">Registered attendee count</span></span><span class="tip"><strong>Registered attendee count</strong>
-People who confirmed a seat</span></div>
-        <p class="cap">Что пишет разработчик</p>
-        <p class="code">&lt;span [dsTooltip]="hint"&gt;{{ label }}&lt;/span&gt;</p>
-        <div class="pills"><span class="pill good">ничего не делать</span><span class="pill bad">поведение не видно в разметке</span><span class="pill bad">любая кнопка с обрезанным текстом и тултипом тоже получит жирный текст сверху</span></div>
-        <dl class="layer"><dt>Что меняется в коде</dt><dd class="none">ничего</dd></dl>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-
-      <article class="opt is-pick" tabindex="0">
-        <span class="badge is-pick">рекомендую</span>
-        <h3>Отдельная директива dsHint, подчёркивание</h3>
-        <p class="youpick"><b>Ты выбираешь</b>обычный <code>dsTooltip</code> снова ничего не дописывает. Для «слово и его определение» появляется явная директива <code>dsHint</code>: слово подчёркнуто точками, при наведении видно определение, а если слово обрезано, определение начинается с него жирным.</p>
-        <div class="live"><span class="th" style="width:150px"><span class="clip dotted">Registered attendee count</span></span><span class="tip"><strong>Registered attendee count</strong>
-People who confirmed a seat</span></div>
-        <p class="cap">Что пишет разработчик</p>
-        <p class="code">&lt;span [dsHint]="hint"&gt;{{ label }}&lt;/span&gt;</p>
-        <div class="pills"><span class="pill good">название директивы говорит, что это определение</span><span class="pill good">вид заголовка таблицы остаётся тем же, что в 0.14.8</span><span class="pill mid">новая публичная директива</span></div>
-        <dl class="layer"><dt>Что меняется в коде</dt><dd>добавляется <code>dsHint</code>; у <code>dsTooltip</code> убирается автоматическая подпись; таблица ставит <code>dsHint</code> вместо связки кнопки и <code>dsTooltip</code></dd></dl>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-
-      <article class="opt" tabindex="0">
-        <h3>Директива dsHint, кружок с вопросом</h3>
-        <p class="youpick"><b>Ты выбираешь</b>та же явная директива, но подсказка живёт на кружке с вопросительным знаком рядом с названием. Название и подсказка не склеиваются: обрезанное название раскрывает свой обычный тултип, кружок открывает определение.</p>
-        <div class="live"><span class="th" style="width:170px; display:flex; gap:6px; align-items:center"><span class="clip" style="flex:1; min-width:0">Registered attendee count</span><span class="qmark">?</span></span><span class="tip">People who confirmed a seat</span></div>
-        <p class="cap">Что пишет разработчик</p>
-        <p class="code">&lt;span dsTooltipWhenClipped&gt;{{ label }}&lt;/span&gt;
-&lt;button dsHint="hint"&gt;?&lt;/button&gt;</p>
-        <div class="pills"><span class="pill good">никакой склейки, у каждого свой тултип</span><span class="pill good">виден значок: понятно, что есть подсказка</span><span class="pill bad">значок съедает ширину в каждом заголовке</span><span class="pill bad">вид заголовка таблицы меняется</span></div>
-        <dl class="layer"><dt>Что меняется в коде</dt><dd>добавляется <code>dsHint</code> с кружком; таблица рисует кружок; точечное подчёркивание уходит</dd></dl>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-
-      <article class="opt" tabindex="0">
-        <h3>Явный второй вход у dsTooltip</h3>
-        <p class="youpick"><b>Ты выбираешь</b>название передаётся отдельным атрибутом <code>dsTooltipTitle</code> рядом с подсказкой, всё остальное остаётся прежним. Автоматики нет, но появляется ещё один вход.</p>
-        <div class="live"><span class="th" style="width:150px"><span class="clip dotted">Registered attendee count</span></span><span class="tip"><strong>Registered attendee count</strong>
-People who confirmed a seat</span></div>
-        <p class="cap">Что пишет разработчик</p>
-        <p class="code">&lt;span [dsTooltip]="hint"
-      [dsTooltipTitle]="label"&gt;...&lt;/span&gt;</p>
-        <div class="pills"><span class="pill good">всё видно в разметке</span><span class="pill bad">ещё один вход у директивы: ты просил таких не плодить</span></div>
-        <dl class="layer"><dt>Что меняется в коде</dt><dd>добавляется вход <code>dsTooltipTitle</code>; автоматическая подпись убирается</dd></dl>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-    </div>
-  </section>
-
-  <section class="panel q" data-q="scope" data-review="Чистить ли код тултипа внутри" data-review-note-only>
-    <h2>Выбор 2. Чистить ли код тултипа внутри</h2>
-    <p>Сейчас вся логика лежит в одном файле на 393 строки. В нём смешаны две работы: показать подсказку и понять, обрезан ли текст. Этот выбор не зависит от первого. Выбор - клик по карточке.</p>
-    <div class="opts">
-      <article class="opt" tabindex="0">
-        <h3>Не трогать</h3>
-        <p class="youpick"><b>Ты выбираешь</b>код остаётся одним файлом, как сейчас.</p>
-        <div class="files"><span class="file is-big">tooltip.directive.ts<small>393 строки: показ, закрытие и вся логика обрезки</small></span></div>
-        <div class="pills"><span class="pill good">никакого риска</span><span class="pill bad">две работы остаются перемешаны</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-
-      <article class="opt is-pick" tabindex="0">
-        <span class="badge is-pick">рекомендую</span>
-        <h3>Разнести по файлам, снаружи ничего не меняется</h3>
-        <p class="youpick"><b>Ты выбираешь</b>тот же код делится на три файла: сам тултип, проверка «обрезан ли текст» и фокус через родителя. Атрибуты и поведение те же, потребитель ничего не заметит.</p>
-        <div class="files">
-          <span class="file">tooltip.directive.ts<small>показ и закрытие</small></span>
-          <span class="file is-new">tooltip-clip.ts<small>обрезан ли текст</small></span>
-          <span class="file is-new">tooltip-ancestor-focus.ts<small>фокус через родителя</small></span>
-        </div>
-        <div class="pills"><span class="pill good">снаружи ничего не меняется</span><span class="pill good">каждый файл про одну работу</span><span class="pill mid">в списке изменений появится строка про внутренние члены</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-
-      <article class="opt" tabindex="0">
-        <h3>Склеить два атрибута в один</h3>
-        <p class="youpick"><b>Ты выбираешь</b>то же разнесение, плюс два атрибута про обрезку сливаются в один. Атрибутов станет меньше, но у тех, кто их пишет, придётся поправить разметку.</p>
-        <p class="cap">Сегодня</p>
-        <p class="code">dsTooltipWhenClipped
-dsTooltipTextSelector=".option-label"</p>
-        <p class="cap">После</p>
-        <p class="code">dsTooltipWhenClipped=".option-label"</p>
-        <div class="pills"><span class="pill good">один выбор записан одним атрибутом</span><span class="pill bad">ломает совместимость: <code>dsTooltipTextSelector</code> удаляется</span><span class="pill mid">затрагивает 4 компонента библиотеки, 9 мест</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-    </div>
-  </section>
-
-  <section class="panel verdict is-done">
-    <h2>Рекомендация</h2>
-    <p class="pick"><strong>Выбор 1: отдельная директива dsHint с подчёркиванием. Выбор 2: разнести по файлам.</strong> В первом выборе тултип снова делает ровно то, что написано, а определение получает явное имя и тот же вид, что уже у заголовка таблицы. Во втором ничего не ломается и код становится читаемее.</p>
-  </section>
+  </details>
 
   <p class="src"><b>Источники, проверено 2026-10-08 на <code>dev</code>.</b> <code>tooltip.directive.ts</code> целиком (393 строки: <code>wc -l</code>; <code>dsTooltipWhenClipped()</code> читается в 6 местах: <code>grep -c</code>); <code>tooltip-panel.component.ts</code>; <code>tooltip-markup.ts</code>; все <code>dsTooltip*</code> в <code>src/lib/**/*.html</code>; импорты <code>TooltipDirective</code> в <code>src/lib</code> (sparkline и графики импортируют <code>ChartTooltipDirective</code>, это другой механизм). Размеры после разреза и 89 строк - оценка по диапазонам строк, не замер. Примеры тултипов собраны из SCSS панели на токенах <code>ds.css</code>, не из самого компонента.</p>
 </main>
