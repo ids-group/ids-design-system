@@ -13,7 +13,9 @@
   and an unpaired `**` stays as typed. The panel builds its content from the parsed text, so no
   markup in a string is interpreted as HTML. Nothing else is parsed: no italics, code, lists or
   tags. `dsTooltipWhenClipped` with no `dsTooltip` shows the host's text exactly as written, even
-  where it contains `**`.
+  where it contains `**`. `TooltipPanelComponent` gained the protected `segments`, and
+  `TooltipDirective` the private `contains` and `ownText`, so a subclass declaring one of those
+  names must rename it.
 
 ### Changed
 

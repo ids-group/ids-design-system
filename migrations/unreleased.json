@@ -88,6 +88,27 @@
       "pitfall": "A screenshot of a clipped button or label with a tooltip gains a bold first line.",
       "restore": null,
       "verify": "Narrow a button or label that has a `dsTooltip` until it clips and open the tooltip: its text is bold on the first line, the tip below."
+    },
+    {
+      "id": "tooltip-classes-member-surface",
+      "kind": "behavior",
+      "old": "TooltipPanelComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends TooltipDirective",
+        "extends TooltipPanelComponent"
+      ],
+      "detect": [
+        "extends TooltipDirective",
+        "extends TooltipPanelComponent"
+      ],
+      "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
+      "appliesWhen": "Only a class of yours that extends TooltipDirective or TooltipPanelComponent. Template users of dsTooltip need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error against TooltipDirective or TooltipPanelComponent.",
+      "note": "TooltipPanelComponent gained the protected segments. TooltipDirective gained the private contains and ownText and lost dsTooltipClippedLead."
     }
   ],
   "informational": [
