@@ -92,7 +92,7 @@
               @if (sortableCol(col) && col.hint) {
                 <button
                   type="button"
-                  class="th-label"
+                  class="th-label th-term"
                   [dsDefinitionTerm]="col.hint"
                   [pinOnClick]="false"
                   (click)="onSort(col)">
@@ -124,7 +124,7 @@
               } @else if (col.hint) {
                 <button
                   type="button"
-                  class="th-label"
+                  class="th-label th-term"
                   [dsDefinitionTerm]="col.hint">
                   <ng-container
                     [ngTemplateOutlet]="thText"
