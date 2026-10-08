@@ -18,7 +18,7 @@ import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/to
       dsTooltipPinOnClick
       [attr.aria-label]="ariaLabel()"
       [dsTooltip]="text()">
-      <ds-icon name="info" [size]="14" />
+      <ds-icon [name]="icon()" [size]="14" />
     </button>
   `,
   styleUrl: './info-hint.component.scss',
@@ -30,4 +30,6 @@ export class InfoHintComponent {
   readonly text = input.required<string>();
   /** Accessible name of the icon button, such as "About conversion rate". */
   readonly ariaLabel = input.required<string>();
+  /** `'help'` draws a question mark in a circle, `'info'` an "i". */
+  readonly icon = input<'help' | 'info'>('help');
 }

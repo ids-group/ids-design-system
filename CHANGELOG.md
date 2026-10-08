@@ -19,9 +19,9 @@
   `onPointerLeave`, and the private `document`, `hostPinOnClick`, `pinsOnClick`, `pin`, `unpin`
   and `pointArrowAtHost`. A subclass declaring one of those names must rename it.
 
-- **`ds-info-hint` is an info icon button with a pinned tooltip.** `<ds-info-hint
-  ariaLabel="About conversion rate" text="…" />` renders a 14px `info` icon button named by
-  `ariaLabel`; `text` shows on hover and focus, describes the button, and stays open after a click.
+- **`ds-info-hint` is an icon button with a pinned tooltip.** `<ds-info-hint
+  ariaLabel="About conversion rate" text="…" />` renders a 14px question-mark icon button named by
+  `ariaLabel`, and `icon="info"` swaps the question mark for an "i"; `text` shows on hover and focus, describes the button, and stays open after a click.
   The icon darkens on hover, sits on a `--surface-muted` circle while pressed, and turns
   `--accent-strong` on an `--accent-muted` circle while pinned.
   `InfoHintComponent` is exported from the package root.

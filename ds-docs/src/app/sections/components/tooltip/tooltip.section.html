@@ -193,11 +193,12 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       &lt;ds-info-hint&gt;
-    </code> is an info icon button with an
+    </code> is an icon button with an
     <code class="t-mono-inline">
       ariaLabel
     </code>; its <code class="t-mono-inline">text</code> shows
-    on hover and focus and pins on click.
+    on hover and focus and pins on click. The icon is a question mark;
+    <code class="t-mono-inline">icon="info"</code> draws an "i" instead.
   </p>
 
   <div class="demo">
@@ -206,6 +207,13 @@
       <ds-info-hint
         ariaLabel="About conversion rate"
         text="Share of contacts who reached the goal step, of all who entered the journey." />
+    </span>
+    <span class="t-s info-row">
+      Conversion rate
+      <ds-info-hint
+        icon="info"
+        ariaLabel="About conversion rate, info icon"
+        text="The same hint with the info icon." />
     </span>
   </div>
 

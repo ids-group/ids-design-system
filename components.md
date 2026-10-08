@@ -821,10 +821,10 @@ All inputs: `dsTooltip: string = ''`, `dsTooltipPlacement: 'top' | 'bottom' | 'l
 <!-- /inputs -->
 
 #### `<ds-info-hint>` — `InfoHintComponent`
-An info icon button (14px `info` icon) that shows supplementary text on hover and focus and keeps it open on click (a toggletip): `<ds-info-hint ariaLabel="About conversion rate" text="Share of contacts who reached the goal." />`. The text describes the button through `aria-describedby` while open. A click outside, `Escape` or blur closes it. The icon darkens on hover, sits on a muted circle while pressed, and turns accent on an `--accent-muted` circle while pinned. Place it after the label it explains.
+An icon button (14px, a question mark in a circle by default; `icon="info"` draws an "i") that shows supplementary text on hover and focus and keeps it open on click (a toggletip): `<ds-info-hint ariaLabel="About conversion rate" text="Share of contacts who reached the goal." />`. The text describes the button through `aria-describedby` while open. A click outside, `Escape` or blur closes it. The icon darkens on hover, sits on a muted circle while pressed, and turns accent on an `--accent-muted` circle while pinned. Place it after the label it explains.
 
 <!-- inputs:ds-info-hint -->
-All inputs: `text: required string`, `ariaLabel: required string`
+All inputs: `text: required string`, `ariaLabel: required string`, `icon: 'help' | 'info' = 'help'`
 <!-- /inputs -->
 
 #### `[dsDefinitionTerm]` — `DefinitionTermDirective`

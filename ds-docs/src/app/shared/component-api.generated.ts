@@ -4798,6 +4798,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": true,
         "description": "Accessible name of the icon button, such as \"About conversion rate\"."
+      },
+      {
+        "name": "icon",
+        "kind": "input",
+        "type": "'help' | 'info'",
+        "union": [
+          "help",
+          "info"
+        ],
+        "default": "'help'",
+        "required": false,
+        "description": "`'help'` draws a question mark in a circle, `'info'` an \"i\"."
       }
     ],
     "outputs": []
