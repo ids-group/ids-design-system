@@ -16,11 +16,23 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { TooltipPanelComponent } from './tooltip-panel.component';
 import { escapeTooltipMarkup, plainTooltipText } from './tooltip-markup';
 import {
+  FOCUSABLE,
+  listenToFocusableAncestor,
+  type AncestorFocusTrigger,
+} from './tooltip-ancestor-focus';
+import {
+  clipElement,
+  isHostClipped,
+  ownTextOf,
+  textContains,
+  toClipTarget,
+  type TooltipClipTarget,
+} from './tooltip-clip';
+import {
   closeOnScroll,
   overlayPlacementOf,
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
-import { isTextClipped } from '@ids-group-ltd/ids-design-system/core';
 import type { TooltipPlacement } from './tooltip.types';
 
 const TRIGGER_GAP_PX = 8;
@@ -31,48 +43,6 @@ const OPPOSITE_PLACEMENT: Record<TooltipPlacement, TooltipPlacement> = {
   left: 'right',
   right: 'left',
 };
-
-const NATIVELY_FOCUSABLE = 'a[href], button, input, select, textarea, summary';
-const FOCUSABLE = `${NATIVELY_FOCUSABLE}, [tabindex]`;
-const KEYBOARD_FOCUSABLE = `${NATIVELY_FOCUSABLE}, [tabindex]:not([tabindex^="-"])`;
-const INTERACTIVE = [
-  NATIVELY_FOCUSABLE,
-  'tr:not([role])',
-  ...[
-    'button',
-    'link',
-    'tab',
-    'option',
-    'menuitem',
-    'menuitemcheckbox',
-    'menuitemradio',
-    'row',
-    'gridcell',
-    'combobox',
-    'checkbox',
-    'radio',
-    'switch',
-    'treeitem',
-  ].map((role) => `[role="${role}"]`),
-].join(', ');
-
-const clippedHostsByAncestor = new WeakMap<
-  HTMLElement,
-  Set<TooltipDirective>
->();
-
-function firstClippedHost(
-  tooltips: Set<TooltipDirective>,
-): TooltipDirective | undefined {
-  return [...tooltips]
-    .sort((a, b) =>
-      a.hostElement.compareDocumentPosition(b.hostElement) &
-      Node.DOCUMENT_POSITION_FOLLOWING
-        ? -1
-        : 1,
-    )
-    .find((tooltip) => tooltip.isClipped());
-}
 
 const PINNED_ATTRIBUTE = 'data-ds-tooltip-pinned';
 
@@ -113,36 +83,28 @@ export class TooltipDirective implements OnDestroy {
   /** Draws the arrow that points at the host. Turn it off where the tip sits flush against it. */
   readonly dsTooltipArrow = input(true, { transform: booleanAttribute });
   /** Show the tip only while the host shows less text than it holds. Re-tested on every open.
+   *  A boolean or the bare attribute tests the host. A selector tests the element it matches inside
+   *  the host and discloses that element's text; while nothing matches, no clipped tip opens.
    *
-   *  Applies the tooltip on its own: without a `dsTooltip` the host's own text is disclosed. A tip
+   *  Applies the tooltip on its own: without a `dsTooltip` the tested text is disclosed. A tip
    *  whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip`
    *  that says more than the host does describes it as usual. */
-  readonly dsTooltipWhenClipped = input(false, { transform: booleanAttribute });
-  /** Selector for the element inside the host whose clipping `dsTooltipWhenClipped` tests and
-   *  whose text it discloses. Resolved on every open; while nothing matches, no clipped tip opens. */
-  readonly dsTooltipTextSelector = input<string | null>(null);
+  readonly dsTooltipWhenClipped = input<
+    TooltipClipTarget | null,
+    boolean | string | null | undefined
+  >(null, { transform: toClipTarget });
 
   /** Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves
    *  until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip.
    *  While pinned the host carries `data-ds-tooltip-pinned`, a hook for styling the pinned trigger. */
   readonly dsTooltipPinOnClick = input(false, { transform: booleanAttribute });
 
-  get hostElement(): HTMLElement {
+  private isClipped(): boolean {
+    return isHostClipped(this.hostElement, this.dsTooltipWhenClipped());
+  }
+
+  private get hostElement(): HTMLElement {
     return this.host.nativeElement;
-  }
-
-  private textElement(): HTMLElement | null {
-    const selector = this.dsTooltipTextSelector();
-
-    return selector
-      ? this.hostElement.querySelector<HTMLElement>(selector)
-      : this.hostElement;
-  }
-
-  isClipped(): boolean {
-    const textElement = this.textElement();
-
-    return textElement !== null && isTextClipped(textElement);
   }
 
   private pinsOnClick(): boolean {
@@ -150,7 +112,9 @@ export class TooltipDirective implements OnDestroy {
   }
 
   private ownText(): string {
-    return (this.textElement()?.textContent ?? '').trim();
+    return ownTextOf(
+      clipElement(this.hostElement, this.dsTooltipWhenClipped()),
+    );
   }
 
   /** A host that leads with its own text puts it, in bold, above the tip while it is clipped, unless the tip already says it. */
@@ -164,7 +128,7 @@ export class TooltipDirective implements OnDestroy {
       this.leadsWithOwnText &&
       own &&
       this.isClipped() &&
-      !this.contains(plainTooltipText(given), own)
+      !textContains(plainTooltipText(given), own)
     ) {
       return `**${escapeTooltipMarkup(own)}**
 ${given}`;
@@ -173,19 +137,13 @@ ${given}`;
     return given;
   }
 
-  private contains(haystack: string, needle: string): boolean {
-    const collapse = (value: string) => value.replace(/\s+/g, ' ').trim();
-
-    return collapse(haystack).includes(collapse(needle));
-  }
-
   /** A clipped host's full text is already in the DOM; describing it again would announce it twice. */
   private disclosesOwnText(text: string): boolean {
     if (!this.dsTooltipWhenClipped()) {
       return false;
     }
 
-    return this.contains(this.ownText(), plainTooltipText(text));
+    return textContains(this.ownText(), plainTooltipText(text));
   }
 
   private ref: OverlayRef | null = null;
@@ -208,54 +166,27 @@ ${given}`;
 
   private detachAncestor: (() => void) | null = null;
 
-  constructor() {
-    afterNextRender(() => this.listenToFocusableAncestor());
-  }
-
-  /** `:focus-visible` keeps a click from opening it. Only the first clipped host of one ancestor opens. */
-  private listenToFocusableAncestor(): void {
-    const host: HTMLElement = this.host.nativeElement;
-    if (!this.dsTooltipWhenClipped() || host.matches(FOCUSABLE)) {
-      return;
-    }
-    const ancestor = host.parentElement?.closest<HTMLElement>(FOCUSABLE);
-    if (!ancestor?.matches(INTERACTIVE)) {
-      return;
-    }
-    let tooltips = clippedHostsByAncestor.get(ancestor);
-    if (!tooltips) {
-      tooltips = new Set();
-      clippedHostsByAncestor.set(ancestor, tooltips);
-    }
-    tooltips.add(this);
-    const open = (event: FocusEvent) => {
-      if (
-        event.target !== ancestor ||
-        // Tested here, not at registration: a disabled trigger carries tabindex="-1" until enabled.
-        !ancestor.matches(KEYBOARD_FOCUSABLE) ||
-        !ancestor.matches(':focus-visible') ||
-        firstClippedHost(tooltips) !== this
-      ) {
-        return;
-      }
+  private readonly ancestorFocusTrigger: AncestorFocusTrigger = {
+    host: this.hostElement,
+    isClipped: () => this.isClipped(),
+    openFor: (ancestor) => {
       this.focusedTarget = ancestor;
       this.scheduleShow();
-    };
-    const close = () => {
+    },
+    close: () => {
       this.focusedTarget = null;
       this.onClose();
-    };
-    ancestor.addEventListener('focusin', open);
-    ancestor.addEventListener('focusout', close);
-    ancestor.addEventListener('click', close);
-    ancestor.addEventListener('keydown', close);
-    this.detachAncestor = () => {
-      tooltips.delete(this);
-      ancestor.removeEventListener('focusin', open);
-      ancestor.removeEventListener('focusout', close);
-      ancestor.removeEventListener('click', close);
-      ancestor.removeEventListener('keydown', close);
-    };
+    },
+  };
+
+  constructor() {
+    afterNextRender(() => {
+      if (this.dsTooltipWhenClipped()) {
+        this.detachAncestor = listenToFocusableAncestor(
+          this.ancestorFocusTrigger,
+        );
+      }
+    });
   }
 
   @HostListener('mouseenter')

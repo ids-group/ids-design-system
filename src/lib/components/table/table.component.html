@@ -295,13 +295,12 @@
                   let first = $first
                 ) {
                   <td
-                    dsTooltipTextSelector=":scope > .cell-clip"
                     [class.numeric]="col.align === 'right'"
                     [class.pin-first]="first && stickyFirstColumn()"
                     [class.editable-cell]="col.editable"
                     [class.interactive-cell]="col.interactive"
                     [class.fit-content]="fitsContent(col)"
-                    [dsTooltipWhenClipped]="!!col.truncate"
+                    [dsTooltipWhenClipped]="col.truncate ? ':scope > .cell-clip' : false"
                     [dsTooltip]="col.truncate ? cellValue(row, col) : ''"
                     (dblclick)="startEdit(row, col, $event)">
                     @if (isEditing(row, col)) {

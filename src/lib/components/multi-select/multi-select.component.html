@@ -279,8 +279,7 @@
                     tabindex="-1"
                     role="option"
                     class="option"
-                    dsTooltipWhenClipped
-                    dsTooltipTextSelector=".option-label"
+                    dsTooltipWhenClipped=".option-label"
                     [id]="optionId(flatIndexOf(option))"
                     [class.is-active]="activeIndex() === flatIndexOf(option)"
                     [attr.aria-selected]="isSelected(option.value)"
@@ -329,8 +328,7 @@
               tabindex="-1"
               role="option"
               class="option"
-              dsTooltipWhenClipped
-              dsTooltipTextSelector=".option-label"
+              dsTooltipWhenClipped=".option-label"
               [id]="optionId(flatIndexOf(option))"
               [class.is-active]="activeIndex() === flatIndexOf(option)"
               [attr.aria-selected]="isSelected(option.value)"
