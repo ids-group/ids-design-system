@@ -378,6 +378,7 @@ export interface DsIntl {
         readonly other: string;
         readonly noVisibleSeries: string;
         readonly target: (value: string) => string;
+        readonly rowsUnder: (label: string) => string;
         readonly noted: (notes: readonly string[]) => string;
         readonly noData: (label: string) => string;
         readonly onePoint: (label: string, value: string, at: string) => string;

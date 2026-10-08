@@ -3,6 +3,8 @@
 
 Group: Display & feedback
 
+Tokens: `--ds-loading-overlay-radius` (default `0`) rounds the scrim's corners; set it to the radius of the container the overlay covers, or the blurred scrim ends in square corners.
+
 <!-- inputs:ds-loading-overlay -->
 All inputs: `loading: boolean = false`, `label: string = ''`, `blur: boolean = true`, `spinnerSize: 'sm' | 'md' | 'lg' = 'md'`, `insetTop: string = '0'`, `inertContent: boolean = true`
 <!-- /inputs -->

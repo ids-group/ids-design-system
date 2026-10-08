@@ -2,6 +2,13 @@
 
 One line per closed item. Open work lives in `todo.md`; the detail behind an entry is in git history.
 
+## Bar chart rows and loading (2026-10-08)
+- `ds-bar-chart` takes `labelPosition: 'top' | 'start'` and `BarChartRow.children`, `hint`, `emphasis`, `showPercent`, `detached` (`bar-chart.math.ts`: `placeRows`, `shownRows`, `partSpans`)
+- New tokens `--ds-bar-chart-label-column-max-width`, `--ds-bar-chart-child-fill-opacity`, `--ds-bar-chart-divider-color`, and `DsIntl.chart.rowsUnder` (`ds-bar-chart`)
+- Loading follows `ds-table`: skeleton rows while `data` is empty, `ds-loading-overlay` over the rows on a reload, no `loadingStyle` input (`showsSkeleton`)
+- The reload overlay covers the card to its rounded corners (`--ds-loading-overlay-radius`); a bordered `ds-table` rounds the overlay's bottom corners
+- Decided: skeleton plus overlay, every drawn variant accepted (Stas, deck `implemented/bar-chart`, asked by mm-ecm)
+
 ## Pie chart centre value fitting (2026-10-05)
 - `ds-pie-chart` keeps the centre value on one line, shrinking to `--ds-pie-chart-center-value-min-font-size` then using the `'tick'` form (`pie-chart.component.ts`, `fitCenterValue`)
 - `[centerCompact]="false"` keeps the full sum at the floor and `centerPlacement="below"` prints value and caption under the ring (`ds-pie-chart`)
