@@ -477,6 +477,9 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
 - [ ] Every TS code an entry names is asserted by `migrations/fixtures/<version>/<id>.ts`,
       compiled at both tags (README, "Compile fixtures"). (`node tools/check.mjs manifest-compile`,
       at the cut)
+- [ ] A template outcome - an NG code, or a TS code only `strictTemplates` reports - is asserted by
+      `migrations/fixtures/<version>/<id>.component.ts`, its template inline and compiled by the
+      Angular compiler at both tags. (`node tools/check.mjs manifest-compile`, at the cut)
 - [ ] A published record that described something which never worked is resolved by one question —
       does anything the consumer DOES change? Yes → an item with an `action` here, in the library's
       voice. No → nothing, and a quiet correction to the old file if it still misleads. Never a line

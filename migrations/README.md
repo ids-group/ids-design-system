@@ -122,10 +122,24 @@ carries a directive on the line above, naming the side and the exact codes:
 
 The codes reported on a line must equal the codes named, and a line with no directive must compile
 clean at both tags; TypeScript's own `@ts-expect-error` accepts any error, so the directive is
-stripped before compiling. Every TS code an item, a `deleteList` row or an `informational` line names must be one its fixture
-asserts. Fixtures
-are kept in the repository and not shipped. Only `.ts` is compiled: template fixtures
-(`strictTemplates`, `.html`) are not supported yet.
+stripped before compiling. Every TS code, and every compile-time NG code (`NG1000` and up), an
+item, a `deleteList` row or an `informational` line names must be one its fixture asserts. Fixtures
+are kept in the repository and not shipped.
+
+A template outcome is backed by `<id>.component.ts` instead: a standalone component importing what
+it uses, its template inline in `template:`, compiled by the Angular compiler with
+`strictTemplates`. A template line expected to fail carries the directive as an HTML comment on the
+line above, with TS or NG codes, and the TypeScript part of the file takes `// @ts-expect-error`
+as before:
+
+```ts
+template: `
+  <!-- expect: after NG8002 -->
+  <ds-accordion [multi]="false"></ds-accordion>
+`,
+```
+
+An `.html` fixture is not compiled.
 
 The prose CHANGELOG is the human copy of a release; the manifest is its machine mirror of the
 same release. Where the two disagree, the CHANGELOG is the one to trust.
