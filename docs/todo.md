@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**124 open — 6 P1, 7 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**124 open — 6 P1, 7 P2, 111 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 6
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer)
 - **Asked by Stas**
-  - A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
+  - ½ A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
   - A click pins a tooltip: hover shows it at once, a click keeps it open (Stas, 2026-10-06)
   - A definition-term directive: an inline term that opens a tooltip on hover and focus and pins on click (Stas, 2026-10-06)
   - An info-hint (toggletip) component: an info icon button that shows supplementary text on hover and focus and pins on click (Stas, 2026-10-06)
@@ -376,9 +376,9 @@ Each has somebody behind it. Nothing here is speculative work.
 
 ## Asked by Stas
 
-- [ ] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `ecm-fix/table-auto-column-clip` (empty marker branch from dev).
-  A long value (an email, a name) stretches the column and pushes the table past its container. Wanted: a default clip width for a column that sets no `width`, with the full text still reachable. The choice is drawn in deck `17-table-truncate-clip.html` on branch `ecm-feat/table-truncate-column-clip` (renumber to 19 when merged; 17 and 18 are taken on dev).
-  **Consumer workaround today** (mm-ecm ME-493, Delta review): `src/frontend/projects/ecm-portal/src/app/features/**/delta-records-table.component.*` sets `width: 'content'` on the columns, wraps the value in `.value { display: block; width: 0; min-width: 100% }` and adds `dsTooltipWhenClipped`. Marked `TODO(ds-clip-default)` there; it goes once the DS clips by default.
+- [~] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `ecm-fix/table-auto-column-clip`.
+  Stas picked «Колонка растёт до текста» (deck `20-table-truncate-clip.html` on branch `ecm-feat/table-truncate-column-clip`): a `truncate` column without `width` takes what the other columns leave at their content width, up to its text, and clips at its column width; its floor is the header label. Built on the work branch with the regression harness `tools/table-clip-harness.mjs` (dev-only route `/harness/table-clip`). Left: Stas's sign-off in deck `20-table-truncate-result.html`, then merge.
+  **Consumer workaround to remove after the release** (mm-ecm ME-493, Delta review): `delta-records-table.component.*` wraps the value in `.value { display: block; width: 0; min-width: 100% }` with `dsTooltipWhenClipped`, marked `TODO(ds-clip-default)`; `truncate: true` on those columns replaces it.
 
 - [ ] **[P2] Document how to build `ds-modal` actions (Stas, 2026-10-06).** Work branch `ecm-fix/table-auto-column-clip`.
   `components.md` says only "`[actions]` (footer button row)". The slot is a flex row with `gap: var(--space-3)`, so each button must be a direct projected child with `actions` on it. A consumer who wrapped the buttons in `<div actions>` got one flex child, no gap, and buttons stuck together (mm-ecm ME-502, `unarchive-program-dialog.component.html`). Wanted: one sentence and one example in the `ds-modal` section (also `ds-modal-card`, `ds-drawer`) saying that `actions` goes on each button, not on a wrapper; a dev-mode warning for a wrapper is optional.
@@ -1098,6 +1098,7 @@ file** — the number moves; cite the filename.
 | 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
 | 19 | `19-tooltip-mechanism` | How deep to refactor the tooltip, with the whole mechanism drawn: keep as is, split the directive's internals with the same API, or also merge `dsTooltipWhenClipped` and `dsTooltipTextSelector` into one input. | none |
+| 20 | `20-table-truncate-result` | Sign-off of the `truncate` column without `width` that grows to its text: before and after of 23 harness tables, the measured differences each labelled intended or fixed, the regressions found and fixed, and the consumer tables. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
