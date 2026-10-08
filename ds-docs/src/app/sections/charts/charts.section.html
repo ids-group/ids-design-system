@@ -444,6 +444,111 @@
     [data]="journeyRows()" />
 
   <h3 class="block-title t-h4">
+    Loading
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      loading
+    </code> with no rows yet draws skeleton rows
+    in the real row geometry; with rows on screen it keeps them under the
+    overlay
+    <code class="t-mono-inline">
+      ds-table
+    </code> uses on a reload.
+  </p>
+
+  <div class="states is-cols-2">
+    <div
+      class="state-cell"
+      data-loading-cell="top-first">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="top"
+        loading
+        [data]="[]" />
+
+      <div class="state-cell-label">
+        top: first load
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="top-loaded">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="top"
+        [data]="loadingCompareRows()" />
+
+      <div class="state-cell-label">
+        top: loaded
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="start-first">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="start"
+        loading
+        [data]="[]" />
+
+      <div class="state-cell-label">
+        start: first load
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="start-loaded">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="start"
+        [data]="loadingCompareRows()" />
+
+      <div class="state-cell-label">
+        start: loaded
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="top-reload">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="top"
+        loading
+        [data]="loadingCompareRows()" />
+
+      <div class="state-cell-label">
+        top: reload
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="start-reload">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="start"
+        loading
+        [data]="loadingCompareRows()" />
+
+      <div class="state-cell-label">
+        start: reload
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Interaction
   </h3>
 
@@ -583,7 +688,7 @@
           [data]="loadingRows()" />
 
         <div class="state-cell-label">
-          Loading
+          Loading with rows
         </div>
 
         <docs-chart-data-editor [(rows)]="loadingRows" />

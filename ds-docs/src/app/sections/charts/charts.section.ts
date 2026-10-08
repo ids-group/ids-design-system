@@ -314,6 +314,13 @@ export class BarChartSection {
     JOURNEY_ROWS.slice(6),
   );
   protected readonly exitRows = signal<readonly BarChartRow[]>(EXIT_ROWS);
+  protected readonly loadingCompareRows = signal<readonly BarChartRow[]>(
+    JOURNEY_ROWS.slice(1, 4).map(({ id, label, value }) => ({
+      id,
+      label,
+      value,
+    })),
+  );
   protected readonly trackHeight = signal(6);
   protected readonly maxBelowDataRows =
     signal<readonly BarChartRow[]>(MAX_BELOW_DATA_ROWS);
