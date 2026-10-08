@@ -89,6 +89,7 @@ export const GROUPS = {
     'public-api',
     'probes',
     'focus-rings',
+    'component-owned-styles',
     'chart-interaction',
     'chart-aria',
     'chart-mark-budget',
