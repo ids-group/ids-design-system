@@ -25,8 +25,8 @@
 - **`ds-bar-chart` takes `labelPosition`.** `labelPosition="start"` puts each label in a column
   before its bar, on the bar's line, and lines up labels, bars, values and percents in columns
   across rows; the default `'top'` keeps the label above the bar. `BarChartLabelPosition` is its
-  type. `--ds-bar-chart-label-column-max-width` (default `40%`) caps the label column, and the row gap
-  under `'start'` defaults to `--space-3`.
+  type. `--ds-bar-chart-label-column-max-width` (default `40%`) caps the label column, and under
+  `'start'` `--ds-bar-chart-row-gap` defaults to `--space-3` (`--space-5` under `'top'`).
 
 - **A `ds-bar-chart` row can hold rows of its own.** `BarChartRow.children` nests rows under a row
   behind a disclosure button after its label, closed at first. A child's bar and derived percent

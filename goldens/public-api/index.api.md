@@ -31,6 +31,7 @@ export { BadgeComponent } from '@ids-group-ltd/ids-design-system/components/badg
 export { BannerComponent } from '@ids-group-ltd/ids-design-system/components/banner'; // component
 export { BannerVariant } from '@ids-group-ltd/ids-design-system/components/banner'; // type
 export { BarChartComponent } from '@ids-group-ltd/ids-design-system/components/bar-chart'; // component
+export { BarChartLabelPosition } from '@ids-group-ltd/ids-design-system/components/bar-chart'; // type
 export { BarChartRow } from '@ids-group-ltd/ids-design-system/components/bar-chart'; // interface
 export { BarChartSegment } from '@ids-group-ltd/ids-design-system/components/bar-chart'; // interface
 export { BarChartValue } from '@ids-group-ltd/ids-design-system/components/bar-chart'; // type
