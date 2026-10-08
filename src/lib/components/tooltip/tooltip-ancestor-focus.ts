@@ -51,7 +51,7 @@ function firstClippedHost(
  * keyboard focus. `:focus-visible` keeps a click from opening it. Only the first clipped host of
  * one ancestor opens. Returns the teardown, or null when the host needs no listening.
  */
-export function listenToFocusableAncestor(
+export function watchFocusableAncestor(
   trigger: AncestorFocusTrigger,
 ): (() => void) | null {
   const host = trigger.host;

@@ -17,7 +17,7 @@ import { TooltipPanelComponent } from './tooltip-panel.component';
 import { escapeTooltipMarkup, plainTooltipText } from './tooltip-markup';
 import {
   FOCUSABLE,
-  listenToFocusableAncestor,
+  watchFocusableAncestor,
   type AncestorFocusTrigger,
 } from './tooltip-ancestor-focus';
 import {
@@ -182,9 +182,7 @@ ${given}`;
   constructor() {
     afterNextRender(() => {
       if (this.dsTooltipWhenClipped()) {
-        this.detachAncestor = listenToFocusableAncestor(
-          this.ancestorFocusTrigger,
-        );
+        this.detachAncestor = watchFocusableAncestor(this.ancestorFocusTrigger);
       }
     });
   }

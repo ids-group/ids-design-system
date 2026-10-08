@@ -12,7 +12,7 @@ export const TOOLTIP_PIN_ON_CLICK = new InjectionToken<Signal<boolean>>('TOOLTIP
 @Directive({ selector: '[dsTooltip], [dsTooltipWhenClipped]' })
 export class TooltipDirective implements OnDestroy {
     public constructor();
-    private contains;
+    private readonly ancestorFocusTrigger;
     private describedElement;
     private detachAncestor;
     private disclosesOwnText;
@@ -23,15 +23,13 @@ export class TooltipDirective implements OnDestroy {
     public readonly dsTooltipDelay = input<number>(120);
     public readonly dsTooltipPinOnClick = input(false, { transform: booleanAttribute });
     public readonly dsTooltipPlacement = input<TooltipPlacement>('top');
-    public readonly dsTooltipTextSelector = input<string | null>(null);
-    public readonly dsTooltipWhenClipped = input(false, { transform: booleanAttribute });
+    public readonly dsTooltipWhenClipped = input<TooltipClipTarget | null, boolean | string | null | undefined>(null, { transform: toClipTarget });
     private focusedTarget;
     private readonly host;
-    public get hostElement(): HTMLElement;
+    private hostElement;
     private readonly hostPinOnClick;
-    public isClipped(): boolean;
+    private isClipped;
     private readonly leadsWithOwnText;
-    private listenToFocusableAncestor;
     public ngOnDestroy(): void;
     protected onClick(): void;
     protected onClose(): void;
@@ -50,7 +48,6 @@ export class TooltipDirective implements OnDestroy {
     private ref;
     private scheduleShow;
     private show;
-    private textElement;
     private timer;
     private readonly tipId;
     private tipText;

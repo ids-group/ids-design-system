@@ -11696,20 +11696,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dsTooltipWhenClipped",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Show the tip only while the host shows less text than it holds. Re-tested on every open. Applies the tooltip on its own: without a `dsTooltip` the host's own text is disclosed. A tip whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip` that says more than the host does describes it as usual."
-      },
-      {
-        "name": "dsTooltipTextSelector",
-        "kind": "input",
-        "type": "string | null",
+        "type": "TooltipClipTarget | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Selector for the element inside the host whose clipping `dsTooltipWhenClipped` tests and whose text it discloses. Resolved on every open; while nothing matches, no clipped tip opens."
+        "description": "Show the tip only while the host shows less text than it holds. Re-tested on every open. A boolean or the bare attribute tests the host. A selector tests the element it matches inside the host and discloses that element's text; while nothing matches, no clipped tip opens. Applies the tooltip on its own: without a `dsTooltip` the tested text is disclosed. A tip whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip` that says more than the host does describes it as usual."
       },
       {
         "name": "dsTooltipPinOnClick",
