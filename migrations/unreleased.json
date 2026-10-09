@@ -141,27 +141,29 @@
     {
       "id": "tooltip-classes-member-surface",
       "kind": "behavior",
-      "old": "TooltipPanelComponent, TooltipDirective, ChartTooltipDirective, BarChartComponent",
+      "old": "TooltipPanelComponent, TooltipDirective, ChartTooltipDirective, BarChartComponent, MenuItemComponent",
       "new": null,
       "surface": "typescript",
       "searchHints": [
         "extends TooltipDirective",
         "extends TooltipPanelComponent",
         "extends ChartTooltipDirective",
-        "extends BarChartComponent"
+        "extends BarChartComponent",
+        "extends MenuItemComponent"
       ],
       "detect": [
         "extends TooltipDirective",
         "extends TooltipPanelComponent",
         "extends ChartTooltipDirective",
-        "extends BarChartComponent"
+        "extends BarChartComponent",
+        "extends MenuItemComponent"
       ],
       "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
-      "appliesWhen": "Only a class of yours that extends TooltipDirective, TooltipPanelComponent, BarChartComponent or the internal ChartTooltipDirective. Template users of dsTooltip, dsChartTooltip and ds-bar-chart need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends TooltipDirective, TooltipPanelComponent, BarChartComponent, MenuItemComponent or the internal ChartTooltipDirective. Template users of dsTooltip, dsChartTooltip, ds-bar-chart and ds-menu-item need nothing; subclassing a DS component is unsupported.",
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
       "restore": null,
-      "verify": "The app builds with no member-collision error against TooltipDirective, TooltipPanelComponent or BarChartComponent, or against a subclass of the internal ChartTooltipDirective.",
-      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 12: ancestorFocusTrigger, document, dsTooltipArrow, dsTooltipPinOnClick, hostPinOnClick, leadsWithOwnText, onClick, onPointerLeave, ownText, pin, pinsOnClick and unpin; it lost 5: dsTooltipClippedLead, dsTooltipTextSelector, listenToFocusableAncestor, positionFor and textElement. The internal ChartTooltipDirective lost the private closeOnEscape. BarChartComponent gained the public labelPosition, the protected isExpanded, toggleRow, hintId, holdsControls, percentColumn, entries, showsSkeleton and reloading, and the private idPrefix and expanded."
+      "verify": "The app builds with no member-collision error against TooltipDirective, TooltipPanelComponent, BarChartComponent or MenuItemComponent, or against a subclass of the internal ChartTooltipDirective.",
+      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 12: ancestorFocusTrigger, document, dsTooltipArrow, dsTooltipPinOnClick, hostPinOnClick, leadsWithOwnText, onClick, onPointerLeave, ownText, pin, pinsOnClick and unpin; it lost 5: dsTooltipClippedLead, dsTooltipTextSelector, listenToFocusableAncestor, positionFor and textElement. The internal ChartTooltipDirective lost the private closeOnEscape. BarChartComponent gained the public labelPosition, the protected isExpanded, toggleRow, hintId, holdsControls, percentColumn, entries, showsSkeleton and reloading, and the private idPrefix and expanded. MenuItemComponent gained the public activateHover and the private aim, and lost the private closeTimer and clearCloseTimer."
     },
     {
       "id": "intl-chart-rows-under-required",
