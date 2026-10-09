@@ -42,8 +42,8 @@
   pin-capable trigger the same cue, its hover and its press.
   Use it on info and definition triggers only, never on a control whose click acts.
   `TooltipDirective` gained the public `dsTooltipPinOnClick`, protected `onClick` and
-  `onPointerLeave`, and the private `document`, `hostPinOnClick`, `pinsOnClick`, `pin`, `unpin`
-  and `pointArrowAtHost`. A subclass declaring one of those names must rename it.
+  `onPointerLeave`, and the private `document`, `hostPinOnClick`, `pinsOnClick`, `pin` and
+  `unpin`. A subclass declaring one of those names must rename it.
 
 - **`ds-info-hint` is an icon button with a pinned tooltip.** `<ds-info-hint
   ariaLabel="About conversion rate" text="…" />` renders a 14px question-mark icon button named by

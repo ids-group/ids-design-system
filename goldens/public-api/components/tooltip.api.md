@@ -43,8 +43,6 @@ export class TooltipDirective implements OnDestroy {
     private ownText;
     private pin;
     private pinsOnClick;
-    private pointArrowAtHost;
-    private positionFor;
     private ref;
     private scheduleShow;
     private show;

@@ -403,6 +403,9 @@ export function lineSegments(points: readonly (LinePoint | null)[]): LinePoint[]
 export function linearScale(domainMin: number, domainMax: number, rangeSize: number): (value: number) => number;
 
 // @internal
+export function listenForEscape(target: Pick<Document, 'addEventListener' | 'removeEventListener'> | null, onEscape: () => void): () => void;
+
+// @internal
 export function listenForMarkFocus(scope: ElementRef<Element>, onFocus: (event: FocusEvent, mark: MarkHit) => void, onBlur?: (event: FocusEvent, mark: MarkHit) => void): void;
 
 // @internal
