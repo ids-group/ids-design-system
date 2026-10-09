@@ -5087,7 +5087,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-loading-overlay-radius",
         "value": "0",
-        "notes": "Corner radius of the loading scrim (default 0). Set it to the radius of the container the overlay covers, so the blurred scrim ends at its rounded edge."
+        "notes": "Corner radius of the loading scrim (default 0); match the covered container's radius."
       },
       {
         "name": "--ds-loading-overlay-enter-keyframes",
