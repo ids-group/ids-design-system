@@ -4,6 +4,25 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.14.0 - 2026-10-10
+
+### Added
+
+- **`lint-step.mjs --tools <dir>`:** linters and parsers the consumer lacks resolve from a
+  `node_modules` root; the consumer's own win. Output gains `toolsSource` (`consumer` | `tools`)
+  per package.
+- **Phase A step 11:** a consumer without the linters gets a pinned set via `npm exec` into npm's
+  `_npx` cache, once per run, behind command approval; its dir is the `--tools`. Nothing is
+  installed into the consumer.
+- **Dead-override baseline:** Phase A step 9 runs `check-overrides` on the installed version
+  (ledger `overridesBaseline`). Phase C lists chain-introduced lines under "Needs manual review",
+  marked with their drift-scan hit (ledger `driftHits`), and pre-existing ones once, apart.
+
+### Fixed
+
+- **`drift-scan.mjs`:** Sass module members (`@include chart-motion.sweeps-in`, `math.div(`) are
+  not read as gone classes.
+
 ## 1.13.0 - 2026-10-09
 
 ### Added

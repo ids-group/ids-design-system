@@ -11,7 +11,9 @@ import { extname, join } from 'node:path';
 
 const SKIP = new Set(['node_modules', 'dist', '.angular', '.git']);
 const TOKEN = /--ds-[a-z0-9-]+/g;
-const STYLE_CLASS = /\.([a-z][a-z0-9-]{2,})/g;
+// A dotted name in an at-rule or before `(` is a Sass module member (`motion.sweeps-in`), not a class.
+const SASS_AT_RULE = /@(?:include|mixin|function|use|forward)\b[^;{]*/g;
+const STYLE_CLASS = /\.([a-z][a-z0-9-]{2,})(?![a-z0-9(-])/g;
 const HTML_CLASS = /class="([^"]*)"/g;
 
 function* walk(dir, extensions) {
@@ -31,7 +33,8 @@ function surface(tree) {
     const extension = extname(file);
     for (const match of text.matchAll(TOKEN)) tokens.add(match[0]);
     if (extension === '.scss' || extension === '.css')
-      for (const match of text.matchAll(STYLE_CLASS)) classes.add(match[1]);
+      for (const match of text.replace(SASS_AT_RULE, '').matchAll(STYLE_CLASS))
+        classes.add(match[1]);
     if (extension === '.html')
       for (const match of text.matchAll(HTML_CLASS))
         for (const name of match[1].split(/\s+/))
