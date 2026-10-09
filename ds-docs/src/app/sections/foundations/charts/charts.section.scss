@@ -22,21 +22,20 @@
     }
 
     .tbl {
-      width: 100%;
-      margin-top: var(--space-3);
       border-collapse: collapse;
-      font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-    }
-    .tbl th, .tbl td {
-      text-align: left;
-      padding: var(--space-3) var(--space-4);
-      border-bottom: var(--border-width-default) solid var(--border-divider);
-    }
-    .tbl th {
-      font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-      letter-spacing: var(--letter-spacing-wider);
-      text-transform: uppercase;
-      color: var(--text-tertiary);
+      border: 0;
+      border-radius: 0;
+      overflow: visible;
+      background: none;
+
+      th {
+        background: none;
+        color: var(--text-tertiary);
+      }
+
+      tr:last-child td {
+        border-bottom: var(--border-width-default) solid var(--border-divider);
+      }
     }
 
     .grid-2 {

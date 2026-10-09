@@ -14,18 +14,19 @@
     Content-span topbar
   </h3>
 
-  <p class="block-desc t-s">
-    Project chrome into
-    <code class="t-mono-inline">
-      [sidenav]
-    </code>,
-    <code class="t-mono-inline">
-      [topbar]
-    </code> and the default slot. The layout
-    renders <code class="t-mono-inline">&lt;main&gt;</code> and compensates
-    the scrollbar, so insets stay symmetric. By default the rail spans full
-    height and the topbar only the content column.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Slots: <code class="t-mono-inline">[sidenav]</code>, <code class="t-mono-inline">[topbar]</code>, default.
+    </li>
+
+    <li>
+      Renders <code class="t-mono-inline">&lt;main&gt;</code> and compensates the scrollbar, so insets stay symmetric.
+    </li>
+
+    <li>
+      Default: the rail spans full height, the topbar only the content column.
+    </li>
+  </ul>
 
   <div class="layout-demo">
     <ds-app-layout>
@@ -156,29 +157,23 @@
     Opening the rail from your own chrome
   </h3>
 
-  <p class="block-desc t-s">
-    Below <code class="t-mono-inline">lg</code> the rail is an overlay opened
-    from your topbar.
-    <code class="t-mono-inline">
-      dsRailTrigger
-    </code> on a native
-    <code class="t-mono-inline">
-      button
-    </code> toggles it and syncs
-    <code class="t-mono-inline">
-      aria-expanded
-    </code> /
-    <code class="t-mono-inline">
-      aria-controls
-    </code>. Not on
-    <code class="t-mono-inline">
-      ds-icon-button
-    </code>: the attributes would land on
-    the wrapper; bind its forwarding inputs off a
-    <code class="t-mono-inline">
-      &lt;ds-app-layout #layout&gt;
-    </code> ref:
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Below <code class="t-mono-inline">lg</code> the rail is an overlay opened from your topbar.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        dsRailTrigger
+      </code> on a native <code class="t-mono-inline">button</code> - toggles it, syncs <code class="t-mono-inline">aria-expanded</code> / <code class="t-mono-inline">aria-controls</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        ds-icon-button
+      </code> - the attributes would land on the wrapper; bind its forwarding inputs off a <code class="t-mono-inline">&lt;ds-app-layout #layout&gt;</code> ref:
+    </li>
+  </ul>
 
   <pre class="t-mono-block"><code>&lt;ds-icon-button
   icon="menu"
@@ -217,31 +212,71 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [restoreScroll]="true"
-    </code> remembers scroll
-    per route and restores it only on history traversal (popstate: back,
-    forward, mouse side button, Alt+←, edge swipe), reload, or navigation with
-    <code class="t-mono-inline">
-      state: {{ '{' }} dsRestoreScroll: true {{ '}' }}
-    </code
-    >; a new screen starts at the top. Wheel, touch or key input cancels a
-    pending restore. These docs use it.
+    </code> remembers scroll per
+    route; a new screen starts at the top. These docs use it.
   </p>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      scrollReset
-    </code> sets when content returns to
-    the top: <code class="t-mono-inline">'path'</code> (default) on path change
-    only, so search, sort and paging keep the place;
-    <code class="t-mono-inline">
-      'always'
-    </code> also on query/fragment-only
-    navigation (server-paged lists); <code class="t-mono-inline">'never'</code>
-    leaves it to the screen, via
-    <code class="t-mono-inline">
-      AppLayoutScrollService.scrollToTop()
-    </code>.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Restores on history traversal (popstate: back, forward, mouse side button, <kbd>Alt</kbd>+<kbd>←</kbd>, edge swipe), reload, or navigation with <code class="t-mono-inline">state: {{ '{' }} dsRestoreScroll: true {{ '}' }}</code>.
+    </li>
+
+    <li>
+      Wheel, touch or key input cancels a pending restore.
+    </li>
+  </ul>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          scrollReset
+        </th>
+
+        <th>
+          Back to the top on
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'path'
+          </code> (default)
+        </td>
+
+        <td>
+          Path change only; search, sort and paging keep the place.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'always'
+          </code>
+        </td>
+
+        <td>
+          Also query/fragment-only navigation (server-paged lists).
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'never'
+          </code>
+        </td>
+
+        <td>
+          Left to the screen, via <code class="t-mono-inline">AppLayoutScrollService.scrollToTop()</code>.
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
@@ -258,21 +293,15 @@
     >. Inject it; do not derive your own.
   </p>
 
-  <p class="block-desc t-s">
-    The offset waits for content to grow tall enough (a
-    <code class="t-mono-inline">
-      ResizeObserver
-    </code>, capped at
-    <code class="t-mono-inline">
-      restoreScrollTimeout
-    </code>), so a list with 8
-    of 40 rows loaded still lands close. A page that sets its own scroll, such
-    as a virtualizer, must take the offset itself:
-    <code class="t-mono-inline code-wrap">
-      inject(AppLayoutScrollService).consumePendingOffset()
-    </code
-    >.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      The offset waits for content to grow tall enough (a <code class="t-mono-inline">ResizeObserver</code>, capped at <code class="t-mono-inline">restoreScrollTimeout</code>): 8 of 40 rows loaded still lands close.
+    </li>
+
+    <li>
+      A page that sets its own scroll (a virtualizer) takes the offset itself: <code class="t-mono-inline code-wrap">inject(AppLayoutScrollService).consumePendingOffset()</code>.
+    </li>
+  </ul>
 
   <h3
     data-claude-design
@@ -281,35 +310,37 @@
     The rail footer on its own
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      &lt;ds-sidenav-footer&gt;
-    </code> is the rail part
-    you configure, not compose: profile row, alert bell, collapse handle.
-    <code class="t-mono-inline">
-      [collapsed]
-    </code> picks the state. Width comes
-    from the sidenav; outside one, give it a frame.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        &lt;ds-sidenav-footer&gt;
+      </code> - the rail part you configure, not compose: profile row, alert bell, collapse handle.
+    </li>
 
-  <p class="block-desc t-s">
-    It only emits
-    <code class="t-mono-inline">
-      collapseToggled
-    </code> and
-    <code class="t-mono-inline">
-      signOutSelected
-    </code>; the parent acts, so the
-    unbound collapse row here does nothing. A null
-    <code class="t-mono-inline">
-      searchProvider
-    </code> or
-    <code class="t-mono-inline">
-      alertItems
-    </code> makes that row inert; an
-    empty <code class="t-mono-inline">profileRoute</code> makes "Your profile"
-    a no-op.
-  </p>
+    <li>
+      <code class="t-mono-inline">
+        [collapsed]
+      </code> - picks the state.
+    </li>
+
+    <li>
+      Width comes from the sidenav; outside one, give it a frame.
+    </li>
+  </ul>
+
+  <ul class="block-desc t-s">
+    <li>
+      Emits only <code class="t-mono-inline">collapseToggled</code> and <code class="t-mono-inline">signOutSelected</code>; the parent acts, so the unbound collapse row here does nothing.
+    </li>
+
+    <li>
+      Null <code class="t-mono-inline">searchProvider</code> or <code class="t-mono-inline">alertItems</code> - that row is inert.
+    </li>
+
+    <li>
+      Empty <code class="t-mono-inline">profileRoute</code> - "Your profile" is a no-op.
+    </li>
+  </ul>
 
   <div class="footer-rails">
     <div class="footer-rail">

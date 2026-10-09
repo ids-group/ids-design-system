@@ -130,7 +130,7 @@ measurements, in `../MANUAL-SURFACE.md` §1.
    A custom element inside another custom element's template loses its projected content _and_
    its inputs. `ds-modal` renders `<ds-modal-card>`, which was also registered. `gen.mjs` now
    registers a component used inside another component's template under an alias, `ds-x-<name>`,
-   which no template mentions — 31 of 85. The React wrapper emits the alias, so callers are
+   which no template mentions (count in `../MANUAL-SURFACE.md`). The React wrapper emits the alias, so callers are
    unaffected.
 2. **Host-directive inputs were never on the element.** `createCustomElement` reads the
    component's own inputs only, so `staticPreview` — re-exposed via `hostDirectives` — had no
@@ -162,8 +162,7 @@ one web search for the symptom returned #24536 on the first page.
   publishes inputs and outputs, not methods, so `popover.toggle(trigger)` — how
   the DS opens a popover — is unreachable. Trigger-driven overlays need an
   input-based open state to be usable from a design.
-- **Attribute directives have no element to register.** Fifteen of them today (re-counted
-  2026-09-01; the figure was 6 when this file was written) — mostly template-slot markers for
+- **Attribute directives have no element to register.** Listed in `../MANUAL-SURFACE.md` §2 - mostly template-slot markers for
   the picker family, which are meaningless without an Angular template anyway. **`dsTooltip` was called the one that hurts; on a
   second look it does not** — a tooltip is hover-revealed, and a static design card has no hover,
   so an agent gets nothing from it either way (`../MANUAL-SURFACE.md` §2). Covering it at all would

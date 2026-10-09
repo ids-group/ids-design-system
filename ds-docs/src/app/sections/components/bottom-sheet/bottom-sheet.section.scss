@@ -8,23 +8,6 @@
     }
     .sheet-body { color: var(--text-secondary); margin: 0; }
 
-    .rules {
-      margin-top: var(--space-3);
-      padding-left: var(--space-5);
-      color: var(--text-secondary);
-      display: grid;
-      gap: var(--space-2);
-      max-width: var(--col-cap-text);
-    }
-    kbd {
-      display: inline-block;
-      padding: 1px 6px;
-      font: var(--font-weight-medium) 11px / 1 var(--font-mono);
-      background: var(--surface-default);
-      border: var(--border-width-default) solid var(--border-default);
-      border-radius: var(--radius-sm);
-      color: var(--text-secondary);
-    }
 
     .static-demo {
       padding-bottom: 0;

@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -221,6 +222,7 @@ const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
   selector: 'section-charts-bar-chart',
   standalone: true,
   imports: [
+    RouterLink,
     BarChartComponent,
     DocsChartDataEditorComponent,
     DocsSectionComponent,

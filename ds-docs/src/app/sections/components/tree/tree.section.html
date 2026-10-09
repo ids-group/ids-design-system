@@ -12,27 +12,99 @@
     Interactive tree
   </h3>
 
-  <p class="block-desc t-s">
-    Pass <code class="t-mono-inline">TreeNode[]</code> (<code class="t-mono-inline">id</code>,
-    <code class="t-mono-inline">
-      label
-    </code>, <code class="t-mono-inline">icon?</code>,
-    <code class="t-mono-inline">
-      children?
-    </code>, <code class="t-mono-inline">disabled?</code>).
-    <code class="t-mono-inline">
-      [(expandedIds)]
-    </code> and
-    <code class="t-mono-inline">
-      [(selectedId)]
-    </code> are two-way;
-    <code class="t-mono-inline">
-      (nodeSelected)
-    </code> emits the whole node.
-    Clicking a parent selects and toggles it. One tab stop: ArrowUp/Down move,
-    Home/End jump, ArrowRight expands then steps in, ArrowLeft collapses then
-    goes to the parent, Enter/Space select.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        TreeNode[]
+      </code>: <code class="t-mono-inline">id</code>, <code class="t-mono-inline">label</code>, <code class="t-mono-inline">icon?</code>, <code class="t-mono-inline">children?</code>, <code class="t-mono-inline">disabled?</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [(expandedIds)]
+      </code>, <code class="t-mono-inline">[(selectedId)]</code> - two-way; <code class="t-mono-inline">(nodeSelected)</code> emits the whole node.
+    </li>
+
+    <li>
+      A click on a parent selects and toggles it.
+    </li>
+  </ul>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Key, one tab stop
+        </th>
+
+        <th>
+          Effect
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <kbd>
+            ArrowUp
+          </kbd> / <kbd>ArrowDown</kbd>
+        </td>
+
+        <td>
+          Move
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            Home
+          </kbd> / <kbd>End</kbd>
+        </td>
+
+        <td>
+          Jump
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            ArrowRight
+          </kbd>
+        </td>
+
+        <td>
+          Expands, then steps in
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            ArrowLeft
+          </kbd>
+        </td>
+
+        <td>
+          Collapses, then goes to the parent
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            Enter
+          </kbd> / <kbd>Space</kbd>
+        </td>
+
+        <td>
+          Select
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="demo-panel">
     <ds-tree

@@ -255,21 +255,15 @@
     A full-bleed child needs the card to clip
   </h3>
 
-  <p class="block-desc t-s">
-    A full-bleed child paints square corners over the card's radius; set
-    <code class="t-mono-inline">
-      --ds-card-overflow: clip
-    </code> on the card
-    (<code class="t-mono-inline">clip</code>, not
-    <code class="t-mono-inline">
-      hidden
-    </code>, so it is not a scroll
-    container). Clipping also cuts outset focus rings; add
-    <code class="t-mono-inline">
-      data-focus="inset"
-    </code> when the card holds
-    focusable content.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      A full-bleed child paints square corners over the radius - set <code class="t-mono-inline">--ds-card-overflow: clip</code> on the card (<code class="t-mono-inline">clip</code>, not <code class="t-mono-inline">hidden</code>: no scroll container).
+    </li>
+
+    <li>
+      Clipping cuts outset focus rings - add <code class="t-mono-inline">data-focus="inset"</code> when the card holds focusable content.
+    </li>
+  </ul>
 
   <div class="grid-2">
     <ds-card padding="none">

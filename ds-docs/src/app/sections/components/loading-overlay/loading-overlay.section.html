@@ -19,14 +19,15 @@
     </code> drops the backdrop blur;
     <code>
       spinnerSize
-    </code> takes <code>sm</code> · <code>md</code> (default) ·
+    </code> takes <code>sm</code> · <code>md</code> (default)
+    · <code> lg </code>. Tokens:
     <code>
-      lg
-    </code>. Tokens: <code> --ds-loading-overlay-scrim-color </code>,
+      --ds-loading-overlay-scrim-color
+    </code>,
     <code>
       -label-color
-    </code>, <code>-radius</code> (default <code>0</code>; set
-    it to the covered container's radius to round the scrim to its edge) and
+    </code>, <code>-radius</code> (default <code>0</code>;
+    match the covered container) and
     <code>
       -enter-keyframes/-duration/-easing/-scale
     </code>.
@@ -91,18 +92,21 @@
   </p>
 
   <p class="block-desc t-s">
-    To cover only part of the content, offset the top with
+    Part of the content: offset the top with
     <code class="t-mono-inline">
       insetTop
     </code>, set
     <code class="t-mono-inline">
       [inertContent]="false"
-    </code> and mark the
-    covered subtree <code class="t-mono-inline">inert</code> yourself.
-    <code class="t-mono-inline">
-      ds-table
-    </code> starts its scrim below the
-    header, so only <code class="t-mono-inline"> &lt;tbody&gt; </code> goes
-    inert and sorting stays operable.
+    </code>, mark the covered
+    subtree <code class="t-mono-inline">inert</code> yourself.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        ds-table
+      </code> starts its scrim below the header: only <code class="t-mono-inline">&lt;tbody&gt;</code> goes inert, sorting stays operable.
+    </li>
+  </ul>
 </docs-section>
