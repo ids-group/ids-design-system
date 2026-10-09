@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**122 open — 1 P1, 10 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
+**123 open — 1 P1, 10 P2, 112 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 1
 
@@ -38,7 +38,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 111
+### P3 — 112
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -125,6 +125,8 @@ is stale. Closing an item means deleting the item and nothing else.
   - Four exports on the package surface have no consumer in `src/`
   - `'none'` and `'grouped'` are the same value on `ds-column-chart`
   - Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea
+- **Wrapping in a `ds-table` cell (recorded 2026-10-09, Stas: parked, come back later)**
+  - Two wrap options for a `truncate` column, drawn in deck `25-table-wrap-parked.html`
 - **ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)**
   - `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them
 - **The global `.icon` squeezes the `ds-icon` box (recorded 2026-10-09, from the mm-ecm consumer)**
@@ -371,7 +373,8 @@ Each has somebody behind it. Nothing here is speculative work.
 ## Asked by Stas
 
 - [~] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `ecm-fix/table-auto-column-clip`.
-  Stas picked «Колонка растёт до текста» (deck `20-table-truncate-clip.html` on branch `ecm-feat/table-truncate-column-clip`): a `truncate` column without `width` takes what the other columns leave at their content width, up to its text, and clips at its column width; its floor is the header label. Built on the work branch with the regression harness `tools/table-clip-harness.mjs` (dev-only route `/harness/table-clip`). Left: Stas's sign-off in deck `22-table-truncate-result.html`, then merge.
+  Stas picked «Колонка растёт до текста» (deck `20-table-truncate-clip.html` on branch `ecm-feat/table-truncate-column-clip`): a `truncate` column without `width` takes what the other columns leave at their content width, up to its text, and clips at its column width; its floor is the header label. Built on the work branch with the regression harness `tools/table-clip-harness.mjs` (dev-only route `/harness/table-clip`). Left: Stas's two open verdicts in deck `24-table-truncate-result.html` - the general column sizing rules (by column kind, by text length as built, or equal shares) and width stability across pages (the built rule measures the rows on screen: harness `paging-page-1` / `-2` at 1100px, Email 302 -> 552px, City 200 -> 80px between pages; options: widths from config and headers, measured once and locked, or from all data / a server hint); then merge.
+  **Decided 2026-10-09 (Stas, deck 24):** table width stays 100% with the slack in the auto column (B); a cell template that ellipsizes its own text gets the tooltip from the DS clip test, which counts descendants (A, nothing to build; option B, mm-ecm putting `dsTooltipWhenClipped` on the clipped span itself, stays possible); `truncate` stays one line with an ellipsis (C; B and D parked below); a column minimum set by the consumer (A, built: `TableColumn.minWidth`).
   **Consumer workaround to remove after the release** (mm-ecm ME-493, Delta review): `delta-records-table.component.*` wraps the value in `.value { display: block; width: 0; min-width: 100% }` with `dsTooltipWhenClipped`, marked `TODO(ds-clip-default)`; `truncate: true` on those columns replaces it.
 
 - [ ] **[P2] Tooltips and trigger-anchored overlays should follow their trigger on scroll, not close (Stas, 2026-10-08).** Today every one closes: `TooltipDirective` and the `ds-menu-item` submenu call `closeOnScroll` (`overlay-motion.ts`), as `ds-popover`, `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker` and `ds-color-picker` already did; only a pinned chart tooltip repositions. The cause of the earlier detach: CDK's `close()` and `reposition()` scroll strategies hear only the window and `cdkScrollable` ancestors, not a plain `overflow: auto` container such as the ds-docs content pane - measured 2026-10-08 in the ds-docs build: before the fix a hover tip, a pinned tip and an open submenu stayed put (pane moved 0px) while their trigger moved 59.7-60.3px; a pinned chart tooltip moved 59.7px with its mark. **Wanted:** follow the trigger (the chart tooltip's `closeOnScroll` + `updatePosition()` is the shape), close only when the trigger leaves the visible part of its scroll container.
@@ -1065,7 +1068,8 @@ file** — the number moves; cite the filename.
 | 21 | `21-text-snap-scale` | How a scaling animation ends without the text snapping a pixel: press (as today for now), card hover, the scaling rule, the funnel stage step. | the overlay-enter-snap fix |
 | 22 | `22-tooltip-mechanism` | Three open questions on the tooltip: the six listeners per table cell (measured) and what to do about them, loading the panel at idle after start, and one app-wide delegated listener for every directive with events. Answered and finished proposals are folded below. | none |
 | 23 | `23-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
-| 24 | `24-table-truncate-result` | Sign-off of the `truncate` column without `width` that grows to its text: before and after of 23 harness tables, the measured differences each labelled intended or fixed, the regressions found and fixed, and the consumer tables. | none |
+| 24 | `24-table-truncate-result` | Sign-off of the `truncate` column without `width` that grows to its text: four verdicts recorded (B, A, C, A), `minWidth` built; open: the general column sizing rules and width stability across pages, each drawn on harness tables. | the P1 table item in Asked by Stas |
+| 25 | `25-table-wrap-parked` | Parked: two wrap options for a `truncate` column (fill the row height, or always wrap), each rendered. | the wrap item under Parked |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1254,6 +1258,10 @@ and the fifteen lint rules.
 # Parked — asked, and deliberately not now
 
 Ordered by how close each is to a first consumer ask, which is the only thing that unparks any of them.
+
+## Wrapping in a `ds-table` cell (recorded 2026-10-09, Stas: parked, come back later)
+
+- [ ] **[P3] Two wrap options for a `truncate` column, drawn in deck `25-table-wrap-parked.html`.** Today a `truncate` column is one line with an ellipsis (picked C in deck `24-table-truncate-result`). B: the clipped text fills the height a neighbour already gave the row (lines = row height / line height), needs a per-row measurement on every resize and does not work under virtual scroll. D: always wrap, as a column without `truncate` does.
 
 ## ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)
 
