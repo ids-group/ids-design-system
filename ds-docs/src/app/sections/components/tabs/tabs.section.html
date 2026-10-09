@@ -13,16 +13,19 @@
     Variants
   </h3>
 
-  <p class="block-desc t-s">
-    Line for primary navigation, pills for compact filters. Pills look like <code class="t-mono-inline">ds-segmented</code> but are
-    <code class="t-mono-inline">
-      tablist
-    </code> tabs owning panels; a panel-less value toggle is
-    <code class="t-mono-inline">
-      ds-segmented
-    </code>. Arrows move and activate, skipping disabled
-    tabs; Home/End jump to the ends.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Line - primary navigation. Pills - compact filters.
+    </li>
+
+    <li>
+      Pills look like <code class="t-mono-inline">ds-segmented</code> but are <code class="t-mono-inline">tablist</code> tabs owning panels; a panel-less value toggle is <code class="t-mono-inline">ds-segmented</code>.
+    </li>
+
+    <li>
+      Arrows move and activate, skipping disabled tabs; <kbd>Home</kbd> / <kbd>End</kbd> jump to the ends.
+    </li>
+  </ul>
 
   <div class="variant-row">
     <div class="variant-row-label t-overline">
@@ -300,18 +303,17 @@
     Closable
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      closable
-    </code> adds a close button emitting
-    <code class="t-mono-inline">
-      tabClosed
-    </code> with the tab's
-    <code class="t-mono-inline">
-      value
-    </code>, else its label; so does Delete on a focused tab.
-    The host removes the tab; the active index stays.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        closable
+      </code> - a close button emitting <code class="t-mono-inline">tabClosed</code> with the tab's <code class="t-mono-inline">value</code>, else its label; <kbd>Delete</kbd> on a focused tab too.
+    </li>
+
+    <li>
+      The host removes the tab; the active index stays.
+    </li>
+  </ul>
 
   <div class="variant-row">
     <div class="variant-row-stage">
@@ -596,35 +598,27 @@
 
 &lt;!-- second tab active --&gt;  ?tab=activity</code></pre>
 
-  <p class="block-desc t-s">
-    Names come from each tab's <code class="t-mono-inline">value</code>, else a slug of its
-    <code class="t-mono-inline">
-      label
-    </code> ("License Verification Status" gives
-    <code class="t-mono-inline">
-      license-verification-status
-    </code>). Set
-    <code class="t-mono-inline">
-      value
-    </code> so a rename keeps links. Without
-    <code class="t-mono-inline">
-      value
-    </code>, <code class="t-mono-inline">tabClosed</code> emits
-    the raw label, not the slug.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Name - the tab's <code class="t-mono-inline">value</code>, else a slug of its <code class="t-mono-inline">label</code> ("License Verification Status" gives <code class="t-mono-inline">license-verification-status</code>).
+    </li>
 
-  <p class="block-desc t-s">
-    The first tab writes no parameter; writes replace history; an unknown name opens the first
-    tab. Query-only writes skip
-    <code class="t-mono-inline">
-      ds-app-layout
-    </code>'s
-    <code class="t-mono-inline">
-      pathChanged
-    </code> scroll reset. One strip per parameter name
-    (<code class="t-mono-inline">tab</code>, <code class="t-mono-inline">subtab</code>); dev mode
-    warns on a clash.
-  </p>
+    <li>
+      Set <code class="t-mono-inline">value</code> so a rename keeps links; without it, <code class="t-mono-inline">tabClosed</code> emits the raw label, not the slug.
+    </li>
+
+    <li>
+      The first tab writes no parameter; writes replace history; an unknown name opens the first tab.
+    </li>
+
+    <li>
+      Query-only writes skip <code class="t-mono-inline">ds-app-layout</code>'s <code class="t-mono-inline">pathChanged</code> scroll reset.
+    </li>
+
+    <li>
+      One strip per parameter name (<code class="t-mono-inline">tab</code>, <code class="t-mono-inline">subtab</code>); dev mode warns on a clash.
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     Reopening the last tab

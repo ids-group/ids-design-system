@@ -93,16 +93,15 @@
     Custom brand logo
   </h3>
 
-  <p class="block-desc t-s">
-    Project an image or SVG into the
-    <code class="t-mono-inline">
-      [brand]
-    </code> slot instead of the
-    <code class="t-mono-inline">
-      brand
-    </code> input; the letter-mark is
-    skipped. On collapse, hide your own wordmark and keep the mark.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      An image or SVG in the <code class="t-mono-inline">[brand]</code> slot replaces the <code class="t-mono-inline">brand</code> input; the letter-mark is skipped.
+    </li>
+
+    <li>
+      On collapse, hide your own wordmark and keep the mark.
+    </li>
+  </ul>
 
   <div class="logo-demos">
     <div class="stage is-frame">
@@ -195,21 +194,19 @@
     semantics.
   </p>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      brandRoute
-    </code> makes the brand row a router link (usually home). It announces
-    <code class="t-mono-inline">
-      "&lt;brand&gt;, home"
-    </code> - override with
-    <code class="t-mono-inline">
-      brandLinkLabel
-    </code>.
-    <code class="t-mono-inline">
-      RouterLink
-    </code> exists only when it is set, so an app without a router still
-    renders.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        brandRoute
+      </code> - the brand row becomes a router link (usually home), announced <code class="t-mono-inline">"&lt;brand&gt;, home"</code>; override with <code class="t-mono-inline">brandLinkLabel</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        RouterLink
+      </code> exists only when it is set, so an app without a router still renders.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">

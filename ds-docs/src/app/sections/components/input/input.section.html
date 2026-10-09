@@ -421,26 +421,28 @@
   </h3>
 
   <p class="block-desc t-s">
-    One message shows, highest first:
-    <code class="t-mono-inline">
-      error
-    </code> → validation errors →
-    <code class="t-mono-inline">
-      warning
-    </code> → warning-kind errors →
-    <code class="t-mono-inline">
-      success
-    </code> →
-    <code class="t-mono-inline">
-      hint
-    </code>, so height is fixed. Error adds
-    a red border and tinted fill; warning and success, the border only. All
-    nine bordered fields set
-    <code class="t-mono-inline">
-      data-field-state
-    </code> on the host: style against it,
-    not a class.
+    One message at a time, so the height is fixed. Highest first:
   </p>
+
+  <pre class="t-mono-block"><code>error &gt; validation errors &gt; warning &gt; warning-kind errors &gt; success &gt; hint</code></pre>
+
+  <ul class="block-desc t-s">
+    <li>
+      Error - red border and tinted fill.
+    </li>
+
+    <li>
+      Warning, success - the border only.
+    </li>
+
+    <li>
+      All nine bordered fields set
+      <code class="t-mono-inline">
+        data-field-state
+      </code> on the host; style
+      against it, not a class.
+    </li>
+  </ul>
 
   <div class="grid-3">
     <ds-input
@@ -463,27 +465,88 @@
   </div>
 
   <p class="block-desc t-s">
-    Focus keeps the state colour: halo
-    <code class="t-mono-inline">
-      --ds-field-focus-shadow-error
-    </code>,
-    <code class="t-mono-inline">
-      --ds-field-focus-shadow-warning
-    </code> or
-    <code class="t-mono-inline">
-      --ds-field-focus-shadow-success
-    </code>, not blue
-    <code class="t-mono-inline">
-      --ds-field-focus-shadow
-    </code>. Under
-    <code class="t-mono-inline">
-      data-focus
-    </code> ring, edge and inset the
-    indicator takes the border colour. To keep blue, set a state's token to
-    <code class="t-mono-inline">
-      var(--ds-field-focus-shadow)
-    </code>.
+    Focus keeps the state colour.
   </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          State
+        </th>
+
+        <th>
+          Focus halo
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          Error
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            --ds-field-focus-shadow-error
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Warning
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            --ds-field-focus-shadow-warning
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Success
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            --ds-field-focus-shadow-success
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Hint, none
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            --ds-field-focus-shadow
+          </code> (blue)
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        data-focus
+      </code> ring, edge and inset - the
+      indicator takes the border colour.
+    </li>
+
+    <li>
+      Blue in every state - set a state's token to
+      <code class="t-mono-inline">
+        var(--ds-field-focus-shadow)
+      </code>.
+    </li>
+  </ul>
 
   <div class="grid-3">
     <div class="state-cell">
@@ -545,26 +608,72 @@
     (WCAG 1.4.1: light-theme warning #8A7400 vs success #156822).
     <code class="t-mono-inline">
       hint
-    </code> has none;
-    <code class="t-mono-inline">
-      stateIcons.hint
-    </code> adds one.
+    </code> has none.
   </p>
 
-  <p class="block-desc t-s">
-    App-wide, per state:
-    <code class="t-mono-inline">
-      DS_CONFIG.field.stateIcons
-    </code>
-    - a name replaces the glyph,
-    <code class="t-mono-inline">
-      false
-    </code> removes it,
-    <code class="t-mono-inline">
-      stateIcons: false
-    </code> removes all four. On
-    one field, <code class="t-mono-inline">messageIcon</code> wins over both:
-  </p>
+  <pre class="t-mono-block"><code>messageIcon &gt; DS_CONFIG.field.stateIcons.&lt;state&gt; &gt; default</code></pre>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Value
+        </th>
+
+        <th>
+          Effect
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          An icon name
+        </td>
+
+        <td>
+          Replaces the glyph.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            false
+          </code>
+        </td>
+
+        <td>
+          Removes it.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            stateIcons: false
+          </code>
+        </td>
+
+        <td>
+          Removes all four.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            stateIcons.hint
+          </code>
+        </td>
+
+        <td>
+          Adds a glyph to the hint line.
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="grid-3">
     <ds-input
@@ -585,22 +694,79 @@
       messageIcon="info" />
   </div>
 
+  <h3 class="block-title t-h4">
+    Validator messages
+  </h3>
+
+  <dl class="spec">
+    <dt>
+      When
+    </dt>
+
+    <dd>
+      A bound <code class="t-mono-inline">error</code> at once; control errors
+      after the first blur.
+    </dd>
+
+    <dt>
+      Warning
+    </dt>
+
+    <dd>
+      Kind <code class="t-mono-inline">DS_FIELD_WARNING_KIND</code>: shown, the
+      field stays valid - no <code class="t-mono-inline">aria-invalid</code>,
+      submit not blocked. Reactive: the error key is the kind; signal forms:
+      <code class="t-mono-inline">
+        ValidationError.kind
+      </code>.
+    </dd>
+
+    <dt>
+      Text
+    </dt>
+
+    <dd>
+      The error's own message &gt;
+      <code class="t-mono-inline">
+        DS_CONFIG.field.errorMessages[kind]
+      </code>.
+      Built-in <code class="t-mono-inline">required</code> and
+      <code class="t-mono-inline">
+        minlength
+      </code> carry none.
+    </dd>
+
+    <dt>
+      Signal forms
+    </dt>
+
+    <dd>
+      <code class="t-mono-inline">
+        required(path, {{ '{' }} message: … {{ '}' }})
+      </code>;
+      <code class="t-mono-inline">
+        FormUiControl
+      </code> binds
+      <code class="t-mono-inline">
+        errors
+      </code> and
+      <code class="t-mono-inline">
+        touched
+      </code> itself.
+    </dd>
+  </dl>
+
   <p class="block-desc t-s">
-    A bound
-    <code class="t-mono-inline">
-      error
-    </code> shows at once; control errors
-    show after the first blur, so
-    <code class="t-mono-inline">
-      required
-    </code> never greets an untouched
-    form. Below: plain
     <code class="t-mono-inline">
       [formControl]
     </code> with
     <code class="t-mono-inline">
       Validators
-    </code> - focus, leave empty, blur.
+    </code>; this section provides
+    <code class="t-mono-inline">
+      errorMessages
+    </code>. Leave the first empty,
+    type "admin" in the second; the third warns on capitals.
   </p>
 
   <div class="grid-2">
@@ -622,57 +788,6 @@
       [formControl]="displayControl" />
   </div>
 
-  <p class="block-desc t-s">
-    A validator can warn: "Display name" returns
-    <code class="t-mono-inline">
-      {{ '{' }} warning: 'Long runs of capitals are hard to scan'
-      {{ '}' }}
-    </code>
-    (the kind
-    <code class="t-mono-inline">
-      DS_FIELD_WARNING_KIND
-    </code>): shown, but the field stays
-    valid - no
-    <code class="t-mono-inline">
-      aria-invalid
-    </code>, submit not blocked.
-    Reactive validators use the key as kind; signal-forms
-    <code class="t-mono-inline">
-      ValidationError
-    </code> carries its own.
-  </p>
-
-  <p class="block-desc t-s">
-    Built-in
-    <code class="t-mono-inline">
-      required
-    </code> and
-    <code class="t-mono-inline">
-      minlength
-    </code> carry no text; it comes from a shared map:
-    <code class="t-mono-inline">
-      provideDsConfig({{ '{' }} field: {{ '{' }} errorMessages: … {{ '}' }}
-      {{ '}' }})
-    </code>
-    on this section. A validator's own message wins: "admin" hits one returning
-    <code class="t-mono-inline">
-      {{ '{' }} taken: 'That handle is already taken' {{ '}' }}
-    </code
-    >. Signal forms set it in the validator,
-    <code class="t-mono-inline">
-      required(path, {{ '{' }} message: … {{ '}' }})
-    </code>;
-    <code class="t-mono-inline">
-      FormUiControl
-    </code> binds
-    <code class="t-mono-inline">
-      errors
-    </code> and
-    <code class="t-mono-inline">
-      touched
-    </code> itself.
-  </p>
-
   <h3
     class="block-title t-h4"
     data-for="field-message">
@@ -683,26 +798,30 @@
     <code class="t-mono-inline">
       reserveMessage
     </code> (default off) holds the
-    message line's height, so validation causes no reflow. The row sits ~23px
-    under the control: stack reserved fields with
-    <code class="t-mono-inline">
-      &lt;ds-stack gap="none"&gt;
-    </code>, or the gap reads as a hole.
+    message line's height, so validation causes no reflow.
   </p>
 
-  <p class="block-desc t-s">
-    For a whole form:
-    <code class="t-mono-inline">
-      &lt;form dsReserveMessages&gt;…&lt;/form&gt;
-    </code
-    >. It provides a merged <code class="t-mono-inline">DS_CONFIG</code> to
-    its subtree; a field's own
-    <code class="t-mono-inline">
-      [reserveMessage]
-    </code> still wins. Only fields declared
-    inside the host count - projected content keeps its own template's
-    injector.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      The row sits ~23px under the control - stack reserved fields with
+      <code class="t-mono-inline">
+        &lt;ds-stack gap="none"&gt;
+      </code>, or the
+      gap reads as a hole.
+    </li>
+
+    <li>
+      Whole form - <code class="t-mono-inline">&lt;form dsReserveMessages&gt;</code>
+      provides a merged <code class="t-mono-inline">DS_CONFIG</code> to its
+      subtree; a field's own <code class="t-mono-inline">[reserveMessage]</code>
+      wins.
+    </li>
+
+    <li>
+      Only fields declared inside the host count; projected content keeps its
+      own template's injector.
+    </li>
+  </ul>
 
   <div class="grid-2 reserve-demo">
     <ds-input

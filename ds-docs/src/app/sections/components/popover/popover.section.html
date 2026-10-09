@@ -44,19 +44,21 @@
     Live demo
   </h3>
 
-  <p class="block-desc t-s">
-    Interactive content needs
-    <code class="t-mono-inline">
-      panelRole
-    </code> and
-    <code class="t-mono-inline">
-      panelLabel
-    </code>; only then the panel traps focus
-    and moves it inside on open. Escape closes and refocuses the trigger. To
-    close from inside, call <code class="t-mono-inline">close()</code> or
-    inject <code class="t-mono-inline">DsOverlayCloseRef</code> in projected
-    content.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Interactive content needs <code class="t-mono-inline">panelRole</code> and <code class="t-mono-inline">panelLabel</code>; only then the panel traps focus and moves it inside on open.
+    </li>
+
+    <li>
+      <kbd>
+        Esc
+      </kbd> closes and refocuses the trigger.
+    </li>
+
+    <li>
+      Close from inside - <code class="t-mono-inline">close()</code>, or inject <code class="t-mono-inline">DsOverlayCloseRef</code> in projected content.
+    </li>
+  </ul>
 
   <div class="demo">
     <ds-button
