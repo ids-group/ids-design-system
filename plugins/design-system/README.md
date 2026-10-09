@@ -81,7 +81,8 @@ documented mechanism for marketplace fetches — do not rely on it.
   and reports what it left for them (`--dry-run` writes nothing). Its fixture cases live in
   `apply-mechanical.fixtures/`, run by `apply-mechanical.test.mjs`.
 - `scripts/drift-scan.mjs` - the `--ds-*` tokens and CSS classes a release dropped, and every
-  consumer line still naming one (plain `node`, no dependencies; `drift-scan-selftest.mjs` beside it).
+  consumer line still naming one; Sass module members (`@include x.mixin`, `math.div(`) are not
+  classes (plain `node`, no dependencies; `drift-scan-selftest.mjs` beside it).
 - `scripts/lint-step.mjs` - runs the library's own ESLint and stylelint plugins over the consumer's
   source for one version step and prints each report as a located hit keyed by its manifest item
   (read-only; `lint-step.test.mjs` runs it over `lint-step.fixtures/`).
@@ -111,6 +112,19 @@ Linters and parsers:
   (`_npx`) and passes that dir as `lint-step.mjs --tools`. Nothing is installed into your repo.
 - Declined: the missing linters are skipped and named in the report.
 - Your lint config is neither read nor changed.
+
+## Dead overrides
+
+`check-overrides` runs twice per target:
+
+| when                              | result                                     |
+| --------------------------------- | ------------------------------------------ |
+| Phase A, on the installed version | stored as the ledger's `overridesBaseline` |
+| Phase C, after the chain          | split against the baseline                 |
+
+- **Introduced by the chain:** "Needs manual review", each marked with its drift-scan hit.
+- **Pre-existing:** listed once, not an issue of the update.
+- Installed version without the schematic (< 0.14.1): no split; every line goes to manual review.
 
 ## Feedback
 
