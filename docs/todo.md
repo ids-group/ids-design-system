@@ -12,19 +12,21 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**130 open — 1 P1, 9 P2, 120 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
+**131 open — 1 P1, 10 P2, 120 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 1
 
 - **Asked by Stas**
   - A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
 
-### P2 — 9
+### P2 — 10
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
+- **Faster gates (Stas, 2026-10-09: after the release)**
+  - `tools/check.mjs` runs every check of a group one after another
 - **Asked by Stas**
   - Tooltips and trigger-anchored overlays should follow their trigger on scroll, not close (Stas, 2026-10-08)
   - Document how to build `ds-modal` actions (Stas, 2026-10-06)
@@ -317,6 +319,14 @@ rather than never meeting it at all.
   are the ones that need an example on the mark itself.
 
 Constraints and decisions that read as removable and are not.
+
+## Faster gates (Stas, 2026-10-09: after the release)
+
+- [ ] **[P2] `tools/check.mjs` runs every check of a group one after another.**
+  `lint:all` walks its 36 checks serially, so every agent and every merge waits for the sum of them.
+  Run independent checks in a worker pool (bounded by CPU count), keep the output grouped per check
+  and the exit code the same; checks that build or share a cache stay serial or get a lock.
+  Measure the group before and after.
 
 ## Keyboard reach reported by Stas, 2026-10-09 (record only, fix after the release)
 
