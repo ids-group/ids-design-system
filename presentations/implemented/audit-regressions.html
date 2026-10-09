@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Регрессии аудита: пикеры и тултип</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-09">
+<meta name="ds-deck-evidence" content="src/lib/core/list-cursor.ts:46 - CHANGELOG.md">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   main { max-width: 1320px; padding-bottom: 72px; }
   .chat { margin: 0; font-size: var(--font-size-xs); color: var(--text-secondary); }
@@ -36,11 +38,20 @@
     <h1>Две регрессии из аудита: было и стало</h1>
     <p class="chat">Ответ нести в чат: «pp-ревью и Dashboard Review»</p>
     <p class="lede">Ветки <code>ecm-fix/picker-loading-inert</code> и <code>ecm-fix/clipped-tooltip-batch</code>, обе от dev. По вердикту на блок.</p>
-    <div class="chips"><span class="chip is-open">Нужен вердикт</span><span class="chip">актуально на 2026-10-09</span></div>
+    <div class="chips"><span class="chip is-done">Решено</span><span class="chip">актуально на 2026-10-09</span></div>
   </header>
 
-  <section class="panel" data-review="Пикеры: клавиши при загрузке">
+  <div class="decided">
+    <h2>Решено: оба фикса приняты</h2>
+    <p>Пикеры: при загрузке со старыми опциями клавиши списка ничего не делают, поле с aria-busy. Тултип: сначала все замеры, потом все записи tabindex; почему рост в 4 раза из аудита не повторился и что ещё стоит денег на длинной таблице, записано в <code>docs/todo.md</code>, раздел Parked, на после релиза.</p>
+    <p class="evidence">2026-10-09 · src/lib/core/list-cursor.ts:46 - CHANGELOG.md</p>
+  </div>
+
+  <details class="folded">
+  <summary>Было и стало, замеры</summary>
+  <section class="panel" data-review="Пикеры: клавиши при загрузке" data-review-round="2">
     <h2>Пикеры: клавиши под скримом загрузки</h2>
+    <div class="decided"><p><strong>Принято.</strong></p></div>
     <p>Список с опциями под <code>ds-loading-overlay</code> при <code>loading</code>. Стрелки и Enter нажаты на поле.</p>
 
     <h3 class="pick">ds-multi-select «Search people», набрано «a»</h3>
@@ -72,10 +83,11 @@
       <p>В каждом пикере <code>listInert</code> = <code>loading</code> и есть опции; он же включает скрим. Пока он true: <code>aria-activedescendant</code> пуст, клавиши из общего <code>isListCursorKey</code> (core/list-cursor.ts: стрелки, PageUp/PageDown, Home/End, Enter) гасятся, у select ещё Space и поиск по буквам. Escape и Tab работают. Общего обработчика клавиш у трёх пикеров нет, поэтому охрана в каждом, а список клавиш один.</p>
       <p>Замер: ds-docs через <code>ng serve</code>, dev и ветка рядом; KeyboardEvent на поле в фокусе. Multi-select: демо с запросом 400 мс, ответ задержан. Select и autocomplete: <code>loading</code> выставлен через сигнал входа.</p>
     </details>
-  </section>
+  <ol data-review-history><li>2026-10-09 · «принято» → вердикт записан, деку закрыл</li></ol></section>
 
-  <section class="panel" data-review="Тултип: таблица 500 строк">
+  <section class="panel" data-review="Тултип: таблица 500 строк" data-review-round="2">
     <h2>Тултип: таблица 500 строк x 2 колонки truncate</h2>
+    <div class="decided"><p><strong>Принято.</strong> Невоспроизведённый рост в 4 раза и остаток стоимости в <code>docs/todo.md</code>, раздел Parked, после релиза.</p></div>
     <p>Самая длинная задача главного потока после вставки 500 строк, прод-сборка ds-docs, свежая страница на каждый прогон.</p>
     <table class="nums">
       <thead><tr><th>Сборка</th><th>Самая длинная задача, мс</th><th>Медиана</th><th>Колбэк ResizeObserver</th><th>Остановок Tab</th></tr></thead>
@@ -96,7 +108,8 @@
       <p>Колбэк общего ResizeObserver и MutationObserver теперь сначала спрашивает у всех хостов <code>isNeeded()</code> (там <code>isClipped()</code>), потом пишет все <code>tabindex</code>. Проба <code>tooltip-tab-stop</code> получила случай: три хоста в одной пачке, порядок «read read read write write write»; на dev она падает с «read write read write read write».</p>
       <p>Замер: <code>ng build ds-docs</code> трёх деревьев с временным крючком <code>window.__injectTruncate</code> (откатан, в коммиты не попал), раздача статикой, вставка 500 строк в демо truncate (1000 обрезанных значений), PerformanceObserver longtask 3 с, время колбэка через обёртку ResizeObserver. В dev-режиме <code>ng serve</code> задача 3-9 с от рендера Angular, этим числам верить нельзя. Включённое дерево доступности (снимок до вставки) на dev: 228 мс, тоже не причина.</p>
     </details>
-  </section>
+  <ol data-review-history><li>2026-10-09 · «ну типо оптимизировал? ну окей. если что то ещё не доделал то пиши в деку и потом после релиза доделаем.» → принято; почему не повторился рост в 4 раза и что ещё стоит денег, записано в docs/todo.md, раздел Parked, после релиза</li></ol></section>
+  </details>
 </main>
 <!-- deck-review -->
 <script>
