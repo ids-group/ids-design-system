@@ -92,18 +92,21 @@
   </p>
 
   <p class="block-desc t-s">
-    To cover only part of the content, offset the top with
+    Part of the content: offset the top with
     <code class="t-mono-inline">
       insetTop
     </code>, set
     <code class="t-mono-inline">
       [inertContent]="false"
-    </code> and mark the
-    covered subtree <code class="t-mono-inline">inert</code> yourself.
-    <code class="t-mono-inline">
-      ds-table
-    </code> starts its scrim below the
-    header, so only <code class="t-mono-inline"> &lt;tbody&gt; </code> goes
-    inert and sorting stays operable.
+    </code>, mark the covered
+    subtree <code class="t-mono-inline">inert</code> yourself.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        ds-table
+      </code> starts its scrim below the header: only <code class="t-mono-inline">&lt;tbody&gt;</code> goes inert, sorting stays operable.
+    </li>
+  </ul>
 </docs-section>

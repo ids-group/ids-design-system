@@ -54,13 +54,31 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code>
+    <code class="t-mono-inline">
       maxVisibleChips
-    </code> defaults to <code>"fit"</code>: chips that
-    fit, the rest behind "+N more", re-split on resize. A number is a ceiling,
-    lowered when the trigger is narrow. <code> "all" </code> shows every chip
-    and grows the trigger. Same on <code> ds-autocomplete </code>.
+    </code>; same on
+    <code class="t-mono-inline">
+      ds-autocomplete
+    </code>.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        "fit"
+      </code> (default) - chips that fit, the rest behind "+N more", re-split on resize.
+    </li>
+
+    <li>
+      A number - a ceiling, lowered when the trigger is narrow.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        "all"
+      </code> - every chip; the trigger grows.
+    </li>
+  </ul>
 
   <div class="demo-panel">
     <div class="ms-demo">
@@ -142,30 +160,25 @@
     Hiding the filter row
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      searchable
-    </code> takes
-    <code class="t-mono-inline">
-      true
-    </code> (always, the default),
-    <code class="t-mono-inline">
-      false
-    </code> (never), or a
-    <strong>
-      number
-    </strong> - the threshold at which the row appears.
-    <code class="t-mono-inline">
-      DS_CONFIG.picker.searchable
-    </code> sets it
-    app-wide; inputs override it.
-    <code class="t-mono-inline">
-      searchPlaceholder
-    </code> defaults to
-    <code>
-      DS_INTL.picker.filterPlaceholder
-    </code>.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        searchable
+      </code> - <code class="t-mono-inline">true</code> (default, always), <code class="t-mono-inline">false</code> (never), or a <strong>number</strong>: the threshold at which the row appears.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        DS_CONFIG.picker.searchable
+      </code> - app-wide; inputs override it.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        searchPlaceholder
+      </code> - defaults to <code class="t-mono-inline">DS_INTL.picker.filterPlaceholder</code>.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
     Arrows, Enter, Escape and
@@ -338,21 +351,23 @@
     Width
   </h3>
 
-  <p class="block-desc t-s">
-    Default <code class="t-mono-inline">width="fill"</code> fills the container,
-    panel matching the trigger.
-    <code class="t-mono-inline">
-      width="content"
-    </code> hugs the trigger's
-    content, which floors the panel width;
-    <code class="t-mono-inline">
-      --ds-dropdown-panel-min-width
-    </code> and
-    <code class="t-mono-inline">
-      --ds-dropdown-panel-max-width
-    </code> bound it.
-    Overlong labels get an ellipsis and hover tooltip.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        width="fill"
+      </code> (default) - fills the container; the panel matches the trigger.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        width="content"
+      </code> - hugs the trigger's content, which floors the panel width; <code class="t-mono-inline">--ds-dropdown-panel-min-width</code> and <code class="t-mono-inline">--ds-dropdown-panel-max-width</code> bound it.
+    </li>
+
+    <li>
+      Overlong labels - ellipsis and hover tooltip.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
     The panel is portaled: style one instance via
@@ -392,34 +407,43 @@
     Helper / error text
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      hint
-    </code> adds a helper line below;
-    <code class="t-mono-inline">
-      error
-    </code> replaces it with text announced
-    via <code>role="alert"</code>;
-    <code class="t-mono-inline">
-      warning
-    </code> /
-    <code class="t-mono-inline">
-      success
-    </code> show their states.
-    <code class="t-mono-inline">
-      [invalid]
-    </code> paints the error border
-    without text. <code class="t-mono-inline">size</code> takes
-    <code>
-      sm
-    </code> · <code>md</code> · <code>lg</code> and falls back to
-    <code>
-      DS_CONFIG.control.size
-    </code>; <code>required</code> and
-    <code>
-      optional
-    </code> mark the label.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        hint
+      </code> - a helper line below.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        error
+      </code> - replaces it, announced via <code class="t-mono-inline">role="alert"</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        warning
+      </code> / <code class="t-mono-inline">success</code> - their states.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [invalid]
+      </code> - the error border, no text.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        size
+      </code> - <code class="t-mono-inline">sm</code> · <code class="t-mono-inline">md</code> · <code class="t-mono-inline">lg</code>, falls back to <code class="t-mono-inline">DS_CONFIG.control.size</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        required
+      </code>, <code class="t-mono-inline">optional</code> - mark the label.
+    </li>
+  </ul>
 
   <div class="demo-panel">
     <div class="ms-demo">
@@ -445,20 +469,15 @@
     Icons in the options
   </h3>
 
-  <p class="block-desc t-s">
-    An option's optional
-    <code class="t-mono-inline">
-      icon
-    </code> renders before its label at 16px -
-    the same <code class="t-mono-inline"> DsOption </code> field as
-    <code class="t-mono-inline">
-      ds-select
-    </code> and
-    <code class="t-mono-inline">
-      ds-autocomplete
-    </code>. Use it for
-    glyph-recognised sets like priority. Chips stay text-only to save room.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      An option's optional <code class="t-mono-inline">icon</code> renders before its label at 16px - the same <code class="t-mono-inline">DsOption</code> field as <code class="t-mono-inline">ds-select</code> and <code class="t-mono-inline">ds-autocomplete</code>.
+    </li>
+
+    <li>
+      For glyph-recognised sets like priority. Chips stay text-only.
+    </li>
+  </ul>
 
   <div class="demo-panel">
     <div class="ms-demo">
@@ -535,22 +554,17 @@
     Panel header and footer
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      dsPanelHeaderTemplate
-    </code> and
-    <code class="t-mono-inline">
-      dsPanelFooterTemplate
-    </code> fill a strip
-    above and below the options, with <code class="t-mono-inline">count</code>,
-    <code class="t-mono-inline">
-      total
-    </code> and
-    <code class="t-mono-inline">
-      query
-    </code> in context. Both sit outside the
-    listbox: not counted as options, not scrolled with the list.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        dsPanelHeaderTemplate
+      </code>, <code class="t-mono-inline">dsPanelFooterTemplate</code> - a strip above and below the options; context <code class="t-mono-inline">count</code>, <code class="t-mono-inline">total</code>, <code class="t-mono-inline">query</code>.
+    </li>
+
+    <li>
+      Both sit outside the listbox: not counted as options, not scrolled with the list.
+    </li>
+  </ul>
 
   <div class="demo-panel">
     <div class="ms-demo">
@@ -584,19 +598,17 @@
     Group headings, and why an option is off
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      dsGroupLabelTemplate
-    </code> fills a group's
-    heading; the element and its naming id stay library-owned. An option's
-    <code class="t-mono-inline">
-      disabledReason
-    </code> reaches the row as
-    <code class="t-mono-inline">
-      aria-describedby
-    </code> for screen readers -
-    try the "On leave" rows.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        dsGroupLabelTemplate
+      </code> - fills a group's heading; the element and its naming id stay library-owned.
+    </li>
+
+    <li>
+      An option's <code class="t-mono-inline">disabledReason</code> - <code class="t-mono-inline">aria-describedby</code> on the row; try the "On leave" rows.
+    </li>
+  </ul>
 
   <div class="demo-panel">
     <div class="ms-demo">
