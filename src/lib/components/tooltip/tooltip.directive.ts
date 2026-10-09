@@ -30,19 +30,16 @@ import {
 } from './tooltip-clip';
 import {
   closeOnScroll,
+  listenForEscape,
   overlayPlacementOf,
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
+import {
+  VIEWPORT_MARGIN_PX,
+  pointArrowAtHost,
+  positionsFor,
+} from './tooltip-position';
 import type { TooltipPlacement } from './tooltip.types';
-
-const TRIGGER_GAP_PX = 8;
-const VIEWPORT_MARGIN_PX = 8;
-const OPPOSITE_PLACEMENT: Record<TooltipPlacement, TooltipPlacement> = {
-  top: 'bottom',
-  bottom: 'top',
-  left: 'right',
-  right: 'left',
-};
 
 const PINNED_ATTRIBUTE = 'data-ds-tooltip-pinned';
 
@@ -280,19 +277,14 @@ ${given}`;
         this.onClose();
       }
     };
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        this.onClose();
-      }
-    };
     this.document.addEventListener('pointerdown', closeOutside, true);
-    this.document.addEventListener('keydown', closeOnEscape, true);
+    const stopEscape = listenForEscape(this.document, () => this.onClose());
     this.hostElement.setAttribute(PINNED_ATTRIBUTE, '');
     this.unpin = () => {
       this.unpin = null;
       this.hostElement.removeAttribute(PINNED_ATTRIBUTE);
       this.document.removeEventListener('pointerdown', closeOutside, true);
-      this.document.removeEventListener('keydown', closeOnEscape, true);
+      stopEscape();
     };
   }
 
@@ -336,10 +328,7 @@ ${given}`;
     const positionStrategy = this.overlay
       .position()
       .flexibleConnectedTo(this.host)
-      .withPositions([
-        this.positionFor(placement),
-        this.positionFor(OPPOSITE_PLACEMENT[placement]),
-      ])
+      .withPositions(positionsFor(placement))
       .withViewportMargin(VIEWPORT_MARGIN_PX);
 
     this.ref = this.overlay.create({
@@ -364,7 +353,7 @@ ${given}`;
       ),
     );
     cmpRef.setInput('panelId', this.tipId);
-    this.pointArrowAtHost(this.ref, cmpRef.location.nativeElement);
+    pointArrowAtHost(this.ref, cmpRef.location.nativeElement, this.hostElement);
     this.ref.detachments().subscribe(() => this.unpin?.());
     if (this.disclosesOwnText(text)) {
       return;
@@ -376,65 +365,6 @@ ${given}`;
       'aria-describedby',
       existing ? `${existing} ${this.tipId}` : this.tipId,
     );
-  }
-
-  // positionChanges skips a re-apply that only pushes the pane; the styles CDK writes do not.
-  // The pane is measured, not the panel: the panel's enter animation scales it.
-  private pointArrowAtHost(ref: OverlayRef, panel: HTMLElement): void {
-    const pane = ref.overlayElement;
-    const point = () => {
-      const trigger = this.hostElement.getBoundingClientRect();
-      const box = pane.getBoundingClientRect();
-      panel.style.setProperty(
-        '--_tooltip-arrow-x',
-        `${trigger.left + trigger.width / 2 - box.left - panel.clientLeft}px`,
-      );
-      panel.style.setProperty(
-        '--_tooltip-arrow-y',
-        `${trigger.top + trigger.height / 2 - box.top - panel.clientTop}px`,
-      );
-    };
-    const observer = new MutationObserver(point);
-    observer.observe(ref.hostElement, { attributeFilter: ['style'] });
-    observer.observe(pane, { attributeFilter: ['style'] });
-    ref.detachments().subscribe({ complete: () => observer.disconnect() });
-  }
-
-  private positionFor(placement: TooltipPlacement) {
-    switch (placement) {
-      case 'top':
-        return {
-          originX: 'center' as const,
-          originY: 'top' as const,
-          overlayX: 'center' as const,
-          overlayY: 'bottom' as const,
-          offsetY: -TRIGGER_GAP_PX,
-        };
-      case 'bottom':
-        return {
-          originX: 'center' as const,
-          originY: 'bottom' as const,
-          overlayX: 'center' as const,
-          overlayY: 'top' as const,
-          offsetY: TRIGGER_GAP_PX,
-        };
-      case 'left':
-        return {
-          originX: 'start' as const,
-          originY: 'center' as const,
-          overlayX: 'end' as const,
-          overlayY: 'center' as const,
-          offsetX: -TRIGGER_GAP_PX,
-        };
-      case 'right':
-        return {
-          originX: 'end' as const,
-          originY: 'center' as const,
-          overlayX: 'start' as const,
-          overlayY: 'center' as const,
-          offsetX: TRIGGER_GAP_PX,
-        };
-    }
   }
 
   ngOnDestroy(): void {
