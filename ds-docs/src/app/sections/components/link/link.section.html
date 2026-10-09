@@ -65,22 +65,21 @@
     Variants
   </h3>
 
-  <p class="block-desc t-s">
-    Modifiers: quiet, inline, standalone (bold), plain (underlined only on
-    hover and focus), sizes <code>xs</code> · <code>sm</code> ·
-    <code>
-      lg
-    </code>. Recolour with
-    <code>
-      --ds-link-color
-    </code>; hover and active derive from it unless
-    <code>
-      --ds-link-color-hover
-    </code> /
-    <code>
-      --ds-link-color-active
-    </code> are set.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Modifiers: quiet, inline, standalone (bold), plain (underlined only on hover and focus).
+    </li>
+
+    <li>
+      Sizes: <code class="t-mono-inline">xs</code> · <code class="t-mono-inline">sm</code> · <code class="t-mono-inline">lg</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        --ds-link-color
+      </code> - recolours; hover and active derive from it unless <code class="t-mono-inline">--ds-link-color-hover</code> / <code class="t-mono-inline">--ds-link-color-active</code> are set.
+    </li>
+  </ul>
 
   <div class="row">
     <a
@@ -149,25 +148,17 @@
     On a button, for an action that is not navigation
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      ds-button
-    </code> warns against
-    <code class="t-mono-inline">
-      variant="text"
-    </code> in favour of this class.
-    A non-navigating action must be a
-    <code class="t-mono-inline">
-      &lt;button&gt;
-    </code>; <code>.link</code> resets its chrome (padding, border,
-    background, font) and matches the anchor except
-    <code class="t-mono-inline">
-      display
-    </code>, which stays
-    <code class="t-mono-inline">
-      inline-block
-    </code>.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      A non-navigating action is a <code class="t-mono-inline">&lt;button&gt;</code>; <code class="t-mono-inline">ds-button</code> warns against <code class="t-mono-inline">variant="text"</code> in favour of this class.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        .link
+      </code> resets its chrome (padding, border, background, font) and matches the anchor, except <code class="t-mono-inline">display: inline-block</code>.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
     Sentence with

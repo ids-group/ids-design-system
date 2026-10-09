@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**126 open — 1 P1, 9 P2, 116 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
+**129 open — 1 P1, 9 P2, 119 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 1
 
@@ -37,7 +37,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 116
+### P3 — 119
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -47,6 +47,10 @@ is stale. Closing an item means deleting the item and nothing else.
   - ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01)
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - `g[dsLineSeries]` demonstrates `stacked` and `tooltipAnchor` only on the preset
+- **Keyboard reach reported by Stas, 2026-10-09 (record only, fix after the release)**
+  - The password field's show/hide toggle is not reachable by Tab
+  - `ds-menu` opened from the keyboard does not take focus, and Tab walks the wrong menu
+  - The focus ring of the first and last menu item ignores the panel's corner radius
 - **Reported by Stas from the docs site, 2026-09-05**
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
   - A pressed danger menu item shows its hover colour (recorded 2026-09-24)
@@ -312,6 +316,28 @@ rather than never meeting it at all.
   are the ones that need an example on the mark itself.
 
 Constraints and decisions that read as removable and are not.
+
+## Keyboard reach reported by Stas, 2026-10-09 (record only, fix after the release)
+
+- [ ] **[P3] The password field's show/hide toggle is not reachable by Tab.**
+  In an auth form (the docs ident layout's ready-made sign-in), Tab goes email -> password ->
+  «Remember me» -> «Sign in»; the eye toggle inside the password field never takes focus. The
+  focus-ring audit (2026-10-09) found the same: `tabindex="-1"` on the toggle, so its ring could
+  not be measured. Stas expects the same in other fields with an inner action and in combined
+  inputs; sweep every field-suffix button (clear, toggle, stepper, picker trigger) for Tab reach
+  before deciding whether an inner action is a tab stop or a shortcut.
+
+- [ ] **[P3] `ds-menu` opened from the keyboard does not take focus, and Tab walks the wrong menu.**
+  On the docs page component/menu: focus the «Account» trigger, Enter opens the menu, but focus
+  stays outside it and cannot be moved in; the next Tab moves to the next menu trigger, and Tab
+  inside the open showcase menu moves to the next item of a different menu. Expected: Enter/Space
+  or ArrowDown moves focus to the first item, arrows walk the items of the open menu, Escape and
+  Tab close it and return focus to the trigger (the menu button pattern).
+
+- [ ] **[P3] The focus ring of the first and last menu item ignores the panel's corner radius.**
+  The ring on the first and the last item of an open menu is square while the panel is rounded;
+  it should follow the panel radius at those corners (top corners on the first item, bottom on
+  the last, all four when the menu has one item).
 
 ## Reported by Stas from the docs site, 2026-09-05
 
@@ -1031,7 +1057,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-24)
 
-**Twenty-three** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Twenty-four** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1066,6 +1092,7 @@ file** — the number moves; cite the filename.
 | 21 | `21-tooltip-mechanism` | Three open questions on the tooltip: the six listeners per table cell (measured) and what to do about them, loading the panel at idle after start, and one app-wide delegated listener for every directive with events. Answered and finished proposals are folded below. | none |
 | 22 | `22-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
 | 23 | `23-focus-ring-followups` | Before and after of `ecm-fix/focus-ring-followups`: ring off the text, centred date picker arrows, 24px icon-only targets, the ring of a truncated cell link; a verdict per element before the merge. | none |
+| 24 | `24-docs-table-look` | Which look `table.tbl` takes on every ds-docs page: bordered everywhere, plain everywhere, or as today (Charts and Z-index override the shared bordered rule); all four pages drawn in each look. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

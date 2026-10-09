@@ -6,30 +6,29 @@
     Priority+ filter row: as many filters as fit, the rest behind "+N more".
   </span>
 
-  <p class="block-desc t-s">
-    Put each filter in an
-    <code class="t-mono-inline">
-      ng-template [dsFilterItem]
-    </code> with its width in px
-    (<code class="t-mono-inline">[dsFilterItem]="170"</code>; bare = 180). The
-    split reads those widths and one
-    <code class="t-mono-inline">
-      ResizeObserver
-    </code> on the row; filters are never
-    measured, so nothing flashes.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Each filter - an <code class="t-mono-inline">ng-template [dsFilterItem]</code> with its width in px (<code class="t-mono-inline">[dsFilterItem]="170"</code>; bare = 180).
+    </li>
 
-  <p class="block-desc t-s">
-    Filters collapse into the panel from the right; controls marked
-    <code class="t-mono-inline">
-      dsFilterBarTrailing
-    </code> stay. Mark each trailing
-    control - a wrapper div would stack its children. Anything neither a
-    <code class="t-mono-inline">
-      dsFilterItem
-    </code> template nor marked <code class="t-mono-inline">dsFilterBarTrailing</code>
-    is not rendered.
-  </p>
+    <li>
+      The split reads those widths and one <code class="t-mono-inline">ResizeObserver</code> on the row; filters are never measured, so nothing flashes.
+    </li>
+  </ul>
+
+  <ul class="block-desc t-s">
+    <li>
+      Filters collapse into the panel from the right; <code class="t-mono-inline">dsFilterBarTrailing</code> controls stay.
+    </li>
+
+    <li>
+      Mark each trailing control - a wrapper div would stack its children.
+    </li>
+
+    <li>
+      Neither a <code class="t-mono-inline">dsFilterItem</code> template nor <code class="t-mono-inline">dsFilterBarTrailing</code> - not rendered.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
     For one component holding two trailing controls, mark it
@@ -139,14 +138,21 @@
     What the width buys
   </h3>
 
-  <p class="block-desc t-s">
-    Each slot is exactly its declared width, in row and panel; a wider control
-    is narrowed. Moving between them re-creates the filter: an open dropdown
-    or focus is lost, the value survives in your signal or form control. The
-    trigger shows the count as text with
-    <code class="t-mono-inline">
-      aria-expanded
-    </code>; the panel is a focus-trapped
-    dialog; each filter exists once in the accessibility tree.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Each slot is exactly its declared width, in row and panel; a wider control is narrowed.
+    </li>
+
+    <li>
+      Moving between them re-creates the filter: an open dropdown or focus is lost; the value survives in your signal or form control.
+    </li>
+
+    <li>
+      The trigger shows the count as text, with <code class="t-mono-inline">aria-expanded</code>; the panel is a focus-trapped dialog.
+    </li>
+
+    <li>
+      Each filter exists once in the accessibility tree.
+    </li>
+  </ul>
 </docs-section>

@@ -67,21 +67,26 @@
   </h3>
 
   <p class="block-desc t-s">
-    Horizontal row for tags, button groups, filter chips. Stack's
-    <code>
-      gap
-    </code> and <code>align</code> values; items centre vertically by
-    default. Unset <code>gap</code> reads <code>--ds-inline-gap</code>.
-    <code>
-      justify
-    </code>: <code>start</code> · <code>center</code> ·
-    <code>
-      end
-    </code> · <code>between</code>. Wraps by default;
-    <code>
-      [wrap]="false"
-    </code> keeps one line and overflows.
+    A horizontal row: tags, button groups, filter chips.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        gap
+      </code>, <code class="t-mono-inline">align</code> - Stack's values; items centre vertically by default. Unset <code class="t-mono-inline">gap</code> reads <code class="t-mono-inline">--ds-inline-gap</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        justify
+      </code> - <code class="t-mono-inline">start</code> · <code class="t-mono-inline">center</code> · <code class="t-mono-inline">end</code> · <code class="t-mono-inline">between</code>.
+    </li>
+
+    <li>
+      Wraps by default; <code class="t-mono-inline">[wrap]="false"</code> keeps one line and overflows.
+    </li>
+  </ul>
 
   <div class="demo-panel">
     <ds-inline gap="xs">
