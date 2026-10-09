@@ -480,7 +480,7 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
   {
     "name": "--focus-ring-radius",
     "value": "var(--ds-radius-inner)",
-    "notes": "The radius a box takes when it exists only to carry a focus ring. An outline has none of its own, so it follows the border-radius of the box it is drawn on, and a square-cornered shell rings square however rounded the control inside it is. Follows --ds-radius-inner, so retuning the inner radius moves these rings with it. A control with its own radius keeps it and ignores this."
+    "notes": "The radius of the keyboard focus ring on any focused element that declares no border-radius of its own, in the library and in the app. An outline follows the border-radius of the box it is drawn on, so this is set on the focused element at zero specificity: any radius the element declares wins. An app element with a fill or border and no radius of its own rounds its corners while focused; declare its border-radius to keep it square. Set 0 to make every such ring square. Follows --ds-radius-inner, so retuning the inner radius moves these rings with it."
   },
   {
     "name": "--focus-ring-inner",

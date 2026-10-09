@@ -1,4 +1,4 @@
-@use '../../styles/press' as press;
+@use '../../styles/dismiss-button' as dismiss-button;
 @use '../../styles/component-base' as component-base;
 @include component-base.rules;
 
@@ -83,16 +83,12 @@
   }
 
   .a-close {
-    background: none;
-    border: 0;
-    cursor: pointer;
-    padding: 0;
+    @include dismiss-button.button;
+
     color: var(--_alert-close-icon-color);
     flex-shrink: 0;
 
     &:hover { color: var(--_alert-close-icon-color-hover); }
-
-    @include press.feedback;
   }
 }
 

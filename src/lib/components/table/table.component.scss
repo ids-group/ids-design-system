@@ -244,7 +244,7 @@
     }
 
     .th-label:has(+ .col-filter-btn) {
-      max-width: calc(100% - var(--space-1) - 12px);
+      max-width: calc(100% - var(--space-2) - 12px);
     }
 
     .th-text {
@@ -365,7 +365,12 @@
         text-decoration: var(--_table-cell-link-decoration);
       }
 
+      // The table rings inward, which here lands on the glyphs; the cell padding has room for a ring outside the text.
       td .cell-link {
+        --focus-ring-offset: 0px;
+
+        padding-inline: var(--focus-ring-width);
+        margin-inline: calc(-1 * var(--focus-ring-width));
         color: var(--_table-cell-link-color);
         text-decoration: var(--_table-cell-link-decoration);
       }
@@ -553,9 +558,11 @@
 }
 
 .col-filter-btn {
+  // A 24px target around the 12px glyph; the negative margins keep the row height of the bare glyph.
   display: inline-flex;
-  margin-left: var(--space-1);
-  padding: 0;
+  margin: calc(-1 * var(--space-1-5));
+  margin-left: calc(var(--space-2) - var(--space-1-5));
+  padding: var(--space-1-5);
   border: 0;
   background: none;
   color: var(--icon-default);
@@ -567,6 +574,10 @@
   &:hover {
     opacity: 1;
     color: var(--icon-strong);
+  }
+
+  &:focus-visible {
+    opacity: 1;
   }
 
   &.active {
