@@ -10,51 +10,8 @@
   </span>
 
   <p class="block-desc t-s">
-    Parts: brand lockup, optional tagline, form card, support line. The brand
-    row takes the sidenav's
-    <code class="t-mono-inline">
-      brand
-    </code> /
-    <code class="t-mono-inline">
-      logoLetter
-    </code> /
-    <code class="t-mono-inline">
-      [dsBrandName]
-    </code> contract; the tile has its
-    own <code class="t-mono-inline">--ds-auth-layout-mark-*</code> hooks; retint
-    both.
+    Parts: brand lockup, optional tagline, form card, support line.
   </p>
-
-  <p class="block-desc t-s">
-    A real logo goes into <code class="t-mono-inline">[brand]</code> (sized by
-    <code class="t-mono-inline">
-      --ds-auth-layout-brand-max-height
-    </code>). It
-    does not hide the tile: leave <code class="t-mono-inline">brand</code> /
-    <code class="t-mono-inline">
-      logoLetter
-    </code> unset.
-  </p>
-
-  <pre class="t-mono-block"><code>[dsBrandName] projection &gt; inputs &gt; provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125; &#125;)</code></pre>
-
-  <ul class="block-desc t-s">
-    <li>
-      The config serves this layout and <code class="t-mono-inline">ds-sidenav</code>, per field; it has no accent.
-    </li>
-
-    <li>
-      <code class="t-mono-inline">
-        brand=""
-      </code> - drops the wordmark; a configured <code class="t-mono-inline">logoLetter</code> still paints the tile. Clear both for no brand row.
-    </li>
-
-    <li>
-      <code class="t-mono-inline">
-        [dsBrandName]
-      </code> - a two-tone wordmark.
-    </li>
-  </ul>
 
   <table class="tbl">
     <thead>
@@ -76,17 +33,61 @@
     <tbody>
       <tr>
         <td>
-          Default
+          <code class="t-mono-inline">
+            [brand]
+          </code>
         </td>
 
         <td>
-          The card (an <code class="t-mono-inline">article</code>), unstyled
+          A real logo, capped by
+          <code class="t-mono-inline">
+            --ds-auth-layout-brand-max-height
+          </code>;
+          the tile stays unless <code class="t-mono-inline">brand</code> /
+          <code class="t-mono-inline">
+            logoLetter
+          </code> are unset
         </td>
 
+        <td>
+          -
+        </td>
+      </tr>
+
+      <tr>
         <td>
           <code class="t-mono-inline">
+            [dsBrandName]
+          </code>
+        </td>
+
+        <td>
+          A two-tone wordmark (the config has no accent)
+        </td>
+
+        <td>
+          -
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          default
+        </td>
+
+        <td>
+          The card body, unstyled
+        </td>
+
+        <td>
+          The card <code class="t-mono-inline">article</code> is
+          <code class="t-mono-inline">
             main
-          </code>; nested in another layout's <code class="t-mono-inline">main</code>, as here, set <code class="t-mono-inline">landmark="none"</code>
+          </code>;
+          <code class="t-mono-inline">
+            landmark="none"
+          </code> inside another
+          layout's <code class="t-mono-inline">main</code>, as here
         </td>
       </tr>
 
@@ -102,11 +103,52 @@
         </td>
 
         <td>
-          contentinfo as the page; a plain footer when nested
+          <code class="t-mono-inline">
+            contentinfo
+          </code> when this layout is the
+          page, a plain footer when nested
         </td>
       </tr>
     </tbody>
   </table>
+
+  <p class="block-desc t-s">
+    Wordmark precedence, per field:
+    <code class="t-mono-inline">
+      [dsBrandName] &gt; brand input &gt; provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125; &#125;)
+    </code>.
+  </p>
+
+  <ul class="rules">
+    <li>
+      The brand row takes <code class="t-mono-inline">ds-sidenav</code>'s
+      <code class="t-mono-inline">
+        brand
+      </code> /
+      <code class="t-mono-inline">
+        logoLetter
+      </code> /
+      <code class="t-mono-inline">
+        [dsBrandName]
+      </code> contract and config
+    </li>
+
+    <li>
+      The tile has its own
+      <code class="t-mono-inline">
+        --ds-auth-layout-mark-*
+      </code>
+      hooks; retint both
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        brand=""
+      </code> drops the wordmark, a
+      configured <code class="t-mono-inline">logoLetter</code> still paints the
+      tile; clear both for no brand row
+    </li>
+  </ul>
 
   <div class="auth-demo">
     <ds-auth-layout
@@ -220,47 +262,42 @@
     On a short screen the chrome compresses, not the card
   </h3>
 
-  <ul class="block-desc t-s">
-    <li>
-      Block padding, column gap and masthead gap clamp against <code class="t-mono-inline">svh</code>, full size at 800px of viewport height; type and tile stay fixed.
-    </li>
-
-    <li>
-      The clamps read the real viewport: shorten the window to see them.
-    </li>
-  </ul>
-
   <p class="block-desc t-s">
+    Block padding, column gap and masthead gap clamp against
     <code class="t-mono-inline">
       svh
-    </code>, not
-    <code class="t-mono-inline">
-      dvh
-    </code>, so the column does not re-space
-    as a mobile URL bar hides. A fixed
-    <code class="t-mono-inline">
-      --ds-auth-layout-padding-block
-    </code> or
-    <code class="t-mono-inline">
-      -gap
-    </code> opts that dimension out.
+    </code>, full size at 800px of viewport
+    height; type and tile stay fixed. Shorten the window to see it.
   </p>
 
-  <p class="block-desc t-s">
-    A too-tall card scrolls; the chrome stays in flow (no
-    <code class="t-mono-inline">
-      position: absolute
-    </code>), never overlapping
-    it.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        svh
+      </code>, not
+      <code class="t-mono-inline">
+        dvh
+      </code>: the column does not re-space as a
+      mobile URL bar hides
+    </li>
+
+    <li>
+      A fixed <code class="t-mono-inline">--ds-auth-layout-padding-block</code>
+      or <code class="t-mono-inline">-gap</code> opts that dimension out
+    </li>
+
+    <li>
+      A too-tall card scrolls; the chrome stays in flow, never overlapping it
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     Why it centres with auto margins
   </h3>
 
   <p class="block-desc t-s">
-    Auto margins, not <code class="t-mono-inline">align-items: center</code>: in a
-    fixed-height parent
+    Auto margins, not <code class="t-mono-inline">align-items: center</code>: in
+    a fixed-height parent
     (<code class="t-mono-inline">--ds-auth-layout-min-height: 100%</code>) a
     too-tall form pins to the top padding and scrolls.
   </p>
@@ -269,22 +306,20 @@
     The notch needs one line from YOUR app
   </h3>
 
-  <ul class="block-desc t-s">
-    <li>
-      <code class="t-mono-inline">
-        env(safe-area-inset-*)
-      </code> padding clears a landscape notch; <code class="t-mono-inline">ds-bottom-sheet</code>, the home indicator.
-    </li>
-
-    <li>
-      The insets are <strong>0 until the host document opts in</strong> via the viewport meta tag in your <code class="t-mono-inline">index.html</code>.
-    </li>
-  </ul>
+  <p class="block-desc t-s">
+    The layout and <code class="t-mono-inline">ds-bottom-sheet</code> pad by
+    <code class="t-mono-inline">
+      env(safe-area-inset-*)
+    </code>; the insets are
+    <strong>
+      0 until <code class="t-mono-inline">index.html</code> opts in
+    </strong>.
+  </p>
 
   <pre class="t-mono-block"><code>&lt;!-- your index.html --&gt;
 &lt;meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" /&gt;</code></pre>
 
   <p class="block-desc t-s">
-    Without it every inset reads 0. This site sets it.
+    This site sets it.
   </p>
 </docs-section>

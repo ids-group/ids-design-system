@@ -12,8 +12,7 @@
       class="t-link">
       ds-filter-bar
     </a> ships the overflow half: filters that fit, the rest in a "+N more"
-    panel. The "More filters" buttons below are stubs; when facets run out of
-    room, use the component beside the applied-tag row.
+    panel. The "More filters" buttons below are stubs.
   </p>
 
   <h3
@@ -143,26 +142,36 @@
   </h3>
 
   <p class="block-desc t-s">
-    Search feeds the
-    <code class="t-mono-inline">
-      ds-table
-    </code> client filter
-    (<code class="t-mono-inline">[filterQuery]</code>: case-insensitive
-    substring over <code class="t-mono-inline">filterable</code> columns, or
-    all if none is marked). The status facet filters app-side; tags mirror
-    active filters and clear one by one. No match shows the table's
-    <code class="t-mono-inline">
-      [empty]
-    </code> slot; project a filter-specific
-    message. With a real backend, skip
-    <code class="t-mono-inline">
-      [filterQuery]
-    </code> and set
-    <code class="t-mono-inline">
-      [loading]="'overlay'"
-    </code> while the query
-    runs.
+    Search feeds the <code class="t-mono-inline">ds-table</code> client filter;
+    the status facet filters app-side.
   </p>
+
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        [filterQuery]
+      </code>: case-insensitive
+      substring over <code class="t-mono-inline">filterable</code> columns, or
+      all if none is marked
+    </li>
+
+    <li>
+      Tags mirror active filters and clear one by one
+    </li>
+
+    <li>
+      No match shows the table's <code class="t-mono-inline">[empty]</code>
+      slot; project a filter-specific message
+    </li>
+
+    <li>
+      Real backend: skip <code class="t-mono-inline">[filterQuery]</code>, set
+      <code class="t-mono-inline">
+        [loading]=&quot;'overlay'&quot;
+      </code> while
+      the query runs
+    </li>
+  </ul>
 
   <div class="stage">
     <div class="filterbar">
