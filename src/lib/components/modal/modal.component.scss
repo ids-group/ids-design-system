@@ -1,4 +1,4 @@
-@use '../../styles/press' as press;
+@use '../../styles/dismiss-button' as dismiss-button;
 
 /* Truncation contract: title is single-line with ellipsis and never hides the close
    button; body wraps and scrolls inside the modal; action labels are single-line and
@@ -151,18 +151,13 @@
   }
 
   .close {
-    background: none;
-    border: 0;
-    cursor: pointer;
+    @include dismiss-button.button;
+
     color: var(--_modal-close-icon-color);
     width: var(--modal-close-size);
     height: var(--modal-close-size);
-    display: grid;
-    place-items: center;
 
     &:hover { color: var(--_modal-close-icon-color-hover); }
-
-    @include press.feedback;
   }
 
   .body {
