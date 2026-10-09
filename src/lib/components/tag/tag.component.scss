@@ -1,5 +1,6 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
+@use '../../styles/target' as target;
 @use '../../styles/component-base' as component-base;
 @include component-base.rules;
 
@@ -95,4 +96,6 @@
   &:focus-visible {
     @include focus.ring(1px);
   }
+
+  @include target.min-size(calc(var(--tag-close-glyph) + 2 * var(--tag-close-pad)));
 }

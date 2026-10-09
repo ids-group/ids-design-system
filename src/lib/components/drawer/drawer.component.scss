@@ -163,6 +163,7 @@
     flex: 1;
   }
 
+  // target-size-guard: --modal-close-size, 24px
   .close {
     @include dismiss-button.button;
 

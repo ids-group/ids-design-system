@@ -1024,7 +1024,6 @@
   --kbd-pad-y: var(--space-0-5);
   --kbd-pad-x: var(--space-1-5);
   --chart-empty-h: 160px;
-  --chart-skeleton-h: 160px;
   --chart-legend-dot: var(--icon-2xs);
   --compare-dt-w: 90px;
   --dodont-stage-minh: 100px;

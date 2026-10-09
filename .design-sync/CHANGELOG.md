@@ -17,6 +17,19 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **`ds-info-hint` and `ds-chart-skeleton` have usage docs and sections.** The design agent reads
+  `InfoHint` as the 14px help or info icon button with a hover, focus and click-pinned tip, and
+  `ChartSkeleton` as the loading placeholder a chart draws itself. Their cards resolve to the
+  `components/tooltip` and `charts/chart` sections.
+
+### Build
+
+- **`[dsDefinitionTerm]` is on the hand-maintained surface.** The elements route generates no
+  wrapper for it: a card has no hover or click to show its definition, and `ds-table` applies it
+  internally.
+
 ## 0.14.8 — 2026-10-06
 
 ### Build
