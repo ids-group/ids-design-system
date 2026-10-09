@@ -183,10 +183,10 @@ express.
 ## 2. Attribute directives — no element to register
 
 A directive has no tag, so `@angular/elements` has nothing to define and it is
-absent from the generated surface entirely. Twenty-one of them:
+absent from the generated surface entirely. Twenty-two of them:
 
 `[dsBrandName]` · `[dsCellTemplate]` · `[dsChartTooltip]` · `[dsChipTemplate]` · `[dsCreateTemplate]` ·
-`[dsEmptyTemplate]` · `[dsFieldClickFocus]` · `[dsGroupLabelTemplate]` ·
+`[dsDefinitionTerm]` · `[dsEmptyTemplate]` · `[dsFieldClickFocus]` · `[dsGroupLabelTemplate]` ·
 `[dsModalConfirm]` · `[dsOptionTemplate]` · `[dsPanelFooterTemplate]` · `[dsPanelHeaderTemplate]` ·
 `[dsPickerTrigger]` · `[dsProjectionDropped]` · `[dsRailTrigger]` ·
 `[dsReserveMessages]` · `[dsTableColumns]` · `[dsTableExport]` ·
@@ -206,6 +206,8 @@ which would now work end to end because host-directive inputs reach the element 
 **Not built:** it would either add a public component to the library for a design-tool-only need,
 or add a design-sync-local component for a feature that cannot be seen in a static card. Revisit
 only if the design host ever renders interactive cards.
+
+`[dsDefinitionTerm]` marks a term that reveals its definition on hover and pins it open on a click, the same behaviour as `[dsTooltip]`. A static card has neither a hover nor a click, so nothing visible is lost; `ds-table` applies it internally.
 
 `[dsProjectionDropped]` is dev-only and never ships a node in production.
 
