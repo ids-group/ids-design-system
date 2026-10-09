@@ -1,0 +1,19 @@
+:host {
+  --ds-button-padding-x: 20px;
+  --ds-button-font-weight: 600;
+  --ds-input-label-color: #333;
+  --ds-modal-bg-color: #fafafa;
+  --ds-chart-tooltip-bg-color: #222;
+  --ds-line-chart-line-width: 3px;
+}
+
+.form,
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.due {
+  color: var(--ds-table-cell-link-color, red);
+}

@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 :host {
   --_description-list-label-width: var(--ds-description-list-label-width, var(--dl-spec-label-w));
   --_description-list-row-gap: var(--ds-description-list-row-gap, var(--space-3));

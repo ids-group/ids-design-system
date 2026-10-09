@@ -7,7 +7,7 @@
       "old": "SelectComponent, MultiSelectComponent, AutocompleteComponent",
       "new": null,
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
-      "note": "All three pickers gained members for the new inputs and outputs. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check and no list here could stay current.",
+      "note": "All three pickers gained members for the new inputs and outputs: `AutocompleteComponent` gained 21, `MultiSelectComponent` gained 22 and `SelectComponent` gained 15, among them the `opened` and `closed` outputs, `loading` and the private `setOpen`. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check and no list here could stay current.",
       "appliesWhen": "You subclass a picker component. Template users of the `<ds-...>` elements need nothing.",
       "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does.",
       "searchHints": [
@@ -30,7 +30,7 @@
       "old": "TableComponent",
       "new": null,
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
-      "note": "TableComponent gained members for row expansion: expandMode, expandAllToggle, rowExpanded, rowCollapsed and the protected helpers behind the header toggle. A redeclared member collides whether it is public or protected, and the compiler enumerates every one, so a build is the whole check.",
+      "note": "TableComponent gained members for row expansion (expandMode, expandAllToggle, rowExpanded, rowCollapsed and the protected helpers behind the header toggle) and for bounded and touch column resizing (resizeRange, onResizeFocus, onResizeBlur, onColumnWidthStep, resizeStep, columnSheetOpen, coarsePointer and private helpers). `TableComponent` gained 24 in all and lost the protected `windowData`. A redeclared member collides whether it is public or protected, and the compiler enumerates every one, so a build is the whole check.",
       "appliesWhen": "You subclass TableComponent. Template users of `<ds-table>` need nothing.",
       "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does.",
       "searchHints": [
@@ -112,7 +112,7 @@
       "new": null,
       "action": "If a ds-select has to show more than 280px of options, set `--picker-maxh` globally, in your own `:root` or on a shell element the pickers sit under. All three pickers follow it.",
       "appliesWhen": "Only ds-select, and only where the list was long enough to reach the old 320px. ds-autocomplete and ds-multi-select already capped at this value and do not move. There is no per-picker form of this at this version: the panel is portaled and carries no class of its own, and `--picker-maxh` is read inside the pane rather than copied onto it from the host, so a value set on one picker does not reach its panel.",
-      "pitfall": "Two independent caps, and the one a consumer reaches for is the wrong one. `--ds-dropdown-panel-maxh` caps the PANEL box and is forwarded from the host, so it is the one that looks settable per picker - and raising it alone changes nothing you can see. The list INSIDE caps separately at `--picker-maxh`, and that is what decides how many rows are visible.",
+      "pitfall": "Two independent caps, and the one a consumer reaches for is the wrong one. `--ds-dropdown-panel-maxh` caps the PANEL box (ds-select does not forward it from its host; only ds-autocomplete does), so raising it alone changes nothing you can see. The list INSIDE caps separately at `--picker-maxh`, and that is what decides how many rows are visible.",
       "note": "The option list's own max-height moved into the shared panel partial, so ds-select caps its list at `--picker-maxh` (280px) where it previously ran to the panel's `--ds-dropdown-panel-maxh` (320px). A `panelClass` input on each picker arrives in 0.13.1; a rule on that class is the scoped route to one picker's list height, and until then the token is global or nothing.",
       "searchHints": [
         "ds-dropdown-panel-maxh",

@@ -6,7 +6,10 @@
   [caption]="caption()"
   [error]="error()"
   [errorText]="errorTextResolved()"
-  [pending]="loading() || !renderReady()"
+  [pending]="(loading() && isEmpty()) || !renderReady()"
+  [reloading]="loading()"
+  [dataTable]="dataTableResolved() !== 'none'"
+  [shimmer]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
   [skeleton]="skeleton"
@@ -19,19 +22,52 @@
   <div
     class="skeleton"
     aria-hidden="true"
-    [class.legend-bottom]="legend() === 'bottom'">
-    <ds-skeleton
-      circle
-      width="var(--_pie-chart-size)"
-      height="var(--_pie-chart-size)"
-      [shimmer]="loading()" />
+    [class.legend-bottom]="legend() === 'bottom'"
+    [style.--_pie-chart-skeleton-slices]="skeletonMarks()">
+    <div class="ring">
+      <ds-skeleton
+        class="skeleton-ring"
+        circle
+        width="100%"
+        height="100%"
+        [shimmer]="loading()" />
+
+      @if (hole() > 0 && centerPlacement() !== 'below') {
+        <ds-skeleton
+          class="skeleton-center"
+          width="40%"
+          height="var(--space-3)"
+          [shimmer]="loading()" />
+      }
+    </div>
 
     @if (legend() !== 'none') {
       <div class="skeleton-legend">
         @for (placeholder of skeletonRows(); track $index) {
-          <ds-skeleton
-            height="var(--_pie-chart-legend-row-height)"
-            [shimmer]="loading()" />
+          <div class="skeleton-row">
+            <ds-skeleton
+              circle
+              width="var(--_pie-chart-swatch-size)"
+              height="var(--_pie-chart-swatch-size)"
+              [shimmer]="loading()" />
+
+            <ds-skeleton
+              class="skeleton-label"
+              height="var(--space-2)"
+              [shimmer]="loading()" />
+
+            <ds-skeleton
+              width="var(--space-8)"
+              height="var(--space-2)"
+              [shimmer]="loading()" />
+
+            @if (partOfWhole()) {
+              <ds-skeleton
+                width="var(--space-6)"
+                height="var(--space-2)"
+                [shimmer]="loading()" />
+            }
+          </div>
         }
       </div>
     }

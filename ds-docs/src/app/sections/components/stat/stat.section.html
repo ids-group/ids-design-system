@@ -12,17 +12,17 @@
     Stat tiles
   </h3>
 
-  <p class="block-desc t-s">
-    Arrow and colour alone show direction; put it in words in
-    <code class="t-mono-inline">
-      deltaLabel
-    </code> or the
-    <code class="t-mono-inline">
-      [delta]
-    </code> slot (e.g. "down 5 vs last
-    week"). <code class="t-mono-inline">deltaTone</code> replaces the up/down
-    colour where direction is not good or bad.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Arrow and colour alone show direction; put it in words in <code class="t-mono-inline">deltaLabel</code> or the <code class="t-mono-inline">[delta]</code> slot ("down 5 vs last week").
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        deltaTone
+      </code> - replaces the up/down colour where direction is not good or bad.
+    </li>
+  </ul>
 
   <div class="grid-4">
     <ds-stat
@@ -90,24 +90,23 @@
     A value that is not a number
   </h3>
 
-  <p class="block-desc t-s">
-    Project a badge, status dot or other non-text headline into
-    <code class="t-mono-inline">
-      [dsStatValue]
-    </code>; the tile keeps its
-    geometry, <code class="t-mono-inline">value</code> is the fallback.
-    Projection replaces the input's text, as in the
-    <code class="t-mono-inline">
-      [delta]
-    </code> slot, which still needs a numeric
-    <code class="t-mono-inline">
-      [delta]
-    </code> input to show the row.
-    <code class="t-mono-inline">
-      unit
-    </code> applies only to the input value;
-    put a suffix in the projection.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        [dsStatValue]
+      </code> - a badge, status dot or other non-text headline; the tile keeps its geometry, <code class="t-mono-inline">value</code> is the fallback.
+    </li>
+
+    <li>
+      Projection replaces the input's text, as in the <code class="t-mono-inline">[delta]</code> slot, which still needs a numeric <code class="t-mono-inline">[delta]</code> to show the row.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        unit
+      </code> applies only to the input value; put a suffix in the projection.
+    </li>
+  </ul>
 
   <div class="grid-4">
     <ds-stat
@@ -127,18 +126,61 @@
   </h3>
 
   <p class="block-desc t-s">
-    The value clips to one line; the rest shows in a tooltip on hover, or on
-    focus inside a focusable element. Three hooks compose:
-    <code class="t-mono-inline">
-      --ds-stat-value-white-space:
-    normal
-    </code> wraps, <code class="t-mono-inline">--ds-stat-value-lines:
-    N</code> then ellipsises on line N (only when wrapping), and
-    <code class="t-mono-inline">
-      --ds-stat-value-wrap:
-    anywhere
-    </code> breaks a word wider than the tile.
+    Clips to one line; the rest shows in a tooltip on hover, or on
+    focus inside a focusable element.
   </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Hook
+        </th>
+
+        <th>
+          Effect
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-stat-value-white-space: normal
+          </code>
+        </td>
+
+        <td>
+          Wraps.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-stat-value-lines: N
+          </code>
+        </td>
+
+        <td>
+          While wrapping, ellipsises on line N; at <code class="t-mono-inline">line-height: normal</code>, no glyph cut.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-stat-value-wrap: anywhere
+          </code>
+        </td>
+
+        <td>
+          Breaks a word wider than the tile.
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="phrase-row">
     <div class="phrase-cell">

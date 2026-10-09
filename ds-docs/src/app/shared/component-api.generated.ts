@@ -623,7 +623,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`."
+        "description": "Options are still being fetched and the list reports `aria-busy`: with no options it shows placeholder rows, with options it keeps them under an overlay until they are replaced."
       },
       {
         "name": "scrollActiveIntoView",
@@ -1173,7 +1173,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -1294,7 +1294,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Prints each row's share of `max` beside its value."
+        "description": "Prints each row's share of `max` beside its value. A row's own `showPercent` overrides it."
+      },
+      {
+        "name": "labelPosition",
+        "kind": "input",
+        "type": "BarChartLabelPosition",
+        "union": [
+          "top",
+          "start"
+        ],
+        "default": "'top'",
+        "required": false,
+        "description": "`'start'` puts each label in a column before its bar, on the bar's line, with the values in aligned columns after it; `'top'` keeps the label on its own line above the bar."
       },
       {
         "name": "dimOthers",
@@ -1924,7 +1936,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -2006,6 +2018,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "[]",
         "required": false,
         "description": "One band per category; every projected mark is positioned against them."
+      },
+      {
+        "name": "skeletonCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_SKELETON_COUNT",
+        "required": false,
+        "description": "How many columns the loading skeleton draws before the categories are known."
       },
       {
         "name": "tickCount",
@@ -3107,7 +3128,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -3221,6 +3242,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Prints each column's value above the column."
+      },
+      {
+        "name": "skeletonCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_SKELETON_COUNT",
+        "required": false,
+        "description": "How many columns the loading skeleton draws before the data is known."
       },
       {
         "name": "tickCount",
@@ -3635,6 +3665,52 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": ""
+      }
+    ],
+    "outputs": []
+  },
+  "definition-term": {
+    "key": "definition-term",
+    "selector": "[dsDefinitionTerm]",
+    "isElement": false,
+    "className": "DefinitionTermDirective",
+    "status": "stable",
+    "importName": "DefinitionTermDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/definition-term",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Keeps the definition open after a click until a click outside, `Escape` or blur. Turn it off where the click already does something, such as sorting a table column."
+      },
+      {
+        "name": "dsDefinitionTerm",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Tip text. An empty string turns the tooltip off."
+      },
+      {
+        "name": "dsTooltipPlacement",
+        "kind": "input",
+        "type": "TooltipPlacement",
+        "union": [
+          "top",
+          "bottom",
+          "left",
+          "right"
+        ],
+        "default": "'top'",
+        "required": false,
+        "description": "Which side the tip opens on. With no room there it opens on the opposite side."
       }
     ],
     "outputs": []
@@ -4183,7 +4259,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -4315,6 +4391,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "What the Drop column reports: `'relative'` (default) the share that leaked at this stage, `'absolute'` the count, `'none'` no column."
       },
       {
+        "name": "skeletonCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_SKELETON_COUNT",
+        "required": false,
+        "description": "How many stages the loading skeleton draws before the data is known."
+      },
+      {
         "name": "dimOthers",
         "kind": "input",
         "type": "boolean",
@@ -4418,7 +4503,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -4723,6 +4808,50 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fires on click unless disabled."
       }
     ]
+  },
+  "info-hint": {
+    "key": "info-hint",
+    "selector": "ds-info-hint",
+    "isElement": true,
+    "className": "InfoHintComponent",
+    "status": "stable",
+    "importName": "InfoHintComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/info-hint",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "text",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "The supplementary text, shown on hover and focus and kept open by a click."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "Accessible name of the icon button, such as \"About conversion rate\"."
+      },
+      {
+        "name": "icon",
+        "kind": "input",
+        "type": "'help' | 'info'",
+        "union": [
+          "help",
+          "info"
+        ],
+        "default": "'help'",
+        "required": false,
+        "description": "`'help'` draws a question mark in a circle, `'info'` an \"i\"."
+      }
+    ],
+    "outputs": []
   },
   "input": {
     "key": "input",
@@ -5298,7 +5427,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -6354,7 +6483,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`."
+        "description": "Options are still being fetched and the list reports `aria-busy`: with no options it shows placeholder rows, with options it keeps them under an overlay until they are replaced."
       },
       {
         "name": "scrollActiveIntoView",
@@ -7114,7 +7243,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -7248,6 +7377,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'end'",
         "required": false,
         "description": "Legend placement, logical so it flips in right-to-left."
+      },
+      {
+        "name": "skeletonCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_SKELETON_COUNT",
+        "required": false,
+        "description": "How many slices, and legend rows, the loading skeleton draws before the data is known."
       },
       {
         "name": "maxSlices",
@@ -7789,7 +7927,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -8395,7 +8533,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`."
+        "description": "Options are still being fetched and the list reports `aria-busy`: with no options it shows placeholder rows, with options it keeps them under an overlay until they are replaced."
       },
       {
         "name": "scrollActiveIntoView",
@@ -11583,31 +11721,31 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Milliseconds before the tip appears. Hiding is immediate."
       },
       {
+        "name": "dsTooltipArrow",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Draws the arrow that points at the host. Turn it off where the tip sits flush against it."
+      },
+      {
         "name": "dsTooltipWhenClipped",
+        "kind": "input",
+        "type": "TooltipClipTarget | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Show the tip only while the host shows less text than it holds. Re-tested on every open. A boolean or the bare attribute tests the host. A selector tests the element it matches inside the host and discloses that element's text; while nothing matches, no clipped tip opens. Applies the tooltip on its own: without a `dsTooltip` the tested text is disclosed. A tip whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip` that says more than the host does describes it as usual. Keyboard focus opens it too: on the host, on a control or widget around it, or on a control inside it. A clipped host that none of these reaches takes `tabindex=\"0\"` while it is clipped."
+      },
+      {
+        "name": "dsTooltipPinOnClick",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Show the tip only while the host shows less text than it holds. Re-tested on every open. Applies the tooltip on its own: without a `dsTooltip` the host's own text is disclosed. A tip whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip` that says more than the host does describes it as usual."
-      },
-      {
-        "name": "dsTooltipTextSelector",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Selector for the element inside the host whose clipping `dsTooltipWhenClipped` tests and whose text it discloses. Resolved on every open; while nothing matches, no clipped tip opens."
-      },
-      {
-        "name": "dsTooltipClippedLead",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Opens the tip with this line above `dsTooltip` while the host shows less text than it holds. The tip keeps its own line break, so the two read as separate lines."
+        "description": "Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip. While pinned the host carries `data-ds-tooltip-pinned`, a hook for styling the pinned trigger."
       }
     ],
     "outputs": []
@@ -11630,7 +11768,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": "Tooltip text content."
+        "description": "Tooltip text; `**bold**` runs render bold."
       },
       {
         "name": "placement",
@@ -11645,6 +11783,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": true,
         "description": "Side of the trigger the panel is positioned on; also drives the arrow class."
+      },
+      {
+        "name": "arrow",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Whether the arrow pointing at the trigger is drawn."
       },
       {
         "name": "panelId",
@@ -11821,7 +11968,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -11951,6 +12098,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "5",
         "required": false,
         "description": "How many value-axis ticks to aim for; ticks snap to a round step."
+      },
+      {
+        "name": "skeletonCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_SKELETON_COUNT",
+        "required": false,
+        "description": "How many steps the loading skeleton draws before the data is known: a total, the deltas, a total."
       },
       {
         "name": "dataTable",

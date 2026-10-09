@@ -1,0 +1,2683 @@
+[
+  {
+    "name": "--banner-ic-mt",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.11.3",
+    "itemId": "0.11.3#banner-icon-top-offset-token-removed"
+  },
+  {
+    "name": "--border-subtle",
+    "replacement": "--border-subtitle",
+    "kind": "renamed",
+    "since": "0.2.0",
+    "itemId": "0.2.0#surface-subtle-token-rename"
+  },
+  {
+    "name": "--chart-axis-fs",
+    "replacement": "--chart-axis-font-size",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-geometry-abbreviations-spelled-out"
+  },
+  {
+    "name": "--chart-axis-label",
+    "replacement": "--chart-axis-label-color",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-color-tokens-gain-color-suffix"
+  },
+  {
+    "name": "--chart-axis-line",
+    "replacement": "--chart-axis-line-color",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-color-tokens-gain-color-suffix"
+  },
+  {
+    "name": "--chart-axis-title",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-axis-title-token-removed"
+  },
+  {
+    "name": "--chart-cat-1",
+    "replacement": "--chart-categorical-1",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-categorical-tokens-renamed"
+  },
+  {
+    "name": "--chart-cat-2",
+    "replacement": "--chart-categorical-2",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-categorical-tokens-renamed"
+  },
+  {
+    "name": "--chart-cat-3",
+    "replacement": "--chart-categorical-3",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-categorical-tokens-renamed"
+  },
+  {
+    "name": "--chart-cat-4",
+    "replacement": "--chart-categorical-4",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-categorical-tokens-renamed"
+  },
+  {
+    "name": "--chart-cat-5",
+    "replacement": "--chart-categorical-5",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-categorical-tokens-renamed"
+  },
+  {
+    "name": "--chart-cat-6",
+    "replacement": "--chart-categorical-6",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-categorical-tokens-renamed"
+  },
+  {
+    "name": "--chart-cat-7",
+    "replacement": "--chart-categorical-7",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-categorical-tokens-renamed"
+  },
+  {
+    "name": "--chart-cat-8",
+    "replacement": "--chart-categorical-8",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-categorical-tokens-renamed"
+  },
+  {
+    "name": "--chart-cursor-line",
+    "replacement": "--chart-cursor-line-color",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-color-tokens-gain-color-suffix"
+  },
+  {
+    "name": "--chart-div--1",
+    "replacement": "--chart-divergent--1",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-divergent-tokens-renamed"
+  },
+  {
+    "name": "--chart-div--2",
+    "replacement": "--chart-divergent--2",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-divergent-tokens-renamed"
+  },
+  {
+    "name": "--chart-div--3",
+    "replacement": "--chart-divergent--3",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-divergent-tokens-renamed"
+  },
+  {
+    "name": "--chart-div-0",
+    "replacement": "--chart-divergent-0",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-divergent-tokens-renamed"
+  },
+  {
+    "name": "--chart-div-1",
+    "replacement": "--chart-divergent-1",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-divergent-tokens-renamed"
+  },
+  {
+    "name": "--chart-div-2",
+    "replacement": "--chart-divergent-2",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-divergent-tokens-renamed"
+  },
+  {
+    "name": "--chart-div-3",
+    "replacement": "--chart-divergent-3",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-divergent-tokens-renamed"
+  },
+  {
+    "name": "--chart-dot-r",
+    "replacement": "--chart-dot-radius",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-geometry-abbreviations-spelled-out"
+  },
+  {
+    "name": "--chart-dot-r-active",
+    "replacement": "--chart-dot-radius-active",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-dot-radius-active-token-renamed"
+  },
+  {
+    "name": "--chart-grid-line",
+    "replacement": "--chart-grid-line-color",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-color-tokens-gain-color-suffix"
+  },
+  {
+    "name": "--chart-grid-line-strong",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-strong-gridline-token-removed"
+  },
+  {
+    "name": "--chart-line-w",
+    "replacement": "--chart-line-width",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-geometry-abbreviations-spelled-out"
+  },
+  {
+    "name": "--chart-line-w-bold",
+    "replacement": "--chart-line-width-bold",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-line-width-bold-token-renamed"
+  },
+  {
+    "name": "--chart-seq-1",
+    "replacement": "--chart-sequential-1",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-sequential-tokens-renamed"
+  },
+  {
+    "name": "--chart-seq-2",
+    "replacement": "--chart-sequential-2",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-sequential-tokens-renamed"
+  },
+  {
+    "name": "--chart-seq-3",
+    "replacement": "--chart-sequential-3",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-sequential-tokens-renamed"
+  },
+  {
+    "name": "--chart-seq-4",
+    "replacement": "--chart-sequential-4",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-sequential-tokens-renamed"
+  },
+  {
+    "name": "--chart-seq-5",
+    "replacement": "--chart-sequential-5",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-sequential-tokens-renamed"
+  },
+  {
+    "name": "--chart-seq-6",
+    "replacement": "--chart-sequential-6",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-sequential-tokens-renamed"
+  },
+  {
+    "name": "--chart-tick-size",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-tick-size-token-removed"
+  },
+  {
+    "name": "--chart-tooltip-border",
+    "replacement": "--chart-tooltip-border-color",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#chart-color-tokens-gain-color-suffix"
+  },
+  {
+    "name": "--combobox-maxh",
+    "replacement": "--picker-maxh",
+    "kind": "removed",
+    "since": "0.8.0",
+    "itemId": "0.8.0#combobox-tokens-renamed-to-picker"
+  },
+  {
+    "name": "--combobox-offset",
+    "replacement": "--picker-offset",
+    "kind": "removed",
+    "since": "0.8.0",
+    "itemId": "0.8.0#combobox-tokens-renamed-to-picker"
+  },
+  {
+    "name": "--ds-alert-pad-x",
+    "replacement": "--ds-alert-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#alert-pad-x-is-alert-padding-x"
+  },
+  {
+    "name": "--ds-alert-pad-y",
+    "replacement": "--ds-alert-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#alert-pad-y-is-alert-padding-y"
+  },
+  {
+    "name": "--ds-app-layout-pad-x",
+    "replacement": "--ds-app-layout-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#app-layout-pad-x-is-app-layout-padding-x"
+  },
+  {
+    "name": "--ds-app-layout-pad-y",
+    "replacement": "--ds-app-layout-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#app-layout-pad-y-is-app-layout-padding-y"
+  },
+  {
+    "name": "--ds-app-shell-content-max-width",
+    "replacement": "--ds-app-layout-content-max-width",
+    "kind": "renamed",
+    "since": "0.7.0",
+    "itemId": "0.7.0#app-shell-tokens-to-app-layout"
+  },
+  {
+    "name": "--ds-app-shell-height",
+    "replacement": "--ds-app-layout-height",
+    "kind": "renamed",
+    "since": "0.7.0",
+    "itemId": "0.7.0#app-shell-tokens-to-app-layout"
+  },
+  {
+    "name": "--ds-app-shell-pad-x",
+    "replacement": "--ds-app-layout-padding-x",
+    "kind": "renamed",
+    "since": "0.7.0",
+    "itemId": "0.7.0#app-shell-tokens-to-app-layout"
+  },
+  {
+    "name": "--ds-app-shell-pad-y",
+    "replacement": "--ds-app-layout-padding-y",
+    "kind": "renamed",
+    "since": "0.7.0",
+    "itemId": "0.7.0#app-shell-tokens-to-app-layout"
+  },
+  {
+    "name": "--ds-auth-layout-pad-block",
+    "replacement": "--ds-auth-layout-padding-block",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#auth-layout-pad-block-is-auth-layout-padding-block"
+  },
+  {
+    "name": "--ds-auth-shell-bg-color",
+    "replacement": "--ds-auth-layout-bg-color",
+    "kind": "renamed",
+    "since": "0.9.0",
+    "itemId": "0.9.0#auth-shell-tokens-to-auth-layout"
+  },
+  {
+    "name": "--ds-auth-shell-card-max-width",
+    "replacement": "--ds-auth-layout-card-max-width",
+    "kind": "renamed",
+    "since": "0.9.0",
+    "itemId": "0.9.0#auth-shell-tokens-to-auth-layout"
+  },
+  {
+    "name": "--ds-auth-shell-gap",
+    "replacement": "--ds-auth-layout-gap",
+    "kind": "renamed",
+    "since": "0.9.0",
+    "itemId": "0.9.0#auth-shell-tokens-to-auth-layout"
+  },
+  {
+    "name": "--ds-auth-shell-mark-bg-color",
+    "replacement": "--ds-auth-layout-mark-bg-color",
+    "kind": "renamed",
+    "since": "0.9.0",
+    "itemId": "0.9.0#auth-shell-tokens-to-auth-layout"
+  },
+  {
+    "name": "--ds-auth-shell-mark-label-color",
+    "replacement": "--ds-auth-layout-mark-label-color",
+    "kind": "renamed",
+    "since": "0.9.0",
+    "itemId": "0.9.0#auth-shell-tokens-to-auth-layout"
+  },
+  {
+    "name": "--ds-auth-shell-min-height",
+    "replacement": "--ds-auth-layout-min-height",
+    "kind": "renamed",
+    "since": "0.9.0",
+    "itemId": "0.9.0#auth-shell-tokens-to-auth-layout"
+  },
+  {
+    "name": "--ds-autocomplete-input-minw",
+    "replacement": "--ds-autocomplete-input-min-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#autocomplete-input-minw-is-autocomplete-input-min-width"
+  },
+  {
+    "name": "--ds-autocomplete-maxw",
+    "replacement": "--ds-autocomplete-max-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#autocomplete-maxw-is-autocomplete-max-width"
+  },
+  {
+    "name": "--ds-autocomplete-option-bg-color-hover",
+    "replacement": "--ds-option-selected-bg-color, --ds-option-selected-label-color, --ds-option-selected-bg-color-hover, --ds-option-check-color",
+    "kind": "removed",
+    "since": "0.11.1",
+    "itemId": "0.11.1#autocomplete-option-hover-token-removed"
+  },
+  {
+    "name": "--ds-autocomplete-panel-maxh",
+    "replacement": "--ds-autocomplete-panel-max-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#autocomplete-panel-maxh-is-autocomplete-panel-max-height"
+  },
+  {
+    "name": "--ds-avatar-bg",
+    "replacement": "--ds-avatar-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-avatargroup-overlap",
+    "replacement": "--ds-avatar-group-overlap",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#avatargroup-token-prefix-rename"
+  },
+  {
+    "name": "--ds-avatargroup-ring",
+    "replacement": "--ds-avatar-group-ring",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#avatargroup-token-prefix-rename"
+  },
+  {
+    "name": "--ds-badge-bg",
+    "replacement": "--ds-badge-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-badge-pad-x",
+    "replacement": "--ds-badge-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#badge-pad-x-is-badge-padding-x"
+  },
+  {
+    "name": "--ds-badge-pad-y",
+    "replacement": "--ds-badge-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#badge-pad-y-is-badge-padding-y"
+  },
+  {
+    "name": "--ds-banner-bg",
+    "replacement": "--ds-banner-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-banner-pad-x",
+    "replacement": "--ds-banner-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#banner-pad-x-is-banner-padding-x"
+  },
+  {
+    "name": "--ds-banner-pad-y",
+    "replacement": "--ds-banner-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#banner-pad-y-is-banner-padding-y"
+  },
+  {
+    "name": "--ds-bottom-sheet-maxh",
+    "replacement": "--ds-bottom-sheet-max-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#bottom-sheet-maxh-is-bottom-sheet-max-height"
+  },
+  {
+    "name": "--ds-bottom-sheet-maxw",
+    "replacement": "--ds-bottom-sheet-max-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#bottom-sheet-maxw-is-bottom-sheet-max-width"
+  },
+  {
+    "name": "--ds-button-bg",
+    "replacement": "--ds-button-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-button-border",
+    "replacement": "--ds-button-border-color",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#button-border-token-names-the-colour"
+  },
+  {
+    "name": "--ds-button-border-disabled",
+    "replacement": "--ds-button-border-color-disabled",
+    "kind": "renamed",
+    "since": "0.13.0",
+    "itemId": "0.13.0#button-border-disabled-token-names-the-colour"
+  },
+  {
+    "name": "--ds-button-focus-shadow",
+    "replacement": "--focus-ring-color",
+    "kind": "removed",
+    "since": "0.12.1",
+    "itemId": "0.12.1#per-component-focus-shadow-tokens-removed"
+  },
+  {
+    "name": "--ds-button-pad-x",
+    "replacement": "--ds-button-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#button-pad-x-is-button-padding-x"
+  },
+  {
+    "name": "--ds-button-pad-y",
+    "replacement": "--ds-button-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#button-pad-y-is-button-padding-y"
+  },
+  {
+    "name": "--ds-button-tracking",
+    "replacement": "--ds-button-letter-spacing",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#token-tracking-spelled-out-as-letter-spacing"
+  },
+  {
+    "name": "--ds-button-weight",
+    "replacement": "--ds-button-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#button-weight-is-button-font-weight"
+  },
+  {
+    "name": "--ds-card-bg",
+    "replacement": "--ds-card-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-card-pad",
+    "replacement": "--ds-card-padding",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#card-pad-is-card-padding"
+  },
+  {
+    "name": "--ds-checkbox-label-weight",
+    "replacement": "--ds-checkbox-label-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#checkbox-label-weight-is-checkbox-label-font-weight"
+  },
+  {
+    "name": "--ds-color-picker-hue-h",
+    "replacement": "--ds-color-picker-hue-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#color-picker-hue-h-is-color-picker-hue-height"
+  },
+  {
+    "name": "--ds-color-picker-panel-w",
+    "replacement": "--ds-color-picker-panel-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#color-picker-panel-w-is-color-picker-panel-width"
+  },
+  {
+    "name": "--ds-color-picker-sv-h",
+    "replacement": "--ds-color-picker-saturation-value-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#color-picker-sv-h-is-color-picker-saturation-value-height"
+  },
+  {
+    "name": "--ds-combobox-focus-shadow",
+    "replacement": "--ds-autocomplete-focus-shadow",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#combobox-token-prefix-rename"
+  },
+  {
+    "name": "--ds-container-max",
+    "replacement": "--ds-container-max-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#container-max-is-container-max-width"
+  },
+  {
+    "name": "--ds-container-pad",
+    "replacement": "--ds-surface-padding",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#container-pad-is-the-surface-default"
+  },
+  {
+    "name": "--ds-container-pad-x",
+    "replacement": "--ds-container-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#container-pad-x-is-container-padding-x"
+  },
+  {
+    "name": "--ds-date-picker-trigger-pad-x",
+    "replacement": "--ds-date-picker-trigger-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#date-picker-trigger-pad-x-is-date-picker-trigger-padding-x"
+  },
+  {
+    "name": "--ds-date-picker-value-weight",
+    "replacement": "--ds-date-picker-value-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#date-picker-value-weight-is-date-picker-value-font-weight"
+  },
+  {
+    "name": "--ds-datepicker-bg",
+    "replacement": "--ds-date-picker-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-datepicker-bg-color",
+    "replacement": "--ds-date-picker-bg-color",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#datepicker-token-prefix-rename"
+  },
+  {
+    "name": "--ds-datepicker-border",
+    "replacement": "--ds-date-picker-border",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#datepicker-token-prefix-rename"
+  },
+  {
+    "name": "--ds-datepicker-day-disabled-label-color",
+    "replacement": "--ds-date-picker-day-disabled-label-color",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#datepicker-token-prefix-rename"
+  },
+  {
+    "name": "--ds-datepicker-day-hover-bg",
+    "replacement": "--ds-date-picker-day-hover-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-datepicker-day-hover-bg-color",
+    "replacement": "--ds-date-picker-day-hover-bg-color",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#datepicker-token-prefix-rename"
+  },
+  {
+    "name": "--ds-datepicker-day-range-bg",
+    "replacement": "--ds-date-picker-day-range-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-datepicker-day-range-bg-color",
+    "replacement": "--ds-date-picker-day-range-bg-color",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#datepicker-token-prefix-rename"
+  },
+  {
+    "name": "--ds-datepicker-day-range-label-color",
+    "replacement": "--ds-date-picker-day-range-label-color",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#datepicker-token-prefix-rename"
+  },
+  {
+    "name": "--ds-datepicker-day-selected-bg",
+    "replacement": "--ds-date-picker-day-selected-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-datepicker-day-selected-bg-color",
+    "replacement": "--ds-date-picker-day-selected-bg-color",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#datepicker-token-prefix-rename"
+  },
+  {
+    "name": "--ds-datepicker-day-selected-bg-color-hover",
+    "replacement": "--ds-date-picker-day-selected-bg-color-hover",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#datepicker-token-prefix-rename"
+  },
+  {
+    "name": "--ds-datepicker-day-selected-label-color",
+    "replacement": "--ds-date-picker-day-selected-label-color",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#datepicker-token-prefix-rename"
+  },
+  {
+    "name": "--ds-datepicker-day-today-label-color",
+    "replacement": "--ds-date-picker-day-today-label-color",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#datepicker-token-prefix-rename"
+  },
+  {
+    "name": "--ds-datepicker-shadow",
+    "replacement": "--ds-date-picker-shadow",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#datepicker-token-prefix-rename"
+  },
+  {
+    "name": "--ds-datepicker-width",
+    "replacement": "--ds-date-picker-width",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#datepicker-token-prefix-rename"
+  },
+  {
+    "name": "--ds-description-list-col-gap",
+    "replacement": "--ds-description-list-column-gap",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#two-tokens-brought-back-into-their-family"
+  },
+  {
+    "name": "--ds-description-list-details-color",
+    "replacement": "--ds-description-item-details-color",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#description-item-tokens-leave-the-list-namespace"
+  },
+  {
+    "name": "--ds-description-list-details-font-size",
+    "replacement": "--ds-description-item-details-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#description-item-tokens-leave-the-list-namespace"
+  },
+  {
+    "name": "--ds-description-list-details-weight",
+    "replacement": "--ds-description-item-details-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#description-item-tokens-leave-the-list-namespace"
+  },
+  {
+    "name": "--ds-description-list-label-w",
+    "replacement": "--ds-description-list-label-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#description-list-label-w-is-description-list-label-width"
+  },
+  {
+    "name": "--ds-description-list-term-color",
+    "replacement": "--ds-description-item-term-color",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#description-item-tokens-leave-the-list-namespace"
+  },
+  {
+    "name": "--ds-description-list-term-font-size",
+    "replacement": "--ds-description-item-term-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#description-item-tokens-leave-the-list-namespace"
+  },
+  {
+    "name": "--ds-description-list-term-tracking",
+    "replacement": "--ds-description-item-term-letter-spacing",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#description-item-tokens-leave-the-list-namespace"
+  },
+  {
+    "name": "--ds-description-list-term-transform",
+    "replacement": "--ds-description-item-term-text-transform",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#description-item-tokens-leave-the-list-namespace"
+  },
+  {
+    "name": "--ds-description-list-term-weight",
+    "replacement": "--ds-description-item-term-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#description-item-tokens-leave-the-list-namespace"
+  },
+  {
+    "name": "--ds-donut-chart-focus-color",
+    "replacement": "--ds-pie-chart-focus-color",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#pie-chart-tokens-renamed"
+  },
+  {
+    "name": "--ds-donut-chart-focus-width",
+    "replacement": "--ds-pie-chart-focus-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#pie-chart-tokens-renamed"
+  },
+  {
+    "name": "--ds-donut-chart-gap",
+    "replacement": "--ds-pie-chart-gap",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#pie-chart-tokens-renamed"
+  },
+  {
+    "name": "--ds-donut-chart-legend-row-gap",
+    "replacement": "--ds-pie-chart-legend-row-gap",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#pie-chart-tokens-renamed"
+  },
+  {
+    "name": "--ds-donut-chart-legend-row-height",
+    "replacement": "--ds-pie-chart-legend-row-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#pie-chart-tokens-renamed"
+  },
+  {
+    "name": "--ds-donut-chart-outline-width",
+    "replacement": "--ds-pie-chart-outline-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#pie-chart-tokens-renamed"
+  },
+  {
+    "name": "--ds-donut-chart-size",
+    "replacement": "--ds-pie-chart-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#pie-chart-tokens-renamed"
+  },
+  {
+    "name": "--ds-donut-chart-swatch-size",
+    "replacement": "--ds-pie-chart-swatch-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#pie-chart-tokens-renamed"
+  },
+  {
+    "name": "--ds-dropdown-panel-maxh",
+    "replacement": "--ds-dropdown-panel-max-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#dropdown-panel-maxh-is-dropdown-panel-max-height"
+  },
+  {
+    "name": "--ds-dropdown-panel-maxw",
+    "replacement": "--ds-dropdown-panel-max-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#dropdown-panel-maxw-is-dropdown-panel-max-width"
+  },
+  {
+    "name": "--ds-dropdown-panel-minw",
+    "replacement": "--ds-dropdown-panel-min-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#dropdown-panel-minw-is-dropdown-panel-min-width"
+  },
+  {
+    "name": "--ds-dropzone-bg",
+    "replacement": "--ds-dropzone-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-empty-state-body-maxw",
+    "replacement": "--ds-empty-state-body-max-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#empty-state-body-maxw-is-empty-state-body-max-width"
+  },
+  {
+    "name": "--ds-empty-state-pad",
+    "replacement": "--ds-empty-state-padding",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#empty-state-pad-is-empty-state-padding"
+  },
+  {
+    "name": "--ds-empty-state-tile-bg",
+    "replacement": "--ds-empty-state-tile-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-empty-state-title-fs",
+    "replacement": "--ds-empty-state-title-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#token-fs-spelled-out-as-font-size"
+  },
+  {
+    "name": "--ds-field-label-tracking",
+    "replacement": "--ds-field-label-letter-spacing",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#token-tracking-spelled-out-as-letter-spacing"
+  },
+  {
+    "name": "--ds-field-label-transform",
+    "replacement": "--ds-field-label-text-transform",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#token-transform-spelled-out-as-text-transform"
+  },
+  {
+    "name": "--ds-field-label-weight",
+    "replacement": "--ds-field-label-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#field-label-weight-is-field-label-font-weight"
+  },
+  {
+    "name": "--ds-icon-button-bg",
+    "replacement": "--ds-icon-button-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-input-bg",
+    "replacement": "--ds-input-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-input-fs",
+    "replacement": "--ds-input-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#token-fs-spelled-out-as-font-size"
+  },
+  {
+    "name": "--ds-input-hint-color",
+    "replacement": "--ds-field-message-color",
+    "kind": "renamed",
+    "since": "0.4.0",
+    "itemId": "0.4.0#input-hint-color-token"
+  },
+  {
+    "name": "--ds-input-hint-fs",
+    "replacement": "--ds-field-message-font-size",
+    "kind": "renamed",
+    "since": "0.4.0",
+    "itemId": "0.4.0#input-hint-fs-token"
+  },
+  {
+    "name": "--ds-input-label-fs",
+    "replacement": "--ds-input-label-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#token-fs-spelled-out-as-font-size"
+  },
+  {
+    "name": "--ds-input-label-fw",
+    "replacement": "--ds-input-label-font-weight",
+    "kind": "renamed",
+    "since": "0.14.0",
+    "itemId": "0.14.0#input-label-fw-is-input-label-font-weight"
+  },
+  {
+    "name": "--ds-input-pad-x",
+    "replacement": "--ds-input-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#input-pad-x-is-input-padding-x"
+  },
+  {
+    "name": "--ds-input-pad-y",
+    "replacement": "--ds-input-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#input-pad-y-is-input-padding-y"
+  },
+  {
+    "name": "--ds-line-chart-annotation-weight",
+    "replacement": "--ds-line-chart-annotation-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#line-chart-annotation-weight-is-line-chart-annotation-font-weight"
+  },
+  {
+    "name": "--ds-list-item-pad-x",
+    "replacement": "--ds-list-item-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#list-item-pad-x-is-list-item-padding-x"
+  },
+  {
+    "name": "--ds-list-item-pad-y",
+    "replacement": "--ds-list-item-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#list-item-pad-y-is-list-item-padding-y"
+  },
+  {
+    "name": "--ds-menu-item-danger-label-color",
+    "replacement": "--ds-menu-item-error-label-color",
+    "kind": "renamed",
+    "since": "0.5.1",
+    "itemId": "0.5.1#menu-item-danger-label-token-rename"
+  },
+  {
+    "name": "--ds-menu-item-label-weight",
+    "replacement": "--ds-menu-item-label-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#menu-item-label-weight-is-menu-item-label-font-weight"
+  },
+  {
+    "name": "--ds-menu-item-pad-x",
+    "replacement": "--ds-menu-item-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#menu-item-pad-x-is-menu-item-padding-x"
+  },
+  {
+    "name": "--ds-menu-item-pad-y",
+    "replacement": "--ds-menu-item-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#menu-item-pad-y-is-menu-item-padding-y"
+  },
+  {
+    "name": "--ds-meter-fill-color",
+    "replacement": "--ds-bar-fill-color",
+    "kind": "renamed",
+    "since": "0.13.3",
+    "itemId": "0.13.3#progress-and-meter-tokens-renamed-to-bar"
+  },
+  {
+    "name": "--ds-meter-height",
+    "replacement": "--ds-bar-height",
+    "kind": "renamed",
+    "since": "0.13.3",
+    "itemId": "0.13.3#progress-and-meter-tokens-renamed-to-bar"
+  },
+  {
+    "name": "--ds-meter-min-width",
+    "replacement": "--ds-bar-min-width",
+    "kind": "renamed",
+    "since": "0.13.3",
+    "itemId": "0.13.3#progress-and-meter-tokens-renamed-to-bar"
+  },
+  {
+    "name": "--ds-meter-radius",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.13.3",
+    "itemId": "0.13.3#meter-radius-removed"
+  },
+  {
+    "name": "--ds-meter-track-color",
+    "replacement": "--ds-bar-track-color",
+    "kind": "renamed",
+    "since": "0.13.3",
+    "itemId": "0.13.3#progress-and-meter-tokens-renamed-to-bar"
+  },
+  {
+    "name": "--ds-modal-actions-pad-bottom",
+    "replacement": "--ds-modal-actions-padding-bottom",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#modal-actions-pad-bottom-is-modal-actions-padding-bottom"
+  },
+  {
+    "name": "--ds-modal-actions-pad-top",
+    "replacement": "--ds-modal-actions-padding-top",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#modal-actions-pad-top-is-modal-actions-padding-top"
+  },
+  {
+    "name": "--ds-modal-actions-pad-y",
+    "replacement": "--ds-modal-actions-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#modal-actions-pad-y-is-modal-actions-padding-y"
+  },
+  {
+    "name": "--ds-modal-bg",
+    "replacement": "--ds-modal-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-modal-body-pad-bottom",
+    "replacement": "--ds-modal-body-padding-bottom",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#modal-body-pad-bottom-is-modal-body-padding-bottom"
+  },
+  {
+    "name": "--ds-modal-body-pad-top",
+    "replacement": "--ds-modal-body-padding-top",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#modal-body-pad-top-is-modal-body-padding-top"
+  },
+  {
+    "name": "--ds-modal-body-pad-y",
+    "replacement": "--ds-modal-body-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#modal-body-pad-y-is-modal-body-padding-y"
+  },
+  {
+    "name": "--ds-modal-eyebrow-tracking",
+    "replacement": "--ds-modal-eyebrow-letter-spacing",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#token-tracking-spelled-out-as-letter-spacing"
+  },
+  {
+    "name": "--ds-modal-eyebrow-transform",
+    "replacement": "--ds-modal-eyebrow-text-transform",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#token-transform-spelled-out-as-text-transform"
+  },
+  {
+    "name": "--ds-modal-eyebrow-weight",
+    "replacement": "--ds-modal-eyebrow-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#modal-eyebrow-weight-is-modal-eyebrow-font-weight"
+  },
+  {
+    "name": "--ds-modal-header-pad-bottom",
+    "replacement": "--ds-modal-header-padding-bottom",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#modal-header-pad-bottom-is-modal-header-padding-bottom"
+  },
+  {
+    "name": "--ds-modal-header-pad-top",
+    "replacement": "--ds-modal-header-padding-top",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#modal-header-pad-top-is-modal-header-padding-top"
+  },
+  {
+    "name": "--ds-modal-header-pad-y",
+    "replacement": "--ds-modal-header-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#modal-header-pad-y-is-modal-header-padding-y"
+  },
+  {
+    "name": "--ds-modal-pad-x",
+    "replacement": "--ds-modal-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#modal-pad-x-is-modal-padding-x"
+  },
+  {
+    "name": "--ds-modal-title-weight",
+    "replacement": "--ds-modal-title-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#modal-title-weight-is-modal-title-font-weight"
+  },
+  {
+    "name": "--ds-option-weight",
+    "replacement": "--ds-option-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#option-weight-is-option-font-weight"
+  },
+  {
+    "name": "--ds-otp-cell-h",
+    "replacement": "--ds-otp-cell-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#otp-cell-h-is-otp-cell-height"
+  },
+  {
+    "name": "--ds-otp-cell-w",
+    "replacement": "--ds-otp-cell-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#otp-cell-w-is-otp-cell-width"
+  },
+  {
+    "name": "--ds-page-header-title-fs",
+    "replacement": "--ds-page-header-title-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#token-fs-spelled-out-as-font-size"
+  },
+  {
+    "name": "--ds-pagehdr-divider",
+    "replacement": "--ds-page-header-divider",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#pagehdr-token-prefix-rename"
+  },
+  {
+    "name": "--ds-pagehdr-eyebrow-text-color",
+    "replacement": "--ds-page-header-eyebrow-text-color",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#pagehdr-token-prefix-rename"
+  },
+  {
+    "name": "--ds-pagehdr-meta-icon-color",
+    "replacement": "--ds-page-header-meta-icon-color",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#pagehdr-token-prefix-rename"
+  },
+  {
+    "name": "--ds-pagehdr-meta-text-color",
+    "replacement": "--ds-page-header-meta-text-color",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#pagehdr-token-prefix-rename"
+  },
+  {
+    "name": "--ds-pagehdr-subtitle-text-color",
+    "replacement": "--ds-page-header-subtitle-text-color",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#pagehdr-token-prefix-rename"
+  },
+  {
+    "name": "--ds-pagehdr-title-fs",
+    "replacement": "--ds-page-header-title-font-size",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#pagehdr-token-prefix-rename"
+  },
+  {
+    "name": "--ds-pagehdr-title-gap",
+    "replacement": "--ds-page-header-title-gap",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#pagehdr-token-prefix-rename"
+  },
+  {
+    "name": "--ds-pagehdr-title-text-color",
+    "replacement": "--ds-page-header-title-text-color",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#pagehdr-token-prefix-rename"
+  },
+  {
+    "name": "--ds-pagination-active-bg",
+    "replacement": "--ds-pagination-active-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-pagination-btn-bg",
+    "replacement": "--ds-pagination-button-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-pagination-btn-bg-color",
+    "replacement": "--ds-pagination-button-bg-color",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#pagination-btn-bg-color-is-pagination-button-bg-color"
+  },
+  {
+    "name": "--ds-pagination-btn-bg-color-hover",
+    "replacement": "--ds-pagination-button-bg-color-hover",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#pagination-btn-bg-color-hover-is-pagination-button-bg-color-hover"
+  },
+  {
+    "name": "--ds-pagination-btn-border",
+    "replacement": "--ds-pagination-button-border",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#pagination-btn-border-is-pagination-button-border"
+  },
+  {
+    "name": "--ds-pagination-btn-label-color",
+    "replacement": "--ds-pagination-button-label-color",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#pagination-btn-label-color-is-pagination-button-label-color"
+  },
+  {
+    "name": "--ds-pagination-btn-label-color-hover",
+    "replacement": "--ds-pagination-button-label-color-hover",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#pagination-btn-label-color-hover-is-pagination-button-label-color-hover"
+  },
+  {
+    "name": "--ds-pagination-label-weight",
+    "replacement": "--ds-pagination-label-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#pagination-label-weight-is-pagination-label-font-weight"
+  },
+  {
+    "name": "--ds-progress-bar-color",
+    "replacement": "--ds-bar-fill-color",
+    "kind": "renamed",
+    "since": "0.13.3",
+    "itemId": "0.13.3#progress-and-meter-tokens-renamed-to-bar"
+  },
+  {
+    "name": "--ds-progress-bar-color-error",
+    "replacement": "--ds-bar-fill-color-error",
+    "kind": "renamed",
+    "since": "0.13.3",
+    "itemId": "0.13.3#progress-and-meter-tokens-renamed-to-bar"
+  },
+  {
+    "name": "--ds-progress-bar-color-success",
+    "replacement": "--ds-bar-fill-color-success",
+    "kind": "renamed",
+    "since": "0.13.3",
+    "itemId": "0.13.3#progress-and-meter-tokens-renamed-to-bar"
+  },
+  {
+    "name": "--ds-progress-bar-color-warn",
+    "replacement": "--ds-bar-fill-color-warning",
+    "kind": "renamed",
+    "since": "0.5.1",
+    "itemId": "0.5.1#progress-bar-warn-token-rename"
+  },
+  {
+    "name": "--ds-progress-bar-color-warning",
+    "replacement": "--ds-bar-fill-color-warning",
+    "kind": "renamed",
+    "since": "0.13.3",
+    "itemId": "0.13.3#progress-and-meter-tokens-renamed-to-bar"
+  },
+  {
+    "name": "--ds-progress-height",
+    "replacement": "--ds-bar-height",
+    "kind": "renamed",
+    "since": "0.13.3",
+    "itemId": "0.13.3#progress-and-meter-tokens-renamed-to-bar"
+  },
+  {
+    "name": "--ds-progress-target-color",
+    "replacement": "--ds-bar-target-color",
+    "kind": "renamed",
+    "since": "0.13.3",
+    "itemId": "0.13.3#progress-and-meter-tokens-renamed-to-bar"
+  },
+  {
+    "name": "--ds-progress-target-width",
+    "replacement": "--ds-bar-target-width",
+    "kind": "renamed",
+    "since": "0.13.3",
+    "itemId": "0.13.3#progress-and-meter-tokens-renamed-to-bar"
+  },
+  {
+    "name": "--ds-progress-track-color",
+    "replacement": "--ds-bar-track-color",
+    "kind": "renamed",
+    "since": "0.13.3",
+    "itemId": "0.13.3#progress-and-meter-tokens-renamed-to-bar"
+  },
+  {
+    "name": "--ds-search-bg",
+    "replacement": "--ds-search-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-search-maxw",
+    "replacement": "--ds-search-max-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#search-maxw-is-search-max-width"
+  },
+  {
+    "name": "--ds-segmented-btn-border",
+    "replacement": "--ds-segmented-segment-border",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#segmented-parts-are-segments"
+  },
+  {
+    "name": "--ds-segmented-btn-h",
+    "replacement": "--ds-segmented-segment-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#segmented-parts-are-segments"
+  },
+  {
+    "name": "--ds-segmented-btn-pad-x",
+    "replacement": "--ds-segmented-segment-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#segmented-parts-are-segments"
+  },
+  {
+    "name": "--ds-segmented-label-weight",
+    "replacement": "--ds-segmented-label-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#segmented-label-weight-is-segmented-label-font-weight"
+  },
+  {
+    "name": "--ds-segmented-pad",
+    "replacement": "--ds-segmented-padding",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#segmented-pad-is-segmented-padding"
+  },
+  {
+    "name": "--ds-segmented-r-inner",
+    "replacement": "--ds-segmented-radius-inner",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#segmented-r-inner-is-segmented-radius-inner"
+  },
+  {
+    "name": "--ds-sidenav-bg",
+    "replacement": "--ds-sidenav-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-sidenav-footer-head-tracking",
+    "replacement": "--ds-sidenav-footer-head-letter-spacing",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#token-tracking-spelled-out-as-letter-spacing"
+  },
+  {
+    "name": "--ds-sidenav-group-open-bg",
+    "replacement": "--ds-sidenav-group-open-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-sidenav-item-label-weight",
+    "replacement": "--ds-sidenav-item-label-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#sidenav-item-label-weight-is-sidenav-item-label-font-weight"
+  },
+  {
+    "name": "--ds-sidenav-mark-bg",
+    "replacement": "--ds-sidenav-mark-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-slider-thumb-bw",
+    "replacement": "--ds-slider-thumb-border-width",
+    "kind": "renamed",
+    "since": "0.14.0",
+    "itemId": "0.14.0#slider-thumb-bw-is-slider-thumb-border-width"
+  },
+  {
+    "name": "--ds-slider-track-h",
+    "replacement": "--ds-slider-track-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#slider-track-h-is-slider-track-height"
+  },
+  {
+    "name": "--ds-split-button-bg-hover-color",
+    "replacement": "--ds-split-button-bg-color-hover",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#two-tokens-brought-back-into-their-family"
+  },
+  {
+    "name": "--ds-stat-bg",
+    "replacement": "--ds-stat-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-stat-pad",
+    "replacement": "--ds-stat-padding",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#stat-pad-is-stat-padding"
+  },
+  {
+    "name": "--ds-statusdot-color",
+    "replacement": "--ds-status-dot-color",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#statusdot-token-prefix-rename"
+  },
+  {
+    "name": "--ds-statusdot-size",
+    "replacement": "--ds-status-dot-size",
+    "kind": "renamed",
+    "since": "0.5.0",
+    "itemId": "0.5.0#statusdot-token-prefix-rename"
+  },
+  {
+    "name": "--ds-t-caption-color",
+    "replacement": "--ds-typography-caption-color",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-caption-font-family",
+    "replacement": "--ds-typography-caption-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-caption-font-size",
+    "replacement": "--ds-typography-caption-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-caption-font-weight",
+    "replacement": "--ds-typography-caption-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-caption-line-height",
+    "replacement": "--ds-typography-caption-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-card-title-color",
+    "replacement": "--ds-typography-card-title-color",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-card-title-font-family",
+    "replacement": "--ds-typography-card-title-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-card-title-font-size",
+    "replacement": "--ds-typography-card-title-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-card-title-font-weight",
+    "replacement": "--ds-typography-card-title-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-card-title-line-height",
+    "replacement": "--ds-typography-card-title-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-display-font-family",
+    "replacement": "--ds-typography-display-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-display-font-size",
+    "replacement": "--ds-typography-display-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-display-font-weight",
+    "replacement": "--ds-typography-display-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-display-letter-spacing",
+    "replacement": "--ds-typography-display-letter-spacing",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-display-line-height",
+    "replacement": "--ds-typography-display-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h1-font-family",
+    "replacement": "--ds-typography-h1-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h1-font-size",
+    "replacement": "--ds-typography-h1-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h1-font-weight",
+    "replacement": "--ds-typography-h1-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h1-letter-spacing",
+    "replacement": "--ds-typography-h1-letter-spacing",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h1-line-height",
+    "replacement": "--ds-typography-h1-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h2-font-family",
+    "replacement": "--ds-typography-h2-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h2-font-size",
+    "replacement": "--ds-typography-h2-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h2-font-weight",
+    "replacement": "--ds-typography-h2-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h2-letter-spacing",
+    "replacement": "--ds-typography-h2-letter-spacing",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h2-line-height",
+    "replacement": "--ds-typography-h2-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h3-font-family",
+    "replacement": "--ds-typography-h3-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h3-font-size",
+    "replacement": "--ds-typography-h3-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h3-font-weight",
+    "replacement": "--ds-typography-h3-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h3-letter-spacing",
+    "replacement": "--ds-typography-h3-letter-spacing",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h3-line-height",
+    "replacement": "--ds-typography-h3-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h4-font-family",
+    "replacement": "--ds-typography-h4-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h4-font-size",
+    "replacement": "--ds-typography-h4-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h4-font-weight",
+    "replacement": "--ds-typography-h4-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h4-line-height",
+    "replacement": "--ds-typography-h4-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h5-font-family",
+    "replacement": "--ds-typography-h5-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h5-font-size",
+    "replacement": "--ds-typography-h5-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h5-font-weight",
+    "replacement": "--ds-typography-h5-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-h5-line-height",
+    "replacement": "--ds-typography-h5-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-l-bold-font-family",
+    "replacement": "--ds-typography-l-bold-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-l-bold-font-size",
+    "replacement": "--ds-typography-l-bold-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-l-bold-font-weight",
+    "replacement": "--ds-typography-l-bold-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-l-bold-line-height",
+    "replacement": "--ds-typography-l-bold-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-l-font-family",
+    "replacement": "--ds-typography-l-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-l-font-size",
+    "replacement": "--ds-typography-l-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-l-font-weight",
+    "replacement": "--ds-typography-l-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-l-line-height",
+    "replacement": "--ds-typography-l-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-m-bold-font-family",
+    "replacement": "--ds-typography-m-bold-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-m-bold-font-size",
+    "replacement": "--ds-typography-m-bold-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-m-bold-font-weight",
+    "replacement": "--ds-typography-m-bold-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-m-bold-line-height",
+    "replacement": "--ds-typography-m-bold-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-m-font-family",
+    "replacement": "--ds-typography-m-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-m-font-size",
+    "replacement": "--ds-typography-m-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-m-font-weight",
+    "replacement": "--ds-typography-m-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-m-line-height",
+    "replacement": "--ds-typography-m-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-block-bg-color",
+    "replacement": "--ds-typography-mono-block-bg-color",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-block-border-color",
+    "replacement": "--ds-typography-mono-block-border-color",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-block-font-family",
+    "replacement": "--ds-typography-mono-block-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-block-font-size",
+    "replacement": "--ds-typography-mono-block-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-block-font-weight",
+    "replacement": "--ds-typography-mono-block-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-block-line-height",
+    "replacement": "--ds-typography-mono-block-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-block-radius",
+    "replacement": "--ds-typography-mono-block-radius",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-font-family",
+    "replacement": "--ds-typography-mono-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-font-size",
+    "replacement": "--ds-typography-mono-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-font-weight",
+    "replacement": "--ds-typography-mono-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-inline-bg-color",
+    "replacement": "--ds-typography-mono-inline-bg-color",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-inline-color",
+    "replacement": "--ds-typography-mono-inline-color",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-inline-font-family",
+    "replacement": "--ds-typography-mono-inline-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-inline-font-size",
+    "replacement": "--ds-typography-mono-inline-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-inline-font-weight",
+    "replacement": "--ds-typography-mono-inline-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-inline-line-height",
+    "replacement": "--ds-typography-mono-inline-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-inline-radius",
+    "replacement": "--ds-typography-mono-inline-radius",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-ligatures",
+    "replacement": "--ds-typography-mono-ligatures",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-mono-line-height",
+    "replacement": "--ds-typography-mono-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-overline-color",
+    "replacement": "--ds-typography-overline-color",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-overline-font-family",
+    "replacement": "--ds-typography-overline-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-overline-font-size",
+    "replacement": "--ds-typography-overline-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-overline-font-weight",
+    "replacement": "--ds-typography-overline-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-overline-letter-spacing",
+    "replacement": "--ds-typography-overline-letter-spacing",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-overline-line-height",
+    "replacement": "--ds-typography-overline-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-overline-text-transform",
+    "replacement": "--ds-typography-overline-text-transform",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-s-bold-font-family",
+    "replacement": "--ds-typography-s-bold-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-s-bold-font-size",
+    "replacement": "--ds-typography-s-bold-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-s-bold-font-weight",
+    "replacement": "--ds-typography-s-bold-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-s-bold-line-height",
+    "replacement": "--ds-typography-s-bold-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-s-font-family",
+    "replacement": "--ds-typography-s-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-s-font-size",
+    "replacement": "--ds-typography-s-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-s-font-weight",
+    "replacement": "--ds-typography-s-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-s-line-height",
+    "replacement": "--ds-typography-s-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-xs-bold-font-family",
+    "replacement": "--ds-typography-xs-bold-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-xs-bold-font-size",
+    "replacement": "--ds-typography-xs-bold-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-xs-bold-font-weight",
+    "replacement": "--ds-typography-xs-bold-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-xs-bold-line-height",
+    "replacement": "--ds-typography-xs-bold-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-xs-font-family",
+    "replacement": "--ds-typography-xs-font-family",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-xs-font-size",
+    "replacement": "--ds-typography-xs-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-xs-font-weight",
+    "replacement": "--ds-typography-xs-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-t-xs-line-height",
+    "replacement": "--ds-typography-xs-line-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#typography-tokens-spelled-out"
+  },
+  {
+    "name": "--ds-tab-label-weight",
+    "replacement": "--ds-tab-label-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#tab-label-weight-is-tab-label-font-weight"
+  },
+  {
+    "name": "--ds-tab-pad-bottom",
+    "replacement": "--ds-tab-padding-bottom",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#tab-pad-bottom-is-tab-padding-bottom"
+  },
+  {
+    "name": "--ds-tab-pad-top",
+    "replacement": "--ds-tab-padding-top",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#tab-pad-top-is-tab-padding-top"
+  },
+  {
+    "name": "--ds-tab-pad-x",
+    "replacement": "--ds-tab-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#tab-pad-x-is-tab-padding-x"
+  },
+  {
+    "name": "--ds-tab-pad-y",
+    "replacement": "--ds-tab-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#tab-pad-y-is-tab-padding-y"
+  },
+  {
+    "name": "--ds-table-bg",
+    "replacement": "--ds-table-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-table-cell-pad-bottom",
+    "replacement": "--ds-table-cell-padding-bottom",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-cell-pad-bottom-is-table-cell-padding-bottom"
+  },
+  {
+    "name": "--ds-table-cell-pad-left",
+    "replacement": "--ds-table-cell-padding-left",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-cell-pad-left-is-table-cell-padding-left"
+  },
+  {
+    "name": "--ds-table-cell-pad-right",
+    "replacement": "--ds-table-cell-padding-right",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-cell-pad-right-is-table-cell-padding-right"
+  },
+  {
+    "name": "--ds-table-cell-pad-top",
+    "replacement": "--ds-table-cell-padding-top",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-cell-pad-top-is-table-cell-padding-top"
+  },
+  {
+    "name": "--ds-table-cell-pad-x",
+    "replacement": "--ds-table-cell-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-cell-pad-x-is-table-cell-padding-x"
+  },
+  {
+    "name": "--ds-table-cell-pad-y",
+    "replacement": "--ds-table-cell-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-cell-pad-y-is-table-cell-padding-y"
+  },
+  {
+    "name": "--ds-table-expand-col-w",
+    "replacement": "--ds-table-expand-column-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-expand-col-w-is-table-expand-column-width"
+  },
+  {
+    "name": "--ds-table-head-bg",
+    "replacement": "--ds-table-head-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-table-head-fs",
+    "replacement": "--ds-table-head-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#token-fs-spelled-out-as-font-size"
+  },
+  {
+    "name": "--ds-table-head-h",
+    "replacement": "--ds-table-head-height",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-head-h-is-table-head-height"
+  },
+  {
+    "name": "--ds-table-head-pad-bottom",
+    "replacement": "--ds-table-head-padding-bottom",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-head-pad-bottom-is-table-head-padding-bottom"
+  },
+  {
+    "name": "--ds-table-head-pad-top",
+    "replacement": "--ds-table-head-padding-top",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-head-pad-top-is-table-head-padding-top"
+  },
+  {
+    "name": "--ds-table-head-tracking",
+    "replacement": "--ds-table-head-letter-spacing",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#token-tracking-spelled-out-as-letter-spacing"
+  },
+  {
+    "name": "--ds-table-head-weight",
+    "replacement": "--ds-table-head-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-head-weight-is-table-head-font-weight"
+  },
+  {
+    "name": "--ds-table-hscroll-bottom",
+    "replacement": "--ds-table-sticky-scrollbar-offset",
+    "kind": "renamed",
+    "since": "0.12.2",
+    "itemId": "0.12.2#table-hscroll-bottom-token-renamed"
+  },
+  {
+    "name": "--ds-table-icon-btn-color",
+    "replacement": "--ds-table-icon-button-color",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-icon-btn-color-is-table-icon-button-color"
+  },
+  {
+    "name": "--ds-table-icon-btn-color-hover",
+    "replacement": "--ds-table-icon-button-color-hover",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-icon-btn-color-hover-is-table-icon-button-color-hover"
+  },
+  {
+    "name": "--ds-table-icon-btn-focus-color",
+    "replacement": "--ds-table-icon-button-focus-color",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-icon-btn-focus-color-is-table-icon-button-focus-color"
+  },
+  {
+    "name": "--ds-table-row-hover-bg",
+    "replacement": "--ds-table-row-hover-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-table-row-selected-bg",
+    "replacement": "--ds-table-row-selected-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-table-select-col-w",
+    "replacement": "--ds-table-select-column-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#table-select-col-w-is-table-select-column-width"
+  },
+  {
+    "name": "--ds-tabs-panel-pad-top",
+    "replacement": "--ds-tabs-panel-padding-top",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#tabs-panel-pad-top-is-tabs-panel-padding-top"
+  },
+  {
+    "name": "--ds-tabs-pills-bg",
+    "replacement": "--ds-tabs-pills-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-tabs-strip-gap",
+    "replacement": "--ds-tabs-gap",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#tabs-strip-gap-is-tabs-gap"
+  },
+  {
+    "name": "--ds-tag-active-bg",
+    "replacement": "--ds-tag-active-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-tag-bg",
+    "replacement": "--ds-tag-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-tag-fs",
+    "replacement": "--ds-tag-font-size",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#token-fs-spelled-out-as-font-size"
+  },
+  {
+    "name": "--ds-tag-fw",
+    "replacement": "--ds-tag-font-weight",
+    "kind": "renamed",
+    "since": "0.14.0",
+    "itemId": "0.14.0#tag-fw-is-tag-font-weight"
+  },
+  {
+    "name": "--ds-tag-hover-bg",
+    "replacement": "--ds-tag-hover-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-tag-lh",
+    "replacement": "--ds-tag-line-height",
+    "kind": "renamed",
+    "since": "0.14.0",
+    "itemId": "0.14.0#tag-lh-is-tag-line-height"
+  },
+  {
+    "name": "--ds-tag-pad-x",
+    "replacement": "--ds-tag-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#tag-pad-x-is-tag-padding-x"
+  },
+  {
+    "name": "--ds-tag-pad-y",
+    "replacement": "--ds-tag-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#tag-pad-y-is-tag-padding-y"
+  },
+  {
+    "name": "--ds-time-picker-trigger-pad-x",
+    "replacement": "--ds-time-picker-trigger-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#time-picker-trigger-pad-x-is-time-picker-trigger-padding-x"
+  },
+  {
+    "name": "--ds-time-picker-value-weight",
+    "replacement": "--ds-time-picker-value-font-weight",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#time-picker-value-weight-is-time-picker-value-font-weight"
+  },
+  {
+    "name": "--ds-timeline-spine-w",
+    "replacement": "--ds-timeline-spine-width",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#timeline-spine-w-is-timeline-spine-width"
+  },
+  {
+    "name": "--ds-toast-bg",
+    "replacement": "--ds-toast-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-toast-border",
+    "replacement": "--ds-toast-border-color",
+    "kind": "renamed",
+    "since": "0.11.4",
+    "itemId": "0.11.4#toast-border-tokens-gain-color"
+  },
+  {
+    "name": "--ds-toast-border-error",
+    "replacement": "--ds-toast-border-color-error",
+    "kind": "renamed",
+    "since": "0.11.4",
+    "itemId": "0.11.4#toast-border-tokens-gain-color"
+  },
+  {
+    "name": "--ds-toast-border-info",
+    "replacement": "--ds-toast-border-color-info",
+    "kind": "renamed",
+    "since": "0.11.4",
+    "itemId": "0.11.4#toast-border-tokens-gain-color"
+  },
+  {
+    "name": "--ds-toast-border-success",
+    "replacement": "--ds-toast-border-color-success",
+    "kind": "renamed",
+    "since": "0.11.4",
+    "itemId": "0.11.4#toast-border-tokens-gain-color"
+  },
+  {
+    "name": "--ds-toast-border-warning",
+    "replacement": "--ds-toast-border-color-warning",
+    "kind": "renamed",
+    "since": "0.11.4",
+    "itemId": "0.11.4#toast-border-tokens-gain-color"
+  },
+  {
+    "name": "--ds-topbar-bg",
+    "replacement": "--ds-topbar-bg-color",
+    "kind": "renamed",
+    "since": "0.3.0",
+    "itemId": "0.3.0#bg-tokens-renamed-bg-color"
+  },
+  {
+    "name": "--ds-tree-row-pad-x",
+    "replacement": "--ds-tree-row-padding-x",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#tree-row-pad-x-is-tree-row-padding-x"
+  },
+  {
+    "name": "--ds-tree-row-pad-y",
+    "replacement": "--ds-tree-row-padding-y",
+    "kind": "renamed",
+    "since": "0.13.4",
+    "itemId": "0.13.4#tree-row-pad-y-is-tree-row-padding-y"
+  },
+  {
+    "name": "--error-subtle",
+    "replacement": "--error-subtitle",
+    "kind": "renamed",
+    "since": "0.2.0",
+    "itemId": "0.2.0#error-subtle-token-rename"
+  },
+  {
+    "name": "--field-floating-label-fs",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.10.0",
+    "itemId": "0.10.0#floating-label-token-overrides"
+  },
+  {
+    "name": "--field-floating-label-lh",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.10.0",
+    "itemId": "0.10.0#floating-label-token-overrides"
+  },
+  {
+    "name": "--field-floating-label-top",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.10.0",
+    "itemId": "0.10.0#floating-label-token-overrides"
+  },
+  {
+    "name": "--field-floating-pad-t",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.10.0",
+    "itemId": "0.10.0#floating-label-token-overrides"
+  },
+  {
+    "name": "--field-gap-label",
+    "replacement": "--field-label-gap",
+    "kind": "renamed",
+    "since": "0.4.0",
+    "itemId": "0.4.0#field-gap-label-token"
+  },
+  {
+    "name": "--field-h-floating",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.10.0",
+    "itemId": "0.10.0#floating-label-token-overrides"
+  },
+  {
+    "name": "--info-subtle",
+    "replacement": "--info-subtitle",
+    "kind": "renamed",
+    "since": "0.2.0",
+    "itemId": "0.2.0#info-subtle-token-rename"
+  },
+  {
+    "name": "--opacity-muted",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.10.1",
+    "itemId": "0.10.1#opacity-muted-token-removed"
+  },
+  {
+    "name": "--primary-subtle",
+    "replacement": "--primary-subtitle",
+    "kind": "renamed",
+    "since": "0.2.0",
+    "itemId": "0.2.0#surface-subtle-token-rename"
+  },
+  {
+    "name": "--progress-h",
+    "replacement": "--bar-h",
+    "kind": "renamed",
+    "since": "0.13.3",
+    "itemId": "0.13.3#progress-and-meter-tokens-renamed-to-bar"
+  },
+  {
+    "name": "--search-h",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.9.0",
+    "itemId": "0.9.0#search-h-token-removed"
+  },
+  {
+    "name": "--secondary-subtle",
+    "replacement": "--secondary-subtitle",
+    "kind": "renamed",
+    "since": "0.2.0",
+    "itemId": "0.2.0#surface-subtle-token-rename"
+  },
+  {
+    "name": "--slider-thumb-bw",
+    "replacement": "--slider-thumb-border-width",
+    "kind": "renamed",
+    "since": "0.14.0",
+    "itemId": "0.14.0#theme-slider-thumb-bw-is-slider-thumb-border-width"
+  },
+  {
+    "name": "--static-white",
+    "replacement": "white",
+    "kind": "removed",
+    "since": "0.5.1",
+    "itemId": "0.5.1#static-white-token-removed"
+  },
+  {
+    "name": "--status-planning-bg-color",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.5.1",
+    "itemId": "0.5.1#status-lifecycle-tokens-removed"
+  },
+  {
+    "name": "--success-subtle",
+    "replacement": "--success-subtitle",
+    "kind": "renamed",
+    "since": "0.2.0",
+    "itemId": "0.2.0#success-subtle-token-rename"
+  },
+  {
+    "name": "--tertiary-subtle",
+    "replacement": "--tertiary-subtitle",
+    "kind": "renamed",
+    "since": "0.2.0",
+    "itemId": "0.2.0#surface-subtle-token-rename"
+  },
+  {
+    "name": "--warning-subtle",
+    "replacement": "--warning-subtitle",
+    "kind": "renamed",
+    "since": "0.2.0",
+    "itemId": "0.2.0#warning-subtle-token-rename"
+  }
+]

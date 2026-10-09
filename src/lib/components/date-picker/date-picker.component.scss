@@ -1,3 +1,4 @@
+@use '../../styles/text-clip' as text-clip;
 @use '../../styles/breakpoints' as bp;
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
@@ -5,6 +6,9 @@
 @use '../../styles/field-state' as field-state;
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/focus' as focus;
+@use '../../styles/target' as target;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract:
    Selected-date label - Numeric date only - no clip.
@@ -25,11 +29,12 @@
   --_date-picker-value-font-family: var(--ds-date-picker-value-font-family, var(--font-mono));
   --_date-picker-value-font-size: var(--ds-date-picker-value-font-size, var(--font-size-s));
   --_date-picker-value-font-weight: var(--ds-date-picker-value-font-weight, var(--font-weight-regular));
+  --_date-picker-max-width: var(--ds-date-picker-max-width, 100%);
 
   /* Hugs its content so an outer grid or flex track cannot stretch the field. */
   display: block;
   width: fit-content;
-  max-width: 100%;
+  max-width: var(--_date-picker-max-width);
 
   /* The mask cannot clip, so a narrower container pushes the whole field past its edge, border included; min-width outranks max-width. */
   min-width: min-content;
@@ -160,7 +165,8 @@
   font-variant-numeric: tabular-nums;
   white-space: pre;
   pointer-events: none;
-  overflow: hidden;
+
+  @include text-clip.inline-axis;
 
   .muted {
     color: var(--_date-picker-placeholder-color);
@@ -209,6 +215,8 @@
   color: var(--icon-default);
   padding: 0;
   cursor: pointer;
+
+  @include target.min-size;
 
   &:disabled {
     cursor: not-allowed;
@@ -305,9 +313,11 @@
     gap: var(--space-2);
     margin-bottom: var(--space-2);
 
+    // target-size-guard: --date-picker-nav-size, 24px
     .picker-nav {
       width: var(--date-picker-nav-size);
       height: var(--date-picker-nav-size);
+      padding: 0;
       border: 0;
       background: transparent;
       display: grid;
@@ -375,6 +385,7 @@
     button {
       width: var(--date-picker-nav-size);
       height: var(--date-picker-nav-size);
+      padding: 0;
       border: 0;
       background: transparent;
       display: grid;

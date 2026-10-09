@@ -1,0 +1,4 @@
+{ "version": "0.4.0", "items": [
+  { "id": "button-variant", "kind": "value-remap", "old": "ds-button[variant]", "new": null,
+    "map": { "primary": null, "secondary": "variant=\"tonal\"", "outline": "color=\"neutral\" variant=\"outline\"", "text": "variant=\"text\"" } }
+] }

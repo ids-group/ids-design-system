@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 :host {
   --_timeline-node-size: var(--ds-timeline-node-size, var(--timeline-node-size));
   --_timeline-spine-width: var(--ds-timeline-spine-width, var(--timeline-spine-w));

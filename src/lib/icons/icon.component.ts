@@ -23,6 +23,12 @@ import { reportDevWarning } from '@ids-group-ltd/ids-design-system/core';
   // Host inline-flex + svg block prevents baseline-gap when icon sits next to text.
   styles: [
     `
+      @layer ds-component-base {
+        ds-icon,
+        ds-icon * {
+          box-sizing: border-box;
+        }
+      }
       ds-icon {
         display: inline-flex;
         align-items: center;

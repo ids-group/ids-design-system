@@ -13,15 +13,21 @@ import {
 } from 'node:fs';
 import { createRequire } from 'node:module';
 
+// `--compile-only <dir>` stops after the compiled collection and its schemas, which need no built
+// library: tools/run-schematic-tests.mjs builds into a temp dir that way.
+const compileOnlyIndex = process.argv.indexOf('--compile-only');
+const compileOnlyDir =
+  compileOnlyIndex === -1 ? null : process.argv[compileOnlyIndex + 1];
+
 const distPkgPath = 'dist/ds/package.json';
-if (!existsSync(distPkgPath)) {
+if (!compileOnlyDir && !existsSync(distPkgPath)) {
   console.error(
     'build-schematics: dist/ds missing — run `bun run build:lib` first.',
   );
   process.exit(1);
 }
 
-const distSchematics = 'dist/ds/schematics';
+const distSchematics = compileOnlyDir ?? 'dist/ds/schematics';
 
 // Wipe first: the previous build emitted index.js from an index.ts, and tsc
 // does not remove what it no longer produces.
@@ -34,19 +40,23 @@ console.log('▶ Compiling schematics (tsc)…');
 // `moduleResolution: "node"`. The lockfile pins the package; only resolving the
 // binary from it pins what actually runs.
 const tscBin = createRequire(import.meta.url).resolve('typescript/bin/tsc');
-execSync(`node "${tscBin}" -p schematics/tsconfig.json`, { stdio: 'inherit' });
+execSync(
+  `node "${tscBin}" -p schematics/tsconfig.json --outDir "${distSchematics}"`,
+  { stdio: 'inherit' },
+);
 
 console.log('▶ Copying collection.json and schemas…');
 cpSync('schematics/collection.json', `${distSchematics}/collection.json`);
-// Copy every generator's schema.json (tsc only emits .js, not .json).
+// tsc only emits .js, so every schema collection.json names is copied.
 // Architecture generators (feature/store/data-access/page/ui) live in the app
 // starter repo.
-for (const gen of ['ng-add', 'check-overrides']) {
-  cpSync(
-    `schematics/${gen}/schema.json`,
-    `${distSchematics}/${gen}/schema.json`,
-  );
+const { schematics } = JSON.parse(
+  readFileSync('schematics/collection.json', 'utf8'),
+);
+for (const { schema } of Object.values(schematics)) {
+  cpSync(`schematics/${schema}`, `${distSchematics}/${schema}`);
 }
+if (compileOnlyDir) process.exit(0);
 
 console.log('▶ Building the override surface…');
 execSync('node tools/build-override-surface.mjs', { stdio: 'inherit' });
@@ -129,15 +139,31 @@ if (existsSync('migrations')) {
   console.log('▶ Copying migrations/ into dist/ds/migrations…');
   // Published manifests and the format note only. `unreleased.json` describes changes that are
   // NOT in this tarball, and an upgrade tool reading it would apply a version the consumer does
-  // not have; AUTHORING.md is written for whoever edits these files, not for whoever runs them.
+  // not have; AUTHORING.md is written for whoever edits these files, not for whoever runs them,
+  // and `fixtures/` is the evidence tools/check-manifest-compile.mjs compiles, read by nobody else.
   mkdirSync('dist/ds/migrations', { recursive: true });
   for (const entry of readdirSync('migrations')) {
-    if (entry === 'unreleased.json' || entry === 'AUTHORING.md') continue;
+    if (
+      entry === 'unreleased.json' ||
+      entry === 'AUTHORING.md' ||
+      entry === 'fixtures'
+    )
+      continue;
     cpSync(`migrations/${entry}`, `dist/ds/migrations/${entry}`, {
       recursive: true,
     });
   }
 }
+
+// The consumer stylelint plugin and the token list it reads, exported as
+// `@ids-group-ltd/ids-design-system/stylelint`.
+console.log('▶ Copying stylelint/ into dist/ds/stylelint…');
+cpSync('stylelint', 'dist/ds/stylelint', { recursive: true });
+
+// The consumer ESLint plugin and the API list it reads, exported as
+// `@ids-group-ltd/ids-design-system/eslint`. It reads the token list from `../stylelint/`.
+console.log('▶ Copying eslint/ into dist/ds/eslint…');
+cpSync('eslint', 'dist/ds/eslint', { recursive: true });
 
 console.log(
   '✔ schematics built into dist/ds/schematics + package.json registered.',

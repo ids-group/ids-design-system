@@ -30,8 +30,8 @@
       "new": null,
       "surface": "style",
       "action": "If you style or hit-test .cdk-overlay-pane.ds-chart-tooltip-pane, scope the interactive half to .is-pinned. Ships in styles/overlay-motion, which styles/ds forwards.",
-      "appliesWhen": "Only an app with its own rule on the chart tooltip pane, or one that relied on the pane catching the pointer. The panel's content, position and dismissal are unchanged.",
-      "pitfall": "Text selection inside an unpinned panel no longer works, because the pane does not take the pointer. A pinned panel still does, and that is the supported way to reach the text.",
+      "appliesWhen": "Only an app with its own rule on the chart tooltip pane, or one that relied on the pane catching the pointer. Making the pane inert leaves the panel's content, position and dismissal alone.",
+      "pitfall": "An unpinned pane no longer takes the pointer, so moving onto the panel reaches the plot beneath it; a pinned pane still takes it. The panel's own content takes the pointer in neither case, so its text cannot be selected.",
       "restore": ".cdk-overlay-pane.ds-chart-tooltip-pane { pointer-events: auto; }",
       "searchHints": [
         "ds-chart-tooltip-pane",
@@ -131,7 +131,7 @@
       "new": null,
       "surface": "none",
       "action": "None. A category panel now lists every series at that category rather than only the one that opened it.",
-      "appliesWhen": "Only a ds-chart with cursor=\"category\" holding more than one mark. A per-mark tooltip is unchanged.",
+      "appliesWhen": "Only a ds-chart with cursor=\"category\" holding more than one mark. A per-mark tooltip still names only its own mark.",
       "pitfall": "A panel that named one series now names several, so a custom tooltipTemplate that assumed a single entry renders more rows than it did.",
       "restore": null,
       "searchHints": [
@@ -242,7 +242,7 @@
         "LineChartComponent"
       ],
       "verify": "Your build has no TS4114 or TS2416 against any of the listed classes, and no member of your subclass is named like one of the removed members listed in the note.",
-      "note": "Gained: ChartComponent 20 members (mostly the tooltip API, plus measured), ColumnSeriesComponent 14, LineSeriesComponent 9, ScatterChartComponent 4, ChartDataTableComponent 3, BarChartComponent/FunnelChartComponent 2 each, PieChartComponent roving, ColumnChartComponent highlightedSeries, PaginationComponent layoutResolved/loading, TableComponent paginationSize/paginationLayout, ModalCardComponent stackOverflowingActions, ChartTooltipDirective dsChartTooltipPinned (internal, via components/chart-tooltip), DsControlValueAccessor/DsBooleanControlValueAccessor blur (internal, via components; inherited by every field control, so a subclass declaring its own collides), SearchComponent blur, TextareaComponent selectionStart/selectionEnd/setSelectionRange/select, CellTemplateDirective dsCellTemplateOf and a static ngTemplateContextGuard (now generic, defaulting to unknown), SwitchComponent controlled/checkedRequested/onClick, LineChartComponent outline. Removed: rovingIndex/tabStopIndex (bar/pie/funnel/column series), onMarkEnter/onMarkNavigation/onPointKey (column series), onMarkerEnter/onMarkerNavigation (line series), onPlotPointer/clearCursor (ChartComponent), markIndex (ScatterChartComponent)."
+      "note": "ChartComponent gained 21 members (mostly the tooltip API, plus measured), ColumnSeriesComponent gained 14, LineSeriesComponent gained 9, ScatterChartComponent gained 4, ChartDataTableComponent gained 3, BarChartComponent and FunnelChartComponent each gained 2, PieChartComponent roving, ColumnChartComponent highlightedSeries, PaginationComponent layoutResolved/loading, TableComponent paginationSize/paginationLayout, ModalCardComponent stackOverflowingActions and the private header and actionsRow, ChartTooltipDirective dsChartTooltipPinned (internal, via components/chart-tooltip), DsControlValueAccessor/DsBooleanControlValueAccessor blur (internal, via components; inherited by every field control, so a subclass declaring its own collides), SearchComponent blur, TextareaComponent selectionStart/selectionEnd/setSelectionRange/select, CellTemplateDirective dsCellTemplateOf and a static ngTemplateContextGuard (now generic, defaulting to unknown), SwitchComponent controlled/checkedRequested/onClick, LineChartComponent outline. Removed: rovingIndex/tabStopIndex (bar/pie/funnel/column series), onMarkEnter/onMarkNavigation/onPointKey (column series), onMarkerEnter/onMarkerNavigation (line series), onPlotPointer/clearCursor (ChartComponent), markIndex (ScatterChartComponent)."
     },
     {
       "id": "table-expand-panel-content-wrapper",
@@ -353,7 +353,7 @@
       "new": "--ds-tag-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-tag-fw` to `--ds-tag-font-weight`, keeping the value.",
-      "appliesWhen": "Any stylesheet that sets `--ds-tag-fw`, on `ds-tag`, an ancestor or `:root`. `--ds-tag-font-size` and `--ds-tag-line-height` are different tokens on the same element, renamed by their own entry in this release.",
+      "appliesWhen": "Any stylesheet that sets `--ds-tag-fw`, on `ds-tag`, an ancestor or `:root`. `--ds-tag-font-size` (spelled out in 0.13.4) and `--ds-tag-line-height` (renamed by its own entry in this release) are different tokens on the same element.",
       "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing - the tag's label quietly falls back to `--font-weight-bold`.",
       "restore": null,
       "searchHints": [

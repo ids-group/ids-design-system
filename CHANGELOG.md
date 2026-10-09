@@ -1,5 +1,450 @@
 ## Unreleased
 
+### Breaking
+
+- **`--ds-waterfall-chart-skeleton-height` is removed.** The waterfall skeleton draws floating
+  steps on the chart's own plot height; delete the declaration.
+
+- **`--chart-skeleton-h` is removed.** No component reads it, so a declaration of it sets nothing;
+  delete the declaration.
+
+- **`dsTooltipClippedLead` is removed from `TooltipDirective`.** A `ds-table` header with a `hint`
+  needs nothing in its place: its `dsDefinitionTerm` button shows its own clipped label in bold
+  above the hint. Anywhere else, delete the binding, or write the lead into the string:
+  `[dsTooltip]="'**' + lead + '**\n' + tip"`.
+
+- **`dsTooltipTextSelector` is removed; `dsTooltipWhenClipped` takes the selector.** One attribute
+  now says both "only while clipped" and "which element to test": `dsTooltipWhenClipped=".label"`
+  tests and discloses the element it matches inside the host, and a boolean or the bare attribute
+  still tests the host. Replace the pair `dsTooltipWhenClipped dsTooltipTextSelector=".label"` with
+  `dsTooltipWhenClipped=".label"`. Where the clip test is bound, bind the selector or `false`:
+  `[dsTooltipWhenClipped]="truncate ? ':scope > .cell' : false"`. The input type widens from
+  `boolean` to `boolean | string`, and `TooltipDirective` no longer exposes `hostElement` and
+  `isClipped()`. Its text-resolution, positioning and focusable-ancestor internals were reworked
+  with the merge: the private `textElement`, `positionFor` and `listenToFocusableAncestor` are gone
+  and a private `ancestorFocusTrigger` is new, so a subclass that overrode or declared one of those
+  names must adjust.
+
+### Added
+
+- **`TableColumn.minWidth` sets the narrowest a `ds-table` column gets, in px with the padding.**
+  A `truncate` column without `width` stops shrinking at it and the table scrolls sideways
+  instead: `{ key: 'email', label: 'Email', truncate: true, minWidth: 160 }`. Ignored when `width`
+  is a number.
+
+- **`styles/target` gives an icon-only control of yours the library's 24px target.**
+  `@include target.min-size` last in its rule: the box keeps its size, a transparent `::before`
+  centred on it takes the pointer over at least `--hit-xs`, and the focus ring is drawn on that
+  target, 24px across. The ring follows `--focus-ring-offset`, so `[data-focus='edge']` draws it
+  2px and `[data-focus='inset']` 4px inside the target's edge. `$ring-on-target: false` leaves the
+  ring where the control's own rule draws it, for a control set beside text; `$position: null` for a
+  control that is already positioned.
+
+- **`skeletonCount` sets how many marks a chart's loading skeleton draws.** `ds-chart` and
+  `ds-column-chart` draw that many columns, `ds-pie-chart` that many slices and legend rows,
+  `ds-funnel-chart` that many stages and `ds-waterfall-chart` that many steps; the default is 5.
+  Once the data is known, the skeleton takes the data's own count. `ChartComponent`,
+  `ColumnChartComponent`, `PieChartComponent`, `FunnelChartComponent` and
+  `WaterfallChartComponent` gained the public `skeletonCount`. These classes, `LineChartComponent`,
+  `HeatmapChartComponent`, `ScatterChartComponent`, `SelectComponent`, `MultiSelectComponent` and
+  `AutocompleteComponent` gained and lost skeleton members, named in the migration manifest; a
+  subclass declaring one of those names must rename it.
+
+- **`styles/component-base` gives a component of yours the base the library's components carry.**
+  `@include component-base.rules` first in a component stylesheet sets `border-box`, the inherited
+  font on form controls, zero heading margins and the base focus ring on that component's own
+  elements, whether or not the app loads `styles/reset` and `styles/focus`.
+
+- **The package ships an ESLint plugin and a stylelint plugin that flag API and tokens the library
+  has removed or renamed.** Import them from `@ids-group-ltd/ids-design-system/eslint` and
+  `@ids-group-ltd/ids-design-system/stylelint`. The ESLint plugin is a flat-config object with seven
+  `problem` rules under the `ids-design-system/` namespace, each running on `**/*.ts` and `**/*.html`
+  (the template rules need your `@angular-eslint/template-parser`): `no-removed-inputs`,
+  `no-removed-outputs` and `no-removed-values` flag a template binding, listener or static attribute
+  value for an input, output or value the library dropped, renamed or remapped; `no-renamed-selectors`
+  flags a renamed element in templates and in `querySelector`, `closest`, `matches` and `css` strings;
+  `no-renamed-imports` flags a removed or renamed symbol imported from the package and autofixes a
+  pure rename across the file; `no-removed-members` flags a class member that now overrides nothing
+  on a class that extends or implements one of ours; and `no-removed-tokens` flags a removed or
+  renamed `--*` custom property in TS strings and template attributes and autofixes a rename.
+  `idsDesignSystem.configs.recommended` turns all seven on at `'error'`. The stylelint plugin adds
+  the one rule `ids-design-system/no-removed-tokens`, which flags removed or renamed `--*` properties
+  in declarations and values and autofixes a rename. The token rules match a whole name, so
+  `--x-warn` is not flagged inside `--x-warning`.
+
+- **Both plugins take a `from` and a `to` version, so an upgrade reports only what changed across
+  it.** Without a range the token rules list every removal and rename back to 0.2.0, and the other
+  ESLint rules back to 0.4.0. With `idsDesignSystem.configs.recommendedFrom('0.13.4', '0.14.5')`, `['error', { from: '0.13.4', to: '0.14.5' }]`
+  on one ESLint rule, or `[true, { from: '0.13.4', to: '0.14.5' }]` on
+  `ids-design-system/no-removed-tokens`, a removed or renamed name from 0.13.4 or earlier, or from
+  after 0.14.5, is left out. `from` is exclusive and `to` inclusive; either can stand alone, and the
+  unreleased version counts unless `to` is set.
+
+- **`--ds-loading-overlay-radius` rounds the corners of the `ds-loading-overlay` scrim.** It
+  defaults to `0`. Set it to the radius of the container the overlay covers, so the blurred scrim
+  ends at the container's own rounded edge instead of in square corners.
+
+- **`dsTooltipPinOnClick` keeps a tooltip open after a click.** With it the tip opens on hover and
+  focus with no delay, and a click on the host keeps it open after the pointer leaves until a click
+  outside, `Escape` or blur; a second click closes it. Without it a click closes the tip as before.
+  While pinned the host carries `data-ds-tooltip-pinned`. Every pinned trigger of the library shows
+  the same cue, with no fill: `--accent-strong` ink, and for a text trigger a 2px solid accent
+  underline. Hovering a pinned text trigger thickens the underline to 3px, and pressing it adds the
+  `--surface-muted` press fill; a pinned icon takes a `--surface-muted` circle on hover and a
+  `--border-default` circle on press. `@include pinned.cue()`, `pinned.cue-hover()` and
+  `pinned.cue-pressed()` from `styles/pinned` (`$underline: false` for an icon) give your own
+  pin-capable trigger the same cue, its hover and its press.
+  Use it on info and definition triggers only, never on a control whose click acts.
+  `TooltipDirective` gained the public `dsTooltipPinOnClick`, protected `onClick` and
+  `onPointerLeave`, and the private `document`, `hostPinOnClick`, `pinsOnClick`, `pin` and
+  `unpin`. A subclass declaring one of those names must rename it.
+
+- **`ds-info-hint` is an icon button with a pinned tooltip.** `<ds-info-hint
+  ariaLabel="About conversion rate" text="…" />` renders a 14px question-mark icon button named by
+  `ariaLabel`, and `icon="info"` swaps the question mark for an "i"; `text` shows on hover and focus, describes the button, and stays open after a click.
+  The icon darkens on hover, sits on a `--surface-muted` circle while pressed, and turns
+  `--accent-strong` while pinned.
+  `InfoHintComponent` is exported from the package root.
+
+- **`dsDefinitionTerm` marks a term that carries its definition, on any element.**
+  `<span dsDefinitionTerm="…">term</span>` keeps the surrounding text style with a dotted underline
+  in `--text-tertiary`, takes the focus ring, shows the definition on hover and focus, and pins it
+  on click; the attribute value is the tooltip text. While the term is clipped, its definition opens
+  with the term's own text in bold, a line break, then the definition; a definition that already
+  contains the term's text is left as it is. On a host other than `<button>` it adds
+  `tabindex="0"`, `role="button"`, and `Enter` / `Space` act as a click; on a `<button>` it sets
+  `type="button"`. Hover makes the underline solid in `--text-secondary`, a press (a click held, or
+  `Enter` / `Space` held on a non-button) tints the term
+  with `--surface-muted`, and a pinned term turns `--accent-strong` with a 2px solid accent underline; no
+  state changes its size. `[pinOnClick]="false"` turns the pin off where the click
+  already acts. The directive brings its own styles: no stylesheet import is needed, including in an app that
+  assembles the style partials one by one.
+  `DefinitionTermDirective` is exported from the package root.
+
+- **`dsTooltipArrow` turns a tooltip's arrow off.** `[dsTooltipArrow]="false"` draws the panel with no
+  arrow pointing at the host; the default is `true`, so every tooltip keeps its arrow until it is set.
+  `TooltipDirective` gained the public `dsTooltipArrow` and `TooltipPanelComponent` the public
+  `arrow`, so a subclass declaring either name must rename it.
+
+- **`text-clip.inline-axis` and `text-clip.line-clamp($lines)`** join
+  `text-clip.single-line-ellipsis` in `styles/text-clip`. `inline-axis` clips a row sideways and
+  leaves the block axis visible; `line-clamp` clamps a block to `$lines` lines at
+  `line-height: normal`, the one line-height every font sizes to its own glyphs, so neither cuts a
+  glyph whatever the font.
+
+- **`dsTooltip` renders `**bold**`.** Text between a pair of `**` is bold; `\*\*` is a literal `**`
+  and an unpaired `**` stays as typed. The panel builds its content from the parsed text, so no
+  markup in a string is interpreted as HTML. Nothing else is parsed: no italics, code, lists or
+  tags. `dsTooltipWhenClipped` with no `dsTooltip` shows the host's text exactly as written, even
+  where it contains `**`. `TooltipPanelComponent` gained the protected `segments`, and
+  `TooltipDirective` the private `ownText` and `leadsWithOwnText`, so a subclass declaring one of those
+  names must rename it.
+
+- **`--ds-date-picker-max-width` caps the width of `ds-date-picker`.** It defaults to `100%`, so
+  nothing changes until it is set. With `fullWidth`, the field fills its container up to the cap,
+  which keeps it from spanning a wide dialog or form column; without `fullWidth`, the field stays as
+  wide as its date format and never gets narrower than it.
+
+- **`ds-bar-chart` takes `labelPosition`.** `labelPosition="start"` puts each label in a column
+  before its bar, on the bar's line, and lines up labels, bars, values and percents in columns
+  across rows; the default `'top'` keeps the label above the bar. `BarChartLabelPosition` is its
+  type. `--ds-bar-chart-label-column-max-width` (default `40%`) caps the label column, and under
+  `'start'` `--ds-bar-chart-row-gap` defaults to `--space-3` (`--space-5` under `'top'`).
+
+- **A `ds-bar-chart` row can hold rows of its own.** `BarChartRow.children` nests rows under a row
+  behind a disclosure button after its label, closed at first. A child's bar and derived percent
+  are shares of its parent's value, not of `max`; it takes the parent's `color` and `showPercent`
+  unless it sets its own, draws at `--ds-bar-chart-child-fill-opacity` (default `0.55`), and is
+  listed in the data table whether or not its group is open. One level deep. With `interactive`,
+  the row carries `aria-expanded`, and Right opens a closed group and Left closes an open one.
+
+- **`BarChartRow` takes `hint`, `emphasis`, `showPercent` and `detached`.** `hint` turns the label
+  into a defined term: a dotted underline, and the hint in a tooltip on hover and keyboard focus,
+  announced as the label's description. `emphasis` prints the label in bold. `showPercent` prints
+  or hides that row's percent, overriding the chart's. `detached` marks a row that is not a part of
+  the others, such as a total of those who finished or left: a dashed divider in
+  `--ds-bar-chart-divider-color` separates it from the row before, and `partOfWhole` gives it no
+  share. A chart with any `hint` or `children` takes `role="group"` instead of `role="img"`, so the
+  buttons inside stay reachable. A chart without the new fields renders as before.
+  `BarChartComponent` gained the public `labelPosition`, the protected `isExpanded`, `toggleRow`,
+  `hintId`, `holdsControls`, `percentColumn`, `entries`, `showsSkeleton` and `reloading`, and the private `idPrefix` and
+  `expanded`, so a subclass declaring one of those names must rename it.
+
+### Changed
+
+- **`ds-chart`, `ds-column-chart`, `ds-line-chart`, `ds-pie-chart`, `ds-funnel-chart`,
+  `ds-waterfall-chart`, `ds-heatmap-chart` and `ds-scatter-chart` keep their plot on screen while
+  they reload.** With `loading` set and data on screen, the plot, its axes and its legend stay
+  under the scrim and spinner of `ds-loading-overlay`, which reaches 8px past the plot and leaves
+  the caption uncovered; the plot takes no focus or pointer until `loading` clears. They drew the
+  skeleton in its place. The skeleton shows only while there is no data: pass empty data while
+  `loading` is set to show it on every load. The internal `ChartStatesComponent` gained `reloading`,
+  `dataTable` and `shimmer`, and the internal `ds-chart-skeleton` element draws the axis skeleton.
+- **A chart's loading skeleton takes the chart's own shape and size.** `ds-chart` and
+  `ds-column-chart` draw the axes with label placeholders and columns, `ds-line-chart` a line,
+  `ds-pie-chart` its ring in slices with legend rows, `ds-funnel-chart` narrowing stages over the
+  stage table, `ds-waterfall-chart` a total, floating steps and a closing total, `ds-heatmap-chart`
+  a cell grid with its labels and scale, and `ds-scatter-chart` its grid lines and labels with no
+  dots. Each is laid out on the drawn chart's value space, plot height and gutters, and a data-table
+  disclosure keeps its room, so the card keeps its height when the data arrives. A
+  `--ds-line-chart-placeholder-height` now sizes the line skeleton with its axis labels included.
+- **`ds-heatmap-chart` is as wide as its grid.** The host is `inline-size: fit-content`, capped at
+  its container, so the card, the skeleton and the reload overlay match the grid instead of filling
+  the row; a wider grid still scrolls inside it. To fill the container again, set
+  `inline-size: auto` on it from a component stylesheet, or as `:root ds-heatmap-chart` from a global
+  one: a bare `ds-heatmap-chart { inline-size: auto }` there loses to the component's own host rule.
+- **`ds-select`, `ds-multi-select` and `ds-autocomplete` load into the list itself.** With
+  `loading` set and no options, the list shows three placeholder option rows; with options, they
+  stay under a `ds-loading-overlay` over the list, inert until `loading` clears. Both replace the
+  spinner row. In `ds-multi-select` the filter input and select all stay live. The overlay host
+  sits between the panel and the list and ships in `styles/dropdown-overlay`.
+
+- **Overlay panels, `ds-modal`, `ds-toast`, `ds-banner` and `ds-alert` enter with `ds-fade-in`
+  instead of `ds-scale-in`.** A tooltip, popover, select or menu panel, a submenu, a modal card, a
+  toast, a banner and an alert now fade in where they stand, without growing or travelling. The
+  scale entrance re-rasterised the text as it ended, so the glyphs drew heavier during the entrance
+  and then thinned and stepped a pixel as it settled; the fade does not. `--ds-overlay-enter-scale`, `--ds-overlay-enter-offset`, `--ds-modal-enter-scale`,
+  `--ds-toast-enter-scale`, `--ds-banner-enter-scale` and `--ds-alert-enter-scale` still work once the
+  matching `--ds-*-enter-keyframes` is set to `ds-scale-in` or `ds-slide-in`.
+- **A closing `ds-toast` fades where it stands.** It rose 8px while it faded.
+- **Chart marks and their labels no longer travel in.** A `ds-funnel-chart` stage grows from 96% while
+  it fades in instead of rising 4px, and the value labels of the bar, column, waterfall, heatmap,
+  pie and funnel charts and the funnel's table rows fade in where they stand. A `ds-pie-chart` ring
+  grows from 96% while it fades in, without the 30° turn.
+- **A `ds-menu-item` submenu stays open while the pointer heads for it.** Moving diagonally from
+  the item to its submenu crosses the items below it, and a crossing slower than 150ms closed the
+  submenu and opened the next one. The pointer may now cross them for as long as it stays inside
+  the triangle from where it left the item to the submenu's near edge; the submenu closes once
+  the pointer leaves that triangle or rests in it for 300ms, and an item it rested on then opens
+  its own submenu. Moving from the submenu back onto its item keeps it open.
+  `MenuItemComponent` gained the public `activateHover` and the private `aim`. A subclass
+  declaring one of those names must rename it. It lost the private `closeTimer` and
+  `clearCloseTimer`, so a subclass member of either name no longer collides.
+
+- **`text-clip.single-line-ellipsis` clips the inline axis only.** It clipped both axes with a
+  4px margin, which a font taller than the line box by more than that overran. Ink above and
+  below the box now paints over whatever sits there, as it would in any unclipped box.
+- **A `ds-stat` value clamped with `--ds-stat-value-lines` sets `line-height: normal`.** At a
+  flat line-height the clamp's edge ran through the strip where the last line's descenders and
+  the next line's accents overlap. A clamped value is taller: a tile whose value fills two
+  lines at the default size grows from 147 to 165px in Mulish. An unclamped value keeps its flat
+  line in a browser with container style queries; in one without, it takes `line-height: normal`
+  as well.
+- **`ds-bar-chart` keeps its rows on screen while it reloads.** With `loading` set and rows in
+  `data`, the rows stay under the scrim and spinner of `ds-loading-overlay`, the one `ds-table`
+  uses on a reload, which covers the whole card to its rounded corners; the chart takes no focus or
+  pointer until `loading` clears. It drew skeleton rows in
+  their place. Skeleton rows show only while `data` is empty, and now take the label, value,
+  percent and track boxes of a drawn row, so the rows keep their height when data arrives. To show
+  the skeleton on every load, pass an empty `data` while `loading` is set.
+- **A `**` in an existing tooltip string now makes text bold.** Write `\*\*` where the asterisks
+  are meant literally.
+- **`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a
+  slot.** Such content renders in the body by design, so neither the console nor a mirrored toast
+  reports it any more, and an attribute that names no slot (a directive such as `cdkDrag`) is not
+  reported as an unknown slot. Rendering is the same. `ModalComponent`, `ModalCardComponent` and
+  `DrawerComponent` lost the private `unslotted`, so a subclass member of that name no longer collides.
+
+- **A `ds-table` column with `truncate` and no `width` grows to its text instead of clipping at
+  240px.** The other columns get their content width first; such a column takes what they leave, up
+  to the widest value among all filtered rows, on every page, and clips at its column width when
+  there is less, down to its header label, so it does not push the table into horizontal scroll.
+  In a table that scrolls sideways anyway it clips at 240px of text, or at its `minWidth`. A value
+  that was cut at 240px beside empty space now shows whole. To keep the 240px cap everywhere, set
+  `width: 272` on the column (240 plus the cell padding).
+  `TableComponent` lost the protected `clipWidth` and gained the protected `clipGrows`,
+  `clipMaxWidth` and `clipMinWidth` and the private `growingClipColumns`, `clipCapsSet`, `clipFit`,
+  `clipFitWidth`, `textCanvas`, `measureGrowingClips`, `widestValue` and `splitGrowingClips`, so a
+  subclass declaring one of those names must rename it.
+
+- **`DsIntl` gains a required key: `chart.rowsUnder: (label: string) => string`** (default
+  `` (label) => `Rows under ${label}` ``), the name of a bar-chart group's disclosure button. A
+  complete `DsIntl` dictionary, or a complete `chart` section of one, declared as a typed object
+  stops compiling until it lists it. Overrides passed to `provideDsIntl` are partial and need
+  nothing.
+
+- **A `ds-table` header label with a `hint` is a `button[dsDefinitionTerm]`.** A plain label pins
+  its hint on click and takes the term's hover, pressed and pinned states; a sortable one sorts on
+  click and pins nothing.
+
+### Deprecated
+
+- **`styles/skeleton-shimmer` emits nothing, and `styles/ds` no longer forwards it.** `ds-skeleton`
+  carries its own reduced-motion opt-out. The partial stays in the package as an empty file; delete your
+  `@use 'styles/skeleton-shimmer'`.
+
+### Fixed
+
+- **A loading `ds-select`, `ds-multi-select` or `ds-autocomplete` list takes no keys.** With
+  `loading` set over options already shown, the arrow, `PageUp` / `PageDown`, `Home` / `End` and
+  `Enter` keys moved the active row and picked an option under the inert scrim. They do nothing
+  until `loading` clears, `aria-activedescendant` points at no option meanwhile, and the field
+  itself carries `aria-busy="true"`. Typing in the filter and the multi-select's select-all row stay
+  live. `SelectComponent`, `MultiSelectComponent` and `AutocompleteComponent` gained the
+  protected `listInert`.
+
+- **A clipped `dsTooltipWhenClipped` value is reachable by keyboard wherever it sits.** A host
+  that was not focusable, inside no focusable control (a code in a clickable card or row, a value in
+  a plain table cell), showed its full text on hover only. It now takes `tabindex="0"` while it is
+  clipped, so Tab stops on it and opens the tip, and it loses the stop once its text fits. A host
+  that is focusable, sits inside a control or widget role, or holds a control is left as it was; a
+  `tabindex` you set is never touched, and `tabindex="-1"` keeps a clipped value out of the Tab order. Every
+  host one resize reaches is measured before any of them takes or loses its stop, so a long table
+  with clipped columns lays out once per resize rather than once per host.
+
+- **The keyboard focus ring is rounded on elements that declare no radius.** The close buttons of
+  `ds-banner`, `ds-alert`, `ds-toast`, `ds-drawer` and `ds-modal-card`, the `ds-dropzone` remove
+  button, the `ds-table` column filter button and cell link, a focusable `ds-sparkline` and
+  `ds-tabs` panel, and a middle `ds-accordion-item` header drew a square ring; they take
+  `--focus-ring-radius` now. The `ds-number-stepper` step buttons and the `ds-split-button` segments
+  round only their outer corners and keep their shared seam square.
+  The radius is set at zero specificity in `styles/focus`, and in each component's base layer for
+  its own elements, so any radius an element declares wins; an element of yours that paints a fill or border and declares none rounds its corners while
+  focused. Declare its `border-radius` to keep it square.
+
+- **The close `×` sits in the centre of its box and focus ring.** The close buttons of `ds-banner`,
+  `ds-alert`, `ds-toast` and the `ds-dropzone` remove button laid the icon on a text line, up to 2px
+  below or beside the centre of a box that was not square; the `ds-drawer` close icon sat low in a
+  box that was already square. They centre the icon in a square box now: 20px in `ds-banner`, 18px
+  in `ds-alert`, `ds-toast` and `ds-dropzone`, 24px in `ds-drawer`. The banner and dropzone buttons
+  are 8px narrower.
+
+- **The `ds-table` column filter button is a 24px target.** It was the 12px icon alone, so its focus
+  ring hugged the icon. The target grows around the icon without changing the header height; the
+  icon sits `--space-2` after the label instead of `--space-1`, so a filtered header's label clips
+  4px sooner. The button is at full opacity while focused.
+
+- **A `ds-table` cell link's focus ring clears the text.** It was drawn inward, over the first and
+  last letter; it is drawn around the text now. In a `truncate` column the link clips its own text,
+  so the ring keeps the sides the cell's clip cut off; the cell's tooltip and ellipsis are as before.
+  That link is the element that clips, `a.cell-link.cell-clip-text` inside `span.cell-clip`: a rule
+  of yours for `ds-table .cell-clip a` still matches it, but one that sets `display`, `overflow`,
+  `white-space` or `text-overflow` there overrides the ellipsis; drop those declarations.
+
+- **The focus ring clears the text of a `ds-table` header label, a `ds-list-item` and a
+  `ds-breadcrumbs` link.** It was drawn inward, over the first and last letter; it is drawn 2px
+  outside the text now, in the padding already around it. Nothing moves at rest, and a header
+  term's pressed fill keeps its size.
+
+- **Every icon-only control takes the pointer over at least `--hit-xs` (24px).** The close and
+  remove buttons of `ds-alert`, `ds-banner`, `ds-toast`, `ds-dropzone` and `ds-tag`; the clear `×`
+  of `ds-input`, `ds-search`, `ds-select`, `ds-autocomplete`, `ds-multi-select`, `ds-time-picker`
+  and the `ds-sidenav-footer` search; the `ds-input` password toggle, the `ds-date-picker` calendar
+  toggle, the `ds-description-item` copy button, the `ds-bar-chart` row toggle, the arrows of the
+  `ds-table` width and column panels, an icon-only `ds-breadcrumbs` item and `ds-info-hint` took a
+  click only on their own box, under 24px on at least one side. Each keeps the size it is drawn at and takes the pointer
+  over 24px around it; nothing around it moves but the arrows of the `ds-table` width and column
+  panels, which sit `--space-2-5` apart instead of `--space-1` so their targets do not overlap. Its
+  focus ring is drawn on the edge of that target, 24px across, except on `ds-info-hint` and an
+  icon-only breadcrumb, whose ring stays on the icon beside their text. Inside a container that sets `data-focus="inset"` or `"edge"` the ring follows that mode and shrinks with it, as the `ds-table` column filter does (16px), since the table sets inset on itself. The ring's corners take the control's own radius, 4px by default, on every one of them. Raising `--hit-xs` raises every one of these targets. The `ds-input` clear button shows its
+  own focus ring; it was cut away with its icon.
+
+- **The `ds-date-picker` month and year arrows sit in the centre of their button.** The browser's
+  button padding left the 14px icon 1px right of the centre of its 24px box.
+
+- **A tooltip and a `ds-menu-item` submenu close when anything under them scrolls.** Inside an
+  `overflow: auto` container they stayed where they opened while their trigger scrolled away. They
+  close now on a scroll of the window or of any scroll container, as
+  `ds-popover` and the picker panels already did; a pinned tooltip unpins.
+- **A bordered `ds-table`'s reload overlay follows its rounded corners.** The scrim over the rows
+  ended in square bottom corners outside the rounded border; it now takes the table's radius,
+  `--ds-table-radius` or `--ds-radius-control`.
+
+- **A tooltip's arrow points at the centre of its trigger.** It sat at the middle of the panel, so
+  a panel pushed off a viewport edge pointed past a trigger near that edge.
+
+- **A `<div actions>` wrapper lays its buttons out like buttons projected one by one.** In the
+  footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet`, the buttons inside a
+  `<div actions>` (or a `<div drawer-footer>`) touched; they now take the footer's gap, alignment
+  and, in `ds-modal-card`, its stacking when the row runs out of width. The wrapper gets
+  `display: contents` at zero specificity, so a `display` you set on it yourself still wins and keeps
+  your own layout.
+
+- **Text keeps its ascenders and descenders under any font.** A box that truncates text clipped
+  both axes, so where the font's ascent plus descent is taller than the line-height, the tails of
+  g, j, p, q and y and the marks above Й, Ё and Å were cut flat, by more the taller the font you
+  set in `--font-sans`. These now clip along the inline axis only and keep their size:
+  `ds-breadcrumbs` (the row and each label), the `ds-stat` label and value, every label that ends
+  in an ellipsis (`ds-select`, `ds-multi-select` and `ds-autocomplete` values and options,
+  `ds-sidenav-item`, `ds-sidenav-footer`, `ds-tree`, `ds-banner`, `ds-table` headers and
+  cells), the chips of a `ds-multi-select` or `ds-autocomplete` in fit mode, the `ds-date-picker`
+  value, the `ds-filter-bar` row, and `ds-table` headers with resizable columns. A long label
+  still ends in an ellipsis and a long trail still clips at the row's end.
+
+- **A pinned chart tooltip takes the pointer.** Its text can be selected and a link in a
+  `tooltipTemplate` clicked; the panel's content ignored the pointer even while its pane was pinned,
+  so a press on it went through to the pane. An unpinned tooltip still lets the pointer through to
+  the plot, and a `pointer-events: auto` you set on an element of your `tooltipTemplate` is still
+  what makes it clickable while `tooltipLingerMs` keeps an unpinned panel open. The internal
+  `ChartTooltipDirective` behind `dsChartTooltip` lost the private `closeOnEscape`, so a subclass
+  member of that name no longer collides.
+- **A `truncate` column dragged with `dsTableResize` clips at its dragged width.** A column with a
+  `width` kept cutting its text at that width after being dragged wider, and could not be dragged
+  narrower than it plus its padding.
+- **A `truncate` column with a numeric `width` is that wide.** Its text was clipped at `width`
+  and the cell padding came on top, so `width: 240` rendered a 272px column (264px at compact
+  density) while a column without `truncate` rendered 240px. The text now clips inside the
+  declared width, 32px shorter at the default density.
+
+- **`ng add` with a `--project` that does not exist stops with an error naming it.** It printed the
+  generic "add it manually" message and changed nothing, which hid the typo.
+
+- **`ng add` no longer adds a second `@use` of the package styles.** A line you wrote yourself with
+  double quotes, `as` or `with (...)` was not recognised, and Sass then refused the duplicate
+  namespace.
+
+- **`check-overrides` reports `--ds-*` values set from templates and code.** `[style.--ds-*]`
+  bindings and `setProperty('--ds-*', …)` calls were never matched, so a stale token set that way
+  went unreported.
+
+- **Reduced motion stops the skeleton shimmer in an app that does not load `styles/ds`.** The opt-out
+  lived in `styles/skeleton-shimmer`, so an app assembling the partials one by one kept the wave
+  running for readers who asked for less motion. `ds-skeleton` carries it in its own styles now.
+
+- **The "no matches" row of `ds-select`, `ds-multi-select` and `ds-autocomplete` keeps its type
+  without `styles/typography`.** Its family, weight and line height came from the `.t-s` class,
+  so without that partial the row fell back to the page's font (the browser's serif on an
+  unstyled page). `styles/dropdown-overlay` sets them now, from the same `--ds-typography-s-*`
+  hooks, and the row no longer carries `t-s`; with typography loaded it renders as before. A rule
+  of yours that reached the row through `.t-s` matches nothing: select `.ds-dropdown-panel .empty`.
+
+- **Components keep their size, fonts and focus ring in an app that does not load `styles/reset`
+  or `styles/focus`.** Each component now sets `box-sizing: border-box` on its host and its own
+  elements, puts its form controls in the inherited font, clears its heading margins and draws the
+  base focus ring on its own focusable elements. Without `styles/reset`, a default `ds-input` field
+  and a `ds-input` inside `ds-field-group` grew taller, and a host with a border took the browser's `content-box`; without `styles/focus`, buttons such as the
+  `ds-number-stepper` steps and the close buttons of `ds-banner`, `ds-toast`, `ds-modal-card` and
+  `ds-drawer` showed the browser's own focus ring. A height animation such as an expanding
+  `ds-sidenav-group` animates without the reset as well.
+
+- **`ds-container` with `size="sm|md|lg"` and the responsive rail of `ds-app-layout` work without
+  `bp.emit-vars`.** Both fall back to the library's breakpoints; `ds-container` went full-bleed
+  and the rail stayed in desktop layout. Your own `--bp-*` still win where you set them, and the
+  dev-mode warning about a missing `--bp-lg` is gone.
+
+- **`ds-bar-chart` prints `—` for a row with a non-finite value.** A `NaN` or `Infinity` value, or a
+  `[low, high]` pair with a non-finite end, printed `0` and `0.0%` as though it were a reading of zero.
+  The row now draws no bar and shows `—` as its value, as its percentage (unless the row sets
+  `percent`) and as its share in the data table under `partOfWhole`. The generated summary leaves
+  such a row out of its lowest and highest readings, and reads `—` when no row has a value.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| `--ds-waterfall-chart-skeleton-height:` | the waterfall skeleton draws floating steps on the chart's own plot height and reads no height token | nothing |
+| `--chart-skeleton-h:` | no component reads the token | nothing |
+| `@use 'styles/skeleton-shimmer'` | the partial emits nothing; `ds-skeleton` styles its own reduced-motion stop | nothing |
+| a hand-built info button: `name="info"` on a `ds-icon` inside a `<button>` that carries `dsTooltip` | `ds-info-hint` renders the button, the icon and the pinned tooltip | `<ds-info-hint ariaLabel="…" text="…" />` |
+| a hand-built term button styled with `underline dotted` that carries `dsTooltip` | `dsDefinitionTerm` carries the underline, the focus ring, the keyboard access and the pinned tooltip | `<span dsDefinitionTerm="…">` |
+| a cell template wrapping the value in an element styled `width: 0; min-width: 100%` with an ellipsis, plus `dsTooltipWhenClipped` on it, so a column without `width` clips at its own width | `truncate: true` on a column without `width` clips at the column width and shows the full value in a tooltip | `truncate: true` on the column; keep the template only for markup it adds besides the value |
+| `--ds-overlay-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of overlay panels | nothing |
+| `--ds-modal-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of a modal card | nothing |
+| `--ds-toast-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of a toast | nothing |
+| `--ds-banner-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of a banner | nothing |
+| `--ds-alert-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of an alert | nothing |
+| `tabindex="0"` added to a `dsTooltipWhenClipped` host only so the keyboard reaches it | the host takes `tabindex="0"` by itself while it is clipped, and no stop while its text fits | nothing; keep it where the value must stay a tab stop when it fits |
+
 ## 0.14.8 — 2026-10-06
 
 ### Added
@@ -13,16 +458,24 @@
 
 - **`dsTooltipClippedLead` puts a line above a tooltip while its host is clipped.** Set it to the
   host's own text and the tip reads that text, a line break, then `dsTooltip`; while the host shows
-  all of its text the tip is `dsTooltip` alone. A tooltip now keeps a line break written into its
-  text. `TooltipDirective` gained the public `dsTooltipClippedLead`, so a subclass declaring that
-  name must rename it.
+  all of its text the tip is `dsTooltip` alone. `TooltipDirective` gained the public
+  `dsTooltipClippedLead`, so a subclass declaring that name must rename it.
+
+### Changed
+
+- **A tooltip keeps a line break written into its text.** A `dsTooltip` string, or the text a
+  `dsTooltipWhenClipped` host discloses, that holds a newline now breaks there; it read as a space
+  before. Runs of spaces still collapse, and a text on one line is unchanged. A string built from a
+  data value with a newline, or from a template literal written across several lines, now shows one
+  row per line; join the lines with a space to keep the old look.
 
 ### Fixed
 
 - **A `ds-table` header label wider than its column ends in an ellipsis.** It ran past the column over
   the next header, and the last column's was cut by the scroll edge. The label now clips inside its
   column; the sort icon and the filter button stay visible, and the clipped label still shows in a
-  tooltip. A header that fits is unchanged.
+  tooltip. A header that fits looks the same, but every label now sits in a `.th-text` span, which
+  carries the ellipsis, inside `.th-label`.
 
 ## 0.14.7 — 2026-10-05
 
@@ -133,10 +586,11 @@
   band and the panel shows that point alone; Enter on it fires `pointClicked` as a click does.
   Enter on a band pins it and moving to another band lets the pin go; Escape steps back from a
   marker to the band and then closes the panel. The series markers are no longer Tab stops there;
-  charts whose pointer picks a mark are unchanged. A class extending `ChartComponent`,
-  `LineSeriesComponent` or `ColumnSeriesComponent` may collide with the members they gained
-  (`focusedCategory`, `axisPointElements` and the keyboard handlers); a colliding private one must
-  be renamed, since `override` cannot reach it.
+  charts whose pointer picks a mark keep their Tab stops and keys, except that Space on a line
+  marker no longer scrolls the page. A class extending `ChartComponent`, `LineSeriesComponent` or
+  `ColumnSeriesComponent` may collide with the members they gained (`focusedCategory`,
+  `axisPointElements` and the keyboard handlers); a colliding private one must be renamed, since
+  `override` cannot reach it.
 
 - **`styles/focus` emits its global rules only through `emit-rules`.** The base focus indicator
   (`:where(:focus-visible)`), the `ds-focus-ring-in` keyframes, the `data-focus` switch and the
@@ -475,8 +929,9 @@
   `ChartTooltipPanelComponent` gained `showsSwatches` and `swatches`; and the internal
   `ChartTooltipDirective` gained `dsChartTooltipSwatches`, `glide` and `glideFrom`. The `min` and
   `max` inputs of `HeatmapChartComponent` and the `max` and `maxSecondary` inputs of
-  `LineChartComponent` now carry a `numberAttribute` transform, so a subclass that redeclares one
-  must declare the same transform, and `tooltipLingerMs` on `ColumnSeriesComponent` and
+  `LineChartComponent` now carry a `numberAttribute` transform with the write type still
+  `number | null`, so a subclass that redeclares one compiles unchanged, and `tooltipLingerMs` on
+  `ColumnSeriesComponent` and
   `LineSeriesComponent` defaults to `500`. Build after upgrading; rename or mark `override` every member the
   compiler reports colliding. Subclassing a DS component is unsupported.
 
@@ -511,9 +966,10 @@
   over the top end of the plot, and the chart keeps its height when a mark is held. A captioned
   chart is unchanged, its control on the caption line.
 
-- **`ds-heatmap-chart`'s `min` and `max` and `ds-line-chart`'s `max` and `maxSecondary` accept a
-  static attribute.** Written as `min="0"` they now coerce through `numberAttribute`; before, only a
-  bound number (`[min]="0"`) compiled. A bound number still works.
+- **`ds-heatmap-chart`'s `min` and `max` and `ds-line-chart`'s `max` and `maxSecondary` coerce a
+  static attribute.** Written as `min="0"` they now pass through `numberAttribute` and hold a number;
+  before, they held the string. Their write type is still `number | null`, so under
+  `strictTemplates` the static attribute fails with TS2322 as before; keep `[min]="0"` there.
 
 ### Fixed
 
@@ -901,8 +1357,7 @@
   `ChartComponent.tooltipPreferBelow` is now `tooltipPinned`, and the internal
   `ChartTooltipDirective` drops `dsChartTooltipPreferBelow` for `dsChartTooltipPinned`. Delete every
   `[dsChartTooltipPreferBelow]` binding. A custom mark that hands `CHART_SCALES.reportTooltip` a
-  source renames its `preferBelow` field to `pinned`; a `pinned` panel takes the pointer so its text
-  can be selected. A `preferBelow` reached through a variable still compiles and is ignored. The
+  source renames its `preferBelow` field to `pinned`; a `pinned` panel's pane takes the pointer. A `preferBelow` reached through a variable still compiles and is ignored. The
   library's own charts need nothing.
 
 - **`--ds-chart-hatch-width` defaults to `1.5px` (was `3px`), and the stripe runs down the middle of
@@ -978,9 +1433,10 @@
   still gets en-US. To keep en-US: `provideDsConfig({ datePicker: { locale: 'en-US' } })`.
 
 - **`ds-dropzone` formats file sizes in the locale.** A listed file's size reads `DsConfig.locale`,
-  then `LOCALE_ID`; under a de-DE locale `1.5 MB` reads `1,5 MB`. Under en-US the text is unchanged
-  below 1000 MB and gains a group separator from 1000 MB (`1,024.0 MB`). To pin a dot decimal:
-  `provideDsConfig({ locale: 'en-US' })`, which also pins chart numbers and `ds-date-picker`.
+  then `LOCALE_ID`; under a de-DE locale `1.5 MB` reads `1,5 MB`. Under en-US the text gains a group
+  separator from 1000 KB up to 1 MB and from 1000 MB up (`1,000.0 KB`, `1,024.0 MB`), and is
+  unchanged everywhere else. To pin a dot decimal: `provideDsConfig({ locale: 'en-US' })`, which
+  also pins chart numbers and `ds-date-picker`.
 
 - **`ds-textarea` text size resolves `--ds-input-font-size`, then `--ds-field-font-size`, then
   `--font-size-s` (was fixed at `--font-size-s`).** A `ds-textarea` under an ancestor that sets
@@ -994,9 +1450,10 @@
   under neither draws exactly what it drew. To restore the grey hover: `ds-search {
   --ds-search-border-hover: var(--border-default); }`.
 
-- **Subclassing one of these breaks on a name collision.** Every one gained a member - most an
-  `intl` accessor and the `...Resolved` readbacks that pair with the nullable text inputs above, the
-  nine chart components also `renderReady`: `AccordionComponent`, `AccordionItemComponent`,
+- **Subclassing one of these breaks on a name collision.** Every one but `AuthLayoutComponent`,
+  `LineSeriesComponent` and the internal `ChartTooltipDirective` gained a member - most an `intl`
+  accessor and the `...Resolved` readbacks that pair with the nullable text inputs above, the nine
+  chart components also `renderReady`: `AccordionComponent`, `AccordionItemComponent`,
   `AlertComponent`, `AppLayoutComponent`, `AuthLayoutComponent`, `AutocompleteComponent`,
   `AvatarComponent`, `AvatarGroupComponent`, `BadgeComponent`, `BannerComponent`,
   `BarChartComponent`, `BreadcrumbsComponent`, `ChartComponent`, `ColumnSeriesComponent`,
@@ -1017,9 +1474,8 @@
   `ChartComponent.tooltipPreferBelow`, `ColumnSeriesComponent.onMarkBlur`,
   `LineSeriesComponent.onMarkerBlur` and the internal `ChartTooltipDirective.dsChartTooltipPreferBelow`.
   Build after upgrading; rename or mark `override` every member the compiler reports colliding
-  (TS4114, or TS2416 where the signature differs - `AuthLayoutComponent`'s `landmark` default moved),
-  and delete an override whose base member is gone. A method named like a removed member and declared
-  without `override` still compiles and is never called again. Subclassing a DS component is
+  (TS4114, or TS2416 where the signature differs), and delete an override whose base member is
+  gone. A method named like a removed member and declared without `override` still compiles and is never called again. Subclassing a DS component is
   unsupported.
 
 ### Added
@@ -1058,9 +1514,11 @@
 - **Six field-family tokens sit under every text-entry field's own token.** `--ds-field-border-color`,
   `--ds-field-border-color-hover`, `--ds-field-border-color-focus`, `--ds-field-text-color`,
   `--ds-field-placeholder-color` and `--ds-field-font-size` reach `ds-input`, `ds-textarea`,
-  `ds-select`, `ds-multi-select`, `ds-autocomplete` and `ds-search`; a per-component token such as
-  `--ds-input-border` still wins where set. The date, time and colour pickers, the number stepper and
-  the OTP cells are not in the family. Every default is the value each field already drew.
+  `ds-select`, `ds-multi-select`, `ds-autocomplete` and `ds-search`, all but
+  `--ds-field-border-color-hover` on `ds-search`, whose hover border follows its resting one; a
+  per-component token such as `--ds-input-border` still wins where set. The date, time and colour
+  pickers, the number stepper and the OTP cells are not in the family. Every default is the value
+  each field already drew.
 
 - **`ds-select`, `ds-multi-select` and `ds-search` take their own size and colour hooks.**
   `ds-select`: `--ds-select-border-color-focus` (read by the focused and the open trigger alike),
@@ -1221,7 +1679,7 @@
 - **The chart tooltip pane is inert unless the reading is pinned.** The pane is drawn over the plot
   it describes, so on a funnel or a tight category axis it covered the neighbouring marks and the
   mark underneath never saw the pointer - the panel named a segment the reader had already left.
-  A pinned pane takes the pointer again, so its text can still be selected. A rule of yours on
+  A pinned pane takes the pointer again; the panel's own content does not. A rule of yours on
   `.cdk-overlay-pane.ds-chart-tooltip-pane` that assumed `pointer-events: auto` needs
   `.is-pinned` added to it.
 
@@ -1454,7 +1912,7 @@
   first word. The grid and the `ds-table-expand` animation sit on `.expand-panel-inner`, and the
   projected template is wrapped in `.expand-panel-content`, the track the reveal clips. A rule of
   yours that reached your template's root through `.expand-panel-inner >` selects
-  `.expand-panel-content` now; `.expand-panel-cell > .expand-panel-inner` is unchanged.
+  `.expand-panel-content` now; `.expand-panel-cell > .expand-panel-inner` still matches.
 
 ### What you can now DELETE
 
@@ -1559,7 +2017,7 @@
 
   An unknown custom property is not an error. The declaration stays in the stylesheet, the
   component reads its own fallback, and the element draws at its default with no build error and
-  no console warning, so a missed rename is silent. Grep for the six spellings and the three
+  no console warning, so a missed rename is silent. Grep for the twelve spellings and the three
   named tokens above.
 
 - **`--ds-container-pad` is `--ds-surface-padding`.** It is the padding every surface component
@@ -1631,7 +2089,7 @@
 
   **Two of these fail quietly.** A static `sortDir="asc"` left behind is an unknown attribute:
   Angular leaves it on the DOM, the input keeps its default, and the table sorts by nothing with
-  no warning. And `[multi]="false"`, written to get a single-open accordion, becomes an unknown
+  no warning. And `multi="false"`, written to get a single-open accordion, becomes an unknown
   attribute against a default of `true` - the accordion opens several panels instead, silently.
   A property binding fails the build; a plain attribute does not.
 
@@ -1884,9 +2342,10 @@
   ```
 
   It only shows once something widens the button past its contents, so on an inline button the two
-  values are identical. Named values rather than a `justify-content` token: the shape a full-width
-  action wants is the label at one edge and the arrow at the other, and publishing the CSS property
-  would publish every other flex arrangement with it.
+  values are identical unless a message longer than the label widens it. Named values rather than a
+  `justify-content` token: the shape a full-width action wants is the label at one edge and the
+  arrow at the other, and publishing the CSS property would publish every other flex arrangement
+  with it.
 
 - **`ds-pagination` takes `size` and `layout`.** `size` is the sm/md/lg control scale the rest of
   the library uses, unset resolving `DS_CONFIG.control.size` and then `sm`, which is the height the
@@ -1915,9 +2374,10 @@
   `--ds-dropdown-empty-font-size` for the panel's no-results line; and
   `--ds-autocomplete-input-font-size`.
 
-  Every default is the value the component already drew, so a chart of the surface before and
-  after is identical. The no-results line takes `inherit` as its size default, which is what it
-  resolved to when it declared none.
+  Every default is the value the component already drew, except the pagination label's: `normal`
+  and `none` replace the `letter-spacing` and `text-transform` it inherited, so a label under an
+  ancestor that sets either stops following it. The no-results line takes `inherit` as its size
+  default, which is what it resolved to when it declared none.
 
   The empty line's tokens are named for the dropdown panel rather than spelled `--ds-empty-*`,
   because `--ds-empty-state-*` is a different component and the two would have sat one hyphen
@@ -1963,12 +2423,12 @@
   ```
 
   **It is the only chart whose mark count the caller decides**, so it is the only one that thins its
-  own data. SVG degrades by the number of NODES, not readings: the same data as a line is one
-  `<path>` and as a scatter it is one node per point, while Lighthouse warns at about 800 nodes and
-  errors at about 1400 on a page that may hold four more charts. Past FOUR times the plot's width in
-  marks - not two, where the saving is invisible and the loss of detail is not - the series is
-  decimated, a line under the plot says how many readings were thinned, and the annex table still
-  lists every one.
+  own data. SVG degrades by the number of NODES, not readings: the same data as a line with no
+  markers and no `interactive` is one `<path>` and as a scatter it is one node per point, while
+  Lighthouse warns at about 800 nodes and errors at about 1400 on a page that may hold four more
+  charts. Past FOUR times the plot's width in marks - not two, where the saving is invisible and the
+  loss of detail is not - the series is decimated, a line under the plot says how many readings
+  were thinned, and the annex table still lists every one.
 
   `decimator` picks how. `'minMax'`, the default, keeps each bucket's highest and lowest reading by
   construction, so the spike a reader is looking for cannot be the point that was dropped; it also
@@ -2070,7 +2530,7 @@
   separate. The heat scale runs the same hue across the full lightness range, 95% to 31%, which is
   6.9-10.6 with 55.0 end to end (OKLab).
 
-  **`--ds-chart-ramp-*` is unchanged and `ds-funnel-chart` looks exactly as it did.** The two scales
+  **`--ds-chart-ramp-*` is unchanged, so `ds-funnel-chart` keeps its stage colours.** The two scales
   want opposite things: a funnel's stages are a shape read at a glance, where a stage at either
   extreme reads as a different object rather than as the next step, and a heat map needs every step
   the eye can hold. `ds-heatmap-chart` is the only thing painting with the heat scale.
@@ -2195,7 +2655,7 @@
   `tooltipLingerMs` and `defaults` among them. `LineChartComponent` gained 24 (`curve`, `stack`,
   `yAxisLabel`, `secondaryAxisLabel`, `plot`, `plotHeight` and the rest) and lost 51 protected and
   private geometry members now that its plot is drawn by `ds-chart`, so a subclass that overrode one
-  of those overrides nothing. `LineSeriesComponent`, public now, gained 17 (`curve`, `dimOthers`,
+  of those overrides nothing. `LineSeriesComponent`, public now, gained 18 (`curve`, `dimOthers`,
   `highlighted`, `patterns`, `pinOnClick`, `stacked`, `tooltipAnchor` and their helpers). Every
   chart gained the `defaults` and the table rows it hands `ds-chart-data-table`:
   `BarChartComponent`, `ColumnChartComponent`, `FunnelChartComponent`, `PieChartComponent` and
@@ -2225,7 +2685,10 @@
   the pie's pair (`--ds-donut-chart-focus-color` / `-width` before the rename, now
   `--ds-pie-chart-focus-color` / `-width`), resolved into a private name no rule read: an override
   parsed, cascaded and changed no pixel. Each now points its pair at `--ds-chart-focus-ring-color`
-  and `--focus-ring-*`, which draws the ring.
+  and `--focus-ring-*`, which draws the ring. With neither pair set, a focused funnel stage or pie
+  slice draws no ring: the private pair falls back to `--focus-ring-*`, which the same chart sets
+  from that pair, and the cycle leaves both invalid. Set the chart's color and width tokens to get
+  the ring back.
 
 - **`--ds-table-head-height` is in the token reference, and the loading scrim honours it.** The
   hook, spelled `--ds-table-head-h` before this release, only ever existed as a string inside a
@@ -2325,7 +2788,8 @@
   `ProgressComponent` and `MeterComponent` are both `BarComponent`, and `ProgressVariant` is
   `BarVariant` — all from `@ids-group-ltd/ids-design-system/components/bar`. A subclass of either
   old class stops building; there is one class to extend now, and it carries every member both of
-  them had.
+  them had, except that `MeterComponent`'s protected `clamped` and `percent` are `clampedValue` and
+  `valuePercent` there.
 
   **A renamed `ds-meter` needs one more edit.** It was `aria-hidden` unless `ariaLabel` named it;
   `ds-bar` announces as a progress bar by default. Add `semantics="none"` where the figure is
@@ -2413,7 +2877,7 @@
   single-series chart ARE the categories and the marks of a grouped one are not. A flat list still
   takes the whole band, so a chart that was passing one stays exactly as it was. Stacked segments
   are separated by a 2px gap in the surface colour rather than a drawn rule, which survives print
-  and colour-vision deficiency. `stack="stacked"` and `ds-line-chart`'s `axisMode="stacked"` are
+  and colour-vision deficiency. `stack="stacked"` and `ds-line-chart`'s `yAxisMode="stacked"` are
   different things: series on top of each other, against two plots one above the other.
 
 - **`ds-donut-chart` takes `partOfWhole`, so its percentages can be turned off.** A ring always
@@ -2485,8 +2949,8 @@
 - **Hovering a legend item behaves as hovering the mark it names.** On `ds-donut-chart` the panel
   opened over the legend row rather than over the arc, so the reader was pointed at the label
   instead of the slice; on `ds-funnel-chart` the stage rows did nothing at all. Both now open the
-  same panel over the MARK and dim the rest of the plot, identical to pointing at the arc or the bar
-  directly, and the keyboard route follows wherever the legend carries it.
+  same panel over the MARK and, under `dimOthers`, dim the rest of the plot, identical to pointing
+  at the arc or the bar directly, and the keyboard route follows wherever the legend carries it.
 
 - **A chart tooltip opens against its mark, not against the row that holds it.** `ds-bar-chart`
   anchored the panel to the whole row — label, value and track — so it opened a row-height above
@@ -2504,7 +2968,8 @@
 
 - **Exported class member surface moved — only matters if you SUBCLASS one of these.**
   `ProgressComponent` and `MeterComponent` are gone; `BarComponent` carries every member both of
-  them had. `ChartTooltipDirective`, internal and not exported from the package root, gains
+  them had, with `MeterComponent`'s `clamped` and `percent` renamed `clampedValue` and
+  `valuePercent`. `ChartTooltipDirective`, internal and not exported from the package root, gains
   `dsChartTooltipPreferBelow`. `ColumnChartComponent` moved its drawing into the shared container
   and took several series, so it gained `thresholds`, `categories`, `geometry`, `tableRows`,
   `viewHeightPx`, `skeletonHeightPx`, `stack`, `resolvedSeries`, `seriesRefs`, `pinnedSeries`,
@@ -2532,7 +2997,8 @@
   on a coloured band read as an artefact rather than as a focus indicator. It is
   `--focus-ring-color` with a light keyline around it now — the keyline is what separates it from
   a mark of the same hue family, which is why the indicator is two tones either way.
-  `--ds-chart-focus-ring-color` and `--ds-chart-focus-halo-color` still set both.
+  `--ds-chart-focus-ring-color` and `--ds-chart-focus-halo-color` still set both; `white` and
+  `var(--static-ink)` are the old pair.
 
 - **A chart with nothing to draw keeps its axes.** `ds-line-chart` and `ds-column-chart` render
   the value axis and the category axis behind the empty, error and no-visible-series messages, so
@@ -2548,6 +3014,9 @@
 
 - **`indeterminate` is ignored unless `semantics` is `'progress'`.** Only a task has an unknown
   duration. Nothing that set it on `ds-progress` is affected, because that is the default.
+
+- **An indeterminate `ds-bar` holds still under reduced motion.** With `prefers-reduced-motion:
+  reduce` it fills its track without moving; `ds-progress` kept its sweep, at half speed.
 
 ### Fixed
 
@@ -2568,7 +3037,6 @@
   rather than overflows, so a locale whose compact numbers are wider than an English `3.5k` lost the
   leading digit of every tick - `3,5 тыс.` printed as `,5 тыс.`. The gutter is measured from the
   widest label that actually rendered, and `axisGutter` is the floor it will not go below.
-
 
 ## 0.13.2 — 2026-09-15
 
@@ -2736,7 +3204,7 @@
   <ds-line-chart [max]="5000" [categories]="months" [series]="series" />
   ```
 
-  Null, the default, keeps the derived axis, so every existing chart is unchanged. A maximum below
+  Null, the default, keeps the derived axis, so an existing axis is unchanged. A maximum below
   the data does not clip it — the larger of the two wins, because hiding a reading is worse than
   more headroom than you asked for. `maxSecondary` does the same for the axis a series reaches with
   `axis: 'secondary'`.
@@ -2756,12 +3224,11 @@
   How long the panel stays after the pointer leaves the mark. See the tooltip entry under Changed
   for what the default does and when to raise it.
 
-- **A pinned mark offers an `Unpin` control, and says which mark it is.** `ds-bar-chart`,
-  `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart` render a pill button above the plot
-  while a mark is pinned — Escape already released one, and a control that says so is what a reader
-  finds without knowing the key. `ds-donut-chart` and `ds-funnel-chart` also draw a pin glyph at the
-  pinned slice's or band's centre, so the plot itself carries which one is held rather than leaving
-  it to the panel; the glyph takes no pointer events. `--ds-chart-pin-size` sizes it, and the button
+- **A pinned mark offers an `Unpin` control, and says which mark it is.** All five charts render
+  a pill button above the plot while a mark is pinned — Escape already released one, and a control
+  that says so is what a reader finds without knowing the key. `ds-bar-chart`, `ds-column-chart`,
+  `ds-donut-chart` and `ds-funnel-chart` also draw a pin glyph on the pinned bar, column, slice or
+  band, so the plot itself carries which one is held rather than leaving it to the panel; the glyph takes no pointer events. `--ds-chart-pin-size` sizes it, and the button
   is `.pin-reset`.
 
   The internal mark-state interface behind it — not exported from the package root — gains a
@@ -2820,21 +3287,22 @@
   `legendMode="toggle"` to keep the checkboxes. `hiddenSeries` is unchanged in both modes, so a page
   driving it from a URL parameter needs nothing.
 
-- **A chart tooltip can be selected and dismissed with Escape, and reached with the pointer where
-  you ask for it.** The pane was inert and closed the instant the pointer left the mark, which left
+- **A chart tooltip can be dismissed with Escape, and reached with the pointer where you ask for
+  it.** The pane was inert and closed the instant the pointer left the mark, which left
   it unreadable at high zoom, unselectable, and impossible to clear without moving the pointer away.
 
   The pane takes the pointer now, and Escape closes the panel — it stays closed until the pointer
   visits another mark, so a reader who clears the screen keeps it cleared. Reaching the panel is
   `tooltipLingerMs`, which is `0`: the panel goes when the pointer does, because one left behind
   sits over the plot the reader has moved on to. WCAG 1.4.13's hoverable clause only bites where the
-  panel holds something to reach — a link, a figure, a selectable string — so set
+  panel holds something to reach — a link, a figure — so set
   `[tooltipLingerMs]="140"` on those charts, or `DS_CONFIG.chart.tooltipLingerMs` for an app whose
   tooltips all carry one. 140ms is what crossing the gap to a portaled panel takes at an ordinary
-  pointer speed.
+  pointer speed. The panel's own content does not take the pointer, so its text cannot be selected
+  and a link in a `tooltipTemplate` is clickable only with `pointer-events: auto` set on it.
 
   If you styled `.ds-chart-tooltip-pane` with `pointer-events`, that rule now decides whether the
-  panel can be selected at all — the pane must stay `auto`.
+  pointer can reach the panel at all — the pane must stay `auto`.
 
 - **A chart tooltip's second line is opt-in.** `0.13.1` gave every `ds-bar-chart` and
   `ds-column-chart` tooltip a `18.6% of total` line whether or not the marks were parts of a whole.
@@ -3039,10 +3507,13 @@
 
   `ds-drawer` and `ds-bottom-sheet` keep `ds-slide-edge-in`, because sliding in from an edge is
   what they are, and `ds-modal` keeps `ds-scale-in`. Any surface takes its old entrance back with
-  one declaration:
+  one declaration, the panels at the root and `ds-alert` / `ds-banner` / `ds-toast` each on its own
+  hook:
 
   ```scss
   :root { --ds-overlay-enter-keyframes: ds-slide-in; }
+  ds-alert { --ds-alert-enter-keyframes: ds-slide-in; }
+  ds-banner { --ds-banner-enter-keyframes: ds-slide-in; }
   ds-toast { --ds-toast-enter-keyframes: ds-slide-in; }
   ```
 
@@ -3239,8 +3710,9 @@
 
   Every `--ds-field-group-*` token is unchanged and still declared on the host, so an override
   written through the tokens needs nothing. The host's own box is unchanged too while the group has
-  no message: measured in the docs app, the row stays 40px and the host stays 40px — it grows to
-  57px only once `error` or `hint` is bound.
+  no message and reserves none: measured in the docs app, the row stays 40px and the host stays
+  40px — it grows to 57px once `error`, `warning` or `hint` is bound, and it reserves that message
+  row on a clean group whenever `reserveMessage` is on, `DS_CONFIG.field.reserveMessage` included.
 
 - **`--ds-button-border` is `--ds-button-border-color`, and `--ds-button-border-disabled` is
   `--ds-button-border-color-disabled`.** Both name a COLOUR, and since the width moved out to
@@ -3290,9 +3762,11 @@
   `--chart-grid-line-strong` before `--chart-grid-line`: the short name is a prefix of the long
   one, and a prefix-blind sweep renames this one instead of deleting it.
 
-  The sequential and divergent VALUES are unchanged in both themes; the eight categorical values are
-  not — they are retuned in this same release, so a rename there lands a different colour rather than
-  the same one under a new name. `--chart-bar-gap`, `--chart-hover-bg-color`, `--chart-tooltip-bg-color` and
+  The sequential VALUES are unchanged in both themes, and so are the divergent zero step and the
+  dark-theme divergent steps; the six light-theme signed divergent steps and the eight categorical
+  values are not — they are retuned in this same release, so a rename there lands a different
+  colour rather than the same one under a new name. `--chart-bar-gap`, `--chart-hover-bg-color`,
+  `--chart-tooltip-bg-color` and
   `--chart-tooltip-text-color` keep their names. Recolouring a series
   is better done through the `--ds-chart-` layer below than through the palette.
 
@@ -3360,16 +3834,17 @@
 - **`ds-line-chart` takes `patterns`, a second encoding channel.** Each series gets a dash of its
   own from a fixed list, in the same order as the palette slots, so the lines are told apart by
   shape as well as by colour — WCAG technique G111. Slot 1 stays solid, so a single-series chart is
-  unchanged by turning it on. Off by default: the shipped palette clears the colour-blind
-  separation threshold on its own, and this is for monochrome print, a retuned palette, or a reader
-  who asks for it.
+  unchanged by turning it on while its `slot` is unset or 1. Off by default: the shipped palette
+  clears the colour-blind separation threshold on its own, and this is for monochrome print, a
+  retuned palette, or a reader who asks for it.
 
   ```html
   <ds-line-chart patterns [series]="series" [categories]="months" />
   ```
 
-  The other four charts print a label beside every mark already — a bar's row, a column's category,
-  a donut's legend row, a funnel's stage — so colour is not what identifies a mark there.
+  The other four charts print a label beside every mark by default — a bar's row, a column's
+  category, a donut's legend row unless `legend="none"`, a funnel's stage in its table unless
+  `showTable` is off — so colour is not what identifies a mark there.
 
 - **A tap answers the way a hover does, and stays put.** Tapping a mark opens its tooltip and
   LATCHES it: a touch fires `pointerleave` the instant the finger lifts, so without this the panel
@@ -3386,7 +3861,7 @@
 - **A mark that arrives and a mark that leaves are now two staged phases.** Removals run first, at
   `--ds-motion-chart-mark-exit-duration`; additions wait that long and then run at
   `--ds-motion-chart-mark-enter-duration`, so a vanishing mark and an arriving one are never on
-  screen together. The update phase — a mark changing size — is unchanged and still runs on
+  screen together. The update phase — a mark changing size — runs on
   `--ds-motion-chart-mark-duration`.
 
   `staggerMs` spaces the arrivals out. `0` is the default and means no stagger; `40` is the
@@ -3431,8 +3906,8 @@
   hidden" by default — carried on a `role="status"` line, with the legend still rendered so the
   reader can switch one back on. Without it the reader is left looking at an empty grid.
 
-  A legend without a filter is unchanged: `ds-line-chart` still draws one whenever there is more
-  than one series, and it is now `ds-chart-legend` rather than markup of its own.
+  Without `legendFilters`, `ds-line-chart` draws a `ds-chart-legend` whenever there is more than
+  one series.
 
 - **Every chart answers a hover, a tap and a keyboard focus with a tooltip.** `ds-bar-chart`,
   `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart` default to `tooltip="item"` — the mark
@@ -3557,7 +4032,6 @@
   These are the last two of the four pieces asked for on 2026-08-18; `hidden` and `disabledReason`
   shipped on 2026-08-21.
 
-
 - **`ds-field-group` takes `error`, `hint` and `warning`, so the error it shows has words.** The
   group suppresses its segments' own labels and message rows — they would break the glued line — and
   until now it had nowhere for the text to go, which left colour as the only channel and 1.4.1
@@ -3635,7 +4109,8 @@
   `messageId`, `message`, `fieldMessage` and `uid` — it shares the fields' message base now;
   `InputComponent` gained `groupMessage`, and `SelectComponent`, `AutocompleteComponent` and
   `DatePickerComponent` gained `groupMessage` and `describedByIds`. Being public API or not is no protection:
-  `private` and `protected` collide with TS2415 exactly as a public name does.
+  a `private` name collides with TS2415, and a `protected` one with TS4114 or TS2416, exactly as a
+  public name does.
 
   `routerLink` also widened on the three navigating components — `string | readonly unknown[] |
   null` became `DsRouterLink`, which adds `UrlTree`. Writing it is unaffected; code that READS the
@@ -3671,7 +4146,6 @@
   `isTextClipped(element)` is exported from `/core` behind it: true when the element, or anything it
   renders, is showing less than it holds. Horizontal only — a clamped block hides whole lines and
   its `scrollWidth` matches its `clientWidth`.
-
 
 - **Five charts: `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart`, `ds-funnel-chart` and
   `ds-line-chart`.** Each takes a `caption`, a `summary` for the accessible name, a `loading`
@@ -3735,7 +4209,6 @@
   because levelling the two makes the eye group a bar with the label BELOW it and read every row off
   by one.
 
-
 - **Chart colour is three families, and reaching for the wrong one is the usual chart bug.** The
   eight `--ds-chart-series-N-color` hooks are CATEGORICAL — they separate marks that are DIFFERENT
   THINGS, such as donut slices or line series. A bar chart's rows are not different things; they are
@@ -3794,7 +4267,6 @@
   bound `interactive` and an output needs no edit — but a test that counted `[tabindex="0"]` inside
   a chart will now see one per series.
 
-
 ### Fixed
 
 - **A disabled field is no longer announced as invalid.** Every field bound `aria-invalid` from its
@@ -3830,7 +4302,7 @@
 
 - **`ds-button`'s `buttonRef` is `controlRef`, and it is typed `HTMLElement`.** The element the
   component renders now follows its destination, so the old name described one of three cases and
-  the old type described the same one. Rename the reference; the property behind it is unchanged.
+  the old type described the same one. Rename the reference; the property behind it is the same `#btn` view child.
   A read of `.nativeElement` that expects a `<button>` — `.disabled`, `.form`, `.type` — no longer
   type-checks and needs a narrow of your own, because the element may be an `<a>`.
 
@@ -3901,8 +4373,10 @@
 
 - **A clickable `ds-table` row, a `ds-tree` row and a `ds-list` activator draw a rounded focus
   ring.** All three ringed a square-cornered box while every control around them was rounded; they
-  now carry `--focus-ring-radius`. None of the three paints anything itself — the table row's tints
-  sit on its cells — so the radius shapes the ring and nothing else, and it sits on the resting rule
+  now carry `--focus-ring-radius`. The table row and the list activator paint nothing themselves -
+  the table row's tints sit on its cells - so there the radius shapes the ring and nothing else; a
+  `ds-tree` row paints its own hover, pressed and selected fill, and that fill now takes the same
+  rounded corners. The radius sits on the resting rule
   rather than inside `:focus-visible`, or the shape would appear only while focused. Reachable by
   keyboard only.
 
@@ -3916,8 +4390,9 @@
   gained `routerLink`, `href`, `controlRef` and `destination`, which decides which of the three
   elements renders; `buttonRef` is gone from its surface, so a subclass that overrode it now
   overrides nothing. `CheckboxComponent`, `RadioComponent` and `SwitchComponent` each gained
-  `ariaLabel` and `resolvedAriaLabel`. Being public API or not is no protection: `private` and
-  `protected` collide with TS2415 exactly as a public name does. Nothing changes for a consumer who
+  `ariaLabel` and `resolvedAriaLabel`. Being public API or not is no protection: a `private` name
+  collides with TS2415, and a `protected` one with TS4114 or TS2416, exactly as a public name does.
+  Nothing changes for a consumer who
   only uses the elements.
 
 ### Fixed
@@ -4071,8 +4546,10 @@
   button whether the panel showing belongs to it, and the new `stickyScrollbarOffset` input with its
   `stickyScrollbarOffsetResolved`. `SidenavGroupComponent` gained the
   new `routerLink` input and `headerNavigates`, the computed that decides whether the header splits
-  into a link and a caret. Only `routerLink` is public API and that is no protection for the rest:
-  `private` and `protected` collide with TS2415 exactly as a public name does, so a member of yours
+  into a link and a caret. Only `routerLink`, `stickyScrollbarOffset` and
+  `stickyScrollbarOffsetResolved` are public API, and that is no protection for the rest:
+  a `private` name collides with TS2415, and a `protected` one with TS4114 or TS2416, exactly as a
+  public name does, so a member of yours
   sharing one of those names stops the build. Nothing changes for a consumer who only uses the
   elements — no existing input, output or token changed name or type.
 
@@ -4313,7 +4790,8 @@
 
 - **Thirteen `--ds-<component>-focus-shadow` tokens are gone**, on button, icon-button, card,
   checkbox, radio, switch, tabs, toast, breadcrumbs, pagination, sidenav-item, sidenav-group and
-  menu-item. Each resolved to `--ds-control-focus-shadow`, which controls no longer read. Set
+  menu-item. Each resolved to `--ds-control-focus-shadow`, which controls no longer read; nor does
+  the error button read `--ds-control-focus-shadow-error`. Set
   `--focus-ring-color`, `--focus-ring-width` or `--focus-ring-offset` on the component's own scope
   instead. Field tokens — `--ds-input-focus-shadow` and its siblings — are unchanged, because fields
   keep the soft halo. An override of a removed token still parses and cascades and changes nothing,
@@ -4332,7 +4810,7 @@
   `--ds-motion-check-enter-duration`, `--ds-motion-check-enter-easing`, `--ds-motion-check-exit-duration`,
   `--ds-motion-check-exit-easing` — with per-scope hooks `--ds-check-mark-*` beneath it, so a dense
   option list can stay calm while forms overshoot. To put the previous motion back, set the four
-  tokens to the linear timing they replaced. Both durations resolve through the `--duration-*`
+  tokens to the timing they replaced, `--duration-fast` on `--ease-standard` both ways. Both durations resolve through the `--duration-*`
   scale, which `prefers-reduced-motion` already zeroes, so the mark goes instant on its own.
 - **The tick and the indeterminate bar are painted as a mask over `currentcolor`, not as a hardcoded
   white stroke.** One path serves a filled box and a bare row — white on the accent fill, the row's
@@ -4400,13 +4878,12 @@
   member left to override; one you declared without the modifier still compiles, overrides nothing
   and runs never.
 
-  Three new classes come with those directives, and all three are internal: `DsTableLayout` is
+  Four new classes come with those directives, and all four are internal: `DsTableLayout` is
   internal, the seam a feature registers with; `TableColumnsPanelComponent` is internal, the
   column panel; `TableColumnsTriggerComponent` is internal, its header button; and
   `TableExportButtonComponent` is internal, the toolbar button. None is API, none appears in the
   component reference, and each is created imperatively — they are named here only so a name
   collision in a subclass is greppable from the first release that has them.
-
 
 - **The focus ring eases in instead of appearing at full strength.** Only its colour moves — the
   ring's geometry is already in place, so nothing shifts and the indicator lands where it will stay.
@@ -4488,8 +4965,8 @@
   a flex row with a gap, and an item that projected no icon collapsed its wrapper to zero width while
   the gap stayed, so a mixed menu had two text axes and an unindented row read as a different kind of
   thing. The menu decides it now rather than the item — an item cannot see its siblings — so one
-  item with an icon makes every item reserve the slot. A menu with no icons anywhere is unchanged and
-  stays flush to its padding. The new `--ds-menu-item-icon-size` sets the width the slot reserves.
+  item with an icon makes every item reserve the slot. A menu with no icons anywhere moves
+  flush to its padding, because the empty icon slot no longer costs the row's 10px gap. The new `--ds-menu-item-icon-size` sets the width the slot reserves.
 
 - **`ds-split-button` answers a press on either half.** Both segments were missing the darken-plus-
   micro-scale that every other button in the library gives a press, so the one control built from two
@@ -4572,7 +5049,7 @@ this package ships under `migrations/`.
   response to an event; for anything transient use `ToastService`, which owns a region built for it.
 
 - **`<ds-toast>`'s `message` input is now `body`**, matching `ToastOptions.body` and `ToastEntry.body`.
-  One concept had three spellings across the family; `body` wins because it is the one every consumer
+  One concept had two spellings across the family; `body` wins because it is the one every consumer
   already passes to the service.
 
 - **Five toast border tokens gain the `-color` the rest of the library uses**:
@@ -4626,8 +5103,9 @@ this package ships under `migrations/`.
   read. `TableComponent` gained `eventsAtExport`,
   `eventMessages`, `tableHead`, `hostElement` and `announceExport`; its inputs, outputs, models
   and exported types are unchanged. `BannerComponent` and `AlertComponent` each gained
-  `announce`, and their `ariaRole` and `ariaLive` now return `null` as well — a subclass that
-  narrowed either type back, or code that assumed the getter is never null, stops compiling.
+  `announce`, and their `ariaRole` and `ariaLive` now return `null` as well — code that assumed
+  the getter is never null stops compiling, while a subclass that narrowed either type back still
+  compiles.
   The compiler enumerates every collision, so building after the upgrade is the whole check.
 
 - **The stack no longer jumps when a toast is added.** Its neighbours are put back where they were
@@ -4685,8 +5163,9 @@ this package ships under `migrations/`.
   another component's template has to be renamed (angular/angular#24536), all three
   avatars came back `margin-left: 0` with no ring, and the joined buttons lost their overlap
   margin and every flattened radius. They match the direct child now, so the grouping holds whatever the child is rendered
-  as. Computed output in an ordinary Angular app is unchanged — verified identical before and
-  after.
+  as. Computed output in an ordinary Angular app is unchanged when every child is a `ds-avatar` /
+  `ds-button` placed directly in the group - verified identical before and after. Any other direct
+  child, such as a wrapper element or a `ds-icon-button`, now takes the group styling itself.
 
 - **Six connected-panel tokens did nothing when scoped to one picker.** `--ds-option-padding`,
   `-gap`, `-radius`, `-row-gap`, `--ds-option-bg-color-active` and `--ds-dropdown-panel-maxh` are read
@@ -4719,7 +5198,6 @@ this package ships under `migrations/`.
   `ToastPromiseMessages` is generic, so `promise<T>` stops discarding `T` and a `success` callback
   receives the resolved value instead of `unknown`.
 
-
 - **A modal, drawer, confirm or bottom sheet opened after a toast covered it and swallowed its action
   button.** `--layer-toast: 1500` could not prevent it and never could: CDK 21 gives every overlay host
   `popover="manual"` and calls `showPopover()`, so hosts live in the browser's top layer, which paints
@@ -4730,7 +5208,6 @@ this package ships under `migrations/`.
 
   Only *scrimmed* overlays trigger it. A tooltip or dropdown neither covers the toast meaningfully nor
   eats a click, and the documented scale deliberately puts `--layer-tooltip` above the toast.
-
 
 - **Typing on a CLOSED `ds-select` did nothing.** Type-ahead landed with the jump wired only for
   an open panel: the closed branch of the key handler returned before reaching it, so a letter
@@ -4778,7 +5255,9 @@ this package ships under `migrations/`.
 - **The banner and toast icon now centres on the message block**, where most shapes aligned it to
   the first line of text. The two rules agree on a one-line message — which is most toasts — and
   diverge as the text grows: the icon sat some 12px above the block centre at two lines and 21px at
-  three. A `compact` banner was already centred and does not move.
+  three. A `compact` banner was already centred and does not move. A `layout="row"` banner with
+  actions beside the text moves even at one line: its icon was pinned to the top of the row and now
+  centres with the text.
 
   It is `align-self` on the icon rather than `align-items` on the row, so the close button and the
   action buttons keep the positions they had. `--banner-ic-mt` is **removed**; it existed only to
@@ -4808,8 +5287,9 @@ this package ships under `migrations/`.
   collision, so building after the upgrade is the whole check.
 
   Worth flagging for anyone who followed 0.11.2's note: `startCountdown` was announced there as a
-  member the region had just gained, so an `override startCountdown` added one release ago now
-  overrides nothing and silently never runs. There is no public replacement to call — the countdown
+  member the region had just gained, so a `startCountdown` of yours added one release ago now
+  overrides nothing: marked `override` it fails with TS4113, unmarked it compiles and never runs.
+  There is no public replacement to call — the countdown
   is the region's own business now. Delete the override.
 
 - **Four event bindings are silently dead, and there is no `<ds-dropdown>`.** `ds-banner` and
@@ -4893,7 +5373,6 @@ this package ships under `migrations/`.
   value by hand and guess what empty means for that control. It does NOT move focus, deliberately:
   the caller may be navigating away.
 
-
 - **Panel header and footer slots.** The panel was a closed box between the filter row and the
   options: "3 of 40 selected", a "clear all" button, a hint or a link under the list had nowhere to
   go. `dsPanelHeaderTemplate` and `dsPanelFooterTemplate` fill a strip above and below, with
@@ -4931,17 +5410,16 @@ this package ships under `migrations/`.
   all accept it and it type-checks on all three pickers; `ds-multi-select` and `ds-autocomplete` do
   not yet render it, so a reason set there is carried and not shown.
 
-
 - **The keyboard cursor keeps its row in view.** On a list longer than the panel the arrows walked the
   cursor out of sight — the reader pressed down and could not see where they were. All three pickers
   scroll the active row into view now, on by default; `scrollActiveIntoView="false"` gives the scroll
   position back to you. It uses `block: 'nearest'`, so a row that is already visible does not move and
   the mouse is never fought.
 
-- **`Home` and `End` on every picker.** They existed on `ds-select` alone, while ten other components
-  in the library already had them. The index arithmetic all three had written out separately — next,
-  previous, first, last, skipping disabled and wrapping — is one shared helper now, so the three
-  behave identically. It is internal: nothing new is exported.
+- **`Home` and `End` on every picker.** They existed on `ds-select` alone, while seven other components
+  in the library already had them. The index arithmetic for Home, End, PageUp and PageDown is one
+  shared helper now, and `ds-select` and `ds-multi-select` step their arrow keys through it too;
+  `ds-autocomplete` keeps its own arrow stepping, which also reaches the create row. It is internal: nothing new is exported.
 
 - **`compareWith` on `ds-autocomplete`.** The component is generic over its value type but compared
   with `===`, which is reference identity: a re-fetch that returned equal data as new objects silently
@@ -4971,7 +5449,6 @@ this package ships under `migrations/`.
   the same `readonly` binding alias `ds-select` has for signal forms; `clearable` uses the same button
   and the same accessible name as `ds-select`'s.
 
-
 - **`ds-table` row expansion: one-at-a-time, expand-all, and events.** The base feature shipped
   already; these are the three edges it was missing. `expandMode="single"` collapses the open row
   when another expander is clicked, so a detail panel cannot stack up down the page — enforced when
@@ -4984,7 +5461,6 @@ this package ships under `migrations/`.
   row, and there is none to carry. Opening two rows or more now also reaches the table's live
   region, which a full page of panels appearing from one keypress previously did not.
 
-
 - **Column resizing works on a touch device, where the drag handle never could.** The handle
   paints its line on `:hover` and `:focus-visible`; a coarse pointer produces neither, so it was
   invisible — while `touch-action: none` still took the horizontal swipe that scrolls the table,
@@ -4994,7 +5470,6 @@ this package ships under `migrations/`.
   opens as a `ds-bottom-sheet` rather than a popover. The buttons render on desktop as well, where
   the handle remains the primary route. All three routes share one step, so drag, arrow keys and
   buttons move a column by the same amount, and all three clamp at the scroll viewport.
-
 
 ### Changed
 
@@ -5186,20 +5661,20 @@ this package ships under `migrations/`.
 
 ### Changed
 
-- **One stylesheet owns the dropdown panel.** The panel is portaled to `document.body`, where
-  Angular's encapsulation does not reach, so the shared partial and two component stylesheets were
-  all declaring its `background`, `border-radius`, `max-height`, `overflow` and `display` at
-  identical specificity — which rule won depended on the order the stylesheets happened to load. The
+- **One stylesheet owns the dropdown panel.** `ds-autocomplete` and `ds-multi-select` each styled their own
+  panel class (`.autocomplete-list`, `.panel`) in their own stylesheet, with their own `background`,
+  `border-radius`, `max-height` and `overflow`, so the shared partial that paints `ds-select` never
+  reached them. The
   partial owns that geometry now, behind `--ds-dropdown-panel-bg-color` beside the `-radius`,
   `-maxh`, `-minw` and `-maxw` knobs, and each picker declares its own name as an ALIAS of the
   shared token on its host and forwards it onto the pane. `--ds-multi-select-panel-bg-color`,
-  `--ds-autocomplete-panel-bg-color`, `-radius` and `-maxh` all still work; what changed is that
-  they reach the panel through one rule instead of a second competing one.
+  `--ds-autocomplete-panel-bg-color`, `-radius` and `-maxh` all still work. On `ds-autocomplete` the
+  host's alias also shadows a `--ds-dropdown-panel-radius` set on `:root`, so set
+  `--ds-autocomplete-panel-radius` there instead.
 
   The panel is also the flex column and the LIST is the scroller, so a filter row or a select-all row
   stays put while the options move under it. `ds-multi-select` did that per-component before and the
   other two did not.
-
 
 - **BREAKING for code that READS `ds-autocomplete`'s `options`: the element type is now
   `AutocompleteItem<T>`, not `AutocompleteOption<T>`.** The input holds flat options OR groups,
@@ -5241,9 +5716,9 @@ this package ships under `migrations/`.
   `DsEmptyTemplateDirective` and `DsCreateTemplateDirective` are new classes. Subclassing is unsupported but consumers do it, and a member of yours that shares a name
   with one of ours stops the build. Rename yours, or add `override` if you meant to replace ours —
   the compiler enumerates every collision, so building after the upgrade is the whole check.
-  `AutocompleteComponent` also LOST a member — the protected computed `filteredGroups` — and that
-  loss fails silently: a subclass that overrode it now overrides nothing and still compiles. It is
-  the one case the build will not flag, so check for it by hand.
+  `AutocompleteComponent` also LOST a member — the protected computed `filteredGroups`: a subclass
+  that overrode it with `override` now fails with TS4113, and one declared without the modifier
+  compiles and never runs, so delete yours.
 
 - **BREAKING for `ds-autocomplete`: one `options` input takes groups on all three pickers.**
   `ds-multi-select` had no groups at
@@ -5280,18 +5755,11 @@ this package ships under `migrations/`.
   144px trigger took the trigger from **40px to 63px** — the text
   broke onto a second line and the chevron onto a third. Single mode has no chip row to wrap for, so
   the wrapping had nothing to protect. The ellipsized value carries a `title`, so the full text is
-  still there on hover. `valueOverflow="wrap"` restores wrapping; multi mode is untouched,
-  its chips already had a measured cap.
+  still there on hover. `valueOverflow="wrap"` restores wrapping. Multi mode with the default chip
+  fit is untouched, its chips already had a measured cap; with `maxVisibleChips="all"` the trigger no
+  longer wraps either, until `valueOverflow="wrap"` is set.
 
 ### Fixed
-
-- **A compact trigger showed one chip where several fitted.** `triggerDisplay="count"` and
-  `"labels"` make the trigger hug its content, so the width the chip fit measured was decided by the
-  chips it was about to cut — each pass shrank its own input and the split settled on one. The fit
-  reads the space AVAILABLE now (the trigger's parent), which no cut can move. `ds-autocomplete` gets
-  the same correction, since both pickers measure through one helper, and a `width="fill"` trigger is
-  unaffected because there the two numbers are identical.
-
 
 - **With the filter row hidden, there was no keyboard way to pick an option.** `Enter` and `Space`
   were consumed by the trigger before the panel's own handler saw them, so the panel toggled shut
@@ -5332,7 +5800,6 @@ this package ships under `migrations/`.
 
 - **`ds-select` accepts a `readonly` options array**, which the other two already did, and tracks
   its top-level items by index rather than by label, which is not unique.
-
 
 ### What you can now DELETE
 
@@ -5393,7 +5860,10 @@ this package ships under `migrations/`.
   reason living only in the accessibility tree reproduces exactly the invisibility this closes.
   **Nothing changes for a button that sets none of these.** Without `disabledReason` the native
   `disabled` attribute stays and focus still skips it; without a message the host keeps the
-  `inline-flex` box every existing layout was built against. A message-bearing button becomes a column,
+  `inline-flex` box every existing layout was built against. The exception is an app that sets
+  `DS_CONFIG.field.reserveMessage: true`: `reserveMessage` falls back to it, so every such button
+  reserves an empty message line and becomes a column; set `[reserveMessage]="false"` on those
+  buttons to keep the old box. A message-bearing button becomes a column,
   and since the host shrinks to fit, a message longer than the label widens the pair — button included,
   exactly as a field's control spans its own message.
 
@@ -5463,7 +5933,7 @@ this package ships under `migrations/`.
   `SidenavComponent` gained `brandRoute`, `brandLinkLabel` and the protected `brandAriaLabel`; and
   `CheckboxComponent` and `RadioGroupComponent` each gained the protected `controlState`.
   A subclass that happens to declare the same name now fails with TS4114 (“must have an ‘override’
-  modifier”), or TS2415 if the signature differs — and `protected` is no protection, since a
+  modifier”), or TS2416 if the signature differs — and `protected` is no protection, since a
   redeclared protected member collides exactly as a public one does.
   Subclassing a DS component stays unsupported (`components.md` § Components); compose instead.
 
@@ -5539,7 +6009,6 @@ this package ships under `migrations/`.
   container now, which drops whitespace-only text nodes outright, so the identifier renders flush and
   the template stays free to be formatted for reading. No API change, and nothing to do on your side.
 
-
 ### What you can now DELETE
 
 None of this is required — skipping it leaves working code that is merely redundant. Each row is a
@@ -5597,8 +6066,9 @@ workaround written against a hook that only landed in this release.
   `ds-autocomplete` panels are unaffected.
 - **`ds-search`'s clear button had no focus indicator at all — introduced by 0.10.2's own ring fix.**
   That fix silenced the base indicator with a shell-wide reset, which also hit `.search-clear`, a
-  `tabindex="0"` tab stop: with the field's halo already lit, tabbing from the input to the × changed
-  no paint property anywhere on screen, so a keyboard user could not tell the × had focus. A WCAG
+  `tabindex="0"` tab stop: with the field's halo already lit, in every shadow-based focus style
+  tabbing from the input to the × changed no paint property anywhere on screen (only
+  `data-focus="outline"` and forced colours still drew an outline), so a keyboard user could not tell the × had focus. A WCAG
   2.4.7 failure, and the same defect as the double ring seen from the other side. Every shell now
   names the one control it speaks for through the new `focus.owns-the-focus-ring($control)` mixin
   instead of blanketing its box, and `ds-field-group` drops its blanket entirely — each segment
@@ -5675,23 +6145,6 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 
 ### Changed
 
-- **`ds-search` no longer takes the field message inputs, because it never rendered them.**
-  Since it gained form binding it extended the internal `DsControlValueAccessor`, which sits on the equally internal `DsFieldBase` — so
-  the API reference advertised `hint`, `error`, `warning`, `errors`, `invalid`, `touched`,
-  `reserveMessage` and `messageIcon` on a component whose template has no `ds-field-message` and whose
-  class reads none of them. **A consumer binding `error="Too short"` on a `ds-search` got silence, and
-  the reference had told them it would work.** Those eight inputs are gone from it now; the reference
-  lists the ten it actually implements.
-  **BREAKING only if you bound one:** it used to compile and do nothing, and now it is a template type
-  error, which is the point. Where a search needs a label or an error line, that is `ds-input` — a
-  toolbar filter is not a validated field, which is the same reasoning that kept the message row off it
-  in the first place.
-  **How the split works, since it is a shape other controls may want:** the `ControlValueAccessor`
-  plumbing is a function rather than a base class, so a control can bind to a form without
-  inheriting the message API; the internal CVA base is that function plus the shared field base and
-  delegates to it, so the logic exists once rather than twice. `hidden` stayed on `ds-search`: it
-  belongs to the forms contract — signal forms reaches every control through it — not to the
-  message API.
 - **A field's message line now carries a glyph for `error`, `warning` and `success` — and not for
   `hint`.** Colour was the whole signal before, which fails WCAG 1.4.1: in the light theme warning
   (#8A7400) against success (#156822) is a hue apart and nothing else. Four of six major design
@@ -5738,10 +6191,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   `number | 'fit' | 'all' | null`, default now `null`), internal `FieldMessageComponent.icon` (widened to
   `IconName | false | null`, so `false` can mean "no glyph" against a state that supplies one),
   `DsConfig.field` (its shape grew the glyph defaults), `SearchComponent.clear` (`protected` →
-  public), `StatComponent.value` (widened to `string | number | null`) and
-  `TimeColumnsComponent.onKey` (internal, and its parameter list changed). **One more break outside this list:**
-  `ds-search` no longer extends the field base, so it loses eight inherited inputs — documented in
-  its own entry above.
+  public) and `StatComponent.value` (widened to `string | number | null`).
 
 - **Every readback that resolves through `DS_CONFIG` is now public.** `sizeResolved` on fourteen
   controls, plus `elevationResolved` / `paddingResolved` (card), `withDotResolved` (badge),
@@ -5864,10 +6314,9 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   description said an unwrapped phrase is clipped when it escapes the tile instead, and `ds-badge`
   carried a superseded docblock. **No API changed** — only what the shipped documentation says about it.
 
-- **Five more overlays dismiss on a click in the host's own empty width.** `ds-select`,
-  `ds-multi-select`, `ds-autocomplete`, `ds-time-picker` and `ds-color-picker` all tested the whole
-  HOST in their outside-pointer guard, which is the defect `ds-date-picker` was fixed for in 0.10.1 —
-  the trigger box hugs its own content while the host takes whatever width a consumer's
+- **Six overlays dismiss on a click in the host's own empty width.** `ds-select`,
+  `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker` and `ds-color-picker` all
+  tested the whole HOST in their outside-pointer guard - the trigger box hugs its own content while the host takes whatever width a consumer's
   layout gives it, so the label, the message row and any bare strip beside the trigger swallowed the
   dismiss instead of performing it. Each guard now tests its TRIGGER, as `ds-popover` always did;
   `ds-time-picker` tests whichever of its three triggers are present, since a range renders two.
@@ -5958,8 +6407,8 @@ workaround written against a hook that only landed in this release.
 - **`success` exists on all nine bordered fields, and it is now a STRING that carries its own text.**
   Added to `ds-textarea`, `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`,
   `ds-time-picker`, `ds-otp-input` and `ds-color-picker` — it was on `ds-input` alone, so a form could
-  not use the state consistently. The three box-less controls (`ds-checkbox`, `ds-radio-group`,
-  `ds-switch`) and `ds-slider` deliberately do NOT get it: they have no box for a border to appear on,
+  not use the state consistently. The four box-less controls (`ds-checkbox`, `ds-radio`,
+  `ds-radio-group`, `ds-switch`) and `ds-slider` deliberately do NOT get it: they have no box for a border to appear on,
   so the state would show in the message line alone and read as a different treatment.
   **BREAKING for `ds-input`, the one field that already had it:** `success` was
   `input(false, { transform: booleanAttribute })` and is now `input<string>('')`. Replace
@@ -6048,17 +6497,18 @@ workaround written against a hook that only landed in this release.
   reaches either directly or through the internal
   `DsControlValueAccessor` / `DsBooleanControlValueAccessor`. All fourteen still carry all eight by
   inheritance, so a template binding, a TS read and an existing `override` all behave exactly as
-  before. A member that moves to a base class is easy to misread as removed; it is not.
+  before, except an override of `hint`, `error` or `warning` typed `input<string>`, which now fails
+  with TS2416 because their write type widened to `string | null | undefined`. A member that moves to a base class is easy to misread as removed; it is not.
   What genuinely grew is smaller: **eight bordered fields gained `success`** (`ds-autocomplete`,
   `ds-color-picker`, `ds-date-picker`, `ds-multi-select`, `ds-otp-input`, `ds-select`,
   `ds-textarea`, `ds-time-picker`), `ds-input` having had it all along. **Only the universal inputs moved:** `success`, `label`, `required` and `optional` stay on the
-  components, because they exist on 9, 9, 7 and 5 fields respectively — lifting them would hand a
+  components, because they exist on 9, 9, 8 and 5 fields respectively — lifting them would hand a
   checkbox a `success` or a slider a `label` it never had. `ds-segmented`
   is the tenth grown class and the one with real new surface — joining the form systems gave it
   `label`, `disabled`, `isDisabled`, `message`, `invalidResolved`, `fieldMessage`, `hintId` and
   `uid`. A subclass declaring `success` on one of those eight now fails with TS4114; declaring any
-  of the eight moved names still collides exactly as it did, because an inherited member collides
-  the same way an own one does.
+  of the eight moved names still collides, because an inherited member collides the same way an
+  own one does.
   `DsFieldBase` is internal and deliberately not exported.
 
 ### Removed
@@ -6158,7 +6608,7 @@ None of this is required — skipping it leaves working code that is merely redu
   `[maxVisibleChips]="2"` honoured the count, ran out of width, and wrapped the text
   input onto its own line — the exact growth the cap exists to prevent. **A number is now a CEILING**
   ("at most N"), measured like `"fit"`, so a 412px trigger shows one chip and `+3 more` on one line
-  instead of two chips over two lines. `null` is unchanged and still the only mode that skips measuring.
+  instead of two chips over two lines. `null` is unchanged and now the only mode that skips measuring.
   Three faults sat behind it, all fixed: the trigger kept `flex-wrap: wrap` while capped, so the row
   could never shrink — it just moved the input down; a squeezed chip wrapped its own label and stood
   46px tall beside 29px neighbours; and the measurement's width cache only filled on a render holding
@@ -6294,7 +6744,7 @@ None of this is required — skipping it leaves working code that is merely redu
   **The two-tone wordmark stays projected:** there is deliberately no accent in the config, because
   a string would have to be split back apart to find one and that is the guessing `[dsBrandName]`
   exists to avoid. The projection wins over both. **You can now delete** an adapter component that
-  existed to inject a brand object and fan it out into four bindings.
+  existed to inject a brand object and fan it out into three bindings.
 
 - **`rememberLastTab` on `ds-tabs` — reopen the tab a screen was last left on.** Off by default, and
   inert without `urlParam` (and outside a routed context), because the parameter supplies the names: a
@@ -6349,8 +6799,8 @@ None of this is required — skipping it leaves working code that is merely redu
   navigation has to be a button — but the class was written for anchors and reset none of the browser's
   button chrome, so everyone who took that advice wrote the same rule by hand. A `<button
   class="link">` used to keep its native chrome — `line-height: normal`, `1px 6px` of padding and an
-  outset border — all of that is gone, so it now renders identically to an `<a class="link">` in the
-  same paragraph. **You can now delete** a local `.link-button`, or the
+  outset border — all of that is gone, so it now takes the paragraph's font family, size and
+  line-height like an `<a class="link">` in the same paragraph. **You can now delete** a local `.link-button`, or the
   padding/border/background/font reset in your overrides.
   `font-weight` is untouched so `.quiet` and `.standalone` still decide it, and `display` stays
   `inline-block` so a standalone button lays out predictably. The reset is scoped with `:where()`, so
@@ -6855,10 +7305,10 @@ None of this is required — skipping it leaves working code that is merely redu
 ### Added
 
 - **The token and component reference now documents every public token and prop** — 41 were
-  shipping with a name, a type and no description: 10 `--ds-*` tokens (the whole
+  shipping with a name, a type and no description: 10 tokens (nine `--ds-*` - the whole
   `--ds-password-rules-*` set among them, plus `--ds-multi-select-panel-bg-color` and
-  `--ds-menu-item-radius`) and 31 inputs and outputs across `ds-calendar-day`, `ds-time-columns`,
-  `ds-field-message`, `ds-divider`, `ds-sidenav-footer` and the three layout primitives. **Three of
+  `--ds-menu-item-radius` - and the global `--auth-card-w`) and 31 inputs and outputs across
+  `ds-calendar-day`, `ds-time-columns`, `ds-field-message`, `ds-divider`, `ds-sidenav-footer` and the three layout primitives. **Three of
   them were guessable wrong**, so check yours if you use them: `ds-time-columns` `value` is always
   `HH:mm` in 24h and `format` changes only the DISPLAY, so a 12h picker still emits 24h;
   `minTime`/`maxTime` disable the out-of-range rows rather than removing them, so the columns keep
@@ -6890,7 +7340,7 @@ None of this is required — skipping it leaves working code that is merely redu
 
 ### Changed (breaking, behaviour)
 
-- **If you EXTEND a DS component, this release collides with your subclass.** Sixteen exported
+- **If you EXTEND a DS component, this release collides with your subclass.** Seventeen exported
   classes gained members, so a subclass declaring the same name stops the build: `TS4114` wants
   `override`, `TS2415` fires on a redeclared private, `TS2416` on a differing signature.
   **`TableComponent` is by far the largest**: `lazy`, `lazyLoad`, `showLabel`, `showPageSize`,
@@ -6924,7 +7374,7 @@ None of this is required — skipping it leaves working code that is merely redu
   separate element with a hardcoded `border-radius: var(--radius-md)` that the shared rule does not
   reach, so it stays at 8px.
 
-- **Seven exit `@keyframes` are gone, replaced by four global presets.** `modal-out`, `ds-sheet-fade-out`
+- **Eight exit `@keyframes` are gone, replaced by four global presets.** `modal-out`, `ds-sheet-fade-out`
   and `drawer-scrim-out` become `ds-fade-out`; `ds-sheet-down` and the four `drawer-panel-close-*` become
   `ds-slide-edge-out`. They were view-encapsulated, so referencing one was only possible from a global
   stylesheet — but if you did, that is the mapping. Nothing about the rendered motion changed.
@@ -7104,10 +7554,10 @@ None of this is required — skipping it leaves working code that is merely redu
 - **`--ds-autocomplete-panel-maxh`**, so the dropdown's height before it scrolls no longer needs the private
   `--picker-maxh` (which `ds-multi-select` also reads, making it the wrong lever for one component).
 
-- **`--ds-autocomplete-panel-radius`, bringing the last panel into the radius role layer.** Its dropdown was
-  the one portaled surface still hard-coding `--radius-lg` while modal, popover, card, bottom-sheet and both
-  picker panels resolve `--ds-radius-panel`, so a consumer who squared the three radius roles got a square
-  app with one rounded panel and no hook to reach it. Nothing moves by default — the role still resolves to
+- **`--ds-autocomplete-panel-radius`, bringing its panel into the radius role layer.** Its dropdown was
+  hard-coding `--radius-lg` while modal, popover, card, bottom-sheet and both picker panels resolve
+  `--ds-radius-panel`, so a consumer who squared the three radius roles still got this panel rounded, with
+  no hook to reach it. Nothing moves by default — the role still resolves to
   `--radius-lg` — and the token is forwarded onto the portaled pane on open like the other panel tokens.
 
 - **`ds-app-layout` takes a `scrollReset` strategy, and `LayoutNavigationService` is public.** Owning the
@@ -7133,7 +7583,8 @@ None of this is required — skipping it leaves working code that is merely redu
   clear buttons, calendar days, chips, and tag and toast close buttons took `var(--radius-sm)` directly
   instead of the role, so the role a consumer is told to retune reached exactly one component. Nothing
   moves (the role's default IS `--radius-sm`), but it changes what a square brand costs: zeroing the three
-  radius roles used to leave five surfaces rounded and now squares every one. Five focus-ring radii inside
+  radius roles now squares these affordances too, while surfaces that still read the raw scale - the
+  `ds-multi-select` panel, menus and steppers among them - stay rounded. Five focus-ring radii inside
   `:focus-visible` keep following the raw scale deliberately — a ring traces a box, it is not a surface a
   brand designs.
 
@@ -7210,7 +7661,9 @@ None of this is required — skipping it leaves working code that is merely redu
   spelled their height as the raw `--hit-*` value, so the knob the token name advertises did nothing for
   them. All six are on the `field-box-height` contract now, and no raw `--hit-cozy` height is left in the
   library. Same pixels at every size **except `ds-number-stepper` at `size="lg"`, which goes 44px → 48px**
-  to match the family's large field; the other sizes are unchanged.
+  to match the family's large field; the other sizes are unchanged. That holds with `[data-density]` on
+  the root element: under a `[data-density]` set on an inner container the `--field-h-*` scale keeps its
+  root value, so these six no longer follow that container's density.
 
 - **Date and time pickers keep step with the fields beside them under `[data-density]`.** Both triggers
   hard-coded their horizontal padding, which happened to equal `--field-pad-x` at default density but did
@@ -7224,8 +7677,9 @@ None of this is required — skipping it leaves working code that is merely redu
 
 - **`density="compact"` no longer defeats every `ds-table` padding hook.** It pinned `padding` straight onto
   the cells, which out-specifies the `--ds-table-cell-pad-*` and head hooks, so a compact table silently
-  ignored all of them. It now retunes the same density tokens `[data-density]` uses — identical spacing, and
-  the hooks apply.
+  ignored all of them. It now retunes the same density tokens `[data-density]` uses — identical spacing
+  except the empty-state cell, which keeps its own 16px padding where compact gave it 8px 12px, and the
+  hooks apply.
 
 - **`ds-date-picker`'s trigger stays visibly active while its own panel is open.** The indicator was bound to
   focus only, and opening from the calendar glyph moves focus into the day grid — so the trigger went dark
@@ -7260,8 +7714,9 @@ None of this is required — skipping it leaves working code that is merely redu
 - **Options in the picker panels had no pressed state.** Hover only — so on a phone, where there is no
   hover, tapping a row in `ds-select`, `ds-autocomplete` or `ds-multi-select` gave no feedback that it had
   been hit. The equivalent rows elsewhere (`ds-menu-item`, `ds-list-item`) have had one since 0.7.x. Fixed
-  once, so all three pickers get it consistently, with a selected-row variant that stays in the brand
-  family rather than stranding the selected label colour on a neutral fill.
+  once, in the option partial `ds-select` and `ds-multi-select` share, so both get it consistently, with
+  a selected-row variant that stays in the brand family rather than stranding the selected label colour
+  on a neutral fill; `ds-autocomplete` styles its own rows and still has hover only.
 
 - **`ds-textarea size="sm"` and `="lg"` got the md vertical padding.** The size variants set the inner
   `<textarea>`'s vertical pad (`--space-2` / `--space-4`), but the `:host`-prefixed pin at the end of the
@@ -7292,12 +7747,12 @@ skipping it leaves working code that is merely redundant.
 | `--ds-modal-divider: transparent`, plus whatever you rewrote the modal padding to afterwards | `[dividers]="false"` — it drops the rules *and* the padding that existed to clear them |
 | A defensive `:hover` rule guarding the selected dropdown row — a selector naming `is-selected` | The `:not(.is-selected)` branch already handles it |
 | `ds-menu-divider { padding: 0 }` | `--ds-menu-divider-spacing`, which already defaults to 0 |
-| A dozen scattered `--ds-*-radius: 0` | For a fully square brand, four lines: `--radius-sm/md/lg/xl: 0` (leave `--radius-pill`). Measured — the three ROLES alone leave options, clear buttons and dropdown panels rounded; they are the tool for squaring one family and keeping another. Worked example on the Theming page |
+| A dozen scattered `--ds-*-radius: 0` | For a fully square brand, four lines: `--radius-sm/md/lg/xl: 0` (leave `--radius-pill`). Measured — the three ROLES alone leave the multi-select panel, menus, steppers and other surfaces that still read the raw scale rounded; they are the tool for squaring one family and keeping another. Worked example on the Theming page |
 | A global rule squaring `.ds-overlay-pane` | Radius and elevation roles now travel onto portaled panes when the host overrides them |
 | Absolutely positioning a search glyph over an autocomplete, or hiding `.autocomplete-chevron` | `dsAutocompletePrefix` and `[showChevron]="false"` |
 | Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it | `clear()` |
 | A hand-built KPI tile — a `kpi` block pairing your own markup with `ds-badge`, where `ds-stat` now fits | `ds-stat` takes a projected `[dsStatValue]` |
-| A pinned `--ds-search-height` (or any sibling) to get a shorter control row | `density="compact"` on the container — every field control is 32px there, measured |
+| A pinned `--ds-search-height` (or any sibling) to get a shorter control row | `data-density="compact"` on the root element — every field control is 32px there, measured; `--field-h-*` resolve on `:root`, so an inner container keeps 40px |
 | A hand-rolled `.scrim` + `.panel` dialog, written because the modal header could not hold a badge or a second line | `ds-modal` projects `[title-badge]` and takes a `subtitle`. You get back the focus trap, focus restore, the scroll lock, Escape and the footer |
 | `[value]="f.x().value()" (valueChange)="f.x().value.set($event)"` on every field of a signal form | `[formField]="f.x"` — the control implements the contract already |
 | `white-space: normal` forced onto a badge in a table cell | `--ds-badge-white-space` |
@@ -7438,7 +7893,7 @@ genuine gap worth reporting.
   stays public for a consumer’s own button and now takes an optional row set.
 - **Focus-indicator style is a one-place switch: `<html data-focus="ring | field | edge | outline">`.**
   The library shipped two fixed families — a soft halo on fields, a crisp double ring on controls — with no
-  way for a brand to choose. Since 20 components already resolve through `--ds-field-focus-shadow` /
+  way for a brand to choose. Since 22 components already resolve through `--ds-field-focus-shadow` /
   `--ds-control-focus-shadow`, the switch simply retargets those roles: `ring` and `field` make both groups
   match, `edge` is a hairline flush against the element, and `outline` swaps to a real `outline` — which a
   box-shadow token cannot express, so that style also emits a zero-specificity `:where(:focus-visible)`
@@ -7506,12 +7961,14 @@ genuine gap worth reporting.
   scale for as long as the token file has existed, but only `-lg` was ever read: `ds-input`, `ds-select`,
   `ds-date-picker` and `ds-time-picker` all spelled the other two out as the raw `var(--hit-min)` /
   `var(--hit-cozy)`. Retuning `--field-h-md` therefore changed nothing — a lever that looked live and was
-  not. All four now resolve through the scale (identical values, so nothing moves), and
-  `--ds-field-height` overrides the resolved size for a consumer who wants one height regardless of
-  `size`; scope it per component the usual way (`ds-select { --ds-field-height: 44px; }`).
+  not. All four now resolve through the scale (identical values, so nothing moves while `[data-density]`
+  sits on the root; under one set on an inner element, md and sm fields now keep the root's height,
+  because the scale resolves on `:root`), and `--ds-field-height` overrides the resolved size for a
+  consumer who wants one height regardless of `size`; scope it per component the usual way
+  (`ds-select { --ds-field-height: 44px; }`).
 - **One label contract for the whole field family: `--ds-field-label-font-size` / `-weight` / `-color` / `-transform` / `-tracking`.** Five components hard-coded the identical label rule and only `ds-input`
-  had hooks, so a form mixing a select with an input rendered labels in two sizes and colours out of the
-  box, and retuning them from an app needed `.field.field .label.label, .select-label.select-label` to
+  had hooks, so a form mixing a select with an input rendered labels in two sizes and colours once the
+  input's were retuned, and retuning them from an app needed `.field.field .label.label, .select-label.select-label` to
   out-rank the shimmed component rule. `input`, `textarea`, `select`, `date-picker`, `time-picker` and
   `radio-group` now resolve through one mixin and one token set. No per-component token set is needed —
   custom-property scoping already narrows a retune to one component (`ds-select {
@@ -7574,7 +8031,9 @@ genuine gap worth reporting.
 - **`ds-radio-group`’s label now looks like every other field label.** It was the one component drawing
   its own type (`medium` weight at `--font-size-s` on `--line-height-flat`) rather than the family’s
   `bold`/`--font-size-xs`; in a form beside an input or a select it read as a different kind of thing.
-  Restore the old look with `ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); }`.
+  Restore the old look with `ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); }`
+  and `ds-radio-group > .label { line-height: var(--line-height-flat); }`: the label now sits on
+  `--line-height-base`, which has no hook.
 - **Fields no longer expose a `protected messageState`;** the resolved `message` (text + state) and
   `invalidResolved` replace it. Only reachable by subclassing a field component, which is not a
   supported extension point, but noted for parity with the class-member changes in 0.7.0.
@@ -7751,11 +8210,11 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   blurred into `<body>` and restarted Tab order at the top of the document. Also gives forms a way to
   focus the first invalid field.
 
-- **Five override tokens that were previously hardcoded:** `--ds-modal-title-font-size` (pairs with the
+- **Four override tokens that were previously hardcoded:** `--ds-modal-title-font-size` (pairs with the
   existing `-title-weight`), `--ds-date-picker-trigger-radius` (the counterpart of
   `--ds-time-picker-trigger-radius`), `--ds-date-picker-panel-radius` (forwarded onto the portaled pane),
-  `--ds-checkbox-radius` (the box only — the indeterminate dash keeps its own), and `--ds-menu-max-width`.
-  `ds-toast` also gains `--ds-toast-min-width` / `--ds-toast-max-width` as per-instance hooks over the
+  and `--ds-checkbox-radius` (the box only — the indeterminate dash keeps its own). `ds-menu` gains
+  `--ds-menu-max-width`, defaulting to `none`, where it had no max-width. `ds-toast` also gains `--ds-toast-min-width` / `--ds-toast-max-width` as per-instance hooks over the
   global `--toast-minw` / `--toast-maxw` geometry. All default to the current values.
 
 - **`--ds-popover-min-width` and `--ds-menu-min-width`.** A popover (or a `ds-menu` projected into one)
@@ -7826,8 +8285,8 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 - **BREAKING (layout): `reserveMessage` now defaults to `false` on every field.** It shipped default-on
   in 0.7.0; the reserved row is right for a form that validates and wrong for the many forms that never
   show a message, where it added ~23px of dead space under every control and made a normal 16px field
-  stack read as a ~39px hole. The resolution chain is unchanged — per-field input, then
-  `DS_CONFIG.field.reserveMessage`, then the default — only the final fallback flipped, so all 14
+  stack read as a ~39px hole. The resolution chain gains a config step — per-field input, then
+  `DS_CONFIG.field.reserveMessage`, then the default — and the final fallback flipped, so all 14
   message-bearing fields follow (`ds-input`, `ds-textarea`, `ds-select`, `ds-autocomplete`,
   `ds-multi-select`, `ds-checkbox`, `ds-radio`, `ds-radio-group`, `ds-switch`, `ds-slider`,
   `ds-date-picker`, `ds-time-picker`, `ds-color-picker`, `ds-otp-input`). **To restore 0.7.0 behaviour
@@ -8018,8 +8477,8 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   DOM already states. The flush-addon layout is now derived automatically: a boxed `.addon` projected
   into `[dsInputPrefix]`/`[dsInputSuffix]` (`<span dsInputPrefix class="addon">…</span>`) sits flush via
   `:has()`, while a bare projected `<ds-icon dsInputPrefix>` correctly keeps its inset. Delete
-  `[withAddon]` / `[withAddonRight]` from your templates — a boxed addon renders identically, and a bare
-  icon that previously (mis)set the flag regains its proper inset (a bugfix).
+  `[withAddon]` / `[withAddonRight]` from your templates — a boxed addon on one side renders
+  identically, and a bare icon that previously (mis)set the flag regains its proper inset (a bugfix).
 
 - **BREAKING: `ds-app-shell` is renamed to `ds-app-layout`.** The slotted fixed-frame application layout
   shipped as `ds-app-shell` in 0.6.3; this renames the selector (`ds-app-shell` →
@@ -8028,10 +8487,10 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   `-pad-y` / `-content-max-width` / `-height` → `--ds-app-layout-*`). Behaviour is unchanged — rename the
   references (see `migrations/`). A consumer still on 0.6.3's `ds-app-shell` must migrate.
 
-- **`TableComponent` gained four more members (`total`, `sortingOrder`,
-  `animateHeight`, `scrollToTopOnPageChange`), and most other component classes changed too**, so a
-  consumer that extends a DS class (unsupported — `design-system.md` § Components) can collide on a
-  name here as well, exactly as in 0.6.3. Same resolution: rename the subclass's own member, or add
+- **`TableComponent` gained five more members (`total`, `sortingOrder`, `animateHeight`,
+  `scrollToTopOnPageChange` and the private `parseDurationMs`), and most other component classes
+  changed too**, so a consumer that extends a DS class (unsupported — `design-system.md` §
+  Components) can collide on a name here as well, exactly as in 0.6.3. Same resolution: rename the subclass's own member, or add
   `override` where the base's semantics genuinely match.
 
 ### Fixed
@@ -8138,7 +8597,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   table the horizontal bar stays reachable without scrolling to the table's end. The proxy hides
   itself when the table doesn't overflow.
 - **`ds-table` truncated cells open a full-value popover on click.** A `truncate` column's clipped
-  cell now shows its complete text in a popover when clicked (in addition to the existing title
+  cell now shows its complete text in a popover when clicked (in addition to the title
   tooltip); the click is swallowed so it never doubles as a row click, while an unclipped cell
   passes the click through to the row unchanged.
 - **`ds-app-shell` — slotted fixed-frame application shell.** `[sidenav]`/`[topbar]`/default
@@ -8208,7 +8667,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 - **`ds-toast` now slides up from below into place as it enters** (previously it dropped in from
   slightly above). The exit animation is unchanged — the toast still slides up as it fades out.
   Visual/motion only; no API change.
-- **The new `ds-table` column API grew `TableComponent`'s member surface by ~76 names, which breaks
+- **The new `ds-table` features grew `TableComponent`'s member surface by 77 names, which breaks
   a consumer that extends the class.** Everything above is additive for anyone using the
   `<ds-table>` element. Subclassing a DS component is unsupported (`design-system.md` §
   Components), but where it happens the new names collide — TS4114 demands an `override` modifier,
@@ -8412,8 +8871,9 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   `ModalConfirmTone` `'danger'` → `'error'` (also `ModalService.confirm({ tone })`);
   `SplitButtonItem.danger` → `.error`. Public tokens renamed in lockstep:
   `--ds-menu-item-danger-label-color` → `--ds-menu-item-error-label-color` and
-  `--ds-progress-bar-color-warn` → `--ds-progress-bar-color-warning`. CSS state classes and every
-  default value are otherwise unchanged.
+  `--ds-progress-bar-color-warn` → `--ds-progress-bar-color-warning`. The CSS state classes follow
+  (`.danger` → `.error` on modal, modal-card, menu-item and stat; `.warn` → `.warning` on progress);
+  every default value is otherwise unchanged.
 - **Event outputs renamed to past-participle (consistent event naming).** Dismissal events unified
   to `closed`: `ds-alert` / `ds-banner` / `ds-toast` `(dismissed)` → `(closed)`. Action events made
   past-tense: `ds-table` `(rowClick)` → `(rowClicked)`, `ds-stepper` `(stepClick)` →
@@ -8496,7 +8956,8 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   binding consumers are unaffected.
 - **`ds-button` tonal fill — `:active` now darkens past `:hover`.** The `tonal` variant reused the
   same token (`--c-muted-strong`) for both hover and active, so the pressed background was identical
-  to hover; active now mixes that tint ~10% toward black for a distinct pressed step.
+  to hover; active now mixes that tint ~10% toward black for a distinct pressed step
+  (`--ds-button-bg-color-active` restores the old one).
 - **Per-instance overlay panel token overrides now reach the portaled pane.** `--ds-*` panel tokens
   set on the host of `ds-autocomplete`, `ds-multi-select`, `ds-date-picker`, `ds-color-picker`,
   `ds-popover`, and `ds-time-picker` were ignored because the panel renders in a CDK overlay
@@ -8515,7 +8976,11 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   mask (two dates) is no longer cut off.
 - **`ultra-compact` density tier gained full token coverage.** `[data-density="ultra-compact"]` now
   also scales avatar size, sidenav width, badge / status-dot sizes, and switch geometry — previously
-  left at the cozy defaults, so those controls didn't shrink with the tier.
+  left at the cozy defaults, so those controls didn't shrink with the tier. Its switch goes from
+  24×20 px with a 12px thumb to 24×14 px with a 10px one (`--switch-track-h` /
+  `--switch-thumb-size` / `--switch-thumb-travel`). The rest go from the root 32px / 6px / 8px /
+  240px / 8px to `--avatar-md` 20px, `--badge-dot-size` 4px, `--status-dot-size` 5px, `--sidenav-w`
+  200px and `--field-floating-label-top` 4px.
 
 ## 0.5.0 — 2026-07-08
 
@@ -8545,7 +9010,8 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   `--ds-status-dot-*` (`color`, `size`); `--ds-pagehdr-*` → `--ds-page-header-*` (~10 tokens:
   eyebrow / title / subtitle / meta / crumb text colors, `meta-icon-color`, `divider`, `title-fs`,
   `title-gap`); `--ds-avatargroup-*` → `--ds-avatar-group-*` (`overlap`, `ring`, `overflow-bg-color`,
-  `overflow-label-color`). Only the names changed — the CSS property each feeds and every default
+  `overflow-label-color`); the globals `--datepicker-w` / `-cell-gap` / `-nav-size` →
+  `--date-picker-*`. Only the names changed — the CSS property each feeds and every default
   value are byte-identical; purely a naming-consistency fix.
 
 ### Added
@@ -8564,7 +9030,9 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 - **Selection controls gain `size` + `required`.** `ds-checkbox` / `ds-radio` / `ds-switch`
   take a `size` input (`sm` / `md` / `lg`; `md` unchanged and still density-responsive) and
   a `required` input (adds `aria-required` + a `*` marker on the inline `[label]`). `ds-radio`
-  (standalone) also gains `invalid` + `hint` via `ds-field-message`, matching checkbox/switch.
+  (standalone) also gains `invalid` + `hint` via `ds-field-message`, matching checkbox/switch. One
+  `md` exception: under `[data-density="ultra-compact"]` a checked `ds-switch` thumb now travels 8px
+  and stays inside its 24px track, where it travelled 16px and overran it.
   New exported `CheckboxSize` / `RadioSize` / `SwitchSize`.
 - **`ds-input` / `ds-textarea` character counter.** New `[maxLength]` caps input and renders a
   live `"n/max"` counter beside the hint. `ds-textarea` also gains `[readOnly]` (mirrors input).
@@ -8628,18 +9096,19 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   day carrying a full-date accessible name; out-of-range days are `aria-disabled` yet stay
   keyboard-reachable, and month/year navigation is announced via a polite live region. Masked entry
   edits at the caret (insert/backspace hop over the mask separators).
-- **Public `--ds-*` customization token sweep across ~44 components.** Components/sub-components that
+- **Public `--ds-*` customization token sweep across 47 components.** Components/sub-components that
   previously had no public token API (or only a shallow one) now expose per-instance/theme knobs —
   spinner, skeleton, progress, divider, accordion, page-footer, tooltip, w3w, drawer, popover, menu
   (+ item + divider), checkbox, radio, switch, slider, segmented, toggle-button, stepper, select,
   autocomplete, multi-select, date-picker, time-picker, otp-input, number-stepper, bottom-sheet, list,
   loading-overlay, split-button, tree, avatar-group, description-list, dropzone, modal, page-header,
   tabs, tag, timeline, toast, topbar, avatar, color-picker, icon-button, input, empty-state — bringing
-  drawer / popover / tooltip up to the same depth as modal / card. Roughly 160–180 new names,
+  drawer / popover / tooltip up to the same depth as modal / card. 182 new names,
   predominantly color (surface/background, border, text/label, icon, accent, plus hover/selected/focus/
   active states) with secondary sizing (height, width, max-width/height, radius, padding, shadow,
   font-size). Each is a `--_x: var(--ds-x, <role-token>)` resolver whose default equals the existing
-  role token, so it is purely additive — zero visual change for consumers who set nothing.
+  role token, so it is purely additive — zero visual change for consumers who set nothing, except
+  `--ds-search-maxw`, whose default is `none` where the field was capped at 320px (see Changed).
 
 ### Changed
 
@@ -8657,7 +9126,8 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 - **`ds-search` fills its container by default.** Default `max-width` changed from `320px` to `none` —
   `ds-search` now stretches to `width: 100%` like the rest of the field family (input / select /
   textarea) instead of being capped at 320px. New public `--ds-search-maxw` override token (default
-  `none`) to opt back into a fixed cap, e.g. `ds-search { --ds-search-maxw: 320px }`.
+  `none`) to opt back into a fixed cap, e.g. `ds-search { --ds-search-maxw: 320px }`; it replaces
+  the global `--search-maxw`, which is gone.
 - **Rounded press feedback + native tap-highlight suppression.** Interactive controls now show a
   rounded `:active` press state (`filter: brightness(0.9)` + `transform: scale(0.97)`) that follows
   each control's own border-radius/shape rather than a square box-shadow/background overlay — applied
@@ -8697,7 +9167,8 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   **discouraged** (dev-mode `console.warn` — prefer the global `.link` class); a small set of
   low-contrast `color × variant` combos (e.g. `neutral` solid, `success` / `warning` ghost/outline)
   render with a discouraged ⚠ marker rather than being banned. Each instance now sources its accent
-  from the `--accent-*` pointer layer (see ds-color).
+  from the `--accent-*` pointer layer (see ds-color). A migrated `outline` button presses to a
+  14% `--text-secondary` tint, was `--surface-secondary` (restore via `--ds-button-bg-color-active`).
 - **Reactive-forms radio now uses `<ds-radio-group>` as the group container and form control.**
   Standalone `<ds-radio [(checked)]>` continues to work for non-group usage, but a group of
   radios that participates in a reactive form should now be wrapped in `<ds-radio-group>`.
@@ -8799,7 +9270,10 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   no automatic `prefers-color-scheme` switch — to follow the OS, opt in at the app root with the new
   **`provideDsTheme({ followSystem: true })`** provider. Each theme declares `color-scheme` so native
   UI (scrollbars, form controls) matches. Adds theme-stable `--static-white` / `--static-ink` tokens
-  so on-fill text keeps correct contrast across themes. Non-breaking — additive, light output unchanged.
+  so on-fill text keeps correct contrast across themes: `--primary-on`, `--icon-on-primary` and
+  `--text-on-*` read them instead of `--neutral-0` / `--neutral-900`, so under
+  `data-neutrals="brand"` `--text-on-warning` is `#161A28`, not the brand-gray 900.
+  Non-breaking — additive, light output unchanged.
   Light and dark are **sibling themes** — a shared base palette (`themes/_base-palette`) + a shared
   role map (`themes/_semantic`); light applies at `:root`, dark at `:root[data-theme='dark']` (the
   dark block declares the complete token set, so it fully replaces light, not patches it).
@@ -8827,6 +9301,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   floating-label layout.
 - **`--field-label-gap` token** (single source for label↔control and control↔hint vertical
   rhythm, defaults to `--space-1-5`); every field control now routes its spacing through it.
+  It replaces `--field-gap-label`, which is gone.
 
 #### Components — new capabilities
 
@@ -8865,8 +9340,9 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 ### Changed
 
 - **Button & icon-button press is now darken + a micro scale-down; the pressed halo is off by default.**
-  `:active` darkens the fill (unchanged) and adds `transform: scale(0.98)` (button) / `0.96` (icon-button)
-  for tactile feedback. The old faint pressed halo (`--ds-button-pressed-shadow`) now defaults to `none`
+  `:active` darkens the fill (unchanged, except the old `outline` button: as neutral `outline` it
+  presses to a grey ink tint, not `--surface-secondary`) and adds `transform: scale(0.98)` (button) /
+  `0.96` (icon-button) for tactile feedback. The old faint pressed halo (`--ds-button-pressed-shadow`) now defaults to `none`
   — still settable to re-enable it. Honors `prefers-reduced-motion` (scale dropped, colour stays).
 - **Button & icon-button `[disabled]` is now a per-variant muted tint, not one flat grey.**
   The disabled look derives from each variant's own colour: solid fills (primary/error/
@@ -8899,13 +9375,14 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 - **`prefers-reduced-motion` no longer freezes looping indicators.** A blanket
   `animation-duration: 0 !important` was stopping spinners and the indeterminate progress
   bar (a frozen spinner reads as "hung", not "loading"). Looping status indicators are now
-  slowed instead of zeroed; one-shot entrance/transition motion stays instant. The page-wide
+  slowed instead of zeroed (`--duration-loop-fast` / `-slow` 1400ms / 2800ms there, were 0ms); one-shot entrance/transition motion stays instant. The page-wide
   skeleton sweep still halts (large-area motion, the one reduced-motion should remove).
 - **Overlay scroll-lock is now released on dismiss.** The scoped `@keyframes` name guard now
   matches Angular's emulated-encapsulation suffix (`endsWith`, not `===`), so the page no
   longer stays scroll-locked after an overlay closes.
-- **`ds-input` / `ds-search` clear button stays visible when the field is blurred** — its
-  contrast was bumped so it reads at rest, not only on focus.
+- **`ds-input` / `ds-search` clear button reads at rest.** `ds-input` draws it in
+  `--text-secondary` instead of `--text-tertiary`, and `ds-search` shows it at full opacity instead
+  of 0.7, so it no longer needs hover or focus to be seen.
 - **`ds-combobox`** truncates long option labels with an ellipsis instead of wrapping in
   narrow panels, and its multi-select option row now fills the panel width (label no longer
   clipped to zero).
@@ -8922,13 +9399,14 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   dropzone, empty-state, icon-button, input, modal, pagination, search, sidenav, stat,
   table, tabs, tag, toast and topbar — plus global tokens (`--select-bg`, `--chart-hover-bg`,
   `--chart-tooltip-bg`, the `--status-*-bg` set) and private `--_*` tokens. Consumers
-  overriding e.g. `--ds-toast-bg` must rename to `--ds-toast-bg-color`.
+  overriding e.g. `--ds-toast-bg` must rename to `--ds-toast-bg-color`; the state variants
+  `--ds-*-bg-<state>` take it after `-bg` (`--ds-button-bg-hover` → `--ds-button-bg-color-hover`).
 - **Renamed `--*-fg` tokens → semantic `-text-color` / `-label-color` / `-icon-color`.**
   The unclear `fg` abbreviation is gone: text/titles/inputs → `-text-color`, control & nav
   labels → `-label-color`, icons/glyphs → `-icon-color`. Affects all public `--ds-*-fg`
   hooks — avatar, badge, banner, breadcrumbs, button, date-picker, dropzone, empty-state,
   icon-button, input, menu, modal, page-header, pagination, search, sidenav, table, tabs,
-  tag and topbar — plus the `--status-*` and chart-tooltip globals. Examples:
+  tag and topbar — plus the `--status-*` globals and `--chart-tooltip-fg`. Examples:
   `--ds-modal-title-fg` → `--ds-modal-title-text-color`, `--ds-sidenav-group-fg` →
   `--ds-sidenav-group-label-color`, `--ds-icon-button-fg` → `--ds-icon-button-icon-color`.
 
@@ -8953,7 +9431,8 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
   matching `-error` hook) that falls back to the group token; the global `.link` utility
   and the shared dropdown/select overlay panel read the group token directly. A consumer
   can retune focus for one component, a whole group (all fields or all controls), or rely
-  on the theme default. Default appearance unchanged.
+  on the theme default. Default appearance unchanged except `ds-combobox`, which moves to
+  the field halo (see Changed).
 - **`ds-tag` hover tokens** `--ds-tag-hover-bg-color` / `--ds-tag-hover-label-color`
   (private tokens hoisted to `:host` for consumer override).
 - **`--opacity-state-active`** (0.24) overlay token, backing the new tag pressed state.

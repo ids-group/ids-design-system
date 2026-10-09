@@ -1,4 +1,6 @@
 @use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   --_list-item-padding-y: var(--ds-list-item-padding-y, var(--list-item-pad-y));
@@ -32,11 +34,12 @@
   text-align: left;
 }
 
+// The item padding has room for a ring outside the text.
 button.activator {
   cursor: pointer;
 
   &:focus-visible {
-    @include focus.ring(calc(-1 * var(--focus-ring-width)));
+    @include focus.ring(var(--focus-ring-width));
   }
 
   &:disabled {

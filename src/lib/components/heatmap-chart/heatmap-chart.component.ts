@@ -252,7 +252,11 @@ export class HeatmapChartComponent
   });
 
   protected readonly skeletonRows = computed(() =>
-    Array.from({ length: Math.max(this.data().length, 4) }),
+    Array.from({ length: this.data().length || 4 }),
+  );
+
+  protected readonly skeletonColumns = computed(() =>
+    Array.from({ length: this.columns().length || 6 }),
   );
 
   /** Flattened so one index addresses a cell (`chartActiveMark` counts marks). */

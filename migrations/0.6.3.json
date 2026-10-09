@@ -42,9 +42,9 @@
       "old": null,
       "new": null,
       "action": "Build the consumer immediately after the bump — the compiler enumerates every collision. Per member: where the base means the same thing, keep the name and add `override` with a base-compatible signature; otherwise rename your own member. Base members it collides on: zebra, columnOrder, orderedColumns, visibleColumns, toggleColumn, onColumnDrop, moveColumn, resetColumns, columnFilters, exportCsv, onResizeMove, onResizeEnd.",
-      "appliesWhen": "Only a consumer that EXTENDS TableComponent. Subclassing a DS component is unsupported (design-system.md § Components); anyone using the `<ds-table>` element is unaffected.",
+      "appliesWhen": "Only a consumer that EXTENDS TableComponent or another class in `detect`. Subclassing a DS component is unsupported; anyone using the `<ds-table>` element is unaffected.",
       "pitfall": "Two ways to fix it wrongly. Adding `override` to `zebra` without adopting the base booleanAttribute transform changes what the input accepts. And renaming your member to something else can collide again — check the new name against the base member list, because the private and protected ones are internal and give no warning.",
-      "note": "The new column API added about 76 members to TableComponent, so a subclass that already used one of those names stops compiling: TS4114 wants an `override` modifier, TS2416 fires where the signature differs.",
+      "note": "With the new column API `TableComponent` gained 77, so a subclass that already used one of those names stops compiling: TS4114 wants an `override` modifier, TS2416 fires where the signature differs. `DatePickerComponent` gained `defaultDate` and lost `defaultMonth`. `MultiSelectComponent` and `TimePickerComponent` each gained `onTriggerClick`. `PopoverComponent` gained `focusTimer`, `panelTrap` and `triggerElement`. `SelectComponent` gained `host`. `SidenavComponent` gained `brandNameRef`, `hasBrandName` and `logoLetter`.",
       "searchHints": [
         "extends TableComponent",
         "extends "
@@ -54,7 +54,19 @@
         "extends TableComponent",
         "extends ",
         "zebra",
-        "exportCsv"
+        "exportCsv",
+        "extends DatePickerComponent",
+        "DatePickerComponent",
+        "extends MultiSelectComponent",
+        "MultiSelectComponent",
+        "extends PopoverComponent",
+        "PopoverComponent",
+        "extends SelectComponent",
+        "SelectComponent",
+        "extends SidenavComponent",
+        "SidenavComponent",
+        "extends TimePickerComponent",
+        "TimePickerComponent"
       ],
       "verify": "A typecheck reports no TS4114 / TS2416 on a TableComponent subclass; every kept name uses `override` with a base-compatible signature."
     }
@@ -71,12 +83,12 @@
     "ds-table gains a public exportCsv(filename?) method — downloads visible columns of the filtered+sorted rows as UTF-8 CSV, wired to a consumer button via template ref — additive, no code change.",
     "ds-table gains opt-in density ('default'|'compact'), zebra (odd-row stripe via new --ds-table-row-stripe-bg-color token) and maxHeight (caps + vertically scrolls the body, pairs with stickyHeader) inputs — additive, off by default, no code change.",
     "ds-table gains an opt-in stickyScrollbar input — the scroll container's native horizontal bar is hidden and a proxy stuck to the bottom of the nearest scroll ancestor mirrors scrollLeft both ways (hides itself when nothing overflows) — additive, off by default, no code change.",
-    "ds-table truncate cells: clicking a clipped cell now opens the full value in a popover (title tooltip unchanged; the click is swallowed, never doubling as a row click; unclipped cells pass the click to the row) — behavior only, no code change.",
+    "ds-table truncate cells: clicking a clipped cell now opens the full value in a popover (in addition to the title tooltip; the click is swallowed, never doubling as a row click; unclipped cells pass the click to the row) — behavior only, no code change.",
     "ds-table rowInteractive: a click that finishes a mouse text selection no longer emits rowClicked, so cell text can be drag-selected and copied (only a selection made by that same gesture counts — a stale selection never blocks clicks); keyboard activation unaffected — behavior only, no code change.",
     "ds-select/ds-autocomplete/ds-multi-select/ds-time-picker/ds-color-picker/ds-popover overlay panels are now non-modal (no backdrop): the page behind stays interactive, panels close on outside pointer-down or page scroll, button-style triggers toggle, and focus returns to the trigger only for Escape/selection/in-panel closes — behavior only, no code change.",
     "ds-date-picker no longer strands focus on <body> when the calendar closes via outside click or page scroll — close() now returns focus to the field (preventScroll) when focus was inside the calendar, except a coarse-pointer device with an editable field (allowInput) which is left alone to avoid re-summoning the soft keyboard (allowInput=false always refocuses); Escape/selection/preset closes unchanged — pure bugfix, no code change.",
     "ds-toast enter animation now slides up from below into place (exit unchanged) — visual/motion only, no code change.",
-    "Typography utilities .t-* (.t-display/.t-h1…/.t-mono-block) now read each type property as a longhand through a public --ds-t-<name>-<prop> hook (font-weight/font-size/line-height/font-family + letter-spacing/text-transform/color/background-color/border-color/border-radius where set), falling back to the current semantic token — consumers can retune a single axis per utility in a scope without forking. Default rendering unchanged; structural box props stay raw. Additive, no code change.",
+    "Typography utilities .t-* (.t-display/.t-h1…/.t-mono-block) now read each type property as a longhand through a public --ds-t-<name>-<prop> hook (font-weight/font-size/line-height/font-family + letter-spacing/text-transform/color/background-color/border-color/border-radius where set), falling back to the current semantic token — consumers can retune a single axis per utility in a scope without forking. Default rendering unchanged; structural box props stay raw. The font shorthand became longhands, so .t-* no longer force font-style/font-variant back to normal - observable only inside an italic or small-caps ancestor. Additive, no code change.",
     "ds-input/ds-search/ds-textarea now focus the inner input/textarea when the frame chrome is clicked (leading/trailing icon, prefix/suffix add-on, padding); nested controls (projected buttons, clear x, password toggle) keep their own click. New exported FieldClickFocusDirective ([dsFieldClickFocus]) for consumers' own field wrappers. Overlay-trigger fields already focused on click and are unchanged — behavior only, no code change.",
     "New ds-app-shell — a slotted fixed-frame application shell ([sidenav]/[topbar]/default content slots) that pins to the viewport (100dvh, overflow: hidden) so only the content <main> scrolls (scrollbar-gutter: stable + automatic native-scrollbar-width padding compensation via the new --ds-scrollbar-width root variable); topbarSpan input ('content' default full-height rail | 'full' full-width topbar) switches the geometry; scroll-to-top on router navigation via the new exported ShellScrollService (also injectable from routed pages for manual scrollToTop()). Tokens: --ds-app-shell-pad-x/-pad-y/-content-max-width/-height — additive, no code change.",
     "New ds-sidenav-footer — a rail footer brick: Search row with a live grouped-results popover, Alerts row with an unread dot + feed popover, Collapse row, and a user card with an account menu; inputs userName/userRole/alerts/collapsed/searchProvider/alertItems/profileRoute, outputs collapseToggled/alertsOpened/signOutSelected; new exported types SidenavSearchProvider/SidenavSearchResult/SidenavAlertItem. Tokens: --ds-sidenav-footer-popover-width/-popover-max-width/-popover-max-height/-head-tracking/-dot-size — additive, no code change.",

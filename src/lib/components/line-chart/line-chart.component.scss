@@ -1,12 +1,14 @@
 @use '../../styles/chart-data-table' as chart-data-table;
 @use '../../styles/chart-frame' as chart-frame;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
 // On the host, not the figure: the component reads the plot height back as a number via getComputedStyle(host).
 :host {
   --_line-chart-plot-height: var(--ds-line-chart-plot-height, 240px);
-  --_line-chart-skeleton-height: var(--ds-line-chart-placeholder-height, var(--_line-chart-plot-height));
+  --_line-chart-skeleton-height: var(--ds-line-chart-placeholder-height, var(--_line-chart-view-height));
   --_line-chart-message-height: var(--ds-line-chart-placeholder-height, var(--_line-chart-view-height));
 }
 
@@ -73,11 +75,15 @@ ds-chart-legend {
   display: grid;
 }
 
+// A line of the legend's own type, so the placeholder row is as tall as the legend it stands for.
 .skeleton-legend {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--space-2) var(--space-4);
+  min-block-size: 1lh;
   margin-block-start: var(--space-3);
+  font-size: var(--font-size-xs);
 }
 
 @include chart-frame.forced-colors;

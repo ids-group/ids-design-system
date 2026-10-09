@@ -48,6 +48,7 @@ const probes = {
   'PageUp / PageDown': /'PageUp'|'PageDown'/,
   'type-ahead (jump by typing)': /typeAhead|createTypeAhead/i,
   'loading / busy state': /\bloading\b|aria-busy/,
+  'loading list takes no cursor key': /isListCursorKey/,
   'opened / closed outputs':
     /output<[^>]*>\(\)[\s\S]{0,40}(opened|closed)|readonly (opened|closed) = output/,
   'filter text as an output':

@@ -62,9 +62,9 @@
       "old": "ChartTooltipDirective",
       "new": null,
       "surface": "typescript",
-      "action": "Only if you SUBCLASS the internal `ChartTooltipDirective`, which the package root does not export, and declare a member called `detachScrollClose`: rename yours, or add `override` where your member genuinely means the scroll-close teardown.",
+      "action": "Only if you SUBCLASS the internal `ChartTooltipDirective`, which the package root does not export, and declare a member called `detachScrollClose`: rename yours. The new member is private, so `override` does not clear the collision.",
       "appliesWhen": "Only a class extending the internal `ChartTooltipDirective`. It is not exported from the package root — `@ids-group-ltd/ids-design-system/components/chart-tooltip` is the only specifier that reaches it — and a chart that uses it through the five chart components needs nothing.",
-      "pitfall": "The collision is a compile error, not a silent one — TS4114 for a same-named member, TS2416 where the signature differs — so a build that passes has none.",
+      "pitfall": "The collision is a compile error, not a silent one — TS2415 on the class plus TS4114 on the member for a same-typed redeclaration (TS2415 alone with `override`), and TS4114 with TS2416 where the type differs — so a build that passes has none.",
       "restore": null,
       "searchHints": [
         "detachScrollClose",
@@ -74,8 +74,8 @@
         "extends ChartTooltipDirective",
         "ChartTooltipDirective"
       ],
-      "verify": "No subclass of the internal `ChartTooltipDirective` declares a member named `detachScrollClose` of its own; the app builds with no TS4114 or TS2416 on that class.",
-      "note": "The directive is internal: it tears down its own scroll subscription when the panel closes, which is what the new member holds. Subclassing a DS directive is unsupported, but a release that only adds can still fail such a build on a name collision."
+      "verify": "No subclass of the internal `ChartTooltipDirective` declares a member named `detachScrollClose` of its own; the app builds with no TS2415, TS4114 or TS2416 on that class.",
+      "note": "The directive is internal: it tears down its own scroll subscription when the panel closes, which is what the new member, `detachScrollClose`, holds. Subclassing a DS directive is unsupported, but a release that only adds can still fail such a build on a name collision."
     },
     {
       "id": "date-time-picker-panes-carry-dropdown-panel-class",
@@ -169,7 +169,7 @@
       "new": "ds-donut-chart .empty-text.is-error",
       "surface": "style",
       "action": "Retarget any rule written against `.empty.is-error` inside `ds-donut-chart` to `.empty-text.is-error`.",
-      "appliesWhen": "Only a stylesheet of yours reaching the donut error message by class. The other four charts still use `.empty.is-error` and are unchanged.",
+      "appliesWhen": "Only a stylesheet of yours reaching the donut error message by class. The other four charts still use `.empty.is-error`, so a rule written against it there still matches.",
       "pitfall": "Nothing errors — the rule simply stops matching, and the message falls back to the library default.",
       "restore": null,
       "searchHints": [
@@ -182,10 +182,62 @@
       ],
       "verify": "No rule targets `.empty.is-error` within `ds-donut-chart`; the error message still takes your styling.",
       "note": "The error branch moved from a bare paragraph to the same ring-sized box the no-data state uses, so `.empty` is now the wrapper and the message carries `.empty-text`."
+    },
+    {
+      "id": "chart-active-mark-leaves-the-package-root",
+      "kind": "behavior",
+      "old": "ChartActiveMark",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if you import the internal `ChartActiveMark` from `@ids-group-ltd/ids-design-system`: import it from `@ids-group-ltd/ids-design-system/components/chart-tooltip` instead.",
+      "appliesWhen": "Only a file that imports the internal `ChartActiveMark` type from the package root. The chart-tooltip entry point still exports it, and code that uses the charts through their elements needs nothing.",
+      "pitfall": "The import fails the build with TS2305 rather than going quiet, so a build that passes has none.",
+      "restore": null,
+      "searchHints": [
+        "ChartActiveMark"
+      ],
+      "detect": [
+        "ChartActiveMark",
+        "has no exported member 'ChartActiveMark'"
+      ],
+      "verify": "No file imports the internal `ChartActiveMark` from `@ids-group-ltd/ids-design-system`; every import of it names the chart-tooltip entry point.",
+      "note": "The type is internal, so the package root no longer exports it. Its `enter` also takes an optional third argument, which an existing implementation still satisfies."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "BarChartComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename your own member or mark it `override` wherever the compiler reports a collision with a class in `detect`. Delete an override of a member the class lost.",
+      "appliesWhen": "Only a class that extends one of the classes in `detect`. A consumer who uses the chart elements in templates needs nothing from this item.",
+      "pitfall": "`private` and `protected` give no protection: a member you redeclare collides with a base member of any visibility. A member of yours that replaced a lost one no longer replaces anything, and the component stops calling it.",
+      "note": "`BarChartComponent`, `ColumnChartComponent`, `DonutChartComponent`, `FunnelChartComponent` and `LineChartComponent` each gained `dataTableResolved`, `emptyTextResolved`, `errorTextResolved` and `valueFormatResolved`, the resolvers behind the inputs that now default to `null`, and the `dimOthers` input. `ColumnChartComponent` also gained `onMarkEnter` and `tooltipAnchor`, `FunnelChartComponent` `hitGapUnits`, and `LineChartComponent` `cursorBottomY`, `readingAnchor` and `tooltipAnchor`. `DonutChartComponent` lost `markStagger`.",
+      "verify": "The app builds with no error naming a class listed in `detect`, and every member of such a subclass that shares a base member's name is marked `override`.",
+      "searchHints": [
+        "extends BarChartComponent",
+        "extends ColumnChartComponent",
+        "extends DonutChartComponent",
+        "extends FunnelChartComponent",
+        "extends LineChartComponent"
+      ],
+      "detect": [
+        "extends BarChartComponent",
+        "BarChartComponent",
+        "extends ColumnChartComponent",
+        "ColumnChartComponent",
+        "extends DonutChartComponent",
+        "DonutChartComponent",
+        "extends FunnelChartComponent",
+        "FunnelChartComponent",
+        "extends LineChartComponent",
+        "LineChartComponent"
+      ],
+      "restore": null
     }
   ],
   "informational": [
-    "Every DS surface that used to travel on its way in now fades instead. `ds-overlay-pane` — the select, autocomplete, multi-select, date-picker, time-picker, colour-picker, popover, menu-submenu and tooltip panels — plus `ds-alert`, `ds-banner` and `ds-toast` defaulted to `ds-slide-in`, which offsets the surface and slides it into place; they default to `ds-fade-in` now, at the same duration and easing. `ds-drawer` and `ds-bottom-sheet` are unchanged (`ds-slide-edge-in`), and so is `ds-modal` (`ds-scale-in`). Nothing in your code changes. If you want the travel back it is one declaration at the root — `:root { --ds-overlay-enter-keyframes: ds-slide-in; }` — or per surface, `ds-toast { --ds-toast-enter-keyframes: ds-slide-in; }`.",
+    "Every DS surface that used to travel on its way in now fades instead. `ds-overlay-pane` — the select, autocomplete, multi-select, date-picker, time-picker, colour-picker, popover, menu-submenu and tooltip panels — plus `ds-alert`, `ds-banner` and `ds-toast` defaulted to `ds-slide-in`, which offsets the surface and slides it into place; they default to `ds-fade-in` now, at the same duration and easing. `ds-drawer` and `ds-bottom-sheet` are unchanged (`ds-slide-edge-in`), and so is `ds-modal` (`ds-scale-in`). Nothing in your code changes. If you want the travel back it is one declaration at the root for the panels — `:root { --ds-overlay-enter-keyframes: ds-slide-in; }` — and one per surface for `--ds-alert-enter-keyframes`, `--ds-banner-enter-keyframes` and `--ds-toast-enter-keyframes`, e.g. `ds-toast { --ds-toast-enter-keyframes: ds-slide-in; }`.",
     "A chart mark now arrives by growing from its own baseline rather than by scaling about its centre: a `ds-column-chart` column grows up out of the category axis, a `ds-bar-chart` row grows out from the value axis, and `ds-donut-chart`, `ds-funnel-chart` and `ds-line-chart` marks fade because they have no baseline to grow from. Nothing in your code changes. `staggerMs` still spaces the arrivals on the four charts whose marks arrive one at a time.",
     "The mark cap on `ds-bar-chart` and `ds-column-chart` is 3px, through a new `--ds-chart-mark-cap-radius` with `--ds-bar-chart-cap-radius` and `--ds-column-chart-cap-radius` over it. The bar's end was a full pill (half the track height) and the column's top was `--radius-sm`, so both change shape slightly. Set the hook to your old value if the pill mattered: `ds-bar-chart { --ds-bar-chart-cap-radius: 6px; }`.",
     "`ds-funnel-chart`'s inter-stage gaps and `ds-bar-chart`'s row gap now belong to the marks either side of them, so a pointer between two marks answers for one of them instead of for nothing. The funnel's gaps look exactly as they did. `ds-bar-chart`'s plot is one full `--ds-bar-chart-row-gap` taller — 20px at the default — because the row gap moved from the list onto each row, giving the first row half a gap above it and the last half a gap below. A test that asserted a pointer between two bars hits neither will now see the nearer one, and a layout pinned to the old plot height needs 20px more.",
@@ -198,11 +250,11 @@
     "Fading the marks that are not singled out is now the `dimOthers` input rather than something `interactive` brought with it, and it is OFF by default on all five charts. On `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart` the pointer or focus picks the mark; `ds-line-chart` has no mark between two readings, so its fade follows the legend's highlight. The fade costs the separation between the faded marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at the default dim opacity — so it is a trade to make deliberately. A chart that had it back: `<ds-donut-chart interactive dimOthers …>`.",
     "Every chart holds the height of its plot while it shows a message — empty data, an error, or a legend that switched the last series off. What reserves that height differs: `ds-column-chart` and `ds-line-chart` use `--ds-column-chart-plot-height` / `--ds-line-chart-plot-height`, `ds-donut-chart` uses `--ds-donut-chart-size`, and `ds-bar-chart` and `ds-funnel-chart` reserve three rows or stages — so a bar chart that normally draws ten rows still shrinks to that reserve. A layout that relied on a chart collapsing to a line of text in those states will now see a reserved box.",
     "A chart tooltip's default content carries a second line per reading, for what the chart does not already print beside the mark: the mark's share of the total on `ds-bar-chart` and `ds-column-chart`, and the drop into the stage on `ds-funnel-chart`. A mark whose value is zero or negative gets no second line. `ds-donut-chart` carries none — its panel and its legend both already print the percentage. `ChartTooltipEntry` takes an optional `detail` for it. A projected `#dsChartTooltip` template is unaffected — it replaces the panel's contents entirely.",
-    "The dropdown panel's hooks all forward from the host onto the portaled pane per instance, the two new ones included — `--ds-dropdown-panel-border-color`, `--ds-dropdown-panel-shadow`, `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family` join `--ds-dropdown-panel-bg-color`, `--ds-dropdown-panel-minw`, `--ds-dropdown-panel-maxw`, `--ds-option-selected-bg-color`, `--ds-option-selected-label-color`, `--ds-option-selected-bg-color-hover` and `--ds-option-check-color`. Setting any of them on one picker reaches that picker's pane with no global rule.",
+    "The dropdown panel's hooks all forward from the host onto the portaled pane per instance, the six new ones included — `--ds-dropdown-panel-border-color`, `--ds-dropdown-panel-shadow`, `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family` join the hooks already forwarded: `--ds-dropdown-panel-bg-color`, `--ds-dropdown-panel-radius`, `--ds-dropdown-panel-maxh`, `--ds-dropdown-panel-minw`, `--ds-dropdown-panel-maxw`, `--ds-option-padding`, `--ds-option-gap`, `--ds-option-radius`, `--ds-option-row-gap`, `--ds-option-bg-color-active`, `--ds-option-selected-bg-color`, `--ds-option-selected-label-color`, `--ds-option-selected-bg-color-hover` and `--ds-option-check-color`. Setting any of them on one picker reaches that picker's pane with no global rule.",
     "`staggerMs` on `ds-donut-chart` has no effect. The ring fades as one object — arcs share their edges, and fading them one at a time shows the background through every seam — so there is nothing for a per-mark step to stagger. The input stays for parity with the other four charts.",
     "A legend's colour chips now fade in with the marks they name, on the same curve and delay: `ds-chart-legend`'s swatch and, where the legend toggles, its checkbox; `ds-donut-chart`'s legend swatch; and `ds-funnel-chart`'s stage-table swatch. They used to be solid from the first frame. Nothing in your code changes; a screenshot test that captures a chart mid-entrance will differ.",
     "`ds-donut-chart`'s error state holds the ring's height instead of collapsing to a line of text, matching the no-data state. The message element carries `empty-text is-error` where it carried `empty is-error`, so a rule written against `.empty.is-error` inside this chart no longer matches it.",
-    "The internal `describeStanding` is renamed: the internal `describeShare` replaces it, returning the share alone with no rank clause, and returning an empty string for a zero or negative reading. Neither name is exported from the package root — `@ids-group-ltd/ids-design-system/components` exports them — so only code reaching in through that specifier has an import to rename."
+    "The internal `describeShare` is new: it returns one mark's share of the total, or an empty string for a lone mark or a zero or negative reading. It is not exported from the package root - only `@ids-group-ltd/ids-design-system/components` exports it. Nothing to change."
   ],
   "deleteList": [
     {

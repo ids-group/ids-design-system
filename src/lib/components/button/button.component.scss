@@ -1,5 +1,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/field-group-segment' as field-group-segment;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract:
    Label - single line, ellipsis on overflow, no tooltip. Rephrase if it needs multiple lines.

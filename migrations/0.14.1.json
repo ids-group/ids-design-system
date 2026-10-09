@@ -241,7 +241,7 @@
         "SkeletonComponent"
       ],
       "verify": "The app builds with no TS2415, TS2416 or TS4114 naming a class listed in detect, and no member of a subclass is named like a removed member listed in the note.",
-      "note": "Every listed class gained intl except AccordionComponent, AccordionItemComponent, AuthLayoutComponent, LineSeriesComponent and ChartTooltipDirective (internal); each nullable text input gained a matching ...Resolved readback. Also gained: AccordionComponent chevron; AccordionItemComponent chevronDown, chevronName; AlertComponent and BannerComponent liveRole; BarChartComponent highlighted, isSegmentDimmed; ChartComponent composed, cursorResolved, tooltipPinned; ColumnSeriesComponent axis, barElements, hatchInUse, locale; DatePickerComponent appLocale; DropzoneComponent sizeFormat; PieChartComponent legendHighlight, onLegendLeave, pinnedEntry. Lost: ChartComponent tooltipPreferBelow; ColumnSeriesComponent onMarkBlur; LineSeriesComponent onMarkerBlur; ChartTooltipDirective (internal) dsChartTooltipPreferBelow. AuthLayoutComponent's landmark default changes the type an override must match. Internal classes in detect are reached through their entry points. The nine chart components gained renderReady, and SkeletonComponent the shimmer input."
+      "note": "Every listed class gained intl except AccordionComponent, AccordionItemComponent, AuthLayoutComponent, LineSeriesComponent and ChartTooltipDirective (internal); each nullable text input gained a matching ...Resolved readback (railLabelResolved, placeholderResolved, searchPlaceholderResolved, countLabelResolved, ariaLabelResolved, moreLabelResolved, panelLabelResolved, noVisibleSeriesTextResolved, otherLabelResolved, menuLabelResolved, rangeAnnouncementResolved, sortAnnouncementResolved, closeLabelResolved). Also gained: AccordionComponent chevron; AccordionItemComponent chevronDown, chevronName; AlertComponent and BannerComponent liveRole; BarChartComponent highlighted, isSegmentDimmed; ChartComponent composed, cursorResolved, tooltipPinned; ColumnSeriesComponent axis, barElements, hatchInUse, locale; DatePickerComponent appLocale; DropzoneComponent sizeFormat; PieChartComponent legendHighlight, onLegendLeave, pinnedEntry. Lost: ChartComponent tooltipPreferBelow; ColumnSeriesComponent onMarkBlur; LineSeriesComponent onMarkerBlur; ChartTooltipDirective (internal) dsChartTooltipPreferBelow. AuthLayoutComponent's `landmark` keeps its type and changes its default to `'main'`, so an override that restated `'none'` now differs from the base default. Internal classes in detect are reached through their entry points. The nine chart components gained renderReady, and SkeletonComponent the shimmer input."
     },
     {
       "id": "chart-cursor-default-auto",
@@ -300,7 +300,7 @@
       ],
       "action": "Delete every [dsChartTooltipPreferBelow] binding. In a tooltip source a custom mark hands CHART_SCALES.reportTooltip, rename preferBelow to pinned.",
       "appliesWhen": "Only an app that binds the dsChartTooltip directive itself, or a custom mark that injects CHART_SCALES and reports a tooltip source carrying preferBelow. The library's own charts are unaffected.",
-      "pitfall": "A preferBelow left in a source reached through a variable rather than an object literal still compiles and is ignored, so a held panel stays inert to the pointer and its text cannot be selected.",
+      "pitfall": "A preferBelow left in a source reached through a variable rather than an object literal still compiles and is ignored, so a held panel stays inert to the pointer.",
       "restore": null,
       "searchHints": [
         "dsChartTooltipPreferBelow",
@@ -313,7 +313,7 @@
         "reportTooltip("
       ],
       "verify": "No dsChartTooltipPreferBelow or preferBelow remains in the app, and a held chart panel opens above its mark.",
-      "note": "Every chart puts its Unpin control at the plot's bottom edge, so a held panel opens above its mark like a hovered one and the flag that flipped it below has nothing left to steer. pinned carries the other half of what preferBelow fed: a held pane takes the pointer so its text can be selected."
+      "note": "Every chart puts its Unpin control at the plot's bottom edge, so a held panel opens above its mark like a hovered one and the flag that flipped it below has nothing left to steer. pinned carries the other half of what preferBelow fed: a held pane takes the pointer."
     },
     {
       "id": "chart-hatch-width-full-stroke",
@@ -535,7 +535,7 @@
         "none"
       ],
       "action": "None, unless a test or a screen expects a file size with a dot decimal under a non-English locale: pin it with provideDsConfig({ locale: 'en-US' }), which also pins chart numbers and ds-date-picker.",
-      "appliesWhen": "Only the size line of a listed file in ds-dropzone, in an app that provides LOCALE_ID or DS_CONFIG.locale. Under en-US the text is unchanged below 1000 MB; from 1000 MB it gains a group separator (1,024.0 MB).",
+      "appliesWhen": "Only the size line of a listed file in ds-dropzone, in an app that provides LOCALE_ID or DS_CONFIG.locale. Under en-US the text gains a group separator from 1000 KB up to 1 MB and from 1000 MB up (1,000.0 KB, 1,024.0 MB), and is unchanged everywhere else.",
       "pitfall": "A test asserting \"1.5 MB\" fails under a de-DE locale, where the size reads 1,5 MB, with no build error.",
       "restore": "provideDsConfig({ locale: 'en-US' })",
       "searchHints": [
@@ -624,7 +624,7 @@
       "verify": "With prefers-reduced-motion: reduce emulated, close a modal and click a button under it within 300 ms: the button's handler runs, and document.elementFromPoint over it never returns the .modal-backdrop."
     },
     "ds-accordion takes chevron: 'right' (default, the chevron every item drew) or 'down', which draws a downward chevron that turns up when the item opens. ds-accordion-item takes --ds-accordion-header-padding, --ds-accordion-header-gap, --ds-accordion-header-font-family, --ds-accordion-header-font-size, --ds-accordion-header-font-weight, --ds-accordion-header-line-height, --ds-accordion-header-hover-text-color and --ds-accordion-body-padding. Every default is the value the item already drew. Purely additive - nothing to change (delete list: accordion-head-and-body-deep-rules).",
-    "Six family tokens sit under every text-entry field's own token: --ds-field-border-color, --ds-field-border-color-hover, --ds-field-border-color-focus, --ds-field-text-color, --ds-field-placeholder-color and --ds-field-font-size reach ds-input, ds-textarea, ds-select, ds-multi-select, ds-autocomplete and ds-search, and a per-component token such as --ds-input-border or --ds-select-text-color still wins where set. The date, time and colour pickers, the number stepper and the OTP cells are not in the family. Every default is the value each field already drew. Purely additive - nothing to change.",
+    "Six family tokens sit under every text-entry field's own token: --ds-field-border-color, --ds-field-border-color-hover, --ds-field-border-color-focus, --ds-field-text-color, --ds-field-placeholder-color and --ds-field-font-size reach ds-input, ds-textarea, ds-select, ds-multi-select, ds-autocomplete and ds-search, all but --ds-field-border-color-hover on ds-search, whose hover border follows its resting one, and a per-component token such as --ds-input-border or --ds-select-text-color still wins where set. The date, time and colour pickers, the number stepper and the OTP cells are not in the family. Every default is the value each field already drew. Purely additive - nothing to change.",
     "ds-select takes --ds-select-border-color-focus, read by the focused and the open trigger alike, plus --ds-select-border-color-hover, --ds-select-placeholder-color and --ds-select-font-size; ds-multi-select takes --ds-multi-select-border-color-hover, --ds-multi-select-placeholder-color and --ds-multi-select-font-size; ds-search takes --ds-search-font-size. Every default is the value the trigger already drew. Purely additive - nothing to change (delete list: select-focus-border-important).",
     "ds-autocomplete takes --ds-autocomplete-text-color for the typed text and the picked value, --ds-autocomplete-placeholder-color for the filter input's placeholder, and --ds-autocomplete-border-color-hover. The placeholder now resolves --text-tertiary through the field family, as ds-input's does, where it was the browser's own grey before. Purely additive - nothing to change (delete list: autocomplete-input-deep-colour-rule).",
     "ds-button takes --ds-button-border-color-hover and --ds-button-border-color-active, ds-icon-button takes --ds-icon-button-border-hover and --ds-icon-button-border-active. Hover defaults to the resting border and active to hover, so an unset pair draws exactly what the button drew. Purely additive - nothing to change (delete list: button-border-hover-deep-rules).",

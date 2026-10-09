@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 :host {
   /* Portaled, so --ds-tooltip-* overrides are theme-level (:root). */
   --_tooltip-bg-color:   var(--ds-tooltip-bg-color,   var(--tooltip-bg-color));
@@ -7,6 +10,9 @@
   --_tooltip-shadow:     var(--ds-tooltip-shadow,     var(--ds-elevation-overlay));
   --_tooltip-max-width:  var(--ds-tooltip-max-width,  var(--tooltip-maxw));
   --_tooltip-padding:    var(--ds-tooltip-padding,    var(--space-1-5) var(--space-2-5));
+  --_tooltip-arrow-inset: calc(var(--_tooltip-radius) + var(--tooltip-arrow));
+  --_tooltip-arrow-left:  clamp(min(var(--_tooltip-arrow-inset), 50%), var(--_tooltip-arrow-x, 50%), max(100% - var(--_tooltip-arrow-inset), 50%));
+  --_tooltip-arrow-top:   clamp(min(var(--_tooltip-arrow-inset), 50%), var(--_tooltip-arrow-y, 50%), max(100% - var(--_tooltip-arrow-inset), 50%));
 
   display: block;
   position: relative;
@@ -22,6 +28,10 @@
   z-index: var(--layer-tooltip);
   box-shadow: var(--_tooltip-shadow);
 
+  strong {
+    font-weight: var(--font-weight-bold);
+  }
+
   &::after {
     content: "";
     position: absolute;
@@ -33,7 +43,12 @@
   }
 }
 
-:host(.bottom)::after { top:    calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); left: 50%; margin-left: calc(var(--tooltip-arrow) / -2); border-top-width: var(--border-width-default); border-left-width: var(--border-width-default); }
-:host(.top)::after    { bottom: calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); left: 50%; margin-left: calc(var(--tooltip-arrow) / -2); border-bottom-width: var(--border-width-default); border-right-width: var(--border-width-default); }
-:host(.left)::after   { right:  calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); top: 50%;  margin-top:  calc(var(--tooltip-arrow) / -2); border-top-width: var(--border-width-default); border-right-width: var(--border-width-default); }
-:host(.right)::after  { left:   calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); top: 50%;  margin-top:  calc(var(--tooltip-arrow) / -2); border-bottom-width: var(--border-width-default); border-left-width: var(--border-width-default); }
+:host(.no-arrow)::after {
+  display: none;
+}
+
+:host(.bottom)::after { top:    calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); left: var(--_tooltip-arrow-left); margin-left: calc(var(--tooltip-arrow) / -2); border-top-width: var(--border-width-default); border-left-width: var(--border-width-default); }
+:host(.top)::after    { bottom: calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); left: var(--_tooltip-arrow-left); margin-left: calc(var(--tooltip-arrow) / -2); border-bottom-width: var(--border-width-default); border-right-width: var(--border-width-default); }
+:host(.left)::after   { right:  calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); top: var(--_tooltip-arrow-top); margin-top:  calc(var(--tooltip-arrow) / -2); border-top-width: var(--border-width-default); border-right-width: var(--border-width-default); }
+:host(.right)::after  { left:   calc(var(--tooltip-arrow) / -2 - var(--border-width-default)); top: var(--_tooltip-arrow-top); margin-top:  calc(var(--tooltip-arrow) / -2); border-bottom-width: var(--border-width-default); border-left-width: var(--border-width-default); }
+

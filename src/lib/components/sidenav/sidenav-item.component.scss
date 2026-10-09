@@ -1,6 +1,8 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/text-clip' as text-clip;
 @use '../../styles/press' as press;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 // Tokens on :host so consumer overrides win against the inner .item rule.
 :host {

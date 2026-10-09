@@ -1,0 +1,16 @@
+@use 'press' as press;
+
+// The bare `×` that closes or removes its container. A flex box, so the glyph sits in the centre of
+// a square box and of its focus ring; an inline glyph rides the text line instead, below centre.
+// Include inside the button's own selector; colour, hover and size stay with the component.
+@mixin button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-0-5);
+  border: 0;
+  background: none;
+  cursor: pointer;
+
+  @include press.feedback;
+}

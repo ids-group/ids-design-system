@@ -29,6 +29,8 @@ const MIGRATIONS = join(
   tmpdir(),
   `check-manifest-coverage-selftest.${process.pid}.migrations`,
 );
+// On 'exit', not in the finally: the verdict leaves through process.exit, which skips finally.
+process.on('exit', () => rmSync(MIGRATIONS, { recursive: true, force: true }));
 
 const original = readFileSync(join(ROOT, 'CHANGELOG.md'), 'utf8');
 writeFileSync(CHANGELOG, original, 'utf8');

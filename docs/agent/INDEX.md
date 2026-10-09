@@ -120,12 +120,14 @@ and token names.** These leaves are for orientation and usage.
 
 ## overlays
 
-- [<ds-modal> — ModalComponent](overlays/ds-modal.md) — <!-- inputs:ds-modal -->
+- [<ds-modal> — ModalComponent](overlays/ds-modal.md) — actions goes on each button or on one <div actions> around them; the wrapper's children lay out as the row's o
 - [<ds-modal-card> — ModalCardComponent](overlays/ds-modal-card.md) — The visual card the <ds-modal> host renders inside its backdrop. Exposed as a separate selector for cases wher
 - [<ds-drawer> — DrawerComponent](overlays/ds-drawer.md) — Side panel (no side input — always anchored right).
 - [<ds-bottom-sheet> — BottomSheetComponent](overlays/ds-bottom-sheet.md) — Mobile-first panel anchored to the bottom edge (touch equivalent of drawer/modal). Drag-down on the grab strip
 - [<ds-popover> — PopoverComponent](overlays/ds-popover.md) — Floating panel anchored to a trigger via CDK overlay. Input: align: 'start' | 'end' = 'start' — controls overl
 - [[dsTooltip] — TooltipDirective](overlays/ds-tooltip.md) — Attribute directive, applied by dsTooltip or by dsTooltipWhenClipped alone. Apply to any focusable element; wi
+- [<ds-info-hint> — InfoHintComponent](overlays/ds-info-hint.md) — An icon button (14px, a question mark in a circle by default; icon="info" draws an "i") that shows supplementa
+- [[dsDefinitionTerm] — DefinitionTermDirective](overlays/ds-definition-term.md) — Directive, on any element: a term inside running text or a label that carries its definition, <span dsDefiniti
 - [<ds-menu> + <ds-menu-item> — MenuComponent, MenuItemComponent](overlays/ds-menu.md) — Menu is a container. Item inputs: icon: IconName | null = null, disabled: boolean = false, danger: boolean = f
 - [<ds-tooltip-panel> — TooltipPanelComponent](overlays/ds-tooltip-panel.md) — <!-- inputs:ds-tooltip-panel -->
 

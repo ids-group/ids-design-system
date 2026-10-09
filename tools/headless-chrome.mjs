@@ -21,35 +21,54 @@ export function findChrome() {
   return found;
 }
 
+// CDP_BROWSER_URL (e.g. http://127.0.0.1:9223) attaches to a running Chrome instead of launching one:
+// the page opens as a tab of that browser and close() closes only that tab.
 export async function open(
   url,
-  { throttle = 1, initScript = '', chromePath = findChrome() } = {},
-) {
-  const profile = mkdtempSync(join(tmpdir(), 'ds-headless-'));
-  const chrome = spawn(
+  {
+    throttle = 1,
+    initScript = '',
     chromePath,
-    [
-      '--headless=new',
-      `--user-data-dir=${profile}`,
-      '--window-size=1440,900',
-      '--remote-debugging-port=0',
-      'about:blank',
-    ],
-    { stdio: ['ignore', 'ignore', 'pipe'] },
-  );
-  const endpoint = await new Promise((resolve, reject) => {
-    let buffer = '';
-    chrome.stderr.on('data', (chunk) => {
-      buffer += chunk;
-      const match = buffer.match(/DevTools listening on (ws:\/\/\S+)/);
-      if (match) resolve(match[1]);
-    });
-    chrome.once('exit', (code) =>
-      reject(
-        new Error(`Chrome exited with ${code} before listening:\n${buffer}`),
-      ),
+    args = [],
+    browserUrl = process.env.CDP_BROWSER_URL,
+  } = {},
+) {
+  let chrome = null;
+  let profile = null;
+  let endpoint;
+  if (browserUrl) {
+    const version = await fetch(`${browserUrl}/json/version`).then((response) =>
+      response.json(),
     );
-  });
+    endpoint = version.webSocketDebuggerUrl;
+  } else {
+    profile = mkdtempSync(join(tmpdir(), 'ds-headless-'));
+    chrome = spawn(
+      chromePath ?? findChrome(),
+      [
+        '--headless=new',
+        `--user-data-dir=${profile}`,
+        '--window-size=1440,900',
+        '--remote-debugging-port=0',
+        ...args,
+        'about:blank',
+      ],
+      { stdio: ['ignore', 'ignore', 'pipe'] },
+    );
+    endpoint = await new Promise((resolve, reject) => {
+      let buffer = '';
+      chrome.stderr.on('data', (chunk) => {
+        buffer += chunk;
+        const match = buffer.match(/DevTools listening on (ws:\/\/\S+)/);
+        if (match) resolve(match[1]);
+      });
+      chrome.once('exit', (code) =>
+        reject(
+          new Error(`Chrome exited with ${code} before listening:\n${buffer}`),
+        ),
+      );
+    });
+  }
 
   const socket = new WebSocket(endpoint);
   await new Promise((resolve) =>
@@ -114,6 +133,11 @@ export async function open(
   // Chrome keeps the profile open for a moment after Browser.close, so removing it once fails; each one left
   // behind is about 60 MB.
   const close = async () => {
+    if (!chrome) {
+      await send('Target.closeTarget', { targetId }).catch(() => {});
+      socket.close();
+      return;
+    }
     await send('Browser.close').catch(() => {});
     await new Promise((resolve) => {
       chrome.once('exit', resolve);

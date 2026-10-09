@@ -1,5 +1,7 @@
 @use '../../styles/chart-data-table' as chart-data-table;
 @use '../../styles/chart-frame' as chart-frame;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
@@ -25,13 +27,6 @@ ds-chart {
 
 :host {
   --_chart-message-height: var(--_column-chart-view-height);
-}
-
-.skeleton {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  column-gap: var(--_column-chart-column-gap);
 }
 
 @include chart-frame.pin-reset;

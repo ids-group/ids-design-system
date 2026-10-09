@@ -1,4 +1,6 @@
-@use '../../styles/press' as press;
+@use '../../styles/dismiss-button' as dismiss-button;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   --_drawer-bg-color:               var(--ds-drawer-bg-color,               var(--surface-overlay));
@@ -41,15 +43,12 @@
 
   /* clip, not hidden: the sliding panel must not add scrollable overflow to ancestor
      frames, where the focus-trap's initial focus() would scroll the host app. */
+  // glyph-clip-guard: the viewport-sized root around the padded panel
   overflow: clip;
 
   &.closing {
     pointer-events: none;
   }
-}
-
-.unslotted {
-  display: contents;
 }
 
 .drawer-static {
@@ -164,18 +163,15 @@
     flex: 1;
   }
 
+  // target-size-guard: --modal-close-size, 24px
   .close {
-    background: transparent;
-    border: 0;
+    @include dismiss-button.button;
+
     width: var(--modal-close-size);
     height: var(--modal-close-size);
     color: var(--_drawer-close-icon-color);
-    cursor: pointer;
-    padding: 0;
 
     &:hover { color: var(--_drawer-close-icon-color-hover); }
-
-    @include press.feedback;
   }
 
   .body {
@@ -191,4 +187,9 @@
     gap: var(--space-2);
     justify-content: flex-end;
   }
+}
+
+// A `<div actions>` wrapper hands its buttons to the row. Zero specificity: a display set on it wins.
+:where(.footer) > ::ng-deep :where(div[actions], div[drawer-footer]) {
+  display: contents;
 }

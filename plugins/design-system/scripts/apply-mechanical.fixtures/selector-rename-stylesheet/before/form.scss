@@ -1,0 +1,4 @@
+.form ds-combobox { width: 100%; }
+ds-combobox.compact,
+:host ::ng-deep ds-combobox > .panel { --ds-combobox-focus-shadow: none; }
+.ds-combobox-wrapper { display: block; }

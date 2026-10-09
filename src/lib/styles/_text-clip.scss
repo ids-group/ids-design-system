@@ -1,8 +1,27 @@
+/* Every box that clips text goes through this file. A glyph reaches past its line box by half the
+   difference between the font's ascent plus descent and the line-height, and that depends on
+   whatever font the consumer sets, so no fixed margin on the block axis is safe for every font. */
+
+/* `clip` does not make a scroll container, so the block axis stays `visible` and nothing moves. */
+@mixin inline-axis {
+  overflow: clip visible;
+}
+
+/* `text-overflow` applies under `clip` as it does under `hidden`. */
 @mixin single-line-ellipsis {
-  /* `clip` with a margin, not `hidden`: where the line box is tighter than the glyph box (Mulish is 1.257em;
-     --line-height-flat and -tight are below it) `hidden` shaves every label. `text-overflow` applies under `clip` too. */
-  overflow: clip;
-  overflow-clip-margin: var(--space-1);
+  @include inline-axis;
+
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* A clamp must clip the block axis to hide the lines after the last, and that edge runs through the
+   strip where a descender above and an accent below overlap. Only a line box as tall as the font's
+   own glyph box keeps both clear of it, and `normal` is the line-height every font defines so. */
+@mixin line-clamp($lines) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  overflow: clip;
+  line-height: normal;
 }

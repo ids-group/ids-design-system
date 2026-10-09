@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,6 +7,7 @@ import {
 } from '@angular/core';
 import { WaterfallChartComponent } from 'ds/waterfall-chart';
 import type { WaterfallChartBar } from 'ds/waterfall-chart';
+import { DocsChartDataEditorComponent } from '../../../shared/docs-chart-data-editor.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 // Deck 10's own numbers, so the page and the probe assert the same chain.
@@ -39,7 +41,12 @@ const BELOW_ZERO: readonly WaterfallChartBar[] = [
 @Component({
   selector: 'section-charts-waterfall-chart',
   standalone: true,
-  imports: [DocsSectionComponent, WaterfallChartComponent],
+  imports: [
+    RouterLink,
+    DocsChartDataEditorComponent,
+    DocsSectionComponent,
+    WaterfallChartComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './waterfall-chart.section.html',
@@ -49,6 +56,8 @@ export class WaterfallChartSection {
   protected readonly settlement = SETTLEMENT;
   protected readonly withSubtotal = WITH_SUBTOTAL;
   protected readonly belowZero = BELOW_ZERO;
+  protected readonly loadingBars =
+    signal<readonly WaterfallChartBar[]>(SETTLEMENT);
 
   protected readonly lastClicked = signal<string>('nothing yet');
 

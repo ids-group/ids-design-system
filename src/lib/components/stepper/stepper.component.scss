@@ -1,5 +1,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/visually-hidden' as visually-hidden;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   display: flex;

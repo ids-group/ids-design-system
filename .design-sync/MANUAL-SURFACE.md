@@ -32,7 +32,7 @@ all failed.
 **Fix, per upstream's own advice — do not nest them.** `gen.mjs` scans every
 `*.component.html` and `*.component.ts` under `src/lib` for `<ds-…` tags; a component used
 inside another component's template registers under an alias, `ds-x-<name>`, that no template
-mentions, so Angular renders it as an ordinary component there. **32 of 95** take an alias (measured 2026-10-02).
+mentions, so Angular renders it as an ordinary component there. **32 of 96** take an alias (`COMPONENTS` in `gen/elements.ts`, 2026-10-09).
 The React wrapper emits the alias, so `<Modal>` and `<Button>` are unchanged for a caller and
 the tag never surfaces in a preview or a design. Angular's component styles are
 attribute-scoped, so the alias costs no CSS.
@@ -48,8 +48,9 @@ expando. Read off the live registration before the fix: `ds-modal`'s prototype c
 and it did — for the React wrapper only.
 
 **Fix:** `gen.mjs` emits a `HOST_INPUTS` map and `defineDsElements` defines a forwarding
-accessor per entry before `customElements.define`. Three components have such inputs today:
-`ds-modal`, `ds-x-popover`, `ds-x-select`, all `staticPreview`.
+accessor per entry before `customElements.define`. Eight entries, all `staticPreview`:
+`ds-x-bottom-sheet`, `ds-color-picker`, `ds-x-date-picker`, `ds-drawer`, `ds-modal`,
+`ds-x-popover`, `ds-x-select`, `ds-time-picker`.
 
 This is what closed the last symptom. With `staticPreview` reaching the component, the card
 renders at view creation, the projection is placed immediately, nothing is detached — and so
@@ -136,7 +137,7 @@ The sixteen, each with the gate its `<ng-content>` sits behind:
 | `filter-bar`    | `collapsed()`     | drops unslotted content by design                                                                      |
 
 `ds-modal-card` also has projection but does not appear here: its slots are at root level,
-outside any block, and it is one of the 31 that register under an alias.
+outside any block, and it is one of the components that register under an alias.
 
 ### `chart` - the gate is live, the marks are what cannot cross (2026-09-17)
 
@@ -183,10 +184,10 @@ express.
 ## 2. Attribute directives — no element to register
 
 A directive has no tag, so `@angular/elements` has nothing to define and it is
-absent from the generated surface entirely. Twenty-one of them:
+absent from the generated surface entirely. Twenty-two of them:
 
 `[dsBrandName]` · `[dsCellTemplate]` · `[dsChartTooltip]` · `[dsChipTemplate]` · `[dsCreateTemplate]` ·
-`[dsEmptyTemplate]` · `[dsFieldClickFocus]` · `[dsGroupLabelTemplate]` ·
+`[dsDefinitionTerm]` · `[dsEmptyTemplate]` · `[dsFieldClickFocus]` · `[dsGroupLabelTemplate]` ·
 `[dsModalConfirm]` · `[dsOptionTemplate]` · `[dsPanelFooterTemplate]` · `[dsPanelHeaderTemplate]` ·
 `[dsPickerTrigger]` · `[dsProjectionDropped]` · `[dsRailTrigger]` ·
 `[dsReserveMessages]` · `[dsTableColumns]` · `[dsTableExport]` ·
@@ -206,6 +207,8 @@ which would now work end to end because host-directive inputs reach the element 
 **Not built:** it would either add a public component to the library for a design-tool-only need,
 or add a design-sync-local component for a feature that cannot be seen in a static card. Revisit
 only if the design host ever renders interactive cards.
+
+`[dsDefinitionTerm]` marks a term that reveals its definition on hover and pins it open on a click, the same behaviour as `[dsTooltip]`. A static card has neither a hover nor a click, so nothing visible is lost; `ds-table` applies it internally.
 
 `[dsProjectionDropped]` is dev-only and never ships a node in production.
 

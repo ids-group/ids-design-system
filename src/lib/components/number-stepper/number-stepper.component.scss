@@ -1,5 +1,7 @@
 @use '../../styles/field-box' as field-box;
 @use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   --_number-stepper-focus-shadow: var(--ds-number-stepper-focus-shadow, var(--ds-field-focus-shadow));
@@ -16,6 +18,9 @@
   background: var(--_number-stepper-bg-color);
   border: var(--border-width-default) solid var(--_number-stepper-border-color);
   border-radius: var(--radius-md);
+  --_number-stepper-inner-radius: calc(var(--radius-md) - var(--border-width-default));
+
+  // glyph-clip-guard: rounds the corners; the value is an <input> that clips its own text
   overflow: hidden;
 
   // The box clips, so the ring is drawn inward.
@@ -86,10 +91,12 @@
 
   &.minus {
     border-right: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--_number-stepper-inner-radius) 0 0 var(--_number-stepper-inner-radius);
   }
 
   &.plus {
     border-left: var(--border-width-default) solid var(--border-default);
+    border-radius: 0 var(--_number-stepper-inner-radius) var(--_number-stepper-inner-radius) 0;
   }
 }
 

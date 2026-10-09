@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 // `paint-order` puts the halo stroke under the glyphs; no backing rectangle to measure.
 .threshold-label {
   --_chart-threshold-color: var(--ds-chart-threshold-color, var(--chart-threshold-color));

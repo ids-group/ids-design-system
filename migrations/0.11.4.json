@@ -17,7 +17,7 @@
       ],
       "verify": "A success callback receives the resolved value with its real type: toast.promise(loadOrder(), { success: (order) => `Saved #${order.id}` }) compiles without a cast.",
       "restore": null,
-      "note": "promise<T> declared a type parameter and then threw it away, because the messages interface hardcoded unknown. Every call site that wanted the resolved value had to cast. A widened exported type, not a rename: the bare name still compiles (T defaults to unknown), but a typed success/error callback against the bare annotation stops compiling — annotate with your concrete T.",
+      "note": "promise<T> declared a type parameter and then threw it away, because the messages interface hardcoded unknown. Every call site that wanted the resolved value had to cast. A widened exported type, not a rename: the bare name still means `unknown`, so a typed success callback against it fails exactly as before - annotate with your concrete T. `error` still receives `unknown`.",
       "action": "Annotate as ToastPromiseMessages<T> where you name the type; inline object literals need no change."
     },
     {
@@ -47,7 +47,7 @@
       "old": "--ds-toast-border, --ds-toast-border-info, --ds-toast-border-success, --ds-toast-border-warning, --ds-toast-border-error",
       "new": "--ds-toast-border-color, --ds-toast-border-color-info, --ds-toast-border-color-success, --ds-toast-border-color-warning, --ds-toast-border-color-error",
       "appliesWhen": "You set any of the five anywhere - :root, a theme file, or a per-instance ds-toast block.",
-      "pitfall": "The old name simply stops resolving, and the declaration it sits in is dropped whole - so a toast loses its border rather than falling back to a default. Nothing errors.",
+      "pitfall": "The old name simply stops being read: your declaration stays valid and inert, and the toast falls back to the default --border-default colour instead of yours. Nothing errors.",
       "searchHints": [
         "ds-toast-border"
       ],
@@ -141,7 +141,7 @@
       ],
       "verify": "Raise six toasts at once: with maxVisible 0 all six are on screen, and with the default five are, the sixth arriving as one dismisses.",
       "restore": "Pass provideDsConfig({ toast: { maxVisible: 0 } }).",
-      "note": "The default moved from unlimited to 5. A negative value means unlimited too and warns in development, because 0 already says it.",
+      "note": "The default moved from unlimited to 5. A negative provideDsConfig value is ignored and leaves the cap at 5; only 0 asks for an uncapped stack. A negative maxVisible bound straight on ds-toast-region means unlimited and warns in development.",
       "action": "Decide whether an uncapped stack was deliberate. If it was, pass provideDsConfig({ toast: { maxVisible: 0 } }); otherwise change nothing."
     },
     {
@@ -173,7 +173,7 @@
       "old": "ToastComponent, ToastRegionComponent, ToastService, TableComponent, BannerComponent, AlertComponent",
       "new": null,
       "appliesWhen": "Only a class that extends one of those six. Template users and service callers need nothing.",
-      "pitfall": "Every new name is private or protected, which is no protection - a redeclared private fails with TS2415 exactly as a public collision does. And an `override promoteFromQueue` or `override role` now overrides nothing: it compiles clean and silently never runs.",
+      "pitfall": "Every new name except the public inputs `body` (ToastComponent) and `announce` (BannerComponent, AlertComponent) is private, which is no protection - a redeclared private fails with TS2415 exactly as a public collision does. `role` and `promoteFromQueue` are gone: a subclass `override role` now fails with TS4113, and a same-named member without `override` compiles but never runs.",
       "searchHints": [
         "extends ToastComponent",
         "extends ToastRegionComponent",
@@ -183,6 +183,7 @@
         "override role",
         "TS2415",
         "TS4114",
+        "TS4113",
         "extends BannerComponent",
         "extends AlertComponent"
       ],
@@ -197,10 +198,10 @@
         "extends BannerComponent",
         "extends AlertComponent"
       ],
-      "verify": "The app builds with no TS4114 / TS2415 / TS2416 naming any of the six classes, and no override of promoteFromQueue, role or message remains in your source.",
+      "verify": "The app builds with no TS4113 / TS4114 / TS2415 / TS2416 naming any of the six classes, and no override of promoteFromQueue, role or message remains in your source.",
       "restore": null,
-      "note": "ToastComponent lost `role`. ToastRegionComponent gained `leaveTimers`, `slideNeighbours`, `toastNodes`, `measureTops` and `leaveDuration`, and renamed `promoteFromQueue` to `drainQueue`. ToastService gained `announcer`, `pendingAnnouncements`, `pendingAssertive`, `announceTimer`, `scrimWatcher`, `announce` and `keepAboveScrims`. TableComponent gained `eventsAtExport`, `eventMessages`, `tableHead`, `hostElement` and `announceExport`. None is public API or a signal. BannerComponent and AlertComponent each gained `announce`. ToastComponent also gained `body` and lost `message`, which is the input rename listed separately.",
-      "action": "Build after upgrading. Rename or mark `override` every member the compiler reports as colliding, and DELETE any `override promoteFromQueue` or `override role` - neither member exists any more, so the override is dead code."
+      "note": "ToastComponent lost `role`. ToastRegionComponent gained `leaveTimers`, `slideNeighbours`, `toastNodes`, `measureTops` and `leaveDuration`, and renamed `promoteFromQueue` to `drainQueue`. ToastService gained `announcer`, `pendingAnnouncements`, `pendingAssertive`, `announceTimer`, `scrimWatcher`, `announce` and `keepAboveScrims`, and lost `position`. TableComponent gained `eventsAtExport`, `eventMessages`, `tableHead`, `hostElement` and `announceExport`. None is public API. BannerComponent and AlertComponent each gained `announce`. ToastComponent also gained `body` and lost `message`, which is the input rename listed separately.",
+      "action": "Build after upgrading. Rename or mark `override` every member the compiler reports as colliding, and DELETE any `override promoteFromQueue` or `override role` - neither member exists any more, so a marked override fails with TS4113 and an unmarked one is dead code."
     },
     {
       "id": "banner-alert-aria-getters-nullable",
@@ -208,20 +209,20 @@
       "old": "BannerComponent.ariaRole, AlertComponent.ariaRole",
       "new": null,
       "appliesWhen": "Only a class extending BannerComponent or AlertComponent that reads or overrides ariaRole or ariaLive. Nothing in a template sees these.",
-      "pitfall": "A widening breaks the READER, not the writer: an override that still declares the narrow return type fails, and code that fed the value somewhere non-nullable fails too, both at a site that did not change.",
+      "pitfall": "A widening breaks the READER, not the writer: code that fed the value somewhere non-nullable fails with TS2322 at a site that did not change, while an override that still declares the narrow return type compiles, because a narrower return type still satisfies the base.",
       "searchHints": [
         "ariaRole",
         "ariaLive",
         "extends BannerComponent",
         "extends AlertComponent",
-        "TS2416"
+        "TS2322"
       ],
       "surface": "typescript",
       "detect": [
         "ariaRole",
         "ariaLive"
       ],
-      "verify": "The app builds with no TS2416 naming ariaRole or ariaLive, and any code consuming either handles null.",
+      "verify": "The app builds with no TS2322 naming ariaRole or ariaLive, and any code consuming either handles null.",
       "restore": null,
       "note": "Both getters widened from `'alert' | 'status'` and `'assertive' | 'polite'` to include `null`, and return null while `announce` is false, which is the default - that is how the attribute is left off entirely rather than set to an empty value.",
       "action": "Widen your own declaration to include null, and handle null wherever you read either getter."
@@ -229,7 +230,7 @@
   ],
   "informational": [
     "Typing on a closed ds-select now commits the type-ahead jump, as a native <select> does. The path existed but was unreachable, so nothing that worked before changes. NO ACTION.",
-    "A chip row's guard against a parent that hugs its content was unreachable and is removed; the measurement is unchanged. NO ACTION.",
+    "A chip row's guard against a parent that hugs its content was unreachable and is replaced by one that asks layout whether the parent's width depends on the trigger. Where it does - a parent at fit-content, an inline-block one, or a flex item that cannot grow - the row now budgets from the trigger's own width instead of reading back its own cut. Affects ds-multi-select and ds-autocomplete. NO ACTION.",
     "A queued toast is not lost: it appears as an earlier one dismisses. The stack also animates when a toast is added rather than jumping, and --ds-toast-shift-duration and --ds-toast-shift-easing tune that. NO ACTION.",
     "Info, success and loading toasts raised through ToastService are now announced at all, where before only error and warning were. NO ACTION.",
     "Six tokens the connected panel reads - --ds-option-padding, -gap, -radius, -row-gap, --ds-option-bg-color-active and --ds-dropdown-panel-maxh - now take effect when scoped to one picker (ds-select { ... }), where before only a global declaration reached them. The panel is portaled outside the component, so a host-scoped value arrives only if the token is on the forwarded list, and these six were not. They join the list every dropdown picker shares, so none of them appears in a picker's own list of forwarded tokens; --ds-dropdown-panel-maxh reached ds-autocomplete and neither of its siblings. NO ACTION, and nothing moves on its own: it changes only where such a declaration is already written on an element and was being ignored. If you widened one to a global rule because the scoped form did nothing, the scoped form is now the narrower way to say it.",
@@ -238,7 +239,7 @@
     "The skeleton shimmer is driven per element instead of by one registered custom property on :root, so skeletons no longer travel in lock-step with one another. The property that drove it, --skeleton-shimmer-x, no longer exists: it was never a --ds-* hook, but if you referenced it, it now resolves to nothing. NO ACTION otherwise.",
     "A focused row in ds-list-item, ds-tree, ds-tag, ds-description-list or ds-color-picker now draws ONE ring, in the focus colour. It drew two — its own outline inside the library-wide focus halo — and that outline asked for --focus-ring-color, which nothing defined, so every site fell through to currentColor and ringed itself in its own text colour. The token is defined now and follows --accent, so it is the brand hue by default and the family’s hue inside a ds-color zone. Override it per brand with --focus-ring-color. NO ACTION.",
     "A selected ds-list-item or ds-tree node now retints its leading icon along with its label, where the icon stayed on its resting colour. Two new hooks control it if you want them apart: --ds-list-item-selected-icon-color and --ds-tree-row-selected-icon-color, each defaulting to the selected label colour. NO ACTION.",
-    "ds-avatar-group and ds-button-group match their children as the direct child rather than by tag name. Computed output in an ordinary Angular application is unchanged — this only restores the avatar overlap and ring, and the joined buttons’ overlap and flattened radii, in a build that registers the library as custom elements, where a nested tag has to be renamed and a tag selector matched none of the children. NO ACTION.",
+    "ds-avatar-group and ds-button-group match their children as the direct child rather than by tag name. Computed output in an ordinary Angular application is unchanged when every child is a ds-avatar / ds-button placed directly in the group; any other direct child, such as a wrapper element or a ds-icon-button, now takes the group styling itself. Beyond that this only restores the avatar overlap and ring, and the joined buttons’ overlap and flattened radii, in a build that registers the library as custom elements, where a nested tag has to be renamed and a tag selector matched none of the children. NO ACTION.",
     "ds-split-button hovers with --accent-hover instead of the family’s readable on-tint colour, which was never meant as a background and left the label near-unreadable inside a status zone. The hover now follows the rest state instead of jumping to another hue. --ds-split-button-bg-hover-color still overrides it. NO ACTION.",
     "A ds-table loading scrim starts at the measured header height instead of an assumed 40px, so it no longer cuts into the header at the default density nor leaves the first row showing through it under [data-density=\"ultra-compact\"]. It lands correctly at any density and any header font size you set. --ds-table-head-h still overrides the value, which you should no longer need for the scrim (delete list: table-head-h-scrim-compensation). NO ACTION otherwise.",
     "A toast no longer sits under a modal, drawer, confirm or bottom sheet opened after it, so its action button stays reachable. Raising --layer-toast never fixed this and could not: every overlay host lives in the browser’s top layer, which paints strictly in the order hosts were shown and ignores z-index and stacking contexts altogether. The library re-shows the toast host itself now. If you raised --layer-toast or --layer-tooltip to work around this, that override was doing nothing and can go (delete list: layer-toast-tooltip-overrides). NO ACTION otherwise."

@@ -3,6 +3,8 @@
    ghost + one primary action, collapse the rest into an overflow menu. */
 
 @use '../../styles/breakpoints' as bp;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   --_page-header-eyebrow-text-color:   var(--ds-page-header-eyebrow-text-color,   var(--text-tertiary));

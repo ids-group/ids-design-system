@@ -23,9 +23,9 @@
       "kind": "behavior",
       "old": "ds-list-item ::ng-deep .activator",
       "new": null,
-      "action": "A `::ng-deep .activator` override that set padding, gap, background or hover now applies to the TEXT only — move it to `ds-list-item` itself.",
-      "appliesWhen": "No input or output changed: title, subtitle, clickable, selected, disabled and activated all behave as before, and a plain row looks identical.",
-      "note": "`[leading]` and `[trailing]` are siblings of `.activator` now rather than children, so a row can hold a checkbox or a kebab alongside a row-level action. The row's `display: flex`, its padding, its gap and both tints sit on the HOST; `.activator` is just the text button. Fixed alongside: `selected` set `aria-current` on the inner button, so it was inert whenever `clickable` was false — it is on the host now.",
+      "action": "A `::ng-deep .activator` override now hits only the text button of a CLICKABLE row, and nothing on a non-clickable row, which no longer has an `.activator` - move padding, gap, background or hover to `ds-list-item` itself.",
+      "appliesWhen": "No input or output was renamed or removed, and title, subtitle and clickable behave as before. `selected` now sets `aria-current` on the host, so it also applies to a non-clickable row; on a clickable row, `[leading]` and `[trailing]` content sits outside the button, so a click on it no longer emits `activated` and `disabled` no longer covers it. A plain row looks identical.",
+      "note": "`[leading]` and `[trailing]` are siblings of `.activator` now rather than children, so a row can hold a checkbox or a kebab alongside a row-level action. The row's `display: flex`, its padding, its gap and both tints sit on the HOST; `.activator` is just the text button of a clickable row, and a non-clickable row has none. Fixed alongside: `selected` set `aria-current` on the inner button, so it was inert whenever `clickable` was false — it is on the host now.",
       "searchHints": [
         "ds-list-item",
         ".activator",
@@ -95,8 +95,8 @@
       "old": "ds-input[success]",
       "new": null,
       "action": "Replace `[success]=\"true\" hint=\"Available\"` with `success=\"Available\"` — the text moves out of `hint`. A `[success]=\"someBoolean\"` becomes `[success]=\"someBoolean ? 'Looks good' : ''\"`, since an empty string is what means \"no success state\" now.",
-      "appliesWhen": "Breaking on ds-input only; the same input is ADDITIVE on ds-textarea, ds-select, ds-multi-select, ds-autocomplete, ds-date-picker, ds-time-picker, ds-otp-input and ds-color-picker, which had no success state at all. Not added to ds-checkbox, ds-radio-group, ds-switch or ds-slider — no bordered box to paint. `invalid` is unchanged and remains the flag partner of `error`.",
-      "pitfall": "A leftover `[success]=\"true\"` does not error — it sets the literal text \"true\" as the message, so the field renders a green line reading `true`. And a success border with NO message is no longer expressible, exactly as it never was for `warning`.",
+      "appliesWhen": "Breaking on ds-input only; the same input is ADDITIVE on ds-textarea, ds-select, ds-multi-select, ds-autocomplete, ds-date-picker, ds-time-picker, ds-otp-input and ds-color-picker, which had no success state at all. Not added to ds-checkbox, ds-radio, ds-radio-group, ds-switch or ds-slider — no bordered box to paint. `invalid` keeps its declaration and remains the flag partner of `error`, but it no longer turns `hint` into an error message - see fields-invalid-no-longer-recolours-hint.",
+      "pitfall": "A leftover `[success]=\"true\"` is a template type error; unchecked, the trim transform throws at runtime. A bare `success` attribute now means '' - no success state - and a static `success=\"true\"` renders the word `true`. And a success border with NO message is no longer expressible, exactly as it never was for `warning`.",
       "note": "`success` went from `input(false, { transform: booleanAttribute })` to `input<string>('')`. It was the only state that could not say anything — a flag that recoloured `hint` green, which meant the message had to be smuggled through a different input. It is the fourth rung of the same ladder now: error, errors, warning, success, hint.",
       "searchHints": [
         "success",
@@ -125,10 +125,10 @@
       "kind": "behavior",
       "old": "TextareaComponent, InputComponent",
       "new": null,
-      "action": "Only if you SUBCLASS a DS field and declare a member named `hint`, `error`, `warning`, `errors`, `invalid`, `touched` or `reserveMessage`: it is an inherited member now rather than an own member, so an incompatible re-declaration fails where it may previously have shadowed. Redeclaring with the same shape still works.",
-      "appliesWhen": "No public API changed — every input keeps its name, type, default and documentation, and the generated docs reference lost nothing. `success`, `label`, `required` and `optional` were deliberately NOT lifted and remain per-component.",
-      "pitfall": "Seven members were not lost, they moved UP onto an internal shared base, and every field still has them by inheritance — so an override of one of those needs no change. The genuine new collision is different: `success` is a NEW member on the eight bordered fields that lacked it, so a subclass of any of those declaring `success` fails with TS4114.",
-      "note": "The seven shared inputs and the `reserveMessageResolved` helper are declared once on a new internal shared base instead of being hand-copied into each of the fourteen fields. Every field reaches them by inheritance.",
+      "action": "Nothing for `errors`, `invalid`, `touched` and `reserveMessage` - a subclass already inherited them from the field class. `hint`, `error` and `warning` moved too, but their write type widened to `string | null | undefined` with a trim transform, so an override still typed `input<string>` fails with TS2416 - retype it to `input<string, string | null | undefined>('', { transform: (value) => value?.trim() ?? '' })` or drop the redeclaration. `success` is new on eight fields, and a string on ds-input: a subclass declaring it now needs `override` under noImplicitOverride (TS4114) and a compatible type (else TS2416).",
+      "appliesWhen": "No input was removed - every input keeps its name and default; hint, error and warning now also accept null/undefined and trim, and the generated docs reference lost nothing. `success`, `label`, `required` and `optional` were deliberately NOT lifted and remain per-component.",
+      "pitfall": "Eight members - the seven shared inputs and the protected `reserveMessageResolved` - were not lost, they moved up onto an internal shared base, and every field still has them by inheritance - an override of `errors`, `invalid`, `touched` or `reserveMessage` needs no change, while one of `hint`, `error` or `warning` typed `input<string>` now fails with TS2416 because the write type widened to `string | null | undefined`. The genuine new collision is different: `success` is a NEW member on the eight bordered fields that lacked it, so a subclass of any of those declaring `success` needs `override` under noImplicitOverride (TS4114), and an incompatible type fails with TS2416.",
+      "note": "The seven shared inputs and the `reserveMessageResolved` helper are declared once on a new internal shared base instead of being hand-copied into each of the fourteen fields. Every field reaches them by inheritance. `AutocompleteComponent`, `ColorPickerComponent`, `DatePickerComponent`, `MultiSelectComponent`, `OtpInputComponent`, `SelectComponent`, `TextareaComponent` and `TimePickerComponent` each gained `success`. `SegmentedComponent` gained 30: it extends the value-accessor base now, so `writeValue`, `registerOnChange`, `setDisabledState` and the field inputs arrive with it.",
       "searchHints": [
         "extends TextareaComponent",
         "extends InputComponent",
@@ -145,9 +145,26 @@
       "detect": [
         "extends TextareaComponent",
         "extends InputComponent",
-        "extends "
+        "extends ",
+        "TextareaComponent",
+        "extends AutocompleteComponent",
+        "AutocompleteComponent",
+        "extends ColorPickerComponent",
+        "ColorPickerComponent",
+        "extends DatePickerComponent",
+        "DatePickerComponent",
+        "extends MultiSelectComponent",
+        "MultiSelectComponent",
+        "extends OtpInputComponent",
+        "OtpInputComponent",
+        "extends SegmentedComponent",
+        "SegmentedComponent",
+        "extends SelectComponent",
+        "SelectComponent",
+        "extends TimePickerComponent",
+        "TimePickerComponent"
       ],
-      "verify": "A typecheck reports no TS4114 on a subclass of a DS field declaring hint, error, warning, errors, invalid, touched or reserveMessage - or `success` on one of the eight bordered fields that just gained it."
+      "verify": "A typecheck reports no TS4114 or TS2416 on a subclass of a DS field declaring `success` - on ds-input or one of the eight bordered fields that just gained it - and no TS2416 on an override of `hint`, `error` or `warning`."
     },
     {
       "id": "fields-invalid-no-longer-recolours-hint",
@@ -181,7 +198,7 @@
       "new": null,
       "action": "Only if you already have a validator using the key `warning` — reactive, template-driven, or a signal-forms ValidationError with kind `warning` — for a BLOCKING error. Rename that key to anything else, such as `warningLimit` or `softLimit`, and the old behaviour returns.",
       "appliesWhen": "Otherwise additive: it gives a form model a way to raise a non-blocking remark, which Angular's AbstractControl has no channel for. Ranked below the explicit `warning` input, and shown only after interaction.",
-      "pitfall": "This one changes VALIDITY, silently. An existing `warning` key that used to block now reads as advisory: aria-invalid stays off, the field stops being invalid, and a submit guard reading validity is no longer blocked. A form that refused to submit will now submit.",
+      "pitfall": "The DS field now treats a `warning` key as advisory: aria-invalid stays off and the field paints and shows it as a warning, not an error. Angular's own validity is unchanged - the control is still invalid and `form.valid` still blocks - so the field and the form now disagree.",
       "note": "The DsFieldError kind `warning` is reserved and exported as `DS_FIELD_WARNING_KIND`. DsFieldError and DsFieldErrorsInput are exported too, for writing a typed validator.",
       "searchHints": [
         "warning",
@@ -199,14 +216,14 @@
         "kind: 'warning'",
         "ValidationErrors"
       ],
-      "verify": "No validator returns the key `warning` for a BLOCKING error - that kind is advisory now, so the field stays valid and a submit guard is not blocked."
+      "verify": "No validator returns the key `warning` for a BLOCKING error - the field shows that kind as an advisory warning, while the form still counts it as invalid."
     },
     {
       "id": "segmented-pill-moves-to-an-inner-track",
       "kind": "behavior",
       "old": "ds-segmented",
       "new": null,
-      "action": "Only for a `::ng-deep` rule that treated the HOST as the pill — a background, a border-radius, a `display: grid`, a border. Retarget it at `ds-segmented .track`.",
+      "action": "Only for a `::ng-deep` rule that treated the HOST as the pill — a background, a border-radius, a `display: grid`, a border. Retarget it at `ds-segmented .track`. Also: the option text class is `.seg-label` now - `.label` is the new field label above the track - so retarget a `ds-segmented .label` rule to `.seg-label`.",
       "appliesWhen": "A token override (`--ds-segmented-*`) is unaffected and needs nothing: the pill's custom properties stayed on `:host` and inherit down.",
       "pitfall": "Left alone, such a rule now paints the whole STACK — label, pill and message row — instead of the control.",
       "note": "ds-segmented stacks a label, the pill and a message row now, so the pill moved off `:host` onto an inner `.track`. Additive alongside: the component provides NG_VALUE_ACCESSOR and resolves its message the same way the fields do, so both form systems and the label / hint / error / warning / errors inputs work as on the other fields.",
@@ -226,14 +243,14 @@
     }
   ],
   "informational": [
-    "ds-table's row-action kebab and column-picker trigger now read --ds-table-icon-btn-color, --ds-table-icon-btn-color-hover and --ds-table-icon-btn-focus-color, each defaulting to the value that was previously hardcoded (--icon-default, --icon-strong, --accent). Purely additive. ACTION only if you recoloured your own row trigger and are now adopting rowActions: set these three instead of repainting --icon-default globally.",
+    "ds-table's expand chevron, row-action kebab and column-picker trigger now read --ds-table-icon-btn-color, --ds-table-icon-btn-color-hover and --ds-table-icon-btn-focus-color, each defaulting to the value that was previously hardcoded (--icon-default, --icon-strong, --accent). Purely additive. ACTION only if you recoloured your own row trigger and are now adopting rowActions: set these three instead of repainting --icon-default globally.",
     "ds-modal and ds-modal-card take per-side padding: --ds-modal-header-pad-top/-pad-bottom, --ds-modal-body-pad-top/-pad-bottom and --ds-modal-actions-pad-top/-pad-bottom. Each defaults to its region's existing --ds-modal-<region>-pad-y, which still works and still sets both edges, so this is purely additive and nothing moves unless you set one. ACTION only if you have been reaching past the API to pad a region asymmetrically - a rule on .modal > .header / > .body / > .actions, most likely carrying !important because the component's own padding outranks a descendant selector: that rule can now be a token on the host instead.",
-    "ds-date-picker: clearing or replacing `value` from outside now clears the picker's own typing error (typedInvalid / rangeInvalid). NO code change is required, but two workarounds can be REMOVED: (a) tearing a modal body down on `closed` just to get a fresh picker -- which never worked when the modal was reopened inside its 300ms leave animation, since the close is cancelled and `closed` never fires; (b) any manual `[error]` juggling used to mask the stale message. Blur validation is unchanged: a full-but-bad date still errors on blur.",
+    "ds-date-picker: writing a DIFFERENT `value` from outside (null over a date, a new Date) now clears the picker's own typing error (typedInvalid / rangeInvalid). A rejected typed date never reaches `value`, so resetting a picker to the value it already holds - most often null back to null - is not a change and leaves the error and the bad text in place. NO code change is required. Two workarounds can go only where every reset writes a different value: (a) tearing a modal body down on `closed` just to get a fresh picker -- which never worked when the modal was reopened inside its 300ms leave animation, since the close is cancelled and `closed` never fires; (b) any manual `[error]` juggling used to mask the stale message. Keep them for a picker that can be reset while still empty. Blur validation is unchanged: a full-but-bad date still errors on blur.",
     "A ds-menu inside a ds-popover now clips its rows to the panel's rounded corners, so a first or last row's fill — a hover tint, or a destructive item's red — no longer paints two square corners through the panel's rounded ones. The cause was a clip of the wrong SHAPE, not a missing one: ds-menu has overflow: hidden, but its :host-context(.popover) block flattened border-radius while leaving overflow in force. The popover now publishes --ds-menu-clip-radius (its own radius less its border) and the menu clips to that, so a brand overriding --ds-popover-radius is followed automatically. Nothing to do; --ds-menu-item-radius still defaults to 0, because the MENU owns the edge corners rather than the row.",
-    "Message inputs absorb null and undefined instead of crashing. hint, error, warning and success took a bare string and the resolver called .trim() on whatever arrived, so [error]=\"form.errors?.message\" pushed null in and threw a TypeError during render whenever the expression was empty. All four now transform at the input boundary — trimmed, with null/undefined becoming ''.",
+    "Message inputs absorb null and undefined instead of crashing. hint, error and warning took a bare string and the resolver called .trim() on whatever arrived, so [error]=\"form.errors?.message\" pushed null in and threw a TypeError during render whenever the expression was empty. They and the new string `success` now transform at the input boundary - trimmed, with null/undefined becoming ''.",
     "A disabled ds-icon-button variant=\"standard\" mixes its glyph toward the surface: color-mix(in srgb, <icon> 40%, var(--surface-default)), replacing the shared fixed-lightness recipe. It is the only variant with neither a fill nor a border, so the glyph carries the whole state, and the old recipe left it 1.46:1 from the enabled icon in dark (light 4.17 -> 5.19:1, dark 1.46 -> 3.58:1). Scoped to standard on purpose: filled's icon is the family's on-colour, and white mixed into a white surface does not move. --ds-icon-button-icon-color-disabled is the same hook and still wins; only the default under it changed.",
     "ds-field-message: the `state` input decides colour, not the glyph. `icon` is a plain input<IconName|null>(null) with no per-state default, so a message with `state` set and `icon` unset shows no glyph. Behaviour is unchanged in this release. If you left `icon` unset expecting the state to pick one, pass it explicitly.",
-    "SegmentedComponent gained eight members when it joined the form systems (label, disabled, isDisabled, message, invalidResolved, fieldMessage, hintId, uid), which is the only genuinely new collision surface beyond `success`. A subclass of it declaring any of those names now fails with TS4114."
+    "SegmentedComponent now extends the field CVA base, so it gained the seven shared field inputs and reserveMessageResolved, the CVA members (hidden, focus, writeValue, registerOnChange/OnTouched, setDisabledState, markTouched, formDisabled, touchedSelf, and the private hostElement, onChange, onTouched, synced, hasSynced) and its own label, disabled, isDisabled, message, invalidResolved, fieldMessage, hintId, uid. A subclass declaring any of them now collides."
   ],
   "deleteList": [
     {
@@ -243,7 +260,7 @@
         "?? ''",
         "?? \"\""
       ],
-      "why": "A `?? ''` guard wrapped around a message binding - `[error]=\"form.errors?.message ?? ''\"` - added because a null pushed into `hint` / `error` / `warning` / `success` threw a TypeError during render.",
+      "why": "A `?? ''` guard wrapped around a message binding - `[error]=\"form.errors?.message ?? ''\"` - added because a null pushed into `hint` / `error` / `warning` threw a TypeError during render.",
       "replaceWith": "nothing - bind the expression directly, the inputs absorb null now"
     },
     {
@@ -253,8 +270,8 @@
         "(closed)",
         "@if (open())"
       ],
-      "why": "A modal body torn down on `(closed)` — or guarded behind the open flag — purely so a re-opened `ds-date-picker` starts without the previous attempt's error. The picker clears its own stale error and text on the value-to-text effect now. The teardown never worked reliably anyway: reopening inside the 300 ms leave animation cancels the close, so `closed` never fires.",
-      "replaceWith": "nothing - keep the body mounted"
+      "why": "A modal body torn down on `(closed)` — or guarded behind the open flag — purely so a re-opened `ds-date-picker` starts without the previous attempt's error. The picker clears its own stale error and text on the value-to-text effect now, but only when the reset writes a DIFFERENT value: a rejected typed date never reaches `value`, so an empty picker reset to null keeps its error. Dead only where every reset writes a different value; kept for a picker that can be reset while empty. The teardown never worked reliably anyway: reopening inside the 300 ms leave animation cancels the close, so `closed` never fires.",
+      "replaceWith": "nothing - keep the body mounted, where every reset writes a value different from the one the picker holds"
     }
   ]
 }

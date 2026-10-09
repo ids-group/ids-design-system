@@ -7,7 +7,7 @@
       "old": "ds-table[clientSort]",
       "new": "sortMode",
       "action": "`[clientSort]=\"true\"` and a bare `clientSort` become `sortMode=\"client\"`; `[clientSort]=\"false\"` or `[clientSort]=\"expr\"` becomes `[sortMode]=\"expr ? 'client' : 'server'\"`. A table that had NO clientSort binding and reorders in its own `(sortChange)` handler must declare `sortMode=\"server\"`. A table that renders a sortable column but sorts nowhere declares `sortMode=\"none\"`, which drops the button, the caret and `aria-sort` instead of leaving a dead control. TypeScript callers can type the value with `import type { TableSortMode }`.",
-      "pitfall": "The last case is the one that is not a find/replace, because the DEFAULT CHANGED: unset resolves to `client` at this version. A server-paged table that only emitted `sortChange` will now ALSO sort its own rows — and client sorting reorders the current page only, so the rows look sorted and are not. Dev builds warn on `total` plus client, but a production build says nothing.",
+      "pitfall": "The last case is the one that is not a find/replace, because the DEFAULT CHANGED: unset resolves to `client` at this version. A server-paged table that only emitted `sortChange` will now ALSO sort its own rows — and client sorting reorders the current page only, so the rows look sorted and are not. Dev builds warn when `total` is set, a column is sortable and `sortMode` is unset, but a production build says nothing.",
       "note": "The boolean could not express \"nothing sorts\", so a column marked `sortable: true` on a table with no sorting drew a header that looked live, showed a caret on hover and did nothing.",
       "searchHints": [
         "clientSort",
@@ -19,7 +19,7 @@
         "ds-table"
       ],
       "surface": "template",
-      "verify": "No `clientSort` is left anywhere. Every server-paged `<ds-table>` - one that binds `total` and reorders in its own (sortChange) - declares sortMode=\"server\" EXPLICITLY: at this version an unset sortMode resolves to \"client\", so leaving it off makes the table re-sort the page it is showing and the rows look sorted while the server order is unchanged. A table holding all its rows declares sortMode=\"client\" or leaves it unset; a table that sorts nothing declares sortMode=\"none\". Dev builds warn on total + client.",
+      "verify": "No `clientSort` is left anywhere. Every server-paged `<ds-table>` - one that binds `total` and reorders in its own (sortChange) - declares sortMode=\"server\" EXPLICITLY: at this version an unset sortMode resolves to \"client\", so leaving it off makes the table re-sort the page it is showing and the rows look sorted while the server order is unchanged. A table holding all its rows declares sortMode=\"client\" or leaves it unset; a table that sorts nothing declares sortMode=\"none\". Dev builds warn on total with sortMode unset, never on an explicit sortMode=\"client\".",
       "restore": "sortMode=\"server\" on a table that should only emit (sortChange) and sort nothing itself"
     },
     {
@@ -30,7 +30,7 @@
       "action": "Build after upgrading — the compiler enumerates every collision. Per member: rename your own, or add `override` where the base semantics genuinely match. A subclass that overrode `messageState` should move its logic to an `error` or `warning` binding on the element instead, since the message is resolved centrally now.",
       "appliesWhen": "Only a consumer that EXTENDS a DS component class. Subclassing is unsupported (design-system.md § Components); template users of the `<ds-…>` elements need nothing.",
       "pitfall": "A PRIVATE member collides too — TS2415 — and `TableComponent.saveLayout()` is the likeliest to collide, because a table wrapper commonly declares the same name. Two more shapes hide here: this release REMOVES members as well as adding them (the fourteen fields dropped protected `messageState`, DatePicker also `messageText`, and Checkbox, Switch and Radio dropped protected `devMode`), so an `override` can start naming nothing; and `close()` gained an optional `cause`, which an override declared as `close()` still satisfies — only a subclass that re-declares the parameter list differently breaks.",
-      "note": "Additions: the fourteen field classes gained the `error`, `warning`, `errors` and `touched` inputs plus protected `message` and `invalidResolved`; both CVA bases gained protected `touchedSelf`; AppLayoutComponent gained `railOverlay` and `railId`; TableComponent lost `clientSort` and gained `sortModeResolved`, `sortableCol()`, `exporting`, `runExport()`, `virtualizing`, `virtualRowHeight`, `virtualWindow`, `windowData`, `isStriped()`, the `persistLayout`, `storageKey`, `exportButton`, `exportFilename`, `exportFetcher`, `virtualScroll` and `virtualRowSize` inputs and the private `saveLayout()` / `restoreLayout()`; ButtonComponent gained `ariaControls`; IconButtonComponent `ariaExpanded` and `ariaControls`; LayoutScrollService `scroller`, `scrollTo()`, `configureRestore()`, `consumePendingOffset()` and `contentReady()`.",
+      "note": "Additions: the fourteen field classes gained the `error`, `warning`, `errors` and `touched` inputs, protected `message`, `invalidResolved` and private `fieldMessage`; InputComponent also `ariaDescribedBy` and protected `describedBy`; DatePickerComponent private `localError`, `dateInvalid`; both CVA bases protected `touchedSelf`; AppLayoutComponent `railOverlay`, `railId` and the `restoreScroll` / `restoreScrollTimeout` inputs; TableComponent lost `clientSort` and gained `sortModeResolved`, `sortableCol()`, `exporting`, `runExport()`, `virtualizing`, `virtualRowHeight`, `virtualWindow`, `windowData`, `isStriped()`, the `sortMode`, `persistLayout`, `storageKey`, `exportButton`, `exportFilename`, `exportFetcher`, `virtualScroll`, `virtualRowSize` inputs and private `saveLayout()`, `restoreLayout()`, `layoutKey()`, `layoutRestored`, `scrollTop`, `viewportHeight`; ButtonComponent `ariaControls`; IconButtonComponent `ariaExpanded`, `ariaControls`; LayoutScrollService `scroller`, `scrollTo()`, `configureRestore()`, `consumePendingOffset()`, `contentReady()` and fifteen private restore members, dropping private `scrollContainer`. Every field class also lost `messageState`; `CheckboxComponent`, `RadioComponent` and `SwitchComponent` lost `devMode`, and `DatePickerComponent` lost `messageText`. `LayoutScrollService` gained 20 in all.",
       "searchHints": [
         "extends InputComponent",
         "extends SelectComponent",
@@ -53,7 +53,42 @@
         "extends InputComponent",
         "extends TableComponent",
         "extends ",
-        "saveLayout"
+        "saveLayout",
+        "InputComponent",
+        "extends AppLayoutComponent",
+        "AppLayoutComponent",
+        "extends AutocompleteComponent",
+        "AutocompleteComponent",
+        "extends ButtonComponent",
+        "ButtonComponent",
+        "extends CheckboxComponent",
+        "CheckboxComponent",
+        "extends ColorPickerComponent",
+        "ColorPickerComponent",
+        "extends DatePickerComponent",
+        "DatePickerComponent",
+        "extends IconButtonComponent",
+        "IconButtonComponent",
+        "extends LayoutScrollService",
+        "LayoutScrollService",
+        "extends MultiSelectComponent",
+        "MultiSelectComponent",
+        "extends OtpInputComponent",
+        "OtpInputComponent",
+        "extends RadioComponent",
+        "RadioComponent",
+        "extends RadioGroupComponent",
+        "RadioGroupComponent",
+        "extends SelectComponent",
+        "SelectComponent",
+        "extends SliderComponent",
+        "SliderComponent",
+        "extends SwitchComponent",
+        "SwitchComponent",
+        "extends TextareaComponent",
+        "TextareaComponent",
+        "extends TimePickerComponent",
+        "TimePickerComponent"
       ],
       "verify": "A typecheck reports no TS4114 / TS2415 / TS2416 on any class extending a DS component - including a PRIVATE collision (saveLayout / restoreLayout on the table) and a subclass that overrode the removed protected `messageState`."
     },
@@ -80,10 +115,9 @@
       "kind": "class-rename",
       "old": "ds-radio-group .group-label",
       "new": ".label",
-      "action": "Retarget `.group-label` to `.label` under ds-radio-group, or delete the rule. To keep the old look, scope the family tokens: `ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); }`.",
-      "appliesWhen": "None of this is needed for most screens — matching the family is the point of the change.",
+      "action": "Retarget `.group-label` to `.label` under ds-radio-group.",
+      "appliesWhen": "Only a rule of yours scoped under ds-radio-group that names `.group-label`. The label's new type is `radio-group-label-type-joins-field-labels`.",
       "pitfall": "`.group-label` is ALSO the class `ds-sidenav-group` uses for its heading, and that one is unchanged. A repo-wide rename takes the sidenav heading with it. Only rules scoped under ds-radio-group are affected.",
-      "note": "Two changes to one element: the class, and the type — the label draws `--font-weight-bold` at `--font-size-xs` now instead of its own medium weight at `--font-size-s`. It was the only field label drawing its own, and beside an input it read as a different kind of element.",
       "searchHints": [
         "group-label",
         ".group-label",
@@ -91,8 +125,22 @@
         "radio-group",
         "label"
       ],
+      "surface": "style"
+    },
+    {
+      "id": "radio-group-label-type-joins-field-labels",
+      "kind": "behavior",
+      "old": "ds-radio-group",
+      "new": null,
+      "action": "None, unless a screen needs the old look: scope the family tokens and set the line height, which has no hook, as in `restore`.",
+      "appliesWhen": "Every ds-radio-group label. None of this is needed for most screens — matching the family is the point of the change.",
+      "note": "The label draws `--font-weight-bold` at `--font-size-xs` on `--line-height-base` now instead of its own medium weight at `--font-size-s` on `--line-height-flat`. It was the only field label drawing its own, and beside an input it read as a different kind of element.",
+      "searchHints": [
+        "ds-radio-group"
+      ],
       "surface": "style",
-      "restore": "ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); }"
+      "verify": "A ds-radio-group label renders at the weight, size and line height of a ds-input label beside it, or at the old medium weight and size where the restore snippet is in place.",
+      "restore": "ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); } ds-radio-group > .label[class] { line-height: var(--line-height-flat); }"
     },
     {
       "id": "ng-add-schematic-now-loads",
@@ -216,15 +264,15 @@
   ],
   "informational": [
     "Every field gained `error` and `warning` beside `hint`, resolved on a fixed ladder: `error` (an explicit string, shown at once) → validation errors → `warning` → `hint`. Only ONE line renders, so a field's height does not depend on how many sources are populated. Purely additive: a field that binds only `hint` behaves exactly as before, and when something is invalid but no source produced text the `hint` still renders in the error state — so the pre-existing `[invalid]` + `[hint]=\"errorText\"` idiom keeps working untouched.",
-    "Fields now read validation state from the bound form control, so `error` is optional. Signal forms binds `errors` and `touched` automatically (those input names are Angular 21's `FormUiControl` contract) and already drove the value through the `ControlValueAccessor` DS fields have always implemented. Reactive and template-driven forms need NO new binding: the field resolves `NgControl` after first render and subscribes to `control.events`. Errors wait for the first blur, or for the parent form to be submitted, so a `required` error never greets an untouched form. `invalid` is now OR-ed with what the control reports; the explicit input still wins.",
-    "`DS_CONFIG` gained `field.errorMessages` — one shared map from validation-error kind to text, for errors whose validator carried no message (Angular's built-ins never do). A message on the error itself always wins, so `required(path, { message })` in signal forms or `{ myError: 'text' }` from a plain validator overrides the map per case. An error that resolves to no text anywhere warns in dev instead of rendering an error style with an empty line.",
+    "Fields now read validation state from the bound form control, so `error` is optional. Signal forms binds `errors` and `touched` automatically (those input names are Angular 21's `FormUiControl` contract) and already drove the value through the `ControlValueAccessor` DS fields have always implemented. Reactive and template-driven forms need NO new binding: the field resolves `NgControl` after first render and subscribes to `control.events`. Errors wait for the first blur, or for the parent form to be submitted, so a `required` error never greets an untouched form. `invalid` is now OR-ed with what the control reports: `[invalid]=\"true\"` forces the error state, `false` cannot clear one the control reports.",
+    "`DS_CONFIG` gained `field.errorMessages` — one shared map from validation-error kind to text, for errors whose validator carried no message (Angular's built-ins never do). A message on the error itself always wins, so `required(path, { message })` in signal forms or `{ myError: 'text' }` from a plain validator overrides the map per case. An error that resolves to no text anywhere warns in dev; the field still turns invalid (error styling, aria-invalid) and shows its warning or hint instead, or with neither no message at all.",
     "`dsRailTrigger` is a new directive: put it on your own burger anywhere inside `ds-app-layout` and it toggles `[(railOpen)]` and keeps `aria-expanded` / `aria-controls` pointing at the rail panel, so the trigger and the panel are related for a screen reader. Both attributes are dropped while the rail is not an overlay, where `aria-expanded=\"false\"` would contradict what the user sees. `ds-app-layout` also exposes `railId` and the read-only `railOverlay` signal for a consumer that builds its own trigger.",
     "`ds-table` `sortMode=\"none\"` is the way to render a column that is sortable in principle but not on this screen: the header renders as plain text, with no button, caret or `aria-sort`, instead of a control that does nothing.",
     "Bugfix, no action: a CLOSED compact `ds-app-layout` rail is now `inert`, and closing it (Escape, scrim click, navigation) returns focus to the control that claims the rail via `aria-controls`. Before, the off-canvas panel kept `role=\"dialog\"`/`aria-modal=\"true\"`, left every nav link tabbable and stranded the caret inside the hidden panel, because cdkTrapFocusAutoCapture restores focus only on directive destroy. A consumer whose custom burger sets neither `dsRailTrigger` nor `aria-controls` gets the inert fix but no focus return - add `aria-controls` pointing at `ds-app-layout`'s `railId` to get it.",
     "Bugfix, no action: NESTING one `ds-app-layout` inside another now works. Three separate faults are fixed. (1) The rail's open state was written as `:host(.rail-open) &`, which Angular's emulated encapsulation compiles to a DESCENDANT selector, and every instance of a component shares one encapsulation attribute — so an inner layout's rail opened whenever an outer one was open, and the inner scrim swallowed clicks meant for the outer. The state now lives on the elements it styles (`.rail.open` / `.scrim.open`). (2) Below `lg` the rail was `position: fixed`, resolving against the viewport, so an embedded layout threw its rail over the top-left of the WINDOW; rail and scrim are now `absolute` against a `position: relative` host. (3) The host now also sets `isolation: isolate`, so each layout z-indexes its rail (`--layer-drawer`) and scrim in its own stacking context instead of the one root context, where an inner layout's rail could paint over an outer layout's open rail. All three are identical to the old behaviour for a single full-viewport shell, which is the normal case.",
     "Bugfix, no action: `--ds-overlay-enter-scale` is now forwarded onto the portaled overlay pane, so scoping it per instance (`ds-select { --ds-overlay-enter-scale: 0.9; }`) finally reaches select / multi-select / autocomplete / date / time / colour picker / popover / tooltip / menu-submenu panels. 0.7.1 shipped it as a known gap — the token was resolved on the pane but absent from the forwarded set, while the other four enter tokens did forward. A GLOBAL override worked before and is unaffected.",
-    "The field family gained one label contract: --ds-field-label-font-size / -weight / -color / -transform / -tracking, resolved by ds-input, ds-textarea, ds-select, ds-date-picker, ds-time-picker and ds-radio-group through a shared mixin. Defaults equal the values those components hard-coded, so nothing moves unless you set a token. There is deliberately no per-component token set - custom-property scoping already narrows a retune to one element (`ds-select { --ds-field-label-transform: uppercase; }`) - and -transform/-tracking make the uppercase tracked label reachable through tokens for the first time. ds-input's --ds-input-label-color/-fs/-fw still take precedence where set and now fall through to the family token rather than the raw scale.",
-    "`--ds-field-height` is new, and the --field-h-sm/-md/-lg scale is now actually read by ds-input, ds-select, ds-date-picker and ds-time-picker - previously only -lg was, the other two sizes reaching past the scale to the raw --hit-min/--hit-cozy. Values are identical, so no height moves on upgrade. NO ACTION, but two things become possible that silently did nothing before: retuning --field-h-md (or -sm) now moves every field, and --ds-field-height pins one height regardless of the size class, scopable per component. NOT a fix for unequal picker heights - those were already equal as of 0.7.1's aligned trigger geometry.",
+    "The field family gained one label contract: --ds-field-label-font-size / -weight / -color / -transform / -tracking, resolved by ds-input, ds-textarea, ds-select, ds-date-picker, ds-time-picker and ds-radio-group through a shared mixin. Defaults equal the values ds-input, ds-textarea, ds-select, ds-date-picker and ds-time-picker hard-coded, so those do not move; ds-radio-group's label moves from medium/s on the flat line height to bold/xs on the base one (its own item above). There is deliberately no per-component token set - custom-property scoping already narrows a retune to one element (`ds-select { --ds-field-label-transform: uppercase; }`) - and -transform/-tracking make the uppercase tracked label reachable through tokens for the first time. ds-input's --ds-input-label-color/-fs/-fw still take precedence where set and now fall through to the family token rather than the raw scale.",
+    "`--ds-field-height` is new, and the --field-h-sm/-md/-lg scale is now actually read by ds-input, ds-select, ds-date-picker and ds-time-picker - previously only -lg was, the other two sizes reaching past the scale to the raw --hit-min/--hit-cozy. Values are identical, so no height moves on upgrade while [data-density] sits on the root element; under a [data-density] set on an inner element, md and sm fields now keep the root's height, because the scale resolves on :root. NO ACTION, but two things become possible that silently did nothing before: retuning --field-h-md (or -sm) now moves every field, and --ds-field-height pins one height regardless of the size class, scopable per component. NOT a fix for unequal picker heights - those were already equal as of 0.7.1's aligned trigger geometry.",
     "ds-button gained --ds-button-font-size / -weight / -tracking / -height / -pad-x / -pad-y, and reflects data-variant / data-color on its host element for external targeting. Defaults equal the hard-coded values, so nothing moves. NO ACTION - but a consumer who wrote .button.button.button { font-size; font-weight; letter-spacing; padding; height } to out-rank the shimmed .button.md can replace it with the tokens, set on the host. Per-variant --ds-button-* values were ALREADY reachable from the host before this change (the colour/fill resolvers read the hook first and never declare it), so an indirection layer added to work around that can go too.",
     "ds-app-layout gained opt-in restoreScroll + restoreScrollTimeout, and LayoutScrollService gained contentReady() and consumePendingOffset(). Off by default, so NO ACTION. Turn it on for a list-and-details app and going back returns the reader to their place; forward links still land at the top. A 'back to list' control that adds a history entry instead of traversing must pass state: { dsRestoreScroll: true } to be restored. Note that an app which scrolls on navigation itself (an anchor jump, a URL that names a section) writes after the layout and wins, so restoreScroll is a no-op on those routes.",
     "New role layer between the foundation scales and components: --ds-radius-{inner,control,panel,pill}, --ds-elevation-{raised,overlay,floating,modal}, and --ds-motion-{enter-panel,enter-surface,enter-large,exit,exit-large}-{duration,easing}. Every role defaults to the value its members already used, so NO ACTION and nothing moves visually. What becomes possible: retune one family without hitting the others - re-round panels while buttons keep their radius, lift every overlay in one line, make panel entrances snappier once. The old --shadow-popover/-modal/-toast/-card aliases still work and now resolve THROUGH the elevation roles. A per-component --ds-<comp>-radius / -shadow / -enter-duration override still wins over its role. Note: two motion resolvers (ds-loading-overlay, the toast leave) deliberately stay on the raw scale because they use --ease-standard, which no role carries.",

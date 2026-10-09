@@ -1,5 +1,8 @@
 @use '../../styles/focus' as focus;
-@use '../../styles/press' as press;
+@use '../../styles/dismiss-button' as dismiss-button;
+@use '../../styles/target' as target;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract:
    File name - single line, ellipsis, tooltip on hover with full name.
@@ -36,6 +39,8 @@
   height: 1px;
   padding: 0;
   margin: -1px;
+
+  // glyph-clip-guard: visually hidden 1px input
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
@@ -133,14 +138,12 @@
     .progress { height: var(--border-width-strong); background: var(--surface-secondary); border-radius: var(--radius-pill); margin-top: var(--space-1); }
     .progress-fill { height: 100%; background: var(--_dropzone-file-progress); border-radius: var(--radius-pill); transition: width var(--duration-base) var(--ease-standard); }
     .remove {
-      background: none;
-      border: 0;
-      cursor: pointer;
+      @include dismiss-button.button;
+      @include target.min-size;
+
       color: var(--icon-default);
       transition: color var(--duration-fast) var(--ease-standard);
       &:hover { color: var(--icon-strong); }
-
-      @include press.feedback;
     }
 
     &.uploading .icon { color: var(--_dropzone-file-progress); }

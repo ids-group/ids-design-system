@@ -12,13 +12,18 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { DsOverlayCloseRef } from '@ids-group-ltd/ids-design-system/overlay';
-import { prepareOverlayEnter } from '@ids-group-ltd/ids-design-system/components';
+import {
+  closeOnScroll,
+  prepareOverlayEnter,
+} from '@ids-group-ltd/ids-design-system/components';
+import { AimHoverTarget, MenuAim, aimTriangle } from './menu-aim';
 
 @Component({
   selector: 'ds-menu-item',
@@ -30,12 +35,14 @@ import { prepareOverlayEnter } from '@ids-group-ltd/ids-design-system/components
   // Presentational: the host sits between the role="menu" <ul> and the role="menuitem" button.
   host: { role: 'none' },
 })
-export class MenuItemComponent implements OnDestroy {
+export class MenuItemComponent implements OnDestroy, AimHoverTarget {
   // Optional so menu-items work standalone; selecting an item closes the containing overlay.
   private readonly closeRef = inject(DsOverlayCloseRef, { optional: true });
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly hostElement = inject(ElementRef<HTMLElement>);
+  private readonly aim =
+    inject(MenuAim, { optional: true }) ?? new MenuAim(inject(DOCUMENT));
   private readonly button =
     viewChild.required<ElementRef<HTMLButtonElement>>('button');
 
@@ -68,7 +75,6 @@ export class MenuItemComponent implements OnDestroy {
 
   private submenuRef: OverlayRef | null = null;
   private openTimer: ReturnType<typeof setTimeout> | null = null;
-  private closeTimer: ReturnType<typeof setTimeout> | null = null;
 
   /** Move keyboard focus to this item's control. */
   focus(): void {
@@ -114,10 +120,15 @@ export class MenuItemComponent implements OnDestroy {
   }
 
   protected onMouseEnter(): void {
-    if (!this.hasSubmenu() || this.disabled()) {
+    if (!this.hasSubmenu() || this.disabled() || !this.aim.requestHover(this)) {
       return;
     }
-    this.clearCloseTimer();
+    this.activateHover();
+  }
+
+  /** Opens the submenu after the hover delay; called directly or once a sibling's aim ends. */
+  activateHover(): void {
+    this.clearOpenTimer();
     this.openTimer = setTimeout(() => this.openSubmenu(), 120);
   }
 
@@ -126,17 +137,18 @@ export class MenuItemComponent implements OnDestroy {
       return;
     }
     this.clearOpenTimer();
-    // Delayed so moving into the submenu panel doesn't close it.
-    this.closeTimer = setTimeout(() => {
-      const submenuElement = this.submenuRef?.overlayElement;
-      if (
-        submenuElement &&
-        submenuElement.contains(event.relatedTarget as Node)
-      ) {
-        return;
-      }
-      this.closeSubmenu();
-    }, 150);
+    this.aim.dropHover(this);
+    const panel = this.submenuRef?.overlayElement;
+    if (!panel || panel.contains(event.relatedTarget as Node | null)) {
+      return;
+    }
+    this.aim.start(
+      aimTriangle(
+        { x: event.clientX, y: event.clientY },
+        panel.getBoundingClientRect(),
+      ),
+      () => this.closeSubmenu(),
+    );
   }
 
   openSubmenu(): void {
@@ -185,15 +197,25 @@ export class MenuItemComponent implements OnDestroy {
     });
 
     this.submenuRef.outsidePointerEvents().subscribe(() => this.closeSubmenu());
+    const stopScrollClose = closeOnScroll(this.submenuRef, () =>
+      this.closeSubmenu(),
+    );
+    this.submenuRef.detachments().subscribe(stopScrollClose);
 
     this.submenuRef.attach(new TemplatePortal(this.submenu()!, this.vcr));
 
     this.submenuRef.overlayElement.addEventListener('mouseenter', () =>
-      this.clearCloseTimer(),
+      this.aim.stop(),
     );
-    this.submenuRef.overlayElement.addEventListener('mouseleave', () =>
-      this.closeSubmenu(),
-    );
+    this.submenuRef.overlayElement.addEventListener('mouseleave', (event) => {
+      if (
+        !this.hostElement.nativeElement.contains(
+          event.relatedTarget as Node | null,
+        )
+      ) {
+        this.closeSubmenu();
+      }
+    });
 
     this.submenuOpen.set(true);
   }
@@ -205,22 +227,18 @@ export class MenuItemComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.submenuRef) {
+      this.aim.stop();
+    }
     this.submenuRef?.dispose();
     this.clearOpenTimer();
-    this.clearCloseTimer();
+    this.aim.dropHover(this);
   }
 
   private clearOpenTimer(): void {
     if (this.openTimer !== null) {
       clearTimeout(this.openTimer);
       this.openTimer = null;
-    }
-  }
-
-  private clearCloseTimer(): void {
-    if (this.closeTimer !== null) {
-      clearTimeout(this.closeTimer);
-      this.closeTimer = null;
     }
   }
 }

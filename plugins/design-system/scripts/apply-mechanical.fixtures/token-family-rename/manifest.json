@@ -1,0 +1,5 @@
+{ "version": "0.13.4", "items": [
+  { "id": "pagehdr-prefix", "kind": "token-rename", "old": "--ds-pagehdr-", "new": "--ds-page-header-" },
+  { "id": "transform-suffix", "kind": "token-rename", "old": "--ds-*-transform", "new": "--ds-*-text-transform" },
+  { "id": "chart-geometry", "kind": "token-rename", "old": "--chart-axis-fs, --chart-line-w", "new": "--chart-axis-font-size, --chart-line-width" }
+] }

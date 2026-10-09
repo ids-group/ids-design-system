@@ -17,7 +17,9 @@
   "exports": {
     "./styles/*": "./styles/*",
     "./themes/*": "./themes/*",
-    "./migrations/*": "./migrations/*"
+    "./migrations/*": "./migrations/*",
+    "./stylelint": "./stylelint/index.mjs",
+    "./eslint": "./eslint/index.mjs"
   },
   "peerDependencies": {
     "@angular/cdk": "^21.2.0",

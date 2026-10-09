@@ -10,7 +10,8 @@ The stages of a journey, drawn top to bottom in the order you give them — they
 - `summary`: the accessible name; generated from `data` when omitted.
 - `valueFormat`: `(value: number) => string`, defaults to `Intl.NumberFormat`.
 - `dataTable`: `'toggle'` (default) | `'visible'` | `'none'`. Suppressed entirely while `showTable` is on — with both, the same numbers print twice.
-- `loading` (default `false`): shows a skeleton funnel.
+- `loading` (default `false`): with empty `data`, a skeleton funnel over the stage table; with data on screen, the plot stays under a `ds-loading-overlay` until it clears.
+- `skeletonCount` (default `5`): how many stages the skeleton draws until the data's own count is known.
 - `emptyText` (default `"No data"`): shown in place of the funnel when `data` is empty.
 - `interactive` (default `false`): turns on the pointer cursor and the keyboard route.
 - `onStageClicked`: fires with the clicked stage, with or without `interactive`.

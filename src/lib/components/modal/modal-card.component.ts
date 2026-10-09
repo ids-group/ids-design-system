@@ -11,16 +11,23 @@ import {
   viewChild,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import {
-  DS_INTL,
-  warnUnslottedContent,
-} from '@ids-group-ltd/ids-design-system/core';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
-import { MODAL_SLOTS, resolveDividers } from './modal-defaults';
+import { resolveDividers } from './modal-defaults';
 import type { ModalSize } from './modal.types';
 import type { DsStatus } from '@ids-group-ltd/ids-design-system/core';
 
 let nextId = 0;
+
+function* flexItems(parent: Element): Generator<Element> {
+  for (const child of parent.children) {
+    if (getComputedStyle(child).display === 'contents') {
+      yield* flexItems(child);
+    } else {
+      yield child;
+    }
+  }
+}
 
 @Component({
   selector: 'ds-modal-card',
@@ -69,17 +76,8 @@ export class ModalCardComponent {
     viewChild.required<ElementRef<HTMLElement>>('header');
   private readonly actionsRow =
     viewChild.required<ElementRef<HTMLElement>>('actions');
-  private readonly unslotted = viewChild<ElementRef<HTMLElement>>('unslotted');
 
   constructor() {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      warnUnslottedContent(
-        'ds-modal-card',
-        'body',
-        MODAL_SLOTS,
-        () => this.unslotted()?.nativeElement,
-      );
-    }
     afterRenderEffect((onCleanup) => {
       this.stackOverflowingActions();
       let frame = 0;
@@ -117,8 +115,8 @@ export class ModalCardComponent {
       parseFloat(styles.paddingRight);
     const gap = parseFloat(styles.columnGap) || 0;
     let needed = -gap;
-    for (const child of row.children) {
-      needed += child.getBoundingClientRect().width + gap;
+    for (const item of flexItems(row)) {
+      needed += item.getBoundingClientRect().width + gap;
     }
     row.classList.toggle('stacked', needed > available);
   }

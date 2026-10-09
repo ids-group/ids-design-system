@@ -21,10 +21,16 @@ import type { AccordionChevron } from './accordion.types';
   template: `<ng-content></ng-content>`,
   styles: [
     `
+      @layer ds-component-base {
+        :host {
+          box-sizing: border-box;
+        }
+      }
       :host {
         display: block;
         border: var(--border-width-default) solid var(--border-divider);
         border-radius: var(--radius-lg);
+        /* glyph-clip-guard: rounds the corners; every head and body pads its text off this edge */
         overflow: hidden;
       }
     `,

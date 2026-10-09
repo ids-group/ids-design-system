@@ -1,4 +1,6 @@
 @use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract:
    Head label - single line, ellipsis, tooltip on hover when clipped.
@@ -91,6 +93,7 @@
 
   .body-inner {
     // Padding stays on .body-content: padding here survives the 0fr crush and leaks a sliver.
+    // glyph-clip-guard: collapses the body; open, .body-content pads the text off this edge
     overflow: hidden;
     min-height: 0;
   }

@@ -30,6 +30,7 @@ export const CHART_BAND_PADDING = 0.3;
 export const CHART_FALLBACK_WIDTH = 640;
 
 export const CHART_DEFAULT_PLOT_HEIGHT = 240;
+/** Width of the value-axis label gutter a chart draws when none is set. @internal */
 export const CHART_DEFAULT_AXIS_GUTTER = 46;
 export const CHART_DEFAULT_VALUE_SPACE = 20;
 

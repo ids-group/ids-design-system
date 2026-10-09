@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Состояния интерактивных элементов</title>
+<meta name="ds-deck-status" content="open">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+<style>
+  /* The tooltip panel rebuilt from tooltip-panel.component.scss on the same tokens. */
+  .tip {
+    display: block; position: relative; max-width: 100%; width: max-content;
+    padding: var(--space-1-5) var(--space-2-5);
+    background: var(--tooltip-bg-color); color: var(--tooltip-text-color);
+    border: var(--border-width-default) solid var(--tooltip-border-color); border-radius: var(--ds-radius-control);
+    box-shadow: var(--ds-elevation-overlay);
+    font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
+    overflow-wrap: anywhere; white-space: pre-line;
+  }
+  .tip strong { font-weight: var(--font-weight-bold); }
+
+  /* A ds-table header cell and a button, both clipping their text with an ellipsis. */
+  .th {
+    display: block; padding: var(--space-2) var(--space-3);
+    background: var(--surface-muted); border-bottom: var(--border-width-default) solid var(--border-default);
+    font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
+    letter-spacing: var(--letter-spacing-wider); text-transform: uppercase; color: var(--text-tertiary);
+    white-space: nowrap; box-sizing: border-box; max-width: 100%;
+  }
+  .th .dotted { text-decoration: underline dotted var(--text-tertiary); text-underline-offset: 3px; }
+  .demo-btn {
+    display: block; padding: var(--space-1-5) var(--space-3); box-sizing: border-box; max-width: 100%;
+    border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control);
+    background: var(--surface-default); color: var(--text-primary);
+    font: var(--font-weight-semibold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
+    white-space: nowrap;
+  }
+  .clip { display: block; overflow: clip; text-overflow: ellipsis; white-space: nowrap; }
+  .state { display: inline-block; padding: 0 var(--space-2); border-radius: var(--radius-pill); font: var(--font-weight-bold) var(--font-size-2xs) / 1.6 var(--font-sans); }
+  .state.is-clipped { background: var(--warning-subtitle); color: var(--warning-text); }
+  .state.is-fits { background: var(--success-subtitle); color: var(--success-text); }
+  .live { display: grid; gap: var(--space-2); align-content: start; padding: var(--space-3); background: var(--surface-muted); border-radius: var(--radius-md); min-height: 150px; }
+  .slider { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-3) 0 var(--space-2); font: var(--font-weight-semibold) var(--font-size-xs) / 1.4 var(--font-sans); }
+  .slider input { flex: 0 1 360px; accent-color: var(--accent); }
+  .slider output { font-family: var(--font-mono); color: var(--text-secondary); min-width: 5ch; }
+  .youpick { margin: 0; padding: var(--space-2) var(--space-3); border-left: 3px solid var(--accent); background: var(--accent-subtitle); font: var(--font-size-xs) / 1.5 var(--font-sans); }
+  .youpick b { display: block; margin-bottom: 2px; font-size: var(--font-size-2xs); letter-spacing: var(--letter-spacing-wider); text-transform: uppercase; color: var(--accent-strong); }
+
+  .code {
+    margin: 0; padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm); background: var(--surface-muted);
+    font: var(--font-size-2xs) / 1.55 var(--font-mono); color: var(--text-primary);
+    white-space: pre; overflow-x: auto;
+  }
+  .attrs { width: 100%; border-collapse: collapse; font-size: var(--font-size-2xs); }
+  .attrs th, .attrs td { padding: var(--space-1-5) var(--space-3); text-align: left; border-bottom: var(--border-width-default) solid var(--border-divider); vertical-align: top; }
+  .attrs td:first-child { font-family: var(--font-mono); white-space: nowrap; }
+  .attrs tr.is-gone td { color: var(--error-text); }
+  .attrs tr.is-changed td { background: var(--accent-subtitle); }
+  .attrs .tag { display: inline-block; padding: 0 var(--space-1-5); border-radius: var(--radius-pill); font-weight: var(--font-weight-bold); }
+  .tag.same { background: var(--surface-muted); color: var(--text-secondary); }
+  .tag.gone { background: var(--error-subtitle); color: var(--error-text); }
+  .tag.new { background: var(--accent-subtitle); color: var(--accent-strong); }
+
+  .opt { cursor: pointer; }
+  .opt > .badge { align-self: flex-start; }
+  .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+  .opt.is-chosen { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+  .opt .chosen-mark { display: none; font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--accent-strong); }
+  .opt.is-chosen .chosen-mark { display: block; }
+  .opts { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  .pill { padding: 2px var(--space-2); border-radius: var(--radius-pill); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.5 var(--font-sans); }
+  .pill.good { background: var(--success-subtitle); color: var(--success-text); }
+  .pill.bad { background: var(--error-subtitle); color: var(--error-text); }
+  .pill.mid { background: var(--warning-subtitle); color: var(--warning-text); }
+  main { padding-bottom: 72px; }
+  @media (max-width: 520px) { body { padding-inline: var(--space-4); } .opts { grid-template-columns: minmax(0, 1fr); } }
+  .pipe { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-2); margin: var(--space-3) 0; counter-reset: step; }
+  .pipe .st { position: relative; padding: var(--space-2) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-md); background: var(--surface-default); font: var(--font-size-xs) / 1.45 var(--font-sans); }
+  .pipe .st::before { counter-increment: step; content: counter(step); display: inline-grid; place-items: center; width: 20px; height: 20px; margin-right: var(--space-1-5); border-radius: 50%; background: var(--accent); color: var(--accent-on); font: var(--font-weight-bold) var(--font-size-2xs) / 1 var(--font-sans); }
+  .pipe .st b { display: inline; }
+  .pipe .st small { display: block; margin-top: var(--space-1); color: var(--text-secondary); font-size: var(--font-size-2xs); }
+  .pipe .st.is-close { border-style: dashed; }
+  .pipe .st.is-close::before { content: "×"; background: var(--surface-muted); color: var(--text-secondary); }
+  .inp { display: inline-block; padding: 0 var(--space-1-5); border-radius: var(--radius-sm); background: var(--accent-subtitle); color: var(--accent-strong); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.6 var(--font-mono); }
+  .modes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-3); }
+  .mode { display: grid; gap: var(--space-2); align-content: start; padding: var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-md); background: var(--surface-default); }
+  .mode .host { display: block; width: 130px; max-width: 100%; box-sizing: border-box; padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); font: var(--font-weight-semibold) var(--font-size-xs) / var(--line-height-base) var(--font-sans); white-space: nowrap; overflow: clip; text-overflow: ellipsis; }
+  .mode h3 { margin: 0; font-size: var(--font-size-s); }
+  .matrix { width: 100%; border-collapse: collapse; font-size: var(--font-size-2xs); }
+  .matrix th, .matrix td { padding: var(--space-1-5) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-divider); text-align: left; vertical-align: middle; }
+  .matrix td.c, .matrix th.c { text-align: center; }
+  .matrix td:first-child { font-family: var(--font-mono); white-space: nowrap; }
+  .matrix tfoot td { font-weight: var(--font-weight-bold); background: var(--surface-muted); }
+  .matrix .n { font-family: var(--font-mono); color: var(--text-secondary); margin-left: var(--space-1); }
+  .files { display: flex; flex-wrap: wrap; gap: var(--space-1-5); align-items: stretch; }
+  .file { padding: var(--space-1-5) var(--space-2); border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-sm); background: var(--surface-default); font: var(--font-size-2xs) / 1.4 var(--font-mono); }
+  .file.is-new { border-color: var(--success); background: var(--success-subtitle); }
+  .file.is-big { background: var(--warning-subtitle); border-color: var(--warning); }
+  .file.is-gone { border-style: dashed; color: var(--error-text); text-decoration: line-through; }
+  .file small { display: block; color: var(--text-secondary); font-family: var(--font-sans); }
+  .qmark { flex: none; display: inline-grid; place-items: center; width: 16px; height: 16px; border: var(--border-width-default) solid var(--text-secondary); border-radius: 50%; color: var(--text-secondary); font: var(--font-weight-bold) 10px / 1 var(--font-sans); text-transform: none; letter-spacing: 0; }
+  .jobs { display: flex; height: 44px; border-radius: var(--radius-sm); overflow: hidden; border: var(--border-width-default) solid var(--border-default); margin: var(--space-2) 0; }
+  .jobs span { display: grid; place-items: center; min-width: 0; padding: 0 2px; font: var(--font-weight-semibold) 10px / 1.1 var(--font-sans); text-align: center; overflow: hidden; border-right: 1px solid var(--surface-default); }
+  .jobs .j1 { background: var(--surface-muted); } .jobs .j2 { background: var(--warning-subtitle); } .jobs .j3 { background: var(--accent-subtitle); }
+  .jobs .j4 { background: var(--success-subtitle); } .jobs .j5 { background: var(--error-subtitle); } .jobs .j6 { background: var(--surface-subtle, var(--surface-muted)); }
+  .legend { display: flex; flex-wrap: wrap; gap: var(--space-2); font: var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--text-secondary); }
+  .legend .j2 { background: var(--warning-subtitle); } .legend .j3 { background: var(--accent-subtitle); }
+  .legend i { display: inline-block; width: 10px; height: 10px; margin-right: 4px; border-radius: 2px; vertical-align: -1px; border: 1px solid var(--border-default); }
+  .arrow { align-self: center; color: var(--text-secondary); font-weight: var(--font-weight-bold); }
+
+  .x-anchor { position: relative; display: inline-block; max-width: 100%; }
+  .x-tip { position: absolute; z-index: 5; left: 0; top: calc(100% + 8px); width: max-content; max-width: 260px; padding: var(--space-1-5) var(--space-2-5); background: var(--tooltip-bg-color); color: var(--tooltip-text-color); border: var(--border-width-default) solid var(--tooltip-border-color); border-radius: var(--ds-radius-control); box-shadow: var(--ds-elevation-overlay); font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-base) var(--font-sans); white-space: pre-line; pointer-events: none; text-transform: none; letter-spacing: 0; }
+  .x-tip[hidden] { display: none; }
+  .x-term { appearance: none; margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; text-decoration: underline dotted var(--text-tertiary); text-underline-offset: 3px; border-radius: var(--radius-sm); text-align: left; }
+  .x-term:hover { text-decoration: underline solid var(--text-secondary); }
+  .x-term:active { color: var(--text-primary); background: var(--surface-muted); box-shadow: 0 0 0 2px var(--surface-muted); text-decoration: underline solid var(--text-primary); }
+  .x-term[data-pinned] { color: var(--accent-strong); background: var(--accent-subtitle); box-shadow: 0 0 0 2px var(--accent-subtitle); text-decoration: underline solid var(--accent-strong); }
+  .x-term[data-pinned]:hover { background: color-mix(in srgb, var(--accent) 20%, transparent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent); }
+  .x-hint[data-pinned]:hover { background: color-mix(in srgb, var(--accent) 20%, transparent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
+  .x-term:focus-visible, .x-hint:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+  .x-term.is-plain { cursor: default; } .x-term.is-plain:hover { text-decoration: underline dotted var(--text-tertiary); }
+  .x-sample { margin: 0; padding: var(--space-3); background: var(--surface-muted); border-radius: var(--radius-md); font: var(--font-size-s) / 1.7 var(--font-sans); min-height: 76px; }
+  .x-th { display: flex; align-items: center; gap: var(--space-2); width: 100%; box-sizing: border-box; margin-top: var(--space-2); padding: var(--space-2) var(--space-3); background: var(--surface-muted); border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-sm); font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans); letter-spacing: var(--letter-spacing-wider); text-transform: uppercase; color: var(--text-tertiary); min-height: 52px; }
+  .x-th .sort { margin-left: auto; font-size: 12px; color: var(--text-secondary); }
+  .x-log { margin: var(--space-2) 0 0; padding: var(--space-1-5) var(--space-2); background: var(--surface-default); border: var(--border-width-default) dashed var(--border-default); border-radius: var(--radius-sm); font: var(--font-size-2xs) / 1.5 var(--font-mono); color: var(--text-secondary); min-height: 3em; }
+  .x-says { margin: var(--space-1) 0 0; font: var(--font-size-2xs) / 1.5 var(--font-sans); color: var(--text-secondary); }
+  .x-says b { color: var(--text-primary); }
+  .x-hint { appearance: none; display: inline-flex; padding: 0; margin: 0; border: 0; border-radius: 50%; background: none; color: var(--icon-default); cursor: pointer; vertical-align: middle; }
+  .x-hint:hover { color: var(--icon-strong); }
+  .x-hint:active { background: var(--surface-muted); box-shadow: 0 0 0 3px var(--surface-muted); }
+  .x-hint[data-pinned] { color: var(--accent-strong); background: var(--accent-muted); box-shadow: 0 0 0 3px var(--accent-muted); }
+  .x-hint svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .x-hintrow { display: inline-flex; align-items: center; gap: var(--space-2); font: var(--font-size-s) / 1.7 var(--font-sans); }
+  .decided { width: 100%; border-collapse: collapse; font-size: var(--font-size-2xs); }
+  .decided th, .decided td { padding: var(--space-1-5) var(--space-3); text-align: left; border-bottom: var(--border-width-default) solid var(--border-divider); vertical-align: top; }
+  .decided td:first-child { font-family: var(--font-mono); white-space: nowrap; }
+
+  .ctl { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-3); margin: var(--space-3) 0; padding: var(--space-3); background: var(--surface-muted); border-radius: var(--radius-md); }
+  .ctl label { display: grid; gap: 4px; font: var(--font-weight-semibold) var(--font-size-xs) / 1.4 var(--font-sans); }
+  .ctl output { font-family: var(--font-mono); color: var(--text-secondary); }
+  .ctl input { accent-color: var(--accent); width: 100%; }
+  .grid { --on: 12%; --step: 8%; --mult: 2; width: 100%; border-collapse: collapse; font-size: var(--font-size-xs); }
+  .grid th, .grid td { padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-divider); text-align: left; vertical-align: middle; }
+  .grid thead th { font: var(--font-weight-bold) var(--font-size-2xs) / 1.3 var(--font-sans); letter-spacing: var(--letter-spacing-wider); text-transform: uppercase; color: var(--text-secondary); }
+  .grid tbody th { font: var(--font-weight-semibold) var(--font-size-xs) / 1.3 var(--font-sans); white-space: nowrap; }
+  .grid .num { display: block; margin-top: 4px; font: var(--font-size-2xs) / 1.3 var(--font-mono); color: var(--text-tertiary); }
+
+  /* one trigger per channel; --lv is the level in percent, set by the state */
+  .t { --lv: 0%; display: inline-block; padding: 1px 4px; border-radius: var(--radius-sm); font: var(--font-weight-medium) var(--font-size-s) / 1.5 var(--font-sans); color: var(--text-primary); cursor: pointer; user-select: none; }
+  .t[data-s~="dis"] { opacity: .4; cursor: not-allowed; }
+  .state-hover { --lv: var(--step); }
+  .state-pressed { --lv: calc(var(--step) * var(--mult)); }
+  .state-on { --lv: var(--on); }
+  .state-on-hover { --lv: calc(var(--on) + var(--step)); }
+  .state-on-pressed { --lv: calc(var(--on) + var(--step) * var(--mult)); }
+
+  /* A: fill. The level is the alpha of the accent wash. */
+  .a { background: color-mix(in srgb, var(--accent) var(--lv), transparent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) var(--lv), transparent); }
+  .a.state-on, .a.state-on-hover, .a.state-on-pressed { color: var(--accent-strong); }
+
+  /* B: underline. The level darkens the ink; on, hover and pressed thicken the line. */
+  .b { text-decoration-line: underline; text-underline-offset: 3px; text-decoration-style: dotted; text-decoration-thickness: 1px; text-decoration-color: var(--text-tertiary); color: var(--text-primary); }
+  .b.state-hover { text-decoration-style: solid; text-decoration-color: var(--text-secondary); }
+  .b.state-pressed { text-decoration-style: solid; text-decoration-thickness: 2px; text-decoration-color: var(--text-primary); }
+  .b.state-on, .b.state-on-hover, .b.state-on-pressed { text-decoration-style: solid; text-decoration-thickness: 2px; color: var(--accent-strong); text-decoration-color: var(--accent-strong); }
+  .b.state-on-hover { text-decoration-thickness: 3px; color: color-mix(in srgb, var(--accent-strong), var(--text-primary) var(--step)); text-decoration-color: color-mix(in srgb, var(--accent-strong), var(--text-primary) var(--step)); }
+  .b.state-on-pressed { text-decoration-thickness: 3px; color: color-mix(in srgb, var(--accent-strong), var(--text-primary) calc(var(--step) * var(--mult))); text-decoration-color: color-mix(in srgb, var(--accent-strong), var(--text-primary) calc(var(--step) * var(--mult))); }
+
+  /* C: icon ink. The level darkens the ink toward the text colour; on changes the hue, not the level. */
+  .c { padding: 2px; line-height: 0; color: var(--icon-default); }
+  .c svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .c.state-hover, .c.state-pressed { color: color-mix(in srgb, var(--icon-default), var(--text-primary) var(--lv)); }
+  .c.state-on { color: var(--accent-strong); }
+  .c.state-on-hover, .c.state-on-pressed { color: color-mix(in srgb, var(--accent-strong), var(--text-primary) calc(var(--lv) - var(--on))); }
+
+  /* live triggers: the same rules on real :hover, :active and [data-on] */
+  .live-row { display: flex; gap: var(--space-6); align-items: center; padding: var(--space-3); background: var(--surface-muted); border-radius: var(--radius-md); flex-wrap: wrap; }
+  .live-row .lbl { font: var(--font-size-2xs) / 1.3 var(--font-sans); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: var(--letter-spacing-wider); display: block; margin-bottom: 4px; }
+  .t.try:hover { --lv: var(--step); }
+  .t.try:active { --lv: calc(var(--step) * var(--mult)); }
+  .t.try[data-on] { --lv: var(--on); }
+  .t.try[data-on]:hover { --lv: calc(var(--on) + var(--step)); }
+  .t.try[data-on]:active { --lv: calc(var(--on) + var(--step) * var(--mult)); }
+  .b.try:hover { text-decoration-style: solid; text-decoration-color: var(--text-secondary); }
+  .b.try:active { text-decoration-style: solid; text-decoration-thickness: 2px; text-decoration-color: var(--text-primary); }
+  .b.try[data-on] { text-decoration-style: solid; text-decoration-thickness: 2px; color: var(--accent-strong); text-decoration-color: var(--accent-strong); }
+  .b.try[data-on]:hover { text-decoration-thickness: 3px; color: color-mix(in srgb, var(--accent-strong), var(--text-primary) var(--step)); text-decoration-color: color-mix(in srgb, var(--accent-strong), var(--text-primary) var(--step)); }
+  .b.try[data-on]:active { text-decoration-thickness: 3px; color: color-mix(in srgb, var(--accent-strong), var(--text-primary) calc(var(--step) * var(--mult))); text-decoration-color: color-mix(in srgb, var(--accent-strong), var(--text-primary) calc(var(--step) * var(--mult))); }
+  .a.try[data-on] { color: var(--accent-strong); }
+  .c.try:hover, .c.try:active { color: color-mix(in srgb, var(--icon-default), var(--text-primary) var(--lv)); }
+  .c.try[data-on] { color: var(--accent-strong); }
+  .c.try[data-on]:hover, .c.try[data-on]:active { color: color-mix(in srgb, var(--accent-strong), var(--text-primary) calc(var(--lv) - var(--on))); }
+  .t:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+
+  .bars2 { display: grid; gap: var(--space-1-5); margin: var(--space-2) 0; }
+  .bars2 .r { display: grid; grid-template-columns: 220px 1fr 70px; gap: var(--space-2); align-items: center; font: var(--font-size-xs) / 1.3 var(--font-sans); }
+  .bars2 .bar { height: 14px; background: var(--surface-muted); border-radius: var(--radius-sm); overflow: hidden; }
+  .bars2 .bar i { display: block; height: 100%; background: var(--accent); }
+  .bars2 .bar i.bad { background: var(--error); }
+  .bars2 .n { font-family: var(--font-mono); color: var(--text-secondary); text-align: right; }
+  .sw { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .sw span { display: inline-grid; gap: 4px; justify-items: center; font: var(--font-size-2xs) / 1.3 var(--font-mono); color: var(--text-secondary); }
+  .sw i { width: 120px; height: 36px; border-radius: var(--radius-sm); border: var(--border-width-default) solid var(--border-default); }
+  .tbl-demo { width: 100%; border-collapse: collapse; font: var(--font-size-xs) / 1.4 var(--font-sans); }
+  .tbl-demo td { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--border-divider); }
+  .tbl-demo tr:hover td { background: var(--_row); }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1>Состояния элементов: осталось решить четыре вещи</h1>
+    <p class="chat">Ответ нести в чат: «Тултип и состояния: деки»</p>
+    <p class="lede">Четыре вещи ждут тебя, они сразу ниже. Первые три про числа и серый цвет, четвёртая про то, вливать ли готовый пилот. Всё решённое, правила и причины собраны под ними.</p>
+    <div class="chips"><span class="chip is-open">Нужно решение: 4</span><span class="chip">.ds-interactive</span><span class="chip">pinned</span><span class="chip">актуально на 2026-10-08</span></div>
+  </header>
+
+  <section class="panel verdict">
+    <h2>Что от тебя нужно</h2>
+    <ol class="todo">
+      <li>
+        <span class="ask">Насколько сильно элемент меняется при наведении, нажатии и когда он «включён»?</span>
+        <p class="mine"><b>Моё предложение:</b> наведение 8%, нажатие вдвое сильнее, база «включено» 12%. Это значения по умолчанию, тяни ползунки и смотри.</p>
+        <p class="where"><a href="#q-steps">К вопросу 1</a></p>
+      </li>
+      <li>
+        <span class="ask">Каким серым подсвечивать строки меню, таблицы и списка при наведении?</span>
+        <p class="mine"><b>Моё предложение:</b> один нейтральный серый из цвета текста, так сделан пилот. Запасной вариант: тёмный <code>surface-muted</code>.</p>
+        <p class="where"><a href="#q-neutral">К вопросу 2</a></p>
+      </li>
+      <li>
+        <span class="ask">Нужен ли скрипт, который ругается, если у элемента нет нажатия или фокуса?</span>
+        <p class="mine"><b>Моё предложение:</b> да, но пока только для пилота, остальным список исключений.</p>
+        <p class="where"><a href="#q-lock">К вопросу 3</a></p>
+      </li>
+      <li>
+        <span class="ask">Вливать ли пилот (термин и <code>ds-info-hint</code> на общих ступенях) в <code>dev</code>?</span>
+        <p class="mine"><b>Моё предложение:</b> да, после вопросов 1 и 2: подставлю твои числа и влью.</p>
+        <p class="where"><a href="#q-merge">К вопросу 4</a></p>
+      </li>
+    </ol>
+    <p class="cap">Согласен - нажми у каждого вопроса карточку «рекомендую». Четыре правила в блоке ниже не требуют выбора: не согласен - напиши замечание. Внизу появится одна строка для чата.</p>
+  </section>
+
+  <section class="panel q" id="q-steps" data-q="steps" data-review="Числа ступеней" data-review-note-only>
+    <h2>Вопрос 1. Числа ступеней, на трёх каналах</h2>
+    <p>Что решить: насколько заметно элемент меняется. Заливка, подчёркивание и иконка - три способа показать состояние. Ступени одни: наведение даёт один шаг, нажатие даёт несколько шагов, «включено» задаёт базу. Подбери три числа так, чтобы все три канала читались. В пилоте есть только два первых числа: шаг 8% и множитель 2, база «включено» пока только здесь. Последние значения ползунков уходят в ответ.</p>
+    <div class="ctl">
+      <label>Шаг наведения <output data-out="step">8%</output><input type="range" min="2" max="16" step="1" value="8" data-var="step"></label>
+      <label>Нажатие = шагов наведения <output data-out="mult">2</output><input type="range" min="1" max="4" step="0.5" value="2" data-var="mult"></label>
+      <label>База «включено» <output data-out="on">12%</output><input type="range" min="0" max="30" step="1" value="12" data-var="on"></label>
+    </div>
+    <div class="live-row" id="live">
+      <div><span class="lbl">Заливка: наведи, нажми, щёлкни</span><span class="t a try" tabindex="0" data-live>exited</span></div>
+      <div><span class="lbl">Подчёркивание</span><span class="t b try" tabindex="0" data-live>exited</span></div>
+      <div><span class="lbl">Иконка</span><span class="t c try" tabindex="0" data-live><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4M12 17v.01"/></svg></span></div>
+    </div>
+    <p class="cap">Клик закрепляет («включено»), второй клик снимает. Tab даёт фокус.</p>
+    <table class="grid" id="grid">
+      <thead><tr><th>Состояние</th><th>Заливка</th><th>Подчёркивание</th><th>Иконка</th></tr></thead>
+      <tbody>
+<tr data-row="rest"><th>Покой</th><td><span class="t a ">exited</span><span class="num" data-num="a-rest"></span></td><td><span class="t b ">exited</span><span class="num" data-num="b-rest"></span></td><td><span class="t c "><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4M12 17v.01"/></svg></span><span class="num" data-num="c-rest"></span></td></tr>
+<tr data-row="hover"><th>Наведение</th><td><span class="t a state-hover">exited</span><span class="num" data-num="a-hover"></span></td><td><span class="t b state-hover">exited</span><span class="num" data-num="b-hover"></span></td><td><span class="t c state-hover"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4M12 17v.01"/></svg></span><span class="num" data-num="c-hover"></span></td></tr>
+<tr data-row="pressed"><th>Нажатие</th><td><span class="t a state-pressed">exited</span><span class="num" data-num="a-pressed"></span></td><td><span class="t b state-pressed">exited</span><span class="num" data-num="b-pressed"></span></td><td><span class="t c state-pressed"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4M12 17v.01"/></svg></span><span class="num" data-num="c-pressed"></span></td></tr>
+<tr data-row="on"><th>Включено (закреплено)</th><td><span class="t a state-on">exited</span><span class="num" data-num="a-on"></span></td><td><span class="t b state-on">exited</span><span class="num" data-num="b-on"></span></td><td><span class="t c state-on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4M12 17v.01"/></svg></span><span class="num" data-num="c-on"></span></td></tr>
+<tr data-row="on-hover"><th>Включено + наведение</th><td><span class="t a state-on-hover">exited</span><span class="num" data-num="a-on-hover"></span></td><td><span class="t b state-on-hover">exited</span><span class="num" data-num="b-on-hover"></span></td><td><span class="t c state-on-hover"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4M12 17v.01"/></svg></span><span class="num" data-num="c-on-hover"></span></td></tr>
+<tr data-row="on-pressed"><th>Включено + нажатие</th><td><span class="t a state-on-pressed">exited</span><span class="num" data-num="a-on-pressed"></span></td><td><span class="t b state-on-pressed">exited</span><span class="num" data-num="b-on-pressed"></span></td><td><span class="t c state-on-pressed"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4M12 17v.01"/></svg></span><span class="num" data-num="c-on-pressed"></span></td></tr>
+<tr data-row="dis"><th>Disabled</th><td><span class="t a " data-s="dis">exited</span><span class="num" data-num="a-dis"></span></td><td><span class="t b " data-s="dis">exited</span><span class="num" data-num="b-dis"></span></td><td><span class="t c " data-s="dis"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4M12 17v.01"/></svg></span><span class="num" data-num="c-dis"></span></td></tr>
+      </tbody>
+    </table>
+    <p class="src">Заливка: уровень - это прозрачность акцента. Подчёркивание: наведение и нажатие утолщают линию, на включённом ещё темнят цвет на шаг. Иконка: уровень темнит чернила к цвету текста, а «включено» меняет оттенок, не уровень. Числа под значками считает страница из тех же ползунков.</p>
+  </section>
+
+  <section class="panel q" id="q-neutral" data-q="neutral" data-review="Нейтральный фон при наведении" data-review-note-only>
+    <h2>Вопрос 2. Один нейтральный фон при наведении</h2>
+    <p>Что решить: строки меню, таблицы и списка сегодня подсвечиваются двумя разными серыми. Нужен один для всех. Наведи мышь на строки. Четвёртый вариант - тот, что сделан в пилоте; замер на ds-docs: наведение 8% даёт rgb(236, 237, 238), у <code>surface-muted</code> rgb(232, 236, 242), то есть пилот светлее и без синевы.</p>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+      <article class="opt" tabindex="0">
+        <h3>Светлый: surface-secondary</h3>
+        <p class="youpick"><b>Ты выбираешь</b>везде подсветка строки на ступень светлее, neutral-100.</p>
+        <table class="tbl-demo" style="--_row: var(--surface-secondary)"><tr><td>Rotterdam</td><td>12</td></tr><tr><td>Antwerp</td><td>8</td></tr><tr><td>Hamburg</td><td>5</td></tr></table>
+        <div class="pills"><span class="pill good">мягче</span><span class="pill mid">на белом читается слабо</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Тёмный: surface-muted</h3>
+        <p class="youpick"><b>Ты выбираешь</b>везде подсветка строки на ступень темнее, neutral-150, и шаг hover считается от неё.</p>
+        <table class="tbl-demo" style="--_row: var(--surface-muted)"><tr><td>Rotterdam</td><td>12</td></tr><tr><td>Antwerp</td><td>8</td></tr><tr><td>Hamburg</td><td>5</td></tr></table>
+        <div class="pills"><span class="pill good">заметнее на белом</span><span class="pill good">совпадает с нажатием кнопок</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Серая вуаль из цвета текста</h3>
+        <p class="youpick"><b>Ты выбираешь</b>подсветка считается как 8% цвета текста поверх любого фона, нажатие 16%. Отдельного серого токена нет, ступени те же, что на ползунках выше.</p>
+        <table class="tbl-demo" style="--_row: color-mix(in srgb, var(--text-primary) 8%, transparent)"><tr><td>Rotterdam</td><td>12</td></tr><tr><td>Antwerp</td><td>8</td></tr><tr><td>Hamburg</td><td>5</td></tr></table>
+        <div class="pills"><span class="pill good">одно правило для всех поверхностей</span><span class="pill good">нейтральный, без синевы</span><span class="pill mid">светлее surface-muted</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Оставить как есть</h3>
+        <p class="youpick"><b>Ты выбираешь</b>каждый компонент берёт любой из двух, как сейчас.</p>
+        <div class="pills"><span class="pill bad">два серых на одну роль остаются</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel q" id="q-lock" data-q="lock" data-review="Проверка против повторного изобретения" data-review-note-only>
+    <h2>Вопрос 3. Проверка, которая ловит пустые клетки</h2>
+    <p>Что решить: нужен ли контроль. Скрипт в <code>tools/</code> читает стили компонентов и ругается, когда у файла есть наведение, но нет нажатия или фокуса. Сегодня он нашёл бы 23 и 7 файлов (грубая проверка по файлу, не по компоненту).</p>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Проверка, пока только на пилоте</h3>
+        <p class="youpick"><b>Ты выбираешь</b>скрипт включается для термина, <code>ds-info-hint</code> и закреплённых хостов, остальным пока список исключений.</p>
+        <div class="pills"><span class="pill good">не шумит</span><span class="pill mid">видит селекторы, не вид</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Сразу на всех</h3>
+        <p class="youpick"><b>Ты выбираешь</b>скрипт включён везде, 23 + 7 файлов красные до миграции.</p>
+        <div class="pills"><span class="pill bad">красный CI на старом коде</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Без скрипта, только ревью</h3>
+        <p class="youpick"><b>Ты выбираешь</b>правила записаны, проверяет человек.</p>
+        <div class="pills"><span class="pill bad">пустые клетки вернутся</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel q" id="q-merge" data-q="merge" data-review="Влить ли пилот" data-review-note-only>
+    <h2>Вопрос 4. Влить ли пилот в dev</h2>
+    <p>Пилот лежит в ветке <code>feat/state-levels-pilot</code>, проверки проходят, в <code>dev</code> он вливается без конфликтов. Он переводит термин и <code>ds-info-hint</code> на общие ступени: файл <code>styles/_state.scss</code>, токены <code>--state-step</code> и <code>--state-press-factor</code>, закреплённая подсветка, документация, changelog. Цвет заметно меняется, замер на ds-docs в браузере:</p>
+    <div class="sw">
+      <span><i style="background: rgb(232, 236, 242)"></i>было: surface-muted</span>
+      <span><i style="background: rgb(220, 225, 234)"></i>было: border-default</span>
+      <span><i style="background: rgb(236, 237, 238)"></i>стало: наведение 8%</span>
+      <span><i style="background: rgb(218, 218, 221)"></i>стало: нажатие 16%</span>
+    </div>
+    <p class="cap">Было синеватое, стало нейтральное и чуть темнее при нажатии. Числа в пилоте - значения по умолчанию; после вопроса 1 меняются одной строкой в <code>_tokens.scss</code>.</p>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Влить после выбора чисел</h3>
+        <p class="youpick"><b>Ты выбираешь</b>я подставлю числа из вопроса 1, прогоню проверки, влью ветку в <code>dev</code> через <code>--no-ff</code> и удалю ветку с рабочей папкой.</p>
+        <div class="files"><span class="file is-new">3 файла стилей + токены</span><span class="arrow">→</span><span class="file">остальные компоненты по очереди</span></div>
+        <div class="pills"><span class="pill good">правила работают на двух компонентах</span><span class="pill mid">цвет меняется у термина и hint</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Подождать второго компонента</h3>
+        <p class="youpick"><b>Ты выбираешь</b>пилот лежит в ветке, пока на те же ступени не переведём ещё один компонент, например кнопку.</p>
+        <div class="pills"><span class="pill good">правила проверены шире</span><span class="pill bad">ветка стареет, конфликты растут</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Выбросить пилот</h3>
+        <p class="youpick"><b>Ты выбираешь</b>ветка удаляется, правила остаются на бумаге, термин и hint остаются на своих числах.</p>
+        <div class="pills"><span class="pill bad">пустые клетки состояний остаются</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+
+  <h2 class="band">Принято, решено и сделано</h2>
+  <p class="cap">Здесь отвечать не нужно, кроме правил: на них можно возразить замечанием.</p>
+
+  <section class="panel">
+    <h2>Решено: с чего начать</h2>
+    <p>Пилот на закреплённых триггерах: термин, <code>ds-info-hint</code> и закреплённые хосты переведены на ступени. Он собран и лежит в ветке <code>feat/state-levels-pilot</code>, влитие - вопрос 4. Остальные компоненты потом по плану <code>.ds-interactive</code>.</p>
+    <p class="cap">Отклонено: сразу строить общий класс <code>.ds-interactive</code> и мигрировать все компоненты (большой объём, 43 файла с hover).</p>
+  </section>
+
+  <details class="folded">
+    <summary>Правила, которые из этого следуют (4)</summary>
+  <section class="panel">
+    <h2>Четыре правила</h2>
+    <ol class="rules">
+      <li><b>Словарь состояний фиксирован.</b> Покой, наведение, нажатие, фокус с клавиатуры, включено, disabled и составные «включено + наведение», «включено + нажатие». Пустая клетка - дефект.</li>
+      <li><b>Состояния - слои, а не комбинации.</b> Включено задаёт цвет и постоянный знак. Наведение и нажатие только добавляют ступени сверху. Составное состояние - сумма, отдельного числа на пару не пишем.</li>
+      <li><b>У каждого состояния свой канал.</b> Наведение и нажатие меняют интенсивность знака, не цвет. Включено меняет цвет. Фокус всегда кольцо и ничего не перекрывает. Disabled гасит наведение и нажатие.</li>
+      <li><b>Одно имя «нажато».</b> <code>:active, [data-ds-pressed]</code>: на <code>span</code> и от клавиатуры <code>:active</code> не срабатывает.</li>
+    </ol>
+  </section>
+  </details>
+
+  <details class="folded">
+    <summary>Что сломано сегодня: замеры по 104 файлам стилей</summary>
+  <section class="panel">
+    <h2>Что сломано сегодня</h2>
+    <p>Измерено по <code>src/lib/components/*/*.scss</code> (104 файла со стилями), грубым поиском по файлам, не по компонентам.</p>
+    <div class="bars2">
+      <div class="r"><span>Описан hover</span><span class="bar"><i style="width:41%"></i></span><span class="n">43 из 104</span></div>
+      <div class="r"><span>Из них нет нажатия</span><span class="bar"><i class="bad" style="width:22%"></i></span><span class="n">23</span></div>
+      <div class="r"><span>Из них нет фокуса с клавиатуры</span><span class="bar"><i class="bad" style="width:7%"></i></span><span class="n">7</span></div>
+    </div>
+    <p>Нейтральный фон при наведении то <code>--surface-secondary</code> (neutral-100), то <code>--surface-muted</code> (neutral-150): в блоках hover и active 18 и 23 строки соответственно.</p>
+    <div class="sw"><span><i style="background:var(--surface-secondary)"></i>surface-secondary</span><span><i style="background:var(--surface-muted)"></i>surface-muted</span></div>
+    <p class="src">Общий контракт <code>.ds-interactive</code> согласован 2026-06-10 и не построен: файла <code>styles/_interaction.scss</code> нет. Закреплённый триггер на днях показал, чем это кончается: правило «закреплено» перекрывало hover и нажатие, у <code>span</code> не было вида при Enter и Space.</p>
+  </section>
+  </details>
+
+  <details class="folded">
+    <summary>Что говорят другие системы и что уже решено у нас</summary>
+    <section class="panel">
+    <p>Из <code>docs/interaction-states-research.md</code>: индустрия хранит значения по токенам на каждое состояние, считает на лету только Material 3 (слой состояния поверх цвета, наведение 8%, фокус и нажатие 10%). «Нажатие = 2 × наведение» не универсально: у Carbon около 4×, у Spectrum +1/+1. Поэтому множитель нажатия здесь ползунок, а не закон.</p>
+    <p>Решено ранее (2026-06-10, <code>project-interaction-contract-design</code>): оттенки считаются формулой от одной базы, а не подбираются вручную по состояниям; общий класс <code>.ds-interactive</code> в <code>styles/_interaction.scss</code>; в компоненте только база и тип знака; v1 «подмешивать чёрное» отклонён как мутный.</p>
+  </section>
+  </details>
+
+  <p class="src"><b>Источники, проверено 2026-10-08 на <code>dev</code>.</b> Счётчики: <code>python3</code> по <code>src/lib/components/*/*.scss</code>, грубые регулярные выражения по файлам. Токены: <code>themes/_semantic.scss</code>. Страница воспроизводит ступени своими стилями на токенах <code>ds.css</code>, это модель, а не сам компонент.</p>
+</main>
+
+<script>
+  const root = document.querySelector('.grid');
+  const out = {};
+  const NUM = {
+    a: (k, v) => ({ rest: '0%', hover: v.step + '%', pressed: (v.step * v.mult) + '%', on: v.on + '%', 'on-hover': (v.on + v.step) + '%', 'on-pressed': (v.on + v.step * v.mult) + '%', dis: '0%, 40% непрозрачность' })[k],
+    b: (k, v) => ({ rest: '1px, пунктир', hover: '1px, сплошная', pressed: '2px', on: '2px, акцент', 'on-hover': '3px, темнее на ' + v.step + '%', 'on-pressed': '3px, темнее на ' + (v.step * v.mult) + '%', dis: 'как покой, 40%' })[k],
+    c: (k, v) => ({ rest: 'ink 0%', hover: 'темнее на ' + v.step + '%', pressed: 'темнее на ' + (v.step * v.mult) + '%', on: 'акцент', 'on-hover': 'акцент + ' + v.step + '%', 'on-pressed': 'акцент + ' + (v.step * v.mult) + '%', dis: 'как покой, 40%' })[k],
+  };
+  const values = { step: 8, mult: 2, on: 12 };
+  function paint() {
+    root.style.setProperty('--step', values.step + '%');
+    root.style.setProperty('--mult', values.mult);
+    root.style.setProperty('--on', values.on + '%');
+    for (const target of [document.getElementById('live')]) {
+      target.style.setProperty('--step', values.step + '%');
+      target.style.setProperty('--mult', values.mult);
+      target.style.setProperty('--on', values.on + '%');
+    }
+    for (const el of document.querySelectorAll('[data-num]')) {
+      const [channel, ...rest] = el.dataset.num.split('-');
+      el.textContent = NUM[channel](rest.join('-'), values);
+    }
+    for (const key of Object.keys(values)) {
+      document.querySelector(`[data-out="${key}"]`).textContent = values[key] + (key === 'mult' ? '' : '%');
+    }
+    window.deckReview?.refresh();
+  }
+  for (const input of document.querySelectorAll('[data-var]')) {
+    input.addEventListener('input', () => { values[input.dataset.var] = Number(input.value); persist(); paint(); });
+  }
+  for (const el of document.querySelectorAll('[data-live]')) {
+    el.addEventListener('click', () => { if (el.hasAttribute('data-on')) el.removeAttribute('data-on'); else el.setAttribute('data-on', ''); });
+    el.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); el.click(); } });
+    el.addEventListener('blur', () => el.removeAttribute('data-on'));
+  }
+
+  const PICK_KEY = 'ds-deck-interaction-states-picks';
+  const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
+  const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private window */ } };
+  const saved = read(PICK_KEY, { picks: {}, values });
+  const state = saved.picks;
+  Object.assign(values, saved.values);
+  for (const input of document.querySelectorAll('[data-var]')) input.value = values[input.dataset.var];
+  function persist() { write(PICK_KEY, { picks: state, values }); }
+  const sections = [...document.querySelectorAll('.q[data-q]')];
+  const labels = { neutral: 'Нейтральный фон при наведении', lock: 'Проверка', merge: 'Влить ли пилот' };
+  const optionName = (card) => card.querySelector('h3').textContent.trim();
+  function render() {
+    for (const section of sections) {
+      for (const card of section.querySelectorAll('.opt')) {
+        const chosen = state[section.dataset.q] === optionName(card);
+        card.classList.toggle('is-chosen', chosen);
+        card.setAttribute('aria-pressed', String(chosen));
+      }
+    }
+    window.deckReview?.refresh();
+  }
+  function pick(section, card) {
+    const key = section.dataset.q;
+    const name = optionName(card);
+    if (state[key] === name) { delete state[key]; } else { state[key] = name; }
+    persist(); render();
+  }
+  window.deckReviewHooks = {
+    extra: () => [`Числа ступеней - шаг ${values.step}%, нажатие ${values.mult} шага, база ${values.on}%`].concat(Object.keys(state).filter((key) => key in labels).map((key) => `${labels[key]} - ${state[key]}`)).join('; '),
+    onReset: () => { for (const key of Object.keys(state)) delete state[key]; Object.assign(values, { step: 8, mult: 2, on: 12 }); for (const input of document.querySelectorAll('[data-var]')) input.value = values[input.dataset.var]; persist(); paint(); render(); },
+  };
+  for (const section of sections) {
+    for (const card of section.querySelectorAll('.opt')) {
+      card.setAttribute('role', 'button');
+      card.addEventListener('click', (event) => { if (!event.target.closest('.code, .tbl-demo')) pick(section, card); });
+      card.addEventListener('keydown', (event) => {
+        if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); pick(section, card); }
+      });
+    }
+  }
+  paint(); render();
+</script>
+<!-- deck-review -->
+<script>
+// deck-review: verdict per [data-review] block, a textarea for remarks, one answer line in a fixed bar.
+// Inlined into a deck by ~/.claude/bin/deck-review-inline; contract in ~/.claude/docs/deck-review.md.
+(() => {
+  // Every key under deck-review: is a disposable reviewer answer, kept 7 days after its last change.
+  const PREFIX = 'deck-review:v1:';
+  const KEY = PREFIX + (document.documentElement.dataset.deck || document.title);
+  const KEEP_MS = 7 * 24 * 60 * 60 * 1000;
+  const ACCEPT = 'принято';
+  const REMARK = 'есть замечание';
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith('deck-review:')) continue;
+      let expires = 0;
+      try { if (key.startsWith(PREFIX)) expires = JSON.parse(localStorage.getItem(key))?.expires; } catch { /* malformed: drop */ }
+      if (!(expires > Date.now())) localStorage.removeItem(key);
+    }
+  } catch { /* private window */ }
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY))?.answers ?? {}; } catch { return {}; } };
+  const write = () => { try { localStorage.setItem(KEY, JSON.stringify({ expires: Date.now() + KEEP_MS, answers: state })); } catch { /* private window */ } };
+  const state = read();
+
+  document.head.insertAdjacentHTML('beforeend', `<style>
+    .dr-row { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px 0; }
+    .dr-btn { padding: 4px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 999px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-btn[aria-pressed="true"] { background: var(--accent-subtitle, #e6efff); border-color: var(--accent-strong, #2457c5); color: var(--accent-strong, #2457c5); }
+    .dr-btn[data-v="${REMARK}"][aria-pressed="true"] { background: var(--error-subtitle, #fdecec); border-color: var(--error-text, #b42318); color: var(--error-text, #b42318); }
+    .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--border-default, #c9ced6); border-radius: var(--radius-md, 8px); background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
+    .dr-note:focus { outline: none; border-color: var(--accent, #2457c5); box-shadow: var(--ds-field-focus-shadow, 0 0 0 3px rgb(36 87 197 / .25)); }
+    .dr-note[hidden] { display: none; }
+    [data-dr-folded] > :not(h1, h2, h3, h4, .dr-row, .dr-note) { display: none !important; }
+    .dr-fold { padding: 4px 8px; border: 0; background: none; color: var(--accent-strong, #2457c5); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-fold[hidden] { display: none; }
+    .dr-bar { position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; padding: 10px 20px; background: var(--surface-default, #fff); border-top: 1px solid var(--border-divider, #e3e6eb); box-shadow: 0 -4px 16px rgb(0 0 0 / .08); color: var(--text-primary, #1d2330); font: 13px/1.4 var(--font-sans, system-ui, sans-serif); }
+    .dr-bar b { flex: none; }
+    .dr-bar .dr-chat { flex: none; color: var(--text-tertiary, #6b7280); }
+    .dr-bar output { flex: 1 1 auto; min-inline-size: 0; overflow-x: auto; white-space: nowrap; color: var(--text-secondary, #4b5563); font-family: var(--font-mono, ui-monospace, monospace); }
+    .dr-bar button { flex: none; padding: 6px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 6px; background: var(--surface-default, #fff); color: inherit; font: 600 13px/1.4 inherit; cursor: pointer; }
+    body { padding-block-end: 72px; }
+    @media (max-width: 640px) { .dr-bar { padding: 8px 12px; gap: 8px; } .dr-bar .dr-chat { display: none; } }
+  </style>`);
+
+  let items = [...document.querySelectorAll('[data-review]')];
+  if (!items.length) {
+    const whole = document.createElement('section');
+    whole.dataset.review = 'Дека в целом';
+    whole.innerHTML = '<h3>Дека в целом</h3>';
+    (document.querySelector('main') ?? document.body).append(whole);
+    items = [whole];
+  }
+
+  const controls = new Map();
+  const unfolded = new Set();
+  for (const item of items) {
+    const label = item.dataset.review;
+    const row = document.createElement('div');
+    row.className = 'dr-row';
+    const verdicts = item.hasAttribute('data-review-note-only') ? [REMARK] : [ACCEPT, REMARK];
+    const buttons = verdicts.map((verdict) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'dr-btn';
+      button.dataset.v = verdict;
+      button.textContent = verdict === ACCEPT ? 'Принято' : 'Есть замечание';
+      button.addEventListener('click', () => {
+        const entry = (state[label] ??= {});
+        entry.v = entry.v === verdict ? '' : verdict;
+        write();
+        render();
+        if (entry.v === REMARK) note.focus();
+      });
+      return button;
+    });
+    const note = document.createElement('textarea');
+    note.className = 'dr-note';
+    note.placeholder = 'Что не так';
+    note.setAttribute('aria-label', `Замечание: ${label}`);
+    note.addEventListener('input', () => { (state[label] ??= {}).note = note.value; write(); render(); });
+    const fold = document.createElement('button');
+    fold.type = 'button';
+    fold.className = 'dr-fold';
+    fold.addEventListener('click', () => { unfolded.has(label) ? unfolded.delete(label) : unfolded.add(label); render(); });
+    row.append(...buttons, fold);
+    item.append(row, note);
+    controls.set(label, { item, buttons, note, fold });
+  }
+
+  const chat = document.querySelector('.chat')?.textContent.replace(/^[^«]*/, '') ?? '';
+  const bar = document.createElement('div');
+  bar.className = 'dr-bar';
+  bar.innerHTML = `<b></b><span class="dr-chat"></span><output></output><button type="button" data-a="copy">Скопировать</button><button type="button" data-a="reset">Сбросить</button>`;
+  bar.querySelector('.dr-chat').textContent = chat;
+  document.body.append(bar);
+  const line = bar.querySelector('output');
+
+  const hooks = (window.deckReviewHooks ??= {});
+  window.deckReview = { refresh: () => render() };
+
+  function render() {
+    const parts = [];
+    let done = 0;
+    for (const [label, { item, buttons, note, fold }] of controls) {
+      const entry = state[label] ?? {};
+      const accepted = entry.v === ACCEPT;
+      item.toggleAttribute('data-dr-folded', accepted && !unfolded.has(label));
+      fold.hidden = !accepted;
+      fold.textContent = unfolded.has(label) ? 'Свернуть' : 'Развернуть';
+      for (const button of buttons) button.setAttribute('aria-pressed', String(entry.v === button.dataset.v));
+      note.hidden = entry.v !== REMARK;
+      if (note.value !== (entry.note ?? '')) note.value = entry.note ?? '';
+      if (!entry.v) continue;
+      done++;
+      const text = entry.note?.trim().replace(/\s+/g, ' ');
+      parts.push(entry.v === REMARK ? `${label} - замечание${text ? `: «${text}»` : ''}` : `${label} - принято`);
+    }
+    const extra = hooks.extra?.();
+    if (extra) parts.push(extra);
+    bar.querySelector('b').textContent = `${done} из ${controls.size}`;
+    line.textContent = parts.length ? `Дека ${document.title}: ${parts.join('; ')}` : 'пока ничего не выбрано';
+  }
+
+  bar.addEventListener('click', (event) => {
+    const action = event.target.closest('button')?.dataset.a;
+    if (action === 'copy') navigator.clipboard?.writeText(line.textContent);
+    if (action === 'reset') { for (const label of Object.keys(state)) delete state[label]; write(); hooks.onReset?.(); render(); }
+  });
+  render();
+})();
+</script>
+<!-- /deck-review -->
+</body>
+</html>

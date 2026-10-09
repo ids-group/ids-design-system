@@ -2,6 +2,8 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 @include chart-motion.draws-on('.series-line:not(.is-dashed)');
 @include chart-motion.draws-on('.series-halo:not(.is-dashed)');
 @include chart-motion.fades-in('.series-line.is-dashed');

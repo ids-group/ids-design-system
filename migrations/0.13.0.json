@@ -11,7 +11,7 @@
         "style"
       ],
       "action": "Look at every screen with a ds-stat whose value is longer than its tile, and decide per tile whether the clipped value is acceptable or the value should wrap. Shorten any label that was relying on two lines, or widen its tile — the label clips with no hook to undo it.",
-      "appliesWhen": "Any ds-stat, and only where the label or value is wider than the card. A tile whose value fits renders identically and needs nothing. Tiles that already set --ds-stat-value-white-space are unaffected in shape — they wrapped before and wrap now.",
+      "appliesWhen": "Any ds-stat, and only where the label or value is wider than the card. A tile whose label and value both fit renders identically and needs nothing. Tiles that already set --ds-stat-value-white-space are unaffected in shape — they wrapped before and wrap now.",
       "pitfall": "Nothing fails to build and nothing is lost to a screen reader, so this only shows on the screen: a tile that read in full because its value painted over the neighbouring card now ends in an ellipsis, and the text is reachable only by hovering or focusing it.",
       "restore": "ds-stat { --ds-stat-value-white-space: normal; }",
       "searchHints": [
@@ -61,7 +61,7 @@
       "new": null,
       "surface": "typescript",
       "action": "Rename your subclass member where it collides, or add `override` where the base member genuinely matches; drop an override of a member that no longer exists on the base.",
-      "appliesWhen": "Only a class that extends one of the two named below. Subclassing a DS component is unsupported (design-system.md § Components), so most consumers are unaffected.",
+      "appliesWhen": "Only a class that extends one of the classes named below. Subclassing a DS component is unsupported (components.md § Components), so most consumers are unaffected.",
       "pitfall": "A gained name fails the build loudly (TS4114 / TS2416), but a LOST one does not: an `override` of a member the base no longer declares is an error, while a method that merely shadowed one now runs as your own code with nothing calling it.",
       "restore": null,
       "searchHints": [
@@ -90,7 +90,7 @@
         "extends SelectComponent"
       ],
       "verify": "The consumer app type-checks, and no subclass declares `override` on a member the base no longer has.",
-      "note": "TooltipDirective gained `dsTooltipWhenClipped` and `tipText`; ButtonComponent gained the five destination modifiers plus `routerLinkActiveOptions`, `ariaCurrent` and two resolvers; SidenavItemComponent and SidenavGroupComponent each gained `ariaCurrent` and two resolvers. TableComponent lost `cellPopoverText`, `isClipped`, `onCellClipClick` and `onHeaderEnter` — the three hand-rolled disclosures it carried, now one directive. The compiler enumerates every collision on the first build, which is why the names live here and not in the action."
+      "note": "TooltipDirective gained `dsTooltipWhenClipped` and `tipText`; ButtonComponent the five destination modifiers (`target`, `rel`, `queryParams`, `queryParamsHandling`, `fragment`) plus `routerLinkActiveOptions`, `ariaCurrent` and two resolvers (`ariaCurrentResolved`, `linkModifiers`); SidenavItemComponent and SidenavGroupComponent each `ariaCurrent` and two resolvers (`ariaCurrentResolved`, `noModifiers`). TableComponent lost `cellPopoverText`, `cellTextPopover`, `isClipped`, `onCellClipClick` and `onHeaderEnter`, now one directive, and gained `actionLabel`. FieldGroupComponent now extends the internal DsMessageBase and gained `invalidResolved`, `messageId`, `message`, two private fields (`uid`, `fieldMessage`) and, from that base, `hint`, `error`, `warning`, `messageIcon`, `reserveMessage` and `reserveMessageResolved`; InputComponent gained `groupMessage`, and SelectComponent, AutocompleteComponent and DatePickerComponent `groupMessage` and an internal `describedByIds`. The compiler enumerates every collision on the first build."
     },
     {
       "id": "button-border-token-names-the-colour",
@@ -196,7 +196,7 @@
         "::ng-deep ds-field-group"
       ],
       "verify": "The group renders with your border/radius as before, and the message row sits outside the bordered box.",
-      "note": "The group carries its own message row now, and that line has to sit outside the border — so the host became the column that stacks the two and `.row` became the bordered box. A group with no message keeps the same outer box it had: measured at 40px row and 40px host, growing to 57px only once `error` or `hint` is bound."
+      "note": "The group carries its own message row now, and that line has to sit outside the border — so the host became the column that stacks the two and `.row` became the bordered box. A group with no message and no reserved row keeps the same outer box it had: measured at 40px row and 40px host, growing to 57px once `error`, `warning` or `hint` is bound. `reserveMessage`, `DS_CONFIG.field.reserveMessage` included, reserves that row on a clean group too."
     },
     {
       "id": "chart-categorical-tokens-renamed",
@@ -204,7 +204,7 @@
       "surface": "style",
       "old": "--chart-cat-1, --chart-cat-2, --chart-cat-3, --chart-cat-4, --chart-cat-5, --chart-cat-6, --chart-cat-7, --chart-cat-8",
       "new": "--chart-categorical-1, --chart-categorical-2, --chart-categorical-3, --chart-categorical-4, --chart-categorical-5, --chart-categorical-6, --chart-categorical-7, --chart-categorical-8",
-      "action": "Where you re-declare one to recolour a series, declare the public hook instead: `--chart-cat-N` becomes `--ds-chart-series-N-color`, keeping the number. Everywhere else, replace the prefix `--chart-cat-` with `--chart-categorical-`, keeping the number.",
+      "action": "Replace the prefix `--chart-cat-` with `--chart-categorical-`, keeping the number, in a `var()` and in a re-declaration alike.",
       "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the eight, including a theme block. A `--chart-cat-` variable of your own is out of scope, and the eight `--ds-chart-series-1-color` … `--ds-chart-series-8-color` hooks are new rather than renamed.",
       "pitfall": "The old name is inert, not invalid. A `var()` on it resolves to nothing, which makes the declaration holding it invalid at computed-value time and drops it whole — a series loses its fill rather than falling back to a default, and nothing is reported.",
       "note": "The palette is spelled out end to end now, so a name can be searched for without being decoded first. The eight VALUES are retuned in the same release, so the rename lands a different colour rather than the same one under a new name: the set is rebuilt around coral and teal, every hue clears 3:1 on white, and no hue falls between 35 and 130, where a colour cannot be both rich and legible. Slot 8 is a neutral now. Read each value back from the installed package rather than assuming the one you saw before. `--ds-chart-series-N-color` is the documented override; the `--chart-categorical-` family is the palette it reads.",
@@ -245,7 +245,7 @@
       "action": "Replace the prefix `--chart-div-` with `--chart-divergent-` on all seven steps, keeping the suffix exactly as it is.",
       "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the seven, including a theme block. Only the prefix moves; the signed suffix is untouched.",
       "pitfall": "The negative steps carry a double hyphen — `--chart-div--3` becomes `--chart-divergent--3`, not `--chart-divergent-3`. Collapsing it points the worst negative step at the best positive one, which is a readable chart with the sign inverted and no way to notice from the code.",
-      "note": "Red through neutral to green for signed data. The three negative steps, the zero step and the three positive steps all keep their meaning and their value in both themes.",
+      "note": "Red through neutral to green for signed data; every step keeps its meaning. The dark-theme values and the zero step are unchanged; the six light-theme signed steps are retuned to a softer red (8deg) and green (145deg), so read them back rather than assuming.",
       "searchHints": [
         "--chart-div-",
         "chart-div"
@@ -281,7 +281,7 @@
       "surface": "style",
       "old": "--chart-axis-line, --chart-axis-label, --chart-grid-line, --chart-cursor-line, --chart-tooltip-border",
       "new": "--chart-axis-line-color, --chart-axis-label-color, --chart-grid-line-color, --chart-cursor-line-color, --chart-tooltip-border-color",
-      "action": "Add `-color` to the end of all five names, after renaming `--chart-grid-line-strong`.",
+      "action": "Add `-color` to the end of all five names.",
       "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the five, including a theme block. `--chart-hover-bg-color`, `--chart-tooltip-bg-color` and `--chart-tooltip-text-color` already carried the suffix and keep their names; `--chart-axis-title` is removed rather than renamed and has its own entry.",
       "pitfall": "The old name is inert, not invalid: a gridline or an axis rule simply stops being painted, and an axis with no line reads as a deliberately minimal chart rather than as a broken override.",
       "note": "`--chart-grid-line` is a prefix of `--chart-grid-line-strong`, so handle the longer identifier first — it has an entry of its own. The five values are unchanged in both themes.",
@@ -383,7 +383,7 @@
       "old": "--chart-axis-fs, --chart-line-w, --chart-dot-r",
       "new": "--chart-axis-font-size, --chart-line-width, --chart-dot-radius",
       "action": "Rename `--chart-axis-fs` to `--chart-axis-font-size`, `--chart-line-w` to `--chart-line-width` and `--chart-dot-r` to `--chart-dot-radius`.",
-      "appliesWhen": "Any stylesheet of yours that sets the axis label size, the line-series stroke width or the resting data-point radius. `--chart-tick-size` and `--chart-bar-gap` were never abbreviated and keep their names.",
+      "appliesWhen": "Any stylesheet of yours that sets the axis label size, the line-series stroke width or the resting data-point radius. `--chart-bar-gap` was never abbreviated and keeps its name; `--chart-tick-size` is removed and has its own entry.",
       "pitfall": "The old name is inert, not invalid: an axis label falls back to the surrounding font size and a dot to whatever the rule around it declared, so the chart still renders and only its proportions are wrong.",
       "note": "Rename the two longer identifiers first — `--chart-line-w-bold` and `--chart-dot-r-active` each have an entry of their own, and a sweep that starts with the short names relies on replace order rather than on matching a whole name. All three values are unchanged.",
       "searchHints": [
@@ -452,15 +452,15 @@
     "`ds-stat` takes two more hooks beside the existing `--ds-stat-value-white-space`: `--ds-stat-value-lines` puts the ellipsis on the line you name once the value wraps, and `--ds-stat-value-wrap: anywhere` breaks a word wider than the tile. Both default to the shape the component already had, so a tile that sets neither is unaffected by them.",
     "`dsTooltipWhenClipped` is public on the tooltip directive: the tip opens only while its host is showing less text than it holds, and with no `dsTooltip` text it discloses the host's own text. `isTextClipped(element)` from `/core` is the same test on its own — horizontal only, descendants included. Additive; an existing `[dsTooltip]` binding behaves exactly as before.",
     "`ds-button` forwards `fragment`, `queryParams`, `queryParamsHandling`, `target` and `rel` to the anchor it renders, and `routerLink` on it, `ds-sidenav-item` and `ds-sidenav-group` now also accepts a `UrlTree` for the options with no input of their own. All additive. If you kept a hand-written button class for controls that needed one of these, it can go (delete list: hand-written-button-class-for-modifiers).",
-    "`routerLinkActiveOptions` and `ariaCurrent` are public on the same three components — the first moves what the `active` class matches, the second overrides what the link announces. Neither is needed for the corrected default.",
+    "`ariaCurrent` is public on the same three components and overrides what the link announces; `routerLinkActiveOptions`, on `ds-button` alone, moves what the `active` class matches. Neither is needed for the corrected default.",
     "`ds-field-group` takes `error`, `hint` and `warning` — the same message inputs every field takes, resolved by the same code. `error` turns the state on and carries the text; `invalid` stays the flag for when the text lives in a form-level summary. Every segment gains `aria-invalid` while the group is in error and points at the one message through `aria-describedby`. Additive: a group binding neither renders exactly as before.",
     "`ds-bar-chart` is new — horizontal bars with a label, a value and a percentage per row, an optional data table, and a `color` override per row.",
     "A public override layer sits over the chart palette: `--ds-chart-series-1-color` through `--ds-chart-series-8-color`, plus `--ds-chart-axis-line-color`, `--ds-chart-axis-label-color`, `--ds-chart-axis-font-size`, `--ds-chart-grid-line-color`, `--ds-chart-hover-bg-color`, `--ds-chart-cursor-line-color`, `--ds-chart-tooltip-bg-color`, `--ds-chart-tooltip-text-color`, `--ds-chart-tooltip-border-color`, `--ds-chart-bar-gap`, `--ds-chart-line-width`, `--ds-chart-line-width-bold`, `--ds-chart-dot-radius` and `--ds-chart-dot-radius-active`. Each defaults to the palette token behind it, so nothing moves until you set one; set these rather than the palette, and recolouring one series costs one declaration instead of the whole ramp.",
     "`TableRowAction` gains `divider?: boolean`, which draws a line above the item — for the destructive tail that colour alone was separating. Additive, and ignored on the first item because a line at the top of a menu has nothing on one side of it.",
     "A field that is disabled no longer sets `aria-invalid`, on all fifteen. Nothing renders differently — the error paint already excluded disabled — and the message text still shows. Only a test asserting `aria-invalid` on a disabled control is affected.",
     "Five chart components ship: `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart`, `ds-funnel-chart` and `ds-line-chart`. Each takes a `caption`, a `summary` for the accessible name, a `loading` skeleton, an `emptyText` and a `valueFormat`, and each offers its numbers again as a table under a `dataTable: 'toggle' | 'visible' | 'none'` disclosure. All new; nothing existing changes.",
-    "Chart colour is three families now, and picking the wrong one is the usual chart bug. `--ds-chart-series-1-color` … `--ds-chart-series-8-color` are CATEGORICAL — for marks that are different things, such as donut slices and line series. `--ds-chart-series-default-color` with `--ds-chart-series-accent-color` is a SINGLE SERIES measured repeatedly — bar rows, columns — where every mark shares one colour and the accent marks the one to land on. `--ds-chart-ramp-1-color` … `--ds-chart-ramp-8-color` is one hue light to deep, for the ordered stages of a single quantity. The default and accent tokens and the eight ramp tokens are new; the eight series tokens keep their names.",
-    "Every interactive chart is keyboard-operable. Set `interactive` on `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart` or `ds-funnel-chart` and each mark joins the tab order as a `role=\"button\"`, answering Enter and Space with the same output a click emits, while the container announces itself as a `group` rather than an `img`. Without the flag the chart stays one image to a screen reader and the annex table carries the numbers. The click output fires either way, so a binding written without the flag is unaffected.",
+    "Chart colour is three families now, and picking the wrong one is the usual chart bug. `--ds-chart-series-1-color` … `--ds-chart-series-8-color` are CATEGORICAL — for marks that are different things, such as donut slices and line series. `--ds-chart-series-default-color` with `--ds-chart-series-accent-color` is a SINGLE SERIES measured repeatedly — bar rows, columns — where every mark shares one colour and the accent marks the one to land on. `--ds-chart-ramp-1-color` … `--ds-chart-ramp-8-color` is one hue light to deep, for the ordered stages of a single quantity. All three families are new in this release: the eight series tokens, the default and accent pair, and the eight ramp tokens. The palette they read (`--chart-categorical-N`) is the renamed `--chart-cat-N`.",
+    "Every interactive chart is keyboard-operable. Set `interactive` on `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart`, `ds-funnel-chart` or `ds-line-chart` (whose readings grow focusable markers) and each mark joins the tab order as a `role=\"button\"`, answering Enter and Space with the same output a click emits, while the container announces itself as a `group` rather than an `img`. Without the flag the chart stays one image to a screen reader and the annex table carries the numbers. The click output fires either way, so a binding written without the flag is unaffected.",
     "`ds-donut-chart` takes `maxSlices` and `otherLabel`: past the cap the smallest slices are summed into one slice on the neutral eighth palette colour. Off by default, so an existing ring is unaffected. `ds-number-stepper` takes `--ds-number-stepper-field-width`, defaulting to the width it already had — set it where values carry more digits than that width holds, since a longer one is clipped rather than wrapped."
   ],
   "deleteList": [

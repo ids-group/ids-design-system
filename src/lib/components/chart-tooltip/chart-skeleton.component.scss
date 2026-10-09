@@ -1,0 +1,65 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
+// Rows and columns are the drawn chart's: value space, plot, category band; tick gutter, plot, edge gutter.
+:host {
+  display: grid;
+  grid-template-columns: var(--_chart-skeleton-axis-gutter) minmax(0, 1fr);
+  grid-template-rows:
+    var(--_chart-skeleton-value-space)
+    var(--_chart-skeleton-plot-height)
+    var(--_chart-skeleton-category-band);
+  padding-inline-end: 12px;
+}
+
+.ticks {
+  grid-area: 2 / 1;
+  position: relative;
+}
+
+.ticks .pill {
+  position: absolute;
+  inset-inline-end: var(--space-2);
+  translate: 0 -50%;
+}
+
+.plot {
+  grid-area: 2 / 2;
+  position: relative;
+  display: flex;
+  border-inline-start: 1px solid var(--ds-chart-axis-line-color);
+  border-block-end: 1px solid var(--ds-chart-axis-line-color);
+}
+
+.band {
+  flex: 1 1 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  min-inline-size: 0;
+}
+
+.bar {
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+
+.line {
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+}
+
+.categories {
+  grid-area: 3 / 2;
+  display: flex;
+}
+
+.categories .band {
+  align-items: flex-start;
+  padding-block-start: var(--space-2-5);
+}
+
+.pill {
+  border-radius: var(--radius-pill);
+}

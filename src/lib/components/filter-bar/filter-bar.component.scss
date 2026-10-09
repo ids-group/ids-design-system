@@ -1,3 +1,7 @@
+@use '../../styles/text-clip' as text-clip;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 :host {
   --_filter-bar-gap: var(--ds-filter-bar-gap, var(--space-3));
   --_filter-bar-panel-gap: var(--ds-filter-bar-panel-gap, var(--space-4));
@@ -20,7 +24,8 @@
   /* `clip` with a margin, not `hidden`: the focus ring is an outset shadow (3-4px) that `hidden`
      cuts off the first and last item. The margin lets only the shadow bleed and `clip` still
      forbids scrolling, so the reported width is unchanged. */
-  overflow: clip;
+  @include text-clip.inline-axis;
+
   overflow-clip-margin: 4px;
 
   /* Collapse when empty: an empty flex child still takes the row's gap. Not `:empty`, which a

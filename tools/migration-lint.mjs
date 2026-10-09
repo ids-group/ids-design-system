@@ -27,6 +27,9 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { previousBoundary, releaseTags } from './release-tags.mjs';
+import { surfaceAt, surfaceOfWorkingTree } from './check-manifest-truth.mjs';
+import { candidatesOf } from './generate-token-deprecations.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 // Overridable so the selftest can mutate a private copy of the whole directory instead of the
@@ -71,6 +74,43 @@ const RENAMES = new Set([
   'token-rename',
   'class-rename',
 ]);
+
+// The upgrade plugin's apply-mechanical.mjs rewrites a rename as a swap of `old` for `new` before
+// any agent reads `action`, so a rename has to BE a swap: one name per old name, every member of a
+// family landing on a name the release has, and nothing in `action` that deletes or re-values.
+const LIST_SEPARATOR = /\s*[,|]\s*|\s+\/\s+/;
+const isOneName = (kind, part) => {
+  if (kind === 'class-rename')
+    return /^(?:[a-z][a-z0-9-]*\s*)?(?:\.[\w*-]+)+$/.test(part);
+  if (kind === 'selector-rename')
+    return /^[a-z][a-z0-9-]*(?:[.#:][\w-]+|\[[^\]\s]+\])*$/.test(part);
+  if (kind === 'input-rename' || kind === 'output-rename')
+    return /^(?:[a-z][a-z0-9-]*\[[A-Za-z][\w.-]*\]|[A-Za-z][\w.-]*)$/.test(part);
+  return /^[^\s=:"'()[\]{}]+$/.test(part);
+};
+// A rule with exceptions, a value spelled out for one case, or a part that goes rather than moves.
+const ACTION_CHANGES_VALUE =
+  /\b(?:delete(?! list:)|deleted|deleting|remove|removing|drop|dropping)\b|\b(?:the|its|their) value (?:becomes|changes|is replaced)\b|\breplace the value\b|\bminus\b|\bbecomes? nothing\b|\binstead\b|\bexceptions?\b|\bunless\b|="(?:true|false)"/i;
+const TAGS = releaseTags(ROOT);
+const boundaryTokens = new Map();
+// The token sets at both ends of the boundary a manifest describes, or null when a tag is missing
+// (a shallow clone): `manifest-truth` reports an unreadable boundary, so this rule stays quiet.
+const tokensOfBoundary = (name) => {
+  if (boundaryTokens.has(name)) return boundaryTokens.get(name);
+  let trees = null;
+  if (name === 'unreleased') {
+    const before = TAGS.length ? surfaceAt(TAGS.at(-1))?.tokens : null;
+    const after = surfaceOfWorkingTree()?.tokens;
+    if (before && after) trees = { before, after, tag: 'the working tree' };
+  } else if (TAGS.includes(`v${name}`)) {
+    const prev = previousBoundary(TAGS, name);
+    const before = prev ? surfaceAt(prev)?.tokens : null;
+    const after = surfaceAt(`v${name}`)?.tokens;
+    if (before && after) trees = { before, after, tag: `v${name}` };
+  }
+  boundaryTokens.set(name, trees);
+  return trees;
+};
 
 /** A hint that only ever appears in OUR sources cannot locate a consumer's own
  *  code — which is the whole failure this linter is named after. */
@@ -124,6 +164,7 @@ const ITEM_KEYS = new Set([
   'restore',
   'map',
   'supersedes',
+  'evidence',
 ]);
 const DELETE_KEYS = new Set(['id', 'surface', 'find', 'why', 'replaceWith']);
 const TOP_KEYS = new Set(['version', 'items', 'informational', 'deleteList']);
@@ -202,27 +243,33 @@ for (const [name, manifest] of manifests) {
       'no `informational` array (use [] when there is nothing)',
     );
   } else {
-    // An entry is a bare string (the FYI) or `{ text, verify }` — the object shape carries the
-    // one eyeball check a rendering-only change has no symbol to grep for.
+    // An entry is a bare string (the FYI) or `{ text, verify, evidence }` - the object shape
+    // carries the one eyeball check a rendering-only change has no symbol to grep for, or the
+    // measurement behind a claim in `text` (tools/check-manifest-claims.mjs reads `evidence`).
     manifest.informational.forEach((entry, index) => {
       if (typeof entry === 'string') return;
       const at046 = (message) =>
         report(errors, file, 'M046', `informational[${index}] ${message}`);
       if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
-        at046('must be a string or a `{ text, verify }` object');
+        at046('must be a string or a `{ text, verify, evidence }` object');
         return;
       }
       const badKey = Object.keys(entry).find(
-        (key) => key !== 'text' && key !== 'verify',
+        (key) => !['text', 'verify', 'evidence'].includes(key),
       );
       if (badKey) {
-        at046(`has unknown key \`${badKey}\` — only text/verify are allowed`);
+        at046(
+          `has unknown key \`${badKey}\` - only text/verify/evidence are allowed`,
+        );
       }
       if (typeof entry.text !== 'string' || !entry.text.trim()) {
         at046('is an object with no non-empty `text`');
       }
-      if (typeof entry.verify !== 'string' || !entry.verify.trim()) {
-        at046('is an object with no non-empty `verify` - an entry with nothing to eyeball is a bare string; write it as one');
+      if (
+        entry.evidence === undefined &&
+        (typeof entry.verify !== 'string' || !entry.verify.trim())
+      ) {
+        at046('is an object with neither `verify` nor `evidence` - an entry with nothing to eyeball or back is a bare string; write it as one');
       }
     });
   }
@@ -268,6 +315,53 @@ for (const [name, manifest] of manifests) {
     }
     if (RENAMES.has(item.kind) && !(item.old && item.new)) {
       at('M018', `${item.kind} needs both \`old\` and \`new\``);
+    }
+
+    if (RENAMES.has(item.kind) && item.old && item.new) {
+      const olds = String(item.old).split(LIST_SEPARATOR).filter(Boolean);
+      const news = String(item.new).split(LIST_SEPARATOR).filter(Boolean);
+      const notOne = news.filter((part) => !isOneName(item.kind, part));
+      if (notOne.length || (news.length !== olds.length && news.length !== 1)) {
+        at(
+          'M047',
+          `\`new\` is not one name per \`old\` name (${notOne.length ? `\`${notOne[0]}\`` : `${olds.length} old, ${news.length} new`}) — ` +
+            'a rename is applied as a swap; what is not a swap is a `behavior` item',
+        );
+      }
+      const valueSentence = sentencesOf(item.action).find((one) =>
+        ACTION_CHANGES_VALUE.test(one),
+      );
+      if (valueSentence) {
+        at(
+          'M047',
+          `\`action\` deletes or re-values as well as renaming (${JSON.stringify(valueSentence.trim().slice(0, 70))}) — ` +
+            'the swap runs before anyone reads `action`, so that part is a `behavior` item or a `deleteList` row',
+        );
+      }
+      const trees =
+        item.kind === 'token-rename' && /[*<]|-(?:\s|,|\||$)/.test(item.old)
+          ? tokensOfBoundary(name)
+          : null;
+      if (trees) {
+        const literal = new Set(olds);
+        const stranded = candidatesOf(
+          item.old,
+          item.new,
+          item.kind,
+          trees.before,
+          trees.after,
+        ).filter(
+          (candidate) =>
+            !literal.has(candidate.name) && candidate.replacement === null,
+        );
+        if (stranded.length) {
+          at(
+            'M047',
+            `the family expands ${stranded.length} member(s) onto a name ${trees.tag} does not have (\`${stranded[0].name}\`) — ` +
+              'list the real pairs instead of the pattern',
+          );
+        }
+      }
     }
 
     if (item.kind === 'value-remap') {

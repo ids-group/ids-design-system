@@ -1,0 +1,3 @@
+{ "version": "0.13.4", "items": [
+  { "id": "range-value", "kind": "type-rename", "old": "RangeValue", "new": "DateRangeValue" }
+] }

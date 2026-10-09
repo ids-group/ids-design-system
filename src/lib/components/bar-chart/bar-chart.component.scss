@@ -2,6 +2,10 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
+@use '../../styles/focus' as focus;
+@use '../../styles/target' as target;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 @include chart-motion.grows-across('.row', '.fill');
 @include chart-motion.follows('.value, .percent, .target', var(--ds-motion-chart-mark-grow-duration));
 @include chart-frame.chart-frame;
@@ -23,6 +27,9 @@
   // The label gap must stay smaller than the row gap, or the eye pairs a bar with the label below it.
   --_bar-chart-row-gap: var(--ds-bar-chart-row-gap, var(--space-5));
   --_bar-chart-label-gap: var(--ds-bar-chart-label-gap, var(--space-1));
+  --_bar-chart-label-column-max-width: var(--ds-bar-chart-label-column-max-width, 40%);
+  --_bar-chart-child-fill-opacity: var(--ds-bar-chart-child-fill-opacity, 0.55);
+  --_bar-chart-divider-color: var(--ds-bar-chart-divider-color, var(--border-default));
 
   margin: 0;
 }
@@ -35,9 +42,42 @@
   display: grid;
 }
 
-.skeleton {
-  display: grid;
-  row-gap: var(--_bar-chart-row-gap);
+// The overlay reaches the card's edge and follows its corners: the padding is pulled back out from under it.
+:host(.framed) .reload-overlay {
+  --ds-loading-overlay-radius: calc(
+    var(--ds-chart-frame-radius) - var(--ds-chart-frame-border-width)
+  );
+
+  margin: calc(-1 * var(--ds-chart-frame-padding));
+  padding: var(--ds-chart-frame-padding);
+}
+
+.is-skeleton {
+  .label {
+    inline-size: 100%;
+  }
+
+  .label > .text-skeleton {
+    max-inline-size: 100%;
+  }
+
+  // The placeholder fills the track, which keeps the track's own size and cap.
+  .track-skeleton {
+    border-radius: var(--_bar-chart-cap-radius);
+  }
+
+  .text-skeleton {
+    border-radius: var(--radius-sm);
+  }
+}
+
+// Under `start` the label column has no text to size it yet, so the placeholders hold it at its cap.
+.rows.is-skeleton.labels-start {
+  grid-template-columns: var(--_bar-chart-label-column-max-width) minmax(0, 1fr) auto;
+
+  &.has-percent {
+    grid-template-columns: var(--_bar-chart-label-column-max-width) minmax(0, 1fr) auto auto;
+  }
 }
 
 .row {
@@ -144,4 +184,127 @@
   inset-inline-start: 50%;
   inset-block-start: 50%;
   translate: -50% -50%;
+}
+
+// One grid for every row, so labels, bars, values and percents line up in columns across rows.
+.rows.labels-start {
+  // A label on the bar's line needs no gap below it, so the rows sit closer than under a label on top.
+  --_bar-chart-row-gap: var(--ds-bar-chart-row-gap, var(--space-3));
+
+  grid-template-columns: fit-content(var(--_bar-chart-label-column-max-width)) minmax(0, 1fr) auto;
+
+  &.has-percent {
+    grid-template-columns: fit-content(var(--_bar-chart-label-column-max-width)) minmax(0, 1fr) auto auto;
+  }
+
+  > .row {
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: center;
+  }
+
+  > .divider {
+    grid-column: 1 / -1;
+  }
+
+  .label {
+    grid-area: 1 / 1;
+  }
+
+  .track {
+    grid-area: 1 / 2;
+  }
+
+  .value {
+    grid-area: 1 / 3;
+    justify-self: end;
+  }
+
+  .percent {
+    grid-area: 1 / 4;
+    justify-self: end;
+  }
+}
+
+.label {
+  &:has(> .toggle) {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0 var(--space-1);
+  }
+
+  &:has(> .toggle) > .detail {
+    flex-basis: 100%;
+  }
+}
+
+.term {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: underline dotted var(--text-tertiary);
+  text-underline-offset: 3px;
+  border-radius: var(--radius-sm);
+
+  &:focus-visible {
+    @include focus.ring;
+  }
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  padding: var(--space-0-5);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--icon-default);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    background: var(--surface-muted);
+  }
+
+  &:focus-visible {
+    @include focus.ring;
+  }
+
+  @include target.min-size;
+}
+
+.row.is-child {
+  .label {
+    padding-inline-start: var(--space-5);
+    font-size: var(--font-size-xs);
+  }
+
+  .value {
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-xs);
+  }
+
+  .fill {
+    opacity: var(--_bar-chart-child-fill-opacity);
+  }
+}
+
+.row.is-emphasis .label {
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+.divider {
+  margin-block: var(--space-2);
+  border-block-start: var(--border-width-default) dashed var(--_bar-chart-divider-color);
 }

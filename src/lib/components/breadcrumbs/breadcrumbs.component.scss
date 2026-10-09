@@ -1,5 +1,8 @@
 @use '../../styles/focus' as focus;
+@use '../../styles/target' as target;
 @use '../../styles/text-clip' as text-clip;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract: labels are single-line with ellipsis, separators never clip,
    the current item is bold and truncates last. */
@@ -31,12 +34,24 @@
   font: var(--_breadcrumbs-font-weight) var(--_breadcrumbs-font-size) / var(--line-height-flat) var(--font-sans);
   color: var(--_breadcrumbs-label-color);
   min-width: 0;
-  max-width: 100%;
   flex-wrap: nowrap;
-  overflow: hidden;
 
-  // Inward ring: the overflow clips an outer one.
-  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
+  @include text-clip.inline-axis;
+
+  // The overflow clips at the padding edge, so the padding holds the ring and the target of the first
+  // and last link; the negative margin and the wider cap give the trail back its width.
+  --focus-ring-offset: var(--focus-ring-width);
+
+  padding-inline: var(--space-1-5);
+  margin-inline: calc(-1 * var(--space-1-5));
+  max-width: calc(100% + 2 * var(--space-1-5));
+
+  // The padding band takes no pointer, so a control beside the trail keeps its clicks.
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
 
   a, .current {
     display: inline-flex;
@@ -66,6 +81,11 @@
 
     &:focus-visible {
       @include focus.ring;
+    }
+
+    // An icon with no label: it sits in the trail beside the next label, so the ring stays on the icon.
+    &:not(:has(.label)) {
+      @include target.min-size($ring-on-target: false);
     }
   }
 

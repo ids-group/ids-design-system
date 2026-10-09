@@ -5,7 +5,10 @@
   [caption]="caption()"
   [error]="error()"
   [errorText]="errorTextResolved()"
-  [pending]="loading() || !renderReady()"
+  [pending]="(loading() && isEmpty()) || !renderReady()"
+  [reloading]="loading()"
+  [dataTable]="true"
+  [shimmer]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
   [skeleton]="skeleton"
@@ -17,11 +20,67 @@
   <div
     class="skeleton"
     aria-hidden="true">
-    @for (placeholder of skeletonRows(); track $index) {
+    <table class="grid">
+      <thead>
+        <tr>
+          <td class="corner"></td>
+
+          @for (column of skeletonColumns(); track $index) {
+            <th class="column-label">
+              <ds-skeleton
+                inline
+                class="skeleton-text"
+                width="var(--space-5)"
+                height="var(--space-2)"
+                [shimmer]="loading()" />
+            </th>
+          }
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (row of skeletonRows(); track $index) {
+          <tr>
+            <th class="row-label">
+              <ds-skeleton
+                inline
+                class="skeleton-text"
+                width="var(--space-10)"
+                height="var(--space-2)"
+                [shimmer]="loading()" />
+            </th>
+
+            @for (column of skeletonColumns(); track $index) {
+              <td class="cell-slot">
+                <ds-skeleton
+                  class="cell"
+                  [shimmer]="loading()" />
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="scale">
       <ds-skeleton
-        height="var(--_heatmap-chart-cell-size)"
+        class="skeleton-text"
+        width="var(--space-4)"
+        height="var(--space-2)"
         [shimmer]="loading()" />
-    }
+
+      <ds-skeleton
+        class="skeleton-text"
+        width="var(--space-32)"
+        height="var(--space-2)"
+        [shimmer]="loading()" />
+
+      <ds-skeleton
+        class="skeleton-text"
+        width="var(--space-6)"
+        height="var(--space-2)"
+        [shimmer]="loading()" />
+    </div>
   </div>
 </ng-template>
 

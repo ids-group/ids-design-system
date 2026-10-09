@@ -1,4 +1,6 @@
 @use '../../styles/field-box' as field-box;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Border, radius, focus ring and dividers live on `.row`, not the host: the group's message must sit outside the bordered box. */
 :host {
@@ -32,6 +34,7 @@
   border-radius: var(--_field-group-radius);
 
   /* Clips end segments to the group corners; safe because every panel a segment opens is portaled to the body. */
+  // glyph-clip-guard: rounds the corners; each segment is a control that pads or clips its own text
   overflow: hidden;
   transition: border-color var(--duration-fast) var(--ease-standard);
 

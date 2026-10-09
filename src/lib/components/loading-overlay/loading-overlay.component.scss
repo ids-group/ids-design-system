@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 :host {
   display: block;
   position: relative;
@@ -7,6 +10,7 @@
     transparent
   ));
   --_loading-overlay-label-color: var(--ds-loading-overlay-label-color, var(--text-secondary));
+  --_loading-overlay-radius: var(--ds-loading-overlay-radius, 0);
   --_loading-overlay-enter-keyframes: var(--ds-loading-overlay-enter-keyframes, ds-fade-in);
   --_loading-overlay-enter-duration: var(--ds-loading-overlay-enter-duration, var(--duration-fast));
   --_loading-overlay-enter-easing: var(--ds-loading-overlay-enter-easing, var(--ease-standard));
@@ -32,6 +36,9 @@
   justify-content: center;
   gap: var(--space-3);
   background-color: var(--_loading-overlay-scrim-color);
+
+  // The blur stops hard at the scrim's edge, so the edge has to be the container's own, corners included.
+  border-radius: var(--_loading-overlay-radius);
   animation-name: var(--_loading-overlay-enter-keyframes);
   animation-duration: var(--_loading-overlay-enter-duration);
   animation-timing-function: var(--_loading-overlay-enter-easing);

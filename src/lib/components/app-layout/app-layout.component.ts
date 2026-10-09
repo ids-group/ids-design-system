@@ -17,7 +17,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
-import { reportDevWarning } from '@ids-group-ltd/ids-design-system/core';
 import { ScrollbarWidthService } from './scrollbar-width.service';
 import { AppLayoutNavigationService } from './layout-navigation.service';
 import {
@@ -149,19 +148,10 @@ export class AppLayoutComponent {
   }
 
   private watchDesktopBreakpoint(): void {
-    // Same `--bp-lg` as the stylesheet; a literal fallback could flip the rail at a different width than the CSS.
-    const lg = getComputedStyle(document.documentElement)
-      .getPropertyValue('--bp-lg')
+    // The host resolves `--bp-lg`, falling back to the Sass value its media queries use; the content element inherits it.
+    const lg = getComputedStyle(this.content().nativeElement)
+      .getPropertyValue('--_app-layout-desktop-min-width')
       .trim();
-    if (!lg) {
-      if (typeof ngDevMode === 'undefined' || ngDevMode) {
-        reportDevWarning(
-          '[ds-app-layout] --bp-lg is not defined, so the responsive rail cannot know its breakpoint and stays in desktop layout. Include the DS global styles (@use "…/styles/ds") — or, à la carte, the partial that emits the breakpoint vars.',
-        );
-      }
-
-      return;
-    }
     const desktop = window.matchMedia(`(width >= ${lg})`);
     const sync = (): void => {
       this.compact.set(!desktop.matches);

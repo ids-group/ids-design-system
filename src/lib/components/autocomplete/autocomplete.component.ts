@@ -34,7 +34,8 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { chipFit } from '@ids-group-ltd/ids-design-system/components';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
+import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
+import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { TagComponent } from '@ids-group-ltd/ids-design-system/components/tag';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
@@ -56,6 +57,7 @@ import {
 } from '@ids-group-ltd/ids-design-system/core';
 import {
   firstEnabledIndex as firstEnabledOf,
+  isListCursorKey,
   lastEnabledIndex as lastEnabledOf,
   nextEnabledIndex,
 } from '@ids-group-ltd/ids-design-system/core';
@@ -88,7 +90,8 @@ let nextId = 0;
   standalone: true,
   imports: [
     IconComponent,
-    SpinnerComponent,
+    LoadingOverlayComponent,
+    SkeletonComponent,
     TagComponent,
     FieldMessageComponent,
     NgTemplateOutlet,
@@ -205,8 +208,12 @@ export class AutocompleteComponent<T = unknown>
   >((option, query) => option.label.toLowerCase().includes(query));
   /** The typed query, on every change; pair with `filterWith="none"` for server-side search. */
   readonly filterChange = output<string>();
-  /** Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`. */
+  /** Options are still being fetched and the list reports `aria-busy`: with no options it shows
+   *  placeholder rows, with options it keeps them under an overlay until they are replaced. */
   readonly loading = input(false, { transform: booleanAttribute });
+
+  protected readonly skeletonOptionWidths = ['70%', '50%', '85%'];
+
   /** The panel opened. */
   readonly opened = output<void>();
   /** The panel closed, for any reason - a pick, Escape, an outside click, a scroll. */
@@ -295,8 +302,13 @@ export class AutocompleteComponent<T = unknown>
   protected readonly activeDescendant = computed(() => {
     const index = this.activeIndex();
 
-    return this.isOpen() && index >= 0 ? this.optionId(index) : null;
+    return this.isOpen() && index >= 0 && !this.listInert()
+      ? this.optionId(index)
+      : null;
   });
+  protected readonly listInert = computed(
+    () => this.loading() && this.filteredOptions().length > 0,
+  );
 
   protected readonly allOptions = computed<readonly AutocompleteOption<T>[]>(
     () => flattenDsOptions(this.options()),
@@ -572,6 +584,12 @@ export class AutocompleteComponent<T = unknown>
   protected onKeydown(event: KeyboardEvent): void {
     this.cursorFromKeyboard.set(true);
     if (this.isDisabled()) {
+      return;
+    }
+    // The scrim makes the list inert, so its rows take no cursor or pick key until loading ends.
+    if (this.isOpen() && this.listInert() && isListCursorKey(event.key)) {
+      event.preventDefault();
+
       return;
     }
     const visibleCount = this.visibleOptions().length;

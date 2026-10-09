@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 /* Truncation contract:
    Title - wraps to a second line if needed, never clipped: the user needs the full sentence.
    CTA label - short verb phrases only (Retry, Allocate resources). */

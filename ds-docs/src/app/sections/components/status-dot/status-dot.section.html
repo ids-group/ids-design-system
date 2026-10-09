@@ -3,11 +3,24 @@
   eyebrow="Components"
   title="Status dots">
   <span lede>
-    Coloured dot beside a label, where a badge is too heavy. The DS ships no status keys; the
-    app declares them with <code>&#64;include status.define((key: (bg:, text?, dot?)))</code>
-    (<code>status.semantic-preset</code> adds info, success, warning, error, neutral). The keys
-    below are this site's.
+    A coloured dot beside a label, where a badge is too heavy.
   </span>
+
+  <ul class="block-desc t-s">
+    <li>
+      The DS ships no status keys; the app declares them with <code class="t-mono-inline">&#64;include status.define((key: (bg:, text?, dot?)))</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        status.semantic-preset
+      </code> - adds info, success, warning, error, neutral.
+    </li>
+
+    <li>
+      The keys below are this site's.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
     The host is <code>role="img"</code>, named by <code>ariaLabel</code> or the raw

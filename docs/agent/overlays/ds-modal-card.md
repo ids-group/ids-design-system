@@ -3,7 +3,7 @@
 
 Group: Overlay
 
-The visual card the `<ds-modal>` host renders inside its backdrop. Exposed as a separate selector for cases where you need custom positioning (e.g. inside a drawer) without re-implementing the dialog chrome. Inputs: `size`, `danger`, `title: required`, `showClose: boolean = true`. Output: `(closed)`. Slots: `[eyebrow]`, `[title-badge]`, `[body]`, `[impact]`, `[actions]`; content with no slot attribute renders in the body, with the same dev-mode warnings as `<ds-modal>`.
+The visual card the `<ds-modal>` host renders inside its backdrop. Exposed as a separate selector for cases where you need custom positioning (e.g. inside a drawer) without re-implementing the dialog chrome. Inputs: `size`, `danger`, `title: required`, `showClose: boolean = true`. Output: `(closed)`. Slots: `[eyebrow]`, `[title-badge]`, `[body]`, `[impact]`, `[actions]`; content with no slot attribute renders in the body, as in `<ds-modal>`. `actions` goes on each button or on one `<div actions>` around them, as on `<ds-modal>`.
 
 <!-- inputs:ds-modal-card -->
 All inputs: `size: 'sm' | 'md' | 'lg' | 'xl' | 'fullscreen' = 'md'`, `status: 'info' | 'success' | 'warning' | 'error' = null`, `title: required string`, `subtitle: string | null = null`, `showClose: boolean = true`, `dividers: boolean | null = null`, `icon: IconName | null = null`, `dialogRole: 'dialog' | 'alertdialog' = null`

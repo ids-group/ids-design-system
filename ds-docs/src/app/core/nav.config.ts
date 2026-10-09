@@ -156,6 +156,7 @@ export const NAV: NavGroup[] = [
     title: 'Foundations',
     path: 'foundations',
     items: [
+      { label: 'Accessibility', anchor: 'accessibility' },
       { label: 'Borders', anchor: 'borders' },
       { label: 'Browser tab', anchor: 'browser-tab' },
       { label: 'Charts', anchor: 'charts' },

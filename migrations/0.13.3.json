@@ -11,7 +11,7 @@
         "typescript",
         "style"
       ],
-      "action": "Rename every `<ds-progress>` element to `<ds-bar>`, and `ProgressComponent` to `BarComponent` imported from `@ids-group-ltd/ids-design-system/components/bar`. The type `ProgressVariant` is now `BarVariant` from the same entry point. Rename a stylesheet rule whose selector names the `ds-progress` element the same way. Behaviour is unchanged — every input keeps its name and its default.",
+      "action": "Rename every `<ds-progress>` element to `<ds-bar>`, and `ProgressComponent` to `BarComponent` imported from `@ids-group-ltd/ids-design-system/components/bar`. The type `ProgressVariant` is now `BarVariant` from the same entry point. Rename a stylesheet rule whose selector names the `ds-progress` element the same way. Every input keeps its name and its default; the one layout change is a 3rem minimum width (`--ds-bar-min-width`), see the informational note.",
       "appliesWhen": "Every template rendering `<ds-progress>` and every file importing `ProgressComponent` or `ProgressVariant`. `ds-bar-chart` is a different component and keeps its name.",
       "pitfall": "The old tag is an unknown element, not an error: Angular renders nothing and logs nothing outside strict schema mode, so a missed one is a bar that silently vanished. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. A word boundary does not separate them - a hyphen is one, so `\\bds-bar\\b` matches inside `ds-bar-chart`. Match `ds-bar([^-\\w]|$)`, or the tag as `<ds-bar[\\s/>]`, and rename nothing whose name continues past `ds-bar`.",
       "restore": null,
@@ -39,9 +39,9 @@
         "typescript",
         "style"
       ],
-      "action": "Rename every `<ds-meter>` element to `<ds-bar>` and `MeterComponent` to `BarComponent` from `@ids-group-ltd/ids-design-system/components/bar`. Rename a stylesheet rule whose selector names the `ds-meter` element the same way. Then give each one a `semantics` — `\"none\"` where it had no `ariaLabel`, `\"meter\"` where it had one. Without that the bar announces as a progress bar.",
+      "action": "Rename every `<ds-meter>` element to `<ds-bar>` and `MeterComponent` to `BarComponent` from `@ids-group-ltd/ids-design-system/components/bar`. Rename a stylesheet rule whose selector names the `ds-meter` element the same way. Then give each one a `semantics` — `\"none\"` where it had no `ariaLabel`, `\"meter\"` where it had one. Without that the bar announces as a progress bar. Where a bar with no `color` should keep the meter's coral fill, set `--ds-bar-fill-color: var(--ds-chart-series-1-color)` on it.",
       "appliesWhen": "Only code written against `0.13.2`, the single release `ds-meter` existed in. `ds-bar-chart` is a different component and keeps its name.",
-      "pitfall": "The rename alone compiles, renders identically, and silently changes what assistive technology hears: `ds-meter` was `aria-hidden` unless `ariaLabel` named it, and `ds-bar` defaults to `semantics=\"progress\"`. A table of two hundred rates that announced nothing now announces two hundred progress bars. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. A word boundary does not separate them - a hyphen is one, so `\\bds-bar\\b` matches inside `ds-bar-chart`. Match `ds-bar([^-\\w]|$)`, or the tag as `<ds-bar[\\s/>]`, and rename nothing whose name continues past `ds-bar`.",
+      "pitfall": "The rename alone compiles and silently changes two things: the default fill moves from chart series 1 (coral) to `--accent`, and what assistive technology hears: `ds-meter` was `aria-hidden` unless `ariaLabel` named it, and `ds-bar` defaults to `semantics=\"progress\"`. A table of two hundred rates that announced nothing now announces two hundred progress bars. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. A word boundary does not separate them - a hyphen is one, so `\\bds-bar\\b` matches inside `ds-bar-chart`. Match `ds-bar([^-\\w]|$)`, or the tag as `<ds-bar[\\s/>]`, and rename nothing whose name continues past `ds-bar`.",
       "restore": null,
       "searchHints": [
         "ds-meter",
@@ -58,12 +58,12 @@
     {
       "id": "bar-semantics-says-what-the-bar-is",
       "kind": "behavior",
-      "old": "ds-bar[semantics]",
+      "old": "ds-meter",
       "new": null,
       "surface": "template",
       "action": "Add `semantics=\"none\"` to every `ds-bar` rendered per row of a table or list whose figure is printed beside it, and `semantics=\"meter\"` to one that is the only place a measurement appears. A bar reporting how far a task has got needs nothing — that is the default.",
-      "appliesWhen": "Only bars that are NOT reporting a task. An upload bar, a step counter or a job indicator keeps the default and is unchanged.",
-      "pitfall": "Nothing errors and nothing looks different — the drawing is identical either way. The cost lands in the accessibility tree, where a per-row bar left at the default reads out a percentage the row already states.",
+      "appliesWhen": "Only bars that are NOT reporting a task. An upload bar, a step counter or a job indicator keeps the default and needs nothing here.",
+      "pitfall": "Nothing errors, and the drawing is identical either way unless the bar sets `indeterminate`, which only `progress` honours. The cost lands in the accessibility tree, where a per-row bar left at the default reads out a percentage the row already states.",
       "restore": "Leave `semantics` unset. The default is `progress`, which is what `ds-progress` always did.",
       "searchHints": [
         "ds-bar",
@@ -81,8 +81,8 @@
     {
       "id": "progress-and-meter-tokens-renamed-to-bar",
       "kind": "token-rename",
-      "old": "--ds-progress-*",
-      "new": "--ds-bar-*",
+      "old": "--ds-progress-height, --ds-progress-track-color, --ds-progress-target-color, --ds-progress-target-width, --ds-progress-bar-color, --ds-progress-bar-color-success, --ds-progress-bar-color-warning, --ds-progress-bar-color-error, --ds-meter-height, --ds-meter-min-width, --ds-meter-track-color, --ds-meter-fill-color, --progress-h",
+      "new": "--ds-bar-height, --ds-bar-track-color, --ds-bar-target-color, --ds-bar-target-width, --ds-bar-fill-color, --ds-bar-fill-color-success, --ds-bar-fill-color-warning, --ds-bar-fill-color-error, --ds-bar-height, --ds-bar-min-width, --ds-bar-track-color, --ds-bar-fill-color, --bar-h",
       "surface": "style",
       "action": "Rename `--ds-progress-height`, `-track-color`, `-target-color` and `-target-width` to `--ds-bar-…` with the same suffix. `--ds-progress-bar-color` and its `-success` / `-warning` / `-error` siblings become `--ds-bar-fill-color`, `--ds-bar-fill-color-success`, `--ds-bar-fill-color-warning`, `--ds-bar-fill-color-error`. The `--ds-meter-*` names go the same way: `-height`, `-min-width` and `-track-color` keep their suffix and `--ds-meter-fill-color` becomes `--ds-bar-fill-color`. `--ds-meter-radius` has no `--ds-bar-*` counterpart and is removed: see `meter-radius-removed`. The global `--progress-h` is now `--bar-h`.",
       "appliesWhen": "Any stylesheet setting one of those names. DS tokens only — a consumer's own `--progress-…` variable is untouched, and so are `--stepper-bar-h` and `--calendar-bar-h`, which are different tokens that merely end in `-bar-h`.",
@@ -128,7 +128,7 @@
       "old": "ProgressComponent",
       "new": null,
       "surface": "typescript",
-      "action": "Only if you SUBCLASS one of these and declare a member of the same name: rename yours, or add `override` where your member genuinely means the same thing. A subclass of `ProgressComponent` or `MeterComponent` has no base class any more — extend `BarComponent` and check `semantics`.",
+      "action": "Only if you SUBCLASS one of these and declare a member of the same name: rename yours, or add `override` where your member genuinely means the same thing. A subclass of `ProgressComponent` or `MeterComponent` has no base class any more — extend `BarComponent` and check `semantics`. `MeterComponent`'s protected `clamped` and `percent` are `clampedValue` and `valuePercent` on `BarComponent`: move an override of either to the new name, or it overrides nothing.",
       "appliesWhen": "Only a class extending `BarComponent`, the two classes it replaces, or the internal chart tooltip directive, which the package root does not export. A template that uses the components needs nothing.",
       "pitfall": "The collision is a compile error, not a silent one — TS4114 for a same-named member, TS2416 where the signature differs — so a build that passes has none. The silent half is a subclass of the OLD classes: that file stops resolving its import, which is also loud.",
       "restore": null,
@@ -158,8 +158,34 @@
         "extends FunnelChartComponent",
         "FunnelChartComponent"
       ],
-      "verify": "No subclass declares a member named `semantics`, `color`, `role` or `dsChartTooltipPreferBelow`, and the app builds with no TS4114, TS2415 or TS2416 on those classes.",
-      "note": "Merging the progress bar and the measurement bar moved every member of both onto one class, and the tooltip directive gained the input that opens a pinned panel below its mark. The three chart components grew as well: the column chart moved its drawing into the shared container and took several series, gaining `thresholds`, `categories`, `geometry`, `tableRows`, `viewHeightPx`, `skeletonHeightPx`, `stack`, `resolvedSeries`, `seriesRefs`, `pinnedSeries`, `slotCount`, `offsets`, `offsetsFor`, `multiSeries`, `legendItems` and `axisFormat` while losing the members that drew its marks; the donut gained `partOfWhole`, `arcAt`, `isDimmed` and three legend handlers; the funnel gained `isDimmed` and `onRowEnter`. Subclassing a DS component is unsupported, but a release that only merges and adds can still fail such a build on a name collision."
+      "verify": "No subclass declares a member named `semantics`, `color`, `role`, `dsChartTooltipPreferBelow` or `detachScrollReposition`, or one the note lists for the column, donut and funnel charts, nor, for a former `MeterComponent` subclass `variant`, `indeterminate`, `target`, `clampedValue`, `valuePercent`, `clampedTarget`, `targetPercent` and `isIndet`; the app builds with no TS4114, TS2415 or TS2416 on those classes.",
+      "note": "Merging the progress bar and the measurement bar moved the members of both onto one class, and the tooltip directive gained the input that opens a pinned panel below its mark. The three chart components grew as well: the column chart moved its drawing into the shared container and took several series, gaining `thresholds`, `categories`, `geometry`, `tableRows`, `viewHeightPx`, `skeletonHeightPx`, `stack`, `resolvedSeries`, `seriesRefs`, `pinnedSeries`, `slotCount`, `offsets`, `offsetsFor`, `multiSeries`, `legendItems` and `axisFormat` while losing the members that drew its marks; the donut gained `partOfWhole`, `arcAt`, `isDimmed` and three legend handlers; the funnel gained `isDimmed` and `onRowEnter`. Subclassing a DS component is unsupported, but a release that only merges and adds can still fail such a build on a name collision."
+    },
+    {
+      "id": "chart-classes-members-lost",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "ColumnChartComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename your own member or mark it `override` wherever the compiler reports a collision with a class in `detect`. Delete an override of a member the class lost.",
+      "appliesWhen": "Only a class that extends one of the classes in `detect`. A consumer who uses the chart elements in templates needs nothing from this item.",
+      "pitfall": "A member of yours that replaced a lost one no longer replaces anything, and the component stops calling it.",
+      "note": "`ColumnChartComponent` lost 15 when its drawing moved into the shared container, among them `columns`, `ticks`, `onMarkClick` and `tooltipContext`. `DonutChartComponent` gained `onLegendClick`, `onLegendEnter` and `onLegendFocus`, its three legend handlers. The internal `ChartTooltipDirective` gained `detachScrollReposition` and `dsChartTooltipPreferBelow` and lost `detachScrollClose`.",
+      "verify": "The app builds with no error naming a class listed in `detect`, and no member of such a subclass overrides a member the class lost.",
+      "searchHints": [
+        "extends ColumnChartComponent",
+        "extends DonutChartComponent",
+        "extends ChartTooltipDirective"
+      ],
+      "detect": [
+        "extends ColumnChartComponent",
+        "ColumnChartComponent",
+        "extends DonutChartComponent",
+        "DonutChartComponent",
+        "extends ChartTooltipDirective",
+        "ChartTooltipDirective"
+      ],
+      "restore": null
     },
     {
       "id": "chart-value-format-receives-tick-or-tooltip-location",
@@ -169,7 +195,7 @@
       "surface": "typescript",
       "action": "Give your `valueFormat` callback a second parameter, `location: ChartFormatLocation` (`'tick' | 'tooltip'`), imported from `@ids-group-ltd/ids-design-system/core`. Return a compact string for `'tick'` and the full value for `'tooltip'`. A callback that ignores the parameter still compiles and still runs.",
       "appliesWhen": "The `action` above is only for a `ds-column-chart` or `ds-line-chart` with a custom `valueFormat` bound, as an input or through `DS_CONFIG.chart.valueFormat`: that is who has code to touch. A chart left on the built-in default needs no code change, but its own rendered ticks changed too; see the informational note about the built-in default below.",
-      "pitfall": "Nothing throws and the build stays green. TypeScript allows an implementation with fewer parameters than its declared type, and JavaScript ignores an argument nothing reads, so a one-argument callback keeps compiling and keeps running. It now also runs for every axis tick, and an implementation that returns the full value regardless of location prints that same full value on the axis, clipped by the fixed-width axis column, which is the defect this release fixes only for the built-in default.",
+      "pitfall": "Nothing throws and the build stays green. TypeScript allows an implementation with fewer parameters than its declared type, and JavaScript ignores an argument nothing reads, so a one-argument callback keeps compiling and keeps running. A custom formatter already ran on every axis tick and still does; what is new is the `location` argument, so one that ignores it keeps printing the full value on the axis, clipped by the fixed-width axis column, which is the defect this release fixes only for the built-in default.",
       "restore": null,
       "searchHints": [
         "valueFormat",
@@ -215,19 +241,23 @@
   ],
   "informational": [
     "`ds-column-chart` takes a list of named series on `data` as well as the flat list of points it already took, and a `stack` input (`'none'` | `'grouped'` | `'stacked'` | `'normalized'`) deciding how they share a category's band. A chart passing a flat list is unaffected: it stays one series across the whole band, coloured by point position, and `stack` defaults to `'none'`. A series list draws a legend under the plot and colours each series as a whole. See `column-chart-data-accepts-a-series-list` for the only code this can break.",
-    "`stack=\"stacked\"` on `ds-column-chart` and `axisMode=\"stacked\"` on `ds-line-chart` are different things: series drawn on top of each other, against two plots one above the other. Neither input changed; the words collide only when read side by side.",
+    "`stack=\"stacked\"` on `ds-column-chart`, new in this release, and `yAxisMode=\"stacked\"` on `ds-line-chart` are different things: series drawn on top of each other, against two plots one above the other. The words collide only when read side by side.",
     "`ds-bar` carries everything `ds-progress` had — `value`, `max`, `variant`, `indeterminate`, `target` and `ariaLabel` keep their names and defaults — so for a progress bar the rename alone is the whole upgrade. It adds `semantics` and `color`.",
     "`indeterminate` is now ignored unless `semantics` is `progress`. Only a task has an unknown duration, and the input was never meaningful on a measurement. Nothing that used it on `ds-progress` is affected, because that is the default.",
     "The bar carries `min-inline-size: 3rem` (`--ds-bar-min-width`). `ds-progress` had none, so a bar inside a content-sized column or a shrink-to-fit flex item that used to collapse to nothing is now visible. Set the property to `0` to get the old collapsing behaviour back.",
+    {
+      "text": "Under `prefers-reduced-motion: reduce` an indeterminate `ds-bar` stands still and fills its track; `ds-progress` kept its sweep, at half speed. Nothing in your code changes.",
+      "verify": "With reduced motion switched on, an indeterminate bar shows a full, motionless fill."
+    },
     "Chart tooltips sit closer to their marks: the gap went from 12px to 6px, and `ds-bar-chart` anchors its panel to the bar rather than to the whole row, which was opening it 46.7px away. Nothing in your code changes; a screenshot test of a chart with a tooltip open will differ.",
     "While a mark is pinned its panel opens BELOW the mark, so it no longer covers the Unpin control at the plot's top edge. Moving the pin between marks no longer unmounts that control for a frame.",
-    "The focus indicator on a chart mark is now the app's `--focus-ring-color` with a light keyline, instead of a white ring with a dark halo. Override `--ds-chart-focus-ring-color` and `--ds-chart-focus-halo-color` to keep the old pair.",
+    "The focus indicator on a chart mark is now the app's `--focus-ring-color` with a light keyline, instead of a white ring with a dark halo. The globals moved: `--chart-focus-ring-color` is `var(--focus-ring-color)`, was `white`, and `--chart-focus-halo-color` is `white`, was `var(--static-ink)`. Set `--ds-chart-focus-ring-color: white` and `--ds-chart-focus-halo-color: var(--static-ink)` to keep the old pair.",
     "`ds-line-chart` and `ds-column-chart` draw their axes behind the empty, error and no-visible-series messages. No ticks and no labels, because there is no data to scale them against.",
     "The `pin` icon is redrawn as a drawing pin seen from the side. Any `<ds-icon name=\"pin\">` in your app changes shape.",
     "The built-in default `valueFormat` on `ds-column-chart` and `ds-line-chart` now compacts each axis tick by that tick's own magnitude (`Intl.NumberFormat`'s `notation: 'compact'`), where the previous default picked one suffix for the whole axis from its step. An axis whose ticks cross a thousand, million or billion boundary can now print more than one suffix, `1M` beside `800K` where it used to print `1000K` beside `800K`. Nothing in your code changes; a screenshot of such an axis will differ.",
-    "Hovering or focusing a legend item on `ds-donut-chart`, or a stage row on `ds-funnel-chart`, now opens the same tooltip over the MARK it names and dims the rest of the plot, exactly as pointing at the arc or the bar does. Nothing to change: it affects what a pointer does, not what a template declares.",
+    "Hovering or focusing a legend item on `ds-donut-chart`, or hovering a stage row on `ds-funnel-chart`, now opens the same tooltip over the MARK it names and, under `dimOthers`, dims the rest of the plot, exactly as pointing at the arc or the bar does. Nothing to change: it affects what a pointer does, not what a template declares.",
     "`ds-donut-chart` gains `partOfWhole`, defaulting to true. A ring's legend, tooltip and data table always stated each slice's share before this input existed; `partOfWhole` only adds the opt-out that was previously impossible — `[partOfWhole]=\"false\"` drops it from all three. Nothing changes for an existing consumer.",
-    "`ds-chart`, the container the column and line charts are built inside, now ships as its own entry point, `@ids-group-ltd/ids-design-system/components/chart`, together with the column and line series marks, the reference line and label marks, their data types, the scales token and the two geometry helpers. Purely additive - nothing to change. Reach for one of the five presets first; the container is the escape hatch for a plot none of them draws, such as columns and a cumulative line on two axes. It is not re-exported from the package facade, so it is imported by its own path. A mark is an ATTRIBUTE selector on a real `<svg:g>` (`<svg:g dsColumnSeries>`), never an element of its own, because an element the SVG specification does not know renders nothing and neither do its children."
+    "`ds-chart`, the container the column chart is built inside, now ships as its own entry point, `@ids-group-ltd/ids-design-system/components/chart`, together with the column and line series marks, the reference line and label marks, their data types, the scales token and the two geometry helpers. Purely additive - nothing to change. Reach for one of the five presets first; the container is the escape hatch for a plot none of them draws, such as columns and a cumulative line on two axes. The package facade re-exports `ChartComponent`, `CHART_SCALES`, `ChartPlot` and `ChartScales`; the marks, their types and the two geometry helpers are imported from `components/chart`. A mark is an ATTRIBUTE selector on a real `<svg:g>` (`<svg:g dsColumnSeries>`), never an element of its own, because an element the SVG specification does not know renders nothing and neither do its children."
   ],
   "deleteList": []
 }

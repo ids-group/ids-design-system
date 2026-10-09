@@ -25,10 +25,10 @@
       "kind": "behavior",
       "old": "ToastRegionComponent",
       "new": null,
-      "action": "Build after upgrading. Rename or mark `override` every member the compiler reports as colliding, and DELETE any `override startCountdown` - that member no longer exists, so the override is dead code the compiler will not complain about.",
+      "action": "Build after upgrading. Rename or mark `override` every member the compiler reports as colliding, and DELETE any `startCountdown` member of yours - ours no longer exists, so yours is dead code the compiler only flags when it carries `override` (TS4113).",
       "appliesWhen": "Only a class that extends ToastRegionComponent. Template users of `<ds-toast-region>` and callers of ToastService need nothing.",
-      "pitfall": "`startCountdown` was announced in 0.11.2 as a member the region had just GAINED, so an override written for that release is one release old and now overrides nothing: it compiles clean and silently never runs. And every one of the five new names is `private` or `protected`, which is no protection - a redeclared private fails with TS2415 exactly as a public collision does.",
-      "note": "ToastRegionComponent gained `arm`, `pauseAll`, `remaining`, `resumeAll` and `startedAt`, and lost `startCountdown`. A countdown is armed when a toast is promoted to visible, and re-armed from what is left when a hover or focus pause ends - the region owns the timing because only it knows when a toast became visible. None of the five is public API or a signal, and there is no public replacement for `startCountdown`.",
+      "pitfall": "`startCountdown` was private in 0.11.2, so a subclass redeclaring it hit TS2415 with or without `override`. Now it is gone: a method of that name compiles clean and never runs, while one marked `override` fails with TS4113. And every one of the twelve new names is `private` or `protected`, which is no protection - a redeclared private fails with TS2415 exactly as a public collision does.",
+      "note": "ToastRegionComponent gained the private `arm`, `pauseAll`, `resumeAll`, `syncPause`, `paused`, `remaining`, `startedAt`, `hovered`, `focusWithin`, `host` and the protected `onHover`, `onFocusWithin`, and lost `startCountdown`. A countdown is armed when a toast is promoted to visible, and re-armed from what is left when a hover or focus pause ends - the region owns the timing because only it knows when a toast became visible. None of the twelve is public API or a signal, and there is no public replacement for `startCountdown`.",
       "searchHints": [
         "extends ToastRegionComponent",
         "ToastRegionComponent",
@@ -36,15 +36,18 @@
         "override startCountdown",
         "pauseAll",
         "resumeAll",
+        "onHover",
+        "onFocusWithin",
         "TS2415",
-        "TS4114"
+        "TS4114",
+        "TS4113"
       ],
       "surface": "typescript",
       "detect": [
         "extends ToastRegionComponent",
         "override startCountdown"
       ],
-      "verify": "The app builds with no TS4114 / TS2415 / TS2416 naming ToastRegionComponent, and no `override startCountdown` remains in your source.",
+      "verify": "The app builds with no TS4113 / TS4114 / TS2415 / TS2416 naming ToastRegionComponent, and no `startCountdown` member remains in a subclass of it.",
       "restore": null
     },
     {
@@ -139,7 +142,7 @@
     }
   ],
   "informational": [
-    "The banner, toast and alert icon now centres on the message block instead of aligning to the first line of text. Nothing to change: it is a visual default, applied by the components themselves. One-line messages look identical either way, which covers most toasts; the difference grows with the text, and was 12px at two lines and 21px at three.",
+    "The banner, toast and alert icon now centres on the message block instead of aligning to the first line of text. Nothing to change: it is a visual default, applied by the components themselves. One-line messages look the same either way, which covers most toasts, except a banner with layout set to row and actions beside the text: its icon was pinned to the top of the row and now centres with the text; the difference grows with the text, and was 12px at two lines and 21px at three.",
     "ToastService.promise() and any toast with an `action` changed their dismissal timing. A settled promise toast now counts its 4s/6s from when it becomes visible rather than from when the promise resolved, so one queued behind `maxVisible` is no longer removed before it is shown. A toast with an `action` no longer auto-dismisses at all and is always dismissible, because the region is last in tab order and the button was unreachable within the old five seconds. Hovering or focusing the region pauses every countdown. Nothing to change in consumer code; if you relied on an action toast disappearing on its own, dismiss it from the action handler.",
     "Inside a `ds-color=\"error\"`, `=\"success\"` or `=\"warning\"` zone, anything that reads the scoped accent's strong colour, --accent-strong, now renders in that status colour instead of falling back to body text — selected list and tree rows, the active sidenav item and its rail, the active tab pill, avatar initials, the active tag, dropzone text, the toast's action label, the selected toggle button, the split-button hover fill, the tonal, ghost, outline and text variants of ds-button, and the tonal variant of ds-icon-button. Nothing to change: those three families simply never defined the role the zone asked for, and --accent-strong now asks for -strong first and the family's readable on-tint -text second. A zone whose accent looked plain before will now look coloured, which is the intended appearance.",
     "ds-banner's close button gained aria-label=\"Dismiss\", which ds-toast and ds-alert already carried. NO ACTION.",

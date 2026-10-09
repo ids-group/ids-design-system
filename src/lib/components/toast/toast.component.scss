@@ -1,5 +1,8 @@
 @use '../../styles/focus' as focus;
-@use '../../styles/press' as press;
+@use '../../styles/dismiss-button' as dismiss-button;
+@use '../../styles/target' as target;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   --_toast-leave-duration: var(--ds-toast-leave-duration, var(--duration-base));
@@ -13,14 +16,9 @@
     transform var(--_toast-shift-duration) var(--_toast-shift-easing);
 }
 
-/* Restates the transform timing rather than inheriting the shift's. */
 :host(.leaving) {
   opacity: 0;
-  transform: translateY(calc(var(--space-2) * -1));
   pointer-events: none;
-  transition:
-    opacity var(--_toast-leave-duration) var(--_toast-leave-easing),
-    transform var(--_toast-leave-duration) var(--_toast-leave-easing);
 }
 
 /* Inverted half of the region's FLIP; the transition is suppressed so the jump-back is not animated. */
@@ -34,7 +32,7 @@
   --_toast-border:        var(--ds-toast-border-color,        var(--border-default));
   --_toast-bar-color: var(--ds-toast-bar-color, var(--accent));
   --_toast-icon-color: var(--ds-toast-icon-color, var(--accent));
-  --_toast-enter-keyframes: var(--ds-toast-enter-keyframes, ds-scale-in);
+  --_toast-enter-keyframes: var(--ds-toast-enter-keyframes, ds-fade-in);
   --_toast-enter-duration: var(--ds-toast-enter-duration, var(--ds-motion-enter-large-duration));
   --_toast-enter-easing: var(--ds-toast-enter-easing, var(--ds-motion-enter-large-easing));
   --_toast-enter-offset: var(--ds-toast-enter-offset, var(--space-2));
@@ -66,9 +64,12 @@
   .icon  { color: var(--_toast-icon-color); flex-shrink: 0; align-self: center; }
   .body  { flex: 1; min-width: 0; overflow-wrap: anywhere; font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
   .title { font-weight: var(--font-weight-bold); color: var(--text-primary); margin-bottom: var(--space-0-5); }
-  .close { border: 0; background: transparent; color: var(--icon-default); cursor: pointer; padding: var(--space-0-5);
+  .close {
+    @include dismiss-button.button;
+    @include target.min-size;
 
- @include press.feedback; }
+    color: var(--icon-default);
+  }
 
   .action {
     flex-shrink: 0;

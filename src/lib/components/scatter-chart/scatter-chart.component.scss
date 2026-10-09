@@ -3,6 +3,8 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 @include chart-motion.settles-in('.point');
 @include chart-frame.chart-frame;
 @include chart-frame.pin-reset;
@@ -37,6 +39,34 @@
   display: block;
   inline-size: 100%;
   block-size: auto;
+}
+
+// The canvas's own box and lines, without the dots: shares of the viewBox keep it at every width.
+.skeleton {
+  position: relative;
+  aspect-ratio: 640 / 360;
+}
+
+.skeleton-grid-line {
+  position: absolute;
+  border-block-start: 1px solid var(--_scatter-chart-grid-line-color);
+
+  &.is-axis {
+    border-block-start-color: var(--_scatter-chart-axis-line-color);
+  }
+}
+
+.skeleton-pill {
+  position: absolute;
+  border-radius: var(--radius-pill);
+
+  &.is-tick {
+    translate: 0 -50%;
+  }
+
+  &.is-category {
+    translate: -50% 0;
+  }
 }
 
 .grid-line {

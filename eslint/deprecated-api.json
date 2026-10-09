@@ -1,0 +1,889 @@
+{
+  "inputs": [
+    {
+      "element": "*",
+      "name": "dsChartTooltipPreferBelow",
+      "replacement": null,
+      "since": "0.14.1",
+      "itemId": "0.14.1#chart-tooltip-prefer-below-removed"
+    },
+    {
+      "element": "*",
+      "name": "dsTooltipTextSelector",
+      "replacement": null,
+      "since": "the next release",
+      "itemId": "unreleased#tooltip-text-selector-merged-into-when-clipped"
+    },
+    {
+      "element": "ds-accordion",
+      "name": "multi",
+      "replacement": "multiple",
+      "since": "0.13.4",
+      "itemId": "0.13.4#accordion-multi-is-multiple"
+    },
+    {
+      "element": "ds-autocomplete",
+      "name": "optionGroups",
+      "replacement": "options",
+      "since": "0.11.1",
+      "itemId": "0.11.1#autocomplete-option-groups-input-removed"
+    },
+    {
+      "element": "ds-badge",
+      "name": "variant",
+      "replacement": null,
+      "since": "0.5.1",
+      "itemId": "0.5.1#badge-variant-to-status-rename"
+    },
+    {
+      "element": "ds-chart",
+      "name": "cursorPin",
+      "replacement": "pinOnClick",
+      "since": "0.14.5",
+      "itemId": "0.14.5#chart-cursor-pin-renamed"
+    },
+    {
+      "element": "ds-date-picker",
+      "name": "defaultMonth",
+      "replacement": "defaultDate",
+      "since": "0.6.3",
+      "itemId": "0.6.3#date-picker-default-month-input-rename"
+    },
+    {
+      "element": "ds-donut-chart",
+      "name": "centerValue",
+      "replacement": null,
+      "since": "0.13.4",
+      "itemId": "0.13.4#pie-chart-centre-content-needs-a-hole"
+    },
+    {
+      "element": "ds-donut-chart",
+      "name": "thickness",
+      "replacement": null,
+      "since": "0.13.4",
+      "itemId": "0.13.4#pie-chart-thickness-is-now-inner-radius"
+    },
+    {
+      "element": "ds-dropdown",
+      "name": "error",
+      "replacement": "ds-select[invalid]",
+      "since": "0.5.0",
+      "itemId": "0.5.0#dropdown-error-input-rename"
+    },
+    {
+      "element": "ds-dropzone",
+      "name": "single",
+      "replacement": null,
+      "since": "0.13.4",
+      "itemId": "0.13.4#dropzone-single-removed"
+    },
+    {
+      "element": "ds-input",
+      "name": "floating",
+      "replacement": null,
+      "since": "0.10.0",
+      "itemId": "0.10.0#input-floating-removed"
+    },
+    {
+      "element": "ds-input",
+      "name": "withAddon",
+      "replacement": null,
+      "since": "0.7.0",
+      "itemId": "0.7.0#input-with-addon-removed"
+    },
+    {
+      "element": "ds-input",
+      "name": "withAddonRight",
+      "replacement": null,
+      "since": "0.7.0",
+      "itemId": "0.7.0#input-with-addon-right-removed"
+    },
+    {
+      "element": "ds-menu-item",
+      "name": "danger",
+      "replacement": "error",
+      "since": "0.5.1",
+      "itemId": "0.5.1#menu-item-danger-input-rename"
+    },
+    {
+      "element": "ds-modal-card",
+      "name": "danger",
+      "replacement": "error",
+      "since": "0.5.1",
+      "itemId": "0.5.1#modal-card-danger-input-rename"
+    },
+    {
+      "element": "ds-modal",
+      "name": "danger",
+      "replacement": "error",
+      "since": "0.5.1",
+      "itemId": "0.5.1#modal-danger-input-rename"
+    },
+    {
+      "element": "ds-modal",
+      "name": "error",
+      "replacement": null,
+      "since": "0.10.0",
+      "itemId": "0.10.0#modal-error-boolean-to-status"
+    },
+    {
+      "element": "ds-pie-chart",
+      "name": "staggerMs",
+      "replacement": null,
+      "since": "0.14.5",
+      "itemId": "0.14.5#pie-chart-stagger-ms-removed"
+    },
+    {
+      "element": "ds-table",
+      "name": "clientSort",
+      "replacement": "sortMode",
+      "since": "0.8.0",
+      "itemId": "0.8.0#table-client-sort-replaced-by-sort-mode"
+    },
+    {
+      "element": "ds-table",
+      "name": "exportButton",
+      "replacement": null,
+      "since": "0.12.1",
+      "itemId": "0.12.1#table-export-behind-directive"
+    },
+    {
+      "element": "ds-table",
+      "name": "sortDir",
+      "replacement": "sortDirection",
+      "since": "0.13.4",
+      "itemId": "0.13.4#table-sort-dir-spelled-out"
+    },
+    {
+      "element": "ds-toast",
+      "name": "message",
+      "replacement": "body",
+      "since": "0.11.4",
+      "itemId": "0.11.4#toast-message-input-renamed-body"
+    }
+  ],
+  "outputs": [
+    {
+      "element": "ds-alert",
+      "name": "dismissed",
+      "replacement": "closed",
+      "since": "0.5.1",
+      "itemId": "0.5.1#alert-dismissed-output-rename"
+    },
+    {
+      "element": "ds-banner",
+      "name": "dismissed",
+      "replacement": "closed",
+      "since": "0.11.3",
+      "itemId": "0.11.3#banner-dismissed-output-never-existed"
+    },
+    {
+      "element": "ds-calendar-day",
+      "name": "daySelect",
+      "replacement": "daySelected",
+      "since": "0.5.1",
+      "itemId": "0.5.1#calendar-day-dayselect-output-rename"
+    },
+    {
+      "element": "ds-pagination",
+      "name": "pageChange",
+      "replacement": "currentPageChange",
+      "since": "0.11.3",
+      "itemId": "0.11.3#pagination-page-change-output-never-existed"
+    },
+    {
+      "element": "ds-split-button",
+      "name": "itemSelect",
+      "replacement": "itemSelected",
+      "since": "0.5.1",
+      "itemId": "0.5.1#split-button-itemselect-output-rename"
+    },
+    {
+      "element": "ds-stepper",
+      "name": "stepClick",
+      "replacement": "stepClicked",
+      "since": "0.5.1",
+      "itemId": "0.5.1#stepper-stepclick-output-rename"
+    },
+    {
+      "element": "ds-table",
+      "name": "rowClick",
+      "replacement": "rowClicked",
+      "since": "0.11.3",
+      "itemId": "0.11.3#table-row-click-output-never-existed"
+    },
+    {
+      "element": "ds-table",
+      "name": "sortDirChange",
+      "replacement": "sortDirectionChange",
+      "since": "0.13.4",
+      "itemId": "0.13.4#table-sort-dir-change-spelled-out"
+    },
+    {
+      "element": "ds-tabs",
+      "name": "tabClose",
+      "replacement": "tabClosed",
+      "since": "0.5.1",
+      "itemId": "0.5.1#tabs-tabclose-output-rename"
+    },
+    {
+      "element": "ds-toast",
+      "name": "dismissed",
+      "replacement": "closed",
+      "since": "0.11.3",
+      "itemId": "0.11.3#toast-dismissed-output-never-existed"
+    },
+    {
+      "element": "ds-tree",
+      "name": "nodeSelect",
+      "replacement": "nodeSelected",
+      "since": "0.5.1",
+      "itemId": "0.5.1#tree-nodeselect-output-rename"
+    }
+  ],
+  "values": [
+    {
+      "element": "ds-autocomplete",
+      "attribute": "maxVisibleChips",
+      "value": "null",
+      "replacement": "maxVisibleChips=\"all\"",
+      "since": "0.10.2",
+      "itemId": "0.10.2#max-visible-chips-null-is-unset-autocomplete"
+    },
+    {
+      "element": "ds-button",
+      "attribute": "size",
+      "value": "l",
+      "replacement": "size=\"md\"",
+      "since": "0.4.0",
+      "itemId": "0.4.0#ds-button-size-legacy-tier"
+    },
+    {
+      "element": "ds-button",
+      "attribute": "size",
+      "value": "m",
+      "replacement": "size=\"sm\"",
+      "since": "0.4.0",
+      "itemId": "0.4.0#ds-button-size-legacy-tier"
+    },
+    {
+      "element": "ds-button",
+      "attribute": "size",
+      "value": "s",
+      "replacement": "size=\"sm\"",
+      "since": "0.4.0",
+      "itemId": "0.4.0#ds-button-size-legacy-tier"
+    },
+    {
+      "element": "ds-button",
+      "attribute": "variant",
+      "value": "error",
+      "replacement": "color=\"error\"",
+      "since": "0.4.0",
+      "itemId": "0.4.0#ds-button-variant-axis-split"
+    },
+    {
+      "element": "ds-button",
+      "attribute": "variant",
+      "value": "primary",
+      "replacement": null,
+      "since": "0.4.0",
+      "itemId": "0.4.0#ds-button-variant-axis-split"
+    },
+    {
+      "element": "ds-button",
+      "attribute": "variant",
+      "value": "secondary",
+      "replacement": "variant=\"tonal\"",
+      "since": "0.4.0",
+      "itemId": "0.4.0#ds-button-variant-axis-split"
+    },
+    {
+      "element": "ds-button",
+      "attribute": "variant",
+      "value": "success",
+      "replacement": "color=\"success\"",
+      "since": "0.4.0",
+      "itemId": "0.4.0#ds-button-variant-axis-split"
+    },
+    {
+      "element": "ds-button",
+      "attribute": "variant",
+      "value": "tertiary",
+      "replacement": "variant=\"ghost\"",
+      "since": "0.4.0",
+      "itemId": "0.4.0#ds-button-variant-axis-split"
+    },
+    {
+      "element": "ds-button",
+      "attribute": "variant",
+      "value": "warning",
+      "replacement": "color=\"warning\"",
+      "since": "0.4.0",
+      "itemId": "0.4.0#ds-button-variant-axis-split"
+    },
+    {
+      "element": "ds-chart",
+      "attribute": "secondaryAxisMode",
+      "value": "independent",
+      "replacement": "secondaryAxisMode=\"dual-grid\"",
+      "since": "0.13.4",
+      "itemId": "0.13.4#chart-secondary-axis-mode-values-renamed"
+    },
+    {
+      "element": "ds-chart",
+      "attribute": "secondaryAxisMode",
+      "value": "rounded",
+      "replacement": "secondaryAxisMode=\"aligned\"",
+      "since": "0.13.4",
+      "itemId": "0.13.4#chart-secondary-axis-mode-values-renamed"
+    },
+    {
+      "element": "ds-chart",
+      "attribute": "secondaryAxisMode",
+      "value": "stacked",
+      "replacement": "secondaryAxisMode=\"split\"",
+      "since": "0.13.4",
+      "itemId": "0.13.4#chart-secondary-axis-mode-values-renamed"
+    },
+    {
+      "element": "ds-line-chart",
+      "attribute": "tooltipAnchor",
+      "value": "point",
+      "replacement": "tooltipAnchor=\"reading\"",
+      "since": "0.14.5",
+      "itemId": "0.14.5#line-chart-tooltip-anchor-point-renamed"
+    },
+    {
+      "element": "ds-line-chart",
+      "attribute": "yAxisMode",
+      "value": "independent",
+      "replacement": "yAxisMode=\"dual-grid\"",
+      "since": "0.13.4",
+      "itemId": "0.13.4#line-chart-axis-mode-values-renamed"
+    },
+    {
+      "element": "ds-line-chart",
+      "attribute": "yAxisMode",
+      "value": "rounded",
+      "replacement": "yAxisMode=\"aligned\"",
+      "since": "0.13.4",
+      "itemId": "0.13.4#line-chart-axis-mode-values-renamed"
+    },
+    {
+      "element": "ds-line-chart",
+      "attribute": "yAxisMode",
+      "value": "stacked",
+      "replacement": "yAxisMode=\"split\"",
+      "since": "0.13.4",
+      "itemId": "0.13.4#line-chart-axis-mode-values-renamed"
+    },
+    {
+      "element": "ds-multi-select",
+      "attribute": "maxVisibleChips",
+      "value": "null",
+      "replacement": "maxVisibleChips=\"all\"",
+      "since": "0.10.2",
+      "itemId": "0.10.2#max-visible-chips-null-is-unset-multi-select"
+    },
+    {
+      "element": "ds-progress",
+      "attribute": "variant",
+      "value": "indeterminate",
+      "replacement": "indeterminate",
+      "since": "0.5.1",
+      "itemId": "0.5.1#progress-variant-remap"
+    },
+    {
+      "element": "ds-progress",
+      "attribute": "variant",
+      "value": "warn",
+      "replacement": "variant=\"warning\"",
+      "since": "0.5.1",
+      "itemId": "0.5.1#progress-variant-remap"
+    },
+    {
+      "element": "ds-stat",
+      "attribute": "variant",
+      "value": "danger",
+      "replacement": "variant=\"error\"",
+      "since": "0.5.1",
+      "itemId": "0.5.1#stat-variant-danger-remap"
+    }
+  ],
+  "selectors": [
+    {
+      "name": "ds-app-shell",
+      "replacement": "ds-app-layout",
+      "since": "0.7.0",
+      "itemId": "0.7.0#app-shell-selector-to-app-layout"
+    },
+    {
+      "name": "ds-auth-shell",
+      "replacement": "ds-auth-layout",
+      "since": "0.9.0",
+      "itemId": "0.9.0#auth-shell-selector-to-auth-layout"
+    },
+    {
+      "name": "ds-combobox",
+      "replacement": "ds-autocomplete",
+      "since": "0.5.0",
+      "itemId": "0.5.0#combobox-selector-rename"
+    },
+    {
+      "name": "ds-donut-chart",
+      "replacement": "ds-pie-chart",
+      "since": "0.13.4",
+      "itemId": "0.13.4#donut-chart-renamed-to-pie-chart"
+    },
+    {
+      "name": "ds-dropdown",
+      "replacement": "ds-select",
+      "since": "0.5.0",
+      "itemId": "0.5.0#dropdown-removed-use-select"
+    },
+    {
+      "name": "ds-meter",
+      "replacement": "ds-bar",
+      "since": "0.13.3",
+      "itemId": "0.13.3#meter-renamed-to-bar"
+    },
+    {
+      "name": "ds-progress",
+      "replacement": "ds-bar",
+      "since": "0.13.3",
+      "itemId": "0.13.3#progress-renamed-to-bar"
+    }
+  ],
+  "symbols": [
+    {
+      "name": "AppShellComponent",
+      "replacement": "AppLayoutComponent",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#app-shell-class-to-app-layout"
+    },
+    {
+      "name": "AuthShellComponent",
+      "replacement": "AuthLayoutComponent",
+      "renamed": true,
+      "since": "0.9.0",
+      "itemId": "0.9.0#auth-shell-class-to-auth-layout"
+    },
+    {
+      "name": "AutocompleteSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#size-type-autocomplete-to-dssize"
+    },
+    {
+      "name": "BadgeVariant",
+      "replacement": null,
+      "renamed": false,
+      "since": "0.5.1",
+      "itemId": "0.5.1#badge-status-dot-types-removed"
+    },
+    {
+      "name": "ButtonSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#size-type-button-to-dssize"
+    },
+    {
+      "name": "CheckboxSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#size-type-checkbox-to-dssize"
+    },
+    {
+      "name": "ComboboxComponent",
+      "replacement": "AutocompleteComponent",
+      "renamed": true,
+      "since": "0.5.0",
+      "itemId": "0.5.0#combobox-component-class-rename"
+    },
+    {
+      "name": "ComboboxOption",
+      "replacement": "AutocompleteOption",
+      "renamed": true,
+      "since": "0.5.0",
+      "itemId": "0.5.0#combobox-option-type-rename"
+    },
+    {
+      "name": "ComboboxSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.5.0",
+      "itemId": "0.5.0#combobox-size-type-rename"
+    },
+    {
+      "name": "DatePickerSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#size-type-date-picker-to-dssize"
+    },
+    {
+      "name": "DrawerSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#size-type-drawer-to-dssize"
+    },
+    {
+      "name": "DropdownComponent",
+      "replacement": "SelectComponent",
+      "renamed": true,
+      "since": "0.5.0",
+      "itemId": "0.5.0#dropdown-component-class-rename"
+    },
+    {
+      "name": "DropdownOption",
+      "replacement": "SelectOption",
+      "renamed": true,
+      "since": "0.5.0",
+      "itemId": "0.5.0#dropdown-option-type-rename"
+    },
+    {
+      "name": "DropdownSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.5.0",
+      "itemId": "0.5.0#dropdown-size-type-rename"
+    },
+    {
+      "name": "DS_TOAST_CONFIG",
+      "replacement": "provideDsConfig({ toast: { maxVisible: 5 } })",
+      "renamed": false,
+      "since": "0.11.4",
+      "itemId": "0.11.4#toast-config-token-removed"
+    },
+    {
+      "name": "DS_TOAST_POSITION",
+      "replacement": "provideDsConfig({ toast: { position: { verticalPosition: 'bottom' } } })",
+      "renamed": false,
+      "since": "0.11.4",
+      "itemId": "0.11.4#toast-position-token-removed"
+    },
+    {
+      "name": "DsScrollReset",
+      "replacement": "DsAppLayoutScrollReset",
+      "renamed": true,
+      "since": "0.13.4",
+      "itemId": "0.13.4#app-layout-services-carry-their-component"
+    },
+    {
+      "name": "dsTooltipClippedLead",
+      "replacement": null,
+      "renamed": false,
+      "since": "the next release",
+      "itemId": "unreleased#tooltip-clipped-lead-removed"
+    },
+    {
+      "name": "IconButtonSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#size-type-icon-button-to-dssize"
+    },
+    {
+      "name": "InputSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#size-type-input-to-dssize"
+    },
+    {
+      "name": "LayoutNavigationService",
+      "replacement": "AppLayoutNavigationService",
+      "renamed": true,
+      "since": "0.13.4",
+      "itemId": "0.13.4#app-layout-services-carry-their-component"
+    },
+    {
+      "name": "LayoutScrollService",
+      "replacement": "AppLayoutScrollService",
+      "renamed": true,
+      "since": "0.13.4",
+      "itemId": "0.13.4#app-layout-services-carry-their-component"
+    },
+    {
+      "name": "LineChartAxisMode",
+      "replacement": "ChartAxisMode",
+      "renamed": true,
+      "since": "0.13.4",
+      "itemId": "0.13.4#line-chart-axis-mode-is-chart-axis-mode"
+    },
+    {
+      "name": "LineChartGaps",
+      "replacement": "ChartGaps",
+      "renamed": true,
+      "since": "0.13.4",
+      "itemId": "0.13.4#chart-gaps-is-one-type"
+    },
+    {
+      "name": "LineChartPoint",
+      "replacement": "LineChartReading",
+      "renamed": true,
+      "since": "0.13.4",
+      "itemId": "0.13.4#line-chart-point-is-a-reading"
+    },
+    {
+      "name": "LineSeriesGaps",
+      "replacement": "ChartGaps",
+      "renamed": true,
+      "since": "0.13.4",
+      "itemId": "0.13.4#chart-gaps-is-one-type"
+    },
+    {
+      "name": "NumberStepperSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#size-type-number-stepper-to-dssize"
+    },
+    {
+      "name": "RadioSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#size-type-radio-to-dssize"
+    },
+    {
+      "name": "RangeValue",
+      "replacement": "DateRangeValue",
+      "renamed": true,
+      "since": "0.13.4",
+      "itemId": "0.13.4#date-range-value-is-qualified"
+    },
+    {
+      "name": "SelectSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#size-type-select-to-dssize"
+    },
+    {
+      "name": "ShellScrollService",
+      "replacement": "AppLayoutScrollService",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#shell-scroll-service-to-layout-scroll-service"
+    },
+    {
+      "name": "SpinnerSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#size-type-spinner-to-dssize"
+    },
+    {
+      "name": "SwitchSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#size-type-switch-to-dssize"
+    },
+    {
+      "name": "TextareaSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#size-type-textarea-to-dssize"
+    },
+    {
+      "name": "TimePickerSize",
+      "replacement": "DsSize",
+      "renamed": true,
+      "since": "0.7.0",
+      "itemId": "0.7.0#size-type-time-picker-to-dssize"
+    }
+  ],
+  "members": [
+    {
+      "owner": "AlertComponent",
+      "name": "dismissed",
+      "replacement": "closed",
+      "since": "0.5.1",
+      "itemId": "0.5.1#alert-dismissed-output-rename"
+    },
+    {
+      "owner": "AutocompleteComponent",
+      "name": "optionGroups",
+      "replacement": "options",
+      "since": "0.11.1",
+      "itemId": "0.11.1#autocomplete-option-groups-input-removed"
+    },
+    {
+      "owner": "BannerComponent",
+      "name": "dismissed",
+      "replacement": "closed",
+      "since": "0.11.3",
+      "itemId": "0.11.3#banner-dismissed-output-never-existed"
+    },
+    {
+      "owner": "ButtonComponent",
+      "name": "buttonRef",
+      "replacement": "controlRef",
+      "since": "0.12.3",
+      "itemId": "0.12.3#button-ref-renamed-and-widened"
+    },
+    {
+      "owner": "CalendarDayComponent",
+      "name": "daySelect",
+      "replacement": "daySelected",
+      "since": "0.5.1",
+      "itemId": "0.5.1#calendar-day-dayselect-output-rename"
+    },
+    {
+      "owner": "ChartComponent",
+      "name": "cursorPin",
+      "replacement": "pinOnClick",
+      "since": "0.14.5",
+      "itemId": "0.14.5#chart-cursor-pin-renamed"
+    },
+    {
+      "owner": "DatePickerComponent",
+      "name": "defaultMonth",
+      "replacement": "defaultDate",
+      "since": "0.6.3",
+      "itemId": "0.6.3#date-picker-default-month-input-rename"
+    },
+    {
+      "owner": "DropzoneComponent",
+      "name": "single",
+      "replacement": null,
+      "since": "0.13.4",
+      "itemId": "0.13.4#dropzone-single-removed"
+    },
+    {
+      "owner": "InputComponent",
+      "name": "floating",
+      "replacement": null,
+      "since": "0.10.0",
+      "itemId": "0.10.0#input-floating-removed"
+    },
+    {
+      "owner": "InputComponent",
+      "name": "withAddon",
+      "replacement": null,
+      "since": "0.7.0",
+      "itemId": "0.7.0#input-with-addon-removed"
+    },
+    {
+      "owner": "InputComponent",
+      "name": "withAddonRight",
+      "replacement": null,
+      "since": "0.7.0",
+      "itemId": "0.7.0#input-with-addon-right-removed"
+    },
+    {
+      "owner": "MenuItemComponent",
+      "name": "danger",
+      "replacement": "error",
+      "since": "0.5.1",
+      "itemId": "0.5.1#menu-item-danger-input-rename"
+    },
+    {
+      "owner": "ModalCardComponent",
+      "name": "danger",
+      "replacement": "error",
+      "since": "0.5.1",
+      "itemId": "0.5.1#modal-card-danger-input-rename"
+    },
+    {
+      "owner": "ModalComponent",
+      "name": "danger",
+      "replacement": "error",
+      "since": "0.5.1",
+      "itemId": "0.5.1#modal-danger-input-rename"
+    },
+    {
+      "owner": "PaginationComponent",
+      "name": "pageChange",
+      "replacement": "currentPageChange",
+      "since": "0.11.3",
+      "itemId": "0.11.3#pagination-page-change-output-never-existed"
+    },
+    {
+      "owner": "SplitButtonComponent",
+      "name": "itemSelect",
+      "replacement": "itemSelected",
+      "since": "0.5.1",
+      "itemId": "0.5.1#split-button-itemselect-output-rename"
+    },
+    {
+      "owner": "StepperComponent",
+      "name": "stepClick",
+      "replacement": "stepClicked",
+      "since": "0.5.1",
+      "itemId": "0.5.1#stepper-stepclick-output-rename"
+    },
+    {
+      "owner": "TableColumn",
+      "name": "srLabel",
+      "replacement": "screenReaderLabel",
+      "since": "0.13.4",
+      "itemId": "0.13.4#table-column-sr-label-spelled-out"
+    },
+    {
+      "owner": "TableComponent",
+      "name": "clientSort",
+      "replacement": "sortMode",
+      "since": "0.8.0",
+      "itemId": "0.8.0#table-client-sort-replaced-by-sort-mode"
+    },
+    {
+      "owner": "TableComponent",
+      "name": "exportButton",
+      "replacement": null,
+      "since": "0.12.1",
+      "itemId": "0.12.1#table-export-behind-directive"
+    },
+    {
+      "owner": "TableComponent",
+      "name": "rowClick",
+      "replacement": "rowClicked",
+      "since": "0.11.3",
+      "itemId": "0.11.3#table-row-click-output-never-existed"
+    },
+    {
+      "owner": "TableComponent",
+      "name": "sortDir",
+      "replacement": "sortDirection",
+      "since": "0.13.4",
+      "itemId": "0.13.4#table-sort-dir-spelled-out"
+    },
+    {
+      "owner": "TableComponent",
+      "name": "sortDirChange",
+      "replacement": "sortDirectionChange",
+      "since": "0.13.4",
+      "itemId": "0.13.4#table-sort-dir-change-spelled-out"
+    },
+    {
+      "owner": "TabsComponent",
+      "name": "tabClose",
+      "replacement": "tabClosed",
+      "since": "0.5.1",
+      "itemId": "0.5.1#tabs-tabclose-output-rename"
+    },
+    {
+      "owner": "ToastComponent",
+      "name": "dismissed",
+      "replacement": "closed",
+      "since": "0.11.3",
+      "itemId": "0.11.3#toast-dismissed-output-never-existed"
+    },
+    {
+      "owner": "TreeComponent",
+      "name": "nodeSelect",
+      "replacement": "nodeSelected",
+      "since": "0.5.1",
+      "itemId": "0.5.1#tree-nodeselect-output-rename"
+    }
+  ]
+}

@@ -6,6 +6,8 @@
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-group-segment' as field-group-segment;
 @use '../../styles/field-state' as field-state;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract:
    Option label - Single line, ellipsis at control width. Panel scrolls internally past its 320px

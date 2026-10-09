@@ -2,6 +2,8 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 @include chart-motion.grows-up('.column', '.bar');
 @include chart-motion.follows('.value', var(--ds-motion-chart-mark-grow-duration));
 @include chart-frame.no-bounding-box-focus('.column');

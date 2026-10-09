@@ -22,17 +22,17 @@
     Long trail · ellipsis collapse
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [maxItems]="4"
-    </code> keeps first and last crumbs
-    and collapses the middle to <code class="t-mono-inline">… N more</code>. Set
-    it on any deep trail: the row is <code class="t-mono-inline">nowrap</code> +
-    <code class="t-mono-inline">
-      overflow: hidden
-    </code>; uncapped, the current page
-    clips off the end.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        [maxItems]="4"
+      </code> - keeps the first and last crumbs, collapses the middle to <code class="t-mono-inline">… N more</code>.
+    </li>
+
+    <li>
+      Set it on any deep trail: the row is <code class="t-mono-inline">nowrap</code> + <code class="t-mono-inline">overflow-x: clip</code>, so uncapped, the current page clips off.
+    </li>
+  </ul>
 
   <div class="stage">
     <ds-breadcrumbs
@@ -176,17 +176,48 @@
     Modified clicks
   </h3>
 
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Click
+        </th>
+
+        <th>
+          Effect
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          Plain
+        </td>
+
+        <td>
+          Prevents the default, emits <code class="t-mono-inline">(navigate)</code>; unbound, does nothing.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            Ctrl
+          </kbd>, <kbd>Cmd</kbd>, <kbd>Shift</kbd>, <kbd>Alt</kbd>, middle button
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            href
+          </code> to the browser, emits nothing.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
   <p class="block-desc t-s">
-    A plain click prevents the default and emits
-    <code class="t-mono-inline">
-      (navigate)
-    </code>. Ctrl, Cmd, Shift, Alt or a
-    non-primary button (middle) leaves <code class="t-mono-inline">href</code>
-    to the browser and emits nothing. Bind it and route with
-    <code class="t-mono-inline">
-      Router.navigateByUrl(item.href)
-    </code>;
-    unbound, a plain click does nothing.
+    Route with <code class="t-mono-inline">Router.navigateByUrl(item.href)</code>.
   </p>
 
   <div class="stage">
@@ -229,32 +260,23 @@
     Service-driven (route-aware apps)
   </h3>
 
-  <p class="block-desc t-s">
-    Without <code class="t-mono-inline">[items]</code> the component reads
-    <code class="t-mono-inline">
-      BreadcrumbsService.items
-    </code>, fed from route
-    data or an effect. It is
-    <code class="t-mono-inline">
-      providedIn: 'root'
-    </code>, so a trail persists
-    across routes; each page calls
-    <code class="t-mono-inline">
-      set
-    </code> (or
-    <code class="t-mono-inline">
-      clear
-    </code>).
-    <code class="t-mono-inline">
-      push
-    </code>,
-    <code class="t-mono-inline">
-      pop
-    </code> and
-    <code class="t-mono-inline">
-      replaceLast
-    </code> edit the end of the trail.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      No <code class="t-mono-inline">[items]</code> - reads <code class="t-mono-inline">BreadcrumbsService.items</code>, fed from route data or an effect.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        providedIn: 'root'
+      </code>: a trail persists across routes; each page calls <code class="t-mono-inline">set</code> (or <code class="t-mono-inline">clear</code>).
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        push
+      </code>, <code class="t-mono-inline">pop</code>, <code class="t-mono-inline">replaceLast</code> - edit the end of the trail.
+    </li>
+  </ul>
 
   <pre
     class="snippet t-mono"><code>{{ '// in a page component or route effect' }}

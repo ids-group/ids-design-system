@@ -17,7 +17,7 @@
         "exact": "yAxisMode=\"exact\""
       },
       "action": "On every `ds-line-chart`, rewrite `yAxisMode=\"rounded\"` to `yAxisMode=\"aligned\"`, `yAxisMode=\"independent\"` to `yAxisMode=\"dual-grid\"` and `yAxisMode=\"stacked\"` to `yAxisMode=\"split\"`. `yAxisMode=\"exact\"` is unchanged. Retype any field, constant or return value that supplies one of those strings.",
-      "appliesWhen": "Only `yAxisMode` on `ds-line-chart`, and any TypeScript typed as `ChartAxisMode` or `ChartAxisMode` that feeds it. `stack` on `ds-column-chart` keeps its own `\"stacked\"`, which is a different input with a different meaning and is NOT renamed.",
+      "appliesWhen": "Only `yAxisMode` on `ds-line-chart`, and any TypeScript typed as `ChartAxisMode` or `LineChartAxisMode` that feeds it. `stack` on `ds-column-chart` keeps its own `\"stacked\"`, which is a different input with a different meaning and is NOT renamed.",
       "pitfall": "An unknown string does not error. Angular assigns it, no mode matches, and the plot silently falls back to one shared grid - a chart that still renders and is measured against the wrong axis. A build that passes proves nothing here; only the three old strings being gone does.",
       "restore": null,
       "searchHints": [
@@ -33,6 +33,7 @@
         "yAxisMode=\"stacked\"",
         "[yAxisMode]=",
         "ChartAxisMode",
+        "LineChartAxisMode",
         ": 'rounded'",
         "= 'rounded'",
         "'independent'",
@@ -148,7 +149,7 @@
         "ToastRegionComponent"
       ],
       "verify": "Every subclass of the listed components builds, and any member it declares that the base now also declares carries `override`.",
-      "note": "`ChartComponent` gained 21 members and `LineChartComponent` 24 behind the new axis, cursor, curve and stack inputs, while `LineChartComponent` lost 51 geometry members now drawn by `ds-chart`; `LineSeriesComponent` gained 17. `ButtonComponent` gained `align`, `PaginationComponent` `size`, `layout`, `sizeResolved` and `navClass`, `SegmentedComponent` `joined`, `DropzoneComponent` `emitPicked`, `ToastRegionComponent` `showQueueCount` and `queuedLabel`, `AlertComponent` and `BannerComponent` `announceResolved`, and every chart the defaults and table rows it hands `ds-chart-data-table`. `DropzoneComponent` lost `single`; `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` for `sortDirection`; `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames. A subclass overriding an old name now overrides nothing."
+      "note": "`ChartComponent` gained 21 members and `LineChartComponent` gained 24 behind the new axis, cursor, curve and stack inputs, while `LineChartComponent` lost 51 geometry members now drawn by `ds-chart`; `LineSeriesComponent` gained 18 and lost `rovingIndex` and `tabStopIndex`. `ButtonComponent` gained `align`, `PaginationComponent` `size`, `layout`, `sizeResolved` and `navClass`, `SegmentedComponent` `joined`, `DropzoneComponent` `emitPicked`, `ToastRegionComponent` `showQueueCount` and `queuedLabel`, `AlertComponent` and `BannerComponent` `announceResolved`, and every chart the defaults and table rows it hands `ds-chart-data-table` (`dataTableColumns` and `dataTableRows`, the funnel's `tableRows`). `DropzoneComponent` lost `single`; `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` and `sortDirChange` for `sortDirection` and `sortDirectionChange`; `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames. A subclass overriding an old name now overrides nothing."
     },
     {
       "id": "bar-chart-value-accepts-a-range",
@@ -157,7 +158,7 @@
       "new": null,
       "surface": "typescript",
       "action": "Nothing to write. Where you READ a row's `value` back as a number - summing it, comparing it, passing it on - handle the `[low, high]` pair the type now also allows.",
-      "appliesWhen": "Only code that reads `BarChartRow['value']` back, or declares its own value of that type. Passing a plain number into `data` is unchanged and draws exactly what it did.",
+      "appliesWhen": "Only code that reads `BarChartRow['value']` back, or declares its own value of that type. Passing a plain number of zero or more into `data` draws exactly what it did; a negative one now draws a bar of its own length from the track's start, and its value prints as `0`.",
       "pitfall": "The widening is source-compatible for whoever WRITES the value and breaking for whoever reads it: `total += row.value` is TS2365 now, and a subclass or a mapped type over `BarChartRow` can fail on the invariant position. A chart that only receives data sees nothing at all.",
       "restore": null,
       "searchHints": [
@@ -225,9 +226,9 @@
     },
     {
       "id": "pie-chart-thickness-is-now-inner-radius",
-      "kind": "input-rename",
+      "kind": "behavior",
       "old": "ds-donut-chart[thickness]",
-      "new": "ds-pie-chart[innerRadius]",
+      "new": null,
       "surface": [
         "template",
         "typescript"
@@ -1866,10 +1867,10 @@
     {
       "id": "token-tracking-spelled-out-as-letter-spacing",
       "kind": "token-rename",
-      "old": "--ds-*-tracking",
-      "new": "--ds-*-letter-spacing",
+      "old": "--ds-button-tracking, --ds-field-label-tracking, --ds-modal-eyebrow-tracking, --ds-sidenav-footer-head-tracking, --ds-table-head-tracking",
+      "new": "--ds-button-letter-spacing, --ds-field-label-letter-spacing, --ds-modal-eyebrow-letter-spacing, --ds-sidenav-footer-head-letter-spacing, --ds-table-head-letter-spacing",
       "surface": "style",
-      "action": "Rewrite a `--ds-*` custom property ending in `-tracking` to end in `-letter-spacing`: `--ds-button-tracking` becomes `--ds-button-letter-spacing`.",
+      "action": "Rewrite each of the five to end in `-letter-spacing`: `--ds-button-tracking` becomes `--ds-button-letter-spacing`.",
       "appliesWhen": "5 tokens. `tracking` is typographic jargon, not a CSS property, so nothing else is affected. The description list's term and details tokens change prefix as well as suffix and are covered end to end by `description-item-tokens-leave-the-list-namespace`, so do not apply this rule to them.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
       "restore": null,
@@ -1883,10 +1884,10 @@
     {
       "id": "token-transform-spelled-out-as-text-transform",
       "kind": "token-rename",
-      "old": "--ds-*-transform",
-      "new": "--ds-*-text-transform",
+      "old": "--ds-field-label-transform, --ds-modal-eyebrow-transform",
+      "new": "--ds-field-label-text-transform, --ds-modal-eyebrow-text-transform",
       "surface": "style",
-      "action": "Rewrite a `--ds-*` custom property ending in `-transform` to end in `-text-transform`: `--ds-field-label-transform` becomes `--ds-field-label-text-transform`.",
+      "action": "Rewrite each of the two to end in `-text-transform`: `--ds-field-label-transform` becomes `--ds-field-label-text-transform`.",
       "appliesWhen": "2 tokens, both of them casing hooks. Neither ever carried the CSS `transform` property, which is what the old name read as. The description list's term and details tokens change prefix as well as suffix and are covered end to end by `description-item-tokens-leave-the-list-namespace`, so do not apply this rule to them.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
       "restore": null,
@@ -1918,8 +1919,8 @@
     {
       "id": "description-item-tokens-leave-the-list-namespace",
       "kind": "token-rename",
-      "old": "--ds-description-list-term-* | --ds-description-list-details-*",
-      "new": "--ds-description-item-term-* | --ds-description-item-details-*",
+      "old": "--ds-description-list-term-color, --ds-description-list-term-font-size, --ds-description-list-term-weight, --ds-description-list-term-tracking, --ds-description-list-term-transform, --ds-description-list-details-color, --ds-description-list-details-font-size, --ds-description-list-details-weight",
+      "new": "--ds-description-item-term-color, --ds-description-item-term-font-size, --ds-description-item-term-font-weight, --ds-description-item-term-letter-spacing, --ds-description-item-term-text-transform, --ds-description-item-details-color, --ds-description-item-details-font-size, --ds-description-item-details-font-weight",
       "surface": "style",
       "action": "Rewrite the eight term and details tokens onto the item, spelling out the three abbreviated suffixes as you go: `--ds-description-list-term-color` becomes `--ds-description-item-term-color`, `-term-font-size` keeps its name under the new prefix, and `-term-weight`, `-term-tracking`, `-term-transform`, `-details-weight` become `--ds-description-item-term-font-weight`, `-term-letter-spacing`, `-term-text-transform` and `-details-font-weight`. `-details-color` and `-details-font-size` change prefix only.",
       "appliesWhen": "Only those eight, and this item replaces the weight, tracking and transform spell-out rules for them: they change prefix as well as suffix, so applying both would leave a name that has never existed. `--ds-description-list-label-w`, `-row-gap` and `-col-gap` stay on the list, because the list is what they size.",
@@ -1943,8 +1944,8 @@
     {
       "id": "segmented-parts-are-segments",
       "kind": "token-rename",
-      "old": "--ds-segmented-btn-*",
-      "new": "--ds-segmented-segment-*",
+      "old": "--ds-segmented-btn-border, --ds-segmented-btn-h, --ds-segmented-btn-pad-x",
+      "new": "--ds-segmented-segment-border, --ds-segmented-segment-height, --ds-segmented-segment-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` to `--ds-segmented-segment-border`, `--ds-segmented-segment-height` and `--ds-segmented-segment-padding-x`.",
       "appliesWhen": "Only the segmented control's three part tokens, and it replaces the `-btn`, dimension and padding renames for them: those three carry a namespace change as well as a spelling one, so this item is the whole instruction and the others do not apply. `--ds-button-*`, `--ds-split-button-*`, `--ds-icon-button-*` and the pagination buttons all style real buttons and keep their names.",
@@ -1970,7 +1971,7 @@
       "new": "--ds-tabs-gap",
       "surface": "style",
       "action": "Rewrite `--ds-tabs-strip-gap` to `--ds-tabs-gap`.",
-      "appliesWhen": "The gap between tabs in the strip. The panel's own spacing is `--ds-tabs-panel-padding-top` and is unchanged.",
+      "appliesWhen": "The gap between tabs in the strip. The panel's own spacing is `--ds-tabs-panel-padding-top`, renamed from `--ds-tabs-panel-pad-top` with its default unchanged.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported.",
       "restore": null,
       "searchHints": [
@@ -2171,7 +2172,7 @@
       "surface": "template",
       "action": "Rename the `multi` binding on every `ds-accordion` to `multiple`.",
       "appliesWhen": "Only `ds-accordion`. `ds-multi-select` is a component name and is unchanged, and `ds-autocomplete[multiple]` already spelled it out.",
-      "pitfall": "The default is `true`, so a `multi` attribute left behind reads as unset and the accordion keeps opening several panels - which is what most callers wanted anyway. A consumer who wrote `[multi]=\"false\"` to get a single-open accordion silently gets the opposite, with no error.",
+      "pitfall": "The default is `true`, so a `multi` attribute left behind reads as unset and the accordion keeps opening several panels - which is what most callers wanted anyway. A static `multi=\"false\"` attribute left behind is silently ignored and the accordion opens several panels again; a `[multi]` binding fails the build.",
       "restore": null,
       "searchHints": [
         "multi",
@@ -2410,7 +2411,7 @@
       "new": null,
       "surface": "style",
       "action": "None, unless a toast, a banner or an inline alert should keep fading in: then set its `--ds-<surface>-enter-keyframes` to `ds-fade-in`. Separately, remove any `--ds-toast-enter-scale`, `--ds-banner-enter-scale` or `--ds-alert-enter-scale` value that was not meant to take effect.",
-      "appliesWhen": "Only the entrance of ds-toast, ds-banner and ds-alert. ds-modal and the overlay panels already grew and are unchanged; ds-drawer and ds-bottom-sheet keep ds-slide-edge-in, and the loading overlay keeps ds-fade-in. An app that already set --ds-toast-enter-keyframes, --ds-banner-enter-keyframes or --ds-alert-enter-keyframes sees no change.",
+      "appliesWhen": "Only the entrance of ds-toast, ds-banner and ds-alert. ds-modal already grew and is unchanged; the overlay panels change in the same release under overlay-pane-enters-with-scale-in; ds-drawer and ds-bottom-sheet keep ds-slide-edge-in, and the loading overlay keeps ds-fade-in. An app that already set --ds-toast-enter-keyframes, --ds-banner-enter-keyframes or --ds-alert-enter-keyframes sees no change.",
       "pitfall": "The growth reads --ds-<surface>-enter-scale, which these three have declared all along while ds-fade-in ignored it. An app that set that token expecting it to do nothing now gets the scale it asked for - a value like 0.5 was inert before and is a visible lurch now.",
       "restore": ":root { --ds-toast-enter-keyframes: ds-fade-in; --ds-banner-enter-keyframes: ds-fade-in; --ds-alert-enter-keyframes: ds-fade-in; }",
       "searchHints": [
@@ -2459,18 +2460,18 @@
     "`ds-line-chart` takes `stack`: `'none'` (the default, and what every chart already drew), `'stacked'` or `'normalized'`. Nothing to change - a chart that sets nothing is unchanged. Only a series with `area: true` fills, stacking runs per axis, and `stack=\"stacked\"` is not `yAxisMode=\"split\"`: series on top of each other, against two plots one above the other.",
     "`ds-heatmap-chart` is new, from `@ids-group-ltd/ids-design-system/components/heatmap-chart` and from the package root, with `HeatmapChartRow` and `HeatmapChartCell`. Purely additive - nothing to change. It has no `dataTable` input on purpose: colour is the only channel carrying the quantity on the grid, so the annex table and the colour scale are always drawn.",
     "`ds-waterfall-chart` is new, from `@ids-group-ltd/ids-design-system/components/waterfall-chart` and from the package root, with `WaterfallChartBar` and `WaterfallChartKind`. Two tokens come with it, `--ds-chart-positive-color` and `--ds-chart-negative-color`, pointing at the palette's two lead hues rather than at `--success` and `--error`. Purely additive - nothing to change.",
-    "A heat scale is new: `--ds-chart-heat-1-color` through `--ds-chart-heat-8-color`, the same hue across the full lightness range for a grid where magnitude is read from the step between two colours. `--ds-chart-ramp-*` is unchanged and `ds-funnel-chart` looks exactly as it did. Purely additive - nothing to change.",
+    "A heat scale is new: `--ds-chart-heat-1-color` through `--ds-chart-heat-8-color`, the same hue across the full lightness range for a grid where magnitude is read from the step between two colours. `--ds-chart-ramp-*` is unchanged, so `ds-funnel-chart` keeps its stage colours. Purely additive - nothing to change.",
     "`ds-scatter-chart` is new, from `@ids-group-ltd/ids-design-system/components/scatter-chart` and from the package root, with `ScatterChartSeries`, `ScatterChartDecimator`, `ScatterChartReading` and `ScatterPoint`. Purely additive - nothing to change. It thins its own data past four times the plot's width in marks and says so under the plot; the annex table still lists every reading. `decimator` chooses between the two decimators or turns it off.",
     "A chart's category labels now turn 45 degrees when that lets all of them be drawn, and thin to every second or third only when a tilt is not enough. Nothing to change: it affects what a narrow chart draws, not what a template declares. A chart wide enough for its labels is unchanged.",
     "`ds-line-chart` takes `yAxisLabel` and `secondaryAxisLabel`, and `ds-chart` takes `axisLabel` and `secondaryAxisLabel`, naming what each axis counts. A line chart carrying two scales on one plot also tints each axis with the colour of the series measured against it, derived from the series rather than asked for. Purely additive - a chart with one scale is drawn exactly as before.",
     "The sixth categorical chart colour moves from `hsl(152deg 58% 41%)` to `hsl(148deg 58% 41%)`. It sat 5.3 from the second slot in OKLab, under the 6 the palette holds itself to, so a chart drawing both series handed the reader two greens to tell apart by eye. Nothing to change: a consumer reading `--chart-categorical-6` or `--ds-chart-series-6-color` keeps the same token and gets the new hue.",
-    "Seven styling hooks close gaps a consumer was reaching past: `--ds-badge-letter-spacing`, `--ds-pagination-label-letter-spacing` and `-label-text-transform`, `--ds-option-color` for an unselected picker row, `--ds-dropdown-empty-color` and `-font-size` for the no-results line, and `--ds-autocomplete-input-font-size`. Every default is the value the component already drew, so nothing moves. Purely additive - nothing to change.",
+    "Seven styling hooks close gaps a consumer was reaching past: `--ds-badge-letter-spacing`, `--ds-pagination-label-letter-spacing` and `-label-text-transform`, `--ds-option-color` for an unselected picker row, `--ds-dropdown-empty-color` and `-font-size` for the no-results line, and `--ds-autocomplete-input-font-size`. Every default is the value the component already drew, except the pagination label's: `normal` and `none` replace the `letter-spacing` and `text-transform` it inherited, so a label under an ancestor that sets either stops following it. Purely additive - nothing to change.",
     "`ds-button` takes `align: 'center' | 'between'`. `'between'` pushes the label and a trailing icon to opposite edges, which only shows once `fullWidth` or a stretching cell widens the button past its contents. Default is unchanged. Purely additive - nothing to change.",
     "`ds-pagination` takes `size` (sm/md/lg, unset resolving `DS_CONFIG.control.size` then `sm`) and `layout: 'grouped' | 'spread'`. `'spread'` gives the nav full width and pushes the label and the controls apart. Both defaults draw what the component already drew. Purely additive - nothing to change.",
     "The internal `--_*` custom properties now mirror the public token they read: `--_alert-padding-y` resolves `--ds-alert-padding-y`, so an inspector showing the internal name gives the settable one by dropping `--_` for `--ds-`. 171 were brought into line; 25 keep a different name because they carry a distinction the public token does not, such as the drawer's three widths behind one `--ds-drawer-width`. Internal names are not API and nothing supported reads them - nothing to change.",
     "`ds-checkbox` takes three styling hooks its label already half had: `--ds-checkbox-row-align` for the box-and-label cross-alignment, `--ds-checkbox-gap` for the space between them, and `--ds-checkbox-message-indent` for the hint, which sits under the box by default and lines up with the label when set to the box plus the gap. Every default draws what the component drew before. Purely additive - nothing to change.",
     "`ds-segmented` takes `joined`. Off by default, which is the padded track every consumer draws today. On, the segments share their edges, adjacent borders collapse into one hairline and only the two ends carry the group radius - the shape a row of bordered chips wants. It needs `--ds-segmented-segment-border` set, because the shared edge IS the border. Purely additive.",
-    "`ChartStackOffset` and `stackOffsets` are published from the package root. The mark that takes them, `g[dsColumnSeries]`, was already published there, so its `offsets` input could be bound and not typed. Purely additive - nothing to change.",
+    "`ChartStackOffset` and `stackOffsets` are published from the package root, beside the `g[dsColumnSeries]` mark that takes them, which joins the root in this release too. Purely additive - nothing to change.",
     "`g[dsLineSeries]` takes `pinOnClick`, `dimOthers`, `patterns` and `stacked`, which brings it level with `g[dsColumnSeries]` and with what `ds-line-chart` draws. A consumer composing a plot out of the marks can now pin a reading, fade the other series, dash a line and stack the areas. Every default is off. Purely additive - nothing to change.",
     "`ds-chart` takes `maxSecondary`, which pins the ceiling of the second value axis the way `max` pins the first. Two plots read against each other need both pinned, or the second rescales under them when one loses its tallest reading. Purely additive - nothing to change.",
     "`ds-chart` takes `cursor`. `'category'` draws a band and a crosshair down the category under the pointer and reports it to every mark through the shared scales; `'none'`, the default, leaves the plot alone, which is what every chart drew before. Purely additive - nothing to change.",
@@ -2486,7 +2487,7 @@
     "An indeterminate ds-bar keeps its sliding chunk on the track for most of the cycle: the loop runs at a constant speed instead of on an ease curve that parked it at the extremes. Visual only, no code change.",
     "The table's loading scrim now starts below a head pinned with `--ds-table-head-height` (spelled `--ds-table-head-h` before this release, renamed by `table-head-h-is-table-head-height`); the order is your value, then the measured head row, then 40px. Nothing to change beyond that rename.",
     "`ds-chart` prints its error message in `--error` red rather than in the grey of its empty message, like the presets always did. The rule ships in `styles/chart-frame`. Nothing to change.",
-    "`--ds-funnel-chart-focus-color` / `-width` and `--ds-pie-chart-focus-color` / `-width` (spelled `--ds-donut-chart-` before this release) now reach the focus ring. They parsed and did nothing before, so a value already set for them starts taking effect."
+    "`--ds-funnel-chart-focus-color` / `-width` and `--ds-pie-chart-focus-color` / `-width` (spelled `--ds-donut-chart-` before this release) now reach the focus ring. They parsed and did nothing before, so a value already set for them starts taking effect. With neither pair set, a focused funnel stage or pie slice draws no ring: each chart's private pair falls back to `--focus-ring-color` / `--focus-ring-width`, which the same chart sets from that pair, a custom-property cycle that leaves both invalid. Set the chart's color and width tokens to get the ring back."
   ],
   "deleteList": []
 }

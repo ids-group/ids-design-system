@@ -51,7 +51,7 @@
       "old": "--<role>-subtle",
       "new": "--<role>-subtitle",
       "action": "Rename the suffix on all eight: `--border-subtle`, `--error-subtle`, `--info-subtle`, `--primary-subtle`, `--secondary-subtle`, `--success-subtle`, `--tertiary-subtle`, `--warning-subtle` each become `--<role>-subtitle`. A plain search-and-replace of `-subtle` to `-subtitle` inside a custom-property name does the whole set.",
-      "appliesWhen": "Only a stylesheet or template of yours that reads one of the eight by name. A consumer who never overrode a subtle token has nothing to do.",
+      "appliesWhen": "Only a stylesheet or template of yours that reads or sets one of the eight by name. A consumer who never names a subtle token has nothing to do.",
       "pitfall": "The old names do not error and do not warn — a `var(--primary-subtle)` that no longer resolves falls back to nothing, so the element loses its tint and keeps rendering. Only looking at the screen finds it.",
       "note": "Eight semantic tint tokens changed suffix: the `-subtle` family became `-subtitle` across border, error, info, primary, secondary, success, tertiary and warning. There is no `--surface-subtle` in this library and there never was.",
       "searchHints": [
@@ -114,7 +114,7 @@
     }
   ],
   "informational": [
-    "All nine `--*-subtle` semantic tokens became `--*-subtitle` in this release - border, primary, secondary, tertiary, surface, success, warning, error and info. Each has its own item above; no token keeps the old spelling, and no longer token is built on one of these names, so the nine renames are independent and can be applied in any order.",
+    "All eight `--*-subtle` semantic tokens became `--*-subtitle` in this release - border, primary, secondary, tertiary, success, warning, error and info. Each has its own item above; no token keeps the old spelling, and no longer token is built on one of these names, so the eight renames are independent and can be applied in any order.",
     "Theme re-skin guidance clarified in the shipped themes/README (brand roles retint from the --blue ramp; a fully calibrated brand may set --primary-* roles directly).",
     "Relicensed from proprietary (UNLICENSED) to MIT."
   ],

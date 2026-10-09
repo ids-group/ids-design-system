@@ -29,19 +29,59 @@
     Legend placement
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      end
-    </code> (default);
-    <code class="t-mono-inline">
-      bottom
-    </code> for narrow columns, keeping the
-    ring full size;
-    <code class="t-mono-inline">
-      none
-    </code> only when parts are named
-    elsewhere.
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          <code class="t-mono-inline">
+            legend
+          </code>
+        </th>
+
+        <th>
+          Use
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'end'
+          </code> (default)
+        </td>
+
+        <td>
+          Beside the ring
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'bottom'
+          </code>
+        </td>
+
+        <td>
+          Narrow columns; the ring stays full size
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'none'
+          </code>
+        </td>
+
+        <td>
+          Only when the parts are named elsewhere
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -88,13 +128,22 @@
     Inner radius
   </h3>
 
-  <p class="block-desc t-s">
-    Hole size as a fraction of the outer radius, default 0.68;
-    <code class="t-mono-inline">
-      0
-    </code> gives a solid pie, no centre
-    content. Valid from 0 to below 1, else 0.68.
-  </p>
+  <ul class="rules">
+    <li>
+      Hole size as a fraction of the outer radius: default 0.68.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        0
+      </code> gives a solid pie, no centre
+      content.
+    </li>
+
+    <li>
+      Valid from 0 to below 1, else 0.68.
+    </li>
+  </ul>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -175,24 +224,40 @@
     Centre value fit
   </h3>
 
-  <p class="block-desc t-s">
-    The value never wraps. Wider than the hole, it shrinks to fit, down to
-    <code class="t-mono-inline">
-      --ds-pie-chart-center-value-min-font-size
-    </code>; past that floor the sum prints in its
-    <code class="t-mono-inline">
-      'tick'
-    </code> form unless
-    <code class="t-mono-inline">
-      [centerCompact]="false"
-    </code>. A
-    <code class="t-mono-inline">
-      centerValue
-    </code> string is never shortened.
-    <code class="t-mono-inline">
-      centerPlacement="below"
-    </code> prints the value under the ring at full size.
-  </p>
+  <ul class="rules">
+    <li>
+      The value never wraps.
+    </li>
+
+    <li>
+      Wider than the hole, it shrinks to fit, down to
+      <code class="t-mono-inline">
+        --ds-pie-chart-center-value-min-font-size
+      </code>.
+    </li>
+
+    <li>
+      Past that floor the sum prints in its
+      <code class="t-mono-inline">
+        'tick'
+      </code> form, unless
+      <code class="t-mono-inline">
+        [centerCompact]="false"
+      </code>.
+    </li>
+
+    <li>
+      A <code class="t-mono-inline">centerValue</code> string is never
+      shortened.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        centerPlacement="below"
+      </code> prints the
+      value under the ring at full size.
+    </li>
+  </ul>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -258,16 +323,23 @@
     Legend length
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      maxSlices
-    </code> (off by default) caps the
-    legend by summing the smallest slices into one, named by
-    <code class="t-mono-inline">
-      otherLabel
-    </code>, in palette slot 8. Kept
-    slices stay in the given order.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        maxSlices
+      </code> (off by default) caps the
+      legend by summing the smallest slices into one.
+    </li>
+
+    <li>
+      That slice is named by <code class="t-mono-inline">otherLabel</code>, in
+      palette slot 8.
+    </li>
+
+    <li>
+      Kept slices stay in the given order.
+    </li>
+  </ul>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -298,43 +370,56 @@
     Interaction
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      interactive
-    </code> adds hover tint and makes
-    slices controls; the pointer cursor shows on them and on any holdable
-    slice.
-    <code class="t-mono-inline">
-      sliceClicked
-    </code> fires either way.
-    <code class="t-mono-inline">
-      tooltip
-    </code>:
-    <code class="t-mono-inline">
-      'item'
-    </code> (default) or
-    <code class="t-mono-inline">
-      'none'
-    </code>.
-    <code class="t-mono-inline">
-      dimOthers
-    </code> fades all but the hovered
-    (once the pointer rests) or focused slice. Arcs share edges, so the ring
-    enters as one, unstaggered. A hovered or focused legend item opens its
-    arc's tooltip and dims the rest.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        interactive
+      </code> adds hover tint and makes
+      slices controls; the pointer cursor shows on them and on any holdable
+      slice.
+    </li>
 
-  <p class="block-desc t-s">
-    One tab stop: arrows move (wrapping), Home/End jump to the ends, Enter or
-    Space fires
-    <code class="t-mono-inline">
-      sliceClicked
-    </code>. Focus travels legend items,
-    or at
-    <code class="t-mono-inline">
-      legend="none"
-    </code> the arcs.
-  </p>
+    <li>
+      <code class="t-mono-inline">
+        sliceClicked
+      </code> fires either way.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        tooltip
+      </code>:
+      <code class="t-mono-inline">
+        'item'
+      </code> (default) or
+      <code class="t-mono-inline">
+        'none'
+      </code>.
+    </li>
+
+    <li>
+      Focus travels the legend items; at
+      <code class="t-mono-inline">
+        legend="none"
+      </code>, the arcs.
+    </li>
+
+    <li>
+      A hovered or focused legend item opens its arc's tooltip and dims the
+      rest.
+    </li>
+
+    <li>
+      Arcs share edges, so the ring enters as one, unstaggered.
+    </li>
+
+    <li>
+      Keys and dimming:
+      <a routerLink="/foundations/charts">
+        Charts foundations
+      </a>.
+    </li>
+  </ul>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -372,21 +457,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    A click holds the slice and its tooltip; with
-    <code class="t-mono-inline">
-      dimOthers
-    </code>, the rest stays dimmed. A pin
-    disc marks it and Unpin appears on the caption line;
-    <kbd>
-      Esc
-    </kbd>, a press outside or a second click releases.
-    <code class="t-mono-inline">
-      pinOnClick="false"
-    </code> disables it, or
-    <code class="t-mono-inline">
-      DS_CONFIG.chart.pinOnClick: false
-    </code>
-    app-wide.
+    A click holds the slice and its tooltip. Release and opt-out:
+    <a routerLink="/foundations/charts">
+      Charts foundations
+    </a>.
   </p>
 
   <ds-pie-chart
@@ -421,24 +495,29 @@
     Data table
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      none
-    </code> (default) renders no table;
-    <code class="t-mono-inline">
-      toggle
-    </code> puts it behind a closed
-    disclosure; <code class="t-mono-inline">visible</code> opens it. It is the
-    non-visual route to the numbers: use
-    <code class="t-mono-inline">
-      none
-    </code> only if they are tabled
-    elsewhere on the page.
-    <code class="t-mono-inline">
-      partOfWhole
-    </code> defaults to true here (false
-    elsewhere); false drops the percentage from legend, tooltip and table.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        dataTable
+      </code> values:
+      <a routerLink="/foundations/charts">
+        Charts foundations
+      </a>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        partOfWhole
+      </code> defaults to
+      <code class="t-mono-inline">
+        true
+      </code> here, false elsewhere;
+      <code class="t-mono-inline">
+        false
+      </code> drops the percentage from
+      legend, tooltip and table.
+    </li>
+  </ul>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -500,10 +579,21 @@
         <ds-pie-chart
           dataTable="none"
           loading
+          [data]="[]" />
+
+        <div class="state-cell-label">
+          Loading, no data
+        </div>
+      </div>
+
+      <div class="state-cell">
+        <ds-pie-chart
+          dataTable="none"
+          loading
           [data]="loadingSlices()" />
 
         <div class="state-cell-label">
-          Loading
+          Reloading
         </div>
 
         <docs-chart-data-editor [(rows)]="loadingSlices" />

@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 /* Truncation contract: the app / account label is single-line with ellipsis; the search
    input never clips while focused; action icons have no visible label (it lives in
    aria-label and the tooltip). */

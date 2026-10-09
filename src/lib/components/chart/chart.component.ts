@@ -27,15 +27,17 @@ import {
   rotationWouldFit,
   tickValues,
   chartRenderGate,
+  CHART_SKELETON_COUNT,
   DsChartBase,
+  skeletonMarkCount,
 } from '@ids-group-ltd/ids-design-system/components';
 import { isPlatformBrowser } from '@angular/common';
-import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import {
   CHART_PIN_GAP,
   CHART_PIN_RADIUS,
   CHART_UNPIN_DRAWN_BY_HOST,
   ChartPinMarkerComponent,
+  ChartSkeletonComponent,
   ChartTooltipDirective,
   ChartStatesComponent,
   chartActiveMark,
@@ -79,7 +81,7 @@ import {
   standalone: true,
   exportAs: 'dsChart',
   imports: [
-    SkeletonComponent,
+    ChartSkeletonComponent,
     ChartTooltipDirective,
     ChartPinMarkerComponent,
     ChartStatesComponent,
@@ -107,6 +109,15 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   /** One band per category; every projected mark is positioned against them. */
   readonly categories = input<readonly string[]>([]);
+
+  /** How many columns the loading skeleton draws before the categories are known. */
+  readonly skeletonCount = input(CHART_SKELETON_COUNT, {
+    transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT),
+  });
+
+  protected readonly skeletonMarks = computed(() =>
+    skeletonMarkCount(this.categories().length, this.skeletonCount()),
+  );
 
   /** How many value-axis ticks to aim for; ticks snap to a round step, so the count may differ by one. */
   readonly tickCount = input(CHART_DEFAULT_TICK_COUNT, {

@@ -18,8 +18,22 @@ interface TokenPair {
   styleUrl: './token-discipline.section.scss',
 })
 export class TokenDisciplineSection {
+  protected readonly stylelintSnippet = `// .stylelintrc.json
+{
+  "plugins": ["@ids-group-ltd/ids-design-system/stylelint"],
+  "rules": { "ids-design-system/no-removed-tokens": true }
+}`;
+
+  protected readonly eslintSnippet = `// eslint.config.mjs
+import idsDesignSystem from '@ids-group-ltd/ids-design-system/eslint';
+
+export default [
+  // ...your TypeScript and template blocks
+  idsDesignSystem.configs.recommended,
+];`;
+
   protected readonly lede =
-    'Every padding, colour, radius, border, font size and motion curve in component CSS reads a token. Literals are token gaps to promote, not shortcuts to take.';
+    'Every padding, colour, radius, border, font size and motion curve in component CSS reads a token.';
 
   protected readonly pairs: TokenPair[] = [
     {

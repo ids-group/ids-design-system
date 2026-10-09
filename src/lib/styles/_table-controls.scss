@@ -1,9 +1,11 @@
 @use 'focus' as focus;
+@use 'target' as target;
 
 // Controls shared by ds-table and its opt-in directives. `dsTableColumns` renders from its own
 // components, which lack ds-table's encapsulation attribute, so both stylesheets include these.
 // The square icon button in a header cell: expand-all, row actions, the column-panel trigger.
 // Reads the `--_table-icon-btn-*` resolvers, so include it only inside a ds-table.
+// target-size-guard: --space-6, 24px
 @mixin header-icon-button {
   display: flex;
   align-items: center;
@@ -36,6 +38,8 @@
   background: none;
   color: var(--icon-default);
   cursor: pointer;
+
+  @include target.min-size;
 
   &:hover:not(:disabled) {
     color: var(--icon-strong);

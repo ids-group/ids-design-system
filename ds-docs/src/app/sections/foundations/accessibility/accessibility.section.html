@@ -1,0 +1,129 @@
+<docs-section
+  anchor="accessibility"
+  eyebrow="Foundations"
+  title="Accessibility">
+  <span lede>
+    Rules every component keeps, so a screen built from them keeps them with no
+    opt-in.
+  </span>
+
+  <h3 class="block-title t-h4">
+    Pointer target: 24px
+  </h3>
+
+  <p class="block-desc t-s">
+    Every icon-only control takes the pointer over at least
+    <code class="t-mono-inline">
+      --hit-xs
+    </code> (24px, WCAG 2.5.8), however
+    small its icon.
+  </p>
+
+  <div class="target-demo">
+    <ds-tag closable>
+      Design
+    </ds-tag>
+
+    <span class="t-s">
+      Conversion rate
+      <ds-info-hint
+        text="Share of recipients who completed the journey."
+        ariaLabel="About conversion rate" />
+    </span>
+  </div>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Token / mixin / param
+        </th>
+
+        <th>
+          Effect
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --hit-xs
+          </code>
+        </td>
+
+        <td>
+          24px; raise it (44px for touch) and every icon-only target follows
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            target.min-size
+          </code>
+        </td>
+
+        <td>
+          Your own control: include last in its rule, after its own focus style;
+          a box of 24px or more grows by nothing. The ring follows
+          <code class="t-mono-inline">
+            --focus-ring-offset
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            $ring-on-target: false
+          </code>
+        </td>
+
+        <td>
+          Keeps the ring on the icon, for a control a few pixels from a label
+          (<code class="t-mono-inline">ds-info-hint</code>); the target still
+          grows
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            $position: null
+          </code>
+        </td>
+
+        <td>
+          For a control that is already positioned
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <pre class="t-mono-block"><code>&#64;use 'styles/target';
+
+.my-icon-button &#123;
+  &amp;:focus-visible &#123; /* own ring */ &#125;
+  &#64;include target.min-size;
+&#125;</code></pre>
+
+  <details class="edge-cases">
+    <summary>
+      <span class="t-s">
+        How the target grows
+      </span>
+
+      <span class="chapter-toggle">
+        Show
+      </span>
+    </summary>
+
+    <p class="block-desc t-s">
+      The box keeps its size, so nothing around it moves and its fills stay as
+      drawn. A transparent <code class="t-mono-inline">::before</code> takes the
+      pointer over at least 24px around it, centred, and the focus ring is drawn on it.
+    </p>
+  </details>
+</docs-section>

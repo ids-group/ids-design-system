@@ -185,17 +185,29 @@ consumer's code forever. **A family renamed one member at a time**: naming one t
 moved leaves the other seven undocumented, and the search that would have found them was spent on
 the one you named.
 
-**Every line added to a published manifest is written from that boundary's diff**, a line added only
-to close a `--audit` coverage gap included. Three shortcuts look like verification and are not:
+**A line added to or rewritten in a published manifest states only what the code at that
+boundary shows.** A line is any field of an item or of a `deleteList` row, or an `informational`
+entry, including one added only to close a gap that `node tools/check.mjs manifest-coverage:audit`
+reported. Before writing it:
 
-- **The version's own `## <version>` block is a pointer, not a source.** It can be looser than the
-  code: the 0.4.0 block says a clear button "stays visible when the field is blurred", and the diff
-  shows only its colour and opacity changed. Write what `git diff v<prev> v<version>` shows for the
-  component the line names.
-- **Presence proves the name, never the behaviour.** A selector found at both tags says nothing about
-  what the line claims it does.
-- **One grep returns fragments.** Before stating what an element did at a tag, read every rule that
-  targets it in that tree, the global partials included, not the lines the first search returned.
+1. **Read the diff for every name the line mentions** (component, element, input, token, class,
+   symbol). Run `git diff v<prev>..v<version> -- src/lib` and write what that diff changes for those
+   names.
+2. **Use the `## <version>` block of `CHANGELOG.md` to find where to look in the diff.** Its wording
+   can be broader than the code: the 0.4.0 block says the `ds-input` / `ds-search` clear button
+   "stays visible when the field is blurred", and the diff changes only its colour and opacity. The
+   manifest line follows the diff.
+3. **Prove a behaviour claim from the full code at both tags.** A behaviour claim is any sentence
+   about what something renders or does (shows, hides, closes, sizes, defaults to, emits), as
+   opposed to what it is called; an `appliesWhen` or `pitfall` that says what happens is one, and a
+   line that both renames and describes behaviour takes steps 1-3. A name present at both tags
+   proves only that the name exists. Extract both trees (`git archive v<prev> src/lib |
+   tar -x -C <prev-dir>`, the same for `v<version>`) and in each read everything that targets the
+   component or element the claim is about: every stylesheet rule, template binding and class
+   member, the global partials in `src/lib/styles/` included. A single grep returns the matches it
+   searched for, and the rule that decides the behaviour is often in a file it did not reach.
+
+A sentence that code does not support is cut, however plausible it reads.
 
 Only `unreleased.json` is written and checked against HEAD, because HEAD is the version it
 describes.
@@ -417,12 +429,25 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
 - [ ] Default-value / timing / event-payload changes are their own `behavior` entry, with `restore`
       (or an explicit `null`) AND a `deleteList` entry for whatever the flip made redundant. (lint,
       for the `restore` half)
+- [ ] Every token or hook whose DEFAULT moved, was deleted or renamed in the boundary is named in
+      the manifest; `node tools/token-diff.mjs v<prev> v<version>` lists them, old and new value.
+      (`tools/check-token-defaults.mjs`, in `lint` and the preflight)
 - [ ] An entry that reverses an earlier release's guidance carries `supersedes` naming it; the earlier
       file stays untouched, and `supersededBy` is rejected. (lint, M028 + reference resolution)
 - [ ] Substring-colliding renames: longer has its own entry; shorter's `note` says "rename longer first".
+- [ ] A `*-rename` or `value-remap` item is a pure swap of `old` for `new` (or through `map`): the
+      upgrade plugin's `scripts/apply-mechanical.mjs` rewrites it before any agent reads `action`.
+      A rename that also changes a value, adds an import or spells out a suffix the pattern does
+      not carry is a `behavior` item, or two items. (lint, M047: a `new` that is not one name per
+      old name, a family whose expansion at the boundary names a token the release lacks, an
+      `action` that deletes or re-values; `node tools/check.mjs plugin-apply` tests the script)
 - [ ] Non-mechanical entries carry the decision rule + where to read the real new name, not "review".
 - [ ] Widened/changed exported types each have a `behavior` entry naming who breaks
       (run `npm run class-surface` — do not assemble the list by eye).
+- [ ] For every exported class whose members moved, a `behavior` item's `detect` names it and that
+      item's `note` names every gained and lost member, or states the count beside the class
+      ("`LineSeriesComponent` gained 18", "... lost 2"); a count must match, and a member the
+      note lists as changed must have changed. (`tools/check-class-member-notes.mjs`, at the cut)
 - [ ] A directive that gained a template context guard or an `unknown`-defaulting generic has a
       `behavior` item on `surface: template` with the consumer's build error in `detect`.
       (`tools/check-class-surface-entry.mjs`, for the guard half, at the cut)
@@ -448,6 +473,14 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
 - [ ] The boundary is in `appliesWhen` and the silent-failure mode in `pitfall`, not buried in the note.
 - [ ] `note` is under 120 words and carries no ALL-CAPS structural marker. (lint, M040 / M041)
 - [ ] No key outside the allowlist. (lint, M042)
+- [ ] A sentence asserting that rendering or behaviour did not change, a compile outcome, or a count
+      of things is backed by `evidence` on its item or object-form `informational` entry, and a
+      `## Unreleased` sentence making one by such an entry naming its code. (`node tools/check.mjs
+      manifest-claims`, in the lint and release gates)
+- [ ] Every docs block whose pixels changed across the boundary has a `ds-*` element, class or
+      token it renders named in the manifest or the CHANGELOG block, and a `pixels:<block id>`
+      evidence names a block that did not change. (`node tools/check.mjs render-evidence`, at the
+      cut)
 - [ ] An `informational` entry whose change is to rendering alone carries `verify`; an object entry
       has a non-empty `text` and `verify` and no other key. (lint, M046 for the shape)
 - [ ] `old` resolves at the PREVIOUS tag, is gone at this one for a rename or a removal, and `new`
@@ -455,9 +488,40 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       `-subtle` token that never existed and every other check passed it. The same check reads
       every `--ds-*` name in `action`, `appliesWhen`, `note`, `pitfall`, `informational` and each
       `deleteList` field, and fails one that exists at neither tag; prose that names a token to say
-      it does not exist is listed in its `DELIBERATE_PHANTOMS`. Its closing line says how many
-      values it read - a clean run vouches for those only.
+      it does not exist is listed in its `DELIBERATE_PHANTOMS`. In the draft it also fails every
+      backticked name in those fields, `verify` and `restore` included - a token of any prefix, a
+      PascalCase symbol, a `ds-*` element or its `[member]`, a `.class`, a camelCase member - that
+      exists at neither tag (platform names are in its `FRAMEWORK_NAMES`), and an `old`/`new` it
+      cannot read unless `UNREAD_ALLOWED` says why. Its closing line says how many values it read -
+      a clean run vouches for those only. Published hits of those two rules are reported by
+      `node tools/check.mjs manifest-truth:audit`.
       (`tools/check-manifest-truth.mjs`, in the PR gate and the preflight)
+- [ ] A line added to or rewritten in a published manifest states what `git diff
+      v<prev>..v<version> -- src/lib` shows for every name it mentions, and a behaviour claim is
+      read from everything in `src/lib` that targets the element at both tags; the CHANGELOG
+      block only points at where to look. ("Correcting a PUBLISHED manifest")
+- [ ] A renamed or removed token reaches the shipped stylelint list: run
+      `node tools/generate-token-deprecations.mjs` after editing a published manifest's
+      `token-rename`, `removed-api` or `deleteList` token, and commit `stylelint/deprecated-tokens.json`.
+      (`node tools/check.mjs token-deprecations`, at the cut; the release commit regenerates it)
+- [ ] A renamed or removed input, output, value, element or exported symbol reaches the shipped
+      ESLint list: run `node tools/generate-api-deprecations.mjs` and commit `eslint/deprecated-api.json`.
+      (`node tools/check.mjs api-deprecations`, in lint and the preflight; the release commit regenerates it)
+- [ ] Every TS code an entry names is asserted by `migrations/fixtures/<version>/<id>.ts`,
+      compiled at both tags (README, "Compile fixtures"). (`node tools/check.mjs manifest-compile`,
+      at the cut)
+- [ ] The item's locators find the consumer code it targets in
+      `migrations/fixtures/<version>/<id>.found.<ext>`, and drop a look-alike in
+      `<id>.ignored.<ext>` (README, "Locator fixtures").
+      (`node tools/check.mjs manifest-detect`, in lint and the preflight)
+- [ ] A template outcome - an NG code, or a TS code only `strictTemplates` reports - is asserted by
+      `migrations/fixtures/<version>/<id>.component.ts`, its template inline and compiled by the
+      Angular compiler at both tags. (`node tools/check.mjs manifest-compile`, at the cut)
+- [ ] `canary/`, an app written against the last release's API, still builds under
+      `strictTemplates` once the draft is applied to it; each error is printed beside the item
+      that edited or names its line, or as covered by none. Keep `canary/` on the last release:
+      a cut whose draft rewrites it carries the rewritten canary. (`node tools/check.mjs
+      upgrade-canary`, at the cut)
 - [ ] A published record that described something which never worked is resolved by one question —
       does anything the consumer DOES change? Yes → an item with an `action` here, in the library's
       voice. No → nothing, and a quiet correction to the old file if it still misleads. Never a line
@@ -469,6 +533,10 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       symbol that resolves against the library tree, and a manifest that mentions none of them. So
       it cannot be answered with prose — name the surface, or the entry needed no line and is not
       asked for one.
+- [ ] Every public change since the last tag - a class member, an exported symbol, an element, a
+      `--ds-*` hook or its fallback - is named under `## Unreleased` or in `unreleased.json` by the
+      change that makes it; a commit that changes none carries the trailer `Changelog: none`.
+      (`tools/check-changelog-pending.mjs`, in lint, the PR gate and the preflight)
 
 ## Why the format is shaped this way
 

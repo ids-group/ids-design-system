@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 /* Truncation contract:
    Initials fallback - 2 chars max, no clip.
    Adjacent name label - single line, ellipsis, tooltip on hover with full name.
@@ -30,6 +33,8 @@ img {
   height: 100%;
   object-fit: cover;
   border-radius: inherit;
+
+  // glyph-clip-guard: an image, no text
   overflow: hidden;
 }
 

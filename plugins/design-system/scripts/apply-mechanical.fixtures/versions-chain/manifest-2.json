@@ -1,0 +1,3 @@
+{ "version": "0.7.0", "items": [
+  { "id": "autocomplete-size", "kind": "type-rename", "old": "AutocompleteSize", "new": "DsSize" }
+] }

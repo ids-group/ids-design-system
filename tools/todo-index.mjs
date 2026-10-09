@@ -56,8 +56,7 @@ out.push(
     (partial
       ? `, ${partial} of them half-done and waiting on a deck verdict`
       : '') +
-    `. Counted by \`node tools/todo-index.mjs\` from the items themselves, never incremented from` +
-    ` the last figure — three summaries in this file had drifted apart before it existed.`,
+    `. Counted by \`node tools/todo-index.mjs\` from the items themselves.`,
 );
 out.push('');
 

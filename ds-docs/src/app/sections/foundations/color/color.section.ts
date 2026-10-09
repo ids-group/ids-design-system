@@ -44,6 +44,15 @@ interface RampSpec {
   styleUrl: './color.section.scss',
 })
 export class ColorSection {
+  protected readonly componentBaseSnippet = `/* my-panel.component.scss */
+@use 'styles/component-base';
+
+@include component-base.rules;
+
+:host {
+  display: block;
+}`;
+
   protected readonly shellRingSnippet = `/* Your own field-like shell: the box rings, the control inside must not. */
 .my-field:focus-within {
   box-shadow: var(--ds-field-focus-shadow);

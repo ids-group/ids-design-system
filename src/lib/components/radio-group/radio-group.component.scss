@@ -1,4 +1,6 @@
 @use '../../styles/field-label' as field-label;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host { display: flex; flex-direction: column; gap: var(--field-label-gap); }
 

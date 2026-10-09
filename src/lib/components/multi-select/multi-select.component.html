@@ -36,6 +36,7 @@
   [attr.aria-readonly]="isReadOnly() ? 'true' : null"
   [attr.name]="name()"
   [attr.aria-activedescendant]="triggerActiveDescendant()"
+  [attr.aria-busy]="loading() ? 'true' : null"
   [attr.tabindex]="isDisabled() ? -1 : 0"
   (click)="onTriggerClick()"
   (keydown)="onTriggerKeydown($event)">
@@ -183,6 +184,7 @@
           [value]="filter()"
           [attr.aria-controls]="listboxId"
           [attr.aria-activedescendant]="activeDescendant()"
+          [attr.aria-busy]="loading() ? 'true' : null"
           (input)="onFilter($event)"
           (keydown)="onSearchKeydown($event)" />
       </div>
@@ -214,185 +216,192 @@
       </button>
     }
 
-    <ul
-      class="dropdown-list"
-      role="listbox"
-      aria-multiselectable="true"
-      [attr.aria-busy]="loading() ? 'true' : null"
-      [id]="listboxId">
-      @for (item of filteredItems(); track $index; let itemIdx = $index) {
-        @if (isGroup(item)) {
-          <li
-            class="optgroup"
-            role="group"
-            [attr.aria-label]="item.label">
-            <span
-              class="optgroup-label"
-              [class.is-first]="itemIdx === 0">
-              @if (groupLabelTemplate(); as tpl) {
-                <ng-container
-                  [ngTemplateOutlet]="tpl"
-                  [ngTemplateOutletContext]="{
-                    $implicit: item,
-                    group: item,
-                    count: item.options.length,
-                  }" />
-              } @else {
-                {{ item.label }}
-              }
-            </span>
-
-            @if (showsGroupSelectAll()) {
-              <button
-                type="button"
-                tabindex="-1"
-                class="select-all group"
-                role="option"
-                [disabled]="item.disabled"
-                [attr.aria-selected]="groupAllSelected(item)"
-                [attr.aria-checked]="
-                  groupAllSelected(item)
-                    ? 'true'
-                    : groupSomeSelected(item)
-                      ? 'mixed'
-                      : 'false'
-                "
-                (click)="toggleGroup(item)">
-                <span
-                  class="checkbox"
-                  [class.checked]="groupAllSelected(item)"
-                  [class.indeterminate]="groupSomeSelected(item)">
-                  <span class="tick"></span>
-                </span>
-
-                {{ intl().picker.selectAllInGroup(item.label) }}
-              </button>
-            }
-
-            <ul
-              class="optgroup-list"
-              role="presentation">
-              @for (option of item.options; track option.value) {
-                <li role="presentation">
-                  <button
-                    type="button"
-                    tabindex="-1"
-                    role="option"
-                    class="option"
-                    dsTooltipWhenClipped
-                    dsTooltipTextSelector=".option-label"
-                    [id]="optionId(flatIndexOf(option))"
-                    [class.is-active]="activeIndex() === flatIndexOf(option)"
-                    [attr.aria-selected]="isSelected(option.value)"
-                    [disabled]="option.disabled"
-                    (click)="toggleValue(option)"
-                    (mouseenter)="
-                      cursorFromKeyboard.set(false);
-                      activeIndex.set(flatIndexOf(option))
-                    ">
-                    <span
-                      class="checkbox"
-                      [class.checked]="isSelected(option.value)">
-                      <span class="tick"></span>
-                    </span>
-
-                    @if (option.icon) {
-                      <ds-icon
-                        class="option-icon"
-                        [name]="option.icon"
-                        [size]="16" />
-                    }
-
-                    <span class="option-label">
-                      @if (optionTemplate(); as tpl) {
-                        <ng-container
-                          [ngTemplateOutlet]="tpl"
-                          [ngTemplateOutletContext]="{
-                            $implicit: option,
-                            option: option,
-                          }" />
-                      } @else {
-                        {{ option.label }}
-                      }
-                    </span>
-                  </button>
-                </li>
-              }
-            </ul>
-          </li>
-        } @else {
-          @let option = item;
-
-          <li role="presentation">
-            <button
-              type="button"
-              tabindex="-1"
-              role="option"
-              class="option"
-              dsTooltipWhenClipped
-              dsTooltipTextSelector=".option-label"
-              [id]="optionId(flatIndexOf(option))"
-              [class.is-active]="activeIndex() === flatIndexOf(option)"
-              [attr.aria-selected]="isSelected(option.value)"
-              [disabled]="option.disabled"
-              (click)="toggleValue(option)"
-              (mouseenter)="
-                cursorFromKeyboard.set(false);
-                activeIndex.set(flatIndexOf(option))
-              ">
+    <ds-loading-overlay
+      class="list-overlay"
+      [loading]="listInert()"
+      [blur]="true">
+      <ul
+        class="dropdown-list"
+        role="listbox"
+        aria-multiselectable="true"
+        [attr.aria-busy]="loading() ? 'true' : null"
+        [id]="listboxId">
+        @for (item of filteredItems(); track $index; let itemIdx = $index) {
+          @if (isGroup(item)) {
+            <li
+              class="optgroup"
+              role="group"
+              [attr.aria-label]="item.label">
               <span
-                class="checkbox"
-                [class.checked]="isSelected(option.value)">
-                <span class="tick"></span>
-              </span>
-
-              @if (option.icon) {
-                <ds-icon
-                  class="option-icon"
-                  [name]="option.icon"
-                  [size]="16" />
-              }
-
-              <span class="option-label">
-                @if (optionTemplate(); as tpl) {
+                class="optgroup-label"
+                [class.is-first]="itemIdx === 0">
+                @if (groupLabelTemplate(); as tpl) {
                   <ng-container
                     [ngTemplateOutlet]="tpl"
                     [ngTemplateOutletContext]="{
-                      $implicit: option,
-                      option: option,
+                      $implicit: item,
+                      group: item,
+                      count: item.options.length,
                     }" />
                 } @else {
-                  {{ option.label }}
+                  {{ item.label }}
                 }
               </span>
-            </button>
+
+              @if (showsGroupSelectAll()) {
+                <button
+                  type="button"
+                  tabindex="-1"
+                  class="select-all group"
+                  role="option"
+                  [disabled]="item.disabled"
+                  [attr.aria-selected]="groupAllSelected(item)"
+                  [attr.aria-checked]="
+                    groupAllSelected(item)
+                      ? 'true'
+                      : groupSomeSelected(item)
+                        ? 'mixed'
+                        : 'false'
+                  "
+                  (click)="toggleGroup(item)">
+                  <span
+                    class="checkbox"
+                    [class.checked]="groupAllSelected(item)"
+                    [class.indeterminate]="groupSomeSelected(item)">
+                    <span class="tick"></span>
+                  </span>
+
+                  {{ intl().picker.selectAllInGroup(item.label) }}
+                </button>
+              }
+
+              <ul
+                class="optgroup-list"
+                role="presentation">
+                @for (option of item.options; track option.value) {
+                  <li role="presentation">
+                    <button
+                      type="button"
+                      tabindex="-1"
+                      role="option"
+                      class="option"
+                      dsTooltipWhenClipped=".option-label"
+                      [id]="optionId(flatIndexOf(option))"
+                      [class.is-active]="activeIndex() === flatIndexOf(option)"
+                      [attr.aria-selected]="isSelected(option.value)"
+                      [disabled]="option.disabled"
+                      (click)="toggleValue(option)"
+                      (mouseenter)="
+                        cursorFromKeyboard.set(false);
+                        activeIndex.set(flatIndexOf(option))
+                      ">
+                      <span
+                        class="checkbox"
+                        [class.checked]="isSelected(option.value)">
+                        <span class="tick"></span>
+                      </span>
+
+                      @if (option.icon) {
+                        <ds-icon
+                          class="option-icon"
+                          [name]="option.icon"
+                          [size]="16" />
+                      }
+
+                      <span class="option-label">
+                        @if (optionTemplate(); as tpl) {
+                          <ng-container
+                            [ngTemplateOutlet]="tpl"
+                            [ngTemplateOutletContext]="{
+                              $implicit: option,
+                              option: option,
+                            }" />
+                        } @else {
+                          {{ option.label }}
+                        }
+                      </span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            </li>
+          } @else {
+            @let option = item;
+
+            <li role="presentation">
+              <button
+                type="button"
+                tabindex="-1"
+                role="option"
+                class="option"
+                dsTooltipWhenClipped=".option-label"
+                [id]="optionId(flatIndexOf(option))"
+                [class.is-active]="activeIndex() === flatIndexOf(option)"
+                [attr.aria-selected]="isSelected(option.value)"
+                [disabled]="option.disabled"
+                (click)="toggleValue(option)"
+                (mouseenter)="
+                  cursorFromKeyboard.set(false);
+                  activeIndex.set(flatIndexOf(option))
+                ">
+                <span
+                  class="checkbox"
+                  [class.checked]="isSelected(option.value)">
+                  <span class="tick"></span>
+                </span>
+
+                @if (option.icon) {
+                  <ds-icon
+                    class="option-icon"
+                    [name]="option.icon"
+                    [size]="16" />
+                }
+
+                <span class="option-label">
+                  @if (optionTemplate(); as tpl) {
+                    <ng-container
+                      [ngTemplateOutlet]="tpl"
+                      [ngTemplateOutletContext]="{
+                        $implicit: option,
+                        option: option,
+                      }" />
+                  } @else {
+                    {{ option.label }}
+                  }
+                </span>
+              </button>
+            </li>
+          }
+        }
+
+        @if (loading() && filteredOptions().length === 0) {
+          @for (width of skeletonOptionWidths; track $index) {
+            <li
+              class="option is-skeleton"
+              role="presentation">
+              <ds-skeleton
+                height="1lh"
+                [width]="width" />
+            </li>
+          }
+        } @else if (filteredOptions().length === 0) {
+          <li
+            class="empty"
+            role="presentation">
+            @if (emptyTemplate(); as tpl) {
+              <ng-container
+                [ngTemplateOutlet]="tpl"
+                [ngTemplateOutletContext]="{
+                  $implicit: filter(),
+                  query: filter(),
+                }" />
+            } @else {
+              {{ intl().picker.noMatches }}
+            }
           </li>
         }
-      }
-
-      @if (loading()) {
-        <li
-          class="empty t-s"
-          role="presentation">
-          <ds-spinner size="sm" />
-        </li>
-      } @else if (filteredOptions().length === 0) {
-        <li
-          class="empty t-s"
-          role="presentation">
-          @if (emptyTemplate(); as tpl) {
-            <ng-container
-              [ngTemplateOutlet]="tpl"
-              [ngTemplateOutletContext]="{
-                $implicit: filter(),
-                query: filter(),
-              }" />
-          } @else {
-            {{ intl().picker.noMatches }}
-          }
-        </li>
-      }
-    </ul>
+      </ul>
+    </ds-loading-overlay>
 
     @if (panelFooterTemplate(); as tpl) {
       <div class="panel-footer">

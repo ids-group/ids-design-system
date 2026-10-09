@@ -265,7 +265,9 @@ const VOID_TAGS = new Set([
   'track',
   'area',
 ]);
-const TAG = /<(\/?)([a-zA-Z][\w-]*)\b([^>]*)>/g;
+// A quoted value can hold markup: Tooltip's `[dsTooltip]="'<b>Tags</b> ...'"` otherwise closes the
+// tag early and unbalances the depth of every block after it.
+const TAG = /<(\/?)([a-zA-Z][\w-]*)\b((?:[^>"']|"[^"]*"|'[^']*')*)>/g;
 
 function blocksOf(slug) {
   const html = templateOf(slug);

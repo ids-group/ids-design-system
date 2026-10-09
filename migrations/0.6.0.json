@@ -15,12 +15,41 @@
         "@use '@ids-group-ltd/ids-design-system/styles/breakpoints'"
       ],
       "surface": "style"
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "BottomSheetComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename your own member or mark it `override` wherever the compiler reports a collision with a class in `detect`. Delete an override of a member the class lost.",
+      "appliesWhen": "Only a class that extends one of the classes in `detect`. A consumer who uses the elements in templates needs nothing from this item.",
+      "pitfall": "`private` and `protected` give no protection: a member you redeclare collides with a base member of any visibility. A member of yours that replaced a lost one no longer replaces anything, and the component stops calling it.",
+      "note": "`BottomSheetComponent` gained `closeFallbackTimer`, `finishClose` and `ngOnDestroy`. `DrawerComponent` and `ModalComponent` each gained `closeFallbackTimer` and `finishClose`. `DatePickerComponent` gained 7 and lost `caretAfterDigits`, `ghostRemainder`, `removeDigit` and `writeBack`.",
+      "verify": "The app builds with no error naming a class listed in `detect`, and every member of such a subclass that shares a base member's name is marked `override`.",
+      "searchHints": [
+        "extends BottomSheetComponent",
+        "extends DatePickerComponent",
+        "extends DrawerComponent",
+        "extends ModalComponent"
+      ],
+      "detect": [
+        "extends BottomSheetComponent",
+        "BottomSheetComponent",
+        "extends DatePickerComponent",
+        "DatePickerComponent",
+        "extends DrawerComponent",
+        "DrawerComponent",
+        "extends ModalComponent",
+        "ModalComponent"
+      ],
+      "restore": null
     }
   ],
   "informational": [
     ".grid-2/.grid-3/.grid-4 layout utils now collapse to 1 column below 640px ($bp-sm) — visual only, no code change.",
     ".t-mono-block gains max-width: 100%; overflow-x: auto — long lines scroll instead of overflowing the page, no code change.",
-    "ds-modal panel clamps max-width: calc(100vw - var(--space-6)) and max-height 90vh with 90dvh fallback on small screens — visual only, no code change.",
+    "ds-modal panel clamps max-width to calc(100vw - var(--space-6)) and max-height to 90dvh (the existing 90vh stays as fallback) at every width - visual only, no code change.",
     "New `menu` (hamburger) icon added to the icon registry — additive.",
     "ds-description-list item grid tracks now use minmax(0, …) and the value gains overflow-wrap: anywhere, fixing page-wide horizontal scroll caused by long unbroken values — visual only, no code change.",
     "ds-drawer/ds-bottom-sheet/ds-modal teardown no longer hangs (scrim stuck, body scroll locked) when the tab is backgrounded mid-close — each now arms a 300ms synthetic-fallback timer alongside the animationend listener so teardown completes even if Chrome freezes the leave animation; no code change required from consumers.",

@@ -1,0 +1,5 @@
+{ "version": "0.10.0", "items": [
+  { "id": "modal-error-to-status", "kind": "input-rename", "old": "ds-modal[error]", "new": "status=\"error\"" },
+  { "id": "family-to-one-name", "kind": "token-rename", "old": "--ds-a-*", "new": "--ds-b-color" },
+  { "id": "one-pair-refused", "kind": "token-rename", "old": "--ds-x-height, --ds-x-*", "new": "--ds-y-height, --ds-y-width" }
+] }

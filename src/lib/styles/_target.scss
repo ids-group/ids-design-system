@@ -1,0 +1,40 @@
+// The pointer target of an icon-only control is at least `--hit-xs` (24px, WCAG 2.5.8), however small
+// it is drawn. Include last in the control's own rule, after its own `:focus-visible`.
+//
+// The box keeps its size, so the layout around it and every fill it paints stay as drawn: a
+// transparent `::before`, centred on the box and `--hit-xs` across where the box is smaller, takes the
+// pointer, and the focus ring is drawn on that target. Under the default style the ring's outer edge
+// is the target's edge; it follows `--focus-ring-offset`, so `[data-focus='edge']` draws it 2px and
+// `[data-focus='inset']` 4px further in.
+//
+// `$ring-on-target: false` leaves the ring where the control's own rule draws it, for a control set a
+// few pixels from running text, where a ring on the target would cover the letters beside it.
+// `$position: null` for a control that is already positioned.
+@mixin min-size($ring-on-target: true, $position: relative) {
+  @if $position {
+    position: $position;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--hit-xs));
+    height: max(100%, var(--hit-xs));
+    translate: -50% -50%;
+    border-radius: inherit;
+  }
+
+  @if $ring-on-target {
+    &:focus-visible {
+      outline-style: none;
+    }
+
+    &:focus-visible::before {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: calc(var(--focus-ring-offset) - 2 * var(--focus-ring-width));
+      animation: ds-focus-ring-in var(--duration-fast) var(--ease-standard);
+    }
+  }
+}

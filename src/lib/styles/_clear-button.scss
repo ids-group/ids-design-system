@@ -1,4 +1,5 @@
 @use 'press' as press;
+@use 'target' as target;
 
 // The `×` behind `clearable` for ds-select, ds-autocomplete and ds-multi-select (ds-input has its own).
 // Include inside the selector holding the trigger's layout.
@@ -20,4 +21,5 @@
   }
 
   @include press.feedback;
+  @include target.min-size;
 }

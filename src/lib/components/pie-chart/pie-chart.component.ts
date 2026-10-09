@@ -30,7 +30,9 @@ import {
   markAt,
   rovingMarks,
   chartRenderGate,
+  CHART_SKELETON_COUNT,
   DsChartBase,
+  skeletonMarkCount,
   watchElementWidth,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -123,6 +125,11 @@ export class PieChartComponent
 
   /** Legend placement, logical so it flips in right-to-left. */
   readonly legend = input<'end' | 'bottom' | 'none'>('end');
+
+  /** How many slices, and legend rows, the loading skeleton draws before the data is known. */
+  readonly skeletonCount = input(CHART_SKELETON_COUNT, {
+    transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT),
+  });
 
   /** Longest legend to draw; past it the smallest slices are summed into one. Values below 2 are ignored. */
   readonly maxSlices = input<number | null>(null, {
@@ -513,8 +520,11 @@ export class PieChartComponent
 
   protected readonly isEmpty = computed(() => this.data().length === 0);
 
-  /** Placeholder legend rows while loading. */
+  protected readonly skeletonMarks = computed(() =>
+    skeletonMarkCount(this.data().length, this.skeletonCount()),
+  );
+
   protected readonly skeletonRows = computed(() =>
-    Array.from({ length: Math.max(this.data().length, 3) }),
+    Array.from({ length: this.skeletonMarks() }),
   );
 }

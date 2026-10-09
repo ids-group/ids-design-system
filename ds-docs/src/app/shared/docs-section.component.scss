@@ -1,3 +1,8 @@
+// Primitives every section uses as is: `ul.rules` for a rule list, `table.tbl` for a table,
+// `dl.spec` for term and value, `<kbd>` for a key. Each sits in `:where()` so a section's own
+// scoped rule overrides it without raising specificity.
+@use 'styles/breakpoints' as bp;
+
 :host {
   display: block;
 }
@@ -121,4 +126,78 @@
 
 :host ::ng-deep .edge-cases[open] > summary .chapter-toggle::before {
   content: "Hide";
+}
+
+:host ::ng-deep :where(ul.rules) {
+  display: grid;
+  gap: var(--space-2);
+  max-width: var(--col-cap-text);
+  margin-top: var(--space-3);
+  padding-left: var(--space-5);
+  color: var(--text-secondary);
+}
+
+:host ::ng-deep :where(table.tbl) {
+  width: 100%;
+  margin-top: var(--space-3);
+  border-collapse: separate;
+  border-spacing: 0;
+  border: var(--border-width-default) solid var(--border-divider);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface-default);
+
+  th,
+  td {
+    padding: var(--space-3) var(--space-4);
+    text-align: left;
+    border-bottom: var(--border-width-default) solid var(--border-divider);
+    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  }
+
+  th {
+    background: var(--surface-secondary);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wider);
+  }
+
+  tr:last-child td {
+    border-bottom: 0;
+  }
+}
+
+:host ::ng-deep :where(dl.spec) {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: var(--space-2) var(--space-4);
+  max-width: var(--col-cap-text);
+  margin-top: var(--space-3);
+
+  @include bp.down(md) {
+    grid-template-columns: 1fr;
+  }
+
+  dt {
+    font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+    color: var(--text-secondary);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: var(--font-size-s);
+  }
+}
+
+:host ::ng-deep :where(kbd) {
+  display: inline-block;
+  padding: 1px 6px;
+  font: var(--font-weight-medium) 11px / 1 var(--font-mono);
+  background: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
 }

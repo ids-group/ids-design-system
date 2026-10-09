@@ -1,4 +1,6 @@
 @use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 :host {
   --_sidenav-group-open-bg-color:      var(--ds-sidenav-group-open-bg-color,      var(--surface-secondary));
   --_sidenav-group-child-indent: var(--ds-sidenav-group-child-indent, var(--space-3));
@@ -67,6 +69,7 @@
   }
 }
 
+// target-size-guard: --hit-min, 32px
 .group-caret-button {
   display: inline-flex;
   align-items: center;
@@ -113,6 +116,8 @@
   flex-direction: column;
   gap: var(--space-1);
   padding-left: var(--_sidenav-group-child-indent);
+
+  // glyph-clip-guard: collapses the group; open, every item pads its text off this edge
   overflow: hidden;
 
   // Inward ring: the overflow clips an outer one.

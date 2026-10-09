@@ -1,4 +1,6 @@
 @use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 // Positioned against the chart's host, which `chart-frame.pin-reset` makes the containing block.
 :host {

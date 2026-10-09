@@ -8,6 +8,9 @@
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-group-segment' as field-group-segment;
 @use '../../styles/focus' as focus;
+@use '../../styles/target' as target;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   @include field-box.field-box-tokens;
@@ -111,6 +114,7 @@
     }
 
     @include press.feedback;
+    @include target.min-size;
   }
 
   .kbd {

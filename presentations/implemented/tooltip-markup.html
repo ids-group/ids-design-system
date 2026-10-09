@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Разметка в строке тултипа</title>
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-08">
+<meta name="ds-deck-evidence" content="src/lib/components/tooltip/tooltip.directive.ts:122 and tooltip-markup.ts - CHANGELOG.md Unreleased (Breaking, Added, Changed) - commit d852339db">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
+<style>
+  /* The tooltip panel rebuilt from tooltip-panel.component.scss on the same tokens. */
+  .tip {
+    display: block; position: relative; max-width: 100%; width: max-content;
+    padding: var(--space-1-5) var(--space-2-5);
+    background: var(--tooltip-bg-color); color: var(--tooltip-text-color);
+    border: var(--border-width-default) solid var(--tooltip-border-color); border-radius: var(--ds-radius-control);
+    box-shadow: var(--ds-elevation-overlay);
+    font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
+    overflow-wrap: anywhere; white-space: pre-line;
+  }
+  .tip strong { font-weight: var(--font-weight-bold); }
+
+  /* A ds-table header cell and a button, both clipping their text with an ellipsis. */
+  .th {
+    display: block; padding: var(--space-2) var(--space-3);
+    background: var(--surface-muted); border-bottom: var(--border-width-default) solid var(--border-default);
+    font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
+    letter-spacing: var(--letter-spacing-wider); text-transform: uppercase; color: var(--text-tertiary);
+    white-space: nowrap; box-sizing: border-box; max-width: 100%;
+  }
+  .th .dotted { text-decoration: underline dotted var(--text-tertiary); text-underline-offset: 3px; }
+  .demo-btn {
+    display: block; padding: var(--space-1-5) var(--space-3); box-sizing: border-box; max-width: 100%;
+    border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control);
+    background: var(--surface-default); color: var(--text-primary);
+    font: var(--font-weight-semibold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
+    white-space: nowrap;
+  }
+  .clip { display: block; overflow: clip; text-overflow: ellipsis; white-space: nowrap; }
+  .state { display: inline-block; padding: 0 var(--space-2); border-radius: var(--radius-pill); font: var(--font-weight-bold) var(--font-size-2xs) / 1.6 var(--font-sans); }
+  .state.is-clipped { background: var(--warning-subtitle); color: var(--warning-text); }
+  .state.is-fits { background: var(--success-subtitle); color: var(--success-text); }
+  .live { display: grid; gap: var(--space-2); align-content: start; padding: var(--space-3); background: var(--surface-muted); border-radius: var(--radius-md); min-height: 150px; }
+  .slider { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-3) 0 var(--space-2); font: var(--font-weight-semibold) var(--font-size-xs) / 1.4 var(--font-sans); }
+  .slider input { flex: 0 1 360px; accent-color: var(--accent); }
+  .slider output { font-family: var(--font-mono); color: var(--text-secondary); min-width: 5ch; }
+  .youpick { margin: 0; padding: var(--space-2) var(--space-3); border-left: 3px solid var(--accent); background: var(--accent-subtitle); font: var(--font-size-xs) / 1.5 var(--font-sans); }
+  .youpick b { display: block; margin-bottom: 2px; font-size: var(--font-size-2xs); letter-spacing: var(--letter-spacing-wider); text-transform: uppercase; color: var(--accent-strong); }
+
+  .code {
+    margin: 0; padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm); background: var(--surface-muted);
+    font: var(--font-size-2xs) / 1.55 var(--font-mono); color: var(--text-primary);
+    white-space: pre; overflow-x: auto;
+  }
+  .attrs { width: 100%; border-collapse: collapse; font-size: var(--font-size-2xs); }
+  .attrs th, .attrs td { padding: var(--space-1-5) var(--space-3); text-align: left; border-bottom: var(--border-width-default) solid var(--border-divider); vertical-align: top; }
+  .attrs td:first-child { font-family: var(--font-mono); white-space: nowrap; }
+  .attrs tr.is-gone td { color: var(--error-text); }
+  .attrs tr.is-changed td { background: var(--accent-subtitle); }
+  .attrs .tag { display: inline-block; padding: 0 var(--space-1-5); border-radius: var(--radius-pill); font-weight: var(--font-weight-bold); }
+  .tag.same { background: var(--surface-muted); color: var(--text-secondary); }
+  .tag.gone { background: var(--error-subtitle); color: var(--error-text); }
+  .tag.new { background: var(--accent-subtitle); color: var(--accent-strong); }
+
+  .opt { cursor: pointer; }
+  .opt > .badge { align-self: flex-start; }
+  .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+  .opt.is-chosen { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+  .opt .chosen-mark { display: none; font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--accent-strong); }
+  .opt.is-chosen .chosen-mark { display: block; }
+  .opts { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  .pill { padding: 2px var(--space-2); border-radius: var(--radius-pill); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.5 var(--font-sans); }
+  .pill.good { background: var(--success-subtitle); color: var(--success-text); }
+  .pill.bad { background: var(--error-subtitle); color: var(--error-text); }
+  .pill.mid { background: var(--warning-subtitle); color: var(--warning-text); }
+  main { padding-bottom: 72px; }
+  @media (max-width: 520px) { body { padding-inline: var(--space-4); } .opts { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1>Тултип обрезанного заголовка таблицы должен показывать название жирным, и надо выбрать, как это устроить</h1>
+    <p class="chat">Ответ нести в чат: «Тултип: разметка и подпись»</p>
+    <p class="lede">Два выбора. Первый про то, что видит пользователь. Второй про то, где в коде живёт правило. В каждой карточке есть живой пример: тяните ползунок и смотрите, что показывает тултип.</p>
+    <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">dsTooltip</span><span class="chip">ds-table hint</span><span class="chip">актуально на 2026-10-07</span></div>
+  </header>
+
+  <section class="panel">
+    <h2>Уже решено: в строке тултипа работает <code>**жирный**</code></h2>
+    <div class="stage"><div class="spec"><p class="cap">Что пишет разработчик</p><p class="code">[dsTooltip]="'Считает **только подтверждённые** места'"</p></div>
+      <div class="spec"><p class="cap">Что видит пользователь</p><span class="tip">Считает <strong>только подтверждённые</strong> места</span></div></div>
+    <p class="src">Больше ничего: ни курсива, ни кода, ни списков, ни тегов, ни шаблонов. Перенос строки <code>\n</code> уже работает. Если нужны сами звёздочки, пишется <code>\*\*</code>. Входа <code>dsTooltipClippedLead</code> не будет.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Атрибуты директивы тултипа: что изменится</h2>
+    <table class="attrs">
+      <thead><tr><th>Атрибут</th><th>Что делает сейчас, 0.14.8</th><th>После</th></tr></thead>
+      <tbody>
+        <tr class="is-changed"><td>dsTooltip</td><td>текст тултипа; перенос строки сохраняется</td><td><span class="tag new">меняется</span> то же, плюс <code>**жирный**</code></td></tr>
+        <tr class="is-gone"><td>dsTooltipClippedLead</td><td>подпись над подсказкой, когда текст обрезан</td><td><span class="tag gone">удаляется</span></td></tr>
+        <tr><td>dsTooltipWhenClipped</td><td>показывать тултип только когда текст обрезан</td><td><span class="tag same">без изменений</span></td></tr>
+        <tr><td>dsTooltipTextSelector</td><td>какой элемент внутри хоста проверять на обрезку. Нужен, когда многоточие стоит не на самом хосте, а на вложенном span: так в <code>ds-select</code> (триггер и пункты), <code>ds-multi-select</code>, <code>ds-autocomplete</code> и в ячейках таблицы. Без него эти пять компонентов не узнают, что текст обрезан</td><td><span class="tag same">без изменений</span> нужен</td></tr>
+        <tr><td>dsTooltipPlacement</td><td>сторона тултипа. Внутри библиотеки его задаёт <code>ds-sidenav-item</code> (справа от свёрнутой рейки); у остальных по умолчанию сверху</td><td><span class="tag same">без изменений</span> нужен</td></tr>
+        <tr><td>dsTooltipDelay</td><td>задержка до появления, 120 мс по умолчанию. Внутри библиотеки его не задаёт никто; это ручка только для приложений</td><td><span class="tag same">без изменений</span> внутри не используется</td></tr>
+      </tbody>
+    </table>
+    <p class="src">Новых атрибутов нет ни в одном из вариантов ниже.</p>
+  </section>
+
+  <section class="panel q" data-q="show" data-review="Что показывает тултип заголовка" data-review-note-only>
+    <h2>Выбор 1. Что показывает тултип заголовка, у которого есть подсказка</h2>
+    <p>У колонки есть название <b>Registered attendee count</b> и подсказка <b>People who confirmed a seat</b>. Тяните ползунок: колонка становится уже, и название обрезается многоточием. В каждой карточке видно, что покажет тултип при этой ширине.</p>
+    <label class="slider">Ширина колонки <input type="range" min="90" max="300" value="130" data-slider="show"><output data-out="show">130 px</output></label>
+    <div class="opts">
+      <article class="opt" tabindex="0" data-mode="always">
+        <h3>Название и подсказка, всегда</h3>
+        <p class="youpick"><b>Ты выбираешь</b>тултип всегда начинается с названия жирным, ниже подсказка. Ширина колонки ни на что не влияет.</p>
+        <div class="live" data-demo="show"><span class="state"></span><span class="th"><span class="clip dotted">Registered attendee count</span></span><span class="tip"></span></div>
+        <div class="pills"><span class="pill good">правило проще всех</span><span class="pill mid">название повторяется, когда и так видно</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0" data-mode="hint">
+        <h3>Только подсказка</h3>
+        <p class="youpick"><b>Ты выбираешь</b>тултип всегда показывает одну подсказку. Если название обрезано, прочитать его негде.</p>
+        <div class="live" data-demo="show"><span class="state"></span><span class="th"><span class="clip dotted">Registered attendee count</span></span><span class="tip"></span></div>
+        <div class="pills"><span class="pill good">ничего не добавляем</span><span class="pill bad">обрезанное название нигде не прочесть</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0" data-mode="clipped">
+        <span class="badge is-pick">ваш вариант из чата</span>
+        <h3>Название только когда не влезает</h3>
+        <p class="youpick"><b>Ты выбираешь</b>колонка широкая: тултип это подсказка. Колонка узкая и название обрезано: сверху добавляется название жирным.</p>
+        <div class="live" data-demo="show"><span class="state"></span><span class="th"><span class="clip dotted">Registered attendee count</span></span><span class="tip"></span></div>
+        <div class="pills"><span class="pill good">название появляется, когда оно нужно</span><span class="pill mid">нужно решить, кто это считает (выбор 2)</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel q" data-q="where" data-review="Где живёт правило" data-review-note-only>
+    <h2>Выбор 2. Где в коде живёт правило «название только когда не влезает»</h2>
+    <p>Нужен только если в выборе 1 взят третий вариант. Результат в заголовке таблицы у обоих одинаковый. Разница в том, что ещё меняется. Ниже пример постороннего места: кнопка в приложении, у которой есть тултип и длинная надпись. Тяните ползунок.</p>
+    <label class="slider">Ширина кнопки <input type="range" min="90" max="300" value="130" data-slider="where"><output data-out="where">130 px</output></label>
+    <div class="opts">
+      <article class="opt is-pick" tabindex="0" data-mode="directive">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Правило в тултипе, для всех</h3>
+        <p class="youpick"><b>Ты выбираешь</b>сам тултип смотрит: если текст под ним обрезан, он добавляет этот текст жирным сверху. Правило одно и то же для <code>dsTooltip</code> и для <code>dsTooltipWhenClipped</code>: это один класс, и срабатывает оно, когда у хоста есть свой текст тултипа, а сам хост обрезан. Если текст тултипа уже содержит текст хоста, ничего не добавляется.</p>
+        <div class="live" data-demo="where"><span class="state"></span><span class="demo-btn"><span class="clip">Export all customers to a file</span></span><span class="tip"></span></div>
+        <p class="cap">Что написано в приложении</p>
+        <p class="code">&lt;button [dsTooltip]="'Download CSV'"&gt;
+  Export all customers to a file
+&lt;/button&gt;</p>
+        <div class="pills"><span class="pill good">в таблице один <code>dsTooltip</code>, ничего больше</span><span class="pill bad">чужие кнопки с обрезанным текстом тоже получат жирный текст сверху</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0" data-mode="table">
+        <h3>Правило только в таблице</h3>
+        <p class="youpick"><b>Ты выбираешь</b>таблица сама следит за шириной своих заголовков и сама подставляет название. Тултип в целом не меняется.</p>
+        <div class="live" data-demo="where"><span class="state"></span><span class="demo-btn"><span class="clip">Export all customers to a file</span></span><span class="tip"></span></div>
+        <p class="cap">Что написано внутри таблицы</p>
+        <p class="code">&lt;button [dsTooltip]="clipped(col)
+  ? '**' + col.label + '**\n' + col.hint
+  : col.hint"&gt;</p>
+        <div class="pills"><span class="pill good">чужие тултипы не меняются</span><span class="pill bad">таблица хранит обрезку каждой колонки</span><span class="pill bad">строка должна успеть обновиться до открытия</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+    <table class="attrs">
+      <thead><tr><th>Где стоит</th><th>Что покажет тултип при обрезке</th><th>Меняется ли</th></tr></thead>
+      <tbody>
+        <tr><td><code>dsTooltip</code> с текстом, который не повторяет текст хоста (подсказка заголовка, кнопка Export)</td><td>жирный текст хоста, ниже подсказка</td><td><span class="tag new">меняется</span></td></tr>
+        <tr><td><code>dsTooltip</code> с текстом, который уже содержит текст хоста (сайднав, заголовок без подсказки)</td><td>как сейчас</td><td><span class="tag same">нет</span></td></tr>
+        <tr><td><code>dsTooltipWhenClipped</code> без своего текста (select, breadcrumbs, stat, ячейки)</td><td>текст хоста, как сейчас</td><td><span class="tag same">нет</span></td></tr>
+        <tr><td><code>dsTooltipWhenClipped</code> вместе с текстом тултипа, который не повторяет текст хоста</td><td>жирный текст хоста, ниже текст тултипа</td><td><span class="tag new">меняется</span></td></tr>
+      </tbody>
+    </table>
+    <p class="src">Если в выборе 1 взят первый или второй вариант, выбор 2 не нужен: таблица склеивает название и подсказку сама, измерять нечего.</p>
+  </section>
+
+  <section class="panel verdict is-done">
+    <h2>Рекомендация</h2>
+    <p class="pick"><strong>Выбор 1: название только когда не влезает. Выбор 2: правило в тултипе.</strong> Это ваш вариант из чата и самая простая запись: в таблице один <code>dsTooltip</code>, ничего не склеивается и не измеряется снаружи. Цена видна в примере: чужая кнопка с обрезанным текстом и тултипом получит жирный текст сверху; если тултип уже содержит этот текст, ничего не добавляется. Если это неприемлемо, берите «правило только в таблице».</p>
+    <p>Что делаю сам, без вопроса, с записью в Unreleased и пунктами в миграциях: разбор <code>**</code>, экранирование, удаление <code>dsTooltipClippedLead</code>, правка шаблона таблицы, текст без маркеров для скринридера, строка в <code>components.md</code> и каталоге.</p>
+  </section>
+
+  <p class="src"><b>Источники, проверено 2026-10-07 на <code>dev</code>.</b> <code>tooltip.directive.ts</code> - <code>tipText()</code>, <code>isClipped()</code>, <code>dsTooltipTextSelector</code>; <code>tooltip-panel.component.ts</code> - шаблон <code>{{ text() }}</code>; <code>table.component.html</code> - у колонки с <code>hint</code> кнопка получает <code>dsTooltipClippedLead</code>; перебор <code>dsTooltip</code> в <code>src/lib</code> - вне таблицы он стоит только на сайднаве, где подсказка уже содержит текст хоста; <code>docs/todo.md</code> - P1 «подпись обрезанного заголовка должна быть жирной отдельной строкой». Примеры собраны из SCSS панели и таблицы на токенах <code>ds.css</code>, не из самого компонента; обрезка в них определяется так же, как в директиве: ширина содержимого больше ширины элемента.</p>
+</main>
+
+<script>
+  const NAME = 'Registered attendee count';
+  const HINT = 'People who confirmed a seat';
+  const BUTTON_TEXT = 'Export all customers to a file';
+  const BUTTON_HINT = 'Download CSV';
+
+  function setTip(tip, boldLine, plainLine) {
+    tip.replaceChildren();
+    if (boldLine) {
+      const strong = document.createElement('strong');
+      strong.textContent = boldLine;
+      tip.append(strong, '\n');
+    }
+    tip.append(plainLine);
+  }
+
+  function update(group, width) {
+    for (const card of document.querySelectorAll(`.q[data-q="${group === 'show' ? 'show' : 'where'}"] .opt`)) {
+      const live = card.querySelector('.live');
+      const holder = live.querySelector('.th, .demo-btn');
+      holder.style.width = width + 'px';
+      const text = holder.querySelector('.clip');
+      const clipped = text.scrollWidth > text.clientWidth;
+      const state = live.querySelector('.state');
+      state.textContent = clipped ? 'название обрезано' : 'название помещается';
+      state.className = 'state ' + (clipped ? 'is-clipped' : 'is-fits');
+      const mode = card.dataset.mode;
+      const tip = live.querySelector('.tip');
+      if (group === 'show') {
+        if (mode === 'always') { setTip(tip, NAME, HINT); }
+        else if (mode === 'hint') { setTip(tip, '', HINT); }
+        else { setTip(tip, clipped ? NAME : '', HINT); }
+      } else {
+        if (mode === 'directive') { setTip(tip, clipped ? BUTTON_TEXT : '', BUTTON_HINT); }
+        else { setTip(tip, '', BUTTON_HINT); }
+      }
+    }
+  }
+  for (const slider of document.querySelectorAll('input[data-slider]')) {
+    const group = slider.dataset.slider;
+    const out = document.querySelector(`[data-out="${group}"]`);
+    const apply = () => { out.textContent = slider.value + ' px'; update(group, Number(slider.value)); };
+    slider.addEventListener('input', apply);
+    apply();
+  }
+
+  const PICK_KEY = 'ds-deck-tooltip-markup-picks';
+  const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
+  const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private window */ } };
+  const state = read(PICK_KEY, {});
+  const sections = [...document.querySelectorAll('.q[data-q]')];
+  const labels = { show: 'Что показывает тултип заголовка', where: 'Где живёт правило' };
+  const optionName = (card) => card.querySelector('h3').textContent.trim();
+  function render() {
+    for (const section of sections) {
+      for (const card of section.querySelectorAll('.opt')) {
+        const chosen = state[section.dataset.q] === optionName(card);
+        card.classList.toggle('is-chosen', chosen);
+        card.setAttribute('aria-pressed', String(chosen));
+      }
+    }
+    window.deckReview?.refresh();
+  }
+  function pick(section, card) {
+    const key = section.dataset.q;
+    const name = optionName(card);
+    if (state[key] === name) { delete state[key]; } else { state[key] = name; }
+    write(PICK_KEY, state);
+    render();
+  }
+  window.deckReviewHooks = {
+    extra: () => Object.keys(state).map((key) => `${labels[key]} - ${state[key]}`).join('; '),
+    onReset: () => { for (const key of Object.keys(state)) delete state[key]; write(PICK_KEY, state); render(); },
+  };
+  for (const section of sections) {
+    for (const card of section.querySelectorAll('.opt')) {
+      card.setAttribute('role', 'button');
+      card.addEventListener('click', (event) => { if (!event.target.closest('.code, .live')) pick(section, card); });
+      card.addEventListener('keydown', (event) => {
+        if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); pick(section, card); }
+      });
+    }
+  }
+  render();
+</script>
+<!-- deck-review -->
+<script>
+// deck-review: verdict per [data-review] block, a textarea for remarks, one answer line in a fixed bar.
+// Inlined into a deck by ~/.claude/bin/deck-review-inline; contract in ~/.claude/docs/deck-review.md.
+(() => {
+  // Every key under deck-review: is a disposable reviewer answer, kept 7 days after its last change.
+  const PREFIX = 'deck-review:v1:';
+  const KEY = PREFIX + (document.documentElement.dataset.deck || document.title);
+  const KEEP_MS = 7 * 24 * 60 * 60 * 1000;
+  const ACCEPT = 'принято';
+  const REMARK = 'есть замечание';
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith('deck-review:')) continue;
+      let expires = 0;
+      try { if (key.startsWith(PREFIX)) expires = JSON.parse(localStorage.getItem(key))?.expires; } catch { /* malformed: drop */ }
+      if (!(expires > Date.now())) localStorage.removeItem(key);
+    }
+  } catch { /* private window */ }
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY))?.answers ?? {}; } catch { return {}; } };
+  const write = () => { try { localStorage.setItem(KEY, JSON.stringify({ expires: Date.now() + KEEP_MS, answers: state })); } catch { /* private window */ } };
+  const state = read();
+
+  document.head.insertAdjacentHTML('beforeend', `<style>
+    .dr-row { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px 0; }
+    .dr-btn { padding: 4px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 999px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-btn[aria-pressed="true"] { background: var(--accent-subtitle, #e6efff); border-color: var(--accent-strong, #2457c5); color: var(--accent-strong, #2457c5); }
+    .dr-btn[data-v="${REMARK}"][aria-pressed="true"] { background: var(--error-subtitle, #fdecec); border-color: var(--error-text, #b42318); color: var(--error-text, #b42318); }
+    .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--error-text, #b42318); border-radius: 8px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
+    .dr-note[hidden] { display: none; }
+    .dr-bar { position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; padding: 10px 20px; background: var(--surface-default, #fff); border-top: 1px solid var(--border-divider, #e3e6eb); box-shadow: 0 -4px 16px rgb(0 0 0 / .08); color: var(--text-primary, #1d2330); font: 13px/1.4 var(--font-sans, system-ui, sans-serif); }
+    .dr-bar b { flex: none; }
+    .dr-bar .dr-chat { flex: none; color: var(--text-tertiary, #6b7280); }
+    .dr-bar output { flex: 1 1 auto; min-inline-size: 0; overflow-x: auto; white-space: nowrap; color: var(--text-secondary, #4b5563); font-family: var(--font-mono, ui-monospace, monospace); }
+    .dr-bar button { flex: none; padding: 6px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 6px; background: var(--surface-default, #fff); color: inherit; font: 600 13px/1.4 inherit; cursor: pointer; }
+    body { padding-block-end: 72px; }
+    @media (max-width: 640px) { .dr-bar { padding: 8px 12px; gap: 8px; } .dr-bar .dr-chat { display: none; } }
+  </style>`);
+
+  let items = [...document.querySelectorAll('[data-review]')];
+  if (!items.length) {
+    const whole = document.createElement('section');
+    whole.dataset.review = 'Дека в целом';
+    whole.innerHTML = '<h3>Дека в целом</h3>';
+    (document.querySelector('main') ?? document.body).append(whole);
+    items = [whole];
+  }
+
+  const controls = new Map();
+  for (const item of items) {
+    const label = item.dataset.review;
+    const row = document.createElement('div');
+    row.className = 'dr-row';
+    const verdicts = item.hasAttribute('data-review-note-only') ? [REMARK] : [ACCEPT, REMARK];
+    const buttons = verdicts.map((verdict) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'dr-btn';
+      button.dataset.v = verdict;
+      button.textContent = verdict === ACCEPT ? 'Принято' : 'Есть замечание';
+      button.addEventListener('click', () => {
+        const entry = (state[label] ??= {});
+        entry.v = entry.v === verdict ? '' : verdict;
+        write();
+        render();
+        if (entry.v === REMARK) note.focus();
+      });
+      return button;
+    });
+    const note = document.createElement('textarea');
+    note.className = 'dr-note';
+    note.placeholder = 'Что не так';
+    note.setAttribute('aria-label', `Замечание: ${label}`);
+    note.addEventListener('input', () => { (state[label] ??= {}).note = note.value; write(); render(); });
+    row.append(...buttons);
+    item.append(row, note);
+    controls.set(label, { buttons, note });
+  }
+
+  const chat = document.querySelector('.chat')?.textContent.replace(/^[^«]*/, '') ?? '';
+  const bar = document.createElement('div');
+  bar.className = 'dr-bar';
+  bar.innerHTML = `<b></b><span class="dr-chat"></span><output></output><button type="button" data-a="copy">Скопировать</button><button type="button" data-a="reset">Сбросить</button>`;
+  bar.querySelector('.dr-chat').textContent = chat;
+  document.body.append(bar);
+  const line = bar.querySelector('output');
+
+  const hooks = (window.deckReviewHooks ??= {});
+  window.deckReview = { refresh: () => render() };
+
+  function render() {
+    const parts = [];
+    let done = 0;
+    for (const [label, { buttons, note }] of controls) {
+      const entry = state[label] ?? {};
+      for (const button of buttons) button.setAttribute('aria-pressed', String(entry.v === button.dataset.v));
+      note.hidden = entry.v !== REMARK;
+      if (note.value !== (entry.note ?? '')) note.value = entry.note ?? '';
+      if (!entry.v) continue;
+      done++;
+      const text = entry.note?.trim().replace(/\s+/g, ' ');
+      parts.push(entry.v === REMARK ? `${label} - замечание${text ? `: «${text}»` : ''}` : `${label} - принято`);
+    }
+    const extra = hooks.extra?.();
+    if (extra) parts.push(extra);
+    bar.querySelector('b').textContent = `${done} из ${controls.size}`;
+    line.textContent = parts.length ? `Дека ${document.title}: ${parts.join('; ')}` : 'пока ничего не выбрано';
+  }
+
+  bar.addEventListener('click', (event) => {
+    const action = event.target.closest('button')?.dataset.a;
+    if (action === 'copy') navigator.clipboard?.writeText(line.textContent);
+    if (action === 'reset') { for (const label of Object.keys(state)) delete state[label]; write(); hooks.onReset?.(); render(); }
+  });
+  render();
+})();
+</script>
+<!-- /deck-review -->
+</body>
+</html>

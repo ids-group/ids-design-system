@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 /* Truncation contract:
    Value - Clamped to 0..max in the wrapper.
    Indeterminate - Width input is ignored. Animation runs at --duration-loop-slow. */
@@ -20,6 +23,8 @@
   block-size: var(--_bar-height);
   background: var(--_bar-track-color);
   border-radius: var(--_bar-radius);
+
+  // glyph-clip-guard: the track holds no text
   overflow: hidden;
 
   > span {

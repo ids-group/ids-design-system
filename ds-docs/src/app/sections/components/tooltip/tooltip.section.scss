@@ -1,3 +1,5 @@
+@use 'styles/pinned';
+
 .states {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -41,3 +43,45 @@
       border-radius: var(--radius-md);
       cursor: pointer;
     }
+
+    .clip-card {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+    }
+
+    .clip-chip {
+      max-inline-size: 120px;
+      overflow: hidden;
+      padding: var(--space-0-5) var(--space-2);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-sm);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .info-row {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+
+.states.is-surface { background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider); }
+
+/* State pins read the triggers' own resolvers. */
+[dsDefinitionTerm].pin-hover { text-decoration: underline solid var(--_term-line-color-hover); }
+[dsDefinitionTerm].pin-active { color: var(--_term-color-pressed); background: var(--_term-bg-pressed); box-shadow: 0 0 0 2px var(--_term-bg-pressed); text-decoration: underline solid var(--_term-color-pressed); }
+[dsDefinitionTerm].pin-pinned { @include pinned.cue; }
+[dsDefinitionTerm].pin-pinned-active { @include pinned.cue-pressed(2px); }
+[dsDefinitionTerm].pin-pinned-hover { @include pinned.cue-hover(2px); }
+[dsDefinitionTerm].pin-focus { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); }
+:host ::ng-deep .pin-hover .info-hint { color: var(--_info-hint-color-hover); }
+:host ::ng-deep .pin-active .info-hint { color: var(--_info-hint-color-hover); background: var(--_info-hint-bg-pressed); box-shadow: 0 0 0 3px var(--_info-hint-bg-pressed); }
+:host ::ng-deep .pin-pinned .info-hint { @include pinned.cue($underline: false); }
+:host ::ng-deep .pin-pinned-active .info-hint { @include pinned.cue-pressed(3px, $underline: false); }
+:host ::ng-deep .pin-pinned-hover .info-hint { @include pinned.cue-hover(3px, $underline: false); }
+:host ::ng-deep .pin-focus .info-hint { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); }

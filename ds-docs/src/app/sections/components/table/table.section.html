@@ -100,9 +100,18 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       hint: '…'
-    </code> defines a column's term: the label gets a dotted underline and shows the hint on hover
-    and keyboard focus. On a sortable column the sort button carries it, with no extra Tab stop.
+    </code> makes the label a
+    <code class="t-mono-inline">
+      dsDefinitionTerm
+    </code>: dotted underline, hint on
+    hover and keyboard focus, a click pins it.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      Sortable column - the sort button carries it, no extra Tab stop; a click sorts.
+    </li>
+  </ul>
 
   <ds-table
     caption="Records with column hints"
@@ -296,28 +305,27 @@
   </h3>
 
   <p class="block-desc t-s">
-    A clickable row is no link to screen readers, Ctrl/Cmd-click, keyboard or touch. A column
-    <code class="t-mono-inline">
-      link
-    </code> returning a route target renders a real
-    <code class="t-mono-inline">
-      &lt;a&gt;
-    </code>;
-    <code class="t-mono-inline">
-      null
-    </code> keeps that cell plain text. External URLs need a
-    <code class="t-mono-inline">
-      [cell]
-    </code> template.
+    A clickable row is no link to screen readers, Ctrl/Cmd-click, keyboard or
+    touch. A real <code class="t-mono-inline">&lt;a&gt;</code> is:
   </p>
 
-  <p class="block-desc t-s">
-    With <code class="t-mono-inline">rowInteractive</code>, a click on the link skips the row handler; the rest of the row still fires it.
-    That is two tab stops per row; on long lists drop
-    <code class="t-mono-inline">
-      rowInteractive
-    </code>.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Column <code class="t-mono-inline">link</code> returning a route target - renders an <code class="t-mono-inline">&lt;a&gt;</code>; <code class="t-mono-inline">null</code> keeps that cell plain text.
+    </li>
+
+    <li>
+      External URL - a <code class="t-mono-inline">[cell]</code> template.
+    </li>
+
+    <li>
+      With <code class="t-mono-inline">rowInteractive</code> - a click on the link skips the row handler; the rest of the row fires it.
+    </li>
+
+    <li>
+      That is two tab stops per row; on long lists drop <code class="t-mono-inline">rowInteractive</code>.
+    </li>
+  </ul>
 
   <ds-table
     caption="Records, with the name as a link"
@@ -1092,20 +1100,29 @@
     Clickable rows · drawer detail
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [rowInteractive]="true"
-    </code>: keyboard-operable rows (pointer,
-    tints, focus ring, Enter/Space); <code class="t-mono-inline">(rowClicked)</code> emits the row,
-    here opening a <code class="t-mono-inline">ds-drawer</code>.
-    <code class="t-mono-inline">
-      [activeRowId]
-    </code> marks it (with
-    <code class="t-mono-inline">
-      aria-current
-    </code>). In-cell controls and text selection never
-    fire the click.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        [rowInteractive]="true"
+      </code> - keyboard-operable rows: pointer, tints, focus ring, <kbd>Enter</kbd> / <kbd>Space</kbd>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        (rowClicked)
+      </code> - emits the row, here opening a <code class="t-mono-inline">ds-drawer</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [activeRowId]
+      </code> - marks it, with <code class="t-mono-inline">aria-current</code>.
+    </li>
+
+    <li>
+      In-cell controls and text selection never fire the click.
+    </li>
+  </ul>
 
   <ds-table
     caption="Records"
@@ -1191,19 +1208,15 @@
     </code>.
   </p>
 
-  <p class="block-desc t-s">
-    Per row: <code class="t-mono-inline">disabled</code> greys an item,
-    <code class="t-mono-inline">
-      disabledReason
-    </code> explains it,
-    <code class="t-mono-inline">
-      hidden
-    </code> omits it; all hidden, no kebab. A hand-built action
-    column with no visible header needs
-    <code class="t-mono-inline">
-      screenReaderLabel
-    </code>.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Per row: <code class="t-mono-inline">disabled</code> greys an item, <code class="t-mono-inline">disabledReason</code> explains it, <code class="t-mono-inline">hidden</code> omits it; all hidden, no kebab.
+    </li>
+
+    <li>
+      A hand-built action column with no visible header needs <code class="t-mono-inline">screenReaderLabel</code>.
+    </li>
+  </ul>
 
   <ds-table
     caption="Records"
@@ -1224,23 +1237,31 @@
     Column picker · reorder
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      dsTableColumns
-    </code> adds a <code class="t-mono-inline">Columns</code>
-    button toggling <code class="t-mono-inline">hideable: true</code> columns (two-way
-    <code class="t-mono-inline">
-      [(hiddenKeys)]
-    </code>; <code class="t-mono-inline">hidden: true</code>
-    starts hidden; the last visible column is locked).
-    <code class="t-mono-inline">
-      [reorderableColumns]="true"
-    </code> adds drag and up/down, two-way
-    via <code class="t-mono-inline">[(columnOrder)]</code>.
-    <code class="t-mono-inline">
-      Reset to default
-    </code> clears both.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        dsTableColumns
+      </code> - a <code class="t-mono-inline">Columns</code> button toggling <code class="t-mono-inline">hideable: true</code> columns; two-way <code class="t-mono-inline">[(hiddenKeys)]</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        hidden: true
+      </code> - starts hidden; the last visible column is locked.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [reorderableColumns]="true"
+      </code> - drag and up/down; two-way <code class="t-mono-inline">[(columnOrder)]</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        Reset to default
+      </code> - clears both.
+    </li>
+  </ul>
 
   <ds-table
     caption="Records"
@@ -1257,26 +1278,57 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       dsTableResize
-    </code> adds header edge handles. Seed from <code class="t-mono-inline">column.width</code>, read
-    <code class="t-mono-inline">
-      viewChild(DsTableResize).columnWidths()
-    </code> (a
-    <code class="t-mono-inline">
-      Map&lt;key, px&gt;
-    </code>), persist with
-    <code class="t-mono-inline">
-      persistLayout
-    </code>. The first drag fixes all visible widths, so
-    nothing jumps.
+    </code> adds header edge handles. The
+    first drag fixes all visible widths, so nothing jumps.
   </p>
 
-  <p class="block-desc t-s">
-    Handles are focusable <code class="t-mono-inline">role="separator"</code> with
-    <code class="t-mono-inline">
-      aria-valuenow/min/max
-    </code> in px. Arrows step 16px,
-    PageUp/PageDown 64px, Home resets to auto; max is the scroll viewport.
-  </p>
+  <dl class="spec">
+    <dt>
+      Seed
+    </dt>
+
+    <dd>
+      <code class="t-mono-inline">
+        column.width
+      </code>
+    </dd>
+
+    <dt>
+      Read
+    </dt>
+
+    <dd>
+      <code class="t-mono-inline">
+        viewChild(DsTableResize).columnWidths()
+      </code>, a <code class="t-mono-inline">Map&lt;key, px&gt;</code>
+    </dd>
+
+    <dt>
+      Persist
+    </dt>
+
+    <dd>
+      <code class="t-mono-inline">
+        persistLayout
+      </code>
+    </dd>
+
+    <dt>
+      Handle
+    </dt>
+
+    <dd>
+      Focusable <code class="t-mono-inline">role="separator"</code>, <code class="t-mono-inline">aria-valuenow/min/max</code> in px
+    </dd>
+
+    <dt>
+      Keys
+    </dt>
+
+    <dd>
+      Arrows 16px, <kbd>PageUp</kbd> / <kbd>PageDown</kbd> 64px, <kbd>Home</kbd> resets to auto; max is the scroll viewport
+    </dd>
+  </dl>
 
   <ds-table
     caption="Records"
@@ -1394,15 +1446,23 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [toolbar]
-    </code>: a row above the table for search (here
-    <code class="t-mono-inline">
-      [filterQuery]
-    </code>), filter, refresh. Several controls flex-wrap,
-    8px gap; one element owns its layout. Hidden when empty and
-    <code class="t-mono-inline">
-      dsTableExport
-    </code> is off. Page filters go in <code class="t-mono-inline">ds-filter-bar</code>.
+    </code>: a row above the table for search
+    (here <code class="t-mono-inline">[filterQuery]</code>), filter, refresh.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      Several controls flex-wrap with an 8px gap; one element owns its layout.
+    </li>
+
+    <li>
+      Hidden when empty and <code class="t-mono-inline">dsTableExport</code> is off.
+    </li>
+
+    <li>
+      Page filters go in <code class="t-mono-inline">ds-filter-bar</code>.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
     Public <code class="t-mono-inline">runExport()</code>, <code class="t-mono-inline">exportCsv()</code>
@@ -1496,22 +1556,25 @@
     The same thing two-way, when the host has no opinion to defend
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [(sortKey)]
-    </code> and
-    <code class="t-mono-inline">
-      [(sortDirection)]
-    </code> need no handler. Clearing sets
-    <code class="t-mono-inline">
-      sortDirection
-    </code> to <code class="t-mono-inline">null</code>:
-    rows unsort. Use two-way when any state is valid, one-way when the host restores a default.
-    Host state:
-    <code class="t-mono-inline">
-      {{ twoWaySortKey() }} · {{ twoWaySortDir() ?? 'null' }}
-    </code>
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        [(sortKey)]
+      </code> and <code class="t-mono-inline">[(sortDirection)]</code> need no handler.
+    </li>
+
+    <li>
+      Clearing sets <code class="t-mono-inline">sortDirection</code> to <code class="t-mono-inline">null</code>: rows unsort.
+    </li>
+
+    <li>
+      Two-way when any state is valid; one-way when the host restores a default.
+    </li>
+
+    <li>
+      Host state: <code class="t-mono-inline">{{ twoWaySortKey() }} · {{ twoWaySortDir() ?? 'null' }}</code>
+    </li>
+  </ul>
 
   <ds-table
     caption="Projects, two-way sort"
@@ -1528,24 +1591,19 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       filter: 'set'
-    </code> adds a funnel with a searchable checklist of
-    distinct values, highlighted while active. Two-way via
-    <code class="t-mono-inline">
-      [(columnFilters)]
-    </code>; combines with
-    <code class="t-mono-inline">
-      [filterQuery]
-    </code>. Rows narrow only with
-    <code class="t-mono-inline">
-      filterMode="client"
-    </code>; unset resolves to
-    <code class="t-mono-inline">
-      server
-    </code>, which only updates
-    <code class="t-mono-inline">
-      columnFilters
-    </code>.
+    </code> adds a funnel with a searchable
+    checklist of distinct values, highlighted while active.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      Two-way via <code class="t-mono-inline">[(columnFilters)]</code>; combines with <code class="t-mono-inline">[filterQuery]</code>.
+    </li>
+
+    <li>
+      Rows narrow only with <code class="t-mono-inline">filterMode="client"</code>; unset resolves to <code class="t-mono-inline">server</code>, which only updates <code class="t-mono-inline">columnFilters</code>.
+    </li>
+  </ul>
 
   <ds-table
     caption="Records"
@@ -1566,17 +1624,21 @@
     Truncation · full-text popover
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      truncate: true
-    </code> ellipsis-clips a text
-    column at its <code class="t-mono-inline">width</code> (240px when unset). Tooltip shows the
-    full value; a clipped cell click opens a popover, an unclipped one clicks the row. Detection
-    runs only in <code class="t-mono-inline">truncate</code> columns, including
-    <code class="t-mono-inline">
-      dsCellTemplate
-    </code> descendants.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        truncate: true
+      </code> - ellipsis-clips a text column at its <code class="t-mono-inline">width</code>. Without one the column grows to its text while the table has room and takes what the other columns leave when it does not; in a table that scrolls anyway it clips at 240px.
+    </li>
+
+    <li>
+      Tooltip - the full value. Click - a clipped cell opens a popover, an unclipped one clicks the row.
+    </li>
+
+    <li>
+      Detection runs only in <code class="t-mono-inline">truncate</code> columns, <code class="t-mono-inline">dsCellTemplate</code> descendants included.
+    </li>
+  </ul>
 
   <ds-table
     caption="Records"
@@ -1683,32 +1745,67 @@
     Server-side filtering, and a filter of your own
   </h3>
 
-  <p class="block-desc t-s">
-    Default <code class="t-mono-inline">filterMode="server"</code>: the table tracks
-    <code class="t-mono-inline">
-      columnFilters
-    </code>; your request filters. Pass all values via
-    <code class="t-mono-inline">
-      columnFilterOptions
-    </code> or the checklist shows only this page.
-    <code class="t-mono-inline">
-      filterMode="client"
-    </code> when the table holds every row; <code class="t-mono-inline">filterMode="none"</code> removes the
-    affordance. A <code class="t-mono-inline">filter: 'set'</code> column with no
-    <code class="t-mono-inline">
-      total
-    </code> and no mode gets a dev warning.
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          filterMode
+        </th>
 
-  <p class="block-desc t-s">
-    Non-list criteria (date range, threshold): project a panel with
-    <code class="t-mono-inline">
-      dsHeaderFilter
-    </code>; the table keeps button, popover and styling.
-    <code class="t-mono-inline">
-      active
-    </code> marks it set.
-  </p>
+        <th>
+          Effect
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            server
+          </code> (default)
+        </td>
+
+        <td>
+          The table tracks <code class="t-mono-inline">columnFilters</code>; your request filters. Pass all values via <code class="t-mono-inline">columnFilterOptions</code>, or the checklist shows only this page.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            client
+          </code>
+        </td>
+
+        <td>
+          The table holds every row and filters them.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            none
+          </code>
+        </td>
+
+        <td>
+          Removes the affordance.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="block-desc t-s">
+    <li>
+      A <code class="t-mono-inline">filter: 'set'</code> column with no <code class="t-mono-inline">total</code> and no mode - dev warning.
+    </li>
+
+    <li>
+      Non-list criteria (date range, threshold) - project a panel with <code class="t-mono-inline">dsHeaderFilter</code>; the table keeps button, popover and styling. <code class="t-mono-inline">active</code> marks it set.
+    </li>
+  </ul>
 
   <pre
     class="t-mono-block"><code>&lt;ng-template dsHeaderFilter="opened" [active]="!!range()" let-close="close"&gt;
@@ -1721,26 +1818,95 @@
   </h3>
 
   <p class="block-desc t-s">
-    One <code class="t-mono-inline">role="status"</code> region announces sort ("Sorted by Owner,
-    ascending") and range ("Showing 1-25 of 240"). Loading wins; the first render is silent.
-    <code class="t-mono-inline">
-      sortAnnouncement
-    </code> and
-    <code class="t-mono-inline">
-      rangeAnnouncement
-    </code> map facts to the sentence; empty string
-    means silence.
+    One <code class="t-mono-inline">role="status"</code> region. Loading wins; the
+    first render is silent.
   </p>
 
-  <p class="block-desc t-s">
-    A paged table with no rows announces its empty-state text, else calls
-    <code class="t-mono-inline">
-      rangeAnnouncement(0, 0, 0)
-    </code>. An empty server page with
-    <code class="t-mono-inline">
-      total
-    </code> above 0 stays silent.
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Fact
+        </th>
+
+        <th>
+          Announced
+        </th>
+
+        <th>
+          Mapped by
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          Sort
+        </td>
+
+        <td>
+          "Sorted by Owner, ascending"
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            sortAnnouncement
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Range
+        </td>
+
+        <td>
+          "Showing 1-25 of 240"
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            rangeAnnouncement
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Paged, no rows
+        </td>
+
+        <td>
+          The empty-state text, else <code class="t-mono-inline">rangeAnnouncement(0, 0, 0)</code>
+        </td>
+
+        <td>
+          -
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Empty server page, <code class="t-mono-inline">total</code> &gt; 0
+        </td>
+
+        <td>
+          Nothing
+        </td>
+
+        <td>
+          -
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="block-desc t-s">
+    <li>
+      A mapper returning an empty string - silence.
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     Virtual scroll

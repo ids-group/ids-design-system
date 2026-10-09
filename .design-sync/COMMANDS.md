@@ -30,7 +30,7 @@ own `<h3 class="block-title">` and description, and the card keeps exactly that
 block plus the chapter's heading, tag chip and lede. **Nothing is published by
 default**: a block reaches Claude Design only when ds-docs marks it
 `data-claude-design`. What to mark, what not to, and how many:
-[`CARDS.md`](CARDS.md). 91 components, 259 cards.
+[`CARDS.md`](CARDS.md).
 
 That granularity is forced by how the pane renders: it fits a card's declared
 `viewport` into a fixed tile, so **the declared height IS the zoom level**.
@@ -65,9 +65,9 @@ disagreed — Container, Inline, Stack and Divider were filed under `layout` /
 `data-display` while ds-docs puts all four under Foundations.
 
 Heights are generated: `node .design-sync/tools/measure-cards.mjs` loads every
-built card in a browser and writes `viewports.json`. It needs Chrome, so it runs
-locally and is not in `build-upload`; CI checks that every card ended up with a
-`viewport`.
+built card in a browser and writes `viewports.json`. It needs Chrome:
+`build-design-sync.sh` installs chromium, runs it between two `build-upload` passes and
+checks that every card ended up with a `viewport`.
 
 Everything the project holds now has a source here. `.thumbnail` — the project's
 cover image — was the last file that did not: a WebP that arrived with the
@@ -193,7 +193,7 @@ HTML holds nothing but `<ds-docs-components-select>` — every element inside it
 appears when Angular renders. Per CARD, not per chapter: the chapter list would
 drag 130 cards live to keep the 85 that have a panel, and Table alone is 35 for 5.
 What a run kept is written to `live-cards.txt`, which is what `check-frozen`
-asserts against rather than re-deriving the rule. **185 frozen, 79 live (measured 2026-10-02).**
+asserts against rather than re-deriving the rule; it prints the frozen and live counts.
 
 Angular inlines a component's styles into every document that renders it, so the
 same block arrived in card after card: 185 distinct blocks against 4005 tags.
@@ -226,25 +226,17 @@ comments — 219 KB of the same three blocks. Tree 20 MB → 9.0 MB.
   changing (a MutationObserver with a 150 ms quiet window, 5 s cap). Counting frames
   instead froze that one card three different ways in three runs.
 
-### The two gates that keep CI from thawing it
+### The gates that keep CI from thawing it
 
-CI runs `build:upload` in an image with no browser, so its cards come out LIVE while
-this repo commits them FROZEN. Byte-comparing those said "stale" on every run, and on
-the branch where `BITBUCKET_BUILD_NUMBER` is set the script does not fail on that — it
-COMMITS, as the release bot. So the next release would have undone the freeze.
+`build-design-sync.sh` installs chromium when the image has none and fails without it, then runs
+`measure-cards`, `snapshot-cards` and `check-frozen`. CI builds the cards FROZEN, the same tree
+this repo commits.
 
-- **`.design-sync/cards.lock.json` is what CI compares instead.** `build-cards` writes
-  it: a sha256 prefix per file it generates under `components/` and `guides/`. It
-  fingerprints the cards as build-cards leaves them, which is exactly what a browserless
-  build reproduces — so it moves when a card's SOURCE moves and stays put when only the
-  freeze is missing. If it moved, CI fails and names the local commands to run; it must
-  not try to build the frozen cards itself.
-- **`check-frozen.mjs` asserts the split.** Every card outside `live-chapters.txt` must
-  have no `<script>`, every card inside it must have one. No browser needed, so CI runs
-  it after restoring the frozen copies from git.
-- **`_ds_cards.css` is restored with the cards.** `build-cards` wipes the directory and
-  only `snapshot-cards` writes that file, so restoring `components/` and `guides/` alone
-  leaves a DELETION for the release commit to pick up.
+- **`check-frozen.mjs` asserts the split.** Every card listed in `live-cards.txt` has a
+  `<script>`, every other card has none. No browser needed.
+- **`_ds_cards.css` comes only from `snapshot-cards`.** `build-cards` wipes the directory, so a
+  build without the freeze leaves the file deleted; `build-design-sync.sh` fails when it is missing
+  or empty.
 - **Whitespace is collapsed IN THE PAGE, never by a regexp over the file.**
   `white-space: pre|pre-wrap|pre-line` is live in five places here, so the tidy
   pass walks text nodes and asks `getComputedStyle` which is which. A file-level
@@ -457,7 +449,7 @@ the plan. The upload stays a local step with a human approving the paths.
 ## What lives remotely, and what this repo commits
 
 The repo commits the sync inputs — `docs/`, `elements/`, `tools/`,
-`config.json`, `viewports.json`, `cards.lock.json`, `live-cards.txt`, `conventions.md` — **and** the built tree at
+`config.json`, `viewports.json`, `live-cards.txt`, `conventions.md` — **and** the built tree at
 `upload/`, so a release commit carries exactly what a publish sends and CI can
 fail on a stale copy. `_ds_manifest.json` is in there too since we started writing
 it ourselves. `_ds_sync.json` is the only file in the project this repo does not

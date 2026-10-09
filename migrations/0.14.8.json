@@ -19,13 +19,37 @@
       "restore": null,
       "verify": "The app builds with no TS2415 or TS4114 against TooltipDirective.",
       "note": "TooltipDirective gained the public dsTooltipClippedLead."
+    },
+    {
+      "id": "tooltip-keeps-line-breaks",
+      "kind": "behavior",
+      "old": "dsTooltip",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "searchHints": [
+        "dsTooltip",
+        "dsTooltipWhenClipped"
+      ],
+      "detect": [
+        "[dsTooltip]=\"`",
+        "\\n",
+        ".join('\\n')"
+      ],
+      "action": "Open every tooltip whose text holds a line break; keep the break where it reads well, otherwise join the lines with a space before binding.",
+      "appliesWhen": "A dsTooltip string, or the text a dsTooltipWhenClipped host discloses, that contains a newline. A text on one line is unchanged, and runs of spaces still collapse.",
+      "pitfall": "A template literal written across several source lines now shows one row per source line; the build and a unit test both pass over it.",
+      "restore": "[dsTooltip]=\"text().replace(/\\s*\\n\\s*/g, ' ')\"",
+      "verify": "Hover each tooltip whose text comes from data or from a multi-line literal and confirm its lines break where intended."
     }
   ],
   "informational": [
     "TableColumn takes an optional hint: the ds-table header label gets a dotted underline and shows the hint in a tooltip on hover and keyboard focus. A non-sortable label with a hint renders as a button styled like the label; a sortable one keeps its sort button as the only Tab stop. While the label is clipped the tooltip shows the label and then the hint; otherwise the hint alone.",
     {
-      "text": "A ds-table header label wider than its column clips with an ellipsis inside the column instead of running over the next header; the sort icon and the filter button stay visible. A header that fits renders as before.",
-      "verify": "set a narrow width on a sortable, a plain and a filterable column with a long label and confirm each label ends in an ellipsis inside its column, the sort icon and filter button stay visible, and no label overlaps the next header."
+      "text": "A ds-table header label wider than its column clips with an ellipsis inside the column instead of running over the next header; the sort icon and the filter button stay visible. A header that fits looks the same, but every label now sits in a .th-text span, which carries the ellipsis, inside .th-label.",
+      "verify": "set a narrow width on a sortable, a plain and a filterable column with a long label and confirm each label ends in an ellipsis inside its column, the sort icon and filter button stay visible, and no label overlaps the next header; confirm a header that fits looks as before, including any stylesheet of yours that targets the label."
     }
   ],
   "deleteList": []

@@ -1,8 +1,11 @@
 import {
+  DOCUMENT,
   Directive,
   ElementRef,
   HostListener,
+  InjectionToken,
   OnDestroy,
+  Signal,
   afterNextRender,
   booleanAttribute,
   inject,
@@ -11,65 +14,47 @@ import {
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { TooltipPanelComponent } from './tooltip-panel.component';
+import { escapeTooltipMarkup, plainTooltipText } from './tooltip-markup';
 import {
+  FOCUSABLE,
+  tabStopWhileClipped,
+  watchFocusableAncestor,
+  type AncestorFocusTrigger,
+} from './tooltip-ancestor-focus';
+import {
+  clipElement,
+  isHostClipped,
+  ownTextOf,
+  textContains,
+  toClipTarget,
+  type TooltipClipTarget,
+} from './tooltip-clip';
+import {
+  closeOnScroll,
+  listenForEscape,
   overlayPlacementOf,
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
-import { isTextClipped } from '@ids-group-ltd/ids-design-system/core';
+import {
+  VIEWPORT_MARGIN_PX,
+  pointArrowAtHost,
+  positionsFor,
+} from './tooltip-position';
 import type { TooltipPlacement } from './tooltip.types';
 
-const TRIGGER_GAP_PX = 8;
-const VIEWPORT_MARGIN_PX = 8;
-const OPPOSITE_PLACEMENT: Record<TooltipPlacement, TooltipPlacement> = {
-  top: 'bottom',
-  bottom: 'top',
-  left: 'right',
-  right: 'left',
-};
-
-const NATIVELY_FOCUSABLE = 'a[href], button, input, select, textarea, summary';
-const FOCUSABLE = `${NATIVELY_FOCUSABLE}, [tabindex]`;
-const KEYBOARD_FOCUSABLE = `${NATIVELY_FOCUSABLE}, [tabindex]:not([tabindex^="-"])`;
-const INTERACTIVE = [
-  NATIVELY_FOCUSABLE,
-  'tr:not([role])',
-  ...[
-    'button',
-    'link',
-    'tab',
-    'option',
-    'menuitem',
-    'menuitemcheckbox',
-    'menuitemradio',
-    'row',
-    'gridcell',
-    'combobox',
-    'checkbox',
-    'radio',
-    'switch',
-    'treeitem',
-  ].map((role) => `[role="${role}"]`),
-].join(', ');
-
-const clippedHostsByAncestor = new WeakMap<
-  HTMLElement,
-  Set<TooltipDirective>
->();
-
-function firstClippedHost(
-  tooltips: Set<TooltipDirective>,
-): TooltipDirective | undefined {
-  return [...tooltips]
-    .sort((a, b) =>
-      a.hostElement.compareDocumentPosition(b.hostElement) &
-      Node.DOCUMENT_POSITION_FOLLOWING
-        ? -1
-        : 1,
-    )
-    .find((tooltip) => tooltip.isClipped());
-}
+const PINNED_ATTRIBUTE = 'data-ds-tooltip-pinned';
 
 let nextId = 0;
+
+/** @internal Lets a component that hosts the tooltip make a clipped host lead the tip with its own text. */
+export const TOOLTIP_LEADS_WITH_OWN_TEXT = new InjectionToken<boolean>(
+  'TOOLTIP_LEADS_WITH_OWN_TEXT',
+);
+
+/** @internal Lets a component that hosts the tooltip decide `dsTooltipPinOnClick` for it. */
+export const TOOLTIP_PIN_ON_CLICK = new InjectionToken<Signal<boolean>>(
+  'TOOLTIP_PIN_ON_CLICK',
+);
 
 @Directive({
   selector: '[dsTooltip], [dsTooltipWhenClipped]',
@@ -78,6 +63,14 @@ let nextId = 0;
 export class TooltipDirective implements OnDestroy {
   private readonly overlay = inject(Overlay);
   private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly document = inject(DOCUMENT);
+  private readonly hostPinOnClick = inject(TOOLTIP_PIN_ON_CLICK, {
+    self: true,
+    optional: true,
+  });
+  private readonly leadsWithOwnText =
+    inject(TOOLTIP_LEADS_WITH_OWN_TEXT, { self: true, optional: true }) ??
+    false;
 
   /** Tip text. An empty string turns the tooltip off. */
   readonly dsTooltip = input<string>('');
@@ -85,50 +78,64 @@ export class TooltipDirective implements OnDestroy {
   readonly dsTooltipPlacement = input<TooltipPlacement>('top');
   /** Milliseconds before the tip appears. Hiding is immediate. */
   readonly dsTooltipDelay = input<number>(120);
+  /** Draws the arrow that points at the host. Turn it off where the tip sits flush against it. */
+  readonly dsTooltipArrow = input(true, { transform: booleanAttribute });
   /** Show the tip only while the host shows less text than it holds. Re-tested on every open.
+   *  A boolean or the bare attribute tests the host. A selector tests the element it matches inside
+   *  the host and discloses that element's text; while nothing matches, no clipped tip opens.
    *
-   *  Applies the tooltip on its own: without a `dsTooltip` the host's own text is disclosed. A tip
+   *  Applies the tooltip on its own: without a `dsTooltip` the tested text is disclosed. A tip
    *  whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip`
-   *  that says more than the host does describes it as usual. */
-  readonly dsTooltipWhenClipped = input(false, { transform: booleanAttribute });
-  /** Selector for the element inside the host whose clipping `dsTooltipWhenClipped` tests and
-   *  whose text it discloses. Resolved on every open; while nothing matches, no clipped tip opens. */
-  readonly dsTooltipTextSelector = input<string | null>(null);
+   *  that says more than the host does describes it as usual.
+   *
+   *  Keyboard focus opens it too: on the host, on a control or widget around it, or on a control
+   *  inside it. A clipped host that none of these reaches takes `tabindex="0"` while it is clipped. */
+  readonly dsTooltipWhenClipped = input<
+    TooltipClipTarget | null,
+    boolean | string | null | undefined
+  >(null, { transform: toClipTarget });
 
-  /** Opens the tip with this line above `dsTooltip` while the host shows less text than it holds.
-   *  The tip keeps its own line break, so the two read as separate lines. */
-  readonly dsTooltipClippedLead = input<string>('');
+  /** Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves
+   *  until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip.
+   *  While pinned the host carries `data-ds-tooltip-pinned`, a hook for styling the pinned trigger. */
+  readonly dsTooltipPinOnClick = input(false, { transform: booleanAttribute });
 
-  get hostElement(): HTMLElement {
+  private isClipped(): boolean {
+    return isHostClipped(this.hostElement, this.dsTooltipWhenClipped());
+  }
+
+  private get hostElement(): HTMLElement {
     return this.host.nativeElement;
   }
 
-  private textElement(): HTMLElement | null {
-    const selector = this.dsTooltipTextSelector();
-
-    return selector
-      ? this.hostElement.querySelector<HTMLElement>(selector)
-      : this.hostElement;
+  private pinsOnClick(): boolean {
+    return this.hostPinOnClick?.() ?? this.dsTooltipPinOnClick();
   }
 
-  isClipped(): boolean {
-    const textElement = this.textElement();
-
-    return textElement !== null && isTextClipped(textElement);
+  private ownText(): string {
+    return ownTextOf(
+      clipElement(this.hostElement, this.dsTooltipWhenClipped()),
+    );
   }
 
+  /** A host that leads with its own text puts it, in bold, above the tip while it is clipped, unless the tip already says it. */
   private tipText(): string {
     const given = this.dsTooltip();
-    const lead = this.dsTooltipClippedLead();
-    if (given && lead && this.isClipped()) {
-      return `${lead}
+    const own = this.ownText();
+    if (!given) {
+      return this.dsTooltipWhenClipped() ? escapeTooltipMarkup(own) : '';
+    }
+    if (
+      this.leadsWithOwnText &&
+      own &&
+      this.isClipped() &&
+      !textContains(plainTooltipText(given), own)
+    ) {
+      return `**${escapeTooltipMarkup(own)}**
 ${given}`;
     }
-    if (given || !this.dsTooltipWhenClipped()) {
-      return given;
-    }
 
-    return (this.textElement()?.textContent ?? '').trim();
+    return given;
   }
 
   /** A clipped host's full text is already in the DOM; describing it again would announce it twice. */
@@ -136,15 +143,13 @@ ${given}`;
     if (!this.dsTooltipWhenClipped()) {
       return false;
     }
-    const collapse = (value: string) => value.replace(/\s+/g, ' ').trim();
 
-    return collapse(this.textElement()?.textContent ?? '').includes(
-      collapse(text),
-    );
+    return textContains(this.ownText(), plainTooltipText(text));
   }
 
   private ref: OverlayRef | null = null;
   private timer: number | null = null;
+  private unpin: (() => void) | null = null;
   private readonly tipId = `ds-tooltip-${++nextId}`;
 
   /**
@@ -162,54 +167,27 @@ ${given}`;
 
   private detachAncestor: (() => void) | null = null;
 
-  constructor() {
-    afterNextRender(() => this.listenToFocusableAncestor());
-  }
-
-  /** `:focus-visible` keeps a click from opening it. Only the first clipped host of one ancestor opens. */
-  private listenToFocusableAncestor(): void {
-    const host: HTMLElement = this.host.nativeElement;
-    if (!this.dsTooltipWhenClipped() || host.matches(FOCUSABLE)) {
-      return;
-    }
-    const ancestor = host.parentElement?.closest<HTMLElement>(FOCUSABLE);
-    if (!ancestor?.matches(INTERACTIVE)) {
-      return;
-    }
-    let tooltips = clippedHostsByAncestor.get(ancestor);
-    if (!tooltips) {
-      tooltips = new Set();
-      clippedHostsByAncestor.set(ancestor, tooltips);
-    }
-    tooltips.add(this);
-    const open = (event: FocusEvent) => {
-      if (
-        event.target !== ancestor ||
-        // Tested here, not at registration: a disabled trigger carries tabindex="-1" until enabled.
-        !ancestor.matches(KEYBOARD_FOCUSABLE) ||
-        !ancestor.matches(':focus-visible') ||
-        firstClippedHost(tooltips) !== this
-      ) {
-        return;
-      }
+  private readonly ancestorFocusTrigger: AncestorFocusTrigger = {
+    host: this.hostElement,
+    isClipped: () => this.isClipped(),
+    openFor: (ancestor) => {
       this.focusedTarget = ancestor;
       this.scheduleShow();
-    };
-    const close = () => {
+    },
+    close: () => {
       this.focusedTarget = null;
       this.onClose();
-    };
-    ancestor.addEventListener('focusin', open);
-    ancestor.addEventListener('focusout', close);
-    ancestor.addEventListener('click', close);
-    ancestor.addEventListener('keydown', close);
-    this.detachAncestor = () => {
-      tooltips.delete(this);
-      ancestor.removeEventListener('focusin', open);
-      ancestor.removeEventListener('focusout', close);
-      ancestor.removeEventListener('click', close);
-      ancestor.removeEventListener('keydown', close);
-    };
+    },
+  };
+
+  constructor() {
+    afterNextRender(() => {
+      if (this.dsTooltipWhenClipped()) {
+        this.detachAncestor =
+          watchFocusableAncestor(this.ancestorFocusTrigger) ??
+          tabStopWhileClipped(this.ancestorFocusTrigger);
+      }
+    });
   }
 
   @HostListener('mouseenter')
@@ -241,7 +219,10 @@ ${given}`;
   }
 
   private scheduleShow(): void {
-    if (!this.tipText()) {
+    if (this.unpin || !this.tipText()) {
+      return;
+    }
+    if (this.pinsOnClick() && this.ref?.hasAttached()) {
       return;
     }
     if (this.dsTooltipWhenClipped() && !this.isClipped()) {
@@ -250,18 +231,67 @@ ${given}`;
     if (this.timer !== null) {
       clearTimeout(this.timer);
     }
-    this.timer = window.setTimeout(() => this.show(), this.dsTooltipDelay());
+    this.timer = window.setTimeout(
+      () => this.show(),
+      this.pinsOnClick() ? 0 : this.dsTooltipDelay(),
+    );
+  }
+
+  @HostListener('mouseleave')
+  protected onPointerLeave(): void {
+    if (!this.unpin) {
+      this.onClose();
+    }
   }
 
   // Close on click too: a re-rendered anchor under a stationary cursor fires no mouseleave.
-  @HostListener('mouseleave')
   @HostListener('click')
+  protected onClick(): void {
+    if (this.pinsOnClick() && !this.unpin) {
+      this.pin();
+    } else {
+      this.onClose();
+    }
+  }
+
   protected onClose(): void {
     if (this.timer !== null) {
       clearTimeout(this.timer);
       this.timer = null;
     }
+    this.unpin?.();
     this.disposeRef();
+  }
+
+  private pin(): void {
+    if (this.timer !== null) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+    if (!this.ref?.hasAttached()) {
+      if (!this.tipText()) {
+        return;
+      }
+      this.show();
+    }
+    const closeOutside = (event: Event) => {
+      const target = event.target as Node;
+      if (
+        !this.hostElement.contains(target) &&
+        !this.ref?.overlayElement.contains(target)
+      ) {
+        this.onClose();
+      }
+    };
+    this.document.addEventListener('pointerdown', closeOutside, true);
+    const stopEscape = listenForEscape(this.document, () => this.onClose());
+    this.hostElement.setAttribute(PINNED_ATTRIBUTE, '');
+    this.unpin = () => {
+      this.unpin = null;
+      this.hostElement.removeAttribute(PINNED_ATTRIBUTE);
+      this.document.removeEventListener('pointerdown', closeOutside, true);
+      stopEscape();
+    };
   }
 
   private disposeRef(): void {
@@ -304,10 +334,7 @@ ${given}`;
     const positionStrategy = this.overlay
       .position()
       .flexibleConnectedTo(this.host)
-      .withPositions([
-        this.positionFor(placement),
-        this.positionFor(OPPOSITE_PLACEMENT[placement]),
-      ])
+      .withPositions(positionsFor(placement))
       .withViewportMargin(VIEWPORT_MARGIN_PX);
 
     this.ref = this.overlay.create({
@@ -316,11 +343,15 @@ ${given}`;
       scrollStrategy: this.overlay.scrollStrategies.close(),
     });
     prepareOverlayEnter(this.ref, this.host.nativeElement, positionStrategy);
+    // The CDK strategy sees only the window and cdkScrollable ancestors, not a plain overflow container.
+    const stopScrollClose = closeOnScroll(this.ref, () => this.onClose());
+    this.ref.detachments().subscribe(stopScrollClose);
 
     const cmpRef = this.ref.attach(new ComponentPortal(TooltipPanelComponent));
     const text = this.tipText();
     cmpRef.setInput('text', text);
     cmpRef.setInput('placement', placement);
+    cmpRef.setInput('arrow', this.dsTooltipArrow());
     positionStrategy.positionChanges.subscribe(({ connectionPair }) =>
       cmpRef.setInput(
         'placement',
@@ -328,6 +359,8 @@ ${given}`;
       ),
     );
     cmpRef.setInput('panelId', this.tipId);
+    pointArrowAtHost(this.ref, cmpRef.location.nativeElement, this.hostElement);
+    this.ref.detachments().subscribe(() => this.unpin?.());
     if (this.disclosesOwnText(text)) {
       return;
     }
@@ -338,43 +371,6 @@ ${given}`;
       'aria-describedby',
       existing ? `${existing} ${this.tipId}` : this.tipId,
     );
-  }
-
-  private positionFor(placement: TooltipPlacement) {
-    switch (placement) {
-      case 'top':
-        return {
-          originX: 'center' as const,
-          originY: 'top' as const,
-          overlayX: 'center' as const,
-          overlayY: 'bottom' as const,
-          offsetY: -TRIGGER_GAP_PX,
-        };
-      case 'bottom':
-        return {
-          originX: 'center' as const,
-          originY: 'bottom' as const,
-          overlayX: 'center' as const,
-          overlayY: 'top' as const,
-          offsetY: TRIGGER_GAP_PX,
-        };
-      case 'left':
-        return {
-          originX: 'start' as const,
-          originY: 'center' as const,
-          overlayX: 'end' as const,
-          overlayY: 'center' as const,
-          offsetX: -TRIGGER_GAP_PX,
-        };
-      case 'right':
-        return {
-          originX: 'end' as const,
-          originY: 'center' as const,
-          overlayX: 'start' as const,
-          overlayY: 'center' as const,
-          offsetX: TRIGGER_GAP_PX,
-        };
-    }
   }
 
   ngOnDestroy(): void {

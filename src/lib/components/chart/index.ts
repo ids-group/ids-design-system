@@ -8,6 +8,7 @@ export type { ChartAnnotation } from './series-annotation.component';
 export type { ColumnSeriesPoint } from './column-series.component';
 export type { LineSeriesData } from './line-series.component';
 export {
+  CHART_DEFAULT_AXIS_GUTTER,
   CHART_DEFAULT_VALUE_SPACE,
   annotationMarks,
   chartViewHeight,

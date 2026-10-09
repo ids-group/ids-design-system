@@ -6,13 +6,14 @@
       "kind": "token-rename",
       "old": "--ds-*-bg",
       "new": "--ds-*-bg-color",
-      "action": "Append `-color` to every DS token whose name ends in `-bg`. Covers the public `--ds-<component>-…-bg` hooks on avatar, badge, banner, button, card, date-picker, dropzone, empty-state, icon-button, input, modal, pagination, search, sidenav, stat, table, tabs, tag, toast and topbar, plus the globals `--select-bg`, `--chart-hover-bg`, `--chart-tooltip-bg` and the `--status-<x>-bg` set.",
+      "action": "Append `-color` to every DS token whose name ends in `-bg`, and insert it after `-bg` in the state variants `--ds-*-bg-<state>` (`--ds-button-bg-hover` becomes `--ds-button-bg-color-hover`, `--ds-toast-bg-error` becomes `--ds-toast-bg-color-error`). Covers the public `--ds-<component>-…-bg` hooks on avatar, badge, banner, button, card, date-picker, dropzone, empty-state, icon-button, input, modal, pagination, search, sidenav, stat, table, tabs, tag, toast and topbar, plus the globals `--select-bg`, `--chart-hover-bg`, `--chart-tooltip-bg` and the `--status-<x>-bg` set.",
       "appliesWhen": "Only to DS-owned tokens. Your own variables ending in `-bg` are untouched, and the private `--_*` internals renamed in lockstep have no public hook, so they need nothing.",
       "pitfall": "A blind search-and-replace on `-bg` renames YOUR variables too, and the result still compiles — a custom property resolves to nothing and the element silently loses its background. Before replacing a name, confirm the `-color` spelling exists in the installed 0.3.0 package under `themes/` or `styles/`; if it does not, the token was yours.",
       "note": "The tokens held only a colour and now feed `background-color`, so the name says which property it reaches.",
       "searchHints": [
         "-bg:",
         "-bg)",
+        "-bg-",
         "--select-bg",
         "--chart-hover-bg",
         "--chart-tooltip-bg",
@@ -25,13 +26,14 @@
       "kind": "behavior",
       "old": "--ds-*-fg",
       "new": null,
-      "action": "For each `-fg` token you override, look the replacement up in the 0.3.0 token reference on the documentation site, which lists every `--ds-*`; the global roles are also readable in the installed package under `themes/` and `styles/`. Three suffixes are in play and the split is real: at 0.3.0 the package carries 23 `-text-color`, 49 `-label-color` and 21 `-icon-color`.",
+      "action": "For each `-fg` token you override, look the replacement up in the 0.3.0 token reference on the documentation site, which lists every `--ds-*`; the global roles are also readable in the installed package under `themes/` and `styles/`. Three suffixes are in play and the split is real: at 0.3.0 the package exposes 16 `--ds-*-text-color`, 30 `-label-color` and 10 `-icon-color` hooks (state variants such as `-hover` included).",
       "appliesWhen": "Only to DS-owned tokens. A variable of your own ending in `-fg` is untouched.",
       "pitfall": "The suffix is NOT derivable from the old name, so guessing produces a name nothing reads and a silently unstyled element. Same shape, three answers: `--ds-modal-title-fg` became `-text-color`, `--ds-sidenav-group-fg` became `-label-color`, `--ds-icon-button-fg` became `-icon-color`.",
-      "note": "The `fg` abbreviation was dropped for a suffix that says what the token paints — text, a control or nav label, or a glyph. It covers the public `--ds-<component>-…-fg` hooks on avatar, badge, banner, breadcrumbs, button, date-picker, dropzone, empty-state, icon-button, input, menu, modal, page-header, pagination, search, sidenav, table, tabs, tag and topbar, plus the `--status-*` and chart-tooltip globals.",
+      "note": "The `fg` abbreviation was dropped for a suffix that says what the token paints — text, a control or nav label, or a glyph. It covers the public `--ds-<component>-…-fg` hooks on avatar, badge, banner, breadcrumbs, button, date-picker, dropzone, empty-state, icon-button, input, menu, modal, page-header, pagination, search, sidenav, table, tabs, tag and topbar, plus the `--status-*` globals and `--chart-tooltip-fg`.",
       "searchHints": [
         "-fg:",
         "-fg)",
+        "--chart-tooltip-fg",
         "--status-"
       ],
       "surface": "style",
@@ -59,13 +61,48 @@
         "readonly string[]"
       ],
       "verify": "Every caption passed in [steps] is written to be READ on screen, not only announced - they render visibly now."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "ComboboxComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename your own member or mark it `override` wherever the compiler reports a collision with a class in `detect`. Delete an override of a member the class lost.",
+      "appliesWhen": "Only a class that extends one of the classes in `detect`. A consumer who uses the elements in templates needs nothing from this item.",
+      "pitfall": "`private` and `protected` give no protection: a member you redeclare collides with a base member of any visibility. A member of yours that replaced a lost one no longer replaces anything, and the component stops calling it.",
+      "note": "`ComboboxComponent` gained `size`. `DrawerComponent` gained `onEscape`. `InputComponent`, `SelectComponent` and `TextareaComponent` each gained 11, the reactive-forms bridge: `writeValue`, `registerOnChange`, `registerOnTouched`, `setDisabledState` and their private state. `StepperComponent` gained `connectorClass` and `labelPosition` and lost `barClass`.",
+      "verify": "The app builds with no error naming a class listed in `detect`, and every member of such a subclass that shares a base member's name is marked `override`.",
+      "searchHints": [
+        "extends ComboboxComponent",
+        "extends DrawerComponent",
+        "extends InputComponent",
+        "extends SelectComponent",
+        "extends StepperComponent",
+        "extends TextareaComponent"
+      ],
+      "detect": [
+        "extends ComboboxComponent",
+        "ComboboxComponent",
+        "extends DrawerComponent",
+        "DrawerComponent",
+        "extends InputComponent",
+        "InputComponent",
+        "extends SelectComponent",
+        "SelectComponent",
+        "extends StepperComponent",
+        "StepperComponent",
+        "extends TextareaComponent",
+        "TextareaComponent"
+      ],
+      "restore": null
     }
   ],
   "informational": [
     "Reactive-forms (ControlValueAccessor) on ds-input / ds-textarea / ds-select ([(value)] signal API unchanged, both work) — additive.",
-    "ng add support (wires the global styles import idempotently); ds-combobox size input (+ComboboxSize); overridable focus-ring token system (--ds-field-focus-shadow / --ds-control-focus-shadow groups + per-component --ds-<comp>-focus-shadow hooks, default appearance unchanged); ds-tag hover tokens; --opacity-state-active overlay token — all additive.",
-    "Visual-only: tag close button gains a pressed state; accordion & sidenav-group animate open/close (collapsed content now stays in the DOM marked inert instead of being removed); ds-combobox focus uses the soft field halo; repo-wide value-preserving CSS modernization (background-color precision, modern hsl()/clip-path/range media syntax).",
-    "Fixes: ds-drawer closes on Escape when focus left the panel; ds-combobox 'No matches' row no longer selectable."
+    "ng add support (wires the global styles import idempotently); ds-combobox size input (+ComboboxSize); overridable focus-ring token system (--ds-field-focus-shadow / --ds-control-focus-shadow groups + per-component --ds-<comp>-focus-shadow hooks, default appearance unchanged except ds-combobox, which moves to the field halo); ds-tag hover label hook `--ds-tag-hover-label-color` (the hover background hook existed and is renamed above); --opacity-state-active overlay token — all additive.",
+    "Visual-only: tag close button gains a pressed state; accordion & sidenav-group animate open/close; the collapsed body stays in the DOM marked inert (accordion: instead of `@if` removal; sidenav-group: instead of `display: none`); ds-combobox focus uses the soft field halo; repo-wide value-preserving CSS modernization (background-color precision, modern hsl()/clip-path/range media syntax).",
+    "Fixes: ds-drawer closes on Escape when focus left the panel; ds-combobox 'No matches' row (role=option, aria-disabled) now also carries aria-selected=\"false\"."
   ],
   "deleteList": []
 }

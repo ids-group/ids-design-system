@@ -1,0 +1,3 @@
+{ "version": "0.5.1", "items": [
+  { "id": "banner-dismissed", "kind": "output-rename", "old": "ds-banner[dismissed]", "new": "closed" }
+] }

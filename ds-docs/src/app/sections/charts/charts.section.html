@@ -13,8 +13,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Rows keep the order given; the chart never sorts. Bar length and percent
-    are shares of
+    Rows keep the order given. Bar length and percent are shares of
     <code class="t-mono-inline">
       max
     </code>: the input, else the largest bar end, target or band.
@@ -32,15 +31,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    A
-    <code class="t-mono-inline">
-      value
-    </code> of
+    A <code class="t-mono-inline">value</code> of
     <code class="t-mono-inline">
       [low, high]
-    </code> spans the bar between its two
-    ends (either order), not from zero, to show a duration and its placement
-    (a phase, a shift, a min-to-max).
+    </code> spans the bar between its
+    ends, in either order: a phase, a shift, a min-to-max.
   </p>
 
   <ds-bar-chart
@@ -52,17 +47,28 @@
     Target and bands
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      target
-    </code> draws a tick at one reading (a
-    goal, a budget, last period);
-    <code class="t-mono-inline">
-      ranges
-    </code> paints bands behind the bar,
-    given as upper bounds, in one neutral hue at rising opacity: a bullet
-    chart.
-  </p>
+  <dl class="spec">
+    <dt>
+      <code class="t-mono-inline">
+        target
+      </code>
+    </dt>
+
+    <dd>
+      A tick at one reading: a goal, a budget, last period.
+    </dd>
+
+    <dt>
+      <code class="t-mono-inline">
+        ranges
+      </code>
+    </dt>
+
+    <dd>
+      Bands behind the bar, given as upper bounds, one neutral hue at rising
+      opacity: a bullet chart.
+    </dd>
+  </dl>
 
   <ds-bar-chart
     caption="Against target, this quarter"
@@ -90,24 +96,38 @@
     Segmented rows
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      segments
-    </code> split a row's bar into parts
-    sized against their own sum, always filling the bar; a sum that differs from
-    <code class="t-mono-inline">
-      value
-    </code> is a data error, not a gap.
-    Parts take the categorical palette in order unless one sets
-    <code class="t-mono-inline">
-      color
-    </code>; the row's colour is unused.
-    The data table nests them; the tooltip lists each with its share. Parts
-    have no text, so draw a key from
-    <code class="t-mono-inline">
-      --ds-chart-series-N-color
-    </code> in segment order.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        segments
+      </code> split a row's bar into parts
+      sized against their own sum, always filling the bar.
+    </li>
+
+    <li>
+      A sum that differs from <code class="t-mono-inline">value</code> is a
+      data error, not a gap.
+    </li>
+
+    <li>
+      Parts take the categorical palette in order unless one sets
+      <code class="t-mono-inline">
+        color
+      </code>; the row's colour is unused.
+    </li>
+
+    <li>
+      The data table nests them; the tooltip lists each with its share.
+    </li>
+
+    <li>
+      Parts have no text: draw a key from
+      <code class="t-mono-inline">
+        --ds-chart-series-N-color
+      </code> in segment
+      order.
+    </li>
+  </ul>
 
   <div class="states is-cols-1">
     <div class="state-cell">
@@ -138,11 +158,14 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       highlighted
-    </code> names one segment by its
+    </code> names one segment by
     <code class="t-mono-inline">
       id
     </code>; every other part in every row
-    fades to <code class="t-mono-inline"> --ds-chart-dim-opacity </code>.
+    fades to <code class="t-mono-inline">--ds-chart-dim-opacity</code>.
+  </p>
+
+  <p class="block-desc t-s">
     Screen readers hear nothing; the control that chose it announces it.
   </p>
 
@@ -188,21 +211,32 @@
     Share of the total
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      partOfWhole
-    </code> declares the rows add up to a
-    real total (a budget, a headcount) and prints each row's share on the
-    tooltip's second line and as a
-    <code class="t-mono-inline">
-      Share of total
-    </code> column. Off by default: a
-    funnel or time series sums to nothing real. The percent beside each row is
-    the share of
-    <code class="t-mono-inline">
-      max
-    </code>, not of the total.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        partOfWhole
+      </code> declares the rows add up
+      to a real total: a budget, a headcount.
+    </li>
+
+    <li>
+      Each row's share prints on the tooltip's second line and in a
+      <code class="t-mono-inline">
+        Share of total
+      </code> column.
+    </li>
+
+    <li>
+      Off by default: a funnel or time series sums to nothing real.
+    </li>
+
+    <li>
+      The percent beside each row is the share of
+      <code class="t-mono-inline">
+        max
+      </code>, not of the total.
+    </li>
+  </ul>
 
   <ds-bar-chart
     partOfWhole
@@ -217,21 +251,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    A click holds the row and its tooltip, marked by a pin disc; Unpin appears
-    at the top end, on the caption line.
-    <kbd>
-      Esc
-    </kbd>, a second click or a press elsewhere releases it.
+    A click holds the row and its tooltip;
     <code class="t-mono-inline">
       rowClicked
-    </code> fires either way.
-    <code class="t-mono-inline">
-      pinOnClick="false"
-    </code> turns it off, or
-    <code class="t-mono-inline">
-      DS_CONFIG.chart.pinOnClick: false
-    </code>
-    app-wide.
+    </code> fires either way. Release
+    and opt-out: <a routerLink="/foundations/charts">Charts foundations</a>.
   </p>
 
   <ds-bar-chart
@@ -246,19 +270,26 @@
     Percent beside the value
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      showPercent
-    </code> (on by default) prints each
-    row's share of <code class="t-mono-inline"> max </code> beside its value.
-    Turn off for narrow rows or alongside
-    <code class="t-mono-inline">
-      partOfWhole
-    </code>. A row's own
-    <code class="t-mono-inline">
-      percent
-    </code> replaces the computed one.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        showPercent
+      </code> (default on) prints each
+      row's share of <code class="t-mono-inline">max</code> beside its value.
+    </li>
+
+    <li>
+      Turn off for narrow rows or alongside
+      <code class="t-mono-inline">
+        partOfWhole
+      </code>.
+    </li>
+
+    <li>
+      A row's own <code class="t-mono-inline">percent</code> replaces the
+      computed one.
+    </li>
+  </ul>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -284,33 +315,364 @@
   </div>
 
   <h3 class="block-title t-h4">
-    Interaction
+    Label beside the bar
   </h3>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      interactive
-    </code> adds the hover tint and makes
-    the rows one tab stop, switching their role from
-    <code class="t-mono-inline">
-      img
-    </code> to a
-    <code class="t-mono-inline">
-      group
-    </code> of buttons. Arrow keys move
-    between rows (wrapping), Home and End jump to the ends, Enter or Space
-    fires <code class="t-mono-inline">rowClicked</code>. Pointer cursor: on
-    <code class="t-mono-inline">
-      interactive
-    </code> rows and any row a click
-    would hold.
-    <code class="t-mono-inline">
-      rowClicked
-    </code> fires with or without the
-    flag. <code class="t-mono-inline">dimOthers</code> fades all rows but the
-    hovered or focused one, label included; off by default, since faded rows
-    lose separation.
+      labelPosition="start"
+    </code> puts each label in
+    a column before its bar; labels, bars, values and percents line up across
+    rows.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        --ds-bar-chart-label-column-max-width
+      </code> - label column cap, default <code class="t-mono-inline">40%</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        --ds-bar-chart-row-gap
+      </code> - <code class="t-mono-inline">var(--space-3)</code> here, <code class="t-mono-inline">var(--space-5)</code> under <code class="t-mono-inline">'top'</code>.
+    </li>
+  </ul>
+
+  <ds-bar-chart
+    caption="Reach"
+    labelPosition="start"
+    dataTable="none"
+    [data]="startRows()" />
+
+  <h3 class="block-title t-h4">
+    Bar height
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      --ds-bar-chart-track-height
+    </code> sets the
+    bar's thickness (default <code class="t-mono-inline">12px</code>).
+  </p>
+
+  <div class="demo-row">
+    <ds-slider
+      class="track-height-slider"
+      ariaLabel="Track height"
+      [min]="4"
+      [max]="28"
+      [(value)]="trackHeight" />
+  </div>
+
+  <ds-bar-chart
+    caption="Why the journey ended"
+    labelPosition="start"
+    dataTable="none"
+    [showPercent]="false"
+    [style.--ds-bar-chart-track-height.px]="trackHeight()"
+    [data]="exitRows()" />
+
+  <h3 class="block-title t-h4">
+    Rows inside a row
+  </h3>
+
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        children
+      </code> nests rows under one,
+      behind a disclosure button after its label, closed at first. One level
+      deep.
+    </li>
+
+    <li>
+      A child's bar and percent are shares of its parent's value, not of
+      <code class="t-mono-inline">
+        max
+      </code>.
+    </li>
+
+    <li>
+      A child takes the parent's colour and
+      <code class="t-mono-inline">
+        showPercent
+      </code> unless it sets its own.
+    </li>
+
+    <li>
+      The data table lists every child, open or closed.
+    </li>
+  </ul>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        DsIntl.chart.rowsUnder
+      </code> - disclosure button name.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        interactive
+      </code> - <kbd>Right</kbd> opens a group, <kbd>Left</kbd> closes it.
+    </li>
+  </ul>
+
+  <ds-bar-chart
+    caption="Engagement"
+    labelPosition="start"
+    dataTable="toggle"
+    [showPercent]="false"
+    [data]="groupRows()" />
+
+  <h3 class="block-title t-h4">
+    A defined term
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      hint
+    </code> turns the label into a term: a
+    dotted underline, and the hint in a tooltip on hover and keyboard focus,
+    announced as the label's description.
+  </p>
+
+  <ds-bar-chart
+    caption="Reach"
+    labelPosition="start"
+    dataTable="none"
+    tooltip="none"
+    [showPercent]="false"
+    [data]="termRows()" />
+
+  <h3 class="block-title t-h4">
+    Bold rows
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      emphasis
+    </code> prints a row's label in bold, as
+    for the first and last rows of a funnel.
+  </p>
+
+  <ds-bar-chart
+    caption="Journey"
+    labelPosition="start"
+    dataTable="none"
+    [showPercent]="false"
+    [data]="emphasisRows()" />
+
+  <h3 class="block-title t-h4">
+    Percent on some rows
+  </h3>
+
+  <p class="block-desc t-s">
+    A row's own <code class="t-mono-inline">showPercent</code> overrides the
+    chart's: here the chart hides percents and one group shows them.
+  </p>
+
+  <ds-bar-chart
+    caption="Engagement, group open"
+    labelPosition="start"
+    dataTable="none"
+    [showPercent]="false"
+    [data]="groupRows()" />
+
+  <h3 class="block-title t-h4">
+    A row apart
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      detached
+    </code> marks a row that is not a
+    step of the others, such as a total who finished or left.
+  </p>
+
+  <p class="block-desc t-s">
+    A dashed divider sets it apart;
+    <code class="t-mono-inline">
+      partOfWhole
+    </code> gives it no share.
+  </p>
+
+  <ds-bar-chart
+    caption="Outcome"
+    labelPosition="start"
+    dataTable="none"
+    [showPercent]="false"
+    [data]="detachedRows()" />
+
+  <h3 class="block-title t-h4">
+    All together: a journey funnel
+  </h3>
+
+  <ds-bar-chart
+    caption="Customer journey"
+    labelPosition="start"
+    dataTable="toggle"
+    tooltip="none"
+    [showPercent]="false"
+    [data]="journeyRows()" />
+
+  <h3 class="block-title t-h4">
+    Loading
+  </h3>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, no rows - skeleton rows in
+      the real row geometry.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, rows on screen - kept under
+      the overlay <code class="t-mono-inline">ds-table</code> uses on a
+      reload.
+    </li>
+  </ul>
+
+  <div class="states is-cols-2">
+    <div
+      class="state-cell"
+      data-loading-cell="top-first">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="top"
+        loading
+        [data]="[]" />
+
+      <div class="state-cell-label">
+        top: first load
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="top-loaded">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="top"
+        [data]="loadingCompareRows()" />
+
+      <div class="state-cell-label">
+        top: loaded
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="start-first">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="start"
+        loading
+        [data]="[]" />
+
+      <div class="state-cell-label">
+        start: first load
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="start-loaded">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="start"
+        [data]="loadingCompareRows()" />
+
+      <div class="state-cell-label">
+        start: loaded
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="top-reload">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="top"
+        loading
+        [data]="loadingCompareRows()" />
+
+      <div class="state-cell-label">
+        top: reload
+      </div>
+    </div>
+
+    <div
+      class="state-cell"
+      data-loading-cell="start-reload">
+      <ds-bar-chart
+        caption="Reach"
+        dataTable="none"
+        labelPosition="start"
+        loading
+        [data]="loadingCompareRows()" />
+
+      <div class="state-cell-label">
+        start: reload
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Interaction
+  </h3>
+
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        interactive
+      </code> adds the hover tint and
+      makes the rows one tab stop: role
+      <code class="t-mono-inline">
+        img
+      </code> becomes a
+      <code class="t-mono-inline">
+        group
+      </code> of buttons.
+    </li>
+
+    <li>
+      Pointer cursor on <code class="t-mono-inline">interactive</code> rows and
+      any row a click would hold.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        rowClicked
+      </code> fires with or without the
+      flag.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        dimOthers
+      </code> fades the label too; off by
+      default, since faded rows lose separation.
+    </li>
+
+    <li>
+      Keys and dimming:
+      <a routerLink="/foundations/charts">
+        Charts foundations
+      </a>.
+    </li>
+  </ul>
 
   <ds-bar-chart
     interactive
@@ -372,12 +734,11 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      none
-    </code> (default) renders no table;
-    <code class="t-mono-inline">
-      toggle
-    </code> puts one behind a closed
-    disclosure; <code class="t-mono-inline">visible</code> renders it open.
+      dataTable="visible"
+    </code> here. Values:
+    <a routerLink="/foundations/charts">
+      Charts foundations
+    </a>.
   </p>
 
   <ds-bar-chart
@@ -398,10 +759,25 @@
       </span>
     </summary>
 
-    <p class="block-desc t-s">
-      A value at or below zero draws an empty track and keeps its label; one
-      huge value flattens every other track.
-    </p>
+    <ul class="block-desc t-s">
+      <li>
+        At or below zero - an empty track; the label stays.
+      </li>
+
+      <li>
+        One huge value - every other track flattens.
+      </li>
+
+      <li>
+        <code class="t-mono-inline">
+          NaN
+        </code>,
+        <code class="t-mono-inline">
+          Infinity
+        </code> - no bar, an em dash for
+        value and percent.
+      </li>
+    </ul>
 
     <div class="states is-cols-2">
       <div class="state-cell">
@@ -423,7 +799,7 @@
           [data]="loadingRows()" />
 
         <div class="state-cell-label">
-          Loading
+          Loading with rows
         </div>
 
         <docs-chart-data-editor [(rows)]="loadingRows" />

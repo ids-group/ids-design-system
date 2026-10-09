@@ -34,13 +34,18 @@ export interface TableColumn<T = unknown> {
   filterable?: boolean;
   /** Adds a header filter menu; `'set'` is a searchable checkbox list of distinct values. */
   filter?: 'set';
-  /** Ellipsis-clip long cell text at `width` (240px when unset); the full value shows in a tooltip. */
+  /** Ellipsis-clip long cell text at the column's width; the full value shows in a tooltip.
+   *  Without `width` the column takes what the other columns leave at their content width, up to
+   *  its text, down to its header label; it never causes horizontal scroll. */
   truncate?: boolean;
-  /** Column width in px, also the clip width for `truncate`.
+  /** Column width in px, padding included; a `truncate` column clips its text inside it.
    *
    *  `'content'` sizes the column to its widest cell without wrapping and leaves the rest to
    *  the other columns. Dragging the edge overrides it. */
   width?: number | 'content';
+  /** The narrowest the column gets, in px, padding included. A `truncate` column without `width`
+   *  stops shrinking at it and the table scrolls sideways instead. Ignored when `width` is a number. */
+  minWidth?: number;
   align?: 'left' | 'right' | 'center';
   cell?: (row: T) => string;
   /** Sort by a domain value instead of the rendered text (`$1.2M`, `Oct 09, 2023` sort wrongly

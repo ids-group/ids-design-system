@@ -4,6 +4,36 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.13.0 - 2026-10-09
+
+### Added
+
+- **The library's lint plugins find and re-check every step.** `scripts/lint-step.mjs` runs the
+  shipped ESLint and stylelint plugins over the consumer's source with the step's `from`/`to`
+  range and prints each report as a hit keyed by `<version>#<item-id>`, read-only, through the
+  linters' Node API with the consumer's own linters and parsers; a missing one is skipped and
+  named. Phase A picks one plugin copy for the run, from the newest release tag that ships it.
+  Phase B step 2 joins the hits to the plan items after the mechanical script; step 7 re-runs it,
+  and any remaining hit blocks green for the version. `scripts/lint-step.test.mjs` runs it over
+  `lint-step.fixtures/`.
+
+## 1.12.0 - 2026-10-08
+
+### Added
+
+- **The mechanical items are applied by a script before any agent runs.**
+  `scripts/apply-mechanical.mjs` rewrites a version's `token-rename`, `selector-rename`,
+  `input-rename`, `output-rename`, `class-rename`, `type-rename` and `value-remap` items by exact,
+  boundary-safe replacement: attributes and values only on the element `old` names, across
+  multi-line tags; TypeScript identifiers on word boundaries, only where imported from the package
+  root; the longer name first where one contains another. It prints per item the files and edits it
+  made and every occurrence it left: a dynamic binding, a class not written directly under its
+  element, a type imported from a secondary entry point. An item whose `old`/`new` is not an exact
+  swap of one name for another is refused: it rewrites nothing and reports every occurrence of
+  `old` as left, with the reason. `--dry-run` writes nothing. Phase B step 2 runs it
+  first and hands the agents only what it left; a dry run runs it once over the whole chain.
+  `scripts/apply-mechanical.test.mjs` runs the fixture cases in `apply-mechanical.fixtures/`.
+
 ## 1.11.0 - 2026-09-30
 
 ### Added

@@ -1,4 +1,7 @@
 @use '../../styles/focus' as focus;
+@use '../../styles/target' as target;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   --_description-item-term-color: var(--ds-description-item-term-color, var(--text-tertiary));
@@ -76,6 +79,8 @@
 
     @include focus.ring(1px);
   }
+
+  @include target.min-size;
 }
 
 :host(.stacked) :is(.term, .details) {

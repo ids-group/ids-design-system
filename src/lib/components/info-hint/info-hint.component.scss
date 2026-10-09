@@ -1,0 +1,55 @@
+@use '../../styles/pinned';
+@use '../../styles/target';
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
+:host {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+// A circle is a box-shadow, so the 14px button keeps its box in every state.
+.info-hint {
+  --_info-hint-color-hover: var(--icon-strong);
+  --_info-hint-bg-pressed: var(--surface-muted);
+
+  display: inline-flex;
+  align-items: center;
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--icon-default);
+  cursor: pointer;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    color: var(--_info-hint-color-hover);
+  }
+
+  &:active {
+    color: var(--_info-hint-color-hover);
+    background: var(--_info-hint-bg-pressed);
+    box-shadow: 0 0 0 3px var(--_info-hint-bg-pressed);
+  }
+
+  &[data-ds-tooltip-pinned] {
+    @include pinned.cue($underline: false);
+
+    &:hover {
+      @include pinned.cue-hover(3px, $underline: false);
+    }
+
+    &:active {
+      @include pinned.cue-pressed(3px, $underline: false);
+    }
+  }
+
+  // Sits a gap of `--space-1` from its label, which a ring around a 24px box would cover.
+  @include target.min-size($ring-on-target: false);
+}

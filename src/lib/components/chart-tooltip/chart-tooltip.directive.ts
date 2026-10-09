@@ -20,6 +20,7 @@ import {
   closeOnScroll,
   disposeWithLeave,
   forwardOverlayTokens,
+  listenForEscape,
 } from '@ids-group-ltd/ids-design-system/components';
 import { ChartTooltipPanelComponent } from './chart-tooltip-panel.component';
 import type {
@@ -149,7 +150,11 @@ export class ChartTooltipDirective {
           ? this.overlayRef?.updatePosition()
           : this.close(),
       );
-      this.detachEscape = this.closeOnEscape();
+      // WCAG 1.4.13: dismissable without moving pointer or focus. Stays closed until the context or origin changes.
+      this.detachEscape = listenForEscape(
+        typeof document === 'undefined' ? null : document,
+        () => this.close(),
+      );
       this.detachOffscreen = hideWhileOffscreen(
         this.overlayRef.overlayElement,
         this.host.nativeElement,
@@ -211,21 +216,6 @@ export class ChartTooltipDirective {
       .withPush(true)
       .withViewportMargin(VIEWPORT_MARGIN_PX)
       .withPositions(positionsFor(gap));
-  }
-
-  // WCAG 1.4.13: dismissable without moving pointer or focus. Stays closed until the context or origin changes.
-  private closeOnEscape(): () => void {
-    if (typeof document === 'undefined') {
-      return () => undefined;
-    }
-    const onKeydown = (event: KeyboardEvent): void => {
-      if (event.key === 'Escape') {
-        this.close();
-      }
-    };
-    document.addEventListener('keydown', onKeydown, true);
-
-    return () => document.removeEventListener('keydown', onKeydown, true);
   }
 
   private close(): void {

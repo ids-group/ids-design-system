@@ -24,13 +24,17 @@ import { execFileSync } from 'node:child_process';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const MIGRATIONS = join(tmpdir(), `migration-lint-selftest.${process.pid}`);
 rmSync(MIGRATIONS, { recursive: true, force: true });
+// The dirty-baseline branch leaves through process.exit, before the cleanup at the end.
+process.on('exit', () => rmSync(MIGRATIONS, { recursive: true, force: true }));
 cpSync(join(ROOT, 'migrations'), MIGRATIONS, { recursive: true });
 const F = join(MIGRATIONS, '0.9.0.json');
 const PRISTINE = readFileSync(F, 'utf8');
 
-const run = () => {
+// A case lints the one manifest it breaks; the rest still load, so `supersedes` resolves. Only the
+// baseline sweeps every file, because M047 reads two release trees per manifest it checks.
+const run = (only = []) => {
   try {
-    execFileSync('node', ['tools/migration-lint.mjs'], {
+    execFileSync('node', ['tools/migration-lint.mjs', ...only], {
       cwd: ROOT,
       encoding: 'utf8',
       stdio: 'pipe',
@@ -142,6 +146,10 @@ const mutations = {
   M046: (m) => {
     m.informational.push({ verify: 'open it and look' });
   },
+  M047: (m) => {
+    const i = m.items.find((x) => x.kind === 'selector-rename');
+    i.new = 'ds-auth-layout variant="card"';
+  },
 };
 
 // A rule that fires on the defect and on the fix alike is a rule nobody can satisfy, so a rule
@@ -174,6 +182,17 @@ const negativeControls = [
         text: 'That override was doing nothing after the fix and can go. (delete list: search-height-pinned-for-a-short-row)',
         verify: 'open it and look',
       });
+    },
+  },
+  {
+    label: 'M047 stays quiet on an element-scoped rename whose action cites a delete-list row',
+    code: 'M047',
+    mutate: (m) => {
+      const i = m.items.find((x) => x.kind === 'selector-rename');
+      i.kind = 'input-rename';
+      i.old = 'ds-auth-shell[variant]';
+      i.new = 'ds-auth-layout[appearance]';
+      i.action = `${i.action} (delete list: ${m.deleteList[0].id})`;
     },
   },
   {
@@ -210,7 +229,7 @@ for (const [code, mutate] of Object.entries(mutations)) {
     /* mutation not applicable */
   }
   writeFileSync(F, JSON.stringify(m, null, 2).replace(/\n/g, '\r\n') + '\r\n');
-  const out = run();
+  const out = run([F]);
   const fired = out.includes(`${basename(F)}  ${code}  `);
   if (!fired) dead.push(code);
   console.log(`${fired ? 'fires ' : 'DEAD  '} ${code}`);
@@ -278,6 +297,22 @@ const extraCases = [
     },
   },
   {
+    label: 'M047 on a rename whose action deletes a value as well',
+    code: 'M047',
+    mutate: (m) => {
+      const i = m.items.find((x) => x.kind === 'token-rename');
+      i.action = `${i.action} A value equal to the old default is deleted instead.`;
+    },
+  },
+  {
+    label: 'M047 on a token family whose expansion names a token the release does not have',
+    code: 'M047',
+    mutate: (m) => {
+      const i = m.items.find((x) => x.id === 'auth-shell-tokens-to-auth-layout');
+      i.new = '--ds-auth-frame-';
+    },
+  },
+  {
     label: 'M046 on an informational object with text but no verify',
     code: 'M046',
     mutate: (m) => {
@@ -297,7 +332,7 @@ for (const { label, code, mutate, raw: text } of extraCases) {
       JSON.stringify(m, null, 2).replace(/\n/g, '\r\n') + '\r\n',
     );
   }
-  const fired = run().includes(`${basename(F)}  ${code}  `);
+  const fired = run([F]).includes(`${basename(F)}  ${code}  `);
   if (!fired) dead.push(label);
   console.log(`${fired ? 'fires ' : 'DEAD  '} ${label}`);
 }
@@ -306,7 +341,7 @@ for (const { label, code, mutate } of negativeControls) {
   const m = JSON.parse(PRISTINE);
   mutate(m);
   writeFileSync(F, JSON.stringify(m, null, 2).replace(/\n/g, '\r\n') + '\r\n');
-  const fired = run().includes(`${basename(F)}  ${code}  `);
+  const fired = run([F]).includes(`${basename(F)}  ${code}  `);
   if (fired) dead.push(label);
   console.log(`${fired ? 'FIRED ' : 'quiet '} ${label}`);
 }

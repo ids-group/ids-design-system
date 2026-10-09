@@ -3,7 +3,7 @@
 
 // The control indicator. Does not touch box-shadow, so a focused card keeps its elevation; a state
 // painting its own shadow must yield, see `state-shadow`.
-// An outline follows the element's border-radius: a shell that only carries the ring takes `--focus-ring-radius`.
+// An outline follows the element's border-radius: `emit-rules` gives `--focus-ring-radius` to whatever declares none.
 // Include inside `&:focus-visible`, never on the element itself, or every instance is ringed at all times.
 // Usually include nothing: `:where(:focus-visible)` in `emit-rules` rings anything focusable that styles nothing itself.
 // Pass a negative offset where an ancestor clips.
@@ -53,8 +53,11 @@
 @mixin emit-rules {
   // Catches anything focusable that styles nothing itself; a shell ringing on `:focus-within`
   // silences its control with `owns-the-focus-ring` to avoid a second ring.
+  // Zero specificity, so a radius the element declares wins; one painting a fill and declaring none rounds while focused.
   :where(:focus-visible) {
     @include ring;
+
+    border-radius: var(--focus-ring-radius);
   }
 
   @keyframes ds-focus-ring-in {

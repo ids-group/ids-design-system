@@ -6,9 +6,9 @@
       "kind": "behavior",
       "old": "ds-bottom-sheet",
       "new": null,
-      "action": "Open each sheet and press Escape without clicking anything first. If one does not close, give its body something focusable — the close button in its header is enough.",
+      "action": "Open each sheet and press Escape without clicking anything first. If one does not close, project something focusable into it - a close button in `[actions]` is enough (the sheet ships none).",
       "pitfall": "A sheet whose body contains NOTHING focusable can no longer be dismissed with Escape at all: the key has to land on the panel, and the focus trap only gets it there by capturing focus inside. A purely informational sheet is exactly the shape that has nothing to focus, and a keyboard user is then stuck in it.",
-      "note": "The Escape handler moved from the document to the panel, matching ds-modal and ds-drawer, because with stacked overlays a background sheet was swallowing the Escape meant for whatever sat on top.",
+      "note": "The Escape handler moved from the document to the sheet's overlay, matching ds-modal (ds-drawer still listens on the document), because with stacked overlays a background sheet was swallowing the Escape meant for whatever sat on top.",
       "searchHints": [
         "ds-bottom-sheet",
         "bottom-sheet",
@@ -19,13 +19,17 @@
       "detect": [
         "ds-bottom-sheet"
       ],
-      "verify": "Every ds-bottom-sheet holds at least one focusable element - its header close button is enough - so Escape still closes it without clicking first."
+      "verify": "Every ds-bottom-sheet projects at least one focusable element (body or `[actions]`), so Escape closes it without clicking first."
     }
   ],
   "informational": [
     "ds-sidenav takes a projected [brand] slot, so a real logo (img, SVG, any markup) can replace or sit beside the string `brand` input. The string input is unchanged and still renders its auto letter-mark. The brand row, previously gated on `brand` being set, now always renders and hides itself with :empty, so an empty rail looks exactly as it did.",
     "ds-date-picker mobile Backspace/Delete removes ONE digit and crosses separators, instead of wiping the whole segment. Gboard reports those keys with a full-segment composing region, which hit the editor's selection-clear branch and erased e.g. all of MM on one tap. Desktop behaviour was always correct and is unchanged.",
-    "ds-bottom-sheet no longer jolts host-app content up and back down as it opens. The entering panel, still translated below the frame, was contributing scrollable overflow to consumer shells that are a containing block for fixed descendants (a `filter`/`transform` ancestor plus overflow:hidden - a centred phone frame is the usual case), and the focus trap's scroll-into-view yanked that shell. The overlay now uses overflow:clip."
+    "ds-bottom-sheet no longer jolts host-app content up and back down as it opens. The entering panel, still translated below the frame, was contributing scrollable overflow to consumer shells that are a containing block for fixed descendants (a `filter`/`transform` ancestor plus overflow:hidden - a centred phone frame is the usual case), and the focus trap's scroll-into-view yanked that shell. The overlay now uses overflow:clip.",
+    {
+      "text": "ds-drawer gets the same fix: a new .drawer-root wrapper with overflow: clip holds the scrim and the panel, which are position: absolute instead of fixed, and the panel is its own stacking context through isolation: isolate instead of z-index.",
+      "verify": "open a ds-drawer inside a shell with a filter or transform ancestor and overflow: hidden, and confirm the host content does not move while the panel slides in."
+    }
   ],
   "deleteList": [
     {

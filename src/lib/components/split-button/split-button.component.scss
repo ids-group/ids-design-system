@@ -1,5 +1,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/field-box' as field-box;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   display: inline-flex;
@@ -19,6 +21,7 @@
   --_split-button-pressed-shadow: var(--ds-split-button-pressed-shadow, none);
 }
 
+// target-size-guard: the button height, 36px and up
 .main,
 .toggle {
   display: inline-flex;
@@ -62,16 +65,14 @@
 
 .main {
   padding: 0 var(--space-4);
-  border-top-left-radius: var(--radius-md);
-  border-bottom-left-radius: var(--radius-md);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
   transform-origin: right center;
 }
 
 .toggle {
   padding: 0 var(--space-2);
   margin-left: var(--btn-group-overlap);
-  border-top-right-radius: var(--radius-md);
-  border-bottom-right-radius: var(--radius-md);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
   transform-origin: left center;
 }
 

@@ -27,7 +27,8 @@ export abstract class DsChartBase {
   /** Accessible name. Generated from the data when omitted. */
   readonly summary = input<string | null>(null);
 
-  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize. */
+  /** With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has
+   *  it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`. */
   readonly loading = input(false, { transform: booleanAttribute });
 
   /** Shows `errorText` in place of the plot. Separate from `loading` and from empty data. */

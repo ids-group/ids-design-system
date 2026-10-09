@@ -6,7 +6,10 @@
   [caption]="caption()"
   [error]="error()"
   [errorText]="errorTextResolved()"
-  [pending]="loading() || !renderReady()"
+  [pending]="(loading() && isEmpty()) || !renderReady()"
+  [reloading]="loading()"
+  [dataTable]="dataTableResolved() !== 'none'"
+  [shimmer]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
   [skeleton]="skeleton"
@@ -18,8 +21,12 @@
   <div
     class="skeleton"
     aria-hidden="true">
-    <ds-skeleton
-      height="var(--_line-chart-skeleton-height)"
+    <ds-chart-skeleton
+      marks="line"
+      [plotHeight]="skeletonPlotHeight"
+      [count]="skeletonPoints()"
+      [valueSpace]="skeletonValueSpace"
+      [axisGutter]="skeletonAxisGutter"
       [shimmer]="loading()" />
 
     @if (skeletonSeries().length > 1) {

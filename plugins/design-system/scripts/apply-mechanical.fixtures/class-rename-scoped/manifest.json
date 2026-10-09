@@ -1,0 +1,5 @@
+{ "version": "0.5.1", "items": [
+  { "id": "modal-danger-class", "kind": "class-rename", "old": "ds-modal .danger", "new": ".error" },
+  { "id": "progress-warn-class", "kind": "class-rename", "old": "ds-progress.warn", "new": ".warning" },
+  { "id": "unscoped-class", "kind": "class-rename", "old": ".panel, .options", "new": ".dropdown-panel, .dropdown-list" }
+] }

@@ -51,6 +51,14 @@ export {
 } from './charts-scale';
 export type { BandScale, NiceDomain, PointScale } from './charts-scale';
 export { leaveMark, staggerDelay } from './charts-motion';
+export {
+  CHART_SKELETON_COUNT,
+  skeletonColumnHeights,
+  skeletonFunnelClips,
+  skeletonLineClip,
+  skeletonMarkCount,
+  skeletonWaterfallSteps,
+} from './charts-skeleton';
 export { chartDwell } from './charts-dwell';
 export type { ChartDwell } from './charts-dwell';
 export {
@@ -111,6 +119,7 @@ export {
   dropdownOverlay,
   focusIsInside,
   forwardOverlayTokens,
+  listenForEscape,
   overlayPlacementOf,
   panelClassesOf,
   prepareOverlayEnter,

@@ -1,4 +1,6 @@
 @use '../../styles/table-controls' as table-controls;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 .col-picker-btn {
   @include table-controls.header-icon-button;

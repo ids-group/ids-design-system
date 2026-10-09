@@ -1,11 +1,14 @@
 @use '../../styles/check-box' as check-box;
 @use '../../styles/focus' as focus;
+@use '../../styles/target' as target;
 @use '../../styles/table-controls' as table-controls;
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/text-clip' as text-clip;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract:
-   Cell text - Single line, ellipsis at column width (truncate + width), full value in a tooltip.
+   Cell text - Single line, ellipsis at column width (truncate), full value in a tooltip.
    Header label - Single line, no clip.
    Action column - No clip - icon-only buttons. */
 
@@ -42,6 +45,12 @@
   @include visually-hidden.visually-hidden;
 }
 
+// The scrim starts under the header, so only its bottom corners meet the rounded border.
+:host(.bordered) ds-loading-overlay {
+  --ds-loading-overlay-radius: 0 0 var(--ds-table-radius, var(--ds-radius-control))
+    var(--ds-table-radius, var(--ds-radius-control));
+}
+
 :host(.bordered) .scroll-wrap {
   border: var(--border-width-default) solid var(--_table-border);
   border-radius: var(--_table-radius);
@@ -56,6 +65,8 @@
   // otherwise widen the page.
   position: relative;
   width: 100%;
+
+  // glyph-clip-guard: x scrolls, so y cannot stay visible; every cell pads its text off this edge
   overflow: auto hidden;
 
   // Rows and header buttons sit flush against this box, so a ring drawn outward is eaten.
@@ -82,7 +93,8 @@
 
 :host(.resizable) thead th {
   position: relative;
-  overflow: hidden;
+
+  @include text-clip.inline-axis;
 }
 
 /* A coarse pointer paints no `:hover`, so the handle is invisible while `touch-action: none` still
@@ -138,6 +150,8 @@
       calc(-1 * var(--_table-scroller-pad-bottom, 0px))
     )
   );
+
+  // glyph-clip-guard: the proxy scrollbar, no text
   overflow: auto hidden;
 }
 
@@ -214,31 +228,33 @@
       align-items: center;
       vertical-align: middle;
       appearance: none;
-      background: none;
       border: 0;
-      margin: 0;
-      padding: 0;
       font: inherit;
       letter-spacing: inherit;
       text-transform: inherit;
-      color: inherit;
       text-align: left;
+      margin: 0;
+      padding: 0;
       max-width: 100%;
+
+      // The table rings inward, which here lands on the glyphs; the header padding has room for a ring outside the text.
+      --focus-ring-offset: var(--focus-ring-width);
+    }
+
+    // A definition term paints its own colour and background for its pressed and pinned states.
+    .th-label:not(.ds-definition-term) {
+      background: none;
+      color: inherit;
     }
 
     .th-label:has(+ .col-filter-btn) {
-      max-width: calc(100% - var(--space-1) - 12px);
+      max-width: calc(100% - var(--space-2) - 12px);
     }
 
     .th-text {
       min-width: 0;
 
       @include text-clip.single-line-ellipsis;
-    }
-
-    .th-label.has-hint {
-      text-decoration: underline dotted var(--text-tertiary);
-      text-underline-offset: 3px;
     }
 
     button.th-label:focus-visible {
@@ -353,7 +369,12 @@
         text-decoration: var(--_table-cell-link-decoration);
       }
 
+      // The table rings inward, which here lands on the glyphs; the cell padding has room for a ring outside the text.
       td .cell-link {
+        --focus-ring-offset: 0px;
+
+        padding-inline: var(--focus-ring-width);
+        margin-inline: calc(-1 * var(--focus-ring-width));
         color: var(--_table-cell-link-color);
         text-decoration: var(--_table-cell-link-decoration);
       }
@@ -419,6 +440,7 @@
     }
 
     .expand-panel-content {
+      // glyph-clip-guard: collapses the expanded row; open, the panel pads its text off this edge
       overflow: hidden;
       min-height: 0;
     }
@@ -442,7 +464,28 @@
       }
     }
 
+    // A link clips its own text, so its ring is drawn outside the clip. Content-box, so the inline
+    // max-width caps the text and the ring padding comes out of the link's negative margin. The box is
+    // the font's own line, as tall as a plain link's, and the negative block margin keeps the cell's
+    // line height.
+    a.cell-clip-text {
+      box-sizing: content-box;
+      line-height: normal;
+      margin-block: calc((var(--line-height-flat) * 1em - 1lh) / 2);
+    }
+
     .cell-clip {
+      display: block;
+    }
+
+    /* The text adds nothing to the column's width: the table sets the clip's min and max width
+       from what the other columns leave, up to the widest value. */
+    .cell-clip.grows > .cell-clip-text {
+      width: 0;
+      min-width: 100%;
+    }
+
+    .cell-clip-text {
       display: block;
 
       /* `scrollWidth > clientWidth` still reports true under `clip`, which is how
@@ -520,7 +563,7 @@
    scoping attribute. */
 .col-width {
   display: inline-flex;
-  gap: var(--space-1);
+  gap: var(--space-2-5);
   align-items: center;
   margin-left: auto;
 }
@@ -541,7 +584,7 @@
 
 .col-filter-btn {
   display: inline-flex;
-  margin-left: var(--space-1);
+  margin: 0 0 0 var(--space-2);
   padding: 0;
   border: 0;
   background: none;
@@ -556,10 +599,16 @@
     color: var(--icon-strong);
   }
 
+  &:focus-visible {
+    opacity: 1;
+  }
+
   &.active {
     opacity: 1;
     color: var(--_table-sort-active-icon-color);
   }
+
+  @include target.min-size;
 }
 
 .col-filter {

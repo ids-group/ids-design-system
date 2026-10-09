@@ -11,7 +11,10 @@ usages appear in them, and **those files' finder hits** for the items (`{loc, ma
 — the exact matched locations, already scoped to the right element. Trust those hits: edit at
 `loc`, change the `match`, and treat `dynamic: true` hits as property bindings (see value-remap).
 Do NOT re-derive matches by re-grepping (that reintroduces the wrong-element false-positive the
-finder prevents). Apply each item precisely to YOUR files only.
+finder prevents). A hit carrying `rule` and `message` comes from the library's own lint plugins:
+its `el` is null because the rule already matched it on the right element, and `message` names
+the replacement and the manifest item; it is a hit like any other. Apply each item precisely to
+YOUR files only.
 Everything specific comes from the item and the hits — the changelog decided WHAT to do; you
 execute it. **Read the item's fields in this order: `action` is the imperative and the ONLY field
 you execute (an `action` of "None, unless …" whose condition this file does not meet = nothing to

@@ -1,3 +1,12 @@
+@use '../../styles/chart-data-table' as chart-data-table;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+@include chart-data-table.chart-data-table;
+
+.data-table-label {
+  border-radius: var(--radius-pill);
+}
+
 figcaption {
   margin-block-end: var(--space-3);
   color: var(--text-primary);
@@ -28,4 +37,18 @@ figcaption {
 :host(.message-axes) .empty {
   border-inline-start: 1px solid var(--ds-chart-axis-line-color);
   border-block-end: 1px solid var(--ds-chart-axis-line-color);
+}
+
+// Reaches past the plot by a gutter on every side, so the blur does not stop on a mark's edge.
+.reload-overlay {
+  --ds-loading-overlay-radius: var(--radius-md);
+
+  margin: calc(-1 * var(--space-2));
+  padding: var(--space-2);
+}
+
+// The funnel figure scrolls its stage table sideways, so an overlay reaching past it would add a scrollbar.
+:host(.funnel-chart) .reload-overlay {
+  margin-inline: 0;
+  padding-inline: 0;
 }

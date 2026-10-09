@@ -1,5 +1,8 @@
-@use '../../styles/press' as press;
+@use '../../styles/dismiss-button' as dismiss-button;
+@use '../../styles/target' as target;
 @use '../../styles/text-clip' as text-clip;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract: title is a single line with ellipsis; body wraps and is
    never clamped (banners are page-level and stay fully readable); the dismiss icon
@@ -25,7 +28,7 @@
   --_banner-body-font-size: var(--ds-banner-body-font-size, var(--font-size-s));
   --_banner-close-icon-color:  var(--ds-banner-close-icon-color,  var(--icon-default));
   --_banner-close-icon-color-hover: var(--ds-banner-close-icon-color-hover, var(--icon-strong));
-  --_banner-enter-keyframes: var(--ds-banner-enter-keyframes, ds-scale-in);
+  --_banner-enter-keyframes: var(--ds-banner-enter-keyframes, ds-fade-in);
   --_banner-enter-duration: var(--ds-banner-enter-duration, var(--ds-motion-enter-surface-duration));
   --_banner-enter-easing: var(--ds-banner-enter-easing, var(--ds-motion-enter-surface-easing));
   --_banner-enter-offset: var(--ds-banner-enter-offset, 4px);
@@ -118,14 +121,12 @@
   }
 
   .close {
-    background: none;
-    border: 0;
-    cursor: pointer;
+    @include dismiss-button.button;
+    @include target.min-size;
+
     color: var(--_banner-close-icon-color);
 
     &:hover { color: var(--_banner-close-icon-color-hover); }
-
-    @include press.feedback;
   }
 
   .actions {

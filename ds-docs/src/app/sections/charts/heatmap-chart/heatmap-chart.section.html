@@ -15,25 +15,105 @@
   </h3>
 
   <p class="block-desc t-s">
-    One reading per cell. Magnitude reads from the STEP between colours, so the
-    heat scale spans the full lightness range (unlike the funnel's mid-range
-    ramp). Cells:
-    <code class="t-mono-inline">
-      --ds-heatmap-chart-cell-size
-    </code> (34px),
-    <code class="t-mono-inline">
-      --ds-heatmap-chart-cell-gap
-    </code> (2px),
-    <code class="t-mono-inline">
-      --ds-heatmap-chart-cell-radius
-    </code>; labels:
-    <code class="t-mono-inline">
-      --ds-heatmap-chart-label-color
-    </code>,
-    <code class="t-mono-inline">
-      --ds-heatmap-chart-label-font-size
-    </code>.
+    One reading per cell. Magnitude reads from the step between colours, so
+    the heat scale spans the full lightness range.
   </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Token
+        </th>
+
+        <th>
+          Default
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-heatmap-chart-cell-size
+          </code>
+        </td>
+
+        <td>
+          34px
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-heatmap-chart-cell-gap
+          </code>
+        </td>
+
+        <td>
+          2px
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-heatmap-chart-cell-radius
+          </code>
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            --ds-radius-control
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-heatmap-chart-label-color
+          </code>
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            --ds-chart-axis-label-color
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-heatmap-chart-label-font-size
+          </code>
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            --ds-chart-axis-font-size
+          </code>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        inline-size: fit-content
+      </code> (default) - as wide as the grid, capped at the container; a wider grid scrolls.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        inline-size: auto
+      </code> - fills the container. Set it from a component stylesheet, or as <code class="t-mono-inline">:root ds-heatmap-chart</code> globally.
+    </li>
+  </ul>
 
   <ds-heatmap-chart
     caption="Collections a day, by depot"
@@ -44,39 +124,42 @@
     What has to be there
   </h3>
 
-  <p class="block-desc t-s">
-    Colour is the only channel for the quantity, so two things are mandatory:
-    the scale under the grid, and the annex table, always drawn (no
-    <code class="t-mono-inline">
-      dataTable
-    </code> option) because coloured
-    squares alone fail WCAG 1.4.1. Each cell announces
-    <code class="t-mono-inline">
-      row, column: value
-    </code>.
-    <code class="t-mono-inline">
-      dimOthers
-    </code> fades every cell but the one
-    under the pointer; <code class="t-mono-inline">tooltip="none"</code> drops
-    the panel.
-  </p>
+  <ul class="rules">
+    <li>
+      Colour is the only channel for the quantity, so the scale and the annex
+      table always draw (WCAG 1.4.1); no
+      <code class="t-mono-inline">
+        dataTable
+      </code> option.
+    </li>
 
-  <p class="block-desc t-s">
-    Pointing at a scale step raises it and fades every cell outside that step.
-  </p>
+    <li>
+      Each cell announces <code class="t-mono-inline">row, column: value</code>.
+    </li>
+
+    <li>
+      Pointing at a scale step raises it and fades every cell outside that
+      step.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        tooltip="none"
+      </code> drops the panel; dimming: <a routerLink="/foundations/charts">Charts foundations</a>.
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     A hole is not a low reading
   </h3>
 
   <p class="block-desc t-s">
-    A <code class="t-mono-inline">null</code> draws in
-    <code class="t-mono-inline">
-      --ds-heatmap-chart-missing-color
-    </code>
+    A <code class="t-mono-inline">null</code> draws in <code class="t-mono-inline">--ds-heatmap-chart-missing-color</code>
     (surface-secondary), not the coldest step, and is left out of the scale.
-    Below, depot F opened on Thursday and nobody reports on Sunday - neither
-    reads as a quiet day.
+  </p>
+
+  <p class="block-desc t-s">
+    Below, depot F opened on Thursday and nobody reports on Sunday.
   </p>
 
   <ds-heatmap-chart
@@ -90,11 +173,14 @@
 
   <p class="block-desc t-s">
     Each grid scales to its own readings, so two grids colour the same value
-    differently. <code class="t-mono-inline">min</code> and
+    differently.
+  </p>
+
+  <p class="block-desc t-s">
     <code class="t-mono-inline">
-      max
-    </code> pin floor and ceiling; they only
-    widen the scale, never narrow it.
+      min
+    </code> and <code class="t-mono-inline">max</code> pin floor and ceiling; they only widen the
+    scale.
   </p>
 
   <div class="states is-cols-2">
@@ -123,14 +209,19 @@
     Printing the readings
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      showValues
-    </code> prints each reading in its
-    cell. Off by default: a dense grid has no room. The glyph takes the cell's
-    colour inverted, legible across a scale running 1.14:1 to 9.07:1 against
-    white.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        showValues
+      </code> prints each reading in its cell. Off by default: a
+      dense grid has no room.
+    </li>
+
+    <li>
+      The glyph takes the cell's colour inverted, legible across a scale
+      running 1.14:1 to 9.07:1 against white.
+    </li>
+  </ul>
 
   <ds-heatmap-chart
     caption="Escalations by quarter and region"
@@ -166,40 +257,75 @@
   </h3>
 
   <p class="block-desc t-s">
-    Clicking a measured cell pins it and its tooltip, with a pin disc and an
-    <code class="t-mono-inline">
-      Unpin
-    </code> control at the chart's top end. A
-    second click, <kbd>Esc</kbd> or a press elsewhere releases it; on an
+    A click holds a measured cell and its tooltip; on an
     <code class="t-mono-inline">
       interactive
-    </code> heat map
-    <code class="t-mono-inline">
-      cellClicked
-    </code> fires either way. Enter and
-    Space click without pinning. Disable with
-    <code class="t-mono-inline">
-      pinOnClick="false"
-    </code>, or
-    <code class="t-mono-inline">
-      DS_CONFIG.chart.pinOnClick: false
-    </code> for
-    every chart.
+    </code> heat map <code class="t-mono-inline">cellClicked</code> fires either way.
+    Release and opt-out: <a routerLink="/foundations/charts">Charts foundations</a>.
   </p>
 
   <h3 class="block-title t-h4">
     Stagger
   </h3>
 
-  <p class="block-desc t-s">
-    Cells fade in column by column, left to right.
-    <code class="t-mono-inline">
-      staggerMs
-    </code> sets the step between columns
-    (default <code class="t-mono-inline">40</code>); the whole spread fits in
-    260ms, so wide grids get a smaller step.
-    <code class="t-mono-inline">
-      0
-    </code> shows the grid at once.
-  </p>
+  <ul class="rules">
+    <li>
+      Cells fade in column by column, left to right.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        staggerMs
+      </code> sets the step between columns: default
+      <code class="t-mono-inline">
+        40
+      </code>, <code class="t-mono-inline">0</code> the grid at once.
+    </li>
+
+    <li>
+      The spread fits in 260ms, so wide grids get a smaller step.
+    </li>
+  </ul>
+
+  <h3 class="block-title t-h4">
+    Loading
+  </h3>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, no data - cell grid with labels and scale.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, rows on screen - kept under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and spinner.
+    </li>
+  </ul>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-heatmap-chart
+        loading
+        [columns]="smallColumns"
+        [data]="[]" />
+
+      <div class="state-cell-label">
+        Loading, no data
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-heatmap-chart
+        loading
+        [columns]="smallColumns"
+        [data]="smallRows" />
+
+      <div class="state-cell-label">
+        Reloading
+      </div>
+    </div>
+  </div>
 </docs-section>

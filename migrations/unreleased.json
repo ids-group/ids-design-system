@@ -1,0 +1,999 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "overlay-classes-lost-unslotted",
+      "kind": "behavior",
+      "old": "ModalComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends ModalComponent",
+        "extends ModalCardComponent",
+        "extends DrawerComponent"
+      ],
+      "detect": [
+        "extends ModalComponent",
+        "extends ModalCardComponent",
+        "extends DrawerComponent"
+      ],
+      "action": "None. A subclass that declares its own `unslotted` no longer collides with ours.",
+      "appliesWhen": "Only a class of yours that extends ModalComponent, ModalCardComponent or DrawerComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "restore": null,
+      "verify": "The app builds, and no subclass of ModalComponent, ModalCardComponent or DrawerComponent reads `this.unslotted`.",
+      "note": "ModalComponent, ModalCardComponent and DrawerComponent each lost the private `unslotted`."
+    },
+    {
+      "id": "tooltip-clipped-lead-removed",
+      "kind": "removed-api",
+      "old": "dsTooltipClippedLead",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "searchHints": [
+        "dsTooltipClippedLead",
+        "extends TooltipDirective"
+      ],
+      "detect": [
+        "[dsTooltipClippedLead]=",
+        "dsTooltipClippedLead=",
+        "extends TooltipDirective",
+        "dsTooltipClippedLead"
+      ],
+      "action": "Delete the `dsTooltipClippedLead` binding. A `ds-table` header with a `hint` needs nothing in its place. Where it carried other text, write it into the tooltip string as `'**' + lead + '**\n' + tip`. A subclass of TooltipDirective that declared `dsTooltipClippedLead` has nothing to rename any more.",
+      "appliesWhen": "Only an element that binds `dsTooltipClippedLead`, and a class that extends TooltipDirective. `dsTooltip` keeps its signature; `dsTooltipTextSelector` is removed and `dsTooltipWhenClipped` widened, each in its own item.",
+      "evidence": [
+        "command:node tools/public-api-golden.mjs --diff v0.14.8"
+      ],
+      "pitfall": "Deleting the binding drops the lead line; a tooltip never adds the host's text by itself, only a `dsDefinitionTerm` does.",
+      "verify": "No template or class binds `dsTooltipClippedLead`, the app compiles, and a tooltip that used it shows its lead line, written into the string."
+    },
+    {
+      "id": "tooltip-text-selector-merged-into-when-clipped",
+      "kind": "removed-api",
+      "old": "[dsTooltipTextSelector]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "dsTooltipTextSelector",
+        "dsTooltipWhenClipped"
+      ],
+      "detect": [
+        "dsTooltipTextSelector=",
+        "[dsTooltipTextSelector]="
+      ],
+      "action": "Move the selector into `dsTooltipWhenClipped` and delete `dsTooltipTextSelector`: `dsTooltipWhenClipped dsTooltipTextSelector=\".label\"` becomes `dsTooltipWhenClipped=\".label\"`. Where `[dsTooltipWhenClipped]` is bound to a condition, bind the selector when it holds and `false` when it does not: `[dsTooltipWhenClipped]=\"truncate ? ':scope > .cell' : false\"`.",
+      "appliesWhen": "Only an element that sets `dsTooltipTextSelector`. A `dsTooltipWhenClipped` with no selector still tests the host, and `dsTooltip` keeps its signature.",
+      "evidence": [
+        "command:node tools/public-api-golden.mjs --diff v0.14.8"
+      ],
+      "pitfall": "A leftover `dsTooltipTextSelector=\"...\"` attribute is an inert HTML attribute and raises no error: the clip test then measures the whole host, and a row whose inner label is clipped inside an unclipped row never shows its tip.",
+      "verify": "No template sets `dsTooltipTextSelector`, and a row whose inner label is clipped still shows its tip on hover and on keyboard focus."
+    },
+    {
+      "id": "tooltip-when-clipped-input-widened",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends TooltipDirective",
+        "dsTooltipWhenClipped()",
+        "hostElement",
+        "isClipped()"
+      ],
+      "detect": [
+        "extends TooltipDirective",
+        "this.dsTooltipWhenClipped()",
+        "this.hostElement",
+        "this.isClipped()"
+      ],
+      "action": "None, unless a subclass of TooltipDirective reads `dsTooltipWhenClipped()` as a boolean or calls `hostElement` or `isClipped()`: read your own state instead.",
+      "appliesWhen": "Only a class of yours that extends TooltipDirective; subclassing a DS component is unsupported. Template users bind `dsTooltipWhenClipped` as before: a boolean, the bare attribute, or now a selector string.",
+      "pitfall": "`dsTooltipWhenClipped` now holds a target object or null, so a read compared with `true` or `false` is never equal and the clip test never runs.",
+      "restore": null,
+      "verify": "No subclass of TooltipDirective reads `dsTooltipWhenClipped()` as a boolean or touches `hostElement` or `isClipped()`."
+    },
+    {
+      "id": "tooltip-clipped-host-tab-stop",
+      "kind": "behavior",
+      "old": "dsTooltipWhenClipped",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "dsTooltipWhenClipped"
+      ],
+      "detect": [
+        "dsTooltipWhenClipped"
+      ],
+      "action": "None, unless a clipped value must stay out of the Tab order: give its host `tabindex=\"-1\"`. Delete a `tabindex=\"0\"` you added only so the keyboard reaches the value (delete list: clipped-host-tabindex).",
+      "appliesWhen": "Only a `dsTooltipWhenClipped` host that is not focusable, sits inside no native control, widget role or focusable table row, holds no control, and is not inside an `aria-hidden` or `inert` subtree. A host in a focusable container such as a tab panel or a scroll region is included.",
+      "pitfall": "A test that counts tab stops, or steps through a screen with Tab, meets a new stop on each clipped value, and loses it again on a viewport where the text fits.",
+      "restore": "Set `tabindex=\"-1\"` on the host.",
+      "verify": "Tab through a screen with a clipped value in a clickable row or card: focus lands on the value, its ring shows and the full text opens; a value whose text fits is skipped."
+    },
+    {
+      "id": "tooltip-bold-markup",
+      "kind": "behavior",
+      "old": "dsTooltip",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "searchHints": [
+        "dsTooltip",
+        "[dsTooltip]"
+      ],
+      "detect": [
+        "[dsTooltip]=\"`",
+        "'**",
+        "\"**"
+      ],
+      "action": "None, unless a tooltip string holds `**` meant literally: write `\\*\\*` there.",
+      "appliesWhen": "Every `dsTooltip` string, including one a component builds from data. `dsTooltipWhenClipped` with no `dsTooltip` shows the host's text as written and is unaffected.",
+      "pitfall": "A string with two `**` loses both and the text between them turns bold, with no error; user-supplied text reaching a tooltip needs its `**` escaped.",
+      "restore": "[dsTooltip]=\"text().replaceAll('**', '\\*\\*')\"",
+      "verify": "Every tooltip string whose text contains `**` shows the asterisks, or bold where bold was meant."
+    },
+    {
+      "id": "tooltip-classes-member-surface",
+      "kind": "behavior",
+      "old": "TooltipPanelComponent, TooltipDirective, ChartTooltipDirective, BarChartComponent, MenuItemComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends TooltipDirective",
+        "extends TooltipPanelComponent",
+        "extends ChartTooltipDirective",
+        "extends BarChartComponent",
+        "extends MenuItemComponent"
+      ],
+      "detect": [
+        "extends TooltipDirective",
+        "extends TooltipPanelComponent",
+        "extends ChartTooltipDirective",
+        "extends BarChartComponent",
+        "extends MenuItemComponent"
+      ],
+      "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
+      "appliesWhen": "Only a class of yours that extends TooltipDirective, TooltipPanelComponent, BarChartComponent, MenuItemComponent or the internal ChartTooltipDirective. Template users of dsTooltip, dsChartTooltip, ds-bar-chart and ds-menu-item need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error against TooltipDirective, TooltipPanelComponent, BarChartComponent or MenuItemComponent, or against a subclass of the internal ChartTooltipDirective.",
+      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 12: ancestorFocusTrigger, document, dsTooltipArrow, dsTooltipPinOnClick, hostPinOnClick, leadsWithOwnText, onClick, onPointerLeave, ownText, pin, pinsOnClick and unpin; it lost 5: dsTooltipClippedLead, dsTooltipTextSelector, listenToFocusableAncestor, positionFor and textElement. The internal ChartTooltipDirective lost the private closeOnEscape. BarChartComponent gained the public labelPosition, the protected isExpanded, toggleRow, hintId, holdsControls, percentColumn, entries, showsSkeleton and reloading, and the private idPrefix and expanded. MenuItemComponent gained the public activateHover and the private aim, and lost the private closeTimer and clearCloseTimer."
+    },
+    {
+      "id": "intl-chart-rows-under-required",
+      "kind": "behavior",
+      "old": "DsIntl",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "DsIntl",
+        "DS_INTL",
+        "shareOfTotal"
+      ],
+      "detect": [
+        ": DsIntl =",
+        "Signal<DsIntl>",
+        "shareOfTotal:"
+      ],
+      "action": "None, unless your code builds a complete DsIntl object of its own: add chart.rowsUnder, the name of a bar-chart group's disclosure button.",
+      "appliesWhen": "Only an object or signal typed as the full DsIntl, not as DsIntlOverrides. provideDsIntl with a partial override, and every app that leaves DS_INTL alone, is unaffected.",
+      "pitfall": "An object that spreads DS_INTL_DEFAULTS.chart compiles, but a chart section written out key by key without the spread fails with TS2741 on rowsUnder.",
+      "restore": null,
+      "verify": "The app builds, and every complete DsIntl object it declares has chart.rowsUnder.",
+      "evidence": [
+        "fixture:unreleased/intl-chart-rows-under-required.ts"
+      ]
+    },
+    {
+      "id": "bar-chart-reload-keeps-rows",
+      "kind": "behavior",
+      "old": "ds-bar-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-bar-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing rows that are already drawn: bind data to an empty array while loading is set.",
+      "appliesWhen": "Only a ds-bar-chart whose loading is set while its data still holds rows, such as a reload or a filter change. A first load with empty data still draws skeleton rows.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn rows stay, inert under the overlay, until loading clears.",
+      "restore": "[data]=\"loading ? [] : rows\"",
+      "verify": "A ds-bar-chart reloading with rows on screen shows those rows under a scrim and spinner, and one loading with empty data shows skeleton rows."
+    },
+    {
+      "id": "table-truncate-without-width-grows",
+      "kind": "behavior",
+      "old": "TableColumn.truncate",
+      "new": null,
+      "surface": "none",
+      "searchHints": [
+        "truncate: true",
+        "truncate:"
+      ],
+      "detect": [
+        "truncate: true"
+      ],
+      "action": "None, unless a column needs the old 240px cap: add `width: 272` to it (240 plus the cell padding at the default density).",
+      "appliesWhen": "A `ds-table` column with `truncate: true` and no `width`. A column with a numeric `width` or `width: 'content'` clips as before, and a column without `truncate` is unaffected.",
+      "pitfall": "A column of long values now takes the room the other columns leave, up to the widest value on any page, so a screenshot shows it wider when the table has room and narrower, down to its header label, when it does not; in a table that scrolls sideways anyway it keeps the 240px clip.",
+      "restore": "{ key: 'email', label: 'Email', truncate: true, width: 272 }",
+      "verify": "Open a table with a `truncate` column without `width`: a short value shows whole, a long one is cut at the column's edge with no empty space after the ellipsis, the column keeps its width when you page, and in a table that scrolls sideways anyway it clips at 240px."
+    },
+    {
+      "id": "table-truncate-width-includes-padding",
+      "kind": "behavior",
+      "old": "TableColumn.width",
+      "new": null,
+      "surface": "none",
+      "searchHints": [
+        "truncate: true",
+        "width:"
+      ],
+      "detect": [
+        "truncate: true"
+      ],
+      "action": "None, unless a `truncate` column with a numeric `width` must keep its old size: add the horizontal cell padding to its `width` (32 at the default density, 24 at compact).",
+      "appliesWhen": "A `ds-table` column with `truncate: true` and a numeric `width`. A column without `truncate`, one with `width: 'content'` and one without `width` are unaffected.",
+      "pitfall": "The column and its clip are 32px narrower at the default density, so a value that used to show whole within a few pixels of the old clip now ends in an ellipsis.",
+      "restore": "{ key: 'model', label: 'Model', truncate: true, width: 272 }",
+      "verify": "Open a table with a `truncate` column whose `width` is 240: the column measures 240px, the same as a column of `width: 240` without `truncate`, and its text ends in an ellipsis inside it."
+    },
+    {
+      "id": "table-component-member-surface",
+      "kind": "behavior",
+      "old": "TableComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends TableComponent"
+      ],
+      "detect": [
+        "extends TableComponent"
+      ],
+      "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
+      "appliesWhen": "Only a class of yours that extends TableComponent. Template users of ds-table need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error against TableComponent.",
+      "note": "TableComponent gained the protected clipGrows, clipMaxWidth and clipMinWidth and the private growingClipColumns, clipCapsSet, clipFit, clipFitWidth, textCanvas, measureGrowingClips, widestValue and splitGrowingClips, and lost the protected clipWidth."
+    },
+    {
+      "id": "focus-ring-default-radius",
+      "kind": "behavior",
+      "old": "--focus-ring-radius",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        ":focus-visible",
+        "outline"
+      ],
+      "detect": [
+        ":focus-visible {",
+        ":focus-visible{",
+        "&:focus-visible"
+      ],
+      "action": "None, unless an element of yours paints a background or border, declares no border-radius and must stay square while focused: declare `border-radius: 0` on it.",
+      "appliesWhen": "Ships in `styles/focus`, which `styles/ds` forwards, and for a component's own elements in that component's stylesheet. Every keyboard-focused element that declares no border-radius takes `--focus-ring-radius` through `:where(:focus-visible)`; an element that declares any radius, `0` included, is unaffected.",
+      "pitfall": "A full-width row or flat button with a fill and no declared radius shows rounded fill corners only while focused, so a screenshot taken at rest looks unchanged.",
+      "restore": ":where(:focus-visible) { border-radius: 0; }",
+      "verify": "The built CSS has `border-radius:var(--focus-ring-radius)` inside `:where(:focus-visible)`, and a focused element with a fill keeps the corners it shows at rest."
+    },
+    {
+      "id": "table-truncated-link-clips-its-text",
+      "kind": "behavior",
+      "old": ".cell-clip",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "cell-clip",
+        "cell-link"
+      ],
+      "detect": [
+        ".cell-clip a",
+        ".cell-clip .cell-link",
+        ".cell-clip > a"
+      ],
+      "action": "None, unless a rule of yours for the link inside `.cell-clip` of a `ds-table` cell sets `display`, `overflow`, `white-space` or `text-overflow`: drop those declarations, the link clips its own text.",
+      "appliesWhen": "Only a `truncate` column whose cells are links (`link` on the column): the link is `a.cell-link.cell-clip-text` inside `span.cell-clip`. A truncated plain cell clips in `span.cell-clip-text`, and a link in a column without `truncate` is `a.cell-link` as before.",
+      "pitfall": "A rule for the old nesting still matches the link; one that resets its display or overflow lets the text run past the column without an ellipsis.",
+      "restore": null,
+      "verify": "A truncated link cell ends in an ellipsis at the column edge, and its focus ring is whole on all four sides."
+    },
+    {
+      "id": "dropdown-empty-row-drops-t-s",
+      "kind": "behavior",
+      "old": ".empty",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        ".empty.t-s",
+        ".ds-dropdown-panel .empty"
+      ],
+      "detect": [
+        ".empty.t-s",
+        ".ds-dropdown-panel .t-s"
+      ],
+      "action": "None, unless a stylesheet of yours reaches the \"no matches\" row of a picker panel through `.t-s`: select `.ds-dropdown-panel .empty` instead.",
+      "appliesWhen": "Only a rule of yours whose selector combines the picker panel or its `.empty` row with `.t-s`. Ships in `styles/dropdown-overlay`, which `styles/ds` forwards. Other elements carrying `.t-s` are not affected.",
+      "pitfall": "A selector such as `.ds-dropdown-panel .empty.t-s` still parses and matches nothing, so the override stops applying with no error.",
+      "restore": null,
+      "verify": "The built CSS holds no selector combining `.empty` with `.t-s`, and the \"no matches\" row of an open `ds-select` with no options shows your override."
+    },
+    {
+      "id": "overlay-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-overlay-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-overlay-enter-keyframes",
+        "--ds-overlay-enter-scale",
+        "--ds-overlay-enter-offset"
+      ],
+      "detect": [
+        "--ds-overlay-enter-scale:",
+        "--ds-overlay-enter-offset:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless overlay panels must keep growing or travelling: set `--ds-overlay-enter-keyframes` to `ds-scale-in` or `ds-slide-in`.",
+      "appliesWhen": "Every CDK overlay panel the library opens: tooltip, popover, select, multi-select, autocomplete, the date, time and colour picker panels, and a `ds-menu-item` submenu. Ships in `styles/overlay-motion`, which `styles/ds` forwards. a chart tooltip faded in already.",
+      "pitfall": "A `--ds-overlay-enter-scale` or `--ds-overlay-enter-offset` set on its own now changes nothing: each is read only by the keyframes that use it.",
+      "restore": ":root { --ds-overlay-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an opened tooltip or select panel fades in where it stands, and neither grows nor moves."
+    },
+    {
+      "id": "modal-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-modal-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-modal-enter-keyframes",
+        "--ds-modal-enter-scale"
+      ],
+      "detect": [
+        "--ds-modal-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless a modal must keep growing in: set `--ds-modal-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every `ds-modal` card; the backdrop faded already.",
+      "pitfall": "A `--ds-modal-enter-scale` set on its own now changes nothing: it is read only while `--ds-modal-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-modal-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an opened `ds-modal` fades in where it stands and does not grow."
+    },
+    {
+      "id": "toast-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-toast-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-toast-enter-keyframes",
+        "--ds-toast-enter-scale"
+      ],
+      "detect": [
+        "--ds-toast-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless a toast must keep growing in: set `--ds-toast-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every `ds-toast` in the toast region.",
+      "pitfall": "A `--ds-toast-enter-scale` set on its own now changes nothing: it is read only while `--ds-toast-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-toast-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an opened `ds-toast` fades in where it stands and does not grow."
+    },
+    {
+      "id": "banner-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-banner-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-banner-enter-keyframes",
+        "--ds-banner-enter-scale"
+      ],
+      "detect": [
+        "--ds-banner-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless a banner must keep growing in: set `--ds-banner-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every `ds-banner` as it is inserted.",
+      "pitfall": "A `--ds-banner-enter-scale` set on its own now changes nothing: it is read only while `--ds-banner-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-banner-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an inserted `ds-banner` fades in where it stands and does not grow."
+    },
+    {
+      "id": "alert-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-alert-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-alert-enter-keyframes",
+        "--ds-alert-enter-scale"
+      ],
+      "detect": [
+        "--ds-alert-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless an alert must keep growing in: set `--ds-alert-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every `ds-alert` as it is inserted.",
+      "pitfall": "A `--ds-alert-enter-scale` set on its own now changes nothing: it is read only while `--ds-alert-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-alert-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an inserted `ds-alert` fades in where it stands and does not grow."
+    },
+    {
+      "id": "chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `categories` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-chart whose `loading` is set while its `categories` still holds values, such as a reload or a filter change. A first load with empty `categories` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[categories]=\"loading ? [] : categories\"",
+      "verify": "A ds-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `categories` shows the skeleton."
+    },
+    {
+      "id": "column-chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-column-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-column-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `data` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-column-chart whose `loading` is set while its `data` still holds values, such as a reload or a filter change. A first load with empty `data` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[data]=\"loading ? [] : data\"",
+      "verify": "A ds-column-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `data` shows the skeleton."
+    },
+    {
+      "id": "line-chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-line-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-line-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `series` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-line-chart whose `loading` is set while its `series` still holds values, such as a reload or a filter change. A first load with empty `series` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[series]=\"loading ? [] : series\"",
+      "verify": "A ds-line-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `series` shows the skeleton."
+    },
+    {
+      "id": "pie-chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-pie-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-pie-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `data` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-pie-chart whose `loading` is set while its `data` still holds values, such as a reload or a filter change. A first load with empty `data` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[data]=\"loading ? [] : data\"",
+      "verify": "A ds-pie-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `data` shows the skeleton."
+    },
+    {
+      "id": "funnel-chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-funnel-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-funnel-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `data` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-funnel-chart whose `loading` is set while its `data` still holds values, such as a reload or a filter change. A first load with empty `data` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[data]=\"loading ? [] : data\"",
+      "verify": "A ds-funnel-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `data` shows the skeleton."
+    },
+    {
+      "id": "waterfall-chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-waterfall-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-waterfall-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `data` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-waterfall-chart whose `loading` is set while its `data` still holds values, such as a reload or a filter change. A first load with empty `data` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[data]=\"loading ? [] : data\"",
+      "verify": "A ds-waterfall-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `data` shows the skeleton."
+    },
+    {
+      "id": "heatmap-chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-heatmap-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-heatmap-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `data` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-heatmap-chart whose `loading` is set while its `data` still holds values, such as a reload or a filter change. A first load with empty `data` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[data]=\"loading ? [] : data\"",
+      "verify": "A ds-heatmap-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `data` shows the skeleton."
+    },
+    {
+      "id": "scatter-chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-scatter-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-scatter-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `data` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-scatter-chart whose `loading` is set while its `data` still holds values, such as a reload or a filter change. A first load with empty `data` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[data]=\"loading ? [] : data\"",
+      "verify": "A ds-scatter-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `data` shows the skeleton."
+    },
+    {
+      "id": "select-loading-skeleton-options",
+      "kind": "behavior",
+      "old": "ds-select[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-select"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a test or screen waits for the spinner row in the open panel: with options in the list they now stay under an overlay, and with none the list shows three placeholder rows.",
+      "appliesWhen": "Only a ds-select whose `loading` is set while its panel is open.",
+      "pitfall": "Options under the overlay are inert, so a test that clicks an option while `loading` is set no longer picks it.",
+      "restore": null,
+      "verify": "An open ds-select with `loading` set and options shows those options blurred under a spinner, and one with no options shows three placeholder rows."
+    },
+    {
+      "id": "multi-select-loading-skeleton-options",
+      "kind": "behavior",
+      "old": "ds-multi-select[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-multi-select"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a test or screen waits for the spinner row in the open panel: with options in the list they now stay under an overlay, and with none the list shows three placeholder rows.",
+      "appliesWhen": "Only a ds-multi-select whose `loading` is set while its panel is open. The filter input and select all stay live; only the list goes under the overlay.",
+      "pitfall": "Options under the overlay are inert, so a test that clicks an option while `loading` is set no longer picks it.",
+      "restore": null,
+      "verify": "An open ds-multi-select with `loading` set and options shows those options blurred under a spinner, and one with no options shows three placeholder rows."
+    },
+    {
+      "id": "autocomplete-loading-skeleton-options",
+      "kind": "behavior",
+      "old": "ds-autocomplete[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-autocomplete"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a test or screen waits for the spinner row in the open panel: with options in the list they now stay under an overlay, and with none the list shows three placeholder rows.",
+      "appliesWhen": "Only a ds-autocomplete whose `loading` is set while its panel is open.",
+      "pitfall": "Options under the overlay are inert, so a test that clicks an option while `loading` is set no longer picks it.",
+      "restore": null,
+      "verify": "An open ds-autocomplete with `loading` set and options shows those options blurred under a spinner, and one with no options shows three placeholder rows."
+    },
+    {
+      "id": "heatmap-chart-hugs-grid",
+      "kind": "behavior",
+      "old": "ds-heatmap-chart",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "ds-heatmap-chart"
+      ],
+      "detect": [
+        "ds-heatmap-chart {",
+        "ds-heatmap-chart{"
+      ],
+      "action": "None, unless the card must fill its container as before: set `inline-size: auto` on `ds-heatmap-chart` with more weight than the component's own host rule, such as `:root ds-heatmap-chart` in a global stylesheet; a bare `ds-heatmap-chart` selector there loses to it.",
+      "appliesWhen": "Every ds-heatmap-chart: the host is `inline-size: fit-content`, capped at the container's width, so the card, its skeleton and its reload overlay are as wide as the grid. A grid wider than the container still scrolls inside it.",
+      "pitfall": "In a row of equal dashboard cards the heatmap card is narrower than its neighbours, also in a grid or flex track that would stretch an auto-width item.",
+      "restore": ":root ds-heatmap-chart { inline-size: auto; }",
+      "verify": "An unstyled ds-heatmap-chart in a wide container is as wide as its grid and caption, and one with `inline-size: auto` fills the container."
+    },
+    {
+      "id": "waterfall-chart-skeleton-height-removed",
+      "kind": "removed-api",
+      "old": "--ds-waterfall-chart-skeleton-height",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "waterfall-chart-skeleton-height"
+      ],
+      "detect": [
+        "--ds-waterfall-chart-skeleton-height"
+      ],
+      "action": "Delete the declaration (delete list: waterfall-chart-skeleton-height). The skeleton draws floating steps on the chart's own plot and reads no height token.",
+      "appliesWhen": "You set --ds-waterfall-chart-skeleton-height anywhere.",
+      "restore": null,
+      "verify": "No stylesheet of yours sets --ds-waterfall-chart-skeleton-height, and a ds-waterfall-chart loading with no data is as tall as the drawn chart."
+    },
+    {
+      "id": "chart-skeleton-h-removed",
+      "kind": "removed-api",
+      "old": "--chart-skeleton-h",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "--chart-skeleton-h"
+      ],
+      "detect": [
+        "--chart-skeleton-h:"
+      ],
+      "action": "Delete the declaration (delete list: chart-skeleton-h). No component reads the token, so it sets nothing.",
+      "appliesWhen": "You set --chart-skeleton-h anywhere. The sibling --chart-empty-h stays and is not affected.",
+      "restore": null,
+      "verify": "No stylesheet of yours sets or reads --chart-skeleton-h."
+    },
+    {
+      "id": "loading-classes-member-surface",
+      "kind": "behavior",
+      "old": "ChartComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, FunnelChartComponent, WaterfallChartComponent, HeatmapChartComponent, ScatterChartComponent, SelectComponent, MultiSelectComponent, AutocompleteComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends ChartComponent",
+        "extends ColumnChartComponent",
+        "extends LineChartComponent",
+        "extends PieChartComponent",
+        "extends FunnelChartComponent",
+        "extends WaterfallChartComponent",
+        "extends HeatmapChartComponent",
+        "extends ScatterChartComponent",
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent",
+        "extends ChartStatesComponent"
+      ],
+      "detect": [
+        "extends ChartComponent",
+        "extends ColumnChartComponent",
+        "extends LineChartComponent",
+        "extends PieChartComponent",
+        "extends FunnelChartComponent",
+        "extends WaterfallChartComponent",
+        "extends HeatmapChartComponent",
+        "extends ScatterChartComponent",
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent",
+        "extends ChartStatesComponent"
+      ],
+      "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
+      "appliesWhen": "Only a class of yours that extends one of these charts or pickers, or the internal ChartStatesComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error against any of these classes.",
+      "note": "Gained: ChartComponent, ColumnChartComponent, PieChartComponent skeletonCount and skeletonMarks; FunnelChartComponent skeletonCount and skeletonColumns; WaterfallChartComponent skeletonCount, skeletonMarks, skeletonValueSpace and skeletonAxisGutter; LineChartComponent skeletonPoints, skeletonValueSpace, skeletonAxisGutter and skeletonPlotHeight; HeatmapChartComponent skeletonColumns; ScatterChartComponent skeletonLayout; SelectComponent, MultiSelectComponent and AutocompleteComponent skeletonOptionWidths and listInert. The internal ChartStatesComponent gained dataTable, reloading and shimmer. Lost: ColumnChartComponent skeletonColumns and skeletonHeightPx; WaterfallChartComponent skeletonBars; ScatterChartComponent skeletonHeight."
+    }
+  ],
+  "informational": [
+    {
+      "text": "A `<div actions>` (or `<div drawer-footer>`) wrapper in the footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet` gets `display: contents` at zero specificity, so its buttons take the footer's gap, alignment and `ds-modal-card` stacking. A `display` set on the wrapper in your own styles still wins.",
+      "verify": "Open a dialog, drawer or bottom sheet whose buttons sit in a `<div actions>` and confirm they are spaced like buttons that carry `actions` themselves, not touching."
+    },
+    "`ds-modal`, `ds-modal-card` and `ds-drawer` no longer warn in dev mode about content without a slot, or about an attribute that names no slot. That content still renders in the body. A test or screenshot that waited for the `Dev warning` toast these raised has nothing to wait for.",
+    {
+      "text": "dsDefinitionTerm loads its own .ds-definition-term styles when the first term renders, so an app that assembles the style partials one by one instead of using styles/ds needs nothing.",
+      "verify": "in an app that does not import styles/ds, open a ds-table with a hinted column and confirm the header label has a dotted underline and turns accent with a 2px underline after a click."
+    },
+    {
+      "text": "A ds-table header label with a hint is a button[dsDefinitionTerm]: a plain label pins its hint on click and takes the term's hover, pressed and pinned states; a sortable one sorts on click and pins nothing.",
+      "verify": "click a plain hinted ds-table header label, move the pointer away and confirm the hint stays open and the label shows the pinned accent until a click outside; click a sortable hinted label and confirm it sorts and no hint stays open."
+    },
+    {
+      "text": "A tooltip's arrow points at the centre of its trigger when the panel is pushed off a viewport edge.",
+      "verify": "open a tooltip on a trigger near the left and the right viewport edge and confirm the arrow sits under the trigger's centre."
+    },
+    {
+      "text": "Text that truncates or clips keeps its ascenders and descenders under any font: `ds-breadcrumbs`, the `ds-stat` label and value, every label ending in an ellipsis (`ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-sidenav-item`, `ds-sidenav-footer`, `ds-tree`, `ds-banner`, `ds-table` headers and cells), fit-mode chips, the `ds-date-picker` value, the `ds-filter-bar` row and resizable `ds-table` headers clip along the inline axis only. Their boxes keep their size.",
+      "verify": "set `--font-sans` to a font taller than its line box (a script or display face) and confirm the tails of g, j, p, q and y show whole in breadcrumbs, select values, table cells and a stat value, and that no row changed height.",
+      "evidence": [
+        "command:node tools/measure-glyph-clip.mjs <after-docs> <out> <before-run>/glyph-clip.json"
+      ]
+    },
+    {
+      "text": "`text-clip.single-line-ellipsis` from `styles/text-clip` now clips the inline axis only; ink above and below the box paints over its neighbours as in any unclipped box. `text-clip.inline-axis` and `text-clip.line-clamp($lines)` are new in the same partial.",
+      "verify": "where a rule of yours includes `text-clip.single-line-ellipsis` in a box shorter than its text, confirm no glyph now paints over a neighbour."
+    },
+    {
+      "text": "A `ds-stat` value clamped with `--ds-stat-value-lines` uses `line-height: normal`, so its tile is taller: two lines at the default size grow the tile from 147 to 165px in Mulish. In a browser without container style queries an unclamped value takes `line-height: normal` too.",
+      "verify": "open a stat that sets `--ds-stat-value-lines` and confirm the value shows whole lines with no accent of the next line peeking under the last, and that the tile's height fits its card.",
+      "evidence": [
+        "command:node tools/measure-glyph-clip.mjs <after-docs> <out> <before-run>/glyph-clip.json"
+      ]
+    },
+    "dsTooltipPinOnClick opens a tooltip on hover and focus with no delay and keeps it open after a click until a click outside, Escape or blur; a second click closes it. Without it a click closes the tooltip as before. While pinned the host carries data-ds-tooltip-pinned, a styling hook for the pinned trigger. Every pinned trigger of the library shows --accent-strong ink with no fill, plus a 2px solid accent underline on a text trigger; hover thickens the line to 3px and a press adds the --surface-muted fill (an icon takes a --surface-muted circle on hover and a --border-default circle on press). @include pinned.cue(), pinned.cue-hover() and pinned.cue-pressed() from styles/pinned give a trigger of your own the same cue, its hover and its press.",
+    "ds-info-hint (InfoHintComponent) is a question-mark icon button (icon=\"info\" draws an \"i\"): ariaLabel names it, text shows on hover and focus and stays open after a click. The icon darkens on hover, sits on a muted circle while pressed and turns --accent-strong while pinned.",
+    "dsDefinitionTerm (DefinitionTermDirective) marks a term on any element with a dotted underline in --text-tertiary and shows its definition on hover and focus, pinned on click; on a host other than button it adds tabindex=\"0\", role=\"button\" and Enter / Space; [pinOnClick]=\"false\" turns the pin off. Hover makes the underline solid, a press tints the term with --surface-muted, and a pinned term turns --accent-strong with a 2px solid accent underline; no state changes its size.",
+    {
+      "text": "A tooltip (dsTooltip, ds-info-hint, dsDefinitionTerm, a hinted ds-table header) and a ds-menu-item submenu close on a scroll of the window or of any scroll container under them; a pinned tooltip unpins.",
+      "verify": "open a tooltip and pin another inside a scrolling panel of your app, scroll the panel and confirm both close instead of staying where they opened."
+    },
+    "ds-bar-chart takes labelPosition ('top' | 'start', default 'top', type BarChartLabelPosition): 'start' puts each label in a column before its bar and aligns labels, bars, values and percents across rows. --ds-bar-chart-label-column-max-width caps the label column. Under 'start', --ds-bar-chart-row-gap defaults to var(--space-3) instead of var(--space-5); set --ds-bar-chart-row-gap: var(--space-5) to keep the wider rhythm. A chart left on 'top' keeps var(--space-5).",
+    "BarChartRow takes children (rows nested behind a disclosure button, each measured against its parent's value), hint (a defined-term label with a tooltip), emphasis (a bold label), showPercent (a per-row override of the chart's showPercent) and detached (a row set apart by a divider and given no partOfWhole share). --ds-bar-chart-child-fill-opacity and --ds-bar-chart-divider-color style the new rows. A chart without these fields renders as before.",
+    {
+      "text": "A ds-bar-chart whose data has any hint or children renders its rows container with role=\"group\" instead of role=\"img\", so the disclosure and term buttons inside it stay reachable to assistive technology; a chart without them keeps role=\"img\".",
+      "verify": "Open a bar chart with a hinted or grouped row and confirm Tab reaches the term and the disclosure button, and that a screen reader announces the term's hint."
+    },
+    "A ds-bar-chart row whose value is NaN, Infinity, or a [low, high] pair with a non-finite end shows — for its value, its derived percentage and its partOfWhole share instead of 0 and 0.0%, and draws no bar; an explicit percent on the row still prints. The generated summary leaves such a row out of its lowest and highest readings.",
+    {
+      "text": "ds-bar-chart skeleton rows use the drawn row markup: a label, value and percent placeholder and a placeholder filling the track, so each skeleton row is as tall as a drawn row and the track keeps its height and cap. Under labelPosition 'start' the placeholder label column takes --ds-bar-chart-label-column-max-width, because no label text exists yet to size it.",
+      "verify": "Open a ds-bar-chart with loading and empty data, then give it rows, and confirm the rows land where the skeleton rows were."
+    },
+    "ds-loading-overlay takes --ds-loading-overlay-radius (default 0) for the corners of its scrim; set it to the radius of the container the overlay covers.",
+    {
+      "text": "A bordered ds-table's reload overlay rounds its bottom corners to the table's radius (--ds-table-radius, else --ds-radius-control) instead of ending square outside the rounded border.",
+      "verify": "Open a bordered ds-table with rows and loading set, and confirm the scrim's bottom corners follow the table's rounded border."
+    },
+    {
+      "text": "A reloading ds-bar-chart covers the whole card with the overlay, to the frame's rounded corners, instead of a scrim over the rows inside the padding.",
+      "verify": "Open a framed ds-bar-chart with rows and loading set, and confirm the blurred scrim reaches the card's edges and corners."
+    },
+    {
+      "text": "A `truncate` column dragged with `dsTableResize` clips at its dragged width; a column with a `width` used to keep clipping at that width and could not be dragged narrower than it.",
+      "verify": "Drag a `truncate` column that has a `width` wider and narrower: its text follows the dragged edge."
+    },
+    "`styles/skeleton-shimmer` emits nothing and `styles/ds` no longer forwards it; `ds-skeleton` stops its shimmer under `prefers-reduced-motion: reduce` from its own styles, so an app that assembles the partials itself gets the stop too (delete list: skeleton-shimmer-use).",
+    {
+      "text": "The \"no matches\" row of `ds-select`, `ds-multi-select` and `ds-autocomplete` takes its font family, weight and line height from `styles/dropdown-overlay` (the `--ds-typography-s-*` hooks) instead of the `.t-s` class, so it keeps its type in an app that does not load `styles/typography`.",
+      "verify": "Open a picker with a query that matches nothing and confirm the row is set in the app's sans face, not a serif."
+    },
+    {
+      "text": "Every component sets `box-sizing: border-box` on its host and its own elements, the inherited font on its form controls, zero margins on its headings and the base focus ring on its own focusable elements. An app that does not load `styles/reset` or `styles/focus` sees component boxes sized as in an app that does, and the library's focus ring where the browser's showed.",
+      "verify": "In an app without `styles/reset`, open a form and confirm a default `ds-input` field is as tall as in an app that loads it; tab to a `ds-number-stepper` step button and confirm the ring is the library's, not the browser's."
+    },
+    {
+      "text": "`ds-container` with `size=\"sm|md|lg\"` and the responsive rail of `ds-app-layout` fall back to the library's breakpoints when `--bp-*` is not set, so they work without `bp.emit-vars`; a `--bp-*` of yours still wins. The dev-mode warning about a missing `--bp-lg` is gone.",
+      "verify": "Without `bp.emit-vars`, confirm a `ds-container size=\"md\"` is 768px wide at most and the `ds-app-layout` rail turns into a drawer below 1024px."
+    },
+    {
+      "text": "A closing `ds-toast` fades where it stands instead of rising 8px while it fades.",
+      "verify": "Dismiss a toast and confirm it fades without moving."
+    },
+    {
+      "text": "A `ds-funnel-chart` stage grows from 96% while it fades in instead of rising 4px, and the value labels of the bar, column, waterfall, heatmap, pie and funnel charts and the funnel's table rows fade in where they stand. A `ds-pie-chart` ring grows from 96% while it fades in, without the 30° turn.",
+      "verify": "Load a funnel and a pie chart and confirm stages, ring and labels appear without travelling or turning."
+    },
+    {
+      "text": "The package ships an ESLint plugin, `@ids-group-ltd/ids-design-system/eslint`, with seven rules that flag removed or renamed inputs, outputs, values, selectors, imports, members and tokens, and a stylelint plugin, `@ids-group-ltd/ids-design-system/stylelint`, with `ids-design-system/no-removed-tokens`. Every rule takes optional `from` and `to` versions, as options of one rule or through `configs.recommendedFrom`, that leave out every removed or renamed name outside that range of releases; without them the token rules list every one back to 0.2.0 and the other ESLint rules back to 0.4.0.",
+      "verify": "In an app linting with the ESLint plugin, confirm its seven ids-design-system/ rules report a renamed input from a past release, and that from/to narrows them.",
+      "evidence": [
+        "command:node -e \"import('./eslint/index.mjs').then((m) => console.log(Object.keys(m.default.rules).length))\""
+      ]
+    },
+    {
+      "text": "The loading skeleton of ds-chart, ds-column-chart, ds-line-chart, ds-pie-chart, ds-funnel-chart, ds-waterfall-chart, ds-heatmap-chart and ds-scatter-chart takes the chart's shape at the drawn chart's size: axes with label placeholders and columns, a line, a ring in slices, narrowing stages over the stage table, floating steps, a cell grid, or the scatter's grid lines with no dots. A data-table disclosure keeps its room under it.",
+      "verify": "Set `loading` with empty data on each chart and confirm the card keeps the height it has once data arrives."
+    },
+    "ds-chart, ds-column-chart, ds-pie-chart, ds-funnel-chart and ds-waterfall-chart take `skeletonCount`, the number of columns, slices, stages or steps the skeleton draws before data is known; it defaults to 5, and known data sets the count instead.",
+    {
+      "text": "A ds-line-chart skeleton under `--ds-line-chart-placeholder-height` is that tall with its axis labels included; unset, it is as tall as the drawn plot with its labels.",
+      "verify": "Set `--ds-line-chart-placeholder-height: 200px` on a loading ds-line-chart with no series and confirm the skeleton above the legend placeholders is 200px tall."
+    },
+    "While loading keeps options on screen under the overlay, ds-select, ds-multi-select and ds-autocomplete ignore the arrow, PageUp, PageDown, Home, End and Enter keys and mark the field aria-busy until loading clears; typing in the filter and the multi-select select-all row stay live."
+  ],
+  "deleteList": [
+    {
+      "id": "hand-built-info-hint",
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "find": [
+        "name=\"info\""
+      ],
+      "why": "ds-info-hint renders the icon button, its accessible name and the pinned tooltip.",
+      "replaceWith": "<ds-info-hint ariaLabel=\"...\" text=\"...\" />; keep a hand-built button whose click does something besides showing the text"
+    },
+    {
+      "id": "hand-built-definition-term",
+      "surface": [
+        "template",
+        "style"
+      ],
+      "find": [
+        "underline dotted"
+      ],
+      "why": "dsDefinitionTerm carries the dotted underline, the focus ring, the keyboard access and the pinned tooltip.",
+      "replaceWith": "<span dsDefinitionTerm=\"...\">; keep a dotted underline that marks something other than a term with a definition"
+    },
+    {
+      "id": "table-zero-width-clip-wrapper",
+      "surface": [
+        "template",
+        "style"
+      ],
+      "find": [
+        "min-width: 100%",
+        "width: 0;",
+        "dsTooltipWhenClipped"
+      ],
+      "why": "`truncate: true` on a column without `width` clips at the column width and shows the full value in a tooltip. The wrapper is still legitimate where the column must yield all its room to its neighbours rather than grow to its text.",
+      "replaceWith": "`truncate: true` on the column"
+    },
+    {
+      "id": "skeleton-shimmer-use",
+      "surface": "style",
+      "find": [
+        "@use 'styles/skeleton-shimmer'",
+        "styles/skeleton-shimmer"
+      ],
+      "why": "The partial emits nothing; `ds-skeleton` carries its own reduced-motion stop.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "overlay-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-overlay-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of overlay panels.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "modal-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-modal-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of `ds-modal`.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "toast-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-toast-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of `ds-toast`.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "banner-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-banner-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of `ds-banner`.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "alert-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-alert-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of `ds-alert`.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "clipped-host-tabindex",
+      "surface": [
+        "template"
+      ],
+      "find": [
+        "tabindex=\"0\""
+      ],
+      "why": "A dsTooltipWhenClipped host that no keyboard path reaches takes tabindex=\"0\" by itself while it is clipped.",
+      "replaceWith": "nothing; keep it where the value must stay a tab stop while its text fits"
+    },
+    {
+      "id": "waterfall-chart-skeleton-height",
+      "surface": "style",
+      "find": [
+        "--ds-waterfall-chart-skeleton-height:"
+      ],
+      "why": "the waterfall skeleton draws floating steps on the chart's own plot height and reads no height token",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "chart-skeleton-h",
+      "surface": "style",
+      "find": [
+        "--chart-skeleton-h:"
+      ],
+      "why": "no component reads the token",
+      "replaceWith": "nothing"
+    }
+  ]
+}

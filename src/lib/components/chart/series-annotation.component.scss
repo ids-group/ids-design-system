@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 .annotations {
   --_chart-annotation-color: var(--ds-chart-annotation-color, var(--text-primary));
   --_chart-annotation-font-size: var(--ds-chart-annotation-font-size, var(--ds-chart-axis-font-size));

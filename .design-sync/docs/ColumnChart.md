@@ -10,7 +10,8 @@ Vertical columns for a short series read left to right — months, stages, teams
 - `summary`: the accessible name; generated from `data` when omitted.
 - `valueFormat`: `(value: number) => string`, defaults to `Intl.NumberFormat`; formats the printed values and the generated `summary`.
 - `dataTable`: `'none'` (the default, omit entirely) | `'toggle'` (closed disclosure) | `'visible'` (open). Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`.
-- `loading` (default `false`): shows a skeleton block instead of columns.
+- `loading` (default `false`): with empty `data`, a skeleton of axes and columns; with data on screen, the plot stays under a `ds-loading-overlay` until it clears.
+- `skeletonCount` (default `5`): how many columns the skeleton draws until the data's own count is known.
 - `emptyText` (default `"No data"`): shown in place of columns when `data` is empty.
 - `interactive` (default `false`): turns on the pointer cursor and puts every column in the tab order as a `role="button"` answering Enter and Space; the plot then announces itself as a `group` rather than an `img`.
 - `onPointClicked`: fires with the clicked point, with or without `interactive`.

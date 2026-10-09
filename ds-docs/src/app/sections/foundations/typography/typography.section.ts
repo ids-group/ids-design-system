@@ -187,4 +187,14 @@ const RAMP: readonly TypeRampRow[] = [
 })
 export class TypographySection {
   protected readonly ramp = RAMP;
+
+  protected readonly textClipSnippet = `@use 'styles/text-clip';
+
+.file-name {
+  @include text-clip.single-line-ellipsis;
+}
+
+.summary {
+  @include text-clip.line-clamp(2);
+}`;
 }

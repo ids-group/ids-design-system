@@ -28,7 +28,10 @@ import {
   leaveMark,
   staggerDelay,
   chartRenderGate,
+  CHART_SKELETON_COUNT,
   DsChartBase,
+  skeletonFunnelClips,
+  skeletonMarkCount,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
@@ -76,8 +79,6 @@ function formatDrop(
     : formatPercent(fraction, 1, locale);
 }
 
-const SKELETON_STAGE_WIDTHS = ['88%', '62%', '80%', '54%', '72%'] as const;
-
 @Component({
   selector: 'ds-funnel-chart',
   standalone: true,
@@ -123,6 +124,11 @@ export class FunnelChartComponent
   /** What the Drop column reports: `'relative'` (default) the share that leaked at this stage,
    *  `'absolute'` the count, `'none'` no column. */
   readonly drop = input<FunnelChartDrop>('relative');
+
+  /** How many stages the loading skeleton draws before the data is known. */
+  readonly skeletonCount = input(CHART_SKELETON_COUNT, {
+    transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT),
+  });
 
   readonly dataTableResolved = this.defaults.dataTable;
 
@@ -361,12 +367,15 @@ export class FunnelChartComponent
       `calc(var(--_funnel-chart-stage-height) * ${Math.max(this.data().length, 1)})`,
   );
 
-  /** Placeholder widths deliberately do not narrow in order: equal bars read as a grey funnel. */
+  /** The stage table's columns: stage, value, share, and the drop when it is shown. */
+  protected readonly skeletonColumns = computed(() =>
+    Array.from({ length: this.drop() === 'none' ? 3 : 4 }),
+  );
+
+  /** Equal stages narrowing by the same step, the funnel's shape before its numbers. */
   protected readonly skeletonStages = computed(() =>
-    Array.from(
-      { length: Math.max(this.data().length, 3) },
-      (unusedEntry, index) =>
-        SKELETON_STAGE_WIDTHS[index % SKELETON_STAGE_WIDTHS.length],
+    skeletonFunnelClips(
+      skeletonMarkCount(this.data().length, this.skeletonCount()),
     ),
   );
 }

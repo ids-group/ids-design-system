@@ -25,7 +25,7 @@
       "old": "ds-search",
       "new": null,
       "action": "Only if you re-added a ring to that button yourself — that rule can go. (delete list: search-clear-button-focus-rule)",
-      "note": "0.10.2's ring fix silenced the base indicator with a shell-wide reset, which also hit `.search-clear`, a `tabindex=0` tab stop: tabbing from the input to the clear button changed nothing on screen — box-shadow, outline, border, background and colour all identical — so a keyboard user could not tell it had focus. A WCAG 2.4.7 failure. Every shell names the single control it silences now.",
+      "note": "0.10.2's ring fix silenced the base indicator with a shell-wide reset, which also hit `.search-clear`, a `tabindex=0` tab stop: in every shadow-based focus style, tabbing from the input to the clear button changed nothing on screen — box-shadow, outline, border, background and colour all identical (only `data-focus=\"outline\"` and forced colours still drew an outline) — so a keyboard user could not tell it had focus. A WCAG 2.4.7 failure. Every shell names the single control it silences now.",
       "surface": "style",
       "verify": "Type into a ds-search so the clear button appears, then Tab: the × shows its own ring on top of the field halo. Same for a chip close button in ds-autocomplete or ds-multi-select, and for the arrows in ds-number-stepper.",
       "searchHints": [
@@ -40,13 +40,15 @@
       "kind": "behavior",
       "old": "ds-date-picker, ds-time-picker",
       "new": null,
-      "action": "Only if you worked around either: a rule adding a ring to `.period-trigger` or `.time-action`, or a `border-radius` forced onto `.time-panel`, can go.",
+      "action": "Only if you worked around either: a rule adding a ring to `.period-trigger`, `.picker-cell`, `.preset-btn` or `.time-action`, or a `border-radius` forced onto `.time-panel`, can go.",
       "pitfall": "The mechanism is worth knowing before you style a DS panel yourself: a private `--_*` token declared on `:host` does NOT reach a panel the CDK has portaled out of that host, and an unresolvable `var()` silently becomes the property's initial value — `none` for box-shadow, `0` for border-radius. Read the PUBLIC `--ds-*` token from outside instead.",
-      "note": "Two tabbable buttons inside the portaled panels had no focus indicator at all, and one panel had square corners: both read a private focus-shadow token declared on the host, and with `outline: none` beside it nothing was left.",
+      "note": "Tabbable buttons inside both portaled panels had no focus indicator at all - the date-picker's month/year header, month and year cells and preset buttons, and the time-picker's action button - and one panel had square corners: all read a private focus-shadow token declared on the host, and with `outline: none` beside it nothing was left.",
       "surface": "style",
-      "verify": "Open the ds-date-picker calendar and Tab to the month/year header: it shows a focus ring. Open the ds-time-picker panel and Tab to its action button: same. The time-picker panel has rounded corners.",
+      "verify": "Open the ds-date-picker calendar and Tab to the month/year header, a month or year cell and a preset button: each shows a focus ring. Open the ds-time-picker panel and Tab to its action button: same. The time-picker panel has rounded corners.",
       "searchHints": [
         "period-trigger",
+        "picker-cell",
+        "preset-btn",
         "time-action",
         "time-panel",
         "--ds-date-picker-focus-shadow",
@@ -59,7 +61,7 @@
     "If you add a component that paints its own ring on :focus-within, suppress the base rule on the control it speaks for - `outline: 0` cannot do it, because the base indicator is a box-shadow.",
     "Two authoring mixins are now documented for consumers building their own composite controls: `focus.owns-the-focus-ring($control)` in styles/focus, and `text-clip.single-line-ellipsis` in styles/text-clip. Both are opt-in - no existing code changes.",
     "A private --_* token declared on :host does not reach a CDK-portaled panel, and an unresolvable var() silently becomes the property's initial value - none for box-shadow, 0 for border-radius. If you style a DS panel from your own CSS, read the PUBLIC --ds-* token there, not the private one.",
-    "Fourteen public tokens were always overridable but never reached the token reference: --ds-container-pad-x, --ds-multi-select-border-color (+-focus), --ds-segmented-selected-bg-color / -label-color / --ds-segmented-radius, --ds-time-picker-option-bg-color-selected / -text-color-selected / -bg-color-hover, --ds-time-picker-trigger-bg-color / -border / -color, --ds-field-message-icon-offset, --ds-time-picker-focus-shadow. Nothing changed in the components - if you hand-rolled around one of these because it looked unsupported, the override is supported and is the way to do it."
+    "Fourteen public tokens were always overridable but never reached the token reference: --ds-container-pad-x, --ds-multi-select-border-color (+-focus), --ds-segmented-selected-bg-color / -label-color / --ds-segmented-radius, --ds-time-picker-option-bg-color-selected / -text-color-selected / -bg-color-hover, --ds-time-picker-trigger-bg-color / -border / -color, --ds-field-message-icon-offset, --ds-time-picker-focus-shadow (it reaches the time-picker panel's action button only from this release - see portaled-panel-focus-indicator). Otherwise nothing changed in the components - if you hand-rolled around one of these because it looked unsupported, the override is supported and is the way to do it."
   ],
   "deleteList": [
     {

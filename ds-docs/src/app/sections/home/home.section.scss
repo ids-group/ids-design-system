@@ -152,13 +152,3 @@
       background: var(--surface-default);
       color: var(--text-secondary);
     }
-
-    kbd {
-      display: inline-block;
-      padding: var(--kbd-pad-y) var(--kbd-pad-x);
-      font: var(--font-weight-medium) 11px / 1 var(--font-mono);
-      background: var(--surface-default);
-      border: var(--border-width-default) solid var(--border-default);
-      border-radius: var(--radius-sm);
-      color: var(--text-secondary);
-    }

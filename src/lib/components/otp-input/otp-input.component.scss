@@ -1,5 +1,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/field-state' as field-state;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 
 :host {

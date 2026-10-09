@@ -72,6 +72,7 @@ export type {
 } from '@ids-group-ltd/ids-design-system/components/bar';
 export { BarChartComponent } from '@ids-group-ltd/ids-design-system/components/bar-chart';
 export type {
+  BarChartLabelPosition,
   BarChartRow,
   BarChartSegment,
   BarChartValue,
@@ -139,6 +140,7 @@ export type {
   DateRangeValue,
   DateValue,
 } from '@ids-group-ltd/ids-design-system/components/date-picker';
+export { DefinitionTermDirective } from '@ids-group-ltd/ids-design-system/components/definition-term';
 export {
   DescriptionItemComponent,
   DescriptionListComponent,
@@ -183,6 +185,7 @@ export type {
   IconButtonType,
   IconButtonVariant,
 } from '@ids-group-ltd/ids-design-system/components/icon-button';
+export { InfoHintComponent } from '@ids-group-ltd/ids-design-system/components/info-hint';
 export { InputComponent } from '@ids-group-ltd/ids-design-system/components/input';
 export type { InputType } from '@ids-group-ltd/ids-design-system/components/input';
 export {

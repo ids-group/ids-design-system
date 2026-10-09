@@ -1,5 +1,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract:
    Page number - short numeral, never clipped.
@@ -51,6 +53,7 @@
     margin-right: var(--space-2);
   }
 
+  // target-size-guard: --_pagination-button-size, 32px
   .pagination-button {
     min-width: var(--_pagination-button-size);
     height: var(--_pagination-button-size);

@@ -76,10 +76,33 @@ documented mechanism for marketplace fetches — do not rely on it.
   the release's tree and delete the dead ones; one per group of rows with disjoint files.
 - `agents/ds-visual-check.md` (sonnet) - measure a rendering change on a consumer screen in a real
   browser; dispatched only when the session has browser tools.
+- `scripts/apply-mechanical.mjs` - applies a version's token-, selector-, input-, output-, class-
+  and type-renames and `value-remap`s by exact, element-scoped replacement before any agent runs,
+  and reports what it left for them (`--dry-run` writes nothing). Its fixture cases live in
+  `apply-mechanical.fixtures/`, run by `apply-mechanical.test.mjs`.
 - `scripts/drift-scan.mjs` - the `--ds-*` tokens and CSS classes a release dropped, and every
   consumer line still naming one (plain `node`, no dependencies; `drift-scan-selftest.mjs` beside it).
+- `scripts/lint-step.mjs` - runs the library's own ESLint and stylelint plugins over the consumer's
+  source for one version step and prints each report as a located hit keyed by its manifest item
+  (read-only; `lint-step.test.mjs` runs it over `lint-step.fixtures/`).
 - `skills/triage-feedback/SKILL.md` - for the DS maintainer: triage `feedback/inbox/` into one fix
   branch per target.
+
+## Lint step
+
+Every version step also runs the design system's shipped lint plugins (`@ids-group-ltd/ids-design-system/eslint`
+and `/stylelint`) with that step's `from`/`to` range: once after the mechanical rewrite, to locate
+what it left and what no grep reaches (a listener on a renamed output, a token set from code, a
+subclass member that overrides nothing), and once at the re-check, where any remaining hit keeps the
+version from going green. The plugin copy comes from the newest release tag that ships it, so it
+lints steps from versions released before the plugins existed; without one, the step is skipped and
+the report says so. Nothing is fixed by the linters: renames stay with `apply-mechanical.mjs`.
+
+Prerequisites, all from the consumer's own `node_modules`: `eslint` 8.57 or later with
+`typescript-eslint` (or `@typescript-eslint/parser`) for `.ts`, `@angular-eslint/template-parser`
+(or `angular-eslint`) for templates, inline ones included, and `stylelint` with `postcss-scss` for
+stylesheets. Whatever is missing is skipped and named in the report; nothing is installed and your
+lint config is neither read nor changed.
 
 ## Feedback
 

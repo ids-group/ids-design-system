@@ -41,7 +41,7 @@
         "config"
       ],
       "action": "None, unless something expects a chart tooltip gone the moment the pointer leaves a mark: wait 500 ms first, or set provideDsConfig({ chart: { tooltipLingerMs: 0 } }), or tooltipLingerMs=\"0\" on the series.",
-      "appliesWhen": "Every chart's tooltip after the pointer leaves a mark, and dsColumnSeries / dsLineSeries with no tooltipLingerMs of their own. The highlight, the dimming and the category cursor still go at once. A pinned tooltip is unaffected.",
+      "appliesWhen": "Every chart's tooltip after the pointer leaves a mark, and dsColumnSeries / dsLineSeries with no tooltipLingerMs of their own. The highlight, the dimming and the category cursor run on the same state and stay the same 500 ms. A pinned tooltip is unaffected.",
       "pitfall": "A test that moves the pointer off a chart and asserts the tooltip is gone in the same step now finds it still open.",
       "restore": "provideDsConfig({ chart: { tooltipLingerMs: 0 } })",
       "searchHints": [
@@ -91,11 +91,12 @@
       "new": null,
       "surface": "template",
       "action": "None, unless you want hovering a category label to dim the other columns: set dimOthers on that chart.",
-      "appliesWhen": "ds-chart and ds-column-chart with columns and a category axis, dimOthers unset. A legend entry still dims the other series, and a chart with dimOthers set is unchanged.",
+      "appliesWhen": "ds-chart, ds-column-chart and ds-waterfall-chart with columns and a category axis, dimOthers unset; ds-waterfall-chart has no dimOthers in this release, so it cannot be restored there. A legend entry still dims the other series, and a chart with dimOthers set is unchanged.",
       "restore": "dimOthers",
       "searchHints": [
         "dimOthers",
         "ds-column-chart",
+        "ds-waterfall-chart",
         "ds-chart"
       ],
       "verify": "Hovering a category label dims the other columns only on charts that set dimOthers."
@@ -123,7 +124,7 @@
       "old": "HeatmapChartComponent, LineChartComponent",
       "new": null,
       "surface": "typescript",
-      "action": "Only in a subclass that redeclares min or max of HeatmapChartComponent, or max or maxSecondary of LineChartComponent: declare it input<number | null, unknown> with the same numberAttribute transform.",
+      "action": "Nothing to change in a subclass that redeclares min or max of HeatmapChartComponent, or max or maxSecondary of LineChartComponent as input<number | null>: it still compiles. Do not retype it input<number | null, unknown>, which fails with TS2416.",
       "appliesWhen": "A class of yours that extends ds-heatmap-chart or ds-line-chart and redeclares one of those four inputs. Reading the value back and binding it in a template are unaffected.",
       "restore": null,
       "searchHints": [
@@ -135,7 +136,7 @@
         "extends LineChartComponent"
       ],
       "verify": "The app builds with no TS2416 on min, max or maxSecondary of a chart subclass.",
-      "note": "The write type widened from number | null to unknown; the value read back is still number | null. Subclassing a DS component is unsupported."
+      "note": "The inputs gained a numberAttribute transform, but their declared write type stays number | null, and so does the value read back. Subclassing a DS component is unsupported."
     },
     {
       "id": "exported-class-members-grew",
@@ -205,7 +206,7 @@
       "text": "The ds-funnel-chart figure clips its vertical overflow, so stage rows rising in the entrance no longer flash a vertical scrollbar; horizontal scrolling is kept.",
       "verify": "Replay a funnel chart's entrance and confirm no vertical scrollbar appears while a narrow one still scrolls horizontally."
     },
-    "min and max on ds-heatmap-chart and max and maxSecondary on ds-line-chart accept a static attribute such as min=\"0\", coerced with numberAttribute."
+    "min and max on ds-heatmap-chart and max and maxSecondary on ds-line-chart coerce a static attribute such as min=\"0\" with numberAttribute. Their write type stays number | null, so under strictTemplates the static attribute still fails with TS2322; bind [min]=\"0\" there."
   ],
   "deleteList": [
     {

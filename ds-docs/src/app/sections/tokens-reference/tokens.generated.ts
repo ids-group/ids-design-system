@@ -480,7 +480,7 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
   {
     "name": "--focus-ring-radius",
     "value": "var(--ds-radius-inner)",
-    "notes": "The radius a box takes when it exists only to carry a focus ring. An outline has none of its own, so it follows the border-radius of the box it is drawn on, and a square-cornered shell rings square however rounded the control inside it is. Follows --ds-radius-inner, so retuning the inner radius moves these rings with it. A control with its own radius keeps it and ignores this."
+    "notes": "The radius of the keyboard focus ring on any focused element that declares no border-radius of its own, in the library and in the app. An outline follows the border-radius of the box it is drawn on, so this is set on the focused element at zero specificity: any radius the element declares wins. An app element with a fill or border and no radius of its own rounds its corners while focused; declare its border-radius to keep it square. Set 0 to make every such ring square. Follows --ds-radius-inner, so retuning the inner radius moves these rings with it."
   },
   {
     "name": "--focus-ring-inner",
@@ -704,11 +704,6 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--chart-empty-h",
     "value": "160px",
     "notes": "Chart empty-state placeholder height (160px)."
-  },
-  {
-    "name": "--chart-skeleton-h",
-    "value": "160px",
-    "notes": "Chart loading skeleton height (160px)."
   },
   {
     "name": "--chart-legend-dot",
@@ -2020,7 +2015,7 @@ export const DENSITY_HIT: readonly SizeRow[] = [
   {
     "name": "--hit-xs",
     "value": "24px",
-    "notes": "btn-s, datepicker nav, modal close."
+    "notes": "The smallest pointer target in the system (24px, WCAG 2.5.8): every icon-only control takes the pointer over at least this, however small it is drawn, and the date picker arrows and the modal close are this size. Raise it, to 44px for a touch screen, and every icon-only control's target follows."
   },
   {
     "name": "--hit-sm",
@@ -2345,8 +2340,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-alert-enter-keyframes",
-        "value": "ds-scale-in",
-        "notes": "Alert entrance @keyframes (default ds-scale-in, growing from the alert's centre)."
+        "value": "ds-fade-in",
+        "notes": "Alert entrance @keyframes (default ds-fade-in, fading in where the alert stands)."
       },
       {
         "name": "--ds-alert-enter-duration",
@@ -2361,12 +2356,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-alert-enter-offset",
         "value": "2px",
-        "notes": "How far the alert travels in, and from where: negative means it settles down from above. The default ds-scale-in does not travel, so this applies once --ds-alert-enter-keyframes names a preset that does, such as ds-slide-in (default 2px)."
+        "notes": "How far the alert travels in, and from where: negative means it settles down from above. The default ds-fade-in does not travel, so this applies once --ds-alert-enter-keyframes names a preset that does, such as ds-slide-in (default 2px)."
       },
       {
         "name": "--ds-alert-enter-scale",
         "value": "0.96",
-        "notes": "Start scale of the default ds-scale-in entrance (default 0.96)."
+        "notes": "Start scale once --ds-alert-enter-keyframes is ds-scale-in (default 0.96)."
       }
     ]
   },
@@ -2799,8 +2794,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-banner-enter-keyframes",
-        "value": "ds-scale-in",
-        "notes": "Banner entrance @keyframes (default ds-scale-in, growing from the banner's centre)."
+        "value": "ds-fade-in",
+        "notes": "Banner entrance @keyframes (default ds-fade-in, fading in where the banner stands)."
       },
       {
         "name": "--ds-banner-enter-duration",
@@ -2815,12 +2810,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-banner-enter-offset",
         "value": "4px",
-        "notes": "How far the banner travels in, and from where: negative means it settles down from above. The default ds-scale-in does not travel, so this applies once --ds-banner-enter-keyframes names a preset that does, such as ds-slide-in (default 4px)."
+        "notes": "How far the banner travels in, and from where: negative means it settles down from above. The default ds-fade-in does not travel, so this applies once --ds-banner-enter-keyframes names a preset that does, such as ds-slide-in (default 4px)."
       },
       {
         "name": "--ds-banner-enter-scale",
         "value": "0.96",
-        "notes": "Start scale of the default ds-scale-in entrance (default 0.96)."
+        "notes": "Start scale once --ds-banner-enter-keyframes is ds-scale-in (default 0.96)."
       },
       {
         "name": "--banner-bar-w",
@@ -2929,7 +2924,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-bar-chart-track-height",
         "value": "12px",
-        "notes": "Thickness of a ds-bar-chart bar and its track (default 8px)."
+        "notes": "Bar and track thickness (default 12px)."
       },
       {
         "name": "--ds-bar-chart-cap-radius",
@@ -2939,12 +2934,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-bar-chart-row-gap",
         "value": "var(--space-5)",
-        "notes": "Vertical gap between ds-bar-chart rows (default --space-3)."
+        "notes": "Row gap (default --space-5; --space-3 under labelPosition=\"start\")."
       },
       {
         "name": "--ds-bar-chart-label-gap",
         "value": "var(--space-1)",
         "notes": ""
+      },
+      {
+        "name": "--ds-bar-chart-label-column-max-width",
+        "value": "40%",
+        "notes": "Label column cap under labelPosition=\"start\" (default 40%)."
+      },
+      {
+        "name": "--ds-bar-chart-child-fill-opacity",
+        "value": "0.55",
+        "notes": "Child-row bar opacity in a group (default 0.55)."
+      },
+      {
+        "name": "--ds-bar-chart-divider-color",
+        "value": "var(--border-default)",
+        "notes": "Dashed divider above a detached row (default --border-default)."
       },
       {
         "name": "--ds-motion-chart-mark-duration",
@@ -3421,7 +3431,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-column-chart-column-gap",
         "value": "var(--ds-chart-bar-gap)",
-        "notes": "Space between the columns of grouped series in one category, and between skeleton columns (defaults to --ds-chart-bar-gap)."
+        "notes": "Space between the columns of grouped series in one category (defaults to --ds-chart-bar-gap)."
       },
       {
         "name": "--ds-column-chart-cap-radius",
@@ -3850,6 +3860,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Weight of the date value and its ghost mask (default --font-weight-regular)."
       },
       {
+        "name": "--ds-date-picker-max-width",
+        "value": "100%",
+        "notes": "Cap on the field width (default 100%); with fullWidth the field fills its container up to this width."
+      },
+      {
         "name": "--ds-date-picker-bg-color",
         "value": "var(--surface-overlay)",
         "notes": "Popover fill."
@@ -4211,6 +4226,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-dropdown-panel-max-width",
         "value": "none",
         "notes": "Upper bound for the same panel, and the reason `width=\"content\"` is safe over a trigger whose options are long: without it the panel grows to its widest option. Same `content`-only caveat as --ds-dropdown-panel-min-width."
+      },
+      {
+        "name": "--ds-typography-s-font-family",
+        "value": "var(--font-sans)",
+        "notes": "`.t-s` font family."
+      },
+      {
+        "name": "--ds-typography-s-font-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "`.t-s` font weight."
+      },
+      {
+        "name": "--ds-typography-s-line-height",
+        "value": "var(--line-height-base)",
+        "notes": "`.t-s` line height."
       }
     ]
   },
@@ -4845,8 +4875,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-line-chart-placeholder-height",
-        "value": "var(--_line-chart-plot-height)",
-        "notes": "Height reserved by a ds-line-chart that has no plot to draw: the loading skeleton, and the empty, error and no-visible-series boxes. Unset, the skeleton takes the plot height and the boxes the height the plot would take with its axis space; set, all of them take this value and the plot keeps --ds-line-chart-plot-height."
+        "value": "var(--_line-chart-view-height)",
+        "notes": "Height reserved by a ds-line-chart that has no plot to draw: the loading skeleton, and the empty, error and no-visible-series boxes. Unset, the skeleton and the boxes take the height the plot would take with its axis space; set, all of them take this value and the plot keeps --ds-line-chart-plot-height."
       },
       {
         "name": "--ds-line-chart-grid-line-color",
@@ -5053,6 +5083,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-loading-overlay-label-color",
         "value": "var(--text-secondary)",
         "notes": "Loading overlay status text colour (defaults to --text-secondary)."
+      },
+      {
+        "name": "--ds-loading-overlay-radius",
+        "value": "0",
+        "notes": "Corner radius of the loading scrim (default 0); match the covered container's radius."
       },
       {
         "name": "--ds-loading-overlay-enter-keyframes",
@@ -5330,8 +5365,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-modal-enter-keyframes",
-        "value": "ds-scale-in",
-        "notes": "Modal card entrance @keyframes (default ds-scale-in); the backdrop always fades."
+        "value": "ds-fade-in",
+        "notes": "Modal card entrance @keyframes (default ds-fade-in); the backdrop always fades."
       },
       {
         "name": "--ds-modal-enter-duration",
@@ -5416,7 +5451,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-modal-enter-scale",
         "value": "0.97",
-        "notes": "Start scale for the modal card with ds-scale-in (default 0.97)."
+        "notes": "Start scale for the modal card once --ds-modal-enter-keyframes is ds-scale-in (default 0.97)."
       },
       {
         "name": "--ds-modal-backdrop",
@@ -5613,8 +5648,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-overlay-enter-keyframes",
-        "value": "ds-scale-in",
-        "notes": "Entrance @keyframes for every portaled panel — default ds-scale-in, which grows the panel out of its trigger edge; also ds-slide-in / ds-fade-in, your own GLOBAL keyframes, or none."
+        "value": "ds-fade-in",
+        "notes": "Entrance @keyframes for every portaled panel — default ds-fade-in, which fades the panel in where it stands; also ds-slide-in / ds-scale-in, your own GLOBAL keyframes, or none."
       },
       {
         "name": "--ds-overlay-enter-duration",
@@ -5634,7 +5669,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-overlay-enter-scale",
         "value": "0.96",
-        "notes": "Start scale when a panel enters with ds-scale-in (default 0.96)."
+        "notes": "Start scale when a panel enters with ds-scale-in (default 0.96); read only after --ds-overlay-enter-keyframes is set to ds-scale-in."
       },
       {
         "name": "--ds-overlay-leave-duration",
@@ -7160,24 +7195,9 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "`.t-m-bold` font family."
       },
       {
-        "name": "--ds-typography-s-font-weight",
-        "value": "var(--font-weight-regular)",
-        "notes": "`.t-s` font weight."
-      },
-      {
         "name": "--ds-typography-s-font-size",
         "value": "var(--font-size-s)",
         "notes": "`.t-s` font size — body text, small."
-      },
-      {
-        "name": "--ds-typography-s-line-height",
-        "value": "var(--line-height-base)",
-        "notes": "`.t-s` line height."
-      },
-      {
-        "name": "--ds-typography-s-font-family",
-        "value": "var(--font-sans)",
-        "notes": "`.t-s` font family."
       },
       {
         "name": "--ds-typography-s-bold-font-weight",
@@ -7407,14 +7427,14 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Overrides the header-row height the table measures for itself; the loading scrim insets its top by it, so the spinner sits below the header rather than behind it (falls back to the measured height, then 40px)."
       },
       {
-        "name": "--ds-table-border",
-        "value": "var(--border-default)",
-        "notes": "Outer border."
-      },
-      {
         "name": "--ds-table-radius",
         "value": "var(--ds-radius-control)",
         "notes": "Outer corner radius."
+      },
+      {
+        "name": "--ds-table-border",
+        "value": "var(--border-default)",
+        "notes": "Outer border."
       },
       {
         "name": "--ds-table-bg-color",
@@ -8115,8 +8135,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-enter-keyframes",
-        "value": "ds-scale-in",
-        "notes": "Toast entrance @keyframes (default ds-scale-in, growing from the toast's centre)."
+        "value": "ds-fade-in",
+        "notes": "Toast entrance @keyframes (default ds-fade-in, fading in where the toast stands)."
       },
       {
         "name": "--ds-toast-enter-duration",
@@ -8131,7 +8151,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-toast-enter-offset",
         "value": "var(--space-2)",
-        "notes": "How far the toast travels in, and from where: positive means it rises from below its resting spot. The default ds-scale-in does not travel, so this applies once --ds-toast-enter-keyframes names a preset that does, such as ds-slide-in (default --space-2)."
+        "notes": "How far the toast travels in, and from where: positive means it rises from below its resting spot. The default ds-fade-in does not travel, so this applies once --ds-toast-enter-keyframes names a preset that does, such as ds-slide-in (default --space-2)."
       },
       {
         "name": "--ds-toast-min-width",
@@ -8146,7 +8166,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-toast-enter-scale",
         "value": "0.96",
-        "notes": "Start scale of the default ds-scale-in entrance (default 0.96)."
+        "notes": "Start scale once --ds-toast-enter-keyframes is ds-scale-in (default 0.96)."
       },
       {
         "name": "--ds-toast-bg-color-info",
@@ -8491,11 +8511,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-waterfall-chart-connector-color",
         "value": "var(--ds-chart-axis-line-color)",
         "notes": "Stroke of the dashed chain that carries each bar's end across to where the next one starts (defaults to --ds-chart-axis-line-color)."
-      },
-      {
-        "name": "--ds-waterfall-chart-skeleton-height",
-        "value": "40px",
-        "notes": "Height of a placeholder bar in the loading skeleton (default 40px)."
       }
     ]
   }

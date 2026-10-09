@@ -17,7 +17,9 @@
   "exports": {
     "./styles/*": "./styles/*",
     "./themes/*": "./themes/*",
-    "./migrations/*": "./migrations/*"
+    "./migrations/*": "./migrations/*",
+    "./stylelint": "./stylelint/index.mjs",
+    "./eslint": "./eslint/index.mjs"
   },
   "scripts": {
     "agent-catalogue": "node tools/split-agent-catalogue.mjs",
@@ -80,6 +82,7 @@
     "probe:charts-format": "node --experimental-strip-types tools/probes/charts-format.probe.mjs",
     "probe:charts-scale": "node --experimental-strip-types tools/probes/charts-scale.probe.mjs",
     "probe:charts-summary": "node --experimental-strip-types tools/probes/charts-summary.probe.mjs",
+    "probe:charts-skeleton": "node --experimental-strip-types tools/probes/charts-skeleton.probe.mjs",
     "publish:manual": "npm run build:lib && npm publish ./dist/ds",
     "release:beta": "node tools/release-beta.mjs",
     "release:major": "npm version major -m \"release: %s\"",

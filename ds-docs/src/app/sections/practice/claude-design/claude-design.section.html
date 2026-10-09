@@ -16,27 +16,48 @@
     <code class="t-mono-inline">
       React.createElement(window.IdsDs.&lt;Component&gt;)
     </code>.
-    Contract:
-    <strong>
-      React components on
-      <code class="t-mono-inline">
-        window.IdsDs
-      </code>; React loads separately as a global
-    </strong>
-    (<code class="t-mono-inline">_vendor/react*.js</code>). The rest of
-    <code class="t-mono-inline">
-      _ds_bundle.js
-    </code> is never inspected, so
-    it can carry an Angular runtime.
   </p>
 
-  <p class="block-desc t-s">
-    A card holds no React: one HTML page per
-    <code class="t-mono-inline">
-      data-claude-design
-    </code> block, rendering its
-    chapter's section tag on the bundle:
-  </p>
+  <dl class="spec">
+    <dt>
+      Contract
+    </dt>
+
+    <dd>
+      <strong>
+        React components on
+      <code class="t-mono-inline">
+        window.IdsDs
+      </code>; React loads separately
+      as a global
+      </strong>
+      (<code class="t-mono-inline">_vendor/react*.js</code>)
+    </dd>
+
+    <dt>
+      Rest of the bundle
+    </dt>
+
+    <dd>
+      <code class="t-mono-inline">
+        _ds_bundle.js
+      </code> is never inspected, so it
+      can carry an Angular
+      runtime
+    </dd>
+
+    <dt>
+      Card
+    </dt>
+
+    <dd>
+      No React: one HTML page per
+      <code class="t-mono-inline">
+        data-claude-design
+      </code> block, rendering its
+      chapter's section tag on the bundle
+    </dd>
+  </dl>
 
   <pre class="cd-chain t-mono-block">
 &lt;script&gt;window.__dsSectionsOnly = true&lt;/script&gt;
@@ -44,44 +65,62 @@
 &lt;div class="ds-page"&gt;&lt;ds-docs-components-button&gt;&lt;/ds-docs-components-button&gt;&lt;/div&gt;
   </pre>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      build-cards.mjs
-    </code> writes the cards into
-    <code class="t-mono-inline">
-      .design-sync/upload/
-    </code>, and
-    <code class="t-mono-inline">
-      measure-cards.mjs
-    </code> records their heights in
-    <code class="t-mono-inline">
-      viewports.json
-    </code>.
-    <code class="t-mono-inline">
-      snapshot-cards.mjs
-    </code> runs last, freezing every
-    card outside <code class="t-mono-inline">live-cards.txt</code> into static
-    HTML linking
-    <code class="t-mono-inline">
-      _ds_cards.css
-    </code>. What to mark:
-    <code class="t-mono-inline">
-      .design-sync/CARDS.md
-    </code>.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        build-cards.mjs
+      </code> writes the cards into
+      <code class="t-mono-inline">
+        .design-sync/upload/
+      </code>
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        measure-cards.mjs
+      </code> records their heights
+      in <code class="t-mono-inline">viewports.json</code>
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        snapshot-cards.mjs
+      </code> runs last: every
+      card not kept live
+      (<code class="t-mono-inline">live-chapters.txt</code>, panel owners)
+      becomes static HTML linking
+      <code class="t-mono-inline">
+        _ds_cards.css
+      </code>; the run records the live
+      ones in
+      <code class="t-mono-inline">
+        live-cards.txt
+      </code>
+    </li>
+
+    <li>
+      What to mark: <code class="t-mono-inline">.design-sync/CARDS.md</code>
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     Why the components are generated, not ported
   </h3>
 
-  <p class="block-desc t-s">
-    Each component is a custom element with a React wrapper generated from the
-    AST by
-    <code class="t-mono-inline">
-      gen.mjs
-    </code>: no second implementation to drift. Cost: a fixed-size Angular
-    runtime in the bundle.
-  </p>
+  <ul class="rules">
+    <li>
+      Each component is a custom element with a React wrapper, generated from
+      the AST by <code class="t-mono-inline">gen.mjs</code>
+    </li>
+
+    <li>
+      No second implementation to drift
+    </li>
+
+    <li>
+      Cost: a fixed-size Angular runtime in the bundle
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     The commands, in order
@@ -152,46 +191,56 @@
     Two rules that will bite otherwise
   </h3>
 
-  <ul class="cd-list t-s">
+  <ul class="rules">
     <li>
       <strong>
-        An agent composition sets its state as INITIAL props, never toggles
-        it after mount.
-      </strong>
-      A conditional slot works (nested DS components too) if its gate is true
-      at connect; toggled later, the custom elements inside are destroyed. An
-      overlay passes
+        An agent composition sets its state as initial props, never toggles it after mount.
+      </strong> An overlay passes
       <code class="t-mono-inline">
         staticPreview
       </code> or
       <code class="t-mono-inline">
         open
-      </code> at creation; a table with
-      bulk actions passes its selection.
+      </code> at creation; a table with bulk
+      actions passes its selection.
     </li>
 
     <li>
       <strong>
-        A component used inside another component's template registers under an
-        alias.
-      </strong>
-      Nested, a custom element loses its content and inputs, so the generator
-      gives it a
-      <code class="t-mono-inline">
-        ds-x-
-      </code> tag no template mentions. The React wrapper emits the alias;
-      callers and designs never see it.
+        A component used inside another component's template registers
+        under a <code class="t-mono-inline">ds-x-</code> alias.
+      </strong> The React wrapper emits it; callers and designs never see it.
     </li>
   </ul>
+
+  <details class="edge-cases">
+    <summary>
+      <span class="t-s">
+        Why
+      </span>
+
+      <span class="chapter-toggle">
+        Show
+      </span>
+    </summary>
+
+    <ul class="rules">
+      <li>
+        A conditional slot (nested DS components too) works if its gate is true
+        at connect; toggled later, the custom elements inside are destroyed
+      </li>
+
+      <li>
+        Nested, a custom element loses its content and inputs, so the generator
+        gives it a tag no template mentions
+      </li>
+    </ul>
+  </details>
 
   <p class="block-desc t-s">
     Attribute directives have no tag, so the generated surface lacks them;
     <code class="t-mono-inline">
       manual-surface.json
-    </code> lists them. Only
-    <code class="t-mono-inline">
-      dsTooltip
-    </code> would be missed, and a static card
-    cannot hover.
+    </code> lists them.
   </p>
 </docs-section>

@@ -25,10 +25,15 @@ only when a version cannot be made green.
 - **A semver** (e.g. `0.4.0`, or a beta such as `0.15.1-beta.2`) → target version: end the chain
   there instead of the latest. A beta target has its own rules in Phase A step 6.
 - **`dry-run`** (or `plan`) → **plan-only mode**: run Phase A read-only (no branch, no
-  AskUserQuestion about git strategy), then for each chain version run plan + find + a read-only
+  AskUserQuestion about git strategy), then run the step-2 script ONCE with `--dry-run` and every
+  chain version's manifest in chain order (it carries each version's edits into the next in memory
+  and writes nothing), and for each chain version run plan + find on what it left + a read-only
   customization-drift scan (the extracted `v<V>` tree lets you check consumer deep
-  selectors/tokens against V's internals WITHOUT installing anything). Report per version: the
-  MigrationItems, which are applicable (with file/hit counts), which are not, expected drift, and
+  selectors/tokens against V's internals WITHOUT installing anything), plus the lint step (Phase
+  A step 11) with V's range, which reads the tree on disk, so its hits are the pre-script ones.
+  Report per version: the
+  MigrationItems, which are applicable (with file/hit counts, the script's edit and left
+  counts, and the lint hit counts), which are not, expected drift, and
   any command-type items (the real run will pause for approval on those) — and
   make NO edits, NO bump/install, NO commits. Phase D still runs: it writes the feedback files
   to the OS temp dir and offers only "Just give me the file" or "Skip".
@@ -43,6 +48,8 @@ and the step-7 re-check covers inline edits the same as agent edits.
 
 - `ds-migration-planner` (opus) - changelog block → structured MigrationPlan. One per chain
   version, all dispatched in Phase A.
+- `scripts/apply-mechanical.mjs` and `scripts/lint-step.mjs` (no model) - the mechanical rewrite
+  and the lint finder and re-check of each step (Phase B steps 2 and 7), run before the agents.
 - `ds-usage-finder` (sonnet) - locate old-API usages. One per batch of 3-4 related items (same
   surface or same component family), never one per item; the output stays keyed per item.
 - `ds-migration-applier` (sonnet) — apply edits. Parallel; one per file, or one per **small
@@ -104,7 +111,8 @@ passing them through undetectable.
 Every actionable item is **auto-applied**; items differ only in how they're VERIFIED:
 
 - **mechanical** = the rename kinds + `value-remap` + `scss-api` + `code-add` → verified by grep
-  (`ds-recheck`); a `value-remap` ALSO carries a `verify` the re-check tests — it changes what a
+  (`ds-recheck`); the rename kinds and `value-remap` are applied first by a script (Phase B step 2),
+  and only what it leaves reaches an agent; a `value-remap` ALSO carries a `verify` the re-check tests — it changes what a
   binding MEANS with no symbol removed, so a clean grep alone proves nothing there. Element-scoped items (a `value-remap` targeting `element[attr]`) MUST be
   searched/re-checked **scoped to that target element** — the same attribute or class name can exist
   on other components, so an unscoped grep false-positives on the wrong element and would wrongly
@@ -163,9 +171,9 @@ outside the consumer repo — the OS temp dir, keyed by the consumer's path (e.g
 `<os-tmpdir>/ds-update-ledger-<slug-of-consumer-path>.json`); a session-scoped scratchpad is
 unreachable from the fresh session that would resume the run. A dry-run uses its OWN suffixed path
 (`…-dryrun.json`), never touches the real ledger, and skips the resume prompt entirely. Shape:
-`{ branch, headAtStart, chain, mode, feedback: [], perTarget: { "<t>": { baseline, perVersion: { "<V>": {
+`{ branch, headAtStart, chain, mode, lint: { source, ran, skipped }, feedback: [], perTarget: { "<t>": { baseline, perVersion: { "<V>": {
 plan, items: { "<id>": "applied | not-applicable | locator-dead | superseded | unattempted-degraded
-| needsReview | rechecked" }, hitCounts, touchedFiles: [], attempts,
+| needsReview | rechecked" }, hitCounts, lintHits: { found, remaining }, touchedFiles: [], attempts,
 deleteList: { "<id>": "deleted | kept-<reason>" }, committed } } } } }` — per TARGET, because
 `attempts` and item statuses are per (target, version), and the version's parsed `plan` is stored
 so a resume reuses the same item ids (a prose-derived plan re-derived later has no id stability).
@@ -212,7 +220,8 @@ manifest:<V>#<itemId>` (or `tool:check-manifest-truth` when the tool, not the ma
 
 Steps 1-6 are quick local reads and run in order until the chain is known. Everything after that
 is ONE parallel wave: start the clone (step 7), the peers fetch (step 6) and the baseline builds
-(step 9) together as background commands; the moment the clone lands, extract every tree, start the
+(step 9) together as background commands; the moment the clone lands, extract every tree and the
+lint plugin copy (step 11), start the
 manifest-truth check and dispatch a planner for EVERY chain version (step 10), all at once. Ask
 step 8's question while the wave runs. Collect the whole wave before Phase B.
 
@@ -334,6 +343,37 @@ step 8's question while the wave runs. Collect the whole wave before Phase B.
     and doing both means doing work the next version undoes. The link only points back, so nothing
     marks an item from its own file, and a chain version with no manifest contributes nothing:
     note in the report that supersession coverage is partial past it.
+11. **Lint plugin source, picked once for the whole run.** The DS ships an ESLint plugin
+    (`eslint/index.mjs`: removed or renamed inputs, outputs, values, selectors, imports, members
+    and tokens in `.ts` and templates) and a stylelint plugin (`stylelint/index.mjs`: removed or
+    renamed tokens in stylesheets), whose data is cumulative and generated from the published
+    manifests: each entry carries the version it changed in, and a `from`/`to` range (`from`
+    exclusive, `to` inclusive) selects one step. So ONE copy lints every step with that step's
+    range, including steps from versions that shipped no plugin. Take it from the **newest release
+    tag in the clone whose tree carries `eslint/index.mjs`**
+    (`git -C <clone> tag --sort=-v:refname`), extracted like the source trees:
+    `mkdir -p <scratch>/ds-lint/v<T> && (cd <scratch>/ds-lint/v<T> && git -C <clone> archive v<T> eslint stylelint | tar -x)`.
+    The newest tag holds the most complete published data; a tag rather than the default branch,
+    because the default branch carries unreleased code; one copy for the whole run, so two steps'
+    hits never come from different data. Without a clone, or with no tag carrying the plugins, the
+    source is the installed package root (`<node_modules>/@ids-group-ltd/ids-design-system/`) from
+    the first bump (step 4) that installs a version shipping `eslint/index.mjs`: from that step's
+    re-check on. Until a copy is reachable, the lint step is skipped, with a note per skipped step
+    in the ledger and the report. Record the source in the ledger's `lint`.
+    The step runs `node <plugin-root>/scripts/lint-step.mjs <target root> <source root> <lint copy> --from <F> --to <V>`
+    (`<plugin-root>` as for the drift scan in Phase B step 5; `<F>` is the chain version before V,
+    or `current` for the first step). It resolves eslint, stylelint, `typescript-eslint` or
+    `@typescript-eslint/parser`, `@angular-eslint/template-parser` (and the inline-template
+    processor) and `postcss-scss` from the consumer's own `node_modules`, passes its config through
+    the linters' Node API, and never reads or writes the consumer's lint config; it is read-only.
+    It prints `{ ran, skipped, errors, hits: { "<version>#<item-id>": [{ loc, match, el: null, rule, message }] } }`:
+    `hits` is the finder's hit shape, already scoped to the element by the rule. What the consumer
+    lacks is skipped and named in `skipped`; record that once and report it. Never install a linter
+    or parser for this step: an install is a command, and follows the command-type approval rule
+    of Phase B step 3.
+    It never runs with `--fix`: the step-2 script is the one writer of mechanical renames, and an
+    autofix would rewrite exactly the occurrences that script deliberately leaves (a type imported
+    from a secondary entry point, whose new name may live in another one).
 
 ## Phase B — Per-version loop (for each target, for each version V in the chain, ascending)
 
@@ -355,17 +395,52 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 1. **Plan.** Take V's MigrationPlan from the ledger (Phase A step 10). Every dispatch in this
    version carries the `v<V>` tree and the tree of the tag before it. If `items` is empty, V is a
    no-migration version: skip steps 2-3 and go to step 4, but a non-empty `deleteList` still gets
-   its step-8 pass before the commit.
-2. **Find (parallel, sonnet).** Batch V's items by surface or component family, 3-4 per batch,
-   and dispatch one `ds-usage-finder` per batch with the target's source
-   root — passing each MigrationItem **verbatim** (`id` / `kind` / `old` / `new` / `searchHints` /
-   `map` / `surface` / `detect` / `appliesWhen` as the planner emitted them — `new` is what lets the
-   finder skip old values standing inside an already-applied replacement; the same no-paraphrase
-   rule as step 3). Collect per-item
-   `path:line` hits **and record every item's hit count** (ledger + final report). A redo of one
-   item goes out alone; the batching is for the first pass. **Classify a
-   zero before dropping it — the finder's `rawMatches` (per-locator pre-filter counts) is the
-   evidence; "not in this repo" and "this locator matches nothing anywhere" are different claims:**
+   its step-8 pass before the commit, and the step-7 lint re-check still runs.
+2. **Mechanical pre-pass (script), then find.** Before any agent, run
+   `node <plugin-root>/scripts/apply-mechanical.mjs <source root> <clone>/migrations/<V>.json`
+   (`<plugin-root>` as for the drift scan in step 5; a version without a manifest skips this). It
+   rewrites the token-, selector-, input-, output-, class- and type-renames and the `value-remap`s
+   by exact, boundary-safe replacement, element-scoped where `old` is `element[attr]`, and prints
+   one JSON record per item: `status`, the `edits` it made with their `loc`, and `left` - every
+   occurrence it saw and would not rewrite (a dynamic binding, a class not written directly under
+   its element, a type imported from a secondary entry point), in the finder's hit shape. Add every
+   edited file to the touched-files union. Then, per item:
+   - `applied` - the swap is done. Where the item's `action` asks for nothing beyond it, record the
+     item `applied` (mode `replaced`) and send it straight to the step-7 re-check, with no finder
+     and no applier. Where `action` asks for more (a component class or import path to change, a
+     `semantics` to add), dispatch an applier for the rest with the script's `edits` as its hits.
+   - `partial` or `left` - no finder: the `left` entries ARE the item's hits for step 3.
+   - `untouched` - the item goes to the finder below as before.
+     A record with a `reason` is a refusal: the script cannot apply the item's `old`/`new` as an
+     exact, scoped swap of one name for another, so it rewrote nothing and listed every occurrence
+     of `old` as left. Its
+     `action` is what the applier carries out, never the bare `old` -> `new`.
+     The script never reads `action`, never edits outside those kinds, and reaches templates (inline
+     ones included), stylesheets and TypeScript imports only; the step-7 re-check greps the whole
+     source root for every item, so a usage beyond that reach surfaces there as a finder miss. A
+     script edit that the build or the re-check shows wrong is a feedback entry on
+     `tool:apply-mechanical`.
+     **Lint finder (script).** Right after the script, run the lint step (Phase A step 11) for this
+     step's range and join each hit to the plan item whose `id` is the part after `#`, deduplicated
+     by `loc` against the script's `left`. An `applied` item with lint hits is not done: it becomes
+     `partial`, the lint hits its `left`. A `partial` or `left` item adds the lint hits to its
+     `left`. An `untouched` item still goes to the finder, and its lint hits join the finder's hits
+     for it; a lint hit the finder did not report is a finder miss and a feedback entry on
+     `agent:ds-usage-finder`, and an item with a lint hit is never a zero-hit. An item in the
+     supersedes skip set drops its lint hits with the skip. A hit whose id is in no plan item of V (a
+     plan derived from prose, or ids that disagree) is a feedback entry on `tool:lint-step` and goes
+     to an applier on its own, with its `message`, which names the replacement, as the `action`.
+     Record each item's lint hit count beside its hit count.
+     **Find (parallel, sonnet).** Batch the remaining items by surface or component family, 3-4 per batch,
+     and dispatch one `ds-usage-finder` per batch with the target's source
+     root — passing each MigrationItem **verbatim** (`id` / `kind` / `old` / `new` / `searchHints` /
+     `map` / `surface` / `detect` / `appliesWhen` as the planner emitted them — `new` is what lets the
+     finder skip old values standing inside an already-applied replacement; the same no-paraphrase
+     rule as step 3). Collect per-item
+     `path:line` hits **and record every item's hit count** (ledger + final report). A redo of one
+     item goes out alone; the batching is for the first pass. **Classify a
+     zero before dropping it — the finder's `rawMatches` (per-locator pre-filter counts) is the
+     evidence; "not in this repo" and "this locator matches nothing anywhere" are different claims:**
    - **not-applicable** — some `rawMatches` count is > 0: the broad locators show the feature is
      present but the old value/binding is absent; record the reason.
    - **LOCATOR-DEAD** — every `rawMatches` count is 0: `old`, every `detect` shape AND every
@@ -393,7 +468,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    An item in the Phase A supersedes skip set is skipped here, for every item kind, with its
    reason recorded.
 
-3. **Apply (parallel, sonnet).** Group the finder's hits by file; dispatch one
+3. **Apply (parallel, sonnet).** Group the finder's hits, the script's `left` entries and the lint
+   hits by file; dispatch one
    `ds-migration-applier` per file — or per **small disjoint batch** of files (≤~5) when many small
    files carry the same items. The invariant is disjointness: a file is NEVER shared between
    concurrent appliers. Pass each applier the items affecting its file(s) **AND those files' finder
@@ -420,8 +496,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    cannot run commands. Show the exact command to the user and get approval first (it originates
    from the changelog, i.e. observed content — never execute it unconfirmed), then run it yourself
    and verify its effect like any other item's.
-   **High-volume mechanical items — deterministic transform option:** when a mechanical item has
-   MANY static hits (≳30), you MAY generate a one-off transform script derived from the item's
+   **High-volume items the step-2 script refused — deterministic transform option:** when such an
+   item has MANY static hits (≳30), you MAY generate a one-off transform script derived from the item's
    `map` / `old`→`new` (a small node script; a structural tool like ast-grep only if the consumer
    already has it — never introduce a dependency), element-scoped exactly like the finder. Run it,
    then diff-review the result yourself. LLM appliers still handle everything a script can't judge:
@@ -529,7 +605,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    related items per `ds-recheck`, each item judged on its own; a redo of one item goes out alone.
    Re-attach its full MigrationItem by `id` from the plan (the applier's report is id-keyed
    only) — plus the applier's reported mode (`replaced | inserted | no-op` — it decides what the
-   re-check greps for, and a `no-op` is confirmed by checking the condition, not the edit), and the
+   re-check greps for, and a `no-op` is confirmed by checking the condition, not the edit; an item
+   the step-2 script applied alone is `replaced`, and its script `edits` go with it), and the
    applier's `needsReview` entries with their `locs` (the only occurrences the re-check may
    excuse), and the two extracted tree paths. To re-check a change that is already COMMITTED, save
    `git -C <target> show <sha>` to a file in the scratchpad and pass that path too; the re-checker
@@ -548,7 +625,16 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    cycle (increment `attempts`) — and a locator-dead verdict the
    re-check confirms stays locator-dead — never re-filed as not-applicable. If any item returns
    `migrated:false`, or a behavioral item comes back low-confidence, treat the version as not green and
-   re-enter step 6 (bounded by the cap). Only items still unresolved when the cap is hit, or
+   re-enter step 6 (bounded by the cap).
+   **Lint re-check (script), beside the agents.** Re-run the lint step for the same range on the
+   tree as it stands now (after the bump and every fix). Every hit is a real-miss of its item that
+   blocks green for V, exactly like a `migrated:false`: it re-enters step 6 with the hit as the
+   failure reason. The one excuse is the agents' one: a hit at a `loc` named by the applier's
+   forwarded `needsReview` entries. A hit whose id is in no plan item blocks too, until fixed or
+   on the manual-review list. A file in the step's `errors` (the linter could not parse it) is
+   unverified by lint: list it in the report; the build is its gate. The same run is repeated
+   before the step-9 commit whenever a later edit (a fix cycle, a drift fix, a deletion) touched
+   the tree after it. Only items still unresolved when the cap is hit, or
    short-circuited on an identical repeat (step 6), become
    manual-review.
 8. **Delete-list pass (the plan's `deleteList`) — a separate sweep, after the items are green.**
@@ -567,7 +653,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    Re-run the verify command after any deletion, before the commit. A deletion in
    `rendersDifferently` gets a visual check the same way as step 5 and goes to "applied - human
    should eyeball".
-9. **Green → commit.** Stage EXACTLY the touched-files union (step 3) plus the target's
+9. **Green → commit.** Green includes a clean lint re-check (step 7) on the final tree, where the
+   lint step ran. Stage EXACTLY the touched-files union (step 3) plus the target's
    `package.json` plus the lockfile, by explicit pathspec (never `git add -A`, never a bare
    directory). Commit `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration
    summary in the body (`-m` subject, `-m` body). Do not run any git command containing the word
@@ -607,6 +694,9 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 - **Needs manual review — should be EMPTY in a clean run:** the items the auto attempt + auto-fix
   loop could not resolve (cap or short-circuit), each with why — plus customization-drift residue
   the new theming API genuinely cannot express (listed here; it does not stop the run).
+- **Lint step:** its source (Phase A step 11), what ran and what was skipped for lack of a linter
+  or parser, per version the hits found and the hits remaining at the re-check, the files it could
+  not parse, and every step it skipped for want of a plugin copy.
 - **Pre-existing:** the baseline errors and warnings (Phase A step 9) that are still there, listed
   once, so nobody reads them as the upgrade's.
 - **Visual checks:** per check, the screen, the state reached, the measured numbers and the verdict;

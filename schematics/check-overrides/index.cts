@@ -4,7 +4,11 @@ import {
   SchematicsException,
   Tree,
 } from '@angular-devkit/schematics';
-import { findDeadClasses, findWriteOnlyTokens } from './scan.cjs';
+import {
+  findDeadClasses,
+  findWriteOnlyBoundTokens,
+  findWriteOnlyTokens,
+} from './scan.cjs';
 
 // No @types/node in this tsconfig (schematics/tsconfig.json has no `types`), so the two CommonJS
 // globals this file needs are declared locally rather than pulling in a dependency for them.
@@ -25,11 +29,6 @@ const STYLE_FILE = /\.(scss|css|sass|less)$/;
 const TOKEN_ONLY_FILE = /\.(html|ts)$/;
 const SKIPPED_DIR = /\/(node_modules|dist|\.angular)\//;
 
-// `style.` catches `[style.--ds-x]="…"`, `setProperty('` catches
-// `el.style.setProperty('--ds-x', …)`. Everything else on an .html/.ts line is prose or an
-// unrelated binding, not a custom-property write.
-const BINDING_MARKER = /style\.|setProperty\('/;
-
 /**
  * `ng g @ids-group-ltd/ids-design-system:check-overrides` — reports every `--ds-*` a consumer's
  * stylesheets set that the installed version never reads, and every `ds-*` selector naming a class
@@ -49,14 +48,11 @@ export function checkOverrides(options: CheckOverridesSchema): Rule {
       if (!isStyleFile && !isTokenOnlyFile) return;
 
       const content = entry.content.toString('utf8');
-      const tokenSource = isStyleFile
-        ? content
-        : content
-            .split(/\r\n|\n/)
-            .map((line: string) => (BINDING_MARKER.test(line) ? line : ''))
-            .join('\n');
+      const tokenHitsInFile = isStyleFile
+        ? findWriteOnlyTokens(content, readTokens)
+        : findWriteOnlyBoundTokens(content, readTokens);
 
-      for (const hit of findWriteOnlyTokens(tokenSource, readTokens)) {
+      for (const hit of tokenHitsInFile) {
         context.logger.warn(
           `${path}:${hit.line} ${hit.token} is not read by @ids-group-ltd/ids-design-system ${surface.version}`,
         );

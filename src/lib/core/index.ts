@@ -18,7 +18,6 @@ export { resolveWithConfig } from './config-defaults';
 export { addDevWarningSink, devWarn, reportDevWarning } from './dev-warning';
 export { warnAnnounceOversight } from './announce-warning';
 export type { AnnounceState } from './announce-warning';
-export { warnUnslottedContent } from './unslotted-content-warning';
 export { DS_CONFIG, inheritDsConfig, provideDsConfig } from './ds-config';
 export type { DsConfig } from './ds-config';
 export { DS_INTL, provideDsIntl } from './ds-intl';
@@ -37,6 +36,7 @@ export { isTextEntryTarget } from './key-target';
 export { isTextClipped } from './text-clip';
 export {
   firstEnabledIndex,
+  isListCursorKey,
   lastEnabledIndex,
   nextEnabledIndex,
 } from './list-cursor';

@@ -693,6 +693,9 @@
      the outline is not painted there. */
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
+  /* Share of the accent in the wash behind a trigger whose tooltip is pinned. The wash is translucent, so it
+     tints whatever surface the trigger sits on, in both themes. */
+  --pinned-wash-amount: 12%;
   /* For a box that exists only to carry the ring; a control with its own shape ignores it. */
   --focus-ring-radius: var(--ds-radius-inner);
   /* Composed from a channel-split tint so a theme can re-colour them (-h/-s are theme-independent, -l comes
@@ -1021,7 +1024,6 @@
   --kbd-pad-y: var(--space-0-5);
   --kbd-pad-x: var(--space-1-5);
   --chart-empty-h: 160px;
-  --chart-skeleton-h: 160px;
   --chart-legend-dot: var(--icon-2xs);
   --compare-dt-w: 90px;
   --dodont-stage-minh: 100px;
@@ -1172,7 +1174,7 @@
   /* BACKGROUND: the frame and every knockout between marks. Read where it is used: a token deriving
      from it on :root would ignore one set on a single chart. */
   --chart-bg-color: var(--surface-default);
-  /* FRAME: inside a card, drop it with --ds-chart-frame-border-width: 0 and --ds-chart-frame-padding: 0. */
+  /* FRAME: inside a card use frame="none" / DS_CONFIG.chart.frame; these tokens size the frame when it is on. */
   --chart-frame-border-color: var(--border-default);
   --chart-frame-border-width: var(--border-width-default);
   --chart-frame-radius: var(--radius-lg);

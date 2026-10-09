@@ -1,7 +1,10 @@
 @use '../../styles/breakpoints' as bp;
 @use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
+  --_app-layout-desktop-min-width: var(--bp-lg, #{bp.$bp-lg});
   --_app-layout-padding-x: var(--ds-app-layout-padding-x, var(--space-6));
   --_app-layout-padding-y: var(--ds-app-layout-padding-y, var(--space-6));
   --_app-layout-content-max-width: var(--ds-app-layout-content-max-width, none);
@@ -22,6 +25,8 @@
 
   // Own stacking context: a nested layout's rail otherwise paints over the outer open rail.
   isolation: isolate;
+
+  // glyph-clip-guard: the page frame; text sits in the padded topbar, rail and content inside it
   overflow: hidden;
 }
 

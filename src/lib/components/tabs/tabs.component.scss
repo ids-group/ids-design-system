@@ -1,5 +1,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract: tab labels are single-line and short; the badge count never clips. */
 
@@ -48,6 +50,7 @@
   }
 }
 
+// target-size-guard: 28 x 40px, the tab row height
 .scroll-arrow {
   --_scroll-arrow-padding-bottom: calc(var(--_tab-padding-bottom) + var(--_tab-indicator-width) - var(--border-width-default));
   --_scroll-arrow-surface-shift: calc(var(--_scroll-arrow-padding-bottom) - var(--_tab-padding-top));

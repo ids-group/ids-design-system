@@ -14,16 +14,21 @@
 
   <p class="block-desc t-s">
     Every value with a design role (colour, spacing, radius, border width,
-    motion) reads a <code class="t-mono-inline">var(--token)</code>. A literal
-    (<code class="t-mono-inline">#ccc</code>,
-    <code class="t-mono-inline">
-      12px
-    </code>,
-    <code class="t-mono-inline">
-      200ms
-    </code>) in component CSS is a token gap
-    to fix; dark mode, density and rebrand depend on it.
+    motion) reads a <code class="t-mono-inline">var(--token)</code>.
   </p>
+
+  <ul class="rules">
+    <li>
+      A literal (<code class="t-mono-inline">#ccc</code>,
+      <code class="t-mono-inline">
+        12px
+      </code>,
+      <code class="t-mono-inline">
+        200ms
+      </code>) in component CSS is a token gap
+      to fix; dark mode, density and rebrand depend on it
+    </li>
+  </ul>
 
   <h3
     data-claude-design
@@ -88,8 +93,119 @@
     </li>
 
     <li>
-      Never as a shortcut: a value whose role you cannot name does not belong
-      in the component.
+      Never as a shortcut: a value whose role you cannot name does not belong in
+      the component.
     </li>
   </ul>
+
+  <h3 class="block-title t-h4">
+    Lint removed names after an upgrade
+  </h3>
+
+  <p class="block-desc t-s">
+    Two plugins flag what the library removed or renamed.
+  </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        &#64;ids-group-ltd/ids-design-system/stylelint
+      </code>
+      - rule
+      <code class="t-mono-inline">
+        ids-design-system/no-removed-tokens
+      </code>:
+      <code class="t-mono-inline">
+        --*
+      </code> properties in stylesheets;
+      <code class="t-mono-inline">
+        --fix
+      </code> applies a rename.
+    </li>
+  </ul>
+
+  <pre class="t-mono-block">{{ stylelintSnippet }}</pre>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        &#64;ids-group-ltd/ids-design-system/eslint
+      </code>
+      - flat config, <code class="t-mono-inline">**/*.ts</code> and
+      <code class="t-mono-inline">
+        **/*.html
+      </code>; seven rules:
+      <ul>
+        <li>
+          <code class="t-mono-inline">
+            no-removed-inputs
+          </code>
+        </li>
+
+        <li>
+          <code class="t-mono-inline">
+            no-removed-outputs
+          </code>
+        </li>
+
+        <li>
+          <code class="t-mono-inline">
+            no-removed-values
+          </code>
+        </li>
+
+        <li>
+          <code class="t-mono-inline">
+            no-renamed-selectors
+          </code>
+        </li>
+
+        <li>
+          <code class="t-mono-inline">
+            no-renamed-imports
+          </code>
+        </li>
+
+        <li>
+          <code class="t-mono-inline">
+            no-removed-members
+          </code>
+        </li>
+
+        <li>
+          <code class="t-mono-inline">
+            no-removed-tokens
+          </code>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        configs.recommended
+      </code> - all seven as
+      errors.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        configs.recommendedFrom(from, to)
+      </code> -
+      only changes after <code class="t-mono-inline">from</code> (exclusive), up
+      to <code class="t-mono-inline">to</code> (inclusive).
+    </li>
+
+    <li>
+      History - token rules from 0.2.0, other rules from 0.4.0.
+    </li>
+  </ul>
+
+  <pre class="t-mono-block">{{ eslintSnippet }}</pre>
+
+  <p class="block-desc t-s">
+    README: per-rule <code class="t-mono-inline">from</code> /
+    <code class="t-mono-inline">
+      to
+    </code> options, template parser setup.
+  </p>
 </docs-section>

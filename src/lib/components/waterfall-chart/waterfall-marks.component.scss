@@ -1,4 +1,6 @@
 @use '../../styles/chart-motion' as chart-motion;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 @include chart-motion.fades-in('.connector', var(--ds-motion-chart-mark-grow-duration));
 @include chart-motion.follows('.value', var(--ds-motion-chart-mark-grow-duration));
 

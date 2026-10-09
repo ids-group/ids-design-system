@@ -1,5 +1,8 @@
 @use '../../styles/focus' as focus;
+@use '../../styles/target' as target;
 @use '../../styles/text-clip' as text-clip;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   --_sidenav-footer-popover-width: var(--ds-sidenav-footer-popover-width, 300px);
@@ -78,6 +81,7 @@
   font-size: var(--font-size-xs);
 }
 
+// target-size-guard: 18px icon and --space-1 padding, 26px
 .more {
   display: inline-flex;
   align-items: center;
@@ -189,6 +193,8 @@
     color: var(--text-tertiary);
     background: transparent;
     cursor: pointer;
+
+    @include target.min-size;
 
     &:hover {
       color: var(--text-primary);

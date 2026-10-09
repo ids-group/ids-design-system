@@ -4,9 +4,12 @@ import {
   computed,
   contentChildren,
   effect,
+  inject,
   signal,
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { MenuItemComponent } from './menu-item.component';
+import { MenuAim } from './menu-aim';
 import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
@@ -15,6 +18,9 @@ import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  providers: [
+    { provide: MenuAim, useFactory: () => new MenuAim(inject(DOCUMENT)) },
+  ],
   // data-focus="inset": the panel clips, so an outward ring is lost.
   host: {
     '(keydown)': 'onKeydown($event)',

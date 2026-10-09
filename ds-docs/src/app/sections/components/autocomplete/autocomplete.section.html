@@ -13,17 +13,57 @@
 
   <docs-nonmodal-note />
 
-  <p class="block-desc t-s">
-    Use autocomplete for lists too big to scan;
-    <code class="t-mono-inline">
-      ds-multi-select
-    </code> when options fit a
-    checkbox list (it shows the unselected too). The same rule decides against
-    <code class="t-mono-inline">
-      ds-select
-    </code>: both read as pickers, but
-    only autocomplete lets you type.
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Options
+        </th>
+
+        <th>
+          Use
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          Too many to scan
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            ds-autocomplete
+          </code> - the only picker you type into
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Fit a checkbox list (shows the unselected too)
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            ds-multi-select
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Fit a list, one value
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            ds-select
+          </code>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <h3
     data-claude-design
@@ -61,13 +101,33 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       maxVisibleChips
-    </code> keeps the trigger one
-    line: <code class="t-mono-inline">"fit"</code> (default) shows what fits
-    plus "+N more", re-split on resize; a number is a ceiling, lowered if
-    narrow; <code class="t-mono-inline">"all"</code> grows the trigger. Same
-    on <code class="t-mono-inline">ds-multi-select</code>. Backspace removes
-    the last selected chip, not the last visible.
+    </code> keeps the trigger one line.
+    Same on <code class="t-mono-inline">ds-multi-select</code>.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        "fit"
+      </code> (default) - what fits plus "+N more", re-split on resize.
+    </li>
+
+    <li>
+      A number - a ceiling, lowered if narrow.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        "all"
+      </code> - grows the trigger.
+    </li>
+
+    <li>
+      <kbd>
+        Backspace
+      </kbd> removes the last selected chip, not the last visible.
+    </li>
+  </ul>
 
   <div class="autocomplete-field-wrap">
     <ds-autocomplete
@@ -99,28 +159,87 @@
     Width
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      width="fill"
-    </code> (default) stretches;
-    <code class="t-mono-inline">
-      width="content"
-    </code> hugs chips/value plus a
-    typing area, for toolbars.
-    <code class="t-mono-inline">
-      --ds-autocomplete-input-min-width
-    </code> (default 40px) sizes the
-    typing area;
-    <code class="t-mono-inline">
-      --ds-autocomplete-max-width
-    </code>
-    caps both modes. Long values ellipsise;
-    <code class="t-mono-inline">
-      valueOverflow="wrap"
-    </code> wraps to a second
-    line. Long option labels, create row included, ellipsise with a hover
-    tooltip.
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Input / token
+        </th>
+
+        <th>
+          Effect
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            width="fill"
+          </code> (default)
+        </td>
+
+        <td>
+          Stretches.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            width="content"
+          </code>
+        </td>
+
+        <td>
+          Hugs chips/value plus a typing area, for toolbars.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-autocomplete-input-min-width
+          </code> (40px)
+        </td>
+
+        <td>
+          Sizes the typing area.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-autocomplete-max-width
+          </code>
+        </td>
+
+        <td>
+          Caps both modes.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            valueOverflow="wrap"
+          </code>
+        </td>
+
+        <td>
+          Long values wrap to a second line instead of ellipsising.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="block-desc t-s">
+    <li>
+      Long option labels, create row included, ellipsise with a hover tooltip.
+    </li>
+  </ul>
 
   <div class="autocomplete-toolbar-row">
     <ds-autocomplete
@@ -236,8 +355,10 @@
     </code> shows a
     <em>
       Create «text»
-    </em> row for text with no exact match,
-    emitting <code class="t-mono-inline">create</code>; you add the item.
+    </em> row for text with no exact match, emitting
+    <code class="t-mono-inline">
+      create
+    </code>; you add the item.
   </p>
 
   <div class="autocomplete-field-wrap">
@@ -255,30 +376,23 @@
     Icons in the options
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      DsOption
-    </code> (as in
-    <code class="t-mono-inline">
-      ds-select
-    </code> and
-    <code class="t-mono-inline">
-      ds-multi-select
-    </code>) takes
-    <code class="t-mono-inline">
-      icon
-    </code> (16px, before the label) and
-    <code class="t-mono-inline">
-      disabled
-    </code> (greyed,
-    <code class="t-mono-inline">
-      aria-disabled
-    </code>, unclickable, skipped by
-    arrows). The trigger shows no option icon; its leading slot is
-    <code class="t-mono-inline">
-      [dsAutocompletePrefix]
-    </code>.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        DsOption.icon
+      </code> - 16px, before the label (as in <code class="t-mono-inline">ds-select</code> and <code class="t-mono-inline">ds-multi-select</code>).
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        DsOption.disabled
+      </code> - greyed, <code class="t-mono-inline">aria-disabled</code>, unclickable, skipped by arrows.
+    </li>
+
+    <li>
+      The trigger shows no option icon; its leading slot is <code class="t-mono-inline">[dsAutocompletePrefix]</code>.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
@@ -365,16 +479,39 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       filterWith
-    </code> narrows (default: case-insensitive
-    substring of <code class="t-mono-inline">label</code>);
+    </code> narrows (default:
+    case-insensitive substring of <code class="t-mono-inline">label</code>);
     <code class="t-mono-inline">
       'none'
     </code> shows options as given: fetch
     them on <code class="t-mono-inline">(filterChange)</code>, which emits each
-    query. <code class="t-mono-inline">[loading]="true"</code> shows a spinner
-    for the empty row and sets <code class="t-mono-inline">aria-busy</code> on
-    the listbox.
+    query.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        [loading]="true"
+      </code> -
+      <code class="t-mono-inline">
+        aria-busy
+      </code> on the field and the listbox.
+    </li>
+
+    <li>
+      No options - three placeholder rows.
+    </li>
+
+    <li>
+      With options - under a
+      <code class="t-mono-inline">
+        ds-loading-overlay
+      </code>, inert and deaf to arrow and Enter keys until
+      <code class="t-mono-inline">
+        loading
+      </code> clears.
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     Templates
@@ -384,37 +521,94 @@
     Directives from
     <code class="t-mono-inline">
       &#64;ids-group-ltd/ids-design-system/components
-    </code>:
-    <code class="t-mono-inline">
-      dsOptionTemplate
-    </code> the option label
-    (context: the option; role, selection, check stay library-owned);
-    <code class="t-mono-inline">
-      dsEmptyTemplate
-    </code> the "no matches" row
-    (context: <code class="t-mono-inline">query</code>; keeps
-    <code class="t-mono-inline">
-      role="status"
-    </code>);
-    <code class="t-mono-inline">
-      dsCreateTemplate
-    </code> the create row
-    (context: <code class="t-mono-inline">query</code>; still emits
-    <code class="t-mono-inline">
-      create
-    </code>).
-    <code class="t-mono-inline">
-      dsChipTemplate
-    </code>,
-    <code class="t-mono-inline">
-      dsGroupLabelTemplate
-    </code>,
-    <code class="t-mono-inline">
-      dsPanelHeaderTemplate
-    </code> and
-    <code class="t-mono-inline">
-      dsPanelFooterTemplate
-    </code> fill what they
-    name.
+    </code>.
   </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Directive
+        </th>
+
+        <th>
+          Fills
+        </th>
+
+        <th>
+          Context, kept by the library
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            dsOptionTemplate
+          </code>
+        </td>
+
+        <td>
+          The option label
+        </td>
+
+        <td>
+          The option; role, selection, check stay library-owned
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            dsEmptyTemplate
+          </code>
+        </td>
+
+        <td>
+          The "no matches" row
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            query
+          </code>; keeps <code class="t-mono-inline">role="status"</code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            dsCreateTemplate
+          </code>
+        </td>
+
+        <td>
+          The create row
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            query
+          </code>; still emits <code class="t-mono-inline">create</code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            dsChipTemplate
+          </code>, <code class="t-mono-inline">dsGroupLabelTemplate</code>, <code class="t-mono-inline">dsPanelHeaderTemplate</code>, <code class="t-mono-inline">dsPanelFooterTemplate</code>
+        </td>
+
+        <td>
+          What they name
+        </td>
+
+        <td>
+          -
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </docs-section>

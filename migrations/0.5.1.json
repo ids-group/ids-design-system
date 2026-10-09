@@ -149,7 +149,10 @@
         ".modal.danger",
         "&.danger"
       ],
-      "surface": "style"
+      "surface": "style",
+      "detect": [
+        "ds-modal-card"
+      ]
     },
     {
       "id": "menu-item-danger-class-rename",
@@ -180,13 +183,13 @@
     {
       "id": "progress-danger-class-rename",
       "kind": "class-rename",
-      "old": "ds-progress .danger",
-      "new": ".error",
-      "action": "Rename `.danger` to `.error` in selectors scoped under ds-progress.",
+      "old": "ds-progress.warn",
+      "new": ".warning",
+      "action": "Rename `.warn` to `.warning` in selectors on ds-progress (it is a host class: `ds-progress.warn`).",
       "appliesWhen": "Only if a stylesheet of yours keys off the class rather than the input.",
       "searchHints": [
         "ds-progress",
-        ".danger"
+        ".warn"
       ],
       "surface": "style"
     },
@@ -332,10 +335,10 @@
     },
     {
       "id": "badge-variant-to-status-rename",
-      "kind": "input-rename",
+      "kind": "behavior",
       "old": "ds-badge[variant]",
-      "new": "status",
-      "action": "Three coupled steps. (1) Rename the input, keeping the value: `variant=\"active\"` → `status=\"active\"`, `[variant]=\"expr\"` → `[status]=\"expr\"`. (2) Wire the colours through the `styles/status` SCSS API keyed on `[data-status]` — see status-lifecycle-tokens-removed for the snippet. (3) Augment DsStatusRegistry with your keys so DsStatusKey narrows from an open string to your union. Full guide: migrations/0.5.1/badge-statuses.md.",
+      "new": null,
+      "action": "Three coupled steps. (1) Rename the input, keeping the value: `variant=\"active\"` → `status=\"active\"`, `[variant]=\"expr\"` → `[status]=\"expr\"`. Exception: `variant=\"solid\"` becomes the bare `solid` attribute and `variant=\"count\"` becomes `[count]=\"n\"` with the number moved out of the content - they were a fill and a shape, not statuses. (2) Wire the colours through the `styles/status` SCSS API keyed on `[data-status]` — see status-lifecycle-tokens-removed for the snippet. (3) Augment DsStatusRegistry with your keys so DsStatusKey narrows from an open string to your union. Full guide: migrations/0.5.1/badge-statuses.md.",
       "appliesWhen": "`[count]`, `[solid]`, `[withDot]`, `[max]` and every `--ds-badge-*` hook are unchanged. If you coloured badges through your OWN class (`class=\"chip {{ status }}\"`), that keeps working — but any value that used to fall through to a factory colour is now uncoloured.",
       "pitfall": "Step 1 alone leaves every badge UNCOLOURED, because the component ships no built-in colour for any value. And a static `variant=\"x\"` left behind fails silently: Angular ignores an unknown attribute instead of erroring, so the badge renders plain with nothing in the console. Grep `variant=` scoped to ds-badge.",
       "note": "The value is emitted as a `data-status` attribute now rather than a status-named CSS class, and the input is typed DsStatusKey.",
@@ -343,6 +346,12 @@
         "<ds-badge",
         "variant=\"",
         "[variant]="
+      ],
+      "detect": [
+        "variant=\"solid\"",
+        "variant=\"count\"",
+        "[variant]=\"",
+        "variant: '"
       ],
       "surface": [
         "template",
@@ -406,7 +415,7 @@
       "new": null,
       "action": "Declare your statuses through the styles/status API instead: `@use '@ids-group-ltd/ids-design-system/styles/status' as status;` then `@include status.define(('completed': (bg: var(--success), text: var(--text-on-success)), 'active': (bg: var(--info-subtitle), text: var(--info-text))));` — one entry per value you pass to `[status]`, shape `(bg required, text?, dot?)`. `status.semantic-preset` covers the info/success/warning/error/neutral set. Pair it with the DsStatusRegistry augmentation. Full guide: migrations/0.5.1/badge-statuses.md.",
       "appliesWhen": "The dimension token `--status-dot-size` is NOT removed and needs nothing.",
-      "pitfall": "These tokens were the only colour those badges and dots had. Removing them without defining the replacements leaves the elements rendering with no status colour at all — nothing errors, the colour is simply gone.",
+      "pitfall": "These tokens were the only colour the lifecycle badges had (status-dot used its own fallbacks, also gone). Without replacements the elements render with no status colour - nothing errors.",
       "note": "The factory lifecycle tokens `--status-planning-*`, `--status-confirmed-*`, `--status-active-*` and `--status-completed-*` are gone; the API writes the public `--ds-badge-*` / `--ds-status-dot-*` hooks keyed on `[data-status]`.",
       "searchHints": [
         "--status-planning",
@@ -461,13 +470,90 @@
         "--static-white"
       ],
       "verify": "No stylesheet reads var(--static-white); the literal `white` stands in its place."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "AlertComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename your own member or mark it `override` wherever the compiler reports a collision with a class in `detect`. Delete an override of a member the class lost.",
+      "appliesWhen": "Only a class that extends one of the classes in `detect`. A consumer who uses the elements in templates needs nothing from this item.",
+      "pitfall": "`private` and `protected` give no protection: a member you redeclare collides with a base member of any visibility. A member of yours that replaced a lost one no longer replaces anything, and the component stops calling it.",
+      "note": "Most of these are the input and output renames above, seen from a subclass. `AlertComponent`, `BannerComponent` and `ToastComponent` each gained `closed` and lost `dismissed`. `AutocompleteComponent`, `MultiSelectComponent`, `PopoverComponent` and `TimePickerComponent` each gained `host` and `panelTokens`. `BadgeComponent` gained `status` and lost `variant`. `ColorPickerComponent` gained `panelTokens`. `DatePickerComponent` gained `ghostRemainder`, `host` and `panelTokens`. `MenuItemComponent`, `ModalCardComponent` and `ModalComponent` each gained `error` and lost `danger`. `ProgressComponent` gained `indeterminate`. `SplitButtonComponent` gained `itemSelected` and lost `itemSelect`. `StatusDotComponent` lost `classes`. `StepperComponent` gained `stepClicked` and lost `stepClick`. `TableComponent` gained `rowClicked` and lost `rowClick`. `TabsComponent` gained `tabClosed` and lost `tabClose`. `TreeComponent` gained `nodeSelected` and lost `nodeSelect`.",
+      "verify": "The app builds with no error naming a class listed in `detect`, and every member of such a subclass that shares a base member's name is marked `override`.",
+      "searchHints": [
+        "extends AlertComponent",
+        "extends AutocompleteComponent",
+        "extends BadgeComponent",
+        "extends BannerComponent",
+        "extends ColorPickerComponent",
+        "extends DatePickerComponent",
+        "extends MenuItemComponent",
+        "extends ModalCardComponent",
+        "extends ModalComponent",
+        "extends MultiSelectComponent",
+        "extends PopoverComponent",
+        "extends ProgressComponent",
+        "extends SplitButtonComponent",
+        "extends StatusDotComponent",
+        "extends StepperComponent",
+        "extends TableComponent",
+        "extends TabsComponent",
+        "extends TimePickerComponent",
+        "extends ToastComponent",
+        "extends TreeComponent"
+      ],
+      "detect": [
+        "extends AlertComponent",
+        "AlertComponent",
+        "extends AutocompleteComponent",
+        "AutocompleteComponent",
+        "extends BadgeComponent",
+        "BadgeComponent",
+        "extends BannerComponent",
+        "BannerComponent",
+        "extends ColorPickerComponent",
+        "ColorPickerComponent",
+        "extends DatePickerComponent",
+        "DatePickerComponent",
+        "extends MenuItemComponent",
+        "MenuItemComponent",
+        "extends ModalCardComponent",
+        "ModalCardComponent",
+        "extends ModalComponent",
+        "ModalComponent",
+        "extends MultiSelectComponent",
+        "MultiSelectComponent",
+        "extends PopoverComponent",
+        "PopoverComponent",
+        "extends ProgressComponent",
+        "ProgressComponent",
+        "extends SplitButtonComponent",
+        "SplitButtonComponent",
+        "extends StatusDotComponent",
+        "StatusDotComponent",
+        "extends StepperComponent",
+        "StepperComponent",
+        "extends TableComponent",
+        "TableComponent",
+        "extends TabsComponent",
+        "TabsComponent",
+        "extends TimePickerComponent",
+        "TimePickerComponent",
+        "extends ToastComponent",
+        "ToastComponent",
+        "extends TreeComponent",
+        "TreeComponent"
+      ],
+      "restore": null
     }
   ],
   "informational": [
     "New extensible status system: DsStatusRegistry / DsStatusKey type exports + styles/status SCSS API (define($map) / semantic-preset) — the additive half of the badge/status-dot status redesign.",
     "Additive: DsStatus type export ('info'|'success'|'warning'|'error'); ds-progress [indeterminate] boolean input; DividerSpacing now re-exported from the public API.",
-    "Visual/behavioral only, no code change: press-feedback reworked (no button-style press on non-buttons; list/menu rows and color-picker trigger get a flat :active tint; small icon action buttons — close/dismiss/clear/remove x and the ds-tag chip close — get the button press-scale); booleanAttribute coercion on ~54 boolean inputs; ds-button tonal :active now darkens past hover.",
-    "Fixes, no action required: overlay panel --ds-* overrides now reach the portaled pane (ds-autocomplete/ds-multi-select/ds-date-picker/ds-color-picker/ds-popover/ds-time-picker); ds-autocomplete/ds-multi-select panels no longer render transparent; ds-tabs secondary variant now applies; ds-date-picker range mask no longer clips the second date + tighter value-to-icon gap; the ultra-compact density tier now scales avatar/sidenav/badge/status-dot/switch geometry.",
+    "Visual/behavioral only, no code change: press-feedback reworked (no button-style press on non-buttons; list/menu rows and color-picker trigger get a flat :active tint; small icon action buttons — close/dismiss/clear/remove x and the ds-tag chip close — get the button press-scale); booleanAttribute coercion on ~54 boolean inputs; ds-button tonal :active now darkens past hover (`--ds-button-bg-color-active` on `variant=\"tonal\"` defaults to the hover tint mixed 10% toward black, was the hover tint itself; restore with e.g. `--ds-button-bg-color-active: var(--primary-muted-strong)` on primary tonal buttons).",
+    "Fixes, no action required: overlay panel --ds-* overrides now reach the portaled pane (ds-autocomplete/ds-multi-select/ds-date-picker/ds-color-picker/ds-popover/ds-time-picker); ds-autocomplete/ds-multi-select panels no longer render transparent; ds-tabs secondary variant now applies; ds-date-picker range mask no longer clips the second date + tighter value-to-icon gap; the ultra-compact density tier now scales avatar/sidenav/badge/status-dot/switch geometry (its switch: `--switch-track-h` 14px, `--switch-thumb-size` 10px, `--switch-thumb-travel` 10px, were 20px, 12px, 16px; the rest: `--avatar-md` 20px, `--badge-dot-size` 4px, `--status-dot-size` 5px, `--sidenav-w` 200px, `--field-floating-label-top` 4px, were the root 32px, 6px, 8px, 240px, 8px; set them back under `[data-density=\"ultra-compact\"]` to restore).",
     "Visual/behavioral only, no code change: ds-date-picker keeps the format mask visible while typing — the unfilled tail of the mask stays on-screen as a muted ghost (e.g. \"12/DD/YYYY\") and the typed value renders in the monospace font for exact glyph alignment."
   ],
   "deleteList": []

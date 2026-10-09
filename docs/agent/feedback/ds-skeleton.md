@@ -3,7 +3,7 @@
 
 Group: Display & feedback
 
-Inputs: `width?: string`, `height?: string`, `circle: boolean = false`, `inline: boolean = false`, `shimmer: boolean = true` (`false` draws a still block of the same shape, for a space held for something that is not loading yet). The wave advances in `--ds-skeleton-wave-steps` steps per pass (default `68`: twenty a second over the default `--ds-skeleton-wave-duration`); more is smoother and costs a main-thread update each. Shimmer animation requires the global `_skeleton-shimmer.scss` (already pulled in by `ds.scss`).
+Inputs: `width?: string`, `height?: string`, `circle: boolean = false`, `inline: boolean = false`, `shimmer: boolean = true` (`false` draws a still block of the same shape, for a space held for something that is not loading yet). The wave advances in `--ds-skeleton-wave-steps` steps per pass (default `68`: twenty a second over the default `--ds-skeleton-wave-duration`); more is smoother and costs a main-thread update each.
 
 <!-- inputs:ds-skeleton -->
 All inputs: `width: string | undefined`, `height: string | undefined`, `circle: boolean = false`, `inline: boolean = false`, `shimmer: boolean = true`

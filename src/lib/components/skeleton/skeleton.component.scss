@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 :host {
   --_skeleton-bg-color:      var(--ds-skeleton-bg-color,      var(--surface-secondary));
 
@@ -22,6 +25,8 @@
 
   display: block;
   position: relative;
+
+  // glyph-clip-guard: a placeholder, no text
   overflow: hidden;
   background: var(--_skeleton-bg-color);
   border-radius: var(--radius-md);
@@ -77,5 +82,11 @@
   to {
     background-position: calc(var(--_skeleton-wave-period) / 1.4142)
       calc(var(--_skeleton-wave-period) / 1.4142);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host::after {
+    animation: none;
   }
 }

@@ -82,14 +82,6 @@
       gap: var(--space-2);
     }
 
-    .rules {
-      margin-top: var(--space-3);
-      padding-left: var(--space-5);
-      color: var(--text-secondary);
-      display: grid;
-      gap: var(--space-2);
-      max-width: var(--col-cap-text);
-    }
 
 /* Side-by-side gap comparison — two identical stacks that differ only in the
    stack's own gap, so the doubled rhythm is visible rather than described. */

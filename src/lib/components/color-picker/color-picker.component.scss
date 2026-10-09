@@ -4,6 +4,8 @@
    private resolvers are declared on both :host and .panel. */
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-state' as field-state;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host,
 .panel {
@@ -106,6 +108,8 @@
   border-radius: var(--radius-md);
   cursor: crosshair;
   touch-action: none;
+
+  // glyph-clip-guard: a colour plane, no text
   overflow: hidden;
 
   &::before {
@@ -221,6 +225,7 @@
   gap: var(--space-2);
 }
 
+// target-size-guard: --_color-picker-swatch, 24px
 .preset {
   width: var(--_color-picker-swatch);
   height: var(--_color-picker-swatch);

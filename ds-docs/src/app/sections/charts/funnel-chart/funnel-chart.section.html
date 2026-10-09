@@ -143,18 +143,59 @@
     What the Drop column reports
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      drop
-    </code> chooses the unit:
-    <code class="t-mono-inline">
-      relative
-    </code> (default) is the share lost at
-    this stage, <code class="t-mono-inline">absolute</code> the count lost,
-    <code class="t-mono-inline">
-      none
-    </code> removes the column.
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          <code class="t-mono-inline">
+            drop
+          </code>
+        </th>
+
+        <th>
+          Drop column
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'relative'
+          </code> (default)
+        </td>
+
+        <td>
+          Share lost at this stage
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'absolute'
+          </code>
+        </td>
+
+        <td>
+          Count lost
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'none'
+          </code>
+        </td>
+
+        <td>
+          No column
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="states is-cols-3">
     <div class="state-cell">
@@ -194,32 +235,28 @@
     Interaction
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      interactive
-    </code> adds the hover tint and
-    makes the bands one tab stop: arrows move (wrapping),
-    <kbd>
-      Home
-    </kbd> / <kbd> End </kbd> jump to the ends,
-    <kbd>
-      Enter
-    </kbd> or
-    <kbd>
-      Space
-    </kbd> activates. Any band a click would activate or hold shows the
-    pointer.
-    <code class="t-mono-inline">
-      stageClicked
-    </code> fires regardless of
-    <code class="t-mono-inline">
-      interactive
-    </code>. Hovering a stage-table
-    row tints it, shows its band's tooltip and dims the rest, regardless of
-    <code class="t-mono-inline">
-      dimOthers
-    </code>.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        interactive
+      </code> adds the hover tint and makes the bands one tab
+      stop. Any band a click would activate or hold shows the pointer.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        stageClicked
+      </code> fires regardless of <code class="t-mono-inline">interactive</code>.
+    </li>
+
+    <li>
+      Hovering a stage-table row tints it and shows its band's tooltip.
+    </li>
+
+    <li>
+      Keys and dimming: <a routerLink="/foundations/charts">Charts foundations</a>.
+    </li>
+  </ul>
 
   <ds-funnel-chart
     interactive
@@ -239,21 +276,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    A click holds band and tooltip (pin disc; Unpin control on the caption
-    line).
-    <kbd>
-      Esc
-    </kbd>, a second click or a press elsewhere releases it. With
-    <code class="t-mono-inline">
-      dimOthers
-    </code> the rest stays dimmed while held.
-    <code class="t-mono-inline">
-      pinOnClick="false"
-    </code> disables holding for one
-    chart,
-    <code class="t-mono-inline">
-      DS_CONFIG.chart.pinOnClick: false
-    </code> for the app.
+    A click holds the band and its tooltip. Release and opt-out: <a routerLink="/foundations/charts">Charts foundations</a>.
   </p>
 
   <div class="states is-cols-2">
@@ -288,12 +311,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       staggerMs
-    </code> staggers the bands' rise-in.
-    Default <code class="t-mono-inline">60</code>; the spread fits inside
-    260ms;
-    <code class="t-mono-inline">
-      0
-    </code> brings all bands in together.
+    </code> staggers the stages' entrance (fade in, grow from
+    96%): default <code class="t-mono-inline">60</code>, <code class="t-mono-inline">0</code> all together, spread within 260ms.
   </p>
 
   <div class="states is-cols-2">
@@ -354,10 +373,21 @@
         <ds-funnel-chart
           dataTable="none"
           loading
+          [data]="[]" />
+
+        <div class="state-cell-label">
+          Loading, no data
+        </div>
+      </div>
+
+      <div class="state-cell">
+        <ds-funnel-chart
+          dataTable="none"
+          loading
           [data]="loadingStages()" />
 
         <div class="state-cell-label">
-          Loading
+          Reloading
         </div>
 
         <docs-chart-data-editor [(rows)]="loadingStages" />

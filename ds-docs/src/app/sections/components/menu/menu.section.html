@@ -11,19 +11,73 @@
     Trigger-opened (overlay)
   </h3>
 
-  <p class="block-desc t-s">
-    A button opens the menu in a <code>ds-popover</code>. An item emits
-    <code>
-      pressed
-    </code> on click (unless disabled or opening a submenu) and
-    closes the overlay; click outside or <code>Esc</code> dismisses it.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      A button opens the menu in a <code class="t-mono-inline">ds-popover</code>.
+    </li>
+
+    <li>
+      An item emits <code class="t-mono-inline">pressed</code> on click (unless disabled or opening a submenu) and closes the overlay.
+    </li>
+
+    <li>
+      A click outside or <kbd>Esc</kbd> dismisses it.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
-    One Tab stop with roving focus: <kbd>ArrowUp</kbd> / <kbd>ArrowDown</kbd>
-    wrap, <kbd>Home</kbd> / <kbd>End</kbd> jump, a typed character moves to the
-    next item starting with it. Disabled items stay in the roving order.
+    One Tab stop, roving focus; disabled items stay in the roving order.
   </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Key
+        </th>
+
+        <th>
+          Moves
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <kbd>
+            ArrowUp
+          </kbd> / <kbd>ArrowDown</kbd>
+        </td>
+
+        <td>
+          Next / previous item, wrapping
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            Home
+          </kbd> / <kbd>End</kbd>
+        </td>
+
+        <td>
+          First / last item
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          A character
+        </td>
+
+        <td>
+          Next item starting with it
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="demo">
     <ds-button
@@ -202,7 +256,9 @@
             Export as
           </ds-menu-item>
 
-          <ds-menu-item icon="download">
+          <ds-menu-item
+            icon="download"
+            [submenu]="downloadSubmenu">
             Download
           </ds-menu-item>
 
@@ -230,7 +286,127 @@
             </ds-menu-item>
           </ds-menu>
         </ng-template>
+
+        <ng-template #downloadSubmenu>
+          <ds-menu>
+            <ds-menu-item>
+              Original file
+            </ds-menu-item>
+
+            <ds-menu-item>
+              Compressed (.zip)
+            </ds-menu-item>
+          </ds-menu>
+        </ng-template>
       </div>
+    </div>
+
+    <div class="showcase-cell">
+      <figure class="aim-diagram">
+        <svg
+          viewBox="0 0 460 230"
+          role="img"
+          aria-label="The pointer leaves Export as towards its submenu. While it moves inside the triangle from its exit point to the submenu's near edge, Download does not take the hover.">
+          <rect
+            class="aim-panel"
+            x="10"
+            y="10"
+            width="200"
+            height="170"
+            rx="10" />
+
+          <rect
+            class="aim-row-active"
+            x="16"
+            y="56"
+            width="188"
+            height="36"
+            rx="6" />
+
+          <text
+            class="aim-label"
+            x="32"
+            y="40">
+            Rename
+          </text>
+
+          <text
+            class="aim-label"
+            x="32"
+            y="80">
+            Export as
+          </text>
+
+          <text
+            class="aim-label"
+            x="32"
+            y="120">
+            Download
+          </text>
+
+          <text
+            class="aim-label"
+            x="32"
+            y="160">
+            Delete
+          </text>
+
+          <rect
+            class="aim-panel"
+            x="216"
+            y="56"
+            width="150"
+            height="130"
+            rx="10" />
+
+          <text
+            class="aim-label"
+            x="232"
+            y="88">
+            PDF
+          </text>
+
+          <text
+            class="aim-label"
+            x="232"
+            y="128">
+            CSV
+          </text>
+
+          <text
+            class="aim-label"
+            x="232"
+            y="168">
+            Excel
+          </text>
+
+          <polygon
+            class="aim-triangle"
+            points="146,92 216,56 216,186" />
+
+          <path
+            class="aim-path"
+            d="M150 92 L232 150" />
+
+          <circle
+            class="aim-exit"
+            cx="150"
+            cy="92"
+            r="4" />
+
+          <text
+            class="aim-note"
+            x="10"
+            y="214">
+            Inside the triangle: Download is skipped, the submenu stays open.
+          </text>
+        </svg>
+
+        <figcaption class="block-desc t-s">
+          Leaving the triangle, or resting in it for 300ms, closes the
+          submenu and hands the hover to the item under the pointer.
+        </figcaption>
+      </figure>
     </div>
   </div>
 
@@ -381,12 +557,23 @@
     </div>
   </div>
 
-  <p class="block-desc t-s">
-    Tokens: <code>--ds-menu-*</code> (bg/border colour, min/max width, gap,
-    radius), <code>--ds-menu-item-*</code> (label/hover/error/quiet colours,
-    padding, font, description colour/size/max width, icon size, radius),
-    <code>
-      --ds-menu-divider-color/-spacing
-    </code>.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        --ds-menu-*
+      </code> - bg/border colour, min/max width, gap, radius.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        --ds-menu-item-*
+      </code> - label/hover/error/quiet colours, padding, font, description colour/size/max width, icon size, radius.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        --ds-menu-divider-color
+      </code> / <code class="t-mono-inline">-spacing</code>.
+    </li>
+  </ul>
 </docs-section>

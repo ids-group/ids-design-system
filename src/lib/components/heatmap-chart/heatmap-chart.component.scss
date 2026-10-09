@@ -3,6 +3,8 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 @include chart-frame.chart-frame;
 @include chart-frame.pin-reset;
 @include chart-frame.pin-marker;
@@ -14,6 +16,12 @@
 :host {
   --_heatmap-chart-focus-color: var(--ds-heatmap-chart-focus-color, var(--focus-ring-color));
   --_heatmap-chart-focus-width: var(--ds-heatmap-chart-focus-width, var(--focus-ring-width));
+}
+
+// The card hugs the grid; a grid wider than the container scrolls inside it.
+:host {
+  inline-size: fit-content;
+  max-inline-size: 100%;
 }
 
 .heatmap-chart {
@@ -33,9 +41,8 @@
   margin: 0;
 }
 
-.skeleton {
-  display: grid;
-  gap: var(--_heatmap-chart-cell-gap);
+.skeleton .skeleton-text {
+  border-radius: var(--radius-pill);
 }
 
 .grid-scroll {

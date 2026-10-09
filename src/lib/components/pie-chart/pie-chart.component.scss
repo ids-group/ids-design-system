@@ -3,9 +3,11 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 // The ring arrives, not the slices: semi-transparent arcs sharing an edge show the background through the seam.
-@include chart-motion.sweeps-in('.ring-svg');
+@include chart-motion.settles-ring-in('.ring-svg');
 @include chart-motion.fades-in(
   '.swatch',
   var(--ds-motion-chart-mark-sweep-duration),
@@ -177,6 +179,47 @@
 
 .skeleton-legend {
   flex: 1 1 auto;
+}
+
+// The ring in equal slices with the drawn chart's hole; a lone slice closes the ring.
+.skeleton-ring {
+  --_pie-chart-skeleton-gap: calc(2deg * min(1, var(--_pie-chart-skeleton-slices) - 1));
+
+  mask:
+    radial-gradient(
+      closest-side,
+      transparent calc(var(--_pie-chart-hole-fraction) * 100%),
+      #000 calc(var(--_pie-chart-hole-fraction) * 100% + 0.5px)
+    ),
+    repeating-conic-gradient(
+      #000 0 calc(360deg / var(--_pie-chart-skeleton-slices) - var(--_pie-chart-skeleton-gap)),
+      transparent 0 calc(360deg / var(--_pie-chart-skeleton-slices))
+    );
+  mask-composite: intersect;
+}
+
+.skeleton-center {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  translate: -50% -50%;
+  border-radius: var(--radius-pill);
+}
+
+.skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  block-size: var(--_pie-chart-legend-row-height);
+}
+
+.skeleton-row > ds-skeleton:not(.circle) {
+  flex: none;
+  border-radius: var(--radius-pill);
+}
+
+.skeleton-row > .skeleton-label {
+  flex: 1 1 auto;
+  max-inline-size: var(--space-24);
 }
 
 .legend-item {

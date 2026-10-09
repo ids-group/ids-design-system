@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 :host {
   --_bottom-sheet-max-width: var(--ds-bottom-sheet-max-width, 480px);
   --_bottom-sheet-max-height: var(--ds-bottom-sheet-max-height, 80%);
@@ -38,6 +41,7 @@
 
   /* clip, not hidden: the entering sheet must not add scrollable overflow to ancestor
      frames, where the focus-trap's initial focus() would scroll the host app. */
+  // glyph-clip-guard: the viewport-sized scrim around the padded sheet
   overflow: clip;
   animation-name: ds-fade-in;
   animation-duration: var(--_bottom-sheet-scrim-enter-duration);
@@ -142,4 +146,9 @@
   &:not(:empty) {
     margin-top: var(--space-3);
   }
+}
+
+// A `<div actions>` wrapper hands its buttons to the column. Zero specificity: a display set on it wins.
+:where(.sheet-actions) > ::ng-deep :where(div[actions]) {
+  display: contents;
 }

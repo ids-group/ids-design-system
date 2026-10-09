@@ -8,41 +8,41 @@ is not tidied away. `[Pn]` sorts inside a bucket. A `[~]` item is half-done and 
 ## The index
 
 Generated — `node tools/todo-index.mjs` rewrites it from the items, and `--check` fails when it
-is stale. It was hand-kept until 2026-09-10 and drifted every time: 44 lines against 66 items,
-and two archived items reading as open for three days. Closing an item now means deleting the
-item and nothing else.
+is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**122 open — 6 P1, 5 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**133 open — 2 P1, 10 P2, 121 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
 
-### P1 — 6
+### P1 — 2
 
-- **Defects consumers work around today (swept 2026-09-23)**
-  - `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer)
-  - A clipped hinted header shows its label and hint as two plain lines; the label should be a bold line of its own (asked by Stas, 2026-10-06)
+- **Faster gates (Stas, 2026-10-09: after the release)**
+  - The release pipeline skips the pixel checks: its image has no Chrome
 - **Asked by Stas**
-  - Review branch `fix/published-manifests-audit` before it is merged (Stas, 2026-10-06)
-  - A click pins a tooltip: hover shows it at once, a click keeps it open (Stas, 2026-10-06)
-  - A definition-term directive: an inline term that opens a tooltip on hover and focus and pins on click (Stas, 2026-10-06)
-  - `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06)
+  - ½ A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
 
-### P2 — 5
+### P2 — 10
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
+- **Faster gates (Stas, 2026-10-09: after the release)**
+  - `tools/check.mjs` runs every check of a group one after another
+- **Asked by Stas**
+  - Tooltips and trigger-anchored overlays should follow their trigger on scroll, not close (Stas, 2026-10-08)
+  - Document how to build `ds-modal` actions (Stas, 2026-10-06)
+  - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
 - **Open verdicts, each drawn in a deck**
   - Six Unreleased behaviour changes shipped without a choice between alternatives
 - **Tooling**
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
+- **The field system — the two controls outside it, and the two with no box to paint**
+  - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 111
+### P3 — 121
 
-- **Defects consumers work around today (swept 2026-09-23)**
-  - The tooltip arrow stays at the panel centre when CDK pushes the panel off a viewport edge, so it does not point at the trigger (from the mm-ecm consumer, an info icon near the right edge)
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
@@ -51,6 +51,10 @@ item and nothing else.
   - ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01)
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - `g[dsLineSeries]` demonstrates `stacked` and `tooltipAnchor` only on the preset
+- **Keyboard reach reported by Stas, 2026-10-09 (record only, fix after the release)**
+  - The password field's show/hide toggle is not reachable by Tab
+  - `ds-menu` opened from the keyboard does not take focus, and Tab walks the wrong menu
+  - The focus ring of the first and last menu item ignores the panel's corner radius
 - **Reported by Stas from the docs site, 2026-09-05**
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
   - A pressed danger menu item shows its hover colour (recorded 2026-09-24)
@@ -58,7 +62,7 @@ item and nothing else.
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
   - Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24)
   - Pin more than one mark at a time (Stas, 2026-09-29)
-  - Cut the prose in ds-docs (Stas, 2026-09-29: "слишком много и никто это не читает")
+  - Cut the prose in ds-docs (Stas, 2026-09-29: too much text, and nobody reads it)
   - Measure an IDS start from `ai-sdlc-prototype` against Vanya's from-scratch run (Stas
   - Cut the tokens a consumer's agent spends finding its way in IDS (Stas, 2026-10-05)
   - Agents and skills inside the DS repo for its own tasks (Stas, 2026-10-05)
@@ -90,7 +94,7 @@ item and nothing else.
   - Transitions are missing or wrong in places, and nothing says where (Stas, 2026-09-04)
 - **Claude Design upload — what the freeze left open (recorded 2026-09-04)**
   - Thirteen obsolete paths on the project can only be deleted by its owner
-- **The field system — the two controls outside it, and the five with no box to paint**
+- **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-autocomplete`'s arrow keys walk a private copy of the list cursor
 - **Open verdicts, each drawn in a deck**
   - Which public tokens the library never reads go?
@@ -103,7 +107,7 @@ item and nothing else.
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
   - `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green
   - Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of deck `5-migration-manifest-audit`)
-- **The field system — the two controls outside it, and the five with no box to paint**
+- **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in, or say they are not fields (Stas asked 2026-08-20)
 - **Colour, interaction and typography tokens**
   - Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24)
@@ -120,15 +124,20 @@ item and nothing else.
   - `.design-sync/conventions.md` is a generator INPUT, and nothing stops a reflow desyncing it
   - Which of the 8 live chapters can also be frozen
 - **Component feature gaps**
+  - What the glyph-clip fix leaves to measure or decide
   - `ds-select` cannot offer "create «what I typed»", and the reason is that it has no place to type (recorded 2026-09-09, Stas)
-  - `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's original framing, endorsed by Stas 2026-09-01: «ds config тоже можно. как я и говорю prototype: true»)
+  - `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's framing; Stas 2026-09-01: a `DS_CONFIG` flag works too, as `prototype: true`)
   - Three edges left open on `ds-table` row expansion and the resize handle, each a judgement call rather than a defect
 - **The chart family read as an architecture (audited 2026-09-22)**
   - Four exports on the package surface have no consumer in `src/`
   - `'none'` and `'grouped'` are the same value on `ds-column-chart`
   - Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea
+- **Wrapping in a `ds-table` cell (recorded 2026-10-09, Stas: parked, come back later)**
+  - Two wrap options for a `truncate` column, drawn in deck `26-table-wrap-parked.html`
 - **ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)**
   - `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them
+- **The global `.icon` squeezes the `ds-icon` box (recorded 2026-10-09, from the mm-ecm consumer)**
+  - In `ds-banner` and `ds-dropzone` the `ds-icon` box is 16px while its svg draws 20px
 - **Missing components (from gap analysis)**
   - Image / lightbox
   - Splitter — ASKED 2026-08-05, Stas: keep in the backlog for now (not built, not closed)
@@ -146,6 +155,10 @@ item and nothing else.
   - A chapter list reaches only sections whose headings are `h3.block-title`
   - The active chapter is not scrolled into the rail's own viewport
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
+  - An icon-only control's focus ring 1px outside its 24px target, 26px on every control
+  - The `ds-tag` remove button's focus ring does not show on a solid tag
+  - The `ds-time-picker` clear button jumps down while pressed
+  - The `ds-tabs` scroll arrows draw their chevron 1px above the box centre
   - The focus-indicator sweep only sees what is in the DOM when a page loads
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
 - **Claude Design upload — what the freeze left open (recorded 2026-09-04)**
@@ -155,20 +168,22 @@ item and nothing else.
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - `ds-button` pulls `field-message` statically, and it stays cheap only while the two
 - **Component feature gaps**
+  - One tab stop per long table, arrow keys between its clipped values - PARKED 2026-10-09 by Stas
+  - The clipped-value tab stop on a 500-row table: the reported 4x long task did not reproduce - PARKED 2026-10-09 by Stas, after the release
   - Portaled CSS as opt-in — PARKED 2026-09-04 by Stas
-  - Split «design system» from «UI kit» as two packages (Mikhail, 2026-08-30)
+  - Split the design system from the UI kit as two packages (Mikhail, 2026-08-30)
   - A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies
   - `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber
   - Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck attached (not built, not closed)
 - **DS-docs**
   - Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below)
-- **The field system — the two controls outside it, and the five with no box to paint**
+- **The field system — the two controls outside it, and the two with no box to paint**
   - CDK Menu adoption (option B) — parked
 - **Tooling**
   - `templates` and `startingPoints` in the Claude Design manifest are unexplored, and so is what feeds the pane's "Usage notes for Claude" (recorded 2026-09-03)
   - Four components had no block of their own in ds-docs (recorded 2026-09-03, three fixed)
   - `schematics/tsconfig.json` still asks for `moduleResolution: "node"`, which TypeScript 6 removes (recorded 2026-08-31)
-  - Re-wrap `CHANGELOG.md` to ~100 columns (Stas, 2026-08-31: "запиши пока в туду … щас не будем")
+  - Re-wrap `CHANGELOG.md` to ~100 columns (Stas, 2026-08-31: record it, not now)
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 - **The chart family read as an architecture (audited 2026-09-22)**
@@ -191,7 +206,6 @@ item and nothing else.
   - Zone COLOUR and `data-focus` SHAPE cannot both reach one role, and the reason is a …
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The resize handle still eats a finger swipe on a HYBRID device, which the touch fix does not reach
-  - A `done.md` heading's own numbers do not reconcile, and the true breakdown is not recoverable from the record
 - **Claude Design upload — what the freeze left open (recorded 2026-09-04)**
   - Where a check mark is drawn, and which ones are the shared one
   - The upload tree tracks `src/lib`, and lags it between a library commit and the next CI
@@ -225,7 +239,7 @@ will swallow every release since in one pass, so those manifests are what has to
 
 **Two habits that keep catching real defects, worth reading before opening anything.** A number
 measured in ONE theme carried into the other unchecked - twice, both wrong: the `tonal` disabled fill
-(4.32:1 light, 1.20:1 dark) and the neutral disabled label (`docs/done.md:1590`, `:1720`). And a capability
+(4.32:1 light, 1.20:1 dark) and the neutral disabled label. And a capability
 that shipped with zero adoption twice traced to one missing field in a contract: when adoption is
 zero, read the consumer's hand-rolled version rather than re-reading our own API.
 
@@ -239,9 +253,7 @@ Defects a consumer hit - from a QA pass, or from reading a consumer tree for a r
 
 - [ ] **[P2] The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer).** `--border-default` is `var(--neutral-200)` (`_semantic.scss:49`, #DCE1EA) and is the resting edge of `ds-input` (`input.component.scss:17`) and 25 more components: 1.31:1 on white in the stock theme against the 3:1 WCAG 1.4.11 floor for a control boundary. `--secondary-on` is the constant `var(--primary-on)` = white (`:134`, `:116`) while `--secondary` recomposes from `--secondary-h/s/l`, so a gold secondary (#FBAC18) gets white text at 1.91:1 - and the stock theme already fails: white on the stock `--secondary` #FF7B2E (`hsl(22 100% 59%)`) is 2.59:1 against 4.5:1 (computed 2026-10-02). ids-europe-landing rebinds both (`_theme.scss:44-57`, `:89`). **Wanted:** a control-edge role that clears 3:1 in both themes (or `--border-default` moved to it), and `--secondary-on` derived from `--secondary`'s lightness or listed in the brand must-rebind checklist of the brand-unsafe item.
 
-- [ ] **[P3] The tooltip arrow stays at the panel centre when CDK pushes the panel off a viewport edge, so it does not point at the trigger (from the mm-ecm consumer, an info icon near the right edge).** `tooltip-panel.component.scss` placed the arrow at `left: 50%` / `top: 50%`. Branch `fix/tooltip-arrow-anchor` (worktree `ids-design-system-arrow`), commit `326dbbda`: the directive measures trigger and pane on every pane style write and sets `--_tooltip-arrow-x/-y`, clamped clear of the radius; `build:lib` passes. **Left, parked by Stas until asked:** browser check at the left edge, right edge, centre and after a flip (arrow centre vs trigger centre, before and after); CHANGELOG Unreleased Fixed and `migrations/unreleased.json`; the before/after deck; lint gates.
-- [ ] **[P1] `ds-bar-chart` prints `0` and `0.0%` for a non-finite value, where `components.md` promises a dash (from the mm-ecm consumer).** `components.md` (bar chart, "Behaviour") says a non-finite value draws no bar and prints a dash. `bar-chart.component.ts` formats `plainValue(row.value) ?? extent.high`, and `extent.high` of NaN is 0, so the label and the share read `0 / 0.0%`. Seen in a docs build at `e0ff159f` (2026-10-06, a NaN row in the bar chart demo). **Wanted:** the dash the doc describes, in the value, the share and the generated summary. Raised to P1 (Stas, 2026-10-06): it is one of the gaps in the "`ds-bar-chart` customization asked by mm-ecm" item (work branch `feat/bar-chart-customization`).
-- [ ] **[P1] A clipped hinted header shows its label and hint as two plain lines; the label should be a bold line of its own (asked by Stas, 2026-10-06).** `dsTooltipClippedLead` joins lead and hint with a newline and `tooltip-panel.component.scss` sets `white-space: pre-line` for every tooltip, so any tooltip text with a newline now breaks there and the label is the same weight as the hint. **Wanted:** a `lead` input on `TooltipPanelComponent` rendered as a bold line, set by the directive only while the host is clipped, and `pre-line` reverted. Work branch `fix/tooltip-arrow-anchor` (tooltip group). A started, unverified patch: mm-ecm-platform `.claude/local/from-scratchpad/2026-10-06-tooltip-lead-bold/tooltip-lead-bold.wip.patch` (local, not in git).
+- [x] **[P1] A clipped hinted header shows its label and hint as two plain lines; the label should be a bold line of its own (asked by Stas, 2026-10-06).** `dsTooltipClippedLead` joins lead and hint with a newline and `tooltip-panel.component.scss` sets `white-space: pre-line` for every tooltip, so any tooltip text with a newline now breaks there and the label is the same weight as the hint. **Wanted:** a `lead` input on `TooltipPanelComponent` rendered as a bold line, set by the directive only while the host is clipped, and `pre-line` reverted. Work branch `ecm-fix/tooltip-arrow-anchor` (tooltip group). A started, unverified patch: mm-ecm-platform `.claude/local/from-scratchpad/2026-10-06-tooltip-lead-bold/tooltip-lead-bold.wip.patch` (local, not in git).
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
@@ -312,6 +324,44 @@ rather than never meeting it at all.
 
 Constraints and decisions that read as removable and are not.
 
+## Faster gates (Stas, 2026-10-09: after the release)
+
+- [ ] **[P1] The release pipeline skips the pixel checks: its image has no Chrome.**
+  `render-evidence` and its selftest failed the first release after they were added (pipeline on
+  `node:22-alpine`: «Chrome not found. Set CHROME_PATH to its executable.»), so `tools/preflight.mjs`
+  skips both when `CI` or `BITBUCKET_BUILD_NUMBER` is set (TODO(render-evidence-ci)). Fix: install
+  Chromium and fonts in the release step, add `/usr/bin/chromium-browser` to `headless-chrome.mjs`
+  and launch with `--no-sandbox` under root, then drop the skip. Stas, 2026-10-09: «пока что выключи
+  потом починим».
+
+- [ ] **[P2] `tools/check.mjs` runs every check of a group one after another.**
+  `lint:all` walks its 36 checks serially, so every agent and every merge waits for the sum of them.
+  Run independent checks in a worker pool (bounded by CPU count), keep the output grouped per check
+  and the exit code the same; checks that build or share a cache stay serial or get a lock.
+  Measure the group before and after.
+
+## Keyboard reach reported by Stas, 2026-10-09 (record only, fix after the release)
+
+- [ ] **[P3] The password field's show/hide toggle is not reachable by Tab.**
+  In an auth form (the docs ident layout's ready-made sign-in), Tab goes email -> password ->
+  «Remember me» -> «Sign in»; the eye toggle inside the password field never takes focus. The
+  focus-ring audit (2026-10-09) found the same: `tabindex="-1"` on the toggle, so its ring could
+  not be measured. Stas expects the same in other fields with an inner action and in combined
+  inputs; sweep every field-suffix button (clear, toggle, stepper, picker trigger) for Tab reach
+  before deciding whether an inner action is a tab stop or a shortcut.
+
+- [ ] **[P3] `ds-menu` opened from the keyboard does not take focus, and Tab walks the wrong menu.**
+  On the docs page component/menu: focus the «Account» trigger, Enter opens the menu, but focus
+  stays outside it and cannot be moved in; the next Tab moves to the next menu trigger, and Tab
+  inside the open showcase menu moves to the next item of a different menu. Expected: Enter/Space
+  or ArrowDown moves focus to the first item, arrows walk the items of the open menu, Escape and
+  Tab close it and return focus to the trigger (the menu button pattern).
+
+- [ ] **[P3] The focus ring of the first and last menu item ignores the panel's corner radius.**
+  The ring on the first and the last item of an open menu is square while the panel is rounded;
+  it should follow the panel radius at those corners (top corners on the first item, bottom on
+  the last, all four when the menu has one item).
+
 ## Reported by Stas from the docs site, 2026-09-05
 
 - [ ] **[P3] The shimmer's viewport anchoring breaks inside a transformed ancestor.**
@@ -373,48 +423,22 @@ Each has somebody behind it. Nothing here is speculative work.
 
 ## Asked by Stas
 
-- [ ] **[P1] Review branch `fix/published-manifests-audit` before it is merged (Stas, 2026-10-06).**
-  It corrects 35 published `migrations/<version>.json` files (`5d99ede5`, +236/-201 lines) from an
-  audit of every manifest against its own release diff: 128 findings, each re-derived by a sceptic
-  agent, none checked by hand. The review answers two questions per changed line: was the defect
-  real, and is the new text true for the code at that version (`git diff v<prev> v<version>`, never
-  HEAD). Everything a reviewing agent needs - the findings, the verdicts, the briefs, the lines decided
-  without an auditor and the review steps - is in `.claude/local/todo/manifest-audit-review.md` and
-  `.claude/local/from-scratchpad/2026-10-06-manifest-audit/` (local to this checkout, not in git).
-  The branch stays out of dev until Stas approves it.
+- [~] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `ecm-fix/table-auto-column-clip`.
+  Stas picked «Колонка растёт до текста» (deck `20-table-truncate-clip.html` on branch `ecm-feat/table-truncate-column-clip`): a `truncate` column without `width` takes what the other columns leave at their content width, up to its text, and clips at its column width; its floor is the header label. Built on the work branch with the regression harness `tools/table-clip-harness.mjs` (dev-only route `/harness/table-clip`). Left: Stas's two open verdicts in deck `25-table-truncate-result.html` - the general column sizing rules (by column kind, by text length as built, or equal shares) and width stability across pages (the built rule measures the rows on screen: harness `paging-page-1` / `-2` at 1100px, Email 302 -> 552px, City 200 -> 80px between pages; options: widths from config and headers, measured once and locked, or from all data / a server hint); then merge.
+  **Decided 2026-10-09 (Stas, deck 24):** table width stays 100% with the slack in the auto column (B); a cell template that ellipsizes its own text gets the tooltip from the DS clip test, which counts descendants (A, nothing to build; option B, mm-ecm putting `dsTooltipWhenClipped` on the clipped span itself, stays possible); `truncate` stays one line with an ellipsis (C; B and D parked below); a column minimum set by the consumer (A, built: `TableColumn.minWidth`).
+  **Consumer workaround to remove after the release** (mm-ecm ME-493, Delta review): `delta-records-table.component.*` wraps the value in `.value { display: block; width: 0; min-width: 100% }` with `dsTooltipWhenClipped`, marked `TODO(ds-clip-default)`; `truncate: true` on those columns replaces it.
 
-- [ ] **[P1] A click pins a tooltip: hover shows it at once, a click keeps it open (Stas, 2026-10-06).** Work branch `fix/tooltip-arrow-anchor` (parked; its code is not touched by this item).
-  Hover shows the tooltip at once. A click on the trigger keeps it open after the pointer leaves; a click outside, `Esc` or blur closes it - the way `ds-select` or a date picker panel stays open. No visual "pinned" marker. Today `tooltip.directive.ts` closes on click (`@HostListener('click')` -> `onClose`).
-  **Opt-in** for info and definition triggers only: a tooltip on a control with its own action must not pin.
-  **References:** Inclusive Components, "Tooltips & Toggletips" https://inclusive-components.design/tooltips-toggletips/ ; Carbon `DefinitionTooltip` (button trigger, click toggles, `openOnHover`) https://github.com/carbon-design-system/carbon/blob/main/packages/react/src/components/Tooltip/DefinitionTooltip.tsx
+- [ ] **[P2] Tooltips and trigger-anchored overlays should follow their trigger on scroll, not close (Stas, 2026-10-08).** Today every one closes: `TooltipDirective` and the `ds-menu-item` submenu call `closeOnScroll` (`overlay-motion.ts`), as `ds-popover`, `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker` and `ds-color-picker` already did; only a pinned chart tooltip repositions. The cause of the earlier detach: CDK's `close()` and `reposition()` scroll strategies hear only the window and `cdkScrollable` ancestors, not a plain `overflow: auto` container such as the ds-docs content pane - measured 2026-10-08 in the ds-docs build: before the fix a hover tip, a pinned tip and an open submenu stayed put (pane moved 0px) while their trigger moved 59.7-60.3px; a pinned chart tooltip moved 59.7px with its mark. **Wanted:** follow the trigger (the chart tooltip's `closeOnScroll` + `updatePosition()` is the shape), close only when the trigger leaves the visible part of its scroll container.
 
-- [ ] **[P1] A definition-term directive: an inline term that opens a tooltip on hover and focus and pins on click (Stas, 2026-10-06).** Work branch `fix/tooltip-arrow-anchor`. Depends on the pin item above.
-  Carbon's "definition tooltip": the term is rendered as `<button type="button">` with a dotted underline in `--text-tertiary`; the tooltip shows on hover and focus, a click pins it, `Esc` closes. For labels and table cells where an icon per term is noise.
-  `ds-table` `TableColumn.hint` (branch `feat/table-column-hint-term`) is the same pattern inside the header and should reuse it.
-  **Consumer today hand-rolls it:** mm-ecm-platform `src/frontend/projects/ecm-portal/src/styles.scss` (`.term-hint`) and the `term-hint` buttons in `src/frontend/projects/ecm-portal/src/app/features/programs/pages/analyze/journey-outcomes/journey-waterfall.component.html`.
+- [ ] **[P2] Document how to build `ds-modal` actions (Stas, 2026-10-06).** Work branch `ecm-fix/table-auto-column-clip`.
+  `components.md` says only "`[actions]` (footer button row)". The slot is a flex row with `gap: var(--space-3)`, so each button must be a direct projected child with `actions` on it. A consumer who wrapped the buttons in `<div actions>` got one flex child, no gap, and buttons stuck together (mm-ecm ME-502, `unarchive-program-dialog.component.html`). Wanted: one sentence and one example in the `ds-modal` section (also `ds-modal-card`, `ds-drawer`) saying that `actions` goes on each button, not on a wrapper; a dev-mode warning for a wrapper is optional.
 
-- [ ] **[P1] `ds-bar-chart` customization asked by mm-ecm (Stas, 2026-10-06).** Work branch `feat/bar-chart-customization` (empty marker branch from dev).
-  The consumer draws "label + bar + number" rows in Analyze (the journey waterfall and the exit reasons) by hand because `ds-bar-chart` cannot be configured to match. **Two implementation routes, the DS team decides:** (a) extend `ds-bar-chart` with the options below, or (b) a new `ds-bar-list` row component for label + bar + number rows. `ds-funnel-chart` is not a fit: the consumer cannot change the chart type.
-  **Gaps:**
-  - label to the left of the bar on the same line (today above it);
-  - an expandable group row with a chevron and sub-rows;
-  - configurable bar height;
-  - per-row bar colour supplied by the consumer;
-  - a term label with a dotted underline and a hint (the definition-term item above);
-  - per-row emphasis (bold first and last row);
-  - per-row percent visibility (`showPercent` today is all-or-none);
-  - an empty value shows a dash, not `0` - the defect item "`ds-bar-chart` prints `0` and `0.0%` for a non-finite value" in "Defects consumers work around today", raised to P1 by this ask;
-  - a row outside the chain (for example "Completed or exited");
-  - loading that dims the rows instead of a skeleton.
-  **ECM source** (mm-ecm-platform repo root), `src/frontend/projects/ecm-portal/src/app/features/programs/pages/analyze/journey-outcomes/`:
-  - `journey-waterfall.component.ts`, `.html`, `.scss`
-  - `journey-exits.component.ts`, `.html`, `.scss`
-  **Screenshots** (`docs/asks/bar-chart/`):
-  - `ecm-journey-waterfall-expanded.webp` - the ECM waterfall with a group row expanded
-  - `ecm-journey-waterfall-live-data.webp` - the same on live programme data
-  - `ecm-exit-reasons.webp` - the exit and suppression reasons
-  - `compare-ecm-waterfall.webp` against `compare-ds-bar-chart-waterfall-rows.webp` - ECM and `ds-bar-chart` with the same rows
-  - `compare-ds-bar-chart-exit-reasons.webp` - `ds-bar-chart` with the exit reasons (one colour, `0` for an empty value)
+- [ ] **[P2] Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07).** The starter
+  repo (`C:/Repositories/ai-sdlc-prototype`, last commit 2026-09-05) has fallen behind. Take the
+  mm-broker frontend (`C:/Repositories/mm-broker-platform/src/frontend`) as the reference for code
+  and project base - structure, tooling, lint and format setup, Claude config, the current design-system
+  version and how it is consumed - carry its best practices into `ai-sdlc-prototype`, and finish what is
+  left there. Tracked here because Stas does not open that repository; the work itself happens in it.
 
 - [ ] **[P3] `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23).** The English `waterfall`
   is the field's standard word - Excel, Power BI, Tableau, Highcharts and ECharts all use it, with
@@ -450,7 +474,7 @@ Each has somebody behind it. Nothing here is speculative work.
   that adds changes what every chart does today), a cap on how many, how panels that would overlap
   are placed, what a press outside the plot releases, and how the keyboard adds and removes one.
 
-- [ ] **[P3] Cut the prose in ds-docs (Stas, 2026-09-29: "слишком много и никто это не читает").**
+- [ ] **[P3] Cut the prose in ds-docs (Stas, 2026-09-29: too much text, and nobody reads it).**
   The pages explain too much. Readers skip the text and look at the demos. Keep what a demo cannot
   show: the input or token name, a default value, and a constraint that is easy to break. Cut the
   rest: paragraphs that restate what the demo shows, rationale, and a fact that repeats on several
@@ -567,7 +591,7 @@ the service was just the one somebody noticed. Full table and every tested hypot
 `packaging-diagnosis.md`.
 
 - [ ] **[P3] A2 - column filters and persisted layout out of `ds-table`.** A1 is priced (a fixed
-  923 B seam, `done.md:3477`); resizing, reorder with the picker and `@angular/cdk/drag-drop`, and CSV
+  923 B seam); resizing, reorder with the picker and `@angular/cdk/drag-drop`, and CSV
   export already moved out as `dsTableResize`, `dsTableColumns` and `dsTableExport` (0.12.1). Still on
   `ds-table`: `filterMode` / `columnFilterOptions` / `filterQuery` and `persistLayout` / `storageKey`
   (`table.component.ts:273-342`). Three questions the ablation left open: does `truncate` stay in the
@@ -614,7 +638,7 @@ the service was just the one somebody noticed. Full table and every tested hypot
   It cannot.** Checked what the globally-forwarded partials actually define: `link` (533 B gz),
   `page-grid` (312 B) and `layout-utils` (184 B) are **public utility classes** — part of the API, they
   stay; `scrollbar` (297 B) styles `html` and `::-webkit-scrollbar`, document level, impossible to scope;
-  `skeleton-shimmer` (207 B) is deliberately ONE `:root` animation so every skeleton stays in lock-step;
+  `skeleton-shimmer` emits nothing (the reduced-motion stop lives in `ds-skeleton`);
   `surface-motion` (192 B) is `@keyframes`, and emulated encapsulation renames keyframes, which would
   break cross-component reference. Only `icon-base` could move, and it is 92 bytes. **The real lever is
   `dropdown-overlay` (1 043 B) + `overlay-motion` (458 B) + `toast-overlay` (91 B) = ~1.6 KB gzip, made
@@ -708,7 +732,7 @@ beside another lane changing those three files.
   the flap and the MOTION from the drum: a sliding strip, because the flap implementations
   (hello-mat.com's design-engineering write-up, `jayKayEss/react-split-flap-effect`) animate a hinged
   fold with `clip-path` halves, `rotateX` and `backface-visibility: hidden`, and a fold is not what
-  was asked for — "как в старых аналоговых счетчиках", a thing that slides.
+  was asked for — a strip that slides, like an old analogue counter.
 
   **Hex is ONE ordered alphabet, which is why letters need no special case.** Compare the two glyphs
   by index in `0123456789ABCDEF` and "increase" is defined across the digit/letter boundary for free:
@@ -801,7 +825,7 @@ beside another lane changing those three files.
   "Messages error, warning, hint", "Reserved message row" and "The glyph on the message line". Blanked and
   unregistered from here; `delete_files` answers 403 for a non-owner by every route tested.
 
-## The field system — the two controls outside it, and the five with no box to paint
+## The field system — the two controls outside it, and the two with no box to paint
 
 *This section also has items under **Decisions**, **Parked**.*
 
@@ -1057,7 +1081,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-24)
 
-**Fourteen** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Twenty-four** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1069,7 +1093,7 @@ file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
 | --- | --- | --- | --- |
-| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 37 decisions in six, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 5 asks in three groups, then 34 decisions in seven, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 | 2 | `2-color-engine-derivation` | One source token per role, derived. | the colour-engine P3 |
 | 3 | `3-color-engine-relative` | The prototype half of the same question. | as above |
 | 4 | `4-interaction-formula` | The pressed recipe of the tonal button, and of the danger menu item. | the pressed-danger-menu P3 and the `.ds-interactive` P3 |
@@ -1087,6 +1111,14 @@ file** — the number moves; cite the filename.
 | 16 | `16-column-chart-filter` | How `ds-column-chart` takes a caption under each column and a persistent selection, so a consumer's filter chart can move onto it: point fields, chart inputs with a template, or nothing; `value: number | null` is settled. | none |
 | 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
+| 19 | `19-interaction-states` | General rules for the states of interactive elements as levels on three channels, with live sliders for the step numbers; one neutral hover surface; a check against empty cells; whether to merge the pilot; open questions on top. | none |
+| 20 | `20-text-snap-scale` | How a scaling animation ends without the text snapping a pixel: press (as today for now), card hover, the scaling rule, the funnel stage step. | the overlay-enter-snap fix |
+| 21 | `21-tooltip-mechanism` | Three open questions on the tooltip: the six listeners per table cell (measured) and what to do about them, loading the panel at idle after start, and one app-wide delegated listener for every directive with events. Answered and finished proposals are folded below. | none |
+| 22 | `22-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
+| 23 | `23-docs-table-look` | Which look `table.tbl` takes on every ds-docs page: bordered everywhere, plain everywhere, or as today (Charts and Z-index override the shared bordered rule); all four pages drawn in each look. | none |
+| 24 | `24-density-scope` | Where `data-density` works: only on `<html>` with the docs corrected, or on any container by re-declaring `--field-h-sm`, `--field-h-md`, `--sidenav-collapsed-item` and `--calendar-cell-min` inside `[data-density]`; both drawn at four tiers and nested. | none |
+| 25 | `25-table-truncate-result` | Sign-off of the `truncate` column without `width` that grows to its text: four verdicts recorded (B, A, C, A), `minWidth` built; open: the general column sizing rules and width stability across pages, each drawn on harness tables. | the P1 table item in Asked by Stas |
+| 26 | `26-table-wrap-parked` | Parked: two wrap options for a `truncate` column (fill the row height, or always wrap), each rendered. | the wrap item under Parked |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1100,6 +1132,8 @@ same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was 
 **Closed on 2026-09-21 and moved to `implemented/`:** `chart-palette-v2` - the two greens moved apart by one token (`--chart-categorical-6`, 152deg to 148deg), and `tools/check-chart-palette-separation.mjs` went into `lint:all` holding the 6 floor under normal vision. Colour-vision deficiency is reported by that gate and not enforced: Stas confirmed the system never took that commitment on, which is why the full repaint was declined.
 
 **Closed on 2026-10-05 and moved to `implemented/`:** `pie-chart-center-value` - option K: the centre value shrinks to the hole down to `--ds-pie-chart-center-value-min-font-size`, then prints the `'tick'` form unless `[centerCompact]="false"`; `centerPlacement="below"` prints it under the ring.
+
+**Closed on 2026-10-09 and moved to `implemented/`:** `loading-states` - each chart's picked skeleton, `skeletonCount`, the plot-bound reload overlay, the heatmap card hugging its grid and the picker list states, built on `ecm-feat/loading-skeletons`; `loading-skeletons` - its before and after, all 12 blocks accepted and merged into dev; `component-owned-styles` - every component carries its own base (`border-box`, control font, heading margins, base focus ring) in `@layer ds-component-base`, plus breakpoints, the picker empty row and the reduced-motion shimmer; a lint guard holds it. Its icon question moved to `23-icon-box-size`. `focus-ring-follows-shape` - the focus ring takes `--focus-ring-radius` wherever an element declares no radius; close buttons centre their glyph in a square box, the `ds-table` column filter is a 24px target, a cell link is ringed outside its text. `clipped-value-tab-stop` - a clipped `dsTooltipWhenClipped` value that no keyboard path reaches takes `tabindex="0"` while clipped, one stop per value in a long table too (option A); one roving stop per table with arrows is under *Parked*.
 
 **Ranks 1-10 have a twin on this board, so one answer closes two lines** — which is what
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
@@ -1143,9 +1177,11 @@ and the fifteen lint rules.
   **Why it is P3 and not higher:** the audit's damaging findings are all fixed (23 of 23), the lint gained M034–M037 and M039–M046, and the delete-table parity gate is green — so nothing here is protecting a consumer from a live defect. It is the difference between a format that is ahead of the field and one whose *enforcement posture* is too, which is the audit's own summary of the gap.
   **Cheapest honest first cut if it is picked up:** (6) and (7) are additive keys with a lint rule each and, pending a re-count over the 36 manifests, no back-fill. (1), (3) and (4) are the ones that change what the gate actually PROVES, and the board's own rule applies — a gate proves nothing until you have watched it fail.
 
-## The field system — the two controls outside it, and the five with no box to paint
+## The field system — the two controls outside it, and the two with no box to paint
 
 *This section also has items under **Asks**, **Parked**.*
+
+- [ ] **[P2] `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message.** They are the two field controls that do not bind `[attr.data-field-state]`; `ds-checkbox` and `ds-radio-group` do, and paint error and warning from it. A switch has a track and a slider a rail, and today neither can carry error, warning or success, so the only sign of an invalid state is the message line underneath, which `color-not-only` says is not enough. **Decide whether each paints its own indicator** for error/warning (and then whether `[success]` follows), the way `checkbox.component.scss` does for its box.
 
 - [ ] **[P3] `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in, or say they are not fields (Stas asked 2026-08-20).** Audited, and they are not "fields missing a feature" — they never had the wrapper. **`ds-number-stepper`** exposes `value`, `min`, `max`, `step`, `size`, `disabled`, `ariaLabel` and nothing else; **`ds-dropzone`** exposes `accept`, `multiple`, `files`, `disabled` plus two outputs, and a projected `[hint]` content slot (`dropzone.component.html:30`, used by mm-broker). Neither has a `label`, `hint` or `error` input, a `ds-field-message`, `resolveFieldMessage`, or the `field-label` mixin — verified by grep, all zero. Every other one of the fourteen fields has all of it.
   **So this is a feature addition, not a unification**, and that is why it is a decision rather than work: both would gain `label`, `hint`, `error`, `errors`, `invalid`, `touched`, `reserveMessage`, a message row, and the label/required/optional block.
@@ -1233,11 +1269,13 @@ and the fifteen lint rules.
 
 *This section also has items under **Asks**, **Parked**.*
 
+- [ ] **[P3] What the glyph-clip fix leaves to measure or decide.** Every block-axis clip in `src/lib` goes through `styles/_text-clip.scss` or carries a `glyph-clip-guard:` reason (`node tools/check.mjs glyph-clip`), and `node tools/measure-glyph-clip.mjs` finds no clipped line on the eight component and chart pages under Mulish, Segoe Script, Mulish at line-height 1 and Javanese Text, in either theme, except three that CSS cannot reach. (a) A native `<input>` (`ds-input`, `ds-number-stepper`) and the `ds-field-group` row: with Javanese Text (ascent plus descent 2.27em) at 14px the font's box exceeds the control's padding box by up to 10px. The ink stays whole in the screenshots, because that face's ink is far shorter than its metrics, but a fixed-height control cannot hold an unbounded glyph box. **Wanted:** a verdict on whether a field's height should grow with the font (`min-block-size` from `1lh` plus padding) or stay fixed. (b) Only Chromium was measured. `text-overflow` under `overflow: clip visible` and container style queries are specified and shipped in Firefox and Safari; confirm the ellipsis and the `ds-stat` clamp there. (c) A panel that opens on demand (menu, select list, tooltip, toast) is measured only where the docs render it inline; the open state is held by the lint, not by a measurement.
+
 - [ ] **[P3] `ds-select` cannot offer "create «what I typed»", and the reason is that it has no place to type (recorded 2026-09-09, Stas).** `[dsCreateTemplate]` and `[dsChipTemplate]` exist in the library and `ds-select` reads neither — correctly, because both decorate features it does not have. Chips show MANY values and a single select holds one; create needs typed text and `ds-select`'s template contains **no `<input>` at all**. What looks like typing there is `createTypeAhead`, a keystroke buffer that jumps to the option whose label matches, so there is no query to turn into a new value.
   **So this is a feature request, not a missing template binding, and it arrives in that order:** first a panel filter field (the thing `ds-multi-select` already has as `.search-row`), then `allowCreate` plus a `created` output and the no-match branch — `ds-autocomplete` carries all three already and is the model to copy rather than re-derive. Only then does reading `[dsCreateTemplate]` mean anything.
   **The product question to settle first:** should a single select have a filter field at all? A short list does not need one and gains a control to tab through; a long one is unusable without it. `ds-autocomplete` already exists for "type to narrow, maybe create", so the honest answer may be to send consumers there instead of growing `ds-select` toward it. Settle that before writing code, or the field lands and then has to be argued about.
 
-- [ ] **[P3] `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's original framing, endorsed by Stas 2026-09-01: «ds config тоже можно. как я и говорю prototype: true»).** One flag in the existing `DS_CONFIG` that puts the whole library in prototype mode instead of asking a consumer to pick a package. **The honest caveat, and it must be settled before this is built:** a runtime config flag CANNOT reduce the bundle — the code for the features it disables is still imported and still ships, so `prototype: true` buys behaviour, not bytes. Only the directive split above removes bytes. So decide what the flag is actually FOR: (a) turning off advanced affordances so a prototype's UI stays simple and demo-able — a real and useful thing, unrelated to size; (b) build-time dead-code elimination, which would need it to be a compile-time constant a bundler can fold, not a DI value. Do not ship (a) while implying it does (b). `DS_CONFIG` already resolves per-component defaults via `resolveWithConfig`, so (a) is a small build.
+- [ ] **[P3] `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's framing; Stas 2026-09-01: a `DS_CONFIG` flag works too, as `prototype: true`).** One flag in the existing `DS_CONFIG` that puts the whole library in prototype mode instead of asking a consumer to pick a package. **The honest caveat, and it must be settled before this is built:** a runtime config flag CANNOT reduce the bundle — the code for the features it disables is still imported and still ships, so `prototype: true` buys behaviour, not bytes. Only the directive split above removes bytes. So decide what the flag is actually FOR: (a) turning off advanced affordances so a prototype's UI stays simple and demo-able — a real and useful thing, unrelated to size; (b) build-time dead-code elimination, which would need it to be a compile-time constant a bundler can fold, not a DI value. Do not ship (a) while implying it does (b). `DS_CONFIG` already resolves per-component defaults via `resolveWithConfig`, so (a) is a small build.
 
 - [ ] **[P3] Three edges left open on `ds-table` row expansion and the resize handle, each a judgement call rather than a defect.** (a) On a page with no rows the expand-all chevron still renders and its label reads "Expand all rows", while clicking it does nothing — the handler early-returns. This is an exact clone of what the select-all checkbox next to it does on an empty page, so it was left for symmetry; breaking the symmetry needs a disabled state on `.expand-btn`, which the shared icon-button chrome has no styling for. (b) Under `lazy` (no `pageSize`, `total` set) `expandAllLabel` omits " on this page" because it keys on `pageSize()`, while expand-all only reaches the rows that have arrived. Inside the already-declared-unsupported `virtualScroll` + `expandableRows` combination. (c) The expander column's `<th>` had no accessible name and now takes one from the expand-all button — which FLIPS between "Expand all rows" and "Collapse all rows", so in table-navigation mode every body cell in that column inherits a changing column name. The `select-col` `<th>` sets the precedent of naming itself from its control, but with a STABLE name. Fixing it means an `aria-label` on the `<th>` naming the column, which is a pattern the component does not use anywhere else.
 
@@ -1270,6 +1308,10 @@ and the fifteen lint rules.
 
 Ordered by how close each is to a first consumer ask, which is the only thing that unparks any of them.
 
+## Wrapping in a `ds-table` cell (recorded 2026-10-09, Stas: parked, come back later)
+
+- [ ] **[P3] Two wrap options for a `truncate` column, drawn in deck `26-table-wrap-parked.html`.** Today a `truncate` column is one line with an ellipsis (picked C in deck `25-table-truncate-result`). B: the clipped text fills the height a neighbour already gave the row (lines = row height / line height), needs a per-row measurement on every resize and does not work under virtual scroll. D: always wrap, as a column without `truncate` does.
+
 ## ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)
 
 - [ ] **[P3] `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them.** It takes
@@ -1287,7 +1329,17 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
   every icon resolves its size (`<ds-icon>` appears in 42 templates across 84 component folders), so it
   wants its own pass and a look at the pages that mix icon sizes in one row.
 
-Stas said keep it in the backlog. Left untouched on purpose.
+Stas: keep it in the backlog.
+
+## The global `.icon` squeezes the `ds-icon` box (recorded 2026-10-09, from the mm-ecm consumer)
+
+- [ ] **[P3] In `ds-banner` and `ds-dropzone` the `ds-icon` box is 16px while its svg draws 20px.**
+  `.icon` from `styles/icon-base` is the only rule setting a width on the `<ds-icon class="icon">`
+  host; the 20 sits on the svg alone. Options, each drawn in `presentations/22-icon-box-size.html`:
+  **A** `ds-icon` keeps its own size (recommended: fixes the source, consumers included; text moves
+  4px), **B** rename the class in the two components (as `option-icon`; a consumer's own
+  `class="icon"` stays squeezed), **C** keep 16 (glyph shrinks, text stays), **D** nothing. No code
+  lands until the verdict. Stas, 2026-10-09: decide later, keep it here.
 
 ## Missing components (from gap analysis)
 
@@ -1373,6 +1425,25 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 
 *This section also has items under **Bugs**, **Asks**, **Decisions**, **Records**.*
 
+- [ ] **[P3] An icon-only control's focus ring 1px outside its 24px target, 26px on every control.**
+  `target.min-size` in `styles/_target.scss` draws the ring on the target's edge, 24px across on
+  every icon-only control; one more pixel of `outline-offset` there gives 26px on all of them
+  (measured on ten controls in `presentations/implemented/focus-ring-followups.html`). Stas, 2026-10-09: 24
+  for now, recheck 26 later.
+
+- [ ] **[P3] The `ds-tag` remove button's focus ring does not show on a solid tag.** The ring is
+  `--focus-ring-color`, the same accent as the solid tag's fill, so on a filled tag it reads as no
+  ring at all; on a neutral tag it shows. Found on the docs Tag demos, 2026-10-09; Stas: park.
+
+- [ ] **[P3] The `ds-time-picker` clear button jumps down while pressed.** It is centred with
+  `top: 50%` and `transform: translateY(-50%)`; `press.feedback` sets `transform: scale(0.97)` on
+  `:active`, which replaces the translate, so the button drops by half its height until released.
+  Read from the stylesheet, 2026-10-09; Stas: park.
+
+- [ ] **[P3] The `ds-tabs` scroll arrows draw their chevron 1px above the box centre.** Measured
+  dy -1 under forced focus; the arrows are `tabindex="-1"` and `aria-hidden`, so no keyboard user
+  ever sees a ring on them and only the hover surface shows it. 2026-10-09; Stas: park.
+
 - [ ] **[P3] The focus-indicator sweep only sees what is in the DOM when a page loads.**
   `tools/focus-indicator-sweep.mjs` forces `:focus`/`:focus-visible`/`:focus-within` over CDP
   (:385-402) on each visible match of `FOCUSABLE` (:128) and never clicks, opens or scrolls. Two
@@ -1423,7 +1494,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
   `FieldMessageComponent`, so every button ships the message line whether or not it binds `hint`,
   `warning` or `error`. Today that is hundreds of bytes: `field-message.component.ts:9-11` needs
   only `IconComponent` and `DS_CONFIG`, both already in the button's closure, and the opt-in
-  directive seam measured 308 B gzip worse (done.md:3507). Re-measure the button with and without the
+  directive seam measured 308 B gzip worse. Re-measure the button with and without the
   line when `field-message` gains an import the button does not carry, or the button stops rendering
   `ds-icon`; the directive seam is the known way out.
 
@@ -1431,9 +1502,13 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 
 *This section also has items under **Asks**, **Decisions**.*
 
+- [ ] **[P3] One tab stop per long table, arrow keys between its clipped values - PARKED 2026-10-09 by Stas.** A clipped `dsTooltipWhenClipped` value that no keyboard path reaches is a tab stop of its own while clipped, so a 25-row `ds-table` with two clipped columns holds 50 stops (measured in the ds-docs build, deck `presentations/implemented/clipped-value-tab-stop.html`). The parked alternative: roving tabindex, one clipped value at `tabindex="0"` and the rest at `-1`, arrows moving between them. APG allows that only inside a composite widget, so the table becomes `role="grid"` and `ds-table` takes the grid keyboard model (arrows, Home/End, PageUp/PageDown); without the role a screen reader in browse mode keeps the arrows for itself. Unparks when a consumer reports the stop count in a long table.
+
+- [ ] **[P3] The clipped-value tab stop on a 500-row table: the reported 4x long task did not reproduce - PARKED 2026-10-09 by Stas, after the release.** An audit reported the largest long task after injecting 500 rows into a `ds-table` with two `truncate` columns going from 160-179 ms before the tab stop to 654-719 ms with it. Measured 2026-10-09 on production ds-docs builds, one fresh page per run, the truncate demo given 500 rows (1000 clipped values, 833 stops written): before the tab stop 199, 342, 129, 225 ms; with it 262, 176, 228 ms; with every host measured before any `tabindex` is written 184, 239, 141 ms. The shared ResizeObserver callback took 7-8 ms for a 994-entry batch with reads and writes interleaved, so writing `tabindex` does not invalidate layout there. Left to find: the audit's setup (viewport, CPU throttling, a resize after render, the accessibility tree on) and whether the cost sits outside the callback, in the style recalc of 833 newly focusable cells or in the per-host `closest` and MutationObserver registration at render; a performance trace of the inject task on both builds splits it. Unparks after the release.
+
 - [ ] **[P3] Portaled CSS as opt-in — PARKED 2026-09-04 by Stas.** 1 055 B of the 2 793 B global sheet is the only part that could move behind an opt-in: `dropdown-overlay`, `overlay-motion`, `toast-overlay`. It saves only a consumer with no picker, no toast and no modal, which is close to nobody, and the cost is one more import in everyone else's bootstrap. The measurement stands if the balance ever changes; the AG Grid route (CSS inside the component) stays rejected because Angular injects those as runtime tags and a strict CSP under SSR blocks them.
 
-- [ ] **[P3] Split «design system» from «UI kit» as two packages (Mikhail, 2026-08-30).** His words: «Можете тогда вообще ui kit и дизайн систему на разные пакеты разнести?» — the UI kit being the whole component library, and the design system being the rules, tokens, themes and guides. **Partly true already:** tokens and themes ship as SCSS assets under `styles/*` and `themes/*` behind their own `exports` entries, and the rules/guides live in the deployed docs site rather than in the package. So the question to study is narrow: is there a real consumer who wants the tokens WITHOUT the components (a non-Angular app, a Figma/CSS-only pipeline, another framework), and does that consumer exist today? If yes, a tokens-only package is cheap and has no mirror-maintenance problem — unlike the basic/advanced table split, nothing is duplicated. If no, the current `exports` map already covers it. **Interacts with the entry-point work above:** a layered `core ← services ← components` partition and a tokens-only package are the same question asked twice, and should be designed together rather than separately.
+- [ ] **[P3] Split the design system from the UI kit as two packages (Mikhail, 2026-08-30).** Mikhail asked whether the two can ship as separate packages: the UI kit being the whole component library, and the design system being the rules, tokens, themes and guides. **Partly true already:** tokens and themes ship as SCSS assets under `styles/*` and `themes/*` behind their own `exports` entries, and the rules/guides live in the deployed docs site rather than in the package. So the question to study is narrow: is there a real consumer who wants the tokens WITHOUT the components (a non-Angular app, a Figma/CSS-only pipeline, another framework), and does that consumer exist today? If yes, a tokens-only package is cheap and has no mirror-maintenance problem — unlike the basic/advanced table split, nothing is duplicated. If no, the current `exports` map already covers it. **Interacts with the entry-point work above:** a layered `core ← services ← components` partition and a tokens-only package are the same question asked twice, and should be designed together rather than separately.
 
 - [ ] **[P3] A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies.** `--static-white` was removed at 0.5.1 and was still advertised in `src/lib/themes/README.md` AND in `ds-docs`' theming page months later; both are fixed. `tools/check-doc-tokens.mjs` (in `lint:all`) gates prose, but only `--ds-*` names and only in `components.md` (`DOC_FILES` at `:30`, the `/(--ds-[\w-]+)/` match at `:66`), so the next `--static-white` still passes. Two mechanisms would close it: (a) widen `check-doc-tokens` to every `--token` mentioned in prose (every `*.md`, the ds-docs section templates), failing on any that no longer resolves in `_base-palette.scss` / `_semantic.scss` / `_tokens.scss`, with an allowlist for text that is deliberately historical — `docs/done.md` and the migration manifests must keep naming what they removed; (b) pairing the two copies, since a repo doc and its ds-docs page carry the same facts and drifted independently twice in one day. Sequence (a) first: it is mechanical and catches the class, while (b) is a restructure. The manifests are already covered and are not part of (a): `check-manifest-truth` fails a `--ds-*` name in manifest prose that exists at neither boundary tag, and its `phantomTokens` plus `DELIBERATE_PHANTOMS` allowlist is the shape to copy for the `*.md` half.
 
@@ -1448,7 +1523,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 
 - [ ] **[P3] Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below).** A section-heading toggle that draws a visual "inspect" overlay on the live demos: colour-coded lines/boxes for paddings, gaps, sizes with values+units, plus WHICH token/class drives each value. Read computed styles + `getBoundingClientRect`; map values back to the `--space-*`/`--radius-*`/`--font-size-*` scales. **Rewritten 2026-07-24 → start as a scoped pilot:** spacing-only on ONE section (e.g. button), then generalize. Greenfield, docs-only, no product impact. _(Verified: nothing exists today.)_
 
-## The field system — the two controls outside it, and the five with no box to paint
+## The field system — the two controls outside it, and the two with no box to paint
 
 *This section also has items under **Asks**, **Decisions**.*
 
@@ -1471,7 +1546,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
   **The fix when the bump comes:** `module` and `moduleResolution` both go to `node16`. `ng-add/index.cts` is already a `.cts` file, so node16 emits CommonJS for it regardless and the `index.cjs` check in the build script keeps passing.
   **The trap around it:** `tools/build-schematics.mjs:31-37` resolves the pinned `typescript/bin/tsc`, not `npx tsc`, so a git worktree with no `node_modules` of its own fails on module resolution, which looks like a broken build rather than a worktree without dependencies; a global TypeScript 7 rejects this tsconfig outright. Verify a build failure in the real checkout before believing it.
 
-- [ ] **[P3] Re-wrap `CHANGELOG.md` to ~100 columns (Stas, 2026-08-31: "запиши пока в туду … щас не будем").** This is a RE-WRAP, not a rewrite — no prose is shortened and no entry changes meaning. Measured 2026-09-24: 45 non-table lines run past 118 characters (`awk 'length>118 && !/^\s*\|/' CHANGELOG.md`), 153 including table rows (`awk 'length>118' CHANGELOG.md`). 0.8.0 (from `:6121`) is still the worst - the longest line, 1039 characters, is `:6419`, and several entries there are a single unwrapped line each - but 0.11.1 through 0.13.4 add their own (e.g. `:252`, `:2930`, `:3506` at 637). Re-derive the per-line list at pick-up time; it moves with every release.
+- [ ] **[P3] Re-wrap `CHANGELOG.md` to ~100 columns (Stas, 2026-08-31: record it, not now).** This is a RE-WRAP, not a rewrite — no prose is shortened and no entry changes meaning. Measured 2026-09-24: 45 non-table lines run past 118 characters (`awk 'length>118 && !/^\s*\|/' CHANGELOG.md`), 153 including table rows (`awk 'length>118' CHANGELOG.md`). 0.8.0 (from `:6121`) is still the worst - the longest line, 1039 characters, is `:6419`, and several entries there are a single unwrapped line each - but 0.11.1 through 0.13.4 add their own (e.g. `:252`, `:2930`, `:3506` at 637). Re-derive the per-line list at pick-up time; it moves with every release.
   Two constraints for whoever does it: table rows (`| … |`) must NOT be re-wrapped, because `check-delete-tables` matches a manifest's `find` shapes verbatim against them; and several inline code spans are currently split across a break (`` `<button\n  class="link">` ``, `` `flex: 1;\n  height: auto` ``, `` `<ng-template\n  [dsFilterItem]="180">` ``), which a re-wrap should join rather than preserve. Three more came out of the same reflow and must join too: `` `ds-select { --ds-field-label-text-transform: uppercase; }` ``, the `::ng-deep ds-table tr:hover .cell-name { … }` workaround shape, and `` `color="neutral" variant="outline"` `` — that last one is a rename map, so a line-oriented grep for it currently misses the CHANGELOG, which is the exact hazard this gate was written for. Six shipped comments are ragged too and are NOT in this item: `_ds-color.scss:4`, `auth-layout.component.ts:20`, `_tokens-charts.scss:36`, `themes/light/_palette.scss:15`, `auth-layout.component.scss:29`, and `_status.scss:10-11`. Verify by comparing the whitespace-normalised word stream before and after.
 
 ## Framework & forms
@@ -1635,7 +1710,7 @@ Bar and column are settled separately and stay apart.
 
 ## A11y — decision record (deferred, NOT a bug)
 
-- [ ] **[P3] topbar → `role="banner"`** — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The bare `<header>` inside the generic custom element `<ds-topbar>` already maps to the `banner` landmark implicitly (**verified `topbar.component.html:1`, 2026-07-24**); an explicit role is flagged "unnecessary" by the W3C validator and would be WRONG if `<ds-topbar>` is nested in `main`/`section`/`article`/`aside`/`nav`. Kept as a decision record; only add if we adopt a deliberate defensive-robustness policy.
+- [ ] **[P3] topbar → `role="banner"`** — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06: skip it, keep the item). The bare `<header>` inside the generic custom element `<ds-topbar>` already maps to the `banner` landmark implicitly (**verified `topbar.component.html:1`, 2026-07-24**); an explicit role is flagged "unnecessary" by the W3C validator and would be WRONG if `<ds-topbar>` is nested in `main`/`section`/`article`/`aside`/`nav`. Kept as a decision record; only add if we adopt a deliberate defensive-robustness policy.
 
 ## One popover instance per trigger — the alternative that was weighed and not taken (recorded 2026-09-08)
 
@@ -1672,8 +1747,6 @@ Bar and column are settled separately and stay apart.
 *This section also has items under **Bugs**.*
 
 - [ ] **[P3] The resize handle still eats a finger swipe on a HYBRID device, which the touch fix does not reach.** `table.component.scss` hides the handle under `@media (hover: none) and (pointer: coarse)`, which is the right test for a phone — but a touch laptop reports `hover: hover` and `pointer: fine` because its PRIMARY input is the mouse, so the query is false, the handle renders, and its `touch-action: none` still takes the horizontal swipe that scrolls the table. The 8px strip is dead there for exactly the same reason it was dead on a phone. Not a regression: before 2026-09-02 it behaved this way on every device. The options are not equivalent — `(any-pointer: coarse)` catches hybrids but would also strip the handle from a mouse user who merely HAS a touchscreen, which is worse; dropping `touch-action: none` and calling `preventDefault` only once a drag has actually started keeps the handle usable by mouse AND returns the swipe, but needs the pointer-event sequence reworked and measured on a real hybrid, not emulated. Nobody has reported it; recorded so the narrow query is a known choice rather than an oversight.
-
-- [ ] **[P3] A `done.md` heading's own numbers do not reconcile, and the true breakdown is not recoverable from the record.** *"The review round on the picker lane — 43 findings, 42 fixed"* says 42 fixed, while its body says three were rejected as overstated: 42 + 3 is 45 against 43 found. The deck it points at has all seven sections `closed` and its §11 lists exactly three rejected findings, so there is NO deferred finding hiding in the gap — the count is what is wrong, not the work. Left uncorrected deliberately: inventing the missing breakdown to make the arithmetic close would be the same error as the claim it produced (a subtraction reported as an observation — see the session's memory on derived numbers). Whoever has the review round's source list can fix the heading; until then the numbers should not be quoted.
 
 ## Claude Design upload — what the freeze left open (recorded 2026-09-04)
 

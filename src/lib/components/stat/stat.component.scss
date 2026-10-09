@@ -1,4 +1,6 @@
 @use '../../styles/text-clip' as text-clip;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract:
    Stat label - single line, ellipsis; tip on hover when clipped.
@@ -63,17 +65,15 @@
   }
 
   .value {
-    @include text-clip.single-line-ellipsis;
-
     font: var(--font-weight-extrabold) var(--_stat-value-font-size) / var(--line-height-flat) var(--font-sans);
     letter-spacing: var(--letter-spacing-snug);
     color: var(--_stat-value-color);
     margin: 0;
     white-space: var(--_stat-value-white-space);
     overflow-wrap: var(--_stat-value-wrap);
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: var(--_stat-value-lines);
+    text-overflow: ellipsis;
+
+    @include text-clip.line-clamp(var(--_stat-value-lines));
   }
 
   .delta {
@@ -93,5 +93,15 @@
     font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
     color: var(--text-tertiary);
     margin-top: var(--space-2);
+  }
+}
+
+/* Unclamped, the value is one flat line that clips only along the inline axis. A browser without
+   style queries keeps the clamp's `normal` line-height, which clips nothing either. */
+@container style(--_stat-value-lines: none) {
+  .stat .value {
+    line-height: var(--line-height-flat);
+
+    @include text-clip.inline-axis;
   }
 }

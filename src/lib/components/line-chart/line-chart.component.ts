@@ -31,6 +31,7 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import {
+  CHART_DEFAULT_AXIS_GUTTER,
   CHART_DEFAULT_VALUE_SPACE,
   ChartComponent,
   LineSeriesComponent,
@@ -55,7 +56,9 @@ import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/component
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import {
+  CHART_SKELETON_CATEGORY_BAND,
   CHART_UNPIN_DRAWN_BY_HOST,
+  ChartSkeletonComponent,
   ChartStatesComponent,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
@@ -113,6 +116,7 @@ const SERIES_DASH_ARRAYS = [
   standalone: true,
   imports: [
     SkeletonComponent,
+    ChartSkeletonComponent,
     ChartComponent,
     LineSeriesComponent,
     SeriesAnnotationComponent,
@@ -556,6 +560,15 @@ export class LineChartComponent
   protected readonly noVisibleSeries = computed(
     () => this.series().length > 0 && this.visibleSeries().length === 0,
   );
+
+  protected readonly skeletonPoints = computed(
+    () => this.categories().length || 7,
+  );
+
+  protected readonly skeletonValueSpace = CHART_DEFAULT_VALUE_SPACE;
+  /** `--ds-line-chart-placeholder-height` sizes the whole skeleton; the plot takes what the labels leave. */
+  protected readonly skeletonPlotHeight = `calc(var(--_line-chart-skeleton-height) - ${CHART_DEFAULT_VALUE_SPACE + CHART_SKELETON_CATEGORY_BAND}px)`;
+  protected readonly skeletonAxisGutter = CHART_DEFAULT_AXIS_GUTTER;
 
   protected readonly skeletonSeries = computed(() =>
     Array.from({ length: Math.max(this.series().length, 3) }),

@@ -1,6 +1,5 @@
 import {
   Component,
-  ElementRef,
   type OnDestroy,
   ViewEncapsulation,
   computed,
@@ -10,27 +9,16 @@ import {
   model,
   output,
   signal,
-  viewChild,
 } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { BodyScrollLockService } from '@ids-group-ltd/ids-design-system/overlay';
-import {
-  DS_INTL,
-  warnUnslottedContent,
-} from '@ids-group-ltd/ids-design-system/core';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { DsStaticPreview } from '@ids-group-ltd/ids-design-system/components';
 import type { DrawerPlacement } from './drawer.types';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 
 let nextId = 0;
-
-const DRAWER_SLOTS = [
-  'drawer-body',
-  'body',
-  'drawer-footer',
-  'actions',
-] as const;
 
 @Component({
   selector: 'ds-drawer',
@@ -74,17 +62,7 @@ export class DrawerComponent implements OnDestroy {
     return parts.join(' ');
   });
 
-  private readonly unslotted = viewChild<ElementRef<HTMLElement>>('unslotted');
-
   constructor() {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      warnUnslottedContent(
-        'ds-drawer',
-        'drawer-body',
-        DRAWER_SLOTS,
-        () => this.unslotted()?.nativeElement,
-      );
-    }
     effect(() => {
       if (this.preview.staticPreview()) {
         return;

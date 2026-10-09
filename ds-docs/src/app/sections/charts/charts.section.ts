@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,6 +9,7 @@ import {
 import { BarChartComponent } from 'ds/bar-chart';
 import type { BarChartRow } from 'ds/bar-chart';
 import { RadioComponent, RadioGroupComponent } from 'ds/radio-group';
+import { SliderComponent } from 'ds/slider';
 import { DocsChartDataEditorComponent } from '../../shared/docs-chart-data-editor.component';
 import { DocsReplayButtonComponent } from '../../shared/docs-replay-button.component';
 import { DocsSectionComponent } from '../../shared/docs-section.component';
@@ -147,6 +149,70 @@ const DETAIL_ROWS: readonly BarChartRow[] = [
   { label: 'Referral', value: 2740, detail: '198 requests · 7.2%' },
 ];
 
+// A journey funnel: every row a share of the first, a group of content blocks under the microsite
+// row, and a closing total that is not a step of the funnel.
+const JOURNEY_ROWS: readonly BarChartRow[] = [
+  {
+    id: 'policyholders',
+    label: 'Policyholders',
+    value: 51402,
+    emphasis: true,
+    hint: 'Active policyholders in the segment. Every other row is a share of this one.',
+  },
+  {
+    id: 'scheduled',
+    label: 'Scheduled for communication',
+    value: 48110,
+    hint: 'Queued for at least one message in the period.',
+  },
+  {
+    id: 'delivered',
+    label: 'Delivered',
+    value: 44210,
+    hint: 'Messages the provider confirmed as delivered.',
+  },
+  { id: 'opened', label: 'Opened', value: 18730 },
+  {
+    id: 'microsite',
+    label: 'Microsite accessed',
+    value: 6420,
+    percent: 100,
+    showPercent: true,
+    children: [
+      { id: 'how', label: 'How conversions work', value: 2210 },
+      { id: 'compare', label: 'Compare plans', value: 1630 },
+      { id: 'faq', label: 'FAQ', value: 940 },
+    ],
+  },
+  { id: 'agent', label: 'Agent requested', value: 1180 },
+  { id: 'form', label: 'Form submitted', value: 640 },
+  { id: 'conversion', label: 'Conversion or new policy', value: Number.NaN },
+  {
+    id: 'finished',
+    label: 'Completed or exited',
+    value: 9870,
+    emphasis: true,
+    detached: true,
+    color: 'var(--ds-chart-series-2-color)',
+  },
+];
+
+const EXIT_ROWS: readonly BarChartRow[] = [
+  {
+    label: 'Completed the journey',
+    value: 6120,
+    color: 'var(--ds-chart-series-2-color)',
+  },
+  {
+    label: 'Program ended',
+    value: 1830,
+    color: 'var(--ds-chart-series-3-color)',
+  },
+  { label: 'Unsubscribed', value: 1240, color: 'var(--warning)' },
+  { label: 'Suppressed', value: 1340 },
+  { label: 'Converted existing coverage', value: Number.NaN },
+];
+
 const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
   { label: 'This quarter', value: 350 },
   { label: 'Last quarter', value: 150 },
@@ -156,12 +222,14 @@ const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
   selector: 'section-charts-bar-chart',
   standalone: true,
   imports: [
+    RouterLink,
     BarChartComponent,
     DocsChartDataEditorComponent,
     DocsSectionComponent,
     DocsReplayButtonComponent,
     RadioComponent,
     RadioGroupComponent,
+    SliderComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -225,6 +293,37 @@ export class BarChartSection {
 
     return typeof choice === 'string' && choice !== 'all' ? choice : null;
   });
+  protected readonly journeyRows = signal<readonly BarChartRow[]>(JOURNEY_ROWS);
+  protected readonly startRows = signal<readonly BarChartRow[]>(
+    JOURNEY_ROWS.slice(0, 4).map(({ id, label, value }) => ({
+      id,
+      label,
+      value,
+    })),
+  );
+  protected readonly groupRows = signal<readonly BarChartRow[]>(
+    JOURNEY_ROWS.slice(3, 6),
+  );
+  protected readonly termRows = signal<readonly BarChartRow[]>(
+    JOURNEY_ROWS.slice(0, 3),
+  );
+  protected readonly emphasisRows = signal<readonly BarChartRow[]>(
+    [JOURNEY_ROWS[0], JOURNEY_ROWS[2], JOURNEY_ROWS[6], JOURNEY_ROWS[8]].map(
+      ({ id, label, value, emphasis }) => ({ id, label, value, emphasis }),
+    ),
+  );
+  protected readonly detachedRows = signal<readonly BarChartRow[]>(
+    JOURNEY_ROWS.slice(6),
+  );
+  protected readonly exitRows = signal<readonly BarChartRow[]>(EXIT_ROWS);
+  protected readonly loadingCompareRows = signal<readonly BarChartRow[]>(
+    JOURNEY_ROWS.slice(1, 4).map(({ id, label, value }) => ({
+      id,
+      label,
+      value,
+    })),
+  );
+  protected readonly trackHeight = signal(6);
   protected readonly maxBelowDataRows =
     signal<readonly BarChartRow[]>(MAX_BELOW_DATA_ROWS);
 }

@@ -284,6 +284,29 @@ export function closeOnScroll(
   return () => doc.removeEventListener('scroll', onScroll, true);
 }
 
+/** Calls `onEscape` when `Escape` is pressed anywhere on `target`, in the CAPTURE phase so a handler
+ *  further down cannot swallow it. Returns the removal. A null target (no document, as on the
+ *  server) listens to nothing.
+ * @internal
+ */
+export function listenForEscape(
+  target: Pick<Document, 'addEventListener' | 'removeEventListener'> | null,
+  onEscape: () => void,
+): () => void {
+  if (!target) {
+    return () => undefined;
+  }
+  const onKeydown = (event: KeyboardEvent): void => {
+    if (event.key === 'Escape') {
+      onEscape();
+    }
+  };
+  target.addEventListener('keydown', onKeydown as EventListener, true);
+
+  return () =>
+    target.removeEventListener('keydown', onKeydown as EventListener, true);
+}
+
 /**
  * Syncs a component's "which overlay is mine, and is it open" state when THIS overlay detaches,
  * skipping the write when a newer one has taken over.

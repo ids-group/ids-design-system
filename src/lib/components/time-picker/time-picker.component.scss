@@ -1,8 +1,11 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
+@use '../../styles/target' as target;
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-state' as field-state;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   --_time-picker-focus-shadow: var(
@@ -170,6 +173,7 @@
   }
 
   @include press.feedback;
+  @include target.min-size($position: null);
 }
 
 .time-static {

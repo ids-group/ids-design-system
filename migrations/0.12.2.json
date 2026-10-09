@@ -9,7 +9,7 @@
       "new": null,
       "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding.",
       "appliesWhen": "Only a class that extends TableComponent or SidenavGroupComponent. A consumer who uses the elements in a template needs nothing — no existing input, output, token or class changed name or type in this release.",
-      "pitfall": "Three of the four members are not public API, which is no protection: a redeclared private or protected member fails with TS2415 exactly as a public collision does, and a same-named method whose signature differs fails with TS2416 instead.",
+      "pitfall": "Six of the nine members are not public API, which is no protection: a redeclared private member fails with TS2415 on the class and TS4114 on the member, and a protected one with TS4114, exactly as a public collision does, and a same-named member whose signature differs fails with TS2416 as well.",
       "note": "TableComponent gained `showsLoadingSpace`, which keeps a body open while the table loads with no rows; `publishHeadHeight`, which measures the header for the scrim to inset against; `scrollAncestor`, which finds the scrollport a sticky offset resolves against; `hasAnyColumnFilter`, which decides whether the column-filter panel renders; `isFilterPanelOpen`, which tells a header button whether the open panel is its own; and the new `stickyScrollbarOffset` input with its `stickyScrollbarOffsetResolved`. SidenavGroupComponent gained the new `routerLink` input and `headerNavigates`, which decides whether the header splits into a link and its own caret. Named here so a subclass collision is greppable from the release that introduced them.",
       "verify": "The app builds with no TS2415 or TS2416 naming TableComponent or SidenavGroupComponent, and no member of your subclass is called showsLoadingSpace, publishHeadHeight, scrollAncestor, hasAnyColumnFilter, isFilterPanelOpen, stickyScrollbarOffset, stickyScrollbarOffsetResolved, routerLink or headerNavigates.",
       "searchHints": [
@@ -206,9 +206,9 @@
       "surface": "style",
       "old": "--ds-table-hscroll-bottom",
       "new": "--ds-table-sticky-scrollbar-offset",
-      "action": "Rename `--ds-table-hscroll-bottom` to `--ds-table-sticky-scrollbar-offset`, keeping the value — unless the value is a negative offset equal to your scroll container's bottom padding, which is deleted instead (delete list: table-hscroll-bottom-workaround).",
+      "action": "Rename `--ds-table-hscroll-bottom` to `--ds-table-sticky-scrollbar-offset`, keeping the value.",
       "appliesWhen": "Only a stylesheet of yours that sets the token. Nothing in a template or in TypeScript changes, and `stickyScrollbar` itself, the bar's behaviour and every other `--ds-table-*` token are untouched.",
-      "pitfall": "The old name is inert rather than invalid, so a declaration left behind is not an error anywhere — the bar simply stops taking your offset and falls back to the measured one, which on most pages looks almost right.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind is not an error anywhere — the bar simply stops taking your offset and falls back to the measured one, which on most pages looks almost right. A negative value equal to your scroll container's bottom padding keeps working after the rename, but it now only restates the offset the table measures itself, and replaces that measurement, which follows the padding on resize, with a fixed value (delete list: table-hscroll-bottom-workaround).",
       "note": "The knob now carries the name of the feature it belongs to, beside `stickyScrollbar` and the new `[stickyScrollbarOffset]` input, so the three greppable spellings of one idea agree. The same value is also reachable per table through that input and app-wide through `DS_CONFIG.table.stickyScrollbarOffset`; the token still out-ranks both.",
       "verify": "No stylesheet declares `--ds-table-hscroll-bottom`, and every offset the sticky scrollbar takes comes from `--ds-table-sticky-scrollbar-offset`, `[stickyScrollbarOffset]` or `DS_CONFIG.table.stickyScrollbarOffset`.",
       "searchHints": [
@@ -249,7 +249,7 @@
     "`ds-dropzone` shows the hand cursor once files are listed. The zone was always clickable; only the cursor said otherwise.",
     "`ds-sidenav-group` takes a new optional `routerLink`. Unset, which is the default and what every existing group has, the header only expands and nothing changed. Set together with `expandable`, the header navigates and the caret becomes its own button, so the group's own DOM gains a `.group-header-row` wrapper and a `.group-caret-button`, and `.group-header` becomes an `a` rather than a `button`. `routerLink` without `expandable` is ignored.",
     "The `ds-table` column panel and the header button that opens it, both rendered by `dsTableColumns`, draw with their own styles instead of the browser's native checkbox, buttons and link. Markup, class names and API are unchanged; a stylesheet of yours that reached `.col-picker`, `.col-picker-row`, `.col-picker-option`, `.col-drag`, `.col-move`, `.col-move-btn`, `.col-reset` or `.col-picker-btn` by a bare class name now competes with a scoped rule, so qualify the selector where your override stopped landing.",
-    "A `ds-table` sticky horizontal scrollbar rests on the scroll container's visible bottom edge rather than one padding-bottom above it, measured off the scroll ancestor and re-measured on resize. `--ds-table-hscroll-bottom` still overrides outright; a negative value equal to your own container's padding is now a second offset (delete list: table-hscroll-bottom-workaround).",
+    "A `ds-table` sticky horizontal scrollbar rests on the scroll container's visible bottom edge rather than one padding-bottom above it, measured off the scroll ancestor and re-measured on resize. `--ds-table-sticky-scrollbar-offset` (renamed from `--ds-table-hscroll-bottom`) still overrides outright; a negative value equal to your own container's padding now only restates the measured offset (delete list: table-hscroll-bottom-workaround).",
     "`clearable` on `ds-autocomplete` and `ds-multi-select` now draws the same clear button as `ds-select`, where both previously rendered the markup with no rule able to reach it and the × came out as the browser's default button. Nothing to change; `ds-select` is untouched and `ds-input` keeps its own filled-disc variant (delete list: picker-clear-button-workaround).",
     "A `ds-table` column filter opens on the first click; the first click used to only build the panel. Nothing to change — `filterMode`, `filter: 'set'` and a projected `dsHeaderFilter` all keep their behaviour, and a table with no filterable column renders no panel at all.",
     "A `ds-table` column filter button now carries `aria-expanded` beside its `aria-haspopup=\"dialog\"`, true only on the column whose panel is showing. Nothing to change unless a test of yours asserts the attribute's absence.",
@@ -275,9 +275,10 @@
       "id": "table-hscroll-bottom-workaround",
       "surface": "style",
       "find": [
-        "--ds-table-hscroll-bottom: -"
+        "--ds-table-hscroll-bottom: -",
+        "--ds-table-sticky-scrollbar-offset: -"
       ],
-      "why": "The table measures its scroll container's bottom padding and cancels it itself, so a negative offset written to do that job moves the sticky scrollbar a second time. The token stays legitimate for a scrollport whose reachable edge is not its padding edge — only the value that duplicates the measurement is dead.",
+      "why": "The table measures its scroll container's bottom padding and cancels it itself. A negative offset written to do that job is dead under the old name and, renamed to --ds-table-sticky-scrollbar-offset, replaces that measurement with the same value fixed, so delete it under either name. The token stays legitimate for a scrollport whose reachable edge is not its padding edge — only the value that duplicates the measurement is dead.",
       "replaceWith": "nothing"
     },
     {

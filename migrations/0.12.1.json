@@ -35,7 +35,7 @@
       "action": "If you set `--focus-ring-inner` to a colour to get a visible ring back, remove that override — it no longer reaches a control's ring. To restyle the ring, set `--focus-ring-width`, `--focus-ring-color` or `--focus-ring-offset`. Wrap any `outline: none` you keep on a DS control in `@media not (forced-colors: active)`.",
       "appliesWhen": "Every focusable control in the library — buttons, checkboxes, radios, switches, tabs, menu rows, list rows, segments, days, links. Fields keep their soft halo and are unaffected; `--focus-ring-inner` still composes the halo that `data-focus=\"ring\"` opts into.",
       "pitfall": "An `outline: none` in your own stylesheet now removes a control's indicator outright, where before it removed nothing because the ring was a shadow. Any reset that zeroes outlines on DS controls leaves a keyboard user with no indicator, and nothing errors.",
-      "note": "Controls draw the ring with `outline` + `outline-offset` instead of a two-layer box-shadow. `outline-offset` leaves its gap UNPAINTED, so the gap shows whatever the control actually sits on; the shadow gap had to be filled with a guessed colour, which was a coloured rim wherever the guess was wrong. A negative offset draws the ring inside the element, so a clipping ancestor can no longer eat it. Components no longer touch `box-shadow` on focus, so a focused card keeps its elevation and a selected segment keeps its shadow.",
+      "note": "Controls draw the ring with `outline` + `outline-offset` instead of a two-layer box-shadow. `outline-offset` leaves its gap UNPAINTED, so the gap shows whatever the control actually sits on; the shadow gap had to be filled with a guessed colour, which was a coloured rim wherever the guess was wrong. A negative offset draws the ring inside the element, so a clipping ancestor can no longer eat it. The ring mixin no longer touches `box-shadow`, so a focused card keeps its elevation; a selected segment, the active tab pill and the active sidenav item drop their state shadow while focused and show the outline instead.",
       "verify": "Focus a button standing on a tinted band: the gap shows the band, not a surface-coloured rim. Focus a menu row: the ring is drawn inside the row and is not clipped.",
       "restore": "--focus-ring-width: 0;",
       "supersedes": [
@@ -67,7 +67,7 @@
       "old": "--ds-button-focus-shadow",
       "new": "--focus-ring-color",
       "action": "Replace every `--ds-<component>-focus-shadow` override on a control with `--focus-ring-color`, `--focus-ring-width` or `--focus-ring-offset` on the same scope.",
-      "appliesWhen": "Only the thirteen control components that published one: button, icon-button, card, checkbox, radio, switch, tabs, toast, breadcrumbs, pagination, sidenav-item, sidenav-group, menu-item. Field tokens such as `--ds-input-focus-shadow` are unchanged. The umbrella `--ds-control-focus-shadow` is the same case and needs the same edit: it still resolves, and the date and time pickers still read it, but none of the thirteen does any more — an override that used to recolour every control is now a silent no-op on them.",
+      "appliesWhen": "Only the thirteen control components that published one: button, icon-button, card, checkbox, radio, switch, tabs, toast, breadcrumbs, pagination, sidenav-item, sidenav-group, menu-item. Field tokens such as `--ds-input-focus-shadow` are unchanged. The umbrella `--ds-control-focus-shadow` is the same case and needs the same edit: it still resolves, and the date and time pickers still read it, but none of the thirteen does any more — an override that used to recolour every control is now a silent no-op on them. Its error pair `--ds-control-focus-shadow-error`, the ring of `ds-button color=\"error\"`, is read by nothing now.",
       "pitfall": "An override of a removed token is a custom property like any other — it sets, it cascades, and it changes nothing. The control keeps the default ring and no build or console says why.",
       "note": "Each of these resolved to `--ds-control-focus-shadow`, which controls no longer read. The three ring tokens replace them and cascade the same way, so a per-component override becomes a scoped one: set them on the component's own selector rather than at `:root`.",
       "verify": "Focus the component you overrode: the ring shows your colour and thickness, not the default brand ring.",
@@ -86,9 +86,9 @@
       "old": "data-focus=\"field\"",
       "new": "data-focus=\"edge\"",
       "action": "Remove `data-focus=\"field\"` and `data-focus=\"outline\"` from `<html>`. For a tighter ring use `data-focus=\"edge\"`; for a thicker or recoloured one set `--focus-ring-width` and `--focus-ring-color`.",
-      "appliesWhen": "Only an app that sets one of those two values. `ring`, `edge` and `inset` are unchanged and keep their meaning.",
+      "appliesWhen": "Only an app that sets one of those two values. `ring`, `edge` and `inset` remain and keep their meaning, though a control now draws them as the 2px outline ring - flush under `edge`, inside the element under `inset` - rather than a box-shadow.",
       "pitfall": "An unknown `data-focus` value matches nothing and is silently ignored, so the app keeps the default indicator and looks merely un-themed rather than misconfigured.",
-      "note": "Both values described a swap of one box-shadow for another. `field` gave controls the halo and `outline` blanked both roles so a single global rule could draw an outline — neither survives now that controls draw their own outline and never a shadow. The ring tokens express what those modes were reaching for, per scope rather than only at the root.",
+      "note": "Both values described a swap of one box-shadow for another. `field` gave controls the halo (`--ds-control-focus-shadow` and `--ds-control-focus-shadow-error` at `--focus-field` / `--focus-field-error`) and `outline` blanked both roles, `--ds-field-focus-shadow-error` and `--ds-control-focus-shadow-error` included, so a single global rule could draw an outline — neither survives now that controls draw their own outline and never a shadow. The ring tokens express what those modes were reaching for, per scope rather than only at the root.",
       "verify": "Focus a button with the attribute removed: the ring is the default brand outline held off the control.",
       "searchHints": [
         "data-focus",
@@ -104,8 +104,8 @@
       "new": null,
       "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding.",
       "appliesWhen": "Only a class that extends MenuComponent, RadioComponent or TableComponent. Template users need nothing; `deselectable` is a new input and nothing existing changed name or type.",
-      "pitfall": "Three of the four new members are not public API, which is no protection: a redeclared private or protected member fails with TS2415 exactly as a public collision does. And an `override anyIcon`, `override onClick` or `override anySelected` written before this release compiles clean while overriding nothing.",
-      "note": "MenuComponent gained `anyIcon`, a computed over its content children that decides whether every row reserves the icon slot. RadioComponent gained `deselectable` (a new input) and `onClick`. TableComponent gained `anySelected` plus the anchors and the seam the opt-in features write into, and LOST the whole data-grid half: `columnOrder`, `hiddenKeys`, `columnWidths`, `reorderableColumns`, `resizableColumns`, `exportButton` and their handlers moved to `dsTableColumns`, `dsTableResize` and `dsTableExport`. A subclass that overrode one of those now overrides nothing, which the compiler does NOT report — the member is simply gone and the override runs never. The three directives and the panel components they create are new classes, listed so a name collision in a subclass of one is greppable from the first release that has them.",
+      "pitfall": "Nine of the ten new members are not public API, which is no protection: a redeclared private member fails with TS2415, and a protected one with TS4114 or TS2416, exactly as a public collision does. And a same-named member of yours now collides with the new one (TS4114 under noImplicitOverride, TS2416 on a type mismatch).",
+      "note": "MenuComponent gained `anyIcon`, a computed over its content children that decides whether every row reserves the icon slot. RadioComponent gained `deselectable` (a new input) and `onClick`. TableComponent gained `anySelected` plus the anchors and the seam the opt-in features write into, and LOST the whole data-grid half: `columnOrder`, `hiddenKeys`, `columnWidths`, `reorderableColumns`, `resizableColumns`, `exportButton`, `exportFilename`, `exportFetcher`, `exportFailed` and their handlers moved to `dsTableColumns`, `dsTableResize` and `dsTableExport`, and the public `exportStatus` signal was removed outright. A subclass member of one of those names now overrides nothing: marked `override` it fails with TS4113, unmarked it compiles and never runs. The three directives and the panel components they create are new classes, listed in detect so a collision in a subclass of one is greppable.",
       "verify": "The app builds with no TS4114 / TS2415 / TS2416 naming MenuComponent, RadioComponent or TableComponent, and no override of anyIcon, deselectable, onClick or anySelected remains in your source.",
       "searchHints": [
         "extends MenuComponent",
@@ -143,13 +143,33 @@
       "restore": null
     },
     {
+      "id": "table-subclass-members-moved",
+      "kind": "behavior",
+      "surface": "typescript",
+      "old": "TableComponent",
+      "new": null,
+      "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding. Delete an override of a member the table lost.",
+      "appliesWhen": "Only a class that extends `TableComponent`. Template users of `<ds-table>` need nothing from this item.",
+      "pitfall": "A member of yours named like a lost one no longer replaces anything, and the table stops calling it.",
+      "note": "`TableComponent` gained 7 and lost 50. The gains are `anySelected`, `columnWidthControls`, `layout`, the private `warnNoExport` and the anchors `headerUtilityAnchor`, `overlaysAnchor` and `toolbarAnchor`. The losses are the data-grid half that moved to `dsTableColumns`, `dsTableResize` and `dsTableExport`, among them `moveColumn`, `toggleColumn`, `resetColumns` and the resize handlers, plus the removed `exportStatus`.",
+      "verify": "The app builds with no error naming `TableComponent`, and no member of a subclass of it overrides a member the table lost.",
+      "searchHints": [
+        "extends TableComponent"
+      ],
+      "detect": [
+        "extends TableComponent",
+        "TableComponent"
+      ],
+      "restore": null
+    },
+    {
       "id": "selection-controls-ring-the-row",
       "kind": "behavior",
       "surface": "style",
       "old": "--ds-checkbox-focus-shadow",
       "new": null,
       "action": "If you positioned anything against a checkbox, radio or switch focus ring, re-measure it against the row rather than the glyph.",
-      "appliesWhen": "Only `ds-checkbox`, `ds-radio` and `ds-switch`. `ds-table`'s cell checkbox is unchanged — it has no label row, so it keeps ringing its own box.",
+      "appliesWhen": "Only `ds-checkbox`, `ds-radio` and `ds-switch`. `ds-table`'s cell checkbox is not affected - it has no label row, so it keeps ringing its own box.",
       "pitfall": "Nothing errors and the control still rings, so this shows up only as a ring that is wider than it was and starts at the label's far edge. A layout that reserved space for a 24px ring around a 20px glyph now has a ring as wide as the label.",
       "note": "Ringing the glyph drew a brand ring concentric with the brand ring the checked state already paints, which reads as a target rather than as two states a keyboard user must tell apart while moving through a group. The row is what the pointer already hits, because the label carries the hit area. A control with no label collapses back onto the glyph, and there the ring stands further off instead.",
       "verify": "Tab to a checked radio: the ring surrounds glyph and label together, and is not concentric with the dot.",
@@ -163,13 +183,16 @@
     },
     {
       "id": "table-export-behind-directive",
-      "kind": "input-rename",
+      "kind": "behavior",
       "old": "ds-table[exportButton]",
-      "new": "dsTableExport",
-      "action": "Import DsTableExport from '@ids-group-ltd/ids-design-system/table-export', add it to the component's imports, and replace [exportButton]=\"true\" on the element with the dsTableExport attribute. Move exportFilename, exportFetcher and (exportFailed) bindings across unchanged — they are the directive's inputs now and still sit on the same element.",
+      "new": null,
+      "action": "Import DsTableExport from '@ids-group-ltd/ids-design-system/table-export', add it to the component's imports, and replace [exportButton]=\"true\" on the element with the dsTableExport attribute. A bound [exportButton]=\"expr\" becomes [dsTableExport]=\"expr\". A table with no exportButton that binds an export input or calls runExport() / exportCsv() gains [dsTableExport]=\"false\", which keeps the export without the button it never showed. Move exportFilename, exportFetcher and (exportFailed) bindings across unchanged — they are the directive's inputs now and still sit on the same element.",
       "appliesWhen": "A <ds-table> that renders the built-in CSV button, binds any export input, or calls table.runExport() / table.exportCsv() from a button of its own — the methods stay on the component, but they carry out an export only while the directive is on that table. To keep a button of your own and hide the built-in one, put dsTableExport on the element and bind [dsTableExport]=\"false\". NOT affected: a table with no export of any kind.",
       "pitfall": "Forgetting the import is a build error, not a silent loss: exportFilename, exportFetcher and exportFailed left the component with the button, so a template that still binds them fails with NG8002 \"Can't bind to 'exportFetcher' since it isn't a known property of 'ds-table'\". The silent case is the other one — a table that renders no export binding at all and drives the feature from a button of its own through runExport() or exportCsv(): those still compile, and with no directive present they do nothing but log a development-mode warning.",
-      "surface": "template",
+      "surface": [
+        "template",
+        "typescript"
+      ],
       "searchHints": [
         "exportButton",
         "exportFetcher",
@@ -247,7 +270,7 @@
       "new": null,
       "action": "On a table with persistLayout, carry every directive whose part of the layout you want kept — dsTableColumns for order and hidden columns, dsTableResize for widths.",
       "appliesWhen": "Only a table binding persistLayout, and only where it carried more than one part of the layout before. persistLayout and storageKey keep their names and stay on the element, and the stored shape is unchanged, so a layout written by an earlier version still restores.",
-      "pitfall": "The loss is one-way and arrives on the first save, not on the upgrade: the table restores the full stored layout, then writes back only the parts a directive registered, so a table carrying dsTableResize alone replaces a stored { order, widths, hidden } with widths alone. The reader sees their column order come back once and never again, and nothing was logged.",
+      "pitfall": "The loss is one-way and silent: restore and save both handle only the slices a directive registered, so a table carrying dsTableResize alone never re-applies the stored column order, and its next save replaces a stored { order, widths, hidden } with widths alone. Nothing is logged.",
       "note": "Each directive registers the slice it owns, and the save writes the registered slices as the whole entry rather than merging into what is there. That is what makes the parts independent, and it is why a table that persists a layout needs the directives for every part of it.",
       "verify": "Reorder and resize a persisted table, reload twice, and both the order and the widths come back the second time.",
       "searchHints": [
@@ -329,13 +352,17 @@
     "Every hand-written `outline: none` in the library is now `focus.own-indicator`, which skips the suppression under forced colours. Silencing a DS control in your own stylesheet should be wrapped the same way: `@media not (forced-colors: active)`.",
     "A ds-table selection column draws the design system checkbox instead of the browser default, and answers the same hooks as ds-checkbox: --ds-checkbox-bg-color, --ds-checkbox-border-color, --ds-checkbox-hover-border-color, --ds-checkbox-selected-bg-color, --ds-checkbox-selected-border-color and --ds-checkbox-radius reach a table where they previously did nothing. Setting one to restyle your checkboxes now also restyles table row selection, which is the intent. The element is still an input[type=\"checkbox\"], so a selector of your own aimed at it still matches; it now competes with the library rule rather than styling something nothing else touched, and the box sets appearance: none. NO ACTION unless that override is what you were relying on.",
     "Text under .t-mono no longer ligates: the face draws === as one triple-bar glyph and != as a struck equals, so prose naming an operator showed something other than the characters it discussed. Set --ds-t-mono-ligatures to normal to get them back. The change is visual and applies wherever .t-mono is used; nothing about the class, the font size or the weight moved. NO ACTION.",
-    "A ds-menu reserves an icon slot on every row as soon as one item projects an icon, so a mixed menu has one text axis instead of two. --ds-menu-item-icon-size is new and sets the width that slot reserves. A menu whose items project no icon anywhere is unchanged and stays flush to its padding. NO ACTION unless you had compensated for the ragged indent yourself.",
+    "A ds-menu reserves an icon slot on every row as soon as one item projects an icon, so a mixed menu has one text axis instead of two. --ds-menu-item-icon-size is new and sets the width that slot reserves. A menu whose items project no icon anywhere now sits flush to its padding: the empty icon slot no longer costs the row's 10px gap, so its labels move 10px left. NO ACTION unless you had compensated for the ragged indent yourself.",
     "A ds-split-button darkens and scales each half under a press, like every other button in the library. --ds-split-button-bg-color-active, --ds-split-button-outline-bg-color-active and --ds-split-button-press-scale are new and set what a press does; --ds-split-button-pressed-shadow is an opt-in pressed halo, default none. The scale runs away from the seam, so the two halves do not part under the finger. NO ACTION.",
     "`ds-table`'s bulk-action bar was hidden when every row was selected — it read the header checkbox's indeterminate predicate rather than \"is anything selected\". It shows for any non-empty selection now. Nothing to change on your side.",
     "A focused first or last `ds-accordion-item` header takes the accordion's own corner radius, so its focus ring is no longer square inside the rounded box.",
     "The `ds-skeleton` shimmer is one viewport-wide wave again: every skeleton shows the slice passing over its own position, anchored with `background-attachment: fixed` instead of the inherited custom property that used to be animated on `:root` and invalidated the whole document each frame. `--ds-skeleton-shimmer-color` and the reduced-motion opt-out are unchanged. Inside a transformed or filtered ancestor the anchor becomes that ancestor, and those skeletons share a wave with each other rather than with the page.",
     "`focus.owns-the-focus-ring($control)` still does its job and needs no edit. It silenced a shadow before and silences an outline now, and it is the shape the ring change asks for: it wraps `outline: none` in `@media not (forced-colors: active)`, so a shell that rings on its control's behalf keeps an indicator in forced colours. If you silence a DS control by hand anywhere else, this mixin is what to use instead.",
     "persistLayout and storageKey stay on ds-table. The stored JSON keeps its { order, widths, hidden } shape, so a layout saved by an earlier version still restores; what a table then writes back is covered by table-persisted-layout-holds-only-what-the-directives-own.",
-    "table.runExport(), table.exporting() and table.exportCsv() stay on the component and keep their signatures — they delegate to whichever export directive is present, so a button of your own in [toolbar] or a page header still drives the export. Called with no directive present they log a dev-mode warning instead of doing nothing quietly."
+    "table.runExport(), table.exporting() and table.exportCsv() stay on the component and keep their signatures — they delegate to whichever export directive is present, so a button of your own in [toolbar] or a page header still drives the export. Called with no directive present they log a dev-mode warning instead of doing nothing quietly.",
+    {
+      "text": "`--ds-autocomplete-input-minw`, the floor of the typing area beside an autocomplete's chips, defaults to 40px, was 80px. In the default `width=\"fill\"` the input still stretches across the row, so only the chip case changes. Set `--ds-autocomplete-input-minw: 80px` to keep the old footprint.",
+      "verify": "Open an autocomplete with chips and confirm the typing area beside them is wide enough for what users type there, or pins 80px."
+    }
   ]
 }

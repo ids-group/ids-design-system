@@ -1,4 +1,6 @@
-@use '../../styles/press' as press;
+@use '../../styles/dismiss-button' as dismiss-button;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract: title is single-line with ellipsis and never hides the close
    button; body wraps and scrolls inside the modal; action labels are single-line and
@@ -29,7 +31,7 @@
   --_modal-icon-badge-bg-color: var(--ds-modal-icon-badge-bg-color, var(--accent-subtitle));
   --_modal-icon-badge-icon-color: var(--ds-modal-icon-badge-icon-color, var(--accent));
   --_modal-impact-text-color: var(--ds-modal-impact-text-color, var(--warning-text));
-  --_modal-enter-keyframes: var(--ds-modal-enter-keyframes, ds-scale-in);
+  --_modal-enter-keyframes: var(--ds-modal-enter-keyframes, ds-fade-in);
   --_modal-enter-duration: var(--ds-modal-enter-duration, var(--ds-motion-enter-surface-duration));
   --_modal-enter-easing: var(--ds-modal-enter-easing, var(--ds-motion-enter-surface-easing));
   --_modal-leave-duration: var(--ds-modal-leave-duration, var(--ds-motion-exit-duration));
@@ -68,6 +70,8 @@
   max-width: calc(100vw - var(--space-6));
   max-height: 90vh;
   max-height: 90dvh;
+
+  // glyph-clip-guard: rounds the corners; header, body and footer pad their text off this edge
   overflow: hidden;
   animation-name: var(--_modal-enter-keyframes);
   animation-duration: var(--_modal-enter-duration);
@@ -148,19 +152,15 @@
     margin: var(--space-0-5) 0 0;
   }
 
+  // target-size-guard: --modal-close-size, 24px
   .close {
-    background: none;
-    border: 0;
-    cursor: pointer;
+    @include dismiss-button.button;
+
     color: var(--_modal-close-icon-color);
     width: var(--modal-close-size);
     height: var(--modal-close-size);
-    display: grid;
-    place-items: center;
 
     &:hover { color: var(--_modal-close-icon-color-hover); }
-
-    @include press.feedback;
   }
 
   .body {
@@ -187,6 +187,7 @@
 
       // ::ng-deep for projected children; a ds-button's own `width: fit-content` opts out of the stretch.
       & > ::ng-deep * { width: 100%; }
+      & > ::ng-deep div[actions] > * { width: 100%; }
     }
   }
 
@@ -216,12 +217,12 @@
   }
 }
 
-.modal-static {
+// A `<div actions>` wrapper hands its buttons to the row. Zero specificity: a display set on it wins.
+:where(.actions) > ::ng-deep :where(div[actions]) {
   display: contents;
 }
 
-// Top level, not under .modal: ds-modal renders this wrapper inside ds-modal-card, whose .modal does not carry ds-modal's scope.
-.unslotted {
+.modal-static {
   display: contents;
 }
 

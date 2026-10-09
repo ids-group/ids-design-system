@@ -4,12 +4,12 @@
     {
       "id": "leave-keyframes-renamed",
       "kind": "token-rename",
-      "old": "modal-out / ds-sheet-down / ds-sheet-fade-out / drawer-panel-close-right|left|top|bottom / drawer-scrim-out",
-      "new": "ds-fade-out / ds-scale-out / ds-slide-out / ds-slide-edge-out",
+      "old": "modal-out / ds-sheet-down / ds-sheet-fade-out / drawer-panel-close-right / drawer-panel-close-left / drawer-panel-close-top / drawer-panel-close-bottom / drawer-scrim-out",
+      "new": "ds-fade-out / ds-slide-edge-out / ds-fade-out / ds-slide-edge-out / ds-slide-edge-out / ds-slide-edge-out / ds-slide-edge-out / ds-fade-out",
       "action": "Only if you referenced an old name from a GLOBAL stylesheet: `modal-out`, `ds-sheet-fade-out` and `drawer-scrim-out` map to `ds-fade-out`; `ds-sheet-down` and all four `drawer-panel-close-*` map to `ds-slide-edge-out`. After upgrading, open and close a modal, a drawer and a bottom sheet and confirm the page scrolls again afterwards.",
       "appliesWhen": "The old names were view-encapsulated, so only a global stylesheet could ever have referenced them. You also gain `--ds-modal-leave-keyframes`, `--ds-drawer-leave-keyframes` and `--ds-bottom-sheet-leave-keyframes`, the exit counterparts of the enter hooks.",
       "pitfall": "Point a leave hook at your own GLOBAL `@keyframes` only — Angular renames a component-scoped animation name, so a scoped one never resolves. And check the scroll after closing: teardown used to match the animation NAME on animationend, and a teardown that does not fire leaks the body-scroll lock. That is the failure this change could cause and the one it was tested for.",
-      "note": "Seven exit keyframes local to modal, drawer and bottom-sheet became four global presets mirroring the entrance vocabulary. The animationend guard checks the event came from the animated element rather than a child now, which is what freed the name. An exit preset reads `--_ds-exit-x/y/scale` and falls back to the matching enter values, so a surface that leaves the way it arrived declares nothing.",
+      "note": "Eight exit keyframes local to modal, drawer and bottom-sheet became four global presets mirroring the entrance vocabulary. The animationend guard checks the event came from the animated element rather than a child now, which is what freed the name. An exit preset reads `--_ds-exit-x/y/scale` and falls back to the matching enter values, so a surface that leaves the way it arrived declares nothing.",
       "searchHints": [
         "modal-out",
         "ds-sheet-down",
@@ -18,7 +18,7 @@
         "ds-sheet-fade-out"
       ],
       "surface": "style",
-      "verify": "No global stylesheet names one of the seven removed exit keyframes, and any --ds-*-leave-keyframes points at a GLOBAL @keyframes (a component-scoped name is renamed by Angular and will not resolve)."
+      "verify": "No global stylesheet names one of the eight removed exit keyframes, and any --ds-*-leave-keyframes points at a GLOBAL @keyframes (a component-scoped name is renamed by Angular and will not resolve)."
     },
     {
       "id": "dropdown-panel-radius",
@@ -45,7 +45,7 @@
       "old": "ds-auth-shell",
       "new": "ds-auth-layout",
       "action": "Rename the element and its closing tag from `ds-auth-shell` to `ds-auth-layout`, and any stylesheet rule that names the element with it, then apply the class and token items below.",
-      "appliesWhen": "Behaviour, inputs and slots are unchanged — `brand`, `logoLetter`, `tagline`, `cardElevation`, `cardPadding`, `[brand]`, `[dsBrandName]` and `dsAuthSupport` all keep their names.",
+      "appliesWhen": "Every existing input and slot keeps its name - `brand`, `logoLetter`, `tagline`, `cardElevation`, `cardPadding`, `[brand]`, `[dsBrandName]`, `dsAuthSupport`; the same release adds `landmark` and short-viewport compression (informational below).",
       "note": "\"Shell\" is not this library's word for a layout: the app-level one became ds-app-layout in 0.7.0, and calling the auth counterpart a shell put the split vocabulary back. It shipped as ds-auth-shell in exactly one release.",
       "searchHints": [
         "ds-auth-shell"
@@ -61,7 +61,7 @@
       "old": "AuthShellComponent",
       "new": "AuthLayoutComponent",
       "action": "Replace `AuthShellComponent` with `AuthLayoutComponent` in imports and type references.",
-      "note": "The exported class follows the selector rename. No members changed.",
+      "note": "The exported class follows the selector rename; it also gained the `landmark` input and a protected `markGlyph`.",
       "searchHints": [
         "AuthShellComponent"
       ],
@@ -75,7 +75,7 @@
       "action": "Replace the prefix `--ds-auth-shell-` with `--ds-auth-layout-` on the six component tokens: `-min-height`, `-card-max-width`, `-gap`, `-bg-color`, `-mark-bg-color`, `-mark-label-color`.",
       "appliesWhen": "DS-owned tokens only — no others ship under this prefix, and a variable of your own is out of scope.",
       "pitfall": "Do NOT rename `--auth-card-w`. It is the global scale token behind `-card-max-width`, it carries no `--ds-auth-shell-` prefix, and it keeps its name — a prefix-blind sweep that catches it breaks the fallback.",
-      "note": "Values and defaults are unchanged.",
+      "note": "Values are unchanged; the -gap default now clamps against svh (informational: short-viewport compression).",
       "searchHints": [
         "--ds-auth-shell-"
       ],
@@ -87,7 +87,7 @@
       "old": "ds-search",
       "new": null,
       "action": "None unless you want the old height: `ds-search { --ds-search-height: 36px; }` — that token still wins over everything.",
-      "appliesWhen": "sm (32px) and lg (48px) are unchanged; only the md default moved. The height also falls through `--ds-field-height` now, so `--ds-field-height: 44px` on a toolbar levels search along with the fields.",
+      "appliesWhen": "sm (32px) and lg (48px) are unchanged; only the md default moved. Under a [data-density=\"ultra-compact\"] set on an inner container rather than the root, sm now stays 32px where it followed --hit-min to 24px. The height also falls through `--ds-field-height` now, so `--ds-field-height: 44px` on a toolbar levels search along with the fields.",
       "note": "ds-search is 40px at the default size, was 36px. The old 36px was a lone tier nothing else used, while ds-button, ds-input, ds-select and both pickers all resolve `--field-h-md`, so a search box in a toolbar sat 4px short of every neighbour.",
       "searchHints": [
         "ds-search",
@@ -146,7 +146,7 @@
       "old": "ds-number-stepper",
       "new": null,
       "action": "None unless you want the old height: `ds-number-stepper { --ds-field-height: 44px; }` scoped to the instance, or set the size back to md.",
-      "appliesWhen": "One size only — sm (32px) and the md default (40px) are unchanged.",
+      "appliesWhen": "One size only — sm (32px) and the md default (40px) are unchanged. Under a [data-density] set on an inner container rather than the root, sm and md now keep the root height instead of following that container's --hit-min / --hit-cozy.",
       "note": "`size=\"lg\"` is 48px, was 44px: it resolved `--hit-comfy` while the family's large size is `--field-h-lg`, so a large stepper was a step short of a large input beside it. The +/- buttons and the quantity box derive their widths from that height, so they widen with it.",
       "searchHints": [
         "ds-number-stepper",
@@ -169,14 +169,14 @@
       "kind": "code-add",
       "old": "ds-tabs",
       "new": "urlParam=\"tab\"",
-      "action": "Per strip, and worth a deliberate pass. (1) Give each `ds-tab` a `value` if it has none. (2) Use one strip per parameter name — nested or sibling strips need distinct names, such as `tab` and `subtab`. (3) Delete any hand-rolled wiring: a queryParamMap subscription plus a `navigate()` on `tabChanged` is exactly what this replaces.",
+      "action": "Per strip, and worth a deliberate pass. (1) Give each `ds-tab` a `value` if it has none. (2) Use one strip per parameter name — nested or sibling strips need distinct names, such as `tab` and `subtab`. (3) Delete any hand-rolled wiring: a queryParamMap subscription plus a `navigate()` on `(selectedIndexChange)` is exactly what this replaces.",
       "appliesWhen": "Nothing changes until you set `urlParam`.",
       "pitfall": "Two traps, both silent until someone shares a link. Without a `value` the URL is written from the LABEL, so the link breaks the moment the label is translated or reworded. And two strips sharing a parameter name erase each other — both write the same query parameter and a reload restores whichever wrote last. A dev-mode warning names that clash.",
       "note": "Setting `urlParam=\"tab\"` makes the strip write `?tab=<name>`, so the active tab survives F5, a shared link and the Back button.",
       "searchHints": [
         "<ds-tabs",
         "ds-tabs",
-        "tabChanged",
+        "selectedIndexChange",
         "queryParamMap"
       ],
       "surface": [
@@ -196,9 +196,9 @@
       "old": "extends TableComponent",
       "new": null,
       "action": "Build after upgrading: the compiler raises most of these collisions, but NOT the ones named in `pitfall` below — check those by hand, because they compile clean. Then per member: rename your own, or add `override` where the base semantics genuinely match.",
-      "appliesWhen": "Only a consumer that EXTENDS a DS component class. Subclassing is unsupported (design-system.md § Components); template users need nothing.",
-      "pitfall": "Two things the compiler will NOT tell you. `isStriped()` keeps its signature but now takes an ABSOLUTE row index rather than a window-relative one, so a subclass that overrode it silently computes the wrong row. And `distinctValuesOf()` was replaced by `optionsFor()` — a subclass that CALLED the old name loses it silently at the call site while only the declaration errors. Also note both CVA bases gained a `focus()` inherited by every field control, so a subclass with its own needs `override`, and five new exported symbols can shadow a local name: AuthLayoutComponent, FieldGroupComponent, DS_FIELD_GROUP, HeaderFilterDirective, HeaderFilterContext — none of these existed at 0.8.0, so they are new exports rather than grown classes.",
-      "note": "Seventeen classes grew a member. TableComponent changed by far the most; ModalComponent, ModalCardComponent, InputComponent, TextareaComponent, SelectComponent, AutocompleteComponent, BreadcrumbsComponent, MenuItemComponent, ButtonComponent, DatePickerComponent, SearchComponent (the last three gained `inGroup`), AppLayoutComponent, TabsComponent, LayoutScrollService and both CVA bases also moved. TS4114 demands `override`, TS2415 fires on a redeclared private, TS2416 on a differing signature.",
+      "appliesWhen": "Only a consumer that EXTENDS a DS component class. Subclassing is unsupported (components.md § Components); template users need nothing.",
+      "pitfall": "One thing the compiler will NOT tell you: `isStriped()` keeps its signature but now takes an ABSOLUTE row index rather than a window-relative one, so a subclass that overrode it silently computes the wrong row. The private `distinctValuesOf()` was replaced by a private `optionsFor()`: a subclass that declared its own `distinctValuesOf` no longer collides, and one declaring `optionsFor` now does (TS2415). Also note both CVA bases gained a `focus()` inherited by every field control, so a subclass with its own needs `override`, and nine new exported symbols can shadow a local name: AuthLayoutComponent, FieldGroupComponent, DS_FIELD_GROUP, DsFieldGroupContext, DsScrollReset, HeaderFilterDirective, HeaderFilterContext, TableFilterMode, LayoutNavigationService — none of these was exported at 0.8.0, so they are new exports rather than grown classes.",
+      "note": "Seventeen classes declare a new member, and eight more inherit three from the CVA bases. TableComponent changed by far the most; ModalComponent, ModalCardComponent, InputComponent, TextareaComponent, SelectComponent, AutocompleteComponent, BreadcrumbsComponent, MenuItemComponent, ButtonComponent, DatePickerComponent, SearchComponent (the last three gained `inGroup`), AppLayoutComponent, TabsComponent, LayoutScrollService and both CVA bases also moved. TS4114 demands `override`, TS2415 fires on a redeclared private, TS2416 on a differing signature. `CheckboxComponent`, `ColorPickerComponent`, `MultiSelectComponent`, `OtpInputComponent`, `RadioGroupComponent`, `SliderComponent`, `SwitchComponent` and `TimePickerComponent` each gained `focus`, `hidden` and `hostElement`. `AutocompleteComponent` gained 9. `InputComponent` gained 8. `TextareaComponent` gained 7. `SelectComponent` gained 6. `DatePickerComponent` gained 4. `TableComponent` gained 30 and lost `distinctValuesOf`. `TabsComponent` gained 8. `AppLayoutComponent` gained `scrollReset`, `MenuItemComponent` `quiet`, `BreadcrumbsComponent` `allItems` and `maxItems`, `LayoutScrollService` `configureReset` and `resetStrategy`, `ModalComponent` and `ModalCardComponent` `dividers` and `subtitle`.",
       "searchHints": [
         "extends TableComponent",
         "extends InputComponent",
@@ -222,7 +222,51 @@
       "detect": [
         "extends TableComponent",
         "extends ",
-        "override "
+        "override ",
+        "extends AppLayoutComponent",
+        "AppLayoutComponent",
+        "extends AutocompleteComponent",
+        "AutocompleteComponent",
+        "extends BreadcrumbsComponent",
+        "BreadcrumbsComponent",
+        "extends ButtonComponent",
+        "ButtonComponent",
+        "extends CheckboxComponent",
+        "CheckboxComponent",
+        "extends ColorPickerComponent",
+        "ColorPickerComponent",
+        "extends DatePickerComponent",
+        "DatePickerComponent",
+        "extends InputComponent",
+        "InputComponent",
+        "extends LayoutScrollService",
+        "LayoutScrollService",
+        "extends MenuItemComponent",
+        "MenuItemComponent",
+        "extends ModalCardComponent",
+        "ModalCardComponent",
+        "extends ModalComponent",
+        "ModalComponent",
+        "extends MultiSelectComponent",
+        "MultiSelectComponent",
+        "extends OtpInputComponent",
+        "OtpInputComponent",
+        "extends RadioGroupComponent",
+        "RadioGroupComponent",
+        "extends SearchComponent",
+        "SearchComponent",
+        "extends SelectComponent",
+        "SelectComponent",
+        "extends SliderComponent",
+        "SliderComponent",
+        "extends SwitchComponent",
+        "SwitchComponent",
+        "extends TabsComponent",
+        "TabsComponent",
+        "extends TextareaComponent",
+        "TextareaComponent",
+        "extends TimePickerComponent",
+        "TimePickerComponent"
       ],
       "verify": "A typecheck reports no TS4114 / TS2415 / TS2416 on any class extending a DS component; a subclass that overrode isStriped() reads an ABSOLUTE row index now."
     },
@@ -256,27 +300,27 @@
     }
   ],
   "informational": [
-    "--ds-radius-inner now actually reaches the small affordances. 33 reads across fifteen component stylesheets took var(--radius-sm) directly - dropdown options, field clear buttons, calendar days, chips, tag and toast close buttons - so the role a consumer is told to retune reached exactly one component. They resolve the role now, and its default IS --radius-sm, so NOTHING MOVES. NO ACTION, but it changes what a square brand costs you: zeroing the three roles used to leave five surfaces rounded and now leaves one. Two deliberate exclusions - five focus-ring radii inside :focus-visible keep following the raw scale (a ring traces a box, it is not a brand surface), and the shared dropdown panel behind ds-select / ds-multi-select still reads --radius-md (8px) where every other panel resolves --ds-radius-panel (12px). That last one is a known inconsistency, not a hook: squaring it needs the scale. Worked example on the Theming page.",
-    "A 32px toolbar is `density=\"compact\"`, not a per-control height pin. Measured on a nine-control row: search, input, select, autocomplete, date-picker, time-picker, multi-select, number-stepper and button are all 40px by default and all 32px under [data-density=\"compact\"] on the container. DELETE-LIST MATERIAL: if you pin --ds-search-height, or reach past it to --hit-min, to get a shorter row - that pin can go, and after the height contract it was fighting the family rather than joining it. `--hit-min` is also a legitimate density knob, so discard hits where it is set deliberately rather than to shorten a search row. Known limit at the bottom of the scale: ds-multi-select and ds-autocomplete hold chips, so they set a min-height rather than a height and stop following the floor once it drops below what the text needs - under ultra-compact they are 33px and 29px where the rest reach 24px, because a density tier scales padding and hit targets but not the type scale. Compact is unaffected in practice (33 against 32). Documented on the Density page. (delete list: search-height-pinned-for-a-short-row)",
+    "--ds-radius-inner now actually reaches the small affordances. 33 reads across fifteen component stylesheets took var(--radius-sm) directly - dropdown options, field clear buttons, calendar days, chips, tag and toast close buttons - so the role a consumer is told to retune reached exactly one component. They resolve the role now, and its default IS --radius-sm, so NOTHING MOVES. NO ACTION, but it changes what a square brand costs you: zeroing the three roles now squares these affordances too, while surfaces that still read the raw scale - the ds-multi-select panel, menus and steppers among them - stay rounded. Two deliberate exclusions - five focus-ring radii inside :focus-visible keep following the raw scale (a ring traces a box, it is not a brand surface), and the ds-multi-select and ds-color-picker panels, each its own element, and the ds-menu host still hard-code --radius-md (8px), where the ds-select, ds-autocomplete, ds-date-picker, ds-time-picker and ds-popover panels resolve --ds-radius-panel (12px). That last one is a known inconsistency, not a hook: squaring it needs the scale. Worked example on the Theming page.",
+    "A 32px toolbar is `density=\"compact\"`, not a per-control height pin. Measured on a nine-control row: search, input, select, autocomplete, date-picker, time-picker, multi-select, number-stepper and button are all 40px by default and all 32px under [data-density=\"compact\"] on the root element. Not on an inner container: their heights read `--field-h-*`, which resolve once on `:root`, so the attribute lower down leaves them at 40px. DELETE-LIST MATERIAL: if you pin --ds-search-height, or reach past it to --hit-min, to get a shorter row - that pin can go, and after the height contract it was fighting the family rather than joining it. `--hit-min` is also a legitimate density knob, so discard hits where it is set deliberately rather than to shorten a search row. Known limit at the bottom of the scale: ds-multi-select and ds-autocomplete hold chips, so they set a min-height rather than a height and stop following the floor once it drops below what the text needs - under ultra-compact they are 33px and 29px where the rest reach 24px, because a density tier scales padding and hit targets but not the type scale. Compact is unaffected in practice (33 against 32). Documented on the Density page. (delete list: search-height-pinned-for-a-short-row)",
     "SIGNAL FORMS WORK — no adapter, no wrapper, no DS import. Put [formField] from @angular/forms/signals on any DS control and the form owns the value, validation, touched and disabled state. This was ALWAYS nearly true and nobody knew: FormValueControl requires exactly one member, a `value` model(), and every DS control already had it. Measured across all fifteen controls - thirteen bound with no library change at all. Additive, NO ACTION. WHAT CHANGED HERE, and it is why the other four rules now work too: min/max/maxLength on ds-input, ds-textarea and ds-number-stepper accept undefined on the WRITE side (the binder sends it for an unset bound; the read type is untouched); `readonly` joins ds-input, ds-textarea and ds-select as the contract spelling of the existing readOnly, because signal forms binds by NAME and a readonly() rule was reaching nothing; `minLength` and `pattern` are new native attributes on ds-input and ds-textarea; and `hidden` is declared on both control-value-accessor bases, so a hidden() rule now removes the control on all thirteen that carry one. focus() is implemented too, so focusBoundControl() - the usual way to reach the first invalid field after a failed submit - lands on the element that holds the value rather than on the host, which is a <ds-*> element and not focusable, so focus previously went nowhere. It resolves per control: the stepper's number box rather than its minus button, the tabbable radio rather than the first in the DOM, a picker's trigger rather than an input inside its closed panel. NOT implemented: dirty, pending and disabledReasons - the form still tracks them, and they are blocked on a visual decision rather than wiring. ERROR TEXT still comes from your validator: required(path.email, { message: '...' }) or a provideDsConfig field.errorMessages mapping, otherwise the field goes red with no words and only a dev warning explains why. Docs: the Practice > Signal Forms page, with a live form and the measured contract table.",
     "ds-modal / ds-modal-card gained [dividers] (default true = today's rendering). Additive, NO ACTION - but DELETE-LIST MATERIAL if you set --ds-modal-divider: transparent. Setting it transparent leaves the header and actions padding sized to clear a rule that is no longer drawn, stacking into a 35px gap where 16px was wanted. [dividers]=\"false\" drops the rules AND the padding in one move, because those are one design decision. If you kept a deliberate --ds-modal-divider colour, nothing changes. If you set it transparent, replace it with [dividers]=\"false\" and delete whatever padding overrides you wrote afterwards - and note --ds-modal-body-pad-y now falls to 0 in that mode, so set it explicitly if you want a value in both. (delete list: modal-divider-transparent-plus-padding)",
     "ds-modal / ds-modal-card gained a [title-badge] content slot and a subtitle input, so a dialog header can carry a status chip and a second line without abandoning the component. Additive, NO ACTION - both are absent by default and the header renders exactly as before. WORTH A LOOK IF YOU HAND-ROLLED A DIALOG: a header that has to carry `title + ds-badge` over a second line used to be a reason to drop ds-modal and re-implement the scrim, the body scroll lock, backdrop-click and Escape by hand - which costs the focus trap, focus restore, the enter/leave animation and, easily, the footer, leaving a destructive action next to the close button. The shape matches ds-page-header: [title-badge] projects beside the title, subtitle is a plain string under it. The accessible name is still the title string - projected markup never enters aria-labelledby. Retune with --ds-modal-subtitle-text-color and --ds-modal-subtitle-font-size.",
     "NEW COMPONENT ds-field-group: several controls in one bordered box (select + input, input + button, search + date-picker). Additive, NO ACTION. If you hand-rolled a glued row by stripping borders off two controls and wrapping them, this replaces it - wrap them in <ds-field-group> and mark the stretching one with grow. Six controls can be segments: ds-input, ds-select, ds-search, ds-autocomplete, ds-date-picker, ds-button. ds-number-stepper and ds-multi-select are excluded by design. Grouped controls must not be given a label or hint - the message row would break the glued line and is suppressed.",
     "ds-table gained [lazy] + (lazyLoad) for fetching rows as they scroll into view. Additive and opt-in, NO ACTION. If you paged a long list yourself to keep it responsive, this is the alternative: set lazy with virtualScroll and total, make data a SPARSE array total long, and write each fetched row at its ABSOLUTE index - gaps inside the window render skeleton rows. Note sortMode must not be \"client\" (it would sort only the rows that happen to have arrived); the new server default is already right.",
-    "--ds-field-height now reaches ds-autocomplete, ds-multi-select, ds-color-picker, ds-number-stepper, ds-split-button and the ds-modal confirm input. All six spelled their height as the raw --hit-* value, so the token the name advertises did nothing for them; they read the field scale now. Pixel-identical at every size EXCEPT ds-number-stepper at size=\"lg\" (its own actionable entry above). NO ACTION unless you had already worked around the gap by pinning height on one of these - that pin can go (delete list: field-height-pin-on-late-adopters).",
+    "--ds-field-height now reaches ds-autocomplete, ds-multi-select, ds-color-picker, ds-number-stepper, ds-split-button and the ds-modal confirm input. All six spelled their height as the raw --hit-* value, so the token the name advertises did nothing for them; they read the field scale now. Pixel-identical at every size EXCEPT ds-number-stepper at size=\"lg\" (its own actionable entry above), with [data-density] on the root element; under a [data-density] set on an inner container the --field-h-* scale keeps its root value, so these six no longer follow that container's density. NO ACTION unless you had already worked around the gap by pinning height on one of these - that pin can go (delete list: field-height-pin-on-late-adopters).",
     "The six connected panels (ds-select, ds-multi-select, ds-autocomplete, ds-color-picker, ds-date-picker, ds-time-picker) now build their overlay from one shared helper instead of six identical copies. Internal only, NO ACTION: the position, the 4px gap, the flip-above fallback, the panel classes and the scroll strategy are byte-for-byte what they were.",
     "ds-autocomplete gained dsAutocompletePrefix / dsAutocompleteSuffix content slots and [showChevron] (default true). Additive, NO ACTION. If you absolutely positioned a search glyph over the field and re-padded the input, or hid the arrow with a global rule reaching for .autocomplete-chevron, replace both: put the icon in the prefix slot and set [showChevron]=\"false\". The slot names and behaviour match ds-input's dsInputPrefix / dsInputSuffix.",
     "ds-autocomplete gained a public clear() that empties the value AND the typed text. If you reset the field by querying the inner <input> out of the DS's DOM and dispatching a synthetic input event, delete that and call clear() on a viewChild ref - the DOM shape it depended on is not part of the public API. It deliberately does not move focus. (delete list: autocomplete-synthetic-input-clear)",
-    "ds-autocomplete gained --ds-autocomplete-panel-radius (default --ds-radius-panel) and --ds-autocomplete-panel-maxh (default --picker-maxh). NO ACTION - both defaults equal today's values. The radius one matters if you square the radius roles: the autocomplete panel was the last portaled surface hard-coding --radius-lg, so it stayed rounded in an otherwise square brand. The max-height one replaces reaching for the private --picker-maxh, which ds-multi-select also reads.",
-    "ds-table gained --ds-table-head-pad-top / --ds-table-head-pad-bottom, plus showPageSize and showLabel forwarded to its footer pager. All additive with today's values as defaults, NO ACTION. Separately FIXED: density=\"compact\" pinned padding onto the cells, which out-specified every --ds-table-*-pad-* hook, so a compact table silently ignored all of them; it now retunes the density tokens instead. Spacing is unchanged - but if you fought that with an !important, it can go. (delete list: compact-cell-padding-important)",
+    "ds-autocomplete gained --ds-autocomplete-panel-radius (default --ds-radius-panel) and --ds-autocomplete-panel-maxh (default --picker-maxh). NO ACTION - both defaults equal today's values. The radius one matters if you square the radius roles: the autocomplete panel hard-coded --radius-lg, so it stayed rounded when the roles were squared. The max-height one replaces reaching for the private --picker-maxh, which ds-multi-select also reads.",
+    "ds-table gained --ds-table-head-pad-top / --ds-table-head-pad-bottom, plus showPageSize and showLabel forwarded to its footer pager. All additive with today's values as defaults, NO ACTION. Separately FIXED: density=\"compact\" pinned padding onto the cells, which out-specified every --ds-table-*-pad-* hook, so a compact table silently ignored all of them; it now retunes the density tokens instead. Spacing is unchanged except the empty-state cell, which keeps its own 16px padding where compact gave it 8px 12px - but if you fought that with an !important, it can go. (delete list: compact-cell-padding-important)",
     "ds-date-picker and ds-time-picker resolve their trigger's horizontal padding from --field-pad-x (new hooks: --ds-date-picker-trigger-pad-x, --ds-time-picker-trigger-pad-x) instead of a hard-coded --space-3. Identical at the default density; the difference shows under [data-density], where the token shrinks and the literal did not, leaving a picker 8px wider than the input beside it. NO ACTION unless you hand-pinned picker padding to compensate.",
-    "The ds-auth-shell -> ds-auth-layout rename is vocabulary only: no input, output, slot, token value or behaviour changed, and it is the same component 0.8.0 shipped. If you never adopted ds-auth-shell (it was added in 0.8.0), there is nothing to do.",
+    "The ds-auth-shell -> ds-auth-layout rename itself changes only names; the same release also adds `landmark`, four tokens and short-viewport compression (entries below). If you never adopted ds-auth-shell (added in 0.8.0), there is nothing to do.",
     "FIXED in ds-textarea: size=\"sm\" and size=\"lg\" rendered the md vertical padding (12px top and bottom) regardless of the size. The size blocks set the inner textarea's vertical pad, but a :host-prefixed pin at the end of the file out-ranked them once emulated encapsulation shimmed both selectors - it carries one more attribute than the size selector. There are now three pins, one per size, and the size blocks keep only the horizontal padding they own. NO ACTION: the change is visible only on a non-md textarea and the md default is unchanged. Note that retuning --ds-input-pad-y previously moved all three sizes together; if you compensated for the wrong padding with your own override on a sm or lg textarea, that override now stacks on the corrected value and can go (delete list: textarea-size-padding-compensation).",
     "ds-auth-layout now COMPRESSES its own chrome on a short viewport: block padding, the column gap, the letter-mark tile and the masthead inner gap clamp against svh. No action - behaviour only, and a viewport 800px tall or more renders exactly what it did before. Read that as a VIEWPORT height, not a screen size: a 1366x768 laptop sits near 630px after browser and OS chrome, and a 1080p screen at 150% display scaling near 585px, so plenty of desktops do get the compressed furniture. Type is deliberately NOT clamped: the wordmark and the tile's glyph were measured to buy zero vertical space (the tile sets the row height at every viewport, and the glyph sits in a fixed-size box) while flattening the brand against a fixed 14px tagline, so both keep the fixed sizes 0.8.0 ships. Below 800px the remaining furniture shrinks so it is not what pushes a card into scrolling (~131px instead of ~219px at a landscape phone's ~330px). Two tokens opt out per dimension: --ds-auth-layout-pad-block and --ds-auth-layout-mark-size; setting any of those or the existing --ds-auth-layout-gap to a fixed value stops that one compressing. A card taller than the remaining space still scrolls - that is intended.",
     "ds-auth-layout audit fixes, all additive or corrective - NO ACTION. The letter-mark tile is now aria-hidden (a screen reader announced 'A MyAdmin', now 'MyAdmin') and carries flex-shrink: 0 so a long wordmark cannot squash it out of square; logoLetter on its own renders its tile instead of nothing; the glyph is taken by code point rather than charAt(0), which returned half a surrogate pair for a brand starting with an emoji; box-sizing: border-box is declared on the host rather than inherited, so the component still avoids its own overflow scrollbar for a consumer composing style partials without styles/reset. The four env(safe-area-inset-*) calls gained 0px fallbacks and moved to physical padding-left/padding-right so the insets cannot swap sides under RTL - and note they are inert unless YOUR app sets viewport-fit=cover in its viewport meta, which the library cannot set for you. New tokens, both defaulting to today's behaviour: --ds-auth-layout-mark-radius (the tile's radius was the one value with no override hop) and --ds-auth-layout-brand-max-height (none by default; set it to cap a projected [brand] logo, which nothing constrained). New input landmark, default 'none': set landmark=\"main\" on a standalone auth page so the card - an <article>, which is not a landmark - becomes something a screen-reader user can jump to; it stays opt-in because this layout is also embedded inside pages that already own a main.",
     "ds-icon now logs a dev-mode warning when an icon name is in neither the DS set nor your provideDsIcons() registry - previously it rendered an empty <svg> silently. No action, and nothing changes in production. Expect the warning to surface real typos the moment you upgrade.",
     "ds-app-layout gained scrollReset: \"path\" | \"never\" | \"always\" (default \"path\" = existing behaviour, so NO ACTION), and LayoutNavigationService is now exported. If you wrote your own \"did the path change?\" check to work around the layout resetting scroll - or to skip a view transition, or to reset a tab - replace it with inject(LayoutNavigationService).pathChanged: it is NavigationEnd, path only, de-duplicated, and it skips a navigation carrying state: { dsSamePage: true }. Note a naive split(\"?\") is NOT equivalent, it keeps the fragment this stream strips. To stop the layout resetting scroll on a paged or filtered list, set scrollReset=\"never\" and call LayoutScrollService.scrollToTop() where you actually want it.",
-    "Options in ds-select / ds-autocomplete / ds-multi-select panels now have a pressed state (they had hover only, which does nothing on touch). No action - visual only. If you styled :active on .option yourself to work around it, you can drop that override; if you want a different pressed fill, it reads --surface-muted (neutral rows) and --primary-subtitle (the selected row). (delete list: dropdown-option-active-override)",
+    "Options in ds-select / ds-multi-select panels now have a pressed state (they had hover only, which does nothing on touch); ds-autocomplete styles its own rows and still has hover only. No action - visual only. If you styled :active on .option yourself to work around it, you can drop that override; if you want a different pressed fill, it reads --surface-muted (neutral rows) and --primary-subtitle (the selected row). (delete list: dropdown-option-active-override)",
     "ds-table gained filterMode: \"client\" | \"server\" | \"none\" and columnFilterOptions. It resolves to \"server\" when unset - see the table-sort-filter-mode-default-server item, which is where the action for that lives. If your table is server-paged (you bind `total`) and any column has filter: \"set\", you WANT filterMode=\"server\" plus columnFilterOptions with the real value domain - otherwise the checklist offers only the values on the current page and then filters locally on top of the server. A dev warning now points this out.",
     "ds-table gained dsHeaderFilter, a template slot for a header filter the built-in checklist cannot express (date range, numeric threshold, async options). Additive, NO ACTION. If you built a host-owned popover outside the table for this, you can move it inside: <ng-template dsHeaderFilter=\"key\" [active]=\"...\" let-close=\"close\">. The table keeps the button, the popover and the active styling; `active` is how you tell it your criterion is set, and `close` dismisses the panel after applying. A projected filter also makes the column filterable on its own - you do not additionally need filter: \"set\".",
     "ds-table now announces sort state and row range through its role=\"status\" region (\"Sorted by Owner, ascending\", \"Showing 1-25 of 240\"). No action - it is additive and the first render stays silent, since aria-live announces changes rather than initial content. If you added your own live region around the table for this, remove it or you will get double announcements. Wording is overridable per table through the sortAnnouncement and rangeAnnouncement inputs, which take the facts and return the sentence. (delete list: table-own-live-region)",
@@ -386,7 +430,7 @@
         "-radius: 0"
       ],
       "why": "A dozen scattered `--ds-*-radius: 0`",
-      "replaceWith": "For a fully square brand, four lines: `--radius-sm/md/lg/xl: 0` (leave `--radius-pill`). Measured — the three ROLES alone leave options, clear buttons and dropdown panels rounded; they are the tool for squaring one family and keeping another. Worked example on the Theming page"
+      "replaceWith": "For a fully square brand, four lines: `--radius-sm/md/lg/xl: 0` (leave `--radius-pill`). The radius roles alone leave the multi-select panel, menus, steppers and other surfaces that still read the raw scale rounded; they are the tool for squaring one family and keeping another. Worked example on the Theming page"
     },
     {
       "id": "overlay-pane-squared-globally",
@@ -517,10 +561,9 @@
         ".option",
         ":active",
         "ds-select",
-        "ds-autocomplete",
         "ds-multi-select"
       ],
-      "why": "An :active rule you wrote on a panel option because the options had hover only, which does nothing on touch. The components paint a pressed state themselves now.",
+      "why": "An :active rule you wrote on a ds-select or ds-multi-select panel option because the options had hover only, which does nothing on touch. Those two paint a pressed state themselves now; ds-autocomplete styles its own rows and still has none, so an :active rule on its options stays.",
       "replaceWith": "nothing - or retune it through --surface-muted and --primary-subtitle"
     },
     {

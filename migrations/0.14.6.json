@@ -30,7 +30,7 @@
       ],
       "action": "None, unless your code builds a complete DsIntl object of its own: add datePicker.previousMonth and datePicker.nextMonth, the names of the calendar's month arrows.",
       "appliesWhen": "Only an object or signal typed as the full DsIntl, not as DsIntlOverrides. provideDsIntl with a partial override, and every app that leaves DS_INTL alone, is unaffected.",
-      "pitfall": "An object that spreads DS_INTL_DEFAULTS.datePicker compiles, but a datePicker section written out key by key without the spread fails with TS2741 on previousMonth.",
+      "pitfall": "An object that spreads DS_INTL_DEFAULTS.datePicker compiles, but a datePicker section written out key by key without the spread fails with TS2739 on previousMonth and nextMonth.",
       "restore": null,
       "verify": "The app builds, and every complete DsIntl object it declares has datePicker.previousMonth and datePicker.nextMonth."
     },
@@ -111,7 +111,7 @@
       "new": null,
       "surface": "none",
       "action": "None, unless your own code or tests focus a series marker inside a line chart or a category-cursor ds-chart by Tab order: they now reach the category band first and a marker through Up/Down.",
-      "appliesWhen": "ds-line-chart and a ds-chart whose cursor resolves to category, interactive. Charts whose pointer picks a mark are unaffected.",
+      "appliesWhen": "An interactive ds-line-chart with tooltip=\"axis\" (the default), and an interactive ds-chart whose cursor resolves to category. Charts whose pointer picks a mark are unaffected.",
       "pitfall": "An end-to-end test that tabs to a marker and presses Enter now lands on the band and pins it instead of firing pointClicked.",
       "restore": null,
       "verify": "Tab into a line chart: the band is ringed, Up focuses a marker, Enter fires pointClicked."

@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 /* Truncation contract:
    Badge / tag label - single line, ellipsis at ~22 ch, tooltip on hover when clipped.
    Status pill - no clip, lifecycle labels are fixed and short.

@@ -2,9 +2,10 @@
   anchor="tooltip"
   eyebrow="Components"
   title="Tooltip"
-  [apiKeys]="['tooltip:TooltipPanelComponent']">
+  [apiKeys]="['tooltip:TooltipPanelComponent', 'info-hint', 'definition-term']">
   <span lede>
-    Hover or focus popup for truncated text, keyboard hints and short clarifications, via
+    Hover or focus popup for truncated text, keyboard hints and short
+    clarifications, via
     <code class="t-mono-inline">
       [dsTooltip]
     </code> directive.
@@ -111,8 +112,7 @@
     on <code class="t-mono-inline">:root</code>:
   </p>
 
-  <pre
-    class="t-mono-block"><code>:root {{ '{' }}
+  <pre class="t-mono-block"><code>:root {{ '{' }}
   --ds-tooltip-bg-color: var(--surface-inverted);
   --ds-tooltip-text-color: var(--text-inverted);
   --ds-tooltip-border-color: transparent;
@@ -122,14 +122,47 @@
     Live demo
   </h3>
 
-  <p class="block-desc t-s">
-    Opens after <code class="t-mono-inline">dsTooltipDelay</code> (120 ms), hides at once;
-    Escape closes it. Without room on the
-    <code class="t-mono-inline">
-      dsTooltipPlacement
-    </code> side it flips, arrow included, 8px clear
-    of the viewport edge.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Opens after <code class="t-mono-inline">dsTooltipDelay</code> (120 ms),
+      hides at once; <kbd>Esc</kbd> closes it.
+    </li>
+
+    <li>
+      No room on the <code class="t-mono-inline">dsTooltipPlacement</code> side
+      - flips, arrow included, 8px clear of the viewport edge.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        **text**
+      </code> - bold; a line break shows as
+      a line break.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [dsTooltipArrow]="false"
+      </code> - no arrow.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        \*\*
+      </code> - a literal
+      <code class="t-mono-inline">
+        **
+      </code>.
+    </li>
+
+    <li>
+      Unpaired <code class="t-mono-inline">**</code> - stays as typed.
+    </li>
+
+    <li>
+      HTML markup - shown as text, never parsed.
+    </li>
+  </ul>
 
   <div class="demo">
     <ds-button
@@ -149,6 +182,391 @@
       [dsTooltip]="'Last synced 14m ago'">
       Hover me · bottom
     </ds-button>
+
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm"
+      [dsTooltip]="'Counts **only confirmed** seats'">
+      Hover me · bold
+    </ds-button>
+
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm"
+      [dsTooltip]="'Matches src/\\*\\*/*.ts'">
+      Hover me · escaped
+    </ds-button>
+
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm"
+      [dsTooltip]="'<b>Tags</b> and a lone ** show as typed'">
+      Hover me · as typed
+    </ds-button>
+
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm"
+      [dsTooltipArrow]="false"
+      [dsTooltip]="'No arrow on this one'">
+      Hover me · no arrow
+    </ds-button>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Pin on click
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsTooltipPinOnClick
+    </code>: opens with no delay;
+    a click keeps it open after the pointer leaves. Opt in only where the click
+    does nothing else.
+  </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      Closes on a click outside, <kbd>Esc</kbd>, blur or a second click on the trigger.
+    </li>
+
+    <li>
+      Without it - a click closes the tip.
+    </li>
+
+    <li>
+      Any scroll (window or container) closes the tip, pinned or not, and a <code class="t-mono-inline">ds-menu-item</code> submenu.
+    </li>
+  </ul>
+
+  <div class="demo">
+    <ds-button
+      dsTooltipPinOnClick
+      color="neutral"
+      variant="outline"
+      size="sm"
+      [dsTooltip]="'Stays open after a click'">
+      Click to pin
+    </ds-button>
+  </div>
+
+  <h3
+    data-claude-design
+    class="block-title t-h4"
+    data-for="info-hint">
+    Info hint
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      &lt;ds-info-hint&gt;
+    </code>: an icon button
+    named by <code class="t-mono-inline">ariaLabel</code>; its
+    <code class="t-mono-inline">
+      text
+    </code> shows on hover and focus, pins on
+    click.
+  </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        icon="help"
+      </code> (default) - a question mark.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        icon="info"
+      </code> - an "i".
+    </li>
+  </ul>
+
+  <div class="demo">
+    <span class="t-s info-row">
+      Conversion rate
+      <ds-info-hint
+        ariaLabel="About conversion rate"
+        text="Share of contacts who reached the goal step, of all who entered the journey." />
+    </span>
+
+    <span class="t-s info-row">
+      Conversion rate
+      <ds-info-hint
+        icon="info"
+        ariaLabel="About conversion rate, info icon"
+        text="The same hint with the info icon." />
+    </span>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Definition term
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsDefinitionTerm="…"
+    </code>: a dotted underline;
+    the definition shows on hover and focus, a click pins it.
+  </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      On a <code class="t-mono-inline">&lt;span&gt;</code> - adds
+      <code class="t-mono-inline">
+        tabindex="0"
+      </code>,
+      <code class="t-mono-inline">
+        role="button"
+      </code>, <kbd>Enter</kbd> /
+      <kbd>
+        Space
+      </kbd>; a <code class="t-mono-inline">&lt;button&gt;</code> has
+      them.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [pinOnClick]="false"
+      </code> - where the click
+      already acts, as on a sortable <code class="t-mono-inline">ds-table</code>
+      header.
+    </li>
+  </ul>
+
+  <div class="demo">
+    <p class="t-s">
+      Contacts who
+      <span
+        dsDefinitionTerm="Left the journey before the goal step, by any exit rule."
+        >
+        exited
+      </span
+      >
+      the journey are not counted as
+      <button
+        type="button"
+        dsDefinitionTerm="Reached the goal step within the attribution window.">
+        converted
+      </button>
+    </p>
+  </div>
+
+  <p class="block-desc t-s">
+    Clipped term: the tip shows it in bold above the definition, unless the
+    definition contains it.
+  </p>
+
+  <div class="demo">
+    <span
+      class="clip-line t-s"
+      dsDefinitionTerm="Contacts who reached the goal step within the attribution window.">
+      Converted within the attribution window
+    </span>
+
+    <span
+      class="clip-line t-s"
+      dsDefinitionTerm="Converted within the attribution window: contacts who reached the goal step in time.">
+      Converted within the attribution window
+    </span>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Trigger states
+  </h3>
+
+  <ul class="block-desc t-s">
+    <li>
+      Hover - the underline turns solid and darker.
+    </li>
+
+    <li>
+      Press - tints the term.
+    </li>
+
+    <li>
+      Pinned - the accent until the tip closes; the trigger carries
+      <code class="t-mono-inline">
+        data-ds-tooltip-pinned
+      </code>, styleable on
+      any <code class="t-mono-inline">dsTooltipPinOnClick</code> host.
+    </li>
+
+    <li>
+      No state changes the term's size; the line around it stays put.
+    </li>
+  </ul>
+
+  <p class="block-desc t-s">
+    Same cue on your own trigger, from
+    <code class="t-mono-inline">
+      styles/pinned
+    </code>:
+  </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        pinned.cue()
+      </code> - pinned.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        pinned.cue-hover()
+      </code> - hover.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        pinned.cue-pressed()
+      </code> - press.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        $underline: false
+      </code> - on each, for an
+      icon trigger.
+    </li>
+  </ul>
+
+  <pre class="t-mono-block">{{ pinnedSnippet }}</pre>
+
+  <div class="states is-surface">
+    <div class="state">
+      <span class="state-lbl">
+        Rest
+      </span>
+
+      <div class="state-stage is-horiz t-s">
+        <span dsDefinitionTerm="Left the journey before the goal step.">
+          exited
+        </span>
+
+        <ds-info-hint
+          ariaLabel="About conversion rate"
+          text="Share of contacts who reached the goal step." />
+      </div>
+    </div>
+
+    <div class="state">
+      <span class="state-lbl">
+        Hover (forced)
+      </span>
+
+      <div class="state-stage is-horiz t-s">
+        <span
+          class="pin-hover"
+          dsDefinitionTerm="Left the journey before the goal step.">
+          exited
+        </span>
+
+        <ds-info-hint
+          class="pin-hover"
+          ariaLabel="About conversion rate"
+          text="Share of contacts who reached the goal step." />
+      </div>
+    </div>
+
+    <div class="state">
+      <span class="state-lbl">
+        Pressed (forced)
+      </span>
+
+      <div class="state-stage is-horiz t-s">
+        <span
+          class="pin-active"
+          dsDefinitionTerm="Left the journey before the goal step.">
+          exited
+        </span>
+
+        <ds-info-hint
+          class="pin-active"
+          ariaLabel="About conversion rate"
+          text="Share of contacts who reached the goal step." />
+      </div>
+    </div>
+
+    <div class="state">
+      <span class="state-lbl">
+        Pinned (forced)
+      </span>
+
+      <div class="state-stage is-horiz t-s">
+        <span
+          class="pin-pinned"
+          dsDefinitionTerm="Left the journey before the goal step.">
+          exited
+        </span>
+
+        <ds-info-hint
+          class="pin-pinned"
+          ariaLabel="About conversion rate"
+          text="Share of contacts who reached the goal step." />
+      </div>
+    </div>
+
+    <div class="state">
+      <span class="state-lbl">
+        Pinned and hovered (forced)
+      </span>
+
+      <div class="state-stage is-horiz t-s">
+        <span
+          class="pin-pinned-hover"
+          dsDefinitionTerm="Left the journey before the goal step.">
+          exited
+        </span>
+
+        <ds-info-hint
+          class="pin-pinned-hover"
+          ariaLabel="About conversion rate"
+          text="Share of contacts who reached the goal step." />
+      </div>
+    </div>
+
+    <div class="state">
+      <span class="state-lbl">
+        Pinned and pressed (forced)
+      </span>
+
+      <div class="state-stage is-horiz t-s">
+        <span
+          class="pin-pinned-active"
+          dsDefinitionTerm="Left the journey before the goal step.">
+          exited
+        </span>
+
+        <ds-info-hint
+          class="pin-pinned-active"
+          ariaLabel="About conversion rate"
+          text="Share of contacts who reached the goal step." />
+      </div>
+    </div>
+
+    <div class="state">
+      <span class="state-lbl">
+        Focus (forced)
+      </span>
+
+      <div class="state-stage is-horiz t-s">
+        <span
+          class="pin-focus"
+          dsDefinitionTerm="Left the journey before the goal step.">
+          exited
+        </span>
+
+        <ds-info-hint
+          class="pin-focus"
+          ariaLabel="About conversion rate"
+          text="Share of contacts who reached the goal step." />
+      </div>
+    </div>
   </div>
 
   <h3 class="block-title t-h4">
@@ -158,11 +576,25 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       dsTooltipWhenClipped
-    </code> shows the tip only while the host is
-    clipped, re-tested on every open. Without <code class="t-mono-inline">dsTooltip</code> it
-    shows the host's own text. <code class="t-mono-inline">dsTooltipTextSelector</code> aims the
-    clip test and text at a descendant; no match, no tip.
+    </code> shows the tip only
+    while the host is clipped, re-tested on every open.
   </p>
+
+  <ul class="rules t-s">
+    <li>
+      No <code class="t-mono-inline">dsTooltip</code> - shows the host's own text.
+    </li>
+
+    <li>
+      A selector - aims the clip test and the text at the match; no match, no tip.
+    </li>
+
+    <li>
+      Bound - a selector or <code class="t-mono-inline">false</code>.
+    </li>
+  </ul>
+
+  <pre class="t-mono-block">{{ whenClippedSnippet }}</pre>
 
   <div class="demo">
     <span
@@ -174,26 +606,126 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       "
-      tabindex="0"
       dsTooltipWhenClipped>
       Rotterdam, Maasvlakte II deep-sea terminal
     </span>
 
     <span
       class="t-s"
-      tabindex="0"
       dsTooltipWhenClipped>
       Antwerp
     </span>
   </div>
 
-  <p class="block-desc t-s">
-    A clipped host that cannot take focus (label in a button, cell of a clickable row) opens when
-    keyboard focus lands on its nearest focusable ancestor; blur, a click or any key closes it.
-    That ancestor must be a Tab-reachable control: native, or a widget role (button, link, tab,
-    option, row, combobox). A focusable container (tab panel, scroll region), negative tabindex
-    or click opens nothing. Only the first clipped value per control opens.
-  </p>
+  <div class="demo">
+    <div
+      class="clip-row"
+      dsTooltipWhenClipped=".label">
+      <span class="clip-line label t-s">
+        Rotterdam, Maasvlakte II deep-sea terminal
+      </span>
+
+      <span class="t-xs">
+        Berth 4
+      </span>
+    </div>
+
+    <div
+      class="clip-row"
+      [dsTooltipWhenClipped]="truncate() ? ':scope > .cell' : false">
+      <span
+        class="cell t-s"
+        [class.clip-line]="truncate()">
+        Quarterly renewal notice for commercial policyholders
+      </span>
+    </div>
+
+    <ds-switch
+      label="Truncate"
+      [(checked)]="truncate" />
+  </div>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Host
+        </th>
+
+        <th>
+          Keyboard path to the tip
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          Focusable, or holds a control
+        </td>
+
+        <td>
+          Focus on the host or on that control opens it.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Inside a control (native, or role <code class="t-mono-inline">button</code>, <code class="t-mono-inline">link</code>, <code class="t-mono-inline">tab</code>, <code class="t-mono-inline">option</code>, <code class="t-mono-inline">row</code>, <code class="t-mono-inline">combobox</code>, …)
+        </td>
+
+        <td>
+          Keyboard focus on the control opens it; blur, a click or any key closes it. First clipped value per control only.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Neither
+        </td>
+
+        <td>
+          Takes <code class="t-mono-inline">tabindex="0"</code> while clipped; drops it once the text fits and focus is elsewhere.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="rules t-s">
+    <li>
+      A <code class="t-mono-inline">tabindex</code> you set is never touched; <code class="t-mono-inline">tabindex="-1"</code> keeps a clipped value out of the Tab order.
+    </li>
+
+    <li>
+      Focus on a container (tab panel, scroll region) opens nothing, so a value inside one takes its own tab stop.
+    </li>
+  </ul>
+
+  <div class="demo">
+    <div class="clip-card">
+      <span
+        class="clip-chip t-xs"
+        dsTooltipWhenClipped>
+        RENEWAL-COMMERCIAL-2026-Q4-NORTH
+      </span>
+
+      <span
+        class="clip-chip t-xs"
+        dsTooltipWhenClipped>
+        AUTO-24
+      </span>
+
+      <a
+        class="t-s"
+        href="#tooltip">
+        <span
+          class="clip-line"
+          dsTooltipWhenClipped>
+          Quarterly renewal notice for commercial policyholders
+        </span>
+      </a>
+    </div>
+  </div>
 
   <div class="demo">
     <ds-button

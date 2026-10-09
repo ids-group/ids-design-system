@@ -249,6 +249,7 @@ export const DS_INTL_DEFAULTS: DsIntl = {
     other: 'Other',
     noVisibleSeries: 'All series are hidden',
     target: (value) => `Target ${value}`,
+    rowsUnder: (label) => `Rows under ${label}`,
     noted: (notes) => `Noted: ${notes.join('; ')}.`,
     noData: (label) => `${label}. No data.`,
     onePoint: (label, value, at) => `${label}, one point: ${value} at ${at}.`,

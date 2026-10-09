@@ -1,5 +1,7 @@
 @use '../../styles/control-line' as control-line;
 @use '../../styles/check-box' as check-box;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   @include check-box.resolvers;

@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 .references {
   --_chart-threshold-color: var(--ds-chart-threshold-color, var(--chart-threshold-color));
   --_chart-threshold-band-opacity: var(--ds-chart-threshold-band-opacity, var(--chart-threshold-band-opacity));

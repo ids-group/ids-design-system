@@ -12,7 +12,8 @@ A running total, bar by bar: what a figure started at, what moved it, and what i
 - `tickCount` (default `5`): a hint, not a count. Ticks snap to a round step.
 - `interactive` (default `false`): turns on the affordance and the keyboard route, and fires `barClicked`.
 - `frame`: `'auto'` (default) | `'none'`. `dataTable`: `'none'` (default) | `'toggle'` | `'visible'`.
-- `loading` (default `false`), `error` (default `false`), `emptyText` (default `"No data"`), `errorText` (default `"Could not load the data"`).
+- `loading` (default `false`), `error` (default `false`), `emptyText` (default `"No data"`), `errorText` (default `"Could not load the data"`). With data on screen, `loading` keeps the plot under a `ds-loading-overlay` until it clears.
+- `skeletonCount` (default `5`): how many steps the skeleton draws until the data's own count is known.
 - `valueFormat`: `(value: number, location) => string`.
 - `barClicked`: the `WaterfallChartDatum` that was clicked.
 
