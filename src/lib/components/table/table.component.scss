@@ -480,11 +480,11 @@
       display: block;
     }
 
-    /* A track from 0 to the text's width, capped by `fitGrowingClips` to what the other columns
-       leave, so the column never forces horizontal scroll. */
-    .cell-clip.grows {
-      display: grid;
-      grid-template-columns: minmax(0, max-content);
+    /* The text adds nothing to the column's width: the table sets the clip's min and max width
+       from what the other columns leave, up to the widest value. */
+    .cell-clip.grows > .cell-clip-text {
+      width: 0;
+      min-width: 100%;
     }
 
     .cell-clip-text {
