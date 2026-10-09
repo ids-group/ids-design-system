@@ -261,10 +261,8 @@
     Every chart draws these: empty data shows
     <code class="t-mono-inline">
       emptyText
-    </code>,
-    <code class="t-mono-inline">
-      [loading]
-    </code> a skeleton, and
+    </code>
+    and
     <code class="t-mono-inline">
       [error]
     </code>
@@ -277,13 +275,52 @@
     </code>.
   </p>
 
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [loading]
+    </code> draws a skeleton in the chart's
+    own shape only while there is no data. With data on screen, a reload keeps
+    the plot under the scrim and spinner of
+    <code class="t-mono-inline">
+      ds-loading-overlay
+    </code>, caption uncovered; pass
+    empty data while loading to show the skeleton on every load.
+    <code class="t-mono-inline">
+      skeletonCount
+    </code> sets how many marks the
+    skeleton draws until the data's own count is known (default
+    <code class="t-mono-inline">
+      5
+    </code>): columns on
+    <code class="t-mono-inline">
+      ds-chart
+    </code> and
+    <code class="t-mono-inline">
+      ds-column-chart
+    </code>, slices on
+    <code class="t-mono-inline">
+      ds-pie-chart
+    </code>, stages on
+    <code class="t-mono-inline">
+      ds-funnel-chart
+    </code>, steps on
+    <code class="t-mono-inline">
+      ds-waterfall-chart
+    </code>.
+  </p>
+
   <div class="grid-2">
     <ds-column-chart
       caption="Empty"
       [data]="noPoints" />
 
     <ds-column-chart
-      caption="Loading"
+      caption="Loading, no data"
+      loading
+      [data]="noPoints" />
+
+    <ds-column-chart
+      caption="Reloading"
       loading
       [data]="eventPoints" />
 
@@ -298,8 +335,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    The panel takes the pointer, so its number can be zoomed and selected
-    (WCAG 1.4.13).
+    A pinned panel takes the pointer, so its number can be zoomed and selected
+    (WCAG 1.4.13); an unpinned one lets the pointer through to the plot.
     <kbd>
       Esc
     </kbd> closes it until the pointer reaches another mark.

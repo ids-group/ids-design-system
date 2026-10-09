@@ -463,6 +463,46 @@
     </div>
   </div>
 
+  <h3 class="block-title t-h4">
+    Skeleton count
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      skeletonCount
+    </code> sets how many columns the loading
+    skeleton draws before the data is known (default
+    <code class="t-mono-inline">
+      5
+    </code>); once it is, the skeleton takes the
+    data's own count.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-column-chart
+        dataTable="none"
+        loading
+        [data]="[]" />
+
+      <div class="state-cell-label">
+        skeletonCount = 5 (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-column-chart
+        dataTable="none"
+        loading
+        [skeletonCount]="12"
+        [data]="[]" />
+
+      <div class="state-cell-label">
+        skeletonCount = 12
+      </div>
+    </div>
+  </div>
+
   <details class="edge-cases">
     <summary>
       <h3 class="block-title t-h4">

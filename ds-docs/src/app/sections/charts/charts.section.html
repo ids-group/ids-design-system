@@ -293,6 +293,22 @@
     </code> puts each label in
     a column before its bar; labels, bars, values and percents line up across
     rows.
+    <code class="t-mono-inline">
+      --ds-bar-chart-label-column-max-width
+    </code>
+    caps the label column (default <code class="t-mono-inline">40%</code>), and
+    <code class="t-mono-inline">
+      --ds-bar-chart-row-gap
+    </code> defaults to
+    <code class="t-mono-inline">
+      var(--space-3)
+    </code> here, against
+    <code class="t-mono-inline">
+      var(--space-5)
+    </code> under
+    <code class="t-mono-inline">
+      'top'
+    </code>.
   </p>
 
   <ds-bar-chart
@@ -346,6 +362,14 @@
       showPercent
     </code> unless it sets its own. The
     data table lists every child, open or closed. One level deep.
+    <code class="t-mono-inline">
+      DsIntl.chart.rowsUnder
+    </code> names the disclosure
+    button. With
+    <code class="t-mono-inline">
+      interactive
+    </code>, <kbd>Right</kbd> opens a
+    closed group and <kbd>Left</kbd> closes an open one.
   </p>
 
   <ds-bar-chart
@@ -665,7 +689,12 @@
 
     <p class="block-desc t-s">
       A value at or below zero draws an empty track and keeps its label; one
-      huge value flattens every other track.
+      huge value flattens every other track. A non-finite value
+      (<code class="t-mono-inline">NaN</code>,
+      <code class="t-mono-inline">
+        Infinity
+      </code>) draws no bar and prints an
+      em dash as its value and percent.
     </p>
 
     <div class="states is-cols-2">

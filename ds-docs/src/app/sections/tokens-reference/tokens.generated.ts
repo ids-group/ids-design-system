@@ -2924,7 +2924,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-bar-chart-track-height",
         "value": "12px",
-        "notes": "Thickness of a ds-bar-chart bar and its track (default 8px)."
+        "notes": "Thickness of a ds-bar-chart bar and its track (default 12px)."
       },
       {
         "name": "--ds-bar-chart-cap-radius",
@@ -2934,7 +2934,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-bar-chart-row-gap",
         "value": "var(--space-5)",
-        "notes": "Vertical gap between ds-bar-chart rows (default --space-3)."
+        "notes": "Vertical gap between ds-bar-chart rows (default --space-5; --space-3 under labelPosition=\"start\")."
       },
       {
         "name": "--ds-bar-chart-label-gap",
@@ -2944,17 +2944,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-bar-chart-label-column-max-width",
         "value": "40%",
-        "notes": ""
+        "notes": "Widest the label column grows under labelPosition=\"start\" (default 40%)."
       },
       {
         "name": "--ds-bar-chart-child-fill-opacity",
         "value": "0.55",
-        "notes": ""
+        "notes": "Opacity of a child row's bar under a ds-bar-chart group, in the parent's colour unless the child sets its own (default 0.55)."
       },
       {
         "name": "--ds-bar-chart-divider-color",
         "value": "var(--border-default)",
-        "notes": ""
+        "notes": "Dashed divider above a detached ds-bar-chart row (default --border-default)."
       },
       {
         "name": "--ds-motion-chart-mark-duration",
