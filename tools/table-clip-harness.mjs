@@ -194,7 +194,7 @@ async function run(url, outDir) {
     result.tooltips = {};
     for (const [id, key, row] of [
       ['trunc-tight', 'email', 0],
-      ['ecm-microsites-cta', 'name', 1],
+      ['ecm-microsites-cta', 'name', 3],
       ['templates-hints', 'email', 0],
       ['trunc-room', 'email', 1],
       ['delta-review-removed-shipped-663', 'email', 0],
@@ -481,7 +481,7 @@ function check(outDir, baseDir) {
       fail(`tooltip ${label}: got ${JSON.stringify(tips[label])}`);
   };
   expectTip('trunc-tight email 0', 'alexandra.montgomery-fitzgerald@');
-  expectTip('ecm-microsites-cta name 1', 'Jordan Avery');
+  expectTip('ecm-microsites-cta name 3', 'Bartholomew Featherstonehaugh');
   expectTip('templates-hints email 0', 'alexandra.montgomery-fitzgerald@');
   expectTip('trunc-room email 1', null);
   expectTip('delta-review-removed-truncate-663 email 0', 'margaret.whitfield@');
@@ -493,7 +493,8 @@ function check(outDir, baseDir) {
           `${label}: ${column.key} clips the glyphs of ${column.shaved} cell(s) top or bottom`,
         );
   };
-  for (const [id, measured] of Object.entries(result.cases)) glyphs(id, measured);
+  for (const [id, measured] of Object.entries(result.cases))
+    glyphs(id, measured);
   for (const [id, measured] of Object.entries(result.dark))
     glyphs(`dark ${id}`, measured);
   for (const [width, measured] of Object.entries(result.container))
