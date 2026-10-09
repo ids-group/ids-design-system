@@ -238,6 +238,13 @@
     "itemId": "0.13.0#chart-sequential-tokens-renamed"
   },
   {
+    "name": "--chart-skeleton-h",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.15.0",
+    "itemId": "0.15.0#chart-skeleton-h-removed"
+  },
+  {
     "name": "--chart-tick-size",
     "replacement": null,
     "kind": "removed",
@@ -2546,6 +2553,13 @@
     "kind": "renamed",
     "since": "0.13.4",
     "itemId": "0.13.4#tree-row-pad-y-is-tree-row-padding-y"
+  },
+  {
+    "name": "--ds-waterfall-chart-skeleton-height",
+    "replacement": null,
+    "kind": "removed",
+    "since": "0.15.0",
+    "itemId": "0.15.0#waterfall-chart-skeleton-height-removed"
   },
   {
     "name": "--error-subtle",

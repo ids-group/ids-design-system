@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 0.15.0 — 2026-10-09
+
 ### Cards
 
 - **`ds-info-hint` and `ds-chart-skeleton` have usage docs and sections.** The design agent reads
