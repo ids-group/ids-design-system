@@ -14,7 +14,7 @@ One or more series plotted over a shared set of categories. A series can be meas
 - `summary`: the accessible name; generated from the series when omitted.
 - `valueFormat`: `(value: number) => string`, defaults to `Intl.NumberFormat`.
 - `dataTable`: `'none'` (the default) | `'toggle'` (closed disclosure) | `'visible'` (open). Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`.
-- `loading` (default `false`): shows a skeleton plot.
+- `loading` (default `false`): with no data, a skeleton line on the axes; with data on screen, the plot stays under a `ds-loading-overlay` until it clears.
 - `emptyText` (default `"No data"`): shown in place of the plot when there is nothing to draw.
 
 **`yAxisMode` is about two axes sharing one plot, and every name says what is done to the GRIDLINES.** `'aligned'` and `'exact'` both draw ONE set and differ in what the second axis does with them: `'aligned'` rounds its step up to a round number, so its series stops short of the top and its labels read cleanly; `'exact'` ends the second axis on its largest reading, so that series uses the full height and its labels are not round. `'dual-grid'` scales and grids each axis on its own, which is the most readable and the least comparable. `'split'` gives up on sharing and draws two plots one above the other over the same category axis.

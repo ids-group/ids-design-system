@@ -11,7 +11,7 @@ export interface BarChartProps {
   caption?: string | null;
   /** Accessible name. Generated from the data when omitted. */
   summary?: string | null;
-  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize. */
+  /** With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`. */
   loading?: boolean;
   /** Shows `errorText` in place of the plot. Separate from `loading` and from empty data. */
   error?: boolean;
@@ -37,8 +37,10 @@ export interface BarChartProps {
   dataTable?: unknown;
   /** Declares the marks parts of one whole: each share appears on the tooltip's second line and in the data table. */
   partOfWhole?: boolean;
-  /** Prints each row's share of `max` beside its value. */
+  /** Prints each row's share of `max` beside its value. A row's own `showPercent` overrides it. */
   showPercent?: boolean;
+  /** `'start'` puts each label in a column before its bar, on the bar's line, with the values in aligned columns after it; `'top'` keeps the label on its own line above the bar. */
+  labelPosition?: ('top' | 'start');
   /** The row clicked or activated with Enter or Space, whether or not `interactive` is set. */
   onRowClicked?: (value: unknown) => void;
   /** Dims every OTHER mark while one is hovered or focused. */

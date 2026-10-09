@@ -1,106 +1,16 @@
-<!-- @dsCard group="data-display" viewport="1200x510" name="Table - dense · zebra" subtitle="density='compact' tightens cell padding; [zebra]='true' tints odd rows." --><!doctype html>
+<!-- @dsCard group="data-display" viewport="1200x510" name="Table - dense · zebra" subtitle="density='compact' tightens cell padding; [zebra]='true' tints odd rows." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Table</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-table></ds-docs-components-table></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 15;
-      var KEY = "table";
-      var TABLE = false;
-      var HEAD = null;
-      var BLOCK = "dense · zebra";
-      var REACT = "Table";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && false);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow, docs-api-table:not([data-key])' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-table");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var HEADER = 'h2, p.lede, .eyebrow, .tagrow, docs-component-meta, ' + API;
-        var filled = function (node) {
-          return !node.matches(HEADER) && (node.childElementCount > 0 || node.textContent.trim() !== '');
-        };
-        if (!Array.prototype.some.call(section.children, filled)) {
-          if (Date.now() - start < 8000) return setTimeout(slice, 50);
-          document.documentElement.setAttribute('data-ds-sliced', '0');
-          document.documentElement.setAttribute('data-ds-kept', '0');
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (filled(k)) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<style></style><link rel="stylesheet" href="../../../_ds_cards.css"><style>@layer ds-component-base{ds-icon,ds-icon *{box-sizing:border-box}}ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style><style>.ds-definition-term{--_term-line-color: var(--text-tertiary);--_term-line-color-hover: var(--text-secondary);--_term-color-pressed: var(--text-primary);--_term-bg-pressed: var(--surface-muted);cursor:pointer;text-decoration:underline dotted var(--_term-line-color);text-underline-offset:3px;border-radius:var(--radius-sm);-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:color var(--duration-fast) var(--ease-standard),background-color var(--duration-fast) var(--ease-standard),box-shadow var(--duration-fast) var(--ease-standard),text-decoration-color var(--duration-fast) var(--ease-standard)}.ds-definition-term:where(button){appearance:none;margin:0;padding:0;border:0;background:none;font:inherit;letter-spacing:inherit;text-transform:inherit;text-align:inherit;color:inherit}.ds-definition-term:hover{text-decoration:underline solid var(--_term-line-color-hover)}.ds-definition-term:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring-color);outline-offset:var(--focus-ring-offset);animation:ds-focus-ring-in var(--duration-fast) var(--ease-standard)}.ds-definition-term:active,.ds-definition-term[data-ds-pressed]{color:var(--_term-color-pressed);background:var(--_term-bg-pressed);box-shadow:0 0 0 2px var(--_term-bg-pressed);text-decoration:underline solid var(--_term-color-pressed)}.ds-definition-term[data-ds-tooltip-pinned]{color:var(--accent-strong);text-decoration:underline solid var(--accent-strong);text-decoration-thickness:2px}.ds-definition-term[data-ds-tooltip-pinned]:hover{color:var(--accent-strong);text-decoration:underline solid var(--accent-strong);text-decoration-thickness:3px}.ds-definition-term[data-ds-tooltip-pinned]:active,.ds-definition-term[data-ds-tooltip-pinned][data-ds-pressed]{color:var(--accent-strong);text-decoration:underline solid var(--accent-strong);text-decoration-thickness:3px;background-color:var(--surface-muted);box-shadow:0 0 0 2px var(--surface-muted)}</style></head><body>
+  <div class="ds-page"><ds-docs-components-table _nghost-c2x=""><docs-section _ngcontent-c2x="" anchor="table" eyebrow="Components" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-table" data-anchor="table"><h2 _ngcontent-c1="" class="t-h2">Table - dense · zebra</h2><p _ngcontent-c2x="" class="block-desc t-s"><code _ngcontent-c2x="" class="t-mono-inline"> density="compact" </code> tightens cell padding; <code _ngcontent-c2x="" class="t-mono-inline"> [zebra]="true" </code> tints odd rows. </p><ds-table _ngcontent-c2x="" caption="Records" density="compact" _nghost-c2y="" style="--_table-scroller-pad-bottom: 0px; --_table-head-measured: 33.65625px;"><div _ngcontent-c2y="" class="table-toolbar"><div _ngcontent-c2y="" class="toolbar-slot"></div></div><ds-loading-overlay _ngcontent-c2y="" _nghost-c1h=""><div _ngcontent-c1h="" class="content"><div _ngcontent-c2y="" class="scroll-wrap"><div _ngcontent-c2y="" role="status" aria-live="polite" class="visually-hidden">  </div><table _ngcontent-c2y="" class="compact table zebra" style="--_table-virtual-row-h: 44px;"><caption _ngcontent-c2y="" class="visually-hidden"> Records </caption><thead _ngcontent-c2y=""><tr _ngcontent-c2y=""><th _ngcontent-c2y="" scope="col" data-col-key="project"><span _ngcontent-c2y="" class="th-label"><span _ngcontent-c2y="" class="th-text"> Record </span></span></th><th _ngcontent-c2y="" scope="col" class="fit-content" data-col-key="id"><span _ngcontent-c2y="" class="th-label"><span _ngcontent-c2y="" class="th-text"> ID </span></span></th><th _ngcontent-c2y="" scope="col" class="fit-content" data-col-key="date"><span _ngcontent-c2y="" class="th-label"><span _ngcontent-c2y="" class="th-text"> Dates </span></span></th><th _ngcontent-c2y="" scope="col" data-col-key="venue"><span _ngcontent-c2y="" class="th-label"><span _ngcontent-c2y="" class="th-text"> Venue </span></span></th><th _ngcontent-c2y="" scope="col" data-col-key="status"><span _ngcontent-c2y="" class="th-label"><span _ngcontent-c2y="" class="th-text"> Status </span></span></th><th _ngcontent-c2y="" scope="col" class="numeric" data-col-key="capacity"><span _ngcontent-c2y="" class="th-label"><span _ngcontent-c2y="" class="th-text"> Capacity </span></span></th></tr></thead><tbody _ngcontent-c2y=""><tr _ngcontent-c2y=""><td _ngcontent-c2y=""><span _ngcontent-c2x="" class="t-s-bold"> Project Alpha </span></td><td _ngcontent-c2y="" class="fit-content"><span _ngcontent-c2x="" class="mono muted"> ORD-2026-0142 </span></td><td _ngcontent-c2y="" class="fit-content"> 30 Apr – 3 May 2026 </td><td _ngcontent-c2y=""> North Site </td><td _ngcontent-c2y=""><ds-badge _ngcontent-c2x="" _nghost-c15="" data-status="active"><span _ngcontent-c15="" class="badge"><span _ngcontent-c15="" class="dot"></span> Active </span></ds-badge></td><td _ngcontent-c2y="" class="numeric"> 1,200 </td></tr><tr _ngcontent-c2y=""><td _ngcontent-c2y=""><span _ngcontent-c2x="" class="t-s-bold"> Project Beta </span></td><td _ngcontent-c2y="" class="fit-content"><span _ngcontent-c2x="" class="mono muted"> ORD-2026-0156 </span></td><td _ngcontent-c2y="" class="fit-content"> 22 – 25 May 2026 </td><td _ngcontent-c2y=""> East Campus </td><td _ngcontent-c2y=""><ds-badge _ngcontent-c2x="" _nghost-c15="" data-status="confirmed"><span _ngcontent-c15="" class="badge"><span _ngcontent-c15="" class="dot"></span> Confirmed </span></ds-badge></td><td _ngcontent-c2y="" class="numeric"> 680 </td></tr><tr _ngcontent-c2y=""><td _ngcontent-c2y=""><span _ngcontent-c2x="" class="t-s-bold"> Q3 Initiative </span></td><td _ngcontent-c2y="" class="fit-content"><span _ngcontent-c2x="" class="mono muted"> ORD-2026-0157 </span></td><td _ngcontent-c2y="" class="fit-content"> 22 – 25 Aug 2026 </td><td _ngcontent-c2y=""> South Hub </td><td _ngcontent-c2y=""><ds-badge _ngcontent-c2x="" _nghost-c15="" data-status="confirmed"><span _ngcontent-c15="" class="badge"><span _ngcontent-c15="" class="dot"></span> Confirmed </span></ds-badge></td><td _ngcontent-c2y="" class="numeric"> 420 </td></tr><tr _ngcontent-c2y=""><td _ngcontent-c2y=""><span _ngcontent-c2x="" class="t-s-bold"> Annual Summit </span></td><td _ngcontent-c2y="" class="fit-content"><span _ngcontent-c2x="" class="mono muted"> ORD-2026-0188 </span></td><td _ngcontent-c2y="" class="fit-content"> 5 – 9 Sep 2026 </td><td _ngcontent-c2y=""> HQ Auditorium </td><td _ngcontent-c2y=""><ds-badge _ngcontent-c2x="" _nghost-c15="" data-status="planning"><span _ngcontent-c15="" class="badge"><span _ngcontent-c15="" class="dot"></span> Planning </span></ds-badge></td><td _ngcontent-c2y="" class="numeric"> 900 </td></tr><tr _ngcontent-c2y=""><td _ngcontent-c2y=""><span _ngcontent-c2x="" class="t-s-bold"> Download 2026 </span></td><td _ngcontent-c2y="" class="fit-content"><span _ngcontent-c2x="" class="mono muted"> EVT-2026-0091 </span></td><td _ngcontent-c2y="" class="fit-content"> 13 – 16 Jun 2026 </td><td _ngcontent-c2y=""> Donington Park </td><td _ngcontent-c2y=""><ds-badge _ngcontent-c2x="" _nghost-c15="" data-status="completed"><span _ngcontent-c15="" class="badge"><span _ngcontent-c15="" class="dot"></span> Completed </span></ds-badge></td><td _ngcontent-c2y="" class="numeric"> 4,500 </td></tr><tr _ngcontent-c2y=""><td _ngcontent-c2y=""><span _ngcontent-c2x="" class="t-s-bold"> Field Day </span></td><td _ngcontent-c2y="" class="fit-content"><span _ngcontent-c2x="" class="mono muted"> EVT-2026-0104 </span></td><td _ngcontent-c2y="" class="fit-content"> 8 – 9 Jul 2026 </td><td _ngcontent-c2y=""> West Pavilion </td><td _ngcontent-c2y=""><ds-badge _ngcontent-c2x="" _nghost-c15="" data-status="active"><span _ngcontent-c15="" class="badge"><span _ngcontent-c15="" class="dot"></span> Active </span></ds-badge></td><td _ngcontent-c2y="" class="numeric"> 320 </td></tr></tbody></table></div></div></ds-loading-overlay></ds-table></section></docs-section></ds-docs-components-table></div>
+  
+  
+  
+
+
 </body></html>

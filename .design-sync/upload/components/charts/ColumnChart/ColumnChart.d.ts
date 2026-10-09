@@ -11,7 +11,7 @@ export interface ColumnChartProps {
   caption?: string | null;
   /** Accessible name. Generated from the data when omitted. */
   summary?: string | null;
-  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize. */
+  /** With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`. */
   loading?: boolean;
   /** Shows `errorText` in place of the plot. Separate from `loading` and from empty data. */
   error?: boolean;
@@ -37,6 +37,8 @@ export interface ColumnChartProps {
   thresholds?: unknown;
   /** Prints each column's value above the column. */
   showValues?: boolean;
+  /** How many columns the loading skeleton draws before the data is known. */
+  skeletonCount?: number;
   /** How many value-axis ticks to aim for; ticks snap to a round step. */
   tickCount?: number;
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */

@@ -7,6 +7,7 @@ Date field with masked typing (`MM/DD/YYYY`-style per-slot editing) plus a calen
 - Disabled days: `minDate`/`maxDate` (inclusive bounds) and/or a `disabledDate` predicate. `presets` is `{ label, value: Date | RangeValue }[]` and renders as a button column beside the grid (widens the panel).
 - Format/locale: `locale` (default `'en-US'`) drives month/weekday names and the derived mask; `dateFormat` (e.g. `'DD/MM/YYYY'`) overrides it. `firstDayOfWeek` 0=Sun…6=Sat, default 1 (Monday). `allowInput={false}` makes the field readonly (calendar-only picking).
 - Error text replaces the `hint` automatically while typed text is invalid; `invalid` forces error styling. `label`/`required`/`optional`/`ariaLabel` as on Input.
+- `--ds-date-picker-max-width` (default `100%`) caps the field's width; with `fullWidth` the field fills its container up to it.
 - Keyboard: digits fill mask slots (Backspace/Delete stay within a slot), ArrowDown opens the calendar, arrows/PageUp/PageDown roam the grid, Enter/Space picks, Escape closes.
 
 ```tsx

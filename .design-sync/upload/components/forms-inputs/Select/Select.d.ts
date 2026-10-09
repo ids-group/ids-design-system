@@ -38,7 +38,7 @@ export interface SelectProps {
   label?: string;
   /** Disables the trigger and blocks all interaction. */
   disabled?: boolean;
-  /** Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`. */
+  /** Options are still being fetched and the list reports `aria-busy`: with no options it shows placeholder rows, with options it keeps them under an overlay until they are replaced. */
   loading?: boolean;
   /** The panel opened. */
   onOpened?: (value: void) => void;

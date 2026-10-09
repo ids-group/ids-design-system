@@ -11,7 +11,8 @@ A ring that splits one total into its parts. Each slice carries its share as a w
 - `summary`: the accessible name; generated from `data` when omitted.
 - `valueFormat`: `(value: number) => string`, defaults to `Intl.NumberFormat`.
 - `dataTable`: `'toggle'` (default, closed disclosure) | `'visible'` (open) | `'none'` (omit entirely).
-- `loading` (default `false`): shows a skeleton ring and legend rows.
+- `loading` (default `false`): with empty `data`, a skeleton ring and legend rows; with data on screen, the plot stays under a `ds-loading-overlay` until it clears.
+- `skeletonCount` (default `5`): how many slices and legend rows the skeleton draws until the data's own count is known.
 - `emptyText` (default `"No data"`): shown in place of the ring when `data` is empty.
 - `interactive` (default `false`): turns on the pointer cursor and puts every legend row in the tab order as a `role="button"` answering Enter and Space.
 - `onSliceClicked`: fires with the clicked slice, with or without `interactive`.

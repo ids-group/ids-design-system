@@ -1,5 +1,5 @@
 # Icon button - color × variant
 
-ariaLabel is required. Variants are its own, not ds-button 's: variant sets the fill (standard chromeless · filled · tonal · outlined). color tints filled, tonal and the selected state; standard and outlined stay neutral at rest. secondary/tertiary default to orange/violet, independent of --primary.
+ariaLabel is required. Variants are its own, not ds-button 's.
 
 Full API: `IconButton.d.ts`. How to use the component anywhere: `IconButton.prompt.md`.
