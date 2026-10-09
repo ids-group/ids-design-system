@@ -106,6 +106,7 @@ export interface TableColumn<T = unknown> {
     filter?: 'set';
     truncate?: boolean;
     width?: number | 'content';
+    minWidth?: number;
     align?: 'left' | 'right' | 'center';
     cell?: (row: T) => string;
     sortValue?: (row: T) => string | number | Date | null | undefined;

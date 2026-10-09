@@ -43,6 +43,9 @@ export interface TableColumn<T = unknown> {
    *  `'content'` sizes the column to its widest cell without wrapping and leaves the rest to
    *  the other columns. Dragging the edge overrides it. */
   width?: number | 'content';
+  /** The narrowest the column gets, in px, padding included. A `truncate` column without `width`
+   *  stops shrinking at it and the table scrolls sideways instead. Ignored when `width` is a number. */
+  minWidth?: number;
   align?: 'left' | 'right' | 'center';
   cell?: (row: T) => string;
   /** Sort by a domain value instead of the rendered text (`$1.2M`, `Oct 09, 2023` sort wrongly

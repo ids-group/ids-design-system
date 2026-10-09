@@ -18,6 +18,11 @@
 
 ### Added
 
+- **`TableColumn.minWidth` sets the narrowest a `ds-table` column gets, in px with the padding.**
+  A `truncate` column without `width` stops shrinking at it and the table scrolls sideways
+  instead: `{ key: 'email', label: 'Email', truncate: true, minWidth: 160 }`. Ignored when `width`
+  is a number.
+
 - **`styles/component-base` gives a component of yours the base the library's components carry.**
   `@include component-base.rules` first in a component stylesheet sets `border-box`, the inherited
   font on form controls, zero heading margins and the base focus ring on that component's own
