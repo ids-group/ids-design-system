@@ -1,4 +1,5 @@
 @use '../../styles/pinned';
+@use '../../styles/target';
 @use '../../styles/component-base' as component-base;
 @include component-base.rules;
 
@@ -48,4 +49,7 @@
       @include pinned.cue-pressed(3px, $underline: false);
     }
   }
+
+  // Sits a gap of `--space-1` from its label, which a ring around a 24px box would cover.
+  @include target.layered(14px, $ring-offset: null);
 }

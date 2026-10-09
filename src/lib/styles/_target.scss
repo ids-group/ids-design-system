@@ -1,0 +1,39 @@
+// A 24px pointer target and focus ring around an icon-only control drawn smaller. `$box` is the
+// control's border-box side without it. Include inside the control's own selector, after its own
+// padding and margin.
+
+@function -grow($box) {
+  @return calc((var(--space-6) - #{$box}) / 2);
+}
+
+// For a control that paints nothing around its glyph: the box grows by padding, and an equal
+// negative margin gives the growth back, so the layout around it keeps its size. `$padding` is the
+// padding the control has without it.
+@mixin padded($box, $padding: null) {
+  @if $padding {
+    padding: calc(#{$padding} + #{-grow($box)});
+  } @else {
+    padding: -grow($box);
+  }
+
+  margin: calc(-1 * #{-grow($box)});
+}
+
+// For a control that paints a fill on its own box: the box keeps its size, a transparent layer takes
+// the pointer around it, and the ring sits where a 24px box would put it. `$ring-offset: null` keeps
+// the ring on the control's own box, for a control set this close to running text.
+@mixin layered($box, $ring-offset: var(--focus-ring-offset)) {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * #{-grow($box)});
+  }
+
+  @if $ring-offset {
+    &:focus-visible {
+      outline-offset: calc(#{$ring-offset} + #{-grow($box)});
+    }
+  }
+}

@@ -200,9 +200,9 @@
 - **The close `×` sits in the centre of its box and focus ring.** The close buttons of `ds-banner`,
   `ds-alert`, `ds-toast`, `ds-drawer` and `ds-modal-card` and the `ds-dropzone` remove button laid
   the icon on a text line, up to 2px below or beside the centre of a box that was not square. The
-  box is square now and centres the icon: 20px in `ds-banner`, 18px in `ds-alert`, `ds-toast` and
-  `ds-dropzone`, 24px in `ds-drawer` and `ds-modal-card`. The banner and dropzone buttons are 8px
-  narrower.
+  box is a 24px square now, a 24px pointer target, and centres the icon. In `ds-banner`, `ds-alert`,
+  `ds-toast` and `ds-dropzone` it takes the room of the icon and 2px a side in the layout, 20px or
+  18px, so the banner and dropzone buttons are 8px narrower.
 
 - **The `ds-table` column filter button is a 24px target.** It was the 12px icon alone, so its focus
   ring hugged the icon. The target grows around the icon without changing the header height; the
@@ -216,6 +216,13 @@
   `ds-breadcrumbs` link.** It was drawn inward, over the first and last letter; it is drawn 2px
   outside the text now, in the padding already around it. Nothing moves at rest, and a header
   term's pressed fill keeps its size.
+
+- **The clear, remove and hint icon buttons are 24px pointer targets.** The clear `×` of
+  `ds-input`, `ds-select`, `ds-autocomplete`, `ds-multi-select` and `ds-time-picker`, the `ds-input`
+  password toggle, the `ds-tag` remove button and `ds-info-hint` took a click only on their 14px to
+  22px box. The target grows to 24px around the icon and nothing around it moves. The focus ring of
+  the `ds-tag`, `ds-select`, `ds-autocomplete`, `ds-multi-select` and `ds-time-picker` buttons is
+  drawn around the 24px target; the `ds-info-hint` ring stays on the icon, clear of its label.
 
 - **The `ds-date-picker` month and year arrows sit in the centre of their button.** The browser's
   button padding left the 14px icon 1px right of the centre of its 24px box.

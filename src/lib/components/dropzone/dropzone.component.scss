@@ -1,5 +1,6 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/dismiss-button' as dismiss-button;
+@use '../../styles/target' as target;
 @use '../../styles/component-base' as component-base;
 @include component-base.rules;
 
@@ -138,6 +139,7 @@
     .progress-fill { height: 100%; background: var(--_dropzone-file-progress); border-radius: var(--radius-pill); transition: width var(--duration-base) var(--ease-standard); }
     .remove {
       @include dismiss-button.button;
+      @include target.padded(calc(14px + 2 * var(--space-0-5)), var(--space-0-5));
 
       color: var(--icon-default);
       transition: color var(--duration-fast) var(--ease-standard);

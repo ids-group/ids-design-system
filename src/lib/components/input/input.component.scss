@@ -1,4 +1,5 @@
 @use '../../styles/press' as press;
+@use '../../styles/target' as target;
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-group-segment' as field-group-segment;
@@ -110,10 +111,11 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: var(--icon-md);
-      height: var(--icon-md);
-      padding: 0;
+      width: var(--space-6);
+      height: var(--space-6);
       border: 0;
+
+      @include target.padded(var(--icon-md));
 
       // Not a muted colour: the × only appears when there IS a value, so it has to read on a blurred field.
       background-color: var(--_input-clear-color);
@@ -122,6 +124,7 @@
       transition: background-color var(--duration-fast) var(--ease-standard),
               opacity var(--duration-fast) var(--ease-standard);
               mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'><path d='M18 6L6 18M6 6l12 12'/></svg>") center/contain no-repeat;
+      mask-origin: content-box;
 
       &:hover { background-color: var(--text-primary); }
       &:focus-visible {
@@ -137,10 +140,12 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 0;
       border: 0;
       background: transparent;
       color: var(--text-tertiary);
+
+      @include target.padded(16px);
+
       cursor: pointer;
       flex-shrink: 0;
       transition: color var(--duration-fast) var(--ease-standard),
