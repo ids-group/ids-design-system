@@ -6,6 +6,7 @@
 @use '../../styles/field-state' as field-state;
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/focus' as focus;
+@use '../../styles/target' as target;
 @use '../../styles/component-base' as component-base;
 @include component-base.rules;
 
@@ -215,6 +216,8 @@
   padding: 0;
   cursor: pointer;
 
+  @include target.min-size(14px);
+
   &:disabled {
     cursor: not-allowed;
   }
@@ -310,9 +313,11 @@
     gap: var(--space-2);
     margin-bottom: var(--space-2);
 
+    // target-size-guard: --date-picker-nav-size, 24px
     .picker-nav {
       width: var(--date-picker-nav-size);
       height: var(--date-picker-nav-size);
+      padding: 0;
       border: 0;
       background: transparent;
       display: grid;
@@ -380,6 +385,7 @@
     button {
       width: var(--date-picker-nav-size);
       height: var(--date-picker-nav-size);
+      padding: 0;
       border: 0;
       background: transparent;
       display: grid;

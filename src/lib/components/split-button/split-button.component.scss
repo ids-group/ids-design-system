@@ -21,6 +21,7 @@
   --_split-button-pressed-shadow: var(--ds-split-button-pressed-shadow, none);
 }
 
+// target-size-guard: the button height, 36px and up
 .main,
 .toggle {
   display: inline-flex;

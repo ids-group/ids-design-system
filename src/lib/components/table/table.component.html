@@ -337,20 +337,21 @@
                         </ng-container>
                       }
                     } @else if (col.truncate) {
-                      <span
-                        class="cell-clip"
-                        [style.max-width.px]="clipWidth(col)">
-                        @if (cellLink(row, col); as target) {
-                          <a
-                            class="cell-link"
-                            [routerLink]="target"
-                            (click)="$event.stopPropagation()">
-                            {{ cellValue(row, col) }}
-                          </a>
-                        } @else {
+                      @if (cellLink(row, col); as target) {
+                        <a
+                          class="cell-link cell-clip"
+                          [style.max-width.px]="clipWidth(col)"
+                          [routerLink]="target"
+                          (click)="$event.stopPropagation()">
                           {{ cellValue(row, col) }}
-                        }
-                      </span>
+                        </a>
+                      } @else {
+                        <span
+                          class="cell-clip"
+                          [style.max-width.px]="clipWidth(col)">
+                          {{ cellValue(row, col) }}
+                        </span>
+                      }
                     } @else if (cellLink(row, col); as target) {
                       <a
                         class="cell-link"

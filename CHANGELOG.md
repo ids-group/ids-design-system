@@ -27,6 +27,13 @@
 
 ### Added
 
+- **`styles/target` gives an icon-only control of yours the library's 24px target.**
+  `@include target.min-size($box)` last in its rule, with `$box` the size it is drawn at: the box
+  keeps its size, a transparent `::before` takes the pointer over `--hit-xs` around it, and the
+  focus ring is drawn on the edge of that target, 24px across. `$ring-on-target: false` leaves the
+  ring where the control's own rule draws it, for a control set beside text; `$position: null` for a
+  control that is already positioned.
+
 - **`skeletonCount` sets how many marks a chart's loading skeleton draws.** `ds-chart` and
   `ds-column-chart` draw that many columns, `ds-pie-chart` that many slices and legend rows,
   `ds-funnel-chart` that many stages and `ds-waterfall-chart` that many steps; the default is 5.
@@ -280,7 +287,28 @@
   4px sooner. The button is at full opacity while focused.
 
 - **A `ds-table` cell link's focus ring clears the text.** It was drawn inward, over the first and
-  last letter; it is drawn around the text now.
+  last letter; it is drawn around the text now. In a `truncate` column the link clips its own text,
+  so the ring keeps the sides the cell's clip cut off; the cell's tooltip and ellipsis are as before.
+
+- **The focus ring clears the text of a `ds-table` header label, a `ds-list-item` and a
+  `ds-breadcrumbs` link.** It was drawn inward, over the first and last letter; it is drawn 2px
+  outside the text now, in the padding already around it. Nothing moves at rest, and a header
+  term's pressed fill keeps its size.
+
+- **Every icon-only control takes the pointer over at least `--hit-xs` (24px).** The close and
+  remove buttons of `ds-alert`, `ds-banner`, `ds-toast`, `ds-dropzone` and `ds-tag`; the clear `×`
+  of `ds-input`, `ds-search`, `ds-select`, `ds-autocomplete`, `ds-multi-select`, `ds-time-picker`
+  and the `ds-sidenav-footer` search; the `ds-input` password toggle, the `ds-date-picker` calendar
+  toggle, the `ds-description-item` copy button, the `ds-bar-chart` row toggle, the arrows of the
+  `ds-table` width and column panels, an icon-only `ds-breadcrumbs` item and `ds-info-hint` took a
+  click only on their 14px to 22px box. Each keeps the size it is drawn at and takes the pointer
+  over 24px around it; nothing around it moves. Its focus ring is drawn on the edge of that target,
+  24px across, except on `ds-info-hint` and an icon-only breadcrumb, whose ring stays on the icon
+  beside their text. Raising `--hit-xs` raises every one of these targets. The `ds-input` clear button shows its
+  own focus ring; it was cut away with its icon.
+
+- **The `ds-date-picker` month and year arrows sit in the centre of their button.** The browser's
+  button padding left the 14px icon 1px right of the centre of its 24px box.
 
 - **A tooltip and a `ds-menu-item` submenu close when anything under them scrolls.** Inside an
   `overflow: auto` container they stayed where they opened while their trigger scrolled away. They

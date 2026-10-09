@@ -26,7 +26,6 @@
   display: flex;
   align-items: center;
   gap: var(--space-2-5);
-  margin-bottom: var(--space-6);
   letter-spacing: var(--letter-spacing-snug);
 
   // The text keeps its full intrinsic width at every step of the width animation,
@@ -34,9 +33,11 @@
   // would make this a scroll container and swallow the rail's own scrolling.
   overflow: clip;
 
-  // The collapse toggle sits flush against this box's right edge, so a ring drawn
-  // outward is cut on three sides and reads as sitting behind the button.
-  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
+  // The clip runs at the padding edge, so the padding holds the outward ring of the home link
+  // and the collapse toggle; the negative margins give the box back its place.
+  padding: calc(2 * var(--focus-ring-width));
+  margin: calc(-2 * var(--focus-ring-width));
+  margin-bottom: calc(var(--space-6) - 2 * var(--focus-ring-width));
 }
 
 .brand-home {
@@ -56,7 +57,7 @@
 .toc.is-collapsed .brand {
   flex-direction: column;
   gap: var(--space-3);
-  margin-bottom: 0;
+  margin-bottom: calc(-2 * var(--focus-ring-width));
 }
 
 .collapse-toggle {

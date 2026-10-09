@@ -2015,7 +2015,7 @@ export const DENSITY_HIT: readonly SizeRow[] = [
   {
     "name": "--hit-xs",
     "value": "24px",
-    "notes": "btn-s, datepicker nav, modal close."
+    "notes": "The smallest pointer target in the system (24px, WCAG 2.5.8): every icon-only control takes the pointer over at least this, however small it is drawn, and the date picker arrows and the modal close are this size. Raise it, to 44px for a touch screen, and every icon-only control's target follows."
   },
   {
     "name": "--hit-sm",
