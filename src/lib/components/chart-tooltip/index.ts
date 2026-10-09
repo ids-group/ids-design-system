@@ -17,5 +17,10 @@ export {
   CHART_UNPIN_DRAWN_BY_HOST,
   ChartUnpinComponent,
 } from './chart-unpin.component';
+export {
+  CHART_SKELETON_CATEGORY_BAND,
+  ChartSkeletonComponent,
+} from './chart-skeleton.component';
+export type { ChartSkeletonMarks } from './chart-skeleton.component';
 export { ChartStatesComponent } from './chart-states.component';
 export type { ChartStatesMessageContext } from './chart-states.component';

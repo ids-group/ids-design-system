@@ -321,6 +321,262 @@
       "pitfall": "A `--ds-alert-enter-scale` set on its own now changes nothing: it is read only while `--ds-alert-enter-keyframes` is `ds-scale-in`.",
       "restore": ":root { --ds-alert-enter-keyframes: ds-scale-in; }",
       "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an inserted `ds-alert` fades in where it stands and does not grow."
+    },
+    {
+      "id": "chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `categories` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-chart whose `loading` is set while its `categories` still holds values, such as a reload or a filter change. A first load with empty `categories` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[categories]=\"loading ? [] : categories\"",
+      "verify": "A ds-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `categories` shows the skeleton."
+    },
+    {
+      "id": "column-chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-column-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-column-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `data` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-column-chart whose `loading` is set while its `data` still holds values, such as a reload or a filter change. A first load with empty `data` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[data]=\"loading ? [] : data\"",
+      "verify": "A ds-column-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `data` shows the skeleton."
+    },
+    {
+      "id": "line-chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-line-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-line-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `series` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-line-chart whose `loading` is set while its `series` still holds values, such as a reload or a filter change. A first load with empty `series` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[series]=\"loading ? [] : series\"",
+      "verify": "A ds-line-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `series` shows the skeleton."
+    },
+    {
+      "id": "pie-chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-pie-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-pie-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `data` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-pie-chart whose `loading` is set while its `data` still holds values, such as a reload or a filter change. A first load with empty `data` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[data]=\"loading ? [] : data\"",
+      "verify": "A ds-pie-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `data` shows the skeleton."
+    },
+    {
+      "id": "funnel-chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-funnel-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-funnel-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `data` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-funnel-chart whose `loading` is set while its `data` still holds values, such as a reload or a filter change. A first load with empty `data` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[data]=\"loading ? [] : data\"",
+      "verify": "A ds-funnel-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `data` shows the skeleton."
+    },
+    {
+      "id": "waterfall-chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-waterfall-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-waterfall-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `data` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-waterfall-chart whose `loading` is set while its `data` still holds values, such as a reload or a filter change. A first load with empty `data` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[data]=\"loading ? [] : data\"",
+      "verify": "A ds-waterfall-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `data` shows the skeleton."
+    },
+    {
+      "id": "heatmap-chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-heatmap-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-heatmap-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `data` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-heatmap-chart whose `loading` is set while its `data` still holds values, such as a reload or a filter change. A first load with empty `data` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[data]=\"loading ? [] : data\"",
+      "verify": "A ds-heatmap-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `data` shows the skeleton."
+    },
+    {
+      "id": "scatter-chart-reload-keeps-plot",
+      "kind": "behavior",
+      "old": "ds-scatter-chart[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-scatter-chart"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a screen relies on the skeleton replacing a plot that is already drawn: bind `data` to an empty array while `loading` is set.",
+      "appliesWhen": "Only a ds-scatter-chart whose `loading` is set while its `data` still holds values, such as a reload or a filter change. A first load with empty `data` still draws the skeleton.",
+      "pitfall": "A test or screenshot that waits for the skeleton after a reload no longer finds it: the drawn plot stays, inert under the overlay, until `loading` clears.",
+      "restore": "[data]=\"loading ? [] : data\"",
+      "verify": "A ds-scatter-chart reloading with values on screen shows its plot under a scrim and spinner with the caption uncovered, and one loading with empty `data` shows the skeleton."
+    },
+    {
+      "id": "select-loading-skeleton-options",
+      "kind": "behavior",
+      "old": "ds-select[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-select"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a test or screen waits for the spinner row in the open panel: with options in the list they now stay under an overlay, and with none the list shows three placeholder rows.",
+      "appliesWhen": "Only a ds-select whose `loading` is set while its panel is open.",
+      "pitfall": "Options under the overlay are inert, so a test that clicks an option while `loading` is set no longer picks it.",
+      "restore": null,
+      "verify": "An open ds-select with `loading` set and options shows those options blurred under a spinner, and one with no options shows three placeholder rows."
+    },
+    {
+      "id": "multi-select-loading-skeleton-options",
+      "kind": "behavior",
+      "old": "ds-multi-select[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-multi-select"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a test or screen waits for the spinner row in the open panel: with options in the list they now stay under an overlay, and with none the list shows three placeholder rows.",
+      "appliesWhen": "Only a ds-multi-select whose `loading` is set while its panel is open. The filter input and select all stay live; only the list goes under the overlay.",
+      "pitfall": "Options under the overlay are inert, so a test that clicks an option while `loading` is set no longer picks it.",
+      "restore": null,
+      "verify": "An open ds-multi-select with `loading` set and options shows those options blurred under a spinner, and one with no options shows three placeholder rows."
+    },
+    {
+      "id": "autocomplete-loading-skeleton-options",
+      "kind": "behavior",
+      "old": "ds-autocomplete[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "ds-autocomplete"
+      ],
+      "detect": [
+        "[loading]=",
+        "loading()"
+      ],
+      "action": "None, unless a test or screen waits for the spinner row in the open panel: with options in the list they now stay under an overlay, and with none the list shows three placeholder rows.",
+      "appliesWhen": "Only a ds-autocomplete whose `loading` is set while its panel is open.",
+      "pitfall": "Options under the overlay are inert, so a test that clicks an option while `loading` is set no longer picks it.",
+      "restore": null,
+      "verify": "An open ds-autocomplete with `loading` set and options shows those options blurred under a spinner, and one with no options shows three placeholder rows."
+    },
+    {
+      "id": "heatmap-chart-hugs-grid",
+      "kind": "behavior",
+      "old": "ds-heatmap-chart",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "ds-heatmap-chart"
+      ],
+      "detect": [
+        "ds-heatmap-chart {",
+        "ds-heatmap-chart{"
+      ],
+      "action": "None, unless the card must fill its container as before: set `inline-size: auto` on `ds-heatmap-chart`.",
+      "appliesWhen": "Every ds-heatmap-chart: the host is `inline-size: fit-content`, capped at the container's width, so the card, its skeleton and its reload overlay are as wide as the grid. A grid wider than the container still scrolls inside it.",
+      "pitfall": "In a row of equal dashboard cards the heatmap card is narrower than its neighbours, also in a grid or flex track that would stretch an auto-width item.",
+      "restore": "ds-heatmap-chart { inline-size: auto; }",
+      "verify": "An unstyled ds-heatmap-chart in a wide container is as wide as its grid and caption, and one with `inline-size: auto` fills the container."
+    },
+    {
+      "id": "waterfall-chart-skeleton-height-removed",
+      "kind": "removed-api",
+      "old": "--ds-waterfall-chart-skeleton-height",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "waterfall-chart-skeleton-height"
+      ],
+      "detect": [
+        "--ds-waterfall-chart-skeleton-height"
+      ],
+      "action": "Delete the declaration (delete list: waterfall-chart-skeleton-height). The skeleton draws floating steps on the chart's own plot and reads no height token.",
+      "appliesWhen": "You set --ds-waterfall-chart-skeleton-height anywhere.",
+      "restore": null,
+      "verify": "No stylesheet of yours sets --ds-waterfall-chart-skeleton-height, and a ds-waterfall-chart loading with no data is as tall as the drawn chart."
     }
   ],
   "informational": [
@@ -407,7 +663,16 @@
       "text": "A `ds-funnel-chart` stage grows from 96% while it fades in instead of rising 4px, and the value labels of the bar, column, waterfall, heatmap, pie and funnel charts and the funnel's table rows fade in where they stand. A `ds-pie-chart` ring grows from 96% while it fades in, without the 30° turn.",
       "verify": "Load a funnel and a pie chart and confirm stages, ring and labels appear without travelling or turning."
     },
-    "The ESLint rules and the stylelint rule take optional `from` and `to` versions, as options of one rule or through a recommended-from config of the ESLint plugin, that leave out every removed or renamed name outside that range of releases. Without them nothing changes."
+    "The ESLint rules and the stylelint rule take optional `from` and `to` versions, as options of one rule or through a recommended-from config of the ESLint plugin, that leave out every removed or renamed name outside that range of releases. Without them nothing changes.",
+    {
+      "text": "The loading skeleton of ds-chart, ds-column-chart, ds-line-chart, ds-pie-chart, ds-funnel-chart, ds-waterfall-chart, ds-heatmap-chart and ds-scatter-chart takes the chart's shape at the drawn chart's size: axes with label placeholders and columns, a line, a ring in slices, narrowing stages over the stage table, floating steps, a cell grid, or the scatter's grid lines with no dots. A data-table disclosure keeps its room under it.",
+      "verify": "Set `loading` with empty data on each chart and confirm the card keeps the height it has once data arrives."
+    },
+    "ds-chart, ds-column-chart, ds-pie-chart, ds-funnel-chart and ds-waterfall-chart take `skeletonCount`, the number of columns, slices, stages or steps the skeleton draws before data is known; it defaults to 5, and known data sets the count instead.",
+    {
+      "text": "A ds-line-chart skeleton under `--ds-line-chart-placeholder-height` is that tall with its axis labels included; unset, it is as tall as the drawn plot with its labels.",
+      "verify": "Set `--ds-line-chart-placeholder-height: 200px` on a loading ds-line-chart with no series and confirm the skeleton above the legend placeholders is 200px tall."
+    }
   ],
   "deleteList": [
     {
@@ -497,6 +762,15 @@
         "--ds-alert-enter-keyframes: ds-fade-in"
       ],
       "why": "ds-fade-in is the default entrance of `ds-alert`.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "waterfall-chart-skeleton-height",
+      "surface": "style",
+      "find": [
+        "--ds-waterfall-chart-skeleton-height:"
+      ],
+      "why": "the waterfall skeleton draws floating steps on the chart's own plot height and reads no height token",
       "replaceWith": "nothing"
     }
   ]

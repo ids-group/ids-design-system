@@ -10,6 +10,9 @@ export const CHART_PIN_GAP = 8;
 export const CHART_PIN_RADIUS = 11;
 
 // @internal
+export const CHART_SKELETON_CATEGORY_BAND = 30;
+
+// @internal
 export const CHART_UNPIN_DRAWN_BY_HOST = new InjectionToken<true>('CHART_UNPIN_DRAWN_BY_HOST');
 
 // @internal
@@ -36,10 +39,29 @@ export class ChartPinMarkerComponent {
 }
 
 // @internal
+@Component({ selector: 'ds-chart-skeleton' })
+export class ChartSkeletonComponent {
+    public readonly axisGutter = input.required<number>();
+    protected readonly bars = computed(…);
+    protected readonly categoryBand = CHART_SKELETON_CATEGORY_BAND;
+    public readonly count = input.required<number>();
+    protected readonly lineClip = computed(…);
+    public readonly marks = input<ChartSkeletonMarks>('columns');
+    public readonly plotHeight = input.required<string>();
+    public readonly shimmer = input(true);
+    protected readonly ticks = TICK_POSITIONS;
+    public readonly valueSpace = input.required<number>();
+}
+
+// @internal
+export type ChartSkeletonMarks = 'columns' | 'line' | 'steps';
+
+// @internal
 @Component({ selector: 'figure[dsChartStates]' })
 export class ChartStatesComponent {
     public readonly body = input.required<TemplateRef<unknown>>();
     public readonly caption = input<string | null>(null);
+    public readonly dataTable = input(false);
     public readonly empty = input(false);
     public readonly emptyText = input('');
     public readonly error = input(false);
@@ -49,6 +71,8 @@ export class ChartStatesComponent {
     public readonly pending = input(false);
     public readonly pinned = input(false);
     public readonly release = output();
+    public readonly reloading = input(false);
+    public readonly shimmer = input(true);
     public readonly skeleton = input.required<TemplateRef<unknown>>();
     public readonly unpin = input(true, { transform: booleanAttribute });
 }
@@ -120,6 +144,10 @@ export function chartActiveMark(lingerMs: () => number = () => 0, hoverDelayMs: 
 ## CSS hooks
 
 ```css
+ds-chart-skeleton {
+    --ds-chart-axis-line-color: (none);
+}
+
 ds-chart-tooltip-panel {
     --ds-chart-hatch-color: var(--surface-default);
     --ds-chart-hatch-width: (none);

@@ -2,6 +2,9 @@
 
 ### Breaking
 
+- **`--ds-waterfall-chart-skeleton-height` is removed.** The waterfall skeleton draws floating
+  steps on the chart's own plot height; delete the declaration.
+
 - **`dsTooltipClippedLead` is removed from `TooltipDirective`.** A `ds-table` header with a `hint`
   needs nothing in its place: its `dsDefinitionTerm` button shows its own clipped label in bold
   above the hint. Anywhere else, delete the binding, or write the lead into the string:
@@ -17,6 +20,14 @@
   `isClipped()`.
 
 ### Added
+
+- **`skeletonCount` sets how many marks a chart's loading skeleton draws.** `ds-chart` and
+  `ds-column-chart` draw that many columns, `ds-pie-chart` that many slices and legend rows,
+  `ds-funnel-chart` that many stages and `ds-waterfall-chart` that many steps; the default is 5.
+  Once the data is known, the skeleton takes the data's own count. `ChartComponent`,
+  `ColumnChartComponent`, `PieChartComponent`, `FunnelChartComponent` and
+  `WaterfallChartComponent` gained the public `skeletonCount`; a subclass declaring that name must
+  rename it.
 
 - **`styles/component-base` gives a component of yours the base the library's components carry.**
   `@include component-base.rules` first in a component stylesheet sets `border-box`, the inherited
@@ -122,6 +133,33 @@
   `expanded`, so a subclass declaring one of those names must rename it.
 
 ### Changed
+
+- **`ds-chart`, `ds-column-chart`, `ds-line-chart`, `ds-pie-chart`, `ds-funnel-chart`,
+  `ds-waterfall-chart`, `ds-heatmap-chart` and `ds-scatter-chart` keep their plot on screen while
+  they reload.** With `loading` set and data on screen, the plot, its axes and its legend stay
+  under the scrim and spinner of `ds-loading-overlay`, which reaches 8px past the plot and leaves
+  the caption uncovered; the plot takes no focus or pointer until `loading` clears. They drew the
+  skeleton in its place. The skeleton shows only while there is no data: pass empty data while
+  `loading` is set to show it on every load. The internal `ChartStatesComponent` gained `reloading`,
+  `dataTable` and `shimmer`, the internal `ds-chart-skeleton` element draws the axis skeleton, and the
+  chart entry point exports the internal `CHART_DEFAULT_AXIS_GUTTER`.
+- **A chart's loading skeleton takes the chart's own shape and size.** `ds-chart` and
+  `ds-column-chart` draw the axes with label placeholders and columns, `ds-line-chart` a line,
+  `ds-pie-chart` its ring in slices with legend rows, `ds-funnel-chart` narrowing stages over the
+  stage table, `ds-waterfall-chart` a total, floating steps and a closing total, `ds-heatmap-chart`
+  a cell grid with its labels and scale, and `ds-scatter-chart` its grid lines and labels with no
+  dots. Each is laid out on the drawn chart's value space, plot height and gutters, and a data-table
+  disclosure keeps its room, so the card keeps its height when the data arrives. A
+  `--ds-line-chart-placeholder-height` now sizes the line skeleton with its axis labels included.
+- **`ds-heatmap-chart` is as wide as its grid.** The host is `inline-size: fit-content`, capped at
+  its container, so the card, the skeleton and the reload overlay match the grid instead of filling
+  the row; a wider grid still scrolls inside it. Set `inline-size: auto` on `ds-heatmap-chart` to
+  fill the container again.
+- **`ds-select`, `ds-multi-select` and `ds-autocomplete` load into the list itself.** With
+  `loading` set and no options, the list shows three placeholder option rows; with options, they
+  stay under a `ds-loading-overlay` over the list, inert until `loading` clears. Both replace the
+  spinner row. In `ds-multi-select` the filter input and select all stay live. The overlay host
+  sits between the panel and the list and ships in `styles/dropdown-overlay`.
 
 - **Overlay panels, `ds-modal`, `ds-toast`, `ds-banner` and `ds-alert` enter with `ds-fade-in`
   instead of `ds-scale-in`.** A tooltip, popover, select or menu panel, a submenu, a modal card, a
@@ -271,6 +309,7 @@
 
 | Delete | Why | Replace with |
 | --- | --- | --- |
+| `--ds-waterfall-chart-skeleton-height:` | the waterfall skeleton draws floating steps on the chart's own plot height and reads no height token | nothing |
 | `@use 'styles/skeleton-shimmer'` | the partial emits nothing; `ds-skeleton` styles its own reduced-motion stop | nothing |
 | a hand-built info button: `name="info"` on a `ds-icon` inside a `<button>` that carries `dsTooltip` | `ds-info-hint` renders the button, the icon and the pinned tooltip | `<ds-info-hint ariaLabel="…" text="…" />` |
 | a hand-built term button styled with `underline dotted` that carries `dsTooltip` | `dsDefinitionTerm` carries the underline, the focus ring, the keyboard access and the pinned tooltip | `<span dsDefinitionTerm="…">` |

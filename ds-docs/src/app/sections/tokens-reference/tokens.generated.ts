@@ -3436,7 +3436,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-column-chart-column-gap",
         "value": "var(--ds-chart-bar-gap)",
-        "notes": "Space between the columns of grouped series in one category, and between skeleton columns (defaults to --ds-chart-bar-gap)."
+        "notes": "Space between the columns of grouped series in one category (defaults to --ds-chart-bar-gap)."
       },
       {
         "name": "--ds-column-chart-cap-radius",
@@ -4880,8 +4880,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-line-chart-placeholder-height",
-        "value": "var(--_line-chart-plot-height)",
-        "notes": "Height reserved by a ds-line-chart that has no plot to draw: the loading skeleton, and the empty, error and no-visible-series boxes. Unset, the skeleton takes the plot height and the boxes the height the plot would take with its axis space; set, all of them take this value and the plot keeps --ds-line-chart-plot-height."
+        "value": "var(--_line-chart-view-height)",
+        "notes": "Height reserved by a ds-line-chart that has no plot to draw: the loading skeleton, and the empty, error and no-visible-series boxes. Unset, the skeleton and the boxes take the height the plot would take with its axis space; set, all of them take this value and the plot keeps --ds-line-chart-plot-height."
       },
       {
         "name": "--ds-line-chart-grid-line-color",
@@ -8516,11 +8516,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-waterfall-chart-connector-color",
         "value": "var(--ds-chart-axis-line-color)",
         "notes": "Stroke of the dashed chain that carries each bar's end across to where the next one starts (defaults to --ds-chart-axis-line-color)."
-      },
-      {
-        "name": "--ds-waterfall-chart-skeleton-height",
-        "value": "40px",
-        "notes": "Height of a placeholder bar in the loading skeleton (default 40px)."
       }
     ]
   }

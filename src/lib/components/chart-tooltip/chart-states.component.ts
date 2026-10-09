@@ -8,6 +8,8 @@ import {
   input,
   output,
 } from '@angular/core';
+import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
+import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { ChartUnpinComponent } from './chart-unpin.component';
 
 /**
@@ -33,7 +35,12 @@ export interface ChartStatesMessageContext {
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'figure[dsChartStates]',
   standalone: true,
-  imports: [ChartUnpinComponent, NgTemplateOutlet],
+  imports: [
+    ChartUnpinComponent,
+    LoadingOverlayComponent,
+    NgTemplateOutlet,
+    SkeletonComponent,
+  ],
   template: `
     @if (unpin()) {
       <ds-chart-unpin [pinned]="pinned()" (release)="release.emit()" />
@@ -57,6 +64,19 @@ export interface ChartStatesMessageContext {
       }
     } @else if (pending()) {
       <ng-container [ngTemplateOutlet]="skeleton()" />
+
+      @if (dataTable()) {
+        <details class="data-table" aria-hidden="true" inert>
+          <summary>
+            <ds-skeleton
+              inline
+              class="data-table-label"
+              width="var(--space-16)"
+              height="var(--space-2)"
+              [shimmer]="shimmer()" />
+          </summary>
+        </details>
+      }
     } @else if (empty()) {
       @if (message(); as messageTemplate) {
         <ng-container
@@ -71,7 +91,12 @@ export interface ChartStatesMessageContext {
         </p>
       }
     } @else {
-      <ng-container [ngTemplateOutlet]="body()" />
+      <ds-loading-overlay
+        class="reload-overlay"
+        [loading]="reloading()"
+        [blur]="true">
+        <ng-container [ngTemplateOutlet]="body()" />
+      </ds-loading-overlay>
     }
   `,
   styleUrl: './chart-states.component.scss',
@@ -87,7 +112,14 @@ export class ChartStatesComponent {
   readonly caption = input<string | null>(null);
   readonly error = input(false);
   readonly errorText = input('');
+  /** Draws `skeleton` in place of `body`: there is nothing to draw yet. */
   readonly pending = input(false);
+  /** Holds the room of the chart's data-table disclosure under the skeleton. */
+  readonly dataTable = input(false);
+  /** Whether the data-table placeholder shimmers, as the chart's own skeleton does. */
+  readonly shimmer = input(true);
+  /** Keeps `body` on screen under a loading overlay bound to it, the caption left uncovered. */
+  readonly reloading = input(false);
   readonly empty = input(false);
   readonly emptyText = input('');
 
