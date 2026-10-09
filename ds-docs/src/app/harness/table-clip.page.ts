@@ -576,6 +576,22 @@ export class TableClipHarnessPage {
       columns: pagingColumns,
     },
     {
+      id: 'truncate-link',
+      title: 'Truncate column whose cells are links, 700px',
+      width: 700,
+      data: people,
+      columns: [
+        { key: 'name', label: 'Policyholder' },
+        {
+          key: 'email',
+          label: 'Email',
+          truncate: true,
+          link: (row) => `/harness/table-clip#${row.id}`,
+        },
+        { key: 'city', label: 'City' },
+      ],
+    },
+    {
       id: 'paging-pager',
       title: 'Same table with pageSize 4: page 1 short, page 2 long',
       width: 1100,
