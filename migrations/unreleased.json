@@ -232,6 +232,27 @@
       "verify": "The built CSS has `border-radius:var(--focus-ring-radius)` inside `:where(:focus-visible)`, and a focused element with a fill keeps the corners it shows at rest."
     },
     {
+      "id": "table-truncated-link-is-cell-clip",
+      "kind": "behavior",
+      "old": ".cell-clip",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "cell-clip",
+        "cell-link"
+      ],
+      "detect": [
+        ".cell-clip a",
+        ".cell-clip .cell-link",
+        ".cell-clip > a"
+      ],
+      "action": "Rewrite a rule of yours that styles the link inside `.cell-clip` of a `ds-table` cell to target `a.cell-clip` itself, for example `ds-table .cell-clip a` becomes `ds-table a.cell-clip`.",
+      "appliesWhen": "Only a `truncate` column whose cells are links (`link` on the column). A truncated plain cell keeps `span.cell-clip`, and a link in a column without `truncate` is `a.cell-link` as before.",
+      "pitfall": "A rule written for the old nesting matches nothing, so the link quietly loses the colour or decoration it set.",
+      "restore": null,
+      "verify": "No stylesheet selects an element inside `.cell-clip`, and a truncated link cell renders with the styling the rule meant to give it."
+    },
+    {
       "id": "dropdown-empty-row-drops-t-s",
       "kind": "behavior",
       "old": ".empty",

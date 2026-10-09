@@ -36,12 +36,10 @@
 
 // The item padding has room for a ring outside the text.
 button.activator {
-  padding-inline: var(--focus-ring-width);
-  margin-inline: calc(-1 * var(--focus-ring-width));
   cursor: pointer;
 
   &:focus-visible {
-    @include focus.ring(0);
+    @include focus.ring(var(--focus-ring-width));
   }
 
   &:disabled {

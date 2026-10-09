@@ -173,7 +173,7 @@
   }
 
   @include press.feedback;
-  @include target.min-size(calc(14px + 2 * var(--space-1)), $position: null);
+  @include target.min-size($position: null);
 }
 
 .time-static {

@@ -139,7 +139,7 @@
     .progress-fill { height: 100%; background: var(--_dropzone-file-progress); border-radius: var(--radius-pill); transition: width var(--duration-base) var(--ease-standard); }
     .remove {
       @include dismiss-button.button;
-      @include target.min-size(calc(14px + 2 * var(--space-0-5)));
+      @include target.min-size;
 
       color: var(--icon-default);
       transition: color var(--duration-fast) var(--ease-standard);

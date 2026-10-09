@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Фокус-рамка: остатки</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-09">
+<meta name="ds-deck-evidence" content="src/lib/styles/_target.scss:13 - CHANGELOG.md">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   main { max-width: 1100px; padding-bottom: 96px; }
   .pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-3); align-items: start; }
@@ -59,6 +61,16 @@
       <p>Доки собраны с dev (ecd6fc99c), с ветки, с ветки на шаге раунда 2 (94c82dbba) и с ветки в варианте B, headless Playwright 1440x900, Shift+Tab затем Tab на элемент. Зазор - от края текста до внутреннего края рамки, минус значит рамка на буквах. Зона нажатия - коробка плюс слой ::before; попадание проверено точкой в 11.5px от центра по четырём сторонам. Коробки в покое: прямоугольники на шести страницах при обычной плотности и ultra-compact.</p>
     </details>
   </header>
+
+  <div class="decided">
+    <h2>Решено: рамка снаружи текста, зона 24px у иконочных кнопок</h2>
+    <p>Все блоки приняты и влиты в dev: рамка у заголовков таблицы, пунктов списка и ссылок крошек снаружи текста, стрелки календаря по центру, иконочные кнопки с зоной клика 24px и рамкой 24px, ссылка в колонке truncate с рамкой со всех сторон. Вариант B размера рамки ждёт в docs/todo.md.</p>
+    <p class="evidence">2026-10-09 · src/lib/styles/_target.scss:13 - CHANGELOG.md</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
+
 
   <h3 class="group">Ждёт ответа</h3>
   <section class="panel" data-review="Попутные находки" data-review-note-only>
@@ -383,6 +395,7 @@
       </div>
     <details class="why"><summary>как сделано</summary><p>Ссылка сама и есть .cell-clip и сама обрезает текст.</p></details>
   </section>
+  </details>
   </details>
 </main>
 <script>
