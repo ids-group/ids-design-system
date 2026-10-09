@@ -8,6 +8,7 @@ Region-scoped loading scrim. Wrap the region's content as children; while `loadi
 - `blur` (default true) backdrop-blurs the covered content.
 - `spinnerSize`: sm | md | lg (default md) — match the region's size.
 - `insetTop` (CSS length, default `'0'`) lowers the scrim's top edge so a sticky header stays uncovered.
+- `--ds-loading-overlay-radius` (default `0`): the scrim's corner radius; set it to the covered container's radius.
 - The wrapped region must have its own height — an empty region gives the scrim nothing to cover. For placeholder content use EmptyState (which embeds this component for its loading variant).
 
 ```tsx

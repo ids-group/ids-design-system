@@ -1173,7 +1173,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -1936,7 +1936,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -3128,7 +3128,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -4259,7 +4259,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -4503,7 +4503,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -5427,7 +5427,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -7243,7 +7243,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -7927,7 +7927,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
@@ -11968,7 +11968,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize."
+        "description": "With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`."
       },
       {
         "name": "error",
