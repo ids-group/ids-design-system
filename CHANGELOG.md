@@ -162,6 +162,11 @@
   `ds-dropzone`, 24px in `ds-drawer` and `ds-modal-card`. The banner and dropzone buttons are 8px
   narrower.
 
+- **The `ds-table` column filter button is a 24px target.** It was the 12px icon alone, so its focus
+  ring hugged the icon. The target grows around the icon without changing the header height; the
+  icon sits `--space-2` after the label instead of `--space-1`, so a filtered header's label clips
+  4px sooner. The button is at full opacity while focused.
+
 - **A tooltip and a `ds-menu-item` submenu close when anything under them scrolls.** Inside an
   `overflow: auto` container they stayed where they opened while their trigger scrolled away, a
   pinned tooltip included. They close now on a scroll of the window or of any scroll container, as

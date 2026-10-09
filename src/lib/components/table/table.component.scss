@@ -242,7 +242,7 @@
     }
 
     .th-label:has(+ .col-filter-btn) {
-      max-width: calc(100% - var(--space-1) - 12px);
+      max-width: calc(100% - var(--space-2) - 12px);
     }
 
     .th-text {
@@ -551,9 +551,11 @@
 }
 
 .col-filter-btn {
+  // A 24px target around the 12px glyph; the negative margins keep the row height of the bare glyph.
   display: inline-flex;
-  margin-left: var(--space-1);
-  padding: 0;
+  margin: calc(-1 * var(--space-1-5));
+  margin-left: calc(var(--space-2) - var(--space-1-5));
+  padding: var(--space-1-5);
   border: 0;
   background: none;
   color: var(--icon-default);
@@ -565,6 +567,10 @@
   &:hover {
     opacity: 1;
     color: var(--icon-strong);
+  }
+
+  &:focus-visible {
+    opacity: 1;
   }
 
   &.active {
