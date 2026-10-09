@@ -33,68 +33,72 @@
 <body>
 <main>
   <header class="masthead">
-    <h1>Ветка убирает из <code>migrations/AUTHORING.md</code> правило про строки в опубликованных манифестах</h1>
+    <h1>Правило про строки в опубликованных манифестах остаётся в <code>migrations/AUTHORING.md</code>, переписано шагами</h1>
     <p class="chat">Ответ нести в чат: «Acc2 · pp-ревью и Dashboard Review»</p>
-    <p class="lede">Изменение только в тексте для авторов манифестов. Слева dev, справа ветка <code>docs/revert-past-release-rule</code>: раздел «Correcting a PUBLISHED manifest», удаляемые 12 строк выделены красным.</p>
-    <div class="chips"><span class="chip">migrations/AUTHORING.md</span><span class="chip">revert</span><span class="chip">актуально на 2026-10-07</span></div>
+    <p class="lede">Слева текст из dev, справа ветка <code>ecm-docs/revert-past-release-rule</code>: тот же раздел «Correcting a PUBLISHED manifest», правило из трёх шагов, плюс строка в чек-листе.</p>
+    <div class="chips"><span class="chip">migrations/AUTHORING.md</span><span class="chip">rewrite</span><span class="chip">актуально на 2026-10-09</span></div>
   </header>
   <section class="panel">
-    <h2>Почему убираем, коротко</h2>
+    <h2>Что изменилось в тексте</h2>
     <ol class="steps-why">
-      <li><b>Агент ошибся.</b> В файл миграций уже выпущенной версии 0.4.0 он дописал две строки по пересказу из CHANGELOG и «проверил» их тем, что такие селекторы есть в коде. На деле в 0.4.0 менялись только цвет и прозрачность.</li>
-      <li><b>И сам вписал правило.</b> После ошибки он добавил в <code>migrations/AUTHORING.md</code> правило из трёх пунктов (коммит <code>d2361276</code>), не спросив тебя.</li>
-      <li><b>Так нельзя по нашему порядку уроков.</b> Урок только предлагает правило карточкой в деке уроков, а вписывается выбранный тобой вариант.</li>
-      <li><b>Откат убирает самовольное правило.</b> Сама мысль может быть верной, поэтому решение за тобой в карточке «Строка о выпущенной версии из вторичного текста, проверенная наличием» (<code>decks/lessons.html</code> дизайн-системы): записать агенту в память (рекомендован), вернуть правило в <code>AUTHORING.md</code> или не возвращать.</li>
+      <li><b>Шаги вместо запретов.</b> Было «три способа, которые выглядят как проверка и ей не являются»; стало три действия по порядку: дифф, CHANGELOG только как указатель, поведение по полному коду обоих тегов.</li>
+      <li><b>Определено, на что действует.</b> «Строка» = любое поле item или строки <code>deleteList</code>, или запись <code>informational</code>; и добавленная, и переписанная.</li>
+      <li><b>Определено «утверждение о поведении»</b> и дана команда выгрузить оба дерева, без размытого <code>v&lt;tag&gt;</code>.</li>
+      <li><b>Строка в чек-листе</b>, по которому агент проходит перед сдачей манифеста.</li>
     </ol>
   </section>
 
-  <section class="panel" data-review="Откат правила прошлых релизов">
+  <section class="panel" data-review="Откат правила прошлых релизов" data-review-round="2">
     <h2>Было и стало</h2>
     <div class="pairs">
-<h3>Раздел «Correcting a PUBLISHED manifest»</h3><div class="pair"><figure class="shot"><div class="textshot"><pre>Two shapes this catches that nothing else does. **A name that never existed**: it is absent from
-HEAD exactly like a correctly removed one, so the item passes every review and finds nothing in a
-consumer&#x27;s code forever. **A family renamed one member at a time**: naming one token when eight
-moved leaves the other seven undocumented, and the search that would have found them was spent on
-the one you named.
-
-<del>**Every line added to a published manifest is written from that boundary&#x27;s diff**, a line added only
+<h3>Раздел «Correcting a PUBLISHED manifest»</h3><div class="pair"><figure class="shot"><div class="textshot"><pre><del>**Every line added to a published manifest is written from that boundary's diff**, a line added only
 to close a `--audit` coverage gap included. Three shortcuts look like verification and are not:
 
-- **The version&#x27;s own `## &lt;version&gt;` block is a pointer, not a source.** It can be looser than the
-  code: the 0.4.0 block says a clear button &quot;stays visible when the field is blurred&quot;, and the diff
+- **The version's own `## &lt;version&gt;` block is a pointer, not a source.** It can be looser than the
+  code: the 0.4.0 block says a clear button "stays visible when the field is blurred", and the diff
   shows only its colour and opacity changed. Write what `git diff v&lt;prev&gt; v&lt;version&gt;` shows for the
   component the line names.
 - **Presence proves the name, never the behaviour.** A selector found at both tags says nothing about
   what the line claims it does.
 - **One grep returns fragments.** Before stating what an element did at a tag, read every rule that
-  targets it in that tree, the global partials included, not the lines the first search returned.
+  targets it in that tree, the global partials included, not the lines the first search returned.</del></pre></div><figcaption><span class="tag was">Было (dev)</span>Три «ложные проверки» через отрицание</figcaption></figure><figure class="shot"><div class="textshot"><pre><ins>**A line added to or rewritten in a published manifest states only what the code at that
+boundary shows.** A line is any field of an item or of a `deleteList` row, or an `informational`
+entry, including one added only to close a gap that `node tools/check.mjs manifest-coverage:audit`
+reported. Before writing it:
 
-</del>Only `unreleased.json` is written and checked against HEAD, because HEAD is the version it
-describes.
+1. **Read the diff for every name the line mentions** (component, element, input, token, class,
+   symbol). Run `git diff v&lt;prev&gt;..v&lt;version&gt; -- src/lib` and write what that diff changes for those
+   names.
+2. **Use the `## &lt;version&gt;` block of `CHANGELOG.md` to find where to look in the diff.** Its wording
+   can be broader than the code: the 0.4.0 block says the `ds-input` / `ds-search` clear button
+   "stays visible when the field is blurred", and the diff changes only its colour and opacity. The
+   manifest line follows the diff.
+3. **Prove a behaviour claim from the full code at both tags.** A behaviour claim is any sentence
+   about what something renders or does (shows, hides, closes, sizes, defaults to, emits), as
+   opposed to what it is called; an `appliesWhen` or `pitfall` that says what happens is one, and a
+   line that both renames and describes behaviour takes steps 1-3. A name present at both tags
+   proves only that the name exists. Extract both trees (`git archive v&lt;prev&gt; src/lib |
+   tar -x -C &lt;prev-dir&gt;`, the same for `v&lt;version&gt;`) and in each read everything that targets the
+   component or element the claim is about: every stylesheet rule, template binding and class
+   member, the global partials in `src/lib/styles/` included. A single grep returns the matches it
+   searched for, and the rule that decides the behaviour is often in a file it did not reach.
 
-</pre></div><figcaption><span class="tag was">Было (dev)</span>Правило из трёх пунктов</figcaption></figure><figure class="shot"><div class="textshot"><pre>Two shapes this catches that nothing else does. **A name that never existed**: it is absent from
-HEAD exactly like a correctly removed one, so the item passes every review and finds nothing in a
-consumer&#x27;s code forever. **A family renamed one member at a time**: naming one token when eight
-moved leaves the other seven undocumented, and the search that would have found them was spent on
-the one you named.
-
-Only `unreleased.json` is written and checked against HEAD, because HEAD is the version it
-describes.
-
-</pre></div><figcaption><span class="tag now">Стало (ветка)</span>Правила нет</figcaption></figure></div>
+A sentence that code does not support is cut, however plausible it reads.</ins></pre></div><figcaption><span class="tag now">Стало (ветка)</span>Три шага: что делать</figcaption></figure></div><h3>Чек-лист «Per-entry checklist»</h3><div class="pair"><figure class="shot"><div class="textshot"><pre>(строки нет)</pre></div><figcaption><span class="tag was">Было (dev)</span>Правило не в чек-листе</figcaption></figure><figure class="shot"><div class="textshot"><pre><ins>- [ ] A line added to or rewritten in a published manifest states what `git diff
+      v&lt;prev&gt;..v&lt;version&gt; -- src/lib` shows for every name it mentions, and a behaviour claim is
+      read from everything in `src/lib` that targets the element at both tags; the CHANGELOG
+      block only points at where to look. ("Correcting a PUBLISHED manifest")</ins></pre></div><figcaption><span class="tag now">Стало (ветка)</span>Новая строка</figcaption></figure></div>
     </div>
     <details class="why">
-      <summary>Замеры и как снято</summary>
-      <h3>Что меняется для автора</h3>
+      <summary>Как проверено</summary>
       <ul>
-        <li>Пропадает требование писать каждую строку, добавляемую в опубликованный <code>&lt;version&gt;.json</code>, по диффу этой границы, включая строки, добавленные только чтобы закрыть пробел <code>--audit</code>.</li>
-        <li>Пропадают три названных ложных проверки: блок <code>## &lt;version&gt;</code> как источник, наличие селектора как доказательство поведения, один grep как полная картина.</li>
-        <li>Остаётся: старое имя есть на <code>v&lt;prev&gt;</code> и нет на <code>v&lt;version&gt;</code>, новое есть на <code>v&lt;version&gt;</code>; две формы ошибки (имя, которого не было, и семейство, переименованное по одному); правка на месте без пункта «прошлый был неверен»; раздел «A claim about a past release is checked against that release» в <code>CONTRIBUTING.md</code> и строка чек-листа про проверку по тегам.</li>
-        <li>Гейты не меняются: правило не было подкреплено линтером.</li>
+        <li>Холодное чтение: свежий агент (sonnet) читал только этот раздел и отвечал на 7 сценариев (строка по <code>manifest-coverage:audit</code>, селектор на обоих тегах, <code>unreleased.json</code>, глобальный партиал, поле <code>deleteList</code>, правка <code>appliesWhen</code>, чистое переименование токена). Четыре прохода одним агентом: каждую найденную неоднозначность правил в тексте, на четвёртом все 7 ответов совпали с задуманным. Первый проход был по-настоящему холодным, следующие агент читал уже зная прошлую версию.</li>
+        <li>Пример про 0.4.0 сверен: блок CHANGELOG v0.4.0 говорит «stays visible when the field is blurred», <code>git diff v0.3.0..v0.4.0</code> меняет только <code>opacity: 0.7 → 1</code> и цвет рамки.</li>
+        <li>Команда <code>git archive v0.4.0 src/lib | tar -x -C &lt;dir&gt;</code> прогнана, дерево с <code>src/lib/styles/</code> выгружается.</li>
+        <li><code>node tools/check.mjs docs-links</code>, <code>migration-lint</code>, <code>changelog-pending</code>: exit 0. Гейта на само правило нет, линтер его не проверяет.</li>
+        <li>Коммиты: <code>bff985c6</code> возвращает правило, <code>43af6076</code> переписывает.</li>
       </ul>
-      <p>Дифф: <code>git show 7854e523</code>, 12 удалённых строк в <code>migrations/AUTHORING.md</code>, правило добавлено в <code>d2361276</code>. Слева текст из dev, справа из ветки после слияния dev (<code>2a1f7270</code>); кроме выделенного куска раздел совпадает символ в символ (проверено скриптом при сборке деки).</p>
     </details>
-  </section>
+  <ol data-review-history><li>2026-10-09 · «ну окей, возвращай обратно. просто перепроверь и убедись что ТЕПЕРЬ правило написано по стандартам антропик и клода и будет действовать как нам надо. что написано однозначно и понятно любому агенту.» → правило возвращено в AUTHORING.md и переписано тремя шагами в позитивной форме, добавлена строка чек-листа; однозначность проверена холодным чтением агента на 7 сценариях</li></ol></section>
 </main>
 <!-- deck-review -->
 <script>
