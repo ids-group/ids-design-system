@@ -64,9 +64,11 @@
     </code> keeps the trigger one
     line: <code class="t-mono-inline">"fit"</code> (default) shows what fits
     plus "+N more", re-split on resize; a number is a ceiling, lowered if
-    narrow; <code class="t-mono-inline">"all"</code> grows the trigger. Same
-    on <code class="t-mono-inline">ds-multi-select</code>. Backspace removes
-    the last selected chip, not the last visible.
+    narrow; <code class="t-mono-inline">"all"</code> grows the trigger. Same on
+    <code class="t-mono-inline">
+      ds-multi-select
+    </code>. Backspace removes the
+    last selected chip, not the last visible.
   </p>
 
   <div class="autocomplete-field-wrap">
@@ -109,8 +111,8 @@
     typing area, for toolbars.
     <code class="t-mono-inline">
       --ds-autocomplete-input-min-width
-    </code> (default 40px) sizes the
-    typing area;
+    </code>
+    (default 40px) sizes the typing area;
     <code class="t-mono-inline">
       --ds-autocomplete-max-width
     </code>
@@ -236,8 +238,10 @@
     </code> shows a
     <em>
       Create «text»
-    </em> row for text with no exact match,
-    emitting <code class="t-mono-inline">create</code>; you add the item.
+    </em> row for text with no exact match, emitting
+    <code class="t-mono-inline">
+      create
+    </code>; you add the item.
   </p>
 
   <div class="autocomplete-field-wrap">
@@ -365,15 +369,23 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       filterWith
-    </code> narrows (default: case-insensitive
-    substring of <code class="t-mono-inline">label</code>);
+    </code> narrows (default:
+    case-insensitive substring of <code class="t-mono-inline">label</code>);
     <code class="t-mono-inline">
       'none'
     </code> shows options as given: fetch
     them on <code class="t-mono-inline">(filterChange)</code>, which emits each
-    query. <code class="t-mono-inline">[loading]="true"</code> shows a spinner
-    for the empty row and sets <code class="t-mono-inline">aria-busy</code> on
-    the listbox.
+    query. <code class="t-mono-inline">[loading]="true"</code> sets
+    <code class="t-mono-inline">
+      aria-busy
+    </code> on the listbox: with no options
+    it shows three placeholder rows; with options they stay under a
+    <code class="t-mono-inline">
+      ds-loading-overlay
+    </code>, inert until
+    <code class="t-mono-inline">
+      loading
+    </code> clears.
   </p>
 
   <h3 class="block-title t-h4">
@@ -384,10 +396,8 @@
     Directives from
     <code class="t-mono-inline">
       &#64;ids-group-ltd/ids-design-system/components
-    </code>:
-    <code class="t-mono-inline">
-      dsOptionTemplate
-    </code> the option label
+    </code
+    >: <code class="t-mono-inline"> dsOptionTemplate </code> the option label
     (context: the option; role, selection, check stay library-owned);
     <code class="t-mono-inline">
       dsEmptyTemplate
