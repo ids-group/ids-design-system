@@ -14,7 +14,7 @@
 // `from` is exclusive and `to` inclusive, as in the plugins; without `to` the unreleased version
 // counts too. Output (stdout, JSON):
 //   { from, to, ran: [], skipped: [], errors: [{ loc, message }],
-//     hits: { "<version>#<item-id>": [{ loc, match, el: null, rule }] } }
+//     hits: { "<version>#<item-id>": [{ loc, match, el: null, rule, message }] } }
 import {
   cpSync,
   existsSync,
@@ -117,6 +117,7 @@ export const lintStep = async ({
       match: matchText(textOf(path), position),
       el: null,
       rule,
+      message,
     });
   };
 
