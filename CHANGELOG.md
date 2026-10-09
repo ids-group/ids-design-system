@@ -26,8 +26,10 @@
   `ds-funnel-chart` that many stages and `ds-waterfall-chart` that many steps; the default is 5.
   Once the data is known, the skeleton takes the data's own count. `ChartComponent`,
   `ColumnChartComponent`, `PieChartComponent`, `FunnelChartComponent` and
-  `WaterfallChartComponent` gained the public `skeletonCount`; a subclass declaring that name must
-  rename it.
+  `WaterfallChartComponent` gained the public `skeletonCount`. These charts, `ds-line-chart`,
+  `ds-heatmap-chart`, `ds-scatter-chart`, `ds-select`, `ds-multi-select` and `ds-autocomplete`
+  gained and lost protected skeleton members, named in the migration manifest; a subclass
+  declaring one of those names must rename it.
 
 - **`styles/component-base` gives a component of yours the base the library's components carry.**
   `@include component-base.rules` first in a component stylesheet sets `border-box`, the inherited

@@ -577,6 +577,45 @@
       "appliesWhen": "You set --ds-waterfall-chart-skeleton-height anywhere.",
       "restore": null,
       "verify": "No stylesheet of yours sets --ds-waterfall-chart-skeleton-height, and a ds-waterfall-chart loading with no data is as tall as the drawn chart."
+    },
+    {
+      "id": "loading-classes-member-surface",
+      "kind": "behavior",
+      "old": "ChartComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, FunnelChartComponent, WaterfallChartComponent, HeatmapChartComponent, ScatterChartComponent, SelectComponent, MultiSelectComponent, AutocompleteComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends ChartComponent",
+        "extends ColumnChartComponent",
+        "extends LineChartComponent",
+        "extends PieChartComponent",
+        "extends FunnelChartComponent",
+        "extends WaterfallChartComponent",
+        "extends HeatmapChartComponent",
+        "extends ScatterChartComponent",
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent"
+      ],
+      "detect": [
+        "extends ChartComponent",
+        "extends ColumnChartComponent",
+        "extends LineChartComponent",
+        "extends PieChartComponent",
+        "extends FunnelChartComponent",
+        "extends WaterfallChartComponent",
+        "extends HeatmapChartComponent",
+        "extends ScatterChartComponent",
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent"
+      ],
+      "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
+      "appliesWhen": "Only a class of yours that extends one of these charts or pickers. Template users need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error against any of these classes.",
+      "note": "Gained: ChartComponent, ColumnChartComponent, PieChartComponent skeletonCount and skeletonMarks; FunnelChartComponent skeletonCount and skeletonColumns; WaterfallChartComponent skeletonCount, skeletonMarks, skeletonValueSpace and skeletonAxisGutter; LineChartComponent skeletonPoints, skeletonValueSpace, skeletonAxisGutter and skeletonPlotHeight; HeatmapChartComponent skeletonColumns; ScatterChartComponent skeletonLayout; SelectComponent, MultiSelectComponent and AutocompleteComponent skeletonOptionWidths. Lost: ColumnChartComponent skeletonColumns and skeletonHeightPx; WaterfallChartComponent skeletonBars; ScatterChartComponent skeletonHeight."
     }
   ],
   "informational": [
