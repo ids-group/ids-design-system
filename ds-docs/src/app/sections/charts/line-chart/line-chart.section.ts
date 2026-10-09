@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -192,6 +193,7 @@ const PINNED_AXIS_LOW_SERIES: readonly LineChartSeries[] = [
   selector: 'section-charts-line-chart',
   standalone: true,
   imports: [
+    RouterLink,
     DocsReplayButtonComponent,
     DocsLineChartDataEditorComponent,
     DocsSectionComponent,

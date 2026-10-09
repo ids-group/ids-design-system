@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -212,6 +213,7 @@ const CUSTOM_COLOR_POINTS: readonly ColumnChartPoint[] = [
   selector: 'section-charts-column-chart',
   standalone: true,
   imports: [
+    RouterLink,
     ChartComponent,
     ColumnChartComponent,
     ColumnSeriesComponent,
