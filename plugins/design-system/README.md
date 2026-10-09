@@ -98,11 +98,19 @@ version from going green. The plugin copy comes from the newest release tag that
 lints steps from versions released before the plugins existed; without one, the step is skipped and
 the report says so. Nothing is fixed by the linters: renames stay with `apply-mechanical.mjs`.
 
-Prerequisites, all from the consumer's own `node_modules`: `eslint` 8.57 or later with
-`typescript-eslint` (or `@typescript-eslint/parser`) for `.ts`, `@angular-eslint/template-parser`
-(or `angular-eslint`) for templates, inline ones included, and `stylelint` with `postcss-scss` for
-stylesheets. Whatever is missing is skipped and named in the report; nothing is installed and your
-lint config is neither read nor changed.
+Linters and parsers:
+
+| need               | packages                                                                   |
+| ------------------ | -------------------------------------------------------------------------- |
+| `.ts`              | `eslint` >= 8.57 + `typescript-eslint` or `@typescript-eslint/parser`      |
+| templates (inline) | `@angular-eslint/template-parser` or `angular-eslint` (+ inline processor) |
+| stylesheets        | `stylelint` + `postcss-scss`                                               |
+
+- Taken from the consumer's own `node_modules` first.
+- Missing ones: the run asks once to fetch a pinned set with `npm exec` into npm's cache
+  (`_npx`) and passes that dir as `lint-step.mjs --tools`. Nothing is installed into your repo.
+- Declined: the missing linters are skipped and named in the report.
+- Your lint config is neither read nor changed.
 
 ## Feedback
 
