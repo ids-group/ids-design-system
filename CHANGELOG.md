@@ -217,6 +217,9 @@
   outside the text now, in the padding already around it. Nothing moves at rest, and a header
   term's pressed fill keeps its size.
 
+- **The `ds-date-picker` month and year arrows sit in the centre of their button.** The browser's
+  button padding left the 14px icon 1px right of the centre of its 24px box.
+
 - **A tooltip and a `ds-menu-item` submenu close when anything under them scrolls.** Inside an
   `overflow: auto` container they stayed where they opened while their trigger scrolled away, a
   pinned tooltip included. They close now on a scroll of the window or of any scroll container, as

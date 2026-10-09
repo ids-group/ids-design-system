@@ -313,6 +313,7 @@
     .picker-nav {
       width: var(--date-picker-nav-size);
       height: var(--date-picker-nav-size);
+      padding: 0;
       border: 0;
       background: transparent;
       display: grid;
@@ -380,6 +381,7 @@
     button {
       width: var(--date-picker-nav-size);
       height: var(--date-picker-nav-size);
+      padding: 0;
       border: 0;
       background: transparent;
       display: grid;
