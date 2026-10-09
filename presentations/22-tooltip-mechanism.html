@@ -148,40 +148,127 @@
 <body>
 <main>
   <header class="masthead">
-    <h1>Тултип: четыре предложения что улучшить</h1>
+    <h1>Тултип: осталось решить две вещи</h1>
     <p class="chat">Ответ нести в чат: «Тултип и состояния: деки»</p>
-    <p class="lede">Жирное название и разрезание файла уже решены и сделаны, они внизу. Сверху четыре предложения, что ещё можно унифицировать, ускорить или почистить. У каждого есть рекомендация и честная цена.</p>
-    <div class="chips"><span class="chip is-open">Нужно решение: 4</span><span class="chip">TooltipDirective</span><span class="chip">overlay</span><span class="chip">актуально на 2026-10-09</span></div>
+    <p class="lede">Положение панели и общий Escape сделаны, жирное название и разрезание файла тоже, всё это внизу. Сверху два вопроса про слушатели и про загрузку панели, у каждого есть замер или цифры и то, как делают другие.</p>
+    <div class="chips"><span class="chip is-open">Нужно решение: 2</span><span class="chip">TooltipDirective</span><span class="chip">overlay</span><span class="chip">актуально на 2026-10-09</span></div>
   </header>
 
   <section class="panel verdict">
     <h2>Что от тебя нужно</h2>
     <ol class="todo">
       <li>
-        <span class="ask">Вынести положение панели и стрелку в четвёртый файл?</span>
-        <p class="mine"><b>Моё предложение:</b> да, как и с первыми двумя вырезками: каждый файл про одну работу.</p>
-        <p class="where"><a href="#q-position">К вопросу 1</a></p>
+        <span class="ask">Что делать со слушателями на ячейках таблицы после замера?</span>
+        <p class="mine"><b>Моё предложение:</b> поставить директиву только на ячейки с обрезкой, а делегирование на приложение решать после этого по замеру боевой сборки.</p>
+        <p class="where"><a href="#q-listeners">К вопросу 1</a></p>
       </li>
       <li>
-        <span class="ask">Сначала замерить цену слушателей на ячейку таблицы?</span>
-        <p class="mine"><b>Моё предложение:</b> да, замер, а оптимизация только если он покажет проблему.</p>
-        <p class="where"><a href="#q-listeners">К вопросу 2</a></p>
-      </li>
-      <li>
-        <span class="ask">Сделать панель ленивой, чтобы она не грузилась до первого наведения?</span>
-        <p class="mine"><b>Моё предложение:</b> нет. Выигрыш около 2 КБ в gzip, цена - асинхронный показ.</p>
-        <p class="where"><a href="#q-lazy">К вопросу 3</a></p>
-      </li>
-      <li>
-        <span class="ask">Вынести общий помощник для «закрыть по Escape» из тултипа и подсказки графика?</span>
-        <p class="mine"><b>Моё предложение:</b> нет, выигрыш около 10 строк при риске для ветки без документа.</p>
-        <p class="where"><a href="#q-escape">К вопросу 4</a></p>
+        <span class="ask">Подгружать ли панель тултипа на простое сразу после старта, а не держать в начальной сборке?</span>
+        <p class="mine"><b>Моё предложение:</b> выигрыш около 2 КБ gzip, и пока нет замера старта я бы не делал. Выбор за тобой.</p>
+        <p class="where"><a href="#q-lazy">К вопросу 2</a></p>
       </li>
     </ol>
     <p class="cap">Согласен с предложением - нажми карточку «рекомендую» у каждого вопроса. Не согласен - нажми другую или напиши замечание. Внизу появится одна строка для чата.</p>
   </section>
 
-  <section class="panel q" id="q-position" data-q="position" data-review="Вынести положение панели" data-review-note-only>
+  <section class="panel q" id="q-listeners" data-q="listeners" data-review="Замер слушателей" data-review-note-only data-review-round="2">
+    <h2>Вопрос 1. Слушатели на ячейку таблицы: что делать после замера</h2>
+    <p>Замерено в ds-docs (<code>ng serve</code>, сборка для разработки): таблица на 1000 строк по 4 колонки, 2 из них с обрезкой. Считал вызовы <code>addEventListener</code> счётчиком, подставленным до загрузки страницы. Страница без добавленных строк: 10 482 вызова и 1 173 ячейки.</p>
+    <div class="bars2">
+      <div class="r"><span>Ячеек <code>td</code></span><span class="bar"><i style="width:23%"></i></span><span class="n">1 173</span></div>
+      <div class="r"><span>Ячеек <code>td</code>, 1000 строк</span><span class="bar"><i class="bad" style="width:100%"></i></span><span class="n">5 161</span></div>
+      <div class="r"><span>Вызовов, базовая страница</span><span class="bar"><i style="width:25%"></i></span><span class="n">10 482</span></div>
+      <div class="r"><span>Вызовов, 1000 строк</span><span class="bar"><i class="bad" style="width:100%"></i></span><span class="n">41 389</span></div>
+    </div>
+    <div class="stage">
+      <div class="spec"><p class="cap">На каждую добавленную ячейку (+3 988)</p><p class="code">mouseenter +3 988
+mouseleave +3 988
+focusin    +3 988
+focusout   +3 988
+click      +4 985
+keydown    +4 985</p></div>
+      <div class="spec"><p class="cap">Что это значит</p><p class="cap">6 слушателей на ячейку. Директива стоит на <b>каждой</b> ячейке таблицы, а не только на тех, где есть обрезка: когда я выключил обрезку во всех колонках, число вызовов осталось 41 389.</p></div>
+    </div>
+    <p class="cap">Время и память этим замером не разделены: в обоих прогонах директива стояла на всех ячейках. Память между прогонами с одинаковым числом слушателей разошлась в 2 раза (181 и 388 МБ), поэтому как цифру её не привожу. Время отрисовки в сборке для разработки не годится, нужна боевая сборка.</p>
+    <p>Как делают другие. <b>Tippy.js</b> даёт <code>delegate()</code>: общий родитель создаёт экземпляры подсказок для дочерних по селектору, и только при первом срабатывании. <b>Bootstrap 5</b> принимает опцию <code>selector</code> и делегирует подсказки на динамически добавленные элементы. <b>Angular Material</b>: разработчики мерили большую <code>mat-table</code> и нашли, что создание <code>MatTooltip</code> занимает 1,3% времени, и в 2025 перенесли создание ненужных зависимостей на момент первого показа.</p>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Директива только на ячейках с обрезкой</h3>
+        <p class="youpick"><b>Ты выбираешь</b>таблица ставит <code>dsTooltipWhenClipped</code> только на ячейки колонок с <code>truncate</code>. Остальные ячейки не получают ни директивы, ни слушателей.</p>
+        <div class="files"><span class="file is-gone">4 колонки × 6</span><span class="arrow">→</span><span class="file is-new">2 колонки × 6</span></div>
+        <div class="pills"><span class="pill good">в этой таблице минус половина слушателей</span><span class="pill good">в типичной, где обрезается одна колонка, больше</span><span class="pill mid">шаблон ячейки раздваивается</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Один слушатель на всё приложение</h3>
+        <p class="youpick"><b>Ты выбираешь</b>тултип, термин и <code>ds-info-hint</code> регистрируются в общем реестре, а на документе стоят по одному слушателю на событие. Слушатель смотрит, в какую цель попало событие, и вызывает нужную директиву.</p>
+        <div class="files"><span class="file is-gone">6 слушателей на каждую цель</span><span class="arrow">→</span><span class="file is-new">6 на приложение</span></div>
+        <div class="pills"><span class="pill good">число слушателей не растёт с числом ячеек</span><span class="pill good">охватывает термин и hint</span><span class="pill bad">перестройка директивы: <code>mouseenter</code> и <code>focusin</code> не всплывают, нужна фаза перехвата и поиск цели вверх по дереву</span><span class="pill bad">выигрыш в миллисекундах не доказан</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Оба: сначала директива только где нужна, потом делегирование</h3>
+        <p class="youpick"><b>Ты выбираешь</b>сейчас правка таблицы, а делегирование откладывается до замера боевой сборки после неё.</p>
+        <div class="pills"><span class="pill good">дешёвая правка сразу</span><span class="pill good">большая перестройка только если ещё нужна</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Не трогать</h3>
+        <p class="youpick"><b>Ты выбираешь</b>считаем цену приемлемой.</p>
+        <div class="pills"><span class="pill mid">6 слушателей на каждую ячейку остаются</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  <ol data-review-history><li>2026-10-09 · «выбираю сначала замерить, но предположительно потребутеся оптимизация Сразу делегировать события. и может на всё приложение что нибудь подобное понадобится. условно на все директивы tooltip и termin, чтобы не у каждого был свой слушатель, а один на приложение, и он дилегировал куда был сделан клик? чтобы не запускать сотни одинаковых слушателей.» → замерено на 1000 строках: 6 слушателей на ячейку, директива стоит на каждой ячейке независимо от обрезки; добавлены варианты: директива только на ячейках с обрезкой, один слушатель на приложение для тултипа, термина и hint (как Tippy delegate и Bootstrap selector), оба по очереди</li></ol></section>
+
+  <section class="panel q" id="q-lazy" data-q="lazy" data-review="Ленивая панель" data-review-note-only data-review-round="2">
+    <h2>Вопрос 2. Загрузка панели не в начальной сборке, а сразу после старта</h2>
+    <p>Панель тултипа с разметкой и стилями весит около 2 140 байт gzip из 7 473 всего тултипа (срез собранного файла, оценка доли). Дальше два способа убрать её из начальной сборки, не ломая первый показ.</p>
+    <div class="pipe">
+      <div class="st"><b>Старт приложения</b><small>только директивы: ничего, что не нужно для первой отрисовки</small></div>
+      <div class="st"><b>Первая отрисовка</b><small>приложение показано</small></div>
+      <div class="st"><b>Простой браузера</b><small><code>requestIdleCallback</code> с запасным временем: панель подгружается, пока никто не наводит</small></div>
+      <div class="st is-close"><b>Наведение</b><small>панель уже на месте, показ синхронный; если пользователь быстрее, показ ждёт загрузки</small></div>
+    </div>
+    <p>Как делают другие. <b>Angular</b>: блок <code>@defer</code> по умолчанию грузит код, когда браузер простаивает (под капотом <code>requestIdleCallback</code>), а <code>prefetch on idle</code> тянет код заранее и показывает позже. Работает для компонентов, не для директив, поэтому подходит панели, а не самой директиве. <b>Idle until urgent</b> (Филип Уолтон): работа откладывается на простой, но выполняется сразу, если пользователь успел раньше.</p>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+      <article class="opt" tabindex="0">
+        <h3>Не делать</h3>
+        <p class="youpick"><b>Ты выбираешь</b>панель остаётся в сборке, показ синхронный. Это был твой первый выбор.</p>
+        <div class="pills"><span class="pill good">без гонок при первом наведении</span><span class="pill mid">около 2 КБ gzip до первого показа</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую, если нужен выигрыш при старте</span>
+        <h3>Панель тултипа: подгрузить на простое</h3>
+        <p class="youpick"><b>Ты выбираешь</b>панель идёт динамическим импортом, который запускается в простое сразу после первой отрисовки. Если наведение раньше, показ ждёт импорта.</p>
+        <div class="pills"><span class="pill good">около 2 КБ gzip уходят из начальной сборки</span><span class="pill good">к первому наведению панель уже на месте</span><span class="pill bad">первый показ может стать асинхронным</span><span class="pill bad">выигрыш мал, замера старта нет</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Общий помощник для панелей всех оверлеев</h3>
+        <p class="youpick"><b>Ты выбираешь</b>одна функция «загрузить на простое, дождаться при нужде» для панелей тултипа, меню, селектов, календаря. Каждая панель грузится в своём этапе после старта.</p>
+        <div class="pills"><span class="pill good">один приём для всех, этапы загрузки</span><span class="pill bad">размер остальных панелей не измерен</span><span class="pill bad">большая перестройка, трогает каждый оверлей</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  <ol data-review-history><li>2026-10-09 · «Не делать, но - ну может просто вынести в загрузку автоматом, но не в начальную фазу? когда само приложение стартует. чтобы старт был быстрее, а потом СРАЗУ же подгружать подобные компоненты? тултипы? термины и тд? каике то ещё вещи? то есть не lazy, а отложенный. сформированный на несколько этапов загрузки.» → добавлены варианты отложенной загрузки по этапам: панель тултипа на простое после старта и общий помощник для панелей всех оверлеев; приведены Angular @defer с prefetch on idle и idle until urgent; директивы отложить нельзя, только панели</li></ol></section>
+
+  <h2 class="band">Уже решено и сделано</h2>
+  <p class="cap">Здесь отвечать не нужно. Два первых вопроса этой деки закрыты, их аргументы свёрнуты.</p>
+
+  <section class="decided">
+    <h2>Решено и сделано, в dev</h2>
+    <p><b>Жирное название при обрезке пишет только <code>dsDefinitionTerm</code>.</b> Обычный <code>dsTooltip</code> показывает ровно то, что написано.</p>
+    <p><b>Код тултипа разрезан на три файла, два атрибута склеены в один.</b> <code>dsTooltipWhenClipped=".label"</code> заменил пару с <code>dsTooltipTextSelector</code>. Клип-тест лежит в <code>tooltip-clip.ts</code>, фокус через родителя в <code>tooltip-ancestor-focus.ts</code>, основной файл остался на 444 строках (было 515, обещал около 360). Старую разметку ловят ESLint и запись миграции.</p>
+    <p><b>Положение панели и стрелка вынесены в <code>tooltip-position.ts</code>, закрытие по Escape общее.</b> Основной файл теперь 374 строки. Закрепление тултипа и подсказка графика слушают Escape через одну функцию из <code>overlay-motion.ts</code>.</p>
+    <p class="evidence">src/lib/components/tooltip/tooltip-position.ts - src/lib/components/overlay-motion.ts - CHANGELOG.md Unreleased</p>
+  </section>
+
+  <details class="folded">
+    <summary>Решено: вынести положение панели в отдельный файл</summary>
+  <section class="panel">
     <h2>Вопрос 1. Вынести положение панели и стрелку в отдельный файл</h2>
     <p>В <code>tooltip.directive.ts</code> осталось 444 строки. Около 66 из них (оценка по диапазонам строк: <code>positionFor</code>, <code>pointArrowAtHost</code>, три константы) только считают, где стоять панели и куда смотреть стрелке, и не знают про события и текст. Снаружи ничего не меняется.</p>
     <div class="jobs" aria-label="Файл tooltip.directive.ts после первой нарезки">
@@ -189,11 +276,11 @@
       <span class="j4" style="flex:378">всё остальное<br>около 378</span>
     </div>
     <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
-      <article class="opt is-pick" tabindex="0">
+      <article class="opt is-pick is-chosen" tabindex="0">
         <span class="badge is-pick">рекомендую</span>
         <h3>Вынести в tooltip-position.ts</h3>
-        <p class="youpick"><b>Ты выбираешь</b>положение панели и стрелка живут в своём файле, директива вызывает их. Основной файл станет около 378 строк (оценка).</p>
-        <div class="files"><span class="file">tooltip.directive.ts<small>около 378</small></span><span class="file is-new">tooltip-position.ts<small>около 66</small></span></div>
+        <p class="youpick"><b>Ты выбираешь</b>положение панели и стрелка живут в своём файле, директива вызывает их. Основной файл стал 374 строки.</p>
+        <div class="files"><span class="file">tooltip.directive.ts<small>374</small></span><span class="file is-new">tooltip-position.ts<small>около 66</small></span></div>
         <div class="pills"><span class="pill good">каждый файл про одну работу</span><span class="pill good">снаружи ничего</span><span class="pill mid">ещё один файл в папке</span></div>
         <dl class="layer"><dt>Потребители</dt><dd class="none">не затронуты</dd><dt>Changelog и миграции</dt><dd>строка про состав членов <code>TooltipDirective</code>: <code>pointArrowAtHost</code> и <code>positionFor</code> уходят</dd></dl>
         <span class="chosen-mark">выбрано</span>
@@ -207,63 +294,11 @@
     </div>
   </section>
 
-  <section class="panel q" id="q-listeners" data-q="listeners" data-review="Замер слушателей" data-review-note-only>
-    <h2>Вопрос 2. Цена слушателей на каждую ячейку таблицы</h2>
-    <p>Директива вешает 7 слушателей на свой элемент (<code>mouseenter</code>, <code>mouseleave</code>, <code>focusin</code>, <code>focusout</code>, <code>click</code>, <code>keydown</code>, <code>keydown.escape</code>; <code>grep -c</code> по <code>@HostListener</code>). Её ставит каждая ячейка колонки с обрезкой, и ещё 4 слушателя встаёт на фокусируемого родителя, если ячейка внутри него. Ниже расчёт, не замер: 5 колонок с обрезкой.</p>
-    <div class="bars2">
-      <div class="r"><span>100 строк</span><span class="bar"><i style="width:10%"></i></span><span class="n">3 500</span></div>
-      <div class="r"><span>500 строк</span><span class="bar"><i class="bad" style="width:50%"></i></span><span class="n">17 500</span></div>
-      <div class="r"><span>1000 строк</span><span class="bar"><i class="bad" style="width:100%"></i></span><span class="n">35 000</span></div>
-    </div>
-    <p class="cap">Расчёт: строки × 5 колонок × 7 слушателей. Реальная цена в миллисекундах и в памяти не измерена.</p>
-    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
-      <article class="opt is-pick" tabindex="0">
-        <span class="badge is-pick">рекомендую</span>
-        <h3>Сначала замерить</h3>
-        <p class="youpick"><b>Ты выбираешь</b>я рисую таблицу на 500 и 1000 строк с обрезкой в 5 колонках и мерю время отрисовки и память. Если цифры плохие, возвращаюсь с решением.</p>
-        <div class="pills"><span class="pill good">решаем по цифрам</span><span class="pill mid">один замер, без правок кода</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-      <article class="opt" tabindex="0">
-        <h3>Сразу делегировать события</h3>
-        <p class="youpick"><b>Ты выбираешь</b>один слушатель на таблицу вместо слушателей на каждую ячейку, директива регистрируется в общем реестре.</p>
-        <div class="pills"><span class="pill good">меньше слушателей</span><span class="pill bad">большая перестройка директивы</span><span class="pill bad">выигрыш не доказан</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-      <article class="opt" tabindex="0">
-        <h3>Не трогать</h3>
-        <p class="youpick"><b>Ты выбираешь</b>считаем цену приемлемой.</p>
-        <div class="pills"><span class="pill mid">без цифр это догадка</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-    </div>
-  </section>
+  </details>
 
-  <section class="panel q" id="q-lazy" data-q="lazy" data-review="Ленивая панель" data-review-note-only>
-    <h2>Вопрос 3. Ленивая загрузка панели</h2>
-    <p>Панель с разметкой и стилями лежит в той же сборке, что директива. Измерено на собранной библиотеке: весь тултип 30 962 байта (7 473 в gzip), из них панель с разметкой около 10 КБ, сжатая отдельно 2 140 байт (срез файла по смещениям, оценка доли).</p>
-    <div class="bars2">
-      <div class="r"><span>Весь тултип, gzip</span><span class="bar"><i style="width:100%"></i></span><span class="n">7 473</span></div>
-      <div class="r"><span>Панель с разметкой</span><span class="bar"><i class="bad" style="width:29%"></i></span><span class="n">около 2 140</span></div>
-    </div>
-    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
-      <article class="opt is-pick" tabindex="0">
-        <span class="badge is-pick">рекомендую</span>
-        <h3>Не делать</h3>
-        <p class="youpick"><b>Ты выбираешь</b>панель остаётся в сборке. Показ остаётся синхронным.</p>
-        <div class="pills"><span class="pill good">без гонок при первом наведении</span><span class="pill mid">около 2 КБ в gzip лишние до первого показа</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-      <article class="opt" tabindex="0">
-        <h3>Грузить панель по первому наведению</h3>
-        <p class="youpick"><b>Ты выбираешь</b>панель подгружается динамическим импортом, пока идёт задержка в 120 мс.</p>
-        <div class="pills"><span class="pill good">около 2 КБ в gzip уходят из начальной сборки</span><span class="pill bad">показ становится асинхронным: гонка с закрытием и закреплением</span><span class="pill bad">запрос на первое наведение</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-    </div>
-  </section>
-
-  <section class="panel q" id="q-escape" data-q="escape" data-review="Общий помощник для Escape" data-review-note-only>
+  <details class="folded">
+    <summary>Решено: общий помощник для закрытия по Escape</summary>
+  <section class="panel">
     <h2>Вопрос 4. Общий помощник для «закрыть по Escape»</h2>
     <p>Закрепление тултипа слушает <code>Escape</code> на документе в фазе перехвата, и подсказка графика (<code>ChartTooltipDirective.closeOnEscape</code>) делает то же самое с проверкой на отсутствие документа. Остальные оверлеи библиотеки используют <code>keydownEvents()</code> самого оверлея. Общие помощники уже есть и работают: <code>closeOnScroll</code> в 10 компонентах, <code>prepareOverlayEnter</code> в 9, <code>overlayPlacementOf</code> в 2 (считал по <code>git grep -l</code>, без файлов индекса и самого модуля).</p>
     <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
@@ -274,7 +309,8 @@
         <div class="pills"><span class="pill good">нулевой риск для графиков</span><span class="pill mid">около 10 строк дублируются</span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
-      <article class="opt" tabindex="0">
+      <article class="opt is-chosen" tabindex="0">
+        <span class="badge is-pick">выбрано</span>
         <h3>Вынести в overlay-motion.ts</h3>
         <p class="youpick"><b>Ты выбираешь</b>одна функция «слушать Escape на документе, вернуть отписку» для тултипа и графика.</p>
         <p class="code">const stop = listenForEscape(document, () =&gt; this.close());</p>
@@ -285,15 +321,7 @@
     </div>
   </section>
 
-  <h2 class="band">Уже решено и сделано</h2>
-  <p class="cap">Здесь отвечать не нужно. Два первых вопроса этой деки закрыты, их аргументы свёрнуты.</p>
-
-  <section class="decided">
-    <h2>Решено и сделано, в dev</h2>
-    <p><b>Жирное название при обрезке пишет только <code>dsDefinitionTerm</code>.</b> Обычный <code>dsTooltip</code> показывает ровно то, что написано.</p>
-    <p><b>Код тултипа разрезан на три файла, два атрибута склеены в один.</b> <code>dsTooltipWhenClipped=".label"</code> заменил пару с <code>dsTooltipTextSelector</code>. Клип-тест лежит в <code>tooltip-clip.ts</code>, фокус через родителя в <code>tooltip-ancestor-focus.ts</code>, основной файл остался на 444 строках (было 515, обещал около 360). Старую разметку ловят ESLint и запись миграции.</p>
-    <p class="evidence">src/lib/components/tooltip/tooltip-clip.ts - src/lib/components/tooltip/tooltip-ancestor-focus.ts - CHANGELOG.md Unreleased (Breaking)</p>
-  </section>
+  </details>
 
   <details class="folded">
     <summary>Решено: кто пишет жирное название при обрезке</summary>
@@ -632,12 +660,12 @@ People who confirmed a seat</span>
   }
   for (const card of document.querySelectorAll('[data-live]')) wire(card);
 
-  const PICK_KEY = 'ds-deck-tooltip-mechanism-picks-v7';
+  const PICK_KEY = 'ds-deck-tooltip-mechanism-picks-v8';
   const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
   const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private window */ } };
   const state = read(PICK_KEY, {});
   const sections = [...document.querySelectorAll('.q[data-q]')];
-  const labels = { position: 'Вынести положение панели', listeners: 'Слушатели на ячейку', lazy: 'Ленивая панель', escape: 'Помощник для Escape' };
+  const labels = { listeners: 'Слушатели на ячейку', lazy: 'Загрузка панели на простое' };
   const optionName = (card) => card.querySelector('h3').textContent.trim();
   const choices = (section) => [...section.querySelectorAll('.opt:not([aria-disabled])')];
   function render() {
