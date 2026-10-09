@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.15.0 — 2026-10-09
+
 ### Breaking
 
 - **`--ds-waterfall-chart-skeleton-height` is removed.** The waterfall skeleton draws floating

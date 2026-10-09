@@ -11,8 +11,8 @@
       "element": "*",
       "name": "dsTooltipTextSelector",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#tooltip-text-selector-merged-into-when-clipped"
+      "since": "0.15.0",
+      "itemId": "0.15.0#tooltip-text-selector-merged-into-when-clipped"
     },
     {
       "element": "ds-accordion",
@@ -579,8 +579,8 @@
       "name": "dsTooltipClippedLead",
       "replacement": null,
       "renamed": false,
-      "since": "the next release",
-      "itemId": "unreleased#tooltip-clipped-lead-removed"
+      "since": "0.15.0",
+      "itemId": "0.15.0#tooltip-clipped-lead-removed"
     },
     {
       "name": "IconButtonSize",
