@@ -143,6 +143,26 @@ const deltaNames = [
   ['Elif', 'Yilmaz'],
   ['Joseph', 'Quigley'],
 ];
+// Two pages of one paged table: the same columns, short values on the first, long on the second.
+const pageOne: readonly Row[] = people
+  .slice(1, 3)
+  .concat(
+    people.slice(1, 3).map((row, index) => ({ ...row, id: `p1-${index}` })),
+  );
+const pageTwo: readonly Row[] = [
+  people[0],
+  people[3],
+  people[0],
+  people[3],
+].map((row, index) => ({ ...row, id: `p2-${index}` }));
+const pagingColumns: readonly TableColumn<Row>[] = [
+  { key: 'name', label: 'Policyholder' },
+  { key: 'email', label: 'Email', truncate: true },
+  { key: 'city', label: 'City' },
+  { key: 'status', label: 'Status' },
+  { key: 'amount', label: 'Amount', align: 'right' },
+];
+
 // A consumer's delta review records: name + key/policy line, one address of about 290px per row.
 const deltaRecords: readonly Row[] = deltaNames.map(([first, last], index) => ({
   id: `NYL-QA308-${String(index + 1).padStart(4, '0')}`,
@@ -527,6 +547,51 @@ export class TableClipHarnessPage {
         { key: 'email', label: 'Email', width: 160, truncate: true },
         { key: 'notes', label: 'Notes' },
         { key: 'amount', label: 'Amount', width: 110, align: 'right' },
+      ],
+    },
+    {
+      id: 'paging-page-1',
+      title: 'One paged table, page 1: short values',
+      width: 1100,
+      data: pageOne,
+      columns: pagingColumns,
+    },
+    {
+      id: 'paging-page-2',
+      title: 'Same table, page 2: long values',
+      width: 1100,
+      data: pageTwo,
+      columns: pagingColumns,
+    },
+    {
+      id: 'paging-all',
+      title: 'Same table, both pages at once',
+      width: 1100,
+      data: [...pageOne, ...pageTwo],
+      columns: pagingColumns,
+    },
+    {
+      id: 'min-width-column',
+      title: 'Truncate column with minWidth 160, 600px',
+      width: 600,
+      data: people,
+      columns: [
+        { key: 'name', label: 'Policyholder' },
+        { key: 'email', label: 'Email', truncate: true, minWidth: 160 },
+        { key: 'notes', label: 'Notes' },
+        { key: 'amount', label: 'Amount', align: 'right' },
+      ],
+    },
+    {
+      id: 'min-width-column-off',
+      title: 'Same columns without minWidth, 600px',
+      width: 600,
+      data: people,
+      columns: [
+        { key: 'name', label: 'Policyholder' },
+        { key: 'email', label: 'Email', truncate: true },
+        { key: 'notes', label: 'Notes' },
+        { key: 'amount', label: 'Amount', align: 'right' },
       ],
     },
   ];
