@@ -495,10 +495,21 @@
         <ds-column-chart
           dataTable="none"
           loading
+          [data]="[]" />
+
+        <div class="state-cell-label">
+          Loading, no data
+        </div>
+      </div>
+
+      <div class="state-cell">
+        <ds-column-chart
+          dataTable="none"
+          loading
           [data]="loadingPoints()" />
 
         <div class="state-cell-label">
-          Loading
+          Reloading
         </div>
 
         <docs-chart-data-editor [(rows)]="loadingPoints" />

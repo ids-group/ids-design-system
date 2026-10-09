@@ -28,8 +28,8 @@ export class ColumnChartComponent extends DsChartBase implements ChartDimmable, 
     protected readonly resolvedSeries = computed<readonly ResolvedColumnSeries[]>(…);
     protected readonly seriesRefs = viewChildren(…);
     public readonly showValues = input(true, { transform: booleanAttribute });
-    protected readonly skeletonColumns = computed(…);
-    protected readonly skeletonHeightPx = computed(…);
+    public readonly skeletonCount = input(CHART_SKELETON_COUNT, { transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT) });
+    protected readonly skeletonMarks = computed(…);
     protected readonly slotCount = computed(…);
     public readonly stack = input<ChartStackMode>('none');
     public readonly staggerMs = input(40, { transform: numberAttribute });

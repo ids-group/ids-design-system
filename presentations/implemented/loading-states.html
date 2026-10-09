@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Загрузка: общее правило</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-09">
+<meta name="ds-deck-evidence" content="src/lib/components/chart-tooltip/chart-skeleton.component.ts - docs/done.md">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   main { max-width: 1400px; padding-bottom: 80px; }
   .release {
@@ -77,7 +79,7 @@
 <body>
 <main>
   <header class="masthead">
-    <div class="decided"><h2>Решено 2026-10-09: варианты выбраны, делается в ветке <code>ecm-feat/loading-skeletons</code></h2><p>Графики: ds-chart, column, line, heatmap - A; pie, funnel, waterfall - B; scatter - A без точек. Число столбцов, долей и ступеней скелета - вход <code>skeletonCount</code>, по умолчанию 5. Тепловая карта - карточка по сетке. Перезагрузка - оверлей по области графика. Списки: скелет опций, перезагрузка под оверлеем; у ds-multi-select только список.</p></div>
+    <div class="decided"><h2>Построено: варианты выбраны 2026-10-09, сделаны в ветке <code>ecm-feat/loading-skeletons</code></h2><p>Графики: ds-chart, column, line, heatmap - A; pie, funnel, waterfall - B; scatter - A без точек. Число столбцов, долей и ступеней скелета - вход <code>skeletonCount</code>, по умолчанию 5. Тепловая карта - карточка по сетке. Перезагрузка - оверлей по области графика. Списки: скелет опций, перезагрузка под оверлеем; у ds-multi-select только список.</p><p class="evidence">2026-10-09 · src/lib/components/chart-tooltip/chart-skeleton.component.ts - docs/done.md - дека implemented/loading-skeletons</p></div>
     <h1>Загрузка: одно правило для всех</h1>
     <p class="chat">Ответ нести в чат: «Acc2 · pp-ревью и Dashboard Review»</p>
     <p class="lede">Данных нет - скелет в форме компонента. Перезагрузка - данные под оверлеем по их области.</p>
@@ -86,6 +88,7 @@
     <div class="chips"><span class="chip is-open">11 компонентов</span><span class="chip">следующий релиз</span><span class="chip">актуально на 2026-10-09</span></div>
   </header>
 
+  <details class="folded"><summary>Как выбирали: варианты, замеры и замечания</summary>
   <section class="panel">
     <h2>Кто уже по правилу</h2>
     <table class="measure">
@@ -537,6 +540,8 @@
       <figure class="shot"><img data-shot="autocomplete-reload-next" alt="опции под оверлеем"><figcaption>опции под оверлеем</figcaption></figure>
     </div>
   <ol data-review-history><li>2026-10-09 · «в деке 21-loading-states.html варианты нарисованы красиво но - было стало смешано в кучу. и если мне нужно выбирать a b c то должны же быть какие то кнопки? выбор? модули? краточки? не руками же мне всё прописывать» → две колонки «Было (dev) | Стало», одна тема за раз (переключатель вверху)</li></ol></section>
+
+  </details>
 
   <p class="src"><b>Источники, 2026-10-08.</b> Шаблоны графиков (<code>[pending]</code>), <code>select.component.html</code>, <code>multi-select.component.html</code>, <code>autocomplete.component.html</code> (строка со спиннером), <code>table.component.ts</code> (<code>loadingMode</code>), <code>bar-chart.component.ts</code> (<code>showsSkeleton</code>, <code>reloading</code>).</p>
 </main>

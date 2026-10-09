@@ -80,6 +80,7 @@ export class SelectComponent extends DsControlValueAccessor<string> implements O
     private setOpen;
     public readonly size = input<DsSize | null>(null);
     public readonly sizeResolved = resolveWithConfig(…);
+    protected readonly skeletonOptionWidths = ['70%', '50%', '85%'];
     public readonly success = input<string, string | null | undefined>('', { transform: trimmedText });
     protected toggle(): void;
     protected readonly trigger = viewChild.required<ElementRef<HTMLElement>>(…);

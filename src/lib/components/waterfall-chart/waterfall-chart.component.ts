@@ -16,13 +16,17 @@ import {
   viewChild,
 } from '@angular/core';
 import {
+  CHART_DEFAULT_AXIS_GUTTER,
+  CHART_DEFAULT_VALUE_SPACE,
   ChartComponent,
   ColumnSeriesComponent,
 } from '@ids-group-ltd/ids-design-system/components/chart';
 import type { ColumnSeriesPoint } from '@ids-group-ltd/ids-design-system/components/chart';
-import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import type { ChartDataTable } from '@ids-group-ltd/ids-design-system/core';
-import { ChartStatesComponent } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import {
+  ChartSkeletonComponent,
+  ChartStatesComponent,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type { ChartItemTooltipTrigger } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { waterfallSteps } from './waterfall-chart.math';
 import { WaterfallMarksComponent } from './waterfall-marks.component';
@@ -31,7 +35,9 @@ import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/c
 import {
   chartRenderGate,
   CHART_RENDER_GATE_PASSED,
+  CHART_SKELETON_COUNT,
   DsChartBase,
+  skeletonMarkCount,
 } from '@ids-group-ltd/ids-design-system/components';
 import type {
   WaterfallChartBar,
@@ -52,9 +58,9 @@ const DIRECTION_COLORS: Record<WaterfallChartStep['direction'], string> = {
   exportAs: 'dsWaterfallChart',
   imports: [
     ChartComponent,
+    ChartSkeletonComponent,
     ChartStatesComponent,
     ColumnSeriesComponent,
-    SkeletonComponent,
     WaterfallMarksComponent,
     ChartDataTableComponent,
   ],
@@ -95,6 +101,11 @@ export class WaterfallChartComponent
 
   /** How many value-axis ticks to aim for; ticks snap to a round step. */
   readonly tickCount = input(5, { transform: numberAttribute });
+
+  /** How many steps the loading skeleton draws before the data is known: a total, the deltas, a total. */
+  readonly skeletonCount = input(CHART_SKELETON_COUNT, {
+    transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT),
+  });
 
   /** The annex table under the plot: each step's direction, reading and running total. Unset falls back to `DS_CONFIG.chart.dataTable`. */
   readonly dataTable = input<ChartDataTable | null>(null);
@@ -198,9 +209,12 @@ export class WaterfallChartComponent
     }));
   });
 
-  protected readonly skeletonBars = computed(() =>
-    Array.from({ length: Math.max(this.data().length, 5) }),
+  protected readonly skeletonMarks = computed(() =>
+    skeletonMarkCount(this.data().length, this.skeletonCount()),
   );
+
+  protected readonly skeletonValueSpace = CHART_DEFAULT_VALUE_SPACE;
+  protected readonly skeletonAxisGutter = CHART_DEFAULT_AXIS_GUTTER;
 
   protected onPointClicked(point: ColumnSeriesPoint): void {
     const datum = this.data().find(

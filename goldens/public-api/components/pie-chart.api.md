@@ -55,6 +55,8 @@ export class PieChartComponent extends DsChartBase implements ChartDimmable, Cha
     private readonly ringElement;
     private readonly ringWidth;
     protected readonly roving = rovingMarks(…);
+    public readonly skeletonCount = input(CHART_SKELETON_COUNT, { transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT) });
+    protected readonly skeletonMarks = computed(…);
     protected readonly skeletonRows = computed(…);
     public readonly sliceClicked = output<PieChartSlice>();
     protected readonly slices = computed(…);

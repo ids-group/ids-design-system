@@ -33,6 +33,8 @@ export class FunnelChartComponent extends DsChartBase implements ChartDimmable, 
     public readonly shape = input<FunnelChartShape>('area');
     protected readonly showDataTable = computed(…);
     public readonly showTable = input(true, { transform: booleanAttribute });
+    protected readonly skeletonColumns = computed(…);
+    public readonly skeletonCount = input(CHART_SKELETON_COUNT, { transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT) });
     protected readonly skeletonStages = computed(…);
     public readonly stageClicked = output<FunnelChartStage>();
     protected readonly stages = computed(…);
