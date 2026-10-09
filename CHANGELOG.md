@@ -167,6 +167,9 @@
   icon sits `--space-2` after the label instead of `--space-1`, so a filtered header's label clips
   4px sooner. The button is at full opacity while focused.
 
+- **A `ds-table` cell link's focus ring clears the text.** It was drawn inward, over the first and
+  last letter; it is drawn around the text now.
+
 - **A tooltip and a `ds-menu-item` submenu close when anything under them scrolls.** Inside an
   `overflow: auto` container they stayed where they opened while their trigger scrolled away, a
   pinned tooltip included. They close now on a scroll of the window or of any scroll container, as

@@ -363,7 +363,12 @@
         text-decoration: var(--_table-cell-link-decoration);
       }
 
+      // The table rings inward, which here lands on the glyphs; the cell padding has room for a ring outside the text.
       td .cell-link {
+        --focus-ring-offset: 0px;
+
+        padding-inline: var(--focus-ring-width);
+        margin-inline: calc(-1 * var(--focus-ring-width));
         color: var(--_table-cell-link-color);
         text-decoration: var(--_table-cell-link-decoration);
       }
