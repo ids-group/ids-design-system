@@ -189,11 +189,20 @@ const ACTIONS: readonly TableRowAction<Row>[] = [
       color: var(--text-secondary);
     }
     page-table-clip-harness .site {
-      display: inline-flex;
-      gap: 6px;
-      align-items: baseline;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
-    page-table-clip-harness .site code {
+    page-table-clip-harness .site-name,
+    page-table-clip-harness .site-slug {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    page-table-clip-harness .site-name {
+      font-weight: 600;
+    }
+    page-table-clip-harness .site-slug {
+      font-size: 12px;
       color: var(--text-tertiary);
     }
     page-table-clip-harness .ph {
