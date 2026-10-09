@@ -3,9 +3,7 @@
     class="case"
     [attr.data-case]="item.id"
     [style.width.px]="item.width">
-    <h3>
-      {{ item.id }} - {{ item.title }} ({{ item.width }}px)
-    </h3>
+    <h3>{{ item.id }} - {{ item.title }} ({{ item.width }}px)</h3>
 
     <ds-table
       sortMode="client"
@@ -58,9 +56,7 @@
   class="case"
   data-case="resize"
   [style.width.px]="900">
-  <h3>
-    resize - dsTableResize, truncate with and without width (900px)
-  </h3>
+  <h3>resize - dsTableResize, truncate with and without width (900px)</h3>
 
   <ds-table
     caption="Resizable"
@@ -74,9 +70,7 @@
   class="case"
   data-case="container-resize"
   [style.width.px]="1200">
-  <h3>
-    container-resize - same table at several container widths
-  </h3>
+  <h3>container-resize - same table at several container widths</h3>
 
   <ds-table
     caption="Container resize"
@@ -109,9 +103,7 @@
           {{ row.name }}
         </span>
 
-        <code>
-          /{{ row.city }}-renewals-2026
-        </code>
+        <code> /{{ row.city }}-renewals-2026 </code>
       </span>
     </ng-template>
   </ds-table>
@@ -139,9 +131,7 @@
           {{ row.name }}
         </span>
 
-        <small>
-          {{ row.id }} · POL-2026-100340
-        </small>
+        <small> {{ row.id }} · POL-2026-100340 </small>
       </div>
     </ng-template>
 
@@ -186,9 +176,7 @@
           {{ row.name }}
         </span>
 
-        <small>
-          {{ row.id }} · POL-2026-100340
-        </small>
+        <small> {{ row.id }} · POL-2026-100340 </small>
       </div>
     </ng-template>
   </ds-table>
@@ -216,9 +204,7 @@
     class="case delta-review"
     [attr.data-case]="item.id"
     [style.width.px]="item.width">
-    <h3>
-      {{ item.id }} - Consumer: delta review ({{ item.width }}px)
-    </h3>
+    <h3>{{ item.id }} - Consumer: delta review ({{ item.width }}px)</h3>
 
     <ds-table
       [caption]="item.id"
@@ -233,9 +219,7 @@
             {{ row.name }}
           </span>
 
-          <span class="ph-cell__meta">
-            {{ row.id }} · {{ row.policy }}
-          </span>
+          <span class="ph-cell__meta"> {{ row.id }} · {{ row.policy }} </span>
         </div>
       </ng-template>
 
@@ -275,7 +259,8 @@
   data-case="expand-truncate"
   [style.width.px]="900">
   <h3>
-    expand-truncate - expandable rows, selectable, truncate without width (900px)
+    expand-truncate - expandable rows, selectable, truncate without width
+    (900px)
   </h3>
 
   <ds-table
@@ -298,7 +283,8 @@
   data-case="min-width-token"
   [style.width.px]="700">
   <h3>
-    min-width-token - --ds-table-min-width 1100px, truncate without width (700px)
+    min-width-token - --ds-table-min-width 1100px, truncate without width
+    (700px)
   </h3>
 
   <ds-table
@@ -312,7 +298,8 @@
   data-case="resize-content"
   [style.width.px]="900">
   <h3>
-    resize-content - dsTableResize on content, truncate, wrapping and numeric columns (900px)
+    resize-content - dsTableResize on content, truncate, wrapping and numeric
+    columns (900px)
   </h3>
 
   <ds-table

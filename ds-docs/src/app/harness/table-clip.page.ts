@@ -638,10 +638,11 @@ export class TableClipHarnessPage {
     },
   ];
 
-  protected readonly deltaReviewUnchangedTruncate: readonly TableColumn<Row>[] = [
-    { key: 'policyholder', label: 'Policyholder', width: 'content' },
-    { key: 'email', label: 'Email', truncate: true },
-  ];
+  protected readonly deltaReviewUnchangedTruncate: readonly TableColumn<Row>[] =
+    [
+      { key: 'policyholder', label: 'Policyholder', width: 'content' },
+      { key: 'email', label: 'Email', truncate: true },
+    ];
 
   protected readonly deltaReviewRemovedTruncate: readonly TableColumn<Row>[] = [
     { key: 'policyholder', label: 'Policyholder', width: 'content' },
@@ -660,23 +661,78 @@ export class TableClipHarnessPage {
     { key: 'email', label: 'Email' },
   ];
 
-  protected readonly deltaReviewUnchangedBothAuto: readonly TableColumn<Row>[] = [
-    { key: 'policyholder', label: 'Policyholder' },
-    { key: 'email', label: 'Email', truncate: true },
-  ];
+  protected readonly deltaReviewUnchangedBothAuto: readonly TableColumn<Row>[] =
+    [
+      { key: 'policyholder', label: 'Policyholder' },
+      { key: 'email', label: 'Email', truncate: true },
+    ];
 
   /** A consumer's delta review at the panel widths of a 1710, 1280 and 1024 px window. `shipped` renders its
    *  zero-width `.value` span; without it the column is `truncate: true` and nothing else. */
   protected readonly deltaReviewCases = [
-    { id: 'delta-review-unchanged-shipped', width: 1349, columns: this.deltaReviewUnchanged, data: deltaRecords, shipped: true },
-    { id: 'delta-review-removed-shipped', width: 1349, columns: this.deltaReviewRemoved, data: deltaRecords.slice(0, 1), shipped: true },
-    { id: 'delta-review-removed-shipped-663', width: 663, columns: this.deltaReviewRemoved, data: deltaRecords.slice(0, 1), shipped: true },
-    { id: 'delta-review-unchanged-truncate', width: 1349, columns: this.deltaReviewUnchangedTruncate, data: deltaRecords, shipped: false },
-    { id: 'delta-review-removed-truncate', width: 1349, columns: this.deltaReviewRemovedTruncate, data: deltaRecords.slice(0, 1), shipped: false },
-    { id: 'delta-review-removed-truncate-919', width: 919, columns: this.deltaReviewRemovedTruncate, data: deltaRecords.slice(0, 1), shipped: false },
-    { id: 'delta-review-removed-truncate-663', width: 663, columns: this.deltaReviewRemovedTruncate, data: deltaRecords.slice(0, 1), shipped: false },
-    { id: 'delta-review-unchanged-hug', width: 1349, columns: this.deltaReviewUnchangedPlain, data: deltaRecords, shipped: false },
-    { id: 'delta-review-unchanged-both-auto', width: 1349, columns: this.deltaReviewUnchangedBothAuto, data: deltaRecords, shipped: false },
+    {
+      id: 'delta-review-unchanged-shipped',
+      width: 1349,
+      columns: this.deltaReviewUnchanged,
+      data: deltaRecords,
+      shipped: true,
+    },
+    {
+      id: 'delta-review-removed-shipped',
+      width: 1349,
+      columns: this.deltaReviewRemoved,
+      data: deltaRecords.slice(0, 1),
+      shipped: true,
+    },
+    {
+      id: 'delta-review-removed-shipped-663',
+      width: 663,
+      columns: this.deltaReviewRemoved,
+      data: deltaRecords.slice(0, 1),
+      shipped: true,
+    },
+    {
+      id: 'delta-review-unchanged-truncate',
+      width: 1349,
+      columns: this.deltaReviewUnchangedTruncate,
+      data: deltaRecords,
+      shipped: false,
+    },
+    {
+      id: 'delta-review-removed-truncate',
+      width: 1349,
+      columns: this.deltaReviewRemovedTruncate,
+      data: deltaRecords.slice(0, 1),
+      shipped: false,
+    },
+    {
+      id: 'delta-review-removed-truncate-919',
+      width: 919,
+      columns: this.deltaReviewRemovedTruncate,
+      data: deltaRecords.slice(0, 1),
+      shipped: false,
+    },
+    {
+      id: 'delta-review-removed-truncate-663',
+      width: 663,
+      columns: this.deltaReviewRemovedTruncate,
+      data: deltaRecords.slice(0, 1),
+      shipped: false,
+    },
+    {
+      id: 'delta-review-unchanged-hug',
+      width: 1349,
+      columns: this.deltaReviewUnchangedPlain,
+      data: deltaRecords,
+      shipped: false,
+    },
+    {
+      id: 'delta-review-unchanged-both-auto',
+      width: 1349,
+      columns: this.deltaReviewUnchangedBothAuto,
+      data: deltaRecords,
+      shipped: false,
+    },
   ];
 
   protected readonly deltaWorkaroundColumns: readonly TableColumn<Row>[] = [
