@@ -751,7 +751,9 @@
     entry per series, formatted by the chart's
     <code class="t-mono-inline">
       valueFormat
-    </code>.
+    </code>. A pinned panel takes the pointer, so
+    its text can be selected and a link in the template clicked; an unpinned
+    one lets the pointer through to the plot.
     <code class="t-mono-inline">
       tooltipExtraGap
     </code> moves the panel
@@ -876,4 +878,5 @@
       [patterns]="seriesDashes"
       [interactive]="true" />
   </ds-chart>
+
 </docs-section>
