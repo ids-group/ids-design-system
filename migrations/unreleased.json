@@ -371,7 +371,8 @@
     {
       "text": "A `ds-funnel-chart` stage grows from 96% while it fades in instead of rising 4px, and the value labels of the bar, column, waterfall, heatmap, pie and funnel charts and the funnel's table rows fade in where they stand. A `ds-pie-chart` ring grows from 96% while it fades in, without the 30° turn.",
       "verify": "Load a funnel and a pie chart and confirm stages, ring and labels appear without travelling or turning."
-    }
+    },
+    "The ESLint rules and the stylelint rule take an optional `from` version, as an option of one rule or through a recommended-from config of the ESLint plugin, that leaves out every removed or renamed name from that release and earlier. Without it nothing changes."
   ],
   "deleteList": [
     {

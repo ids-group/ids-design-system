@@ -4,6 +4,7 @@
 // and autofixes a rename to the current name.
 import { readFileSync } from 'node:fs';
 import stylelint from 'stylelint';
+import { VERSION, releasedAfter } from './since-version.mjs';
 
 const {
   createPlugin,
@@ -28,13 +29,28 @@ const messages = ruleMessages(ruleName, {
 // The whole dashed name, so `--x-warn` is never found inside `--x-warning`.
 const CUSTOM_PROPERTY = /(?<![\w-])--[\w-]+/g;
 
-const rule = (primary) => (root, result) => {
-  if (!validateOptions(result, ruleName, { actual: primary })) return;
+const rule = (primary, secondary) => (root, result) => {
+  if (
+    !validateOptions(
+      result,
+      ruleName,
+      { actual: primary },
+      {
+        actual: secondary,
+        possible: {
+          from: (value) => typeof value === 'string' && VERSION.test(value),
+        },
+        optional: true,
+      },
+    )
+  )
+    return;
+  const from = secondary?.from;
 
   root.walkDecls((declaration) => {
     const reportName = (name, index, rewrite) => {
       const entry = deprecatedTokens.get(name);
-      if (!entry) return;
+      if (!entry || !releasedAfter(entry.since, from)) return;
       const renamed = entry.kind === 'renamed';
       report({
         ruleName,

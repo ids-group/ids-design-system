@@ -18,6 +18,12 @@
 
 ### Added
 
+- **The ESLint and stylelint plugins take a `from` version, so an upgrade reports only what changed
+  after it.** Without it every rule lists every release since 0.4.0, as before. With
+  `idsDesignSystem.configs.recommendedFrom('0.13.4')`, `['error', { from: '0.13.4' }]` on one ESLint
+  rule, or `[true, { from: '0.13.4' }]` on `ids-design-system/no-removed-tokens`, a removed or renamed
+  name from 0.13.4 or earlier is left out and the unreleased version always counts.
+
 - **`--ds-loading-overlay-radius` rounds the corners of the `ds-loading-overlay` scrim.** It
   defaults to `0`. Set it to the radius of the container the overlay covers, so the blurred scrim
   ends at the container's own rounded edge instead of in square corners.
