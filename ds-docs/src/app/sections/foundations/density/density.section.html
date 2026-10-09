@@ -202,27 +202,37 @@
 
   <p class="block-desc t-s">
     Density is a <strong>screen-level decision</strong>, not user-global (the
-    Tweaks panel offers it for prototyping only). Set
-    <code class="t-mono-inline">
-      [data-density]
-    </code> on the route container,
-    not on <code class="t-mono-inline">&lt;html&gt;</code>. Control
-    <code class="t-mono-inline">
-      size
-    </code> (sm/md/lg) is a separate axis, defaulted by
-    <code class="t-mono-inline">
-      DS_CONFIG.control.size
-    </code>.
+    Tweaks panel offers it for prototyping only).
   </p>
+
+  <ul class="rules">
+    <li>
+      Set <code class="t-mono-inline">[data-density]</code> on the route
+      container, not on <code class="t-mono-inline">&lt;html&gt;</code>
+    </li>
+
+    <li>
+      Control <code class="t-mono-inline">size</code> (sm/md/lg) is a separate
+      axis, defaulted by
+      <code class="t-mono-inline">
+        DS_CONFIG.control.size
+      </code>
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     A 32px toolbar — use compact, not a per-control pin
   </h3>
 
   <p class="block-desc t-s">
-    <strong><code class="t-mono-inline">data-density="compact"</code> levels a
-    toolbar at 32px.</strong> Do not pin
-    <code class="t-mono-inline">--ds-search-height</code> and its siblings per
+    <strong>
+      <code class="t-mono-inline">
+        data-density="compact"
+      </code> levels a toolbar at 32px.
+    </strong> Do not pin
+    <code class="t-mono-inline">
+      --ds-search-height
+    </code> and its siblings per
     component.
   </p>
 
@@ -251,7 +261,9 @@
       <tbody>
         <tr>
           <td>
-            <code class="t-mono-inline">cozy</code> (default)
+            <code class="t-mono-inline">
+              cozy
+            </code> (default)
           </td>
 
           <td>
@@ -269,7 +281,9 @@
 
         <tr>
           <td>
-            <code class="t-mono-inline">compact</code>
+            <code class="t-mono-inline">
+              compact
+            </code>
           </td>
 
           <td>
@@ -287,7 +301,9 @@
 
         <tr>
           <td>
-            <code class="t-mono-inline">ultra-compact</code>
+            <code class="t-mono-inline">
+              ultra-compact
+            </code>
           </td>
 
           <td>
@@ -299,7 +315,10 @@
           </td>
 
           <td>
-            Field and table-cell padding; <code class="t-mono-inline">--ds-surface-padding</code> 24px to 16px
+            Field and table-cell padding;
+            <code class="t-mono-inline">
+              --ds-surface-padding
+            </code> 24px to 16px
           </td>
         </tr>
       </tbody>
@@ -314,17 +333,27 @@
 
     <li>
       Chip controls (multi-select, autocomplete) set
-      <code class="t-mono-inline">min-height</code>; density does not scale
+      <code class="t-mono-inline">
+        min-height
+      </code>; density does not scale
       type, so a 14px font keeps a 19.6px line box. For a true 24px row, shrink
       the type in that container
     </li>
 
     <li>
       A surface padding in between: set
-      <code class="t-mono-inline">--ds-surface-padding</code> (shared by
-      <code class="t-mono-inline">ds-card</code> and
-      <code class="t-mono-inline">ds-stat</code>) at
-      <code class="t-mono-inline">:root</code>
+      <code class="t-mono-inline">
+        --ds-surface-padding
+      </code> (shared by
+      <code class="t-mono-inline">
+        ds-card
+      </code> and
+      <code class="t-mono-inline">
+        ds-stat
+      </code>) at
+      <code class="t-mono-inline">
+        :root
+      </code>
     </li>
   </ul>
 </docs-section>
