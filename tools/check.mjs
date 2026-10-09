@@ -41,6 +41,8 @@ const EXTRA = {
   'deck-lint:selftest': ['tools/deck-lint-selftest.mjs'],
   // The upgrade plugin's mechanical-apply script, run over its fixture cases.
   'plugin-apply': ['plugins/design-system/scripts/apply-mechanical.test.mjs'],
+  // The upgrade plugin's lint step, run over its fixture with this repo's linters and plugins.
+  'plugin-lint-step': ['plugins/design-system/scripts/lint-step.test.mjs'],
   'upgrade-canary': ['tools/run-upgrade-canary.mjs'],
   'upgrade-canary:selftest': ['tools/run-upgrade-canary-selftest.mjs'],
   // Sweeps published history and never fails: triage, not a gate.
@@ -96,6 +98,8 @@ export const GROUPS = {
   // `plugin-apply` is in: its fixtures run in about 3 s (2026-10-08), and a consumer's upgrade runs
   // the script before any agent, so a broken rewrite reaches their code unless the PR that made it
   // fails.
+  // `plugin-lint-step` is in for the same reason: about 4 s (2026-10-09), and a consumer's upgrade
+  // takes its hits as located usages.
   lint: [
     'tools-parse',
     'entry-point-imports',
@@ -132,6 +136,7 @@ export const GROUPS = {
     'abbreviated-tokens',
     'deck-lint',
     'plugin-apply',
+    'plugin-lint-step',
     'token-deprecations:selftest',
     'api-deprecations:selftest',
     'api-deprecations',
