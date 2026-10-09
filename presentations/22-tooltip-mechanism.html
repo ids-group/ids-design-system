@@ -148,10 +148,10 @@
 <body>
 <main>
   <header class="masthead">
-    <h1>Тултип: осталось решить две вещи</h1>
+    <h1>Тултип: осталось решить три вещи</h1>
     <p class="chat">Ответ нести в чат: «Тултип и состояния: деки»</p>
-    <p class="lede">Положение панели и общий Escape сделаны, жирное название и разрезание файла тоже, всё это внизу. Сверху два вопроса про слушатели и про загрузку панели, у каждого есть замер или цифры и то, как делают другие.</p>
-    <div class="chips"><span class="chip is-open">Нужно решение: 2</span><span class="chip">TooltipDirective</span><span class="chip">overlay</span><span class="chip">актуально на 2026-10-09</span></div>
+    <p class="lede">Положение панели и общий Escape сделаны, жирное название и разрезание файла тоже, всё это внизу. Сверху три вопроса: слушатели на ячейках, загрузка панели и общее делегирование событий для всех директив. У каждого есть замер или цифры и то, как делают другие.</p>
+    <div class="chips"><span class="chip is-open">Нужно решение: 3</span><span class="chip">TooltipDirective</span><span class="chip">overlay</span><span class="chip">актуально на 2026-10-09</span></div>
   </header>
 
   <section class="panel verdict">
@@ -166,6 +166,11 @@
         <span class="ask">Подгружать ли панель тултипа на простое сразу после старта, а не держать в начальной сборке?</span>
         <p class="mine"><b>Моё предложение:</b> выигрыш около 2 КБ gzip, и пока нет замера старта я бы не делал. Выбор за тобой.</p>
         <p class="where"><a href="#q-lazy">К вопросу 2</a></p>
+      </li>
+      <li>
+        <span class="ask">Делать ли один общий слушатель на документ для всех директив и компонентов с событиями, а не только для тултипа?</span>
+        <p class="mine"><b>Моё предложение:</b> пока нет. Сначала вопрос 1, потом замер боевой сборки, и если слушателей всё ещё много, строить общий сервис.</p>
+        <p class="where"><a href="#q-delegation">К вопросу 3</a></p>
       </li>
     </ol>
     <p class="cap">Согласен с предложением - нажми карточку «рекомендую» у каждого вопроса. Не согласен - нажми другую или напиши замечание. Внизу появится одна строка для чата.</p>
@@ -254,6 +259,42 @@ keydown    +4 985</p></div>
       </article>
     </div>
   <ol data-review-history><li>2026-10-09 · «Не делать, но - ну может просто вынести в загрузку автоматом, но не в начальную фазу? когда само приложение стартует. чтобы старт был быстрее, а потом СРАЗУ же подгружать подобные компоненты? тултипы? термины и тд? каике то ещё вещи? то есть не lazy, а отложенный. сформированный на несколько этапов загрузки.» → добавлены варианты отложенной загрузки по этапам: панель тултипа на простое после старта и общий помощник для панелей всех оверлеев; приведены Angular @defer с prefetch on idle и idle until urgent; директивы отложить нельзя, только панели</li></ol></section>
+
+  <section class="panel q" id="q-delegation" data-q="delegation" data-review="Общее делегирование событий" data-review-note-only>
+    <h2>Вопрос 3. Один слушатель на документ для всех директив и компонентов</h2>
+    <p>Вопрос 1 разбирает делегирование только для тултипа, термина и <code>ds-info-hint</code>. Здесь шире: общий сервис, на который подписываются любые элементы, которых в списке много. Ниже сколько слушателей на один экземпляр вешают те, что повторяются в строках, списках и ячейках. Это счёт обработчиков в коде (<code>@HostListener</code> и <code>host</code>), не замер на странице.</p>
+    <div class="bars2">
+      <div class="r"><span><code>TooltipDirective</code></span><span class="bar"><i class="bad" style="width:100%"></i></span><span class="n">7 (в замере 6)</span></div>
+      <div class="r"><span><code>DefinitionTermDirective</code></span><span class="bar"><i class="bad" style="width:71%"></i></span><span class="n">5</span></div>
+      <div class="r"><span><code>TagComponent</code></span><span class="bar"><i style="width:43%"></i></span><span class="n">3 + 1</span></div>
+      <div class="r"><span><code>W3wComponent</code></span><span class="bar"><i style="width:43%"></i></span><span class="n">3</span></div>
+      <div class="r"><span><code>SparklineComponent</code></span><span class="bar"><i style="width:43%"></i></span><span class="n">3</span></div>
+    </div>
+    <p class="cap">«3 + 1» значит три слушателя хоста и один в шаблоне. Таблица, списки и выпадающие списки вешают ещё и слушатели в шаблоне, на каждую строку (в файле <code>TableComponent</code> 33 места в шаблоне). В замере на 1000 строк тултип дал 24 слушателя на строку из 31, остальные 7 принадлежат самой строке.</p>
+    <p>Как делают другие. <b>Tippy.js</b> и <b>Bootstrap 5</b> делегируют только подсказки, общего сервиса для всех компонентов у них нет. Сведения о том, делает ли это <b>Angular Material</b> для остальных компонентов, я не нашёл.</p>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Пока только семейство тултипа</h3>
+        <p class="youpick"><b>Ты выбираешь</b>делегирование и правка таблицы только по вопросу 1: тултип, термин, <code>ds-info-hint</code>. Остальное не трогаем, пока замер боевой сборки не покажет проблему.</p>
+        <div class="pills"><span class="pill good">самое тяжёлое место закрыто</span><span class="pill good">нет общей инфраструктуры, которая может не понадобиться</span><span class="pill mid">шаблонные слушатели строк остаются</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Общий сервис делегирования</h3>
+        <p class="youpick"><b>Ты выбираешь</b>один сервис с слушателями на документе (<code>click</code>, <code>keydown</code>, а <code>mouseenter</code> и <code>focusin</code> через фазу перехвата). Директивы и компоненты регистрируют цель и обработчик, а не вешают свои слушатели.</p>
+        <div class="files"><span class="file is-gone">каждая цель × 3-7</span><span class="arrow">→</span><span class="file is-new">один на документ</span></div>
+        <div class="pills"><span class="pill good">число слушателей не растёт с числом строк</span><span class="pill bad">большая перестройка: каждый компонент меняет способ подписки</span><span class="pill bad">клавиши Enter и Space у тега и <code>w3w</code> нужно фильтровать в сервисе</span><span class="pill bad">компонент, который останавливает событие, ломает доставку на документ</span><span class="pill bad">выигрыш не измерен</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Не делать, оптимизировать точечно</h3>
+        <p class="youpick"><b>Ты выбираешь</b>общего сервиса нет, а каждый тяжёлый случай чинится отдельно, как таблица в вопросе 1: ставить слушатели только там, где они нужны.</p>
+        <div class="pills"><span class="pill good">без новой инфраструктуры</span><span class="pill mid">повторять приём придётся для каждого случая</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
 
   <h2 class="band">Уже решено и сделано</h2>
   <p class="cap">Здесь отвечать не нужно. Два первых вопроса этой деки закрыты, их аргументы свёрнуты.</p>
@@ -660,12 +701,12 @@ People who confirmed a seat</span>
   }
   for (const card of document.querySelectorAll('[data-live]')) wire(card);
 
-  const PICK_KEY = 'ds-deck-tooltip-mechanism-picks-v8';
+  const PICK_KEY = 'ds-deck-tooltip-mechanism-picks-v9';
   const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
   const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private window */ } };
   const state = read(PICK_KEY, {});
   const sections = [...document.querySelectorAll('.q[data-q]')];
-  const labels = { listeners: 'Слушатели на ячейку', lazy: 'Загрузка панели на простое' };
+  const labels = { listeners: 'Слушатели на ячейку', lazy: 'Загрузка панели на простое', delegation: 'Общее делегирование событий' };
   const optionName = (card) => card.querySelector('h3').textContent.trim();
   const choices = (section) => [...section.querySelectorAll('.opt:not([aria-disabled])')];
   function render() {
