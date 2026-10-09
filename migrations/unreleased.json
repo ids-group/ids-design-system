@@ -595,7 +595,8 @@
         "extends ScatterChartComponent",
         "extends SelectComponent",
         "extends MultiSelectComponent",
-        "extends AutocompleteComponent"
+        "extends AutocompleteComponent",
+        "extends ChartStatesComponent"
       ],
       "detect": [
         "extends ChartComponent",
@@ -608,14 +609,15 @@
         "extends ScatterChartComponent",
         "extends SelectComponent",
         "extends MultiSelectComponent",
-        "extends AutocompleteComponent"
+        "extends AutocompleteComponent",
+        "extends ChartStatesComponent"
       ],
       "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
-      "appliesWhen": "Only a class of yours that extends one of these charts or pickers. Template users need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends one of these charts or pickers, or the internal ChartStatesComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
       "restore": null,
       "verify": "The app builds with no member-collision error against any of these classes.",
-      "note": "Gained: ChartComponent, ColumnChartComponent, PieChartComponent skeletonCount and skeletonMarks; FunnelChartComponent skeletonCount and skeletonColumns; WaterfallChartComponent skeletonCount, skeletonMarks, skeletonValueSpace and skeletonAxisGutter; LineChartComponent skeletonPoints, skeletonValueSpace, skeletonAxisGutter and skeletonPlotHeight; HeatmapChartComponent skeletonColumns; ScatterChartComponent skeletonLayout; SelectComponent, MultiSelectComponent and AutocompleteComponent skeletonOptionWidths. Lost: ColumnChartComponent skeletonColumns and skeletonHeightPx; WaterfallChartComponent skeletonBars; ScatterChartComponent skeletonHeight."
+      "note": "Gained: ChartComponent, ColumnChartComponent, PieChartComponent skeletonCount and skeletonMarks; FunnelChartComponent skeletonCount and skeletonColumns; WaterfallChartComponent skeletonCount, skeletonMarks, skeletonValueSpace and skeletonAxisGutter; LineChartComponent skeletonPoints, skeletonValueSpace, skeletonAxisGutter and skeletonPlotHeight; HeatmapChartComponent skeletonColumns; ScatterChartComponent skeletonLayout; SelectComponent, MultiSelectComponent and AutocompleteComponent skeletonOptionWidths. The internal ChartStatesComponent gained dataTable, reloading and shimmer. Lost: ColumnChartComponent skeletonColumns and skeletonHeightPx; WaterfallChartComponent skeletonBars; ScatterChartComponent skeletonHeight."
     }
   ],
   "informational": [
