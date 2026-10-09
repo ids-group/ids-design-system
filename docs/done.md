@@ -9,6 +9,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - `ds-heatmap-chart` hugs its grid (`inline-size: fit-content`)
 - `ds-select`, `ds-multi-select`, `ds-autocomplete`: placeholder option rows while empty, the list under an overlay on a reload; the multi-select filter and select all stay live
 - Decided: ds-chart, column, line, heatmap A; pie, funnel, waterfall B; scatter A without dots; heatmap card hugs the grid; multi-select A (Stas, deck `implemented/loading-states`, asked by mm-ecm)
+- Accepted: every block of the before and after (Stas, deck `implemented/loading-skeletons`)
 
 ## Bar chart rows and loading (2026-10-08)
 - `ds-bar-chart` takes `labelPosition: 'top' | 'start'` and `BarChartRow.children`, `hint`, `emphasis`, `showPercent`, `detached` (`bar-chart.math.ts`: `placeRows`, `shownRows`, `partSpans`)

@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Скелеты загрузки</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-09">
+<meta name="ds-deck-evidence" content="src/lib/components/chart-tooltip/chart-skeleton.component.ts - docs/done.md">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   main { max-width: 1400px; padding-bottom: 80px; }
   .q { margin: var(--space-1) 0 var(--space-3); font: var(--font-weight-semibold) var(--font-size-s) / 1.4 var(--font-sans); color: var(--text-secondary); }
@@ -35,6 +37,8 @@
 </head>
 <body>
 <main>
+  <div class="decided"><h2>Принято 2026-10-09: все 12 блоков, ветка влита в dev</h2><p>Восемь графиков, <code>skeletonCount</code> и три списка приняты без замечаний; <code>ecm-feat/loading-skeletons</code> влита в dev.</p><p class="evidence">2026-10-09 · src/lib/components/chart-tooltip/chart-skeleton.component.ts - docs/done.md</p></div>
+
   <header class="masthead">
     <h1>Скелеты загрузки: было и стало</h1>
     <p class="chat">Ответ нести в чат: «Acc2 · pp-ревью и Dashboard Review»</p>
@@ -43,6 +47,7 @@
     <div class="chips"><span class="chip is-open">8 графиков, 3 списка</span><span class="chip">не в dev</span><span class="chip">актуально на 2026-10-09</span></div>
   </header>
 
+  <details class="folded"><summary>Было и стало по каждому компоненту</summary>
   <section class="panel" data-review="ds-chart">
     <h2><code>ds-chart</code>: Контейнер графика</h2>
     <p class="q">A: 5 столбцов, оси; с данными карточка 364px</p>
@@ -215,6 +220,8 @@
       <figure class="shot"><img data-shot="next-autocomplete-reload" alt="стало: перезагрузка"><figcaption>список под оверлеем.</figcaption></figure>
     </div>
   </section>
+
+  </details>
 
   <p class="src"><b>Как сняты.</b> Первый пример на странице каждого компонента в ds-docs: dev (d3ead8646) и ветка, <code>loading</code> и пустые данные выставлены через <code>ng.getComponent</code>, Chromium без анимаций, DPR 2. Спиннер на снимке застыл в начале оборота.</p>
 </main>
