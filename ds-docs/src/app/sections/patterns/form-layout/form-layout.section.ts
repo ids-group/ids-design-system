@@ -25,7 +25,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 export class FormLayoutSection {
   protected readonly showError = signal(false);
   protected readonly lede =
-    'Two-column form section, side-by-side date pairs, a one-third / two-thirds city/country split, and an inline-edit row for one-field changes. Footer with Discard and Save anchors every full form.';
+    'Two-column sections, date pairs, a city / country split and an inline-edit row; a Discard / Save footer anchors every full form.';
 
   protected readonly name = 'Project Alpha';
   protected readonly recordId = 'EVT-2026-0142';

@@ -33,7 +33,7 @@ export default [
 ];`;
 
   protected readonly lede =
-    'Every padding, colour, radius, border, font size and motion curve in component CSS reads a token. Literals are token gaps to promote, not shortcuts to take.';
+    'Every padding, colour, radius, border, font size and motion curve in component CSS reads a token.';
 
   protected readonly pairs: TokenPair[] = [
     {

@@ -19,5 +19,5 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 })
 export class EmptyStateSection {
   protected readonly lede =
-    'Five variants: none, loading, error, locked and success. Error, locked and success tint the icon tile; none and loading use the accent tint. Each carries a clear message and at most one primary action.';
+    'Five variants: none, loading, error, locked and success; each has a clear message and at most one primary action.';
 }

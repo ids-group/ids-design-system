@@ -13,10 +13,10 @@
 
   <p class="block-desc t-s">
     Every icon-only control takes the pointer over at least
-    <code class="t-mono-inline">--hit-xs</code> (24px, WCAG 2.5.8), however
-    small its icon is drawn. The box keeps its size, so nothing around it moves
-    and its fills stay as drawn; a transparent layer takes the pointer around
-    it, and its focus ring is drawn on the edge of that 24px target.
+    <code class="t-mono-inline">
+      --hit-xs
+    </code> (24px, WCAG 2.5.8), however
+    small its icon.
   </p>
 
   <div class="target-demo">
@@ -32,35 +32,98 @@
     </span>
   </div>
 
-  <dl class="spec">
-    <dt>
-      Token
-    </dt>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Token / mixin / param
+        </th>
 
-    <dd>
-      <code class="t-mono-inline">--hit-xs</code>: 24px. Raise it, to 44px
-      for a touch screen, and every icon-only control's target follows.
-    </dd>
+        <th>
+          Effect
+        </th>
+      </tr>
+    </thead>
 
-    <dt>
-      Your own control
-    </dt>
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --hit-xs
+          </code>
+        </td>
 
-    <dd>
-      <code class="t-mono-inline">@use 'styles/target'</code> and
-      <code class="t-mono-inline">@include target.min-size</code>
-      last in its rule, after its own focus style. A control at least 24px by
-      its own size grows by nothing.
-    </dd>
+        <td>
+          24px; raise it (44px for touch) and every icon-only target follows
+        </td>
+      </tr>
 
-    <dt>
-      Beside text
-    </dt>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            target.min-size
+          </code>
+        </td>
 
-    <dd>
-      <code class="t-mono-inline">$ring-on-target: false</code> keeps the ring
-      on the icon, for a control set a few pixels from a label, such as
-      <code class="t-mono-inline">ds-info-hint</code>; the target still grows.
-    </dd>
-  </dl>
+        <td>
+          Your own control: include last in its rule, after its own focus style;
+          a box of 24px or more grows by nothing. The ring follows
+          <code class="t-mono-inline">
+            --focus-ring-offset
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            $ring-on-target: false
+          </code>
+        </td>
+
+        <td>
+          Keeps the ring on the icon, for a control a few pixels from a label
+          (<code class="t-mono-inline">ds-info-hint</code>); the target still
+          grows
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            $position: null
+          </code>
+        </td>
+
+        <td>
+          For a control that is already positioned
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <pre class="t-mono-block"><code>&#64;use 'styles/target';
+
+.my-icon-button &#123;
+  &amp;:focus-visible &#123; /* own ring */ &#125;
+  &#64;include target.min-size;
+&#125;</code></pre>
+
+  <details class="edge-cases">
+    <summary>
+      <span class="t-s">
+        How the target grows
+      </span>
+
+      <span class="chapter-toggle">
+        Show
+      </span>
+    </summary>
+
+    <p class="block-desc t-s">
+      The box keeps its size, so nothing around it moves and its fills stay as
+      drawn. A transparent <code class="t-mono-inline">::before</code> takes the
+      pointer over at least 24px around it, centred, and the focus ring is drawn on it.
+    </p>
+  </details>
 </docs-section>

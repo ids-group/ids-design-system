@@ -189,29 +189,99 @@
     Chart entrances
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      --ds-motion-chart-mark-enter-duration
-    </code>
-    (400ms, <code class="t-mono-inline">--ease-emphasized-decelerate</code>):
-    marks that fade or settle in place.
-    <code class="t-mono-inline">
-      -grow-duration
-    </code> (600ms,
-    <code class="t-mono-inline">
-      --ease-settle
-    </code>): columns and bars
-    growing from the baseline.
-    <code class="t-mono-inline">
-      -sweep-duration
-    </code>
-    (600ms): rings and lines.
-    <code class="t-mono-inline">
-      -detail-duration
-    </code> (180ms): value labels
-    and markers. A series' arrivals spread across 260ms regardless of mark
-    count. Reduced motion shows every mark at once.
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Token
+        </th>
+
+        <th>
+          Default
+        </th>
+
+        <th>
+          For
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-motion-chart-mark-enter-duration
+          </code>
+        </td>
+
+        <td>
+          400ms, <code class="t-mono-inline">--ease-emphasized-decelerate</code>
+        </td>
+
+        <td>
+          Marks that fade or settle in place
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            -grow-duration
+          </code>
+        </td>
+
+        <td>
+          600ms, <code class="t-mono-inline">--ease-settle</code>
+        </td>
+
+        <td>
+          Columns and bars growing from the baseline
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            -sweep-duration
+          </code>
+        </td>
+
+        <td>
+          600ms
+        </td>
+
+        <td>
+          Rings and lines
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            -detail-duration
+          </code>
+        </td>
+
+        <td>
+          180ms
+        </td>
+
+        <td>
+          Value labels and markers
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="rules">
+    <li>
+      A series' arrivals spread across 260ms, whatever the mark count
+    </li>
+
+    <li>
+      Reduced motion shows every mark at once
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     Entrance presets · customizing a surface
@@ -285,49 +355,161 @@
     </code>,
     <code class="t-mono-inline">
       -enter-duration
-    </code>,
+    </code> and
     <code class="t-mono-inline">
       -enter-easing
-    </code>, plus
-    <code class="t-mono-inline">
-      -enter-offset
-    </code> or
-    <code class="t-mono-inline">
-      -enter-scale
-    </code> for the preset's travel or
-    scale (only with <code class="t-mono-inline">ds-scale-in</code> /
-    <code class="t-mono-inline">
-      ds-slide-in
-    </code>; overlay panels, modal,
-    toast, banner, alert default to
-    <code class="t-mono-inline">
-      ds-fade-in
-    </code>). Surfaces that animate on
-    close add <code class="t-mono-inline"> -leave-duration </code> and
-    <code class="t-mono-inline">
-      -leave-easing
-    </code>; modal, drawer and bottom
-    sheet add
-    <code class="t-mono-inline">
-      -leave-keyframes
-    </code>
-    (<code class="t-mono-inline">ds-fade-out</code>,
-    <code class="t-mono-inline">
-      ds-scale-out
-    </code>,
-    <code class="t-mono-inline">
-      ds-slide-out
-    </code>,
-    <code class="t-mono-inline">
-      ds-slide-edge-out
-    </code>). Set them globally,
-    per theme or per instance; portaled panels forward them to their overlay
-    pane. The token reference lists every surface.
+    </code>.
   </p>
 
-  <p class="block-desc t-s">
-    Custom <code class="t-mono-inline">&#64;keyframes</code> must be global:
-    emulated encapsulation renames scoped ones, so they never play through the
-    token.
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Surface
+        </th>
+
+        <th>
+          Default keyframes
+        </th>
+
+        <th>
+          Leave tokens
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          Overlay panels (<code class="t-mono-inline">--ds-overlay-*</code>)
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            ds-fade-in
+          </code>
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            -leave-duration
+          </code>,
+          <code class="t-mono-inline">
+            -leave-easing
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Modal
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            ds-fade-in
+          </code>
+        </td>
+
+        <td>
+          Duration, easing, <code class="t-mono-inline">-leave-keyframes</code>
+          (<code class="t-mono-inline">ds-fade-out</code>)
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Drawer, bottom sheet
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            ds-slide-edge-in
+          </code>
+        </td>
+
+        <td>
+          Duration, easing, <code class="t-mono-inline">-leave-keyframes</code>
+          (<code class="t-mono-inline">ds-slide-edge-out</code>)
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Toast
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            ds-fade-in
+          </code>
+        </td>
+
+        <td>
+          Duration, easing
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Banner, alert, loading overlay
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            ds-fade-in
+          </code>
+        </td>
+
+        <td>
+          None
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        -enter-offset
+      </code> /
+      <code class="t-mono-inline">
+        -enter-scale
+      </code> apply only with
+      <code class="t-mono-inline">
+        ds-slide-in
+      </code> /
+      <code class="t-mono-inline">
+        ds-scale-in
+      </code>
+    </li>
+
+    <li>
+      Leave keyframes: <code class="t-mono-inline">ds-fade-out</code>,
+      <code class="t-mono-inline">
+        ds-scale-out
+      </code>,
+      <code class="t-mono-inline">
+        ds-slide-out
+      </code>,
+      <code class="t-mono-inline">
+        ds-slide-edge-out
+      </code>
+    </li>
+
+    <li>
+      Set them globally, per theme or per instance; portaled panels forward
+      them to their overlay pane
+    </li>
+
+    <li>
+      Custom <code class="t-mono-inline">&#64;keyframes</code> must be global:
+      emulated encapsulation
+      renames scoped ones
+    </li>
+
+    <li>
+      The token reference lists every surface
+    </li>
+  </ul>
 </docs-section>
