@@ -25,7 +25,7 @@ import { TabComponent, TabsComponent } from 'ds/tabs';
 })
 export class PageHeaderSection {
   protected readonly lede =
-    'How a record page assembles breadcrumb, title, status, primary actions and tabs into a single header. The component itself lives under Components — this pattern documents how to compose it.';
+    'How a record page composes breadcrumb, title, status, actions and tabs into one header. The component lives under Components.';
 
   protected readonly crumbs: BreadcrumbItem[] = [
     { label: 'Dashboard', href: '/' },
