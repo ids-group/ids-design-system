@@ -26,7 +26,13 @@
 //   node tools/generate-api-deprecations.mjs --check   # fail when the committed JSON is stale
 //   node tools/generate-api-deprecations.mjs --report  # also list what the manifests named and the
 //                                                      # tree refused or the reader could not place
-import { readdirSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import {
+  existsSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+} from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { compareVersions } from './release-tags.mjs';
@@ -80,7 +86,9 @@ export function buildApiDeprecations({ report = [] } = {}) {
     .map((file) => /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?)\.json$/.exec(file)?.[1])
     .filter(Boolean)
     .sort(compareVersions);
-  versions.push('unreleased');
+  // The release step runs this after promoting the draft, when unreleased.json is gone.
+  if (existsSync(join(ROOT, 'migrations', 'unreleased.json')))
+    versions.push('unreleased');
 
   const lists = {
     inputs: new Map(),
