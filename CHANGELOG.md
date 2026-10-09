@@ -336,7 +336,7 @@
   over 24px around it; nothing around it moves but the arrows of the `ds-table` width and column
   panels, which sit `--space-2-5` apart instead of `--space-1` so their targets do not overlap. Its
   focus ring is drawn on the edge of that target, 24px across, except on `ds-info-hint` and an
-  icon-only breadcrumb, whose ring stays on the icon beside their text. The ring's corners take the control's own radius, 4px by default, on every one of them. Raising `--hit-xs` raises every one of these targets. The `ds-input` clear button shows its
+  icon-only breadcrumb, whose ring stays on the icon beside their text. Inside a container that sets `data-focus="inset"` or `"edge"` the ring follows that mode and shrinks with it, as the `ds-table` column filter does (16px), since the table sets inset on itself. The ring's corners take the control's own radius, 4px by default, on every one of them. Raising `--hit-xs` raises every one of these targets. The `ds-input` clear button shows its
   own focus ring; it was cut away with its icon.
 
 - **The `ds-date-picker` month and year arrows sit in the centre of their button.** The browser's
