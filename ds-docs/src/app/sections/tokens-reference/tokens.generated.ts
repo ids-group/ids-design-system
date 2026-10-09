@@ -4231,6 +4231,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-dropdown-panel-max-width",
         "value": "none",
         "notes": "Upper bound for the same panel, and the reason `width=\"content\"` is safe over a trigger whose options are long: without it the panel grows to its widest option. Same `content`-only caveat as --ds-dropdown-panel-min-width."
+      },
+      {
+        "name": "--ds-typography-s-font-family",
+        "value": "var(--font-sans)",
+        "notes": "`.t-s` font family."
+      },
+      {
+        "name": "--ds-typography-s-font-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "`.t-s` font weight."
+      },
+      {
+        "name": "--ds-typography-s-line-height",
+        "value": "var(--line-height-base)",
+        "notes": "`.t-s` line height."
       }
     ]
   },
@@ -7185,24 +7200,9 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "`.t-m-bold` font family."
       },
       {
-        "name": "--ds-typography-s-font-weight",
-        "value": "var(--font-weight-regular)",
-        "notes": "`.t-s` font weight."
-      },
-      {
         "name": "--ds-typography-s-font-size",
         "value": "var(--font-size-s)",
         "notes": "`.t-s` font size — body text, small."
-      },
-      {
-        "name": "--ds-typography-s-line-height",
-        "value": "var(--line-height-base)",
-        "notes": "`.t-s` line height."
-      },
-      {
-        "name": "--ds-typography-s-font-family",
-        "value": "var(--font-sans)",
-        "notes": "`.t-s` font family."
       },
       {
         "name": "--ds-typography-s-bold-font-weight",
