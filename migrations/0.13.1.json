@@ -64,7 +64,7 @@
       "surface": "typescript",
       "action": "Only if you SUBCLASS the internal `ChartTooltipDirective`, which the package root does not export, and declare a member called `detachScrollClose`: rename yours. The new member is private, so `override` does not clear the collision.",
       "appliesWhen": "Only a class extending the internal `ChartTooltipDirective`. It is not exported from the package root — `@ids-group-ltd/ids-design-system/components/chart-tooltip` is the only specifier that reaches it — and a chart that uses it through the five chart components needs nothing.",
-      "pitfall": "The collision is a compile error, not a silent one — TS2415 on the class for a same-named member, with or without `override`, and TS2416 where the signature differs — so a build that passes has none.",
+      "pitfall": "The collision is a compile error, not a silent one — TS2415 on the class plus TS4114 on the member for a same-typed redeclaration (TS2415 alone with `override`), and TS4114 with TS2416 where the type differs — so a build that passes has none.",
       "restore": null,
       "searchHints": [
         "detachScrollClose",

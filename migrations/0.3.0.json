@@ -102,7 +102,7 @@
     "Reactive-forms (ControlValueAccessor) on ds-input / ds-textarea / ds-select ([(value)] signal API unchanged, both work) — additive.",
     "ng add support (wires the global styles import idempotently); ds-combobox size input (+ComboboxSize); overridable focus-ring token system (--ds-field-focus-shadow / --ds-control-focus-shadow groups + per-component --ds-<comp>-focus-shadow hooks, default appearance unchanged except ds-combobox, which moves to the field halo); ds-tag hover label hook `--ds-tag-hover-label-color` (the hover background hook existed and is renamed above); --opacity-state-active overlay token — all additive.",
     "Visual-only: tag close button gains a pressed state; accordion & sidenav-group animate open/close; the collapsed body stays in the DOM marked inert (accordion: instead of `@if` removal; sidenav-group: instead of `display: none`); ds-combobox focus uses the soft field halo; repo-wide value-preserving CSS modernization (background-color precision, modern hsl()/clip-path/range media syntax).",
-    "Fixes: ds-drawer closes on Escape when focus left the panel; ds-combobox 'No matches' row is no longer exposed to assistive tech as a selectable option (aria-selected=false)."
+    "Fixes: ds-drawer closes on Escape when focus left the panel; ds-combobox 'No matches' row (role=option, aria-disabled) now also carries aria-selected=\"false\"."
   ],
   "deleteList": []
 }

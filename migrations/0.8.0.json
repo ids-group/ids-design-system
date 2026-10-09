@@ -140,7 +140,7 @@
       ],
       "surface": "style",
       "verify": "A ds-radio-group label renders at the weight, size and line height of a ds-input label beside it, or at the old medium weight and size where the restore snippet is in place.",
-      "restore": "ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); } ds-radio-group > .label { line-height: var(--line-height-flat); }"
+      "restore": "ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); } ds-radio-group > .label[class] { line-height: var(--line-height-flat); }"
     },
     {
       "id": "ng-add-schematic-now-loads",

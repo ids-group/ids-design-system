@@ -2583,6 +2583,13 @@
     "itemId": "0.10.0#floating-label-token-overrides"
   },
   {
+    "name": "--field-gap-label",
+    "replacement": "--field-label-gap",
+    "kind": "renamed",
+    "since": "0.4.0",
+    "itemId": "0.4.0#field-gap-label-token"
+  },
+  {
     "name": "--field-h-floating",
     "replacement": null,
     "kind": "removed",
