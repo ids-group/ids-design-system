@@ -1029,7 +1029,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-24)
 
-**Twenty-two** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Twenty-three** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1063,8 +1063,7 @@ file** — the number moves; cite the filename.
 | 20 | `20-loading-states` | The next-release loading fix for the eight other charts and the three pickers, each drawn now and under the shared rule. | the loading item in Asked by Stas |
 | 21 | `21-text-snap-scale` | How a scaling animation ends without the text snapping a pixel: press (as today for now), card hover, the scaling rule, the funnel stage step. | the overlay-enter-snap fix |
 | 22 | `22-tooltip-mechanism` | Two open questions on the tooltip: the six listeners per table cell (measured) and what to do about them, and loading the panel at idle after start. Answered and finished proposals are folded below. | none |
-| 23 | `23-component-owned-styles` | The component base, the audit of every `styles/ds` partial and the guard answer, measured. | none |
-| 24 | `24-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
+| 23 | `23-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1078,6 +1077,8 @@ same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was 
 **Closed on 2026-09-21 and moved to `implemented/`:** `chart-palette-v2` - the two greens moved apart by one token (`--chart-categorical-6`, 152deg to 148deg), and `tools/check-chart-palette-separation.mjs` went into `lint:all` holding the 6 floor under normal vision. Colour-vision deficiency is reported by that gate and not enforced: Stas confirmed the system never took that commitment on, which is why the full repaint was declined.
 
 **Closed on 2026-10-05 and moved to `implemented/`:** `pie-chart-center-value` - option K: the centre value shrinks to the hole down to `--ds-pie-chart-center-value-min-font-size`, then prints the `'tick'` form unless `[centerCompact]="false"`; `centerPlacement="below"` prints it under the ring.
+
+**Closed on 2026-10-09 and moved to `implemented/`:** `component-owned-styles` - every component carries its own base (`border-box`, control font, heading margins, base focus ring) in `@layer ds-component-base`, plus breakpoints, the picker empty row and the reduced-motion shimmer; a lint guard holds it. Its icon question moved to `23-icon-box-size`.
 
 **Ranks 1-10 have a twin on this board, so one answer closes two lines** — which is what
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
@@ -1275,7 +1276,7 @@ Stas: keep it in the backlog.
 
 - [ ] **[P3] In `ds-banner` and `ds-dropzone` the `ds-icon` box is 16px while its svg draws 20px.**
   `.icon` from `styles/icon-base` is the only rule setting a width on the `<ds-icon class="icon">`
-  host; the 20 sits on the svg alone. Options, each drawn in `presentations/24-icon-box-size.html`:
+  host; the 20 sits on the svg alone. Options, each drawn in `presentations/23-icon-box-size.html`:
   **A** `ds-icon` keeps its own size (recommended: fixes the source, consumers included; text moves
   4px), **B** rename the class in the two components (as `option-icon`; a consumer's own
   `class="icon"` stays squeezed), **C** keep 16 (glyph shrinks, text stays), **D** nothing. No code
