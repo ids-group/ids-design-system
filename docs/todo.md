@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**122 open — 1 P1, 9 P2, 112 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
+**126 open — 1 P1, 9 P2, 116 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 1
 
@@ -37,7 +37,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 112
+### P3 — 116
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -145,6 +145,10 @@ is stale. Closing an item means deleting the item and nothing else.
   - A chapter list reaches only sections whose headings are `h3.block-title`
   - The active chapter is not scrolled into the rail's own viewport
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
+  - An icon-only control's focus ring 1px outside its 24px target, 26px on every control
+  - The `ds-tag` remove button's focus ring does not show on a solid tag
+  - The `ds-time-picker` clear button jumps down while pressed
+  - The `ds-tabs` scroll arrows draw their chevron 1px above the box centre
   - The focus-indicator sweep only sees what is in the DOM when a page loads
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
 - **Claude Design upload — what the freeze left open (recorded 2026-09-04)**
@@ -1363,6 +1367,25 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
 *This section also has items under **Bugs**, **Asks**, **Decisions**, **Records**.*
+
+- [ ] **[P3] An icon-only control's focus ring 1px outside its 24px target, 26px on every control.**
+  `target.min-size` in `styles/_target.scss` draws the ring on the target's edge, 24px across on
+  every icon-only control; one more pixel of `outline-offset` there gives 26px on all of them
+  (measured on ten controls in `presentations/23-focus-ring-followups.html`). Stas, 2026-10-09: 24
+  for now, recheck 26 later.
+
+- [ ] **[P3] The `ds-tag` remove button's focus ring does not show on a solid tag.** The ring is
+  `--focus-ring-color`, the same accent as the solid tag's fill, so on a filled tag it reads as no
+  ring at all; on a neutral tag it shows. Found on the docs Tag demos, 2026-10-09; Stas: park.
+
+- [ ] **[P3] The `ds-time-picker` clear button jumps down while pressed.** It is centred with
+  `top: 50%` and `transform: translateY(-50%)`; `press.feedback` sets `transform: scale(0.97)` on
+  `:active`, which replaces the translate, so the button drops by half its height until released.
+  Read from the stylesheet, 2026-10-09; Stas: park.
+
+- [ ] **[P3] The `ds-tabs` scroll arrows draw their chevron 1px above the box centre.** Measured
+  dy -1 under forced focus; the arrows are `tabindex="-1"` and `aria-hidden`, so no keyboard user
+  ever sees a ring on them and only the hover surface shows it. 2026-10-09; Stas: park.
 
 - [ ] **[P3] The focus-indicator sweep only sees what is in the DOM when a page loads.**
   `tools/focus-indicator-sweep.mjs` forces `:focus`/`:focus-visible`/`:focus-within` over CDP
