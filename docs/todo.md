@@ -1031,7 +1031,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-24)
 
-**Twenty-three** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Twenty-four** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1066,6 +1066,7 @@ file** — the number moves; cite the filename.
 | 21 | `21-tooltip-mechanism` | Three open questions on the tooltip: the six listeners per table cell (measured) and what to do about them, loading the panel at idle after start, and one app-wide delegated listener for every directive with events. Answered and finished proposals are folded below. | none |
 | 22 | `22-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
 | 23 | `23-focus-ring-followups` | Before and after of `ecm-fix/focus-ring-followups`: ring off the text, centred date picker arrows, 24px icon-only targets, the ring of a truncated cell link; a verdict per element before the merge. | none |
+| 24 | `24-docs-table-look` | Which look `table.tbl` takes on every ds-docs page: bordered everywhere, plain everywhere, or as today (Charts and Z-index override the shared bordered rule); all four pages drawn in each look. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
