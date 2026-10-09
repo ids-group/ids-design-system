@@ -24,8 +24,9 @@
 - **`styles/target` gives an icon-only control of yours the library's 24px target.**
   `@include target.min-size($box)` last in its rule, with `$box` the size it is drawn at: the box
   keeps its size, a transparent `::before` takes the pointer over `--hit-xs` around it, and the
-  focus ring moves out to that target. `$ring-offset: null` keeps the ring on the icon for a control
-  set beside text; `$position: null` for a control that is already positioned.
+  focus ring is drawn on the edge of that target, 24px across. `$ring-on-target: false` leaves the
+  ring where the control's own rule draws it, for a control set beside text; `$position: null` for a
+  control that is already positioned.
 
 - **`skeletonCount` sets how many marks a chart's loading skeleton draws.** `ds-chart` and
   `ds-column-chart` draw that many columns, `ds-pie-chart` that many slices and legend rows,
@@ -278,9 +279,9 @@
   toggle, the `ds-description-item` copy button, the `ds-bar-chart` row toggle, the arrows of the
   `ds-table` width and column panels, an icon-only `ds-breadcrumbs` item and `ds-info-hint` took a
   click only on their 14px to 22px box. Each keeps the size it is drawn at and takes the pointer
-  over 24px around it; nothing around it moves. Its focus ring is drawn around the 24px target,
-  except on `ds-info-hint` and an icon-only breadcrumb, whose ring stays on the icon beside their
-  text. Raising `--hit-xs` raises every one of these targets. The `ds-input` clear button shows its
+  over 24px around it; nothing around it moves. Its focus ring is drawn on the edge of that target,
+  24px across, except on `ds-info-hint` and an icon-only breadcrumb, whose ring stays on the icon
+  beside their text. Raising `--hit-xs` raises every one of these targets. The `ds-input` clear button shows its
   own focus ring; it was cut away with its icon.
 
 - **The `ds-date-picker` month and year arrows sit in the centre of their button.** The browser's

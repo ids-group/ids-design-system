@@ -78,7 +78,7 @@
 
     // An icon with no label: it sits in the trail beside the next label, so the ring stays on the icon.
     &:not(:has(.label)) {
-      @include target.min-size(14px, $ring-offset: null);
+      @include target.min-size(14px, $ring-on-target: false);
     }
   }
 

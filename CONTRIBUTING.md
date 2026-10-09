@@ -84,9 +84,9 @@ WCAG 2.5.8), whatever size it is drawn. One mechanism, `styles/target`:
 }
 ```
 
-Include it last in the rule, after the control's own `:focus-visible`, with `$ring-offset` set to the
-offset that ring uses. The box keeps its size, so the layout and every fill stay as drawn: a transparent `::before` takes the
-pointer and the focus ring moves out to the 24px target. `$ring-offset: null` keeps the ring on the
+Include it last in the rule, after the control's own `:focus-visible`. The box keeps its size, so the
+layout and every fill stay as drawn: a transparent `::before` takes the pointer and the focus ring is
+drawn on the edge of the 24px target, 24px across. `$ring-on-target: false` leaves the ring on the
 icon for a control a few pixels from running text; `$position: null` for one already positioned. A
 control at least 24px by its own size writes `// target-size-guard: <token>, <size>` on the line
 above its rule instead, or `<!-- target-size-guard: ... -->` right before a control with no class.

@@ -16,7 +16,7 @@
     <code class="t-mono-inline">--hit-xs</code> (24px, WCAG 2.5.8), however
     small its icon is drawn. The box keeps its size, so nothing around it moves
     and its fills stay as drawn; a transparent layer takes the pointer around
-    it, and its focus ring is drawn around the 24px target.
+    it, and its focus ring is drawn on the edge of that 24px target.
   </p>
 
   <div class="target-demo">
@@ -59,7 +59,7 @@
     </dt>
 
     <dd>
-      <code class="t-mono-inline">$ring-offset: null</code> keeps the ring
+      <code class="t-mono-inline">$ring-on-target: false</code> keeps the ring
       on the icon, for a control set a few pixels from a label, such as
       <code class="t-mono-inline">ds-info-hint</code>; the target still grows.
     </dd>
