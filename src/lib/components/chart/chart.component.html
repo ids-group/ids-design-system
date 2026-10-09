@@ -7,7 +7,8 @@
   [caption]="caption()"
   [error]="error()"
   [errorText]="errorTextResolved()"
-  [pending]="loading() || !renderReady()"
+  [pending]="(loading() && isEmpty()) || !renderReady()"
+  [reloading]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
   [skeleton]="skeleton"
@@ -16,13 +17,12 @@
 </figure>
 
 <ng-template #skeleton>
-  <div
-    class="skeleton"
-    aria-hidden="true">
-    <ds-skeleton
-      height="var(--_chart-view-height)"
-      [shimmer]="loading()" />
-  </div>
+  <ds-chart-skeleton
+    [count]="skeletonMarks()"
+    [plotHeight]="plotHeight() + 'px'"
+    [valueSpace]="valueSpace()"
+    [axisGutter]="axisGutter()"
+    [shimmer]="loading()" />
 </ng-template>
 
 <ng-template #body>

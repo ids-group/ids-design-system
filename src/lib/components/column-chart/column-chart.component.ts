@@ -27,10 +27,11 @@ import {
   shareOfTotal,
   chartRenderGate,
   CHART_RENDER_GATE_PASSED,
+  CHART_SKELETON_COUNT,
   DsChartBase,
   readOnHostResize,
+  skeletonMarkCount,
 } from '@ids-group-ltd/ids-design-system/components';
-import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import type {
   ChartDataTable,
   ChartStackMode,
@@ -50,7 +51,10 @@ import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/component
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
-import { ChartStatesComponent } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import {
+  ChartSkeletonComponent,
+  ChartStatesComponent,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
@@ -131,7 +135,7 @@ function readColumnGeometry(host: HTMLElement): typeof COLUMN_GEOMETRY {
   selector: 'ds-column-chart',
   standalone: true,
   imports: [
-    SkeletonComponent,
+    ChartSkeletonComponent,
     ChartComponent,
     ChartLegendComponent,
     ChartStatesComponent,
@@ -175,6 +179,11 @@ export class ColumnChartComponent
 
   /** Prints each column's value above the column. */
   readonly showValues = input(true, { transform: booleanAttribute });
+
+  /** How many columns the loading skeleton draws before the data is known. */
+  readonly skeletonCount = input(CHART_SKELETON_COUNT, {
+    transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT),
+  });
 
   /** How many value-axis ticks to aim for; ticks snap to a round step. */
   readonly tickCount = input(5, { transform: numberAttribute });
@@ -227,10 +236,6 @@ export class ColumnChartComponent
   protected readonly viewHeightPx = computed(
     () =>
       `${chartViewHeight(this.geometry().plotHeight, this.geometry().valueSpace)}px`,
-  );
-
-  protected readonly skeletonHeightPx = computed(
-    () => `${this.geometry().plotHeight}px`,
   );
 
   protected readonly seriesRefs = viewChildren(ColumnSeriesComponent);
@@ -370,7 +375,7 @@ export class ColumnChartComponent
 
   protected readonly isEmpty = computed(() => this.categories().length === 0);
 
-  protected readonly skeletonColumns = computed(() =>
-    Array.from({ length: Math.max(this.categories().length, 3) }),
+  protected readonly skeletonMarks = computed(() =>
+    skeletonMarkCount(this.categories().length, this.skeletonCount()),
   );
 }

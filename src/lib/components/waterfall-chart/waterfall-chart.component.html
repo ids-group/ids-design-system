@@ -6,7 +6,10 @@
   [caption]="caption()"
   [error]="error()"
   [errorText]="errorTextResolved()"
-  [pending]="loading() || !renderReady()"
+  [pending]="(loading() && isEmpty()) || !renderReady()"
+  [reloading]="loading()"
+  [dataTable]="dataTableResolved() !== 'none'"
+  [shimmer]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
   [skeleton]="skeleton"
@@ -15,15 +18,13 @@
 </figure>
 
 <ng-template #skeleton>
-  <div
-    class="skeleton"
-    aria-hidden="true">
-    @for (placeholder of skeletonBars(); track $index) {
-      <ds-skeleton
-        height="var(--_waterfall-chart-skeleton-height)"
-        [shimmer]="loading()" />
-    }
-  </div>
+  <ds-chart-skeleton
+    marks="steps"
+    plotHeight="240px"
+    [count]="skeletonMarks()"
+    [valueSpace]="skeletonValueSpace"
+    [axisGutter]="skeletonAxisGutter"
+    [shimmer]="loading()" />
 </ng-template>
 
 <ng-template #body>

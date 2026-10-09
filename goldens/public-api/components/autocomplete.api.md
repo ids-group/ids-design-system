@@ -104,6 +104,7 @@ export class AutocompleteComponent<T = unknown> extends DsControlValueAccessor<T
     private readonly showsEveryChip;
     public readonly size = input<DsSize | null>(null);
     public readonly sizeResolved = resolveWithConfig(…);
+    protected readonly skeletonOptionWidths = ['70%', '50%', '85%'];
     public readonly success = input<string, string | null | undefined>('', { transform: trimmedText });
     protected togglePanel(event: MouseEvent): void;
     protected readonly trigger = viewChild.required<ElementRef<HTMLElement>>(…);
