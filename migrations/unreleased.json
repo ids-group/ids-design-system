@@ -97,6 +97,24 @@
       "verify": "No subclass of TooltipDirective reads `dsTooltipWhenClipped()` as a boolean or touches `hostElement` or `isClipped()`."
     },
     {
+      "id": "tooltip-clipped-host-tab-stop",
+      "kind": "behavior",
+      "old": "dsTooltipWhenClipped",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "dsTooltipWhenClipped"
+      ],
+      "detect": [
+        "dsTooltipWhenClipped"
+      ],
+      "action": "None, unless a clipped value must stay out of the Tab order: give its host `tabindex=\"-1\"`. Delete a `tabindex=\"0\"` you added only so the keyboard reaches the value (delete list: clipped-host-tabindex).",
+      "appliesWhen": "Only a `dsTooltipWhenClipped` host that is not focusable, sits inside no native control, widget role or focusable table row, holds no control, and is not inside an `aria-hidden` or `inert` subtree. A host in a focusable container such as a tab panel or a scroll region is included.",
+      "pitfall": "A test that counts tab stops, or steps through a screen with Tab, meets a new stop on each clipped value, and loses it again on a viewport where the text fits.",
+      "restore": "Set `tabindex=\"-1\"` on the host.",
+      "verify": "Tab through a screen with a clipped value in a clickable row or card: focus lands on the value, its ring shows and the full text opens; a value whose text fits is skipped."
+    },
+    {
       "id": "tooltip-bold-markup",
       "kind": "behavior",
       "old": "dsTooltip",
@@ -453,6 +471,17 @@
       ],
       "why": "ds-fade-in is the default entrance of `ds-alert`.",
       "replaceWith": "nothing"
+    },
+    {
+      "id": "clipped-host-tabindex",
+      "surface": [
+        "template"
+      ],
+      "find": [
+        "tabindex=\"0\""
+      ],
+      "why": "A dsTooltipWhenClipped host that no keyboard path reaches takes tabindex=\"0\" by itself while it is clipped.",
+      "replaceWith": "nothing; keep it where the value must stay a tab stop while its text fits"
     }
   ]
 }

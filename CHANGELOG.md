@@ -175,6 +175,12 @@
 
 ### Fixed
 
+- **A clipped `dsTooltipWhenClipped` value is reachable by keyboard wherever it sits.** A host
+  that was not focusable, inside no focusable control (a code in a clickable card or row, a value in
+  a plain table cell), showed its full text on hover only. It now takes `tabindex="0"` while it is
+  clipped, so Tab stops on it and opens the tip, and it loses the stop once its text fits. A host
+  that is focusable, sits inside a control or widget role, or holds a control is left as it was; a
+  `tabindex` you set is never touched, and `tabindex="-1"` keeps a clipped value out of the Tab order.
 - **A tooltip and a `ds-menu-item` submenu close when anything under them scrolls.** Inside an
   `overflow: auto` container they stayed where they opened while their trigger scrolled away, a
   pinned tooltip included. They close now on a scroll of the window or of any scroll container, as
@@ -239,6 +245,7 @@
 | `--ds-toast-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of a toast | nothing |
 | `--ds-banner-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of a banner | nothing |
 | `--ds-alert-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of an alert | nothing |
+| `tabindex="0"` added to a `dsTooltipWhenClipped` host only so the keyboard reaches it | the host takes `tabindex="0"` by itself while it is clipped, and no stop while its text fits | nothing; keep it where the value must stay a tab stop when it fits |
 
 ## 0.14.8 — 2026-10-06
 
