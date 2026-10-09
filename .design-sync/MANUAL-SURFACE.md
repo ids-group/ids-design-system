@@ -32,7 +32,7 @@ all failed.
 **Fix, per upstream's own advice — do not nest them.** `gen.mjs` scans every
 `*.component.html` and `*.component.ts` under `src/lib` for `<ds-…` tags; a component used
 inside another component's template registers under an alias, `ds-x-<name>`, that no template
-mentions, so Angular renders it as an ordinary component there. **32 of 95** take an alias (measured 2026-10-02).
+mentions, so Angular renders it as an ordinary component there. **32 of 96** take an alias (`COMPONENTS` in `gen/elements.ts`, 2026-10-09).
 The React wrapper emits the alias, so `<Modal>` and `<Button>` are unchanged for a caller and
 the tag never surfaces in a preview or a design. Angular's component styles are
 attribute-scoped, so the alias costs no CSS.
@@ -48,8 +48,9 @@ expando. Read off the live registration before the fix: `ds-modal`'s prototype c
 and it did — for the React wrapper only.
 
 **Fix:** `gen.mjs` emits a `HOST_INPUTS` map and `defineDsElements` defines a forwarding
-accessor per entry before `customElements.define`. Three components have such inputs today:
-`ds-modal`, `ds-x-popover`, `ds-x-select`, all `staticPreview`.
+accessor per entry before `customElements.define`. Eight entries, all `staticPreview`:
+`ds-x-bottom-sheet`, `ds-color-picker`, `ds-x-date-picker`, `ds-drawer`, `ds-modal`,
+`ds-x-popover`, `ds-x-select`, `ds-time-picker`.
 
 This is what closed the last symptom. With `staticPreview` reaching the component, the card
 renders at view creation, the projection is placed immediately, nothing is detached — and so
@@ -136,7 +137,7 @@ The sixteen, each with the gate its `<ng-content>` sits behind:
 | `filter-bar`    | `collapsed()`     | drops unslotted content by design                                                                      |
 
 `ds-modal-card` also has projection but does not appear here: its slots are at root level,
-outside any block, and it is one of the 31 that register under an alias.
+outside any block, and it is one of the components that register under an alias.
 
 ### `chart` - the gate is live, the marks are what cannot cross (2026-09-17)
 

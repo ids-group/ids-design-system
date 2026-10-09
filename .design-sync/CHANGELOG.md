@@ -51,6 +51,10 @@ holds an entry; what the release bot commits afterwards needs none.
   wrapper for it: a card has no hover or click to show its definition, and `ds-table` applies it
   internally.
 
+- **`COMMANDS.md` describes the CI freeze.** `build-design-sync.sh` installs chromium, measures and
+  freezes the cards; `check-frozen` asserts the split against `live-cards.txt`. `MANUAL-SURFACE.md`
+  counts 32 aliased components of 96 and eight `HOST_INPUTS` entries.
+
 ## 0.14.8 — 2026-10-06
 
 ### Build
