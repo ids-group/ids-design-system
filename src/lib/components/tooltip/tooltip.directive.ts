@@ -17,6 +17,7 @@ import { TooltipPanelComponent } from './tooltip-panel.component';
 import { escapeTooltipMarkup, plainTooltipText } from './tooltip-markup';
 import {
   FOCUSABLE,
+  tabStopWhileClipped,
   watchFocusableAncestor,
   type AncestorFocusTrigger,
 } from './tooltip-ancestor-focus';
@@ -85,7 +86,10 @@ export class TooltipDirective implements OnDestroy {
    *
    *  Applies the tooltip on its own: without a `dsTooltip` the tested text is disclosed. A tip
    *  whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip`
-   *  that says more than the host does describes it as usual. */
+   *  that says more than the host does describes it as usual.
+   *
+   *  Keyboard focus opens it too: on the host, on a control or widget around it, or on a control
+   *  inside it. A clipped host that none of these reaches takes `tabindex="0"` while it is clipped. */
   readonly dsTooltipWhenClipped = input<
     TooltipClipTarget | null,
     boolean | string | null | undefined
@@ -179,7 +183,9 @@ ${given}`;
   constructor() {
     afterNextRender(() => {
       if (this.dsTooltipWhenClipped()) {
-        this.detachAncestor = watchFocusableAncestor(this.ancestorFocusTrigger);
+        this.detachAncestor =
+          watchFocusableAncestor(this.ancestorFocusTrigger) ??
+          tabStopWhileClipped(this.ancestorFocusTrigger);
       }
     });
   }

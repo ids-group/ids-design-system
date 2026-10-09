@@ -12,14 +12,14 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**122 open — 1 P1, 10 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
+**122 open — 1 P1, 9 P2, 112 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 1
 
 - **Asked by Stas**
   - A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
 
-### P2 — 10
+### P2 — 9
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -29,7 +29,6 @@ is stale. Closing an item means deleting the item and nothing else.
   - Tooltips and trigger-anchored overlays should follow their trigger on scroll, not close (Stas, 2026-10-08)
   - Document how to build `ds-modal` actions (Stas, 2026-10-06)
   - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
-  - Loading in the other data components: skeleton without data, overlay on a reload (Stas, 2026-10-08)
 - **Open verdicts, each drawn in a deck**
   - Six Unreleased behaviour changes shipped without a choice between alternatives
 - **Tooling**
@@ -38,7 +37,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 111
+### P3 — 112
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -155,6 +154,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - `ds-button` pulls `field-message` statically, and it stays cheap only while the two
 - **Component feature gaps**
+  - One tab stop per long table, arrow keys between its clipped values - PARKED 2026-10-09 by Stas
   - Portaled CSS as opt-in — PARKED 2026-09-04 by Stas
   - Split the design system from the UI kit as two packages (Mikhail, 2026-08-30)
   - A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies
@@ -385,9 +385,6 @@ Each has somebody behind it. Nothing here is speculative work.
   and project base - structure, tooling, lint and format setup, Claude config, the current design-system
   version and how it is consumed - carry its best practices into `ai-sdlc-prototype`, and finish what is
   left there. Tracked here because Stas does not open that repository; the work itself happens in it.
-
-- [ ] **[P2] Loading in the other data components: skeleton without data, overlay on a reload (Stas, 2026-10-08).** Stas: «где не так, и не общее поведение - сделай деку и покажи как будет. в следующем релизе поправим». The rule, as `ds-table` (`loading=true`) and `ds-bar-chart` follow it: skeleton rows while there is no data; on a reload the data stays under `ds-loading-overlay`, which covers the whole container and takes its radius through `--ds-loading-overlay-radius`. **Next release:** the other eight charts (`ds-chart`, column, line, pie, funnel, waterfall, heatmap, scatter) pass `[pending]="loading() || !renderReady()"` to `ChartStatesComponent`, so a reload blanks the plot into a skeleton - move the bar chart's rule into `ChartStatesComponent`; `ds-select`, `ds-multi-select` and `ds-autocomplete` show a spinner row - skeleton options while empty, the overlay over the list on a reload. `ds-pagination` stays: its skeleton hides a stale total by design. Each drawn now and under the rule in deck `21-loading-states`.
-  **Skeleton shapes (measured 2026-10-08, deck `21-loading-states`):** the skeleton has to take the chart's own shapes in the chart's own box. Today: `ds-chart` draws one slab of the plot size (639 x 290) with no axes or marks; `ds-funnel-chart` five start-aligned bars of 457, 322, 415, 280 and 374px that do not narrow, card 289 vs 524px tall; `ds-waterfall-chart` five full-width 40px horizontal slabs instead of floating columns, card 305 vs 363px; `ds-heatmap-chart` full-width slabs one cell (34px) tall instead of the 7 x 5 grid, card 251 vs 337px. **Heatmap card:** the host fills its container (969px) while the grid is 307px of 34px cells; the card should hug the grid (`inline-size: fit-content`, capped at 100%, 349px here) so the skeleton and the overlay match the chart. **Decided (Stas, 2026-10-09), built on `ecm-feat/loading-skeletons`:** `ds-chart`, column, line and heatmap skeleton A (the chart type's fixed silhouette at the plot size); pie, funnel and waterfall B (ring in slices, narrowing stages, floating steps); scatter A with no dots (axes, grid and label pills only). The number of columns, slices, stages and steps is a `skeletonCount` input, default 5. A reload keeps the data under an overlay bound to the plot area, caption sharp. The heatmap card hugs the grid. Pickers: skeleton options while empty, the overlay over the list on a reload; `ds-multi-select` leaves the filter input and «select all» live (variant A).
 
 - [ ] **[P3] `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23).** The English `waterfall`
   is the field's standard word - Excel, Power BI, Tableau, Highcharts and ECharts all use it, with
@@ -1061,10 +1058,9 @@ file** — the number moves; cite the filename.
 | 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
 | 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
 | 19 | `19-interaction-states` | General rules for the states of interactive elements as levels on three channels, with live sliders for the step numbers; one neutral hover surface; a check against empty cells; whether to merge the pilot; open questions on top. | none |
-| 20 | `20-loading-states` | The loading fix for the eight other charts and the three pickers: picked 2026-10-09, built on `ecm-feat/loading-skeletons`. | the loading item in Asked by Stas |
-| 21 | `21-text-snap-scale` | How a scaling animation ends without the text snapping a pixel: press (as today for now), card hover, the scaling rule, the funnel stage step. | the overlay-enter-snap fix |
-| 22 | `22-tooltip-mechanism` | Three open questions on the tooltip: the six listeners per table cell (measured) and what to do about them, loading the panel at idle after start, and one app-wide delegated listener for every directive with events. Answered and finished proposals are folded below. | none |
-| 23 | `23-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
+| 20 | `20-text-snap-scale` | How a scaling animation ends without the text snapping a pixel: press (as today for now), card hover, the scaling rule, the funnel stage step. | the overlay-enter-snap fix |
+| 21 | `21-tooltip-mechanism` | Three open questions on the tooltip: the six listeners per table cell (measured) and what to do about them, loading the panel at idle after start, and one app-wide delegated listener for every directive with events. Answered and finished proposals are folded below. | none |
+| 22 | `22-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1079,7 +1075,7 @@ same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was 
 
 **Closed on 2026-10-05 and moved to `implemented/`:** `pie-chart-center-value` - option K: the centre value shrinks to the hole down to `--ds-pie-chart-center-value-min-font-size`, then prints the `'tick'` form unless `[centerCompact]="false"`; `centerPlacement="below"` prints it under the ring.
 
-**Closed on 2026-10-09 and moved to `implemented/`:** `component-owned-styles` - every component carries its own base (`border-box`, control font, heading margins, base focus ring) in `@layer ds-component-base`, plus breakpoints, the picker empty row and the reduced-motion shimmer; a lint guard holds it. Its icon question moved to `23-icon-box-size`. `focus-ring-follows-shape` - the focus ring takes `--focus-ring-radius` wherever an element declares no radius; close buttons centre their glyph in a square box, the `ds-table` column filter is a 24px target, a cell link is ringed outside its text.
+**Closed on 2026-10-09 and moved to `implemented/`:** `loading-states` - each chart's picked skeleton, `skeletonCount`, the plot-bound reload overlay, the heatmap card hugging its grid and the picker list states, built on `ecm-feat/loading-skeletons`; `loading-skeletons` - its before and after, all 12 blocks accepted and merged into dev; `component-owned-styles` - every component carries its own base (`border-box`, control font, heading margins, base focus ring) in `@layer ds-component-base`, plus breakpoints, the picker empty row and the reduced-motion shimmer; a lint guard holds it. Its icon question moved to `23-icon-box-size`. `focus-ring-follows-shape` - the focus ring takes `--focus-ring-radius` wherever an element declares no radius; close buttons centre their glyph in a square box, the `ds-table` column filter is a 24px target, a cell link is ringed outside its text. `clipped-value-tab-stop` - a clipped `dsTooltipWhenClipped` value that no keyboard path reaches takes `tabindex="0"` while clipped, one stop per value in a long table too (option A); one roving stop per table with arrows is under *Parked*.
 
 **Ranks 1-10 have a twin on this board, so one answer closes two lines** — which is what
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
@@ -1277,7 +1273,7 @@ Stas: keep it in the backlog.
 
 - [ ] **[P3] In `ds-banner` and `ds-dropzone` the `ds-icon` box is 16px while its svg draws 20px.**
   `.icon` from `styles/icon-base` is the only rule setting a width on the `<ds-icon class="icon">`
-  host; the 20 sits on the svg alone. Options, each drawn in `presentations/23-icon-box-size.html`:
+  host; the 20 sits on the svg alone. Options, each drawn in `presentations/22-icon-box-size.html`:
   **A** `ds-icon` keeps its own size (recommended: fixes the source, consumers included; text moves
   4px), **B** rename the class in the two components (as `option-icon`; a consumer's own
   `class="icon"` stays squeezed), **C** keep 16 (glyph shrinks, text stays), **D** nothing. No code
@@ -1424,6 +1420,8 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 ## Component feature gaps
 
 *This section also has items under **Asks**, **Decisions**.*
+
+- [ ] **[P3] One tab stop per long table, arrow keys between its clipped values - PARKED 2026-10-09 by Stas.** A clipped `dsTooltipWhenClipped` value that no keyboard path reaches is a tab stop of its own while clipped, so a 25-row `ds-table` with two clipped columns holds 50 stops (measured in the ds-docs build, deck `presentations/implemented/clipped-value-tab-stop.html`). The parked alternative: roving tabindex, one clipped value at `tabindex="0"` and the rest at `-1`, arrows moving between them. APG allows that only inside a composite widget, so the table becomes `role="grid"` and `ds-table` takes the grid keyboard model (arrows, Home/End, PageUp/PageDown); without the role a screen reader in browse mode keeps the arrows for itself. Unparks when a consumer reports the stop count in a long table.
 
 - [ ] **[P3] Portaled CSS as opt-in — PARKED 2026-09-04 by Stas.** 1 055 B of the 2 793 B global sheet is the only part that could move behind an opt-in: `dropdown-overlay`, `overlay-motion`, `toast-overlay`. It saves only a consumer with no picker, no toast and no modal, which is close to nobody, and the cost is one more import in everyone else's bootstrap. The measurement stands if the balance ever changes; the AG Grid route (CSS inside the component) stays rejected because Angular injects those as runtime tags and a strict CSP under SSR blocks them.
 

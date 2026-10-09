@@ -8,7 +8,6 @@
 
 .waterfall-chart {
   --_waterfall-chart-connector-color: var(--ds-waterfall-chart-connector-color, var(--ds-chart-axis-line-color));
-  --_waterfall-chart-skeleton-height: var(--ds-waterfall-chart-skeleton-height, 40px);
 
   margin: 0;
 }
@@ -18,8 +17,3 @@
 }
 
 @include chart-frame.pin-reset;
-
-.skeleton {
-  display: grid;
-  gap: var(--space-2);
-}
