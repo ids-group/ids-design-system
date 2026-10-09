@@ -71,6 +71,10 @@ run(template, 'no-removed-inputs', {
       ...html('<ds-table [sortDir]="direction"></ds-table>'),
       options: [{ from: '0.13.4' }],
     },
+    {
+      ...html('<ds-table [sortDir]="direction"></ds-table>'),
+      options: [{ to: '0.13.3' }],
+    },
   ],
   invalid: [
     {
@@ -78,6 +82,12 @@ run(template, 'no-removed-inputs', {
         { message: /renamed or replaced in 0\.13\.4/ },
       ]),
       options: [{ from: '0.13.3' }],
+    },
+    {
+      ...html('<ds-table [sortDir]="direction"></ds-table>', [
+        { message: /renamed or replaced in 0\.13\.4/ },
+      ]),
+      options: [{ from: '0.13.3', to: '0.13.4' }],
     },
   ],
 });

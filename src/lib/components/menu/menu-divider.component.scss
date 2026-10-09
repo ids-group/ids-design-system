@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 :host {
   --_menu-divider-color: var(--ds-menu-divider-color, var(--border-divider));
   --_menu-divider-spacing: var(--ds-menu-divider-spacing, 0px);

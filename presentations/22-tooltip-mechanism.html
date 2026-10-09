@@ -148,40 +148,168 @@
 <body>
 <main>
   <header class="masthead">
-    <h1>Тултип: четыре предложения что улучшить</h1>
+    <h1>Тултип: осталось решить три вещи</h1>
     <p class="chat">Ответ нести в чат: «Тултип и состояния: деки»</p>
-    <p class="lede">Жирное название и разрезание файла уже решены и сделаны, они внизу. Сверху четыре предложения, что ещё можно унифицировать, ускорить или почистить. У каждого есть рекомендация и честная цена.</p>
-    <div class="chips"><span class="chip is-open">Нужно решение: 4</span><span class="chip">TooltipDirective</span><span class="chip">overlay</span><span class="chip">актуально на 2026-10-09</span></div>
+    <p class="lede">Положение панели и общий Escape сделаны, жирное название и разрезание файла тоже, всё это внизу. Сверху три вопроса: слушатели на ячейках, загрузка панели и общее делегирование событий для всех директив. У каждого есть замер или цифры и то, как делают другие.</p>
+    <div class="chips"><span class="chip is-open">Нужно решение: 3</span><span class="chip">TooltipDirective</span><span class="chip">overlay</span><span class="chip">актуально на 2026-10-09</span></div>
   </header>
 
   <section class="panel verdict">
     <h2>Что от тебя нужно</h2>
     <ol class="todo">
       <li>
-        <span class="ask">Вынести положение панели и стрелку в четвёртый файл?</span>
-        <p class="mine"><b>Моё предложение:</b> да, как и с первыми двумя вырезками: каждый файл про одну работу.</p>
-        <p class="where"><a href="#q-position">К вопросу 1</a></p>
+        <span class="ask">Что делать со слушателями на ячейках таблицы после замера?</span>
+        <p class="mine"><b>Моё предложение:</b> поставить директиву только на ячейки с обрезкой, а делегирование на приложение решать после этого по замеру боевой сборки.</p>
+        <p class="where"><a href="#q-listeners">К вопросу 1</a></p>
       </li>
       <li>
-        <span class="ask">Сначала замерить цену слушателей на ячейку таблицы?</span>
-        <p class="mine"><b>Моё предложение:</b> да, замер, а оптимизация только если он покажет проблему.</p>
-        <p class="where"><a href="#q-listeners">К вопросу 2</a></p>
+        <span class="ask">Подгружать ли панель тултипа на простое сразу после старта, а не держать в начальной сборке?</span>
+        <p class="mine"><b>Моё предложение:</b> выигрыш около 2 КБ gzip, и пока нет замера старта я бы не делал. Выбор за тобой.</p>
+        <p class="where"><a href="#q-lazy">К вопросу 2</a></p>
       </li>
       <li>
-        <span class="ask">Сделать панель ленивой, чтобы она не грузилась до первого наведения?</span>
-        <p class="mine"><b>Моё предложение:</b> нет. Выигрыш около 2 КБ в gzip, цена - асинхронный показ.</p>
-        <p class="where"><a href="#q-lazy">К вопросу 3</a></p>
-      </li>
-      <li>
-        <span class="ask">Вынести общий помощник для «закрыть по Escape» из тултипа и подсказки графика?</span>
-        <p class="mine"><b>Моё предложение:</b> нет, выигрыш около 10 строк при риске для ветки без документа.</p>
-        <p class="where"><a href="#q-escape">К вопросу 4</a></p>
+        <span class="ask">Делать ли один общий слушатель на документ для всех директив и компонентов с событиями, а не только для тултипа?</span>
+        <p class="mine"><b>Моё предложение:</b> пока нет. Сначала вопрос 1, потом замер боевой сборки, и если слушателей всё ещё много, строить общий сервис.</p>
+        <p class="where"><a href="#q-delegation">К вопросу 3</a></p>
       </li>
     </ol>
     <p class="cap">Согласен с предложением - нажми карточку «рекомендую» у каждого вопроса. Не согласен - нажми другую или напиши замечание. Внизу появится одна строка для чата.</p>
   </section>
 
-  <section class="panel q" id="q-position" data-q="position" data-review="Вынести положение панели" data-review-note-only>
+  <section class="panel q" id="q-listeners" data-q="listeners" data-review="Замер слушателей" data-review-note-only data-review-round="2">
+    <h2>Вопрос 1. Слушатели на ячейку таблицы: что делать после замера</h2>
+    <p>Замерено в ds-docs (<code>ng serve</code>, сборка для разработки): таблица на 1000 строк по 4 колонки, 2 из них с обрезкой. Считал вызовы <code>addEventListener</code> счётчиком, подставленным до загрузки страницы. Страница без добавленных строк: 10 482 вызова и 1 173 ячейки.</p>
+    <div class="bars2">
+      <div class="r"><span>Ячеек <code>td</code></span><span class="bar"><i style="width:23%"></i></span><span class="n">1 173</span></div>
+      <div class="r"><span>Ячеек <code>td</code>, 1000 строк</span><span class="bar"><i class="bad" style="width:100%"></i></span><span class="n">5 161</span></div>
+      <div class="r"><span>Вызовов, базовая страница</span><span class="bar"><i style="width:25%"></i></span><span class="n">10 482</span></div>
+      <div class="r"><span>Вызовов, 1000 строк</span><span class="bar"><i class="bad" style="width:100%"></i></span><span class="n">41 389</span></div>
+    </div>
+    <div class="stage">
+      <div class="spec"><p class="cap">На каждую добавленную ячейку (+3 988)</p><p class="code">mouseenter +3 988
+mouseleave +3 988
+focusin    +3 988
+focusout   +3 988
+click      +4 985
+keydown    +4 985</p></div>
+      <div class="spec"><p class="cap">Что это значит</p><p class="cap">6 слушателей на ячейку. Директива стоит на <b>каждой</b> ячейке таблицы, а не только на тех, где есть обрезка: когда я выключил обрезку во всех колонках, число вызовов осталось 41 389.</p></div>
+    </div>
+    <p class="cap">Время и память этим замером не разделены: в обоих прогонах директива стояла на всех ячейках. Память между прогонами с одинаковым числом слушателей разошлась в 2 раза (181 и 388 МБ), поэтому как цифру её не привожу. Время отрисовки в сборке для разработки не годится, нужна боевая сборка.</p>
+    <p>Как делают другие. <b>Tippy.js</b> даёт <code>delegate()</code>: общий родитель создаёт экземпляры подсказок для дочерних по селектору, и только при первом срабатывании. <b>Bootstrap 5</b> принимает опцию <code>selector</code> и делегирует подсказки на динамически добавленные элементы. <b>Angular Material</b>: разработчики мерили большую <code>mat-table</code> и нашли, что создание <code>MatTooltip</code> занимает 1,3% времени, и в 2025 перенесли создание ненужных зависимостей на момент первого показа.</p>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Директива только на ячейках с обрезкой</h3>
+        <p class="youpick"><b>Ты выбираешь</b>таблица ставит <code>dsTooltipWhenClipped</code> только на ячейки колонок с <code>truncate</code>. Остальные ячейки не получают ни директивы, ни слушателей.</p>
+        <div class="files"><span class="file is-gone">4 колонки × 6</span><span class="arrow">→</span><span class="file is-new">2 колонки × 6</span></div>
+        <div class="pills"><span class="pill good">в этой таблице минус половина слушателей</span><span class="pill good">в типичной, где обрезается одна колонка, больше</span><span class="pill mid">шаблон ячейки раздваивается</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Один слушатель на всё приложение</h3>
+        <p class="youpick"><b>Ты выбираешь</b>тултип, термин и <code>ds-info-hint</code> регистрируются в общем реестре, а на документе стоят по одному слушателю на событие. Слушатель смотрит, в какую цель попало событие, и вызывает нужную директиву.</p>
+        <div class="files"><span class="file is-gone">6 слушателей на каждую цель</span><span class="arrow">→</span><span class="file is-new">6 на приложение</span></div>
+        <div class="pills"><span class="pill good">число слушателей не растёт с числом ячеек</span><span class="pill good">охватывает термин и hint</span><span class="pill bad">перестройка директивы: <code>mouseenter</code> и <code>focusin</code> не всплывают, нужна фаза перехвата и поиск цели вверх по дереву</span><span class="pill bad">выигрыш в миллисекундах не доказан</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Оба: сначала директива только где нужна, потом делегирование</h3>
+        <p class="youpick"><b>Ты выбираешь</b>сейчас правка таблицы, а делегирование откладывается до замера боевой сборки после неё.</p>
+        <div class="pills"><span class="pill good">дешёвая правка сразу</span><span class="pill good">большая перестройка только если ещё нужна</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Не трогать</h3>
+        <p class="youpick"><b>Ты выбираешь</b>считаем цену приемлемой.</p>
+        <div class="pills"><span class="pill mid">6 слушателей на каждую ячейку остаются</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  <ol data-review-history><li>2026-10-09 · «выбираю сначала замерить, но предположительно потребутеся оптимизация Сразу делегировать события. и может на всё приложение что нибудь подобное понадобится. условно на все директивы tooltip и termin, чтобы не у каждого был свой слушатель, а один на приложение, и он дилегировал куда был сделан клик? чтобы не запускать сотни одинаковых слушателей.» → замерено на 1000 строках: 6 слушателей на ячейку, директива стоит на каждой ячейке независимо от обрезки; добавлены варианты: директива только на ячейках с обрезкой, один слушатель на приложение для тултипа, термина и hint (как Tippy delegate и Bootstrap selector), оба по очереди</li></ol></section>
+
+  <section class="panel q" id="q-lazy" data-q="lazy" data-review="Ленивая панель" data-review-note-only data-review-round="2">
+    <h2>Вопрос 2. Загрузка панели не в начальной сборке, а сразу после старта</h2>
+    <p>Панель тултипа с разметкой и стилями весит около 2 140 байт gzip из 7 473 всего тултипа (срез собранного файла, оценка доли). Дальше два способа убрать её из начальной сборки, не ломая первый показ.</p>
+    <div class="pipe">
+      <div class="st"><b>Старт приложения</b><small>только директивы: ничего, что не нужно для первой отрисовки</small></div>
+      <div class="st"><b>Первая отрисовка</b><small>приложение показано</small></div>
+      <div class="st"><b>Простой браузера</b><small><code>requestIdleCallback</code> с запасным временем: панель подгружается, пока никто не наводит</small></div>
+      <div class="st is-close"><b>Наведение</b><small>панель уже на месте, показ синхронный; если пользователь быстрее, показ ждёт загрузки</small></div>
+    </div>
+    <p>Как делают другие. <b>Angular</b>: блок <code>@defer</code> по умолчанию грузит код, когда браузер простаивает (под капотом <code>requestIdleCallback</code>), а <code>prefetch on idle</code> тянет код заранее и показывает позже. Работает для компонентов, не для директив, поэтому подходит панели, а не самой директиве. <b>Idle until urgent</b> (Филип Уолтон): работа откладывается на простой, но выполняется сразу, если пользователь успел раньше.</p>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+      <article class="opt" tabindex="0">
+        <h3>Не делать</h3>
+        <p class="youpick"><b>Ты выбираешь</b>панель остаётся в сборке, показ синхронный. Это был твой первый выбор.</p>
+        <div class="pills"><span class="pill good">без гонок при первом наведении</span><span class="pill mid">около 2 КБ gzip до первого показа</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую, если нужен выигрыш при старте</span>
+        <h3>Панель тултипа: подгрузить на простое</h3>
+        <p class="youpick"><b>Ты выбираешь</b>панель идёт динамическим импортом, который запускается в простое сразу после первой отрисовки. Если наведение раньше, показ ждёт импорта.</p>
+        <div class="pills"><span class="pill good">около 2 КБ gzip уходят из начальной сборки</span><span class="pill good">к первому наведению панель уже на месте</span><span class="pill bad">первый показ может стать асинхронным</span><span class="pill bad">выигрыш мал, замера старта нет</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Общий помощник для панелей всех оверлеев</h3>
+        <p class="youpick"><b>Ты выбираешь</b>одна функция «загрузить на простое, дождаться при нужде» для панелей тултипа, меню, селектов, календаря. Каждая панель грузится в своём этапе после старта.</p>
+        <div class="pills"><span class="pill good">один приём для всех, этапы загрузки</span><span class="pill bad">размер остальных панелей не измерен</span><span class="pill bad">большая перестройка, трогает каждый оверлей</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  <ol data-review-history><li>2026-10-09 · «Не делать, но - ну может просто вынести в загрузку автоматом, но не в начальную фазу? когда само приложение стартует. чтобы старт был быстрее, а потом СРАЗУ же подгружать подобные компоненты? тултипы? термины и тд? каике то ещё вещи? то есть не lazy, а отложенный. сформированный на несколько этапов загрузки.» → добавлены варианты отложенной загрузки по этапам: панель тултипа на простое после старта и общий помощник для панелей всех оверлеев; приведены Angular @defer с prefetch on idle и idle until urgent; директивы отложить нельзя, только панели</li></ol></section>
+
+  <section class="panel q" id="q-delegation" data-q="delegation" data-review="Общее делегирование событий" data-review-note-only>
+    <h2>Вопрос 3. Один слушатель на документ для всех директив и компонентов</h2>
+    <p>Вопрос 1 разбирает делегирование только для тултипа, термина и <code>ds-info-hint</code>. Здесь шире: общий сервис, на который подписываются любые элементы, которых в списке много. Ниже сколько слушателей на один экземпляр вешают те, что повторяются в строках, списках и ячейках. Это счёт обработчиков в коде (<code>@HostListener</code> и <code>host</code>), не замер на странице.</p>
+    <div class="bars2">
+      <div class="r"><span><code>TooltipDirective</code></span><span class="bar"><i class="bad" style="width:100%"></i></span><span class="n">7 (в замере 6)</span></div>
+      <div class="r"><span><code>DefinitionTermDirective</code></span><span class="bar"><i class="bad" style="width:71%"></i></span><span class="n">5</span></div>
+      <div class="r"><span><code>TagComponent</code></span><span class="bar"><i style="width:43%"></i></span><span class="n">3 + 1</span></div>
+      <div class="r"><span><code>W3wComponent</code></span><span class="bar"><i style="width:43%"></i></span><span class="n">3</span></div>
+      <div class="r"><span><code>SparklineComponent</code></span><span class="bar"><i style="width:43%"></i></span><span class="n">3</span></div>
+    </div>
+    <p class="cap">«3 + 1» значит три слушателя хоста и один в шаблоне. Таблица, списки и выпадающие списки вешают ещё и слушатели в шаблоне, на каждую строку (в файле <code>TableComponent</code> 33 места в шаблоне). В замере на 1000 строк тултип дал 24 слушателя на строку из 31, остальные 7 принадлежат самой строке.</p>
+    <p>Как делают другие. <b>Tippy.js</b> и <b>Bootstrap 5</b> делегируют только подсказки, общего сервиса для всех компонентов у них нет. Сведения о том, делает ли это <b>Angular Material</b> для остальных компонентов, я не нашёл.</p>
+    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Пока только семейство тултипа</h3>
+        <p class="youpick"><b>Ты выбираешь</b>делегирование и правка таблицы только по вопросу 1: тултип, термин, <code>ds-info-hint</code>. Остальное не трогаем, пока замер боевой сборки не покажет проблему.</p>
+        <div class="pills"><span class="pill good">самое тяжёлое место закрыто</span><span class="pill good">нет общей инфраструктуры, которая может не понадобиться</span><span class="pill mid">шаблонные слушатели строк остаются</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Общий сервис делегирования</h3>
+        <p class="youpick"><b>Ты выбираешь</b>один сервис с слушателями на документе (<code>click</code>, <code>keydown</code>, а <code>mouseenter</code> и <code>focusin</code> через фазу перехвата). Директивы и компоненты регистрируют цель и обработчик, а не вешают свои слушатели.</p>
+        <div class="files"><span class="file is-gone">каждая цель × 3-7</span><span class="arrow">→</span><span class="file is-new">один на документ</span></div>
+        <div class="pills"><span class="pill good">число слушателей не растёт с числом строк</span><span class="pill bad">большая перестройка: каждый компонент меняет способ подписки</span><span class="pill bad">клавиши Enter и Space у тега и <code>w3w</code> нужно фильтровать в сервисе</span><span class="pill bad">компонент, который останавливает событие, ломает доставку на документ</span><span class="pill bad">выигрыш не измерен</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Не делать, оптимизировать точечно</h3>
+        <p class="youpick"><b>Ты выбираешь</b>общего сервиса нет, а каждый тяжёлый случай чинится отдельно, как таблица в вопросе 1: ставить слушатели только там, где они нужны.</p>
+        <div class="pills"><span class="pill good">без новой инфраструктуры</span><span class="pill mid">повторять приём придётся для каждого случая</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <h2 class="band">Уже решено и сделано</h2>
+  <p class="cap">Здесь отвечать не нужно. Два первых вопроса этой деки закрыты, их аргументы свёрнуты.</p>
+
+  <section class="decided">
+    <h2>Решено и сделано, в dev</h2>
+    <p><b>Жирное название при обрезке пишет только <code>dsDefinitionTerm</code>.</b> Обычный <code>dsTooltip</code> показывает ровно то, что написано.</p>
+    <p><b>Код тултипа разрезан на три файла, два атрибута склеены в один.</b> <code>dsTooltipWhenClipped=".label"</code> заменил пару с <code>dsTooltipTextSelector</code>. Клип-тест лежит в <code>tooltip-clip.ts</code>, фокус через родителя в <code>tooltip-ancestor-focus.ts</code>, основной файл остался на 444 строках (было 515, обещал около 360). Старую разметку ловят ESLint и запись миграции.</p>
+    <p><b>Положение панели и стрелка вынесены в <code>tooltip-position.ts</code>, закрытие по Escape общее.</b> Основной файл теперь 374 строки. Закрепление тултипа и подсказка графика слушают Escape через одну функцию из <code>overlay-motion.ts</code>.</p>
+    <p class="evidence">src/lib/components/tooltip/tooltip-position.ts - src/lib/components/overlay-motion.ts - CHANGELOG.md Unreleased</p>
+  </section>
+
+  <details class="folded">
+    <summary>Решено: вынести положение панели в отдельный файл</summary>
+  <section class="panel">
     <h2>Вопрос 1. Вынести положение панели и стрелку в отдельный файл</h2>
     <p>В <code>tooltip.directive.ts</code> осталось 444 строки. Около 66 из них (оценка по диапазонам строк: <code>positionFor</code>, <code>pointArrowAtHost</code>, три константы) только считают, где стоять панели и куда смотреть стрелке, и не знают про события и текст. Снаружи ничего не меняется.</p>
     <div class="jobs" aria-label="Файл tooltip.directive.ts после первой нарезки">
@@ -189,11 +317,11 @@
       <span class="j4" style="flex:378">всё остальное<br>около 378</span>
     </div>
     <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
-      <article class="opt is-pick" tabindex="0">
+      <article class="opt is-pick is-chosen" tabindex="0">
         <span class="badge is-pick">рекомендую</span>
         <h3>Вынести в tooltip-position.ts</h3>
-        <p class="youpick"><b>Ты выбираешь</b>положение панели и стрелка живут в своём файле, директива вызывает их. Основной файл станет около 378 строк (оценка).</p>
-        <div class="files"><span class="file">tooltip.directive.ts<small>около 378</small></span><span class="file is-new">tooltip-position.ts<small>около 66</small></span></div>
+        <p class="youpick"><b>Ты выбираешь</b>положение панели и стрелка живут в своём файле, директива вызывает их. Основной файл стал 374 строки.</p>
+        <div class="files"><span class="file">tooltip.directive.ts<small>374</small></span><span class="file is-new">tooltip-position.ts<small>около 66</small></span></div>
         <div class="pills"><span class="pill good">каждый файл про одну работу</span><span class="pill good">снаружи ничего</span><span class="pill mid">ещё один файл в папке</span></div>
         <dl class="layer"><dt>Потребители</dt><dd class="none">не затронуты</dd><dt>Changelog и миграции</dt><dd>строка про состав членов <code>TooltipDirective</code>: <code>pointArrowAtHost</code> и <code>positionFor</code> уходят</dd></dl>
         <span class="chosen-mark">выбрано</span>
@@ -207,63 +335,11 @@
     </div>
   </section>
 
-  <section class="panel q" id="q-listeners" data-q="listeners" data-review="Замер слушателей" data-review-note-only>
-    <h2>Вопрос 2. Цена слушателей на каждую ячейку таблицы</h2>
-    <p>Директива вешает 7 слушателей на свой элемент (<code>mouseenter</code>, <code>mouseleave</code>, <code>focusin</code>, <code>focusout</code>, <code>click</code>, <code>keydown</code>, <code>keydown.escape</code>; <code>grep -c</code> по <code>@HostListener</code>). Её ставит каждая ячейка колонки с обрезкой, и ещё 4 слушателя встаёт на фокусируемого родителя, если ячейка внутри него. Ниже расчёт, не замер: 5 колонок с обрезкой.</p>
-    <div class="bars2">
-      <div class="r"><span>100 строк</span><span class="bar"><i style="width:10%"></i></span><span class="n">3 500</span></div>
-      <div class="r"><span>500 строк</span><span class="bar"><i class="bad" style="width:50%"></i></span><span class="n">17 500</span></div>
-      <div class="r"><span>1000 строк</span><span class="bar"><i class="bad" style="width:100%"></i></span><span class="n">35 000</span></div>
-    </div>
-    <p class="cap">Расчёт: строки × 5 колонок × 7 слушателей. Реальная цена в миллисекундах и в памяти не измерена.</p>
-    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
-      <article class="opt is-pick" tabindex="0">
-        <span class="badge is-pick">рекомендую</span>
-        <h3>Сначала замерить</h3>
-        <p class="youpick"><b>Ты выбираешь</b>я рисую таблицу на 500 и 1000 строк с обрезкой в 5 колонках и мерю время отрисовки и память. Если цифры плохие, возвращаюсь с решением.</p>
-        <div class="pills"><span class="pill good">решаем по цифрам</span><span class="pill mid">один замер, без правок кода</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-      <article class="opt" tabindex="0">
-        <h3>Сразу делегировать события</h3>
-        <p class="youpick"><b>Ты выбираешь</b>один слушатель на таблицу вместо слушателей на каждую ячейку, директива регистрируется в общем реестре.</p>
-        <div class="pills"><span class="pill good">меньше слушателей</span><span class="pill bad">большая перестройка директивы</span><span class="pill bad">выигрыш не доказан</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-      <article class="opt" tabindex="0">
-        <h3>Не трогать</h3>
-        <p class="youpick"><b>Ты выбираешь</b>считаем цену приемлемой.</p>
-        <div class="pills"><span class="pill mid">без цифр это догадка</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-    </div>
-  </section>
+  </details>
 
-  <section class="panel q" id="q-lazy" data-q="lazy" data-review="Ленивая панель" data-review-note-only>
-    <h2>Вопрос 3. Ленивая загрузка панели</h2>
-    <p>Панель с разметкой и стилями лежит в той же сборке, что директива. Измерено на собранной библиотеке: весь тултип 30 962 байта (7 473 в gzip), из них панель с разметкой около 10 КБ, сжатая отдельно 2 140 байт (срез файла по смещениям, оценка доли).</p>
-    <div class="bars2">
-      <div class="r"><span>Весь тултип, gzip</span><span class="bar"><i style="width:100%"></i></span><span class="n">7 473</span></div>
-      <div class="r"><span>Панель с разметкой</span><span class="bar"><i class="bad" style="width:29%"></i></span><span class="n">около 2 140</span></div>
-    </div>
-    <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
-      <article class="opt is-pick" tabindex="0">
-        <span class="badge is-pick">рекомендую</span>
-        <h3>Не делать</h3>
-        <p class="youpick"><b>Ты выбираешь</b>панель остаётся в сборке. Показ остаётся синхронным.</p>
-        <div class="pills"><span class="pill good">без гонок при первом наведении</span><span class="pill mid">около 2 КБ в gzip лишние до первого показа</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-      <article class="opt" tabindex="0">
-        <h3>Грузить панель по первому наведению</h3>
-        <p class="youpick"><b>Ты выбираешь</b>панель подгружается динамическим импортом, пока идёт задержка в 120 мс.</p>
-        <div class="pills"><span class="pill good">около 2 КБ в gzip уходят из начальной сборки</span><span class="pill bad">показ становится асинхронным: гонка с закрытием и закреплением</span><span class="pill bad">запрос на первое наведение</span></div>
-        <span class="chosen-mark">выбрано</span>
-      </article>
-    </div>
-  </section>
-
-  <section class="panel q" id="q-escape" data-q="escape" data-review="Общий помощник для Escape" data-review-note-only>
+  <details class="folded">
+    <summary>Решено: общий помощник для закрытия по Escape</summary>
+  <section class="panel">
     <h2>Вопрос 4. Общий помощник для «закрыть по Escape»</h2>
     <p>Закрепление тултипа слушает <code>Escape</code> на документе в фазе перехвата, и подсказка графика (<code>ChartTooltipDirective.closeOnEscape</code>) делает то же самое с проверкой на отсутствие документа. Остальные оверлеи библиотеки используют <code>keydownEvents()</code> самого оверлея. Общие помощники уже есть и работают: <code>closeOnScroll</code> в 10 компонентах, <code>prepareOverlayEnter</code> в 9, <code>overlayPlacementOf</code> в 2 (считал по <code>git grep -l</code>, без файлов индекса и самого модуля).</p>
     <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
@@ -274,7 +350,8 @@
         <div class="pills"><span class="pill good">нулевой риск для графиков</span><span class="pill mid">около 10 строк дублируются</span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
-      <article class="opt" tabindex="0">
+      <article class="opt is-chosen" tabindex="0">
+        <span class="badge is-pick">выбрано</span>
         <h3>Вынести в overlay-motion.ts</h3>
         <p class="youpick"><b>Ты выбираешь</b>одна функция «слушать Escape на документе, вернуть отписку» для тултипа и графика.</p>
         <p class="code">const stop = listenForEscape(document, () =&gt; this.close());</p>
@@ -285,15 +362,7 @@
     </div>
   </section>
 
-  <h2 class="band">Уже решено и сделано</h2>
-  <p class="cap">Здесь отвечать не нужно. Два первых вопроса этой деки закрыты, их аргументы свёрнуты.</p>
-
-  <section class="decided">
-    <h2>Решено и сделано, в dev</h2>
-    <p><b>Жирное название при обрезке пишет только <code>dsDefinitionTerm</code>.</b> Обычный <code>dsTooltip</code> показывает ровно то, что написано.</p>
-    <p><b>Код тултипа разрезан на три файла, два атрибута склеены в один.</b> <code>dsTooltipWhenClipped=".label"</code> заменил пару с <code>dsTooltipTextSelector</code>. Клип-тест лежит в <code>tooltip-clip.ts</code>, фокус через родителя в <code>tooltip-ancestor-focus.ts</code>, основной файл остался на 444 строках (было 515, обещал около 360). Старую разметку ловят ESLint и запись миграции.</p>
-    <p class="evidence">src/lib/components/tooltip/tooltip-clip.ts - src/lib/components/tooltip/tooltip-ancestor-focus.ts - CHANGELOG.md Unreleased (Breaking)</p>
-  </section>
+  </details>
 
   <details class="folded">
     <summary>Решено: кто пишет жирное название при обрезке</summary>
@@ -632,12 +701,12 @@ People who confirmed a seat</span>
   }
   for (const card of document.querySelectorAll('[data-live]')) wire(card);
 
-  const PICK_KEY = 'ds-deck-tooltip-mechanism-picks-v7';
+  const PICK_KEY = 'ds-deck-tooltip-mechanism-picks-v9';
   const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
   const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private window */ } };
   const state = read(PICK_KEY, {});
   const sections = [...document.querySelectorAll('.q[data-q]')];
-  const labels = { position: 'Вынести положение панели', listeners: 'Слушатели на ячейку', lazy: 'Ленивая панель', escape: 'Помощник для Escape' };
+  const labels = { listeners: 'Слушатели на ячейку', lazy: 'Загрузка панели на простое', delegation: 'Общее делегирование событий' };
   const optionName = (card) => card.querySelector('h3').textContent.trim();
   const choices = (section) => [...section.querySelectorAll('.opt:not([aria-disabled])')];
   function render() {
@@ -700,11 +769,23 @@ People who confirmed a seat</span>
     .dr-btn { padding: 4px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 999px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
     .dr-btn[aria-pressed="true"] { background: var(--accent-subtitle, #e6efff); border-color: var(--accent-strong, #2457c5); color: var(--accent-strong, #2457c5); }
     .dr-btn[data-v="${REMARK}"][aria-pressed="true"] { background: var(--error-subtitle, #fdecec); border-color: var(--error-text, #b42318); color: var(--error-text, #b42318); }
-    .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--error-text, #b42318); border-radius: 8px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
+    .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--border-default, #c9ced6); border-radius: var(--radius-md, 8px); background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
+    .dr-note:focus { outline: none; border-color: var(--accent, #2457c5); box-shadow: var(--ds-field-focus-shadow, 0 0 0 3px rgb(36 87 197 / .25)); }
     .dr-note[hidden] { display: none; }
+    .dr-history { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 4px; color: var(--text-secondary, #4b5563); font: 13px/1.45 var(--font-sans, system-ui, sans-serif); }
+    .dr-history::before { content: 'История замечаний'; display: block; margin-left: -1.2em; color: var(--text-primary, #1d2330); font-weight: 600; }
     [data-dr-folded] > :not(h1, h2, h3, h4, .dr-row, .dr-note) { display: none !important; }
     .dr-fold { padding: 4px 8px; border: 0; background: none; color: var(--accent-strong, #2457c5); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
     .dr-fold[hidden] { display: none; }
+    .dr-btn, .dr-bar button, .dr-fold { transition: background-color .12s, border-color .12s, color .12s, box-shadow .12s; }
+    .dr-btn:hover, .dr-bar button:hover { background: var(--surface-secondary, #f3f4f6); border-color: var(--border-strong, #9aa1ad); }
+    .dr-btn:active, .dr-bar button:active { background: var(--surface-muted, #e5e7eb); }
+    .dr-btn[aria-pressed="true"]:hover { background: color-mix(in srgb, var(--accent-strong, #2457c5) 14%, var(--surface-default, #fff)); }
+    .dr-btn[data-v="есть замечание"][aria-pressed="true"]:hover { background: color-mix(in srgb, var(--error-text, #b42318) 14%, var(--surface-default, #fff)); }
+    .dr-fold:hover { text-decoration: underline; }
+    .dr-fold:active { color: var(--text-primary, #1d2330); }
+    .dr-btn:focus-visible, .dr-bar button:focus-visible, .dr-fold:focus-visible { outline: 2px solid var(--focus-ring-color, var(--accent, #2457c5)); outline-offset: 2px; }
+    .dr-bar button[data-done] { background: var(--success-subtitle, #e7f6ec); border-color: var(--success, #1a7f37); color: var(--success-text, #116329); }
     .dr-bar { position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; padding: 10px 20px; background: var(--surface-default, #fff); border-top: 1px solid var(--border-divider, #e3e6eb); box-shadow: 0 -4px 16px rgb(0 0 0 / .08); color: var(--text-primary, #1d2330); font: 13px/1.4 var(--font-sans, system-ui, sans-serif); }
     .dr-bar b { flex: none; }
     .dr-bar .dr-chat { flex: none; color: var(--text-tertiary, #6b7280); }
@@ -727,6 +808,11 @@ People who confirmed a seat</span>
   const unfolded = new Set();
   for (const item of items) {
     const label = item.dataset.review;
+    // A deck bumps data-review-round once it has worked through the remarks of a round; answers stored
+    // for an earlier round are already in the block's history, so they leave the input.
+    const round = Number(item.dataset.reviewRound) || 1;
+    if (state[label] && (state[label].round ?? 1) !== round) { delete state[label]; write(); }
+    const own = () => Object.assign((state[label] ??= {}), { round });
     const row = document.createElement('div');
     row.className = 'dr-row';
     const verdicts = item.hasAttribute('data-review-note-only') ? [REMARK] : [ACCEPT, REMARK];
@@ -737,7 +823,7 @@ People who confirmed a seat</span>
       button.dataset.v = verdict;
       button.textContent = verdict === ACCEPT ? 'Принято' : 'Есть замечание';
       button.addEventListener('click', () => {
-        const entry = (state[label] ??= {});
+        const entry = own();
         entry.v = entry.v === verdict ? '' : verdict;
         write();
         render();
@@ -749,13 +835,15 @@ People who confirmed a seat</span>
     note.className = 'dr-note';
     note.placeholder = 'Что не так';
     note.setAttribute('aria-label', `Замечание: ${label}`);
-    note.addEventListener('input', () => { (state[label] ??= {}).note = note.value; write(); render(); });
+    note.addEventListener('input', () => { own().note = note.value; write(); render(); });
     const fold = document.createElement('button');
     fold.type = 'button';
     fold.className = 'dr-fold';
     fold.addEventListener('click', () => { unfolded.has(label) ? unfolded.delete(label) : unfolded.add(label); render(); });
     row.append(...buttons, fold);
     item.append(row, note);
+    const history = item.querySelector(':scope > [data-review-history]');
+    if (history) { history.classList.add('dr-history'); item.append(history); }
     controls.set(label, { item, buttons, note, fold });
   }
 
@@ -773,6 +861,7 @@ People who confirmed a seat</span>
   function render() {
     const parts = [];
     let done = 0;
+    let open = 0;
     for (const [label, { item, buttons, note, fold }] of controls) {
       const entry = state[label] ?? {};
       const accepted = entry.v === ACCEPT;
@@ -782,20 +871,28 @@ People who confirmed a seat</span>
       for (const button of buttons) button.setAttribute('aria-pressed', String(entry.v === button.dataset.v));
       note.hidden = entry.v !== REMARK;
       if (note.value !== (entry.note ?? '')) note.value = entry.note ?? '';
+      if (!accepted) open++;
       if (!entry.v) continue;
-      done++;
+      if (!accepted) done++;
       const text = entry.note?.trim().replace(/\s+/g, ' ');
       parts.push(entry.v === REMARK ? `${label} - замечание${text ? `: «${text}»` : ''}` : `${label} - принято`);
     }
     const extra = hooks.extra?.();
     if (extra) parts.push(extra);
-    bar.querySelector('b').textContent = `${done} из ${controls.size}`;
+    bar.querySelector('b').textContent = `${done} из ${open}`;
     line.textContent = parts.length ? `Дека ${document.title}: ${parts.join('; ')}` : 'пока ничего не выбрано';
   }
 
   bar.addEventListener('click', (event) => {
     const action = event.target.closest('button')?.dataset.a;
-    if (action === 'copy') navigator.clipboard?.writeText(line.textContent);
+    if (action === 'copy') {
+      const button = event.target.closest('button');
+      navigator.clipboard?.writeText(line.textContent).then(() => {
+        button.dataset.done = '';
+        button.textContent = 'Скопировано';
+        setTimeout(() => { delete button.dataset.done; button.textContent = 'Скопировать'; }, 1500);
+      });
+    }
     if (action === 'reset') { for (const label of Object.keys(state)) delete state[label]; write(); hooks.onReset?.(); render(); }
   });
   render();

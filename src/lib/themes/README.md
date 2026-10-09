@@ -88,22 +88,22 @@ On-fill text is the literal `white`, or the theme-stable `--static-ink` where th
 @use 'styles/toast-overlay';
 @use 'styles/surface-motion';
 @use 'styles/overlay-motion';
-@use 'styles/skeleton-shimmer';
 
-@include bp.emit-vars; // REQUIRED, and not implied by the @use above
+@include bp.emit-vars; // writes --bp-*; not implied by the @use above
 ```
 
 That is the whole list `styles/ds` forwards — it is written out rather than trailed off, because
 the parts that are easy to leave out are the ones that fail silently:
 
 - **`bp.emit-vars` is a separate call.** `@use 'styles/breakpoints'` alone emits nothing; the mixin
-  is what writes `--bp-*`. Without it `ds-container` reads `var(--bp-sm|md|lg)` with no fallback, so
-  `max-width` is invalid at computed-value time and `size="sm|md|lg"` silently goes full-bleed. The
-  default `size="xl"` resolves from `tokens` and looks fine, which is what makes the omission hard
-  to spot.
+  is what writes `--bp-*` for your own stylesheets. The library's components fall back to the same
+  values when it is missing.
 - **`ds-color`** is what defines the `[ds-color="…"]` zones. Leave it out and the accent never
   recolours — no error, just the primary palette everywhere.
-- **`focus`** carries the focus-ring roles; without it interactive elements lose their ring.
+- **`focus`** gives your own elements the base focus ring and carries the `[data-focus]` styles and
+  the ring's fade-in. The library's components draw their ring without it.
+- **`reset`** sets the page: `border-box`, the body font, form controls in the inherited font. The
+  library's components set what they need of it on their own elements.
 - **`dropdown-overlay` and `toast-overlay`** style panels that portal to `document.body`, which is
   why they cannot live in a component's own stylesheet. Omitting them renders every dropdown,
   picker panel and toast unstyled.

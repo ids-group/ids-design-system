@@ -1,5 +1,7 @@
-@use '../../styles/press' as press;
+@use '../../styles/dismiss-button' as dismiss-button;
 @use '../../styles/text-clip' as text-clip;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract: title is a single line with ellipsis; body wraps and is
    never clamped (banners are page-level and stay fully readable); the dismiss icon
@@ -118,14 +120,11 @@
   }
 
   .close {
-    background: none;
-    border: 0;
-    cursor: pointer;
+    @include dismiss-button.button;
+
     color: var(--_banner-close-icon-color);
 
     &:hover { color: var(--_banner-close-icon-color-hover); }
-
-    @include press.feedback;
   }
 
   .actions {

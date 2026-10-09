@@ -1,4 +1,6 @@
 @use '../../../styles/focus' as focus;
+@use '../../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   --_time-picker-option-bg-color-selected: var(

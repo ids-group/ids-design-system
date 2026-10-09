@@ -1,4 +1,6 @@
 @use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 :host {
   --_sidenav-group-open-bg-color:      var(--ds-sidenav-group-open-bg-color,      var(--surface-secondary));
   --_sidenav-group-child-indent: var(--ds-sidenav-group-child-indent, var(--space-3));

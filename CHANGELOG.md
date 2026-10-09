@@ -18,11 +18,18 @@
 
 ### Added
 
-- **The ESLint and stylelint plugins take a `from` version, so an upgrade reports only what changed
-  after it.** Without it every rule lists every release since 0.4.0, as before. With
-  `idsDesignSystem.configs.recommendedFrom('0.13.4')`, `['error', { from: '0.13.4' }]` on one ESLint
-  rule, or `[true, { from: '0.13.4' }]` on `ids-design-system/no-removed-tokens`, a removed or renamed
-  name from 0.13.4 or earlier is left out and the unreleased version always counts.
+- **`styles/component-base` gives a component of yours the base the library's components carry.**
+  `@include component-base.rules` first in a component stylesheet sets `border-box`, the inherited
+  font on form controls, zero heading margins and the base focus ring on that component's own
+  elements, whether or not the app loads `styles/reset` and `styles/focus`.
+
+- **The ESLint and stylelint plugins take a `from` and a `to` version, so an upgrade reports only what
+  changed across it.** Without them every rule lists every release since 0.4.0, as before. With
+  `idsDesignSystem.configs.recommendedFrom('0.13.4', '0.14.5')`, `['error', { from: '0.13.4', to: '0.14.5' }]`
+  on one ESLint rule, or `[true, { from: '0.13.4', to: '0.14.5' }]` on
+  `ids-design-system/no-removed-tokens`, a removed or renamed name from 0.13.4 or earlier, or from
+  after 0.14.5, is left out. `from` is exclusive and `to` inclusive; either can stand alone, and the
+  unreleased version counts unless `to` is set.
 
 - **`--ds-loading-overlay-radius` rounds the corners of the `ds-loading-overlay` scrim.** It
   defaults to `0`. Set it to the radius of the container the overlay covers, so the blurred scrim
@@ -40,8 +47,8 @@
   pin-capable trigger the same cue, its hover and its press.
   Use it on info and definition triggers only, never on a control whose click acts.
   `TooltipDirective` gained the public `dsTooltipPinOnClick`, protected `onClick` and
-  `onPointerLeave`, and the private `document`, `hostPinOnClick`, `pinsOnClick`, `pin`, `unpin`
-  and `pointArrowAtHost`. A subclass declaring one of those names must rename it.
+  `onPointerLeave`, and the private `document`, `hostPinOnClick`, `pinsOnClick`, `pin` and
+  `unpin`. A subclass declaring one of those names must rename it.
 
 - **`ds-info-hint` is an icon button with a pinned tooltip.** `<ds-info-hint
   ariaLabel="About conversion rate" text="…" />` renders a 14px question-mark icon button named by
@@ -173,6 +180,12 @@
   its hint on click and takes the term's hover, pressed and pinned states; a sortable one sorts on
   click and pins nothing.
 
+### Deprecated
+
+- **`styles/skeleton-shimmer` emits nothing, and `styles/ds` no longer forwards it.** `ds-skeleton`
+  carries its own reduced-motion opt-out. The partial stays in the package as an empty file; delete your
+  `@use 'styles/skeleton-shimmer'`.
+
 ### Fixed
 
 - **A clipped `dsTooltipWhenClipped` value is reachable by keyboard wherever it sits.** A host
@@ -181,6 +194,31 @@
   clipped, so Tab stops on it and opens the tip, and it loses the stop once its text fits. A host
   that is focusable, sits inside a control or widget role, or holds a control is left as it was; a
   `tabindex` you set is never touched, and `tabindex="-1"` keeps a clipped value out of the Tab order.
+
+- **The keyboard focus ring is rounded on elements that declare no radius.** The close buttons of
+  `ds-banner`, `ds-alert`, `ds-toast`, `ds-drawer` and `ds-modal-card`, the `ds-dropzone` remove
+  button, the `ds-table` column filter button and cell link, a focusable `ds-sparkline` and
+  `ds-tabs` panel, and a middle `ds-accordion-item` header drew a square ring; they take
+  `--focus-ring-radius` now. The `ds-number-stepper` step buttons follow the box's rounded corners.
+  The radius is set at zero specificity in `styles/focus`, and in each component's base layer for
+  its own elements, so any radius an element declares wins; an element of yours that paints a fill or border and declares none rounds its corners while
+  focused. Declare its `border-radius` to keep it square.
+
+- **The close `×` sits in the centre of its box and focus ring.** The close buttons of `ds-banner`,
+  `ds-alert`, `ds-toast`, `ds-drawer` and `ds-modal-card` and the `ds-dropzone` remove button laid
+  the icon on a text line, up to 2px below or beside the centre of a box that was not square. The
+  box is square now and centres the icon: 20px in `ds-banner`, 18px in `ds-alert`, `ds-toast` and
+  `ds-dropzone`, 24px in `ds-drawer` and `ds-modal-card`. The banner and dropzone buttons are 8px
+  narrower.
+
+- **The `ds-table` column filter button is a 24px target.** It was the 12px icon alone, so its focus
+  ring hugged the icon. The target grows around the icon without changing the header height; the
+  icon sits `--space-2` after the label instead of `--space-1`, so a filtered header's label clips
+  4px sooner. The button is at full opacity while focused.
+
+- **A `ds-table` cell link's focus ring clears the text.** It was drawn inward, over the first and
+  last letter; it is drawn around the text now.
+
 - **A tooltip and a `ds-menu-item` submenu close when anything under them scrolls.** Inside an
   `overflow: auto` container they stayed where they opened while their trigger scrolled away, a
   pinned tooltip included. They close now on a scroll of the window or of any scroll container, as
@@ -228,6 +266,32 @@
   bindings and `setProperty('--ds-*', …)` calls were never matched, so a stale token set that way
   went unreported.
 
+- **Reduced motion stops the skeleton shimmer in an app that does not load `styles/ds`.** The opt-out
+  lived in `styles/skeleton-shimmer`, so an app assembling the partials one by one kept the wave
+  running for readers who asked for less motion. `ds-skeleton` carries it in its own styles now.
+
+- **The "no matches" row of `ds-select`, `ds-multi-select` and `ds-autocomplete` keeps its type
+  without `styles/typography`.** Its family, weight and line height came from the `.t-s` class,
+  so without that partial the row fell back to the page's font (the browser's serif on an
+  unstyled page). `styles/dropdown-overlay` sets them now, from the same `--ds-typography-s-*`
+  hooks, and the row no longer carries `t-s`; with typography loaded it renders as before. A rule
+  of yours that reached the row through `.t-s` matches nothing: select `.ds-dropdown-panel .empty`.
+
+- **Components keep their size, fonts and focus ring in an app that does not load `styles/reset`
+  or `styles/focus`.** Each component now sets `box-sizing: border-box` on its host and its own
+  elements, puts its form controls in the inherited font, clears its heading margins and draws the
+  base focus ring on its own focusable elements. Without `styles/reset`, a default `ds-input` field
+  grew from 40px to 41.2px tall, a `ds-input` inside `ds-field-group` from 38.8px to 40px, and a
+  host with a border took the browser's `content-box`; without `styles/focus`, buttons such as the
+  `ds-number-stepper` steps and the close buttons of `ds-banner`, `ds-toast`, `ds-modal-card` and
+  `ds-drawer` showed the browser's own focus ring. A height animation such as an expanding
+  `ds-sidenav-group` animates without the reset as well.
+
+- **`ds-container` with `size="sm|md|lg"` and the responsive rail of `ds-app-layout` work without
+  `bp.emit-vars`.** Both fall back to the library's breakpoints; `ds-container` went full-bleed
+  and the rail stayed in desktop layout. Your own `--bp-*` still win where you set them, and the
+  dev-mode warning about a missing `--bp-lg` is gone.
+
 - **`ds-bar-chart` prints `—` for a row with a non-finite value.** A `NaN` or `Infinity` value, or a
   `[low, high]` pair with a non-finite end, printed `0` and `0.0%` as though it were a reading of zero.
   The row now draws no bar and shows `—` as its value, as its percentage (unless the row sets
@@ -238,6 +302,7 @@
 
 | Delete | Why | Replace with |
 | --- | --- | --- |
+| `@use 'styles/skeleton-shimmer'` | the partial emits nothing; `ds-skeleton` styles its own reduced-motion stop | nothing |
 | a hand-built info button: `name="info"` on a `ds-icon` inside a `<button>` that carries `dsTooltip` | `ds-info-hint` renders the button, the icon and the pinned tooltip | `<ds-info-hint ariaLabel="…" text="…" />` |
 | a hand-built term button styled with `underline dotted` that carries `dsTooltip` | `dsDefinitionTerm` carries the underline, the focus ring, the keyboard access and the pinned tooltip | `<span dsDefinitionTerm="…">` |
 | `--ds-overlay-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of overlay panels | nothing |
