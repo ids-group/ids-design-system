@@ -33,11 +33,20 @@
     <tbody>
       <tr>
         <td>
-          <code class="t-mono-inline">[brand]</code>
+          <code class="t-mono-inline">
+            [brand]
+          </code>
         </td>
 
         <td>
-          A real logo, capped by <code class="t-mono-inline">--ds-auth-layout-brand-max-height</code>; the tile stays unless <code class="t-mono-inline">brand</code> / <code class="t-mono-inline">logoLetter</code> are unset
+          A real logo, capped by
+          <code class="t-mono-inline">
+            --ds-auth-layout-brand-max-height
+          </code>;
+          the tile stays unless <code class="t-mono-inline">brand</code> /
+          <code class="t-mono-inline">
+            logoLetter
+          </code> are unset
         </td>
 
         <td>
@@ -47,7 +56,9 @@
 
       <tr>
         <td>
-          <code class="t-mono-inline">[dsBrandName]</code>
+          <code class="t-mono-inline">
+            [dsBrandName]
+          </code>
         </td>
 
         <td>
@@ -69,13 +80,22 @@
         </td>
 
         <td>
-          The card <code class="t-mono-inline">article</code> is <code class="t-mono-inline">main</code>; <code class="t-mono-inline">landmark="none"</code> inside another layout's <code class="t-mono-inline">main</code>, as here
+          The card <code class="t-mono-inline">article</code> is
+          <code class="t-mono-inline">
+            main
+          </code>;
+          <code class="t-mono-inline">
+            landmark="none"
+          </code> inside another
+          layout's <code class="t-mono-inline">main</code>, as here
         </td>
       </tr>
 
       <tr>
         <td>
-          <code class="t-mono-inline">[dsAuthSupport]</code>
+          <code class="t-mono-inline">
+            [dsAuthSupport]
+          </code>
         </td>
 
         <td>
@@ -83,7 +103,10 @@
         </td>
 
         <td>
-          <code class="t-mono-inline">contentinfo</code> when this layout is the page, a plain footer when nested
+          <code class="t-mono-inline">
+            contentinfo
+          </code> when this layout is the
+          page, a plain footer when nested
         </td>
       </tr>
     </tbody>
@@ -91,24 +114,37 @@
 
   <p class="block-desc t-s">
     Wordmark precedence, per field:
-    <code class="t-mono-inline">[dsBrandName] &gt; brand input &gt; provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125; &#125;)</code>.
+    <code class="t-mono-inline">
+      [dsBrandName] &gt; brand input &gt; provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125; &#125;)
+    </code>.
   </p>
 
   <ul class="rules">
     <li>
       The brand row takes <code class="t-mono-inline">ds-sidenav</code>'s
-      <code class="t-mono-inline">brand</code> /
-      <code class="t-mono-inline">logoLetter</code> /
-      <code class="t-mono-inline">[dsBrandName]</code> contract and config
+      <code class="t-mono-inline">
+        brand
+      </code> /
+      <code class="t-mono-inline">
+        logoLetter
+      </code> /
+      <code class="t-mono-inline">
+        [dsBrandName]
+      </code> contract and config
     </li>
 
     <li>
-      The tile has its own <code class="t-mono-inline">--ds-auth-layout-mark-*</code>
+      The tile has its own
+      <code class="t-mono-inline">
+        --ds-auth-layout-mark-*
+      </code>
       hooks; retint both
     </li>
 
     <li>
-      <code class="t-mono-inline">brand=""</code> drops the wordmark, a
+      <code class="t-mono-inline">
+        brand=""
+      </code> drops the wordmark, a
       configured <code class="t-mono-inline">logoLetter</code> still paints the
       tile; clear both for no brand row
     </li>
@@ -228,14 +264,20 @@
 
   <p class="block-desc t-s">
     Block padding, column gap and masthead gap clamp against
-    <code class="t-mono-inline">svh</code>, full size at 800px of viewport
+    <code class="t-mono-inline">
+      svh
+    </code>, full size at 800px of viewport
     height; type and tile stay fixed. Shorten the window to see it.
   </p>
 
   <ul class="rules">
     <li>
-      <code class="t-mono-inline">svh</code>, not
-      <code class="t-mono-inline">dvh</code>: the column does not re-space as a
+      <code class="t-mono-inline">
+        svh
+      </code>, not
+      <code class="t-mono-inline">
+        dvh
+      </code>: the column does not re-space as a
       mobile URL bar hides
     </li>
 
@@ -266,8 +308,12 @@
 
   <p class="block-desc t-s">
     The layout and <code class="t-mono-inline">ds-bottom-sheet</code> pad by
-    <code class="t-mono-inline">env(safe-area-inset-*)</code>; the insets are
-    <strong>0 until <code class="t-mono-inline">index.html</code> opts in</strong>.
+    <code class="t-mono-inline">
+      env(safe-area-inset-*)
+    </code>; the insets are
+    <strong>
+      0 until <code class="t-mono-inline">index.html</code> opts in
+    </strong>.
   </p>
 
   <pre class="t-mono-block"><code>&lt;!-- your index.html --&gt;

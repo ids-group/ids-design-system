@@ -501,8 +501,12 @@
   <p class="block-desc t-s">
     Fields take a halo
     (<code class="t-mono-inline">--ds-field-focus-shadow</code>); the rest a
-    <code class="t-mono-inline">--focus-ring-width</code> outline in
-    <code class="t-mono-inline">--focus-ring-color</code>.
+    <code class="t-mono-inline">
+      --focus-ring-width
+    </code> outline in
+    <code class="t-mono-inline">
+      --focus-ring-color
+    </code>.
   </p>
 
   <table class="tbl">
@@ -531,7 +535,9 @@
 
       <tr>
         <td>
-          <code class="t-mono-inline">ring</code>
+          <code class="t-mono-inline">
+            ring
+          </code>
         </td>
 
         <td>
@@ -541,7 +547,9 @@
 
       <tr>
         <td>
-          <code class="t-mono-inline">edge</code>
+          <code class="t-mono-inline">
+            edge
+          </code>
         </td>
 
         <td>
@@ -553,23 +561,37 @@
 
   <ul class="rules">
     <li>
-      <code class="t-mono-inline">focus.emit-rules</code> rings any unstyled
+      <code class="t-mono-inline">
+        focus.emit-rules
+      </code> rings any unstyled
       focusable via <code class="t-mono-inline">:where(:focus-visible)</code>,
       zero specificity, so any CSS wins
     </li>
 
     <li>
       Without it a projected link or your own
-      <code class="t-mono-inline">&lt;button&gt;</code> gets the browser's
-      <code class="t-mono-inline">outline: auto</code>; DS components ring their
+      <code class="t-mono-inline">
+        &lt;button&gt;
+      </code> gets the browser's
+      <code class="t-mono-inline">
+        outline: auto
+      </code>; DS components ring their
       own elements through <code class="t-mono-inline">component-base</code>
     </li>
 
     <li>
-      <code class="t-mono-inline">styles/ds</code> includes it; an a-la-carte
-      <code class="t-mono-inline">&#64;use</code> consumer adds
-      <code class="t-mono-inline">&#64;use 'styles/focus' as focus;</code> and
-      <code class="t-mono-inline">&#64;include focus.emit-rules;</code> to one
+      <code class="t-mono-inline">
+        styles/ds
+      </code> includes it; an a-la-carte
+      <code class="t-mono-inline">
+        &#64;use
+      </code> consumer adds
+      <code class="t-mono-inline">
+        &#64;use 'styles/focus' as focus;
+      </code> and
+      <code class="t-mono-inline">
+        &#64;include focus.emit-rules;
+      </code> to one
       global stylesheet
     </li>
   </ul>
@@ -587,7 +609,9 @@
   <ul class="rules">
     <li>
       Do: <code class="t-mono-inline">focus.ring-for($control)</code> or
-      <code class="t-mono-inline">focus.owns-the-focus-ring($control)</code>,
+      <code class="t-mono-inline">
+        focus.owns-the-focus-ring($control)
+      </code>,
       naming one control
     </li>
 
@@ -610,14 +634,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">&#64;include component-base.rules;</code>
+    <code class="t-mono-inline">
+      &#64;include component-base.rules;
+    </code>
     (<code class="t-mono-inline">styles/component-base</code>) first in the
     stylesheet. It sits in a cascade layer, so any unlayered rule wins.
   </p>
 
   <ul class="rules">
     <li>
-      <code class="t-mono-inline">border-box</code>
+      <code class="t-mono-inline">
+        border-box
+      </code>
     </li>
 
     <li>
@@ -633,7 +661,10 @@
     </li>
 
     <li>
-      Same result with or without <code class="t-mono-inline">styles/reset</code>
+      Same result with or without
+      <code class="t-mono-inline">
+        styles/reset
+      </code>
       and <code class="t-mono-inline">styles/focus</code>
     </li>
   </ul>
@@ -650,19 +681,25 @@
   <p class="block-desc t-s">
     An <code class="t-mono-inline">overflow: hidden</code> ancestor clips rings,
     which draw outside the border box (e.g.
-    <code class="t-mono-inline">ds-card padding="none"</code> with a full-bleed
+    <code class="t-mono-inline">
+      ds-card padding="none"
+    </code> with a full-bleed
     child).
   </p>
 
   <ul class="rules">
     <li>
-      <code class="t-mono-inline">inset</code> draws the outline inside and
+      <code class="t-mono-inline">
+        inset
+      </code> draws the outline inside and
       makes the field halo an inset double ring
     </li>
 
     <li>
       Set it on the clipping element, not
-      <code class="t-mono-inline">&lt;html&gt;</code>; descendants inherit it
+      <code class="t-mono-inline">
+        &lt;html&gt;
+      </code>; descendants inherit it
     </li>
   </ul>
 
