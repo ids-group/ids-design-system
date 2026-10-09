@@ -36,44 +36,77 @@
     </code> unset.
   </p>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125;
-      &#125;)
-    </code>
-    serves this layout and
-    <code class="t-mono-inline">
-      ds-sidenav
-    </code>, per field; inputs beat the
-    config.
-    <code class="t-mono-inline">
-      brand=""
-    </code> drops the wordmark, but a
-    configured <code class="t-mono-inline">logoLetter</code> still paints the
-    tile; clear both for no brand row. The config has no accent: project
-    <code class="t-mono-inline">
-      [dsBrandName]
-    </code> for a two-tone wordmark;
-    the projection wins over both.
-  </p>
+  <pre class="t-mono-block"><code>[dsBrandName] projection &gt; inputs &gt; provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125; &#125;)</code></pre>
 
-  <p class="block-desc t-s">
-    The default slot fills the card, unstyled. The support line goes into
-    <code class="t-mono-inline">
-      [dsAuthSupport]
-    </code>: the contentinfo landmark
-    when this layout is the page, a plain footer when nested in another
-    layout's <code class="t-mono-inline">main</code>; omit it and the footer
-    collapses. The card (an <code class="t-mono-inline">article</code>) is
-    marked <code class="t-mono-inline">main</code> by default; nested in another
-    layout's
-    <code class="t-mono-inline">
-      main
-    </code>, as here, set
-    <code class="t-mono-inline">
-      landmark="none"
-    </code>.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      The config serves this layout and <code class="t-mono-inline">ds-sidenav</code>, per field; it has no accent.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        brand=""
+      </code> - drops the wordmark; a configured <code class="t-mono-inline">logoLetter</code> still paints the tile. Clear both for no brand row.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [dsBrandName]
+      </code> - a two-tone wordmark.
+    </li>
+  </ul>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Slot
+        </th>
+
+        <th>
+          Content
+        </th>
+
+        <th>
+          Landmark
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          Default
+        </td>
+
+        <td>
+          The card (an <code class="t-mono-inline">article</code>), unstyled
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            main
+          </code>; nested in another layout's <code class="t-mono-inline">main</code>, as here, set <code class="t-mono-inline">landmark="none"</code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            [dsAuthSupport]
+          </code>
+        </td>
+
+        <td>
+          The support line; omitted, the footer collapses
+        </td>
+
+        <td>
+          contentinfo as the page; a plain footer when nested
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="auth-demo">
     <ds-auth-layout
@@ -187,14 +220,15 @@
     On a short screen the chrome compresses, not the card
   </h3>
 
-  <p class="block-desc t-s">
-    Block padding, column gap and masthead gap clamp against
-    <code class="t-mono-inline">
-      svh
-    </code>, reaching full size at 800px of
-    viewport height (many laptops have less); type and tile stay fixed. The
-    clamps read the real viewport: shorten the window to see them.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Block padding, column gap and masthead gap clamp against <code class="t-mono-inline">svh</code>, full size at 800px of viewport height; type and tile stay fixed.
+    </li>
+
+    <li>
+      The clamps read the real viewport: shorten the window to see them.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
@@ -225,38 +259,27 @@
   </h3>
 
   <p class="block-desc t-s">
-    The column centres with auto margins, not
-    <code class="t-mono-inline">
-      align-items: center
-    </code>, so in a
+    Auto margins, not <code class="t-mono-inline">align-items: center</code>: in a
     fixed-height parent
     (<code class="t-mono-inline">--ds-auth-layout-min-height: 100%</code>) a
-    too-tall form pins to the top padding and scrolls rather than landing above
-    the scroll origin. The demos lower that token.
+    too-tall form pins to the top padding and scrolls.
   </p>
 
   <h3 class="block-title t-h4">
     The notch needs one line from YOUR app
   </h3>
 
-  <p class="block-desc t-s">
-    The layout pads by
-    <code class="t-mono-inline">
-      env(safe-area-inset-*)
-    </code> to clear a landscape
-    notch;
-    <code class="t-mono-inline">
-      ds-bottom-sheet
-    </code> does the same for the
-    home indicator. The insets are
-    <strong>
-      0 until the host document opts in
-    </strong> via the viewport meta
-    tag in your
-    <code class="t-mono-inline">
-      index.html
-    </code>.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        env(safe-area-inset-*)
+      </code> padding clears a landscape notch; <code class="t-mono-inline">ds-bottom-sheet</code>, the home indicator.
+    </li>
+
+    <li>
+      The insets are <strong>0 until the host document opts in</strong> via the viewport meta tag in your <code class="t-mono-inline">index.html</code>.
+    </li>
+  </ul>
 
   <pre class="t-mono-block"><code>&lt;!-- your index.html --&gt;
 &lt;meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" /&gt;</code></pre>
