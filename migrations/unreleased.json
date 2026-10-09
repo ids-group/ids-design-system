@@ -191,6 +191,26 @@
       "verify": "A ds-bar-chart reloading with rows on screen shows those rows under a scrim and spinner, and one loading with empty data shows skeleton rows."
     },
     {
+      "id": "dropdown-empty-row-drops-t-s",
+      "kind": "behavior",
+      "old": ".empty",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        ".empty.t-s",
+        ".ds-dropdown-panel .empty"
+      ],
+      "detect": [
+        ".empty.t-s",
+        ".ds-dropdown-panel .t-s"
+      ],
+      "action": "None, unless a stylesheet of yours reaches the \"no matches\" row of a picker panel through `.t-s`: select `.ds-dropdown-panel .empty` instead.",
+      "appliesWhen": "Only a rule of yours whose selector combines the picker panel or its `.empty` row with `.t-s`. Ships in `styles/dropdown-overlay`, which `styles/ds` forwards. Other elements carrying `.t-s` are not affected.",
+      "pitfall": "A selector such as `.ds-dropdown-panel .empty.t-s` still parses and matches nothing, so the override stops applying with no error.",
+      "restore": null,
+      "verify": "The built CSS holds no selector combining `.empty` with `.t-s`, and the \"no matches\" row of an open `ds-select` with no options shows your override."
+    },
+    {
       "id": "overlay-enter-keyframes-default-fade-in",
       "kind": "behavior",
       "old": "--ds-overlay-enter-keyframes",
@@ -366,6 +386,19 @@
       "text": "A reloading ds-bar-chart covers the whole card with the overlay, to the frame's rounded corners, instead of a scrim over the rows inside the padding.",
       "verify": "Open a framed ds-bar-chart with rows and loading set, and confirm the blurred scrim reaches the card's edges and corners."
     },
+    "`styles/skeleton-shimmer` emits nothing and `styles/ds` no longer forwards it; `ds-skeleton` stops its shimmer under `prefers-reduced-motion: reduce` from its own styles, so an app that assembles the partials itself gets the stop too (delete list: skeleton-shimmer-use).",
+    {
+      "text": "The \"no matches\" row of `ds-select`, `ds-multi-select` and `ds-autocomplete` takes its font family, weight and line height from `styles/dropdown-overlay` (the `--ds-typography-s-*` hooks) instead of the `.t-s` class, so it keeps its type in an app that does not load `styles/typography`.",
+      "verify": "Open a picker with a query that matches nothing and confirm the row is set in the app's sans face, not a serif."
+    },
+    {
+      "text": "Every component sets `box-sizing: border-box` on its host and its own elements, the inherited font on its form controls, zero margins on its headings and the base focus ring on its own focusable elements. An app that does not load `styles/reset` or `styles/focus` sees a default `ds-input` field at 40px instead of 41.2px tall, and one inside `ds-field-group` at 38.8px instead of 40px, and the library's focus ring where the browser's showed.",
+      "verify": "In an app without `styles/reset`, open a form and confirm a default `ds-input` field is 40px tall; tab to a `ds-number-stepper` step button and confirm the ring is the library's, not the browser's."
+    },
+    {
+      "text": "`ds-container` with `size=\"sm|md|lg\"` and the responsive rail of `ds-app-layout` fall back to the library's breakpoints when `--bp-*` is not set, so they work without `bp.emit-vars`; a `--bp-*` of yours still wins. The dev-mode warning about a missing `--bp-lg` is gone.",
+      "verify": "Without `bp.emit-vars`, confirm a `ds-container size=\"md\"` is 768px wide at most and the `ds-app-layout` rail turns into a drawer below 1024px."
+    },
     {
       "text": "A closing `ds-toast` fades where it stands instead of rising 8px while it fades.",
       "verify": "Dismiss a toast and confirm it fades without moving."
@@ -400,6 +433,16 @@
       ],
       "why": "dsDefinitionTerm carries the dotted underline, the focus ring, the keyboard access and the pinned tooltip.",
       "replaceWith": "<span dsDefinitionTerm=\"...\">; keep a dotted underline that marks something other than a term with a definition"
+    },
+    {
+      "id": "skeleton-shimmer-use",
+      "surface": "style",
+      "find": [
+        "@use 'styles/skeleton-shimmer'",
+        "styles/skeleton-shimmer"
+      ],
+      "why": "The partial emits nothing; `ds-skeleton` carries its own reduced-motion stop.",
+      "replaceWith": "nothing"
     },
     {
       "id": "overlay-enter-keyframes-fade-in",

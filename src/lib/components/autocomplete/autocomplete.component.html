@@ -294,13 +294,13 @@
 
       @if (loading()) {
         <li
-          class="empty t-s"
+          class="empty"
           role="presentation">
           <ds-spinner size="sm" />
         </li>
       } @else if (filteredOptions().length === 0 && !showCreateRow()) {
         <li
-          class="empty t-s"
+          class="empty"
           role="presentation">
           @if (emptyTemplate(); as tpl) {
             <ng-container

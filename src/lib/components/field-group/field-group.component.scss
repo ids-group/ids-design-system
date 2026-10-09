@@ -1,4 +1,6 @@
 @use '../../styles/field-box' as field-box;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Border, radius, focus ring and dividers live on `.row`, not the host: the group's message must sit outside the bordered box. */
 :host {

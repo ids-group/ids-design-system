@@ -18,6 +18,11 @@
 
 ### Added
 
+- **`styles/component-base` gives a component of yours the base the library's components carry.**
+  `@include component-base.rules` first in a component stylesheet sets `border-box`, the inherited
+  font on form controls, zero heading margins and the base focus ring on that component's own
+  elements, whether or not the app loads `styles/reset` and `styles/focus`.
+
 - **The ESLint and stylelint plugins take a `from` and a `to` version, so an upgrade reports only what
   changed across it.** Without them every rule lists every release since 0.4.0, as before. With
   `idsDesignSystem.configs.recommendedFrom('0.13.4', '0.14.5')`, `['error', { from: '0.13.4', to: '0.14.5' }]`
@@ -175,6 +180,12 @@
   its hint on click and takes the term's hover, pressed and pinned states; a sortable one sorts on
   click and pins nothing.
 
+### Deprecated
+
+- **`styles/skeleton-shimmer` emits nothing, and `styles/ds` no longer forwards it.** `ds-skeleton`
+  carries its own reduced-motion opt-out. The partial stays in the package as an empty file; delete your
+  `@use 'styles/skeleton-shimmer'`.
+
 ### Fixed
 
 - **A tooltip and a `ds-menu-item` submenu close when anything under them scrolls.** Inside an
@@ -224,6 +235,32 @@
   bindings and `setProperty('--ds-*', …)` calls were never matched, so a stale token set that way
   went unreported.
 
+- **Reduced motion stops the skeleton shimmer in an app that does not load `styles/ds`.** The opt-out
+  lived in `styles/skeleton-shimmer`, so an app assembling the partials one by one kept the wave
+  running for readers who asked for less motion. `ds-skeleton` carries it in its own styles now.
+
+- **The "no matches" row of `ds-select`, `ds-multi-select` and `ds-autocomplete` keeps its type
+  without `styles/typography`.** Its family, weight and line height came from the `.t-s` class,
+  so without that partial the row fell back to the page's font (the browser's serif on an
+  unstyled page). `styles/dropdown-overlay` sets them now, from the same `--ds-typography-s-*`
+  hooks, and the row no longer carries `t-s`; with typography loaded it renders as before. A rule
+  of yours that reached the row through `.t-s` matches nothing: select `.ds-dropdown-panel .empty`.
+
+- **Components keep their size, fonts and focus ring in an app that does not load `styles/reset`
+  or `styles/focus`.** Each component now sets `box-sizing: border-box` on its host and its own
+  elements, puts its form controls in the inherited font, clears its heading margins and draws the
+  base focus ring on its own focusable elements. Without `styles/reset`, a default `ds-input` field
+  grew from 40px to 41.2px tall, a `ds-input` inside `ds-field-group` from 38.8px to 40px, and a
+  host with a border took the browser's `content-box`; without `styles/focus`, buttons such as the
+  `ds-number-stepper` steps and the close buttons of `ds-banner`, `ds-toast`, `ds-modal-card` and
+  `ds-drawer` showed the browser's own focus ring. A height animation such as an expanding
+  `ds-sidenav-group` animates without the reset as well.
+
+- **`ds-container` with `size="sm|md|lg"` and the responsive rail of `ds-app-layout` work without
+  `bp.emit-vars`.** Both fall back to the library's breakpoints; `ds-container` went full-bleed
+  and the rail stayed in desktop layout. Your own `--bp-*` still win where you set them, and the
+  dev-mode warning about a missing `--bp-lg` is gone.
+
 - **`ds-bar-chart` prints `—` for a row with a non-finite value.** A `NaN` or `Infinity` value, or a
   `[low, high]` pair with a non-finite end, printed `0` and `0.0%` as though it were a reading of zero.
   The row now draws no bar and shows `—` as its value, as its percentage (unless the row sets
@@ -234,6 +271,7 @@
 
 | Delete | Why | Replace with |
 | --- | --- | --- |
+| `@use 'styles/skeleton-shimmer'` | the partial emits nothing; `ds-skeleton` styles its own reduced-motion stop | nothing |
 | a hand-built info button: `name="info"` on a `ds-icon` inside a `<button>` that carries `dsTooltip` | `ds-info-hint` renders the button, the icon and the pinned tooltip | `<ds-info-hint ariaLabel="…" text="…" />` |
 | a hand-built term button styled with `underline dotted` that carries `dsTooltip` | `dsDefinitionTerm` carries the underline, the focus ring, the keyboard access and the pinned tooltip | `<span dsDefinitionTerm="…">` |
 | `--ds-overlay-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of overlay panels | nothing |

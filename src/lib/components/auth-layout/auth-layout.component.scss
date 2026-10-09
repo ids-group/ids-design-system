@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 /* The block padding and column gap clamp down on short viewports (max at 800px
    tall) so the furniture never pushes a card into scrolling.
 

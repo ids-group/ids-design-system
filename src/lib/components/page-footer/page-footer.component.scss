@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 :host {
   --_page-footer-bg-color:          var(--ds-page-footer-bg-color,          var(--surface-secondary));
   --_page-footer-border-color:      var(--ds-page-footer-border-color,      var(--border-divider));

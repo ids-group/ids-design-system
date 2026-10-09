@@ -415,6 +415,9 @@ styles/_dropdown-overlay.scss {
     --ds-option-selected-bg-color: var(--primary-subtitle);
     --ds-option-selected-bg-color-hover: var(--primary-muted);
     --ds-option-selected-label-color: var(--primary-strong);
+    --ds-typography-s-font-family: var(--font-sans);
+    --ds-typography-s-font-weight: var(--font-weight-regular);
+    --ds-typography-s-line-height: var(--line-height-base);
 }
 
 styles/_field-box.scss {
