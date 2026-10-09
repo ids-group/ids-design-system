@@ -271,7 +271,9 @@
   a plain table cell), showed its full text on hover only. It now takes `tabindex="0"` while it is
   clipped, so Tab stops on it and opens the tip, and it loses the stop once its text fits. A host
   that is focusable, sits inside a control or widget role, or holds a control is left as it was; a
-  `tabindex` you set is never touched, and `tabindex="-1"` keeps a clipped value out of the Tab order.
+  `tabindex` you set is never touched, and `tabindex="-1"` keeps a clipped value out of the Tab order. Every
+  host one resize reaches is measured before any of them takes or loses its stop, so a long table
+  with clipped columns lays out once per resize rather than once per host.
 
 - **The keyboard focus ring is rounded on elements that declare no radius.** The close buttons of
   `ds-banner`, `ds-alert`, `ds-toast`, `ds-drawer` and `ds-modal-card`, the `ds-dropzone` remove

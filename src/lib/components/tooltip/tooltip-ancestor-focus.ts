@@ -96,19 +96,33 @@ export function watchFocusableAncestor(
   };
 }
 
-const tabStopSyncs = new Map<Node, () => void>();
+interface TabStopSync {
+  isNeeded(): boolean;
+  apply(needed: boolean): void;
+}
+
+const tabStopSyncs = new Map<Node, TabStopSync>();
 let resizes: ResizeObserver | null = null;
 let mutations: MutationObserver | null = null;
 
-function syncHostOf(node: Node | null): void {
+function syncOf(node: Node | null): TabStopSync | undefined {
   for (let current = node; current; current = current.parentElement) {
     const sync = tabStopSyncs.get(current);
     if (sync) {
-      sync();
-
-      return;
+      return sync;
     }
   }
+
+  return undefined;
+}
+
+// Every isClipped() read forces layout once a tabindex write has dirtied it, so all reads go first.
+function syncAll(targets: Node[]): void {
+  const syncs = [...new Set(targets.map(syncOf))].filter(
+    (sync): sync is TabStopSync => sync !== undefined,
+  );
+  const decided = syncs.map((sync) => [sync, sync.isNeeded()] as const);
+  decided.forEach(([sync, needed]) => sync.apply(needed));
 }
 
 /**
@@ -125,9 +139,9 @@ export function tabStopWhileClipped(
     return null;
   }
   let written = false;
-  const sync = () => {
-    const needed =
-      trigger.isClipped() && !host.querySelector(KEYBOARD_FOCUSABLE);
+  const isNeeded = () =>
+    trigger.isClipped() && !host.querySelector(KEYBOARD_FOCUSABLE);
+  const apply = (needed: boolean) => {
     if (needed && !host.hasAttribute('tabindex')) {
       host.setAttribute('tabindex', '0');
       written = true;
@@ -142,13 +156,14 @@ export function tabStopWhileClipped(
       }
     }
   };
+  const sync = () => apply(isNeeded());
   resizes ??= new ResizeObserver((entries) =>
-    entries.forEach((entry) => syncHostOf(entry.target)),
+    syncAll(entries.map((entry) => entry.target)),
   );
   mutations ??= new MutationObserver((records) =>
-    records.forEach((record) => syncHostOf(record.target)),
+    syncAll(records.map((record) => record.target)),
   );
-  tabStopSyncs.set(host, sync);
+  tabStopSyncs.set(host, { isNeeded, apply });
   resizes.observe(host);
   mutations.observe(host, {
     characterData: true,
