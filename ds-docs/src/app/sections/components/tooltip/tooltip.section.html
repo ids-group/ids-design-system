@@ -132,22 +132,31 @@
     <code class="t-mono-inline">
       **
     </code> is bold, and a line break shows as a
-    line break. <code class="t-mono-inline">\*\*</code> is a literal
-    <code class="t-mono-inline">
-      **
-    </code>, an unpaired
-    <code class="t-mono-inline">
-      **
-    </code> stays as typed, and no markup in the
-    string is read as HTML.
-    <code class="t-mono-inline">
-      dsTooltipArrow
-    </code> set to
+    line break. <code class="t-mono-inline"> dsTooltipArrow </code> set to
     <code class="t-mono-inline">
       false
     </code>
     leaves the arrow out.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        \*\*
+      </code> - a literal
+      <code class="t-mono-inline">
+        **
+      </code>.
+    </li>
+
+    <li>
+      Unpaired <code class="t-mono-inline">**</code> - stays as typed.
+    </li>
+
+    <li>
+      HTML markup - shown as text, never parsed.
+    </li>
+  </ul>
 
   <div class="demo">
     <ds-button
@@ -213,12 +222,11 @@
     hover and focus, and a click keeps the tip open after the pointer leaves. A
     click outside, <code class="t-mono-inline"> Escape </code> or blur closes
     it; a second click on the trigger too. Opt in only where the click does
-    nothing else: without it a click closes the tip. A scroll of the window or
-    of any scroll container closes a tooltip and a
+    nothing else: without it a click closes the tip. Any scroll (window or
+    container) closes the tip, pinned or not, and a
     <code class="t-mono-inline">
       ds-menu-item
-    </code> submenu; a pinned tooltip
-    unpins.
+    </code> submenu.
   </p>
 
   <div class="demo">
@@ -317,8 +325,8 @@
   </div>
 
   <p class="block-desc t-s">
-    While the term is clipped, its tooltip opens with the term's own text in
-    bold above the definition, unless the definition already contains it.
+    Clipped term: the tip shows it in bold above the definition, unless the
+    definition contains it.
   </p>
 
   <div class="demo">
@@ -349,22 +357,42 @@
     <code class="t-mono-inline">
       dsTooltipPinOnClick
     </code> host can style. No
-    state changes the size of the term, so the line around it never moves. The
-    mixins of <code class="t-mono-inline">styles/pinned</code> give a
-    pin-capable trigger of yours the same cue:
-    <code class="t-mono-inline">
-      pinned.cue()
-    </code> while pinned,
-    <code class="t-mono-inline">
-      cue-hover()
-    </code> on hover and
-    <code class="t-mono-inline">
-      cue-pressed()
-    </code> on press;
-    <code class="t-mono-inline">
-      $underline: false
-    </code> for an icon.
+    state changes the size of the term, so the line around it never moves.
   </p>
+
+  <p class="block-desc t-s">
+    Same cue on your own trigger, from
+    <code class="t-mono-inline">
+      styles/pinned
+    </code>:
+  </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        pinned.cue()
+      </code> - pinned.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        pinned.cue-hover()
+      </code> - hover.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        pinned.cue-pressed()
+      </code> - press.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        $underline: false
+      </code> - on each, for an
+      icon trigger.
+    </li>
+  </ul>
 
   <pre class="t-mono-block">{{ pinnedSnippet }}</pre>
 
@@ -515,15 +543,12 @@
     Give it a selector,
     <code class="t-mono-inline">
       dsTooltipWhenClipped=".label"
-    </code>, to aim the
-    clip test and text at a descendant; no match, no tip. Where the clip test is
-    bound, bind the selector or <code class="t-mono-inline">false</code>:
-    <code class="t-mono-inline"
-      >
-      [dsTooltipWhenClipped]="truncate ? ':scope &gt; .cell' : false"
-    </code
-    >.
+    </code>, to aim
+    the clip test and text at a descendant; no match, no tip. Bound: a selector
+    or <code class="t-mono-inline">false</code>.
   </p>
+
+  <pre class="t-mono-block">{{ whenClippedSnippet }}</pre>
 
   <div class="demo">
     <span

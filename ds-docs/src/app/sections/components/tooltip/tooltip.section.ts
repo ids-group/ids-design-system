@@ -28,6 +28,8 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 export class TooltipSection {
   protected readonly truncate = signal(true);
 
+  protected readonly whenClippedSnippet = `[dsTooltipWhenClipped]="truncate ? ':scope > .cell' : false"`;
+
   protected readonly pinnedSnippet = `@use 'styles/pinned';
 
 .my-trigger[data-ds-tooltip-pinned] {
@@ -35,12 +37,5 @@ export class TooltipSection {
 
   &:hover { @include pinned.cue-hover(); }
   &:active { @include pinned.cue-pressed(); }
-}
-
-.my-icon-trigger[data-ds-tooltip-pinned] {
-  @include pinned.cue($underline: false);
-
-  &:hover { @include pinned.cue-hover($underline: false); }
-  &:active { @include pinned.cue-pressed($underline: false); }
 }`;
 }
