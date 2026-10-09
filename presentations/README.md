@@ -33,6 +33,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 20 | `20-loading-states` | one loading rule for every data component (skeleton with no data, the overlay to the container's edge on a reload), fixed in the next release: each of the eight other charts and the three pickers now beside the rule, light and dark |
 | 21 | `21-text-snap-scale` | how a scaling animation ends without the text snapping a pixel: the press (left as today for now, every variant still open), the card hover lift or growth, the rule for scaling text, and the funnel stage's residual step - every variant live and measured in Chrome at 150% |
 | 22 | `22-tooltip-mechanism` | four proposals to tidy the tooltip, each drawn with its cost (a fourth file for panel position, measuring listeners per table cell before optimising, a lazy panel with measured gzip sizes, a shared Escape helper); the two answered questions (who writes the bold label, the file split and the merged clip attribute) folded below |
+| 23 | `23-clipped-tooltip-keyboard` | whether `ecm-fix/clipped-tooltip-keyboard` merges: a clipped `dsTooltipWhenClipped` value that no keyboard path reaches takes `tabindex="0"` while clipped - before/after Tab sequences from the docs build (a code in a clickable row, a code that fits, a value in a link, a value in a tab panel) |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
