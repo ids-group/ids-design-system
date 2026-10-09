@@ -1,4 +1,5 @@
 @use '../../styles/focus' as focus;
+@use '../../styles/target' as target;
 @use '../../styles/text-clip' as text-clip;
 @use '../../styles/component-base' as component-base;
 @include component-base.rules;
@@ -37,13 +38,13 @@
 
   @include text-clip.inline-axis;
 
-  // The overflow clips at the padding edge, so the padding holds the ring of the first and last link;
-  // the negative margin and the wider cap give the trail back its width.
+  // The overflow clips at the padding edge, so the padding holds the ring and the target of the first
+  // and last link; the negative margin and the wider cap give the trail back its width.
   --focus-ring-offset: var(--focus-ring-width);
 
-  padding-inline: calc(2 * var(--focus-ring-width));
-  margin-inline: calc(-2 * var(--focus-ring-width));
-  max-width: calc(100% + 4 * var(--focus-ring-width));
+  padding-inline: var(--space-1-5);
+  margin-inline: calc(-1 * var(--space-1-5));
+  max-width: calc(100% + 2 * var(--space-1-5));
 
   a, .current {
     display: inline-flex;
@@ -73,6 +74,11 @@
 
     &:focus-visible {
       @include focus.ring;
+    }
+
+    // An icon with no label: it sits in the trail beside the next label, so the ring stays on the icon.
+    &:not(:has(.label)) {
+      @include target.min-size(14px, $ring-offset: null);
     }
   }
 

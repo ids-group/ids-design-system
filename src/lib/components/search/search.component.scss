@@ -8,6 +8,7 @@
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-group-segment' as field-group-segment;
 @use '../../styles/focus' as focus;
+@use '../../styles/target' as target;
 @use '../../styles/component-base' as component-base;
 @include component-base.rules;
 
@@ -113,6 +114,7 @@
     }
 
     @include press.feedback;
+    @include target.min-size(calc(14px + 2 * var(--space-0-5)));
   }
 
   .kbd {

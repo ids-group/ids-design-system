@@ -173,10 +173,7 @@
   }
 
   @include press.feedback;
-  @include target.padded(calc(14px + 2 * var(--space-1)), var(--space-1));
-
-  // Centred by `top` and `transform`; a block margin would move it.
-  margin-block: 0;
+  @include target.min-size(calc(14px + 2 * var(--space-1)), $position: null);
 }
 
 .time-static {

@@ -1,5 +1,6 @@
 @use '../../styles/check-box' as check-box;
 @use '../../styles/focus' as focus;
+@use '../../styles/target' as target;
 @use '../../styles/table-controls' as table-controls;
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/text-clip' as text-clip;
@@ -575,11 +576,9 @@
 }
 
 .col-filter-btn {
-  // A 24px target around the 12px glyph; the negative margins keep the row height of the bare glyph.
   display: inline-flex;
-  margin: calc(-1 * var(--space-1-5));
-  margin-left: calc(var(--space-2) - var(--space-1-5));
-  padding: var(--space-1-5);
+  margin: 0 0 0 var(--space-2);
+  padding: 0;
   border: 0;
   background: none;
   color: var(--icon-default);
@@ -601,6 +600,8 @@
     opacity: 1;
     color: var(--_table-sort-active-icon-color);
   }
+
+  @include target.min-size(12px);
 }
 
 .col-filter {
