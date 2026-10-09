@@ -5,6 +5,7 @@
 // `@angular-eslint/template-parser` produces, which the consumer's own config provides; nothing
 // here imports it.
 import { readFileSync } from 'node:fs';
+import { VERSION, releasedAfter } from '../stylelint/since-version.mjs';
 
 const read = (path) =>
   JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
@@ -46,14 +47,28 @@ const describe = (what, entry) =>
     ? `${what} was renamed or replaced in ${entry.since}: use ${entry.replacement} (${entry.itemId})`
     : `${what} was removed in ${entry.since} (${entry.itemId})`;
 
+const SCHEMA = [
+  {
+    type: 'object',
+    properties: { from: { type: 'string', pattern: VERSION.source } },
+    additionalProperties: false,
+  },
+];
+
 const rule = (description, create, fixable) => ({
   meta: {
     type: 'problem',
     docs: { description, url: `${URL_BASE}#4-removed-and-renamed-api-eslint` },
     ...(fixable ? { fixable: 'code' } : {}),
-    schema: [],
+    schema: SCHEMA,
   },
-  create,
+  create(context) {
+    const from = context.options[0]?.from;
+    const seen = (entry) =>
+      entry && releasedAfter(entry.since, from) ? entry : undefined;
+
+    return create(context, seen);
+  },
 });
 
 // A template node carries offsets into the file the parser read, which with an inline template is
@@ -76,12 +91,12 @@ const boundInputs = (context, element) => [
 
 const noRemovedInputs = rule(
   'Report a template binding to an input this library removed or renamed.',
-  (context) => ({
+  (context, seen) => ({
     Element(element) {
       for (const input of boundInputs(context, element)) {
         const entry =
-          inputs.get(`${element.name}[${input.name}]`) ??
-          inputs.get(`*[${input.name}]`);
+          seen(inputs.get(`${element.name}[${input.name}]`)) ??
+          seen(inputs.get(`*[${input.name}]`));
         if (entry)
           context.report({
             loc: spanLoc(context, input.keySpan ?? input.sourceSpan),
@@ -94,10 +109,10 @@ const noRemovedInputs = rule(
 
 const noRemovedOutputs = rule(
   'Report a template listener on an output this library removed or renamed. Without strictTemplates it compiles and never fires.',
-  (context) => ({
+  (context, seen) => ({
     Element(element) {
       for (const output of element.outputs) {
-        const entry = outputs.get(`${element.name}[${output.name}]`);
+        const entry = seen(outputs.get(`${element.name}[${output.name}]`));
         if (entry)
           context.report({
             loc: spanLoc(context, output.keySpan ?? output.sourceSpan),
@@ -110,7 +125,7 @@ const noRemovedOutputs = rule(
 
 const noRemovedValues = rule(
   'Report a static attribute value this library remapped. A bound expression is not read.',
-  (context) => ({
+  (context, seen) => ({
     Element(element) {
       const statics = [
         ...element.attributes.map((attribute) => [attribute, attribute.value]),
@@ -120,7 +135,9 @@ const noRemovedValues = rule(
           .filter(([, value]) => typeof value === 'string'),
       ];
       for (const [node, value] of statics) {
-        const entry = values.get(`${element.name}[${node.name}]=${value}`);
+        const entry = seen(
+          values.get(`${element.name}[${node.name}]=${value}`),
+        );
         if (!entry) continue;
         context.report({
           loc: spanLoc(context, node.sourceSpan),
@@ -147,16 +164,18 @@ const SELECTOR_CALLS = new Set([
 
 const noRenamedSelectors = rule(
   'Report an element this library renamed, in a template and in a TypeScript selector string.',
-  (context) => {
+  (context, seen) => {
     const reportString = (node, text, offset) => {
       for (const match of text.matchAll(selectorPattern)) {
+        const entry = seen(selectors.get(match[0]));
+        if (!entry) continue;
         const start = node.range[0] + offset + match.index;
         context.report({
           loc: {
             start: context.sourceCode.getLocFromIndex(start),
             end: context.sourceCode.getLocFromIndex(start + match[0].length),
           },
-          message: describe(`"${match[0]}"`, selectors.get(match[0])),
+          message: describe(`"${match[0]}"`, entry),
         });
       }
     };
@@ -171,7 +190,7 @@ const noRenamedSelectors = rule(
     };
     return {
       Element(element) {
-        const entry = selectors.get(element.name);
+        const entry = seen(selectors.get(element.name));
         if (entry)
           context.report({
             loc: spanLoc(context, element.startSourceSpan),
@@ -199,13 +218,13 @@ const noRenamedSelectors = rule(
 
 const noRenamedImports = rule(
   'Report an import from this library of a symbol it removed or renamed, and rename a pure rename.',
-  (context) => ({
+  (context, seen) => ({
     ImportDeclaration(declaration) {
       if (!PACKAGE.test(declaration.source.value)) return;
       for (const specifier of declaration.specifiers) {
         if (specifier.type !== 'ImportSpecifier') continue;
         const name = specifier.imported.name ?? specifier.imported.value;
-        const entry = symbols.get(name);
+        const entry = seen(symbols.get(name));
         if (!entry) continue;
         const aliased = specifier.local.name !== name;
         context.report({
@@ -256,7 +275,7 @@ const MEMBER_DEFINITIONS = new Set([
 
 const noRemovedMembers = rule(
   'Report a member of a class extending or implementing one of ours that now overrides nothing.',
-  (context) => {
+  (context, seen) => {
     const check = (node) => {
       const parents = [
         node.superClass,
@@ -268,7 +287,7 @@ const noRemovedMembers = rule(
         for (const member of node.body.body) {
           if (!MEMBER_DEFINITIONS.has(member.type) || member.computed) continue;
           const name = member.key?.name ?? member.key?.value;
-          const entry = members.get(name);
+          const entry = seen(members.get(name));
           if (entry)
             context.report({
               node: member.key,
@@ -283,10 +302,10 @@ const noRemovedMembers = rule(
 
 const noRemovedTokens = rule(
   'Report a custom property this library removed or renamed, in a TypeScript string and a template attribute, and rename a pure rename.',
-  (context) => {
+  (context, seen) => {
     const reportIn = (text, offset) => {
       for (const match of text.matchAll(CUSTOM_PROPERTY)) {
-        const entry = tokens.get(match[0]);
+        const entry = seen(tokens.get(match[0]));
         if (!entry) continue;
         const start = offset + match.index;
         const range = [start, start + match[0].length];
@@ -351,13 +370,22 @@ const plugin = {
   rules,
   configs: {},
 };
-plugin.configs.recommended = {
-  name: 'ids-design-system/recommended',
+const recommendedFor = (name, level) => ({
+  name,
   files: ['**/*.ts', '**/*.html'],
   plugins: { 'ids-design-system': plugin },
   rules: Object.fromEntries(
-    Object.keys(rules).map((name) => [`ids-design-system/${name}`, 'error']),
+    Object.keys(rules).map((rule) => [`ids-design-system/${rule}`, level]),
   ),
-};
+});
+plugin.configs.recommended = recommendedFor(
+  'ids-design-system/recommended',
+  'error',
+);
+plugin.configs.recommendedFrom = (from) =>
+  recommendedFor(`ids-design-system/recommended-from-${from}`, [
+    'error',
+    { from },
+  ]);
 
 export default plugin;

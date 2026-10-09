@@ -116,6 +116,10 @@ Each report names the replacement, the version and the manifest item
 `stylelint --fix` renames a token that has a single replacement; a removed token is reported and left
 for you to resolve. Only stylesheets are read; the ESLint plugin below covers TypeScript and templates.
 
+The list holds every release since 0.4.0. When you upgrade from a known version, ask for the releases
+after it only: `"ids-design-system/no-removed-tokens": [true, { "from": "0.13.4" }]` reports what changed
+after 0.13.4 and stays quiet about older renames.
+
 ### 4. Removed and renamed API (ESLint)
 
 The package also ships an ESLint flat-config plugin with the same purpose for `.ts` files and
@@ -154,6 +158,12 @@ the plugin as `plugins: { 'ids-design-system': idsDesignSystem }` and name them:
   or a template attribute (`[style.--x]`, `style="..."`, `[ngStyle]`); `--fix` renames a pure rename.
 
 Each report names the replacement, the version and the manifest item, like the stylelint rule.
+
+Every rule lists every release since 0.4.0. When you upgrade from a known version, report only what
+changed after it: `idsDesignSystem.configs.recommendedFrom('0.13.4')` is `recommended` with every rule
+set to `['error', { from: '0.13.4' }]`, and a single rule takes the same option
+(`'ids-design-system/no-removed-inputs': ['error', { from: '0.13.4' }]`). The unreleased version always
+counts.
 
 ## License
 

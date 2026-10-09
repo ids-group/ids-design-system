@@ -65,6 +65,23 @@ run(template, 'no-removed-inputs', {
   ],
 });
 
+run(template, 'no-removed-inputs', {
+  valid: [
+    {
+      ...html('<ds-table [sortDir]="direction"></ds-table>'),
+      options: [{ from: '0.13.4' }],
+    },
+  ],
+  invalid: [
+    {
+      ...html('<ds-table [sortDir]="direction"></ds-table>', [
+        { message: /renamed or replaced in 0\.13\.4/ },
+      ]),
+      options: [{ from: '0.13.3' }],
+    },
+  ],
+});
+
 run(template, 'no-removed-outputs', {
   valid: [
     html('<ds-table (rowClicked)="open($event)"></ds-table>'),
