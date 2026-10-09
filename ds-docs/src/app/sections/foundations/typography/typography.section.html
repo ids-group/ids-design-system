@@ -225,26 +225,37 @@ WHERE  project_id = 'alpha'
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       styles/text-clip
-    </code> clips text without
-    cutting a glyph, whatever the font.
-    <code class="t-mono-inline">
-      single-line-ellipsis
-    </code> ends one line in an
-    ellipsis and clips the inline axis only;
-    <code class="t-mono-inline">
-      inline-axis
-    </code> clips a row sideways and
-    leaves the block axis visible;
-    <code class="t-mono-inline">
-      line-clamp($lines)
-    </code> clamps a block to
-    <code class="t-mono-inline">
-      $lines
-    </code> lines at
-    <code class="t-mono-inline">
-      line-height: normal
-    </code>.
+    </code> clips without cutting a
+    glyph, in any font.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        single-line-ellipsis
+      </code> - one line,
+      ellipsis; clips the inline axis only.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        inline-axis
+      </code> - clips a row sideways;
+      block axis stays visible.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        line-clamp($lines)
+      </code> -
+      <code class="t-mono-inline">
+        $lines
+      </code> lines at
+      <code class="t-mono-inline">
+        line-height: normal
+      </code>.
+    </li>
+  </ul>
 
   <pre class="t-mono-block">{{ textClipSnippet }}</pre>
 
