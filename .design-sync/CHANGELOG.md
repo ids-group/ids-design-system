@@ -36,6 +36,11 @@ holds an entry; what the release bot commits afterwards needs none.
 - **The `BarChart` doc lists the row's `children`, `hint`, `emphasis`, `showPercent` and
   `detached`, and `labelPosition`.** A `hint` or `children` on any row makes the chart a `group`.
 
+- **The `TooltipPanel`, `LoadingOverlay`, `DatePicker` and picker docs list the new API.**
+  `TooltipPanel` takes `arrow` and renders `**bold**`; `--ds-loading-overlay-radius` and
+  `--ds-date-picker-max-width` are named; `Select`, `MultiSelect` and `Autocomplete` describe
+  `loading` as placeholder rows or rows under the overlay.
+
 ### Build
 
 - **`build-cards` reads markup inside a quoted attribute as part of the value.** Tooltip's
