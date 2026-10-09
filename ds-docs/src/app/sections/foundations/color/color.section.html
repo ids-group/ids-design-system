@@ -571,24 +571,40 @@
   </p>
 
   <p class="block-desc t-s">
-    A component of yours takes the base the library's components carry from
-    <code class="t-mono-inline">
-      styles/component-base
-    </code>:
+    Your own component:
     <code class="t-mono-inline">
       &#64;include component-base.rules;
-    </code> first
-    in its stylesheet sets <code class="t-mono-inline">border-box</code>, the
-    inherited font on form controls, zero heading margins and the base focus
-    ring on the component's own elements, whether or not the app loads
+    </code>
+    (<code class="t-mono-inline">styles/component-base</code>) first in its
+    stylesheet, with or without
     <code class="t-mono-inline">
       styles/reset
     </code> and
     <code class="t-mono-inline">
       styles/focus
-    </code>. The rules sit in a cascade
-    layer, so any unlayered rule of yours wins over them.
+    </code>. Layered: any unlayered rule
+    of yours wins. On the component's own elements it sets:
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        border-box
+      </code>
+    </li>
+
+    <li>
+      inherited font on form controls
+    </li>
+
+    <li>
+      zero heading margins
+    </li>
+
+    <li>
+      the base focus ring
+    </li>
+  </ul>
 
   <pre class="t-mono-block">{{ componentBaseSnippet }}</pre>
 
