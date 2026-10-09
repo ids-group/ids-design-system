@@ -34,7 +34,7 @@ interface ActivityEntry {
 })
 export class ActivitySection {
   protected readonly lede =
-    'A vertical list of attributed events on a record — avatar, actor, verb, object, optional inline status badge, and a relative timestamp. Plus a calm empty state for fresh records.';
+    'Attributed events on a record, plus a calm empty state for fresh records.';
 
   protected readonly entries: ActivityEntry[] = [
     {
