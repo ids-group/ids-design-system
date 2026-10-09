@@ -225,9 +225,9 @@
       ],
       "action": "None, unless a column needs the old 240px cap: add `width: 272` to it (240 plus the cell padding at the default density).",
       "appliesWhen": "A `ds-table` column with `truncate: true` and no `width`. A column with a numeric `width` or `width: 'content'` clips as before, and a column without `truncate` is unaffected.",
-      "pitfall": "A column of long values now takes the room the other columns leave, so a screenshot shows it wider when the table has room and narrower, down to its header label, when it does not; a table that scrolled sideways because of such columns now fits its container.",
+      "pitfall": "A column of long values now takes the room the other columns leave, up to the widest value on any page, so a screenshot shows it wider when the table has room and narrower, down to its header label, when it does not; in a table that scrolls sideways anyway it keeps the 240px clip.",
       "restore": "{ key: 'email', label: 'Email', truncate: true, width: 272 }",
-      "verify": "Open a table with a `truncate` column without `width`: a short value shows whole, a long one is cut at the column's edge with no empty space after the ellipsis, and the table scrolls sideways only where its headers or fixed-width columns are wider than the container."
+      "verify": "Open a table with a `truncate` column without `width`: a short value shows whole, a long one is cut at the column's edge with no empty space after the ellipsis, the column keeps its width when you page, and in a table that scrolls sideways anyway it clips at 240px."
     },
     {
       "id": "table-truncate-width-includes-padding",
@@ -265,7 +265,7 @@
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
       "restore": null,
       "verify": "The app builds with no member-collision error against TableComponent.",
-      "note": "TableComponent gained the protected clipGrows and clipMaxWidth and the private growingClipColumns, clipCapsSet and fitGrowingClips, and lost the protected clipWidth."
+      "note": "TableComponent gained the protected clipGrows, clipMaxWidth and clipMinWidth and the private growingClipColumns, clipCapsSet, clipFit, clipFitWidth, textCanvas, measureGrowingClips, widestValue and splitGrowingClips, and lost the protected clipWidth."
     },
     {
       "id": "focus-ring-default-radius",

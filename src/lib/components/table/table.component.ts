@@ -64,6 +64,9 @@ const VIRTUAL_OVERSCAN = 6;
 const clipCapProperty = (index: number): string => `--_table-clip-cap-${index}`;
 const clipMinProperty = (index: number): string => `--_table-clip-min-${index}`;
 
+/** The text clip of a growing column in a table that scrolls anyway, without `minWidth`. */
+const FALLBACK_CLIP_TEXT_PX = 240;
+
 interface ClipFit {
   readonly natural: number;
   readonly tableMinWidth: number;
@@ -867,6 +870,16 @@ export class TableComponent<T extends object> {
       let cap: number;
       if (leftover >= needed) {
         cap = column.text;
+      } else if (fit.natural > available) {
+        // The table scrolls with every growing column at its header; squeezing them buys nothing.
+        const fallback =
+          column.minWidth !== undefined
+            ? column.minWidth - column.padding
+            : FALLBACK_CLIP_TEXT_PX;
+        cap = Math.max(
+          column.floor - column.padding,
+          Math.min(column.text, fallback),
+        );
       } else {
         // A pixel short of the share: a neighbour given a fraction less than its text wraps.
         const share = (leftover * column.need) / needed;

@@ -246,13 +246,14 @@
 
 - **A `ds-table` column with `truncate` and no `width` grows to its text instead of clipping at
   240px.** The other columns get their content width first; such a column takes what they leave, up
-  to its own text, and clips at its column width when there is less. Its floor is its header label,
-  so it no longer pushes the table into horizontal scroll. A value that was cut at 240px beside empty
-  space now shows whole, and a table that scrolled sideways because of these columns fits its
-  container with their text cut shorter. To keep the 240px cap, set `width: 272` on the column
-  (240 plus the cell padding).
-  `TableComponent` lost the protected `clipWidth` and gained the protected `clipGrows` and
-  `clipMaxWidth` and the private `growingClipColumns`, `clipCapsSet` and `fitGrowingClips`, so a
+  to the widest value among all filtered rows, on every page, and clips at its column width when
+  there is less, down to its header label, so it does not push the table into horizontal scroll.
+  In a table that scrolls sideways anyway it clips at 240px of text, or at its `minWidth`. A value
+  that was cut at 240px beside empty space now shows whole. To keep the 240px cap everywhere, set
+  `width: 272` on the column (240 plus the cell padding).
+  `TableComponent` lost the protected `clipWidth` and gained the protected `clipGrows`,
+  `clipMaxWidth` and `clipMinWidth` and the private `growingClipColumns`, `clipCapsSet`, `clipFit`,
+  `clipFitWidth`, `textCanvas`, `measureGrowingClips`, `widestValue` and `splitGrowingClips`, so a
   subclass declaring one of those names must rename it.
 
 - **`DsIntl` gains a required key: `chart.rowsUnder: (label: string) => string`** (default

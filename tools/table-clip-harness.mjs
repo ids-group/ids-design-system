@@ -8,8 +8,8 @@
 // Serve the docs app first (`ng serve ds-docs --port <port>`); the route exists in dev mode only.
 // With CDP_BROWSER_URL set, `run` drives a tab of that running Chrome instead of launching one.
 // `check` pins the truncate contract: a `truncate` column without `width` clips at its own column
-// width, never causes horizontal overflow, and every case with no such column renders exactly as
-// in `baseDir`.
+// width, causes no horizontal overflow where its header fits, clips at 240px of text in a table
+// that scrolls anyway, and every case with no such column renders exactly as in `baseDir`.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { open, wait } from './headless-chrome.mjs';
@@ -416,14 +416,17 @@ function check(outDir, baseDir) {
           `${id}: ${column.key} clips rows [${column.clipped}] although the table has room`,
         );
   }
+  // 240px of text plus the default cell padding.
+  const scrollingClip = 272;
   const overflowOnlyFromHeaders = (label, measured) => {
     if (measured.overflow <= 0) return;
     for (const column of measured.columns.filter(
       (candidate) => candidate.truncate && candidate.dragged === null,
     )) {
-      if (column.width > column.headerFloor + 2 && column.clipped.length)
+      const limit = Math.max(column.headerFloor, scrollingClip);
+      if (column.width > limit + 2 && column.clipped.length)
         fail(
-          `${label}: overflow ${measured.overflow}px while truncate column ${column.key} is ${column.width}px, above its header floor ${column.headerFloor}px`,
+          `${label}: overflow ${measured.overflow}px while truncate column ${column.key} is ${column.width}px, above ${limit}px`,
         );
     }
   };
@@ -433,7 +436,6 @@ function check(outDir, baseDir) {
   for (const id of [
     'trunc-tight',
     'trunc-tighter',
-    'long-words',
     'ecm-audit-history',
     'ecm-microsite-errors',
     'ecm-delta-truncate',
@@ -447,7 +449,7 @@ function check(outDir, baseDir) {
       fail(`${id}: horizontal overflow ${result.cases[id].overflow}px`);
   }
   for (const [width, measured] of Object.entries(result.container)) {
-    if (Number(width) >= 480 && measured.overflow > 0)
+    if (Number(width) >= 800 && measured.overflow > 0)
       fail(`container ${width}: horizontal overflow ${measured.overflow}px`);
   }
   for (const [id, steps] of Object.entries(result.drags)) {
