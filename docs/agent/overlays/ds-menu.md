@@ -3,7 +3,7 @@
 
 Group: Overlay
 
-Menu is a container. Item inputs: `icon: IconName | null = null`, `disabled: boolean = false`, `danger: boolean = false`. Output: `(pressed): MouseEvent`. Content: label text; supports `[icon]` content slot for custom icons.
+Menu is a container. Item inputs: `icon: IconName | null = null`, `disabled: boolean = false`, `danger: boolean = false`. Output: `(pressed): MouseEvent`. Content: label text; supports `[icon]` content slot for custom icons. A `[submenu]` opens on hover after 120ms and stays open while the pointer moves from its item towards it, across the items in between; it closes once the pointer leaves that path or rests on it for 300ms.
 
 <!-- inputs:ds-menu-item -->
 All inputs: `icon: IconName | null = null`, `disabled: boolean = false`, `error: boolean = false`, `quiet: boolean = false`, `description: string = ''`, `submenu: TemplateRef<unknown> | null = null`

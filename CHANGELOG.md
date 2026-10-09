@@ -7,12 +7,29 @@
   above the hint. Anywhere else, delete the binding, or write the lead into the string:
   `[dsTooltip]="'**' + lead + '**\n' + tip"`.
 
+- **`dsTooltipTextSelector` is removed; `dsTooltipWhenClipped` takes the selector.** One attribute
+  now says both "only while clipped" and "which element to test": `dsTooltipWhenClipped=".label"`
+  tests and discloses the element it matches inside the host, and a boolean or the bare attribute
+  still tests the host. Replace the pair `dsTooltipWhenClipped dsTooltipTextSelector=".label"` with
+  `dsTooltipWhenClipped=".label"`. Where the clip test is bound, bind the selector or `false`:
+  `[dsTooltipWhenClipped]="truncate ? ':scope > .cell' : false"`. The input type widens from
+  `boolean` to `boolean | string`, and `TooltipDirective` no longer exposes `hostElement` and
+  `isClipped()`.
+
 ### Added
 
 - **`styles/component-base` gives a component of yours the base the library's components carry.**
   `@include component-base.rules` first in a component stylesheet sets `border-box`, the inherited
   font on form controls, zero heading margins and the base focus ring on that component's own
   elements, whether or not the app loads `styles/reset` and `styles/focus`.
+
+- **The ESLint and stylelint plugins take a `from` and a `to` version, so an upgrade reports only what
+  changed across it.** Without them every rule lists every release since 0.4.0, as before. With
+  `idsDesignSystem.configs.recommendedFrom('0.13.4', '0.14.5')`, `['error', { from: '0.13.4', to: '0.14.5' }]`
+  on one ESLint rule, or `[true, { from: '0.13.4', to: '0.14.5' }]` on
+  `ids-design-system/no-removed-tokens`, a removed or renamed name from 0.13.4 or earlier, or from
+  after 0.14.5, is left out. `from` is exclusive and `to` inclusive; either can stand alone, and the
+  unreleased version counts unless `to` is set.
 
 - **`--ds-loading-overlay-radius` rounds the corners of the `ds-loading-overlay` scrim.** It
   defaults to `0`. Set it to the radius of the container the overlay covers, so the blurred scrim
@@ -30,8 +47,8 @@
   pin-capable trigger the same cue, its hover and its press.
   Use it on info and definition triggers only, never on a control whose click acts.
   `TooltipDirective` gained the public `dsTooltipPinOnClick`, protected `onClick` and
-  `onPointerLeave`, and the private `document`, `hostPinOnClick`, `pinsOnClick`, `pin`, `unpin`
-  and `pointArrowAtHost`. A subclass declaring one of those names must rename it.
+  `onPointerLeave`, and the private `document`, `hostPinOnClick`, `pinsOnClick`, `pin` and
+  `unpin`. A subclass declaring one of those names must rename it.
 
 - **`ds-info-hint` is an icon button with a pinned tooltip.** `<ds-info-hint
   ariaLabel="About conversion rate" text="…" />` renders a 14px question-mark icon button named by
@@ -106,6 +123,28 @@
 
 ### Changed
 
+- **Overlay panels, `ds-modal`, `ds-toast`, `ds-banner` and `ds-alert` enter with `ds-fade-in`
+  instead of `ds-scale-in`.** A tooltip, popover, select or menu panel, a submenu, a modal card, a
+  toast, a banner and an alert now fade in where they stand, without growing or travelling. The
+  scale entrance re-rasterised the text as it ended, so the glyphs drew heavier during the entrance
+  and then thinned and stepped a pixel: at 150% display scale, 741 changed pixels on the tooltip,
+  1346 on a submenu, 4893 on a modal card and 4917 on a toast in the frame the animation ended, 0
+  with the fade. `--ds-overlay-enter-scale`, `--ds-overlay-enter-offset`, `--ds-modal-enter-scale`,
+  `--ds-toast-enter-scale`, `--ds-banner-enter-scale` and `--ds-alert-enter-scale` still work once the
+  matching `--ds-*-enter-keyframes` is set to `ds-scale-in` or `ds-slide-in`.
+- **A closing `ds-toast` fades where it stands.** It rose 8px while it faded.
+- **Chart marks and their labels no longer travel in.** A `ds-funnel-chart` stage grows from 96% while
+  it fades in instead of rising 4px, and the value labels of the bar, column, waterfall, heatmap,
+  pie and funnel charts and the funnel's table rows fade in where they stand. A `ds-pie-chart` ring
+  grows from 96% while it fades in, without the 30° turn.
+- **A `ds-menu-item` submenu stays open while the pointer heads for it.** Moving diagonally from
+  the item to its submenu crosses the items below it, and a crossing slower than 150ms closed the
+  submenu and opened the next one. The pointer may now cross them for as long as it stays inside
+  the triangle from where it left the item to the submenu's near edge; the submenu closes once
+  the pointer leaves that triangle or rests in it for 300ms, and an item it rested on then opens
+  its own submenu. Moving from the submenu back onto its item keeps it open.
+  `MenuItemComponent` gained the public `activateHover` and the private `aim`. A subclass
+  declaring one of those names must rename it.
 
 - **`text-clip.single-line-ellipsis` clips the inline axis only.** It clipped both axes with a
   4px margin, which a font taller than the line box by more than that overran. Ink above and
@@ -235,6 +274,11 @@
 | `@use 'styles/skeleton-shimmer'` | the partial emits nothing; `ds-skeleton` styles its own reduced-motion stop | nothing |
 | a hand-built info button: `name="info"` on a `ds-icon` inside a `<button>` that carries `dsTooltip` | `ds-info-hint` renders the button, the icon and the pinned tooltip | `<ds-info-hint ariaLabel="…" text="…" />` |
 | a hand-built term button styled with `underline dotted` that carries `dsTooltip` | `dsDefinitionTerm` carries the underline, the focus ring, the keyboard access and the pinned tooltip | `<span dsDefinitionTerm="…">` |
+| `--ds-overlay-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of overlay panels | nothing |
+| `--ds-modal-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of a modal card | nothing |
+| `--ds-toast-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of a toast | nothing |
+| `--ds-banner-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of a banner | nothing |
+| `--ds-alert-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of an alert | nothing |
 
 ## 0.14.8 — 2026-10-06
 

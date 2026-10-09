@@ -212,38 +212,42 @@
 <body>
 <main>
   <header class="masthead">
-    <h1>Состояния интерактивных элементов: общие правила вместо нового изобретения в каждом компоненте</h1>
-    <p class="chat">Ответ нести в чат: «Тултип: разметка и подпись»</p>
-    <p class="lede">Сетка ниже живая: тяни ползунки и смотри, как три способа показать состояние (заливка, подчёркивание, иконка) ведут себя на одних и тех же ступенях. Решить надо четыре вещи в конце.</p>
-    <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">.ds-interactive</span><span class="chip">pinned</span><span class="chip">актуально на 2026-10-08</span></div>
+    <h1>Состояния элементов: осталось решить четыре вещи</h1>
+    <p class="chat">Ответ нести в чат: «Тултип и состояния: деки»</p>
+    <p class="lede">Четыре вещи ждут тебя, они сразу ниже. Первые три про числа и серый цвет, четвёртая про то, вливать ли готовый пилот. Всё решённое, правила и причины собраны под ними.</p>
+    <div class="chips"><span class="chip is-open">Нужно решение: 4</span><span class="chip">.ds-interactive</span><span class="chip">pinned</span><span class="chip">актуально на 2026-10-08</span></div>
   </header>
 
-  <section class="panel">
-    <h2>Что сломано сегодня</h2>
-    <p>Измерено по <code>src/lib/components/*/*.scss</code> (104 файла со стилями), грубым поиском по файлам, не по компонентам.</p>
-    <div class="bars2">
-      <div class="r"><span>Описан hover</span><span class="bar"><i style="width:41%"></i></span><span class="n">43 из 104</span></div>
-      <div class="r"><span>Из них нет нажатия</span><span class="bar"><i class="bad" style="width:22%"></i></span><span class="n">23</span></div>
-      <div class="r"><span>Из них нет фокуса с клавиатуры</span><span class="bar"><i class="bad" style="width:7%"></i></span><span class="n">7</span></div>
-    </div>
-    <p>Нейтральный фон при наведении то <code>--surface-secondary</code> (neutral-100), то <code>--surface-muted</code> (neutral-150): в блоках hover и active 18 и 23 строки соответственно.</p>
-    <div class="sw"><span><i style="background:var(--surface-secondary)"></i>surface-secondary</span><span><i style="background:var(--surface-muted)"></i>surface-muted</span></div>
-    <p class="src">Общий контракт <code>.ds-interactive</code> согласован 2026-06-10 и не построен: файла <code>styles/_interaction.scss</code> нет. Закреплённый триггер на днях показал, чем это кончается: правило «закреплено» перекрывало hover и нажатие, у <code>span</code> не было вида при Enter и Space.</p>
-  </section>
-
-  <section class="panel">
-    <h2>Правила, которые из этого следуют</h2>
-    <ol class="rules">
-      <li><b>Словарь состояний фиксирован.</b> Покой, наведение, нажатие, фокус с клавиатуры, включено, disabled и составные «включено + наведение», «включено + нажатие». Пустая клетка - дефект.</li>
-      <li><b>Состояния - слои, а не комбинации.</b> Включено задаёт цвет и постоянный знак. Наведение и нажатие только добавляют ступени сверху. Составное состояние - сумма, отдельного числа на пару не пишем.</li>
-      <li><b>У каждого состояния свой канал.</b> Наведение и нажатие меняют интенсивность знака, не цвет. Включено меняет цвет. Фокус всегда кольцо и ничего не перекрывает. Disabled гасит наведение и нажатие.</li>
-      <li><b>Одно имя «нажато».</b> <code>:active, [data-ds-pressed]</code>: на <code>span</code> и от клавиатуры <code>:active</code> не срабатывает.</li>
+  <section class="panel verdict">
+    <h2>Что от тебя нужно</h2>
+    <ol class="todo">
+      <li>
+        <span class="ask">Насколько сильно элемент меняется при наведении, нажатии и когда он «включён»?</span>
+        <p class="mine"><b>Моё предложение:</b> наведение 8%, нажатие вдвое сильнее, база «включено» 12%. Это значения по умолчанию, тяни ползунки и смотри.</p>
+        <p class="where"><a href="#q-steps">К вопросу 1</a></p>
+      </li>
+      <li>
+        <span class="ask">Каким серым подсвечивать строки меню, таблицы и списка при наведении?</span>
+        <p class="mine"><b>Моё предложение:</b> один нейтральный серый из цвета текста, так сделан пилот. Запасной вариант: тёмный <code>surface-muted</code>.</p>
+        <p class="where"><a href="#q-neutral">К вопросу 2</a></p>
+      </li>
+      <li>
+        <span class="ask">Нужен ли скрипт, который ругается, если у элемента нет нажатия или фокуса?</span>
+        <p class="mine"><b>Моё предложение:</b> да, но пока только для пилота, остальным список исключений.</p>
+        <p class="where"><a href="#q-lock">К вопросу 3</a></p>
+      </li>
+      <li>
+        <span class="ask">Вливать ли пилот (термин и <code>ds-info-hint</code> на общих ступенях) в <code>dev</code>?</span>
+        <p class="mine"><b>Моё предложение:</b> да, после вопросов 1 и 2: подставлю твои числа и влью.</p>
+        <p class="where"><a href="#q-merge">К вопросу 4</a></p>
+      </li>
     </ol>
+    <p class="cap">Согласен - нажми у каждого вопроса карточку «рекомендую». Четыре правила в блоке ниже не требуют выбора: не согласен - напиши замечание. Внизу появится одна строка для чата.</p>
   </section>
 
-  <section class="panel q" data-q="steps" data-review="Числа ступеней" data-review-note-only>
-    <h2>Выбор 1. Числа ступеней, на трёх каналах</h2>
-    <p>Заливка, подчёркивание и иконка - три способа показать состояние. Ступени одни: наведение даёт один шаг, нажатие даёт несколько шагов, «включено» задаёт базу. Подбери три числа так, чтобы все три канала читались. Последние значения ползунков уходят в ответ.</p>
+  <section class="panel q" id="q-steps" data-q="steps" data-review="Числа ступеней" data-review-note-only>
+    <h2>Вопрос 1. Числа ступеней, на трёх каналах</h2>
+    <p>Что решить: насколько заметно элемент меняется. Заливка, подчёркивание и иконка - три способа показать состояние. Ступени одни: наведение даёт один шаг, нажатие даёт несколько шагов, «включено» задаёт базу. Подбери три числа так, чтобы все три канала читались. В пилоте есть только два первых числа: шаг 8% и множитель 2, база «включено» пока только здесь. Последние значения ползунков уходят в ответ.</p>
     <div class="ctl">
       <label>Шаг наведения <output data-out="step">8%</output><input type="range" min="2" max="16" step="1" value="8" data-var="step"></label>
       <label>Нажатие = шагов наведения <output data-out="mult">2</output><input type="range" min="1" max="4" step="0.5" value="2" data-var="mult"></label>
@@ -270,9 +274,9 @@
     <p class="src">Заливка: уровень - это прозрачность акцента. Подчёркивание: наведение и нажатие утолщают линию, на включённом ещё темнят цвет на шаг. Иконка: уровень темнит чернила к цвету текста, а «включено» меняет оттенок, не уровень. Числа под значками считает страница из тех же ползунков.</p>
   </section>
 
-  <section class="panel q" data-q="neutral" data-review="Нейтральный фон при наведении" data-review-note-only>
-    <h2>Выбор 2. Один нейтральный фон при наведении</h2>
-    <p>Строки меню, таблицы и списка сегодня подсвечиваются двумя разными серыми. Выбери один для всех. Наведи мышь на строки.</p>
+  <section class="panel q" id="q-neutral" data-q="neutral" data-review="Нейтральный фон при наведении" data-review-note-only>
+    <h2>Вопрос 2. Один нейтральный фон при наведении</h2>
+    <p>Что решить: строки меню, таблицы и списка сегодня подсвечиваются двумя разными серыми. Нужен один для всех. Наведи мышь на строки. Четвёртый вариант - тот, что сделан в пилоте; замер на ds-docs: наведение 8% даёт rgb(236, 237, 238), у <code>surface-muted</code> rgb(232, 236, 242), то есть пилот светлее и без синевы.</p>
     <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
       <article class="opt" tabindex="0">
         <h3>Светлый: surface-secondary</h3>
@@ -281,12 +285,19 @@
         <div class="pills"><span class="pill good">мягче</span><span class="pill mid">на белом читается слабо</span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
-      <article class="opt is-pick" tabindex="0">
-        <span class="badge is-pick">рекомендую</span>
+      <article class="opt" tabindex="0">
         <h3>Тёмный: surface-muted</h3>
         <p class="youpick"><b>Ты выбираешь</b>везде подсветка строки на ступень темнее, neutral-150, и шаг hover считается от неё.</p>
         <table class="tbl-demo" style="--_row: var(--surface-muted)"><tr><td>Rotterdam</td><td>12</td></tr><tr><td>Antwerp</td><td>8</td></tr><tr><td>Hamburg</td><td>5</td></tr></table>
         <div class="pills"><span class="pill good">заметнее на белом</span><span class="pill good">совпадает с нажатием кнопок</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick" tabindex="0">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Серая вуаль из цвета текста</h3>
+        <p class="youpick"><b>Ты выбираешь</b>подсветка считается как 8% цвета текста поверх любого фона, нажатие 16%. Отдельного серого токена нет, ступени те же, что на ползунках выше.</p>
+        <table class="tbl-demo" style="--_row: color-mix(in srgb, var(--text-primary) 8%, transparent)"><tr><td>Rotterdam</td><td>12</td></tr><tr><td>Antwerp</td><td>8</td></tr><tr><td>Hamburg</td><td>5</td></tr></table>
+        <div class="pills"><span class="pill good">одно правило для всех поверхностей</span><span class="pill good">нейтральный, без синевы</span><span class="pill mid">светлее surface-muted</span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
       <article class="opt" tabindex="0">
@@ -298,9 +309,9 @@
     </div>
   </section>
 
-  <section class="panel q" data-q="lock" data-review="Проверка против повторного изобретения" data-review-note-only>
-    <h2>Выбор 3. Проверка, которая ловит пустые клетки</h2>
-    <p>Скрипт в <code>tools/</code> читает стили компонентов и ругается, когда у файла есть наведение, но нет нажатия или фокуса. Сегодня он нашёл бы 23 и 7 файлов (грубая проверка по файлу, не по компоненту).</p>
+  <section class="panel q" id="q-lock" data-q="lock" data-review="Проверка против повторного изобретения" data-review-note-only>
+    <h2>Вопрос 3. Проверка, которая ловит пустые клетки</h2>
+    <p>Что решить: нужен ли контроль. Скрипт в <code>tools/</code> читает стили компонентов и ругается, когда у файла есть наведение, но нет нажатия или фокуса. Сегодня он нашёл бы 23 и 7 файлов (грубая проверка по файлу, не по компоненту).</p>
     <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
       <article class="opt is-pick" tabindex="0">
         <span class="badge is-pick">рекомендую</span>
@@ -324,34 +335,85 @@
     </div>
   </section>
 
-  <section class="panel q" data-q="pilot" data-review="С чего начать" data-review-note-only>
-    <h2>Выбор 4. С чего начать</h2>
+  <section class="panel q" id="q-merge" data-q="merge" data-review="Влить ли пилот" data-review-note-only>
+    <h2>Вопрос 4. Влить ли пилот в dev</h2>
+    <p>Пилот лежит в ветке <code>feat/state-levels-pilot</code>, проверки проходят, в <code>dev</code> он вливается без конфликтов. Он переводит термин и <code>ds-info-hint</code> на общие ступени: файл <code>styles/_state.scss</code>, токены <code>--state-step</code> и <code>--state-press-factor</code>, закреплённая подсветка, документация, changelog. Цвет заметно меняется, замер на ds-docs в браузере:</p>
+    <div class="sw">
+      <span><i style="background: rgb(232, 236, 242)"></i>было: surface-muted</span>
+      <span><i style="background: rgb(220, 225, 234)"></i>было: border-default</span>
+      <span><i style="background: rgb(236, 237, 238)"></i>стало: наведение 8%</span>
+      <span><i style="background: rgb(218, 218, 221)"></i>стало: нажатие 16%</span>
+    </div>
+    <p class="cap">Было синеватое, стало нейтральное и чуть темнее при нажатии. Числа в пилоте - значения по умолчанию; после вопроса 1 меняются одной строкой в <code>_tokens.scss</code>.</p>
     <div class="opts" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
       <article class="opt is-pick" tabindex="0">
         <span class="badge is-pick">рекомендую</span>
-        <h3>Пилот на закреплённых триггерах</h3>
-        <p class="youpick"><b>Ты выбираешь</b>термин, <code>ds-info-hint</code> и закреплённые хосты переводятся на ступени вместе с параллельной сессией, она сейчас всё равно переделывает их под вариант E. Остальные компоненты потом по плану <code>.ds-interactive</code>.</p>
-        <div class="files"><span class="file is-new">3 файла</span><span class="arrow">→</span><span class="file">остальные по очереди</span></div>
+        <h3>Влить после выбора чисел</h3>
+        <p class="youpick"><b>Ты выбираешь</b>я подставлю числа из вопроса 1, прогоню проверки, влью ветку в <code>dev</code> через <code>--no-ff</code> и удалю ветку с рабочей папкой.</p>
+        <div class="files"><span class="file is-new">3 файла стилей + токены</span><span class="arrow">→</span><span class="file">остальные компоненты по очереди</span></div>
+        <div class="pills"><span class="pill good">правила работают на двух компонентах</span><span class="pill mid">цвет меняется у термина и hint</span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
       <article class="opt" tabindex="0">
-        <h3>Сразу контракт .ds-interactive</h3>
-        <p class="youpick"><b>Ты выбираешь</b>строить общий класс и миграцию всех компонентов сразу.</p>
-        <div class="pills"><span class="pill bad">большой объём, 43 файла с hover</span></div>
+        <h3>Подождать второго компонента</h3>
+        <p class="youpick"><b>Ты выбираешь</b>пилот лежит в ветке, пока на те же ступени не переведём ещё один компонент, например кнопку.</p>
+        <div class="pills"><span class="pill good">правила проверены шире</span><span class="pill bad">ветка стареет, конфликты растут</span></div>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt" tabindex="0">
+        <h3>Выбросить пилот</h3>
+        <p class="youpick"><b>Ты выбираешь</b>ветка удаляется, правила остаются на бумаге, термин и hint остаются на своих числах.</p>
+        <div class="pills"><span class="pill bad">пустые клетки состояний остаются</span></div>
         <span class="chosen-mark">выбрано</span>
       </article>
     </div>
   </section>
 
-  <section class="panel verdict is-done">
-    <h2>Рекомендация</h2>
-    <p class="pick"><strong>Числа выбери ползунками, нейтральный фон тёмный, проверка пока на пилоте, начинать с закреплённых триггеров.</strong> Правила 1-4 принимаются как есть: они не требуют выбора.</p>
+
+  <h2 class="band">Принято, решено и сделано</h2>
+  <p class="cap">Здесь отвечать не нужно, кроме правил: на них можно возразить замечанием.</p>
+
+  <section class="panel">
+    <h2>Решено: с чего начать</h2>
+    <p>Пилот на закреплённых триггерах: термин, <code>ds-info-hint</code> и закреплённые хосты переведены на ступени. Он собран и лежит в ветке <code>feat/state-levels-pilot</code>, влитие - вопрос 4. Остальные компоненты потом по плану <code>.ds-interactive</code>.</p>
+    <p class="cap">Отклонено: сразу строить общий класс <code>.ds-interactive</code> и мигрировать все компоненты (большой объём, 43 файла с hover).</p>
   </section>
 
-  <details class="panel">
-    <summary><b>Что говорят другие системы и что уже решено у нас</b></summary>
+  <details class="folded">
+    <summary>Правила, которые из этого следуют (4)</summary>
+  <section class="panel">
+    <h2>Четыре правила</h2>
+    <ol class="rules">
+      <li><b>Словарь состояний фиксирован.</b> Покой, наведение, нажатие, фокус с клавиатуры, включено, disabled и составные «включено + наведение», «включено + нажатие». Пустая клетка - дефект.</li>
+      <li><b>Состояния - слои, а не комбинации.</b> Включено задаёт цвет и постоянный знак. Наведение и нажатие только добавляют ступени сверху. Составное состояние - сумма, отдельного числа на пару не пишем.</li>
+      <li><b>У каждого состояния свой канал.</b> Наведение и нажатие меняют интенсивность знака, не цвет. Включено меняет цвет. Фокус всегда кольцо и ничего не перекрывает. Disabled гасит наведение и нажатие.</li>
+      <li><b>Одно имя «нажато».</b> <code>:active, [data-ds-pressed]</code>: на <code>span</code> и от клавиатуры <code>:active</code> не срабатывает.</li>
+    </ol>
+  </section>
+  </details>
+
+  <details class="folded">
+    <summary>Что сломано сегодня: замеры по 104 файлам стилей</summary>
+  <section class="panel">
+    <h2>Что сломано сегодня</h2>
+    <p>Измерено по <code>src/lib/components/*/*.scss</code> (104 файла со стилями), грубым поиском по файлам, не по компонентам.</p>
+    <div class="bars2">
+      <div class="r"><span>Описан hover</span><span class="bar"><i style="width:41%"></i></span><span class="n">43 из 104</span></div>
+      <div class="r"><span>Из них нет нажатия</span><span class="bar"><i class="bad" style="width:22%"></i></span><span class="n">23</span></div>
+      <div class="r"><span>Из них нет фокуса с клавиатуры</span><span class="bar"><i class="bad" style="width:7%"></i></span><span class="n">7</span></div>
+    </div>
+    <p>Нейтральный фон при наведении то <code>--surface-secondary</code> (neutral-100), то <code>--surface-muted</code> (neutral-150): в блоках hover и active 18 и 23 строки соответственно.</p>
+    <div class="sw"><span><i style="background:var(--surface-secondary)"></i>surface-secondary</span><span><i style="background:var(--surface-muted)"></i>surface-muted</span></div>
+    <p class="src">Общий контракт <code>.ds-interactive</code> согласован 2026-06-10 и не построен: файла <code>styles/_interaction.scss</code> нет. Закреплённый триггер на днях показал, чем это кончается: правило «закреплено» перекрывало hover и нажатие, у <code>span</code> не было вида при Enter и Space.</p>
+  </section>
+  </details>
+
+  <details class="folded">
+    <summary>Что говорят другие системы и что уже решено у нас</summary>
+    <section class="panel">
     <p>Из <code>docs/interaction-states-research.md</code>: индустрия хранит значения по токенам на каждое состояние, считает на лету только Material 3 (слой состояния поверх цвета, наведение 8%, фокус и нажатие 10%). «Нажатие = 2 × наведение» не универсально: у Carbon около 4×, у Spectrum +1/+1. Поэтому множитель нажатия здесь ползунок, а не закон.</p>
     <p>Решено ранее (2026-06-10, <code>project-interaction-contract-design</code>): оттенки считаются формулой от одной базы, а не подбираются вручную по состояниям; общий класс <code>.ds-interactive</code> в <code>styles/_interaction.scss</code>; в компоненте только база и тип знака; v1 «подмешивать чёрное» отклонён как мутный.</p>
+  </section>
   </details>
 
   <p class="src"><b>Источники, проверено 2026-10-08 на <code>dev</code>.</b> Счётчики: <code>python3</code> по <code>src/lib/components/*/*.scss</code>, грубые регулярные выражения по файлам. Токены: <code>themes/_semantic.scss</code>. Страница воспроизводит ступени своими стилями на токенах <code>ds.css</code>, это модель, а не сам компонент.</p>
@@ -402,7 +464,7 @@
   for (const input of document.querySelectorAll('[data-var]')) input.value = values[input.dataset.var];
   function persist() { write(PICK_KEY, { picks: state, values }); }
   const sections = [...document.querySelectorAll('.q[data-q]')];
-  const labels = { neutral: 'Нейтральный фон при наведении', lock: 'Проверка', pilot: 'С чего начать' };
+  const labels = { neutral: 'Нейтральный фон при наведении', lock: 'Проверка', merge: 'Влить ли пилот' };
   const optionName = (card) => card.querySelector('h3').textContent.trim();
   function render() {
     for (const section of sections) {
@@ -421,7 +483,7 @@
     persist(); render();
   }
   window.deckReviewHooks = {
-    extra: () => [`Числа ступеней - шаг ${values.step}%, нажатие ${values.mult} шага, база ${values.on}%`].concat(Object.keys(state).map((key) => `${labels[key]} - ${state[key]}`)).join('; '),
+    extra: () => [`Числа ступеней - шаг ${values.step}%, нажатие ${values.mult} шага, база ${values.on}%`].concat(Object.keys(state).filter((key) => key in labels).map((key) => `${labels[key]} - ${state[key]}`)).join('; '),
     onReset: () => { for (const key of Object.keys(state)) delete state[key]; Object.assign(values, { step: 8, mult: 2, on: 12 }); for (const input of document.querySelectorAll('[data-var]')) input.value = values[input.dataset.var]; persist(); paint(); render(); },
   };
   for (const section of sections) {

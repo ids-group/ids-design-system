@@ -189,8 +189,7 @@
               <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
               <div
                 role="option"
-                dsTooltipWhenClipped
-                dsTooltipTextSelector=".option-label"
+                dsTooltipWhenClipped=".option-label"
                 [class]="optionClass(option)"
                 [id]="optionId(flatIndexOf(option))"
                 [class.is-active]="flatIndexOf(option) === activeIndex()"
@@ -244,8 +243,7 @@
           <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
           <li
             role="option"
-            dsTooltipWhenClipped
-            dsTooltipTextSelector=".option-label"
+            dsTooltipWhenClipped=".option-label"
             [class]="optionClass(option)"
             [id]="optionId(flatIndexOf(option))"
             [class.is-active]="flatIndexOf(option) === activeIndex()"
@@ -322,8 +320,7 @@
         <li
           class="option create-row"
           role="option"
-          dsTooltipWhenClipped
-          dsTooltipTextSelector=".option-label"
+          dsTooltipWhenClipped=".option-label"
           [id]="optionId(visibleOptions().length)"
           [class.is-active]="activeIndex() === visibleOptions().length"
           [attr.aria-selected]="false"

@@ -80,6 +80,7 @@ export function buildApiDeprecations({ report = [] } = {}) {
     .map((file) => /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?)\.json$/.exec(file)?.[1])
     .filter(Boolean)
     .sort(compareVersions);
+  versions.push('unreleased');
 
   const lists = {
     inputs: new Map(),
@@ -98,7 +99,7 @@ export function buildApiDeprecations({ report = [] } = {}) {
     );
     for (const item of manifest.items ?? []) {
       const itemId = `${version}#${item.id}`;
-      const since = version;
+      const since = version === 'unreleased' ? 'the next release' : version;
       const old = typeof item.old === 'string' ? item.old.trim() : '';
       const skip = (why) => report.push(`${itemId}: ${why}: ${old}`);
       // A token is the stylelint list's, which this plugin reads as it is.

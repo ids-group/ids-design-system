@@ -27,7 +27,7 @@
   --_banner-body-font-size: var(--ds-banner-body-font-size, var(--font-size-s));
   --_banner-close-icon-color:  var(--ds-banner-close-icon-color,  var(--icon-default));
   --_banner-close-icon-color-hover: var(--ds-banner-close-icon-color-hover, var(--icon-strong));
-  --_banner-enter-keyframes: var(--ds-banner-enter-keyframes, ds-scale-in);
+  --_banner-enter-keyframes: var(--ds-banner-enter-keyframes, ds-fade-in);
   --_banner-enter-duration: var(--ds-banner-enter-duration, var(--ds-motion-enter-surface-duration));
   --_banner-enter-easing: var(--ds-banner-enter-easing, var(--ds-motion-enter-surface-easing));
   --_banner-enter-offset: var(--ds-banner-enter-offset, 4px);

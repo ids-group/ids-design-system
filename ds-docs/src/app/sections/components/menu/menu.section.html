@@ -202,7 +202,9 @@
             Export as
           </ds-menu-item>
 
-          <ds-menu-item icon="download">
+          <ds-menu-item
+            icon="download"
+            [submenu]="downloadSubmenu">
             Download
           </ds-menu-item>
 
@@ -230,7 +232,127 @@
             </ds-menu-item>
           </ds-menu>
         </ng-template>
+
+        <ng-template #downloadSubmenu>
+          <ds-menu>
+            <ds-menu-item>
+              Original file
+            </ds-menu-item>
+
+            <ds-menu-item>
+              Compressed (.zip)
+            </ds-menu-item>
+          </ds-menu>
+        </ng-template>
       </div>
+    </div>
+
+    <div class="showcase-cell">
+      <figure class="aim-diagram">
+        <svg
+          viewBox="0 0 460 230"
+          role="img"
+          aria-label="The pointer leaves Export as towards its submenu. While it moves inside the triangle from its exit point to the submenu's near edge, Download does not take the hover.">
+          <rect
+            class="aim-panel"
+            x="10"
+            y="10"
+            width="200"
+            height="170"
+            rx="10" />
+
+          <rect
+            class="aim-row-active"
+            x="16"
+            y="56"
+            width="188"
+            height="36"
+            rx="6" />
+
+          <text
+            class="aim-label"
+            x="32"
+            y="40">
+            Rename
+          </text>
+
+          <text
+            class="aim-label"
+            x="32"
+            y="80">
+            Export as
+          </text>
+
+          <text
+            class="aim-label"
+            x="32"
+            y="120">
+            Download
+          </text>
+
+          <text
+            class="aim-label"
+            x="32"
+            y="160">
+            Delete
+          </text>
+
+          <rect
+            class="aim-panel"
+            x="216"
+            y="56"
+            width="150"
+            height="130"
+            rx="10" />
+
+          <text
+            class="aim-label"
+            x="232"
+            y="88">
+            PDF
+          </text>
+
+          <text
+            class="aim-label"
+            x="232"
+            y="128">
+            CSV
+          </text>
+
+          <text
+            class="aim-label"
+            x="232"
+            y="168">
+            Excel
+          </text>
+
+          <polygon
+            class="aim-triangle"
+            points="146,92 216,56 216,186" />
+
+          <path
+            class="aim-path"
+            d="M150 92 L232 150" />
+
+          <circle
+            class="aim-exit"
+            cx="150"
+            cy="92"
+            r="4" />
+
+          <text
+            class="aim-note"
+            x="10"
+            y="214">
+            Inside the triangle: Download is skipped, the submenu stays open.
+          </text>
+        </svg>
+
+        <figcaption class="block-desc t-s">
+          Leaving the triangle, or resting in it for 300ms, closes the
+          submenu and hands the hover to the item under the pointer.
+        </figcaption>
+      </figure>
     </div>
   </div>
 
