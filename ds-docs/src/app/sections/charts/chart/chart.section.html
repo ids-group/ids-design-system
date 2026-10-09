@@ -879,4 +879,46 @@
       [interactive]="true" />
   </ds-chart>
 
+  <h3 class="block-title t-h4">
+    Loading
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      loading
+    </code> with no categories yet draws the
+    axes with label placeholders and columns; with marks on screen it keeps
+    them under the scrim and spinner of
+    <code class="t-mono-inline">
+      ds-loading-overlay
+    </code>.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-chart
+        loading
+        [categories]="[]" />
+
+      <div class="state-cell-label">
+        Loading, no data
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-chart
+        loading
+        [categories]="orderMonths">
+        <svg:g
+          dsColumnSeries
+          seriesLabel="Orders"
+          [data]="orderColumns"
+          [showValues]="false" />
+      </ds-chart>
+
+      <div class="state-cell-label">
+        Reloading
+      </div>
+    </div>
+  </div>
 </docs-section>
