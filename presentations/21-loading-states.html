@@ -39,6 +39,37 @@
   .trio + .trio { margin-top: var(--space-4); }
   table.measure { margin-top: var(--space-3); }
   @media (max-width: 860px) { .trio { grid-template-columns: minmax(0, 1fr); } }
+  .q { margin: var(--space-1) 0 var(--space-3); font: var(--font-weight-semibold) var(--font-size-s) / 1.4 var(--font-sans); color: var(--text-secondary); }
+  .now-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); }
+  .now-row .shot { grid-column: 1 / span 1; }
+  .now-row .shot img + img { margin-top: var(--space-1-5); }
+  .opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); align-items: stretch; }
+  .opt { display: grid; gap: var(--space-2); align-content: start; padding: var(--space-3); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); background: var(--surface-default); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; transition: border-color .12s, background-color .12s, box-shadow .12s; }
+  .opt:hover { border-color: var(--border-strong); background: var(--surface-secondary); }
+  .opt:focus-visible { outline: 2px solid var(--focus-ring-color); outline-offset: 2px; }
+  .opt[aria-pressed="true"] { border-color: var(--accent-strong); background: var(--accent-subtitle); box-shadow: 0 0 0 2px var(--accent-strong); }
+  .opt[aria-pressed="true"] .opt-title::after { content: ' - выбрано'; color: var(--accent-strong); }
+  .opt img { display: block; max-width: 100%; height: auto; border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-sm); background: var(--surface-default); }
+  .opt .rec { justify-self: start; padding: 0 var(--space-2); border-radius: var(--radius-pill); background: var(--accent-strong); color: var(--surface-default); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.6 var(--font-sans); }
+  .opt-title { font: var(--font-weight-semibold) var(--font-size-s) / 1.4 var(--font-sans); }
+  .pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  .pill { padding: 0 var(--space-2); border-radius: var(--radius-pill); font: var(--font-size-2xs) / 1.6 var(--font-sans); }
+  .pill.good { background: var(--success-subtitle); color: var(--success-text); }
+  .pill.bad { background: var(--error-subtitle); color: var(--error-text); }
+  .pill.mid { background: var(--warning-subtitle); color: var(--warning-text); }
+  .ba { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-2) var(--space-3); align-items: start; }
+  .ba-head { padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font: var(--font-weight-semibold) var(--font-size-xs) / 1.4 var(--font-sans); }
+  .ba-head.was { background: var(--error-subtitle); color: var(--error-text); }
+  .ba-head.now { background: var(--success-subtitle); color: var(--success-text); }
+  .ba-cap { grid-column: 1 / -1; margin: var(--space-2) 0 0; font: var(--font-weight-semibold) var(--font-size-s) / 1.4 var(--font-sans); }
+  .ba-cap:empty { display: none; }
+  .ba .shot img { max-height: none; }
+  .ba .shot figcaption { color: var(--text-secondary); font-weight: var(--font-weight-regular); }
+  .theme { display: flex; align-items: center; gap: var(--space-1-5); margin-top: var(--space-3); font: var(--font-weight-semibold) var(--font-size-xs) / 1.4 var(--font-sans); }
+  .theme button { padding: var(--space-1) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-pill); background: var(--surface-default); color: var(--text-primary); font: inherit; cursor: pointer; }
+  .theme button[aria-pressed="true"] { border-color: var(--accent-strong); background: var(--accent-subtitle); color: var(--accent-strong); }
+  .theme button:focus-visible { outline: 2px solid var(--focus-ring-color); outline-offset: 2px; }
+  @media (max-width: 860px) { .opts, .now-row { grid-template-columns: minmax(0, 1fr); } .ba { grid-template-columns: minmax(0, 1fr); } .ba-head.now { display: none; } }
 </style>
 </head>
 <body>
@@ -47,9 +78,10 @@
     <p class="release">Правка в следующем релизе: сейчас в этих компонентах ничего не меняется</p>
     <h1>Загрузка: одно правило для всех</h1>
     <p class="chat">Ответ нести в чат: «Acc2 · pp-ревью и Dashboard Review»</p>
-    <p class="lede">Данных нет - скелет в форме компонента. Перезагрузка - данные под оверлеем по их области. Слева сейчас, справа как будет.</p>
-    <p class="finding">Первая загрузка графиков: три варианта скелета A, B, C. Выбор - в замечании к блоку.</p>
-    <div class="chips"><span class="chip is-open">11 компонентов</span><span class="chip">следующий релиз</span><span class="chip">актуально на 2026-10-08</span></div>
+    <p class="lede">Данных нет - скелет в форме компонента. Перезагрузка - данные под оверлеем по их области.</p>
+    <p class="finding">Где выбор - карточки: клик выбирает, выбор уходит в строку внизу. Где «Было (dev) | Стало» - «Принято» или замечание.</p>
+    <div class="theme" role="group" aria-label="Тема картинок"><span>Картинки:</span><button type="button" data-theme-pick="light" aria-pressed="true">Светлая</button><button type="button" data-theme-pick="dark" aria-pressed="false">Тёмная</button></div>
+    <div class="chips"><span class="chip is-open">11 компонентов</span><span class="chip">следующий релиз</span><span class="chip">актуально на 2026-10-09</span></div>
   </header>
 
   <section class="panel">
@@ -65,277 +97,321 @@
       </tbody>
     </table>
     <details class="why"><summary>как сделаны картинки и что поменяется в коде</summary>
-      <p>«Сейчас» - живой рендер ds-docs этой ветки с включённым <code>loading</code>. «Как будет» - макет на живом рендере: скелеты A и B нарисованы SVG в размер области графика (так их рисовал бы код, не зная данных), C - график с данными, перекрашенный в тон скелета; оверлей на токенах DS (<code>--surface-canvas</code> с <code>--opacity-scrim</code>, размытие <code>--blur-sm</code>) по области графика с подписями и легендой, заголовок карточки не закрыт. Для списков - макет скелетных опций.</p>
+      <p>«Сейчас (dev)» и «Было (dev)» - живой рендер ds-docs этой ветки с включённым <code>loading</code>. «Стало» и варианты - макет на живом рендере: скелеты A и B нарисованы SVG в размер области графика (так их рисовал бы код, не зная данных), C - график с данными, перекрашенный в тон скелета; оверлей на токенах DS (<code>--surface-canvas</code> с <code>--opacity-scrim</code>, размытие <code>--blur-sm</code>) по области графика с подписями и легендой, заголовок карточки не закрыт. Для списков - макет скелетных опций.</p>
       <p>Графики: восемь шаблонов передают <code>[pending]="loading() || !renderReady()"</code>. Правило <code>ds-bar-chart</code> (скелет только без данных, иначе <code>ds-loading-overlay</code> на всю карточку с <code>--ds-loading-overlay-radius</code>) переносится в общий <code>ChartStatesComponent</code> одним изменением, но оверлей и скелет вешаются на область графика, а не на всю карточку. Списки: при пустом списке и <code>loading</code> - три скелетные опции высоты опции; при опциях и <code>loading</code> - оверлей поверх списка вместо спиннера внизу. Пагинация остаётся: скелет там прячет устаревшее «из N».</p>
     </details>
   </section>
 
-  <section class="panel" data-review="ds-chart" data-review-round="3">
-    <h2><code>ds-chart</code>: Контейнер графика</h2>
-    <p class="cap">Первая загрузка</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>скелет сегодня</figcaption><img data-shot="chart-now-light" alt="скелет сегодня"></figure>
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="chart-now-dark" alt="тёмная"></figure>
+  <section class="panel" data-review="ds-chart" data-review-round="4" data-review-note-only>
+    <h2><code>ds-chart</code>: Контейнер графика - первая загрузка</h2>
+    <p class="q">Какой скелет, пока данных нет?</p>
+      <div class="now-row">
+        <figure class="shot"><figcaption><span class="tag was">Сейчас (dev)</span>скелет сегодня; высота карточки 363 = 363, прыжка нет</figcaption><img data-shot="chart-now" alt="скелет сегодня"></figure>
       </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>типичный силуэт</figcaption><img data-shot="chart-a-light" alt="типичный силуэт"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>подсказка: 6 категорий</figcaption><img data-shot="chart-b-light" alt="подсказка: 6 категорий"></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>прошлые данные серым</figcaption><img data-shot="chart-c-light" alt="прошлые данные серым"></figure>
+      <p class="cap">Варианты: клик по карточке - выбор</p>
+      <div class="opts" role="group" aria-label="ds-chart">
+        <button type="button" class="opt" data-block="ds-chart" data-opt="A" data-name="A" aria-pressed="false">
+          <span class="rec">Рекомендую</span>
+          <span class="opt-title"><b>A</b> типичный силуэт</span>
+          <img data-shot="chart-a" alt="типичный силуэт">
+          <span class="pills"><span class="pill good">нет прыжка карточки</span><span class="pill good">без новых входов</span><span class="pill bad">число меток условное</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-chart" data-opt="B" data-name="B" aria-pressed="false">
+          
+          <span class="opt-title"><b>B</b> подсказка: 6 категорий</span>
+          <img data-shot="chart-b" alt="подсказка: 6 категорий">
+          <span class="pills"><span class="pill good">число как в данных</span><span class="pill bad">приложение передаёт подсказку</span><span class="pill mid">без подсказки = A</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-chart" data-opt="C" data-name="C" aria-pressed="false">
+          
+          <span class="opt-title"><b>C</b> прошлые данные серым</span>
+          <img data-shot="chart-c" alt="прошлые данные серым">
+          <span class="pills"><span class="pill good">форма прошлых данных</span><span class="pill bad">кэш в приложении</span><span class="pill mid">первый заход = A</span></span>
+        </button>
       </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>тёмная</figcaption><img data-shot="chart-a-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>тёмная</figcaption><img data-shot="chart-b-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>тёмная</figcaption><img data-shot="chart-c-dark" alt="тёмная"></figure>
-      </div>
-    <table class="measure">
-      <thead><tr><th>Высота карточки, px</th><th>Скелет сегодня</th><th>График</th></tr></thead>
-      <tbody><tr><td>прыжок 0</td><td class="good">363</td><td>363</td></tr></tbody>
-    </table>
-    <details class="why"><summary>как нарисованы A, B, C</summary>
+    <details class="why"><summary>почему так</summary>
       <p><b>A</b> - постоянный силуэт типа графика, данных не знает: 7 столбцов. Рисуется в размер области графика, оси там, где они есть у графика.</p>
-      <p><b>B</b> - то же, но приложение заранее передаёт, что знает до данных: 6 категорий.</p>
-      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Здесь перекрашенный рендер честный. Первый заход без кэша - A.</p>
-    </details>
-    <p class="cap">Перезагрузка с данными на экране</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>график сменяется скелетом</figcaption><img data-shot="chart-reload-now-light" alt="график сменяется скелетом"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>оверлей по области графика</figcaption><img data-shot="chart-reload-next-light" alt="оверлей по области графика"></figure>
+      <p><b>B</b> - то же, но приложение заранее передаёт, что знает до данных: 6 категорий. Без подсказки рисуется A.</p>
+      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Первый заход без кэша - A.</p>
+      <p>Рекомендую A: убирает прыжок и неверную форму без нового API; B и C добавляются потом входами поверх A.</p></details>
+  <ol data-review-history><li>2026-10-08 · «здесь как будто скелетон пофиксать надо?» → скелет в формах графика (оси и столбцы) и в его размере; сегодня в библиотеке один блок на всю площадь, в список правок релиза</li><li>2026-10-08 · «СКЕЛЕТОНЫ ДОЛЖНЫ БЫТЬ ПОДОБНЫ ДАННЫМ КОТОРЫЕ ОТОБРАЗЯТСЯ, А НЕ РАНДОМНЫЕ» «везде» «перепроверь, что сейчас скелетоны у каждого чарта действительно подобны данным» → сегодня один блок без осей; три варианта: A типичный силуэт (7 столбцов, оси), B по подсказке (6 категорий), C прошлые данные серым; оверлей перезагрузки по области графика</li><li>2026-10-09 · «в деке 21-loading-states.html варианты нарисованы красиво но - было стало смешано в кучу. и если мне нужно выбирать a b c то должны же быть какие то кнопки? выбор? модули? краточки? не руками же мне всё прописывать» → «Сейчас (dev)» один раз, варианты A/B/C карточками: клик выбирает, выбор в строке внизу; перезагрузка отдельным блоком «Было (dev) | Стало»</li></ol></section>
+  <section class="panel" data-review="ds-chart: перезагрузка">
+    <h2><code>ds-chart</code>: Контейнер графика - перезагрузка с данными на экране</h2>
+    <div class="ba">
+      <div class="ba-head was">Было (dev)</div><div class="ba-head now">Стало</div>
+      <p class="ba-cap"></p>
+      <figure class="shot"><img data-shot="chart-reload-now" alt="график сменяется скелетом"><figcaption>график сменяется скелетом</figcaption></figure>
+      <figure class="shot"><img data-shot="chart-reload-next" alt="оверлей по области графика"><figcaption>оверлей по области графика</figcaption></figure>
+    </div>
+  </section>
+  <section class="panel" data-review="ds-column-chart" data-review-round="3" data-review-note-only>
+    <h2><code>ds-column-chart</code>: Столбцы - первая загрузка</h2>
+    <p class="q">Какой скелет, пока данных нет?</p>
+      <div class="now-row">
+        <figure class="shot"><figcaption><span class="tag was">Сейчас (dev)</span>скелет сегодня; высота карточки 273 → 323, прыжок 50px</figcaption><img data-shot="column-chart-reload-now" alt="скелет сегодня"></figure>
       </div>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="chart-reload-now-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>тёмная</figcaption><img data-shot="chart-reload-next-dark" alt="тёмная"></figure>
+      <p class="cap">Варианты: клик по карточке - выбор</p>
+      <div class="opts" role="group" aria-label="ds-column-chart">
+        <button type="button" class="opt" data-block="ds-column-chart" data-opt="A" data-name="A" aria-pressed="false">
+          <span class="rec">Рекомендую</span>
+          <span class="opt-title"><b>A</b> типичный силуэт</span>
+          <img data-shot="column-chart-a" alt="типичный силуэт">
+          <span class="pills"><span class="pill good">нет прыжка карточки</span><span class="pill good">без новых входов</span><span class="pill bad">число меток условное</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-column-chart" data-opt="B" data-name="B" aria-pressed="false">
+          
+          <span class="opt-title"><b>B</b> подсказка: 5 категорий</span>
+          <img data-shot="column-chart-b" alt="подсказка: 5 категорий">
+          <span class="pills"><span class="pill good">число как в данных</span><span class="pill bad">приложение передаёт подсказку</span><span class="pill mid">без подсказки = A</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-column-chart" data-opt="C" data-name="C" aria-pressed="false">
+          
+          <span class="opt-title"><b>C</b> прошлые данные серым</span>
+          <img data-shot="column-chart-c" alt="прошлые данные серым">
+          <span class="pills"><span class="pill good">форма прошлых данных</span><span class="pill bad">кэш в приложении</span><span class="pill mid">первый заход = A</span></span>
+        </button>
       </div>
-  <ol data-review-history><li>2026-10-08 · «здесь как будто скелетон пофиксать надо?» → скелет в формах графика (оси и столбцы) и в его размере; сегодня в библиотеке один блок на всю площадь, в список правок релиза</li><li>2026-10-08 · «СКЕЛЕТОНЫ ДОЛЖНЫ БЫТЬ ПОДОБНЫ ДАННЫМ КОТОРЫЕ ОТОБРАЗЯТСЯ, А НЕ РАНДОМНЫЕ» «везде» «перепроверь, что сейчас скелетоны у каждого чарта действительно подобны данным» → сегодня один блок без осей; три варианта: A типичный силуэт (7 столбцов, оси), B по подсказке (6 категорий), C прошлые данные серым; оверлей перезагрузки по области графика</li></ol></section>
-  <section class="panel" data-review="ds-column-chart" data-review-round="2">
-    <h2><code>ds-column-chart</code>: Столбцы</h2>
-    <p class="cap">Первая загрузка</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>скелет сегодня</figcaption><img data-shot="column-chart-reload-now-light" alt="скелет сегодня"></figure>
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="column-chart-reload-now-dark" alt="тёмная"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>типичный силуэт</figcaption><img data-shot="column-chart-a-light" alt="типичный силуэт"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>подсказка: 5 категорий</figcaption><img data-shot="column-chart-b-light" alt="подсказка: 5 категорий"></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>прошлые данные серым</figcaption><img data-shot="column-chart-c-light" alt="прошлые данные серым"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>тёмная</figcaption><img data-shot="column-chart-a-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>тёмная</figcaption><img data-shot="column-chart-b-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>тёмная</figcaption><img data-shot="column-chart-c-dark" alt="тёмная"></figure>
-      </div>
-    <table class="measure">
-      <thead><tr><th>Высота карточки, px</th><th>Скелет сегодня</th><th>График</th></tr></thead>
-      <tbody><tr><td>прыжок 50</td><td class="bad">273</td><td>323</td></tr></tbody>
-    </table>
-    <details class="why"><summary>как нарисованы A, B, C</summary>
+    <details class="why"><summary>почему так</summary>
       <p><b>A</b> - постоянный силуэт типа графика, данных не знает: 7 столбцов. Рисуется в размер области графика, оси там, где они есть у графика.</p>
-      <p><b>B</b> - то же, но приложение заранее передаёт, что знает до данных: 5 категорий.</p>
-      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Здесь перекрашенный рендер честный. Первый заход без кэша - A.</p>
-    </details>
-    <p class="cap">Перезагрузка с данными на экране</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>график сменяется скелетом</figcaption><img data-shot="column-chart-reload-now-light" alt="график сменяется скелетом"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>оверлей по области графика</figcaption><img data-shot="column-chart-reload-next-light" alt="оверлей по области графика"></figure>
+      <p><b>B</b> - то же, но приложение заранее передаёт, что знает до данных: 5 категорий. Без подсказки рисуется A.</p>
+      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Первый заход без кэша - A.</p>
+      <p>Рекомендую A: убирает прыжок и неверную форму без нового API; B и C добавляются потом входами поверх A.</p></details>
+  <ol data-review-history><li>2026-10-08 · «СКЕЛЕТОНЫ ДОЛЖНЫ БЫТЬ ПОДОБНЫ ДАННЫМ КОТОРЫЕ ОТОБРАЗЯТСЯ, А НЕ РАНДОМНЫЕ» «везде» «перепроверь, что сейчас скелетоны у каждого чарта действительно подобны данным» → сегодня 5 одинаковых плит без осей, карточка прыгает на 50px; добавлена первая загрузка: A 7 столбцов, B 5 по подсказке, C прошлые данные; оверлей по области графика</li><li>2026-10-09 · «в деке 21-loading-states.html варианты нарисованы красиво но - было стало смешано в кучу. и если мне нужно выбирать a b c то должны же быть какие то кнопки? выбор? модули? краточки? не руками же мне всё прописывать» → «Сейчас (dev)» один раз, варианты A/B/C карточками: клик выбирает, выбор в строке внизу; перезагрузка отдельным блоком «Было (dev) | Стало»</li></ol></section>
+  <section class="panel" data-review="ds-column-chart: перезагрузка">
+    <h2><code>ds-column-chart</code>: Столбцы - перезагрузка с данными на экране</h2>
+    <div class="ba">
+      <div class="ba-head was">Было (dev)</div><div class="ba-head now">Стало</div>
+      <p class="ba-cap"></p>
+      <figure class="shot"><img data-shot="column-chart-reload-now" alt="график сменяется скелетом"><figcaption>график сменяется скелетом</figcaption></figure>
+      <figure class="shot"><img data-shot="column-chart-reload-next" alt="оверлей по области графика"><figcaption>оверлей по области графика</figcaption></figure>
+    </div>
+  </section>
+  <section class="panel" data-review="ds-line-chart" data-review-round="3" data-review-note-only>
+    <h2><code>ds-line-chart</code>: Линии - первая загрузка</h2>
+    <p class="q">Какой скелет, пока данных нет?</p>
+      <div class="now-row">
+        <figure class="shot"><figcaption><span class="tag was">Сейчас (dev)</span>скелет сегодня; высота карточки 337 → 390, прыжок 53px</figcaption><img data-shot="line-chart-reload-now" alt="скелет сегодня"></figure>
       </div>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="column-chart-reload-now-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>тёмная</figcaption><img data-shot="column-chart-reload-next-dark" alt="тёмная"></figure>
+      <p class="cap">Варианты: клик по карточке - выбор</p>
+      <div class="opts" role="group" aria-label="ds-line-chart">
+        <button type="button" class="opt" data-block="ds-line-chart" data-opt="A" data-name="A" aria-pressed="false">
+          <span class="rec">Рекомендую</span>
+          <span class="opt-title"><b>A</b> типичный силуэт</span>
+          <img data-shot="line-chart-a" alt="типичный силуэт">
+          <span class="pills"><span class="pill good">нет прыжка карточки</span><span class="pill good">без новых входов</span><span class="pill bad">число меток условное</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-line-chart" data-opt="B" data-name="B" aria-pressed="false">
+          
+          <span class="opt-title"><b>B</b> подсказка: 2 серии по 6 точек</span>
+          <img data-shot="line-chart-b" alt="подсказка: 2 серии по 6 точек">
+          <span class="pills"><span class="pill good">число как в данных</span><span class="pill bad">приложение передаёт подсказку</span><span class="pill mid">без подсказки = A</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-line-chart" data-opt="C" data-name="C" aria-pressed="false">
+          
+          <span class="opt-title"><b>C</b> прошлые данные серым</span>
+          <img data-shot="line-chart-c" alt="прошлые данные серым">
+          <span class="pills"><span class="pill good">форма прошлых данных</span><span class="pill bad">кэш в приложении</span><span class="pill mid">первый заход = A</span></span>
+        </button>
       </div>
-  <ol data-review-history><li>2026-10-08 · «СКЕЛЕТОНЫ ДОЛЖНЫ БЫТЬ ПОДОБНЫ ДАННЫМ КОТОРЫЕ ОТОБРАЗЯТСЯ, А НЕ РАНДОМНЫЕ» «везде» «перепроверь, что сейчас скелетоны у каждого чарта действительно подобны данным» → сегодня 5 одинаковых плит без осей, карточка прыгает на 50px; добавлена первая загрузка: A 7 столбцов, B 5 по подсказке, C прошлые данные; оверлей по области графика</li></ol></section>
-  <section class="panel" data-review="ds-line-chart" data-review-round="2">
-    <h2><code>ds-line-chart</code>: Линии</h2>
-    <p class="cap">Первая загрузка</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>скелет сегодня</figcaption><img data-shot="line-chart-reload-now-light" alt="скелет сегодня"></figure>
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="line-chart-reload-now-dark" alt="тёмная"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>типичный силуэт</figcaption><img data-shot="line-chart-a-light" alt="типичный силуэт"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>подсказка: 2 серии, 6 точек</figcaption><img data-shot="line-chart-b-light" alt="подсказка: 2 серии, 6 точек"></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>прошлые данные серым</figcaption><img data-shot="line-chart-c-light" alt="прошлые данные серым"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>тёмная</figcaption><img data-shot="line-chart-a-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>тёмная</figcaption><img data-shot="line-chart-b-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>тёмная</figcaption><img data-shot="line-chart-c-dark" alt="тёмная"></figure>
-      </div>
-    <table class="measure">
-      <thead><tr><th>Высота карточки, px</th><th>Скелет сегодня</th><th>График</th></tr></thead>
-      <tbody><tr><td>прыжок 53</td><td class="bad">337</td><td>390</td></tr></tbody>
-    </table>
-    <details class="why"><summary>как нарисованы A, B, C</summary>
+    <details class="why"><summary>почему так</summary>
       <p><b>A</b> - постоянный силуэт типа графика, данных не знает: одна линия, 7 точек. Рисуется в размер области графика, оси там, где они есть у графика.</p>
-      <p><b>B</b> - то же, но приложение заранее передаёт, что знает до данных: 2 серии по 6 точек.</p>
-      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Здесь перекрашенный рендер честный. Первый заход без кэша - A.</p>
-    </details>
-    <p class="cap">Перезагрузка с данными на экране</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>график сменяется скелетом</figcaption><img data-shot="line-chart-reload-now-light" alt="график сменяется скелетом"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>оверлей по области графика</figcaption><img data-shot="line-chart-reload-next-light" alt="оверлей по области графика"></figure>
+      <p><b>B</b> - то же, но приложение заранее передаёт, что знает до данных: 2 серии по 6 точек. Без подсказки рисуется A.</p>
+      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Первый заход без кэша - A.</p>
+      <p>Рекомендую A: убирает прыжок и неверную форму без нового API; B и C добавляются потом входами поверх A.</p></details>
+  <ol data-review-history><li>2026-10-08 · «СКЕЛЕТОНЫ ДОЛЖНЫ БЫТЬ ПОДОБНЫ ДАННЫМ КОТОРЫЕ ОТОБРАЗЯТСЯ, А НЕ РАНДОМНЫЕ» «везде» «перепроверь, что сейчас скелетоны у каждого чарта действительно подобны данным» → сегодня плита вместо линии, прыжок 53px; A одна линия, B 2 серии по подсказке, C прошлые данные; оверлей по области графика с легендой</li><li>2026-10-09 · «в деке 21-loading-states.html варианты нарисованы красиво но - было стало смешано в кучу. и если мне нужно выбирать a b c то должны же быть какие то кнопки? выбор? модули? краточки? не руками же мне всё прописывать» → «Сейчас (dev)» один раз, варианты A/B/C карточками: клик выбирает, выбор в строке внизу; перезагрузка отдельным блоком «Было (dev) | Стало»</li></ol></section>
+  <section class="panel" data-review="ds-line-chart: перезагрузка">
+    <h2><code>ds-line-chart</code>: Линии - перезагрузка с данными на экране</h2>
+    <div class="ba">
+      <div class="ba-head was">Было (dev)</div><div class="ba-head now">Стало</div>
+      <p class="ba-cap"></p>
+      <figure class="shot"><img data-shot="line-chart-reload-now" alt="график сменяется скелетом"><figcaption>график сменяется скелетом</figcaption></figure>
+      <figure class="shot"><img data-shot="line-chart-reload-next" alt="оверлей по области графика"><figcaption>оверлей по области графика</figcaption></figure>
+    </div>
+  </section>
+  <section class="panel" data-review="ds-pie-chart" data-review-round="3" data-review-note-only>
+    <h2><code>ds-pie-chart</code>: Круговая - первая загрузка</h2>
+    <p class="q">Какой скелет, пока данных нет?</p>
+      <div class="now-row">
+        <figure class="shot"><figcaption><span class="tag was">Сейчас (dev)</span>скелет сегодня; высота карточки сплошной круг вместо кольца</figcaption><img data-shot="pie-chart-reload-now" alt="скелет сегодня"></figure>
       </div>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="line-chart-reload-now-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>тёмная</figcaption><img data-shot="line-chart-reload-next-dark" alt="тёмная"></figure>
+      <p class="cap">Варианты: клик по карточке - выбор</p>
+      <div class="opts" role="group" aria-label="ds-pie-chart">
+        <button type="button" class="opt" data-block="ds-pie-chart" data-opt="A" data-name="A" aria-pressed="false">
+          <span class="rec">Рекомендую</span>
+          <span class="opt-title"><b>A</b> типичный силуэт</span>
+          <img data-shot="pie-chart-a" alt="типичный силуэт">
+          <span class="pills"><span class="pill good">нет прыжка карточки</span><span class="pill good">без новых входов</span><span class="pill bad">число меток условное</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-pie-chart" data-opt="B" data-name="B" aria-pressed="false">
+          
+          <span class="opt-title"><b>B</b> подсказка: 4 доли</span>
+          <img data-shot="pie-chart-b" alt="подсказка: 4 доли">
+          <span class="pills"><span class="pill good">число как в данных</span><span class="pill bad">приложение передаёт подсказку</span><span class="pill mid">без подсказки = A</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-pie-chart" data-opt="C" data-name="C" aria-pressed="false">
+          
+          <span class="opt-title"><b>C</b> прошлые данные серым</span>
+          <img data-shot="pie-chart-c" alt="прошлые данные серым">
+          <span class="pills"><span class="pill good">форма прошлых данных</span><span class="pill bad">кэш в приложении</span><span class="pill mid">первый заход = A</span></span>
+        </button>
       </div>
-  <ol data-review-history><li>2026-10-08 · «СКЕЛЕТОНЫ ДОЛЖНЫ БЫТЬ ПОДОБНЫ ДАННЫМ КОТОРЫЕ ОТОБРАЗЯТСЯ, А НЕ РАНДОМНЫЕ» «везде» «перепроверь, что сейчас скелетоны у каждого чарта действительно подобны данным» → сегодня плита вместо линии, прыжок 53px; A одна линия, B 2 серии по подсказке, C прошлые данные; оверлей по области графика с легендой</li></ol></section>
-  <section class="panel" data-review="ds-pie-chart" data-review-round="2">
-    <h2><code>ds-pie-chart</code>: Круговая</h2>
-    <p class="cap">Первая загрузка</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>скелет сегодня</figcaption><img data-shot="pie-chart-reload-now-light" alt="скелет сегодня"></figure>
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="pie-chart-reload-now-dark" alt="тёмная"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>типичный силуэт</figcaption><img data-shot="pie-chart-a-light" alt="типичный силуэт"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>подсказка: 4 доли</figcaption><img data-shot="pie-chart-b-light" alt="подсказка: 4 доли"></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>прошлые данные серым</figcaption><img data-shot="pie-chart-c-light" alt="прошлые данные серым"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>тёмная</figcaption><img data-shot="pie-chart-a-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>тёмная</figcaption><img data-shot="pie-chart-b-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>тёмная</figcaption><img data-shot="pie-chart-c-dark" alt="тёмная"></figure>
-      </div>
-    <table class="measure">
-      <thead><tr><th>Высота карточки, px</th><th>Скелет сегодня</th><th>График</th></tr></thead>
-      <tbody><tr><td>прыжок 0</td><td class="good">253</td><td>253</td></tr></tbody>
-    </table>
-    <details class="why"><summary>как нарисованы A, B, C</summary>
+    <details class="why"><summary>почему так</summary>
       <p><b>A</b> - постоянный силуэт типа графика, данных не знает: кольцо, 3 строки легенды. Рисуется в размер области графика, оси там, где они есть у графика.</p>
-      <p><b>B</b> - то же, но приложение заранее передаёт, что знает до данных: 4 доли.</p>
-      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Здесь перекрашенный рендер честный. Первый заход без кэша - A.</p>
-    </details>
-    <p class="cap">Перезагрузка с данными на экране</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>график сменяется скелетом</figcaption><img data-shot="pie-chart-reload-now-light" alt="график сменяется скелетом"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>оверлей по области графика</figcaption><img data-shot="pie-chart-reload-next-light" alt="оверлей по области графика"></figure>
+      <p><b>B</b> - то же, но приложение заранее передаёт, что знает до данных: 4 доли. Без подсказки рисуется A.</p>
+      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Первый заход без кэша - A.</p>
+      <p>Рекомендую A: убирает прыжок и неверную форму без нового API; B и C добавляются потом входами поверх A.</p></details>
+  <ol data-review-history><li>2026-10-08 · «СКЕЛЕТОНЫ ДОЛЖНЫ БЫТЬ ПОДОБНЫ ДАННЫМ КОТОРЫЕ ОТОБРАЗЯТСЯ, А НЕ РАНДОМНЫЕ» «везде» «перепроверь, что сейчас скелетоны у каждого чарта действительно подобны данным» → сегодня сплошной круг, а график кольцо; A кольцо, B кольцо из 4 долей, C прошлые данные; оверлей по кольцу и легенде (399 из 460px карточки)</li><li>2026-10-09 · «в деке 21-loading-states.html варианты нарисованы красиво но - было стало смешано в кучу. и если мне нужно выбирать a b c то должны же быть какие то кнопки? выбор? модули? краточки? не руками же мне всё прописывать» → «Сейчас (dev)» один раз, варианты A/B/C карточками: клик выбирает, выбор в строке внизу; перезагрузка отдельным блоком «Было (dev) | Стало»</li></ol></section>
+  <section class="panel" data-review="ds-pie-chart: перезагрузка">
+    <h2><code>ds-pie-chart</code>: Круговая - перезагрузка с данными на экране</h2>
+    <div class="ba">
+      <div class="ba-head was">Было (dev)</div><div class="ba-head now">Стало</div>
+      <p class="ba-cap"></p>
+      <figure class="shot"><img data-shot="pie-chart-reload-now" alt="график сменяется скелетом"><figcaption>график сменяется скелетом</figcaption></figure>
+      <figure class="shot"><img data-shot="pie-chart-reload-next" alt="оверлей по области графика"><figcaption>оверлей по области графика</figcaption></figure>
+    </div>
+  </section>
+  <section class="panel" data-review="ds-funnel-chart" data-review-round="4" data-review-note-only>
+    <h2><code>ds-funnel-chart</code>: Воронка - первая загрузка</h2>
+    <p class="q">Какой скелет, пока данных нет?</p>
+      <div class="now-row">
+        <figure class="shot"><figcaption><span class="tag was">Сейчас (dev)</span>скелет сегодня; высота карточки 289 → 525, прыжок 236px</figcaption><img data-shot="funnel-chart-now" alt="скелет сегодня"></figure>
       </div>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="pie-chart-reload-now-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>тёмная</figcaption><img data-shot="pie-chart-reload-next-dark" alt="тёмная"></figure>
+      <p class="cap">Варианты: клик по карточке - выбор</p>
+      <div class="opts" role="group" aria-label="ds-funnel-chart">
+        <button type="button" class="opt" data-block="ds-funnel-chart" data-opt="A" data-name="A" aria-pressed="false">
+          <span class="rec">Рекомендую</span>
+          <span class="opt-title"><b>A</b> типичный силуэт</span>
+          <img data-shot="funnel-chart-a" alt="типичный силуэт">
+          <span class="pills"><span class="pill good">нет прыжка карточки</span><span class="pill good">без новых входов</span><span class="pill bad">число меток условное</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-funnel-chart" data-opt="B" data-name="B" aria-pressed="false">
+          
+          <span class="opt-title"><b>B</b> подсказка: 5 ступеней</span>
+          <img data-shot="funnel-chart-b" alt="подсказка: 5 ступеней">
+          <span class="pills"><span class="pill good">число как в данных</span><span class="pill bad">приложение передаёт подсказку</span><span class="pill mid">без подсказки = A</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-funnel-chart" data-opt="C" data-name="C" aria-pressed="false">
+          
+          <span class="opt-title"><b>C</b> прошлые данные серым</span>
+          <img data-shot="funnel-chart-c" alt="прошлые данные серым">
+          <span class="pills"><span class="pill good">форма прошлых данных</span><span class="pill bad">кэш в приложении</span><span class="pill mid">первый заход = A</span></span>
+        </button>
       </div>
-  <ol data-review-history><li>2026-10-08 · «СКЕЛЕТОНЫ ДОЛЖНЫ БЫТЬ ПОДОБНЫ ДАННЫМ КОТОРЫЕ ОТОБРАЗЯТСЯ, А НЕ РАНДОМНЫЕ» «везде» «перепроверь, что сейчас скелетоны у каждого чарта действительно подобны данным» → сегодня сплошной круг, а график кольцо; A кольцо, B кольцо из 4 долей, C прошлые данные; оверлей по кольцу и легенде (399 из 460px карточки)</li></ol></section>
-  <section class="panel" data-review="ds-funnel-chart" data-review-round="3">
-    <h2><code>ds-funnel-chart</code>: Воронка</h2>
-    <p class="cap">Первая загрузка</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>скелет сегодня</figcaption><img data-shot="funnel-chart-now-light" alt="скелет сегодня"></figure>
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="funnel-chart-now-dark" alt="тёмная"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>типичный силуэт</figcaption><img data-shot="funnel-chart-a-light" alt="типичный силуэт"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>подсказка: 5 ступеней</figcaption><img data-shot="funnel-chart-b-light" alt="подсказка: 5 ступеней"></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>прошлые данные серым</figcaption><img data-shot="funnel-chart-c-light" alt="прошлые данные серым"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>тёмная</figcaption><img data-shot="funnel-chart-a-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>тёмная</figcaption><img data-shot="funnel-chart-b-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>тёмная</figcaption><img data-shot="funnel-chart-c-dark" alt="тёмная"></figure>
-      </div>
-    <table class="measure">
-      <thead><tr><th>Высота карточки, px</th><th>Скелет сегодня</th><th>График</th></tr></thead>
-      <tbody><tr><td>прыжок 236</td><td class="bad">289</td><td>525</td></tr></tbody>
-    </table>
-    <details class="why"><summary>как нарисованы A, B, C</summary>
+    <details class="why"><summary>почему так</summary>
       <p><b>A</b> - постоянный силуэт типа графика, данных не знает: 4 ступени. Рисуется в размер области графика, оси там, где они есть у графика.</p>
-      <p><b>B</b> - то же, но приложение заранее передаёт, что знает до данных: 5 ступеней.</p>
-      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Здесь перекрашенный рендер честный. Первый заход без кэша - A.</p>
-    </details>
-    <p class="cap">Перезагрузка с данными на экране</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>график сменяется скелетом</figcaption><img data-shot="funnel-chart-reload-now-light" alt="график сменяется скелетом"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>оверлей по области графика</figcaption><img data-shot="funnel-chart-reload-next-light" alt="оверлей по области графика"></figure>
+      <p><b>B</b> - то же, но приложение заранее передаёт, что знает до данных: 5 ступеней. Без подсказки рисуется A.</p>
+      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Первый заход без кэша - A.</p>
+      <p>Рекомендую A: убирает прыжок и неверную форму без нового API; B и C добавляются потом входами поверх A.</p></details>
+  <ol data-review-history><li>2026-10-08 · «здесь как будто скелетон пофиксать надо - формы не те.» → скелет сужается по центру, как воронка, и занимает её высоту; сегодня полосы от левого края, карточка прыгает на 235px, в список правок</li><li>2026-10-08 · «скелетон должен повторять форму типично funnel» «СКЕЛЕТОНЫ ДОЛЖНЫ БЫТЬ ПОДОБНЫ ДАННЫМ КОТОРЫЕ ОТОБРАЗЯТСЯ, А НЕ РАНДОМНЫЕ» «везде» «перепроверь, что сейчас скелетоны у каждого чарта действительно подобны данным» → A типичная воронка: 4 равные сужающиеся ступени, B 5 ступеней по подсказке, C прошлые данные серым; прежний макет был перекрашенными данными</li><li>2026-10-09 · «в деке 21-loading-states.html варианты нарисованы красиво но - было стало смешано в кучу. и если мне нужно выбирать a b c то должны же быть какие то кнопки? выбор? модули? краточки? не руками же мне всё прописывать» → «Сейчас (dev)» один раз, варианты A/B/C карточками: клик выбирает, выбор в строке внизу; перезагрузка отдельным блоком «Было (dev) | Стало»</li></ol></section>
+  <section class="panel" data-review="ds-funnel-chart: перезагрузка">
+    <h2><code>ds-funnel-chart</code>: Воронка - перезагрузка с данными на экране</h2>
+    <div class="ba">
+      <div class="ba-head was">Было (dev)</div><div class="ba-head now">Стало</div>
+      <p class="ba-cap"></p>
+      <figure class="shot"><img data-shot="funnel-chart-reload-now" alt="график сменяется скелетом"><figcaption>график сменяется скелетом</figcaption></figure>
+      <figure class="shot"><img data-shot="funnel-chart-reload-next" alt="оверлей по области графика"><figcaption>оверлей по области графика</figcaption></figure>
+    </div>
+  </section>
+  <section class="panel" data-review="ds-waterfall-chart" data-review-round="4" data-review-note-only>
+    <h2><code>ds-waterfall-chart</code>: Водопад - первая загрузка</h2>
+    <p class="q">Какой скелет, пока данных нет?</p>
+      <div class="now-row">
+        <figure class="shot"><figcaption><span class="tag was">Сейчас (dev)</span>скелет сегодня; высота карточки 305 → 363, прыжок 58px</figcaption><img data-shot="waterfall-chart-now" alt="скелет сегодня"></figure>
       </div>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="funnel-chart-reload-now-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>тёмная</figcaption><img data-shot="funnel-chart-reload-next-dark" alt="тёмная"></figure>
+      <p class="cap">Варианты: клик по карточке - выбор</p>
+      <div class="opts" role="group" aria-label="ds-waterfall-chart">
+        <button type="button" class="opt" data-block="ds-waterfall-chart" data-opt="A" data-name="A" aria-pressed="false">
+          <span class="rec">Рекомендую</span>
+          <span class="opt-title"><b>A</b> типичный силуэт</span>
+          <img data-shot="waterfall-chart-a" alt="типичный силуэт">
+          <span class="pills"><span class="pill good">нет прыжка карточки</span><span class="pill good">без новых входов</span><span class="pill bad">число меток условное</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-waterfall-chart" data-opt="B" data-name="B" aria-pressed="false">
+          
+          <span class="opt-title"><b>B</b> подсказка: 5 столбцов</span>
+          <img data-shot="waterfall-chart-b" alt="подсказка: 5 столбцов">
+          <span class="pills"><span class="pill good">число как в данных</span><span class="pill bad">приложение передаёт подсказку</span><span class="pill mid">без подсказки = A</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-waterfall-chart" data-opt="C" data-name="C" aria-pressed="false">
+          
+          <span class="opt-title"><b>C</b> прошлые данные серым</span>
+          <img data-shot="waterfall-chart-c" alt="прошлые данные серым">
+          <span class="pills"><span class="pill good">форма прошлых данных</span><span class="pill bad">кэш в приложении</span><span class="pill mid">первый заход = A</span></span>
+        </button>
       </div>
-  <ol data-review-history><li>2026-10-08 · «здесь как будто скелетон пофиксать надо - формы не те.» → скелет сужается по центру, как воронка, и занимает её высоту; сегодня полосы от левого края, карточка прыгает на 235px, в список правок</li><li>2026-10-08 · «скелетон должен повторять форму типично funnel» «СКЕЛЕТОНЫ ДОЛЖНЫ БЫТЬ ПОДОБНЫ ДАННЫМ КОТОРЫЕ ОТОБРАЗЯТСЯ, А НЕ РАНДОМНЫЕ» «везде» «перепроверь, что сейчас скелетоны у каждого чарта действительно подобны данным» → A типичная воронка: 4 равные сужающиеся ступени, B 5 ступеней по подсказке, C прошлые данные серым; прежний макет был перекрашенными данными</li></ol></section>
-  <section class="panel" data-review="ds-waterfall-chart" data-review-round="3">
-    <h2><code>ds-waterfall-chart</code>: Водопад</h2>
-    <p class="cap">Первая загрузка</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>скелет сегодня</figcaption><img data-shot="waterfall-chart-now-light" alt="скелет сегодня"></figure>
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="waterfall-chart-now-dark" alt="тёмная"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>типичный силуэт</figcaption><img data-shot="waterfall-chart-a-light" alt="типичный силуэт"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>подсказка: 5 столбцов</figcaption><img data-shot="waterfall-chart-b-light" alt="подсказка: 5 столбцов"></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>прошлые данные серым</figcaption><img data-shot="waterfall-chart-c-light" alt="прошлые данные серым"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>тёмная</figcaption><img data-shot="waterfall-chart-a-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>тёмная</figcaption><img data-shot="waterfall-chart-b-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>тёмная</figcaption><img data-shot="waterfall-chart-c-dark" alt="тёмная"></figure>
-      </div>
-    <table class="measure">
-      <thead><tr><th>Высота карточки, px</th><th>Скелет сегодня</th><th>График</th></tr></thead>
-      <tbody><tr><td>прыжок 58</td><td class="bad">305</td><td>363</td></tr></tbody>
-    </table>
-    <details class="why"><summary>как нарисованы A, B, C</summary>
+    <details class="why"><summary>почему так</summary>
       <p><b>A</b> - постоянный силуэт типа графика, данных не знает: 6 столбцов. Рисуется в размер области графика, оси там, где они есть у графика.</p>
-      <p><b>B</b> - то же, но приложение заранее передаёт, что знает до данных: 5 столбцов.</p>
-      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Здесь перекрашенный рендер честный. Первый заход без кэша - A.</p>
-    </details>
-    <p class="cap">Перезагрузка с данными на экране</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>график сменяется скелетом</figcaption><img data-shot="waterfall-chart-reload-now-light" alt="график сменяется скелетом"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>оверлей по области графика</figcaption><img data-shot="waterfall-chart-reload-next-light" alt="оверлей по области графика"></figure>
+      <p><b>B</b> - то же, но приложение заранее передаёт, что знает до данных: 5 столбцов. Без подсказки рисуется A.</p>
+      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Первый заход без кэша - A.</p>
+      <p>Рекомендую A: убирает прыжок и неверную форму без нового API; B и C добавляются потом входами поверх A.</p></details>
+  <ol data-review-history><li>2026-10-08 · «здесь как будто скелетон пофиксать надо - формы не те.» → скелет из висящих столбцов в размер графика; сегодня горизонтальные полосы, карточка прыгает на 58px, в список правок</li><li>2026-10-08 · «тут почему линии горизонтальные если чарт вертикальные линии? СКЕЛЕТОНЫ ДОЛЖНЫ БЫТЬ ПОДОБНЫ ДАННЫМ КОТОРЫЕ ОТОБРАЗЯТСЯ, А НЕ РАНДОМНЫЕ» → горизонтальными читались сетка и пунктир связок: убраны, остались вертикальные висящие столбцы; A 6 столбцов, B 5 по подсказке, C прошлые данные</li><li>2026-10-09 · «в деке 21-loading-states.html варианты нарисованы красиво но - было стало смешано в кучу. и если мне нужно выбирать a b c то должны же быть какие то кнопки? выбор? модули? краточки? не руками же мне всё прописывать» → «Сейчас (dev)» один раз, варианты A/B/C карточками: клик выбирает, выбор в строке внизу; перезагрузка отдельным блоком «Было (dev) | Стало»</li></ol></section>
+  <section class="panel" data-review="ds-waterfall-chart: перезагрузка">
+    <h2><code>ds-waterfall-chart</code>: Водопад - перезагрузка с данными на экране</h2>
+    <div class="ba">
+      <div class="ba-head was">Было (dev)</div><div class="ba-head now">Стало</div>
+      <p class="ba-cap"></p>
+      <figure class="shot"><img data-shot="waterfall-chart-reload-now" alt="график сменяется скелетом"><figcaption>график сменяется скелетом</figcaption></figure>
+      <figure class="shot"><img data-shot="waterfall-chart-reload-next" alt="оверлей по области графика"><figcaption>оверлей по области графика</figcaption></figure>
+    </div>
+  </section>
+  <section class="panel" data-review="ds-heatmap-chart" data-review-round="4" data-review-note-only>
+    <h2><code>ds-heatmap-chart</code>: Тепловая карта - первая загрузка</h2>
+    <p class="q">Какой скелет, пока данных нет?</p>
+      <div class="now-row">
+        <figure class="shot"><figcaption><span class="tag was">Сейчас (dev)</span>скелет сегодня; высота карточки 251 → 336, прыжок 85px</figcaption><img data-shot="heatmap-chart-now" alt="скелет сегодня"></figure>
       </div>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="waterfall-chart-reload-now-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>тёмная</figcaption><img data-shot="waterfall-chart-reload-next-dark" alt="тёмная"></figure>
+      <p class="cap">Варианты: клик по карточке - выбор</p>
+      <div class="opts" role="group" aria-label="ds-heatmap-chart">
+        <button type="button" class="opt" data-block="ds-heatmap-chart" data-opt="A" data-name="A" aria-pressed="false">
+          <span class="rec">Рекомендую</span>
+          <span class="opt-title"><b>A</b> типичный силуэт</span>
+          <img data-shot="heatmap-chart-a" alt="типичный силуэт">
+          <span class="pills"><span class="pill good">нет прыжка карточки</span><span class="pill good">без новых входов</span><span class="pill bad">число меток условное</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-heatmap-chart" data-opt="B" data-name="B" aria-pressed="false">
+          
+          <span class="opt-title"><b>B</b> подсказка: сетка 7 x 5</span>
+          <img data-shot="heatmap-chart-b" alt="подсказка: сетка 7 x 5">
+          <span class="pills"><span class="pill good">число как в данных</span><span class="pill bad">приложение передаёт подсказку</span><span class="pill mid">без подсказки = A</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-heatmap-chart" data-opt="C" data-name="C" aria-pressed="false">
+          
+          <span class="opt-title"><b>C</b> прошлые данные серым</span>
+          <img data-shot="heatmap-chart-c" alt="прошлые данные серым">
+          <span class="pills"><span class="pill good">форма прошлых данных</span><span class="pill bad">кэш в приложении</span><span class="pill mid">первый заход = A</span></span>
+        </button>
       </div>
-  <ol data-review-history><li>2026-10-08 · «здесь как будто скелетон пофиксать надо - формы не те.» → скелет из висящих столбцов в размер графика; сегодня горизонтальные полосы, карточка прыгает на 58px, в список правок</li><li>2026-10-08 · «тут почему линии горизонтальные если чарт вертикальные линии? СКЕЛЕТОНЫ ДОЛЖНЫ БЫТЬ ПОДОБНЫ ДАННЫМ КОТОРЫЕ ОТОБРАЗЯТСЯ, А НЕ РАНДОМНЫЕ» → горизонтальными читались сетка и пунктир связок: убраны, остались вертикальные висящие столбцы; A 6 столбцов, B 5 по подсказке, C прошлые данные</li></ol></section>
-  <section class="panel" data-review="ds-heatmap-chart" data-review-round="3">
-    <h2><code>ds-heatmap-chart</code>: Тепловая карта</h2>
-    <p class="cap">Первая загрузка</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>скелет сегодня</figcaption><img data-shot="heatmap-chart-now-light" alt="скелет сегодня"></figure>
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="heatmap-chart-now-dark" alt="тёмная"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>типичный силуэт</figcaption><img data-shot="heatmap-chart-a-light" alt="типичный силуэт"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>подсказка: 7 x 5</figcaption><img data-shot="heatmap-chart-b-light" alt="подсказка: 7 x 5"></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>прошлые данные серым</figcaption><img data-shot="heatmap-chart-c-light" alt="прошлые данные серым"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>тёмная</figcaption><img data-shot="heatmap-chart-a-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>тёмная</figcaption><img data-shot="heatmap-chart-b-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>тёмная</figcaption><img data-shot="heatmap-chart-c-dark" alt="тёмная"></figure>
-      </div>
-    <table class="measure">
-      <thead><tr><th>Высота карточки, px</th><th>Скелет сегодня</th><th>График</th></tr></thead>
-      <tbody><tr><td>прыжок 85</td><td class="bad">251</td><td>336</td></tr></tbody>
-    </table>
-    <details class="why"><summary>как нарисованы A, B, C</summary>
+    <details class="why"><summary>почему так</summary>
       <p><b>A</b> - постоянный силуэт типа графика, данных не знает: сетка 6 x 4. Рисуется в размер области графика, оси там, где они есть у графика.</p>
-      <p><b>B</b> - то же, но приложение заранее передаёт, что знает до данных: 7 x 5.</p>
-      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Здесь перекрашенный рендер честный. Первый заход без кэша - A.</p>
-    </details>
-    <p class="cap">Карточка 969px, сетка 303px</p>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>скелет на всю карточку</figcaption><img data-shot="heatmap-chart-now-light" alt="скелет на всю карточку"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Рекомендую</span>скелет по сетке</figcaption><img data-shot="heatmap-chart-b-light" alt="скелет по сетке"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Иначе</span>карточка по сетке</figcaption><img data-shot="heatmap-chart-fit-skeleton-light" alt="карточка по сетке"></figure>
+      <p><b>B</b> - то же, но приложение заранее передаёт, что знает до данных: сетка 7 x 5. Без подсказки рисуется A.</p>
+      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Первый заход без кэша - A.</p>
+      <p>Рекомендую A: убирает прыжок и неверную форму без нового API; B и C добавляются потом входами поверх A.</p></details>
+  <ol data-review-history><li>2026-10-08 · «а пчоему сам чарт такой маленький, а и placeholder skeleton и оверлей на всю оргомную карточку аплаятся? "C:\Users\admin\Pictures\Screenshots\Screenshot 2026-10-08 173720.png" и как будто скелетон пофиксать надо - формы не те.» → замерено: карточка 969px, сетка 307px из клеток по 34px; предложение: карточка по сетке (349px), скелет из клеток в её размер, оверлей на эту карточку</li><li>2026-10-08 · «в хит мап тоже. везде» «хитмап это маленький графичек слева, а в карточке он скелетон растянул на полную карточку, и лоудер на полную карточку. изучи этот случай» → причина: хост и .grid-scroll блоки на 928-969px, сетка 303px; скелет и оверлей по сетке (319 x 239), карточка по сетке (344px) как альтернатива; A 6 x 4, B 7 x 5, C прошлые данные</li><li>2026-10-09 · «в деке 21-loading-states.html варианты нарисованы красиво но - было стало смешано в кучу. и если мне нужно выбирать a b c то должны же быть какие то кнопки? выбор? модули? краточки? не руками же мне всё прописывать» → «Сейчас (dev)» один раз, варианты A/B/C карточками: клик выбирает, выбор в строке внизу; перезагрузка отдельным блоком «Было (dev) | Стало»</li></ol></section>
+  <section class="panel" data-review="ds-heatmap-chart: ширина" data-review-note-only data-review-round="2">
+    <h2><code>ds-heatmap-chart</code>: скелет и оверлей - какой ширины</h2>
+    <p class="q">Карточка 969px, сетка 303px. По чему ложатся скелет и оверлей?</p>
+      <div class="now-row">
+        <figure class="shot"><figcaption><span class="tag was">Сейчас (dev)</span>скелет и оверлей на всю карточку</figcaption><img data-shot="heatmap-chart-now" alt="первая загрузка"><img data-shot="heatmap-chart-reload-now" alt="перезагрузка"></figure>
       </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="heatmap-chart-now-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Рекомендую</span>тёмная</figcaption><img data-shot="heatmap-chart-b-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Иначе</span>тёмная</figcaption><img data-shot="heatmap-chart-fit-skeleton-dark" alt="тёмная"></figure>
+      <p class="cap">Варианты: клик по карточке - выбор</p>
+      <div class="opts" role="group" aria-label="ds-heatmap-chart: ширина">
+        <button type="button" class="opt" data-block="ds-heatmap-chart: ширина" data-opt="grid" data-name="по сетке" aria-pressed="false">
+          <span class="rec">Рекомендую</span>
+          <span class="opt-title">По сетке</span>
+          <img data-shot="heatmap-chart-b" alt="первая загрузка: скелет по сетке"><img data-shot="heatmap-chart-reload-next" alt="перезагрузка: оверлей по сетке">
+          <span class="pills"><span class="pill good">любая ширина карточки</span><span class="pill good">правка только в библиотеке</span><span class="pill mid">справа пусто, как сейчас</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-heatmap-chart: ширина" data-opt="card" data-name="карточка по сетке" aria-pressed="false">
+          
+          <span class="opt-title">Карточка по сетке</span>
+          <img data-shot="heatmap-chart-fit-skeleton" alt="первая загрузка: карточка по сетке"><img data-shot="heatmap-chart-fit-reload" alt="перезагрузка: карточка по сетке">
+          <span class="pills"><span class="pill good">нет пустой карточки</span><span class="pill bad">ломает ряд карточек</span><span class="pill bad">решение приложения</span></span>
+        </button>
       </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>перезагрузка: скелет</figcaption><img data-shot="heatmap-chart-reload-now-light" alt="перезагрузка: скелет"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Рекомендую</span>оверлей по сетке</figcaption><img data-shot="heatmap-chart-reload-next-light" alt="оверлей по сетке"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Иначе</span>карточка по сетке</figcaption><img data-shot="heatmap-chart-fit-reload-light" alt="карточка по сетке"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="heatmap-chart-reload-now-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Рекомендую</span>тёмная</figcaption><img data-shot="heatmap-chart-reload-next-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Иначе</span>тёмная</figcaption><img data-shot="heatmap-chart-fit-reload-dark" alt="тёмная"></figure>
-      </div>
-    <table class="measure">
-      <thead><tr><th>Блок</th><th>Ширина x высота, px</th></tr></thead>
-      <tbody>
+    <details class="why"><summary>почему так</summary>
+      <p>Хост - блок и растягивается на ширину родителя. <code>.grid-scroll</code> тоже блок (ему нужна ширина, чтобы прокручивать широкую сетку), а таблица внутри занимает 303px. Скелет сегодня - пять блочных полос по 928px, поэтому он на всю карточку. Оверлей по правилу <code>ds-bar-chart</code> обёрнут вокруг всего хоста и тоже лёг бы на 969px.</p>
+      <p>По сетке: обёртка области графика (сетка, подписи, шкала) шириной <code>fit-content</code> и не шире контейнера; на неё вешается оверлей, скелет берёт ширину из числа столбцов и размера клетки. Карточка по сетке (<code>inline-size: fit-content</code> на хосте) убирает пустое место, но ломает ряд одинаковых карточек на дашборде, поэтому это решение приложения.</p>
+      <table class="measure"><thead><tr><th>Блок</th><th>Ширина x высота, px</th></tr></thead><tbody>
         <tr><td>карточка <code>ds-heatmap-chart</code></td><td>969 x 336</td></tr>
         <tr><td>область прокрутки <code>.grid-scroll</code></td><td>928 x 197</td></tr>
         <tr><td>сетка 7 x 5, клетка 34</td><td>303 x 197</td></tr>
@@ -343,120 +419,102 @@
         <tr><td>оверлей на карточку (как у <code>ds-bar-chart</code>)</td><td class="bad">969 x 336</td></tr>
         <tr><td>оверлей по сетке и шкале</td><td class="good">319 x 239</td></tr>
         <tr><td>карточка по сетке</td><td class="mid">344 x 336</td></tr>
-      </tbody>
-    </table>
-    <p class="finding">Рекомендую: скелет и оверлей по сетке. Ширина карточки - выбор приложения.</p>
+      </tbody></table>
+      <p>Замер в Chrome на ds-docs этой ветки, окно 1440 x 900, 2026-10-08.</p></details>
+  <ol data-review-history><li>2026-10-09 · «в деке 21-loading-states.html варианты нарисованы красиво но - было стало смешано в кучу. и если мне нужно выбирать a b c то должны же быть какие то кнопки? выбор? модули? краточки? не руками же мне всё прописывать» → ширина скелета и оверлея - отдельный выбор карточками: по сетке (рекомендую) или карточка по сетке; «Сейчас (dev)» один раз</li></ol></section>
+  <section class="panel" data-review="ds-scatter-chart" data-review-round="3" data-review-note-only>
+    <h2><code>ds-scatter-chart</code>: Точечная - первая загрузка</h2>
+    <p class="q">Какой скелет, пока данных нет?</p>
+      <div class="now-row">
+        <figure class="shot"><figcaption><span class="tag was">Сейчас (dev)</span>скелет сегодня; высота карточки 433 → 595, прыжок 162px</figcaption><img data-shot="scatter-chart-reload-now" alt="скелет сегодня"></figure>
+      </div>
+      <p class="cap">Варианты: клик по карточке - выбор</p>
+      <div class="opts" role="group" aria-label="ds-scatter-chart">
+        <button type="button" class="opt" data-block="ds-scatter-chart" data-opt="A" data-name="A" aria-pressed="false">
+          <span class="rec">Рекомендую</span>
+          <span class="opt-title"><b>A</b> типичный силуэт</span>
+          <img data-shot="scatter-chart-a" alt="типичный силуэт">
+          <span class="pills"><span class="pill good">нет прыжка карточки</span><span class="pill good">без новых входов</span><span class="pill bad">число меток условное</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-scatter-chart" data-opt="C" data-name="C" aria-pressed="false">
+          
+          <span class="opt-title"><b>C</b> прошлые данные серым</span>
+          <img data-shot="scatter-chart-c" alt="прошлые данные серым">
+          <span class="pills"><span class="pill good">форма прошлых данных</span><span class="pill bad">кэш в приложении</span><span class="pill mid">первый заход = A</span></span>
+        </button>
+      </div>
     <details class="why"><summary>почему так</summary>
-      <p>Хост - блок и растягивается на ширину родителя. <code>.grid-scroll</code> тоже блок (ему нужна ширина, чтобы прокручивать широкую сетку), а таблица внутри занимает 303px. Скелет сегодня - пять блочных полос по 928px, поэтому он на всю карточку. Оверлей по правилу <code>ds-bar-chart</code> обёрнут вокруг всего хоста и тоже лёг бы на 969px.</p>
-      <p>Правка: обёртка области графика (сетка, подписи, шкала) шириной <code>fit-content</code> и не шире контейнера; на неё вешается оверлей, скелет берёт ширину из числа столбцов и размера клетки. Работает при любой ширине карточки. Карточка по сетке (<code>inline-size: fit-content</code> на хосте) убирает пустое место, но ломает ряд одинаковых карточек на дашборде, поэтому это решение приложения, а не библиотеки.</p>
-      <p>Замер в Chrome на ds-docs этой ветки, окно 1440 x 900, 2026-10-08.</p>
-    </details>
-  <ol data-review-history><li>2026-10-08 · «а пчоему сам чарт такой маленький, а и placeholder skeleton и оверлей на всю оргомную карточку аплаятся? "C:\Users\admin\Pictures\Screenshots\Screenshot 2026-10-08 173720.png" и как будто скелетон пофиксать надо - формы не те.» → замерено: карточка 969px, сетка 307px из клеток по 34px; предложение: карточка по сетке (349px), скелет из клеток в её размер, оверлей на эту карточку</li><li>2026-10-08 · «в хит мап тоже. везде» «хитмап это маленький графичек слева, а в карточке он скелетон растянул на полную карточку, и лоудер на полную карточку. изучи этот случай» → причина: хост и .grid-scroll блоки на 928-969px, сетка 303px; скелет и оверлей по сетке (319 x 239), карточка по сетке (344px) как альтернатива; A 6 x 4, B 7 x 5, C прошлые данные</li></ol></section>
-  <section class="panel" data-review="ds-scatter-chart" data-review-round="2">
-    <h2><code>ds-scatter-chart</code>: Точечная</h2>
-    <p class="cap">Первая загрузка</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>скелет сегодня</figcaption><img data-shot="scatter-chart-reload-now-light" alt="скелет сегодня"></figure>
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="scatter-chart-reload-now-dark" alt="тёмная"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>типичный силуэт</figcaption><img data-shot="scatter-chart-a-light" alt="типичный силуэт"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>подсказки нет</figcaption></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>прошлые данные серым</figcaption><img data-shot="scatter-chart-c-light" alt="прошлые данные серым"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag now">A</span>тёмная</figcaption><img data-shot="scatter-chart-a-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">B</span>подсказки нет</figcaption></figure>
-        <figure class="shot"><figcaption><span class="tag now">C</span>тёмная</figcaption><img data-shot="scatter-chart-c-dark" alt="тёмная"></figure>
-      </div>
-    <table class="measure">
-      <thead><tr><th>Высота карточки, px</th><th>Скелет сегодня</th><th>График</th></tr></thead>
-      <tbody><tr><td>прыжок 162</td><td class="bad">433</td><td>595</td></tr></tbody>
-    </table>
-    <details class="why"><summary>как нарисованы A, B, C</summary>
       <p><b>A</b> - постоянный силуэт типа графика, данных не знает: облако точек. Рисуется в размер области графика, оси там, где они есть у графика.</p>
-      <p><b>B</b> - у точечной нет числа категорий, подсказывать нечего: остаётся A.</p>
-      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Здесь перекрашенный рендер честный. Первый заход без кэша - A.</p>
-    </details>
-    <p class="cap">Перезагрузка с данными на экране</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>график сменяется скелетом</figcaption><img data-shot="scatter-chart-reload-now-light" alt="график сменяется скелетом"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>оверлей по области графика</figcaption><img data-shot="scatter-chart-reload-next-light" alt="оверлей по области графика"></figure>
-      </div>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="scatter-chart-reload-now-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>тёмная</figcaption><img data-shot="scatter-chart-reload-next-dark" alt="тёмная"></figure>
-      </div>
-  <ol data-review-history><li>2026-10-08 · «СКЕЛЕТОНЫ ДОЛЖНЫ БЫТЬ ПОДОБНЫ ДАННЫМ КОТОРЫЕ ОТОБРАЗЯТСЯ, А НЕ РАНДОМНЫЕ» «везде» «перепроверь, что сейчас скелетоны у каждого чарта действительно подобны данным» → сегодня одна плита, прыжок 162px; A облако точек с осями, C прошлые данные; подсказки для B нет; оверлей по области графика</li></ol></section>
-  <section class="panel" data-review="ds-select">
-    <h2><code>ds-select</code></h2>
-    <p class="cap">Опций ещё нет</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>спиннер в списке</figcaption><img data-shot="select-first-now-light" alt="спиннер в списке"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>скелет опций</figcaption><img data-shot="select-first-next-light" alt="скелет опций"></figure>
-      </div>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная: спиннер</figcaption><img data-shot="select-first-now-dark" alt="тёмная: спиннер"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>тёмная: скелет опций</figcaption><img data-shot="select-first-next-dark" alt="тёмная: скелет опций"></figure>
-      </div>
-    <p class="cap">Опции есть, идёт загрузка</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>спиннер под опциями</figcaption><img data-shot="select-reload-now-light" alt="спиннер под опциями"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>опции под оверлеем</figcaption><img data-shot="select-reload-next-light" alt="опции под оверлеем"></figure>
-      </div>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная: спиннер внизу</figcaption><img data-shot="select-reload-now-dark" alt="тёмная: спиннер внизу"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>тёмная: оверлей</figcaption><img data-shot="select-reload-next-dark" alt="тёмная: оверлей"></figure>
-      </div>
+      <p><b>B</b> нет: у точечной нет числа категорий, подсказывать нечего.</p>
+      <p><b>C</b> - при повторном заходе приложение отдаёт прошлые данные из своего кэша, скелет рисует их форму серым. Первый заход без кэша - A.</p>
+      <p>Рекомендую A: убирает прыжок и неверную форму без нового API; B и C добавляются потом входами поверх A.</p></details>
+  <ol data-review-history><li>2026-10-08 · «СКЕЛЕТОНЫ ДОЛЖНЫ БЫТЬ ПОДОБНЫ ДАННЫМ КОТОРЫЕ ОТОБРАЗЯТСЯ, А НЕ РАНДОМНЫЕ» «везде» «перепроверь, что сейчас скелетоны у каждого чарта действительно подобны данным» → сегодня одна плита, прыжок 162px; A облако точек с осями, C прошлые данные; подсказки для B нет; оверлей по области графика</li><li>2026-10-09 · «в деке 21-loading-states.html варианты нарисованы красиво но - было стало смешано в кучу. и если мне нужно выбирать a b c то должны же быть какие то кнопки? выбор? модули? краточки? не руками же мне всё прописывать» → «Сейчас (dev)» один раз, варианты A/C карточками (B нет): клик выбирает, выбор в строке внизу; перезагрузка отдельным блоком «Было (dev) | Стало»</li></ol></section>
+  <section class="panel" data-review="ds-scatter-chart: перезагрузка">
+    <h2><code>ds-scatter-chart</code>: Точечная - перезагрузка с данными на экране</h2>
+    <div class="ba">
+      <div class="ba-head was">Было (dev)</div><div class="ba-head now">Стало</div>
+      <p class="ba-cap"></p>
+      <figure class="shot"><img data-shot="scatter-chart-reload-now" alt="график сменяется скелетом"><figcaption>график сменяется скелетом</figcaption></figure>
+      <figure class="shot"><img data-shot="scatter-chart-reload-next" alt="оверлей по области графика"><figcaption>оверлей по области графика</figcaption></figure>
+    </div>
   </section>
-  <section class="panel" data-review="ds-multi-select" data-review-round="2">
-    <h2><code>ds-multi-select</code></h2>
-    <p class="cap">Опций ещё нет</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>спиннер в списке</figcaption><img data-shot="multi-select-first-now-light" alt="спиннер в списке"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>скелет опций</figcaption><img data-shot="multi-select-first-next-light" alt="скелет опций"></figure>
-      </div>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная: спиннер</figcaption><img data-shot="multi-select-first-now-dark" alt="тёмная: спиннер"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>тёмная: скелет опций</figcaption><img data-shot="multi-select-first-next-dark" alt="тёмная: скелет опций"></figure>
-      </div>
-    <p class="cap">Опции есть, идёт загрузка: где оверлей</p>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>спиннер под опциями</figcaption><img data-shot="multi-select-today-light" alt="спиннер под опциями"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Вариант A</span>только список</figcaption><img data-shot="multi-select-list-light" alt="только список"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Вариант B</span>список и «выбрать все»</figcaption><img data-shot="multi-select-list-select-all-light" alt="список и «выбрать все»"></figure>
-      </div>
-      <div class="trio">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная</figcaption><img data-shot="multi-select-today-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Вариант A</span>тёмная</figcaption><img data-shot="multi-select-list-dark" alt="тёмная"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Вариант B</span>тёмная</figcaption><img data-shot="multi-select-list-select-all-dark" alt="тёмная"></figure>
-      </div>
-    <p class="finding">Рекомендую B: поле фильтра живое, «выбрать все» и список под оверлеем.</p>
-    <details class="why"><summary>почему B</summary>
-      <p>Можно ли печатать во время перезагрузки: да, и нужно. Чаще всего перезагрузку и запускает ввод в фильтр, и поле, которое гаснет под пальцами, съедает буквы. Поэтому поле ввода никогда не накрываем. «Выбрать все» во время перезагрузки выбрал бы опции, которые вот-вот сменятся, поэтому оно уходит под оверлей вместе со списком (вариант B). Вариант A оставляет «выбрать все» живым над устаревшим списком. Высоты, px: поле 38.6, «выбрать все» 37, список 226.</p>
-    </details>
-  <ol data-review-history><li>2026-10-08 · «тут как будто оверлей на input сверху и select all можно не аплайить? или только на инпут не аплаить...» → нарисованы три варианта; рекомендую B: поле фильтра живое, «выбрать все» и список под оверлеем</li></ol></section>
-  <section class="panel" data-review="ds-autocomplete">
-    <h2><code>ds-autocomplete</code></h2>
-    <p class="cap">Опций ещё нет</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>спиннер в списке</figcaption><img data-shot="autocomplete-first-now-light" alt="спиннер в списке"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>скелет опций</figcaption><img data-shot="autocomplete-first-next-light" alt="скелет опций"></figure>
-      </div>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная: спиннер</figcaption><img data-shot="autocomplete-first-now-dark" alt="тёмная: спиннер"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>тёмная: скелет опций</figcaption><img data-shot="autocomplete-first-next-dark" alt="тёмная: скелет опций"></figure>
-      </div>
-    <p class="cap">Опции есть, идёт загрузка</p>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>спиннер под опциями</figcaption><img data-shot="autocomplete-reload-now-light" alt="спиннер под опциями"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>опции под оверлеем</figcaption><img data-shot="autocomplete-reload-next-light" alt="опции под оверлеем"></figure>
-      </div>
-      <div class="pair">
-        <figure class="shot"><figcaption><span class="tag was">Сейчас</span>тёмная: спиннер внизу</figcaption><img data-shot="autocomplete-reload-now-dark" alt="тёмная: спиннер внизу"></figure>
-        <figure class="shot"><figcaption><span class="tag now">Как будет</span>тёмная: оверлей</figcaption><img data-shot="autocomplete-reload-next-dark" alt="тёмная: оверлей"></figure>
-      </div>
+  <section class="panel" data-review="ds-select" data-review-round="2">
+    <h2><code>ds-select</code>: загрузка списка</h2>
+    <div class="ba">
+      <div class="ba-head was">Было (dev)</div><div class="ba-head now">Стало</div>
+      <p class="ba-cap">Опций ещё нет</p>
+      <figure class="shot"><img data-shot="select-first-now" alt="спиннер в списке"><figcaption>спиннер в списке</figcaption></figure>
+      <figure class="shot"><img data-shot="select-first-next" alt="скелет опций"><figcaption>скелет опций</figcaption></figure>
+      <p class="ba-cap">Опции есть, идёт загрузка</p>
+      <figure class="shot"><img data-shot="select-reload-now" alt="спиннер под опциями"><figcaption>спиннер под опциями</figcaption></figure>
+      <figure class="shot"><img data-shot="select-reload-next" alt="опции под оверлеем"><figcaption>опции под оверлеем</figcaption></figure>
+    </div>
+  <ol data-review-history><li>2026-10-09 · «в деке 21-loading-states.html варианты нарисованы красиво но - было стало смешано в кучу. и если мне нужно выбирать a b c то должны же быть какие то кнопки? выбор? модули? краточки? не руками же мне всё прописывать» → две колонки «Было (dev) | Стало», одна тема за раз (переключатель вверху)</li></ol></section>
+  <section class="panel" data-review="ds-multi-select: опций нет">
+    <h2><code>ds-multi-select</code>: опций ещё нет</h2>
+    <div class="ba">
+      <div class="ba-head was">Было (dev)</div><div class="ba-head now">Стало</div>
+      <p class="ba-cap"></p>
+      <figure class="shot"><img data-shot="multi-select-first-now" alt="спиннер в списке"><figcaption>спиннер в списке</figcaption></figure>
+      <figure class="shot"><img data-shot="multi-select-first-next" alt="скелет опций"><figcaption>скелет опций</figcaption></figure>
+    </div>
   </section>
+  <section class="panel" data-review="ds-multi-select" data-review-round="3" data-review-note-only>
+    <h2><code>ds-multi-select</code>: перезагрузка - что под оверлеем</h2>
+    <p class="q">Опции есть, идёт загрузка. Что накрывает оверлей?</p>
+      <div class="now-row">
+        <figure class="shot"><figcaption><span class="tag was">Сейчас (dev)</span>спиннер под опциями</figcaption><img data-shot="multi-select-today" alt="спиннер под опциями"></figure>
+      </div>
+      <p class="cap">Варианты: клик по карточке - выбор</p>
+      <div class="opts" role="group" aria-label="ds-multi-select">
+        <button type="button" class="opt" data-block="ds-multi-select" data-opt="B" data-name="B" aria-pressed="false">
+          <span class="rec">Рекомендую</span>
+          <span class="opt-title"><b>B</b> список и «выбрать все»</span>
+          <img data-shot="multi-select-list-select-all" alt="список и «выбрать все»">
+          <span class="pills"><span class="pill good">фильтр живой</span><span class="pill good">не выбрать устаревшее</span></span>
+        </button>
+        <button type="button" class="opt" data-block="ds-multi-select" data-opt="A" data-name="A" aria-pressed="false">
+          
+          <span class="opt-title"><b>A</b> только список</span>
+          <img data-shot="multi-select-list" alt="только список">
+          <span class="pills"><span class="pill good">фильтр живой</span><span class="pill bad">«выбрать все» по старому списку</span></span>
+        </button>
+      </div>
+    <details class="why"><summary>почему так</summary>
+      <p>Можно ли печатать во время перезагрузки: да, и нужно. Чаще всего перезагрузку и запускает ввод в фильтр, и поле, которое гаснет под пальцами, съедает буквы. Поэтому поле ввода никогда не накрываем. «Выбрать все» во время перезагрузки выбрал бы опции, которые вот-вот сменятся, поэтому оно уходит под оверлей вместе со списком (вариант B). Вариант A оставляет «выбрать все» живым над устаревшим списком. Высоты, px: поле 38.6, «выбрать все» 37, список 226.</p></details>
+  <ol data-review-history><li>2026-10-08 · «тут как будто оверлей на input сверху и select all можно не аплайить? или только на инпут не аплаить...» → нарисованы три варианта; рекомендую B: поле фильтра живое, «выбрать все» и список под оверлеем</li><li>2026-10-09 · «в деке 21-loading-states.html варианты нарисованы красиво но - было стало смешано в кучу. и если мне нужно выбирать a b c то должны же быть какие то кнопки? выбор? модули? краточки? не руками же мне всё прописывать» → варианты оверлея карточками B/A, клик выбирает; «опций нет» отдельным блоком «Было (dev) | Стало»</li></ol></section>
+  <section class="panel" data-review="ds-autocomplete" data-review-round="2">
+    <h2><code>ds-autocomplete</code>: загрузка списка</h2>
+    <div class="ba">
+      <div class="ba-head was">Было (dev)</div><div class="ba-head now">Стало</div>
+      <p class="ba-cap">Опций ещё нет</p>
+      <figure class="shot"><img data-shot="autocomplete-first-now" alt="спиннер в списке"><figcaption>спиннер в списке</figcaption></figure>
+      <figure class="shot"><img data-shot="autocomplete-first-next" alt="скелет опций"><figcaption>скелет опций</figcaption></figure>
+      <p class="ba-cap">Опции есть, идёт загрузка</p>
+      <figure class="shot"><img data-shot="autocomplete-reload-now" alt="спиннер под опциями"><figcaption>спиннер под опциями</figcaption></figure>
+      <figure class="shot"><img data-shot="autocomplete-reload-next" alt="опции под оверлеем"><figcaption>опции под оверлеем</figcaption></figure>
+    </div>
+  <ol data-review-history><li>2026-10-09 · «в деке 21-loading-states.html варианты нарисованы красиво но - было стало смешано в кучу. и если мне нужно выбирать a b c то должны же быть какие то кнопки? выбор? модули? краточки? не руками же мне всё прописывать» → две колонки «Было (dev) | Стало», одна тема за раз (переключатель вверху)</li></ol></section>
 
   <p class="src"><b>Источники, 2026-10-08.</b> Шаблоны графиков (<code>[pending]</code>), <code>select.component.html</code>, <code>multi-select.component.html</code>, <code>autocomplete.component.html</code> (строка со спиннером), <code>table.component.ts</code> (<code>loadingMode</code>), <code>bar-chart.component.ts</code> (<code>showsSkeleton</code>, <code>reloading</code>).</p>
 </main>
@@ -580,7 +638,39 @@
 "waterfall-chart-reload-now-dark": "data:image/webp;base64,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",
 "waterfall-chart-reload-now-light": "data:image/webp;base64,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"
 };
-  for (const image of document.querySelectorAll('img[data-shot]')) image.src = SHOTS[image.dataset.shot];
+
+  const PICKS_KEY = 'loading-states:picks';
+  const THEME_KEY = 'loading-states:theme';
+  let picks = {};
+  try { picks = JSON.parse(localStorage.getItem(PICKS_KEY)) || {}; } catch { picks = {}; }
+  let theme = 'light';
+  try { theme = localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light'; } catch {}
+  const cards = [...document.querySelectorAll('.opt')];
+  const paint = () => {
+    for (const card of cards) card.setAttribute('aria-pressed', String(picks[card.dataset.block] === card.dataset.opt));
+    for (const image of document.querySelectorAll('img[data-shot]')) {
+      image.onload = () => { image.style.width = image.naturalWidth / 2 + 'px'; };
+      image.src = SHOTS[image.dataset.shot + '-' + theme];
+    }
+    for (const button of document.querySelectorAll('[data-theme-pick]')) button.setAttribute('aria-pressed', String(button.dataset.themePick === theme));
+  };
+  for (const card of cards) card.addEventListener('click', () => {
+    picks[card.dataset.block] = card.dataset.opt;
+    try { localStorage.setItem(PICKS_KEY, JSON.stringify(picks)); } catch {}
+    paint();
+    window.deckReview?.refresh();
+  });
+  for (const button of document.querySelectorAll('[data-theme-pick]')) button.addEventListener('click', () => {
+    theme = button.dataset.themePick;
+    try { localStorage.setItem(THEME_KEY, theme); } catch {}
+    paint();
+  });
+  const pickName = (block) => cards.find((card) => card.dataset.block === block && card.dataset.opt === picks[block])?.dataset.name;
+  window.deckReviewHooks = {
+    extra: () => [...new Set(cards.map((card) => card.dataset.block))].filter(pickName).map((block) => block + ' - ' + pickName(block)).join('; '),
+    onReset: () => { picks = {}; try { localStorage.removeItem(PICKS_KEY); } catch {} paint(); },
+  };
+  paint();
 </script>
 <!-- deck-review -->
 <script>
