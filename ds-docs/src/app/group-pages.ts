@@ -95,6 +95,7 @@ import { MotionSection } from './sections/foundations/motion/motion.section';
 import { OpacitySection } from './sections/foundations/opacity/opacity.section';
 import { RadiusSection } from './sections/foundations/radius/radius.section';
 import { ScrollbarSection } from './sections/foundations/scrollbar/scrollbar.section';
+import { AccessibilitySection } from './sections/foundations/accessibility/accessibility.section';
 import { SpacingSection } from './sections/foundations/spacing/spacing.section';
 import { SurfaceLevelsSection } from './sections/foundations/surface-levels/surface-levels.section';
 import { ThemingSection } from './sections/foundations/theming/theming.section';
@@ -250,6 +251,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
     path: 'foundations',
     title: 'Foundations',
     sections: [
+      AccessibilitySection,
       BordersSection,
       BrowserTabSection,
       ChartsSection,
