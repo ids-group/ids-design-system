@@ -51,5 +51,5 @@
   }
 
   // Sits a gap of `--space-1` from its label, which a ring around a 24px box would cover.
-  @include target.min-size(14px, $ring-on-target: false);
+  @include target.min-size($ring-on-target: false);
 }

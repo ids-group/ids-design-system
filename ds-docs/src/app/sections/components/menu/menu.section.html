@@ -11,19 +11,73 @@
     Trigger-opened (overlay)
   </h3>
 
-  <p class="block-desc t-s">
-    A button opens the menu in a <code>ds-popover</code>. An item emits
-    <code>
-      pressed
-    </code> on click (unless disabled or opening a submenu) and
-    closes the overlay; click outside or <code>Esc</code> dismisses it.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      A button opens the menu in a <code class="t-mono-inline">ds-popover</code>.
+    </li>
+
+    <li>
+      An item emits <code class="t-mono-inline">pressed</code> on click (unless disabled or opening a submenu) and closes the overlay.
+    </li>
+
+    <li>
+      A click outside or <kbd>Esc</kbd> dismisses it.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
-    One Tab stop with roving focus: <kbd>ArrowUp</kbd> / <kbd>ArrowDown</kbd>
-    wrap, <kbd>Home</kbd> / <kbd>End</kbd> jump, a typed character moves to the
-    next item starting with it. Disabled items stay in the roving order.
+    One Tab stop, roving focus; disabled items stay in the roving order.
   </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Key
+        </th>
+
+        <th>
+          Moves
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <kbd>
+            ArrowUp
+          </kbd> / <kbd>ArrowDown</kbd>
+        </td>
+
+        <td>
+          Next / previous item, wrapping
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            Home
+          </kbd> / <kbd>End</kbd>
+        </td>
+
+        <td>
+          First / last item
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          A character
+        </td>
+
+        <td>
+          Next item starting with it
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="demo">
     <ds-button
@@ -503,12 +557,23 @@
     </div>
   </div>
 
-  <p class="block-desc t-s">
-    Tokens: <code>--ds-menu-*</code> (bg/border colour, min/max width, gap,
-    radius), <code>--ds-menu-item-*</code> (label/hover/error/quiet colours,
-    padding, font, description colour/size/max width, icon size, radius),
-    <code>
-      --ds-menu-divider-color/-spacing
-    </code>.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        --ds-menu-*
+      </code> - bg/border colour, min/max width, gap, radius.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        --ds-menu-item-*
+      </code> - label/hover/error/quiet colours, padding, font, description colour/size/max width, icon size, radius.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        --ds-menu-divider-color
+      </code> / <code class="t-mono-inline">-spacing</code>.
+    </li>
+  </ul>
 </docs-section>

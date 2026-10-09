@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -68,6 +69,7 @@ const SLOT_SLICES: readonly PieChartSlice[] = [
   selector: 'section-charts-pie-chart',
   standalone: true,
   imports: [
+    RouterLink,
     DocsReplayButtonComponent,
     DocsChartDataEditorComponent,
     DocsSectionComponent,

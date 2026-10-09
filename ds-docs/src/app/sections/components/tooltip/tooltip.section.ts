@@ -28,7 +28,9 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 export class TooltipSection {
   protected readonly truncate = signal(true);
 
-  protected readonly whenClippedSnippet = `[dsTooltipWhenClipped]="truncate ? ':scope > .cell' : false"`;
+  protected readonly whenClippedSnippet = `<span dsTooltipWhenClipped>…</span>
+<div dsTooltipWhenClipped=".label">…</div>
+<div [dsTooltipWhenClipped]="truncate ? ':scope > .cell' : false">…</div>`;
 
   protected readonly pinnedSnippet = `@use 'styles/pinned';
 

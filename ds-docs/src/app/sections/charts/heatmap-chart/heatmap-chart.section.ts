@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -47,7 +48,7 @@ const LATER_ROWS: readonly HeatmapChartRow[] = [
 @Component({
   selector: 'section-charts-heatmap-chart',
   standalone: true,
-  imports: [DocsSectionComponent, HeatmapChartComponent],
+  imports: [RouterLink, DocsSectionComponent, HeatmapChartComponent],
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './heatmap-chart.section.html',

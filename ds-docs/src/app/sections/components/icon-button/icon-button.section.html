@@ -16,32 +16,100 @@
     <code class="t-mono-inline">
       ariaLabel
     </code> is required. Variants are its
-    own, not
-    <code class="t-mono-inline">
-      ds-button
-    </code>'s:
-    <code class="t-mono-inline">
-      variant
-    </code> sets the fill (standard
-    chromeless · filled · tonal · outlined).
-    <code class="t-mono-inline">
-      color
-    </code>
-    tints <code class="t-mono-inline">filled</code>,
-    <code class="t-mono-inline">
-      tonal
-    </code> and the selected state;
-    <code class="t-mono-inline">
-      standard
-    </code> and
-    <code class="t-mono-inline">
-      outlined
-    </code> stay neutral at rest.
-    secondary/tertiary default to orange/violet, independent of
-    <code class="t-mono-inline">
-      --primary
-    </code>.
+    own, not <code class="t-mono-inline">ds-button</code>'s.
   </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          variant
+        </th>
+
+        <th>
+          Fill
+        </th>
+
+        <th>
+          color tints
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            standard
+          </code>
+        </td>
+
+        <td>
+          Chromeless
+        </td>
+
+        <td>
+          Selected state only; neutral at rest
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            filled
+          </code>
+        </td>
+
+        <td>
+          Solid
+        </td>
+
+        <td>
+          Yes
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            tonal
+          </code>
+        </td>
+
+        <td>
+          Tinted
+        </td>
+
+        <td>
+          Yes
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            outlined
+          </code>
+        </td>
+
+        <td>
+          Border
+        </td>
+
+        <td>
+          Selected state only; neutral at rest
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        secondary
+      </code> / <code class="t-mono-inline">tertiary</code> default to orange / violet, independent of <code class="t-mono-inline">--primary</code>.
+    </li>
+  </ul>
 
   <div class="brand-demo">
     <div class="demo-head">

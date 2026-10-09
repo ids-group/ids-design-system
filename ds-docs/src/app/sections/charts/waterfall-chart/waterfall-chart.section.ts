@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -41,6 +42,7 @@ const BELOW_ZERO: readonly WaterfallChartBar[] = [
   selector: 'section-charts-waterfall-chart',
   standalone: true,
   imports: [
+    RouterLink,
     DocsChartDataEditorComponent,
     DocsSectionComponent,
     WaterfallChartComponent,

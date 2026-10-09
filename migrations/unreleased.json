@@ -289,6 +289,27 @@
       "verify": "The built CSS has `border-radius:var(--focus-ring-radius)` inside `:where(:focus-visible)`, and a focused element with a fill keeps the corners it shows at rest."
     },
     {
+      "id": "table-truncated-link-clips-its-text",
+      "kind": "behavior",
+      "old": ".cell-clip",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "cell-clip",
+        "cell-link"
+      ],
+      "detect": [
+        ".cell-clip a",
+        ".cell-clip .cell-link",
+        ".cell-clip > a"
+      ],
+      "action": "None, unless a rule of yours for the link inside `.cell-clip` of a `ds-table` cell sets `display`, `overflow`, `white-space` or `text-overflow`: drop those declarations, the link clips its own text.",
+      "appliesWhen": "Only a `truncate` column whose cells are links (`link` on the column): the link is `a.cell-link.cell-clip-text` inside `span.cell-clip`. A truncated plain cell clips in `span.cell-clip-text`, and a link in a column without `truncate` is `a.cell-link` as before.",
+      "pitfall": "A rule for the old nesting still matches the link; one that resets its display or overflow lets the text run past the column without an ellipsis.",
+      "restore": null,
+      "verify": "A truncated link cell ends in an ellipsis at the column edge, and its focus ring is whole on all four sides."
+    },
+    {
       "id": "dropdown-empty-row-drops-t-s",
       "kind": "behavior",
       "old": ".empty",

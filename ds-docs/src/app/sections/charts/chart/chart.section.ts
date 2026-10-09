@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -121,6 +122,7 @@ const TRAFFIC_SERIES: readonly LineSeriesData[] = [
   selector: 'section-charts-chart',
   standalone: true,
   imports: [
+    RouterLink,
     RadioComponent,
     RadioGroupComponent,
     ChartComponent,

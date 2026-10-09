@@ -3,28 +3,39 @@
   eyebrow="Components"
   title="Stepper">
   <span lede>
-    Multi-step progress from <code class="t-mono-inline">steps</code> (labels) and a zero-based
-    <code class="t-mono-inline">
-      current
-    </code>: earlier nodes checked, current filled with the
-    accent, later ones outlined numerals.
-    <code class="t-mono-inline">
-      labelPosition="inline"
-    </code> puts captions beside nodes,
-    <code class="t-mono-inline">
-      orientation="vertical"
-    </code> stacks them,
-    <code class="t-mono-inline">
-      [clickable]="true"
-    </code> makes nodes buttons emitting
-    <code class="t-mono-inline">
-      (stepClicked)
-    </code>, and
-    <code class="t-mono-inline">
-      [errorSteps]
-    </code> marks errors, which override every other
-    state.
+    Multi-step progress: <code class="t-mono-inline">steps</code> (labels) and a
+    zero-based <code class="t-mono-inline">current</code>.
   </span>
+
+  <ul class="block-desc t-s">
+    <li>
+      Earlier nodes - checked. Current - filled with the accent. Later - outlined numerals.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        labelPosition="inline"
+      </code> - captions beside nodes.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        orientation="vertical"
+      </code> - stacks them.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [clickable]="true"
+      </code> - nodes are buttons emitting <code class="t-mono-inline">(stepClicked)</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [errorSteps]
+      </code> - marks errors, which override every other state.
+    </li>
+  </ul>
 
   <h3
     data-claude-design

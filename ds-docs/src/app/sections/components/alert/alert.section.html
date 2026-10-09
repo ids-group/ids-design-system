@@ -203,26 +203,58 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       announce
-    </code> (unset follows
+    </code>: unset follows
     <code class="t-mono-inline">
       DS_CONFIG.alert.announce
     </code>, then
     <code class="t-mono-inline">
       false
-    </code>) gives error and warning
-    <code class="t-mono-inline">
-      role="alert"
-    </code> +
-    <code class="t-mono-inline">
-      aria-live="assertive"
-    </code>, the others
-    <code class="t-mono-inline">
-      role="status"
-    </code> +
-    <code class="t-mono-inline">
-      polite
-    </code>. Unbound, it dev-warns when an
-    error or warning is silent from an unset key, or another variant announces
-    only because the key is <code class="t-mono-inline">true</code>.
+    </code>.
   </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Variant
+        </th>
+
+        <th>
+          Announced as
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          Error, warning
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            role="alert"
+          </code> + <code class="t-mono-inline">aria-live="assertive"</code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Others
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            role="status"
+          </code> + <code class="t-mono-inline">polite</code>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="block-desc t-s">
+    <li>
+      Unbound, it dev-warns when an error or warning is silent from an unset key, or another variant announces only because the key is <code class="t-mono-inline">true</code>.
+    </li>
+  </ul>
 </docs-section>
