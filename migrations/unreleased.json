@@ -43,7 +43,7 @@
         "dsTooltipClippedLead"
       ],
       "action": "Delete the `dsTooltipClippedLead` binding. A `ds-table` header with a `hint` needs nothing in its place. Where it carried other text, write it into the tooltip string as `'**' + lead + '**\n' + tip`. A subclass of TooltipDirective that declared `dsTooltipClippedLead` has nothing to rename any more.",
-      "appliesWhen": "Only an element that binds `dsTooltipClippedLead`, and a class that extends TooltipDirective. `dsTooltip`, `dsTooltipWhenClipped` and `dsTooltipTextSelector` are unchanged.",
+      "appliesWhen": "Only an element that binds `dsTooltipClippedLead`, and a class that extends TooltipDirective. `dsTooltip` keeps its signature; `dsTooltipTextSelector` is removed and `dsTooltipWhenClipped` widened, each in its own item.",
       "evidence": [
         "command:node tools/public-api-golden.mjs --diff v0.14.8"
       ],
@@ -65,7 +65,7 @@
         "[dsTooltipTextSelector]="
       ],
       "action": "Move the selector into `dsTooltipWhenClipped` and delete `dsTooltipTextSelector`: `dsTooltipWhenClipped dsTooltipTextSelector=\".label\"` becomes `dsTooltipWhenClipped=\".label\"`. Where `[dsTooltipWhenClipped]` is bound to a condition, bind the selector when it holds and `false` when it does not: `[dsTooltipWhenClipped]=\"truncate ? ':scope > .cell' : false\"`.",
-      "appliesWhen": "Only an element that sets `dsTooltipTextSelector`. A `dsTooltipWhenClipped` with no selector, `dsTooltip` and `dsDefinitionTerm` are unchanged.",
+      "appliesWhen": "Only an element that sets `dsTooltipTextSelector`. A `dsTooltipWhenClipped` with no selector still tests the host, and `dsTooltip` keeps its signature.",
       "evidence": [
         "command:node tools/public-api-golden.mjs --diff v0.14.8"
       ],
@@ -357,7 +357,7 @@
         "--ds-alert-enter-scale:",
         "ds-scale-in"
       ],
-      "action": "None, unless a alert must keep growing in: set `--ds-alert-enter-keyframes: ds-scale-in`.",
+      "action": "None, unless an alert must keep growing in: set `--ds-alert-enter-keyframes: ds-scale-in`.",
       "appliesWhen": "Every `ds-alert` as it is inserted.",
       "pitfall": "A `--ds-alert-enter-scale` set on its own now changes nothing: it is read only while `--ds-alert-enter-keyframes` is `ds-scale-in`.",
       "restore": ":root { --ds-alert-enter-keyframes: ds-scale-in; }",
@@ -596,10 +596,10 @@
         "ds-heatmap-chart {",
         "ds-heatmap-chart{"
       ],
-      "action": "None, unless the card must fill its container as before: set `inline-size: auto` on `ds-heatmap-chart`.",
+      "action": "None, unless the card must fill its container as before: set `inline-size: auto` on `ds-heatmap-chart` with more weight than the component's own host rule, such as `:root ds-heatmap-chart` in a global stylesheet; a bare `ds-heatmap-chart` selector there loses to it.",
       "appliesWhen": "Every ds-heatmap-chart: the host is `inline-size: fit-content`, capped at the container's width, so the card, its skeleton and its reload overlay are as wide as the grid. A grid wider than the container still scrolls inside it.",
       "pitfall": "In a row of equal dashboard cards the heatmap card is narrower than its neighbours, also in a grid or flex track that would stretch an auto-width item.",
-      "restore": "ds-heatmap-chart { inline-size: auto; }",
+      "restore": ":root ds-heatmap-chart { inline-size: auto; }",
       "verify": "An unstyled ds-heatmap-chart in a wide container is as wide as its grid and caption, and one with `inline-size: auto` fills the container."
     },
     {
@@ -730,8 +730,8 @@
       "verify": "Open a picker with a query that matches nothing and confirm the row is set in the app's sans face, not a serif."
     },
     {
-      "text": "Every component sets `box-sizing: border-box` on its host and its own elements, the inherited font on its form controls, zero margins on its headings and the base focus ring on its own focusable elements. An app that does not load `styles/reset` or `styles/focus` sees a default `ds-input` field at 40px instead of 41.2px tall, and one inside `ds-field-group` at 38.8px instead of 40px, and the library's focus ring where the browser's showed.",
-      "verify": "In an app without `styles/reset`, open a form and confirm a default `ds-input` field is 40px tall; tab to a `ds-number-stepper` step button and confirm the ring is the library's, not the browser's."
+      "text": "Every component sets `box-sizing: border-box` on its host and its own elements, the inherited font on its form controls, zero margins on its headings and the base focus ring on its own focusable elements. An app that does not load `styles/reset` or `styles/focus` sees component boxes sized as in an app that does, and the library's focus ring where the browser's showed.",
+      "verify": "In an app without `styles/reset`, open a form and confirm a default `ds-input` field is as tall as in an app that loads it; tab to a `ds-number-stepper` step button and confirm the ring is the library's, not the browser's."
     },
     {
       "text": "`ds-container` with `size=\"sm|md|lg\"` and the responsive rail of `ds-app-layout` fall back to the library's breakpoints when `--bp-*` is not set, so they work without `bp.emit-vars`; a `--bp-*` of yours still wins. The dev-mode warning about a missing `--bp-lg` is gone.",
@@ -745,7 +745,13 @@
       "text": "A `ds-funnel-chart` stage grows from 96% while it fades in instead of rising 4px, and the value labels of the bar, column, waterfall, heatmap, pie and funnel charts and the funnel's table rows fade in where they stand. A `ds-pie-chart` ring grows from 96% while it fades in, without the 30° turn.",
       "verify": "Load a funnel and a pie chart and confirm stages, ring and labels appear without travelling or turning."
     },
-    "The ESLint rules and the stylelint rule take optional `from` and `to` versions, as options of one rule or through a recommended-from config of the ESLint plugin, that leave out every removed or renamed name outside that range of releases. Without them nothing changes.",
+    {
+      "text": "The package ships an ESLint plugin, `@ids-group-ltd/ids-design-system/eslint`, with seven rules that flag removed or renamed inputs, outputs, values, selectors, imports, members and tokens, and a stylelint plugin, `@ids-group-ltd/ids-design-system/stylelint`, with `ids-design-system/no-removed-tokens`. Every rule takes optional `from` and `to` versions, as options of one rule or through `configs.recommendedFrom`, that leave out every removed or renamed name outside that range of releases; without them a rule lists every one back to 0.2.0.",
+      "verify": "In an app linting with the ESLint plugin, confirm its seven ids-design-system/ rules report a renamed input from a past release, and that from/to narrows them.",
+      "evidence": [
+        "command:node -e \"import('./eslint/index.mjs').then((m) => console.log(Object.keys(m.default.rules).length))\""
+      ]
+    },
     {
       "text": "The loading skeleton of ds-chart, ds-column-chart, ds-line-chart, ds-pie-chart, ds-funnel-chart, ds-waterfall-chart, ds-heatmap-chart and ds-scatter-chart takes the chart's shape at the drawn chart's size: axes with label placeholders and columns, a line, a ring in slices, narrowing stages over the stage table, floating steps, a cell grid, or the scatter's grid lines with no dots. A data-table disclosure keeps its room under it.",
       "verify": "Set `loading` with empty data on each chart and confirm the card keeps the height it has once data arrives."
