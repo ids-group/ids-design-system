@@ -746,7 +746,7 @@
       "verify": "Load a funnel and a pie chart and confirm stages, ring and labels appear without travelling or turning."
     },
     {
-      "text": "The package ships an ESLint plugin, `@ids-group-ltd/ids-design-system/eslint`, with seven rules that flag removed or renamed inputs, outputs, values, selectors, imports, members and tokens, and a stylelint plugin, `@ids-group-ltd/ids-design-system/stylelint`, with `ids-design-system/no-removed-tokens`. Every rule takes optional `from` and `to` versions, as options of one rule or through `configs.recommendedFrom`, that leave out every removed or renamed name outside that range of releases; without them a rule lists every one back to 0.2.0.",
+      "text": "The package ships an ESLint plugin, `@ids-group-ltd/ids-design-system/eslint`, with seven rules that flag removed or renamed inputs, outputs, values, selectors, imports, members and tokens, and a stylelint plugin, `@ids-group-ltd/ids-design-system/stylelint`, with `ids-design-system/no-removed-tokens`. Every rule takes optional `from` and `to` versions, as options of one rule or through `configs.recommendedFrom`, that leave out every removed or renamed name outside that range of releases; without them the token rules list every one back to 0.2.0 and the other ESLint rules back to 0.4.0.",
       "verify": "In an app linting with the ESLint plugin, confirm its seven ids-design-system/ rules report a renamed input from a past release, and that from/to narrows them.",
       "evidence": [
         "command:node -e \"import('./eslint/index.mjs').then((m) => console.log(Object.keys(m.default.rules).length))\""

@@ -116,7 +116,7 @@ Each report names the replacement, the version and the manifest item
 `stylelint --fix` renames a token that has a single replacement; a removed token is reported and left
 for you to resolve. Only stylesheets are read; the ESLint plugin below covers TypeScript and templates.
 
-The list holds every release since 0.4.0. When you upgrade across known versions, ask for those releases
+The list holds every release since 0.2.0. When you upgrade across known versions, ask for those releases
 only: `"ids-design-system/no-removed-tokens": [true, { "from": "0.13.4", "to": "0.14.5" }]` reports what
 changed after 0.13.4, up to and including 0.14.5, and stays quiet about the rest. Either bound can stand
 alone; without `to` the unreleased version counts too.
@@ -160,7 +160,7 @@ the plugin as `plugins: { 'ids-design-system': idsDesignSystem }` and name them:
 
 Each report names the replacement, the version and the manifest item, like the stylelint rule.
 
-Every rule lists every release since 0.4.0. When you upgrade across known versions, report only what
+`no-removed-tokens` lists every release since 0.2.0, the other rules every release since 0.4.0. When you upgrade across known versions, report only what
 changed in them: `idsDesignSystem.configs.recommendedFrom('0.13.4', '0.14.5')` is `recommended` with
 every rule set to `['error', { from: '0.13.4', to: '0.14.5' }]`, and a single rule takes the same options
 (`'ids-design-system/no-removed-inputs': ['error', { from: '0.13.4', to: '0.14.5' }]`). `from` is

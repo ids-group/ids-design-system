@@ -57,8 +57,8 @@
   `--x-warn` is not flagged inside `--x-warning`.
 
 - **Both plugins take a `from` and a `to` version, so an upgrade reports only what changed across
-  it.** Without a range every rule lists every removal and rename back to 0.2.0. With
-  `idsDesignSystem.configs.recommendedFrom('0.13.4', '0.14.5')`, `['error', { from: '0.13.4', to: '0.14.5' }]`
+  it.** Without a range the token rules list every removal and rename back to 0.2.0, and the other
+  ESLint rules back to 0.4.0. With `idsDesignSystem.configs.recommendedFrom('0.13.4', '0.14.5')`, `['error', { from: '0.13.4', to: '0.14.5' }]`
   on one ESLint rule, or `[true, { from: '0.13.4', to: '0.14.5' }]` on
   `ids-design-system/no-removed-tokens`, a removed or renamed name from 0.13.4 or earlier, or from
   after 0.14.5, is left out. `from` is exclusive and `to` inclusive; either can stand alone, and the
