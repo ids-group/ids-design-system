@@ -751,7 +751,8 @@
     entry per series, formatted by the chart's
     <code class="t-mono-inline">
       valueFormat
-    </code>.
+    </code>. Pinned: the panel takes the pointer (select text, click links).
+    Unpinned: the pointer passes to the plot.
     <code class="t-mono-inline">
       tooltipExtraGap
     </code> moves the panel
@@ -876,4 +877,50 @@
       [patterns]="seriesDashes"
       [interactive]="true" />
   </ds-chart>
+
+  <h3 class="block-title t-h4">
+    Loading
+  </h3>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, no data - axes, label placeholders, columns.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, marks on screen - kept under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and spinner.
+    </li>
+  </ul>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-chart
+        loading
+        [categories]="[]" />
+
+      <div class="state-cell-label">
+        Loading, no data
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-chart
+        loading
+        [categories]="orderMonths">
+        <svg:g
+          dsColumnSeries
+          seriesLabel="Orders"
+          [data]="orderColumns"
+          [showValues]="false" />
+      </ds-chart>
+
+      <div class="state-cell-label">
+        Reloading
+      </div>
+    </div>
+  </div>
 </docs-section>

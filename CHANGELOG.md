@@ -2,6 +2,12 @@
 
 ### Breaking
 
+- **`--ds-waterfall-chart-skeleton-height` is removed.** The waterfall skeleton draws floating
+  steps on the chart's own plot height; delete the declaration.
+
+- **`--chart-skeleton-h` is removed.** No component reads it, so a declaration of it sets nothing;
+  delete the declaration.
+
 - **`dsTooltipClippedLead` is removed from `TooltipDirective`.** A `ds-table` header with a `hint`
   needs nothing in its place: its `dsDefinitionTerm` button shows its own clipped label in bold
   above the hint. Anywhere else, delete the binding, or write the lead into the string:
@@ -14,7 +20,10 @@
   `dsTooltipWhenClipped=".label"`. Where the clip test is bound, bind the selector or `false`:
   `[dsTooltipWhenClipped]="truncate ? ':scope > .cell' : false"`. The input type widens from
   `boolean` to `boolean | string`, and `TooltipDirective` no longer exposes `hostElement` and
-  `isClipped()`.
+  `isClipped()`. Its text-resolution, positioning and focusable-ancestor internals were reworked
+  with the merge: the private `textElement`, `positionFor` and `listenToFocusableAncestor` are gone
+  and a private `ancestorFocusTrigger` is new, so a subclass that overrode or declared one of those
+  names must adjust.
 
 ### Added
 
@@ -23,14 +32,48 @@
   instead: `{ key: 'email', label: 'Email', truncate: true, minWidth: 160 }`. Ignored when `width`
   is a number.
 
+- **`styles/target` gives an icon-only control of yours the library's 24px target.**
+  `@include target.min-size($box)` last in its rule, with `$box` the size it is drawn at: the box
+  keeps its size, a transparent `::before` takes the pointer over `--hit-xs` around it, and the
+  focus ring is drawn on the edge of that target, 24px across. `$ring-on-target: false` leaves the
+  ring where the control's own rule draws it, for a control set beside text; `$position: null` for a
+  control that is already positioned.
+
+- **`skeletonCount` sets how many marks a chart's loading skeleton draws.** `ds-chart` and
+  `ds-column-chart` draw that many columns, `ds-pie-chart` that many slices and legend rows,
+  `ds-funnel-chart` that many stages and `ds-waterfall-chart` that many steps; the default is 5.
+  Once the data is known, the skeleton takes the data's own count. `ChartComponent`,
+  `ColumnChartComponent`, `PieChartComponent`, `FunnelChartComponent` and
+  `WaterfallChartComponent` gained the public `skeletonCount`. These classes, `LineChartComponent`,
+  `HeatmapChartComponent`, `ScatterChartComponent`, `SelectComponent`, `MultiSelectComponent` and
+  `AutocompleteComponent` gained and lost skeleton members, named in the migration manifest; a
+  subclass declaring one of those names must rename it.
+
 - **`styles/component-base` gives a component of yours the base the library's components carry.**
   `@include component-base.rules` first in a component stylesheet sets `border-box`, the inherited
   font on form controls, zero heading margins and the base focus ring on that component's own
   elements, whether or not the app loads `styles/reset` and `styles/focus`.
 
-- **The ESLint and stylelint plugins take a `from` and a `to` version, so an upgrade reports only what
-  changed across it.** Without them every rule lists every release since 0.4.0, as before. With
-  `idsDesignSystem.configs.recommendedFrom('0.13.4', '0.14.5')`, `['error', { from: '0.13.4', to: '0.14.5' }]`
+- **The package ships an ESLint plugin and a stylelint plugin that flag API and tokens the library
+  has removed or renamed.** Import them from `@ids-group-ltd/ids-design-system/eslint` and
+  `@ids-group-ltd/ids-design-system/stylelint`. The ESLint plugin is a flat-config object with seven
+  `problem` rules under the `ids-design-system/` namespace, each running on `**/*.ts` and `**/*.html`
+  (the template rules need your `@angular-eslint/template-parser`): `no-removed-inputs`,
+  `no-removed-outputs` and `no-removed-values` flag a template binding, listener or static attribute
+  value for an input, output or value the library dropped, renamed or remapped; `no-renamed-selectors`
+  flags a renamed element in templates and in `querySelector`, `closest`, `matches` and `css` strings;
+  `no-renamed-imports` flags a removed or renamed symbol imported from the package and autofixes a
+  pure rename across the file; `no-removed-members` flags a class member that now overrides nothing
+  on a class that extends or implements one of ours; and `no-removed-tokens` flags a removed or
+  renamed `--*` custom property in TS strings and template attributes and autofixes a rename.
+  `idsDesignSystem.configs.recommended` turns all seven on at `'error'`. The stylelint plugin adds
+  the one rule `ids-design-system/no-removed-tokens`, which flags removed or renamed `--*` properties
+  in declarations and values and autofixes a rename. The token rules match a whole name, so
+  `--x-warn` is not flagged inside `--x-warning`.
+
+- **Both plugins take a `from` and a `to` version, so an upgrade reports only what changed across
+  it.** Without a range the token rules list every removal and rename back to 0.2.0, and the other
+  ESLint rules back to 0.4.0. With `idsDesignSystem.configs.recommendedFrom('0.13.4', '0.14.5')`, `['error', { from: '0.13.4', to: '0.14.5' }]`
   on one ESLint rule, or `[true, { from: '0.13.4', to: '0.14.5' }]` on
   `ids-design-system/no-removed-tokens`, a removed or renamed name from 0.13.4 or earlier, or from
   after 0.14.5, is left out. `from` is exclusive and `to` inclusive; either can stand alone, and the
@@ -93,7 +136,7 @@
   markup in a string is interpreted as HTML. Nothing else is parsed: no italics, code, lists or
   tags. `dsTooltipWhenClipped` with no `dsTooltip` shows the host's text exactly as written, even
   where it contains `**`. `TooltipPanelComponent` gained the protected `segments`, and
-  `TooltipDirective` the private `contains`, `ownText` and `leadsWithOwnText`, so a subclass declaring one of those
+  `TooltipDirective` the private `ownText` and `leadsWithOwnText`, so a subclass declaring one of those
   names must rename it.
 
 - **`--ds-date-picker-max-width` caps the width of `ds-date-picker`.** It defaults to `100%`, so
@@ -128,13 +171,38 @@
 
 ### Changed
 
+- **`ds-chart`, `ds-column-chart`, `ds-line-chart`, `ds-pie-chart`, `ds-funnel-chart`,
+  `ds-waterfall-chart`, `ds-heatmap-chart` and `ds-scatter-chart` keep their plot on screen while
+  they reload.** With `loading` set and data on screen, the plot, its axes and its legend stay
+  under the scrim and spinner of `ds-loading-overlay`, which reaches 8px past the plot and leaves
+  the caption uncovered; the plot takes no focus or pointer until `loading` clears. They drew the
+  skeleton in its place. The skeleton shows only while there is no data: pass empty data while
+  `loading` is set to show it on every load. The internal `ChartStatesComponent` gained `reloading`,
+  `dataTable` and `shimmer`, and the internal `ds-chart-skeleton` element draws the axis skeleton.
+- **A chart's loading skeleton takes the chart's own shape and size.** `ds-chart` and
+  `ds-column-chart` draw the axes with label placeholders and columns, `ds-line-chart` a line,
+  `ds-pie-chart` its ring in slices with legend rows, `ds-funnel-chart` narrowing stages over the
+  stage table, `ds-waterfall-chart` a total, floating steps and a closing total, `ds-heatmap-chart`
+  a cell grid with its labels and scale, and `ds-scatter-chart` its grid lines and labels with no
+  dots. Each is laid out on the drawn chart's value space, plot height and gutters, and a data-table
+  disclosure keeps its room, so the card keeps its height when the data arrives. A
+  `--ds-line-chart-placeholder-height` now sizes the line skeleton with its axis labels included.
+- **`ds-heatmap-chart` is as wide as its grid.** The host is `inline-size: fit-content`, capped at
+  its container, so the card, the skeleton and the reload overlay match the grid instead of filling
+  the row; a wider grid still scrolls inside it. To fill the container again, set
+  `inline-size: auto` on it from a component stylesheet, or as `:root ds-heatmap-chart` from a global
+  one: a bare `ds-heatmap-chart { inline-size: auto }` there loses to the component's own host rule.
+- **`ds-select`, `ds-multi-select` and `ds-autocomplete` load into the list itself.** With
+  `loading` set and no options, the list shows three placeholder option rows; with options, they
+  stay under a `ds-loading-overlay` over the list, inert until `loading` clears. Both replace the
+  spinner row. In `ds-multi-select` the filter input and select all stay live. The overlay host
+  sits between the panel and the list and ships in `styles/dropdown-overlay`.
+
 - **Overlay panels, `ds-modal`, `ds-toast`, `ds-banner` and `ds-alert` enter with `ds-fade-in`
   instead of `ds-scale-in`.** A tooltip, popover, select or menu panel, a submenu, a modal card, a
   toast, a banner and an alert now fade in where they stand, without growing or travelling. The
   scale entrance re-rasterised the text as it ended, so the glyphs drew heavier during the entrance
-  and then thinned and stepped a pixel: at 150% display scale, 741 changed pixels on the tooltip,
-  1346 on a submenu, 4893 on a modal card and 4917 on a toast in the frame the animation ended, 0
-  with the fade. `--ds-overlay-enter-scale`, `--ds-overlay-enter-offset`, `--ds-modal-enter-scale`,
+  and then thinned and stepped a pixel as it settled; the fade does not. `--ds-overlay-enter-scale`, `--ds-overlay-enter-offset`, `--ds-modal-enter-scale`,
   `--ds-toast-enter-scale`, `--ds-banner-enter-scale` and `--ds-alert-enter-scale` still work once the
   matching `--ds-*-enter-keyframes` is set to `ds-scale-in` or `ds-slide-in`.
 - **A closing `ds-toast` fades where it stands.** It rose 8px while it faded.
@@ -149,7 +217,8 @@
   the pointer leaves that triangle or rests in it for 300ms, and an item it rested on then opens
   its own submenu. Moving from the submenu back onto its item keeps it open.
   `MenuItemComponent` gained the public `activateHover` and the private `aim`. A subclass
-  declaring one of those names must rename it.
+  declaring one of those names must rename it. It lost the private `closeTimer` and
+  `clearCloseTimer`, so a subclass member of either name no longer collides.
 
 - **`text-clip.single-line-ellipsis` clips the inline axis only.** It clipped both axes with a
   4px margin, which a font taller than the line box by more than that overran. Ink above and
@@ -204,21 +273,29 @@
 
 ### Fixed
 
+- **A clipped `dsTooltipWhenClipped` value is reachable by keyboard wherever it sits.** A host
+  that was not focusable, inside no focusable control (a code in a clickable card or row, a value in
+  a plain table cell), showed its full text on hover only. It now takes `tabindex="0"` while it is
+  clipped, so Tab stops on it and opens the tip, and it loses the stop once its text fits. A host
+  that is focusable, sits inside a control or widget role, or holds a control is left as it was; a
+  `tabindex` you set is never touched, and `tabindex="-1"` keeps a clipped value out of the Tab order.
+
 - **The keyboard focus ring is rounded on elements that declare no radius.** The close buttons of
   `ds-banner`, `ds-alert`, `ds-toast`, `ds-drawer` and `ds-modal-card`, the `ds-dropzone` remove
   button, the `ds-table` column filter button and cell link, a focusable `ds-sparkline` and
   `ds-tabs` panel, and a middle `ds-accordion-item` header drew a square ring; they take
-  `--focus-ring-radius` now. The `ds-number-stepper` step buttons follow the box's rounded corners.
+  `--focus-ring-radius` now. The `ds-number-stepper` step buttons and the `ds-split-button` segments
+  round only their outer corners and keep their shared seam square.
   The radius is set at zero specificity in `styles/focus`, and in each component's base layer for
   its own elements, so any radius an element declares wins; an element of yours that paints a fill or border and declares none rounds its corners while
   focused. Declare its `border-radius` to keep it square.
 
 - **The close `×` sits in the centre of its box and focus ring.** The close buttons of `ds-banner`,
-  `ds-alert`, `ds-toast`, `ds-drawer` and `ds-modal-card` and the `ds-dropzone` remove button laid
-  the icon on a text line, up to 2px below or beside the centre of a box that was not square. The
-  box is square now and centres the icon: 20px in `ds-banner`, 18px in `ds-alert`, `ds-toast` and
-  `ds-dropzone`, 24px in `ds-drawer` and `ds-modal-card`. The banner and dropzone buttons are 8px
-  narrower.
+  `ds-alert`, `ds-toast` and the `ds-dropzone` remove button laid the icon on a text line, up to 2px
+  below or beside the centre of a box that was not square; the `ds-drawer` close icon sat low in a
+  box that was already square. They centre the icon in a square box now: 20px in `ds-banner`, 18px
+  in `ds-alert`, `ds-toast` and `ds-dropzone`, 24px in `ds-drawer`. The banner and dropzone buttons
+  are 8px narrower.
 
 - **The `ds-table` column filter button is a 24px target.** It was the 12px icon alone, so its focus
   ring hugged the icon. The target grows around the icon without changing the header height; the
@@ -226,19 +303,39 @@
   4px sooner. The button is at full opacity while focused.
 
 - **A `ds-table` cell link's focus ring clears the text.** It was drawn inward, over the first and
-  last letter; it is drawn around the text now.
+  last letter; it is drawn around the text now. In a `truncate` column the link clips its own text,
+  so the ring keeps the sides the cell's clip cut off; the cell's tooltip and ellipsis are as before.
+
+- **The focus ring clears the text of a `ds-table` header label, a `ds-list-item` and a
+  `ds-breadcrumbs` link.** It was drawn inward, over the first and last letter; it is drawn 2px
+  outside the text now, in the padding already around it. Nothing moves at rest, and a header
+  term's pressed fill keeps its size.
+
+- **Every icon-only control takes the pointer over at least `--hit-xs` (24px).** The close and
+  remove buttons of `ds-alert`, `ds-banner`, `ds-toast`, `ds-dropzone` and `ds-tag`; the clear `×`
+  of `ds-input`, `ds-search`, `ds-select`, `ds-autocomplete`, `ds-multi-select`, `ds-time-picker`
+  and the `ds-sidenav-footer` search; the `ds-input` password toggle, the `ds-date-picker` calendar
+  toggle, the `ds-description-item` copy button, the `ds-bar-chart` row toggle, the arrows of the
+  `ds-table` width and column panels, an icon-only `ds-breadcrumbs` item and `ds-info-hint` took a
+  click only on their own box, under 24px on at least one side. Each keeps the size it is drawn at and takes the pointer
+  over 24px around it; nothing around it moves. Its focus ring is drawn on the edge of that target,
+  24px across, except on `ds-info-hint` and an icon-only breadcrumb, whose ring stays on the icon
+  beside their text. Raising `--hit-xs` raises every one of these targets. The `ds-input` clear button shows its
+  own focus ring; it was cut away with its icon.
+
+- **The `ds-date-picker` month and year arrows sit in the centre of their button.** The browser's
+  button padding left the 14px icon 1px right of the centre of its 24px box.
 
 - **A tooltip and a `ds-menu-item` submenu close when anything under them scrolls.** Inside an
-  `overflow: auto` container they stayed where they opened while their trigger scrolled away, a
-  pinned tooltip included. They close now on a scroll of the window or of any scroll container, as
+  `overflow: auto` container they stayed where they opened while their trigger scrolled away. They
+  close now on a scroll of the window or of any scroll container, as
   `ds-popover` and the picker panels already did; a pinned tooltip unpins.
 - **A bordered `ds-table`'s reload overlay follows its rounded corners.** The scrim over the rows
   ended in square bottom corners outside the rounded border; it now takes the table's radius,
   `--ds-table-radius` or `--ds-radius-control`.
 
 - **A tooltip's arrow points at the centre of its trigger.** It sat at the middle of the panel, so
-  a panel pushed off a viewport edge pointed past a trigger near that edge, 41px off for a button
-  at the right edge.
+  a panel pushed off a viewport edge pointed past a trigger near that edge.
 
 - **A `<div actions>` wrapper lays its buttons out like buttons projected one by one.** In the
   footer of `ds-modal`, `ds-modal-card`, `ds-drawer` and `ds-bottom-sheet`, the buttons inside a
@@ -262,7 +359,9 @@
   `tooltipTemplate` clicked; the panel's content ignored the pointer even while its pane was pinned,
   so a press on it went through to the pane. An unpinned tooltip still lets the pointer through to
   the plot, and a `pointer-events: auto` you set on an element of your `tooltipTemplate` is still
-  what makes it clickable while `tooltipLingerMs` keeps an unpinned panel open.
+  what makes it clickable while `tooltipLingerMs` keeps an unpinned panel open. The internal
+  `ChartTooltipDirective` behind `dsChartTooltip` lost the private `closeOnEscape`, so a subclass
+  member of that name no longer collides.
 - **A `truncate` column dragged with `dsTableResize` clips at its dragged width.** A column with a
   `width` kept cutting its text at that width after being dragged wider, and could not be dragged
   narrower than it plus its padding.
@@ -297,8 +396,7 @@
   or `styles/focus`.** Each component now sets `box-sizing: border-box` on its host and its own
   elements, puts its form controls in the inherited font, clears its heading margins and draws the
   base focus ring on its own focusable elements. Without `styles/reset`, a default `ds-input` field
-  grew from 40px to 41.2px tall, a `ds-input` inside `ds-field-group` from 38.8px to 40px, and a
-  host with a border took the browser's `content-box`; without `styles/focus`, buttons such as the
+  and a `ds-input` inside `ds-field-group` grew taller, and a host with a border took the browser's `content-box`; without `styles/focus`, buttons such as the
   `ds-number-stepper` steps and the close buttons of `ds-banner`, `ds-toast`, `ds-modal-card` and
   `ds-drawer` showed the browser's own focus ring. A height animation such as an expanding
   `ds-sidenav-group` animates without the reset as well.
@@ -318,6 +416,8 @@
 
 | Delete | Why | Replace with |
 | --- | --- | --- |
+| `--ds-waterfall-chart-skeleton-height:` | the waterfall skeleton draws floating steps on the chart's own plot height and reads no height token | nothing |
+| `--chart-skeleton-h:` | no component reads the token | nothing |
 | `@use 'styles/skeleton-shimmer'` | the partial emits nothing; `ds-skeleton` styles its own reduced-motion stop | nothing |
 | a hand-built info button: `name="info"` on a `ds-icon` inside a `<button>` that carries `dsTooltip` | `ds-info-hint` renders the button, the icon and the pinned tooltip | `<ds-info-hint ariaLabel="…" text="…" />` |
 | a hand-built term button styled with `underline dotted` that carries `dsTooltip` | `dsDefinitionTerm` carries the underline, the focus ring, the keyboard access and the pinned tooltip | `<span dsDefinitionTerm="…">` |
@@ -327,6 +427,7 @@
 | `--ds-toast-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of a toast | nothing |
 | `--ds-banner-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of a banner | nothing |
 | `--ds-alert-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of an alert | nothing |
+| `tabindex="0"` added to a `dsTooltipWhenClipped` host only so the keyboard reaches it | the host takes `tabindex="0"` by itself while it is clipped, and no stop while its text fits | nothing; keep it where the value must stay a tab stop when it fits |
 
 ## 0.14.8 — 2026-10-06
 

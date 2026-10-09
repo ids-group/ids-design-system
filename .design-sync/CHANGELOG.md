@@ -17,6 +17,44 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **`ds-info-hint` and `ds-chart-skeleton` have usage docs and sections.** The design agent reads
+  `InfoHint` as the 14px help or info icon button with a hover, focus and click-pinned tip, and
+  `ChartSkeleton` as the loading placeholder a chart draws itself. Their cards resolve to the
+  `components/tooltip` and `charts/chart` sections.
+
+- **`ds-info-hint` has a card.** The Tooltip chapter's Info hint block carries
+  `data-claude-design` and `data-for="info-hint"`.
+
+- **The chart docs describe loading as skeleton or reload.** The design agent reads a chart's
+  skeleton as the no-data state and a reload with data as the plot under `ds-loading-overlay`.
+  `Chart`, `ColumnChart`, `PieChart`, `FunnelChart` and `WaterfallChart` list `skeletonCount`;
+  `ChartSkeleton` shows only with no data; `HeatmapChart` gives its `fit-content` host and the
+  `:root` rule that fills the row.
+
+- **The `BarChart` doc lists the row's `children`, `hint`, `emphasis`, `showPercent` and
+  `detached`, and `labelPosition`.** A `hint` or `children` on any row makes the chart a `group`.
+
+- **The `TooltipPanel`, `LoadingOverlay`, `DatePicker` and picker docs list the new API.**
+  `TooltipPanel` takes `arrow` and renders `**bold**`; `--ds-loading-overlay-radius` and
+  `--ds-date-picker-max-width` are named; `Select`, `MultiSelect` and `Autocomplete` describe
+  `loading` as placeholder rows or rows under the overlay.
+
+### Build
+
+- **`build-cards` reads markup inside a quoted attribute as part of the value.** Tooltip's
+  `[dsTooltip]="'<b>Tags</b> ...'"` stays inside its tag, so every later block of the chapter can
+  carry a card.
+
+- **`[dsDefinitionTerm]` is on the hand-maintained surface.** The elements route generates no
+  wrapper for it: a card has no hover or click to show its definition, and `ds-table` applies it
+  internally.
+
+- **`COMMANDS.md` describes the CI freeze.** `build-design-sync.sh` installs chromium, measures and
+  freezes the cards; `check-frozen` asserts the split against `live-cards.txt`. `MANUAL-SURFACE.md`
+  counts 32 aliased components of 96 and eight `HOST_INPUTS` entries.
+
 ## 0.14.8 — 2026-10-06
 
 ### Build

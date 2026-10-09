@@ -172,4 +172,50 @@
     </code> for
     every chart.
   </p>
+
+  <h3 class="block-title t-h4">
+    Loading
+  </h3>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, no data - grid lines and labels, no dots.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, points on screen - kept under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and spinner.
+    </li>
+  </ul>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-scatter-chart
+        dataTable="none"
+        loading
+        xLabel="Weight, kg"
+        yLabel="Cost"
+        [data]="[]" />
+
+      <div class="state-cell-label">
+        Loading, no data
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-scatter-chart
+        dataTable="none"
+        loading
+        xLabel="Weight, kg"
+        yLabel="Cost"
+        [data]="oneSeries" />
+
+      <div class="state-cell-label">
+        Reloading
+      </div>
+    </div>
+  </div>
 </docs-section>

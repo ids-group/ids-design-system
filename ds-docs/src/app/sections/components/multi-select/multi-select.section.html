@@ -12,8 +12,8 @@
     'empty-template',
   ]">
   <span lede>
-    Chip multi-select over a checkbox list, with search, keyboard navigation
-    and overflow collapse; for sets too large to scan, use autocomplete.
+    Chip multi-select over a checkbox list, with search, keyboard navigation and
+    overflow collapse; for sets too large to scan, use autocomplete.
   </span>
 
   <docs-nonmodal-note />
@@ -56,15 +56,10 @@
   <p class="block-desc t-s">
     <code>
       maxVisibleChips
-    </code> defaults to <code>"fit"</code>: chips that fit,
-    the rest behind "+N more", re-split on resize. A number is a ceiling,
-    lowered when the trigger is narrow.
-    <code>
-      "all"
-    </code> shows every chip and grows the trigger. Same on
-    <code>
-      ds-autocomplete
-    </code>.
+    </code> defaults to <code>"fit"</code>: chips that
+    fit, the rest behind "+N more", re-split on resize. A number is a ceiling,
+    lowered when the trigger is narrow. <code> "all" </code> shows every chip
+    and grows the trigger. Same on <code> ds-autocomplete </code>.
   </p>
 
   <div class="demo-panel">
@@ -106,11 +101,9 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       triggerDisplay="labels"
-    </code> names the selection in
-    the compact footprint, cut to width with the rest behind &laquo;+N&raquo;.
-    <code class="t-mono-inline">
-      selectAll
-    </code> takes
+    </code> names the
+    selection in the compact footprint, cut to width with the rest behind
+    &laquo;+N&raquo;. <code class="t-mono-inline"> selectAll </code> takes
     <code class="t-mono-inline">
       'group'
     </code> or
@@ -164,8 +157,8 @@
     </strong> - the threshold at which the row appears.
     <code class="t-mono-inline">
       DS_CONFIG.picker.searchable
-    </code> sets it app-wide; inputs
-    override it.
+    </code> sets it
+    app-wide; inputs override it.
     <code class="t-mono-inline">
       searchPlaceholder
     </code> defaults to
@@ -211,8 +204,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       triggerDisplay="count"
-    </code> shows a caption and
-    count badge at intrinsic width, fixed for filter toolbars. A projected
+    </code> shows a caption
+    and count badge at intrinsic width, fixed for filter toolbars. A projected
     <code class="t-mono-inline">
       dsPickerTrigger
     </code> WINS:
@@ -322,8 +315,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Groups and flat options mix in one <code class="t-mono-inline">options</code>
-    input, in the order given. A group's <code class="t-mono-inline">disabled</code>
+    Groups and flat options mix in one
+    <code class="t-mono-inline">
+      options
+    </code> input, in the order given. A
+    group's <code class="t-mono-inline">disabled</code>
     disables all its options. Filtering hides a group with no matches.
   </p>
 
@@ -343,19 +339,19 @@
   </h3>
 
   <p class="block-desc t-s">
-    Default <code class="t-mono-inline">width="fill"</code> fills the
-    container, panel matching the trigger.
+    Default <code class="t-mono-inline">width="fill"</code> fills the container,
+    panel matching the trigger.
     <code class="t-mono-inline">
       width="content"
-    </code> hugs the trigger's content,
-    which floors the panel width;
+    </code> hugs the trigger's
+    content, which floors the panel width;
     <code class="t-mono-inline">
       --ds-dropdown-panel-min-width
     </code> and
     <code class="t-mono-inline">
       --ds-dropdown-panel-max-width
-    </code> bound it. Overlong
-    labels get an ellipsis and hover tooltip.
+    </code> bound it.
+    Overlong labels get an ellipsis and hover tooltip.
   </p>
 
   <p class="block-desc t-s">
@@ -454,17 +450,14 @@
     <code class="t-mono-inline">
       icon
     </code> renders before its label at 16px -
-    the same
-    <code class="t-mono-inline">
-      DsOption
-    </code> field as
+    the same <code class="t-mono-inline"> DsOption </code> field as
     <code class="t-mono-inline">
       ds-select
     </code> and
     <code class="t-mono-inline">
       ds-autocomplete
-    </code>. Use it for glyph-recognised sets like priority. Chips stay
-    text-only to save room.
+    </code>. Use it for
+    glyph-recognised sets like priority. Chips stay text-only to save room.
   </p>
 
   <div class="demo-panel">
@@ -488,14 +481,37 @@
     <code class="t-mono-inline">
       filterWith="none"
     </code> renders your options
-    unfiltered.
+    unfiltered. <code class="t-mono-inline"> dsEmptyTemplate </code> replaces
+    the No-matches row. The panel emits
     <code class="t-mono-inline">
-      loading
-    </code> swaps the empty row for a
-    spinner; <code class="t-mono-inline">dsEmptyTemplate</code> replaces the
-    No-matches row. The panel emits <code class="t-mono-inline">opened</code>
-    (fetch first here) and <code class="t-mono-inline">closed</code>.
+      opened
+    </code> (fetch first here) and
+    <code class="t-mono-inline">
+      closed
+    </code>.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, no options - three placeholder
+      rows.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, with options - under a
+      <code class="t-mono-inline">
+        ds-loading-overlay
+      </code>, inert until
+      <code class="t-mono-inline">
+        loading
+      </code> clears; filter input and select
+      all stay live.
+    </li>
+  </ul>
 
   <div class="demo-panel">
     <div class="ms-demo">
@@ -578,8 +594,8 @@
     </code> reaches the row as
     <code class="t-mono-inline">
       aria-describedby
-    </code> for screen readers - try the
-    "On leave" rows.
+    </code> for screen readers -
+    try the "On leave" rows.
   </p>
 
   <div class="demo-panel">
@@ -609,8 +625,8 @@
     </code> takes focus without opening,
     <code class="t-mono-inline">
       clearable
-    </code> shows the shared clear button,
-    and <code class="t-mono-inline">name</code> reaches the trigger.
+    </code> shows the shared clear
+    button, and <code class="t-mono-inline">name</code> reaches the trigger.
   </p>
 
   <div class="demo-panel">

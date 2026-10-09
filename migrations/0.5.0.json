@@ -299,11 +299,13 @@
       "action": "Build after upgrading, then rename your own member or mark it `override` wherever the compiler reports a collision with a class in `detect`. Delete an override of a member the class lost.",
       "appliesWhen": "Only a class that extends one of the classes in `detect`. A consumer who uses the elements in templates needs nothing from this item.",
       "pitfall": "`private` and `protected` give no protection: a member you redeclare collides with a base member of any visibility. A member of yours that replaced a lost one no longer replaces anything, and the component stops calling it.",
-      "note": "`CardComponent` gained `interactive`. `ColorPickerComponent` and `MultiSelectComponent` each gained `ngOnDestroy`. `NumberStepperComponent` gained `ariaLabel`. `TabComponent` gained `value`. `ToastComponent` gained `isLoading`. `ToastService` gained `toastConfig`. `DrawerComponent` gained `ngOnDestroy` and `placement`. `AccordionComponent`, `AvatarComponent`, `CheckboxComponent`, `InputComponent`, `PopoverComponent` and `SidenavItemComponent` each gained 3. `AccordionItemComponent`, `BadgeComponent`, `BottomSheetComponent`, `ModalComponent`, `SelectComponent` and `TextareaComponent` each gained 4. `StepperComponent` gained 5. `TableComponent` gained 6. `RadioComponent` gained 7. `MenuItemComponent` gained 17. `DatePickerComponent` gained 46 and lost `displayLabel` and `trigger`. `SwitchComponent` gained 4 and lost `classes`. `TabsComponent` gained 10 and lost `selectedTemplate` and `tabsClasses`. `ToastRegionComponent` gained 5 and lost `entries`.",
+      "note": "`CardComponent` gained `interactive`. `ColorPickerComponent` and `MultiSelectComponent` each gained `ngOnDestroy`. `NumberStepperComponent` gained `ariaLabel`. `TabComponent` gained `value`. `ToastComponent` gained `isLoading`. `ToastService` gained `toastConfig`. `DrawerComponent` gained `ngOnDestroy` and `placement`. `AccordionComponent`, `AvatarComponent`, `CheckboxComponent`, `InputComponent`, `PopoverComponent` and `SidenavItemComponent` each gained 3. `AccordionItemComponent`, `BadgeComponent`, `BottomSheetComponent`, `ModalComponent`, `SelectComponent` and `TextareaComponent` each gained 4. `StepperComponent` gained 5. `TableComponent` gained 6. `RadioComponent` gained 7. `MenuItemComponent` gained 17. `DatePickerComponent` gained 46 and lost `displayLabel` and `trigger`. `SwitchComponent` gained 4 and lost `classes`. `TabsComponent` gained 10 and lost `selectedTemplate` and `tabsClasses`. `ToastRegionComponent` gained 5 and lost `entries`. `AutocompleteComponent` (the renamed `ComboboxComponent`) gained 11.",
       "verify": "The app builds with no error naming a class listed in `detect`, and every member of such a subclass that shares a base member's name is marked `override`.",
       "searchHints": [
         "extends AccordionComponent",
         "extends AccordionItemComponent",
+        "extends AutocompleteComponent",
+        "extends ComboboxComponent",
         "extends AvatarComponent",
         "extends BadgeComponent",
         "extends BottomSheetComponent",
@@ -336,6 +338,9 @@
         "AccordionComponent",
         "extends AccordionItemComponent",
         "AccordionItemComponent",
+        "extends AutocompleteComponent",
+        "AutocompleteComponent",
+        "extends ComboboxComponent",
         "extends AvatarComponent",
         "AvatarComponent",
         "extends BadgeComponent",
@@ -395,7 +400,7 @@
   "informational": [
     "New ds-time-picker (24h/12h via provideDsConfig, range mode, CVA) — additive.",
     "Selection controls gain size + required; standalone ds-radio gains invalid/hint; input/textarea maxLength counter; date-picker minDate/maxDate/disabledDate/presets + locale/dateFormat/firstDayOfWeek/defaultMonth manual masked entry; select clearable/icons/readOnly; autocomplete optionGroups/allowCreate/width=content; table expandable rows; modal closeOnBackdrop/persistent/xl/fullscreen; drawer placement/sm; bottom-sheet snapPoints; toast loading/promise/maxVisible; menu dividers/submenus; popover arrow/placement; tabs lazy/scrollable/closable/vertical; accordion single-open/item disabled; stepper clickable/errorSteps/vertical; sidenav collapsed tooltip; badge count/max; avatar status/fallbackIcon — all additive.",
-    "Public --ds-* customization token sweep across 47 existing components (182 new names) — purely additive resolvers, zero visual change when unset, except --ds-search-maxw, whose default moved from 320px to none (its own item).",
+    "Public --ds-* customization token sweep across 47 existing components — purely additive resolvers, zero visual change when unset, except ds-search, whose max-width default moved from 320px (the removed global --search-maxw) to none through the new --ds-search-maxw (its own item).",
     "Visual-only: rounded press feedback (+ --ds-press-brightness/--ds-press-scale tuning tokens) and native tap-highlight suppression; accessibility hardening across overlays/pickers/fields/cards (dialog semantics, Tab close, role=alert re-announce, labels)."
   ],
   "deleteList": []

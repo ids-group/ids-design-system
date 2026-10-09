@@ -70,6 +70,18 @@
     gap: var(--_option-row-gap);
   }
 
+  // The overlay host stands between the panel and the list, so it carries the list's flex sizing.
+  .list-overlay {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .option.is-skeleton {
+    cursor: default;
+    pointer-events: none;
+  }
+
   .optgroup {
     list-style: none;
     display: flex;

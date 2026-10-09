@@ -158,6 +158,9 @@ export class ScatterChartComponent
     height: SCATTER_VIEW_HEIGHT - CATEGORY_GUTTER - EDGE_GUTTER,
   };
 
+  protected readonly plotBottom = this.plot.top + this.plot.height;
+  protected readonly plotRight = this.plot.left + this.plot.width;
+
   protected readonly isEmpty = computed(() =>
     this.data().every((series) => series.data.length === 0),
   );
@@ -262,9 +265,6 @@ export class ScatterChartComponent
     }));
   });
 
-  protected readonly plotBottom = this.plot.top + this.plot.height;
-  protected readonly plotRight = this.plot.left + this.plot.width;
-
   protected readonly multiSeries = computed(() => this.data().length > 1);
 
   /** The series named in the legend under the pointer, which fades the rest. */
@@ -337,7 +337,29 @@ export class ScatterChartComponent
     () => this.tableOpen() || this.dataTableResolved() === 'visible',
   );
 
-  protected readonly skeletonHeight = `${SCATTER_VIEW_HEIGHT}`;
+  /** Where the drawn chart puts its grid lines and labels, as shares of the box, which keeps the
+   *  drawn chart's aspect ratio. Marks are left out: no dots while loading. */
+  protected readonly skeletonLayout = (() => {
+    const share = (value: number, of: number) => `${(value / of) * 100}%`;
+    const steps = [0, 0.25, 0.5, 0.75, 1];
+
+    return {
+      plotLeft: share(this.plot.left, SCATTER_VIEW_WIDTH),
+      plotWidth: share(this.plot.width, SCATTER_VIEW_WIDTH),
+      labelEnd: share(
+        SCATTER_VIEW_WIDTH - this.plot.left + 8,
+        SCATTER_VIEW_WIDTH,
+      ),
+      categoryTop: share(this.plotBottom + 10, SCATTER_VIEW_HEIGHT),
+      titleTop: share(this.plotBottom + 26, SCATTER_VIEW_HEIGHT),
+      rows: steps.map((step) =>
+        share(this.plot.top + step * this.plot.height, SCATTER_VIEW_HEIGHT),
+      ),
+      columns: steps.map((step) =>
+        share(this.plot.left + step * this.plot.width, SCATTER_VIEW_WIDTH),
+      ),
+    };
+  })();
 
   /** Flattened so one index addresses a mark (`chartActiveMark` counts marks). */
   private readonly flatMarks = computed(() =>

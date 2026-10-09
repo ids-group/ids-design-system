@@ -634,7 +634,7 @@
     <code class="t-mono-inline">
       --ds-line-chart-placeholder-height
     </code> when
-    set; the plot reads only
+    set (axis labels included); the plot reads only
     <code class="t-mono-inline">
       --ds-line-chart-plot-height
     </code>.
@@ -1004,11 +1004,23 @@
         <ds-line-chart
           dataTable="none"
           loading
+          [categories]="[]"
+          [series]="[]" />
+
+        <div class="state-cell-label">
+          Loading, no data
+        </div>
+      </div>
+
+      <div class="state-cell">
+        <ds-line-chart
+          dataTable="none"
+          loading
           [categories]="loadingCategories()"
           [series]="loadingSeries()" />
 
         <div class="state-cell-label">
-          Loading
+          Reloading
         </div>
 
         <docs-line-chart-data-editor

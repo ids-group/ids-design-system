@@ -463,6 +463,42 @@
     </div>
   </div>
 
+  <h3 class="block-title t-h4">
+    Skeleton count
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      skeletonCount
+    </code> - skeleton columns while the data's count is
+    unknown. Default <code class="t-mono-inline">5</code>.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-column-chart
+        dataTable="none"
+        loading
+        [data]="[]" />
+
+      <div class="state-cell-label">
+        skeletonCount = 5 (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-column-chart
+        dataTable="none"
+        loading
+        [skeletonCount]="12"
+        [data]="[]" />
+
+      <div class="state-cell-label">
+        skeletonCount = 12
+      </div>
+    </div>
+  </div>
+
   <details class="edge-cases">
     <summary>
       <h3 class="block-title t-h4">
@@ -495,10 +531,21 @@
         <ds-column-chart
           dataTable="none"
           loading
+          [data]="[]" />
+
+        <div class="state-cell-label">
+          Loading, no data
+        </div>
+      </div>
+
+      <div class="state-cell">
+        <ds-column-chart
+          dataTable="none"
+          loading
           [data]="loadingPoints()" />
 
         <div class="state-cell-label">
-          Loading
+          Reloading
         </div>
 
         <docs-chart-data-editor [(rows)]="loadingPoints" />

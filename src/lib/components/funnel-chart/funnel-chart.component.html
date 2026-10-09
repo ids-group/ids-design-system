@@ -5,7 +5,10 @@
   [caption]="caption()"
   [error]="error()"
   [errorText]="errorTextResolved()"
-  [pending]="loading() || !renderReady()"
+  [pending]="(loading() && isEmpty()) || !renderReady()"
+  [reloading]="loading()"
+  [dataTable]="showDataTable()"
+  [shimmer]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
   [skeleton]="skeleton"
@@ -17,11 +20,64 @@
   <div
     class="skeleton"
     aria-hidden="true">
-    @for (placeholderWidth of skeletonStages(); track $index) {
-      <ds-skeleton
-        height="calc(var(--_funnel-chart-stage-height) - var(--_funnel-chart-stage-gap))"
-        [shimmer]="loading()"
-        [width]="placeholderWidth" />
+    <div class="skeleton-stages">
+      @for (clip of skeletonStages(); track $index) {
+        <ds-skeleton
+          height="calc(var(--_funnel-chart-stage-height) - var(--_funnel-chart-stage-gap))"
+          [style.clip-path]="clip"
+          [shimmer]="loading()" />
+      }
+    </div>
+
+    @if (showTable()) {
+      <table class="stage-table">
+        <thead>
+          <tr>
+            @for (column of skeletonColumns(); track $index) {
+              <th>
+                <ds-skeleton
+                  inline
+                  class="skeleton-text"
+                  width="var(--space-10)"
+                  height="var(--space-2)"
+                  [shimmer]="loading()" />
+              </th>
+            }
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (clip of skeletonStages(); track $index) {
+            <tr>
+              <th scope="row">
+                <ds-skeleton
+                  inline
+                  circle
+                  class="swatch"
+                  [shimmer]="loading()" />
+
+                <ds-skeleton
+                  inline
+                  class="skeleton-text"
+                  width="var(--space-24)"
+                  height="var(--space-2)"
+                  [shimmer]="loading()" />
+              </th>
+
+              @for (column of skeletonColumns().slice(1); track $index) {
+                <td>
+                  <ds-skeleton
+                    inline
+                    class="skeleton-text"
+                    width="var(--space-12)"
+                    height="var(--space-2)"
+                    [shimmer]="loading()" />
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
     }
   </div>
 </ng-template>

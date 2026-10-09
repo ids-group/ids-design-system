@@ -59,7 +59,11 @@ export class LineChartComponent extends DsChartBase implements ChartDimmable, Ch
     public readonly series = input<readonly LineChartSeries[]>([]);
     protected readonly showLegend = computed(…);
     public readonly showMarkers = input(true, { transform: booleanAttribute });
+    protected readonly skeletonAxisGutter = CHART_DEFAULT_AXIS_GUTTER;
+    protected readonly skeletonPlotHeight = `calc(var(--_line-chart-skeleton-height) - ${CHART_DEFAULT_VALUE_SPACE + CHART_SKELETON_CATEGORY_BAND}px)`;
+    protected readonly skeletonPoints = computed(…);
     protected readonly skeletonSeries = computed(…);
+    protected readonly skeletonValueSpace = CHART_DEFAULT_VALUE_SPACE;
     public readonly stack = input<LineChartStack>('none');
     protected readonly stackedSeries = computed<readonly ResolvedSeries[]>(…);
     protected readonly stacksSeries = computed(…);
@@ -115,7 +119,7 @@ ds-line-chart {
     --ds-line-chart-hover-bg-color: var(--ds-chart-hover-bg-color);
     --ds-line-chart-line-width: var(--ds-chart-line-width);
     --ds-line-chart-line-width-bold: var(--ds-chart-line-width-bold);
-    --ds-line-chart-placeholder-height: var(--_line-chart-plot-height) | var(--_line-chart-view-height);
+    --ds-line-chart-placeholder-height: var(--_line-chart-view-height);
     --ds-line-chart-plot-height: 240px;
     --ds-line-chart-swatch-size: 10px;
 }

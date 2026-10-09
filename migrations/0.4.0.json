@@ -49,7 +49,7 @@
       },
       "surface": "template",
       "restore": "nothing to restore - the 24px tier is gone; its callers take sm (32px), and an attribute-less button keeps the same 40px it had as `l`",
-      "verify": "No ds-button binds size=\"s\", \"m\" or \"l\". A button left without size renders at the md height (40px), and every button that previously said \"l\" now says \"md\" and keeps its 40px height, padding and font size."
+      "verify": "No ds-button binds size=\"s\", \"m\" or \"l\". A button left without size renders at the md height (40px), and every button that previously said \"l\" now says \"md\" and keeps its 40px height, padding and font size; one with projected subtext ([dsButtonSubtext]) drops from a 48px to a 40px min-height."
     },
     {
       "id": "ds-button-ts-types-retyped",
@@ -111,6 +111,20 @@
       "action": "Replace `--ds-input-hint-fs` with `--ds-field-message-font-size`.",
       "searchHints": [
         "--ds-input-hint-fs"
+      ],
+      "surface": "style"
+    },
+    {
+      "id": "field-gap-label-token",
+      "kind": "token-rename",
+      "old": "--field-gap-label",
+      "new": "--field-label-gap",
+      "action": "Replace `--field-gap-label` with `--field-label-gap`.",
+      "appliesWhen": "A stylesheet reads `var(--field-gap-label)` or sets `--field-gap-label`. The default is the same `--space-1-5` under both names.",
+      "pitfall": "No component read `--field-gap-label`, so an override of it changed nothing before the upgrade. Renamed, it sets the label-to-control gap of every field control in its scope: checkbox, color-picker, combobox, date-picker, input, multi-select, otp-input, radio-group, select, switch and textarea.",
+      "verify": "No stylesheet names `--field-gap-label`, and where the app sets `--field-label-gap` the field controls in that scope show the gap it intends.",
+      "searchHints": [
+        "--field-gap-label"
       ],
       "surface": "style"
     },
@@ -268,7 +282,7 @@
   "informational": [
     "Many new components (multi-select, slider, otp-input, color-picker, tree, segmented, button-group, split-button, toggle-button, list, timeline, description-list, stack/inline/container, loading-overlay, radio-group, alert) — additive.",
     "ds-color scoped-accent system (--accent-* pointer layer, [ds-color] attribute, ds.color() mixin) + dark theme (opt-in via data-theme=dark, provideDsTheme({followSystem})) — additive, light output unchanged.",
-    "Reactive-forms (CVA) on checkbox, switch, combobox, date-picker; invalid/hint on checkbox, switch, combobox; invalid on date-picker; hint on select; inline [label] on checkbox/radio/switch; input [loading]/[floating] — additive. `--field-gap-label` is renamed `--field-label-gap`, same `--space-1-5` default, and every field control now reads it: rename any read or override of the old name.",
+    "Reactive-forms (CVA) on checkbox, switch, combobox, date-picker; invalid/hint on checkbox, switch, combobox; invalid on date-picker; hint on select; inline [label] on checkbox/radio/switch; input [loading]/[floating] — additive. `--field-gap-label` is renamed `--field-label-gap`, same `--space-1-5` default, and every field control now reads it.",
     "ds-button overlay-trigger inputs (ariaHasPopup/ariaExpanded/buttonRef); date-picker month/year grid pickers; table pagination/clientSort/stickyFirstColumn; ModalService.confirm(); dropzone per-file message + queued state — additive.",
     "$bp-* Sass breakpoint aliases + up()/down() mixins; new disabled-state and press-scale override tokens — additive (a-la-carte styles/tokens importers also need styles/breakpoints now).",
     "Visual-only: button/icon-button press is darken + micro scale-down; [disabled] is a per-variant muted tint (override --ds-*-disabled tokens to restore flat grey); smooth motion pass across components; reduced-motion no longer freezes spinners (under `prefers-reduced-motion: reduce` `--duration-loop-fast` / `--duration-loop-slow` are 1400ms / 2800ms, were 0ms; set them back to `0ms` there to stop them again); overlay scroll-lock release fix.",

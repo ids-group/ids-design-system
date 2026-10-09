@@ -349,18 +349,18 @@
                         class="cell-clip"
                         [class.grows]="clipGrows(col)"
                         [style.max-width]="clipMaxWidth(col, index)">
-                        <span class="cell-clip-text">
-                          @if (cellLink(row, col); as target) {
-                            <a
-                              class="cell-link"
-                              [routerLink]="target"
-                              (click)="$event.stopPropagation()">
-                              {{ cellValue(row, col) }}
-                            </a>
-                          } @else {
+                        @if (cellLink(row, col); as target) {
+                          <a
+                            class="cell-link cell-clip-text"
+                            [routerLink]="target"
+                            (click)="$event.stopPropagation()">
                             {{ cellValue(row, col) }}
-                          }
-                        </span>
+                          </a>
+                        } @else {
+                          <span class="cell-clip-text">
+                            {{ cellValue(row, col) }}
+                          </span>
+                        }
                       </span>
                     } @else if (cellLink(row, col); as target) {
                       <a

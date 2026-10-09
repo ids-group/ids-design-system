@@ -173,9 +173,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Overflowing labels (trigger or option) get an ellipsis and a full-text
-    hover tooltip. Add <code class="t-mono-inline">[title]</code> only to say
-    more than the label.
+    Overflowing labels (trigger or option) get an ellipsis and a full-text hover
+    tooltip. Add <code class="t-mono-inline">[title]</code> only to say more
+    than the label.
   </p>
 
   <div class="grid-3">
@@ -244,12 +244,6 @@
       isSelectOptionGroup()
     </code> tells them apart.
     <code class="t-mono-inline">
-      loading
-    </code>: panel spinner,
-    <code class="t-mono-inline">
-      aria-busy
-    </code>.
-    <code class="t-mono-inline">
       dsEmptyTemplate
     </code> replaces "no options".
     <code class="t-mono-inline">
@@ -268,6 +262,31 @@
       Multi-select
     </a>.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code> -
+      <code class="t-mono-inline">
+        aria-busy
+      </code> on the list.
+    </li>
+
+    <li>
+      No options - three placeholder rows.
+    </li>
+
+    <li>
+      With options - under a
+      <code class="t-mono-inline">
+        ds-loading-overlay
+      </code>, inert until
+      <code class="t-mono-inline">
+        loading
+      </code> clears.
+    </li>
+  </ul>
 
   <div class="grid-3">
     <ds-select

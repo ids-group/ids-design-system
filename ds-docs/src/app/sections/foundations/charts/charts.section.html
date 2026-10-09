@@ -261,10 +261,8 @@
     Every chart draws these: empty data shows
     <code class="t-mono-inline">
       emptyText
-    </code>,
-    <code class="t-mono-inline">
-      [loading]
-    </code> a skeleton, and
+    </code>
+    and
     <code class="t-mono-inline">
       [error]
     </code>
@@ -277,13 +275,42 @@
     </code>.
   </p>
 
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        [loading]
+      </code>, no data - skeleton in the chart's shape.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [loading]
+      </code>, data on screen - plot under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and spinner; caption uncovered.
+    </li>
+
+    <li>
+      Skeleton on every load - pass empty data while loading.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        skeletonCount
+      </code> (default <code class="t-mono-inline">5</code>) - skeleton marks while the data's count is unknown: columns on <code class="t-mono-inline">ds-chart</code>, <code class="t-mono-inline">ds-column-chart</code>; slices on <code class="t-mono-inline">ds-pie-chart</code>; stages on <code class="t-mono-inline">ds-funnel-chart</code>; steps on <code class="t-mono-inline">ds-waterfall-chart</code>.
+    </li>
+  </ul>
+
   <div class="grid-2">
     <ds-column-chart
       caption="Empty"
       [data]="noPoints" />
 
     <ds-column-chart
-      caption="Loading"
+      caption="Loading, no data"
+      loading
+      [data]="noPoints" />
+
+    <ds-column-chart
+      caption="Reloading"
       loading
       [data]="eventPoints" />
 
@@ -298,8 +325,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    The panel takes the pointer, so its number can be zoomed and selected
-    (WCAG 1.4.13).
+    Pinned: the panel takes the pointer, its number zoomable and selectable
+    (WCAG 1.4.13). Unpinned: the pointer passes to the plot.
     <kbd>
       Esc
     </kbd> closes it until the pointer reaches another mark.

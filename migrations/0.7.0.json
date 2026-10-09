@@ -307,7 +307,7 @@
       "action": "Build the consumer immediately after the bump — the compiler enumerates every collision. Per member: keep the name and add `override` with a base-compatible signature where the base means the same thing, otherwise rename your own member. TableComponent gained the inputs `total`, `sortingOrder`, `animateHeight`, `scrollToTopOnPageChange` and the private method `parseDurationMs`.",
       "appliesWhen": "Only a consumer that EXTENDS a DS component class. Subclassing is unsupported; anyone using the DS elements is unaffected.",
       "pitfall": "It is not only the table this time — most component classes changed, so fixing the collisions the compiler names first can still leave others in files it has not reached. Check any renamed member against the base member list before settling on the new name.",
-      "note": "A subclass that already used one of the added names stops compiling: TS4114 wants an `override` modifier, TS2416 fires where the signature differs. `TableComponent` gained `total`, `sortingOrder`, `animateHeight`, `scrollToTopOnPageChange` and `parseDurationMs`, and lost `resizeState`. `AutocompleteComponent`, `CheckboxComponent`, `ColorPickerComponent`, `DatePickerComponent`, `MultiSelectComponent`, `OtpInputComponent`, `RadioComponent`, `RadioGroupComponent`, `SelectComponent`, `SliderComponent`, `SwitchComponent`, `TextareaComponent` and `TimePickerComponent` each gained `reserveMessage`. `AvatarComponent` gained `avoidHues` and `seed`. `BadgeComponent` gained `countLabel`. `BottomSheetComponent` gained `scrollLock` and lost `previousBodyOverflow`. `DrawerComponent` and `ModalComponent` each gained `scrollLock` and lost `doc`. `InputComponent` gained `reserveMessage` and lost `withAddon` and `withAddonRight`. `PaginationComponent` lost `pageChange` and `pageSizeChange`. `SearchComponent` gained `size`. `SidenavItemComponent` gained `activate` and `onActivate`. `TooltipDirective` gained `disposeRef`.",
+      "note": "A subclass that already used one of the added names stops compiling: TS4114 wants an `override` modifier, TS2416 fires where the signature differs. `TableComponent` gained `total`, `sortingOrder`, `animateHeight`, `scrollToTopOnPageChange` and `parseDurationMs`, and lost `resizeState`. `AutocompleteComponent`, `CheckboxComponent`, `ColorPickerComponent`, `DatePickerComponent`, `MultiSelectComponent`, `OtpInputComponent`, `RadioComponent`, `RadioGroupComponent`, `SelectComponent`, `SliderComponent`, `SwitchComponent`, `TextareaComponent` and `TimePickerComponent` each gained `reserveMessage`. `AvatarComponent` gained `avoidHues` and `seed`. `BadgeComponent` gained `countLabel`. `BottomSheetComponent` gained `scrollLock` and lost `previousBodyOverflow`. `DrawerComponent` and `ModalComponent` each gained `scrollLock` and lost `doc`. `InputComponent` gained `reserveMessage` and lost `withAddon` and `withAddonRight`. `PaginationComponent` lost `pageChange` and `pageSizeChange`. `SearchComponent` gained `size`. `SidenavItemComponent` gained `activate` and `onActivate`. `TooltipDirective` gained `disposeRef`. `AppLayoutComponent` (the renamed `AppShellComponent`) gained `layoutScroll` and lost `shellScroll`.",
       "searchHints": [
         "extends TableComponent",
         "extends "
@@ -316,6 +316,9 @@
       "detect": [
         "extends TableComponent",
         "extends ",
+        "extends AppLayoutComponent",
+        "AppLayoutComponent",
+        "extends AppShellComponent",
         "extends AutocompleteComponent",
         "AutocompleteComponent",
         "extends AvatarComponent",

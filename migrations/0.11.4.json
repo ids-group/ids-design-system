@@ -173,7 +173,7 @@
       "old": "ToastComponent, ToastRegionComponent, ToastService, TableComponent, BannerComponent, AlertComponent",
       "new": null,
       "appliesWhen": "Only a class that extends one of those six. Template users and service callers need nothing.",
-      "pitfall": "Every new name is private or protected, which is no protection - a redeclared private fails with TS2415 exactly as a public collision does. `role` and `promoteFromQueue` are gone: a subclass `override role` now fails with TS4113, and a same-named member without `override` compiles but never runs.",
+      "pitfall": "Every new name except the public inputs `body` (ToastComponent) and `announce` (BannerComponent, AlertComponent) is private, which is no protection - a redeclared private fails with TS2415 exactly as a public collision does. `role` and `promoteFromQueue` are gone: a subclass `override role` now fails with TS4113, and a same-named member without `override` compiles but never runs.",
       "searchHints": [
         "extends ToastComponent",
         "extends ToastRegionComponent",
@@ -200,7 +200,7 @@
       ],
       "verify": "The app builds with no TS4113 / TS4114 / TS2415 / TS2416 naming any of the six classes, and no override of promoteFromQueue, role or message remains in your source.",
       "restore": null,
-      "note": "ToastComponent lost `role`. ToastRegionComponent gained `leaveTimers`, `slideNeighbours`, `toastNodes`, `measureTops` and `leaveDuration`, and renamed `promoteFromQueue` to `drainQueue`. ToastService gained `announcer`, `pendingAnnouncements`, `pendingAssertive`, `announceTimer`, `scrimWatcher`, `announce` and `keepAboveScrims`, and lost `position`. TableComponent gained `eventsAtExport`, `eventMessages`, `tableHead`, `hostElement` and `announceExport`. None is public API or a signal. BannerComponent and AlertComponent each gained `announce`. ToastComponent also gained `body` and lost `message`, which is the input rename listed separately.",
+      "note": "ToastComponent lost `role`. ToastRegionComponent gained `leaveTimers`, `slideNeighbours`, `toastNodes`, `measureTops` and `leaveDuration`, and renamed `promoteFromQueue` to `drainQueue`. ToastService gained `announcer`, `pendingAnnouncements`, `pendingAssertive`, `announceTimer`, `scrimWatcher`, `announce` and `keepAboveScrims`, and lost `position`. TableComponent gained `eventsAtExport`, `eventMessages`, `tableHead`, `hostElement` and `announceExport`. None is public API. BannerComponent and AlertComponent each gained `announce`. ToastComponent also gained `body` and lost `message`, which is the input rename listed separately.",
       "action": "Build after upgrading. Rename or mark `override` every member the compiler reports as colliding, and DELETE any `override promoteFromQueue` or `override role` - neither member exists any more, so a marked override fails with TS4113 and an unmarked one is dead code."
     },
     {

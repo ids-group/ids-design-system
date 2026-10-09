@@ -1,26 +1,27 @@
 const NATIVELY_FOCUSABLE = 'a[href], button, input, select, textarea, summary';
 export const FOCUSABLE = `${NATIVELY_FOCUSABLE}, [tabindex]`;
 const KEYBOARD_FOCUSABLE = `${NATIVELY_FOCUSABLE}, [tabindex]:not([tabindex^="-"])`;
-const INTERACTIVE = [
-  NATIVELY_FOCUSABLE,
-  'tr:not([role])',
-  ...[
-    'button',
-    'link',
-    'tab',
-    'option',
-    'menuitem',
-    'menuitemcheckbox',
-    'menuitemradio',
-    'row',
-    'gridcell',
-    'combobox',
-    'checkbox',
-    'radio',
-    'switch',
-    'treeitem',
-  ].map((role) => `[role="${role}"]`),
-].join(', ');
+const WIDGET_ROLES = [
+  'button',
+  'link',
+  'tab',
+  'option',
+  'menuitem',
+  'menuitemcheckbox',
+  'menuitemradio',
+  'row',
+  'gridcell',
+  'combobox',
+  'checkbox',
+  'radio',
+  'switch',
+  'treeitem',
+]
+  .map((role) => `[role="${role}"]`)
+  .join(', ');
+const INTERACTIVE = `${NATIVELY_FOCUSABLE}, tr:not([role]), ${WIDGET_ROLES}`;
+// A widget role owns its focus (a listbox moves it by `aria-activedescendant`), and a hidden subtree must hold no tab stop.
+const REACHED_OR_HIDDEN = `${NATIVELY_FOCUSABLE}, tr[tabindex]:not([role]), ${WIDGET_ROLES}, [aria-hidden="true"], [inert]`;
 
 export interface AncestorFocusTrigger {
   readonly host: HTMLElement;
@@ -92,5 +93,73 @@ export function watchFocusableAncestor(
     ancestor.removeEventListener('focusout', close);
     ancestor.removeEventListener('click', close);
     ancestor.removeEventListener('keydown', close);
+  };
+}
+
+const tabStopSyncs = new Map<Node, () => void>();
+let resizes: ResizeObserver | null = null;
+let mutations: MutationObserver | null = null;
+
+function syncHostOf(node: Node | null): void {
+  for (let current = node; current; current = current.parentElement) {
+    const sync = tabStopSyncs.get(current);
+    if (sync) {
+      sync();
+
+      return;
+    }
+  }
+}
+
+/**
+ * A clipped host that no keyboard path reaches - not focusable, inside no control or widget role,
+ * holding no focusable descendant - takes `tabindex="0"` while it is clipped, and loses it once its
+ * text fits and it does not hold focus. A tabindex it did not write is never touched. One observer
+ * pair serves every host. Returns the teardown, or null when the host is reached another way.
+ */
+export function tabStopWhileClipped(
+  trigger: AncestorFocusTrigger,
+): (() => void) | null {
+  const host = trigger.host;
+  if (host.matches(FOCUSABLE) || host.closest(REACHED_OR_HIDDEN)) {
+    return null;
+  }
+  let written = false;
+  const sync = () => {
+    const needed =
+      trigger.isClipped() && !host.querySelector(KEYBOARD_FOCUSABLE);
+    if (needed && !host.hasAttribute('tabindex')) {
+      host.setAttribute('tabindex', '0');
+      written = true;
+    } else if (
+      !needed &&
+      written &&
+      host.ownerDocument.activeElement !== host
+    ) {
+      written = false;
+      if (host.getAttribute('tabindex') === '0') {
+        host.removeAttribute('tabindex');
+      }
+    }
+  };
+  resizes ??= new ResizeObserver((entries) =>
+    entries.forEach((entry) => syncHostOf(entry.target)),
+  );
+  mutations ??= new MutationObserver((records) =>
+    records.forEach((record) => syncHostOf(record.target)),
+  );
+  tabStopSyncs.set(host, sync);
+  resizes.observe(host);
+  mutations.observe(host, {
+    characterData: true,
+    childList: true,
+    subtree: true,
+  });
+  host.addEventListener('focusout', sync);
+
+  return () => {
+    tabStopSyncs.delete(host);
+    resizes?.unobserve(host);
+    host.removeEventListener('focusout', sync);
   };
 }

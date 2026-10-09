@@ -6,7 +6,10 @@
   [caption]="caption()"
   [error]="error()"
   [errorText]="errorTextResolved()"
-  [pending]="loading() || !renderReady()"
+  [pending]="(loading() && isEmpty()) || !renderReady()"
+  [reloading]="loading()"
+  [dataTable]="dataTableResolved() !== 'none'"
+  [shimmer]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
   [skeleton]="skeleton"
@@ -15,11 +18,47 @@
 </figure>
 
 <ng-template #skeleton>
-  <ds-skeleton
+  <div
     class="skeleton"
-    width="100%"
-    [shimmer]="loading()"
-    [height]="skeletonHeight + 'px'" />
+    aria-hidden="true">
+    @for (row of skeletonLayout.rows; track row) {
+      <span
+        class="skeleton-grid-line"
+        [class.is-axis]="$last"
+        [style.top]="row"
+        [style.left]="skeletonLayout.plotLeft"
+        [style.width]="skeletonLayout.plotWidth">
+      </span>
+
+      <ds-skeleton
+        class="skeleton-pill is-tick"
+        width="var(--space-6)"
+        height="var(--space-2)"
+        [style.top]="row"
+        [style.inset-inline-end]="skeletonLayout.labelEnd"
+        [shimmer]="loading()" />
+    }
+
+    @for (column of skeletonLayout.columns; track column) {
+      <ds-skeleton
+        class="skeleton-pill is-category"
+        width="var(--space-6)"
+        height="var(--space-2)"
+        [style.left]="column"
+        [style.top]="skeletonLayout.categoryTop"
+        [shimmer]="loading()" />
+    }
+
+    @if (xLabel()) {
+      <ds-skeleton
+        class="skeleton-pill is-category"
+        width="var(--space-24)"
+        height="var(--space-2)"
+        [style.left]="'50%'"
+        [style.top]="skeletonLayout.titleTop"
+        [shimmer]="loading()" />
+    }
+  </div>
 </ng-template>
 
 <ng-template #body>

@@ -103,6 +103,7 @@ export class MultiSelectComponent extends DsControlValueAccessor<string[]> imple
     protected readonly showsSearch = computed<boolean>(…);
     public readonly size = input<DsSize | null>(null);
     public readonly sizeResolved = resolveWithConfig(…);
+    protected readonly skeletonOptionWidths = ['70%', '50%', '85%'];
     protected readonly someFilteredSelected = computed<boolean>(…);
     public readonly success = input<string, string | null | undefined>('', { transform: trimmedText });
     protected toggleGroup(group: MultiSelectOptionGroup): void;

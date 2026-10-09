@@ -3,8 +3,8 @@
   eyebrow="Foundations"
   title="Typography">
   <span lede>
-    Mulish for UI and prose, JetBrains Mono for IDs, dates and data; weights
-    400 / 500 / 600 / 700 / 800.
+    Mulish for UI and prose, JetBrains Mono for IDs, dates and data; weights 400
+    / 500 / 600 / 700 / 800.
   </span>
 
   <h3
@@ -24,10 +24,8 @@
     Each class reads
     <code class="t-mono-inline">
       --ds-typography-&lt;role&gt;-font-weight
-    </code>,
-    <code class="t-mono-inline">
-      -font-size
-    </code>,
+    </code
+    >, <code class="t-mono-inline"> -font-size </code>,
     <code class="t-mono-inline">
       -line-height
     </code>,
@@ -42,8 +40,10 @@
     </code> where set); retune one axis in a
     scope:
     <code class="t-mono-inline">
-      .my-scope .t-h3 {{ '{' }} --ds-typography-h3-font-weight: var(--font-weight-bold) {{ '}' }}
-    </code>.
+      .my-scope .t-h3 {{ '{' }} --ds-typography-h3-font-weight:
+      var(--font-weight-bold) {{ '}' }}
+    </code
+    >.
   </p>
 
   <div class="ramp">
@@ -217,4 +217,70 @@ WHERE  project_id = 'alpha'
       --font-sans
     </code>.
   </p>
+
+  <h3 class="block-title t-h4">
+    Clipping text
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      styles/text-clip
+    </code> clips without cutting a
+    glyph, in any font.
+  </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        single-line-ellipsis
+      </code> - one line,
+      ellipsis; clips the inline axis only.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        inline-axis
+      </code> - clips a row sideways;
+      block axis stays visible.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        line-clamp($lines)
+      </code> -
+      <code class="t-mono-inline">
+        $lines
+      </code> lines at
+      <code class="t-mono-inline">
+        line-height: normal
+      </code>.
+    </li>
+  </ul>
+
+  <pre class="t-mono-block">{{ textClipSnippet }}</pre>
+
+  <div class="row">
+    <div class="family-card clip-card">
+      <div class="t-overline">
+        single-line-ellipsis
+      </div>
+
+      <div class="t-s clip-ellipsis">
+        Quarterly renewal notice for commercial policyholders in the north
+        region
+      </div>
+    </div>
+
+    <div class="family-card clip-card">
+      <div class="t-overline">
+        line-clamp(2)
+      </div>
+
+      <div class="t-s clip-clamp">
+        Quarterly renewal notice for commercial policyholders in the north
+        region, sent four weeks before each policy ends, with the new premium
+        and any change in cover.
+      </div>
+    </div>
+  </div>
 </docs-section>

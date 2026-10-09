@@ -16,8 +16,10 @@
     Hover to play. Under
     <code class="t-mono-inline">
       prefers-reduced-motion
-    </code> one-shot durations drop to 0; loops
-    (<code class="t-mono-inline">--duration-loop-*</code>) slow down.
+    </code> one-shot
+    durations drop to 0; loops (<code class="t-mono-inline"
+      >--duration-loop-*</code
+    >) slow down.
   </p>
 
   <div class="motion-grid">
@@ -198,14 +200,17 @@
     </code> (600ms,
     <code class="t-mono-inline">
       --ease-settle
-    </code>): columns and bars growing
-    from the baseline. <code class="t-mono-inline">-sweep-duration</code>
+    </code>): columns and bars
+    growing from the baseline.
+    <code class="t-mono-inline">
+      -sweep-duration
+    </code>
     (600ms): rings and lines.
     <code class="t-mono-inline">
       -detail-duration
-    </code> (180ms): value labels and
-    markers. A series' arrivals spread across 260ms regardless of mark count.
-    Reduced motion shows every mark at once.
+    </code> (180ms): value labels
+    and markers. A series' arrivals spread across 260ms regardless of mark
+    count. Reduced motion shows every mark at once.
   </p>
 
   <h3 class="block-title t-h4">
@@ -241,8 +246,7 @@
           Entrance played with
           <code class="t-mono-inline">
             {{ preset() }}
-          </code
-          >.
+          </code>.
         </ds-alert>
       }
 
@@ -291,13 +295,19 @@
     <code class="t-mono-inline">
       -enter-scale
     </code> for the preset's travel or
-    scale. Surfaces that animate on close add
+    scale (only with <code class="t-mono-inline">ds-scale-in</code> /
     <code class="t-mono-inline">
-      -leave-duration
-    </code> and
+      ds-slide-in
+    </code>; overlay panels, modal,
+    toast, banner, alert default to
+    <code class="t-mono-inline">
+      ds-fade-in
+    </code>). Surfaces that animate on
+    close add <code class="t-mono-inline"> -leave-duration </code> and
     <code class="t-mono-inline">
       -leave-easing
-    </code>; modal, drawer and bottom sheet add
+    </code>; modal, drawer and bottom
+    sheet add
     <code class="t-mono-inline">
       -leave-keyframes
     </code>
@@ -310,9 +320,9 @@
     </code>,
     <code class="t-mono-inline">
       ds-slide-edge-out
-    </code>). Set them globally, per
-    theme or per instance; portaled panels forward them to their overlay pane.
-    The token reference lists every surface.
+    </code>). Set them globally,
+    per theme or per instance; portaled panels forward them to their overlay
+    pane. The token reference lists every surface.
   </p>
 
   <p class="block-desc t-s">

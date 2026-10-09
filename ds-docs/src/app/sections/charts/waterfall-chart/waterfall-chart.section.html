@@ -225,4 +225,48 @@
       0
     </code> brings every step in at once.
   </p>
+
+  <h3 class="block-title t-h4">
+    Loading
+  </h3>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, no data - total, floating steps, closing total.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, bars on screen - kept under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and spinner.
+    </li>
+  </ul>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-waterfall-chart
+        dataTable="none"
+        loading
+        [data]="[]" />
+
+      <div class="state-cell-label">
+        Loading, no data
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-waterfall-chart
+        dataTable="none"
+        loading
+        [data]="loadingBars()" />
+
+      <div class="state-cell-label">
+        Reloading
+      </div>
+
+      <docs-chart-data-editor [(rows)]="loadingBars" />
+    </div>
+  </div>
 </docs-section>

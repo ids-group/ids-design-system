@@ -706,11 +706,6 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart empty-state placeholder height (160px)."
   },
   {
-    "name": "--chart-skeleton-h",
-    "value": "160px",
-    "notes": "Chart loading skeleton height (160px)."
-  },
-  {
     "name": "--chart-legend-dot",
     "value": "var(--icon-2xs)",
     "notes": "Chart legend swatch dot size (defaults to --icon-2xs, showcase)."
@@ -2020,7 +2015,7 @@ export const DENSITY_HIT: readonly SizeRow[] = [
   {
     "name": "--hit-xs",
     "value": "24px",
-    "notes": "btn-s, datepicker nav, modal close."
+    "notes": "The smallest pointer target in the system (24px, WCAG 2.5.8): every icon-only control takes the pointer over at least this, however small it is drawn, and the date picker arrows and the modal close are this size. Raise it, to 44px for a touch screen, and every icon-only control's target follows."
   },
   {
     "name": "--hit-sm",
@@ -2929,7 +2924,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-bar-chart-track-height",
         "value": "12px",
-        "notes": "Thickness of a ds-bar-chart bar and its track (default 8px)."
+        "notes": "Bar and track thickness (default 12px)."
       },
       {
         "name": "--ds-bar-chart-cap-radius",
@@ -2939,7 +2934,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-bar-chart-row-gap",
         "value": "var(--space-5)",
-        "notes": "Vertical gap between ds-bar-chart rows (default --space-3)."
+        "notes": "Row gap (default --space-5; --space-3 under labelPosition=\"start\")."
       },
       {
         "name": "--ds-bar-chart-label-gap",
@@ -2949,17 +2944,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-bar-chart-label-column-max-width",
         "value": "40%",
-        "notes": ""
+        "notes": "Label column cap under labelPosition=\"start\" (default 40%)."
       },
       {
         "name": "--ds-bar-chart-child-fill-opacity",
         "value": "0.55",
-        "notes": ""
+        "notes": "Child-row bar opacity in a group (default 0.55)."
       },
       {
         "name": "--ds-bar-chart-divider-color",
         "value": "var(--border-default)",
-        "notes": ""
+        "notes": "Dashed divider above a detached row (default --border-default)."
       },
       {
         "name": "--ds-motion-chart-mark-duration",
@@ -3436,7 +3431,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-column-chart-column-gap",
         "value": "var(--ds-chart-bar-gap)",
-        "notes": "Space between the columns of grouped series in one category, and between skeleton columns (defaults to --ds-chart-bar-gap)."
+        "notes": "Space between the columns of grouped series in one category (defaults to --ds-chart-bar-gap)."
       },
       {
         "name": "--ds-column-chart-cap-radius",
@@ -4880,8 +4875,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-line-chart-placeholder-height",
-        "value": "var(--_line-chart-plot-height)",
-        "notes": "Height reserved by a ds-line-chart that has no plot to draw: the loading skeleton, and the empty, error and no-visible-series boxes. Unset, the skeleton takes the plot height and the boxes the height the plot would take with its axis space; set, all of them take this value and the plot keeps --ds-line-chart-plot-height."
+        "value": "var(--_line-chart-view-height)",
+        "notes": "Height reserved by a ds-line-chart that has no plot to draw: the loading skeleton, and the empty, error and no-visible-series boxes. Unset, the skeleton and the boxes take the height the plot would take with its axis space; set, all of them take this value and the plot keeps --ds-line-chart-plot-height."
       },
       {
         "name": "--ds-line-chart-grid-line-color",
@@ -5092,7 +5087,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-loading-overlay-radius",
         "value": "0",
-        "notes": ""
+        "notes": "Corner radius of the loading scrim (default 0); match the covered container's radius."
       },
       {
         "name": "--ds-loading-overlay-enter-keyframes",
@@ -8516,11 +8511,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-waterfall-chart-connector-color",
         "value": "var(--ds-chart-axis-line-color)",
         "notes": "Stroke of the dashed chain that carries each bar's end across to where the next one starts (defaults to --ds-chart-axis-line-color)."
-      },
-      {
-        "name": "--ds-waterfall-chart-skeleton-height",
-        "value": "40px",
-        "notes": "Height of a placeholder bar in the loading skeleton (default 40px)."
       }
     ]
   }

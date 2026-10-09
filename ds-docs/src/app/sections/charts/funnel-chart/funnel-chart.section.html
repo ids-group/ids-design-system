@@ -288,7 +288,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       staggerMs
-    </code> staggers the bands' rise-in.
+    </code> staggers the stages' entrance (fade
+    in, grow from 96%).
     Default <code class="t-mono-inline">60</code>; the spread fits inside
     260ms;
     <code class="t-mono-inline">
@@ -354,10 +355,21 @@
         <ds-funnel-chart
           dataTable="none"
           loading
+          [data]="[]" />
+
+        <div class="state-cell-label">
+          Loading, no data
+        </div>
+      </div>
+
+      <div class="state-cell">
+        <ds-funnel-chart
+          dataTable="none"
+          loading
           [data]="loadingStages()" />
 
         <div class="state-cell-label">
-          Loading
+          Reloading
         </div>
 
         <docs-chart-data-editor [(rows)]="loadingStages" />

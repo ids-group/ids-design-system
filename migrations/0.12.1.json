@@ -361,7 +361,7 @@
     "persistLayout and storageKey stay on ds-table. The stored JSON keeps its { order, widths, hidden } shape, so a layout saved by an earlier version still restores; what a table then writes back is covered by table-persisted-layout-holds-only-what-the-directives-own.",
     "table.runExport(), table.exporting() and table.exportCsv() stay on the component and keep their signatures — they delegate to whichever export directive is present, so a button of your own in [toolbar] or a page header still drives the export. Called with no directive present they log a dev-mode warning instead of doing nothing quietly.",
     {
-      "text": "`--ds-autocomplete-input-minw`, the floor of the typing area beside an autocomplete's chips, defaults to 40px, was 80px. In the default `width=\"fill\"` the input still stretches across the row, so only the chip case changes; under `width=\"content\"` it is what an empty field measures. Set `--ds-autocomplete-input-minw: 80px` to keep the old footprint.",
+      "text": "`--ds-autocomplete-input-minw`, the floor of the typing area beside an autocomplete's chips, defaults to 40px, was 80px. In the default `width=\"fill\"` the input still stretches across the row, so only the chip case changes. Set `--ds-autocomplete-input-minw: 80px` to keep the old footprint.",
       "verify": "Open an autocomplete with chips and confirm the typing area beside them is wide enough for what users type there, or pins 80px."
     }
   ]
