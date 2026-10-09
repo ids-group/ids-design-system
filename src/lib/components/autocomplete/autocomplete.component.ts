@@ -57,6 +57,7 @@ import {
 } from '@ids-group-ltd/ids-design-system/core';
 import {
   firstEnabledIndex as firstEnabledOf,
+  isListCursorKey,
   lastEnabledIndex as lastEnabledOf,
   nextEnabledIndex,
 } from '@ids-group-ltd/ids-design-system/core';
@@ -301,8 +302,13 @@ export class AutocompleteComponent<T = unknown>
   protected readonly activeDescendant = computed(() => {
     const index = this.activeIndex();
 
-    return this.isOpen() && index >= 0 ? this.optionId(index) : null;
+    return this.isOpen() && index >= 0 && !this.listInert()
+      ? this.optionId(index)
+      : null;
   });
+  protected readonly listInert = computed(
+    () => this.loading() && this.filteredOptions().length > 0,
+  );
 
   protected readonly allOptions = computed<readonly AutocompleteOption<T>[]>(
     () => flattenDsOptions(this.options()),
@@ -578,6 +584,12 @@ export class AutocompleteComponent<T = unknown>
   protected onKeydown(event: KeyboardEvent): void {
     this.cursorFromKeyboard.set(true);
     if (this.isDisabled()) {
+      return;
+    }
+    // The scrim makes the list inert, so its rows take no cursor or pick key until loading ends.
+    if (this.isOpen() && this.listInert() && isListCursorKey(event.key)) {
+      event.preventDefault();
+
       return;
     }
     const visibleCount = this.visibleOptions().length;

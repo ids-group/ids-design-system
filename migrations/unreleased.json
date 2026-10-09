@@ -696,7 +696,7 @@
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
       "restore": null,
       "verify": "The app builds with no member-collision error against any of these classes.",
-      "note": "Gained: ChartComponent, ColumnChartComponent, PieChartComponent skeletonCount and skeletonMarks; FunnelChartComponent skeletonCount and skeletonColumns; WaterfallChartComponent skeletonCount, skeletonMarks, skeletonValueSpace and skeletonAxisGutter; LineChartComponent skeletonPoints, skeletonValueSpace, skeletonAxisGutter and skeletonPlotHeight; HeatmapChartComponent skeletonColumns; ScatterChartComponent skeletonLayout; SelectComponent, MultiSelectComponent and AutocompleteComponent skeletonOptionWidths. The internal ChartStatesComponent gained dataTable, reloading and shimmer. Lost: ColumnChartComponent skeletonColumns and skeletonHeightPx; WaterfallChartComponent skeletonBars; ScatterChartComponent skeletonHeight."
+      "note": "Gained: ChartComponent, ColumnChartComponent, PieChartComponent skeletonCount and skeletonMarks; FunnelChartComponent skeletonCount and skeletonColumns; WaterfallChartComponent skeletonCount, skeletonMarks, skeletonValueSpace and skeletonAxisGutter; LineChartComponent skeletonPoints, skeletonValueSpace, skeletonAxisGutter and skeletonPlotHeight; HeatmapChartComponent skeletonColumns; ScatterChartComponent skeletonLayout; SelectComponent, MultiSelectComponent and AutocompleteComponent skeletonOptionWidths and listInert. The internal ChartStatesComponent gained dataTable, reloading and shimmer. Lost: ColumnChartComponent skeletonColumns and skeletonHeightPx; WaterfallChartComponent skeletonBars; ScatterChartComponent skeletonHeight."
     }
   ],
   "informational": [
@@ -798,7 +798,8 @@
     {
       "text": "A ds-line-chart skeleton under `--ds-line-chart-placeholder-height` is that tall with its axis labels included; unset, it is as tall as the drawn plot with its labels.",
       "verify": "Set `--ds-line-chart-placeholder-height: 200px` on a loading ds-line-chart with no series and confirm the skeleton above the legend placeholders is 200px tall."
-    }
+    },
+    "While loading keeps options on screen under the overlay, ds-select, ds-multi-select and ds-autocomplete ignore the arrow, PageUp, PageDown, Home, End and Enter keys and mark the field aria-busy until loading clears; typing in the filter and the multi-select select-all row stay live."
   ],
   "deleteList": [
     {

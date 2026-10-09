@@ -90,6 +90,7 @@
     [attr.aria-expanded]="isOpen()"
     [attr.aria-controls]="listboxId"
     [attr.aria-activedescendant]="activeDescendant()"
+    [attr.aria-busy]="loading() ? 'true' : null"
     [attr.aria-labelledby]="label() ? labelId : null"
     [attr.aria-label]="resolvedAriaLabel()"
     [attr.aria-required]="required() ? 'true' : null"
@@ -159,7 +160,7 @@
 
     <ds-loading-overlay
       class="list-overlay"
-      [loading]="loading() && filteredOptions().length > 0"
+      [loading]="listInert()"
       [blur]="true">
       <ul
         class="dropdown-list"

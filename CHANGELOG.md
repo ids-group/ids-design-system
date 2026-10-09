@@ -258,6 +258,14 @@
 
 ### Fixed
 
+- **A loading `ds-select`, `ds-multi-select` or `ds-autocomplete` list takes no keys.** With
+  `loading` set over options already shown, the arrow, `PageUp` / `PageDown`, `Home` / `End` and
+  `Enter` keys moved the active row and picked an option under the inert scrim. They do nothing
+  until `loading` clears, `aria-activedescendant` points at no option meanwhile, and the field
+  itself carries `aria-busy="true"`. Typing in the filter and the multi-select's select-all row stay
+  live. `SelectComponent`, `MultiSelectComponent` and `AutocompleteComponent` gained the
+  protected `listInert`.
+
 - **A clipped `dsTooltipWhenClipped` value is reachable by keyboard wherever it sits.** A host
   that was not focusable, inside no focusable control (a code in a clickable card or row, a value in
   a plain table cell), showed its full text on hover only. It now takes `tabindex="0"` while it is

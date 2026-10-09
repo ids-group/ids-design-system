@@ -36,6 +36,7 @@
   [attr.aria-readonly]="isReadOnly() ? 'true' : null"
   [attr.name]="name()"
   [attr.aria-activedescendant]="triggerActiveDescendant()"
+  [attr.aria-busy]="loading() ? 'true' : null"
   [attr.tabindex]="isDisabled() ? -1 : 0"
   (click)="onTriggerClick()"
   (keydown)="onTriggerKeydown($event)">
@@ -183,6 +184,7 @@
           [value]="filter()"
           [attr.aria-controls]="listboxId"
           [attr.aria-activedescendant]="activeDescendant()"
+          [attr.aria-busy]="loading() ? 'true' : null"
           (input)="onFilter($event)"
           (keydown)="onSearchKeydown($event)" />
       </div>
@@ -216,7 +218,7 @@
 
     <ds-loading-overlay
       class="list-overlay"
-      [loading]="loading() && filteredOptions().length > 0"
+      [loading]="listInert()"
       [blur]="true">
       <ul
         class="dropdown-list"

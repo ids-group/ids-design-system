@@ -52,6 +52,7 @@ export class MultiSelectComponent extends DsControlValueAccessor<string[]> imple
     protected isSelected(value: string): boolean;
     public readonly label = input<string>('');
     protected readonly labelId = `${this.uid}-label`;
+    protected readonly listInert = computed(…);
     protected readonly listboxId = `${this.uid}-listbox`;
     public readonly loading = input(false, { transform: booleanAttribute });
     public readonly maxVisibleChips = input<number | 'fit' | 'all' | null>(null, { transform: (raw: unknown) => { if (raw === 'fit' || raw === 'all') { return raw; } return raw == null ? null : numberAttribute(raw); } });

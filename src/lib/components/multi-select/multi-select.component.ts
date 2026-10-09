@@ -72,6 +72,7 @@ import {
 } from '@ids-group-ltd/ids-design-system/core';
 import {
   firstEnabledIndex as firstEnabledOf,
+  isListCursorKey,
   lastEnabledIndex as lastEnabledOf,
   nextEnabledIndex,
 } from '@ids-group-ltd/ids-design-system/core';
@@ -407,8 +408,13 @@ export class MultiSelectComponent
   protected readonly activeDescendant = computed(() => {
     const index = this.activeIndex();
 
-    return this.open() && index >= 0 ? this.optionId(index) : null;
+    return this.open() && index >= 0 && !this.listInert()
+      ? this.optionId(index)
+      : null;
   });
+  protected readonly listInert = computed(
+    () => this.loading() && this.filteredOptions().length > 0,
+  );
 
   protected readonly resolvedAriaLabel = computed(
     () => this.ariaLabel() || this.placeholderResolved(),
@@ -647,6 +653,12 @@ export class MultiSelectComponent
 
   protected onSearchKeydown(event: KeyboardEvent): void {
     this.cursorFromKeyboard.set(true);
+    // The scrim makes the list inert, so its rows take no cursor or pick key until loading ends.
+    if (this.listInert() && isListCursorKey(event.key)) {
+      event.preventDefault();
+
+      return;
+    }
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();

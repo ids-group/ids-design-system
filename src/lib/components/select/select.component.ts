@@ -67,6 +67,7 @@ import { DsPanelFooterTemplateDirective } from '@ids-group-ltd/ids-design-system
 import { DsGroupLabelTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
 import {
   firstEnabledIndex as firstEnabledOf,
+  isListCursorKey,
   lastEnabledIndex as lastEnabledOf,
   nextEnabledIndex,
 } from '@ids-group-ltd/ids-design-system/core';
@@ -233,8 +234,13 @@ export class SelectComponent
   protected readonly activeDescendant = computed(() => {
     const index = this.activeIndex();
 
-    return this.open() && index >= 0 ? this.optionId(index) : null;
+    return this.open() && index >= 0 && !this.listInert()
+      ? this.optionId(index)
+      : null;
   });
+  protected readonly listInert = computed(
+    () => this.loading() && this.options().length > 0,
+  );
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
   );
@@ -494,6 +500,14 @@ export class SelectComponent
     if (key === 'Escape') {
       event.preventDefault();
       this.close('dismiss');
+
+      return;
+    }
+    // The scrim makes the list inert, so its rows take no cursor or pick key until loading ends.
+    if (this.listInert()) {
+      if (isListCursorKey(key) || key.length === 1) {
+        event.preventDefault();
+      }
 
       return;
     }

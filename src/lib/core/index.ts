@@ -36,6 +36,7 @@ export { isTextEntryTarget } from './key-target';
 export { isTextClipped } from './text-clip';
 export {
   firstEnabledIndex,
+  isListCursorKey,
   lastEnabledIndex,
   nextEnabledIndex,
 } from './list-cursor';
