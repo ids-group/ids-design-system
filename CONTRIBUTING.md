@@ -78,21 +78,22 @@ WCAG 2.5.8), whatever size it is drawn. One mechanism, `styles/target`:
 @use '../../styles/target' as target;
 
 .clear-btn {
-  @include target.min-size(
-    calc(14px + 2 * var(--space-0-5))
-  ); // the box as drawn
+  @include target.min-size;
 }
 ```
 
 Include it last in the rule, after the control's own `:focus-visible`. The box keeps its size, so the
-layout and every fill stay as drawn: a transparent `::before` takes the pointer and the focus ring is
-drawn on the edge of the 24px target, 24px across. `$ring-on-target: false` leaves the ring on the
+layout and every fill stay as drawn: a transparent `::before`, centred on the box and
+`max(100%, var(--hit-xs))` across, takes the pointer, and the focus ring is drawn on it, 24px across
+under the default style. The ring follows `--focus-ring-offset`, so `[data-focus='edge']` and
+`[data-focus='inset']` draw it inside the target. `$ring-on-target: false` leaves the ring on the
 icon for a control a few pixels from running text; `$position: null` for one already positioned. A
 control at least 24px by its own size writes `// target-size-guard: <token>, <size>` on the line
 above its rule instead, or `<!-- target-size-guard: ... -->` right before a control with no class.
 
 `node tools/check-target-size.mjs` (in `lint:all`) fails a template icon-only control that has
-neither. It reads static templates, so a control that is icon-only only for some inputs (a
+neither, and two controls side by side whose targets reach further into the gap between them than
+the gap of their parent's rule: each target grows by half of `--hit-xs` less the box it draws. It reads static templates, so a control that is icon-only only for some inputs (a
 `ds-breadcrumbs` item with an icon and no label) is covered by hand.
 
 ## Releasing

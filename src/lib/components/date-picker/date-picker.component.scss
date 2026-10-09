@@ -216,7 +216,7 @@
   padding: 0;
   cursor: pointer;
 
-  @include target.min-size(14px);
+  @include target.min-size;
 
   &:disabled {
     cursor: not-allowed;

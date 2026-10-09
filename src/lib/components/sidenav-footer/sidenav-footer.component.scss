@@ -194,7 +194,7 @@
     background: transparent;
     cursor: pointer;
 
-    @include target.min-size(16px);
+    @include target.min-size;
 
     &:hover {
       color: var(--text-primary);
