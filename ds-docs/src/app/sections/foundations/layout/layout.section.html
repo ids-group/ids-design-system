@@ -16,28 +16,74 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       &#64;media
-    </code>
-    conditions cannot read custom properties; use the Sass aliases. After
-    <code class="t-mono-inline">
-      &#64;use 'styles/breakpoints' as bp
-    </code> write
-    <code class="t-mono-inline">
-      &#64;include bp.up(md)
-    </code> or
-    <code class="t-mono-inline">
-      bp.down(sm)
-    </code> (<code class="t-mono-inline">up</code> inclusive,
-    <code class="t-mono-inline">
-      down
-    </code> exclusive), or read
-    <code class="t-mono-inline">
-      bp.$bp-md
-    </code> directly.
-    <code class="t-mono-inline">
-      --bp-*
-    </code> properties below serve regular
-    rules and JS.
+    </code> conditions cannot read custom
+    properties; after <code class="t-mono-inline">&#64;use 'styles/breakpoints'
+    as bp</code> use the Sass aliases.
   </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Form
+        </th>
+
+        <th>
+          Use
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            &#64;include bp.up(md)
+          </code>
+        </td>
+
+        <td>
+          From md up, inclusive
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            &#64;include bp.down(sm)
+          </code>
+        </td>
+
+        <td>
+          Below sm, exclusive
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            bp.$bp-md
+          </code>
+        </td>
+
+        <td>
+          The raw value
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --bp-*
+          </code>
+        </td>
+
+        <td>
+          Regular rules and JS
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="bp-list">
     @for (bp of breakpoints; track bp.token) {
@@ -70,23 +116,33 @@
     Layout grid
   </h3>
 
-  <p class="block-desc t-s">
-    Apply with <code class="t-mono-inline">.page-grid</code> and
-    <code class="t-mono-inline">
-      .col-span-1
-    </code> to
-    <code class="t-mono-inline">
-      .col-span-12
-    </code>; a span wider than the
-    active tier wraps to its own row. <code class="t-mono-inline">.grid-2</code>,
-    <code class="t-mono-inline">
-      .grid-3
-    </code> and
-    <code class="t-mono-inline">
-      .grid-4
-    </code> are helpers that collapse at smaller
-    breakpoints.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        .page-grid
+      </code> with
+      <code class="t-mono-inline">
+        .col-span-1
+      </code> to
+      <code class="t-mono-inline">
+        .col-span-12
+      </code>; a span wider than the
+      active tier wraps to its own row
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        .grid-2
+      </code>,
+      <code class="t-mono-inline">
+        .grid-3
+      </code>,
+      <code class="t-mono-inline">
+        .grid-4
+      </code>: helpers that collapse at
+      smaller breakpoints
+    </li>
+  </ul>
 
   <div class="grid-tiers">
     @for (t of tiers; track t.name) {

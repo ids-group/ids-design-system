@@ -499,39 +499,102 @@
   </h3>
 
   <p class="block-desc t-s">
-    Fields take a halo (<code class="t-mono-inline"
-      >--ds-field-focus-shadow</code
-    >); the rest a <code class="t-mono-inline">--focus-ring-width</code> outline
-    in <code class="t-mono-inline"> --focus-ring-color </code>.
+    Fields take a halo
+    (<code class="t-mono-inline">--ds-field-focus-shadow</code>); the rest a
     <code class="t-mono-inline">
-      data-focus
-    </code> on
+      --focus-ring-width
+    </code> outline in
     <code class="t-mono-inline">
-      &lt;html&gt;
-    </code>:
-    <code class="t-mono-inline">
-      ring
-    </code> gives fields the double ring;
-    <code class="t-mono-inline">
-      edge
-    </code> makes both flush (offset 0, 1px
-    field ring).
-  </p>
-
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      focus.emit-rules
-    </code> rings any unstyled
-    focusable via <code class="t-mono-inline">:where(:focus-visible)</code>;
-    zero specificity, so any CSS wins. Without it, an
-    <code class="t-mono-inline">
-      ds-alert
-    </code> close button, projected link
-    or own <code class="t-mono-inline">&lt;button&gt;</code> gets the browser's
-    <code class="t-mono-inline">
-      outline: auto
+      --focus-ring-color
     </code>.
   </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          data-focus on &lt;html&gt;
+        </th>
+
+        <th>
+          Effect
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          unset
+        </td>
+
+        <td>
+          Field halo, offset outline on the rest
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            ring
+          </code>
+        </td>
+
+        <td>
+          Fields take the double ring
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            edge
+          </code>
+        </td>
+
+        <td>
+          Both flush: offset 0, 1px field ring
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        focus.emit-rules
+      </code> rings any unstyled
+      focusable via <code class="t-mono-inline">:where(:focus-visible)</code>,
+      zero specificity, so any CSS wins
+    </li>
+
+    <li>
+      Without it a projected link or your own
+      <code class="t-mono-inline">
+        &lt;button&gt;
+      </code> gets the browser's
+      <code class="t-mono-inline">
+        outline: auto
+      </code>; DS components ring their
+      own elements through <code class="t-mono-inline">component-base</code>
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        styles/ds
+      </code> includes it; an a-la-carte
+      <code class="t-mono-inline">
+        &#64;use
+      </code> consumer adds
+      <code class="t-mono-inline">
+        &#64;use 'styles/focus' as focus;
+      </code> and
+      <code class="t-mono-inline">
+        &#64;include focus.emit-rules;
+      </code> to one
+      global stylesheet
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     Building a ringed shell: silence the one control inside
@@ -539,54 +602,46 @@
 
   <p class="block-desc t-s">
     A composite ringed on <code class="t-mono-inline">:focus-within</code>
-    (field box, segmented row, toolbar cell) must drop the base outline on its
-    one inner control, or two rings show. Never reset the whole box: inner tab
-    stops (clear button, password toggle, stepper) lose their ring (WCAG 2.4.7).
-    DS shells use
-    <code class="t-mono-inline">
-      focus.owns-the-focus-ring($control)
-    </code> or
-    <code class="t-mono-inline">
-      focus.ring-for($control)
-    </code>.
+    (field box, segmented row, toolbar cell) silences the base outline of its
+    one inner control, or two rings show.
   </p>
+
+  <ul class="rules">
+    <li>
+      Do: <code class="t-mono-inline">focus.ring-for($control)</code> or
+      <code class="t-mono-inline">
+        focus.owns-the-focus-ring($control)
+      </code>,
+      naming one control
+    </li>
+
+    <li>
+      Don't: reset the whole box; inner tab stops (clear button, password
+      toggle, stepper) lose their ring (WCAG 2.4.7)
+    </li>
+
+    <li>
+      Under <code class="t-mono-inline">forced-colors</code> every focused
+      element keeps a <code class="t-mono-inline">CanvasText</code> outline;
+      silencing is off
+    </li>
+  </ul>
 
   <pre class="t-mono-block">{{ shellRingSnippet }}</pre>
 
-  <p class="block-desc t-s">
-    Under <code class="t-mono-inline">forced-colors</code> every focused element
-    gets a <code class="t-mono-inline">CanvasText</code> outline (box-shadow is
-    dropped) and silencing is off. À-la-carte
-    <code class="t-mono-inline">
-      &#64;use
-    </code> consumers add
-    <code class="t-mono-inline">
-      &#64;use 'styles/focus' as focus;
-    </code> and
-    <code class="t-mono-inline">
-      &#64;include focus.emit-rules;
-    </code> to one
-    global stylesheet; <code class="t-mono-inline">styles/ds</code> includes
-    them.
-  </p>
+  <h3 class="block-title t-h4">
+    Base styles for your own component
+  </h3>
 
   <p class="block-desc t-s">
-    Your own component:
     <code class="t-mono-inline">
       &#64;include component-base.rules;
     </code>
-    (<code class="t-mono-inline">styles/component-base</code>) first in its
-    stylesheet, with or without
-    <code class="t-mono-inline">
-      styles/reset
-    </code> and
-    <code class="t-mono-inline">
-      styles/focus
-    </code>. Layered: any unlayered rule
-    of yours wins. On the component's own elements it sets:
+    (<code class="t-mono-inline">styles/component-base</code>) first in the
+    stylesheet. It sits in a cascade layer, so any unlayered rule wins.
   </p>
 
-  <ul class="block-desc t-s">
+  <ul class="rules">
     <li>
       <code class="t-mono-inline">
         border-box
@@ -594,15 +649,23 @@
     </li>
 
     <li>
-      inherited font on form controls
+      Inherited font on form controls
     </li>
 
     <li>
-      zero heading margins
+      Zero heading margins
     </li>
 
     <li>
-      the base focus ring
+      The base focus ring
+    </li>
+
+    <li>
+      Same result with or without
+      <code class="t-mono-inline">
+        styles/reset
+      </code>
+      and <code class="t-mono-inline">styles/focus</code>
     </li>
   </ul>
 
@@ -616,24 +679,29 @@
   </h3>
 
   <p class="block-desc t-s">
-    Rings draw outside the border box, so an
+    An <code class="t-mono-inline">overflow: hidden</code> ancestor clips rings,
+    which draw outside the border box (e.g.
     <code class="t-mono-inline">
-      overflow: hidden
-    </code> ancestor (e.g.
-    <code class="t-mono-inline">
-      ds-card
-    </code>
-
-    <code class="t-mono-inline">
-      padding="none"
-    </code> with a full-bleed child)
-    clips them. <code class="t-mono-inline">inset</code> moves the outline
-    inside (negative offset) and makes the field halo an inset double ring. Set
-    it on the clipping element, not
-    <code class="t-mono-inline">
-      &lt;html&gt;
-    </code>; descendants inherit it.
+      ds-card padding="none"
+    </code> with a full-bleed
+    child).
   </p>
+
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        inset
+      </code> draws the outline inside and
+      makes the field halo an inset double ring
+    </li>
+
+    <li>
+      Set it on the clipping element, not
+      <code class="t-mono-inline">
+        &lt;html&gt;
+      </code>; descendants inherit it
+    </li>
+  </ul>
 
   <div class="halo-stage">
     <div class="halo-cell">

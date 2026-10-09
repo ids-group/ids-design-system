@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="ru" data-density="cozy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Где работает плотность</title>
+<meta name="ds-deck-status" content="open">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+<style>
+  main { max-width: 1320px; padding-bottom: 72px; }
+  .chat { margin: 0; font-size: var(--font-size-xs); color: var(--text-secondary); }
+  .panel.good { border-left: 4px solid var(--success); }
+  .opts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 900px) { .opts { grid-template-columns: minmax(0, 1fr); } }
+  .opt { cursor: pointer; min-width: 0; }
+  .opt > .badge { align-self: flex-start; }
+  .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+  .opt.is-chosen { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+  .opt .chosen-mark { display: none; font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--accent-strong); }
+  .opt.is-chosen .chosen-mark { display: block; }
+  .pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  .pill { padding: 2px var(--space-2); border-radius: var(--radius-pill); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.5 var(--font-sans); }
+  .pill.good { background: var(--success-subtitle); color: var(--success-text); }
+  .pill.bad { background: var(--error-subtitle); color: var(--error-text); }
+  .pill.mid { background: var(--warning-subtitle); color: var(--warning-text); }
+  .stage .spec { flex: 1 1 420px; min-width: 0; }
+
+  /* One tier = one container with the attribute, holding a toolbar row of real fields. */
+  .tier { padding: var(--space-2) var(--space-3); border: var(--border-width-default) dashed var(--border-default); border-radius: var(--radius-md); background: var(--surface-default); min-width: 0; }
+  .tier + .tier { margin-top: var(--space-2); }
+  .tier .tier { margin: var(--space-2) 0 0; background: var(--surface-secondary); }
+  .tier-name { margin: 0 0 var(--space-1-5); font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-mono); color: var(--text-tertiary); }
+  .says { margin: var(--space-1-5) 0 0; }
+  .says .off { color: var(--error-text); font-weight: var(--font-weight-bold); }
+  .says .on { color: var(--success-text); font-weight: var(--font-weight-bold); }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+
+  /* Rebuilt from the library's SCSS: input.component.scss .control, select .trigger, multi-select .field-trigger,
+     button.component.scss :host + .md, icon-button.component.scss .md; heights through styles/_field-box.scss. */
+  .x-input, .x-select, .x-multi {
+    --_field-height: var(--ds-field-height, var(--field-h-md));
+    box-sizing: border-box; display: flex; align-items: center; gap: var(--space-2); min-width: 0;
+    background-color: var(--surface-default);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--ds-radius-control);
+    color: var(--text-tertiary);
+    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  }
+  .x-input { flex: 1 1 64px; height: var(--_field-height); padding: var(--field-pad-y) var(--field-pad-x); }
+  .x-select { flex: 0 1 100px; height: var(--_field-height); padding: var(--field-pad-y) var(--field-select-pad-r) var(--field-pad-y) var(--field-pad-x); position: relative; }
+  .x-select::after { content: ''; position: absolute; right: var(--space-2); top: 50%; width: 7px; height: 7px; margin-top: -5px; border: solid var(--text-secondary); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  .x-multi { flex: 0 1 96px; min-height: var(--_field-height); padding: var(--space-1-5) var(--field-pad-x); gap: var(--space-1-5); }
+  .x-button {
+    --_button-height: var(--ds-button-height, var(--field-h-md));
+    box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; flex: none;
+    height: var(--_button-height); padding: 0 var(--space-5);
+    border: var(--border-width-default) solid transparent; border-radius: var(--ds-radius-control);
+    background-color: var(--accent); color: var(--accent-on);
+    font: var(--font-weight-extrabold) var(--font-size-m) / var(--line-height-flat) var(--font-sans);
+    letter-spacing: var(--letter-spacing-wide);
+  }
+  .x-icon-button {
+    --_icon-button-size: var(--ds-icon-button-size, var(--hit-cozy));
+    box-sizing: border-box; display: inline-grid; place-items: center; flex: none;
+    width: var(--_icon-button-size); height: var(--_icon-button-size);
+    border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control);
+    background-color: var(--surface-default); color: var(--text-secondary);
+  }
+  .x-icon-button svg { width: var(--icon-md); height: var(--icon-md); }
+
+  /* «Плотность на любом контейнере»: the four :root tokens that read a density base, re-declared where the base changes. */
+  .is-scoped [data-density] {
+    --field-h-sm: var(--hit-min);
+    --field-h-md: var(--hit-cozy);
+    --sidenav-collapsed-item: var(--hit-cozy);
+    --calendar-cell-min: var(--hit-cozy);
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1><code>data-density</code> на контейнере не меняет высоту полей</h1>
+    <p class="lede">Одно решение: где консьюмер ставит плотность.</p>
+    <p class="chat">Ответ нести в чат: «Acc2 · Changelog с v0.14.8»</p>
+  </header>
+
+  <section class="panel" data-review="Сегодня">
+    <h2>Сегодня</h2>
+    <p><code>&lt;html&gt;</code> этой страницы - <code>cozy</code>. Справа контейнер с <code>data-density="compact"</code>: иконка-кнопка сжалась до 32, поле, выбор и кнопка остались 40. Страница Density в ds-docs советует ставить атрибут на контейнер маршрута и обещает тулбар в 32px.</p>
+    <div class="stage">
+      <div class="spec">
+        <p class="cap">контейнер без атрибута</p>
+        <div class="tier" data-row><div class="bar" data-fields></div><p class="says" data-says></p></div>
+      </div>
+      <div class="spec">
+        <p class="cap">контейнер data-density="compact"</p>
+        <div class="tier" data-density="compact" data-row data-expect="32"><div class="bar" data-fields></div><p class="says" data-says></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" data-review="Два варианта" data-review-note-only>
+    <h2>Два варианта</h2>
+    <p>В каждой карточке одни и те же поля в четырёх контейнерах и один вложенный. Цифры под строкой - высоты, измеренные в этой странице. Выбор - клик по карточке.</p>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0" data-pick="Плотность только на <html>">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Плотность только на <code>&lt;html&gt;</code></h3>
+        <div class="pills"><span class="pill good">0 строк в библиотеке</span><span class="pill mid">правится текст в ds-docs</span><span class="pill bad">тулбар разной высоты в контейнере</span></div>
+        <div data-tiers></div>
+        <dl class="layer">
+          <dt>CSS</dt><dd class="none">без изменений; страница Density говорит «только на &lt;html&gt;», для плотного куска - <code>size="sm"</code> на каждом компоненте</dd>
+          <dt>Кто уже ставит на контейнер</dt><dd class="none">видит то же, что сейчас: поля 40px, иконки-кнопки, чекбоксы, свитчи и аватары следуют атрибуту</dd>
+          <dt>Наследование и вложенность</dt><dd>поля - нет; 18 базовых токенов (--hit-cozy, --check-size, ...) - да, отсюда разнобой</dd>
+        </dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+      <article class="opt is-pick is-scoped" tabindex="0" data-pick="Плотность на любом контейнере">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Плотность на любом контейнере</h3>
+        <div class="pills"><span class="pill good">4 строки в _tokens.scss</span><span class="pill good">вложенность работает</span><span class="pill mid">поля в таких контейнерах сжимаются</span></div>
+        <div data-tiers></div>
+        <dl class="layer">
+          <dt>CSS</dt><dd class="gain">[data-density] { --field-h-sm: var(--hit-min); --field-h-md: var(--hit-cozy); --sidenav-collapsed-item: var(--hit-cozy); --calendar-cell-min: var(--hit-cozy); }</dd>
+          <dt>Кто уже ставит на контейнер</dt><dd>поля, кнопки, поиск, пагинация, свёрнутый пункт sidenav и ячейка календаря становятся 48/32/24 вместе с остальным; в consumer-репозиториях на диске таких мест 0</dd>
+          <dt>Наследование и вложенность</dt><dd class="gain">ближайший [data-density] выигрывает: compact внутри comfy - 32px</dd>
+        </dl>
+        <span class="chosen-mark">выбрано</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Сравнение</h2>
+    <table>
+      <thead><tr><th>Вариант</th><th>Что пишет консьюмер</th><th>Вложенность</th><th>Риск поломки</th><th class="num">Токенов переобъявлено</th><th>Так делают</th></tr></thead>
+      <tbody>
+        <tr class="row-today"><th class="rowlabel">Плотность только на &lt;html&gt;</th><td><code>&lt;html data-density="compact"&gt;</code>, локально <code>size="sm"</code></td><td>нет</td><td>нет</td><td class="num">0</td><td>Fluent 2 (только <code>size</code> на компоненте), MDC («density does not cascade»)</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Плотность на любом контейнере</th><td><code>&lt;section data-density="compact"&gt;</code></td><td>да</td><td>поля в контейнерах с атрибутом сжимаются</td><td class="num">4</td><td>Carbon (<code>Layout</code>, производная переобъявлена в классе), Ant Design и Spectrum (вложенный провайдер), MUI (вложенный <code>ThemeProvider</code>)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel good">
+    <h2>Рекомендую: «Плотность на любом контейнере»</h2>
+    <p>Четыре строки делают правдой то, что уже обещает страница Density и что делают Carbon, Ant Design и Spectrum, и убирают разнобой иконка-кнопка 32 / кнопка 40 в одном тулбаре.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Что решить</h2>
+    <table>
+      <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
+      <tbody>
+        <tr class="row-pick"><th class="rowlabel">Где работает data-density</th><td>Плотность только на &lt;html&gt; · Плотность на любом контейнере</td><td>Плотность на любом контейнере</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <p class="src"><b>Источники, проверено 2026-10-09 на <code>dev</code> (<code>5baa53e30</code>).</b> Код: <code>src/lib/styles/_tokens.scss</code> - <code>:root</code> объявляет <code>--field-h-sm: var(--hit-min)</code> (330), <code>--field-h-md: var(--hit-cozy)</code> (331), <code>--sidenav-collapsed-item</code> (352) и <code>--calendar-cell-min</code> (442) от <code>--hit-cozy</code>; блоки <code>[data-density]</code> (506-559) меняют 18 базовых токенов и ни одного из этих четырёх - список посчитан скриптом по всем <code>:root</code> и <code>[data-density]</code> в <code>src/lib/styles</code>. Читают их <code>styles/_field-box.scss</code> (input, select, multi-select, autocomplete, date, time и colour picker, number stepper, field-group, split-button, modal), <code>button</code>, <code>search</code>, <code>pagination</code>, <code>icon-button .lg</code>, <code>sidenav-item</code>; <code>icon-button .md</code> читает <code>--hit-cozy</code> напрямую и потому следует контейнеру. Docs: <code>ds-docs/.../density/density.section.html:210</code> («on the route container») и <code>:231</code> («levels a toolbar at 32px»); живое сравнение там на локальных <code>.dens-btn</code>/<code>.dens-input</code>, которые читают <code>--hit-cozy</code> напрямую. Поля в деке пересобраны из SCSS компонентов на токенах <code>ds.css</code>; карточка «на любом контейнере» добавляет ровно четыре строки из таблицы. В <code>mm-ecm-platform*</code>, <code>mm-broker-platform</code> и исходниках <code>pinkmoon-platform</code> <code>data-density</code> не встречается (grep по <code>C:/Repositories</code>, 2026-10-09). CSS: значение custom property подставляется в computed value до наследования - <a href="https://www.w3.org/TR/css-variables-1/">CSS Variables 1</a>; <code>@property</code> этого не меняет, registered property тоже наследует computed value - <a href="https://www.w3.org/TR/css-properties-values-api-1/">Properties and Values API</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">MDN</a>. Библиотеки: Carbon <a href="https://raw.githubusercontent.com/carbon-design-system/carbon/main/packages/react/src/components/Layout/Layout.mdx">Layout</a>, <a href="https://raw.githubusercontent.com/carbon-design-system/carbon/main/packages/styles/scss/utilities/_layout.scss">_layout.scss</a>; <a href="https://react-spectrum.adobe.com/react-spectrum/Provider.html">React Spectrum Provider</a>; <a href="https://ant.design/components/config-provider">Ant ConfigProvider</a>; <a href="https://mui.com/material-ui/customization/theming/">MUI theming</a>; <a href="https://cdn.jsdelivr.net/npm/@material/density@14.0.0/README.md">MDC density</a>; <a href="https://raw.githubusercontent.com/microsoft/fluentui/master/packages/react-components/react-provider/library/src/components/FluentProvider/FluentProvider.types.ts">FluentProvider types</a>; <a href="https://atlassian.design/foundations/spacing">Atlassian spacing</a> (настройки плотности нет).</p>
+</main>
+
+<template id="fields">
+  <span class="x-input" data-m="поле">Поиск…</span>
+  <span class="x-select" data-m="выбор">Статус</span>
+  <span class="x-multi" data-m="мульти">Теги</span>
+  <span class="x-button" data-m="кнопка">Сохранить</span>
+  <span class="x-icon-button" data-m="иконка"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4h10M5 8h6M7 12h2"/></svg></span>
+</template>
+
+<script>
+  const TIERS = [['comfy', 48], ['cozy', 40], ['compact', 32], ['ultra-compact', 24]];
+  const fieldsTemplate = document.getElementById('fields');
+
+  const row = (density, expect) => {
+    const tier = document.createElement('div');
+    tier.className = 'tier';
+    tier.dataset.row = '';
+    tier.dataset.expect = expect;
+    tier.setAttribute('data-density', density);
+    tier.innerHTML = `<p class="tier-name">data-density="${density}" · ждём ${expect}</p><div class="bar" data-fields></div><p class="says" data-says></p>`;
+    return tier;
+  };
+
+  for (const host of document.querySelectorAll('[data-tiers]')) {
+    for (const [density, expect] of TIERS) host.append(row(density, expect));
+    const outer = row('comfy', 48);
+    outer.querySelector('.tier-name').textContent = 'вложенный: comfy снаружи';
+    outer.querySelector('[data-fields]').remove();
+    outer.querySelector('[data-says]').remove();
+    const inner = row('compact', 32);
+    inner.querySelector('.tier-name').textContent = 'data-density="compact" внутри · ждём 32';
+    outer.append(inner);
+    host.append(outer);
+  }
+
+  for (const bar of document.querySelectorAll('[data-fields]')) bar.append(fieldsTemplate.content.cloneNode(true));
+
+  // min-height, as in the library: the empty multi-select never drops below 6px + 19.6px line box + 6px + 2px border.
+  const MULTI_CONTENT = 33.6;
+  const measure = () => {
+    for (const tier of document.querySelectorAll('[data-row]')) {
+      const says = tier.querySelector(':scope > [data-says]');
+      if (!says) continue;
+      const expect = Number(tier.dataset.expect || 40);
+      says.innerHTML = [...tier.querySelectorAll(':scope > [data-fields] [data-m]')].map((field) => {
+        const height = Math.round(field.getBoundingClientRect().height * 10) / 10;
+        const isMulti = field.classList.contains('x-multi');
+        const want = isMulti ? Math.max(expect, MULTI_CONTENT) : expect;
+        const ok = Math.abs(height - want) < 0.5;
+        return `${field.dataset.m} <span class="${ok ? 'on' : 'off'}">${height}</span>`;
+      }).join(' · ');
+    }
+  };
+  document.fonts.ready.then(measure);
+  measure();
+
+  let picked = '';
+  const cards = document.querySelectorAll('.opt[data-pick]');
+  const choose = (card) => {
+    picked = picked === card.dataset.pick ? '' : card.dataset.pick;
+    for (const other of cards) other.classList.toggle('is-chosen', other.dataset.pick === picked);
+    window.deckReview?.refresh();
+  };
+  for (const card of cards) {
+    card.addEventListener('click', () => choose(card));
+    card.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); choose(card); } });
+  }
+  window.deckReviewHooks = {
+    extra: () => (picked ? 'плотность - ' + picked : ''),
+    onReset: () => { picked = ''; for (const card of cards) card.classList.remove('is-chosen'); },
+  };
+</script>
+<!-- deck-review -->
+<script>
+// deck-review: verdict per [data-review] block, a textarea for remarks, one answer line in a fixed bar.
+// Inlined into a deck by ~/.claude/bin/deck-review-inline; contract in ~/.claude/docs/deck-review.md.
+(() => {
+  // Every key under deck-review: is a disposable reviewer answer, kept 7 days after its last change.
+  const PREFIX = 'deck-review:v1:';
+  const KEY = PREFIX + (document.documentElement.dataset.deck || document.title);
+  const KEEP_MS = 7 * 24 * 60 * 60 * 1000;
+  const ACCEPT = 'принято';
+  const REMARK = 'есть замечание';
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith('deck-review:')) continue;
+      let expires = 0;
+      try { if (key.startsWith(PREFIX)) expires = JSON.parse(localStorage.getItem(key))?.expires; } catch { /* malformed: drop */ }
+      if (!(expires > Date.now())) localStorage.removeItem(key);
+    }
+  } catch { /* private window */ }
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY))?.answers ?? {}; } catch { return {}; } };
+  const write = () => { try { localStorage.setItem(KEY, JSON.stringify({ expires: Date.now() + KEEP_MS, answers: state })); } catch { /* private window */ } };
+  const state = read();
+
+  document.head.insertAdjacentHTML('beforeend', `<style>
+    .dr-row { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px 0; }
+    .dr-btn { padding: 4px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 999px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-btn[aria-pressed="true"] { background: var(--accent-subtitle, #e6efff); border-color: var(--accent-strong, #2457c5); color: var(--accent-strong, #2457c5); }
+    .dr-btn[data-v="${REMARK}"][aria-pressed="true"] { background: var(--error-subtitle, #fdecec); border-color: var(--error-text, #b42318); color: var(--error-text, #b42318); }
+    .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--border-default, #c9ced6); border-radius: var(--radius-md, 8px); background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
+    .dr-note:focus { outline: none; border-color: var(--accent, #2457c5); box-shadow: var(--ds-field-focus-shadow, 0 0 0 3px rgb(36 87 197 / .25)); }
+    .dr-note[hidden] { display: none; }
+    .dr-history { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 4px; color: var(--text-secondary, #4b5563); font: 13px/1.45 var(--font-sans, system-ui, sans-serif); }
+    .dr-history::before { content: 'История замечаний'; display: block; margin-left: -1.2em; color: var(--text-primary, #1d2330); font-weight: 600; }
+    [data-dr-folded] > :not(h1, h2, h3, h4, .dr-row, .dr-note) { display: none !important; }
+    .dr-fold { padding: 4px 8px; border: 0; background: none; color: var(--accent-strong, #2457c5); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-fold[hidden] { display: none; }
+    .dr-btn, .dr-bar button, .dr-fold { transition: background-color .12s, border-color .12s, color .12s, box-shadow .12s; }
+    .dr-btn:hover, .dr-bar button:hover { background: var(--surface-secondary, #f3f4f6); border-color: var(--border-strong, #9aa1ad); }
+    .dr-btn:active, .dr-bar button:active { background: var(--surface-muted, #e5e7eb); }
+    .dr-btn[aria-pressed="true"]:hover { background: color-mix(in srgb, var(--accent-strong, #2457c5) 14%, var(--surface-default, #fff)); }
+    .dr-btn[data-v="есть замечание"][aria-pressed="true"]:hover { background: color-mix(in srgb, var(--error-text, #b42318) 14%, var(--surface-default, #fff)); }
+    .dr-fold:hover { text-decoration: underline; }
+    .dr-fold:active { color: var(--text-primary, #1d2330); }
+    .dr-btn:focus-visible, .dr-bar button:focus-visible, .dr-fold:focus-visible { outline: 2px solid var(--focus-ring-color, var(--accent, #2457c5)); outline-offset: 2px; }
+    .dr-bar button[data-done] { background: var(--success-subtitle, #e7f6ec); border-color: var(--success, #1a7f37); color: var(--success-text, #116329); }
+    .dr-bar { position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; padding: 10px 20px; background: var(--surface-default, #fff); border-top: 1px solid var(--border-divider, #e3e6eb); box-shadow: 0 -4px 16px rgb(0 0 0 / .08); color: var(--text-primary, #1d2330); font: 13px/1.4 var(--font-sans, system-ui, sans-serif); }
+    .dr-bar b { flex: none; }
+    .dr-bar .dr-chat { flex: none; color: var(--text-tertiary, #6b7280); }
+    .dr-bar output { flex: 1 1 auto; min-inline-size: 0; overflow-x: auto; white-space: nowrap; color: var(--text-secondary, #4b5563); font-family: var(--font-mono, ui-monospace, monospace); }
+    .dr-bar button { flex: none; padding: 6px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 6px; background: var(--surface-default, #fff); color: inherit; font: 600 13px/1.4 inherit; cursor: pointer; }
+    body { padding-block-end: 72px; }
+    @media (max-width: 640px) { .dr-bar { padding: 8px 12px; gap: 8px; } .dr-bar .dr-chat { display: none; } }
+  </style>`);
+
+  let items = [...document.querySelectorAll('[data-review]')];
+  if (!items.length) {
+    const whole = document.createElement('section');
+    whole.dataset.review = 'Дека в целом';
+    whole.innerHTML = '<h3>Дека в целом</h3>';
+    (document.querySelector('main') ?? document.body).append(whole);
+    items = [whole];
+  }
+
+  const controls = new Map();
+  const unfolded = new Set();
+  for (const item of items) {
+    const label = item.dataset.review;
+    // A deck bumps data-review-round once it has worked through the remarks of a round; answers stored
+    // for an earlier round are already in the block's history, so they leave the input.
+    const round = Number(item.dataset.reviewRound) || 1;
+    if (state[label] && (state[label].round ?? 1) !== round) { delete state[label]; write(); }
+    const own = () => Object.assign((state[label] ??= {}), { round });
+    const row = document.createElement('div');
+    row.className = 'dr-row';
+    const verdicts = item.hasAttribute('data-review-note-only') ? [REMARK] : [ACCEPT, REMARK];
+    const buttons = verdicts.map((verdict) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'dr-btn';
+      button.dataset.v = verdict;
+      button.textContent = verdict === ACCEPT ? 'Принято' : 'Есть замечание';
+      button.addEventListener('click', () => {
+        const entry = own();
+        entry.v = entry.v === verdict ? '' : verdict;
+        write();
+        render();
+        if (entry.v === REMARK) note.focus();
+      });
+      return button;
+    });
+    const note = document.createElement('textarea');
+    note.className = 'dr-note';
+    note.placeholder = 'Что не так';
+    note.setAttribute('aria-label', `Замечание: ${label}`);
+    note.addEventListener('input', () => { own().note = note.value; write(); render(); });
+    const fold = document.createElement('button');
+    fold.type = 'button';
+    fold.className = 'dr-fold';
+    fold.addEventListener('click', () => { unfolded.has(label) ? unfolded.delete(label) : unfolded.add(label); render(); });
+    row.append(...buttons, fold);
+    item.append(row, note);
+    const history = item.querySelector(':scope > [data-review-history]');
+    if (history) { history.classList.add('dr-history'); item.append(history); }
+    controls.set(label, { item, buttons, note, fold });
+  }
+
+  const chat = document.querySelector('.chat')?.textContent.replace(/^[^«]*/, '') ?? '';
+  const bar = document.createElement('div');
+  bar.className = 'dr-bar';
+  bar.innerHTML = `<b></b><span class="dr-chat"></span><output></output><button type="button" data-a="copy">Скопировать</button><button type="button" data-a="reset">Сбросить</button>`;
+  bar.querySelector('.dr-chat').textContent = chat;
+  document.body.append(bar);
+  const line = bar.querySelector('output');
+
+  const hooks = (window.deckReviewHooks ??= {});
+  window.deckReview = { refresh: () => render() };
+
+  function render() {
+    const parts = [];
+    let done = 0;
+    let open = 0;
+    for (const [label, { item, buttons, note, fold }] of controls) {
+      const entry = state[label] ?? {};
+      const accepted = entry.v === ACCEPT;
+      item.toggleAttribute('data-dr-folded', accepted && !unfolded.has(label));
+      fold.hidden = !accepted;
+      fold.textContent = unfolded.has(label) ? 'Свернуть' : 'Развернуть';
+      for (const button of buttons) button.setAttribute('aria-pressed', String(entry.v === button.dataset.v));
+      note.hidden = entry.v !== REMARK;
+      if (note.value !== (entry.note ?? '')) note.value = entry.note ?? '';
+      if (!accepted) open++;
+      if (!entry.v) continue;
+      if (!accepted) done++;
+      const text = entry.note?.trim().replace(/\s+/g, ' ');
+      parts.push(entry.v === REMARK ? `${label} - замечание${text ? `: «${text}»` : ''}` : `${label} - принято`);
+    }
+    const extra = hooks.extra?.();
+    if (extra) parts.push(extra);
+    bar.querySelector('b').textContent = `${done} из ${open}`;
+    line.textContent = parts.length ? `Дека ${document.title}: ${parts.join('; ')}` : 'пока ничего не выбрано';
+  }
+
+  bar.addEventListener('click', (event) => {
+    const action = event.target.closest('button')?.dataset.a;
+    if (action === 'copy') {
+      const button = event.target.closest('button');
+      navigator.clipboard?.writeText(line.textContent).then(() => {
+        button.dataset.done = '';
+        button.textContent = 'Скопировано';
+        setTimeout(() => { delete button.dataset.done; button.textContent = 'Скопировать'; }, 1500);
+      });
+    }
+    if (action === 'reset') { for (const label of Object.keys(state)) delete state[label]; write(); hooks.onReset?.(); render(); }
+  });
+  render();
+})();
+</script>
+<!-- /deck-review -->
+</body>
+</html>
