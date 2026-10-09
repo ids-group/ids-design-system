@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**129 open — 1 P1, 9 P2, 119 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
+**130 open — 1 P1, 9 P2, 120 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 1
 
@@ -37,7 +37,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 119
+### P3 — 120
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -163,6 +163,7 @@ is stale. Closing an item means deleting the item and nothing else.
   - `ds-button` pulls `field-message` statically, and it stays cheap only while the two
 - **Component feature gaps**
   - One tab stop per long table, arrow keys between its clipped values - PARKED 2026-10-09 by Stas
+  - The clipped-value tab stop on a 500-row table: the reported 4x long task did not reproduce - PARKED 2026-10-09 by Stas, after the release
   - Portaled CSS as opt-in — PARKED 2026-09-04 by Stas
   - Split the design system from the UI kit as two packages (Mikhail, 2026-08-30)
   - A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies
@@ -1472,6 +1473,8 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 *This section also has items under **Asks**, **Decisions**.*
 
 - [ ] **[P3] One tab stop per long table, arrow keys between its clipped values - PARKED 2026-10-09 by Stas.** A clipped `dsTooltipWhenClipped` value that no keyboard path reaches is a tab stop of its own while clipped, so a 25-row `ds-table` with two clipped columns holds 50 stops (measured in the ds-docs build, deck `presentations/implemented/clipped-value-tab-stop.html`). The parked alternative: roving tabindex, one clipped value at `tabindex="0"` and the rest at `-1`, arrows moving between them. APG allows that only inside a composite widget, so the table becomes `role="grid"` and `ds-table` takes the grid keyboard model (arrows, Home/End, PageUp/PageDown); without the role a screen reader in browse mode keeps the arrows for itself. Unparks when a consumer reports the stop count in a long table.
+
+- [ ] **[P3] The clipped-value tab stop on a 500-row table: the reported 4x long task did not reproduce - PARKED 2026-10-09 by Stas, after the release.** An audit reported the largest long task after injecting 500 rows into a `ds-table` with two `truncate` columns going from 160-179 ms before the tab stop to 654-719 ms with it. Measured 2026-10-09 on production ds-docs builds, one fresh page per run, the truncate demo given 500 rows (1000 clipped values, 833 stops written): before the tab stop 199, 342, 129, 225 ms; with it 262, 176, 228 ms; with every host measured before any `tabindex` is written 184, 239, 141 ms. The shared ResizeObserver callback took 7-8 ms for a 994-entry batch with reads and writes interleaved, so writing `tabindex` does not invalidate layout there. Left to find: the audit's setup (viewport, CPU throttling, a resize after render, the accessibility tree on) and whether the cost sits outside the callback, in the style recalc of 833 newly focusable cells or in the per-host `closest` and MutationObserver registration at render; a performance trace of the inject task on both builds splits it. Unparks after the release.
 
 - [ ] **[P3] Portaled CSS as opt-in — PARKED 2026-09-04 by Stas.** 1 055 B of the 2 793 B global sheet is the only part that could move behind an opt-in: `dropdown-overlay`, `overlay-motion`, `toast-overlay`. It saves only a consumer with no picker, no toast and no modal, which is close to nobody, and the cost is one more import in everyone else's bootstrap. The measurement stands if the balance ever changes; the AG Grid route (CSS inside the component) stays rejected because Angular injects those as runtime tags and a strict CSP under SSR blocks them.
 
