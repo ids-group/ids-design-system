@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Обрезанное значение с клавиатуры</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-09">
+<meta name="ds-deck-evidence" content="src/lib/components/tooltip/tooltip-ancestor-focus.ts:120 - CHANGELOG.md:191">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   .pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-3); }
   .pair figure, .solo figure { margin: 0; }
@@ -41,8 +43,15 @@
     <h1>Обрезанное значение доступно с клавиатуры</h1>
     <p class="chat">Ответ нести в чат: «pp-ревью и Dashboard Review»</p>
     <p class="lede">Ветка <code>ecm-fix/clipped-tooltip-keyboard</code>. Обрезанное значение, до которого Tab не доходил, получает остановку Tab, пока обрезано.</p>
-    <div class="chips"><span class="chip is-open">Нужно решение: влить в dev</span><span class="chip">dsTooltipWhenClipped</span><span class="chip">ME-488</span><span class="chip">актуально на 2026-10-09</span></div>
+    <div class="chips"><span class="chip">влито в dev</span><span class="chip">dsTooltipWhenClipped</span><span class="chip">ME-488</span><span class="chip">актуально на 2026-10-09</span></div>
   </header>
+  <div class="decided">
+    <h2>Решено: остановка Tab на каждом обрезанном значении (A)</h2>
+    <p>Хост <code>dsTooltipWhenClipped</code>, до которого не доходит ни один путь с клавиатуры, получает <code>tabindex="0"</code>, пока обрезан, и теряет его, когда текст влезает. Длинные таблицы - вариант A, ветка как есть: 25 строк с двумя обрезанными колонками дают 50 остановок. B (одна остановка, стрелки, role=grid) - в docs/todo.md, Parked. C не выбран. Все шесть блоков приняты, значение во вкладке тоже получает остановку.</p>
+    <p class="evidence">2026-10-09 · src/lib/components/tooltip/tooltip-ancestor-focus.ts:120 - CHANGELOG.md:191</p>
+  </div>
+  <details class="folded">
+    <summary>До и после, варианты, замеры</summary>
 
   <section class="panel verdict">
     <h2>Что от тебя нужно</h2>
@@ -161,6 +170,7 @@
         <li><code>class-surface-entry</code> (проверка при релизе): падает на <code>MenuItemComponent</code> - это изменение из dev (feat(menu) 179a1568e), ветка меню не трогает.</li>
       </ul>
     </div>
+  </details>
   </details>
 </main>
 <script>
