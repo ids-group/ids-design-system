@@ -1,5 +1,6 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
+@use '../../styles/target' as target;
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-state' as field-state;
@@ -172,6 +173,7 @@
   }
 
   @include press.feedback;
+  @include target.min-size(calc(14px + 2 * var(--space-1)), $position: null);
 }
 
 .time-static {
