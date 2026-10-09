@@ -39,7 +39,7 @@
   color: var(--icon-default);
   cursor: pointer;
 
-  @include target.min-size(14px);
+  @include target.min-size;
 
   &:hover:not(:disabled) {
     color: var(--icon-strong);

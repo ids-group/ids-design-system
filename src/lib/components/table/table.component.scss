@@ -601,7 +601,7 @@
     color: var(--_table-sort-active-icon-color);
   }
 
-  @include target.min-size(12px);
+  @include target.min-size;
 }
 
 .col-filter {

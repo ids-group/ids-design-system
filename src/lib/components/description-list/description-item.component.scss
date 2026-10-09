@@ -80,7 +80,7 @@
     @include focus.ring(1px);
   }
 
-  @include target.min-size(calc(14px + 2 * var(--space-0-5)));
+  @include target.min-size;
 }
 
 :host(.stacked) :is(.term, .details) {

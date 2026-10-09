@@ -28,9 +28,10 @@
 ### Added
 
 - **`styles/target` gives an icon-only control of yours the library's 24px target.**
-  `@include target.min-size($box)` last in its rule, with `$box` the size it is drawn at: the box
-  keeps its size, a transparent `::before` takes the pointer over `--hit-xs` around it, and the
-  focus ring is drawn on the edge of that target, 24px across. `$ring-on-target: false` leaves the
+  `@include target.min-size` last in its rule: the box keeps its size, a transparent `::before`
+  centred on it takes the pointer over at least `--hit-xs`, and the focus ring is drawn on that
+  target, 24px across. The ring follows `--focus-ring-offset`, so `[data-focus='edge']` draws it
+  2px and `[data-focus='inset']` 4px inside the target's edge. `$ring-on-target: false` leaves the
   ring where the control's own rule draws it, for a control set beside text; `$position: null` for a
   control that is already positioned.
 

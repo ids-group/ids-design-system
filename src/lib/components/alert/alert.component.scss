@@ -85,7 +85,7 @@
 
   .a-close {
     @include dismiss-button.button;
-    @include target.min-size(calc(14px + 2 * var(--space-0-5)));
+    @include target.min-size;
 
     color: var(--_alert-close-icon-color);
     flex-shrink: 0;
