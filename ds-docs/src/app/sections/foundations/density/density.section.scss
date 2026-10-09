@@ -1,32 +1,12 @@
     /* ---------- Tiers table ---------- */
     .tbl {
-      width: 100%;
       min-width: 400px;
-      margin-top: var(--space-3);
-      border-collapse: separate;
-      border-spacing: 0;
-      border: var(--border-width-default) solid var(--border-divider);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      background: var(--surface-default);
+
+      th,
+      td {
+        vertical-align: top;
+      }
     }
-    .tbl th,
-    .tbl td {
-      padding: var(--space-3) var(--space-4);
-      text-align: left;
-      border-bottom: var(--border-width-default) solid var(--border-divider);
-      font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-      vertical-align: top;
-    }
-    .tbl th {
-      background: var(--surface-secondary);
-      font-weight: var(--font-weight-bold);
-      color: var(--text-secondary);
-      font-size: var(--font-size-xs);
-      text-transform: uppercase;
-      letter-spacing: var(--letter-spacing-wider);
-    }
-    .tbl tr:last-child td { border-bottom: 0; }
 
     /* ---------- Sandboxes ---------- */
     .dens-grid {
