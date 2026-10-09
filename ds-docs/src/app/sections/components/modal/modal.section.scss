@@ -25,16 +25,6 @@
   gap: var(--space-3);
 }
 
-kbd {
-  display: inline-block;
-  padding: 1px 6px;
-  font: var(--font-weight-medium) 11px / 1 var(--font-mono);
-  background: var(--surface-default);
-  border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-sm);
-  color: var(--text-secondary);
-}
-
 .confirm-message {
   margin: 0;
   color: var(--text-secondary);
