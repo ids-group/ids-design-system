@@ -12,10 +12,12 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**132 open — 1 P1, 10 P2, 121 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
+**133 open — 2 P1, 10 P2, 121 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
 
-### P1 — 1
+### P1 — 2
 
+- **Faster gates (Stas, 2026-10-09: after the release)**
+  - The release pipeline skips the pixel checks: its image has no Chrome
 - **Asked by Stas**
   - ½ A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
 
@@ -323,6 +325,14 @@ rather than never meeting it at all.
 Constraints and decisions that read as removable and are not.
 
 ## Faster gates (Stas, 2026-10-09: after the release)
+
+- [ ] **[P1] The release pipeline skips the pixel checks: its image has no Chrome.**
+  `render-evidence` and its selftest failed the first release after they were added (pipeline on
+  `node:22-alpine`: «Chrome not found. Set CHROME_PATH to its executable.»), so `tools/preflight.mjs`
+  skips both when `CI` or `BITBUCKET_BUILD_NUMBER` is set (TODO(render-evidence-ci)). Fix: install
+  Chromium and fonts in the release step, add `/usr/bin/chromium-browser` to `headless-chrome.mjs`
+  and launch with `--no-sandbox` under root, then drop the skip. Stas, 2026-10-09: «пока что выключи
+  потом починим».
 
 - [ ] **[P2] `tools/check.mjs` runs every check of a group one after another.**
   `lint:all` walks its 36 checks serially, so every agent and every merge waits for the sum of them.
