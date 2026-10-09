@@ -189,29 +189,99 @@
     Chart entrances
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      --ds-motion-chart-mark-enter-duration
-    </code>
-    (400ms, <code class="t-mono-inline">--ease-emphasized-decelerate</code>):
-    marks that fade or settle in place.
-    <code class="t-mono-inline">
-      -grow-duration
-    </code> (600ms,
-    <code class="t-mono-inline">
-      --ease-settle
-    </code>): columns and bars
-    growing from the baseline.
-    <code class="t-mono-inline">
-      -sweep-duration
-    </code>
-    (600ms): rings and lines.
-    <code class="t-mono-inline">
-      -detail-duration
-    </code> (180ms): value labels
-    and markers. A series' arrivals spread across 260ms regardless of mark
-    count. Reduced motion shows every mark at once.
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Token
+        </th>
+
+        <th>
+          Default
+        </th>
+
+        <th>
+          For
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-motion-chart-mark-enter-duration
+          </code>
+        </td>
+
+        <td>
+          400ms, <code class="t-mono-inline">--ease-emphasized-decelerate</code>
+        </td>
+
+        <td>
+          Marks that fade or settle in place
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            -grow-duration
+          </code>
+        </td>
+
+        <td>
+          600ms, <code class="t-mono-inline">--ease-settle</code>
+        </td>
+
+        <td>
+          Columns and bars growing from the baseline
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            -sweep-duration
+          </code>
+        </td>
+
+        <td>
+          600ms
+        </td>
+
+        <td>
+          Rings and lines
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            -detail-duration
+          </code>
+        </td>
+
+        <td>
+          180ms
+        </td>
+
+        <td>
+          Value labels and markers
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="rules">
+    <li>
+      A series' arrivals spread across 260ms, whatever the mark count
+    </li>
+
+    <li>
+      Reduced motion shows every mark at once
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     Entrance presets · customizing a surface
@@ -279,8 +349,16 @@
   </div>
 
   <p class="block-desc t-s">
-    Each surface takes <code class="t-mono-inline">--ds-&lt;surface&gt;-enter-keyframes</code>,
-    <code class="t-mono-inline">-enter-duration</code> and <code class="t-mono-inline">-enter-easing</code>.
+    Each surface takes
+    <code class="t-mono-inline">
+      --ds-&lt;surface&gt;-enter-keyframes
+    </code>,
+    <code class="t-mono-inline">
+      -enter-duration
+    </code> and
+    <code class="t-mono-inline">
+      -enter-easing
+    </code>.
   </p>
 
   <table class="tbl">
@@ -307,11 +385,18 @@
         </td>
 
         <td>
-          <code class="t-mono-inline">ds-fade-in</code>
+          <code class="t-mono-inline">
+            ds-fade-in
+          </code>
         </td>
 
         <td>
-          <code class="t-mono-inline">-leave-duration</code>, <code class="t-mono-inline">-leave-easing</code>
+          <code class="t-mono-inline">
+            -leave-duration
+          </code>,
+          <code class="t-mono-inline">
+            -leave-easing
+          </code>
         </td>
       </tr>
 
@@ -321,11 +406,14 @@
         </td>
 
         <td>
-          <code class="t-mono-inline">ds-fade-in</code>
+          <code class="t-mono-inline">
+            ds-fade-in
+          </code>
         </td>
 
         <td>
-          Duration, easing, <code class="t-mono-inline">-leave-keyframes</code> (<code class="t-mono-inline">ds-fade-out</code>)
+          Duration, easing, <code class="t-mono-inline">-leave-keyframes</code>
+          (<code class="t-mono-inline">ds-fade-out</code>)
         </td>
       </tr>
 
@@ -335,11 +423,14 @@
         </td>
 
         <td>
-          <code class="t-mono-inline">ds-slide-edge-in</code>
+          <code class="t-mono-inline">
+            ds-slide-edge-in
+          </code>
         </td>
 
         <td>
-          Duration, easing, <code class="t-mono-inline">-leave-keyframes</code> (<code class="t-mono-inline">ds-slide-edge-out</code>)
+          Duration, easing, <code class="t-mono-inline">-leave-keyframes</code>
+          (<code class="t-mono-inline">ds-slide-edge-out</code>)
         </td>
       </tr>
 
@@ -349,7 +440,9 @@
         </td>
 
         <td>
-          <code class="t-mono-inline">ds-fade-in</code>
+          <code class="t-mono-inline">
+            ds-fade-in
+          </code>
         </td>
 
         <td>
@@ -363,7 +456,9 @@
         </td>
 
         <td>
-          <code class="t-mono-inline">ds-fade-in</code>
+          <code class="t-mono-inline">
+            ds-fade-in
+          </code>
         </td>
 
         <td>
@@ -375,13 +470,31 @@
 
   <ul class="rules">
     <li>
-      <code class="t-mono-inline">-enter-offset</code> / <code class="t-mono-inline">-enter-scale</code> apply only with
-      <code class="t-mono-inline">ds-slide-in</code> / <code class="t-mono-inline">ds-scale-in</code>
+      <code class="t-mono-inline">
+        -enter-offset
+      </code> /
+      <code class="t-mono-inline">
+        -enter-scale
+      </code> apply only with
+      <code class="t-mono-inline">
+        ds-slide-in
+      </code> /
+      <code class="t-mono-inline">
+        ds-scale-in
+      </code>
     </li>
 
     <li>
-      Leave keyframes: <code class="t-mono-inline">ds-fade-out</code>, <code class="t-mono-inline">ds-scale-out</code>,
-      <code class="t-mono-inline">ds-slide-out</code>, <code class="t-mono-inline">ds-slide-edge-out</code>
+      Leave keyframes: <code class="t-mono-inline">ds-fade-out</code>,
+      <code class="t-mono-inline">
+        ds-scale-out
+      </code>,
+      <code class="t-mono-inline">
+        ds-slide-out
+      </code>,
+      <code class="t-mono-inline">
+        ds-slide-edge-out
+      </code>
     </li>
 
     <li>
@@ -390,7 +503,8 @@
     </li>
 
     <li>
-      Custom <code class="t-mono-inline">&#64;keyframes</code> must be global: emulated encapsulation
+      Custom <code class="t-mono-inline">&#64;keyframes</code> must be global:
+      emulated encapsulation
       renames scoped ones
     </li>
 
