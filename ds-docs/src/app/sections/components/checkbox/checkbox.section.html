@@ -177,20 +177,21 @@
     A caption with markup in it
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [label]
-    </code> is the usual API; for a link or
-    emphasis, project markup instead.
-    <code class="t-mono-inline">
-      [label]
-    </code> wins when both are set and is the
-    only source of the required asterisk - a projected caption adds its own.
-    Same for <code class="t-mono-inline">ds-switch</code> and
-    <code class="t-mono-inline">
-      ds-radio
-    </code>.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        [label]
+      </code> - the usual API; for a link or emphasis, project markup.
+    </li>
+
+    <li>
+      Both set - <code class="t-mono-inline">[label]</code> wins; it is the only source of the required asterisk, a projected caption adds its own.
+    </li>
+
+    <li>
+      Same for <code class="t-mono-inline">ds-switch</code> and <code class="t-mono-inline">ds-radio</code>.
+    </li>
+  </ul>
 
   <div class="stack">
     <ds-checkbox>

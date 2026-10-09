@@ -15,20 +15,82 @@
   </h3>
 
   <p class="block-desc t-s">
-    The calendar icon or
-    <kbd>
-      ↓
-    </kbd> opens a one-month panel. In the grid, arrows move by day or week,
-    <kbd>
-      Home
-    </kbd>/<kbd>End</kbd> to week start or end,
-    <kbd>
-      PageUp
-    </kbd>/<kbd>PageDown</kbd> by month, <kbd>Enter</kbd> or
-    <kbd>
-      Space
-    </kbd> selects, <kbd>Esc</kbd> closes.
+    The calendar icon or <kbd>↓</kbd> opens a one-month panel.
   </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Key, in the grid
+        </th>
+
+        <th>
+          Moves
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          Arrows
+        </td>
+
+        <td>
+          By day or week
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            Home
+          </kbd> / <kbd>End</kbd>
+        </td>
+
+        <td>
+          To week start or end
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            PageUp
+          </kbd> / <kbd>PageDown</kbd>
+        </td>
+
+        <td>
+          By month
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            Enter
+          </kbd> / <kbd>Space</kbd>
+        </td>
+
+        <td>
+          Selects
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            Esc
+          </kbd>
+        </td>
+
+        <td>
+          Closes
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="row">
     <ds-date-picker
@@ -270,12 +332,25 @@
   </h3>
 
   <p class="block-desc t-s">
-    By default (<code class="t-mono-inline"
-      >[allowInput]="true"</code
-    >) the trigger is a text field masked to the locale format. Non-digits are
-    rejected; an impossible or out-of-range date errors on blur. Range mode
-    uses one field for both ends. Clicking field or icon opens the panel.
+    <code class="t-mono-inline">
+      [allowInput]="true"
+    </code> (default): the trigger
+    is a text field masked to the locale format.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      Non-digits are rejected; an impossible or out-of-range date errors on blur.
+    </li>
+
+    <li>
+      Range mode - one field for both ends.
+    </li>
+
+    <li>
+      A click on field or icon opens the panel.
+    </li>
+  </ul>
 
   <div class="grid-2">
     <ds-date-picker

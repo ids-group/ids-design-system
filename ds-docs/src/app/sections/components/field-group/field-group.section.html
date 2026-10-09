@@ -6,20 +6,25 @@
     Several controls in one bordered box.
   </span>
 
-  <p class="block-desc t-s">
-    The group owns border, radius, divider and one focus ring. Controls inside
-    detect it via
-    <code class="t-mono-inline">
-      DS_FIELD_GROUP
-    </code> and render naked; no per-child flag.
-    <code class="t-mono-inline">
-      disabled
-    </code> dims the box only; disable each control too. Segments hug their
-    content;
-    <code class="t-mono-inline">
-      grow
-    </code> marks the one that takes the slack.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      The group owns border, radius, divider and one focus ring.
+    </li>
+
+    <li>
+      Controls inside detect it via <code class="t-mono-inline">DS_FIELD_GROUP</code> and render naked; no per-child flag.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        disabled
+      </code> - dims the box only; disable each control too.
+    </li>
+
+    <li>
+      Segments hug their content; <code class="t-mono-inline">grow</code> marks the one that takes the slack.
+    </li>
+  </ul>
 
   <div class="demo-row">
     <ds-field-group>
@@ -188,17 +193,25 @@
     Saying what is wrong
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      error
-    </code> sets the state and shows its
-    text once, under the row; <code class="t-mono-inline">invalid</code>
-    paints the state when the text is elsewhere (a form summary);
-    <code class="t-mono-inline">
-      hint
-    </code>
-    uses the same row.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        error
+      </code> - sets the state, shows its text once, under the row.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        invalid
+      </code> - the state only, when the text is elsewhere (a form summary).
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        hint
+      </code> - the same row.
+    </li>
+  </ul>
 
   <div class="demo-row demo-stack">
     <ds-field-group hint="Currency first, then the amount">
