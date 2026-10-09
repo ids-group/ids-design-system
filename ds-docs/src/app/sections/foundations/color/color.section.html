@@ -20,13 +20,8 @@
     (active rails, indicators, accent pills), orange by default. Reskin via
     <code class="t-mono-inline">
       --secondary-h/s/l
-    </code>.
-    <em>
-      Not
-    </em> a second CTA: actions stay
-    <code class="t-mono-inline">
-      --primary
-    </code>.
+    </code>. <em> Not </em> a
+    second CTA: actions stay <code class="t-mono-inline"> --primary </code>.
   </p>
 
   <div class="role-grid">
@@ -237,8 +232,8 @@
   </div>
 
   <p class="block-desc t-s">
-    Each is opt-in via a class or input. The Acme preview brand (Tweaks
-    panel) turns <code class="t-mono-inline">--secondary</code> red.
+    Each is opt-in via a class or input. The Acme preview brand (Tweaks panel)
+    turns <code class="t-mono-inline">--secondary</code> red.
   </p>
 
   <h3
@@ -248,8 +243,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Third brand hue (violet), full ramp
-    (<code class="t-mono-inline">-hover / -strong / -subtitle / -muted</code>).
+    Third brand hue (violet), full ramp (<code class="t-mono-inline"
+      >-hover / -strong / -subtitle / -muted</code
+    >).
   </p>
 
   <div class="role-demos">
@@ -374,8 +370,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Each stop is a custom property
-    (<code class="t-mono-inline">--blue-600</code>).
+    Each stop is a custom property (<code class="t-mono-inline">--blue-600</code
+    >).
   </p>
 
   @for (ramp of ramps; track ramp.prefix) {
@@ -418,7 +414,10 @@
     Outer band: brand HSL, so
     <code class="t-mono-inline">
       --primary-h
-    </code> recolours it. Inner band: <code class="t-mono-inline">--surface-default</code>.
+    </code> recolours it. Inner band:
+    <code class="t-mono-inline">
+      --surface-default
+    </code>.
   </p>
 
   <div class="halo-stage">
@@ -500,11 +499,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Fields take a halo (<code class="t-mono-inline">--ds-field-focus-shadow</code>);
-    the rest a <code class="t-mono-inline">--focus-ring-width</code> outline in
-    <code class="t-mono-inline">
-      --focus-ring-color
-    </code>.
+    Fields take a halo (<code class="t-mono-inline"
+      >--ds-field-focus-shadow</code
+    >); the rest a <code class="t-mono-inline">--focus-ring-width</code> outline
+    in <code class="t-mono-inline"> --focus-ring-color </code>.
     <code class="t-mono-inline">
       data-focus
     </code> on
@@ -516,8 +514,8 @@
     </code> gives fields the double ring;
     <code class="t-mono-inline">
       edge
-    </code> makes both flush (offset 0, 1px field
-    ring).
+    </code> makes both flush (offset 0, 1px
+    field ring).
   </p>
 
   <p class="block-desc t-s">
@@ -529,8 +527,10 @@
     <code class="t-mono-inline">
       ds-alert
     </code> close button, projected link
-    or own <code class="t-mono-inline">&lt;button&gt;</code> gets the
-    browser's <code class="t-mono-inline">outline: auto</code>.
+    or own <code class="t-mono-inline">&lt;button&gt;</code> gets the browser's
+    <code class="t-mono-inline">
+      outline: auto
+    </code>.
   </p>
 
   <h3 class="block-title t-h4">
@@ -539,10 +539,10 @@
 
   <p class="block-desc t-s">
     A composite ringed on <code class="t-mono-inline">:focus-within</code>
-    (field box, segmented row, toolbar cell) must drop the base outline on its one
-    inner control, or two rings show. Never reset the whole box: inner tab
-    stops (clear button, password toggle, stepper) lose their ring (WCAG
-    2.4.7). DS shells use
+    (field box, segmented row, toolbar cell) must drop the base outline on its
+    one inner control, or two rings show. Never reset the whole box: inner tab
+    stops (clear button, password toggle, stepper) lose their ring (WCAG 2.4.7).
+    DS shells use
     <code class="t-mono-inline">
       focus.owns-the-focus-ring($control)
     </code> or
@@ -569,6 +569,28 @@
     global stylesheet; <code class="t-mono-inline">styles/ds</code> includes
     them.
   </p>
+
+  <p class="block-desc t-s">
+    A component of yours takes the base the library's components carry from
+    <code class="t-mono-inline">
+      styles/component-base
+    </code>:
+    <code class="t-mono-inline">
+      &#64;include component-base.rules;
+    </code> first
+    in its stylesheet sets <code class="t-mono-inline">border-box</code>, the
+    inherited font on form controls, zero heading margins and the base focus
+    ring on the component's own elements, whether or not the app loads
+    <code class="t-mono-inline">
+      styles/reset
+    </code> and
+    <code class="t-mono-inline">
+      styles/focus
+    </code>. The rules sit in a cascade
+    layer, so any unlayered rule of yours wins over them.
+  </p>
+
+  <pre class="t-mono-block">{{ componentBaseSnippet }}</pre>
 
   <h3 class="block-title t-h4">
     A clipping ancestor eats the ring:

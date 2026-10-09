@@ -611,6 +611,7 @@
   "--ds-loading-overlay-enter-keyframes": "Loading-scrim entrance @keyframes (default ds-fade-in).",
   "--ds-loading-overlay-enter-scale": "Start scale if the scrim enters with ds-scale-in (default 0.96).",
   "--ds-loading-overlay-label-color": "Loading overlay status text colour (defaults to --text-secondary).",
+  "--ds-loading-overlay-radius": "Corner radius of the loading scrim (default 0). Set it to the radius of the container the overlay covers, so the blurred scrim ends at its rounded edge.",
   "--ds-loading-overlay-scrim-color": "Loading overlay scrim tint over the canvas (opacity-driven mix of --surface-canvas).",
   "--ds-menu-bg-color": "Menu panel surface fill (defaults to --surface-default).",
   "--ds-menu-border-color": "Menu panel border colour (defaults to --border-divider).",

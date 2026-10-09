@@ -88,8 +88,72 @@
     </li>
 
     <li>
-      Never as a shortcut: a value whose role you cannot name does not belong
-      in the component.
+      Never as a shortcut: a value whose role you cannot name does not belong in
+      the component.
     </li>
   </ul>
+
+  <h3 class="block-title t-h4">
+    Lint removed names after an upgrade
+  </h3>
+
+  <p class="block-desc t-s">
+    The package ships two plugins that flag what the library has removed or
+    renamed.
+    <code class="t-mono-inline"
+      >
+      &#64;ids-group-ltd/ids-design-system/stylelint
+    </code
+    >
+    adds
+    <code class="t-mono-inline">
+      ids-design-system/no-removed-tokens
+    </code> for
+    <code class="t-mono-inline">
+      --*
+    </code> properties in stylesheets;
+    <code class="t-mono-inline">
+      --fix
+    </code> applies a rename.
+  </p>
+
+  <pre class="t-mono-block">{{ stylelintSnippet }}</pre>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline"
+      >
+      &#64;ids-group-ltd/ids-design-system/eslint
+    </code
+    >
+    is a flat-config plugin with seven rules for
+    <code class="t-mono-inline">
+      **/*.ts
+    </code> and
+    <code class="t-mono-inline">
+      **/*.html
+    </code>: removed inputs, outputs and
+    values, renamed selectors and imports, members that override nothing, and
+    tokens set from code or templates.
+    <code class="t-mono-inline">
+      configs.recommended
+    </code> turns all seven on as
+    errors;
+    <code class="t-mono-inline">
+      configs.recommendedFrom(from, to)
+    </code> reports
+    only what changed after <code class="t-mono-inline">from</code>, up to and
+    including <code class="t-mono-inline">to</code>.
+  </p>
+
+  <pre class="t-mono-block">{{ eslintSnippet }}</pre>
+
+  <p class="block-desc t-s">
+    The package README lists every rule, the per-rule
+    <code class="t-mono-inline">
+      from
+    </code> /
+    <code class="t-mono-inline">
+      to
+    </code> options and the template parser setup.
+  </p>
 </docs-section>
