@@ -5,16 +5,17 @@
 // The plugins come from <plugin-dir> (a directory holding `eslint/index.mjs` and
 // `stylelint/index.mjs`: an extracted release tag or the installed package root); eslint,
 // stylelint and the parsers come from the consumer's own `node_modules`, found from
-// <consumer-root> upward. The consumer's lint config is never read or written: the config is
-// passed through the linters' Node API. A linter or parser the consumer lacks is skipped and named
-// in `skipped`.
+// <consumer-root> upward, else from `--tools <dir>` (a `node_modules` root, such as the one
+// `npm exec` installs into its cache). The consumer's lint config is never read or written: the
+// config is passed through the linters' Node API. A linter or parser found in neither is skipped
+// and named in `skipped`.
 //
-//   node lint-step.mjs <consumer-root> <source-root> <plugin-dir> --from <V> [--to <V>]
+//   node lint-step.mjs <consumer-root> <source-root> <plugin-dir> --from <V> [--to <V>] [--tools <dir>]
 //
 // `from` is exclusive and `to` inclusive, as in the plugins; without `to` the unreleased version
 // counts too. Output (stdout, JSON):
-//   { from, to, ran: [], skipped: [], errors: [{ loc, message }],
-//     hits: { "<version>#<item-id>": [{ loc, match, el: null, rule, message }] } }
+//   { from, to, ran: [], skipped: [], toolsSource: { "<package>": "consumer" | "tools" },
+//     errors: [{ loc, message }], hits: { "<version>#<item-id>": [{ loc, match, el: null, rule, message }] } }
 import {
   cpSync,
   existsSync,
@@ -66,14 +67,19 @@ export const resolvePackage = (fromDirectory, name) => {
   }
 };
 
-const importFirst = async (fromDirectory, candidates) => {
-  for (const [name, pick] of candidates) {
-    const path = resolvePackage(fromDirectory, name);
-    if (!path || !existsSync(path)) continue;
-    const module = await import(pathToFileURL(path).href);
-    const value = pick(module.default ?? module, module);
-    if (value) return value;
-  }
+const importFirst = async (sources, toolsSource, candidates) => {
+  for (const [source, fromDirectory] of sources)
+    for (const [name, pick] of candidates) {
+      const path = resolvePackage(fromDirectory, name);
+      if (!path || !existsSync(path)) continue;
+      const module = await import(pathToFileURL(path).href);
+      const value = pick(module.default ?? module, module);
+      if (value) {
+        toolsSource[name] = source;
+
+        return value;
+      }
+    }
 
   return undefined;
 };
@@ -92,13 +98,17 @@ export const lintStep = async ({
   pluginDirectory,
   from,
   to,
+  toolsDirectory,
 }) => {
+  const sources = [['consumer', consumerRoot]];
+  if (toolsDirectory) sources.push(['tools', dirname(resolve(toolsDirectory))]);
   const range = to ? { from, to } : { from };
   const output = {
     from,
     to: to ?? null,
     ran: [],
     skipped: [],
+    toolsSource: {},
     errors: [],
     hits: {},
   };
@@ -122,7 +132,7 @@ export const lintStep = async ({
   };
 
   const eslintPlugin = join(pluginDirectory, 'eslint', 'index.mjs');
-  const eslintModule = await importFirst(consumerRoot, [
+  const eslintModule = await importFirst(sources, output.toolsSource, [
     [
       'eslint',
       (module, namespace) => namespace.loadESLint ?? module.loadESLint,
@@ -132,26 +142,26 @@ export const lintStep = async ({
     output.skipped.push(`eslint: ${eslintPlugin} does not exist`);
   else if (!eslintModule)
     output.skipped.push(
-      'eslint: not installed in the consumer, or older than 8.57 (no flat-config API)',
+      'eslint: not installed in the consumer or --tools, or older than 8.57 (no flat-config API)',
     );
   else {
     const plugin = (await import(pathToFileURL(eslintPlugin).href)).default;
     const ESLint = await eslintModule({ useFlatConfig: true });
-    const typescriptParser = await importFirst(consumerRoot, [
+    const typescriptParser = await importFirst(sources, output.toolsSource, [
       ['typescript-eslint', (module) => module.parser],
       [
         '@typescript-eslint/parser',
         (module) => module.parseForESLint && module,
       ],
     ]);
-    const templateParser = await importFirst(consumerRoot, [
+    const templateParser = await importFirst(sources, output.toolsSource, [
       ['angular-eslint', (module) => module.templateParser],
       [
         '@angular-eslint/template-parser',
         (module) => module.parseForESLint && module,
       ],
     ]);
-    const inlineTemplates = await importFirst(consumerRoot, [
+    const inlineTemplates = await importFirst(sources, output.toolsSource, [
       ['angular-eslint', (module) => module.processInlineTemplates],
       [
         '@angular-eslint/eslint-plugin-template',
@@ -220,12 +230,19 @@ export const lintStep = async ({
   }
 
   const stylelintPlugin = join(pluginDirectory, 'stylelint', 'index.mjs');
-  const stylelintPath = resolvePackage(consumerRoot, 'stylelint');
+  const [stylelintSource, stylelintPath] =
+    sources
+      .map(([source, directory]) => [
+        source,
+        resolvePackage(directory, 'stylelint'),
+      ])
+      .find(([, path]) => path) ?? [];
   if (!existsSync(stylelintPlugin))
     output.skipped.push(`stylelint: ${stylelintPlugin} does not exist`);
   else if (!stylelintPath)
-    output.skipped.push('stylelint: not installed in the consumer');
+    output.skipped.push('stylelint: not installed in the consumer or --tools');
   else {
+    output.toolsSource.stylelint = stylelintSource;
     const stylelintUrl = pathToFileURL(stylelintPath).href;
     const stylelint = (await import(stylelintUrl)).default;
     // The plugin imports `stylelint` by name, which resolves from where the plugin file sits; a
@@ -243,7 +260,7 @@ export const lintStep = async ({
         ),
       );
       const plugin = (await import(pathToFileURL(copiedPlugin).href)).default;
-      const scss = await importFirst(consumerRoot, [
+      const scss = await importFirst(sources, output.toolsSource, [
         ['postcss-scss', (module) => module.parse && module],
       ]);
       if (!scss)
@@ -296,10 +313,11 @@ const main = async (argv) => {
   };
   const from = flag('--from');
   const to = flag('--to');
+  const toolsDirectory = flag('--tools');
   const [consumerRoot, sourceRoot, pluginDirectory] = argv;
   if (!consumerRoot || !sourceRoot || !pluginDirectory || !from) {
     console.error(
-      'usage: node lint-step.mjs <consumer-root> <source-root> <plugin-dir> --from <V> [--to <V>]',
+      'usage: node lint-step.mjs <consumer-root> <source-root> <plugin-dir> --from <V> [--to <V>] [--tools <dir>]',
     );
 
     return 2;
@@ -310,6 +328,7 @@ const main = async (argv) => {
     pluginDirectory: resolve(pluginDirectory),
     from,
     to,
+    toolsDirectory,
   });
   process.stdout.write(`${JSON.stringify(output, null, 2)}\n`);
 

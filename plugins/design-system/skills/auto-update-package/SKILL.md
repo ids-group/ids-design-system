@@ -171,7 +171,7 @@ outside the consumer repo — the OS temp dir, keyed by the consumer's path (e.g
 `<os-tmpdir>/ds-update-ledger-<slug-of-consumer-path>.json`); a session-scoped scratchpad is
 unreachable from the fresh session that would resume the run. A dry-run uses its OWN suffixed path
 (`…-dryrun.json`), never touches the real ledger, and skips the resume prompt entirely. Shape:
-`{ branch, headAtStart, chain, mode, lint: { source, ran, skipped }, feedback: [], perTarget: { "<t>": { baseline, perVersion: { "<V>": {
+`{ branch, headAtStart, chain, mode, lint: { source, toolsDir, toolsSource, ran, skipped }, feedback: [], perTarget: { "<t>": { baseline, perVersion: { "<V>": {
 plan, items: { "<id>": "applied | not-applicable | locator-dead | superseded | unattempted-degraded
 | needsReview | rechecked" }, hitCounts, lintHits: { found, remaining }, touchedFiles: [], attempts,
 deleteList: { "<id>": "deleted | kept-<reason>" }, committed } } } } }` — per TARGET, because
@@ -360,17 +360,29 @@ step 8's question while the wave runs. Collect the whole wave before Phase B.
     the first bump (step 4) that installs a version shipping `eslint/index.mjs`: from that step's
     re-check on. Until a copy is reachable, the lint step is skipped, with a note per skipped step
     in the ledger and the report. Record the source in the ledger's `lint`.
-    The step runs `node <plugin-root>/scripts/lint-step.mjs <target root> <source root> <lint copy> --from <F> --to <V>`
+    The step runs `node <plugin-root>/scripts/lint-step.mjs <target root> <source root> <lint copy> --from <F> --to <V> --tools <tools dir>`
     (`<plugin-root>` as for the drift scan in Phase B step 5; `<F>` is the chain version before V,
     or `current` for the first step). It resolves eslint, stylelint, `typescript-eslint` or
     `@typescript-eslint/parser`, `@angular-eslint/template-parser` (and the inline-template
-    processor) and `postcss-scss` from the consumer's own `node_modules`, passes its config through
-    the linters' Node API, and never reads or writes the consumer's lint config; it is read-only.
-    It prints `{ ran, skipped, errors, hits: { "<version>#<item-id>": [{ loc, match, el: null, rule, message }] } }`:
-    `hits` is the finder's hit shape, already scoped to the element by the rule. What the consumer
-    lacks is skipped and named in `skipped`; record that once and report it. Never install a linter
-    or parser for this step: an install is a command, and follows the command-type approval rule
-    of Phase B step 3.
+    processor) and `postcss-scss` from the consumer's own `node_modules` first, then from
+    `<tools dir>`; passes its config through the linters' Node API; never reads or writes the
+    consumer's lint config; read-only.
+    **Tools dir, once per run, when the consumer lacks any of them** (no `eslint` >= 8.57,
+    `stylelint`, a TS or template parser, or `postcss-scss` in its `node_modules`):
+    - Run from the scratchpad (a dir with no `package.json`, so npm cannot pick the consumer's copies):
+      `npm exec --yes --package=eslint@9.39.4 --package=stylelint@17.13.0 --package=postcss-scss@4.0.9 --package=typescript@5.9.3 --package=@typescript-eslint/parser@8.61.0 --package=@angular-eslint/template-parser@21.4.0 --package=@angular-eslint/eslint-plugin-template@21.4.0 -- node -p "require('path').dirname(process.env.PATH.split(require('path').delimiter).find((entry) => entry.includes('_npx')))"`
+    - stdout = `<tools dir>` (`<npm cache>/_npx/<hash>/node_modules`); stderr carries npm warnings only.
+      Same line in Bash and PowerShell. Needs Node >= 20.19 (stylelint 17).
+    - A network download into npm's own cache; nothing lands in the consumer. It is a command:
+      show it and get approval under Phase B step 3's command-type rule. Run it once; reuse the
+      dir for every step and the re-check.
+    - Declined or failed: run without `--tools`; the missing linters are skipped.
+
+    It prints `{ ran, skipped, toolsSource, errors, hits: { "<version>#<item-id>": [{ loc, match, el: null, rule, message }] } }`:
+    `hits` is the finder's hit shape, already scoped to the element by the rule; `toolsSource`
+    maps each package used to `consumer` or `tools`. What neither source has is skipped and named
+    in `skipped`; record `skipped` and `toolsSource` once and report them. Never install a linter
+    or parser into the consumer.
     It never runs with `--fix`: the step-2 script is the one writer of mechanical renames, and an
     autofix would rewrite exactly the occurrences that script deliberately leaves (a type imported
     from a secondary entry point, whose new name may live in another one).
@@ -694,9 +706,10 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 - **Needs manual review — should be EMPTY in a clean run:** the items the auto attempt + auto-fix
   loop could not resolve (cap or short-circuit), each with why — plus customization-drift residue
   the new theming API genuinely cannot express (listed here; it does not stop the run).
-- **Lint step:** its source (Phase A step 11), what ran and what was skipped for lack of a linter
-  or parser, per version the hits found and the hits remaining at the re-check, the files it could
-  not parse, and every step it skipped for want of a plugin copy.
+- **Lint step:** its source (Phase A step 11), the tools dir when one was used and
+  `toolsSource`, what ran and what was skipped for lack of a linter or parser, per version the
+  hits found and the hits remaining at the re-check, the files it could not parse, and every step
+  it skipped for want of a plugin copy.
 - **Pre-existing:** the baseline errors and warnings (Phase A step 9) that are still there, listed
   once, so nobody reads them as the upgrade's.
 - **Visual checks:** per check, the screen, the state reached, the measured numbers and the verdict;
