@@ -46,6 +46,13 @@
   margin-inline: calc(-1 * var(--space-1-5));
   max-width: calc(100% + 2 * var(--space-1-5));
 
+  // The padding band takes no pointer, so a control beside the trail keeps its clicks.
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+
   a, .current {
     display: inline-flex;
     align-items: center;
@@ -78,7 +85,7 @@
 
     // An icon with no label: it sits in the trail beside the next label, so the ring stays on the icon.
     &:not(:has(.label)) {
-      @include target.min-size(14px, $ring-on-target: false);
+      @include target.min-size($ring-on-target: false);
     }
   }
 

@@ -11,15 +11,25 @@
     Live demo
   </h3>
 
-  <p class="block-desc t-s">
-    Drag the grab strip down, tap the scrim or press
-    <kbd>
-      Esc
-    </kbd> to close. Body scroll locks while open. Wide viewports centre it,
-    capped at <code class="t-mono-inline">--ds-bottom-sheet-max-width</code>.
-    It is <code class="t-mono-inline">position: fixed</code>: a transformed
-    ancestor contains it.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Closes on a drag of the grab strip down, a scrim tap or <kbd>Esc</kbd>.
+    </li>
+
+    <li>
+      Body scroll locks while open.
+    </li>
+
+    <li>
+      Wide viewports centre it, capped at <code class="t-mono-inline">--ds-bottom-sheet-max-width</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        position: fixed
+      </code>: a transformed ancestor contains it.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
@@ -168,10 +178,19 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [snapPoints]="[0.35, 0.65, 0.9]"
-    </code>:
-    ascending fractions of viewport height (0-1). It opens at the first stop;
-    drags snap to the nearest; below the lowest, it closes. Without <code class="t-mono-inline">snapPoints</code> it has one height.
+    </code>: ascending
+    fractions of viewport height (0-1). Unset - one height.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      Opens at the first stop.
+    </li>
+
+    <li>
+      A drag snaps to the nearest; below the lowest, it closes.
+    </li>
+  </ul>
 
   <div class="demo">
     <ds-button (pressed)="snapOpen.set(true)">

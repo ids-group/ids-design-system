@@ -83,22 +83,84 @@
     The header slots are a reading order, not a set
   </h3>
 
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Slot
+        </th>
+
+        <th>
+          Place
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            [breadcrumbs]
+          </code>
+        </td>
+
+        <td>
+          Above the title
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            [title-badge]
+          </code>
+        </td>
+
+        <td>
+          Beside the title
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            [meta]
+          </code>
+        </td>
+
+        <td>
+          Under the title
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            [actions]
+          </code>
+        </td>
+
+        <td>
+          Right-aligned on the title line
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            [tabs]
+          </code>
+        </td>
+
+        <td>
+          Last, on the header's bottom edge
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [breadcrumbs]
-    </code> above the title,
-    <code class="t-mono-inline">
-      [title-badge]
-    </code> beside it,
-    <code class="t-mono-inline">
-      [meta]
-    </code> under it,
-    <code class="t-mono-inline">
-      [actions]
-    </code> right-aligned on the title
-    line, <code class="t-mono-inline">[tabs]</code> last, on the header's
-    bottom edge. Page actions go nowhere else: no floating button, no row above
-    the header.
+    Page actions go nowhere else: no floating button, no row above the header.
   </p>
 
   <h3
@@ -112,9 +174,8 @@
       <strong>
         Filters sit directly above the data they filter
       </strong> -
-      between header and content, full width, in no wrapper that could clip
-      the overflow popover. Not in a sidebar or the table's card; the 9+3 split
-      is for a genuine filter RAIL.
+      between header and content, full width, never in a clipping wrapper, a
+      sidebar or the table's card. A 9+3 split is for a genuine filter RAIL.
     </li>
 
     <li>
@@ -150,9 +211,15 @@
 
   <p class="block-desc t-s">
     A card holds a UNIT that could be moved, collapsed or repeated: record
-    summary, KPI tile, form section. Not a full-width table: it has its own
-    frame, so a card double-borders it. Default: no card.
+    summary, KPI tile, form section. Default: no card.
   </p>
+
+  <ul class="rules">
+    <li>
+      Never a full-width table: it has its own frame, so a card double-borders
+      it
+    </li>
+  </ul>
 
   <h3
     data-claude-design

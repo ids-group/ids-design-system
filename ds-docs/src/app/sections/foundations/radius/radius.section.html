@@ -43,22 +43,23 @@
   </h3>
 
   <p class="block-desc t-s">
-    Components resolve only these four roles. Retheme
-    corners by moving them. A raw stop says "no role", almost never true. Set
-    <code class="t-mono-inline">
-      --radius-pill-value
-    </code> (e.g.
-    <code class="t-mono-inline">
-      var(--radius-sm)
-    </code>) to square every pill.
+    Components resolve only these four roles; retheme corners by moving them. A
+    raw stop says "no role", almost never true.
   </p>
 
-  <p class="block-desc t-s">
-    No <code class="t-mono-inline">field</code> role; scope the control role:
-    <code class="t-mono-inline">
-      ds-input {{ '{' }} --ds-radius-control: 4px; {{ '}' }}
-    </code>.
-  </p>
+  <ul class="rules">
+    <li>
+      Square every pill: <code class="t-mono-inline">--radius-pill-value</code>,
+      e.g. <code class="t-mono-inline">var(--radius-sm)</code>
+    </li>
+
+    <li>
+      No <code class="t-mono-inline">field</code> role; scope the control role:
+      <code class="t-mono-inline">
+        ds-input {{ '{' }} --ds-radius-control: 4px; {{ '}' }}
+      </code>
+    </li>
+  </ul>
 
   <div class="radius-role-table">
     <div class="radius-role-row is-head">
@@ -139,12 +140,20 @@
     </div>
   </div>
 
-  <p class="block-desc t-s">
-    Where roles do not cover a value: inner radius = outer radius minus the
-    padding between. <code class="t-mono-inline">--radius-flat</code> means
-    "deliberately square", not "unset"; button-group middles and in-range
-    calendar days use it.
-  </p>
+  <ul class="rules">
+    <li>
+      Where roles do not cover a value: inner radius = outer radius minus the
+      padding between
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        --radius-flat
+      </code> means "deliberately
+      square", not "unset"; button-group middles and in-range calendar days use
+      it
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     Applied

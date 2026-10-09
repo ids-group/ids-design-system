@@ -202,18 +202,23 @@
 
   <p class="block-desc t-s">
     Density is a <strong>screen-level decision</strong>, not user-global (the
-    Tweaks panel offers it for prototyping only). Set
-    <code class="t-mono-inline">
-      [data-density]
-    </code> on the route container,
-    not on <code class="t-mono-inline">&lt;html&gt;</code>. Control
-    <code class="t-mono-inline">
-      size
-    </code> (sm/md/lg) is a separate axis, defaulted by
-    <code class="t-mono-inline">
-      DS_CONFIG.control.size
-    </code>.
+    Tweaks panel offers it for prototyping only).
   </p>
+
+  <ul class="rules">
+    <li>
+      Set <code class="t-mono-inline">[data-density]</code> on the route
+      container, not on <code class="t-mono-inline">&lt;html&gt;</code>
+    </li>
+
+    <li>
+      Control <code class="t-mono-inline">size</code> (sm/md/lg) is a separate
+      axis, defaulted by
+      <code class="t-mono-inline">
+        DS_CONFIG.control.size
+      </code>
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     A 32px toolbar — use compact, not a per-control pin
@@ -223,63 +228,132 @@
     <strong>
       <code class="t-mono-inline">
         data-density="compact"
-      </code> levels a toolbar at
-      32px.
-    </strong>
-    Search, input, select, autocomplete, date picker, time picker,
-    multi-select, number stepper and button go from <strong>40px</strong> to
-    <strong>
-      32px
-    </strong>. Do not pin
+      </code> levels a toolbar at 32px.
+    </strong> Do not pin
     <code class="t-mono-inline">
       --ds-search-height
     </code> and its siblings per
     component.
   </p>
 
-  <p class="block-desc t-s">
-    Chip-holding controls (multi-select, autocomplete) set
-    <code class="t-mono-inline">
-      min-height
-    </code>, not
-    <code class="t-mono-inline">
-      height
-    </code>: they stop following a tier
-    below the text line. Under
-    <code class="t-mono-inline">
-      ultra-compact
-    </code> they measure 33px and 29px
-    against 24px, since density does not scale type (a 14px font keeps a
-    19.6px line box); under compact, 33px vs 32px. For a true 24px row, shrink
-    the type in that container too.
-  </p>
+  <div class="scroll-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>
+            Tier
+          </th>
 
-  <p class="block-desc t-s">
-    <strong>
-      Padding follows the tier only at the bottom.
-    </strong>
+          <th>
+            Control height
+          </th>
 
-    <code class="t-mono-inline">
-      compact
-    </code> and
-    <code class="t-mono-inline">
-      comfy
-    </code> leave padding alone;
-    <code class="t-mono-inline">
-      ultra-compact
-    </code> also compresses field padding, table cells and
-    <code class="t-mono-inline">
-      --ds-surface-padding
-    </code> (shared by
-    <code class="t-mono-inline">
-      ds-card
-    </code> and
-    <code class="t-mono-inline">
-      ds-stat
-    </code>) from 24px to 16px. For a
-    value in between, set that token at
-    <code class="t-mono-inline">
-      :root
-    </code>.
-  </p>
+          <th>
+            Chip controls, with chips
+          </th>
+
+          <th>
+            Padding
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>
+            <code class="t-mono-inline">
+              cozy
+            </code> (default)
+          </td>
+
+          <td>
+            40px
+          </td>
+
+          <td>
+            Multi-select 42.8px, autocomplete 40px
+          </td>
+
+          <td>
+            Unchanged
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <code class="t-mono-inline">
+              compact
+            </code>
+          </td>
+
+          <td>
+            32px
+          </td>
+
+          <td>
+            Multi-select 42.8px, autocomplete 38.8px
+          </td>
+
+          <td>
+            Unchanged
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <code class="t-mono-inline">
+              ultra-compact
+            </code>
+          </td>
+
+          <td>
+            24px
+          </td>
+
+          <td>
+            Multi-select 42.8px, autocomplete 38.8px
+          </td>
+
+          <td>
+            Field and table-cell padding;
+            <code class="t-mono-inline">
+              --ds-surface-padding
+            </code> 24px to 16px
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ul class="rules">
+    <li>
+      Follow the tier: search, input, select, autocomplete, date picker, time
+      picker, multi-select, number stepper, button
+    </li>
+
+    <li>
+      Chip controls (multi-select, autocomplete) set
+      <code class="t-mono-inline">
+        min-height
+      </code>; density does not scale
+      type, so a 14px font keeps a 19.6px line box. For a true 24px row, shrink
+      the type in that container
+    </li>
+
+    <li>
+      A surface padding in between: set
+      <code class="t-mono-inline">
+        --ds-surface-padding
+      </code> (shared by
+      <code class="t-mono-inline">
+        ds-card
+      </code> and
+      <code class="t-mono-inline">
+        ds-stat
+      </code>) at
+      <code class="t-mono-inline">
+        :root
+      </code>
+    </li>
+  </ul>
 </docs-section>

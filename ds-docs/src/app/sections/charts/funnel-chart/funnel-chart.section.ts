@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -43,6 +44,7 @@ const ZERO_FIRST_STAGE_STAGES: readonly FunnelChartStage[] = [
   selector: 'section-charts-funnel-chart',
   standalone: true,
   imports: [
+    RouterLink,
     DocsChartDataEditorComponent,
     DocsSectionComponent,
     FunnelChartComponent,

@@ -419,16 +419,49 @@
     </code> is off unless bound or set via
     <code class="t-mono-inline">
       provideDsConfig(&#123; banner: &#123; announce: true &#125; &#125;)
-    </code
-    >: a live region fires on insertion, so page furniture would interrupt
-    every route. On, error, warning and severe get
-    <code class="t-mono-inline">
-      role="alert"
-    </code> (assertive), the rest
-    <code class="t-mono-inline">
-      role="status"
-    </code> (polite).
+    </code>:
+    a live region fires on insertion, so page furniture would interrupt every route.
   </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Variant, announce on
+        </th>
+
+        <th>
+          Announced as
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          Error, warning, severe
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            role="alert"
+          </code> (assertive)
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Others
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            role="status"
+          </code> (polite)
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <p class="block-desc t-s">
     Dev mode, <code class="t-mono-inline">announce</code> unbound: error,

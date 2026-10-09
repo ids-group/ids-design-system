@@ -43,18 +43,19 @@
     Live demo
   </h3>
 
-  <p class="block-desc t-s">
-    X,
-    <kbd>
-      Esc
-    </kbd> or a scrim click closes it; focus is trapped while open. The body takes
-    <code>
-      drawer-body
-    </code> or <code>body</code>, the footer
-    <code>
-      drawer-footer
-    </code> or <code>actions</code>. Content without a slot renders in the body.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Closes on X, <kbd>Esc</kbd> or a scrim click; focus is trapped while open.
+    </li>
+
+    <li>
+      Body slot - <code class="t-mono-inline">drawer-body</code> or <code class="t-mono-inline">body</code>; unslotted content lands here too.
+    </li>
+
+    <li>
+      Footer slot - <code class="t-mono-inline">drawer-footer</code> or <code class="t-mono-inline">actions</code>.
+    </li>
+  </ul>
 
   <div class="demo">
     <ds-button

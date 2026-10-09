@@ -28,9 +28,10 @@
 ### Added
 
 - **`styles/target` gives an icon-only control of yours the library's 24px target.**
-  `@include target.min-size($box)` last in its rule, with `$box` the size it is drawn at: the box
-  keeps its size, a transparent `::before` takes the pointer over `--hit-xs` around it, and the
-  focus ring is drawn on the edge of that target, 24px across. `$ring-on-target: false` leaves the
+  `@include target.min-size` last in its rule: the box keeps its size, a transparent `::before`
+  centred on it takes the pointer over at least `--hit-xs`, and the focus ring is drawn on that
+  target, 24px across. The ring follows `--focus-ring-offset`, so `[data-focus='edge']` draws it
+  2px and `[data-focus='inset']` 4px inside the target's edge. `$ring-on-target: false` leaves the
   ring where the control's own rule draws it, for a control set beside text; `$position: null` for a
   control that is already positioned.
 
@@ -291,6 +292,9 @@
 - **A `ds-table` cell link's focus ring clears the text.** It was drawn inward, over the first and
   last letter; it is drawn around the text now. In a `truncate` column the link clips its own text,
   so the ring keeps the sides the cell's clip cut off; the cell's tooltip and ellipsis are as before.
+  That link is the clipping element itself, `a.cell-link.cell-clip`, with no `span.cell-clip` around
+  it: a rule of yours for `ds-table .cell-clip a` or `.cell-clip .cell-link` matches nothing, write
+  it for `ds-table a.cell-clip`.
 
 - **The focus ring clears the text of a `ds-table` header label, a `ds-list-item` and a
   `ds-breadcrumbs` link.** It was drawn inward, over the first and last letter; it is drawn 2px
@@ -304,9 +308,10 @@
   toggle, the `ds-description-item` copy button, the `ds-bar-chart` row toggle, the arrows of the
   `ds-table` width and column panels, an icon-only `ds-breadcrumbs` item and `ds-info-hint` took a
   click only on their own box, under 24px on at least one side. Each keeps the size it is drawn at and takes the pointer
-  over 24px around it; nothing around it moves. Its focus ring is drawn on the edge of that target,
-  24px across, except on `ds-info-hint` and an icon-only breadcrumb, whose ring stays on the icon
-  beside their text. Raising `--hit-xs` raises every one of these targets. The `ds-input` clear button shows its
+  over 24px around it; nothing around it moves but the arrows of the `ds-table` width and column
+  panels, which sit `--space-2-5` apart instead of `--space-1` so their targets do not overlap. Its
+  focus ring is drawn on the edge of that target, 24px across, except on `ds-info-hint` and an
+  icon-only breadcrumb, whose ring stays on the icon beside their text. The ring's corners take the control's own radius, 4px by default, on every one of them. Raising `--hit-xs` raises every one of these targets. The `ds-input` clear button shows its
   own focus ring; it was cut away with its icon.
 
 - **The `ds-date-picker` month and year arrows sit in the centre of their button.** The browser's
