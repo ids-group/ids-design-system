@@ -33,7 +33,8 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
+import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
+import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
 import {
   describedByIds,
@@ -76,7 +77,8 @@ import { createTypeAhead } from '@ids-group-ltd/ids-design-system/components';
   selector: 'ds-select',
   standalone: true,
   imports: [
-    SpinnerComponent,
+    LoadingOverlayComponent,
+    SkeletonComponent,
     IconComponent,
     NgTemplateOutlet,
     FieldMessageComponent,
@@ -140,8 +142,12 @@ export class SelectComponent
   readonly label = input<string>('');
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`. */
+  /** Options are still being fetched and the list reports `aria-busy`: with no options it shows
+   *  placeholder rows, with options it keeps them under an overlay until they are replaced. */
   readonly loading = input(false, { transform: booleanAttribute });
+
+  protected readonly skeletonOptionWidths = ['70%', '50%', '85%'];
+
   /** The panel opened. */
   readonly opened = output<void>();
   /** The panel closed, for any reason - a pick, Escape, an outside click, a scroll. */
