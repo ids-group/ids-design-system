@@ -76,9 +76,14 @@ svg {
   @include chart-frame.drawn-focus-ring;
 }
 
-.skeleton {
+.skeleton-stages {
   display: grid;
   row-gap: var(--_funnel-chart-stage-gap);
+  padding-block-end: var(--_funnel-chart-stage-gap);
+}
+
+.skeleton .skeleton-text {
+  border-radius: var(--radius-pill);
 }
 
 .stage-table {

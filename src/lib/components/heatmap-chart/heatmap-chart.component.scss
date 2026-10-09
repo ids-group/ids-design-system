@@ -18,6 +18,12 @@
   --_heatmap-chart-focus-width: var(--ds-heatmap-chart-focus-width, var(--focus-ring-width));
 }
 
+// The card hugs the grid; a grid wider than the container scrolls inside it.
+:host {
+  inline-size: fit-content;
+  max-inline-size: 100%;
+}
+
 .heatmap-chart {
   --_chart-message-height: calc(4 * var(--_heatmap-chart-cell-size));
   --_heatmap-chart-cell-size: var(--ds-heatmap-chart-cell-size, 34px);
@@ -35,9 +41,8 @@
   margin: 0;
 }
 
-.skeleton {
-  display: grid;
-  gap: var(--_heatmap-chart-cell-gap);
+.skeleton .skeleton-text {
+  border-radius: var(--radius-pill);
 }
 
 .grid-scroll {

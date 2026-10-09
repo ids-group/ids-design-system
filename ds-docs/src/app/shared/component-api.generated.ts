@@ -623,7 +623,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`."
+        "description": "Options are still being fetched and the list reports `aria-busy`: with no options it shows placeholder rows, with options it keeps them under an overlay until they are replaced."
       },
       {
         "name": "scrollActiveIntoView",
@@ -2020,6 +2020,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "One band per category; every projected mark is positioned against them."
       },
       {
+        "name": "skeletonCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_SKELETON_COUNT",
+        "required": false,
+        "description": "How many columns the loading skeleton draws before the categories are known."
+      },
+      {
         "name": "tickCount",
         "kind": "input",
         "type": "number",
@@ -3235,6 +3244,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prints each column's value above the column."
       },
       {
+        "name": "skeletonCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_SKELETON_COUNT",
+        "required": false,
+        "description": "How many columns the loading skeleton draws before the data is known."
+      },
+      {
         "name": "tickCount",
         "kind": "input",
         "type": "number",
@@ -4371,6 +4389,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'relative'",
         "required": false,
         "description": "What the Drop column reports: `'relative'` (default) the share that leaked at this stage, `'absolute'` the count, `'none'` no column."
+      },
+      {
+        "name": "skeletonCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_SKELETON_COUNT",
+        "required": false,
+        "description": "How many stages the loading skeleton draws before the data is known."
       },
       {
         "name": "dimOthers",
@@ -6456,7 +6483,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`."
+        "description": "Options are still being fetched and the list reports `aria-busy`: with no options it shows placeholder rows, with options it keeps them under an overlay until they are replaced."
       },
       {
         "name": "scrollActiveIntoView",
@@ -7350,6 +7377,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'end'",
         "required": false,
         "description": "Legend placement, logical so it flips in right-to-left."
+      },
+      {
+        "name": "skeletonCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_SKELETON_COUNT",
+        "required": false,
+        "description": "How many slices, and legend rows, the loading skeleton draws before the data is known."
       },
       {
         "name": "maxSlices",
@@ -8497,7 +8533,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`."
+        "description": "Options are still being fetched and the list reports `aria-busy`: with no options it shows placeholder rows, with options it keeps them under an overlay until they are replaced."
       },
       {
         "name": "scrollActiveIntoView",
@@ -12062,6 +12098,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "5",
         "required": false,
         "description": "How many value-axis ticks to aim for; ticks snap to a round step."
+      },
+      {
+        "name": "skeletonCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_SKELETON_COUNT",
+        "required": false,
+        "description": "How many steps the loading skeleton draws before the data is known: a total, the deltas, a total."
       },
       {
         "name": "dataTable",

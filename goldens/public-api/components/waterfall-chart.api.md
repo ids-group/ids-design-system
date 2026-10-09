@@ -30,7 +30,10 @@ export class WaterfallChartComponent extends DsChartBase implements ChartDimmabl
     protected readonly series = viewChild(…);
     public readonly showConnectors = input(true, { transform: booleanAttribute });
     public readonly showValues = input(true, { transform: booleanAttribute });
-    protected readonly skeletonBars = computed(…);
+    protected readonly skeletonAxisGutter = CHART_DEFAULT_AXIS_GUTTER;
+    public readonly skeletonCount = input(CHART_SKELETON_COUNT, { transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT) });
+    protected readonly skeletonMarks = computed(…);
+    protected readonly skeletonValueSpace = CHART_DEFAULT_VALUE_SPACE;
     public readonly staggerMs = input(40, { transform: numberAttribute });
     protected readonly steps = computed(…);
     protected readonly tableRows = computed(…);
@@ -49,7 +52,6 @@ ds-waterfall-chart {
     --ds-chart-positive-color: (none);
     --ds-chart-series-default-color: (none);
     --ds-waterfall-chart-connector-color: var(--ds-chart-axis-line-color);
-    --ds-waterfall-chart-skeleton-height: 40px;
 }
 
 g[dsWaterfallMarks] {

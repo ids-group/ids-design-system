@@ -28,6 +28,9 @@ export const CHART_RENDER_GATE_PASSED = new InjectionToken<boolean>('CHART_RENDE
 export const CHART_SERIES_COLORS: readonly string[];
 
 // @internal
+export const CHART_SKELETON_COUNT = 5;
+
+// @internal
 export const CHART_TOOLTIP_LINGER_MS = 500;
 
 // @internal
@@ -473,6 +476,21 @@ export function scrollActiveOptionIntoView(activeDescendantId: Signal<string | n
 
 // @internal
 export function shareOfTotal(values: readonly number[], index: number, locale: string): string;
+
+// @internal
+export function skeletonColumnHeights(count: number): number[];
+
+// @internal
+export function skeletonFunnelClips(count: number): string[];
+
+// @internal
+export function skeletonLineClip(count: number): string;
+
+// @internal
+export function skeletonMarkCount(dataLength: number, skeletonCount: number): number;
+
+// @internal
+export function skeletonWaterfallSteps(count: number): { bottom: number; height: number; }[];
 
 // @internal
 export function staggerDelay(index: number, count: number, stepMs: number): number;

@@ -2,6 +2,15 @@
 
 One line per closed item. Open work lives in `todo.md`; the detail behind an entry is in git history.
 
+## Chart and picker loading (2026-10-09)
+- Eight charts keep the plot under `ds-loading-overlay` on a reload, bound to the plot with an 8px reach and the caption uncovered (`ChartStatesComponent`, `reloading`)
+- The skeleton takes each chart's shape at the drawn size: axes and columns, a line, a sliced ring, narrowing stages, floating steps, a cell grid, the scatter grid with no dots (`chart-skeleton.component.ts`, `charts-skeleton.ts`)
+- `skeletonCount` on `ds-chart`, `ds-column-chart`, `ds-pie-chart`, `ds-funnel-chart`, `ds-waterfall-chart`, default 5; `--ds-waterfall-chart-skeleton-height` removed
+- `ds-heatmap-chart` hugs its grid (`inline-size: fit-content`)
+- `ds-select`, `ds-multi-select`, `ds-autocomplete`: placeholder option rows while empty, the list under an overlay on a reload; the multi-select filter and select all stay live
+- Decided: ds-chart, column, line, heatmap A; pie, funnel, waterfall B; scatter A without dots; heatmap card hugs the grid; multi-select A (Stas, deck `implemented/loading-states`, asked by mm-ecm)
+- Accepted: every block of the before and after (Stas, deck `implemented/loading-skeletons`)
+
 ## Bar chart rows and loading (2026-10-08)
 - `ds-bar-chart` takes `labelPosition: 'top' | 'start'` and `BarChartRow.children`, `hint`, `emphasis`, `showPercent`, `detached` (`bar-chart.math.ts`: `placeRows`, `shownRows`, `partSpans`)
 - New tokens `--ds-bar-chart-label-column-max-width`, `--ds-bar-chart-child-fill-opacity`, `--ds-bar-chart-divider-color`, and `DsIntl.chart.rowsUnder` (`ds-bar-chart`)

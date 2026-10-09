@@ -1004,11 +1004,23 @@
         <ds-line-chart
           dataTable="none"
           loading
+          [categories]="[]"
+          [series]="[]" />
+
+        <div class="state-cell-label">
+          Loading, no data
+        </div>
+      </div>
+
+      <div class="state-cell">
+        <ds-line-chart
+          dataTable="none"
+          loading
           [categories]="loadingCategories()"
           [series]="loadingSeries()" />
 
         <div class="state-cell-label">
-          Loading
+          Reloading
         </div>
 
         <docs-line-chart-data-editor
