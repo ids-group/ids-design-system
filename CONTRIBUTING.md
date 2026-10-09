@@ -92,7 +92,8 @@ control at least 24px by its own size writes `// target-size-guard: <token>, <si
 above its rule instead, or `<!-- target-size-guard: ... -->` right before a control with no class.
 
 `node tools/check-target-size.mjs` (in `lint:all`) fails a template icon-only control that has
-neither. It reads static templates, so a control that is icon-only only for some inputs (a
+neither, and two controls side by side whose targets reach further into the gap between them than
+the gap of their parent's rule: each target grows by half of `--hit-xs` less the box it draws. It reads static templates, so a control that is icon-only only for some inputs (a
 `ds-breadcrumbs` item with an icon and no label) is covered by hand.
 
 ## Releasing

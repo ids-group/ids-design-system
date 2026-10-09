@@ -9,6 +9,10 @@
 // Content behind `@if` counts as content: a control that is icon-only only for some inputs, such
 // as a `ds-breadcrumbs` item with an icon and no label, is not seen here and is covered by hand.
 //
+// Two targets must not overlap: where two controls sit side by side in one element and either takes
+// the mixin, the `gap` of that element's rule must hold what each target grows past its box, half of
+// `--hit-xs` less the `ds-icon` size it draws. A text control grows by nothing along the row.
+//
 //   node tools/check-target-size.mjs
 import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
@@ -17,7 +21,8 @@ const COMPONENTS =
   process.env.DS_TARGET_SIZE_COMPONENTS ?? 'src/lib/components';
 const STYLES = process.env.DS_TARGET_SIZE_STYLES ?? 'src/lib/styles';
 const GUARD = /target-size-guard:\s*\S/;
-const MIXIN = /@include\s+target\.min-size\(/;
+const MIXIN = /@include\s+target\.min-size\b/;
+const TOKENS = join(STYLES, '_tokens.scss');
 
 const walk = (dir) =>
   readdirSync(dir).flatMap((entry) => {
@@ -121,6 +126,57 @@ const rulesFor = (className, scssFiles) => {
   return found;
 };
 
+const tokens = new Map(
+  existsSync(TOKENS)
+    ? [
+        ...readFileSync(TOKENS, 'utf8').matchAll(
+          /(--[\w-]+):\s*(-?[\d.]+)px\s*;/g,
+        ),
+      ].map((match) => [match[1], Number(match[2])])
+    : [],
+);
+const HIT = tokens.get('--hit-xs') ?? 24;
+
+const pixels = (value) => {
+  const literal = /^(-?[\d.]+)px$/.exec(value) ?? /^(0)$/.exec(value);
+  if (literal) return Number(literal[1]);
+  const token = /^var\((--[\w-]+)\)$/.exec(value);
+  return token && tokens.has(token[1]) ? tokens.get(token[1]) : null;
+};
+
+// The element whose children the control at `index` is: the last tag opened before it and not closed.
+const parentAt = (template, index) => {
+  const stack = [];
+  for (const match of template
+    .slice(0, index)
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .matchAll(/<(\/?)([a-zA-Z][\w-]*)\b([^>]*?)(\/?)>/g)) {
+    if (match[4] || /^(input|img|br|hr)$/i.test(match[2])) continue;
+    if (match[1]) {
+      const open = stack.findLastIndex((tag) => tag.name === match[2]);
+      if (open !== -1) stack.length = open;
+    } else stack.push({ name: match[2], attributes: match[3] });
+  }
+  return stack.at(-1);
+};
+
+const declared = (rules, property) =>
+  rules
+    .map((rule) =>
+      new RegExp(`(?:^|[\\s;{])${property}:\\s*([^;]+);`).exec(rule),
+    )
+    .find(Boolean)?.[1]
+    .trim();
+
+// The side of an icon-only control as drawn: its declared width, or its icon and padding.
+const boxOf = (rules, inner) => {
+  const width = pixels(declared(rules, 'width') ?? '');
+  if (width !== null) return width;
+  const icon = /<ds-icon\b[^>]*?\[?size\]?="(\d+)"/.exec(inner);
+  const padding = pixels(declared(rules, 'padding') ?? '0') ?? 0;
+  return (icon ? Number(icon[1]) : 0) + 2 * padding;
+};
+
 const problems = [];
 let controls = 0;
 for (const file of walk(COMPONENTS).filter(
@@ -130,30 +186,70 @@ for (const file of walk(COMPONENTS).filter(
   const scssFiles = readdirSync(dir)
     .filter((f) => f.endsWith('.scss'))
     .map((f) => join(dir, f));
+  const where = relative(process.cwd(), file).split('\\').join('/');
   for (const template of templatesOf(file)) {
+    let previous = null;
     for (const match of template.matchAll(
       /<(button|a)\b([^>]*)>([\s\S]*?)<\/\1>/g,
     )) {
+      const className = (/\bclass="([^"\s]+)/.exec(match[2]) ?? [])[1];
+      const rules =
+        className === undefined ? [] : rulesFor(className, scssFiles);
+      const targeted = rules.some((rule) => MIXIN.test(rule));
+      const inFlow = !rules.some((rule) => /position:\s*absolute/.test(rule));
+      const control = {
+        name: className ? `.${className}` : `<${match[1]}>`,
+        start: match.index,
+        end: match.index + match[0].length,
+        grows:
+          targeted && inFlow && iconOnly(match[3])
+            ? Math.max(0, (HIT - boxOf(rules, match[3])) / 2)
+            : 0,
+      };
+      const adjacent =
+        previous !== null &&
+        iconOnly(template.slice(previous.end, control.start));
+      const needed = adjacent ? previous.grows + control.grows : 0;
+      if (needed > 0) {
+        const parent = parentAt(template, previous.start);
+        const parentClass = (/\bclass="([^"\s]+)/.exec(
+          parent?.attributes ?? '',
+        ) ?? [])[1];
+        const parentRules = parentClass
+          ? rulesFor(parentClass, scssFiles)
+          : [];
+        const gapValue =
+          declared(parentRules, 'column-gap') ?? declared(parentRules, 'gap');
+        const gap =
+          gapValue === undefined ? 0 : pixels(gapValue.split(/\s+/).at(-1));
+        if (gap === null || gap < needed) {
+          problems.push(
+            `${where}: ${previous.name} and ${control.name} sit side by side in ${parentClass ? `.${parentClass}` : `<${parent?.name}>`} with a gap of ${gapValue ?? 'nothing'}, and their targets reach ${needed}px into it - set a gap of at least ${needed}px`,
+          );
+        }
+      }
+      previous = control;
       if (!iconOnly(match[3])) continue;
       controls += 1;
-      const where = relative(process.cwd(), file).split('\\').join('/');
       const preceding = template.slice(0, match.index).trimEnd();
       if (
         /<!--[^]*?-->$/.test(preceding) &&
         GUARD.test(preceding.slice(preceding.lastIndexOf('<!--')))
       )
         continue;
-      const className = (/\bclass="([^"\s]+)/.exec(match[2]) ?? [])[1];
       if (!className) {
         problems.push(
           `${where}: an icon-only <${match[1]}> with no class - give it a class whose rule includes target.min-size, or put <!-- target-size-guard: <size> --> right before it`,
         );
         continue;
       }
-      const rules = rulesFor(className, scssFiles);
-      if (rules.some((rule) => MIXIN.test(rule) || GUARD.test(rule))) continue;
+      if (
+        targeted ||
+        rulesFor(className, scssFiles).some((rule) => GUARD.test(rule))
+      )
+        continue;
       problems.push(
-        `${where}: .${className} is an icon-only <${match[1]}> - include target.min-size(<its box>) in its rule, or write target-size-guard: <size> above the rule when it is at least --hit-xs`,
+        `${where}: .${className} is an icon-only <${match[1]}> - include target.min-size in its rule, or write target-size-guard: <size> above the rule when it is at least --hit-xs`,
       );
     }
   }
@@ -167,7 +263,7 @@ if (controls === 0) {
 }
 if (problems.length > 0) {
   console.error(
-    `target-size: ${problems.length} icon-only control(s) without a --hit-xs target:\n  ${problems.join('\n  ')}`,
+    `target-size: ${problems.length} target problem(s):\n  ${problems.join('\n  ')}`,
   );
   process.exit(1);
 }
