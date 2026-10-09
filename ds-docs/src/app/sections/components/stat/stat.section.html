@@ -99,10 +99,8 @@
     Projection replaces the input's text, as in the
     <code class="t-mono-inline">
       [delta]
-    </code> slot, which still needs a numeric
-    <code class="t-mono-inline">
-      [delta]
-    </code> input to show the row.
+    </code> slot, which still needs a
+    numeric <code class="t-mono-inline"> [delta] </code> input to show the row.
     <code class="t-mono-inline">
       unit
     </code> applies only to the input value;
@@ -130,14 +128,18 @@
     The value clips to one line; the rest shows in a tooltip on hover, or on
     focus inside a focusable element. Three hooks compose:
     <code class="t-mono-inline">
-      --ds-stat-value-white-space:
-    normal
-    </code> wraps, <code class="t-mono-inline">--ds-stat-value-lines:
-    N</code> then ellipsises on line N (only when wrapping), and
+      --ds-stat-value-white-space: normal
+    </code>
+    wraps, <code class="t-mono-inline">--ds-stat-value-lines: N</code> then
+    ellipsises on line N (only when wrapping) and sets
     <code class="t-mono-inline">
-      --ds-stat-value-wrap:
-    anywhere
-    </code> breaks a word wider than the tile.
+      line-height: normal
+    </code>, so the clamp cuts no
+    descender or accent, and
+    <code class="t-mono-inline">
+      --ds-stat-value-wrap: anywhere
+    </code> breaks a
+    word wider than the tile.
   </p>
 
   <div class="phrase-row">
