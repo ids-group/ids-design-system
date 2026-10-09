@@ -329,6 +329,7 @@
   function render() {
     const parts = [];
     let done = 0;
+    let open = 0;
     for (const [label, { item, buttons, note, fold }] of controls) {
       const entry = state[label] ?? {};
       const accepted = entry.v === ACCEPT;
@@ -338,14 +339,15 @@
       for (const button of buttons) button.setAttribute('aria-pressed', String(entry.v === button.dataset.v));
       note.hidden = entry.v !== REMARK;
       if (note.value !== (entry.note ?? '')) note.value = entry.note ?? '';
+      if (!accepted) open++;
       if (!entry.v) continue;
-      done++;
+      if (!accepted) done++;
       const text = entry.note?.trim().replace(/\s+/g, ' ');
       parts.push(entry.v === REMARK ? `${label} - замечание${text ? `: «${text}»` : ''}` : `${label} - принято`);
     }
     const extra = hooks.extra?.();
     if (extra) parts.push(extra);
-    bar.querySelector('b').textContent = `${done} из ${controls.size}`;
+    bar.querySelector('b').textContent = `${done} из ${open}`;
     line.textContent = parts.length ? `Дека ${document.title}: ${parts.join('; ')}` : 'пока ничего не выбрано';
   }
 
