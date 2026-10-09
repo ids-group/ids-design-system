@@ -116,7 +116,6 @@
   "--chart-sequential-4": "Sequential chart scale colour, step 4.",
   "--chart-sequential-5": "Sequential chart scale colour, step 5.",
   "--chart-sequential-6": "Sequential chart scale colour, step 6 (darkest).",
-  "--chart-skeleton-h": "Chart loading skeleton height (160px).",
   "--chart-threshold-band-opacity": "Fill opacity of a reference band.",
   "--chart-threshold-color": "Reference line and band colour.",
   "--chart-threshold-dashed-pattern": "stroke-dasharray of a `dash: 'dashed'` reference line.",

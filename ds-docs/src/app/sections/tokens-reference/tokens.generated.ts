@@ -706,11 +706,6 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart empty-state placeholder height (160px)."
   },
   {
-    "name": "--chart-skeleton-h",
-    "value": "160px",
-    "notes": "Chart loading skeleton height (160px)."
-  },
-  {
     "name": "--chart-legend-dot",
     "value": "var(--icon-2xs)",
     "notes": "Chart legend swatch dot size (defaults to --icon-2xs, showcase)."
