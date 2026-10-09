@@ -4,6 +4,19 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.13.0 - 2026-10-09
+
+### Added
+
+- **The library's lint plugins find and re-check every step.** `scripts/lint-step.mjs` runs the
+  shipped ESLint and stylelint plugins over the consumer's source with the step's `from`/`to`
+  range and prints each report as a hit keyed by `<version>#<item-id>`, read-only, through the
+  linters' Node API with the consumer's own linters and parsers; a missing one is skipped and
+  named. Phase A picks one plugin copy for the run, from the newest release tag that ships it.
+  Phase B step 2 joins the hits to the plan items after the mechanical script; step 7 re-runs it,
+  and any remaining hit blocks green for the version. `scripts/lint-step.test.mjs` runs it over
+  `lint-step.fixtures/`.
+
 ## 1.12.0 - 2026-10-08
 
 ### Added
