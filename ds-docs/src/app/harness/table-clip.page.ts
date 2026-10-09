@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { BadgeComponent } from 'ds/badge';
 import { CellTemplateDirective, TableComponent } from 'ds/table';
 import type { TableColumn, TableRowAction } from 'ds/table';
@@ -32,6 +32,7 @@ interface HarnessCase {
   readonly stickyFirstColumn?: boolean;
   readonly rowActions?: readonly TableRowAction<Row>[];
   readonly virtualScroll?: boolean;
+  readonly pageSize?: number;
 }
 
 const LONG_EMAIL =
@@ -278,6 +279,9 @@ const ACTIONS: readonly TableRowAction<Row>[] = [
 })
 export class TableClipHarnessPage {
   protected readonly people = people;
+  protected readonly perfRows = signal<readonly Row[]>([]);
+  protected readonly perfData = (count: number): Row[] => many(count);
+  protected readonly perfColumns: readonly TableColumn<Row>[] = pagingColumns;
   protected readonly many = many(200);
   protected readonly records = records;
   protected readonly deltaRecords = deltaRecords;
@@ -562,6 +566,14 @@ export class TableClipHarnessPage {
       width: 1100,
       data: pageTwo,
       columns: pagingColumns,
+    },
+    {
+      id: 'paging-pager',
+      title: 'Same table with pageSize 4: page 1 short, page 2 long',
+      width: 1100,
+      data: [...pageOne, ...pageTwo],
+      columns: pagingColumns,
+      pageSize: 4,
     },
     {
       id: 'paging-all',

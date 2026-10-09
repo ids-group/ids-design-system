@@ -18,7 +18,8 @@
       [maxHeight]="item.maxHeight ?? null"
       [stickyFirstColumn]="item.stickyFirstColumn ?? false"
       [rowActions]="item.rowActions ?? []"
-      [virtualScroll]="item.virtualScroll ?? false" />
+      [virtualScroll]="item.virtualScroll ?? false"
+      [pageSize]="item.pageSize ?? null" />
   </section>
 }
 
@@ -321,4 +322,28 @@
     [data]="people"
     [columns]="resizeContentColumns"
     [stickyHeader]="false" />
+</section>
+
+<section
+  class="case-perf"
+  data-perf="truncate"
+  [style.width.px]="1100">
+  <button
+    type="button"
+    data-perf-load="25"
+    (click)="perfRows.set(perfData(25))">
+    25 rows
+  </button>
+
+  <button
+    type="button"
+    data-perf-load="500"
+    (click)="perfRows.set(perfData(500))">
+    500 rows
+  </button>
+
+  <ds-table
+    caption="Perf"
+    [data]="perfRows()"
+    [columns]="perfColumns" />
 </section>
