@@ -247,7 +247,9 @@
   `tooltipTemplate` clicked; the panel's content ignored the pointer even while its pane was pinned,
   so a press on it went through to the pane. An unpinned tooltip still lets the pointer through to
   the plot, and a `pointer-events: auto` you set on an element of your `tooltipTemplate` is still
-  what makes it clickable while `tooltipLingerMs` keeps an unpinned panel open.
+  what makes it clickable while `tooltipLingerMs` keeps an unpinned panel open. The internal
+  `ChartTooltipDirective` behind `dsChartTooltip` lost the private `closeOnEscape`, so a subclass
+  member of that name no longer collides.
 
 - **`ng add` with a `--project` that does not exist stops with an error naming it.** It printed the
   generic "add it manually" message and changed nothing, which hid the typo.
