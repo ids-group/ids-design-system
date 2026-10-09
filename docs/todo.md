@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**121 open — 1 P1, 9 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
+**122 open — 1 P1, 9 P2, 112 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 1
 
@@ -37,7 +37,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 111
+### P3 — 112
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -154,6 +154,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - `ds-button` pulls `field-message` statically, and it stays cheap only while the two
 - **Component feature gaps**
+  - One tab stop per long table, arrow keys between its clipped values - PARKED 2026-10-09 by Stas
   - Portaled CSS as opt-in — PARKED 2026-09-04 by Stas
   - Split the design system from the UI kit as two packages (Mikhail, 2026-08-30)
   - A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies
@@ -1074,7 +1075,7 @@ same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was 
 
 **Closed on 2026-10-05 and moved to `implemented/`:** `pie-chart-center-value` - option K: the centre value shrinks to the hole down to `--ds-pie-chart-center-value-min-font-size`, then prints the `'tick'` form unless `[centerCompact]="false"`; `centerPlacement="below"` prints it under the ring.
 
-**Closed on 2026-10-09 and moved to `implemented/`:** `loading-states` - each chart's picked skeleton, `skeletonCount`, the plot-bound reload overlay, the heatmap card hugging its grid and the picker list states, built on `ecm-feat/loading-skeletons`; `loading-skeletons` - its before and after, all 12 blocks accepted and merged into dev; `component-owned-styles` - every component carries its own base (`border-box`, control font, heading margins, base focus ring) in `@layer ds-component-base`, plus breakpoints, the picker empty row and the reduced-motion shimmer; a lint guard holds it. Its icon question moved to `23-icon-box-size`. `focus-ring-follows-shape` - the focus ring takes `--focus-ring-radius` wherever an element declares no radius; close buttons centre their glyph in a square box, the `ds-table` column filter is a 24px target, a cell link is ringed outside its text.
+**Closed on 2026-10-09 and moved to `implemented/`:** `loading-states` - each chart's picked skeleton, `skeletonCount`, the plot-bound reload overlay, the heatmap card hugging its grid and the picker list states, built on `ecm-feat/loading-skeletons`; `loading-skeletons` - its before and after, all 12 blocks accepted and merged into dev; `component-owned-styles` - every component carries its own base (`border-box`, control font, heading margins, base focus ring) in `@layer ds-component-base`, plus breakpoints, the picker empty row and the reduced-motion shimmer; a lint guard holds it. Its icon question moved to `23-icon-box-size`. `focus-ring-follows-shape` - the focus ring takes `--focus-ring-radius` wherever an element declares no radius; close buttons centre their glyph in a square box, the `ds-table` column filter is a 24px target, a cell link is ringed outside its text. `clipped-value-tab-stop` - a clipped `dsTooltipWhenClipped` value that no keyboard path reaches takes `tabindex="0"` while clipped, one stop per value in a long table too (option A); one roving stop per table with arrows is under *Parked*.
 
 **Ranks 1-10 have a twin on this board, so one answer closes two lines** — which is what
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
@@ -1419,6 +1420,8 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 ## Component feature gaps
 
 *This section also has items under **Asks**, **Decisions**.*
+
+- [ ] **[P3] One tab stop per long table, arrow keys between its clipped values - PARKED 2026-10-09 by Stas.** A clipped `dsTooltipWhenClipped` value that no keyboard path reaches is a tab stop of its own while clipped, so a 25-row `ds-table` with two clipped columns holds 50 stops (measured in the ds-docs build, deck `presentations/implemented/clipped-value-tab-stop.html`). The parked alternative: roving tabindex, one clipped value at `tabindex="0"` and the rest at `-1`, arrows moving between them. APG allows that only inside a composite widget, so the table becomes `role="grid"` and `ds-table` takes the grid keyboard model (arrows, Home/End, PageUp/PageDown); without the role a screen reader in browse mode keeps the arrows for itself. Unparks when a consumer reports the stop count in a long table.
 
 - [ ] **[P3] Portaled CSS as opt-in — PARKED 2026-09-04 by Stas.** 1 055 B of the 2 793 B global sheet is the only part that could move behind an opt-in: `dropdown-overlay`, `overlay-motion`, `toast-overlay`. It saves only a consumer with no picker, no toast and no modal, which is close to nobody, and the cost is one more import in everyone else's bootstrap. The measurement stands if the balance ever changes; the AG Grid route (CSS inside the component) stays rejected because Angular injects those as runtime tags and a strict CSP under SSR blocks them.
 
