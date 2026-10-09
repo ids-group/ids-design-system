@@ -584,6 +584,9 @@ export function injectDsLocale(): string;
 
 export function isDsOptionGroup<T>(item: DsOptionItem<T>): item is DsOptionGroup<T>;
 
+// @internal
+export function isListCursorKey(key: string): boolean;
+
 export function isTextClipped(element: HTMLElement): boolean;
 
 // @internal

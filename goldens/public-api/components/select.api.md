@@ -43,6 +43,7 @@ export class SelectComponent extends DsControlValueAccessor<string> implements O
     public readonly label = input<string>('');
     protected readonly labelId = `${this.uid}-label`;
     private lastEnabledIndex;
+    protected readonly listInert = computed(…);
     protected readonly listboxId = `${this.uid}-listbox`;
     public readonly loading = input(false, { transform: booleanAttribute });
     protected readonly message = this.fieldMessage.message;

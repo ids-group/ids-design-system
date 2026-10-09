@@ -30,6 +30,23 @@ export function lastEnabledIndex(list: DsListCursorList): number {
   return -1;
 }
 
+const CURSOR_KEYS = new Set([
+  'ArrowDown',
+  'ArrowUp',
+  'PageDown',
+  'PageUp',
+  'Home',
+  'End',
+  'Enter',
+]);
+
+/** Whether `key` moves the cursor or picks the row under it.
+ * @internal
+ */
+export function isListCursorKey(key: string): boolean {
+  return CURSOR_KEYS.has(key);
+}
+
 /**
  * The next enabled index `step` away from `from`, wrapping at both ends.
  *
