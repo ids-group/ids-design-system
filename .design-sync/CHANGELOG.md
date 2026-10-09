@@ -24,7 +24,14 @@ holds an entry; what the release bot commits afterwards needs none.
   `ChartSkeleton` as the loading placeholder a chart draws itself. Their cards resolve to the
   `components/tooltip` and `charts/chart` sections.
 
+- **`ds-info-hint` has a card.** The Tooltip chapter's Info hint block carries
+  `data-claude-design` and `data-for="info-hint"`.
+
 ### Build
+
+- **`build-cards` reads markup inside a quoted attribute as part of the value.** Tooltip's
+  `[dsTooltip]="'<b>Tags</b> ...'"` stays inside its tag, so every later block of the chapter can
+  carry a card.
 
 - **`[dsDefinitionTerm]` is on the hand-maintained surface.** The elements route generates no
   wrapper for it: a card has no hover or click to show its definition, and `ds-table` applies it
