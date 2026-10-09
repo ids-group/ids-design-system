@@ -386,22 +386,71 @@
     Type-ahead, and the cursor staying in view
   </h3>
 
-  <p class="block-desc t-s">
-    Closed, a letter selects the first match, as a native
-    <code class="t-mono-inline">
-      &lt;select&gt;
-    </code>; repeats cycle. Open, it
-    moves the cursor and scrolls the active row into view (off:
-    <code class="t-mono-inline">
-      scrollActiveIntoView="false"
-    </code>).
-    <kbd>
-      PageDown
-    </kbd>/<kbd>PageUp</kbd>: ten rows;
-    <kbd>
-      Home
-    </kbd>/<kbd>End</kbd>: first/last enabled. Hover never scrolls.
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Key
+        </th>
+
+        <th>
+          Effect
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          A letter, closed
+        </td>
+
+        <td>
+          Selects the first match, as a native <code class="t-mono-inline">&lt;select&gt;</code>; repeats cycle.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          A letter, open
+        </td>
+
+        <td>
+          Moves the cursor, scrolls the active row into view (off: <code class="t-mono-inline">scrollActiveIntoView="false"</code>).
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            PageDown
+          </kbd> / <kbd>PageUp</kbd>
+        </td>
+
+        <td>
+          Ten rows
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            Home
+          </kbd> / <kbd>End</kbd>
+        </td>
+
+        <td>
+          First / last enabled
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="block-desc t-s">
+    <li>
+      Hover never scrolls.
+    </li>
+  </ul>
 
   <div class="demo-panel">
     <div class="select-demo">
@@ -443,16 +492,19 @@
     Clearing from outside
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      clear()
-    </code> (via a template reference)
-    empties the value and closes the panel, keeping focus. Call
-    <code class="t-mono-inline">
-      blur()
-    </code> after it when the host moves on;
-    it drops focus and leaves an open panel alone.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        clear()
+      </code> (via a template reference) - empties the value, closes the panel, keeps focus.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        blur()
+      </code> after it when the host moves on - drops focus, leaves an open panel alone.
+    </li>
+  </ul>
 
   <div class="demo-panel">
     <div class="select-demo">

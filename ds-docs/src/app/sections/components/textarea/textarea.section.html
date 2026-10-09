@@ -153,12 +153,18 @@
     <code class="t-mono-inline">
       maxLengthMode="soft"
     </code> allows text past the
-    limit: the counter turns red, the excess is highlighted, the field sets
-    <code class="t-mono-inline">
-      aria-invalid
-    </code>, described by the counter.
-    The form decides whether to block saving.
+    limit; the form decides whether to block saving. Past it:
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      The counter turns red and the excess is highlighted.
+    </li>
+
+    <li>
+      The field sets <code class="t-mono-inline">aria-invalid</code>, described by the counter.
+    </li>
+  </ul>
 
   <div class="grid-2">
     <ds-textarea
