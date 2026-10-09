@@ -1,106 +1,16 @@
-<!-- @dsCard group="feedback-status" viewport="1200x449" name="Bar - in a table cell" subtitle="No chart chrome (caption, legend, annex table) to fill a 60px cell." --><!doctype html>
+<!-- @dsCard group="feedback-status" viewport="1200x468" name="Bar - in a table cell" --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Bar</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-bar></ds-docs-components-bar></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 2;
-      var KEY = "bar";
-      var TABLE = false;
-      var HEAD = null;
-      var BLOCK = "in a table cell";
-      var REACT = "Bar";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && false);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow, docs-api-table:not([data-key])' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-bar");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var HEADER = 'h2, p.lede, .eyebrow, .tagrow, docs-component-meta, ' + API;
-        var filled = function (node) {
-          return !node.matches(HEADER) && (node.childElementCount > 0 || node.textContent.trim() !== '');
-        };
-        if (!Array.prototype.some.call(section.children, filled)) {
-          if (Date.now() - start < 8000) return setTimeout(slice, 50);
-          document.documentElement.setAttribute('data-ds-sliced', '0');
-          document.documentElement.setAttribute('data-ds-kept', '0');
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (filled(k)) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"></head><body>
+  <div class="ds-page"><ds-docs-components-bar _nghost-c3d=""><docs-section _ngcontent-c3d="" anchor="bar" eyebrow="Components" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-bar" data-anchor="bar"><h2 _ngcontent-c1="" class="t-h2">Bar - in a table cell</h2><ul _ngcontent-c3d="" class="block-desc t-s"><li _ngcontent-c3d=""> No chart chrome (caption, legend, annex table), to fit a 60px cell. </li><li _ngcontent-c3d=""><code _ngcontent-c3d="" class="t-mono-inline"> max </code> - the column's largest value, so the longest bar fills its track. </li><li _ngcontent-c3d=""> The figure prints beside it, so bars are <code _ngcontent-c3d="" class="t-mono-inline">semantics="none"</code>. </li></ul><ds-table _ngcontent-c3d="" caption="Microsites" _nghost-c2y="" style="--_table-scroller-pad-bottom: 0px; --_table-head-measured: 41.65625px;"><div _ngcontent-c2y="" class="table-toolbar"><div _ngcontent-c2y="" class="toolbar-slot"></div></div><ds-loading-overlay _ngcontent-c2y="" _nghost-c1h=""><div _ngcontent-c1h="" class="content"><div _ngcontent-c2y="" class="scroll-wrap"><div _ngcontent-c2y="" role="status" aria-live="polite" class="visually-hidden">  </div><table _ngcontent-c2y="" class="table" style="--_table-virtual-row-h: 44px;"><caption _ngcontent-c2y="" class="visually-hidden"> Microsites </caption><thead _ngcontent-c2y=""><tr _ngcontent-c2y=""><th _ngcontent-c2y="" scope="col" data-col-key="name"><span _ngcontent-c2y="" class="th-label"><span _ngcontent-c2y="" class="th-text"> Microsite </span></span></th><th _ngcontent-c2y="" scope="col" class="numeric fit-content" data-col-key="requests"><span _ngcontent-c2y="" class="th-label"><span _ngcontent-c2y="" class="th-text"> Requests </span></span></th><th _ngcontent-c2y="" scope="col" class="fit-content" data-col-key="rate"><span _ngcontent-c2y="" class="th-label"><span _ngcontent-c2y="" class="th-text"> Rate </span></span></th></tr></thead><tbody _ngcontent-c2y=""><tr _ngcontent-c2y=""><td _ngcontent-c2y=""> Northgate refresh </td><td _ngcontent-c2y="" class="numeric fit-content"> 1240 </td><td _ngcontent-c2y="" class="fit-content"><span _ngcontent-c3d="" class="meter-cell"><ds-bar _ngcontent-c3d="" semantics="none" _nghost-c3e="" aria-hidden="true"><span _ngcontent-c3e="" style="width: 100%;"></span></ds-bar><span _ngcontent-c3d="" class="t-mono-inline"> 7.2% </span></span></td></tr><tr _ngcontent-c2y=""><td _ngcontent-c2y=""> Harbour Point </td><td _ngcontent-c2y="" class="numeric fit-content"> 864 </td><td _ngcontent-c2y="" class="fit-content"><span _ngcontent-c3d="" class="meter-cell"><ds-bar _ngcontent-c3d="" semantics="none" _nghost-c3e="" aria-hidden="true"><span _ngcontent-c3e="" style="width: 70.8333%;"></span></ds-bar><span _ngcontent-c3d="" class="t-mono-inline"> 5.1% </span></span></td></tr><tr _ngcontent-c2y=""><td _ngcontent-c2y=""> Claremont Row </td><td _ngcontent-c2y="" class="numeric fit-content"> 512 </td><td _ngcontent-c2y="" class="fit-content"><span _ngcontent-c3d="" class="meter-cell"><ds-bar _ngcontent-c3d="" semantics="none" _nghost-c3e="" aria-hidden="true"><span _ngcontent-c3e="" style="width: 47.2222%;"></span></ds-bar><span _ngcontent-c3d="" class="t-mono-inline"> 3.4% </span></span></td></tr><tr _ngcontent-c2y=""><td _ngcontent-c2y=""> Eastfield Gardens </td><td _ngcontent-c2y="" class="numeric fit-content"> 188 </td><td _ngcontent-c2y="" class="fit-content"><span _ngcontent-c3d="" class="meter-cell"><ds-bar _ngcontent-c3d="" semantics="none" _nghost-c3e="" aria-hidden="true"><span _ngcontent-c3e="" style="width: 16.6667%;"></span></ds-bar><span _ngcontent-c3d="" class="t-mono-inline"> 1.2% </span></span></td></tr></tbody></table></div></div></ds-loading-overlay></ds-table></section></docs-section></ds-docs-components-bar></div>
+  
+  
+  
+
+
 </body></html>

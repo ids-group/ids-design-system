@@ -94,6 +94,7 @@
               "components/*/HeatmapChart/**",
               "components/*/Icon/**",
               "components/*/IconButton/**",
+              "components/*/InfoHint/**",
               "components/*/Inline/**",
               "components/*/Input/**",
               "components/*/LineChart/**",
@@ -217,8 +218,8 @@
         "message": "<Bar> doesn't accept that prop. Declared props: value, max, semantics, variant, indeterminate, color, ariaLabel, target, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='BarChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|max|dataTable|partOfWhole|showPercent|onRowClicked|dimOthers|highlighted|staggerMs|tooltip|children|key|ref|className|style)$/]",
-        "message": "<BarChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, max, dataTable, partOfWhole, showPercent, onRowClicked, dimOthers, highlighted, staggerMs, tooltip, children."
+        "selector": "JSXOpeningElement[name.name='BarChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|max|dataTable|partOfWhole|showPercent|labelPosition|onRowClicked|dimOthers|highlighted|staggerMs|tooltip|children|key|ref|className|style)$/]",
+        "message": "<BarChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, max, dataTable, partOfWhole, showPercent, labelPosition, onRowClicked, dimOthers, highlighted, staggerMs, tooltip, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='BottomSheet'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|title|onClosed|snapPoints|staticPreview|onOpenChange|actions|children|key|ref|className|style)$/]",
@@ -241,8 +242,8 @@
         "message": "<Card> doesn't accept that prop. Declared props: elevation, padding, onPressed, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Chart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|categories|tickCount|min|max|cursor|maxSecondary|plotHeight|axisGutter|valueSpace|secondaryAxisMode|axisColor|secondaryAxisColor|axisLabel|secondaryAxisLabel|tooltipTemplate|tooltipExtraGap|referenceLine|referenceLabel|seriesAnnotation|children|key|ref|className|style)$/]",
-        "message": "<Chart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, categories, tickCount, min, max, cursor, maxSecondary, plotHeight, axisGutter, valueSpace, secondaryAxisMode, axisColor, secondaryAxisColor, axisLabel, secondaryAxisLabel, tooltipTemplate, tooltipExtraGap, referenceLine, referenceLabel, seriesAnnotation, children."
+        "selector": "JSXOpeningElement[name.name='Chart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|categories|skeletonCount|tickCount|min|max|cursor|maxSecondary|plotHeight|axisGutter|valueSpace|secondaryAxisMode|axisColor|secondaryAxisColor|axisLabel|secondaryAxisLabel|tooltipTemplate|tooltipExtraGap|referenceLine|referenceLabel|seriesAnnotation|children|key|ref|className|style)$/]",
+        "message": "<Chart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, categories, skeletonCount, tickCount, min, max, cursor, maxSecondary, plotHeight, axisGutter, valueSpace, secondaryAxisMode, axisColor, secondaryAxisColor, axisLabel, secondaryAxisLabel, tooltipTemplate, tooltipExtraGap, referenceLine, referenceLabel, seriesAnnotation, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='ChartDataTable'] > JSXAttribute > JSXIdentifier[name!=/^(?:columns|rows|caption|open|rowHeader|onToggled|children|key|ref|className|style)$/]",
@@ -261,8 +262,8 @@
         "message": "<ColorPicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, presets, panelClass, disabled, ariaLabel, success, staticPreview, onValueChange, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='ColumnChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|stack|thresholds|showValues|tickCount|dataTable|partOfWhole|onPointClicked|dimOthers|staggerMs|tooltip|tooltipAnchor|children|key|ref|className|style)$/]",
-        "message": "<ColumnChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, stack, thresholds, showValues, tickCount, dataTable, partOfWhole, onPointClicked, dimOthers, staggerMs, tooltip, tooltipAnchor, children."
+        "selector": "JSXOpeningElement[name.name='ColumnChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|stack|thresholds|showValues|skeletonCount|tickCount|dataTable|partOfWhole|onPointClicked|dimOthers|staggerMs|tooltip|tooltipAnchor|children|key|ref|className|style)$/]",
+        "message": "<ColumnChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, stack, thresholds, showValues, skeletonCount, tickCount, dataTable, partOfWhole, onPointClicked, dimOthers, staggerMs, tooltip, tooltipAnchor, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Container'] > JSXAttribute > JSXIdentifier[name!=/^(?:size|children|key|ref|className|style)$/]",
@@ -305,8 +306,8 @@
         "message": "<FilterBar> doesn't accept that prop. Declared props: moreLabel, panelLabel, triggerSize, trailing, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='FunnelChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|shape|showTable|dataTable|drop|onStageClicked|dimOthers|staggerMs|tooltip|children|key|ref|className|style)$/]",
-        "message": "<FunnelChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, shape, showTable, dataTable, drop, onStageClicked, dimOthers, staggerMs, tooltip, children."
+        "selector": "JSXOpeningElement[name.name='FunnelChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|shape|showTable|dataTable|drop|skeletonCount|onStageClicked|dimOthers|staggerMs|tooltip|children|key|ref|className|style)$/]",
+        "message": "<FunnelChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, shape, showTable, dataTable, drop, skeletonCount, onStageClicked, dimOthers, staggerMs, tooltip, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='HeatmapChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|columns|data|min|max|showValues|dimOthers|tooltip|staggerMs|onCellClicked|children|key|ref|className|style)$/]",
@@ -319,6 +320,10 @@
       {
         "selector": "JSXOpeningElement[name.name='IconButton'] > JSXAttribute > JSXIdentifier[name!=/^(?:icon|ariaLabel|ariaDescribedBy|variant|color|size|type|disabled|selected|ariaExpanded|ariaControls|onPressed|children|key|ref|className|style)$/]",
         "message": "<IconButton> doesn't accept that prop. Declared props: icon, ariaLabel, ariaDescribedBy, variant, color, size, type, disabled, selected, ariaExpanded, ariaControls, onPressed, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='InfoHint'] > JSXAttribute > JSXIdentifier[name!=/^(?:text|ariaLabel|icon|children|key|ref|className|style)$/]",
+        "message": "<InfoHint> doesn't accept that prop. Declared props: text, ariaLabel, icon, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Inline'] > JSXAttribute > JSXIdentifier[name!=/^(?:gap|align|justify|wrap|children|key|ref|className|style)$/]",
@@ -397,8 +402,8 @@
         "message": "<PasswordRules> doesn't accept that prop. Declared props: value, rules, showUnmet, columns, listId, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='PieChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|centerValue|centerLabel|centerCompact|centerPlacement|legend|maxSlices|otherLabel|innerRadius|dataTable|partOfWhole|onSliceClicked|dimOthers|tooltip|children|key|ref|className|style)$/]",
-        "message": "<PieChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, centerValue, centerLabel, centerCompact, centerPlacement, legend, maxSlices, otherLabel, innerRadius, dataTable, partOfWhole, onSliceClicked, dimOthers, tooltip, children."
+        "selector": "JSXOpeningElement[name.name='PieChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|centerValue|centerLabel|centerCompact|centerPlacement|legend|skeletonCount|maxSlices|otherLabel|innerRadius|dataTable|partOfWhole|onSliceClicked|dimOthers|tooltip|children|key|ref|className|style)$/]",
+        "message": "<PieChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, centerValue, centerLabel, centerCompact, centerPlacement, legend, skeletonCount, maxSlices, otherLabel, innerRadius, dataTable, partOfWhole, onSliceClicked, dimOthers, tooltip, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Popover'] > JSXAttribute > JSXIdentifier[name!=/^(?:align|placement|arrow|panelRole|panelLabel|staticPreview|children|key|ref|className|style)$/]",
@@ -533,8 +538,8 @@
         "message": "<ToggleButton> doesn't accept that prop. Declared props: pressed, icon, disabled, onPressedChange, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='TooltipPanel'] > JSXAttribute > JSXIdentifier[name!=/^(?:text|placement|panelId|children|key|ref|className|style)$/]",
-        "message": "<TooltipPanel> doesn't accept that prop. Declared props: text, placement, panelId, children."
+        "selector": "JSXOpeningElement[name.name='TooltipPanel'] > JSXAttribute > JSXIdentifier[name!=/^(?:text|placement|arrow|panelId|children|key|ref|className|style)$/]",
+        "message": "<TooltipPanel> doesn't accept that prop. Declared props: text, placement, arrow, panelId, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Topbar'] > JSXAttribute > JSXIdentifier[name!=/^(?:title|breadcrumbs|search|actions|children|key|ref|className|style)$/]",
@@ -549,8 +554,8 @@
         "message": "<W3w> doesn't accept that prop. Declared props: prefix, address, copyable, onCopied, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='WaterfallChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|showValues|showConnectors|dimOthers|tooltip|tickCount|dataTable|staggerMs|onBarClicked|children|key|ref|className|style)$/]",
-        "message": "<WaterfallChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, showValues, showConnectors, dimOthers, tooltip, tickCount, dataTable, staggerMs, onBarClicked, children."
+        "selector": "JSXOpeningElement[name.name='WaterfallChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|data|showValues|showConnectors|dimOthers|tooltip|tickCount|skeletonCount|dataTable|staggerMs|onBarClicked|children|key|ref|className|style)$/]",
+        "message": "<WaterfallChart> doesn't accept that prop. Declared props: frame, caption, summary, loading, error, emptyText, errorText, valueFormat, interactive, tooltipSwatches, tooltipLingerMs, pinOnClick, data, showValues, showConnectors, dimOthers, tooltip, tickCount, skeletonCount, dataTable, staggerMs, onBarClicked, children."
       }
     ]
   },
@@ -679,6 +684,9 @@
         "replaces": []
       },
       "IconButton": {
+        "replaces": []
+      },
+      "InfoHint": {
         "replaces": []
       },
       "Inline": {
@@ -1078,7 +1086,6 @@
       "--chart-sequential-6",
       "--chart-series-accent",
       "--chart-series-default",
-      "--chart-skeleton-h",
       "--chart-threshold-band-opacity",
       "--chart-threshold-color",
       "--chart-threshold-dashed-pattern",
@@ -2482,7 +2489,6 @@
       "--kbd-pad-y": "other",
       "--kbd-pad-x": "other",
       "--chart-empty-h": "length",
-      "--chart-skeleton-h": "length",
       "--chart-legend-dot": "other",
       "--compare-dt-w": "length",
       "--dodont-stage-minh": "length",

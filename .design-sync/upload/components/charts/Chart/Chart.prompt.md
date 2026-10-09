@@ -12,7 +12,8 @@ The container `ColumnChart` is built inside - port of `ds-chart`. It owns the pl
 - `summary`: the accessible name. The container holds no readings, so a chart that needs its numbers described supplies the sentence here; the presets generate it from their own data.
 - `interactive` (default `false`): only decides the plot's role, `group` against `img`. The marks carry their own interactivity.
 - `frame`: `'auto'` (default) draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`.
-- `loading` (default `false`): a skeleton at the plot's own height, so the page does not resize when the data lands.
+- `loading` (default `false`): with empty `categories`, a skeleton at the plot's own height; with data on screen, the plot stays under a `ds-loading-overlay` until it clears.
+- `skeletonCount` (default `5`): how many columns the skeleton draws until the data's own count is known.
 - `emptyText` (default `"No data"`), `error` (default `false`), `errorText` (default `"Could not load the data"`): the three non-plot states. `error` is separate from `loading` and from an empty `categories` because "the request failed" and "there is nothing to show" read the same and mean opposite things.
 - `valueFormat`: `(value: number, location) => string` for the tick labels. Unset falls back to `DS_CONFIG.chart.valueFormat`.
 - `secondaryAxisMode` (default `'aligned'`): `'aligned'` | `'exact'` | `'dual-grid'` | `'split'` - how a second value axis relates to the first, once a mark has reported against it. Every name says what is done to the gridlines. The same four words `LineChart` takes as `yAxisMode`.

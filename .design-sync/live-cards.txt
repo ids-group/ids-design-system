@@ -4,19 +4,11 @@ components/actions/SplitButton/Split Button - Primary variant.html
 components/data-display/Stat/Stat - A value that is not a number.html
 components/data-display/Stat/Stat - Sizes.html
 components/data-display/Stat/Stat - Stat tiles.html
-components/data-display/Table/Table - Default.html
-components/data-display/Table/Table - Dense - zebra.html
 components/data-display/Table/Table - Empty states.html
-components/data-display/Table/Table - Expandable rows.html
-components/data-display/Table/Table - Loading - overlay.html
 components/data-display/Table/Table - Pagination - sticky column.html
 components/data-display/Table/Table - Row actions - kebab menu.html
-components/data-display/Table/Table - Row selection - bulk-action bar.html
-components/data-display/Table/Table - Sortable columns.html
-components/data-display/Table/Table - Toolbar slot - the export button anywhere.html
 components/data-display/Tree/Tree - Interactive tree.html
 components/data-display/Tree/Tree - Single node states.html
-components/feedback-status/Bar/Bar - In a table cell.html
 components/feedback-status/LoadingOverlay/Loading Overlay - Interactive demo.html
 components/feedback-status/Toast/Toast - States showcase (static specimens).html
 components/feedback-status/ToastRegion/Toast Region - Toast stack.html
@@ -63,6 +55,7 @@ components/navigation/SidenavItem/Sidenav Item - Item states showcase.html
 components/navigation/Topbar/Topbar - With breadcrumb.html
 components/overlays/BottomSheet/Bottom Sheet - Open sheet.html
 components/overlays/Drawer/Drawer - Open drawer.html
+components/overlays/InfoHint/Info Hint - Info hint.html
 components/overlays/Modal/Modal - Sizes.html
 components/overlays/ModalCard/Modal Card - Eyebrow - context above the title.html
 components/overlays/ModalCard/Modal Card - Status.html

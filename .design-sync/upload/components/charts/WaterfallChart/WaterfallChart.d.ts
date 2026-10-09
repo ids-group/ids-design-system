@@ -11,7 +11,7 @@ export interface WaterfallChartProps {
   caption?: string | null;
   /** Accessible name. Generated from the data when omitted. */
   summary?: string | null;
-  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize. */
+  /** With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`. */
   loading?: boolean;
   /** Shows `errorText` in place of the plot. Separate from `loading` and from empty data. */
   error?: boolean;
@@ -41,6 +41,8 @@ export interface WaterfallChartProps {
   tooltip?: ('item' | 'none');
   /** How many value-axis ticks to aim for; ticks snap to a round step. */
   tickCount?: number;
+  /** How many steps the loading skeleton draws before the data is known: a total, the deltas, a total. */
+  skeletonCount?: number;
   /** The annex table under the plot: each step's direction, reading and running total. Unset falls back to `DS_CONFIG.chart.dataTable`. */
   dataTable?: unknown;
   /** Milliseconds between one step's entrance and the next; the step narrows to finish within 260ms. `0` turns it off. */

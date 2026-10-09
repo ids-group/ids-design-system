@@ -4,8 +4,8 @@ A mark picks its axis: axis: 'secondary' in line data, axis="secondary" on a col
 
 axisColor and secondaryAxisColor colour each axis's labels like its marks - the only cue to which axis a mark reads.
 
-Either mark takes either side; here columns read the right axis - keep that when the replaced screen did.
+Either mark takes either side: here columns read the right axis.
 
-Cumulative line over its columns: column chart, "Columns and a line, on two scales".
+Cumulative line over its columns: Column chart, "Columns and a line, on two scales".
 
 Full API: `Chart.d.ts`. How to use the component anywhere: `Chart.prompt.md`.

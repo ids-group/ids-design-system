@@ -9,7 +9,7 @@ A matrix of readings coloured by magnitude — depot by weekday, hour by date, q
 - `interactive` (default `false`): makes every measured cell a button and fires `cellClicked`. An unmeasured cell stays inert — a grid of buttons with nothing behind them is a tab trap.
 - `caption`: shown above the grid and reused as the annex table's caption.
 - `frame`: `'auto'` (default) draws the bordered, padded box; `'none'` leaves it bare. Unset falls back to `DS_CONFIG.chart.frame`.
-- `loading` (default `false`), `error` (default `false`), `emptyText` (default `"No data"`), `errorText` (default `"Could not load the data"`): the three non-plot states. `error` is separate from an empty matrix because "the request failed" and "there is nothing to show" read the same and mean opposite things.
+- `loading` (default `false`), `error` (default `false`), `emptyText` (default `"No data"`), `errorText` (default `"Could not load the data"`): the three non-plot states. `error` is separate from an empty matrix because "the request failed" and "there is nothing to show" read the same and mean opposite things. With data on screen, `loading` keeps the plot under a `ds-loading-overlay` until it clears.
 - `valueFormat`: `(value: number, location) => string`. Formats the scale's two ends, every cell's accessible name and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`.
 - `cellClicked`: `{ row, rowIndex, column, columnIndex, value }`.
 
@@ -19,4 +19,4 @@ A matrix of readings coloured by magnitude — depot by weekday, hour by date, q
 
 **The heat scale spans 1.14:1 to 9.07:1 against white**, so a label placed over a cell cannot take one colour for the whole scale. `showValues` handles this by drawing the glyph in the cell's own colour inverted, which stays legible at either end.
 
-The grid scrolls sideways below its natural width rather than crushing the cells, the same answer `Table` gives.
+The host is `fit-content` wide, capped at its container. To fill the container: `:root ds-heatmap-chart { inline-size: auto }` in a global stylesheet. The grid scrolls sideways below its natural width rather than crushing the cells, the same answer `Table` gives.

@@ -11,7 +11,7 @@ export interface ChartProps {
   caption?: string | null;
   /** Accessible name. Generated from the data when omitted. */
   summary?: string | null;
-  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize. */
+  /** With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`. */
   loading?: boolean;
   /** Shows `errorText` in place of the plot. Separate from `loading` and from empty data. */
   error?: boolean;
@@ -31,6 +31,8 @@ export interface ChartProps {
   pinOnClick?: boolean | null;
   /** One band per category; every projected mark is positioned against them. */
   categories?: readonly string[];
+  /** How many columns the loading skeleton draws before the categories are known. */
+  skeletonCount?: number;
   /** How many value-axis ticks to aim for; ticks snap to a round step, so the count may differ by one. */
   tickCount?: number;
   /** Pins the floor of the value axis. It only opens the axis further; a floor above the data is ignored. */

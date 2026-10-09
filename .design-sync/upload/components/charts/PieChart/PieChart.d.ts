@@ -11,7 +11,7 @@ export interface PieChartProps {
   caption?: string | null;
   /** Accessible name. Generated from the data when omitted. */
   summary?: string | null;
-  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize. */
+  /** With no data, draws a skeleton in the chart's shape: `skeletonCount` marks where the chart has it, the data's count once known. With data on screen, keeps the plot under `ds-loading-overlay`. */
   loading?: boolean;
   /** Shows `errorText` in place of the plot. Separate from `loading` and from empty data. */
   error?: boolean;
@@ -41,6 +41,8 @@ export interface PieChartProps {
   centerPlacement?: ('inside' | 'below');
   /** Legend placement, logical so it flips in right-to-left. */
   legend?: 'end' | 'bottom' | 'none';
+  /** How many slices, and legend rows, the loading skeleton draws before the data is known. */
+  skeletonCount?: number;
   /** Longest legend to draw; past it the smallest slices are summed into one. Values below 2 are ignored. */
   maxSlices?: number | null;
   /** Names the grouped slice. Unset falls back to `DS_INTL.chart.other`. */
