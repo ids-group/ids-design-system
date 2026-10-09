@@ -280,8 +280,16 @@ const ACTIONS: readonly TableRowAction<Row>[] = [
 export class TableClipHarnessPage {
   protected readonly people = people;
   protected readonly perfRows = signal<readonly Row[]>([]);
-  protected readonly perfData = (count: number): Row[] => many(count);
-  protected readonly perfColumns: readonly TableColumn<Row>[] = pagingColumns;
+  protected readonly perfColumns =
+    signal<readonly TableColumn<Row>[]>(pagingColumns);
+  // The clip as it is without the fit: a numeric width clips at 240px of text.
+  protected readonly perfFixedColumns: readonly TableColumn<Row>[] =
+    pagingColumns.map((col) => (col.truncate ? { ...col, width: 272 } : col));
+
+  protected loadPerf(count: number, fixed: boolean): void {
+    this.perfColumns.set(fixed ? this.perfFixedColumns : pagingColumns);
+    this.perfRows.set(many(count));
+  }
   protected readonly many = many(200);
   protected readonly records = records;
   protected readonly deltaRecords = deltaRecords;

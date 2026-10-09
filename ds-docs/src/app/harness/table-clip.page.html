@@ -331,19 +331,26 @@
   <button
     type="button"
     data-perf-load="25"
-    (click)="perfRows.set(perfData(25))">
+    (click)="loadPerf(25, false)">
     25 rows
   </button>
 
   <button
     type="button"
     data-perf-load="500"
-    (click)="perfRows.set(perfData(500))">
+    (click)="loadPerf(500, false)">
     500 rows
+  </button>
+
+  <button
+    type="button"
+    data-perf-load="500-fixed"
+    (click)="loadPerf(500, true)">
+    500 rows, width 272
   </button>
 
   <ds-table
     caption="Perf"
     [data]="perfRows()"
-    [columns]="perfColumns" />
+    [columns]="perfColumns()" />
 </section>
