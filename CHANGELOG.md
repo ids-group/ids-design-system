@@ -144,7 +144,8 @@
   the pointer leaves that triangle or rests in it for 300ms, and an item it rested on then opens
   its own submenu. Moving from the submenu back onto its item keeps it open.
   `MenuItemComponent` gained the public `activateHover` and the private `aim`. A subclass
-  declaring one of those names must rename it.
+  declaring one of those names must rename it. It lost the private `closeTimer` and
+  `clearCloseTimer`, so a subclass member of either name no longer collides.
 
 - **`text-clip.single-line-ellipsis` clips the inline axis only.** It clipped both axes with a
   4px margin, which a font taller than the line box by more than that overran. Ink above and
