@@ -37,7 +37,7 @@ interface ContractRow {
 })
 export class SignalFormsSection {
   protected readonly lede =
-    'DS controls bind to Angular Signal Forms with no wrapper and no adapter: put [formField] on the control and the form owns the value, the validation and the disabled state. Nothing needs to be imported from the DS to make it work.';
+    'DS controls bind to Angular Signal Forms with no wrapper or adapter: put [formField] on the control and the form owns value, validation and disabled state.';
 
   protected readonly roles = [
     { value: 'admin', label: 'Administrator' },

@@ -61,17 +61,25 @@
     </ds-button>
   </div>
 
-  <p class="block-desc t-s">
-    Once a field is touched, the message shows, the border turns and
-    <code class="t-mono-inline">
-      aria-invalid
-    </code> flips. The button gates on
-    presence and in-flight only, never validity:
-    <code class="t-mono-inline">
-      submit()
-    </code> touches every field and sends
-    only a valid form.
-  </p>
+  <ul class="rules">
+    <li>
+      Once a field is touched, the message shows, the border turns and
+      <code class="t-mono-inline">
+        aria-invalid
+      </code> flips
+    </li>
+
+    <li>
+      The button gates on presence and in-flight only, never validity
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        submit()
+      </code> touches every field and sends
+      only a valid form
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     Error text comes from the validator
