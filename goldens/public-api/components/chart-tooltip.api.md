@@ -69,7 +69,6 @@ export interface ChartTooltipContext {
 export class ChartTooltipDirective {
     public constructor();
     private close;
-    private closeOnEscape;
     private detachEscape;
     private detachOffscreen;
     private detachScrollReposition;

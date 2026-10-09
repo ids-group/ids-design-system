@@ -15,8 +15,15 @@ const config = {
   rules: { 'ids-design-system/no-removed-tokens': true },
 };
 
-const lint = async (code, fix = false) => {
-  const { results, code: fixed } = await stylelint.lint({ code, config, fix });
+const lint = async (code, fix = false, setting = true) => {
+  const { results, code: fixed } = await stylelint.lint({
+    code,
+    config: {
+      ...config,
+      rules: { 'ids-design-system/no-removed-tokens': setting },
+    },
+    fix,
+  });
   return {
     warnings: results[0].warnings.map((warning) => warning.text),
     fixed,
@@ -38,6 +45,27 @@ await test('a renamed declaration is reported with replacement and version', asy
   assert.match(
     warnings[0],
     /--ds-card-pad" was renamed to "--ds-card-padding" in 0\.13\.4/,
+  );
+});
+
+await test('a token renamed in the version you upgrade from is left out', async () => {
+  const code = 'a { --ds-card-pad: 4px; }';
+  assert.deepEqual(
+    (await lint(code, false, [true, { from: '0.13.4' }])).warnings,
+    [],
+  );
+  assert.equal(
+    (await lint(code, false, [true, { from: '0.13.3' }])).warnings.length,
+    1,
+  );
+  assert.deepEqual(
+    (await lint(code, false, [true, { to: '0.13.3' }])).warnings,
+    [],
+  );
+  assert.equal(
+    (await lint(code, false, [true, { from: '0.13.3', to: '0.13.4' }])).warnings
+      .length,
+    1,
   );
 });
 

@@ -2249,6 +2249,66 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
     </div>
   </section>
 
+  <p class="group">Движение и масштаб текста</p>
+
+  <section class="q" data-q="text-snap-press">
+    <div class="q-head">
+      <span class="q-num">36</span>
+      <h2 class="q-title">Рывок текста в конце нажатия кнопки</h2>
+      <a class="q-src" href="22-text-snap-scale.html">дека text-snap-scale</a>
+    </div>
+    <p class="q-sub">Сжатие 0.98 при отпускании кончается рывком: текст перерисовывается по пиксельной сетке. Предварительно - как сейчас. Замеры на ds-button при 150% и живые кнопки - в деке.</p>
+    <div class="opts">
+      <div class="opt"><h3>Как сейчас</h3><p class="says">предварительно</p><p>Рывок 783-1073 px в конце отпускания.</p></div>
+      <div class="opt"><h3>P1: слой всегда</h3><p class="says">без рывка</p><p>В покое текст иначе: 771 px.</p></div>
+      <div class="opt"><h3>P4: слой при наведении</h3><p class="says">без рывка</p><p>При наведении текст сдвигается и мутнеет.</p></div>
+      <div class="opt"><h3>P5: translateZ при наведении</h3><p class="says">шаг 113 px</p><p>При наведении без изменений.</p></div>
+      <div class="opt"><h3>P6: слой с нажатия</h3><p class="says">без рывка</p><p>Держится на фокусе: в Safari и Firefox на Mac рывок вернётся.</p></div>
+      <div class="opt"><h3>P7: translateZ всегда</h3><p class="says">шаг 113 px</p><p>В покое как сейчас; слой у каждой кнопки.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="text-snap-card">
+    <div class="q-head">
+      <span class="q-num">37</span>
+      <h2 class="q-title">Card при наведении: подъём или рост</h2>
+      <a class="q-src" href="22-text-snap-scale.html">дека text-snap-scale</a>
+    </div>
+    <p class="q-sub">Подъём на 1px чистый в обе стороны; рост всей карточки даёт рывок при уходе курсора. Живые карточки как ds-card - в деке.</p>
+    <div class="opts">
+      <div class="opt"><h3>Как сейчас</h3><p class="says">подъём 1px</p><p>Чисто.</p></div>
+      <div class="opt"><h3>U1: рост 101%</h3><p class="says">рывок 2472 px</p><p>При уходе курсора.</p></div>
+      <div class="opt"><h3>U4: рост + слой при наведении</h3><p class="says">рывок 2472 px</p><p>Слой снимается раньше обратного роста.</p></div>
+      <div class="opt"><h3>U6: рост + translateZ всегда</h3><p class="says">шаг 572 px, до 28</p><p>В покое чуть иначе, до 28.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="text-snap-rule">
+    <div class="q-head">
+      <span class="q-num">38</span>
+      <h2 class="q-title">Как в DS масштабировать текст</h2>
+      <a class="q-src" href="22-text-snap-scale.html">дека text-snap-scale</a>
+    </div>
+    <p class="q-sub">Масштаб текста через transform в конце переключает режим рисования текста. Подложку, мгновенное сжатие и zoom ты отклонил.</p>
+    <div class="opts">
+      <div class="opt"><h3>Постоянный translateZ(0)</h3><p class="says">шаг в 7-10 раз меньше</p><p>Слой у каждого элемента; прокрутка не замерена.</p></div>
+      <div class="opt"><h3>Оставить как есть</h3><p class="says">рывок остаётся</p><p>Без новых слоёв.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="text-snap-funnel">
+    <div class="q-head">
+      <span class="q-num">39</span>
+      <h2 class="q-title">Ступень funnel растёт с маленьким шагом в конце</h2>
+      <a class="q-src" href="22-text-snap-scale.html">дека text-snap-scale</a>
+    </div>
+    <p class="q-sub">Ступени растут из 96% и проявляются; в конце роста шаг до 51 из 255 на краях фигуры, текста в ступени нет.</p>
+    <div class="opts">
+      <div class="opt"><h3>Оставить рост</h3><p class="says">шаг до 51</p><p>Как в ветке.</p></div>
+      <div class="opt"><h3>Убрать рост у ступеней</h3><p class="says">только проявление</p><p>Шага нет.</p></div>
+    </div>
+  </section>
+
   <p class="group">Уже решено</p>
 
   <section class="q is-settled" data-done="ask-table-expand-leave">

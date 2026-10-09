@@ -3,6 +3,8 @@
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-state' as field-state;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   --_time-picker-focus-shadow: var(

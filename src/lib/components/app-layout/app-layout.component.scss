@@ -1,7 +1,10 @@
 @use '../../styles/breakpoints' as bp;
 @use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
+  --_app-layout-desktop-min-width: var(--bp-lg, #{bp.$bp-lg});
   --_app-layout-padding-x: var(--ds-app-layout-padding-x, var(--space-6));
   --_app-layout-padding-y: var(--ds-app-layout-padding-y, var(--space-6));
   --_app-layout-content-max-width: var(--ds-app-layout-content-max-width, none);

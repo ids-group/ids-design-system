@@ -1,4 +1,6 @@
 @use '../../styles/dismiss-button' as dismiss-button;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   --_drawer-bg-color:               var(--ds-drawer-bg-color,               var(--surface-overlay));

@@ -1,4 +1,6 @@
 @use '../../styles/dismiss-button' as dismiss-button;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   display: inline-flex;
@@ -13,7 +15,7 @@
   --_alert-padding-y:              var(--ds-alert-padding-y,              var(--space-2));
   --_alert-padding-x:              var(--ds-alert-padding-x,              var(--space-3));
   --_alert-radius:             var(--ds-alert-radius,             var(--ds-radius-control));
-  --_alert-enter-keyframes: var(--ds-alert-enter-keyframes, ds-scale-in);
+  --_alert-enter-keyframes: var(--ds-alert-enter-keyframes, ds-fade-in);
   --_alert-enter-duration: var(--ds-alert-enter-duration, var(--ds-motion-enter-surface-duration));
   --_alert-enter-easing: var(--ds-alert-enter-easing, var(--ds-motion-enter-surface-easing));
   --_alert-enter-offset: var(--ds-alert-enter-offset, 2px);

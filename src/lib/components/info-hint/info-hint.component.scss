@@ -1,4 +1,6 @@
 @use '../../styles/pinned';
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   display: inline-flex;

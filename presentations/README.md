@@ -11,7 +11,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 
 | # | Deck | Answering it unblocks |
 | --- | --- | --- |
-| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 7 asks a consumer waits on, then 37 decisions across six groups, every option drawn in its own card; answered asks sit under «Уже решено» |
+| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 5 asks a consumer waits on, then 34 decisions across seven groups, every option drawn in its own card; answered asks sit under «Уже решено» |
 | 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
 | 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
 | 4 | `4-interaction-formula` | two pressed-state verdicts, both rendered and measured: the tonal button's pressed recipe and the danger menu item whose pressed equals its hover. The other three are answered and the `.ds-interactive` formula is deferred |
@@ -29,10 +29,11 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 16 | `16-column-chart-filter` | how `ds-column-chart` gets a caption under each column and a persistent selection - point fields, chart inputs with a template, or nothing - each written as the same consumer task with its rendering |
 | 17 | `17-table-column-hint` | what a `ds-table` header with `hint` shows when its label does not fit the column: only the hint as today, the full label over the hint, or a header that wraps instead - before/after screenshots of the docs demo at `8eb6ab9e` and `e0ff159f`, the three options drawn |
 | 18 | `18-table-header-clip` | the `ds-table` header label that clips with an ellipsis inside its column and the tooltip of a clipped hinted header (label, then hint) - before/after screenshots of the docs demo on dev and on `fix/table-header-clip`: narrow headers, focus ring, plain and hinted tooltip, with the measurements |
-| 19 | `19-tooltip-mechanism` | everything about the tooltip in one deck, the two open questions on top and what is settled below: what is settled and already in dev (bold markup, arrow flag, one `dsDefinitionTerm` directive, `ds-info-hint` question mark with `icon="info"`, a pinned trigger deepens its wash on hover, both tooltip branches landing in dev), live examples of the term and the info icon, and two open questions: who writes the bold label of a clipped header, and whether to split the tooltip file (drawn as coloured jobs with measured line counts) |
-| 20 | `20-interaction-states` | general rules for the states of interactive elements (rest, hover, pressed, focus, on, on + hover, on + pressed, disabled) as levels on three channels (fill, underline, icon ink) with live sliders for the step numbers, one neutral hover surface, a check that catches empty cells, and whether to merge the pilot; the four open questions on top, rules and measurements folded below |
-| 21 | `21-loading-states` | one loading rule for every data component (skeleton with no data, the overlay to the container's edge on a reload), fixed in the next release: each of the eight other charts and the three pickers now beside the rule, light and dark |
-| 22 | `22-focus-ring-radius` | whether the keyboard focus ring follows each shape: before/after of 13 elements that drew a square ring (stepper buttons, close buttons, table filter and cell link, sparkline, tabs panel, accordion header), light and dark |
+| 19 | `19-interaction-states` | general rules for the states of interactive elements (rest, hover, pressed, focus, on, on + hover, on + pressed, disabled) as levels on three channels (fill, underline, icon ink) with live sliders for the step numbers, one neutral hover surface, a check that catches empty cells, and whether to merge the pilot; the four open questions on top, rules and measurements folded below |
+| 20 | `20-loading-states` | one loading rule for every data component (skeleton with no data, the overlay to the container's edge on a reload), decided 2026-10-09 and built on `ecm-feat/loading-skeletons`: the picked skeleton per chart, a `skeletonCount` input, the heatmap card hugging its grid, the pickers beside the rule |
+| 21 | `21-text-snap-scale` | how a scaling animation ends without the text snapping a pixel: the press (left as today for now, every variant still open), the card hover lift or growth, the rule for scaling text, and the funnel stage's residual step - every variant live and measured in Chrome at 150% |
+| 22 | `22-tooltip-mechanism` | three open questions on the tooltip, each with a measurement or sizes and what other libraries do: the six listeners every table cell carries (measured on 1000 rows, a directive only on clipped cells against one app-wide delegated listener), loading the panel at idle after start, and one app-wide delegated listener for every directive with events; the finished and answered proposals folded below |
+| 23 | `23-icon-box-size` | parked: how `ds-banner` and `ds-dropzone` size their icon while `styles/icon-base`'s `.icon` shrinks the `ds-icon` box to 16px under a 20px glyph - four options drawn as clickable cards, one recommended, before and after in two columns; the verdict comes later and the item waits in `docs/todo.md` |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
@@ -70,6 +71,12 @@ number on the way (D009: a rank is a queue position and it has left the queue), 
 gap. The number is the rank and nothing else: it is not an id,
 so never keep a stale one to preserve a link. There is deliberately no `ds-deck-rank` meta — one more
 marker is one more thing to drift, and the filename cannot drift from itself.
+
+**Two branches that add a deck under the same rank: whoever merges into `dev` last takes the last
+number.** The deck already in `dev` keeps its rank; the later branch renames its deck to the next free
+rank at merge time and fixes its rows in the table above and in the `docs/todo.md` deck table. Check
+before merging: `ls presentations | grep -E '^[0-9]+-' | sort -n | tail -3`. `deck-lint` D007 is what
+fails when this is skipped.
 
 ## A deck declares its own status, and that is what moves it
 

@@ -1,0 +1,56 @@
+@use 'focus' as focus;
+
+// What a component's own elements need from the page, set by the component, so it renders the same
+// with or without `styles/reset` and `styles/focus`. Every selector compiles to the component's own
+// elements only; `interpolate-size` is inherited, so content projected into the host takes it as
+// under the reset.
+//
+// In a cascade layer, so any unlayered rule wins over it whatever its specificity: the component's
+// own rules, `styles/reset` and `styles/focus` where the app loads them, and the app's own global
+// rules such as a custom `:focus-visible` ring. It only fills what nothing else sets.
+@mixin rules {
+  @layer ds-component-base {
+    :host {
+      box-sizing: border-box;
+      interpolate-size: allow-keywords;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin: 0;
+    }
+
+    // The base ring of `focus.emit-rules`, for what the component does not style itself.
+    :host(:where(:focus-visible)),
+    :where(:focus-visible) {
+      @include focus.ring;
+
+      border-radius: var(--focus-ring-radius);
+    }
+
+    @media (forced-colors: active) {
+      :host(:where(:focus-visible)),
+      :where(:focus-visible) {
+        outline: var(--focus-ring-width) solid CanvasText;
+        outline-offset: var(--focus-ring-offset);
+      }
+    }
+  }
+}

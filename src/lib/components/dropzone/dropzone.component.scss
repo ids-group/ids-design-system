@@ -1,5 +1,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/dismiss-button' as dismiss-button;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract:
    File name - single line, ellipsis, tooltip on hover with full name.
