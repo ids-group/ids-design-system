@@ -5,6 +5,9 @@
 - **`--ds-waterfall-chart-skeleton-height` is removed.** The waterfall skeleton draws floating
   steps on the chart's own plot height; delete the declaration.
 
+- **`--chart-skeleton-h` is removed.** No component reads it, so a declaration of it sets nothing;
+  delete the declaration.
+
 - **`dsTooltipClippedLead` is removed from `TooltipDirective`.** A `ds-table` header with a `hint`
   needs nothing in its place: its `dsDefinitionTerm` button shows its own clipped label in bold
   above the hint. Anywhere else, delete the binding, or write the lead into the string:
@@ -363,6 +366,7 @@
 | Delete | Why | Replace with |
 | --- | --- | --- |
 | `--ds-waterfall-chart-skeleton-height:` | the waterfall skeleton draws floating steps on the chart's own plot height and reads no height token | nothing |
+| `--chart-skeleton-h:` | no component reads the token | nothing |
 | `@use 'styles/skeleton-shimmer'` | the partial emits nothing; `ds-skeleton` styles its own reduced-motion stop | nothing |
 | a hand-built info button: `name="info"` on a `ds-icon` inside a `<button>` that carries `dsTooltip` | `ds-info-hint` renders the button, the icon and the pinned tooltip | `<ds-info-hint ariaLabel="…" text="…" />` |
 | a hand-built term button styled with `underline dotted` that carries `dsTooltip` | `dsDefinitionTerm` carries the underline, the focus ring, the keyboard access and the pinned tooltip | `<span dsDefinitionTerm="…">` |

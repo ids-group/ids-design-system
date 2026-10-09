@@ -620,6 +620,23 @@
       "verify": "No stylesheet of yours sets --ds-waterfall-chart-skeleton-height, and a ds-waterfall-chart loading with no data is as tall as the drawn chart."
     },
     {
+      "id": "chart-skeleton-h-removed",
+      "kind": "removed-api",
+      "old": "--chart-skeleton-h",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "--chart-skeleton-h"
+      ],
+      "detect": [
+        "--chart-skeleton-h:"
+      ],
+      "action": "Delete the declaration (delete list: chart-skeleton-h). No component reads the token, so it sets nothing.",
+      "appliesWhen": "You set --chart-skeleton-h anywhere. The sibling --chart-empty-h stays and is not affected.",
+      "restore": null,
+      "verify": "No stylesheet of yours sets or reads --chart-skeleton-h."
+    },
+    {
       "id": "loading-classes-member-surface",
       "kind": "behavior",
       "old": "ChartComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, FunnelChartComponent, WaterfallChartComponent, HeatmapChartComponent, ScatterChartComponent, SelectComponent, MultiSelectComponent, AutocompleteComponent",
@@ -870,6 +887,15 @@
         "--ds-waterfall-chart-skeleton-height:"
       ],
       "why": "the waterfall skeleton draws floating steps on the chart's own plot height and reads no height token",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "chart-skeleton-h",
+      "surface": "style",
+      "find": [
+        "--chart-skeleton-h:"
+      ],
+      "why": "no component reads the token",
       "replaceWith": "nothing"
     }
   ]
