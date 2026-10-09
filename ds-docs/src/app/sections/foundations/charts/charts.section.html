@@ -275,39 +275,29 @@
     </code>.
   </p>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [loading]
-    </code> draws a skeleton in the chart's
-    own shape only while there is no data. With data on screen, a reload keeps
-    the plot under the scrim and spinner of
-    <code class="t-mono-inline">
-      ds-loading-overlay
-    </code>, caption uncovered; pass
-    empty data while loading to show the skeleton on every load.
-    <code class="t-mono-inline">
-      skeletonCount
-    </code> sets how many marks the
-    skeleton draws until the data's own count is known (default
-    <code class="t-mono-inline">
-      5
-    </code>): columns on
-    <code class="t-mono-inline">
-      ds-chart
-    </code> and
-    <code class="t-mono-inline">
-      ds-column-chart
-    </code>, slices on
-    <code class="t-mono-inline">
-      ds-pie-chart
-    </code>, stages on
-    <code class="t-mono-inline">
-      ds-funnel-chart
-    </code>, steps on
-    <code class="t-mono-inline">
-      ds-waterfall-chart
-    </code>.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        [loading]
+      </code>, no data - skeleton in the chart's shape.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [loading]
+      </code>, data on screen - plot under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and spinner; caption uncovered.
+    </li>
+
+    <li>
+      Skeleton on every load - pass empty data while loading.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        skeletonCount
+      </code> (default <code class="t-mono-inline">5</code>) - skeleton marks while the data's count is unknown: columns on <code class="t-mono-inline">ds-chart</code>, <code class="t-mono-inline">ds-column-chart</code>; slices on <code class="t-mono-inline">ds-pie-chart</code>; stages on <code class="t-mono-inline">ds-funnel-chart</code>; steps on <code class="t-mono-inline">ds-waterfall-chart</code>.
+    </li>
+  </ul>
 
   <div class="grid-2">
     <ds-column-chart
@@ -335,8 +325,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    A pinned panel takes the pointer, so its number can be zoomed and selected
-    (WCAG 1.4.13); an unpinned one lets the pointer through to the plot.
+    Pinned: the panel takes the pointer, its number zoomable and selectable
+    (WCAG 1.4.13). Unpinned: the pointer passes to the plot.
     <kbd>
       Esc
     </kbd> closes it until the pointer reaches another mark.

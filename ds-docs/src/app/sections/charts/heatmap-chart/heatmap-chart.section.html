@@ -35,18 +35,19 @@
     </code>.
   </p>
 
-  <p class="block-desc t-s">
-    The chart is as wide as its grid, capped at its container
-    (<code class="t-mono-inline">inline-size: fit-content</code>), and a wider
-    grid scrolls inside it. To fill the container, set
-    <code class="t-mono-inline">
-      inline-size: auto
-    </code> on it from a component
-    stylesheet, or as
-    <code class="t-mono-inline">
-      :root ds-heatmap-chart
-    </code> from a global one.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        inline-size: fit-content
+      </code> (default) - as wide as the grid, capped at the container; a wider grid scrolls.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        inline-size: auto
+      </code> - fills the container. Set it from a component stylesheet, or as <code class="t-mono-inline">:root ds-heatmap-chart</code> globally.
+    </li>
+  </ul>
 
   <ds-heatmap-chart
     caption="Collections a day, by depot"
@@ -220,16 +221,19 @@
     Loading
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      loading
-    </code> with no rows yet draws a cell grid
-    with its labels and scale; with rows on screen it keeps them under
-    the scrim and spinner of
-    <code class="t-mono-inline">
-      ds-loading-overlay
-    </code>.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, no data - cell grid with labels and scale.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, rows on screen - kept under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and spinner.
+    </li>
+  </ul>
 
   <div class="states is-cols-2">
     <div class="state-cell">
