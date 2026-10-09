@@ -185,17 +185,29 @@ consumer's code forever. **A family renamed one member at a time**: naming one t
 moved leaves the other seven undocumented, and the search that would have found them was spent on
 the one you named.
 
-**Every line added to a published manifest is written from that boundary's diff**, a line added only
-to close a `--audit` coverage gap included. Three shortcuts look like verification and are not:
+**A line added to or rewritten in a published manifest states only what the code at that
+boundary shows.** A line is any field of an item or of a `deleteList` row, or an `informational`
+entry, including one added only to close a gap that `node tools/check.mjs manifest-coverage:audit`
+reported. Before writing it:
 
-- **The version's own `## <version>` block is a pointer, not a source.** It can be looser than the
-  code: the 0.4.0 block says a clear button "stays visible when the field is blurred", and the diff
-  shows only its colour and opacity changed. Write what `git diff v<prev> v<version>` shows for the
-  component the line names.
-- **Presence proves the name, never the behaviour.** A selector found at both tags says nothing about
-  what the line claims it does.
-- **One grep returns fragments.** Before stating what an element did at a tag, read every rule that
-  targets it in that tree, the global partials included, not the lines the first search returned.
+1. **Read the diff for every name the line mentions** (component, element, input, token, class,
+   symbol). Run `git diff v<prev>..v<version> -- src/lib` and write what that diff changes for those
+   names.
+2. **Use the `## <version>` block of `CHANGELOG.md` to find where to look in the diff.** Its wording
+   can be broader than the code: the 0.4.0 block says the `ds-input` / `ds-search` clear button
+   "stays visible when the field is blurred", and the diff changes only its colour and opacity. The
+   manifest line follows the diff.
+3. **Prove a behaviour claim from the full code at both tags.** A behaviour claim is any sentence
+   about what something renders or does (shows, hides, closes, sizes, defaults to, emits), as
+   opposed to what it is called; an `appliesWhen` or `pitfall` that says what happens is one, and a
+   line that both renames and describes behaviour takes steps 1-3. A name present at both tags
+   proves only that the name exists. Extract both trees (`git archive v<prev> src/lib |
+   tar -x -C <prev-dir>`, the same for `v<version>`) and in each read everything that targets the
+   component or element the claim is about: every stylesheet rule, template binding and class
+   member, the global partials in `src/lib/styles/` included. A single grep returns the matches it
+   searched for, and the rule that decides the behaviour is often in a file it did not reach.
+
+A sentence that code does not support is cut, however plausible it reads.
 
 Only `unreleased.json` is written and checked against HEAD, because HEAD is the version it
 describes.
@@ -484,6 +496,10 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       a clean run vouches for those only. Published hits of those two rules are reported by
       `node tools/check.mjs manifest-truth:audit`.
       (`tools/check-manifest-truth.mjs`, in the PR gate and the preflight)
+- [ ] A line added to or rewritten in a published manifest states what `git diff
+      v<prev>..v<version> -- src/lib` shows for every name it mentions, and a behaviour claim is
+      read from everything in `src/lib` that targets the element at both tags; the CHANGELOG
+      block only points at where to look. ("Correcting a PUBLISHED manifest")
 - [ ] A renamed or removed token reaches the shipped stylelint list: run
       `node tools/generate-token-deprecations.mjs` after editing a published manifest's
       `token-rename`, `removed-api` or `deleteList` token, and commit `stylelint/deprecated-tokens.json`.

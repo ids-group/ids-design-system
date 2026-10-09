@@ -29,6 +29,24 @@
        <ds-menu>'s scoped CSS (component owns its surface). */
     .stage ds-menu { width: 280px; }
 
+    .aim-diagram {
+      margin: var(--space-3) 0 0;
+      padding: var(--space-4);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-lg);
+
+      svg { display: block; width: 100%; height: auto; }
+      figcaption { margin-top: var(--space-3); }
+    }
+
+    .aim-panel { fill: var(--surface-default); stroke: var(--border-divider); }
+    .aim-row-active { fill: var(--surface-muted); }
+    .aim-label { fill: var(--text-primary); font: var(--font-size-s) var(--font-sans); }
+    .aim-note { fill: var(--text-secondary); font: var(--font-size-xs) var(--font-sans); }
+    .aim-triangle { fill: var(--accent-muted); fill-opacity: 0.6; stroke: var(--accent-strong); stroke-dasharray: 4 3; }
+    .aim-path { stroke: var(--accent-strong); stroke-width: 2; stroke-dasharray: 6 4; fill: none; }
+    .aim-exit { fill: var(--accent-strong); }
+
     .demo {
       margin-top: var(--space-3);
       padding: var(--space-4);

@@ -415,6 +415,9 @@ styles/_dropdown-overlay.scss {
     --ds-option-selected-bg-color: var(--primary-subtitle);
     --ds-option-selected-bg-color-hover: var(--primary-muted);
     --ds-option-selected-label-color: var(--primary-strong);
+    --ds-typography-s-font-family: var(--font-sans);
+    --ds-typography-s-font-weight: var(--font-weight-regular);
+    --ds-typography-s-line-height: var(--line-height-base);
 }
 
 styles/_field-box.scss {
@@ -454,7 +457,7 @@ styles/_link.scss {
 styles/_overlay-motion.scss {
     --ds-overlay-enter-duration: var(--ds-motion-enter-panel-duration);
     --ds-overlay-enter-easing: var(--ds-motion-enter-panel-easing);
-    --ds-overlay-enter-keyframes: ds-fade-in | ds-scale-in;
+    --ds-overlay-enter-keyframes: ds-fade-in;
     --ds-overlay-enter-offset: 4px;
     --ds-overlay-enter-scale: 0.96;
     --ds-overlay-leave-duration: var(--ds-motion-exit-duration);

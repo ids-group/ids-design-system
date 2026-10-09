@@ -6,11 +6,14 @@
 // trigger edge. The keyframe name never changes with placement, so a mid-scroll CDK flip redirects the
 // motion instead of restarting it.
 //
+// A scale entrance re-rasterises the text when it ends, so the glyphs thin and step a pixel; the
+// default fades in place.
+//
 // Duration and easing are longhands so they outrank a consumer keyframe's own timing. Reduced motion
 // zeroes the duration; at 0s `animationend` is unreliable, and `disposeWithLeave`'s 400 ms timer tears the pane down.
 
 .cdk-overlay-pane.ds-overlay-pane {
-  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-scale-in);
+  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-fade-in);
   --_overlay-enter-duration: var(--ds-overlay-enter-duration, var(--ds-motion-enter-panel-duration));
   --_overlay-enter-easing: var(--ds-overlay-enter-easing, var(--ds-motion-enter-panel-easing));
   --_overlay-enter-offset: var(--ds-overlay-enter-offset, 4px);
@@ -38,11 +41,6 @@
     --_ds-enter-x: calc(-1 * var(--_overlay-enter-offset));
     --_ds-enter-y: 0px;
     --_overlay-enter-origin: center left;
-  }
-
-  // A chart tooltip reopens on every mark crossed; a scale would shift its rows, so it fades.
-  &.ds-chart-tooltip-pane {
-    --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-fade-in);
   }
 
   @media (prefers-reduced-motion: reduce) {

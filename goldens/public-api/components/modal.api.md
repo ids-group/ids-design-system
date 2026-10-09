@@ -104,7 +104,7 @@ ds-modal {
     --ds-modal-divider: var(--border-divider);
     --ds-modal-enter-duration: var(--ds-motion-enter-surface-duration);
     --ds-modal-enter-easing: var(--ds-motion-enter-surface-easing);
-    --ds-modal-enter-keyframes: ds-scale-in;
+    --ds-modal-enter-keyframes: ds-fade-in;
     --ds-modal-enter-scale: 0.97;
     --ds-modal-eyebrow-font-size: var(--font-size-xs);
     --ds-modal-eyebrow-font-weight: var(--font-weight-bold);

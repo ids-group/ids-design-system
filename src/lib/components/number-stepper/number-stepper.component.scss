@@ -1,5 +1,7 @@
 @use '../../styles/field-box' as field-box;
 @use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   --_number-stepper-focus-shadow: var(--ds-number-stepper-focus-shadow, var(--ds-field-focus-shadow));

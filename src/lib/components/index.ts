@@ -111,6 +111,7 @@ export {
   dropdownOverlay,
   focusIsInside,
   forwardOverlayTokens,
+  listenForEscape,
   overlayPlacementOf,
   panelClassesOf,
   prepareOverlayEnter,
