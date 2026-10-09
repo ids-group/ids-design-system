@@ -82,6 +82,9 @@
   gap: 2px;
   flex: 0 0 auto;
 
+  // Room for the home link's inward ring past the end of the name.
+  padding-inline-end: calc(2 * var(--focus-ring-width));
+
   // Delay = the rail's opening duration: the text may not start before the
   // width has made room.
   transition: opacity var(--duration-fast) var(--ease-standard)

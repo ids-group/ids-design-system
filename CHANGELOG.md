@@ -212,6 +212,11 @@
 - **A `ds-table` cell link's focus ring clears the text.** It was drawn inward, over the first and
   last letter; it is drawn around the text now.
 
+- **The focus ring clears the text of a `ds-table` header label, a `ds-list-item` and a
+  `ds-breadcrumbs` link.** It was drawn inward, over the first and last letter; it is drawn 2px
+  outside the text now, in the padding already around it. Nothing moves at rest, and a header
+  term's pressed fill keeps its size.
+
 - **A tooltip and a `ds-menu-item` submenu close when anything under them scrolls.** Inside an
   `overflow: auto` container they stayed where they opened while their trigger scrolled away, a
   pinned tooltip included. They close now on a scroll of the window or of any scroll container, as

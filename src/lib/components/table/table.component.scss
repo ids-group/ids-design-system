@@ -228,13 +228,22 @@
       vertical-align: middle;
       appearance: none;
       border: 0;
-      margin: 0;
-      padding: 0;
       font: inherit;
       letter-spacing: inherit;
       text-transform: inherit;
       text-align: left;
-      max-width: 100%;
+
+      // The table rings inward, which here lands on the glyphs; the header padding has room for a ring outside the text.
+      --focus-ring-offset: 0px;
+
+      padding: 0 var(--focus-ring-width);
+      margin: 0 calc(-1 * var(--focus-ring-width));
+      max-width: calc(100% + 2 * var(--focus-ring-width));
+    }
+
+    // The ring padding already widens a term's pressed fill by the spread the term adds elsewhere.
+    .th-label.ds-definition-term:is(:active, [data-ds-pressed]) {
+      box-shadow: none;
     }
 
     // A definition term paints its own colour and background for its pressed and pinned states.
@@ -244,7 +253,7 @@
     }
 
     .th-label:has(+ .col-filter-btn) {
-      max-width: calc(100% - var(--space-2) - 12px);
+      max-width: calc(100% + 2 * var(--focus-ring-width) - var(--space-2) - 12px);
     }
 
     .th-text {

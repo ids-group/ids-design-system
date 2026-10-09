@@ -33,13 +33,17 @@
   font: var(--_breadcrumbs-font-weight) var(--_breadcrumbs-font-size) / var(--line-height-flat) var(--font-sans);
   color: var(--_breadcrumbs-label-color);
   min-width: 0;
-  max-width: 100%;
   flex-wrap: nowrap;
 
   @include text-clip.inline-axis;
 
-  // Inward ring: the overflow clips an outer one.
-  --focus-ring-offset: calc(-1 * var(--focus-ring-width));
+  // The overflow clips at the padding edge, so the padding holds the ring of the first and last link;
+  // the negative margin and the wider cap give the trail back its width.
+  --focus-ring-offset: var(--focus-ring-width);
+
+  padding-inline: calc(2 * var(--focus-ring-width));
+  margin-inline: calc(-2 * var(--focus-ring-width));
+  max-width: calc(100% + 4 * var(--focus-ring-width));
 
   a, .current {
     display: inline-flex;
