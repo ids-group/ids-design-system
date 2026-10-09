@@ -4,7 +4,7 @@
 // and autofixes a rename to the current name.
 import { readFileSync } from 'node:fs';
 import stylelint from 'stylelint';
-import { VERSION, releasedAfter } from './since-version.mjs';
+import { VERSION, inRange } from './since-version.mjs';
 
 const {
   createPlugin,
@@ -39,18 +39,18 @@ const rule = (primary, secondary) => (root, result) => {
         actual: secondary,
         possible: {
           from: (value) => typeof value === 'string' && VERSION.test(value),
+          to: (value) => typeof value === 'string' && VERSION.test(value),
         },
         optional: true,
       },
     )
   )
     return;
-  const from = secondary?.from;
 
   root.walkDecls((declaration) => {
     const reportName = (name, index, rewrite) => {
       const entry = deprecatedTokens.get(name);
-      if (!entry || !releasedAfter(entry.since, from)) return;
+      if (!entry || !inRange(entry.since, secondary)) return;
       const renamed = entry.kind === 'renamed';
       report({
         ruleName,

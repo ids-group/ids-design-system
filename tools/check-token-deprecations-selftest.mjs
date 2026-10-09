@@ -58,6 +58,15 @@ await test('a token renamed in the version you upgrade from is left out', async 
     (await lint(code, false, [true, { from: '0.13.3' }])).warnings.length,
     1,
   );
+  assert.deepEqual(
+    (await lint(code, false, [true, { to: '0.13.3' }])).warnings,
+    [],
+  );
+  assert.equal(
+    (await lint(code, false, [true, { from: '0.13.3', to: '0.13.4' }])).warnings
+      .length,
+    1,
+  );
 });
 
 await test('a renamed var() use is reported and both sites are autofixed', async () => {
