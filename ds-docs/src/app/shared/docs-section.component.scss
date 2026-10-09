@@ -1,5 +1,7 @@
-// Primitives every section uses as is: `ul.rules` for a rule list, `table.tbl` for a table.
-// Each sits in `:where()` so a section's own scoped rule overrides it without raising specificity.
+// Primitives every section uses as is: `ul.rules` for a rule list, `table.tbl` for a table,
+// `dl.spec` for term and value, `<kbd>` for a key. Each sits in `:where()` so a section's own
+// scoped rule overrides it without raising specificity.
+@use 'styles/breakpoints' as bp;
 
 :host {
   display: block;
@@ -165,4 +167,37 @@
   tr:last-child td {
     border-bottom: 0;
   }
+}
+
+:host ::ng-deep :where(dl.spec) {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: var(--space-2) var(--space-4);
+  max-width: var(--col-cap-text);
+  margin-top: var(--space-3);
+
+  @include bp.down(md) {
+    grid-template-columns: 1fr;
+  }
+
+  dt {
+    font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+    color: var(--text-secondary);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: var(--font-size-s);
+  }
+}
+
+:host ::ng-deep :where(kbd) {
+  display: inline-block;
+  padding: 1px 6px;
+  font: var(--font-weight-medium) 11px / 1 var(--font-mono);
+  background: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
 }
