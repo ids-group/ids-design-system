@@ -35,7 +35,7 @@ interface RecordRow {
 })
 export class FilterBarSection {
   protected readonly lede =
-    'Search, dropdown facets, applied-filter tags and a clear-all escape hatch — composed above any list view. Reflows to a stacked variant on narrow viewports.';
+    'Search, facets, applied tags and a clear-all link above any list view; stacks on narrow viewports.';
 
   protected readonly statusOptions: SelectOption[] = [
     { label: 'All statuses', value: '' },
