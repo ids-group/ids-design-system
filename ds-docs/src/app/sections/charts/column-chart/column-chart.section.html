@@ -56,18 +56,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    A click pins the column and tooltip (pin disc, Unpin on the caption
-    line); Escape, a second click or an outside press releases.
+    A click holds the column and its tooltip;
     <code class="t-mono-inline">
       pointClicked
-    </code> fires either way.
-    <code class="t-mono-inline">
-      dimOthers
-    </code> fades all but the active
-    column (rested hover, focus or pin).
-    <code class="t-mono-inline">
-      pinOnClick="false"
-    </code> disables pinning.
+    </code> fires either way. Release,
+    opt-out and <code class="t-mono-inline">dimOthers</code>:
+    <a routerLink="/foundations/charts">
+      Charts foundations
+    </a>.
   </p>
 
   <ds-column-chart
@@ -137,37 +133,82 @@
   </h3>
 
   <p class="block-desc t-s">
-    Hand
-    <code class="t-mono-inline">
-      data
-    </code> NAMED SERIES for one column per
-    series per category, with a legend; hovering or focusing an item
-    highlights its series.
-    <code class="t-mono-inline">
-      stack
-    </code>:
-    <code class="t-mono-inline">
-      'none'
-    </code> (default) and
-    <code class="t-mono-inline">
-      grouped
-    </code> side by side,
-    <code class="t-mono-inline">
-      stacked
-    </code> stacked,
-    <code class="t-mono-inline">
-      normalized
-    </code> stacked as shares of the
-    category total. A flat list is one full-band series.
+    Named series in <code class="t-mono-inline">data</code>: one column per
+    series per category, with a legend. A flat list is one full-band series.
   </p>
 
-  <p class="block-desc t-s">
-    A series has one colour; a flat list colours by position (its marks ARE
-    the categories). A series-wide
-    <code class="t-mono-inline">
-      fill
-    </code> applies to all its columns.
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          <code class="t-mono-inline">
+            stack
+          </code>
+        </th>
+
+        <th>
+          Columns
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'none'
+          </code> (default),
+          <code class="t-mono-inline">
+            'grouped'
+          </code>
+        </td>
+
+        <td>
+          Side by side
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'stacked'
+          </code>
+        </td>
+
+        <td>
+          Stacked
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'normalized'
+          </code>
+        </td>
+
+        <td>
+          Stacked as shares of the category total
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="rules">
+    <li>
+      Hovering or focusing a legend item highlights its series.
+    </li>
+
+    <li>
+      A series has one colour; a flat list colours by position, its marks
+      being the categories.
+    </li>
+
+    <li>
+      A series-wide <code class="t-mono-inline">fill</code> applies to all its
+      columns.
+    </li>
+  </ul>
 
   <ds-column-chart
     caption="Billed against committed"
@@ -177,14 +218,17 @@
     [data]="pairedSeries"
     [thresholds]="pairedThresholds" />
 
-  <p class="block-desc t-s">
-    Segments are split by a 2px surface-colour gap, the palette's second
-    encoding for print and colour-vision deficiency. Under
-    <code class="t-mono-inline">
-      normalized
-    </code> only the axis shows shares;
-    segment values stay readings.
-  </p>
+  <ul class="rules">
+    <li>
+      Segments are split by a 2px surface-colour gap, a second encoding for
+      print and colour-vision deficiency.
+    </li>
+
+    <li>
+      Under <code class="t-mono-inline">normalized</code> only the axis shows
+      shares; segment values stay readings.
+    </li>
+  </ul>
 
   <div class="demo-pair">
     <ds-column-chart
@@ -207,28 +251,37 @@
   </h3>
 
   <p class="block-desc t-s">
-    Each axis takes its series' colour. No combo component: this is
-    <code class="t-mono-inline">
-      ds-chart
-    </code> with a
+    No combo component: <code class="t-mono-inline">ds-chart</code> with a
     <code class="t-mono-inline">
       dsColumnSeries
     </code> and a
     <code class="t-mono-inline">
       dsLineSeries
     </code>.
-    <code class="t-mono-inline">
-      axis: 'secondary'
-    </code> uses the second axis, tied by
-    <code class="t-mono-inline">
-      secondaryAxisMode
-    </code> (default
-    <code class="t-mono-inline">
-      'aligned'
-    </code>: first axis's gridlines,
-    round step). Marks paint in source order, so the line comes last. One
-    panel shows both readings.
   </p>
+
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        axis: 'secondary'
+      </code> uses the second
+      axis, tied by <code class="t-mono-inline">secondaryAxisMode</code>
+      (default <code class="t-mono-inline">'aligned'</code>: the first axis's
+      gridlines, a round step).
+    </li>
+
+    <li>
+      Each axis takes its series' colour.
+    </li>
+
+    <li>
+      Marks paint in source order, so the line comes last.
+    </li>
+
+    <li>
+      One panel shows both readings.
+    </li>
+  </ul>
 
   <ds-chart
     interactive
@@ -261,19 +314,41 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       thresholds
-    </code> draws a target, budget or
-    SLA behind the columns: one
-    <code class="t-mono-inline">
-      value
-    </code>;
-    <code class="t-mono-inline">
-      dash
-    </code> sets its stroke and
-    <code class="t-mono-inline">
-      to
-    </code> makes a band. The axis widens to
-    fit it; the description names it.
+    </code> draws a target, budget or SLA
+    behind the columns. The axis widens to fit it; the description names it.
   </p>
+
+  <dl class="spec">
+    <dt>
+      <code class="t-mono-inline">
+        value
+      </code>
+    </dt>
+
+    <dd>
+      The line.
+    </dd>
+
+    <dt>
+      <code class="t-mono-inline">
+        dash
+      </code>
+    </dt>
+
+    <dd>
+      Its stroke.
+    </dd>
+
+    <dt>
+      <code class="t-mono-inline">
+        to
+      </code>
+    </dt>
+
+    <dd>
+      Makes a band.
+    </dd>
+  </dl>
 
   <div class="demo-stack">
     <ds-column-chart
@@ -298,28 +373,60 @@
   <p class="block-desc t-s">
     The hit box is the full-height category cell, so short columns stay
     reachable.
-    <code class="t-mono-inline">
-      tooltipAnchor
-    </code>:
-    <code class="t-mono-inline">
-      'mark'
-    </code> (default) the column,
-    <code class="t-mono-inline">
-      'cell'
-    </code> the top of the cell.
+  </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          <code class="t-mono-inline">
+            tooltipAnchor
+          </code>
+        </th>
+
+        <th>
+          Panel points at
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'mark'
+          </code> (default)
+        </td>
+
+        <td>
+          The column
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'cell'
+          </code>
+        </td>
+
+        <td>
+          The top of the cell
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="block-desc t-s">
     <code class="t-mono-inline">
       pointClicked
     </code> fires on every click,
     <code class="t-mono-inline">
       interactive
-    </code> or not;
-    <kbd>
-      Enter
-    </kbd> and <kbd>Space</kbd> fire it on an
-    <code class="t-mono-inline">
-      interactive
-    </code> column, never pinning. One tab
-    stop; arrows move (wrapping), Home / End jump to the ends.
+    </code> or not. Keys:
+    <a routerLink="/foundations/charts">
+      Charts foundations
+    </a>.
   </p>
 
   <div class="states is-cols-2">
@@ -357,33 +464,128 @@
   </h3>
 
   <p class="block-desc t-s">
-    Tokens, not inputs:
-    <code class="t-mono-inline">
-      --ds-column-chart-plot-height
-    </code> (200px),
-    <code class="t-mono-inline">
-      --ds-column-chart-axis-width
-    </code> (40px) and
-    <code class="t-mono-inline">
-      --ds-column-chart-value-space
-    </code> px only;
-    <code class="t-mono-inline">
-      --ds-column-chart-column-width
-    </code> is a
-    slot percentage (80%).
-    <code class="t-mono-inline">
-      --ds-column-chart-column-max-width
-    </code>,
-    <code class="t-mono-inline">
-      --ds-column-chart-column-gap
-    </code>,
-    <code class="t-mono-inline">
-      --ds-column-chart-cap-radius
-    </code> and
-    <code class="t-mono-inline">
-      --ds-column-chart-grid-line-color
-    </code>.
+    Tokens, not inputs.
   </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Token
+        </th>
+
+        <th>
+          Default
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-column-chart-plot-height
+          </code>
+        </td>
+
+        <td>
+          200px
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-column-chart-axis-width
+          </code>
+        </td>
+
+        <td>
+          40px
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-column-chart-value-space
+          </code>
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            var(--space-5)
+          </code>; px only
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-column-chart-column-width
+          </code>
+        </td>
+
+        <td>
+          80% of the slot
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-column-chart-column-max-width
+          </code>
+        </td>
+
+        <td>
+          48px
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-column-chart-column-gap
+          </code>
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            --ds-chart-bar-gap
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-column-chart-cap-radius
+          </code>
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            --ds-chart-mark-cap-radius
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-column-chart-grid-line-color
+          </code>
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            --ds-chart-grid-line-color
+          </code>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <h3 class="block-title t-h4">
     Data table
@@ -391,19 +593,11 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      none
-    </code> (default) no table,
-    <code class="t-mono-inline">
-      toggle
-    </code> collapsed,
-    <code class="t-mono-inline">
-      visible
-    </code> open. It is the non-visual
-    route to the numbers: use
-    <code class="t-mono-inline">
-      none
-    </code> only if the page already has
-    them in a table.
+      dataTable="visible"
+    </code> here. Values:
+    <a routerLink="/foundations/charts">
+      Charts foundations
+    </a>.
   </p>
 
   <ds-column-chart
@@ -418,21 +612,28 @@
     Stagger
   </h3>
 
-  <p class="block-desc t-s">
-    Leaving marks finish before arrivals start.
-    <code class="t-mono-inline">
-      staggerMs
-    </code> spaces arrivals:
-    <code class="t-mono-inline">
-      40
-    </code> default,
-    <code class="t-mono-inline">
-      0
-    </code> off; the spread caps at 260ms.
-    <code class="t-mono-inline">
-      prefers-reduced-motion
-    </code> zeroes all durations.
-  </p>
+  <ul class="rules">
+    <li>
+      Leaving marks finish before arrivals start.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        staggerMs
+      </code> spaces arrivals: default
+      <code class="t-mono-inline">
+        40
+      </code>, <code class="t-mono-inline">0</code>
+      off; the spread caps at 260ms.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        prefers-reduced-motion
+      </code> zeroes all
+      durations.
+    </li>
+  </ul>
 
   <div class="states is-cols-2">
     <div class="state-cell">
