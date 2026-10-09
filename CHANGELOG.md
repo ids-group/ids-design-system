@@ -290,6 +290,9 @@
 - **A `ds-table` cell link's focus ring clears the text.** It was drawn inward, over the first and
   last letter; it is drawn around the text now. In a `truncate` column the link clips its own text,
   so the ring keeps the sides the cell's clip cut off; the cell's tooltip and ellipsis are as before.
+  That link is the clipping element itself, `a.cell-link.cell-clip`, with no `span.cell-clip` around
+  it: a rule of yours for `ds-table .cell-clip a` or `.cell-clip .cell-link` matches nothing, write
+  it for `ds-table a.cell-clip`.
 
 - **The focus ring clears the text of a `ds-table` header label, a `ds-list-item` and a
   `ds-breadcrumbs` link.** It was drawn inward, over the first and last letter; it is drawn 2px

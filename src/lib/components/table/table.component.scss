@@ -465,11 +465,15 @@
     }
 
     // A link clips its own text, so its ring is drawn outside the clip. Content-box, so the inline
-    // max-width caps the text and the ring padding comes out of the link's negative margin.
+    // max-width caps the text and the ring padding comes out of the link's negative margin. The box is
+    // the font's own line, as tall as a plain link's, and the negative block margin keeps the cell's
+    // line height.
     a.cell-clip {
       display: inline-block;
       vertical-align: top;
       box-sizing: content-box;
+      line-height: normal;
+      margin-block: calc((var(--line-height-flat) * 1em - 1lh) / 2);
     }
 
     .cell-clip {
