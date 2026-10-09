@@ -12,32 +12,45 @@
     6-digit numeric OTP
   </h3>
 
-  <p class="block-desc t-s">
-    <code>
-      length
-    </code> defaults to 6 and <code>mode</code> to
-    <code>
-      numeric
-    </code> (digits, numeric keypad); <code>alphanumeric</code>
-    accepts letters. <code>(completed)</code> fires with the code when it goes
-    from partial to complete, not on edits of a full code.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        length
+      </code> - default 6.
+    </li>
 
-  <p class="block-desc t-s">
-    Paste spreads across cells; <kbd>Backspace</kbd> on an empty cell clears the
-    previous one; <kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd> move; focus snaps
-    to the first empty cell. The first cell has
-    <code>
-      autocomplete="one-time-code"
-    </code> for SMS autofill. The row is a
-    <code>
-      role="group"
-    </code> named by <code>ariaLabel</code> (fallback
-    <code>
-      DS_INTL.otpInput.label
-    </code>); cells are labelled "digit N" or
-    "character N" from <code>DS_INTL.otpInput</code>.
-  </p>
+    <li>
+      <code class="t-mono-inline">
+        mode
+      </code> - <code class="t-mono-inline">numeric</code> (default; digits, numeric keypad) or <code class="t-mono-inline">alphanumeric</code>.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        (completed)
+      </code> - fires with the code when it goes from partial to complete, not on edits of a full code.
+    </li>
+  </ul>
+
+  <ul class="block-desc t-s">
+    <li>
+      Paste spreads across cells; focus snaps to the first empty cell.
+    </li>
+
+    <li>
+      <kbd>
+        Backspace
+      </kbd> on an empty cell clears the previous one; <kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd> move.
+    </li>
+
+    <li>
+      The first cell has <code class="t-mono-inline">autocomplete="one-time-code"</code> for SMS autofill.
+    </li>
+
+    <li>
+      The row is a <code class="t-mono-inline">role="group"</code> named by <code class="t-mono-inline">ariaLabel</code> (fallback <code class="t-mono-inline">DS_INTL.otpInput.label</code>); cells read "digit N" or "character N" from <code class="t-mono-inline">DS_INTL.otpInput</code>.
+    </li>
+  </ul>
 
   <div class="demo-panel">
     <div class="demo-stack">

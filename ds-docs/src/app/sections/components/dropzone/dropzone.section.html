@@ -11,30 +11,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    It holds no files: a pick or drop emits raw files via
-    <code class="t-mono-inline">
-      (filesAdded)
-    </code>; your handler adds
-    <code class="t-mono-inline">
-      DropzoneFile
-    </code> rows to
-    <code class="t-mono-inline">
-      [files]
-    </code> and updates their
-    <code class="t-mono-inline">
-      state
-    </code>,
-    <code class="t-mono-inline">
-      progress
-    </code> and
-    <code class="t-mono-inline">
-      message
-    </code>. The remove X emits
-    <code class="t-mono-inline">
-      (fileRemoved)
-    </code>; your handler drops the
-    entry.
+    It holds no files; your handlers own the list.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      Pick or drop - <code class="t-mono-inline">(filesAdded)</code> emits raw files; add <code class="t-mono-inline">DropzoneFile</code> rows to <code class="t-mono-inline">[files]</code>, update their <code class="t-mono-inline">state</code>, <code class="t-mono-inline">progress</code>, <code class="t-mono-inline">message</code>.
+    </li>
+
+    <li>
+      Remove X - <code class="t-mono-inline">(fileRemoved)</code>; drop the entry.
+    </li>
+  </ul>
 
   <div class="dz-demo">
     <ds-dropzone
@@ -109,23 +97,31 @@
     Single-file mode
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      multiple
-    </code> is off by default: one file per
-    <code class="t-mono-inline">
-      (filesAdded)
-    </code>; your handler replaces the
-    existing entry.
-    <code class="t-mono-inline">
-      accept
-    </code> filters the file picker, not
-    drops. A <code class="t-mono-inline">hint</code> element shows under the
-    default text while the list is empty.
-    <code class="t-mono-inline">
-      --ds-dropzone-max-width
-    </code> caps the width.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        multiple
+      </code> off (default) - one file per <code class="t-mono-inline">(filesAdded)</code>; replace the existing entry.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        accept
+      </code> - filters the file picker, not drops.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        hint
+      </code> - under the default text while the list is empty.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        --ds-dropzone-max-width
+      </code> - caps the width.
+    </li>
+  </ul>
 
   <div class="single-wrap">
     <div class="dz-demo">

@@ -109,15 +109,17 @@
     With action
   </h3>
 
-  <p class="block-desc t-s">
-    Pass
-    <code class="t-mono-inline">
-      action: {{ '{' }} label, handler {{ '}' }}
-    </code>
-    adds a button (e.g. Undo). Such a toast never auto-dismisses and is always dismissible:
-    keyboard users cannot reach the region (last in <code class="t-mono-inline">body</code>) in
-    five seconds.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        action: {{ '{' }} label, handler {{ '}' }}
+      </code> - a button (such as Undo).
+    </li>
+
+    <li>
+      Such a toast never auto-dismisses and is always dismissible: keyboard users cannot reach the region (last in <code class="t-mono-inline">body</code>) in five seconds.
+    </li>
+  </ul>
 
   <div class="demo">
     <ds-button
@@ -155,20 +157,21 @@
     Screen readers, and what the service owns
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      ToastService
-    </code> announces via the CDK
-    <code class="t-mono-inline">
-      LiveAnnouncer
-    </code>: NVDA and JAWS ignore a live region born with
-    text. Errors and warnings are assertive, others polite; a burst is one announcement. A
-    hand-placed <code class="t-mono-inline">&lt;ds-toast&gt;</code> has no
-    <code class="t-mono-inline">
-      role
-    </code> or <code class="t-mono-inline">aria-live</code>: use the
-    service.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        ToastService
+      </code> announces via the CDK <code class="t-mono-inline">LiveAnnouncer</code>: NVDA and JAWS ignore a live region born with text.
+    </li>
+
+    <li>
+      Errors and warnings - assertive; others - polite. A burst is one announcement.
+    </li>
+
+    <li>
+      A hand-placed <code class="t-mono-inline">&lt;ds-toast&gt;</code> has no <code class="t-mono-inline">role</code> or <code class="t-mono-inline">aria-live</code>: use the service.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
     The service lifts the stack above later modals, drawers and confirms;
@@ -199,16 +202,21 @@
     Dev warnings
   </h3>
 
-  <p class="block-desc t-s">
-    In dev mode every library warning that reaches the console also shows as a
-    <code class="t-mono-inline">
-      warning
-    </code> toast titled "Dev warning", once per message, as soon as
-    the app injects <code class="t-mono-inline">ToastService</code>. A production build shows none.
-    <code class="t-mono-inline">
-      toast.mirrorDevWarnings: false
-    </code> keeps them in the console only.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Dev mode - every library warning that reaches the console also shows as a <code class="t-mono-inline">warning</code> toast titled "Dev warning", once per message, once the app injects <code class="t-mono-inline">ToastService</code>.
+    </li>
+
+    <li>
+      Production build - none.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        toast.mirrorDevWarnings: false
+      </code> - console only.
+    </li>
+  </ul>
 
   <h3
     class="block-title t-h4"

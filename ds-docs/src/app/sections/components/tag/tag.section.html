@@ -56,18 +56,17 @@
     Interactive · selectable
   </h3>
 
-  <p class="block-desc t-s">
-    For filter-chip rows: <code class="t-mono-inline">[interactive]</code>
-    makes the tag a toggle (<code class="t-mono-inline">role="button"</code>,
-    tab stop, <code class="t-mono-inline">aria-pressed</code> =
-    <code class="t-mono-inline">
-      [selected]
-    </code>, which also paints the active
-    state). Click, <kbd> Enter </kbd> or <kbd> Space </kbd> emits
-    <code class="t-mono-inline">
-      (toggled)
-    </code>; add no key handler.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        [interactive]
+      </code> - a toggle for filter-chip rows: <code class="t-mono-inline">role="button"</code>, tab stop, <code class="t-mono-inline">aria-pressed</code> = <code class="t-mono-inline">[selected]</code>, which also paints the active state.
+    </li>
+
+    <li>
+      Click, <kbd>Enter</kbd> or <kbd>Space</kbd> emits <code class="t-mono-inline">(toggled)</code>; add no key handler.
+    </li>
+  </ul>
 
   <div class="row">
     <ds-tag

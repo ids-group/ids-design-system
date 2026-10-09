@@ -159,12 +159,15 @@
     still select.
   </p>
 
-  <p class="block-desc t-s">
-    A checkbox inside a <code>&lt;button&gt;</code> is invalid HTML, bubbles
-    into <code>activated</code> and loses its checked state for screen
-    readers. The host is <code>role="list"</code>, not <code>listbox</code>,
-    whose options cannot hold interactive content.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      A checkbox inside a <code class="t-mono-inline">&lt;button&gt;</code> is invalid HTML, bubbles into <code class="t-mono-inline">activated</code> and loses its checked state for screen readers.
+    </li>
+
+    <li>
+      The host is <code class="t-mono-inline">role="list"</code>, not <code class="t-mono-inline">listbox</code>, whose options cannot hold interactive content.
+    </li>
+  </ul>
 
   <div class="demo-panel">
     <ds-list>
