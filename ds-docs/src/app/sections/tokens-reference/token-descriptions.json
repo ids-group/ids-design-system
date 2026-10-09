@@ -1293,7 +1293,7 @@
   "--hit-min": "Dense desktop default.",
   "--hit-sm": "segmented btn, stepper node.",
   "--hit-touch": "Mobile-friendly hit target.",
-  "--hit-xs": "btn-s, datepicker nav, modal close.",
+  "--hit-xs": "The smallest pointer target in the system (24px, WCAG 2.5.8): every icon-only control takes the pointer over at least this, however small it is drawn, and the date picker arrows and the modal close are this size. Raise it, to 44px for a touch screen, and every icon-only control's target follows.",
   "--icon-2xs": "Status dot, chart legend dot.",
   "--icon-default": "Default icon colour (neutral-500).",
   "--icon-lg": "Topbar, sidenav, modal header icon.",

@@ -105,6 +105,8 @@ export const GROUPS = {
     'public-api',
     'probes',
     'focus-rings',
+    'target-size:selftest',
+    'target-size',
     'component-owned-styles',
     'glyph-clip:selftest',
     'glyph-clip',
