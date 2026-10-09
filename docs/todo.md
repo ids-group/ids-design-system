@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**126 open — 1 P1, 9 P2, 116 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
+**129 open — 1 P1, 9 P2, 119 P3**. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 1
 
@@ -37,7 +37,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 116
+### P3 — 119
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -47,6 +47,10 @@ is stale. Closing an item means deleting the item and nothing else.
   - ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01)
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - `g[dsLineSeries]` demonstrates `stacked` and `tooltipAnchor` only on the preset
+- **Keyboard reach reported by Stas, 2026-10-09 (record only, fix after the release)**
+  - The password field's show/hide toggle is not reachable by Tab
+  - `ds-menu` opened from the keyboard does not take focus, and Tab walks the wrong menu
+  - The focus ring of the first and last menu item ignores the panel's corner radius
 - **Reported by Stas from the docs site, 2026-09-05**
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
   - A pressed danger menu item shows its hover colour (recorded 2026-09-24)
@@ -312,6 +316,28 @@ rather than never meeting it at all.
   are the ones that need an example on the mark itself.
 
 Constraints and decisions that read as removable and are not.
+
+## Keyboard reach reported by Stas, 2026-10-09 (record only, fix after the release)
+
+- [ ] **[P3] The password field's show/hide toggle is not reachable by Tab.**
+  In an auth form (the docs ident layout's ready-made sign-in), Tab goes email -> password ->
+  «Remember me» -> «Sign in»; the eye toggle inside the password field never takes focus. The
+  focus-ring audit (2026-10-09) found the same: `tabindex="-1"` on the toggle, so its ring could
+  not be measured. Stas expects the same in other fields with an inner action and in combined
+  inputs; sweep every field-suffix button (clear, toggle, stepper, picker trigger) for Tab reach
+  before deciding whether an inner action is a tab stop or a shortcut.
+
+- [ ] **[P3] `ds-menu` opened from the keyboard does not take focus, and Tab walks the wrong menu.**
+  On the docs page component/menu: focus the «Account» trigger, Enter opens the menu, but focus
+  stays outside it and cannot be moved in; the next Tab moves to the next menu trigger, and Tab
+  inside the open showcase menu moves to the next item of a different menu. Expected: Enter/Space
+  or ArrowDown moves focus to the first item, arrows walk the items of the open menu, Escape and
+  Tab close it and return focus to the trigger (the menu button pattern).
+
+- [ ] **[P3] The focus ring of the first and last menu item ignores the panel's corner radius.**
+  The ring on the first and the last item of an open menu is square while the panel is rounded;
+  it should follow the panel radius at those corners (top corners on the first item, bottom on
+  the last, all four when the menu has one item).
 
 ## Reported by Stas from the docs site, 2026-09-05
 
