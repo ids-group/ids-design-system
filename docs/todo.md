@@ -1065,8 +1065,7 @@ file** — the number moves; cite the filename.
 | 20 | `20-text-snap-scale` | How a scaling animation ends without the text snapping a pixel: press (as today for now), card hover, the scaling rule, the funnel stage step. | the overlay-enter-snap fix |
 | 21 | `21-tooltip-mechanism` | Three open questions on the tooltip: the six listeners per table cell (measured) and what to do about them, loading the panel at idle after start, and one app-wide delegated listener for every directive with events. Answered and finished proposals are folded below. | none |
 | 22 | `22-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
-| 23 | `23-focus-ring-followups` | Before and after of `ecm-fix/focus-ring-followups`: ring off the text, centred date picker arrows, 24px icon-only targets, the ring of a truncated cell link; a verdict per element before the merge. | none |
-| 24 | `24-docs-table-look` | Which look `table.tbl` takes on every ds-docs page: bordered everywhere, plain everywhere, or as today (Charts and Z-index override the shared bordered rule); all four pages drawn in each look. | none |
+| 23 | `23-docs-table-look` | Which look `table.tbl` takes on every ds-docs page: bordered everywhere, plain everywhere, or as today (Charts and Z-index override the shared bordered rule); all four pages drawn in each look. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1372,7 +1371,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 - [ ] **[P3] An icon-only control's focus ring 1px outside its 24px target, 26px on every control.**
   `target.min-size` in `styles/_target.scss` draws the ring on the target's edge, 24px across on
   every icon-only control; one more pixel of `outline-offset` there gives 26px on all of them
-  (measured on ten controls in `presentations/23-focus-ring-followups.html`). Stas, 2026-10-09: 24
+  (measured on ten controls in `presentations/implemented/focus-ring-followups.html`). Stas, 2026-10-09: 24
   for now, recheck 26 later.
 
 - [ ] **[P3] The `ds-tag` remove button's focus ring does not show on a solid tag.** The ring is
