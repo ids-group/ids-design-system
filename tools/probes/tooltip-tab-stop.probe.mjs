@@ -332,4 +332,34 @@ for (const [name, wrap] of [
   teardown();
 }
 
+{
+  const order = [];
+  const hosts = [0, 1, 2].map(() => {
+    const host = el('span');
+    el('div', {}, [host]);
+    const setAttribute = host.setAttribute.bind(host);
+    host.setAttribute = (name, value) => {
+      order.push('write');
+      setAttribute(name, value);
+    };
+    const teardown = tabStopWhileClipped({
+      host,
+      isClipped: () => (order.push('read'), true),
+      openFor: () => {},
+      close: () => {},
+    });
+
+    return { host, teardown };
+  });
+  resizeCallbacks.forEach((callback) =>
+    callback(hosts.map(({ host }) => ({ target: host }))),
+  );
+  check(
+    'one resize batch reads every host before writing any tabindex',
+    order.join(' '),
+    'read read read write write write',
+  );
+  hosts.forEach(({ teardown }) => teardown());
+}
+
 finish('tooltip-tab-stop');
