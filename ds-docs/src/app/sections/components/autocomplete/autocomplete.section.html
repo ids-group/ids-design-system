@@ -375,18 +375,33 @@
       'none'
     </code> shows options as given: fetch
     them on <code class="t-mono-inline">(filterChange)</code>, which emits each
-    query. <code class="t-mono-inline">[loading]="true"</code> sets
-    <code class="t-mono-inline">
-      aria-busy
-    </code> on the listbox: with no options
-    it shows three placeholder rows; with options they stay under a
-    <code class="t-mono-inline">
-      ds-loading-overlay
-    </code>, inert until
-    <code class="t-mono-inline">
-      loading
-    </code> clears.
+    query.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        [loading]="true"
+      </code> -
+      <code class="t-mono-inline">
+        aria-busy
+      </code> on the listbox.
+    </li>
+
+    <li>
+      No options - three placeholder rows.
+    </li>
+
+    <li>
+      With options - under a
+      <code class="t-mono-inline">
+        ds-loading-overlay
+      </code>, inert until
+      <code class="t-mono-inline">
+        loading
+      </code> clears.
+    </li>
+  </ul>
 
   <h3 class="block-title t-h4">
     Templates

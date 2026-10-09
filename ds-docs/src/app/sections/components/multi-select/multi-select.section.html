@@ -481,21 +481,37 @@
     <code class="t-mono-inline">
       filterWith="none"
     </code> renders your options
-    unfiltered. <code class="t-mono-inline"> loading </code> with no options
-    shows three placeholder rows; with options they stay under a
+    unfiltered. <code class="t-mono-inline"> dsEmptyTemplate </code> replaces
+    the No-matches row. The panel emits
     <code class="t-mono-inline">
-      ds-loading-overlay
-    </code>, inert until
+      opened
+    </code> (fetch first here) and
     <code class="t-mono-inline">
-      loading
-    </code> clears, while the filter input
-    and select all stay live.
-    <code class="t-mono-inline">
-      dsEmptyTemplate
-    </code> replaces the No-matches
-    row. The panel emits <code class="t-mono-inline">opened</code> (fetch first
-    here) and <code class="t-mono-inline">closed</code>.
+      closed
+    </code>.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, no options - three placeholder
+      rows.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, with options - under a
+      <code class="t-mono-inline">
+        ds-loading-overlay
+      </code>, inert until
+      <code class="t-mono-inline">
+        loading
+      </code> clears; filter input and select
+      all stay live.
+    </li>
+  </ul>
 
   <div class="demo-panel">
     <div class="ms-demo">
