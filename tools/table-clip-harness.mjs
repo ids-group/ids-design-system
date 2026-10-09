@@ -91,6 +91,10 @@ async function run(url, outDir) {
     const ids = await evaluate(
       `() => [...document.querySelectorAll('[data-case]')].map((section) => section.dataset.case)`,
     );
+    if (ids.length === 0)
+      throw new Error(
+        `no [data-case] sections at ${url} after 60s: the harness route exists only in a development build (ng serve)`,
+      );
 
     const shoot = async (id, file) => {
       const rect = await evaluate(
