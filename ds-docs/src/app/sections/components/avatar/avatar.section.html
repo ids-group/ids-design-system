@@ -95,18 +95,26 @@
     Status dots
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      status
-    </code> adds a presence dot. Put person
-    and status in <code class="t-mono-inline">ariaLabel</code>
-    ("Alice Brown, Online"): a labelled avatar is
-    <code class="t-mono-inline">
-      role="img"
-    </code>, so the dot's label is not
-    read. Without <code class="t-mono-inline">ariaLabel</code> the avatar is
-    decorative.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        status
+      </code> - adds a presence dot.
+    </li>
+
+    <li>
+      Person and status go in <code class="t-mono-inline">ariaLabel</code>
+      ("Alice Brown, Online"): a labelled avatar is
+      <code class="t-mono-inline">
+        role="img"
+      </code>, so the dot's label is not
+      read.
+    </li>
+
+    <li>
+      No <code class="t-mono-inline">ariaLabel</code> - decorative.
+    </li>
+  </ul>
 
   <div class="row">
     <ds-avatar
@@ -168,55 +176,163 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      seed
-    </code> (an email or name) gives a
-    deterministic <code class="t-mono-inline">hsl(H 50% 62%)</code> tint,
-    identical across apps, with white initials.
+    A seed gives a deterministic <code class="t-mono-inline">hsl(H 50% 62%)</code>
+    tint with white initials, identical across apps.
     <code class="t-mono-inline">
       avatarTint
     </code> and
     <code class="t-mono-inline">
       initialsFrom
-    </code> (also takes one full name)
-    are exported.
+    </code> (also takes one full name) are exported.
   </p>
 
-  <p class="block-desc t-s">
-    White on lighter hues drops to <strong>1.65:1</strong> (WCAG AA: 4.5:1).
-    Keep the default beside a written name; when initials are the only
-    identifier, bind
-    <code class="t-mono-inline">
-      [tint]="avatarTint(seed, &#123; lightness: 50 &#125;)"
-    </code>
-    (5.3-6.6:1).
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Input
+        </th>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      name
-    </code> replaces both bindings in this
-    demo: it derives initials and seeds the tint.
-    <strong>
-      The tint hashes the NAME, never the initials
-    </strong>: Alice
-    Brown and Adam Bell (both "AB") get hues 198° and 356°.
-  </p>
+        <th>
+          Effect
+        </th>
+      </tr>
+    </thead>
 
-  <p class="block-desc t-s">
-    Default initials: first letters of the first two words, a Latin-script
-    guess (Spanish wants MG for "María José García López"). Override per
-    instance with
-    <code class="t-mono-inline">
-      [initialsRule]
-    </code> or app-wide with
-    <code class="t-mono-inline">
-      provideDsConfig(&#123; avatar: &#123; initials &#125; &#125;)
-    </code>; explicit
-    <code class="t-mono-inline">
-      initials
-    </code> wins.
-  </p>
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            name
+          </code>
+        </td>
+
+        <td>
+          Derives the initials and seeds the tint. The tint hashes the name,
+          never the initials: Alice Brown and Adam Bell (both "AB") get 198° and
+          356°.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            seed
+          </code>
+        </td>
+
+        <td>
+          Tint seed for an id or email; defaults to <code class="t-mono-inline">name</code>.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            initials
+          </code>
+        </td>
+
+        <td>
+          Explicit text; wins over derived initials.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            initialsRule
+          </code>
+        </td>
+
+        <td>
+          Replaces the name-to-initials rule. Fallback:
+          <code class="t-mono-inline">
+            provideDsConfig(&#123; avatar: &#123; initials &#125; &#125;)
+          </code>,
+          then the first letters of the first two words (Latin script; Spanish
+          wants MG for "María José García López").
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            avoidHues
+          </code>
+        </td>
+
+        <td>
+          Hue arcs the seeded tint skips, such as a brand's pink and red.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            tint
+          </code>
+        </td>
+
+        <td>
+          A <code class="t-mono-inline">&#123; bg, fg &#125;</code> pair or
+          <code class="t-mono-inline">
+            'neutral'
+          </code>; replaces the seeded tint.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Tint
+        </th>
+
+        <th>
+          White initials (WCAG AA 4.5:1)
+        </th>
+
+        <th>
+          Use
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          Default, lightness 62
+        </td>
+
+        <td>
+          Down to <strong>1.65:1</strong> on lighter hues
+        </td>
+
+        <td>
+          Beside a written name
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            [tint]="avatarTint(seed, &#123; lightness: 50 &#125;)"
+          </code>
+        </td>
+
+        <td>
+          5.3-6.6:1
+        </td>
+
+        <td>
+          Initials are the only identifier
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="row">
     @for (person of people; track person) {
@@ -231,8 +347,7 @@
     Same seeds with
     <code class="t-mono-inline">
       [avoidHues]="[[310, 360], [0, 20]]"
-    </code>,
-    skipping a brand's pink and red:
+    </code>:
   </p>
 
   <div class="row">

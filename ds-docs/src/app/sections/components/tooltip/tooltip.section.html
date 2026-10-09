@@ -122,24 +122,30 @@
     Live demo
   </h3>
 
-  <p class="block-desc t-s">
-    Opens after <code class="t-mono-inline">dsTooltipDelay</code> (120 ms),
-    hides at once; Escape closes it. Without room on the
-    <code class="t-mono-inline">
-      dsTooltipPlacement
-    </code> side it flips, arrow
-    included, 8px clear of the viewport edge. Text between a pair of
-    <code class="t-mono-inline">
-      **
-    </code> is bold, and a line break shows as a
-    line break. <code class="t-mono-inline"> dsTooltipArrow </code> set to
-    <code class="t-mono-inline">
-      false
-    </code>
-    leaves the arrow out.
-  </p>
-
   <ul class="block-desc t-s">
+    <li>
+      Opens after <code class="t-mono-inline">dsTooltipDelay</code> (120 ms),
+      hides at once; <kbd>Esc</kbd> closes it.
+    </li>
+
+    <li>
+      No room on the <code class="t-mono-inline">dsTooltipPlacement</code> side
+      - flips, arrow included, 8px clear of the viewport edge.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        **text**
+      </code> - bold; a line break shows as
+      a line break.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [dsTooltipArrow]="false"
+      </code> - no arrow.
+    </li>
+
     <li>
       <code class="t-mono-inline">
         \*\*
@@ -218,16 +224,24 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       dsTooltipPinOnClick
-    </code> opens at once on
-    hover and focus, and a click keeps the tip open after the pointer leaves. A
-    click outside, <code class="t-mono-inline"> Escape </code> or blur closes
-    it; a second click on the trigger too. Opt in only where the click does
-    nothing else: without it a click closes the tip. Any scroll (window or
-    container) closes the tip, pinned or not, and a
-    <code class="t-mono-inline">
-      ds-menu-item
-    </code> submenu.
+    </code>: opens with no delay;
+    a click keeps it open after the pointer leaves. Opt in only where the click
+    does nothing else.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      Closes on a click outside, <kbd>Esc</kbd>, blur or a second click on the trigger.
+    </li>
+
+    <li>
+      Without it - a click closes the tip.
+    </li>
+
+    <li>
+      Any scroll (window or container) closes the tip, pinned or not, and a <code class="t-mono-inline">ds-menu-item</code> submenu.
+    </li>
+  </ul>
 
   <div class="demo">
     <ds-button
@@ -250,16 +264,27 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       &lt;ds-info-hint&gt;
-    </code> is an icon button
-    with an <code class="t-mono-inline"> ariaLabel </code>; its
+    </code>: an icon button
+    named by <code class="t-mono-inline">ariaLabel</code>; its
     <code class="t-mono-inline">
       text
-    </code> shows on hover and focus and pins on
-    click. The icon is a question mark;
-    <code class="t-mono-inline">
-      icon="info"
-    </code> draws an "i" instead.
+    </code> shows on hover and focus, pins on
+    click.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        icon="help"
+      </code> (default) - a question mark.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        icon="info"
+      </code> - an "i".
+    </li>
+  </ul>
 
   <div class="demo">
     <span class="t-s info-row">
@@ -285,29 +310,33 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       dsDefinitionTerm="…"
-    </code> on any element
-    marks a term with a dotted underline and shows its definition on hover and
-    focus; a click pins it. On a
-    <code class="t-mono-inline">
-      &lt;span&gt;
-    </code> it adds
-    <code class="t-mono-inline">
-      tabindex="0"
-    </code>,
-    <code class="t-mono-inline">
-      role="button"
-    </code> and Enter / Space; a
-    <code class="t-mono-inline">
-      &lt;button&gt;
-    </code> has those already.
-    <code class="t-mono-inline">
-      [pinOnClick]="false"
-    </code> where the click
-    already acts, as on a sortable
-    <code class="t-mono-inline">
-      ds-table
-    </code> header.
+    </code>: a dotted underline;
+    the definition shows on hover and focus, a click pins it.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      On a <code class="t-mono-inline">&lt;span&gt;</code> - adds
+      <code class="t-mono-inline">
+        tabindex="0"
+      </code>,
+      <code class="t-mono-inline">
+        role="button"
+      </code>, <kbd>Enter</kbd> /
+      <kbd>
+        Space
+      </kbd>; a <code class="t-mono-inline">&lt;button&gt;</code> has
+      them.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [pinOnClick]="false"
+      </code> - where the click
+      already acts, as on a sortable <code class="t-mono-inline">ds-table</code>
+      header.
+    </li>
+  </ul>
 
   <div class="demo">
     <p class="t-s">
@@ -350,18 +379,27 @@
     Trigger states
   </h3>
 
-  <p class="block-desc t-s">
-    Hover makes the underline solid and darker; a press tints the term; a pinned
-    tip paints its trigger in the accent until it closes. The pinned trigger
-    carries
-    <code class="t-mono-inline">
-      data-ds-tooltip-pinned
-    </code>, which any
-    <code class="t-mono-inline">
-      dsTooltipPinOnClick
-    </code> host can style. No
-    state changes the size of the term, so the line around it never moves.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      Hover - the underline turns solid and darker.
+    </li>
+
+    <li>
+      Press - tints the term.
+    </li>
+
+    <li>
+      Pinned - the accent until the tip closes; the trigger carries
+      <code class="t-mono-inline">
+        data-ds-tooltip-pinned
+      </code>, styleable on
+      any <code class="t-mono-inline">dsTooltipPinOnClick</code> host.
+    </li>
+
+    <li>
+      No state changes the term's size; the line around it stays put.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
     Same cue on your own trigger, from
@@ -539,17 +577,22 @@
     <code class="t-mono-inline">
       dsTooltipWhenClipped
     </code> shows the tip only
-    while the host is clipped, re-tested on every open. Without
-    <code class="t-mono-inline">
-      dsTooltip
-    </code> it shows the host's own text.
-    Give it a selector,
-    <code class="t-mono-inline">
-      dsTooltipWhenClipped=".label"
-    </code>, to aim
-    the clip test and text at a descendant; no match, no tip. Bound: a selector
-    or <code class="t-mono-inline">false</code>.
+    while the host is clipped, re-tested on every open.
   </p>
+
+  <ul class="rules t-s">
+    <li>
+      No <code class="t-mono-inline">dsTooltip</code> - shows the host's own text.
+    </li>
+
+    <li>
+      A selector - aims the clip test and the text at the match; no match, no tip.
+    </li>
+
+    <li>
+      Bound - a selector or <code class="t-mono-inline">false</code>.
+    </li>
+  </ul>
 
   <pre class="t-mono-block">{{ whenClippedSnippet }}</pre>
 
@@ -602,22 +645,61 @@
       [(checked)]="truncate" />
   </div>
 
-  <p class="block-desc t-s">
-    A clipped host that no keyboard path reaches - not focusable, inside no
-    control, holding no control - takes
-    <code class="t-mono-inline">
-      tabindex="0"
-    </code> while it is clipped, so Tab
-    stops on it and opens the tip. Text that fits is skipped, and the stop goes
-    once a resize or a text change lets it fit. A
-    <code class="t-mono-inline">
-      tabindex
-    </code> you set is never touched; set
-    <code class="t-mono-inline">
-      tabindex="-1"
-    </code> to keep a clipped value out
-    of the Tab order.
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Host
+        </th>
+
+        <th>
+          Keyboard path to the tip
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          Focusable, or holds a control
+        </td>
+
+        <td>
+          Focus on the host or on that control opens it.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Inside a control (native, or role <code class="t-mono-inline">button</code>, <code class="t-mono-inline">link</code>, <code class="t-mono-inline">tab</code>, <code class="t-mono-inline">option</code>, <code class="t-mono-inline">row</code>, <code class="t-mono-inline">combobox</code>, …)
+        </td>
+
+        <td>
+          Keyboard focus on the control opens it; blur, a click or any key closes it. First clipped value per control only.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Neither
+        </td>
+
+        <td>
+          Takes <code class="t-mono-inline">tabindex="0"</code> while clipped; drops it once the text fits and focus is elsewhere.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="rules t-s">
+    <li>
+      A <code class="t-mono-inline">tabindex</code> you set is never touched; <code class="t-mono-inline">tabindex="-1"</code> keeps a clipped value out of the Tab order.
+    </li>
+
+    <li>
+      Focus on a container (tab panel, scroll region) opens nothing, so a value inside one takes its own tab stop.
+    </li>
+  </ul>
 
   <div class="demo">
     <div class="clip-card">
@@ -644,16 +726,6 @@
       </a>
     </div>
   </div>
-
-  <p class="block-desc t-s">
-    A clipped host that cannot take focus (label in a button, cell of a
-    clickable row) opens when keyboard focus lands on its nearest focusable
-    ancestor; blur, a click or any key closes it. That ancestor must be a
-    Tab-reachable control: native, or a widget role (button, link, tab, option,
-    row, combobox). Focus on a container (tab panel, scroll region) opens
-    nothing, so a clipped value inside one takes its own tab stop; a click opens
-    nothing. Only the first clipped value per control opens.
-  </p>
 
   <div class="demo">
     <ds-button

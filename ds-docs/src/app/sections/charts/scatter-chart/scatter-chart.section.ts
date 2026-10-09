@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -46,7 +47,7 @@ const FLOOD: readonly ScatterChartSeries[] = [
 @Component({
   selector: 'section-charts-scatter-chart',
   standalone: true,
-  imports: [DocsSectionComponent, ScatterChartComponent],
+  imports: [RouterLink, DocsSectionComponent, ScatterChartComponent],
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './scatter-chart.section.html',

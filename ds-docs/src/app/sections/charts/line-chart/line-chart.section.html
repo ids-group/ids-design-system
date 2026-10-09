@@ -40,12 +40,26 @@
       annotations
     </code> pins a label over one
     reading, visible in screenshots and print.
-    Each takes a <code class="t-mono-inline">categoryIndex</code> and an
-    optional <code class="t-mono-inline">seriesId</code> (default: first
-    plotted series). Edge labels anchor to the edge; labels on hidden series
-    draw nothing. They are <code class="t-mono-inline">aria-hidden</code>;
-    their text joins the chart's accessible name.
   </p>
+
+  <ul class="rules">
+    <li>
+      Each takes a <code class="t-mono-inline">categoryIndex</code> and an
+      optional <code class="t-mono-inline">seriesId</code> (default: the first
+      plotted series).
+    </li>
+
+    <li>
+      Edge labels anchor to the edge; labels on hidden series draw nothing.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        aria-hidden
+      </code>; their text joins the
+      chart's accessible name.
+    </li>
+  </ul>
 
   <ds-line-chart
     caption="Sessions and signups by month"
@@ -58,22 +72,63 @@
     Composition over time
   </h3>
 
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          <code class="t-mono-inline">
+            stack
+          </code>
+        </th>
+
+        <th>
+          Draws
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'none'
+          </code> (default)
+        </td>
+
+        <td>
+          Each series from zero
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'stacked'
+          </code>
+        </td>
+
+        <td>
+          Each series starts where the one below ended
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'normalized'
+          </code>
+        </td>
+
+        <td>
+          Divided by the category's total; the axis reads in shares
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
   <p class="block-desc t-s">
-    A stack shows what the total is made of.
-    <code class="t-mono-inline">
-      stack
-    </code>:
-    <code class="t-mono-inline">
-      stacked
-    </code> starts each series where the
-    one below ended;
-    <code class="t-mono-inline">
-      normalized
-    </code> divides by the category's
-    total, so the axis reads in shares. Only a series with
-    <code class="t-mono-inline">
-      area
-    </code> fills; lines sit on the running total. Stacking is per axis.
+    Only a series with <code class="t-mono-inline">area</code> fills; lines
+    sit on the running total. Stacking is per axis.
   </p>
 
   <div class="states is-cols-2">
@@ -116,21 +171,62 @@
     Between the readings
   </h3>
 
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          <code class="t-mono-inline">
+            curve
+          </code>
+        </th>
+
+        <th>
+          Between readings
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'linear'
+          </code> (default)
+        </td>
+
+        <td>
+          Claims nothing extra
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'step'
+          </code>
+        </td>
+
+        <td>
+          Holds each reading until the next: prices, headcounts, rates
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'smooth'
+          </code>
+        </td>
+
+        <td>
+          Monotone cubic: no invented peaks or troughs
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      curve
-    </code> sets what the line claims between readings.
-    <code class="t-mono-inline">
-      linear
-    </code> (default) claims nothing extra.
-    <code class="t-mono-inline">
-      step
-    </code> holds each reading until the next - for prices, headcounts,
-    rates.
-    <code class="t-mono-inline">
-      smooth
-    </code>
-    is a monotone cubic: no invented peaks or troughs. Fills follow the curve.
+    Fills follow the curve.
   </p>
 
   <div class="states is-cols-3">
@@ -191,19 +287,51 @@
   </h3>
 
   <p class="block-desc t-s">
-    A <code class="t-mono-inline">null</code> reading is a hole, not a zero;
-    <code class="t-mono-inline">
-      gaps
-    </code> sets what it draws:
-    <code class="t-mono-inline">
-      break
-    </code> (default) stops the line and
-    resumes after; <code class="t-mono-inline">zero</code> draws through the
-    baseline. Any non-finite value, such as
-    <code class="t-mono-inline">
-      NaN
-    </code>, is treated the same.
+    A <code class="t-mono-inline">null</code> or other non-finite reading
+    (<code class="t-mono-inline">NaN</code>) is a hole, not a zero.
   </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          <code class="t-mono-inline">
+            gaps
+          </code>
+        </th>
+
+        <th>
+          Draws
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'break'
+          </code> (default)
+        </td>
+
+        <td>
+          Stops the line, resumes after
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'zero'
+          </code>
+        </td>
+
+        <td>
+          Through the baseline
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -247,13 +375,17 @@
 
   <p class="block-desc t-s">
     Same data, only the right ceiling moved: crossing on the left, none on
-    the right. No mode removes this. Each axis takes its series' colour;
+    the right. No mode removes this.
+  </p>
+
+  <p class="block-desc t-s">
+    Each axis takes its series' colour; set both
     <code class="t-mono-inline">
       yAxisLabel
-    </code> /
+    </code> and
     <code class="t-mono-inline">
       secondaryAxisLabel
-    </code> name the units - set both.
+    </code> to name the units.
   </p>
 
   <div class="states is-cols-2">
@@ -293,13 +425,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    A series with
     <code class="t-mono-inline">
       axis: 'secondary'
-    </code> uses the right scale;
-    <code class="t-mono-inline">
-      yAxisMode
-    </code> reconciles them.
+    </code> puts a series on the
+    right scale; <code class="t-mono-inline">yAxisMode</code> reconciles the
+    two.
+  </p>
+
+  <p class="block-desc t-s">
     <code class="t-mono-inline">
       aligned
     </code> (default) shares gridlines and
@@ -545,19 +678,29 @@
   </h3>
 
   <p class="block-desc t-s">
-    A derived axis differs per dataset, so similar plots can be four times
+    A derived axis differs per dataset: similar plots can be four times
     apart.
-    <code class="t-mono-inline">
-      max
-    </code> pins it; null (default) derives
-    it.
-    <code class="t-mono-inline">
-      maxSecondary
-    </code> does the same for
-    <code class="t-mono-inline">
-      axis: 'secondary'
-    </code>.
   </p>
+
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        max
+      </code> pins it;
+      <code class="t-mono-inline">
+        null
+      </code> (default) derives it.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        maxSecondary
+      </code> does the same for
+      <code class="t-mono-inline">
+        axis: 'secondary'
+      </code>.
+    </li>
+  </ul>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -599,19 +742,22 @@
     Stagger
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      staggerMs
-    </code> draws series in turn
-    (default
-    <code class="t-mono-inline">
-      40
-    </code>,
-    <code class="t-mono-inline">
-      0
-    </code> = all at once), within 260ms.
-    Solid lines draw on; dashed lines and areas fade in; markers settle last.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        staggerMs
+      </code> draws series in turn:
+      default <code class="t-mono-inline">40</code>,
+      <code class="t-mono-inline">
+        0
+      </code> all at once, spread within 260ms.
+    </li>
+
+    <li>
+      Solid lines draw on; dashed lines and areas fade in; markers settle
+      last.
+    </li>
+  </ul>
 
   <ds-line-chart
     dataTable="none"
@@ -625,20 +771,30 @@
     Nothing left to draw
   </h3>
 
-  <p class="block-desc t-s">
-    When the legend hides every series,
-    <code class="t-mono-inline">
-      noVisibleSeriesText
-    </code> shows at the plot's height.
-    Skeleton, empty and error boxes take
-    <code class="t-mono-inline">
-      --ds-line-chart-placeholder-height
-    </code> when
-    set (axis labels included); the plot reads only
-    <code class="t-mono-inline">
-      --ds-line-chart-plot-height
-    </code>.
-  </p>
+  <ul class="rules">
+    <li>
+      Legend hides every series:
+      <code class="t-mono-inline">
+        noVisibleSeriesText
+      </code> at the plot's
+      height.
+    </li>
+
+    <li>
+      Skeleton, empty and error boxes take
+      <code class="t-mono-inline">
+        --ds-line-chart-placeholder-height
+      </code>
+      when set, axis labels included.
+    </li>
+
+    <li>
+      The plot reads only
+      <code class="t-mono-inline">
+        --ds-line-chart-plot-height
+      </code>.
+    </li>
+  </ul>
 
   <ds-line-chart
     legendFilters
@@ -654,16 +810,12 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      none
-    </code> (default) renders no table at
-    all; <code class="t-mono-inline">toggle</code>, a closed disclosure;
-    <code class="t-mono-inline">
-      visible
-    </code>, an open one. The table is the non-visual route, so use
-    <code class="t-mono-inline">
-      none
-    </code> only when the page already
-    tabulates the numbers.
+      dataTable="toggle"
+    </code> here. Values and
+    when to use <code class="t-mono-inline">none</code>:
+    <a routerLink="/foundations/charts">
+      Charts foundations
+    </a>.
   </p>
 
   <ds-line-chart
@@ -680,87 +832,87 @@
     Interactive
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      interactive
-    </code> makes every reading
-    focusable and clickable (invisible markers where a series has none); the
-    hit area is a transparent 24px stroke on a fine pointer, 44px on a coarse
-    one. The tooltip names every series at the category; with
-    <code class="t-mono-inline">
-      tooltip="item"
-    </code> there is no band and Tab
-    and tooltip address one marker.
-    <code class="t-mono-inline">
-      pointClicked
-    </code> fires with or without interactive.
-    <code class="t-mono-inline">
-      dimOthers
-    </code> is a separate opt-in, off by default.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        interactive
+      </code> makes every reading
+      focusable and clickable, with invisible markers where a series has none.
+    </li>
 
-  <p class="block-desc t-s">
-    With <code class="t-mono-inline">interactive</code> and the default
-    <code class="t-mono-inline">
-      tooltip="axis"
-    </code>, Tab lands on a
-    category's band, ringed, panel open (no tab stop otherwise).
-    <kbd>
-      ←
-    </kbd> / <kbd> → </kbd> move between bands and wrap,
-    <kbd>
-      Home
-    </kbd> / <kbd> End </kbd> jump to the ends, Tab leaves the chart.
-    <kbd>
-      Enter
-    </kbd> or <kbd> Space </kbd> on a band pins it (unless
-    <code class="t-mono-inline">
-      pinOnClick
-    </code> is off); moving to another band releases the pin.
-    <kbd>
-      ↑
-    </kbd> / <kbd> ↓ </kbd> focus one marker, named alone in the panel;
-    <kbd>
-      Enter
-    </kbd> on it fires
-    <code class="t-mono-inline">
-      pointClicked
-    </code>. <kbd> Esc </kbd> steps
-    back to the band, then closes the panel.
-  </p>
+    <li>
+      Hit area: a transparent 24px stroke on a fine pointer, 44px on a coarse
+      one.
+    </li>
 
-  <p class="block-desc t-s">
-    A press pins the category (band, panel, pin disc) with an Unpin control
-    on the caption's line. A second press on the same category,
-    <kbd>
-      Esc
-    </kbd> or a press outside releases it. A focused marker does not pin:
-    <kbd>
-      Enter
-    </kbd> / <kbd> Space </kbd> fire
-    <code class="t-mono-inline">
-      pointClicked
-    </code> only. Set
-    <code class="t-mono-inline">
-      pinOnClick="false"
-    </code> to keep the cursor
-    following the pointer, or
-    <code class="t-mono-inline">
-      DS_CONFIG.chart.pinOnClick: false
-    </code> app-wide.
-  </p>
+    <li>
+      The default <code class="t-mono-inline">tooltip="axis"</code> names
+      every series at the category; Tab lands on its band.
+      <code class="t-mono-inline">
+        tooltip="item"
+      </code>: no band, Tab and
+      tooltip address one marker.
+    </li>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      tooltipAnchor
-    </code> places the panel:
-    <code class="t-mono-inline">
-      'reading'
-    </code> (default) holds it still over the category's highest reading;
-    <code class="t-mono-inline">
-      'pointer'
-    </code> follows the cursor.
-  </p>
+    <li>
+      A press pins the whole category.
+      <code class="t-mono-inline">
+        pointClicked
+      </code> fires with or without
+      <code class="t-mono-inline">
+        interactive
+      </code>.
+    </li>
+
+    <li>
+      Keys, pin and <code class="t-mono-inline">dimOthers</code>:
+      <a routerLink="/foundations/charts">
+        Charts foundations
+      </a>.
+    </li>
+  </ul>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          <code class="t-mono-inline">
+            tooltipAnchor
+          </code>
+        </th>
+
+        <th>
+          Panel
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'reading'
+          </code> (default)
+        </td>
+
+        <td>
+          Still, over the category's highest reading
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'pointer'
+          </code>
+        </td>
+
+        <td>
+          Follows the cursor
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <ds-line-chart
     caption="Sessions and signups — every reading is a control"
@@ -820,14 +972,20 @@
     Patterns
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      patterns
-    </code> gives each series a dash in
-    palette-slot order, separating lines by shape too (WCAG G111); slot 1
-    stays solid. Off by default (the palette passes colour-blind separation);
-    use for monochrome print, a retuned palette, or on request.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        patterns
+      </code> gives each series a dash in
+      palette-slot order, separating lines by shape too (WCAG G111); slot 1
+      stays solid.
+    </li>
+
+    <li>
+      Off by default: the palette passes colour-blind separation. Use for
+      monochrome print, a retuned palette, or on request.
+    </li>
+  </ul>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -862,18 +1020,59 @@
     What a legend control does
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      legendMode
-    </code>:
-    <code class="t-mono-inline">
-      isolate
-    </code> (default) shows one series, as radios with All and None.
-    <code class="t-mono-inline">
-      toggle
-    </code> hides one, as checkboxes -
-    to remove a dominant series so the rest read at a usable scale.
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          <code class="t-mono-inline">
+            legendMode
+          </code>
+        </th>
+
+        <th>
+          Control
+        </th>
+
+        <th>
+          Use
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'isolate'
+          </code> (default)
+        </td>
+
+        <td>
+          Radios with All and None; shows one series
+        </td>
+
+        <td>
+          Read one series at a time
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'toggle'
+          </code>
+        </td>
+
+        <td>
+          Checkboxes; hides one series
+        </td>
+
+        <td>
+          Remove a dominant series so the rest read at a usable scale
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -911,27 +1110,36 @@
     Filtering legend
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      legendFilters
-    </code> makes legend entries
-    switches (radios, or checkboxes with
-    <code class="t-mono-inline">
-      legendMode="toggle"
-    </code>);
-    <code class="t-mono-inline">
-      hiddenSeries
-    </code> is two-way, e.g. for a URL
-    parameter. The axis scales from all series, hidden too, unless
-    <code class="t-mono-inline">
-      rescaleOnHide
-    </code> is set. Resting on an entry
-    fades the others, focusing fades at once, regardless of
-    <code class="t-mono-inline">
-      dimOthers
-    </code>. With all hidden, the plot
-    shows an explanation.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        legendFilters
+      </code> makes legend entries
+      switches.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        hiddenSeries
+      </code> is two-way, e.g. for a
+      URL parameter.
+    </li>
+
+    <li>
+      The axis scales from all series, hidden too, unless
+      <code class="t-mono-inline">
+        rescaleOnHide
+      </code> is set.
+    </li>
+
+    <li>
+      Resting on an entry fades the others; focusing fades at once.
+    </li>
+
+    <li>
+      With all hidden, the plot shows an explanation.
+    </li>
+  </ul>
 
   <div class="states is-cols-2">
     <div class="state-cell">

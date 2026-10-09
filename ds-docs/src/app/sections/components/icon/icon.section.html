@@ -164,16 +164,28 @@
     <code class="t-mono-inline">
       provideDsIcons(icons)
     </code> registers extra
-    names; each value is the SVG body inside the 24x24 stroke
+    names: each value is the SVG body inside the 24x24 stroke
     <code class="t-mono-inline">
       &lt;svg&gt;
     </code>, no
     <code class="t-mono-inline">
       stroke
-    </code> attribute. Built-ins win a clash;
-    an unknown name renders nothing and warns in dev mode. Calls accumulate,
-    lazy routes included; the later call wins a shared name.
+    </code> attribute.
   </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      Built-ins win a clash.
+    </li>
+
+    <li>
+      Unknown name - renders nothing, warns in dev mode.
+    </li>
+
+    <li>
+      Calls accumulate, lazy routes included; the later call wins a shared name.
+    </li>
+  </ul>
 
   <pre class="t-mono-block">{{ customIconsSnippet }}</pre>
 </docs-section>

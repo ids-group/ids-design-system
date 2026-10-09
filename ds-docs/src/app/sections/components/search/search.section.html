@@ -157,28 +157,77 @@
     displayed text never lags.
   </p>
 
-  <p class="block-desc t-s">
-    Clearing the field, Enter (flushes the pending keystroke, then emits
-    <code class="t-mono-inline">
-      submitted
-    </code>) and
-    <code class="t-mono-inline">
-      clear()
-    </code> skip the timer. For an external
-    Clear button: <code class="t-mono-inline">clear()</code> empties the field,
-    drops the pending keystroke, publishes <code class="t-mono-inline">''</code>
-    at once and keeps focus. Writing <code class="t-mono-inline">''</code> into
-    <code class="t-mono-inline">
-      value
-    </code> cancels the timer only if it
-    differs from the last pushed value.
-    <code class="t-mono-inline">
-      blur()
-    </code> drops focus;
-    <code class="t-mono-inline">
-      focus()
-    </code> sets it.
-  </p>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Action
+        </th>
+
+        <th>
+          Effect
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          Clearing the field
+        </td>
+
+        <td>
+          Skips the timer.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            Enter
+          </kbd>
+        </td>
+
+        <td>
+          Flushes the pending keystroke, then emits <code class="t-mono-inline">submitted</code>.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            clear()
+          </code>
+        </td>
+
+        <td>
+          Empties the field, drops the pending keystroke, publishes <code class="t-mono-inline">''</code> at once, keeps focus. For an external Clear button.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Writing <code class="t-mono-inline">''</code> into <code class="t-mono-inline">value</code>
+        </td>
+
+        <td>
+          Cancels the timer only if it differs from the last pushed value.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            blur()
+          </code> / <code class="t-mono-inline">focus()</code>
+        </td>
+
+        <td>
+          Drops / sets focus.
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="demo-stack">
     <ds-search

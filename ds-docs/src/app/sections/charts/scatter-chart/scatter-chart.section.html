@@ -14,29 +14,37 @@
     Default
   </h3>
 
-  <p class="block-desc t-s">
-    Always set
-    <code class="t-mono-inline">
-      xLabel
-    </code> and
-    <code class="t-mono-inline">
-      yLabel
-    </code>. Marks are semi-transparent
-    (<code class="t-mono-inline">--ds-scatter-chart-dot-opacity</code>, 0.72;
-    radius <code class="t-mono-inline">--ds-scatter-chart-dot-radius</code>)
-    so pile-ups read darker, and enter together with no stagger.
-  </p>
+  <ul class="rules">
+    <li>
+      Always set <code class="t-mono-inline">xLabel</code> and <code class="t-mono-inline">yLabel</code>.
+    </li>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      tickCount
-    </code> hints both axes; ticks
-    snap to a round step. <code class="t-mono-inline">dimOthers</code> fades all
-    marks but the hovered one;
-    <code class="t-mono-inline">
-      tooltip="none"
-    </code> drops the panel.
-  </p>
+    <li>
+      Marks are semi-transparent, so pile-ups read darker:
+      <code class="t-mono-inline">
+        --ds-scatter-chart-dot-opacity
+      </code> (0.72), radius
+      <code class="t-mono-inline">
+        --ds-scatter-chart-dot-radius
+      </code>.
+    </li>
+
+    <li>
+      Marks enter together, with no stagger.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        tickCount
+      </code> hints both axes; ticks snap to a round step.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        tooltip="none"
+      </code> drops the panel; dimming: <a routerLink="/foundations/charts">Charts foundations</a>.
+    </li>
+  </ul>
 
   <ds-scatter-chart
     caption="Carriage cost against parcel weight"
@@ -68,35 +76,77 @@
     Thinning, and saying so
   </h3>
 
-  <p class="block-desc t-s">
-    One SVG node per point, not one
-    <code class="t-mono-inline">
-      &lt;path&gt;
-    </code> per line (Lighthouse warns
-    near 800, errors near 1400). Past four times the plot width in marks, a
-    series is decimated; the chart prints how many readings it dropped.
-    <code class="t-mono-inline">
-      dataTable
-    </code> still lists every reading.
-  </p>
+  <ul class="rules">
+    <li>
+      One SVG node per point, not one <code class="t-mono-inline">&lt;path&gt;</code> per line:
+      Lighthouse warns near 800, errors near 1400.
+    </li>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      decimator
-    </code> picks how.
-    <code class="t-mono-inline">
-      minMax
-    </code> (default) keeps each
-    bucket's highest and lowest reading, so spikes are never dropped.
-    <code class="t-mono-inline">
-      lttb
-    </code> draws a truer silhouette
-    without that promise.
-    <code class="t-mono-inline">
-      none
-    </code>
-    leaves the node budget to the caller.
-  </p>
+    <li>
+      Past four times the plot width in marks, a series is decimated; the
+      chart prints how many readings it dropped.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        dataTable
+      </code> still lists every reading.
+    </li>
+  </ul>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          <code class="t-mono-inline">
+            decimator
+          </code>
+        </th>
+
+        <th>
+          Keeps
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'minMax'
+          </code> (default)
+        </td>
+
+        <td>
+          Keeps each bucket's highest and lowest reading: spikes are never dropped
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'lttb'
+          </code>
+        </td>
+
+        <td>
+          A truer silhouette, without that promise
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'none'
+          </code>
+        </td>
+
+        <td>
+          Leaves the node budget to the caller
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -158,19 +208,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    A click pins point and tooltip, with a pin disc and an
-    <code class="t-mono-inline">
-      Unpin
-    </code> control at the chart's top end. A
-    second click, <kbd>Esc</kbd> or a press elsewhere releases. Enter and
-    Space fire the click without pinning.
-    <code class="t-mono-inline">
-      pinOnClick="false"
-    </code> disables pinning,
-    <code class="t-mono-inline">
-      DS_CONFIG.chart.pinOnClick: false
-    </code> for
-    every chart.
+    A click holds the point and its tooltip. Release and opt-out: <a routerLink="/foundations/charts">Charts foundations</a>.
   </p>
 
   <h3 class="block-title t-h4">

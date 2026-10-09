@@ -13,39 +13,106 @@
     Default
   </h3>
 
-  <p class="block-desc t-s">
-    One <code class="t-mono-inline">svg</code>, no container to measure: cheap
-    in a thousand-row table. A tooltip shows on hover. Decorative unless it
-    gets a
-    <code class="t-mono-inline">
-      label
-    </code>. With a
-    <code class="t-mono-inline">
-      label
-    </code> and <code class="t-mono-inline">tooltip</code> on (default) it is a
-    tab stop: focus opens the tooltip on the last reading; Left, Right, Home and
-    End move it.
-  </p>
+  <ul class="rules">
+    <li>
+      One <code class="t-mono-inline">svg</code>, no container to measure: cheap in a thousand-row
+      table.
+    </li>
 
-  <p class="block-desc t-s">
-    Sized by
-    <code class="t-mono-inline">
-      --ds-sparkline-width
-    </code> /
-    <code class="t-mono-inline">
-      --ds-sparkline-height
-    </code> (80 x 24px); line
-    styled by
-    <code class="t-mono-inline">
-      --ds-sparkline-line-color
-    </code> (series 1),
-    <code class="t-mono-inline">
-      --ds-sparkline-line-width
-    </code> (1.5px) and
-    <code class="t-mono-inline">
-      --ds-sparkline-dot-radius
-    </code> (2.5px).
-  </p>
+    <li>
+      A tooltip shows on hover.
+    </li>
+
+    <li>
+      Decorative unless it gets a <code class="t-mono-inline">label</code>.
+    </li>
+
+    <li>
+      With a <code class="t-mono-inline">label</code> and <code class="t-mono-inline">tooltip</code> on (default) it is a tab
+      stop: focus opens the tooltip on the last reading;
+      <kbd>
+        ←
+      </kbd>
+
+      <kbd>
+        →
+      </kbd>
+
+      <kbd>
+        Home
+      </kbd>
+
+      <kbd>
+        End
+      </kbd> move it.
+    </li>
+  </ul>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Token
+        </th>
+
+        <th>
+          Default
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-sparkline-width
+          </code> / <code class="t-mono-inline">--ds-sparkline-height</code>
+        </td>
+
+        <td>
+          80px / 24px
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-sparkline-line-color
+          </code>
+        </td>
+
+        <td>
+          <code class="t-mono-inline">
+            --ds-chart-series-1-color
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-sparkline-line-width
+          </code>
+        </td>
+
+        <td>
+          1.5px
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --ds-sparkline-dot-radius
+          </code>
+        </td>
+
+        <td>
+          2.5px
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <table class="spark-table t-s">
     <tbody>
@@ -76,19 +143,53 @@
     Scale
   </h3>
 
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          <code class="t-mono-inline">
+            scale
+          </code>
+        </th>
+
+        <th>
+          Range
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'data'
+          </code> (default)
+        </td>
+
+        <td>
+          Spans the readings' range
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            'zero'
+          </code>
+        </td>
+
+        <td>
+          Keeps zero on the scale, when amount matters more than movement
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      data
-    </code> (default) spans the readings'
-    range;
-    <code class="t-mono-inline">
-      zero
-    </code> keeps zero on the scale, for
-    when amount matters more than movement.
-    <code class="t-mono-inline">
       valueFormat
-    </code> formats the tooltip value;
-    unset, the locale's number format.
+    </code> formats the tooltip value; unset, the locale's
+    number format.
   </p>
 
   <div class="states is-cols-2">
@@ -126,25 +227,21 @@
     Area
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      area
-    </code> fills down to the baseline: zero on
-    the
-    <code class="t-mono-inline">
-      zero
-    </code> scale, the foot of the box on
-    <code class="t-mono-inline">
-      data
-    </code>. Colour
-    <code class="t-mono-inline">
-      --ds-sparkline-area-color
-    </code> (default: the
-    line's) at
-    <code class="t-mono-inline">
-      --ds-sparkline-area-opacity
-    </code>.
-  </p>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        area
+      </code> fills down to the baseline: zero on the <code class="t-mono-inline">zero</code>
+      scale, the foot of the box on <code class="t-mono-inline">data</code>.
+    </li>
+
+    <li>
+      Colour <code class="t-mono-inline">--ds-sparkline-area-color</code> (default: the line's) at
+      <code class="t-mono-inline">
+        --ds-sparkline-area-opacity
+      </code>.
+    </li>
+  </ul>
 
   <div class="states is-cols-2">
     <div class="state-cell">
