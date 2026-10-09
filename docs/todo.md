@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**121 open — 1 P1, 9 P2, 111 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**122 open — 1 P1, 9 P2, 112 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
@@ -38,7 +38,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 111
+### P3 — 112
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -127,6 +127,8 @@ item and nothing else.
   - Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea
 - **ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)**
   - `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them
+- **The global `.icon` squeezes the `ds-icon` box (recorded 2026-10-09, from the mm-ecm consumer)**
+  - In `ds-banner` and `ds-dropzone` the `ds-icon` box is 16px while its svg draws 20px
 - **Missing components (from gap analysis)**
   - Image / lightbox
   - Splitter — ASKED 2026-08-05, Stas: keep in the backlog for now (not built, not closed)
@@ -1061,7 +1063,8 @@ file** — the number moves; cite the filename.
 | 19 | `19-tooltip-mechanism` | Everything about the tooltip in one deck: what is settled and in dev, live examples of the term and the info icon, and two open questions (who writes the bold label of a clipped header, whether to split the tooltip file). | none |
 | 20 | `20-interaction-states` | General rules for the states of interactive elements as levels on three channels, with live sliders for the step numbers; one neutral hover surface; a check against empty cells; where to start. | none |
 | 21 | `21-loading-states` | The next-release loading fix for the eight other charts and the three pickers, each drawn now and under the shared rule. | the loading item in Asked by Stas |
-| 22 | `22-component-owned-styles` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended. The component base, the audit and the guard answer are shown done. | none |
+| 22 | `22-component-owned-styles` | The component base, the audit of every `styles/ds` partial and the guard answer, measured. | none |
+| 23 | `23-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1265,6 +1268,16 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
   wants its own pass and a look at the pages that mix icon sizes in one row.
 
 Stas said keep it in the backlog. Left untouched on purpose.
+
+## The global `.icon` squeezes the `ds-icon` box (recorded 2026-10-09, from the mm-ecm consumer)
+
+- [ ] **[P3] In `ds-banner` and `ds-dropzone` the `ds-icon` box is 16px while its svg draws 20px.**
+  `.icon` from `styles/icon-base` is the only rule setting a width on the `<ds-icon class="icon">`
+  host; the 20 sits on the svg alone. Options, each drawn in `presentations/23-icon-box-size.html`:
+  **A** `ds-icon` keeps its own size (recommended: fixes the source, consumers included; text moves
+  4px), **B** rename the class in the two components (as `option-icon`; a consumer's own
+  `class="icon"` stays squeezed), **C** keep 16 (glyph shrinks, text stays), **D** nothing. No code
+  lands until the verdict. Stas, 2026-10-09: decide later, keep it here.
 
 ## Missing components (from gap analysis)
 
