@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Скругление фокус-рамки</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-09">
+<meta name="ds-deck-evidence" content="src/lib/styles/_focus.scss:60 - CHANGELOG.md:191">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   main { max-width: 1100px; padding-bottom: 96px; }
   .pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-3); align-items: start; }
@@ -36,13 +38,20 @@
     <h1>Фокус-рамка повторяет форму</h1>
     <p class="chat">Ответ нести в чат: «Acc2 · pp-ревью и Dashboard Review»</p>
     <p class="lede">Слева dev, справа ветка <code>ecm-fix/focus-ring-radius</code>. Фокус с клавиатуры.</p>
-    <div class="chips"><span class="chip is-open">13 элементов</span><span class="chip is-open">3 замечания, раунд 2</span><span class="chip">светлая и тёмная</span><span class="chip">актуально на 2026-10-08</span></div>
+    <div class="chips"><span class="chip">13 элементов</span><span class="chip">3 замечания, раунд 2</span><span class="chip">светлая и тёмная</span><span class="chip">актуально на 2026-10-08</span></div>
     <details class="why"><summary>как сделано</summary>
       <p>Глобальное <code>:where(:focus-visible)</code> в <code>styles/focus</code> получило <code>border-radius: var(--focus-ring-radius)</code> (4px). Нулевая специфичность: свой радиус элемента всегда сильнее, поэтому кнопки, поля и пункты меню (там <code>0</code> задан намеренно) не меняются. У <code>ds-number-stepper</code> кнопки шага берут внутренний радиус поля на внешних углах. У <code>ds-split-button</code> внутренние углы теперь заданы явно, иначе синяя кнопка скруглялась бы в фокусе на стыке.</p>
       <p>Отвергнуто: радиус внутри миксина <code>focus.ring</code> (перебил бы радиус кнопок), правка каждого крестика по отдельности (9 правок одной причины), 50% на крестиках (их коробка не квадратная, получится эллипс).</p>
       <p>Проверка: обход всех страниц доков, каждый фокусируемый элемент. Квадратная рамка осталась только у <code>ds-menu-item</code> и средней кнопки <code>ds-button-group</code> - там квадратная форма задана. В фокусе меняет форму заливки только средний заголовок аккордеона: углы 4px внутри карточки.</p>
     </details>
   </header>
+  <div class="decided">
+    <h2>Решено: рамка фокуса повторяет форму</h2>
+    <p>Где элемент не задаёт радиус, рамка берёт <code>--focus-ring-radius</code> (в <code>styles/focus</code> и в базовом слое каждого компонента). Крестики шести компонентов по центру квадратной коробки, фильтр колонки - зона 24px с зазором 8px до подписи (C), ссылка в ячейке - рамка снаружи текста. Все 16 блоков приняты.</p>
+    <p class="evidence">2026-10-09 · src/lib/styles/_focus.scss:60 - CHANGELOG.md:191</p>
+  </div>
+  <details class="folded">
+    <summary>До и после, 16 блоков</summary>
 
   <section class="panel" data-review="Минус: углы как у поля">
     <h2>Минус: углы как у поля <code>ds-number-stepper</code></h2>
@@ -310,6 +319,7 @@
       <li>2026-10-09 · «здесь фокус кольцо вплотную...» → рамка снаружи текста с зазором 2px, буква не перекрыта, строка той же высоты</li>
     </ol>
   </section>
+  </details>
 </main>
 <script>
   (() => {
