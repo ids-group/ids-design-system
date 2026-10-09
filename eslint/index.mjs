@@ -5,7 +5,7 @@
 // `@angular-eslint/template-parser` produces, which the consumer's own config provides; nothing
 // here imports it.
 import { readFileSync } from 'node:fs';
-import { VERSION, releasedAfter } from '../stylelint/since-version.mjs';
+import { VERSION, inRange } from '../stylelint/since-version.mjs';
 
 const read = (path) =>
   JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
@@ -50,7 +50,10 @@ const describe = (what, entry) =>
 const SCHEMA = [
   {
     type: 'object',
-    properties: { from: { type: 'string', pattern: VERSION.source } },
+    properties: {
+      from: { type: 'string', pattern: VERSION.source },
+      to: { type: 'string', pattern: VERSION.source },
+    },
     additionalProperties: false,
   },
 ];
@@ -63,9 +66,9 @@ const rule = (description, create, fixable) => ({
     schema: SCHEMA,
   },
   create(context) {
-    const from = context.options[0]?.from;
+    const range = context.options[0];
     const seen = (entry) =>
-      entry && releasedAfter(entry.since, from) ? entry : undefined;
+      entry && inRange(entry.since, range) ? entry : undefined;
 
     return create(context, seen);
   },
@@ -382,10 +385,10 @@ plugin.configs.recommended = recommendedFor(
   'ids-design-system/recommended',
   'error',
 );
-plugin.configs.recommendedFrom = (from) =>
-  recommendedFor(`ids-design-system/recommended-from-${from}`, [
-    'error',
-    { from },
-  ]);
+plugin.configs.recommendedFrom = (from, to) =>
+  recommendedFor(
+    `ids-design-system/recommended-from-${from}${to ? `-to-${to}` : ''}`,
+    ['error', to ? { from, to } : { from }],
+  );
 
 export default plugin;
