@@ -27,6 +27,15 @@ holds an entry; what the release bot commits afterwards needs none.
 - **`ds-info-hint` has a card.** The Tooltip chapter's Info hint block carries
   `data-claude-design` and `data-for="info-hint"`.
 
+- **The chart docs describe loading as skeleton or reload.** The design agent reads a chart's
+  skeleton as the no-data state and a reload with data as the plot under `ds-loading-overlay`.
+  `Chart`, `ColumnChart`, `PieChart`, `FunnelChart` and `WaterfallChart` list `skeletonCount`;
+  `ChartSkeleton` shows only with no data; `HeatmapChart` gives its `fit-content` host and the
+  `:root` rule that fills the row.
+
+- **The `BarChart` doc lists the row's `children`, `hint`, `emphasis`, `showPercent` and
+  `detached`, and `labelPosition`.** A `hint` or `children` on any row makes the chart a `group`.
+
 ### Build
 
 - **`build-cards` reads markup inside a quoted attribute as part of the value.** Tooltip's
