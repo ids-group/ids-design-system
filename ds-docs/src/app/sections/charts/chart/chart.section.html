@@ -751,9 +751,8 @@
     entry per series, formatted by the chart's
     <code class="t-mono-inline">
       valueFormat
-    </code>. A pinned panel takes the pointer, so
-    its text can be selected and a link in the template clicked; an unpinned
-    one lets the pointer through to the plot.
+    </code>. Pinned: the panel takes the pointer (select text, click links).
+    Unpinned: the pointer passes to the plot.
     <code class="t-mono-inline">
       tooltipExtraGap
     </code> moves the panel
@@ -883,16 +882,19 @@
     Loading
   </h3>
 
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      loading
-    </code> with no categories yet draws the
-    axes with label placeholders and columns; with marks on screen it keeps
-    them under the scrim and spinner of
-    <code class="t-mono-inline">
-      ds-loading-overlay
-    </code>.
-  </p>
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, no data - axes, label placeholders, columns.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        loading
+      </code>, marks on screen - kept under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and spinner.
+    </li>
+  </ul>
 
   <div class="states is-cols-2">
     <div class="state-cell">
