@@ -106,6 +106,7 @@ export interface TableColumn<T = unknown> {
     filter?: 'set';
     truncate?: boolean;
     width?: number | 'content';
+    minWidth?: number;
     align?: 'left' | 'right' | 'center';
     cell?: (row: T) => string;
     sortValue?: (row: T) => string | number | Date | null | undefined;
@@ -142,7 +143,12 @@ export class TableComponent<T extends object> {
     protected readonly cellTemplates = computed<Record<string, TemplateRef<{ $implicit: unknown; row: unknown; }>>>(…);
     protected cellValue(row: T, col: TableColumn<T>): string;
     protected clearColumnFilter(): void;
-    protected clipWidth(col: TableColumn<T>): number | null;
+    private clipCapsSet;
+    private clipFit;
+    private clipFitWidth;
+    protected clipGrows(col: TableColumn<T>): boolean;
+    protected clipMaxWidth(col: TableColumn<T>, index: number): string | null;
+    protected clipMinWidth(col: TableColumn<T>, index: number): string | null;
     public readonly columnFilterOptions = input<ReadonlyMap<string, readonly string[]>>(new Map());
     private readonly columnFilterPopover;
     public readonly columnFilters = model<Map<string, ReadonlySet<string>>>(new Map());
@@ -181,6 +187,7 @@ export class TableComponent<T extends object> {
     protected readonly filterValues = computed<readonly string[]>(…);
     protected readonly filteredData = computed<readonly T[]>(…);
     protected fitsContent(col: TableColumn<T>): boolean;
+    private readonly growingClipColumns;
     protected hasActionsFor(row: T): boolean;
     protected readonly hasAnyColumnFilter = computed(…);
     protected hasColumnFilter(col: TableColumn<T>): boolean;
@@ -219,6 +226,7 @@ export class TableComponent<T extends object> {
     public readonly loading = input<boolean | 'skeleton' | 'overlay'>(false);
     protected readonly loadingMode = computed<'skeleton' | 'overlay' | false>(…);
     public readonly maxHeight = input<string | null>(null);
+    private measureGrowingClips;
     protected readonly menuRow = signal<T | null>(…);
     protected onColumnFilterClick(col: TableColumn<T>, event: Event): void;
     protected onEditInput(event: Event): void;
@@ -293,6 +301,7 @@ export class TableComponent<T extends object> {
     protected sortableCol(col: TableColumn<T>): boolean;
     protected readonly sortedData = computed<readonly T[]>(…);
     public readonly sortingOrder = input<SortDirection[]>(['asc', 'desc', null]);
+    private splitGrowingClips;
     protected startEdit(row: T, col: TableColumn<T>, event: Event): void;
     protected readonly statusMessage = computed<string>(…);
     public readonly stickyFirstColumn = input(false, { transform: booleanAttribute });
@@ -304,6 +313,7 @@ export class TableComponent<T extends object> {
     public readonly storageKey = input<string>('');
     protected readonly tableClasses = computed(…);
     private readonly tableHead;
+    private textCanvas;
     protected toggleFilterValue(value: string): void;
     private readonly toolbarAnchor;
     public readonly total = input<number | null>(null);
@@ -317,6 +327,7 @@ export class TableComponent<T extends object> {
     protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(…);
     protected readonly visibleRowActions = computed<readonly TableRowAction<T>[]>(…);
     private warnNoExport;
+    private widestValue;
     public readonly zebra = input(false, { transform: booleanAttribute });
 }
 

@@ -8,7 +8,7 @@
 @include component-base.rules;
 
 /* Truncation contract:
-   Cell text - Single line, ellipsis at column width (truncate + width), full value in a tooltip.
+   Cell text - Single line, ellipsis at column width (truncate), full value in a tooltip.
    Header label - Single line, no clip.
    Action column - No clip - icon-only buttons. */
 
@@ -468,15 +468,24 @@
     // max-width caps the text and the ring padding comes out of the link's negative margin. The box is
     // the font's own line, as tall as a plain link's, and the negative block margin keeps the cell's
     // line height.
-    a.cell-clip {
-      display: inline-block;
-      vertical-align: top;
+    a.cell-clip-text {
       box-sizing: content-box;
       line-height: normal;
       margin-block: calc((var(--line-height-flat) * 1em - 1lh) / 2);
     }
 
     .cell-clip {
+      display: block;
+    }
+
+    /* The text adds nothing to the column's width: the table sets the clip's min and max width
+       from what the other columns leave, up to the widest value. */
+    .cell-clip.grows > .cell-clip-text {
+      width: 0;
+      min-width: 100%;
+    }
+
+    .cell-clip-text {
       display: block;
 
       /* `scrollWidth > clientWidth` still reports true under `clip`, which is how

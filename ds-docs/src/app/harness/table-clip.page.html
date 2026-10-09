@@ -1,0 +1,356 @@
+@for (item of cases; track item.id) {
+  <section
+    class="case"
+    [attr.data-case]="item.id"
+    [style.width.px]="item.width">
+    <h3>
+      {{ item.id }} - {{ item.title }} ({{ item.width }}px)
+    </h3>
+
+    <ds-table
+      sortMode="client"
+      [caption]="item.title"
+      [data]="item.data"
+      [columns]="item.columns"
+      [density]="item.density ?? 'default'"
+      [selectable]="item.selectable ?? false"
+      [zebra]="item.zebra ?? false"
+      [maxHeight]="item.maxHeight ?? null"
+      [stickyFirstColumn]="item.stickyFirstColumn ?? false"
+      [rowActions]="item.rowActions ?? []"
+      [virtualScroll]="item.virtualScroll ?? false"
+      [pageSize]="item.pageSize ?? null" />
+  </section>
+}
+
+<section
+  class="case"
+  data-case="templates-hints"
+  [style.width.px]="900">
+  <h3>
+    templates-hints - Cell templates, hint headers, numeric, empty cells (900px)
+  </h3>
+
+  <ds-table
+    caption="Templates and hints"
+    [data]="people"
+    [columns]="hintColumns">
+    <ng-template
+      let-row
+      dsCellTemplate="status"
+      [dsCellTemplateOf]="people">
+      <ds-badge [withDot]="true">
+        {{ row.status }}
+      </ds-badge>
+    </ng-template>
+
+    <ng-template
+      let-row
+      dsCellTemplate="email"
+      [dsCellTemplateOf]="people">
+      <strong>
+        {{ row.email }}
+      </strong>
+    </ng-template>
+  </ds-table>
+</section>
+
+<section
+  class="case"
+  data-case="resize"
+  [style.width.px]="900">
+  <h3>
+    resize - dsTableResize, truncate with and without width (900px)
+  </h3>
+
+  <ds-table
+    caption="Resizable"
+    dsTableResize
+    [data]="people"
+    [columns]="resizeColumns"
+    [stickyHeader]="false" />
+</section>
+
+<section
+  class="case"
+  data-case="container-resize"
+  [style.width.px]="1200">
+  <h3>
+    container-resize - same table at several container widths
+  </h3>
+
+  <ds-table
+    caption="Container resize"
+    [data]="people"
+    [columns]="containerColumns" />
+</section>
+
+<section
+  class="case"
+  data-case="ecm-microsites-cta"
+  [style.width.px]="1000">
+  <h3>
+    ecm-microsites-cta - Consumer: microsites, width 200 truncate with template
+    (1000px)
+  </h3>
+
+  <ds-table
+    caption="Microsites"
+    density="compact"
+    sortMode="client"
+    [data]="people"
+    [columns]="ctaColumns"
+    [rowInteractive]="true">
+    <ng-template
+      let-row
+      dsCellTemplate="name"
+      [dsCellTemplateOf]="people">
+      <span class="site">
+        <span class="site-name">
+          {{ row.name }}
+        </span>
+
+        <code class="site-slug">
+          /{{ row.city }}-renewals-2026
+        </code>
+      </span>
+    </ng-template>
+  </ds-table>
+</section>
+
+<section
+  class="case"
+  data-case="ecm-delta-workaround"
+  [style.width.px]="1000">
+  <h3>
+    ecm-delta-workaround - Consumer: delta review as shipped, zero-width value
+    spans (1000px)
+  </h3>
+
+  <ds-table
+    caption="Delta workaround"
+    [data]="people"
+    [columns]="deltaWorkaroundColumns">
+    <ng-template
+      let-row
+      dsCellTemplate="name"
+      [dsCellTemplateOf]="people">
+      <div class="ph">
+        <span>
+          {{ row.name }}
+        </span>
+
+        <small>
+          {{ row.id }} · POL-2026-100340
+        </small>
+      </div>
+    </ng-template>
+
+    <ng-template
+      let-row
+      dsCellTemplate="email"
+      [dsCellTemplateOf]="people">
+      <span class="value">
+        {{ row.email || '—' }}
+      </span>
+    </ng-template>
+
+    <ng-template
+      let-row
+      dsCellTemplate="notes"
+      [dsCellTemplateOf]="people">
+      <span class="value">
+        {{ row.notes || '—' }}
+      </span>
+    </ng-template>
+  </ds-table>
+</section>
+
+<section
+  class="case"
+  data-case="ecm-delta-truncate"
+  [style.width.px]="1000">
+  <h3>
+    ecm-delta-truncate - Consumer: delta review with truncate instead (1000px)
+  </h3>
+
+  <ds-table
+    caption="Delta truncate"
+    [data]="people"
+    [columns]="deltaTruncateColumns">
+    <ng-template
+      let-row
+      dsCellTemplate="name"
+      [dsCellTemplateOf]="people">
+      <div class="ph">
+        <span>
+          {{ row.name }}
+        </span>
+
+        <small>
+          {{ row.id }} · POL-2026-100340
+        </small>
+      </div>
+    </ng-template>
+  </ds-table>
+</section>
+
+<section
+  class="case"
+  data-case="broker-ai-stats"
+  [style.width.px]="1200">
+  <h3>
+    broker-ai-stats - Consumer: resizable runs, model truncate width 240
+    (1200px)
+  </h3>
+
+  <ds-table
+    caption="AI usage runs"
+    dsTableResize
+    sortMode="client"
+    [data]="people"
+    [columns]="brokerColumns" />
+</section>
+
+@for (item of deltaReviewCases; track item.id) {
+  <section
+    class="case delta-review"
+    [attr.data-case]="item.id"
+    [style.width.px]="item.width">
+    <h3>
+      {{ item.id }} - Consumer: delta review ({{ item.width }}px)
+    </h3>
+
+    <ds-table
+      [caption]="item.id"
+      [data]="item.data"
+      [columns]="item.columns">
+      <ng-template
+        let-row
+        dsCellTemplate="policyholder"
+        [dsCellTemplateOf]="item.data">
+        <div class="ph-cell">
+          <span class="ph-cell__name">
+            {{ row.name }}
+          </span>
+
+          <span class="ph-cell__meta">
+            {{ row.id }} · {{ row.policy }}
+          </span>
+        </div>
+      </ng-template>
+
+      @if (item.shipped) {
+        <ng-template
+          let-row
+          dsCellTemplate="email"
+          [dsCellTemplateOf]="item.data">
+          <span
+            class="value"
+            dsTooltipWhenClipped>
+            {{ row.email ?? '—' }}
+          </span>
+        </ng-template>
+      }
+
+      <ng-template
+        let-row
+        dsCellTemplate="step"
+        [dsCellTemplateOf]="item.data">
+        <div class="step-cell">
+          <span>
+            {{ row.step }}
+          </span>
+
+          <span class="step-cell__meta">
+            {{ row.enrollment }}
+          </span>
+        </div>
+      </ng-template>
+    </ds-table>
+  </section>
+}
+
+<section
+  class="case"
+  data-case="expand-truncate"
+  [style.width.px]="900">
+  <h3>
+    expand-truncate - expandable rows, selectable, truncate without width (900px)
+  </h3>
+
+  <ds-table
+    caption="Expandable"
+    [selectable]="true"
+    [expandableRows]="true"
+    [rowExpandTemplate]="expandPanel"
+    [data]="people"
+    [columns]="expandColumns" />
+
+  <ng-template
+    #expandPanel
+    let-row>
+    {{ row.notes }}
+  </ng-template>
+</section>
+
+<section
+  class="case min-width-token"
+  data-case="min-width-token"
+  [style.width.px]="700">
+  <h3>
+    min-width-token - --ds-table-min-width 1100px, truncate without width (700px)
+  </h3>
+
+  <ds-table
+    caption="Min width"
+    [data]="people"
+    [columns]="containerColumns" />
+</section>
+
+<section
+  class="case"
+  data-case="resize-content"
+  [style.width.px]="900">
+  <h3>
+    resize-content - dsTableResize on content, truncate, wrapping and numeric columns (900px)
+  </h3>
+
+  <ds-table
+    caption="Resizable content"
+    dsTableResize
+    [data]="people"
+    [columns]="resizeContentColumns"
+    [stickyHeader]="false" />
+</section>
+
+<section
+  class="case-perf"
+  data-perf="truncate"
+  [style.width.px]="1100">
+  <button
+    type="button"
+    data-perf-load="25"
+    (click)="loadPerf(25, false)">
+    25 rows
+  </button>
+
+  <button
+    type="button"
+    data-perf-load="500"
+    (click)="loadPerf(500, false)">
+    500 rows
+  </button>
+
+  <button
+    type="button"
+    data-perf-load="500-fixed"
+    (click)="loadPerf(500, true)">
+    500 rows, width 272
+  </button>
+
+  <ds-table
+    caption="Perf"
+    [data]="perfRows()"
+    [columns]="perfColumns()" />
+</section>

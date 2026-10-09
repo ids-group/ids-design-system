@@ -27,6 +27,11 @@
 
 ### Added
 
+- **`TableColumn.minWidth` sets the narrowest a `ds-table` column gets, in px with the padding.**
+  A `truncate` column without `width` stops shrinking at it and the table scrolls sideways
+  instead: `{ key: 'email', label: 'Email', truncate: true, minWidth: 160 }`. Ignored when `width`
+  is a number.
+
 - **`styles/target` gives an icon-only control of yours the library's 24px target.**
   `@include target.min-size` last in its rule: the box keeps its size, a transparent `::before`
   centred on it takes the pointer over at least `--hit-xs`, and the focus ring is drawn on that
@@ -240,6 +245,18 @@
   reported as an unknown slot. Rendering is the same. `ModalComponent`, `ModalCardComponent` and
   `DrawerComponent` lost the private `unslotted`, so a subclass member of that name no longer collides.
 
+- **A `ds-table` column with `truncate` and no `width` grows to its text instead of clipping at
+  240px.** The other columns get their content width first; such a column takes what they leave, up
+  to the widest value among all filtered rows, on every page, and clips at its column width when
+  there is less, down to its header label, so it does not push the table into horizontal scroll.
+  In a table that scrolls sideways anyway it clips at 240px of text, or at its `minWidth`. A value
+  that was cut at 240px beside empty space now shows whole. To keep the 240px cap everywhere, set
+  `width: 272` on the column (240 plus the cell padding).
+  `TableComponent` lost the protected `clipWidth` and gained the protected `clipGrows`,
+  `clipMaxWidth` and `clipMinWidth` and the private `growingClipColumns`, `clipCapsSet`, `clipFit`,
+  `clipFitWidth`, `textCanvas`, `measureGrowingClips`, `widestValue` and `splitGrowingClips`, so a
+  subclass declaring one of those names must rename it.
+
 - **`DsIntl` gains a required key: `chart.rowsUnder: (label: string) => string`** (default
   `` (label) => `Rows under ${label}` ``), the name of a bar-chart group's disclosure button. A
   complete `DsIntl` dictionary, or a complete `chart` section of one, declared as a typed object
@@ -300,9 +317,9 @@
 - **A `ds-table` cell link's focus ring clears the text.** It was drawn inward, over the first and
   last letter; it is drawn around the text now. In a `truncate` column the link clips its own text,
   so the ring keeps the sides the cell's clip cut off; the cell's tooltip and ellipsis are as before.
-  That link is the clipping element itself, `a.cell-link.cell-clip`, with no `span.cell-clip` around
-  it: a rule of yours for `ds-table .cell-clip a` or `.cell-clip .cell-link` matches nothing, write
-  it for `ds-table a.cell-clip`.
+  That link is the element that clips, `a.cell-link.cell-clip-text` inside `span.cell-clip`: a rule
+  of yours for `ds-table .cell-clip a` still matches it, but one that sets `display`, `overflow`,
+  `white-space` or `text-overflow` there overrides the ellipsis; drop those declarations.
 
 - **The focus ring clears the text of a `ds-table` header label, a `ds-list-item` and a
   `ds-breadcrumbs` link.** It was drawn inward, over the first and last letter; it is drawn 2px
@@ -361,6 +378,13 @@
   what makes it clickable while `tooltipLingerMs` keeps an unpinned panel open. The internal
   `ChartTooltipDirective` behind `dsChartTooltip` lost the private `closeOnEscape`, so a subclass
   member of that name no longer collides.
+- **A `truncate` column dragged with `dsTableResize` clips at its dragged width.** A column with a
+  `width` kept cutting its text at that width after being dragged wider, and could not be dragged
+  narrower than it plus its padding.
+- **A `truncate` column with a numeric `width` is that wide.** Its text was clipped at `width`
+  and the cell padding came on top, so `width: 240` rendered a 272px column (264px at compact
+  density) while a column without `truncate` rendered 240px. The text now clips inside the
+  declared width, 32px shorter at the default density.
 
 - **`ng add` with a `--project` that does not exist stops with an error naming it.** It printed the
   generic "add it manually" message and changed nothing, which hid the typo.
@@ -413,6 +437,7 @@
 | `@use 'styles/skeleton-shimmer'` | the partial emits nothing; `ds-skeleton` styles its own reduced-motion stop | nothing |
 | a hand-built info button: `name="info"` on a `ds-icon` inside a `<button>` that carries `dsTooltip` | `ds-info-hint` renders the button, the icon and the pinned tooltip | `<ds-info-hint ariaLabel="…" text="…" />` |
 | a hand-built term button styled with `underline dotted` that carries `dsTooltip` | `dsDefinitionTerm` carries the underline, the focus ring, the keyboard access and the pinned tooltip | `<span dsDefinitionTerm="…">` |
+| a cell template wrapping the value in an element styled `width: 0; min-width: 100%` with an ellipsis, plus `dsTooltipWhenClipped` on it, so a column without `width` clips at its own width | `truncate: true` on a column without `width` clips at the column width and shows the full value in a tooltip | `truncate: true` on the column; keep the template only for markup it adds besides the value |
 | `--ds-overlay-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of overlay panels | nothing |
 | `--ds-modal-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of a modal card | nothing |
 | `--ds-toast-enter-keyframes: ds-fade-in` | `ds-fade-in` is the default entrance of a toast | nothing |

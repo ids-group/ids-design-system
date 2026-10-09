@@ -83,7 +83,7 @@
               [class.pin-first]="first && stickyFirstColumn()"
               [class.fit-content]="fitsContent(col)"
               [style.width.px]="columnWidth(col)"
-              [style.min-width.px]="columnWidth(col)"
+              [style.min-width.px]="columnWidth(col) ?? col.minWidth"
               [style.max-width.px]="columnWidth(col)"
               [attr.aria-sort]="ariaSort(col)"
               [attr.data-col-key]="col.key"
@@ -292,7 +292,8 @@
                 @for (
                   col of visibleColumns();
                   track col.key;
-                  let first = $first
+                  let first = $first;
+                  let index = $index
                 ) {
                   <td
                     [class.numeric]="col.align === 'right'"
@@ -300,7 +301,11 @@
                     [class.editable-cell]="col.editable"
                     [class.interactive-cell]="col.interactive"
                     [class.fit-content]="fitsContent(col)"
-                    [dsTooltipWhenClipped]="col.truncate ? ':scope > .cell-clip' : false"
+                    [dsTooltipWhenClipped]="
+                      col.truncate
+                        ? ':scope > .cell-clip > .cell-clip-text'
+                        : false
+                    "
                     [dsTooltip]="col.truncate ? cellValue(row, col) : ''"
                     (dblclick)="startEdit(row, col, $event)">
                     @if (isEditing(row, col)) {
@@ -318,14 +323,18 @@
                       @if (col.truncate) {
                         <span
                           class="cell-clip"
-                          [style.max-width.px]="clipWidth(col)">
-                          <ng-container
-                            [ngTemplateOutlet]="tpl"
-                            [ngTemplateOutletContext]="{
-                              $implicit: row,
-                              row: row,
-                            }">
-                          </ng-container>
+                          [class.grows]="clipGrows(col)"
+                          [style.max-width]="clipMaxWidth(col, index)"
+                          [style.min-width]="clipMinWidth(col, index)">
+                          <span class="cell-clip-text">
+                            <ng-container
+                              [ngTemplateOutlet]="tpl"
+                              [ngTemplateOutletContext]="{
+                                $implicit: row,
+                                row: row,
+                              }">
+                            </ng-container>
+                          </span>
                         </span>
                       } @else {
                         <ng-container
@@ -337,21 +346,24 @@
                         </ng-container>
                       }
                     } @else if (col.truncate) {
-                      @if (cellLink(row, col); as target) {
-                        <a
-                          class="cell-link cell-clip"
-                          [style.max-width.px]="clipWidth(col)"
-                          [routerLink]="target"
-                          (click)="$event.stopPropagation()">
-                          {{ cellValue(row, col) }}
-                        </a>
-                      } @else {
-                        <span
-                          class="cell-clip"
-                          [style.max-width.px]="clipWidth(col)">
-                          {{ cellValue(row, col) }}
-                        </span>
-                      }
+                      <span
+                        class="cell-clip"
+                        [class.grows]="clipGrows(col)"
+                        [style.max-width]="clipMaxWidth(col, index)"
+                          [style.min-width]="clipMinWidth(col, index)">
+                        @if (cellLink(row, col); as target) {
+                          <a
+                            class="cell-link cell-clip-text"
+                            [routerLink]="target"
+                            (click)="$event.stopPropagation()">
+                            {{ cellValue(row, col) }}
+                          </a>
+                        } @else {
+                          <span class="cell-clip-text">
+                            {{ cellValue(row, col) }}
+                          </span>
+                        }
+                      </span>
                     } @else if (cellLink(row, col); as target) {
                       <a
                         class="cell-link"

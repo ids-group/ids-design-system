@@ -624,7 +624,7 @@ export class TableSection {
   protected readonly truncateColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record', truncate: true, width: 220 },
     { key: 'date', label: 'Dates' },
-    { key: 'venue', label: 'Venue', truncate: true, width: 200 },
+    { key: 'venue', label: 'Venue', truncate: true },
     { key: 'statusLabel', label: 'Status' },
   ];
 

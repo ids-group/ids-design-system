@@ -46,7 +46,7 @@ const inlineOnly = (file, selector) => {
 inlineOnly('components/breadcrumbs/breadcrumbs.component.scss', '.breadcrumbs');
 inlineOnly('components/breadcrumbs/breadcrumbs.component.scss', '.label');
 inlineOnly('components/table/table.component.scss', '.th-text');
-inlineOnly('components/table/table.component.scss', '.cell-clip');
+inlineOnly('components/table/table.component.scss', '.cell-clip-text');
 inlineOnly('components/table/table.component.scss', 'thead th');
 inlineOnly('components/select/select.component.scss', '.trigger-text');
 inlineOnly('components/sidenav/sidenav-item.component.scss', '.item-label');

@@ -211,6 +211,63 @@
       "verify": "A ds-bar-chart reloading with rows on screen shows those rows under a scrim and spinner, and one loading with empty data shows skeleton rows."
     },
     {
+      "id": "table-truncate-without-width-grows",
+      "kind": "behavior",
+      "old": "TableColumn.truncate",
+      "new": null,
+      "surface": "none",
+      "searchHints": [
+        "truncate: true",
+        "truncate:"
+      ],
+      "detect": [
+        "truncate: true"
+      ],
+      "action": "None, unless a column needs the old 240px cap: add `width: 272` to it (240 plus the cell padding at the default density).",
+      "appliesWhen": "A `ds-table` column with `truncate: true` and no `width`. A column with a numeric `width` or `width: 'content'` clips as before, and a column without `truncate` is unaffected.",
+      "pitfall": "A column of long values now takes the room the other columns leave, up to the widest value on any page, so a screenshot shows it wider when the table has room and narrower, down to its header label, when it does not; in a table that scrolls sideways anyway it keeps the 240px clip.",
+      "restore": "{ key: 'email', label: 'Email', truncate: true, width: 272 }",
+      "verify": "Open a table with a `truncate` column without `width`: a short value shows whole, a long one is cut at the column's edge with no empty space after the ellipsis, the column keeps its width when you page, and in a table that scrolls sideways anyway it clips at 240px."
+    },
+    {
+      "id": "table-truncate-width-includes-padding",
+      "kind": "behavior",
+      "old": "TableColumn.width",
+      "new": null,
+      "surface": "none",
+      "searchHints": [
+        "truncate: true",
+        "width:"
+      ],
+      "detect": [
+        "truncate: true"
+      ],
+      "action": "None, unless a `truncate` column with a numeric `width` must keep its old size: add the horizontal cell padding to its `width` (32 at the default density, 24 at compact).",
+      "appliesWhen": "A `ds-table` column with `truncate: true` and a numeric `width`. A column without `truncate`, one with `width: 'content'` and one without `width` are unaffected.",
+      "pitfall": "The column and its clip are 32px narrower at the default density, so a value that used to show whole within a few pixels of the old clip now ends in an ellipsis.",
+      "restore": "{ key: 'model', label: 'Model', truncate: true, width: 272 }",
+      "verify": "Open a table with a `truncate` column whose `width` is 240: the column measures 240px, the same as a column of `width: 240` without `truncate`, and its text ends in an ellipsis inside it."
+    },
+    {
+      "id": "table-component-member-surface",
+      "kind": "behavior",
+      "old": "TableComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends TableComponent"
+      ],
+      "detect": [
+        "extends TableComponent"
+      ],
+      "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
+      "appliesWhen": "Only a class of yours that extends TableComponent. Template users of ds-table need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error against TableComponent.",
+      "note": "TableComponent gained the protected clipGrows, clipMaxWidth and clipMinWidth and the private growingClipColumns, clipCapsSet, clipFit, clipFitWidth, textCanvas, measureGrowingClips, widestValue and splitGrowingClips, and lost the protected clipWidth."
+    },
+    {
       "id": "focus-ring-default-radius",
       "kind": "behavior",
       "old": "--focus-ring-radius",
@@ -232,7 +289,7 @@
       "verify": "The built CSS has `border-radius:var(--focus-ring-radius)` inside `:where(:focus-visible)`, and a focused element with a fill keeps the corners it shows at rest."
     },
     {
-      "id": "table-truncated-link-is-cell-clip",
+      "id": "table-truncated-link-clips-its-text",
       "kind": "behavior",
       "old": ".cell-clip",
       "new": null,
@@ -246,11 +303,11 @@
         ".cell-clip .cell-link",
         ".cell-clip > a"
       ],
-      "action": "Rewrite a rule of yours that styles the link inside `.cell-clip` of a `ds-table` cell to target `a.cell-clip` itself, for example `ds-table .cell-clip a` becomes `ds-table a.cell-clip`.",
-      "appliesWhen": "Only a `truncate` column whose cells are links (`link` on the column). A truncated plain cell keeps `span.cell-clip`, and a link in a column without `truncate` is `a.cell-link` as before.",
-      "pitfall": "A rule written for the old nesting matches nothing, so the link quietly loses the colour or decoration it set.",
+      "action": "None, unless a rule of yours for the link inside `.cell-clip` of a `ds-table` cell sets `display`, `overflow`, `white-space` or `text-overflow`: drop those declarations, the link clips its own text.",
+      "appliesWhen": "Only a `truncate` column whose cells are links (`link` on the column): the link is `a.cell-link.cell-clip-text` inside `span.cell-clip`. A truncated plain cell clips in `span.cell-clip-text`, and a link in a column without `truncate` is `a.cell-link` as before.",
+      "pitfall": "A rule for the old nesting still matches the link; one that resets its display or overflow lets the text run past the column without an ellipsis.",
       "restore": null,
-      "verify": "No stylesheet selects an element inside `.cell-clip`, and a truncated link cell renders with the styling the rule meant to give it."
+      "verify": "A truncated link cell ends in an ellipsis at the column edge, and its focus ring is whole on all four sides."
     },
     {
       "id": "dropdown-empty-row-drops-t-s",
@@ -762,6 +819,10 @@
       "text": "A reloading ds-bar-chart covers the whole card with the overlay, to the frame's rounded corners, instead of a scrim over the rows inside the padding.",
       "verify": "Open a framed ds-bar-chart with rows and loading set, and confirm the blurred scrim reaches the card's edges and corners."
     },
+    {
+      "text": "A `truncate` column dragged with `dsTableResize` clips at its dragged width; a column with a `width` used to keep clipping at that width and could not be dragged narrower than it.",
+      "verify": "Drag a `truncate` column that has a `width` wider and narrower: its text follows the dragged edge."
+    },
     "`styles/skeleton-shimmer` emits nothing and `styles/ds` no longer forwards it; `ds-skeleton` stops its shimmer under `prefers-reduced-motion: reduce` from its own styles, so an app that assembles the partials itself gets the stop too (delete list: skeleton-shimmer-use).",
     {
       "text": "The \"no matches\" row of `ds-select`, `ds-multi-select` and `ds-autocomplete` takes its font family, weight and line height from `styles/dropdown-overlay` (the `--ds-typography-s-*` hooks) instead of the `.t-s` class, so it keeps its type in an app that does not load `styles/typography`.",
@@ -825,6 +886,20 @@
       ],
       "why": "dsDefinitionTerm carries the dotted underline, the focus ring, the keyboard access and the pinned tooltip.",
       "replaceWith": "<span dsDefinitionTerm=\"...\">; keep a dotted underline that marks something other than a term with a definition"
+    },
+    {
+      "id": "table-zero-width-clip-wrapper",
+      "surface": [
+        "template",
+        "style"
+      ],
+      "find": [
+        "min-width: 100%",
+        "width: 0;",
+        "dsTooltipWhenClipped"
+      ],
+      "why": "`truncate: true` on a column without `width` clips at the column width and shows the full value in a tooltip. The wrapper is still legitimate where the column must yield all its room to its neighbours rather than grow to its text.",
+      "replaceWith": "`truncate: true` on the column"
     },
     {
       "id": "skeleton-shimmer-use",
