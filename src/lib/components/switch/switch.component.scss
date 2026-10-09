@@ -1,5 +1,7 @@
 @use '../../styles/control-line' as control-line;
 @use '../../styles/press' as press;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   --_switch-track-w: var(--switch-track-w);

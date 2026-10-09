@@ -1,4 +1,6 @@
 @use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 :host {
   --_menu-item-label-color: var(--ds-menu-item-label-color, var(--text-primary));
   --_menu-item-hover-bg-color: var(--ds-menu-item-hover-bg-color, var(--surface-secondary));

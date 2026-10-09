@@ -1,5 +1,7 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 @include chart-frame.chart-frame;
 @include chart-frame.pin-reset;
 

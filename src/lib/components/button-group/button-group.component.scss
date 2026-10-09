@@ -1,3 +1,6 @@
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
 /* Anchored ::ng-deep reaches the inner .button of projected children; unanchored compiles to a
    global rule hitting every ds-button. Matched as the direct child, not as `ds-button`:
    custom-element hosts rename a nested tag (angular/angular#24536) and a tag selector misses it. */

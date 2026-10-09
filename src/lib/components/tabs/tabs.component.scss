@@ -1,5 +1,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract: tab labels are single-line and short; the badge count never clips. */
 

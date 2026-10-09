@@ -26,6 +26,5 @@
 @forward 'toast-overlay';
 @forward 'surface-motion';
 @forward 'overlay-motion';
-@forward 'skeleton-shimmer';
 @include bp-emit.emit-vars;
 @include focus-emit.emit-rules;

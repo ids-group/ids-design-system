@@ -59,6 +59,36 @@ run(template, 'no-removed-inputs', {
     html('<div dsChartTooltipPreferBelow></div>', [
       { message: /was removed in 0\.14\.1/ },
     ]),
+    html('<div dsTooltipWhenClipped dsTooltipTextSelector=".label"></div>', [
+      { message: /dsTooltipTextSelector.* was removed in/ },
+    ]),
+  ],
+});
+
+run(template, 'no-removed-inputs', {
+  valid: [
+    {
+      ...html('<ds-table [sortDir]="direction"></ds-table>'),
+      options: [{ from: '0.13.4' }],
+    },
+    {
+      ...html('<ds-table [sortDir]="direction"></ds-table>'),
+      options: [{ to: '0.13.3' }],
+    },
+  ],
+  invalid: [
+    {
+      ...html('<ds-table [sortDir]="direction"></ds-table>', [
+        { message: /renamed or replaced in 0\.13\.4/ },
+      ]),
+      options: [{ from: '0.13.3' }],
+    },
+    {
+      ...html('<ds-table [sortDir]="direction"></ds-table>', [
+        { message: /renamed or replaced in 0\.13\.4/ },
+      ]),
+      options: [{ from: '0.13.3', to: '0.13.4' }],
+    },
   ],
 });
 

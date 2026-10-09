@@ -1,4 +1,6 @@
-@use '../../styles/press' as press;
+@use '../../styles/dismiss-button' as dismiss-button;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 /* Truncation contract: title is single-line with ellipsis and never hides the close
    button; body wraps and scrolls inside the modal; action labels are single-line and
@@ -29,7 +31,7 @@
   --_modal-icon-badge-bg-color: var(--ds-modal-icon-badge-bg-color, var(--accent-subtitle));
   --_modal-icon-badge-icon-color: var(--ds-modal-icon-badge-icon-color, var(--accent));
   --_modal-impact-text-color: var(--ds-modal-impact-text-color, var(--warning-text));
-  --_modal-enter-keyframes: var(--ds-modal-enter-keyframes, ds-scale-in);
+  --_modal-enter-keyframes: var(--ds-modal-enter-keyframes, ds-fade-in);
   --_modal-enter-duration: var(--ds-modal-enter-duration, var(--ds-motion-enter-surface-duration));
   --_modal-enter-easing: var(--ds-modal-enter-easing, var(--ds-motion-enter-surface-easing));
   --_modal-leave-duration: var(--ds-modal-leave-duration, var(--ds-motion-exit-duration));
@@ -151,18 +153,13 @@
   }
 
   .close {
-    background: none;
-    border: 0;
-    cursor: pointer;
+    @include dismiss-button.button;
+
     color: var(--_modal-close-icon-color);
     width: var(--modal-close-size);
     height: var(--modal-close-size);
-    display: grid;
-    place-items: center;
 
     &:hover { color: var(--_modal-close-icon-color-hover); }
-
-    @include press.feedback;
   }
 
   .body {

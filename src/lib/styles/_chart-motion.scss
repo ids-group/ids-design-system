@@ -42,12 +42,6 @@
   }
 }
 
-@keyframes ds-chart-ring-sweep {
-  from {
-    opacity: 0;
-    transform: rotate(-30deg) scale(0.96);
-  }
-}
 
 // Needs `pathLength="1"` and `stroke-dasharray: 1` on the path, so one unit is the whole line.
 @keyframes ds-chart-line-draw {
@@ -150,7 +144,7 @@
   @include leaves($mark);
 }
 
-@mixin sweeps-in($ring) {
+@mixin settles-ring-in($ring) {
   #{$ring} {
     transform-box: fill-box;
     transform-origin: center;
@@ -158,7 +152,7 @@
 
   @include enters(
     '#{$ring}',
-    ds-chart-ring-sweep,
+    ds-chart-mark-settle,
     var(--ds-motion-chart-mark-sweep-duration),
     var(--ds-motion-chart-mark-grow-easing)
   );
@@ -182,7 +176,7 @@
 @mixin follows($detail, $after) {
   @include enters(
     '#{$detail}',
-    ds-chart-mark-rise,
+    ds-chart-mark-fade-in,
     var(--ds-motion-chart-mark-detail-duration),
     var(--ds-motion-chart-mark-enter-easing),
     $after

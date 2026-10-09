@@ -51,6 +51,52 @@
       "verify": "No template or class binds `dsTooltipClippedLead`, the app compiles, and a tooltip that used it shows its lead line, written into the string."
     },
     {
+      "id": "tooltip-text-selector-merged-into-when-clipped",
+      "kind": "removed-api",
+      "old": "[dsTooltipTextSelector]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "dsTooltipTextSelector",
+        "dsTooltipWhenClipped"
+      ],
+      "detect": [
+        "dsTooltipTextSelector=",
+        "[dsTooltipTextSelector]="
+      ],
+      "action": "Move the selector into `dsTooltipWhenClipped` and delete `dsTooltipTextSelector`: `dsTooltipWhenClipped dsTooltipTextSelector=\".label\"` becomes `dsTooltipWhenClipped=\".label\"`. Where `[dsTooltipWhenClipped]` is bound to a condition, bind the selector when it holds and `false` when it does not: `[dsTooltipWhenClipped]=\"truncate ? ':scope > .cell' : false\"`.",
+      "appliesWhen": "Only an element that sets `dsTooltipTextSelector`. A `dsTooltipWhenClipped` with no selector, `dsTooltip` and `dsDefinitionTerm` are unchanged.",
+      "evidence": [
+        "command:node tools/public-api-golden.mjs --diff v0.14.8"
+      ],
+      "pitfall": "A leftover `dsTooltipTextSelector=\"...\"` attribute is an inert HTML attribute and raises no error: the clip test then measures the whole host, and a row whose inner label is clipped inside an unclipped row never shows its tip.",
+      "verify": "No template sets `dsTooltipTextSelector`, and a row whose inner label is clipped still shows its tip on hover and on keyboard focus."
+    },
+    {
+      "id": "tooltip-when-clipped-input-widened",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends TooltipDirective",
+        "dsTooltipWhenClipped()",
+        "hostElement",
+        "isClipped()"
+      ],
+      "detect": [
+        "extends TooltipDirective",
+        "this.dsTooltipWhenClipped()",
+        "this.hostElement",
+        "this.isClipped()"
+      ],
+      "action": "None, unless a subclass of TooltipDirective reads `dsTooltipWhenClipped()` as a boolean or calls `hostElement` or `isClipped()`: read your own state instead.",
+      "appliesWhen": "Only a class of yours that extends TooltipDirective; subclassing a DS component is unsupported. Template users bind `dsTooltipWhenClipped` as before: a boolean, the bare attribute, or now a selector string.",
+      "pitfall": "`dsTooltipWhenClipped` now holds a target object or null, so a read compared with `true` or `false` is never equal and the clip test never runs.",
+      "restore": null,
+      "verify": "No subclass of TooltipDirective reads `dsTooltipWhenClipped()` as a boolean or touches `hostElement` or `isClipped()`."
+    },
+    {
       "id": "tooltip-bold-markup",
       "kind": "behavior",
       "old": "dsTooltip",
@@ -77,25 +123,27 @@
     {
       "id": "tooltip-classes-member-surface",
       "kind": "behavior",
-      "old": "TooltipPanelComponent, TooltipDirective, BarChartComponent",
+      "old": "TooltipPanelComponent, TooltipDirective, ChartTooltipDirective, BarChartComponent",
       "new": null,
       "surface": "typescript",
       "searchHints": [
         "extends TooltipDirective",
         "extends TooltipPanelComponent",
+        "extends ChartTooltipDirective",
         "extends BarChartComponent"
       ],
       "detect": [
         "extends TooltipDirective",
         "extends TooltipPanelComponent",
+        "extends ChartTooltipDirective",
         "extends BarChartComponent"
       ],
       "action": "Build after upgrading, and rename a member of yours the compiler reports as colliding.",
-      "appliesWhen": "Only a class of yours that extends TooltipDirective, TooltipPanelComponent or BarChartComponent. Template users of dsTooltip and ds-bar-chart need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends TooltipDirective, TooltipPanelComponent, BarChartComponent or the internal ChartTooltipDirective. Template users of dsTooltip, dsChartTooltip and ds-bar-chart need nothing; subclassing a DS component is unsupported.",
       "pitfall": "A redeclared private member collides as a public one does, and override cannot resolve it; only a rename does.",
       "restore": null,
-      "verify": "The app builds with no member-collision error against TooltipDirective, TooltipPanelComponent or BarChartComponent.",
-      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 13: contains, document, dsTooltipArrow, dsTooltipPinOnClick, hostPinOnClick, leadsWithOwnText, onClick, onPointerLeave, ownText, pin, pinsOnClick, pointArrowAtHost and unpin; it lost dsTooltipClippedLead. BarChartComponent gained the public labelPosition, the protected isExpanded, toggleRow, hintId, holdsControls, percentColumn, entries, showsSkeleton and reloading, and the private idPrefix and expanded."
+      "verify": "The app builds with no member-collision error against TooltipDirective, TooltipPanelComponent or BarChartComponent, or against a subclass of the internal ChartTooltipDirective.",
+      "note": "TooltipPanelComponent gained 2: the protected segments and the public arrow. TooltipDirective gained 12: ancestorFocusTrigger, document, dsTooltipArrow, dsTooltipPinOnClick, hostPinOnClick, leadsWithOwnText, onClick, onPointerLeave, ownText, pin, pinsOnClick and unpin; it lost 5: dsTooltipClippedLead, dsTooltipTextSelector, listenToFocusableAncestor, positionFor and textElement. The internal ChartTooltipDirective lost the private closeOnEscape. BarChartComponent gained the public labelPosition, the protected isExpanded, toggleRow, hintId, holdsControls, percentColumn, entries, showsSkeleton and reloading, and the private idPrefix and expanded."
     },
     {
       "id": "intl-chart-rows-under-required",
@@ -198,6 +246,159 @@
       "restore": null,
       "verify": "The app builds with no member-collision error against TableComponent.",
       "note": "TableComponent gained the protected clipGrows and clipMaxWidth and the private growingClipColumns, clipCapsSet and fitGrowingClips, and lost the protected clipWidth."
+    },
+    {
+      "id": "focus-ring-default-radius",
+      "kind": "behavior",
+      "old": "--focus-ring-radius",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        ":focus-visible",
+        "outline"
+      ],
+      "detect": [
+        ":focus-visible {",
+        ":focus-visible{",
+        "&:focus-visible"
+      ],
+      "action": "None, unless an element of yours paints a background or border, declares no border-radius and must stay square while focused: declare `border-radius: 0` on it.",
+      "appliesWhen": "Ships in `styles/focus`, which `styles/ds` forwards, and for a component's own elements in that component's stylesheet. Every keyboard-focused element that declares no border-radius takes `--focus-ring-radius` through `:where(:focus-visible)`; an element that declares any radius, `0` included, is unaffected.",
+      "pitfall": "A full-width row or flat button with a fill and no declared radius shows rounded fill corners only while focused, so a screenshot taken at rest looks unchanged.",
+      "restore": ":where(:focus-visible) { border-radius: 0; }",
+      "verify": "The built CSS has `border-radius:var(--focus-ring-radius)` inside `:where(:focus-visible)`, and a focused element with a fill keeps the corners it shows at rest."
+    },
+    {
+      "id": "dropdown-empty-row-drops-t-s",
+      "kind": "behavior",
+      "old": ".empty",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        ".empty.t-s",
+        ".ds-dropdown-panel .empty"
+      ],
+      "detect": [
+        ".empty.t-s",
+        ".ds-dropdown-panel .t-s"
+      ],
+      "action": "None, unless a stylesheet of yours reaches the \"no matches\" row of a picker panel through `.t-s`: select `.ds-dropdown-panel .empty` instead.",
+      "appliesWhen": "Only a rule of yours whose selector combines the picker panel or its `.empty` row with `.t-s`. Ships in `styles/dropdown-overlay`, which `styles/ds` forwards. Other elements carrying `.t-s` are not affected.",
+      "pitfall": "A selector such as `.ds-dropdown-panel .empty.t-s` still parses and matches nothing, so the override stops applying with no error.",
+      "restore": null,
+      "verify": "The built CSS holds no selector combining `.empty` with `.t-s`, and the \"no matches\" row of an open `ds-select` with no options shows your override."
+    },
+    {
+      "id": "overlay-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-overlay-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-overlay-enter-keyframes",
+        "--ds-overlay-enter-scale",
+        "--ds-overlay-enter-offset"
+      ],
+      "detect": [
+        "--ds-overlay-enter-scale:",
+        "--ds-overlay-enter-offset:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless overlay panels must keep growing or travelling: set `--ds-overlay-enter-keyframes` to `ds-scale-in` or `ds-slide-in`.",
+      "appliesWhen": "Every CDK overlay panel the library opens: tooltip, popover, select, multi-select, autocomplete, the date, time and colour picker panels, and a `ds-menu-item` submenu. Ships in `styles/overlay-motion`, which `styles/ds` forwards. a chart tooltip faded in already.",
+      "pitfall": "A `--ds-overlay-enter-scale` or `--ds-overlay-enter-offset` set on its own now changes nothing: each is read only by the keyframes that use it.",
+      "restore": ":root { --ds-overlay-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an opened tooltip or select panel fades in where it stands, and neither grows nor moves."
+    },
+    {
+      "id": "modal-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-modal-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-modal-enter-keyframes",
+        "--ds-modal-enter-scale"
+      ],
+      "detect": [
+        "--ds-modal-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless a modal must keep growing in: set `--ds-modal-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every `ds-modal` card; the backdrop faded already.",
+      "pitfall": "A `--ds-modal-enter-scale` set on its own now changes nothing: it is read only while `--ds-modal-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-modal-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an opened `ds-modal` fades in where it stands and does not grow."
+    },
+    {
+      "id": "toast-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-toast-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-toast-enter-keyframes",
+        "--ds-toast-enter-scale"
+      ],
+      "detect": [
+        "--ds-toast-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless a toast must keep growing in: set `--ds-toast-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every `ds-toast` in the toast region.",
+      "pitfall": "A `--ds-toast-enter-scale` set on its own now changes nothing: it is read only while `--ds-toast-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-toast-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an opened `ds-toast` fades in where it stands and does not grow."
+    },
+    {
+      "id": "banner-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-banner-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-banner-enter-keyframes",
+        "--ds-banner-enter-scale"
+      ],
+      "detect": [
+        "--ds-banner-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless a banner must keep growing in: set `--ds-banner-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every `ds-banner` as it is inserted.",
+      "pitfall": "A `--ds-banner-enter-scale` set on its own now changes nothing: it is read only while `--ds-banner-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-banner-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an inserted `ds-banner` fades in where it stands and does not grow."
+    },
+    {
+      "id": "alert-enter-keyframes-default-fade-in",
+      "kind": "behavior",
+      "old": "--ds-alert-enter-keyframes",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-alert-enter-keyframes",
+        "--ds-alert-enter-scale"
+      ],
+      "detect": [
+        "--ds-alert-enter-scale:",
+        "ds-scale-in"
+      ],
+      "action": "None, unless a alert must keep growing in: set `--ds-alert-enter-keyframes: ds-scale-in`.",
+      "appliesWhen": "Every `ds-alert` as it is inserted.",
+      "pitfall": "A `--ds-alert-enter-scale` set on its own now changes nothing: it is read only while `--ds-alert-enter-keyframes` is `ds-scale-in`.",
+      "restore": ":root { --ds-alert-enter-keyframes: ds-scale-in; }",
+      "verify": "The default was `ds-scale-in` and is now `ds-fade-in`: an inserted `ds-alert` fades in where it stands and does not grow."
     }
   ],
   "informational": [
@@ -266,7 +467,29 @@
     {
       "text": "A `truncate` column dragged with `dsTableResize` clips at its dragged width; a column with a `width` used to keep clipping at that width and could not be dragged narrower than it.",
       "verify": "Drag a `truncate` column that has a `width` wider and narrower: its text follows the dragged edge."
-    }
+    },
+    "`styles/skeleton-shimmer` emits nothing and `styles/ds` no longer forwards it; `ds-skeleton` stops its shimmer under `prefers-reduced-motion: reduce` from its own styles, so an app that assembles the partials itself gets the stop too (delete list: skeleton-shimmer-use).",
+    {
+      "text": "The \"no matches\" row of `ds-select`, `ds-multi-select` and `ds-autocomplete` takes its font family, weight and line height from `styles/dropdown-overlay` (the `--ds-typography-s-*` hooks) instead of the `.t-s` class, so it keeps its type in an app that does not load `styles/typography`.",
+      "verify": "Open a picker with a query that matches nothing and confirm the row is set in the app's sans face, not a serif."
+    },
+    {
+      "text": "Every component sets `box-sizing: border-box` on its host and its own elements, the inherited font on its form controls, zero margins on its headings and the base focus ring on its own focusable elements. An app that does not load `styles/reset` or `styles/focus` sees a default `ds-input` field at 40px instead of 41.2px tall, and one inside `ds-field-group` at 38.8px instead of 40px, and the library's focus ring where the browser's showed.",
+      "verify": "In an app without `styles/reset`, open a form and confirm a default `ds-input` field is 40px tall; tab to a `ds-number-stepper` step button and confirm the ring is the library's, not the browser's."
+    },
+    {
+      "text": "`ds-container` with `size=\"sm|md|lg\"` and the responsive rail of `ds-app-layout` fall back to the library's breakpoints when `--bp-*` is not set, so they work without `bp.emit-vars`; a `--bp-*` of yours still wins. The dev-mode warning about a missing `--bp-lg` is gone.",
+      "verify": "Without `bp.emit-vars`, confirm a `ds-container size=\"md\"` is 768px wide at most and the `ds-app-layout` rail turns into a drawer below 1024px."
+    },
+    {
+      "text": "A closing `ds-toast` fades where it stands instead of rising 8px while it fades.",
+      "verify": "Dismiss a toast and confirm it fades without moving."
+    },
+    {
+      "text": "A `ds-funnel-chart` stage grows from 96% while it fades in instead of rising 4px, and the value labels of the bar, column, waterfall, heatmap, pie and funnel charts and the funnel's table rows fade in where they stand. A `ds-pie-chart` ring grows from 96% while it fades in, without the 30° turn.",
+      "verify": "Load a funnel and a pie chart and confirm stages, ring and labels appear without travelling or turning."
+    },
+    "The ESLint rules and the stylelint rule take optional `from` and `to` versions, as options of one rule or through a recommended-from config of the ESLint plugin, that leave out every removed or renamed name outside that range of releases. Without them nothing changes."
   ],
   "deleteList": [
     {
@@ -306,6 +529,71 @@
       ],
       "why": "`truncate: true` on a column without `width` clips at the column width and shows the full value in a tooltip. The wrapper is still legitimate where the column must yield all its room to its neighbours rather than grow to its text.",
       "replaceWith": "`truncate: true` on the column"
+    },
+    {
+      "id": "skeleton-shimmer-use",
+      "surface": "style",
+      "find": [
+        "@use 'styles/skeleton-shimmer'",
+        "styles/skeleton-shimmer"
+      ],
+      "why": "The partial emits nothing; `ds-skeleton` carries its own reduced-motion stop.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "overlay-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-overlay-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of overlay panels.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "modal-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-modal-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of `ds-modal`.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "toast-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-toast-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of `ds-toast`.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "banner-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-banner-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of `ds-banner`.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "alert-enter-keyframes-fade-in",
+      "surface": [
+        "style"
+      ],
+      "find": [
+        "--ds-alert-enter-keyframes: ds-fade-in"
+      ],
+      "why": "ds-fade-in is the default entrance of `ds-alert`.",
+      "replaceWith": "nothing"
     }
   ]
 }

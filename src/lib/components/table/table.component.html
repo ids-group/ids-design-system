@@ -209,8 +209,7 @@
           <tr aria-hidden="true">
             <td
               class="loading-space"
-              [attr.colspan]="expandedColspan()">
-            </td>
+              [attr.colspan]="expandedColspan()"></td>
           </tr>
         } @else if (showsEmptyRow()) {
           <tr>
@@ -231,8 +230,7 @@
             <tr
               class="spacer"
               aria-hidden="true"
-              [style.height.px]="window.padTop">
-            </tr>
+              [style.height.px]="window.padTop"></tr>
           }
 
           @for (slot of rowSlots(); track slot.index) {
@@ -296,13 +294,16 @@
                   let index = $index
                 ) {
                   <td
-                    dsTooltipTextSelector=":scope > .cell-clip > .cell-clip-text"
                     [class.numeric]="col.align === 'right'"
                     [class.pin-first]="first && stickyFirstColumn()"
                     [class.editable-cell]="col.editable"
                     [class.interactive-cell]="col.interactive"
                     [class.fit-content]="fitsContent(col)"
-                    [dsTooltipWhenClipped]="!!col.truncate"
+                    [dsTooltipWhenClipped]="
+                      col.truncate
+                        ? ':scope > .cell-clip > .cell-clip-text'
+                        : false
+                    "
                     [dsTooltip]="col.truncate ? cellValue(row, col) : ''"
                     (dblclick)="startEdit(row, col, $event)">
                     @if (isEditing(row, col)) {
@@ -396,11 +397,11 @@
               </tr>
 
               @if (
-                  expandableRows() &&
-                  isExpanded(row) &&
-                  rowExpandTemplate() &&
-                  !virtualizing()
-                ) {
+                expandableRows() &&
+                isExpanded(row) &&
+                rowExpandTemplate() &&
+                !virtualizing()
+              ) {
                 <tr
                   class="expand-panel-row"
                   (animate.leave)="$event.target.classList.add('is-leaving')">
@@ -433,8 +434,7 @@
             <tr
               class="spacer"
               aria-hidden="true"
-              [style.height.px]="window.padBottom">
-            </tr>
+              [style.height.px]="window.padBottom"></tr>
           }
         }
       </tbody>
@@ -450,8 +450,7 @@
     [class.hscroll-hidden]="!hscrollNeeded()">
     <div
       class="hscroll-spacer"
-      [style.width.px]="hscrollContentWidth()">
-    </div>
+      [style.width.px]="hscrollContentWidth()"></div>
   </div>
 }
 
@@ -624,8 +623,7 @@
     @if (expandableRows()) {
       <td
         class="expand-col"
-        [class.pin-expand]="stickyFirstColumn()">
-      </td>
+        [class.pin-expand]="stickyFirstColumn()"></td>
     }
 
     @for (col of visibleColumns(); track col.key; let first = $first) {

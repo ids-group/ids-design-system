@@ -1,4 +1,6 @@
-@use '../../styles/press' as press;
+@use '../../styles/dismiss-button' as dismiss-button;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
 
 :host {
   --_drawer-bg-color:               var(--ds-drawer-bg-color,               var(--surface-overlay));
@@ -162,17 +164,13 @@
   }
 
   .close {
-    background: transparent;
-    border: 0;
+    @include dismiss-button.button;
+
     width: var(--modal-close-size);
     height: var(--modal-close-size);
     color: var(--_drawer-close-icon-color);
-    cursor: pointer;
-    padding: 0;
 
     &:hover { color: var(--_drawer-close-icon-color-hover); }
-
-    @include press.feedback;
   }
 
   .body {

@@ -279,8 +279,7 @@
                     tabindex="-1"
                     role="option"
                     class="option"
-                    dsTooltipWhenClipped
-                    dsTooltipTextSelector=".option-label"
+                    dsTooltipWhenClipped=".option-label"
                     [id]="optionId(flatIndexOf(option))"
                     [class.is-active]="activeIndex() === flatIndexOf(option)"
                     [attr.aria-selected]="isSelected(option.value)"
@@ -329,8 +328,7 @@
               tabindex="-1"
               role="option"
               class="option"
-              dsTooltipWhenClipped
-              dsTooltipTextSelector=".option-label"
+              dsTooltipWhenClipped=".option-label"
               [id]="optionId(flatIndexOf(option))"
               [class.is-active]="activeIndex() === flatIndexOf(option)"
               [attr.aria-selected]="isSelected(option.value)"
@@ -372,13 +370,13 @@
 
       @if (loading()) {
         <li
-          class="empty t-s"
+          class="empty"
           role="presentation">
           <ds-spinner size="sm" />
         </li>
       } @else if (filteredOptions().length === 0) {
         <li
-          class="empty t-s"
+          class="empty"
           role="presentation">
           @if (emptyTemplate(); as tpl) {
             <ng-container

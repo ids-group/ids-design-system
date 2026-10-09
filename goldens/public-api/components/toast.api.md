@@ -144,7 +144,7 @@ ds-toast {
     --ds-toast-border-color-warning: var(--ds-toast-border-color, var(--border-default));
     --ds-toast-enter-duration: var(--ds-motion-enter-large-duration);
     --ds-toast-enter-easing: var(--ds-motion-enter-large-easing);
-    --ds-toast-enter-keyframes: ds-scale-in;
+    --ds-toast-enter-keyframes: ds-fade-in;
     --ds-toast-enter-offset: var(--space-2);
     --ds-toast-enter-scale: 0.96;
     --ds-toast-icon-color: var(--accent) | var(--error) | var(--success) | var(--warning-hover);
