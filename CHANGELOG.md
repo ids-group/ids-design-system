@@ -188,6 +188,30 @@
 
 ### Fixed
 
+- **The keyboard focus ring is rounded on elements that declare no radius.** The close buttons of
+  `ds-banner`, `ds-alert`, `ds-toast`, `ds-drawer` and `ds-modal-card`, the `ds-dropzone` remove
+  button, the `ds-table` column filter button and cell link, a focusable `ds-sparkline` and
+  `ds-tabs` panel, and a middle `ds-accordion-item` header drew a square ring; they take
+  `--focus-ring-radius` now. The `ds-number-stepper` step buttons follow the box's rounded corners.
+  The radius is set at zero specificity in `styles/focus`, and in each component's base layer for
+  its own elements, so any radius an element declares wins; an element of yours that paints a fill or border and declares none rounds its corners while
+  focused. Declare its `border-radius` to keep it square.
+
+- **The close `×` sits in the centre of its box and focus ring.** The close buttons of `ds-banner`,
+  `ds-alert`, `ds-toast`, `ds-drawer` and `ds-modal-card` and the `ds-dropzone` remove button laid
+  the icon on a text line, up to 2px below or beside the centre of a box that was not square. The
+  box is square now and centres the icon: 20px in `ds-banner`, 18px in `ds-alert`, `ds-toast` and
+  `ds-dropzone`, 24px in `ds-drawer` and `ds-modal-card`. The banner and dropzone buttons are 8px
+  narrower.
+
+- **The `ds-table` column filter button is a 24px target.** It was the 12px icon alone, so its focus
+  ring hugged the icon. The target grows around the icon without changing the header height; the
+  icon sits `--space-2` after the label instead of `--space-1`, so a filtered header's label clips
+  4px sooner. The button is at full opacity while focused.
+
+- **A `ds-table` cell link's focus ring clears the text.** It was drawn inward, over the first and
+  last letter; it is drawn around the text now.
+
 - **A tooltip and a `ds-menu-item` submenu close when anything under them scrolls.** Inside an
   `overflow: auto` container they stayed where they opened while their trigger scrolled away, a
   pinned tooltip included. They close now on a scroll of the window or of any scroll container, as

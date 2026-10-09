@@ -41,6 +41,8 @@
     :host(:where(:focus-visible)),
     :where(:focus-visible) {
       @include focus.ring;
+
+      border-radius: var(--focus-ring-radius);
     }
 
     @media (forced-colors: active) {

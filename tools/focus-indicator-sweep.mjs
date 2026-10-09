@@ -1,5 +1,6 @@
-// Does anything focusable in the docs site draw NO focus indicator, and does everything focusable
-// have an accessible name? A MEASUREMENT, not a gate — it needs the docs dev server, so it is run
+// Does anything focusable in the docs site draw NO focus indicator, does everything focusable
+// have an accessible name, and does each ring fit what it rings (an icon-only control's glyph in
+// the centre, 24x24, clear of its text)? A MEASUREMENT, not a gate — it needs the docs dev server, so it is run
 // by hand and its answer is recorded in docs/todo.md.
 //
 //   npm run dev:docs
@@ -228,6 +229,59 @@ window.__sweep = (() => {
       const el = document.querySelector('[data-sweep-id="' + id + '"]');
       return el ? signature(el) : null;
     },
+    // Read while the focus is forced: the ring box, how far an icon-only control's glyph sits off
+    // that box's centre, and how much room the ring leaves its text.
+    geometry(id) {
+      const el = document.querySelector('[data-sweep-id="' + id + '"]');
+      if (!el) return null;
+      const style = getComputedStyle(el);
+      const box = el.getBoundingClientRect();
+      const out = {
+        w: +box.width.toFixed(1),
+        h: +box.height.toFixed(1),
+        outlined: style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0,
+        outlineOffset: parseFloat(style.outlineOffset),
+        textGap: null,
+        glyphOffset: null,
+      };
+      // The ring's inner edge sits outline-offset outside the border box; a gap under 1px means
+      // the ring touches or covers the first or last glyph.
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      let left = Infinity;
+      let right = -Infinity;
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        if (!node.textContent.trim()) continue;
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        for (const rect of range.getClientRects()) {
+          left = Math.min(left, rect.left);
+          right = Math.max(right, rect.right);
+        }
+      }
+      // Clamped to the box: text an overflow hides is not under the ring.
+      if (left < right) {
+        const offset = parseFloat(style.outlineOffset);
+        out.textGap = +Math.min(
+          Math.max(left, box.left) - (box.left - offset),
+          box.right + offset - Math.min(right, box.right),
+        ).toFixed(1);
+      }
+      const svgs = el.querySelectorAll('svg');
+      if (svgs.length === 1 && !(el.textContent ?? '').trim() && el.matches('button, a, [role="button"]')) {
+        const svg = svgs[0];
+        const frame = svg.getBoundingClientRect();
+        const view = svg.viewBox.baseVal;
+        const scale = view && view.width ? frame.width / view.width : 1;
+        const bbox = svg.getBBox();
+        const cx = frame.x + (bbox.x - (view ? view.x : 0) + bbox.width / 2) * scale;
+        const cy = frame.y + (bbox.y - (view ? view.y : 0) + bbox.height / 2) * scale;
+        out.glyphOffset = {
+          dx: +(cx - (box.x + box.width / 2)).toFixed(1),
+          dy: +(cy - (box.y + box.height / 2)).toFixed(1),
+        };
+      }
+      return out;
+    },
     // The ring animates in from a TRANSPARENT outline-color, so a read at frame 0 sees
     // rgba(0,0,0,0) and scores a live indicator as a gap. Freezing is cheaper than a 500ms settle
     // per element, and the keyframe declares only its FROM value.
@@ -396,6 +450,7 @@ const sweep = async (url) => {
     const after = await evaluate(
       `JSON.stringify(window.__sweep.signature(${row.sweepId}))`,
     );
+    const geometry = await evaluate(`window.__sweep.geometry(${row.sweepId})`);
     await Promise.all([
       cdp('CSS.forcePseudoState', { nodeId, forcedPseudoClasses: [] }),
       ...ancestorIds.map((id) =>
@@ -432,6 +487,7 @@ const sweep = async (url) => {
           ? 'ringed-at-rest'
           : 'no-indicator';
       })(),
+      geometry,
       changes: changes.slice(0, 6),
       resting:
         classify(changes) === 'no-indicator'
@@ -512,6 +568,58 @@ for (const row of unnamed) {
     `  ${(row.component ?? '(docs)').padEnd(22)} ${row.tag}.${row.classes || '—'} role=${row.axRole} at ${row.url}`,
   );
 }
+
+// Half a pixel is antialiasing; past it the glyph visibly leaves the middle of its ring.
+const offCentre = all.filter(
+  (r) =>
+    r.geometry?.glyphOffset &&
+    Math.max(
+      Math.abs(r.geometry.glyphOffset.dx),
+      Math.abs(r.geometry.glyphOffset.dy),
+    ) > 0.5,
+);
+// WCAG 2.5.8 also passes a smaller target with 24px of spacing, which this does not measure:
+// the list is where to look, not a list of failures.
+const small = all.filter(
+  (r) =>
+    !r.disabled &&
+    r.geometry?.glyphOffset &&
+    (r.geometry.w < 24 || r.geometry.h < 24),
+);
+const ringOnText = all.filter(
+  (r) =>
+    r.geometry?.outlined &&
+    r.geometry.textGap !== null &&
+    r.geometry.textGap < 1,
+);
+const listOnce = (rows, title, detail) => {
+  console.log(`\n-- ${rows.length} ${title} --`);
+  const seenRows = new Set();
+  for (const row of rows) {
+    const key = `${row.component ?? row.hostTag}|${row.tag}.${row.classes}`;
+    if (seenRows.has(key)) continue;
+    seenRows.add(key);
+    console.log(
+      `  ${(row.component ?? '(docs)').padEnd(22)} ${row.tag}.${row.classes || '-'} ${detail(row)} at ${row.url}`,
+    );
+  }
+};
+listOnce(
+  offCentre,
+  'icon-only control(s) with the glyph off the box centre',
+  (r) => `dx=${r.geometry.glyphOffset.dx} dy=${r.geometry.glyphOffset.dy}`,
+);
+listOnce(
+  small,
+  'icon-only control(s) under 24x24',
+  (r) => `${r.geometry.w}x${r.geometry.h}`,
+);
+listOnce(
+  ringOnText,
+  'ring(s) touching or covering their text',
+  (r) =>
+    `gap=${r.geometry.textGap}px outline-offset=${r.geometry.outlineOffset}px`,
+);
 
 socket.close();
 chrome.kill();
