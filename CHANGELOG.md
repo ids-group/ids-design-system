@@ -301,7 +301,7 @@
   and the `ds-sidenav-footer` search; the `ds-input` password toggle, the `ds-date-picker` calendar
   toggle, the `ds-description-item` copy button, the `ds-bar-chart` row toggle, the arrows of the
   `ds-table` width and column panels, an icon-only `ds-breadcrumbs` item and `ds-info-hint` took a
-  click only on their 14px to 22px box. Each keeps the size it is drawn at and takes the pointer
+  click only on their own box, under 24px on at least one side. Each keeps the size it is drawn at and takes the pointer
   over 24px around it; nothing around it moves. Its focus ring is drawn on the edge of that target,
   24px across, except on `ds-info-hint` and an icon-only breadcrumb, whose ring stays on the icon
   beside their text. Raising `--hit-xs` raises every one of these targets. The `ds-input` clear button shows its
