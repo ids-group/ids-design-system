@@ -67,6 +67,8 @@ const clipMinProperty = (index: number): string => `--_table-clip-min-${index}`;
 /** The text clip of a growing column in a table that scrolls anyway, without `minWidth`. */
 const FALLBACK_CLIP_TEXT_PX = 240;
 
+const CLIP_SPLIT_INTERVAL_MS = 330;
+
 interface ClipFit {
   readonly natural: number;
   readonly tableMinWidth: number;
@@ -1301,30 +1303,50 @@ export class TableComponent<T extends object> {
       }
     });
     // Splitting writes widths that resize the wrap's content, so it waits a frame and only for a
-    // changed inline size; splitting inside the callback loops the observer.
+    // changed inline size; splitting inside the callback loops the observer. During a resize it
+    // runs at most every CLIP_SPLIT_INTERVAL_MS, first and last width included: each split lays the
+    // whole table out once more.
     afterNextRender(() => {
       if (typeof ResizeObserver === 'undefined') {
         return;
       }
       const wrap = this.scrollWrap().nativeElement;
       let frame = 0;
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      let lastSplit = -Infinity;
+      let width = 0;
+      const split = () => {
+        frame = 0;
+        lastSplit = performance.now();
+        const table = wrap.querySelector('table');
+        if (
+          table &&
+          this.clipFit &&
+          Math.abs(width - this.clipFitWidth) >= 0.5
+        ) {
+          this.splitGrowingClips(table, width);
+        }
+      };
       const observer = new ResizeObserver(([entry]) => {
-        const width = entry.contentRect.width;
-        cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(() => {
-          const table = wrap.querySelector('table');
-          if (
-            table &&
-            this.clipFit &&
-            Math.abs(width - this.clipFitWidth) >= 0.5
-          ) {
-            this.splitGrowingClips(table, width);
-          }
-        });
+        width = entry.contentRect.width;
+        if (frame || timer !== undefined) {
+          return;
+        }
+        const wait = lastSplit + CLIP_SPLIT_INTERVAL_MS - performance.now();
+        if (wait <= 0) {
+          frame = requestAnimationFrame(split);
+
+          return;
+        }
+        timer = setTimeout(() => {
+          timer = undefined;
+          frame = requestAnimationFrame(split);
+        }, wait);
       });
       observer.observe(wrap);
       this.destroyRef.onDestroy(() => {
         cancelAnimationFrame(frame);
+        clearTimeout(timer);
         observer.disconnect();
       });
     });
