@@ -14,12 +14,11 @@
   `prefers-reduced-motion` every one of them lands at once.
 - **The hovered mark answers.** A hovered or focused column, bar, waterfall step and heatmap cell
   brightens (`filter: brightness(1.12) saturate(1.1)`), and a hovered pie slice slides 3 units of the
-  100-unit ring out along its middle, past the ring's box. A pin pops in, and the tooltip's rows
-  fade in when the panel moves to another category or slice. `ChartComponent`,
+  100-unit ring out along its middle, past the ring's box. A pin pops in. The category band appears in place on the first
+  hover and glides only between categories. `ChartComponent`,
   `PieChartComponent`, `HeatmapChartComponent` and `ScatterChartComponent` gained members, named in
   the migration manifest; a subclass declaring one of those names must rename it.
-  The internal `ChartTooltipPanelComponent` gained `rowsKey` and `shownRows`, and the internal
-  `WaterfallMarksComponent` gained `leaveMark`.
+  The internal `WaterfallMarksComponent` gained `leaveMark`.
 
 ## 0.15.0 — 2026-10-09
 

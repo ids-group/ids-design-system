@@ -88,7 +88,10 @@
     var(--ds-motion-chart-tooltip-move-easing);
 }
 
+// No glide while entering: the enter reads styles before the band's `transform` binding lands, so the
+// transition would start the band at the plot's left edge.
 .cursor.cursor-in {
+  transition: none;
   animation: ds-chart-mark-fade-in var(--ds-motion-chart-state-duration)
     var(--ds-motion-chart-state-easing) both;
 }
