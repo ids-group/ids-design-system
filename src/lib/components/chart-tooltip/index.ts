@@ -22,5 +22,6 @@ export {
   ChartSkeletonComponent,
 } from './chart-skeleton.component';
 export type { ChartSkeletonMarks } from './chart-skeleton.component';
+export { ChartPlacedDirective } from './chart-placed.directive';
 export { ChartStatesComponent } from './chart-states.component';
 export type { ChartStatesMessageContext } from './chart-states.component';

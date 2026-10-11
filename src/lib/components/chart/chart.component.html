@@ -13,8 +13,7 @@
   [emptyText]="emptyTextResolved()"
   [skeleton]="skeleton"
   [body]="body"
-  (release)="releaseCursor()">
-</figure>
+  (release)="releaseCursor()"></figure>
 
 <ng-template #skeleton>
   <ds-chart-skeleton
@@ -74,6 +73,7 @@
         <g
           class="cursor"
           aria-hidden="true"
+          dsChartPlaced
           animate.enter="cursor-in"
           animate.leave="cursor-out"
           [style.transform]="'translateX(' + band.x + 'px)'">
@@ -271,11 +271,11 @@
       @if (cursorPinned() && cursorBand(); as band) {
         <g
           class="band-pin"
+          dsChartPlaced
           [style.transform]="'translateX(' + (band.x + band.width / 2) + 'px)'">
           <g
             dsChartPinMarker
-            [attr.transform]="'translate(0,' + bandPinY() + ')'">
-          </g>
+            [attr.transform]="'translate(0,' + bandPinY() + ')'"></g>
         </g>
       }
     </svg>
