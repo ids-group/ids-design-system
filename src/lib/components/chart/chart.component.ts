@@ -200,14 +200,21 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     () => this.measuredWidth() || CHART_FALLBACK_WIDTH,
   );
 
-  /** Whether the marks may animate: the correction after measuring must not. Two frames, because
+  private readonly settledWidth = signal(0);
+
+  /** Whether the marks may animate: the correction after measuring and every resize must not. Derived
+   *  from the width, so the hold lands in the same render as the new geometry. Two frames, because
    *  after one the corrected geometry is unstyled and `transitionrun` fires on `x` and `width`. */
-  protected readonly settled = signal(false);
+  protected readonly settled = computed(
+    () =>
+      this.measuredWidth() > 0 && this.measuredWidth() === this.settledWidth(),
+  );
 
   constructor() {
     super();
     effect((onCleanup) => {
-      if (this.settled() || this.measuredWidth() === 0) {
+      const width = this.measuredWidth();
+      if (width === 0 || width === this.settledWidth()) {
         return;
       }
       let first = 0;
@@ -215,7 +222,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       // Outside the zone: under zone.js each frame callback is a full application tick.
       this.zone.runOutsideAngular(() => {
         first = requestAnimationFrame(() => {
-          second = requestAnimationFrame(() => this.settled.set(true));
+          second = requestAnimationFrame(() => this.settledWidth.set(width));
         });
       });
       onCleanup(() => {
