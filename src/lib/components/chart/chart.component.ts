@@ -267,6 +267,16 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       },
     });
 
+    // The readings and the scales change with the data, so a held pin follows its category's new geometry.
+    afterRenderEffect({
+      read: () => {
+        this.tooltipContext();
+        this.yPosition();
+        this.secondaryYPosition();
+        this.bandPinY.set(this.measureBandPinY());
+      },
+    });
+
     afterRenderEffect({
       read: () => {
         const origin = this.tooltipOrigin();
@@ -715,7 +725,11 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   /** Under the panel: it opens over the tallest reading, so the disc sits at that reading's head -
    *  inside a column, below a marker, and over a column too short to hold it. */
-  protected readonly bandPinY = computed(() => {
+  protected readonly bandPinY = signal(0);
+
+  // Read from the marks' bound geometry, not their boxes: after a data change the boxes are mid-glide,
+  // and the pin glides to where the reading lands.
+  private measureBandPinY(): number {
     const band = this.cursorBand();
     const inset = CHART_PIN_RADIUS + CHART_PIN_GAP;
     const origin = this.tooltipOrigin();
@@ -723,24 +737,19 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     if (!band || !canvas || !(origin instanceof Element)) {
       return (band?.top ?? 0) + inset;
     }
-    const frame = canvas.getBoundingClientRect();
-    const scale = frame.height > 0 ? this.viewHeight() / frame.height : 1;
-    const head = origin.getBoundingClientRect();
-    const top = (head.top - frame.top) * scale;
-    const height = head.height * scale;
+    const { top, height } = landedExtent(origin, canvas, this.viewHeight());
     if (height >= 2 * inset) {
       return top + inset;
     }
     if (!origin.matches('.bar')) {
       return top + height + inset;
     }
-    const value = origin.parentElement?.querySelector(':scope > .value');
-    const valueTop = value
-      ? (value.getBoundingClientRect().top - frame.top) * scale
-      : top;
+    const value =
+      origin.parentElement?.querySelector<SVGTextElement>(':scope > .value');
+    const valueTop = value ? landedTextTop(value) : top;
 
     return Math.min(top, valueTop) - inset;
-  });
+  }
 
   /** How far a held pin sits above the panel's anchor; the panel rises by as much to stay over it. */
   private readonly pinRise = signal(0);
@@ -1195,4 +1204,39 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   protected readonly accessibleName = computed(
     () => this.summary() ?? this.caption() ?? this.intl().chart.title,
   );
+}
+
+function boundNumber(element: Element, name: string): number {
+  return parseFloat(element.getAttribute(name) ?? '') || 0;
+}
+
+/** Top and height in view units of where `origin` lands: a column's cap and a marker by their bound
+ *  attributes, anything else by its box. */
+function landedExtent(
+  origin: Element,
+  canvas: SVGSVGElement,
+  viewHeight: number,
+): { top: number; height: number } {
+  const cap = origin.matches('.bar') ? origin.querySelector('.bar-cap') : null;
+  if (cap) {
+    return { top: boundNumber(cap, 'y'), height: boundNumber(cap, 'height') };
+  }
+  if (origin instanceof SVGCircleElement) {
+    const radius = parseFloat(getComputedStyle(origin).r) || 0;
+
+    return { top: boundNumber(origin, 'cy') - radius, height: 2 * radius };
+  }
+  const frame = canvas.getBoundingClientRect();
+  const scale = frame.height > 0 ? viewHeight / frame.height : 1;
+  const box = origin.getBoundingClientRect();
+
+  return { top: (box.top - frame.top) * scale, height: box.height * scale };
+}
+
+// The label is placed by `--_column-value-y` (its baseline); `getBBox` is in its own space, so its `y` is the ascent.
+function landedTextTop(label: SVGTextElement): number {
+  const baseline =
+    parseFloat(label.style.getPropertyValue('--_column-value-y')) || 0;
+
+  return baseline + label.getBBox().y;
 }

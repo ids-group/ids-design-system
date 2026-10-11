@@ -267,12 +267,15 @@
         <ng-content select="[dsReferenceLabel], [dsSeriesAnnotation]" />
       </g>
 
+      <!-- Across with the band, down with the data: the two move on different timings. -->
       @if (cursorPinned() && cursorBand(); as band) {
         <g
-          dsChartPinMarker
-          [attr.transform]="
-            'translate(' + (band.x + band.width / 2) + ',' + bandPinY() + ')'
-          ">
+          class="band-pin"
+          [style.transform]="'translateX(' + (band.x + band.width / 2) + 'px)'">
+          <g
+            dsChartPinMarker
+            [attr.transform]="'translate(0,' + bandPinY() + ')'">
+          </g>
         </g>
       }
     </svg>

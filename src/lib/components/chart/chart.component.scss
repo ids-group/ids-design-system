@@ -77,9 +77,9 @@
 
 @include chart-frame.forced-colors;
 
-// With the panel, not the marks: the band, its pin and the panel move as one.
+// With the panel, not the marks: the band, its pin and the panel move across as one.
 .cursor,
-.canvas > .pin-marker {
+.band-pin {
   transition: transform var(--ds-motion-chart-tooltip-move-duration)
     var(--ds-motion-chart-tooltip-move-easing);
 }
