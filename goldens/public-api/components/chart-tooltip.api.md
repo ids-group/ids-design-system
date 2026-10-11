@@ -39,6 +39,12 @@ export class ChartPinMarkerComponent {
 }
 
 // @internal
+@Directive({ selector: '[dsChartPlaced]' })
+export class ChartPlacedDirective {
+    public constructor();
+}
+
+// @internal
 @Component({ selector: 'ds-chart-skeleton' })
 export class ChartSkeletonComponent {
     public readonly axisGutter = input.required<number>();

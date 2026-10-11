@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { ICONS } from '@ids-group-ltd/ids-design-system/core';
+import { ChartPlacedDirective } from './chart-placed.directive';
 
 /** Radius of the pin disc, in plot pixels.
  *
@@ -30,6 +31,7 @@ const GLYPH_SIZE = 14;
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[dsChartPinMarker]',
   standalone: true,
+  hostDirectives: [ChartPlacedDirective],
   template: `
     <svg:g class="pin-body">
       <svg:circle class="pin-disc" [attr.r]="radius" />
@@ -52,6 +54,9 @@ const GLYPH_SIZE = 14;
   styles: `
     :host {
       pointer-events: none;
+    }
+
+    :host(.placed) {
       transition: transform var(--ds-motion-chart-mark-duration)
         var(--ds-motion-chart-mark-easing);
     }
