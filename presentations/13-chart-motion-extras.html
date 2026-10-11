@@ -44,8 +44,7 @@
   .demo .enter-settle { transform-box: fill-box; transform-origin: center; animation: enter-settle var(--ds-motion-chart-mark-grow-duration) var(--ds-motion-chart-mark-grow-easing) both; }
   @keyframes enter-fade { from { opacity: 0; } }
   @keyframes enter-settle { from { scale: 0; opacity: 0; } }
-  .demo .skeleton-col { fill: var(--surface-muted); animation: shimmer 1.2s ease-in-out infinite alternate; }
-  @keyframes shimmer { to { opacity: 0.45; } }
+  .demo .skeleton-axis { fill: none; stroke: var(--chart-axis-line-color); }
   .demo .stage-fade { transition: opacity var(--ds-motion-chart-mark-enter-duration) var(--ds-motion-chart-mark-enter-easing); }
   .demo .focus-ring { fill: none; stroke: var(--focus-ring-color); stroke-width: 2; rx: 4; transition: x var(--ds-motion-chart-tooltip-move-duration) var(--ds-motion-chart-tooltip-move-easing), opacity var(--ds-motion-chart-state-duration); }
   .demo svg:focus-visible { outline: none; }
@@ -152,9 +151,9 @@
       <article class="opt" tabindex="0" data-key="skeleton">
         <span class="badge is-pick">загрузка</span>
         <h3>Скелетон переходит в график</h3>
-        <div class="demo" data-demo="skeleton"><p class="hint">Нажми «Загрузить»: в скелетоне 4, в данных 5</p></div>
+        <div class="demo" data-demo="skeleton"><p class="hint">Нажми «Загрузить»: <code>skeletonCount</code> 4, в данных 5</p></div>
         <div class="pills"><span class="pill good">нет вспышки при замене</span><span class="pill good">плейсхолдер становится колонкой</span></div>
-        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">все графики: плейсхолдеры встают на места и высоты колонок с тем же номером, затем окрашиваются; колонки без плейсхолдера растут из базовой линии, лишние плейсхолдеры опускаются</dd></dl>
+        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">все графики: одним движением плейсхолдеры встают на места и высоты колонок с тем же номером и окрашиваются, колонки без плейсхолдера растут из базовой линии, лишние опускаются; плашки делений и категорий сменяются подписями</dd></dl>
         <span class="state-mark"></span>
       </article>
 
@@ -424,44 +423,50 @@
       svg.addEventListener('pointerleave', () => set(-1));
     },
     skeleton(host) {
-      const W = 300, H = 150, L = 20, R = 290, B = 130, T = 15;
+      const W = 300, H = 160, L = 34, R = 290, T = 12, B = 128;
       const svg = svgIn(host, W, H, 'Orders by month');
-      const placeholders = [0.5, 0.7, 0.6, 0.8], values = [62, 71, 68, 84, 96];
-      const GROW = ms('--ds-motion-chart-mark-grow-duration', 600), FADE = ms('--ds-motion-chart-mark-enter-duration', 400);
-      const box = (count, i, share) => { const slot = (R - L) / count, w = slot * 0.5; return [L + slot * i + (slot - w) / 2, w, share * (B - T)]; };
-      const setBox = (rect, [x, w, h]) => { rect.setAttribute('x', x); rect.setAttribute('width', w); rect.setAttribute('y', B - h); rect.setAttribute('height', h); };
-      let rects = [], run = 0, timer = 0;
+      const placeholders = [0.45, 0.62, 0.52, 0.75], values = [62, 71, 68, 84, 96], cats = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+      const GROW = ms('--ds-motion-chart-mark-grow-duration', 600);
+      const defs = el('defs', {}, svg);
+      const wave = el('linearGradient', { id: 'skeleton-wave', gradientUnits: 'userSpaceOnUse', x1: 0, y1: 0, x2: W, y2: 0 }, defs);
+      [[0, 'secondary'], [0.4, 'secondary'], [0.5, 'muted'], [0.6, 'secondary'], [1, 'secondary']].forEach(([offset, tone]) => { el('stop', { offset, style: `stop-color: var(--surface-${tone})` }, wave); });
+      if (!reduced) el('animateTransform', { attributeName: 'gradientTransform', type: 'translate', from: `${-W} 0`, to: `${W} 0`, dur: '1.8s', repeatCount: 'indefinite' }, wave);
+      el('path', { class: 'skeleton-axis', d: `M${L} ${T} V${B} H${R}` }, svg);
+      const stage = el('g', {}, svg);
+      const box = (count, i, share) => { const slot = (R - L) / count, w = slot * 0.5; return [L + slot * i + (slot - w) / 2, w, share * (B - T), 1]; };
+      const setBox = (rect, [x, w, h, alpha]) => { rect.setAttribute('x', x); rect.setAttribute('width', w); rect.setAttribute('y', B - h); rect.setAttribute('height', h); rect.setAttribute('opacity', alpha); };
+      const centre = (count, i) => L + ((R - L) / count) * (i + 0.5);
+      const pill = (x, y, width) => el('rect', { x: x - width / 2, y: y - 3, width, height: 6, rx: 3, fill: 'url(#skeleton-wave)' }, stage);
+      let run = 0, timer = 0, bars = [], catPills = [], tickPills = [];
       const draw = () => {
-        run++; clearTimeout(timer); svg.replaceChildren();
-        rects = placeholders.map((share, i) => { const rect = el('rect', { class: 'skeleton-col', rx: 2 }, svg); setBox(rect, box(placeholders.length, i, share)); return rect; });
+        run++; clearTimeout(timer); stage.replaceChildren();
+        tickPills = [0, 0.25, 0.5, 0.75, 1].map((k) => pill(L - 14, B - k * (B - T), 16));
+        bars = placeholders.map((share, i) => { const rect = el('rect', { rx: 2, fill: 'url(#skeleton-wave)' }, stage); setBox(rect, box(placeholders.length, i, share)); return rect; });
+        catPills = placeholders.map((share, i) => pill(centre(placeholders.length, i), B + 13, 22));
       };
       const load = () => {
-        const mine = run;
-        const from = rects.map((rect, i) => box(placeholders.length, i, placeholders[i]));
-        rects.forEach((rect) => {
-          rect.style.opacity = getComputedStyle(rect).opacity;
-          rect.style.fill = 'var(--surface-muted)';
-          rect.classList.remove('skeleton-col');
-          rect.getBoundingClientRect();
-          rect.style.transition = `opacity ${FADE}ms, fill ${FADE}ms`;
-          rect.style.opacity = 1;
+        const mine = run, count = values.length, from = placeholders.map((share, i) => box(placeholders.length, i, share));
+        const fade = (node, to) => { const start = Number(node.getAttribute('opacity') ?? 1); tween(start, to, GROW, (a) => mine === run && node.setAttribute('opacity', a)); };
+        const label = (x, y, text, anchor) => { const node = el('text', { class: anchor ? 'tick' : 'cat', x, y, opacity: 0, ...(anchor ? { dy: '0.32em', 'text-anchor': anchor } : {}) }, stage); node.textContent = text; fade(node, 1); };
+        tickPills.forEach((node) => fade(node, 0));
+        [0, 25, 50, 75, 100].forEach((v) => label(L - 6, B - (v / 100) * (B - T), v, 'end'));
+        catPills.forEach((node, i) => { const width = 22, start = centre(placeholders.length, i), end = centre(count, Math.min(i, count - 1)); tween([start, 1], [end, 0], GROW, ([x, a]) => { if (mine !== run) return; node.setAttribute('x', x - width / 2); node.setAttribute('opacity', a); }); });
+        cats.forEach((name, i) => label(centre(count, i), B + 16, name));
+        bars.forEach((rect, i) => {
+          if (i >= count) { tween(from[i], [from[i][0], from[i][1], 0, 0], GROW, (b) => mine === run && setBox(rect, b)); return; }
+          const colour = el('rect', { rx: 2, fill: C(i + 1) }, stage);
+          const to = box(count, i, values[i] / 100);
+          tween(from[i], [...to.slice(0, 3), 0], GROW, (b) => mine === run && setBox(rect, b));
+          tween([...from[i].slice(0, 3), 0], to, GROW, (b) => mine === run && setBox(colour, b));
         });
-        rects.forEach((rect, i) => {
-          const to = i < values.length ? box(values.length, i, values[i] / 100) : [from[i][0], from[i][1], 0];
-          tween(from[i], to, GROW, (b) => mine === run && setBox(rect, b));
+        values.slice(bars.length).forEach((v, k) => {
+          const i = bars.length + k, rect = el('rect', { rx: 2, fill: C(i + 1) }, stage);
+          tween(box(count, i, 0), box(count, i, v / 100), GROW, (b) => mine === run && setBox(rect, b));
         });
-        timer = setTimeout(() => {
-          if (mine !== run) return;
-          rects.forEach((rect, i) => (i < values.length ? (rect.style.fill = C(i + 1)) : rect.remove()));
-          values.slice(rects.length).forEach((v, k) => {
-            const i = rects.length + k, rect = el('rect', { rx: 2, fill: C(i + 1) }, svg);
-            tween(box(values.length, i, 0), box(values.length, i, v / 100), GROW, (b) => mine === run && setBox(rect, b));
-          });
-        }, GROW);
       };
       draw();
       const actions = document.createElement('div'); actions.className = 'chips-row'; host.append(actions);
-      button(actions, 'Загрузить').addEventListener('click', (e) => { e.stopPropagation(); draw(); timer = setTimeout(load, 700); });
+      button(actions, 'Загрузить').addEventListener('click', (e) => { e.stopPropagation(); draw(); timer = setTimeout(load, 900); });
     },
     stagger(host) {
       const svg = svgIn(host, 300, 150, 'Points and cells entering');
