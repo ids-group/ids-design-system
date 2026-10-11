@@ -70,7 +70,6 @@
   .demo .leak-value { fill: var(--error-text); font: var(--font-weight-bold) 10px / 1 var(--font-sans); text-anchor: middle; pointer-events: none; }
   .demo .stage { transition: filter var(--ds-motion-chart-state-duration); }
   .demo .stage.is-hot { filter: brightness(1.12) saturate(1.1); }
-  .demo .has-cross .cell:not(.in-cross) { opacity: 0.35; }
   .demo .tick.is-hot { fill: var(--text-primary); font-weight: var(--font-weight-bold); }
   .demo .change-seg { stroke-width: 4; stroke-linecap: round; pointer-events: none; transition: opacity var(--ds-motion-chart-state-duration); }
   .demo .change-value { font: var(--font-weight-bold) 10px / 1 var(--font-sans); text-anchor: middle; pointer-events: none; transition: opacity var(--ds-motion-chart-state-duration); }
@@ -114,7 +113,7 @@
 <body>
 <main>
   <header class="masthead">
-    <h1>Шестнадцать дополнений к движению и наведению графиков</h1>
+    <h1>Пятнадцать дополнений к движению и наведению графиков</h1>
     <p class="lede">Одно решение: какие дополнения строить. Все включены; клик по карточке вне примера снимает дополнение. В деке <code>chart-motion</code> выбран «Синхрон и отклик»; дополнения строятся поверх него, и образцы уже показывают этот уровень: наведённая колонка подсвечивается, сектор pie выдвигается, линия и сетка движутся вместе с колонками.</p>
     <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">актуально на 2026-10-11</span></div>
   </header>
@@ -248,15 +247,6 @@
         <span class="state-mark"></span>
       </article>
 
-      <article class="opt" tabindex="0" data-key="heat-cross">
-        <span class="badge is-pick">heatmap</span>
-        <h3>Строка и столбец ячейки heatmap</h3>
-        <div class="demo" data-demo="cross"><p class="hint">Наведи на ячейку</p></div>
-        <div class="pills"><span class="pill good">день и час находятся сразу</span><span class="pill good">видно ряд целиком</span></div>
-        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">ds-heatmap-chart: подписи строки и столбца наведённой ячейки жирные, ячейки вне этого креста приглушаются</dd></dl>
-        <span class="state-mark"></span>
-      </article>
-
       <article class="opt" tabindex="0" data-key="line-change">
         <span class="badge is-pick">линия</span>
         <h3>Изменение к прошлой точке</h3>
@@ -292,7 +282,7 @@
   </section>
 
   <section class="panel good">
-    <h2>Рекомендую: все шестнадцать</h2>
+    <h2>Рекомендую: все пятнадцать</h2>
     <p>Каждое дополнение либо отвечает на действие, либо показывает, что изменилось, и ни одно не задерживает чтение числа. Постоянного движения нет, кроме мерцания скелетона: всё запускается действием и выключается при reduced-motion.</p>
   </section>
 
@@ -301,15 +291,15 @@
     <table>
       <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
       <tbody>
-        <tr class="row-pick"><th class="rowlabel">Какие дополнения строить поверх выбранного объёма</th><td>любое подмножество из шестнадцати</td><td>все шестнадцать</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Какие дополнения строить поверх выбранного объёма</th><td>любое подмножество из пятнадцати</td><td>все пятнадцать</td></tr>
       </tbody>
     </table>
   </section>
 
-  <p class="src"><b>Источники, проверено 2026-10-11 на <code>dev</code>.</b> Сегодня в библиотеке нет ни одного из шестнадцати: подписи категорий ds-chart не меняются при наведении и плашки значения на оси нет; центр ds-pie-chart показывает только итог; скрытая в легенде серия гаснет (<code>animate.leave</code>, только opacity); шкала ds-heatmap-chart отвечает только на наведение на ступень, метки значения на ней нет; у точек scatter нет правила <code>.is-active</code>; scatter реагирует только на точное попадание в точку и не имеет <code>staggerMs</code>; у точки линии при наведении растёт только <code>r</code>; скелетон заменяется графиком без перехода; кольцо фокуса стоит на атрибутах без перехода; колонки трекаются по ключу, но меняют позицию <code>x</code> без перехода. Для шести новых проверено в <code>src/lib/components/</code>: перетаскивания по оси нет (<code>pointerdown</code> в <code>chart.component.ts</code> и <code>chart-active-mark.ts</code> только закрепляет и снимает пин, <code>brush</code>, <code>drag</code>, <code>lasso</code> не встречаются); разницы между двумя метками нет (<code>delta</code> в <code>chart-tooltip.directive.ts</code> - сдвиг панели, <code>compare</code> в <code>chart.component.ts</code> - сравнение по значению); отсев воронки есть только числом (<code>stageDrops</code>, колонка Drop и <code>fellAway</code> в tooltip), нарисованной ушедшей части нет; накопленный итог waterfall есть только в tooltip и таблице (<code>formattedRunningTotal</code>), приглушение у колонок только по серии (<code>dimmedBySeries</code>); у подписей строк и столбцов heatmap нет класса от наведения (<code>.row-label</code>, <code>.column-label</code>); у линии нет изменения к предыдущей точке (<code>previous</code>, <code>change</code> в <code>line-chart</code> и <code>line-series</code> не встречаются). Уже есть и поэтому не предложено: подсветка серии при наведении на легенду (<code>highlighted</code> в <code>chart-legend</code>, <code>legendHighlight</code> в ds-pie-chart), выдвижение сектора при наведении на строку легенды pie (<code>onLegendEnter</code> → <code>activeMark.enter</code>), режим легенды <code>isolate</code>. Скелетоны сняты с шаблонов: <code>ds-chart-skeleton</code> (<code>columns</code>, <code>line</code>, <code>steps</code>), <code>charts-skeleton.ts</code> (высоты колонок, линии и шагов, трапеции воронки), шаблоны ds-pie-chart, ds-funnel-chart, ds-heatmap-chart, ds-scatter-chart и ds-bar-chart (3 строки, пока данных нет); при перезагрузке с данными скелетона нет, график стоит под <code>ds-loading-overlay</code> (CHANGELOG, Unreleased). Что из этого покрывает «Синхрон и отклик», не повторяется здесь: подсветка наведённой колонки, бара и ячейки, выдвижение сектора, полоса курсора вместе с панелью. <b>Образцы</b> - маленькие графики на SVG и JS, длительности и кривые из токенов <code>ds.css</code> (<code>--ds-motion-chart-*</code>); это модель поведения, а не код библиотеки. При <code>prefers-reduced-motion</code> все анимации в образцах выключены.</p>
+  <p class="src"><b>Источники, проверено 2026-10-11 на <code>dev</code>.</b> Сегодня в библиотеке нет ни одного из пятнадцати: подписи категорий ds-chart не меняются при наведении и плашки значения на оси нет; центр ds-pie-chart показывает только итог; скрытая в легенде серия гаснет (<code>animate.leave</code>, только opacity); шкала ds-heatmap-chart отвечает только на наведение на ступень, метки значения на ней нет; у точек scatter нет правила <code>.is-active</code>; scatter реагирует только на точное попадание в точку и не имеет <code>staggerMs</code>; у точки линии при наведении растёт только <code>r</code>; скелетон заменяется графиком без перехода; кольцо фокуса стоит на атрибутах без перехода; колонки трекаются по ключу, но меняют позицию <code>x</code> без перехода. Для пяти новых проверено в <code>src/lib/components/</code>: перетаскивания по оси нет (<code>pointerdown</code> в <code>chart.component.ts</code> и <code>chart-active-mark.ts</code> только закрепляет и снимает пин, <code>brush</code>, <code>drag</code>, <code>lasso</code> не встречаются); разницы между двумя метками нет (<code>delta</code> в <code>chart-tooltip.directive.ts</code> - сдвиг панели, <code>compare</code> в <code>chart.component.ts</code> - сравнение по значению); отсев воронки есть только числом (<code>stageDrops</code>, колонка Drop и <code>fellAway</code> в tooltip), нарисованной ушедшей части нет; накопленный итог waterfall есть только в tooltip и таблице (<code>formattedRunningTotal</code>), приглушение у колонок только по серии (<code>dimmedBySeries</code>); у линии нет изменения к предыдущей точке (<code>previous</code>, <code>change</code> в <code>line-chart</code> и <code>line-series</code> не встречаются). Уже есть и поэтому не предложено: подсветка серии при наведении на легенду (<code>highlighted</code> в <code>chart-legend</code>, <code>legendHighlight</code> в ds-pie-chart), выдвижение сектора при наведении на строку легенды pie (<code>onLegendEnter</code> → <code>activeMark.enter</code>), режим легенды <code>isolate</code>. Скелетоны сняты с шаблонов: <code>ds-chart-skeleton</code> (<code>columns</code>, <code>line</code>, <code>steps</code>), <code>charts-skeleton.ts</code> (высоты колонок, линии и шагов, трапеции воронки), шаблоны ds-pie-chart, ds-funnel-chart, ds-heatmap-chart, ds-scatter-chart и ds-bar-chart (3 строки, пока данных нет); при перезагрузке с данными скелетона нет, график стоит под <code>ds-loading-overlay</code> (CHANGELOG, Unreleased). Что из этого покрывает «Синхрон и отклик», не повторяется здесь: подсветка наведённой колонки, бара и ячейки, выдвижение сектора, полоса курсора вместе с панелью. <b>Образцы</b> - маленькие графики на SVG и JS, длительности и кривые из токенов <code>ds.css</code> (<code>--ds-motion-chart-*</code>); это модель поведения, а не код библиотеки. При <code>prefers-reduced-motion</code> все анимации в образцах выключены.</p>
 
   <div class="bar-fixed">
-    <span class="count" id="count">16 из 16</span>
+    <span class="count" id="count">15 из 15</span>
     <output id="line"></output>
     <button type="button" id="copy">Скопировать</button>
     <button type="button" id="reset">Вернуть все</button>
@@ -760,25 +750,6 @@
       };
       svg.addEventListener('pointermove', (e) => { const b = svg.getBoundingClientRect(); const i = Math.floor((((e.clientX - b.left) / b.width) * W - L) / slot); set(i >= 0 && i < steps.length ? i : -1); });
       svg.addEventListener('pointerleave', () => set(-1));
-    },
-    cross(host) {
-      const svg = svgIn(host, 300, 160, 'Load by weekday and hour');
-      const g = el('g', {}, svg);
-      const rows = 5, colsN = 8, cw = 30, ch = 24, x0 = 40, y0 = 20;
-      const rowLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((d, r) => { const t = el('text', { class: 'tick', x: x0 - 6, y: y0 + r * ch + ch / 2, dy: '0.32em', 'text-anchor': 'end' }, svg); t.textContent = d; return t; });
-      const colLabels = Array.from({ length: colsN }, (_, c) => { const t = el('text', { class: 'cat', x: x0 + c * cw + (cw - 2) / 2, y: y0 - 7 }, svg); t.textContent = 9 + c; return t; });
-      const cells = [];
-      for (let r = 0; r < rows; r++) for (let c = 0; c < colsN; c++) {
-        const cell = el('rect', { class: 'cell', x: x0 + c * cw, y: y0 + r * ch, width: cw - 2, height: ch - 2, rx: 2, fill: `var(--chart-heat-${1 + ((r * 3 + c * 5 + (r * c) % 4) % 7)})` }, g);
-        cells.push({ cell, r, c });
-        cell.addEventListener('pointerenter', () => {
-          g.classList.add('has-cross');
-          cells.forEach((item) => item.cell.classList.toggle('in-cross', item.r === r || item.c === c));
-          rowLabels.forEach((t, k) => t.classList.toggle('is-hot', k === r));
-          colLabels.forEach((t, k) => t.classList.toggle('is-hot', k === c));
-        });
-      }
-      svg.addEventListener('pointerleave', () => { g.classList.remove('has-cross'); [...rowLabels, ...colLabels].forEach((t) => t.classList.remove('is-hot')); });
     },
     change(host) {
       const W = 300, H = 150, L = 20, R = 290, T = 26, B = 130;
