@@ -41,7 +41,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     protected readonly axisTitleX = computed(…);
     private bandAt;
     private readonly bandElement;
-    protected readonly bandPinY = computed(…);
+    protected readonly bandPinY = signal(…);
     protected readonly bandPins = computed(…);
     public readonly bandWidth = computed(…);
     private readonly bands;
@@ -87,6 +87,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     private listenForEscapeFromMarker;
     public readonly max = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
     public readonly maxSecondary = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
+    private measureBandPinY;
     public readonly measured = computed(…);
     private readonly measuredCategoryLabelWidth;
     private readonly measuredLabelWidth;
