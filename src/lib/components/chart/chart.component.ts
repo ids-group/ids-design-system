@@ -291,17 +291,33 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       },
     });
 
+    // Where the pin and the anchor land, not their boxes: a pin moving to another mark is mid-glide here.
     afterRenderEffect({
       read: () => {
+        this.tooltipContext();
+        this.bandPinY();
         const origin = this.tooltipOrigin();
+        const canvas = this.canvasElement()?.nativeElement;
         const pin = this.tooltipPinned()
           ? this.host.nativeElement.querySelector('[dschartpinmarker]')
           : null;
+        const viewHeight = this.viewHeight();
+        if (
+          !(origin instanceof Element) ||
+          !pin ||
+          !canvas ||
+          viewHeight <= 0
+        ) {
+          this.pinRise.set(0);
+
+          return;
+        }
+        const pixelsPerUnit =
+          canvas.getBoundingClientRect().height / viewHeight;
+        const pinTop = landedTranslateY(pin) - CHART_PIN_RADIUS;
         const rise =
-          origin instanceof Element && pin
-            ? origin.getBoundingClientRect().top -
-              pin.getBoundingClientRect().top
-            : 0;
+          (landedExtent(origin, canvas, viewHeight).top - pinTop) *
+          pixelsPerUnit;
         this.pinRise.set(Math.max(0, Math.round(rise)));
       },
     });
@@ -1218,6 +1234,15 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   protected readonly accessibleName = computed(
     () => this.summary() ?? this.caption() ?? this.intl().chart.title,
   );
+}
+
+// A pin's `transform` attribute is where it lands; its computed transform is mid-glide.
+function landedTranslateY(element: Element): number {
+  const match = /translate\(\s*[-\d.e]+[\s,]+([-\d.e]+)/.exec(
+    element.getAttribute('transform') ?? '',
+  );
+
+  return match ? parseFloat(match[1]) : 0;
 }
 
 function boundNumber(element: Element, name: string): number {
