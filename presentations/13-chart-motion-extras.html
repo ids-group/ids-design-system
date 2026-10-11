@@ -42,6 +42,7 @@
   .demo .point { transition: r var(--ds-motion-chart-state-duration), opacity var(--ds-motion-chart-state-duration); }
   .demo .scatter.has-hot .point:not(.is-hot) { opacity: 0.35; }
   .demo .point.is-hot { r: 6; }
+  .demo .point-tether { stroke: var(--chart-cursor-line-color); stroke-width: 1; stroke-dasharray: 3 3; pointer-events: none; transition: opacity var(--ds-motion-chart-state-duration); }
   .demo .point-ring { fill: none; stroke: var(--text-primary); stroke-width: 1.5; pointer-events: none; transition: cx var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing), cy var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing); }
   .demo .enter-fade { animation: enter-fade var(--ds-motion-chart-mark-enter-duration) var(--ds-motion-chart-mark-enter-easing) both; }
   .demo .enter-settle { transform-box: fill-box; transform-origin: center; animation: enter-settle var(--ds-motion-chart-mark-grow-duration) var(--ds-motion-chart-mark-grow-easing) both; }
@@ -137,8 +138,8 @@
         <span class="badge is-pick">scatter</span>
         <h3>Ближайшая точка в scatter</h3>
         <div class="demo" data-demo="scatter"><p class="hint">Веди курсор по полю</p></div>
-        <div class="pills"><span class="pill good">не нужно целиться в 3px</span><span class="pill good">кольцо плывёт к точке</span></div>
-        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">ds-scatter-chart: наведение на ближайшую к курсору точку, остальные приглушаются</dd></dl>
+        <div class="pills"><span class="pill good">не нужно целиться в 3px</span><span class="pill good">кольцо плывёт к точке</span><span class="pill good">пунктир от курсора к точке</span></div>
+        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">ds-scatter-chart: наведение на ближайшую к курсору точку, остальные приглушаются; пунктир от курсора показывает, какая точка выбрана</dd></dl>
         <span class="state-mark"></span>
       </article>
 
@@ -386,6 +387,8 @@
       let seed = 7; const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
       const points = Array.from({ length: 36 }, (_, i) => ({ x: 25 + rnd() * 260, y: 15 + rnd() * 140, s: i % 3 }));
       const dots = points.map((p) => el('circle', { class: 'point', cx: p.x, cy: p.y, r: 3.5, fill: C(p.s + 1) }, g));
+      const tether = el('line', { class: 'point-tether', opacity: 0 }, svg);
+      let follow = 0;
       const ring = el('circle', { class: 'point-ring', r: 9, opacity: 0 }, svg);
       svg.addEventListener('pointermove', (e) => {
         const b = svg.getBoundingClientRect();
@@ -394,9 +397,15 @@
         points.forEach((p, i) => { const d = (p.x - x) ** 2 + (p.y - y) ** 2; if (d < dist) { dist = d; best = i; } });
         g.classList.add('has-hot');
         dots.forEach((d, i) => d.classList.toggle('is-hot', i === best));
+        const appearing = ring.getAttribute('opacity') === '0';
+        if (appearing) ring.style.transition = 'none';
         ring.setAttribute('cx', points[best].x); ring.setAttribute('cy', points[best].y); ring.setAttribute('opacity', 1);
+        if (appearing) { ring.getBoundingClientRect(); ring.style.transition = ''; }
+        tether.setAttribute('x1', x); tether.setAttribute('y1', y); tether.setAttribute('opacity', 1);
+        if (!follow) { tether.setAttribute('x2', points[best].x); tether.setAttribute('y2', points[best].y); }
+        if (!follow) follow = requestAnimationFrame(function stick() { const ringStyle = getComputedStyle(ring); tether.setAttribute('x2', parseFloat(ringStyle.cx)); tether.setAttribute('y2', parseFloat(ringStyle.cy)); follow = requestAnimationFrame(stick); });
       });
-      svg.addEventListener('pointerleave', () => { g.classList.remove('has-hot'); dots.forEach((d) => d.classList.remove('is-hot')); ring.setAttribute('opacity', 0); });
+      svg.addEventListener('pointerleave', () => { g.classList.remove('has-hot'); dots.forEach((d) => d.classList.remove('is-hot')); ring.setAttribute('opacity', 0); tether.setAttribute('opacity', 0); cancelAnimationFrame(follow); follow = 0; });
     },
     point(host) {
       const W = 300, H = 150, L = 20, R = 290, T = 22, B = 130;
