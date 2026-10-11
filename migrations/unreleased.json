@@ -8,6 +8,7 @@
       "new": null,
       "surface": "typescript",
       "searchHints": [
+        "extends ChartComponent",
         "extends PieChartComponent",
         "extends HeatmapChartComponent",
         "extends ScatterChartComponent",
@@ -15,6 +16,7 @@
         "extends WaterfallMarksComponent"
       ],
       "detect": [
+        "extends ChartComponent",
         "extends PieChartComponent",
         "extends HeatmapChartComponent",
         "extends ScatterChartComponent",
@@ -22,10 +24,10 @@
         "extends WaterfallMarksComponent"
       ],
       "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
-      "appliesWhen": "Only a class of yours that extends PieChartComponent, HeatmapChartComponent or ScatterChartComponent, or the internal ChartTooltipPanelComponent or WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends ChartComponent, PieChartComponent, HeatmapChartComponent or ScatterChartComponent, or the internal ChartTooltipPanelComponent or WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
-      "verify": "The app builds with no member-collision error on a subclass of PieChartComponent, HeatmapChartComponent or ScatterChartComponent.",
-      "note": "PieChartComponent gained `drawnArcs`, `sliceHoverShift`, `stopArcTween`, `tweenArcs` and the internal `leaveMark`; HeatmapChartComponent and ScatterChartComponent each gained the internal `leaveMark`. The internal ChartTooltipPanelComponent gained `rowsKey` and `shownRows`, and the internal WaterfallMarksComponent gained `leaveMark`."
+      "verify": "The app builds with no member-collision error on a subclass of ChartComponent, PieChartComponent, HeatmapChartComponent or ScatterChartComponent.",
+      "note": "ChartComponent gained `measureBandPinY`; PieChartComponent gained `drawnArcs`, `sliceHoverShift`, `stopArcTween`, `tweenArcs` and the internal `leaveMark`; HeatmapChartComponent and ScatterChartComponent each gained the internal `leaveMark`. The internal ChartTooltipPanelComponent gained `rowsKey` and `shownRows`, and the internal WaterfallMarksComponent gained `leaveMark`."
     }
   ],
   "informational": [
@@ -42,8 +44,8 @@
       "verify": "Change a ds-pie-chart's data and confirm the slices turn instead of jumping; hover a slice and confirm it slides outward and stays out while the pointer is over its inner edge."
     },
     {
-      "text": "A removed heatmap cell, scatter point, pie slice, waterfall connector or waterfall value label fades out before it leaves.",
-      "verify": "Drop a column from a ds-heatmap-chart's data and confirm its cells fade out instead of vanishing."
+      "text": "A removed heatmap row or cell, scatter point, pie slice, waterfall connector or waterfall value label fades out before it leaves.",
+      "verify": "Drop a row and a column from a ds-heatmap-chart's data and confirm their cells fade out instead of vanishing."
     },
     {
       "text": "A hovered or focused column, bar, waterfall step and heatmap cell brightens with `filter: brightness(1.12) saturate(1.1)`, a chart pin pops in, and the tooltip rows fade in when the panel moves to another category or slice. Under `prefers-reduced-motion` all of these change at once.",
