@@ -571,6 +571,9 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   private readonly categoryOrigin = computed(() => {
     const own = this.activeTooltip()?.origin() ?? null;
+    if (this.activeTooltip()?.stacked?.() && own instanceof Element) {
+      return this.stackTop(own);
+    }
     if (
       this.cursorResolved() !== 'category' ||
       (own !== null && !(own instanceof Element))
@@ -757,6 +760,31 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   /** Under the panel: it opens over the tallest reading, so the disc sits at that reading's head -
    *  inside a column, below a marker, and over a column too short to hold it. */
   protected readonly bandPinY = signal(0);
+
+  // The highest segment at the mark's category, by where each lands: a segment glides after a data change.
+  private stackTop(segment: Element): Element {
+    const canvas = this.canvasElement()?.nativeElement;
+    const index = segment
+      .closest('[data-mark-index]')
+      ?.getAttribute('data-mark-index');
+    if (!canvas || index == null) {
+      return segment;
+    }
+    const segments = this.host.nativeElement.querySelectorAll(
+      `[data-mark-index="${index}"] > .bar`,
+    );
+    let highest = segment;
+    let highestTop = landedExtent(segment, canvas, this.viewHeight()).top;
+    for (const candidate of segments) {
+      const top = landedExtent(candidate, canvas, this.viewHeight()).top;
+      if (top < highestTop) {
+        highest = candidate;
+        highestTop = top;
+      }
+    }
+
+    return highest;
+  }
 
   // Read from the marks' bound geometry, not their boxes: after a data change the boxes are mid-glide,
   // and the pin glides to where the reading lands.

@@ -23,6 +23,8 @@ export interface ChartTooltipSource {
   /** Whether the mark's own panel is about the category, as `tooltip="axis"` is; one such mark turns
    *  the category cursor on under `cursor="auto"`. */
   readonly readsCategory?: Signal<boolean>;
+  /** Whether the mark sits in a stack; its own panel hangs over the stack's top, clear of the segments above it. */
+  readonly stacked?: Signal<boolean>;
   /** This mark's reading at the cursor's category as an element; a category panel hangs over the highest. Absent falls back to `origin`. */
   readonly axisOrigin?: Signal<Element | null>;
   /** What this mark reads at the cursor's category, whatever its own tooltip setting. */

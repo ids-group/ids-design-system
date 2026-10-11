@@ -219,6 +219,7 @@ export class ColumnSeriesComponent implements OnDestroy {
       origin: computed(() => this.activeMark.origin()),
       pinned: this.activeMark.pinned,
       offersTooltip: computed(() => this.tooltip() !== 'none'),
+      stacked: computed(() => this.offsets() !== null),
       axisOrigin: computed(() => {
         const categoryIndex = this.scales.activeIndex();
 

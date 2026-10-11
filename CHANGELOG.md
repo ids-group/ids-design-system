@@ -25,6 +25,9 @@
 - **Only the main mouse button pins a chart.** A right or middle press on a `ds-chart` category, or
   on any chart's mark, takes no pin, and one outside the chart leaves a held pin in place. The
   chart-tooltip entry point exports the internal `isPrimaryPress`.
+- **A stacked column's panel hangs over the whole stack.** In `ds-column-chart` and `ds-chart`
+  with stacked `dsColumnSeries`, hovering a segment opens its panel over the stack's top, so the
+  segments above it stay in view and reachable.
 
 ## 0.15.0 — 2026-10-09
 

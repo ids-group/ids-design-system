@@ -145,6 +145,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     protected readonly showSecondaryGridlines = computed(…);
     public readonly skeletonCount = input(CHART_SKELETON_COUNT, { transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT) });
     protected readonly skeletonMarks = computed(…);
+    private stackTop;
     protected readonly stacked = computed(…);
     private readonly stepBackOnEscape;
     protected stopLabel(index: number): string;
