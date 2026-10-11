@@ -59,6 +59,9 @@
   .demo button[aria-pressed="false"] .sw { opacity: 0.3; }
   .demo button:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
   .demo .hint { margin: 0; color: var(--text-tertiary); font: var(--font-size-2xs) / 1.4 var(--font-sans); }
+  .samples { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-3); }
+  .sample { margin: 0; display: grid; gap: var(--space-1-5); align-content: start; }
+  .sample figcaption { font: var(--font-weight-bold) var(--font-size-xs) / 1.4 var(--font-sans); color: var(--text-primary); }
 
   .opts { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
   .opt { cursor: pointer; }
@@ -155,9 +158,9 @@
       <article class="opt" tabindex="0" data-key="skeleton">
         <span class="badge is-pick">загрузка</span>
         <h3>Скелетон переходит в график</h3>
-        <div class="demo" data-demo="skeleton"><p class="hint">Нажми «Загрузить»: <code>skeletonCount</code> 4, в данных 5</p></div>
-        <div class="pills"><span class="pill good">нет вспышки при замене</span><span class="pill good">плейсхолдер становится колонкой</span></div>
-        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">все графики: одним движением плейсхолдеры встают на места и высоты колонок с тем же номером и окрашиваются, колонки без плейсхолдера растут из базовой линии, лишние опускаются; плашки делений и категорий сменяются подписями</dd></dl>
+        <div class="demo" data-demo="skeleton"><p class="hint">Нажми «Загрузить»: <code>skeletonCount</code> 4, в данных 5. Остальные графики - ниже</p></div>
+        <div class="pills"><span class="pill good">нет вспышки при замене</span><span class="pill good">плейсхолдер становится колонкой</span><span class="pill good">только первая загрузка</span></div>
+        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">все графики, только при первой загрузке, пока данных нет: одним движением плейсхолдеры встают на места и высоты колонок с тем же номером и окрашиваются, колонки без плейсхолдера растут из базовой линии, лишние опускаются; плашки делений и категорий сменяются подписями</dd></dl>
         <span class="state-mark"></span>
       </article>
 
@@ -187,6 +190,20 @@
         <dl class="layer"><dt>В библиотеке</dt><dd class="gain">ds-bar-chart и ds-column-chart: колонка с тем же id едет на новое место, а не перерисовывается</dd></dl>
         <span class="state-mark"></span>
       </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Скелетон переходит в каждый график</h2>
+    <p>Часть карточки «Скелетон переходит в график»: тот же переход для каждого скелетона библиотеки, в его форме. Только первая загрузка, пока данных нет.</p>
+    <div class="samples">
+      <figure class="sample"><figcaption>Линия</figcaption><div class="demo" data-demo="skeleton-line"><p class="hint">7 точек скелетона, в данных 6</p></div></figure>
+      <figure class="sample"><figcaption>Pie</figcaption><div class="demo" data-demo="skeleton-pie"><p class="hint">5 секторов скелетона, в данных 4</p></div></figure>
+      <figure class="sample"><figcaption>Воронка</figcaption><div class="demo" data-demo="skeleton-funnel"><p class="hint">5 этапов скелетона, в данных 4</p></div></figure>
+      <figure class="sample"><figcaption>Waterfall</figcaption><div class="demo" data-demo="skeleton-waterfall"><p class="hint">итог, шаги, итог</p></div></figure>
+      <figure class="sample"><figcaption>Heatmap</figcaption><div class="demo" data-demo="skeleton-heatmap"><p class="hint">серые ячейки берут цвет</p></div></figure>
+      <figure class="sample"><figcaption>Scatter</figcaption><div class="demo" data-demo="skeleton-scatter"><p class="hint">точек в скелетоне нет</p></div></figure>
+      <figure class="sample"><figcaption>Бары</figcaption><div class="demo" data-demo="skeleton-bar"><p class="hint">3 строки скелетона, в данных 4</p></div></figure>
     </div>
   </section>
 
@@ -247,6 +264,45 @@
   }
   const svgIn = (host, w, h, label) => { const s = el('svg', { viewBox: `0 0 ${w} ${h}`, role: 'img', 'aria-label': label }); host.prepend(s); return s; };
   const button = (host, text) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = text; host.append(b); return b; };
+  const actionButton = (host, text, action) => { const actions = document.createElement('div'); actions.className = 'chips-row'; host.append(actions); button(actions, text).addEventListener('click', (e) => { e.stopPropagation(); action(); }); };
+  const GROW = ms('--ds-motion-chart-mark-grow-duration', 600);
+  const wave = (svg, width, id) => {
+    const gradient = el('linearGradient', { id, gradientUnits: 'userSpaceOnUse', x1: 0, y1: 0, x2: width, y2: 0 }, el('defs', {}, svg));
+    [[0, 'secondary'], [0.4, 'secondary'], [0.5, 'muted'], [0.6, 'secondary'], [1, 'secondary']].forEach(([offset, tone]) => { el('stop', { offset, style: `stop-color: var(--surface-${tone})` }, gradient); });
+    if (!reduced) el('animateTransform', { attributeName: 'gradientTransform', type: 'translate', from: `${-width} 0`, to: `${width} 0`, dur: '1.8s', repeatCount: 'indefinite' }, gradient);
+    return `url(#${id})`;
+  };
+  const centreOf = ({ L, R }, count, i) => L + ((R - L) / count) * (i + 0.5);
+  const pillAt = (stage, fill, x, y, width) => el('rect', { x: x - width / 2, y: y - 3, width, height: 6, rx: 3, fill }, stage);
+  const fade = (node, to, alive) => { const from = Number(node.getAttribute('opacity') ?? 1); tween(from, to, GROW, (a) => alive() && node.setAttribute('opacity', a)); };
+  const label = (stage, cls, x, y, value, alive, attrs = {}) => { const node = el('text', { class: cls, x, y, opacity: 0, ...attrs }, stage); node.textContent = value; fade(node, 1, alive); return node; };
+  const shape = (node, pts) => node.setAttribute('d', pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x} ${y}`).join(' '));
+  const TICK_STEPS = [0, 0.25, 0.5, 0.75, 1];
+  const axisSkeleton = (stage, fill, box, count) => {
+    el('path', { class: 'skeleton-axis', d: `M${box.L} ${box.T} V${box.B} H${box.R}` }, stage);
+    return {
+      ticks: TICK_STEPS.map((k) => pillAt(stage, fill, box.L - 12, box.B - k * (box.B - box.T), 14)),
+      cats: Array.from({ length: count }, (_, i) => pillAt(stage, fill, centreOf(box, count, i), box.B + 12, 18)),
+    };
+  };
+  const axisReveal = (stage, box, pills, top, names, alive) => {
+    pills.ticks.forEach((node) => fade(node, 0, alive));
+    TICK_STEPS.forEach((k) => label(stage, 'tick', box.L - 5, box.B - k * (box.B - box.T), Math.round(k * top), alive, { dy: '0.32em', 'text-anchor': 'end' }));
+    pills.cats.forEach((node, i) => {
+      const width = Number(node.getAttribute('width')), start = Number(node.getAttribute('x')) + width / 2, end = centreOf(box, names.length, Math.min(i, names.length - 1));
+      tween([start, 1], [end, 0], GROW, ([x, a]) => { if (!alive()) return; node.setAttribute('x', x - width / 2); node.setAttribute('opacity', a); });
+    });
+    names.forEach((name, i) => label(stage, 'cat', centreOf(box, names.length, i), box.B + 15, name, alive));
+  };
+  const loadSample = (host, title, W, H, build) => {
+    const svg = svgIn(host, W, H, title);
+    const fill = wave(svg, W, `wave-${host.dataset.demo}`);
+    const stage = el('g', {}, svg);
+    let run = 0, timer = 0, load = null;
+    const draw = () => { const mine = ++run; clearTimeout(timer); stage.replaceChildren(); load = build(stage, fill, () => mine === run); };
+    draw();
+    actionButton(host, 'Загрузить', () => { draw(); timer = setTimeout(load, 900); });
+  };
 
   const demos = {
     axis(host) {
@@ -449,22 +505,18 @@
       const W = 300, H = 160, L = 34, R = 290, T = 12, B = 128;
       const svg = svgIn(host, W, H, 'Orders by month');
       const placeholders = [0.45, 0.62, 0.52, 0.75], values = [62, 71, 68, 84, 96], cats = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
-      const GROW = ms('--ds-motion-chart-mark-grow-duration', 600);
-      const defs = el('defs', {}, svg);
-      const wave = el('linearGradient', { id: 'skeleton-wave', gradientUnits: 'userSpaceOnUse', x1: 0, y1: 0, x2: W, y2: 0 }, defs);
-      [[0, 'secondary'], [0.4, 'secondary'], [0.5, 'muted'], [0.6, 'secondary'], [1, 'secondary']].forEach(([offset, tone]) => { el('stop', { offset, style: `stop-color: var(--surface-${tone})` }, wave); });
-      if (!reduced) el('animateTransform', { attributeName: 'gradientTransform', type: 'translate', from: `${-W} 0`, to: `${W} 0`, dur: '1.8s', repeatCount: 'indefinite' }, wave);
+      const fill = wave(svg, W, 'wave-column');
       el('path', { class: 'skeleton-axis', d: `M${L} ${T} V${B} H${R}` }, svg);
       const stage = el('g', {}, svg);
       const box = (count, i, share) => { const slot = (R - L) / count, w = slot * 0.5; return [L + slot * i + (slot - w) / 2, w, share * (B - T), 1]; };
       const setBox = (rect, [x, w, h, alpha]) => { rect.setAttribute('x', x); rect.setAttribute('width', w); rect.setAttribute('y', B - h); rect.setAttribute('height', h); rect.setAttribute('opacity', alpha); };
       const centre = (count, i) => L + ((R - L) / count) * (i + 0.5);
-      const pill = (x, y, width) => el('rect', { x: x - width / 2, y: y - 3, width, height: 6, rx: 3, fill: 'url(#skeleton-wave)' }, stage);
+      const pill = (x, y, width) => el('rect', { x: x - width / 2, y: y - 3, width, height: 6, rx: 3, fill }, stage);
       let run = 0, timer = 0, bars = [], catPills = [], tickPills = [];
       const draw = () => {
         run++; clearTimeout(timer); stage.replaceChildren();
         tickPills = [0, 0.25, 0.5, 0.75, 1].map((k) => pill(L - 14, B - k * (B - T), 16));
-        bars = placeholders.map((share, i) => { const rect = el('rect', { rx: 2, fill: 'url(#skeleton-wave)' }, stage); setBox(rect, box(placeholders.length, i, share)); return rect; });
+        bars = placeholders.map((share, i) => { const rect = el('rect', { rx: 2, fill }, stage); setBox(rect, box(placeholders.length, i, share)); return rect; });
         catPills = placeholders.map((share, i) => pill(centre(placeholders.length, i), B + 13, 22));
       };
       const load = () => {
@@ -490,6 +542,171 @@
       draw();
       const actions = document.createElement('div'); actions.className = 'chips-row'; host.append(actions);
       button(actions, 'Загрузить').addEventListener('click', (e) => { e.stopPropagation(); draw(); timer = setTimeout(load, 900); });
+    },
+    'skeleton-line'(host) {
+      loadSample(host, 'Sessions by day', 220, 130, (stage, fill, alive) => {
+        const box = { L: 30, R: 212, T: 10, B: 104 }, pills = axisSkeleton(stage, fill, box, 7);
+        const from = [0.42, 0.52, 0.47, 0.62, 0.58, 0.72, 0.68].map((h, i) => [centreOf(box, 7, i), box.B - h * (box.B - box.T)]);
+        const band = el('path', { class: 'line', stroke: fill }, stage);
+        band.style.strokeWidth = 4;
+        shape(band, from);
+        return () => {
+          const values = [38, 52, 47, 66, 61, 80], days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+          const to = from.map((p, i) => { const k = Math.min(i, values.length - 1); return [centreOf(box, values.length, k), box.B - (values[k] / 100) * (box.B - box.T)]; });
+          const line = el('path', { class: 'line', stroke: C(3), opacity: 0 }, stage);
+          const markers = values.map(() => el('circle', { class: 'marker', r: 3, stroke: C(3), opacity: 0 }, stage));
+          axisReveal(stage, box, pills, 100, days, alive);
+          tween([...from.flat(), 4, 0], [...to.flat(), 2, 1], GROW, (frame) => {
+            if (!alive()) return;
+            const pts = from.map((p, i) => [frame[i * 2], frame[i * 2 + 1]]), width = frame[14], k = frame[15];
+            shape(band, pts); shape(line, pts);
+            band.style.strokeWidth = width; line.style.strokeWidth = width;
+            band.setAttribute('opacity', 1 - k); line.setAttribute('opacity', k);
+            markers.forEach((m, i) => { m.setAttribute('cx', pts[i][0]); m.setAttribute('cy', pts[i][1]); m.setAttribute('opacity', k); });
+          });
+        };
+      });
+    },
+    'skeleton-pie'(host) {
+      loadSample(host, 'Leads by channel', 220, 120, (stage, fill, alive) => {
+        const cx = 58, cy = 60, outer = 50, inner = 29, count = 5, gap = Math.PI / 90, start = -Math.PI / 2, x0 = 122;
+        const arc = (a0, a1) => {
+          const pt = (r, a) => `${cx + r * Math.cos(a)} ${cy + r * Math.sin(a)}`, large = a1 - a0 > Math.PI ? 1 : 0;
+          return `M${pt(outer, a0)} A${outer} ${outer} 0 ${large} 1 ${pt(outer, a1)} L${pt(inner, a1)} A${inner} ${inner} 0 ${large} 0 ${pt(inner, a0)}Z`;
+        };
+        const step = (2 * Math.PI) / count, rowY = (i) => 18 + i * 21;
+        const from = Array.from({ length: count }, (_, i) => [start + i * step, start + (i + 1) * step - gap]);
+        const ghosts = from.map(([a0, a1]) => el('path', { d: arc(a0, a1), fill }, stage));
+        const centrePill = pillAt(stage, fill, cx, cy, 24);
+        const rows = from.map((_, i) => [el('circle', { cx: x0 + 4, cy: rowY(i), r: 4, fill }, stage), pillAt(stage, fill, x0 + 34, rowY(i), 40), pillAt(stage, fill, x0 + 80, rowY(i), 18)]);
+        return () => {
+          const parts = [42, 28, 18, 12], names = ['Organic', 'Paid', 'Referral', 'Email'];
+          let a = start;
+          const to = from.map((_, i) => { const a0 = a; a += ((parts[i] ?? 0) / 100) * 2 * Math.PI; return [a0, a]; });
+          const slices = parts.map((_, i) => el('path', { class: 'slice', fill: C(i + 1), opacity: 0 }, stage));
+          tween([...from.flat(), 0], [...to.flat(), 1], GROW, (frame) => {
+            if (!alive()) return;
+            const k = frame[count * 2];
+            ghosts.forEach((node, i) => { node.setAttribute('d', arc(frame[i * 2], frame[i * 2 + 1])); node.setAttribute('opacity', 1 - k); });
+            slices.forEach((node, i) => { node.setAttribute('d', arc(frame[i * 2], frame[i * 2 + 1])); node.setAttribute('opacity', k); });
+          });
+          fade(centrePill, 0, alive);
+          label(stage, 'centre-value', cx, cy + 2, '7,630', alive);
+          label(stage, 'centre-caption', cx, cy + 15, 'leads', alive);
+          rows.forEach((row, i) => {
+            row.forEach((node) => fade(node, 0, alive));
+            if (i >= parts.length) return;
+            fade(el('circle', { cx: x0 + 4, cy: rowY(i), r: 4, fill: C(i + 1), opacity: 0 }, stage), 1, alive);
+            label(stage, 'tick', x0 + 14, rowY(i), names[i], alive, { dy: '0.32em' });
+            label(stage, 'tick', x0 + 89, rowY(i), `${parts[i]}%`, alive, { dy: '0.32em', 'text-anchor': 'end' });
+          });
+        };
+      });
+    },
+    'skeleton-funnel'(host) {
+      loadSample(host, 'Signup funnel', 220, 128, (stage, fill, alive) => {
+        const left = 10, width = 200, top = 4, depth = 120, count = 5, gapY = 2, inset = 0.3 / count;
+        const poly = (y0, y1, w0, w1) => { const c = left + width / 2; return `${c - w0 / 2},${y0} ${c + w0 / 2},${y0} ${c + w1 / 2},${y1} ${c - w1 / 2},${y1}`; };
+        const from = Array.from({ length: count }, (_, i) => [top + (i * depth) / count, top + ((i + 1) * depth) / count - gapY, width * (1 - 2 * i * inset), width * (1 - 2 * (i + 1) * inset)]);
+        const ghosts = from.map((g) => el('polygon', { points: poly(...g), fill }, stage));
+        return () => {
+          const values = [1000, 620, 410, 240], n = values.length, widths = values.map((v) => (v / values[0]) * width);
+          const to = from.map((_, i) => (i < n
+            ? [top + (i * depth) / n, top + ((i + 1) * depth) / n - gapY, widths[i], widths[Math.min(i + 1, n - 1)]]
+            : [top + depth, top + depth, widths[n - 1], widths[n - 1]]));
+          const stages = values.map((_, i) => el('polygon', { fill: C(i + 1), opacity: 0 }, stage));
+          tween([...from.flat(), 0], [...to.flat(), 1], GROW, (frame) => {
+            if (!alive()) return;
+            const k = frame[count * 4], geometry = (i) => frame.slice(i * 4, i * 4 + 4);
+            ghosts.forEach((node, i) => { node.setAttribute('points', poly(...geometry(i))); node.setAttribute('opacity', 1 - k); });
+            stages.forEach((node, i) => { node.setAttribute('points', poly(...geometry(i))); node.setAttribute('opacity', k); });
+          });
+        };
+      });
+    },
+    'skeleton-waterfall'(host) {
+      loadSample(host, 'Margin bridge', 220, 130, (stage, fill, alive) => {
+        const box = { L: 30, R: 212, T: 10, B: 104 }, count = 5, pills = axisSkeleton(stage, fill, box, count);
+        const span = box.B - box.T, slot = (box.R - box.L) / count, w = slot * 0.5;
+        const rectOf = (i, [bottom, height], alpha) => [box.L + slot * i + (slot - w) / 2, box.B - (bottom + height) * span, height * span, alpha];
+        const setRect = (node, [x, y, h, alpha]) => { node.setAttribute('x', x); node.setAttribute('width', w); node.setAttribute('y', y); node.setAttribute('height', h); node.setAttribute('opacity', alpha); };
+        const from = [[0, 0.9], [0.74, 0.16], [0.6, 0.14], [0.6, 0.08], [0, 0.68]];
+        const ghosts = from.map((step, i) => { const node = el('rect', { fill }, stage); setRect(node, rectOf(i, step, 1)); return node; });
+        return () => {
+          const to = [[0, 0.8], [0.62, 0.18], [0.53, 0.09], [0.53, 0.14], [0, 0.67]];
+          const total = 'var(--ds-chart-series-default-color)', down = 'var(--ds-chart-negative-color)', up = 'var(--ds-chart-positive-color)';
+          const colours = [total, down, down, up, total];
+          axisReveal(stage, box, pills, 100, ['Start', 'Fees', 'Tax', 'Sales', 'End'], alive);
+          to.forEach((step, i) => {
+            const bar = el('rect', { fill: colours[i] }, stage);
+            tween(rectOf(i, from[i], 1), rectOf(i, step, 0), GROW, (b) => alive() && setRect(ghosts[i], b));
+            tween(rectOf(i, from[i], 0), rectOf(i, step, 1), GROW, (b) => alive() && setRect(bar, b));
+          });
+        };
+      });
+    },
+    'skeleton-heatmap'(host) {
+      loadSample(host, 'Load by weekday and hour', 220, 116, (stage, fill, alive) => {
+        const rows = 4, cols = 6, x0 = 40, y0 = 16, cw = 28, ch = 18, rampY = y0 + rows * ch + 12, rampX = x0 + 14, rampW = cols * cw - 36, levels = 7;
+        const colX = (c) => x0 + c * cw + (cw - 2) / 2, rowY = (r) => y0 + r * ch + (ch - 2) / 2;
+        const colPills = Array.from({ length: cols }, (_, c) => pillAt(stage, fill, colX(c), y0 - 8, 12));
+        const rowPills = Array.from({ length: rows }, (_, r) => pillAt(stage, fill, x0 - 16, rowY(r), 22));
+        const cells = [];
+        for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) cells.push({ r, c, node: el('rect', { x: x0 + c * cw, y: y0 + r * ch, width: cw - 2, height: ch - 2, rx: 2, fill }, stage) });
+        const scalePills = [pillAt(stage, fill, x0 + 5, rampY + 3, 10), el('rect', { x: rampX, y: rampY, width: rampW, height: 6, rx: 3, fill }, stage), pillAt(stage, fill, rampX + rampW + 11, rampY + 3, 14)];
+        return () => {
+          [...colPills, ...rowPills, ...scalePills, ...cells.map((cell) => cell.node)].forEach((node) => fade(node, 0, alive));
+          cells.forEach(({ r, c }) => fade(el('rect', { x: x0 + c * cw, y: y0 + r * ch, width: cw - 2, height: ch - 2, rx: 2, fill: `var(--chart-heat-${1 + ((r * 3 + c * 5 + (r * c) % 4) % levels)})`, opacity: 0 }, stage), 1, alive));
+          for (let l = 0; l < levels; l++) fade(el('rect', { x: rampX + (l * rampW) / levels, y: rampY, width: rampW / levels, height: 6, fill: `var(--chart-heat-${l + 1})`, opacity: 0 }, stage), 1, alive);
+          ['9', '10', '11', '12', '13', '14'].forEach((hour, c) => label(stage, 'cat', colX(c), y0 - 5, hour, alive));
+          ['Mon', 'Tue', 'Wed', 'Thu'].forEach((day, r) => label(stage, 'tick', x0 - 6, rowY(r), day, alive, { dy: '0.32em', 'text-anchor': 'end' }));
+          label(stage, 'tick', x0 + 5, rampY + 3, 0, alive, { dy: '0.32em', 'text-anchor': 'middle' });
+          label(stage, 'tick', rampX + rampW + 11, rampY + 3, 105, alive, { dy: '0.32em', 'text-anchor': 'middle' });
+        };
+      });
+    },
+    'skeleton-scatter'(host) {
+      loadSample(host, 'Deal size against cycle length', 220, 130, (stage, fill, alive) => {
+        const box = { L: 30, R: 212, T: 10, B: 100 };
+        TICK_STEPS.forEach((k) => { const y = box.B - k * (box.B - box.T); el('line', { class: k ? 'grid-line' : 'skeleton-axis', x1: box.L, x2: box.R, y1: y, y2: y }, stage); });
+        const xOf = (k) => box.L + k * (box.R - box.L);
+        const pills = [...TICK_STEPS.map((k) => pillAt(stage, fill, box.L - 12, box.B - k * (box.B - box.T), 14)), ...TICK_STEPS.map((k) => pillAt(stage, fill, xOf(k), box.B + 12, 14))];
+        return () => {
+          pills.forEach((node) => fade(node, 0, alive));
+          TICK_STEPS.forEach((k) => {
+            label(stage, 'tick', box.L - 5, box.B - k * (box.B - box.T), Math.round(k * 100), alive, { dy: '0.32em', 'text-anchor': 'end' });
+            label(stage, 'cat', xOf(k), box.B + 15, `${Math.round(k * 60)}d`, alive);
+          });
+          let seed = 5; const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+          const points = Array.from({ length: 24 }, () => ({ x: box.L + 6 + rnd() * (box.R - box.L - 12), y: box.T + 6 + rnd() * (box.B - box.T - 12) })).sort((p, q) => p.x - q.x);
+          points.forEach((p, i) => { el('circle', { class: 'enter-settle', cx: p.x, cy: p.y, r: 3, fill: C(1 + (i % 3)) }, stage).style.animationDelay = `${(i / points.length) * 260}ms`; });
+        };
+      });
+    },
+    'skeleton-bar'(host) {
+      loadSample(host, 'Leads by channel', 220, 122, (stage, fill, alive) => {
+        const left = 6, trackW = 206, valueX = 212, labelY = (i) => 8 + i * 30, trackY = (i) => 16 + i * 30;
+        const ghosts = [0.7, 0.9, 0.55].map((share, i) => ({
+          label: el('rect', { x: left, y: labelY(i) - 3, width: share * 150, height: 6, rx: 2, fill }, stage),
+          value: pillAt(stage, fill, valueX - 13, labelY(i), 26),
+          track: el('rect', { x: left, y: trackY(i), width: trackW, height: 8, rx: 4, fill }, stage),
+        }));
+        return () => {
+          const data = [['Organic', 72], ['Paid', 55], ['Referral', 38], ['Email', 21]], max = 80;
+          data.forEach(([name, value], i) => {
+            const ghost = ghosts[i], to = (value / max) * trackW;
+            fade(el('rect', { x: left, y: trackY(i), width: trackW, height: 8, rx: 4, fill: 'var(--chart-grid-line-color)', opacity: 0 }, stage), 1, alive);
+            const bar = el('rect', { x: left, y: trackY(i), height: 8, rx: 4, fill: 'var(--ds-chart-series-default-color)', opacity: ghost ? 0 : 1 }, stage);
+            if (ghost) {
+              fade(ghost.label, 0, alive); fade(ghost.value, 0, alive);
+              tween([trackW, 1], [to, 0], GROW, ([w, a]) => { if (!alive()) return; ghost.track.setAttribute('width', w); ghost.track.setAttribute('opacity', a); });
+            }
+            tween([ghost ? trackW : 0, ghost ? 0 : 1], [to, 1], GROW, ([w, a]) => { if (!alive()) return; bar.setAttribute('width', w); bar.setAttribute('opacity', a); });
+            label(stage, 'tick', left, labelY(i), name, alive, { dy: '0.32em' });
+            label(stage, 'tick', valueX, labelY(i), value, alive, { dy: '0.32em', 'text-anchor': 'end' });
+          });
+        };
+      });
     },
     stagger(host) {
       const svg = svgIn(host, 300, 150, 'Points and cells entering');
