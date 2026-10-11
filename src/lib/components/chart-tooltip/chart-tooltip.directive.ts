@@ -21,6 +21,7 @@ import {
   disposeWithLeave,
   forwardOverlayTokens,
   listenForEscape,
+  cssDurationMs,
 } from '@ids-group-ltd/ids-design-system/components';
 import { ChartTooltipPanelComponent } from './chart-tooltip-panel.component';
 import type {
@@ -186,7 +187,7 @@ export class ChartTooltipDirective {
       return;
     }
     const style = getComputedStyle(pane);
-    const duration = milliseconds(
+    const duration = cssDurationMs(
       style.getPropertyValue('--ds-motion-chart-tooltip-move-duration'),
     );
     if (duration <= 0) {
@@ -244,15 +245,6 @@ function hideWhileOffscreen(pane: HTMLElement, chart: HTMLElement): () => void {
   observer.observe(chart);
 
   return () => observer.disconnect();
-}
-
-function milliseconds(duration: string): number {
-  const value = parseFloat(duration);
-  if (!Number.isFinite(value)) {
-    return 0;
-  }
-
-  return duration.trim().endsWith('ms') ? value : value * 1000;
 }
 
 function coarsePointer(): boolean {

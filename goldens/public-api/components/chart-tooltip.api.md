@@ -161,4 +161,9 @@ ds-chart-tooltip-panel {
 figure[dsChartStates] {
     --ds-chart-axis-line-color: (none);
 }
+
+g[dsChartPinMarker] {
+    --ds-motion-chart-mark-duration: (none);
+    --ds-motion-chart-mark-easing: (none);
+}
 ```

@@ -98,7 +98,7 @@
         <svg:text
           class="value"
           text-anchor="middle"
-          [attr.y]="mark.labelY">
+          [style.--_column-value-y]="mark.labelY + 'px'">
           {{ mark.formattedValue }}
         </svg:text>
       }

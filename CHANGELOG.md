@@ -1,5 +1,26 @@
 ## Unreleased
 
+### Changed
+
+- **Every mark of a chart moves together when its data changes.** In `ds-chart`, `ds-column-chart`,
+  `ds-line-chart` and `ds-waterfall-chart` the line, its markers and area, the value labels, the
+  pin, the gridlines with their tick labels and the waterfall connectors glide to their new place on
+  the column's own timing (`--ds-motion-chart-mark-duration` and `-easing`), and a column glides
+  sideways when the plot narrows or widens. A line whose point count changes redraws at once. The
+  category band and crosshair glide with the tooltip panel, on
+  `--ds-motion-chart-tooltip-move-duration` and `-easing`, which `ds-chart` now reads. A
+  `ds-pie-chart` turns its slices to their new angles. A removed heatmap row or cell, scatter point,
+  pie slice, waterfall connector or waterfall value label fades out. Under
+  `prefers-reduced-motion` every one of them lands at once.
+- **The hovered mark answers.** A hovered or focused column, bar, waterfall step and heatmap cell
+  brightens (`filter: brightness(1.12) saturate(1.1)`), and a hovered pie slice slides 3 units of the
+  100-unit ring out along its middle, past the ring's box. A pin pops in, and the tooltip's rows
+  fade in when the panel moves to another category or slice. `ChartComponent`,
+  `PieChartComponent`, `HeatmapChartComponent` and `ScatterChartComponent` gained members, named in
+  the migration manifest; a subclass declaring one of those names must rename it.
+  The internal `ChartTooltipPanelComponent` gained `rowsKey` and `shownRows`, and the internal
+  `WaterfallMarksComponent` gained `leaveMark`.
+
 ## 0.15.0 — 2026-10-09
 
 ### Breaking

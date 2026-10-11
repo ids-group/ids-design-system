@@ -41,7 +41,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     protected readonly axisTitleX = computed(…);
     private bandAt;
     private readonly bandElement;
-    protected readonly bandPinY = computed(…);
+    protected readonly bandPinY = signal(…);
     protected readonly bandPins = computed(…);
     public readonly bandWidth = computed(…);
     private readonly bands;
@@ -87,6 +87,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     private listenForEscapeFromMarker;
     public readonly max = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
     public readonly maxSecondary = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
+    private measureBandPinY;
     public readonly measured = computed(…);
     private readonly measuredCategoryLabelWidth;
     private readonly measuredLabelWidth;
@@ -399,6 +400,8 @@ ds-chart {
     --ds-chart-plot-bg-color: transparent;
     --ds-motion-chart-state-duration: (none);
     --ds-motion-chart-state-easing: (none);
+    --ds-motion-chart-tooltip-move-duration: (none);
+    --ds-motion-chart-tooltip-move-easing: (none);
 }
 
 g[dsColumnSeries] {
@@ -423,8 +426,6 @@ g[dsLineSeries] {
     --ds-chart-line-width: (none);
     --ds-chart-line-width-bold: (none);
     --ds-motion-chart-mark-detail-duration: (none);
-    --ds-motion-chart-mark-duration: (none);
-    --ds-motion-chart-mark-easing: (none);
     --ds-motion-chart-mark-enter-easing: (none);
     --ds-motion-chart-mark-sweep-duration: (none);
     --ds-motion-chart-state-duration: (none);

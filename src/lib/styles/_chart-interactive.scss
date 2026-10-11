@@ -2,6 +2,10 @@
 //
 // TODO(ds-interactive): migrate this onto `_interaction.scss` once that file exists.
 
+// The hovered mark brightens: a filter, not a colour, so it holds on every palette colour, a hatch and a heat ramp.
+$highlight: brightness(1.12) saturate(1.1);
+$highlight-transition: filter var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
+
 // `.is-dimmed` alone, for a mark highlighted only from outside (legend, consumer).
 //
 // `$also` adds the mark's own transitions; a second `transition` on the same selector would

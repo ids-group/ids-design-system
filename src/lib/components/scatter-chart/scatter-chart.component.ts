@@ -21,6 +21,7 @@ import {
   decimationTarget,
   linearScale,
   listenForMarkFocus,
+  leaveMark,
   lttbDecimate,
   markOf,
   minMaxDecimate,
@@ -112,6 +113,8 @@ export class ScatterChartComponent
   implements ChartDimmable, ChartWithDataTable, ChartWithTooltipTrigger
 {
   protected readonly renderReady = chartRenderGate();
+
+  protected readonly leaveMark = leaveMark;
 
   /** One entry per series. */
   readonly data = input<readonly ScatterChartSeries[]>([]);

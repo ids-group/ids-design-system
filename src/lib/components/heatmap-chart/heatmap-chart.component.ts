@@ -18,6 +18,7 @@ import {
   CHART_HEAT_COLORS,
   chartDwell,
   chartRenderGate,
+  leaveMark,
   staggerDelay,
   DsChartBase,
 } from '@ids-group-ltd/ids-design-system/components';
@@ -79,6 +80,8 @@ export class HeatmapChartComponent
   implements ChartDimmable, ChartStaggered, ChartWithTooltipTrigger
 {
   protected readonly renderReady = chartRenderGate();
+
+  protected readonly leaveMark = leaveMark;
 
   /** The column headings, left to right; a row longer than this loses its tail. */
   readonly columns = input<readonly string[]>([]);

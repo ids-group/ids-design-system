@@ -143,12 +143,18 @@
     inline-size var(--ds-motion-chart-mark-duration)
       var(--ds-motion-chart-mark-easing),
     background-color var(--ds-motion-chart-mark-duration)
-      var(--ds-motion-chart-mark-easing);
+      var(--ds-motion-chart-mark-easing),
+    chart-interactive.$highlight-transition;
+}
+
+.row.is-active .fill {
+  filter: chart-interactive.$highlight;
 }
 
 @include chart-frame.forced-colors;
 @include chart-frame.pin-reset;
 @include chart-frame.pin-marker;
+@include chart-motion.pops-in('.pin-marker');
 
 .label > .detail {
   display: block;

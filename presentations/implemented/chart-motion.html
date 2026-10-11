@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Движение в графиках</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-11">
+<meta name="ds-deck-evidence" content="src/lib/styles/_chart-motion.scss:16">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   .mini { position: relative; display: grid; gap: var(--space-2); }
   .mini svg { display: block; inline-size: 100%; block-size: auto; overflow: visible; user-select: none; }
@@ -85,8 +87,17 @@
   <header class="masthead">
     <h1>В графиках одни элементы движутся плавно, а соседние с ними прыгают</h1>
     <p class="lede">Одно решение: сколько движения добавить в графики. В каждом варианте наведи на график, кликни по колонке и нажми «Сменить данные».</p>
-    <div class="chips"><span class="chip is-open">Нужно решение</span><span class="chip">актуально на 2026-10-05</span></div>
+    <div class="chips"><span class="chip is-done">Решено 2026-10-11</span><span class="chip">ветка feat/chart-motion-sync-response</span><span class="chip">актуально на 2026-10-05</span></div>
   </header>
+
+  <div class="decided">
+    <h2>Решено: «Синхрон и отклик»</h2>
+    <p>При смене данных линия, её точки, подписи, пины, сетка и деления движутся вместе с колонками, полоса курсора едет вместе с панелью tooltip, секторы pie меняют углы, уходящие ячейки, точки, секторы и соединители гаснут. На наведение отвечают колонка, бар, ступень и ячейка (подсветка), сектор pie выдвигается, пин появляется с «поп», строки tooltip мягко сменяются. Числа не докручиваются.</p>
+    <p class="evidence">2026-10-11 · src/lib/styles/_chart-motion.scss:16</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
 
   <section class="panel">
     <h2>Сегодня</h2>
@@ -177,6 +188,7 @@
     <button type="button" id="copy">Скопировать</button>
     <button type="button" id="reset">Сбросить</button>
   </div>
+  </details>
 </main>
 
 <script>

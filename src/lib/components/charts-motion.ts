@@ -26,3 +26,68 @@ export function staggerDelay(
 export function leaveMark(event: AnimationCallbackEvent): void {
   event.target.classList.add('mark-leave');
 }
+
+/** A CSS duration (`300ms`, `0.3s`) in milliseconds; anything unparsable is `0`.
+ *
+ *  @internal */
+export function cssDurationMs(duration: string): number {
+  const value = parseFloat(duration);
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+
+  return duration.trim().endsWith('ms') ? value : value * 1000;
+}
+
+/** Eases `apply` from `from` to `to` on the mark timing `element` inherits (`--ds-motion-chart-mark-*`),
+ *  for geometry CSS cannot interpolate. A zero duration, as under reduced motion, applies `to` at once.
+ *  Returns the cancel; a caller starting the next tween cancels this one and passes what it last applied.
+ *
+ *  @internal */
+export function tweenMarks(
+  element: Element,
+  from: readonly number[],
+  to: readonly number[],
+  apply: (values: readonly number[]) => void,
+): () => void {
+  const style = getComputedStyle(element);
+  const duration = cssDurationMs(
+    style.getPropertyValue('--ds-motion-chart-mark-duration'),
+  );
+  if (
+    duration <= 0 ||
+    from.length !== to.length ||
+    typeof KeyframeEffect === 'undefined'
+  ) {
+    apply(to);
+
+    return () => undefined;
+  }
+  // A target-less effect is only a clock: it eases by the token's own curve, whatever its form.
+  const clock = new Animation(
+    new KeyframeEffect(null, null, {
+      duration,
+      easing:
+        style.getPropertyValue('--ds-motion-chart-mark-easing').trim() ||
+        'ease',
+      fill: 'forwards',
+    }),
+  );
+  let frame = 0;
+  const step = (): void => {
+    const progress = clock.effect?.getComputedTiming().progress ?? 1;
+    apply(
+      to.map((value, index) => from[index] + (value - from[index]) * progress),
+    );
+    if (clock.playState !== 'finished') {
+      frame = requestAnimationFrame(step);
+    }
+  };
+  clock.play();
+  frame = requestAnimationFrame(step);
+
+  return () => {
+    cancelAnimationFrame(frame);
+    clock.cancel();
+  };
+}

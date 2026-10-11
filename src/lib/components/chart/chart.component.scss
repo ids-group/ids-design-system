@@ -1,6 +1,7 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/focus' as focus;
 @use '../../styles/component-base' as component-base;
+@use '../../styles/chart-motion' as chart-motion;
 @include component-base.rules;
 @include chart-frame.chart-frame;
 @include chart-frame.pin-reset;
@@ -31,8 +32,15 @@
 
 /* Holds marks still until `settled`, or a mark inserted at the fallback width animates its correction.
    `::ng-deep` reaches projected marks' stylesheets. */
-:host(.measuring) .marks ::ng-deep * {
+:host(.measuring) .marks ::ng-deep *,
+:host(.measuring) .axes *,
+:host(.measuring) .labels * {
   transition-duration: 0ms !important;
+}
+
+.grid-line,
+.axis-label {
+  transition: chart-motion.moves(transform);
 }
 
 .grid-line {
@@ -68,6 +76,13 @@
 }
 
 @include chart-frame.forced-colors;
+
+// With the panel, not the marks: the band, its pin and the panel move across as one.
+.cursor,
+.band-pin {
+  transition: transform var(--ds-motion-chart-tooltip-move-duration)
+    var(--ds-motion-chart-tooltip-move-easing);
+}
 
 .cursor.cursor-in {
   animation: ds-chart-mark-fade-in var(--ds-motion-chart-state-duration)

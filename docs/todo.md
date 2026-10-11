@@ -1039,12 +1039,6 @@ that already existed, because both are the kind of ask that comes back.
   them read only by ds-docs), and 70 scale, palette and role names. In pinkmoon, mm-ecm and mm-broker
   the 51 have 0 readers; 12 of the 70 are read. Options: none, the 51 dead sizes, or all 121.
 
-- [ ] **[P3] How much motion do the charts get?** Drawn in deck `chart-motion`. Verified 2026-10-05:
-  columns tween `y`/`height`, while the line path, its markers, the value labels, the pin, the
-  gridlines and the crosshair band snap; the tooltip glides 300ms past a band that jumps; no column,
-  bar, slice, stage or cell answers a hover unless `dimOthers` is set; heatmap, scatter and pie bind
-  no `animate.leave`. Options: none, sync, sync and response (recommended), full with counting numbers.
-
 - [ ] **[P3] Does the picker list height become a public token, or stay behind `panelClass`?** Drawn
   in deck `picker-list-height`. Two caps sit on one panel and the settable-looking one is not the
   one that governs the visible rows: `--ds-dropdown-panel-max-height` caps the box and is forwarded,
@@ -1106,21 +1100,20 @@ file** — the number moves; cite the filename.
 | 9 | `9-locale-week-and-hour` | Whether the date picker's first day of the week and the time picker's 12h/24h follow `DS_CONFIG.locale`: fixed as today, both, week only, or hours only, each drawn over six locales. | the locale-defaults Decision (plan-C, task 21) |
 | 10 | `10-docs-reasoning-blocks` | What ds-docs does with its ~27 reasoning blocks: keep, fold to the chapter end, move to a proof page, or delete. | none - the Claude Design side is settled in `.design-sync/CARDS.md` |
 | 11 | `11-deerns-atlas-feedback` | Nine design calls and a per-component scope call raised by the Deerns Atlas prototype on the Claude Design bundle; twenty one-answer fixes (inputs before first CD on React 18 for NG0950 and mount flicker, empty Tabs, `ds-x-*` alias vs tag selectors, `.link` on button, Tag nowrap, agent catalogue) are listed in the deck. | Deerns Atlas feedback |
-| 12 | `12-chart-motion` | How much motion the charts get: none, sync, sync and response, or full; each drawn as a live mini chart. | the chart-motion Decision |
-| 13 | `13-chart-motion-extras` | Which of fifteen motion, hover and interaction additions to build on top of «Синхрон и отклик», the level picked in `chart-motion`; all on by default, each one live, with skeleton-to-data drawn for every chart kind and the data-to-data reload shown. | the chart-motion Decision |
-| 14 | `14-unread-tokens` | Which public tokens the library never reads to remove: none, the 51 dead component and pattern sizes, or all 121. | none |
-| 15 | `15-unasked-decisions` | Six Unreleased behaviour changes made without a choice: keep, adjust or revert each. | none |
-| 16 | `16-column-chart-filter` | How `ds-column-chart` takes a caption under each column and a persistent selection, so a consumer's filter chart can move onto it: point fields, chart inputs with a template, or nothing; `value: number | null` is settled. | none |
-| 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
-| 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
-| 19 | `19-interaction-states` | General rules for the states of interactive elements as levels on three channels, with live sliders for the step numbers; one neutral hover surface; a check against empty cells; whether to merge the pilot; open questions on top. | none |
-| 20 | `20-text-snap-scale` | How a scaling animation ends without the text snapping a pixel: press (as today for now), card hover, the scaling rule, the funnel stage step. | the overlay-enter-snap fix |
-| 21 | `21-tooltip-mechanism` | Three open questions on the tooltip: the six listeners per table cell (measured) and what to do about them, loading the panel at idle after start, and one app-wide delegated listener for every directive with events. Answered and finished proposals are folded below. | none |
-| 22 | `22-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
-| 23 | `23-docs-table-look` | Which look `table.tbl` takes on every ds-docs page: bordered everywhere, plain everywhere, or as today (Charts and Z-index override the shared bordered rule); all four pages drawn in each look. | none |
-| 24 | `24-density-scope` | Where `data-density` works: only on `<html>` with the docs corrected, or on any container by re-declaring `--field-h-sm`, `--field-h-md`, `--sidenav-collapsed-item` and `--calendar-cell-min` inside `[data-density]`; both drawn at four tiers and nested. | none |
-| 25 | `25-table-truncate-result` | Sign-off of the `truncate` column without `width` that grows to its text: four verdicts recorded (B, A, C, A), `minWidth` built; open: the general column sizing rules and width stability across pages, each drawn on harness tables. | the P1 table item in Asked by Stas |
-| 26 | `26-table-wrap-parked` | Parked: two wrap options for a `truncate` column (fill the row height, or always wrap), each rendered. | the wrap item under Parked |
+| 12 | `12-chart-motion-extras` | Which of fifteen motion, hover and interaction additions to build on top of «Синхрон и отклик», the level picked in `chart-motion`; all on by default, each one live, with skeleton-to-data drawn for every chart kind and the data-to-data reload shown. | none |
+| 13 | `13-unread-tokens` | Which public tokens the library never reads to remove: none, the 51 dead component and pattern sizes, or all 121. | none |
+| 14 | `14-unasked-decisions` | Six Unreleased behaviour changes made without a choice: keep, adjust or revert each. | none |
+| 15 | `15-column-chart-filter` | How `ds-column-chart` takes a caption under each column and a persistent selection, so a consumer's filter chart can move onto it: point fields, chart inputs with a template, or nothing; `value: number | null` is settled. | none |
+| 16 | `16-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
+| 17 | `17-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
+| 18 | `18-interaction-states` | General rules for the states of interactive elements as levels on three channels, with live sliders for the step numbers; one neutral hover surface; a check against empty cells; whether to merge the pilot; open questions on top. | none |
+| 19 | `19-text-snap-scale` | How a scaling animation ends without the text snapping a pixel: press (as today for now), card hover, the scaling rule, the funnel stage step. | the overlay-enter-snap fix |
+| 20 | `20-tooltip-mechanism` | Three open questions on the tooltip: the six listeners per table cell (measured) and what to do about them, loading the panel at idle after start, and one app-wide delegated listener for every directive with events. Answered and finished proposals are folded below. | none |
+| 21 | `21-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
+| 22 | `22-docs-table-look` | Which look `table.tbl` takes on every ds-docs page: bordered everywhere, plain everywhere, or as today (Charts and Z-index override the shared bordered rule); all four pages drawn in each look. | none |
+| 23 | `23-density-scope` | Where `data-density` works: only on `<html>` with the docs corrected, or on any container by re-declaring `--field-h-sm`, `--field-h-md`, `--sidenav-collapsed-item` and `--calendar-cell-min` inside `[data-density]`; both drawn at four tiers and nested. | none |
+| 24 | `24-table-truncate-result` | Sign-off of the `truncate` column without `width` that grows to its text: four verdicts recorded (B, A, C, A), `minWidth` built; open: the general column sizing rules and width stability across pages, each drawn on harness tables. | the P1 table item in Asked by Stas |
+| 25 | `25-table-wrap-parked` | Parked: two wrap options for a `truncate` column (fill the row height, or always wrap), each rendered. | the wrap item under Parked |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1337,7 +1330,7 @@ Stas: keep it in the backlog.
 
 - [ ] **[P3] In `ds-banner` and `ds-dropzone` the `ds-icon` box is 16px while its svg draws 20px.**
   `.icon` from `styles/icon-base` is the only rule setting a width on the `<ds-icon class="icon">`
-  host; the 20 sits on the svg alone. Options, each drawn in `presentations/22-icon-box-size.html`:
+  host; the 20 sits on the svg alone. Options, each drawn in `presentations/21-icon-box-size.html`:
   **A** `ds-icon` keeps its own size (recommended: fixes the source, consumers included; text moves
   4px), **B** rename the class in the two components (as `option-icon`; a consumer's own
   `class="icon"` stays squeezed), **C** keep 16 (glyph shrinks, text stays), **D** nothing. No code

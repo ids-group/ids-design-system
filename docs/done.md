@@ -2,6 +2,12 @@
 
 One line per closed item. Open work lives in `todo.md`; the detail behind an entry is in git history.
 
+## Chart motion: sync and response (2026-10-11)
+- Line, markers, area, value labels, pins, gridlines, tick labels and waterfall connectors move on the column timing; the category band glides with the tooltip panel and a held band pin follows the data (`chart-motion.moves`, `measureBandPinY`)
+- `ds-pie-chart` tweens slice angles through `tweenMarks` (`charts-motion.ts`); heatmap rows and cells, scatter points, pie slices and waterfall connectors and labels leave with a fade
+- Hovered column, bar, waterfall step and heatmap cell brighten (`chart-interactive.$highlight`); a hovered pie slice slides out 3 units; pins pop in; tooltip rows fade in on a new category
+- Decided: sync and response, no counting numbers (Stas, deck `chart-motion`)
+
 ## Chart and picker loading (2026-10-09)
 - Eight charts keep the plot under `ds-loading-overlay` on a reload, bound to the plot with an 8px reach and the caption uncovered (`ChartStatesComponent`, `reloading`)
 - The skeleton takes each chart's shape at the drawn size: axes and columns, a line, a sliced ring, narrowing stages, floating steps, a cell grid, the scatter grid with no dots (`chart-skeleton.component.ts`, `charts-skeleton.ts`)

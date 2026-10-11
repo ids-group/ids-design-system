@@ -10,6 +10,7 @@ import {
   input,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import { cssDurationMs } from '@ids-group-ltd/ids-design-system/components';
 import type { ChartTooltipContext } from './chart-tooltip.types';
 import { swatchBlendsInto } from './swatch-contrast';
 
@@ -49,9 +50,40 @@ export class ChartTooltipPanelComponent {
       : swatches;
   });
 
+  // What the rows read: another category or mark fades them in, a new value alone does not.
+  private readonly rowsKey = computed(() =>
+    JSON.stringify([
+      this.context().category,
+      this.context().entries.map((entry) => entry.label),
+    ]),
+  );
+
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
+  private shownRows: string | null = null;
+
   constructor() {
+    afterRenderEffect(() => {
+      const rows = this.rowsKey();
+      const previous = this.shownRows;
+      this.shownRows = rows;
+      const list = this.host.nativeElement.querySelector('.entries');
+      if (previous === null || previous === rows || !list?.animate) {
+        return;
+      }
+      const style = getComputedStyle(list);
+      const duration = cssDurationMs(
+        style.getPropertyValue('--ds-motion-chart-state-duration'),
+      );
+      if (duration > 0) {
+        list.animate([{ opacity: 0.15 }, { opacity: 1 }], {
+          duration,
+          easing:
+            style.getPropertyValue('--ds-motion-chart-state-easing').trim() ||
+            'ease',
+        });
+      }
+    });
     afterRenderEffect({
       earlyRead: () => {
         this.context();

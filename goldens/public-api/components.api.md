@@ -340,6 +340,9 @@ export function closeOnScroll(overlayRef: OverlayRef, close: () => void): () => 
 export function createTypeAhead(): DsTypeAhead;
 
 // @internal
+export function cssDurationMs(duration: string): number;
+
+// @internal
 export function decimationTarget(plotWidth: number): number;
 
 // @internal
@@ -503,6 +506,9 @@ export function tickValues(domainMin: number, domainMax: number, targetCount: nu
 
 // @internal
 export function trimmedText(value: string | null | undefined): string;
+
+// @internal
+export function tweenMarks(element: Element, from: readonly number[], to: readonly number[], apply: (values: readonly number[]) => void): () => void;
 
 // @internal
 export function valueControlBridge<T>(model: () => ModelSignal<T>): { readonly formDisabled: WritableSignal<boolean>; readonly touchedSelf: WritableSignal<boolean>; markTouched(): void; writeValue(next: T): void; registerOnChange(fn: (next: T) => void): void; registerOnTouched(fn: () => void): void; setDisabledState(isDisabled: boolean): void; };

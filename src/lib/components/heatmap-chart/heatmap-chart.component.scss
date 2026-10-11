@@ -50,7 +50,7 @@
 }
 
 .grid {
-  @include chart-interactive.fades('.cell', ', background var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
+  @include chart-interactive.fades('.cell', ', background var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing), #{chart-interactive.$highlight-transition}');
 
   border-collapse: separate;
   border-spacing: var(--_heatmap-chart-cell-gap);
@@ -78,6 +78,8 @@
   padding: 0;
 }
 
+@include chart-motion.pops-in('.cell-slot > .pin-marker');
+
 .cell-slot > .pin-marker {
   position: absolute;
   inset: 0;
@@ -103,6 +105,8 @@
 }
 
 @include chart-motion.fades-in('.cell');
+@include chart-motion.leaves('.grid tbody > tr');
+@include chart-motion.leaves('.cell-slot');
 @include chart-motion.follows('.cell-value', var(--ds-motion-chart-mark-enter-duration));
 
 // The row label is the first child, so a slot's position is its column index + 1.
@@ -119,6 +123,10 @@
 }
 
 // The ramp's first step is a real reading, so a missing cell must not use it.
+.cell.is-active {
+  filter: chart-interactive.$highlight;
+}
+
 .cell.is-missing {
   background: var(--_heatmap-chart-missing-color);
 }

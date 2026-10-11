@@ -177,6 +177,7 @@
     [class.ring-outline]="total() === 0">
     <svg
       class="ring-svg"
+      [style.--_pie-chart-hover-shift.px]="sliceHoverShift"
       [class.dims-others]="dimOthers()"
       [attr.aria-hidden]="ringCarriesTheRoute() ? null : true"
       [attr.viewBox]="viewBox">
@@ -193,12 +194,15 @@
           [class.focusable]="ringCarriesTheRoute()"
           [attr.d]="entry.path"
           [style.fill]="entry.color"
+          [style.--_slice-shift-x.px]="entry.shift.x"
+          [style.--_slice-shift-y.px]="entry.shift.y"
           [attr.role]="ringCarriesTheRoute() ? 'button' : null"
           [attr.tabindex]="
             ringCarriesTheRoute() ? (index === roving.tabStop() ? 0 : -1) : null
           "
           [attr.data-mark-index]="index"
           [attr.aria-label]="ringCarriesTheRoute() ? entryLabel(entry) : null"
+          (animate.leave)="leaveMark($event)"
           (pointerenter)="activeMark.enter(index, $event)"
           (pointerleave)="activeMark.leave()"
           (focus)="onMarkFocus(index, $event)"

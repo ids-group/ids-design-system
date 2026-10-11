@@ -3,6 +3,12 @@
 @include component-base.rules;
 @include chart-motion.fades-in('.connector', var(--ds-motion-chart-mark-grow-duration));
 @include chart-motion.follows('.value', var(--ds-motion-chart-mark-grow-duration));
+@include chart-motion.leaves('.value');
+
+.connector,
+.value {
+  transition: chart-motion.moves(transform);
+}
 
 .connector {
   stroke: var(--_waterfall-chart-connector-color);

@@ -50,7 +50,12 @@ export {
   tickValues,
 } from './charts-scale';
 export type { BandScale, NiceDomain, PointScale } from './charts-scale';
-export { leaveMark, staggerDelay } from './charts-motion';
+export {
+  cssDurationMs,
+  leaveMark,
+  staggerDelay,
+  tweenMarks,
+} from './charts-motion';
 export {
   CHART_SKELETON_COUNT,
   skeletonColumnHeights,

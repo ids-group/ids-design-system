@@ -26,6 +26,7 @@ export class HeatmapChartComponent extends DsChartBase implements ChartDimmable,
     protected readonly highlightedStep = signal<number | null>(…);
     protected isCellDimmed(cell: PlacedCell): boolean;
     protected readonly isEmpty = computed(…);
+    protected readonly leaveMark = leaveMark;
     public readonly max = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
     public readonly min = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
     protected onCellClick(row: PlacedRow, cell: PlacedCell, rowIndex: number): void;
