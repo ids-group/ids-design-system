@@ -15,14 +15,17 @@
   .demo .cat { text-anchor: middle; }
   .demo .cat.is-hot { fill: var(--text-primary); font-weight: var(--font-weight-bold); }
   .demo .guide { stroke: var(--chart-cursor-line-color); stroke-dasharray: 3 3; transition: opacity var(--ds-motion-chart-state-duration); }
+  .demo .guide + g { transition: opacity var(--ds-motion-chart-state-duration); }
   .demo .pill-bg { fill: var(--text-primary); }
   .demo .pill-text { fill: var(--surface-default); font: var(--font-weight-bold) 9px / 1 var(--font-sans); text-anchor: middle; }
   .demo .col { transition: filter var(--ds-motion-chart-state-duration), y var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing), height var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing), opacity var(--ds-motion-chart-mark-duration); }
   .demo .col.is-hot { filter: brightness(1.12) saturate(1.1); }
   .demo .line { fill: none; stroke-width: 2; stroke-linejoin: round; }
   .demo .marker { stroke-width: 2; fill: var(--surface-default); }
-  .demo .halo { fill: none; stroke-width: 2; transform-box: fill-box; transform-origin: center; animation: halo 1.6s var(--ease-standard) infinite; pointer-events: none; }
-  @keyframes halo { 0% { scale: 1; opacity: 0.55; } 70% { scale: 2.6; opacity: 0; } 100% { scale: 2.6; opacity: 0; } }
+  .demo .marker { transition: r var(--ds-motion-chart-state-duration), fill var(--ds-motion-chart-state-duration); }
+  .demo .marker.is-hot { r: 5.5; fill: var(--chart-categorical-4); }
+  .demo .drop { stroke: var(--chart-cursor-line-color); stroke-width: 1; pointer-events: none; transition: opacity var(--ds-motion-chart-state-duration); }
+  .demo .point-value { fill: var(--text-primary); font: var(--font-weight-bold) 10px / 1 var(--font-sans); text-anchor: middle; pointer-events: none; transition: opacity var(--ds-motion-chart-state-duration); }
   .demo .slice { stroke: var(--surface-default); stroke-width: 2; pointer-events: none; transition: translate var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing); }
   .demo .slice-hit { fill: transparent; }
   .demo[data-demo="pie"] svg { inline-size: min(170px, 100%); justify-self: center; }
@@ -30,8 +33,9 @@
   .demo .centre-caption { fill: var(--text-tertiary); font: 9px / 1 var(--font-sans); text-anchor: middle; transition: opacity 90ms linear; }
   .demo .is-swapping { opacity: 0.1; }
   .demo .cell { transition: opacity var(--ds-motion-chart-state-duration); }
-  .demo .heat.has-hot .cell:not(.in-cross) { opacity: 0.45; }
-  .demo .cross-outline { fill: none; stroke: var(--text-primary); stroke-width: 1.5; pointer-events: none; }
+  .demo .cell-outline { fill: none; stroke: var(--text-primary); stroke-width: 1.5; pointer-events: none; transition: opacity var(--ds-motion-chart-state-duration); }
+  .demo .scale-marker { pointer-events: none; transition: opacity var(--ds-motion-chart-state-duration); }
+  .demo .scale-marker path { fill: var(--text-primary); }
   .demo .point { transition: r var(--ds-motion-chart-state-duration), opacity var(--ds-motion-chart-state-duration); }
   .demo .scatter.has-hot .point:not(.is-hot) { opacity: 0.35; }
   .demo .point.is-hot { r: 6; }
@@ -114,16 +118,16 @@
         <h3>Серия схлопывается</h3>
         <div class="demo" data-demo="collapse"><p class="hint">Выключи серию в легенде</p></div>
         <div class="pills"><span class="pill good">видно, что ушло</span><span class="pill good">остальные плавно пересчитываются</span></div>
-        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">скрытые колонки опускаются до нуля, линия ложится на ось, затем гаснет</dd></dl>
+        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">скрытые колонки опускаются до нуля, линия стирается по себе справа налево и так же дорисовывается обратно</dd></dl>
         <span class="state-mark"></span>
       </article>
 
-      <article class="opt" tabindex="0" data-key="heat-cross">
+      <article class="opt" tabindex="0" data-key="heat-scale-marker">
         <span class="badge is-pick">heatmap</span>
-        <h3>Крест в heatmap</h3>
-        <div class="demo" data-demo="heat"><p class="hint">Наведи на ячейку</p></div>
-        <div class="pills"><span class="pill good">строка и колонка читаются сразу</span></div>
-        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">ds-heatmap-chart: ячейки вне строки и колонки наведённой приглушаются</dd></dl>
+        <h3>Метка на шкале heatmap</h3>
+        <div class="demo" data-demo="heat"><p class="hint">Веди курсор по ячейкам</p></div>
+        <div class="pills"><span class="pill good">цвет читается числом</span><span class="pill good">видно место на шкале</span></div>
+        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">ds-heatmap-chart: над шкалой цвета метка с числом едет к значению наведённой ячейки</dd></dl>
         <span class="state-mark"></span>
       </article>
 
@@ -136,21 +140,21 @@
         <span class="state-mark"></span>
       </article>
 
-      <article class="opt" tabindex="0" data-key="halo">
+      <article class="opt" tabindex="0" data-key="point-drop">
         <span class="badge is-pick">линия</span>
-        <h3>Ореол точки</h3>
-        <div class="demo" data-demo="halo"><p class="hint">Наведи на точку линии</p></div>
-        <div class="pills"><span class="pill good">видно, какая точка выбрана</span><span class="pill mid">постоянное движение, пока наведено</span></div>
-        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">ds-line-chart: мягко расходящееся кольцо вокруг наведённой или закреплённой точки</dd></dl>
+        <h3>Точка линии с отвесом</h3>
+        <div class="demo" data-demo="point"><p class="hint">Веди курсор вдоль линии</p></div>
+        <div class="pills"><span class="pill good">видно, какая точка выбрана</span><span class="pill good">значение без tooltip</span><span class="pill good">ничего не мигает</span></div>
+        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">ds-line-chart: наведённая точка заливается цветом серии, от неё к оси идёт отвес, над ней значение; к соседней точке всё плывёт</dd></dl>
         <span class="state-mark"></span>
       </article>
 
       <article class="opt" tabindex="0" data-key="skeleton">
         <span class="badge is-pick">загрузка</span>
         <h3>Скелетон переходит в график</h3>
-        <div class="demo" data-demo="skeleton"><p class="hint">Нажми «Загрузить»</p></div>
-        <div class="pills"><span class="pill good">нет вспышки при замене</span></div>
-        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">все графики: скелетон гаснет, пока колонки растут из базовой линии</dd></dl>
+        <div class="demo" data-demo="skeleton"><p class="hint">Нажми «Загрузить»: в скелетоне 4, в данных 5</p></div>
+        <div class="pills"><span class="pill good">нет вспышки при замене</span><span class="pill good">плейсхолдер становится колонкой</span></div>
+        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">все графики: плейсхолдеры встают на места и высоты колонок с тем же номером, затем окрашиваются; колонки без плейсхолдера растут из базовой линии, лишние плейсхолдеры опускаются</dd></dl>
         <span class="state-mark"></span>
       </article>
 
@@ -185,7 +189,7 @@
 
   <section class="panel good">
     <h2>Рекомендую: все десять</h2>
-    <p>Каждое дополнение либо отвечает на действие, либо показывает, что изменилось, и ни одно не задерживает чтение числа. Единственное постоянное движение - ореол точки, он работает только пока точка наведена или закреплена и выключается при reduced-motion.</p>
+    <p>Каждое дополнение либо отвечает на действие, либо показывает, что изменилось, и ни одно не задерживает чтение числа. Постоянного движения нет, кроме мерцания скелетона: всё запускается действием и выключается при reduced-motion.</p>
   </section>
 
   <section class="panel">
@@ -198,7 +202,7 @@
     </table>
   </section>
 
-  <p class="src"><b>Источники, проверено 2026-10-05 на <code>dev</code>.</b> Сегодня в библиотеке нет ни одного из десяти: подписи категорий ds-chart не меняются при наведении и плашки значения на оси нет; центр ds-pie-chart показывает только итог; скрытая в легенде серия гаснет (<code>animate.leave</code>, только opacity); у ячеек heatmap и точек scatter нет правила <code>.is-active</code>; scatter реагирует только на точное попадание в точку и не имеет <code>staggerMs</code>; у точки линии при наведении растёт только <code>r</code>; скелетон заменяется графиком без перехода; кольцо фокуса стоит на атрибутах без перехода; колонки трекаются по ключу, но меняют позицию <code>x</code> без перехода. <b>Образцы</b> - маленькие графики на SVG и JS, длительности и кривые из токенов <code>ds.css</code> (<code>--ds-motion-chart-*</code>); это модель поведения, а не код библиотеки. При <code>prefers-reduced-motion</code> все анимации в образцах выключены.</p>
+  <p class="src"><b>Источники, проверено 2026-10-05 на <code>dev</code>.</b> Сегодня в библиотеке нет ни одного из десяти: подписи категорий ds-chart не меняются при наведении и плашки значения на оси нет; центр ds-pie-chart показывает только итог; скрытая в легенде серия гаснет (<code>animate.leave</code>, только opacity); шкала ds-heatmap-chart отвечает только на наведение на ступень, метки значения на ней нет; у точек scatter нет правила <code>.is-active</code>; scatter реагирует только на точное попадание в точку и не имеет <code>staggerMs</code>; у точки линии при наведении растёт только <code>r</code>; скелетон заменяется графиком без перехода; кольцо фокуса стоит на атрибутах без перехода; колонки трекаются по ключу, но меняют позицию <code>x</code> без перехода. <b>Образцы</b> - маленькие графики на SVG и JS, длительности и кривые из токенов <code>ds.css</code> (<code>--ds-motion-chart-*</code>); это модель поведения, а не код библиотеки. При <code>prefers-reduced-motion</code> все анимации в образцах выключены.</p>
 
   <div class="bar-fixed">
     <span class="count" id="count">10 из 10</span>
@@ -258,14 +262,19 @@
       const pillText = el('text', { class: 'pill-text', x: -15, y: 3 }, pill);
       const cols = values.map((v, i) => el('rect', { class: 'col', x: L + slot * i + (slot - w) / 2, width: w, y: B - (v / max) * (B - T), height: (v / max) * (B - T), rx: 2, fill: C(i + 1) }, svg));
       const labels = cats.map((c, i) => { const t = el('text', { class: 'cat', x: L + slot * (i + 0.5), y: B + 14 }, svg); t.textContent = c; return t; });
+      let at = -1, shownY = B, run = 0;
+      const placeY = (y) => { shownY = y; guide.setAttribute('y1', y); guide.setAttribute('y2', y); pill.setAttribute('transform', `translate(${L - 2} ${y})`); };
       const set = (i) => {
+        if (i === at) return;
         cols.forEach((c, k) => c.classList.toggle('is-hot', k === i));
         labels.forEach((c, k) => c.classList.toggle('is-hot', k === i));
-        if (i < 0) { guide.setAttribute('opacity', 0); pill.setAttribute('opacity', 0); return; }
-        const y = B - (values[i] / max) * (B - T);
-        guide.setAttribute('y1', y); guide.setAttribute('y2', y); guide.setAttribute('opacity', 1);
-        pill.setAttribute('transform', `translate(${L - 2} ${y})`); pill.setAttribute('opacity', 1);
-        pillText.textContent = values[i];
+        guide.setAttribute('opacity', i < 0 ? 0 : 1); pill.setAttribute('opacity', i < 0 ? 0 : 1);
+        if (i >= 0) {
+          const y = B - (values[i] / max) * (B - T), mine = ++run;
+          pillText.textContent = values[i];
+          tween(at < 0 ? y : shownY, y, ms('--ds-motion-chart-tooltip-move-duration', 200), (v) => mine === run && placeY(v));
+        }
+        at = i;
       };
       svg.addEventListener('pointermove', (e) => { const b = svg.getBoundingClientRect(); const i = Math.floor((((e.clientX - b.left) / b.width) * W - L) / slot); set(i >= 0 && i < 5 ? i : -1); });
       svg.addEventListener('pointerleave', () => set(-1));
@@ -306,8 +315,9 @@
       const grid = el('g', {}, svg);
       const slot = (R - L) / n, w = slot * 0.3;
       const cols = series.map((s, k) => s.values.map((v, i) => el('rect', { class: 'col', x: L + slot * i + slot / 2 - w + k * w, width: w - 1, rx: 1.5, fill: s.color }, svg)));
-      const path = el('path', { class: 'line', stroke: trend.color }, svg);
-      let max = 1000, lineYs = [];
+      const path = el('path', { class: 'line', stroke: trend.color, pathLength: 1, 'stroke-dasharray': '1 1' }, svg);
+      const GROW = ms('--ds-motion-chart-mark-grow-duration', 420);
+      let max = 1000, lineYs = [], lineShown = 1;
       const yOf = (v) => B - (v / max) * (B - T);
       const drawGrid = () => {
         grid.replaceChildren();
@@ -318,10 +328,12 @@
         max = Math.max(100, Math.ceil(Math.max(...visible, 0) / 250) * 250);
         drawGrid();
         series.forEach((s, k) => s.values.forEach((v, i) => { const y = s.on ? yOf(v) : B; cols[k][i].setAttribute('y', y); cols[k][i].setAttribute('height', B - y); }));
-        const target = trend.values.map((v) => (trend.on ? yOf(v) : B));
-        const from = first || !lineYs.length ? target : lineYs;
-        path.setAttribute('opacity', 1);
-        tween(from, target, first ? 0 : MARK, (ys) => path.setAttribute('d', ys.map((y, i) => `${i ? 'L' : 'M'}${L + slot * (i + 0.5)} ${y}`).join(' ')), () => { if (!trend.on) path.setAttribute('opacity', 0); });
+        const target = trend.values.map(yOf);
+        const shape = (ys) => path.setAttribute('d', ys.map((y, i) => `${i ? 'L' : 'M'}${L + slot * (i + 0.5)} ${y}`).join(' '));
+        const reveal = (to) => { tween(lineShown, to, first ? 0 : GROW, (k) => path.setAttribute('stroke-dashoffset', 1 - k)); lineShown = to; };
+        if (!trend.on) { if (lineShown) reveal(0); return; }
+        if (!lineShown || first) { shape(target); reveal(1); }
+        else tween(lineYs, target, MARK, shape);
         lineYs = target;
       };
       const legend = document.createElement('div'); legend.className = 'chips-row'; host.append(legend);
@@ -333,25 +345,37 @@
       render(true);
     },
     heat(host) {
-      const svg = svgIn(host, 300, 150, 'Load by weekday and hour');
+      const svg = svgIn(host, 300, 172, 'Load by weekday and hour');
       const g = el('g', { class: 'heat' }, svg);
-      const rows = 5, colsN = 8, cw = 30, ch = 22, x0 = 40, y0 = 10;
-      const cells = [];
+      const rows = 5, colsN = 8, cw = 30, ch = 22, x0 = 40, y0 = 10, levels = 7, step = 15, top = levels * step;
+      const rampY = y0 + rows * ch + 26, rampW = colsN * cw - 2;
+      const xOfValue = (v) => x0 + (v / top) * rampW;
       ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].forEach((d, r) => { el('text', { class: 'tick', x: x0 - 6, y: y0 + r * ch + ch / 2, dy: '0.32em', 'text-anchor': 'end' }, svg).textContent = d; });
+      for (let l = 0; l < levels; l++) el('rect', { x: x0 + (l * rampW) / levels, y: rampY, width: rampW / levels, height: 8, fill: `var(--chart-heat-${l + 1})` }, svg);
+      el('text', { class: 'tick', x: x0 - 6, y: rampY + 4, dy: '0.32em', 'text-anchor': 'end' }, svg).textContent = 0;
+      el('text', { class: 'tick', x: x0 + rampW + 6, y: rampY + 4, dy: '0.32em' }, svg).textContent = top;
+      const outline = el('rect', { class: 'cell-outline', width: cw - 2, height: ch - 2, rx: 2, opacity: 0 }, svg);
+      const marker = el('g', { class: 'scale-marker', opacity: 0 }, svg);
+      el('path', { d: 'M-4 -6 L4 -6 L0 0 Z' }, marker);
+      const markerText = el('text', { class: 'point-value', y: -9 }, marker);
+      const SETTLE_MS = 120;
+      let markerX = x0, run = 0, settle = 0;
       for (let r = 0; r < rows; r++) for (let c = 0; c < colsN; c++) {
         const level = 1 + ((r * 3 + c * 5 + (r * c) % 4) % 7);
-        const cell = el('rect', { class: 'cell', x: x0 + c * cw, y: y0 + r * ch, width: cw - 2, height: ch - 2, rx: 2, fill: `var(--chart-heat-${level})` }, g);
-        cell.dataset.r = r; cell.dataset.c = c; cells.push(cell);
+        const value = (level - 1) * step + ((r * 7 + c * 3) % step);
+        el('rect', { class: 'cell', x: x0 + c * cw, y: y0 + r * ch, width: cw - 2, height: ch - 2, rx: 2, fill: `var(--chart-heat-${level})` }, g).addEventListener('pointerenter', () => {
+          outline.setAttribute('x', x0 + c * cw); outline.setAttribute('y', y0 + r * ch); outline.setAttribute('opacity', 1);
+          clearTimeout(settle);
+          settle = setTimeout(() => {
+            markerText.textContent = value;
+            const wasHidden = marker.getAttribute('opacity') === '0';
+            marker.setAttribute('opacity', 1);
+            const mine = ++run, to = xOfValue(value);
+            tween(wasHidden ? to : markerX, to, ms('--ds-motion-chart-tooltip-move-duration', 200), (x) => { if (mine !== run) return; markerX = x; marker.setAttribute('transform', `translate(${x} ${rampY - 1})`); });
+          }, SETTLE_MS);
+        });
       }
-      const outline = el('rect', { class: 'cross-outline', width: cw - 2, height: ch - 2, rx: 2, opacity: 0 }, svg);
-      const set = (r, c) => {
-        g.classList.toggle('has-hot', r >= 0);
-        cells.forEach((cell) => cell.classList.toggle('in-cross', Number(cell.dataset.r) === r || Number(cell.dataset.c) === c));
-        outline.setAttribute('opacity', r >= 0 ? 1 : 0);
-        if (r >= 0) { outline.setAttribute('x', x0 + c * cw); outline.setAttribute('y', y0 + r * ch); }
-      };
-      cells.forEach((cell) => cell.addEventListener('pointerenter', () => set(Number(cell.dataset.r), Number(cell.dataset.c))));
-      svg.addEventListener('pointerleave', () => set(-1, -1));
+      svg.addEventListener('pointerleave', () => { clearTimeout(settle); outline.setAttribute('opacity', 0); marker.setAttribute('opacity', 0); });
     },
     scatter(host) {
       const svg = svgIn(host, 300, 170, 'Deal size against cycle length');
@@ -372,47 +396,72 @@
       });
       svg.addEventListener('pointerleave', () => { g.classList.remove('has-hot'); dots.forEach((d) => d.classList.remove('is-hot')); ring.setAttribute('opacity', 0); });
     },
-    halo(host) {
-      const W = 300, H = 150, L = 20, R = 290, T = 15, B = 130;
+    point(host) {
+      const W = 300, H = 150, L = 20, R = 290, T = 22, B = 130;
       const values = [82, 86, 91, 85, 118, 104];
       const svg = svgIn(host, W, H, 'Average order value');
       const slot = (R - L) / values.length;
       const pts = values.map((v, i) => [L + slot * (i + 0.5), B - ((v - 60) / 70) * (B - T)]);
+      el('line', { class: 'grid-line', x1: L, x2: R, y1: B, y2: B }, svg);
+      const drop = el('line', { class: 'drop', y2: B, opacity: 0 }, svg);
       el('path', { class: 'line', stroke: C(4), d: pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x} ${y}`).join(' ') }, svg);
-      let halo = null;
-      pts.forEach(([x, y]) => {
-        const m = el('circle', { class: 'marker', cx: x, cy: y, r: 4, stroke: C(4) }, svg);
-        el('circle', { cx: x, cy: y, r: 14, fill: 'transparent' }, svg).addEventListener('pointerenter', () => {
-          halo?.remove();
-          halo = el('circle', { class: 'halo', cx: x, cy: y, r: 5, stroke: C(4) }, svg);
-        });
-      });
-      svg.addEventListener('pointerleave', () => { halo?.remove(); halo = null; });
+      const markers = pts.map(([x, y]) => el('circle', { class: 'marker', cx: x, cy: y, r: 4, stroke: C(4) }, svg));
+      const label = el('text', { class: 'point-value', opacity: 0 }, svg);
+      let at = -1, shown = pts[0], run = 0;
+      const place = ([x, y]) => { shown = [x, y]; drop.setAttribute('x1', x); drop.setAttribute('x2', x); drop.setAttribute('y1', y + 6); label.setAttribute('x', x); label.setAttribute('y', y - 10); };
+      const set = (i) => {
+        if (i === at) return;
+        markers.forEach((m, k) => m.classList.toggle('is-hot', k === i));
+        drop.setAttribute('opacity', i < 0 ? 0 : 1); label.setAttribute('opacity', i < 0 ? 0 : 1);
+        if (i >= 0) {
+          label.textContent = `$${values[i]}`;
+          const mine = ++run;
+          tween(at < 0 ? pts[i] : shown, pts[i], ms('--ds-motion-chart-tooltip-move-duration', 200), (p) => mine === run && place(p));
+        }
+        at = i;
+      };
+      svg.addEventListener('pointermove', (e) => { const b = svg.getBoundingClientRect(); const i = Math.floor((((e.clientX - b.left) / b.width) * W - L) / slot); set(i >= 0 && i < values.length ? i : -1); });
+      svg.addEventListener('pointerleave', () => set(-1));
     },
     skeleton(host) {
       const W = 300, H = 150, L = 20, R = 290, B = 130, T = 15;
       const svg = svgIn(host, W, H, 'Orders by month');
-      const slot = (R - L) / 5, w = slot * 0.5, values = [62, 71, 68, 84, 96];
-      const skel = el('g', { class: 'stage-fade' }, svg);
-      const real = el('g', { class: 'stage-fade', opacity: 0 }, svg);
+      const placeholders = [0.5, 0.7, 0.6, 0.8], values = [62, 71, 68, 84, 96];
+      const GROW = ms('--ds-motion-chart-mark-grow-duration', 600), FADE = ms('--ds-motion-chart-mark-enter-duration', 400);
+      const box = (count, i, share) => { const slot = (R - L) / count, w = slot * 0.5; return [L + slot * i + (slot - w) / 2, w, share * (B - T)]; };
+      const setBox = (rect, [x, w, h]) => { rect.setAttribute('x', x); rect.setAttribute('width', w); rect.setAttribute('y', B - h); rect.setAttribute('height', h); };
+      let rects = [], run = 0, timer = 0;
       const draw = () => {
-        skel.replaceChildren(); real.replaceChildren();
-        [0.5, 0.7, 0.6, 0.8, 0.9].forEach((k, i) => el('rect', { class: 'skeleton-col', x: L + slot * i + (slot - w) / 2, width: w, y: B - k * (B - T), height: k * (B - T), rx: 2 }, skel));
-        skel.setAttribute('opacity', 1); real.setAttribute('opacity', 0);
+        run++; clearTimeout(timer); svg.replaceChildren();
+        rects = placeholders.map((share, i) => { const rect = el('rect', { class: 'skeleton-col', rx: 2 }, svg); setBox(rect, box(placeholders.length, i, share)); return rect; });
+      };
+      const load = () => {
+        const mine = run;
+        const from = rects.map((rect, i) => box(placeholders.length, i, placeholders[i]));
+        rects.forEach((rect) => {
+          rect.style.opacity = getComputedStyle(rect).opacity;
+          rect.style.fill = 'var(--surface-muted)';
+          rect.classList.remove('skeleton-col');
+          rect.getBoundingClientRect();
+          rect.style.transition = `opacity ${FADE}ms, fill ${FADE}ms`;
+          rect.style.opacity = 1;
+        });
+        rects.forEach((rect, i) => {
+          const to = i < values.length ? box(values.length, i, values[i] / 100) : [from[i][0], from[i][1], 0];
+          tween(from[i], to, GROW, (b) => mine === run && setBox(rect, b));
+        });
+        timer = setTimeout(() => {
+          if (mine !== run) return;
+          rects.forEach((rect, i) => (i < values.length ? (rect.style.fill = C(i + 1)) : rect.remove()));
+          values.slice(rects.length).forEach((v, k) => {
+            const i = rects.length + k, rect = el('rect', { rx: 2, fill: C(i + 1) }, svg);
+            tween(box(values.length, i, 0), box(values.length, i, v / 100), GROW, (b) => mine === run && setBox(rect, b));
+          });
+        }, GROW);
       };
       draw();
       const actions = document.createElement('div'); actions.className = 'chips-row'; host.append(actions);
-      const go = button(actions, 'Загрузить');
-      go.addEventListener('click', (e) => {
-        e.stopPropagation(); draw();
-        setTimeout(() => {
-          values.forEach((v, i) => {
-            const r = el('rect', { class: 'col', x: L + slot * i + (slot - w) / 2, width: w, y: B, height: 0, rx: 2, fill: C(i + 1) }, real);
-            tween(0, v, ms('--ds-motion-chart-mark-grow-duration', 600), (h) => { const hh = (h / 100) * (B - T); r.setAttribute('y', B - hh); r.setAttribute('height', hh); });
-          });
-          skel.setAttribute('opacity', 0); real.setAttribute('opacity', 1);
-        }, 500);
-      });
+      button(actions, 'Загрузить').addEventListener('click', (e) => { e.stopPropagation(); draw(); timer = setTimeout(load, 700); });
     },
     stagger(host) {
       const svg = svgIn(host, 300, 150, 'Points and cells entering');
