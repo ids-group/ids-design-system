@@ -144,7 +144,8 @@
             [attr.data-mark-index]="start + index"
             [attr.aria-label]="
               interactive() ? pointLabel(entry.series, mark.point) : null
-            " />
+            "
+            (animate.leave)="leaveMark($event)" />
         }
       </g>
     }
