@@ -75,18 +75,18 @@
           class="cursor"
           aria-hidden="true"
           animate.enter="cursor-in"
-          animate.leave="cursor-out">
+          animate.leave="cursor-out"
+          [style.transform]="'translateX(' + band.x + 'px)'">
           <rect
             class="category-band"
-            [attr.x]="band.x"
             [attr.y]="band.top"
             [attr.width]="band.width"
             [attr.height]="band.bottom - band.top" />
 
           <line
             class="cursor-line"
-            [attr.x1]="band.x + band.width / 2"
-            [attr.x2]="band.x + band.width / 2"
+            [attr.x1]="band.width / 2"
+            [attr.x2]="band.width / 2"
             [attr.y1]="band.top"
             [attr.y2]="band.bottom" />
         </g>
@@ -102,8 +102,7 @@
             class="grid-line"
             [attr.x1]="plot().left"
             [attr.x2]="plotRight()"
-            [attr.y1]="tick.y"
-            [attr.y2]="tick.y" />
+            [style.transform]="'translateY(' + tick.y + 'px)'" />
         }
 
         <line
@@ -126,8 +125,7 @@
               class="grid-line is-secondary"
               [attr.x1]="plot().left"
               [attr.x2]="plotRight()"
-              [attr.y1]="tick.y"
-              [attr.y2]="tick.y" />
+              [style.transform]="'translateY(' + tick.y + 'px)'" />
           }
         }
 
@@ -231,7 +229,7 @@
             text-anchor="end"
             [style.fill]="axisLabelFill()"
             [attr.x]="axisLabelX()"
-            [attr.y]="tick.y">
+            [style.transform]="'translateY(' + tick.y + 'px)'">
             {{ tick.label }}
           </text>
         }
@@ -242,7 +240,7 @@
             [style.fill]="secondaryAxisLabelFill()"
             [attr.text-anchor]="secondaryLabelAnchor()"
             [attr.x]="secondaryLabelX()"
-            [attr.y]="tick.y">
+            [style.transform]="'translateY(' + tick.y + 'px)'">
             {{ tick.label }}
           </text>
         }
@@ -273,11 +271,7 @@
         <g
           dsChartPinMarker
           [attr.transform]="
-            'translate(' +
-            (band.x + band.width / 2) +
-            ',' +
-            bandPinY() +
-            ')'
+            'translate(' + (band.x + band.width / 2) + ',' + bandPinY() + ')'
           ">
         </g>
       }

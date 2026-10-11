@@ -10,7 +10,7 @@
 
 
 .columns {
-  @include chart-interactive.fades('.column');
+  @include chart-interactive.fades('.column', ', #{chart-motion.moves(transform)}');
   @include chart-interactive.clickable('.column');
 
   --_column-chart-column-max-width: var(--ds-column-chart-column-max-width, 48px);
@@ -62,6 +62,11 @@
 // `fill-box`, not view-box: the arrival scales about the column's own baseline.
 .bar {
   transform-box: fill-box;
+  transition: chart-interactive.$highlight-transition;
+}
+
+.column.is-active .bar {
+  filter: chart-interactive.$highlight;
 }
 
 .bar-base,
@@ -110,6 +115,8 @@
 
 // SVG text paints from `fill`; `currentcolor` keeps the inherited colour.
 .value {
+  transform: translateY(var(--_column-value-y));
+  transition: chart-motion.moves(transform);
   fill: currentcolor;
   font-size: var(--font-size-xs);
   font-weight: 700;

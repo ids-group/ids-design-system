@@ -27,12 +27,14 @@
   --_chart-area-opacity: var(--ds-chart-area-opacity);
 }
 
-@include chart-interactive.dims('.series-line', ', stroke var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
-@include chart-interactive.dims('.series-marker', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing), r var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing)');
+// A `d` with a different command count does not interpolate and snaps, which is what a point added or removed needs.
+@include chart-interactive.dims('.series-line', ', #{chart-motion.moves(stroke, d)}');
+@include chart-interactive.dims('.series-marker', ', #{chart-motion.moves(fill, cx, cy)}, r var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing)');
 @include chart-interactive.clickable('.series-marker');
 
 // `--ds-chart-area-color` is left undeclared, so an unset one falls through to the series colour.
 .series-area {
+  transition: chart-motion.moves(d);
   fill: var(--ds-chart-area-color, var(--_series-area-color));
   fill-opacity: var(--_chart-area-opacity);
   stroke: none;
