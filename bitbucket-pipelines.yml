@@ -32,6 +32,19 @@ definitions:
           - bun.lock
           - angular.json
       path: .angular/cache
+    # eslint and stylelint `--cache` (package.json scripts). Their cache sees a file's content and the
+    # config, not the code of the repo's own rule plugins, so those are in the key; locally, delete
+    # `.cache/` after editing a rule under eslint/, eslint-rules/ or stylelint/.
+    lint:
+      key:
+        files:
+          - bun.lock
+          - eslint.config.mjs
+          - .stylelintrc.json
+          - eslint/**
+          - eslint-rules/**
+          - stylelint/**
+      path: .cache
     dist-ds:
       key:
         files:
@@ -80,6 +93,7 @@ pipelines:
             - bun-cache
             - angular
             - dist-ds
+            - lint
           script:
             - sh infrastructure/scripts/ci-pr.sh
 
