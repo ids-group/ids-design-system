@@ -128,6 +128,7 @@
               <td
                 class="cell-slot"
                 [attr.data-mark-index]="index"
+                (animate.leave)="leaveMark($event)"
                 (pointerenter)="activeMark.enter(index, $event)"
                 (pointerleave)="activeMark.leave()"
                 (click)="onCellPress(cell, index, $event)">
