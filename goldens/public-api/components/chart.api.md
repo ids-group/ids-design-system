@@ -399,6 +399,8 @@ ds-chart {
     --ds-chart-plot-bg-color: transparent;
     --ds-motion-chart-state-duration: (none);
     --ds-motion-chart-state-easing: (none);
+    --ds-motion-chart-tooltip-move-duration: (none);
+    --ds-motion-chart-tooltip-move-easing: (none);
 }
 
 g[dsColumnSeries] {
@@ -423,8 +425,6 @@ g[dsLineSeries] {
     --ds-chart-line-width: (none);
     --ds-chart-line-width-bold: (none);
     --ds-motion-chart-mark-detail-duration: (none);
-    --ds-motion-chart-mark-duration: (none);
-    --ds-motion-chart-mark-easing: (none);
     --ds-motion-chart-mark-enter-easing: (none);
     --ds-motion-chart-mark-sweep-duration: (none);
     --ds-motion-chart-state-duration: (none);

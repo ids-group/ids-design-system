@@ -25,6 +25,7 @@ export class PieChartComponent extends DsChartBase implements ChartDimmable, Cha
     public readonly dataTableResolved = this.defaults.dataTable;
     protected readonly dataTableRows = computed<readonly ChartDataRow[]>(…);
     public readonly dimOthers = input(false, { transform: booleanAttribute });
+    private readonly drawnArcs;
     protected entryLabel(entry: { slice: PieChartSlice; formattedValue: string; formattedPercent: string; });
     private fitCenter;
     private readonly fitsInside;
@@ -32,6 +33,7 @@ export class PieChartComponent extends DsChartBase implements ChartDimmable, Cha
     public readonly innerRadius = input(DEFAULT_INNER_RADIUS, { transform: numberAttribute });
     protected isDimmed(index: number): boolean;
     protected readonly isEmpty = computed(…);
+    protected readonly leaveMark = leaveMark;
     public readonly legend = input<'end' | 'bottom' | 'none'>('end');
     private readonly legendDwell;
     private readonly legendHighlight;
@@ -59,12 +61,15 @@ export class PieChartComponent extends DsChartBase implements ChartDimmable, Cha
     protected readonly skeletonMarks = computed(…);
     protected readonly skeletonRows = computed(…);
     public readonly sliceClicked = output<PieChartSlice>();
+    protected readonly sliceHoverShift = SLICE_HOVER_SHIFT;
     protected readonly slices = computed(…);
+    private stopArcTween;
     public readonly tooltip = input<ChartItemTooltipTrigger>('item');
     protected readonly tooltipContext = computed<ChartTooltipContext | null>(…);
     private readonly tooltipLingerResolved;
     protected readonly tooltipTemplate = contentChild<TemplateRef<{ $implicit: ChartTooltipContext; }>>(…);
     protected readonly total = computed(…);
+    private readonly tweenArcs;
     protected readonly viewBox = `0 0 ${RING_VIEW_BOX_SIZE} ${RING_VIEW_BOX_SIZE}`;
     protected readonly visibleSlices = computed(…);
     private readonly watchRing;
@@ -89,6 +94,8 @@ ds-pie-chart {
     --ds-motion-chart-mark-duration: (none);
     --ds-motion-chart-mark-easing: (none);
     --ds-motion-chart-mark-sweep-duration: (none);
+    --ds-motion-chart-state-duration: (none);
+    --ds-motion-chart-state-easing: (none);
     --ds-pie-chart-center-value-min-font-size: var(--font-size-s);
     --ds-pie-chart-focus-color: var(--focus-ring-color);
     --ds-pie-chart-focus-width: var(--focus-ring-width);

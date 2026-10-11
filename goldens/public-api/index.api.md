@@ -361,6 +361,8 @@ styles/_chart-interactive.scss {
 
 styles/_chart-motion.scss {
     --ds-motion-chart-mark-detail-duration: (none);
+    --ds-motion-chart-mark-duration: (none);
+    --ds-motion-chart-mark-easing: (none);
     --ds-motion-chart-mark-enter-duration: (none);
     --ds-motion-chart-mark-enter-easing: (none);
     --ds-motion-chart-mark-exit-duration: (none);

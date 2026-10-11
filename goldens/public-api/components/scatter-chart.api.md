@@ -24,6 +24,7 @@ export class ScatterChartComponent extends DsChartBase implements ChartDimmable,
     protected readonly highlightedSeries = signal<string | null>(…);
     private hoveredIndex;
     protected readonly isEmpty = computed(…);
+    protected readonly leaveMark = leaveMark;
     protected readonly legendItems = computed<readonly ChartLegendItem[]>(…);
     protected readonly multiSeries = computed(…);
     private nearestMark;
