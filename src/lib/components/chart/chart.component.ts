@@ -202,21 +202,26 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     () => this.measuredWidth() || CHART_FALLBACK_WIDTH,
   );
 
-  private readonly settledWidth = signal(0);
+  /** The geometry a resize or a category coming or going redraws; marks hold still while it changes. */
+  private readonly layout = computed(
+    () => `${this.measuredWidth()}:${this.categories().length}`,
+  );
 
-  /** Whether the marks may animate: the correction after measuring and every resize must not. Derived
-   *  from the width, so the hold lands in the same render as the new geometry. Two frames, because
-   *  after one the corrected geometry is unstyled and `transitionrun` fires on `x` and `width`. */
+  private readonly settledLayout = signal('');
+
+  /** Whether the marks may animate: the correction after measuring, a resize and a category coming or
+   *  going must not, or a column glides while a line whose point count changed redraws at once.
+   *  Derived from the layout, so the hold lands in the same render as the new geometry. Two frames,
+   *  because after one the corrected geometry is unstyled and `transitionrun` fires on `x` and `width`. */
   protected readonly settled = computed(
-    () =>
-      this.measuredWidth() > 0 && this.measuredWidth() === this.settledWidth(),
+    () => this.measuredWidth() > 0 && this.layout() === this.settledLayout(),
   );
 
   constructor() {
     super();
     effect((onCleanup) => {
-      const width = this.measuredWidth();
-      if (width === 0 || width === this.settledWidth()) {
+      const layout = this.layout();
+      if (this.measuredWidth() === 0 || layout === this.settledLayout()) {
         return;
       }
       let first = 0;
@@ -224,7 +229,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       // Outside the zone: under zone.js each frame callback is a full application tick.
       this.zone.runOutsideAngular(() => {
         first = requestAnimationFrame(() => {
-          second = requestAnimationFrame(() => this.settledWidth.set(width));
+          second = requestAnimationFrame(() => this.settledLayout.set(layout));
         });
       });
       onCleanup(() => {

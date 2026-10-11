@@ -82,6 +82,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     protected readonly keyboardStops = computed(…);
     private readonly labelHovered;
     private readonly labelTexts;
+    private readonly layout;
     private leavesChart;
     private listenForCursor;
     private listenForEscapeFromMarker;
@@ -140,7 +141,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     public readonly secondaryYPosition = computed(…);
     public setActiveIndex(index: number): void;
     protected readonly settled = computed(…);
-    private readonly settledWidth;
+    private readonly settledLayout;
     protected readonly showSecondaryGridlines = computed(…);
     public readonly skeletonCount = input(CHART_SKELETON_COUNT, { transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT) });
     protected readonly skeletonMarks = computed(…);
