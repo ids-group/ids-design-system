@@ -1039,12 +1039,6 @@ that already existed, because both are the kind of ask that comes back.
   them read only by ds-docs), and 70 scale, palette and role names. In pinkmoon, mm-ecm and mm-broker
   the 51 have 0 readers; 12 of the 70 are read. Options: none, the 51 dead sizes, or all 121.
 
-- [ ] **[P3] How much motion do the charts get?** Drawn in deck `chart-motion`. Verified 2026-10-05:
-  columns tween `y`/`height`, while the line path, its markers, the value labels, the pin, the
-  gridlines and the crosshair band snap; the tooltip glides 300ms past a band that jumps; no column,
-  bar, slice, stage or cell answers a hover unless `dimOthers` is set; heatmap, scatter and pie bind
-  no `animate.leave`. Options: none, sync, sync and response (recommended), full with counting numbers.
-
 - [ ] **[P3] Does the picker list height become a public token, or stay behind `panelClass`?** Drawn
   in deck `picker-list-height`. Two caps sit on one panel and the settable-looking one is not the
   one that governs the visible rows: `--ds-dropdown-panel-max-height` caps the box and is forwarded,
