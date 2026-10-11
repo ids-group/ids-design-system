@@ -27,7 +27,7 @@
       "appliesWhen": "Only a class of yours that extends ChartComponent, PieChartComponent, HeatmapChartComponent or ScatterChartComponent, or the internal ChartTooltipPanelComponent or WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of ChartComponent, PieChartComponent, HeatmapChartComponent or ScatterChartComponent.",
-      "note": "ChartComponent gained `measureBandPinY`; PieChartComponent gained `drawnArcs`, `sliceHoverShift`, `stopArcTween`, `tweenArcs` and the internal `leaveMark`; HeatmapChartComponent and ScatterChartComponent each gained the internal `leaveMark`. The internal ChartTooltipPanelComponent gained `rowsKey` and `shownRows`, and the internal WaterfallMarksComponent gained `leaveMark`."
+      "note": "ChartComponent gained `measureBandPinY` and `settledWidth`; PieChartComponent gained `drawnArcs`, `sliceHoverShift`, `stopArcTween`, `tweenArcs` and the internal `leaveMark`; HeatmapChartComponent and ScatterChartComponent each gained the internal `leaveMark`. The internal ChartTooltipPanelComponent gained `rowsKey` and `shownRows`, and the internal WaterfallMarksComponent gained `leaveMark`."
     }
   ],
   "informational": [
