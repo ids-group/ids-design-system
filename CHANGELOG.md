@@ -20,6 +20,12 @@
   the migration manifest; a subclass declaring one of those names must rename it.
   The internal `WaterfallMarksComponent` gained `leaveMark`.
 
+### Fixed
+
+- **Only the main mouse button pins a chart.** A right or middle press on a `ds-chart` category, or
+  on any chart's mark, takes no pin, and one outside the chart leaves a held pin in place. The
+  chart-tooltip entry point exports the internal `isPrimaryPress`.
+
 ## 0.15.0 — 2026-10-09
 
 ### Breaking

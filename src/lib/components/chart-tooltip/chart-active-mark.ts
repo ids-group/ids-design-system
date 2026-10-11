@@ -144,6 +144,9 @@ export function chartActiveMark(
     element ? element.closest('figure') : null;
 
   const release = (event: PointerEvent): void => {
+    if (!isPrimaryPress(event)) {
+      return;
+    }
     if (!(event.target instanceof Element)) {
       clear();
 
@@ -205,7 +208,7 @@ export function chartActiveMark(
     },
     pin(at, event, anchor, mark) {
       dwell.cancel();
-      if (typeof document === 'undefined') {
+      if (typeof document === 'undefined' || !isPrimaryPress(event)) {
         return;
       }
       if (pinned() && index() === at) {
@@ -250,4 +253,11 @@ export function chartActiveMark(
       tapLatched = true;
     }
   }
+}
+
+/** Whether `event` may take or drop a pin: a key or a touch always, a mouse only by its main button.
+ *
+ *  @internal */
+export function isPrimaryPress(event: Event): boolean {
+  return !(event instanceof MouseEvent) || event.button === 0;
 }

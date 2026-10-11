@@ -6,7 +6,7 @@ export type {
   ChartTooltipOrigin,
   ChartTooltipTrigger,
 } from './chart-tooltip.types';
-export { chartActiveMark } from './chart-active-mark';
+export { chartActiveMark, isPrimaryPress } from './chart-active-mark';
 export type { ChartActiveMark } from './chart-active-mark';
 export {
   CHART_PIN_GAP,
