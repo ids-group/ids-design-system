@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Таблицы входов в ds-docs</title>
+<meta name="ds-deck-status" content="open">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+<style>
+  .opts { grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); align-items: start; }
+  .opt { cursor: pointer; }
+  .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+  .opt.is-chosen { outline: 2px solid var(--success); outline-offset: 2px; }
+  .frame { max-block-size: 420px; overflow: auto; border-radius: var(--radius-md); }
+  .pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  .pill { padding: 2px var(--space-2); border-radius: var(--radius-pill); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.5 var(--font-sans); }
+  .pill.good { background: var(--success-subtitle); color: var(--success-text); }
+  .pill.mid { background: var(--warning-subtitle); color: var(--warning-text); }
+
+  table.tbl { width: 100%; border-collapse: separate; border-spacing: 0; border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); overflow: hidden; background: var(--surface-default); }
+  table.tbl th, table.tbl td { padding: var(--space-3) var(--space-4); text-align: left; border-bottom: var(--border-width-default) solid var(--border-divider); font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-primary); }
+  table.tbl th { background: var(--surface-secondary); font-weight: var(--font-weight-bold); color: var(--text-secondary); font-size: var(--font-size-xs); text-transform: uppercase; letter-spacing: var(--letter-spacing-wider); }
+  table.tbl tr:last-child td { border-bottom: 0; }
+  table.tbl code { padding: 1px 6px; border-radius: var(--radius-sm); background: var(--surface-secondary); font: var(--font-size-xs) / 1.4 var(--font-mono); }
+
+  .dense table.tbl th, .dense table.tbl td { padding: 5px var(--space-3); font-size: var(--font-size-xs); line-height: 1.4; }
+  .dense table.tbl th { text-transform: none; letter-spacing: 0; font-size: var(--font-size-2xs); }
+  .dense table.tbl code { padding: 0; background: none; color: var(--text-primary); }
+  .dense table.tbl td:nth-child(2) code { color: var(--text-tertiary); }
+
+  details.fold { border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); background: var(--surface-default); }
+  details.fold > summary { padding: var(--space-2) var(--space-3); cursor: pointer; font: var(--font-weight-semibold) var(--font-size-xs) / 1.4 var(--font-sans); color: var(--text-secondary); }
+  details.fold > summary .count { color: var(--text-tertiary); font-weight: var(--font-weight-regular); }
+  details.fold[open] > summary { border-bottom: var(--border-width-default) solid var(--border-divider); }
+  details.fold table.tbl { border: 0; border-radius: 0; }
+
+  main { padding-bottom: 72px; }
+  .bar-fixed { position: fixed; inset-inline: 0; inset-block-end: 0; display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-6); background: var(--surface-overlay); border-top: var(--border-width-default) solid var(--border-divider); font: var(--font-size-xs) / 1.4 var(--font-sans); }
+  .bar-fixed output { flex: 1 1 auto; min-width: 0; color: var(--text-secondary); font-family: var(--font-mono); overflow-x: auto; white-space: nowrap; }
+  .bar-fixed .chat-name { color: var(--text-tertiary); flex: none; }
+  .bar-fixed button { flex: none; padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-primary); font: var(--font-weight-bold) var(--font-size-2xs) var(--font-sans); cursor: pointer; }
+  @media (max-width: 640px) { .opts { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1>Таблица входов в ds-docs занимает экран и не читается</h1>
+    <p class="lede">Одно решение: как показывать таблицы входов и параметров в разделах ds-docs.</p>
+    <p class="chat">Ответ нести в чат: «Acc2 · Дека движения графиков»</p>
+  </header>
+
+  <section class="panel" data-review="Сегодня">
+    <h2>Сегодня</h2>
+    <p>Раздел <code>ds-chart</code>, «Mark inputs»: 19 строк <code>dsColumnSeries</code>, 1069px на ширине 640px, выше экрана. Таких ручных <code>table.tbl</code> в разделах 104, все с одним общим стилем.</p>
+    <div class="stage"><div class="spec" style="flex: 1 1 640px"><div class="frame" data-table="today"></div><p class="cap">как сейчас, стили из docs-section</p></div></div>
+  </section>
+
+  <section class="panel q" data-review="Варианты">
+    <h2>Четыре варианта</h2>
+    <p>Выбор - клик по карточке.</p>
+    <div class="opts">
+      <article class="opt" tabindex="0" data-key="today">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Ничего</h3>
+        <div class="frame" data-table="today"></div>
+        <div class="pills"><span class="pill mid">19 строк: 1069px</span></div>
+        <dl class="layer"><dt>В ds-docs</dt><dd class="none">ничего</dd></dl>
+      </article>
+
+      <article class="opt" tabindex="0" data-key="dense">
+        <span class="badge">плотность</span>
+        <h3>Плотная таблица</h3>
+        <div class="frame dense" data-table="dense"></div>
+        <div class="pills"><span class="pill good">1069 → 688px</span><span class="pill good">одно правило CSS на все 104</span></div>
+        <dl class="layer"><dt>В ds-docs</dt><dd class="gain">table.tbl: строка 5px сверху и снизу, шрифт xs, код без плашки, заголовок без капса</dd></dl>
+      </article>
+
+      <article class="opt" tabindex="0" data-key="folded">
+        <span class="badge">свёрнуто</span>
+        <h3>Свёрнута под счётчиком</h3>
+        <div class="frame" data-table="folded"></div>
+        <div class="pills"><span class="pill good">закрытая 34px</span><span class="pill mid">открытая 1069px, как сейчас</span></div>
+        <dl class="layer"><dt>В ds-docs</dt><dd class="gain">таблица длиннее 8 строк сворачивается под «Входы · N», как уже свёрнуты таблицы API сервисов</dd></dl>
+      </article>
+
+      <article class="opt is-pick" tabindex="0" data-key="dense-folded">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Плотная и свёрнутая</h3>
+        <div class="frame dense" data-table="folded"></div>
+        <div class="pills"><span class="pill good">закрытая 34px</span><span class="pill good">открытая 688px</span></div>
+        <dl class="layer"><dt>В ds-docs</dt><dd class="gain">оба правила вместе</dd></dl>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Сравнение</h2>
+    <table>
+      <thead><tr><th>Что</th><th>Ничего</th><th>Плотная</th><th>Свёрнута</th><th>Плотная и свёрнутая</th></tr></thead>
+      <tbody>
+        <tr><th class="rowlabel">Высота 19 строк, закрытая</th><td data-h="today"></td><td data-h="dense"></td><td data-h="folded-closed"></td><td data-h="folded-closed-dense"></td></tr>
+        <tr><th class="rowlabel">Высота 19 строк, открытая</th><td data-h="today"></td><td data-h="dense"></td><td data-h="today"></td><td data-h="dense"></td></tr>
+        <tr><th class="rowlabel">Правок в ds-docs</th><td>0</td><td>1 правило CSS</td><td>1 общая обёртка для таблиц длиннее 8 строк</td><td>оба</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel good">
+    <h2>Рекомендую: «Плотная и свёрнутая»</h2>
+    <p>Справку по входам открывают, когда ищут один вход; закрытая таблица не отнимает экран у примеров, открытая показывает все строки без прокрутки.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Что решить</h2>
+    <table>
+      <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
+      <tbody><tr class="row-pick"><th class="rowlabel">Как показывать таблицы входов в ds-docs</th><td>Ничего · Плотная таблица · Свёрнута под счётчиком · Плотная и свёрнутая</td><td>Плотная и свёрнутая</td></tr></tbody>
+    </table>
+  </section>
+
+  <p class="src"><b>Источники, проверено 2026-10-12 на <code>dev</code>.</b> Строки - таблица «Mark inputs» в <code>ds-docs/src/app/sections/charts/chart/chart.section.html</code>. Стиль «как сейчас» перенесён из <code>:where(table.tbl)</code> в <code>ds-docs/src/app/shared/docs-section.component.scss</code>. <code>&lt;table</code> в <code>ds-docs/src/app/sections</code>: 104 (<code>grep -c</code>). Таблицы API сервисов уже свёрнуты в <code>&lt;details&gt;</code> (<code>docs-api-table.component.html</code>). Высоты меряются в этой странице при открытии на ширине 640px; 2026-10-12: 1069, 688 и 34px.</p>
+
+  <div class="bar-fixed">
+    <span class="chat-name">«Acc2 · Дека движения графиков»</span>
+    <output id="line">пока ничего не выбрано</output>
+    <button type="button" id="copy">Скопировать</button>
+  </div>
+</main>
+
+<script>
+  const rows = [
+    ['data', '[]', 'One point per category'],
+    ['showValues', 'true', 'Values above columns'],
+    ['interactive', 'false', 'Pointer cursor and hover tint; <code>pointClicked</code> fires either way'],
+    ['pinOnClick', 'null', 'Holds the clicked mark; unset reads <code>DS_CONFIG.chart.pinOnClick</code>, then <code>true</code>'],
+    ['dimOthers', 'false', 'Fades all but the active mark'],
+    ['staggerMs', '40', 'Entrance delay between marks; <code>0</code> off'],
+    ['partOfWhole', 'false', 'Share in the tooltip'],
+    ['tooltip', "'item'", "<code>'none'</code>: hover and focus open no panel"],
+    ['tooltipAnchor', "'mark'", "<code>'cell'</code>: the full-height category cell"],
+    ['tooltipLingerMs', '500', 'How long the panel outlives the pointer'],
+    ['valueFormat', 'locale number', 'Formats printed values'],
+    ['columnWidthRatio', '0.8', 'Share of the slot before the max-width cap'],
+    ['slot / slotCount', '0 / 1', "This series' slot in a category, and how many: hand-grouped columns"],
+    ['offsets', 'null', "Each mark's value-axis start and end: hand-stacked columns. Unset, from zero"],
+    ['soleSeries', 'false', 'Alone in its slot; marks answer over the full plot height'],
+    ['axis', "'primary'", "or <code>'secondary'</code>"],
+    ['seriesColor / seriesFill', 'null', "Series colour; fill <code>'solid'</code> / <code>'hatched'</code>. A point's own wins"],
+    ['seriesLabel', 'null', 'Names the series in the tooltip'],
+    ['seriesKey / highlighted', 'null', 'Legend identity; all but the highlighted series fade'],
+  ];
+  const code = (text) => text.split(' / ').map((part) => `<code>${part}</code>`).join(' / ');
+  const table = () => `<table class="tbl"><thead><tr><th>dsColumnSeries</th><th>Default</th><th>Meaning</th></tr></thead><tbody>${rows.map(([name, value, meaning]) => `<tr><td>${code(name)}</td><td>${value === 'locale number' ? value : code(value)}</td><td>${meaning}</td></tr>`).join('')}</tbody></table>`;
+  document.querySelectorAll('[data-table]').forEach((host) => {
+    host.innerHTML = host.dataset.table === 'folded'
+      ? `<details class="fold"><summary>dsColumnSeries inputs <span class="count">· ${rows.length}</span></summary>${table()}</details>`
+      : table();
+  });
+
+  const measure = (className, folded, open) => {
+    const probe = document.createElement('div');
+    probe.className = className;
+    probe.style.cssText = 'position:absolute; visibility:hidden; inline-size:640px';
+    probe.innerHTML = folded ? `<details class="fold"${open ? ' open' : ''}><summary>dsColumnSeries inputs <span class="count">· ${rows.length}</span></summary>${table()}</details>` : table();
+    document.body.append(probe);
+    const height = Math.round(probe.getBoundingClientRect().height);
+    probe.remove();
+    return `${height}px`;
+  };
+  const heights = { today: measure('', false), dense: measure('dense', false), 'folded-closed': measure('', true, false), 'folded-closed-dense': measure('dense', true, false) };
+  document.querySelectorAll('[data-h]').forEach((cell) => { cell.textContent = heights[cell.dataset.h]; });
+
+  const KEY = 'ds-deck-docs-table-weight-pick';
+  const cards = [...document.querySelectorAll('.opt[data-key]')];
+  const render = (key) => {
+    cards.forEach((card) => card.classList.toggle('is-chosen', card.dataset.key === key));
+    const card = cards.find((item) => item.dataset.key === key);
+    document.getElementById('line').textContent = card ? `Дека docs-table-weight: ${card.querySelector('h3').textContent}` : 'пока ничего не выбрано';
+  };
+  cards.forEach((card) => {
+    const choose = () => { try { localStorage.setItem(KEY, card.dataset.key); } catch { /* private window */ } render(card.dataset.key); };
+    card.addEventListener('click', (event) => { if (!event.target.closest('summary, details')) choose(); });
+    card.addEventListener('keydown', (event) => { if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); choose(); } });
+  });
+  document.getElementById('copy').addEventListener('click', () => navigator.clipboard?.writeText(document.getElementById('line').textContent));
+  try { render(localStorage.getItem(KEY)); } catch { render(null); }
+</script>
+<!-- deck-review -->
+<script>
+// deck-review: verdict per [data-review] block, a textarea for remarks, one answer line in a fixed bar.
+// Inlined into a deck by ~/.claude/bin/deck-review-inline; contract in ~/.claude/docs/deck-review.md.
+(() => {
+  // Every key under deck-review: is a disposable reviewer answer, kept 7 days after its last change.
+  const PREFIX = 'deck-review:v1:';
+  const KEY = PREFIX + (document.documentElement.dataset.deck || document.title);
+  const KEEP_MS = 7 * 24 * 60 * 60 * 1000;
+  const ACCEPT = 'принято';
+  const REMARK = 'есть замечание';
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith('deck-review:')) continue;
+      let expires = 0;
+      try { if (key.startsWith(PREFIX)) expires = JSON.parse(localStorage.getItem(key))?.expires; } catch { /* malformed: drop */ }
+      if (!(expires > Date.now())) localStorage.removeItem(key);
+    }
+  } catch { /* private window */ }
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY))?.answers ?? {}; } catch { return {}; } };
+  const write = () => { try { localStorage.setItem(KEY, JSON.stringify({ expires: Date.now() + KEEP_MS, answers: state })); } catch { /* private window */ } };
+  const state = read();
+
+  document.head.insertAdjacentHTML('beforeend', `<style>
+    .dr-row { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px 0; }
+    .dr-btn { padding: 4px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 999px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-btn[aria-pressed="true"] { background: var(--accent-subtitle, #e6efff); border-color: var(--accent-strong, #2457c5); color: var(--accent-strong, #2457c5); }
+    .dr-btn[data-v="${REMARK}"][aria-pressed="true"] { background: var(--error-subtitle, #fdecec); border-color: var(--error-text, #b42318); color: var(--error-text, #b42318); }
+    .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--border-default, #c9ced6); border-radius: var(--radius-md, 8px); background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
+    .dr-note:focus { outline: none; border-color: var(--accent, #2457c5); box-shadow: var(--ds-field-focus-shadow, 0 0 0 3px rgb(36 87 197 / .25)); }
+    .dr-note[hidden] { display: none; }
+    .dr-history { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 4px; color: var(--text-secondary, #4b5563); font: 13px/1.45 var(--font-sans, system-ui, sans-serif); }
+    .dr-history::before { content: 'История замечаний'; display: block; margin-left: -1.2em; color: var(--text-primary, #1d2330); font-weight: 600; }
+    [data-dr-folded] > :not(h1, h2, h3, h4, .dr-row, .dr-note) { display: none !important; }
+    .dr-fold { padding: 4px 8px; border: 0; background: none; color: var(--accent-strong, #2457c5); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-fold[hidden] { display: none; }
+    .dr-btn, .dr-bar button, .dr-fold { transition: background-color .12s, border-color .12s, color .12s, box-shadow .12s; }
+    .dr-btn:hover, .dr-bar button:hover { background: var(--surface-secondary, #f3f4f6); border-color: var(--border-strong, #9aa1ad); }
+    .dr-btn:active, .dr-bar button:active { background: var(--surface-muted, #e5e7eb); }
+    .dr-btn[aria-pressed="true"]:hover { background: color-mix(in srgb, var(--accent-strong, #2457c5) 14%, var(--surface-default, #fff)); }
+    .dr-btn[data-v="есть замечание"][aria-pressed="true"]:hover { background: color-mix(in srgb, var(--error-text, #b42318) 14%, var(--surface-default, #fff)); }
+    .dr-fold:hover { text-decoration: underline; }
+    .dr-fold:active { color: var(--text-primary, #1d2330); }
+    .dr-btn:focus-visible, .dr-bar button:focus-visible, .dr-fold:focus-visible { outline: 2px solid var(--focus-ring-color, var(--accent, #2457c5)); outline-offset: 2px; }
+    .dr-bar button[data-done] { background: var(--success-subtitle, #e7f6ec); border-color: var(--success, #1a7f37); color: var(--success-text, #116329); }
+    .dr-bar { position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; padding: 10px 20px; background: var(--surface-default, #fff); border-top: 1px solid var(--border-divider, #e3e6eb); box-shadow: 0 -4px 16px rgb(0 0 0 / .08); color: var(--text-primary, #1d2330); font: 13px/1.4 var(--font-sans, system-ui, sans-serif); }
+    .dr-bar b { flex: none; }
+    .dr-bar .dr-chat { flex: none; color: var(--text-tertiary, #6b7280); }
+    .dr-bar output { flex: 1 1 auto; min-inline-size: 0; overflow-x: auto; white-space: nowrap; color: var(--text-secondary, #4b5563); font-family: var(--font-mono, ui-monospace, monospace); }
+    .dr-bar button { flex: none; padding: 6px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 6px; background: var(--surface-default, #fff); color: inherit; font: 600 13px/1.4 inherit; cursor: pointer; }
+    body { padding-block-end: 72px; }
+    @media (max-width: 640px) { .dr-bar { padding: 8px 12px; gap: 8px; } .dr-bar .dr-chat { display: none; } }
+  </style>`);
+
+  let items = [...document.querySelectorAll('[data-review]')];
+  if (!items.length) {
+    const whole = document.createElement('section');
+    whole.dataset.review = 'Дека в целом';
+    whole.innerHTML = '<h3>Дека в целом</h3>';
+    (document.querySelector('main') ?? document.body).append(whole);
+    items = [whole];
+  }
+
+  const controls = new Map();
+  const unfolded = new Set();
+  for (const item of items) {
+    const label = item.dataset.review;
+    // A deck bumps data-review-round once it has worked through the remarks of a round; answers stored
+    // for an earlier round are already in the block's history, so they leave the input.
+    const round = Number(item.dataset.reviewRound) || 1;
+    if (state[label] && (state[label].round ?? 1) !== round) { delete state[label]; write(); }
+    const own = () => Object.assign((state[label] ??= {}), { round });
+    const row = document.createElement('div');
+    row.className = 'dr-row';
+    const verdicts = item.hasAttribute('data-review-note-only') ? [REMARK] : [ACCEPT, REMARK];
+    const buttons = verdicts.map((verdict) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'dr-btn';
+      button.dataset.v = verdict;
+      button.textContent = verdict === ACCEPT ? 'Принято' : 'Есть замечание';
+      button.addEventListener('click', () => {
+        const entry = own();
+        entry.v = entry.v === verdict ? '' : verdict;
+        write();
+        render();
+        if (entry.v === REMARK) note.focus();
+      });
+      return button;
+    });
+    const note = document.createElement('textarea');
+    note.className = 'dr-note';
+    note.placeholder = 'Что не так';
+    note.setAttribute('aria-label', `Замечание: ${label}`);
+    note.addEventListener('input', () => { own().note = note.value; write(); render(); });
+    const fold = document.createElement('button');
+    fold.type = 'button';
+    fold.className = 'dr-fold';
+    fold.addEventListener('click', () => { unfolded.has(label) ? unfolded.delete(label) : unfolded.add(label); render(); });
+    row.append(...buttons, fold);
+    item.append(row, note);
+    const history = item.querySelector(':scope > [data-review-history]');
+    if (history) { history.classList.add('dr-history'); item.append(history); }
+    controls.set(label, { item, buttons, note, fold });
+  }
+
+  const chat = document.querySelector('.chat')?.textContent.replace(/^[^«]*/, '') ?? '';
+  const bar = document.createElement('div');
+  bar.className = 'dr-bar';
+  bar.innerHTML = `<b></b><span class="dr-chat"></span><output></output><button type="button" data-a="copy">Скопировать</button><button type="button" data-a="reset">Сбросить</button>`;
+  bar.querySelector('.dr-chat').textContent = chat;
+  document.body.append(bar);
+  const line = bar.querySelector('output');
+
+  const hooks = (window.deckReviewHooks ??= {});
+  window.deckReview = { refresh: () => render() };
+
+  function render() {
+    const parts = [];
+    let done = 0;
+    let open = 0;
+    for (const [label, { item, buttons, note, fold }] of controls) {
+      const entry = state[label] ?? {};
+      const accepted = entry.v === ACCEPT;
+      item.toggleAttribute('data-dr-folded', accepted && !unfolded.has(label));
+      fold.hidden = !accepted;
+      fold.textContent = unfolded.has(label) ? 'Свернуть' : 'Развернуть';
+      for (const button of buttons) button.setAttribute('aria-pressed', String(entry.v === button.dataset.v));
+      note.hidden = entry.v !== REMARK;
+      if (note.value !== (entry.note ?? '')) note.value = entry.note ?? '';
+      if (!accepted) open++;
+      if (!entry.v) continue;
+      if (!accepted) done++;
+      const text = entry.note?.trim().replace(/\s+/g, ' ');
+      parts.push(entry.v === REMARK ? `${label} - замечание${text ? `: «${text}»` : ''}` : `${label} - принято`);
+    }
+    const extra = hooks.extra?.();
+    if (extra) parts.push(extra);
+    bar.querySelector('b').textContent = `${done} из ${open}`;
+    line.textContent = parts.length ? `Дека ${document.title}: ${parts.join('; ')}` : 'пока ничего не выбрано';
+  }
+
+  bar.addEventListener('click', (event) => {
+    const action = event.target.closest('button')?.dataset.a;
+    if (action === 'copy') {
+      const button = event.target.closest('button');
+      navigator.clipboard?.writeText(line.textContent).then(() => {
+        button.dataset.done = '';
+        button.textContent = 'Скопировано';
+        setTimeout(() => { delete button.dataset.done; button.textContent = 'Скопировать'; }, 1500);
+      });
+    }
+    if (action === 'reset') { for (const label of Object.keys(state)) delete state[label]; write(); hooks.onReset?.(); render(); }
+  });
+  render();
+})();
+</script>
+<!-- /deck-review -->
+</body>
+</html>

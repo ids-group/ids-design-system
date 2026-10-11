@@ -36,6 +36,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 23 | `23-density-scope` | where `data-density` works: only on `<html>` (today; on a container the fields, button and search stay 40px while the icon button follows) or on any container, nesting included, by re-declaring the four `:root` tokens derived from `--hit-cozy`/`--hit-min` inside `[data-density]` - both drawn at four tiers and one nested container, heights measured in the page |
 | 24 | `24-table-truncate-result` | sign-off of the `ds-table` `truncate` column without `width` that grows to its text: before/after screenshots of the harness tables, the width rule drawn as bars over real renders, four decisions recorded with `minWidth` built, and two open ones drawn on the same tables - general column sizing rules and widths that stay put between pages |
 | 25 | `25-table-wrap-parked` | parked: two wrap options for a `truncate` column - fill the height a neighbour gave the row, or always wrap - each rendered; the verdict comes later and the item waits in `docs/todo.md` |
+| 26 | `26-docs-table-weight` | how ds-docs shows a table of inputs: as today, dense, folded under a count, or dense and folded - each drawn on the real 19-row `dsColumnSeries` table with its measured height |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
