@@ -3409,6 +3409,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-motion-chart-tooltip-move-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-tooltip-move-easing",
+        "value": "—",
+        "notes": ""
+      },
+      {
         "name": "--ds-motion-chart-state-duration",
         "value": "—",
         "notes": ""
@@ -8736,16 +8746,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--ds-field-focus-shadow",
     "value": "var(--focus-field)",
     "kind": "color"
-  },
-  {
-    "name": "--ds-motion-chart-tooltip-move-duration",
-    "value": "300ms",
-    "kind": "motion"
-  },
-  {
-    "name": "--ds-motion-chart-tooltip-move-easing",
-    "value": "var(--ease-standard)",
-    "kind": "other"
   },
   {
     "name": "--ds-motion-check-enter-duration",
