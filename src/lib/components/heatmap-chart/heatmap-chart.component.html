@@ -113,7 +113,7 @@
 
       <tbody>
         @for (entry of rows(); track entry.key; let rowIndex = $index) {
-          <tr>
+          <tr (animate.leave)="leaveMark($event)">
             <th
               class="row-label"
               scope="row">

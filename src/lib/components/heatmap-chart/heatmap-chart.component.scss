@@ -105,6 +105,7 @@
 }
 
 @include chart-motion.fades-in('.cell');
+@include chart-motion.leaves('.grid tbody > tr');
 @include chart-motion.leaves('.cell-slot');
 @include chart-motion.follows('.cell-value', var(--ds-motion-chart-mark-enter-duration));
 
