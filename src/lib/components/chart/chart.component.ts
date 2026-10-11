@@ -42,6 +42,7 @@ import {
   ChartTooltipDirective,
   ChartStatesComponent,
   chartActiveMark,
+  isPrimaryPress,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type { ChartTooltipContext } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
@@ -849,8 +850,12 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     const forgetRect = (): void => {
       this.canvasRect = null;
     };
-    const onPointer = (event: PointerEvent): void =>
+    const onPointer = (event: PointerEvent): void => {
+      if (event.type === 'pointerdown' && !isPrimaryPress(event)) {
+        return;
+      }
       this.plotPointer(event, canvas);
+    };
     const onEnter = (): void =>
       window.addEventListener('scroll', forgetRect, {
         capture: true,

@@ -145,6 +145,9 @@ export class ChartUnpinComponent {
 
 // @internal
 export function chartActiveMark(lingerMs: () => number = () => 0, hoverDelayMs: () => number = () => 0): ChartActiveMark;
+
+// @internal
+export function isPrimaryPress(event: Event): boolean;
 ```
 
 ## CSS hooks
