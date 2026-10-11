@@ -7,9 +7,9 @@
         class="connector"
         [attr.x1]="connector.x1"
         [attr.x2]="connector.x2"
-        [attr.y1]="connector.y"
-        [attr.y2]="connector.y"
-        [style.--_chart-mark-stagger]="connector.stagger" />
+        [style.transform]="'translateY(' + connector.y + 'px)'"
+        [style.--_chart-mark-stagger]="connector.stagger"
+        (animate.leave)="leaveMark($event)" />
     }
   }
 
@@ -18,9 +18,9 @@
       <svg:text
         class="value"
         text-anchor="middle"
-        [attr.x]="label.x"
-        [attr.y]="label.y"
-        [style.--_chart-mark-stagger]="label.stagger">
+        [style.transform]="'translate(' + label.x + 'px, ' + label.y + 'px)'"
+        [style.--_chart-mark-stagger]="label.stagger"
+        (animate.leave)="leaveMark($event)">
         {{ label.text }}
       </svg:text>
     }
