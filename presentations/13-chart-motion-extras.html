@@ -59,7 +59,13 @@
   .demo button[aria-pressed="false"] .sw { opacity: 0.3; }
   .demo button:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
   .demo .hint { margin: 0; color: var(--text-tertiary); font: var(--font-size-2xs) / 1.4 var(--font-sans); }
+  .reload-frame { position: relative; }
+  .reload-scrim { position: absolute; inset: calc(-1 * var(--space-2)); display: grid; place-items: center; border-radius: var(--radius-md); background: color-mix(in srgb, var(--surface-canvas) calc(var(--opacity-scrim) * 100%), transparent); opacity: 0; pointer-events: none; transition: opacity var(--ds-motion-chart-state-duration); }
+  .reload-scrim.is-on { opacity: 1; pointer-events: auto; }
+  .reload-scrim::after { content: ''; inline-size: var(--spinner-md); block-size: var(--spinner-md); border: var(--spinner-bw) solid var(--border-default); border-block-start-color: var(--accent); border-radius: var(--radius-pill); animation: reload-spin var(--duration-loop-fast) linear infinite; }
+  @keyframes reload-spin { to { rotate: 360deg; } }
   .samples { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-3); }
+  .samples.is-pair { grid-template-columns: repeat(auto-fit, minmax(260px, 420px)); }
   .sample { margin: 0; display: grid; gap: var(--space-1-5); align-content: start; }
   .sample figcaption { font: var(--font-weight-bold) var(--font-size-xs) / 1.4 var(--font-sans); color: var(--text-primary); }
 
@@ -207,6 +213,15 @@
     </div>
   </section>
 
+  <section class="panel">
+    <h2>Перезагрузка с данными на экране</h2>
+    <p>Показ, не карточка: это «Синхрон» из <code>chart-motion</code> поверх перезагрузки, отдельного решения нет. Скелетона нет: график стоит под затемнением и спиннером <code>ds-loading-overlay</code> и не отвечает на мышь, потом метки едут к новым значениям, шкала растягивается плавно.</p>
+    <div class="samples is-pair">
+      <figure class="sample"><figcaption>Колонки и линия</figcaption><div class="demo" data-demo="refresh-columns"><p class="hint">Mar уходит, Jun приходит, шкала 1000 → 1500</p></div></figure>
+      <figure class="sample"><figcaption>Pie</figcaption><div class="demo" data-demo="refresh-pie"><p class="hint">Email уходит, Social приходит</p></div></figure>
+    </div>
+  </section>
+
   <section class="panel good">
     <h2>Рекомендую: все десять</h2>
     <p>Каждое дополнение либо отвечает на действие, либо показывает, что изменилось, и ни одно не задерживает чтение числа. Постоянного движения нет, кроме мерцания скелетона: всё запускается действием и выключается при reduced-motion.</p>
@@ -302,6 +317,20 @@
     const draw = () => { const mine = ++run; clearTimeout(timer); stage.replaceChildren(); load = build(stage, fill, () => mine === run); };
     draw();
     actionButton(host, 'Загрузить', () => { draw(); timer = setTimeout(load, 900); });
+  };
+  const ENTER = ms('--ds-motion-chart-mark-enter-duration', 400);
+  const mean = (list) => list.reduce((sum, value) => sum + value, 0) / list.length;
+  const reloadFrame = (host, W, H, title) => {
+    const frame = document.createElement('div'); frame.className = 'reload-frame'; host.prepend(frame);
+    const svg = svgIn(frame, W, H, title);
+    const scrim = document.createElement('div'); scrim.className = 'reload-scrim'; frame.append(scrim);
+    let run = 0;
+    const reload = (apply) => {
+      const mine = ++run;
+      scrim.classList.add('is-on'); frame.inert = true;
+      setTimeout(() => { if (mine !== run) return; scrim.classList.remove('is-on'); frame.inert = false; apply(() => mine === run); }, 900);
+    };
+    return { svg, reload };
   };
 
   const demos = {
@@ -707,6 +736,89 @@
           });
         };
       });
+    },
+    'refresh-columns'(host) {
+      const W = 300, H = 170, L = 40, R = 290, T = 12, B = 140, ORDER = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+      const sets = [
+        { max: 1000, rows: [['Jan', 620, 540], ['Feb', 710, 600], ['Mar', 680, 650], ['Apr', 840, 700], ['May', 960, 780]] },
+        { max: 1500, rows: [['Jan', 820, 700], ['Feb', 940, 820], ['Apr', 1180, 980], ['May', 1320, 1100], ['Jun', 1450, 1250]] },
+      ];
+      const { svg, reload } = reloadFrame(host, W, H, 'Orders and target by month');
+      const grid = el('g', {}, svg), marks = el('g', {}, svg);
+      const path = el('path', { class: 'line', stroke: C(4) }, svg);
+      const ticks = [0, 250, 500, 750, 1000, 1250, 1500].map((v) => {
+        const text = el('text', { class: 'tick', x: L - 6, dy: '0.32em', 'text-anchor': 'end' }, grid); text.textContent = v >= 1000 ? `${v / 1000}K` : v;
+        return { v, text, line: el('line', { class: 'grid-line', x1: L, x2: R }, grid) };
+      });
+      const layout = (set) => { const slot = (R - L) / set.rows.length; return new Map(set.rows.map(([key, v, t], i) => [key, { x: L + slot * (i + 0.5), w: slot * 0.5, v, t }])); };
+      const near = (map, key) => {
+        const at = ORDER.indexOf(key), keys = [...map.keys()];
+        const sides = [keys.filter((q) => ORDER.indexOf(q) < at).pop(), keys.find((q) => ORDER.indexOf(q) > at)].filter(Boolean).map((q) => map.get(q));
+        return { x: mean(sides.map((s) => s.x)), t: mean(sides.map((s) => s.t)) };
+      };
+      const FIELDS = ['x', 'w', 'v', 'a', 'px', 'pt'];
+      const state = new Map();
+      let current = 0, max = sets[0].max;
+      const paint = () => {
+        const yOf = (v) => B - (v / max) * (B - T);
+        ticks.forEach(({ v, text, line }) => { const y = yOf(v), a = Math.max(0, Math.min(1, 1 - (v - max) / 250)); line.setAttribute('y1', y); line.setAttribute('y2', y); line.setAttribute('opacity', a); text.setAttribute('y', y); text.setAttribute('opacity', a); });
+        for (const s of state.values()) {
+          s.rect.setAttribute('x', s.x - s.w / 2); s.rect.setAttribute('width', s.w); s.rect.setAttribute('y', yOf(s.v)); s.rect.setAttribute('height', B - yOf(s.v)); s.rect.setAttribute('opacity', s.a);
+          s.label.setAttribute('x', s.x); s.label.setAttribute('opacity', s.a);
+        }
+        shape(path, [...state.values()].sort((p, q) => p.px - q.px).map((s) => [s.px, yOf(s.pt)]));
+      };
+      const add = (key, values) => {
+        const rect = el('rect', { class: 'col', rx: 2, fill: C(ORDER.indexOf(key) + 1) }, marks);
+        rect.style.transition = 'none';
+        const text = el('text', { class: 'cat', y: B + 14 }, marks); text.textContent = key;
+        state.set(key, { rect, label: text, ...values });
+      };
+      layout(sets[0]).forEach((m, key) => add(key, { x: m.x, w: m.w, v: m.v, a: 1, px: m.x, pt: m.t }));
+      paint();
+      actionButton(host, 'Обновить', () => reload((alive) => {
+        const before = layout(sets[current]);
+        current = 1 - current;
+        const after = layout(sets[current]), fromMax = max;
+        ORDER.forEach((key) => { if (after.has(key) && !state.has(key)) { const m = after.get(key), origin = near(before, key); add(key, { x: m.x, w: m.w, v: 0, a: 0, px: origin.x, pt: origin.t }); } });
+        const keys = [...state.keys()];
+        const target = (key) => { const m = after.get(key); if (m) return { x: m.x, w: m.w, v: m.v, a: 1, px: m.x, pt: m.t }; const s = state.get(key), gap = near(after, key); return { x: s.x, w: 0, v: 0, a: 0, px: gap.x, pt: gap.t }; };
+        const from = [fromMax, ...keys.flatMap((key) => FIELDS.map((f) => state.get(key)[f]))];
+        const to = [sets[current].max, ...keys.flatMap((key) => { const t = target(key); return FIELDS.map((f) => t[f]); })];
+        tween(from, to, ENTER, (frame) => {
+          if (!alive()) return;
+          max = frame[0];
+          keys.forEach((key, k) => FIELDS.forEach((f, i) => { state.get(key)[f] = frame[1 + k * FIELDS.length + i]; }));
+          paint();
+        }, () => { if (!alive()) return; keys.filter((key) => !after.has(key)).forEach((key) => { const s = state.get(key); s.rect.remove(); s.label.remove(); state.delete(key); }); paint(); });
+      }));
+    },
+    'refresh-pie'(host) {
+      const ORDER = ['Organic', 'Paid', 'Referral', 'Email', 'Social'];
+      const sets = [
+        { total: 7630, parts: { Organic: 42, Paid: 28, Referral: 18, Email: 12 } },
+        { total: 9120, parts: { Organic: 36, Paid: 30, Referral: 20, Social: 14 } },
+      ];
+      const { svg, reload } = reloadFrame(host, 160, 160, 'Leads by channel');
+      svg.style.inlineSize = 'min(170px, 100%)'; svg.style.justifySelf = 'center'; svg.style.marginInline = 'auto';
+      const arc = (a0, a1) => {
+        const pt = (r, a) => `${80 + r * Math.cos(a)} ${80 + r * Math.sin(a)}`, large = a1 - a0 > Math.PI ? 1 : 0;
+        return `M${pt(68, a0)} A68 68 0 ${large} 1 ${pt(68, a1)} L${pt(40, a1)} A40 40 0 ${large} 0 ${pt(40, a0)}Z`;
+      };
+      const slices = ORDER.map((key, i) => el('path', { class: 'slice', fill: C(i + 1) }, svg));
+      const value = el('text', { class: 'centre-value', x: 80, y: 82 }, svg);
+      el('text', { class: 'centre-caption', x: 80, y: 96 }, svg).textContent = 'leads';
+      let current = 0, shares = ORDER.map((key) => sets[0].parts[key] ?? 0);
+      const paint = () => { let a = -Math.PI / 2; slices.forEach((node, i) => { const a0 = a; a += (shares[i] / 100) * 2 * Math.PI; node.setAttribute('d', arc(a0, a)); }); };
+      value.textContent = sets[0].total.toLocaleString('en');
+      paint();
+      actionButton(host, 'Обновить', () => reload((alive) => {
+        current = 1 - current;
+        const set = sets[current];
+        value.classList.add('is-swapping');
+        setTimeout(() => { value.textContent = set.total.toLocaleString('en'); value.classList.remove('is-swapping'); }, reduced ? 0 : 90);
+        tween(shares, ORDER.map((key) => set.parts[key] ?? 0), ENTER, (frame) => { if (!alive()) return; shares = frame; paint(); });
+      }));
     },
     stagger(host) {
       const svg = svgIn(host, 300, 150, 'Points and cells entering');
