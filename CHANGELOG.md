@@ -6,7 +6,7 @@
   `ds-line-chart` and `ds-waterfall-chart` the line, its markers and area, the value labels, the
   pin, the gridlines with their tick labels and the waterfall connectors glide to their new place on
   the column's own timing (`--ds-motion-chart-mark-duration` and `-easing`), and a column glides
-  sideways when the plot narrows or widens. A line whose point count changes redraws at once. The
+  sideways when a category comes or goes. A resize redraws every mark at once. A line whose point count changes redraws at once. The
   category band and crosshair glide with the tooltip panel, on
   `--ds-motion-chart-tooltip-move-duration` and `-easing`, which `ds-chart` now reads. A
   `ds-pie-chart` turns its slices to their new angles. A removed heatmap row or cell, scatter point,
