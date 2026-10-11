@@ -1,0 +1,50 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "chart-classes-gained-motion-members",
+      "kind": "behavior",
+      "old": "PieChartComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends PieChartComponent",
+        "extends HeatmapChartComponent",
+        "extends ScatterChartComponent"
+      ],
+      "detect": [
+        "extends PieChartComponent",
+        "extends HeatmapChartComponent",
+        "extends ScatterChartComponent"
+      ],
+      "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
+      "appliesWhen": "Only a class of yours that extends PieChartComponent, HeatmapChartComponent or ScatterChartComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error on a subclass of PieChartComponent, HeatmapChartComponent or ScatterChartComponent.",
+      "note": "PieChartComponent gained `drawnArcs`, `sliceHoverShift`, `stopArcTween`, `tweenArcs` and the internal `leaveMark`; HeatmapChartComponent and ScatterChartComponent each gained the internal `leaveMark`."
+    }
+  ],
+  "informational": [
+    {
+      "text": "`ds-chart`, `ds-column-chart`, `ds-line-chart` and `ds-waterfall-chart` move the line, its markers and area, the value labels, the pin, the gridlines and tick labels and the waterfall connectors on `--ds-motion-chart-mark-duration` and `--ds-motion-chart-mark-easing` when the data changes, as the columns already did; a column also glides sideways when the plot width changes. Set `--ds-motion-chart-mark-duration: 0ms` on the chart to make every mark land at once again.",
+      "verify": "Change the data of a ds-chart holding a column and a line series and confirm the line, its markers and the gridlines move with the columns instead of jumping."
+    },
+    {
+      "text": "`ds-chart` reads `--ds-motion-chart-tooltip-move-duration` (default 300ms) and `--ds-motion-chart-tooltip-move-easing` (default `var(--ease-standard)`) for its category band and crosshair, which moved at once and now glide with the tooltip panel. Set `--ds-motion-chart-tooltip-move-duration: 0ms` on the chart to keep the band jumping; that also stops the panel's glide.",
+      "verify": "Hover across the categories of a ds-chart with cursor=\"category\" and confirm the band glides alongside the tooltip panel."
+    },
+    {
+      "text": "A `ds-pie-chart` turns its slices to their new angles when the data changes, and a hovered slice slides out along its middle, drawing past the ring's box.",
+      "verify": "Change a ds-pie-chart's data and confirm the slices turn instead of jumping; hover a slice and confirm it slides outward and stays out while the pointer is over its inner edge."
+    },
+    {
+      "text": "A removed heatmap cell, scatter point, pie slice, waterfall connector or waterfall value label fades out before it leaves.",
+      "verify": "Drop a column from a ds-heatmap-chart's data and confirm its cells fade out instead of vanishing."
+    },
+    {
+      "text": "A hovered or focused column, bar, waterfall step and heatmap cell brightens with `filter: brightness(1.12) saturate(1.1)`, a chart pin pops in, and the tooltip rows fade in when the panel moves to another category or slice. Under `prefers-reduced-motion` all of these change at once.",
+      "verify": "Hover a column of a ds-column-chart and confirm it brightens; click it and confirm the pin pops in."
+    }
+  ],
+  "deleteList": []
+}
