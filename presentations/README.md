@@ -46,9 +46,9 @@ written in Russian; `deck.css`, which sits beside `ds.css` and carries the shell
 of the argument — the next person to ask the same question reads it to find out what was already
 weighed — but it stops LOOKING like a question: the verdict sits in a `.decided` banner at the top
 with its evidence line, and the argument folds into a `<details class="folded">` accordion under it.
-Eight closed on 2026-09-19 with the charts phase-2 work: the composition model, the area mode, the
-four axis modes and their names, the rescale-on-hide default, the phase-2 marks, the docs chapter
-nav, and the scatter's phase — which went to phase 2 with its decimation layer rather than to 3.
+Decks whose decision shipped in 0.15.0 or earlier are not in the folder; their verdicts are in
+`docs/done.md` and `CHANGELOG.md`, and `git log --diff-filter=D -- presentations/implemented/` finds
+the files.
 
 **A `tool` here takes no number.** `rejected-with-numbers.html` is read whenever rather than at a
 moment, so it stays unnumbered and sorts below the queue.
@@ -103,8 +103,8 @@ no evidence is treated as `open`** - otherwise the marker is just a second opini
 stops meaning anything.
 
 **Whoever ships the decision writes the marker, in the same commit as the code.** That is the only
-moment the evidence is known for certain. `avatar-tints.html` is the shape to copy: deck and
-implementation landed together in `63aa3954`.
+moment the evidence is known for certain. Commit `63aa3954` is the shape to copy: deck and
+implementation landed together.
 
 ## A deck names the chat its answer goes back to
 
@@ -126,8 +126,7 @@ The marker is a claim, not proof. Before moving anything into `implemented/`, co
 order, and stop at the first source that answers:
 
 1. **The code.** Does the chosen API, token or value actually exist? The only source that cannot go
-   stale. (`menu-item-radius.html` reads as "8px today, three options"; the code ships radius 0 -
-   variant C - so the deck's own framing was two decisions behind.)
+   stale.
 2. **`docs/done.md` and `CHANGELOG.md`.** Which variant was picked, and when.
 3. **`docs/todo.md`.** If the item is still there the deck is `open`, whatever the code shows: a
    half-built decision is not an implemented one.
@@ -135,13 +134,12 @@ order, and stop at the first source that answers:
    committed alongside its implementation is a decision already taken.
 
 **Never classify from the deck's own prose.** A deck is a snapshot of a question and has no way to
-update itself when the answer arrives - `consumer-default-overrides.html` still ends "which is why
-none of it has been touched" about four items, three of which were closed and the fourth shipped.
+update itself when the answer arrives.
 
 **Three outcomes, not two.** *Decided and built* moves. *Decided and NOT built* stays `open`, and the
 work belongs in `docs/todo.md` rather than only in the deck - a verdict that lives nowhere but a deck
 is a verdict nobody will execute. *Moot* - the question dissolved instead of being answered - counts
-as `implemented`, and the evidence line says which of the two it was (`combobox-single-display.html`).
+as `implemented`, and the evidence line says which of the two it was.
 
 ### Fix the stylesheet path on the way down
 
@@ -174,7 +172,7 @@ check. It is in `lint:all`, and every rule is a defect that actually shipped:
 **D012 is the one with real blood on it.** On 2026-09-01 ten decks referenced four tokens the DS does
 not define — `--space-7`, `--border-subtle` (missed by the `subtle`→`subtitle` rename), `--shadow-md`
 and `--shadow-lg`. None had a usable fallback, so each voided its whole shorthand: five `h2` margins,
-two borders and a shadow were never applied, and three status pills in `new-components.html` rendered
+two borders and a shadow were never applied, and three status pills in one deck rendered
 transparent. Nothing looked broken enough to notice.
 
 The selftest exists because a rule that cannot match is invisible — the lint stays green either way.

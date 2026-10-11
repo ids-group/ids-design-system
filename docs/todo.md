@@ -457,8 +457,8 @@ Each has somebody behind it. Nothing here is speculative work.
   error: Angular renders nothing and logs nothing outside strict schema mode, so a missed one is a
   chart that silently vanished.
 
-- [ ] **[P3] Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24).** Reverses the name kept in
-  `presentations/implemented/ds-bar-name-collision.html`, whose decided block is now superseded. The
+- [ ] **[P3] Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24).** Reverses the name kept by the
+  `ds-bar-name-collision` decision. The
   type name is drawn in `1-decision-queue`'s `row-chart-row-type` section. Migration: a
   `selector-rename`, one `type-rename` per exported symbol, a `token-rename` for the
   `--ds-bar-chart-*` prefix and a `class-rename` for the internal `.bar-chart` class - the same shape
@@ -1423,7 +1423,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 - [ ] **[P3] An icon-only control's focus ring 1px outside its 24px target, 26px on every control.**
   `target.min-size` in `styles/_target.scss` draws the ring on the target's edge, 24px across on
   every icon-only control; one more pixel of `outline-offset` there gives 26px on all of them
-  (measured on ten controls in `presentations/implemented/focus-ring-followups.html`). Stas, 2026-10-09: 24
+  (measured on ten controls). Stas, 2026-10-09: 24
   for now, recheck 26 later.
 
 - [ ] **[P3] The `ds-tag` remove button's focus ring does not show on a solid tag.** The ring is
@@ -1497,7 +1497,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 
 *This section also has items under **Asks**, **Decisions**.*
 
-- [ ] **[P3] One tab stop per long table, arrow keys between its clipped values - PARKED 2026-10-09 by Stas.** A clipped `dsTooltipWhenClipped` value that no keyboard path reaches is a tab stop of its own while clipped, so a 25-row `ds-table` with two clipped columns holds 50 stops (measured in the ds-docs build, deck `presentations/implemented/clipped-value-tab-stop.html`). The parked alternative: roving tabindex, one clipped value at `tabindex="0"` and the rest at `-1`, arrows moving between them. APG allows that only inside a composite widget, so the table becomes `role="grid"` and `ds-table` takes the grid keyboard model (arrows, Home/End, PageUp/PageDown); without the role a screen reader in browse mode keeps the arrows for itself. Unparks when a consumer reports the stop count in a long table.
+- [ ] **[P3] One tab stop per long table, arrow keys between its clipped values - PARKED 2026-10-09 by Stas.** A clipped `dsTooltipWhenClipped` value that no keyboard path reaches is a tab stop of its own while clipped, so a 25-row `ds-table` with two clipped columns holds 50 stops (measured in the ds-docs build). The parked alternative: roving tabindex, one clipped value at `tabindex="0"` and the rest at `-1`, arrows moving between them. APG allows that only inside a composite widget, so the table becomes `role="grid"` and `ds-table` takes the grid keyboard model (arrows, Home/End, PageUp/PageDown); without the role a screen reader in browse mode keeps the arrows for itself. Unparks when a consumer reports the stop count in a long table.
 
 - [ ] **[P3] The clipped-value tab stop on a 500-row table: the reported 4x long task did not reproduce - PARKED 2026-10-09 by Stas, after the release.** An audit reported the largest long task after injecting 500 rows into a `ds-table` with two `truncate` columns going from 160-179 ms before the tab stop to 654-719 ms with it. Measured 2026-10-09 on production ds-docs builds, one fresh page per run, the truncate demo given 500 rows (1000 clipped values, 833 stops written): before the tab stop 199, 342, 129, 225 ms; with it 262, 176, 228 ms; with every host measured before any `tabindex` is written 184, 239, 141 ms. The shared ResizeObserver callback took 7-8 ms for a 994-entry batch with reads and writes interleaved, so writing `tabindex` does not invalidate layout there. Left to find: the audit's setup (viewport, CPU throttling, a resize after render, the accessibility tree on) and whether the cost sits outside the callback, in the style recalc of 833 newly focusable cells or in the per-host `closest` and MutationObserver registration at render; a performance trace of the inject task on both builds splits it. Unparks after the release.
 
@@ -1799,7 +1799,7 @@ Bar and column are settled separately and stay apart.
   **1. Lightness is flat.** Seven of the eight categorical slots sit between OKLab L 0.625 and 0.673 - a spread of 0.048 - and the closest two are 0.002 apart. Only slot 8 breaks the band at 0.394. A chart screenshotted into a black-and-white document loses every series distinction, and the same flatness is why simulated colour blindness collapses six pairs: it removes hue, and there is no lightness left underneath. Fixing it means moving colours, so it is a repaint and needs its own deck.
   **2. The gate only ever sees the light palette.** `tools/check-chart-palette-separation.mjs` reads `_tokens-charts.scss`; `src/lib/themes/dark/_theme.scss` overrides `--chart-categorical-8` alone, so the dark theme's effective palette is seven inherited slots plus one. Checked by hand on 2026-09-21 and it passes (`node tools/check-chart-palette-separation.mjs --hexes '#e75740,#11a793,#5a83e2,#a173de,#e25a9e,#2ca565,#d85ad8,#8b93a7'`), but nothing holds it there - and in the dark theme all eight slots land in L 0.625-0.673, because slot 8 flips to 0.663.
   **3. Slot order is right and unguarded.** The worst pair among the first 2 slots is 29.0, the first 3 is 18.4, the first 4 is 10.2 - so the charts that use two to four series get the widest gaps, which is the correct arrangement. No gate enforces it, so a future reorder can quietly hand the common case the narrow pairs.
-  A fourth thing, not a defect: the dark theme's own comment reasons in protanopia deltas ("dE 12 from the orchid"), although colour-vision support is not a requirement of this system - see `presentations/implemented/chart-palette-v2.html`.
+  A fourth thing, not a defect: the dark theme's own comment reasons in protanopia deltas ("dE 12 from the orchid"), although colour-vision support is not a requirement of this system.
 
 - [ ] **[P3] Three `ds-table` paths have never been driven by automation, and five component groups have never been clicked through.** The paths: dragging a column by its handle to reorder, drag-resizing a column, and CSV export — each is pointer-sequence or file-download work that every sweep so far has read statically or skipped. The groups whose demos no automated pass has ever exercised: `actions`, `navigation`, `feedback-status`, `overlays`, `page-structure`. Recorded so the coverage is a known hole rather than an assumption: the focus and accessible-name sweeps DID load all thirteen group pages, so what is missing is interaction, not rendering.
 

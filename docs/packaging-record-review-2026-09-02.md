@@ -1335,7 +1335,7 @@ upgrade" about what the diagnosis calls a measured breaking change with a mandat
 parenthetical is still true (`grep typesVersions` over `package.json`, `ng-package.json`,
 `dist/ds/package.json` → zero hits), which makes the stale framing more dangerous, not less.
 **Bonus wave 1 missed:** `packaging-diagnosis.md:759` says the caveat "was open on three decks" and names
-"decks 5 and 9" — `grep untested` across all decks finds it only in `presentations/implemented/packaging-entry-points.html` (numbered `4-` at the time of the review)
+"decks 5 and 9" — `grep untested` across all decks finds it only in deck `packaging-entry-points` (numbered `4-` at the time of the review)
 and `8-entry-point-shape.html:165,256`. **Decks 5 and 9 never carried it.** A second instance of E-F12's
 renumbering damage, inside the diagnosis doc.
 → **And note this whole item is now REFUTED at the root by W2-V19b**: the node10 breakage is not
