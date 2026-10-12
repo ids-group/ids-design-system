@@ -19,12 +19,19 @@ interface Row {
   readonly [field: string]: string | undefined;
 }
 
+// Typed wider than TableColumn so the page also compiles against a library without `kind`.
+type HarnessColumn = TableColumn<Row> & {
+  readonly kind?: 'text' | 'id' | 'date' | 'number' | 'status';
+};
+
 interface HarnessCase {
   readonly id: string;
   readonly title: string;
   readonly width: number;
-  readonly columns: readonly TableColumn<Row>[];
+  readonly columns: readonly HarnessColumn[];
   readonly data: readonly Row[];
+  /** Swapped in for `data` by the case's "Page 2" button, as a server-paged host does. */
+  readonly pageTwo?: readonly Row[];
   readonly density?: 'default' | 'compact';
   readonly selectable?: boolean;
   readonly zebra?: boolean;
@@ -131,6 +138,24 @@ const records: readonly Row[] = Array.from({ length: 6 }, (_, index) => ({
   renewal_date: '2026-11-01',
 }));
 
+const shortRecords: readonly Row[] = records.map((row, index) => ({
+  ...row,
+  id: `rec-p2-${index}`,
+  groups: 'Q3',
+  first_name: 'Ann',
+  last_name: 'Fox',
+  email: 'a@b.io',
+  address_line_1: '1 High St',
+  city: 'Ely',
+  product: 'Motor',
+}));
+const recordKinds: Readonly<Record<string, HarnessColumn['kind']>> = {
+  policy_id: 'id',
+  postcode: 'id',
+  premium: 'number',
+  renewal_date: 'date',
+};
+
 const deltaNames = [
   ['Margaret', 'Whitfield'],
   ['Oluwaseun', 'Adeyemi-Clarke'],
@@ -156,12 +181,12 @@ const pageTwo: readonly Row[] = [
   people[0],
   people[3],
 ].map((row, index) => ({ ...row, id: `p2-${index}` }));
-const pagingColumns: readonly TableColumn<Row>[] = [
+const pagingColumns: readonly HarnessColumn[] = [
   { key: 'name', label: 'Policyholder' },
   { key: 'email', label: 'Email', truncate: true },
   { key: 'city', label: 'City' },
-  { key: 'status', label: 'Status' },
-  { key: 'amount', label: 'Amount', align: 'right' },
+  { key: 'status', label: 'Status', kind: 'status' },
+  { key: 'amount', label: 'Amount', align: 'right', kind: 'number' },
 ];
 
 // A consumer's delta review records: name + key/policy line, one address of about 290px per row.
@@ -279,6 +304,17 @@ const ACTIONS: readonly TableRowAction<Row>[] = [
 })
 export class TableClipHarnessPage {
   protected readonly people = people;
+  protected readonly secondPageShown = signal<ReadonlySet<string>>(new Set());
+
+  protected caseData(item: HarnessCase): readonly Row[] {
+    return item.pageTwo && this.secondPageShown().has(item.id)
+      ? item.pageTwo
+      : item.data;
+  }
+
+  protected showPageTwo(id: string): void {
+    this.secondPageShown.update((shown) => new Set(shown).add(id));
+  }
   protected readonly perfRows = signal<readonly Row[]>([]);
   protected readonly perfColumns =
     signal<readonly TableColumn<Row>[]>(pagingColumns);
@@ -501,10 +537,12 @@ export class TableClipHarnessPage {
       density: 'compact',
       maxHeight: '300px',
       data: records,
+      pageTwo: shortRecords,
       columns: ['groups', ...recordFields].map((key) => ({
         key,
         label: key,
         truncate: true,
+        kind: recordKinds[key],
       })),
     },
     {
@@ -604,6 +642,14 @@ export class TableClipHarnessPage {
       title: 'Same table, both pages at once',
       width: 1100,
       data: [...pageOne, ...pageTwo],
+      columns: pagingColumns,
+    },
+    {
+      id: 'paging-server',
+      title: 'One server-paged table: the host swaps data from page 1 to page 2',
+      width: 1100,
+      data: pageOne,
+      pageTwo,
       columns: pagingColumns,
     },
     {
