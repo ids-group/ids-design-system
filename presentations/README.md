@@ -38,6 +38,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 25 | `25-docs-table-weight` | the ds-docs policy for component inputs: tables as today, dense and folded, no input tables, or a generated «what you can change» strip with the full list folded - each drawn on real `ds-chart` and `ds-button` fragments; 22 hand-written input tables on 15 pages counted |
 | 26 | `26-chart-motion-timing` | whether chart motion uses one speed per kind of motion: as today (pointer-following 300 or 120ms, dimming 120 or 180ms), one speed per kind (following 300, dimming 120), or everything at 120ms - each drawn live on a column-and-line chart with a legend |
 | 27 | `27-info-hint-content` | how `ds-info-hint` takes rich content (the mm-ecm ME-495 «Published» list): content projection, a template input, or a standard ⓘ trigger for `ds-popover`, each as consumer markup with screenshots of today and the target; and a conditional second block, needed only if the ME-495 icon verdict is A: any `IconName` with a colour token, or a `tone` input |
+| 28 | `28-chart-pin-line` | whether a pinned category keeps the vertical cursor line (no band): only the pin as today, the line in charts with a line series (line, combo), or the line in every category chart - each drawn live on a line and a column specimen |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
