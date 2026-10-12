@@ -178,9 +178,12 @@
   category every frame restarted their glide at zero each time, so on a long `ds-line-chart` or
   `ds-chart` they stood still until the pointer stopped while the cursor moved on. Each glide now
   starts two frames in; the scatter ring and the pie arcs glide the same way.
-- **A chart's panel closes while the pointer moves over another chart.** Every element the pointer
-  crossed outside a chart restarted its `tooltipLingerMs` wait, so a panel, cursor and travelling
-  marker stayed up for as long as the pointer kept moving elsewhere. The wait now runs once.
+- **A chart's hover clears the moment the pointer leaves the chart.** The panel, the cursor and
+  the travelling marker used to stay for `tooltipLingerMs` (500ms) wherever the pointer went, so
+  moving onto the next chart lit both; they now wait only while the pointer is still inside the
+  chart, in a gap between marks or on the legend, and the panel stays while the pointer is on it.
+  Every element the pointer crossed outside also restarted that wait, keeping the panel up for as
+  long as the pointer moved; the wait now runs once.
 - **On a `'step'` line the travelling marker lands on the reading.** It stopped at the foot of the
   riser, at the previous reading's height.
 - **Without markers, the panel and the pin sit on the reading.** A `ds-line-chart` or

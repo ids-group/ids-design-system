@@ -135,8 +135,9 @@ export interface DsConfig {
     dataTable?: ChartDataTable;
     /** Whether every chart draws its own bordered, padded box. Default `'auto'`, which draws it. */
     frame?: ChartFrame;
-    /** How long a chart's tooltip stays after the pointer leaves the mark, in milliseconds.
-     *  Default 500; zero closes it at once. */
+    /** How long a chart's tooltip stays after the pointer leaves the mark for another part of the
+     *  chart, in milliseconds; leaving the chart closes it at once. Default 500; zero closes it at
+     *  once everywhere. */
     tooltipLingerMs?: number;
     /** Whether a click on a mark or category holds its tooltip and highlight. Default `true`.
      *  A second click, Escape or a press elsewhere releases. A tap holds whatever this says. */

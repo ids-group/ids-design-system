@@ -142,7 +142,7 @@ export class ColumnSeriesComponent implements OnDestroy {
   /** Where the tooltip is pinned: `'mark'` is the column, `'cell'` the full-height category cell (panel at the plot top). */
   readonly tooltipAnchor = input<'mark' | 'cell'>('mark');
 
-  /** Milliseconds the panel survives the pointer leaving the mark. */
+  /** Milliseconds the panel survives the pointer leaving the mark within the chart. */
   readonly tooltipLingerMs = input(CHART_TOOLTIP_LINGER_MS, {
     transform: numberAttribute,
   });
