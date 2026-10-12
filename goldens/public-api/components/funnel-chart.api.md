@@ -15,7 +15,6 @@ export class FunnelChartComponent extends DsChartBase implements ChartDimmable, 
     public readonly drop = input<FunnelChartDrop>('relative');
     protected entryLabel(entry: { stage: FunnelChartStage; formattedValue: string; }): string;
     protected readonly hitGapUnits = computed(…);
-    protected isDimmed(index: number): boolean;
     protected readonly isEmpty = computed(…);
     protected readonly leaveMark = leaveMark;
     protected markStagger(index: number): string;
@@ -28,8 +27,6 @@ export class FunnelChartComponent extends DsChartBase implements ChartDimmable, 
     protected readonly pinnedCenter = computed(…);
     protected readonly renderReady = chartRenderGate(…);
     protected readonly roving = rovingMarks(…);
-    private readonly rowDwell;
-    private readonly rowHighlight;
     public readonly shape = input<FunnelChartShape>('area');
     protected readonly showDataTable = computed(…);
     public readonly showTable = input(true, { transform: booleanAttribute });

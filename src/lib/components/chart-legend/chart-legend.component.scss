@@ -16,9 +16,12 @@
 }
 
 .legend {
+  --_legend-row-gap: var(--space-2);
+  --_legend-column-gap: var(--space-4);
+
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2) var(--space-4);
+  gap: var(--_legend-row-gap) var(--_legend-column-gap);
   margin: var(--space-3) 0 0;
   padding: 0;
   list-style: none;
@@ -35,7 +38,8 @@
 @include chart-interactive.legend-entry(
   '.legend-item',
   var(--_chart-legend-hover-bg-color),
-  var(--_chart-legend-hover-text-color)
+  var(--_chart-legend-hover-text-color),
+  $covers-gap: true
 );
 
 .legend-toggle {

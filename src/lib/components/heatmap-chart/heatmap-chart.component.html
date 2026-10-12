@@ -95,8 +95,7 @@
     [dsChartTooltipOrigin]="activeMark.origin()">
     <table
       class="grid"
-      [class.dims-others]="dimOthers()"
-      [style.--_heatmap-chart-column-stagger]="columnStagger()">
+      [class.dims-others]="dimOthers()">
       <thead>
         <tr>
           <td class="corner"></td>
@@ -128,6 +127,9 @@
               <td
                 class="cell-slot"
                 [attr.data-mark-index]="index"
+                [style.--_chart-mark-stagger]="
+                  cellStagger(rowIndex, cell.columnIndex)
+                "
                 (animate.leave)="leaveMark($event)"
                 (pointerenter)="activeMark.enter(index, $event)"
                 (pointerleave)="activeMark.leave()"
@@ -139,6 +141,9 @@
                     [class.pins]="pins"
                     [class.is-active]="activeMark.index() === index"
                     [class.is-pinned]="pinned"
+                    [class.is-highlighted]="
+                      cell.step !== null && highlightedStep() === cell.step
+                    "
                     [class.is-dimmed]="isCellDimmed(cell)"
                     [style.background]="cell.color"
                     [attr.aria-label]="cell.accessibleName"
@@ -160,6 +165,9 @@
                     [class.pins]="pins"
                     [class.is-active]="activeMark.index() === index"
                     [class.is-pinned]="pinned"
+                    [class.is-highlighted]="
+                      cell.step !== null && highlightedStep() === cell.step
+                    "
                     [class.is-dimmed]="isCellDimmed(cell)"
                     [style.background]="cell.color"
                     [attr.aria-label]="cell.accessibleName">
@@ -199,6 +207,15 @@
           [style.background]="step"
           (pointerenter)="onStepEnter(stepIndex, $event)"
           (pointerleave)="onStepLeave()">
+        </span>
+      }
+
+      @if (scaleMarker(); as marker) {
+        <span
+          class="scale-marker"
+          dsChartPlaced
+          [style.inset-inline-start.%]="marker.offset">
+          {{ marker.label }}
         </span>
       }
     </span>

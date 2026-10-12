@@ -9,6 +9,7 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  effect,
   input,
   numberAttribute,
   output,
@@ -27,6 +28,7 @@ import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/s
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import {
+  ChartPlacedDirective,
   ChartTooltipDirective,
   ChartStatesComponent,
   chartActiveMark,
@@ -37,6 +39,9 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { heatmapDomain, rampIndexOf } from './heatmap-chart.math';
 import type { HeatmapChartCell, HeatmapChartRow } from './heatmap-chart.types';
+
+// The scale marker moves once the pointer rests on a cell this long, so a sweep across the grid leaves it still.
+const SCALE_MARKER_SETTLE_MS = 120;
 
 interface PlacedCell {
   readonly key: string;
@@ -61,6 +66,7 @@ interface PlacedRow {
   standalone: true,
   exportAs: 'dsHeatmapChart',
   imports: [
+    ChartPlacedDirective,
     ChartTooltipDirective,
     ChartStatesComponent,
     SkeletonComponent,
@@ -109,13 +115,15 @@ export class HeatmapChartComponent
   /** Whether a hovered or focused cell opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
-  /** Milliseconds between one column's entrance and the next; `0` turns it off. The spread is capped at 260ms. */
+  /** Milliseconds between one diagonal's entrance and the next, from the top-left cell; `0` turns
+   *  it off. The spread is capped at 260ms. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
-  // The stylesheet multiplies this by the column index.
-  protected readonly columnStagger = computed(
-    () => `${staggerDelay(1, this.columns().length, this.staggerMs())}ms`,
-  );
+  protected cellStagger(rowIndex: number, columnIndex: number): string {
+    const diagonals = this.data().length + this.columns().length - 1;
+
+    return `${staggerDelay(rowIndex + columnIndex, diagonals, this.staggerMs())}ms`;
+  }
 
   /** The clicked cell, with its row and column. Never fires for an unmeasured cell. */
   readonly cellClicked = output<HeatmapChartCell>();
@@ -125,7 +133,7 @@ export class HeatmapChartComponent
     () => this.defaults.hoverDelayMs(),
   );
 
-  /** The ramp step under the pointer on the scale; every cell outside it fades. */
+  /** The ramp step under the pointer on the scale; its cells brighten, and under `dimOthers` the rest fade. */
   protected readonly highlightedStep = signal<number | null>(null);
 
   private readonly stepDwell = chartDwell(() => this.defaults.hoverDelayMs());
@@ -142,8 +150,39 @@ export class HeatmapChartComponent
   protected isCellDimmed(cell: PlacedCell): boolean {
     const step = this.highlightedStep();
 
-    return step !== null && cell.step !== step;
+    return this.dimOthers() && step !== null && cell.step !== step;
   }
+
+  private readonly scaleMarkerIndex = signal(-1);
+
+  private readonly settleScaleMarker = effect((onCleanup) => {
+    const index = this.activeMark.index();
+    if (index === -1) {
+      this.scaleMarkerIndex.set(-1);
+
+      return;
+    }
+    const timer = setTimeout(
+      () => this.scaleMarkerIndex.set(index),
+      SCALE_MARKER_SETTLE_MS,
+    );
+    onCleanup(() => clearTimeout(timer));
+  });
+
+  /** Where the settled cell's reading sits along the scale, as a percentage of the ramp. */
+  protected readonly scaleMarker = computed(() => {
+    const cell = this.flatCells()[this.scaleMarkerIndex()];
+    if (!cell || cell.value === null) {
+      return null;
+    }
+    const { min, max } = this.domain();
+    const share = max > min ? (cell.value - min) / (max - min) : 0.5;
+
+    return {
+      offset: Math.min(Math.max(share, 0), 1) * 100,
+      label: this.valueFormatResolved()(cell.value, 'tick'),
+    };
+  });
 
   protected onCellPress(cell: PlacedCell, index: number, event: Event): void {
     // Enter and Space click the native button with `detail` 0; keys must not pin.

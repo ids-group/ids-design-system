@@ -17,7 +17,7 @@ export class HeatmapChartComponent extends DsChartBase implements ChartDimmable,
     protected readonly activeMark = chartActiveMark(…);
     public readonly cellClicked = output<HeatmapChartCell>();
     protected cellIndex(rowIndex: number, columnIndex: number): number;
-    protected readonly columnStagger = computed(…);
+    protected cellStagger(rowIndex: number, columnIndex: number): string;
     public readonly columns = input<readonly string[]>([]);
     public readonly data = input<readonly HeatmapChartRow[]>([]);
     public readonly dimOthers = input(false, { transform: booleanAttribute });
@@ -35,9 +35,12 @@ export class HeatmapChartComponent extends DsChartBase implements ChartDimmable,
     protected onStepLeave(): void;
     protected readonly renderReady = chartRenderGate(…);
     protected readonly rows = computed<readonly PlacedRow[]>(…);
+    protected readonly scaleMarker = computed(…);
+    private readonly scaleMarkerIndex;
     protected readonly scaleMaxLabel = computed(…);
     protected readonly scaleMinLabel = computed(…);
     protected readonly scaleSteps = computed(…);
+    private readonly settleScaleMarker;
     public readonly showValues = input(false, { transform: booleanAttribute });
     protected readonly skeletonColumns = computed(…);
     protected readonly skeletonRows = computed(…);
@@ -73,6 +76,8 @@ ds-heatmap-chart {
     --ds-motion-chart-mark-enter-duration: (none);
     --ds-motion-chart-state-duration: (none);
     --ds-motion-chart-state-easing: (none);
+    --ds-motion-chart-tooltip-move-duration: (none);
+    --ds-motion-chart-tooltip-move-easing: (none);
     --ds-radius-control: (none);
 }
 ```

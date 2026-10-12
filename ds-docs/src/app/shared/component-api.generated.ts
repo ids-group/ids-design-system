@@ -4725,7 +4725,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one column's entrance and the next; `0` turns it off. The spread is capped at 260ms."
+        "description": "Milliseconds between one diagonal's entrance and the next, from the top-left cell; `0` turns it off. The spread is capped at 260ms."
       }
     ],
     "outputs": [
@@ -8176,6 +8176,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Fades every mark but the one under the pointer; on a scatter this hides pile-ups."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "40",
+        "required": false,
+        "description": "Milliseconds between one point's entrance and the next, left to right; `0` turns it off. The spread is capped at 260ms."
       }
     ],
     "outputs": [

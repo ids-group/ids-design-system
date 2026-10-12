@@ -24,6 +24,10 @@
   `--ds-chart-negative-color` and prints the change in percent. With several series it follows the
   one singled out by hover, focus or the legend. `showChange="false"` turns it off.
 
+- **A scatter's points enter left to right.** `ds-scatter-chart` takes `staggerMs` (default 40),
+  as the column charts do: each point waits by its place across the plot, the whole entrance stays
+  within 260ms, and `0` turns it off.
+
 ### Changed
 
 - **The value axis answers the hovered reading.** In `ds-chart`, `ds-column-chart`,
@@ -39,11 +43,16 @@
   column moves to the next one with the panel. Under forced colours each keeps its own ring.
 - **A column keeps its place by key.** A `dsColumnSeries` column with the same `id` glides to its
   new slot when the data is reordered; without an `id` a column is keyed by its label.
-- **A legend highlight fades the other series only under `dimOthers`.** In `ds-column-chart`,
-  `ds-line-chart` and `dsColumnSeries` / `dsLineSeries`, pointing at a legend item brightens its
-  columns or thickens its line, and fades the rest only where `dimOthers` is set, as hovering a mark
-  does; under `dimOthers` hovering a column fades the other series too. Set `dimOthers` to keep the
-  legend fading the other series.
+- **Hovering a pie, heatmap or scatter names the mark.** A hovered, focused or held `ds-pie-chart`
+  slice fades the centre to its share (its value under `partOfWhole: false`) over its name, and the
+  total comes back when the pointer leaves. Once the pointer has rested 120ms on a
+  `ds-heatmap-chart` cell, a marker over the colour scale prints its reading and glides to its place
+  on the ramp; a fast sweep across the grid leaves it still. The scale sits 12px lower to hold it.
+  A `ds-scatter-chart` answers with the point nearest the pointer anywhere over the plot, where it
+  answered only within 16px of a point: a ring glides to that point and a dashed line runs to it
+  from the pointer. Under `prefers-reduced-motion` the centre, the marker and the ring change at once.
+- **Heatmap cells enter along the diagonals.** `staggerMs` on `ds-heatmap-chart` spaces the
+  diagonals from the top-left cell, where it spaced the columns; the spread stays within 260ms.
 - **Every mark of a chart moves together when its data changes.** In `ds-chart`, `ds-column-chart`,
   `ds-line-chart` and `ds-waterfall-chart` the line, its markers and area, the value labels, the
   pin, the gridlines with their tick labels and the waterfall connectors glide to their new place on
@@ -63,11 +72,27 @@
   and a pin appear in place and glide only to a later position; the chart-tooltip entry point exports the internal `ChartPlacedDirective`
   that gates it. `ChartComponent`, `ColumnSeriesComponent`, `LineSeriesComponent`,
   `ColumnChartComponent`, `LineChartComponent`, `PieChartComponent`, `HeatmapChartComponent` and
-  `ScatterChartComponent` gained members, named in the migration manifest; a subclass declaring one
-  of those names must rename it.
+  `ScatterChartComponent` gained members, named in the migration manifest, as are the members
+  `FunnelChartComponent`, `PieChartComponent`, `HeatmapChartComponent`, `ScatterChartComponent` and
+  `LineSeriesComponent` lost; a subclass declaring one of those names must rename it, and one
+  overriding a lost member overrides nothing.
   The internal `WaterfallMarksComponent` gained `leaveMark`.
 
 ### Fixed
+
+- **A legend fades the other marks only under `dimOthers`, as hovering a mark does.** Hovering or
+  focusing a `ds-pie-chart` legend entry, a `ds-funnel-chart` stage-table row, a
+  `ds-scatter-chart` legend entry, a `ds-heatmap-chart` scale step, or a series legend entry of
+  `ds-column-chart` and `ds-line-chart` faded the rest whatever `dimOthers` said. It fades them only
+  when `dimOthers` is set; a scale step brightens its own cells, a column series brightens and a line
+  thickens either way, and under `dimOthers` hovering a column fades the other series too. The same
+  holds for `highlighted` on `dsColumnSeries` and `dsLineSeries`. Add `dimOthers` to a chart whose
+  legend should keep fading the rest.
+- **Moving the pointer down a legend keeps the highlight.** The few pixels between two rows of a
+  `ds-pie-chart` legend, and between the entries of the series legend under `ds-chart`,
+  `ds-column-chart`, `ds-line-chart` and `ds-scatter-chart`, belonged to no entry, so the
+  highlight, the slid-out slice and the tooltip dropped and came back at every row. Each entry
+  takes the pointer up to the middle of the gap beside it.
 
 - **Only the main mouse button pins a chart.** A right or middle press on a `ds-chart` category, or
   on any chart's mark, takes no pin, and one outside the chart leaves a held pin in place. The
