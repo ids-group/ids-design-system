@@ -546,6 +546,12 @@
     background-color: var(--_table-row-stripe-bg-color);
   }
 
+  /* At 100% an auto layout hands the container's slack to every column, so shrinking one widens
+     the rest. Once each column has a pixel width the table is as wide as its columns. */
+  &.sized-columns {
+    width: auto;
+  }
+
   /* Every row must be exactly --_table-virtual-row-h tall or every offset below it is wrong:
      no wrapping, and a fixed layout (auto re-measures against the rendered rows and columns
      twitch on scroll). */
@@ -870,9 +876,9 @@
   gap: var(--space-2);
   margin-bottom: var(--space-2);
 
-  /* Always in the markup, so it hides itself when the slot is empty. `:has()`, not `:empty`,
-     which whitespace text nodes defeat. */
-  &:not(:has(.toolbar-slot > *, > ds-button)) {
+  /* Always in the markup, so it hides itself when the slot is empty and no feature has inserted
+     its control beside it. `:has()`, not `:empty`, which whitespace text nodes defeat. */
+  &:not(:has(.toolbar-slot > *, > :not(.toolbar-slot))) {
     display: none;
   }
 }

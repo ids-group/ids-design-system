@@ -437,6 +437,11 @@ export class TableComponent<T extends object> {
     }
     if (this.virtualizing()) {
       parts.push('virtual');
+    } else if (
+      this.layout.resize() !== null &&
+      this.visibleColumns().every((col) => this.columnWidth(col) !== null)
+    ) {
+      parts.push('sized-columns');
     }
 
     return parts.join(' ');
