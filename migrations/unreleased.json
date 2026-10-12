@@ -12,6 +12,7 @@
         "extends PieChartComponent",
         "extends HeatmapChartComponent",
         "extends ScatterChartComponent",
+        "extends FunnelChartComponent",
         "extends LineSeriesComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent"
@@ -21,15 +22,34 @@
         "extends PieChartComponent",
         "extends HeatmapChartComponent",
         "extends ScatterChartComponent",
+        "extends FunnelChartComponent",
         "extends LineSeriesComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent"
       ],
       "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
-      "appliesWhen": "Only a class of yours that extends ChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or LineSeriesComponent, or the internal ChartTooltipPanelComponent or WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends ChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent, FunnelChartComponent or LineSeriesComponent, or the internal ChartTooltipPanelComponent or WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
-      "verify": "The app builds with no member-collision error on a subclass of ChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or LineSeriesComponent.",
-      "note": "ChartComponent gained `layout`, `measureBandPinY`, `pinnedCategories`, `settledLayout` and `stackTop`; PieChartComponent gained `drawnArcs`, `sliceHoverShift`, `stopArcTween`, `tweenArcs` and the internal `leaveMark`; HeatmapChartComponent gained the internal `leaveMark`; ScatterChartComponent gained the internal `leaveMark` and `pinnedPoints` and lost `pinnedPoint`; LineSeriesComponent gained `pinnedMarkers` and lost `pinnedMarker`. The internal WaterfallMarksComponent gained `leaveMark`."
+      "verify": "The app builds with no member-collision error on a subclass of ChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent, FunnelChartComponent or LineSeriesComponent.",
+      "note": "ChartComponent gained `layout`, `measureBandPinY`, `pinnedCategories`, `settledLayout` and `stackTop`; PieChartComponent gained `centerEntry`, `centerKey`, `drawnArcs`, `shownCenterLabel`, `shownCenterValue`, `sliceHoverShift`, `stopArcTween`, `tweenArcs` and the internal `leaveMark`, and lost `isDimmed`, `legendDwell` and `legendHighlight`; HeatmapChartComponent gained `cellStagger`, `scaleMarker`, `scaleMarkerIndex`, `settleScaleMarker` and the internal `leaveMark`, and lost `columnStagger`; ScatterChartComponent gained `followRing`, `pinnedPoints`, `pointStagger`, `pointer`, `ringElement`, `ringedMark`, `staggerMs`, `staggerSpread`, `tetherElement`, `zone` and the internal `leaveMark`, and lost `pinnedPoint`; FunnelChartComponent lost `isDimmed`, `rowDwell` and `rowHighlight`; LineSeriesComponent gained `pinnedMarkers` and lost `pinnedMarker`. The internal WaterfallMarksComponent gained `leaveMark`."
+    },
+    {
+      "id": "chart-legend-fades-only-under-dim-others",
+      "kind": "behavior",
+      "old": "ds-pie-chart[dimOthers]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "ds-pie-chart",
+        "ds-funnel-chart",
+        "ds-scatter-chart",
+        "ds-heatmap-chart"
+      ],
+      "action": "None, unless the other marks must keep fading while a legend entry, stage-table row or scale step is hovered: then add `dimOthers` to that chart.",
+      "appliesWhen": "ds-pie-chart, ds-funnel-chart, ds-scatter-chart and ds-heatmap-chart that do not set dimOthers. A chart that sets it fades from the legend as before.",
+      "pitfall": "dimOthers also fades the other marks while a mark itself is hovered, not only from the legend.",
+      "restore": "dimOthers",
+      "verify": "Hover a legend entry of every ds-pie-chart, ds-funnel-chart stage row, ds-scatter-chart legend entry and ds-heatmap-chart scale step that should fade the rest, and confirm the chart carries dimOthers."
     }
   ],
   "informational": [
@@ -52,6 +72,26 @@
     {
       "text": "A hovered or focused column, bar, waterfall step and heatmap cell brightens with `filter: brightness(1.12) saturate(1.1)`, a chart pin pops in, and the tooltip rows fade in when the panel moves to another category or slice. Under `prefers-reduced-motion` all of these change at once.",
       "verify": "Hover a column of a ds-column-chart and confirm it brightens; click it and confirm the pin pops in."
+    },
+    {
+      "text": "A hovered, focused or held `ds-pie-chart` slice fades the centre to its share and name; the total comes back when the pointer leaves.",
+      "verify": "Hover a slice of a ds-pie-chart and confirm the centre shows its share over its name, and the total once the pointer leaves the ring."
+    },
+    {
+      "text": "Once the pointer has rested 120ms on a `ds-heatmap-chart` cell, a marker over the colour scale prints its reading and glides to it; the scale sits 12px lower (`margin-block-start` 24px, was 12px) to hold it.",
+      "verify": "Rest the pointer on a heatmap cell and confirm the marker appears over the scale at its reading, and that the scale clears the grid's last row."
+    },
+    {
+      "text": "`ds-scatter-chart` answers with the point nearest the pointer anywhere over the plot, rings it and draws a dashed line to it from the pointer.",
+      "verify": "Point at empty space inside a ds-scatter-chart plot and confirm the nearest point is ringed and its tooltip opens."
+    },
+    {
+      "text": "`ds-scatter-chart` points enter left to right (`staggerMs`, default 40) and `ds-heatmap-chart` cells along the diagonals from the top-left, each within 260ms; `staggerMs=\"0\"` makes them enter together.",
+      "verify": "Load a ds-scatter-chart and confirm the leftmost points appear first."
+    },
+    {
+      "text": "Each entry of a `ds-pie-chart` legend and of the shared series legend takes the pointer up to the middle of the gap beside it, so moving across entries keeps the highlight.",
+      "verify": "Move the pointer down a ds-pie-chart legend and confirm the tint never leaves every row between two rows."
     }
   ],
   "deleteList": []
