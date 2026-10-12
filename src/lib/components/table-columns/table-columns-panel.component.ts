@@ -19,6 +19,7 @@ import { BottomSheetComponent } from '@ids-group-ltd/ids-design-system/component
 import { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
 import type { TableColumn } from '@ids-group-ltd/ids-design-system/components/table';
 import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
+import { focusRescue } from '@ids-group-ltd/ids-design-system/components';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 
 /**
@@ -57,6 +58,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 
     <ng-template #panel>
       <div
+        #list
         class="col-picker"
         cdkDropList
         (cdkDropListDropped)="dropped.emit($event)">
@@ -99,7 +101,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
                   class="col-move-btn"
                   [attr.aria-label]="intl().tableColumns.moveUp"
                   [disabled]="first"
-                  (click)="moved.emit({ column: col, delta: -1 })">
+                  (click)="move(col, -1, list)">
                   <ds-icon name="chevronUp" [size]="14" />
                 </button>
 
@@ -108,7 +110,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
                   class="col-move-btn"
                   [attr.aria-label]="intl().tableColumns.moveDown"
                   [disabled]="last"
-                  (click)="moved.emit({ column: col, delta: 1 })">
+                  (click)="move(col, 1, list)">
                   <ds-icon name="chevronDown" [size]="14" />
                 </button>
               </span>
@@ -134,6 +136,7 @@ export class TableColumnsPanelComponent<T> {
   readonly isLocked = input.required<(column: TableColumn<T>) => boolean>();
 
   protected readonly intl = inject(DS_INTL);
+  private readonly rescueFocus = focusRescue();
 
   readonly sheetOpen = model(false);
   readonly toggled = output<TableColumn<T>>();
@@ -148,6 +151,28 @@ export class TableColumnsPanelComponent<T> {
       ? this.sheetOpen()
       : (this.popover()?.opened() ?? false),
   );
+
+  // A moved row is re-inserted, or its button disabled at an end, under focus.
+  protected move(
+    column: TableColumn<T>,
+    delta: -1 | 1,
+    list: HTMLElement,
+  ): void {
+    this.moved.emit({ column, delta });
+    this.rescueFocus(() => {
+      const index = this.columns().findIndex(
+        (candidate) => candidate.key === column.key,
+      );
+      const [up, down] = Array.from(
+        list.children[index]?.querySelectorAll<HTMLButtonElement>(
+          '.col-move-btn',
+        ) ?? [],
+      );
+      const same = delta < 0 ? up : down;
+
+      return same?.disabled ? (delta < 0 ? down : up) : same;
+    });
+  }
 
   toggle(trigger: HTMLElement): void {
     if (this.coarsePointer()) {

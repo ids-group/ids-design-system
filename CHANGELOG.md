@@ -290,6 +290,11 @@
   the region. Focus that a `(closed)` handler or a toast action's `handler` moves elsewhere stays
   there. `ToastRegionComponent` gained members, and the `onDismiss` of `AlertComponent` and
   `BannerComponent` takes an argument, named in the migration manifest.
+- **Move up and Move down in the `dsTableColumns` panel keep focus on the moved row.** Pressed from
+  the keyboard, three moves in four dropped focus to the page, as the row was re-inserted or its
+  button disabled at the top or bottom. Focus stays on the pressed button of the moved row, or moves
+  to its other button once the row reaches an end. The internal `TableColumnsPanelComponent`
+  gained `move` and `rescueFocus`.
 
 ### What you can now DELETE
 

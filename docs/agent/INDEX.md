@@ -151,5 +151,5 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-table> — TableComponent<T extends { id: string }>](tables/ds-table.md) — Column shape: { key: string, label: string, sortable?: boolean, align?: 'left' | 'right' | 'center', cell?: (r
 - [[dsCellTemplate] — CellTemplateDirective](tables/ds-cell-template.md) — <!-- inputs:[dsCellTemplate] -->
 - [<ng-template[dsHeaderFilter]> — HeaderFilterDirective](tables/header-filter-directive.md) — <!-- inputs:ng-template[dsHeaderFilter] -->
-- [[dsTableColumns] — DsTableColumns](tables/ds-table-columns.md) — <!-- inputs:[dsTableColumns] -->
+- [[dsTableColumns] — DsTableColumns](tables/ds-table-columns.md) — Column panel Move up and Move down keep focus on the moved row: the pressed button, or the other at an end.
 - [[dsTableExport] — DsTableExport](tables/ds-table-export.md) — <!-- inputs:[dsTableExport] -->
