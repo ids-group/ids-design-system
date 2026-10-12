@@ -9,7 +9,7 @@ export class InfoHintComponent {
     public readonly ariaLabel = input.required<string>();
     public readonly content = input<TemplateRef<unknown> | null>(null);
     private readonly hasProjected;
-    public readonly icon = input<'help' | 'info'>('help');
+    public readonly icon = input<IconName>('help');
     private readonly projected;
     private readonly sources;
     public readonly text = input<string>('');

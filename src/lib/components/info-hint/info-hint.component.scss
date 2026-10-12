@@ -10,7 +10,9 @@
 
 // A circle is a box-shadow, so the 14px button keeps its box in every state.
 .info-hint {
-  --_info-hint-color-hover: var(--icon-strong);
+  --_info-hint-color: var(--ds-info-hint-color, var(--icon-default));
+  // A consumer colour is kept on hover: darkening it to --icon-strong would drop its meaning.
+  --_info-hint-color-hover: var(--ds-info-hint-color, var(--icon-strong));
   --_info-hint-bg-pressed: var(--surface-muted);
 
   display: inline-flex;
@@ -21,7 +23,7 @@
   border: 0;
   border-radius: var(--radius-pill);
   background: none;
-  color: var(--icon-default);
+  color: var(--_info-hint-color);
   cursor: pointer;
   transition:
     color var(--duration-fast) var(--ease-standard),

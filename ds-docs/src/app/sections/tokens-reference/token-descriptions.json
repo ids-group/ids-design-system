@@ -574,6 +574,7 @@
   "--ds-icon-button-radius": "Corner radius.",
   "--ds-icon-button-size": "Icon button hit area size (defaults to --hit-cozy).",
   "--ds-icon-size": "Icon glyph box for every icon under this scope. Defaults to --icon-md; a per-instance `size` input beats it.",
+  "--ds-info-hint-color": "Info hint icon colour, at rest and on hover (defaults to --icon-default).",
   "--ds-inline-gap": "Default gap for inline-arranged layouts (defaults to --space-inline).",
   "--ds-input-bg-color": "Field fill.",
   "--ds-input-bg-color-disabled": "Disabled fill.",

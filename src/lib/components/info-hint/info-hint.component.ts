@@ -9,7 +9,10 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { devWarn } from '@ids-group-ltd/ids-design-system/core';
+import {
+  devWarn,
+  type IconName,
+} from '@ids-group-ltd/ids-design-system/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import {
@@ -50,8 +53,8 @@ export class InfoHintComponent {
   readonly content = input<TemplateRef<unknown> | null>(null);
   /** Accessible name of the icon button, such as "About conversion rate". */
   readonly ariaLabel = input.required<string>();
-  /** `'help'` draws a question mark in a circle, `'info'` an "i". */
-  readonly icon = input<'help' | 'info'>('help');
+  /** Any DS icon; `'help'` draws a question mark in a circle, `'info'` an "i". */
+  readonly icon = input<IconName>('help');
 
   private readonly projected = viewChild.required<TemplateRef<unknown>>('projected');
   private readonly hasProjected = signal<boolean | null>(null);
