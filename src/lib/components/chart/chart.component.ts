@@ -8,6 +8,7 @@ import {
   Signal,
   ViewEncapsulation,
   afterRenderEffect,
+  booleanAttribute,
   computed,
   effect,
   forwardRef,
@@ -27,6 +28,7 @@ import {
   rotationWouldFit,
   tickValues,
   chartRenderGate,
+  leaveMark,
   CHART_SKELETON_COUNT,
   DsChartBase,
   skeletonMarkCount,
@@ -52,6 +54,7 @@ import type {
 } from '@ids-group-ltd/ids-design-system/core';
 import {
   categoryAt,
+  categoryKeys,
   CHART_AXIS_LABEL_GAP,
   CHART_AXIS_TITLE_BAND,
   CHART_BAND_PADDING,
@@ -73,10 +76,20 @@ import {
 import {
   CHART_SCALES,
   type ChartAxisEntry,
+  type ChartAxisReadout,
+  type ChartCategoryRange,
   type ChartPlot,
   type ChartScales,
   type ChartTooltipSource,
 } from './chart-scales.token';
+
+// Between the value axis and the pill that prints the reading there.
+const READOUT_PILL_GAP = 2;
+// Text to edge, either side, of a pill drawn on the canvas.
+const PILL_PADDING = 6;
+const RANGE_BAND_INSET = 2;
+// Above the plot's top edge, inside the value space reserved there.
+const RANGE_PILL_RISE = 10;
 
 @Component({
   selector: 'ds-chart',
@@ -108,6 +121,8 @@ import {
   ],
 })
 export class ChartComponent extends DsChartBase implements ChartScales {
+  protected readonly leaveMark = leaveMark;
+
   protected readonly renderReady = chartRenderGate();
 
   /** One band per category; every projected mark is positioned against them. */
@@ -184,6 +199,11 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   /** `axisLabel` for the second axis. */
   readonly secondaryAxisLabel = input<string | null>(null);
 
+  /** Lets a press dragged across categories select them: a band over the range, the sum and mean of
+   *  every reading in it, and the marks outside it faded. Escape or a press outside clears it; a
+   *  press released in its own category still pins. Off by default. */
+  readonly selectRange = input(false, { transform: booleanAttribute });
+
   protected readonly tooltipSwatchesResolved = this.defaults.tooltipSwatches;
   readonly hoverDelayMs = this.defaults.hoverDelayMs;
 
@@ -203,17 +223,16 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     () => this.measuredWidth() || CHART_FALLBACK_WIDTH,
   );
 
-  /** The geometry a resize or a category coming or going redraws; marks hold still while it changes. */
-  private readonly layout = computed(
-    () => `${this.measuredWidth()}:${this.categories().length}`,
-  );
+  /** The geometry a resize redraws; marks hold still while it changes. A category coming or going is
+   *  not part of it: the marks glide sideways and a line morphs to its new point count. */
+  private readonly layout = computed(() => `${this.measuredWidth()}`);
 
   private readonly settledLayout = signal('');
 
-  /** Whether the marks may animate: the correction after measuring, a resize and a category coming or
-   *  going must not, or a column glides while a line whose point count changed redraws at once.
-   *  Derived from the layout, so the hold lands in the same render as the new geometry. Two frames,
-   *  because after one the corrected geometry is unstyled and `transitionrun` fires on `x` and `width`. */
+  /** Whether the marks may animate: the correction after measuring and a resize must not, or the plot
+   *  drags behind the pointer. Derived from the layout, so the hold lands in the same render as the new
+   *  geometry. Two frames, because after one the corrected geometry is unstyled and `transitionrun`
+   *  fires on `x` and `width`. */
   protected readonly settled = computed(
     () => this.measuredWidth() > 0 && this.layout() === this.settledLayout(),
   );
@@ -250,6 +269,9 @@ export class ChartComponent extends DsChartBase implements ChartScales {
         if (this.roving() > last && this.keyboardFocusInside()) {
           this.refocusStop = true;
         }
+        if ((this.range()?.to ?? -1) > last) {
+          this.range.set(null);
+        }
       });
     });
 
@@ -268,6 +290,15 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       }
     });
 
+    effect((onCleanup) => {
+      const canvas = this.canvasElement()?.nativeElement;
+      if (canvas && this.selectRange()) {
+        onCleanup(this.listenForRange(canvas));
+      } else {
+        untracked(() => this.range.set(null));
+      }
+    });
+
     // Read phase: every `getComputedTextLength` before any write, or each label forces a layout.
     afterRenderEffect({
       read: () => {
@@ -279,6 +310,15 @@ export class ChartComponent extends DsChartBase implements ChartScales {
         this.measuredCategoryLabelWidth.set(
           this.widestLabel('.category-label'),
         );
+      },
+    });
+
+    afterRenderEffect({
+      read: () => {
+        this.axisReadout();
+        this.rangeTotal();
+        this.readoutTextWidth.set(this.widestLabel('.readout-text'));
+        this.rangeTextWidth.set(this.widestLabel('.range-text'));
       },
     });
 
@@ -869,7 +909,12 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
       return;
     }
-    if (event.type === 'pointerdown' && this.pinOnClickResolved()) {
+    // Under `selectRange` a press may become a drag; the range listener pins on a release in place.
+    if (
+      event.type === 'pointerdown' &&
+      this.pinOnClickResolved() &&
+      !this.selectRange()
+    ) {
       this.cursorState.pin(index, event);
 
       return;
@@ -922,6 +967,218 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     };
   }
 
+  private readonly range = signal<ChartCategoryRange | null>(null);
+
+  /** The categories a drag selected, both ends included; `null` when none are. */
+  readonly selectedRange = this.range.asReadonly();
+
+  private listenForRange(canvas: SVGSVGElement): () => void {
+    const document = canvas.ownerDocument;
+    const view = document.defaultView ?? window;
+    let anchor = -1;
+    let dragged = false;
+    // Past either end of the plot a drag holds the nearest category.
+    const categoryOf = (event: PointerEvent, clamp: boolean): number => {
+      const box = canvas.getBoundingClientRect();
+      const plot = this.plot();
+      const viewX = ((event.clientX - box.left) / box.width) * this.viewWidth();
+      const x = clamp
+        ? Math.min(Math.max(viewX, plot.left), plot.left + plot.width)
+        : viewX;
+
+      return categoryAt(x, plot.left, plot.width, this.categories().length);
+    };
+    const onMove = (event: PointerEvent): void => {
+      const index = categoryOf(event, true);
+      if (index < 0 || (index === anchor && !dragged)) {
+        return;
+      }
+      dragged = true;
+      this.range.set({
+        from: Math.min(anchor, index),
+        to: Math.max(anchor, index),
+      });
+    };
+    const stopDrag = (): void => {
+      view.removeEventListener('pointermove', onMove);
+      view.removeEventListener('pointerup', onUp);
+      anchor = -1;
+    };
+    const onUp = (event: PointerEvent): void => {
+      if (!dragged && this.cursorOn() && this.pinOnClickResolved()) {
+        this.cursorState.pin(anchor, event, null, canvas);
+      }
+      stopDrag();
+    };
+    const onDown = (event: PointerEvent): void => {
+      if (!isPrimaryPress(event)) {
+        return;
+      }
+      stopDrag();
+      this.range.set(null);
+      dragged = false;
+      anchor = categoryOf(event, false);
+      if (anchor >= 0) {
+        view.addEventListener('pointermove', onMove);
+        view.addEventListener('pointerup', onUp);
+      }
+    };
+    const onOutside = (event: PointerEvent): void => {
+      if (!(event.target instanceof Node) || !canvas.contains(event.target)) {
+        this.range.set(null);
+      }
+    };
+    const onEscape = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        this.range.set(null);
+      }
+    };
+    this.zone.runOutsideAngular(() => {
+      canvas.addEventListener('pointerdown', onDown);
+      document.addEventListener('pointerdown', onOutside, true);
+      document.addEventListener('keydown', onEscape);
+    });
+
+    return () => {
+      stopDrag();
+      canvas.removeEventListener('pointerdown', onDown);
+      document.removeEventListener('pointerdown', onOutside, true);
+      document.removeEventListener('keydown', onEscape);
+    };
+  }
+
+  private readonly rangeTotal = computed(() => {
+    const range = this.range();
+    if (!range) {
+      return null;
+    }
+    const perSource = [...this.tooltipSources().values()].map(
+      (source) => source.valuesByCategory?.() ?? [],
+    );
+    let total = 0;
+    let count = 0;
+    for (let index = range.from; index <= range.to; index++) {
+      for (const values of perSource) {
+        for (const value of values[index] ?? []) {
+          total += value;
+          count++;
+        }
+      }
+    }
+    const categories = this.categories();
+    const name =
+      range.from === range.to
+        ? (categories[range.from] ?? '')
+        : `${categories[range.from] ?? ''}-${categories[range.to] ?? ''}`;
+    const format = this.valueFormatResolved();
+
+    return this.intl().chart.rangeTotal(
+      name,
+      format(total, 'tooltip'),
+      format(count > 0 ? total / count : 0, 'tooltip'),
+    );
+  });
+
+  private readonly rangeTextWidth = signal(0);
+
+  protected readonly rangeBand = computed(() => {
+    const range = this.range();
+    const label = this.rangeTotal();
+    const count = this.categories().length;
+    if (!range || label === null || count === 0) {
+      return null;
+    }
+    const plot = this.plot();
+    const step = plot.width / count;
+    const x = plot.left + step * range.from + RANGE_BAND_INSET;
+    const width = step * (range.to - range.from + 1) - 2 * RANGE_BAND_INSET;
+    const pillWidth = this.rangeTextWidth() + 2 * PILL_PADDING;
+    const half = Math.min(pillWidth, plot.width) / 2;
+
+    return {
+      x,
+      width,
+      top: plot.top,
+      height: plot.height,
+      label,
+      pillWidth,
+      pillX: Math.min(
+        Math.max(x + width / 2, plot.left + half),
+        plot.left + plot.width - half,
+      ),
+      pillY: plot.top - RANGE_PILL_RISE,
+    };
+  });
+
+  /** Under the category cursor the highest reading at the category, or the one the keyboard picked;
+   *  otherwise the reading of the mark answering the pointer or focus. */
+  private readonly activeReadout = computed<ChartAxisReadout | null>(() => {
+    if (this.cursorOn()) {
+      const categoryIndex = this.activeIndex();
+      if (categoryIndex < 0) {
+        return null;
+      }
+      const top =
+        this.pickedReading()?.entry ??
+        highestReading(
+          [...this.tooltipSources().values()].flatMap(
+            (source) => source.axisEntries?.() ?? [],
+          ),
+        );
+
+      return top?.y === undefined
+        ? null
+        : { categoryIndex, y: top.y, axis: top.axis };
+    }
+    for (const source of this.tooltipSources().values()) {
+      const readout = source.axisReadout?.();
+      if (readout) {
+        return readout;
+      }
+    }
+
+    return null;
+  });
+
+  private readonly readoutTextWidth = signal(0);
+
+  /** A guide from the value axis at the active reading, and the axis value there in a pill on the axis. */
+  protected readonly axisReadout = computed(() => {
+    const readout = this.activeReadout();
+    if (!readout) {
+      return null;
+    }
+    const secondary = readout.axis === 'secondary' && this.hasSecondaryAxis();
+    const plot = secondary ? this.secondaryPlot() : this.plot();
+    const domain = secondary ? this.secondary().domain : this.domain();
+    const share =
+      plot.height > 0 ? (plot.top + plot.height - readout.y) / plot.height : 0;
+    // Rounded off the float noise the inversion adds, so a reading of 620 prints as 620.
+    const value =
+      Math.round((domain.min + share * (domain.max - domain.min)) * 1e6) / 1e6;
+    const onRight = secondary && !this.stacked();
+    const half = this.bandWidth() / 2;
+    const centre = this.xPosition()(readout.categoryIndex);
+    const toMark = readout.reach === 'mark';
+    const pillWidth = this.readoutTextWidth() + 2 * PILL_PADDING;
+
+    return {
+      categoryIndex: readout.categoryIndex,
+      y: readout.y,
+      label: this.valueFormatResolved()(value, 'tooltip'),
+      x1: onRight && toMark ? centre - half : this.plot().left,
+      x2: !onRight && toMark ? centre + half : this.plotRight(),
+      pillWidth,
+      pillX: onRight
+        ? this.plotRight() + READOUT_PILL_GAP
+        : this.plot().left - READOUT_PILL_GAP - pillWidth,
+    };
+  });
+
+  protected readonly hotCategory = computed(
+    () => this.axisReadout()?.categoryIndex ?? -1,
+  );
+
   private readonly bandElement = viewChild<ElementRef<Element>>('cursorBandEl');
 
   readonly cursorOrigin = computed<Element | null>(() =>
@@ -938,6 +1195,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   readonly focusedCategory = computed(() =>
     Math.min(this.roving(), Math.max(0, this.categories().length - 1)),
+  );
+
+  protected readonly focusedStopX = computed(
+    () => this.xPosition()(this.focusedCategory()) - this.bandWidth() / 2,
   );
 
   protected readonly categoryStops = computed(() => {
@@ -1258,8 +1519,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     const toX = this.xPosition();
     const interval = this.categoryLabelInterval();
 
+    const keys = categoryKeys(this.categories());
+
     return this.categories()
-      .map((text, index) => ({ x: toX(index), text, index }))
+      .map((text, index) => ({ x: toX(index), text, index, key: keys[index] }))
       .filter((label) => label.index % interval === 0);
   });
 
@@ -1271,6 +1534,22 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   protected readonly accessibleName = computed(
     () => this.summary() ?? this.caption() ?? this.intl().chart.title,
   );
+}
+
+function highestReading(
+  readings: readonly ChartAxisEntry[],
+): ChartAxisEntry | null {
+  let highest: ChartAxisEntry | null = null;
+  for (const reading of readings) {
+    if (
+      reading.y !== undefined &&
+      (highest?.y === undefined || reading.y < highest.y)
+    ) {
+      highest = reading;
+    }
+  }
+
+  return highest;
 }
 
 // A pin's `transform` attribute is where it lands; its computed transform is mid-glide.

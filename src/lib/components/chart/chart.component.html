@@ -13,7 +13,8 @@
   [emptyText]="emptyTextResolved()"
   [skeleton]="skeleton"
   [body]="body"
-  (release)="releaseCursor()"></figure>
+  (release)="releaseCursor()">
+</figure>
 
 <ng-template #skeleton>
   <ds-chart-skeleton
@@ -40,6 +41,7 @@
       class="canvas"
       preserveAspectRatio="xMidYMid meet"
       [class.pins]="bandPins()"
+      [class.selects-range]="selectRange()"
       [style.block-size.px]="viewHeight()"
       [attr.viewBox]="viewBox()">
       <rect
@@ -155,6 +157,34 @@
         }
       </g>
 
+      @if (rangeBand(); as range) {
+        <rect
+          class="range-band"
+          aria-hidden="true"
+          dsChartPlaced
+          animate.enter="cursor-in"
+          animate.leave="cursor-out"
+          [attr.x]="range.x"
+          [attr.y]="range.top"
+          [attr.width]="range.width"
+          [attr.height]="range.height" />
+      }
+
+      @if (axisReadout(); as readout) {
+        <g
+          class="readout"
+          aria-hidden="true"
+          dsChartPlaced
+          animate.enter="cursor-in"
+          animate.leave="cursor-out"
+          [style.transform]="'translateY(' + readout.y + 'px)'">
+          <line
+            class="readout-guide"
+            [attr.x1]="readout.x1"
+            [attr.x2]="readout.x2" />
+        </g>
+      }
+
       <!-- Two slots so a reference line paints under the marks in any source order. Both stay
            inside `.marks`, which the boot transition guard is keyed on. -->
       <g class="marks">
@@ -181,6 +211,16 @@
               (focus)="onStopFocus(stop.index, $event)"
               (blur)="onStopBlur($event)" />
           }
+
+          <!-- One ring for every stop, so focus glides to the next category with the panel. -->
+          <rect
+            class="stop-ring"
+            aria-hidden="true"
+            dsChartPlaced
+            [attr.y]="plot().top"
+            [attr.width]="bandWidth()"
+            [attr.height]="plot().height"
+            [style.transform]="'translateX(' + focusedStopX() + 'px)'" />
         </g>
       }
 
@@ -245,18 +285,23 @@
           </text>
         }
 
-        @for (label of categoryLabels(); track label.index) {
+        <!-- Keyed by category and placed by `transform`, so a label glides with its column when
+             another category comes or goes. -->
+        @for (label of categoryLabels(); track label.key) {
           <text
             class="category-label"
+            [class.is-hot]="label.index === hotCategory()"
             [class.is-rotated]="categoryLabelsRotated()"
             [attr.text-anchor]="categoryLabelsRotated() ? 'end' : 'middle'"
-            [attr.x]="label.x"
-            [attr.y]="categoryLabelY()"
-            [attr.transform]="
-              categoryLabelsRotated()
-                ? 'rotate(-45 ' + label.x + ' ' + categoryLabelY() + ')'
-                : null
+            [style.transform]="
+              'translate(' +
+              label.x +
+              'px, ' +
+              categoryLabelY() +
+              'px)' +
+              (categoryLabelsRotated() ? ' rotate(-45deg)' : '')
             "
+            (animate.leave)="leaveMark($event)"
             (pointerenter)="onCategoryLabelEnter(label.index, $event)"
             (pointerleave)="onCategoryLabelLeave()">
             {{ label.text }}
@@ -266,6 +311,51 @@
         <!-- Over the marks so an annotation's name survives a column drawn through it. -->
         <ng-content select="[dsReferenceLabel], [dsSeriesAnnotation]" />
       </g>
+
+      <!-- Over the tick labels it covers; its guide stays under the marks. -->
+      @if (axisReadout(); as readout) {
+        <g
+          class="readout"
+          aria-hidden="true"
+          dsChartPlaced
+          animate.enter="cursor-in"
+          animate.leave="cursor-out"
+          [style.transform]="'translateY(' + readout.y + 'px)'">
+          <rect
+            class="pill"
+            [attr.x]="readout.pillX"
+            [attr.width]="readout.pillWidth" />
+
+          <text
+            class="readout-text pill-text"
+            text-anchor="middle"
+            [attr.x]="readout.pillX + readout.pillWidth / 2">
+            {{ readout.label }}
+          </text>
+        </g>
+      }
+
+      @if (rangeBand(); as range) {
+        <g
+          class="range-pill"
+          aria-hidden="true"
+          animate.enter="cursor-in"
+          animate.leave="cursor-out"
+          [style.transform]="
+            'translate(' + range.pillX + 'px, ' + range.pillY + 'px)'
+          ">
+          <rect
+            class="pill"
+            [attr.x]="-range.pillWidth / 2"
+            [attr.width]="range.pillWidth" />
+
+          <text
+            class="range-text pill-text"
+            text-anchor="middle">
+            {{ range.label }}
+          </text>
+        </g>
+      }
 
       <!-- Keyed by category: another category takes a new pin that pops in; the same one glides with the data. -->
       @for (pinnedCategory of pinnedCategories(); track pinnedCategory) {
@@ -277,7 +367,8 @@
             ">
             <g
               dsChartPinMarker
-              [attr.transform]="'translate(0,' + bandPinY() + ')'"></g>
+              [attr.transform]="'translate(0,' + bandPinY() + ')'">
+            </g>
           </g>
         }
       }
