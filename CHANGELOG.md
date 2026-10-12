@@ -54,6 +54,10 @@
   A `ds-scatter-chart` answers with the point nearest the pointer anywhere over the plot, where it
   answered only within 16px of a point: a ring glides to that point and a dashed line runs to it
   from the pointer. Under `prefers-reduced-motion` the centre, the marker and the ring change at once.
+  Each is on by default and has its own off switch: `centerFollowsHover` on `ds-pie-chart` keeps
+  `centerValue` and `centerLabel` in the centre, `showScaleMarker` on `ds-heatmap-chart` drops the
+  marker, and `nearestPoint` on `ds-scatter-chart` answers only within 16px of a point, without the
+  ring and line.
 - **Heatmap cells enter along the diagonals.** `staggerMs` on `ds-heatmap-chart` spaces the
   diagonals from the top-left cell, where it spaced the columns; the spread stays within 260ms.
 - **Every mark of a chart moves together when its data changes.** In `ds-chart`, `ds-column-chart`,

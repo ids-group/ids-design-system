@@ -204,6 +204,45 @@
   </p>
 
   <h3 class="block-title t-h4">
+    Nearest point
+  </h3>
+
+  <p class="block-desc t-s">
+    Anywhere over the plot answers with the nearest point, ringed and tethered
+    to the pointer.
+    <code class="t-mono-inline">
+      [nearestPoint]="false"
+    </code> answers only within 16px of a point, without the ring.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-scatter-chart
+        caption="Nearest point, any distance"
+        xLabel="Weight, kg"
+        yLabel="Cost"
+        [data]="oneSeries" />
+
+      <div class="state-cell-label">
+        Default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-scatter-chart
+        caption="Point under the pointer only"
+        xLabel="Weight, kg"
+        yLabel="Cost"
+        [data]="oneSeries"
+        [nearestPoint]="false" />
+
+      <div class="state-cell-label">
+        nearestPoint = false
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Holding a point
   </h3>
 

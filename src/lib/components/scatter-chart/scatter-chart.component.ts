@@ -79,7 +79,8 @@ const CATEGORY_GUTTER = 34;
 const EDGE_GUTTER = 12;
 // Clearance past the point's default radius, `--chart-dot-radius`.
 const PIN_POINT_CLEARANCE = 4;
-// Screen pixels past the plot's edge within which hover still answers.
+// Screen pixels past the plot's edge within which hover still answers, and, with `nearestPoint` off,
+// from a point's centre.
 const HOVER_REACH_PX = 16;
 
 interface PlacedPoint {
@@ -154,6 +155,10 @@ export class ScatterChartComponent
 
   /** Fades every mark but the one under the pointer; on a scatter this hides pile-ups. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
+
+  /** Anywhere over the plot answers with the nearest point, ringed and tethered to the pointer. Off,
+   *  a point answers only within 16 CSS pixels of its centre, without the ring and tether. */
+  readonly nearestPoint = input(true, { transform: booleanAttribute });
 
   /** Milliseconds between one point's entrance and the next, left to right; `0` turns it off. The
    *  spread is capped at 260ms. */
@@ -541,7 +546,6 @@ export class ScatterChartComponent
     }
   }
 
-  // Anywhere over the plot answers with the nearest point, however far.
   // ponytail: linear scan per pointer move, over marks already capped by decimation; a spatial
   // index if that cap is ever raised far enough to show in a trace.
   private nearestMark(
@@ -565,7 +569,7 @@ export class ScatterChartComponent
       return null;
     }
     let nearestIndex = -1;
-    let nearestDistance = Infinity;
+    let nearestDistance = this.nearestPoint() ? Infinity : reach * reach;
     this.flatMarks().forEach(({ mark }, index) => {
       const distance = (mark.cx - pointer.x) ** 2 + (mark.cy - pointer.y) ** 2;
       if (distance <= nearestDistance) {

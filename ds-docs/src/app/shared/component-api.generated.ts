@@ -4698,6 +4698,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prints each cell's reading inside it."
       },
       {
+        "name": "showScaleMarker",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Marks the hovered or focused cell's reading on the colour scale."
+      },
+      {
         "name": "dimOthers",
         "kind": "input",
         "type": "boolean",
@@ -7459,6 +7468,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "`'below'` prints the value and its caption under the ring at full size, never shrunk or shortened."
       },
       {
+        "name": "centerFollowsHover",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "The hovered, focused or held slice prints its value and label in the centre in place of `centerValue` and `centerLabel`."
+      },
+      {
         "name": "legend",
         "kind": "input",
         "type": "'end' | 'bottom' | 'none'",
@@ -8176,6 +8194,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Fades every mark but the one under the pointer; on a scatter this hides pile-ups."
+      },
+      {
+        "name": "nearestPoint",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Anywhere over the plot answers with the nearest point, ringed and tethered to the pointer. Off, a point answers only within 16 CSS pixels of its centre, without the ring and tether."
       },
       {
         "name": "staggerMs",
