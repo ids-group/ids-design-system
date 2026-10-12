@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Скорости движения графиков</title>
+<meta name="ds-deck-status" content="open">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+<style>
+  .opts { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+  @media (max-width: 1000px) { .opts { grid-template-columns: minmax(0, 1fr); } }
+  .opt { cursor: pointer; }
+  .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+  .opt.is-chosen { outline: 2px solid var(--success); outline-offset: 2px; }
+  .demo { display: grid; gap: var(--space-2); padding: var(--space-3); border-radius: var(--radius-md); background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider); }
+  .demo svg { display: block; inline-size: 100%; block-size: auto; overflow: visible; }
+  .demo .grid-line { stroke: var(--chart-grid-line-color); }
+  .demo .band { fill: var(--surface-muted); }
+  .demo .ring { fill: none; stroke: var(--text-primary); stroke-width: 1.5; }
+  .demo .line { fill: none; stroke: var(--chart-categorical-4); stroke-width: 2; }
+  .demo .dot { fill: var(--surface-default); stroke: var(--chart-categorical-4); stroke-width: 2; }
+  .demo .cols, .demo .series { opacity: 1; }
+  .demo .is-dimmed { opacity: 0.3; }
+  .demo .legend { display: flex; gap: var(--space-3); font: var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--text-secondary); }
+  .demo .legend span { display: inline-flex; align-items: center; gap: var(--space-1); padding: 2px var(--space-1-5); border-radius: var(--radius-sm); cursor: default; }
+  .demo .legend span:hover { background: var(--surface-secondary); }
+  .demo .legend i { inline-size: 8px; block-size: 8px; border-radius: 50%; display: inline-block; }
+  .demo .hint { margin: 0; color: var(--text-tertiary); font: var(--font-size-2xs) / 1.4 var(--font-sans); }
+  .timing { font: var(--font-size-2xs) / 1.5 var(--font-mono); color: var(--text-secondary); margin: 0; }
+  .slow-row { display: flex; align-items: center; gap: var(--space-2); font: var(--font-size-xs) var(--font-sans); }
+  .pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  .pill { padding: 2px var(--space-2); border-radius: var(--radius-pill); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.5 var(--font-sans); }
+  .pill.good { background: var(--success-subtitle); color: var(--success-text); }
+  .pill.mid { background: var(--warning-subtitle); color: var(--warning-text); }
+  .pill.bad { background: var(--error-subtitle); color: var(--error-text); }
+  main { padding-bottom: 72px; }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1>Элементы одного графика следуют за курсором и тускнеют с разной скоростью</h1>
+    <p class="lede">Одно решение: приводить ли скорости к одной на каждый вид движения.</p>
+    <p class="chat">Ответ нести в чат: «Acc2 · Дека движения графиков»</p>
+  </header>
+
+  <section class="panel" data-review="Сегодня">
+    <h2>Сегодня</h2>
+    <p>Полоса категории, курсор, пин, плашка оси, метка шкалы и кольцо фокуса едут за курсором за 300ms (<code>tooltip-move</code>); кольцо ближайшей точки scatter и полоса выделенного диапазона - за 120ms (<code>state</code>). При наведении на легенду линии тускнеют за 120ms (<code>state</code>), колонки и группы точек scatter - за 180ms (<code>mark</code>). Ниже это видно: веди курсор по графику и наводи на легенду; «Замедлить ×5» растягивает все длительности.</p>
+    <label class="slow-row"><input type="checkbox" id="slow"> Замедлить ×5</label>
+  </section>
+
+  <section class="panel q" data-review="Варианты">
+    <h2>Три варианта</h2>
+    <p>В каждом образце полоса - это «следует за курсором как панель», кольцо - «следует как кольцо scatter». Выбор - клик по карточке вне графика.</p>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0" data-key="today">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Как сейчас</h3>
+        <div class="demo" data-follow-band="300" data-follow-ring="120" data-dim-line="120" data-dim-cols="180"></div>
+        <p class="timing">полоса 300 · кольцо 120 · линия тускнеет 120 · колонки 180</p>
+        <div class="pills"><span class="pill bad">кольцо обгоняет полосу</span><span class="pill bad">линия и колонки гаснут вразнобой</span></div>
+        <dl class="layer"><dt>В библиотеке</dt><dd class="none">ничего</dd></dl>
+      </article>
+
+      <article class="opt is-pick" tabindex="0" data-key="unified">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Одна скорость на вид движения</h3>
+        <div class="demo" data-follow-band="300" data-follow-ring="300" data-dim-line="120" data-dim-cols="120"></div>
+        <p class="timing">слежение 300 · затемнение 120</p>
+        <div class="pills"><span class="pill good">всё, что следует за курсором, едет вместе</span><span class="pill good">серии гаснут разом</span></div>
+        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">функция <code>glides()</code> рядом с <code>moves()</code> на токенах <code>tooltip-move</code>; кольцо scatter и полоса диапазона переходят на неё; затемнение групп колонок и точек через <code>dims()</code> на <code>state</code></dd></dl>
+      </article>
+
+      <article class="opt" tabindex="0" data-key="fast">
+        <span class="badge">быстрее</span>
+        <h3>Всё на 120ms</h3>
+        <div class="demo" data-follow-band="120" data-follow-ring="120" data-dim-line="120" data-dim-cols="120"></div>
+        <p class="timing">слежение 120 · затемнение 120</p>
+        <div class="pills"><span class="pill good">едино и быстро</span><span class="pill mid">панель tooltip тоже ускоряется до 120</span></div>
+        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">как «Одна скорость», плюс <code>--ds-motion-chart-tooltip-move-duration</code> 300 → 120ms для всех консьюмеров</dd></dl>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Сравнение</h2>
+    <table>
+      <thead><tr><th>Что</th><th>Как сейчас</th><th>Одна скорость на вид движения</th><th>Всё на 120ms</th></tr></thead>
+      <tbody>
+        <tr><th class="rowlabel">Полоса, пин, плашки, фокус</th><td>300</td><td>300</td><td>120</td></tr>
+        <tr><th class="rowlabel">Кольцо scatter, полоса диапазона</th><td>120</td><td>300</td><td>120</td></tr>
+        <tr><th class="rowlabel">Затемнение линий</th><td>120</td><td>120</td><td>120</td></tr>
+        <tr><th class="rowlabel">Затемнение колонок и точек scatter</th><td>180</td><td>120</td><td>120</td></tr>
+        <tr><th class="rowlabel">Меняется токен консьюмеров</th><td>нет</td><td>нет</td><td><code>tooltip-move</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel good">
+    <h2>Рекомендую: «Одна скорость на вид движения»</h2>
+    <p>Элементы, которые следуют за курсором, движутся вместе с панелью tooltip, а серии при наведении на легенду гаснут разом. Публичный токен не меняется, правки только в двух правилах и одной общей функции.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Что решить</h2>
+    <table>
+      <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
+      <tbody><tr class="row-pick"><th class="rowlabel">Приводить ли скорости движения графиков к одной на вид движения</th><td>Как сейчас · Одна скорость на вид движения · Всё на 120ms</td><td>Одна скорость на вид движения</td></tr></tbody>
+    </table>
+  </section>
+
+  <p class="src"><b>Источники, проверено 2026-10-12 на <code>dev</code>.</b> Токены: <code>--ds-motion-chart-state-duration</code> = <code>--duration-fast</code> 120ms, <code>-mark-</code> = <code>--duration-base</code> 180ms, <code>-tooltip-move-</code> 300ms (<code>src/lib/styles/_tokens.scss</code>). Скорость 120ms у кольца: <code>scatter-chart.component.scss:129</code> (<code>.nearest-ring.placed</code>); полоса диапазона на <code>state</code> в <code>chart.component.scss</code>; группы колонок и точек тускнеют на <code>mark</code>: <code>column-series.component.scss:199-204</code>, <code>scatter-chart.component.scss:149-153</code>; линии через <code>dims()</code> на <code>state</code>. Найдено аудитом повторов (<code>.claude/local/todo/chart-unify-audit.md</code>, пункты 6 и 7). Образцы - модель на SVG и CSS-переходах с этими длительностями, не код библиотеки; при <code>prefers-reduced-motion</code> движение выключено.</p>
+</main>
+
+<script>
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs, parent) => { const node = document.createElementNS(NS, tag); for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value); parent?.append(node); return node; };
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const W = 300, H = 150, L = 16, R = 292, T = 12, B = 132, n = 6;
+  const columns = [62, 80, 55, 92, 70, 86], line = [40, 58, 47, 72, 66, 84];
+  const slot = (R - L) / n;
+  const yOf = (value) => B - (value / 100) * (B - T);
+  let factor = 1;
+  const ms = (value) => (reduced ? 0 : value * factor);
+
+  document.querySelectorAll('.demo').forEach((host) => {
+    const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Columns and a line' }, null);
+    host.append(svg);
+    [0, 0.5, 1].forEach((k) => { const y = B - k * (B - T); el('line', { class: 'grid-line', x1: L, x2: R, y1: y, y2: y }, svg); });
+    const band = el('rect', { class: 'band', y: T, height: B - T, width: slot, x: L, opacity: 0 }, svg);
+    const cols = el('g', { class: 'cols' }, svg);
+    columns.forEach((value, i) => el('rect', { x: L + slot * i + slot * 0.25, width: slot * 0.5, y: yOf(value), height: B - yOf(value), rx: 2, fill: `var(--chart-categorical-${(i % 3) + 1})` }, cols));
+    const series = el('g', { class: 'series' }, svg);
+    const points = line.map((value, i) => [L + slot * (i + 0.5), yOf(value)]);
+    el('path', { class: 'line', d: points.map(([x, y], i) => `${i ? 'L' : 'M'}${x} ${y}`).join(' ') }, series);
+    points.forEach(([x, y]) => el('circle', { class: 'dot', cx: x, cy: y, r: 3 }, series));
+    const ring = el('circle', { class: 'ring', r: 7, opacity: 0, cx: points[0][0], cy: points[0][1] }, svg);
+    const legend = document.createElement('div'); legend.className = 'legend';
+    legend.innerHTML = '<span data-hl="cols"><i style="background: var(--chart-categorical-1)"></i>Orders</span><span data-hl="series"><i style="background: var(--chart-categorical-4)"></i>Basket</span>';
+    host.append(legend);
+    const hint = document.createElement('p'); hint.className = 'hint'; hint.textContent = 'Веди курсор по графику, наводи на легенду'; host.append(hint);
+
+    const apply = () => {
+      band.style.transition = `x ${ms(+host.dataset.followBand)}ms cubic-bezier(.2,0,0,1), opacity 120ms`;
+      ring.style.transition = `cx ${ms(+host.dataset.followRing)}ms cubic-bezier(.2,0,0,1), cy ${ms(+host.dataset.followRing)}ms cubic-bezier(.2,0,0,1), opacity 120ms`;
+      series.style.transition = `opacity ${ms(+host.dataset.dimLine)}ms cubic-bezier(.2,0,0,1)`;
+      cols.style.transition = `opacity ${ms(+host.dataset.dimCols)}ms ${+host.dataset.dimCols === 180 ? 'cubic-bezier(0,0,0,1)' : 'cubic-bezier(.2,0,0,1)'}`;
+    };
+    apply();
+    host.addEventListener('ds-slow', apply);
+    svg.addEventListener('pointermove', (event) => {
+      const box = svg.getBoundingClientRect();
+      const index = Math.max(0, Math.min(n - 1, Math.floor((((event.clientX - box.left) / box.width) * W - L) / slot)));
+      band.setAttribute('x', L + slot * index); band.setAttribute('opacity', 1);
+      ring.setAttribute('cx', points[index][0]); ring.setAttribute('cy', points[index][1]); ring.setAttribute('opacity', 1);
+    });
+    svg.addEventListener('pointerleave', () => { band.setAttribute('opacity', 0); ring.setAttribute('opacity', 0); });
+    legend.querySelectorAll('[data-hl]').forEach((item) => {
+      item.addEventListener('pointerenter', () => { cols.classList.toggle('is-dimmed', item.dataset.hl !== 'cols'); series.classList.toggle('is-dimmed', item.dataset.hl !== 'series'); });
+      item.addEventListener('pointerleave', () => { cols.classList.remove('is-dimmed'); series.classList.remove('is-dimmed'); });
+    });
+  });
+  document.getElementById('slow').addEventListener('change', (event) => {
+    factor = event.target.checked ? 5 : 1;
+    document.querySelectorAll('.demo').forEach((host) => host.dispatchEvent(new Event('ds-slow')));
+  });
+
+  const KEY = 'ds-deck-chart-motion-timing-pick';
+  const cards = [...document.querySelectorAll('.opt[data-key]')];
+  let picked = null;
+  try { picked = localStorage.getItem(KEY); } catch { picked = null; }
+  const paint = () => cards.forEach((card) => card.classList.toggle('is-chosen', card.dataset.key === picked));
+  cards.forEach((card) => {
+    const choose = () => { picked = card.dataset.key; try { localStorage.setItem(KEY, picked); } catch { /* private window */ } paint(); window.deckReview?.refresh?.(); };
+    card.addEventListener('click', (event) => { if (!event.target.closest('.demo')) choose(); });
+    card.addEventListener('keydown', (event) => { if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); choose(); } });
+  });
+  paint();
+  (window.deckReviewHooks ??= {}).extra = () => { const card = cards.find((item) => item.dataset.key === picked); return card ? `выбор - «${card.querySelector('h3').textContent}»` : ''; };
+</script>
+<!-- deck-review -->
+<script>
+// deck-review: verdict per [data-review] block, a textarea for remarks, one answer line in a fixed bar.
+// Inlined into a deck by ~/.claude/bin/deck-review-inline; contract in ~/.claude/docs/deck-review.md.
+(() => {
+  // Every key under deck-review: is a disposable reviewer answer, kept 7 days after its last change.
+  const PREFIX = 'deck-review:v1:';
+  const KEY = PREFIX + (document.documentElement.dataset.deck || document.title);
+  const KEEP_MS = 7 * 24 * 60 * 60 * 1000;
+  const ACCEPT = 'принято';
+  const REMARK = 'есть замечание';
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith('deck-review:')) continue;
+      let expires = 0;
+      try { if (key.startsWith(PREFIX)) expires = JSON.parse(localStorage.getItem(key))?.expires; } catch { /* malformed: drop */ }
+      if (!(expires > Date.now())) localStorage.removeItem(key);
+    }
+  } catch { /* private window */ }
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY))?.answers ?? {}; } catch { return {}; } };
+  const write = () => { try { localStorage.setItem(KEY, JSON.stringify({ expires: Date.now() + KEEP_MS, answers: state })); } catch { /* private window */ } };
+  const state = read();
+
+  document.head.insertAdjacentHTML('beforeend', `<style>
+    .dr-row { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px 0; }
+    .dr-btn { padding: 4px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 999px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-btn[aria-pressed="true"] { background: var(--accent-subtitle, #e6efff); border-color: var(--accent-strong, #2457c5); color: var(--accent-strong, #2457c5); }
+    .dr-btn[data-v="${REMARK}"][aria-pressed="true"] { background: var(--error-subtitle, #fdecec); border-color: var(--error-text, #b42318); color: var(--error-text, #b42318); }
+    .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--border-default, #c9ced6); border-radius: var(--radius-md, 8px); background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
+    .dr-note:focus { outline: none; border-color: var(--accent, #2457c5); box-shadow: var(--ds-field-focus-shadow, 0 0 0 3px rgb(36 87 197 / .25)); }
+    .dr-note[hidden] { display: none; }
+    .dr-history { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 4px; color: var(--text-secondary, #4b5563); font: 13px/1.45 var(--font-sans, system-ui, sans-serif); }
+    .dr-history::before { content: 'История замечаний'; display: block; margin-left: -1.2em; color: var(--text-primary, #1d2330); font-weight: 600; }
+    [data-dr-folded] > :not(h1, h2, h3, h4, .dr-row, .dr-note) { display: none !important; }
+    .dr-fold { padding: 4px 8px; border: 0; background: none; color: var(--accent-strong, #2457c5); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-fold[hidden] { display: none; }
+    .dr-btn, .dr-bar button, .dr-fold { transition: background-color .12s, border-color .12s, color .12s, box-shadow .12s; }
+    .dr-btn:hover, .dr-bar button:hover { background: var(--surface-secondary, #f3f4f6); border-color: var(--border-strong, #9aa1ad); }
+    .dr-btn:active, .dr-bar button:active { background: var(--surface-muted, #e5e7eb); }
+    .dr-btn[aria-pressed="true"]:hover { background: color-mix(in srgb, var(--accent-strong, #2457c5) 14%, var(--surface-default, #fff)); }
+    .dr-btn[data-v="есть замечание"][aria-pressed="true"]:hover { background: color-mix(in srgb, var(--error-text, #b42318) 14%, var(--surface-default, #fff)); }
+    .dr-fold:hover { text-decoration: underline; }
+    .dr-fold:active { color: var(--text-primary, #1d2330); }
+    .dr-btn:focus-visible, .dr-bar button:focus-visible, .dr-fold:focus-visible { outline: 2px solid var(--focus-ring-color, var(--accent, #2457c5)); outline-offset: 2px; }
+    .dr-bar button[data-done] { background: var(--success-subtitle, #e7f6ec); border-color: var(--success, #1a7f37); color: var(--success-text, #116329); }
+    .dr-bar { position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; padding: 10px 20px; background: var(--surface-default, #fff); border-top: 1px solid var(--border-divider, #e3e6eb); box-shadow: 0 -4px 16px rgb(0 0 0 / .08); color: var(--text-primary, #1d2330); font: 13px/1.4 var(--font-sans, system-ui, sans-serif); }
+    .dr-bar b { flex: none; }
+    .dr-bar .dr-chat { flex: none; color: var(--text-tertiary, #6b7280); }
+    .dr-bar output { flex: 1 1 auto; min-inline-size: 0; overflow-x: auto; white-space: nowrap; color: var(--text-secondary, #4b5563); font-family: var(--font-mono, ui-monospace, monospace); }
+    .dr-bar button { flex: none; padding: 6px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 6px; background: var(--surface-default, #fff); color: inherit; font: 600 13px/1.4 inherit; cursor: pointer; }
+    body { padding-block-end: 72px; }
+    @media (max-width: 640px) { .dr-bar { padding: 8px 12px; gap: 8px; } .dr-bar .dr-chat { display: none; } }
+  </style>`);
+
+  let items = [...document.querySelectorAll('[data-review]')];
+  if (!items.length) {
+    const whole = document.createElement('section');
+    whole.dataset.review = 'Дека в целом';
+    whole.innerHTML = '<h3>Дека в целом</h3>';
+    (document.querySelector('main') ?? document.body).append(whole);
+    items = [whole];
+  }
+
+  const controls = new Map();
+  const unfolded = new Set();
+  for (const item of items) {
+    const label = item.dataset.review;
+    // A deck bumps data-review-round once it has worked through the remarks of a round; answers stored
+    // for an earlier round are already in the block's history, so they leave the input.
+    const round = Number(item.dataset.reviewRound) || 1;
+    if (state[label] && (state[label].round ?? 1) !== round) { delete state[label]; write(); }
+    const own = () => Object.assign((state[label] ??= {}), { round });
+    const row = document.createElement('div');
+    row.className = 'dr-row';
+    const verdicts = item.hasAttribute('data-review-note-only') ? [REMARK] : [ACCEPT, REMARK];
+    const buttons = verdicts.map((verdict) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'dr-btn';
+      button.dataset.v = verdict;
+      button.textContent = verdict === ACCEPT ? 'Принято' : 'Есть замечание';
+      button.addEventListener('click', () => {
+        const entry = own();
+        entry.v = entry.v === verdict ? '' : verdict;
+        write();
+        render();
+        if (entry.v === REMARK) note.focus();
+      });
+      return button;
+    });
+    const note = document.createElement('textarea');
+    note.className = 'dr-note';
+    note.placeholder = 'Что не так';
+    note.setAttribute('aria-label', `Замечание: ${label}`);
+    note.addEventListener('input', () => { own().note = note.value; write(); render(); });
+    const fold = document.createElement('button');
+    fold.type = 'button';
+    fold.className = 'dr-fold';
+    fold.addEventListener('click', () => { unfolded.has(label) ? unfolded.delete(label) : unfolded.add(label); render(); });
+    row.append(...buttons, fold);
+    item.append(row, note);
+    const history = item.querySelector(':scope > [data-review-history]');
+    if (history) { history.classList.add('dr-history'); item.append(history); }
+    controls.set(label, { item, buttons, note, fold });
+  }
+
+  const chat = document.querySelector('.chat')?.textContent.replace(/^[^«]*/, '') ?? '';
+  const bar = document.createElement('div');
+  bar.className = 'dr-bar';
+  bar.innerHTML = `<b></b><span class="dr-chat"></span><output></output><button type="button" data-a="copy">Скопировать</button><button type="button" data-a="reset">Сбросить</button>`;
+  bar.querySelector('.dr-chat').textContent = chat;
+  document.body.append(bar);
+  const line = bar.querySelector('output');
+
+  const hooks = (window.deckReviewHooks ??= {});
+  window.deckReview = { refresh: () => render() };
+
+  function render() {
+    const parts = [];
+    let done = 0;
+    let open = 0;
+    for (const [label, { item, buttons, note, fold }] of controls) {
+      const entry = state[label] ?? {};
+      const accepted = entry.v === ACCEPT;
+      item.toggleAttribute('data-dr-folded', accepted && !unfolded.has(label));
+      fold.hidden = !accepted;
+      fold.textContent = unfolded.has(label) ? 'Свернуть' : 'Развернуть';
+      for (const button of buttons) button.setAttribute('aria-pressed', String(entry.v === button.dataset.v));
+      note.hidden = entry.v !== REMARK;
+      if (note.value !== (entry.note ?? '')) note.value = entry.note ?? '';
+      if (!accepted) open++;
+      if (!entry.v) continue;
+      if (!accepted) done++;
+      const text = entry.note?.trim().replace(/\s+/g, ' ');
+      parts.push(entry.v === REMARK ? `${label} - замечание${text ? `: «${text}»` : ''}` : `${label} - принято`);
+    }
+    const extra = hooks.extra?.();
+    if (extra) parts.push(extra);
+    bar.querySelector('b').textContent = `${done} из ${open}`;
+    line.textContent = parts.length ? `Дека ${document.title}: ${parts.join('; ')}` : 'пока ничего не выбрано';
+  }
+
+  bar.addEventListener('click', (event) => {
+    const action = event.target.closest('button')?.dataset.a;
+    if (action === 'copy') {
+      const button = event.target.closest('button');
+      navigator.clipboard?.writeText(line.textContent).then(() => {
+        button.dataset.done = '';
+        button.textContent = 'Скопировано';
+        setTimeout(() => { delete button.dataset.done; button.textContent = 'Скопировать'; }, 1500);
+      });
+    }
+    if (action === 'reset') { for (const label of Object.keys(state)) delete state[label]; write(); hooks.onReset?.(); render(); }
+  });
+  render();
+})();
+</script>
+<!-- /deck-review -->
+</body>
+</html>
