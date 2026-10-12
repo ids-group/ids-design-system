@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import { Component, ViewEncapsulation, resource, signal } from '@angular/core';
 import {
   FormField,
   email,
@@ -7,12 +7,47 @@ import {
   readonly,
   required,
   submit,
+  validateAsync,
+  type SchemaPath,
+  type SchemaPathTree,
 } from '@angular/forms/signals';
 import { ButtonComponent } from 'ds/button';
 import { CheckboxComponent } from 'ds/checkbox';
 import { InputComponent } from 'ds/input';
 import { SelectComponent } from 'ds/select';
+import { ShowDirtyDirective } from 'ds/show-dirty';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+
+interface Account {
+  company: string;
+  city: string;
+}
+
+const ACCOUNT: Account = { company: 'acme', city: 'london' };
+
+/** Stands in for a server lookup: a value is checked for 1.5 s, and `taken` is rejected. */
+function checkedLater(path: SchemaPath<string>): void {
+  validateAsync(path, {
+    params: ({ value }) => value(),
+    factory: (params) =>
+      resource({
+        params,
+        loader: ({ params: value, abortSignal }) =>
+          new Promise<boolean>((resolve) => {
+            const timer = setTimeout(() => resolve(value === 'taken'), 1500);
+            abortSignal.addEventListener('abort', () => clearTimeout(timer));
+          }),
+      }),
+    onSuccess: (rejected) =>
+      rejected ? { kind: 'taken', message: 'Already registered' } : null,
+    onError: () => null,
+  });
+}
+
+function accountSchema(path: SchemaPathTree<Account>): void {
+  checkedLater(path.company);
+  checkedLater(path.city);
+}
 
 interface ContractRow {
   readonly member: string;
@@ -30,6 +65,7 @@ interface ContractRow {
     SelectComponent,
     CheckboxComponent,
     ButtonComponent,
+    ShowDirtyDirective,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './signal-forms.section.html',
@@ -58,6 +94,20 @@ export class SignalFormsSection {
     minLength(path.email, 6);
     readonly(path.reference);
   });
+
+  protected readonly cities = [
+    { value: 'london', label: 'London' },
+    { value: 'leeds', label: 'Leeds' },
+    { value: 'taken', label: 'Taken' },
+  ];
+
+  protected readonly pendingForm = form(signal({ ...ACCOUNT }), accountSchema);
+  protected readonly dirtyForm = form(signal({ ...ACCOUNT }), accountSchema);
+
+  protected readonly stateSnippet = `<form dsShowDirty>
+  <ds-input label="Company" [formField]="accountForm.company" />
+  <ds-select label="City" [options]="cities" [formField]="accountForm.city" />
+</form>`;
 
   protected sendInvite(): void {
     void submit(this.demoForm, async () => undefined);
@@ -132,9 +182,19 @@ loginForm = form(this.model, (path) => {
       note: 'focusBoundControl() reaches the control that actually holds the value — the stepper’s number box rather than its minus button, the tabbable radio rather than the first one, a picker’s trigger rather than an input inside its closed panel.',
     },
     {
-      member: 'dirty / pending / disabledReasons',
+      member: 'pending',
+      state: 'yes',
+      note: 'A trailing spinner while an async validator runs, on every field.',
+    },
+    {
+      member: 'dirty',
+      state: 'yes',
+      note: 'A dot and a "Changed" line, opt-in: showDirty on the field, dsShowDirty on the form, or DS_CONFIG.field.showDirty.',
+    },
+    {
+      member: 'disabledReasons',
       state: 'no',
-      note: 'Not implemented, and blocked on a visual decision rather than wiring: nothing in the library renders "edited" or "validating" today, so there is no established look to bind these to.',
+      note: 'Not implemented.',
     },
   ];
 }
