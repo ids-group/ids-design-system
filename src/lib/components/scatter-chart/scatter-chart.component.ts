@@ -1,5 +1,6 @@
 import type {
   ChartDimmable,
+  ChartStaggered,
   ChartWithDataTable,
   ChartWithTooltipTrigger,
 } from '@ids-group-ltd/ids-design-system/components';
@@ -29,6 +30,7 @@ import {
   niceDomain,
   tickValues,
   chartRenderGate,
+  staggerDelay,
   DsChartBase,
 } from '@ids-group-ltd/ids-design-system/components';
 import type { MarkHit } from '@ids-group-ltd/ids-design-system/components';
@@ -110,7 +112,11 @@ interface PlacedSeries {
 })
 export class ScatterChartComponent
   extends DsChartBase
-  implements ChartDimmable, ChartWithDataTable, ChartWithTooltipTrigger
+  implements
+    ChartDimmable,
+    ChartStaggered,
+    ChartWithDataTable,
+    ChartWithTooltipTrigger
 {
   protected readonly renderReady = chartRenderGate();
 
@@ -141,6 +147,20 @@ export class ScatterChartComponent
 
   /** Fades every mark but the one under the pointer; on a scatter this hides pile-ups. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
+
+  /** Milliseconds between one point's entrance and the next, left to right; `0` turns it off. The
+   *  spread is capped at 260ms. */
+  readonly staggerMs = input(40, { transform: numberAttribute });
+
+  private readonly staggerSpread = computed(() => {
+    const count = this.flatMarks().length;
+
+    return staggerDelay(count - 1, count, this.staggerMs());
+  });
+
+  protected pointStagger(cx: number): string {
+    return `${((cx - this.plot.left) / this.plot.width) * this.staggerSpread()}ms`;
+  }
 
   /** The clicked reading, with the series it belongs to. Fires on click and on Enter or Space. */
   readonly pointClicked = output<ScatterChartReading>();

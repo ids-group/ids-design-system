@@ -109,19 +109,6 @@
 @include chart-motion.leaves('.cell-slot');
 @include chart-motion.follows('.cell-value', var(--ds-motion-chart-mark-enter-duration));
 
-// The row label is the first child, so a slot's position is its column index + 1.
-// ponytail: columns past the 61st start together at the 61st column's delay; raise the bound if wider
-// grids appear.
-@for $column from 1 through 59 {
-  .cell-slot:nth-child(#{$column + 2}) {
-    --_chart-mark-stagger: calc(#{$column} * var(--_heatmap-chart-column-stagger, 0ms));
-  }
-}
-
-.cell-slot:nth-child(n + 62) {
-  --_chart-mark-stagger: calc(60 * var(--_heatmap-chart-column-stagger, 0ms));
-}
-
 // The ramp's first step is a real reading, so a missing cell must not use it.
 .cell.is-active,
 .cell.is-highlighted {

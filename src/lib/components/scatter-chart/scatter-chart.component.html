@@ -140,6 +140,7 @@
             "
             [attr.cx]="mark.cx"
             [attr.cy]="mark.cy"
+            [style.--_chart-mark-stagger]="pointStagger(mark.cx)"
             [attr.role]="interactive() ? 'button' : null"
             [attr.tabindex]="interactive() ? 0 : null"
             [attr.data-mark-index]="start + index"

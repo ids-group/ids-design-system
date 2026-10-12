@@ -115,13 +115,15 @@ export class HeatmapChartComponent
   /** Whether a hovered or focused cell opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
-  /** Milliseconds between one column's entrance and the next; `0` turns it off. The spread is capped at 260ms. */
+  /** Milliseconds between one diagonal's entrance and the next, from the top-left cell; `0` turns
+   *  it off. The spread is capped at 260ms. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
-  // The stylesheet multiplies this by the column index.
-  protected readonly columnStagger = computed(
-    () => `${staggerDelay(1, this.columns().length, this.staggerMs())}ms`,
-  );
+  protected cellStagger(rowIndex: number, columnIndex: number): string {
+    const diagonals = this.data().length + this.columns().length - 1;
+
+    return `${staggerDelay(rowIndex + columnIndex, diagonals, this.staggerMs())}ms`;
+  }
 
   /** The clicked cell, with its row and column. Never fires for an unmeasured cell. */
   readonly cellClicked = output<HeatmapChartCell>();
