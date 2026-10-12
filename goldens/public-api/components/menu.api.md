@@ -8,6 +8,7 @@ export class MenuComponent {
     public constructor();
     private readonly activeIndex;
     protected readonly anyIcon = computed(…);
+    private readonly closeRef;
     private focusItem;
     private readonly host;
     private readonly items;
@@ -38,6 +39,7 @@ export class MenuItemComponent implements OnDestroy, AimHoverTarget {
     protected hasSubmenu(): boolean;
     private readonly hostElement;
     public readonly icon = input<IconName | null>(null);
+    private readonly injector;
     public label(): string;
     public ngOnDestroy(): void;
     protected onClick(event: MouseEvent): void;

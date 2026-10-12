@@ -276,6 +276,11 @@
 - **A `ds-menu` opens at its first item.** Reopening a `ds-split-button` menu, or any `ds-menu`
   in a `ds-popover`, focused the item that had focus when it closed. Once focus leaves the menu,
   its first item takes the tab stop again.
+- **Tab leaves an open `ds-menu`.** In a `ds-split-button` menu, or a `ds-menu` in a
+  `ds-popover`, Tab on an item did nothing; it closes the menu and moves focus on from its
+  trigger. In a submenu they close the submenu and the menu holding it. Choosing a submenu item
+  closes the submenu and returns focus to its parent item before the overlay closes, where the
+  submenu stayed open.
 
 ### What you can now DELETE
 

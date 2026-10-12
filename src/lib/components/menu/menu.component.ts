@@ -12,6 +12,7 @@ import { DOCUMENT } from '@angular/common';
 import { MenuItemComponent } from './menu-item.component';
 import { MenuAim } from './menu-aim';
 import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
+import { DsOverlayCloseRef } from '@ids-group-ltd/ids-design-system/overlay';
 
 @Component({
   selector: 'ds-menu',
@@ -33,6 +34,7 @@ import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
 })
 export class MenuComponent {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly closeRef = inject(DsOverlayCloseRef, { optional: true });
   private readonly items = contentChildren(MenuItemComponent);
 
   /** One item with an icon makes every item reserve the slot, so the labels share one axis. */
@@ -83,6 +85,12 @@ export class MenuComponent {
     const focused = items.findIndex((item) =>
       item.contains(event.target as Node | null),
     );
+    // Not prevented: the overlay hands focus back to its trigger, and Tab moves on from there (APG).
+    if (event.key === 'Tab' && focused >= 0) {
+      this.closeRef?.close();
+
+      return;
+    }
     const from = focused >= 0 ? focused : this.activeIndex();
 
     if (
