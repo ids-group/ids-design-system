@@ -288,6 +288,11 @@
 - **ArrowRight on a `ds-menu-item` with a `submenu` focuses the submenu's first item.** It opened
   the submenu and left focus on the parent, so the submenu's items were out of reach; Enter and
   Space focus the first item too. ArrowLeft and Escape close it and focus the parent, as before.
+- **A `ds-icon-button` toggle that is off says so.** With `[selected]` bound to `false` it dropped
+  `aria-pressed`, so a screen reader heard a plain button; it renders `aria-pressed="false"`, as
+  `ds-toggle-button` does. An icon button with no `selected` binding still carries no
+  `aria-pressed`. `IconButtonComponent.selected` is `boolean | null`, `null` when unbound; code
+  reading it back as a `boolean` handles `null`.
 
 ### What you can now DELETE
 

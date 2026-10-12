@@ -5,7 +5,7 @@
   [disabled]="disabled()"
   [attr.aria-label]="ariaLabel()"
   [attr.aria-describedby]="ariaDescribedBy()"
-  [attr.aria-pressed]="selected() ? true : null"
+  [attr.aria-pressed]="selected()"
   [attr.aria-expanded]="ariaExpanded()"
   [attr.aria-controls]="ariaControls()"
   (click)="onClick($event)">

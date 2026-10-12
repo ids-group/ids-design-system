@@ -384,6 +384,32 @@
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
       "note": "`MenuComponent` gained `closeRef`, `host`, `onFocusIn` and `onFocusOut`; `MenuItemComponent` gained `focusSubmenu` and `injector`."
+    },
+    {
+      "id": "icon-button-selected-widened-to-nullable",
+      "kind": "behavior",
+      "old": "IconButtonComponent",
+      "new": null,
+      "surface": [
+        "typescript",
+        "template"
+      ],
+      "searchHints": [
+        "IconButtonComponent",
+        "ds-icon-button",
+        "[selected]",
+        ".selected()"
+      ],
+      "detect": [
+        ".selected()",
+        "extends IconButtonComponent"
+      ],
+      "action": "Where your code reads `IconButtonComponent.selected()` back as a `boolean`, handle `null`, which an unbound `selected` now holds. On a `ds-icon-button` that is not a toggle, remove a `[selected]` binding.",
+      "appliesWhen": "TypeScript that reads `selected` back off an icon button or a subclass that overrides it, and a `ds-icon-button` given `[selected]` though it is not a toggle. A toggle binding `[selected]` needs no change.",
+      "pitfall": "A non-toggle button bound to `[selected]=\"false\"` now announces itself as a toggle button that is not pressed.",
+      "note": "`IconButtonComponent.selected` went from `input(false)` (`boolean`) to `input<boolean | null>(null)`. A bound `false` renders `aria-pressed=\"false\"`; unbound, the button has no `aria-pressed`.",
+      "restore": null,
+      "verify": "Every read of IconButtonComponent.selected() handles null, and every ds-icon-button with a [selected] binding is a toggle."
     }
   ],
   "informational": [
