@@ -20,7 +20,9 @@
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent",
         "extends ChartStatesComponent",
-        "extends ChartLegendComponent"
+        "extends ChartLegendComponent",
+        "extends WaterfallChartComponent",
+        "extends DsTableResize"
       ],
       "detect": [
         "extends ChartComponent",
@@ -35,13 +37,15 @@
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent",
         "extends ChartStatesComponent",
-        "extends ChartLegendComponent"
+        "extends ChartLegendComponent",
+        "extends WaterfallChartComponent",
+        "extends DsTableResize"
       ],
       "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
       "appliesWhen": "Only a class of yours that extends ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or FunnelChartComponent, or the internal ChartTooltipPanelComponent, the internal ChartStatesComponent, the internal ChartLegendComponent or the internal WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
-      "note": "`ChartComponent` gained 25; `LineSeriesComponent` gained 23 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 10; `ColumnChartComponent` gained `heldExtent`, `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `rescaleOnHide`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `selectRange` and `showChange` and lost `axisMax`, `axisMaxSecondary` and `ceilingOf`; `PieChartComponent` gained 13 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 6 and lost `columnStagger`, `onStepEnter`, `onStepLeave` and `stepDwell`; `ScatterChartComponent` gained 20 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 9 and its `dataTable` takes a `ChartDataTable`; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`, `onItemEnter` and `onItemLeave`."
+      "note": "`ChartComponent` gained 28; `LineSeriesComponent` gained 23 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 10; `ColumnChartComponent` gained `axisReadout`, `heldExtent`, `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `rescaleOnHide`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `axisReadout`, `selectRange` and `showChange` and lost `axisMax`, `axisMaxSecondary` and `ceilingOf`; `PieChartComponent` gained 14 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 8 and lost `columnStagger`, `onStepEnter`, `onStepLeave` and `stepDwell`; `ScatterChartComponent` gained 22 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`; `WaterfallChartComponent` gained `axisReadout`; `DsTableResize` gained `guide` and `placeGuide`. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 9 and its `dataTable` takes a `ChartDataTable`; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`, `onItemEnter` and `onItemLeave`."
     },
     {
       "id": "chart-legend-fades-only-under-dim-others",
@@ -348,7 +352,7 @@
       "verify": "Load a ds-funnel-chart and confirm each stage's centre holds still while it grows, with its left and right edges moving outward together."
     },
     {
-      "text": "Under forced colours a `ds-line-chart` annotation prints in `CanvasText` over a `Canvas` halo, as a reference-line label does; it kept its own colour on a white patch. `--ds-line-chart-annotation-halo-color` and `--ds-line-chart-annotation-halo-width` still set the halo in normal colours.",
+      "text": "Under forced colours a `ds-line-chart` annotation prints in the system text colour over a halo in the system background colour, as a reference-line label does; it kept its own colour on a white patch. `--ds-line-chart-annotation-halo-color` and `--ds-line-chart-annotation-halo-width` still set the halo in normal colours.",
       "verify": "Turn on Windows high contrast, open a ds-line-chart with annotations and confirm each annotation reads in the system text colour over the system background."
     },
     "`showDirty` (default `false`) on every value field, the `dsShowDirty` directive (`ShowDirtyDirective`) and `DS_CONFIG.field.showDirty` mark a value the user changed with a dot and a \"Changed\" line; off unless one of the three turns it on. The line reads the new optional `DsIntl` key `field.changed`."
