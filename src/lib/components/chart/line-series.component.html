@@ -32,6 +32,7 @@
     @for (path of entry.areaPaths; track $index) {
       <svg:path
         class="series-area"
+        [attr.data-series-id]="entry.series.id"
         [class.is-fade]="fades"
         [class.is-stacked]="stacked()"
         [class.is-dimmed]="isDimmed(entry.series.id)"

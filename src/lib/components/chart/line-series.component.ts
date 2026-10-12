@@ -697,6 +697,8 @@ export class LineSeriesComponent implements OnDestroy {
     Map<string, { x: number; y: number }>
   >();
   private drawnKeys: readonly string[] = [];
+  // Where each series' area meets its axis, in view units.
+  private drawnBaselines = new Map<string, number>();
   private stopMorph: () => void = () => undefined;
   private morphing = false;
 
@@ -707,6 +709,7 @@ export class LineSeriesComponent implements OnDestroy {
     plotted: readonly {
       series: LineSeriesData;
       linePaths: readonly string[];
+      areaPaths: readonly string[];
       markers: readonly { categoryKey: string; x: number; y: number }[];
     }[],
   ): void {
@@ -724,6 +727,10 @@ export class LineSeriesComponent implements OnDestroy {
         ),
       ]),
     );
+    const targetBaselines = new Map(
+      plotted.map((entry) => [entry.series.id, this.baselineOf(entry.series)]),
+    );
+    const previousBaselines = this.drawnBaselines;
     this.drawnKeys = keys;
     const sameCategories =
       previousKeys.length === keys.length &&
@@ -732,6 +739,7 @@ export class LineSeriesComponent implements OnDestroy {
     // retargets from where the points are.
     if (previousKeys.length === 0 || (sameCategories && !this.morphing)) {
       this.drawnPoints = targets;
+      this.drawnBaselines = targetBaselines;
 
       return;
     }
@@ -763,6 +771,12 @@ export class LineSeriesComponent implements OnDestroy {
           return found === undefined ? undefined : within.get(found);
         };
         const escaped = CSS.escape(id);
+        const baseline = targetBaselines.get(id) ?? 0;
+        // A band over `lower` has a second edge of its own; it keeps to the CSS transitions.
+        const fillsToBaseline =
+          !!entry.series.area &&
+          !entry.series.lower &&
+          entry.areaPaths.length === 1;
 
         return {
           id,
@@ -773,34 +787,61 @@ export class LineSeriesComponent implements OnDestroy {
           ends: order.map(
             (key) => to.get(key) ?? near(key, to) ?? from.get(key),
           ),
+          baselineFrom: previousBaselines.get(id) ?? baseline,
+          baselineTo: baseline,
           paths: [
             ...host.querySelectorAll<SVGPathElement>(
               `.series-line[data-series-id="${escaped}"]:not(.mark-leave), .series-halo[data-series-id="${escaped}"]`,
             ),
           ],
+          areas: fillsToBaseline
+            ? [
+                ...host.querySelectorAll<SVGPathElement>(
+                  `.series-area[data-series-id="${escaped}"]:not(.mark-leave)`,
+                ),
+              ]
+            : [],
+          // A removed point is still in the DOM while it fades, and slides into its neighbour meanwhile.
           markers: order.map((key) =>
-            to.has(key)
-              ? host.querySelector<SVGCircleElement>(
-                  `.series-marker[data-point-key="${CSS.escape(id + '-' + key)}"]`,
-                )
-              : null,
+            host.querySelector<SVGCircleElement>(
+              `.series-marker[data-point-key="${CSS.escape(id + '-' + key)}"]`,
+            ),
           ),
+          leaving: order.map((key) => !to.has(key)),
         };
       });
     this.drawnPoints = targets;
+    this.drawnBaselines = targetBaselines;
     if (plans.length === 0) {
       return;
     }
-    const flat = (points: readonly ({ x: number; y: number } | undefined)[]) =>
-      points.flatMap((point) => [point?.x ?? 0, point?.y ?? 0]);
-    const from = plans.flatMap((plan) => flat(plan.starts));
-    const to = plans.flatMap((plan) => flat(plan.ends));
+    const flat = (
+      points: readonly ({ x: number; y: number } | undefined)[],
+      baseline: number,
+    ) => [
+      ...points.flatMap((point) => [point?.x ?? 0, point?.y ?? 0]),
+      baseline,
+    ];
+    const from = plans.flatMap((plan) => flat(plan.starts, plan.baselineFrom));
+    const to = plans.flatMap((plan) => flat(plan.ends, plan.baselineTo));
+    const leavingMarkers = plans.flatMap((plan) =>
+      plan.markers.filter(
+        (marker, index): marker is SVGCircleElement =>
+          !!marker && plan.leaving[index],
+      ),
+    );
+    // A leaving marker keeps where it slid to until it is gone.
     const styled = plans.flatMap((plan) => [
       ...plan.paths,
-      ...plan.markers.filter((marker): marker is SVGCircleElement => !!marker),
+      ...plan.areas,
+      ...plan.markers.filter(
+        (marker, index): marker is SVGCircleElement =>
+          !!marker && !plan.leaving[index],
+      ),
     ]);
     const curve = this.curve();
     const live = new Map(targets);
+    const liveBaselines = new Map(targetBaselines);
     const apply = (values: readonly number[]): void => {
       let offset = 0;
       for (const plan of plans) {
@@ -810,10 +851,15 @@ export class LineSeriesComponent implements OnDestroy {
           x: values[offset + 2 * index],
           y: values[offset + 2 * index + 1],
         }));
-        offset += 2 * plan.order.length;
+        const baseline = values[offset + 2 * plan.order.length];
+        offset += 2 * plan.order.length + 1;
         const path = `path("${linePath(points, curve)}")`;
         for (const element of plan.paths) {
           element.style.setProperty('d', path);
+        }
+        const area = `path("${areaPath(points, baseline, curve)}")`;
+        for (const element of plan.areas) {
+          element.style.setProperty('d', area);
         }
         plan.markers.forEach((marker, index) => {
           marker?.style.setProperty('cx', `${points[index].x}px`);
@@ -823,8 +869,10 @@ export class LineSeriesComponent implements OnDestroy {
           plan.id,
           new Map(plan.order.map((key, index) => [key, points[index]])),
         );
+        liveBaselines.set(plan.id, baseline);
       }
       this.drawnPoints = live;
+      this.drawnBaselines = liveBaselines;
     };
     const release = (): void => {
       for (const element of styled) {
@@ -834,7 +882,7 @@ export class LineSeriesComponent implements OnDestroy {
         element.style.removeProperty('transition');
       }
     };
-    for (const element of styled) {
+    for (const element of [...styled, ...leavingMarkers]) {
       element.style.setProperty('transition', 'none');
     }
     apply(from);
@@ -848,9 +896,19 @@ export class LineSeriesComponent implements OnDestroy {
     cancel = tweenMarks(host, from, to, apply, 'mark', () => {
       release();
       this.drawnPoints = targets;
+      this.drawnBaselines = targetBaselines;
       this.morphing = false;
       this.stopMorph = () => undefined;
     });
+  }
+
+  private baselineOf(series: LineSeriesData): number {
+    const toY =
+      (series.axis ?? 'primary') === 'secondary'
+        ? this.scales.secondaryYPosition()
+        : this.scales.yPosition();
+
+    return toY(0);
   }
 
   private readonly hoveredSeries = computed(
