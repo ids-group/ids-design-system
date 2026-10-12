@@ -48,7 +48,10 @@ import {
   isPrimaryPress,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type { ChartTooltipContext } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_INTL_DEFAULTS,
+  resolveWithConfig,
+} from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartAxis,
   ChartAxisMode,
@@ -1089,7 +1092,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
         : `${categories[range.from] ?? ''}-${categories[range.to] ?? ''}`;
     const format = this.valueFormatResolved();
 
-    return this.intl().chart.rangeTotal(
+    const rangeTotal =
+      this.intl().chart.rangeTotal ?? DS_INTL_DEFAULTS.chart.rangeTotal;
+
+    return rangeTotal(
       name,
       format(total, 'tooltip'),
       format(count > 0 ? total / count : 0, 'tooltip'),

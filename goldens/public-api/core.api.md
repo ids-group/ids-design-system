@@ -59,7 +59,9 @@ export const DS_INTL = new InjectionToken<Signal<DsIntl>>('DS_INTL', {
     factory: () => DEFAULTS,
 });
 
-export const DS_INTL_DEFAULTS: DsIntl;
+export const DS_INTL_DEFAULTS: DsIntl & {
+    readonly chart: Required<DsIntl['chart']>;
+};
 
 export interface DsConfig {
     locale?: string;
@@ -414,7 +416,7 @@ export interface DsIntl {
         readonly directionColumn: string;
         readonly runningTotalColumn: string;
         readonly endsAt: (value: string) => string;
-        readonly rangeTotal: (range: string, total: string, average: string) => string;
+        readonly rangeTotal?: (range: string, total: string, average: string) => string;
     };
 }
 

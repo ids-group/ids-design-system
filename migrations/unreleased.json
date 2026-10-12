@@ -44,31 +44,6 @@
       "note": "`ChartComponent` gained 25; `LineSeriesComponent` gained 23 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 10; `ColumnChartComponent` gained `heldExtent`, `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `rescaleOnHide`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `selectRange` and `showChange` and lost `axisMax`, `axisMaxSecondary` and `ceilingOf`; `PieChartComponent` gained 13 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 6 and lost `columnStagger`, `onStepEnter`, `onStepLeave` and `stepDwell`; `ScatterChartComponent` gained 20 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 8; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`, `onItemEnter` and `onItemLeave`."
     },
     {
-      "id": "intl-chart-range-total-required",
-      "kind": "behavior",
-      "old": "DsIntl",
-      "new": null,
-      "surface": "typescript",
-      "searchHints": [
-        "DsIntl",
-        "DS_INTL",
-        "shareOfTotal"
-      ],
-      "detect": [
-        ": DsIntl =",
-        "Signal<DsIntl>",
-        "shareOfTotal:"
-      ],
-      "action": "None, unless your code builds a complete DsIntl object of its own: add chart.rangeTotal, the pill over a range selected with selectRange.",
-      "appliesWhen": "Only an object or signal typed as the full DsIntl, not as DsIntlOverrides. provideDsIntl with a partial override, and every app that leaves DS_INTL alone, is unaffected.",
-      "pitfall": "An object that spreads DS_INTL_DEFAULTS.chart compiles, but a chart section written out key by key without the spread fails with TS2741 on rangeTotal.",
-      "restore": null,
-      "verify": "The app builds, and every complete DsIntl object it declares has chart.rangeTotal.",
-      "evidence": [
-        "fixture:unreleased/intl-chart-range-total-required.ts"
-      ]
-    },
-    {
       "id": "chart-legend-fades-only-under-dim-others",
       "kind": "behavior",
       "old": "ds-pie-chart[dimOthers]",

@@ -8,11 +8,9 @@
   category, column or line point focused, Shift+Left and Shift+Right grow or shrink the range from
   its far end. Escape or a press outside the chart clears it; a press released in its own category
   still pins. The pill
-  reads the new required `DsIntl` key `chart.rangeTotal: (range, total, average) => string`
-  (default `` `${range}: ${total} · avg ${average}` ``); a complete `DsIntl` dictionary, or a
-  complete `chart` section of one, declared as a typed object stops compiling until it lists it.
-  Overrides passed to `provideDsIntl` are partial and need nothing. `ds-chart` exposes the range as
-  `selectedRange`, typed by the new `ChartCategoryRange`.
+  reads the new optional `DsIntl` key `chart.rangeTotal: (range, total, average) => string`; a
+  dictionary without it shows the English default `` `${range}: ${total} · avg ${average}` ``.
+  `ds-chart` exposes the range as `selectedRange`, typed by the new `ChartCategoryRange`.
 - **`ds-column-chart` takes `legendFilters`, `legendMode` and `hiddenSeries`,** as
   `ds-line-chart` does: the legend hides a series, its columns sink to the baseline and the other
   series settle onto each other. The value axis fits what is left; `[rescaleOnHide]="false"` holds
