@@ -414,6 +414,30 @@
       "verify": "Press each loading-bound ds-button from the keyboard and confirm focus stays on it, with its ring, until the work ends."
     },
     {
+      "id": "pagination-loading-keeps-focus",
+      "kind": "behavior",
+      "old": "ds-pagination[loading]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript",
+        "style"
+      ],
+      "searchHints": [
+        "loading"
+      ],
+      "detect": [
+        "toBeDisabled()",
+        "button:disabled",
+        "button[disabled]"
+      ],
+      "action": "None, unless a test or a stylesheet reads the native disabled state of a ds-pagination button while loading: read aria-disabled=\"true\" instead.",
+      "appliesWhen": "Every ds-pagination with loading set, including the pager a ds-table renders during skeleton loading. Previous on the first page, Next on the last and every button on an empty list keep the native attribute; the rows-per-page select still disables.",
+      "pitfall": "A rule styling the loading pager through `.pagination-button[disabled]` or `button:disabled` matches nothing while loading.",
+      "restore": null,
+      "verify": "Press a page button of each loading-bound ds-pagination from the keyboard and confirm focus stays on a page button, with its ring, until loading ends."
+    },
+    {
       "id": "focus-classes-gained-members",
       "kind": "behavior",
       "old": "PaginationComponent",

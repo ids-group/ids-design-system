@@ -71,7 +71,7 @@
       border-color var(--duration-fast) var(--ease-standard),
       color var(--duration-fast) var(--ease-standard);
 
-    &:hover:not([disabled], .active) {
+    &:hover:not([disabled], [aria-disabled='true'], .active) {
       background-color: var(--_pagination-button-bg-color-hover);
       color: var(--_pagination-button-label-color-hover);
     }
@@ -82,12 +82,13 @@
       border-color: var(--_pagination-active-bg-color);
     }
 
-    &.active:hover:not([disabled]) {
+    &.active:hover:not([disabled], [aria-disabled='true']) {
       background-color: var(--_pagination-active-bg-color-hover);
       border-color: var(--_pagination-active-bg-color-hover);
     }
 
-    &[disabled] {
+    &[disabled],
+    &[aria-disabled='true'] {
       cursor: not-allowed;
 
       &:not(.active) { color: var(--text-disabled); }
