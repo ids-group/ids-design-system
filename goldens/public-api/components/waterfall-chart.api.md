@@ -13,7 +13,6 @@ export interface WaterfallChartBar {
 @Component({ selector: 'ds-waterfall-chart', exportAs: 'dsWaterfallChart' })
 export class WaterfallChartComponent extends DsChartBase implements ChartDimmable, ChartStaggered, ChartWithDataTable, ChartWithTooltipTrigger {
     protected readonly accessibleName = computed(…);
-    public readonly axisReadout = input(true, { transform: booleanAttribute });
     public readonly barClicked = output<WaterfallChartBar>();
     protected readonly categories = computed(…);
     public readonly data = input<readonly WaterfallChartBar[]>([]);
@@ -29,6 +28,7 @@ export class WaterfallChartComponent extends DsChartBase implements ChartDimmabl
     protected readonly points = computed<readonly ColumnSeriesPoint[]>(…);
     protected readonly renderReady = chartRenderGate(…);
     protected readonly series = viewChild(…);
+    public readonly showAxisReadout = input(true, { transform: booleanAttribute });
     public readonly showConnectors = input(true, { transform: booleanAttribute });
     public readonly showValues = input(true, { transform: booleanAttribute });
     protected readonly skeletonAxisGutter = CHART_DEFAULT_AXIS_GUTTER;

@@ -43,7 +43,6 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     public readonly axisLabel = input<string | null>(null);
     protected readonly axisLabelFill = computed(…);
     protected readonly axisLabelX = computed(…);
-    public readonly axisReadout = input(true, { transform: booleanAttribute });
     protected readonly axisTitleGutter = computed(…);
     protected readonly axisTitleX = computed(…);
     private bandAt;
@@ -169,6 +168,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     public setActiveIndex(index: number): void;
     protected readonly settled = computed(…);
     private readonly settledLayout;
+    public readonly showAxisReadout = input(true, { transform: booleanAttribute });
     protected readonly showSecondaryGridlines = computed(…);
     protected readonly shownReadout = computed(…);
     public readonly skeletonCount = input(CHART_SKELETON_COUNT, { transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT) });

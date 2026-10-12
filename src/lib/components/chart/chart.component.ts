@@ -217,7 +217,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   /** Answers the pointer on the axes: the category label in bold, a guide from the value axis and
    *  the value there in a pill on the axis. On by default. */
-  readonly axisReadout = input(true, { transform: booleanAttribute });
+  readonly showAxisReadout = input(true, { transform: booleanAttribute });
 
   protected readonly tooltipSwatchesResolved = this.defaults.tooltipSwatches;
   readonly hoverDelayMs = this.defaults.hoverDelayMs;
@@ -1179,7 +1179,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   /** A guide from the value axis at the active reading, and the axis value there in a pill on the axis. */
   protected readonly shownReadout = computed(() => {
-    const readout = this.axisReadout() ? this.activeReadout() : null;
+    const readout = this.showAxisReadout() ? this.activeReadout() : null;
     if (!readout) {
       return null;
     }

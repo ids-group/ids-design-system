@@ -93,7 +93,7 @@
   runs from the value axis at the reading, and a pill on the axis prints the axis value there; the
   guide and the pill glide between readings on `--ds-motion-chart-tooltip-move-duration` and
   `-easing`. In `ds-waterfall-chart` the guide stops at the hovered step, reads its running total,
-  and under `dimOthers` the steps after it fade. The new `axisReadout` input on all four, on by default, turns the
+  and under `dimOthers` the steps after it fade. The new `showAxisReadout` input on all four, on by default, turns the
   label, the guide and the pill off. The pill prints through `valueFormat` at the new
   `ChartFormatLocation` `'readout'`: the built-in format spells it out as for `'tooltip'`, and a
   custom formatter can return the tick's short form there. A formatter whose `location` parameter
@@ -123,9 +123,9 @@
   A `ds-scatter-chart` answers with the point nearest the pointer anywhere over the plot, where it
   answered only within 16px of a point: a ring glides to that point and a dashed line runs to it
   from the pointer. Under `prefers-reduced-motion` the centre, the marker and the ring change at once.
-  Each is on by default and has its own off switch: `centerFollowsHover` on `ds-pie-chart` keeps
+  Each is on by default and has its own off switch: `showHoverCenter` on `ds-pie-chart` keeps
   `centerValue` and `centerLabel` in the centre, `showScaleMarker` on `ds-heatmap-chart` drops the
-  marker, and `nearestPoint` on `ds-scatter-chart` answers only within 16px of a point, without the
+  marker, and `showNearestPoint` on `ds-scatter-chart` answers only within 16px of a point, without the
   ring and line. `nearestRadius` on `ds-scatter-chart` caps how far, in CSS pixels, the nearest
   point answers from; unset, any distance.
 - **Heatmap cells enter along the diagonals.** `staggerMs` on `ds-heatmap-chart` spaces the

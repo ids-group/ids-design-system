@@ -7,7 +7,6 @@
 export class ColumnChartComponent extends DsChartBase implements ChartDimmable, ChartStaggered, ChartWithDataTable, ChartWithTooltipTrigger {
     protected readonly accessibleName = computed(…);
     protected readonly axisFormat = computed<ChartValueFormat | null>(…);
-    public readonly axisReadout = input(true, { transform: booleanAttribute });
     protected readonly categories = computed(…);
     public readonly data = input<readonly ColumnChartPoint[] | readonly ColumnChartSeries[]>([]);
     public readonly dataTable = input<ChartDataTable | null>(null);
@@ -35,6 +34,7 @@ export class ColumnChartComponent extends DsChartBase implements ChartDimmable, 
     protected readonly resolvedSeries = computed<readonly ResolvedColumnSeries[]>(…);
     public readonly selectRange = input(false, { transform: booleanAttribute });
     protected readonly seriesRefs = viewChildren(…);
+    public readonly showAxisReadout = input(true, { transform: booleanAttribute });
     public readonly showValues = input(true, { transform: booleanAttribute });
     public readonly skeletonCount = input(CHART_SKELETON_COUNT, { transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT) });
     protected readonly skeletonMarks = computed(…);

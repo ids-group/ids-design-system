@@ -2200,7 +2200,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Lets a press dragged across categories select them: a band over the range, the sum and mean of every reading in it, and the marks outside it faded. Escape or a press outside clears it; a press released in its own category still pins. Off by default."
       },
       {
-        "name": "axisReadout",
+        "name": "showAxisReadout",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -3497,7 +3497,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Lets a press dragged across columns select their categories: a band, the sum and mean of every column in it, and the rest faded. Escape or a press outside clears it. Off by default."
       },
       {
-        "name": "axisReadout",
+        "name": "showAxisReadout",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -5993,7 +5993,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Lets a press dragged across categories select them: a band, the sum and mean of every reading in it, and the readings outside faded. Escape or a press outside clears it. Off by default."
       },
       {
-        "name": "axisReadout",
+        "name": "showAxisReadout",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -7708,7 +7708,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "`'below'` prints the value and its caption under the ring at full size, never shrunk or shortened."
       },
       {
-        "name": "centerFollowsHover",
+        "name": "showHoverCenter",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -8463,7 +8463,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fades every mark but the one under the pointer; on a scatter this hides pile-ups."
       },
       {
-        "name": "nearestPoint",
+        "name": "showNearestPoint",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -8478,7 +8478,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How far the pointer may be from a point's centre, in CSS pixels and inclusive, for the point to answer under `nearestPoint`; `null` sets no limit."
+        "description": "How far the pointer may be from a point's centre, in CSS pixels and inclusive, for the point to answer under `showNearestPoint`; `null` sets no limit."
       },
       {
         "name": "staggerMs",
@@ -12659,7 +12659,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Dims every OTHER bar while one is hovered or focused."
       },
       {
-        "name": "axisReadout",
+        "name": "showAxisReadout",
         "kind": "input",
         "type": "boolean",
         "union": null,
