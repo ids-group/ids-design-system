@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { BadgeComponent } from 'ds/badge';
 import { CellTemplateDirective, TableComponent } from 'ds/table';
-import type { TableColumn, TableRowAction } from 'ds/table';
+import type { TableColumn, TableColumnKind, TableRowAction } from 'ds/table';
 import { DsTableResize } from 'ds/table-resize';
 import { TooltipDirective } from 'ds/tooltip';
 
@@ -19,16 +19,11 @@ interface Row {
   readonly [field: string]: string | undefined;
 }
 
-// Typed wider than TableColumn so the page also compiles against a library without `kind`.
-type HarnessColumn = TableColumn<Row> & {
-  readonly kind?: 'text' | 'id' | 'date' | 'number' | 'status';
-};
-
 interface HarnessCase {
   readonly id: string;
   readonly title: string;
   readonly width: number;
-  readonly columns: readonly HarnessColumn[];
+  readonly columns: readonly TableColumn<Row>[];
   readonly data: readonly Row[];
   /** Swapped in for `data` by the case's "Page 2" button, as a server-paged host does. */
   readonly pageTwo?: readonly Row[];
@@ -149,7 +144,7 @@ const shortRecords: readonly Row[] = records.map((row, index) => ({
   city: 'Ely',
   product: 'Motor',
 }));
-const recordKinds: Readonly<Record<string, HarnessColumn['kind']>> = {
+const recordKinds: Readonly<Record<string, TableColumnKind>> = {
   policy_id: 'id',
   postcode: 'id',
   premium: 'number',
@@ -181,7 +176,7 @@ const pageTwo: readonly Row[] = [
   people[0],
   people[3],
 ].map((row, index) => ({ ...row, id: `p2-${index}` }));
-const pagingColumns: readonly HarnessColumn[] = [
+const pagingColumns: readonly TableColumn<Row>[] = [
   { key: 'name', label: 'Policyholder' },
   { key: 'email', label: 'Email', truncate: true },
   { key: 'city', label: 'City' },
@@ -646,7 +641,8 @@ export class TableClipHarnessPage {
     },
     {
       id: 'paging-server',
-      title: 'One server-paged table: the host swaps data from page 1 to page 2',
+      title:
+        'One server-paged table: the host swaps data from page 1 to page 2',
       width: 1100,
       data: pageOne,
       pageTwo,

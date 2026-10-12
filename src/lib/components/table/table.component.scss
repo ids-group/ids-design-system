@@ -207,18 +207,31 @@
   --_table-head-letter-spacing: var(--ds-table-head-letter-spacing, var(--letter-spacing-wider));
 
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
   background-color: var(--_table-bg-color);
 
-  /* `width: 1%` is the shrink-to-fit trick: a table lays out at least the content width, so an
-     under-sized request collapses the column onto its widest cell and hands the slack to the
-     others. nowrap stops that cell wrapping and defeating the point. */
-  th.fit-content,
   td.fit-content {
-    width: 1%;
     white-space: nowrap;
+  }
+
+  /* Auto layout at max-content for one synchronous read: every cell asks for its full width, which
+     the fixed layout never does. `!important` beats the inline widths on the <col> elements. */
+  &.measuring-head,
+  &.measuring-rows {
+    table-layout: auto;
+    width: max-content;
+    min-width: 0;
+
+    col {
+      width: auto !important;
+    }
+  }
+
+  &.measuring-head tbody {
+    display: none;
   }
 
   thead th {
@@ -352,6 +365,9 @@
          do not apply. */
       box-shadow: inset 0 calc(-1 * var(--border-width-default)) 0 var(--_table-divider);
       vertical-align: middle;
+
+      // The fixed layout never widens a column for a word longer than it.
+      overflow-wrap: anywhere;
 
       &.numeric {
         text-align: right;
@@ -492,13 +508,6 @@
       display: block;
     }
 
-    /* The text adds nothing to the column's width: the table sets the clip's min and max width
-       from what the other columns leave, up to the widest value. */
-    .cell-clip.grows > .cell-clip-text {
-      width: 0;
-      min-width: 100%;
-    }
-
     .cell-clip-text {
       display: block;
 
@@ -547,11 +556,8 @@
   }
 
   /* Every row must be exactly --_table-virtual-row-h tall or every offset below it is wrong:
-     no wrapping, and a fixed layout (auto re-measures against the rendered rows and columns
-     twitch on scroll). */
+     no wrapping. */
   &.virtual {
-    table-layout: fixed;
-
     tbody tr:not(.spacer) {
       height: var(--_table-virtual-row-h);
     }

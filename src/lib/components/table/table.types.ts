@@ -18,6 +18,14 @@ export type TableSortMode = 'client' | 'server' | 'none';
 /** `'single'` closes the open row when another expands; `'multiple'` (default) does not. */
 export type TableExpandMode = 'multiple' | 'single';
 
+/**
+ * What a column holds, which sets its width when `width` is unset: `'id'` and `'date'` 130px,
+ * `'number'` 120px, `'status'` 110px, each widened to its header label. `'text'` (default)
+ * columns share the rest of the table equally, each no narrower than its header label or
+ * `minWidth`.
+ */
+export type TableColumnKind = 'text' | 'id' | 'date' | 'number' | 'status';
+
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 
 export interface TableColumn<T = unknown> {
@@ -35,16 +43,19 @@ export interface TableColumn<T = unknown> {
   /** Adds a header filter menu; `'set'` is a searchable checkbox list of distinct values. */
   filter?: 'set';
   /** Ellipsis-clip long cell text at the column's width; the full value shows in a tooltip.
-   *  Without `width` the column takes what the other columns leave at their content width, up to
-   *  its text, down to its header label; it never causes horizontal scroll. */
+   *  A `'text'` column without `width` or `minWidth`, in a table whose columns do not fit
+   *  without scrolling, is 240px of text wide. */
   truncate?: boolean;
+  /** Sets the column's width when `width` is unset. Default `'text'`. */
+  kind?: TableColumnKind;
   /** Column width in px, padding included; a `truncate` column clips its text inside it.
    *
-   *  `'content'` sizes the column to its widest cell without wrapping and leaves the rest to
-   *  the other columns. Dragging the edge overrides it. */
+   *  `'content'` sizes the column to its widest rendered cell without wrapping, measured again
+   *  whenever the rows change, so it is the one width that moves with the data. Dragging the
+   *  edge overrides it. */
   width?: number | 'content';
-  /** The narrowest the column gets, in px, padding included. A `truncate` column without `width`
-   *  stops shrinking at it and the table scrolls sideways instead. Ignored when `width` is a number. */
+  /** The narrowest the column gets, in px, padding included; the table scrolls sideways before
+   *  the column goes narrower. Ignored when `width` is set. */
   minWidth?: number;
   align?: 'left' | 'right' | 'center';
   cell?: (row: T) => string;

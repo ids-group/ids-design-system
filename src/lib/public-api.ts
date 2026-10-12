@@ -338,6 +338,7 @@ export type {
   SortDirection,
   TableCellEditEvent,
   TableColumn,
+  TableColumnKind,
   TableExpandMode,
   TableFilterMode,
   TableRowAction,

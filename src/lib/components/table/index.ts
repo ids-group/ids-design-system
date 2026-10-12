@@ -12,6 +12,7 @@ export type { HeaderFilterContext } from './header-filter.directive';
 export type { CellTemplateContext } from './cell-template.directive';
 export type {
   TableColumn,
+  TableColumnKind,
   TableExpandMode,
   TableFilterMode,
   TableSortMode,

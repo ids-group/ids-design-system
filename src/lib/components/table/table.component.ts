@@ -17,6 +17,7 @@ import {
   model,
   output,
   signal,
+  untracked,
   ViewContainerRef,
   viewChild,
 } from '@angular/core';
@@ -48,6 +49,7 @@ import type {
   SortDirection,
   TableCellEditEvent,
   TableColumn,
+  TableColumnKind,
   TableRowAction,
   TableRowActionEvent,
   TableExpandMode,
@@ -61,26 +63,25 @@ const VIRTUAL_FALLBACK_HEIGHT = 720;
 
 const VIRTUAL_OVERSCAN = 6;
 
-const clipCapProperty = (index: number): string => `--_table-clip-cap-${index}`;
-const clipMinProperty = (index: number): string => `--_table-clip-min-${index}`;
+/** Column width by kind, padding included; a wider header label widens it. */
+const KIND_WIDTH_PX: Readonly<
+  Record<Exclude<TableColumnKind, 'text'>, number>
+> = {
+  id: 130,
+  date: 130,
+  number: 120,
+  status: 110,
+};
 
-/** The text clip of a growing column in a table that scrolls anyway, without `minWidth`. */
-const FALLBACK_CLIP_TEXT_PX = 240;
+/** Text width of a `truncate` text column without `minWidth` in a table that scrolls anyway. */
+const SCROLLING_CLIP_TEXT_PX = 240;
 
-const CLIP_SPLIT_INTERVAL_MS = 330;
-
-interface ClipFit {
-  readonly natural: number;
+interface HeaderMetrics {
+  /** Each data column's header at its max-content width, padding included. */
+  readonly floors: ReadonlyMap<string, number>;
+  readonly utilityWidth: number;
+  readonly cellPadding: number;
   readonly tableMinWidth: number;
-  readonly columns: readonly {
-    readonly property: string;
-    readonly minProperty: string;
-    readonly floor: number;
-    readonly padding: number;
-    readonly text: number;
-    readonly minWidth: number | undefined;
-    readonly need: number;
-  }[];
 }
 
 const BLANK_CELL = new Set(['', '—', '-', '–', 'n/a', 'never', 'none']);
@@ -484,17 +485,7 @@ export class TableComponent<T extends object> {
     this.layout.foldColumns(this.columns()),
   );
 
-  /** `'content'` is not a pixel value; it is carried by a class, see `fitsContent`. */
-  protected columnWidth(col: TableColumn<T>): number | null {
-    const dragged = this.layout.resize()?.widthOverride(col.key);
-    if (dragged !== undefined) {
-      return dragged;
-    }
-
-    return typeof col.width === 'number' ? col.width : null;
-  }
-
-  /** Shrink-to-content mode, unless the reader has dragged this column — a drag is a deliberate
+  /** Content-fit mode, unless the reader has dragged this column — a drag is a deliberate
    *  pixel width and must win over the declared intent. */
   protected fitsContent(col: TableColumn<T>): boolean {
     return (
@@ -711,194 +702,155 @@ export class TableComponent<T extends object> {
     this.editingCell.set(null);
   }
 
-  /** A dragged column clips at its dragged width too, not at the declared one. */
-  protected clipGrows(col: TableColumn<T>): boolean {
-    return (
-      col.width === undefined ||
-      this.layout.resize()?.widthOverride(col.key) !== undefined
-    );
-  }
+  private readonly headerMetrics = signal<HeaderMetrics | null>(null);
+  private readonly wrapWidth = signal(0);
+  private readonly contentWidths = signal<ReadonlyMap<string, number>>(
+    new Map(),
+  );
+  private readonly fontsLoaded = signal(false);
 
-  protected clipMaxWidth(col: TableColumn<T>, index: number): string | null {
-    if (this.clipGrows(col)) {
-      return `var(${clipCapProperty(index)}, none)`;
+  /** One per visible column; `null` leaves the column to share the slack with the others. Read
+   *  from the columns, the header labels and the container, never from the rows. */
+  protected readonly columnWidths = computed<readonly (number | null)[]>(() => {
+    const columns = this.visibleColumns();
+    const metrics = this.headerMetrics();
+    const resize = this.layout.resize();
+    const contentWidths = this.contentWidths();
+    const floorOf = (col: TableColumn<T>): number =>
+      Math.max(metrics?.floors.get(col.key) ?? 0, col.minWidth ?? 0);
+    const declared = columns.map((col): number | null | undefined => {
+      const dragged = resize?.widthOverride(col.key);
+      if (dragged !== undefined) {
+        return dragged;
+      }
+      if (typeof col.width === 'number') {
+        return col.width;
+      }
+      if (col.width === 'content') {
+        return contentWidths.get(col.key) ?? null;
+      }
+      if (col.kind && col.kind !== 'text') {
+        return Math.max(KIND_WIDTH_PX[col.kind], floorOf(col));
+      }
+
+      return undefined;
+    });
+    if (!metrics) {
+      return declared.map((width) => width ?? null);
+    }
+    let space =
+      Math.max(this.wrapWidth(), metrics.tableMinWidth) -
+      metrics.utilityWidth -
+      declared.reduce<number>((sum, width) => sum + (width ?? 0), 0);
+    const textIndexes = declared.flatMap((width, index) =>
+      width === undefined ? [index] : [],
+    );
+    const floorTotal = textIndexes.reduce(
+      (sum, index) => sum + floorOf(columns[index]),
+      0,
+    );
+    if (floorTotal > space) {
+      return declared.map((width, index) => {
+        if (width !== undefined) {
+          return width;
+        }
+        const col = columns[index];
+
+        return col.truncate && col.minWidth === undefined
+          ? Math.max(floorOf(col), SCROLLING_CLIP_TEXT_PX + metrics.cellPadding)
+          : floorOf(col);
+      });
+    }
+    // An equal share narrower than a column's floor holds that column at its floor; the rest share
+    // what is left, widest floor first.
+    const widths: (number | null)[] = declared.map((width) => width ?? null);
+    const byFloor = [...textIndexes].sort(
+      (left, right) => floorOf(columns[right]) - floorOf(columns[left]),
+    );
+    let sharing = byFloor.length;
+    for (const index of byFloor) {
+      const floor = floorOf(columns[index]);
+      if (floor * sharing <= space) {
+        break;
+      }
+      widths[index] = floor;
+      space -= floor;
+      sharing -= 1;
     }
 
-    // `width` is the cell's border box, as for a column without `truncate`.
-    return typeof col.width === 'number'
-      ? `calc(${col.width}px - var(--_table-cell-padding-left) - var(--_table-cell-padding-right))`
-      : null;
-  }
+    return widths;
+  });
 
-  /** Holds the column open to its text, as far as its cap, whatever the rendered rows hold. */
-  protected clipMinWidth(col: TableColumn<T>, index: number): string | null {
-    return this.clipGrows(col) ? `var(${clipMinProperty(index)}, 0px)` : null;
-  }
-
-  private readonly growingClipColumns = computed(() =>
-    this.virtualizing()
-      ? []
-      : this.visibleColumns().flatMap((col, index) =>
-          col.truncate &&
-          col.width === undefined &&
-          this.layout.resize()?.widthOverride(col.key) === undefined
-            ? [{ index, key: col.key }]
-            : [],
-        ),
-  );
-
-  private clipCapsSet: readonly string[] = [];
-  private clipFit: ClipFit | null = null;
-  private clipFitWidth = -1;
-  private textCanvas: CanvasRenderingContext2D | null | undefined;
-
-  /** One forced layout per data or column change: the table at max-content with every growing
-   *  column at its header leaves what the other columns need to show their content. A growing
-   *  column's text is the widest of its rendered cells and of every filtered row's value, so a
-   *  page of short values sizes it as a page of long ones does. */
-  private measureGrowingClips(
+  /** In auto layout at max-content, `tbody` hidden or shown, so a cell gives the width it asks
+   *  for. Restores the scroll position the narrower table may have clamped. */
+  private measureAtMaxContent(
     wrap: HTMLElement,
     table: HTMLTableElement,
-    growing: readonly { index: number; key: string }[],
+    withRows: boolean,
+    read: (headCells: readonly HTMLTableCellElement[]) => void,
   ): void {
-    for (const property of this.clipCapsSet) {
-      table.style.removeProperty(property);
-    }
-    this.clipCapsSet = growing.flatMap(({ index }) => [
-      clipCapProperty(index),
-      clipMinProperty(index),
-    ]);
-    this.clipFit = null;
-    if (growing.length === 0) {
-      return;
-    }
-    const tableMinWidth = parseFloat(getComputedStyle(table).minWidth) || 0;
-    for (const { index } of growing) {
-      table.style.setProperty(clipCapProperty(index), '0px');
-      table.style.removeProperty(clipMinProperty(index));
-    }
-    table.style.width = 'max-content';
-    table.style.minWidth = '0';
-    const natural = table.getBoundingClientRect().width;
-    const rows = this.filteredData();
-    const columns = growing.map(({ index, key }) => {
-      const head = table.querySelector<HTMLTableCellElement>(
-        `thead th[data-col-key="${CSS.escape(key)}"]`,
-      );
-      const col = this.visibleColumns()[index];
-      let text = 0;
-      let padding = 0;
-      let font = '';
-      for (const row of Array.from(table.tBodies[0]?.rows ?? [])) {
-        const cell = head ? row.cells[head.cellIndex] : undefined;
-        const clip = cell?.querySelector<HTMLElement>('.cell-clip-text');
-        if (!cell || !clip) {
+    const scrollLeft = wrap.scrollLeft;
+    const measuringClass = withRows ? 'measuring-rows' : 'measuring-head';
+    table.classList.add(measuringClass);
+    read(Array.from(table.tHead?.rows[0]?.cells ?? []));
+    table.classList.remove(measuringClass);
+    wrap.scrollLeft = scrollLeft;
+  }
+
+  private measureHeader(wrap: HTMLElement, table: HTMLTableElement): void {
+    const floors = new Map<string, number>();
+    let utilityWidth = 0;
+    let cellPadding = 0;
+    this.measureAtMaxContent(wrap, table, false, (headCells) => {
+      for (const head of headCells) {
+        const width = head.getBoundingClientRect().width;
+        const key = head.dataset['colKey'];
+        if (key === undefined) {
+          utilityWidth += width;
           continue;
         }
-        text = Math.max(text, clip.scrollWidth);
-        if (!padding) {
-          const style = getComputedStyle(cell);
-          padding =
+        floors.set(key, Math.ceil(width));
+        if (!cellPadding) {
+          const style = getComputedStyle(head);
+          cellPadding =
             parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
-          font = getComputedStyle(clip).font;
         }
       }
-      text = Math.max(text, this.widestValue(rows, col, font));
-      const floor = head?.getBoundingClientRect().width ?? 0;
-
-      return {
-        property: clipCapProperty(index),
-        minProperty: clipMinProperty(index),
-        floor,
-        padding,
-        text,
-        minWidth: col.minWidth,
-        need: Math.max(0, text + padding - floor),
-      };
     });
-    const style = getComputedStyle(wrap);
-    const wrapWidth =
+    const wrapStyle = getComputedStyle(wrap);
+    this.wrapWidth.set(
       wrap.clientWidth -
-      parseFloat(style.paddingLeft) -
-      parseFloat(style.paddingRight);
-    table.style.width = '';
-    table.style.minWidth = '';
-    this.clipFit = { natural, tableMinWidth, columns };
-    this.splitGrowingClips(table, wrapWidth);
+        parseFloat(wrapStyle.paddingLeft) -
+        parseFloat(wrapStyle.paddingRight),
+    );
+    this.headerMetrics.set({
+      floors,
+      utilityWidth,
+      cellPadding,
+      tableMinWidth: parseFloat(getComputedStyle(table).minWidth) || 0,
+    });
   }
 
-  /** The values a page does not render, measured as text in the cell's font. */
-  private widestValue(
-    rows: readonly T[],
-    col: TableColumn<T>,
-    font: string,
-  ): number {
-    if (!font || rows.length === 0) {
-      return 0;
-    }
-    if (this.textCanvas === undefined) {
-      this.textCanvas = document.createElement('canvas').getContext('2d');
-    }
-    const context = this.textCanvas;
-    if (!context) {
-      return 0;
-    }
-    context.font = font;
-    let widest = 0;
-    const seen = new Set<string>();
-    for (const row of rows) {
-      const value = this.cellValue(row, col);
-      if (seen.has(value)) {
-        continue;
+  private measureContentColumns(
+    wrap: HTMLElement,
+    table: HTMLTableElement,
+    keys: readonly string[],
+  ): void {
+    const measured = new Map<string, number>();
+    this.measureAtMaxContent(wrap, table, true, (headCells) => {
+      for (const head of headCells) {
+        const key = head.dataset['colKey'];
+        if (key !== undefined && keys.includes(key)) {
+          measured.set(key, Math.ceil(head.getBoundingClientRect().width));
+        }
       }
-      seen.add(value);
-      widest = Math.max(widest, context.measureText(value).width);
-    }
-
-    return Math.ceil(widest);
-  }
-
-  /** No layout read: the widths come from the last measure and the wrap's width. */
-  private splitGrowingClips(table: HTMLTableElement, wrapWidth: number): void {
-    const fit = this.clipFit;
-    if (!fit) {
-      return;
-    }
-    this.clipFitWidth = wrapWidth;
-    const available = Math.max(wrapWidth, fit.tableMinWidth);
-    const leftover = Math.max(0, available - fit.natural);
-    const needed = fit.columns.reduce((sum, column) => sum + column.need, 0);
-    for (const column of fit.columns) {
-      let cap: number;
-      if (leftover >= needed) {
-        cap = column.text;
-      } else if (fit.natural > available) {
-        // The table scrolls with every growing column at its header; squeezing them buys nothing.
-        const fallback =
-          column.minWidth !== undefined
-            ? column.minWidth - column.padding
-            : FALLBACK_CLIP_TEXT_PX;
-        cap = Math.max(
-          column.floor - column.padding,
-          Math.min(column.text, fallback),
-        );
-      } else {
-        // A pixel short of the share: a neighbour given a fraction less than its text wraps.
-        const share = (leftover * column.need) / needed;
-        cap = Math.max(
-          0,
-          Math.floor(column.floor + share - column.padding) - 1,
-        );
-      }
-      const px = `${Math.floor(cap)}px`;
-      // An unchanged value is not written again: every write lays the whole table out once more.
-      const max = leftover >= needed ? '' : px;
-      if (table.style.getPropertyValue(column.property) !== max) {
-        table.style.setProperty(column.property, max || null);
-      }
-      if (table.style.getPropertyValue(column.minProperty) !== px) {
-        table.style.setProperty(column.minProperty, px);
-      }
+    });
+    const previous = untracked(() => this.contentWidths());
+    const changed =
+      previous.size !== measured.size ||
+      [...measured].some(([key, width]) => previous.get(key) !== width);
+    if (changed) {
+      this.contentWidths.set(measured);
     }
   }
 
@@ -1290,63 +1242,55 @@ export class TableComponent<T extends object> {
       });
       onCleanup(() => observer.disconnect());
     });
-    // Auto layout alone shares the room by text length, so a long clipped value would wrap a
-    // neighbour that fits; a growing column takes only what the others leave, up to its text.
+    // Header labels are measured when the column set or the density changes, never per row.
     afterRenderEffect(() => {
-      this.rowSlots();
-      this.filteredData();
-      const growing = this.growingClipColumns();
+      this.visibleColumns();
+      this.tableClasses();
+      this.selectable();
+      this.expandableRows();
+      this.hasUtilityColumn();
+      this.layout.resize();
+      this.fontsLoaded();
       const wrap = this.scrollWrap().nativeElement;
       const table = wrap.querySelector('table');
       if (table) {
-        this.measureGrowingClips(wrap, table, growing);
+        untracked(() => this.measureHeader(wrap, table));
       }
     });
-    // Splitting writes widths that resize the wrap's content, so it waits a frame and only for a
-    // changed inline size; splitting inside the callback loops the observer. During a resize it
-    // runs at most every CLIP_SPLIT_INTERVAL_MS, first and last width included: each split lays the
-    // whole table out once more.
+    // `width: 'content'` is the one width that follows the rows, so only it re-measures with them.
+    afterRenderEffect(() => {
+      this.rowSlots();
+      const keys = this.visibleColumns()
+        .filter((col) => this.fitsContent(col))
+        .map((col) => col.key);
+      const wrap = this.scrollWrap().nativeElement;
+      const table = wrap.querySelector('table');
+      if (!table || keys.length === 0) {
+        if (untracked(() => this.contentWidths().size)) {
+          this.contentWidths.set(new Map());
+        }
+
+        return;
+      }
+      untracked(() => this.measureContentColumns(wrap, table, keys));
+    });
     afterNextRender(() => {
+      void document.fonts?.ready.then(() => this.fontsLoaded.set(true));
       if (typeof ResizeObserver === 'undefined') {
         return;
       }
       const wrap = this.scrollWrap().nativeElement;
       let frame = 0;
-      let timer: ReturnType<typeof setTimeout> | undefined;
-      let lastSplit = -Infinity;
-      let width = 0;
-      const split = () => {
-        frame = 0;
-        lastSplit = performance.now();
-        const table = wrap.querySelector('table');
-        if (
-          table &&
-          this.clipFit &&
-          Math.abs(width - this.clipFitWidth) >= 0.5
-        ) {
-          this.splitGrowingClips(table, width);
-        }
-      };
+      // A frame later: widths written inside the callback move the wrap's scrollbar and loop the
+      // observer.
       const observer = new ResizeObserver(([entry]) => {
-        width = entry.contentRect.width;
-        if (frame || timer !== undefined) {
-          return;
-        }
-        const wait = lastSplit + CLIP_SPLIT_INTERVAL_MS - performance.now();
-        if (wait <= 0) {
-          frame = requestAnimationFrame(split);
-
-          return;
-        }
-        timer = setTimeout(() => {
-          timer = undefined;
-          frame = requestAnimationFrame(split);
-        }, wait);
+        const width = entry.contentRect.width;
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => this.wrapWidth.set(width));
       });
       observer.observe(wrap);
       this.destroyRef.onDestroy(() => {
         cancelAnimationFrame(frame);
-        clearTimeout(timer);
         observer.disconnect();
       });
     });
