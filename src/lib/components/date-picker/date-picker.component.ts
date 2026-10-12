@@ -62,6 +62,7 @@ import {
   formatDate,
   formatRange,
   fullDateLabel,
+  localeFirstDayOfWeek,
   monthLabels,
   parseDate,
   parseDateRange,
@@ -265,7 +266,7 @@ export class DatePickerComponent
   readonly locale = input<string | null>(null);
   /** Explicit token format e.g. `'MM/DD/YYYY'`; default derived from `locale`. */
   readonly dateFormat = input<string | null>(null);
-  /** First weekday column: 0=Sunday … 6=Saturday. Default 1 (Monday). */
+  /** First weekday column: 0=Sunday … 6=Saturday. Falls back to `DS_CONFIG.datePicker.firstDayOfWeek`, then the resolved `locale`'s week, then 1 (Monday). */
   readonly firstDayOfWeek = input<number | null>(null);
   /** Date the calendar opens on when the value is empty; never written to `value`. */
   readonly defaultDate = input<Date | null>(null);
@@ -320,7 +321,11 @@ export class DatePickerComponent
     () => this.locale() ?? this.config.datePicker?.locale ?? this.appLocale,
   );
   protected readonly resolvedFirstDay = computed(
-    () => this.firstDayOfWeek() ?? this.config.datePicker?.firstDayOfWeek ?? 1,
+    () =>
+      this.firstDayOfWeek() ??
+      this.config.datePicker?.firstDayOfWeek ??
+      localeFirstDayOfWeek(this.resolvedLocale()) ??
+      1,
   );
   protected readonly formatSpec = computed<DateFormatSpec>(() =>
     resolveDateFormat(

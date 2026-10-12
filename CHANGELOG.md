@@ -117,6 +117,14 @@
   `morphGrowth`, `morphing` and `ngOnChanges`; the internal `ChartLegendComponent` gained `highlight`
   and lost `onItemEnter` and `onItemLeave`. The internal `pointScale` with its `PointScale` type,
   `tickStep` and `polylinePoints` are removed.
+- **The calendar week and the clock follow the locale.** Unset, `ds-date-picker` starts its week
+  on the first day of its locale (`locale`, `datePicker.locale`, the config `locale`, then
+  `LOCALE_ID`) and `ds-time-picker` shows the clock of the config `locale`, then `LOCALE_ID`:
+  en-US, the default `LOCALE_ID`, now gets Sunday-first weeks and 12-hour times, en-GB and de-DE
+  keep Monday and 24 hours. A browser with no week data keeps Monday. `firstDayOfWeek`,
+  `datePicker.firstDayOfWeek`, `format` and `timePicker.format` still win;
+  `provideDsConfig({ datePicker: { firstDayOfWeek: 1 }, timePicker: { format: '24h' } })` keeps
+  the old Monday and 24 hours.
 
 ### Fixed
 
@@ -158,6 +166,8 @@
 | Delete | Why | Replace with |
 | --- | --- | --- |
 | `rescaleOnHide` on `ds-line-chart` | `true` is the default | nothing |
+| `[firstDayOfWeek]="0"` on `ds-date-picker` under an en-US locale | Sunday is that locale's first day | nothing |
+| `format="12h"` on `ds-time-picker` under an en-US locale | 12 hours is that locale's clock | nothing |
 
 ## 0.15.0 — 2026-10-09
 

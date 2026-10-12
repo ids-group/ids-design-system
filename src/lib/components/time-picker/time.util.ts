@@ -1,5 +1,14 @@
 import type { TimeConstraints, TimeFormat } from './time-picker.types';
 
+/** The locale's clock: `'12h'` when its hour cycle is h11/h12, else `'24h'`. */
+export function localeTimeFormat(locale: string): TimeFormat {
+  const { hourCycle } = new Intl.DateTimeFormat(locale, {
+    hour: 'numeric',
+  }).resolvedOptions();
+
+  return hourCycle === 'h11' || hourCycle === 'h12' ? '12h' : '24h';
+}
+
 export function pad2(value: number): string {
   return value < 10 ? `0${value}` : `${value}`;
 }
