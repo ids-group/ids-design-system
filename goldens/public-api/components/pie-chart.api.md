@@ -14,9 +14,10 @@ export class PieChartComponent extends DsChartBase implements ChartDimmable, Cha
     private readonly centerEntry;
     private readonly centerFit;
     protected readonly centerFontSize = computed(…);
-    protected readonly centerKey = computed(…);
+    private readonly centerKey;
     public readonly centerLabel = input<string | null>(null);
     public readonly centerPlacement = input<PieChartCenterPlacement>('inside');
+    private readonly centerSwapElement;
     protected readonly centerText = computed(…);
     public readonly centerValue = input<string | null>(null);
     private readonly centerValueElement;
@@ -29,6 +30,7 @@ export class PieChartComponent extends DsChartBase implements ChartDimmable, Cha
     public readonly dimOthers = input(false, { transform: booleanAttribute });
     private readonly drawnArcs;
     protected entryLabel(entry: { slice: PieChartSlice; formattedValue: string; formattedPercent: string; });
+    private readonly fadeCenterSwap;
     private fitCenter;
     private readonly fitsInside;
     protected readonly hole = computed(…);
@@ -56,6 +58,7 @@ export class PieChartComponent extends DsChartBase implements ChartDimmable, Cha
     private readonly ringElement;
     private readonly ringWidth;
     protected readonly roving = rovingMarks(…);
+    private shownCenterKey;
     protected readonly shownCenterLabel = computed(…);
     private readonly shownCenterValue;
     public readonly skeletonCount = input(CHART_SKELETON_COUNT, { transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT) });
