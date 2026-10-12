@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Содержимое ds-info-hint</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-12">
+<meta name="ds-deck-evidence" content="src/lib/components/info-hint/info-hint.component.ts:71 - CHANGELOG.md">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   main { padding-bottom: 72px; }
   .opts { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
@@ -40,6 +42,22 @@
     <p class="lede">Аск от mm-ecm (ME-495): все пояснения в приложении переезжают на компоненты DS. Два вопроса, второй нужен только при одном ответе в деке ME-495.</p>
     <p class="chat">Ответ нести в чат: «Acc2 · pp-ревью и Dashboard Review»</p>
   </header>
+
+  <div class="decided">
+    <h2>Решено: «и A · Содержимое внутри тега, и B · Шаблон во входе»; значок - «Любой значок DS, цвет от консьюмера»</h2>
+    <p>Оба способа работают: разметка внутри <code>&lt;ds-info-hint&gt;</code> и шаблон во входе <code>[content]</code>. Если дано несколько источников, показывается <code>[content]</code>, потом разметка внутри тега, потом <code>text</code>; в dev-режиме предупреждение в консоли. Какой способ оставить, решим по тому, как ими пользуются консьюмеры: метка <code>TODO(info-hint-content)</code> в коде и пункт в <code>docs/todo.md</code>. <code>icon</code> принимает любое имя значка DS, цвет задаёт <code>--ds-info-hint-color</code>.</p>
+    <div class="shots">
+      <figure class="shot"><img src="info-hint-content-media/before-text.png" alt="" width="272"><figcaption>Было: только текст</figcaption></figure>
+      <figure class="shot"><img src="info-hint-content-media/after-text.png" alt="" width="272"><figcaption>Стало: текст как раньше</figcaption></figure>
+      <figure class="shot"><img src="info-hint-content-media/after-projected-list.png" alt="" width="201"><figcaption>A: разметка внутри тега</figcaption></figure>
+      <figure class="shot"><img src="info-hint-content-media/after-template-list.png" alt="" width="255"><figcaption>B: шаблон в [content]</figcaption></figure>
+      <figure class="shot"><img src="info-hint-content-media/after-warn-coloured.png" alt="" width="272"><figcaption>icon="warn" + цвет</figcaption></figure>
+    </div>
+    <p class="evidence">2026-10-12 · src/lib/components/info-hint/info-hint.component.ts:71 · ветка ecm-feat/info-hint-content</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
 
   <section class="panel q" data-review="Подсказка со списком" data-review-note-only>
     <h2>Подсказка со списком: как передать содержимое</h2>
@@ -136,6 +154,8 @@ tone: 'neutral' | 'warning' | 'danger'</code></pre>
       </article>
     </div>
   </section>
+
+  </details>
 
   <p class="src"><b>Источники, проверено 2026-10-12 на <code>dev</code>.</b> <code>src/lib/components/info-hint/info-hint.component.ts</code> и <code>.scss:24</code>; <code>tooltip/tooltip-panel.component.ts</code> (<code>role="tooltip"</code>, вход <code>text</code>); <code>tooltip/tooltip.directive.ts</code> (<code>pin()</code>, <code>onFocusOut</code>, <code>aria-describedby</code> в <code>show()</code>); <code>popover/popover.component.ts</code> (<code>toggle()</code>, <code>panelRole</code>); <code>core/icon-names.ts</code> (<code>warn</code>, <code>lock</code>). Консьюмер: mm-ecm <code>data-ingest.page.html</code>, <code>ds-popover #pubPop</code>. Ветка под работу: <code>ecm-feat/info-hint-content</code>.</p>
 </main>
