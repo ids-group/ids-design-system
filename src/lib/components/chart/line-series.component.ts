@@ -345,7 +345,7 @@ export class LineSeriesComponent implements OnDestroy {
   /** Where an `'axis'` panel hangs: `'reading'` over the highest reading in the category; `'pointer'` follows the cursor. */
   readonly tooltipAnchor = input<'reading' | 'pointer'>('reading');
 
-  /** Milliseconds the panel survives the pointer leaving the marker. */
+  /** Milliseconds the panel survives the pointer leaving the marker within the chart. */
   readonly tooltipLingerMs = input(CHART_TOOLTIP_LINGER_MS, {
     transform: numberAttribute,
   });
