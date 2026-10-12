@@ -24,6 +24,7 @@
     @for (row of skeletonLayout.rows; track row) {
       <span
         class="skeleton-grid-line"
+        data-morph="fade"
         [class.is-axis]="$last"
         [style.top]="row"
         [style.left]="skeletonLayout.plotLeft"
