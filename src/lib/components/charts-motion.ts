@@ -49,7 +49,7 @@ export function tweenMarks(
   from: readonly number[],
   to: readonly number[],
   apply: (values: readonly number[]) => void,
-  timing: 'mark' | 'tooltip-move' = 'mark',
+  timing: 'mark' | 'mark-grow' | 'tooltip-move' = 'mark',
 ): () => void {
   const style = getComputedStyle(element);
   const duration = cssDurationMs(

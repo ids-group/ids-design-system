@@ -2,14 +2,27 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
+  ElementRef,
+  NgZone,
+  PLATFORM_ID,
   TemplateRef,
   ViewEncapsulation,
   booleanAttribute,
+  inject,
   input,
   output,
+  signal,
+  type OnChanges,
+  type SimpleChanges,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import {
+  startSkeletonMorph,
+  type ChartMorphGrowth,
+} from './chart-skeleton-morph';
 import { ChartUnpinComponent } from './chart-unpin.component';
 
 /**
@@ -104,7 +117,7 @@ export interface ChartStatesMessageContext {
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChartStatesComponent {
+export class ChartStatesComponent implements OnChanges {
   readonly unpin = input(true, { transform: booleanAttribute });
   readonly pinned = input(false);
   readonly release = output();
@@ -130,4 +143,48 @@ export class ChartStatesComponent {
   readonly body = input.required<TemplateRef<unknown>>();
   /** Replaces the default error and empty paragraph. */
   readonly message = input<TemplateRef<ChartStatesMessageContext> | null>(null);
+
+  /** How a mark the loading skeleton had no placeholder for arrives when the data lands. */
+  readonly morphGrowth = input<ChartMorphGrowth>(null);
+
+  private readonly morphingState = signal(false);
+  /** Whether the loading skeleton is turning into the drawn chart; a chart animating its own marks
+   *  starts them from the skeleton while it is. */
+  readonly morphing = this.morphingState.asReadonly();
+
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly zone = inject(NgZone);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private stopMorph: () => void = () => undefined;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => this.stopMorph());
+  }
+
+  // Before the view swaps the skeleton out, while its placeholders can still be measured.
+  ngOnChanges(changes: SimpleChanges): void {
+    const pending = changes['pending'];
+    if (!pending || pending.firstChange) {
+      return;
+    }
+    this.stopMorph();
+    if (
+      !pending.previousValue ||
+      pending.currentValue ||
+      !this.isBrowser ||
+      this.error() ||
+      this.empty()
+    ) {
+      return;
+    }
+    const stop = this.zone.runOutsideAngular(() =>
+      startSkeletonMorph(this.host.nativeElement, this.morphGrowth(), () =>
+        this.morphingState.set(false),
+      ),
+    );
+    if (stop) {
+      this.stopMorph = stop;
+      this.morphingState.set(true);
+    }
+  }
 }

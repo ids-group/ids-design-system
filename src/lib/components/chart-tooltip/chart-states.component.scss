@@ -52,3 +52,8 @@ figcaption {
   margin-inline: 0;
   padding-inline: 0;
 }
+
+// The drawn chart waits out of sight until its geometry lands, then fades in under the morphing skeleton.
+:host(.skeleton-morph) > .reload-overlay {
+  opacity: 0;
+}
