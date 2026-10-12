@@ -103,6 +103,10 @@ export class MenuItemComponent implements OnDestroy, AimHoverTarget {
     }
     if (this.hasSubmenu()) {
       this.openSubmenu();
+      // detail 0: Enter or Space, which APG has land on the submenu's first item.
+      if (event.detail === 0) {
+        this.focusSubmenu();
+      }
 
       return;
     }
@@ -118,6 +122,7 @@ export class MenuItemComponent implements OnDestroy, AimHoverTarget {
       event.preventDefault();
       event.stopPropagation();
       this.openSubmenu();
+      this.focusSubmenu();
     }
   }
 
@@ -255,6 +260,12 @@ export class MenuItemComponent implements OnDestroy, AimHoverTarget {
     this.submenuRef?.dispose();
     this.clearOpenTimer();
     this.aim.dropHover(this);
+  }
+
+  private focusSubmenu(): void {
+    this.submenuRef?.overlayElement
+      .querySelector<HTMLElement>('[role="menuitem"]')
+      ?.focus();
   }
 
   private clearOpenTimer(): void {

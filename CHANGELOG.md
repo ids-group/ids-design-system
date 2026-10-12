@@ -285,6 +285,9 @@
   popover left focus on the trigger, so arrow keys and type-ahead never reached the menu; this hit
   the `ds-table` row-actions menu too. A panel holding a `role="menu"` now focuses the menu's first
   item on open, and Escape returns focus to the trigger. It is not trapped: Tab closes it.
+- **ArrowRight on a `ds-menu-item` with a `submenu` focuses the submenu's first item.** It opened
+  the submenu and left focus on the parent, so the submenu's items were out of reach; Enter and
+  Space focus the first item too. ArrowLeft and Escape close it and focus the parent, as before.
 
 ### What you can now DELETE
 

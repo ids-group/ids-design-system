@@ -383,7 +383,7 @@
       "appliesWhen": "Only a class of yours that extends MenuComponent or MenuItemComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
-      "note": "`MenuComponent` gained `closeRef`, `host`, `onFocusIn` and `onFocusOut`; `MenuItemComponent` gained `injector`."
+      "note": "`MenuComponent` gained `closeRef`, `host`, `onFocusIn` and `onFocusOut`; `MenuItemComponent` gained `focusSubmenu` and `injector`."
     }
   ],
   "informational": [

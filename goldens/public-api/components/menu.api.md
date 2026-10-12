@@ -36,6 +36,7 @@ export class MenuItemComponent implements OnDestroy, AimHoverTarget {
     public readonly disabled = input(false, { transform: booleanAttribute });
     public readonly error = input(false, { transform: booleanAttribute });
     public focus(): void;
+    private focusSubmenu;
     protected hasSubmenu(): boolean;
     private readonly hostElement;
     public readonly icon = input<IconName | null>(null);
