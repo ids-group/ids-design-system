@@ -151,14 +151,14 @@ tone: 'neutral' | 'warning' | 'danger'</code></pre>
     const paint = () => cards.forEach((card) => {
       const chosen = card.dataset.key === picks[name];
       card.classList.toggle('is-chosen', chosen);
-      card.querySelector('.pick-btn').textContent = chosen ? 'Выбрано' : 'Выбрать';
+      card.querySelector('.pick-btn').textContent = chosen ? 'Выбрано · снять' : 'Выбрать';
     });
     cards.forEach((card) => {
       const pickButton = document.createElement('button');
       pickButton.type = 'button';
       pickButton.className = 'pick-btn';
       card.append(pickButton);
-      const choose = () => { picks[name] = card.dataset.key; try { localStorage.setItem(keyOf(name), picks[name]); } catch { /* private window */ } paint(); window.deckReview?.refresh?.(); };
+      const choose = () => { picks[name] = picks[name] === card.dataset.key ? null : card.dataset.key; try { if (picks[name]) localStorage.setItem(keyOf(name), picks[name]); else localStorage.removeItem(keyOf(name)); } catch { /* private window */ } paint(); window.deckReview?.refresh?.(); };
       card.addEventListener('click', (event) => { if (!event.target.closest('pre')) choose(); });
       card.addEventListener('keydown', (event) => { if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); choose(); } });
     });

@@ -483,7 +483,7 @@
         const chosen = picks[section.dataset.key] === card.dataset.opt;
         card.classList.toggle('is-chosen', chosen);
         card.setAttribute('aria-pressed', String(chosen));
-        card.querySelector('.pick-btn').textContent = chosen ? 'Выбрано' : 'Выбрать';
+        card.querySelector('.pick-btn').textContent = chosen ? 'Выбрано · снять' : 'Выбрать';
       }
     }
   };
@@ -493,7 +493,7 @@
       pickButton.type = 'button';
       pickButton.className = 'pick-btn';
       card.append(pickButton);
-      const choose = () => { picks[section.dataset.key] = card.dataset.opt; save(); paint(); window.deckReview?.refresh?.(); };
+      const choose = () => { if (picks[section.dataset.key] === card.dataset.opt) delete picks[section.dataset.key]; else picks[section.dataset.key] = card.dataset.opt; save(); paint(); window.deckReview?.refresh?.(); };
       card.addEventListener('click', (event) => { if (!event.target.closest('.code')) choose(); });
       card.addEventListener('keydown', (event) => { if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); choose(); } });
     }

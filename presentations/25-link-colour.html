@@ -52,7 +52,8 @@
     <p class="chat">Ответ нести в чат: «Acc2 · Дека движения графиков»</p>
   </header>
 
-  <section class="panel" data-review="Сегодня">
+  <section class="panel" data-review="Сегодня" data-review-round="2">
+    <ol data-review-history><li>2026-10-12 · «ну сделай чтоб посещённую тоже красили, и дай ссылке и всем её состояниям токены.» → в работе: посещённая ссылка получит свой цвет, у ссылки и каждого состояния (обычное, наведение, нажатие, посещённое, фокус) будет свой токен; это не зависит от выбора цвета ниже</li></ol>
     <h2>Сегодня</h2>
     <ul>
       <li>В светлой теме ссылка <b>берёт тон из <code>--primary</code></b>: зелёный бренд - тёмно-зелёная ссылка <code>#1d583b</code>.</li>
@@ -62,7 +63,15 @@
     </ul>
   </section>
 
-  <section class="panel q" data-review="Варианты" data-review-note-only>
+  <section class="panel q" data-review="Варианты" data-review-note-only data-review-round="2">
+    <ol data-review-history><li>2026-10-12 · «что в итоге исследования и ux практики сказали? как правильно?» → ответ ниже, блок «Что говорят исследования»; выбор «Всегда синий» был отмечен случайно и снят, решение не принято</li></ol>
+    <h2>Что говорят исследования</h2>
+    <ul>
+      <li><b>Синий - самый сильный сигнал «это ссылка»</b> (NN/g, GOV.UK). Системы с ссылкой цвета бренда (Primer, Carbon, Atlassian) сами синие, их пример вопрос не решает.</li>
+      <li><b>Одного цвета мало:</b> WCAG G183 требует 3:1 между ссылкой и соседним текстом, если ссылку отличает только цвет. Синяя даёт 2.54:1, зелёная 2.07:1; ссылку в тексте отличает <b>подчёркивание</b>, оно в DS есть.</li>
+      <li><b>Посещённая ссылка - другим цветом</b> (NN/g): человек видит, где уже был.</li>
+      <li><b>Как правильно:</b> ссылка синяя и подчёркнута в тексте, посещённая своего цвета, бренд живёт в кнопках и подложках.</li>
+    </ul>
     <h2>Два варианта</h2>
     <div class="opts">
       <article class="opt is-today" tabindex="0" data-key="brand">
@@ -180,7 +189,7 @@
   measure();
   document.querySelectorAll('.frag a').forEach((anchor) => anchor.addEventListener('click', (event) => event.preventDefault()));
 
-  const KEY = 'ds-deck-link-colour-pick-v1';
+  const KEY = 'ds-deck-link-colour-pick-v2';
   const cards = [...document.querySelectorAll('.opt[data-key]')];
   cards.forEach((card) => {
     const pickButton = document.createElement('button');
@@ -192,10 +201,10 @@
   try { picked = localStorage.getItem(KEY); } catch { picked = null; }
   const paint = () => cards.forEach((card) => {
     card.classList.toggle('is-chosen', card.dataset.key === picked);
-    card.querySelector('.pick-btn').textContent = card.dataset.key === picked ? 'Выбрано' : 'Выбрать';
+    card.querySelector('.pick-btn').textContent = card.dataset.key === picked ? 'Выбрано · снять' : 'Выбрать';
   });
   cards.forEach((card) => {
-    const choose = () => { picked = card.dataset.key; try { localStorage.setItem(KEY, picked); } catch { /* private window */ } paint(); window.deckReview?.refresh?.(); };
+    const choose = () => { picked = picked === card.dataset.key ? null : card.dataset.key; try { if (picked) localStorage.setItem(KEY, picked); else localStorage.removeItem(KEY); } catch { /* private window */ } paint(); window.deckReview?.refresh?.(); };
     card.addEventListener('click', (event) => { if (!event.target.closest('.frag')) choose(); });
     card.addEventListener('keydown', (event) => { if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); choose(); } });
   });
