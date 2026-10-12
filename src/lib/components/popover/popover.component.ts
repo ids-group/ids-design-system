@@ -89,7 +89,8 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
 
   /** ARIA role for the panel (e.g. 'dialog'). When set, the panel traps focus and captures it
    *  on open; Escape or an in-panel close returns focus to the trigger, an outside click or
-   *  scroll does not (non-modal). Leave null for plain text popovers. */
+   *  scroll does not (non-modal). Leave null for plain text popovers. A panel holding a
+   *  `role="menu"` (a `ds-menu`) captures focus on open without it, untrapped. */
   readonly panelRole = input<string | null>(null);
   /** Accessible name for the panel; pair with `panelRole`. */
   readonly panelLabel = input<string | null>(null);
@@ -165,7 +166,11 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
     this.ref.attach(new TemplatePortal(this.panelTpl()!, this.vcr));
     this.resolvedPlacement.set(placement);
     this.opened.set(true);
-    if (this.panelRole()) {
+    // A menu is operated from inside (APG menu button), so it takes focus without a panelRole.
+    if (
+      this.panelRole() ||
+      this.ref.overlayElement.querySelector('[role="menu"]')
+    ) {
       // cdkTrapFocusAutoCapture without its destroy-time restore, which steals focus on an outside/scroll close.
       this.focusTimer = setTimeout(() => {
         this.focusTimer = null;

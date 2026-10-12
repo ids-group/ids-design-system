@@ -412,6 +412,52 @@
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
       "note": "`PaginationComponent` gained `rescueFocus`, and its `goTo` takes the nav element as a second argument. `ToastRegionComponent` gained `focusOrigin` and `onFocusIn`. The `onDismiss` of `AlertComponent` and `BannerComponent` takes the element that leaves."
+    },
+    {
+      "id": "menu-classes-gained-members",
+      "kind": "behavior",
+      "old": "MenuComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends MenuComponent",
+        "extends MenuItemComponent"
+      ],
+      "detect": [
+        "extends MenuComponent",
+        "extends MenuItemComponent"
+      ],
+      "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
+      "appliesWhen": "Only a class of yours that extends MenuComponent or MenuItemComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
+      "note": "`MenuComponent` gained `closeRef`, `host`, `onFocusIn` and `onFocusOut`; `MenuItemComponent` gained `focusSubmenu` and `injector`."
+    },
+    {
+      "id": "icon-button-selected-widened-to-nullable",
+      "kind": "behavior",
+      "old": "IconButtonComponent",
+      "new": null,
+      "surface": [
+        "typescript",
+        "template"
+      ],
+      "searchHints": [
+        "IconButtonComponent",
+        "ds-icon-button",
+        "[selected]",
+        ".selected()"
+      ],
+      "detect": [
+        ".selected()",
+        "extends IconButtonComponent"
+      ],
+      "action": "Where your code reads `IconButtonComponent.selected()` back as a `boolean`, handle `null`, which an unbound `selected` now holds. On a `ds-icon-button` that is not a toggle, remove a `[selected]` binding.",
+      "appliesWhen": "TypeScript that reads `selected` back off an icon button or a subclass that overrides it, and a `ds-icon-button` given `[selected]` though it is not a toggle. A toggle binding `[selected]` needs no change.",
+      "pitfall": "A non-toggle button bound to `[selected]=\"false\"` now announces itself as a toggle button that is not pressed.",
+      "note": "`IconButtonComponent.selected` went from `input(false)` (`boolean`) to `input<boolean | null>(null)`. A bound `false` renders `aria-pressed=\"false\"`; unbound, the button has no `aria-pressed`.",
+      "restore": null,
+      "verify": "Every read of IconButtonComponent.selected() handles null, and every ds-icon-button with a [selected] binding is a toggle."
     }
   ],
   "informational": [
@@ -510,7 +556,9 @@
     },
     "Pressing Previous onto the first page or Next onto the last of a `ds-pagination` moves focus to the current page's button; it fell to the page.",
     "Dismissing a `ds-alert` or `ds-banner` from its close button moves focus to the next control after it, else the one before it; a toast leaving with focus inside it moves focus to the next toast, else to the element focused before focus entered the region. Focus fell to the page.",
-    "Move up and Move down in the `dsTableColumns` panel keep focus on the moved row's pressed button, or its other button once the row reaches the top or bottom; focus fell to the page. The internal `TableColumnsPanelComponent` gained `move` and `rescueFocus`."
+    "Move up and Move down in the `dsTableColumns` panel keep focus on the moved row's pressed button, or its other button once the row reaches the top or bottom; focus fell to the page. The internal `TableColumnsPanelComponent` gained `move` and `rescueFocus`.",
+    "A `ds-menu` in a `ds-split-button` or a `ds-popover` opens at its first item each time, whichever item had focus when it closed.",
+    "Tab on a `ds-menu` item closes the `ds-split-button` or `ds-popover` menu holding it and moves focus on from the trigger; choosing a submenu item closes the submenu."
   ],
   "deleteList": [
     {

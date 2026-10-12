@@ -1737,7 +1737,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Busy state: disables interaction and sets `aria-busy`. Button-only; ignored on an anchor with a dev warning."
+        "description": "Busy state: blocks `pressed` and sets `aria-busy` and `aria-disabled`, keeping the button focusable so focus stays on it while the work runs. Button-only; ignored on an anchor with a dev warning."
       },
       {
         "name": "fullWidth",
@@ -5000,11 +5000,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "selected",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Toggle state: renders the pressed look and sets `aria-pressed`."
+        "description": "Toggle state: renders the pressed look and sets `aria-pressed`, `\"false\"` when bound off. Unbound, the button is no toggle and carries no `aria-pressed`."
       },
       {
         "name": "ariaExpanded",
@@ -7874,7 +7874,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "ARIA role for the panel (e.g. 'dialog'). When set, the panel traps focus and captures it on open; Escape or an in-panel close returns focus to the trigger, an outside click or scroll does not (non-modal). Leave null for plain text popovers."
+        "description": "ARIA role for the panel (e.g. 'dialog'). When set, the panel traps focus and captures it on open; Escape or an in-panel close returns focus to the trigger, an outside click or scroll does not (non-modal). Leave null for plain text popovers. A panel holding a `role=\"menu\"` (a `ds-menu`) captures focus on open without it, untrapped."
       },
       {
         "name": "panelLabel",

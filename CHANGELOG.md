@@ -308,6 +308,26 @@
   button disabled at the top or bottom. Focus stays on the pressed button of the moved row, or moves
   to its other button once the row reaches an end. The internal `TableColumnsPanelComponent`
   gained `move` and `rescueFocus`.
+- **A `ds-menu` opens at its first item.** Reopening a `ds-split-button` menu, or any `ds-menu`
+  in a `ds-popover`, focused the item that had focus when it closed. Once focus leaves the menu,
+  its first item takes the tab stop again.
+- **Tab leaves an open `ds-menu`.** In a `ds-split-button` menu, or a `ds-menu` in a
+  `ds-popover`, Tab on an item did nothing; it closes the menu and moves focus on from its
+  trigger. In a submenu they close the submenu and the menu holding it. Choosing a submenu item
+  closes the submenu and returns focus to its parent item before the overlay closes, where the
+  submenu stayed open.
+- **A `ds-popover` holding a `ds-menu` moves focus into it.** Without `panelRole`, opening the
+  popover left focus on the trigger, so arrow keys and type-ahead never reached the menu; this hit
+  the `ds-table` row-actions menu too. A panel holding a `role="menu"` now focuses the menu's first
+  item on open, and Escape returns focus to the trigger. It is not trapped: Tab closes it.
+- **ArrowRight on a `ds-menu-item` with a `submenu` focuses the submenu's first item.** It opened
+  the submenu and left focus on the parent, so the submenu's items were out of reach; Enter and
+  Space focus the first item too. ArrowLeft and Escape close it and focus the parent, as before.
+- **A `ds-icon-button` toggle that is off says so.** With `[selected]` bound to `false` it dropped
+  `aria-pressed`, so a screen reader heard a plain button; it renders `aria-pressed="false"`, as
+  `ds-toggle-button` does. An icon button with no `selected` binding still carries no
+  `aria-pressed`. `IconButtonComponent.selected` is `boolean | null`, `null` when unbound; code
+  reading it back as a `boolean` handles `null`.
 
 ### What you can now DELETE
 
