@@ -152,6 +152,9 @@
 - **A stacked column's panel hangs over the whole stack.** In `ds-column-chart` and `ds-chart`
   with stacked `dsColumnSeries`, hovering a segment opens its panel over the stack's top, so the
   segments above it stay in view and reachable.
+- **An expanded `ds-table` row folds all the way.** Opening a row's panel started 24px tall and
+  closing it stopped at 24px before the row dropped out: the cell padding sat outside the fold. The
+  padding now folds with the panel, so the row grows from 0 and shrinks to 0.
 
 ### What you can now DELETE
 
