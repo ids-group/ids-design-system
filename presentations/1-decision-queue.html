@@ -819,11 +819,40 @@
   .mo-skeleton { fill: var(--surface-secondary); }
   .mo-slot { fill: none; stroke: var(--border-strong); stroke-width: .75; stroke-dasharray: 2 2; }
   .mo-column { transform-box: fill-box; transform-origin: center; }
+  .dq-c3 { fill: var(--chart-categorical-1); }
+  .ag-svg text.dq-seg { fill: var(--surface-default); font-weight: var(--font-weight-bold); text-anchor: middle; }
+  .dq-gap { fill: none; stroke: var(--border-strong); stroke-width: .75; stroke-dasharray: 2 2; }
+  .dq-pill-bad { fill: var(--error); }
+  .dq-cursor { stroke: var(--ds-chart-cursor-line-color); stroke-width: 1; }
+  .dq-band { fill: var(--ds-chart-hover-bg-color); }
+  .dq-pin-dot { fill: var(--chart-categorical-3); stroke: var(--surface-default); stroke-width: 2; }
+  .dq-rise { stroke: var(--success); stroke-width: 3; stroke-linecap: round; }
+  .dq-reach { fill: none; stroke: var(--border-strong); stroke-width: .75; stroke-dasharray: 2 2; }
+  .dq-reach.is-hit { fill: var(--primary-subtitle); stroke: var(--primary); }
+  .dq-arrow { fill: var(--text-primary); stroke: var(--surface-default); stroke-width: .75; }
+  .dq-ghosts circle { fill: none; stroke: var(--text-tertiary); stroke-width: .75; stroke-dasharray: 1.5 1.5; }
+  .dq-hot { outline: 2px solid var(--text-primary); outline-offset: -1px; }
+  .dq-tick { position: absolute; inset-block-end: calc(100% + 2px); translate: -50% 0; border: 4px solid transparent; border-block-end-width: 0; border-block-start-color: var(--text-primary); }
+  .dq-pin, .dq-sweep { cursor: crosshair; touch-action: none; }
+  .dq-pin .dq-hit { fill: transparent; }
+  .dq-sweep { max-inline-size: 360px; }
+  .dq-sweep-run { align-self: flex-start; }
+  .dq-lag { margin: 0; font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
+  .dq-lag b { color: var(--text-primary); }
+  [data-q="ag-glide-head-start"] .stage .spec { flex: 1 1 300px; min-inline-size: 0; }
+  .dq-rows { display: grid; gap: var(--space-2); margin-block-start: var(--space-4); }
+  .dq-row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-2); align-items: stretch; }
+  .dq-item { display: grid; gap: var(--space-1); align-content: center; padding: var(--space-2) var(--space-3); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--ds-radius-panel); background: var(--surface-default); font: var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--text-secondary); }
+  .dq-item b { font-size: var(--font-size-xs); color: var(--text-primary); }
+  .dq-row .opt { gap: var(--space-1); padding: var(--space-2) var(--space-3); }
+  .dq-row .opt > h3 { font-size: var(--font-size-xs); }
+  .dq-row .opt .chip { align-self: flex-start; }
+  @media (max-width: 720px) { .dq-row { grid-template-columns: 1fr 1fr; } .dq-item { grid-column: 1 / -1; } }
 </style>
 
 <main>
   <div class="masthead">
-    <h1>6 асков консьюмеров и 36 решений, у каждого варианты нарисованы</h1>
+    <h1>6 асков консьюмеров и 47 решений, у каждого варианты нарисованы</h1>
     <p class="lede">
       Сверху - чего ждут консьюмеры, ниже - открытые решения по темам. Вариант выбирается кликом,
       звёздочка - рекомендация, внизу собирается одна строка со всеми ответами. Справа от вопроса -
@@ -2604,6 +2633,345 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
   </section>
 
+  <section class="q" data-q="ag-hover-switch-names">
+    <div class="q-head">
+      <span class="q-num">43</span>
+      <h2 class="q-title">Выключатели наведения у графиков названы четырьмя разными способами</h2>
+      <span class="q-src">chart.component.ts:220 · pie-chart.component.ts:133 · heatmap-chart.component.ts:114 · scatter-chart.component.ts:161 · 937e15e03 · fe6d6591a</span>
+    </div>
+    <ul class="q-sub">
+      <li>Сегодня в dev четыре новых входа, все <b>включены по умолчанию</b>: <code>axisReadout</code>, <code>centerFollowsHover</code>, <code>showScaleMarker</code>, <code>nearestPoint</code> с <code>nearestRadius</code>.</li>
+      <li>У остальных входов графиков шаблон один: <b>show…</b> (<code>showValues</code>, <code>showMarkers</code>, <code>showChange</code>).</li>
+      <li>Входы ещё в Unreleased: <b>переименование сейчас ничего не ломает</b>. Ниже одна задача экрана: выключить отклик на четырёх графиках.</li>
+    </ul>
+    <div class="opts">
+      <div class="opt is-today"><h3>Как сейчас: четыре разных имени</h3><span class="badge is-same">сейчас в dev</span>
+        <p class="css">&lt;ds-line-chart <b>[axisReadout]</b>="false" /&gt;
+&lt;ds-pie-chart <b>[centerFollowsHover]</b>="false" /&gt;
+&lt;ds-heatmap-chart <b>[showScaleMarker]</b>="false" /&gt;
+&lt;ds-scatter-chart <b>[nearestPoint]</b>="false"
+  <b>[nearestRadius]</b>="24" /&gt;</p>
+        <dl class="layer"><dt>Поиск «show» в подсказке</dt><dd>находит 1 из 4</dd><dt>Правок</dt><dd class="gain">0</dd></dl>
+        <p class="ag-cost">Каждое имя описывает своё. <b>Цена:</b> четыре имени для одного рода входа.</p></div>
+      <div class="opt"><h3>Один шаблон show…, как у соседей <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <p class="css">&lt;ds-line-chart <b>[showAxisReadout]</b>="false" /&gt;
+&lt;ds-pie-chart <b>[showHoverCenter]</b>="false" /&gt;
+&lt;ds-heatmap-chart <b>[showScaleMarker]</b>="false" /&gt;
+&lt;ds-scatter-chart <b>[showNearestPoint]</b>="false"
+  <b>[nearestRadius]</b>="24" /&gt;</p>
+        <dl class="layer"><dt>Поиск «show» в подсказке</dt><dd class="gain">находит 4 из 4, рядом с showValues</dd><dt>Правок</dt><dd>три переименования до релиза</dd></dl>
+        <p class="ag-cost">Тот же шаблон, что у <code>showValues</code>. <b>Цена:</b> имена длиннее.</p></div>
+      <div class="opt"><h3>Один шаблон hover…</h3>
+        <p class="css">&lt;ds-line-chart <b>[hoverReadout]</b>="false" /&gt;
+&lt;ds-pie-chart <b>[hoverCenter]</b>="false" /&gt;
+&lt;ds-heatmap-chart <b>[hoverScaleMarker]</b>="false" /&gt;
+&lt;ds-scatter-chart <b>[hoverNearest]</b>="false"
+  <b>[hoverRadius]</b>="24" /&gt;</p>
+        <dl class="layer"><dt>Поиск «show» в подсказке</dt><dd class="none">0 из 4, своё семейство «hover»</dd><dt>Правок</dt><dd>пять переименований до релиза</dd></dl>
+        <p class="ag-cost">Сразу видно, что вход про наведение. <b>Цена:</b> второй шаблон рядом с show….</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-readout-location">
+    <div class="q-head">
+      <span class="q-num">44</span>
+      <h2 class="q-title">Формат числа в пилюле на оси пришёл новым местом 'readout', и часть форматтеров консьюмеров ломается</h2>
+      <span class="q-src">chart.types.ts:12 · chart.component.ts:1203 · charts-format.ts:42 · 46fe38cd4</span>
+    </div>
+    <ul class="q-sub">
+      <li>Пилюля печатает число через <b><code>valueFormat(value, 'readout')</code></b>; встроенный формат пишет его полностью, как <code>'tooltip'</code>.</li>
+      <li>Форматтер со своим типом <b><code>'tick' | 'tooltip'</code> перестаёт компилироваться</b>.</li>
+      <li>Форматтер, который ждёт <b><code>=== 'tooltip'</code></b> для полного числа, <b>молча печатает в пилюле короткое</b>.</li>
+    </ul>
+    <div class="opts">
+      <div class="opt is-today"><h3>Новое место 'readout' в valueFormat <span class="star">★</span></h3><span class="badge is-same">сейчас в dev</span><span class="badge is-pick">рекомендую</span>
+        <p class="css">fmt = (v: number, at: ChartFormatLocation) =&gt;
+  at === 'tick' ? short(v) : full(v);
+
+&lt;ds-line-chart [valueFormat]="fmt" /&gt;</p>
+        <svg class="ag-svg" viewBox="0 0 160 44" aria-hidden="true"><line class="ag-base" x1="52" y1="4" x2="52" y2="40"/><line class="ag-guide" x1="52" y1="22" x2="150" y2="22"/><circle class="ag-c1" cx="150" cy="22" r="3"/><rect class="ag-pill" x="2" y="14" width="48" height="16" rx="3"/><text class="ag-pill-text" x="26" y="25" text-anchor="middle">1,234,567</text></svg>
+        <p class="cap">чужой форматтер, ждёт 'tooltip':</p>
+        <svg class="ag-svg" viewBox="0 0 160 44" aria-hidden="true"><line class="ag-base" x1="52" y1="4" x2="52" y2="40"/><line class="ag-guide" x1="52" y1="22" x2="150" y2="22"/><circle class="ag-c1" cx="150" cy="22" r="3"/><rect class="ag-pill dq-pill-bad" x="22" y="14" width="28" height="16" rx="3"/><text class="ag-pill-text" x="36" y="25" text-anchor="middle">1.2M</text></svg>
+        <p class="console">TS2322: '(v, at: "tick" | "tooltip") =&gt; string' is not assignable to type 'ChartValueFormat'</p>
+        <p class="ag-cost">Один форматтер на все места. <b>Цена:</b> два вида чужих форматтеров надо поправить.</p></div>
+      <div class="opt"><h3>Отдельный вход axisReadoutFormat</h3>
+        <p class="css">fmt = (v: number, at: 'tick' | 'tooltip') =&gt;
+  at === 'tick' ? short(v) : full(v);
+
+&lt;ds-line-chart [valueFormat]="fmt"
+  <b>[axisReadoutFormat]</b>="pillFmt" /&gt;</p>
+        <svg class="ag-svg" viewBox="0 0 160 44" aria-hidden="true"><line class="ag-base" x1="52" y1="4" x2="52" y2="40"/><line class="ag-guide" x1="52" y1="22" x2="150" y2="22"/><circle class="ag-c1" cx="150" cy="22" r="3"/><rect class="ag-pill" x="2" y="14" width="48" height="16" rx="3"/><text class="ag-pill-text" x="26" y="25" text-anchor="middle">1,234,567</text></svg>
+        <p class="cap">без pillFmt: valueFormat(v, 'tooltip')</p>
+        <p class="console quiet">старые форматтеры компилируются и печатают как раньше</p>
+        <p class="ag-cost">Ничего у консьюмера не ломается. <b>Цена:</b> второй вход формата у четырёх графиков.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-pin-line-move">
+    <div class="q-head">
+      <span class="q-num">45</span>
+      <h2 class="q-title">Закреплённая линия курсора гаснет и появляется заново, а не переезжает к новой категории</h2>
+      <span class="q-src">chart.component.html:99 · chart.component.scss:93 · c449bdcb0</span>
+    </div>
+    <ul class="q-sub">
+      <li>Клик закрепляет категорию на линейном графике: встаёт <b>пин и вертикальная линия</b>.</li>
+      <li>Клик по другой категории: сегодня старая линия <b>гаснет, новая проявляется</b> на месте, как сам пин.</li>
+      <li>Кликай по графику: сначала одну категорию, потом другую.</li>
+    </ul>
+    <div class="stage">
+      <button type="button" class="pf-replay dq-pin-run">Переколоть: 2-я, потом 5-я</button>
+      <label class="pf-slow"><input type="checkbox"> Замедлить ×5</label>
+    </div>
+    <div class="opts">
+      <div class="opt is-today"><h3>Гаснет и появляется <span class="star">★</span></h3><span class="badge is-same">сейчас в dev</span><span class="badge is-pick">рекомендую</span>
+        <svg class="ag-svg dq-pin" data-dq-pin="fade" data-no-pick viewBox="0 0 220 100" aria-hidden="true"></svg>
+        <p class="ag-cost">Линия ведёт себя как пин: оба привязаны к категории. <b>Цена:</b> между кликами линии на миг две.</p></div>
+      <div class="opt"><h3>Переезжает</h3>
+        <svg class="ag-svg dq-pin" data-dq-pin="glide" data-no-pick viewBox="0 0 220 100" aria-hidden="true"></svg>
+        <p class="ag-cost">Видно, откуда куда. <b>Цена:</b> линия едет через чужие категории, пин при этом гаснет и появляется.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-pin-line-detect">
+    <div class="q-head">
+      <span class="q-num">46</span>
+      <h2 class="q-title">Линия у закреплённой категории пропадает, если серия линии лежит в своём компоненте консьюмера</h2>
+      <span class="q-src">chart.component.ts:874 · chart.component.ts:878 · c449bdcb0</span>
+    </div>
+    <ul class="q-sub">
+      <li><code>ds-chart</code> ищет линии через <b><code>contentChildren(LineSeriesComponent, &#123; descendants: true &#125;)</code></b>.</li>
+      <li><code>dsLineSeries</code> внутри обёртки консьюмера <b>этим поиском не видна</b>: линия на графике есть, а закреплённой линии курсора нет.</li>
+      <li>Каждая серия уже сообщает графику свой диапазон через общий канал; через него же можно сообщить «я линия».</li>
+    </ul>
+    <div class="opts">
+      <div class="opt is-today"><h3>Как сейчас: только прямые серии</h3><span class="badge is-same">сейчас в dev</span>
+        <p class="css">&lt;ds-chart&gt;
+  &lt;app-revenue-line /&gt;
+&lt;/ds-chart&gt;
+&lt;!-- dsLineSeries внутри app-revenue-line --&gt;</p>
+        <svg class="ag-svg" viewBox="0 0 160 76" aria-hidden="true"><line class="ag-base" x1="4" y1="66" x2="156" y2="66"/><polyline class="ag-line" points="16,52 46,38 76,44 106,22 136,30"/><circle class="dq-pin-dot" cx="106" cy="22" r="4"/><text x="106" y="76" text-anchor="middle">закреплено</text></svg>
+        <p class="ag-cost">Пин есть, линии нет. <b>Цена:</b> консьюмер не узнает почему.</p></div>
+      <div class="opt"><h3>Вход, который включает линию</h3>
+        <p class="css">&lt;ds-chart <b>pinnedLine</b>&gt;
+  &lt;app-revenue-line /&gt;
+&lt;/ds-chart&gt;</p>
+        <svg class="ag-svg" viewBox="0 0 160 76" aria-hidden="true"><line class="ag-base" x1="4" y1="66" x2="156" y2="66"/><line class="dq-cursor" x1="106" y1="6" x2="106" y2="66"/><polyline class="ag-line" points="16,52 46,38 76,44 106,22 136,30"/><circle class="dq-pin-dot" cx="106" cy="22" r="4"/><text x="106" y="76" text-anchor="middle">закреплено</text></svg>
+        <p class="ag-cost">Работает с любой обёрткой. <b>Цена:</b> новый вход, консьюмер должен о нём знать.</p></div>
+      <div class="opt"><h3>Серия сама сообщает, что она линия <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <p class="css">&lt;ds-chart&gt;
+  &lt;app-revenue-line /&gt;
+&lt;/ds-chart&gt;</p>
+        <svg class="ag-svg" viewBox="0 0 160 76" aria-hidden="true"><line class="ag-base" x1="4" y1="66" x2="156" y2="66"/><line class="dq-cursor" x1="106" y1="6" x2="106" y2="66"/><polyline class="ag-line" points="16,52 46,38 76,44 106,22 136,30"/><circle class="dq-pin-dot" cx="106" cy="22" r="4"/><text x="106" y="76" text-anchor="middle">закреплено</text></svg>
+        <p class="ag-cost">Линия есть без правок у консьюмера. <b>Цена:</b> ещё одно поле в канале серии.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-scale-marker-off">
+    <div class="q-head">
+      <span class="q-num">47</span>
+      <h2 class="q-title">Выключенная метка на шкале heatmap убирает и число, и указатель</h2>
+      <span class="q-src">heatmap-chart.component.ts:170 · heatmap-chart.component.html:219 · 937e15e03</span>
+    </div>
+    <ul class="q-sub">
+      <li><code>[showScaleMarker]="false"</code> убирает <b>метку целиком</b>: число и треугольник над шкалой.</li>
+      <li>Просвет 24px над шкалой <b>остаётся</b> и с выключенной меткой (вопрос 35).</li>
+      <li>Ниже курсор на ячейке со значением 618, метка выключена.</li>
+    </ul>
+    <div class="opts">
+      <div class="opt is-today"><h3>Убрать всю метку <span class="star">★</span></h3><span class="badge is-same">сейчас в dev</span><span class="badge is-pick">рекомендую</span>
+        <div class="ag-heat">
+          <div class="ag-cells"><i style="background:var(--chart-sequential-5)"></i><i style="background:var(--chart-sequential-3)"></i><i class="dq-hot" style="background:var(--chart-sequential-2)"></i><i style="background:var(--chart-sequential-4)"></i><i style="background:var(--chart-sequential-1)"></i><i style="background:var(--chart-sequential-6)"></i></div>
+          <div class="ag-heat-scale"><div class="ag-ramp"></div></div>
+        </div>
+        <p class="ag-cost">Выключено значит тихо. <b>Цена:</b> по шкале не видно, где ячейка.</p></div>
+      <div class="opt"><h3>Убрать только число</h3>
+        <div class="ag-heat">
+          <div class="ag-cells"><i style="background:var(--chart-sequential-5)"></i><i style="background:var(--chart-sequential-3)"></i><i class="dq-hot" style="background:var(--chart-sequential-2)"></i><i style="background:var(--chart-sequential-4)"></i><i style="background:var(--chart-sequential-1)"></i><i style="background:var(--chart-sequential-6)"></i></div>
+          <div class="ag-heat-scale"><div class="ag-ramp"><span class="dq-tick" style="inset-inline-start:77%"></span></div></div>
+        </div>
+        <p class="ag-cost">Место ячейки на шкале видно. <b>Цена:</b> чтобы убрать всё, нужен второй вход.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-nearest-radius-off">
+    <div class="q-head">
+      <span class="q-num">48</span>
+      <h2 class="q-title">Радиус nearestRadius ничего не делает, когда ближайшая точка выключена</h2>
+      <span class="q-src">scatter-chart.component.ts:578 · scatter-chart.component.ts:165 · 5311a5fb2</span>
+    </div>
+    <ul class="q-sub">
+      <li>С <code>[nearestPoint]="false"</code> точка отвечает <b>только в 16px от центра</b>, и <code>nearestRadius</code> это не меняет.</li>
+      <li>Значение не проверяется: <b><code>'abc'</code> - не отвечает ни одна точка</b>, <b><code>-20</code> работает как 20</b>.</li>
+      <li>Ниже курсор в 18px от точки, задано <code>[nearestRadius]="40"</code>.</li>
+    </ul>
+    <div class="opts">
+      <div class="opt is-today"><h3>Радиус только для ближайшей точки</h3><span class="badge is-same">сейчас в dev</span>
+        <svg class="ag-svg" viewBox="0 0 160 84" aria-hidden="true"><line class="ag-base" x1="4" y1="76" x2="156" y2="76"/>
+          <circle class="dq-reach" cx="30" cy="58" r="10"/><circle class="dq-reach" cx="70" cy="30" r="10"/><circle class="dq-reach" cx="115" cy="52" r="10"/><circle class="dq-reach" cx="140" cy="22" r="10"/>
+          <circle class="ag-c1" cx="30" cy="58" r="3"/><circle class="ag-c1" cx="70" cy="30" r="3"/><circle class="ag-c1" cx="115" cy="52" r="3"/><circle class="ag-c1" cx="140" cy="22" r="3"/>
+          <path class="dq-arrow" d="M85 40 l0 11 l3 -3 l2.5 5 l2 -1 l-2.5 -5 l4 0 z"/><text x="6" y="10">радиус 16px</text></svg>
+        <p class="ag-cost">Курсор мимо: никто не отвечает. <b>Цена:</b> заданные 40 молча не работают.</p></div>
+      <div class="opt"><h3>Радиус расширяет и обычное попадание <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <svg class="ag-svg" viewBox="0 0 160 84" aria-hidden="true"><line class="ag-base" x1="4" y1="76" x2="156" y2="76"/>
+          <circle class="dq-reach" cx="30" cy="58" r="25"/><circle class="dq-reach is-hit" cx="70" cy="30" r="25"/><circle class="dq-reach" cx="115" cy="52" r="25"/><circle class="dq-reach" cx="140" cy="22" r="25"/>
+          <circle class="ag-c1" cx="30" cy="58" r="3"/><circle class="ag-c1" cx="70" cy="30" r="5"/><circle class="ag-c1" cx="115" cy="52" r="3"/><circle class="ag-c1" cx="140" cy="22" r="3"/>
+          <path class="dq-arrow" d="M85 40 l0 11 l3 -3 l2.5 5 l2 -1 l-2.5 -5 l4 0 z"/><text x="6" y="10">радиус 40px</text></svg>
+        <p class="ag-cost">Точка отвечает, кольца и пунктира нет. <b>Цена:</b> вход значит «досягаемость» в обоих режимах.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-change-from-zero">
+    <div class="q-head">
+      <span class="q-num">49</span>
+      <h2 class="q-title">Отрезок от нуля пропадает из подсветки изменения на линии</h2>
+      <span class="q-src">line-series.component.ts:985 · 7682d9d98</span>
+    </div>
+    <ul class="q-sub">
+      <li><code>showChange</code> красит два отрезка вокруг наведённой точки и подписывает процент.</li>
+      <li>Отрезок, который <b>начинается с 0</b>, пропускается <b>целиком</b>, и линия, и подпись: процент от нуля не определён.</li>
+      <li>Ниже наведено на 40, прошлая точка 0.</li>
+    </ul>
+    <div class="opts">
+      <div class="opt is-today"><h3>Пропустить отрезок</h3><span class="badge is-same">сейчас в dev</span>
+        <svg class="ag-svg" viewBox="0 0 160 90" aria-hidden="true"><line class="ag-base" x1="4" y1="80" x2="156" y2="80"/><polyline class="ag-line" points="20,80 80,40 140,25"/><line class="dq-rise" x1="80" y1="40" x2="140" y2="25"/><circle class="ag-c1" cx="80" cy="40" r="4"/><text class="ag-rise-text" x="110" y="24" text-anchor="middle">+37.5%</text><text x="20" y="88" text-anchor="middle">0</text><text x="80" y="88" text-anchor="middle">40</text><text x="140" y="88" text-anchor="middle">55</text></svg>
+        <p class="ag-cost">Цвет только там, где есть число. <b>Цена:</b> рост с нуля выглядит как отсутствие изменения.</p></div>
+      <div class="opt"><h3>Отрезок без подписи <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <svg class="ag-svg" viewBox="0 0 160 90" aria-hidden="true"><line class="ag-base" x1="4" y1="80" x2="156" y2="80"/><polyline class="ag-line" points="20,80 80,40 140,25"/><line class="dq-rise" x1="20" y1="80" x2="80" y2="40"/><line class="dq-rise" x1="80" y1="40" x2="140" y2="25"/><circle class="ag-c1" cx="80" cy="40" r="4"/><text class="ag-rise-text" x="110" y="24" text-anchor="middle">+37.5%</text><text x="20" y="88" text-anchor="middle">0</text><text x="80" y="88" text-anchor="middle">40</text><text x="140" y="88" text-anchor="middle">55</text></svg>
+        <p class="ag-cost">Направление видно с обеих сторон. <b>Цена:</b> один цветной отрезок без числа.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-hold-stack">
+    <div class="q-head">
+      <span class="q-num">50</span>
+      <h2 class="q-title">С закреплённой осью скрытая серия уходит, а стопка над ней всё равно оседает</h2>
+      <span class="q-src">column-chart.component.ts:302 · column-chart.component.ts:313 · 221cc70ed</span>
+    </div>
+    <ul class="q-sub">
+      <li><code>rescaleOnHide="false"</code> на <code>ds-column-chart</code>: <b>ось стоит</b>, скрытая серия опускается в ноль.</li>
+      <li>Остальные серии стопки <b>садятся друг на друга</b>: верхняя встаёт на место скрытой.</li>
+      <li>Ниже скрыта средняя серия B.</li>
+    </ul>
+    <div class="opts">
+      <div class="opt is-today"><h3>Стопка пересобирается <span class="star">★</span></h3><span class="badge is-same">сейчас в dev</span><span class="badge is-pick">рекомендую</span>
+        <svg class="ag-svg" viewBox="0 0 200 92" aria-hidden="true">
+          <line class="ag-grid" x1="4" y1="12" x2="196" y2="12"/><line class="ag-base" x1="4" y1="72" x2="196" y2="72"/>
+          <g><rect class="ag-c1" x="10" y="54" width="14" height="18"/><rect class="ag-c2" x="10" y="31.5" width="14" height="22.5"/><rect class="dq-c3" x="10" y="18" width="14" height="13.5"/><text class="dq-seg" x="17" y="65">A</text><text class="dq-seg" x="17" y="45">B</text><text class="dq-seg" x="17" y="27">C</text>
+          <rect class="ag-c1" x="30" y="45" width="14" height="27"/><rect class="ag-c2" x="30" y="31.5" width="14" height="13.5"/><rect class="dq-c3" x="30" y="13.5" width="14" height="18"/>
+          <rect class="ag-c1" x="50" y="49.5" width="14" height="22.5"/><rect class="ag-c2" x="50" y="22.5" width="14" height="27"/><rect class="dq-c3" x="50" y="13.5" width="14" height="9"/></g>
+          <text x="100" y="44" text-anchor="middle">скрыл B →</text>
+          <g><rect class="ag-c1" x="130" y="54" width="14" height="18"/><rect class="dq-c3" x="130" y="40.5" width="14" height="13.5"/>
+          <rect class="ag-c1" x="150" y="45" width="14" height="27"/><rect class="dq-c3" x="150" y="27" width="14" height="18"/>
+          <rect class="ag-c1" x="170" y="49.5" width="14" height="22.5"/><rect class="dq-c3" x="170" y="40.5" width="14" height="9"/></g>
+          <text x="37" y="84" text-anchor="middle">до</text><text x="157" y="84" text-anchor="middle">после</text></svg>
+        <p class="ag-cost">C встаёт на A, стопка без дыр. <b>Цена:</b> верх C сравнивать с «до» нельзя.</p></div>
+      <div class="opt"><h3>Стопка замирает</h3>
+        <svg class="ag-svg" viewBox="0 0 200 92" aria-hidden="true">
+          <line class="ag-grid" x1="4" y1="12" x2="196" y2="12"/><line class="ag-base" x1="4" y1="72" x2="196" y2="72"/>
+          <g><rect class="ag-c1" x="10" y="54" width="14" height="18"/><rect class="ag-c2" x="10" y="31.5" width="14" height="22.5"/><rect class="dq-c3" x="10" y="18" width="14" height="13.5"/><text class="dq-seg" x="17" y="65">A</text><text class="dq-seg" x="17" y="45">B</text><text class="dq-seg" x="17" y="27">C</text>
+          <rect class="ag-c1" x="30" y="45" width="14" height="27"/><rect class="ag-c2" x="30" y="31.5" width="14" height="13.5"/><rect class="dq-c3" x="30" y="13.5" width="14" height="18"/>
+          <rect class="ag-c1" x="50" y="49.5" width="14" height="22.5"/><rect class="ag-c2" x="50" y="22.5" width="14" height="27"/><rect class="dq-c3" x="50" y="13.5" width="14" height="9"/></g>
+          <text x="100" y="44" text-anchor="middle">скрыл B →</text>
+          <g><rect class="ag-c1" x="130" y="54" width="14" height="18"/><rect class="dq-gap" x="130" y="31.5" width="14" height="22.5"/><rect class="dq-c3" x="130" y="18" width="14" height="13.5"/>
+          <rect class="ag-c1" x="150" y="45" width="14" height="27"/><rect class="dq-gap" x="150" y="31.5" width="14" height="13.5"/><rect class="dq-c3" x="150" y="13.5" width="14" height="18"/>
+          <rect class="ag-c1" x="170" y="49.5" width="14" height="22.5"/><rect class="dq-gap" x="170" y="22.5" width="14" height="27"/><rect class="dq-c3" x="170" y="13.5" width="14" height="9"/></g>
+          <text x="37" y="84" text-anchor="middle">до</text><text x="157" y="84" text-anchor="middle">после</text></svg>
+        <p class="ag-cost">C стоит, где стоял, сравнение «до/после» прямое. <b>Цена:</b> C висит над пустотой.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-anchor-dots">
+    <div class="q-head">
+      <span class="q-num">51</span>
+      <h2 class="q-title">Линия без точек рисует невидимые точки, чтобы панель и пин вставали на значение</h2>
+      <span class="q-src">line-series.component.html:121 · line-series.component.scss:197 · dea4ffa40</span>
+    </div>
+    <ul class="q-sub">
+      <li>При <code>showMarkers</code> выключенном под курсором категории рисуется <b>по одному <code>&lt;circle&gt;</code> на значение</b> с <code>visibility: hidden</code>.</li>
+      <li>Панель и пин встают ровно на значение, как у линии с точками. <b>Читатель видит одно и то же</b> в обоих вариантах.</li>
+      <li><b>Цена:</b> столько лишних узлов DOM, сколько значений. Пунктир ниже - узлы, которых не видно.</li>
+    </ul>
+    <div class="opts">
+      <div class="opt is-today"><h3>Невидимые точки в DOM</h3><span class="badge is-same">сейчас в dev</span>
+        <svg class="ag-svg" viewBox="0 0 160 92" aria-hidden="true"><rect class="dq-band" x="70" y="6" width="16" height="58"/><line class="ag-base" x1="4" y1="64" x2="156" y2="64"/><polyline class="ag-line" points="10,50 22,44 34,47 46,36 58,40 70,30 82,26 94,34 106,22 118,28 130,18 142,24"/><rect class="ag-pill" x="88" y="4" width="34" height="14" rx="3"/><text class="ag-pill-text" x="105" y="13.5" text-anchor="middle">Jul 42</text><circle class="ag-c1" cx="82" cy="26" r="3.5"/>
+          <g class="dq-ghosts"><circle cx="10" cy="80" r="3"/><circle cx="22" cy="80" r="3"/><circle cx="34" cy="80" r="3"/><circle cx="46" cy="80" r="3"/><circle cx="58" cy="80" r="3"/><circle cx="70" cy="80" r="3"/><circle cx="82" cy="80" r="3"/><circle cx="94" cy="80" r="3"/><circle cx="106" cy="80" r="3"/><circle cx="118" cy="80" r="3"/><circle cx="130" cy="80" r="3"/><circle cx="142" cy="80" r="3"/></g></svg>
+        <dl class="layer"><dt>В DOM</dt><dd>12 значений: +12 circle</dd><dt>Код</dt><dd class="gain">тот же путь, что у видимых точек</dd></dl></div>
+      <div class="opt"><h3>Позиция из данных, без узлов</h3>
+        <svg class="ag-svg" viewBox="0 0 160 92" aria-hidden="true"><rect class="dq-band" x="70" y="6" width="16" height="58"/><line class="ag-base" x1="4" y1="64" x2="156" y2="64"/><polyline class="ag-line" points="10,50 22,44 34,47 46,36 58,40 70,30 82,26 94,34 106,22 118,28 130,18 142,24"/><rect class="ag-pill" x="88" y="4" width="34" height="14" rx="3"/><text class="ag-pill-text" x="105" y="13.5" text-anchor="middle">Jul 42</text><circle class="ag-c1" cx="82" cy="26" r="3.5"/>
+          <text x="80" y="83" text-anchor="middle">в DOM: 0 лишних узлов</text></svg>
+        <dl class="layer"><dt>В DOM</dt><dd class="gain">+0</dd><dt>Код</dt><dd>второй путь привязки панели и пина</dd></dl></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-glide-head-start">
+    <div class="q-head">
+      <span class="q-num">52</span>
+      <h2 class="q-title">При быстром проходе курсора панель и точка отставали; теперь переезд стартует с 33ms</h2>
+      <span class="q-src">charts-motion.ts:42 · charts-motion.ts:103 · chart-tooltip.directive.ts:196 · 65d87734e</span>
+    </div>
+    <ul class="q-sub">
+      <li>Панель, бегущая точка, кольцо scatter и доли pie переезжают за 300ms. Перенацеленный переезд теперь <b>начинается с 33ms, на два кадра вперёд</b>.</li>
+      <li>Замер на ds-docs, линия «Long series»: до правки после быстрого прохода <b>точка стояла</b> (x 461 при курсоре на 861); с правкой панель и точка <b>в пределах ~70px</b> от курсора. Один кадр в том же замере: <b>150-190px</b>.</li>
+      <li>Нажми «Быстрый проход» или веди мышь по полосам. Под каждой - отставание в конце прохода.</li>
+    </ul>
+    <div class="stage">
+      <button type="button" class="pf-replay dq-sweep-run">Быстрый проход</button>
+      <div class="spec"><p class="cap">до правки: с нуля</p><svg class="ag-svg dq-sweep" data-dq-head="0" data-no-pick viewBox="0 0 300 64" aria-hidden="true"></svg><p class="dq-lag">отставание: <b>-</b></p></div>
+    </div>
+    <div class="opts">
+      <div class="opt is-today"><h3>Старт с двух кадров <span class="star">★</span></h3><span class="badge is-same">сейчас в dev</span><span class="badge is-pick">рекомендую</span>
+        <svg class="ag-svg dq-sweep" data-dq-head="33.3" data-no-pick viewBox="0 0 300 64" aria-hidden="true"></svg><p class="dq-lag">отставание: <b>-</b></p>
+        <p class="ag-cost">Догоняет, переезд остаётся плавным. <b>Цена:</b> короткий переезд на 33ms короче.</p></div>
+      <div class="opt"><h3>Старт с одного кадра</h3>
+        <svg class="ag-svg dq-sweep" data-dq-head="16.7" data-no-pick viewBox="0 0 300 64" aria-hidden="true"></svg><p class="dq-lag">отставание: <b>-</b></p>
+        <p class="ag-cost">Мягче на медленном курсоре. <b>Цена:</b> отстаёт в 2-3 раза дальше.</p></div>
+      <div class="opt"><h3>Без переезда на быстром проходе</h3>
+        <svg class="ag-svg dq-sweep" data-dq-head="33.3" data-dq-follow data-no-pick viewBox="0 0 300 64" aria-hidden="true"></svg><p class="dq-lag">отставание: <b>-</b></p>
+        <p class="ag-cost">Не отстаёт совсем. <b>Цена:</b> на быстром проходе панель прыгает, переезд только на медленном.</p></div>
+    </div>
+  </section>
+
+  <p class="group">Очередь: «не сейчас» засчитано как решено</p>
+
+  <section class="q" data-q="parked-as-decided">
+    <div class="q-head">
+      <span class="q-num">53</span>
+      <h2 class="q-title">Пять ответов «не сейчас» агент сам перенёс в «Уже решено»: оставить там или вернуть в очередь</h2>
+      <span class="q-src">«Уже решено» в этой деке · docs/todo.md</span>
+    </div>
+    <ul class="q-sub">
+      <li>При переделке очереди агент засчитал пять ответов <b>«не сейчас» или «ждать до X»</b> как решённые и убрал их из открытых.</li>
+      <li>По каждой строке выбрать: <b>оставить решённым</b> или <b>вернуть в очередь</b>.</li>
+    </ul>
+    <div class="dq-rows" data-multi>
+      <div class="dq-row" data-row>
+        <div class="dq-item"><b>Холст с графом узлов для пути кампании</b><span>«ждать второго консьюмера», 2026-09-22 · todo.md:1391</span></div>
+        <div class="opt"><h3>Холст: решено</h3><span class="chip">Уже решено</span></div>
+        <div class="opt"><h3>Холст: в очередь</h3><span class="chip is-open">Нужно решение</span></div>
+      </div>
+      <div class="dq-row" data-row>
+        <div class="dq-item"><b>Цвета серий различаются тоном, почти не светлотой</b><span>«только записать, не чинить», 2026-09-21 · todo.md:1810</span></div>
+        <div class="opt"><h3>Палитра: решено</h3><span class="chip">Уже решено</span></div>
+        <div class="opt"><h3>Палитра: в очередь</h3><span class="chip is-open">Нужно решение</span></div>
+      </div>
+      <div class="dq-row" data-row>
+        <div class="dq-item"><b>Классы .t-* и токены --ds-typography-* названы по-разному</b><span>«сначала токены, классы записать», 2026-09-22 · todo.md:1206</span></div>
+        <div class="opt"><h3>.t-*: решено</h3><span class="chip">Уже решено</span></div>
+        <div class="opt"><h3>.t-*: в очередь</h3><span class="chip is-open">Нужно решение</span></div>
+      </div>
+      <div class="dq-row" data-row>
+        <div class="dq-item"><b>Строки CHANGELOG на 100 символов</b><span>«запиши пока в туду, щас не будем», 2026-08-31 · todo.md:1556</span></div>
+        <div class="opt"><h3>CHANGELOG: решено</h3><span class="chip">Уже решено</span></div>
+        <div class="opt"><h3>CHANGELOG: в очередь</h3><span class="chip is-open">Нужно решение</span></div>
+      </div>
+      <div class="dq-row" data-row>
+        <div class="dq-item"><b>ds-select с выбором нескольких значений</b><span>«не строить, есть ds-multi-select», 2026-08-06 · todo.md:1524; дека 6-select-native-multi открыта</span></div>
+        <div class="opt"><h3>ds-select multi: решено</h3><span class="chip">Уже решено</span></div>
+        <div class="opt"><h3>ds-select multi: в очередь</h3><span class="chip is-open">Нужно решение</span></div>
+      </div>
+    </div>
+  </section>
+
   <p class="group">Уже решено</p>
   <p class="done-lede">Здесь ничего не выбирается: что решено, что из этого уже в dev и где это видно.</p>
 
@@ -2677,23 +3045,23 @@ onRow(row: <b>RowChartEntry</b>)</p>
   </section>
   <section class="q is-settled" data-done="ask-journey-canvas">
     <div class="q-head"><h2 class="q-title">Холст с ветвящимся графом узлов для пути кампании</h2><span class="chip">отложено</span></div>
-    <p class="q-sub">Твоё решение 2026-09-22: ждать второго консьюмера, которому нужен такой холст. <code>docs/todo.md:1424</code>.</p>
+    <p class="q-sub">Твоё решение 2026-09-22: ждать второго консьюмера, которому нужен такой холст. <code>docs/todo.md:1391</code>.</p>
   </section>
   <section class="q is-settled" data-done="chart-palette-lightness">
     <div class="q-head"><h2 class="q-title">Цвета серий в графиках различаются тоном, почти не светлотой</h2><span class="chip">отложено</span></div>
-    <p class="q-sub">Твоё решение 2026-09-21: только записать, не чинить. <code>docs/todo.md:1813</code>.</p>
+    <p class="q-sub">Твоё решение 2026-09-21: только записать, не чинить. <code>docs/todo.md:1810</code>.</p>
   </section>
   <section class="q is-settled" data-done="typography-classes">
     <div class="q-head"><h2 class="q-title">Классы текста .t-* и токены --ds-typography-* названы по-разному</h2><span class="chip">отложено</span></div>
-    <p class="q-sub">Твоё решение 2026-09-22: сначала токены, классы оставить и записать. <code>docs/todo.md:1213</code>.</p>
+    <p class="q-sub">Твоё решение 2026-09-22: сначала токены, классы оставить и записать. <code>docs/todo.md:1206</code>.</p>
   </section>
   <section class="q is-settled" data-done="changelog-wrap">
     <div class="q-head"><h2 class="q-title">Перенести строки CHANGELOG на 100 символов</h2><span class="chip">отложено</span></div>
-    <p class="q-sub">Твои слова 2026-08-31: «запиши пока в туду, щас не будем». <code>docs/todo.md:1559</code>.</p>
+    <p class="q-sub">Твои слова 2026-08-31: «запиши пока в туду, щас не будем». <code>docs/todo.md:1556</code>.</p>
   </section>
   <section class="q is-settled" data-done="select-multi">
     <div class="q-head"><h2 class="q-title">Строить ли ds-select с выбором нескольких значений</h2><span class="chip">отложено</span></div>
-    <p class="q-sub">Решено 2026-08-06: не строить, для нескольких значений есть <code>ds-multi-select</code>; пункт держать в бэклоге вместе с декой. <code>docs/todo.md:1527</code>.</p>
+    <p class="q-sub">Решено 2026-08-06: не строить, для нескольких значений есть <code>ds-multi-select</code>; пункт держать в бэклоге вместе с декой. <code>docs/todo.md:1524</code>.</p>
   </section>
 
   <div class="bar-fixed">
@@ -2731,13 +3099,16 @@ onRow(row: <b>RowChartEntry</b>)</p>
   for (const section of sections) {
     section.addEventListener('click', (event) => {
       const card = event.target.closest('.opt');
-      if (!card || event.target.closest('input, label, button')) return;
+      if (!card || event.target.closest('input, label, button, [data-no-pick]')) return;
       const key = section.dataset.q;
       const picked = name(card);
       const chosen = state[key] ?? [];
-      // one question may take several answers - the manifest practices are marked `data-multi`
+      // one question may take several answers - the manifest practices are marked `data-multi`;
+      // a `data-row` inside it takes one answer per row
+      const row = card.closest('[data-row]');
+      const rowNames = row ? [...row.querySelectorAll('.opt')].map(name) : [picked];
       state[key] = card.closest('[data-multi]')
-        ? (chosen.includes(picked) ? chosen.filter((v) => v !== picked) : [...chosen, picked])
+        ? (chosen.includes(picked) ? chosen.filter((v) => v !== picked) : [...chosen.filter((v) => !rowNames.includes(v)), picked])
         : (chosen.includes(picked) ? [] : [picked]);
       if (!state[key].length) delete state[key];
       save(state);
@@ -2954,4 +3325,167 @@ onRow(row: <b>RowChartEntry</b>)</p>
     });
     reduce.addEventListener('change', showPause);
   }
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const svgEl = (tag, attrs) => {
+    const el = document.createElementNS(SVG_NS, tag);
+    for (const [key, value] of Object.entries(attrs)) el.setAttribute(key, value);
+    return el;
+  };
+
+  const PIN_X = [25, 59, 93, 127, 161, 195];
+  const PIN_Y = [70, 50, 58, 30, 40, 22];
+  const pinDemos = [...document.querySelectorAll('.dq-pin')].map((svg) => {
+    const section = svg.closest('.q');
+    svg.append(svgEl('line', { class: 'ag-base', x1: 8, y1: 86, x2: 212, y2: 86 }));
+    svg.append(svgEl('polyline', { class: 'ag-line', points: PIN_X.map((x, at) => `${x},${PIN_Y[at]}`).join(' ') }));
+    const lines = svgEl('g', {});
+    const dots = svgEl('g', {});
+    svg.append(lines, dots);
+    PIN_X.forEach((x, at) => {
+      const hit = svgEl('rect', { class: 'dq-hit', x: x - 17, y: 0, width: 34, height: 96 });
+      hit.addEventListener('click', () => demo.pinAt(at));
+      svg.append(hit);
+    });
+    const fadeTiming = () => ({ duration: motionMs('--ds-motion-chart-state-duration') * slowFactor(section), easing: motionEasing('--ds-motion-chart-state-easing'), fill: 'both' });
+    const fadeIn = (el) => el.animate([{ opacity: 0 }, { opacity: 1 }], fadeTiming());
+    const fadeOut = (el) => { el.animate([{ opacity: 1 }, { opacity: 0 }], fadeTiming()).finished.then(() => el.remove(), () => undefined); };
+    let current = -1;
+    let gliding = null;
+    const demo = {
+      clear() {
+        current = -1;
+        gliding = null;
+        lines.replaceChildren();
+        dots.replaceChildren();
+      },
+      pinAt(at) {
+        if (at === current) return;
+        const x = PIN_X[at];
+        for (const dot of dots.children) fadeOut(dot);
+        const dot = svgEl('circle', { class: 'dq-pin-dot', cx: x, cy: PIN_Y[at], r: 4 });
+        dots.append(dot);
+        fadeIn(dot);
+        if (svg.dataset.dqPin === 'glide' && gliding) {
+          const from = PIN_X[current];
+          gliding.style.transform = `translateX(${x}px)`;
+          gliding.animate([{ transform: `translateX(${from}px)` }, { transform: `translateX(${x}px)` }], {
+            duration: motionMs('--ds-motion-chart-tooltip-move-duration') * slowFactor(section),
+            easing: motionEasing('--ds-motion-chart-tooltip-move-easing'),
+          });
+        } else {
+          for (const line of lines.children) fadeOut(line);
+          const line = svgEl('line', { class: 'dq-cursor', x1: 0, y1: 6, x2: 0, y2: 86 });
+          line.style.transform = `translateX(${x}px)`;
+          lines.append(line);
+          fadeIn(line);
+          gliding = line;
+        }
+        current = at;
+      },
+    };
+    return demo;
+  });
+  for (const button of document.querySelectorAll('.dq-pin-run')) {
+    const section = button.closest('.q');
+    button.addEventListener('click', () => {
+      for (const demo of pinDemos) { demo.clear(); demo.pinAt(1); }
+      setTimeout(() => pinDemos.forEach((demo) => demo.pinAt(4)), 700 * slowFactor(section));
+    });
+  }
+  pinDemos.forEach((demo) => demo.pinAt(1));
+
+  const SWEEP_COUNT = 60;
+  const sweepX = (at) => 6 + at * 4.8;
+  const sweepY = (at) => 34 + 14 * Math.sin(at / 4) + 6 * Math.sin(at / 1.7);
+  const sweeps = [...document.querySelectorAll('.dq-sweep')].map((svg) => {
+    svg.append(svgEl('line', { class: 'ag-base', x1: 0, y1: 60, x2: 300, y2: 60 }));
+    const band = svgEl('rect', { class: 'dq-band', x: 0, y: 2, width: 4.8, height: 58 });
+    svg.append(band);
+    svg.append(svgEl('polyline', { class: 'ag-line', points: Array.from({ length: SWEEP_COUNT }, (_, at) => `${sweepX(at)},${sweepY(at)}`).join(' ') }));
+    const panel = svgEl('rect', { class: 'ag-pill', y: 2, width: 24, height: 10, rx: 2 });
+    const marker = svgEl('circle', { class: 'ag-c1', r: 3.5 });
+    svg.append(panel, marker);
+    const sweep = { svg, band, panel, marker, head: +svg.dataset.dqHead, follow: svg.hasAttribute('data-dq-follow'), lag: svg.parentElement.querySelector('.dq-lag b'), index: -1, pointerX: null, pos: null, from: null, to: null, clock: null, lastAim: -Infinity };
+    svg.addEventListener('pointermove', (event) => {
+      sweep.pointerX = new DOMPoint(event.clientX, event.clientY).matrixTransform(svg.getScreenCTM().inverse()).x;
+      runSweeps();
+    });
+    return sweep;
+  });
+  const drawSweep = (sweep) => {
+    sweep.band.setAttribute('x', sweepX(sweep.index) - 2.4);
+    sweep.marker.setAttribute('cx', sweep.pos.x);
+    sweep.marker.setAttribute('cy', sweep.pos.y);
+    sweep.panel.setAttribute('x', Math.min(274, sweep.pos.x + 6));
+  };
+  const aimSweep = (sweep, index, now) => {
+    sweep.index = index;
+    const to = { x: sweepX(index), y: sweepY(index) };
+    const inFlight = now - sweep.lastAim < motionMs('--ds-motion-chart-tooltip-move-duration');
+    sweep.lastAim = now;
+    sweep.clock?.cancel();
+    sweep.clock = null;
+    if (!sweep.pos || (sweep.follow && inFlight)) {
+      sweep.pos = to;
+      return;
+    }
+    sweep.from = { ...sweep.pos };
+    sweep.to = to;
+    // the library's own clock: a target-less effect started `head` milliseconds in
+    sweep.clock = new Animation(new KeyframeEffect(null, null, {
+      duration: motionMs('--ds-motion-chart-tooltip-move-duration'),
+      easing: motionEasing('--ds-motion-chart-tooltip-move-easing'),
+      delay: -sweep.head,
+      fill: 'forwards',
+    }));
+    sweep.clock.play();
+  };
+  let sweepFrame = 0;
+  let sweepRun = null;
+  const sweepTick = (now) => {
+    sweepFrame = 0;
+    let sweepEnded = false;
+    if (sweepRun) {
+      const progress = Math.min(1, (now - sweepRun) / 350);
+      for (const sweep of sweeps) sweep.pointerX = sweepX(0) + (sweepX(SWEEP_COUNT - 1) - sweepX(0)) * progress;
+      sweepEnded = progress === 1;
+    }
+    for (const sweep of sweeps) {
+      if (sweep.pointerX === null) continue;
+      const index = Math.max(0, Math.min(SWEEP_COUNT - 1, Math.round((sweep.pointerX - 6) / 4.8)));
+      if (index !== sweep.index) aimSweep(sweep, index, now);
+      if (sweep.clock) {
+        const progress = sweep.clock.playState === 'finished' ? 1 : (sweep.clock.effect.getComputedTiming().progress ?? 0);
+        sweep.pos = { x: sweep.from.x + (sweep.to.x - sweep.from.x) * progress, y: sweep.from.y + (sweep.to.y - sweep.from.y) * progress };
+        if (progress === 1) sweep.clock = null;
+      }
+      drawSweep(sweep);
+    }
+    if (sweepEnded) {
+      for (const sweep of sweeps) {
+        const scale = sweep.svg.getBoundingClientRect().width / 300;
+        sweep.lag.textContent = `${Math.round((sweepX(sweep.index) - sweep.pos.x) * scale)}px`;
+      }
+      sweepRun = null;
+    }
+    if (sweepRun || sweeps.some((sweep) => sweep.clock)) runSweeps();
+  };
+  function runSweeps() {
+    if (!sweepFrame) sweepFrame = requestAnimationFrame(sweepTick);
+  }
+  for (const button of document.querySelectorAll('.dq-sweep-run')) {
+    button.addEventListener('click', () => {
+      for (const sweep of sweeps) {
+        sweep.clock?.cancel();
+        Object.assign(sweep, { clock: null, pos: null, index: -1, lastAim: -Infinity, pointerX: sweepX(0) });
+        sweep.lag.textContent = '…';
+      }
+      sweepRun = performance.now();
+      runSweeps();
+    });
+  }
+  for (const sweep of sweeps) {
+    sweep.pointerX = sweepX(0);
+  }
+  runSweeps();
 </script>
