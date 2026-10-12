@@ -962,13 +962,9 @@ export class LineSeriesComponent implements OnDestroy {
     ];
   });
 
-  // A list keyed by mark index: another mark takes a new pin that pops in, the same mark glides with the data.
-  protected readonly pinnedMarkers = computed(() => {
-    const index = this.activeMark.index();
-    const marker = this.activeMark.pinned() ? this.allMarkers()[index] : null;
-
-    return marker ? [{ index, marker }] : [];
-  });
+  protected readonly pinnedMarkers = this.activeMark.pinnedAt(
+    (index) => this.allMarkers()[index],
+  );
 
   protected readonly pinLift =
     CHART_PIN_RADIUS + CHART_PIN_GAP + PIN_MARKER_CLEARANCE;
