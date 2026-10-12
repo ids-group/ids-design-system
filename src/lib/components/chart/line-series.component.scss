@@ -192,6 +192,13 @@
   fill-opacity: 0;
 }
 
+// Drawn under the category cursor only so the panel and the pin anchor to the reading as they do
+// over a visible marker.
+.series-marker.anchor-only {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .series-marker.ghost:hover,
 .series-marker.ghost:focus-visible,
 .series-marker.ghost.is-active {

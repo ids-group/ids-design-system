@@ -105,7 +105,8 @@
   @if (
       showMarkers() ||
       interactive() ||
-      pins()
+      pins() ||
+      scales.cursorOn?.()
     ) {
     @for (entry of plotted(); track entry.series.id) {
       @for (marker of entry.markers; track marker.key) {
@@ -117,6 +118,7 @@
           [class.is-collapsed]="marker.hidden"
           [class.is-out]="isOutsideRange(marker.categoryIndex)"
           [class.ghost]="!showMarkers()"
+          [class.anchor-only]="!showMarkers() && !interactive() && !pins()"
           [class.interactive]="interactive()"
           [class.pins]="pins()"
           [class.is-active]="isActiveMarker(marker)"
