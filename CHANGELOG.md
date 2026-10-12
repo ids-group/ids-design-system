@@ -107,8 +107,9 @@
   too, where they dimmed on the `mark` timing and came back at once.
 - **A pinned category keeps its line in a chart with lines.** In a `ds-chart` holding a
   `dsLineSeries` (`ds-line-chart`, a combo), the pinned category draws the cursor line in
-  `--ds-chart-cursor-line-color`, without the band fill, under the pin; the hover band and line
-  still follow the pointer. A column-only chart keeps the pin alone.
+  `--ds-chart-cursor-line-color`, without the band fill, under the pin, and glides to the next
+  pinned category on `--ds-motion-chart-tooltip-move-duration`; the hover band and line still
+  follow the pointer. A column-only chart keeps the pin alone.
 - **A highlighted line point rides the line.** Under the category cursor, each series' highlighted
   point travels along its own line to the next category, with the panel and the crosshair, instead
   of jumping there.

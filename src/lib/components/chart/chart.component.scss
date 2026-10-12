@@ -86,7 +86,8 @@
 @include chart-frame.forced-colors;
 
 // With the panel, not the marks: the band, its pin and the panel move across as one.
-.cursor.placed {
+.cursor.placed,
+.pinned-line.placed {
   transition: chart-motion.glides(transform);
 }
 
