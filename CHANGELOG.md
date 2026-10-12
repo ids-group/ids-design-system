@@ -8,19 +8,20 @@
   category, column or line point focused, Shift+Left and Shift+Right grow or shrink the range from
   its far end. Escape or a press outside the chart clears it; a press released in its own category
   still pins. The pill
-  reads the new required `DsIntl` key `chart.rangeTotal: (range, total, average) => string`
-  (default `` `${range}: ${total} · avg ${average}` ``); a complete `DsIntl` dictionary, or a
-  complete `chart` section of one, declared as a typed object stops compiling until it lists it.
-  Overrides passed to `provideDsIntl` are partial and need nothing. `ds-chart` exposes the range as
-  `selectedRange`, typed by the new `ChartCategoryRange`.
+  reads the new optional `DsIntl` key `chart.rangeTotal: (range, total, average) => string`; a
+  dictionary without it shows the English default `` `${range}: ${total} · avg ${average}` ``.
+  `ds-chart` exposes the range as `selectedRange`, typed by the new `ChartCategoryRange`.
 - **`ds-column-chart` takes `legendFilters`, `legendMode` and `hiddenSeries`,** as
-  `ds-line-chart` does: the legend hides a series, its columns sink to the baseline, the other
-  series settle onto each other and the value axis fits what is left.
+  `ds-line-chart` does: the legend hides a series, its columns sink to the baseline and the other
+  series settle onto each other. The value axis fits what is left; `[rescaleOnHide]="false"` holds
+  it where it stands with every series shown.
 - **`dsColumnSeries` takes `hidden` and `runningTotal`; `LineSeriesData` takes `hidden`.** A hidden
   column series sinks to the baseline and a hidden line erases itself back along its own path, and
-  draws on again when shown; both leave the value axis to the other marks. `runningTotal` reads the
-  columns as a waterfall's: hovering one stops the axis guide at it, and under `dimOthers` fades
-  every column after it.
+  draws on again when shown. `ds-chart` takes `rescaleOnHide` (default `true`): a hidden series
+  leaves the value axes to the other marks, and with `false` its values still hold them. A custom
+  mark passes the new optional `hidden` argument of `ChartScales.reportDomain` to take part.
+  `runningTotal` reads the columns as a waterfall's: hovering one stops the axis guide at it, and
+  under `dimOthers` fades every column after it.
 - **`showChange` on `dsLineSeries` and `ds-line-chart`, off by default.** On the hovered reading,
   the stretches from the reading before it and to the reading after it thicken, each in
   `--ds-chart-positive-color` or `--ds-chart-negative-color` by its own change, and each prints its
@@ -33,6 +34,10 @@
 
 ### Changed
 
+- **`ds-line-chart` re-scales the value axis when a series is hidden.** `rescaleOnHide` defaults to
+  `true`, as on `ds-column-chart` and `ds-chart`: the axis fits the series left showing. Set
+  `[rescaleOnHide]="false"` to hold it where it stands with every series shown; a bare
+  `rescaleOnHide` restates the default.
 - **The value axis answers the hovered reading.** In `ds-chart`, `ds-column-chart`,
   `ds-line-chart` and `ds-waterfall-chart` the hovered category's label turns bold, a dashed guide
   runs from the value axis at the reading, and a pill on the axis prints the axis value there; the
@@ -147,6 +152,12 @@
 - **A stacked column's panel hangs over the whole stack.** In `ds-column-chart` and `ds-chart`
   with stacked `dsColumnSeries`, hovering a segment opens its panel over the stack's top, so the
   segments above it stay in view and reachable.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| `rescaleOnHide` on `ds-line-chart` | `true` is the default | nothing |
 
 ## 0.15.0 — 2026-10-09
 

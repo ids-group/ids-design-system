@@ -27,23 +27,6 @@ export function alignSeriesValues(
   return aligned;
 }
 
-/** Largest finite reading across the given series, or zero. Never negative: `ds-chart` only raises
- *  its domain to this ceiling, so a negative would pin an axis below its own data. */
-export function domainMaxOf(
-  valueGroups: readonly (readonly (number | null)[])[],
-): number {
-  let max = 0;
-  for (const values of valueGroups) {
-    for (const value of values) {
-      if (value !== null && Number.isFinite(value) && value > max) {
-        max = value;
-      }
-    }
-  }
-
-  return max;
-}
-
 export function paletteIndexFor(
   slot: number | undefined,
   index: number,

@@ -13,6 +13,9 @@ export interface BandScale {
 }
 
 // @internal
+export const CHART_GLIDE_HEAD_START_MS = 1000 / 30;
+
+// @internal
 export const CHART_HEAT_COLORS: readonly string[];
 
 // @internal

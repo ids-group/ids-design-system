@@ -2,7 +2,9 @@ import type { DsIntl } from './ds-intl.types';
 
 /** English wording for every string the library invents. Used unless `provideDsIntl` overrides
  *  a section. */
-export const DS_INTL_DEFAULTS: DsIntl = {
+export const DS_INTL_DEFAULTS: DsIntl & {
+  readonly chart: Required<DsIntl['chart']>;
+} = {
   field: {
     optional: '(optional)',
     clearInput: 'Clear input',

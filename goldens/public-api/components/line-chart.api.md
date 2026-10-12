@@ -14,11 +14,9 @@ export class LineChartComponent extends DsChartBase implements ChartDimmable, Ch
     protected readonly accessibleName = computed(…);
     public readonly annotations = input<readonly LineChartAnnotation[]>([]);
     protected readonly axisFormat = computed<ChartValueFormat>(…);
-    protected readonly axisMax = computed(…);
-    protected readonly axisMaxSecondary = computed(…);
+    public readonly axisReadout = input(true, { transform: booleanAttribute });
     private readonly axisTint;
     public readonly categories = input<readonly string[]>([]);
-    private ceilingOf;
     public readonly curve = input<ChartCurve>('linear');
     protected readonly dashPatterns = computed<readonly string[]>(…);
     public readonly dataTable = input<ChartDataTable | null>(null);
@@ -52,13 +50,13 @@ export class LineChartComponent extends DsChartBase implements ChartDimmable, Ch
     protected readonly primaryAxisFill = computed(…);
     protected releaseCategoryPin(): void;
     protected readonly renderReady = chartRenderGate(…);
-    public readonly rescaleOnHide = input(false, { transform: booleanAttribute });
+    public readonly rescaleOnHide = input(true, { transform: booleanAttribute });
     protected readonly resolvedSeries = computed<readonly ResolvedSeries[]>(…);
     protected readonly secondaryAxisFill = computed(…);
     public readonly secondaryAxisLabel = input<string | null>(null);
     public readonly selectRange = input(false, { transform: booleanAttribute });
     public readonly series = input<readonly LineChartSeries[]>([]);
-    public readonly showChange = input(true, { transform: booleanAttribute });
+    public readonly showChange = input(false, { transform: booleanAttribute });
     protected readonly showLegend = computed(…);
     public readonly showMarkers = input(true, { transform: booleanAttribute });
     protected readonly skeletonAxisGutter = CHART_DEFAULT_AXIS_GUTTER;

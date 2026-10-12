@@ -49,7 +49,10 @@ import {
   isPrimaryPress,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type { ChartTooltipContext } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_INTL_DEFAULTS,
+  resolveWithConfig,
+} from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartAxis,
   ChartAxisMode,
@@ -167,6 +170,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     (config) => config.chart?.pinOnClick,
     true,
   );
+
+  /** Whether hiding a series re-scales the value axes to what is left. Off holds them where they
+   *  stand with every series shown. */
+  readonly rescaleOnHide = input(true, { transform: booleanAttribute });
 
   /** Pins the ceiling of the SECOND value axis, the way `max` pins the first. */
   readonly maxSecondary = input<number | null>(null, {
@@ -458,7 +465,11 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   private readonly reportedDomains = signal<
     ReadonlyMap<
       string,
-      { readonly axis: ChartAxis; readonly values: readonly number[] }
+      {
+        readonly axis: ChartAxis;
+        readonly values: readonly number[];
+        readonly hidden: boolean;
+      }
     >
   >(new Map());
 
@@ -466,16 +477,20 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     id: string,
     values: readonly number[],
     axis: ChartAxis = 'primary',
+    hidden = false,
   ): void {
     this.reportedDomains.update((reported) =>
-      new Map(reported).set(id, { axis, values }),
+      new Map(reported).set(id, { axis, values, hidden }),
     );
   }
 
-  private valuesOn(axis: ChartAxis): readonly (readonly number[])[] {
+  private valuesOn(
+    axis: ChartAxis,
+    withHidden = false,
+  ): readonly (readonly number[])[] {
     const found: (readonly number[])[] = [];
     for (const report of this.reportedDomains().values()) {
-      if (report.axis === axis) {
+      if (report.axis === axis && (withHidden || !report.hidden)) {
         found.push(report.values);
       }
     }
@@ -646,7 +661,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   protected readonly domain = computed(
     () =>
       axisDomain(
-        this.valuesOn('primary'),
+        this.valuesOn('primary', !this.rescaleOnHide()),
         this.tickCount(),
         this.min(),
         this.max(),
@@ -663,7 +678,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     () =>
       secondaryAxis(
         this.ticks().map((tick) => tick.value),
-        this.valuesOn('secondary'),
+        this.valuesOn('secondary', !this.rescaleOnHide()),
         this.tickCount(),
         this.secondaryAxisMode(),
         this.maxSecondary(),
@@ -1089,7 +1104,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
         : `${categories[range.from] ?? ''}-${categories[range.to] ?? ''}`;
     const format = this.valueFormatResolved();
 
-    return this.intl().chart.rangeTotal(
+    const rangeTotal =
+      this.intl().chart.rangeTotal ?? DS_INTL_DEFAULTS.chart.rangeTotal;
+
+    return rangeTotal(
       name,
       format(total, 'tooltip'),
       format(count > 0 ? total / count : 0, 'tooltip'),

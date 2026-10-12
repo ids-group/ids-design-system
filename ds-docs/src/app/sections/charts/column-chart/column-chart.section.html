@@ -257,6 +257,13 @@
       </code>): its columns sink to
       the baseline, the rest settle and the axis fits what is left.
     </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [rescaleOnHide]="false"
+      </code> holds the
+      axis where it stands with every series shown.
+    </li>
   </ul>
 
   <ds-column-chart
@@ -265,6 +272,16 @@
     legendMode="toggle"
     legendFilters
     dataTable="none"
+    [showValues]="false"
+    [data]="channelSeries" />
+
+  <ds-column-chart
+    caption="Revenue by channel, axis held while a series is hidden"
+    stack="stacked"
+    legendMode="toggle"
+    legendFilters
+    dataTable="none"
+    [rescaleOnHide]="false"
     [showValues]="false"
     [data]="channelSeries" />
 

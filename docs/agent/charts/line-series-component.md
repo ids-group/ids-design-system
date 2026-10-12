@@ -4,5 +4,5 @@
 Group: Charts
 
 <!-- inputs:g[dsLineSeries] -->
-All inputs: `data: readonly LineSeriesData[] = []`, `showMarkers: boolean = true`, `outline: boolean = true`, `interactive: boolean = false`, `pinOnClick: boolean | null = null`, `dimOthers: boolean = false`, `highlighted: string | null = null`, `patterns: readonly string[] = []`, `stacked: boolean = false`, `staggerMs: number = 40`, `gaps: 'break' | 'zero' = 'break'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `tooltip: 'item' | 'axis' | 'none' = 'item'`, `tooltipAnchor: 'reading' | 'pointer' = 'reading'`, `tooltipLingerMs: number`, `valueFormat: ChartValueFormat`
+All inputs: `data: readonly LineSeriesData[] = []`, `showMarkers: boolean = true`, `outline: boolean = true`, `interactive: boolean = false`, `pinOnClick: boolean | null = null`, `dimOthers: boolean = false`, `highlighted: string | null = null`, `showChange: boolean = false`, `patterns: readonly string[] = []`, `stacked: boolean = false`, `staggerMs: number = 40`, `gaps: 'break' | 'zero' = 'break'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `tooltip: 'item' | 'axis' | 'none' = 'item'`, `tooltipAnchor: 'reading' | 'pointer' = 'reading'`, `tooltipLingerMs: number`, `valueFormat: ChartValueFormat`
 <!-- /inputs -->

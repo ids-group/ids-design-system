@@ -2069,6 +2069,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Draws a band and crosshair down the category under the pointer and reports it to every mark through `activeIndex`; the panel then names every reading at that category. `'auto'` (default) is `'category'` with two or more tooltip-showing marks or a mark with `tooltip=\"axis\"`, else `'none'`."
       },
       {
+        "name": "rescaleOnHide",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Whether hiding a series re-scales the value axes to what is left. Off holds them where they stand with every series shown."
+      },
+      {
         "name": "maxSecondary",
         "kind": "input",
         "type": "number | null",
@@ -2421,7 +2430,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Sinks every column to the baseline and leaves the value axis to the other marks; set it rather than removing the series to animate a legend hiding it."
+        "description": "Sinks every column to the baseline; the value axis follows the chart's `rescaleOnHide`. Set it rather than removing the series to animate a legend hiding it."
       },
       {
         "name": "runningTotal",
@@ -3365,7 +3374,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Ids of the series the legend has switched off; their columns sink to the baseline and the value axis fits what is left."
+        "description": "Ids of the series the legend has switched off; their columns sink to the baseline."
+      },
+      {
+        "name": "rescaleOnHide",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Whether hiding a series re-scales the value axis to what is left. Off holds the axis where it stands with every series shown."
       },
       {
         "name": "legendFilters",
@@ -5781,9 +5799,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "boolean",
         "union": null,
-        "default": "false",
+        "default": "true",
         "required": false,
-        "description": "Whether hiding a series re-scales the value axis to what is left."
+        "description": "Whether hiding a series re-scales the value axis to what is left. Off holds the axis where it stands with every series shown."
       },
       {
         "name": "legendFilters",

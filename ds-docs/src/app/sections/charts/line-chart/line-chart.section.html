@@ -14,7 +14,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Series take palette colours in order. <code class="t-mono-inline">slot</code>
+    Series take palette colours in order.
+    <code class="t-mono-inline">
+      slot
+    </code>
     (1-based) pins a series to a palette slot, so hiding one keeps the others'
     colours.
   </p>
@@ -127,8 +130,8 @@
   </table>
 
   <p class="block-desc t-s">
-    Only a series with <code class="t-mono-inline">area</code> fills; lines
-    sit on the running total. Stacking is per axis.
+    Only a series with <code class="t-mono-inline">area</code> fills; lines sit
+    on the running total. Stacking is per axis.
   </p>
 
   <div class="states is-cols-2">
@@ -287,8 +290,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    A <code class="t-mono-inline">null</code> or other non-finite reading
-    (<code class="t-mono-inline">NaN</code>) is a hole, not a zero.
+    A <code class="t-mono-inline">null</code> or other non-finite reading (<code
+      class="t-mono-inline"
+      >NaN</code
+    >) is a hole, not a zero.
   </p>
 
   <table class="tbl">
@@ -374,8 +379,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Same data, only the right ceiling moved: crossing on the left, none on
-    the right. No mode removes this.
+    Same data, only the right ceiling moved: crossing on the left, none on the
+    right. No mode removes this.
   </p>
 
   <p class="block-desc t-s">
@@ -475,8 +480,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Each axis is niced on its own and both use the full height, with two sets
-    of gridlines - the secondary's dashed.
+    Each axis is niced on its own and both use the full height, with two sets of
+    gridlines - the secondary's dashed.
   </p>
 
   <ds-line-chart
@@ -515,8 +520,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Turn <code class="t-mono-inline">showMarkers</code> off when dense
-    markers merge into a band.
+    Turn <code class="t-mono-inline">showMarkers</code> off when dense markers
+    merge into a band.
   </p>
 
   <ds-line-chart
@@ -594,8 +599,8 @@
     <code class="t-mono-inline">
       area: true
     </code> fills to the baseline,
-    implying zero matters - wrong for a rate or index. Fill one series at
-    most: overlaps read as a third quantity.
+    implying zero matters - wrong for a rate or index. Fill one series at most:
+    overlaps read as a third quantity.
   </p>
 
   <div class="states is-cols-2">
@@ -698,8 +703,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    A derived axis differs per dataset: similar plots can be four times
-    apart.
+    A derived axis differs per dataset: similar plots can be four times apart.
   </p>
 
   <ul class="rules">
@@ -774,8 +778,7 @@
     </li>
 
     <li>
-      Solid lines draw on; dashed lines and areas fade in; markers settle
-      last.
+      Solid lines draw on; dashed lines and areas fade in; markers settle last.
     </li>
   </ul>
 
@@ -866,8 +869,8 @@
     </li>
 
     <li>
-      The default <code class="t-mono-inline">tooltip="axis"</code> names
-      every series at the category; Tab lands on its band.
+      The default <code class="t-mono-inline">tooltip="axis"</code> names every
+      series at the category; Tab lands on its band.
       <code class="t-mono-inline">
         tooltip="item"
       </code>: no band, Tab and
@@ -1146,10 +1149,11 @@
     </li>
 
     <li>
-      The axis scales from all series, hidden too, unless
+      The axis re-scales to the series left showing;
       <code class="t-mono-inline">
-        rescaleOnHide
-      </code> is set.
+        [rescaleOnHide]="false"
+      </code> holds it
+      where it was.
     </li>
 
     <li>
@@ -1164,30 +1168,30 @@
   <div class="states is-cols-2">
     <div class="state-cell">
       <ds-line-chart
-        caption="Hiding a series leaves the axis where it was"
-        dataTable="none"
-        legendFilters
-        [categories]="legendCategories()"
-        [series]="legendSeries()"
-        [(hiddenSeries)]="hiddenSeries" />
-
-      <div class="state-cell-label">
-        rescaleOnHide = false (default)
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <ds-line-chart
         caption="Hiding a series re-scales the axis to what is left"
         dataTable="none"
         legendFilters
-        rescaleOnHide
         [categories]="legendCategories()"
         [series]="legendSeries()"
         [(hiddenSeries)]="rescaledHiddenSeries" />
 
       <div class="state-cell-label">
-        rescaleOnHide
+        rescaleOnHide = true (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Hiding a series leaves the axis where it was"
+        dataTable="none"
+        legendFilters
+        [rescaleOnHide]="false"
+        [categories]="legendCategories()"
+        [series]="legendSeries()"
+        [(hiddenSeries)]="hiddenSeries" />
+
+      <div class="state-cell-label">
+        rescaleOnHide = false
       </div>
     </div>
   </div>

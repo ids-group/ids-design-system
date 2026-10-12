@@ -43,7 +43,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     public readonly axisLabel = input<string | null>(null);
     protected readonly axisLabelFill = computed(…);
     protected readonly axisLabelX = computed(…);
-    protected readonly axisReadout = computed(…);
+    public readonly axisReadout = input(true, { transform: booleanAttribute });
     protected readonly axisTitleGutter = computed(…);
     protected readonly axisTitleX = computed(…);
     private bandAt;
@@ -97,6 +97,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     private readonly layout;
     protected readonly leaveMark = leaveMark;
     private leavesChart;
+    private readonly lineSeries;
     private listenForCursor;
     private listenForEscapeFromMarker;
     private listenForRange;
@@ -124,6 +125,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     public readonly pinOnClickResolved = resolveWithConfig(…);
     private readonly pinRise;
     protected readonly pinnedCategories = computed(…);
+    protected readonly pinnedLine = computed(…);
     public readonly plot: Signal<ChartPlot> = computed(…);
     protected readonly plotBottom = computed(…);
     public readonly plotHeight = input(CHART_DEFAULT_PLOT_HEIGHT, { transform: numberAttribute });
@@ -143,9 +145,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     public releaseDomain(id: string): void;
     public releaseTooltip(id: string): void;
     protected readonly renderReady = chartRenderGate(…);
-    public reportDomain(id: string, values: readonly number[], axis: ChartAxis = 'primary'): void;
+    public reportDomain(id: string, values: readonly number[], axis: ChartAxis = 'primary', hidden = false): void;
     public reportTooltip(id: string, source: ChartTooltipSource): void;
     private readonly reportedDomains;
+    public readonly rescaleOnHide = input(true, { transform: booleanAttribute });
     protected readonly rightGutter = computed(…);
     private readonly roving;
     protected readonly secondary = computed(…);
@@ -167,6 +170,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     protected readonly settled = computed(…);
     private readonly settledLayout;
     protected readonly showSecondaryGridlines = computed(…);
+    protected readonly shownReadout = computed(…);
     public readonly skeletonCount = input(CHART_SKELETON_COUNT, { transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT) });
     protected readonly skeletonMarks = computed(…);
     private stackTop;
@@ -228,7 +232,7 @@ export interface ChartScales {
         readonly y: number;
     } | null>;
     setActiveIndex(index: number): void;
-    reportDomain(id: string, values: readonly number[], axis?: ChartAxis): void;
+    reportDomain(id: string, values: readonly number[], axis?: ChartAxis, hidden?: boolean): void;
     releaseDomain(id: string): void;
     reportTooltip(id: string, source: ChartTooltipSource): void;
     releaseTooltip(id: string): void;
@@ -303,6 +307,7 @@ export class ColumnSeriesComponent implements OnDestroy {
     protected readonly slotStepPx = computed(…);
     public readonly soleSeries = input(false, { transform: booleanAttribute });
     private readonly spans;
+    private spansOf;
     protected readonly spotlit = computed(…);
     protected readonly stacked = computed(…);
     public readonly staggerMs = input(40, { transform: numberAttribute });
@@ -379,11 +384,12 @@ export class LineSeriesComponent implements OnDestroy {
     public readonly pointClicked = output<{ series: LineSeriesData; categoryIndex: number; value: number; }>();
     private readonly readingsAtCursor;
     private readingsOf;
+    private reportIdOf;
     private readonly rovingBySeries;
     protected readonly scales = inject(…);
     private selectMarker;
     protected seriesStagger(index: number): string;
-    public readonly showChange = input(true, { transform: booleanAttribute });
+    public readonly showChange = input(false, { transform: booleanAttribute });
     public readonly showMarkers = input(true, { transform: booleanAttribute });
     private readonly spotlight;
     public readonly stacked = input(false, { transform: booleanAttribute });
@@ -462,8 +468,6 @@ ds-chart {
     --ds-motion-chart-mark-easing: (none);
     --ds-motion-chart-state-duration: (none);
     --ds-motion-chart-state-easing: (none);
-    --ds-motion-chart-tooltip-move-duration: (none);
-    --ds-motion-chart-tooltip-move-easing: (none);
 }
 
 g[dsColumnSeries] {
@@ -476,8 +480,6 @@ g[dsColumnSeries] {
     --ds-motion-chart-mark-duration: (none);
     --ds-motion-chart-mark-easing: (none);
     --ds-motion-chart-mark-grow-duration: (none);
-    --ds-motion-chart-tooltip-move-duration: (none);
-    --ds-motion-chart-tooltip-move-easing: (none);
 }
 
 g[dsLineSeries] {

@@ -39,6 +39,7 @@ export class HeatmapChartComponent extends DsChartBase implements ChartDimmable,
     protected readonly scaleMinLabel = computed(…);
     protected readonly scaleSteps = computed(…);
     private readonly settleScaleMarker;
+    public readonly showScaleMarker = input(true, { transform: booleanAttribute });
     public readonly showValues = input(false, { transform: booleanAttribute });
     protected readonly skeletonColumns = computed(…);
     protected readonly skeletonRows = computed(…);

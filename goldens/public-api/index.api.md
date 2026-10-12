@@ -371,6 +371,8 @@ styles/_chart-motion.scss {
     --ds-motion-chart-mark-grow-duration: (none);
     --ds-motion-chart-mark-grow-easing: (none);
     --ds-motion-chart-mark-sweep-duration: (none);
+    --ds-motion-chart-tooltip-move-duration: (none);
+    --ds-motion-chart-tooltip-move-easing: (none);
 }
 
 styles/_check-box.scss {

@@ -27,8 +27,8 @@
     </li>
 
     <li>
-      Paint order, whatever the written order: reference lines, then marks
-      (in written order), then reference labels.
+      Paint order, whatever the written order: reference lines, then marks (in
+      written order), then reference labels.
     </li>
   </ul>
 
@@ -896,8 +896,8 @@
     </li>
 
     <li>
-      A click on a mark fires <code class="t-mono-inline">pointClicked</code>;
-      a click on the band pins the category.
+      A click on a mark fires <code class="t-mono-inline">pointClicked</code>; a
+      click on the band pins the category.
     </li>
 
     <li>
@@ -1052,27 +1052,29 @@
     <li>
       <code class="t-mono-inline">
         'aligned'
-      </code> (default) - on the first axis's gridlines at a round step; one
-      plot.
+      </code> (default) - on the first
+      axis's gridlines at a round step; one plot.
     </li>
 
     <li>
       <code class="t-mono-inline">
         'split'
-      </code> - two plots over the same category axis.
+      </code> - two plots over the same
+      category axis.
     </li>
 
     <li>
       <code class="t-mono-inline">
         'exact'
-      </code> - one grid; the second axis ends at its largest reading, with
-      unround labels.
+      </code> - one grid; the second axis
+      ends at its largest reading, with unround labels.
     </li>
 
     <li>
       <code class="t-mono-inline">
         'dual-grid'
-      </code> - each axis scaled and gridded on its own.
+      </code> - each axis scaled and
+      gridded on its own.
     </li>
   </ul>
 
@@ -1187,8 +1189,8 @@
     Cumulative line over its columns:
     <a routerLink="/charts/column-chart">
       Column chart
-    </a>, "Columns and a line,
-    on two scales".
+    </a>, "Columns and a
+    line, on two scales".
   </p>
 
   <h3
@@ -1325,12 +1327,23 @@
       </code> pins the first, so compared plots
       do not rescale.
     </dd>
+
+    <dt>
+      <code class="t-mono-inline">
+        rescaleOnHide
+      </code>
+    </dt>
+
+    <dd>
+      On by default: a hidden series leaves the axes. Off, its values still hold
+      them, so hiding a series moves no gridline.
+    </dd>
   </dl>
 
   <ul class="rules">
     <li>
-      A press holds the category cursor: a pin disc at the band's foot, Unpin
-      on the caption line, atop the plot without one.
+      A press holds the category cursor: a pin disc at the band's foot, Unpin on
+      the caption line, atop the plot without one.
     </li>
 
     <li>
@@ -1476,8 +1489,8 @@
     </li>
 
     <li>
-      The <code class="t-mono-inline">highlighted</code> line also thickens,
-      for monochrome print.
+      The <code class="t-mono-inline">highlighted</code> line also thickens, for
+      monochrome print.
     </li>
 
     <li>
@@ -1539,13 +1552,16 @@
     <li>
       <code class="t-mono-inline">
         loading
-      </code>, no data - axes, label placeholders, columns.
+      </code>, no data - axes, label
+      placeholders, columns.
     </li>
 
     <li>
       <code class="t-mono-inline">
         loading
-      </code>, marks on screen - kept under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and spinner.
+      </code>, marks on screen - kept under
+      the <code class="t-mono-inline">ds-loading-overlay</code> scrim and
+      spinner.
     </li>
   </ul>
 
