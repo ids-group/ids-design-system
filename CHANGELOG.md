@@ -282,6 +282,10 @@
   as wide as its columns and leaves the rest of the container empty. A column still stops at its
   content's narrowest width, and `Home` on a handle returns the column to auto, which fills the
   container again.
+- **`dsTableExport` shows its CSV button.** The toolbar above a `ds-table` showed only when its
+  `[toolbar]` slot held content, so a table with `dsTableExport` and no slotted content hid the
+  built-in Export button. The toolbar shows whenever the slot or a table feature puts a control in
+  it.
 
 ### What you can now DELETE
 

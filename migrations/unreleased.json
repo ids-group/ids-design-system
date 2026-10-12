@@ -455,6 +455,10 @@
     {
       "text": "Under `dsTableResize`, once every visible column has a pixel width (after the first drag, or from `column.width` and persisted widths) the `ds-table` is as wide as the sum of its columns instead of its container, so narrowing a column leaves empty space after the last one rather than widening the rest. A virtual table keeps filling its container.",
       "verify": "Drag one column edge of a ds-table with dsTableResize to the left and confirm the other columns keep their widths and the table ends short of its container."
+    },
+    {
+      "text": "The `ds-table` toolbar shows when a table feature inserts its control, as `dsTableExport` does with its Export button, and not only when the `[toolbar]` slot holds content; a table with neither keeps the toolbar hidden.",
+      "verify": "Render a ds-table with dsTableExport and nothing in its toolbar slot and confirm the Export button shows above the table."
     }
   ],
   "deleteList": [

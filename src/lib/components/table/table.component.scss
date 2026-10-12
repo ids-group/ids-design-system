@@ -876,9 +876,9 @@
   gap: var(--space-2);
   margin-bottom: var(--space-2);
 
-  /* Always in the markup, so it hides itself when the slot is empty. `:has()`, not `:empty`,
-     which whitespace text nodes defeat. */
-  &:not(:has(.toolbar-slot > *, > ds-button)) {
+  /* Always in the markup, so it hides itself when the slot is empty and no feature has inserted
+     its control beside it. `:has()`, not `:empty`, which whitespace text nodes defeat. */
+  &:not(:has(.toolbar-slot > *, > :not(.toolbar-slot))) {
     display: none;
   }
 }
