@@ -135,6 +135,10 @@
   `datePicker.firstDayOfWeek`, `format` and `timePicker.format` still win;
   `provideDsConfig({ datePicker: { firstDayOfWeek: 1 }, timePicker: { format: '24h' } })` keeps
   the old Monday and 24 hours.
+- **A pressed tonal `ds-button` deepens toward its own colour.** The pressed fill is the rest fill
+  mixed 28% toward the button's colour (`--primary` for primary), where it was the hover fill
+  mixed 10% toward black and turned greyer than the hover. `--ds-button-bg-color-active` still
+  sets a pressed fill of your own.
 
 ### Fixed
 
