@@ -160,6 +160,12 @@ export class ScatterChartComponent
    *  a point answers only within 16 CSS pixels of its centre, without the ring and tether. */
   readonly nearestPoint = input(true, { transform: booleanAttribute });
 
+  /** How far the pointer may be from a point's centre, in CSS pixels and inclusive, for the point to
+   *  answer under `nearestPoint`; `null` sets no limit. */
+  readonly nearestRadius = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
+
   /** Milliseconds between one point's entrance and the next, left to right; `0` turns it off. The
    *  spread is capped at 260ms. */
   readonly staggerMs = input(40, { transform: numberAttribute });
@@ -569,7 +575,8 @@ export class ScatterChartComponent
       return null;
     }
     let nearestIndex = -1;
-    let nearestDistance = this.nearestPoint() ? Infinity : reach * reach;
+    const radius = this.nearestPoint() ? this.nearestRadius() : HOVER_REACH_PX;
+    let nearestDistance = radius === null ? Infinity : (radius / matrix.a) ** 2;
     this.flatMarks().forEach(({ mark }, index) => {
       const distance = (mark.cx - pointer.x) ** 2 + (mark.cy - pointer.y) ** 2;
       if (distance <= nearestDistance) {

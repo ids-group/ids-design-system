@@ -8205,6 +8205,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Anywhere over the plot answers with the nearest point, ringed and tethered to the pointer. Off, a point answers only within 16 CSS pixels of its centre, without the ring and tether."
       },
       {
+        "name": "nearestRadius",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How far the pointer may be from a point's centre, in CSS pixels and inclusive, for the point to answer under `nearestPoint`; `null` sets no limit."
+      },
+      {
         "name": "staggerMs",
         "kind": "input",
         "type": "number",

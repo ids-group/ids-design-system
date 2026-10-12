@@ -242,6 +242,19 @@
     </div>
   </div>
 
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      nearestRadius
+    </code> caps the reach in CSS pixels; past it nothing answers.
+  </p>
+
+  <ds-scatter-chart
+    caption="Nearest point within 48px"
+    xLabel="Weight, kg"
+    yLabel="Cost"
+    [data]="oneSeries"
+    [nearestRadius]="48" />
+
   <h3 class="block-title t-h4">
     Holding a point
   </h3>

@@ -57,7 +57,8 @@
   Each is on by default and has its own off switch: `centerFollowsHover` on `ds-pie-chart` keeps
   `centerValue` and `centerLabel` in the centre, `showScaleMarker` on `ds-heatmap-chart` drops the
   marker, and `nearestPoint` on `ds-scatter-chart` answers only within 16px of a point, without the
-  ring and line.
+  ring and line. `nearestRadius` on `ds-scatter-chart` caps how far, in CSS pixels, the nearest
+  point answers from; unset, any distance.
 - **Heatmap cells enter along the diagonals.** `staggerMs` on `ds-heatmap-chart` spaces the
   diagonals from the top-left cell, where it spaced the columns; the spread stays within 260ms.
 - **Every mark of a chart moves together when its data changes.** In `ds-chart`, `ds-column-chart`,
