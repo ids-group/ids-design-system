@@ -35,6 +35,8 @@
   .pill.mid { background: var(--warning-subtitle); color: var(--warning-text); }
   .pill.bad { background: var(--error-subtitle); color: var(--error-text); }
   main { padding-bottom: 72px; }
+  .opt .pick-btn { align-self: flex-start; padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-primary); font: var(--font-weight-bold) var(--font-size-xs) var(--font-sans); cursor: pointer; }
+  .opt.is-chosen .pick-btn { background: var(--success); border-color: var(--success); color: var(--surface-default); }
 </style>
 </head>
 <body>
@@ -51,7 +53,8 @@
     <label class="slow-row"><input type="checkbox" id="slow"> Замедлить ×5</label>
   </section>
 
-  <section class="panel q" data-review="Варианты">
+  <section class="panel q" data-review="Варианты" data-review-note-only data-review-round="2">
+    <ol data-review-history><li>2026-10-12 · «Принято» без выбранной карточки → выбор теперь только кликом по карточке или «Выбрать», «Принято» у этого блока убрано</li></ol>
     <h2>Три варианта</h2>
     <p>В каждом образце полоса - это «следует за курсором как панель», кольцо - «следует как кольцо scatter». Выбор - клик по карточке вне графика.</p>
     <div class="opts">
@@ -169,6 +172,15 @@
 
   const KEY = 'ds-deck-chart-motion-timing-pick';
   const cards = [...document.querySelectorAll('.opt[data-key]')];
+  cards.forEach((card) => {
+    const pickButton = document.createElement('button');
+    pickButton.type = 'button';
+    pickButton.className = 'pick-btn';
+    card.append(pickButton);
+  });
+  const labelPicks = () => cards.forEach((card) => { card.querySelector('.pick-btn').textContent = card.classList.contains('is-chosen') ? 'Выбрано' : 'Выбрать'; });
+  new MutationObserver(labelPicks).observe(document.querySelector('.opts'), { subtree: true, attributes: true, attributeFilter: ['class'] });
+  labelPicks();
   let picked = null;
   try { picked = localStorage.getItem(KEY); } catch { picked = null; }
   const paint = () => cards.forEach((card) => card.classList.toggle('is-chosen', card.dataset.key === picked));
@@ -178,7 +190,7 @@
     card.addEventListener('keydown', (event) => { if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); choose(); } });
   });
   paint();
-  (window.deckReviewHooks ??= {}).extra = () => { const card = cards.find((item) => item.dataset.key === picked); return card ? `выбор - «${card.querySelector('h3').textContent}»` : ''; };
+  (window.deckReviewHooks ??= {}).extra = () => { const card = cards.find((item) => item.dataset.key === picked); return card ? `выбор - «${card.querySelector('h3').textContent}»` : 'выбор - не сделан'; };
 </script>
 <!-- deck-review -->
 <script>
