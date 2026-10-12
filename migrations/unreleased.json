@@ -41,7 +41,7 @@
       "appliesWhen": "Only a class of yours that extends ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or FunnelChartComponent, or the internal ChartTooltipPanelComponent, the internal ChartStatesComponent, the internal ChartLegendComponent or the internal WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
-      "note": "`ChartComponent` gained 25; `LineSeriesComponent` gained 23 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 10; `ColumnChartComponent` gained `heldExtent`, `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `rescaleOnHide`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `selectRange` and `showChange` and lost `axisMax`, `axisMaxSecondary` and `ceilingOf`; `PieChartComponent` gained 13 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 6 and lost `columnStagger`, `onStepEnter`, `onStepLeave` and `stepDwell`; `ScatterChartComponent` gained 20 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 8; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`, `onItemEnter` and `onItemLeave`."
+      "note": "`ChartComponent` gained 25; `LineSeriesComponent` gained 23 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 10; `ColumnChartComponent` gained `heldExtent`, `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `rescaleOnHide`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `selectRange` and `showChange` and lost `axisMax`, `axisMaxSecondary` and `ceilingOf`; `PieChartComponent` gained 13 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 6 and lost `columnStagger`, `onStepEnter`, `onStepLeave` and `stepDwell`; `ScatterChartComponent` gained 20 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 9 and its `dataTable` takes a `ChartDataTable`; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`, `onItemEnter` and `onItemLeave`."
     },
     {
       "id": "chart-legend-fades-only-under-dim-others",
@@ -265,6 +265,10 @@
     {
       "text": "A pressed `ds-menu-item` with `error` fills with `--error-muted`, one red step deeper than its `--error-subtitle` hover; the press showed the hover fill.",
       "verify": "Hold the mouse down on an error ds-menu-item and confirm the red fill deepens from the hover fill, in the light and the dark theme."
+    },
+    {
+      "text": "A loading chart holds the height of its data-table line, and under `dataTable=\"visible\"` draws the open table with a header and five rows; `ds-bar-chart` showed no table line while loading.",
+      "verify": "Load a ds-bar-chart and a ds-column-chart with dataTable set to toggle and to visible, and confirm the data-table line or open table sits in the same place before and after the data arrives."
     }
   ],
   "deleteList": [
