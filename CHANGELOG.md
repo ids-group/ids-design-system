@@ -33,9 +33,10 @@
   100-unit ring out along its middle, past the ring's box. A pin pops in, and pinning another mark or category pops a new pin there. The category band
   and a pin appear in place and glide only to a later position; the chart-tooltip entry point exports the internal `ChartPlacedDirective`
   that gates it. `ChartComponent`,
-  `PieChartComponent`, `HeatmapChartComponent` and `ScatterChartComponent` gained members, named in
-  the migration manifest, as are the members `FunnelChartComponent`, `PieChartComponent`,
-  `HeatmapChartComponent` and `ScatterChartComponent` lost; a subclass declaring one of those names
+  `PieChartComponent`, `HeatmapChartComponent`, `ScatterChartComponent` and `LineSeriesComponent`
+  gained members, named in the migration manifest, as are the members `FunnelChartComponent`,
+  `PieChartComponent`, `HeatmapChartComponent`, `ScatterChartComponent` and `LineSeriesComponent`
+  lost; a subclass declaring one of those names
   must rename it, and one overriding a lost member overrides nothing.
   The internal `WaterfallMarksComponent` gained `leaveMark`.
 
