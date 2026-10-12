@@ -39,7 +39,10 @@ import {
   panelClassesOf,
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
-import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  FieldMessageComponent,
+  FieldStatusComponent,
+} from '@ids-group-ltd/ids-design-system/components/field-message';
 import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import {
   resolveFieldMessage,
@@ -90,6 +93,7 @@ import { createTypeAhead } from '@ids-group-ltd/ids-design-system/components';
     TagComponent,
     BadgeComponent,
     FieldMessageComponent,
+    FieldStatusComponent,
     NgTemplateOutlet,
     TooltipDirective,
   ],
@@ -421,9 +425,12 @@ export class MultiSelectComponent
   );
 
   protected readonly hintId = computed(() =>
-    this.message().text ? `${this.uid}-hint` : null,
+    this.message().text || this.changedShown() ? `${this.uid}-hint` : null,
   );
   private readonly fieldMessage = resolveFieldMessage({
+    pending: this.pending,
+    dirty: this.dirty,
+    showDirty: this.showDirtyResolved,
     disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
@@ -435,6 +442,8 @@ export class MultiSelectComponent
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly pendingShown = this.fieldMessage.pending;
+  protected readonly changedShown = this.fieldMessage.changed;
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 

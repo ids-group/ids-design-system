@@ -7,8 +7,16 @@
 @include chart-editor-disclosure.disclosure;
 @include chart-editor-disclosure.replay-row;
 
+// Sized by the specimen's cell, never by the matrix: in a narrow grid cell the matrix would
+// otherwise widen the cell past its neighbours instead of scrolling.
+.editor-row > .editor[open] {
+  flex: 1 1 100%;
+  min-inline-size: 0;
+}
+
 .scroll {
-  max-inline-size: 100%;
+  contain: inline-size;
+  align-self: stretch;
   overflow-x: auto;
 }
 

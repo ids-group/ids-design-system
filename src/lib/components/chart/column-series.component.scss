@@ -163,8 +163,7 @@
 }
 
 .focus-ring.placed {
-  transition: transform var(--ds-motion-chart-tooltip-move-duration)
-    var(--ds-motion-chart-tooltip-move-easing);
+  transition: chart-motion.glides(transform);
 }
 
 .focus-ring-shape {
@@ -175,9 +174,7 @@
 }
 
 .focus-ring.placed .focus-ring-shape {
-  transition:
-    y var(--ds-motion-chart-tooltip-move-duration) var(--ds-motion-chart-tooltip-move-easing),
-    height var(--ds-motion-chart-tooltip-move-duration) var(--ds-motion-chart-tooltip-move-easing);
+  transition: chart-motion.glides(y, height);
 }
 
 .columns:has(.column.interactive:focus-visible) .focus-ring {
@@ -197,8 +194,4 @@
 }
 
 /* On the group, not each column: a stack's segments must fade together. */
-.columns.is-dimmed {
-  opacity: var(--ds-chart-dim-opacity);
-  transition: opacity var(--ds-motion-chart-mark-duration)
-    var(--ds-motion-chart-mark-easing);
-}
+@include chart-interactive.dims('.columns');

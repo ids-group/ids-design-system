@@ -9,7 +9,7 @@
   [errorText]="errorTextResolved()"
   [pending]="(loading() && isEmpty()) || !renderReady()"
   [reloading]="loading()"
-  [dataTable]="dataTableResolved() !== 'none'"
+  [dataTable]="dataTableResolved()"
   [shimmer]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
@@ -36,6 +36,7 @@
     [tickCount]="tickCount()"
     [valueFormat]="valueFormatResolved()"
     [interactive]="interactive()"
+    [axisReadout]="axisReadout()"
     [summary]="accessibleName()">
     <svg:g
       dsWaterfallMarks

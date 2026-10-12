@@ -2,6 +2,10 @@
 
 One line per closed item. Open work lives in `todo.md`; the detail behind an entry is in git history.
 
+## Calendar week and clock from the locale (2026-10-12)
+- `ds-date-picker` starts the week on its locale's first day (`localeFirstDayOfWeek`, Monday without week data); `ds-time-picker` shows the locale's 12h or 24h clock (`localeTimeFormat`); inputs and `DS_CONFIG` still win
+- Decided: everything from the locale (Stas, deck `implemented/locale-week-and-hour`)
+
 ## Chart motion: sync and response (2026-10-11)
 - Line, markers, area, value labels, pins, gridlines, tick labels and waterfall connectors move on the column timing; the category band glides with the tooltip panel and a held band pin follows the data (`chart-motion.moves`, `measureBandPinY`)
 - `ds-pie-chart` tweens slice angles through `tweenMarks` (`charts-motion.ts`); heatmap rows and cells, scatter points, pie slices and waterfall connectors and labels leave with a fade

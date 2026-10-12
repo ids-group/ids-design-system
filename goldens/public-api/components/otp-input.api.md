@@ -10,6 +10,7 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
     private readonly boxes;
     protected cellLabel(index: number): string;
     protected readonly cells = computed<string[]>(…);
+    protected readonly changedShown = this.fieldMessage.changed;
     private commit;
     public readonly completed = output<string>();
     protected readonly controlState = this.fieldMessage.controlState;
@@ -31,6 +32,7 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
     protected onInput(event: Event, index: number): void;
     protected onKeydown(event: KeyboardEvent, index: number): void;
     protected onPaste(event: ClipboardEvent, index: number): void;
+    protected readonly pendingShown = this.fieldMessage.pending;
     private sanitize;
     public readonly success = input<string, string | null | undefined>('', { transform: trimmedText });
     protected readonly uid = nextControlId(…);

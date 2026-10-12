@@ -158,7 +158,7 @@
   <p class="block-desc t-s">
     Other chart tokens (axis font size, threshold, dim, hover, focus ring, cap
     radius, bar gap, area, hatch): see the
-    <a routerLink="/reference/tokens-reference"> tokens reference </a>.
+    <a class="link" routerLink="/reference/tokens-reference"> tokens reference </a>.
   </p>
 
   <h3 class="block-title t-h4">How a chart arrives</h3>
@@ -866,39 +866,16 @@
     <code class="t-mono-inline"> DS_CONFIG.chart.dataTable </code>.
   </p>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>Value</th>
-
-        <th>Table</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td><code class="t-mono-inline"> 'none' </code> (default)</td>
-
-        <td>None. Use it only when the page already tabulates the numbers.</td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline"> 'toggle' </code>
-        </td>
-
-        <td>Behind a closed disclosure</td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline"> 'visible' </code>
-        </td>
-
-        <td>Open</td>
-      </tr>
-    </tbody>
-  </table>
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      'none'
+    </code> (default) only when the page
+    already tabulates the numbers; <code class="t-mono-inline">'toggle'</code>
+    puts the table behind a closed disclosure,
+    <code class="t-mono-inline">
+      'visible'
+    </code> shows it open.
+  </p>
 
   <p class="block-desc t-s">
     A heat map always has its table: colour is its only magnitude channel.

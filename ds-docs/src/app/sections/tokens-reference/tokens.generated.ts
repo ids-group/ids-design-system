@@ -42,22 +42,22 @@ export const SEMANTIC_PRIMARY: readonly ColourRow[] = [
   },
   {
     "name": "--primary-subtitle",
-    "value": "var(--blue-50)",
+    "value": "hsl(from var(--primary) h 100% 97%)",
     "notes": "Light brand tint (active table row, date range fill)."
   },
   {
     "name": "--primary-muted",
-    "value": "var(--blue-100)",
+    "value": "hsl(from var(--primary) h 95% 94%)",
     "notes": "Slightly stronger tint than subtle."
   },
   {
     "name": "--primary-muted-strong",
-    "value": "var(--blue-200)",
+    "value": "hsl(from var(--primary) h 95% 89%)",
     "notes": "Strongest tint in the brand-muted family."
   },
   {
     "name": "--primary-strong",
-    "value": "var(--blue-700)",
+    "value": "hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))",
     "notes": "Darker brand for text on brand tints."
   },
   {
@@ -348,7 +348,7 @@ export const SEMANTIC_TEXT: readonly ColourRow[] = [
   },
   {
     "name": "--text-link",
-    "value": "var(--blue-700)",
+    "value": "hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))",
     "notes": "Hyperlink text."
   },
   {
@@ -412,7 +412,7 @@ export const SEMANTIC_SURFACE: readonly ColourRow[] = [
   },
   {
     "name": "--surface-tint",
-    "value": "var(--blue-50)",
+    "value": "hsl(from var(--primary) h 100% 97%)",
     "notes": "Brand-tinted surfaces."
   },
   {
@@ -3409,16 +3409,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-motion-chart-tooltip-move-duration",
-        "value": "—",
-        "notes": ""
-      },
-      {
-        "name": "--ds-motion-chart-tooltip-move-easing",
-        "value": "—",
-        "notes": ""
-      },
-      {
         "name": "--ds-motion-chart-state-duration",
         "value": "—",
         "notes": ""
@@ -4546,6 +4536,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-message-icon-offset",
         "value": "calc((var(--_field-message-font-size) * var(--line-height-base) - var(--icon-sm)) / 2)",
         "notes": "Top offset that centres the 14px glyph on the FIRST line of the message rather than on the whole block, which matters once a message wraps. Defaults to a calc over --ds-field-message-font-size and --line-height-base, so it still holds if the message type is retuned; set a length to override."
+      },
+      {
+        "name": "--ds-field-changed-text-color",
+        "value": "var(--accent-strong)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-field-changed-color",
+        "value": "var(--accent)",
+        "notes": ""
       }
     ]
   },
@@ -4647,6 +4647,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-heatmap-chart-missing-color",
         "value": "var(--surface-secondary)",
         "notes": "Fill of a cell whose value is null, which no step of the heat scale stands for (default --surface-secondary)."
+      },
+      {
+        "name": "--ds-motion-chart-tooltip-move-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-tooltip-move-easing",
+        "value": "—",
+        "notes": ""
       }
     ]
   },
@@ -7452,6 +7462,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Table fill."
       },
       {
+        "name": "--ds-table-sort-active-icon-color",
+        "value": "var(--accent)",
+        "notes": "Active sort caret."
+      },
+      {
         "name": "--ds-table-sticky-scrollbar-offset",
         "value": "var(\n      --_table-sticky-scrollbar-offset,\n      calc(-1 * var(--_table-scroller-pad-bottom, 0px))\n    )",
         "notes": "Where the sticky horizontal scrollbar comes to rest, as any CSS length. Unset, the table measures its scroll container's bottom padding and cancels it, so the bar sits on the edge the reader sees; set this for a scrollport whose reachable edge is somewhere else. Overrides `[stickyScrollbarOffset]` and `DS_CONFIG.table.stickyScrollbarOffset`."
@@ -7515,11 +7530,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-table-divider",
         "value": "var(--border-divider)",
         "notes": "Row divider."
-      },
-      {
-        "name": "--ds-table-sort-active-icon-color",
-        "value": "var(--accent)",
-        "notes": "Active sort caret."
       },
       {
         "name": "--ds-table-icon-button-color",
@@ -8746,6 +8756,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--ds-field-focus-shadow",
     "value": "var(--focus-field)",
     "kind": "color"
+  },
+  {
+    "name": "--ds-motion-chart-scale-marker-delay",
+    "value": "var(--duration-fast)",
+    "kind": "other"
   },
   {
     "name": "--ds-motion-check-enter-duration",

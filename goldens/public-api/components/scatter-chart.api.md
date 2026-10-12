@@ -33,6 +33,8 @@ export class ScatterChartComponent extends DsChartBase implements ChartDimmable,
     private readonly listenForPointer;
     protected readonly multiSeries = computed(…);
     private nearestMark;
+    public readonly nearestPoint = input(true, { transform: booleanAttribute });
+    public readonly nearestRadius = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
     private onCanvasLeave;
     private onCanvasPointer;
     protected onPointActivate(event: Event): void;
@@ -100,7 +102,6 @@ export interface ScatterPoint {
 ```css
 ds-scatter-chart {
     --ds-chart-cursor-line-color: (none);
-    --ds-chart-dim-opacity: (none);
     --ds-chart-plot-bg-color: transparent;
     --ds-motion-chart-mark-duration: (none);
     --ds-motion-chart-mark-easing: (none);

@@ -118,21 +118,22 @@ export function chartActiveMark(
     }
   };
 
+  const clearHover = (): void => {
+    cancelPendingClear();
+    index.set(-1);
+    origin.set(null);
+    document.removeEventListener('pointerover', trackPointer, true);
+  };
+
   const scheduleClear = (): void => {
     cancelPendingClear();
-    pendingClear = setTimeout(
-      () => {
-        pendingClear = null;
-        index.set(-1);
-        origin.set(null);
-        document.removeEventListener('pointerover', trackPointer, true);
-      },
-      Math.max(lingerMs(), 0),
-    );
+    pendingClear = setTimeout(clearHover, Math.max(lingerMs(), 0));
   };
 
   // `pointerover` fires per element crossed: the panel cancels the clear, anything else but the mark
-  // schedules one. Without that a panel the pointer once touched never closes.
+  // schedules one. Without that a panel the pointer once touched never closes. A pending clear is
+  // kept, not restarted, or a pointer moving over another chart holds this one open forever. The
+  // wait bridges the gaps between marks; a pointer that left the chart clears it at once.
   const trackPointer = (event: PointerEvent): void => {
     if (!(event.target instanceof Element)) {
       return;
@@ -143,7 +144,12 @@ export function chartActiveMark(
       return;
     }
     // Host, not anchor: a legend item and the arc its panel points at are disjoint.
-    if (!host || !host.contains(event.target)) {
+    if (host && host.contains(event.target)) {
+      return;
+    }
+    if (host && chartOf(event.target) !== chartOf(host)) {
+      clearHover();
+    } else if (pendingClear === null) {
       scheduleClear();
     }
   };

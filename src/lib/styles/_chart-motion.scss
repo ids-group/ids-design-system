@@ -26,6 +26,22 @@
   @return $transitions;
 }
 
+// One timing for everything that follows the pointer, so a band, a ring and the panel arrive together.
+@function glides($properties...) {
+  $transitions: ();
+
+  @each $property in $properties {
+    $transitions: list.append(
+      $transitions,
+      #{$property} var(--ds-motion-chart-tooltip-move-duration)
+        var(--ds-motion-chart-tooltip-move-easing),
+      $separator: comma
+    );
+  }
+
+  @return $transitions;
+}
+
 @keyframes ds-chart-mark-grow-y {
   from {
     transform: scaleY(0);

@@ -8,36 +8,93 @@
   category, column or line point focused, Shift+Left and Shift+Right grow or shrink the range from
   its far end. Escape or a press outside the chart clears it; a press released in its own category
   still pins. The pill
-  reads the new required `DsIntl` key `chart.rangeTotal: (range, total, average) => string`
-  (default `` `${range}: ${total} · avg ${average}` ``); a complete `DsIntl` dictionary, or a
-  complete `chart` section of one, declared as a typed object stops compiling until it lists it.
-  Overrides passed to `provideDsIntl` are partial and need nothing. `ds-chart` exposes the range as
-  `selectedRange`, typed by the new `ChartCategoryRange`.
+  reads the new optional `DsIntl` key `chart.rangeTotal: (range, total, average) => string`; a
+  dictionary without it shows the English default `` `${range}: ${total} · avg ${average}` ``.
+  `ds-chart` exposes the range as `selectedRange`, typed by the new `ChartCategoryRange`.
 - **`ds-column-chart` takes `legendFilters`, `legendMode` and `hiddenSeries`,** as
-  `ds-line-chart` does: the legend hides a series, its columns sink to the baseline, the other
-  series settle onto each other and the value axis fits what is left.
+  `ds-line-chart` does: the legend hides a series, its columns sink to the baseline and the other
+  series settle onto each other. The value axis fits what is left; `[rescaleOnHide]="false"` holds
+  it where it stands with every series shown.
 - **`dsColumnSeries` takes `hidden` and `runningTotal`; `LineSeriesData` takes `hidden`.** A hidden
   column series sinks to the baseline and a hidden line erases itself back along its own path, and
-  draws on again when shown; both leave the value axis to the other marks. `runningTotal` reads the
-  columns as a waterfall's: hovering one fades every column after it and stops the axis guide at
-  it.
-- **`showChange` on `dsLineSeries` and `ds-line-chart`, on by default.** On the hovered reading,
-  the stretch from the reading before it thickens in `--ds-chart-positive-color` or
-  `--ds-chart-negative-color` and prints the change in percent. With several series it follows the
-  one singled out by hover, focus or the legend. `showChange="false"` turns it off.
+  draws on again when shown. `ds-chart` takes `rescaleOnHide` (default `true`): a hidden series
+  leaves the value axes to the other marks, and with `false` its values still hold them. A custom
+  mark passes the new optional `hidden` argument of `ChartScales.reportDomain` to take part.
+  `runningTotal` reads the columns as a waterfall's: hovering one stops the axis guide at it, and
+  under `dimOthers` fades every column after it.
+- **`showChange` on `dsLineSeries` and `ds-line-chart`, off by default.** On the hovered reading,
+  the stretches from the reading before it and to the reading after it thicken, each in
+  `--ds-chart-positive-color` or `--ds-chart-negative-color` by its own change, and each prints its
+  change in percent. With several series it follows the one singled out by hover, focus or the
+  legend.
 
 - **A scatter's points enter left to right.** `ds-scatter-chart` takes `staggerMs` (default 40),
   as the column charts do: each point waits by its place across the plot, the whole entrance stays
   within 260ms, and `0` turns it off.
 
+- **Dragging a `ds-table` column edge draws that edge down the whole table.** Under
+  `dsTableResize`, a line in `--ds-table-sort-active-icon-color` runs from the header to the last
+  row at the edge being dragged, so the width it sets reads against every row. It shows only
+  while the drag lasts; `DsTableResize` hands the table the edge through a new internal `guide`
+  signal.
+
+- **`showDirty` marks a changed field, off by default.** On `ds-input`, `ds-textarea`, `ds-select`,
+  `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker`, `ds-color-picker`,
+  `ds-checkbox`, `ds-switch`, `ds-radio-group`, `ds-segmented`, `ds-slider` and `ds-otp-input`, a
+  value the user changed carries a dot at the end of the control and a "Changed" line under it,
+  which the control's `aria-describedby` reads. Turn it on per field with `[showDirty]`, per form
+  with the new `dsShowDirty` directive (`ShowDirtyDirective`), or app-wide with
+  `DS_CONFIG.field.showDirty`; a field's own binding wins. The state comes from the new `dirty`
+  input, which signal forms binds by name, or from the `NgControl` of a reactive or template-driven
+  form, so resetting the form clears the mark. The line reads the new optional `DsIntl` key
+  `field.changed`, default `'Changed'`; `--ds-field-changed-color` recolours the dot and
+  `--ds-field-changed-text-color` the line. The `pending`, `dirty`, `showDirty` and
+  `showDirtyResolved` members sit on the internal `DsFormControlBase` both value-accessor bases
+  extend; the internal `ds-field-message` takes `changed` (with `changedText` and `intl`), and the
+  new internal `ds-field-status` draws the spinner and the dot.
+
 ### Changed
 
+- **Links and every brand shade follow `--primary`.** In light, `--surface-tint` and
+  `--primary-subtitle` are `hsl(from var(--primary) h 100% 97%)`, `--primary-muted`
+  `h 95% 94%`, `--primary-muted-strong` `h 95% 89%`, and `--text-link` and `--primary-strong`
+  `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))`, where they were the `--blue-50`,
+  `--blue-100`, `--blue-200` and `--blue-700` steps. In dark, `--surface-tint`,
+  `--primary-subtitle`, `--primary-muted`, `--primary-muted-strong` and `--primary-strong` take
+  their hue from `--primary` where they took `--primary-h`, at the same saturation and lightness.
+  The default blue renders the same RGB. A brand that sets only `--primary` gets links, active
+  rows, selected options, tonal fills and the text on them in its own hue; one that sets them
+  itself keeps its values. A light brand colour (yellow, lime, cyan) derives a link and a
+  `--primary-strong` under 4.5:1 on white: the theming page lists the six with what each paints
+  and the contrast it must meet. The focus ring, the field halo, `--link-visited` and the dark
+  `--text-link` still read `--primary-h/s/l`. Restore with `--text-link: var(--blue-700);
+  --primary-strong: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle:
+  var(--blue-50); --primary-muted: var(--blue-100); --primary-muted-strong: var(--blue-200);` in
+  light, and `hsl(var(--primary-h) …)` at the same saturation and lightness in dark.
+- **`ds-line-chart` re-scales the value axis when a series is hidden.** `rescaleOnHide` defaults to
+  `true`, as on `ds-column-chart` and `ds-chart`: the axis fits the series left showing. Set
+  `[rescaleOnHide]="false"` to hold it where it stands with every series shown; a bare
+  `rescaleOnHide` restates the default.
 - **The value axis answers the hovered reading.** In `ds-chart`, `ds-column-chart`,
   `ds-line-chart` and `ds-waterfall-chart` the hovered category's label turns bold, a dashed guide
   runs from the value axis at the reading, and a pill on the axis prints the axis value there; the
   guide and the pill glide between readings on `--ds-motion-chart-tooltip-move-duration` and
   `-easing`. In `ds-waterfall-chart` the guide stops at the hovered step, reads its running total,
-  and the steps after it fade.
+  and under `dimOthers` the steps after it fade. The new `axisReadout` input on all four, on by default, turns the
+  label, the guide and the pill off. The pill prints through `valueFormat` at the new
+  `ChartFormatLocation` `'readout'`: the built-in format spells it out as for `'tooltip'`, and a
+  custom formatter can return the tick's short form there. A formatter whose `location` parameter
+  is typed as its own `'tick' | 'tooltip'` union stops compiling until it takes `'readout'`.
+- **One chart motion timing per kind of movement.** Whatever follows the pointer glides on
+  `--ds-motion-chart-tooltip-move-duration` and `-easing`: the `ds-scatter-chart` nearest-point
+  ring and the `selectRange` band join the band, the panel and the axis readout there, where they
+  moved on the `state` timing. Series dimming runs on `--ds-motion-chart-state-duration` everywhere:
+  `dsColumnSeries` groups and scatter point groups fade on it, as lines do, and fade back in on it
+  too, where they dimmed on the `mark` timing and came back at once.
+- **A pinned category keeps its line in a chart with lines.** In a `ds-chart` holding a
+  `dsLineSeries` (`ds-line-chart`, a combo), the pinned category draws the cursor line in
+  `--ds-chart-cursor-line-color`, without the band fill, under the pin; the hover band and line
+  still follow the pointer. A column-only chart keeps the pin alone.
 - **A highlighted line point rides the line.** Under the category cursor, each series' highlighted
   point travels along its own line to the next category, with the panel and the crosshair, instead
   of jumping there.
@@ -47,12 +104,17 @@
   new slot when the data is reordered; without an `id` a column is keyed by its label.
 - **Hovering a pie, heatmap or scatter names the mark.** A hovered, focused or held `ds-pie-chart`
   slice fades the centre to its share (its value under `partOfWhole: false`) over its name, and the
-  total comes back when the pointer leaves. Once the pointer has rested 120ms on a
-  `ds-heatmap-chart` cell, a marker over the colour scale prints its reading and glides to its place
+  total comes back when the pointer leaves. Once the pointer has rested on a `ds-heatmap-chart`
+  cell for `--ds-motion-chart-scale-marker-delay` (120ms), a marker over the colour scale prints its reading and glides to its place
   on the ramp; a fast sweep across the grid leaves it still. The scale sits 12px lower to hold it.
   A `ds-scatter-chart` answers with the point nearest the pointer anywhere over the plot, where it
   answered only within 16px of a point: a ring glides to that point and a dashed line runs to it
   from the pointer. Under `prefers-reduced-motion` the centre, the marker and the ring change at once.
+  Each is on by default and has its own off switch: `centerFollowsHover` on `ds-pie-chart` keeps
+  `centerValue` and `centerLabel` in the centre, `showScaleMarker` on `ds-heatmap-chart` drops the
+  marker, and `nearestPoint` on `ds-scatter-chart` answers only within 16px of a point, without the
+  ring and line. `nearestRadius` on `ds-scatter-chart` caps how far, in CSS pixels, the nearest
+  point answers from; unset, any distance.
 - **Heatmap cells enter along the diagonals.** `staggerMs` on `ds-heatmap-chart` spaces the
   diagonals from the top-left cell, where it spaced the columns; the spread stays within 260ms.
 - **Every mark of a chart moves together when its data changes.** In `ds-chart`, `ds-column-chart`,
@@ -92,6 +154,46 @@
   `morphGrowth`, `morphing` and `ngOnChanges`; the internal `ChartLegendComponent` gained `highlight`
   and lost `onItemEnter` and `onItemLeave`. The internal `pointScale` with its `PointScale` type,
   `tickStep` and `polylinePoints` are removed.
+- **An app that never set a locale formats in British English.** Angular's default `LOCALE_ID`,
+  `'en-US'`, now reads as `'en-GB'` everywhere the library formats: English names, Monday-first
+  weeks, a 24-hour clock and `DD/MM/YYYY` typed dates in `ds-date-picker`, where the picker used
+  `MM/DD/YYYY`. Numbers do not change. Any other `LOCALE_ID`, and `DsConfig.locale`, are used as
+  given; `ds-sparkline` now reads `DsConfig.locale` too. For US formats:
+  `provideDsConfig({ locale: 'en-US' })`.
+- **The calendar week and the clock follow the locale.** Unset, `ds-date-picker` starts its week
+  on the first day of its locale (`locale`, `datePicker.locale`, the config `locale`, then
+  `LOCALE_ID`) and `ds-time-picker` shows the clock of the config `locale`, then `LOCALE_ID`: en-GB
+  (also an app with no locale), de-DE and ru-RU keep Monday and 24 hours; a `DsConfig.locale` of
+  en-US gets Sunday-first weeks and 12-hour times. A browser with no week data keeps Monday.
+  `firstDayOfWeek`, `datePicker.firstDayOfWeek`, `format` and `timePicker.format` still win;
+  `provideDsConfig({ datePicker: { firstDayOfWeek: 1 }, timePicker: { format: '24h' } })` keeps
+  Monday and 24 hours under any locale.
+- **A pressed tonal `ds-button` deepens toward its own colour.** The pressed fill is the rest fill
+  mixed 28% toward the button's colour (`--primary` for primary), where it was the hover fill
+  mixed 10% toward black and turned greyer than the hover. `--ds-button-bg-color-active` still
+  sets a pressed fill of your own.
+- **A pressed `ds-menu-item` with `error` goes one red step deeper.** It fills with
+  `--error-muted` on press, over the `--error-subtitle` hover, the pair a ghost error `ds-button`
+  uses; the press showed the hover fill.
+- **A `ds-funnel-chart` stage grows from its centre.** On entrance each stage grows from 96% about
+  its own centre, as a `ds-scatter-chart` point does, so the funnel's axis stands still; it grew
+  right and down from its top-left corner.
+
+- **Every field shows a spinner while its value is checked.** `ds-input`, `ds-textarea`,
+  `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker`,
+  `ds-color-picker`, `ds-checkbox`, `ds-switch`, `ds-radio-group`, `ds-segmented`, `ds-slider` and
+  `ds-otp-input` take a `pending` input, which signal forms binds by name, and read `pending` from
+  the `NgControl` of a reactive or template-driven form: while an async validator runs, the field
+  shows the small spinner `ds-input` shows for `loading`. It sits at the end of the control; on
+  `ds-checkbox` and `ds-switch` after the label, on `ds-radio-group` and `ds-segmented` beside the
+  label, or after the options without one, on `ds-slider` under the track and on `ds-otp-input`
+  after the cells. A `[loading]` on `ds-input` bound to its own control's pending restates it.
+  `InputComponent`, `TextareaComponent`, `SelectComponent`, `MultiSelectComponent`,
+  `AutocompleteComponent`, `DatePickerComponent`, `TimePickerComponent`, `ColorPickerComponent`,
+  `CheckboxComponent`, `SwitchComponent`, `RadioGroupComponent`, `SegmentedComponent`,
+  `SliderComponent` and `OtpInputComponent` gained members, named in the migration manifest, as did
+  the internal `FieldMessageComponent` and the internal `DsFormControlBase`; a subclass declaring
+  one of those names must rename it.
 
 ### Fixed
 
@@ -112,9 +214,44 @@
 - **Only the main mouse button pins a chart.** A right or middle press on a `ds-chart` category, or
   on any chart's mark, takes no pin, and one outside the chart leaves a held pin in place. The
   chart-tooltip entry point exports the internal `isPrimaryPress`.
+- **A fast pointer no longer leaves the panel and the travelling marker behind.** Crossing a
+  category every frame restarted their glide at zero each time, so on a long `ds-line-chart` or
+  `ds-chart` they stood still until the pointer stopped while the cursor moved on. Each glide now
+  starts two frames in; the scatter ring and the pie arcs glide the same way.
+- **A chart's hover clears the moment the pointer leaves the chart.** The panel, the cursor and
+  the travelling marker used to stay for `tooltipLingerMs` (500ms) wherever the pointer went, so
+  moving onto the next chart lit both; they now wait only while the pointer is still inside the
+  chart, in a gap between marks or on the legend, and the panel stays while the pointer is on it.
+  Every element the pointer crossed outside also restarted that wait, keeping the panel up for as
+  long as the pointer moved; the wait now runs once.
+- **On a `'step'` line the travelling marker lands on the reading.** It stopped at the foot of the
+  riser, at the previous reading's height.
+- **Without markers, the panel and the pin sit on the reading.** A `ds-line-chart` or
+  `dsLineSeries` with `showMarkers` off anchored both to the top of the category band, above the
+  line; they now sit as they do over a visible marker.
 - **A stacked column's panel hangs over the whole stack.** In `ds-column-chart` and `ds-chart`
   with stacked `dsColumnSeries`, hovering a segment opens its panel over the stack's top, so the
   segments above it stay in view and reachable.
+- **An expanded `ds-table` row folds all the way.** Opening a row's panel started 24px tall and
+  closing it stopped at 24px before the row dropped out: the cell padding sat outside the fold. The
+  padding now folds with the panel, so the row grows from 0 and shrinks to 0.
+- **A loading chart holds the room of its data table.** `ds-bar-chart` drew no table line while
+  loading, the other charts drew the line 5px short, and under `dataTable="visible"` every chart
+  drew the closed line where the open table lands, so the page jumped when the data arrived. The
+  placeholder now matches the table line, and under `'visible'` draws the open table with a header
+  and five rows.
+- **Chart labels share one halo.** A `ds-line-chart` annotation, a reference-line label and the
+  `showChange` percentage draw the same 3px halo in `--ds-chart-bg-color` with rounded joins, and
+  under forced colours each prints in `CanvasText` over a `Canvas` halo; an annotation kept its
+  own colour on a white patch there, and the percentage's halo had sharp corners.
+  `--ds-line-chart-annotation-halo-color` and `-halo-width` still set the annotation's halo.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| `rescaleOnHide` on `ds-line-chart` | `true` is the default | nothing |
+| `[loading]` on a `ds-input` bound to its own control: `.pending()"` or `.pending"` | the field shows the spinner whenever its control is pending | nothing |
 
 ## 0.15.0 — 2026-10-09
 

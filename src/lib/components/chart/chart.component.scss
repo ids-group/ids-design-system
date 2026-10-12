@@ -87,8 +87,7 @@
 
 // With the panel, not the marks: the band, its pin and the panel move across as one.
 .cursor.placed {
-  transition: transform var(--ds-motion-chart-tooltip-move-duration)
-    var(--ds-motion-chart-tooltip-move-easing);
+  transition: chart-motion.glides(transform);
 }
 
 .cursor-in {
@@ -134,7 +133,7 @@
 
 .stop-ring.placed {
   transition:
-    transform var(--ds-motion-chart-tooltip-move-duration) var(--ds-motion-chart-tooltip-move-easing),
+    chart-motion.glides(transform),
     opacity var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
 }
 
@@ -162,8 +161,7 @@
 }
 
 .readout.placed {
-  transition: transform var(--ds-motion-chart-tooltip-move-duration)
-    var(--ds-motion-chart-tooltip-move-easing);
+  transition: chart-motion.glides(transform);
 }
 
 .readout,
@@ -201,9 +199,7 @@
 }
 
 .range-band.placed {
-  transition:
-    x var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing),
-    width var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
+  transition: chart-motion.glides(x, width);
 }
 
 // A sideways drag selects; a vertical one still scrolls the page.

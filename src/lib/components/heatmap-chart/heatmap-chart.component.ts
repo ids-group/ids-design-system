@@ -6,10 +6,12 @@ import type {
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
   effect,
+  inject,
   input,
   numberAttribute,
   output,
@@ -17,6 +19,7 @@ import {
 } from '@angular/core';
 import {
   CHART_HEAT_COLORS,
+  chartDelay,
   chartRenderGate,
   dwellHighlight,
   leaveMark,
@@ -40,9 +43,6 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { heatmapDomain, rampIndexOf } from './heatmap-chart.math';
 import type { HeatmapChartCell, HeatmapChartRow } from './heatmap-chart.types';
-
-// The scale marker moves once the pointer rests on a cell this long, so a sweep across the grid leaves it still.
-const SCALE_MARKER_SETTLE_MS = 120;
 
 interface PlacedCell {
   readonly key: string;
@@ -110,6 +110,9 @@ export class HeatmapChartComponent
   /** Prints each cell's reading inside it. */
   readonly showValues = input(false, { transform: booleanAttribute });
 
+  /** Marks the hovered or focused cell's reading on the colour scale. */
+  readonly showScaleMarker = input(true, { transform: booleanAttribute });
+
   /** Fades every cell but the one under the pointer. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
@@ -145,7 +148,11 @@ export class HeatmapChartComponent
     return dimmedBy(this.dimOthers(), this.highlightedStep(), cell.step);
   }
 
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
   private readonly scaleMarkerIndex = signal(-1);
+
+  // The marker moves once the pointer rests on a cell, so a sweep across the grid leaves it still.
 
   private readonly settleScaleMarker = effect((onCleanup) => {
     const index = this.activeMark.index();
@@ -154,17 +161,20 @@ export class HeatmapChartComponent
 
       return;
     }
-    const timer = setTimeout(
-      () => this.scaleMarkerIndex.set(index),
-      SCALE_MARKER_SETTLE_MS,
-    );
+    const delay = chartDelay(this.host.nativeElement, 'scale-marker');
+    if (delay <= 0) {
+      this.scaleMarkerIndex.set(index);
+
+      return;
+    }
+    const timer = setTimeout(() => this.scaleMarkerIndex.set(index), delay);
     onCleanup(() => clearTimeout(timer));
   });
 
   /** Where the settled cell's reading sits along the scale, as a percentage of the ramp. */
   protected readonly scaleMarker = computed(() => {
     const cell = this.flatCells()[this.scaleMarkerIndex()];
-    if (!cell || cell.value === null) {
+    if (!this.showScaleMarker() || !cell || cell.value === null) {
       return null;
     }
     const { min, max } = this.domain();

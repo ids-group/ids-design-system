@@ -68,7 +68,6 @@ import type {
 import {
   LINE_CHART_DEFAULT_TICK_COUNT,
   alignSeriesValues,
-  domainMaxOf,
   paletteIndexFor,
 } from './line-chart.math';
 
@@ -238,8 +237,9 @@ export class LineChartComponent
   /** Ids of the series the legend has switched off. */
   readonly hiddenSeries = model<readonly string[]>([]);
 
-  /** Whether hiding a series re-scales the value axis to what is left. */
-  readonly rescaleOnHide = input(false, { transform: booleanAttribute });
+  /** Whether hiding a series re-scales the value axis to what is left. Off holds the axis where it
+   *  stands with every series shown. */
+  readonly rescaleOnHide = input(true, { transform: booleanAttribute });
 
   /** Whether the legend switches series off. Off leaves it a plain key. */
   readonly legendFilters = input(false, { transform: booleanAttribute });
@@ -263,9 +263,14 @@ export class LineChartComponent
    *  it, and the readings outside faded. Escape or a press outside clears it. Off by default. */
   readonly selectRange = input(false, { transform: booleanAttribute });
 
-  /** On the hovered reading, thickens the stretch from the reading before it in the rising or falling
-   *  colour and prints the change in percent; with several series, for the one singled out. */
-  readonly showChange = input(true, { transform: booleanAttribute });
+  /** Answers the pointer on the axes: the category label in bold, a guide from the value axis and
+   *  the value there in a pill on the axis. On by default. */
+  readonly axisReadout = input(true, { transform: booleanAttribute });
+
+  /** On the hovered reading, thickens the stretches from the reading before it and to the reading
+   *  after it, each in its own rising or falling colour and with its own change in percent; with
+   *  several series, for the one singled out. */
+  readonly showChange = input(false, { transform: booleanAttribute });
 
   /** Milliseconds between one series' entrance and the next; `0` turns it off. The step narrows
    *  so the last series still starts within the stagger budget. */
@@ -508,30 +513,6 @@ export class LineChartComponent
   protected readonly hasSecondaryAxis = computed(() =>
     this.visibleSeries().some((entry) => entry.onSecondaryAxis),
   );
-
-  /** The ceiling handed to the container, which only raises its domain to it. Unless `rescaleOnHide`,
-   *  it spans every series, so hiding one does not move the gridlines. */
-  protected readonly axisMax = computed(() =>
-    this.rescaleOnHide() ? this.max() : this.ceilingOf(false, this.max()),
-  );
-
-  protected readonly axisMaxSecondary = computed(() =>
-    this.rescaleOnHide()
-      ? this.maxSecondary()
-      : this.ceilingOf(true, this.maxSecondary()),
-  );
-
-  private ceilingOf(onSecondaryAxis: boolean, asked: number | null): number {
-    const derived = domainMaxOf(
-      this.stackedSeries()
-        .filter((entry) => entry.onSecondaryAxis === onSecondaryAxis)
-        .map((entry) => entry.values),
-    );
-
-    return asked !== null && Number.isFinite(asked) && asked > derived
-      ? asked
-      : derived;
-  }
 
   protected readonly plotHeight = readOnHostResize(
     inject<ElementRef<HTMLElement>>(ElementRef),

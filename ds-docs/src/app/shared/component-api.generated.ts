@@ -409,6 +409,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -1236,7 +1263,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark for another part of the chart, in milliseconds; zero closes it at once. A pointer that leaves the chart closes it at once whatever this says. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -1999,7 +2026,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark for another part of the chart, in milliseconds; zero closes it at once. A pointer that leaves the chart closes it at once whatever this says. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -2067,6 +2094,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'auto'",
         "required": false,
         "description": "Draws a band and crosshair down the category under the pointer and reports it to every mark through `activeIndex`; the panel then names every reading at that category. `'auto'` (default) is `'category'` with two or more tooltip-showing marks or a mark with `tooltip=\"axis\"`, else `'none'`."
+      },
+      {
+        "name": "rescaleOnHide",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Whether hiding a series re-scales the value axes to what is left. Off holds them where they stand with every series shown."
       },
       {
         "name": "maxSecondary",
@@ -2162,6 +2198,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Lets a press dragged across categories select them: a band over the range, the sum and mean of every reading in it, and the marks outside it faded. Escape or a press outside clears it; a press released in its own category still pins. Off by default."
+      },
+      {
+        "name": "axisReadout",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Answers the pointer on the axes: the category label in bold, a guide from the value axis and the value there in a pill on the axis. On by default."
       },
       {
         "name": "tooltipTemplate",
@@ -2289,7 +2334,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "CHART_TOOLTIP_LINGER_MS",
         "required": false,
-        "description": "Milliseconds the panel survives the pointer leaving the mark."
+        "description": "Milliseconds the panel survives the pointer leaving the mark within the chart."
       },
       {
         "name": "valueFormat",
@@ -2412,7 +2457,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Sinks every column to the baseline and leaves the value axis to the other marks; set it rather than removing the series to animate a legend hiding it."
+        "description": "Sinks every column to the baseline; the value axis follows the chart's `rescaleOnHide`. Set it rather than removing the series to animate a legend hiding it."
       },
       {
         "name": "runningTotal",
@@ -2421,7 +2466,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Reads the columns as a running total, as a waterfall's are: hovering one fades every column after it, and the axis guide stops at the hovered column."
+        "description": "Reads the columns as a running total, as a waterfall's are: the axis guide stops at the hovered column, and under `dimOthers` every column after it fades."
       }
     ],
     "outputs": [
@@ -2515,9 +2560,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "boolean",
         "union": null,
-        "default": "true",
+        "default": "false",
         "required": false,
-        "description": "On the hovered reading, thickens the stretch from the reading before it in the rising or falling colour (`--ds-chart-positive-color`, `--ds-chart-negative-color`) and prints the change in percent. With several series it follows the one singled out: hovered, focused or highlighted."
+        "description": "On the hovered reading, thickens the stretches from the reading before it and to the reading after it, each in its own rising or falling colour (`--ds-chart-positive-color`, `--ds-chart-negative-color`) and with its own change in percent. With several series it follows the one singled out: hovered, focused or highlighted."
       },
       {
         "name": "patterns",
@@ -2603,7 +2648,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "CHART_TOOLTIP_LINGER_MS",
         "required": false,
-        "description": "Milliseconds the panel survives the pointer leaving the marker."
+        "description": "Milliseconds the panel survives the pointer leaving the marker within the chart."
       },
       {
         "name": "valueFormat",
@@ -2849,6 +2894,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -3042,6 +3114,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -3227,7 +3326,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark for another part of the chart, in milliseconds; zero closes it at once. A pointer that leaves the chart closes it at once whatever this says. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -3356,7 +3455,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Ids of the series the legend has switched off; their columns sink to the baseline and the value axis fits what is left."
+        "description": "Ids of the series the legend has switched off; their columns sink to the baseline."
+      },
+      {
+        "name": "rescaleOnHide",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Whether hiding a series re-scales the value axis to what is left. Off holds the axis where it stands with every series shown."
       },
       {
         "name": "legendFilters",
@@ -3387,6 +3495,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Lets a press dragged across columns select their categories: a band, the sum and mean of every column in it, and the rest faded. Escape or a press outside clears it. Off by default."
+      },
+      {
+        "name": "axisReadout",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Answers the pointer on the axes: the category label in bold, a guide from the value axis and the value there in a pill on the axis. On by default."
       },
       {
         "name": "tooltipAnchor",
@@ -3508,6 +3625,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
+      },
+      {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
       },
       {
         "name": "hidden",
@@ -3712,7 +3856,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "First weekday column: 0=Sunday … 6=Saturday. Default 1 (Monday)."
+        "description": "First weekday column: 0=Sunday … 6=Saturday. Falls back to `DS_CONFIG.datePicker.firstDayOfWeek`, then the resolved `locale`'s week, then 1 (Monday)."
       },
       {
         "name": "defaultDate",
@@ -4397,7 +4541,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark for another part of the chart, in milliseconds; zero closes it at once. A pointer that leaves the chart closes it at once whatever this says. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -4641,7 +4785,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark for another part of the chart, in milliseconds; zero closes it at once. A pointer that leaves the chart closes it at once whatever this says. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -4696,6 +4840,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Prints each cell's reading inside it."
+      },
+      {
+        "name": "showScaleMarker",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Marks the hovered or focused cell's reading on the colour scale."
       },
       {
         "name": "dimOthers",
@@ -5010,6 +5163,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
+      },
+      {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
       },
       {
         "name": "hidden",
@@ -5565,7 +5745,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark for another part of the chart, in milliseconds; zero closes it at once. A pointer that leaves the chart closes it at once whatever this says. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -5754,9 +5934,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "boolean",
         "union": null,
-        "default": "false",
+        "default": "true",
         "required": false,
-        "description": "Whether hiding a series re-scales the value axis to what is left."
+        "description": "Whether hiding a series re-scales the value axis to what is left. Off holds the axis where it stands with every series shown."
       },
       {
         "name": "legendFilters",
@@ -5807,13 +5987,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Lets a press dragged across categories select them: a band, the sum and mean of every reading in it, and the readings outside faded. Escape or a press outside clears it. Off by default."
       },
       {
-        "name": "showChange",
+        "name": "axisReadout",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "true",
         "required": false,
-        "description": "On the hovered reading, thickens the stretch from the reading before it in the rising or falling colour and prints the change in percent; with several series, for the one singled out."
+        "description": "Answers the pointer on the axes: the category label in bold, a guide from the value axis and the value there in a pill on the axis. On by default."
+      },
+      {
+        "name": "showChange",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "On the hovered reading, thickens the stretches from the reading before it and to the reading after it, each in its own rising or falling colour and with its own change in percent; with several series, for the one singled out."
       },
       {
         "name": "staggerMs",
@@ -6462,6 +6651,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -6904,6 +7120,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
+      },
+      {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
       },
       {
         "name": "hidden",
@@ -7399,7 +7642,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark for another part of the chart, in milliseconds; zero closes it at once. A pointer that leaves the chart closes it at once whatever this says. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -7457,6 +7700,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'inside'",
         "required": false,
         "description": "`'below'` prints the value and its caption under the ring at full size, never shrunk or shortened."
+      },
+      {
+        "name": "centerFollowsHover",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "The hovered, focused or held slice prints its value and label in the centre in place of `centerValue` and `centerLabel`."
       },
       {
         "name": "legend",
@@ -7903,6 +8155,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -8083,7 +8362,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark for another part of the chart, in milliseconds; zero closes it at once. A pointer that leaves the chart closes it at once whatever this says. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -8176,6 +8455,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Fades every mark but the one under the pointer; on a scatter this hides pile-ups."
+      },
+      {
+        "name": "nearestPoint",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Anywhere over the plot answers with the nearest point, ringed and tethered to the pointer. Off, a point answers only within 16 CSS pixels of its centre, without the ring and tether."
+      },
+      {
+        "name": "nearestRadius",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How far the pointer may be from a point's centre, in CSS pixels and inclusive, for the point to answer under `nearestPoint`; `null` sets no limit."
       },
       {
         "name": "staggerMs",
@@ -8401,6 +8698,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -8548,6 +8872,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
+      },
+      {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
       },
       {
         "name": "hidden",
@@ -8757,6 +9108,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The panel closed, for any reason - a pick, Escape, an outside click, a scroll."
       }
     ]
+  },
+  "show-dirty": {
+    "key": "show-dirty",
+    "selector": "[dsShowDirty]",
+    "isElement": false,
+    "className": "ShowDirtyDirective",
+    "status": "stable",
+    "importName": "ShowDirtyDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/show-dirty",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
   },
   "sidenav:BrandNameDirective": {
     "key": "sidenav",
@@ -9281,6 +9645,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
+      },
+      {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
       },
       {
         "name": "hidden",
@@ -9857,6 +10248,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
+      },
+      {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
       },
       {
         "name": "hidden",
@@ -11055,6 +11473,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -11360,6 +11805,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -11538,7 +12010,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Override the DS-config format for this instance."
+        "description": "Display clock; falls back to `DS_CONFIG.timePicker.format`, then the hour cycle of `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "staticPreview",
@@ -12133,7 +12605,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "How long the tooltip stays after the pointer leaves the mark for another part of the chart, in milliseconds; zero closes it at once. A pointer that leaves the chart closes it at once whatever this says. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "pinOnClick",
@@ -12179,6 +12651,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Dims every OTHER bar while one is hovered or focused."
+      },
+      {
+        "name": "axisReadout",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Answers the pointer on the axes: the category label in bold, a guide from the value axis and the value there in a pill on the axis. On by default."
       },
       {
         "name": "tooltip",

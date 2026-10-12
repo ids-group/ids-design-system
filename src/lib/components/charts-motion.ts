@@ -37,6 +37,10 @@ function cssDurationMs(duration: string): number {
   return duration.trim().endsWith('ms') ? value : value * 1000;
 }
 
+/** How far a glide starts in. A glide re-aimed every frame, as a fast pointer re-aims it, otherwise
+ *  draws its zero-progress frame each time and stands still until the pointer stops. @internal */
+export const CHART_GLIDE_HEAD_START_MS = 1000 / 30;
+
 /** A chart motion timing, read from `--ds-motion-chart-<timing>-duration` and `-easing`. @internal */
 export type ChartMotionTiming = 'mark' | 'mark-grow' | 'state' | 'tooltip-move';
 
@@ -62,6 +66,19 @@ export function chartTiming(
       style.getPropertyValue(`--ds-motion-chart-${timing}-easing`).trim() ||
       'ease',
   };
+}
+
+/** A chart motion delay, read from `--ds-motion-chart-<delay>-delay`. @internal */
+export type ChartMotionDelay = 'scale-marker';
+
+/** The delay `element` inherits from `--ds-motion-chart-<delay>-delay`, in milliseconds; `0` under
+ *  reduced motion.
+ *
+ *  @internal */
+export function chartDelay(element: Element, delay: ChartMotionDelay): number {
+  return cssDurationMs(
+    getComputedStyle(element).getPropertyValue(`--ds-motion-chart-${delay}-delay`),
+  );
 }
 
 /** Eases `apply` from `from` to `to` on the timing `element` inherits (`--ds-motion-chart-<timing>-*`),
@@ -94,7 +111,11 @@ export function tweenMarks(
   }
   // A target-less effect is only a clock: it eases by the token's own curve, whatever its form.
   const clock = new Animation(
-    new KeyframeEffect(null, null, { ...eased, fill: 'forwards' }),
+    new KeyframeEffect(null, null, {
+      ...eased,
+      delay: -CHART_GLIDE_HEAD_START_MS,
+      fill: 'forwards',
+    }),
   );
   let frame = 0;
   const step = (): void => {

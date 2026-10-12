@@ -19,6 +19,7 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | DateRange
     protected readonly canPrevYearPage = computed(…);
     protected readonly captionId = `${this.uid}-caption`;
     private caretAfterFill;
+    protected readonly changedShown = this.fieldMessage.changed;
     private clampToBounds;
     protected close(cause: DsOverlayCloseCause = 'select'): void;
     protected closeMenus(): void;
@@ -95,6 +96,7 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | DateRange
     protected readonly panelId = `${this.uid}-panel`;
     private readonly panelTokens;
     protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>(…);
+    protected readonly pendingShown = this.fieldMessage.pending;
     public readonly placeholder = input<string | null>(null);
     public readonly placeholderResolved = computed(…);
     public readonly presets = input<readonly DatePickerPreset[]>([]);

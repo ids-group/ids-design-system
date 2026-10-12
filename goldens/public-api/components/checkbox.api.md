@@ -6,6 +6,7 @@
 @Component({ selector: 'ds-checkbox' })
 export class CheckboxComponent extends DsBooleanControlValueAccessor {
     public readonly ariaLabel = input<string | null>(null);
+    protected readonly changedShown = this.fieldMessage.changed;
     public readonly checked = model<boolean>(false);
     protected readonly controlId = computed(…);
     protected readonly controlState = this.fieldMessage.controlState;
@@ -21,6 +22,7 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
     protected readonly message = this.fieldMessage.message;
     public readonly name = input<string | null>(null);
     protected onCheckedChange(event: Event): void;
+    protected readonly pendingShown = this.fieldMessage.pending;
     public readonly required = input(false, { transform: booleanAttribute });
     protected readonly resolvedAriaLabel = computed(…);
     public readonly size = input<DsSize | null>(null);

@@ -34,7 +34,10 @@ export class DsTableResize<T extends object> {
     key: string;
     startX: number;
     startWidth: number;
+    header: HTMLElement;
   } | null = null;
+
+  private readonly guide = signal<{ x: number; height: number } | null>(null);
 
   private readonly resizeFocus = signal<{
     key: string;
@@ -60,6 +63,7 @@ export class DsTableResize<T extends object> {
       onBlur: () => this.resizeFocus.set(null),
       onKey: (column, event) => this.onResizeKey(column, event),
       step: (column, delta) => this.stepColumnWidth(column, delta, null),
+      guide: this.guide.asReadonly(),
     });
   }
 
@@ -101,7 +105,9 @@ export class DsTableResize<T extends object> {
       key: column.key,
       startX: event.clientX,
       startWidth: header.offsetWidth,
+      header,
     };
+    this.placeGuide(header, header.offsetWidth);
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
   }
 
@@ -140,10 +146,24 @@ export class DsTableResize<T extends object> {
     const next = new Map(this.columnWidths());
     next.set(this.resizeState.key, Math.round(width));
     this.columnWidths.set(next);
+    this.placeGuide(this.resizeState.header, Math.round(width));
   }
 
   private onResizeEnd(): void {
     this.resizeState = null;
+    this.guide.set(null);
+  }
+
+  // From the width being set, not the header's box: the new width has not been laid out yet.
+  private placeGuide(header: HTMLElement, width: number): void {
+    const table = header.closest('table');
+    if (!table) {
+      return;
+    }
+    this.guide.set({
+      x: table.offsetLeft + header.offsetLeft + width,
+      height: table.offsetHeight,
+    });
   }
 
   private onResizeFocus(column: TableColumn<T>, event: FocusEvent): void {

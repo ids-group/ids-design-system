@@ -16,6 +16,10 @@
       (focus)="onFocus($event, i)"
       (blur)="onBlur()" />
   }
+
+  <ds-field-status
+    [pending]="pendingShown()"
+    [changed]="changedShown()" />
 </div>
 
 <ds-field-message
@@ -23,4 +27,5 @@
   [text]="message().text"
   [state]="message().state"
   [messageId]="hintId()"
-  [reserve]="reserveMessageResolved()" />
+  [reserve]="reserveMessageResolved()"
+  [changed]="changedShown()" />

@@ -10,6 +10,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     public readonly autosize = input(false, { transform: booleanAttribute });
     protected readonly autosizeMaxHeight = computed(…);
     protected readonly autosizeMinHeight = computed(…);
+    protected readonly changedShown = this.fieldMessage.changed;
     private readonly control;
     protected readonly controlState = this.fieldMessage.controlState;
     public readonly countTrimmed = input(false, { transform: booleanAttribute });
@@ -41,6 +42,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     protected readonly overflowParts = computed(…);
     public readonly pattern = input<readonly RegExp[], readonly RegExp[] | string | undefined>([], { transform: (value) => value === undefined ? [] : typeof value === 'string' ? [new RegExp(value)] : value });
     protected readonly patternAttribute = computed(…);
+    protected readonly pendingShown = this.fieldMessage.pending;
     public readonly placeholder = input<string>('');
     public readonly readOnly = input(false, { transform: booleanAttribute });
     public readonly readonlyBinding = input(false, { alias: 'readonly', transform: booleanAttribute });

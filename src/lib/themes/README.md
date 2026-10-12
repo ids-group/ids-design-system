@@ -136,6 +136,61 @@ Components never change — they consume semantic roles, which the active theme 
 3. Override the brand hue (`--blue-*` ramp and/or `--primary` + channels), and any roles you want to retint (surfaces, text, secondary, status). Leave `--primary-hover`/`--primary-pressed` to the DS `color-mix()` derivation.
 4. Apply via `<html data-brand="X">`.
 
+## Brand checklist: what follows `--primary`
+
+Every shade of the primary family takes its hue from `--primary` through relative colour syntax,
+in both themes, except the dark `--text-link`; in light the two text shades take its saturation
+and lightness too. A brand that sets `--primary` gets all of them. Check each against your brand;
+set it explicitly where it fails.
+
+| Token                    | Paints                                                                                                              | Light default                                           | Dark default                    | Must meet                                            |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------- | ---------------------------------------------------- |
+| `--text-link`            | links styled by `styles/link`                                                                                       | `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))` | `hsl(var(--primary-h) 90% 74%)` | 4.5:1 on `--surface-default` and on `--surface-tint` |
+| `--primary-strong`       | text and icons on a tint: tag, chip, tonal button, selected row, tab, sidenav item, through `--accent-strong`       | `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))` | `h 90% 72%`                     | 4.5:1 on every tint below and on `--surface-default` |
+| `--surface-tint`         | active rows and items (list, tree, empty state), through `--accent-surface-tint`                                    | `hsl(from var(--primary) h 100% 97%)`                   | `h 45% 16%`                     | `--text-primary` and `--text-link` 4.5:1 on it       |
+| `--primary-subtitle`     | dropdown selected option; tonal fills (button, tabs, table, calendar day, sidenav item) through `--accent-subtitle` | `hsl(from var(--primary) h 100% 97%)`                   | `h 45% 18%`                     | the text on it 4.5:1                                 |
+| `--primary-muted`        | dropdown selected option on hover; button, tag, avatar, sidenav item through `--accent-muted`                       | `hsl(from var(--primary) h 95% 94%)`                    | `h 40% 26%`                     | the text on it 4.5:1                                 |
+| `--primary-muted-strong` | tonal button hover, outline button border, through `--accent-muted-strong`                                          | `hsl(from var(--primary) h 95% 89%)`                    | `h 42% 32%`                     | the hover label 4.5:1; the default dark holds 3.5:1  |
+
+Dark defaults are `hsl(from var(--primary) …)` with the hue, saturation and lightness shown.
+
+- A light brand (yellow, lime, cyan) derives a link and a `--primary-strong` under 4.5:1 on white:
+  set both to a darker step.
+- An achromatic brand (black, gray) has no hue: the tints fall to hue 0, pink in light and dark red
+  in dark. Set the tints.
+- Still read from the channels `--primary-h/s/l`, which follow `--blue-h/s/l` and not `--primary`:
+  the focus ring and the field halo (`--focus-ring`, `--focus-field`), `--link-visited`, the dark
+  `--text-link` and the `data-neutrals="brand"` grays. Set the three channels to your brand's
+  HSL, or they stay blue.
+- Dark: the dark block declares `--primary` itself and wins over a light-authored brand, so restate
+  `--primary` (and the channels) under `[data-theme='dark'][data-brand="X"]`; every shade follows.
+
+Green brand, measured in Chrome 2026-10-12:
+
+```scss
+[data-brand='green'] {
+  --primary: #1f7a4d;
+  --primary-h: 150;
+  --primary-s: 60%;
+  --primary-l: 30%;
+  // Derived in light: --surface-tint and --primary-subtitle #f0fff7, --primary-muted #e1fef0,
+  // --primary-muted-strong #c8fee3, --text-link and --primary-strong #1d583b
+  // (8.33:1 on white, 8.07:1 on the tint).
+  // Or the brand colour itself as the link, with a tint it holds on:
+  // --text-link: #1f7a4d;     5.32:1 on white
+  // --surface-tint: #e8f4ee;  link 4.71:1 on it
+}
+
+[data-theme='dark'][data-brand='green'] {
+  --primary: #1f7a4d;
+  --primary-h: 150;
+  --primary-s: 60%;
+  --primary-l: 30%;
+  // Derived: --surface-tint #163b29, --primary-subtitle #19432e, --primary-muted #285d43,
+  // --primary-muted-strong #2f7452, --primary-strong #77f8b8 (9.37:1 on the tint).
+}
+```
+
 ## Rules summary
 
 - Components never reference base-palette primitives (`--blue-600`, `--neutral-200`) directly — use a Tier-2 role.

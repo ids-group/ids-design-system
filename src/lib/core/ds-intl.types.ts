@@ -16,6 +16,8 @@ export interface DsIntl {
     /** `'1 character over the limit'` / `` `${excess} characters over the limit` `` - textarea
      *  `maxLengthMode="soft"`. */
     readonly overLimit: (excess: number) => string;
+    /** `'Changed'` - the mark of a field under `showDirty` whose value was edited. */
+    readonly changed?: string;
   };
   readonly picker: {
     /** `'Select…'` - autocomplete, multi-select `placeholder` default. */
@@ -354,8 +356,9 @@ export interface DsIntl {
     readonly directionColumn: string;
     readonly runningTotalColumn: string;
     readonly endsAt: (value: string) => string;
-    /** The pill over a dragged range of categories: their names, the readings' sum and mean. */
-    readonly rangeTotal: (
+    /** The pill over a dragged range of categories: their names, the readings' sum and mean.
+     *  Unset, the English default. */
+    readonly rangeTotal?: (
       range: string,
       total: string,
       average: string,

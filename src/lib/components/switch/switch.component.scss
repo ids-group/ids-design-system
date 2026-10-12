@@ -45,6 +45,10 @@
     var(--font-weight-regular) var(--ds-switch-label-font-size, var(--_switch-label-fs)) / var(--line-height-base) var(--font-sans),
     var(--ds-switch-label-color, var(--text-primary))
   );
+
+  ds-field-status {
+    margin-inline-start: var(--space-2);
+  }
 }
 
 .switch {

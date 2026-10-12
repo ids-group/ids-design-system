@@ -268,60 +268,27 @@
     </li>
   </ul>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          scrollReset
-        </th>
-
-        <th>
-          Content returns to the top
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'path'
-          </code> (default)
-        </td>
-
-        <td>
-          On path change only; search, sort and paging keep the place
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'always'
-          </code>
-        </td>
-
-        <td>
-          Also on query or fragment-only navigation (server-paged lists)
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'never'
-          </code>
-        </td>
-
-        <td>
-          Never; the screen calls
-          <code class="t-mono-inline">
-            scrollToTop()
-          </code>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        scrollReset
+      </code>: the default
+      <code class="t-mono-inline">
+        'path'
+      </code> returns the content to the top
+      on a path change only, so search, sort and paging keep the place;
+      <code class="t-mono-inline">
+        'always'
+      </code> also on a query- or
+      fragment-only navigation (server-paged lists);
+      <code class="t-mono-inline">
+        'never'
+      </code> leaves it to the screen's
+      <code class="t-mono-inline">
+        scrollToTop()
+      </code>.
+    </li>
+  </ul>
 
   <table class="tbl">
     <thead>

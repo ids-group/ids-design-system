@@ -141,6 +141,15 @@
   }
 }
 
+.resize-guide {
+  position: absolute;
+  top: 0;
+  width: var(--border-width-strong);
+  translate: -100% 0;
+  background-color: var(--ds-table-sort-active-icon-color, var(--accent));
+  pointer-events: none;
+}
+
 .hscroll-proxy {
   position: sticky;
   bottom: var(
@@ -417,7 +426,7 @@
     }
 
     .expand-panel-cell {
-      padding: var(--_table-cell-padding-top) var(--_table-cell-padding-right) var(--_table-cell-padding-bottom) var(--_table-cell-padding-left);
+      padding: 0;
     }
 
     /* A keyframe, not a transition: the row is
@@ -443,6 +452,11 @@
       // glyph-clip-guard: collapses the expanded row; open, the panel pads its text off this edge
       overflow: hidden;
       min-height: 0;
+    }
+
+    // Inside the fold, so the padding collapses with the panel rather than snapping at the end.
+    .expand-panel-body {
+      padding: var(--_table-cell-padding-top) var(--_table-cell-padding-right) var(--_table-cell-padding-bottom) var(--_table-cell-padding-left);
     }
 
     @keyframes ds-table-expand {

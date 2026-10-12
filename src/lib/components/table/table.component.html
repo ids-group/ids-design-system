@@ -414,13 +414,15 @@
                     [attr.colspan]="expandedColspan()">
                     <div class="expand-panel-inner">
                       <div class="expand-panel-content">
-                        <ng-container
-                          [ngTemplateOutlet]="rowExpandTemplate()!"
-                          [ngTemplateOutletContext]="{
-                            $implicit: row,
-                            row: row,
-                          }">
-                        </ng-container>
+                        <div class="expand-panel-body">
+                          <ng-container
+                            [ngTemplateOutlet]="rowExpandTemplate()!"
+                            [ngTemplateOutletContext]="{
+                              $implicit: row,
+                              row: row,
+                            }">
+                          </ng-container>
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -444,6 +446,15 @@
         }
       </tbody>
     </table>
+
+    @if (layout.resize()?.guide?.(); as guide) {
+      <div
+        class="resize-guide"
+        aria-hidden="true"
+        [style.left.px]="guide.x"
+        [style.height.px]="guide.height">
+      </div>
+    }
   </div>
 </ds-loading-overlay>
 

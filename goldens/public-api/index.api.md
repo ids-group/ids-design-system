@@ -248,6 +248,7 @@ export { SelectOption } from '@ids-group-ltd/ids-design-system/components/select
 export { SelectOptionGroup } from '@ids-group-ltd/ids-design-system/components/select'; // interface
 export { SelectWidth } from '@ids-group-ltd/ids-design-system/components/select'; // type
 export { SeriesAnnotationComponent } from '@ids-group-ltd/ids-design-system/components/chart'; // component
+export { ShowDirtyDirective } from '@ids-group-ltd/ids-design-system/components/show-dirty'; // directive
 export { SidenavAlertItem } from '@ids-group-ltd/ids-design-system/components/sidenav-footer'; // interface
 export { SidenavComponent } from '@ids-group-ltd/ids-design-system/components/sidenav'; // component
 export { SidenavContract } from '@ids-group-ltd/ids-design-system/components/sidenav'; // interface
@@ -344,6 +345,7 @@ styles/_chart-data-table.scss {
 
 styles/_chart-frame.scss {
     --ds-chart-axis-line-color: (none);
+    --ds-chart-bg-color: (none);
     --ds-chart-focus-halo-color: var(--ds-chart-bg-color);
     --ds-chart-focus-ring-color: (none);
     --ds-chart-frame-bg-color: var(--ds-chart-bg-color);
@@ -371,6 +373,8 @@ styles/_chart-motion.scss {
     --ds-motion-chart-mark-grow-duration: (none);
     --ds-motion-chart-mark-grow-easing: (none);
     --ds-motion-chart-mark-sweep-duration: (none);
+    --ds-motion-chart-tooltip-move-duration: (none);
+    --ds-motion-chart-tooltip-move-easing: (none);
 }
 
 styles/_check-box.scss {

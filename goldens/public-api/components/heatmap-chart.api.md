@@ -24,6 +24,7 @@ export class HeatmapChartComponent extends DsChartBase implements ChartDimmable,
     private readonly domain;
     private readonly flatCells;
     protected readonly highlightedStep = signal<number | null>(…);
+    private readonly host;
     protected isCellDimmed(cell: PlacedCell): boolean;
     protected readonly isEmpty = computed(…);
     protected readonly leaveMark = leaveMark;
@@ -39,6 +40,7 @@ export class HeatmapChartComponent extends DsChartBase implements ChartDimmable,
     protected readonly scaleMinLabel = computed(…);
     protected readonly scaleSteps = computed(…);
     private readonly settleScaleMarker;
+    public readonly showScaleMarker = input(true, { transform: booleanAttribute });
     public readonly showValues = input(false, { transform: booleanAttribute });
     protected readonly skeletonColumns = computed(…);
     protected readonly skeletonRows = computed(…);

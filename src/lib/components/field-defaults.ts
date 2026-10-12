@@ -24,3 +24,16 @@ export function resolveReserveMessage(
         : false),
   );
 }
+
+/**
+ * Resolves a field's `showDirty`: the input, then `DS_CONFIG.field.showDirty`, then `false`.
+ *
+ * Call from a field initializer (an injection context).
+ */
+export function resolveShowDirty(
+  showDirty: Signal<boolean | null>,
+): Signal<boolean> {
+  const config = inject(DS_CONFIG);
+
+  return computed(() => showDirty() ?? config.field?.showDirty ?? false);
+}

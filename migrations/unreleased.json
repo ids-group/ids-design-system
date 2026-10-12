@@ -20,7 +20,9 @@
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent",
         "extends ChartStatesComponent",
-        "extends ChartLegendComponent"
+        "extends ChartLegendComponent",
+        "extends WaterfallChartComponent",
+        "extends DsTableResize"
       ],
       "detect": [
         "extends ChartComponent",
@@ -35,38 +37,15 @@
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent",
         "extends ChartStatesComponent",
-        "extends ChartLegendComponent"
+        "extends ChartLegendComponent",
+        "extends WaterfallChartComponent",
+        "extends DsTableResize"
       ],
       "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
       "appliesWhen": "Only a class of yours that extends ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or FunnelChartComponent, or the internal ChartTooltipPanelComponent, the internal ChartStatesComponent, the internal ChartLegendComponent or the internal WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
-      "note": "`ChartComponent` gained 24; `LineSeriesComponent` gained 22 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 9; `ColumnChartComponent` gained `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `selectRange` and `showChange`; `PieChartComponent` gained 13 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 6 and lost `columnStagger`, `onStepEnter`, `onStepLeave` and `stepDwell`; `ScatterChartComponent` gained 20 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 8; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`, `onItemEnter` and `onItemLeave`."
-    },
-    {
-      "id": "intl-chart-range-total-required",
-      "kind": "behavior",
-      "old": "DsIntl",
-      "new": null,
-      "surface": "typescript",
-      "searchHints": [
-        "DsIntl",
-        "DS_INTL",
-        "shareOfTotal"
-      ],
-      "detect": [
-        ": DsIntl =",
-        "Signal<DsIntl>",
-        "shareOfTotal:"
-      ],
-      "action": "None, unless your code builds a complete DsIntl object of its own: add chart.rangeTotal, the pill over a range selected with selectRange.",
-      "appliesWhen": "Only an object or signal typed as the full DsIntl, not as DsIntlOverrides. provideDsIntl with a partial override, and every app that leaves DS_INTL alone, is unaffected.",
-      "pitfall": "An object that spreads DS_INTL_DEFAULTS.chart compiles, but a chart section written out key by key without the spread fails with TS2741 on rangeTotal.",
-      "restore": null,
-      "verify": "The app builds, and every complete DsIntl object it declares has chart.rangeTotal.",
-      "evidence": [
-        "fixture:unreleased/intl-chart-range-total-required.ts"
-      ]
+      "note": "`ChartComponent` gained 28; `LineSeriesComponent` gained 23 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 10; `ColumnChartComponent` gained `axisReadout`, `heldExtent`, `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `rescaleOnHide`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `axisReadout`, `selectRange` and `showChange` and lost `axisMax`, `axisMaxSecondary` and `ceilingOf`; `PieChartComponent` gained 14 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 8 and lost `columnStagger`, `onStepEnter`, `onStepLeave` and `stepDwell`; `ScatterChartComponent` gained 22 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`; `WaterfallChartComponent` gained `axisReadout`; `DsTableResize` gained `guide` and `placeGuide`. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 9 and its `dataTable` takes a `ChartDataTable`; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`, `onItemEnter` and `onItemLeave`."
     },
     {
       "id": "chart-legend-fades-only-under-dim-others",
@@ -91,22 +70,214 @@
       "verify": "Hover a legend entry of every ds-pie-chart, ds-funnel-chart stage row, ds-scatter-chart legend entry, ds-heatmap-chart scale step and multi-series ds-column-chart or ds-line-chart that should fade the rest, and confirm the chart carries dimOthers."
     },
     {
-      "id": "line-chart-show-change-default-on",
+      "id": "line-chart-rescale-on-hide-default-on",
       "kind": "behavior",
       "old": "ds-line-chart",
       "new": null,
       "surface": "template",
       "searchHints": [
         "ds-line-chart",
-        "dsLineSeries"
+        "rescaleOnHide"
       ],
-      "action": "None, unless a hovered reading must not draw its change from the reading before it: set showChange=\"false\" on ds-line-chart or dsLineSeries.",
-      "appliesWhen": "Every ds-line-chart and dsLineSeries: on the hovered reading of a single series, or of the series singled out by hover, focus or the legend.",
-      "restore": "showChange=\"false\"",
-      "verify": "Hover the second reading of a single-series ds-line-chart and confirm the stretch from the first thickens with a percentage over it, or that nothing is drawn where showChange is false."
+      "action": "None, unless the value axis of a ds-line-chart must stay put while the legend hides a series: set [rescaleOnHide]=\"false\" on it.",
+      "appliesWhen": "Every ds-line-chart that does not bind rescaleOnHide and lets a series be hidden through legendFilters or hiddenSeries. ds-column-chart and ds-chart re-scaled before and still do.",
+      "pitfall": "With the axis re-scaled, two screenshots of one chart with different series hidden no longer share gridlines, so a period-over-period comparison reads differently.",
+      "restore": "[rescaleOnHide]=\"false\"",
+      "verify": "Hide a series in every ds-line-chart with legendFilters and confirm the axis either re-scales to what is left or carries [rescaleOnHide]=\"false\" where it must hold."
+    },
+    {
+      "id": "default-locale-en-us-reads-en-gb",
+      "kind": "behavior",
+      "old": "DsConfig",
+      "new": null,
+      "surface": [
+        "config",
+        "none"
+      ],
+      "searchHints": [
+        "LOCALE_ID",
+        "provideDsConfig(",
+        "ds-date-picker",
+        "ds-sparkline"
+      ],
+      "detect": [
+        "LOCALE_ID",
+        "provideDsConfig(",
+        "locale:"
+      ],
+      "action": "None, unless the app must keep US formats: set `provideDsConfig({ locale: 'en-US' })`.",
+      "appliesWhen": "An app that sets no `DsConfig.locale` and either provides no `LOCALE_ID` or provides `'en-US'`. The library formats in en-GB: `ds-date-picker` types and shows `DD/MM/YYYY` where it showed `MM/DD/YYYY`, its week starts on Monday and `ds-time-picker` uses 24 hours. Names stay English and numbers do not change. An app with any other `LOCALE_ID`, or with `DsConfig.locale`, is not affected.",
+      "pitfall": "A date typed or pasted as `03/04/2026` now means 3 April, not 4 March; check any test, fixture or user guide that types US-ordered dates into a `ds-date-picker`.",
+      "restore": "provideDsConfig({ locale: 'en-US' })",
+      "verify": "Open a ds-date-picker in an app with no locale set and confirm a picked date reads DD/MM/YYYY, the week starts on Monday and a ds-time-picker shows 24-hour times."
+    },
+    {
+      "id": "date-picker-first-day-from-locale",
+      "kind": "behavior",
+      "old": "ds-date-picker",
+      "new": null,
+      "surface": [
+        "config",
+        "template"
+      ],
+      "searchHints": [
+        "ds-date-picker",
+        "firstDayOfWeek",
+        "datePicker"
+      ],
+      "detect": [
+        "provideDsConfig(",
+        "datePicker:",
+        "LOCALE_ID"
+      ],
+      "action": "None, unless a calendar must keep starting on Monday whatever the locale: set `datePicker: { firstDayOfWeek: 1 }` in `provideDsConfig`, or `[firstDayOfWeek]=\"1\"` on the one `ds-date-picker`.",
+      "appliesWhen": "Every `ds-date-picker`, single and range, that binds no `firstDayOfWeek` under a config with no `datePicker.firstDayOfWeek`, in an app whose locale (`locale`, then `datePicker.locale`, then the config's `locale`, then `LOCALE_ID`) is not Monday-first: Sunday for a config `locale` of en-US and for ja-JP, Saturday for ar-EG. An app with no locale, en-GB, de-DE and ru-RU keep Monday. A browser with no week data keeps Monday. A bound `firstDayOfWeek` or `datePicker.firstDayOfWeek` wins as before.",
+      "pitfall": "A `LOCALE_ID` of en-US reads as en-GB and keeps Monday; only a config `locale: 'en-US'` brings Sunday, so look for that before assuming a screen is unaffected.",
+      "restore": "provideDsConfig({ datePicker: { firstDayOfWeek: 1 } })",
+      "verify": "Open a ds-date-picker on each screen and confirm its first weekday header is the day the app means: the locale's, or the day `firstDayOfWeek` pins."
+    },
+    {
+      "id": "time-picker-format-from-locale",
+      "kind": "behavior",
+      "old": "ds-time-picker",
+      "new": null,
+      "surface": [
+        "config",
+        "template"
+      ],
+      "searchHints": [
+        "ds-time-picker",
+        "timePicker",
+        "format="
+      ],
+      "detect": [
+        "provideDsConfig(",
+        "timePicker:",
+        "LOCALE_ID"
+      ],
+      "action": "None, unless times must stay on the 24-hour clock whatever the locale: set `timePicker: { format: '24h' }` in `provideDsConfig`, or `format=\"24h\"` on the one `ds-time-picker`.",
+      "appliesWhen": "Every `ds-time-picker`, single and range, that binds no `format` under a config with no `timePicker.format`, in an app whose config `locale`, then `LOCALE_ID`, uses a 12-hour clock: a config `locale` of en-US, or ar-EG. An app with no locale, en-GB, de-DE, ru-RU and ja-JP keep 24 hours. The bound value stays a 24-hour `HH:mm` string.",
+      "pitfall": "Nothing fails at build: a test or a screenshot that reads the trigger as 21:30 reads 09:30 PM under a config `locale` of en-US.",
+      "restore": "provideDsConfig({ timePicker: { format: '24h' } })",
+      "verify": "Open a ds-time-picker on each screen and confirm the trigger shows the clock the app means: the locale's, or the one `format` or `timePicker.format` pins."
+    },
+    {
+      "id": "brand-shades-follow-primary",
+      "kind": "behavior",
+      "old": "--text-link",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "--primary:",
+        "--text-link",
+        "--primary-strong",
+        "--primary-muted-strong",
+        "--surface-tint",
+        "--primary-subtitle",
+        "--primary-muted",
+        "--blue-50",
+        "--blue-100",
+        "--blue-200",
+        "--blue-700",
+        "--blue-h",
+        "--blue-s",
+        "--blue-l",
+        "--primary-h",
+        "data-brand"
+      ],
+      "action": "None, unless your brand sets `--primary`, `--primary-h` or `--blue-h/s/l`: check `--text-link` and `--primary-strong` against 4.5:1 on white and on `--surface-tint` in light, the text on each tint in dark, and set `--text-link`, `--primary-strong`, `--surface-tint`, `--primary-subtitle`, `--primary-muted` or `--primary-muted-strong` explicitly where the derived value fails or is not the colour you want.",
+      "appliesWhen": "In light, `--text-link`, `--primary-strong`, `--surface-tint`, `--primary-subtitle`, `--primary-muted` and `--primary-muted-strong` were the `--blue-*` steps `--blue-700`, `--blue-700`, `--blue-50`, `--blue-50`, `--blue-100` and `--blue-200`; they now take the hue of `--primary` (`hsl(from var(--primary) h 100% 97%)` for both tints, `h 95% 94%` for `--primary-muted`, `h 95% 89%` for `--primary-muted-strong`), and `--text-link` and `--primary-strong` are `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))`. In dark, `--surface-tint`, `--primary-subtitle`, `--primary-muted`, `--primary-muted-strong` and `--primary-strong` were `hsl(var(--primary-h) …)` and are `hsl(from var(--primary) …)` at the same saturation and lightness. The default blue renders the same RGB. A brand that sets them itself keeps its values. The dark `--text-link`, `--link-visited`, the focus ring and the field halo are unchanged and read `--primary-h/s/l`.",
+      "pitfall": "A brand that re-pointed the `--blue-50`, `--blue-100`, `--blue-200` or `--blue-700` steps, or `--primary-h` in dark, without moving `--primary`'s hue no longer reaches these tokens through them; a light brand colour (yellow, lime, cyan) derives a link and on-tint text under 4.5:1 on white; and an achromatic `--primary` (black, gray) has no hue, so the tints turn pink in light and dark red in dark, with no error anywhere.",
+      "restore": "--text-link: var(--blue-700); --primary-strong: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle: var(--blue-50); --primary-muted: var(--blue-100); --primary-muted-strong: var(--blue-200); and under [data-theme='dark']: --surface-tint: hsl(var(--primary-h) 45% 16%); --primary-subtitle: hsl(var(--primary-h) 45% 18%); --primary-muted: hsl(var(--primary-h) 40% 26%); --primary-muted-strong: hsl(var(--primary-h) 42% 32%); --primary-strong: hsl(var(--primary-h) 90% 72%);",
+      "verify": "With the brand applied in each theme it ships, a link and the label of a selected tag, tab or list row read at least 4.5:1 on their background, and the active row, the selected dropdown option, tonal fills and the text on them are in the brand hue or set deliberately.",
+      "evidence": [
+        "tokens:--surface-tint",
+        "tokens:--primary-subtitle",
+        "tokens:--primary-muted",
+        "tokens:--primary-muted-strong",
+        "tokens:--primary-strong",
+        "tokens:--text-link"
+      ]
+    },
+    {
+      "id": "field-pending-spinner-on-every-field",
+      "kind": "behavior",
+      "old": "ds-input[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "pending",
+        "dsInputSuffix"
+      ],
+      "detect": [
+        ".pending()\"",
+        ".pending\""
+      ],
+      "action": "None, unless a ds-input binds [loading] to its own control's pending state: delete that binding (delete list: input-loading-bound-to-pending).",
+      "appliesWhen": "Every ds-input, ds-textarea, ds-select, ds-multi-select, ds-autocomplete, ds-date-picker, ds-time-picker, ds-color-picker, ds-checkbox, ds-switch, ds-radio-group, ds-segmented, ds-slider and ds-otp-input bound to a form control with an async validator. A [loading] on ds-select, ds-multi-select or ds-autocomplete is the option list's loading state and is not affected.",
+      "pitfall": "A spinner the app draws in a ds-input suffix slot for the same check now shows beside the field's own.",
+      "restore": null,
+      "verify": "Make each bound field's async validator run and confirm the field shows one spinner while it runs and none once it settles."
+    },
+    {
+      "id": "field-classes-gained-form-state-members",
+      "kind": "behavior",
+      "old": "InputComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends InputComponent",
+        "extends TextareaComponent",
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent",
+        "extends DatePickerComponent",
+        "extends TimePickerComponent",
+        "extends ColorPickerComponent",
+        "extends CheckboxComponent",
+        "extends SwitchComponent",
+        "extends RadioGroupComponent",
+        "extends SegmentedComponent",
+        "extends SliderComponent",
+        "extends OtpInputComponent",
+        "extends DsControlValueAccessor",
+        "extends DsBooleanControlValueAccessor",
+        "extends FieldMessageComponent",
+        "extends DsFormControlBase"
+      ],
+      "detect": [
+        "extends InputComponent",
+        "extends TextareaComponent",
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent",
+        "extends DatePickerComponent",
+        "extends TimePickerComponent",
+        "extends ColorPickerComponent",
+        "extends CheckboxComponent",
+        "extends SwitchComponent",
+        "extends RadioGroupComponent",
+        "extends SegmentedComponent",
+        "extends SliderComponent",
+        "extends OtpInputComponent",
+        "extends DsControlValueAccessor",
+        "extends DsBooleanControlValueAccessor",
+        "extends FieldMessageComponent",
+        "extends DsFormControlBase"
+      ],
+      "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
+      "appliesWhen": "Only a class of yours that extends InputComponent, TextareaComponent, SelectComponent, MultiSelectComponent, AutocompleteComponent, DatePickerComponent, TimePickerComponent, ColorPickerComponent, CheckboxComponent, SwitchComponent, RadioGroupComponent, SegmentedComponent, SliderComponent or OtpInputComponent, or the internal DsControlValueAccessor, the internal DsBooleanControlValueAccessor or the internal FieldMessageComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
+      "note": "Every field component this item names gained `pendingShown` and `changedShown`, and `pending`, `dirty`, `showDirty` and `showDirtyResolved` through the internal `DsFormControlBase`, which `DsControlValueAccessor` and `DsBooleanControlValueAccessor` now extend. The internal `FieldMessageComponent` gained `changed`, `changedText` and `intl`."
     }
   ],
   "informational": [
+    {
+      "text": "An expanded `ds-table` row now folds to nothing on close and grows from nothing on open: the panel's cell padding moved inside the folding part, so the row no longer starts or stops 24px tall. The open panel keeps the same padding.",
+      "verify": "Open and close an expandable ds-table row and confirm it grows from and folds to zero height with no jump at either end."
+    },
     {
       "text": "`ds-chart`, `ds-column-chart`, `ds-line-chart` and `ds-waterfall-chart` move the line, its markers and area, the value labels, the pin, the gridlines and tick labels and the waterfall connectors on `--ds-motion-chart-mark-duration` and `--ds-motion-chart-mark-easing` when the data changes, as the columns already did; a column also glides sideways when the plot width changes. Set `--ds-motion-chart-mark-duration: 0ms` on the chart to make every mark land at once again.",
       "verify": "Change the data of a ds-chart holding a column and a line series and confirm the line, its markers and the gridlines move with the columns instead of jumping."
@@ -145,7 +316,7 @@
       "verify": "Hover a slice of a ds-pie-chart and confirm the centre shows its share over its name, and the total once the pointer leaves the ring."
     },
     {
-      "text": "Once the pointer has rested 120ms on a `ds-heatmap-chart` cell, a marker over the colour scale prints its reading and glides to it; the scale sits 12px lower (`margin-block-start` 24px, was 12px) to hold it.",
+      "text": "Once the pointer has rested on a `ds-heatmap-chart` cell for `--ds-motion-chart-scale-marker-delay` (120ms, `0ms` under `prefers-reduced-motion`), a marker over the colour scale prints its reading and glides to it; the scale sits 12px lower (`margin-block-start` 24px, was 12px) to hold it.",
       "verify": "Rest the pointer on a heatmap cell and confirm the marker appears over the scale at its reading, and that the scale clears the grid's last row."
     },
     {
@@ -163,7 +334,46 @@
     {
       "text": "On the first load, a chart's loading skeleton turns into the chart in one motion when the data lands, on `--ds-motion-chart-mark-grow-duration` and `--ds-motion-chart-mark-grow-easing`: each placeholder travels to the mark in its place and takes its colour, a mark without one grows from the baseline, a spare placeholder sinks, and the tick and category placeholders fade into the labels. A reload with data on screen keeps the plot under the loading overlay as before. Set `--ds-motion-chart-mark-grow-duration: 0ms` on the chart to swap the skeleton for the chart at once.",
       "verify": "Bind `loading` with no data to a ds-column-chart, then set data and turn `loading` off: confirm the grey placeholders move onto the columns and colour in, with no blank frame between skeleton and chart."
-    }
+    },
+    {
+      "text": "A pressed `ds-button` with `variant=\"tonal\"` fills with its rest fill mixed 28% toward the button's colour (`--primary` for primary), where it was the hover fill mixed 10% toward black. `--ds-button-bg-color-active` still sets a pressed fill of your own.",
+      "verify": "Hold the mouse down on a tonal ds-button and confirm the fill turns more saturated than the hover fill, not greyer, in the light and the dark theme."
+    },
+    {
+      "text": "A pressed `ds-menu-item` with `error` fills with `--error-muted`, one red step deeper than its `--error-subtitle` hover; the press showed the hover fill.",
+      "verify": "Hold the mouse down on an error ds-menu-item and confirm the red fill deepens from the hover fill, in the light and the dark theme."
+    },
+    {
+      "text": "A loading chart holds the height of its data-table line, and under `dataTable=\"visible\"` draws the open table with a header and five rows; `ds-bar-chart` showed no table line while loading.",
+      "verify": "Load a ds-bar-chart and a ds-column-chart with dataTable set to toggle and to visible, and confirm the data-table line or open table sits in the same place before and after the data arrives."
+    },
+    {
+      "text": "A `ds-funnel-chart` stage enters growing from 96% about its own centre, as a `ds-scatter-chart` point does; it grew right and down from its top-left corner.",
+      "verify": "Load a ds-funnel-chart and confirm each stage's centre holds still while it grows, with its left and right edges moving outward together."
+    },
+    {
+      "text": "Under forced colours a `ds-line-chart` annotation prints in the system text colour over a halo in the system background colour, as a reference-line label does; it kept its own colour on a white patch. `--ds-line-chart-annotation-halo-color` and `--ds-line-chart-annotation-halo-width` still set the halo in normal colours.",
+      "verify": "Turn on Windows high contrast, open a ds-line-chart with annotations and confirm each annotation reads in the system text colour over the system background."
+    },
+    "`showDirty` (default `false`) on every value field, the `dsShowDirty` directive (`ShowDirtyDirective`) and `DS_CONFIG.field.showDirty` mark a value the user changed with a dot and a \"Changed\" line; off unless one of the three turns it on. The line reads the new optional `DsIntl` key `field.changed`."
   ],
-  "deleteList": []
+  "deleteList": [
+    {
+      "id": "line-chart-rescale-on-hide-bare",
+      "surface": "template",
+      "find": "rescaleOnHide",
+      "why": "true is the default of rescaleOnHide on ds-line-chart; [rescaleOnHide]=\"false\" stays where the axis must hold.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "input-loading-bound-to-pending",
+      "surface": "template",
+      "find": [
+        ".pending()\"",
+        ".pending\""
+      ],
+      "why": "Every DS field shows the spinner while its own control is pending. A [loading] bound to another control's state stays, and so does [loading] on ds-select, ds-multi-select or ds-autocomplete, which means the option list is loading.",
+      "replaceWith": "nothing"
+    }
+  ]
 }

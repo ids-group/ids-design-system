@@ -1,25 +1,9 @@
 @let api = data();
 
 @if (api) {
-  <div class="meta">
-    <div class="row">
-      <span class="chip tagchip">
-        <span class="tag">
-          {{ api.isElement ? '<' + api.selector + '>' : api.selector }}
-        </span>
-      </span>
-
-      <span
-        class="chip"
-        title="Import path">
-        {{ api.entryPoint }}
-      </span>
-    </div>
-
-    @if (api.summary) {
-      <p class="summary">
-        {{ api.summary }}
-      </p>
-    }
-  </div>
+  <span class="chip tagchip">
+    <span class="tag">
+      {{ api.isElement ? '<' + api.selector + '>' : api.selector }}
+    </span>
+  </span>
 }

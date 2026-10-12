@@ -72,7 +72,7 @@ export class ChartStatesComponent implements OnChanges {
     public constructor();
     public readonly body = input.required<TemplateRef<unknown>>();
     public readonly caption = input<string | null>(null);
-    public readonly dataTable = input(false);
+    public readonly dataTable = input<ChartDataTable>('none');
     public readonly empty = input(false);
     public readonly emptyText = input('');
     public readonly error = input(false);
@@ -87,6 +87,7 @@ export class ChartStatesComponent implements OnChanges {
     public ngOnChanges(changes: SimpleChanges): void;
     public readonly pending = input(false);
     public readonly pinned = input(false);
+    protected readonly placeholderRows = Array.from(…);
     public readonly release = output();
     public readonly reloading = input(false);
     public readonly shimmer = input(true);

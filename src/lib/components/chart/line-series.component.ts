@@ -171,9 +171,25 @@ function interpolate(
     : values[index - 1] + (values[index] - values[index - 1]) * share;
 }
 
-// Distance along a line drawn left to right at which it reaches `x`.
-function lengthAtX(samples: PathSamples, x: number): number {
+// Distance along a line drawn left to right at which it reaches `x`; on a vertical run at `x` (a
+// step's riser), the sample nearest `y`.
+function lengthAt(samples: PathSamples, x: number, y: number): number {
   const index = firstReaching(samples.xs, x);
+  let nearest = index;
+  for (
+    let candidate = index + 1;
+    candidate < samples.xs.length && samples.xs[candidate] - x < 0.5;
+    candidate++
+  ) {
+    if (
+      Math.abs(samples.ys[candidate] - y) < Math.abs(samples.ys[nearest] - y)
+    ) {
+      nearest = candidate;
+    }
+  }
+  if (nearest !== index) {
+    return samples.lengths[nearest];
+  }
 
   return interpolate(
     samples.lengths,
@@ -297,10 +313,10 @@ export class LineSeriesComponent implements OnDestroy {
    *  `dimOthers` the others fade. */
   readonly highlighted = input<string | null>(null);
 
-  /** On the hovered reading, thickens the stretch from the reading before it in the rising or falling
-   *  colour (`--ds-chart-positive-color`, `--ds-chart-negative-color`) and prints the change in percent.
-   *  With several series it follows the one singled out: hovered, focused or highlighted. */
-  readonly showChange = input(true, { transform: booleanAttribute });
+  /** On the hovered reading, thickens the stretches from the reading before it and to the reading
+   *  after it, each in its own rising or falling colour (`--ds-chart-positive-color`,
+   *  `--ds-chart-negative-color`) and with its own change in percent. With several series it follows the one singled out: hovered, focused or highlighted. */
+  readonly showChange = input(false, { transform: booleanAttribute });
 
   /** A dash pattern per series, in series order. A series past the end, or given `''`, draws solid. */
   readonly patterns = input<readonly string[]>([]);
@@ -329,7 +345,7 @@ export class LineSeriesComponent implements OnDestroy {
   /** Where an `'axis'` panel hangs: `'reading'` over the highest reading in the category; `'pointer'` follows the cursor. */
   readonly tooltipAnchor = input<'reading' | 'pointer'>('reading');
 
-  /** Milliseconds the panel survives the pointer leaving the marker. */
+  /** Milliseconds the panel survives the pointer leaving the marker within the chart. */
   readonly tooltipLingerMs = input(CHART_TOOLTIP_LINGER_MS, {
     transform: numberAttribute,
   });
@@ -354,16 +370,16 @@ export class LineSeriesComponent implements OnDestroy {
 
   constructor() {
     effect(() => {
-      this.scales.reportDomain(
-        `${this.domainId}-primary`,
-        this.valuesOn('primary'),
-        'primary',
-      );
-      this.scales.reportDomain(
-        `${this.domainId}-secondary`,
-        this.valuesOn('secondary'),
-        'secondary',
-      );
+      for (const axis of ['primary', 'secondary'] as const) {
+        for (const hidden of [false, true]) {
+          this.scales.reportDomain(
+            this.reportIdOf(axis, hidden),
+            this.valuesOn(axis, hidden),
+            axis,
+            hidden,
+          );
+        }
+      }
     });
     this.scales.reportTooltip(this.domainId, {
       context: this.tooltipContext,
@@ -408,8 +424,10 @@ export class LineSeriesComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.scales.releaseTooltip(this.domainId);
-    this.scales.releaseDomain(`${this.domainId}-primary`);
-    this.scales.releaseDomain(`${this.domainId}-secondary`);
+    for (const axis of ['primary', 'secondary'] as const) {
+      this.scales.releaseDomain(this.reportIdOf(axis, false));
+      this.scales.releaseDomain(this.reportIdOf(axis, true));
+    }
   }
 
   readonly activeMark = chartActiveMark(
@@ -417,9 +435,17 @@ export class LineSeriesComponent implements OnDestroy {
     () => this.scales.hoverDelayMs?.() ?? 0,
   );
 
-  private valuesOn(axis: ChartAxis): number[] {
+  private reportIdOf(axis: ChartAxis, hidden: boolean): string {
+    return `${this.domainId}-${axis}${hidden ? '-hidden' : ''}`;
+  }
+
+  private valuesOn(axis: ChartAxis, hidden: boolean): number[] {
     return this.data()
-      .filter((series) => (series.axis ?? 'primary') === axis && !series.hidden)
+      .filter(
+        (series) =>
+          (series.axis ?? 'primary') === axis &&
+          (series.hidden ?? false) === hidden,
+      )
       .flatMap((series) =>
         series.data.filter((value): value is number => value !== null),
       );
@@ -669,13 +695,14 @@ export class LineSeriesComponent implements OnDestroy {
       if (line) {
         next.cancel = tweenMarks(
           marker,
-          [lengthAtX(line, state.x)],
-          [lengthAtX(line, target.x)],
+          [lengthAt(line, state.x, state.y)],
+          [lengthAt(line, target.x, target.y)],
           ([length]) => {
             const point = pointAtLength(line, length);
             place(point.x, point.y);
           },
           'tooltip-move',
+          () => place(target.x, target.y),
         );
       } else {
         next.cancel = tweenMarks(
@@ -940,24 +967,37 @@ export class LineSeriesComponent implements OnDestroy {
     const current = markers.find(
       (marker) => marker.categoryIndex === categoryIndex,
     );
-    const previous = markers.find(
-      (marker) => marker.categoryIndex === categoryIndex - 1,
-    );
-    if (!current || !previous || previous.value === 0) {
+    if (!current) {
       return [];
     }
-    const change = current.value - previous.value;
+    const stretches = [
+      [
+        markers.find((marker) => marker.categoryIndex === categoryIndex - 1),
+        current,
+      ],
+      [
+        current,
+        markers.find((marker) => marker.categoryIndex === categoryIndex + 1),
+      ],
+    ] as const;
 
-    return [
-      {
-        key: `${current.seriesId}-${categoryIndex}`,
-        path: linePath([previous, current], this.curve()),
-        rising: change >= 0,
-        label: `${change > 0 ? '+' : ''}${formatPercent(change, Math.abs(previous.value), this.locale)}`,
-        x: (previous.x + current.x) / 2,
-        y: Math.min(previous.y, current.y) - CHANGE_LABEL_GAP,
-      },
-    ];
+    return stretches.flatMap(([from, to]) => {
+      if (!from || !to || from.value === 0) {
+        return [];
+      }
+      const change = to.value - from.value;
+
+      return [
+        {
+          key: `${current.seriesId}-${from.categoryIndex}`,
+          path: linePath([from, to], this.curve()),
+          rising: change >= 0,
+          label: `${change > 0 ? '+' : ''}${formatPercent(change, Math.abs(from.value), this.locale)}`,
+          x: (from.x + to.x) / 2,
+          y: Math.min(from.y, to.y) - CHANGE_LABEL_GAP,
+        },
+      ];
+    });
   });
 
   protected readonly pinnedMarkers = this.activeMark.pinnedAt(

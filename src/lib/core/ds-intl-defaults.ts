@@ -2,7 +2,10 @@ import type { DsIntl } from './ds-intl.types';
 
 /** English wording for every string the library invents. Used unless `provideDsIntl` overrides
  *  a section. */
-export const DS_INTL_DEFAULTS: DsIntl = {
+export const DS_INTL_DEFAULTS: DsIntl & {
+  readonly field: Required<DsIntl['field']>;
+  readonly chart: Required<DsIntl['chart']>;
+} = {
   field: {
     optional: '(optional)',
     clearInput: 'Clear input',
@@ -12,6 +15,7 @@ export const DS_INTL_DEFAULTS: DsIntl = {
       excess === 1
         ? '1 character over the limit'
         : `${excess} characters over the limit`,
+    changed: 'Changed',
   },
   picker: {
     placeholder: 'Select…',

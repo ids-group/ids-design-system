@@ -42,6 +42,10 @@
     padding-inline-start: var(--_checkbox-gap);
   }
 
+  ds-field-status {
+    margin-inline-start: var(--_checkbox-gap);
+  }
+
   @include control-line.line(
     '.check',
     var(--ds-checkbox-label-font-weight, var(--font-weight-regular)) var(--ds-checkbox-label-font-size, var(--_checkbox-label-fs)) / var(--line-height-base) var(--font-sans),

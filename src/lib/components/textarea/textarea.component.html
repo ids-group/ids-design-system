@@ -60,11 +60,16 @@
       (blur)="markTouched()"
       (scroll)="syncOverflowScroll()">
     </textarea>
+
+    <ds-field-status
+      [pending]="pendingShown()"
+      [changed]="changedShown()" />
   </div>
 
   @if (
       reserveMessageResolved() ||
       message().text ||
+      changedShown() ||
       maxLength() !== null
     ) {
     <div class="field-footer">
@@ -73,7 +78,8 @@
         [text]="message().text"
         [state]="message().state"
         [messageId]="hintId()"
-        [reserve]="reserveMessageResolved()" />
+        [reserve]="reserveMessageResolved()"
+        [changed]="changedShown()" />
 
       @if (maxLength() !== null) {
         <span
