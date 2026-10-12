@@ -1182,7 +1182,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     return {
       categoryIndex: readout.categoryIndex,
       y: readout.y,
-      label: this.valueFormatResolved()(value, 'tooltip'),
+      label: this.valueFormatResolved()(value, 'readout'),
       x1: onRight && toMark ? centre - half : this.plot().left,
       x2: !onRight && toMark ? centre + half : this.plotRight(),
       pillWidth,

@@ -5,9 +5,11 @@ export type ChartDataTable = 'toggle' | 'visible' | 'none';
 /** Whether a chart draws its own bordered, padded box; `'none'` for a chart inside a card. */
 export type ChartFrame = 'auto' | 'none';
 
-/** Where a chart-value formatter is printing: the compact `'tick'` label on the value axis, or
- *  `'tooltip'` for every value spelled out in full (annex table, description, beside a mark). */
-export type ChartFormatLocation = 'tick' | 'tooltip';
+/** Where a chart-value formatter is printing: the compact `'tick'` label on the value axis,
+ *  `'readout'` for the hovered value in a pill on the axis, or `'tooltip'` for every value spelled
+ *  out in full (annex table, description, beside a mark). The built-in format prints `'readout'`
+ *  in full, as `'tooltip'`. */
+export type ChartFormatLocation = 'tick' | 'readout' | 'tooltip';
 
 /** Formats every value a chart prints, annex table and generated description included.
  *  Receives the location, so one function can abbreviate on the axis only. */

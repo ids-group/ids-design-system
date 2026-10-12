@@ -21,10 +21,16 @@ import type {
 } from 'ds/chart';
 import { ChartDataTableComponent } from 'ds/chart-data-table';
 import type { ChartDataRow } from 'ds/chart-data-table';
-import type { ChartThreshold } from 'ds/core';
+import type { ChartThreshold, ChartValueFormat } from 'ds/core';
 import { RadioComponent, RadioGroupComponent } from 'ds/radio-group';
 import { SwitchComponent } from 'ds/switch';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+
+const COMPACT_NUMBER = new Intl.NumberFormat('en', {
+  notation: 'compact',
+  maximumFractionDigits: 1,
+});
+const FULL_NUMBER = new Intl.NumberFormat('en');
 
 const LATENCY_NOTES: readonly ChartAnnotation[] = [
   { categoryIndex: 4, value: 480, label: 'Cache eviction' },
@@ -156,6 +162,12 @@ export class ChartSection {
   protected readonly orderMonths = ORDER_MONTHS;
   protected readonly orderColumns = ORDER_COLUMNS;
   protected readonly basketSeries = BASKET_SERIES;
+  protected readonly revenueColumns = ORDER_COLUMNS.map((point) => ({
+    ...point,
+    value: point.value * 1840,
+  }));
+  protected readonly compactReadout: ChartValueFormat = (value, location) =>
+    (location === 'tooltip' ? FULL_NUMBER : COMPACT_NUMBER).format(value);
   protected readonly visitSeries = VISIT_SERIES;
   protected readonly columnAxisColor = 'var(--ds-chart-series-1-color)';
   protected readonly lineAxisColor = 'var(--ds-chart-series-4-color)';

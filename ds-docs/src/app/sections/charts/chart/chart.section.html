@@ -918,6 +918,16 @@
     </li>
 
     <li>
+      The pill prints through the chart's
+      <code class="t-mono-inline">
+        valueFormat
+      </code> at the location
+      <code class="t-mono-inline">
+        'readout'
+      </code>; the built-in format spells it out in full, as in a tooltip.
+    </li>
+
+    <li>
       Keys, with <code class="t-mono-inline">interactive</code> on chart and
       marks: the category cursor table in
       <a routerLink="/foundations/charts">
@@ -996,6 +1006,24 @@
 
       <div class="state-cell-label">
         axisReadout = false: no label, guide or pill
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-chart
+        interactive
+        [categories]="orderMonths"
+        [valueFormat]="compactReadout">
+        <svg:g
+          dsColumnSeries
+          interactive
+          seriesLabel="Revenue"
+          [data]="revenueColumns"
+          [showValues]="false" />
+      </ds-chart>
+
+      <div class="state-cell-label">
+        valueFormat: a compact pill, a full tooltip
       </div>
     </div>
   </div>

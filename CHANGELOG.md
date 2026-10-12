@@ -38,7 +38,10 @@
   guide and the pill glide between readings on `--ds-motion-chart-tooltip-move-duration` and
   `-easing`. In `ds-waterfall-chart` the guide stops at the hovered step, reads its running total,
   and the steps after it fade. The new `axisReadout` input on all four, on by default, turns the
-  label, the guide and the pill off.
+  label, the guide and the pill off. The pill prints through `valueFormat` at the new
+  `ChartFormatLocation` `'readout'`: the built-in format spells it out as for `'tooltip'`, and a
+  custom formatter can return the tick's short form there. A formatter whose `location` parameter
+  is typed as its own `'tick' | 'tooltip'` union stops compiling until it takes `'readout'`.
 - **A highlighted line point rides the line.** Under the category cursor, each series' highlighted
   point travels along its own line to the next category, with the panel and the crosshair, instead
   of jumping there.
