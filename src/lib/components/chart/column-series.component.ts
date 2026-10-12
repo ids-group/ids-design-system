@@ -19,7 +19,7 @@ import {
   CHART_SERIES_COLORS,
   CHART_TOOLTIP_LINGER_MS,
   chartValueFormat,
-  cssDurationMs,
+  chartTiming,
   describeShare,
   listenForMarkFocus,
   markOf,
@@ -331,11 +331,8 @@ export class ColumnSeriesComponent implements OnDestroy {
       if (from === undefined || from === mark.x || !column) {
         return;
       }
-      const style = getComputedStyle(column);
-      const duration = cssDurationMs(
-        style.getPropertyValue('--ds-motion-chart-mark-duration'),
-      );
-      if (duration <= 0 || typeof column.animate !== 'function') {
+      const timing = chartTiming(column, 'mark');
+      if (!timing || typeof column.animate !== 'function') {
         return;
       }
       // Re-inserted, the column replays its entrance; it has already arrived.
@@ -347,12 +344,7 @@ export class ColumnSeriesComponent implements OnDestroy {
       const at = (x: number) => ({
         transform: `translateX(calc(${x}px + var(--_column-slot-offset)))`,
       });
-      column.animate([at(from), at(mark.x)], {
-        duration,
-        easing:
-          style.getPropertyValue('--ds-motion-chart-mark-easing').trim() ||
-          'ease',
-      });
+      column.animate([at(from), at(mark.x)], timing);
     });
   }
 

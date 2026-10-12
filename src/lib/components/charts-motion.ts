@@ -27,16 +27,40 @@ export function leaveMark(event: AnimationCallbackEvent): void {
   event.target.classList.add('mark-leave');
 }
 
-/** A CSS duration (`300ms`, `0.3s`) in milliseconds; anything unparsable is `0`.
- *
- *  @internal */
-export function cssDurationMs(duration: string): number {
+// A CSS duration (`300ms`, `0.3s`) in milliseconds; anything unparsable is `0`.
+function cssDurationMs(duration: string): number {
   const value = parseFloat(duration);
   if (!Number.isFinite(value)) {
     return 0;
   }
 
   return duration.trim().endsWith('ms') ? value : value * 1000;
+}
+
+type ChartTimingName = 'mark' | 'mark-grow' | 'state' | 'tooltip-move';
+
+/** The duration and easing `element` inherits from `--ds-motion-chart-<timing>-*`, or `null` when the
+ *  duration is zero, as under reduced motion.
+ *
+ *  @internal */
+export function chartTiming(
+  element: Element,
+  timing: ChartTimingName,
+): { duration: number; easing: string } | null {
+  const style = getComputedStyle(element);
+  const duration = cssDurationMs(
+    style.getPropertyValue(`--ds-motion-chart-${timing}-duration`),
+  );
+  if (duration <= 0) {
+    return null;
+  }
+
+  return {
+    duration,
+    easing:
+      style.getPropertyValue(`--ds-motion-chart-${timing}-easing`).trim() ||
+      'ease',
+  };
 }
 
 /** Eases `apply` from `from` to `to` on the timing `element` inherits (`--ds-motion-chart-<timing>-*`),
@@ -53,15 +77,12 @@ export function tweenMarks(
   from: readonly number[],
   to: readonly number[],
   apply: (values: readonly number[]) => void,
-  timing: 'mark' | 'mark-grow' | 'state' | 'tooltip-move' = 'mark',
+  timing: ChartTimingName = 'mark',
   onDone: () => void = () => undefined,
 ): () => void {
-  const style = getComputedStyle(element);
-  const duration = cssDurationMs(
-    style.getPropertyValue(`--ds-motion-chart-${timing}-duration`),
-  );
+  const eased = chartTiming(element, timing);
   if (
-    duration <= 0 ||
+    !eased ||
     from.length !== to.length ||
     typeof KeyframeEffect === 'undefined'
   ) {
@@ -72,13 +93,7 @@ export function tweenMarks(
   }
   // A target-less effect is only a clock: it eases by the token's own curve, whatever its form.
   const clock = new Animation(
-    new KeyframeEffect(null, null, {
-      duration,
-      easing:
-        style.getPropertyValue(`--ds-motion-chart-${timing}-easing`).trim() ||
-        'ease',
-      fill: 'forwards',
-    }),
+    new KeyframeEffect(null, null, { ...eased, fill: 'forwards' }),
   );
   let frame = 0;
   const step = (): void => {

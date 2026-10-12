@@ -1,4 +1,4 @@
-import { cssDurationMs } from '@ids-group-ltd/ids-design-system/components';
+import { chartTiming } from '@ids-group-ltd/ids-design-system/components';
 
 /** How a mark with no placeholder arrives, and a placeholder with no mark leaves: from the
  *  baseline under it (`up`), from its inline start (`across`), or fading in place (`null`).
@@ -76,10 +76,7 @@ export function startSkeletonMorph(
   growth: ChartMorphGrowth,
   done: () => void,
 ): (() => void) | null {
-  const hostStyle = getComputedStyle(host);
-  const duration = cssDurationMs(
-    hostStyle.getPropertyValue('--ds-motion-chart-mark-grow-duration'),
-  );
+  const growTiming = chartTiming(host, 'mark-grow');
   const elements = Array.from(
     host.querySelectorAll<HTMLElement>('ds-skeleton, [data-morph]'),
   );
@@ -88,16 +85,10 @@ export function startSkeletonMorph(
       element.localName === 'ds-skeleton' &&
       !element.classList.contains('still'),
   );
-  if (duration <= 0 || !loading || typeof host.animate !== 'function') {
+  if (!growTiming || !loading || typeof host.animate !== 'function') {
     return null;
   }
-  const timing: KeyframeAnimationOptions = {
-    duration,
-    easing:
-      hostStyle.getPropertyValue('--ds-motion-chart-mark-grow-easing').trim() ||
-      'ease',
-    fill: 'both',
-  };
+  const timing: KeyframeAnimationOptions = { ...growTiming, fill: 'both' };
 
   const layer = document.createElement('div');
   layer.setAttribute('aria-hidden', 'true');
