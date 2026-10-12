@@ -1447,6 +1447,102 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     }
   }
 
+  // Captured ahead of a series' own arrow keys, which would otherwise move focus without the range.
+  private readonly extendRangeFromKeys = this.listenForRangeKeys();
+
+  private listenForRangeKeys(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+    const host = this.host.nativeElement;
+    const onKey = (event: KeyboardEvent): void => {
+      const target = event.target;
+      if (
+        !this.selectRange() ||
+        !event.shiftKey ||
+        (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') ||
+        !(target instanceof Element)
+      ) {
+        return;
+      }
+      const stop = target.closest('.category-stop');
+      const mark = stop ? null : target.closest('[data-mark-index]');
+      // A column's mark index is its category; a line marker reports its category as it takes focus.
+      const current = stop
+        ? this.focusedCategory()
+        : mark?.hasAttribute('data-point-key')
+          ? this.activeIndex()
+          : Number(mark?.getAttribute('data-mark-index') ?? -1);
+      if ((!stop && !mark) || current < 0) {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      const next = this.extendRange(
+        current,
+        event.key === 'ArrowRight' ? 1 : -1,
+      );
+      if (next === current) {
+        return;
+      }
+      if (stop) {
+        this.focusStop(next);
+      } else if (mark) {
+        this.markInCategory(mark, current, next)?.focus();
+      }
+    };
+    host.addEventListener('keydown', onKey, true);
+    inject(DestroyRef).onDestroy(() =>
+      host.removeEventListener('keydown', onKey, true),
+    );
+  }
+
+  // Grows or shrinks the range from its far end; from a category outside the range's ends, a new one
+  // starts there. Returns the category the far end moved to.
+  private extendRange(current: number, step: 1 | -1): number {
+    const next = Math.min(
+      Math.max(current + step, 0),
+      this.categories().length - 1,
+    );
+    const range = this.range();
+    const anchor =
+      range && current === range.to
+        ? range.from
+        : range && current === range.from
+          ? range.to
+          : current;
+    this.range.set({
+      from: Math.min(anchor, next),
+      to: Math.max(anchor, next),
+    });
+
+    return next;
+  }
+
+  // The same series' mark at another category: a column is indexed by its category, a line marker keyed by it.
+  private markInCategory(
+    mark: Element,
+    current: number,
+    next: number,
+  ): SVGElement | null {
+    const pointKey = mark.getAttribute('data-point-key');
+    if (pointKey === null) {
+      return (
+        mark.parentElement?.querySelector<SVGElement>(
+          `:scope > [data-mark-index="${next}"]`,
+        ) ?? null
+      );
+    }
+    const keys = categoryKeys(this.categories());
+    const seriesId = pointKey.slice(0, -(keys[current].length + 1));
+
+    return (
+      mark.parentElement?.querySelector<SVGElement>(
+        `[data-point-key="${CSS.escape(`${seriesId}-${keys[next]}`)}"]`,
+      ) ?? null
+    );
+  }
+
   setActiveIndex(index: number): void {
     this.cursorState.setIndex(this.clampIndex(index));
   }
