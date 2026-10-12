@@ -23,7 +23,7 @@ import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
       color="neutral"
       variant="outline"
       size="sm"
-      [disabled]="busy()"
+      [loading]="busy()"
       (pressed)="pressed.emit()">
       {{ busy() ? intl().tableExport.buttonBusy : intl().tableExport.button }}
     </ds-button>

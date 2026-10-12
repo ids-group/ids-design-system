@@ -147,8 +147,8 @@
       color="neutral"
       variant="outline"
       size="sm"
-      [disabled]="promiseRunning()"
-      (click)="firePromise()">
+      [loading]="promiseRunning()"
+      (pressed)="firePromise()">
       Save report (async)
     </ds-button>
   </div>

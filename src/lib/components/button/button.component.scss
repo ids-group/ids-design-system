@@ -271,7 +271,7 @@
     color: transparent !important;
     pointer-events: none;
 
-    /* [disabled] is set while loading; keep the variant fill, not the disabled gray. */
+    /* aria-disabled is set while loading; keep the variant fill, not the disabled gray. */
     background-color: var(--_button-bg-color);
     border-color: var(--_button-border-color);
 

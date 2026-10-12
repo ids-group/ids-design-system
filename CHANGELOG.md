@@ -273,6 +273,13 @@
   under forced colours each prints in `CanvasText` over a `Canvas` halo; an annotation kept its
   own colour on a white patch there, and the percentage's halo had sharp corners.
   `--ds-line-chart-annotation-halo-color` and `-halo-width` still set the annotation's halo.
+- **A `ds-button` keeps focus while `loading`.** A button pressed from the keyboard and then set
+  `loading` was disabled natively, so focus fell to the page. A loading button takes
+  `aria-disabled="true"` beside `aria-busy` and stays focusable; the click is swallowed, so
+  `(pressed)` does not fire and a `type="submit"` does not submit. The `dsTableExport` button shows
+  the spinner while an `exportFetcher` runs, in place of the greyed "Exporting…" label. A
+  `[disabled]` bound to the same flag as `[loading]` still disables natively and drops focus;
+  remove it.
 
 ### What you can now DELETE
 
