@@ -613,67 +613,22 @@
 
   <pre class="t-mono-block"><code>messageIcon &gt; DS_CONFIG.field.stateIcons.&lt;state&gt; &gt; default</code></pre>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          Value
-        </th>
+  <ul class="rules">
+    <li>
+      An icon name replaces the glyph; <code class="t-mono-inline">false</code>
+      removes it.
+    </li>
 
-        <th>
-          Effect
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          An icon name
-        </td>
-
-        <td>
-          Replaces the glyph.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            false
-          </code>
-        </td>
-
-        <td>
-          Removes it.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            stateIcons: false
-          </code>
-        </td>
-
-        <td>
-          Removes all four.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            stateIcons.hint
-          </code>
-        </td>
-
-        <td>
-          Adds a glyph to the hint line.
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <li>
+      <code class="t-mono-inline">
+        stateIcons: false
+      </code> removes all four;
+      <code class="t-mono-inline">
+        stateIcons.hint
+      </code> adds a glyph to the
+      hint line.
+    </li>
+  </ul>
 
   <div class="grid-3">
     <ds-input

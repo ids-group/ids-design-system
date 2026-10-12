@@ -137,62 +137,24 @@
     series per category, with a legend. A flat list is one full-band series.
   </p>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          <code class="t-mono-inline">
-            stack
-          </code>
-        </th>
-
-        <th>
-          Columns
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'none'
-          </code> (default),
-          <code class="t-mono-inline">
-            'grouped'
-          </code>
-        </td>
-
-        <td>
-          Side by side
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'stacked'
-          </code>
-        </td>
-
-        <td>
-          Stacked
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'normalized'
-          </code>
-        </td>
-
-        <td>
-          Stacked as shares of the category total
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      stack
+    </code>:
+    <code class="t-mono-inline">
+      'grouped'
+    </code> or the default
+    <code class="t-mono-inline">
+      'none'
+    </code> sets the columns side by side,
+    <code class="t-mono-inline">
+      'stacked'
+    </code> stacks them,
+    <code class="t-mono-inline">
+      'normalized'
+    </code> stacks them as shares of the
+    category total.
+  </p>
 
   <ul class="rules">
     <li>
@@ -450,50 +412,12 @@
 
   <p class="block-desc t-s">
     The hit box is the full-height category cell, so short columns stay
-    reachable.
+    reachable. The panel points at the column, or with
+    <code class="t-mono-inline">
+      tooltipAnchor="cell"
+    </code> at the top of the
+    cell.
   </p>
-
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          <code class="t-mono-inline">
-            tooltipAnchor
-          </code>
-        </th>
-
-        <th>
-          Panel points at
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'mark'
-          </code> (default)
-        </td>
-
-        <td>
-          The column
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'cell'
-          </code>
-        </td>
-
-        <td>
-          The top of the cell
-        </td>
-      </tr>
-    </tbody>
-  </table>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">

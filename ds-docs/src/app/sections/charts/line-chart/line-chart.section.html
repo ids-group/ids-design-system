@@ -75,59 +75,14 @@
     Composition over time
   </h3>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          <code class="t-mono-inline">
-            stack
-          </code>
-        </th>
-
-        <th>
-          Draws
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'none'
-          </code> (default)
-        </td>
-
-        <td>
-          Each series from zero
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'stacked'
-          </code>
-        </td>
-
-        <td>
-          Each series starts where the one below ended
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'normalized'
-          </code>
-        </td>
-
-        <td>
-          Divided by the category's total; the axis reads in shares
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      stack
+    </code>: by default each series draws from
+    zero; <code class="t-mono-inline">'stacked'</code> starts each where the one
+    below ended; <code class="t-mono-inline">'normalized'</code> divides by the
+    category's total, and the axis reads in shares.
+  </p>
 
   <p class="block-desc t-s">
     Only a series with <code class="t-mono-inline">area</code> fills; lines sit
@@ -174,59 +129,28 @@
     Between the readings
   </h3>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          <code class="t-mono-inline">
-            curve
-          </code>
-        </th>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        'linear'
+      </code> (default) claims nothing
+      between the readings.
+    </li>
 
-        <th>
-          Between readings
-        </th>
-      </tr>
-    </thead>
+    <li>
+      <code class="t-mono-inline">
+        'step'
+      </code> holds each reading until the
+      next: prices, headcounts, rates.
+    </li>
 
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'linear'
-          </code> (default)
-        </td>
-
-        <td>
-          Claims nothing extra
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'step'
-          </code>
-        </td>
-
-        <td>
-          Holds each reading until the next: prices, headcounts, rates
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'smooth'
-          </code>
-        </td>
-
-        <td>
-          Monotone cubic: no invented peaks or troughs
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <li>
+      <code class="t-mono-inline">
+        'smooth'
+      </code> is a monotone cubic: no
+      invented peaks or troughs.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
     Fills follow the curve.
@@ -296,47 +220,16 @@
     >) is a hole, not a zero.
   </p>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          <code class="t-mono-inline">
-            gaps
-          </code>
-        </th>
-
-        <th>
-          Draws
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'break'
-          </code> (default)
-        </td>
-
-        <td>
-          Stops the line, resumes after
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'zero'
-          </code>
-        </td>
-
-        <td>
-          Through the baseline
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      gaps
+    </code>: the default
+    <code class="t-mono-inline">
+      'break'
+    </code> stops the line and resumes after
+    the hole; <code class="t-mono-inline">'zero'</code> draws through the
+    baseline.
+  </p>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -895,47 +788,14 @@
     </li>
   </ul>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          <code class="t-mono-inline">
-            tooltipAnchor
-          </code>
-        </th>
-
-        <th>
-          Panel
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'reading'
-          </code> (default)
-        </td>
-
-        <td>
-          Still, over the category's highest reading
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'pointer'
-          </code>
-        </td>
-
-        <td>
-          Follows the cursor
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <p class="block-desc t-s">
+    An <code class="t-mono-inline">'axis'</code> panel stands still over the
+    category's highest reading; with
+    <code class="t-mono-inline">
+      tooltipAnchor="pointer"
+    </code> it follows the
+    cursor.
+  </p>
 
   <ds-line-chart
     caption="Sessions and signups — every reading is a control"
@@ -1043,59 +903,21 @@
     What a legend control does
   </h3>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          <code class="t-mono-inline">
-            legendMode
-          </code>
-        </th>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        'isolate'
+      </code> (default): radios with All
+      and None, one series shown. Read one series at a time.
+    </li>
 
-        <th>
-          Control
-        </th>
-
-        <th>
-          Use
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'isolate'
-          </code> (default)
-        </td>
-
-        <td>
-          Radios with All and None; shows one series
-        </td>
-
-        <td>
-          Read one series at a time
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'toggle'
-          </code>
-        </td>
-
-        <td>
-          Checkboxes; hides one series
-        </td>
-
-        <td>
-          Remove a dominant series so the rest read at a usable scale
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <li>
+      <code class="t-mono-inline">
+        'toggle'
+      </code>: checkboxes, each hides its
+      series. Remove a dominant series so the rest read at a usable scale.
+    </li>
+  </ul>
 
   <div class="states is-cols-2">
     <div class="state-cell">

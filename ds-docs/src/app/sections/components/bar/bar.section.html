@@ -11,77 +11,33 @@
     What the bar is
   </h3>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          semantics
-        </th>
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        semantics
+      </code>: the default
+      <code class="t-mono-inline">
+        'progress'
+      </code> is task completion, role
+      <code class="t-mono-inline">
+        progressbar
+      </code>.
+    </li>
 
-        <th>
-          For
-        </th>
+    <li>
+      <code class="t-mono-inline">
+        'meter'
+      </code> is a measurement (rate, score,
+      count against a ceiling), role <code class="t-mono-inline">meter</code>.
+    </li>
 
-        <th>
-          Role
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'progress'
-          </code> (default)
-        </td>
-
-        <td>
-          Task completion
-        </td>
-
-        <td>
-          <code class="t-mono-inline">
-            progressbar
-          </code>
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'meter'
-          </code>
-        </td>
-
-        <td>
-          A measurement: rate, score, count against a ceiling
-        </td>
-
-        <td>
-          <code class="t-mono-inline">
-            meter
-          </code>
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'none'
-          </code>
-        </td>
-
-        <td>
-          A cell that prints its figure beside it
-        </td>
-
-        <td>
-          Hidden from assistive technology
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <li>
+      <code class="t-mono-inline">
+        'none'
+      </code> is a cell that prints its figure
+      beside it, hidden from assistive technology.
+    </li>
+  </ul>
 
   <p class="block-desc t-s">
     Progress and meter bars need an

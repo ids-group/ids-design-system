@@ -92,61 +92,22 @@
         dataTable
       </code> still lists every reading.
     </li>
+
+    <li>
+      <code class="t-mono-inline">
+        decimator
+      </code>: the default
+      <code class="t-mono-inline">
+        'minMax'
+      </code> keeps each bucket's highest
+      and lowest reading, so spikes are never dropped;
+      <code class="t-mono-inline">
+        'lttb'
+      </code> keeps a truer silhouette without
+      that promise; <code class="t-mono-inline">'none'</code> leaves the node
+      budget to the caller.
+    </li>
   </ul>
-
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          <code class="t-mono-inline">
-            decimator
-          </code>
-        </th>
-
-        <th>
-          Keeps
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'minMax'
-          </code> (default)
-        </td>
-
-        <td>
-          Keeps each bucket's highest and lowest reading: spikes are never dropped
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'lttb'
-          </code>
-        </td>
-
-        <td>
-          A truer silhouette, without that promise
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'none'
-          </code>
-        </td>
-
-        <td>
-          Leaves the node budget to the caller
-        </td>
-      </tr>
-    </tbody>
-  </table>
 
   <div class="states is-cols-2">
     <div class="state-cell">
