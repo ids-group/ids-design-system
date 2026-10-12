@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**134 open — 2 P1, 11 P2, 121 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
+**133 open — 2 P1, 11 P2, 120 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 2
 
@@ -42,7 +42,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 121
+### P3 — 120
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -99,7 +99,6 @@ is stale. Closing an item means deleting the item and nothing else.
   - `ds-autocomplete`'s arrow keys walk a private copy of the list cursor
 - **Open verdicts, each drawn in a deck**
   - Which public tokens the library never reads go?
-  - How much motion do the charts get?
   - Does the picker list height become a public token, or stay behind `panelClass`?
   - Do the date picker's first day of the week and the time picker's 12h/24h default from …
   - Should the `ds-breadcrumbs` hover colour derive from `--text-link`, like the `.link` helper?
@@ -134,7 +133,7 @@ is stale. Closing an item means deleting the item and nothing else.
   - `'none'` and `'grouped'` are the same value on `ds-column-chart`
   - Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea
 - **Wrapping in a `ds-table` cell (recorded 2026-10-09, Stas: parked, come back later)**
-  - Two wrap options for a `truncate` column, drawn in deck `26-table-wrap-parked.html`
+  - Two wrap options for a `truncate` column, drawn in deck `25-table-wrap-parked.html`
 - **ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)**
   - `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them
 - **The global `.icon` squeezes the `ds-icon` box (recorded 2026-10-09, from the mm-ecm consumer)**
@@ -1130,7 +1129,7 @@ same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was 
 
 **Closed on 2026-10-05 and moved to `implemented/`:** `pie-chart-center-value` - option K: the centre value shrinks to the hole down to `--ds-pie-chart-center-value-min-font-size`, then prints the `'tick'` form unless `[centerCompact]="false"`; `centerPlacement="below"` prints it under the ring.
 
-**Closed on 2026-10-09 and moved to `implemented/`:** `loading-states` - each chart's picked skeleton, `skeletonCount`, the plot-bound reload overlay, the heatmap card hugging its grid and the picker list states, built on `ecm-feat/loading-skeletons`; `loading-skeletons` - its before and after, all 12 blocks accepted and merged into dev; `component-owned-styles` - every component carries its own base (`border-box`, control font, heading margins, base focus ring) in `@layer ds-component-base`, plus breakpoints, the picker empty row and the reduced-motion shimmer; a lint guard holds it. Its icon question moved to `23-icon-box-size`. `focus-ring-follows-shape` - the focus ring takes `--focus-ring-radius` wherever an element declares no radius; close buttons centre their glyph in a square box, the `ds-table` column filter is a 24px target, a cell link is ringed outside its text. `clipped-value-tab-stop` - a clipped `dsTooltipWhenClipped` value that no keyboard path reaches takes `tabindex="0"` while clipped, one stop per value in a long table too (option A); one roving stop per table with arrows is under *Parked*.
+**Closed on 2026-10-09 and moved to `implemented/`:** `loading-states` - each chart's picked skeleton, `skeletonCount`, the plot-bound reload overlay, the heatmap card hugging its grid and the picker list states, built on `ecm-feat/loading-skeletons`; `loading-skeletons` - its before and after, all 12 blocks accepted and merged into dev; `component-owned-styles` - every component carries its own base (`border-box`, control font, heading margins, base focus ring) in `@layer ds-component-base`, plus breakpoints, the picker empty row and the reduced-motion shimmer; a lint guard holds it. Its icon question moved to `21-icon-box-size`. `focus-ring-follows-shape` - the focus ring takes `--focus-ring-radius` wherever an element declares no radius; close buttons centre their glyph in a square box, the `ds-table` column filter is a 24px target, a cell link is ringed outside its text. `clipped-value-tab-stop` - a clipped `dsTooltipWhenClipped` value that no keyboard path reaches takes `tabindex="0"` while clipped, one stop per value in a long table too (option A); one roving stop per table with arrows is under *Parked*.
 
 **Ranks 1-10 have a twin on this board, so one answer closes two lines** — which is what
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
@@ -1307,7 +1306,7 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
 
 ## Wrapping in a `ds-table` cell (recorded 2026-10-09, Stas: parked, come back later)
 
-- [ ] **[P3] Two wrap options for a `truncate` column, drawn in deck `26-table-wrap-parked.html`.** Today a `truncate` column is one line with an ellipsis (picked C in deck `25-table-truncate-result`). B: the clipped text fills the height a neighbour already gave the row (lines = row height / line height), needs a per-row measurement on every resize and does not work under virtual scroll. D: always wrap, as a column without `truncate` does.
+- [ ] **[P3] Two wrap options for a `truncate` column, drawn in deck `25-table-wrap-parked.html`.** Today a `truncate` column is one line with an ellipsis (picked C in deck `24-table-truncate-result`). B: the clipped text fills the height a neighbour already gave the row (lines = row height / line height), needs a per-row measurement on every resize and does not work under virtual scroll. D: always wrap, as a column without `truncate` does.
 
 ## ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)
 
