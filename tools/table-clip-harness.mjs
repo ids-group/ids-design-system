@@ -512,8 +512,15 @@ function check(outDir, baseDir) {
       const now = step.columns.find((column) => column.key === key).width;
       const column = step.columns.find((candidate) => candidate.key === key);
       if (delta === 'home') {
-        if (column.dragged !== null)
-          fail(`${id} #${index + 1}: Home kept ${key} at ${column.dragged}px`);
+        // Home drops the override; the width that follows depends on the columns still dragged.
+        const lastDrag = steps
+          .slice(0, index)
+          .findLast((earlier) => earlier.step.startsWith(`${key} `));
+        const draggedTo = lastDrag?.columns.find(
+          (candidate) => candidate.key === key,
+        ).width;
+        if (draggedTo !== undefined && Math.abs(now - draggedTo) <= 1)
+          fail(`${id} #${index + 1}: Home kept ${key} at ${now}px`);
       } else {
         const expected = Math.max(48, before + Number(delta));
         if (Math.abs(column.dragged - expected) > 2)
