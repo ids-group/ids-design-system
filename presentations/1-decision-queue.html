@@ -813,11 +813,47 @@
   [data-q="link-dark-states"] .lk-state { display: grid; justify-items: center; gap: 3px; min-inline-size: 0; }
   [data-q="link-dark-states"] .lk-state b { color: var(--lk); text-decoration: underline; text-decoration-thickness: var(--lk-u, 1px); text-underline-offset: 2px; font: var(--font-weight-medium) var(--font-size-s) / 1.4 var(--font-sans); }
   [data-q="link-dark-states"] .lk-state small { font: var(--font-size-2xs) / 1 var(--font-sans); color: #8A92A4; }
+
+  .fx-step { margin: var(--space-1) 0 2px; font: var(--font-size-3xs) / 1.3 var(--font-sans); color: var(--text-tertiary); }
+  .fx-step b { color: var(--text-secondary); }
+  .fx-frame { display: flex; padding: 2px; border: var(--border-width-default) dashed var(--border-strong); border-radius: var(--radius-sm); }
+  .fx-frame i { flex: none; min-inline-size: 0; block-size: 20px; padding-inline-start: 2px; border: var(--border-width-default) solid var(--border-default); border-inline-start-width: 0; background: var(--surface-default); font: var(--font-weight-bold) 9px / 18px var(--font-mono); font-style: normal; color: var(--text-secondary); overflow: hidden; white-space: nowrap; }
+  .fx-frame i:first-child { border-inline-start-width: var(--border-width-default); }
+  .fx-frame i.is-hot { background: var(--info-subtitle); color: var(--info-text); }
+  .fx-frame i.is-grown { background: var(--success-subtitle); color: var(--success-text); }
+  .fx-frame .fx-gap { flex: 1 1 0; min-inline-size: 0; background: repeating-linear-gradient(135deg, transparent 0 4px, var(--surface-muted) 4px 8px); }
+
+  .fx-focus { outline: 2px solid var(--focus-ring-color); outline-offset: 2px; }
+  .fx-pager { display: flex; flex-wrap: wrap; gap: 4px; }
+  .fx-pager b { display: grid; place-items: center; min-inline-size: 22px; block-size: 22px; padding-inline: 3px; border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-sm); background: var(--surface-default); font: var(--font-weight-bold) 10px var(--font-sans); color: var(--text-primary); }
+  .fx-pager b.is-current { background: var(--primary); border-color: var(--primary); color: var(--text-on-primary); }
+  .fx-pager b.is-off { background: var(--surface-muted); color: var(--text-tertiary); }
+
+  .fx-page { display: grid; gap: 4px; padding: var(--space-1); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-sm); font: 10px / 1.2 var(--font-sans); }
+  .fx-page.fx-focus { outline-offset: 1px; }
+  .fx-ctl { justify-self: start; padding: 2px 6px; border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-sm); background: var(--surface-default); font-weight: var(--font-weight-bold); }
+  .fx-msg { display: flex; justify-content: space-between; gap: var(--space-1); padding: 3px 6px; border-radius: var(--radius-sm); background: var(--success-subtitle); color: var(--success-text); }
+  .fx-msg.is-gone { background: none; color: var(--text-tertiary); outline: 1px dashed var(--border-default); text-decoration: line-through; }
+  .fx-msg .fx-x { padding-inline: 3px; border-radius: 2px; font-weight: var(--font-weight-bold); text-decoration: none; }
+
+  .fx-btn { position: relative; display: inline-grid; place-items: center; padding: 4px 10px; border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); font: var(--font-weight-medium) 12px / 1.3 var(--font-sans); color: var(--text-primary); }
+  .fx-btn.is-off { background: var(--surface-disabled); border-color: var(--border-disabled); color: var(--text-tertiary); }
+  .fx-btn.is-loading { color: transparent; }
+  .fx-btn.is-loading::after { content: ""; position: absolute; inline-size: 14px; block-size: 14px; border: 2px solid var(--text-primary); border-right-color: transparent; border-radius: var(--radius-pill); animation: spinq 0.8s linear infinite; }
+  @media (prefers-reduced-motion: reduce) { .fx-btn.is-loading::after { animation: none; } }
+
+  .fx-flow { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; font: var(--font-size-2xs) / 1.35 var(--font-sans); color: var(--text-secondary); }
+  .fx-flow li { display: grid; grid-template-columns: 4.6rem 1fr; gap: var(--space-1); align-items: baseline; }
+  .fx-flow kbd { justify-self: start; padding: 0 4px; border: var(--border-width-default) solid var(--border-default); border-block-end-width: 2px; border-radius: 3px; background: var(--surface-default); font: var(--font-weight-bold) 10px / 1.5 var(--font-mono); color: var(--text-primary); }
+  .fx-flow li.is-bad { color: var(--error-text); }
+  .fx-menu { display: grid; gap: 2px; justify-items: start; }
+  .fx-menu ul { margin: 0; padding: 3px; list-style: none; display: grid; gap: 1px; min-inline-size: 9rem; border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-sm); background: var(--surface-default); box-shadow: 0 2px 6px rgb(0 0 0 / 0.12); font: 11px / 1.3 var(--font-sans); }
+  .fx-menu li { padding: 2px 6px; border-radius: 2px; }
 </style>
 
 <main>
   <div class="masthead">
-    <h1>3 аска консьюмеров и 41 решение, у каждого варианты нарисованы</h1>
+    <h1>3 аска консьюмеров и 47 решений, у каждого варианты нарисованы</h1>
     <ul class="lede">
       <li>Сверху <b>то, чего ждут консьюмеры</b>, ниже открытые решения по темам; справа от вопроса приоритет и консьюмер или ссылка на деку.</li>
       <li><b>Вариант выбирается кликом</b>, звёздочка - рекомендация, внизу собирается одна строка со всеми ответами.</li>
@@ -2110,7 +2146,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
   </section>
 
-  <p class="group">Графики: сделано без твоего выбора</p>
+  <p class="group">Сделано агентами без твоего выбора: графики, таблица, фокус</p>
 
   <section class="q" data-q="ag-duplicate-labels">
     <div class="q-head">
@@ -2732,11 +2768,193 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
   </section>
 
+  <section class="q" data-q="fx-table-width">
+    <div class="q-head">
+      <span class="q-num">44</span>
+      <h2 class="q-title">Таблица, у которой сузили колонку, больше не тянется на всю ширину</h2>
+      <span class="q-src">table.component.ts:440 · table.component.scss:551 · table-resize.directive.ts:7 · 3c9f23466</span>
+    </div>
+    <ul class="q-sub">
+      <li>С <code>dsTableResize</code>, как только у каждой видимой колонки есть ширина в px, таблица получает <code>width: auto</code>: <b>она шириной со свои колонки, справа пустое место</b>.</li>
+      <li>Замер агента, который чинил: Record сдвинули на 480px влево, ширины стали <b>101, 126, 168, 180, 173, 135</b>, таблица <b>883px вместо 969</b>.</li>
+      <li>Колонка <b>не уже самого узкого своего содержимого</b>: Record встаёт на 101px, хотя перетаскивание и <code>aria-valuenow</code> говорят 48 (минимум 48 в коде).</li>
+      <li><b>Home</b> на ручке возвращает колонке авто-ширину, и таблица снова тянется. Ниже: рамка - контейнер, число в ячейке - ширина в px.</li>
+    </ul>
+    <div class="stage">
+      <div class="spec"><p class="cap">до перетаскивания: 969px, первая колонка Record</p>
+        <div class="fx-frame"><i class="is-hot" style="inline-size:19.3%">187</i><i style="inline-size:13%">126</i><i style="inline-size:17.34%">168</i><i style="inline-size:18.58%">180</i><i style="inline-size:17.85%">173</i><i style="inline-size:13.93%">135</i></div></div>
+    </div>
+    <div class="opts">
+      <div class="opt is-today"><h3>Таблица по ширине колонок <span class="star">★</span></h3><span class="badge is-same">сейчас в dev</span><span class="badge is-pick">рекомендую</span>
+        <p class="fx-step">после: Record до упора влево</p>
+        <div class="fx-frame"><i class="is-hot" style="inline-size:10.42%">101</i><i style="inline-size:13%">126</i><i style="inline-size:17.34%">168</i><i style="inline-size:18.58%">180</i><i style="inline-size:17.85%">173</i><i style="inline-size:13.93%">135</i><span class="fx-gap"></span></div>
+        <p class="ag-cost">Каждая колонка держит заданную ширину. <b>Цена:</b> 86px пустоты справа.</p></div>
+      <div class="opt"><h3>Последняя колонка забирает остаток</h3>
+        <p class="fx-step">после: Record до упора влево</p>
+        <div class="fx-frame"><i class="is-hot" style="inline-size:10.42%">101</i><i style="inline-size:13%">126</i><i style="inline-size:17.34%">168</i><i style="inline-size:18.58%">180</i><i style="inline-size:17.85%">173</i><i class="is-grown" style="flex:1 1 0">221</i></div>
+        <p class="ag-cost">Таблица во всю ширину. <b>Цена:</b> последняя колонка шире, чем её задали; её ручка двигает и остаток.</p></div>
+      <div class="opt"><h3>Таблица заполняет контейнер, соседние колонки расширяются</h3>
+        <p class="fx-step">после: Record до упора влево (до правки)</p>
+        <div class="fx-frame"><i class="is-hot" style="inline-size:10.42%">101</i><i class="is-grown" style="inline-size:14.76%">~143</i><i class="is-grown" style="inline-size:19.09%">~185</i><i class="is-grown" style="inline-size:20.33%">~197</i><i class="is-grown" style="inline-size:19.61%">~190</i><i class="is-grown" style="inline-size:15.69%">~152</i></div>
+        <p class="ag-cost">Пустоты нет. <b>Цена:</b> сужаешь одну колонку - расширяются все остальные; их числа примерные.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="fx-pagination-focus">
+    <div class="q-head">
+      <span class="q-num">45</span>
+      <h2 class="q-title">Куда уходит фокус в пагинации, когда кнопка «назад» или «вперёд» гаснет</h2>
+      <span class="q-src">pagination.component.ts:128 · pagination.component.html:23 · focus-rescue.ts:58 · 65c3f99d5</span>
+    </div>
+    <ul class="q-sub">
+      <li>«Previous page» на страницу 1 или «Next page» на последнюю <b>выключает кнопку под фокусом</b>, и фокус падал на <code>&lt;body&gt;</code>.</li>
+      <li>Сделано: фокус <b>переходит на кнопку текущей страницы</b>. Другой путь: кнопки не выключать, а ставить <code>aria-disabled</code>, тогда фокус остаётся на месте.</li>
+    </ul>
+    <div class="stage">
+      <div class="spec"><p class="cap">страница 2, фокус на «назад»</p>
+        <div class="fx-pager"><b class="fx-focus">‹</b><b>1</b><b class="is-current">2</b><b>3</b><b>›</b></div></div>
+    </div>
+    <div class="opts">
+      <div class="opt is-today"><h3>Фокус на текущую страницу <span class="star">★</span></h3><span class="badge is-same">сейчас в dev</span><span class="badge is-pick">рекомендую</span>
+        <p class="fx-step">после Enter: страница 1</p>
+        <div class="fx-pager"><b class="is-off">‹</b><b class="is-current fx-focus">1</b><b>2</b><b>3</b><b>›</b></div>
+        <dl class="layer"><dt>скринридер</dt><dd>«Page 1, current page, button»</dd><dt>Tab дальше</dt><dd>на 2, 3, ›</dd></dl>
+        <p class="ag-cost">Фокус там, где видно результат. <b>Цена:</b> фокус уходит с кнопки, которую нажимали.</p></div>
+      <div class="opt"><h3>Кнопка остаётся в фокусе с aria-disabled</h3>
+        <p class="fx-step">после Enter: страница 1</p>
+        <div class="fx-pager"><b class="is-off fx-focus">‹</b><b class="is-current">1</b><b>2</b><b>3</b><b>›</b></div>
+        <dl class="layer"><dt>скринридер</dt><dd>«Previous page, недоступно, button»</dd><dt>Tab дальше</dt><dd>на 1, 2, 3, ›</dd></dl>
+        <p class="ag-cost">Фокус не прыгает. <b>Цена:</b> погасшие кнопки остаются в Tab-обходе, клик по ним надо гасить в коде.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="fx-dismiss-focus">
+    <div class="q-head">
+      <span class="q-num">46</span>
+      <h2 class="q-title">Куда уходит фокус, когда закрыли сообщение или тост</h2>
+      <span class="q-src">focus-rescue.ts:37 · alert.component.ts:109 · banner.component.ts:127 · toast-region.component.ts:322 · 9487e1e46</span>
+    </div>
+    <ul class="q-sub">
+      <li>Кнопка × уходит из DOM вместе с сообщением, и фокус падал на <code>&lt;body&gt;</code>.</li>
+      <li>Сделано: alert и banner отдают фокус <b>следующему элементу страницы после себя, иначе предыдущему</b>.</li>
+      <li>Тост отдаёт фокус <b>соседнему тосту</b> (следующему, иначе предыдущему), а если тостов больше нет - <b>туда, откуда фокус пришёл в область тостов</b>.</li>
+    </ul>
+    <div class="stage">
+      <div class="spec"><p class="cap">до: фокус на × у сообщения</p>
+        <div class="fx-page"><span class="fx-ctl">Сохранить</span><span class="fx-msg"><span>Изменения сохранены</span><span class="fx-x fx-focus">×</span></span><span class="fx-ctl">Далее</span></div></div>
+      <div class="spec"><p class="cap">до: два тоста, фокус на × у первого</p>
+        <div class="fx-page"><span class="fx-msg"><span>Файл загружен</span><span class="fx-x fx-focus">×</span></span><span class="fx-msg"><span>Отчёт готов</span><span class="fx-x">×</span></span></div></div>
+    </div>
+    <div class="opts">
+      <div class="opt is-today"><h3>Следующий элемент, у тоста соседний тост <span class="star">★</span></h3><span class="badge is-same">сейчас в dev</span><span class="badge is-pick">рекомендую</span>
+        <p class="fx-step"><b>сообщение</b> закрыто</p>
+        <div class="fx-page"><span class="fx-ctl">Сохранить</span><span class="fx-msg is-gone"><span>Изменения сохранены</span><span class="fx-x">×</span></span><span class="fx-ctl fx-focus">Далее</span></div>
+        <p class="fx-step"><b>тост</b> закрыт</p>
+        <div class="fx-page"><span class="fx-msg is-gone"><span>Файл загружен</span><span class="fx-x">×</span></span><span class="fx-msg"><span>Отчёт готов</span><span class="fx-x fx-focus">×</span></span></div>
+        <p class="ag-cost">Можно закрыть всё подряд одной клавишей. <b>Цена:</b> фокус уходит дальше по странице от места, где пользователь работал.</p></div>
+      <div class="opt"><h3>Всегда туда, откуда пришёл фокус</h3>
+        <p class="fx-step"><b>сообщение</b> закрыто</p>
+        <div class="fx-page"><span class="fx-ctl fx-focus">Сохранить</span><span class="fx-msg is-gone"><span>Изменения сохранены</span><span class="fx-x">×</span></span><span class="fx-ctl">Далее</span></div>
+        <p class="fx-step"><b>тост</b> закрыт</p>
+        <div class="fx-page"><span class="fx-msg is-gone"><span>Файл загружен</span><span class="fx-x">×</span></span><span class="fx-msg"><span>Отчёт готов</span><span class="fx-x">×</span></span></div>
+        <p class="fx-step">фокус на «Сохранить», в другом месте страницы</p>
+        <p class="ag-cost">Как закрытие диалога. <b>Цена:</b> alert и banner должны помнить, откуда пришли; если сообщение появилось само, «откуда» нет.</p></div>
+      <div class="opt"><h3>На контейнер, где было сообщение</h3>
+        <p class="fx-step"><b>сообщение</b> закрыто</p>
+        <div class="fx-page fx-focus"><span class="fx-ctl">Сохранить</span><span class="fx-msg is-gone"><span>Изменения сохранены</span><span class="fx-x">×</span></span><span class="fx-ctl">Далее</span></div>
+        <p class="fx-step"><b>тост</b> закрыт</p>
+        <div class="fx-page fx-focus"><span class="fx-msg is-gone"><span>Файл загружен</span><span class="fx-x">×</span></span><span class="fx-msg"><span>Отчёт готов</span><span class="fx-x">×</span></span></div>
+        <p class="ag-cost">Фокус не уезжает с места. <b>Цена:</b> DS не знает контейнер консьюмера; нужен <code>tabindex="-1"</code> на нём, иначе некуда.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="fx-export-busy">
+    <div class="q-head">
+      <span class="q-num">47</span>
+      <h2 class="q-title">Кнопка экспорта таблицы во время выгрузки: спиннер вместо надписи</h2>
+      <span class="q-src">table-export-button.component.ts:26 · button.component.scss:270 · button.component.html:58 · 4c9d5152c</span>
+    </div>
+    <ul class="q-sub">
+      <li>Была <code>[disabled]</code> с надписью <b>«Preparing…»</b> на серой кнопке; фокус с неё падал на <code>&lt;body&gt;</code>.</li>
+      <li>Сделано: <code>[loading]</code> у <code>ds-button</code>: <b>надпись прозрачная, по центру спиннер</b>, кнопка остаётся в фокусе с <code>aria-busy</code> и <code>aria-disabled</code>.</li>
+      <li>Текст «Preparing…» в DOM остался, его слышит только скринридер (<code>ds-intl-defaults.ts:233</code>).</li>
+    </ul>
+    <div class="opts">
+      <div class="opt is-today"><h3>Спиннер <span class="star">★</span></h3><span class="badge is-same">сейчас в dev</span><span class="badge is-pick">рекомендую</span>
+        <p class="fx-step">в покое → идёт выгрузка</p>
+        <div class="fx-pager"><span class="fx-btn">Export CSV</span><span class="fx-btn is-loading fx-focus">Preparing…</span></div>
+        <dl class="layer"><dt>атрибуты</dt><dd class="gain">aria-busy="true" aria-disabled="true"</dd><dt>фокус</dt><dd class="gain">остаётся на кнопке</dd></dl>
+        <p class="ag-cost">Как любая <code>ds-button</code> в загрузке. <b>Цена:</b> глазами не прочитать, что именно идёт.</p></div>
+      <div class="opt"><h3>Надпись «Preparing…»</h3>
+        <p class="fx-step">в покое → идёт выгрузка</p>
+        <div class="fx-pager"><span class="fx-btn">Export CSV</span><span class="fx-btn is-off fx-focus">Preparing…</span></div>
+        <dl class="layer"><dt>атрибуты</dt><dd>aria-disabled="true" (soft-disabled)</dd><dt>фокус</dt><dd>остаётся, только через <code>disabledReason</code> (button.component.html:24); с простым <code>disabled</code> падает</dd></dl>
+        <p class="ag-cost">Видно словами, что идёт. <b>Цена:</b> выглядит иначе, чем загрузка остальных кнопок DS.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="fx-popover-menu">
+    <div class="q-head">
+      <span class="q-num">48</span>
+      <h2 class="q-title">Поповер с меню внутри теперь сам переводит фокус в меню</h2>
+      <span class="q-src">popover.component.ts:169 · table.component.html:587 · 5ce77f0a2</span>
+    </div>
+    <ul class="q-sub">
+      <li>Чинили меню «Account» на docs-странице menu: Enter открывал меню, а <b>фокус оставался на кнопке</b>, стрелки до пунктов не доходили (<code>docs/todo.md:355</code>).</li>
+      <li>Сделано в самом <code>ds-popover</code>: если в панели есть <code>role="menu"</code>, <b>фокус уходит на первый пункт без <code>panelRole</code>, без ловушки</b>; Tab закрывает.</li>
+      <li>Заодно выиграло <b>меню действий строки в <code>ds-table</code></b>: там тоже нет <code>panelRole</code>.</li>
+    </ul>
+    <div class="opts">
+      <div class="opt is-today"><h3>Поповер сам фокусирует меню <span class="star">★</span></h3><span class="badge is-same">сейчас в dev</span><span class="badge is-pick">рекомендую</span>
+        <p class="css">&lt;ds-popover #acct&gt;
+  &lt;ds-menu&gt;…&lt;/ds-menu&gt;
+&lt;/ds-popover&gt;</p>
+        <div class="fx-menu"><span class="fx-btn">Account ▾</span><ul><li class="fx-focus">Profile settings</li><li>Preferences</li><li>Notifications</li></ul></div>
+        <ol class="fx-flow"><li><kbd>Enter</kbd><span>фокус на первом пункте</span></li><li><kbd>↓ ↑</kbd><span>по пунктам</span></li><li><kbd>Esc</kbd><span>закрыть, фокус на «Account»</span></li><li><kbd>Tab</kbd><span>закрыть, фокус дальше</span></li></ol>
+        <p class="ag-cost">Консьюмеру ничего не писать. <b>Цена:</b> поведение поповера зависит от того, что в нём лежит.</p></div>
+      <div class="opt"><h3>Поповер как был, консьюмер ставит panelRole</h3>
+        <p class="css">&lt;ds-popover #acct
+  panelRole="dialog" panelLabel="Account"&gt;
+  &lt;ds-menu&gt;…&lt;/ds-menu&gt;
+&lt;/ds-popover&gt;</p>
+        <div class="fx-menu"><span class="fx-btn fx-focus">Account ▾</span><ul><li>Profile settings</li><li>Preferences</li><li>Notifications</li></ul></div>
+        <ol class="fx-flow"><li class="is-bad"><kbd>Enter</kbd><span>без panelRole: фокус на кнопке, меню не управляется</span></li><li><kbd>Enter</kbd><span>с panelRole: фокус в панели</span></li><li class="is-bad"><kbd>Tab</kbd><span>с panelRole: заперт в панели, не закрывает</span></li></ol>
+        <p class="ag-cost">Поповер ничего не угадывает. <b>Цена:</b> каждый консьюмер помнит про атрибут, и меню строки в <code>ds-table</code> надо чинить отдельно.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="fx-icon-button-selected">
+    <div class="q-head">
+      <span class="q-num">49</span>
+      <h2 class="q-title">Как кнопка-иконка понимает, что она переключатель</h2>
+      <span class="q-src">icon-button.component.ts:53 · icon-button.component.html:8 · 8366e14e5</span>
+    </div>
+    <ul class="q-sub">
+      <li>Выключенный переключатель не отдавал <code>aria-pressed="false"</code>, и скринридер не знал, что это переключатель.</li>
+      <li>Сделано: <code>selected</code> стал <b><code>boolean | null</code></b>. <code>null</code> - не переключатель, <code>false</code> - выключен. <b>Публичный тип расширился.</b></li>
+      <li>Ловушка: <code>[selected]="undefined"</code> тоже даёт <code>null</code>, то есть <b>молча не переключатель</b>.</li>
+    </ul>
+    <div class="opts">
+      <div class="opt is-today"><h3>selected принимает null <span class="star">★</span></h3><span class="badge is-same">сейчас в dev</span><span class="badge is-pick">рекомендую</span>
+        <p class="css">&lt;ds-icon-button icon="bold"
+  [selected]="isBold" /&gt;
+&lt;ds-icon-button icon="copy" /&gt;</p>
+        <dl class="layer"><dt>isBold = true</dt><dd class="gain">aria-pressed="true"</dd><dt>isBold = false</dt><dd class="gain">aria-pressed="false"</dd><dt>не задан</dt><dd class="none">нет aria-pressed</dd></dl>
+        <p class="ag-cost">Один вход, как три состояния <code>aria-pressed</code>. <b>Цена:</b> <code>undefined</code> в привязке выключает переключатель без ошибки.</p></div>
+      <div class="opt"><h3>Отдельный вход toggle</h3>
+        <p class="css">&lt;ds-icon-button icon="bold" toggle
+  [selected]="isBold" /&gt;
+&lt;ds-icon-button icon="copy" /&gt;</p>
+        <dl class="layer"><dt>toggle, isBold = true</dt><dd class="gain">aria-pressed="true"</dd><dt>toggle, isBold = false</dt><dd class="gain">aria-pressed="false"</dd><dt>без toggle</dt><dd class="none">нет aria-pressed, selected не читается</dd></dl>
+        <p class="ag-cost">Явно в разметке. <b>Цена:</b> ещё один вход, и <code>selected</code> без <code>toggle</code> молча ничего не делает.</p></div>
+    </div>
+  </section>
+
   <p class="group">Очередь: «не сейчас» засчитано как решено</p>
 
   <section class="q" data-q="parked-as-decided">
     <div class="q-head">
-      <span class="q-num">44</span>
+      <span class="q-num">50</span>
       <h2 class="q-title">Пять ответов «не сейчас» агент сам перенёс в «Уже решено»: оставить там или вернуть в очередь</h2>
       <span class="q-src">«Уже решено» в этой деке · docs/todo.md</span>
     </div>
@@ -2954,7 +3172,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
   </section>
 
   <div class="bar-fixed">
-    <span class="count" id="count">0 из 44</span>
+    <span class="count" id="count">0 из 50</span>
     <output id="line">пока ничего не выбрано</output>
     <button type="button" id="copy">Скопировать</button>
     <button type="button" id="reset">Сбросить</button>
