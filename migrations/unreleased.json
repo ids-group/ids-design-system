@@ -194,6 +194,77 @@
         "tokens:--primary-strong",
         "tokens:--text-link"
       ]
+    },
+    {
+      "id": "field-pending-spinner-on-every-field",
+      "kind": "behavior",
+      "old": "ds-input[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "pending",
+        "dsInputSuffix"
+      ],
+      "detect": [
+        ".pending()\"",
+        ".pending\""
+      ],
+      "action": "None, unless a ds-input binds [loading] to its own control's pending state: delete that binding (delete list: input-loading-bound-to-pending).",
+      "appliesWhen": "Every ds-input, ds-textarea, ds-select, ds-multi-select, ds-autocomplete, ds-date-picker, ds-time-picker, ds-color-picker, ds-checkbox, ds-switch, ds-radio-group, ds-segmented, ds-slider and ds-otp-input bound to a form control with an async validator. A [loading] on ds-select, ds-multi-select or ds-autocomplete is the option list's loading state and is not affected.",
+      "pitfall": "A spinner the app draws in a ds-input suffix slot for the same check now shows beside the field's own.",
+      "restore": null,
+      "verify": "Make each bound field's async validator run and confirm the field shows one spinner while it runs and none once it settles."
+    },
+    {
+      "id": "field-classes-gained-form-state-members",
+      "kind": "behavior",
+      "old": "InputComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends InputComponent",
+        "extends TextareaComponent",
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent",
+        "extends DatePickerComponent",
+        "extends TimePickerComponent",
+        "extends ColorPickerComponent",
+        "extends CheckboxComponent",
+        "extends SwitchComponent",
+        "extends RadioGroupComponent",
+        "extends SegmentedComponent",
+        "extends SliderComponent",
+        "extends OtpInputComponent",
+        "extends DsControlValueAccessor",
+        "extends DsBooleanControlValueAccessor",
+        "extends FieldMessageComponent"
+      ],
+      "detect": [
+        "extends InputComponent",
+        "extends TextareaComponent",
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent",
+        "extends DatePickerComponent",
+        "extends TimePickerComponent",
+        "extends ColorPickerComponent",
+        "extends CheckboxComponent",
+        "extends SwitchComponent",
+        "extends RadioGroupComponent",
+        "extends SegmentedComponent",
+        "extends SliderComponent",
+        "extends OtpInputComponent",
+        "extends DsControlValueAccessor",
+        "extends DsBooleanControlValueAccessor",
+        "extends FieldMessageComponent"
+      ],
+      "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
+      "appliesWhen": "Only a class of yours that extends InputComponent, TextareaComponent, SelectComponent, MultiSelectComponent, AutocompleteComponent, DatePickerComponent, TimePickerComponent, ColorPickerComponent, CheckboxComponent, SwitchComponent, RadioGroupComponent, SegmentedComponent, SliderComponent or OtpInputComponent, or the internal DsControlValueAccessor, the internal DsBooleanControlValueAccessor or the internal FieldMessageComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
+      "note": "Every field component this item names gained `pendingShown` and `changedShown`, and `pending`, `dirty`, `showDirty` and `showDirtyResolved` through the internal `DsFormControlBase`, which `DsControlValueAccessor` and `DsBooleanControlValueAccessor` now extend. The internal `FieldMessageComponent` gained `changed`, `changedText` and `intl`."
     }
   ],
   "informational": [
@@ -265,7 +336,8 @@
     {
       "text": "A pressed `ds-menu-item` with `error` fills with `--error-muted`, one red step deeper than its `--error-subtitle` hover; the press showed the hover fill.",
       "verify": "Hold the mouse down on an error ds-menu-item and confirm the red fill deepens from the hover fill, in the light and the dark theme."
-    }
+    },
+    "`showDirty` (default `false`) on every value field, the `dsShowDirty` directive (`ShowDirtyDirective`) and `DS_CONFIG.field.showDirty` mark a value the user changed with a dot and a \"Changed\" line; off unless one of the three turns it on. The line reads the new optional `DsIntl` key `field.changed`."
   ],
   "deleteList": [
     {
@@ -273,6 +345,16 @@
       "surface": "template",
       "find": "rescaleOnHide",
       "why": "true is the default of rescaleOnHide on ds-line-chart; [rescaleOnHide]=\"false\" stays where the axis must hold.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "input-loading-bound-to-pending",
+      "surface": "template",
+      "find": [
+        ".pending()\"",
+        ".pending\""
+      ],
+      "why": "Every DS field shows the spinner while its own control is pending. A [loading] bound to another control's state stays, and so does [loading] on ds-select, ds-multi-select or ds-autocomplete, which means the option list is loading.",
       "replaceWith": "nothing"
     }
   ]
