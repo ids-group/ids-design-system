@@ -147,15 +147,50 @@
   @include focus.ring;
 }
 
+// The room above the ramp is the scale marker's.
 .scale {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  margin-block-start: var(--space-3);
+  margin-block-start: var(--space-6);
 }
 
 .scale-ramp {
+  position: relative;
   display: flex;
+}
+
+.scale-marker {
+  position: absolute;
+  inset-block-end: calc(100% + var(--space-1));
+  translate: -50% 0;
+  color: var(--text-primary);
+  font-size: var(--_heatmap-chart-label-font-size);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+
+  &:dir(rtl) {
+    translate: 50% 0;
+  }
+
+  &::after {
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline: 0;
+    inline-size: fit-content;
+    margin-inline: auto;
+    border: var(--space-1) solid transparent;
+    border-block-end-width: 0;
+    border-block-start-color: currentcolor;
+    content: '';
+  }
+
+  &.placed {
+    transition: inset-inline-start var(--ds-motion-chart-tooltip-move-duration)
+      var(--ds-motion-chart-tooltip-move-easing);
+  }
 }
 
 .scale-step {

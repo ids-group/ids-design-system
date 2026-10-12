@@ -9,6 +9,7 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  effect,
   input,
   numberAttribute,
   output,
@@ -27,6 +28,7 @@ import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/s
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import {
+  ChartPlacedDirective,
   ChartTooltipDirective,
   ChartStatesComponent,
   chartActiveMark,
@@ -37,6 +39,9 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { heatmapDomain, rampIndexOf } from './heatmap-chart.math';
 import type { HeatmapChartCell, HeatmapChartRow } from './heatmap-chart.types';
+
+// The scale marker moves once the pointer rests on a cell this long, so a sweep across the grid leaves it still.
+const SCALE_MARKER_SETTLE_MS = 120;
 
 interface PlacedCell {
   readonly key: string;
@@ -61,6 +66,7 @@ interface PlacedRow {
   standalone: true,
   exportAs: 'dsHeatmapChart',
   imports: [
+    ChartPlacedDirective,
     ChartTooltipDirective,
     ChartStatesComponent,
     SkeletonComponent,
@@ -144,6 +150,37 @@ export class HeatmapChartComponent
 
     return this.dimOthers() && step !== null && cell.step !== step;
   }
+
+  private readonly scaleMarkerIndex = signal(-1);
+
+  private readonly settleScaleMarker = effect((onCleanup) => {
+    const index = this.activeMark.index();
+    if (index === -1) {
+      this.scaleMarkerIndex.set(-1);
+
+      return;
+    }
+    const timer = setTimeout(
+      () => this.scaleMarkerIndex.set(index),
+      SCALE_MARKER_SETTLE_MS,
+    );
+    onCleanup(() => clearTimeout(timer));
+  });
+
+  /** Where the settled cell's reading sits along the scale, as a percentage of the ramp. */
+  protected readonly scaleMarker = computed(() => {
+    const cell = this.flatCells()[this.scaleMarkerIndex()];
+    if (!cell || cell.value === null) {
+      return null;
+    }
+    const { min, max } = this.domain();
+    const share = max > min ? (cell.value - min) / (max - min) : 0.5;
+
+    return {
+      offset: Math.min(Math.max(share, 0), 1) * 100,
+      label: this.valueFormatResolved()(cell.value, 'tick'),
+    };
+  });
 
   protected onCellPress(cell: PlacedCell, index: number, event: Event): void {
     // Enter and Space click the native button with `detail` 0; keys must not pin.

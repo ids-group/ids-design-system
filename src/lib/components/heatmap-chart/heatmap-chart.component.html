@@ -207,6 +207,15 @@
           (pointerleave)="onStepLeave()">
         </span>
       }
+
+      @if (scaleMarker(); as marker) {
+        <span
+          class="scale-marker"
+          dsChartPlaced
+          [style.inset-inline-start.%]="marker.offset">
+          {{ marker.label }}
+        </span>
+      }
     </span>
 
     <span class="scale-label">

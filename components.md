@@ -1005,6 +1005,7 @@ A `null` reading is a hole, not a low value: it draws as the surface, stays out 
 `min` / `max` only ever OPEN the scale further. Set both to compare two heat maps by colour — unset, each spans its own readings and the same hue means a different quantity on each.
 Colour: the single-hue heat scale `--ds-chart-heat-1-color` … `--ds-chart-heat-8-color`, which spans the full lightness range and therefore runs 1.14:1 to 9.07:1 against white. It is NOT `--ds-chart-ramp-*`, which stays in the middle of the range for the funnel's stages. `showValues` draws the glyph in the cell's own colour inverted, which stays legible at either end without picking one ink for the whole scale.
 The grid scrolls sideways below its natural width rather than crushing the cells, the same answer `ds-table` gives.
+Scale marker: once the pointer has rested on a cell for 120ms, a marker over the scale names its reading and glides to its place on the ramp, so a sweep across the grid leaves it still. The cells enter along the diagonals from the top-left, `staggerMs` apart, within 260ms.
 Tokens: `--ds-heatmap-chart-cell-size`, `--ds-heatmap-chart-cell-gap`, `--ds-heatmap-chart-cell-radius`, `--ds-heatmap-chart-label-color`, `--ds-heatmap-chart-label-font-size`, `--ds-heatmap-chart-missing-color`, `--ds-heatmap-chart-focus-color`, `--ds-heatmap-chart-focus-width`.
 
 <!-- inputs:ds-heatmap-chart -->
