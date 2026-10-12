@@ -197,8 +197,8 @@ export class ColumnSeriesComponent implements OnDestroy {
       this.highlighted() !== null && this.highlighted() === this.seriesKey(),
   );
 
-  /** Sinks every column to the baseline and leaves the value axis to the other marks; set it rather
-   *  than removing the series to animate a legend hiding it. */
+  /** Sinks every column to the baseline; the value axis follows the chart's `rescaleOnHide`. Set it
+   *  rather than removing the series to animate a legend hiding it. */
   readonly hidden = input(false, { transform: booleanAttribute });
 
   /** Reads the columns as a running total, as a waterfall's are: hovering one fades every column
@@ -216,9 +216,10 @@ export class ColumnSeriesComponent implements OnDestroy {
   protected readonly hatchId = `ds-column-hatch-${this.seriesId}`;
 
   /** Where each mark spans, which the axis has to hold: a stacked segment's top is the running total. */
-  private readonly spans = computed<readonly ChartStackOffset[]>(() => {
+  private readonly spans = computed(() => this.spansOf(this.hidden()));
+
+  private spansOf(hidden: boolean): readonly ChartStackOffset[] {
     const given = this.offsets();
-    const hidden = this.hidden();
 
     return this.data().map(
       (point, index) =>
@@ -227,16 +228,15 @@ export class ColumnSeriesComponent implements OnDestroy {
           to: Number.isFinite(point.value) && !hidden ? point.value : 0,
         },
     );
-  });
+  }
 
   constructor() {
     effect(() =>
       this.scales.reportDomain(
         this.domainId,
-        this.hidden()
-          ? []
-          : this.spans().flatMap((span) => [span.from, span.to]),
+        this.spansOf(false).flatMap((span) => [span.from, span.to]),
         this.axis(),
+        this.hidden(),
       ),
     );
     this.scales.reportTooltip(this.domainId, {

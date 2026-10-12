@@ -15,6 +15,7 @@ export class ColumnChartComponent extends DsChartBase implements ChartDimmable, 
     protected readonly dataTableRows = computed<readonly ChartDataRow[]>(…);
     public readonly dimOthers = input(false, { transform: booleanAttribute });
     protected readonly geometry = readOnHostResize(…);
+    protected readonly heldExtent = computed(…);
     public readonly hiddenSeries = model<readonly string[]>([]);
     protected readonly highlightedSeries = signal<string | null>(…);
     protected readonly isEmpty = computed(…);
@@ -29,6 +30,7 @@ export class ColumnChartComponent extends DsChartBase implements ChartDimmable, 
     protected readonly pinnedSeries = computed(…);
     public readonly pointClicked = output<ColumnChartPoint>();
     protected readonly renderReady = chartRenderGate(…);
+    public readonly rescaleOnHide = input(true, { transform: booleanAttribute });
     protected readonly resolvedSeries = computed<readonly ResolvedColumnSeries[]>(…);
     public readonly selectRange = input(false, { transform: booleanAttribute });
     protected readonly seriesRefs = viewChildren(…);

@@ -370,16 +370,16 @@ export class LineSeriesComponent implements OnDestroy {
 
   constructor() {
     effect(() => {
-      this.scales.reportDomain(
-        `${this.domainId}-primary`,
-        this.valuesOn('primary'),
-        'primary',
-      );
-      this.scales.reportDomain(
-        `${this.domainId}-secondary`,
-        this.valuesOn('secondary'),
-        'secondary',
-      );
+      for (const axis of ['primary', 'secondary'] as const) {
+        for (const hidden of [false, true]) {
+          this.scales.reportDomain(
+            this.reportIdOf(axis, hidden),
+            this.valuesOn(axis, hidden),
+            axis,
+            hidden,
+          );
+        }
+      }
     });
     this.scales.reportTooltip(this.domainId, {
       context: this.tooltipContext,
@@ -424,8 +424,10 @@ export class LineSeriesComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.scales.releaseTooltip(this.domainId);
-    this.scales.releaseDomain(`${this.domainId}-primary`);
-    this.scales.releaseDomain(`${this.domainId}-secondary`);
+    for (const axis of ['primary', 'secondary'] as const) {
+      this.scales.releaseDomain(this.reportIdOf(axis, false));
+      this.scales.releaseDomain(this.reportIdOf(axis, true));
+    }
   }
 
   readonly activeMark = chartActiveMark(
@@ -433,9 +435,17 @@ export class LineSeriesComponent implements OnDestroy {
     () => this.scales.hoverDelayMs?.() ?? 0,
   );
 
-  private valuesOn(axis: ChartAxis): number[] {
+  private reportIdOf(axis: ChartAxis, hidden: boolean): string {
+    return `${this.domainId}-${axis}${hidden ? '-hidden' : ''}`;
+  }
+
+  private valuesOn(axis: ChartAxis, hidden: boolean): number[] {
     return this.data()
-      .filter((series) => (series.axis ?? 'primary') === axis && !series.hidden)
+      .filter(
+        (series) =>
+          (series.axis ?? 'primary') === axis &&
+          (series.hidden ?? false) === hidden,
+      )
       .flatMap((series) =>
         series.data.filter((value): value is number => value !== null),
       );

@@ -212,9 +212,12 @@ export class ColumnChartComponent
   /** Whether a hovered or focused column opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
-  /** Ids of the series the legend has switched off; their columns sink to the baseline and the value
-   *  axis fits what is left. */
+  /** Ids of the series the legend has switched off; their columns sink to the baseline. */
   readonly hiddenSeries = model<readonly string[]>([]);
+
+  /** Whether hiding a series re-scales the value axis to what is left. Off holds the axis where it
+   *  stands with every series shown. */
+  readonly rescaleOnHide = input(true, { transform: booleanAttribute });
 
   /** Whether the legend switches series off. Off leaves it a plain key. */
   readonly legendFilters = input(false, { transform: booleanAttribute });
@@ -300,6 +303,21 @@ export class ColumnChartComponent
       ),
       this.stack(),
     );
+  });
+
+  // The hidden series pile as zeros above, so the held axis has to come from the pile with all shown.
+  protected readonly heldExtent = computed(() => {
+    if (this.rescaleOnHide()) {
+      return { min: null, max: null };
+    }
+    const edges = stackOffsets(
+      this.resolvedSeries().map((series) =>
+        series.points.map((point) => point.value),
+      ),
+      this.stack(),
+    ).flatMap((spans) => spans.flatMap((span) => [span.from, span.to]));
+
+    return { min: Math.min(0, ...edges), max: Math.max(0, ...edges) };
   });
 
   protected isHidden(key: string): boolean {

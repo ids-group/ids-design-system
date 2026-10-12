@@ -105,8 +105,14 @@ export interface ChartScales {
   } | null>;
   setActiveIndex(index: number): void;
   /** Contributes values to the shared domain under a caller-owned id; the same id replaces its earlier report.
-   *  Call from an `effect`: required inputs are unreadable in the constructor. */
-  reportDomain(id: string, values: readonly number[], axis?: ChartAxis): void;
+   *  Call from an `effect`: required inputs are unreadable in the constructor. A `hidden` report
+   *  holds the axis only while `rescaleOnHide` is off. */
+  reportDomain(
+    id: string,
+    values: readonly number[],
+    axis?: ChartAxis,
+    hidden?: boolean,
+  ): void;
   /** Withdraws a contribution. */
   releaseDomain(id: string): void;
   /** Offers a panel to open while this mark is active; the same id replaces the offer. */

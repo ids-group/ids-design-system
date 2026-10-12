@@ -41,7 +41,7 @@
       "appliesWhen": "Only a class of yours that extends ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or FunnelChartComponent, or the internal ChartTooltipPanelComponent, the internal ChartStatesComponent, the internal ChartLegendComponent or the internal WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
-      "note": "`ChartComponent` gained 24; `LineSeriesComponent` gained 22 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 9; `ColumnChartComponent` gained `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `selectRange` and `showChange`; `PieChartComponent` gained 13 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 6 and lost `columnStagger`, `onStepEnter`, `onStepLeave` and `stepDwell`; `ScatterChartComponent` gained 20 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 8; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`, `onItemEnter` and `onItemLeave`."
+      "note": "`ChartComponent` gained 25; `LineSeriesComponent` gained 23 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 10; `ColumnChartComponent` gained `heldExtent`, `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `rescaleOnHide`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `selectRange` and `showChange` and lost `axisMax`, `axisMaxSecondary` and `ceilingOf`; `PieChartComponent` gained 13 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 6 and lost `columnStagger`, `onStepEnter`, `onStepLeave` and `stepDwell`; `ScatterChartComponent` gained 20 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 8; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`, `onItemEnter` and `onItemLeave`."
     },
     {
       "id": "intl-chart-range-total-required",
@@ -104,6 +104,22 @@
       "appliesWhen": "Every ds-line-chart and dsLineSeries: on the hovered reading of a single series, or of the series singled out by hover, focus or the legend.",
       "restore": "showChange=\"false\"",
       "verify": "Hover the second reading of a single-series ds-line-chart and confirm the stretch from the first thickens with a percentage over it, or that nothing is drawn where showChange is false."
+    },
+    {
+      "id": "line-chart-rescale-on-hide-default-on",
+      "kind": "behavior",
+      "old": "ds-line-chart",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "ds-line-chart",
+        "rescaleOnHide"
+      ],
+      "action": "None, unless the value axis of a ds-line-chart must stay put while the legend hides a series: set [rescaleOnHide]=\"false\" on it.",
+      "appliesWhen": "Every ds-line-chart that does not bind rescaleOnHide and lets a series be hidden through legendFilters or hiddenSeries. ds-column-chart and ds-chart re-scaled before and still do.",
+      "pitfall": "With the axis re-scaled, two screenshots of one chart with different series hidden no longer share gridlines, so a period-over-period comparison reads differently.",
+      "restore": "[rescaleOnHide]=\"false\"",
+      "verify": "Hide a series in every ds-line-chart with legendFilters and confirm the axis either re-scales to what is left or carries [rescaleOnHide]=\"false\" where it must hold."
     }
   ],
   "informational": [
@@ -165,5 +181,13 @@
       "verify": "Bind `loading` with no data to a ds-column-chart, then set data and turn `loading` off: confirm the grey placeholders move onto the columns and colour in, with no blank frame between skeleton and chart."
     }
   ],
-  "deleteList": []
+  "deleteList": [
+    {
+      "id": "line-chart-rescale-on-hide-bare",
+      "surface": "template",
+      "find": "rescaleOnHide",
+      "why": "true is the default of rescaleOnHide on ds-line-chart; [rescaleOnHide]=\"false\" stays where the axis must hold.",
+      "replaceWith": "nothing"
+    }
+  ]
 }

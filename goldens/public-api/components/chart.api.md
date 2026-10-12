@@ -143,9 +143,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     public releaseDomain(id: string): void;
     public releaseTooltip(id: string): void;
     protected readonly renderReady = chartRenderGate(…);
-    public reportDomain(id: string, values: readonly number[], axis: ChartAxis = 'primary'): void;
+    public reportDomain(id: string, values: readonly number[], axis: ChartAxis = 'primary', hidden = false): void;
     public reportTooltip(id: string, source: ChartTooltipSource): void;
     private readonly reportedDomains;
+    public readonly rescaleOnHide = input(true, { transform: booleanAttribute });
     protected readonly rightGutter = computed(…);
     private readonly roving;
     protected readonly secondary = computed(…);
@@ -228,7 +229,7 @@ export interface ChartScales {
         readonly y: number;
     } | null>;
     setActiveIndex(index: number): void;
-    reportDomain(id: string, values: readonly number[], axis?: ChartAxis): void;
+    reportDomain(id: string, values: readonly number[], axis?: ChartAxis, hidden?: boolean): void;
     releaseDomain(id: string): void;
     reportTooltip(id: string, source: ChartTooltipSource): void;
     releaseTooltip(id: string): void;
@@ -303,6 +304,7 @@ export class ColumnSeriesComponent implements OnDestroy {
     protected readonly slotStepPx = computed(…);
     public readonly soleSeries = input(false, { transform: booleanAttribute });
     private readonly spans;
+    private spansOf;
     protected readonly spotlit = computed(…);
     protected readonly stacked = computed(…);
     public readonly staggerMs = input(40, { transform: numberAttribute });
@@ -379,11 +381,12 @@ export class LineSeriesComponent implements OnDestroy {
     public readonly pointClicked = output<{ series: LineSeriesData; categoryIndex: number; value: number; }>();
     private readonly readingsAtCursor;
     private readingsOf;
+    private reportIdOf;
     private readonly rovingBySeries;
     protected readonly scales = inject(…);
     private selectMarker;
     protected seriesStagger(index: number): string;
-    public readonly showChange = input(true, { transform: booleanAttribute });
+    public readonly showChange = input(false, { transform: booleanAttribute });
     public readonly showMarkers = input(true, { transform: booleanAttribute });
     private readonly spotlight;
     public readonly stacked = input(false, { transform: booleanAttribute });

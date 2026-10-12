@@ -40,6 +40,9 @@
     [interactive]="interactive()"
     [selectRange]="selectRange()"
     [summary]="accessibleName()"
+    [rescaleOnHide]="rescaleOnHide()"
+    [min]="heldExtent().min"
+    [max]="heldExtent().max"
     [plotHeight]="geometry().plotHeight"
     [axisGutter]="geometry().axisGutter"
     [valueSpace]="geometry().valueSpace">
