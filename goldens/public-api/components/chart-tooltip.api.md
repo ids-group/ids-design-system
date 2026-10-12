@@ -25,6 +25,10 @@ export interface ChartActiveMark {
     leave(): void;
     pin(index: number, event: Event, anchor?: string | Element | null, mark?: Element): void;
     release(): void;
+    pinnedAt<T>(lookup: (index: number) => T | null | undefined): Signal<readonly {
+        index: number;
+        value: T;
+    }[]>;
 }
 
 export type ChartItemTooltipTrigger = 'item' | 'none';

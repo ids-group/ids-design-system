@@ -6,11 +6,10 @@
 // @internal
 @Component({ selector: 'ds-chart-legend' })
 export class ChartLegendComponent {
-    public constructor();
-    private readonly dwell;
     protected readonly groupName = nextControlId(…);
     public readonly hidden = model<readonly string[]>([]);
     protected hideAll(): void;
+    protected readonly highlight = dwellHighlight(…);
     public readonly highlighted = model<string | null>(null);
     protected readonly intl = inject(…);
     protected isHidden(id: string): boolean;
@@ -18,8 +17,6 @@ export class ChartLegendComponent {
     protected readonly isolated = computed(…);
     public readonly items = input.required<readonly ChartLegendItem[]>();
     public readonly mode = input<'toggle' | 'isolate'>('isolate');
-    protected onItemEnter(id: string, event: PointerEvent): void;
-    protected onItemLeave(): void;
     protected showAll(): void;
     protected toggle(id: string): void;
     public readonly toggleable = input(false, { transform: booleanAttribute });

@@ -31,8 +31,6 @@ export class HeatmapChartComponent extends DsChartBase implements ChartDimmable,
     public readonly min = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
     protected onCellClick(row: PlacedRow, cell: PlacedCell, rowIndex: number): void;
     protected onCellPress(cell: PlacedCell, index: number, event: Event): void;
-    protected onStepEnter(step: number, event: PointerEvent): void;
-    protected onStepLeave(): void;
     protected readonly renderReady = chartRenderGate(…);
     protected readonly rows = computed<readonly PlacedRow[]>(…);
     protected readonly scaleMarker = computed(…);
@@ -45,7 +43,7 @@ export class HeatmapChartComponent extends DsChartBase implements ChartDimmable,
     protected readonly skeletonColumns = computed(…);
     protected readonly skeletonRows = computed(…);
     public readonly staggerMs = input(40, { transform: numberAttribute });
-    private readonly stepDwell;
+    protected readonly stepHighlight = dwellHighlight(…);
     protected readonly tableColumns = computed<readonly string[]>(…);
     protected readonly tableRows = computed<readonly ChartDataRow[]>(…);
     public readonly tooltip = input<ChartItemTooltipTrigger>('item');
