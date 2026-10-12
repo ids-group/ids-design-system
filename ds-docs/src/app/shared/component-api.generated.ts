@@ -2517,7 +2517,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "On the hovered reading, thickens the stretch from the reading before it in the rising or falling colour (`--ds-chart-positive-color`, `--ds-chart-negative-color`) and prints the change in percent. With several series it follows the one singled out: hovered, focused or highlighted."
+        "description": "On the hovered reading, thickens the stretches from the reading before it and to the reading after it, each in its own rising or falling colour (`--ds-chart-positive-color`, `--ds-chart-negative-color`) and with its own change in percent. With several series it follows the one singled out: hovered, focused or highlighted."
       },
       {
         "name": "patterns",
@@ -5813,7 +5813,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "On the hovered reading, thickens the stretch from the reading before it in the rising or falling colour and prints the change in percent; with several series, for the one singled out."
+        "description": "On the hovered reading, thickens the stretches from the reading before it and to the reading after it, each in its own rising or falling colour and with its own change in percent; with several series, for the one singled out."
       },
       {
         "name": "staggerMs",

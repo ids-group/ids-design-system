@@ -313,9 +313,9 @@ export class LineSeriesComponent implements OnDestroy {
    *  `dimOthers` the others fade. */
   readonly highlighted = input<string | null>(null);
 
-  /** On the hovered reading, thickens the stretch from the reading before it in the rising or falling
-   *  colour (`--ds-chart-positive-color`, `--ds-chart-negative-color`) and prints the change in percent.
-   *  With several series it follows the one singled out: hovered, focused or highlighted. */
+  /** On the hovered reading, thickens the stretches from the reading before it and to the reading
+   *  after it, each in its own rising or falling colour (`--ds-chart-positive-color`,
+   *  `--ds-chart-negative-color`) and with its own change in percent. With several series it follows the one singled out: hovered, focused or highlighted. */
   readonly showChange = input(false, { transform: booleanAttribute });
 
   /** A dash pattern per series, in series order. A series past the end, or given `''`, draws solid. */
@@ -957,24 +957,37 @@ export class LineSeriesComponent implements OnDestroy {
     const current = markers.find(
       (marker) => marker.categoryIndex === categoryIndex,
     );
-    const previous = markers.find(
-      (marker) => marker.categoryIndex === categoryIndex - 1,
-    );
-    if (!current || !previous || previous.value === 0) {
+    if (!current) {
       return [];
     }
-    const change = current.value - previous.value;
+    const stretches = [
+      [
+        markers.find((marker) => marker.categoryIndex === categoryIndex - 1),
+        current,
+      ],
+      [
+        current,
+        markers.find((marker) => marker.categoryIndex === categoryIndex + 1),
+      ],
+    ] as const;
 
-    return [
-      {
-        key: `${current.seriesId}-${categoryIndex}`,
-        path: linePath([previous, current], this.curve()),
-        rising: change >= 0,
-        label: `${change > 0 ? '+' : ''}${formatPercent(change, Math.abs(previous.value), this.locale)}`,
-        x: (previous.x + current.x) / 2,
-        y: Math.min(previous.y, current.y) - CHANGE_LABEL_GAP,
-      },
-    ];
+    return stretches.flatMap(([from, to]) => {
+      if (!from || !to || from.value === 0) {
+        return [];
+      }
+      const change = to.value - from.value;
+
+      return [
+        {
+          key: `${current.seriesId}-${from.categoryIndex}`,
+          path: linePath([from, to], this.curve()),
+          rising: change >= 0,
+          label: `${change > 0 ? '+' : ''}${formatPercent(change, Math.abs(from.value), this.locale)}`,
+          x: (from.x + to.x) / 2,
+          y: Math.min(from.y, to.y) - CHANGE_LABEL_GAP,
+        },
+      ];
+    });
   });
 
   protected readonly pinnedMarkers = this.activeMark.pinnedAt(

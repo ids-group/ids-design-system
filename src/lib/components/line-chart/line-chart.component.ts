@@ -263,8 +263,9 @@ export class LineChartComponent
    *  it, and the readings outside faded. Escape or a press outside clears it. Off by default. */
   readonly selectRange = input(false, { transform: booleanAttribute });
 
-  /** On the hovered reading, thickens the stretch from the reading before it in the rising or falling
-   *  colour and prints the change in percent; with several series, for the one singled out. */
+  /** On the hovered reading, thickens the stretches from the reading before it and to the reading
+   *  after it, each in its own rising or falling colour and with its own change in percent; with
+   *  several series, for the one singled out. */
   readonly showChange = input(false, { transform: booleanAttribute });
 
   /** Milliseconds between one series' entrance and the next; `0` turns it off. The step narrows

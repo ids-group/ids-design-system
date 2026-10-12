@@ -530,6 +530,26 @@
     [(series)]="markersSeries" />
 
   <h3 class="block-title t-h4">
+    Change on hover
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">showChange</code> thickens the stretches into
+    and out of the hovered reading, each in the rising or falling colour with
+    its change in percent.
+  </p>
+
+  <ds-line-chart
+    dataTable="none"
+    showChange
+    [categories]="changeCategories()"
+    [series]="changeSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="changeCategories"
+    [(series)]="changeSeries" />
+
+  <h3 class="block-title t-h4">
     Outline
   </h3>
 
