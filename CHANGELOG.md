@@ -280,6 +280,9 @@
   the spinner while an `exportFetcher` runs, in place of the greyed "Exporting…" label. A
   `[disabled]` bound to the same flag as `[loading]` still disables natively and drops focus;
   remove it.
+- **Pressing Previous onto the first page, or Next onto the last, keeps focus in `ds-pagination`.**
+  The pressed button disabled under focus and focus fell to the page; it moves to the current
+  page's button. `PaginationComponent` gained a member, named in the migration manifest.
 
 ### What you can now DELETE
 

@@ -700,6 +700,7 @@ Outputs: `(currentPageChange): number`, `(pageSizeChange): number`
 <!-- inputs:ds-pagination -->
 All inputs: `total: required number`, `pageSize: number = 10`, `currentPage: number = 1`, `pageSizeOptions: number[]`, `showLabel: boolean = true`, `showPageSize: boolean = true`, `size: 'sm' | 'md' | 'lg' = null`, `layout: 'grouped' | 'spread' = null`, `loading: boolean = false`
 <!-- /inputs -->
+Previous and Next disable on the first and last page; pressing one onto that page moves focus to the current page's button.
 
 #### `<ds-divider>` — `DividerComponent`
 Inputs: `variant: 'default' | 'strong' | 'vertical' | 'label' = 'default'`, `spacing: 'none' | 'sm' | 'md' | 'lg' = 'md'`

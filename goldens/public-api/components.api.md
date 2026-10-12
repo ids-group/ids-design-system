@@ -401,6 +401,9 @@ export function focusIsInside(overlayRef: OverlayRef): boolean;
 export function focusMark(scope: Element | null, index: number, within = ''): void;
 
 // @internal
+export function focusRescue(): (target: () => HTMLElement | null | undefined) => void;
+
+// @internal
 export function formatPercent(value: number, total: number, locale: string): string;
 
 // @internal

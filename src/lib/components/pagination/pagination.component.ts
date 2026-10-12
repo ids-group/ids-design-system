@@ -12,6 +12,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SelectComponent } from '@ids-group-ltd/ids-design-system/components/select';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
+import { focusRescue } from '@ids-group-ltd/ids-design-system/components';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   DsSize,
@@ -62,6 +63,7 @@ export class PaginationComponent {
   readonly loading = input(false, { transform: booleanAttribute });
 
   protected readonly intl = inject(DS_INTL);
+  private readonly rescueFocus = focusRescue();
 
   protected readonly navClass = computed(() =>
     ['pagination', this.sizeResolved(), this.layoutResolved()]
@@ -124,11 +126,15 @@ export class PaginationComponent {
 
   protected readonly pageSizeStr = computed(() => String(this.pageSize()));
 
-  protected goTo(page: number): void {
+  protected goTo(page: number, nav: HTMLElement): void {
     if (page < 1 || page > this.totalPages() || page === this.currentPage()) {
       return;
     }
     this.currentPage.set(page);
+    // Previous or Next disables under focus at the first or last page.
+    this.rescueFocus(() =>
+      nav.querySelector<HTMLElement>('[aria-current="page"]'),
+    );
   }
 
   protected onSizeChange(value: string): void {

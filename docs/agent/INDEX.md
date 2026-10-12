@@ -110,7 +110,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-breadcrumbs> — BreadcrumbsComponent](navigation/ds-breadcrumbs.md) — <!-- inputs:ds-breadcrumbs -->
 - [<ds-tabs> + <ds-tab> — TabsComponent, TabComponent](navigation/ds-tabs.md) — Container holds <ds-tab label="…"> children.
 - [<ds-stepper> — StepperComponent](navigation/ds-stepper.md) — <!-- inputs:ds-stepper -->
-- [<ds-pagination> — PaginationComponent](navigation/ds-pagination.md) — <!-- inputs:ds-pagination -->
+- [<ds-pagination> — PaginationComponent](navigation/ds-pagination.md) — Previous and Next disable on the first and last page; pressing one onto that page moves focus to the current p
 - [<ds-divider> — DividerComponent](navigation/ds-divider.md) — Content: label text (when variant="label").
 - [<ds-container> — ContainerComponent](navigation/ds-container.md) — <!-- inputs:ds-container -->
 - [<ds-inline> — InlineComponent](navigation/ds-inline.md) — <!-- inputs:ds-inline -->
