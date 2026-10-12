@@ -64,7 +64,8 @@ export type ChartSkeletonMarks = 'columns' | 'line' | 'steps';
 
 // @internal
 @Component({ selector: 'figure[dsChartStates]' })
-export class ChartStatesComponent {
+export class ChartStatesComponent implements OnChanges {
+    public constructor();
     public readonly body = input.required<TemplateRef<unknown>>();
     public readonly caption = input<string | null>(null);
     public readonly dataTable = input(false);
@@ -72,15 +73,23 @@ export class ChartStatesComponent {
     public readonly emptyText = input('');
     public readonly error = input(false);
     public readonly errorText = input('');
+    private readonly host;
+    private readonly isBrowser;
     public readonly message = input<TemplateRef<ChartStatesMessageContext> | null>(null);
     public readonly messageAxes = input(false, { transform: booleanAttribute });
+    public readonly morphGrowth = input<ChartMorphGrowth>(null);
+    public readonly morphing = this.morphingState.asReadonly(…);
+    private readonly morphingState;
+    public ngOnChanges(changes: SimpleChanges): void;
     public readonly pending = input(false);
     public readonly pinned = input(false);
     public readonly release = output();
     public readonly reloading = input(false);
     public readonly shimmer = input(true);
     public readonly skeleton = input.required<TemplateRef<unknown>>();
+    private stopMorph;
     public readonly unpin = input(true, { transform: booleanAttribute });
+    private readonly zone;
 }
 
 // @internal
