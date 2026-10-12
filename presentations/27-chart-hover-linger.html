@@ -31,82 +31,113 @@
   .pill.good { background: var(--success-subtitle); color: var(--success-text); }
   .pill.mid { background: var(--warning-subtitle); color: var(--warning-text); }
   .pill.bad { background: var(--error-subtitle); color: var(--error-text); }
+  .tl { display: grid; gap: var(--space-1); }
+  .tl p { margin: 0; font: var(--font-size-xs) / 1.4 var(--font-sans); color: var(--text-secondary); }
+  .tl .res { font-weight: var(--font-weight-bold); margin-block-end: var(--space-2); }
+  .tl .res.good { color: var(--success-text); }
+  .tl .res.mid { color: var(--warning-text); }
+  .tl .res.bad { color: var(--error-text); }
+  .track { display: flex; block-size: 14px; border-radius: var(--radius-sm); background: var(--surface-secondary); overflow: hidden; }
+  .track span, .swatch { display: block; block-size: 100%; }
+  .on { background: var(--success); }
+  .blink { background: var(--error); }
+  .both { background: var(--warning); }
+  .legend-list { display: flex; gap: var(--space-4); padding: 0; margin: 0 0 var(--space-3); list-style: none; font: var(--font-size-xs) var(--font-sans); color: var(--text-secondary); }
+  .legend-list li { display: inline-flex; align-items: center; gap: var(--space-1); }
+  .swatch { inline-size: 14px; block-size: 14px; border-radius: 3px; }
+  .hint-line { margin: var(--space-2) 0 0; font: var(--font-size-xs) var(--font-sans); color: var(--text-secondary); }
 </style>
 </head>
 <body>
 <main>
   <header class="masthead">
-    <h1>Ховер графика держится после ухода курсора и выглядит как лаг</h1>
-    <p class="lede">Одно решение: сколько панель, курсор и маркер держатся после того, как курсор ушёл с метки или с графика.</p>
+    <h1>Подсказка графика гаснет с задержкой: сколько ей держаться</h1>
+    <p class="lede">Одно решение. Варианты отличаются в двух ситуациях - они нарисованы в каждой карточке.</p>
     <p class="chat">Ответ нести в чат: «Acc2 · Дека движения графиков»</p>
   </header>
 
-  <section class="panel" data-review="Сегодня">
+  <section class="panel" data-review="Сегодня" data-review-round="2">
+    <ol data-review-history><li>2026-10-12 · текст назван нечитаемым (замечание в «Варианты») → переписан списком</li></ol>
     <h2>Сегодня</h2>
-    <p>После ухода курсора всё гаснет через <code>tooltipLingerMs</code> = 500ms плюс 120ms затухания, и внутри графика (в зазоре между колонками), и за его пределами. Зачем задержка: курсор, переходящий с колонки на колонку через зазор, не моргает панелью, и до панели можно довести курсор. Секунды залипания, которые ты видел, были багом, он уже исправлен в ветке <code>fix/chart-hover-batch</code>: каждый элемент под движущимся курсором перезапускал 500ms заново. Осталась сама задержка; ниже её видно: веди курсор по левому графику и сразу на правый.</p>
+    <ul>
+      <li>Курсор ушёл с колонки - подсказка держится ещё <b>0,5 с</b>, потом гаснет.</li>
+      <li>Зачем: курсор идёт с колонки на колонку <b>через пустой зазор</b>, и подсказка не должна моргать.</li>
+      <li>Минус: ушёл на соседний график - <b>полсекунды горят оба</b>.</li>
+      <li>Залипание на секунды было отдельным багом, он <b>исправлен</b> в <code>dev</code>.</li>
+    </ul>
   </section>
 
-  <section class="panel q" data-review="Варианты" data-review-note-only>
-    <ol data-review-history></ol>
+  <section class="panel q" data-review="Варианты" data-review-note-only data-review-round="2">
+    <ol data-review-history><li>2026-10-12 · «не понимаю разница между Сразу при уходе с графика и 150ms везде - у тебя очень сложные и нагромождённые карточки. [...] вот это ВСЕГДА написано очень трудно у тебя. нечитаемо. пиши с форматированием.» → карточки упрощены до двух полос-ситуаций, «Сегодня» списком; выбор «150ms везде» не применён, сброшен</li></ol>
     <h2>Три варианта</h2>
-    <p>В каждой карточке два графика рядом; панель над колонкой. Выбор - клик по карточке вне графиков.</p>
+    <ul class="legend-list">
+      <li><span class="swatch on"></span> подсказка видна</li>
+      <li><span class="swatch blink"></span> подсказка моргнула</li>
+      <li><span class="swatch both"></span> горят два графика сразу</li>
+    </ul>
     <div class="opts">
       <article class="opt is-today" tabindex="0" data-key="today">
         <span class="badge is-same">как сейчас</span>
         <h3>500ms везде</h3>
+        <div class="tl">
+          <p>Медленно через зазор между колонками</p>
+          <div class="track"><span class="on" style="inline-size:100%"></span></div>
+          <p class="res good">не моргает</p>
+          <p>Ушёл на соседний график</p>
+          <div class="track"><span class="both" style="inline-size:50%"></span></div>
+          <p class="res bad">0,5 с горят оба</p>
+        </div>
         <div class="demo" data-inside="500" data-outside="500"></div>
-        <p class="timing">в зазоре 500 · вне графика 500</p>
-        <div class="pills"><span class="pill good">не моргает между колонками</span><span class="pill bad">два графика горят разом полсекунды</span></div>
-        <dl class="layer"><dt>В библиотеке</dt><dd class="none">ничего</dd></dl>
       </article>
 
       <article class="opt is-pick" tabindex="0" data-key="split">
         <span class="badge is-pick">рекомендую</span>
         <h3>Сразу при уходе с графика</h3>
+        <div class="tl">
+          <p>Медленно через зазор между колонками</p>
+          <div class="track"><span class="on" style="inline-size:100%"></span></div>
+          <p class="res good">не моргает</p>
+          <p>Ушёл на соседний график</p>
+          <div class="track"></div>
+          <p class="res good">старый гаснет сразу</p>
+        </div>
         <div class="demo" data-inside="500" data-outside="0"></div>
-        <p class="timing">в зазоре 500 · вне графика 0</p>
-        <div class="pills"><span class="pill good">не моргает между колонками</span><span class="pill good">ушёл с графика - погасло</span><span class="pill mid">до панели за краем графика не довести</span></div>
-        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">в <code>chartActiveMark</code> курсор за пределами графика (не над его меткой и не над панелью) гасит ховер без ожидания; <code>tooltipLingerMs</code> остаётся для зазоров внутри графика</dd></dl>
       </article>
 
       <article class="opt" tabindex="0" data-key="short">
         <span class="badge">короче</span>
         <h3>150ms везде</h3>
+        <div class="tl">
+          <p>Медленно через зазор между колонками</p>
+          <div class="track"><span class="on" style="inline-size:15%"></span><span class="blink" style="inline-size:15%"></span><span class="on" style="inline-size:70%"></span></div>
+          <p class="res bad">моргает, если зазор дольше 0,15 с</p>
+          <p>Ушёл на соседний график</p>
+          <div class="track"><span class="both" style="inline-size:15%"></span></div>
+          <p class="res mid">0,15 с горят оба</p>
+        </div>
         <div class="demo" data-inside="150" data-outside="150"></div>
-        <p class="timing">в зазоре 150 · вне графика 150</p>
-        <div class="pills"><span class="pill good">почти сразу гаснет</span><span class="pill mid">на медленном переходе между колонками моргает</span></div>
-        <dl class="layer"><dt>В библиотеке</dt><dd class="gain">по умолчанию <code>tooltipLingerMs</code> 500 → 150 для всех графиков</dd></dl>
       </article>
     </div>
-  </section>
-
-  <section class="panel">
-    <h2>Сравнение</h2>
-    <table>
-      <thead><tr><th>Что</th><th>500ms везде</th><th>Сразу при уходе с графика</th><th>150ms везде</th></tr></thead>
-      <tbody>
-        <tr><th class="rowlabel">Курсор в зазоре между колонками</th><td>держится 500</td><td>держится 500</td><td>держится 150</td></tr>
-        <tr><th class="rowlabel">Курсор ушёл с графика</th><td>гаснет через 500</td><td>гаснет сразу</td><td>гаснет через 150</td></tr>
-        <tr><th class="rowlabel">Два графика горят одновременно</th><td>до 0,6 с</td><td>нет</td><td>до 0,3 с</td></tr>
-        <tr><th class="rowlabel">Меняется умолчание консьюмеров</th><td>нет</td><td>поведение вне графика</td><td><code>tooltipLingerMs</code></td></tr>
-      </tbody>
-    </table>
+    <p class="hint-line">Полоса = 1 секунда. Под полосами живые графики: веди медленно по колонкам, потом на соседний.</p>
   </section>
 
   <section class="panel good">
     <h2>Рекомендую: «Сразу при уходе с графика»</h2>
-    <p>Задержка нужна только внутри графика, где курсор пересекает зазоры между метками. Курсор, ушедший с графика, уже ничего в нём не ищет, и погасший сразу ховер не выглядит как лаг. Панель, на которую курсор заходит, по-прежнему держится.</p>
+    <ul>
+      <li>Между колонками <b>не моргает</b>, как сейчас.</li>
+      <li>Ушёл с графика - <b>гаснет сразу</b>, двух горящих графиков нет.</li>
+    </ul>
   </section>
 
   <section class="panel">
     <h2>Что решить</h2>
     <table>
       <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
-      <tbody><tr class="row-pick"><th class="rowlabel">Сколько ховер графика держится после ухода курсора</th><td>500ms везде · Сразу при уходе с графика · 150ms везде</td><td>Сразу при уходе с графика</td></tr></tbody>
+      <tbody><tr class="row-pick"><th class="rowlabel">Сколько подсказка графика держится после ухода курсора</th><td>500ms везде · Сразу при уходе с графика · 150ms везде</td><td>Сразу при уходе с графика</td></tr></tbody>
     </table>
   </section>
 
-  <p class="src"><b>Источники, проверено 2026-10-12.</b> Таймер: <code>src/lib/components/chart-tooltip/chart-active-mark.ts</code>, <code>scheduleClear</code> и <code>trackPointer</code>; умолчание 500ms в <code>charts-base.ts</code> (<code>tooltipLingerMs</code>, затем <code>DS_CONFIG.chart.tooltipLingerMs</code>). Измерено headless на ds-docs, раздел Missing readings, курсор с левого графика на правый и дальше в движении по правому: на <code>dev</code> курсор левого не гас 6 с из 6 замеренных; в ветке <code>fix/chart-hover-batch</code> (коммит <code>5e9407ef8</code>) гаснет к 0,93 с (замеры раз в 250ms). Образцы - модель на SVG с этими задержками, не код библиотеки.</p>
+  <details class="src"><summary>Источники</summary><p>Проверено 2026-10-12. Задержка: <code>tooltipLingerMs</code>, по умолчанию 500 (<code>src/lib/components/charts-defaults.ts:48</code>), таймер в <code>chart-tooltip/chart-active-mark.ts</code>. Баг с перезапуском таймера исправлен в <code>5e9407ef8</code>: на <code>dev</code> до него курсор левого графика не гас 6 с из 6, после - гаснет к 0,93 с. Полосы - схема, графики под ними - модель на SVG с этими задержками, не код библиотеки.</p></details>
 </main>
 
 <script>
@@ -154,7 +185,7 @@
     });
   });
 
-  const KEY = 'ds-deck-chart-hover-linger-pick';
+  const KEY = 'ds-deck-chart-hover-linger-pick-v2';
   const cards = [...document.querySelectorAll('.opt[data-key]')];
   cards.forEach((card) => {
     const pickButton = document.createElement('button');
