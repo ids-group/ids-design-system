@@ -9,7 +9,10 @@ export class MenuComponent {
     private readonly activeIndex;
     protected readonly anyIcon = computed(…);
     private focusItem;
+    private readonly host;
     private readonly items;
+    protected onFocusIn(event: FocusEvent): void;
+    protected onFocusOut(event: FocusEvent): void;
     protected onKeydown(event: KeyboardEvent): void;
     private typeAhead;
 }

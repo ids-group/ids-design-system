@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   ViewEncapsulation,
   computed,
   contentChildren,
@@ -24,11 +25,14 @@ import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
   // data-focus="inset": the panel clips, so an outward ring is lost.
   host: {
     '(keydown)': 'onKeydown($event)',
+    '(focusin)': 'onFocusIn($event)',
+    '(focusout)': 'onFocusOut($event)',
     'data-focus': 'inset',
     '[class.has-icons]': 'anyIcon()',
   },
 })
 export class MenuComponent {
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly items = contentChildren(MenuItemComponent);
 
   /** One item with an icon makes every item reserve the slot, so the labels share one axis. */
@@ -51,6 +55,22 @@ export class MenuComponent {
       }
       items.forEach((item, i) => item.tabbable.set(i === index));
     });
+  }
+
+  protected onFocusIn(event: FocusEvent): void {
+    const index = this.items().findIndex((item) =>
+      item.contains(event.target as Node | null),
+    );
+    if (index >= 0) {
+      this.activeIndex.set(index);
+    }
+  }
+
+  // APG: a menu always opens at its first item, so the roving stop goes back there once focus leaves.
+  protected onFocusOut(event: FocusEvent): void {
+    if (!this.host.nativeElement.contains(event.relatedTarget as Node | null)) {
+      this.activeIndex.set(0);
+    }
   }
 
   protected onKeydown(event: KeyboardEvent): void {

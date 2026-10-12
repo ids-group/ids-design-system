@@ -273,6 +273,9 @@
   under forced colours each prints in `CanvasText` over a `Canvas` halo; an annotation kept its
   own colour on a white patch there, and the percentage's halo had sharp corners.
   `--ds-line-chart-annotation-halo-color` and `-halo-width` still set the annotation's halo.
+- **A `ds-menu` opens at its first item.** Reopening a `ds-split-button` menu, or any `ds-menu`
+  in a `ds-popover`, focused the item that had focus when it closed. Once focus leaves the menu,
+  its first item takes the tab stop again.
 
 ### What you can now DELETE
 
