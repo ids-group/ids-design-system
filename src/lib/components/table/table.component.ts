@@ -1260,6 +1260,7 @@ export class TableComponent<T extends object> {
     // `width: 'content'` is the one width that follows the rows, so only it re-measures with them.
     afterRenderEffect(() => {
       this.rowSlots();
+      this.fontsLoaded();
       const keys = this.visibleColumns()
         .filter((col) => this.fitsContent(col))
         .map((col) => col.key);
