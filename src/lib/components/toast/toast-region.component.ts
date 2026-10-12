@@ -216,7 +216,10 @@ export class ToastRegionComponent {
 
   protected onFocusIn(event: FocusEvent): void {
     const from = event.relatedTarget;
-    if (from instanceof HTMLElement && !this.host.nativeElement.contains(from)) {
+    if (
+      from instanceof HTMLElement &&
+      !this.host.nativeElement.contains(from)
+    ) {
       this.focusOrigin = from;
     }
     this.onFocusWithin(true);
