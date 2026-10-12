@@ -42,12 +42,12 @@ export const SEMANTIC_PRIMARY: readonly ColourRow[] = [
   },
   {
     "name": "--primary-subtitle",
-    "value": "var(--blue-50)",
+    "value": "hsl(from var(--primary) h 100% 97%)",
     "notes": "Light brand tint (active table row, date range fill)."
   },
   {
     "name": "--primary-muted",
-    "value": "var(--blue-100)",
+    "value": "hsl(from var(--primary) h 95% 94%)",
     "notes": "Slightly stronger tint than subtle."
   },
   {
@@ -348,7 +348,7 @@ export const SEMANTIC_TEXT: readonly ColourRow[] = [
   },
   {
     "name": "--text-link",
-    "value": "var(--blue-700)",
+    "value": "hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))",
     "notes": "Hyperlink text."
   },
   {
@@ -412,7 +412,7 @@ export const SEMANTIC_SURFACE: readonly ColourRow[] = [
   },
   {
     "name": "--surface-tint",
-    "value": "var(--blue-50)",
+    "value": "hsl(from var(--primary) h 100% 97%)",
     "notes": "Brand-tinted surfaces."
   },
   {
@@ -3409,16 +3409,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-motion-chart-tooltip-move-duration",
-        "value": "—",
-        "notes": ""
-      },
-      {
-        "name": "--ds-motion-chart-tooltip-move-easing",
-        "value": "—",
-        "notes": ""
-      },
-      {
         "name": "--ds-motion-chart-state-duration",
         "value": "—",
         "notes": ""
@@ -4647,6 +4637,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-heatmap-chart-missing-color",
         "value": "var(--surface-secondary)",
         "notes": "Fill of a cell whose value is null, which no step of the heat scale stands for (default --surface-secondary)."
+      },
+      {
+        "name": "--ds-motion-chart-tooltip-move-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-tooltip-move-easing",
+        "value": "—",
+        "notes": ""
       }
     ]
   },

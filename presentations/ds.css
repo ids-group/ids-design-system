@@ -137,7 +137,7 @@
   --surface-overlay: var(--neutral-0);
   --surface-inverted: var(--neutral-900);
   --surface-inverted-hover: var(--neutral-800);
-  --surface-tint: var(--blue-50);
+  --surface-tint: hsl(from var(--primary) h 100% 97%);
   --surface-disabled: var(--neutral-100);
   --surface-muted: var(--neutral-150);
   /* Modal/drawer backdrop; the dark theme flips the tint. */
@@ -159,7 +159,7 @@
   --text-inverted: var(--neutral-0);
   --text-on-media: white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
-  --text-link: var(--blue-700);
+  --text-link: hsl(from var(--primary) h calc(s * 0.85) calc(l - 7));
   --text-on-primary: white;
   --text-on-success: white;
   /* White on the yellow warning fill (--yellow-400) is ~1.5:1 and fails WCAG; the darkest neutral is ~10:1. */
@@ -189,8 +189,8 @@
   --primary-hover: color-mix(in srgb, var(--primary) 88%, black);
   --primary-pressed: color-mix(in srgb, var(--primary) 76%, black);
   --primary-selected-hover: color-mix(in srgb, var(--primary) 88%, black);
-  --primary-subtitle: var(--blue-50);
-  --primary-muted: var(--blue-100);
+  --primary-subtitle: hsl(from var(--primary) h 100% 97%);
+  --primary-muted: hsl(from var(--primary) h 95% 94%);
   --primary-muted-strong: var(--blue-200);
   --primary-strong: var(--blue-700);
   --primary-on: white;
@@ -372,7 +372,7 @@
   --surface-overlay: var(--neutral-0);
   --surface-inverted: var(--neutral-900);
   --surface-inverted-hover: var(--neutral-800);
-  --surface-tint: var(--blue-50);
+  --surface-tint: hsl(from var(--primary) h 100% 97%);
   --surface-disabled: var(--neutral-100);
   --surface-muted: var(--neutral-150);
   /* Modal/drawer backdrop; the dark theme flips the tint. */
@@ -394,7 +394,7 @@
   --text-inverted: var(--neutral-0);
   --text-on-media: white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
-  --text-link: var(--blue-700);
+  --text-link: hsl(from var(--primary) h calc(s * 0.85) calc(l - 7));
   --text-on-primary: white;
   --text-on-success: white;
   /* White on the yellow warning fill (--yellow-400) is ~1.5:1 and fails WCAG; the darkest neutral is ~10:1. */
@@ -424,8 +424,8 @@
   --primary-hover: color-mix(in srgb, var(--primary) 88%, black);
   --primary-pressed: color-mix(in srgb, var(--primary) 76%, black);
   --primary-selected-hover: color-mix(in srgb, var(--primary) 88%, black);
-  --primary-subtitle: var(--blue-50);
-  --primary-muted: var(--blue-100);
+  --primary-subtitle: hsl(from var(--primary) h 100% 97%);
+  --primary-muted: hsl(from var(--primary) h 95% 94%);
   --primary-muted-strong: var(--blue-200);
   --primary-strong: var(--blue-700);
   --primary-on: white;
@@ -693,9 +693,6 @@
      the outline is not painted there. */
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
-  /* Share of the accent in the wash behind a trigger whose tooltip is pinned. The wash is translucent, so it
-     tints whatever surface the trigger sits on, in both themes. */
-  --pinned-wash-amount: 12%;
   /* For a box that exists only to carry the ring; a control with its own shape ignores it. */
   --focus-ring-radius: var(--ds-radius-inner);
   /* Composed from a channel-split tint so a theme can re-colour them (-h/-s are theme-independent, -l comes
@@ -1870,6 +1867,14 @@ html {
   flex-shrink: 0;
 }
 
+/* Every box that clips text goes through this file. A glyph reaches past its line box by half the
+   difference between the font's ascent plus descent and the line-height, and that depends on
+   whatever font the consumer sets, so no fixed margin on the block axis is safe for every font. */
+/* `clip` does not make a scroll container, so the block axis stays `visible` and nothing moves. */
+/* `text-overflow` applies under `clip` as it does under `hidden`. */
+/* A clamp must clip the block axis to hide the lines after the last, and that edge runs through the
+   strip where a descender above and an accent below overlap. Only a line box as tall as the font's
+   own glyph box keeps both clear of it, and `normal` is the line-height every font defines so. */
 .ds-dropdown-panel {
   --_option-selected-bg-color: var(--ds-option-selected-bg-color, var(--primary-subtitle));
   --_option-selected-label-color: var(--ds-option-selected-label-color, var(--primary-strong));
@@ -1922,6 +1927,15 @@ html {
   overflow-y: auto;
   gap: var(--_option-row-gap);
 }
+.ds-dropdown-panel .list-overlay {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.ds-dropdown-panel .option.is-skeleton {
+  cursor: default;
+  pointer-events: none;
+}
 .ds-dropdown-panel .optgroup {
   list-style: none;
   display: flex;
@@ -1950,7 +1964,10 @@ html {
 .ds-dropdown-panel .empty {
   padding: var(--space-3) var(--space-4);
   color: var(--_dropdown-empty-color);
+  font-family: var(--ds-typography-s-font-family, var(--font-sans));
+  font-weight: var(--ds-typography-s-font-weight, var(--font-weight-regular));
   font-size: var(--_dropdown-empty-font-size);
+  line-height: var(--ds-typography-s-line-height, var(--line-height-base));
   text-align: center;
 }
 .ds-dropdown-panel .option {
@@ -1975,10 +1992,7 @@ html {
 .ds-dropdown-panel .option .option-label {
   flex: 1;
   min-width: 0;
-  /* `clip` with a margin, not `hidden`: where the line box is tighter than the glyph box (Mulish is 1.257em;
-     --line-height-flat and -tight are below it) `hidden` shaves every label. `text-overflow` applies under `clip` too. */
-  overflow: clip;
-  overflow-clip-margin: var(--space-1);
+  overflow: clip visible;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -2116,7 +2130,7 @@ html {
   }
 }
 .cdk-overlay-pane.ds-overlay-pane {
-  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-scale-in);
+  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-fade-in);
   --_overlay-enter-duration: var(--ds-overlay-enter-duration, var(--ds-motion-enter-panel-duration));
   --_overlay-enter-easing: var(--ds-overlay-enter-easing, var(--ds-motion-enter-panel-easing));
   --_overlay-enter-offset: var(--ds-overlay-enter-offset, 4px);
@@ -2140,9 +2154,6 @@ html {
   --_ds-enter-x: calc(-1 * var(--_overlay-enter-offset));
   --_ds-enter-y: 0px;
   --_overlay-enter-origin: center left;
-}
-.cdk-overlay-pane.ds-overlay-pane.ds-chart-tooltip-pane {
-  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-fade-in);
 }
 @media (prefers-reduced-motion: reduce) {
   .cdk-overlay-pane.ds-overlay-pane {
@@ -2186,11 +2197,6 @@ html {
   pointer-events: auto;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  ds-skeleton::after {
-    animation: none !important;
-  }
-}
 :root {
   --bp-xs: 480px;
   --bp-sm: 640px;
@@ -2204,6 +2210,7 @@ html {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
   animation: ds-focus-ring-in var(--duration-fast) var(--ease-standard);
+  border-radius: var(--focus-ring-radius);
 }
 
 @keyframes ds-focus-ring-in {

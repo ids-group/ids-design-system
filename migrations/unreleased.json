@@ -80,6 +80,37 @@
       "pitfall": "With the axis re-scaled, two screenshots of one chart with different series hidden no longer share gridlines, so a period-over-period comparison reads differently.",
       "restore": "[rescaleOnHide]=\"false\"",
       "verify": "Hide a series in every ds-line-chart with legendFilters and confirm the axis either re-scales to what is left or carries [rescaleOnHide]=\"false\" where it must hold."
+    },
+    {
+      "id": "light-brand-tints-follow-primary",
+      "kind": "behavior",
+      "old": "--text-link",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "--primary:",
+        "--text-link",
+        "--surface-tint",
+        "--primary-subtitle",
+        "--primary-muted",
+        "--blue-50",
+        "--blue-100",
+        "--blue-700",
+        "--blue-s",
+        "--blue-l",
+        "data-brand"
+      ],
+      "action": "None, unless your brand sets `--primary` or `--blue-s/l` in the light theme: check `--text-link` on white and on `--surface-tint` against 4.5:1, and set `--text-link`, `--surface-tint`, `--primary-subtitle` or `--primary-muted` explicitly where the derived value fails or is not the colour you want.",
+      "appliesWhen": "Light theme only. In light, `--text-link`, `--surface-tint`, `--primary-subtitle` and `--primary-muted` were the `--blue-*` steps `--blue-700`, `--blue-50`, `--blue-50` and `--blue-100`; they now take the hue of `--primary` (`hsl(from var(--primary) h 100% 97%)` for both tints, `h 95% 94%` for `--primary-muted`), and `--text-link` is `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))`. The default blue renders the same RGB. A brand that sets them itself keeps its values. The dark theme is unchanged.",
+      "pitfall": "A brand that re-pointed the `--blue-50`, `--blue-100` or `--blue-700` steps without moving `--primary`'s hue no longer reaches them through those steps; and a light brand colour (yellow, lime, cyan) derives a link under 4.5:1 on white with no error anywhere.",
+      "restore": "--text-link: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle: var(--blue-50); --primary-muted: var(--blue-100);",
+      "verify": "With the brand applied in the light theme, a link reads at least 4.5:1 on white and on an active list row, and the active row, the selected dropdown option and tonal fills are tinted in the brand hue or set deliberately.",
+      "evidence": [
+        "tokens:--surface-tint",
+        "tokens:--primary-subtitle",
+        "tokens:--primary-muted",
+        "tokens:--text-link"
+      ]
     }
   ],
   "informational": [
