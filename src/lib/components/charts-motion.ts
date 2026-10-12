@@ -1,4 +1,4 @@
-import type { AnimationCallbackEvent } from '@angular/core';
+import type { AnimationCallbackEvent, NgZone } from '@angular/core';
 
 // The whole spread of a series' arrival; past it the entrance reads as a queue, not one gesture.
 const STAGGER_BUDGET_MS = 260;
@@ -114,5 +114,24 @@ export function tweenMarks(
   return () => {
     cancelAnimationFrame(frame);
     clock.cancel();
+  };
+}
+
+/** Runs `run` two frames from now, outside Angular's zone; returns the cancel.
+ *
+ *  @internal */
+export function afterTwoFrames(zone: NgZone, run: () => void): () => void {
+  let first = 0;
+  let second = 0;
+  // Outside the zone: under zone.js each frame callback is a full application tick.
+  zone.runOutsideAngular(() => {
+    first = requestAnimationFrame(() => {
+      second = requestAnimationFrame(run);
+    });
+  });
+
+  return () => {
+    cancelAnimationFrame(first);
+    cancelAnimationFrame(second);
   };
 }

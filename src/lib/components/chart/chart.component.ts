@@ -21,6 +21,7 @@ import {
   viewChild,
 } from '@angular/core';
 import {
+  afterTwoFrames,
   bandScale,
   elementWidth,
   labelInterval,
@@ -244,18 +245,9 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       if (this.measuredWidth() === 0 || layout === this.settledLayout()) {
         return;
       }
-      let first = 0;
-      let second = 0;
-      // Outside the zone: under zone.js each frame callback is a full application tick.
-      this.zone.runOutsideAngular(() => {
-        first = requestAnimationFrame(() => {
-          second = requestAnimationFrame(() => this.settledLayout.set(layout));
-        });
-      });
-      onCleanup(() => {
-        cancelAnimationFrame(first);
-        cancelAnimationFrame(second);
-      });
+      onCleanup(
+        afterTwoFrames(this.zone, () => this.settledLayout.set(layout)),
+      );
     });
 
     // Before the view drops the stops past the new end, while the focused one is still in the DOM.

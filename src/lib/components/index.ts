@@ -51,6 +51,7 @@ export {
 } from './charts-scale';
 export type { BandScale, NiceDomain, PointScale } from './charts-scale';
 export {
+  afterTwoFrames,
   chartTiming,
   leaveMark,
   staggerDelay,
