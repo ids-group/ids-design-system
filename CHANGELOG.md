@@ -4,8 +4,10 @@
 
 - **`selectRange` sums a dragged range of categories.** On `ds-chart`, `ds-column-chart` and
   `ds-line-chart`, off by default: a press dragged across categories draws a band over them, a pill
-  with the sum and mean of every reading in the range, and fades the marks outside it. Escape or a
-  press outside the chart clears it; a press released in its own category still pins. The pill
+  with the sum and mean of every reading in the range, and fades the marks outside it. With a
+  category, column or line point focused, Shift+Left and Shift+Right grow or shrink the range from
+  its far end. Escape or a press outside the chart clears it; a press released in its own category
+  still pins. The pill
   reads the new required `DsIntl` key `chart.rangeTotal: (range, total, average) => string`
   (default `` `${range}: ${total} · avg ${average}` ``); a complete `DsIntl` dictionary, or a
   complete `chart` section of one, declared as a typed object stops compiling until it lists it.
@@ -58,9 +60,9 @@
   pin, the gridlines with their tick labels and the waterfall connectors glide to their new place on
   the column's own timing (`--ds-motion-chart-mark-duration` and `-easing`). When a category comes
   or goes, the columns, the category labels and the points glide sideways to their new places on the
-  same timing and the line morphs to its new point count with its points on it: a new point leaves
-  its neighbour, a removed one merges into its neighbour; a new column grows and a removed column,
-  label or point fades. A resize redraws every mark in place at once. The
+  same timing and the line and its area morph to the new point count with the points on them: a new
+  point leaves its neighbour, a removed one slides into its neighbour as it fades; a new column grows
+  and a removed column or label fades. An area filled between two lines (`lower`) changes at once. A resize redraws every mark in place at once. The
   category band and crosshair glide with the tooltip panel, on
   `--ds-motion-chart-tooltip-move-duration` and `-easing`, which `ds-chart` now reads. A
   `ds-pie-chart` turns its slices to their new angles. A removed heatmap row or cell, scatter point,
