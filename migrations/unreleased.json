@@ -82,6 +82,32 @@
       "verify": "Hide a series in every ds-line-chart with legendFilters and confirm the axis either re-scales to what is left or carries [rescaleOnHide]=\"false\" where it must hold."
     },
     {
+      "id": "default-locale-en-us-reads-en-gb",
+      "kind": "behavior",
+      "old": "DsConfig",
+      "new": null,
+      "surface": [
+        "config",
+        "none"
+      ],
+      "searchHints": [
+        "LOCALE_ID",
+        "provideDsConfig(",
+        "ds-date-picker",
+        "ds-sparkline"
+      ],
+      "detect": [
+        "LOCALE_ID",
+        "provideDsConfig(",
+        "locale:"
+      ],
+      "action": "None, unless the app must keep US formats: set `provideDsConfig({ locale: 'en-US' })`.",
+      "appliesWhen": "An app that sets no `DsConfig.locale` and either provides no `LOCALE_ID` or provides `'en-US'`. The library formats in en-GB: `ds-date-picker` types and shows `DD/MM/YYYY` where it showed `MM/DD/YYYY`, its week starts on Monday and `ds-time-picker` uses 24 hours. Names stay English and numbers do not change. An app with any other `LOCALE_ID`, or with `DsConfig.locale`, is not affected.",
+      "pitfall": "A date typed or pasted as `03/04/2026` now means 3 April, not 4 March; check any test, fixture or user guide that types US-ordered dates into a `ds-date-picker`.",
+      "restore": "provideDsConfig({ locale: 'en-US' })",
+      "verify": "Open a ds-date-picker in an app with no locale set and confirm a picked date reads DD/MM/YYYY, the week starts on Monday and a ds-time-picker shows 24-hour times."
+    },
+    {
       "id": "date-picker-first-day-from-locale",
       "kind": "behavior",
       "old": "ds-date-picker",
@@ -101,8 +127,8 @@
         "LOCALE_ID"
       ],
       "action": "None, unless a calendar must keep starting on Monday whatever the locale: set `datePicker: { firstDayOfWeek: 1 }` in `provideDsConfig`, or `[firstDayOfWeek]=\"1\"` on the one `ds-date-picker`.",
-      "appliesWhen": "Every `ds-date-picker`, single and range, that binds no `firstDayOfWeek` under a config with no `datePicker.firstDayOfWeek`. Its week now starts on the first day of the picker's locale (`locale`, then `datePicker.locale`, then the config's `locale`, then `LOCALE_ID`): Sunday for en-US, which is the default `LOCALE_ID`, and ja-JP; Saturday for ar-EG; Monday for en-GB, de-DE and ru-RU. A browser with no week data keeps Monday. A bound `firstDayOfWeek` or `datePicker.firstDayOfWeek` wins as before.",
-      "pitfall": "An app that never set `LOCALE_ID` or a config `locale` runs as en-US, so its calendars start on Sunday although nobody chose that. Setting `locale: 'en-GB'` to get Monday back also moves the typed date order to DD/MM/YYYY.",
+      "appliesWhen": "Every `ds-date-picker`, single and range, that binds no `firstDayOfWeek` under a config with no `datePicker.firstDayOfWeek`, in an app whose locale (`locale`, then `datePicker.locale`, then the config's `locale`, then `LOCALE_ID`) is not Monday-first: Sunday for a config `locale` of en-US and for ja-JP, Saturday for ar-EG. An app with no locale, en-GB, de-DE and ru-RU keep Monday. A browser with no week data keeps Monday. A bound `firstDayOfWeek` or `datePicker.firstDayOfWeek` wins as before.",
+      "pitfall": "A `LOCALE_ID` of en-US reads as en-GB and keeps Monday; only a config `locale: 'en-US'` brings Sunday, so look for that before assuming a screen is unaffected.",
       "restore": "provideDsConfig({ datePicker: { firstDayOfWeek: 1 } })",
       "verify": "Open a ds-date-picker on each screen and confirm its first weekday header is the day the app means: the locale's, or the day `firstDayOfWeek` pins."
     },
@@ -126,8 +152,8 @@
         "LOCALE_ID"
       ],
       "action": "None, unless times must stay on the 24-hour clock whatever the locale: set `timePicker: { format: '24h' }` in `provideDsConfig`, or `format=\"24h\"` on the one `ds-time-picker`.",
-      "appliesWhen": "Every `ds-time-picker`, single and range, that binds no `format` under a config with no `timePicker.format`. Its trigger text and hour column follow the hour cycle of the config's `locale`, then `LOCALE_ID`: 12-hour with an AM/PM column for en-US, which is the default `LOCALE_ID`, and ar-EG; 24-hour for en-GB, de-DE, ru-RU and ja-JP. The bound value stays a 24-hour `HH:mm` string.",
-      "pitfall": "Nothing fails at build: a test or a screenshot that reads the trigger as 21:30 reads 09:30 PM under en-US.",
+      "appliesWhen": "Every `ds-time-picker`, single and range, that binds no `format` under a config with no `timePicker.format`, in an app whose config `locale`, then `LOCALE_ID`, uses a 12-hour clock: a config `locale` of en-US, or ar-EG. An app with no locale, en-GB, de-DE, ru-RU and ja-JP keep 24 hours. The bound value stays a 24-hour `HH:mm` string.",
+      "pitfall": "Nothing fails at build: a test or a screenshot that reads the trigger as 21:30 reads 09:30 PM under a config `locale` of en-US.",
       "restore": "provideDsConfig({ timePicker: { format: '24h' } })",
       "verify": "Open a ds-time-picker on each screen and confirm the trigger shows the clock the app means: the locale's, or the one `format` or `timePicker.format` pins."
     },
@@ -232,32 +258,6 @@
       "surface": "template",
       "find": "rescaleOnHide",
       "why": "true is the default of rescaleOnHide on ds-line-chart; [rescaleOnHide]=\"false\" stays where the axis must hold.",
-      "replaceWith": "nothing"
-    },
-    {
-      "id": "date-picker-sunday-first-restates-locale",
-      "surface": [
-        "template",
-        "config"
-      ],
-      "find": [
-        "[firstDayOfWeek]=\"0\"",
-        "firstDayOfWeek: 0"
-      ],
-      "why": "Sunday is the first day an en-US locale now gives ds-date-picker; the pin stays where the picker's locale starts the week on another day.",
-      "replaceWith": "nothing"
-    },
-    {
-      "id": "time-picker-12h-restates-locale",
-      "surface": [
-        "template",
-        "config"
-      ],
-      "find": [
-        "format=\"12h\"",
-        "format: '12h'"
-      ],
-      "why": "12-hour is the clock an en-US locale now gives ds-time-picker; the pin stays where the app's locale reads a 24-hour clock.",
       "replaceWith": "nothing"
     }
   ]

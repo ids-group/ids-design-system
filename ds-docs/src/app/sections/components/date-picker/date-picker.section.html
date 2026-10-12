@@ -398,8 +398,9 @@
       [locale]
     </code> drives month names, weekday
     headers and value format via <code>Intl</code>, never mixed with the OS
-    locale. The week starts on the locale's first day (en-US Sunday, en-GB
-    Monday; Monday where the browser has no week data);
+    locale. With no locale set it is en-GB: Monday first, DD/MM/YYYY. The
+    week starts on the locale's first day (en-US Sunday, en-GB Monday; Monday
+    where the browser has no week data);
     <code class="t-mono-inline">[firstDayOfWeek]</code> (0-6) overrides it. App-wide:
     <code class="t-mono-inline">
       provideDsConfig({{ '{' }} datePicker: {{ '{' }} locale, dateFormat,
