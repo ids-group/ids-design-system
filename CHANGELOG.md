@@ -201,6 +201,11 @@
 - **An expanded `ds-table` row folds all the way.** Opening a row's panel started 24px tall and
   closing it stopped at 24px before the row dropped out: the cell padding sat outside the fold. The
   padding now folds with the panel, so the row grows from 0 and shrinks to 0.
+- **A loading chart holds the room of its data table.** `ds-bar-chart` drew no table line while
+  loading, the other charts drew the line 5px short, and under `dataTable="visible"` every chart
+  drew the closed line where the open table lands, so the page jumped when the data arrived. The
+  placeholder now matches the table line, and under `'visible'` draws the open table with a header
+  and five rows.
 
 ### What you can now DELETE
 

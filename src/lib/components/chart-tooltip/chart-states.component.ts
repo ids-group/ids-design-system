@@ -19,6 +19,8 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import type { ChartDataTable } from '@ids-group-ltd/ids-design-system/core';
+import { CHART_SKELETON_COUNT } from '@ids-group-ltd/ids-design-system/components';
 import {
   startSkeletonMorph,
   type ChartMorphGrowth,
@@ -78,8 +80,12 @@ export interface ChartStatesMessageContext {
     } @else if (pending()) {
       <ng-container [ngTemplateOutlet]="skeleton()" />
 
-      @if (dataTable()) {
-        <details class="data-table" aria-hidden="true" inert>
+      @if (dataTable() !== 'none') {
+        <details
+          class="data-table"
+          aria-hidden="true"
+          inert
+          [open]="dataTable() === 'visible'">
           <summary>
             <ds-skeleton
               inline
@@ -88,6 +94,54 @@ export interface ChartStatesMessageContext {
               height="var(--space-2)"
               [shimmer]="shimmer()" />
           </summary>
+
+          @if (dataTable() === 'visible') {
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    <ds-skeleton
+                      inline
+                      class="data-table-label"
+                      width="var(--space-12)"
+                      height="var(--space-2)"
+                      [shimmer]="shimmer()" />
+                  </th>
+                  <th>
+                    <ds-skeleton
+                      inline
+                      class="data-table-label"
+                      width="var(--space-8)"
+                      height="var(--space-2)"
+                      [shimmer]="shimmer()" />
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (row of placeholderRows; track $index) {
+                  <tr>
+                    <td>
+                      <ds-skeleton
+                        inline
+                        class="data-table-label"
+                        width="var(--space-20)"
+                        height="var(--space-2)"
+                        [shimmer]="shimmer()" />
+                    </td>
+                    <td>
+                      <ds-skeleton
+                        inline
+                        class="data-table-label"
+                        width="var(--space-10)"
+                        height="var(--space-2)"
+                        [shimmer]="shimmer()" />
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
         </details>
       }
     } @else if (empty()) {
@@ -127,8 +181,8 @@ export class ChartStatesComponent implements OnChanges {
   readonly errorText = input('');
   /** Draws `skeleton` in place of `body`: there is nothing to draw yet. */
   readonly pending = input(false);
-  /** Holds the room of the chart's data-table disclosure under the skeleton. */
-  readonly dataTable = input(false);
+  /** Holds the room of the chart's data-table disclosure under the skeleton, open under `'visible'`. */
+  readonly dataTable = input<ChartDataTable>('none');
   /** Whether the data-table placeholder shimmers, as the chart's own skeleton does. */
   readonly shimmer = input(true);
   /** Keeps `body` on screen under a loading overlay bound to it, the caption left uncovered. */
@@ -146,6 +200,8 @@ export class ChartStatesComponent implements OnChanges {
 
   /** How a mark the loading skeleton had no placeholder for arrives when the data lands. */
   readonly morphGrowth = input<ChartMorphGrowth>(null);
+
+  protected readonly placeholderRows = Array.from({ length: CHART_SKELETON_COUNT });
 
   private readonly morphingState = signal(false);
   /** Whether the loading skeleton is turning into the drawn chart; a chart animating its own marks

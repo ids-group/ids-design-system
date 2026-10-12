@@ -7,7 +7,7 @@
   [errorText]="errorTextResolved()"
   [pending]="(loading() && isEmpty()) || !renderReady()"
   [reloading]="loading()"
-  [dataTable]="showDataTable()"
+  [dataTable]="showDataTable() ? dataTableResolved() : 'none'"
   [shimmer]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
