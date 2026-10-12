@@ -139,6 +139,9 @@
   mixed 28% toward the button's colour (`--primary` for primary), where it was the hover fill
   mixed 10% toward black and turned greyer than the hover. `--ds-button-bg-color-active` still
   sets a pressed fill of your own.
+- **A pressed `ds-menu-item` with `error` goes one red step deeper.** It fills with
+  `--error-muted` on press, over the `--error-subtitle` hover, the pair a ghost error `ds-button`
+  uses; the press showed the hover fill.
 
 ### Fixed
 
