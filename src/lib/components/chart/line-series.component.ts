@@ -742,21 +742,19 @@ export class LineSeriesComponent implements OnDestroy {
       element.style.setProperty('transition', 'none');
     }
     apply(from);
-    const cancel = tweenMarks(host, from, to, (values) => {
-      apply(values);
-      if (values.every((value, index) => Math.abs(value - to[index]) < 1e-6)) {
-        release();
-        this.drawnPoints = targets;
-        this.morphing = false;
-        this.stopMorph = () => undefined;
-      }
-    });
+    let cancel: () => void = () => undefined;
     this.morphing = true;
     this.stopMorph = () => {
       cancel();
       release();
       this.morphing = false;
     };
+    cancel = tweenMarks(host, from, to, apply, 'mark', () => {
+      release();
+      this.drawnPoints = targets;
+      this.morphing = false;
+      this.stopMorph = () => undefined;
+    });
   }
 
   private readonly hoveredSeries = computed(
