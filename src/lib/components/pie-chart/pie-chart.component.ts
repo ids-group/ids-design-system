@@ -23,6 +23,7 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import {
   CHART_SERIES_COLORS,
+  cssDurationMs,
   describeSeries,
   formatWholePercent,
   largestRemainder,
@@ -428,10 +429,37 @@ export class PieChartComponent
     () => this.slices()[this.activeMark.index()] ?? null,
   );
 
-  // Changes with the slice the centre names, so the centre swaps once per slice, not once per re-render.
-  protected readonly centerKey = computed(() =>
+  private readonly centerKey = computed(() =>
     this.centerEntry() ? this.activeMark.index() : -1,
   );
+
+  private readonly centerSwapElement =
+    viewChild<ElementRef<HTMLElement>>('centerSwap');
+
+  private shownCenterKey: number | null = null;
+
+  // Fades the centre in once per slice it names, on the hover timing; a zero duration swaps at once.
+  private readonly fadeCenterSwap = afterRenderEffect(() => {
+    const key = this.centerKey();
+    const swap = this.centerSwapElement()?.nativeElement;
+    const previous = this.shownCenterKey;
+    this.shownCenterKey = key;
+    if (!swap || previous === null || previous === key) {
+      return;
+    }
+    const style = getComputedStyle(swap);
+    const duration = cssDurationMs(
+      style.getPropertyValue('--ds-motion-chart-state-duration'),
+    );
+    if (duration > 0) {
+      swap.animate([{ opacity: 0 }, { opacity: 1 }], {
+        duration,
+        easing:
+          style.getPropertyValue('--ds-motion-chart-state-easing').trim() ||
+          'ease',
+      });
+    }
+  });
 
   private readonly shownCenterValue = computed(() => {
     const entry = this.centerEntry();

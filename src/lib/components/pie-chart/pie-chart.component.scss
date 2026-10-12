@@ -130,12 +130,9 @@
   pointer-events: none;
 }
 
-// A new slice's share fades in over the last one's, on the hover timing.
 .center-swap {
   display: grid;
   justify-items: center;
-  animation: ds-chart-mark-fade-in var(--ds-motion-chart-state-duration)
-    var(--ds-motion-chart-state-easing) backwards;
 }
 
 // Halo of the frame background for text overhanging several hues.

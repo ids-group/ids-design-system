@@ -234,20 +234,20 @@
 </ng-template>
 
 <ng-template #centerContent>
-  @for (key of [centerKey()]; track key) {
-    <span class="center-swap">
-      <span
-        #centerValue
-        class="center-value"
-        [style.font-size.px]="centerFontSize()">
-        {{ centerText() }}
-      </span>
-
-      @if (shownCenterLabel()) {
-        <span class="center-label">
-          {{ shownCenterLabel() }}
-        </span>
-      }
+  <span
+    #centerSwap
+    class="center-swap">
+    <span
+      #centerValue
+      class="center-value"
+      [style.font-size.px]="centerFontSize()">
+      {{ centerText() }}
     </span>
-  }
+
+    @if (shownCenterLabel()) {
+      <span class="center-label">
+        {{ shownCenterLabel() }}
+      </span>
+    }
+  </span>
 </ng-template>
