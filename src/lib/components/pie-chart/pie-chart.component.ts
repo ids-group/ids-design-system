@@ -423,8 +423,31 @@ export class PieChartComponent
       this.centerValue() ?? this.valueFormatResolved()(this.total(), 'tooltip'),
   );
 
+  // The hovered, focused or held slice takes the centre from the total until the pointer leaves.
+  private readonly centerEntry = computed(
+    () => this.slices()[this.activeMark.index()] ?? null,
+  );
+
+  // Changes with the slice the centre names, so the centre swaps once per slice, not once per re-render.
+  protected readonly centerKey = computed(() =>
+    this.centerEntry() ? this.activeMark.index() : -1,
+  );
+
+  private readonly shownCenterValue = computed(() => {
+    const entry = this.centerEntry();
+    if (!entry) {
+      return this.resolvedCenterValue();
+    }
+
+    return this.partOfWhole() ? entry.formattedPercent : entry.formattedValue;
+  });
+
+  protected readonly shownCenterLabel = computed(
+    () => this.centerEntry()?.slice.label ?? this.centerLabel(),
+  );
+
   private readonly compactCenterValue = computed(() =>
-    this.centerCompact() && this.centerValue() === null
+    this.centerCompact() && this.centerValue() === null && !this.centerEntry()
       ? this.valueFormatResolved()(this.total(), 'tick')
       : null,
   );
@@ -439,7 +462,7 @@ export class PieChartComponent
   });
 
   protected readonly centerText = computed(
-    () => this.centerFit()?.text ?? this.resolvedCenterValue(),
+    () => this.centerFit()?.text ?? this.shownCenterValue(),
   );
 
   protected readonly centerFontSize = computed(
@@ -521,7 +544,7 @@ export class PieChartComponent
   private readonly refit = afterRenderEffect(() => {
     const value = this.centerValueElement()?.nativeElement;
     const ringWidth = this.ringWidth();
-    const full = this.resolvedCenterValue();
+    const full = this.shownCenterValue();
     const compact = this.compactCenterValue();
     const hole = this.hole();
     fontsLoaded();
