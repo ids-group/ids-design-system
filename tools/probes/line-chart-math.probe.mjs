@@ -13,8 +13,8 @@ const { alignSeriesValues, domainMaxOf, paletteIndexFor } = await import(
   pathToFileURL(join(components, 'line-chart', 'line-chart.math.ts')).href
 );
 
-const { areaPath, bandPath, lineSegments, linePath, polylinePoints } =
-  await import(pathToFileURL(join(components, 'charts-path.ts')).href);
+const { areaPath, bandPath, lineSegments, linePath } = await import(
+  pathToFileURL(join(components, 'charts-path.ts')).href);
 
 const point = (x, y) => ({ categoryIndex: 0, x, y, value: 1 });
 const noDigitsLost = (text) => !/NaN|Infinity|undefined/.test(text);
@@ -139,21 +139,6 @@ check(
     .filter((entry) => entry !== null)
     .every((entry) => noDigitsLost(`${entry.x},${entry.y}`)),
   true,
-);
-check(
-  'polylinePoints refuses a poisoned coordinate',
-  polylinePoints([point(10, 20), point(NaN, 40)]),
-  '',
-);
-check(
-  'polylinePoints refuses an infinite coordinate',
-  polylinePoints([point(10, 20), point(30, Infinity)]),
-  '',
-);
-check(
-  'polylinePoints of a clean segment is a points list',
-  polylinePoints([point(10, 20), point(30, 40.125)]),
-  '10,20 30,40.13',
 );
 
 check('linePath of nothing is an empty path', linePath([], 'linear'), '');

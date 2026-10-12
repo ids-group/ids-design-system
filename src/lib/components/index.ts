@@ -31,25 +31,17 @@ export {
   minMaxDecimate,
   needsDecimating,
 } from './charts-decimate';
-export {
-  areaPath,
-  bandPath,
-  linePath,
-  lineSegments,
-  polylinePoints,
-} from './charts-path';
+export { areaPath, bandPath, linePath, lineSegments } from './charts-path';
 export type { LinePoint } from './charts-path';
 export {
   bandScale,
-  pointScale,
   domainMinOf,
   linearScale,
   niceDomain,
   roundStepAtLeast,
-  tickStep,
   tickValues,
 } from './charts-scale';
-export type { BandScale, NiceDomain, PointScale } from './charts-scale';
+export type { BandScale, NiceDomain } from './charts-scale';
 export {
   afterTwoFrames,
   chartTiming,
