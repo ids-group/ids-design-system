@@ -15,9 +15,13 @@ export class ColumnChartComponent extends DsChartBase implements ChartDimmable, 
     protected readonly dataTableRows = computed<readonly ChartDataRow[]>(…);
     public readonly dimOthers = input(false, { transform: booleanAttribute });
     protected readonly geometry = readOnHostResize(…);
+    public readonly hiddenSeries = model<readonly string[]>([]);
     protected readonly highlightedSeries = signal<string | null>(…);
     protected readonly isEmpty = computed(…);
+    protected isHidden(key: string): boolean;
+    public readonly legendFilters = input(false, { transform: booleanAttribute });
     protected readonly legendItems = computed<readonly ChartLegendItem[]>(…);
+    public readonly legendMode = input<'toggle' | 'isolate'>('isolate');
     protected readonly multiSeries = computed(…);
     private readonly offsets;
     protected offsetsFor(index: number): readonly ChartStackOffset[];
@@ -26,11 +30,13 @@ export class ColumnChartComponent extends DsChartBase implements ChartDimmable, 
     public readonly pointClicked = output<ColumnChartPoint>();
     protected readonly renderReady = chartRenderGate(…);
     protected readonly resolvedSeries = computed<readonly ResolvedColumnSeries[]>(…);
+    public readonly selectRange = input(false, { transform: booleanAttribute });
     protected readonly seriesRefs = viewChildren(…);
     public readonly showValues = input(true, { transform: booleanAttribute });
     public readonly skeletonCount = input(CHART_SKELETON_COUNT, { transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT) });
     protected readonly skeletonMarks = computed(…);
     protected readonly slotCount = computed(…);
+    protected readonly spotlitSeries = computed(…);
     public readonly stack = input<ChartStackMode>('none');
     public readonly staggerMs = input(40, { transform: numberAttribute });
     protected readonly tableRows = computed(…);

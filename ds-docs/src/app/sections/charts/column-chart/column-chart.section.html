@@ -13,8 +13,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Input order, one axis niced to a round step: the tallest column usually
-    ends below the top gridline.
+    Input order, one axis niced to a round step: the tallest column usually ends
+    below the top gridline.
   </p>
 
   <ds-column-chart
@@ -79,8 +79,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Turn <code class="t-mono-inline">showValues</code> off for narrow columns
-    or when an open table shows the numbers.
+    Turn <code class="t-mono-inline">showValues</code> off for narrow columns or
+    when an open table shows the numbers.
   </p>
 
   <ds-column-chart
@@ -95,8 +95,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Palette colours go in list order, wrapping after eight, so removing a
-    point recolours later ones; a point's own
+    Palette colours go in list order, wrapping after eight, so removing a point
+    recolours later ones; a point's own
     <code class="t-mono-inline">
       color
     </code> overrides.
@@ -116,9 +116,9 @@
     A point with
     <code class="t-mono-inline">
       fill="hatched"
-    </code> adds stripes over its colour,
-    marking a projection in greyscale, print and colour-vision deficiency. The
-    caller marks projections.
+    </code> adds stripes over its
+    colour, marking a projection in greyscale, print and colour-vision
+    deficiency. The caller marks projections.
   </p>
 
   <ds-column-chart
@@ -200,8 +200,8 @@
     </li>
 
     <li>
-      A series has one colour; a flat list colours by position, its marks
-      being the categories.
+      A series has one colour; a flat list colours by position, its marks being
+      the categories.
     </li>
 
     <li>
@@ -246,6 +246,62 @@
       [data]="channelSeries" />
   </div>
 
+  <ul class="rules">
+    <li>
+      <code class="t-mono-inline">
+        legendFilters
+      </code> lets the legend hide a
+      series (<code class="t-mono-inline">legendMode</code>,
+      <code class="t-mono-inline">
+        hiddenSeries
+      </code>): its columns sink to
+      the baseline, the rest settle and the axis fits what is left.
+    </li>
+  </ul>
+
+  <ds-column-chart
+    caption="Revenue by channel, legend hides a series"
+    stack="stacked"
+    legendMode="toggle"
+    legendFilters
+    dataTable="none"
+    [showValues]="false"
+    [data]="channelSeries" />
+
+  <h3 class="block-title t-h4">
+    Sorting and a range total
+  </h3>
+
+  <ul class="rules">
+    <li>
+      A column keeps its <code class="t-mono-inline">id</code> across a reorder
+      and moves to its new place.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        selectRange
+      </code> (off by default): drag
+      across columns for their sum and mean; Escape or a press outside clears
+      it.
+    </li>
+  </ul>
+
+  <ds-button
+    color="neutral"
+    variant="outline"
+    size="sm"
+    (pressed)="sortRangePoints()">
+    Sort
+  </ds-button>
+
+  <ds-column-chart
+    caption="Orders a month"
+    interactive
+    selectRange
+    dataTable="none"
+    [data]="rangePoints()" />
+
   <h3 class="block-title t-h4">
     Columns and a line, on two scales
   </h3>
@@ -265,8 +321,13 @@
       <code class="t-mono-inline">
         axis: 'secondary'
       </code> uses the second
-      axis, tied by <code class="t-mono-inline">secondaryAxisMode</code>
-      (default <code class="t-mono-inline">'aligned'</code>: the first axis's
+      axis, tied by
+      <code class="t-mono-inline">
+        secondaryAxisMode
+      </code> (default
+      <code class="t-mono-inline">
+        'aligned'
+      </code>: the first axis's
       gridlines, a round step).
     </li>
 
@@ -314,8 +375,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       thresholds
-    </code> draws a target, budget or SLA
-    behind the columns. The axis widens to fit it; the description names it.
+    </code> draws a target, budget or
+    SLA behind the columns. The axis widens to fit it; the description names it.
   </p>
 
   <dl class="spec">
@@ -623,7 +684,10 @@
       </code> spaces arrivals: default
       <code class="t-mono-inline">
         40
-      </code>, <code class="t-mono-inline">0</code>
+      </code>,
+      <code class="t-mono-inline">
+        0
+      </code>
       off; the spread caps at 260ms.
     </li>
 
@@ -671,8 +735,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       skeletonCount
-    </code> - skeleton columns while the data's count is
-    unknown. Default <code class="t-mono-inline">5</code>.
+    </code> - skeleton columns while
+    the data's count is unknown. Default <code class="t-mono-inline">5</code>.
   </p>
 
   <div class="states is-cols-2">
