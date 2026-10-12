@@ -2421,7 +2421,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Reads the columns as a running total, as a waterfall's are: hovering one fades every column after it, and the axis guide stops at the hovered column."
+        "description": "Reads the columns as a running total, as a waterfall's are: the axis guide stops at the hovered column, and under `dimOthers` every column after it fades."
       }
     ],
     "outputs": [

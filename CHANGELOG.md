@@ -19,8 +19,8 @@
 - **`dsColumnSeries` takes `hidden` and `runningTotal`; `LineSeriesData` takes `hidden`.** A hidden
   column series sinks to the baseline and a hidden line erases itself back along its own path, and
   draws on again when shown; both leave the value axis to the other marks. `runningTotal` reads the
-  columns as a waterfall's: hovering one fades every column after it and stops the axis guide at
-  it.
+  columns as a waterfall's: hovering one stops the axis guide at it, and under `dimOthers` fades
+  every column after it.
 - **`showChange` on `dsLineSeries` and `ds-line-chart`, off by default.** On the hovered reading,
   the stretches from the reading before it and to the reading after it thicken, each in
   `--ds-chart-positive-color` or `--ds-chart-negative-color` by its own change, and each prints its
@@ -38,7 +38,7 @@
   runs from the value axis at the reading, and a pill on the axis prints the axis value there; the
   guide and the pill glide between readings on `--ds-motion-chart-tooltip-move-duration` and
   `-easing`. In `ds-waterfall-chart` the guide stops at the hovered step, reads its running total,
-  and the steps after it fade.
+  and under `dimOthers` the steps after it fade.
 - **A highlighted line point rides the line.** Under the category cursor, each series' highlighted
   point travels along its own line to the next category, with the panel and the crosshair, instead
   of jumping there.
