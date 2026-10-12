@@ -32,6 +32,12 @@
   as the column charts do: each point waits by its place across the plot, the whole entrance stays
   within 260ms, and `0` turns it off.
 
+- **Dragging a `ds-table` column edge draws that edge down the whole table.** Under
+  `dsTableResize`, a line in `--ds-table-sort-active-icon-color` runs from the header to the last
+  row at the edge being dragged, so the width it sets reads against every row. It shows only
+  while the drag lasts; `DsTableResize` hands the table the edge through a new internal `guide`
+  signal.
+
 ### Changed
 
 - **Links and the brand tints follow `--primary` in the light theme.** `--surface-tint` and

@@ -141,6 +141,15 @@
   }
 }
 
+.resize-guide {
+  position: absolute;
+  top: 0;
+  width: var(--border-width-strong);
+  translate: -100% 0;
+  background-color: var(--ds-table-sort-active-icon-color, var(--accent));
+  pointer-events: none;
+}
+
 .hscroll-proxy {
   position: sticky;
   bottom: var(
