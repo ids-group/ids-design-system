@@ -42,6 +42,16 @@
   `ChartFormatLocation` `'readout'`: the built-in format spells it out as for `'tooltip'`, and a
   custom formatter can return the tick's short form there. A formatter whose `location` parameter
   is typed as its own `'tick' | 'tooltip'` union stops compiling until it takes `'readout'`.
+- **One chart motion timing per kind of movement.** Whatever follows the pointer glides on
+  `--ds-motion-chart-tooltip-move-duration` and `-easing`: the `ds-scatter-chart` nearest-point
+  ring and the `selectRange` band join the band, the panel and the axis readout there, where they
+  moved on the `state` timing. Series dimming runs on `--ds-motion-chart-state-duration` everywhere:
+  `dsColumnSeries` groups and scatter point groups fade on it, as lines do, and fade back in on it
+  too, where they dimmed on the `mark` timing and came back at once.
+- **A pinned category keeps its line in a chart with lines.** In a `ds-chart` holding a
+  `dsLineSeries` (`ds-line-chart`, a combo), the pinned category draws the cursor line in
+  `--ds-chart-cursor-line-color`, without the band fill, under the pin; the hover band and line
+  still follow the pointer. A column-only chart keeps the pin alone.
 - **A highlighted line point rides the line.** Under the category cursor, each series' highlighted
   point travels along its own line to the next category, with the panel and the crosshair, instead
   of jumping there.
