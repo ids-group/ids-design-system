@@ -23,6 +23,17 @@
   .q.is-settled .q-sub { margin-block-start: var(--space-1); }
   .done-lede { margin: 0 0 var(--space-4); font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
 
+  .ih-wrap { display: grid; gap: var(--space-1); justify-items: start; font: var(--font-size-2xs) var(--font-sans); color: var(--text-primary); }
+  .ih-label { display: inline-flex; align-items: center; gap: var(--space-1); font-weight: var(--font-weight-bold); }
+  .ih-trigger { display: inline-grid; place-items: center; inline-size: 14px; block-size: 14px; border-radius: 50%; border: 1.5px solid var(--icon-default); color: var(--icon-default); font: var(--font-weight-bold) 9px / 1 var(--font-sans); }
+  .ih-trigger.is-on { border-color: var(--primary); color: var(--primary); }
+  .ih-pop { min-inline-size: 140px; padding: var(--space-2) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-panel); background: var(--surface-overlay); box-shadow: var(--shadow-popover); }
+  .ih-pop ul { margin: 0; padding-inline-start: 1rem; }
+  .ih-head { display: flex; justify-content: space-between; gap: var(--space-3); margin: 0 0 var(--space-1); }
+  .ih-icons { display: flex; flex-wrap: wrap; gap: var(--space-3); font: var(--font-size-2xs) var(--font-sans); }
+  .ih-icons span { display: inline-flex; align-items: center; gap: var(--space-1); }
+  .ih-icons svg { inline-size: 16px; block-size: 16px; }
+
   .opt { cursor: pointer; }
   .opt.is-chosen { border-color: var(--success); box-shadow: inset 0 0 0 1px var(--success); }
   .opt > h3 { display: flex; align-items: baseline; gap: var(--space-2); }
@@ -485,29 +496,31 @@
   [data-q="fix-all-html"] .opt .css, [data-q="fix-all-html"] .opt .console { margin: 0; }
   [data-q="fix-all-html"] .opt .cap, [data-q="fix-all-html"] .opt > p { margin: 0; }
   /* interaction-b1 */
-  [data-q="interaction-b1"] .ib-col { display: grid; gap: var(--space-2); align-content: start; }
-  [data-q="interaction-b1"] .ib-row { display: flex; align-items: center; gap: var(--space-3); }
-  [data-q="interaction-b1"] .ib-pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
-  [data-q="interaction-b1"] .ib-black { --ib-rest: var(--primary-muted); --ib-hover: var(--primary-muted-strong); --ib-pressed: color-mix(in srgb, var(--primary-muted-strong) 90%, black); }
-  [data-q="interaction-b1"] .ib-own { --ib-rest: var(--primary-muted); --ib-hover: var(--primary-muted-strong); --ib-pressed: color-mix(in srgb, var(--primary-muted) 72%, var(--primary)); }
-  [data-q="interaction-b1"] .ib-dtoday { --ib-rest: var(--surface-overlay); --ib-hover: var(--error-subtitle); --ib-pressed: var(--error-subtitle); }
-  [data-q="interaction-b1"] .ib-dmuted { --ib-rest: var(--surface-overlay); --ib-hover: var(--error-subtitle); --ib-pressed: var(--error-muted); }
-  [data-q="interaction-b1"] .ib-tonal { min-inline-size: 88px; block-size: 32px; padding: 0 var(--space-4); border: 0; border-radius: var(--ds-radius-control); cursor: pointer; font: var(--font-weight-semibold) var(--font-size-s) / 1 var(--font-sans); color: var(--primary-strong); background-image: linear-gradient(var(--ib-rest, transparent), var(--ib-rest, transparent)); }
-  [data-q="interaction-b1"] .ib-tonal:hover { background-image: linear-gradient(var(--ib-hover, transparent), var(--ib-hover, transparent)); }
-  [data-q="interaction-b1"] .ib-tonal:active { background-image: linear-gradient(var(--ib-pressed, transparent), var(--ib-pressed, transparent)); }
-  [data-q="interaction-b1"] .ib-triad { display: inline-flex; gap: 3px; }
-  [data-q="interaction-b1"] .ib-triad i { inline-size: 22px; block-size: 22px; border-radius: var(--radius-sm); box-shadow: inset 0 0 0 1px var(--border-divider); }
-  [data-q="interaction-b1"] .ib-triad i:nth-child(1) { background-image: linear-gradient(var(--ib-rest, transparent), var(--ib-rest, transparent)); }
-  [data-q="interaction-b1"] .ib-triad i:nth-child(2) { background-image: linear-gradient(var(--ib-hover, transparent), var(--ib-hover, transparent)); }
-  [data-q="interaction-b1"] .ib-triad i:nth-child(3) { background-image: linear-gradient(var(--ib-pressed, transparent), var(--ib-pressed, transparent)); }
-  [data-q="interaction-b1"] .ib-menu { inline-size: 170px; background: var(--surface-overlay); border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-popover); overflow: hidden; }
-  [data-q="interaction-b1"] .ib-menu button { display: block; inline-size: 100%; padding: var(--space-2) var(--space-3); border: 0; text-align: start; cursor: pointer; font: var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-primary); background-image: linear-gradient(transparent, transparent); }
-  [data-q="interaction-b1"] .ib-menu button:hover { background-image: linear-gradient(var(--surface-secondary), var(--surface-secondary)); }
-  [data-q="interaction-b1"] .ib-menu button:active { background-image: linear-gradient(var(--surface-muted), var(--surface-muted)); }
-  [data-q="interaction-b1"] .ib-menu button.err { color: var(--error-text); }
-  [data-q="interaction-b1"] .ib-menu button.err:hover { background-image: linear-gradient(var(--error-subtitle), var(--error-subtitle)); }
-  [data-q="interaction-b1"] .ib-menu button.err:active { background-image: linear-gradient(var(--ib-pressed, transparent), var(--ib-pressed, transparent)); }
-  [data-q="interaction-b1"] .ib-dtoday .ib-menu button.err:active { background-image: linear-gradient(var(--error-subtitle), var(--error-subtitle)); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-col { display: grid; gap: var(--space-2); align-content: start; }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-row { display: flex; align-items: center; gap: var(--space-3); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-black { --ib-rest: var(--primary-muted); --ib-hover: var(--primary-muted-strong); --ib-pressed: color-mix(in srgb, var(--primary-muted-strong) 90%, black); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-own { --ib-rest: var(--primary-muted); --ib-hover: var(--primary-muted-strong); --ib-pressed: color-mix(in srgb, var(--primary-muted) 72%, var(--primary)); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-dtoday { --ib-rest: var(--surface-overlay); --ib-hover: var(--error-subtitle); --ib-pressed: var(--error-subtitle); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-dmuted { --ib-rest: var(--surface-overlay); --ib-hover: var(--error-subtitle); --ib-pressed: var(--error-muted); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-own34 { --ib-rest: var(--primary-muted); --ib-hover: var(--primary-muted-strong); --ib-pressed: color-mix(in srgb, var(--primary-muted) 66%, var(--primary)); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-dgrey { --ib-rest: var(--surface-overlay); --ib-hover: var(--error-subtitle); --ib-pressed: var(--surface-muted); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-tonal { min-inline-size: 88px; block-size: 32px; padding: 0 var(--space-4); border: 0; border-radius: var(--ds-radius-control); cursor: pointer; font: var(--font-weight-semibold) var(--font-size-s) / 1 var(--font-sans); color: var(--primary-strong); background-image: linear-gradient(var(--ib-rest, transparent), var(--ib-rest, transparent)); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-tonal:hover { background-image: linear-gradient(var(--ib-hover, transparent), var(--ib-hover, transparent)); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-tonal:active { background-image: linear-gradient(var(--ib-pressed, transparent), var(--ib-pressed, transparent)); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-triad { display: inline-flex; gap: 3px; }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-triad i { inline-size: 22px; block-size: 22px; border-radius: var(--radius-sm); box-shadow: inset 0 0 0 1px var(--border-divider); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-triad i:nth-child(1) { background-image: linear-gradient(var(--ib-rest, transparent), var(--ib-rest, transparent)); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-triad i:nth-child(2) { background-image: linear-gradient(var(--ib-hover, transparent), var(--ib-hover, transparent)); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-triad i:nth-child(3) { background-image: linear-gradient(var(--ib-pressed, transparent), var(--ib-pressed, transparent)); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-menu { inline-size: 170px; background: var(--surface-overlay); border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-popover); overflow: hidden; }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-menu button { display: block; inline-size: 100%; padding: var(--space-2) var(--space-3); border: 0; text-align: start; cursor: pointer; font: var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-primary); background-image: linear-gradient(transparent, transparent); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-menu button:hover { background-image: linear-gradient(var(--surface-secondary), var(--surface-secondary)); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-menu button:active { background-image: linear-gradient(var(--surface-muted), var(--surface-muted)); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-menu button.err { color: var(--error-text); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-menu button.err:hover { background-image: linear-gradient(var(--error-subtitle), var(--error-subtitle)); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-menu button.err:active { background-image: linear-gradient(var(--ib-pressed, transparent), var(--ib-pressed, transparent)); }
+  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-dtoday .ib-menu button.err:active { background-image: linear-gradient(var(--error-subtitle), var(--error-subtitle)); }
   /* locale-week-and-hour */
   /* date-picker .grid/.dow and time-picker field, at a small scale */
   [data-q="locale-week-and-hour"] .stage { gap: var(--space-5); }
@@ -824,13 +837,10 @@
   <section class="q" data-q="ask-control-contrast">
       <div class="q-head">
         <span class="q-num">01</span>
-        <h2 class="q-title">Край поля и текст на secondary не проходят контраст</h2>
+        <h2 class="q-title">Рамка поля и белый текст на кнопке secondary не проходят контраст</h2>
         <span class="q-src">P2 · ids-europe-landing · дефект</span>
       </div>
-      <p class="q-sub">
-        <code>--border-default</code> (#DCE1EA) - рамка <code>ds-input</code> и ещё 25 компонентов. <code>--secondary-on</code>
-        всегда белый, а <code>--secondary</code> пересобирается из бренда. Лендинг переопределяет оба.
-      </p>
+      <p class="q-sub">Рамка <code>ds-input</code> и ещё 25 компонентов (#DCE1EA) на белом даёт 1.31:1 при норме 3:1 - край поля почти не виден. Текст на кнопке secondary всегда белый, а сам secondary перекрашивается брендом: на золотом #FBAC18 белый текст даёт 1.91:1 при норме 4.5:1. Лендинг ids-europe-landing уже переопределяет оба цвета у себя. Выбрать, как чинить в DS.</p>
 
       <div class="stage">
         <div class="spec">
@@ -869,7 +879,7 @@
   --secondary-on:   var(--primary-on);  <span class="hit">/* white */</span></p>
           <dl class="layer"><dt>Консьюмер</dt><dd>_theme.scss:44-57, :89</dd></dl>
         </div>
-        <div class="opt"><h3>Край 3:1 и on от светлоты <span class="star">★</span></h3>
+        <div class="opt"><h3>Рамка 3:1, цвет текста кнопки по её светлоте <span class="star">★</span></h3>
           <div class="a-white cc-spec">
             <div class="a-field">Email<div class="a-box edge3">name@company.com</div></div>
             <div class="a-pair"><span class="a-ratio pass">3.12:1</span><span class="cc-tag">край #8A92A4</span></div>
@@ -881,7 +891,7 @@
   --secondary-on: /* от --secondary-l */;</p>
           <dl class="layer"><dt>Бренд</dt><dd class="gain">золото получает тёмный текст сам</dd><dt>Работа</dt><dd>новая роль + 26 компонентов</dd></dl>
         </div>
-        <div class="opt"><h3>Край 3:1 и чеклист бренда</h3>
+        <div class="opt"><h3>Рамка 3:1, цвет текста кнопки задаёт бренд</h3>
           <div class="a-white cc-spec">
             <div class="a-field">Email<div class="a-box edge3">name@company.com</div></div>
             <div class="a-pair"><span class="a-ratio pass">3.12:1</span><span class="cc-tag">край #8A92A4</span></div>
@@ -899,26 +909,29 @@
   <section class="q" data-q="ask-info-hint-content">
       <div class="q-head">
         <span class="q-num">02</span>
-        <h2 class="q-title">ⓘ с содержимым, а не только текстом</h2>
+        <h2 class="q-title">Подсказка ⓘ умеет показать только строку текста, а консьюмеру нужен список</h2>
         <a class="q-src" href="27-info-hint-content.html">P2 · mm-ecm ME-495 · фича · дека</a>
       </div>
-      <p class="q-sub">
-        На Data ingest самодельная ⓘ открывает <code>ds-popover</code>-диалог «Published» со списком версий.
-        <code>ds-info-hint</code> сегодня берёт только строку <code>text</code>. Нужно то же поведение ⓘ с содержимым от консьюмера.
-      </p>
+      <p class="q-sub">На экране Data ingest в mm-ecm (ME-495) значок ⓘ открывает список опубликованных версий. Сегодня там самодельная кнопка: <code>ds-info-hint</code> берёт только строку <code>text</code>. Выбрать, как консьюмер передаёт в подсказку свою разметку.</p>
       <div class="opts">
-        <div class="opt"><h3>A · Содержимое внутри тега <span class="star">★</span></h3>
+        <div class="opt"><h3>Разметка прямо внутри тега <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+          <div class="ih-wrap"><span class="ih-label">Published <span class="ih-trigger">i</span></span><div class="ih-pop"><ul><li>v3 · 12 Oct</li><li>v2 · 3 Oct</li><li>v1 · 21 Sep</li></ul></div></div>
+          <p class="cap">по наведению и фокусу</p>
           <p class="css">&lt;ds-info-hint ariaLabel="..."&gt;
   &lt;ul&gt;...&lt;/ul&gt;
 &lt;/ds-info-hint&gt;</p>
           <dl class="layer"><dt>Библиотека</dt><dd class="gain">text необязателен, ng-content в окно</dd></dl>
         </div>
-        <div class="opt"><h3>B · Шаблон во входе</h3>
+        <div class="opt"><h3>Шаблон, переданный во вход</h3>
+          <div class="ih-wrap"><span class="ih-label">Published <span class="ih-trigger">i</span></span><div class="ih-pop"><ul><li>v3 · 12 Oct</li><li>v2 · 3 Oct</li><li>v1 · 21 Sep</li></ul></div></div>
+          <p class="cap">на экране так же, разметка в двух местах</p>
           <p class="css">&lt;ds-info-hint [content]="pubList" /&gt;
 &lt;ng-template #pubList&gt;...</p>
           <dl class="layer"><dt>Библиотека</dt><dd>вход TemplateRef, разметка в двух местах</dd></dl>
         </div>
-        <div class="opt"><h3>C · ds-popover со стандартной ⓘ</h3>
+        <div class="opt"><h3>Отдельное окно ds-popover со стандартной ⓘ</h3>
+          <div class="ih-wrap"><span class="ih-label">Published <span class="ih-trigger is-on">i</span></span><div class="ih-pop is-dialog"><p class="ih-head"><b>Published</b><span>×</span></p><ul><li>v3 · 12 Oct</li><li>v2 · 3 Oct</li><li>v1 · 21 Sep</li></ul></div></div>
+          <p class="cap">только по клику, с крестиком</p>
           <p class="css">&lt;ds-info-hint mode="dialog"
   [popover]="pubPop" /&gt;</p>
           <dl class="layer"><dt>Поведение</dt><dd>только клик, крестик, ловушка фокуса</dd></dl>
@@ -929,20 +942,21 @@
   <section class="q" data-q="ask-info-hint-icon">
       <div class="q-head">
         <span class="q-num">03</span>
-        <h2 class="q-title">Значок как кнопка подсказки</h2>
+        <h2 class="q-title">Значок статуса как кнопка подсказки: кто задаёт значок и цвет</h2>
         <a class="q-src" href="27-info-hint-content.html">P2 · mm-ecm ME-495 · фича · дека</a>
       </div>
-      <p class="q-sub">
-        Нужно, только если в ME-495 выберешь вариант A для значка. Сегодня <code>icon</code> - только <code>help</code> или <code>info</code>,
-        цвет кнопка ставит сама.
-      </p>
+      <p class="q-sub">Нужно, только если в задаче ME-495 значок статуса станет кнопкой подсказки. Сегодня у <code>ds-info-hint</code> два значка, help и info, и цвет он ставит сам. Выбрать, как консьюмер задаёт значок и его цвет.</p>
       <div class="opts">
-        <div class="opt"><h3>A · Любой значок DS, цвет от консьюмера <span class="star">★</span></h3>
+        <div class="opt"><h3>Любой значок DS, цвет задаёт консьюмер <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+          <div class="ih-icons"><span style="color:var(--warning-text)"><svg viewBox="0 0 16 16"><path d="M8 1.5 15 14H1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 6v4M8 11.5v.5" stroke="currentColor" stroke-width="1.5"/></svg>Устарело</span><span style="color:var(--chart-categorical-4)"><svg viewBox="0 0 16 16"><rect x="3" y="7" width="10" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Заблокировано</span><span style="color:var(--error-text)"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5v4.5M8 10.8v.6" stroke="currentColor" stroke-width="1.5"/></svg>Ошибка</span></div>
+          <p class="cap">любой значок, любой цвет</p>
           <p class="css">&lt;ds-info-hint icon="warn" ... /&gt;
 --ds-info-hint-color: var(--warning-text);</p>
           <dl class="layer"><dt>Библиотека</dt><dd class="gain">IconName + токен цвета</dd></dl>
         </div>
-        <div class="opt"><h3>B · Вход tone</h3>
+        <div class="opt"><h3>Значок и один из трёх готовых тонов</h3>
+          <div class="ih-icons"><span style="color:var(--text-secondary)"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v4.5M8 4.6v.6" stroke="currentColor" stroke-width="1.5"/></svg>neutral</span><span style="color:var(--warning-text)"><svg viewBox="0 0 16 16"><path d="M8 1.5 15 14H1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 6v4M8 11.5v.5" stroke="currentColor" stroke-width="1.5"/></svg>warning</span><span style="color:var(--error-text)"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5v4.5M8 10.8v.6" stroke="currentColor" stroke-width="1.5"/></svg>danger</span></div>
+          <p class="cap">только три цвета</p>
           <p class="css">&lt;ds-info-hint icon="warn" tone="warning" /&gt;</p>
           <dl class="layer"><dt>Библиотека</dt><dd>neutral, warning, danger</dd></dl>
         </div>
@@ -966,13 +980,10 @@
   <section class="q" data-q="ask-indeterminate">
     <div class="q-head">
       <span class="q-num">04</span>
-      <h2 class="q-title">Форма неопределённого прогресса на узком треке</h2>
+      <h2 class="q-title">Бегущая полоска загрузки на узкой дорожке часть времени пустая</h2>
       <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
     </div>
-    <p class="q-sub">
-      Причина уже исправлена: цикл шёл на кривой, стал <code>linear</code>, и кусок теперь на треке
-      86.7% цикла против 48.3%. Треки ниже живые и узкие - как в карточке узла у консьюмера.
-    </p>
+    <p class="q-sub">Пока длительность неизвестна, <code>ds-progress</code> гоняет по дорожке кусок полосы. Причину пустой дорожки уже исправили: на узкой дорожке кусок теперь виден 86.7% времени вместо 48.3%. Оставшиеся 13.3% дорожка пуста - так устроен бегущий кусок. У консьюмера mm-ecm своя полоса с бегущими косыми штрихами, она не пустеет никогда. Дорожки ниже живые.</p>
 
     <div class="stage">
       <div class="spec">
@@ -1003,7 +1014,7 @@
         <p>Дефект вылечен. 13.3% цикла куска нет совсем - это бегущий кусок, который так и работает.</p>
         <dl class="layer"><dt>Кода</dt><dd class="none">нет, уже сделано</dd></dl>
       </div>
-      <div class="opt"><h3>Полоса по умолчанию</h3>
+      <div class="opt"><h3>Косые штрихи для всех</h3>
         <div class="ind-pair">
           <span class="ind-lbl">узкий</span><div class="track narrow"><i class="stripe"></i></div>
           <span class="ind-lbl">широкий</span><div class="track ind-wide"><i class="stripe"></i></div>
@@ -1013,7 +1024,7 @@
         <p>Неопределённый прогресс больше никогда не пуст, на любой ширине.</p>
         <dl class="layer"><dt>Кода</dt><dd>новый keyframe, градиент</dd><dt>Ломает</dt><dd>вид у всех, кто уже привык к куску</dd></dl>
       </div>
-      <div class="opt"><h3>Полоса за входом</h3>
+      <div class="opt"><h3>Косые штрихи по входу для узких дорожек</h3>
         <div class="ind-pair">
           <span class="ind-lbl">узкий, вход вкл.</span><div class="track narrow"><i class="stripe"></i></div>
           <span class="ind-lbl">широкий</span><div class="track ind-wide"><i class="chunk"></i></div>
@@ -1044,13 +1055,10 @@
   <section class="q" data-q="ask-text-muted">
       <div class="q-head">
         <span class="q-num">06</span>
-        <h2 class="q-title">Приглушённый текст по умолчанию не проходит AA</h2>
+        <h2 class="q-title">Самый бледный серый текст не читается: 2.42:1 при норме 4.5:1</h2>
         <span class="q-src">P3 · ai-sdlc · контраст, запаркован</span>
       </div>
-      <p class="q-sub">
-        <code>--text-muted</code> = <code>#9BA3B4</code> на канве <code>#F8FAFC</code> - 2.42:1, ниже даже 3:1 для крупного
-        текста. Внутри DS его читают только дни чужого месяца в календаре; стартер ai-sdlc перебивает тему сам.
-      </p>
+      <p class="q-sub">Токен <code>--text-muted</code> (#9BA3B4) на фоне страницы даёт 2.42:1, ниже даже 3:1 для крупного текста. В самой DS им красятся только дни соседнего месяца в календаре; стартер ai-sdlc перекрывает его своим цветом. Выбрать: объявить токен только для декора или затемнить его.</p>
       <div class="stage">
         <div class="spec">
           <p class="cap">--text-muted, сегодня</p>
@@ -1073,7 +1081,7 @@
           <p class="cap">токен годен для текста</p>
           <dl class="layer"><dt>Кто платит</dt><dd>консьюмер, который взял токен для текста</dd></dl>
         </div>
-        <div class="opt"><h3>Объявить декоративным <span class="star">★</span></h3>
+        <div class="opt"><h3>Только для декора, для текста другой серый <span class="star">★</span></h3>
           <div class="tm-card">
             <div class="tm-cal"><b style="color:var(--text-muted)">28</b><b style="color:var(--text-muted)">29</b><b style="color:var(--text-muted)">30</b><b style="color:var(--text-muted)">31</b><b>1</b><b>2</b><b>3</b></div>
             <p class="tm-line" style="color:var(--text-tertiary)">Последнее изменение 2 дня назад</p>
@@ -1083,7 +1091,7 @@
           <p class="css">--text-muted: только декор, не для чтения</p>
           <dl class="layer"><dt>Работа</dt><dd class="gain">строка в доке токенов</dd><dt>Цвет</dt><dd>не меняется</dd></dl>
         </div>
-        <div class="opt"><h3>Сдвинуть --text-muted</h3>
+        <div class="opt"><h3>Затемнить бледный серый до 4.74:1</h3>
           <div class="tm-card">
             <div class="tm-cal"><b style="color:#6B7388">28</b><b style="color:#6B7388">29</b><b style="color:#6B7388">30</b><b style="color:#6B7388">31</b><b>1</b><b>2</b><b>3</b></div>
             <p class="tm-line" style="color:#6B7388">Последнее изменение 2 дня назад</p>
@@ -1100,14 +1108,10 @@
   <section class="q" data-q="ask-brand-residue">
       <div class="q-head">
         <span class="q-num">07</span>
-        <h2 class="q-title">На бренде другого цвета остаются синие ссылки и подложки</h2>
+        <h2 class="q-title">У консьюмера с зелёным брендом ссылки и подложки остаются синими</h2>
         <span class="q-src">P3 · pinkmoon, ai-sdlc · бренд, запаркован</span>
       </div>
-      <p class="q-sub">
-        Тема перенаводит <code>--primary</code>, но <code>--text-link</code>, <code>--surface-tint</code>,
-        <code>--primary-subtitle</code> и <code>--primary-muted</code> в светлой теме - литералы синей рампы. Каждый
-        консьюмер с другим брендом переназначает их руками.
-      </p>
+      <p class="q-sub">Тема меняет главный цвет, но четыре токена - ссылка, подложка выбранной строки и два светлых фона - в светлой теме зашиты синими. Каждый консьюмер с другим брендом переназначает их руками. Выбрать: выводить их из главного цвета или дать бренду список того, что задать.</p>
       <div class="stage">
         <div class="spec">
           <p class="cap">зелёный бренд, сегодня</p>
@@ -1122,7 +1126,7 @@
           <p class="cap">синий остаток на зелёном</p>
           <dl class="layer"><dt>Консьюмер</dt><dd>переназначает 4 токена сам</dd></dl>
         </div>
-        <div class="opt"><h3>Вывести из --primary <span class="star">★</span></h3>
+        <div class="opt"><h3>Выводить тон из главного цвета <span class="star">★</span></h3>
           <div class="br-kit" style="--br-tint:hsl(150.3 100% 97%);--br-link:hsl(150.3 85% 52%);--br-subtitle:hsl(150.3 100% 97%);--br-muted:hsl(150.3 95% 94%)"><div class="btn-row"><b style="background:#1F7A4D">Сохранить</b><span class="br-chip">Черновик</span><span class="br-chip br-sub">Новое</span></div><div class="br-list"><span>Входящие</span><span class="br-sel">Выбранная строка</span><span>Архив</span></div><p class="br-text">Условия доставки · <span class="br-link">Подробнее</span></p></div>
           <div class="br-pills"><span class="a-ratio pass">тон зелёный</span><span class="a-ratio fail">ссылка 1.56:1</span></div>
           <p class="cap">тон из бренда, S/L синей рампы</p>
@@ -1130,7 +1134,7 @@
   h 85% 52%); <span class="hit">/* #1DED86 */</span></p>
           <dl class="layer"><dt>Работа</dt><dd>часть движка цвета из одного токена</dd><dt>Тёмная тема</dt><dd class="gain">уже так делает</dd><dt>Ссылка</dt><dd>светлота тоже от бренда, иначе 1.56:1</dd></dl>
         </div>
-        <div class="opt"><h3>Чеклист must-rebind</h3>
+        <div class="opt"><h3>Список четырёх токенов, которые задаёт бренд</h3>
           <div class="br-kit" style="--br-tint:#E8F4EE;--br-link:#1F7A4D;--br-subtitle:#E8F4EE;--br-muted:hsl(150.3 40% 88%)"><div class="btn-row"><b style="background:#1F7A4D">Сохранить</b><span class="br-chip">Черновик</span><span class="br-chip br-sub">Новое</span></div><div class="br-list"><span>Входящие</span><span class="br-sel">Выбранная строка</span><span>Архив</span></div><p class="br-text">Условия доставки · <span class="br-link">Подробнее</span></p></div>
           <div class="br-pills"><span class="a-ratio pass">ссылка 5.32:1</span><span class="a-ratio pass">на подложке 4.71:1</span></div>
           <p class="cap">бренд ставит четыре значения</p>
@@ -1148,10 +1152,10 @@
   <section class="q" data-q="colour-engine">
     <div class="q-head">
       <span class="q-num">09</span>
-      <h2 class="q-title">Каким методом выводить цвет из одного токена на роль</h2>
+      <h2 class="q-title">Как получать все оттенки цвета из одного цвета бренда</h2>
       <a class="q-src" href="2-color-engine-derivation.html">дека color-engine-derivation</a>
     </div>
-    <p class="q-sub">Ниже по течению три P2 и одна измеренная провальная проверка контраста. Дека 2 - прототипная половина того же вопроса, отдельного ответа не требует.</p>
+    <p class="q-sub">Сегодня у главного цвета два несвязанных источника: готовые оттенки и отдельные числа тона. Поменяешь тон - перекрасятся кольцо фокуса и ссылки, а заливка кнопки останется синей. Выбрать способ, которым из одного цвета бренда считаются все семь шагов: светлые фоны, наведение, нажатие, тёмный текст. От ответа зависят три задачи P2 и один провал контраста; вторая дека, color-engine-relative, - прототип того же вопроса.</p>
     <div class="stage">
       <div class="spec"><p class="cap">сегодня: два источника</p>
         <div class="ce-src"><span class="ce-box"></span><code>--primary-h: 22</code></div>
@@ -1160,73 +1164,82 @@
     </div>
 
     <div class="opts">
-      <div class="opt"><h3>Сегодня, ручные пики</h3>
+      <div class="opt"><h3>Как сейчас: семь значений руками</h3>
         <div class="ce-card"><div class="ce-lane"><span class="ce-brand">синий</span><div class="ce-ramp"><i style="background-image:linear-gradient(hsl(229 100% 97%),hsl(229 100% 97%))"></i><i style="background-image:linear-gradient(hsl(229 95% 94%),hsl(229 95% 94%))"></i><i style="background-image:linear-gradient(hsl(229 95% 89%),hsl(229 95% 89%))"></i><i style="background-image:linear-gradient(hsl(229 100% 59%),hsl(229 100% 59%))"></i><i style="background-image:linear-gradient(color-mix(in srgb, hsl(229 100% 59%) 88%, black),color-mix(in srgb, hsl(229 100% 59%) 88%, black))"></i><i style="background-image:linear-gradient(color-mix(in srgb, hsl(229 100% 59%) 76%, black),color-mix(in srgb, hsl(229 100% 59%) 76%, black))"></i><i style="background-image:linear-gradient(hsl(229 85% 52%),hsl(229 85% 52%))"></i></div><div class="ce-kit"><b class="ce-solid" style="background-image:linear-gradient(hsl(229 100% 59%),hsl(229 100% 59%))">Solid</b><b class="ce-tonal" style="background-image:linear-gradient(hsl(229 95% 94%),hsl(229 95% 94%));color:hsl(229 85% 52%)">Tonal</b><b class="ce-ghost" style="color:hsl(229 85% 52%)">Ghost</b></div></div><div class="ce-lane"><span class="ce-brand">оранжевый</span><div class="ce-ramp ce-manual"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><p class="ce-note">7 значений руками</p></div></div><div class="ce-pills"><span class="a-ratio ce-n">эталон</span><span class="a-ratio fail">бренд = переписать всё</span></div>
         <p class="cap">бренд переписывается руками</p>
         <p>Ничего не меняется, источник остаётся раздвоенным.</p></div>
-      <div class="opt"><h3>HSL hue-only + ручные S/L <span class="star">★</span></h3>
+      <div class="opt"><h3>Тон из бренда, насыщенность и светлота как сейчас <span class="star">★</span></h3>
         <div class="ce-card"><div class="ce-lane"><span class="ce-brand">синий</span><div class="ce-ramp"><i style="background-image:linear-gradient(hsl(from #2E54FF h 100% 97%),hsl(from #2E54FF h 100% 97%))"></i><i style="background-image:linear-gradient(hsl(from #2E54FF h 95% 94%),hsl(from #2E54FF h 95% 94%))"></i><i style="background-image:linear-gradient(hsl(from #2E54FF h 95% 89%),hsl(from #2E54FF h 95% 89%))"></i><i style="background-image:linear-gradient(#2E54FF,#2E54FF)"></i><i style="background-image:linear-gradient(color-mix(in srgb, #2E54FF 88%, black),color-mix(in srgb, #2E54FF 88%, black))"></i><i style="background-image:linear-gradient(color-mix(in srgb, #2E54FF 76%, black),color-mix(in srgb, #2E54FF 76%, black))"></i><i style="background-image:linear-gradient(hsl(from #2E54FF h 85% 52%),hsl(from #2E54FF h 85% 52%))"></i></div><div class="ce-kit"><b class="ce-solid" style="background-image:linear-gradient(#2E54FF,#2E54FF)">Solid</b><b class="ce-tonal" style="background-image:linear-gradient(hsl(from #2E54FF h 95% 94%),hsl(from #2E54FF h 95% 94%));color:hsl(from #2E54FF h 85% 52%)">Tonal</b><b class="ce-ghost" style="color:hsl(from #2E54FF h 85% 52%)">Ghost</b></div></div><div class="ce-lane"><span class="ce-brand">оранжевый</span><div class="ce-ramp"><i style="background-image:linear-gradient(hsl(from #FF6B2E h 100% 97%),hsl(from #FF6B2E h 100% 97%))"></i><i style="background-image:linear-gradient(hsl(from #FF6B2E h 95% 94%),hsl(from #FF6B2E h 95% 94%))"></i><i style="background-image:linear-gradient(hsl(from #FF6B2E h 95% 89%),hsl(from #FF6B2E h 95% 89%))"></i><i style="background-image:linear-gradient(#FF6B2E,#FF6B2E)"></i><i style="background-image:linear-gradient(color-mix(in srgb, #FF6B2E 88%, black),color-mix(in srgb, #FF6B2E 88%, black))"></i><i style="background-image:linear-gradient(color-mix(in srgb, #FF6B2E 76%, black),color-mix(in srgb, #FF6B2E 76%, black))"></i><i style="background-image:linear-gradient(hsl(from #FF6B2E h 85% 52%),hsl(from #FF6B2E h 85% 52%))"></i></div><div class="ce-kit"><b class="ce-solid" style="background-image:linear-gradient(#FF6B2E,#FF6B2E)">Solid</b><b class="ce-tonal" style="background-image:linear-gradient(hsl(from #FF6B2E h 95% 94%),hsl(from #FF6B2E h 95% 94%));color:hsl(from #FF6B2E h 85% 52%)">Tonal</b><b class="ce-ghost" style="color:hsl(from #FF6B2E h 85% 52%)">Ghost</b></div></div></div><div class="ce-pills"><span class="a-ratio pass">Δ0 от сегодня</span><span class="a-ratio ce-n">тинты бледнеют</span></div>
         <p class="cap">тон из токена, как сегодня</p>
         <p>Δ0, байт-в-байт как сейчас, и всё из одного токена.</p></div>
-      <div class="opt"><h3>OKLCH hue-only</h3>
+      <div class="opt"><h3>Тон из бренда, ровные шаги OKLCH</h3>
         <div class="ce-card"><div class="ce-lane"><span class="ce-brand">синий</span><div class="ce-ramp"><i style="background-image:linear-gradient(oklch(from #2E54FF 0.9642 calc(c * 0.0669) h),oklch(from #2E54FF 0.9642 calc(c * 0.0669) h))"></i><i style="background-image:linear-gradient(oklch(from #2E54FF 0.9296 calc(c * 0.1286) h),oklch(from #2E54FF 0.9296 calc(c * 0.1286) h))"></i><i style="background-image:linear-gradient(oklch(from #2E54FF 0.8708 calc(c * 0.2411) h),oklch(from #2E54FF 0.8708 calc(c * 0.2411) h))"></i><i style="background-image:linear-gradient(#2E54FF,#2E54FF)"></i><i style="background-image:linear-gradient(oklch(from #2E54FF calc(l - 0.0476) calc(c * 0.902) h),oklch(from #2E54FF calc(l - 0.0476) calc(c * 0.902) h))"></i><i style="background-image:linear-gradient(oklch(from #2E54FF calc(l - 0.0962) calc(c * 0.802) h),oklch(from #2E54FF calc(l - 0.0962) calc(c * 0.802) h))"></i><i style="background-image:linear-gradient(oklch(from #2E54FF 0.4898 calc(c * 0.998) h),oklch(from #2E54FF 0.4898 calc(c * 0.998) h))"></i></div><div class="ce-kit"><b class="ce-solid" style="background-image:linear-gradient(#2E54FF,#2E54FF)">Solid</b><b class="ce-tonal" style="background-image:linear-gradient(oklch(from #2E54FF 0.9296 calc(c * 0.1286) h),oklch(from #2E54FF 0.9296 calc(c * 0.1286) h));color:oklch(from #2E54FF 0.4898 calc(c * 0.998) h)">Tonal</b><b class="ce-ghost" style="color:oklch(from #2E54FF 0.4898 calc(c * 0.998) h)">Ghost</b></div></div><div class="ce-lane"><span class="ce-brand">оранжевый</span><div class="ce-ramp"><i style="background-image:linear-gradient(oklch(from #FF6B2E 0.9642 calc(c * 0.0669) h),oklch(from #FF6B2E 0.9642 calc(c * 0.0669) h))"></i><i style="background-image:linear-gradient(oklch(from #FF6B2E 0.9296 calc(c * 0.1286) h),oklch(from #FF6B2E 0.9296 calc(c * 0.1286) h))"></i><i style="background-image:linear-gradient(oklch(from #FF6B2E 0.8708 calc(c * 0.2411) h),oklch(from #FF6B2E 0.8708 calc(c * 0.2411) h))"></i><i style="background-image:linear-gradient(#FF6B2E,#FF6B2E)"></i><i style="background-image:linear-gradient(oklch(from #FF6B2E calc(l - 0.0476) calc(c * 0.902) h),oklch(from #FF6B2E calc(l - 0.0476) calc(c * 0.902) h))"></i><i style="background-image:linear-gradient(oklch(from #FF6B2E calc(l - 0.0962) calc(c * 0.802) h),oklch(from #FF6B2E calc(l - 0.0962) calc(c * 0.802) h))"></i><i style="background-image:linear-gradient(oklch(from #FF6B2E 0.4898 calc(c * 0.998) h),oklch(from #FF6B2E 0.4898 calc(c * 0.998) h))"></i></div><div class="ce-kit"><b class="ce-solid" style="background-image:linear-gradient(#FF6B2E,#FF6B2E)">Solid</b><b class="ce-tonal" style="background-image:linear-gradient(oklch(from #FF6B2E 0.9296 calc(c * 0.1286) h),oklch(from #FF6B2E 0.9296 calc(c * 0.1286) h));color:oklch(from #FF6B2E 0.4898 calc(c * 0.998) h)">Tonal</b><b class="ce-ghost" style="color:oklch(from #FF6B2E 0.4898 calc(c * 0.998) h)">Ghost</b></div></div></div><div class="ce-pills"><span class="a-ratio ce-n">Δ≤6/255 от сегодня</span><span class="a-ratio pass">ровнее на любом бренде</span></div>
         <p class="cap">ровные шаги, малый сдвиг</p>
         <p>Ровнее шаги, чище тинты; расхождение с сегодняшним.</p></div>
-      <div class="opt"><h3>OKLCH чистая формула</h3>
+      <div class="opt"><h3>Всё считает формула OKLCH</h3>
         <div class="ce-card"><div class="ce-lane"><span class="ce-brand">синий</span><div class="ce-ramp"><i style="background-image:linear-gradient(oklch(from #2E54FF calc(l + (1 - l) * 0.94) calc(c * 0.35) h),oklch(from #2E54FF calc(l + (1 - l) * 0.94) calc(c * 0.35) h))"></i><i style="background-image:linear-gradient(oklch(from #2E54FF calc(l + (1 - l) * 0.82) calc(c * 0.5) h),oklch(from #2E54FF calc(l + (1 - l) * 0.82) calc(c * 0.5) h))"></i><i style="background-image:linear-gradient(oklch(from #2E54FF calc(l + (1 - l) * 0.62) calc(c * 0.7) h),oklch(from #2E54FF calc(l + (1 - l) * 0.62) calc(c * 0.7) h))"></i><i style="background-image:linear-gradient(#2E54FF,#2E54FF)"></i><i style="background-image:linear-gradient(oklch(from #2E54FF calc(l - 0.05) c h),oklch(from #2E54FF calc(l - 0.05) c h))"></i><i style="background-image:linear-gradient(oklch(from #2E54FF calc(l - 0.11) c h),oklch(from #2E54FF calc(l - 0.11) c h))"></i><i style="background-image:linear-gradient(oklch(from #2E54FF calc(l * 0.78) calc(c * 0.85) h),oklch(from #2E54FF calc(l * 0.78) calc(c * 0.85) h))"></i></div><div class="ce-kit"><b class="ce-solid" style="background-image:linear-gradient(#2E54FF,#2E54FF)">Solid</b><b class="ce-tonal" style="background-image:linear-gradient(oklch(from #2E54FF calc(l + (1 - l) * 0.82) calc(c * 0.5) h),oklch(from #2E54FF calc(l + (1 - l) * 0.82) calc(c * 0.5) h));color:oklch(from #2E54FF calc(l * 0.78) calc(c * 0.85) h)">Tonal</b><b class="ce-ghost" style="color:oklch(from #2E54FF calc(l * 0.78) calc(c * 0.85) h)">Ghost</b></div></div><div class="ce-lane"><span class="ce-brand">оранжевый</span><div class="ce-ramp"><i style="background-image:linear-gradient(oklch(from #FF6B2E calc(l + (1 - l) * 0.94) calc(c * 0.35) h),oklch(from #FF6B2E calc(l + (1 - l) * 0.94) calc(c * 0.35) h))"></i><i style="background-image:linear-gradient(oklch(from #FF6B2E calc(l + (1 - l) * 0.82) calc(c * 0.5) h),oklch(from #FF6B2E calc(l + (1 - l) * 0.82) calc(c * 0.5) h))"></i><i style="background-image:linear-gradient(oklch(from #FF6B2E calc(l + (1 - l) * 0.62) calc(c * 0.7) h),oklch(from #FF6B2E calc(l + (1 - l) * 0.62) calc(c * 0.7) h))"></i><i style="background-image:linear-gradient(#FF6B2E,#FF6B2E)"></i><i style="background-image:linear-gradient(oklch(from #FF6B2E calc(l - 0.05) c h),oklch(from #FF6B2E calc(l - 0.05) c h))"></i><i style="background-image:linear-gradient(oklch(from #FF6B2E calc(l - 0.11) c h),oklch(from #FF6B2E calc(l - 0.11) c h))"></i><i style="background-image:linear-gradient(oklch(from #FF6B2E calc(l * 0.78) calc(c * 0.85) h),oklch(from #FF6B2E calc(l * 0.78) calc(c * 0.85) h))"></i></div><div class="ce-kit"><b class="ce-solid" style="background-image:linear-gradient(#FF6B2E,#FF6B2E)">Solid</b><b class="ce-tonal" style="background-image:linear-gradient(oklch(from #FF6B2E calc(l + (1 - l) * 0.82) calc(c * 0.5) h),oklch(from #FF6B2E calc(l + (1 - l) * 0.82) calc(c * 0.5) h));color:oklch(from #FF6B2E calc(l * 0.78) calc(c * 0.85) h)">Tonal</b><b class="ce-ghost" style="color:oklch(from #FF6B2E calc(l * 0.78) calc(c * 0.85) h)">Ghost</b></div></div></div><div class="ce-pills"><span class="a-ratio fail">флэттит рампу</span><span class="a-ratio ce-n">без ручных значений</span></div>
         <p class="cap">всё считает формула</p>
         <p>Всё из calc от base; сплющивает рампу.</p></div>
-      <div class="opt"><h3>color-mix white/black</h3>
+      <div class="opt"><h3>Смешивание бренда с белым и чёрным</h3>
         <div class="ce-card"><div class="ce-lane"><span class="ce-brand">синий</span><div class="ce-ramp"><i style="background-image:linear-gradient(color-mix(in srgb, #2E54FF 8%, white),color-mix(in srgb, #2E54FF 8%, white))"></i><i style="background-image:linear-gradient(color-mix(in srgb, #2E54FF 16%, white),color-mix(in srgb, #2E54FF 16%, white))"></i><i style="background-image:linear-gradient(color-mix(in srgb, #2E54FF 30%, white),color-mix(in srgb, #2E54FF 30%, white))"></i><i style="background-image:linear-gradient(#2E54FF,#2E54FF)"></i><i style="background-image:linear-gradient(color-mix(in srgb, #2E54FF 85%, black),color-mix(in srgb, #2E54FF 85%, black))"></i><i style="background-image:linear-gradient(color-mix(in srgb, #2E54FF 72%, black),color-mix(in srgb, #2E54FF 72%, black))"></i><i style="background-image:linear-gradient(color-mix(in srgb, #2E54FF 62%, black),color-mix(in srgb, #2E54FF 62%, black))"></i></div><div class="ce-kit"><b class="ce-solid" style="background-image:linear-gradient(#2E54FF,#2E54FF)">Solid</b><b class="ce-tonal" style="background-image:linear-gradient(color-mix(in srgb, #2E54FF 16%, white),color-mix(in srgb, #2E54FF 16%, white));color:color-mix(in srgb, #2E54FF 62%, black)">Tonal</b><b class="ce-ghost" style="color:color-mix(in srgb, #2E54FF 62%, black)">Ghost</b></div></div><div class="ce-lane"><span class="ce-brand">оранжевый</span><div class="ce-ramp"><i style="background-image:linear-gradient(color-mix(in srgb, #FF6B2E 8%, white),color-mix(in srgb, #FF6B2E 8%, white))"></i><i style="background-image:linear-gradient(color-mix(in srgb, #FF6B2E 16%, white),color-mix(in srgb, #FF6B2E 16%, white))"></i><i style="background-image:linear-gradient(color-mix(in srgb, #FF6B2E 30%, white),color-mix(in srgb, #FF6B2E 30%, white))"></i><i style="background-image:linear-gradient(#FF6B2E,#FF6B2E)"></i><i style="background-image:linear-gradient(color-mix(in srgb, #FF6B2E 85%, black),color-mix(in srgb, #FF6B2E 85%, black))"></i><i style="background-image:linear-gradient(color-mix(in srgb, #FF6B2E 72%, black),color-mix(in srgb, #FF6B2E 72%, black))"></i><i style="background-image:linear-gradient(color-mix(in srgb, #FF6B2E 62%, black),color-mix(in srgb, #FF6B2E 62%, black))"></i></div><div class="ce-kit"><b class="ce-solid" style="background-image:linear-gradient(#FF6B2E,#FF6B2E)">Solid</b><b class="ce-tonal" style="background-image:linear-gradient(color-mix(in srgb, #FF6B2E 16%, white),color-mix(in srgb, #FF6B2E 16%, white));color:color-mix(in srgb, #FF6B2E 62%, black)">Tonal</b><b class="ce-ghost" style="color:color-mix(in srgb, #FF6B2E 62%, black)">Ghost</b></div></div></div><div class="ce-pills"><span class="a-ratio fail">мутит на насыщенных</span><span class="a-ratio ce-n">без ручных значений</span></div>
         <p class="cap">микс через серую середину</p>
         <p>Мутит на насыщенных.</p></div>
     </div>
   </section>
 
-  <section class="q" data-q="interaction-b1">
+  <section class="q" data-q="pressed-tonal">
     <div class="q-head">
-      <span class="q-num">10</span>
-      <h2 class="q-title">Pressed у тональной кнопки и у danger-пункта меню</h2>
+      <span class="q-num">00</span>
+      <h2 class="q-title">Нажатая тональная кнопка сереет вместо того, чтобы стать насыщеннее</h2>
       <a class="q-src" href="4-interaction-formula.html">дека interaction-formula</a>
     </div>
-    <p class="q-sub">Два открытых вердикта, оба нарисованы живыми образцами с замерами в деке interaction-formula. Тональная кнопка: сейчас нажатие смешивает цвет с чёрным и гасит насыщенность, варианты - к своему цвету 28% или 34%. Danger-пункт меню: нажатие сейчас не видно вовсе (hover перекрывает pressed), варианты - серый как у соседей или красный на шаг глубже.</p>
-    <div class="stage">
-      <div class="spec ib-col">
-        <p class="cap">тональная, сейчас: к чёрному</p>
+    <p class="q-sub">Тональная кнопка - светлая подложка цвета бренда. Сегодня при нажатии подложку смешивают с чёрным, и цвет тускнеет; в тёмной теме нажатие почти не видно. Выбрать, к чему смешивать. Зажми кнопку в карточке; квадраты рядом - покой, наведение, нажатие.</p>
+    <div class="opts">
+      <div class="opt is-today"><h3>К чёрному</h3><span class="badge is-same">сейчас в dev</span>
         <div class="ib-row ib-black"><button type="button" class="ib-tonal">Кнопка</button><span class="ib-triad"><i></i><i></i><i></i></span></div>
-        <div class="ib-pills"><span class="a-ratio fail">chroma 6.2 → 5.6</span><span class="a-ratio fail">тёмная: шаг 2.4</span></div>
-      </div>
-      <div class="spec ib-col">
-        <p class="cap">рекомендация деки: к своему, 28%</p>
+        <div class="ib-pills"><span class="a-ratio fail">насыщенность 6.2 → 5.6</span><span class="a-ratio fail">тёмная тема: шаг от 2.4</span></div>
+        <p class="ag-cost">Нажатие тусклее наведения.</p></div>
+      <div class="opt"><h3>К своему цвету на 28% <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
         <div class="ib-row ib-own"><button type="button" class="ib-tonal">Кнопка</button><span class="ib-triad"><i></i><i></i><i></i></span></div>
-        <div class="ib-pills"><span class="a-ratio pass">chroma 6.2 → 9.3</span><span class="a-ratio pass">тёмная: шаг 2.8</span></div>
-      </div>
+        <div class="ib-pills"><span class="a-ratio pass">насыщенность 6.2 → 9.3</span><span class="a-ratio pass">тёмная тема: шаг от 2.8</span><span class="a-ratio pass">текст 3.76:1</span></div>
+        <p class="ag-cost">Нажатие густеет, текст читается.</p></div>
+      <div class="opt"><h3>К своему цвету на 34%</h3>
+        <div class="ib-row ib-own34"><button type="button" class="ib-tonal">Кнопка</button><span class="ib-triad"><i></i><i></i><i></i></span></div>
+        <div class="ib-pills"><span class="a-ratio pass">насыщенность 6.2 → 10.7</span><span class="a-ratio pass">тёмная тема: шаг от 3.7</span><span class="a-ratio fail">текст 3.45:1</span></div>
+        <p class="ag-cost">Шаг заметнее, но текст на нажатии читается хуже.</p></div>
     </div>
-    <div class="stage">
-      <div class="spec ib-col">
-        <p class="cap">danger-пункт, сейчас</p>
+    <p class="says">Числа - дека interaction-formula, замер 2026-09-24, семья primary, светлая тема: насыщенность - OKLCH C ×100; шаг - расстояние наведение → нажатие, от 2 видно глазом.</p>
+  </section>
+
+  <section class="q" data-q="pressed-danger">
+    <div class="q-head">
+      <span class="q-num">00</span>
+      <h2 class="q-title">Красный пункт меню «Удалить» никак не меняется при нажатии</h2>
+      <a class="q-src" href="4-interaction-formula.html">дека interaction-formula</a>
+    </div>
+    <p class="q-sub">Сегодня у пункта «Удалить» нажатие выглядит так же, как наведение: та же светло-красная подложка. Соседние пункты при нажатии темнеют в серый. Выбрать цвет нажатия. Зажми пункт в карточке.</p>
+    <div class="opts">
+      <div class="opt is-today"><h3>Нажатие как наведение</h3><span class="badge is-same">сейчас в dev</span>
         <div class="ib-row ib-dtoday"><div class="ib-menu"><button type="button">Переименовать</button><button type="button" class="err">Удалить объект</button></div><span class="ib-triad"><i></i><i></i><i></i></span></div>
-        <div class="ib-pills"><span class="a-ratio fail">шаг hover → pressed 0</span></div>
-      </div>
-      <div class="spec ib-col">
-        <p class="cap">рекомендация деки: красный глубже</p>
+        <div class="ib-pills"><span class="a-ratio fail">шаг 0</span></div></div>
+      <div class="opt"><h3>Серый, как у соседних пунктов</h3>
+        <div class="ib-row ib-dgrey"><div class="ib-menu"><button type="button">Переименовать</button><button type="button" class="err">Удалить объект</button></div><span class="ib-triad"><i></i><i></i><i></i></span></div>
+        <div class="ib-pills"><span class="a-ratio pass">шаг 3.3 / 8.0</span><span class="a-ratio fail">красный уходит на нажатии</span></div></div>
+      <div class="opt"><h3>Красный на шаг глубже <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
         <div class="ib-row ib-dmuted"><div class="ib-menu"><button type="button">Переименовать</button><button type="button" class="err">Удалить объект</button></div><span class="ib-triad"><i></i><i></i><i></i></span></div>
         <div class="ib-pills"><span class="a-ratio pass">шаг 2.5 / 7.8</span><span class="a-ratio pass">текст 5.51:1</span></div>
-      </div>
+        <p class="ag-cost">Та же пара, что у красной кнопки без заливки.</p></div>
     </div>
-    <p class="says">Покой · hover · pressed, семья primary, светлая тема. Зажми образец. Числа - дека interaction-formula, замер 2026-09-24: chroma OKLCH ×100, шаг ΔE OKLab ×100, контраст --error-text на --error-muted.</p>
-    <div class="opts">
-      <div class="opt"><h3>Решить в деке interaction-formula</h3></div>
-    </div>
+    <p class="says">Шаг наведение → нажатие: светлая / тёмная тема, дека interaction-formula, замер 2026-09-24.</p>
   </section>
 
   <section class="q" data-q="theme-recipe">
     <div class="q-head">
       <span class="q-num">11</span>
-      <h2 class="q-title">Рецепт темы против ручных пиков</h2>
+      <h2 class="q-title">Кнопка считает цвета наведения сама и может разойтись с темой</h2>
       <a class="q-src" href="../docs/todo.md">рецепт темы против ручных пиков</a>
     </div>
-    <p class="q-sub">Кнопка выводит состояния из рецепта темы 88%/76% mix-to-black. Если калибровка цвет-движка заменит <code>--primary-hover/-pressed</code> ручными значениями, дефолты кнопки разойдутся с ролями темы.</p>
+    <p class="q-sub">Сегодня кнопка получает цвет наведения и нажатия, смешивая свой цвет с чёрным на 12% и 24% - так же, как тема. Если новый способ считать цвета (вопрос выше) заменит эти роли в теме подобранными значениями, кнопка и тема разойдутся. Выбрать, кто главный. Бренд в примере #FF6B2E.</p>
     <div class="stage">
       <div class="spec"><p class="cap">рецепт темы 88% / 76%</p><div class="btn-row"><b style="background:#FF6B2E">Покой</b><b style="background:#E05E28">Hover</b><b style="background:#C25123">Pressed</b></div></div>
       <div class="spec"><p class="cap">калибровка OKLCH из деки color-engine-derivation</p><div class="btn-row"><b style="background:#FF6B2E">Покой</b><b style="background:#E6632F">Hover</b><b style="background:#CD5B2F">Pressed</b></div><p class="says">бренд #FF6B2E; если калибровка заменит роли, кнопка разойдётся с темой</p></div>
@@ -1234,7 +1247,7 @@
     <p class="says">Калибровка - лейн «OKLCH hue-only + ручные L/C» деки color-engine-derivation: hover oklch(l - 0.0476, c × 0.902), pressed oklch(l - 0.0962, c × 0.802). ΔE hover / pressed в OKLab ×100 против 88/76, от 2 шаг виден глазом.</p>
 
     <div class="opts">
-      <div class="opt"><h3>Компоненты снова читают роли</h3>
+      <div class="opt"><h3>Кнопка берёт цвета из темы</h3>
         <div class="tr-grid">
           <span></span><span class="tr-h">синий</span><span class="tr-h">оранжевый</span>
           <span class="tr-k">роль темы</span><span class="tr-triad"><i style="background:#2E54FF"></i><i style="background:#284AE0"></i><i style="background:#2240C2"></i></span><span class="tr-triad"><i style="background:#FF6B2E"></i><i style="background:#E6632F"></i><i style="background:#CD5B2F"></i></span>
@@ -1243,7 +1256,7 @@
         <div class="tr-pills"><span class="a-ratio pass">кнопка = роль, ΔE 0</span></div>
         <p class="cap">кнопка берёт калибровку</p>
         <p>Один источник, кнопка теряет свой расчёт.</p></div>
-      <div class="opt"><h3>Тема оставляет формулу</h3>
+      <div class="opt"><h3>Тема оставляет смешивание с чёрным</h3>
         <div class="tr-grid">
           <span></span><span class="tr-h">синий</span><span class="tr-h">оранжевый</span>
           <span class="tr-k">роль темы</span><span class="tr-triad"><i style="background:#2E54FF"></i><i style="background:#284AE0"></i><i style="background:#2340C2"></i></span><span class="tr-triad"><i style="background:#FF6B2E"></i><i style="background:#E05E28"></i><i style="background:#C25123"></i></span>
@@ -1259,10 +1272,10 @@
   <section class="q" data-q="warning-text">
     <div class="q-head">
       <span class="q-num">12</span>
-      <h2 class="q-title">Какой цвет текста ставить на жёлтый тинт</h2>
+      <h2 class="q-title">Текст жёлтого предупреждения не проходит контраст: 4.42:1 при норме 4.5:1</h2>
       <a class="q-src" href="7-warning-text-colour.html">дека warning-text-colour</a>
     </div>
-    <p class="q-sub">Пара под Bugs меряется 4.42:1 против порога 4.5:1. Вариант 4 трогает не текст, а тинт, и оставляет ноль запаса.</p>
+    <p class="q-sub">Текст #8A7400 на жёлтой подложке #FFFBEA в <code>ds-alert</code> и бейдже. Соседние статусы проходят, а более тёмного жёлтого в палитре нет. Выбрать цвет текста или подложки.</p>
     <div class="stage">
       <div class="spec"><p class="cap">ds-alert warning сегодня</p>
         <div class="wt-alert" style="--wt-bg:#FFFBEA;--wt-fg:#8A7400"><i class="wt-icon">!</i><div><p class="wt-title">Внимание</p><p class="wt-line">Срок действия полиса истекает через 14 дней</p><p class="wt-small">Мелкая подпись, 13px</p></div></div>
@@ -1280,22 +1293,22 @@
       </div>
     </div>
     <div class="opts">
-      <div class="opt"><h3>1 · основной текст</h3>
+      <div class="opt"><h3>Основной тёмный текст</h3>
         <div class="wt-alert" style="--wt-bg:#FFFBEA;--wt-fg:#1F2933"><i class="wt-icon">!</i><div><p class="wt-title">Внимание</p><p class="wt-line">Срок полиса истекает через 14 дней</p><p class="wt-small">Мелкая подпись, 13px</p></div></div>
         <span class="wt-badge" style="--wt-bg:#FFFBEA;--wt-fg:#1F2933">Предупреждение</span>
         <dl class="layer"><dt>Контраст</dt><dd>14.22:1</dd></dl>
         <p class="wt-note">Жёлтый уходит из текста.</p></div>
-      <div class="opt"><h3>2 · серый</h3>
+      <div class="opt"><h3>Серый текст</h3>
         <div class="wt-alert" style="--wt-bg:#FFFBEA;--wt-fg:#323F4B"><i class="wt-icon">!</i><div><p class="wt-title">Внимание</p><p class="wt-line">Срок полиса истекает через 14 дней</p><p class="wt-small">Мелкая подпись, 13px</p></div></div>
         <span class="wt-badge" style="--wt-bg:#FFFBEA;--wt-fg:#323F4B">Предупреждение</span>
         <dl class="layer"><dt>Контраст</dt><dd>10.39:1</dd></dl>
         <p class="wt-note">Нейтральный текст на тинте.</p></div>
-      <div class="opt"><h3>3 · тёмно-жёлтый</h3>
+      <div class="opt"><h3>Новый тёмно-жёлтый</h3>
         <div class="wt-alert" style="--wt-bg:#FFFBEA;--wt-fg:#5C4A00"><i class="wt-icon">!</i><div><p class="wt-title">Внимание</p><p class="wt-line">Срок полиса истекает через 14 дней</p><p class="wt-small">Мелкая подпись, 13px</p></div></div>
         <span class="wt-badge" style="--wt-bg:#FFFBEA;--wt-fg:#5C4A00">Предупреждение</span>
         <dl class="layer"><dt>Контраст</dt><dd>8.31:1</dd></dl>
         <p class="wt-note">Новый шаг ниже 700.</p></div>
-      <div class="opt"><h3>4 · осветлить тинт</h3>
+      <div class="opt"><h3>Светлее подложка, текст прежний</h3>
         <div class="wt-alert" style="--wt-bg:#FFFDF5;--wt-fg:#8A7400"><i class="wt-icon">!</i><div><p class="wt-title">Внимание</p><p class="wt-line">Срок полиса истекает через 14 дней</p><p class="wt-small">Мелкая подпись, 13px</p></div></div>
         <span class="wt-badge" style="--wt-bg:#FFFDF5;--wt-fg:#8A7400">Предупреждение</span>
         <dl class="layer"><dt>Контраст</dt><dd>4.50:1</dd></dl>
