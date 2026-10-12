@@ -250,6 +250,14 @@
     {
       "text": "On the first load, a chart's loading skeleton turns into the chart in one motion when the data lands, on `--ds-motion-chart-mark-grow-duration` and `--ds-motion-chart-mark-grow-easing`: each placeholder travels to the mark in its place and takes its colour, a mark without one grows from the baseline, a spare placeholder sinks, and the tick and category placeholders fade into the labels. A reload with data on screen keeps the plot under the loading overlay as before. Set `--ds-motion-chart-mark-grow-duration: 0ms` on the chart to swap the skeleton for the chart at once.",
       "verify": "Bind `loading` with no data to a ds-column-chart, then set data and turn `loading` off: confirm the grey placeholders move onto the columns and colour in, with no blank frame between skeleton and chart."
+    },
+    {
+      "text": "A pressed `ds-button` with `variant=\"tonal\"` fills with its rest fill mixed 28% toward the button's colour (`--primary` for primary), where it was the hover fill mixed 10% toward black. `--ds-button-bg-color-active` still sets a pressed fill of your own.",
+      "verify": "Hold the mouse down on a tonal ds-button and confirm the fill turns more saturated than the hover fill, not greyer, in the light and the dark theme."
+    },
+    {
+      "text": "A pressed `ds-menu-item` with `error` fills with `--error-muted`, one red step deeper than its `--error-subtitle` hover; the press showed the hover fill.",
+      "verify": "Hold the mouse down on an error ds-menu-item and confirm the red fill deepens from the hover fill, in the light and the dark theme."
     }
   ],
   "deleteList": [

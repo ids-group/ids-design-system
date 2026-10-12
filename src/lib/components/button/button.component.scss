@@ -213,7 +213,7 @@
     --_button-bg-color:        var(--ds-button-bg-color,        var(--_family-muted));
     --_button-label-color:     var(--ds-button-label-color,     var(--_family-strong));
     --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--_family-muted-strong));
-    --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--_family-muted-strong) 90%, black));
+    --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--_family-muted) 72%, var(--_family-base)));
     --_button-accent: var(--_button-label-color);
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
 

@@ -65,7 +65,7 @@ export type ButtonVariant = 'solid' | 'tonal' | 'ghost' | 'outline' | 'text';
 ```css
 ds-button {
     --ds-button-bg-color: transparent | var(--_family-base) | var(--_family-muted);
-    --ds-button-bg-color-active: color-mix(in srgb, var(--_button-bg-color) 76%, black) | color-mix(in srgb, var(--_family-muted-strong) 90%, black) | transparent | var(--_family-muted);
+    --ds-button-bg-color-active: color-mix(in srgb, var(--_button-bg-color) 76%, black) | color-mix(in srgb, var(--_family-muted) 72%, var(--_family-base)) | transparent | var(--_family-muted);
     --ds-button-bg-color-disabled: color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)) | oklch(from var(--_button-accent) 92% 0.03 h) | transparent;
     --ds-button-bg-color-hover: color-mix(in srgb, var(--_button-bg-color) 88%, black) | transparent | var(--_family-muted-strong) | var(--_family-subtitle);
     --ds-button-border-color: transparent | var(--_family-outline-border);
