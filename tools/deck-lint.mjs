@@ -87,6 +87,16 @@ for (const dir of [DECKS, ARCHIVE]) {
     const evidence = meta(html, 'evidence');
     const rank = name.match(/^(\d+)-/)?.[1];
 
+    // The single-pick snippet decks copy: assigning the clicked card outright leaves no way to
+    // clear a stray pick, and the answer line then reports a choice nobody made.
+    if (status === 'open' && /picked = card\.dataset\.key;/.test(html)) {
+      fail(
+        'D016',
+        where,
+        'a pick that a second click cannot clear; toggle it: `picked = picked === card.dataset.key ? null : card.dataset.key`.',
+      );
+    }
+
     if (!/<title>[^<]+<\/title>/.test(html)) {
       fail(
         'D015',
