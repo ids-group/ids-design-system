@@ -17,7 +17,7 @@ export class AlertComponent {
     public readonly icon = input<IconName | null>(null);
     protected readonly intl = inject(…);
     private readonly liveRole;
-    protected onDismiss(): void;
+    protected onDismiss(leaving: HTMLElement): void;
     protected readonly resolvedIcon = computed<IconName>(…);
     public readonly title = input<string>('');
     public readonly variant = input<AlertVariant>('info');

@@ -286,6 +286,28 @@
   `[toolbar]` slot held content, so a table with `dsTableExport` and no slotted content hid the
   built-in Export button. The toolbar shows whenever the slot or a table feature puts a control in
   it.
+- **A `ds-button` keeps focus while `loading`.** A button pressed from the keyboard and then set
+  `loading` was disabled natively, so focus fell to the page. A loading button takes
+  `aria-disabled="true"` beside `aria-busy` and stays focusable; the click is swallowed, so
+  `(pressed)` does not fire and a `type="submit"` does not submit. The `dsTableExport` button shows
+  the spinner while an `exportFetcher` runs, in place of the greyed "Exporting…" label. A
+  `[disabled]` bound to the same flag as `[loading]` still disables natively and drops focus;
+  remove it.
+- **Pressing Previous onto the first page, or Next onto the last, keeps focus in `ds-pagination`.**
+  The pressed button disabled under focus and focus fell to the page; it moves to the current
+  page's button. `PaginationComponent` gained a member, named in the migration manifest.
+- **Dismissing a `ds-alert`, a `ds-banner` or a toast moves focus to a neighbour.** Focus sat on
+  the close or action button and fell to the page when the element left. A dismissed alert or
+  banner hands it to the next control after it, or the one before it when nothing follows; a toast
+  hands it to the next toast in the region, else back to the element focused before focus entered
+  the region. Focus that a `(closed)` handler or a toast action's `handler` moves elsewhere stays
+  there. `ToastRegionComponent` gained members, and the `onDismiss` of `AlertComponent` and
+  `BannerComponent` takes an argument, named in the migration manifest.
+- **Move up and Move down in the `dsTableColumns` panel keep focus on the moved row.** Pressed from
+  the keyboard, three moves in four dropped focus to the page, as the row was re-inserted or its
+  button disabled at the top or bottom. Focus stays on the pressed button of the moved row, or moves
+  to its other button once the row reaches an end. The internal `TableColumnsPanelComponent`
+  gained `move` and `rescueFocus`.
 
 ### What you can now DELETE
 

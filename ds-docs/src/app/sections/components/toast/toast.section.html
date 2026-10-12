@@ -119,6 +119,11 @@
     <li>
       Such a toast never auto-dismisses and is always dismissible: keyboard users cannot reach the region (last in <code class="t-mono-inline">body</code>) in five seconds.
     </li>
+
+    <li>
+      Pressing the action or the close button hands focus to the next toast, else back to the
+      element focused before the region.
+    </li>
   </ul>
 
   <div class="demo">
@@ -147,8 +152,8 @@
       color="neutral"
       variant="outline"
       size="sm"
-      [disabled]="promiseRunning()"
-      (click)="firePromise()">
+      [loading]="promiseRunning()"
+      (pressed)="firePromise()">
       Save report (async)
     </ds-button>
   </div>

@@ -364,6 +364,54 @@
       "pitfall": "Browsers ignore custom properties declared inside a `:visited` rule, so `.link:visited { --ds-link-color: red; }` does nothing; set `--ds-link-color-visited` on `.link` or an ancestor.",
       "restore": ".link { --ds-link-color-visited: var(--ds-link-color, var(--text-link)); }",
       "verify": "The built CSS carries `.link:where(:visited)`, and a visited link in the app paints in the colour the app intends."
+    },
+    {
+      "id": "button-loading-keeps-focus",
+      "kind": "behavior",
+      "old": "ds-button[loading]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript",
+        "style"
+      ],
+      "searchHints": [
+        "loading"
+      ],
+      "detect": [
+        "toBeDisabled()",
+        "button:disabled",
+        "button[disabled]"
+      ],
+      "action": "None, unless a ds-button binds [disabled] to the same flag as [loading]: remove that [disabled]. Where a test or a stylesheet reads the native disabled state of a loading ds-button, read aria-disabled=\"true\" instead.",
+      "appliesWhen": "Every ds-button with loading set. A ds-button rendering a link ignores loading and is not affected, and a ds-button with disabled set keeps the native attribute.",
+      "pitfall": "A [disabled] bound to the same flag as [loading] still disables the button natively, so focus still falls to the page the moment the work starts.",
+      "restore": null,
+      "verify": "Press each loading-bound ds-button from the keyboard and confirm focus stays on it, with its ring, until the work ends."
+    },
+    {
+      "id": "focus-classes-gained-members",
+      "kind": "behavior",
+      "old": "PaginationComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends PaginationComponent",
+        "extends AlertComponent",
+        "extends BannerComponent",
+        "extends ToastRegionComponent"
+      ],
+      "detect": [
+        "extends PaginationComponent",
+        "extends AlertComponent",
+        "extends BannerComponent",
+        "extends ToastRegionComponent"
+      ],
+      "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
+      "appliesWhen": "Only a class of yours that extends a class this item names. Template users need nothing; subclassing a DS component is unsupported.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
+      "note": "`PaginationComponent` gained `rescueFocus`, and its `goTo` takes the nav element as a second argument. `ToastRegionComponent` gained `focusOrigin` and `onFocusIn`. The `onDismiss` of `AlertComponent` and `BannerComponent` takes the element that leaves."
     }
   ],
   "informational": [
@@ -459,7 +507,10 @@
     {
       "text": "The `ds-table` toolbar shows when a table feature inserts its control, as `dsTableExport` does with its Export button, and not only when the `[toolbar]` slot holds content; a table with neither keeps the toolbar hidden.",
       "verify": "Render a ds-table with dsTableExport and nothing in its toolbar slot and confirm the Export button shows above the table."
-    }
+    },
+    "Pressing Previous onto the first page or Next onto the last of a `ds-pagination` moves focus to the current page's button; it fell to the page.",
+    "Dismissing a `ds-alert` or `ds-banner` from its close button moves focus to the next control after it, else the one before it; a toast leaving with focus inside it moves focus to the next toast, else to the element focused before focus entered the region. Focus fell to the page.",
+    "Move up and Move down in the `dsTableColumns` panel keep focus on the moved row's pressed button, or its other button once the row reaches the top or bottom; focus fell to the page. The internal `TableColumnsPanelComponent` gained `move` and `rescueFocus`."
   ],
   "deleteList": [
     {

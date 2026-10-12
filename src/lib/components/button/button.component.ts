@@ -159,8 +159,9 @@ export class ButtonComponent extends DsMessageBase {
   readonly type = input<ButtonType>('button');
   /** Disables the button and blocks `pressed`. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Busy state: disables interaction and sets `aria-busy`. Button-only; ignored on an anchor
-   *  with a dev warning. */
+  /** Busy state: blocks `pressed` and sets `aria-busy` and `aria-disabled`, keeping the button
+   *  focusable so focus stays on it while the work runs. Button-only; ignored on an anchor with a
+   *  dev warning. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** Fills the container: the host becomes block-level and 100% wide. */
   readonly fullWidth = input(false, { transform: booleanAttribute });
@@ -290,12 +291,10 @@ export class ButtonComponent extends DsMessageBase {
   }
 
   protected onClick(event: MouseEvent): void {
-    // A soft-disabled button is only `aria-disabled`, so the browser still dispatches the click.
+    // A soft-disabled or loading button is only `aria-disabled`, so the browser still dispatches the
+    // click; preventDefault stops an `<a href>` navigating and a `type="submit"` submitting its form.
     if (this.disabled() || this.loading()) {
-      // The routerLink branch binds `null`; an `<a href>` still navigates.
-      if (this.destination() === 'href') {
-        event.preventDefault();
-      }
+      event.preventDefault();
 
       return;
     }

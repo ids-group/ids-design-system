@@ -15,6 +15,7 @@ import {
   warnAnnounceOversight,
 } from '@ids-group-ltd/ids-design-system/core';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
+import { moveFocusOutOf } from '@ids-group-ltd/ids-design-system/components';
 import type { AlertVariant } from './alert.types';
 
 @Component({
@@ -104,7 +105,9 @@ export class AlertComponent {
     () => this.icon() ?? this.defaultIcon(),
   );
 
-  protected onDismiss(): void {
+  // The host app removes the element on `closed`, taking the focused close button with it.
+  protected onDismiss(leaving: HTMLElement): void {
+    moveFocusOutOf(leaving, leaving.ownerDocument.body);
     this.closed.emit();
   }
 }

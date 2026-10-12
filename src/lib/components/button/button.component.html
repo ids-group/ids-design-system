@@ -55,9 +55,9 @@
       [attr.aria-expanded]="ariaExpanded()"
       [attr.aria-controls]="ariaControls()"
       [attr.aria-busy]="loading() ? 'true' : null"
-      [attr.aria-disabled]="softDisabled() ? 'true' : null"
+      [attr.aria-disabled]="softDisabled() || loading() ? 'true' : null"
       [attr.aria-describedby]="describedBy()"
-      [disabled]="(disabled() || loading()) && !softDisabled()"
+      [disabled]="disabled() && !softDisabled()"
       (click)="onClick($event)">
       <ng-container [ngTemplateOutlet]="content" />
     </button>
