@@ -152,6 +152,27 @@
       </g>
     }
 
+    @if (ringedMark(); as ringed) {
+      @if (pointer(); as at) {
+        @if (!activeMark.pinned()) {
+          <line
+            #tether
+            class="nearest-tether"
+            [attr.x1]="at.x"
+            [attr.y1]="at.y"
+            [attr.x2]="ringed.cx"
+            [attr.y2]="ringed.cy" />
+        }
+      }
+
+      <circle
+        #ring
+        class="nearest-ring"
+        dsChartPlaced
+        [style.cx.px]="ringed.cx"
+        [style.cy.px]="ringed.cy" />
+    }
+
     @for (pinned of pinnedPoints(); track pinned.index) {
       <svg:g
         dsChartPinMarker
