@@ -116,6 +116,8 @@
 }
 
 .change {
+  --_chart-change-label-color: var(--success-text);
+
   pointer-events: none;
   animation: ds-chart-mark-fade-in var(--ds-motion-chart-state-duration)
     var(--ds-motion-chart-state-easing) backwards;
@@ -138,17 +140,16 @@
   stroke: var(--ds-chart-negative-color);
 }
 
-.change-label {
-  fill: var(--success-text);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  paint-order: stroke;
-  stroke: var(--ds-chart-bg-color);
-  stroke-width: 3px;
+.change.is-falling {
+  --_chart-change-label-color: var(--error-text);
 }
 
-.change.is-falling .change-label {
-  fill: var(--error-text);
+.change-label {
+  fill: var(--_chart-change-label-color);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+
+  @include chart-frame.label-halo;
 }
 
 /* A stroke on the line itself would be clipped by its own dash pattern. */

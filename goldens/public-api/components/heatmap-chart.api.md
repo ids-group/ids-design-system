@@ -24,6 +24,7 @@ export class HeatmapChartComponent extends DsChartBase implements ChartDimmable,
     private readonly domain;
     private readonly flatCells;
     protected readonly highlightedStep = signal<number | null>(…);
+    private readonly host;
     protected isCellDimmed(cell: PlacedCell): boolean;
     protected readonly isEmpty = computed(…);
     protected readonly leaveMark = leaveMark;

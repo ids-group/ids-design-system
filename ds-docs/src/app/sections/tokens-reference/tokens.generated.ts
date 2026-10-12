@@ -4536,6 +4536,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-message-icon-offset",
         "value": "calc((var(--_field-message-font-size) * var(--line-height-base) - var(--icon-sm)) / 2)",
         "notes": "Top offset that centres the 14px glyph on the FIRST line of the message rather than on the whole block, which matters once a message wraps. Defaults to a calc over --ds-field-message-font-size and --line-height-base, so it still holds if the message type is retuned; set a length to override."
+      },
+      {
+        "name": "--ds-field-changed-text-color",
+        "value": "var(--accent-strong)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-field-changed-color",
+        "value": "var(--accent)",
+        "notes": ""
       }
     ]
   },
@@ -8746,6 +8756,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--ds-field-focus-shadow",
     "value": "var(--focus-field)",
     "kind": "color"
+  },
+  {
+    "name": "--ds-motion-chart-scale-marker-delay",
+    "value": "var(--duration-fast)",
+    "kind": "other"
   },
   {
     "name": "--ds-motion-check-enter-duration",

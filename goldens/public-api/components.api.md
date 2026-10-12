@@ -45,6 +45,9 @@ export interface ChartDwell {
 }
 
 // @internal
+export type ChartMotionDelay = 'scale-marker';
+
+// @internal
 export type ChartMotionTiming = 'mark' | 'mark-grow' | 'state' | 'tooltip-move';
 
 // @internal
@@ -321,6 +324,9 @@ export const chartColors = {
     heat7: 'var(--ds-chart-heat-7-color)',
     heat8: 'var(--ds-chart-heat-8-color)',
 } as const;
+
+// @internal
+export function chartDelay(element: Element, delay: ChartMotionDelay): number;
 
 // @internal
 export function chartDwell(delayMs: () => number): ChartDwell;

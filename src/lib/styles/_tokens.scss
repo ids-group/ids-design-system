@@ -159,6 +159,9 @@
   --ds-motion-chart-tooltip-move-duration: 300ms;
   --ds-motion-chart-tooltip-move-easing: var(--ease-standard);
 
+  /* How long the pointer rests on a heatmap cell before the scale marker moves to it; a sweep across the grid leaves it still. */
+  --ds-motion-chart-scale-marker-delay: var(--duration-fast);
+
   --opacity-disabled:        0.5;
   --opacity-text-disabled:   0.38;
   --opacity-scrim:           0.55;

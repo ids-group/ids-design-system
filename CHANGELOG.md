@@ -104,8 +104,8 @@
   new slot when the data is reordered; without an `id` a column is keyed by its label.
 - **Hovering a pie, heatmap or scatter names the mark.** A hovered, focused or held `ds-pie-chart`
   slice fades the centre to its share (its value under `partOfWhole: false`) over its name, and the
-  total comes back when the pointer leaves. Once the pointer has rested 120ms on a
-  `ds-heatmap-chart` cell, a marker over the colour scale prints its reading and glides to its place
+  total comes back when the pointer leaves. Once the pointer has rested on a `ds-heatmap-chart`
+  cell for `--ds-motion-chart-scale-marker-delay` (120ms), a marker over the colour scale prints its reading and glides to its place
   on the ramp; a fast sweep across the grid leaves it still. The scale sits 12px lower to hold it.
   A `ds-scatter-chart` answers with the point nearest the pointer anywhere over the plot, where it
   answered only within 16px of a point: a ring glides to that point and a dashed line runs to it
@@ -175,6 +175,9 @@
 - **A pressed `ds-menu-item` with `error` goes one red step deeper.** It fills with
   `--error-muted` on press, over the `--error-subtitle` hover, the pair a ghost error `ds-button`
   uses; the press showed the hover fill.
+- **A `ds-funnel-chart` stage grows from its centre.** On entrance each stage grows from 96% about
+  its own centre, as a `ds-scatter-chart` point does, so the funnel's axis stands still; it grew
+  right and down from its top-left corner.
 
 - **Every field shows a spinner while its value is checked.** `ds-input`, `ds-textarea`,
   `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker`,
@@ -237,6 +240,11 @@
   drew the closed line where the open table lands, so the page jumped when the data arrived. The
   placeholder now matches the table line, and under `'visible'` draws the open table with a header
   and five rows.
+- **Chart labels share one halo.** A `ds-line-chart` annotation, a reference-line label and the
+  `showChange` percentage draw the same 3px halo in `--ds-chart-bg-color` with rounded joins, and
+  under forced colours each prints in `CanvasText` over a `Canvas` halo; an annotation kept its
+  own colour on a white patch there, and the percentage's halo had sharp corners.
+  `--ds-line-chart-annotation-halo-color` and `-halo-width` still set the annotation's halo.
 
 ### What you can now DELETE
 

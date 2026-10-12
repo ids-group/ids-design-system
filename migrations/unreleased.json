@@ -312,7 +312,7 @@
       "verify": "Hover a slice of a ds-pie-chart and confirm the centre shows its share over its name, and the total once the pointer leaves the ring."
     },
     {
-      "text": "Once the pointer has rested 120ms on a `ds-heatmap-chart` cell, a marker over the colour scale prints its reading and glides to it; the scale sits 12px lower (`margin-block-start` 24px, was 12px) to hold it.",
+      "text": "Once the pointer has rested on a `ds-heatmap-chart` cell for `--ds-motion-chart-scale-marker-delay` (120ms, `0ms` under `prefers-reduced-motion`), a marker over the colour scale prints its reading and glides to it; the scale sits 12px lower (`margin-block-start` 24px, was 12px) to hold it.",
       "verify": "Rest the pointer on a heatmap cell and confirm the marker appears over the scale at its reading, and that the scale clears the grid's last row."
     },
     {
@@ -342,6 +342,14 @@
     {
       "text": "A loading chart holds the height of its data-table line, and under `dataTable=\"visible\"` draws the open table with a header and five rows; `ds-bar-chart` showed no table line while loading.",
       "verify": "Load a ds-bar-chart and a ds-column-chart with dataTable set to toggle and to visible, and confirm the data-table line or open table sits in the same place before and after the data arrives."
+    },
+    {
+      "text": "A `ds-funnel-chart` stage enters growing from 96% about its own centre, as a `ds-scatter-chart` point does; it grew right and down from its top-left corner.",
+      "verify": "Load a ds-funnel-chart and confirm each stage's centre holds still while it grows, with its left and right edges moving outward together."
+    },
+    {
+      "text": "Under forced colours a `ds-line-chart` annotation prints in `CanvasText` over a `Canvas` halo, as a reference-line label does; it kept its own colour on a white patch. `--ds-line-chart-annotation-halo-color` and `--ds-line-chart-annotation-halo-width` still set the halo in normal colours.",
+      "verify": "Turn on Windows high contrast, open a ds-line-chart with annotations and confirm each annotation reads in the system text colour over the system background."
     },
     "`showDirty` (default `false`) on every value field, the `dsShowDirty` directive (`ShowDirtyDirective`) and `DS_CONFIG.field.showDirty` mark a value the user changed with a dot and a \"Changed\" line; off unless one of the three turns it on. The line reads the new optional `DsIntl` key `field.changed`."
   ],

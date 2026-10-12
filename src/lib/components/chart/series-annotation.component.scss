@@ -1,3 +1,4 @@
+@use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/component-base' as component-base;
 @include component-base.rules;
 
@@ -9,13 +10,10 @@
   --_chart-annotation-halo-width: var(--ds-chart-annotation-halo-width, 3px);
 }
 
-/* `paint-order` puts the halo under the glyphs; a stroke over them would thicken the letters. */
 .annotation {
   fill: var(--_chart-annotation-color);
   font-size: var(--_chart-annotation-font-size);
   font-weight: var(--_chart-annotation-font-weight);
-  paint-order: stroke;
-  stroke: var(--_chart-annotation-halo-color);
-  stroke-width: var(--_chart-annotation-halo-width);
-  stroke-linejoin: round;
+
+  @include chart-frame.label-halo(var(--_chart-annotation-halo-color), var(--_chart-annotation-halo-width));
 }

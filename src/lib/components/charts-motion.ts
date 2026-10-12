@@ -68,6 +68,19 @@ export function chartTiming(
   };
 }
 
+/** A chart motion delay, read from `--ds-motion-chart-<delay>-delay`. @internal */
+export type ChartMotionDelay = 'scale-marker';
+
+/** The delay `element` inherits from `--ds-motion-chart-<delay>-delay`, in milliseconds; `0` under
+ *  reduced motion.
+ *
+ *  @internal */
+export function chartDelay(element: Element, delay: ChartMotionDelay): number {
+  return cssDurationMs(
+    getComputedStyle(element).getPropertyValue(`--ds-motion-chart-${delay}-delay`),
+  );
+}
+
 /** Eases `apply` from `from` to `to` on the timing `element` inherits (`--ds-motion-chart-<timing>-*`),
  *  for geometry CSS cannot interpolate. A zero duration, as under reduced motion, applies `to` at once.
  *  `onDone` runs after the last apply, inside this call when there is no motion. Returns the cancel;
