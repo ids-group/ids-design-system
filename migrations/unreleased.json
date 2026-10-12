@@ -158,7 +158,7 @@
       "verify": "Open a ds-time-picker on each screen and confirm the trigger shows the clock the app means: the locale's, or the one `format` or `timePicker.format` pins."
     },
     {
-      "id": "light-brand-tints-follow-primary",
+      "id": "brand-shades-follow-primary",
       "kind": "behavior",
       "old": "--text-link",
       "new": null,
@@ -166,25 +166,32 @@
       "searchHints": [
         "--primary:",
         "--text-link",
+        "--primary-strong",
+        "--primary-muted-strong",
         "--surface-tint",
         "--primary-subtitle",
         "--primary-muted",
         "--blue-50",
         "--blue-100",
+        "--blue-200",
         "--blue-700",
+        "--blue-h",
         "--blue-s",
         "--blue-l",
+        "--primary-h",
         "data-brand"
       ],
-      "action": "None, unless your brand sets `--primary` or `--blue-s/l` in the light theme: check `--text-link` on white and on `--surface-tint` against 4.5:1, and set `--text-link`, `--surface-tint`, `--primary-subtitle` or `--primary-muted` explicitly where the derived value fails or is not the colour you want.",
-      "appliesWhen": "Light theme only. In light, `--text-link`, `--surface-tint`, `--primary-subtitle` and `--primary-muted` were the `--blue-*` steps `--blue-700`, `--blue-50`, `--blue-50` and `--blue-100`; they now take the hue of `--primary` (`hsl(from var(--primary) h 100% 97%)` for both tints, `h 95% 94%` for `--primary-muted`), and `--text-link` is `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))`. The default blue renders the same RGB. A brand that sets them itself keeps its values. The dark theme is unchanged.",
-      "pitfall": "A brand that re-pointed the `--blue-50`, `--blue-100` or `--blue-700` steps without moving `--primary`'s hue no longer reaches them through those steps; and a light brand colour (yellow, lime, cyan) derives a link under 4.5:1 on white with no error anywhere.",
-      "restore": "--text-link: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle: var(--blue-50); --primary-muted: var(--blue-100);",
-      "verify": "With the brand applied in the light theme, a link reads at least 4.5:1 on white and on an active list row, and the active row, the selected dropdown option and tonal fills are tinted in the brand hue or set deliberately.",
+      "action": "None, unless your brand sets `--primary`, `--primary-h` or `--blue-h/s/l`: check `--text-link` and `--primary-strong` against 4.5:1 on white and on `--surface-tint` in light, the text on each tint in dark, and set `--text-link`, `--primary-strong`, `--surface-tint`, `--primary-subtitle`, `--primary-muted` or `--primary-muted-strong` explicitly where the derived value fails or is not the colour you want.",
+      "appliesWhen": "In light, `--text-link`, `--primary-strong`, `--surface-tint`, `--primary-subtitle`, `--primary-muted` and `--primary-muted-strong` were the `--blue-*` steps `--blue-700`, `--blue-700`, `--blue-50`, `--blue-50`, `--blue-100` and `--blue-200`; they now take the hue of `--primary` (`hsl(from var(--primary) h 100% 97%)` for both tints, `h 95% 94%` for `--primary-muted`, `h 95% 89%` for `--primary-muted-strong`), and `--text-link` and `--primary-strong` are `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))`. In dark, `--surface-tint`, `--primary-subtitle`, `--primary-muted`, `--primary-muted-strong` and `--primary-strong` were `hsl(var(--primary-h) …)` and are `hsl(from var(--primary) …)` at the same saturation and lightness. The default blue renders the same RGB. A brand that sets them itself keeps its values. The dark `--text-link`, `--link-visited`, the focus ring and the field halo are unchanged and read `--primary-h/s/l`.",
+      "pitfall": "A brand that re-pointed the `--blue-50`, `--blue-100`, `--blue-200` or `--blue-700` steps, or `--primary-h` in dark, without moving `--primary`'s hue no longer reaches these tokens through them; a light brand colour (yellow, lime, cyan) derives a link and on-tint text under 4.5:1 on white; and an achromatic `--primary` (black, gray) has no hue, so the tints turn pink in light and dark red in dark, with no error anywhere.",
+      "restore": "--text-link: var(--blue-700); --primary-strong: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle: var(--blue-50); --primary-muted: var(--blue-100); --primary-muted-strong: var(--blue-200); and under [data-theme='dark']: --surface-tint: hsl(var(--primary-h) 45% 16%); --primary-subtitle: hsl(var(--primary-h) 45% 18%); --primary-muted: hsl(var(--primary-h) 40% 26%); --primary-muted-strong: hsl(var(--primary-h) 42% 32%); --primary-strong: hsl(var(--primary-h) 90% 72%);",
+      "verify": "With the brand applied in each theme it ships, a link and the label of a selected tag, tab or list row read at least 4.5:1 on their background, and the active row, the selected dropdown option, tonal fills and the text on them are in the brand hue or set deliberately.",
       "evidence": [
         "tokens:--surface-tint",
         "tokens:--primary-subtitle",
         "tokens:--primary-muted",
+        "tokens:--primary-muted-strong",
+        "tokens:--primary-strong",
         "tokens:--text-link"
       ]
     }
