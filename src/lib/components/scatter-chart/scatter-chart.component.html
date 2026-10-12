@@ -14,7 +14,8 @@
   [emptyText]="emptyTextResolved()"
   [skeleton]="skeleton"
   [body]="body"
-  (release)="activeMark.release()"></figure>
+  (release)="activeMark.release()">
+</figure>
 
 <ng-template #skeleton>
   <div
@@ -120,6 +121,7 @@
 
       <g
         [class.is-dimmed]="
+          dimOthers() &&
           highlightedSeries() !== null &&
           highlightedSeries() !== entry.series.id
         "
@@ -138,6 +140,7 @@
             "
             [attr.cx]="mark.cx"
             [attr.cy]="mark.cy"
+            [style.--_chart-mark-stagger]="pointStagger(mark.cx)"
             [attr.role]="interactive() ? 'button' : null"
             [attr.tabindex]="interactive() ? 0 : null"
             [attr.data-mark-index]="start + index"
@@ -147,6 +150,27 @@
             (animate.leave)="leaveMark($event)" />
         }
       </g>
+    }
+
+    @if (ringedMark(); as ringed) {
+      @if (pointer(); as at) {
+        @if (!activeMark.pinned()) {
+          <line
+            #tether
+            class="nearest-tether"
+            [attr.x1]="at.x"
+            [attr.y1]="at.y"
+            [attr.x2]="ringed.cx"
+            [attr.y2]="ringed.cy" />
+        }
+      }
+
+      <circle
+        #ring
+        class="nearest-ring"
+        dsChartPlaced
+        [style.cx.px]="ringed.cx"
+        [style.cy.px]="ringed.cy" />
     }
 
     @for (pinned of pinnedPoints(); track pinned.index) {

@@ -190,7 +190,6 @@
           [class.is-pinned]="
             activeMark.pinned() && activeMark.index() === index
           "
-          [class.is-dimmed]="isDimmed(index)"
           [class.focusable]="ringCarriesTheRoute()"
           [attr.d]="entry.path"
           [style.fill]="entry.color"
@@ -236,15 +235,19 @@
 
 <ng-template #centerContent>
   <span
-    #centerValue
-    class="center-value"
-    [style.font-size.px]="centerFontSize()">
-    {{ centerText() }}
-  </span>
-
-  @if (centerLabel()) {
-    <span class="center-label">
-      {{ centerLabel() }}
+    #centerSwap
+    class="center-swap">
+    <span
+      #centerValue
+      class="center-value"
+      [style.font-size.px]="centerFontSize()">
+      {{ centerText() }}
     </span>
-  }
+
+    @if (shownCenterLabel()) {
+      <span class="center-label">
+        {{ shownCenterLabel() }}
+      </span>
+    }
+  </span>
 </ng-template>

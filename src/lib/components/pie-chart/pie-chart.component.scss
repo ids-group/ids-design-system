@@ -130,6 +130,11 @@
   pointer-events: none;
 }
 
+.center-swap {
+  display: grid;
+  justify-items: center;
+}
+
 // Halo of the frame background for text overhanging several hues.
 .center-value,
 .center-label {
@@ -172,6 +177,8 @@
 }
 
 .legend {
+  --_legend-row-gap: var(--_pie-chart-legend-row-gap);
+
   margin: 0;
   padding: 0;
   list-style: none;
@@ -233,7 +240,8 @@
   '.legend-item',
   var(--_pie-chart-legend-hover-bg-color),
   var(--_pie-chart-legend-hover-text-color),
-  '.legend-label'
+  '.legend-label',
+  $covers-gap: true
 );
 
 .legend-item.interactive,
@@ -262,9 +270,11 @@
 }
 
 .legend-bottom .legend {
+  --_legend-column-gap: var(--space-4);
+
   display: flex;
   flex-wrap: wrap;
-  gap: var(--_pie-chart-legend-row-gap) var(--space-4);
+  gap: var(--_legend-row-gap) var(--_legend-column-gap);
 }
 
 .legend-bottom .legend-item {

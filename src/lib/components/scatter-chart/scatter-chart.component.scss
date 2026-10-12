@@ -118,6 +118,28 @@
   @include chart-frame.drawn-focus-ring;
 }
 
+// Neither takes the pointer: hover reads the nearest point from the canvas.
+.nearest-ring {
+  r: calc(var(--_scatter-chart-dot-radius) + var(--space-1));
+  fill: none;
+  stroke: var(--text-primary);
+  stroke-width: 1.5;
+  pointer-events: none;
+
+  &.placed {
+    transition:
+      cx var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing),
+      cy var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
+  }
+}
+
+.nearest-tether {
+  stroke: var(--ds-chart-cursor-line-color);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  pointer-events: none;
+}
+
 .thinned {
   margin-block: var(--space-2) 0;
   color: var(--text-secondary);
