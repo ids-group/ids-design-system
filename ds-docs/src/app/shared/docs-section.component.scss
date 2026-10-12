@@ -2,6 +2,7 @@
 // `dl.spec` for term and value, `<kbd>` for a key. Each sits in `:where()` so a section's own
 // scoped rule overrides it without raising specificity.
 @use 'styles/breakpoints' as bp;
+@use '../../styles/chart-editor-disclosure' as chart-editor-disclosure;
 
 :host {
   display: block;
@@ -37,15 +38,19 @@
   margin-top: var(--space-3);
 }
 
+@include chart-editor-disclosure.disclosure;
+
 /* One row for the aggregator and the item it holds: `<ds-description-list>` and
    `<ds-description-item>` name one subject, and reading them apart made the item look like a
    second component documented further down. */
-.tagrow {
-  display: flex;
-  flex-wrap: wrap;
+.tagrow > .body {
+  flex-flow: row wrap;
   align-items: center;
-  gap: var(--space-2);
-  margin-top: var(--space-4);
+}
+.summary {
+  color: var(--text-secondary);
+  margin-top: var(--space-2);
+  max-width: var(--col-cap-text);
 }
 
 // Edge cases open on demand. They are the longest block on every chart page and the least often
