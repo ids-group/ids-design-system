@@ -739,11 +739,83 @@
   .pcv-label { color: var(--text-tertiary); font-size: 12px; }
   .pcv-nowrap .pcv-value { white-space: nowrap; }
   .pcv-below { text-align: center; font-family: var(--font-sans); font-weight: 700; font-size: 22px; color: var(--text-primary); }
+  /* group: chart choices agents made alone - every model loops on one 4s clock */
+  .ag-svg { inline-size: 100%; max-inline-size: 230px; block-size: auto; display: block; overflow: visible; }
+  .ag-svg text { font: 8px var(--font-sans); fill: var(--text-tertiary); }
+  .ag-svg text.ag-strong { font-weight: var(--font-weight-bold); fill: var(--text-primary); }
+  .ag-svg .ag-base { stroke: var(--border-strong); stroke-width: 1; }
+  .ag-svg .ag-grid { stroke: var(--border-divider); stroke-width: 1; }
+  .ag-svg .ag-guide { stroke: var(--text-tertiary); stroke-width: 1; stroke-dasharray: 3 2; }
+  .ag-svg .ag-pill { fill: var(--neutral-800); }
+  .ag-svg text.ag-pill-text { fill: var(--surface-default); font-weight: var(--font-weight-bold); }
+  .ag-c1 { fill: var(--chart-categorical-3); }
+  .ag-c2 { fill: var(--chart-categorical-2); }
+  .ag-c3 { fill: var(--chart-categorical-1); }
+  .ag-line { fill: none; stroke: var(--chart-categorical-3); stroke-width: 2; }
+  .ag-rise { fill: none; stroke: var(--success); stroke-width: 4; stroke-linecap: round; }
+  .ag-svg text.ag-rise-text { fill: var(--success-text); font-weight: var(--font-weight-bold); }
+  .ag-dot { fill: var(--surface-default); stroke: var(--chart-categorical-3); stroke-width: 2; }
+  .ag-dim { opacity: var(--ds-chart-dim-opacity); }
+  .ag-ring { fill: none; stroke: var(--text-primary); stroke-width: 1.5; }
+  .ag-tether { stroke: var(--text-primary); stroke-width: 1; stroke-dasharray: 2 2; }
+  .ag-reach { fill: var(--primary-subtitle); stroke: var(--primary); stroke-width: .75; stroke-dasharray: 2 2; }
+  .ag-pointer { fill: var(--text-primary); }
+  .ag-loop { animation: ag-loop 4s linear infinite; }
+  .ag-move, .ag-grow, .ag-fade { animation: 4s var(--ease-standard) infinite; }
+  .ag-move { animation-name: ag-move; }
+  .ag-grow { animation-name: ag-grow; transform-box: fill-box; transform-origin: bottom; }
+  .ag-fade { animation-name: ag-fade; }
+  .ag-fade.ag-in { animation-name: ag-in; }
+  @keyframes ag-loop { 0% { opacity: 0; } 6%, 92% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes ag-move { 0%, 20% { transform: translate(0, 0); } 55%, 100% { transform: translate(var(--dx, 0px), var(--dy, 0px)); } }
+  @keyframes ag-grow { 0%, 20% { transform: scaleY(1); } 55%, 100% { transform: scaleY(var(--sy, 1)); } }
+  @keyframes ag-fade { 0%, 20% { opacity: 1; } 55%, 100% { opacity: 0; } }
+  @keyframes ag-in { 0%, 20% { opacity: 0; } 55%, 100% { opacity: 1; } }
+  .ag-sweep { animation: ag-sweep 4s linear infinite; }
+  @keyframes ag-sweep { 0% { transform: translateX(0); } 40%, 100% { transform: translateX(115px); } }
+  .ag-hold { animation: ag-hold 4s var(--ease-standard) infinite; }
+  @keyframes ag-hold { 0%, 43% { transform: translateX(0); } 50%, 100% { transform: translateX(var(--dx, 0px)); } }
+  .ag-jitter { animation: ag-jitter 4s steps(1, end) infinite; }
+  @keyframes ag-jitter { 0% { transform: translateX(0); } 8% { transform: translateX(96px); } 16% { transform: translateX(24px); } 24% { transform: translateX(132px); } 32% { transform: translateX(60px); } 40%, 100% { transform: translateX(110px); } }
+  @media (prefers-reduced-motion: reduce) {
+    .ag-loop, .ag-move, .ag-grow, .ag-fade, .ag-sweep, .ag-hold, .ag-jitter { animation: none; }
+  }
+  .ag-heat { display: grid; gap: var(--space-1); min-inline-size: 0; }
+  .ag-cells { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; inline-size: 168px; }
+  .ag-cells i { block-size: 14px; border-radius: 2px; }
+  .ag-ramp { position: relative; inline-size: 168px; block-size: 8px; border-radius: 2px; background: linear-gradient(90deg, var(--chart-sequential-6), var(--chart-sequential-1)); }
+  .ag-marker { position: absolute; inset-block-end: 10px; inset-inline-start: 0; translate: -50% 0; padding: 0 var(--space-1); border-radius: 3px; background: var(--neutral-800); color: var(--surface-default); font: var(--font-weight-bold) 9px / 14px var(--font-mono); white-space: nowrap; }
+  .ag-marker.ag-over { inset-block-end: -3px; }
+  .ag-gap { position: relative; }
+  .ag-gap-mark { position: absolute; inset-inline-end: -4px; inset-block-start: 0; block-size: 100%; border-inline-end: 2px solid var(--error); }
+  .ag-heat-row { position: relative; display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; inline-size: 168px; }
+  .ag-heat-row i { block-size: 18px; border-radius: 2px; }
+  .ag-heat-row .ag-cursor { position: absolute; inset-block-start: 4px; inset-inline-start: 6px; inline-size: 10px; block-size: 10px; border-radius: 50%; background: var(--text-primary); box-shadow: 0 0 0 2px var(--surface-default); }
+  .ag-heat-scale { position: relative; inline-size: 168px; block-size: 26px; }
+  .ag-heat-scale .ag-ramp { position: absolute; inset-block-end: 0; }
+  .ag-heat-scale .ag-marker { inset-block-end: 10px; inset-inline-start: 6px; translate: none; }
+  .ag-legend { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-1) 0 0; font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
+  .ag-legend span { display: inline-flex; align-items: center; gap: 3px; padding: 0 3px; border-radius: 3px; }
+  .ag-legend span.ag-hover { background: var(--surface-secondary); color: var(--text-primary); font-weight: var(--font-weight-bold); }
+  .ag-legend i { inline-size: 8px; block-size: 8px; border-radius: 2px; }
+  .ag-pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+  .ag-pair .cap { margin: 0; font-size: var(--font-size-3xs); }
+  .ag-pie { position: relative; inline-size: 92px; block-size: 92px; border-radius: 50%; margin-inline: auto;
+    background: conic-gradient(var(--chart-categorical-3) 0 42%, var(--chart-categorical-2) 0 70%, var(--chart-categorical-1) 0 88%, var(--chart-categorical-4) 0); }
+  .ag-pie::before { content: ""; position: absolute; inset: 20%; border-radius: 50%; background: var(--surface-default); }
+  .ag-pie span { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; font: var(--font-weight-bold) 13px / 1.1 var(--font-sans); color: var(--text-primary); }
+  .ag-pie small { font: var(--font-size-3xs) var(--font-sans); color: var(--text-tertiary); }
+  .ag-cost { margin: 0; font: var(--font-size-2xs) / 1.45 var(--font-sans); color: var(--text-secondary); }
+  .ag-cost b { color: var(--text-primary); }
+  .ag-err { color: var(--error-text); font-weight: var(--font-weight-bold); }
+  .ag-ok { color: var(--success-text); font-weight: var(--font-weight-bold); }
+  [data-q^="ag-"] .opt .css { white-space: pre-wrap; }
+  [data-q^="ag-"] .opt > .badge { align-self: flex-start; }
 </style>
 
 <main>
   <div class="masthead">
-    <h1>7 асков консьюмеров и 36 решений, каждое с нарисованными вариантами</h1>
+    <h1>5 асков консьюмеров и 46 решений, каждое с нарисованными вариантами</h1>
     <p class="lede">
       Сверху - всё, чего ждёт консьюмер: фиксы, хуки и фичи из бэклога, каждый показан как есть
       сейчас и как будет после. Ниже - открытые деки и бакет <code>Decisions</code>. Вариант
@@ -2306,6 +2378,374 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
     <div class="opts">
       <div class="opt"><h3>Оставить рост</h3><p class="says">шаг до 51</p><p>Как в ветке.</p></div>
       <div class="opt"><h3>Убрать рост у ступеней</h3><p class="says">только проявление</p><p>Шага нет.</p></div>
+    </div>
+  </section>
+
+  <p class="group">Графики: решено агентами без тебя</p>
+
+  <section class="q" data-q="ag-duplicate-labels">
+    <div class="q-head">
+      <span class="q-num">40</span>
+      <h2 class="q-title">Две колонки с меткой «Jan»: при удалении первой едет не та</h2>
+      <span class="q-src">chart.math.ts:426 · column-series.component.ts:437 · 0e868e686</span>
+    </div>
+    <p class="q-sub">Колонка без <code>id</code> берёт ключ из метки, повтор метки получает номер: <code>Jan</code>, <code>Feb</code>, <code>Jan#1</code>. Тот же ключ у подписей категорий и точек линии (<code>chart.component.ts:1522</code>, <code>line-series.component.ts:351</code>). В CHANGELOG написано «keyed by its label», номер повтора не упомянут. Подпись под колонкой ниже - чья это колонка в DOM.</p>
+    <div class="stage">
+      <div class="spec"><p class="cap">данные до</p><p class="css">[{ label: 'Jan', value: 30 },  // 2025
+ { label: 'Feb', value: 50 },
+ { label: 'Jan', value: 90 }]  // 2026</p></div>
+      <div class="spec"><p class="cap">данные после</p><p class="css">[{ label: 'Feb', value: 50 },
+ { label: 'Jan', value: 90 }]  // 2026</p></div>
+      <div class="spec"><p class="cap">замер в ds-docs, column-chart</p><p class="says" style="white-space:pre-line">ключи до: Jan · Feb · Jan#1
+ключи после: Feb · Jan
+Jan: x 503 → 801, высота 125 → 200
+Jan#1: mark-leave, гаснет</p></div>
+    </div>
+    <div class="opts">
+      <div class="opt is-today"><h3>Метка + номер повтора</h3><span class="badge is-same">сейчас в dev</span>
+        <svg class="ag-svg" viewBox="0 0 160 86" aria-hidden="true"><g class="ag-loop">
+          <line class="ag-base" x1="4" y1="70" x2="156" y2="70"/>
+          <g class="ag-move" style="--dx:85px"><rect class="ag-c1 ag-grow" style="--sy:3" x="22" y="52" width="16" height="18"/><text x="30" y="81" text-anchor="middle">Jan ’25</text></g>
+          <g class="ag-move" style="--dx:-35px"><rect class="ag-c1" x="72" y="40" width="16" height="30"/><text x="80" y="81" text-anchor="middle">Feb</text></g>
+          <g class="ag-fade"><rect class="ag-c1" x="122" y="16" width="16" height="54"/><text x="130" y="81" text-anchor="middle">Jan ’26</text></g>
+        </g></svg>
+        <p class="ag-cost">Колонка 2025 года переезжает через Feb и становится 2026-м, настоящая 2026 гаснет. <b>Цена:</b> 0 правок.</p></div>
+      <div class="opt"><h3>По индексу</h3>
+        <svg class="ag-svg" viewBox="0 0 160 86" aria-hidden="true"><g class="ag-loop">
+          <line class="ag-base" x1="4" y1="70" x2="156" y2="70"/>
+          <g class="ag-move" style="--dx:15px"><rect class="ag-c1 ag-grow" style="--sy:1.667" x="22" y="52" width="16" height="18"/><text x="30" y="81" text-anchor="middle">Jan ’25</text></g>
+          <g class="ag-move" style="--dx:35px"><rect class="ag-c1 ag-grow" style="--sy:1.8" x="72" y="40" width="16" height="30"/><text x="80" y="81" text-anchor="middle">Feb</text></g>
+          <g class="ag-fade"><rect class="ag-c1" x="122" y="16" width="16" height="54"/><text x="130" y="81" text-anchor="middle">Jan ’26</text></g>
+        </g></svg>
+        <p class="ag-cost">Никто не пересекается, но каждая колонка меняет высоту; сортировка без <code>id</code> перестаёт ехать. <b>Цена:</b> пропадает переезд по метке.</p></div>
+      <div class="opt"><h3>Как сейчас + предупреждение без id <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <svg class="ag-svg" viewBox="0 0 160 86" aria-hidden="true"><g class="ag-loop">
+          <line class="ag-base" x1="4" y1="70" x2="156" y2="70"/>
+          <g class="ag-fade"><rect class="ag-c1" x="22" y="52" width="16" height="18"/><text x="30" y="81" text-anchor="middle">Jan ’25</text></g>
+          <g class="ag-move" style="--dx:-35px"><rect class="ag-c1" x="72" y="40" width="16" height="30"/><text x="80" y="81" text-anchor="middle">Feb</text></g>
+          <g class="ag-move" style="--dx:-15px"><rect class="ag-c1" x="122" y="16" width="16" height="54"/><text x="130" y="81" text-anchor="middle">Jan ’26</text></g>
+        </g></svg>
+        <p class="console">[ds-column-chart] label "Jan" repeats; pass id to keep each column</p>
+        <p class="ag-cost">С <code>id</code> едет верно (нарисовано); без него ключ как сейчас и строка в консоли в dev. <b>Цена:</b> одна проверка в dev.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-hide-rescale">
+    <div class="q-head">
+      <span class="q-num">41</span>
+      <h2 class="q-title">Скрыл серию в легенде: колонки перемасштабируют ось, линия нет</h2>
+      <span class="q-src">column-chart.component.ts:291 · line-chart.component.ts:242 · a89b2eaec</span>
+    </div>
+    <p class="q-sub"><code>ds-column-chart</code> считает скрытую серию нулями, и ось подстраивается под оставшееся всегда. У <code>ds-line-chart</code> есть <code>rescaleOnHide</code>, по умолчанию <code>false</code>: ось стоит. Модель: скрыта серия Fact (бирюзовая).</p>
+    <div class="opts">
+      <div class="opt is-today"><h3>Колонки всегда подстраивают</h3><span class="badge is-same">сейчас в dev</span>
+        <svg class="ag-svg" viewBox="0 0 160 80" aria-hidden="true"><g class="ag-loop">
+          <line class="ag-grid" x1="24" y1="10" x2="156" y2="10"/><line class="ag-base" x1="24" y1="70" x2="156" y2="70"/>
+          <text class="ag-fade" x="20" y="13" text-anchor="end">100</text><text class="ag-fade ag-in" x="20" y="13" text-anchor="end">60</text><text x="20" y="73" text-anchor="end">0</text>
+          <rect class="ag-c1 ag-grow" style="--sy:1.667" x="37" y="46" width="12" height="24"/><rect class="ag-c1 ag-grow" style="--sy:1.667" x="77" y="34" width="12" height="36"/><rect class="ag-c1 ag-grow" style="--sy:1.667" x="117" y="40" width="12" height="30"/>
+          <rect class="ag-c2 ag-grow" style="--sy:0" x="51" y="22" width="12" height="48"/><rect class="ag-c2 ag-grow" style="--sy:0" x="91" y="10" width="12" height="60"/><rect class="ag-c2 ag-grow" style="--sy:0" x="131" y="16" width="12" height="54"/>
+        </g></svg>
+        <p class="ag-cost">Plan растёт до верха. <b>Цена:</b> колонки и линии ведут себя по-разному.</p></div>
+      <div class="opt"><h3>rescaleOnHide, ось стоит <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <svg class="ag-svg" viewBox="0 0 160 80" aria-hidden="true"><g class="ag-loop">
+          <line class="ag-grid" x1="24" y1="10" x2="156" y2="10"/><line class="ag-base" x1="24" y1="70" x2="156" y2="70"/>
+          <text x="20" y="13" text-anchor="end">100</text><text x="20" y="73" text-anchor="end">0</text>
+          <rect class="ag-c1" x="37" y="46" width="12" height="24"/><rect class="ag-c1" x="77" y="34" width="12" height="36"/><rect class="ag-c1" x="117" y="40" width="12" height="30"/>
+          <rect class="ag-c2 ag-grow" style="--sy:0" x="51" y="22" width="12" height="48"/><rect class="ag-c2 ag-grow" style="--sy:0" x="91" y="10" width="12" height="60"/><rect class="ag-c2 ag-grow" style="--sy:0" x="131" y="16" width="12" height="54"/>
+        </g></svg>
+        <p class="ag-cost">Как у линии: Plan стоит, Fact уходит. <b>Цена:</b> новый вход у ds-column-chart, поведение колонок меняется.</p></div>
+      <div class="opt"><h3>rescaleOnHide, ось подстраивается</h3>
+        <svg class="ag-svg" viewBox="0 0 160 80" aria-hidden="true"><g class="ag-loop">
+          <line class="ag-grid" x1="24" y1="10" x2="156" y2="10"/><line class="ag-base" x1="24" y1="70" x2="156" y2="70"/>
+          <text class="ag-fade" x="20" y="13" text-anchor="end">100</text><text class="ag-fade ag-in" x="20" y="13" text-anchor="end">60</text><text x="20" y="73" text-anchor="end">0</text>
+          <rect class="ag-c1 ag-grow" style="--sy:1.667" x="37" y="46" width="12" height="24"/><rect class="ag-c1 ag-grow" style="--sy:1.667" x="77" y="34" width="12" height="36"/><rect class="ag-c1 ag-grow" style="--sy:1.667" x="117" y="40" width="12" height="30"/>
+          <rect class="ag-c2 ag-grow" style="--sy:0" x="51" y="22" width="12" height="48"/><rect class="ag-c2 ag-grow" style="--sy:0" x="91" y="10" width="12" height="60"/><rect class="ag-c2 ag-grow" style="--sy:0" x="131" y="16" width="12" height="54"/>
+        </g></svg>
+        <p class="ag-cost">Вход на обоих, по умолчанию <code>true</code>. <b>Цена:</b> у ds-line-chart меняется умолчание.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-readout-switch">
+    <div class="q-head">
+      <span class="q-num">42</span>
+      <h2 class="q-title">Отклик оси на наведение не выключается</h2>
+      <span class="q-src">chart.component.ts:1146 · chart.component.html:174 · 6502f09e0</span>
+    </div>
+    <p class="q-sub">В <code>ds-chart</code>, <code>ds-column-chart</code>, <code>ds-line-chart</code>, <code>ds-waterfall-chart</code>: жирная подпись категории, пунктир от оси и пилюля на оси. Входа, который это выключает, нет. Сам отклик выбран в деке chart-motion-extras; выключатель и умолчание - нет.</p>
+    <div class="opts">
+      <div class="opt is-today"><h3>Всегда, без выключателя</h3><span class="badge is-same">сейчас в dev</span>
+        <svg class="ag-svg" viewBox="-14 0 184 86" aria-hidden="true">
+          <text x="30" y="13" text-anchor="end">2M</text><text x="30" y="43" text-anchor="end">1M</text><text x="30" y="73" text-anchor="end">0</text>
+          <line class="ag-grid" x1="34" y1="10" x2="164" y2="10"/><line class="ag-grid" x1="34" y1="40" x2="164" y2="40"/><line class="ag-base" x1="34" y1="70" x2="164" y2="70"/>
+          <rect class="ag-c1" x="47" y="46" width="16" height="24"/><rect class="ag-c1" x="77" y="22" width="16" height="48"/><rect class="ag-c1" x="107" y="33" width="16" height="37"/><rect class="ag-c1" x="137" y="52" width="16" height="18"/>
+          <line class="ag-guide" x1="34" y1="33" x2="123" y2="33"/>
+          <rect class="ag-pill" x="-12" y="27" width="44" height="12" rx="3"/><text class="ag-pill-text" x="10" y="36" text-anchor="middle">1,234,567</text>
+          <text x="55" y="81" text-anchor="middle">Jan</text><text x="85" y="81" text-anchor="middle">Feb</text><text class="ag-strong" x="115" y="81" text-anchor="middle">Mar</text><text x="145" y="81" text-anchor="middle">Apr</text>
+        </svg>
+        <p class="ag-cost"><b>Цена:</b> экрану, где это лишнее, выключить нечем.</p></div>
+      <div class="opt"><h3>Вкл, вход для выключения <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <svg class="ag-svg" viewBox="-14 0 184 86" aria-hidden="true">
+          <text x="30" y="13" text-anchor="end">2M</text><text x="30" y="43" text-anchor="end">1M</text><text x="30" y="73" text-anchor="end">0</text>
+          <line class="ag-grid" x1="34" y1="10" x2="164" y2="10"/><line class="ag-grid" x1="34" y1="40" x2="164" y2="40"/><line class="ag-base" x1="34" y1="70" x2="164" y2="70"/>
+          <rect class="ag-c1" x="47" y="46" width="16" height="24"/><rect class="ag-c1" x="77" y="22" width="16" height="48"/><rect class="ag-c1" x="107" y="33" width="16" height="37"/><rect class="ag-c1" x="137" y="52" width="16" height="18"/>
+          <line class="ag-guide" x1="34" y1="33" x2="123" y2="33"/>
+          <rect class="ag-pill" x="-12" y="27" width="44" height="12" rx="3"/><text class="ag-pill-text" x="10" y="36" text-anchor="middle">1,234,567</text>
+          <text x="55" y="81" text-anchor="middle">Jan</text><text x="85" y="81" text-anchor="middle">Feb</text><text class="ag-strong" x="115" y="81" text-anchor="middle">Mar</text><text x="145" y="81" text-anchor="middle">Apr</text>
+        </svg>
+        <dl class="layer"><dt>Выключить</dt><dd><code>[axisReadout]="false"</code> - имя для примера</dd></dl>
+        <p class="ag-cost"><b>Цена:</b> один вход на четырёх графиках.</p></div>
+      <div class="opt"><h3>Выкл по умолчанию</h3>
+        <svg class="ag-svg" viewBox="-14 0 184 86" aria-hidden="true">
+          <text x="30" y="13" text-anchor="end">2M</text><text x="30" y="43" text-anchor="end">1M</text><text x="30" y="73" text-anchor="end">0</text>
+          <line class="ag-grid" x1="34" y1="10" x2="164" y2="10"/><line class="ag-grid" x1="34" y1="40" x2="164" y2="40"/><line class="ag-base" x1="34" y1="70" x2="164" y2="70"/>
+          <rect class="ag-c1" x="47" y="46" width="16" height="24"/><rect class="ag-c1" x="77" y="22" width="16" height="48"/><rect class="ag-c1" x="107" y="33" width="16" height="37"/><rect class="ag-c1" x="137" y="52" width="16" height="18"/>
+          <text x="55" y="81" text-anchor="middle">Jan</text><text x="85" y="81" text-anchor="middle">Feb</text><text x="115" y="81" text-anchor="middle">Mar</text><text x="145" y="81" text-anchor="middle">Apr</text>
+        </svg>
+        <p class="ag-cost">Как до Unreleased, включается входом. <b>Цена:</b> выбранный в деке отклик видят только те, кто включил.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-readout-format">
+    <div class="q-head">
+      <span class="q-num">43</span>
+      <h2 class="q-title">Пилюля на оси печатает полное число, а тики - короткое</h2>
+      <span class="q-src">chart.component.ts:1168 · charts-format.ts:27 · 6502f09e0</span>
+    </div>
+    <p class="q-sub">Пилюля берёт <code>valueFormat(value, 'tooltip')</code>; тик берёт <code>'tick'</code>, встроенный формат там компактный (<code>1.2M</code>). Пилюля стоит поверх подписей тиков.</p>
+    <div class="opts">
+      <div class="opt is-today"><h3>Полное число</h3><span class="badge is-same">сейчас в dev</span>
+        <svg class="ag-svg" style="max-inline-size:130px" viewBox="-14 0 100 50" aria-hidden="true">
+          <text x="30" y="8" text-anchor="end">2M</text><text x="30" y="44" text-anchor="end">1M</text>
+          <line class="ag-guide" x1="34" y1="22" x2="84" y2="22"/>
+          <rect class="ag-pill" x="-12" y="16" width="44" height="12" rx="3"/><text class="ag-pill-text" x="10" y="25" text-anchor="middle">1,234,567</text>
+        </svg>
+        <p class="ag-cost">Точно, повторяет панель подсказки. <b>Цена:</b> пилюля шире колонки тиков.</p></div>
+      <div class="opt"><h3>Как тики <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <svg class="ag-svg" style="max-inline-size:130px" viewBox="-14 0 100 50" aria-hidden="true">
+          <text x="30" y="8" text-anchor="end">2M</text><text x="30" y="44" text-anchor="end">1M</text>
+          <line class="ag-guide" x1="34" y1="22" x2="84" y2="22"/>
+          <rect class="ag-pill" x="10" y="16" width="22" height="12" rx="3"/><text class="ag-pill-text" x="21" y="25" text-anchor="middle">1.2M</text>
+        </svg>
+        <p class="ag-cost">Читается одной шкалой с осью. <b>Цена:</b> точное число только в панели.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-show-change">
+    <div class="q-head">
+      <span class="q-num">44</span>
+      <h2 class="q-title">«Изменение к прошлой точке» включено по умолчанию</h2>
+      <span class="q-src">line-series.component.ts:213 · line-chart.component.ts:268 · 50b5c54fa</span>
+    </div>
+    <p class="q-sub"><code>showChange</code> = <code>true</code> на <code>dsLineSeries</code> и <code>ds-line-chart</code>. При нескольких сериях показывается только у выделенной наведением, фокусом или легендой; без выделения - нигде (<code>line-series.component.ts:785</code>). Для сравнения: <code>selectRange</code> из той же деки выключен по умолчанию.</p>
+    <div class="opts">
+      <div class="opt is-today"><h3>Вкл по умолчанию</h3><span class="badge is-same">сейчас в dev</span>
+        <svg class="ag-svg" viewBox="0 0 180 80" aria-hidden="true">
+          <line class="ag-base" x1="10" y1="70" x2="170" y2="70"/>
+          <polyline class="ag-line" points="20,30 55,15 90,25 125,19.6 160,23"/>
+          <line class="ag-rise" x1="90" y1="25" x2="125" y2="19.6"/>
+          <text class="ag-rise-text" x="107" y="11" text-anchor="middle">+12%</text>
+          <circle class="ag-dot" cx="125" cy="19.6" r="4"/>
+        </svg>
+        <p class="ag-cost"><b>Цена:</b> у каждого линейного графика новый рисунок без запроса.</p></div>
+      <div class="opt"><h3>Выкл по умолчанию <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <svg class="ag-svg" viewBox="0 0 180 80" aria-hidden="true">
+          <line class="ag-base" x1="10" y1="70" x2="170" y2="70"/>
+          <polyline class="ag-line" points="20,30 55,15 90,25 125,19.6 160,23"/>
+          <circle class="ag-dot" cx="125" cy="19.6" r="4"/>
+        </svg>
+        <p class="ag-cost">Включается <code>showChange</code>, как <code>selectRange</code>. <b>Цена:</b> ломающее для тех, кто уже видел.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-hover-switches">
+    <div class="q-head">
+      <span class="q-num">45</span>
+      <h2 class="q-title">Центр pie, метка на шкале heatmap, ближайшая точка scatter: не выключаются</h2>
+      <span class="q-src">pie-chart.component.ts:441 · heatmap-chart.component.ts:156 · scatter-chart.component.ts:481 · 30e6a5bb1 · f4fa4867b · 46a912b46</span>
+    </div>
+    <p class="q-sub">Все три включены всегда; <code>staggerMs="0"</code> выключает только поочерёдное появление. Центр pie при наведении заменяет и заданный потребителем <code>centerValue</code>/<code>centerLabel</code> (<code>pie-chart.component.ts:479</code>). Сами отклики выбраны в деке chart-motion-extras; выключатель - нет.</p>
+    <div class="stage">
+      <div class="spec"><p class="cap">pie: наведён Europe</p><div class="ag-pie"><span>42%<small>Europe</small></span></div></div>
+      <div class="spec"><p class="cap">heatmap: метка на шкале</p><div class="ag-heat-scale"><div class="ag-ramp"></div><span class="ag-marker" style="inset-inline-start:110px">618</span></div></div>
+      <div class="spec"><p class="cap">scatter: кольцо и пунктир</p><svg class="ag-svg" viewBox="0 0 120 60" aria-hidden="true"><circle class="ag-c1" cx="30" cy="20" r="3"/><circle class="ag-c1" cx="60" cy="42" r="3"/><circle class="ag-c1" cx="90" cy="28" r="3"/><circle class="ag-ring" cx="90" cy="28" r="6"/><line class="ag-tether" x1="90" y1="28" x2="108" y2="50"/><circle class="ag-pointer" cx="108" cy="50" r="2"/></svg></div>
+    </div>
+    <div class="opts">
+      <div class="opt is-today"><h3>Вкл, без выключателя</h3><span class="badge is-same">сейчас в dev</span>
+        <div class="ag-pie"><span>42%<small>Europe</small></span></div>
+        <p class="ag-cost"><b>Цена:</b> экран со своим текстом в центре теряет его на наведении.</p></div>
+      <div class="opt"><h3>Вкл, вход у каждого <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <div class="ag-pie"><span>42%<small>Europe</small></span></div>
+        <dl class="layer"><dt>Выключить</dt><dd>по входу на pie, heatmap, scatter - имена в задаче</dd></dl>
+        <p class="ag-cost"><b>Цена:</b> три входа.</p></div>
+      <div class="opt"><h3>Выкл по умолчанию</h3>
+        <div class="ag-pie"><span>1,240<small>Total</small></span></div>
+        <p class="ag-cost">Центр держит итог, шкала без метки, scatter по точке. <b>Цена:</b> выбранное в деке видят только включившие.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-scatter-reach">
+    <div class="q-head">
+      <span class="q-num">46</span>
+      <h2 class="q-title">Scatter отвечает ближайшей точкой с любого места поля</h2>
+      <span class="q-src">scatter-chart.component.ts:80 · :481 · 46a912b46</span>
+    </div>
+    <p class="q-sub">Было: ответ, если курсор в 16px от центра точки. Стало: ближайшая точка из любого места поля (и 16px за его краем). Два курсора: один в 30px от точки, другой в пустом углу в 86px. Модель в масштабе 0,4.</p>
+    <div class="opts">
+      <div class="opt is-today"><h3>С любого места</h3><span class="badge is-same">сейчас в dev</span>
+        <svg class="ag-svg" viewBox="0 0 160 90" aria-hidden="true">
+          <rect x="4" y="4" width="152" height="82" fill="none" class="ag-grid"/>
+          <circle class="ag-c1" cx="40" cy="30" r="3"/><circle class="ag-c1" cx="70" cy="55" r="3"/><circle class="ag-c1" cx="120" cy="40" r="3"/><circle class="ag-c1" cx="100" cy="70" r="3"/>
+          <circle class="ag-ring" cx="120" cy="40" r="6"/>
+          <line class="ag-tether" x1="120" y1="40" x2="128" y2="49"/><circle class="ag-pointer" cx="128" cy="49" r="2"/>
+          <line class="ag-tether" x1="120" y1="40" x2="140" y2="12"/><circle class="ag-pointer" cx="140" cy="12" r="2"/>
+        </svg>
+        <p class="ag-cost">Пустой угол тоже называет точку. <b>Цена:</b> на редком облаке ответ издалека.</p></div>
+      <div class="opt"><h3>В пределах 48px <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <svg class="ag-svg" viewBox="0 0 160 90" aria-hidden="true">
+          <rect x="4" y="4" width="152" height="82" fill="none" class="ag-grid"/>
+          <circle class="ag-reach" cx="40" cy="30" r="19.2"/><circle class="ag-reach" cx="70" cy="55" r="19.2"/><circle class="ag-reach" cx="120" cy="40" r="19.2"/><circle class="ag-reach" cx="100" cy="70" r="19.2"/>
+          <circle class="ag-c1" cx="40" cy="30" r="3"/><circle class="ag-c1" cx="70" cy="55" r="3"/><circle class="ag-c1" cx="120" cy="40" r="3"/><circle class="ag-c1" cx="100" cy="70" r="3"/>
+          <circle class="ag-ring" cx="120" cy="40" r="6"/>
+          <line class="ag-tether" x1="120" y1="40" x2="128" y2="49"/><circle class="ag-pointer" cx="128" cy="49" r="2"/>
+          <circle class="ag-pointer" cx="140" cy="12" r="2"/>
+        </svg>
+        <p class="ag-cost">30px отвечает, 86px молчит. <b>Цена:</b> одна константа.</p></div>
+      <div class="opt"><h3>В пределах 16px, как было</h3>
+        <svg class="ag-svg" viewBox="0 0 160 90" aria-hidden="true">
+          <rect x="4" y="4" width="152" height="82" fill="none" class="ag-grid"/>
+          <circle class="ag-reach" cx="40" cy="30" r="6.4"/><circle class="ag-reach" cx="70" cy="55" r="6.4"/><circle class="ag-reach" cx="120" cy="40" r="6.4"/><circle class="ag-reach" cx="100" cy="70" r="6.4"/>
+          <circle class="ag-c1" cx="40" cy="30" r="3"/><circle class="ag-c1" cx="70" cy="55" r="3"/><circle class="ag-c1" cx="120" cy="40" r="3"/><circle class="ag-c1" cx="100" cy="70" r="3"/>
+          <circle class="ag-pointer" cx="128" cy="49" r="2"/><circle class="ag-pointer" cx="140" cy="12" r="2"/>
+        </svg>
+        <p class="ag-cost">Оба курсора молчат. <b>Цена:</b> пунктир от курсора почти не нужен.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-heatmap-gap">
+    <div class="q-head">
+      <span class="q-num">47</span>
+      <h2 class="q-title">Шкала heatmap опустилась на 12px под метку</h2>
+      <span class="q-src">heatmap-chart.component.scss:142 · f4fa4867b</span>
+    </div>
+    <p class="q-sub">Отступ над шкалой <code>--space-3</code> (12px) стал <code>--space-6</code> (24px), каждый heatmap выше на 12px, даже когда метки нет. Отступы в модели в натуральную величину.</p>
+    <div class="opts">
+      <div class="opt is-today"><h3>Шкала ниже</h3><span class="badge is-same">сейчас в dev</span>
+        <div class="ag-heat">
+          <div class="ag-cells"><i style="background:var(--chart-sequential-5)"></i><i style="background:var(--chart-sequential-3)"></i><i style="background:var(--chart-sequential-6)"></i><i style="background:var(--chart-sequential-2)"></i><i style="background:var(--chart-sequential-4)"></i><i style="background:var(--chart-sequential-1)"></i><i style="background:var(--chart-sequential-4)"></i><i style="background:var(--chart-sequential-2)"></i><i style="background:var(--chart-sequential-5)"></i><i style="background:var(--chart-sequential-3)"></i><i style="background:var(--chart-sequential-6)"></i><i style="background:var(--chart-sequential-2)"></i></div>
+          <div class="ag-heat-scale" style="block-size:8px;margin-block-start:20px"><div class="ag-ramp"></div><span class="ag-marker" style="inset-inline-start:96px">618</span></div>
+        </div>
+        <p class="ag-cost">Метка в своём просвете. <b>Цена:</b> +12px высоты всегда.</p></div>
+      <div class="opt"><h3>Метка поверх шкалы</h3>
+        <div class="ag-heat">
+          <div class="ag-cells"><i style="background:var(--chart-sequential-5)"></i><i style="background:var(--chart-sequential-3)"></i><i style="background:var(--chart-sequential-6)"></i><i style="background:var(--chart-sequential-2)"></i><i style="background:var(--chart-sequential-4)"></i><i style="background:var(--chart-sequential-1)"></i><i style="background:var(--chart-sequential-4)"></i><i style="background:var(--chart-sequential-2)"></i><i style="background:var(--chart-sequential-5)"></i><i style="background:var(--chart-sequential-3)"></i><i style="background:var(--chart-sequential-6)"></i><i style="background:var(--chart-sequential-2)"></i></div>
+          <div class="ag-heat-scale" style="block-size:8px;margin-block-start:8px"><div class="ag-ramp"></div><span class="ag-marker ag-over" style="inset-inline-start:96px">618</span></div>
+        </div>
+        <p class="ag-cost">Высота как была. <b>Цена:</b> метка закрывает кусок шкалы под собой.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-legend-dim">
+    <div class="q-head">
+      <span class="q-num">48</span>
+      <h2 class="q-title">Легенда больше не приглушает остальное без dimOthers</h2>
+      <span class="q-src">5e96d7cac · CHANGELOG Unreleased, Fixed</span>
+    </div>
+    <p class="q-sub">Pie, funnel, scatter, heatmap и легенда серий у column и line приглушали остальное при наведении на легенду, что бы ни стояло в <code>dimOthers</code>. Свой путь легенды удалён: она ведёт ту же активную метку, приглушает только <code>dimOthers</code>, по умолчанию <code>false</code>. Модель при умолчании.</p>
+    <div class="opts">
+      <div class="opt is-today"><h3>Только под dimOthers</h3><span class="badge is-same">сейчас в dev</span>
+        <div class="ag-pair">
+          <div><p class="cap">легенда</p><svg class="ag-svg" viewBox="0 0 80 50" aria-hidden="true"><line class="ag-base" x1="2" y1="46" x2="78" y2="46"/><rect class="ag-c1" x="8" y="26" width="9" height="20"/><rect class="ag-c2" x="18" y="14" width="9" height="32"/><rect class="ag-c1" x="34" y="20" width="9" height="26"/><rect class="ag-c2" x="44" y="8" width="9" height="38"/><rect class="ag-c1" x="60" y="30" width="9" height="16"/><rect class="ag-c2" x="70" y="18" width="9" height="28"/></svg><p class="ag-legend"><span><i style="background:var(--chart-categorical-3)"></i>Plan</span><span class="ag-hover"><i style="background:var(--chart-categorical-2)"></i>Fact</span></p></div>
+          <div><p class="cap">колонка</p><svg class="ag-svg" viewBox="0 0 80 50" aria-hidden="true"><line class="ag-base" x1="2" y1="46" x2="78" y2="46"/><rect class="ag-c1" x="8" y="26" width="9" height="20"/><rect class="ag-c2" x="18" y="14" width="9" height="32"/><rect class="ag-c1" x="34" y="20" width="9" height="26"/><rect class="ag-c2" x="44" y="8" width="9" height="38"/><rect class="ag-c1" x="60" y="30" width="9" height="16"/><rect class="ag-c2" x="70" y="18" width="9" height="28"/></svg></div>
+        </div>
+        <p class="ag-cost">Одно правило для меток и легенды. <b>Цена:</b> чтобы легенда приглушала, нужен <code>dimOthers</code>.</p></div>
+      <div class="opt"><h3>Легенда всегда, метки под dimOthers</h3>
+        <div class="ag-pair">
+          <div><p class="cap">легенда</p><svg class="ag-svg" viewBox="0 0 80 50" aria-hidden="true"><line class="ag-base" x1="2" y1="46" x2="78" y2="46"/><rect class="ag-c1 ag-dim" x="8" y="26" width="9" height="20"/><rect class="ag-c2" x="18" y="14" width="9" height="32"/><rect class="ag-c1 ag-dim" x="34" y="20" width="9" height="26"/><rect class="ag-c2" x="44" y="8" width="9" height="38"/><rect class="ag-c1 ag-dim" x="60" y="30" width="9" height="16"/><rect class="ag-c2" x="70" y="18" width="9" height="28"/></svg><p class="ag-legend"><span><i style="background:var(--chart-categorical-3)"></i>Plan</span><span class="ag-hover"><i style="background:var(--chart-categorical-2)"></i>Fact</span></p></div>
+          <div><p class="cap">колонка</p><svg class="ag-svg" viewBox="0 0 80 50" aria-hidden="true"><line class="ag-base" x1="2" y1="46" x2="78" y2="46"/><rect class="ag-c1" x="8" y="26" width="9" height="20"/><rect class="ag-c2" x="18" y="14" width="9" height="32"/><rect class="ag-c1" x="34" y="20" width="9" height="26"/><rect class="ag-c2" x="44" y="8" width="9" height="38"/><rect class="ag-c1" x="60" y="30" width="9" height="16"/><rect class="ag-c2" x="70" y="18" width="9" height="28"/></svg></div>
+        </div>
+        <p class="ag-cost">Как было. <b>Цена:</b> два правила для одного жеста.</p></div>
+      <div class="opt"><h3>Всегда, и легенда, и метки</h3>
+        <div class="ag-pair">
+          <div><p class="cap">легенда</p><svg class="ag-svg" viewBox="0 0 80 50" aria-hidden="true"><line class="ag-base" x1="2" y1="46" x2="78" y2="46"/><rect class="ag-c1 ag-dim" x="8" y="26" width="9" height="20"/><rect class="ag-c2" x="18" y="14" width="9" height="32"/><rect class="ag-c1 ag-dim" x="34" y="20" width="9" height="26"/><rect class="ag-c2" x="44" y="8" width="9" height="38"/><rect class="ag-c1 ag-dim" x="60" y="30" width="9" height="16"/><rect class="ag-c2" x="70" y="18" width="9" height="28"/></svg><p class="ag-legend"><span><i style="background:var(--chart-categorical-3)"></i>Plan</span><span class="ag-hover"><i style="background:var(--chart-categorical-2)"></i>Fact</span></p></div>
+          <div><p class="cap">колонка</p><svg class="ag-svg" viewBox="0 0 80 50" aria-hidden="true"><line class="ag-base" x1="2" y1="46" x2="78" y2="46"/><rect class="ag-c1 ag-dim" x="8" y="26" width="9" height="20"/><rect class="ag-c2" x="18" y="14" width="9" height="32"/><rect class="ag-c1 ag-dim" x="34" y="20" width="9" height="26"/><rect class="ag-c2 ag-dim" x="44" y="8" width="9" height="38"/><rect class="ag-c1 ag-dim" x="60" y="30" width="9" height="16"/><rect class="ag-c2 ag-dim" x="70" y="18" width="9" height="28"/></svg></div>
+        </div>
+        <p class="ag-cost"><b>Цена:</b> <code>dimOthers</code> теряет смысл, вход уходит.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-intl-range">
+    <div class="q-head">
+      <span class="q-num">49</span>
+      <h2 class="q-title">Ключ DsIntl.chart.rangeTotal обязательный</h2>
+      <span class="q-src">ds-intl.types.ts:358 · ds-intl-defaults.ts:300 · 6502f09e0</span>
+    </div>
+    <p class="q-sub">Частичные переопределения через <code>provideDsIntl</code> не задеты. Полный словарь, объявленный типом <code>DsIntl</code> без <code>...DS_INTL_DEFAULTS.chart</code>, перестаёт компилироваться. Замер: в <code>ds-intl.types.ts</code> 235 ключей <code>readonly</code>, из них необязательных 0.</p>
+    <div class="opts">
+      <div class="opt is-today"><h3>Обязательный, как все <span class="star">★</span></h3><span class="badge is-same">сейчас в dev</span><span class="badge is-pick">рекомендую</span>
+        <p class="css">const intl: DsIntl = {
+  ...myDictionary,
+  chart: { ...myChart },
+};</p>
+        <p class="says"><span class="ag-err">ошибка компиляции:</span> нет rangeTotal</p>
+        <p class="ag-cost">Перевод не потеряется молча. <b>Цена:</b> строка в CHANGELOG уже есть, в манифесте миграций - проверить.</p></div>
+      <div class="opt"><h3>Необязательный, английский по умолчанию</h3>
+        <p class="css">const intl: DsIntl = {
+  ...myDictionary,
+  chart: { ...myChart },
+};</p>
+        <p class="says"><span class="ag-ok">компилируется;</span> пилюля: «Jan - Mar: 1,240 · avg 413»</p>
+        <p class="ag-cost"><b>Цена:</b> первый необязательный ключ из 235; немецкий экран покажет английскую пилюлю.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-heatmap-settle">
+    <div class="q-head">
+      <span class="q-num">50</span>
+      <h2 class="q-title">Метка heatmap ждёт 120ms: число в коде, не токен</h2>
+      <span class="q-src">heatmap-chart.component.ts:44 · :158 · f4fa4867b</span>
+    </div>
+    <p class="q-sub">120ms показаны в деке chart-motion-extras. Не решено: <code>SCALE_MARKER_SETTLE_MS</code> - константа, токена нет, и ожидание идёт и под <code>prefers-reduced-motion</code> (таймер без проверки). Курсор проводят по строке и оставляют на пятой ячейке.</p>
+    <div class="opts">
+      <div class="opt is-today"><h3>120ms в коде</h3><span class="badge is-same">сейчас в dev</span>
+        <div class="ag-heat"><div class="ag-heat-row"><i style="background:var(--chart-sequential-5)"></i><i style="background:var(--chart-sequential-2)"></i><i style="background:var(--chart-sequential-6)"></i><i style="background:var(--chart-sequential-1)"></i><i style="background:var(--chart-sequential-3)"></i><i style="background:var(--chart-sequential-4)"></i><span class="ag-cursor ag-sweep"></span></div>
+          <div class="ag-heat-scale"><div class="ag-ramp"></div><span class="ag-marker ag-hold" style="--dx:110px">618</span></div></div>
+        <p class="ag-cost">Проход не дёргает метку. <b>Цена:</b> подстроить нечем.</p></div>
+      <div class="opt"><h3>Токен движения <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <div class="ag-heat"><div class="ag-heat-row"><i style="background:var(--chart-sequential-5)"></i><i style="background:var(--chart-sequential-2)"></i><i style="background:var(--chart-sequential-6)"></i><i style="background:var(--chart-sequential-1)"></i><i style="background:var(--chart-sequential-3)"></i><i style="background:var(--chart-sequential-4)"></i><span class="ag-cursor ag-sweep"></span></div>
+          <div class="ag-heat-scale"><div class="ag-ramp"></div><span class="ag-marker ag-hold" style="--dx:110px">618</span></div></div>
+        <dl class="layer"><dt>Токен</dt><dd>в ряду <code>--ds-motion-chart-*</code>, 120ms по умолчанию</dd></dl>
+        <p class="ag-cost">Как сейчас, но настраивается. <b>Цена:</b> один токен.</p></div>
+      <div class="opt"><h3>Без ожидания</h3>
+        <div class="ag-heat"><div class="ag-heat-row"><i style="background:var(--chart-sequential-5)"></i><i style="background:var(--chart-sequential-2)"></i><i style="background:var(--chart-sequential-6)"></i><i style="background:var(--chart-sequential-1)"></i><i style="background:var(--chart-sequential-3)"></i><i style="background:var(--chart-sequential-4)"></i><span class="ag-cursor ag-sweep"></span></div>
+          <div class="ag-heat-scale"><div class="ag-ramp"></div><span class="ag-marker ag-jitter">618</span></div></div>
+        <p class="ag-cost">Метка прыгает за каждой ячейкой. <b>Цена:</b> мельтешение на проходе.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-running-total-fade">
+    <div class="q-head">
+      <span class="q-num">51</span>
+      <h2 class="q-title">Waterfall гасит шаги после наведённого без dimOthers</h2>
+      <span class="q-src">column-series.component.ts:582 · column-series.component.scss:75 · 318893176</span>
+    </div>
+    <p class="q-sub">Найдено сверх списка. <code>runningTotal</code> (его ставит <code>ds-waterfall-chart</code>) гасит колонки после наведённой всегда, хотя по пункту 48 приглушает только <code>dimOthers</code>.</p>
+    <div class="opts">
+      <div class="opt is-today"><h3>Гасит всегда</h3><span class="badge is-same">сейчас в dev</span>
+        <svg class="ag-svg" viewBox="0 0 160 80" aria-hidden="true">
+          <line class="ag-base" x1="4" y1="70" x2="156" y2="70"/>
+          <rect class="ag-c1" x="10" y="30" width="18" height="40"/><rect class="ag-c2" x="38" y="16" width="18" height="14"/><rect class="ag-c3" x="66" y="16" width="18" height="20"/>
+          <rect class="ag-c3 ag-dim" x="94" y="36" width="18" height="10"/><rect class="ag-c1 ag-dim" x="122" y="46" width="18" height="24"/>
+          <line class="ag-guide" x1="4" y1="36" x2="84" y2="36"/>
+        </svg>
+        <p class="ag-cost">Видно, до какого шага итог. <b>Цена:</b> исключение из правила dimOthers.</p></div>
+      <div class="opt"><h3>Только под dimOthers</h3>
+        <svg class="ag-svg" viewBox="0 0 160 80" aria-hidden="true">
+          <line class="ag-base" x1="4" y1="70" x2="156" y2="70"/>
+          <rect class="ag-c1" x="10" y="30" width="18" height="40"/><rect class="ag-c2" x="38" y="16" width="18" height="14"/><rect class="ag-c3" x="66" y="16" width="18" height="20"/>
+          <rect class="ag-c3" x="94" y="36" width="18" height="10"/><rect class="ag-c1" x="122" y="46" width="18" height="24"/>
+          <line class="ag-guide" x1="4" y1="36" x2="84" y2="36"/>
+        </svg>
+        <p class="ag-cost">Пунктир всё равно стоит на шаге. <b>Цена:</b> гашение включается входом.</p></div>
     </div>
   </section>
 
