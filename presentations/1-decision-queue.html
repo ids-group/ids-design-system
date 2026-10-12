@@ -2825,22 +2825,23 @@ onRow(row: <b>RowChartEntry</b>)</p>
       <li>Твой ответ 2026-10-12: <b>«Всё из локали»</b>, и первый день недели, и 12/24 часа.</li>
       <li>В dev: <code>bb43d3bb0</code>, <code>date-picker.component.ts:327</code>, <code>time-picker.component.ts:79</code>.</li>
       <li>Дека <a href="implemented/locale-week-and-hour.html">locale-week-and-hour</a> закрыта.</li>
+      <li>Твоё уточнение: приложение без своей локали получает <b>en-GB</b>, а не американскую: понедельник, 24 часа, ДД/ММ/ГГГГ (<code>ds-locale.ts</code>).</li>
     </ul>
   </section>
   <section class="q is-settled" data-done="pressed-tonal">
-    <div class="q-head"><h2 class="q-title">Нажатая тональная кнопка сереет вместо того, чтобы стать насыщеннее</h2><span class="chip is-accent">в работе</span></div>
+    <div class="q-head"><h2 class="q-title">Нажатая тональная кнопка сереет вместо того, чтобы стать насыщеннее</h2><span class="chip is-done">сделано</span></div>
     <ul class="q-sub">
       <li>Твой ответ 2026-10-12: <b>«К своему цвету на 28%»</b>.</li>
       <li><b>Только тональная кнопка</b>; формула нажатия для всего DS позже, со своим манифестом.</li>
-      <li>Ветка <code>fix/pressed-tonal-danger</code>.</li>
+      <li>В dev: <code>9d3db855d</code>, <code>button.component.scss</code>; насыщенность нажатия 6.2 → 9.2, текст 3.77:1.</li>
     </ul>
   </section>
   <section class="q is-settled" data-done="pressed-danger">
-    <div class="q-head"><h2 class="q-title">Красный пункт меню «Удалить» никак не меняется при нажатии</h2><span class="chip is-accent">в работе</span></div>
+    <div class="q-head"><h2 class="q-title">Красный пункт меню «Удалить» никак не меняется при нажатии</h2><span class="chip is-done">сделано</span></div>
     <ul class="q-sub">
       <li>Твой ответ 2026-10-12: <b>«Красный на шаг глубже»</b>.</li>
       <li><b>Только этот пункт меню</b>; формула нажатия для всего DS позже, со своим манифестом.</li>
-      <li>Ветка <code>fix/pressed-tonal-danger</code>.</li>
+      <li>В dev: <code>87d81212b</code>, <code>menu-item.component.scss</code>; нажатие <code>--error-muted</code>, текст 5.51:1.</li>
     </ul>
   </section>
   <section class="q is-settled" data-done="ag-running-total-fade">
@@ -2848,7 +2849,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
     <p class="q-sub">Твой ответ 2026-10-12: «Только под <code>dimOthers</code>». Шаги после наведённого гаснут только у графика с включённым приглушением, как у всех остальных. Сделано в dev: <code>0152280a7</code>.</p>
   </section>
   <section class="q is-settled" data-done="ag-intl-range">
-    <div class="q-head"><h2 class="q-title">Перевод подписи «итог за диапазон» обязателен в словаре DS</h2><span class="chip is-accent">в работе</span></div>
+    <div class="q-head"><h2 class="q-title">Перевод подписи «итог за диапазон» обязателен в словаре DS</h2><span class="chip is-done">сделано</span></div>
     <p class="q-sub">Твой ответ 2026-10-12: «Необязательный, английский по умолчанию». Свой словарь без этой строки компилируется, подпись берётся английская.</p>
   </section>
   <section class="q is-settled" data-done="ag-legend-dim">
@@ -2868,16 +2869,16 @@ onRow(row: <b>RowChartEntry</b>)</p>
     <p class="q-sub">Твой ответ 2026-10-12: «Выкл по умолчанию». Сделано в dev: <code>a73ecc928</code>, <code>showChange</code> теперь <code>false</code> (<code>line-series.component.ts:319</code>).</p>
   </section>
   <section class="q is-settled" data-done="ag-readout-format">
-    <div class="q-head"><h2 class="q-title">Пилюля с числом на оси печатает полное число, а деления оси - короткое</h2><span class="chip is-accent">в работе</span></div>
-    <p class="q-sub">Твой ответ 2026-10-12: «Полное число, но можно настроить». По умолчанию <code>1,234,567</code>, экран может задать свой формат.</p>
+    <div class="q-head"><h2 class="q-title">Пилюля с числом на оси печатает полное число, а деления оси - короткое</h2><span class="chip is-done">сделано</span></div>
+    <p class="q-sub">Твой ответ 2026-10-12: «Полное число, но можно настроить». По умолчанию <code>1,234,567</code>, экран может задать свой формат. Сделано в dev: место <code>'readout'</code> в <code>valueFormat</code> (<code>46fe38cd4</code>).</p>
   </section>
   <section class="q is-settled" data-done="ag-readout-switch">
-    <div class="q-head"><h2 class="q-title">Отклик оси на наведение нельзя выключить</h2><span class="chip is-accent">в работе</span></div>
+    <div class="q-head"><h2 class="q-title">Отклик оси на наведение нельзя выключить</h2><span class="chip is-done">сделано</span></div>
     <p class="q-sub">Твой ответ 2026-10-12: «Вкл, вход для выключения». Жирная подпись, пунктир и пилюля на оси остаются по умолчанию, новый вход их выключает.</p>
   </section>
   <section class="q is-settled" data-done="ag-hide-rescale">
-    <div class="q-head"><h2 class="q-title">Скрыл серию в легенде: колонки перестраивают ось, линия нет</h2><span class="chip is-accent">в работе</span></div>
-    <p class="q-sub">Твой ответ 2026-10-12: <code>rescaleOnHide</code> у обоих; по умолчанию ось подстраивается под оставшиеся серии, экран может её закрепить.</p>
+    <div class="q-head"><h2 class="q-title">Скрыл серию в легенде: колонки перестраивают ось, линия нет</h2><span class="chip is-done">сделано</span></div>
+    <p class="q-sub">Твой ответ 2026-10-12: <code>rescaleOnHide</code> у обоих; по умолчанию ось подстраивается под оставшиеся серии, экран может её закрепить. Сделано в dev: <code>221cc70ed</code>.</p>
   </section>
   <section class="q is-settled" data-done="text-snap-rule">
     <div class="q-head"><h2 class="q-title">Как в DS масштабировать текст без рывка в конце</h2><span class="chip is-done">решено</span></div>
