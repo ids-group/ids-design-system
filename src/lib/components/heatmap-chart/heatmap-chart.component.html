@@ -39,7 +39,7 @@
       </thead>
 
       <tbody>
-        @for (row of skeletonRows(); track $index) {
+        @for (row of skeletonRows(); track $index; let rowIndex = $index) {
           <tr>
             <th class="row-label">
               <ds-skeleton
@@ -54,6 +54,8 @@
               <td class="cell-slot">
                 <ds-skeleton
                   class="cell"
+                  data-morph="mark"
+                  [attr.data-morph-key]="rowIndex + ':' + $index"
                   [shimmer]="loading()" />
               </td>
             }
@@ -137,7 +139,9 @@
                 @if (interactive() && cell.value !== null) {
                   <button
                     class="cell interactive"
+                    data-morph="mark"
                     type="button"
+                    [attr.data-morph-key]="rowIndex + ':' + cell.columnIndex"
                     [class.pins]="pins"
                     [class.is-active]="activeMark.index() === index"
                     [class.is-pinned]="pinned"
@@ -161,6 +165,8 @@
                   <span
                     class="cell"
                     role="img"
+                    data-morph="mark"
+                    [attr.data-morph-key]="rowIndex + ':' + cell.columnIndex"
                     [class.is-missing]="cell.value === null"
                     [class.pins]="pins"
                     [class.is-active]="activeMark.index() === index"
