@@ -158,6 +158,12 @@
     </li>
   </ul>
 
+  <ds-heatmap-chart
+    caption="Collections a day, by depot, without the scale marker"
+    [columns]="weekdays"
+    [data]="depotRows"
+    [showScaleMarker]="false" />
+
   <h3 class="block-title t-h4">
     A hole is not a low reading
   </h3>
