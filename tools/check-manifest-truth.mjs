@@ -739,6 +739,7 @@ const FRAMEWORK_NAMES = new Set([
   'routerLinkActive',
   'Signal',
   'strictTemplates',
+  'TemplateRef',
   'UrlTree',
   'useValue',
   'ValidationErrors',

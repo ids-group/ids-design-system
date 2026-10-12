@@ -833,7 +833,7 @@ All inputs: `align: 'start' | 'end' = 'start'`, `placement: 'top' | 'bottom' | '
 
 #### `[dsTooltip]` — `TooltipDirective`
 Attribute directive, applied by `dsTooltip` or by `dsTooltipWhenClipped` alone. Apply to any focusable element; with `dsTooltipWhenClipped` also to a label that cannot take focus.
-Inputs: `dsTooltip: string = ''` (the text; empty disables; `**bold**` renders bold, `\*\*` is a literal `**`, nothing else is parsed), `dsTooltipPlacement: 'top' | 'bottom' | 'left' | 'right' = 'top'`, `dsTooltipDelay: number = 120` (ms), `dsTooltipArrow: boolean = true` (draws the arrow that points at the host; `[dsTooltipArrow]="false"` leaves it out), `dsTooltipWhenClipped: boolean | string = false` (open only while the host shows less text than it holds; without a `dsTooltip` it discloses the tested text. A selector in place of a boolean aims the test and the text at the element it matches inside the host, so a whole row can be the hover area for the label inside it: `<button dsTooltip dsTooltipWhenClipped=".label"><span class="label">…</span></button>`; resolved on every open, and while nothing matches no clipped tip opens), `dsTooltipPinOnClick: boolean = false` (opens with no delay; a click on the host keeps the tip open after the pointer leaves until a click outside, `Escape` or blur, and a second click closes it; without it a click closes the tip. While pinned the host carries `data-ds-tooltip-pinned`. Every pinned trigger of the library shows one cue, `--accent-strong` ink with no fill, plus a 2px solid accent underline on a text trigger; a pinned text trigger thickens the line to 3px on hover and takes the `--surface-muted` press fill on press, a pinned icon takes a `--surface-muted` circle on hover and a `--border-default` circle on press; give your own trigger the same cue with `@use 'styles/pinned' as pinned;` and `&[data-ds-tooltip-pinned] { @include pinned.cue(); }`. For info and definition triggers only, never on a control whose click acts)
+Inputs: `dsTooltip: string | TemplateRef<unknown> = ''` (the text; empty disables; `**bold**` renders bold, `\*\*` is a literal `**`, nothing else is parsed. A `TemplateRef` is rendered in the panel as given, with no `**bold**` parsing and no lead text; keep it non-interactive), `dsTooltipPlacement: 'top' | 'bottom' | 'left' | 'right' = 'top'`, `dsTooltipDelay: number = 120` (ms), `dsTooltipArrow: boolean = true` (draws the arrow that points at the host; `[dsTooltipArrow]="false"` leaves it out), `dsTooltipWhenClipped: boolean | string = false` (open only while the host shows less text than it holds; without a `dsTooltip` it discloses the tested text. A selector in place of a boolean aims the test and the text at the element it matches inside the host, so a whole row can be the hover area for the label inside it: `<button dsTooltip dsTooltipWhenClipped=".label"><span class="label">…</span></button>`; resolved on every open, and while nothing matches no clipped tip opens), `dsTooltipPinOnClick: boolean = false` (opens with no delay; a click on the host keeps the tip open after the pointer leaves until a click outside, `Escape` or blur, and a second click closes it; without it a click closes the tip. While pinned the host carries `data-ds-tooltip-pinned`. Every pinned trigger of the library shows one cue, `--accent-strong` ink with no fill, plus a 2px solid accent underline on a text trigger; a pinned text trigger thickens the line to 3px on hover and takes the `--surface-muted` press fill on press, a pinned icon takes a `--surface-muted` circle on hover and a `--border-default` circle on press; give your own trigger the same cue with `@use 'styles/pinned' as pinned;` and `&[data-ds-tooltip-pinned] { @include pinned.cue(); }`. For info and definition triggers only, never on a control whose click acts)
 Renders `<ds-tooltip-panel>` via CDK overlay on hover / focus; hides on leave / blur. A line break in the text shows as a line break; runs of spaces collapse. A `dsTooltip` shows exactly its text; only a `dsDefinitionTerm` leads with its own text, in bold, then a line break, unless the tip already contains that text. A `dsTooltipWhenClipped` host that cannot take focus (a label inside a button, a cell of a clickable row) also opens when keyboard focus lands on its nearest focusable ancestor, and closes on that ancestor's blur, click or any key; a `dsTooltipWhenClipped` host that takes focus itself opens on keyboard focus and closes on its own blur, click or any key; a mouse click opens nothing, and of several clipped hosts in one ancestor only the first in document order opens. A clipped `dsTooltipWhenClipped` host that no keyboard path reaches - not focusable, inside no control or widget role, holding no control - takes `tabindex="0"` while it is clipped and loses it once its text fits and it is not focused; a `tabindex` you set is never touched, and `tabindex="-1"` keeps a clipped value out of the Tab order. A clipped tip whose text the host already contains sets no `aria-describedby` (the text is in the DOM already); a `dsTooltip` that says more than the host, and a plain `dsTooltip`, describe the focused element. A plain `dsTooltip` on a non-focusable element stays hover-only: put an info tooltip on its own focusable element, not inside a button. The panel wraps a value with no break opportunity (a file name, an id) inside its max width.
 
 <!-- inputs:[dsTooltip] -->
@@ -841,17 +841,36 @@ All inputs: `dsTooltip: string = ''`, `dsTooltipPlacement: 'top' | 'bottom' | 'l
 <!-- /inputs -->
 
 #### `<ds-info-hint>` — `InfoHintComponent`
-An icon button (14px, a question mark in a circle by default; `icon="info"` draws an "i") that shows supplementary text on hover and focus and keeps it open on click (a toggletip): `<ds-info-hint ariaLabel="About conversion rate" text="Share of contacts who reached the goal." />`. The text describes the button through `aria-describedby` while open. A click outside, `Escape` or blur closes it. The icon darkens on hover, sits on a muted circle while pressed, and turns `--accent-strong` while pinned. Place it after the label it explains.
+An icon button (14px, a question mark in a circle by default; `icon="info"` draws an "i", and `icon` takes any `IconName`) that shows supplementary content on hover and focus and keeps it open on click (a toggletip): `<ds-info-hint ariaLabel="About conversion rate" text="Share of contacts who reached the goal." />`. The content describes the button through `aria-describedby` while open. A click outside, `Escape` or blur closes it. The icon darkens on hover, sits on a muted circle while pressed, and turns `--accent-strong` while pinned. Place it after the label it explains.
+
+Rich content comes two ways, both rendered in the same `role="tooltip"` panel:
+
+```html
+<ds-info-hint ariaLabel="When v4 was published">
+  <strong>Published</strong>
+  <ul><li>v4 · 29 Sep 2026, 14:32</li></ul>
+</ds-info-hint>
+
+<ds-info-hint ariaLabel="When v4 was published" [content]="published" />
+<ng-template #published>
+  <strong>Published</strong>
+  <ul><li>v4 · 29 Sep 2026, 14:32</li></ul>
+</ng-template>
+```
+
+Exactly one source shows: `[content]` first, then projected content, then `text` (with its `**bold**` runs). In dev mode a hint given more than one, or none, logs a console warning naming what it shows. Projected content is created with the hint, even while it is closed; a `[content]` template is created only when the panel opens, so prefer it in a long list or table. Keep the content non-interactive: the panel never takes focus, so a link or button in it cannot be reached by keyboard. A screen reader reads the description as flat text, without the list structure. The panel stays within `--ds-tooltip-max-width`.
+
+The icon is painted `--icon-default`; set `--ds-info-hint-color` on the hint to colour it, as `ds-info-hint.removed { --ds-info-hint-color: var(--warning-text); }` beside `icon="warn"`. A custom colour stays on hover; the pressed circle and the pinned cue are unchanged.
 
 <!-- inputs:ds-info-hint -->
-All inputs: `text: required string`, `ariaLabel: required string`, `icon: 'help' | 'info' = 'help'`
+All inputs: `text: string = ''`, `content: TemplateRef<unknown> | null = null`, `ariaLabel: required string`, `icon: IconName = 'help'`
 <!-- /inputs -->
 
 #### `[dsDefinitionTerm]` — `DefinitionTermDirective`
 Directive, on any element: a term inside running text or a label that carries its definition, `<span dsDefinitionTerm="Left the journey before the goal step.">exited</span>`. The text in `dsDefinitionTerm` is the tooltip; no `dsTooltip` is needed. The term keeps the surrounding text style with a dotted underline in `--text-tertiary`, takes the focus ring, and shows the definition on hover and focus; a click pins it until a click outside, `Escape` or blur. On a host other than `<button>` it adds `tabindex="0"`, `role="button"`, and `Enter` / `Space` act as a click; a `<button>` gets `type="button"` and its native behaviour. It brings its own styles (`.ds-definition-term`); no stylesheet import is needed. Hover makes the underline solid in `--text-secondary`, a press (a click held, or `Enter` / `Space` held on a non-button) tints the term with `--surface-muted`, and while pinned it turns `--accent-strong` with a 2px solid accent underline, 3px on hover and with the `--surface-muted` fill while pressed; no state changes its size. `[pinOnClick]="false"` where the click already acts, such as a sort button. Also takes `dsTooltipPlacement`.
 
 <!-- inputs:[dsDefinitionTerm] -->
-All inputs: `pinOnClick: boolean = true`, `dsDefinitionTerm: string = ''`, `dsTooltipPlacement: 'top' | 'bottom' | 'left' | 'right' = 'top'`
+All inputs: `pinOnClick: boolean = true`, `dsDefinitionTerm: string | TemplateRef<unknown> = ''`, `dsTooltipPlacement: 'top' | 'bottom' | 'left' | 'right' = 'top'`
 <!-- /inputs -->
 
 #### `<ds-menu>` + `<ds-menu-item>` — `MenuComponent`, `MenuItemComponent`
@@ -866,7 +885,7 @@ All inputs: `icon: IconName | null = null`, `disabled: boolean = false`, `error:
 #### `<ds-tooltip-panel>` — `TooltipPanelComponent`
 
 <!-- inputs:ds-tooltip-panel -->
-All inputs: `text: required string`, `placement: required 'top' | 'bottom' | 'left' | 'right'`, `arrow: boolean = true`, `panelId: string = ''`
+All inputs: `text: required string | TemplateRef<unknown>`, `placement: required 'top' | 'bottom' | 'left' | 'right'`, `arrow: boolean = true`, `panelId: string = ''`
 <!-- /inputs -->
 
 ### Tables

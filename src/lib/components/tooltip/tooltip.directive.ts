@@ -6,6 +6,7 @@ import {
   InjectionToken,
   OnDestroy,
   Signal,
+  TemplateRef,
   afterNextRender,
   booleanAttribute,
   inject,
@@ -72,8 +73,9 @@ export class TooltipDirective implements OnDestroy {
     inject(TOOLTIP_LEADS_WITH_OWN_TEXT, { self: true, optional: true }) ??
     false;
 
-  /** Tip text. An empty string turns the tooltip off. */
-  readonly dsTooltip = input<string>('');
+  /** Tip text, or a template the panel renders as given. An empty string turns the tooltip off.
+   *  Keep a template's content non-interactive: the panel is `role="tooltip"` and never takes focus. */
+  readonly dsTooltip = input<string | TemplateRef<unknown>>('');
   /** Which side the tip opens on. With no room there it opens on the opposite side. */
   readonly dsTooltipPlacement = input<TooltipPlacement>('top');
   /** Milliseconds before the tip appears. Hiding is immediate. */
@@ -119,8 +121,11 @@ export class TooltipDirective implements OnDestroy {
   }
 
   /** A host that leads with its own text puts it, in bold, above the tip while it is clipped, unless the tip already says it. */
-  private tipText(): string {
+  private tipContent(): string | TemplateRef<unknown> {
     const given = this.dsTooltip();
+    if (given instanceof TemplateRef) {
+      return given;
+    }
     const own = this.ownText();
     if (!given) {
       return this.dsTooltipWhenClipped() ? escapeTooltipMarkup(own) : '';
@@ -219,7 +224,7 @@ ${given}`;
   }
 
   private scheduleShow(): void {
-    if (this.unpin || !this.tipText()) {
+    if (this.unpin || !this.tipContent()) {
       return;
     }
     if (this.pinsOnClick() && this.ref?.hasAttached()) {
@@ -269,7 +274,7 @@ ${given}`;
       this.timer = null;
     }
     if (!this.ref?.hasAttached()) {
-      if (!this.tipText()) {
+      if (!this.tipContent()) {
         return;
       }
       this.show();
@@ -348,8 +353,8 @@ ${given}`;
     this.ref.detachments().subscribe(stopScrollClose);
 
     const cmpRef = this.ref.attach(new ComponentPortal(TooltipPanelComponent));
-    const text = this.tipText();
-    cmpRef.setInput('text', text);
+    const tip = this.tipContent();
+    cmpRef.setInput('text', tip);
     cmpRef.setInput('placement', placement);
     cmpRef.setInput('arrow', this.dsTooltipArrow());
     positionStrategy.positionChanges.subscribe(({ connectionPair }) =>
@@ -361,7 +366,7 @@ ${given}`;
     cmpRef.setInput('panelId', this.tipId);
     pointArrowAtHost(this.ref, cmpRef.location.nativeElement, this.hostElement);
     this.ref.detachments().subscribe(() => this.unpin?.());
-    if (this.disclosesOwnText(text)) {
+    if (typeof tip === 'string' && this.disclosesOwnText(tip)) {
       return;
     }
     const described = this.focusedTarget ?? this.host.nativeElement;

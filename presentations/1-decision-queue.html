@@ -26,16 +26,6 @@
   .q.is-settled .q-sub { margin-block-start: var(--space-1); }
   .done-lede { margin: 0 0 var(--space-4); font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
 
-  .ih-wrap { display: grid; gap: var(--space-1); justify-items: start; font: var(--font-size-2xs) var(--font-sans); color: var(--text-primary); }
-  .ih-label { display: inline-flex; align-items: center; gap: var(--space-1); font-weight: var(--font-weight-bold); }
-  .ih-trigger { display: inline-grid; place-items: center; inline-size: 14px; block-size: 14px; border-radius: 50%; border: 1.5px solid var(--icon-default); color: var(--icon-default); font: var(--font-weight-bold) 9px / 1 var(--font-sans); }
-  .ih-trigger.is-on { border-color: var(--primary); color: var(--primary); }
-  .ih-pop { min-inline-size: 140px; padding: var(--space-2) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-panel); background: var(--surface-overlay); box-shadow: var(--shadow-popover); }
-  .ih-pop ul { margin: 0; padding-inline-start: 1rem; }
-  .ih-head { display: flex; justify-content: space-between; gap: var(--space-3); margin: 0 0 var(--space-1); }
-  .ih-icons { display: flex; flex-wrap: wrap; gap: var(--space-3); font: var(--font-size-2xs) var(--font-sans); }
-  .ih-icons span { display: inline-flex; align-items: center; gap: var(--space-1); }
-  .ih-icons svg { inline-size: 16px; block-size: 16px; }
 
   .ut-waffle { display: grid; grid-template-columns: repeat(11, 12px); gap: 2px; }
   .ut-waffle i, .ut-legend i { inline-size: 12px; block-size: 12px; border-radius: 2px; }
@@ -806,7 +796,7 @@
 
 <main>
   <div class="masthead">
-    <h1>5 асков консьюмеров и 42 решения, у каждого варианты нарисованы</h1>
+    <h1>3 аска консьюмеров и 42 решения, у каждого варианты нарисованы</h1>
     <ul class="lede">
       <li>Сверху <b>то, чего ждут консьюмеры</b>, ниже открытые решения по темам; справа от вопроса приоритет и консьюмер или ссылка на деку.</li>
       <li><b>Вариант выбирается кликом</b>, звёздочка - рекомендация, внизу собирается одна строка со всеми ответами.</li>
@@ -928,62 +918,6 @@
       </div>
     </section>
 
-  <section class="q" data-q="ask-info-hint-content">
-      <div class="q-head">
-        <span class="q-num">02</span>
-        <h2 class="q-title">Подсказка ⓘ умеет показать только строку текста, а консьюмеру нужен список</h2>
-        <a class="q-src" href="24-info-hint-content.html">P2 · mm-ecm ME-495 · фича · дека</a>
-      </div>
-      <p class="q-sub">На экране Data ingest в mm-ecm (ME-495) значок ⓘ открывает список опубликованных версий. Сегодня там самодельная кнопка: <code>ds-info-hint</code> берёт только строку <code>text</code>. Выбрать, как консьюмер передаёт в подсказку свою разметку.</p>
-      <div class="opts">
-        <div class="opt"><h3>Разметка прямо внутри тега <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
-          <div class="ih-wrap"><span class="ih-label">Published <span class="ih-trigger">i</span></span><div class="ih-pop"><ul><li>v3 · 12 Oct</li><li>v2 · 3 Oct</li><li>v1 · 21 Sep</li></ul></div></div>
-          <p class="cap">по наведению и фокусу</p>
-          <p class="css">&lt;ds-info-hint ariaLabel="..."&gt;
-  &lt;ul&gt;...&lt;/ul&gt;
-&lt;/ds-info-hint&gt;</p>
-          <dl class="layer"><dt>Библиотека</dt><dd class="gain">text необязателен, ng-content в окно</dd></dl>
-        </div>
-        <div class="opt"><h3>Шаблон, переданный во вход</h3>
-          <div class="ih-wrap"><span class="ih-label">Published <span class="ih-trigger">i</span></span><div class="ih-pop"><ul><li>v3 · 12 Oct</li><li>v2 · 3 Oct</li><li>v1 · 21 Sep</li></ul></div></div>
-          <p class="cap">на экране так же, разметка в двух местах</p>
-          <p class="css">&lt;ds-info-hint [content]="pubList" /&gt;
-&lt;ng-template #pubList&gt;...</p>
-          <dl class="layer"><dt>Библиотека</dt><dd>вход TemplateRef, разметка в двух местах</dd></dl>
-        </div>
-        <div class="opt"><h3>Отдельное окно ds-popover со стандартной ⓘ</h3>
-          <div class="ih-wrap"><span class="ih-label">Published <span class="ih-trigger is-on">i</span></span><div class="ih-pop is-dialog"><p class="ih-head"><b>Published</b><span>×</span></p><ul><li>v3 · 12 Oct</li><li>v2 · 3 Oct</li><li>v1 · 21 Sep</li></ul></div></div>
-          <p class="cap">только по клику, с крестиком</p>
-          <p class="css">&lt;ds-info-hint mode="dialog"
-  [popover]="pubPop" /&gt;</p>
-          <dl class="layer"><dt>Поведение</dt><dd>только клик, крестик, ловушка фокуса</dd></dl>
-        </div>
-      </div>
-    </section>
-
-  <section class="q" data-q="ask-info-hint-icon">
-      <div class="q-head">
-        <span class="q-num">03</span>
-        <h2 class="q-title">Значок статуса как кнопка подсказки: кто задаёт значок и цвет</h2>
-        <a class="q-src" href="24-info-hint-content.html">P2 · mm-ecm ME-495 · фича · дека</a>
-      </div>
-      <p class="q-sub">Нужно, только если в задаче ME-495 значок статуса станет кнопкой подсказки. Сегодня у <code>ds-info-hint</code> два значка, help и info, и цвет он ставит сам. Выбрать, как консьюмер задаёт значок и его цвет.</p>
-      <div class="opts">
-        <div class="opt"><h3>Любой значок DS, цвет задаёт консьюмер <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
-          <div class="ih-icons"><span style="color:var(--warning-text)"><svg viewBox="0 0 16 16"><path d="M8 1.5 15 14H1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 6v4M8 11.5v.5" stroke="currentColor" stroke-width="1.5"/></svg>Устарело</span><span style="color:var(--chart-categorical-4)"><svg viewBox="0 0 16 16"><rect x="3" y="7" width="10" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Заблокировано</span><span style="color:var(--error-text)"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5v4.5M8 10.8v.6" stroke="currentColor" stroke-width="1.5"/></svg>Ошибка</span></div>
-          <p class="cap">любой значок, любой цвет</p>
-          <p class="css">&lt;ds-info-hint icon="warn" ... /&gt;
---ds-info-hint-color: var(--warning-text);</p>
-          <dl class="layer"><dt>Библиотека</dt><dd class="gain">IconName + токен цвета</dd></dl>
-        </div>
-        <div class="opt"><h3>Значок и один из трёх готовых тонов</h3>
-          <div class="ih-icons"><span style="color:var(--text-secondary)"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v4.5M8 4.6v.6" stroke="currentColor" stroke-width="1.5"/></svg>neutral</span><span style="color:var(--warning-text)"><svg viewBox="0 0 16 16"><path d="M8 1.5 15 14H1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 6v4M8 11.5v.5" stroke="currentColor" stroke-width="1.5"/></svg>warning</span><span style="color:var(--error-text)"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5v4.5M8 10.8v.6" stroke="currentColor" stroke-width="1.5"/></svg>danger</span></div>
-          <p class="cap">только три цвета</p>
-          <p class="css">&lt;ds-info-hint icon="warn" tone="warning" /&gt;</p>
-          <dl class="layer"><dt>Библиотека</dt><dd>neutral, warning, danger</dd></dl>
-        </div>
-      </div>
-    </section>
 
 
 
@@ -1001,7 +935,7 @@
 
   <section class="q" data-q="ask-indeterminate">
     <div class="q-head">
-      <span class="q-num">04</span>
+      <span class="q-num">02</span>
       <h2 class="q-title">Бегущая полоска загрузки на узкой дорожке часть времени пустая</h2>
       <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
     </div>
@@ -1076,7 +1010,7 @@
 
   <section class="q" data-q="ask-text-muted">
       <div class="q-head">
-        <span class="q-num">05</span>
+        <span class="q-num">03</span>
         <h2 class="q-title">Самый бледный серый текст не читается: 2.42:1 при норме 4.5:1</h2>
         <span class="q-src">P3 · ai-sdlc · контраст, запаркован</span>
       </div>
@@ -1132,7 +1066,7 @@
 
   <section class="q" data-q="colour-engine">
     <div class="q-head">
-      <span class="q-num">06</span>
+      <span class="q-num">04</span>
       <h2 class="q-title">Как получать все оттенки цвета из одного цвета бренда</h2>
       <a class="q-src" href="2-color-engine-derivation.html">дека color-engine-derivation</a>
     </div>
@@ -1172,7 +1106,7 @@
 
   <section class="q" data-q="theme-recipe">
     <div class="q-head">
-      <span class="q-num">07</span>
+      <span class="q-num">05</span>
       <h2 class="q-title">Кнопка считает цвета наведения сама и может разойтись с темой</h2>
       <a class="q-src" href="../docs/todo.md">рецепт темы против ручных пиков</a>
     </div>
@@ -1208,7 +1142,7 @@
 
   <section class="q" data-q="warning-text">
     <div class="q-head">
-      <span class="q-num">08</span>
+      <span class="q-num">06</span>
       <h2 class="q-title">Текст жёлтого предупреждения не проходит контраст: 4.42:1 при норме 4.5:1</h2>
       <a class="q-src" href="7-warning-text-colour.html">дека warning-text-colour</a>
     </div>
@@ -1255,7 +1189,7 @@
 
   <section class="q" data-q="tonal-contrast">
     <div class="q-head">
-      <span class="q-num">09</span>
+      <span class="q-num">07</span>
       <h2 class="q-title">Текст тональной кнопки при наведении и нажатии не проходит контраст: до 3.37:1 при норме 4.5:1</h2>
       <span class="q-src">button.component.scss:212-216 · _semantic.scss:82-84 · dark/_theme.scss:30-32 · 1b2dced56</span>
     </div>
@@ -1284,7 +1218,7 @@
 
   <section class="q" data-q="focus-brand">
     <div class="q-head">
-      <span class="q-num">10</span>
+      <span class="q-num">08</span>
       <h2 class="q-title">Ореол поля и кольцо фокуса остаются синими у бренда, который задал только --primary</h2>
       <span class="q-src">_semantic.scss:162-164, :172-174, :193-194 · themes/README.md:161-164 · 1b2dced56</span>
     </div>
@@ -1324,9 +1258,9 @@
         </div>
         <div class="a-pair"><span class="a-ratio pass">ореол #CEE2D8</span><span class="a-ratio fail">visited 3.35:1</span></div>
         <p class="cap">одна строка бренда, visited переписать</p>
-        <dl class="layer"><dt>Это</dt><dd>пункт single-source colour engine, docs/todo.md:1186, вопрос 06 и деки 2 и 3</dd><dt>Цена</dt><dd class="none">публичные --primary-h/s/l уходят; visited по старой формуле на зелёном 3.35:1, нужна светлота от бренда</dd></dl></div>
+        <dl class="layer"><dt>Это</dt><dd>пункт single-source colour engine, docs/todo.md:1186, вопрос 04 и деки 2 и 3</dd><dt>Цена</dt><dd class="none">публичные --primary-h/s/l уходят; visited по старой формуле на зелёном 3.35:1, нужна светлота от бренда</dd></dl></div>
     </div>
-    <p class="says">Рекомендация: «Вывести кольцо и ореол из --primary». Чинит видимый синий фокус сейчас и не забегает вперёд вопроса 06, где решается судьба каналов целиком.</p>
+    <p class="says">Рекомендация: «Вывести кольцо и ореол из --primary». Чинит видимый синий фокус сейчас и не забегает вперёд вопроса 04, где решается судьба каналов целиком.</p>
   </section>
 
   <p class="group">Компоненты</p>
@@ -1335,7 +1269,7 @@
 
   <section class="q" data-q="stepper-dropzone-fields">
     <div class="q-head">
-      <span class="q-num">11</span>
+      <span class="q-num">09</span>
       <h2 class="q-title">Счётчик и зона загрузки файлов не умеют подпись и ошибку, как остальные поля</h2>
       <a class="q-src" href="../docs/todo.md">ds-number-stepper и ds-dropzone в системе полей</a>
     </div>
@@ -1368,7 +1302,7 @@
 
   <section class="q" data-q="picker-height">
     <div class="q-head">
-      <span class="q-num">12</span>
+      <span class="q-num">10</span>
       <h2 class="q-title">Высоту выпадающего списка нельзя поднять выше 280px общей настройкой</h2>
       <a class="q-src" href="8-picker-list-height.html">дека picker-list-height</a>
     </div>
@@ -1427,7 +1361,7 @@
 
   <section class="q" data-q="cdk-menu">
     <div class="q-head">
-      <span class="q-num">13</span>
+      <span class="q-num">11</span>
       <h2 class="q-title">Переводить ли меню на готовую клавиатуру и фокус из Angular</h2>
       <a class="q-src" href="../docs/todo.md">переход на CDK Menu</a>
     </div>
@@ -1458,7 +1392,7 @@
 
   <section class="q" data-q="signal-forms">
     <div class="q-head">
-      <span class="q-num">14</span>
+      <span class="q-num">12</span>
       <h2 class="q-title">Как поле показывает «идёт проверка» и «значение изменено»</h2>
       <a class="q-src" href="../docs/todo.md">вид pending и dirty у signal-forms</a>
     </div>
@@ -1501,7 +1435,7 @@
 
   <section class="q" data-q="row-chart-row-type">
     <div class="q-head">
-      <span class="q-num">15</span>
+      <span class="q-num">13</span>
       <h2 class="q-title">Как назвать тип строки данных у графика с горизонтальными полосами</h2>
       <a class="q-src" href="../docs/todo.md">переименование ds-bar-chart</a>
     </div>
@@ -1560,7 +1494,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="unread-tokens">
     <div class="q-head">
-      <span class="q-num">16</span>
+      <span class="q-num">14</span>
       <h2 class="q-title">121 публичный токен никто в библиотеке не читает: что удалить</h2>
       <a class="q-src" href="11-unread-tokens.html">дека unread-tokens</a>
     </div>
@@ -1583,7 +1517,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="angular-22">
     <div class="q-head">
-      <span class="q-num">17</span>
+      <span class="q-num">15</span>
       <h2 class="q-title">Приложение на Angular 22 ставит DS только с обходным флагом: когда переходим</h2>
       <a class="q-src" href="../docs/todo.md">апгрейд на Angular 22, P3</a>
     </div>
@@ -1622,7 +1556,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="npm-2027">
     <div class="q-head">
-      <span class="q-num">18</span>
+      <span class="q-num">16</span>
       <h2 class="q-title">С января 2027 npm перестанет принимать публикацию DS по нашему токену</h2>
       <a class="q-src" href="../docs/todo.md">публикация в npm после января 2027</a>
     </div>
@@ -1667,7 +1601,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="claude-design-ci">
     <div class="q-head">
-      <span class="q-num">19</span>
+      <span class="q-num">17</span>
       <h2 class="q-title">Загрузку DS в Claude Design нельзя запустить из CI: последний шаг ручной</h2>
       <a class="q-src" href="../docs/todo.md">публикация в Claude Design из CI</a>
     </div>
@@ -1704,7 +1638,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="fix-all-html">
     <div class="q-head">
-      <span class="q-num">20</span>
+      <span class="q-num">18</span>
       <h2 class="q-title">Автоисправление fix:all переписывает HTML-шаблоны, а eslint хочет их обратно</h2>
       <a class="q-src" href="../docs/todo.md">fix:all против eslint на HTML</a>
     </div>
@@ -1745,7 +1679,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="stale-ds-css">
     <div class="q-head">
-      <span class="q-num">21</span>
+      <span class="q-num">19</span>
       <h2 class="q-title">Деки рисуются со старой копией стилей DS, и это никто не ловит</h2>
       <a class="q-src" href="../docs/todo.md">устаревший presentations/ds.css</a>
     </div>
@@ -1783,7 +1717,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="todo-index-gate">
     <div class="q-head">
-      <span class="q-num">22</span>
+      <span class="q-num">20</span>
       <h2 class="q-title">Оглавление бэклога может устареть: его проверка не входит в общий прогон</h2>
       <a class="q-src" href="../docs/todo.md">todo-index --check вне lint:all</a>
     </div>
@@ -1823,7 +1757,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="manifest-practices">
     <div class="q-head">
-      <span class="q-num">23</span>
+      <span class="q-num">21</span>
       <h2 class="q-title">Какие из десяти практик для файлов миграций принять</h2>
       <a class="q-src" href="5-migration-manifest-audit.html">дека migration-manifest-audit</a>
     </div>
@@ -1923,7 +1857,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="schematics-tsconfig">
     <div class="q-head">
-      <span class="q-num">24</span>
+      <span class="q-num">22</span>
       <h2 class="q-title">Пакет DS уйдёт в npm пустым, когда репо перейдёт на TypeScript 6</h2>
       <a class="q-src" href="../docs/todo.md">schematics/tsconfig moduleResolution</a>
     </div>
@@ -1960,7 +1894,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="design-manifest-templates">
     <div class="q-head">
-      <span class="q-num">25</span>
+      <span class="q-num">23</span>
       <h2 class="q-title">Два пустых раздела в манифесте Claude Design: templates и startingPoints</h2>
       <a class="q-src" href="../docs/todo.md">templates и startingPoints в манифесте</a>
     </div>
@@ -1996,7 +1930,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="docs-blocks">
     <div class="q-head">
-      <span class="q-num">26</span>
+      <span class="q-num">24</span>
       <h2 class="q-title">Колесо часов и минут в выпадашке выбора времени: показывать его в документации отдельно</h2>
       <a class="q-src" href="../docs/todo.md">компоненты без блока в ds-docs</a>
     </div>
@@ -2050,7 +1984,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="text-snap-press">
     <div class="q-head">
-      <span class="q-num">27</span>
+      <span class="q-num">25</span>
       <h2 class="q-title">Текст кнопки дёргается в конце анимации нажатия</h2>
       <a class="q-src" href="17-text-snap-scale.html">дека text-snap-scale</a>
     </div>
@@ -2079,7 +2013,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="text-snap-card">
     <div class="q-head">
-      <span class="q-num">28</span>
+      <span class="q-num">26</span>
       <h2 class="q-title">Карточка при наведении: приподниматься на 1px или расти</h2>
       <a class="q-src" href="17-text-snap-scale.html">дека text-snap-scale</a>
     </div>
@@ -2103,7 +2037,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="text-snap-funnel">
     <div class="q-head">
-      <span class="q-num">29</span>
+      <span class="q-num">27</span>
       <h2 class="q-title">Ступень воронки в конце появления делает маленький шаг по краям</h2>
       <a class="q-src" href="17-text-snap-scale.html">дека text-snap-scale</a>
     </div>
@@ -2130,7 +2064,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-duplicate-labels">
     <div class="q-head">
-      <span class="q-num">30</span>
+      <span class="q-num">28</span>
       <h2 class="q-title">Две колонки с одной подписью: убрал первую - на её место едет не та</h2>
       <span class="q-src">chart.math.ts:457 · 0e868e686</span>
     </div>
@@ -2199,7 +2133,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-heatmap-gap">
     <div class="q-head">
-      <span class="q-num">31</span>
+      <span class="q-num">29</span>
       <h2 class="q-title">Цветная шкала под heatmap отодвинута на 12px ради метки с числом</h2>
       <span class="q-src">heatmap-chart.component.scss:142 · f4fa4867b</span>
     </div>
@@ -2224,7 +2158,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-scatter-tether-paint">
     <div class="q-head">
-      <span class="q-num">32</span>
+      <span class="q-num">30</span>
       <h2 class="q-title">Пунктир от курсора к точке в scatter заставляет браузер перерисовывать всю страницу</h2>
       <span class="q-src">scatter-chart.component.html:153 · 46a912b46</span>
     </div>
@@ -2264,7 +2198,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-hover-transitions-paint">
     <div class="q-head">
-      <span class="q-num">33</span>
+      <span class="q-num">31</span>
       <h2 class="q-title">Плавная подсветка при наведении заставляет график перерисовываться каждый кадр</h2>
       <span class="q-src">_chart-interactive.scss:6 · chart.component.scss:152 · 737838eac</span>
     </div>
@@ -2314,7 +2248,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-halo-copies">
     <div class="q-head">
-      <span class="q-num">34</span>
+      <span class="q-num">32</span>
       <h2 class="q-title">Обводка подписей на графике сделана трижды, и у «+24.0%» она другая</h2>
       <span class="q-src">reference-label.component.scss:5 · series-annotation.component.scss:13 · line-series.component.scss:141 · bf6fb9dd7</span>
     </div>
@@ -2369,7 +2303,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-change-fade-timing">
     <div class="q-head">
-      <span class="q-num">35</span>
+      <span class="q-num">33</span>
       <h2 class="q-title">Подпись «+12.5%» на линии появляется быстрее остальных подписей графика</h2>
       <span class="q-src">line-series.component.scss:118 · _chart-motion.scss:82 · bf6fb9dd7</span>
     </div>
@@ -2402,7 +2336,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-morph-finish">
     <div class="q-head">
-      <span class="q-num">36</span>
+      <span class="q-num">34</span>
       <h2 class="q-title">Данные пересортировались, пока колонки ещё влетают из заглушки загрузки</h2>
       <span class="q-src">chart-skeleton-morph.ts:91 · column-series.component.ts:335 · bf6fb9dd7</span>
     </div>
@@ -2435,7 +2369,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-hover-switch-names">
     <div class="q-head">
-      <span class="q-num">37</span>
+      <span class="q-num">35</span>
       <h2 class="q-title">Выключатели наведения у графиков названы четырьмя разными способами</h2>
       <span class="q-src">chart.component.ts:220 · pie-chart.component.ts:133 · heatmap-chart.component.ts:114 · scatter-chart.component.ts:161 · 937e15e03 · fe6d6591a</span>
     </div>
@@ -2474,7 +2408,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-readout-location">
     <div class="q-head">
-      <span class="q-num">38</span>
+      <span class="q-num">36</span>
       <h2 class="q-title">Формат числа в пилюле на оси пришёл новым местом 'readout', и часть форматтеров консьюмеров ломается</h2>
       <span class="q-src">chart.types.ts:12 · chart.component.ts:1203 · charts-format.ts:42 · 46fe38cd4</span>
     </div>
@@ -2509,7 +2443,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-pin-line-move">
     <div class="q-head">
-      <span class="q-num">39</span>
+      <span class="q-num">37</span>
       <h2 class="q-title">Закреплённая линия курсора гаснет и появляется заново, а не переезжает к новой категории</h2>
       <span class="q-src">chart.component.html:99 · chart.component.scss:93 · c449bdcb0</span>
     </div>
@@ -2534,7 +2468,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-pin-line-detect">
     <div class="q-head">
-      <span class="q-num">40</span>
+      <span class="q-num">38</span>
       <h2 class="q-title">Линия у закреплённой категории пропадает, если серия линии лежит в своём компоненте консьюмера</h2>
       <span class="q-src">chart.component.ts:874 · chart.component.ts:878 · c449bdcb0</span>
     </div>
@@ -2568,13 +2502,13 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-scale-marker-off">
     <div class="q-head">
-      <span class="q-num">41</span>
+      <span class="q-num">39</span>
       <h2 class="q-title">Выключенная метка на шкале heatmap убирает и число, и указатель</h2>
       <span class="q-src">heatmap-chart.component.ts:170 · heatmap-chart.component.html:219 · 937e15e03</span>
     </div>
     <ul class="q-sub">
       <li><code>[showScaleMarker]="false"</code> убирает <b>метку целиком</b>: число и треугольник над шкалой.</li>
-      <li>Просвет 24px над шкалой <b>остаётся</b> и с выключенной меткой (вопрос 33).</li>
+      <li>Просвет 24px над шкалой <b>остаётся</b> и с выключенной меткой (вопрос 31).</li>
       <li>Ниже курсор на ячейке со значением 618, метка выключена.</li>
     </ul>
     <div class="opts">
@@ -2595,7 +2529,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-nearest-radius-off">
     <div class="q-head">
-      <span class="q-num">42</span>
+      <span class="q-num">40</span>
       <h2 class="q-title">Радиус nearestRadius ничего не делает, когда ближайшая точка выключена</h2>
       <span class="q-src">scatter-chart.component.ts:578 · scatter-chart.component.ts:165 · 5311a5fb2</span>
     </div>
@@ -2622,7 +2556,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-change-from-zero">
     <div class="q-head">
-      <span class="q-num">43</span>
+      <span class="q-num">41</span>
       <h2 class="q-title">Отрезок от нуля пропадает из подсветки изменения на линии</h2>
       <span class="q-src">line-series.component.ts:985 · 7682d9d98</span>
     </div>
@@ -2643,7 +2577,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-hold-stack">
     <div class="q-head">
-      <span class="q-num">44</span>
+      <span class="q-num">42</span>
       <h2 class="q-title">С закреплённой осью скрытая серия уходит, а стопка над ней всё равно оседает</h2>
       <span class="q-src">column-chart.component.ts:302 · column-chart.component.ts:313 · 221cc70ed</span>
     </div>
@@ -2682,7 +2616,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-anchor-dots">
     <div class="q-head">
-      <span class="q-num">45</span>
+      <span class="q-num">43</span>
       <h2 class="q-title">Линия без точек рисует невидимые точки, чтобы панель и пин вставали на значение</h2>
       <span class="q-src">line-series.component.html:121 · line-series.component.scss:197 · dea4ffa40</span>
     </div>
@@ -2705,7 +2639,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-glide-head-start">
     <div class="q-head">
-      <span class="q-num">46</span>
+      <span class="q-num">44</span>
       <h2 class="q-title">При быстром проходе курсора панель и точка отставали; теперь переезд стартует с 33ms</h2>
       <span class="q-src">charts-motion.ts:42 · charts-motion.ts:103 · chart-tooltip.directive.ts:196 · 65d87734e</span>
     </div>
@@ -2735,7 +2669,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="parked-as-decided">
     <div class="q-head">
-      <span class="q-num">47</span>
+      <span class="q-num">45</span>
       <h2 class="q-title">Пять ответов «не сейчас» агент сам перенёс в «Уже решено»: оставить там или вернуть в очередь</h2>
       <span class="q-src">«Уже решено» в этой деке · docs/todo.md</span>
     </div>
@@ -2775,11 +2709,23 @@ onRow(row: <b>RowChartEntry</b>)</p>
   <p class="group">Уже решено</p>
   <p class="done-lede">Здесь ничего не выбирается: что решено, что из этого уже в dev и где это видно.</p>
 
+  <section class="q is-settled" data-done="ask-info-hint-content">
+    <div class="q-head"><h2 class="q-title">Подсказка ⓘ умеет показать только строку текста, а консьюмеру нужен список</h2><span class="chip is-done">сделано в ветке</span></div>
+    <ul class="q-sub">
+      <li>Твой ответ 2026-10-12: <b>«и A · Содержимое внутри тега, и B · Шаблон во входе»</b>, потом сравнить по тому, как консьюмеры пользуются.</li>
+      <li>Ветка <code>ecm-feat/info-hint-content</code>: оба способа работают, в коде метка <code>TODO(info-hint-content)</code>, пункт в <code>docs/todo.md</code>. Дека <a href="implemented/info-hint-content.html">info-hint-content</a>.</li>
+    </ul>
+  </section>
+  <section class="q is-settled" data-done="ask-info-hint-icon">
+    <div class="q-head"><h2 class="q-title">Значок статуса как кнопка подсказки: кто задаёт значок и цвет</h2><span class="chip is-done">сделано в ветке</span></div>
+    <p class="q-sub">Твой ответ 2026-10-12: <b>«Любой значок DS, цвет от консьюмера»</b>. <code>icon</code> принимает любое имя значка, цвет - <code>--ds-info-hint-color</code>. Ветка <code>ecm-feat/info-hint-content</code>.</p>
+  </section>
+
   <section class="q is-settled" data-done="unasked-decisions">
     <div class="q-head"><h2 class="q-title">Шесть изменений поведения вышли в 0.14.7 без выбора между вариантами</h2><span class="chip">разбирается в деке</span></div>
     <ul class="q-sub">
       <li>Твой ответ 2026-10-12: <b>«Разобрать по одному в деке»</b>.</li>
-      <li>Разбирается в деке <a href="27-six-behaviour-changes.html">six-behaviour-changes</a>: по каждому изменению до и после и два-три варианта.</li>
+      <li>Разбирается в деке <a href="26-six-behaviour-changes.html">six-behaviour-changes</a>: по каждому изменению до и после и два-три варианта.</li>
       <li>Все шесть <b>уже опубликованы в 0.14.7</b>; до твоего выбора остаются как есть.</li>
     </ul>
   </section>

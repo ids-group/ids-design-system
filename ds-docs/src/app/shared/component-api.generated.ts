@@ -3911,11 +3911,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dsDefinitionTerm",
         "kind": "input",
-        "type": "string",
+        "type": "string | TemplateRef<unknown>",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Tip text. An empty string turns the tooltip off."
+        "description": "Tip text, or a template the panel renders as given. An empty string turns the tooltip off. Keep a template's content non-interactive: the panel is `role=\"tooltip\"` and never takes focus."
       },
       {
         "name": "dsTooltipPlacement",
@@ -5050,12 +5050,21 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "inputs": [
       {
         "name": "text",
-        "kind": "input-required",
+        "kind": "input",
         "type": "string",
         "union": null,
-        "default": null,
-        "required": true,
-        "description": "The supplementary text, shown on hover and focus and kept open by a click."
+        "default": "''",
+        "required": false,
+        "description": "The supplementary text, shown on hover and focus and kept open by a click. `**bold**` runs render bold."
+      },
+      {
+        "name": "content",
+        "kind": "input",
+        "type": "TemplateRef<unknown> | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "A template shown in the panel in place of `text`. Wins over projected content and `text`."
       },
       {
         "name": "ariaLabel",
@@ -5069,14 +5078,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "icon",
         "kind": "input",
-        "type": "'help' | 'info'",
-        "union": [
-          "help",
-          "info"
-        ],
+        "type": "IconName",
+        "union": null,
         "default": "'help'",
         "required": false,
-        "description": "`'help'` draws a question mark in a circle, `'info'` an \"i\"."
+        "description": "Any DS icon; `'help'` draws a question mark in a circle, `'info'` an \"i\"."
       }
     ],
     "outputs": []
@@ -12265,11 +12271,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dsTooltip",
         "kind": "input",
-        "type": "string",
+        "type": "string | TemplateRef<unknown>",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Tip text. An empty string turns the tooltip off."
+        "description": "Tip text, or a template the panel renders as given. An empty string turns the tooltip off. Keep a template's content non-interactive: the panel is `role=\"tooltip\"` and never takes focus."
       },
       {
         "name": "dsTooltipPlacement",
@@ -12338,11 +12344,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "text",
         "kind": "input-required",
-        "type": "string",
+        "type": "string | TemplateRef<unknown>",
         "union": null,
         "default": null,
         "required": true,
-        "description": "Tooltip text; `**bold**` runs render bold."
+        "description": "Tooltip text, where `**bold**` runs render bold; or a template, rendered as given."
       },
       {
         "name": "placement",

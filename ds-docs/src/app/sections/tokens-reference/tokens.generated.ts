@@ -4750,6 +4750,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Info Hint",
+    "selector": ".info-hint",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-info-hint-color",
+        "value": "var(--icon-default)",
+        "notes": "Info hint icon colour, at rest and on hover (defaults to --icon-default)."
+      }
+    ]
+  },
+  {
     "component": "Input",
     "selector": ".input",
     "description": "",
