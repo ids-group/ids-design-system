@@ -34,6 +34,16 @@
 
 ### Changed
 
+- **Links and the brand tints follow `--primary` in the light theme.** `--surface-tint` and
+  `--primary-subtitle` are `hsl(from var(--primary) h 100% 97%)`, `--primary-muted` is
+  `hsl(from var(--primary) h 95% 94%)` and `--text-link` is
+  `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))`, where they were the `--blue-50`,
+  `--blue-100` and `--blue-700` steps. A brand that sets only `--primary` gets links, active rows,
+  selected options and tonal fills in its own hue; one that sets them itself keeps its values.
+  A light brand colour (yellow, lime, cyan) derives a link under 4.5:1 on white: the theming page
+  lists the four with what each paints and the contrast it must meet. Restore with
+  `--text-link: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle: var(--blue-50);
+  --primary-muted: var(--blue-100);`.
 - **`ds-line-chart` re-scales the value axis when a series is hidden.** `rescaleOnHide` defaults to
   `true`, as on `ds-column-chart` and `ds-chart`: the axis fits the series left showing. Set
   `[rescaleOnHide]="false"` to hold it where it stands with every series shown; a bare

@@ -130,9 +130,44 @@
       "pitfall": "Nothing fails at build: a test or a screenshot that reads the trigger as 21:30 reads 09:30 PM under en-US.",
       "restore": "provideDsConfig({ timePicker: { format: '24h' } })",
       "verify": "Open a ds-time-picker on each screen and confirm the trigger shows the clock the app means: the locale's, or the one `format` or `timePicker.format` pins."
+    },
+    {
+      "id": "light-brand-tints-follow-primary",
+      "kind": "behavior",
+      "old": "--text-link",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "--primary:",
+        "--text-link",
+        "--surface-tint",
+        "--primary-subtitle",
+        "--primary-muted",
+        "--blue-50",
+        "--blue-100",
+        "--blue-700",
+        "--blue-s",
+        "--blue-l",
+        "data-brand"
+      ],
+      "action": "None, unless your brand sets `--primary` or `--blue-s/l` in the light theme: check `--text-link` on white and on `--surface-tint` against 4.5:1, and set `--text-link`, `--surface-tint`, `--primary-subtitle` or `--primary-muted` explicitly where the derived value fails or is not the colour you want.",
+      "appliesWhen": "Light theme only. In light, `--text-link`, `--surface-tint`, `--primary-subtitle` and `--primary-muted` were the `--blue-*` steps `--blue-700`, `--blue-50`, `--blue-50` and `--blue-100`; they now take the hue of `--primary` (`hsl(from var(--primary) h 100% 97%)` for both tints, `h 95% 94%` for `--primary-muted`), and `--text-link` is `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))`. The default blue renders the same RGB. A brand that sets them itself keeps its values. The dark theme is unchanged.",
+      "pitfall": "A brand that re-pointed the `--blue-50`, `--blue-100` or `--blue-700` steps without moving `--primary`'s hue no longer reaches them through those steps; and a light brand colour (yellow, lime, cyan) derives a link under 4.5:1 on white with no error anywhere.",
+      "restore": "--text-link: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle: var(--blue-50); --primary-muted: var(--blue-100);",
+      "verify": "With the brand applied in the light theme, a link reads at least 4.5:1 on white and on an active list row, and the active row, the selected dropdown option and tonal fills are tinted in the brand hue or set deliberately.",
+      "evidence": [
+        "tokens:--surface-tint",
+        "tokens:--primary-subtitle",
+        "tokens:--primary-muted",
+        "tokens:--text-link"
+      ]
     }
   ],
   "informational": [
+    {
+      "text": "An expanded `ds-table` row now folds to nothing on close and grows from nothing on open: the panel's cell padding moved inside the folding part, so the row no longer starts or stops 24px tall. The open panel keeps the same padding.",
+      "verify": "Open and close an expandable ds-table row and confirm it grows from and folds to zero height with no jump at either end."
+    },
     {
       "text": "`ds-chart`, `ds-column-chart`, `ds-line-chart` and `ds-waterfall-chart` move the line, its markers and area, the value labels, the pin, the gridlines and tick labels and the waterfall connectors on `--ds-motion-chart-mark-duration` and `--ds-motion-chart-mark-easing` when the data changes, as the columns already did; a column also glides sideways when the plot width changes. Set `--ds-motion-chart-mark-duration: 0ms` on the chart to make every mark land at once again.",
       "verify": "Change the data of a ds-chart holding a column and a line series and confirm the line, its markers and the gridlines move with the columns instead of jumping."
