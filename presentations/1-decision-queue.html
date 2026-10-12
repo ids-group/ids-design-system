@@ -52,6 +52,14 @@
   .ud-board em { font-style: normal; font-weight: var(--font-weight-bold); color: var(--text-tertiary); }
   .ud-board li.is-open { background: none; box-shadow: inset 0 0 0 1px var(--border-default); }
 
+  .ts-strip { display: grid; gap: 2px; font: var(--font-size-2xs) / 1.3 var(--font-sans); }
+  .ts-strip span { display: flex; justify-content: space-between; gap: var(--space-2); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); }
+  .ts-strip span b { flex: none; }
+  .ts-strip b { font-size: var(--font-size-3xs); text-transform: uppercase; letter-spacing: .04em; }
+  .ts-strip .is-ok { background: var(--success-subtitle); color: var(--success-text); }
+  .ts-strip .is-warn { background: var(--warning-subtitle); color: var(--text-primary); }
+  .ts-strip .is-bad { background: var(--error-subtitle); color: var(--error-text); }
+
   .opt { cursor: pointer; }
   .opt.is-chosen { border-color: var(--success); box-shadow: inset 0 0 0 1px var(--success); }
   .opt > h3 { display: flex; align-items: baseline; gap: var(--space-2); }
@@ -807,12 +815,12 @@
 
 <main>
   <div class="masthead">
-    <h1>7 асков консьюмеров и 52 решения, каждое с нарисованными вариантами</h1>
+    <h1>6 асков консьюмеров и 36 решений, у каждого варианты нарисованы</h1>
     <p class="lede">
-      Сверху - всё, чего ждёт консьюмер: фиксы, хуки и фичи из бэклога, каждый показан как есть
-      сейчас и как будет после. Ниже - открытые деки и бакет <code>Decisions</code>. Вариант
-      выбирается кликом, звёздочка - рекомендация, внизу собирается одна строка со всеми ответами.
-      Справа от аска - приоритет, консьюмер и вид работы; справа от решения - ссылка на деку.
+      Сверху - чего ждут консьюмеры, ниже - открытые решения по темам. Вариант выбирается кликом,
+      звёздочка - рекомендация, внизу собирается одна строка со всеми ответами. Справа от вопроса -
+      приоритет и консьюмер или ссылка на деку с полным разбором. В конце - «Уже решено»: что ответено
+      и что из этого уже в dev.
     </p>
     <div class="chips">
       <span class="chip is-open">Нужно решение</span>
@@ -1072,7 +1080,7 @@
 
   <section class="q" data-q="ask-text-muted">
       <div class="q-head">
-        <span class="q-num">06</span>
+        <span class="q-num">05</span>
         <h2 class="q-title">Самый бледный серый текст не читается: 2.42:1 при норме 4.5:1</h2>
         <span class="q-src">P3 · ai-sdlc · контраст, запаркован</span>
       </div>
@@ -1125,7 +1133,7 @@
 
   <section class="q" data-q="ask-brand-residue">
       <div class="q-head">
-        <span class="q-num">07</span>
+        <span class="q-num">06</span>
         <h2 class="q-title">У консьюмера с зелёным брендом ссылки и подложки остаются синими</h2>
         <span class="q-src">P3 · pinkmoon, ai-sdlc · бренд, запаркован</span>
       </div>
@@ -1169,7 +1177,7 @@
 
   <section class="q" data-q="colour-engine">
     <div class="q-head">
-      <span class="q-num">09</span>
+      <span class="q-num">07</span>
       <h2 class="q-title">Как получать все оттенки цвета из одного цвета бренда</h2>
       <a class="q-src" href="2-color-engine-derivation.html">дека color-engine-derivation</a>
     </div>
@@ -1207,7 +1215,7 @@
 
   <section class="q" data-q="pressed-tonal">
     <div class="q-head">
-      <span class="q-num">00</span>
+      <span class="q-num">08</span>
       <h2 class="q-title">Нажатая тональная кнопка сереет вместо того, чтобы стать насыщеннее</h2>
       <a class="q-src" href="4-interaction-formula.html">дека interaction-formula</a>
     </div>
@@ -1231,7 +1239,7 @@
 
   <section class="q" data-q="pressed-danger">
     <div class="q-head">
-      <span class="q-num">00</span>
+      <span class="q-num">09</span>
       <h2 class="q-title">Красный пункт меню «Удалить» никак не меняется при нажатии</h2>
       <a class="q-src" href="4-interaction-formula.html">дека interaction-formula</a>
     </div>
@@ -1253,7 +1261,7 @@
 
   <section class="q" data-q="theme-recipe">
     <div class="q-head">
-      <span class="q-num">11</span>
+      <span class="q-num">10</span>
       <h2 class="q-title">Кнопка считает цвета наведения сама и может разойтись с темой</h2>
       <a class="q-src" href="../docs/todo.md">рецепт темы против ручных пиков</a>
     </div>
@@ -1289,7 +1297,7 @@
 
   <section class="q" data-q="warning-text">
     <div class="q-head">
-      <span class="q-num">12</span>
+      <span class="q-num">11</span>
       <h2 class="q-title">Текст жёлтого предупреждения не проходит контраст: 4.42:1 при норме 4.5:1</h2>
       <a class="q-src" href="7-warning-text-colour.html">дека warning-text-colour</a>
     </div>
@@ -1338,7 +1346,7 @@
 
   <section class="q" data-q="locale-week-and-hour">
     <div class="q-head">
-      <span class="q-num">13</span>
+      <span class="q-num">12</span>
       <h2 class="q-title">Календарь и часы не следуют языку и стране приложения</h2>
       <a class="q-src" href="9-locale-week-and-hour.html">дека locale-week-and-hour</a>
     </div>
@@ -1371,7 +1379,7 @@
 
   <section class="q" data-q="stepper-dropzone-fields">
     <div class="q-head">
-      <span class="q-num">14</span>
+      <span class="q-num">13</span>
       <h2 class="q-title">Счётчик и зона загрузки файлов не умеют подпись и ошибку, как остальные поля</h2>
       <a class="q-src" href="../docs/todo.md">ds-number-stepper и ds-dropzone в системе полей</a>
     </div>
@@ -1404,7 +1412,7 @@
 
   <section class="q" data-q="picker-height">
     <div class="q-head">
-      <span class="q-num">16</span>
+      <span class="q-num">14</span>
       <h2 class="q-title">Высоту выпадающего списка нельзя поднять выше 280px общей настройкой</h2>
       <a class="q-src" href="8-picker-list-height.html">дека picker-list-height</a>
     </div>
@@ -1463,7 +1471,7 @@
 
   <section class="q" data-q="cdk-menu">
     <div class="q-head">
-      <span class="q-num">17</span>
+      <span class="q-num">15</span>
       <h2 class="q-title">Переводить ли меню на готовую клавиатуру и фокус из Angular</h2>
       <a class="q-src" href="../docs/todo.md">переход на CDK Menu</a>
     </div>
@@ -1494,7 +1502,7 @@
 
   <section class="q" data-q="signal-forms">
     <div class="q-head">
-      <span class="q-num">18</span>
+      <span class="q-num">16</span>
       <h2 class="q-title">Как поле показывает «идёт проверка» и «значение изменено»</h2>
       <a class="q-src" href="../docs/todo.md">вид pending и dirty у signal-forms</a>
     </div>
@@ -1533,7 +1541,7 @@
 
   <section class="q" data-q="row-chart-row-type">
     <div class="q-head">
-      <span class="q-num">19</span>
+      <span class="q-num">17</span>
       <h2 class="q-title">Как назвать тип строки данных у графика с горизонтальными полосами</h2>
       <a class="q-src" href="../docs/todo.md">переименование ds-bar-chart</a>
     </div>
@@ -1592,7 +1600,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="unread-tokens">
     <div class="q-head">
-      <span class="q-num">24</span>
+      <span class="q-num">18</span>
       <h2 class="q-title">121 публичный токен никто в библиотеке не читает: что удалить</h2>
       <a class="q-src" href="12-unread-tokens.html">дека unread-tokens</a>
     </div>
@@ -1613,7 +1621,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="unasked-decisions">
     <div class="q-head">
-      <span class="q-num">25</span>
+      <span class="q-num">19</span>
       <h2 class="q-title">Шесть изменений поведения ушли в Unreleased без выбора между вариантами</h2>
       <a class="q-src" href="13-unasked-decisions.html">дека unasked-decisions</a>
     </div>
@@ -1632,11 +1640,11 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="angular-22">
     <div class="q-head">
-      <span class="q-num">26</span>
-      <h2 class="q-title">Когда переходим на Angular 22</h2>
+      <span class="q-num">20</span>
+      <h2 class="q-title">Приложение на Angular 22 ставит DS только с обходным флагом: когда переходим</h2>
       <a class="q-src" href="../docs/todo.md">апгрейд на Angular 22, P3</a>
     </div>
-    <p class="q-sub">Библиотека объявляет <code>^21.2.0</code> во всех шести peer-зависимостях, поэтому приложение на 22 не ставится без <code>--legacy-peer-deps</code>. Angular 22 вышел 2026-06-03. Вопрос - когда, а не нужно ли.</p>
+    <p class="q-sub">DS объявляет совместимость только с Angular 21, поэтому приложение на 22 ставит её лишь с <code>--legacy-peer-deps</code>. Angular 22 вышел 2026-06-03, ни один из шести консьюмеров на нём пока не сидит. Переход тянет TypeScript 6 и новую Node на машинах и в CI. Выбрать, когда.</p>
     <div class="stage">
       <div class="spec"><p class="cap">сейчас</p>
         <p class="css">"peerDependencies": {
@@ -1654,28 +1662,28 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
 
     <div class="opts">
-      <div class="opt"><h3>В ближайший мажор</h3>
-        <div class="a22-line"><span class="t-now">0.14.6-beta.0</span><i></i><span class="t-ok">Angular 22 + TS 6.0</span><i></i><span class="t-done">новый мажор</span></div>
-        <dl class="layer"><dt>Приложение на 22</dt><dd class="gain">ставится штатно с первого мажора</dd></dl>
-        <p>Новый мажор Angular = новый мажор пакета.</p></div>
-      <div class="opt"><h3>После текущего релиза</h3>
-        <div class="a22-line"><span class="t-now">0.14.6-beta.0</span><i></i><span class="t-done">0.14.6 на 21</span><i></i><span class="t-ok">Angular 22 + TS 6.0</span></div>
+      <div class="opt"><h3>В следующей версии DS</h3>
+        <div class="a22-line"><span class="t-now">0.15.0 вышла</span><i></i><span class="t-ok">Angular 22 + TS 6.0</span><i></i><span class="t-done">0.16.0</span></div>
+        <dl class="layer"><dt>Приложение на 22</dt><dd class="gain">ставится штатно с 0.16.0</dd></dl>
+        <p>Новая версия Angular - новая версия пакета.</p></div>
+      <div class="opt"><h3>Через одну версию</h3>
+        <div class="a22-line"><span class="t-now">0.15.0 вышла</span><i></i><span class="t-done">0.16.0 на 21</span><i></i><span class="t-ok">Angular 22 + TS 6.0</span></div>
         <dl class="layer"><dt>Приложение на 22</dt><dd>ждёт ещё один релиз</dd></dl>
         <p>Сначала выпустить накопленное, потом апгрейд.</p></div>
-      <div class="opt"><h3>Ждать 22.1</h3>
-        <div class="a22-line"><span class="t-done">22.0 · 2026-06-03</span><i></i><span class="t-done">22.2.1 уже вышел</span><i></i><span class="t-gap">ждать нечего</span></div>
-        <dl class="layer"><dt>Реестр на 2026-10-02</dt><dd>@angular/core 22.2.1 latest, 22.3.0-next.0 на next</dd></dl>
-        <p>Дать экосистеме догнать.</p></div>
+      <div class="opt"><h3>Когда первый консьюмер попросит</h3>
+        <div class="a22-line"><span class="t-now">консьюмеров на 22: 0</span><i></i><span class="t-gap">первый просит 22</span><i></i><span class="t-ok">Angular 22 + TS 6.0</span></div>
+        <dl class="layer"><dt>Консьюмеры</dt><dd>все шесть на Angular 21, проверено 2026-10-02</dd></dl>
+        <p>Апгрейд, когда он кому-то нужен.</p></div>
     </div>
   </section>
 
   <section class="q" data-q="npm-2027">
     <div class="q-head">
-      <span class="q-num">27</span>
-      <h2 class="q-title">Чем заменить публикацию в npm с января 2027</h2>
+      <span class="q-num">21</span>
+      <h2 class="q-title">С января 2027 npm перестанет принимать публикацию DS по нашему токену</h2>
       <a class="q-src" href="../docs/todo.md">публикация в npm после января 2027</a>
     </div>
-    <p class="q-sub"><code>publish.sh</code> ходит с гранулярным токеном и Bypass 2FA. npm убирает прямую публикацию такими токенами в январе 2027 - останется чтение и подготовка публикации, которую мейнтейнер подтверждает 2FA.</p>
+    <p class="q-sub">Сегодня релиз публикуется из CI по токену с обходом двухфакторной проверки. npm закрывает этот путь в январе 2027, а до тех пор токен надо менять каждые 90 дней, иначе релиз падает. Ты сказал 2026-09-14: держать токен, маршрут решить позже. Выбрать маршрут.</p>
     <div class="stage">
       <div class="spec"><p class="cap">до отсечки</p>
         <div class="np-tl">
@@ -1693,18 +1701,18 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
 
     <div class="opts">
-      <div class="opt"><h3>Trusted publishing (OIDC)</h3>
+      <div class="opt"><h3>Публикация из CI без токена</h3>
         <p class="cap">тег v*</p>
         <div class="pipe"><span>build-lib.sh</span><i>→</i><span class="p-ok">publish по OIDC</span><i>→</i><span class="p-ok">в npm</span></div>
         <dl class="layer"><dt>токен</dt><dd class="gain">нет</dd><dt>ротация 90 дней</dt><dd class="gain">уходит</dd><dt>человек</dt><dd class="none">не нужен</dd></dl>
         <p class="np-warn">Bitbucket не trusted publisher - перепроверить</p>
         <p>CI публикует без долгоживущего токена.</p></div>
-      <div class="opt"><h3>Ручное подтверждение 2FA</h3>
+      <div class="opt"><h3>CI готовит, человек подтверждает кодом</h3>
         <p class="cap">тег v*</p>
         <div class="pipe"><span>build-lib.sh</span><i>→</i><span>stage по токену</span><i>→</i><span class="p-wait">ждёт 2FA</span><i>→</i><span class="p-ok">в npm</span></div>
         <dl class="layer"><dt>токен</dt><dd>только на stage</dd><dt>ротация 90 дней</dt><dd class="gain">уходит</dd><dt>человек</dt><dd>каждый релиз</dd></dl>
         <p>Пайплайн готовит, человек подтверждает.</p></div>
-      <div class="opt"><h3>Свой реестр</h3>
+      <div class="opt"><h3>Свой реестр пакетов вместо npm</h3>
         <p class="cap">тег v*</p>
         <div class="pipe"><span>build-lib.sh</span><i>→</i><span class="p-ok">publish в свой реестр</span></div>
         <p class="cap">.npmrc каждого консьюмера</p>
@@ -1716,11 +1724,11 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="claude-design-ci">
     <div class="q-head">
-      <span class="q-num">28</span>
-      <h2 class="q-title">Публикация в Claude Design из Bitbucket</h2>
+      <span class="q-num">22</span>
+      <h2 class="q-title">Загрузку DS в Claude Design нельзя запустить из CI: последний шаг ручной</h2>
       <a class="q-src" href="../docs/todo.md">публикация в Claude Design из CI</a>
     </div>
-    <p class="q-sub">Всё до публикации уже автоматизировано и гейтится. Не хватает последнего шага - самой загрузки, которая требует Chrome.</p>
+    <p class="q-sub">Всё до загрузки уже собирается и проверяется в CI. Сама загрузка идёт только из сессии Claude Code на машине: доступ привязан к логину claude.ai, а перед записью нужен клик одобрения. Ты просил ещё раз поискать путь через CI.</p>
     <div class="stage">
       <div class="spec"><p class="cap">after-release, node:22-alpine</p>
         <div class="pipe"><span class="p-ok">генератор</span><i>→</i><span class="p-ok">Angular build</span><i>→</i><span class="p-ok">бандл</span><i>→</i><span class="p-ok">check-manual-surface</span><i>→</i><span class="p-ok">check-doc-api</span><i>→</i><span class="p-ok">build:upload</span><i>→</i><span class="p-ok">коммит release-bot</span></div>
@@ -1733,13 +1741,13 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
 
     <div class="opts">
-      <div class="opt"><h3>Искать CI-маршрут</h3>
+      <div class="opt"><h3>Искать путь через CI</h3>
         <div class="pipe"><span class="p-ok">дерево upload</span><i>→</i><span class="cd-q">grant в переменной?</span><i>→</i><span class="cd-q">план без клика?</span><i>→</i><span>загрузка из CI</span></div>
         <p class="cap">что проверить, по порядку</p>
         <ol class="cd-list"><li>refresh-токен designOauth: срок и узкий scope</li><li>неинтерактивный finalize_plan</li><li>грант владельца ведёт себя иначе</li></ol>
         <dl class="layer"><dt>человек</dt><dd class="gain">не нужен, если всё да</dd></dl>
-        <p>Headless Chrome в пайплайне.</p></div>
-      <div class="opt"><h3>Оставить локальным</h3>
+        <p>Загрузка без человека, если на все три вопроса ответ «да».</p></div>
+      <div class="opt"><h3>Оставить загрузку с машины</h3>
         <div class="pipe"><span class="p-ok">CI: дерево upload</span><i>→</i><span>сессия на машине</span><i>→</i><span class="p-wait">клик одобрения</span><i>→</i><span>загрузка</span></div>
         <dl class="layer"><dt>что уходит</dt><dd>байт-в-байт дерево CI</dd><dt>суждение</dt><dd class="none">не нужно, только клик</dd></dl>
         <p>Загрузка с машины, остальное в CI.</p></div>
@@ -1753,11 +1761,11 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="fix-all-html">
     <div class="q-head">
-      <span class="q-num">30</span>
-      <h2 class="q-title">fix:all переформатирует HTML, с которым потом спорит eslint</h2>
+      <span class="q-num">23</span>
+      <h2 class="q-title">Автоисправление fix:all переписывает HTML-шаблоны, а eslint хочет их обратно</h2>
       <a class="q-src" href="../docs/todo.md">fix:all против eslint на HTML</a>
     </div>
-    <p class="q-sub">Разница в двух глобах: <code>format</code> не смотрит шаблоны и гейт зелёный, а <code>format:fix</code> добавляет <code>html</code> и переписывает ~112 шаблонов, которые два правила eslint немедленно хотят обратно.</p>
+    <p class="q-sub">Общая проверка <code>lint:all</code> зелёная. Но <code>fix:all</code> прогоняет форматтер и по шаблонам: он переписывает ~112 файлов, а два правила eslint тут же хотят их обратно, и в дифф попадают чужие файлы. Выбрать: убрать шаблоны из форматтера или подружить правила.</p>
     <div class="stage">
       <div class="spec"><p class="cap">loading-overlay.section.html в репо</p>
         <p class="css">&lt;h3 class="block-title t-h4"&gt;
@@ -1773,7 +1781,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
 
     <div class="opts">
-      <div class="opt"><h3>*.html в .prettierignore <span class="star">★</span></h3>
+      <div class="opt"><h3>Форматтер не трогает шаблоны <span class="star">★</span></h3>
         <p class="cap">.prettierignore</p>
         <p class="css">*.scss
 *.css
@@ -1783,7 +1791,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
         <p class="console quiet">git status: шаблоны не тронуты</p>
         <dl class="layer"><dt>правок</dt><dd class="gain">1 строка</dd></dl>
         <p>Самый дешёвый пункт на доске.</p></div>
-      <div class="opt"><h3>Подружить правила</h3>
+      <div class="opt"><h3>Подружить форматтер и eslint</h3>
         <p class="cap">шаблон после</p>
         <p class="css">&lt;h3 class="block-title t-h4"&gt;The scrim stops the keyboard too&lt;/h3&gt;</p>
         <p class="console quiet">prettier и eslint согласны</p>
@@ -1794,11 +1802,11 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="stale-ds-css">
     <div class="q-head">
-      <span class="q-num">31</span>
-      <h2 class="q-title">Ничто не ловит устаревший presentations/ds.css</h2>
+      <span class="q-num">24</span>
+      <h2 class="q-title">Деки рисуются со старой копией стилей DS, и это никто не ловит</h2>
       <a class="q-src" href="../docs/todo.md">устаревший presentations/ds.css</a>
     </div>
-    <p class="q-sub">Регенерация 2026-09-10 сдвинула 47 объявлений, не имевших отношения к правке. Два гейта читают этот файл как истину, то есть деки рендерились со старым фокус-кольцом столько, сколько изменения лежали в <code>src/lib</code>.</p>
+    <p class="q-sub"><code>presentations/ds.css</code> - копия стилей библиотеки для дек, её пересобирают руками. В сентябре она отстала на 47 объявлений, и деки рисовали старое кольцо фокуса. Две проверки читают эту копию как истину, поэтому тоже могут ошибаться. Выбрать, как держать её свежей.</p>
     <div class="stage">
       <div class="spec"><p class="cap">деки рендерили это</p><div class="ring-mock old">Кнопка</div><p class="says">кольцо через transition</p></div>
       <div class="spec"><p class="cap">библиотека рисует это</p><div class="ring-mock new">Кнопка</div><p class="says">кольцо через animation, 47 объявлений разошлись</p></div>
@@ -1808,20 +1816,20 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
 
     <div class="opts">
-      <div class="opt"><h3>Гейт на свежесть <span class="star">★</span></h3>
+      <div class="opt"><h3>Проверка падает на устаревшей копии <span class="star">★</span></h3>
         <p class="cap">в lint:all, ds.css устарел</p>
         <p class="console">$ npm run build:deck-css<br>$ git diff --exit-code presentations/ds.css<br><code>-  transition: outline-color var(--duration-fast) …</code><br><code>+  animation: ds-focus-ring-in var(--duration-fast) …</code><br>exit 1</p>
         <p class="cap">ds.css свежий</p>
         <p class="console quiet">build:deck-css: presentations/ds.css written, 8 referenced file(s) all present<br>exit 0</p>
         <p class="says">так уже делает build-design-sync.sh</p>
         <p>Сравнивать с пересборкой, падать на расхождении.</p></div>
-      <div class="opt"><h3>Регенерировать в prebuild</h3>
+      <div class="opt"><h3>Пересобирать копию при каждой сборке</h3>
         <p class="cap">каждая сборка</p>
         <div class="pipe"><span class="p-ok">build:deck-css</span><i>→</i><span>сборка</span></div>
         <p class="console quiet">$ git status --short<br> M presentations/ds.css</p>
         <dl class="layer"><dt>деки</dt><dd class="gain">всегда свежие</dd><dt>дерево</dt><dd>грязное, если ds.css отстал</dd></dl>
         <p>Всегда свежий, дольше сборка.</p></div>
-      <div class="opt"><h3>Оставить</h3>
+      <div class="opt"><h3>Оставить как есть</h3>
         <p class="cap">дека берёт новый токен</p>
         <p class="console"><code>D012 var(--focus-ring-radius) resolves to nothing</code></p>
         <p class="says">живой токен читается как void</p>
@@ -1832,11 +1840,11 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="todo-index-gate">
     <div class="q-head">
-      <span class="q-num">32</span>
-      <h2 class="q-title">todo-index --check вне lint:all</h2>
+      <span class="q-num">25</span>
+      <h2 class="q-title">Оглавление бэклога может устареть: его проверка не входит в общий прогон</h2>
       <a class="q-src" href="../docs/todo.md">todo-index --check вне lint:all</a>
     </div>
-    <p class="q-sub">Намеренно: в общем чекауте побайтовая сверка валит прогоны, не связанные с текущей веткой. Цена - индекс может устареть между коммитами.</p>
+    <p class="q-sub"><code>docs/todo.md</code> начинается с оглавления, которое собирает скрипт. Проверку оглавления держат вне <code>lint:all</code> нарочно: в общем чекауте параллельная сессия правит этот файл, и чужой прогон упал бы. Выбрать, включать ли её.</p>
     <div class="stage">
       <div class="spec"><p class="cap">npm run lint:all</p>
         <div class="pipe"><span class="p-ok">check:lint <b class="ti-pill">24 проверки</b></span><i>→</i><span class="p-ok">format</span><i>→</i><span class="p-ok">lint:styles</span><i>→</i><span class="p-ok">lint</span></div>
@@ -1852,14 +1860,14 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
 
     <div class="opts">
-      <div class="opt"><h3>Оставить вне <span class="star">★</span></h3>
+      <div class="opt"><h3>Оставить вне общего прогона <span class="star">★</span></h3>
         <p class="cap">lint:all сессии А</p>
         <p class="console quiet">check:lint … ok<br>exit 0</p>
         <p class="cap">индекс сверяют руками</p>
         <p class="console">$ node tools/check.mjs todo-index<br>todo-index: the index does not match the items<br>run `node tools/todo-index.mjs`</p>
         <dl class="layer"><dt>чужой прогон</dt><dd class="gain">зелёный</dd><dt>индекс</dt><dd>свеж, пока не забыли</dd></dl>
         <p>Как сейчас.</p></div>
-      <div class="opt"><h3>Внести в lint:all</h3>
+      <div class="opt"><h3>Включить в общий прогон</h3>
         <p class="cap">lint:all сессии А</p>
         <p class="console">todo-index: the index does not match the items<br>run `node tools/todo-index.mjs`<br>exit 1</p>
         <p class="says">ветка А todo.md не трогала</p>
@@ -1872,11 +1880,11 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="manifest-practices">
     <div class="q-head">
-      <span class="q-num">33</span>
-      <h2 class="q-title">Какие из десяти практик формата манифестов берём</h2>
+      <span class="q-num">26</span>
+      <h2 class="q-title">Какие из десяти практик для файлов миграций принять</h2>
       <a class="q-src" href="5-migration-manifest-audit.html">дека migration-manifest-audit</a>
     </div>
-    <p class="q-sub">Все 23 находки аудита закрыты, осталась ратификация. Контракт держится на 609 строках регэкспов - первые две практики лечат именно это. Можно отметить несколько.</p>
+    <p class="q-sub">Файлы <code>migrations/*.json</code> говорят консьюмеру, что поменялось в релизе и как обновиться. Аудит нашёл десять практик из других библиотек; все его ошибки уже исправлены, осталось решить, какие практики принять. Сейчас правила держит скрипт на 609 строк регулярных выражений, первые две практики заменяют часть их проверками. Можно отметить несколько.</p>
     <div class="stage">
       <div class="spec"><p class="cap">пункт манифеста сейчас, 0.13.0</p><p class="css">{
   "id": "button-border-token-names-the-colour",
@@ -1901,7 +1909,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
   "absent": "--ds-button-border(?![-\\w])"
 }</span></p>
         <p class="says">как у Polaris: RegExp на группу</p></div>
-      <div class="opt"><h3>Guard-предусловие</h3>
+      <div class="opt"><h3>Проверка перед применением</h3>
         <p class="cap">проверка перед миграцией</p>
         <p class="css">{
   "id": "button-border-token-names-the-colour",
@@ -1912,7 +1920,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 }</p>
         <p class="says">нет совпадения - пункт не применяется вовсе, полу-применения не бывает</p>
         <p class="mp-warn">форма ключа - пример</p></div>
-      <div class="opt"><h3>Полярность replaceIn</h3>
+      <div class="opt"><h3>Область файлов у пункта</h3>
         <p class="cap">область файлов пункта</p>
         <p class="css">{
   "id": "button-border-token-names-the-colour",
@@ -1927,17 +1935,17 @@ onRow(row: <b>RowChartEntry</b>)</p>
 <span class="dead">"new": null</span>
 <span class="mp-add">"replacedBy": []</span></p>
         <p class="says">«нет замены» отличимо от «забыли»</p></div>
-      <div class="opt"><h3>Рантайм-идентификаторы</h3>
+      <div class="opt"><h3>Связь с предупреждением в консоли</h3>
         <p class="console">[ds-button] variant="text" is discouraged</p>
         <p class="css"><span class="mp-add">"signal": "ds-button/variant-text"</span></p>
         <p class="says">devWarn уже есть, связи с пунктом нет</p></div>
-      <div class="opt"><h3>Маркер эскалации</h3>
+      <div class="opt"><h3>Метка «нужен человек» в коде</h3>
         <p class="cap">в файле консьюмера</p>
         <p class="css"><span class="mp-add">/* DS-MIGRATE: button-border-token-names-the-colour
    needs a human */</span></p>
         <p class="console">сборка падает, пока маркер в коде</p>
         <p class="says">как у Next.js, только комментарий</p></div>
-      <div class="opt"><h3>deprecatedIn</h3>
+      <div class="opt"><h3>Версия, где объявлено устаревшим</h3>
         <p class="css">"old": "--chart-grid-line-strong",
 <span class="mp-add">"deprecatedIn": "…",</span>
 // удалён в 0.13.0</p>
@@ -1947,7 +1955,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
         <p class="css"><span class="mp-add">"pr": "https://bitbucket.org/itband/
   ids-design-system/pull-requests/…"</span></p>
         <p class="says">опциональный, линт только до релиза</p></div>
-      <div class="opt"><h3>Ключ requirements</h3>
+      <div class="opt"><h3>Требование к версии Angular</h3>
         <p class="css">{
   "version": "0.13.0",
 <span class="mp-add">  "requirements": {
@@ -1956,7 +1964,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
   "items": [ … ]
 }</p>
         <p class="says">пре-флайт, который исполняет Angular CLI</p></div>
-      <div class="opt"><h3>Счётчик dry-run</h3>
+      <div class="opt"><h3>Счётчик замен при пробном прогоне</h3>
         <p class="cap">отчёт плагина по файлам</p>
         <p class="css">button-border-token-names-the-colour
 <span class="mp-add">  src/app/order.scss       3 замены
@@ -1972,11 +1980,11 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="automation-coverage">
     <div class="q-head">
-      <span class="q-num">34</span>
-      <h2 class="q-title">Три пути ds-table и пять групп компонентов ни разу не прокликаны</h2>
+      <span class="q-num">27</span>
+      <h2 class="q-title">Пять групп компонентов и три действия в таблице никто ни разу не прокликал</h2>
       <a class="q-src" href="../docs/todo.md">непрокликанные пути ds-table</a>
     </div>
-    <p class="q-sub">Автоматизация их не трогала.</p>
+    <p class="q-sub">Автоматические проходы загружали все страницы, но кликами не проверены действия, навигация, статусы, оверлеи и структура страницы, а в <code>ds-table</code> - перетаскивание колонки, растягивание и экспорт CSV. Выбрать: прокликать один раз и записать итог или оставить известной дырой.</p>
     <div class="stage">
       <div class="spec"><p class="cap">что прокликано</p>
         <table class="ac-grid">
@@ -2007,7 +2015,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
 
     <div class="opts">
-      <div class="opt"><h3>Прокликать</h3>
+      <div class="opt"><h3>Прокликать один раз</h3>
         <div class="ac-strip"><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><b></b><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i></div>
         <p class="says">5 групп + 3 пути прокликаны</p>
         <dl class="layer"><dt>итог</dt><dd class="gain">записан в todo</dd><dt>пункт</dt><dd class="gain">закрыт или стал багами</dd></dl>
@@ -2022,11 +2030,11 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="schematics-tsconfig">
     <div class="q-head">
-      <span class="q-num">35</span>
-      <h2 class="q-title">schematics/tsconfig просит moduleResolution: node</h2>
+      <span class="q-num">28</span>
+      <h2 class="q-title">Пакет DS уйдёт в npm пустым, когда репо перейдёт на TypeScript 6</h2>
       <a class="q-src" href="../docs/todo.md">schematics/tsconfig moduleResolution</a>
     </div>
-    <p class="q-sub">TypeScript 6 его удаляет.</p>
+    <p class="q-sub"><code>schematics/tsconfig.json</code> просит <code>moduleResolution: "node"</code>, а TypeScript 6 эту настройку удаляет. Тогда сборка схематиков падает, хотя <code>ng build</code> пишет success, и в npm уходит пакет без CHANGELOG, документации и миграций. Сегодня, на TypeScript 5.9.3, всё зелёное.</p>
     <div class="stage">
       <div class="spec"><p class="cap">schematics/tsconfig.json сейчас</p><p class="css">{
   "module": "commonjs",
@@ -2039,7 +2047,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
 
     <div class="opts">
-      <div class="opt"><h3>Перевести сейчас</h3>
+      <div class="opt"><h3>Поправить сейчас</h3>
         <p class="css">{
   "module": <span class="dead">"commonjs"</span> <span class="st-add">"node16"</span>,
   "moduleResolution": <span class="dead">"node"</span> <span class="st-add">"node16"</span>
@@ -2048,7 +2056,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
         <p class="cap">dist/ds</p>
         <ul class="st-tree"><li class="ok">CHANGELOG.md</li><li class="ok">design-system.md</li><li class="ok">components.md</li><li class="ok">migrations/</li><li class="ok">schematics/collection.json</li></ul>
         <p>До того, как оно сломается.</p></div>
-      <div class="opt"><h3>Ждать TS 6</h3>
+      <div class="opt"><h3>Чинить при переходе на TypeScript 6</h3>
         <p class="console">▶ Compiling schematics (tsc)…<br>error TS5108: Option 'moduleResolution=node10' has been removed.</p>
         <p class="says">ng build ds при этом пишет success</p>
         <p class="cap">dist/ds уходит в npm без</p>
@@ -2059,11 +2067,11 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="design-manifest-templates">
     <div class="q-head">
-      <span class="q-num">36</span>
-      <h2 class="q-title">templates и startingPoints в манифесте Claude Design</h2>
+      <span class="q-num">29</span>
+      <h2 class="q-title">Два пустых раздела в манифесте Claude Design: templates и startingPoints</h2>
       <a class="q-src" href="../docs/todo.md">templates и startingPoints в манифесте</a>
     </div>
-    <p class="q-sub">Оба в схеме и оба пустые; что они дают - не исследовано.</p>
+    <p class="q-sub">У манифеста загрузки в Claude Design есть поля <code>templates</code> и <code>startingPoints</code>. Оба пустые, и что они дают читателю, никто не проверял. Выбрать: проверить одной загрузкой или оставить пустыми.</p>
     <div class="stage"><div class="spec"><p class="cap">.design-sync/upload/_ds_manifest.json</p><p class="css">{
   "components": [ … 91 … ],
   "cards": [ … 259 … ],
@@ -2073,7 +2081,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 }</p><p class="says">оба в схеме и оба пустые; панель серверная</p></div></div>
 
     <div class="opts">
-      <div class="opt"><h3>Исследовать</h3>
+      <div class="opt"><h3>Проверить одной загрузкой</h3>
         <div class="pipe"><span>одна запись в templates</span><i>→</i><span>загрузка</span><i>→</i><span class="p-wait">смотрим панель</span></div>
         <div class="dm-pane">
           <b>Claude Design</b>
@@ -2095,11 +2103,11 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="docs-blocks">
     <div class="q-head">
-      <span class="q-num">37</span>
-      <h2 class="q-title">TimeColumns без собственного блока в ds-docs</h2>
+      <span class="q-num">30</span>
+      <h2 class="q-title">Колонки выбора времени (TimeColumns) - последний компонент без своей карточки</h2>
       <a class="q-src" href="../docs/todo.md">компоненты без блока в ds-docs</a>
     </div>
-    <p class="q-sub">Три из четырёх уже исправлены (ModalCard, PasswordRules, SidenavFooter); остался TimeColumns.</p>
+    <p class="q-sub">Три из четырёх компонентов без своего блока в ds-docs его уже получили. TimeColumns показан только внутри блока Time picker, поэтому в Claude Design у него нет своей карточки. Выбрать: дать ему свой блок или оставить внутри Time picker.</p>
     <div class="stage">
       <div class="spec"><p class="cap">как уже сделано у SidenavFooter</p>
         <p class="css">&lt;h3 data-claude-design class="block-title t-h4"
@@ -2114,7 +2122,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
 
     <div class="opts">
-      <div class="opt"><h3>Доделать TimeColumns</h3>
+      <div class="opt"><h3>Дать TimeColumns свой блок</h3>
         <div class="db-page">
           <b class="db-title">Time picker</b>
           <span class="db-block db-card">Single</span>
@@ -2129,7 +2137,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
         </div>
         <p class="says">карточки: TimePicker <span class="db-pill">3</span> TimeColumns <span class="db-pill db-gain">1</span></p>
         <p>Последний компонент получает свой блок.</p></div>
-      <div class="opt"><h3>Оставить</h3>
+      <div class="opt"><h3>Оставить внутри Time picker</h3>
         <div class="db-page">
           <b class="db-title">Time picker</b>
           <span class="db-block db-card">Single</span>
@@ -2146,51 +2154,75 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
   </section>
 
-  <p class="group">Движение и масштаб текста</p>
+  <p class="group">Рывок текста в конце анимации</p>
 
   <section class="q" data-q="text-snap-press">
     <div class="q-head">
-      <span class="q-num">38</span>
-      <h2 class="q-title">Рывок текста в конце нажатия кнопки</h2>
+      <span class="q-num">31</span>
+      <h2 class="q-title">Текст кнопки дёргается в конце анимации нажатия</h2>
       <a class="q-src" href="18-text-snap-scale.html">дека text-snap-scale</a>
     </div>
-    <p class="q-sub">Сжатие 0.98 при отпускании кончается рывком: текст перерисовывается по пиксельной сетке. Предварительно - как сейчас. Замеры на ds-button при 150% и живые кнопки - в деке.</p>
+    <p class="q-sub">При нажатии кнопка сжимается до 98% к центру. Когда она возвращается к 100%, браузер в последний кадр перерисовывает текст по пиксельной сетке, и текст дёргается. Ты предварительно оставил как есть, ни один вариант не отклонён. Числа - сколько пикселей меняется в этот момент на <code>ds-button</code> при масштабе 150%, только Chrome на Windows; живые кнопки - в деке.</p>
     <div class="opts">
-      <div class="opt"><h3>Как сейчас</h3><p class="says">предварительно</p><p>Рывок 783-1073 px в конце отпускания.</p></div>
-      <div class="opt"><h3>P1: слой всегда</h3><p class="says">без рывка</p><p>В покое текст иначе: 771 px.</p></div>
-      <div class="opt"><h3>P4: слой при наведении</h3><p class="says">без рывка</p><p>При наведении текст сдвигается и мутнеет.</p></div>
-      <div class="opt"><h3>P5: translateZ при наведении</h3><p class="says">шаг 113 px</p><p>При наведении без изменений.</p></div>
-      <div class="opt"><h3>P6: слой с нажатия</h3><p class="says">без рывка</p><p>Держится на фокусе: в Safari и Firefox на Mac рывок вернётся.</p></div>
-      <div class="opt"><h3>P7: translateZ всегда</h3><p class="says">шаг 113 px</p><p>В покое как сейчас; слой у каждой кнопки.</p></div>
+      <div class="opt is-today"><h3>Как сейчас: рывок в конце</h3><span class="badge is-same">сейчас в dev</span>
+        <div class="ts-strip"><span class="is-ok"><b>Покой</b>как есть</span><span class="is-ok"><b>Наведение</b>как есть</span><span class="is-bad"><b>Конец нажатия</b>рывок, 783-1073px</span></div>
+        <p class="ag-cost"><b>Цена:</b> рывок остаётся.</p></div>
+      <div class="opt"><h3>Отдельный слой у кнопки всегда</h3>
+        <div class="ts-strip"><span class="is-warn"><b>Покой</b>текст иначе, 771px</span><span class="is-ok"><b>Наведение</b>чисто</span><span class="is-ok"><b>Конец нажатия</b>до 8 из 255</span></div>
+        <p class="ag-cost"><b>Цена:</b> слой у каждой кнопки, текст в покое рисуется иначе.</p></div>
+      <div class="opt"><h3>Слой только при наведении</h3>
+        <div class="ts-strip"><span class="is-ok"><b>Покой</b>как есть</span><span class="is-bad"><b>Наведение</b>сдвиг и муть, 752-1019px</span><span class="is-ok"><b>Конец нажатия</b>до 14 из 255</span></div>
+        <p class="ag-cost"><b>Цена:</b> текст дёргается уже при наведении.</p></div>
+      <div class="opt"><h3>Лёгкий слой при наведении</h3>
+        <div class="ts-strip"><span class="is-ok"><b>Покой</b>как есть</span><span class="is-ok"><b>Наведение</b>0px</span><span class="is-warn"><b>Конец нажатия</b>шаг 113px</span></div>
+        <p class="ag-cost"><b>Цена:</b> маленький шаг в конце остаётся.</p></div>
+      <div class="opt"><h3>Слой с момента нажатия</h3>
+        <div class="ts-strip"><span class="is-ok"><b>Покой</b>как есть</span><span class="is-ok"><b>Наведение</b>как есть</span><span class="is-ok"><b>Конец нажатия</b>0px</span></div>
+        <p class="ag-cost">После нажатия текст иначе (771px), пока курсор на кнопке. <b>Цена:</b> держится на фокусе после клика; в Safari и Firefox на Mac клик фокуса не даёт, там рывок вернётся (не проверено).</p></div>
+      <div class="opt"><h3>Лёгкий слой всегда</h3>
+        <div class="ts-strip"><span class="is-ok"><b>Покой</b>до 1 из 255</span><span class="is-ok"><b>Наведение</b>как есть</span><span class="is-warn"><b>Конец нажатия</b>шаг 113px</span></div>
+        <p class="ag-cost"><b>Цена:</b> слой у каждой кнопки, маленький шаг в конце.</p></div>
     </div>
   </section>
 
   <section class="q" data-q="text-snap-card">
     <div class="q-head">
-      <span class="q-num">39</span>
-      <h2 class="q-title">Card при наведении: подъём или рост</h2>
+      <span class="q-num">32</span>
+      <h2 class="q-title">Карточка при наведении: приподниматься на 1px или расти</h2>
       <a class="q-src" href="18-text-snap-scale.html">дека text-snap-scale</a>
     </div>
-    <p class="q-sub">Подъём на 1px чистый в обе стороны; рост всей карточки даёт рывок при уходе курсора. Живые карточки как ds-card - в деке.</p>
+    <p class="q-sub">Сегодня <code>ds-card</code> при наведении поднимается на 1px, это чисто в обе стороны. Если карточка вместо этого растёт до 101%, текст дёргается, когда курсор уходит. Числа - сколько пикселей меняется в этот момент при масштабе 150%; живые карточки - в деке.</p>
     <div class="opts">
-      <div class="opt"><h3>Как сейчас</h3><p class="says">подъём 1px</p><p>Чисто.</p></div>
-      <div class="opt"><h3>U1: рост 101%</h3><p class="says">рывок 2472 px</p><p>При уходе курсора.</p></div>
-      <div class="opt"><h3>U4: рост + слой при наведении</h3><p class="says">рывок 2472 px</p><p>Слой снимается раньше обратного роста.</p></div>
-      <div class="opt"><h3>U6: рост + translateZ всегда</h3><p class="says">шаг 572 px, до 28</p><p>В покое чуть иначе, до 28.</p></div>
+      <div class="opt is-today"><h3>Подъём на 1px</h3><span class="badge is-same">сейчас в dev</span>
+        <div class="ts-strip"><span class="is-ok"><b>Наведение</b>плавно</span><span class="is-ok"><b>Уход курсора</b>плавно</span><span class="is-ok"><b>Покой</b>как есть</span></div>
+        <p class="ag-cost"><b>Цена:</b> нет.</p></div>
+      <div class="opt"><h3>Рост до 101%</h3>
+        <div class="ts-strip"><span class="is-ok"><b>Наведение</b>плавно</span><span class="is-bad"><b>Уход курсора</b>рывок, 2472px</span><span class="is-ok"><b>Покой</b>как есть</span></div>
+        <p class="ag-cost"><b>Цена:</b> рывок текста на уходе курсора.</p></div>
+      <div class="opt"><h3>Рост и слой при наведении</h3>
+        <div class="ts-strip"><span class="is-ok"><b>Наведение</b>плавно</span><span class="is-bad"><b>Уход курсора</b>рывок, 2472px</span><span class="is-ok"><b>Покой</b>как есть</span></div>
+        <p class="ag-cost">Слой снимается раньше обратного роста, поэтому не помогает. <b>Цена:</b> как у роста.</p></div>
+      <div class="opt"><h3>Рост и лёгкий слой всегда</h3>
+        <div class="ts-strip"><span class="is-ok"><b>Наведение</b>плавно</span><span class="is-warn"><b>Уход курсора</b>шаг 572px</span><span class="is-warn"><b>Покой</b>чуть иначе, 572px</span></div>
+        <p class="ag-cost"><b>Цена:</b> слой у каждой карточки, рывок в 7 раз слабее.</p></div>
     </div>
   </section>
 
 
   <section class="q" data-q="text-snap-funnel">
     <div class="q-head">
-      <span class="q-num">41</span>
-      <h2 class="q-title">Ступень funnel растёт с маленьким шагом в конце</h2>
+      <span class="q-num">33</span>
+      <h2 class="q-title">Ступень воронки в конце появления делает маленький шаг по краям</h2>
       <a class="q-src" href="18-text-snap-scale.html">дека text-snap-scale</a>
     </div>
-    <p class="q-sub">Ступени растут из 96% и проявляются; в конце роста шаг до 51 из 255 на краях фигуры, текста в ступени нет.</p>
+    <p class="q-sub">Ступени воронки появляются, вырастая из 96% размера и проявляясь. В последний кадр роста края фигуры сдвигаются на шаг, до 51 из 255 по яркости. Текста в ступени нет, подпись проявляется отдельно и плавно. Пунктир - где ступень встанет, красное - края, которые делают шаг.</p>
     <div class="opts">
-      <div class="opt"><h3>Оставить рост</h3><p class="says">шаг до 51</p><p>Как в ветке.</p></div>
-      <div class="opt"><h3>Убрать рост у ступеней</h3><p class="says">только проявление</p><p>Шага нет.</p></div>
+      <div class="opt is-today"><h3>Рост из 96% и проявление</h3><span class="badge is-same">сейчас в dev</span>
+        <svg class="ag-svg" viewBox="0 0 160 60" aria-hidden="true"><polygon points="10,8 150,8 132,52 28,52" class="mo-slot"/><polygon points="13,10 147,10 130,50 30,50" class="ag-c1" opacity=".85"/><path d="M10 8 L13 10 M150 8 L147 10 M132 52 L130 50 M28 52 L30 50" stroke="var(--error)" stroke-width="2"/><text x="80" y="34" text-anchor="middle" style="fill:var(--surface-default)">96% → 100%</text></svg>
+        <p class="ag-cost">Ступень заметно встаёт на место. <b>Цена:</b> шаг до 51 из 255 на краях.</p></div>
+      <div class="opt"><h3>Только проявление, без роста</h3>
+        <svg class="ag-svg" viewBox="0 0 160 60" aria-hidden="true"><polygon points="10,8 150,8 132,52 28,52" class="ag-c1" opacity=".35"/><polygon points="10,8 150,8 132,52 28,52" class="mo-slot"/><text x="80" y="34" text-anchor="middle">прозрачность 0 → 1</text></svg>
+        <p class="ag-cost">Шага нет. <b>Цена:</b> ступень просто проявляется на месте.</p></div>
     </div>
   </section>
 
@@ -2198,7 +2230,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-duplicate-labels">
     <div class="q-head">
-      <span class="q-num">42</span>
+      <span class="q-num">34</span>
       <h2 class="q-title">Две колонки с одной подписью: убрал первую - на её место едет не та</h2>
       <span class="q-src">chart.math.ts:457 · 0e868e686</span>
     </div>
@@ -2247,7 +2279,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-heatmap-gap">
     <div class="q-head">
-      <span class="q-num">49</span>
+      <span class="q-num">35</span>
       <h2 class="q-title">Цветная шкала под heatmap отодвинута на 12px ради метки с числом</h2>
       <span class="q-src">heatmap-chart.component.scss:142 · f4fa4867b</span>
     </div>
@@ -2272,7 +2304,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-heatmap-settle">
     <div class="q-head">
-      <span class="q-num">44</span>
+      <span class="q-num">36</span>
       <h2 class="q-title">Пауза метки на шкале heatmap: число в коде или настройка темы</h2>
       <span class="q-src">heatmap-chart.component.ts:45 · f4fa4867b</span>
     </div>
@@ -2304,7 +2336,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-scatter-tether-paint">
     <div class="q-head">
-      <span class="q-num">54</span>
+      <span class="q-num">37</span>
       <h2 class="q-title">Пунктир от курсора к точке в scatter заставляет браузер перерисовывать всю страницу</h2>
       <span class="q-src">scatter-chart.component.html:153 · 46a912b46</span>
     </div>
@@ -2343,7 +2375,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-hover-transitions-paint">
     <div class="q-head">
-      <span class="q-num">55</span>
+      <span class="q-num">38</span>
       <h2 class="q-title">Плавная подсветка при наведении заставляет график перерисовываться каждый кадр</h2>
       <span class="q-src">_chart-interactive.scss:6 · chart.component.scss:152 · 737838eac</span>
     </div>
@@ -2392,7 +2424,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-funnel-settle-origin">
     <div class="q-head">
-      <span class="q-num">56</span>
+      <span class="q-num">39</span>
       <h2 class="q-title">Ступени воронки при появлении дорастают из левого угла, а точки scatter - из центра</h2>
       <span class="q-src">funnel-chart.component.scss:9 · _chart-motion.scss:47 · bf6fb9dd7</span>
     </div>
@@ -2419,7 +2451,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-halo-copies">
     <div class="q-head">
-      <span class="q-num">57</span>
+      <span class="q-num">40</span>
       <h2 class="q-title">Обводка подписей на графике сделана трижды, и у «+24.0%» она другая</h2>
       <span class="q-src">reference-label.component.scss:5 · series-annotation.component.scss:13 · line-series.component.scss:141 · bf6fb9dd7</span>
     </div>
@@ -2496,7 +2528,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-change-fade-timing">
     <div class="q-head">
-      <span class="q-num">58</span>
+      <span class="q-num">41</span>
       <h2 class="q-title">Подпись «+12.5%» на линии появляется быстрее остальных подписей графика</h2>
       <span class="q-src">line-series.component.scss:118 · _chart-motion.scss:82 · bf6fb9dd7</span>
     </div>
@@ -2529,7 +2561,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-morph-finish">
     <div class="q-head">
-      <span class="q-num">59</span>
+      <span class="q-num">42</span>
       <h2 class="q-title">Данные пересортировались, пока колонки ещё влетают из заглушки загрузки</h2>
       <span class="q-src">chart-skeleton-morph.ts:91 · column-series.component.ts:335 · bf6fb9dd7</span>
     </div>
