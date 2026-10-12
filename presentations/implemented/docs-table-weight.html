@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Входы компонентов в ds-docs</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-12">
+<meta name="ds-deck-evidence" content="ds-docs/src/app/shared/docs-section.component.html:17 - ds-docs/src/app/sections/charts/chart/chart.section.html:148">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   main { max-width: 1480px; }
   .opts { grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: start; }
@@ -77,6 +79,15 @@
     <p class="chat">Ответ нести в чат: «Acc2 · Дека движения графиков»</p>
   </header>
 
+  <div class="decided">
+    <h2>Решено: «Без таблиц входов»</h2>
+    <p>22 ручные таблицы входов удалены из 15 файлов <code>ds-docs/src/app/sections</code>; то, чего нет в JSDoc и на странице (что делает каждое значение <code>cursor</code>, <code>stack</code>, <code>curve</code>, <code>gaps</code>, <code>tooltipAnchor</code> и других), стоит одной фразой или коротким списком у живого примера. Сгенерированный API не выводится. В шапке раздела нет entry point; селектор свёрнут под закрытой плашкой «Selector».</p>
+    <p class="evidence">2026-10-12 · ds-docs/src/app/shared/docs-section.component.html:17</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
+
   <section class="panel" data-review="Сегодня">
     <h2>Сегодня</h2>
     <ul class="facts">
@@ -95,8 +106,8 @@
     <p class="cap">слева ds-chart, справа ds-button, как сейчас; фрагменты пересобраны в деке</p>
   </section>
 
-  <section class="panel q" data-review="Варианты" data-review-note-only data-review-round="2">
-    <ol data-review-history><li>2026-10-12 · «Принято» без выбранной карточки → выбор теперь только кликом по карточке или «Выбрать», «Принято» у этого блока убрано</li></ol>
+  <section class="panel q" data-review="Варианты" data-review-note-only data-review-round="3">
+    <ol data-review-history><li>2026-10-12 · «Принято» без выбранной карточки → выбор теперь только кликом по карточке или «Выбрать», «Принято» у этого блока убрано</li><li>2026-10-12 · выбор «Без таблиц входов»; «&lt;ds-button&gt; @ids-group-ltd/ids-design-system/components/button - вообще не надо. максимум - тег и то лучше его тоже в скрытую область перенести.» → 22 таблицы входов удалены; чип entry point убран со всех страниц, селектор в закрытой плашке «Selector» (несколько селекторов - «Selectors») под заголовком раздела</li></ol>
     <h2>Пять вариантов</h2>
     <p>Каждая карточка - одни и те же два фрагмента, ds-chart и ds-button, в одном масштабе: высота видна глазом. Выбор - клик по карточке.</p>
     <div class="opts">
@@ -176,6 +187,7 @@
   </section>
 
   <p class="src"><b>Источники, проверено 2026-10-12 на <code>dev</code> (<code>f8998fe2</code>).</b> Таблицы: разбор каждой <code>table.tbl</code> в <code>ds-docs/src/app/sections/**/*.html</code> по заголовкам колонок (скрипт в scratchpad), классы назначены вручную по шапке. API: <code>shared/component-api.generated.ts</code> прочитан целиком в node; число чипов - входы с <code>union</code> или <code>boolean</code>, кроме <code>aria*</code> и <code>type</code>. Рендер: <code>docs-section.component.html</code> выводит <code>docs-component-meta</code> для компонентов и <code>docs-api-table</code> только для <code>serviceNames()</code>. Высоты страниц и таблиц измерены в Chrome на <code>localhost:4300</code> (<code>/charts/chart</code>, <code>/components/button</code>, <code>/components/toast</code>), окно 1807px. Строки таблицы <code>dsColumnSeries</code> - из <code>charts/chart/chart.section.html</code>; стиль таблицы перенесён из <code>docs-section.component.scss</code>. Высоты блока входов на фрагментах меряются в этой странице при открытии на ширине 640px.</p>
+  </details>
 </main>
 
 <script>

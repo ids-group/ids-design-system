@@ -87,6 +87,11 @@ export class DocsSectionComponent {
 
     return primary ? [primary, ...this.secondaryKeys()] : this.secondaryKeys();
   });
+  protected readonly summaries = computed(() =>
+    this.metaKeys()
+      .map((key) => COMPONENT_API[key].summary)
+      .filter((summary) => !!summary),
+  );
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly chapterRegistry = inject(SectionChaptersService);

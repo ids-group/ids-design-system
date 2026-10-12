@@ -973,7 +973,7 @@
       <div class="q-head">
         <span class="q-num">02</span>
         <h2 class="q-title">Подсказка ⓘ умеет показать только строку текста, а консьюмеру нужен список</h2>
-        <a class="q-src" href="26-info-hint-content.html">P2 · mm-ecm ME-495 · фича · дека</a>
+        <a class="q-src" href="24-info-hint-content.html">P2 · mm-ecm ME-495 · фича · дека</a>
       </div>
       <p class="q-sub">На экране Data ingest в mm-ecm (ME-495) значок ⓘ открывает список опубликованных версий. Сегодня там самодельная кнопка: <code>ds-info-hint</code> берёт только строку <code>text</code>. Выбрать, как консьюмер передаёт в подсказку свою разметку.</p>
       <div class="opts">
@@ -1006,7 +1006,7 @@
       <div class="q-head">
         <span class="q-num">03</span>
         <h2 class="q-title">Значок статуса как кнопка подсказки: кто задаёт значок и цвет</h2>
-        <a class="q-src" href="26-info-hint-content.html">P2 · mm-ecm ME-495 · фича · дека</a>
+        <a class="q-src" href="24-info-hint-content.html">P2 · mm-ecm ME-495 · фича · дека</a>
       </div>
       <p class="q-sub">Нужно, только если в задаче ME-495 значок статуса станет кнопкой подсказки. Сегодня у <code>ds-info-hint</code> два значка, help и info, и цвет он ставит сам. Выбрать, как консьюмер задаёт значок и его цвет.</p>
       <div class="opts">
@@ -1385,7 +1385,7 @@
     <div class="q-head">
       <span class="q-num">12</span>
       <h2 class="q-title">Календарь и часы не следуют языку и стране приложения</h2>
-      <a class="q-src" href="9-locale-week-and-hour.html">дека locale-week-and-hour</a>
+      <a class="q-src" href="implemented/locale-week-and-hour.html">дека locale-week-and-hour</a>
     </div>
     <p class="q-sub">Сегодня календарь всегда начинает неделю с понедельника, а время всегда 24-часовое. Приложение без своей локали получает от Angular en-US, где неделя с воскресенья и часы 12-часовые. Выбрать, что брать из локали. Ниже en-US, сентябрь 2026; жёлтая рамка - что поменялось; шесть локалей - в деке.</p>
     <div class="opts">
@@ -1643,7 +1643,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
     <div class="q-head">
       <span class="q-num">18</span>
       <h2 class="q-title">121 публичный токен никто в библиотеке не читает: что удалить</h2>
-      <a class="q-src" href="12-unread-tokens.html">дека unread-tokens</a>
+      <a class="q-src" href="11-unread-tokens.html">дека unread-tokens</a>
     </div>
     <p class="q-sub">Из 746 токенов DS 121 не читается нигде в библиотеке: 51 размер компонентов и паттернов, которых нет (<code>--cmdk-*</code>, <code>--wizard-*</code>), и 70 имён шкал, палитры и ролей. У pinkmoon, mm-ecm и mm-broker 51 размер не читает никто, из 70 имён читают 12. Замер 2026-10-05. Каждый квадрат - один токен.</p>
     <div class="opts">
@@ -1664,7 +1664,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
     <div class="q-head">
       <span class="q-num">19</span>
       <h2 class="q-title">Шесть изменений поведения ушли в Unreleased без выбора между вариантами</h2>
-      <a class="q-src" href="13-unasked-decisions.html">дека unasked-decisions</a>
+      <a class="q-src" href="12-unasked-decisions.html">дека unasked-decisions</a>
     </div>
     <p class="q-sub">Каждое уже в коде и ждёт релиза; варианты по каждому нарисованы в деке unasked-decisions. Выбрать: оставить все шесть как сделаны или разобрать их по одному в деке до релиза.</p>
     <div class="opts">
@@ -2201,7 +2201,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
     <div class="q-head">
       <span class="q-num">31</span>
       <h2 class="q-title">Текст кнопки дёргается в конце анимации нажатия</h2>
-      <a class="q-src" href="18-text-snap-scale.html">дека text-snap-scale</a>
+      <a class="q-src" href="17-text-snap-scale.html">дека text-snap-scale</a>
     </div>
     <p class="q-sub">При нажатии кнопка сжимается до 98% к центру. Когда она возвращается к 100%, браузер в последний кадр перерисовывает текст по пиксельной сетке, и текст дёргается. Ты предварительно оставил как есть, ни один вариант не отклонён. Числа - сколько пикселей меняется в этот момент на <code>ds-button</code> при масштабе 150%, только Chrome на Windows; живые кнопки - в деке.</p>
     <div class="opts">
@@ -2230,7 +2230,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
     <div class="q-head">
       <span class="q-num">32</span>
       <h2 class="q-title">Карточка при наведении: приподниматься на 1px или расти</h2>
-      <a class="q-src" href="18-text-snap-scale.html">дека text-snap-scale</a>
+      <a class="q-src" href="17-text-snap-scale.html">дека text-snap-scale</a>
     </div>
     <p class="q-sub">Сегодня <code>ds-card</code> при наведении поднимается на 1px, это чисто в обе стороны. Если карточка вместо этого растёт до 101%, текст дёргается, когда курсор уходит. Числа - сколько пикселей меняется в этот момент при масштабе 150%; живые карточки - в деке.</p>
     <div class="opts">
@@ -2254,7 +2254,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
     <div class="q-head">
       <span class="q-num">33</span>
       <h2 class="q-title">Ступень воронки в конце появления делает маленький шаг по краям</h2>
-      <a class="q-src" href="18-text-snap-scale.html">дека text-snap-scale</a>
+      <a class="q-src" href="17-text-snap-scale.html">дека text-snap-scale</a>
     </div>
     <p class="q-sub">Ступени воронки появляются, вырастая из 96% размера и проявляясь. В последний кадр роста края фигуры сдвигаются на шаг, до 51 из 255 по яркости. Текста в ступени нет, подпись проявляется отдельно и плавно. Пунктир - где ступень встанет, красное - края, которые делают шаг.</p>
     <div class="opts">

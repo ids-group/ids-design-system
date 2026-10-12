@@ -1745,59 +1745,32 @@
     Server-side filtering, and a filter of your own
   </h3>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          filterMode
-        </th>
-
-        <th>
-          Effect
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            server
-          </code> (default)
-        </td>
-
-        <td>
-          The table tracks <code class="t-mono-inline">columnFilters</code>; your request filters. Pass all values via <code class="t-mono-inline">columnFilterOptions</code>, or the checklist shows only this page.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            client
-          </code>
-        </td>
-
-        <td>
-          The table holds every row and filters them.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            none
-          </code>
-        </td>
-
-        <td>
-          Removes the affordance.
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
   <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        filterMode
+      </code>
+      <code class="t-mono-inline">
+        server
+      </code> (default): the table tracks
+      <code class="t-mono-inline">
+        columnFilters
+      </code> and your request filters.
+      Pass every value through
+      <code class="t-mono-inline">
+        columnFilterOptions
+      </code>, or the checklist
+      shows only this page.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        client
+      </code>: the table holds every row and
+      filters them. <code class="t-mono-inline">none</code> removes the
+      affordance.
+    </li>
+
     <li>
       A <code class="t-mono-inline">filter: 'set'</code> column with no <code class="t-mono-inline">total</code> and no mode - dev warning.
     </li>

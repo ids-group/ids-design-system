@@ -186,103 +186,19 @@
     </code> (also takes one full name) are exported.
   </p>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          Input
-        </th>
+  <ul class="rules">
+    <li>
+      The tint hashes <code class="t-mono-inline">name</code>, never the
+      initials: Alice Brown and Adam Bell (both "AB") get 198° and 356°.
+    </li>
 
-        <th>
-          Effect
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            name
-          </code>
-        </td>
-
-        <td>
-          Derives the initials and seeds the tint. The tint hashes the name,
-          never the initials: Alice Brown and Adam Bell (both "AB") get 198° and
-          356°.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            seed
-          </code>
-        </td>
-
-        <td>
-          Tint seed for an id or email; defaults to <code class="t-mono-inline">name</code>.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            initials
-          </code>
-        </td>
-
-        <td>
-          Explicit text; wins over derived initials.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            initialsRule
-          </code>
-        </td>
-
-        <td>
-          Replaces the name-to-initials rule. Fallback:
-          <code class="t-mono-inline">
-            provideDsConfig(&#123; avatar: &#123; initials &#125; &#125;)
-          </code>,
-          then the first letters of the first two words (Latin script; Spanish
-          wants MG for "María José García López").
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            avoidHues
-          </code>
-        </td>
-
-        <td>
-          Hue arcs the seeded tint skips, such as a brand's pink and red.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            tint
-          </code>
-        </td>
-
-        <td>
-          A <code class="t-mono-inline">&#123; bg, fg &#125;</code> pair or
-          <code class="t-mono-inline">
-            'neutral'
-          </code>; replaces the seeded tint.
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <li>
+      <code class="t-mono-inline">
+        initialsRule
+      </code> is for a script or custom
+      the default rule misses: Spanish wants MG for "María José García López".
+    </li>
+  </ul>
 
   <table class="tbl">
     <thead>
