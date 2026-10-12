@@ -17,6 +17,9 @@
   .q-src { font: var(--font-size-2xs) var(--font-mono); color: var(--text-tertiary); text-decoration: none; border-bottom: 1px dotted var(--border-strong); }
   .q-src:hover { color: var(--accent-strong); }
   .q-sub { margin: var(--space-2) 0 0; font: var(--font-size-2xs) / 1.55 var(--font-sans); color: var(--text-secondary); }
+  ul.q-sub { padding-inline-start: 1.1rem; max-inline-size: 70ch; }
+  ul.q-sub li + li { margin-block-start: 2px; }
+  .q-sub b { color: var(--text-primary); }
 
   .q.is-settled { margin-bottom: var(--space-4); padding-block-end: var(--space-3); border-bottom: var(--border-width-default) solid var(--border-divider); }
   .q.is-settled .q-title { font-size: var(--font-size-m); }
@@ -619,11 +622,16 @@
   [data-q="schematics-tsconfig"] .opt .css, [data-q="schematics-tsconfig"] .opt .console { margin: 0; }
   [data-q="schematics-tsconfig"] .opt .cap, [data-q="schematics-tsconfig"] .opt > p { margin: 0; }
   /* signal-forms */
-  [data-q="signal-forms"] .sf-stack { display: grid; gap: var(--space-2); }
-  [data-q="signal-forms"] .sf-stack .field-mock { min-inline-size: 0; }
-  [data-q="signal-forms"] .sf-chev { margin-inline-start: auto; color: var(--icon-default); line-height: 1; }
-  [data-q="signal-forms"] .sf-chev.is-after { margin-inline-start: var(--space-1); }
-  [data-q="signal-forms"] .field-mock .box .spin + .sf-chev { margin-inline-start: var(--space-1); }
+  [data-q="signal-forms"] .sf-stack { display: grid; gap: var(--space-3); }
+  [data-q="signal-forms"] .field-mock { min-inline-size: 0; font: var(--font-size-s) var(--font-sans); color: var(--text-primary); }
+  [data-q="signal-forms"] .field-mock label { margin-block-end: var(--space-1); font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); }
+  [data-q="signal-forms"] .field-mock .box { box-sizing: border-box; min-block-size: var(--hit-cozy); padding: 0 var(--space-3); gap: var(--space-2); }
+  [data-q="signal-forms"] .sf-val { flex: 1 1 auto; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  [data-q="signal-forms"] .field-mock .spin { flex: none; box-sizing: border-box; inline-size: 16px; block-size: 16px; margin: 0; border-color: var(--neutral-200); border-top-color: var(--primary); }
+  [data-q="signal-forms"] .sf-chev { flex: none; inline-size: 16px; block-size: 16px; fill: none; stroke: var(--icon-default); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+  [data-q="signal-forms"] .field-mock .dot-dirty { flex: none; inline-size: 8px; block-size: 8px; margin: 0; background: var(--primary); }
+  [data-q="signal-forms"] .field-mock .msg { margin-block-start: var(--space-1); font-size: var(--font-size-xs); color: var(--primary-strong); }
+  [data-q="signal-forms"] .stage .spec { min-inline-size: 0; flex: 1 1 200px; }
   /* stale-ds-css */
   [data-q="stale-ds-css"] .pipe { align-items: center; }
   [data-q="stale-ds-css"] .pipe > i { font-style: normal; color: var(--text-tertiary); font-size: var(--font-size-2xs); }
@@ -1506,34 +1514,38 @@
       <h2 class="q-title">Как поле показывает «идёт проверка» и «значение изменено»</h2>
       <a class="q-src" href="../docs/todo.md">вид pending и dirty у signal-forms</a>
     </div>
-    <p class="q-sub">Новые формы Angular сообщают полю два состояния: идёт асинхронная проверка и значение изменено. Спиннер проверки есть только у <code>ds-input</code>, «изменено» не рисует никто. Без вида эти два состояния к полям не подключить. Выбрать, что рисовать.</p>
-    <div class="stage"><div class="spec"><p class="cap">pending: есть у ds-input</p><div class="field-mock"><div class="box">acme-holdings<span class="spin"></span></div></div><p class="says">вход loading, спиннер в конце поля</p></div><div class="spec"><p class="cap">pending: у остальных нечем</p><div class="field-mock"><div class="box">Лондон<span class="sf-chev">&#8964;</span></div></div></div><div class="spec"><p class="cap">dirty: нигде</p><div class="field-mock"><div class="box">ACME</div></div><p class="says">изменённое поле выглядит как нетронутое</p></div></div>
+    <ul class="q-sub">
+      <li>Новые формы Angular сообщают полю два состояния: <b>идёт проверка</b> (pending) и <b>значение изменено</b> (dirty).</li>
+      <li>Сегодня спиннер проверки есть <b>только у <code>ds-input</code></b>, «изменено» не рисует ни одно поле.</li>
+      <li>Выбрать, что рисуют все поля.</li>
+    </ul>
+    <div class="stage"><div class="spec"><p class="cap">pending: есть у ds-input</p><div class="field-mock"><div class="box"><span class="sf-val">acme-holdings</span><span class="spin"></span></div></div><p class="says">вход loading, спиннер в конце поля</p></div><div class="spec"><p class="cap">pending: у ds-select нечем</p><div class="field-mock"><div class="box"><span class="sf-val">Лондон</span><svg class="sf-chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></div></div><p class="says">проверка идёт, поле молчит</p></div><div class="spec"><p class="cap">dirty: нигде</p><div class="field-mock"><div class="box"><span class="sf-val">ACME</span></div></div><p class="says">изменённое поле как нетронутое</p></div></div>
 
     <div class="opts">
       <div class="opt"><h3>Спиннер везде и точка «изменено»</h3>
         <div class="sf-stack">
-          <div class="field-mock"><label>Компания</label><div class="box">acme-holdings<span class="spin"></span></div></div>
-          <div class="field-mock"><label>Город</label><div class="box">Лондон<span class="spin"></span><span class="sf-chev is-after">&#8964;</span></div></div>
-          <div class="field-mock"><label>Название</label><div class="box">ACME<span class="dot-dirty"></span></div><p class="msg">изменено</p></div>
+          <div class="field-mock"><label>Компания</label><div class="box"><span class="sf-val">acme-holdings</span><span class="spin"></span></div></div>
+          <div class="field-mock"><label>Город</label><div class="box"><span class="sf-val">Лондон</span><span class="spin"></span><svg class="sf-chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></div></div>
+          <div class="field-mock"><label>Название</label><div class="box"><span class="sf-val">ACME</span><span class="dot-dirty"></span></div><p class="msg">изменено</p></div>
         </div>
-        <dl class="layer"><dt>pending</dt><dd class="gain">спиннер во всех полях</dd><dt>dirty</dt><dd class="gain">точка у поля</dd></dl>
-        <p>Спиннер во все поля, треугольник или точка для dirty.</p></div>
+        <dl class="layer"><dt>pending</dt><dd class="gain">спиннер во всех полях</dd><dt>dirty</dt><dd class="gain">точка и строка «изменено»</dd></dl>
+        <p class="ag-cost">Видны оба состояния. <b>Цена:</b> новый вид dirty во всех полях.</p></div>
       <div class="opt"><h3>Только спиннер во всех полях</h3>
         <div class="sf-stack">
-          <div class="field-mock"><label>Компания</label><div class="box">acme-holdings<span class="spin"></span></div></div>
-          <div class="field-mock"><label>Город</label><div class="box">Лондон<span class="spin"></span><span class="sf-chev is-after">&#8964;</span></div></div>
-          <div class="field-mock"><label>Название</label><div class="box">ACME</div></div>
+          <div class="field-mock"><label>Компания</label><div class="box"><span class="sf-val">acme-holdings</span><span class="spin"></span></div></div>
+          <div class="field-mock"><label>Город</label><div class="box"><span class="sf-val">Лондон</span><span class="spin"></span><svg class="sf-chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></div></div>
+          <div class="field-mock"><label>Название</label><div class="box"><span class="sf-val">ACME</span></div></div>
         </div>
         <dl class="layer"><dt>pending</dt><dd class="gain">спиннер во всех полях</dd><dt>dirty</dt><dd class="none">не видно</dd></dl>
-        <p>Dirty остаётся без визуального представления.</p></div>
-      <div class="opt"><h3>Ничего, как сейчас</h3>
+        <p class="ag-cost">Проверка видна везде. <b>Цена:</b> изменённое поле не отличить.</p></div>
+      <div class="opt is-today"><h3>Ничего, как сейчас</h3><span class="badge is-same">сейчас в dev</span>
         <div class="sf-stack">
-          <div class="field-mock"><label>Компания</label><div class="box">acme-holdings<span class="spin"></span></div></div>
-          <div class="field-mock"><label>Город</label><div class="box">Лондон<span class="sf-chev">&#8964;</span></div></div>
-          <div class="field-mock"><label>Название</label><div class="box">ACME</div></div>
+          <div class="field-mock"><label>Компания</label><div class="box"><span class="sf-val">acme-holdings</span><span class="spin"></span></div></div>
+          <div class="field-mock"><label>Город</label><div class="box"><span class="sf-val">Лондон</span><svg class="sf-chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></div></div>
+          <div class="field-mock"><label>Название</label><div class="box"><span class="sf-val">ACME</span></div></div>
         </div>
         <dl class="layer"><dt>pending</dt><dd>только ds-input</dd><dt>dirty</dt><dd class="none">не видно</dd></dl>
-        <p>Члены контракта остаются необъявленными.</p></div>
+        <p class="ag-cost">0 правок. <b>Цена:</b> оба состояния к полям не подключить.</p></div>
     </div>
   </section>
 
