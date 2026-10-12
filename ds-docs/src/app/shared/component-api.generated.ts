@@ -2515,7 +2515,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "boolean",
         "union": null,
-        "default": "true",
+        "default": "false",
         "required": false,
         "description": "On the hovered reading, thickens the stretch from the reading before it in the rising or falling colour (`--ds-chart-positive-color`, `--ds-chart-negative-color`) and prints the change in percent. With several series it follows the one singled out: hovered, focused or highlighted."
       },
@@ -5811,7 +5811,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "boolean",
         "union": null,
-        "default": "true",
+        "default": "false",
         "required": false,
         "description": "On the hovered reading, thickens the stretch from the reading before it in the rising or falling colour and prints the change in percent; with several series, for the one singled out."
       },

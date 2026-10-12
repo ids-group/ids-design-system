@@ -316,7 +316,7 @@ export class LineSeriesComponent implements OnDestroy {
   /** On the hovered reading, thickens the stretch from the reading before it in the rising or falling
    *  colour (`--ds-chart-positive-color`, `--ds-chart-negative-color`) and prints the change in percent.
    *  With several series it follows the one singled out: hovered, focused or highlighted. */
-  readonly showChange = input(true, { transform: booleanAttribute });
+  readonly showChange = input(false, { transform: booleanAttribute });
 
   /** A dash pattern per series, in series order. A series past the end, or given `''`, draws solid. */
   readonly patterns = input<readonly string[]>([]);

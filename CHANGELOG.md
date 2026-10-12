@@ -21,10 +21,10 @@
   draws on again when shown; both leave the value axis to the other marks. `runningTotal` reads the
   columns as a waterfall's: hovering one fades every column after it and stops the axis guide at
   it.
-- **`showChange` on `dsLineSeries` and `ds-line-chart`, on by default.** On the hovered reading,
+- **`showChange` on `dsLineSeries` and `ds-line-chart`, off by default.** On the hovered reading,
   the stretch from the reading before it thickens in `--ds-chart-positive-color` or
   `--ds-chart-negative-color` and prints the change in percent. With several series it follows the
-  one singled out by hover, focus or the legend. `showChange="false"` turns it off.
+  one singled out by hover, focus or the legend.
 
 - **A scatter's points enter left to right.** `ds-scatter-chart` takes `staggerMs` (default 40),
   as the column charts do: each point waits by its place across the plot, the whole entrance stays
