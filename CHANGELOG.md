@@ -89,8 +89,8 @@
   new slot when the data is reordered; without an `id` a column is keyed by its label.
 - **Hovering a pie, heatmap or scatter names the mark.** A hovered, focused or held `ds-pie-chart`
   slice fades the centre to its share (its value under `partOfWhole: false`) over its name, and the
-  total comes back when the pointer leaves. Once the pointer has rested 120ms on a
-  `ds-heatmap-chart` cell, a marker over the colour scale prints its reading and glides to its place
+  total comes back when the pointer leaves. Once the pointer has rested on a `ds-heatmap-chart`
+  cell for `--ds-motion-chart-scale-marker-delay` (120ms), a marker over the colour scale prints its reading and glides to its place
   on the ramp; a fast sweep across the grid leaves it still. The scale sits 12px lower to hold it.
   A `ds-scatter-chart` answers with the point nearest the pointer anywhere over the plot, where it
   answered only within 16px of a point: a ring glides to that point and a dashed line runs to it

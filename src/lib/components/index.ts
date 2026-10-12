@@ -45,12 +45,13 @@ export type { BandScale, NiceDomain } from './charts-scale';
 export {
   afterTwoFrames,
   CHART_GLIDE_HEAD_START_MS,
+  chartDelay,
   chartTiming,
   leaveMark,
   staggerDelay,
   tweenMarks,
 } from './charts-motion';
-export type { ChartMotionTiming } from './charts-motion';
+export type { ChartMotionDelay, ChartMotionTiming } from './charts-motion';
 export {
   CHART_SKELETON_COUNT,
   skeletonColumnHeights,

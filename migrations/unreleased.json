@@ -239,7 +239,7 @@
       "verify": "Hover a slice of a ds-pie-chart and confirm the centre shows its share over its name, and the total once the pointer leaves the ring."
     },
     {
-      "text": "Once the pointer has rested 120ms on a `ds-heatmap-chart` cell, a marker over the colour scale prints its reading and glides to it; the scale sits 12px lower (`margin-block-start` 24px, was 12px) to hold it.",
+      "text": "Once the pointer has rested on a `ds-heatmap-chart` cell for `--ds-motion-chart-scale-marker-delay` (120ms, `0ms` under `prefers-reduced-motion`), a marker over the colour scale prints its reading and glides to it; the scale sits 12px lower (`margin-block-start` 24px, was 12px) to hold it.",
       "verify": "Rest the pointer on a heatmap cell and confirm the marker appears over the scale at its reading, and that the scale clears the grid's last row."
     },
     {
