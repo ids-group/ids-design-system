@@ -521,7 +521,7 @@
   [data-q="fix-all-html"] .fa-add { color: var(--success-text); font-weight: var(--font-weight-bold); }
   [data-q="fix-all-html"] .opt .css, [data-q="fix-all-html"] .opt .console { margin: 0; }
   [data-q="fix-all-html"] .opt .cap, [data-q="fix-all-html"] .opt > p { margin: 0; }
-  /* interaction-b1 */
+  /* pressed-tonal, pressed-danger */
   :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-col { display: grid; gap: var(--space-2); align-content: start; }
   :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-row { display: flex; align-items: center; gap: var(--space-3); }
   :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
@@ -2596,8 +2596,8 @@ onRow(row: <b>RowChartEntry</b>)</p>
   <p class="done-lede">Здесь ничего не выбирается: что решено, что из этого уже в dev и где это видно.</p>
 
   <section class="q is-settled" data-done="ag-running-total-fade">
-    <div class="q-head"><h2 class="q-title">Waterfall гасит шаги после наведённого, хотя приглушение выключено</h2><span class="chip is-accent">в работе</span></div>
-    <p class="q-sub">Твой ответ 2026-10-12: «Только под <code>dimOthers</code>». Шаги после наведённого гаснут только у графика с включённым приглушением, как у всех остальных.</p>
+    <div class="q-head"><h2 class="q-title">Waterfall гасит шаги после наведённого, хотя приглушение выключено</h2><span class="chip is-done">сделано</span></div>
+    <p class="q-sub">Твой ответ 2026-10-12: «Только под <code>dimOthers</code>». Шаги после наведённого гаснут только у графика с включённым приглушением, как у всех остальных. Сделано в dev: <code>0152280a7</code>.</p>
   </section>
   <section class="q is-settled" data-done="ag-intl-range">
     <div class="q-head"><h2 class="q-title">Перевод подписи «итог за диапазон» обязателен в словаре DS</h2><span class="chip is-accent">в работе</span></div>
@@ -2608,12 +2608,12 @@ onRow(row: <b>RowChartEntry</b>)</p>
     <p class="q-sub">Твой ответ 2026-10-12: «Только под <code>dimOthers</code>». Так dev уже работает: <code>CHANGELOG.md:98</code>, Unreleased, Fixed - легенда приглушает остальное только с <code>dimOthers</code>, как наведение на метку.</p>
   </section>
   <section class="q is-settled" data-done="ag-scatter-reach">
-    <div class="q-head"><h2 class="q-title">Scatter отвечает ближайшей точкой с любого места поля</h2><span class="chip is-accent">в работе</span></div>
-    <p class="q-sub">Твой ответ 2026-10-12: «С любого места», плюс новый вход, которым экран задаёт максимальное расстояние до точки.</p>
+    <div class="q-head"><h2 class="q-title">Scatter отвечает ближайшей точкой с любого места поля</h2><span class="chip is-done">сделано</span></div>
+    <p class="q-sub">Твой ответ 2026-10-12: «С любого места», плюс новый вход, которым экран задаёт максимальное расстояние до точки. Сделано в dev: вход <code>nearestRadius</code>, <code>5311a5fb2</code>.</p>
   </section>
   <section class="q is-settled" data-done="ag-hover-switches">
-    <div class="q-head"><h2 class="q-title">Центр pie, метку на шкале heatmap и ближайшую точку scatter нельзя выключить</h2><span class="chip is-accent">в работе</span></div>
-    <p class="q-sub">Твой ответ 2026-10-12: «Вкл, вход у каждого». Все три остаются включены, у каждого графика появляется вход, который их выключает.</p>
+    <div class="q-head"><h2 class="q-title">Центр pie, метку на шкале heatmap и ближайшую точку scatter нельзя выключить</h2><span class="chip is-done">сделано</span></div>
+    <p class="q-sub">Твой ответ 2026-10-12: «Вкл, вход у каждого». Все три остаются включены, у каждого графика появляется вход, который их выключает. Сделано в dev: <code>937e15e03</code>.</p>
   </section>
   <section class="q is-settled" data-done="ag-show-change">
     <div class="q-head"><h2 class="q-title">Процент изменения к прошлой точке на линии включён по умолчанию</h2><span class="chip is-done">сделано</span></div>
