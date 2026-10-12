@@ -415,8 +415,9 @@ function check(outDir, baseDir) {
     'expand-truncate',
     'resize-content',
   ]);
-  // min-width-token is wider than its container by declaration; the other three clip inside a
-  // numeric width that used to get the cell padding on top.
+  // min-width-token is wider than its container by declaration; three clip inside a numeric width
+  // that used to get the cell padding on top; the rest hold a text column, whose share comes from
+  // the column config.
   const widthChanging = new Set([
     ...autoTruncate,
     'min-width-token',
@@ -431,6 +432,13 @@ function check(outDir, baseDir) {
     'truncate-link',
     'min-width-column',
     'min-width-column-off',
+    'auto-mixed',
+    'content-wide',
+    'ecm-delta-workaround',
+    'equal-stretch',
+    'fixed-widths',
+    'header-longer',
+    'trunc-content',
   ]);
   const fixedTruncate = {
     'ecm-microsites-cta': ['name'],
