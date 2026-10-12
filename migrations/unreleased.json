@@ -239,7 +239,8 @@
         "extends OtpInputComponent",
         "extends DsControlValueAccessor",
         "extends DsBooleanControlValueAccessor",
-        "extends FieldMessageComponent"
+        "extends FieldMessageComponent",
+        "extends DsFormControlBase"
       ],
       "detect": [
         "extends InputComponent",
@@ -258,7 +259,8 @@
         "extends OtpInputComponent",
         "extends DsControlValueAccessor",
         "extends DsBooleanControlValueAccessor",
-        "extends FieldMessageComponent"
+        "extends FieldMessageComponent",
+        "extends DsFormControlBase"
       ],
       "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
       "appliesWhen": "Only a class of yours that extends InputComponent, TextareaComponent, SelectComponent, MultiSelectComponent, AutocompleteComponent, DatePickerComponent, TimePickerComponent, ColorPickerComponent, CheckboxComponent, SwitchComponent, RadioGroupComponent, SegmentedComponent, SliderComponent or OtpInputComponent, or the internal DsControlValueAccessor, the internal DsBooleanControlValueAccessor or the internal FieldMessageComponent. Template users need nothing; subclassing a DS component is unsupported.",

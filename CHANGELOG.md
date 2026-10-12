@@ -185,6 +185,12 @@
   `ds-checkbox` and `ds-switch` after the label, on `ds-radio-group` and `ds-segmented` beside the
   label, or after the options without one, on `ds-slider` under the track and on `ds-otp-input`
   after the cells. A `[loading]` on `ds-input` bound to its own control's pending restates it.
+  `InputComponent`, `TextareaComponent`, `SelectComponent`, `MultiSelectComponent`,
+  `AutocompleteComponent`, `DatePickerComponent`, `TimePickerComponent`, `ColorPickerComponent`,
+  `CheckboxComponent`, `SwitchComponent`, `RadioGroupComponent`, `SegmentedComponent`,
+  `SliderComponent` and `OtpInputComponent` gained members, named in the migration manifest, as did
+  the internal `FieldMessageComponent` and the internal `DsFormControlBase`; a subclass declaring
+  one of those names must rename it.
 
 ### Fixed
 
