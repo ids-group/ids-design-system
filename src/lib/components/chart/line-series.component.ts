@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  NgZone,
   OnDestroy,
   ViewEncapsulation,
   afterRenderEffect,
@@ -90,20 +91,123 @@ const PIN_MARKER_CLEARANCE = 6;
 // From the higher end of a thickened change to the baseline of its percentage.
 const CHANGE_LABEL_GAP = 10;
 
+// View units between two samples of a line; a travelling marker interpolates between them.
+const PATH_SAMPLE_STEP = 2;
+
+interface PathSamples {
+  readonly geometry: string;
+  readonly xs: Float64Array;
+  readonly ys: Float64Array;
+  readonly lengths: Float64Array;
+}
+
+const sampledPaths = new WeakMap<SVGPathElement, PathSamples>();
+
+// Read once per geometry: every `getPointAtLength` forces style and layout.
+function samplesOf(path: SVGPathElement): PathSamples {
+  const geometry = `${path.getAttribute('d')}|${path.style.getPropertyValue('d')}`;
+  const cached = sampledPaths.get(path);
+  if (cached?.geometry === geometry) {
+    return cached;
+  }
+  const total = path.getTotalLength();
+  const count = Math.max(2, Math.ceil(total / PATH_SAMPLE_STEP) + 1);
+  const samples: PathSamples = {
+    geometry,
+    xs: new Float64Array(count),
+    ys: new Float64Array(count),
+    lengths: new Float64Array(count),
+  };
+  for (let index = 0; index < count; index++) {
+    const length = (total * index) / (count - 1);
+    const point = path.getPointAtLength(length);
+    samples.xs[index] = point.x;
+    samples.ys[index] = point.y;
+    samples.lengths[index] = length;
+  }
+  // Mid-glide the drawn line is not the one its `d` names.
+  if (path.getAnimations().length === 0) {
+    sampledPaths.set(path, samples);
+  }
+
+  return samples;
+}
+
+// The first index whose value reaches `target`, over ascending values.
+function firstReaching(values: Float64Array, target: number): number {
+  let low = 0;
+  let high = values.length - 1;
+  while (low < high) {
+    const middle = (low + high) >> 1;
+    if (values[middle] < target) {
+      low = middle + 1;
+    } else {
+      high = middle;
+    }
+  }
+
+  return low;
+}
+
+function shareBetween(
+  values: Float64Array,
+  index: number,
+  target: number,
+): number {
+  const span = index === 0 ? 0 : values[index] - values[index - 1];
+
+  return span > 0 ? (target - values[index - 1]) / span : 1;
+}
+
+function interpolate(
+  values: Float64Array,
+  index: number,
+  share: number,
+): number {
+  return index === 0
+    ? values[0]
+    : values[index - 1] + (values[index] - values[index - 1]) * share;
+}
+
+// Distance along a line drawn left to right at which it reaches `x`.
+function lengthAtX(samples: PathSamples, x: number): number {
+  const index = firstReaching(samples.xs, x);
+
+  return interpolate(
+    samples.lengths,
+    index,
+    shareBetween(samples.xs, index, x),
+  );
+}
+
+function pointAtLength(
+  samples: PathSamples,
+  length: number,
+): { x: number; y: number } {
+  const index = firstReaching(samples.lengths, length);
+  const share = shareBetween(samples.lengths, index, length);
+
+  return {
+    x: interpolate(samples.xs, index, share),
+    y: interpolate(samples.ys, index, share),
+  };
+}
+
 // The drawn piece of a series that spans both x positions; a gap between them leaves none.
 function lineThrough(
   paths: Iterable<SVGPathElement>,
   fromX: number,
   toX: number,
-): SVGPathElement | null {
+): PathSamples | null {
   const low = Math.min(fromX, toX);
   const high = Math.max(fromX, toX);
   for (const path of paths) {
-    const length = path.getTotalLength();
-    const start = path.getPointAtLength(0).x;
-    const end = path.getPointAtLength(length).x;
-    if (start <= low + 0.5 && end >= high - 0.5) {
-      return path;
+    const samples = samplesOf(path);
+    if (
+      samples.xs[0] <= low + 0.5 &&
+      samples.xs[samples.xs.length - 1] >= high - 0.5
+    ) {
+      return samples;
     }
   }
 
@@ -133,22 +237,6 @@ function mergedKeys(
   });
 
   return merged;
-}
-
-// Distance along a line drawn left to right at which it reaches `x`.
-function lengthAtX(path: SVGPathElement, x: number): number {
-  let low = 0;
-  let high = path.getTotalLength();
-  for (let step = 0; step < 20; step++) {
-    const middle = (low + high) / 2;
-    if (path.getPointAtLength(middle).x < x) {
-      low = middle;
-    } else {
-      high = middle;
-    }
-  }
-
-  return (low + high) / 2;
 }
 
 /**
@@ -290,13 +378,19 @@ export class LineSeriesComponent implements OnDestroy {
       write: () => {
         this.scales.activeIndex();
         this.plotted();
-        untracked(() => this.moveTravelMarkers());
+        untracked(() =>
+          this.zone.runOutsideAngular(() => this.moveTravelMarkers()),
+        );
       },
     });
     afterRenderEffect({
       write: () => {
         const plotted = this.plotted();
-        untracked(() => this.morphOnCategoryChange(plotted));
+        untracked(() =>
+          this.zone.runOutsideAngular(() =>
+            this.morphOnCategoryChange(plotted),
+          ),
+        );
       },
     });
     listenForMarkFocus(
@@ -497,6 +591,8 @@ export class LineSeriesComponent implements OnDestroy {
 
   private readonly host = inject<ElementRef<Element>>(ElementRef);
 
+  private readonly zone = inject(NgZone);
+
   private readonly travel = new Map<
     string,
     {
@@ -551,8 +647,8 @@ export class LineSeriesComponent implements OnDestroy {
       const place = (x: number, y: number): void => {
         next.x = x;
         next.y = y;
-        marker.setAttribute('cx', String(x));
-        marker.setAttribute('cy', String(y));
+        // `transform`, not `cx`: a geometry change re-lays out the SVG and repaints the whole page each frame.
+        marker.style.transform = `translate(${x}px, ${y}px)`;
       };
       this.travel.set(id, next);
       if (!state || !marker.classList.contains('is-shown')) {
@@ -560,7 +656,8 @@ export class LineSeriesComponent implements OnDestroy {
         marker.classList.add('is-shown');
         continue;
       }
-      place(state.x, state.y);
+      next.x = state.x;
+      next.y = state.y;
       const line =
         state.categoryIndex === categoryIndex
           ? null
@@ -572,13 +669,12 @@ export class LineSeriesComponent implements OnDestroy {
               target.x,
             );
       if (line) {
-        const along = (x: number) => lengthAtX(line, x);
         next.cancel = tweenMarks(
           marker,
-          [along(state.x)],
-          [along(target.x)],
+          [lengthAtX(line, state.x)],
+          [lengthAtX(line, target.x)],
           ([length]) => {
-            const point = line.getPointAtLength(length);
+            const point = pointAtLength(line, length);
             place(point.x, point.y);
           },
           'tooltip-move',
