@@ -296,6 +296,11 @@
 - **Pressing Previous onto the first page, or Next onto the last, keeps focus in `ds-pagination`.**
   The pressed button disabled under focus and focus fell to the page; it moves to the current
   page's button. `PaginationComponent` gained a member, named in the migration manifest.
+- **A `ds-pagination` keeps focus while `loading`.** A page button pressed from the keyboard, with
+  the host then setting `loading` (a server-paged `ds-table` does), was disabled natively, so focus
+  fell to the page. While loading, the page, Previous and Next buttons take `aria-disabled="true"`
+  and stay focusable, and a press is ignored. Previous on the first page, Next on the last and
+  every button on an empty list still disable natively.
 - **Dismissing a `ds-alert`, a `ds-banner` or a toast moves focus to a neighbour.** Focus sat on
   the close or action button and fell to the page when the element left. A dismissed alert or
   banner hands it to the next control after it, or the one before it when nothing follows; a toast

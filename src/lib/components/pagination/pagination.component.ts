@@ -58,8 +58,9 @@ export class PaginationComponent {
     (config) => config.pagination?.layout,
     'grouped' as PaginationLayout,
   );
-  /** The host is still fetching: every control disables, the range label is masked with a
-   *  `<ds-skeleton>` so a stale `total` is never quoted, and the nav reports `aria-busy`. */
+  /** The host is still fetching: the page buttons take `aria-disabled` and ignore presses while
+   *  staying focusable, the size select disables, the range label is masked with a `<ds-skeleton>`
+   *  so a stale `total` is never quoted, and the nav reports `aria-busy`. */
   readonly loading = input(false, { transform: booleanAttribute });
 
   protected readonly intl = inject(DS_INTL);
@@ -127,7 +128,12 @@ export class PaginationComponent {
   protected readonly pageSizeStr = computed(() => String(this.pageSize()));
 
   protected goTo(page: number, nav: HTMLElement): void {
-    if (page < 1 || page > this.totalPages() || page === this.currentPage()) {
+    if (
+      this.loading() ||
+      page < 1 ||
+      page > this.totalPages() ||
+      page === this.currentPage()
+    ) {
       return;
     }
     this.currentPage.set(page);
