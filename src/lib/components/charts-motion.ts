@@ -39,7 +39,7 @@ export function cssDurationMs(duration: string): number {
   return duration.trim().endsWith('ms') ? value : value * 1000;
 }
 
-/** Eases `apply` from `from` to `to` on the mark timing `element` inherits (`--ds-motion-chart-mark-*`),
+/** Eases `apply` from `from` to `to` on the timing `element` inherits (`--ds-motion-chart-<timing>-*`),
  *  for geometry CSS cannot interpolate. A zero duration, as under reduced motion, applies `to` at once.
  *  Returns the cancel; a caller starting the next tween cancels this one and passes what it last applied.
  *
@@ -49,10 +49,11 @@ export function tweenMarks(
   from: readonly number[],
   to: readonly number[],
   apply: (values: readonly number[]) => void,
+  timing: 'mark' | 'tooltip-move' = 'mark',
 ): () => void {
   const style = getComputedStyle(element);
   const duration = cssDurationMs(
-    style.getPropertyValue('--ds-motion-chart-mark-duration'),
+    style.getPropertyValue(`--ds-motion-chart-${timing}-duration`),
   );
   if (
     duration <= 0 ||
@@ -68,7 +69,7 @@ export function tweenMarks(
     new KeyframeEffect(null, null, {
       duration,
       easing:
-        style.getPropertyValue('--ds-motion-chart-mark-easing').trim() ||
+        style.getPropertyValue(`--ds-motion-chart-${timing}-easing`).trim() ||
         'ease',
       fill: 'forwards',
     }),
