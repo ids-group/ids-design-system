@@ -70,6 +70,18 @@ export function sliceArcs(values: readonly number[]): PieArc[] {
   });
 }
 
+/** Start and end angles, flattened, of `count` slices drawn from the skeleton's `skeletonSlices`
+ *  equal slices; a slice past them opens from the end of the ring. */
+export function skeletonArcs(count: number, skeletonSlices: number): number[] {
+  const step = FULL_TURN / Math.max(skeletonSlices, 1);
+
+  return Array.from({ length: count }, (unused, index) =>
+    index < skeletonSlices
+      ? [index * step, (index + 1) * step]
+      : [FULL_TURN, FULL_TURN],
+  ).flat();
+}
+
 export function resolveInnerRadius(
   outerRadius: number,
   innerRadius: number,

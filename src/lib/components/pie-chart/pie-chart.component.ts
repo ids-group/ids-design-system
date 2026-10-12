@@ -58,6 +58,7 @@ import {
   paletteIndex,
   positiveValues,
   resolveInnerRadius,
+  skeletonArcs,
   resolveTotal,
   ringCoords,
   sliceArcs,
@@ -306,6 +307,8 @@ export class PieChartComponent
 
   private stopArcTween: () => void = () => undefined;
 
+  private readonly states = viewChild(ChartStatesComponent);
+
   private readonly tweenArcs = afterRenderEffect((onCleanup) => {
     const data = this.visibleSlices();
     const ring = this.ringElement()?.nativeElement;
@@ -326,6 +329,17 @@ export class PieChartComponent
         );
       const to = target.flatMap((arc) => [arc.startAngle, arc.endAngle]);
       this.stopArcTween();
+      if (ring && drawn.size === 0 && this.states()?.morphing()) {
+        this.stopArcTween = tweenMarks(
+          ring,
+          skeletonArcs(data.length, skeletonMarkCount(0, this.skeletonCount())),
+          to,
+          apply,
+          'mark-grow',
+        );
+
+        return;
+      }
       if (!ring || drawn.size === 0) {
         apply(to);
 
