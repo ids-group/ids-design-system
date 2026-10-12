@@ -112,6 +112,14 @@
 - **Only the main mouse button pins a chart.** A right or middle press on a `ds-chart` category, or
   on any chart's mark, takes no pin, and one outside the chart leaves a held pin in place. The
   chart-tooltip entry point exports the internal `isPrimaryPress`.
+- **A chart's panel closes while the pointer moves over another chart.** Every element the pointer
+  crossed outside a chart restarted its `tooltipLingerMs` wait, so a panel, cursor and travelling
+  marker stayed up for as long as the pointer kept moving elsewhere. The wait now runs once.
+- **On a `'step'` line the travelling marker lands on the reading.** It stopped at the foot of the
+  riser, at the previous reading's height.
+- **Without markers, the panel and the pin sit on the reading.** A `ds-line-chart` or
+  `dsLineSeries` with `showMarkers` off anchored both to the top of the category band, above the
+  line; they now sit as they do over a visible marker.
 - **A stacked column's panel hangs over the whole stack.** In `ds-column-chart` and `ds-chart`
   with stacked `dsColumnSeries`, hovering a segment opens its panel over the stack's top, so the
   segments above it stay in view and reachable.
