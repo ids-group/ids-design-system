@@ -43,10 +43,11 @@ export const CHART_SKELETON_CATEGORY_BAND = 30;
       }
     </div>
 
-    <div class="plot">
+    <div class="plot" data-morph="fade">
       @if (marks() === 'line') {
         <ds-skeleton
           class="line"
+          data-morph="line"
           [style.clip-path]="lineClip()"
           [shimmer]="shimmer()" />
       } @else {
@@ -54,6 +55,7 @@ export const CHART_SKELETON_CATEGORY_BAND = 30;
           <span class="band">
             <ds-skeleton
               class="bar"
+              data-morph="mark"
               width="50%"
               [height]="bar.height"
               [style.inset-block-end]="bar.bottom"

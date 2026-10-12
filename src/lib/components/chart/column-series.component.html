@@ -75,6 +75,7 @@
       <svg:g
         #barEl
         class="bar"
+        data-morph="mark"
         [style.transform-origin]="mark.origin">
         <!-- `rx` rounds all four corners but the cap belongs on the free end alone; this rect fills the
              two baseline corners back in. Unlike a `<path>`, both keep `y` and `height` interpolable. -->
@@ -102,6 +103,7 @@
       @if (showValues()) {
         <svg:text
           class="value"
+          data-morph="hold"
           text-anchor="middle"
           [style.--_column-value-y]="mark.labelY + 'px'">
           {{ mark.formattedValue }}

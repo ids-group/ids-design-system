@@ -5,6 +5,7 @@
     @for (connector of connectors(); track connector.key) {
       <svg:line
         class="connector"
+        data-morph="hold"
         [attr.x1]="connector.x1"
         [attr.x2]="connector.x2"
         [style.transform]="'translateY(' + connector.y + 'px)'"
@@ -17,6 +18,7 @@
     @for (label of labels(); track label.key) {
       <svg:text
         class="value"
+        data-morph="hold"
         text-anchor="middle"
         [style.transform]="'translate(' + label.x + 'px, ' + label.y + 'px)'"
         [style.--_chart-mark-stagger]="label.stagger"
