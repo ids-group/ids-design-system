@@ -412,6 +412,22 @@ export function categoryAt(
   return Math.min(categoryCount - 1, Math.floor(offset / band));
 }
 
+/** Where a pin's disc centres on a mark spanning `top` to `top + height`, `inset` being the disc's
+ *  radius plus its gap: inside the mark's upper end when it holds the disc, else above the mark and
+ *  above `valueTop`, the top of the value printed over it. */
+export function pinYAbove(
+  top: number,
+  height: number,
+  valueTop: number | null,
+  inset: number,
+): number {
+  if (height >= 2 * inset) {
+    return top + inset;
+  }
+
+  return Math.min(top, valueTop ?? top) - inset;
+}
+
 /** Readings ordered top to bottom with the height dropped; ties and readings with no height keep their place. */
 export function topDown(
   entries: readonly ChartAxisEntry[],

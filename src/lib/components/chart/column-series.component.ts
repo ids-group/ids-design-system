@@ -50,7 +50,7 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
 import type { ChartAxisEntry, ChartAxisReadout } from './chart-scales.token';
-import { categoryKeys, chartViewHeight } from './chart.math';
+import { categoryKeys, chartViewHeight, pinYAbove } from './chart.math';
 import type { ChartStackOffset } from './chart.math';
 
 export interface ColumnSeriesPoint {
@@ -447,15 +447,16 @@ export class ColumnSeriesComponent implements OnDestroy {
   /** Inside the column's top when it holds the disc - the panel opens there - and over the column
    *  and its printed value when it is too short, so the disc never crosses the baseline. */
   private pinYOf(tip: number, baseline: number, below: boolean): number {
-    const inset = CHART_PIN_RADIUS + CHART_PIN_GAP;
     const top = Math.min(tip, baseline);
-    if (Math.abs(tip - baseline) >= 2 * inset) {
-      return top + inset;
-    }
-    const value =
-      this.showValues() && !below ? VALUE_LABEL_GAP + VALUE_LABEL_HEIGHT : 0;
 
-    return top - value - inset;
+    return pinYAbove(
+      top,
+      Math.abs(tip - baseline),
+      this.showValues() && !below
+        ? top - (VALUE_LABEL_GAP + VALUE_LABEL_HEIGHT)
+        : null,
+      CHART_PIN_RADIUS + CHART_PIN_GAP,
+    );
   }
 
   protected markStagger(index: number): string {
