@@ -297,11 +297,13 @@
   </h3>
 
   <p class="block-desc t-s">
-    In light, four tokens take their hue from
+    Six tokens take their hue from
     <code class="t-mono-inline">
       --primary
-    </code>. Check each against the
-    brand; set it where it fails.
+    </code> in both themes, the dark link from
+    <code class="t-mono-inline">
+      --primary-h
+    </code>. Check each against the brand; set it where it fails.
   </p>
 
   <table class="tbl">
@@ -337,6 +339,25 @@
           4.5:1 on <code class="t-mono-inline">--surface-default</code> and on
           <code class="t-mono-inline">
             --surface-tint
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --primary-strong
+          </code>
+        </td>
+
+        <td>
+          Text on a tint: tag, tonal button, selected row, tab, sidenav item
+        </td>
+
+        <td>
+          4.5:1 on every tint and on
+          <code class="t-mono-inline">
+            --surface-default
           </code>
         </td>
       </tr>
@@ -389,28 +410,50 @@
           Text 4.5:1 on it
         </td>
       </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --primary-muted-strong
+          </code>
+        </td>
+
+        <td>
+          Tonal button hover, outline button border
+        </td>
+
+        <td>
+          Text 4.5:1 on it
+        </td>
+      </tr>
     </tbody>
   </table>
 
   <ul class="rules">
     <li>
-      Light brand (yellow, lime, cyan): the derived link fails, set
+      Light brand (yellow, lime, cyan): the derived link and
       <code class="t-mono-inline">
-        --text-link
-      </code>
+        --primary-strong
+      </code> fail, set both
     </li>
 
     <li>
-      Not derived from <code class="t-mono-inline">--primary</code>:
-      <code class="t-mono-inline">
-        --primary-strong
-      </code>,
-      <code class="t-mono-inline">
-        --primary-muted-strong
-      </code>,
+      Still on <code class="t-mono-inline">--primary-h/s/l</code>: focus ring,
+      field halo,
       <code class="t-mono-inline">
         --link-visited
-      </code>, dark tints
+      </code>, dark
+      <code class="t-mono-inline">
+        --text-link
+      </code>; set the channels
+    </li>
+
+    <li>
+      Dark: restate <code class="t-mono-inline">--primary</code> and the
+      channels under
+      <code class="t-mono-inline">
+        [data-theme='dark'][data-brand]
+      </code>
     </li>
   </ul>
 
