@@ -273,6 +273,9 @@
   under forced colours each prints in `CanvasText` over a `Canvas` halo; an annotation kept its
   own colour on a white patch there, and the percentage's halo had sharp corners.
   `--ds-line-chart-annotation-halo-color` and `-halo-width` still set the annotation's halo.
+- **The `dsTableColumns` button reports its panel open.** On a fresh page the «Columns» button kept
+  `aria-expanded="false"` while its panel was open, and followed the panel only after the column
+  order had changed once. It reads `true` while the panel is open from the first press.
 
 ### What you can now DELETE
 
