@@ -3,39 +3,59 @@
 /* Pure CSS class so inline anchors in <p> text keep their line flow. */
 
 .link {
-  --_link-color:        var(--ds-link-color,        var(--text-link));
-  --_link-color-hover:  var(--ds-link-color-hover,  color-mix(in srgb, var(--_link-color) 80%, black));
+  --_link-color: var(--ds-link-color, var(--text-link));
+  --_link-color-hover: var(--ds-link-color-hover, color-mix(in srgb, var(--_link-color) 80%, black));
   --_link-color-active: var(--ds-link-color-active, color-mix(in srgb, var(--_link-color) 65%, black));
+  --_link-color-visited: var(--ds-link-color-visited, var(--link-visited));
+  --_link-color-visited-hover: var(--ds-link-color-visited-hover, color-mix(in srgb, var(--_link-color-visited) 80%, black));
+  --_link-color-visited-active: var(--ds-link-color-visited-active, color-mix(in srgb, var(--_link-color-visited) 65%, black));
+  --_link-color-disabled: var(--ds-link-color-disabled, var(--text-disabled));
+  --_link-underline-color: var(--ds-link-underline-color, currentcolor);
+  --_link-underline-thickness: var(--ds-link-underline-thickness, 1px);
+  --_link-underline-offset: var(--ds-link-underline-offset, 2px);
+  --_link-focus-ring-color: var(--ds-link-focus-ring-color, var(--focus-ring-color));
 
   color: var(--_link-color);
   text-decoration: underline;
-  text-decoration-color: var(--_link-color);
-  text-underline-offset: 2px;
-  text-decoration-thickness: 1px;
+  text-decoration-color: var(--_link-underline-color);
+  text-underline-offset: var(--_link-underline-offset);
+  text-decoration-thickness: var(--_link-underline-thickness);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition: color var(--duration-fast) var(--ease-standard), text-decoration-color var(--duration-fast) var(--ease-standard);
 
   &:hover {
     color: var(--_link-color-hover);
-    text-decoration-color: var(--_link-color-hover);
   }
 
   &:active {
     color: var(--_link-color-active);
-    text-decoration-color: var(--_link-color-active);
+  }
+
+  /* Browsers apply only colour properties under `:visited` and ignore custom properties declared there,
+     so the resolvers live on `.link` and these rules set `color` alone. `:where()` keeps each at the
+     specificity of its unvisited twin, so `.quiet` and `[aria-disabled]` below still win. */
+  &:where(:visited) {
+    color: var(--_link-color-visited);
+  }
+
+  &:where(:visited):hover {
+    color: var(--_link-color-visited-hover);
+  }
+
+  &:where(:visited):active {
+    color: var(--_link-color-visited-active);
   }
 
   &:focus-visible {
     @include focus.ring;
 
+    outline-color: var(--_link-focus-ring-color);
     border-radius: var(--radius-sm);
-    text-decoration-color: var(--_link-color);
   }
 
   &[aria-disabled="true"] {
-    color: var(--text-disabled);
-    text-decoration-color: var(--text-disabled);
+    color: var(--_link-color-disabled);
     pointer-events: none;
     cursor: default;
   }
@@ -61,12 +81,10 @@
 
   &.quiet {
     color: var(--text-secondary);
-    text-decoration-color: var(--text-secondary);
     font-weight: var(--font-weight-medium);
 
     &:hover {
       color: var(--text-primary);
-      text-decoration-color: var(--text-primary);
     }
   }
 
