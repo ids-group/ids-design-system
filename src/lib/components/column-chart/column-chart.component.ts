@@ -15,6 +15,7 @@ import {
   contentChild,
   inject,
   input,
+  model,
   numberAttribute,
   output,
   signal,
@@ -211,6 +212,21 @@ export class ColumnChartComponent
   /** Whether a hovered or focused column opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
+  /** Ids of the series the legend has switched off; their columns sink to the baseline and the value
+   *  axis fits what is left. */
+  readonly hiddenSeries = model<readonly string[]>([]);
+
+  /** Whether the legend switches series off. Off leaves it a plain key. */
+  readonly legendFilters = input(false, { transform: booleanAttribute });
+
+  /** What a legend control does. `'isolate'` shows one series and hides the rest (radios);
+   *  `'toggle'` hides one and leaves the rest (checkboxes). */
+  readonly legendMode = input<'toggle' | 'isolate'>('isolate');
+
+  /** Lets a press dragged across columns select their categories: a band, the sum and mean of every
+   *  column in it, and the rest faded. Escape or a press outside clears it. Off by default. */
+  readonly selectRange = input(false, { transform: booleanAttribute });
+
   protected readonly tooltipTemplate =
     contentChild<TemplateRef<{ $implicit: ChartTooltipContext }>>(
       'dsChartTooltip',
@@ -272,14 +288,35 @@ export class ColumnChartComponent
       : this.resolvedSeries().length,
   );
 
-  private readonly offsets = computed(() =>
-    stackOffsets(
+  // A hidden series piles as zeros, so the rest settle onto each other and it sinks where it stood.
+  private readonly offsets = computed(() => {
+    const hidden = this.hiddenSeries();
+
+    return stackOffsets(
       this.resolvedSeries().map((series) =>
-        series.points.map((point) => point.value),
+        series.points.map((point) =>
+          hidden.includes(series.key) ? 0 : point.value,
+        ),
       ),
       this.stack(),
-    ),
-  );
+    );
+  });
+
+  protected isHidden(key: string): boolean {
+    return this.hiddenSeries().includes(key);
+  }
+
+  // Under `dimOthers` a hovered column singles out its series as a legend item does, so both fade the rest.
+  protected readonly spotlitSeries = computed(() => {
+    if (this.highlightedSeries() !== null || !this.dimOthers()) {
+      return this.highlightedSeries();
+    }
+    const hovered = this.seriesRefs().findIndex(
+      (series) => series.activeMark.index() >= 0,
+    );
+
+    return this.resolvedSeries()[hovered]?.key ?? null;
+  });
 
   protected offsetsFor(index: number): readonly ChartStackOffset[] {
     return this.offsets()[index] ?? [];

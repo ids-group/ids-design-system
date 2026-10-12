@@ -259,6 +259,14 @@ export class LineChartComponent
   /** Gives every series a dash pattern, so lines differ by shape as well as colour. */
   readonly patterns = input(false, { transform: booleanAttribute });
 
+  /** Lets a press dragged across categories select them: a band, the sum and mean of every reading in
+   *  it, and the readings outside faded. Escape or a press outside clears it. Off by default. */
+  readonly selectRange = input(false, { transform: booleanAttribute });
+
+  /** On the hovered reading, thickens the stretch from the reading before it in the rising or falling
+   *  colour and prints the change in percent; with several series, for the one singled out. */
+  readonly showChange = input(true, { transform: booleanAttribute });
+
   /** Milliseconds between one series' entrance and the next; `0` turns it off. The step narrows
    *  so the last series still starts within the stagger budget. */
   readonly staggerMs = input(40, { transform: numberAttribute });
@@ -448,8 +456,11 @@ export class LineChartComponent
     this.plot()?.releaseCursor();
   }
 
-  protected readonly markSeries = computed<readonly LineSeriesData[]>(() =>
-    this.visibleSeries().map((entry) => ({
+  // Hidden series stay drawn, flagged, so a line erases itself instead of vanishing.
+  protected readonly markSeries = computed<readonly LineSeriesData[]>(() => {
+    const hidden = this.hiddenSeries();
+
+    return this.stackedSeries().map((entry) => ({
       id: entry.series.id,
       label: entry.series.label,
       data: entry.values,
@@ -459,11 +470,12 @@ export class LineChartComponent
       area: entry.series.area,
       lower: entry.lowerValues ?? undefined,
       color: entry.color,
-    })),
-  );
+      hidden: hidden.includes(entry.series.id),
+    }));
+  });
 
   protected readonly dashPatterns = computed<readonly string[]>(() =>
-    this.visibleSeries().map((entry) => entry.dash ?? ''),
+    this.stackedSeries().map((entry) => entry.dash ?? ''),
   );
 
   protected readonly markAnnotations = computed<readonly ChartAnnotation[]>(
