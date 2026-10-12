@@ -180,6 +180,8 @@
 .skeleton-legend {
   flex: 1 1 auto;
 }
+  --_legend-row-gap: var(--_pie-chart-legend-row-gap);
+
 
 // The ring in equal slices with the drawn chart's hole; a lone slice closes the ring.
 .skeleton-ring {
@@ -233,7 +235,8 @@
   '.legend-item',
   var(--_pie-chart-legend-hover-bg-color),
   var(--_pie-chart-legend-hover-text-color),
-  '.legend-label'
+  '.legend-label',
+  $covers-gap: true
 );
 
 .legend-item.interactive,
@@ -264,12 +267,14 @@
 .legend-bottom .legend {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--_pie-chart-legend-row-gap) var(--space-4);
+  gap: var(--_legend-row-gap) var(--_legend-column-gap);
 }
 
 .legend-bottom .legend-item {
   display: flex;
   column-gap: var(--space-2);
+  --_legend-column-gap: var(--space-4);
+
 }
 
 
