@@ -208,6 +208,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
    *  press released in its own category still pins. Off by default. */
   readonly selectRange = input(false, { transform: booleanAttribute });
 
+  /** Answers the pointer on the axes: the category label in bold, a guide from the value axis and
+   *  the value there in a pill on the axis. On by default. */
+  readonly axisReadout = input(true, { transform: booleanAttribute });
+
   protected readonly tooltipSwatchesResolved = this.defaults.tooltipSwatches;
   readonly hoverDelayMs = this.defaults.hoverDelayMs;
 
@@ -310,7 +314,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
     afterRenderEffect({
       read: () => {
-        this.axisReadout();
+        this.shownReadout();
         this.rangeTotal();
         this.readoutTextWidth.set(this.widestLabel('.readout-text'));
         this.rangeTextWidth.set(this.widestLabel('.range-text'));
@@ -1156,8 +1160,8 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   private readonly readoutTextWidth = signal(0);
 
   /** A guide from the value axis at the active reading, and the axis value there in a pill on the axis. */
-  protected readonly axisReadout = computed(() => {
-    const readout = this.activeReadout();
+  protected readonly shownReadout = computed(() => {
+    const readout = this.axisReadout() ? this.activeReadout() : null;
     if (!readout) {
       return null;
     }
@@ -1189,7 +1193,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   });
 
   protected readonly hotCategory = computed(
-    () => this.axisReadout()?.categoryIndex ?? -1,
+    () => this.shownReadout()?.categoryIndex ?? -1,
   );
 
   private readonly bandElement = viewChild<ElementRef<Element>>('cursorBandEl');

@@ -37,7 +37,8 @@
   runs from the value axis at the reading, and a pill on the axis prints the axis value there; the
   guide and the pill glide between readings on `--ds-motion-chart-tooltip-move-duration` and
   `-easing`. In `ds-waterfall-chart` the guide stops at the hovered step, reads its running total,
-  and the steps after it fade.
+  and the steps after it fade. The new `axisReadout` input on all four, on by default, turns the
+  label, the guide and the pill off.
 - **A highlighted line point rides the line.** Under the category cursor, each series' highlighted
   point travels along its own line to the next category, with the panel and the crosshair, instead
   of jumping there.

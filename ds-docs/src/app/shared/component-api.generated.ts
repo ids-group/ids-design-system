@@ -2164,6 +2164,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Lets a press dragged across categories select them: a band over the range, the sum and mean of every reading in it, and the marks outside it faded. Escape or a press outside clears it; a press released in its own category still pins. Off by default."
       },
       {
+        "name": "axisReadout",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Answers the pointer on the axes: the category label in bold, a guide from the value axis and the value there in a pill on the axis. On by default."
+      },
+      {
         "name": "tooltipTemplate",
         "kind": "input",
         "type": "TemplateRef<{\n    $implicit: ChartTooltipContext;\n  }> | null",
@@ -3387,6 +3396,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Lets a press dragged across columns select their categories: a band, the sum and mean of every column in it, and the rest faded. Escape or a press outside clears it. Off by default."
+      },
+      {
+        "name": "axisReadout",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Answers the pointer on the axes: the category label in bold, a guide from the value axis and the value there in a pill on the axis. On by default."
       },
       {
         "name": "tooltipAnchor",
@@ -5805,6 +5823,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Lets a press dragged across categories select them: a band, the sum and mean of every reading in it, and the readings outside faded. Escape or a press outside clears it. Off by default."
+      },
+      {
+        "name": "axisReadout",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Answers the pointer on the axes: the category label in bold, a guide from the value axis and the value there in a pill on the axis. On by default."
       },
       {
         "name": "showChange",
@@ -12179,6 +12206,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Dims every OTHER bar while one is hovered or focused."
+      },
+      {
+        "name": "axisReadout",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Answers the pointer on the axes: the category label in bold, a guide from the value axis and the value there in a pill on the axis. On by default."
       },
       {
         "name": "tooltip",

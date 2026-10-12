@@ -188,7 +188,7 @@
           [attr.height]="range.height" />
       }
 
-      @if (axisReadout(); as readout) {
+      @if (shownReadout(); as readout) {
         <g
           class="readout"
           aria-hidden="true"
@@ -331,7 +331,7 @@
       </g>
 
       <!-- Over the tick labels it covers; its guide stays under the marks. -->
-      @if (axisReadout(); as readout) {
+      @if (shownReadout(); as readout) {
         <g
           class="readout"
           aria-hidden="true"
