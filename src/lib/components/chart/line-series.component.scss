@@ -17,6 +17,7 @@
   var(--ds-motion-chart-mark-sweep-duration)
 );
 @include chart-frame.no-bounding-box-focus('.series-marker');
+@include chart-motion.leaves('.series-marker');
 
 
 .lines {
@@ -28,13 +29,19 @@
 }
 
 // A `d` with a different command count does not interpolate and snaps, which is what a point added or removed needs.
-@include chart-interactive.dims('.series-line', ', #{chart-motion.moves(stroke, d)}');
+// `stroke-dashoffset` erases a hidden line back along itself and draws it on again when shown.
+@include chart-interactive.dims(
+  '.series-line',
+  ', #{chart-motion.moves(stroke, d)}, stroke-width var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing), stroke-dashoffset var(--ds-motion-chart-mark-sweep-duration) var(--ds-motion-chart-mark-enter-easing)'
+);
 @include chart-interactive.dims('.series-marker', ', #{chart-motion.moves(fill, cx, cy)}, r var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing)');
 @include chart-interactive.clickable('.series-marker');
 
 // `--ds-chart-area-color` is left undeclared, so an unset one falls through to the series colour.
 .series-area {
-  transition: chart-motion.moves(d);
+  transition:
+    chart-motion.moves(d),
+    opacity var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
   fill: var(--ds-chart-area-color, var(--_series-area-color));
   fill-opacity: var(--_chart-area-opacity);
   stroke: none;
@@ -65,12 +72,90 @@
 }
 
 /* Thickens as well as keeping its colour, so the highlight survives monochrome print. */
-.lines:has(.series-line.is-dimmed) .series-line:not(.is-dimmed) {
+.series-line.is-spotlit {
   stroke-width: var(--_chart-line-width-bold);
+}
+
+.series-line.is-collapsed:not(.is-dashed),
+.series-halo.is-collapsed:not(.is-dashed) {
+  stroke-dashoffset: 1;
+}
+
+.series-line.is-collapsed.is-dashed,
+.series-halo.is-collapsed.is-dashed,
+.series-area.is-collapsed,
+.series-marker.is-collapsed {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.series-marker.is-out {
+  opacity: var(--ds-chart-dim-opacity);
+}
+
+// Rides the line to the category the cursor is on; placed by script, so it never slides in from the origin.
+.travel-marker {
+  r: var(--_chart-dot-radius-active);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
+}
+
+.travel-marker.is-shown {
+  opacity: 1;
+}
+
+.travel-marker.is-shown.is-dimmed {
+  opacity: var(--ds-chart-dim-opacity);
+}
+
+.lines.is-outlined .travel-marker {
+  stroke: var(--ds-chart-bg-color);
+  stroke-width: var(--_chart-line-outline, 3px);
+  paint-order: stroke;
+}
+
+.change {
+  pointer-events: none;
+  animation: ds-chart-mark-fade-in var(--ds-motion-chart-state-duration)
+    var(--ds-motion-chart-state-easing) backwards;
+}
+
+.change.mark-leave {
+  animation: ds-chart-mark-exit var(--ds-motion-chart-state-duration)
+    var(--ds-motion-chart-state-easing) both;
+}
+
+.change-stretch {
+  fill: none;
+  stroke: var(--ds-chart-positive-color);
+  stroke-width: calc(2 * var(--_chart-line-width));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.change.is-falling .change-stretch {
+  stroke: var(--ds-chart-negative-color);
+}
+
+.change-label {
+  fill: var(--success-text);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  paint-order: stroke;
+  stroke: var(--ds-chart-bg-color);
+  stroke-width: 3px;
+}
+
+.change.is-falling .change-label {
+  fill: var(--error-text);
 }
 
 /* A stroke on the line itself would be clipped by its own dash pattern. */
 .series-halo {
+  transition:
+    stroke-dashoffset var(--ds-motion-chart-mark-sweep-duration) var(--ds-motion-chart-mark-enter-easing),
+    opacity var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
   fill: none;
   stroke: var(--ds-chart-bg-color);
   stroke-width: calc(var(--_chart-line-width) + var(--_chart-line-outline, 3px));
