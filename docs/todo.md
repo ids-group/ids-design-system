@@ -1115,6 +1115,7 @@ file** — the number moves; cite the filename.
 | 24 | `24-table-truncate-result` | Sign-off of the `truncate` column without `width` that grows to its text: four verdicts recorded (B, A, C, A), `minWidth` built; open: the general column sizing rules and width stability across pages, each drawn on harness tables. | the P1 table item in Asked by Stas |
 | 25 | `25-table-wrap-parked` | Parked: two wrap options for a `truncate` column (fill the row height, or always wrap), each rendered. | the wrap item under Parked |
 | 26 | `26-docs-table-weight` | How ds-docs shows the 104 hand-written input tables: as today, dense, folded under a count, or dense and folded; heights measured on the 19-row `dsColumnSeries` table. | none |
+| 27 | `27-chart-category-change` | How a chart moves when a category comes or goes: every mark at its new x at once (dev today) or a 180ms sideways glide with the line morphed so its points stay on it; both drawn live on one combo chart. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

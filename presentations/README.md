@@ -37,6 +37,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 24 | `24-table-truncate-result` | sign-off of the `ds-table` `truncate` column without `width` that grows to its text: before/after screenshots of the harness tables, the width rule drawn as bars over real renders, four decisions recorded with `minWidth` built, and two open ones drawn on the same tables - general column sizing rules and widths that stay put between pages |
 | 25 | `25-table-wrap-parked` | parked: two wrap options for a `truncate` column - fill the height a neighbour gave the row, or always wrap - each rendered; the verdict comes later and the item waits in `docs/todo.md` |
 | 26 | `26-docs-table-weight` | how ds-docs shows a table of inputs: as today, dense, folded under a count, or dense and folded - each drawn on the real 19-row `dsColumnSeries` table with its measured height |
+| 27 | `27-chart-category-change` | how a chart moves when a category is added or removed: «Сразу и вместе» (dev today: every mark jumps to its new x in one frame, a new column grows, a removed one fades) or «Боковой сдвиг» (columns and points glide 180ms and the line morphs through the union of old and new points, so the points stay on it) - both live on the same combo chart with a ×5 slow-down |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
