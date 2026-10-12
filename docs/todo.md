@@ -1280,10 +1280,8 @@ and the fifteen lint rules.
 
 *This section also has items under **Bugs**, **Parked**, **Records**.*
 
-- [ ] **[P3] Four exports on the package surface have no consumer in `src/`.** `pointScale`
-  (`charts-scale.ts:120`, 32 lines), `tickStep` (`:73`), `formatTick` (`charts-format.ts:126`, 27
-  lines) and `polylinePoints` (`charts-path.ts:61`) are re-exported by `components/index.ts`;
-  the last three are referenced only from `tools/probes/`, `pointScale` from nowhere.
+- [ ] **[P3] `formatTick` on the package surface has no consumer in `src/`.** `charts-format.ts:126`
+  (27 lines) is re-exported by `components/index.ts` and referenced only from `tools/probes/`.
   `ChartScales.zeroOffset` (`chart-scales.token.ts:70`) is declared on the mark contract and read by
   no mark - only the container's own template reads it.
 

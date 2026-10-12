@@ -44,14 +44,6 @@
   }
 }
 
-// On a canvas whose viewBox stretches, a pixel is a user unit: set `--_chart-rise-distance` as a percentage of the mark's box.
-@keyframes ds-chart-mark-rise {
-  from {
-    opacity: 0;
-    transform: translateY(var(--_chart-rise-distance, 4px));
-  }
-}
-
 @keyframes ds-chart-mark-settle {
   from {
     opacity: 0;

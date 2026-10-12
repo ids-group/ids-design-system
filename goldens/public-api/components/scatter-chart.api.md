@@ -27,6 +27,7 @@ export class ScatterChartComponent extends DsChartBase implements ChartDimmable,
     protected readonly highlightedSeries = signal<string | null>(…);
     private hoveredIndex;
     protected readonly isEmpty = computed(…);
+    protected isSeriesDimmed(seriesId: string): boolean;
     protected readonly leaveMark = leaveMark;
     protected readonly legendItems = computed<readonly ChartLegendItem[]>(…);
     private readonly listenForPointer;
@@ -38,7 +39,7 @@ export class ScatterChartComponent extends DsChartBase implements ChartDimmable,
     protected onPointClick(series: ScatterChartSeries, point: ScatterPoint): void;
     protected onPointPress(event: Event): void;
     protected readonly pinLift = CHART_PIN_RADIUS + CHART_PIN_GAP + PIN_POINT_CLEARANCE;
-    protected readonly pinnedPoints = computed(…);
+    protected readonly pinnedPoints = this.activeMark.pinnedAt(…);
     private placeRing;
     private placeTether;
     protected readonly plot: ScatterPlot = { left: AXIS_GUTTER, top: EDGE_GUTTER, width: SCATTER_VIEW_WIDTH - AXIS_GUTTER - EDGE_GUTTER, height: SCATTER_VIEW_HEIGHT - CATEGORY_GUTTER - EDGE_GUTTER };

@@ -1,3 +1,5 @@
+import { DestroyRef, inject, type WritableSignal } from '@angular/core';
+
 /** Delays a chart's answer to a resting pointer.
  *
  *  @internal */
@@ -13,10 +15,11 @@ export interface ChartDwell {
 // A chart stays warm from its first answer until the pointer leaves it; one set for the page, as a legend and its plot are one chart.
 const warmCharts = new WeakSet<Element>();
 
-function chartOf(event: Event): Element | null {
-  const node = event.currentTarget ?? event.target;
-
-  return node instanceof Element ? node.closest('figure') : null;
+/** The chart `element` sits in.
+ *
+ *  @internal */
+export function chartOf(element: Element | null): Element | null {
+  return element ? element.closest('figure') : null;
 }
 
 function warmUp(chart: Element): void {
@@ -33,7 +36,8 @@ function warmUp(chart: Element): void {
   document.addEventListener('pointerover', coolOnLeave, true);
 }
 
-/** Call from anywhere; the caller's own `leave` cancels the wait. `delayMs` is read at each `schedule`.
+/** Call from an injection context; the caller's own `leave` cancels the wait, and so does destroying
+ *  the context. `delayMs` is read at each `schedule`.
  *
  *  @internal */
 export function chartDwell(delayMs: () => number): ChartDwell {
@@ -50,13 +54,16 @@ export function chartDwell(delayMs: () => number): ChartDwell {
     }
   };
 
+  inject(DestroyRef).onDestroy(cancel);
+
   return {
     schedule(target, answer, event) {
       const pointer =
         typeof PointerEvent !== 'undefined' &&
         event instanceof PointerEvent &&
         event.pointerType !== 'touch';
-      const chart = chartOf(event);
+      const node = event.currentTarget ?? event.target;
+      const chart = chartOf(node instanceof Element ? node : null);
       const delay = Math.max(delayMs(), 0);
       if (!pointer || delay === 0 || (chart && warmCharts.has(chart))) {
         cancel();
@@ -84,5 +91,26 @@ export function chartDwell(delayMs: () => number): ChartDwell {
       waiting = { target, answer, timer };
     },
     cancel,
+  };
+}
+
+/** Sets `highlighted` to the item the pointer rests on, after the dwell, and back to `null` when it
+ *  leaves. Call from an injection context.
+ *
+ *  @internal */
+export function dwellHighlight<T>(
+  highlighted: WritableSignal<T | null>,
+  delayMs: () => number,
+): { enter(item: T, event: Event): void; leave(): void } {
+  const dwell = chartDwell(delayMs);
+
+  return {
+    enter(item, event) {
+      dwell.schedule(item, () => highlighted.set(item), event);
+    },
+    leave() {
+      dwell.cancel();
+      highlighted.set(null);
+    },
   };
 }

@@ -23,7 +23,7 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import {
   CHART_SERIES_COLORS,
-  cssDurationMs,
+  chartTiming,
   describeSeries,
   formatWholePercent,
   largestRemainder,
@@ -461,17 +461,9 @@ export class PieChartComponent
     if (!swap || previous === null || previous === key) {
       return;
     }
-    const style = getComputedStyle(swap);
-    const duration = cssDurationMs(
-      style.getPropertyValue('--ds-motion-chart-state-duration'),
-    );
-    if (duration > 0) {
-      swap.animate([{ opacity: 0 }, { opacity: 1 }], {
-        duration,
-        easing:
-          style.getPropertyValue('--ds-motion-chart-state-easing').trim() ||
-          'ease',
-      });
+    const timing = chartTiming(swap, 'state');
+    if (timing) {
+      swap.animate([{ opacity: 0 }, { opacity: 1 }], timing);
     }
   });
 

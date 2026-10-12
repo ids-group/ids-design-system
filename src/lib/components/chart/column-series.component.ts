@@ -19,13 +19,15 @@ import {
   CHART_SERIES_COLORS,
   CHART_TOOLTIP_LINGER_MS,
   chartValueFormat,
-  cssDurationMs,
+  chartTiming,
   describeShare,
   listenForMarkFocus,
   markOf,
   rovingMarks,
   leaveMark,
   staggerDelay,
+  dimmedBy,
+  leftMark,
 } from '@ids-group-ltd/ids-design-system/components';
 import {
   DS_INTL,
@@ -50,7 +52,12 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
 import type { ChartAxisEntry, ChartAxisReadout } from './chart-scales.token';
-import { categoryKeys, chartViewHeight } from './chart.math';
+import {
+  categoryKeys,
+  chartViewHeight,
+  outsideRange,
+  pinYAbove,
+} from './chart.math';
 import type { ChartStackOffset } from './chart.math';
 
 export interface ColumnSeriesPoint {
@@ -181,15 +188,9 @@ export class ColumnSeriesComponent implements OnDestroy {
    *  series fades instead, as the other columns do when one is hovered. */
   readonly highlighted = input<string | null>(null);
 
-  protected readonly dimmedBySeries = computed(() => {
-    const highlighted = this.highlighted();
-
-    return (
-      this.dimOthers() &&
-      highlighted !== null &&
-      highlighted !== this.seriesKey()
-    );
-  });
+  protected readonly dimmedBySeries = computed(() =>
+    dimmedBy(this.dimOthers(), this.highlighted(), this.seriesKey()),
+  );
 
   protected readonly spotlit = computed(
     () =>
@@ -331,11 +332,8 @@ export class ColumnSeriesComponent implements OnDestroy {
       if (from === undefined || from === mark.x || !column) {
         return;
       }
-      const style = getComputedStyle(column);
-      const duration = cssDurationMs(
-        style.getPropertyValue('--ds-motion-chart-mark-duration'),
-      );
-      if (duration <= 0 || typeof column.animate !== 'function') {
+      const timing = chartTiming(column, 'mark');
+      if (!timing || typeof column.animate !== 'function') {
         return;
       }
       // Re-inserted, the column replays its entrance; it has already arrived.
@@ -347,12 +345,7 @@ export class ColumnSeriesComponent implements OnDestroy {
       const at = (x: number) => ({
         transform: `translateX(calc(${x}px + var(--_column-slot-offset)))`,
       });
-      column.animate([at(from), at(mark.x)], {
-        duration,
-        easing:
-          style.getPropertyValue('--ds-motion-chart-mark-easing').trim() ||
-          'ease',
-      });
+      column.animate([at(from), at(mark.x)], timing);
     });
   }
 
@@ -455,15 +448,16 @@ export class ColumnSeriesComponent implements OnDestroy {
   /** Inside the column's top when it holds the disc - the panel opens there - and over the column
    *  and its printed value when it is too short, so the disc never crosses the baseline. */
   private pinYOf(tip: number, baseline: number, below: boolean): number {
-    const inset = CHART_PIN_RADIUS + CHART_PIN_GAP;
     const top = Math.min(tip, baseline);
-    if (Math.abs(tip - baseline) >= 2 * inset) {
-      return top + inset;
-    }
-    const value =
-      this.showValues() && !below ? VALUE_LABEL_GAP + VALUE_LABEL_HEIGHT : 0;
 
-    return top - value - inset;
+    return pinYAbove(
+      top,
+      Math.abs(tip - baseline),
+      this.showValues() && !below
+        ? top - (VALUE_LABEL_GAP + VALUE_LABEL_HEIGHT)
+        : null,
+      CHART_PIN_RADIUS + CHART_PIN_GAP,
+    );
   }
 
   protected markStagger(index: number): string {
@@ -495,11 +489,7 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   protected onMarkOut(event: PointerEvent): void {
     const hit = markOf(event);
-    const next =
-      event.relatedTarget instanceof Element
-        ? event.relatedTarget.closest('[data-mark-index]')
-        : null;
-    if (hit && next !== hit.element && !this.scales.cursorOn?.()) {
+    if (hit && leftMark(event, hit) && !this.scales.cursorOn?.()) {
       this.activeMark.leave();
     }
   }
@@ -586,9 +576,7 @@ export class ColumnSeriesComponent implements OnDestroy {
   }
 
   protected isOutsideRange(index: number): boolean {
-    const range = this.scales.selectedRange?.() ?? null;
-
-    return range !== null && (index < range.from || index > range.to);
+    return outsideRange(this.scales.selectedRange?.() ?? null, index);
   }
 
   protected readonly focusedMark = computed(

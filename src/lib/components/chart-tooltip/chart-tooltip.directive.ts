@@ -21,7 +21,7 @@ import {
   disposeWithLeave,
   forwardOverlayTokens,
   listenForEscape,
-  cssDurationMs,
+  chartTiming,
 } from '@ids-group-ltd/ids-design-system/components';
 import { ChartTooltipPanelComponent } from './chart-tooltip-panel.component';
 import type {
@@ -186,22 +186,13 @@ export class ChartTooltipDirective {
     if ((deltaX === 0 && deltaY === 0) || typeof pane.animate !== 'function') {
       return;
     }
-    const style = getComputedStyle(pane);
-    const duration = cssDurationMs(
-      style.getPropertyValue('--ds-motion-chart-tooltip-move-duration'),
-    );
-    if (duration <= 0) {
+    const timing = chartTiming(pane, 'tooltip-move');
+    if (!timing) {
       return;
     }
     this.glide = pane.animate(
       [{ translate: `${deltaX}px ${deltaY}px` }, { translate: '0 0' }],
-      {
-        duration,
-        easing:
-          style
-            .getPropertyValue('--ds-motion-chart-tooltip-move-easing')
-            .trim() || 'ease',
-      },
+      timing,
     );
   }
 

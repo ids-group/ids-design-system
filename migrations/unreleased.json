@@ -19,7 +19,8 @@
         "extends FunnelChartComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent",
-        "extends ChartStatesComponent"
+        "extends ChartStatesComponent",
+        "extends ChartLegendComponent"
       ],
       "detect": [
         "extends ChartComponent",
@@ -33,13 +34,14 @@
         "extends FunnelChartComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent",
-        "extends ChartStatesComponent"
+        "extends ChartStatesComponent",
+        "extends ChartLegendComponent"
       ],
       "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
-      "appliesWhen": "Only a class of yours that extends ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or FunnelChartComponent, or the internal ChartTooltipPanelComponent, the internal ChartStatesComponent or the internal WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or FunnelChartComponent, or the internal ChartTooltipPanelComponent, the internal ChartStatesComponent, the internal ChartLegendComponent or the internal WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
-      "note": "`ChartComponent` gained 24; `LineSeriesComponent` gained 22 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 9; `ColumnChartComponent` gained `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `selectRange` and `showChange`; `PieChartComponent` gained 13 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 5 and lost `columnStagger`; `ScatterChartComponent` gained 19 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 8."
+      "note": "`ChartComponent` gained 24; `LineSeriesComponent` gained 22 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 9; `ColumnChartComponent` gained `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `selectRange` and `showChange`; `PieChartComponent` gained 13 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 6 and lost `columnStagger`, `onStepEnter`, `onStepLeave` and `stepDwell`; `ScatterChartComponent` gained 20 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 8; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`, `onItemEnter` and `onItemLeave`."
     },
     {
       "id": "intl-chart-range-total-required",

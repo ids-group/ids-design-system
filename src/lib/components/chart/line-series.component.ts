@@ -33,6 +33,8 @@ import {
   linePath,
   leaveMark,
   staggerDelay,
+  dimmedBy,
+  leftMark,
 } from '@ids-group-ltd/ids-design-system/components';
 import type {
   LinePoint,
@@ -61,7 +63,7 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
 import type { ChartAxisEntry, ChartAxisReadout } from './chart-scales.token';
-import { categoryKeys, topDown } from './chart.math';
+import { categoryKeys, outsideRange, topDown } from './chart.math';
 
 export interface LineSeriesData {
   id: string;
@@ -582,11 +584,7 @@ export class LineSeriesComponent implements OnDestroy {
   }
 
   protected isOutsideRange(categoryIndex: number): boolean {
-    const range = this.scales.selectedRange?.() ?? null;
-
-    return (
-      range !== null && (categoryIndex < range.from || categoryIndex > range.to)
-    );
+    return outsideRange(this.scales.selectedRange?.() ?? null, categoryIndex);
   }
 
   private readonly host = inject<ElementRef<Element>>(ElementRef);
@@ -962,13 +960,9 @@ export class LineSeriesComponent implements OnDestroy {
     ];
   });
 
-  // A list keyed by mark index: another mark takes a new pin that pops in, the same mark glides with the data.
-  protected readonly pinnedMarkers = computed(() => {
-    const index = this.activeMark.index();
-    const marker = this.activeMark.pinned() ? this.allMarkers()[index] : null;
-
-    return marker ? [{ index, marker }] : [];
-  });
+  protected readonly pinnedMarkers = this.activeMark.pinnedAt(
+    (index) => this.allMarkers()[index],
+  );
 
   protected readonly pinLift =
     CHART_PIN_RADIUS + CHART_PIN_GAP + PIN_MARKER_CLEARANCE;
@@ -985,11 +979,7 @@ export class LineSeriesComponent implements OnDestroy {
     if (!hit || this.scales.cursorOn?.()) {
       return;
     }
-    const next =
-      event.relatedTarget instanceof Element
-        ? event.relatedTarget.closest('[data-mark-index]')
-        : null;
-    if (next !== hit.element) {
+    if (leftMark(event, hit)) {
       this.activeMark.leave();
     }
   }
@@ -1037,9 +1027,7 @@ export class LineSeriesComponent implements OnDestroy {
   }
 
   protected isDimmed(seriesId: string): boolean {
-    const spotlight = this.spotlight();
-
-    return this.dimOthers() && spotlight !== null && spotlight !== seriesId;
+    return dimmedBy(this.dimOthers(), this.spotlight(), seriesId);
   }
 
   protected onMarkerClick(event: MouseEvent): void {

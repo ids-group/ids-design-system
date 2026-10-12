@@ -89,7 +89,9 @@
   `LineSeriesComponent` lost; a subclass declaring one of those names must rename it, and one
   overriding a lost member overrides nothing.
   The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained
-  `morphGrowth`, `morphing` and `ngOnChanges`.
+  `morphGrowth`, `morphing` and `ngOnChanges`; the internal `ChartLegendComponent` gained `highlight`
+  and lost `onItemEnter` and `onItemLeave`. The internal `pointScale` with its `PointScale` type,
+  `tickStep` and `polylinePoints` are removed.
 
 ### Fixed
 

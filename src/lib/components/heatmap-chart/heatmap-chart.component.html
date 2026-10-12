@@ -211,8 +211,8 @@
         <span
           class="scale-step"
           [style.background]="step"
-          (pointerenter)="onStepEnter(stepIndex, $event)"
-          (pointerleave)="onStepLeave()">
+          (pointerenter)="stepHighlight.enter(stepIndex, $event)"
+          (pointerleave)="stepHighlight.leave()">
         </span>
       }
 

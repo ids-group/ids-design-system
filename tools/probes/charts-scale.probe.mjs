@@ -4,7 +4,6 @@ import {
   tickValues,
   niceDomain,
   domainMinOf,
-  tickStep,
 } from '../../src/lib/components/charts-scale.ts';
 import { check, finish } from './probe-check.mjs';
 
@@ -20,15 +19,6 @@ check(
 );
 check('niceMax rounds up', niceDomain(0, 2410, 5).max, 2500);
 check('niceMax leaves a round max alone', niceDomain(0, 2500, 5).max, 2500);
-
-check(
-  'tickStep reads the distance between two ticks',
-  tickStep(tickValues(0, 2410, 5)),
-  500,
-);
-// A degenerate series yields one tick, and `ticks[1] - ticks[0]` would be NaN.
-check('tickStep of a single tick is zero', tickStep([0]), 0);
-check('tickStep of no ticks is zero', tickStep([]), 0);
 
 // 2410 and 75 both land on factor 5 or 2 — factor 1 and factor 10 need their own domains.
 check(

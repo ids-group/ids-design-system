@@ -75,6 +75,18 @@ export abstract class DsChartBase {
   readonly valueFormatResolved = this.defaults.valueFormat;
 }
 
+/** Whether the marks keyed `key` fade while `highlighted` is singled out: only under `dimOthers`,
+ *  and never the highlighted marks themselves.
+ *
+ *  @internal */
+export function dimmedBy<T>(
+  dimOthers: boolean,
+  highlighted: T | null,
+  key: T,
+): boolean {
+  return dimOthers && highlighted !== null && highlighted !== key;
+}
+
 /** A chart that can fade every mark but the one it is answering. @internal */
 export interface ChartDimmable {
   readonly dimOthers: Signal<boolean>;

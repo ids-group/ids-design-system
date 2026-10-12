@@ -1,5 +1,8 @@
-import { DestroyRef, Signal, inject, signal } from '@angular/core';
-import { chartDwell } from '@ids-group-ltd/ids-design-system/components';
+import { DestroyRef, Signal, computed, inject, signal } from '@angular/core';
+import {
+  chartDwell,
+  chartOf,
+} from '@ids-group-ltd/ids-design-system/components';
 
 /** @internal */
 export interface ChartActiveMark {
@@ -28,6 +31,11 @@ export interface ChartActiveMark {
     mark?: Element,
   ): void;
   release(): void;
+  /** The pinned mark, looked up by its index, as a list keyed by that index: pinning another mark
+   *  puts a new pin in the list, the same mark keeps its pin. Empty when nothing is pinned. */
+  pinnedAt<T>(
+    lookup: (index: number) => T | null | undefined,
+  ): Signal<readonly { index: number; value: T }[]>;
 }
 
 /**
@@ -140,9 +148,6 @@ export function chartActiveMark(
     }
   };
 
-  const chartOf = (element: Element | null): Element | null =>
-    element ? element.closest('figure') : null;
-
   const release = (event: PointerEvent): void => {
     if (!isPrimaryPress(event)) {
       return;
@@ -165,7 +170,6 @@ export function chartActiveMark(
 
   if (typeof document !== 'undefined') {
     inject(DestroyRef).onDestroy(() => {
-      dwell.cancel();
       cancelPendingClear();
       document.removeEventListener('pointerdown', release, true);
       document.removeEventListener('keydown', releaseOnEscape, true);
@@ -205,6 +209,14 @@ export function chartActiveMark(
       if (typeof document !== 'undefined') {
         clear();
       }
+    },
+    pinnedAt(lookup) {
+      return computed(() => {
+        const at = index();
+        const value = pinned() ? lookup(at) : null;
+
+        return value ? [{ index: at, value }] : [];
+      });
     },
     pin(at, event, anchor, mark) {
       dwell.cancel();

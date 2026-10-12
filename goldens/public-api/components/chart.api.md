@@ -373,7 +373,7 @@ export class LineSeriesComponent implements OnDestroy {
     protected readonly pinLift = CHART_PIN_RADIUS + CHART_PIN_GAP + PIN_MARKER_CLEARANCE;
     public readonly pinOnClick = input<boolean | null, unknown>(null, { transform: (value) => (value == null ? null : booleanAttribute(value)) });
     public readonly pinOnClickResolved = resolveWithConfig(…);
-    protected readonly pinnedMarkers = computed(…);
+    protected readonly pinnedMarkers = this.activeMark.pinnedAt(…);
     protected readonly pins = computed(…);
     protected readonly plotted = computed(…);
     public readonly pointClicked = output<{ series: LineSeriesData; categoryIndex: number; value: number; }>();

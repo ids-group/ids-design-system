@@ -37,6 +37,8 @@ import {
   staggerDelay,
   tweenMarks,
   DsChartBase,
+  dimmedBy,
+  markAt,
 } from '@ids-group-ltd/ids-design-system/components';
 import type { MarkHit } from '@ids-group-ltd/ids-design-system/components';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
@@ -297,6 +299,10 @@ export class ScatterChartComponent
 
   /** The series named in the legend under the pointer; under `dimOthers` it fades the rest. */
   protected readonly highlightedSeries = signal<string | null>(null);
+
+  protected isSeriesDimmed(seriesId: string): boolean {
+    return dimmedBy(this.dimOthers(), this.highlightedSeries(), seriesId);
+  }
 
   protected readonly legendItems = computed<readonly ChartLegendItem[]>(() =>
     this.series().map((entry) => ({
@@ -567,10 +573,7 @@ export class ScatterChartComponent
         nearestDistance = distance;
       }
     });
-    const element =
-      nearestIndex === -1
-        ? null
-        : canvas.querySelector(`[data-mark-index="${nearestIndex}"]`);
+    const element = nearestIndex === -1 ? null : markAt(canvas, nearestIndex);
 
     return element
       ? {
@@ -588,15 +591,9 @@ export class ScatterChartComponent
     this.onPointActivate(event);
   }
 
-  // A list keyed by mark index: another point takes a new pin that pops in, the same point glides with the data.
-  protected readonly pinnedPoints = computed(() => {
-    const index = this.activeMark.index();
-    const point = this.activeMark.pinned()
-      ? this.flatMarks()[index]?.mark
-      : null;
-
-    return point ? [{ index, point }] : [];
-  });
+  protected readonly pinnedPoints = this.activeMark.pinnedAt(
+    (index) => this.flatMarks()[index]?.mark,
+  );
 
   protected readonly pinLift =
     CHART_PIN_RADIUS + CHART_PIN_GAP + PIN_POINT_CLEARANCE;

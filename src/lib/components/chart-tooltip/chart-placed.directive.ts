@@ -7,6 +7,7 @@ import {
   inject,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { afterTwoFrames } from '@ids-group-ltd/ids-design-system/components';
 
 /**
  * Adds `placed` to its host two frames after the host enters the DOM. A chart element that glides
@@ -26,17 +27,8 @@ export class ChartPlacedDirective {
       return;
     }
     const host = inject<ElementRef<Element>>(ElementRef).nativeElement;
-    let first = 0;
-    let second = 0;
-    // Outside the zone: under zone.js each frame callback is a full application tick.
-    inject(NgZone).runOutsideAngular(() => {
-      first = requestAnimationFrame(() => {
-        second = requestAnimationFrame(() => host.classList.add('placed'));
-      });
-    });
-    inject(DestroyRef).onDestroy(() => {
-      cancelAnimationFrame(first);
-      cancelAnimationFrame(second);
-    });
+    inject(DestroyRef).onDestroy(
+      afterTwoFrames(inject(NgZone), () => host.classList.add('placed')),
+    );
   }
 }

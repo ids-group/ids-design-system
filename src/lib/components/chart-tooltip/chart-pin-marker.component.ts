@@ -51,39 +51,7 @@ const GLYPH_SIZE = 14;
         [innerHTML]="glyph" />
     </svg:g>
   `,
-  styles: `
-    :host {
-      pointer-events: none;
-    }
-
-    :host(.placed) {
-      transition: transform var(--ds-motion-chart-mark-duration)
-        var(--ds-motion-chart-mark-easing);
-    }
-
-    /* On a child: the host transform places the disc, and a scale there would scale the offset too. */
-    .pin-body {
-      animation: pin-pop var(--ds-motion-chart-mark-duration) var(--ease-spring)
-        backwards;
-    }
-
-    @keyframes pin-pop {
-      from {
-        scale: 0.4;
-        opacity: 0;
-      }
-    }
-
-    .pin-disc {
-      fill: var(--surface-default);
-      stroke: var(--border-divider);
-      stroke-width: var(--border-width-default);
-    }
-
-    .pin-glyph {
-      color: var(--text-primary);
-    }
-  `,
+  styleUrl: './chart-pin-marker.component.scss',
   host: {
     class: 'pin-marker',
     'aria-hidden': 'true',

@@ -21,6 +21,7 @@ import {
   viewChild,
 } from '@angular/core';
 import {
+  afterTwoFrames,
   bandScale,
   elementWidth,
   labelInterval,
@@ -69,6 +70,7 @@ import {
   axisDomain,
   chartPlot,
   chartViewHeight,
+  pinYAbove,
   secondaryAxis,
   topDown,
   valueScale,
@@ -244,18 +246,9 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       if (this.measuredWidth() === 0 || layout === this.settledLayout()) {
         return;
       }
-      let first = 0;
-      let second = 0;
-      // Outside the zone: under zone.js each frame callback is a full application tick.
-      this.zone.runOutsideAngular(() => {
-        first = requestAnimationFrame(() => {
-          second = requestAnimationFrame(() => this.settledLayout.set(layout));
-        });
-      });
-      onCleanup(() => {
-        cancelAnimationFrame(first);
-        cancelAnimationFrame(second);
-      });
+      onCleanup(
+        afterTwoFrames(this.zone, () => this.settledLayout.set(layout)),
+      );
     });
 
     // Before the view drops the stops past the new end, while the focused one is still in the DOM.
@@ -837,17 +830,13 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       return (band?.top ?? 0) + inset;
     }
     const { top, height } = landedExtent(origin, canvas, this.viewHeight());
-    if (height >= 2 * inset) {
-      return top + inset;
-    }
-    if (!origin.matches('.bar')) {
+    if (height < 2 * inset && !origin.matches('.bar')) {
       return top + height + inset;
     }
     const value =
       origin.parentElement?.querySelector<SVGTextElement>(':scope > .value');
-    const valueTop = value ? landedTextTop(value) : top;
 
-    return Math.min(top, valueTop) - inset;
+    return pinYAbove(top, height, value ? landedTextTop(value) : null, inset);
   }
 
   /** How far a held pin sits above the panel's anchor; the panel rises by as much to stay over it. */
