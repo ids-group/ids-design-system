@@ -23,6 +23,7 @@
     <div class="skeleton-stages">
       @for (clip of skeletonStages(); track $index) {
         <ds-skeleton
+          data-morph="mark"
           height="calc(var(--_funnel-chart-stage-height) - var(--_funnel-chart-stage-gap))"
           [style.clip-path]="clip"
           [shimmer]="loading()" />
@@ -101,6 +102,7 @@
       @for (entry of stages(); track entry.stage.id; let index = $index) {
         <polygon
           class="stage"
+          data-morph="mark"
           [attr.stroke-width]="hitGapUnits()"
           [style.--_chart-mark-stagger]="markStagger(index)"
           [class.interactive]="interactive()"

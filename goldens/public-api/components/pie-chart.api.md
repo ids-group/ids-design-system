@@ -67,6 +67,7 @@ export class PieChartComponent extends DsChartBase implements ChartDimmable, Cha
     public readonly sliceClicked = output<PieChartSlice>();
     protected readonly sliceHoverShift = SLICE_HOVER_SHIFT;
     protected readonly slices = computed(…);
+    private readonly states;
     private stopArcTween;
     public readonly tooltip = input<ChartItemTooltipTrigger>('item');
     protected readonly tooltipContext = computed<ChartTooltipContext | null>(…);

@@ -66,6 +66,16 @@
   `ds-pie-chart` turns its slices to their new angles. A removed heatmap row or cell, scatter point,
   pie slice, waterfall connector or waterfall value label fades out. Under
   `prefers-reduced-motion` every one of them lands at once.
+- **A loading skeleton turns into the chart.** On the first load, when the data lands, every chart's
+  skeleton becomes the chart in one motion: each placeholder travels to the place and size of the
+  mark in its place and fades from the skeleton fill to the mark's colour, a mark without one grows
+  from the baseline, a spare placeholder sinks and fades, and the tick and category placeholders
+  fade into the labels. The line band settles onto the line, the pie ring turns its slices to their
+  angles while the legend swatches take their colours, funnel stages and bar tracks take their
+  widths, and heatmap cells take their colours; scatter points enter as before. A reload with data
+  on screen keeps the plot under `ds-loading-overlay`. It runs on
+  `--ds-motion-chart-mark-grow-duration` and `-easing`; under `prefers-reduced-motion` the chart
+  replaces the skeleton at once.
 - **The hovered mark answers.** A hovered or focused column, bar, waterfall step and heatmap cell
   brightens (`filter: brightness(1.12) saturate(1.1)`), and a hovered pie slice slides 3 units of the
   100-unit ring out along its middle, past the ring's box. A pin pops in, and pinning another mark or category pops a new pin there. The category band
@@ -76,7 +86,8 @@
   `FunnelChartComponent`, `PieChartComponent`, `HeatmapChartComponent`, `ScatterChartComponent` and
   `LineSeriesComponent` lost; a subclass declaring one of those names must rename it, and one
   overriding a lost member overrides nothing.
-  The internal `WaterfallMarksComponent` gained `leaveMark`.
+  The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained
+  `morphGrowth`, `morphing` and `ngOnChanges`.
 
 ### Fixed
 
