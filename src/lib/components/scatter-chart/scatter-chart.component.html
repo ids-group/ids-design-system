@@ -119,6 +119,7 @@
       @let start = seriesStart().get(entry.key) ?? 0;
 
       <g
+        class="point-group"
         [class.is-dimmed]="isSeriesDimmed(entry.series.id)"
         [style.--_scatter-series-color]="entry.color"
         (click)="onPointPress($event)"

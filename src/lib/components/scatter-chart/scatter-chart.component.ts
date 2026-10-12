@@ -483,7 +483,7 @@ export class ScatterChartComponent
         [from.x, from.y],
         [target.cx, target.cy],
         ([x, y]) => this.placeRing(ring, x, y),
-        'state',
+        'tooltip-move',
       );
     });
   });
