@@ -11,7 +11,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 
 | # | Deck | Answering it unblocks |
 | --- | --- | --- |
-| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 5 asks a consumer waits on, then 44 decisions across eight groups (the last two: chart choices made without a deck, and «not now» answers counted as decided), every option drawn in its own card; answered questions sit under «Уже решено», each with its status and evidence |
+| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 5 asks a consumer waits on, then 46 decisions across eight groups (the last two: chart choices made without a deck, and «not now» answers counted as decided), every option drawn in its own card; answered questions sit under «Уже решено», each with its status and evidence |
 | 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
 | 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
 | 4 | `4-interaction-formula` | two pressed-state verdicts, both rendered and measured: the tonal button's pressed recipe and the danger menu item whose pressed equals its hover. The other three are answered and the `.ds-interactive` formula is deferred |
