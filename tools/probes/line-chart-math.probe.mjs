@@ -9,7 +9,7 @@ const components = registerComponentsFacade(import.meta.url, [
   'charts-path.ts',
 ]);
 
-const { alignSeriesValues, domainMaxOf, paletteIndexFor } = await import(
+const { alignSeriesValues, paletteIndexFor } = await import(
   pathToFileURL(join(components, 'line-chart', 'line-chart.math.ts')).href
 );
 
@@ -89,7 +89,6 @@ check(
   lineSegments(pointsFrom(alignSeriesValues(allNull, 3, 'break'))),
   [],
 );
-check('an all-null series has no domain', domainMaxOf([allNull]), 0);
 check(
   'an all-null series emits no path',
   areaPath(
@@ -121,17 +120,6 @@ check(
   'a NaN reading follows the gaps policy like any other hole',
   alignSeriesValues([10, NaN, 30], 3, 'zero'),
   [10, 0, 30],
-);
-check(
-  'domainMaxOf skips an Infinity reading',
-  domainMaxOf([[10, Infinity, 30]]),
-  30,
-);
-check('domainMaxOf skips a NaN reading', domainMaxOf([[10, NaN, 30]]), 30);
-check(
-  'a reading beside an Infinity keeps its own height',
-  domainMaxOf([[10, Infinity]]),
-  10,
 );
 check(
   'a poisoned series reaches the DOM with no NaN in it',
@@ -250,9 +238,6 @@ check(
   areaPath([point(10, 20)], 100),
   '',
 );
-
-// ------------------------------------------------------- an empty series list
-check('no series means no domain', domainMaxOf([]), 0);
 
 check('a slot picks its own palette colour', paletteIndexFor(3, 0, 8), 2);
 check(

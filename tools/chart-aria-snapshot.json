@@ -15,6 +15,7 @@
     "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
     "rect: aria-hidden=true",
     "g: aria-hidden=true",
+    "line: aria-hidden=true",
     "g: aria-hidden=true",
     "rect: aria-hidden=true",
     "g: aria-hidden=true",
@@ -24,7 +25,10 @@
     "g: aria-hidden=true",
     "g: aria-hidden=true"
   ],
-  "column-chart": ["p: role=status", "details: aria-hidden=true"],
+  "column-chart": [
+    "p: role=status",
+    "details: aria-hidden=true"
+  ],
   "column-series": [
     "svg: role={interactive() && !hidden() ? 'button' : null}, aria-label={interactive() && !hidden() ? entryLabel(mark) : null}",
     "svg: aria-hidden=true"
@@ -70,7 +74,9 @@
     "path: role={ringCarriesTheRoute() ? 'button' : null}, aria-label={ringCarriesTheRoute() ? entryLabel(entry) : null}"
   ],
   "reference-label": [],
-  "reference-line": ["svg: aria-hidden=true"],
+  "reference-line": [
+    "svg: aria-hidden=true"
+  ],
   "scatter-chart": [
     "p: role=status",
     "details: aria-hidden=true",
@@ -80,6 +86,11 @@
     "p: role=status"
   ],
   "series-annotation": [],
-  "waterfall-chart": ["p: role=status", "details: aria-hidden=true"],
-  "waterfall-marks": ["svg: aria-hidden=true"]
+  "waterfall-chart": [
+    "p: role=status",
+    "details: aria-hidden=true"
+  ],
+  "waterfall-marks": [
+    "svg: aria-hidden=true"
+  ]
 }
