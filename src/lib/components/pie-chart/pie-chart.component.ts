@@ -23,7 +23,6 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import {
   CHART_SERIES_COLORS,
-  chartDwell,
   describeSeries,
   formatWholePercent,
   largestRemainder,
@@ -200,22 +199,12 @@ export class PieChartComponent
     this.activeMark.enter(index, event);
   }
 
-  private readonly legendHighlight = signal(-1);
-  private readonly legendDwell = chartDwell(() => this.defaults.hoverDelayMs());
-
-  /** A legend item opens the arc's tooltip and dims the other slices, as hovering the arc does. */
+  /** A legend item opens the arc's tooltip and slides the arc out, as hovering the arc does. */
   protected onLegendEnter(index: number, event: Event): void {
-    this.legendDwell.schedule(
-      index,
-      () => this.legendHighlight.set(index),
-      event,
-    );
     this.activeMark.enter(index, event, this.arcAt(event, index));
   }
 
   protected onLegendLeave(): void {
-    this.legendDwell.cancel();
-    this.legendHighlight.set(-1);
     this.activeMark.leave();
   }
 
@@ -240,20 +229,6 @@ export class PieChartComponent
       (event.currentTarget as Element).closest('.chart'),
       index,
       '.slice',
-    );
-  }
-
-  protected isDimmed(index: number): boolean {
-    // The legend dims the rest whether or not `dimOthers` is set; `dimOthers` governs the ring only.
-    const legendHighlight = this.legendHighlight();
-    if (legendHighlight !== -1) {
-      return legendHighlight !== index;
-    }
-
-    return (
-      this.dimOthers() &&
-      this.activeMark.index() !== -1 &&
-      this.activeMark.index() !== index
     );
   }
 

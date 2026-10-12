@@ -141,6 +141,9 @@
                     [class.is-pinned]="pinned"
                     [class.is-dimmed]="isCellDimmed(cell)"
                     [style.background]="cell.color"
+                    [class.is-highlighted]="
+                      cell.step !== null && highlightedStep() === cell.step
+                    "
                     [attr.aria-label]="cell.accessibleName"
                     (click)="onCellClick(entry, cell, rowIndex)"
                     (pointerenter)="activeMark.enter(index, $event)"
@@ -162,6 +165,9 @@
                     [class.is-pinned]="pinned"
                     [class.is-dimmed]="isCellDimmed(cell)"
                     [style.background]="cell.color"
+                    [class.is-highlighted]="
+                      cell.step !== null && highlightedStep() === cell.step
+                    "
                     [attr.aria-label]="cell.accessibleName">
                     @if (showValues() && cell.value !== null) {
                       <span class="cell-value">

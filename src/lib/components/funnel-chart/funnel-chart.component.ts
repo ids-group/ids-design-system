@@ -15,12 +15,10 @@ import {
   input,
   numberAttribute,
   output,
-  signal,
 } from '@angular/core';
 import {
   CHART_RAMP_COLORS,
   chartColors,
-  chartDwell,
   describeSeries,
   formatPercent,
   markAt,
@@ -192,11 +190,7 @@ export class FunnelChartComponent
     this.activeMark.enter(index, event);
   }
 
-  private readonly rowHighlight = signal(-1);
-  private readonly rowDwell = chartDwell(() => this.defaults.hoverDelayMs());
-
   protected onRowEnter(index: number, event: Event): void {
-    this.rowDwell.schedule(index, () => this.rowHighlight.set(index), event);
     this.activeMark.enter(
       index,
       event,
@@ -209,22 +203,7 @@ export class FunnelChartComponent
   }
 
   protected onRowLeave(): void {
-    this.rowDwell.cancel();
-    this.rowHighlight.set(-1);
     this.activeMark.leave();
-  }
-
-  protected isDimmed(index: number): boolean {
-    const rowHighlight = this.rowHighlight();
-    if (rowHighlight !== -1) {
-      return rowHighlight !== index;
-    }
-
-    return (
-      this.dimOthers() &&
-      this.activeMark.index() !== -1 &&
-      this.activeMark.index() !== index
-    );
   }
 
   protected onMarkNavigation(event: KeyboardEvent, index: number): void {

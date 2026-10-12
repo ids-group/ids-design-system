@@ -123,7 +123,8 @@
 }
 
 // The ramp's first step is a real reading, so a missing cell must not use it.
-.cell.is-active {
+.cell.is-active,
+.cell.is-highlighted {
   filter: chart-interactive.$highlight;
 }
 

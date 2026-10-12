@@ -125,7 +125,7 @@ export class HeatmapChartComponent
     () => this.defaults.hoverDelayMs(),
   );
 
-  /** The ramp step under the pointer on the scale; every cell outside it fades. */
+  /** The ramp step under the pointer on the scale; its cells brighten, and under `dimOthers` the rest fade. */
   protected readonly highlightedStep = signal<number | null>(null);
 
   private readonly stepDwell = chartDwell(() => this.defaults.hoverDelayMs());
@@ -142,7 +142,7 @@ export class HeatmapChartComponent
   protected isCellDimmed(cell: PlacedCell): boolean {
     const step = this.highlightedStep();
 
-    return step !== null && cell.step !== step;
+    return this.dimOthers() && step !== null && cell.step !== step;
   }
 
   protected onCellPress(cell: PlacedCell, index: number, event: Event): void {
