@@ -145,11 +145,24 @@
     </li>
 
     <li>
+      A hovered cell marks its reading on the scale;
+      <code class="t-mono-inline">
+        [showScaleMarker]="false"
+      </code> drops the marker.
+    </li>
+
+    <li>
       <code class="t-mono-inline">
         tooltip="none"
       </code> drops the panel; dimming: <a routerLink="/foundations/charts">Charts foundations</a>.
     </li>
   </ul>
+
+  <ds-heatmap-chart
+    caption="Collections a day, by depot, without the scale marker"
+    [columns]="weekdays"
+    [data]="depotRows"
+    [showScaleMarker]="false" />
 
   <h3 class="block-title t-h4">
     A hole is not a low reading

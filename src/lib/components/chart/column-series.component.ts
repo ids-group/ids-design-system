@@ -201,8 +201,8 @@ export class ColumnSeriesComponent implements OnDestroy {
    *  than removing the series to animate a legend hiding it. */
   readonly hidden = input(false, { transform: booleanAttribute });
 
-  /** Reads the columns as a running total, as a waterfall's are: hovering one fades every column
-   *  after it, and the axis guide stops at the hovered column. */
+  /** Reads the columns as a running total, as a waterfall's are: the axis guide stops at the hovered
+   *  column, and under `dimOthers` every column after it fades. */
   readonly runningTotal = input(false, { transform: booleanAttribute });
 
   /** The clicked datum. Fires on click and on Enter or Space, whatever `interactive` says. */
@@ -572,7 +572,9 @@ export class ColumnSeriesComponent implements OnDestroy {
   protected isLater(index: number): boolean {
     const active = this.activeMark.index();
 
-    return this.runningTotal() && active >= 0 && index > active;
+    return (
+      this.runningTotal() && this.dimOthers() && active >= 0 && index > active
+    );
   }
 
   protected isOutsideRange(index: number): boolean {

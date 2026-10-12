@@ -2421,7 +2421,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Reads the columns as a running total, as a waterfall's are: hovering one fades every column after it, and the axis guide stops at the hovered column."
+        "description": "Reads the columns as a running total, as a waterfall's are: the axis guide stops at the hovered column, and under `dimOthers` every column after it fades."
       }
     ],
     "outputs": [
@@ -2517,7 +2517,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "On the hovered reading, thickens the stretch from the reading before it in the rising or falling colour (`--ds-chart-positive-color`, `--ds-chart-negative-color`) and prints the change in percent. With several series it follows the one singled out: hovered, focused or highlighted."
+        "description": "On the hovered reading, thickens the stretches from the reading before it and to the reading after it, each in its own rising or falling colour (`--ds-chart-positive-color`, `--ds-chart-negative-color`) and with its own change in percent. With several series it follows the one singled out: hovered, focused or highlighted."
       },
       {
         "name": "patterns",
@@ -4698,6 +4698,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prints each cell's reading inside it."
       },
       {
+        "name": "showScaleMarker",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Marks the hovered or focused cell's reading on the colour scale."
+      },
+      {
         "name": "dimOthers",
         "kind": "input",
         "type": "boolean",
@@ -5813,7 +5822,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "On the hovered reading, thickens the stretch from the reading before it in the rising or falling colour and prints the change in percent; with several series, for the one singled out."
+        "description": "On the hovered reading, thickens the stretches from the reading before it and to the reading after it, each in its own rising or falling colour and with its own change in percent; with several series, for the one singled out."
       },
       {
         "name": "staggerMs",
@@ -7459,6 +7468,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "`'below'` prints the value and its caption under the ring at full size, never shrunk or shortened."
       },
       {
+        "name": "centerFollowsHover",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "The hovered, focused or held slice prints its value and label in the centre in place of `centerValue` and `centerLabel`."
+      },
+      {
         "name": "legend",
         "kind": "input",
         "type": "'end' | 'bottom' | 'none'",
@@ -8176,6 +8194,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Fades every mark but the one under the pointer; on a scatter this hides pile-ups."
+      },
+      {
+        "name": "nearestPoint",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Anywhere over the plot answers with the nearest point, ringed and tethered to the pointer. Off, a point answers only within 16 CSS pixels of its centre, without the ring and tether."
+      },
+      {
+        "name": "nearestRadius",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How far the pointer may be from a point's centre, in CSS pixels and inclusive, for the point to answer under `nearestPoint`; `null` sets no limit."
       },
       {
         "name": "staggerMs",

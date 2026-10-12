@@ -110,6 +110,9 @@ export class HeatmapChartComponent
   /** Prints each cell's reading inside it. */
   readonly showValues = input(false, { transform: booleanAttribute });
 
+  /** Marks the hovered or focused cell's reading on the colour scale. */
+  readonly showScaleMarker = input(true, { transform: booleanAttribute });
+
   /** Fades every cell but the one under the pointer. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
@@ -164,7 +167,7 @@ export class HeatmapChartComponent
   /** Where the settled cell's reading sits along the scale, as a percentage of the ramp. */
   protected readonly scaleMarker = computed(() => {
     const cell = this.flatCells()[this.scaleMarkerIndex()];
-    if (!cell || cell.value === null) {
+    if (!this.showScaleMarker() || !cell || cell.value === null) {
       return null;
     }
     const { min, max } = this.domain();

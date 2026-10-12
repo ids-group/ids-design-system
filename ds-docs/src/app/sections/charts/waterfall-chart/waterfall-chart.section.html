@@ -144,6 +144,18 @@
     </div>
   </div>
 
+  <p class="block-desc t-s">
+    Hovering a step stops the axis guide at it; under
+    <code class="t-mono-inline">
+      dimOthers
+    </code> the other bars, and the steps after it, fade.
+  </p>
+
+  <ds-waterfall-chart
+    caption="Settlement, other bars dimmed on hover"
+    dimOthers
+    [data]="settlement" />
+
   <h3 class="block-title t-h4">
     Drilling in
   </h3>

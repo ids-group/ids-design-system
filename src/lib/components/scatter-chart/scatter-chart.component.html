@@ -147,7 +147,7 @@
       </g>
     }
 
-    @if (ringedMark()) {
+    @if (nearestPoint() && ringedMark()) {
       @if (pointerOverPlot() && !activeMark.pinned()) {
         <line
           #tether

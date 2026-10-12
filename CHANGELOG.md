@@ -19,12 +19,13 @@
 - **`dsColumnSeries` takes `hidden` and `runningTotal`; `LineSeriesData` takes `hidden`.** A hidden
   column series sinks to the baseline and a hidden line erases itself back along its own path, and
   draws on again when shown; both leave the value axis to the other marks. `runningTotal` reads the
-  columns as a waterfall's: hovering one fades every column after it and stops the axis guide at
-  it.
+  columns as a waterfall's: hovering one stops the axis guide at it, and under `dimOthers` fades
+  every column after it.
 - **`showChange` on `dsLineSeries` and `ds-line-chart`, off by default.** On the hovered reading,
-  the stretch from the reading before it thickens in `--ds-chart-positive-color` or
-  `--ds-chart-negative-color` and prints the change in percent. With several series it follows the
-  one singled out by hover, focus or the legend.
+  the stretches from the reading before it and to the reading after it thicken, each in
+  `--ds-chart-positive-color` or `--ds-chart-negative-color` by its own change, and each prints its
+  change in percent. With several series it follows the one singled out by hover, focus or the
+  legend.
 
 - **A scatter's points enter left to right.** `ds-scatter-chart` takes `staggerMs` (default 40),
   as the column charts do: each point waits by its place across the plot, the whole entrance stays
@@ -37,7 +38,7 @@
   runs from the value axis at the reading, and a pill on the axis prints the axis value there; the
   guide and the pill glide between readings on `--ds-motion-chart-tooltip-move-duration` and
   `-easing`. In `ds-waterfall-chart` the guide stops at the hovered step, reads its running total,
-  and the steps after it fade.
+  and under `dimOthers` the steps after it fade.
 - **A highlighted line point rides the line.** Under the category cursor, each series' highlighted
   point travels along its own line to the next category, with the panel and the crosshair, instead
   of jumping there.
@@ -53,6 +54,11 @@
   A `ds-scatter-chart` answers with the point nearest the pointer anywhere over the plot, where it
   answered only within 16px of a point: a ring glides to that point and a dashed line runs to it
   from the pointer. Under `prefers-reduced-motion` the centre, the marker and the ring change at once.
+  Each is on by default and has its own off switch: `centerFollowsHover` on `ds-pie-chart` keeps
+  `centerValue` and `centerLabel` in the centre, `showScaleMarker` on `ds-heatmap-chart` drops the
+  marker, and `nearestPoint` on `ds-scatter-chart` answers only within 16px of a point, without the
+  ring and line. `nearestRadius` on `ds-scatter-chart` caps how far, in CSS pixels, the nearest
+  point answers from; unset, any distance.
 - **Heatmap cells enter along the diagonals.** `staggerMs` on `ds-heatmap-chart` spaces the
   diagonals from the top-left cell, where it spaced the columns; the spread stays within 260ms.
 - **Every mark of a chart moves together when its data changes.** In `ds-chart`, `ds-column-chart`,
