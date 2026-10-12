@@ -46,14 +46,6 @@
   .ut-waffle i.ut-c.is-gone { box-shadow: inset 0 0 0 2px var(--error); }
   .ut-legend { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: var(--space-2) 0 0; font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
   .ut-legend span { display: inline-flex; align-items: center; gap: var(--space-1); }
-  .ud-board { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; font: var(--font-size-2xs) / 1.35 var(--font-sans); }
-  .ud-board li { display: grid; grid-template-columns: 1rem 1fr; column-gap: var(--space-2); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: var(--surface-secondary); }
-  .ud-board .ud-mark { grid-row: span 3; font-weight: var(--font-weight-bold); }
-  .ud-board li.is-kept .ud-mark { color: var(--success-text); }
-  .ud-board li.is-open .ud-mark { color: var(--primary); }
-  .ud-board span:not(.ud-mark) { color: var(--text-secondary); }
-  .ud-board em { font-style: normal; font-weight: var(--font-weight-bold); color: var(--text-tertiary); }
-  .ud-board li.is-open { background: none; box-shadow: inset 0 0 0 1px var(--border-default); }
 
   .ts-strip { display: grid; gap: 2px; font: var(--font-size-2xs) / 1.3 var(--font-sans); }
   .ts-strip span { display: flex; justify-content: space-between; gap: var(--space-2); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); }
@@ -433,15 +425,6 @@
   [data-q="ask-text-muted"] .tm-same i { inline-size: 18px; block-size: 18px; border-radius: 3px; }
   [data-q="ask-text-muted"] .tm-same code { font: var(--font-size-2xs) var(--font-mono); }
   /* automation-coverage */
-  [data-q="automation-coverage"] .ac-grid { border-collapse: collapse; font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
-  [data-q="automation-coverage"] .ac-grid th { padding: 0 var(--space-2) var(--space-1); font-weight: var(--font-weight-bold); color: var(--text-tertiary); }
-  [data-q="automation-coverage"] .ac-grid td { padding: 2px var(--space-2); }
-  [data-q="automation-coverage"] .ac-grid td:first-child { font-family: var(--font-mono); color: var(--text-primary); }
-  [data-q="automation-coverage"] .ac-grid td:not(:first-child) { text-align: center; }
-  [data-q="automation-coverage"] .ac-grid i, [data-q="automation-coverage"] .ac-strip i { display: inline-block; inline-size: 14px; block-size: 14px; border-radius: 2px; vertical-align: middle; }
-  [data-q="automation-coverage"] .ac-strip { display: flex; gap: 3px; align-items: center; }
-  [data-q="automation-coverage"] .ac-strip b { inline-size: 1px; block-size: 14px; margin-inline: 3px; background: var(--border-strong); }
-  [data-q="automation-coverage"] .opt > p { margin: 0; }
   /* cdk-menu */
   [data-q="cdk-menu"] .menu-mock { background: var(--surface-default); }
   [data-q="cdk-menu"] .cm-wrap { display: flex; align-items: flex-start; }
@@ -727,18 +710,6 @@
   .ag-pie small { font: var(--font-size-3xs) var(--font-sans); color: var(--text-tertiary); }
   .ag-cost { margin: 0; font: var(--font-size-2xs) / 1.45 var(--font-sans); color: var(--text-secondary); }
   .ag-cost b { color: var(--text-primary); }
-  .hs-demo { display: grid; gap: var(--space-2); inline-size: 184px; max-inline-size: 100%; }
-  .hs-row { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; }
-  .hs-row i { block-size: 24px; border-radius: 2px; cursor: crosshair; }
-  .hs-row i.is-hot { outline: 2px solid var(--text-primary); outline-offset: -2px; }
-  .hs-scale { position: relative; block-size: 30px; }
-  .hs-ramp { position: absolute; inset-inline: 0; inset-block-end: 0; block-size: 8px; border-radius: 2px; background: linear-gradient(90deg, var(--chart-sequential-6), var(--chart-sequential-1)); }
-  .hs-marker { position: absolute; inset-block-end: 12px; translate: -50% 0; padding: 0 var(--space-1); border-radius: 3px; background: var(--neutral-800); color: var(--surface-default); font: var(--font-weight-bold) 9px / 14px var(--font-sans); visibility: hidden; }
-  .hs-marker::after { content: ""; position: absolute; inset-block-start: 100%; inset-inline-start: 50%; translate: -50% 0; border: 3px solid transparent; border-block-start-color: var(--neutral-800); }
-  .hs-readout { margin: 0; font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
-  .hs-theme { display: flex; align-items: center; gap: var(--space-2); font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
-  .hs-theme input { inline-size: 90px; }
-  .hs-theme output { font-family: var(--font-mono); color: var(--text-primary); }
   .ag-err { color: var(--error-text); font-weight: var(--font-weight-bold); }
   .ag-ok { color: var(--success-text); font-weight: var(--font-weight-bold); }
   .pf-bars { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-1) var(--space-2); inline-size: 100%; max-inline-size: 360px; min-inline-size: 0; font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
@@ -810,11 +781,32 @@
   .dq-row .opt > h3 { font-size: var(--font-size-xs); }
   .dq-row .opt .chip { align-self: flex-start; }
   @media (max-width: 720px) { .dq-row { grid-template-columns: 1fr 1fr; } .dq-item { grid-column: 1 / -1; } }
+  [data-q="docs-blocks"] .tc-field { display: flex; justify-content: space-between; align-items: center; inline-size: 180px; max-inline-size: 100%; padding: var(--space-1-5) var(--space-2); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); font: var(--font-size-xs) var(--font-sans); color: var(--text-primary); }
+  [data-q="docs-blocks"] .tc-field i { inline-size: 12px; block-size: 12px; border: 2px solid var(--text-tertiary); border-radius: 50%; }
+  [data-q="docs-blocks"] .tc-panel { position: relative; display: flex; gap: var(--space-2); inline-size: 180px; max-inline-size: 100%; margin-block: var(--space-1) var(--space-2); padding: var(--space-4) var(--space-2) var(--space-2); border-radius: var(--ds-radius-panel); background: var(--surface-default); box-shadow: var(--shadow-popover); outline: 2px dashed var(--success); outline-offset: 2px; }
+  [data-q="docs-blocks"] .tc-tag { position: absolute; inset-block-start: 2px; inset-inline-start: var(--space-2); font: var(--font-weight-bold) var(--font-size-3xs) var(--font-mono); color: var(--success-text); }
+  [data-q="docs-blocks"] .tc-col { flex: 1; display: grid; gap: 2px; text-align: center; font: var(--font-size-2xs) / 1.6 var(--font-sans); color: var(--text-secondary); }
+  [data-q="docs-blocks"] .tc-col b { font-size: var(--font-size-3xs); color: var(--text-tertiary); }
+  [data-q="docs-blocks"] .tc-col .is-on { border-radius: var(--radius-sm); background: var(--accent); color: var(--surface-default); font-weight: var(--font-weight-bold); }
+  [data-q="docs-blocks"] .tc-cards { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  [data-q="docs-blocks"] .tc-cards span { padding: var(--space-2) var(--space-3); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); background: var(--surface-default); font: var(--font-weight-bold) var(--font-size-2xs) var(--font-sans); color: var(--text-primary); }
+  [data-q="docs-blocks"] .tc-cards span.is-new { border-color: var(--success); background: var(--success-subtitle); color: var(--success-text); }
+  .fn-real { display: block; inline-size: 100%; max-inline-size: 400px; block-size: auto; overflow: visible; }
+  .fn-real .fn-final { stroke-width: 1; stroke-dasharray: 4 3; }
+  .fn-edge { fill: none; stroke: var(--error); stroke-width: 3; stroke-linecap: round; opacity: 0; }
+  .lib-how { margin-block-start: var(--space-4); overflow-x: auto; }
+  .lib-how table { font-size: var(--font-size-2xs); }
+  .lib-how th, .lib-how td { vertical-align: top; }
+  .lib-how td code { font-size: var(--font-size-3xs); overflow-wrap: anywhere; }
+  .mt { display: inline-block; margin: 0 2px 2px 0; padding: 1px var(--space-2); border-radius: var(--radius-pill); font-weight: var(--font-weight-semibold); }
+  .mt-index { background: var(--surface-secondary); color: var(--text-secondary); }
+  .mt-label { background: var(--warning-subtitle); color: var(--warning-text); }
+  .mt-key { background: var(--success-subtitle); color: var(--success-text); }
 </style>
 
 <main>
   <div class="masthead">
-    <h1>5 асков консьюмеров и 46 решений, у каждого варианты нарисованы</h1>
+    <h1>5 асков консьюмеров и 42 решения, у каждого варианты нарисованы</h1>
     <ul class="lede">
       <li>Сверху <b>то, чего ждут консьюмеры</b>, ниже открытые решения по темам; справа от вопроса приоритет и консьюмер или ссылка на деку.</li>
       <li><b>Вариант выбирается кликом</b>, звёздочка - рекомендация, внизу собирается одна строка со всеми ответами.</li>
@@ -1587,28 +1579,11 @@ onRow(row: <b>RowChartEntry</b>)</p>
     <p class="ut-legend"><span><i class="ut-d"></i>51 размер несуществующих компонентов</span><span><i class="ut-n"></i>58 имён шкал и ролей</span><span><i class="ut-c"></i>12 читают консьюмеры</span></p>
   </section>
 
-  <section class="q" data-q="unasked-decisions">
-    <div class="q-head">
-      <span class="q-num">17</span>
-      <h2 class="q-title">Шесть изменений поведения ушли в Unreleased без выбора между вариантами</h2>
-      <a class="q-src" href="12-unasked-decisions.html">дека unasked-decisions</a>
-    </div>
-    <p class="q-sub">Каждое уже в коде и ждёт релиза; варианты по каждому нарисованы в деке unasked-decisions. Выбрать: оставить все шесть как сделаны или разобрать их по одному в деке до релиза.</p>
-    <div class="opts">
-      <div class="opt"><h3>Оставить все шесть как сделаны</h3>
-        <ul class="ud-board"><li class="is-kept"><span class="ud-mark">✓</span><b>Тема</b><span>ручной data-theme на &lt;html&gt; держится всегда</span><em>так и выйдет</em></li><li class="is-kept"><span class="ud-mark">✓</span><b>Модалка</b><span>подтверждение через директиву, пока модалка открыта</span><em>так и выйдет</em></li><li class="is-kept"><span class="ud-mark">✓</span><b>Группа аватаров</b><span>max прячет лишние аватары</span><em>так и выйдет</em></li><li class="is-kept"><span class="ud-mark">✓</span><b>Неактивная ссылка с причиной</b><span>остаётся в порядке Tab</span><em>так и выйдет</em></li><li class="is-kept"><span class="ud-mark">✓</span><b>Два набора иконок</b><span>сливаются, поздний выигрывает</span><em>так и выйдет</em></li><li class="is-kept"><span class="ud-mark">✓</span><b>Пин на графике</b><span>кружок в 8px над значением</span><em>так и выйдет</em></li></ul>
-        <p class="ag-cost"><b>Цена:</b> ничего, релиз выходит как есть.</p></div>
-      <div class="opt"><h3>Разобрать по одному в деке</h3>
-        <ul class="ud-board"><li class="is-open"><span class="ud-mark">?</span><b>Тема</b><span>ручной data-theme на &lt;html&gt; держится всегда</span><em>выбор в деке</em></li><li class="is-open"><span class="ud-mark">?</span><b>Модалка</b><span>подтверждение через директиву, пока модалка открыта</span><em>выбор в деке</em></li><li class="is-open"><span class="ud-mark">?</span><b>Группа аватаров</b><span>max прячет лишние аватары</span><em>выбор в деке</em></li><li class="is-open"><span class="ud-mark">?</span><b>Неактивная ссылка с причиной</b><span>остаётся в порядке Tab</span><em>выбор в деке</em></li><li class="is-open"><span class="ud-mark">?</span><b>Два набора иконок</b><span>сливаются, поздний выигрывает</span><em>выбор в деке</em></li><li class="is-open"><span class="ud-mark">?</span><b>Пин на графике</b><span>кружок в 8px над значением</span><em>выбор в деке</em></li></ul>
-        <p class="ag-cost"><b>Цена:</b> шесть ответов в деке unasked-decisions; что отличается от сделанного, переделывается до релиза.</p></div>
-    </div>
-  </section>
-
   <p class="group">Релиз и публикация</p>
 
   <section class="q" data-q="angular-22">
     <div class="q-head">
-      <span class="q-num">18</span>
+      <span class="q-num">17</span>
       <h2 class="q-title">Приложение на Angular 22 ставит DS только с обходным флагом: когда переходим</h2>
       <a class="q-src" href="../docs/todo.md">апгрейд на Angular 22, P3</a>
     </div>
@@ -1647,7 +1622,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="npm-2027">
     <div class="q-head">
-      <span class="q-num">19</span>
+      <span class="q-num">18</span>
       <h2 class="q-title">С января 2027 npm перестанет принимать публикацию DS по нашему токену</h2>
       <a class="q-src" href="../docs/todo.md">публикация в npm после января 2027</a>
     </div>
@@ -1692,7 +1667,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="claude-design-ci">
     <div class="q-head">
-      <span class="q-num">20</span>
+      <span class="q-num">19</span>
       <h2 class="q-title">Загрузку DS в Claude Design нельзя запустить из CI: последний шаг ручной</h2>
       <a class="q-src" href="../docs/todo.md">публикация в Claude Design из CI</a>
     </div>
@@ -1729,7 +1704,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="fix-all-html">
     <div class="q-head">
-      <span class="q-num">21</span>
+      <span class="q-num">20</span>
       <h2 class="q-title">Автоисправление fix:all переписывает HTML-шаблоны, а eslint хочет их обратно</h2>
       <a class="q-src" href="../docs/todo.md">fix:all против eslint на HTML</a>
     </div>
@@ -1770,7 +1745,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="stale-ds-css">
     <div class="q-head">
-      <span class="q-num">22</span>
+      <span class="q-num">21</span>
       <h2 class="q-title">Деки рисуются со старой копией стилей DS, и это никто не ловит</h2>
       <a class="q-src" href="../docs/todo.md">устаревший presentations/ds.css</a>
     </div>
@@ -1808,7 +1783,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="todo-index-gate">
     <div class="q-head">
-      <span class="q-num">23</span>
+      <span class="q-num">22</span>
       <h2 class="q-title">Оглавление бэклога может устареть: его проверка не входит в общий прогон</h2>
       <a class="q-src" href="../docs/todo.md">todo-index --check вне lint:all</a>
     </div>
@@ -1848,7 +1823,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="manifest-practices">
     <div class="q-head">
-      <span class="q-num">24</span>
+      <span class="q-num">23</span>
       <h2 class="q-title">Какие из десяти практик для файлов миграций принять</h2>
       <a class="q-src" href="5-migration-manifest-audit.html">дека migration-manifest-audit</a>
     </div>
@@ -1946,59 +1921,9 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
   </section>
 
-  <section class="q" data-q="automation-coverage">
-    <div class="q-head">
-      <span class="q-num">25</span>
-      <h2 class="q-title">Пять групп компонентов и три действия в таблице никто ни разу не прокликал</h2>
-      <a class="q-src" href="../docs/todo.md">непрокликанные пути ds-table</a>
-    </div>
-    <p class="q-sub">Автоматические проходы загружали все страницы, но кликами не проверены действия, навигация, статусы, оверлеи и структура страницы, а в <code>ds-table</code> - перетаскивание колонки, растягивание и экспорт CSV. Выбрать: прокликать один раз и записать итог или оставить известной дырой.</p>
-    <div class="stage">
-      <div class="spec"><p class="cap">что прокликано</p>
-        <table class="ac-grid">
-          <thead><tr><th></th><th>загружено</th><th>прокликано</th></tr></thead>
-          <tbody>
-            <tr><td>actions</td><td><i class="g-ok"></i></td><td><i class="g-no"></i></td></tr>
-            <tr><td>forms-inputs</td><td><i class="g-ok"></i></td><td><i class="g-ok"></i></td></tr>
-            <tr><td>navigation</td><td><i class="g-ok"></i></td><td><i class="g-no"></i></td></tr>
-            <tr><td>data-display</td><td><i class="g-ok"></i></td><td><i class="g-ok"></i></td></tr>
-            <tr><td>feedback-status</td><td><i class="g-ok"></i></td><td><i class="g-no"></i></td></tr>
-            <tr><td>overlays</td><td><i class="g-ok"></i></td><td><i class="g-no"></i></td></tr>
-            <tr><td>page-structure</td><td><i class="g-ok"></i></td><td><i class="g-no"></i></td></tr>
-          </tbody>
-        </table>
-        <p class="says">все 13 страниц групп загружали свипы фокуса и имён</p>
-      </div>
-      <div class="spec"><p class="cap">ds-table</p>
-        <table class="ac-grid">
-          <thead><tr><th></th><th>прокликано</th></tr></thead>
-          <tbody>
-            <tr><td>перетащить колонку за ручку</td><td><i class="g-no"></i></td></tr>
-            <tr><td>растянуть колонку</td><td><i class="g-no"></i></td></tr>
-            <tr><td>экспорт CSV</td><td><i class="g-no"></i></td></tr>
-          </tbody>
-        </table>
-        <p class="says">свипы читали их статически или пропускали</p>
-      </div>
-    </div>
-
-    <div class="opts">
-      <div class="opt"><h3>Прокликать один раз</h3>
-        <div class="ac-strip"><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><b></b><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i></div>
-        <p class="says">5 групп + 3 пути прокликаны</p>
-        <dl class="layer"><dt>итог</dt><dd class="gain">записан в todo</dd><dt>пункт</dt><dd class="gain">закрыт или стал багами</dd></dl>
-        <p>Разовый проход и запись результата.</p></div>
-      <div class="opt"><h3>Оставить</h3>
-        <div class="ac-strip"><i class="g-no"></i><i class="g-no"></i><i class="g-no"></i><i class="g-no"></i><i class="g-no"></i><b></b><i class="g-no"></i><i class="g-no"></i><i class="g-no"></i></div>
-        <p class="says">5 групп + 3 пути не тронуты</p>
-        <dl class="layer"><dt>итог</dt><dd>известная дыра в todo</dd><dt>эти пути</dt><dd class="none">не проверены</dd></dl>
-        <p>Пробел остаётся известным.</p></div>
-    </div>
-  </section>
-
   <section class="q" data-q="schematics-tsconfig">
     <div class="q-head">
-      <span class="q-num">26</span>
+      <span class="q-num">24</span>
       <h2 class="q-title">Пакет DS уйдёт в npm пустым, когда репо перейдёт на TypeScript 6</h2>
       <a class="q-src" href="../docs/todo.md">schematics/tsconfig moduleResolution</a>
     </div>
@@ -2035,7 +1960,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="design-manifest-templates">
     <div class="q-head">
-      <span class="q-num">27</span>
+      <span class="q-num">25</span>
       <h2 class="q-title">Два пустых раздела в манифесте Claude Design: templates и startingPoints</h2>
       <a class="q-src" href="../docs/todo.md">templates и startingPoints в манифесте</a>
     </div>
@@ -2071,54 +1996,53 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="docs-blocks">
     <div class="q-head">
-      <span class="q-num">28</span>
-      <h2 class="q-title">Колонки выбора времени (TimeColumns) - последний компонент без своей карточки</h2>
+      <span class="q-num">26</span>
+      <h2 class="q-title">Колесо часов и минут в выпадашке выбора времени: показывать его в документации отдельно</h2>
       <a class="q-src" href="../docs/todo.md">компоненты без блока в ds-docs</a>
     </div>
-    <p class="q-sub">Три из четырёх компонентов без своего блока в ds-docs его уже получили. TimeColumns показан только внутри блока Time picker, поэтому в Claude Design у него нет своей карточки. Выбрать: дать ему свой блок или оставить внутри Time picker.</p>
+    <ul class="q-sub">
+      <li><b>TimeColumns</b> - колонки часов и минут, которые <b>прокручиваются внутри выпадашки</b> поля «Время» (<code>ds-time-picker</code>).</li>
+      <li>Он <b>внутренний</b>: консьюмер не может поставить его сам, только через <code>ds-time-picker</code>.</li>
+      <li>Вопрос только про документацию: <b>дать колесу свой блок</b> на странице Time picker, и тогда Claude Design получит <b>отдельную карточку</b>, или оставить его показанным внутри Time picker.</li>
+    </ul>
     <div class="stage">
-      <div class="spec"><p class="cap">как уже сделано у SidenavFooter</p>
-        <p class="css">&lt;h3 data-claude-design class="block-title t-h4"
-    <span class="hit">data-for="sidenav-footer"</span>&gt;
-  The rail footer on its own
-&lt;/h3&gt;</p>
-        <p class="says">блок с data-for даёт карточку чужому компоненту</p>
-      </div>
-      <div class="spec"><p class="cap">TimeColumns сегодня</p>
-        <dl class="layer"><dt>своя карточка</dt><dd class="none">нет</dd><dt>старая карточка</dt><dd>Time Columns.html, 1552px, ждёт удаления владельцем</dd><dt>своя API-таблица</dt><dd class="none">нет, не экспортируется</dd></dl>
+      <div class="spec"><p class="cap">что такое TimeColumns</p>
+        <div class="tc-field"><span>14:30</span><i></i></div>
+        <div class="tc-panel"><span class="tc-tag">TimeColumns</span>
+          <div class="tc-col"><b>Часы</b><span>12</span><span>13</span><span class="is-on">14</span><span>15</span><span>16</span></div>
+          <div class="tc-col"><b>Минуты</b><span>20</span><span>25</span><span class="is-on">30</span><span>35</span><span>40</span></div>
+        </div>
+        <p class="says">зелёная рамка - то, что называется TimeColumns</p>
       </div>
     </div>
-
     <div class="opts">
-      <div class="opt"><h3>Дать TimeColumns свой блок</h3>
+      <div class="opt"><h3>Дать колесу свой блок</h3>
+        <p class="cap">страница Time picker в ds-docs</p>
         <div class="db-page">
           <b class="db-title">Time picker</b>
           <span class="db-block db-card">Single</span>
           <span class="db-block db-card">Open wheels</span>
-          <span class="db-block db-new">TimeColumns <code>data-for="time-columns"</code></span>
+          <span class="db-block db-new">Колесо часов и минут <code>data-for="time-columns"</code></span>
           <span class="db-block">12-hour (AM/PM)</span>
           <span class="db-block">Minute step</span>
-          <span class="db-block">Min · max · disabled slots</span>
-          <span class="db-block">Clearable · sizes</span>
           <span class="db-block db-card">Range</span>
-          <span class="db-block">Validation · reactive forms</span>
         </div>
-        <p class="says">карточки: TimePicker <span class="db-pill">3</span> TimeColumns <span class="db-pill db-gain">1</span></p>
-        <p>Последний компонент получает свой блок.</p></div>
+        <p class="cap">карточки в Claude Design</p>
+        <div class="tc-cards"><span>Date Picker</span><span>Time Picker</span><span class="is-new">Time Columns</span></div>
+        <ul class="q-sub"><li>Claude Design может <b>собрать колесо отдельно</b>, например в своей панели.</li><li>Карточка компонента, которого <b>консьюмер не может поставить</b>.</li></ul></div>
       <div class="opt"><h3>Оставить внутри Time picker</h3>
+        <p class="cap">страница Time picker в ds-docs</p>
         <div class="db-page">
           <b class="db-title">Time picker</b>
           <span class="db-block db-card">Single</span>
           <span class="db-block db-card">Open wheels</span>
           <span class="db-block">12-hour (AM/PM)</span>
           <span class="db-block">Minute step</span>
-          <span class="db-block">Min · max · disabled slots</span>
-          <span class="db-block">Clearable · sizes</span>
           <span class="db-block db-card">Range</span>
-          <span class="db-block">Validation · reactive forms</span>
         </div>
-        <p class="says">карточки: TimePicker <span class="db-pill">3</span> TimeColumns <span class="db-pill">0</span></p>
-        <p>TimeColumns остаётся внутри чужого блока.</p></div>
+        <p class="cap">карточки в Claude Design</p>
+        <div class="tc-cards"><span>Date Picker</span><span>Time Picker</span></div>
+        <ul class="q-sub"><li>Колесо видно <b>в карточке Time Picker</b> (блок «Open wheels»).</li><li>Старая карточка <code>Time Columns.html</code> <b>удаляется</b> владельцем.</li></ul></div>
     </div>
   </section>
 
@@ -2126,7 +2050,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="text-snap-press">
     <div class="q-head">
-      <span class="q-num">29</span>
+      <span class="q-num">27</span>
       <h2 class="q-title">Текст кнопки дёргается в конце анимации нажатия</h2>
       <a class="q-src" href="17-text-snap-scale.html">дека text-snap-scale</a>
     </div>
@@ -2155,7 +2079,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="text-snap-card">
     <div class="q-head">
-      <span class="q-num">30</span>
+      <span class="q-num">28</span>
       <h2 class="q-title">Карточка при наведении: приподниматься на 1px или расти</h2>
       <a class="q-src" href="17-text-snap-scale.html">дека text-snap-scale</a>
     </div>
@@ -2179,18 +2103,26 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="text-snap-funnel">
     <div class="q-head">
-      <span class="q-num">31</span>
+      <span class="q-num">29</span>
       <h2 class="q-title">Ступень воронки в конце появления делает маленький шаг по краям</h2>
       <a class="q-src" href="17-text-snap-scale.html">дека text-snap-scale</a>
     </div>
-    <p class="q-sub">Ступени воронки появляются, вырастая из 96% размера и проявляясь. В последний кадр роста края фигуры сдвигаются на шаг, до 51 из 255 по яркости. Текста в ступени нет, подпись проявляется отдельно и плавно. Пунктир - где ступень встанет, красное - края, которые делают шаг.</p>
+    <ul class="q-sub">
+      <li>Ступени воронки появляются, <b>вырастая из 96% размера от центра</b> и проявляясь; рост из центра строится по твоему ответу.</li>
+      <li>В последний кадр роста <b>края ступени сдвигаются на шаг</b>: до 51 из 255 по яркости, замер деки text-snap-scale.</li>
+      <li>Ниже воронка в натуральную величину: 4 ступени по 44px, зазор 4px, хвост 38% ширины, рост 400ms, задержка 120ms и 60ms на ступень. <b>Красная вспышка</b> - кадр, где края делают шаг.</li>
+    </ul>
+    <div class="stage">
+      <button type="button" class="pf-replay">Проиграть ещё раз</button>
+      <label class="pf-slow"><input type="checkbox"> Замедлить ×5</label>
+    </div>
     <div class="opts">
       <div class="opt is-today"><h3>Рост из 96% и проявление</h3><span class="badge is-same">сейчас в dev</span>
-        <svg class="ag-svg" viewBox="0 0 160 60" aria-hidden="true"><polygon points="10,8 150,8 132,52 28,52" class="mo-slot"/><polygon points="13,10 147,10 130,50 30,50" class="ag-c1" opacity=".85"/><path d="M10 8 L13 10 M150 8 L147 10 M132 52 L130 50 M28 52 L30 50" stroke="var(--error)" stroke-width="2"/><text x="80" y="34" text-anchor="middle" style="fill:var(--surface-default)">96% → 100%</text></svg>
-        <p class="ag-cost">Ступень заметно встаёт на место. <b>Цена:</b> шаг до 51 из 255 на краях.</p></div>
+        <svg class="fn-real" data-play="funnel" data-fn-origin="center" data-fn-mode="grow" viewBox="0 0 400 176" aria-hidden="true"><polygon class="fn-final" points="1.4,2 398.6,2 370.4,42 29.6,42"/><polygon class="fn-final" points="32.4,46 367.6,46 339.4,86 60.6,86"/><polygon class="fn-final" points="63.4,90 336.6,90 308.4,130 91.6,130"/><polygon class="fn-final" points="94.4,134 305.6,134 277.4,174 122.6,174"/><polygon class="fn-stage" data-stagger="0" style="fill:var(--ds-chart-ramp-1-color)" points="1.4,2 398.6,2 370.4,42 29.6,42"/><polygon class="fn-stage" data-stagger="60" style="fill:var(--ds-chart-ramp-5-color)" points="32.4,46 367.6,46 339.4,86 60.6,86"/><polygon class="fn-stage" data-stagger="120" style="fill:var(--ds-chart-ramp-8-color)" points="63.4,90 336.6,90 308.4,130 91.6,130"/><polygon class="fn-stage" data-stagger="180" style="fill:var(--ds-chart-series-accent-color)" points="94.4,134 305.6,134 277.4,174 122.6,174"/><path class="fn-edge" d="M1.4 2 L29.6 42 M398.6 2 L370.4 42"/><path class="fn-edge" d="M32.4 46 L60.6 86 M367.6 46 L339.4 86"/><path class="fn-edge" d="M63.4 90 L91.6 130 M336.6 90 L308.4 130"/><path class="fn-edge" d="M94.4 134 L122.6 174 M305.6 134 L277.4 174"/></svg>
+        <ul class="q-sub"><li>Ступень <b>заметно встаёт на место</b>.</li><li><b>Шаг на краях</b> в последний кадр.</li></ul></div>
       <div class="opt"><h3>Только проявление, без роста</h3>
-        <svg class="ag-svg" viewBox="0 0 160 60" aria-hidden="true"><polygon points="10,8 150,8 132,52 28,52" class="ag-c1" opacity=".35"/><polygon points="10,8 150,8 132,52 28,52" class="mo-slot"/><text x="80" y="34" text-anchor="middle">прозрачность 0 → 1</text></svg>
-        <p class="ag-cost">Шага нет. <b>Цена:</b> ступень просто проявляется на месте.</p></div>
+        <svg class="fn-real" data-play="funnel" data-fn-origin="center" data-fn-mode="fade" viewBox="0 0 400 176" aria-hidden="true"><polygon class="fn-final" points="1.4,2 398.6,2 370.4,42 29.6,42"/><polygon class="fn-final" points="32.4,46 367.6,46 339.4,86 60.6,86"/><polygon class="fn-final" points="63.4,90 336.6,90 308.4,130 91.6,130"/><polygon class="fn-final" points="94.4,134 305.6,134 277.4,174 122.6,174"/><polygon class="fn-stage" data-stagger="0" style="fill:var(--ds-chart-ramp-1-color)" points="1.4,2 398.6,2 370.4,42 29.6,42"/><polygon class="fn-stage" data-stagger="60" style="fill:var(--ds-chart-ramp-5-color)" points="32.4,46 367.6,46 339.4,86 60.6,86"/><polygon class="fn-stage" data-stagger="120" style="fill:var(--ds-chart-ramp-8-color)" points="63.4,90 336.6,90 308.4,130 91.6,130"/><polygon class="fn-stage" data-stagger="180" style="fill:var(--ds-chart-series-accent-color)" points="94.4,134 305.6,134 277.4,174 122.6,174"/><path class="fn-edge" d="M1.4 2 L29.6 42 M398.6 2 L370.4 42"/><path class="fn-edge" d="M32.4 46 L60.6 86 M367.6 46 L339.4 86"/><path class="fn-edge" d="M63.4 90 L91.6 130 M336.6 90 L308.4 130"/><path class="fn-edge" d="M94.4 134 L122.6 174 M305.6 134 L277.4 174"/></svg>
+        <ul class="q-sub"><li><b>Шага нет</b>: размер не меняется.</li><li>Ступень <b>просто проявляется</b> на месте.</li></ul></div>
     </div>
   </section>
 
@@ -2198,7 +2130,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-duplicate-labels">
     <div class="q-head">
-      <span class="q-num">32</span>
+      <span class="q-num">30</span>
       <h2 class="q-title">Две колонки с одной подписью: убрал первую - на её место едет не та</h2>
       <span class="q-src">chart.math.ts:457 · 0e868e686</span>
     </div>
@@ -2237,6 +2169,26 @@ onRow(row: <b>RowChartEntry</b>)</p>
         <p class="console">[ds-column-chart] label "Jan" repeats; pass id to keep each column</p>
         <p class="ag-cost">С <code>id</code> едет верно (нарисовано); без него ключ как сейчас и строка в консоли в dev. <b>Цена:</b> одна проверка в dev.</p></div>
     </div>
+    <div class="lib-how">
+      <p class="cap">Как делают другие: как график узнаёт колонку после обновления данных</p>
+      <table>
+        <thead><tr><th>Библиотека</th><th>По умолчанию</th><th>Свой ключ</th><th>Две одинаковые подписи</th></tr></thead>
+        <tbody>
+          <tr><th>Highcharts</th><td><span class="mt mt-index">по порядку при той же длине</span> <span class="mt mt-key">по id</span> <span class="mt mt-index">по x</span></td><td><code>id</code> у точки; по имени только с <code>dataSorting.matchByName</code></td><td>без id - по порядку</td></tr>
+          <tr><th>Apache ECharts</th><td><span class="mt mt-label">по подписи с номером повтора</span></td><td><code>id</code> у элемента</td><td>второй «Jan» = <code>Jan__ec__2</code>, <b>как у нас сейчас</b></td></tr>
+          <tr><th>Chart.js</th><td><span class="mt mt-index">по месту в массиве</span></td><td>нет</td><td>подписи не участвуют; <code>shift</code> и <code>splice</code> того же массива отслеживаются</td></tr>
+          <tr><th>Recharts</th><td><span class="mt mt-index">по месту в массиве</span></td><td><code>animationMatchBy</code> с <code>matchByDataKey</code></td><td>по месту в массиве</td></tr>
+          <tr><th>D3</th><td><span class="mt mt-index">по месту в массиве</span></td><td>функция ключа в <code>selection.data</code></td><td>повтор ключа: лишний элемент уходит, лишние данные входят заново</td></tr>
+          <tr><th>Vega, Vega-Lite</th><td>не описано</td><td><span class="mt mt-key">key</span> у марки, канал <code>key</code></td><td>ключ обязан быть уникальным</td></tr>
+          <tr><th>Nivo</th><td><span class="mt mt-label">по подписи</span></td><td>нет</td><td>ключ <code>серия.подпись</code> у обеих одинаковый</td></tr>
+        </tbody>
+      </table>
+      <ul class="q-sub">
+        <li><b>Никто из семи не угадывает</b> верную колонку при повторе подписи без явного ключа.</li>
+        <li>Главный путь у всех, кто его даёт: <b>явный id или ключ</b>; у нас это <code>id</code> у точки.</li>
+        <li>Открыто 2026-10-12: Highcharts API <code>Series.setData</code> и <code>dataSorting.matchByName</code>; ECharts <code>src/data/SeriesData.ts</code>; Chart.js <code>src/core/core.datasetController.js</code> и docs «Updating Charts»; Recharts <code>src/cartesian/Bar.tsx</code>; d3js.org «Joining data»; Vega docs «Marks»; Vega-Lite docs «Encoding»; Nivo <code>packages/bar/src/compute/grouped.ts</code>.</li>
+      </ul>
+    </div>
   </section>
 
 
@@ -2247,7 +2199,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-heatmap-gap">
     <div class="q-head">
-      <span class="q-num">33</span>
+      <span class="q-num">31</span>
       <h2 class="q-title">Цветная шкала под heatmap отодвинута на 12px ради метки с числом</h2>
       <span class="q-src">heatmap-chart.component.scss:142 · f4fa4867b</span>
     </div>
@@ -2270,45 +2222,14 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
 
 
-  <section class="q" data-q="ag-heatmap-settle">
-    <div class="q-head">
-      <span class="q-num">34</span>
-      <h2 class="q-title">Пауза метки на шкале heatmap: число в коде или настройка темы</h2>
-      <span class="q-src">heatmap-chart.component.ts:45 · f4fa4867b</span>
-    </div>
-    <p class="q-sub">Когда курсор встаёт на ячейку, метка с её числом переезжает по шкале через 120ms, чтобы не прыгать на каждой ячейке по пути. «В коде» и «токеном» на экране по умолчанию одинаковы: обе ждут 120ms. Разница в двух вещах: токен тема консьюмера меняет одной строкой CSS, как остальные <code>--ds-motion-chart-*</code>, и при системной настройке «уменьшить движение» токен становится 0ms, а число в коде ждёт всегда. «Без паузы» - метка прыгает за каждой ячейкой. Веди курсор по строке.</p>
-    <div class="stage">
-      <label class="pf-slow"><input type="checkbox" class="hs-reduce"> Система: уменьшить движение</label>
-    </div>
-    <div class="opts">
-      <div class="opt is-today"><h3>Пауза 120ms в коде</h3><span class="badge is-same">сейчас в dev</span>
-        <div class="hs-demo" data-hs-mode="code"><div class="hs-row"><i data-v="412" style="background:var(--chart-sequential-3)"></i><i data-v="188" style="background:var(--chart-sequential-5)"></i><i data-v="618" style="background:var(--chart-sequential-2)"></i><i data-v="96" style="background:var(--chart-sequential-5)"></i><i data-v="305" style="background:var(--chart-sequential-4)"></i><i data-v="540" style="background:var(--chart-sequential-3)"></i><i data-v="233" style="background:var(--chart-sequential-5)"></i><i data-v="701" style="background:var(--chart-sequential-2)"></i></div><div class="hs-scale"><span class="hs-ramp"></span><span class="hs-marker"></span></div><p class="hs-readout">пауза: <b>120ms</b></p></div>
-        <p class="css">const SCALE_MARKER_SETTLE_MS = 120;</p>
-        <dl class="layer"><dt>Тема консьюмера</dt><dd class="none">поменять нечем</dd><dt>Уменьшить движение</dt><dd>всё равно ждёт 120ms</dd></dl>
-      </div>
-      <div class="opt"><h3>Пауза 120ms токеном <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
-        <div class="hs-demo" data-hs-mode="token"><div class="hs-row"><i data-v="412" style="background:var(--chart-sequential-3)"></i><i data-v="188" style="background:var(--chart-sequential-5)"></i><i data-v="618" style="background:var(--chart-sequential-2)"></i><i data-v="96" style="background:var(--chart-sequential-5)"></i><i data-v="305" style="background:var(--chart-sequential-4)"></i><i data-v="540" style="background:var(--chart-sequential-3)"></i><i data-v="233" style="background:var(--chart-sequential-5)"></i><i data-v="701" style="background:var(--chart-sequential-2)"></i></div><div class="hs-scale"><span class="hs-ramp"></span><span class="hs-marker"></span></div><p class="hs-readout">пауза: <b>120ms</b></p></div>
-        <label class="hs-theme">тема ставит <input type="range" min="0" max="600" step="20" value="120"> <output>120ms</output></label>
-        <p class="css">ds-heatmap-chart {
-  --ds-motion-chart-scale-marker-delay: 250ms;
-}</p>
-        <dl class="layer"><dt>Тема консьюмера</dt><dd class="gain">одна строка CSS; имя токена - пример</dd><dt>Уменьшить движение</dt><dd class="gain">0ms, как все токены движения</dd></dl>
-      </div>
-      <div class="opt"><h3>Без паузы</h3>
-        <div class="hs-demo" data-hs-mode="none"><div class="hs-row"><i data-v="412" style="background:var(--chart-sequential-3)"></i><i data-v="188" style="background:var(--chart-sequential-5)"></i><i data-v="618" style="background:var(--chart-sequential-2)"></i><i data-v="96" style="background:var(--chart-sequential-5)"></i><i data-v="305" style="background:var(--chart-sequential-4)"></i><i data-v="540" style="background:var(--chart-sequential-3)"></i><i data-v="233" style="background:var(--chart-sequential-5)"></i><i data-v="701" style="background:var(--chart-sequential-2)"></i></div><div class="hs-scale"><span class="hs-ramp"></span><span class="hs-marker"></span></div><p class="hs-readout">пауза: <b>0ms</b></p></div>
-        <dl class="layer"><dt>Проход курсором</dt><dd>метка прыгает за каждой ячейкой</dd><dt>Код</dt><dd class="gain">таймер уходит</dd></dl>
-      </div>
-    </div>
-  </section>
-
-
   <section class="q" data-q="ag-scatter-tether-paint">
     <div class="q-head">
-      <span class="q-num">35</span>
+      <span class="q-num">32</span>
       <h2 class="q-title">Пунктир от курсора к точке в scatter заставляет браузер перерисовывать всю страницу</h2>
       <span class="q-src">scatter-chart.component.html:153 · 46a912b46</span>
     </div>
     <p class="q-sub">Сегодня в scatter от курсора к ближайшей точке тянется пунктир, и каждое движение мыши перерисовывает всю страницу: 752ms работы браузера за один проход по 40 точкам против 23ms без пунктира (замер 2026-10-12). Дешёвого способа рисовать его нет. Выбрать: оставить, показывать только пока кольцо едет к новой точке, или убрать. Веди курсор по полю.</p>
+    <ul class="q-sub"><li><b>Замер идёт</b>: твой ответ 2026-10-12 «пока оставить как есть и замерить точную производительность»; до замера в dev ничего не меняется.</li></ul>
     <div class="stage">
       <div class="spec"><p class="cap">Paint за проход, perf-агент 2026-10-12</p><div class="pf-bars">
         <span>с пунктиром</span><i style="inline-size:100%"></i><b>752ms</b>
@@ -2343,11 +2264,12 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-hover-transitions-paint">
     <div class="q-head">
-      <span class="q-num">36</span>
+      <span class="q-num">33</span>
       <h2 class="q-title">Плавная подсветка при наведении заставляет график перерисовываться каждый кадр</h2>
       <span class="q-src">_chart-interactive.scss:6 · chart.component.scss:152 · 737838eac</span>
     </div>
     <p class="q-sub">Сегодня при наведении колонка плавно светлеет за 120ms, подпись под ней плавно жирнеет, а пилюля с числом плавно едет по оси за 300ms. Один проход мышью по heatmap стоит браузеру 905ms работы; без плавной яркости - 546ms, без всех трёх переходов - 249ms (замер 2026-10-12). Выбрать, что оставить плавным. Веди курсор по колонкам.</p>
+    <ul class="q-sub"><li><b>Замер идёт</b>: твой ответ 2026-10-12 «пока оставить как есть и замерить точную производительность»; до замера в dev ничего не меняется.</li></ul>
     <div class="stage">
       <div class="spec"><p class="cap">Paint heatmap за проход, perf-агент 2026-10-12</p><div class="pf-bars">
         <span>с переходами</span><i style="inline-size:100%"></i><b>905ms</b>
@@ -2390,64 +2312,15 @@ onRow(row: <b>RowChartEntry</b>)</p>
     </div>
   </section>
 
-  <section class="q" data-q="ag-funnel-settle-origin">
-    <div class="q-head">
-      <span class="q-num">37</span>
-      <h2 class="q-title">Ступени воронки при появлении дорастают из левого угла, а точки scatter - из центра</h2>
-      <span class="q-src">funnel-chart.component.scss:9 · _chart-motion.scss:47 · bf6fb9dd7</span>
-    </div>
-    <p class="q-sub">Сегодня каждая ступень воронки появляется из 96% размера и дорастает вправо и вниз от своего левого верхнего угла, так что её правый край едет. Точки scatter появляются той же анимацией, но из центра. Общий код для обоих есть; переход на него меняет вид воронки, поэтому вопрос к тебе. Пунктир - где ступень встанет.</p>
-    <div class="stage">
-      <button type="button" class="pf-replay">Проиграть ещё раз</button>
-      <label class="pf-slow"><input type="checkbox"> Замедлить ×5</label>
-    </div>
-    <div class="opts">
-      <div class="opt is-today"><h3>Из левого угла</h3><span class="badge is-same">сейчас в dev</span>
-        <svg class="ag-svg" data-play="funnel" data-fn-origin="corner" viewBox="0 0 200 124" aria-hidden="true">
-          <polygon class="fn-final" points="5,2 195,2 175,28 25,28"/><polygon class="fn-final" points="25,32 175,32 155,58 45,58"/><polygon class="fn-final" points="45,62 155,62 137,88 63,88"/><polygon class="fn-final" points="63,92 137,92 122,118 78,118"/>
-          <polygon class="fn-stage ag-c3" data-stagger="0" points="5,2 195,2 175,28 25,28"/><polygon class="fn-stage ag-c2" data-stagger="60" points="25,32 175,32 155,58 45,58"/><polygon class="fn-stage ag-c1" data-stagger="120" points="45,62 155,62 137,88 63,88"/><polygon class="fn-stage ag-c3" data-stagger="180" points="63,92 137,92 122,118 78,118"/>
-        </svg>
-        <p class="ag-cost">Ступень дорастает вправо и вниз, правый край едет на 4% ширины. <b>Цена:</b> 0 правок, три вызова вместо одного.</p></div>
-      <div class="opt"><h3>Из центра, как точки scatter <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
-        <svg class="ag-svg" data-play="funnel" data-fn-origin="center" viewBox="0 0 200 124" aria-hidden="true">
-          <polygon class="fn-final" points="5,2 195,2 175,28 25,28"/><polygon class="fn-final" points="25,32 175,32 155,58 45,58"/><polygon class="fn-final" points="45,62 155,62 137,88 63,88"/><polygon class="fn-final" points="63,92 137,92 122,118 78,118"/>
-          <polygon class="fn-stage ag-c3" data-stagger="0" points="5,2 195,2 175,28 25,28"/><polygon class="fn-stage ag-c2" data-stagger="60" points="25,32 175,32 155,58 45,58"/><polygon class="fn-stage ag-c1" data-stagger="120" points="45,62 155,62 137,88 63,88"/><polygon class="fn-stage ag-c3" data-stagger="180" points="63,92 137,92 122,118 78,118"/>
-        </svg>
-        <p class="ag-cost">Ступень дорастает на 2% в каждую сторону, ось воронки стоит. <b>Цена:</b> одна строка вместо трёх в funnel-chart.component.scss.</p></div>
-    </div>
-  </section>
-
   <section class="q" data-q="ag-halo-copies">
     <div class="q-head">
-      <span class="q-num">38</span>
+      <span class="q-num">34</span>
       <h2 class="q-title">Обводка подписей на графике сделана трижды, и у «+24.0%» она другая</h2>
       <span class="q-src">reference-label.component.scss:5 · series-annotation.component.scss:13 · line-series.component.scss:141 · bf6fb9dd7</span>
     </div>
-    <p class="q-sub">Подписи на графике («Цель 1.2M», «Запуск», «+24.0%») обведены цветом фона, чтобы читаться поверх линий и колонок. Это написано в трёх местах по-разному: у «+24.0%» углы обводки острые, а в режиме высокой контрастности Windows две из трёх подписей остаются цветными на белом пятне. Выбрать: одна общая обводка или поправить только «+24.0%». Нижняя картинка в каждой карточке - модель режима высокой контрастности.</p>
+    <p class="q-sub">Подписи на графике («Цель 1.2M», «Запуск», «+24.0%») обведены цветом фона, чтобы читаться поверх линий и колонок. Это написано в трёх местах по-разному: у «+24.0%» углы обводки острые, а в режиме высокой контрастности Windows две из трёх подписей остаются цветными на белом пятне. Твой выбор «Одна общая обводка» строится, но вопрос открыт, пока ты думаешь; остались два варианта. Нижняя картинка в каждой карточке - модель режима высокой контрастности.</p>
     <div class="opts">
-      <div class="opt is-today" data-hl="today"><h3>Три разные копии</h3><span class="badge is-same">сейчас в dev</span>
-        <p class="cap">обычный экран</p>
-        <svg class="ag-svg hl-svg" viewBox="0 0 160 90" aria-hidden="true">
-          <rect class="hl-canvas" x="0" y="0" width="160" height="90"/>
-          <line class="ag-grid" x1="4" y1="20" x2="156" y2="20"/><line class="ag-grid" x1="4" y1="45" x2="156" y2="45"/><line class="ag-base" x1="4" y1="80" x2="156" y2="80"/>
-          <rect class="ag-c2" x="14" y="44" width="16" height="36"/><rect class="ag-c2" x="44" y="30" width="16" height="50"/><rect class="ag-c2" x="74" y="52" width="16" height="28"/><rect class="ag-c2" x="104" y="36" width="16" height="44"/><rect class="ag-c2" x="134" y="24" width="16" height="56"/>
-          <line class="hl-threshold-line" x1="4" y1="28" x2="156" y2="28"/>
-          <path class="ag-line" d="M22 58 L52 40 L82 50 L112 30 L142 36"/><path class="hl-stretch" d="M82 50 L112 30"/>
-          <text class="hl-threshold" x="6" y="25">Цель 1.2M</text><text class="hl-note" x="52" y="34" text-anchor="middle">Запуск</text><text class="hl-change" x="104" y="60" text-anchor="middle">+24.0%</text>
-        </svg>
-        <p class="cap">«+24.0%» крупно, на колонке</p>
-        <svg class="ag-svg hl-svg" viewBox="0 0 60 20" aria-hidden="true"><rect class="ag-c2" x="0" y="0" width="60" height="20"/><text class="hl-change" x="30" y="15" text-anchor="middle">+24.0%</text></svg>
-        <p class="cap">forced-colors, модель</p>
-        <div class="hl-forced"><svg class="ag-svg hl-svg" viewBox="0 0 160 90" aria-hidden="true">
-          <rect class="hl-canvas" x="0" y="0" width="160" height="90"/>
-          <line class="ag-grid" x1="4" y1="20" x2="156" y2="20"/><line class="ag-grid" x1="4" y1="45" x2="156" y2="45"/><line class="ag-base" x1="4" y1="80" x2="156" y2="80"/>
-          <rect class="ag-c2" x="14" y="44" width="16" height="36"/><rect class="ag-c2" x="44" y="30" width="16" height="50"/><rect class="ag-c2" x="74" y="52" width="16" height="28"/><rect class="ag-c2" x="104" y="36" width="16" height="44"/><rect class="ag-c2" x="134" y="24" width="16" height="56"/>
-          <line class="hl-threshold-line" x1="4" y1="28" x2="156" y2="28"/>
-          <path class="ag-line" d="M22 58 L52 40 L82 50 L112 30 L142 36"/><path class="hl-stretch" d="M82 50 L112 30"/>
-          <text class="hl-threshold" x="6" y="25">Цель 1.2M</text><text class="hl-note" x="52" y="34" text-anchor="middle">Запуск</text><text class="hl-change" x="104" y="60" text-anchor="middle">+24.0%</text>
-        </svg></div>
-        <p class="ag-cost">У «+24.0%» острые выступы обводки; при высокой контрастности «Запуск» и «+24.0%» остаются цветными на белом пятне. <b>Цена:</b> 0 правок.</p></div>
-      <div class="opt" data-hl="shared"><h3>Одна общая обводка, скруглённая, с высокой контрастностью <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+      <div class="opt" data-hl="shared"><h3>Одна общая обводка, скруглённая, с высокой контрастностью <span class="star">★</span></h3><span class="badge is-pick">строится</span>
         <p class="cap">обычный экран</p>
         <svg class="ag-svg hl-svg" viewBox="0 0 160 90" aria-hidden="true">
           <rect class="hl-canvas" x="0" y="0" width="160" height="90"/>
@@ -2496,7 +2369,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-change-fade-timing">
     <div class="q-head">
-      <span class="q-num">39</span>
+      <span class="q-num">35</span>
       <h2 class="q-title">Подпись «+12.5%» на линии появляется быстрее остальных подписей графика</h2>
       <span class="q-src">line-series.component.scss:118 · _chart-motion.scss:82 · bf6fb9dd7</span>
     </div>
@@ -2529,7 +2402,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-morph-finish">
     <div class="q-head">
-      <span class="q-num">40</span>
+      <span class="q-num">36</span>
       <h2 class="q-title">Данные пересортировались, пока колонки ещё влетают из заглушки загрузки</h2>
       <span class="q-src">chart-skeleton-morph.ts:91 · column-series.component.ts:335 · bf6fb9dd7</span>
     </div>
@@ -2562,7 +2435,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-hover-switch-names">
     <div class="q-head">
-      <span class="q-num">41</span>
+      <span class="q-num">37</span>
       <h2 class="q-title">Выключатели наведения у графиков названы четырьмя разными способами</h2>
       <span class="q-src">chart.component.ts:220 · pie-chart.component.ts:133 · heatmap-chart.component.ts:114 · scatter-chart.component.ts:161 · 937e15e03 · fe6d6591a</span>
     </div>
@@ -2601,7 +2474,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-readout-location">
     <div class="q-head">
-      <span class="q-num">42</span>
+      <span class="q-num">38</span>
       <h2 class="q-title">Формат числа в пилюле на оси пришёл новым местом 'readout', и часть форматтеров консьюмеров ломается</h2>
       <span class="q-src">chart.types.ts:12 · chart.component.ts:1203 · charts-format.ts:42 · 46fe38cd4</span>
     </div>
@@ -2636,7 +2509,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-pin-line-move">
     <div class="q-head">
-      <span class="q-num">43</span>
+      <span class="q-num">39</span>
       <h2 class="q-title">Закреплённая линия курсора гаснет и появляется заново, а не переезжает к новой категории</h2>
       <span class="q-src">chart.component.html:99 · chart.component.scss:93 · c449bdcb0</span>
     </div>
@@ -2661,7 +2534,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-pin-line-detect">
     <div class="q-head">
-      <span class="q-num">44</span>
+      <span class="q-num">40</span>
       <h2 class="q-title">Линия у закреплённой категории пропадает, если серия линии лежит в своём компоненте консьюмера</h2>
       <span class="q-src">chart.component.ts:874 · chart.component.ts:878 · c449bdcb0</span>
     </div>
@@ -2695,7 +2568,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-scale-marker-off">
     <div class="q-head">
-      <span class="q-num">45</span>
+      <span class="q-num">41</span>
       <h2 class="q-title">Выключенная метка на шкале heatmap убирает и число, и указатель</h2>
       <span class="q-src">heatmap-chart.component.ts:170 · heatmap-chart.component.html:219 · 937e15e03</span>
     </div>
@@ -2722,7 +2595,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-nearest-radius-off">
     <div class="q-head">
-      <span class="q-num">46</span>
+      <span class="q-num">42</span>
       <h2 class="q-title">Радиус nearestRadius ничего не делает, когда ближайшая точка выключена</h2>
       <span class="q-src">scatter-chart.component.ts:578 · scatter-chart.component.ts:165 · 5311a5fb2</span>
     </div>
@@ -2749,7 +2622,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-change-from-zero">
     <div class="q-head">
-      <span class="q-num">47</span>
+      <span class="q-num">43</span>
       <h2 class="q-title">Отрезок от нуля пропадает из подсветки изменения на линии</h2>
       <span class="q-src">line-series.component.ts:985 · 7682d9d98</span>
     </div>
@@ -2770,7 +2643,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-hold-stack">
     <div class="q-head">
-      <span class="q-num">48</span>
+      <span class="q-num">44</span>
       <h2 class="q-title">С закреплённой осью скрытая серия уходит, а стопка над ней всё равно оседает</h2>
       <span class="q-src">column-chart.component.ts:302 · column-chart.component.ts:313 · 221cc70ed</span>
     </div>
@@ -2809,7 +2682,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-anchor-dots">
     <div class="q-head">
-      <span class="q-num">49</span>
+      <span class="q-num">45</span>
       <h2 class="q-title">Линия без точек рисует невидимые точки, чтобы панель и пин вставали на значение</h2>
       <span class="q-src">line-series.component.html:121 · line-series.component.scss:197 · dea4ffa40</span>
     </div>
@@ -2832,7 +2705,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-glide-head-start">
     <div class="q-head">
-      <span class="q-num">50</span>
+      <span class="q-num">46</span>
       <h2 class="q-title">При быстром проходе курсора панель и точка отставали; теперь переезд стартует с 33ms</h2>
       <span class="q-src">charts-motion.ts:42 · charts-motion.ts:103 · chart-tooltip.directive.ts:196 · 65d87734e</span>
     </div>
@@ -2862,7 +2735,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="parked-as-decided">
     <div class="q-head">
-      <span class="q-num">51</span>
+      <span class="q-num">47</span>
       <h2 class="q-title">Пять ответов «не сейчас» агент сам перенёс в «Уже решено»: оставить там или вернуть в очередь</h2>
       <span class="q-src">«Уже решено» в этой деке · docs/todo.md</span>
     </div>
@@ -2901,6 +2774,37 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <p class="group">Уже решено</p>
   <p class="done-lede">Здесь ничего не выбирается: что решено, что из этого уже в dev и где это видно.</p>
+
+  <section class="q is-settled" data-done="unasked-decisions">
+    <div class="q-head"><h2 class="q-title">Шесть изменений поведения вышли в 0.14.7 без выбора между вариантами</h2><span class="chip">разбирается в деке</span></div>
+    <ul class="q-sub">
+      <li>Твой ответ 2026-10-12: <b>«Разобрать по одному в деке»</b>.</li>
+      <li>Разбирается в деке <a href="27-six-behaviour-changes.html">six-behaviour-changes</a>: по каждому изменению до и после и два-три варианта.</li>
+      <li>Все шесть <b>уже опубликованы в 0.14.7</b>; до твоего выбора остаются как есть.</li>
+    </ul>
+  </section>
+  <section class="q is-settled" data-done="automation-coverage">
+    <div class="q-head"><h2 class="q-title">Пять групп компонентов и три действия в таблице никто ни разу не прокликал</h2><span class="chip">в работе</span></div>
+    <ul class="q-sub">
+      <li>Твой ответ 2026-10-12: <b>«Прокликать один раз»</b>.</li>
+      <li>Агент прокликивает <b>actions, navigation, feedback-status, overlays, page-structure</b> и в <code>ds-table</code> <b>перетаскивание колонки, растягивание, экспорт CSV</b>.</li>
+      <li>Итог ляжет в <code>docs/todo.md</code>: пункт закрыт или стал багами.</li>
+    </ul>
+  </section>
+  <section class="q is-settled" data-done="ag-heatmap-settle">
+    <div class="q-head"><h2 class="q-title">Пауза метки на шкале heatmap: число в коде или настройка темы</h2><span class="chip">в работе</span></div>
+    <ul class="q-sub">
+      <li>Твой ответ 2026-10-12: <b>«Пауза 120ms токеном»</b>.</li>
+      <li>Число <code>SCALE_MARKER_SETTLE_MS = 120</code> в <code>heatmap-chart.component.ts</code> становится <b>токеном движения</b>: тема меняет его одной строкой CSS, при «уменьшить движение» он 0ms.</li>
+    </ul>
+  </section>
+  <section class="q is-settled" data-done="ag-funnel-settle-origin">
+    <div class="q-head"><h2 class="q-title">Ступени воронки при появлении дорастают из левого угла, а точки scatter - из центра</h2><span class="chip">в работе</span></div>
+    <ul class="q-sub">
+      <li>Твой ответ 2026-10-12: <b>«Из центра, как точки scatter»</b>.</li>
+      <li>Ступень дорастает <b>на 2% в каждую сторону</b>, ось воронки стоит; правка в <code>funnel-chart.component.scss</code>.</li>
+    </ul>
+  </section>
 
   <section class="q is-settled" data-done="ask-brand-residue">
     <div class="q-head"><h2 class="q-title">У консьюмера с зелёным брендом ссылки и подложки остаются синими</h2><span class="chip is-done">сделано</span></div>
@@ -3025,7 +2929,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
   </section>
 
   <div class="bar-fixed">
-    <span class="count" id="count">0 из 51</span>
+    <span class="count" id="count">0 из 47</span>
     <output id="line">пока ничего не выбрано</output>
     <button type="button" id="copy">Скопировать</button>
     <button type="button" id="reset">Сбросить</button>
@@ -3191,12 +3095,19 @@ onRow(row: <b>RowChartEntry</b>)</p>
   const players = {
     funnel(svg, slow) {
       for (const stage of svg.querySelectorAll('.fn-stage')) {
-        stage.animate([{ opacity: 0, transform: 'scale(0.96)' }, { opacity: 1, transform: 'scale(1)' }], {
+        const frames = svg.dataset.fnMode === 'fade'
+          ? [{ opacity: 0 }, { opacity: 1 }]
+          : [{ opacity: 0, transform: 'scale(0.96)' }, { opacity: 1, transform: 'scale(1)' }];
+        const entrance = stage.animate(frames, {
           duration: motionMs('--ds-motion-chart-mark-enter-duration') * slow,
           easing: motionEasing('--ds-motion-chart-mark-enter-easing'),
           delay: (motionMs('--ds-motion-chart-mark-exit-duration') + +stage.dataset.stagger) * slow,
           fill: 'backwards',
         });
+        const edge = svg.querySelectorAll('.fn-edge')[[...svg.querySelectorAll('.fn-stage')].indexOf(stage)];
+        if (svg.dataset.fnMode === 'grow' && edge) {
+          entrance.finished.then(() => edge.animate([{ opacity: 1 }, { opacity: 1, offset: 0.4 }, { opacity: 0 }], { duration: 700 * slow })).catch(() => {});
+        }
       }
     },
     change(svg, slow) {
@@ -3244,47 +3155,6 @@ onRow(row: <b>RowChartEntry</b>)</p>
     replay(section);
   }
 
-  for (const demo of document.querySelectorAll('.hs-demo')) {
-    const section = demo.closest('.q');
-    const card = demo.closest('.opt');
-    const reduce = section.querySelector('.hs-reduce');
-    const theme = card.querySelector('.hs-theme input');
-    const marker = demo.querySelector('.hs-marker');
-    const readout = demo.querySelector('.hs-readout b');
-    const cells = [...demo.querySelectorAll('.hs-row i')];
-    const max = 800;
-    let timer = 0;
-    const pause = () => {
-      if (demo.dataset.hsMode === 'none') return 0;
-      if (demo.dataset.hsMode === 'code') return 120;
-      return reduce.checked ? 0 : +theme.value;
-    };
-    const showPause = () => { readout.textContent = `${pause()}ms`; };
-    const place = (cell) => {
-      marker.textContent = cell.dataset.v;
-      marker.style.insetInlineStart = `${(+cell.dataset.v / max) * 100}%`;
-      marker.style.visibility = 'visible';
-    };
-    demo.addEventListener('pointerover', (event) => {
-      const cell = event.target.closest('.hs-row i');
-      if (!cell) return;
-      cells.forEach((other) => other.classList.toggle('is-hot', other === cell));
-      clearTimeout(timer);
-      const wait = pause();
-      if (wait === 0) place(cell);
-      else timer = setTimeout(() => place(cell), wait);
-    });
-    demo.querySelector('.hs-row').addEventListener('pointerleave', () => {
-      clearTimeout(timer);
-      cells.forEach((cell) => cell.classList.remove('is-hot'));
-      marker.style.visibility = 'hidden';
-    });
-    theme?.addEventListener('input', () => {
-      card.querySelector('.hs-theme output').textContent = `${theme.value}ms`;
-      showPause();
-    });
-    reduce.addEventListener('change', showPause);
-  }
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const svgEl = (tag, attrs) => {
     const el = document.createElementNS(SVG_NS, tag);
