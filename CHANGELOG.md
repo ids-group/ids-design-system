@@ -276,6 +276,12 @@
 - **The `dsTableColumns` button reports its panel open.** On a fresh page the «Columns» button kept
   `aria-expanded="false"` while its panel was open, and followed the panel only after the column
   order had changed once. It reads `true` while the panel is open from the first press.
+- **Dragging a `dsTableResize` column moves only that column.** The table filled its container, so
+  narrowing one column handed the freed width to the others: dragging a 188px column 480px left
+  widened the other five by 12 to 18px each. Once every visible column has a width, the table is
+  as wide as its columns and leaves the rest of the container empty. A column still stops at its
+  content's narrowest width, and `Home` on a handle returns the column to auto, which fills the
+  container again.
 
 ### What you can now DELETE
 
