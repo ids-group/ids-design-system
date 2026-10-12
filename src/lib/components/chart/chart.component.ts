@@ -817,6 +817,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     Math.max(this.tooltipExtraGap(), this.pinRise()),
   );
 
+  protected readonly pinnedCategories = computed(() =>
+    this.cursorPinned() && this.cursorBand() ? [this.activeIndex()] : [],
+  );
+
   protected readonly bandPins = computed(
     () => this.pinOnClickResolved() && this.pointerInBand(),
   );

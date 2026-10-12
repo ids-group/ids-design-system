@@ -14,8 +14,7 @@
   [emptyText]="emptyTextResolved()"
   [skeleton]="skeleton"
   [body]="body"
-  (release)="activeMark.release()">
-</figure>
+  (release)="activeMark.release()"></figure>
 
 <ng-template #skeleton>
   <div
@@ -150,11 +149,15 @@
       </g>
     }
 
-    @if (pinnedPoint(); as point) {
+    @for (pinned of pinnedPoints(); track pinned.index) {
       <svg:g
         dsChartPinMarker
         [attr.transform]="
-          'translate(' + point.cx + ',' + (point.cy - pinLift) + ')'
+          'translate(' +
+          pinned.point.cx +
+          ',' +
+          (pinned.point.cy - pinLift) +
+          ')'
         " />
     }
 

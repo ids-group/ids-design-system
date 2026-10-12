@@ -107,6 +107,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     private pinFromKeyboard;
     public readonly pinOnClickResolved = resolveWithConfig(…);
     private readonly pinRise;
+    protected readonly pinnedCategories = computed(…);
     public readonly plot: Signal<ChartPlot> = computed(…);
     protected readonly plotBottom = computed(…);
     public readonly plotHeight = input(CHART_DEFAULT_PLOT_HEIGHT, { transform: numberAttribute });
@@ -324,7 +325,7 @@ export class LineSeriesComponent implements OnDestroy {
     protected readonly pinLift = CHART_PIN_RADIUS + CHART_PIN_GAP + PIN_MARKER_CLEARANCE;
     public readonly pinOnClick = input<boolean | null, unknown>(null, { transform: (value) => (value == null ? null : booleanAttribute(value)) });
     public readonly pinOnClickResolved = resolveWithConfig(…);
-    protected readonly pinnedMarker = computed(…);
+    protected readonly pinnedMarkers = computed(…);
     protected readonly pins = computed(…);
     protected readonly plotted = computed(…);
     public readonly pointClicked = output<{ series: LineSeriesData; categoryIndex: number; value: number; }>();

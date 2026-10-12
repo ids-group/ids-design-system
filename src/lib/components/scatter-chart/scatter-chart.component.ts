@@ -452,11 +452,15 @@ export class ScatterChartComponent
     this.onPointActivate(event);
   }
 
-  protected readonly pinnedPoint = computed(() =>
-    this.activeMark.pinned()
-      ? (this.flatMarks()[this.activeMark.index()]?.mark ?? null)
-      : null,
-  );
+  // A list keyed by mark index: another point takes a new pin that pops in, the same point glides with the data.
+  protected readonly pinnedPoints = computed(() => {
+    const index = this.activeMark.index();
+    const point = this.activeMark.pinned()
+      ? this.flatMarks()[index]?.mark
+      : null;
+
+    return point ? [{ index, point }] : [];
+  });
 
   protected readonly pinLift =
     CHART_PIN_RADIUS + CHART_PIN_GAP + PIN_POINT_CLEARANCE;

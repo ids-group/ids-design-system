@@ -73,11 +73,7 @@
     }
   }
 
-  @if (
-      showMarkers() ||
-      interactive() ||
-      pins()
-    ) {
+  @if (showMarkers() || interactive() || pins()) {
     @for (entry of plotted(); track entry.series.id) {
       @for (marker of entry.markers; track marker.key) {
         <svg:circle
@@ -107,11 +103,11 @@
     }
   }
 
-  @if (pinnedMarker(); as marker) {
+  @for (pinned of pinnedMarkers(); track pinned.index) {
     <svg:g
       dsChartPinMarker
       [attr.transform]="
-        'translate(' + marker.x + ',' + (marker.y - pinLift) + ')'
+        'translate(' + pinned.marker.x + ',' + (pinned.marker.y - pinLift) + ')'
       " />
   }
 </svg:g>
