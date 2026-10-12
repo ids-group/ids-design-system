@@ -66,7 +66,20 @@
   in the migration manifest, as is the one `TooltipDirective` lost; a subclass declaring one of
   those names must rename it.
 
+- **`.link` takes a token per state.** `--ds-link-color-visited` (default `var(--link-visited)`)
+  with `--ds-link-color-visited-hover` and `--ds-link-color-visited-active`, which derive from it
+  as `--ds-link-color-hover` and `--ds-link-color-active` derive from `--ds-link-color`;
+  `--ds-link-color-disabled` (default `var(--text-disabled)`); `--ds-link-focus-ring-color`
+  (default `var(--focus-ring-color)`); and `--ds-link-underline-color` (default `currentcolor`),
+  `--ds-link-underline-thickness` (`1px`) and `--ds-link-underline-offset` (`2px`).
+
 ### Changed
+
+- **A visited `.link` takes `--link-visited`.** It painted in the link colour; it now paints in
+  `--ds-link-color-visited`, default `var(--link-visited)`, and darkens from it on hover and press.
+  `.link.quiet` and a disabled link keep their own colour. The underline follows the text colour in
+  every state, a focused link's included. To keep visited links in the link colour, set
+  `.link { --ds-link-color-visited: var(--ds-link-color, var(--text-link)); }`.
 
 - **Links and every brand shade follow `--primary`.** In light, `--surface-tint` and
   `--primary-subtitle` are `hsl(from var(--primary) h 100% 97%)`, `--primary-muted`

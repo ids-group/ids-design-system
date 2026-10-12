@@ -341,6 +341,29 @@
       "note": "`InfoHintComponent.icon` went from `input<'help' | 'info'>` to `input<IconName>`, default still `'help'`.",
       "restore": null,
       "verify": "Every read of InfoHintComponent.icon() accepts any IconName."
+    },
+    {
+      "id": "link-visited-takes-link-visited",
+      "kind": "behavior",
+      "old": ".link",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        ":visited",
+        "--link-visited",
+        "--ds-link-color",
+        "class=\"link"
+      ],
+      "detect": [
+        "a:visited",
+        ".link:visited",
+        ":visited {"
+      ],
+      "action": "None, unless visited links must keep the link colour: then set `.link { --ds-link-color-visited: var(--ds-link-color, var(--text-link)); }`, and delete a `:visited` rule of yours that recoloured `.link` in favour of `--ds-link-color-visited`.",
+      "appliesWhen": "Every `.link` whose `href` the browser history holds, from `styles/link`, which `styles/ds` forwards. `.link.quiet`, a link with `aria-disabled=\"true\"` and a `<button class=\"link\">` keep their colour.",
+      "pitfall": "Browsers ignore custom properties declared inside a `:visited` rule, so `.link:visited { --ds-link-color: red; }` does nothing; set `--ds-link-color-visited` on `.link` or an ancestor.",
+      "restore": ".link { --ds-link-color-visited: var(--ds-link-color, var(--text-link)); }",
+      "verify": "The built CSS carries `.link:where(:visited)`, and a visited link in the app paints in the colour the app intends."
     }
   ],
   "informational": [
@@ -426,7 +449,8 @@
       "verify": "Turn on Windows high contrast, open a ds-line-chart with annotations and confirm each annotation reads in the system text colour over the system background."
     },
     "`showDirty` (default `false`) on every value field, the `dsShowDirty` directive (`ShowDirtyDirective`) and `DS_CONFIG.field.showDirty` mark a value the user changed with a dot and a \"Changed\" line; off unless one of the three turns it on. The line reads the new optional `DsIntl` key `field.changed`.",
-    "`ds-info-hint` takes rich content inside the tag or through the new `content` input (`text` is optional), any `IconName` in `icon`, and the new `--ds-info-hint-color` hook for the icon colour. `dsTooltip` and `dsDefinitionTerm` take a template as well as a string."
+    "`ds-info-hint` takes rich content inside the tag or through the new `content` input (`text` is optional), any `IconName` in `icon`, and the new `--ds-info-hint-color` hook for the icon colour. `dsTooltip` and `dsDefinitionTerm` take a template as well as a string.",
+    "`.link` takes `--ds-link-color-visited`, `--ds-link-color-visited-hover`, `--ds-link-color-visited-active`, `--ds-link-color-disabled`, `--ds-link-focus-ring-color`, `--ds-link-underline-color`, `--ds-link-underline-thickness` and `--ds-link-underline-offset`, each defaulting to the value the partial painted with."
   ],
   "deleteList": [
     {

@@ -5026,6 +5026,46 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-link-color-active",
         "value": "color-mix(in srgb, var(--_link-color) 65%, black)",
         "notes": "Link colour while pressed. Defaults to the link colour mixed 65% with black."
+      },
+      {
+        "name": "--ds-link-color-visited",
+        "value": "var(--link-visited)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-color-visited-hover",
+        "value": "color-mix(in srgb, var(--_link-color-visited) 80%, black)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-color-visited-active",
+        "value": "color-mix(in srgb, var(--_link-color-visited) 65%, black)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-color-disabled",
+        "value": "var(--text-disabled)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-underline-color",
+        "value": "currentcolor",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-underline-thickness",
+        "value": "1px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-underline-offset",
+        "value": "2px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-focus-ring-color",
+        "value": "var(--focus-ring-color)",
+        "notes": ""
       }
     ]
   },

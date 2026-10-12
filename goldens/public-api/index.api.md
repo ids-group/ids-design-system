@@ -458,7 +458,15 @@ styles/_icon-base.scss {
 styles/_link.scss {
     --ds-link-color: var(--text-link);
     --ds-link-color-active: color-mix(in srgb, var(--_link-color) 65%, black);
+    --ds-link-color-disabled: var(--text-disabled);
     --ds-link-color-hover: color-mix(in srgb, var(--_link-color) 80%, black);
+    --ds-link-color-visited: var(--link-visited);
+    --ds-link-color-visited-active: color-mix(in srgb, var(--_link-color-visited) 65%, black);
+    --ds-link-color-visited-hover: color-mix(in srgb, var(--_link-color-visited) 80%, black);
+    --ds-link-focus-ring-color: var(--focus-ring-color);
+    --ds-link-underline-color: currentcolor;
+    --ds-link-underline-offset: 2px;
+    --ds-link-underline-thickness: 1px;
 }
 
 styles/_overlay-motion.scss {

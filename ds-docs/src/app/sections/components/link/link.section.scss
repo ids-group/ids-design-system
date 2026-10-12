@@ -12,11 +12,10 @@
     }
 
     /* State pins read the link's own resolvers. */
-    .link.pin-hover  { color: var(--_link-color-hover); text-decoration-color: var(--_link-color-hover); }
-    .link.pin-active { color: var(--_link-color-active); text-decoration-color: var(--_link-color-active); }
-
-    /* focus: --focus-ring and --radius-sm are bare tokens (no --_* resolver) */
-    .link.pin-focus  { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); border-radius: var(--radius-sm); text-decoration-color: var(--_link-color); }
+    .link.pin-hover { color: var(--_link-color-hover); }
+    .link.pin-active { color: var(--_link-color-active); }
+    .link.pin-visited { color: var(--_link-color-visited); }
+    .link.pin-focus { outline: var(--focus-ring-width) solid var(--_link-focus-ring-color); outline-offset: var(--focus-ring-offset); border-radius: var(--radius-sm); }
 
     /* disabled: aria-disabled="true" already triggers the real state in _link.scss; pin-disabled mirrors it for docs clarity */
-    .link.pin-disabled { color: var(--text-disabled); text-decoration-color: var(--text-disabled); pointer-events: none; cursor: default; }
+    .link.pin-disabled { color: var(--_link-color-disabled); pointer-events: none; cursor: default; }
