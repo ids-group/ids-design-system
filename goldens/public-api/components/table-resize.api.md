@@ -10,6 +10,7 @@ export class DsTableResize<T extends object> {
     private columnWidth;
     private columnWidthCeiling;
     public readonly columnWidths = signal<Map<string, number>>(…);
+    private readonly guide;
     private headerCellFor;
     private readonly layout;
     private lockMeasuredWidths;
@@ -18,6 +19,7 @@ export class DsTableResize<T extends object> {
     private onResizeKey;
     private onResizeMove;
     private onResizeStart;
+    private placeGuide;
     private readonly resizeFocus;
     private resizeRange;
     private resizeState;
