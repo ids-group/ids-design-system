@@ -265,7 +265,7 @@ export class LineChartComponent
 
   /** On the hovered reading, thickens the stretch from the reading before it in the rising or falling
    *  colour and prints the change in percent; with several series, for the one singled out. */
-  readonly showChange = input(true, { transform: booleanAttribute });
+  readonly showChange = input(false, { transform: booleanAttribute });
 
   /** Milliseconds between one series' entrance and the next; `0` turns it off. The step narrows
    *  so the last series still starts within the stagger budget. */

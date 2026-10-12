@@ -132,7 +132,8 @@ export function chartActiveMark(
   };
 
   // `pointerover` fires per element crossed: the panel cancels the clear, anything else but the mark
-  // schedules one. Without that a panel the pointer once touched never closes.
+  // schedules one. Without that a panel the pointer once touched never closes. A pending clear is
+  // kept, not restarted, or a pointer moving over another chart holds this one open forever.
   const trackPointer = (event: PointerEvent): void => {
     if (!(event.target instanceof Element)) {
       return;
@@ -143,7 +144,7 @@ export function chartActiveMark(
       return;
     }
     // Host, not anchor: a legend item and the arc its panel points at are disjoint.
-    if (!host || !host.contains(event.target)) {
+    if ((!host || !host.contains(event.target)) && pendingClear === null) {
       scheduleClear();
     }
   };
