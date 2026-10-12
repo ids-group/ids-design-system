@@ -17,7 +17,6 @@
         "extends HeatmapChartComponent",
         "extends ScatterChartComponent",
         "extends FunnelChartComponent",
-        "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent",
         "extends ChartStatesComponent",
         "extends ChartLegendComponent",
@@ -34,7 +33,6 @@
         "extends HeatmapChartComponent",
         "extends ScatterChartComponent",
         "extends FunnelChartComponent",
-        "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent",
         "extends ChartStatesComponent",
         "extends ChartLegendComponent",
@@ -42,7 +40,7 @@
         "extends DsTableResize"
       ],
       "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
-      "appliesWhen": "Only a class of yours that extends ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or FunnelChartComponent, or the internal ChartTooltipPanelComponent, the internal ChartStatesComponent, the internal ChartLegendComponent or the internal WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or FunnelChartComponent, WaterfallChartComponent or DsTableResize, or the internal ChartStatesComponent, the internal ChartLegendComponent or the internal WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
       "note": "`ChartComponent` gained 30; `LineSeriesComponent` gained 25 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 10; `ColumnChartComponent` gained `showAxisReadout`, `heldExtent`, `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `rescaleOnHide`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `showAxisReadout`, `selectRange` and `showChange` and lost `axisMax`, `axisMaxSecondary` and `ceilingOf`; `PieChartComponent` gained 14 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 8 and lost `columnStagger`, `onStepEnter`, `onStepLeave` and `stepDwell`; `ScatterChartComponent` gained 22 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`; `WaterfallChartComponent` gained `showAxisReadout`; `DsTableResize` gained `guide` and `placeGuide`. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 9 and its `dataTable` takes a `ChartDataTable`; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`, `onItemEnter` and `onItemLeave`."
@@ -343,6 +341,32 @@
       "verify": "Every read of InfoHintComponent.icon() accepts any IconName."
     },
     {
+      "id": "chart-format-location-gained-readout",
+      "kind": "behavior",
+      "old": "ChartFormatLocation",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "ChartFormatLocation",
+        "ChartValueFormat",
+        "valueFormat"
+      ],
+      "detect": [
+        "Record<ChartFormatLocation",
+        ": never =",
+        "ChartFormatLocation"
+      ],
+      "action": "Where your code maps or switches over every `ChartFormatLocation`, add a `'readout'` case or key.",
+      "appliesWhen": "Only TypeScript that enumerates `ChartFormatLocation`: a `Record<ChartFormatLocation, …>` fails with TS2741 and an exhaustive `switch` that assigns the rest to `never` fails with TS2322. A `ChartValueFormat` that branches on `'tick'` and `'tooltip'` with a fallback compiles and keeps working, because the charts pass `'readout'` only to a formatter that sets `handlesReadout: true`.",
+      "pitfall": "Mapping `'readout'` to the `'tooltip'` result keeps the full number in the axis pill; map it to the `'tick'` result for the short form, and set `handlesReadout: true` on the formatter or the charts never ask for it.",
+      "note": "`ChartFormatLocation` went from `'tick' | 'tooltip'` to `'tick' | 'readout' | 'tooltip'`, and `ChartValueFormat` from a plain function type to the same call signature with an optional `readonly handlesReadout?: boolean`.",
+      "restore": null,
+      "verify": "The app builds, and every map or switch over ChartFormatLocation names 'readout'.",
+      "evidence": [
+        "fixture:unreleased/chart-format-location-gained-readout.ts"
+      ]
+    },
+    {
       "id": "link-visited-takes-link-visited",
       "kind": "behavior",
       "old": ".link",
@@ -423,19 +447,21 @@
         "extends PaginationComponent",
         "extends AlertComponent",
         "extends BannerComponent",
-        "extends ToastRegionComponent"
+        "extends ToastRegionComponent",
+        "extends TableColumnsPanelComponent"
       ],
       "detect": [
         "extends PaginationComponent",
         "extends AlertComponent",
         "extends BannerComponent",
-        "extends ToastRegionComponent"
+        "extends ToastRegionComponent",
+        "extends TableColumnsPanelComponent"
       ],
       "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
       "appliesWhen": "Only a class of yours that extends a class this item names. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
-      "note": "`PaginationComponent` gained `rescueFocus`, and its `goTo` takes the nav element as a second argument. `ToastRegionComponent` gained `focusOrigin` and `onFocusIn`. The `onDismiss` of `AlertComponent` and `BannerComponent` takes the element that leaves."
+      "note": "`PaginationComponent` gained `rescueFocus`, and its `goTo` takes the nav element as a second argument. `ToastRegionComponent` gained `focusOrigin` and `onFocusIn`. The `onDismiss` of `AlertComponent` and `BannerComponent` takes the element that leaves. The internal `TableColumnsPanelComponent` gained `move` and `rescueFocus`."
     },
     {
       "id": "menu-classes-gained-members",
@@ -490,7 +516,7 @@
       "verify": "Open and close an expandable ds-table row and confirm it grows from and folds to zero height with no jump at either end."
     },
     {
-      "text": "`ds-chart`, `ds-column-chart`, `ds-line-chart` and `ds-waterfall-chart` move the line, its markers and area, the value labels, the pin, the gridlines and tick labels and the waterfall connectors on `--ds-motion-chart-mark-duration` and `--ds-motion-chart-mark-easing` when the data changes, as the columns already did; a column also glides sideways when the plot width changes. Set `--ds-motion-chart-mark-duration: 0ms` on the chart to make every mark land at once again.",
+      "text": "`ds-chart`, `ds-column-chart`, `ds-line-chart` and `ds-waterfall-chart` move the line, its markers and area, the value labels, the pin, the gridlines and tick labels and the waterfall connectors on `--ds-motion-chart-mark-duration` and `--ds-motion-chart-mark-easing` when the data changes, as the columns already did; a resize redraws every mark in place at once. Set `--ds-motion-chart-mark-duration: 0ms` on the chart to make every mark land at once again.",
       "verify": "Change the data of a ds-chart holding a column and a line series and confirm the line, its markers and the gridlines move with the columns instead of jumping."
     },
     {
@@ -506,7 +532,7 @@
       "verify": "Drop a row and a column from a ds-heatmap-chart's data and confirm their cells fade out instead of vanishing."
     },
     {
-      "text": "A hovered or focused column, bar, waterfall step and heatmap cell brightens with `filter: brightness(1.12) saturate(1.1)`, a chart pin pops in, and the tooltip rows fade in when the panel moves to another category or slice. Under `prefers-reduced-motion` all of these change at once.",
+      "text": "A hovered or focused column, bar, waterfall step and heatmap cell brightens with `filter: brightness(1.12) saturate(1.1)` and a chart pin pops in. Under `prefers-reduced-motion` all of these change at once.",
       "verify": "Hover a column of a ds-column-chart and confirm it brightens; click it and confirm the pin pops in."
     },
     {
@@ -514,7 +540,7 @@
       "verify": "Hover a column of a ds-column-chart and confirm its label is bold and a pill on the value axis prints its value."
     },
     {
-      "text": "`showChange` paints the thickened stretch in `--ds-chart-positive-color` or `--ds-chart-negative-color`, which `ds-chart` now reads; their defaults stay `var(--chart-positive)` and `var(--chart-negative)`. Set either on the chart to recolour it, or `showChange=\"false\"` to draw nothing.",
+      "text": "`showChange` paints the thickened stretch in `--ds-chart-positive-color` or `--ds-chart-negative-color`, which `ds-chart` now reads; their defaults stay `var(--chart-positive)` and `var(--chart-negative)`. Set either on the chart to recolour it; `showChange` is off unless set.",
       "verify": "Hover a falling reading of a ds-line-chart and confirm the stretch before it takes the negative colour."
     },
     {
@@ -523,15 +549,15 @@
     },
     "A `dsColumnSeries` column without an `id` is keyed by its label, so it keeps its element and glides when a category before it is removed; one with an `id` glides to its new slot when the data is reordered.",
     {
-      "text": "A hovered, focused or held `ds-pie-chart` slice fades the centre to its share and name; the total comes back when the pointer leaves.",
+      "text": "A hovered, focused or held `ds-pie-chart` slice fades the centre to its share and name; the total comes back when the pointer leaves. `[showHoverCenter]=\"false\"` keeps `centerValue` and `centerLabel` there.",
       "verify": "Hover a slice of a ds-pie-chart and confirm the centre shows its share over its name, and the total once the pointer leaves the ring."
     },
     {
-      "text": "Once the pointer has rested on a `ds-heatmap-chart` cell for `--ds-motion-chart-scale-marker-delay` (120ms, `0ms` under `prefers-reduced-motion`), a marker over the colour scale prints its reading and glides to it; the scale sits 12px lower (`margin-block-start` 24px, was 12px) to hold it.",
+      "text": "Once the pointer has rested on a `ds-heatmap-chart` cell for `--ds-motion-chart-scale-marker-delay` (120ms, `0ms` under `prefers-reduced-motion`), a marker over the colour scale prints its reading and glides to it; the scale sits 12px lower (`margin-block-start` 24px, was 12px) to hold it. `[showScaleMarker]=\"false\"` drops the marker.",
       "verify": "Rest the pointer on a heatmap cell and confirm the marker appears over the scale at its reading, and that the scale clears the grid's last row."
     },
     {
-      "text": "`ds-scatter-chart` answers with the point nearest the pointer anywhere over the plot, rings it and draws a dashed line to it from the pointer.",
+      "text": "`ds-scatter-chart` answers with the point nearest the pointer anywhere over the plot, rings it and draws a dashed line to it from the pointer. `[showNearestPoint]=\"false\"` answers only within 16px of a point, without the ring and line; `nearestRadius` caps the reach in CSS pixels.",
       "verify": "Point at empty space inside a ds-scatter-chart plot and confirm the nearest point is ringed and its tooltip opens."
     },
     {
@@ -566,7 +592,7 @@
       "text": "Under forced colours a `ds-line-chart` annotation prints in the system text colour over a halo in the system background colour, as a reference-line label does; it kept its own colour on a white patch. `--ds-line-chart-annotation-halo-color` and `--ds-line-chart-annotation-halo-width` still set the halo in normal colours.",
       "verify": "Turn on Windows high contrast, open a ds-line-chart with annotations and confirm each annotation reads in the system text colour over the system background."
     },
-    "`showDirty` (default `false`) on every value field, the `dsShowDirty` directive (`ShowDirtyDirective`) and `DS_CONFIG.field.showDirty` mark a value the user changed with a dot and a \"Changed\" line; off unless one of the three turns it on. The line reads the new optional `DsIntl` key `field.changed`.",
+    "`showDirty` (default `false`) on every value field, the `dsShowDirty` directive (`ShowDirtyDirective`) and `provideDsConfig({ field: { showDirty: true } })` mark a value the user changed with a dot and a \"Changed\" line; off unless one of the three turns it on. The line reads the new optional `DsIntl` key `field.changed`.",
     "`ds-info-hint` takes rich content inside the tag or through the new `content` input (`text` is optional), any `IconName` in `icon`, and the new `--ds-info-hint-color` hook for the icon colour. `dsTooltip` and `dsDefinitionTerm` take a template as well as a string.",
     "`.link` takes `--ds-link-color-visited`, `--ds-link-color-visited-hover`, `--ds-link-color-visited-active`, `--ds-link-color-disabled`, `--ds-link-focus-ring-color`, `--ds-link-underline-color`, `--ds-link-underline-thickness` and `--ds-link-underline-offset`, each defaulting to the value the partial painted with.",
     "The `dsTableColumns` header button sets `aria-expanded` to `true` while its column panel is open, from the first press on a fresh page.",
@@ -579,7 +605,7 @@
       "verify": "Render a ds-table with dsTableExport and nothing in its toolbar slot and confirm the Export button shows above the table."
     },
     "Pressing Previous onto the first page or Next onto the last of a `ds-pagination` moves focus to the current page's button; it fell to the page.",
-    "Dismissing a `ds-alert` or `ds-banner` from its close button moves focus to the next control after it, else the one before it; a toast leaving with focus inside it moves focus to the next toast, else to the element focused before focus entered the region. Focus fell to the page.",
+    "Dismissing a `ds-alert` or `ds-banner` from its close button moves focus to the next control after it, else the one before it; a toast leaving with focus inside it moves focus to the next toast, else the previous one, else to the element focused before focus entered the region. Focus fell to the page.",
     "Move up and Move down in the `dsTableColumns` panel keep focus on the moved row's pressed button, or its other button once the row reaches the top or bottom; focus fell to the page. The internal `TableColumnsPanelComponent` gained `move` and `rescueFocus`.",
     "A `ds-menu` in a `ds-split-button` or a `ds-popover` opens at its first item each time, whichever item had focus when it closed.",
     "Tab on a `ds-menu` item closes the `ds-split-button` or `ds-popover` menu holding it and moves focus on from the trigger; choosing a submenu item closes the submenu."
