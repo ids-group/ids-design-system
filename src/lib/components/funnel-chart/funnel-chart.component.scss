@@ -58,9 +58,6 @@
 }
 
 svg {
-  // The viewBox stretches with the stage count, so a pixel of rise would stretch too.
-  --_chart-rise-distance: 10%;
-
   display: block;
   inline-size: 100%;
 }
