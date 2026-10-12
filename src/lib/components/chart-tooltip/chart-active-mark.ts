@@ -170,7 +170,6 @@ export function chartActiveMark(
 
   if (typeof document !== 'undefined') {
     inject(DestroyRef).onDestroy(() => {
-      dwell.cancel();
       cancelPendingClear();
       document.removeEventListener('pointerdown', release, true);
       document.removeEventListener('keydown', releaseOnEscape, true);

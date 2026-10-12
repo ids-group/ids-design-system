@@ -65,7 +65,7 @@ export {
   skeletonMarkCount,
   skeletonWaterfallSteps,
 } from './charts-skeleton';
-export { chartDwell } from './charts-dwell';
+export { chartDwell, dwellHighlight } from './charts-dwell';
 export type { ChartDwell } from './charts-dwell';
 export {
   focusMark,
@@ -140,7 +140,7 @@ export { scrollActiveOptionIntoView } from './scroll-active-option';
 export { DsStaticPreview } from './static-preview.directive';
 export { createTypeAhead } from './type-ahead';
 export {
-  CHART_HOVER_DELAY_MS,
   CHART_TOOLTIP_LINGER_MS,
+  chartHoverDelayMs,
   resolveChartDefaults,
 } from './charts-defaults';

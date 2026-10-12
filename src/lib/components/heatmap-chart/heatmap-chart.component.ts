@@ -17,8 +17,8 @@ import {
 } from '@angular/core';
 import {
   CHART_HEAT_COLORS,
-  chartDwell,
   chartRenderGate,
+  dwellHighlight,
   leaveMark,
   staggerDelay,
   DsChartBase,
@@ -136,16 +136,9 @@ export class HeatmapChartComponent
   /** The ramp step under the pointer on the scale; its cells brighten, and under `dimOthers` the rest fade. */
   protected readonly highlightedStep = signal<number | null>(null);
 
-  private readonly stepDwell = chartDwell(() => this.defaults.hoverDelayMs());
-
-  protected onStepEnter(step: number, event: PointerEvent): void {
-    this.stepDwell.schedule(step, () => this.highlightedStep.set(step), event);
-  }
-
-  protected onStepLeave(): void {
-    this.stepDwell.cancel();
-    this.highlightedStep.set(null);
-  }
+  protected readonly stepHighlight = dwellHighlight(this.highlightedStep, () =>
+    this.defaults.hoverDelayMs(),
+  );
 
   protected isCellDimmed(cell: PlacedCell): boolean {
     const step = this.highlightedStep();

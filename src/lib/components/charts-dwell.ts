@@ -1,3 +1,5 @@
+import { DestroyRef, inject, type WritableSignal } from '@angular/core';
+
 /** Delays a chart's answer to a resting pointer.
  *
  *  @internal */
@@ -33,7 +35,8 @@ function warmUp(chart: Element): void {
   document.addEventListener('pointerover', coolOnLeave, true);
 }
 
-/** Call from anywhere; the caller's own `leave` cancels the wait. `delayMs` is read at each `schedule`.
+/** Call from an injection context; the caller's own `leave` cancels the wait, and so does destroying
+ *  the context. `delayMs` is read at each `schedule`.
  *
  *  @internal */
 export function chartDwell(delayMs: () => number): ChartDwell {
@@ -49,6 +52,8 @@ export function chartDwell(delayMs: () => number): ChartDwell {
       waiting = null;
     }
   };
+
+  inject(DestroyRef).onDestroy(cancel);
 
   return {
     schedule(target, answer, event) {
@@ -84,5 +89,26 @@ export function chartDwell(delayMs: () => number): ChartDwell {
       waiting = { target, answer, timer };
     },
     cancel,
+  };
+}
+
+/** Sets `highlighted` to the item the pointer rests on, after the dwell, and back to `null` when it
+ *  leaves. Call from an injection context.
+ *
+ *  @internal */
+export function dwellHighlight<T>(
+  highlighted: WritableSignal<T | null>,
+  delayMs: () => number,
+): { enter(item: T, event: Event): void; leave(): void } {
+  const dwell = chartDwell(delayMs);
+
+  return {
+    enter(item, event) {
+      dwell.schedule(item, () => highlighted.set(item), event);
+    },
+    leave() {
+      dwell.cancel();
+      highlighted.set(null);
+    },
   };
 }
