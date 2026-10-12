@@ -49,6 +49,7 @@ export {
   staggerDelay,
   tweenMarks,
 } from './charts-motion';
+export type { ChartMotionTiming } from './charts-motion';
 export {
   CHART_SKELETON_COUNT,
   skeletonColumnHeights,

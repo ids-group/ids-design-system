@@ -37,7 +37,8 @@ function cssDurationMs(duration: string): number {
   return duration.trim().endsWith('ms') ? value : value * 1000;
 }
 
-type ChartTimingName = 'mark' | 'mark-grow' | 'state' | 'tooltip-move';
+/** A chart motion timing, read from `--ds-motion-chart-<timing>-duration` and `-easing`. @internal */
+export type ChartMotionTiming = 'mark' | 'mark-grow' | 'state' | 'tooltip-move';
 
 /** The duration and easing `element` inherits from `--ds-motion-chart-<timing>-*`, or `null` when the
  *  duration is zero, as under reduced motion.
@@ -45,7 +46,7 @@ type ChartTimingName = 'mark' | 'mark-grow' | 'state' | 'tooltip-move';
  *  @internal */
 export function chartTiming(
   element: Element,
-  timing: ChartTimingName,
+  timing: ChartMotionTiming,
 ): { duration: number; easing: string } | null {
   const style = getComputedStyle(element);
   const duration = cssDurationMs(
@@ -77,7 +78,7 @@ export function tweenMarks(
   from: readonly number[],
   to: readonly number[],
   apply: (values: readonly number[]) => void,
-  timing: ChartTimingName = 'mark',
+  timing: ChartMotionTiming = 'mark',
   onDone: () => void = () => undefined,
 ): () => void {
   const eased = chartTiming(element, timing);
