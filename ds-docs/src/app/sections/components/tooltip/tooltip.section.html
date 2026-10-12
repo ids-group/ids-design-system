@@ -284,6 +284,23 @@
         icon="info"
       </code> - an "i".
     </li>
+
+    <li>
+      Any other DS icon name, such as
+      <code class="t-mono-inline">
+        icon="warn"
+      </code>; colour it with
+      <code class="t-mono-inline">
+        --ds-info-hint-color
+      </code>.
+    </li>
+
+    <li>
+      Rich content: put it inside the tag, or pass a template to
+      <code class="t-mono-inline">
+        [content]
+      </code>. Keep it non-interactive; a screen reader reads it as flat text.
+    </li>
   </ul>
 
   <div class="demo">
@@ -301,7 +318,44 @@
         ariaLabel="About conversion rate, info icon"
         text="The same hint with the info icon." />
     </span>
+
+    <span class="t-s info-row">
+      Published
+      <ds-info-hint ariaLabel="When each version was published">
+        <strong>Published</strong>
+        <ul class="hint-list">
+          <li>v4 · 29 Sep 2026, 14:32</li>
+          <li>v3 · 12 Sep 2026, 09:05</li>
+        </ul>
+      </ds-info-hint>
+    </span>
+
+    <span class="t-s info-row">
+      Published, template
+      <ds-info-hint
+        ariaLabel="When each version was published, template"
+        [content]="publishedList" />
+    </span>
+
+    <span class="t-s info-row">
+      Removed
+      <ds-info-hint
+        class="warning-hint"
+        icon="warn"
+        ariaLabel="Why this row was removed"
+        text="Removed from the source on 29 Sep 2026." />
+    </span>
   </div>
+
+  <ng-template #publishedList>
+    <strong>Published</strong>
+    <ul class="hint-list">
+      <li>v4 · 29 Sep 2026, 14:32</li>
+      <li>v3 · 12 Sep 2026, 09:05</li>
+    </ul>
+  </ng-template>
+
+  <pre class="t-mono-block">{{ infoHintContentSnippet }}</pre>
 
   <h3 class="block-title t-h4">
     Definition term

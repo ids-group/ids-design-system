@@ -3,8 +3,27 @@
 
 Group: Overlay
 
-An icon button (14px, a question mark in a circle by default; `icon="info"` draws an "i") that shows supplementary text on hover and focus and keeps it open on click (a toggletip): `<ds-info-hint ariaLabel="About conversion rate" text="Share of contacts who reached the goal." />`. The text describes the button through `aria-describedby` while open. A click outside, `Escape` or blur closes it. The icon darkens on hover, sits on a muted circle while pressed, and turns `--accent-strong` while pinned. Place it after the label it explains.
+An icon button (14px, a question mark in a circle by default; `icon="info"` draws an "i", and `icon` takes any `IconName`) that shows supplementary content on hover and focus and keeps it open on click (a toggletip): `<ds-info-hint ariaLabel="About conversion rate" text="Share of contacts who reached the goal." />`. The content describes the button through `aria-describedby` while open. A click outside, `Escape` or blur closes it. The icon darkens on hover, sits on a muted circle while pressed, and turns `--accent-strong` while pinned. Place it after the label it explains.
+
+Rich content comes two ways, both rendered in the same `role="tooltip"` panel:
+
+```html
+<ds-info-hint ariaLabel="When v4 was published">
+  <strong>Published</strong>
+  <ul><li>v4 · 29 Sep 2026, 14:32</li></ul>
+</ds-info-hint>
+
+<ds-info-hint ariaLabel="When v4 was published" [content]="published" />
+<ng-template #published>
+  <strong>Published</strong>
+  <ul><li>v4 · 29 Sep 2026, 14:32</li></ul>
+</ng-template>
+```
+
+Exactly one source shows: `[content]` first, then projected content, then `text` (with its `**bold**` runs). In dev mode a hint given more than one, or none, logs a console warning naming what it shows. Projected content is created with the hint, even while it is closed; a `[content]` template is created only when the panel opens, so prefer it in a long list or table. Keep the content non-interactive: the panel never takes focus, so a link or button in it cannot be reached by keyboard. A screen reader reads the description as flat text, without the list structure. The panel stays within `--ds-tooltip-max-width`.
+
+The icon is painted `--icon-default`; set `--ds-info-hint-color` on the hint to colour it, as `ds-info-hint.removed { --ds-info-hint-color: var(--warning-text); }` beside `icon="warn"`. A custom colour stays on hover; the pressed circle and the pinned cue are unchanged.
 
 <!-- inputs:ds-info-hint -->
-All inputs: `text: required string`, `ariaLabel: required string`, `icon: 'help' | 'info' = 'help'`
+All inputs: `text: string = ''`, `content: TemplateRef<unknown> | null = null`, `ariaLabel: required string`, `icon: IconName = 'help'`
 <!-- /inputs -->

@@ -271,6 +271,76 @@
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
       "note": "Every field component this item names gained `pendingShown` and `changedShown`, and `pending`, `dirty`, `showDirty` and `showDirtyResolved` through the internal `DsFormControlBase`, which `DsControlValueAccessor` and `DsBooleanControlValueAccessor` now extend. The internal `FieldMessageComponent` gained `changed`, `changedText` and `intl`."
+    },
+    {
+      "id": "info-hint-tooltip-classes-gained-members",
+      "kind": "behavior",
+      "old": "InfoHintComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends InfoHintComponent",
+        "extends TooltipDirective",
+        "extends TooltipPanelComponent"
+      ],
+      "detect": [
+        "extends InfoHintComponent",
+        "extends TooltipDirective",
+        "extends TooltipPanelComponent"
+      ],
+      "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
+      "appliesWhen": "Only a class of yours that extends InfoHintComponent, TooltipDirective or TooltipPanelComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
+      "note": "`InfoHintComponent` gained `content`, `tip`, `sources`, `projected` and `hasProjected`; `TooltipDirective` gained `tipContent` and lost `tipText`; `TooltipPanelComponent` gained `template`."
+    },
+    {
+      "id": "tooltip-content-widened-to-template",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "TooltipDirective",
+        "TooltipPanelComponent",
+        "dsTooltip",
+        "DefinitionTermDirective"
+      ],
+      "detect": [
+        ".dsTooltip()",
+        "dsTooltip()",
+        ".text()",
+        "extends TooltipPanelComponent",
+        "extends TooltipDirective"
+      ],
+      "action": "Where your code reads `dsTooltip()` or `TooltipPanelComponent.text()` back as a string, check `typeof value === 'string'` first, or widen your own type to `string | TemplateRef<unknown>`.",
+      "appliesWhen": "Only TypeScript that reads `TooltipDirective.dsTooltip` or `TooltipPanelComponent.text` back, or a subclass that overrides either. Binding `[dsTooltip]`, `dsDefinitionTerm` or `[text]` in a template needs no change.",
+      "pitfall": "A helper typed `(text: string)` that receives the read value stops compiling, and a cast written to silence it passes a template where a string is expected.",
+      "note": "`TooltipDirective.dsTooltip` went from `input<string>` to `input<string | TemplateRef<unknown>>`, and `TooltipPanelComponent.text` from `input.required<string>` to `input.required<string | TemplateRef<unknown>>`.",
+      "restore": null,
+      "verify": "Every read of dsTooltip() or TooltipPanelComponent.text() handles a TemplateRef."
+    },
+    {
+      "id": "info-hint-icon-widened-to-icon-name",
+      "kind": "behavior",
+      "old": "InfoHintComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "InfoHintComponent",
+        "ds-info-hint",
+        ".icon()"
+      ],
+      "detect": [
+        ".icon()",
+        "'help' | 'info'",
+        "extends InfoHintComponent"
+      ],
+      "action": "Where your code reads `InfoHintComponent.icon()` back into a `'help' | 'info'` type, widen that type to `IconName`.",
+      "appliesWhen": "Only TypeScript that reads `icon` back off a hint, or a subclass that overrides it. `icon=\"help\"` and `icon=\"info\"` in a template need no change.",
+      "note": "`InfoHintComponent.icon` went from `input<'help' | 'info'>` to `input<IconName>`, default still `'help'`.",
+      "restore": null,
+      "verify": "Every read of InfoHintComponent.icon() accepts any IconName."
     }
   ],
   "informational": [
@@ -355,7 +425,8 @@
       "text": "Under forced colours a `ds-line-chart` annotation prints in the system text colour over a halo in the system background colour, as a reference-line label does; it kept its own colour on a white patch. `--ds-line-chart-annotation-halo-color` and `--ds-line-chart-annotation-halo-width` still set the halo in normal colours.",
       "verify": "Turn on Windows high contrast, open a ds-line-chart with annotations and confirm each annotation reads in the system text colour over the system background."
     },
-    "`showDirty` (default `false`) on every value field, the `dsShowDirty` directive (`ShowDirtyDirective`) and `DS_CONFIG.field.showDirty` mark a value the user changed with a dot and a \"Changed\" line; off unless one of the three turns it on. The line reads the new optional `DsIntl` key `field.changed`."
+    "`showDirty` (default `false`) on every value field, the `dsShowDirty` directive (`ShowDirtyDirective`) and `DS_CONFIG.field.showDirty` mark a value the user changed with a dot and a \"Changed\" line; off unless one of the three turns it on. The line reads the new optional `DsIntl` key `field.changed`.",
+    "`ds-info-hint` takes rich content inside the tag or through the new `content` input (`text` is optional), any `IconName` in `icon`, and the new `--ds-info-hint-color` hook for the icon colour. `dsTooltip` and `dsDefinitionTerm` take a template as well as a string."
   ],
   "deleteList": [
     {

@@ -53,6 +53,17 @@
   extend; the internal `ds-field-message` takes `changed` (with `changedText` and `intl`), and the
   new internal `ds-field-status` draws the spinner and the dot.
 
+- **`ds-info-hint` shows rich content and any icon.** Put the markup inside the tag, or pass a
+  template to the new `content` input (`TemplateRef<unknown> | null`); `text` is now optional.
+  One source shows: `content`, then projected content, then `text`. In dev mode a hint given more
+  than one, or none, logs a warning naming what it shows. The panel stays `role="tooltip"` and
+  describes the button while open, so keep the content non-interactive. Projected content is
+  created with the hint, a `content` template only when the panel opens. `icon` takes any
+  `IconName` (default still `'help'`), and `--ds-info-hint-color` (default `var(--icon-default)`)
+  colours it at rest and on hover. `dsTooltip`, the `dsDefinitionTerm` that feeds it and
+  `TooltipPanelComponent.text` take a `TemplateRef<unknown>` as well as a string, rendered as
+  given.
+
 ### Changed
 
 - **Links and every brand shade follow `--primary`.** In light, `--surface-tint` and

@@ -126,7 +126,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-bottom-sheet> — BottomSheetComponent](overlays/ds-bottom-sheet.md) — Mobile-first panel anchored to the bottom edge (touch equivalent of drawer/modal). Drag-down on the grab strip
 - [<ds-popover> — PopoverComponent](overlays/ds-popover.md) — Floating panel anchored to a trigger via CDK overlay. Input: align: 'start' | 'end' = 'start' — controls overl
 - [[dsTooltip] — TooltipDirective](overlays/ds-tooltip.md) — Attribute directive, applied by dsTooltip or by dsTooltipWhenClipped alone. Apply to any focusable element; wi
-- [<ds-info-hint> — InfoHintComponent](overlays/ds-info-hint.md) — An icon button (14px, a question mark in a circle by default; icon="info" draws an "i") that shows supplementa
+- [<ds-info-hint> — InfoHintComponent](overlays/ds-info-hint.md) — An icon button (14px, a question mark in a circle by default; icon="info" draws an "i", and icon takes any Ico
 - [[dsDefinitionTerm] — DefinitionTermDirective](overlays/ds-definition-term.md) — Directive, on any element: a term inside running text or a label that carries its definition, <span dsDefiniti
 - [<ds-menu> + <ds-menu-item> — MenuComponent, MenuItemComponent](overlays/ds-menu.md) — Menu is a container. Item inputs: icon: IconName | null = null, disabled: boolean = false, danger: boolean = f
 - [<ds-tooltip-panel> — TooltipPanelComponent](overlays/ds-tooltip-panel.md) — <!-- inputs:ds-tooltip-panel -->

@@ -32,6 +32,16 @@ export class TooltipSection {
 <div dsTooltipWhenClipped=".label">…</div>
 <div [dsTooltipWhenClipped]="truncate ? ':scope > .cell' : false">…</div>`;
 
+  protected readonly infoHintContentSnippet = `<ds-info-hint ariaLabel="When v4 was published">
+  <ul>…</ul>
+</ds-info-hint>
+
+<ds-info-hint ariaLabel="When v4 was published" [content]="published" />
+<ng-template #published><ul>…</ul></ng-template>
+
+<ds-info-hint class="removed" icon="warn" ariaLabel="Why removed" text="…" />
+.removed { --ds-info-hint-color: var(--warning-text); }`;
+
   protected readonly pinnedSnippet = `@use 'styles/pinned';
 
 .my-trigger[data-ds-tooltip-pinned] {
