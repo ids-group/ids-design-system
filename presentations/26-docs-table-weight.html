@@ -9,7 +9,8 @@
 <link rel="stylesheet" href="deck.css">
 <style>
   main { max-width: 1480px; }
-  .opts { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: start; }
+  .opts { grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: start; }
+  @media (max-width: 1100px) { .opts { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); } }
   .opt { cursor: pointer; min-width: 0; }
   .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
   .opt.is-chosen { outline: 2px solid var(--success); outline-offset: 2px; }
@@ -93,7 +94,7 @@
   </section>
 
   <section class="panel q" data-review="Варианты">
-    <h2>Четыре варианта</h2>
+    <h2>Пять вариантов</h2>
     <p>Каждая карточка - одни и те же два фрагмента, ds-chart и ds-button, в одном масштабе: высота видна глазом. Выбор - клик по карточке.</p>
     <div class="opts">
       <article class="opt is-today" tabindex="0" data-key="today">
@@ -103,6 +104,15 @@
         <div class="mini"><div data-page="button" data-variant="today"></div></div>
         <div class="pills"><span class="pill mid">блок входов ds-chart: <span data-h="today"></span></span><span class="pill mid">22 ручные таблицы</span><span class="pill mid">список у 2 из 118</span></div>
         <dl class="layer"><dt>В ds-docs</dt><dd class="none">ничего</dd></dl>
+      </article>
+
+      <article class="opt" tabindex="0" data-key="folded">
+        <span class="badge">свернуть</span>
+        <h3>Свёрнута под счётчиком</h3>
+        <div class="mini"><div data-page="chart" data-variant="folded"></div></div>
+        <div class="mini"><div data-page="button" data-variant="folded"></div></div>
+        <div class="pills"><span class="pill good">закрытая: <span data-h="folded"></span></span><span class="pill good">строка API свёрнута</span><span class="pill mid">18 таблиц значений одного входа открыты</span></div>
+        <dl class="layer"><dt>В ds-docs</dt><dd class="gain">общий <code>docs-fold</code>: 3 полных списка входов (<code>dsColumnSeries</code>, <code>dsLineSeries</code>, avatar) и строка селекторов и entry points вверху каждого раздела закрыты под «Inputs · N» и «API · N»; стиль таблиц прежний</dd></dl>
       </article>
 
       <article class="opt" tabindex="0" data-key="dense-folded">
@@ -137,14 +147,14 @@
   <section class="panel">
     <h2>Сравнение</h2>
     <table>
-      <thead><tr><th>Что</th><th>Как сейчас</th><th>Плотная и свёрнутая</th><th>Без таблиц входов</th><th>Витрина настроек</th></tr></thead>
+      <thead><tr><th>Что</th><th>Как сейчас</th><th>Свёрнута под счётчиком</th><th>Плотная и свёрнутая</th><th>Без таблиц входов</th><th>Витрина настроек</th></tr></thead>
       <tbody>
-        <tr><th class="rowlabel">Блок входов ds-chart, ширина 640px</th><td data-h="today"></td><td data-h="dense-folded"></td><td data-h="no-tables"></td><td data-h="showcase"></td></tr>
-        <tr><th class="rowlabel">Ручные таблицы входов</th><td>22</td><td>22</td><td>0</td><td>0</td></tr>
-        <tr><th class="rowlabel">Что видно сразу</th><td>таблица</td><td>строка-счётчик</td><td>только демо</td><td>имена входов и их значения</td></tr>
-        <tr><th class="rowlabel">Полный список входов</th><td>у 2 из 118, развёрнут</td><td>у 2 из 118, свёрнут</td><td>нет</td><td>у 118 из 118, свёрнут</td></tr>
-        <tr><th class="rowlabel">Откуда текст</th><td>руками</td><td>руками</td><td>нет текста</td><td>из <code>component-api.generated.ts</code></td></tr>
-        <tr><th class="rowlabel">Правки</th><td>0</td><td>CSS + обёртка 3 таблиц</td><td>15 файлов</td><td>15 файлов + <code>docs-section</code></td></tr>
+        <tr><th class="rowlabel">Блок входов ds-chart, ширина 640px</th><td data-h="today"></td><td data-h="folded"></td><td data-h="dense-folded"></td><td data-h="no-tables"></td><td data-h="showcase"></td></tr>
+        <tr><th class="rowlabel">Ручные таблицы входов</th><td>22</td><td>22, 3 полных свёрнуты</td><td>22</td><td>0</td><td>0</td></tr>
+        <tr><th class="rowlabel">Что видно сразу</th><td>таблица</td><td>строки «API · N» и «Inputs · N», таблицы значений</td><td>строка-счётчик</td><td>только демо</td><td>имена входов и их значения</td></tr>
+        <tr><th class="rowlabel">Полный список входов</th><td>у 2 из 118, развёрнут</td><td>у 2 из 118, свёрнут</td><td>у 2 из 118, свёрнут</td><td>нет</td><td>у 118 из 118, свёрнут</td></tr>
+        <tr><th class="rowlabel">Откуда текст</th><td>руками</td><td>руками</td><td>руками</td><td>нет текста</td><td>из <code>component-api.generated.ts</code></td></tr>
+        <tr><th class="rowlabel">Правки</th><td>0</td><td><code>docs-fold</code> + 3 таблицы + шапка раздела</td><td>CSS + обёртка 3 таблиц</td><td>15 файлов</td><td>15 файлов + <code>docs-section</code></td></tr>
       </tbody>
     </table>
   </section>
@@ -158,7 +168,7 @@
     <h2>Что решить</h2>
     <table>
       <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
-      <tbody><tr class="row-pick"><th class="rowlabel">Как ds-docs показывает входы компонентов</th><td>Как сейчас · Плотная и свёрнутая · Без таблиц входов · Витрина настроек</td><td>Витрина настроек</td></tr></tbody>
+      <tbody><tr class="row-pick"><th class="rowlabel">Как ds-docs показывает входы компонентов</th><td>Как сейчас · Свёрнута под счётчиком · Плотная и свёрнутая · Без таблиц входов · Витрина настроек</td><td>Витрина настроек</td></tr></tbody>
     </table>
   </section>
 
@@ -206,20 +216,26 @@
   const part = {
     chart: {
       today: () => table(),
+      folded: () => fold('dsColumnSeries inputs', rows.length, false),
       'dense-folded': () => fold('dsColumnSeries inputs', rows.length, true),
       'no-tables': () => '',
       showcase: () => `${strip('chart')}${fold('Все входы dsColumnSeries', showcase.chart.total, true)}`,
     },
     button: {
       today: () => '<div class="none">таблицы входов нет: 0 из 30 на странице</div>',
+      folded: () => '<div class="none">таблицы входов нет: 0 из 30 на странице</div>',
       'dense-folded': () => '<div class="none">таблицы входов нет: 0 из 30 на странице</div>',
       'no-tables': () => '<div class="none">таблицы входов нет: 0 из 30 на странице</div>',
       showcase: () => `${strip('button')}${fold('Все входы ds-button', showcase.button.total, true)}`,
     },
   };
+  const tags = (variant, selector, entry) => {
+    const row = `<div class="tags"><span class="tag">${selector}</span><span class="tag">@ids-group-ltd/ids-design-system/components/${entry}</span></div>`;
+    return variant === 'folded' ? `<details class="fold"><summary>API <span class="count">· 1</span></summary>${row}</details>` : row;
+  };
   const page = (kind, variant) => kind === 'chart'
-    ? `<div class="pg"><div class="eb">Charts</div><div class="ttl">Chart container</div><div class="tags"><span class="tag">&lt;g dsColumnSeries&gt;</span><span class="tag">@ids-group-ltd/ids-design-system/components/chart</span></div>${demo}<div data-part>${part.chart[variant]()}</div></div>`
-    : `<div class="pg"><div class="eb">Components</div><div class="ttl">Button</div><div class="tags"><span class="tag">&lt;ds-button&gt;</span><span class="tag">@ids-group-ltd/ids-design-system/components/button</span></div>${buttons}<div data-part>${part.button[variant]()}</div></div>`;
+    ? `<div class="pg"><div class="eb">Charts</div><div class="ttl">Chart container</div>${tags(variant, '&lt;g dsColumnSeries&gt;', 'chart')}${demo}<div data-part>${part.chart[variant]()}</div></div>`
+    : `<div class="pg"><div class="eb">Components</div><div class="ttl">Button</div>${tags(variant, '&lt;ds-button&gt;', 'button')}${buttons}<div data-part>${part.button[variant]()}</div></div>`;
   document.querySelectorAll('[data-page]').forEach((host) => { host.outerHTML = page(host.dataset.page, host.dataset.variant); });
 
   const fit = () => document.querySelectorAll('.mini').forEach((frame) => { frame.firstElementChild.style.zoom = String(Math.min(1, frame.clientWidth / 640)); });
@@ -236,7 +252,7 @@
     return `${height}px`;
   };
   document.fonts.ready.then(() => {
-    const measured = Object.fromEntries(['today', 'dense-folded', 'no-tables', 'showcase'].map((variant) => [variant, measure(variant)]));
+    const measured = Object.fromEntries(['today', 'folded', 'dense-folded', 'no-tables', 'showcase'].map((variant) => [variant, measure(variant)]));
     document.querySelectorAll('[data-h]').forEach((cell) => { cell.textContent = measured[cell.dataset.h]; });
   });
 
