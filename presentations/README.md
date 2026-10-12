@@ -171,6 +171,7 @@ check. It is in `lint:all`, and every rule is a defect that actually shipped:
 | D012 | `var(--token)` that resolves to nothing: no fallback, undeclared here, absent from `ds.css` |
 | D013 | `ds-deck-evidence` citing a path that does not exist |
 | D015 | no `<title>`, so the tab and every listing show a filename |
+| D016 | an open deck whose pick a second click cannot clear, so a stray click reads as a decision |
 
 **D012 is the one with real blood on it.** On 2026-09-01 ten decks referenced four tokens the DS does
 not define — `--space-7`, `--border-subtle` (missed by the `subtle`→`subtitle` rename), `--shadow-md`

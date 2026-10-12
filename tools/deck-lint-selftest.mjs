@@ -126,6 +126,14 @@ const cases = [
     }),
   ],
   ['D015', DECKS, '5015-selftest.html', deck({ title: '' })],
+  [
+    'D016',
+    DECKS,
+    '5016-selftest.html',
+    deck({
+      body: '<script>const choose = () => { picked = card.dataset.key; };</script>',
+    }),
+  ],
 ];
 
 // The negative control. Without it a linter that reported every deck broken would

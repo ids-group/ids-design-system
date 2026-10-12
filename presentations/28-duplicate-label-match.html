@@ -253,10 +253,10 @@
   try { picked = localStorage.getItem(KEY); } catch { picked = null; }
   const paint = () => cards.forEach((card) => {
     card.classList.toggle('is-chosen', card.dataset.key === picked);
-    card.querySelector('.pick-btn').textContent = card.dataset.key === picked ? 'Выбрано' : 'Выбрать';
+    card.querySelector('.pick-btn').textContent = card.dataset.key === picked ? 'Выбрано · снять' : 'Выбрать';
   });
   cards.forEach((card) => {
-    const choose = () => { picked = card.dataset.key; try { localStorage.setItem(KEY, picked); } catch { /* private window */ } paint(); window.deckReview?.refresh?.(); };
+    const choose = () => { picked = picked === card.dataset.key ? null : card.dataset.key; try { if (picked) localStorage.setItem(KEY, picked); else localStorage.removeItem(KEY); } catch { /* private window */ } paint(); window.deckReview?.refresh?.(); };
     card.addEventListener('click', choose);
     card.addEventListener('keydown', (event) => { if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); choose(); } });
   });
