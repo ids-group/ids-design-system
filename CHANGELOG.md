@@ -160,6 +160,9 @@
 - **A pressed `ds-menu-item` with `error` goes one red step deeper.** It fills with
   `--error-muted` on press, over the `--error-subtitle` hover, the pair a ghost error `ds-button`
   uses; the press showed the hover fill.
+- **A `ds-funnel-chart` stage grows from its centre.** On entrance each stage grows from 96% about
+  its own centre, as a `ds-scatter-chart` point does, so the funnel's axis stands still; it grew
+  right and down from its top-left corner.
 
 ### Fixed
 

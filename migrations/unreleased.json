@@ -265,6 +265,10 @@
     {
       "text": "A pressed `ds-menu-item` with `error` fills with `--error-muted`, one red step deeper than its `--error-subtitle` hover; the press showed the hover fill.",
       "verify": "Hold the mouse down on an error ds-menu-item and confirm the red fill deepens from the hover fill, in the light and the dark theme."
+    },
+    {
+      "text": "A `ds-funnel-chart` stage enters growing from 96% about its own centre, as a `ds-scatter-chart` point does; it grew right and down from its top-left corner.",
+      "verify": "Load a ds-funnel-chart and confirm each stage's centre holds still while it grows, with its left and right edges moving outward together."
     }
   ],
   "deleteList": [
