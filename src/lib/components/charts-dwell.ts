@@ -15,10 +15,11 @@ export interface ChartDwell {
 // A chart stays warm from its first answer until the pointer leaves it; one set for the page, as a legend and its plot are one chart.
 const warmCharts = new WeakSet<Element>();
 
-function chartOf(event: Event): Element | null {
-  const node = event.currentTarget ?? event.target;
-
-  return node instanceof Element ? node.closest('figure') : null;
+/** The chart `element` sits in.
+ *
+ *  @internal */
+export function chartOf(element: Element | null): Element | null {
+  return element ? element.closest('figure') : null;
 }
 
 function warmUp(chart: Element): void {
@@ -61,7 +62,8 @@ export function chartDwell(delayMs: () => number): ChartDwell {
         typeof PointerEvent !== 'undefined' &&
         event instanceof PointerEvent &&
         event.pointerType !== 'touch';
-      const chart = chartOf(event);
+      const node = event.currentTarget ?? event.target;
+      const chart = chartOf(node instanceof Element ? node : null);
       const delay = Math.max(delayMs(), 0);
       if (!pointer || delay === 0 || (chart && warmCharts.has(chart))) {
         cancel();

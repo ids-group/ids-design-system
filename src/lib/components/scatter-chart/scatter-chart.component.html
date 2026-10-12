@@ -119,11 +119,7 @@
       @let start = seriesStart().get(entry.key) ?? 0;
 
       <g
-        [class.is-dimmed]="
-          dimOthers() &&
-          highlightedSeries() !== null &&
-          highlightedSeries() !== entry.series.id
-        "
+        [class.is-dimmed]="isSeriesDimmed(entry.series.id)"
         [style.--_scatter-series-color]="entry.color"
         (click)="onPointPress($event)"
         (keydown.enter)="onPointActivate($event)"

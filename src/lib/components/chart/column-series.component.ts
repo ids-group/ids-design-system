@@ -26,6 +26,8 @@ import {
   rovingMarks,
   leaveMark,
   staggerDelay,
+  dimmedBy,
+  leftMark,
 } from '@ids-group-ltd/ids-design-system/components';
 import {
   DS_INTL,
@@ -50,7 +52,12 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
 import type { ChartAxisEntry, ChartAxisReadout } from './chart-scales.token';
-import { categoryKeys, chartViewHeight, pinYAbove } from './chart.math';
+import {
+  categoryKeys,
+  chartViewHeight,
+  outsideRange,
+  pinYAbove,
+} from './chart.math';
 import type { ChartStackOffset } from './chart.math';
 
 export interface ColumnSeriesPoint {
@@ -181,15 +188,9 @@ export class ColumnSeriesComponent implements OnDestroy {
    *  series fades instead, as the other columns do when one is hovered. */
   readonly highlighted = input<string | null>(null);
 
-  protected readonly dimmedBySeries = computed(() => {
-    const highlighted = this.highlighted();
-
-    return (
-      this.dimOthers() &&
-      highlighted !== null &&
-      highlighted !== this.seriesKey()
-    );
-  });
+  protected readonly dimmedBySeries = computed(() =>
+    dimmedBy(this.dimOthers(), this.highlighted(), this.seriesKey()),
+  );
 
   protected readonly spotlit = computed(
     () =>
@@ -488,11 +489,7 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   protected onMarkOut(event: PointerEvent): void {
     const hit = markOf(event);
-    const next =
-      event.relatedTarget instanceof Element
-        ? event.relatedTarget.closest('[data-mark-index]')
-        : null;
-    if (hit && next !== hit.element && !this.scales.cursorOn?.()) {
+    if (hit && leftMark(event, hit) && !this.scales.cursorOn?.()) {
       this.activeMark.leave();
     }
   }
@@ -579,9 +576,7 @@ export class ColumnSeriesComponent implements OnDestroy {
   }
 
   protected isOutsideRange(index: number): boolean {
-    const range = this.scales.selectedRange?.() ?? null;
-
-    return range !== null && (index < range.from || index > range.to);
+    return outsideRange(this.scales.selectedRange?.() ?? null, index);
   }
 
   protected readonly focusedMark = computed(

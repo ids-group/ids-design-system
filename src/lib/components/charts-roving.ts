@@ -98,6 +98,18 @@ export interface MarkHit {
   readonly index: number;
 }
 
+/** Whether a `pointerout` from `hit` left the mark, rather than crossing into another part of it.
+ *
+ *  @internal */
+export function leftMark(event: PointerEvent, hit: MarkHit): boolean {
+  const next =
+    event.relatedTarget instanceof Element
+      ? event.relatedTarget.closest('[data-mark-index]')
+      : null;
+
+  return next !== hit.element;
+}
+
 /** The mark an event on the marks' parent came from (the nearest `[data-mark-index]`), or `null`.
  *
  *  @internal */

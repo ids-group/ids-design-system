@@ -37,6 +37,8 @@ import {
   staggerDelay,
   tweenMarks,
   DsChartBase,
+  dimmedBy,
+  markAt,
 } from '@ids-group-ltd/ids-design-system/components';
 import type { MarkHit } from '@ids-group-ltd/ids-design-system/components';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
@@ -297,6 +299,10 @@ export class ScatterChartComponent
 
   /** The series named in the legend under the pointer; under `dimOthers` it fades the rest. */
   protected readonly highlightedSeries = signal<string | null>(null);
+
+  protected isSeriesDimmed(seriesId: string): boolean {
+    return dimmedBy(this.dimOthers(), this.highlightedSeries(), seriesId);
+  }
 
   protected readonly legendItems = computed<readonly ChartLegendItem[]>(() =>
     this.series().map((entry) => ({
@@ -567,10 +573,7 @@ export class ScatterChartComponent
         nearestDistance = distance;
       }
     });
-    const element =
-      nearestIndex === -1
-        ? null
-        : canvas.querySelector(`[data-mark-index="${nearestIndex}"]`);
+    const element = nearestIndex === -1 ? null : markAt(canvas, nearestIndex);
 
     return element
       ? {

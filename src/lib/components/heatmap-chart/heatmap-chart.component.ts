@@ -22,6 +22,7 @@ import {
   leaveMark,
   staggerDelay,
   DsChartBase,
+  dimmedBy,
 } from '@ids-group-ltd/ids-design-system/components';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -141,9 +142,7 @@ export class HeatmapChartComponent
   );
 
   protected isCellDimmed(cell: PlacedCell): boolean {
-    const step = this.highlightedStep();
-
-    return this.dimOthers() && step !== null && cell.step !== step;
+    return dimmedBy(this.dimOthers(), this.highlightedStep(), cell.step);
   }
 
   private readonly scaleMarkerIndex = signal(-1);

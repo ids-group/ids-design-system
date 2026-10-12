@@ -1,5 +1,8 @@
 import { DestroyRef, Signal, computed, inject, signal } from '@angular/core';
-import { chartDwell } from '@ids-group-ltd/ids-design-system/components';
+import {
+  chartDwell,
+  chartOf,
+} from '@ids-group-ltd/ids-design-system/components';
 
 /** @internal */
 export interface ChartActiveMark {
@@ -144,9 +147,6 @@ export function chartActiveMark(
       scheduleClear();
     }
   };
-
-  const chartOf = (element: Element | null): Element | null =>
-    element ? element.closest('figure') : null;
 
   const release = (event: PointerEvent): void => {
     if (!isPrimaryPress(event)) {

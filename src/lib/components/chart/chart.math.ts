@@ -13,7 +13,7 @@ import type {
   ChartThresholdDash,
 } from '@ids-group-ltd/ids-design-system/core';
 import type { ChartTooltipEntry } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import type { ChartAxisEntry } from './chart-scales.token';
+import type { ChartAxisEntry, ChartCategoryRange } from './chart-scales.token';
 
 export const CHART_DEFAULT_TICK_COUNT = 5;
 export const CHART_AXIS_LABEL_GAP = 8;
@@ -426,6 +426,14 @@ export function pinYAbove(
   }
 
   return Math.min(top, valueTop ?? top) - inset;
+}
+
+/** Whether category `index` falls outside a selected range; nothing is outside no range. */
+export function outsideRange(
+  range: ChartCategoryRange | null,
+  index: number,
+): boolean {
+  return range !== null && (index < range.from || index > range.to);
 }
 
 /** Readings ordered top to bottom with the height dropped; ties and readings with no height keep their place. */

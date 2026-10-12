@@ -65,10 +65,11 @@ export {
   skeletonMarkCount,
   skeletonWaterfallSteps,
 } from './charts-skeleton';
-export { chartDwell, dwellHighlight } from './charts-dwell';
+export { chartDwell, chartOf, dwellHighlight } from './charts-dwell';
 export type { ChartDwell } from './charts-dwell';
 export {
   focusMark,
+  leftMark,
   listenForMarkFocus,
   markAt,
   markOf,
@@ -95,7 +96,7 @@ export type {
 } from './destination';
 export { DsEmptyTemplateDirective } from './empty-template.directive';
 export { DsFieldBase } from './field-base';
-export { DsChartBase } from './charts-base';
+export { DsChartBase, dimmedBy } from './charts-base';
 export type {
   ChartDimmable,
   ChartStaggered,
