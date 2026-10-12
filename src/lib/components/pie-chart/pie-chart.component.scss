@@ -180,6 +180,8 @@
 }
 
 .legend {
+  --_legend-row-gap: var(--_pie-chart-legend-row-gap);
+
   margin: 0;
   padding: 0;
   list-style: none;
@@ -188,8 +190,6 @@
 .skeleton-legend {
   flex: 1 1 auto;
 }
-  --_legend-row-gap: var(--_pie-chart-legend-row-gap);
-
 
 // The ring in equal slices with the drawn chart's hole; a lone slice closes the ring.
 .skeleton-ring {
@@ -273,6 +273,8 @@
 }
 
 .legend-bottom .legend {
+  --_legend-column-gap: var(--space-4);
+
   display: flex;
   flex-wrap: wrap;
   gap: var(--_legend-row-gap) var(--_legend-column-gap);
@@ -281,8 +283,6 @@
 .legend-bottom .legend-item {
   display: flex;
   column-gap: var(--space-2);
-  --_legend-column-gap: var(--space-4);
-
 }
 
 
