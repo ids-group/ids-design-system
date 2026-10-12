@@ -36,7 +36,7 @@ is stale. Closing an item means deleting the item and nothing else.
   - Document how to build `ds-modal` actions (Stas, 2026-10-06)
   - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
 - **Open verdicts, each drawn in a deck**
-  - Six Unreleased behaviour changes shipped without a choice between alternatives
+  - Six behaviour changes published in 0.14.7 without a choice between alternatives
 - **Tooling**
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
@@ -1033,11 +1033,11 @@ that already existed, because both are the kind of ask that comes back.
 
 ## Open verdicts, each drawn in a deck
 
-- [ ] **[P2] Six Unreleased behaviour changes shipped without a choice between alternatives.** Drawn in
-  deck `unasked-decisions`: `provideDsTheme` keeps a preset `data-theme`, `dsModalConfirm`, avatar-group
-  hides past `max`, a disabled link with `disabledReason` keeps a Tab stop, `provideDsIcons` calls merge,
-  chart pin geometry (8px gap, lift over a short column). They stay as built until Stas picks; a pick
-  that differs is reworked before the next release is cut.
+- [ ] **[P2] Six behaviour changes published in 0.14.7 without a choice between alternatives.** Being
+  taken one by one in deck `six-behaviour-changes`: `provideDsTheme` keeps a preset `data-theme`,
+  `dsModalConfirm`, avatar-group hides past `max`, a disabled link with `disabledReason` keeps a Tab
+  stop, `provideDsIcons` calls merge, chart pin geometry (8px gap, lift over a short column). They stay
+  as built until Stas picks; a pick that differs ships as a behaviour change in the next release.
 
 - [ ] **[P3] Which public tokens the library never reads go?** Drawn in deck `unread-tokens`.
   Measured 2026-10-05 (`var(--name` over `src/lib` and `ds-docs/src`): of 746 tokens in `styles/`
@@ -1110,6 +1110,7 @@ file** — the number moves; cite the filename.
 | 24 | `24-info-hint-content` | How `ds-info-hint` takes rich content from the consumer (mm-ecm ME-495 «Published» list): content projection, a template input, or a standard trigger for `ds-popover`; and, only if the ME-495 icon verdict is A, how a status icon becomes the hint trigger: any `IconName` with a colour token, or a `tone` input. | the info-hint rich-content P2 in Asked by Stas |
 | 25 | `25-link-colour` | What colour a text link takes under a non-blue brand: the brand colour (dev since `b9f5a6db2`) or always blue; both drawn for a blue and a green brand in light and dark, with link-to-background and link-to-text contrast. | none |
 | 26 | `26-brand-dark-theme` | How a brand colour set once reaches the dark theme: repeat it under the dark selector (today), the dark block stops redeclaring `--primary` and its channels, or a `--ds-brand` input with a lifted dark `--primary`; drawn on the real `ds.css` for blue, green and navy brands with contrast measured. | the open queue question on deriving every shade from one brand colour |
+| 27 | `27-six-behaviour-changes` | The six behaviour changes published in 0.14.7 without a choice, one by one: theme set before startup, modal `confirmed`, avatar-group `max`, disabled link with `disabledReason`, `provideDsIcons` merge, chart pin disc; before and after drawn, two or three options each, six picks. | the Decisions item on the six behaviour changes |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

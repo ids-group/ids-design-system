@@ -37,11 +37,12 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 24 | `24-info-hint-content` | how `ds-info-hint` takes rich content (the mm-ecm ME-495 «Published» list): content projection, a template input, or a standard ⓘ trigger for `ds-popover`, each as consumer markup with screenshots of today and the target; and a conditional second block, needed only if the ME-495 icon verdict is A: any `IconName` with a colour token, or a `tone` input |
 | 25 | `25-link-colour` | what colour a text link takes under a non-blue brand: the brand colour as on dev, or always blue with the tints still following the brand - both drawn on one fragment (inline, visited, table and «Подробнее» links) for a blue and a green brand in light and dark, contrast measured in the page |
 | 26 | `26-brand-dark-theme` | how a brand colour set once reaches the dark theme, where the DS dark block redeclares `--primary` and wins: the brand repeats it under `[data-theme='dark'][data-brand]` as today, the dark block stops declaring `--primary` and its channels so the brand's value reaches both themes, or a new `--ds-brand` input with the dark `--primary` lifted to the default's OKLCH lightness; each drawn on the real `ds.css` for the default blue, a green and a navy brand in light and dark, contrast measured in the page |
+| 27 | `27-six-behaviour-changes` | the six behaviour changes published in 0.14.7 without a choice, one section each: the theme an app set before startup, the modal confirm event, avatars past `max`, a disabled link with a reason in the Tab order, `provideDsIcons` calls adding up, the pin disc on a column - each with a before and after render and two or three drawn options to pick |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
 written in Russian; `deck.css`, which sits beside `ds.css` and carries the shell, is shared by ranks
-1, 4, 5, 8-16 and 18-26 - ranks 2, 3, 6, 7 and 17 render fully inline instead.
+1, 4, 5, 8-16 and 18-27 - ranks 2, 3, 6, 7 and 17 render fully inline instead.
 
 **`implemented/` is where the answers live, and it is worth reading.** A closed deck keeps every word
 of the argument — the next person to ask the same question reads it to find out what was already
