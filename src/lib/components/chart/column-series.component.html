@@ -76,6 +76,7 @@
         #barEl
         class="bar"
         data-morph="mark"
+        [attr.data-morph-from]="mark.below ? 'top' : null"
         [style.transform-origin]="mark.origin">
         <!-- `rx` rounds all four corners but the cap belongs on the free end alone; this rect fills the
              two baseline corners back in. Unlike a `<path>`, both keep `y` and `height` interpolable. -->

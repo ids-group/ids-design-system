@@ -41,7 +41,11 @@ export function cssDurationMs(duration: string): number {
 
 /** Eases `apply` from `from` to `to` on the timing `element` inherits (`--ds-motion-chart-<timing>-*`),
  *  for geometry CSS cannot interpolate. A zero duration, as under reduced motion, applies `to` at once.
- *  Returns the cancel; a caller starting the next tween cancels this one and passes what it last applied.
+ *  `onDone` runs after the last apply, inside this call when there is no motion. Returns the cancel;
+ *  a caller starting the next tween cancels this one and passes what it last applied.
+ *
+ *  Frames run in whatever zone the call runs in: call it outside Angular's zone, or every frame is
+ *  an application tick.
  *
  *  @internal */
 export function tweenMarks(
@@ -49,7 +53,8 @@ export function tweenMarks(
   from: readonly number[],
   to: readonly number[],
   apply: (values: readonly number[]) => void,
-  timing: 'mark' | 'mark-grow' | 'tooltip-move' = 'mark',
+  timing: 'mark' | 'mark-grow' | 'state' | 'tooltip-move' = 'mark',
+  onDone: () => void = () => undefined,
 ): () => void {
   const style = getComputedStyle(element);
   const duration = cssDurationMs(
@@ -61,6 +66,7 @@ export function tweenMarks(
     typeof KeyframeEffect === 'undefined'
   ) {
     apply(to);
+    onDone();
 
     return () => undefined;
   }
@@ -82,7 +88,10 @@ export function tweenMarks(
     );
     if (clock.playState !== 'finished') {
       frame = requestAnimationFrame(step);
+
+      return;
     }
+    onDone();
   };
   clock.play();
   frame = requestAnimationFrame(step);
