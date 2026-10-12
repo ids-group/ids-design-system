@@ -281,6 +281,10 @@
   trigger. In a submenu they close the submenu and the menu holding it. Choosing a submenu item
   closes the submenu and returns focus to its parent item before the overlay closes, where the
   submenu stayed open.
+- **A `ds-popover` holding a `ds-menu` moves focus into it.** Without `panelRole`, opening the
+  popover left focus on the trigger, so arrow keys and type-ahead never reached the menu; this hit
+  the `ds-table` row-actions menu too. A panel holding a `role="menu"` now focuses the menu's first
+  item on open, and Escape returns focus to the trigger. It is not trapped: Tab closes it.
 
 ### What you can now DELETE
 
