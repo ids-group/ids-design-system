@@ -62,7 +62,9 @@
   `IconName` (default still `'help'`), and `--ds-info-hint-color` (default `var(--icon-default)`)
   colours it at rest and on hover. `dsTooltip`, the `dsDefinitionTerm` that feeds it and
   `TooltipPanelComponent.text` take a `TemplateRef<unknown>` as well as a string, rendered as
-  given.
+  given. `InfoHintComponent`, `TooltipDirective` and `TooltipPanelComponent` gained members, named
+  in the migration manifest, as is the one `TooltipDirective` lost; a subclass declaring one of
+  those names must rename it.
 
 ### Changed
 
