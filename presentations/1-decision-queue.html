@@ -98,7 +98,7 @@
   .css {
     margin: var(--space-2) 0 0; padding: var(--space-2) var(--space-3);
     border-radius: var(--radius-sm); background: var(--surface-muted);
-    font: var(--font-size-2xs) / 1.6 var(--font-mono); white-space: pre; overflow-x: auto;
+    font: var(--font-size-2xs) / 1.6 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere;
   }
   .css .hit { color: var(--error-text); font-weight: var(--font-weight-bold); }
   .css .dead { color: var(--text-tertiary); text-decoration: line-through; }
@@ -517,6 +517,7 @@
   [data-q="manifest-practices"] .mp-warn { margin: 0; align-self: flex-start; padding: 2px var(--space-2); border-radius: var(--radius-sm); background: var(--warning-subtitle); color: var(--warning-text); font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-sans); }
   [data-q="manifest-practices"] .stage .says { margin: 0 0 var(--space-1); }
   [data-q="manifest-practices"] .opt .css, [data-q="manifest-practices"] .opt .console { margin: 0; font-size: 9px; }
+  [data-q="manifest-practices"] .opts { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
   [data-q="manifest-practices"] .opt .cap, [data-q="manifest-practices"] .opt > p { margin: 0; }
   /* npm-2027 */
   [data-q="npm-2027"] .pipe { align-items: center; }
@@ -547,7 +548,6 @@
   [data-q="picker-height"] .css { white-space: pre; overflow-x: auto; }
   /* row-chart-row-type */
   [data-q="row-chart-row-type"] .css b { color: var(--accent-strong); font-weight: var(--font-weight-bold); }
-  [data-q="row-chart-row-type"] .opt .css { white-space: pre; overflow-x: auto; }
   [data-q="row-chart-row-type"] .rc-chart { min-inline-size: 220px; }
   [data-q="row-chart-row-type"] .rc-chart .bar { background: var(--surface-secondary); }
   [data-q="row-chart-row-type"] .rc-chart .bar i { display: block; background: var(--primary); }
@@ -849,7 +849,11 @@
         <h2 class="q-title">Рамка поля и белый текст на кнопке secondary не проходят контраст</h2>
         <span class="q-src">P2 · ids-europe-landing · дефект</span>
       </div>
-      <p class="q-sub">Рамка <code>ds-input</code> и ещё 25 компонентов (#DCE1EA) на белом даёт 1.31:1 при норме 3:1 - край поля почти не виден. Текст на кнопке secondary всегда белый, а сам secondary перекрашивается брендом: на золотом #FBAC18 белый текст даёт 1.91:1 при норме 4.5:1. Лендинг ids-europe-landing уже переопределяет оба цвета у себя. Выбрать, как чинить в DS.</p>
+      <ul class="q-sub">
+        <li>Рамка <code>ds-input</code> и ещё 25 компонентов (#DCE1EA) на белом: <b>1.31:1 при норме 3:1</b>, край поля почти не виден.</li>
+        <li>Текст secondary всегда белый, а secondary перекрашивает бренд: на золотом #FBAC18 <b>1.91:1 при норме 4.5:1</b>.</li>
+        <li>Лендинг ids-europe-landing уже переопределяет оба цвета у себя. <b>Выбрать, как чинить в DS.</b></li>
+      </ul>
 
       <div class="stage">
         <div class="spec">
@@ -884,8 +888,10 @@
             <div class="a-pair"><span class="a-btn gold">Оставить заявку</span><span class="a-ratio fail">1.91:1</span></div>
           </div>
           <p class="cap">край и текст не проходят</p>
-          <p class="css">--border-default: var(--neutral-200); <span class="hit">/* 1.31:1 */</span>
-  --secondary-on:   var(--primary-on);  <span class="hit">/* white */</span></p>
+          <p class="css"><span class="hit">/* 1.31:1 */</span>
+--border-default: var(--neutral-200);
+<span class="hit">/* white */</span>
+--secondary-on: var(--primary-on);</p>
           <dl class="layer"><dt>Консьюмер</dt><dd>_theme.scss:44-57, :89</dd></dl>
         </div>
         <div class="opt"><h3>Рамка 3:1, цвет текста кнопки по её светлоте <span class="star">★</span></h3>
