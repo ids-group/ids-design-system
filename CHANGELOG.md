@@ -106,11 +106,12 @@
   runs from the value axis at the reading, and a pill on the axis prints the axis value there; the
   guide and the pill glide between readings on `--ds-motion-chart-tooltip-move-duration` and
   `-easing`. In `ds-waterfall-chart` the guide stops at the hovered step, reads its running total,
-  and under `dimOthers` the steps after it fade. The new `axisReadout` input on all four, on by default, turns the
-  label, the guide and the pill off. The pill prints through `valueFormat` at the new
-  `ChartFormatLocation` `'readout'`: the built-in format spells it out as for `'tooltip'`, and a
-  custom formatter can return the tick's short form there. A formatter whose `location` parameter
-  is typed as its own `'tick' | 'tooltip'` union stops compiling until it takes `'readout'`.
+  and under `dimOthers` the steps after it fade. The new `showAxisReadout` input on all four, on by default, turns the
+  label, the guide and the pill off. The pill prints through `valueFormat` at
+  `'tooltip'`, in full. A formatter that sets `handlesReadout: true` is asked for the new
+  `ChartFormatLocation` `'readout'` there instead, and can return the tick's short form. A
+  formatter typed for `'tick' | 'tooltip'` alone is a valid `ChartValueFormat` and keeps a full
+  number in the pill.
 - **One chart motion timing per kind of movement.** Whatever follows the pointer glides on
   `--ds-motion-chart-tooltip-move-duration` and `-easing`: the `ds-scatter-chart` nearest-point
   ring and the `selectRange` band join the band, the panel and the axis readout there, where they
@@ -119,8 +120,9 @@
   too, where they dimmed on the `mark` timing and came back at once.
 - **A pinned category keeps its line in a chart with lines.** In a `ds-chart` holding a
   `dsLineSeries` (`ds-line-chart`, a combo), the pinned category draws the cursor line in
-  `--ds-chart-cursor-line-color`, without the band fill, under the pin; the hover band and line
-  still follow the pointer. A column-only chart keeps the pin alone.
+  `--ds-chart-cursor-line-color`, without the band fill, under the pin, and glides to the next
+  pinned category on `--ds-motion-chart-tooltip-move-duration`; the hover band and line still
+  follow the pointer. A column-only chart keeps the pin alone.
 - **A highlighted line point rides the line.** Under the category cursor, each series' highlighted
   point travels along its own line to the next category, with the panel and the crosshair, instead
   of jumping there.
@@ -136,9 +138,9 @@
   A `ds-scatter-chart` answers with the point nearest the pointer anywhere over the plot, where it
   answered only within 16px of a point: a ring glides to that point and a dashed line runs to it
   from the pointer. Under `prefers-reduced-motion` the centre, the marker and the ring change at once.
-  Each is on by default and has its own off switch: `centerFollowsHover` on `ds-pie-chart` keeps
+  Each is on by default and has its own off switch: `showHoverCenter` on `ds-pie-chart` keeps
   `centerValue` and `centerLabel` in the centre, `showScaleMarker` on `ds-heatmap-chart` drops the
-  marker, and `nearestPoint` on `ds-scatter-chart` answers only within 16px of a point, without the
+  marker, and `showNearestPoint` on `ds-scatter-chart` answers only within 16px of a point, without the
   ring and line. `nearestRadius` on `ds-scatter-chart` caps how far, in CSS pixels, the nearest
   point answers from; unset, any distance.
 - **Heatmap cells enter along the diagonals.** `staggerMs` on `ds-heatmap-chart` spaces the

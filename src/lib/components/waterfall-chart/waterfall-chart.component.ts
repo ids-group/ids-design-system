@@ -97,7 +97,7 @@ export class WaterfallChartComponent
 
   /** Answers the pointer on the axes: the category label in bold, a guide from the value axis and
    *  the value there in a pill on the axis. On by default. */
-  readonly axisReadout = input(true, { transform: booleanAttribute });
+  readonly showAxisReadout = input(true, { transform: booleanAttribute });
 
   /** Whether a hovered or focused bar opens a tooltip. `'axis'` is not offered: each bar is its
    *  own category. */

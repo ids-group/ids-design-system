@@ -14,7 +14,6 @@ export class LineChartComponent extends DsChartBase implements ChartDimmable, Ch
     protected readonly accessibleName = computed(…);
     public readonly annotations = input<readonly LineChartAnnotation[]>([]);
     protected readonly axisFormat = computed<ChartValueFormat>(…);
-    public readonly axisReadout = input(true, { transform: booleanAttribute });
     private readonly axisTint;
     public readonly categories = input<readonly string[]>([]);
     public readonly curve = input<ChartCurve>('linear');
@@ -56,6 +55,7 @@ export class LineChartComponent extends DsChartBase implements ChartDimmable, Ch
     public readonly secondaryAxisLabel = input<string | null>(null);
     public readonly selectRange = input(false, { transform: booleanAttribute });
     public readonly series = input<readonly LineChartSeries[]>([]);
+    public readonly showAxisReadout = input(true, { transform: booleanAttribute });
     public readonly showChange = input(false, { transform: booleanAttribute });
     protected readonly showLegend = computed(…);
     public readonly showMarkers = input(true, { transform: booleanAttribute });

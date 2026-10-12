@@ -217,7 +217,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   /** Answers the pointer on the axes: the category label in bold, a guide from the value axis and
    *  the value there in a pill on the axis. On by default. */
-  readonly axisReadout = input(true, { transform: booleanAttribute });
+  readonly showAxisReadout = input(true, { transform: booleanAttribute });
 
   protected readonly tooltipSwatchesResolved = this.defaults.tooltipSwatches;
   readonly hoverDelayMs = this.defaults.hoverDelayMs;
@@ -645,6 +645,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
         return box.width > 0 && box.height > 0;
       });
+    const reading = this.readingAnchorTop();
+    if (reading !== null && boxes.every(({ top }) => reading <= top)) {
+      return this.cursorOrigin();
+    }
 
     return boxes.length === 0
       ? (own ?? this.cursorOrigin())
@@ -652,6 +656,39 @@ export class ChartComponent extends DsChartBase implements ChartScales {
           candidate.top < highest.top ? candidate : highest,
         ).element;
   });
+
+  /** The highest reading a mark reports without an element; the cursor band shrinks to a marker's
+   *  box there, so the panel and the pin anchor to it as to a marker. */
+  protected readonly readingY = computed(() => {
+    let highest: number | null = null;
+    for (const source of this.tooltipSources().values()) {
+      const y = source.axisReadingY?.() ?? null;
+      if (y !== null && (highest === null || y < highest)) {
+        highest = y;
+      }
+    }
+
+    return highest;
+  });
+
+  // In client pixels, as the boxes it is compared with; from the reading, not the anchor's box, which may not have moved yet.
+  private readingAnchorTop(): number | null {
+    const y = this.readingY();
+    const canvas = this.canvasElement()?.nativeElement;
+    const viewHeight = this.viewHeight();
+    if (y === null || !canvas || viewHeight <= 0) {
+      return null;
+    }
+    const frame = canvas.getBoundingClientRect();
+    const radius =
+      parseFloat(
+        getComputedStyle(this.host.nativeElement).getPropertyValue(
+          '--ds-chart-dot-radius',
+        ),
+      ) || 0;
+
+    return frame.top + ((y - radius) * frame.height) / viewHeight;
+  }
 
   protected readonly tooltipPinned = computed(
     () => (this.activeTooltip()?.pinned?.() ?? false) || this.cursorPinned(),
@@ -1179,7 +1216,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   /** A guide from the value axis at the active reading, and the axis value there in a pill on the axis. */
   protected readonly shownReadout = computed(() => {
-    const readout = this.axisReadout() ? this.activeReadout() : null;
+    const readout = this.showAxisReadout() ? this.activeReadout() : null;
     if (!readout) {
       return null;
     }
@@ -1196,11 +1233,12 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     const centre = this.xPosition()(readout.categoryIndex);
     const toMark = readout.reach === 'mark';
     const pillWidth = this.readoutTextWidth() + 2 * PILL_PADDING;
+    const format = this.valueFormatResolved();
 
     return {
       categoryIndex: readout.categoryIndex,
       y: readout.y,
-      label: this.valueFormatResolved()(value, 'readout'),
+      label: format(value, format.handlesReadout ? 'readout' : 'tooltip'),
       x1: onRight && toMark ? centre - half : this.plot().left,
       x2: !onRight && toMark ? centre + half : this.plotRight(),
       pillWidth,
