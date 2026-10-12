@@ -408,19 +408,6 @@
   [data-q="angular-22"] .a22-line .t-now { background: var(--primary-subtitle); color: var(--primary-strong); }
   [data-q="angular-22"] .a22-line .t-gap { background: var(--error-subtitle); color: var(--error-text); }
   [data-q="angular-22"] .a22-line .t-ok { background: var(--success); color: var(--surface-default); }
-  /* ask-brand-residue */
-  [data-q="ask-brand-residue"] .br-kit { display: grid; gap: var(--space-2); padding: var(--space-3); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--ds-radius-panel); background: #FFFFFF; min-inline-size: 200px; }
-  [data-q="ask-brand-residue"] .br-kit .btn-row { align-items: center; }
-  [data-q="ask-brand-residue"] .br-kit, [data-q="ask-brand-residue"] .br-list { min-inline-size: 0; }
-  [data-q="ask-brand-residue"] .br-kit .btn-row { flex-wrap: wrap; }
-  [data-q="ask-brand-residue"] .br-chip { padding: 2px var(--space-2); border-radius: var(--ds-radius-pill); background: var(--br-muted, transparent); color: #161A28; font: var(--font-weight-bold) var(--font-size-2xs) var(--font-sans); }
-  [data-q="ask-brand-residue"] .br-list { display: grid; gap: 1px; padding: var(--space-1); border-radius: var(--ds-radius-inner); }
-  [data-q="ask-brand-residue"] .br-list span { padding: 4px var(--space-2); border-radius: var(--ds-radius-inner); font: var(--font-size-2xs) var(--font-sans); color: #161A28; background: #FFFFFF; }
-  [data-q="ask-brand-residue"] .br-list .br-sel { background: var(--br-tint, transparent); box-shadow: inset 2px 0 0 #1F7A4D; }
-  [data-q="ask-brand-residue"] .br-text { margin: 0; font: var(--font-size-2xs) var(--font-sans); color: #353B4D; }
-  [data-q="ask-brand-residue"] .br-link { color: var(--br-link, currentColor); text-decoration: underline; }
-  [data-q="ask-brand-residue"] .br-pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
-  [data-q="ask-brand-residue"] .br-chip.br-sub { background: var(--br-subtitle, transparent); }
   /* ask-control-contrast */
   [data-q="ask-control-contrast"] .cc-dark { display: grid; gap: var(--space-3); padding: var(--space-3); border-radius: var(--radius-md); background: #171B24; min-inline-size: 200px; }
   [data-q="ask-control-contrast"] .cc-dfield { font: var(--font-size-2xs) var(--font-sans); color: #B7BFD0; }
@@ -524,46 +511,6 @@
   [data-q="fix-all-html"] .fa-add { color: var(--success-text); font-weight: var(--font-weight-bold); }
   [data-q="fix-all-html"] .opt .css, [data-q="fix-all-html"] .opt .console { margin: 0; }
   [data-q="fix-all-html"] .opt .cap, [data-q="fix-all-html"] .opt > p { margin: 0; }
-  /* pressed-tonal, pressed-danger */
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-col { display: grid; gap: var(--space-2); align-content: start; }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-row { display: flex; align-items: center; gap: var(--space-3); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-black { --ib-rest: var(--primary-muted); --ib-hover: var(--primary-muted-strong); --ib-pressed: color-mix(in srgb, var(--primary-muted-strong) 90%, black); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-own { --ib-rest: var(--primary-muted); --ib-hover: var(--primary-muted-strong); --ib-pressed: color-mix(in srgb, var(--primary-muted) 72%, var(--primary)); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-dtoday { --ib-rest: var(--surface-overlay); --ib-hover: var(--error-subtitle); --ib-pressed: var(--error-subtitle); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-dmuted { --ib-rest: var(--surface-overlay); --ib-hover: var(--error-subtitle); --ib-pressed: var(--error-muted); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-own34 { --ib-rest: var(--primary-muted); --ib-hover: var(--primary-muted-strong); --ib-pressed: color-mix(in srgb, var(--primary-muted) 66%, var(--primary)); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-dgrey { --ib-rest: var(--surface-overlay); --ib-hover: var(--error-subtitle); --ib-pressed: var(--surface-muted); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-tonal { min-inline-size: 88px; block-size: 32px; padding: 0 var(--space-4); border: 0; border-radius: var(--ds-radius-control); cursor: pointer; font: var(--font-weight-semibold) var(--font-size-s) / 1 var(--font-sans); color: var(--primary-strong); background-image: linear-gradient(var(--ib-rest, transparent), var(--ib-rest, transparent)); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-tonal:hover { background-image: linear-gradient(var(--ib-hover, transparent), var(--ib-hover, transparent)); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-tonal:active { background-image: linear-gradient(var(--ib-pressed, transparent), var(--ib-pressed, transparent)); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-triad { display: inline-flex; gap: 3px; }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-triad i { inline-size: 22px; block-size: 22px; border-radius: var(--radius-sm); box-shadow: inset 0 0 0 1px var(--border-divider); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-triad i:nth-child(1) { background-image: linear-gradient(var(--ib-rest, transparent), var(--ib-rest, transparent)); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-triad i:nth-child(2) { background-image: linear-gradient(var(--ib-hover, transparent), var(--ib-hover, transparent)); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-triad i:nth-child(3) { background-image: linear-gradient(var(--ib-pressed, transparent), var(--ib-pressed, transparent)); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-menu { inline-size: 170px; background: var(--surface-overlay); border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-popover); overflow: hidden; }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-menu button { display: block; inline-size: 100%; padding: var(--space-2) var(--space-3); border: 0; text-align: start; cursor: pointer; font: var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-primary); background-image: linear-gradient(transparent, transparent); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-menu button:hover { background-image: linear-gradient(var(--surface-secondary), var(--surface-secondary)); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-menu button:active { background-image: linear-gradient(var(--surface-muted), var(--surface-muted)); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-menu button.err { color: var(--error-text); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-menu button.err:hover { background-image: linear-gradient(var(--error-subtitle), var(--error-subtitle)); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-menu button.err:active { background-image: linear-gradient(var(--ib-pressed, transparent), var(--ib-pressed, transparent)); }
-  :is([data-q="pressed-tonal"], [data-q="pressed-danger"]) .ib-dtoday .ib-menu button.err:active { background-image: linear-gradient(var(--error-subtitle), var(--error-subtitle)); }
-  /* locale-week-and-hour */
-  /* date-picker .grid/.dow and time-picker field, at a small scale */
-  [data-q="locale-week-and-hour"] .stage { gap: var(--space-5); }
-  [data-q="locale-week-and-hour"] .stage .spec { min-width: 0; }
-  [data-q="locale-week-and-hour"] .lw-cal { inline-size: 182px; padding: var(--space-2); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--ds-radius-panel); background: var(--surface-default); }
-  [data-q="locale-week-and-hour"] .lw-dow, [data-q="locale-week-and-hour"] .lw-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
-  [data-q="locale-week-and-hour"] .lw-dow b { font: var(--font-weight-semibold) 9px / 18px var(--font-sans); color: var(--text-tertiary); }
-  [data-q="locale-week-and-hour"] .lw-days i { font: var(--font-size-2xs) / 22px var(--font-sans); font-style: normal; color: var(--text-primary); border-radius: var(--ds-radius-inner); }
-  [data-q="locale-week-and-hour"] .lw-time { margin-block-start: var(--space-2); inline-size: 182px; box-sizing: border-box; padding: var(--space-1-5) var(--field-pad-x); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); font: var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-primary); }
-  [data-q="locale-week-and-hour"] .lw-moved { box-shadow: 0 0 0 2px var(--warning); }
-  [data-q="locale-week-and-hour"] .lw-pills { margin: var(--space-2) 0 0; display: flex; flex-wrap: wrap; gap: var(--space-1); }
-  [data-q="locale-week-and-hour"] .lw-pill { padding: 1px var(--space-1); border-radius: 3px; background: var(--surface-default); color: var(--text-secondary); font: var(--font-size-2xs) / 1.5 var(--font-mono); }
-  [data-q="locale-week-and-hour"] .lw-pill.is-moved { background: var(--warning-subtitle); color: var(--text-primary); }
-  [data-q="locale-week-and-hour"] .lw-pill.is-pick { background: var(--success); color: var(--surface-default); font-family: var(--font-sans); font-weight: var(--font-weight-bold); }
   /* manifest-practices */
   [data-q="manifest-practices"] .mp-add { color: var(--success-text); font-weight: var(--font-weight-bold); }
   [data-q="manifest-practices"] .mp-pill { padding: 1px var(--space-1); border-radius: 3px; background: var(--surface-secondary); font: var(--font-weight-bold) var(--font-size-2xs) / 1.5 var(--font-mono); color: var(--text-primary); }
@@ -852,13 +799,12 @@
 
 <main>
   <div class="masthead">
-    <h1>6 асков консьюмеров и 47 решений, у каждого варианты нарисованы</h1>
-    <p class="lede">
-      Сверху - чего ждут консьюмеры, ниже - открытые решения по темам. Вариант выбирается кликом,
-      звёздочка - рекомендация, внизу собирается одна строка со всеми ответами. Справа от вопроса -
-      приоритет и консьюмер или ссылка на деку с полным разбором. В конце - «Уже решено»: что ответено
-      и что из этого уже в dev.
-    </p>
+    <h1>5 асков консьюмеров и 44 решения, у каждого варианты нарисованы</h1>
+    <ul class="lede">
+      <li>Сверху <b>то, чего ждут консьюмеры</b>, ниже открытые решения по темам; справа от вопроса приоритет и консьюмер или ссылка на деку.</li>
+      <li><b>Вариант выбирается кликом</b>, звёздочка - рекомендация, внизу собирается одна строка со всеми ответами.</li>
+      <li>В конце <b>«Уже решено»</b>: что отвечено и что из этого уже в dev.</li>
+    </ul>
     <div class="chips">
       <span class="chip is-open">Нужно решение</span>
       <span class="chip">аски консьюмеров + деки + бакет Decisions</span>
@@ -1168,53 +1114,12 @@
       </div>
     </section>
 
-  <section class="q" data-q="ask-brand-residue">
-      <div class="q-head">
-        <span class="q-num">06</span>
-        <h2 class="q-title">У консьюмера с зелёным брендом ссылки и подложки остаются синими</h2>
-        <span class="q-src">P3 · pinkmoon, ai-sdlc · бренд, запаркован</span>
-      </div>
-      <p class="q-sub">Тема меняет главный цвет, но четыре токена - ссылка, подложка выбранной строки и два светлых фона - в светлой теме зашиты синими. Каждый консьюмер с другим брендом переназначает их руками. Выбрать: выводить их из главного цвета или дать бренду список того, что задать.</p>
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">зелёный бренд, сегодня</p>
-          <div class="br-kit" style="--br-tint:var(--surface-tint);--br-link:var(--text-link);--br-subtitle:var(--primary-subtitle);--br-muted:var(--primary-muted)"><div class="btn-row"><b style="background:#1F7A4D">Сохранить</b><span class="br-chip">Черновик</span><span class="br-chip br-sub">Новое</span></div><div class="br-list"><span>Входящие</span><span class="br-sel">Выбранная строка</span><span>Архив</span></div><p class="br-text">Условия доставки · <span class="br-link">Подробнее</span></p></div>
-          <p class="says">кнопка зелёная, подложка, чип и ссылка - синие</p>
-        </div>
-      </div>
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <div class="br-kit" style="--br-tint:var(--surface-tint);--br-link:var(--text-link);--br-subtitle:var(--primary-subtitle);--br-muted:var(--primary-muted)"><div class="btn-row"><b style="background:#1F7A4D">Сохранить</b><span class="br-chip">Черновик</span><span class="br-chip br-sub">Новое</span></div><div class="br-list"><span>Входящие</span><span class="br-sel">Выбранная строка</span><span>Архив</span></div><p class="br-text">Условия доставки · <span class="br-link">Подробнее</span></p></div>
-          <div class="br-pills"><span class="a-ratio fail">4 токена синие</span><span class="a-ratio pass">ссылка 6.85:1</span></div>
-          <p class="cap">синий остаток на зелёном</p>
-          <dl class="layer"><dt>Консьюмер</dt><dd>переназначает 4 токена сам</dd></dl>
-        </div>
-        <div class="opt"><h3>Выводить тон из главного цвета <span class="star">★</span></h3>
-          <div class="br-kit" style="--br-tint:hsl(150.3 100% 97%);--br-link:hsl(150.3 85% 52%);--br-subtitle:hsl(150.3 100% 97%);--br-muted:hsl(150.3 95% 94%)"><div class="btn-row"><b style="background:#1F7A4D">Сохранить</b><span class="br-chip">Черновик</span><span class="br-chip br-sub">Новое</span></div><div class="br-list"><span>Входящие</span><span class="br-sel">Выбранная строка</span><span>Архив</span></div><p class="br-text">Условия доставки · <span class="br-link">Подробнее</span></p></div>
-          <div class="br-pills"><span class="a-ratio pass">тон зелёный</span><span class="a-ratio fail">ссылка 1.56:1</span></div>
-          <p class="cap">тон из бренда, S/L синей рампы</p>
-          <p class="css">--text-link: hsl(from --primary
-  h 85% 52%); <span class="hit">/* #1DED86 */</span></p>
-          <dl class="layer"><dt>Работа</dt><dd>часть движка цвета из одного токена</dd><dt>Тёмная тема</dt><dd class="gain">уже так делает</dd><dt>Ссылка</dt><dd>светлота тоже от бренда, иначе 1.56:1</dd></dl>
-        </div>
-        <div class="opt"><h3>Список четырёх токенов, которые задаёт бренд</h3>
-          <div class="br-kit" style="--br-tint:#E8F4EE;--br-link:#1F7A4D;--br-subtitle:#E8F4EE;--br-muted:hsl(150.3 40% 88%)"><div class="btn-row"><b style="background:#1F7A4D">Сохранить</b><span class="br-chip">Черновик</span><span class="br-chip br-sub">Новое</span></div><div class="br-list"><span>Входящие</span><span class="br-sel">Выбранная строка</span><span>Архив</span></div><p class="br-text">Условия доставки · <span class="br-link">Подробнее</span></p></div>
-          <div class="br-pills"><span class="a-ratio pass">ссылка 5.32:1</span><span class="a-ratio pass">на подложке 4.71:1</span></div>
-          <p class="cap">бренд ставит четыре значения</p>
-          <p class="css">--surface-tint:     #E8F4EE;
---text-link:        #1F7A4D;
---primary-subtitle: …;
---primary-muted:    …;</p>
-          <dl class="layer"><dt>Работа</dt><dd class="gain">строка в доке тем</dd><dt>Остаток</dt><dd>каждый бренд помнит сам</dd></dl>
-        </div>
-      </div>
-    </section>
 
   <p class="group">Цвет и состояния</p>
 
   <section class="q" data-q="colour-engine">
     <div class="q-head">
-      <span class="q-num">07</span>
+      <span class="q-num">06</span>
       <h2 class="q-title">Как получать все оттенки цвета из одного цвета бренда</h2>
       <a class="q-src" href="2-color-engine-derivation.html">дека color-engine-derivation</a>
     </div>
@@ -1250,55 +1155,11 @@
     </div>
   </section>
 
-  <section class="q" data-q="pressed-tonal">
-    <div class="q-head">
-      <span class="q-num">08</span>
-      <h2 class="q-title">Нажатая тональная кнопка сереет вместо того, чтобы стать насыщеннее</h2>
-      <a class="q-src" href="4-interaction-formula.html">дека interaction-formula</a>
-    </div>
-    <p class="q-sub">Тональная кнопка - светлая подложка цвета бренда. Сегодня при нажатии подложку смешивают с чёрным, и цвет тускнеет; в тёмной теме нажатие почти не видно. Выбрать, к чему смешивать. Зажми кнопку в карточке; квадраты рядом - покой, наведение, нажатие.</p>
-    <div class="opts">
-      <div class="opt is-today"><h3>К чёрному</h3><span class="badge is-same">сейчас в dev</span>
-        <div class="ib-row ib-black"><button type="button" class="ib-tonal">Кнопка</button><span class="ib-triad"><i></i><i></i><i></i></span></div>
-        <div class="ib-pills"><span class="a-ratio fail">насыщенность 6.2 → 5.6</span><span class="a-ratio fail">тёмная тема: шаг от 2.4</span></div>
-        <p class="ag-cost">Нажатие тусклее наведения.</p></div>
-      <div class="opt"><h3>К своему цвету на 28% <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
-        <div class="ib-row ib-own"><button type="button" class="ib-tonal">Кнопка</button><span class="ib-triad"><i></i><i></i><i></i></span></div>
-        <div class="ib-pills"><span class="a-ratio pass">насыщенность 6.2 → 9.3</span><span class="a-ratio pass">тёмная тема: шаг от 2.8</span><span class="a-ratio pass">текст 3.76:1</span></div>
-        <p class="ag-cost">Нажатие густеет, текст читается.</p></div>
-      <div class="opt"><h3>К своему цвету на 34%</h3>
-        <div class="ib-row ib-own34"><button type="button" class="ib-tonal">Кнопка</button><span class="ib-triad"><i></i><i></i><i></i></span></div>
-        <div class="ib-pills"><span class="a-ratio pass">насыщенность 6.2 → 10.7</span><span class="a-ratio pass">тёмная тема: шаг от 3.7</span><span class="a-ratio fail">текст 3.45:1</span></div>
-        <p class="ag-cost">Шаг заметнее, но текст на нажатии читается хуже.</p></div>
-    </div>
-    <p class="says">Числа - дека interaction-formula, замер 2026-09-24, семья primary, светлая тема: насыщенность - OKLCH C ×100; шаг - расстояние наведение → нажатие, от 2 видно глазом.</p>
-  </section>
 
-  <section class="q" data-q="pressed-danger">
-    <div class="q-head">
-      <span class="q-num">09</span>
-      <h2 class="q-title">Красный пункт меню «Удалить» никак не меняется при нажатии</h2>
-      <a class="q-src" href="4-interaction-formula.html">дека interaction-formula</a>
-    </div>
-    <p class="q-sub">Сегодня у пункта «Удалить» нажатие выглядит так же, как наведение: та же светло-красная подложка. Соседние пункты при нажатии темнеют в серый. Выбрать цвет нажатия. Зажми пункт в карточке.</p>
-    <div class="opts">
-      <div class="opt is-today"><h3>Нажатие как наведение</h3><span class="badge is-same">сейчас в dev</span>
-        <div class="ib-row ib-dtoday"><div class="ib-menu"><button type="button">Переименовать</button><button type="button" class="err">Удалить объект</button></div><span class="ib-triad"><i></i><i></i><i></i></span></div>
-        <div class="ib-pills"><span class="a-ratio fail">шаг 0</span></div></div>
-      <div class="opt"><h3>Серый, как у соседних пунктов</h3>
-        <div class="ib-row ib-dgrey"><div class="ib-menu"><button type="button">Переименовать</button><button type="button" class="err">Удалить объект</button></div><span class="ib-triad"><i></i><i></i><i></i></span></div>
-        <div class="ib-pills"><span class="a-ratio pass">шаг 3.3 / 8.0</span><span class="a-ratio fail">красный уходит на нажатии</span></div></div>
-      <div class="opt"><h3>Красный на шаг глубже <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
-        <div class="ib-row ib-dmuted"><div class="ib-menu"><button type="button">Переименовать</button><button type="button" class="err">Удалить объект</button></div><span class="ib-triad"><i></i><i></i><i></i></span></div>
-        <div class="ib-pills"><span class="a-ratio pass">шаг 2.5 / 7.8</span><span class="a-ratio pass">текст 5.51:1</span></div>
-        <p class="ag-cost">Та же пара, что у красной кнопки без заливки.</p></div>
-    </div>
-    <p class="says">Шаг наведение → нажатие: светлая / тёмная тема, дека interaction-formula, замер 2026-09-24.</p>
-  </section>
 
   <section class="q" data-q="theme-recipe">
     <div class="q-head">
-      <span class="q-num">10</span>
+      <span class="q-num">07</span>
       <h2 class="q-title">Кнопка считает цвета наведения сама и может разойтись с темой</h2>
       <a class="q-src" href="../docs/todo.md">рецепт темы против ручных пиков</a>
     </div>
@@ -1334,7 +1195,7 @@
 
   <section class="q" data-q="warning-text">
     <div class="q-head">
-      <span class="q-num">11</span>
+      <span class="q-num">08</span>
       <h2 class="q-title">Текст жёлтого предупреждения не проходит контраст: 4.42:1 при норме 4.5:1</h2>
       <a class="q-src" href="7-warning-text-colour.html">дека warning-text-colour</a>
     </div>
@@ -1381,42 +1242,11 @@
 
   <p class="group">Компоненты</p>
 
-  <section class="q" data-q="locale-week-and-hour">
-    <div class="q-head">
-      <span class="q-num">12</span>
-      <h2 class="q-title">Календарь и часы не следуют языку и стране приложения</h2>
-      <a class="q-src" href="implemented/locale-week-and-hour.html">дека locale-week-and-hour</a>
-    </div>
-    <p class="q-sub">Сегодня календарь всегда начинает неделю с понедельника, а время всегда 24-часовое. Приложение без своей локали получает от Angular en-US, где неделя с воскресенья и часы 12-часовые. Выбрать, что брать из локали. Ниже en-US, сентябрь 2026; жёлтая рамка - что поменялось; шесть локалей - в деке.</p>
-    <div class="opts">
-      <div class="opt is-today"><h3>Как сейчас: понедельник и 24 часа</h3><span class="badge is-same">сейчас в dev</span>
-        <div class="lw-cal"><div class="lw-dow"><b>Mon</b><b>Tue</b><b>Wed</b><b>Thu</b><b>Fri</b><b>Sat</b><b>Sun</b></div><div class="lw-days"><i></i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i><i>13</i></div></div>
-        <div class="lw-time">21:30</div>
-        <p class="lw-pills"><span class="lw-pill">пн</span><span class="lw-pill">24ч</span></p>
-      </div>
-      <div class="opt"><h3>Всё из локали <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
-        <div class="lw-cal lw-moved"><div class="lw-dow"><b>Sun</b><b>Mon</b><b>Tue</b><b>Wed</b><b>Thu</b><b>Fri</b><b>Sat</b></div><div class="lw-days"><i></i><i></i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i></div></div>
-        <div class="lw-time lw-moved">09:30 PM</div>
-        <p class="lw-pills"><span class="lw-pill is-moved">вс</span><span class="lw-pill is-moved">12ч</span></p>
-      </div>
-      <div class="opt"><h3>Только неделя из локали</h3>
-        <div class="lw-cal lw-moved"><div class="lw-dow"><b>Sun</b><b>Mon</b><b>Tue</b><b>Wed</b><b>Thu</b><b>Fri</b><b>Sat</b></div><div class="lw-days"><i></i><i></i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i></div></div>
-        <div class="lw-time">21:30</div>
-        <p class="lw-pills"><span class="lw-pill is-moved">вс</span><span class="lw-pill">24ч</span></p>
-      </div>
-      <div class="opt"><h3>Только часы из локали</h3>
-        <div class="lw-cal"><div class="lw-dow"><b>Mon</b><b>Tue</b><b>Wed</b><b>Thu</b><b>Fri</b><b>Sat</b><b>Sun</b></div><div class="lw-days"><i></i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i><i>13</i></div></div>
-        <div class="lw-time lw-moved">09:30 PM</div>
-        <p class="lw-pills"><span class="lw-pill">пн</span><span class="lw-pill is-moved">12ч</span></p>
-      </div>
-    </div>
-    <p class="says">сентябрь 2026, en-US - приложение без LOCALE_ID и DS_CONFIG.locale; жёлтая рамка - дефолт сменился</p>
-  </section>
 
 
   <section class="q" data-q="stepper-dropzone-fields">
     <div class="q-head">
-      <span class="q-num">13</span>
+      <span class="q-num">09</span>
       <h2 class="q-title">Счётчик и зона загрузки файлов не умеют подпись и ошибку, как остальные поля</h2>
       <a class="q-src" href="../docs/todo.md">ds-number-stepper и ds-dropzone в системе полей</a>
     </div>
@@ -1449,7 +1279,7 @@
 
   <section class="q" data-q="picker-height">
     <div class="q-head">
-      <span class="q-num">14</span>
+      <span class="q-num">10</span>
       <h2 class="q-title">Высоту выпадающего списка нельзя поднять выше 280px общей настройкой</h2>
       <a class="q-src" href="8-picker-list-height.html">дека picker-list-height</a>
     </div>
@@ -1508,7 +1338,7 @@
 
   <section class="q" data-q="cdk-menu">
     <div class="q-head">
-      <span class="q-num">15</span>
+      <span class="q-num">11</span>
       <h2 class="q-title">Переводить ли меню на готовую клавиатуру и фокус из Angular</h2>
       <a class="q-src" href="../docs/todo.md">переход на CDK Menu</a>
     </div>
@@ -1539,7 +1369,7 @@
 
   <section class="q" data-q="signal-forms">
     <div class="q-head">
-      <span class="q-num">16</span>
+      <span class="q-num">12</span>
       <h2 class="q-title">Как поле показывает «идёт проверка» и «значение изменено»</h2>
       <a class="q-src" href="../docs/todo.md">вид pending и dirty у signal-forms</a>
     </div>
@@ -1582,7 +1412,7 @@
 
   <section class="q" data-q="row-chart-row-type">
     <div class="q-head">
-      <span class="q-num">17</span>
+      <span class="q-num">13</span>
       <h2 class="q-title">Как назвать тип строки данных у графика с горизонтальными полосами</h2>
       <a class="q-src" href="../docs/todo.md">переименование ds-bar-chart</a>
     </div>
@@ -1641,7 +1471,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="unread-tokens">
     <div class="q-head">
-      <span class="q-num">18</span>
+      <span class="q-num">14</span>
       <h2 class="q-title">121 публичный токен никто в библиотеке не читает: что удалить</h2>
       <a class="q-src" href="11-unread-tokens.html">дека unread-tokens</a>
     </div>
@@ -1662,7 +1492,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="unasked-decisions">
     <div class="q-head">
-      <span class="q-num">19</span>
+      <span class="q-num">15</span>
       <h2 class="q-title">Шесть изменений поведения ушли в Unreleased без выбора между вариантами</h2>
       <a class="q-src" href="12-unasked-decisions.html">дека unasked-decisions</a>
     </div>
@@ -1681,7 +1511,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="angular-22">
     <div class="q-head">
-      <span class="q-num">20</span>
+      <span class="q-num">16</span>
       <h2 class="q-title">Приложение на Angular 22 ставит DS только с обходным флагом: когда переходим</h2>
       <a class="q-src" href="../docs/todo.md">апгрейд на Angular 22, P3</a>
     </div>
@@ -1720,7 +1550,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="npm-2027">
     <div class="q-head">
-      <span class="q-num">21</span>
+      <span class="q-num">17</span>
       <h2 class="q-title">С января 2027 npm перестанет принимать публикацию DS по нашему токену</h2>
       <a class="q-src" href="../docs/todo.md">публикация в npm после января 2027</a>
     </div>
@@ -1765,7 +1595,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="claude-design-ci">
     <div class="q-head">
-      <span class="q-num">22</span>
+      <span class="q-num">18</span>
       <h2 class="q-title">Загрузку DS в Claude Design нельзя запустить из CI: последний шаг ручной</h2>
       <a class="q-src" href="../docs/todo.md">публикация в Claude Design из CI</a>
     </div>
@@ -1802,7 +1632,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="fix-all-html">
     <div class="q-head">
-      <span class="q-num">23</span>
+      <span class="q-num">19</span>
       <h2 class="q-title">Автоисправление fix:all переписывает HTML-шаблоны, а eslint хочет их обратно</h2>
       <a class="q-src" href="../docs/todo.md">fix:all против eslint на HTML</a>
     </div>
@@ -1843,7 +1673,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="stale-ds-css">
     <div class="q-head">
-      <span class="q-num">24</span>
+      <span class="q-num">20</span>
       <h2 class="q-title">Деки рисуются со старой копией стилей DS, и это никто не ловит</h2>
       <a class="q-src" href="../docs/todo.md">устаревший presentations/ds.css</a>
     </div>
@@ -1881,7 +1711,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="todo-index-gate">
     <div class="q-head">
-      <span class="q-num">25</span>
+      <span class="q-num">21</span>
       <h2 class="q-title">Оглавление бэклога может устареть: его проверка не входит в общий прогон</h2>
       <a class="q-src" href="../docs/todo.md">todo-index --check вне lint:all</a>
     </div>
@@ -1921,7 +1751,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="manifest-practices">
     <div class="q-head">
-      <span class="q-num">26</span>
+      <span class="q-num">22</span>
       <h2 class="q-title">Какие из десяти практик для файлов миграций принять</h2>
       <a class="q-src" href="5-migration-manifest-audit.html">дека migration-manifest-audit</a>
     </div>
@@ -2021,7 +1851,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="automation-coverage">
     <div class="q-head">
-      <span class="q-num">27</span>
+      <span class="q-num">23</span>
       <h2 class="q-title">Пять групп компонентов и три действия в таблице никто ни разу не прокликал</h2>
       <a class="q-src" href="../docs/todo.md">непрокликанные пути ds-table</a>
     </div>
@@ -2071,7 +1901,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="schematics-tsconfig">
     <div class="q-head">
-      <span class="q-num">28</span>
+      <span class="q-num">24</span>
       <h2 class="q-title">Пакет DS уйдёт в npm пустым, когда репо перейдёт на TypeScript 6</h2>
       <a class="q-src" href="../docs/todo.md">schematics/tsconfig moduleResolution</a>
     </div>
@@ -2108,7 +1938,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="design-manifest-templates">
     <div class="q-head">
-      <span class="q-num">29</span>
+      <span class="q-num">25</span>
       <h2 class="q-title">Два пустых раздела в манифесте Claude Design: templates и startingPoints</h2>
       <a class="q-src" href="../docs/todo.md">templates и startingPoints в манифесте</a>
     </div>
@@ -2144,7 +1974,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="docs-blocks">
     <div class="q-head">
-      <span class="q-num">30</span>
+      <span class="q-num">26</span>
       <h2 class="q-title">Колонки выбора времени (TimeColumns) - последний компонент без своей карточки</h2>
       <a class="q-src" href="../docs/todo.md">компоненты без блока в ds-docs</a>
     </div>
@@ -2199,7 +2029,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="text-snap-press">
     <div class="q-head">
-      <span class="q-num">31</span>
+      <span class="q-num">27</span>
       <h2 class="q-title">Текст кнопки дёргается в конце анимации нажатия</h2>
       <a class="q-src" href="17-text-snap-scale.html">дека text-snap-scale</a>
     </div>
@@ -2228,7 +2058,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="text-snap-card">
     <div class="q-head">
-      <span class="q-num">32</span>
+      <span class="q-num">28</span>
       <h2 class="q-title">Карточка при наведении: приподниматься на 1px или расти</h2>
       <a class="q-src" href="17-text-snap-scale.html">дека text-snap-scale</a>
     </div>
@@ -2252,7 +2082,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="text-snap-funnel">
     <div class="q-head">
-      <span class="q-num">33</span>
+      <span class="q-num">29</span>
       <h2 class="q-title">Ступень воронки в конце появления делает маленький шаг по краям</h2>
       <a class="q-src" href="17-text-snap-scale.html">дека text-snap-scale</a>
     </div>
@@ -2271,7 +2101,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-duplicate-labels">
     <div class="q-head">
-      <span class="q-num">34</span>
+      <span class="q-num">30</span>
       <h2 class="q-title">Две колонки с одной подписью: убрал первую - на её место едет не та</h2>
       <span class="q-src">chart.math.ts:457 · 0e868e686</span>
     </div>
@@ -2320,7 +2150,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-heatmap-gap">
     <div class="q-head">
-      <span class="q-num">35</span>
+      <span class="q-num">31</span>
       <h2 class="q-title">Цветная шкала под heatmap отодвинута на 12px ради метки с числом</h2>
       <span class="q-src">heatmap-chart.component.scss:142 · f4fa4867b</span>
     </div>
@@ -2345,7 +2175,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-heatmap-settle">
     <div class="q-head">
-      <span class="q-num">36</span>
+      <span class="q-num">32</span>
       <h2 class="q-title">Пауза метки на шкале heatmap: число в коде или настройка темы</h2>
       <span class="q-src">heatmap-chart.component.ts:45 · f4fa4867b</span>
     </div>
@@ -2377,7 +2207,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-scatter-tether-paint">
     <div class="q-head">
-      <span class="q-num">37</span>
+      <span class="q-num">33</span>
       <h2 class="q-title">Пунктир от курсора к точке в scatter заставляет браузер перерисовывать всю страницу</h2>
       <span class="q-src">scatter-chart.component.html:153 · 46a912b46</span>
     </div>
@@ -2416,7 +2246,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-hover-transitions-paint">
     <div class="q-head">
-      <span class="q-num">38</span>
+      <span class="q-num">34</span>
       <h2 class="q-title">Плавная подсветка при наведении заставляет график перерисовываться каждый кадр</h2>
       <span class="q-src">_chart-interactive.scss:6 · chart.component.scss:152 · 737838eac</span>
     </div>
@@ -2465,7 +2295,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-funnel-settle-origin">
     <div class="q-head">
-      <span class="q-num">39</span>
+      <span class="q-num">35</span>
       <h2 class="q-title">Ступени воронки при появлении дорастают из левого угла, а точки scatter - из центра</h2>
       <span class="q-src">funnel-chart.component.scss:9 · _chart-motion.scss:47 · bf6fb9dd7</span>
     </div>
@@ -2492,7 +2322,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-halo-copies">
     <div class="q-head">
-      <span class="q-num">40</span>
+      <span class="q-num">36</span>
       <h2 class="q-title">Обводка подписей на графике сделана трижды, и у «+24.0%» она другая</h2>
       <span class="q-src">reference-label.component.scss:5 · series-annotation.component.scss:13 · line-series.component.scss:141 · bf6fb9dd7</span>
     </div>
@@ -2569,7 +2399,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-change-fade-timing">
     <div class="q-head">
-      <span class="q-num">41</span>
+      <span class="q-num">37</span>
       <h2 class="q-title">Подпись «+12.5%» на линии появляется быстрее остальных подписей графика</h2>
       <span class="q-src">line-series.component.scss:118 · _chart-motion.scss:82 · bf6fb9dd7</span>
     </div>
@@ -2602,7 +2432,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-morph-finish">
     <div class="q-head">
-      <span class="q-num">42</span>
+      <span class="q-num">38</span>
       <h2 class="q-title">Данные пересортировались, пока колонки ещё влетают из заглушки загрузки</h2>
       <span class="q-src">chart-skeleton-morph.ts:91 · column-series.component.ts:335 · bf6fb9dd7</span>
     </div>
@@ -2635,7 +2465,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-hover-switch-names">
     <div class="q-head">
-      <span class="q-num">43</span>
+      <span class="q-num">39</span>
       <h2 class="q-title">Выключатели наведения у графиков названы четырьмя разными способами</h2>
       <span class="q-src">chart.component.ts:220 · pie-chart.component.ts:133 · heatmap-chart.component.ts:114 · scatter-chart.component.ts:161 · 937e15e03 · fe6d6591a</span>
     </div>
@@ -2674,7 +2504,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-readout-location">
     <div class="q-head">
-      <span class="q-num">44</span>
+      <span class="q-num">40</span>
       <h2 class="q-title">Формат числа в пилюле на оси пришёл новым местом 'readout', и часть форматтеров консьюмеров ломается</h2>
       <span class="q-src">chart.types.ts:12 · chart.component.ts:1203 · charts-format.ts:42 · 46fe38cd4</span>
     </div>
@@ -2709,7 +2539,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-pin-line-move">
     <div class="q-head">
-      <span class="q-num">45</span>
+      <span class="q-num">41</span>
       <h2 class="q-title">Закреплённая линия курсора гаснет и появляется заново, а не переезжает к новой категории</h2>
       <span class="q-src">chart.component.html:99 · chart.component.scss:93 · c449bdcb0</span>
     </div>
@@ -2734,7 +2564,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-pin-line-detect">
     <div class="q-head">
-      <span class="q-num">46</span>
+      <span class="q-num">42</span>
       <h2 class="q-title">Линия у закреплённой категории пропадает, если серия линии лежит в своём компоненте консьюмера</h2>
       <span class="q-src">chart.component.ts:874 · chart.component.ts:878 · c449bdcb0</span>
     </div>
@@ -2768,7 +2598,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-scale-marker-off">
     <div class="q-head">
-      <span class="q-num">47</span>
+      <span class="q-num">43</span>
       <h2 class="q-title">Выключенная метка на шкале heatmap убирает и число, и указатель</h2>
       <span class="q-src">heatmap-chart.component.ts:170 · heatmap-chart.component.html:219 · 937e15e03</span>
     </div>
@@ -2795,7 +2625,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-nearest-radius-off">
     <div class="q-head">
-      <span class="q-num">48</span>
+      <span class="q-num">44</span>
       <h2 class="q-title">Радиус nearestRadius ничего не делает, когда ближайшая точка выключена</h2>
       <span class="q-src">scatter-chart.component.ts:578 · scatter-chart.component.ts:165 · 5311a5fb2</span>
     </div>
@@ -2822,7 +2652,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-change-from-zero">
     <div class="q-head">
-      <span class="q-num">49</span>
+      <span class="q-num">45</span>
       <h2 class="q-title">Отрезок от нуля пропадает из подсветки изменения на линии</h2>
       <span class="q-src">line-series.component.ts:985 · 7682d9d98</span>
     </div>
@@ -2843,7 +2673,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-hold-stack">
     <div class="q-head">
-      <span class="q-num">50</span>
+      <span class="q-num">46</span>
       <h2 class="q-title">С закреплённой осью скрытая серия уходит, а стопка над ней всё равно оседает</h2>
       <span class="q-src">column-chart.component.ts:302 · column-chart.component.ts:313 · 221cc70ed</span>
     </div>
@@ -2882,7 +2712,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-anchor-dots">
     <div class="q-head">
-      <span class="q-num">51</span>
+      <span class="q-num">47</span>
       <h2 class="q-title">Линия без точек рисует невидимые точки, чтобы панель и пин вставали на значение</h2>
       <span class="q-src">line-series.component.html:121 · line-series.component.scss:197 · dea4ffa40</span>
     </div>
@@ -2905,7 +2735,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="ag-glide-head-start">
     <div class="q-head">
-      <span class="q-num">52</span>
+      <span class="q-num">48</span>
       <h2 class="q-title">При быстром проходе курсора панель и точка отставали; теперь переезд стартует с 33ms</h2>
       <span class="q-src">charts-motion.ts:42 · charts-motion.ts:103 · chart-tooltip.directive.ts:196 · 65d87734e</span>
     </div>
@@ -2935,7 +2765,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="parked-as-decided">
     <div class="q-head">
-      <span class="q-num">53</span>
+      <span class="q-num">49</span>
       <h2 class="q-title">Пять ответов «не сейчас» агент сам перенёс в «Уже решено»: оставить там или вернуть в очередь</h2>
       <span class="q-src">«Уже решено» в этой деке · docs/todo.md</span>
     </div>
@@ -2975,6 +2805,38 @@ onRow(row: <b>RowChartEntry</b>)</p>
   <p class="group">Уже решено</p>
   <p class="done-lede">Здесь ничего не выбирается: что решено, что из этого уже в dev и где это видно.</p>
 
+  <section class="q is-settled" data-done="ask-brand-residue">
+    <div class="q-head"><h2 class="q-title">У консьюмера с зелёным брендом ссылки и подложки остаются синими</h2><span class="chip is-done">сделано</span></div>
+    <ul class="q-sub">
+      <li>Твой ответ 2026-10-12: <b>«Выводить тон из главного цвета» + «Список четырёх токенов, которые задаёт бренд»</b>.</li>
+      <li>Четыре токена берут тон от <code>--primary</code>: <code>src/lib/themes/_semantic.scss:19</code>, <code>:47</code>, <code>:81-82</code>, <code>b9f5a6db2</code>.</li>
+      <li>Чеклист бренда: <code>src/lib/themes/README.md:139</code> и ds-docs Foundations → Theming, <code>33b4bdf38</code>.</li>
+    </ul>
+  </section>
+  <section class="q is-settled" data-done="locale-week-and-hour">
+    <div class="q-head"><h2 class="q-title">Календарь и часы не следуют языку и стране приложения</h2><span class="chip is-done">сделано</span></div>
+    <ul class="q-sub">
+      <li>Твой ответ 2026-10-12: <b>«Всё из локали»</b>, и первый день недели, и 12/24 часа.</li>
+      <li>В dev: <code>bb43d3bb0</code>, <code>date-picker.component.ts:327</code>, <code>time-picker.component.ts:79</code>.</li>
+      <li>Дека <a href="implemented/locale-week-and-hour.html">locale-week-and-hour</a> закрыта.</li>
+    </ul>
+  </section>
+  <section class="q is-settled" data-done="pressed-tonal">
+    <div class="q-head"><h2 class="q-title">Нажатая тональная кнопка сереет вместо того, чтобы стать насыщеннее</h2><span class="chip is-accent">в работе</span></div>
+    <ul class="q-sub">
+      <li>Твой ответ 2026-10-12: <b>«К своему цвету на 28%»</b>.</li>
+      <li><b>Только тональная кнопка</b>; формула нажатия для всего DS позже, со своим манифестом.</li>
+      <li>Ветка <code>fix/pressed-tonal-danger</code>.</li>
+    </ul>
+  </section>
+  <section class="q is-settled" data-done="pressed-danger">
+    <div class="q-head"><h2 class="q-title">Красный пункт меню «Удалить» никак не меняется при нажатии</h2><span class="chip is-accent">в работе</span></div>
+    <ul class="q-sub">
+      <li>Твой ответ 2026-10-12: <b>«Красный на шаг глубже»</b>.</li>
+      <li><b>Только этот пункт меню</b>; формула нажатия для всего DS позже, со своим манифестом.</li>
+      <li>Ветка <code>fix/pressed-tonal-danger</code>.</li>
+    </ul>
+  </section>
   <section class="q is-settled" data-done="ag-running-total-fade">
     <div class="q-head"><h2 class="q-title">Waterfall гасит шаги после наведённого, хотя приглушение выключено</h2><span class="chip is-done">сделано</span></div>
     <p class="q-sub">Твой ответ 2026-10-12: «Только под <code>dimOthers</code>». Шаги после наведённого гаснут только у графика с включённым приглушением, как у всех остальных. Сделано в dev: <code>0152280a7</code>.</p>
@@ -3065,7 +2927,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
   </section>
 
   <div class="bar-fixed">
-    <span class="count" id="count">0 из 5</span>
+    <span class="count" id="count">0 из 49</span>
     <output id="line">пока ничего не выбрано</output>
     <button type="button" id="copy">Скопировать</button>
     <button type="button" id="reset">Сбросить</button>
