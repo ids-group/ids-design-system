@@ -76,9 +76,12 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     protected readonly domain = computed(…);
     protected readonly drawsUnpin = !inject(CHART_UNPIN_DRAWN_BY_HOST, { optional: true });
     protected readonly effectiveAxisGutter = computed(…);
+    private extendRange;
+    private readonly extendRangeFromKeys;
     private focusStop;
     public readonly focusedCategory = computed(…);
     protected readonly focusedStopX = computed(…);
+    private readonly forgetCanvasRect;
     public readonly hasSecondaryAxis = computed(…);
     protected readonly highlightBand = computed(…);
     private readonly host;
@@ -97,6 +100,8 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     private listenForCursor;
     private listenForEscapeFromMarker;
     private listenForRange;
+    private listenForRangeKeys;
+    private markInCategory;
     public readonly max = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
     public readonly maxSecondary = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
     private measureBandPinY;
@@ -183,6 +188,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     protected readonly viewBox = computed(…);
     protected readonly viewHeight = computed(…);
     protected readonly viewWidth = computed(…);
+    private viewXOf;
     private widestLabel;
     public readonly xPosition = computed(…);
     public readonly yPosition = computed(…);
@@ -326,12 +332,14 @@ export class LineSeriesComponent implements OnDestroy {
     public readonly axisPointElements = computed<readonly (Element | null)[]>(…);
     private readonly axisReadout;
     private readonly axisTooltipContext;
+    private baselineOf;
     protected readonly changes = computed(…);
     public readonly curve = input<ChartCurve>('linear');
     protected dashFor(seriesIndex: number): string | null;
     public readonly data = input<readonly LineSeriesData[]>([]);
     public readonly dimOthers = input(false, { transform: booleanAttribute });
     private readonly domainId;
+    private drawnBaselines;
     private drawnKeys;
     private drawnPoints;
     protected fadeId(seriesIndex: number): string;
@@ -392,6 +400,7 @@ export class LineSeriesComponent implements OnDestroy {
     private readonly valuesByCategory;
     private valuesOn;
     private readonly visibleCount;
+    private readonly zone;
 }
 
 export interface LineSeriesData {
