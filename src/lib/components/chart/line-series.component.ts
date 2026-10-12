@@ -171,9 +171,25 @@ function interpolate(
     : values[index - 1] + (values[index] - values[index - 1]) * share;
 }
 
-// Distance along a line drawn left to right at which it reaches `x`.
-function lengthAtX(samples: PathSamples, x: number): number {
+// Distance along a line drawn left to right at which it reaches `x`; on a vertical run at `x` (a
+// step's riser), the sample nearest `y`.
+function lengthAt(samples: PathSamples, x: number, y: number): number {
   const index = firstReaching(samples.xs, x);
+  let nearest = index;
+  for (
+    let candidate = index + 1;
+    candidate < samples.xs.length && samples.xs[candidate] - x < 0.5;
+    candidate++
+  ) {
+    if (
+      Math.abs(samples.ys[candidate] - y) < Math.abs(samples.ys[nearest] - y)
+    ) {
+      nearest = candidate;
+    }
+  }
+  if (nearest !== index) {
+    return samples.lengths[nearest];
+  }
 
   return interpolate(
     samples.lengths,
@@ -669,13 +685,14 @@ export class LineSeriesComponent implements OnDestroy {
       if (line) {
         next.cancel = tweenMarks(
           marker,
-          [lengthAtX(line, state.x)],
-          [lengthAtX(line, target.x)],
+          [lengthAt(line, state.x, state.y)],
+          [lengthAt(line, target.x, target.y)],
           ([length]) => {
             const point = pointAtLength(line, length);
             place(point.x, point.y);
           },
           'tooltip-move',
+          () => place(target.x, target.y),
         );
       } else {
         next.cancel = tweenMarks(
