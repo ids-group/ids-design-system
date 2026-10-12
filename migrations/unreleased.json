@@ -582,7 +582,11 @@
     "Dismissing a `ds-alert` or `ds-banner` from its close button moves focus to the next control after it, else the one before it; a toast leaving with focus inside it moves focus to the next toast, else to the element focused before focus entered the region. Focus fell to the page.",
     "Move up and Move down in the `dsTableColumns` panel keep focus on the moved row's pressed button, or its other button once the row reaches the top or bottom; focus fell to the page. The internal `TableColumnsPanelComponent` gained `move` and `rescueFocus`.",
     "A `ds-menu` in a `ds-split-button` or a `ds-popover` opens at its first item each time, whichever item had focus when it closed.",
-    "Tab on a `ds-menu` item closes the `ds-split-button` or `ds-popover` menu holding it and moves focus on from the trigger; choosing a submenu item closes the submenu."
+    "Tab on a `ds-menu` item closes the `ds-split-button` or `ds-popover` menu holding it and moves focus on from the trigger; choosing a submenu item closes the submenu.",
+    {
+      "text": "A pressed `ds-pagination` page button keeps focus on the page it names when the window of page numbers shifts; focus stayed at the same position and the button there read the next page.",
+      "verify": "Press a middle page number of a ds-pagination from the keyboard and confirm focus stays on the button for that page."
+    }
   ],
   "deleteList": [
     {
