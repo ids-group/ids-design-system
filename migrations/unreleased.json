@@ -9,27 +9,91 @@
       "surface": "typescript",
       "searchHints": [
         "extends ChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "extends ColumnChartComponent",
+        "extends LineChartComponent",
         "extends PieChartComponent",
         "extends HeatmapChartComponent",
         "extends ScatterChartComponent",
-        "extends LineSeriesComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent"
       ],
       "detect": [
         "extends ChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "extends ColumnChartComponent",
+        "extends LineChartComponent",
         "extends PieChartComponent",
         "extends HeatmapChartComponent",
         "extends ScatterChartComponent",
-        "extends LineSeriesComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent"
       ],
       "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
-      "appliesWhen": "Only a class of yours that extends ChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or LineSeriesComponent, or the internal ChartTooltipPanelComponent or WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, HeatmapChartComponent or ScatterChartComponent, or the internal ChartTooltipPanelComponent or WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
-      "verify": "The app builds with no member-collision error on a subclass of ChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or LineSeriesComponent.",
-      "note": "ChartComponent gained `layout`, `measureBandPinY`, `pinnedCategories`, `settledLayout` and `stackTop`; PieChartComponent gained `drawnArcs`, `sliceHoverShift`, `stopArcTween`, `tweenArcs` and the internal `leaveMark`; HeatmapChartComponent gained the internal `leaveMark`; ScatterChartComponent gained the internal `leaveMark` and `pinnedPoints` and lost `pinnedPoint`; LineSeriesComponent gained `pinnedMarkers` and lost `pinnedMarker`. The internal WaterfallMarksComponent gained `leaveMark`."
+      "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
+      "note": "`ChartComponent` gained 18; `LineSeriesComponent` gained 19 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 9; `ColumnChartComponent` gained `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `selectRange` and `showChange`; `PieChartComponent` gained `drawnArcs`, `sliceHoverShift`, `stopArcTween`, `tweenArcs` and the internal `leaveMark`; `HeatmapChartComponent` gained the internal `leaveMark`; `ScatterChartComponent` gained the internal `leaveMark` and `pinnedPoints` and lost `pinnedPoint`. The internal `WaterfallMarksComponent` gained `leaveMark`."
+    },
+    {
+      "id": "intl-chart-range-total-required",
+      "kind": "behavior",
+      "old": "DsIntl",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "DsIntl",
+        "DS_INTL",
+        "shareOfTotal"
+      ],
+      "detect": [
+        ": DsIntl =",
+        "Signal<DsIntl>",
+        "shareOfTotal:"
+      ],
+      "action": "None, unless your code builds a complete DsIntl object of its own: add chart.rangeTotal, the pill over a range selected with selectRange.",
+      "appliesWhen": "Only an object or signal typed as the full DsIntl, not as DsIntlOverrides. provideDsIntl with a partial override, and every app that leaves DS_INTL alone, is unaffected.",
+      "pitfall": "An object that spreads DS_INTL_DEFAULTS.chart compiles, but a chart section written out key by key without the spread fails with TS2741 on rangeTotal.",
+      "restore": null,
+      "verify": "The app builds, and every complete DsIntl object it declares has chart.rangeTotal.",
+      "evidence": [
+        "fixture:unreleased/intl-chart-range-total-required.ts"
+      ]
+    },
+    {
+      "id": "chart-legend-highlight-dims-under-dim-others",
+      "kind": "behavior",
+      "old": "ds-line-chart[dimOthers]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "ds-line-chart",
+        "ds-column-chart",
+        "dsLineSeries",
+        "dsColumnSeries",
+        "highlighted"
+      ],
+      "action": "None, unless the other series should still fade while a legend item is pointed at: set dimOthers on the chart, or on each dsColumnSeries / dsLineSeries you bind highlighted on.",
+      "appliesWhen": "ds-column-chart and ds-line-chart with more than one series, and a dsColumnSeries or dsLineSeries whose highlighted input you bind. A chart that already sets dimOthers fades as before.",
+      "restore": "dimOthers",
+      "verify": "Point at a legend item of a chart that should fade the other series and confirm they fade; on a chart without dimOthers they stay at full strength and the pointed series brightens or thickens."
+    },
+    {
+      "id": "line-chart-show-change-default-on",
+      "kind": "behavior",
+      "old": "ds-line-chart",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "ds-line-chart",
+        "dsLineSeries"
+      ],
+      "action": "None, unless a hovered reading must not draw its change from the reading before it: set showChange=\"false\" on ds-line-chart or dsLineSeries.",
+      "appliesWhen": "Every ds-line-chart and dsLineSeries: on the hovered reading of a single series, or of the series singled out by hover, focus or the legend.",
+      "restore": "showChange=\"false\"",
+      "verify": "Hover the second reading of a single-series ds-line-chart and confirm the stretch from the first thickens with a percentage over it, or that nothing is drawn where showChange is false."
     }
   ],
   "informational": [
@@ -52,7 +116,20 @@
     {
       "text": "A hovered or focused column, bar, waterfall step and heatmap cell brightens with `filter: brightness(1.12) saturate(1.1)`, a chart pin pops in, and the tooltip rows fade in when the panel moves to another category or slice. Under `prefers-reduced-motion` all of these change at once.",
       "verify": "Hover a column of a ds-column-chart and confirm it brightens; click it and confirm the pin pops in."
-    }
+    },
+    {
+      "text": "The value axis of `ds-chart`, `ds-column-chart`, `ds-line-chart` and `ds-waterfall-chart` answers the hovered reading: the category label turns bold, a dashed guide in `--ds-chart-cursor-line-color` runs from the axis, and a pill on the axis prints the value there. In `ds-waterfall-chart` the guide stops at the hovered step and the steps after it fade.",
+      "verify": "Hover a column of a ds-column-chart and confirm its label is bold and a pill on the value axis prints its value."
+    },
+    {
+      "text": "`showChange` paints the thickened stretch in `--ds-chart-positive-color` or `--ds-chart-negative-color`, which `ds-chart` now reads; their defaults stay `var(--chart-positive)` and `var(--chart-negative)`. Set either on the chart to recolour it, or `showChange=\"false\"` to draw nothing.",
+      "verify": "Hover a falling reading of a ds-line-chart and confirm the stretch before it takes the negative colour."
+    },
+    {
+      "text": "When a category comes or goes, the columns, category labels, value labels and line points of `ds-chart`, `ds-column-chart` and `ds-line-chart` glide sideways on `--ds-motion-chart-mark-duration` and the line morphs with its points on it; a resize still redraws at once. A highlighted line point under the category cursor rides the line to the next category, and the focus ring of a category or column glides with the panel.",
+      "verify": "Add a category to a ds-line-chart and confirm the points slide sideways along the line rather than jumping."
+    },
+    "A `dsColumnSeries` column without an `id` is keyed by its label, so it keeps its element and glides when a category before it is removed; one with an `id` glides to its new slot when the data is reordered."
   ],
   "deleteList": []
 }

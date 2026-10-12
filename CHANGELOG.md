@@ -1,11 +1,57 @@
 ## Unreleased
 
+### Added
+
+- **`selectRange` sums a dragged range of categories.** On `ds-chart`, `ds-column-chart` and
+  `ds-line-chart`, off by default: a press dragged across categories draws a band over them, a pill
+  with the sum and mean of every reading in the range, and fades the marks outside it. Escape or a
+  press outside the chart clears it; a press released in its own category still pins. The pill
+  reads the new required `DsIntl` key `chart.rangeTotal: (range, total, average) => string`
+  (default `` `${range}: ${total} · avg ${average}` ``); a complete `DsIntl` dictionary, or a
+  complete `chart` section of one, declared as a typed object stops compiling until it lists it.
+  Overrides passed to `provideDsIntl` are partial and need nothing. `ds-chart` exposes the range as
+  `selectedRange`, typed by the new `ChartCategoryRange`.
+- **`ds-column-chart` takes `legendFilters`, `legendMode` and `hiddenSeries`,** as
+  `ds-line-chart` does: the legend hides a series, its columns sink to the baseline, the other
+  series settle onto each other and the value axis fits what is left.
+- **`dsColumnSeries` takes `hidden` and `runningTotal`; `LineSeriesData` takes `hidden`.** A hidden
+  column series sinks to the baseline and a hidden line erases itself back along its own path, and
+  draws on again when shown; both leave the value axis to the other marks. `runningTotal` reads the
+  columns as a waterfall's: hovering one fades every column after it and stops the axis guide at
+  it.
+- **`showChange` on `dsLineSeries` and `ds-line-chart`, on by default.** On the hovered reading,
+  the stretch from the reading before it thickens in `--ds-chart-positive-color` or
+  `--ds-chart-negative-color` and prints the change in percent. With several series it follows the
+  one singled out by hover, focus or the legend. `showChange="false"` turns it off.
+
 ### Changed
 
+- **The value axis answers the hovered reading.** In `ds-chart`, `ds-column-chart`,
+  `ds-line-chart` and `ds-waterfall-chart` the hovered category's label turns bold, a dashed guide
+  runs from the value axis at the reading, and a pill on the axis prints the axis value there; the
+  guide and the pill glide between readings on `--ds-motion-chart-tooltip-move-duration` and
+  `-easing`. In `ds-waterfall-chart` the guide stops at the hovered step, reads its running total,
+  and the steps after it fade.
+- **A highlighted line point rides the line.** Under the category cursor, each series' highlighted
+  point travels along its own line to the next category, with the panel and the crosshair, instead
+  of jumping there.
+- **Keyboard focus glides.** The focus ring of a `ds-chart` category and of a `dsColumnSeries`
+  column moves to the next one with the panel. Under forced colours each keeps its own ring.
+- **A column keeps its place by key.** A `dsColumnSeries` column with the same `id` glides to its
+  new slot when the data is reordered; without an `id` a column is keyed by its label.
+- **A legend highlight fades the other series only under `dimOthers`.** In `ds-column-chart`,
+  `ds-line-chart` and `dsColumnSeries` / `dsLineSeries`, pointing at a legend item brightens its
+  columns or thickens its line, and fades the rest only where `dimOthers` is set, as hovering a mark
+  does; under `dimOthers` hovering a column fades the other series too. Set `dimOthers` to keep the
+  legend fading the other series.
 - **Every mark of a chart moves together when its data changes.** In `ds-chart`, `ds-column-chart`,
   `ds-line-chart` and `ds-waterfall-chart` the line, its markers and area, the value labels, the
   pin, the gridlines with their tick labels and the waterfall connectors glide to their new place on
-  the column's own timing (`--ds-motion-chart-mark-duration` and `-easing`). A resize or a category coming or going redraws every mark in place at once. The
+  the column's own timing (`--ds-motion-chart-mark-duration` and `-easing`). When a category comes
+  or goes, the columns, the category labels and the points glide sideways to their new places on the
+  same timing and the line morphs to its new point count with its points on it: a new point leaves
+  its neighbour, a removed one merges into its neighbour; a new column grows and a removed column,
+  label or point fades. A resize redraws every mark in place at once. The
   category band and crosshair glide with the tooltip panel, on
   `--ds-motion-chart-tooltip-move-duration` and `-easing`, which `ds-chart` now reads. A
   `ds-pie-chart` turns its slices to their new angles. A removed heatmap row or cell, scatter point,
@@ -15,9 +61,10 @@
   brightens (`filter: brightness(1.12) saturate(1.1)`), and a hovered pie slice slides 3 units of the
   100-unit ring out along its middle, past the ring's box. A pin pops in, and pinning another mark or category pops a new pin there. The category band
   and a pin appear in place and glide only to a later position; the chart-tooltip entry point exports the internal `ChartPlacedDirective`
-  that gates it. `ChartComponent`,
-  `PieChartComponent`, `HeatmapChartComponent` and `ScatterChartComponent` gained members, named in
-  the migration manifest; a subclass declaring one of those names must rename it.
+  that gates it. `ChartComponent`, `ColumnSeriesComponent`, `LineSeriesComponent`,
+  `ColumnChartComponent`, `LineChartComponent`, `PieChartComponent`, `HeatmapChartComponent` and
+  `ScatterChartComponent` gained members, named in the migration manifest; a subclass declaring one
+  of those names must rename it.
   The internal `WaterfallMarksComponent` gained `leaveMark`.
 
 ### Fixed
