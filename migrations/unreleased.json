@@ -423,19 +423,21 @@
         "extends PaginationComponent",
         "extends AlertComponent",
         "extends BannerComponent",
-        "extends ToastRegionComponent"
+        "extends ToastRegionComponent",
+        "extends TableColumnsPanelComponent"
       ],
       "detect": [
         "extends PaginationComponent",
         "extends AlertComponent",
         "extends BannerComponent",
-        "extends ToastRegionComponent"
+        "extends ToastRegionComponent",
+        "extends TableColumnsPanelComponent"
       ],
       "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
       "appliesWhen": "Only a class of yours that extends a class this item names. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
-      "note": "`PaginationComponent` gained `rescueFocus`, and its `goTo` takes the nav element as a second argument. `ToastRegionComponent` gained `focusOrigin` and `onFocusIn`. The `onDismiss` of `AlertComponent` and `BannerComponent` takes the element that leaves."
+      "note": "`PaginationComponent` gained `rescueFocus`, and its `goTo` takes the nav element as a second argument. `ToastRegionComponent` gained `focusOrigin` and `onFocusIn`. The `onDismiss` of `AlertComponent` and `BannerComponent` takes the element that leaves. The internal `TableColumnsPanelComponent` gained `move` and `rescueFocus`."
     },
     {
       "id": "menu-classes-gained-members",
@@ -566,7 +568,7 @@
       "text": "Under forced colours a `ds-line-chart` annotation prints in the system text colour over a halo in the system background colour, as a reference-line label does; it kept its own colour on a white patch. `--ds-line-chart-annotation-halo-color` and `--ds-line-chart-annotation-halo-width` still set the halo in normal colours.",
       "verify": "Turn on Windows high contrast, open a ds-line-chart with annotations and confirm each annotation reads in the system text colour over the system background."
     },
-    "`showDirty` (default `false`) on every value field, the `dsShowDirty` directive (`ShowDirtyDirective`) and `DS_CONFIG.field.showDirty` mark a value the user changed with a dot and a \"Changed\" line; off unless one of the three turns it on. The line reads the new optional `DsIntl` key `field.changed`.",
+    "`showDirty` (default `false`) on every value field, the `dsShowDirty` directive (`ShowDirtyDirective`) and `provideDsConfig({ field: { showDirty: true } })` mark a value the user changed with a dot and a \"Changed\" line; off unless one of the three turns it on. The line reads the new optional `DsIntl` key `field.changed`.",
     "`ds-info-hint` takes rich content inside the tag or through the new `content` input (`text` is optional), any `IconName` in `icon`, and the new `--ds-info-hint-color` hook for the icon colour. `dsTooltip` and `dsDefinitionTerm` take a template as well as a string.",
     "`.link` takes `--ds-link-color-visited`, `--ds-link-color-visited-hover`, `--ds-link-color-visited-active`, `--ds-link-color-disabled`, `--ds-link-focus-ring-color`, `--ds-link-underline-color`, `--ds-link-underline-thickness` and `--ds-link-underline-offset`, each defaulting to the value the partial painted with.",
     "The `dsTableColumns` header button sets `aria-expanded` to `true` while its column panel is open, from the first press on a fresh page.",
@@ -579,7 +581,7 @@
       "verify": "Render a ds-table with dsTableExport and nothing in its toolbar slot and confirm the Export button shows above the table."
     },
     "Pressing Previous onto the first page or Next onto the last of a `ds-pagination` moves focus to the current page's button; it fell to the page.",
-    "Dismissing a `ds-alert` or `ds-banner` from its close button moves focus to the next control after it, else the one before it; a toast leaving with focus inside it moves focus to the next toast, else to the element focused before focus entered the region. Focus fell to the page.",
+    "Dismissing a `ds-alert` or `ds-banner` from its close button moves focus to the next control after it, else the one before it; a toast leaving with focus inside it moves focus to the next toast, else the previous one, else to the element focused before focus entered the region. Focus fell to the page.",
     "Move up and Move down in the `dsTableColumns` panel keep focus on the moved row's pressed button, or its other button once the row reaches the top or bottom; focus fell to the page. The internal `TableColumnsPanelComponent` gained `move` and `rescueFocus`.",
     "A `ds-menu` in a `ds-split-button` or a `ds-popover` opens at its first item each time, whichever item had focus when it closed.",
     "Tab on a `ds-menu` item closes the `ds-split-button` or `ds-popover` menu holding it and moves focus on from the trigger; choosing a submenu item closes the submenu."

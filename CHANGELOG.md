@@ -10,11 +10,14 @@
   still pins. The pill
   reads the new optional `DsIntl` key `chart.rangeTotal: (range, total, average) => string`; a
   dictionary without it shows the English default `` `${range}: ${total} · avg ${average}` ``.
-  `ds-chart` exposes the range as `selectedRange`, typed by the new `ChartCategoryRange`.
+  `ds-chart` exposes the range as a read-only `selectedRange` signal of the new
+  `ChartCategoryRange` (`{ from, to }`), `null` while nothing is selected.
+
 - **`ds-column-chart` takes `legendFilters`, `legendMode` and `hiddenSeries`,** as
   `ds-line-chart` does: the legend hides a series, its columns sink to the baseline and the other
   series settle onto each other. The value axis fits what is left; `[rescaleOnHide]="false"` holds
   it where it stands with every series shown.
+
 - **`dsColumnSeries` takes `hidden` and `runningTotal`; `LineSeriesData` takes `hidden`.** A hidden
   column series sinks to the baseline and a hidden line erases itself back along its own path, and
   draws on again when shown. `ds-chart` takes `rescaleOnHide` (default `true`): a hidden series
@@ -22,6 +25,7 @@
   mark passes the new optional `hidden` argument of `ChartScales.reportDomain` to take part.
   `runningTotal` reads the columns as a waterfall's: hovering one stops the axis guide at it, and
   under `dimOthers` fades every column after it.
+
 - **`showChange` on `dsLineSeries` and `ds-line-chart`, off by default.** On the hovered reading,
   the stretches from the reading before it and to the reading after it thicken, each in
   `--ds-chart-positive-color` or `--ds-chart-negative-color` by its own change, and each prints its
@@ -34,17 +38,17 @@
 
 - **Dragging a `ds-table` column edge draws that edge down the whole table.** Under
   `dsTableResize`, a line in `--ds-table-sort-active-icon-color` runs from the header to the last
-  row at the edge being dragged, so the width it sets reads against every row. It shows only
-  while the drag lasts; `DsTableResize` hands the table the edge through a new internal `guide`
-  signal.
+  row at the edge being dragged, so the width it sets reads against every row. It shows only while
+  the drag lasts. `DsTableResize` gained the private `guide` and `placeGuide`; a subclass declaring
+  either must rename it.
 
 - **`showDirty` marks a changed field, off by default.** On `ds-input`, `ds-textarea`, `ds-select`,
   `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker`, `ds-color-picker`,
   `ds-checkbox`, `ds-switch`, `ds-radio-group`, `ds-segmented`, `ds-slider` and `ds-otp-input`, a
   value the user changed carries a dot at the end of the control and a "Changed" line under it,
   which the control's `aria-describedby` reads. Turn it on per field with `[showDirty]`, per form
-  with the new `dsShowDirty` directive (`ShowDirtyDirective`), or app-wide with
-  `DS_CONFIG.field.showDirty`; a field's own binding wins. The state comes from the new `dirty`
+  with the new `dsShowDirty` directive (`ShowDirtyDirective`), or app-wide with `provideDsConfig({
+  field: { showDirty: true } })`; a field's own binding wins. The state comes from the new `dirty`
   input, which signal forms binds by name, or from the `NgControl` of a reactive or template-driven
   form, so resetting the form clears the mark. The line reads the new optional `DsIntl` key
   `field.changed`, default `'Changed'`; `--ds-field-changed-color` recolours the dot and
@@ -97,67 +101,81 @@
   --primary-strong: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle:
   var(--blue-50); --primary-muted: var(--blue-100); --primary-muted-strong: var(--blue-200);` in
   light, and `hsl(var(--primary-h) …)` at the same saturation and lightness in dark.
+
 - **`ds-line-chart` re-scales the value axis when a series is hidden.** `rescaleOnHide` defaults to
   `true`, as on `ds-column-chart` and `ds-chart`: the axis fits the series left showing. Set
   `[rescaleOnHide]="false"` to hold it where it stands with every series shown; a bare
   `rescaleOnHide` restates the default.
+
 - **The value axis answers the hovered reading.** In `ds-chart`, `ds-column-chart`,
   `ds-line-chart` and `ds-waterfall-chart` the hovered category's label turns bold, a dashed guide
   runs from the value axis at the reading, and a pill on the axis prints the axis value there; the
   guide and the pill glide between readings on `--ds-motion-chart-tooltip-move-duration` and
   `-easing`. In `ds-waterfall-chart` the guide stops at the hovered step, reads its running total,
-  and under `dimOthers` the steps after it fade. The new `showAxisReadout` input on all four, on by default, turns the
-  label, the guide and the pill off. The pill prints through `valueFormat` at
+  and under `dimOthers` the steps after it fade. The new `showAxisReadout` input on all four, on by
+  default, turns the label, the guide and the pill off. The pill prints through `valueFormat` at
   `'tooltip'`, in full. A formatter that sets `handlesReadout: true` is asked for the new
   `ChartFormatLocation` `'readout'` there instead, and can return the tick's short form. A
   formatter typed for `'tick' | 'tooltip'` alone is a valid `ChartValueFormat` and keeps a full
-  number in the pill.
+  number in the pill; code that maps or switches over every `ChartFormatLocation` needs a
+  `'readout'` case. `WaterfallChartComponent` gained `showAxisReadout`; a subclass declaring it
+  must rename it.
+
 - **One chart motion timing per kind of movement.** Whatever follows the pointer glides on
   `--ds-motion-chart-tooltip-move-duration` and `-easing`: the `ds-scatter-chart` nearest-point
   ring and the `selectRange` band join the band, the panel and the axis readout there, where they
   moved on the `state` timing. Series dimming runs on `--ds-motion-chart-state-duration` everywhere:
   `dsColumnSeries` groups and scatter point groups fade on it, as lines do, and fade back in on it
   too, where they dimmed on the `mark` timing and came back at once.
+
 - **A pinned category keeps its line in a chart with lines.** In a `ds-chart` holding a
   `dsLineSeries` (`ds-line-chart`, a combo), the pinned category draws the cursor line in
   `--ds-chart-cursor-line-color`, without the band fill, under the pin, and glides to the next
   pinned category on `--ds-motion-chart-tooltip-move-duration`; the hover band and line still
   follow the pointer. A column-only chart keeps the pin alone.
+
 - **A highlighted line point rides the line.** Under the category cursor, each series' highlighted
   point travels along its own line to the next category, with the panel and the crosshair, instead
   of jumping there.
+
 - **Keyboard focus glides.** The focus ring of a `ds-chart` category and of a `dsColumnSeries`
   column moves to the next one with the panel. Under forced colours each keeps its own ring.
+
 - **A column keeps its place by key.** A `dsColumnSeries` column with the same `id` glides to its
   new slot when the data is reordered; without an `id` a column is keyed by its label.
+
 - **Hovering a pie, heatmap or scatter names the mark.** A hovered, focused or held `ds-pie-chart`
   slice fades the centre to its share (its value under `partOfWhole: false`) over its name, and the
-  total comes back when the pointer leaves. Once the pointer has rested on a `ds-heatmap-chart`
-  cell for `--ds-motion-chart-scale-marker-delay` (120ms), a marker over the colour scale prints its reading and glides to its place
-  on the ramp; a fast sweep across the grid leaves it still. The scale sits 12px lower to hold it.
-  A `ds-scatter-chart` answers with the point nearest the pointer anywhere over the plot, where it
-  answered only within 16px of a point: a ring glides to that point and a dashed line runs to it
-  from the pointer. Under `prefers-reduced-motion` the centre, the marker and the ring change at once.
-  Each is on by default and has its own off switch: `showHoverCenter` on `ds-pie-chart` keeps
-  `centerValue` and `centerLabel` in the centre, `showScaleMarker` on `ds-heatmap-chart` drops the
-  marker, and `showNearestPoint` on `ds-scatter-chart` answers only within 16px of a point, without the
-  ring and line. `nearestRadius` on `ds-scatter-chart` caps how far, in CSS pixels, the nearest
-  point answers from; unset, any distance.
+  total comes back when the pointer leaves. Once the pointer has rested on a `ds-heatmap-chart` cell
+  for `--ds-motion-chart-scale-marker-delay` (120ms), a marker over the colour scale prints its
+  reading and glides to its place on the ramp; a fast sweep across the grid leaves it still. The
+  scale sits 12px lower to hold it. A `ds-scatter-chart` answers with the point nearest the pointer
+  anywhere over the plot, where it answered only within 16px of a point: a ring glides to that point
+  and a dashed line runs to it from the pointer. Under `prefers-reduced-motion` the centre, the
+  marker and the ring change at once. Each is on by default and has its own off switch:
+  `showHoverCenter` on `ds-pie-chart` keeps `centerValue` and `centerLabel` in the centre,
+  `showScaleMarker` on `ds-heatmap-chart` drops the marker, and `showNearestPoint` on
+  `ds-scatter-chart` answers only within 16px of a point, without the ring and line. `nearestRadius`
+  on `ds-scatter-chart` caps how far, in CSS pixels, the nearest point answers from; unset, any
+  distance.
+
 - **Heatmap cells enter along the diagonals.** `staggerMs` on `ds-heatmap-chart` spaces the
   diagonals from the top-left cell, where it spaced the columns; the spread stays within 260ms.
+
 - **Every mark of a chart moves together when its data changes.** In `ds-chart`, `ds-column-chart`,
   `ds-line-chart` and `ds-waterfall-chart` the line, its markers and area, the value labels, the
   pin, the gridlines with their tick labels and the waterfall connectors glide to their new place on
   the column's own timing (`--ds-motion-chart-mark-duration` and `-easing`). When a category comes
   or goes, the columns, the category labels and the points glide sideways to their new places on the
   same timing and the line and its area morph to the new point count with the points on them: a new
-  point leaves its neighbour, a removed one slides into its neighbour as it fades; a new column grows
-  and a removed column or label fades. An area filled between two lines (`lower`) changes at once. A resize redraws every mark in place at once. The
-  category band and crosshair glide with the tooltip panel, on
-  `--ds-motion-chart-tooltip-move-duration` and `-easing`, which `ds-chart` now reads. A
-  `ds-pie-chart` turns its slices to their new angles. A removed heatmap row or cell, scatter point,
-  pie slice, waterfall connector or waterfall value label fades out. Under
+  point leaves its neighbour, a removed one slides into its neighbour as it fades; a new column
+  grows and a removed column or label fades. An area filled between two lines (`lower`) changes at
+  once. A resize redraws every mark in place at once. The category band and crosshair glide with the
+  tooltip panel, on `--ds-motion-chart-tooltip-move-duration` and `-easing`, which `ds-chart` now
+  reads. A `ds-pie-chart` turns its slices to their new angles. A removed heatmap row or cell,
+  scatter point, pie slice, waterfall connector or waterfall value label fades out. Under
   `prefers-reduced-motion` every one of them lands at once.
+
 - **A loading skeleton turns into the chart.** On the first load, when the data lands, every chart's
   skeleton becomes the chart in one motion: each placeholder travels to the place and size of the
   mark in its place and fades from the skeleton fill to the mark's colour, a mark without one grows
@@ -168,26 +186,29 @@
   on screen keeps the plot under `ds-loading-overlay`. It runs on
   `--ds-motion-chart-mark-grow-duration` and `-easing`; under `prefers-reduced-motion` the chart
   replaces the skeleton at once.
+
 - **The hovered mark answers.** A hovered or focused column, bar, waterfall step and heatmap cell
-  brightens (`filter: brightness(1.12) saturate(1.1)`), and a hovered pie slice slides 3 units of the
-  100-unit ring out along its middle, past the ring's box. A pin pops in, and pinning another mark or category pops a new pin there. The category band
-  and a pin appear in place and glide only to a later position; the chart-tooltip entry point exports the internal `ChartPlacedDirective`
-  that gates it. `ChartComponent`, `ColumnSeriesComponent`, `LineSeriesComponent`,
+  brightens (`filter: brightness(1.12) saturate(1.1)`), and a hovered pie slice slides 3 units of
+  the 100-unit ring out along its middle, past the ring's box. A pin pops in, and pinning another
+  mark or category pops a new pin there. The category band and a pin appear in place and glide only
+  to a later position. `ChartComponent`, `ColumnSeriesComponent`, `LineSeriesComponent`,
   `ColumnChartComponent`, `LineChartComponent`, `PieChartComponent`, `HeatmapChartComponent` and
   `ScatterChartComponent` gained members, named in the migration manifest, as are the members
   `FunnelChartComponent`, `PieChartComponent`, `HeatmapChartComponent`, `ScatterChartComponent` and
   `LineSeriesComponent` lost; a subclass declaring one of those names must rename it, and one
-  overriding a lost member overrides nothing.
-  The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained
-  `morphGrowth`, `morphing` and `ngOnChanges`; the internal `ChartLegendComponent` gained `highlight`
-  and lost `onItemEnter` and `onItemLeave`. The internal `pointScale` with its `PointScale` type,
-  `tickStep` and `polylinePoints` are removed.
+  overriding a lost member overrides nothing. The internal `WaterfallMarksComponent` gained
+  `leaveMark`; the internal `ChartStatesComponent` gained `morphGrowth`, `morphing` and
+  `ngOnChanges`; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`,
+  `onItemEnter` and `onItemLeave`. The internal `pointScale` with its `PointScale` type, `tickStep`
+  and `polylinePoints` are removed.
+
 - **An app that never set a locale formats in British English.** Angular's default `LOCALE_ID`,
   `'en-US'`, now reads as `'en-GB'` everywhere the library formats: English names, Monday-first
   weeks, a 24-hour clock and `DD/MM/YYYY` typed dates in `ds-date-picker`, where the picker used
   `MM/DD/YYYY`. Numbers do not change. Any other `LOCALE_ID`, and `DsConfig.locale`, are used as
   given; `ds-sparkline` now reads `DsConfig.locale` too. For US formats:
   `provideDsConfig({ locale: 'en-US' })`.
+
 - **The calendar week and the clock follow the locale.** Unset, `ds-date-picker` starts its week
   on the first day of its locale (`locale`, `datePicker.locale`, the config `locale`, then
   `LOCALE_ID`) and `ds-time-picker` shows the clock of the config `locale`, then `LOCALE_ID`: en-GB
@@ -196,13 +217,16 @@
   `firstDayOfWeek`, `datePicker.firstDayOfWeek`, `format` and `timePicker.format` still win;
   `provideDsConfig({ datePicker: { firstDayOfWeek: 1 }, timePicker: { format: '24h' } })` keeps
   Monday and 24 hours under any locale.
+
 - **A pressed tonal `ds-button` deepens toward its own colour.** The pressed fill is the rest fill
   mixed 28% toward the button's colour (`--primary` for primary), where it was the hover fill
   mixed 10% toward black and turned greyer than the hover. `--ds-button-bg-color-active` still
   sets a pressed fill of your own.
+
 - **A pressed `ds-menu-item` with `error` goes one red step deeper.** It fills with
   `--error-muted` on press, over the `--error-subtitle` hover, the pair a ghost error `ds-button`
   uses; the press showed the hover fill.
+
 - **A `ds-funnel-chart` stage grows from its centre.** On entrance each stage grows from 96% about
   its own centre, as a `ds-scatter-chart` point does, so the funnel's axis stands still; it grew
   right and down from its top-left corner.
@@ -226,13 +250,14 @@
 ### Fixed
 
 - **A legend fades the other marks only under `dimOthers`, as hovering a mark does.** Hovering or
-  focusing a `ds-pie-chart` legend entry, a `ds-funnel-chart` stage-table row, a
-  `ds-scatter-chart` legend entry, a `ds-heatmap-chart` scale step, or a series legend entry of
-  `ds-column-chart` and `ds-line-chart` faded the rest whatever `dimOthers` said. It fades them only
-  when `dimOthers` is set; a scale step brightens its own cells, a column series brightens and a line
-  thickens either way, and under `dimOthers` hovering a column fades the other series too. The same
-  holds for `highlighted` on `dsColumnSeries` and `dsLineSeries`. Add `dimOthers` to a chart whose
-  legend should keep fading the rest.
+  focusing a `ds-pie-chart` legend entry, a `ds-funnel-chart` stage-table row, a `ds-scatter-chart`
+  legend entry, a `ds-heatmap-chart` scale step, or a series legend entry of `ds-column-chart` and
+  `ds-line-chart` faded the rest whatever `dimOthers` said. It fades them only when `dimOthers` is
+  set; a scale step brightens its own cells, a column series brightens and a line thickens either
+  way, and under `dimOthers` hovering a column fades the other series too. The same holds for
+  `highlighted` on `dsColumnSeries` and `dsLineSeries`. Add `dimOthers` to a chart whose legend
+  should keep fading the rest.
+
 - **Moving the pointer down a legend keeps the highlight.** The few pixels between two rows of a
   `ds-pie-chart` legend, and between the entries of the series legend under `ds-chart`,
   `ds-column-chart`, `ds-line-chart` and `ds-scatter-chart`, belonged to no entry, so the
@@ -240,89 +265,109 @@
   takes the pointer up to the middle of the gap beside it.
 
 - **Only the main mouse button pins a chart.** A right or middle press on a `ds-chart` category, or
-  on any chart's mark, takes no pin, and one outside the chart leaves a held pin in place. The
-  chart-tooltip entry point exports the internal `isPrimaryPress`.
+  on any chart's mark, takes no pin, and one outside the chart leaves a held pin in place.
+
 - **A fast pointer no longer leaves the panel and the travelling marker behind.** Crossing a
   category every frame restarted their glide at zero each time, so on a long `ds-line-chart` or
   `ds-chart` they stood still until the pointer stopped while the cursor moved on. Each glide now
   starts two frames in; the scatter ring and the pie arcs glide the same way.
+
 - **A chart's hover clears the moment the pointer leaves the chart.** The panel, the cursor and
   the travelling marker used to stay for `tooltipLingerMs` (500ms) wherever the pointer went, so
   moving onto the next chart lit both; they now wait only while the pointer is still inside the
   chart, in a gap between marks or on the legend, and the panel stays while the pointer is on it.
   Every element the pointer crossed outside also restarted that wait, keeping the panel up for as
   long as the pointer moved; the wait now runs once.
+
 - **On a `'step'` line the travelling marker lands on the reading.** It stopped at the foot of the
   riser, at the previous reading's height.
+
 - **Without markers, the panel and the pin sit on the reading.** A `ds-line-chart` or
   `dsLineSeries` with `showMarkers` off anchored both to the top of the category band, above the
   line; they now sit as they do over a visible marker.
+
 - **A stacked column's panel hangs over the whole stack.** In `ds-column-chart` and `ds-chart`
   with stacked `dsColumnSeries`, hovering a segment opens its panel over the stack's top, so the
   segments above it stay in view and reachable.
+
 - **An expanded `ds-table` row folds all the way.** Opening a row's panel started 24px tall and
   closing it stopped at 24px before the row dropped out: the cell padding sat outside the fold. The
   padding now folds with the panel, so the row grows from 0 and shrinks to 0.
+
 - **A loading chart holds the room of its data table.** `ds-bar-chart` drew no table line while
   loading, the other charts drew the line 5px short, and under `dataTable="visible"` every chart
   drew the closed line where the open table lands, so the page jumped when the data arrived. The
   placeholder now matches the table line, and under `'visible'` draws the open table with a header
   and five rows.
+
 - **Chart labels share one halo.** A `ds-line-chart` annotation, a reference-line label and the
   `showChange` percentage draw the same 3px halo in `--ds-chart-bg-color` with rounded joins, and
   under forced colours each prints in `CanvasText` over a `Canvas` halo; an annotation kept its
   own colour on a white patch there, and the percentage's halo had sharp corners.
   `--ds-line-chart-annotation-halo-color` and `-halo-width` still set the annotation's halo.
+
 - **The `dsTableColumns` button reports its panel open.** On a fresh page the «Columns» button kept
   `aria-expanded="false"` while its panel was open, and followed the panel only after the column
   order had changed once. It reads `true` while the panel is open from the first press.
+
 - **Dragging a `dsTableResize` column moves only that column.** The table filled its container, so
-  narrowing one column handed the freed width to the others: dragging a 188px column 480px left
-  widened the other five by 12 to 18px each. Once every visible column has a width, the table is
-  as wide as its columns and leaves the rest of the container empty. A column still stops at its
-  content's narrowest width, and `Home` on a handle returns the column to auto, which fills the
-  container again.
+  narrowing one column handed the freed width to the others. Once every visible column has a width,
+  the table is as wide as its columns and leaves the rest of the container empty. A column still
+  stops at its content's narrowest width, and `Home` on a handle returns the column to auto, which
+  fills the container again.
+
 - **`dsTableExport` shows its CSV button.** The toolbar above a `ds-table` showed only when its
   `[toolbar]` slot held content, so a table with `dsTableExport` and no slotted content hid the
   built-in Export button. The toolbar shows whenever the slot or a table feature puts a control in
   it.
+
 - **A `ds-button` keeps focus while `loading`.** A button pressed from the keyboard and then set
   `loading` was disabled natively, so focus fell to the page. A loading button takes
   `aria-disabled="true"` beside `aria-busy` and stays focusable; the click is swallowed, so
   `(pressed)` does not fire and a `type="submit"` does not submit. The `dsTableExport` button shows
-  the spinner while an `exportFetcher` runs, in place of the greyed "Exporting…" label. A
+  the spinner while an `exportFetcher` runs, in place of the greyed "Preparing…" label. A
   `[disabled]` bound to the same flag as `[loading]` still disables natively and drops focus;
   remove it.
+
 - **Pressing Previous onto the first page, or Next onto the last, keeps focus in `ds-pagination`.**
   The pressed button disabled under focus and focus fell to the page; it moves to the current
   page's button. `PaginationComponent` gained a member, named in the migration manifest.
-- **Dismissing a `ds-alert`, a `ds-banner` or a toast moves focus to a neighbour.** Focus sat on
-  the close or action button and fell to the page when the element left. A dismissed alert or
-  banner hands it to the next control after it, or the one before it when nothing follows; a toast
-  hands it to the next toast in the region, else back to the element focused before focus entered
-  the region. Focus that a `(closed)` handler or a toast action's `handler` moves elsewhere stays
-  there. `ToastRegionComponent` gained members, and the `onDismiss` of `AlertComponent` and
-  `BannerComponent` takes an argument, named in the migration manifest.
+
+- **Dismissing a `ds-alert`, a `ds-banner` or a toast moves focus to a neighbour.** Focus sat on the
+  close or action button and fell to the page when the element left. A dismissed alert or banner
+  hands it to the next control after it, or the one before it when nothing follows; a toast hands it
+  to the next toast in the region, else the previous one, else back to the element focused before
+  focus entered the region. Focus that a `(closed)` handler or a toast action's `handler` moves
+  elsewhere stays there. `ToastRegionComponent` gained members, and the `onDismiss` of
+  `AlertComponent` and `BannerComponent` takes an argument, named in the migration manifest.
+
 - **Move up and Move down in the `dsTableColumns` panel keep focus on the moved row.** Pressed from
-  the keyboard, three moves in four dropped focus to the page, as the row was re-inserted or its
-  button disabled at the top or bottom. Focus stays on the pressed button of the moved row, or moves
+  the keyboard, a move dropped focus to the page when the row was re-inserted or its button
+  disabled at the top or bottom. Focus stays on the pressed button of the moved row, or moves
   to its other button once the row reaches an end. The internal `TableColumnsPanelComponent`
   gained `move` and `rescueFocus`.
+
 - **A `ds-menu` opens at its first item.** Reopening a `ds-split-button` menu, or any `ds-menu`
   in a `ds-popover`, focused the item that had focus when it closed. Once focus leaves the menu,
   its first item takes the tab stop again.
+
 - **Tab leaves an open `ds-menu`.** In a `ds-split-button` menu, or a `ds-menu` in a
   `ds-popover`, Tab on an item did nothing; it closes the menu and moves focus on from its
   trigger. In a submenu they close the submenu and the menu holding it. Choosing a submenu item
   closes the submenu and returns focus to its parent item before the overlay closes, where the
   submenu stayed open.
+
 - **A `ds-popover` holding a `ds-menu` moves focus into it.** Without `panelRole`, opening the
   popover left focus on the trigger, so arrow keys and type-ahead never reached the menu; this hit
   the `ds-table` row-actions menu too. A panel holding a `role="menu"` now focuses the menu's first
   item on open, and Escape returns focus to the trigger. It is not trapped: Tab closes it.
+
 - **ArrowRight on a `ds-menu-item` with a `submenu` focuses the submenu's first item.** It opened
   the submenu and left focus on the parent, so the submenu's items were out of reach; Enter and
   Space focus the first item too. ArrowLeft and Escape close it and focus the parent, as before.
+  `MenuComponent` and `MenuItemComponent` gained members, named in the migration manifest; a
+  subclass declaring one of those names must rename it.
+
 - **A `ds-icon-button` toggle that is off says so.** With `[selected]` bound to `false` it dropped
   `aria-pressed`, so a screen reader heard a plain button; it renders `aria-pressed="false"`, as
   `ds-toggle-button` does. An icon button with no `selected` binding still carries no
