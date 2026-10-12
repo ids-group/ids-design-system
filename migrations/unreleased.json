@@ -12,6 +12,7 @@
         "extends PieChartComponent",
         "extends HeatmapChartComponent",
         "extends ScatterChartComponent",
+        "extends LineSeriesComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent"
       ],
@@ -20,14 +21,15 @@
         "extends PieChartComponent",
         "extends HeatmapChartComponent",
         "extends ScatterChartComponent",
+        "extends LineSeriesComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent"
       ],
       "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
-      "appliesWhen": "Only a class of yours that extends ChartComponent, PieChartComponent, HeatmapChartComponent or ScatterChartComponent, or the internal ChartTooltipPanelComponent or WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends ChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or LineSeriesComponent, or the internal ChartTooltipPanelComponent or WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
-      "verify": "The app builds with no member-collision error on a subclass of ChartComponent, PieChartComponent, HeatmapChartComponent or ScatterChartComponent.",
-      "note": "ChartComponent gained `layout`, `measureBandPinY`, `settledLayout` and `stackTop`; PieChartComponent gained `drawnArcs`, `sliceHoverShift`, `stopArcTween`, `tweenArcs` and the internal `leaveMark`; HeatmapChartComponent and ScatterChartComponent each gained the internal `leaveMark`. The internal WaterfallMarksComponent gained `leaveMark`."
+      "verify": "The app builds with no member-collision error on a subclass of ChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or LineSeriesComponent.",
+      "note": "ChartComponent gained `layout`, `measureBandPinY`, `pinnedCategories`, `settledLayout` and `stackTop`; PieChartComponent gained `drawnArcs`, `sliceHoverShift`, `stopArcTween`, `tweenArcs` and the internal `leaveMark`; HeatmapChartComponent gained the internal `leaveMark`; ScatterChartComponent gained the internal `leaveMark` and `pinnedPoints` and lost `pinnedPoint`; LineSeriesComponent gained `pinnedMarkers` and lost `pinnedMarker`. The internal WaterfallMarksComponent gained `leaveMark`."
     }
   ],
   "informational": [

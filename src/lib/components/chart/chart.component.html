@@ -267,16 +267,19 @@
         <ng-content select="[dsReferenceLabel], [dsSeriesAnnotation]" />
       </g>
 
-      <!-- Across with the band, down with the data: the two move on different timings. -->
-      @if (cursorPinned() && cursorBand(); as band) {
-        <g
-          class="band-pin"
-          dsChartPlaced
-          [style.transform]="'translateX(' + (band.x + band.width / 2) + 'px)'">
+      <!-- Keyed by category: another category takes a new pin that pops in; the same one glides with the data. -->
+      @for (pinnedCategory of pinnedCategories(); track pinnedCategory) {
+        @if (cursorBand(); as band) {
           <g
-            dsChartPinMarker
-            [attr.transform]="'translate(0,' + bandPinY() + ')'"></g>
-        </g>
+            class="band-pin"
+            [style.transform]="
+              'translateX(' + (band.x + band.width / 2) + 'px)'
+            ">
+            <g
+              dsChartPinMarker
+              [attr.transform]="'translate(0,' + bandPinY() + ')'"></g>
+          </g>
+        }
       }
     </svg>
   </div>

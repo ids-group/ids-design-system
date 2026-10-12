@@ -82,8 +82,7 @@
 @include chart-frame.forced-colors;
 
 // With the panel, not the marks: the band, its pin and the panel move across as one.
-.cursor.placed,
-.band-pin.placed {
+.cursor.placed {
   transition: transform var(--ds-motion-chart-tooltip-move-duration)
     var(--ds-motion-chart-tooltip-move-easing);
 }
