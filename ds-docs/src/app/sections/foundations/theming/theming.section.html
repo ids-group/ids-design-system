@@ -293,6 +293,130 @@
   </p>
 
   <h3 class="block-title t-h4">
+    Brand checklist
+  </h3>
+
+  <p class="block-desc t-s">
+    In light, four tokens take their hue from
+    <code class="t-mono-inline">
+      --primary
+    </code>. Check each against the
+    brand; set it where it fails.
+  </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Token
+        </th>
+
+        <th>
+          Paints
+        </th>
+
+        <th>
+          Must meet
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --text-link
+          </code>
+        </td>
+
+        <td>
+          Links
+        </td>
+
+        <td>
+          4.5:1 on <code class="t-mono-inline">--surface-default</code> and on
+          <code class="t-mono-inline">
+            --surface-tint
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --surface-tint
+          </code>
+        </td>
+
+        <td>
+          Active rows and items: list, tree, empty state
+        </td>
+
+        <td>
+          Text and link 4.5:1 on it
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --primary-subtitle
+          </code>
+        </td>
+
+        <td>
+          Selected option; tonal fills: button, tabs, table, calendar day,
+          sidenav item
+        </td>
+
+        <td>
+          Text 4.5:1 on it
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --primary-muted
+          </code>
+        </td>
+
+        <td>
+          Selected option on hover; button, tag, avatar, sidenav item
+        </td>
+
+        <td>
+          Text 4.5:1 on it
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="rules">
+    <li>
+      Light brand (yellow, lime, cyan): the derived link fails, set
+      <code class="t-mono-inline">
+        --text-link
+      </code>
+    </li>
+
+    <li>
+      Not derived from <code class="t-mono-inline">--primary</code>:
+      <code class="t-mono-inline">
+        --primary-strong
+      </code>,
+      <code class="t-mono-inline">
+        --primary-muted-strong
+      </code>,
+      <code class="t-mono-inline">
+        --link-visited
+      </code>, dark tints
+    </li>
+  </ul>
+
+  <pre class="t-mono-block">{{ brandChecklistSnippet }}</pre>
+
+  <h3 class="block-title t-h4">
     Picking a theme (consumer)
   </h3>
 

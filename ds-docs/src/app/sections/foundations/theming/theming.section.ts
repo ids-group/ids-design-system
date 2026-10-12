@@ -32,6 +32,22 @@ providers: [provideDsTheme({ followSystem: true })]`;
 // a role override needs the dark selector too, or the dark block wins:
 [data-theme='dark'][data-brand='acme'] { --primary: #8a63e8; }`;
 
+  protected readonly brandChecklistSnippet = `// Light defaults
+--text-link:        hsl(from var(--primary) h calc(s * 0.85) calc(l - 7));
+--surface-tint:     hsl(from var(--primary) h 100% 97%);
+--primary-subtitle: hsl(from var(--primary) h 100% 97%);
+--primary-muted:    hsl(from var(--primary) h 95% 94%);
+
+// Green brand
+[data-brand='green'] {
+  --primary: #1f7a4d;
+  // derived: tint and subtitle #f0fff7, muted #e1fef0,
+  // link #1d583b (8.36:1 on white, 8.10:1 on the tint)
+  // or the brand colour as the link, with a tint it holds on:
+  // --text-link: #1f7a4d;     5.32:1 on white
+  // --surface-tint: #e8f4ee;  link 4.71:1 on it
+}`;
+
   protected readonly squareSnippet = `// A square brand — three roles.
 :root {
   --ds-radius-inner: 0;     // options, chips, calendar days, close buttons
