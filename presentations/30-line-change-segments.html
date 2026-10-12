@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Отрезки изменения у точки линии</title>
+<meta name="ds-deck-status" content="open">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+<style>
+  main { padding-bottom: 72px; }
+  .opts { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  @media (max-width: 900px) { .opts { grid-template-columns: minmax(0, 1fr); } }
+  .opt { cursor: pointer; }
+  .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+  .opt.is-chosen { outline: 2px solid var(--success); outline-offset: 2px; }
+  .opt .pick-btn { align-self: flex-start; padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-primary); font: var(--font-weight-bold) var(--font-size-xs) var(--font-sans); cursor: pointer; }
+  .opt.is-chosen .pick-btn { background: var(--success); border-color: var(--success); color: var(--surface-default); }
+  .demo { display: grid; gap: var(--space-1); padding: var(--space-3); border-radius: var(--radius-md); background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider); }
+  .demo svg { display: block; inline-size: 100%; block-size: auto; overflow: visible; }
+  .demo .grid-line { stroke: var(--chart-grid-line-color); }
+  .demo .axis-text { font: 9px var(--font-sans); fill: var(--text-secondary); text-anchor: middle; }
+  .demo .axis-text.is-active { fill: var(--text-primary); font-weight: 700; }
+  .demo .category-band { fill: var(--chart-hover-bg-color); }
+  .demo .cursor-line { stroke: var(--chart-cursor-line-color); stroke-width: 1; }
+  .demo .series-line { fill: none; stroke: var(--chart-categorical-1); stroke-width: 2; }
+  .demo .dot { fill: var(--chart-categorical-1); stroke: var(--surface-default); stroke-width: 1.5; }
+  .demo .dot.is-active { r: 5; }
+  .demo .stretch { fill: none; stroke-width: 4; stroke-linecap: round; }
+  .demo .stretch.up { stroke: var(--ds-chart-positive-color); }
+  .demo .stretch.down { stroke: var(--ds-chart-negative-color); }
+  .demo .change-label { font: 700 10px var(--font-sans); text-anchor: middle; paint-order: stroke; stroke: var(--surface-default); stroke-width: 3px; }
+  .demo .change-label.up { fill: var(--success-text); }
+  .demo .change-label.down { fill: var(--error-text); }
+  .demo .hint { margin: 0; font: var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--text-secondary); }
+  .pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  .pill { padding: 2px var(--space-2); border-radius: var(--radius-pill); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.5 var(--font-sans); }
+  .pill.good { background: var(--success-subtitle); color: var(--success-text); }
+  .pill.mid { background: var(--warning-subtitle); color: var(--warning-text); }
+  .pill.bad { background: var(--error-subtitle); color: var(--error-text); }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1>Изменение у точки линии красит только отрезок до неё</h1>
+    <p class="lede">Одно решение: красить при наведении только отрезок от предыдущей точки или оба соседних отрезка.</p>
+    <p class="chat">Ответ нести в чат: «Acc2 · Дека движения графиков»</p>
+  </header>
+
+  <section class="panel" data-review="Сегодня">
+    <h2>Сегодня</h2>
+    <p>С <code>showChange</code> наведённая точка утолщает отрезок от предыдущей точки в цвет роста или падения и подписывает изменение в процентах: это ответ на «насколько эта точка отличается от прошлой». Следующий отрезок не красится, потому что он про следующую точку. <code>showChange</code> по твоему слову выключен по умолчанию (ветка <code>fix/chart-hover-batch</code>, коммит <code>a73ecc928</code>); решение ниже касается только графиков, где его включили.</p>
+  </section>
+
+  <section class="panel q" data-review="Варианты" data-review-note-only>
+    <ol data-review-history></ol>
+    <h2>Два варианта</h2>
+    <p>Веди курсор по графику. Выбор - клик по карточке вне графика.</p>
+    <div class="opts">
+      <article class="opt is-today is-pick" tabindex="0" data-key="incoming">
+        <span class="badge is-pick">рекомендую · как сейчас</span>
+        <h3>Отрезок до точки</h3>
+        <div class="demo" data-both="0"></div>
+        <div class="pills"><span class="pill good">одна цифра - про эту точку</span><span class="pill mid">куда линия идёт дальше, не выделено</span></div>
+        <dl class="layer"><dt>В библиотеке</dt><dd class="none">ничего</dd></dl>
+      </article>
+
+      <article class="opt" tabindex="0" data-key="both">
+        <span class="badge">шире</span>
+        <h3>Оба отрезка</h3>
+        <div class="demo" data-both="1"></div>
+        <div class="pills"><span class="pill good">видно, откуда пришла и куда ушла</span><span class="pill bad">две цифры, вторая - про следующую точку</span></div>
+        <dl class="layer"><dt>В библиотеке</dt><dd class="gain"><code>changes()</code> в <code>dsLineSeries</code> отдаёт два отрезка: от предыдущей точки и к следующей, каждый со своим цветом и подписью</dd></dl>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Сравнение</h2>
+    <table>
+      <thead><tr><th>Что</th><th>Отрезок до точки</th><th>Оба отрезка</th></tr></thead>
+      <tbody>
+        <tr><th class="rowlabel">Подписей у точки</th><td>1</td><td>2</td></tr>
+        <tr><th class="rowlabel">Первая точка ряда</th><td>ничего</td><td>только отрезок после</td></tr>
+        <tr><th class="rowlabel">Последняя точка ряда</th><td>отрезок до</td><td>только отрезок до</td></tr>
+        <tr><th class="rowlabel">Подписи сталкиваются с панелью</th><td>реже</td><td>чаще</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel good">
+    <h2>Рекомендую: «Отрезок до точки»</h2>
+    <p>Цифра у точки отвечает на один вопрос: насколько она отличается от прошлой. Вторая подпись у той же точки про другую точку, и читатель сравнивает две цифры, не понимая, какая чья. Отрезок после точки выделится, когда курсор перейдёт на следующую.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Что решить</h2>
+    <table>
+      <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
+      <tbody><tr class="row-pick"><th class="rowlabel">Какие отрезки красит <code>showChange</code> у наведённой точки</th><td>Отрезок до точки · Оба отрезка</td><td>Отрезок до точки</td></tr></tbody>
+    </table>
+  </section>
+
+  <p class="src"><b>Источники, проверено 2026-10-12.</b> <code>src/lib/components/chart/line-series.component.ts</code>, <code>changes = computed(...)</code>: берёт текущую и предыдущую точку выделенной серии, путь <code>linePath([previous, current])</code>, подпись над серединой отрезка. Цвета: <code>--ds-chart-positive-color</code>, <code>--ds-chart-negative-color</code>, подпись <code>--success-text</code> / <code>--error-text</code> (<code>line-series.component.scss</code>, <code>.change-stretch</code>, <code>.change-label</code>). Образцы - модель на SVG с этими токенами, не сам компонент.</p>
+</main>
+
+<script>
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs, parent) => { const node = document.createElementNS(NS, tag); for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value); parent?.append(node); return node; };
+  const W = 360, H = 180, L = 12, R = 348, T = 22, B = 156, n = 6;
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const values = [64, 76, 88, 82, 95, 100];
+  const slot = (R - L) / n;
+  const xOf = (i) => L + slot * (i + 0.5);
+  const yOf = (value) => B - (value / 110) * (B - T);
+  const percent = (from, to) => { const change = ((to - from) / from) * 100; return `${change > 0 ? '+' : ''}${change.toFixed(1)}%`; };
+
+  document.querySelectorAll('.demo').forEach((host) => {
+    const both = host.dataset.both === '1';
+    const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Line chart with the change at the hovered reading' }, null);
+    host.append(svg);
+    [0, 0.5, 1].forEach((k) => { const y = B - k * (B - T); el('line', { class: 'grid-line', x1: L, x2: R, y1: y, y2: y }, svg); });
+    const cursor = el('g', { opacity: 0 }, svg);
+    el('rect', { class: 'category-band', y: T, width: slot, height: B - T, x: 0 }, cursor);
+    el('line', { class: 'cursor-line', x1: slot / 2, x2: slot / 2, y1: T, y2: B }, cursor);
+    const points = values.map((value, i) => [xOf(i), yOf(value)]);
+    el('path', { class: 'series-line', d: points.map(([x, y], i) => `${i ? 'L' : 'M'}${x} ${y}`).join(' ') }, svg);
+    const changes = el('g', {}, svg);
+    const dots = points.map(([x, y]) => el('circle', { class: 'dot', cx: x, cy: y, r: 3.5 }, svg));
+    const labels = months.map((month, i) => { const text = el('text', { class: 'axis-text', x: xOf(i), y: H - 6 }, svg); text.textContent = month; return text; });
+
+    const stretch = (from, to) => {
+      const up = values[to] >= values[from];
+      el('path', { class: `stretch ${up ? 'up' : 'down'}`, d: `M${points[from][0]} ${points[from][1]} L${points[to][0]} ${points[to][1]}` }, changes);
+      const label = el('text', { class: `change-label ${up ? 'up' : 'down'}`, x: (points[from][0] + points[to][0]) / 2, y: Math.min(points[from][1], points[to][1]) - 8 }, changes);
+      label.textContent = percent(values[from], values[to]);
+    };
+    const show = (index) => {
+      changes.replaceChildren();
+      cursor.setAttribute('transform', `translate(${L + slot * index} 0)`);
+      cursor.setAttribute('opacity', 1);
+      if (index > 0) stretch(index - 1, index);
+      if (both && index < n - 1) stretch(index, index + 1);
+      dots.forEach((dot, i) => dot.classList.toggle('is-active', i === index));
+      labels.forEach((label, i) => label.classList.toggle('is-active', i === index));
+    };
+    show(2);
+    svg.addEventListener('pointermove', (event) => { const box = svg.getBoundingClientRect(); show(Math.max(0, Math.min(n - 1, Math.floor((((event.clientX - box.left) / box.width) * W - L) / slot)))); });
+    const hint = document.createElement('p'); hint.className = 'hint'; hint.textContent = 'Веди курсор по графику'; host.append(hint);
+  });
+
+  const KEY = 'ds-deck-line-change-segments-pick';
+  const cards = [...document.querySelectorAll('.opt[data-key]')];
+  cards.forEach((card) => {
+    const pickButton = document.createElement('button');
+    pickButton.type = 'button';
+    pickButton.className = 'pick-btn';
+    card.append(pickButton);
+  });
+  const labelPicks = () => cards.forEach((card) => { card.querySelector('.pick-btn').textContent = card.classList.contains('is-chosen') ? 'Выбрано' : 'Выбрать'; });
+  new MutationObserver(labelPicks).observe(document.querySelector('.opts'), { subtree: true, attributes: true, attributeFilter: ['class'] });
+  labelPicks();
+  let picked = null;
+  try { picked = localStorage.getItem(KEY); } catch { picked = null; }
+  const paint = () => cards.forEach((card) => card.classList.toggle('is-chosen', card.dataset.key === picked));
+  cards.forEach((card) => {
+    const choose = () => { picked = card.dataset.key; try { localStorage.setItem(KEY, picked); } catch { /* private window */ } paint(); window.deckReview?.refresh?.(); };
+    card.addEventListener('click', (event) => { if (!event.target.closest('.demo')) choose(); });
+    card.addEventListener('keydown', (event) => { if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); choose(); } });
+  });
+  paint();
+  (window.deckReviewHooks ??= {}).extra = () => { const card = cards.find((item) => item.dataset.key === picked); return card ? `выбор - «${card.querySelector('h3').textContent}»` : 'выбор - не сделан'; };
+</script>
+<!-- deck-review -->
+<script>
+// deck-review: verdict per [data-review] block, a textarea for remarks, one answer line in a fixed bar.
+// Inlined into a deck by ~/.claude/bin/deck-review-inline; contract in ~/.claude/docs/deck-review.md.
+(() => {
+  // Every key under deck-review: is a disposable reviewer answer, kept 7 days after its last change.
+  const PREFIX = 'deck-review:v1:';
+  const KEY = PREFIX + (document.documentElement.dataset.deck || document.title);
+  const KEEP_MS = 7 * 24 * 60 * 60 * 1000;
+  const ACCEPT = 'принято';
+  const REMARK = 'есть замечание';
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith('deck-review:')) continue;
+      let expires = 0;
+      try { if (key.startsWith(PREFIX)) expires = JSON.parse(localStorage.getItem(key))?.expires; } catch { /* malformed: drop */ }
+      if (!(expires > Date.now())) localStorage.removeItem(key);
+    }
+  } catch { /* private window */ }
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY))?.answers ?? {}; } catch { return {}; } };
+  const write = () => { try { localStorage.setItem(KEY, JSON.stringify({ expires: Date.now() + KEEP_MS, answers: state })); } catch { /* private window */ } };
+  const state = read();
+
+  document.head.insertAdjacentHTML('beforeend', `<style>
+    .dr-row { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px 0; }
+    .dr-btn { padding: 4px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 999px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-btn[aria-pressed="true"] { background: var(--accent-subtitle, #e6efff); border-color: var(--accent-strong, #2457c5); color: var(--accent-strong, #2457c5); }
+    .dr-btn[data-v="${REMARK}"][aria-pressed="true"] { background: var(--error-subtitle, #fdecec); border-color: var(--error-text, #b42318); color: var(--error-text, #b42318); }
+    .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--border-default, #c9ced6); border-radius: var(--radius-md, 8px); background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
+    .dr-note:focus { outline: none; border-color: var(--accent, #2457c5); box-shadow: var(--ds-field-focus-shadow, 0 0 0 3px rgb(36 87 197 / .25)); }
+    .dr-note[hidden] { display: none; }
+    .dr-history { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 4px; color: var(--text-secondary, #4b5563); font: 13px/1.45 var(--font-sans, system-ui, sans-serif); }
+    .dr-history::before { content: 'История замечаний'; display: block; margin-left: -1.2em; color: var(--text-primary, #1d2330); font-weight: 600; }
+    [data-dr-folded] > :not(h1, h2, h3, h4, .dr-row, .dr-note) { display: none !important; }
+    .dr-fold { padding: 4px 8px; border: 0; background: none; color: var(--accent-strong, #2457c5); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-fold[hidden] { display: none; }
+    .dr-btn, .dr-bar button, .dr-fold { transition: background-color .12s, border-color .12s, color .12s, box-shadow .12s; }
+    .dr-btn:hover, .dr-bar button:hover { background: var(--surface-secondary, #f3f4f6); border-color: var(--border-strong, #9aa1ad); }
+    .dr-btn:active, .dr-bar button:active { background: var(--surface-muted, #e5e7eb); }
+    .dr-btn[aria-pressed="true"]:hover { background: color-mix(in srgb, var(--accent-strong, #2457c5) 14%, var(--surface-default, #fff)); }
+    .dr-btn[data-v="есть замечание"][aria-pressed="true"]:hover { background: color-mix(in srgb, var(--error-text, #b42318) 14%, var(--surface-default, #fff)); }
+    .dr-fold:hover { text-decoration: underline; }
+    .dr-fold:active { color: var(--text-primary, #1d2330); }
+    .dr-btn:focus-visible, .dr-bar button:focus-visible, .dr-fold:focus-visible { outline: 2px solid var(--focus-ring-color, var(--accent, #2457c5)); outline-offset: 2px; }
+    .dr-bar button[data-done] { background: var(--success-subtitle, #e7f6ec); border-color: var(--success, #1a7f37); color: var(--success-text, #116329); }
+    .dr-bar { position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; padding: 10px 20px; background: var(--surface-default, #fff); border-top: 1px solid var(--border-divider, #e3e6eb); box-shadow: 0 -4px 16px rgb(0 0 0 / .08); color: var(--text-primary, #1d2330); font: 13px/1.4 var(--font-sans, system-ui, sans-serif); }
+    .dr-bar b { flex: none; }
+    .dr-bar .dr-chat { flex: none; color: var(--text-tertiary, #6b7280); }
+    .dr-bar output { flex: 1 1 auto; min-inline-size: 0; overflow-x: auto; white-space: nowrap; color: var(--text-secondary, #4b5563); font-family: var(--font-mono, ui-monospace, monospace); }
+    .dr-bar button { flex: none; padding: 6px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 6px; background: var(--surface-default, #fff); color: inherit; font: 600 13px/1.4 inherit; cursor: pointer; }
+    body { padding-block-end: 72px; }
+    @media (max-width: 640px) { .dr-bar { padding: 8px 12px; gap: 8px; } .dr-bar .dr-chat { display: none; } }
+  </style>`);
+
+  let items = [...document.querySelectorAll('[data-review]')];
+  if (!items.length) {
+    const whole = document.createElement('section');
+    whole.dataset.review = 'Дека в целом';
+    whole.innerHTML = '<h3>Дека в целом</h3>';
+    (document.querySelector('main') ?? document.body).append(whole);
+    items = [whole];
+  }
+
+  const controls = new Map();
+  const unfolded = new Set();
+  for (const item of items) {
+    const label = item.dataset.review;
+    // A deck bumps data-review-round once it has worked through the remarks of a round; answers stored
+    // for an earlier round are already in the block's history, so they leave the input.
+    const round = Number(item.dataset.reviewRound) || 1;
+    if (state[label] && (state[label].round ?? 1) !== round) { delete state[label]; write(); }
+    const own = () => Object.assign((state[label] ??= {}), { round });
+    const row = document.createElement('div');
+    row.className = 'dr-row';
+    const verdicts = item.hasAttribute('data-review-note-only') ? [REMARK] : [ACCEPT, REMARK];
+    const buttons = verdicts.map((verdict) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'dr-btn';
+      button.dataset.v = verdict;
+      button.textContent = verdict === ACCEPT ? 'Принято' : 'Есть замечание';
+      button.addEventListener('click', () => {
+        const entry = own();
+        entry.v = entry.v === verdict ? '' : verdict;
+        write();
+        render();
+        if (entry.v === REMARK) note.focus();
+      });
+      return button;
+    });
+    const note = document.createElement('textarea');
+    note.className = 'dr-note';
+    note.placeholder = 'Что не так';
+    note.setAttribute('aria-label', `Замечание: ${label}`);
+    note.addEventListener('input', () => { own().note = note.value; write(); render(); });
+    const fold = document.createElement('button');
+    fold.type = 'button';
+    fold.className = 'dr-fold';
+    fold.addEventListener('click', () => { unfolded.has(label) ? unfolded.delete(label) : unfolded.add(label); render(); });
+    row.append(...buttons, fold);
+    item.append(row, note);
+    const history = item.querySelector(':scope > [data-review-history]');
+    if (history) { history.classList.add('dr-history'); item.append(history); }
+    controls.set(label, { item, buttons, note, fold });
+  }
+
+  const chat = document.querySelector('.chat')?.textContent.replace(/^[^«]*/, '') ?? '';
+  const bar = document.createElement('div');
+  bar.className = 'dr-bar';
+  bar.innerHTML = `<b></b><span class="dr-chat"></span><output></output><button type="button" data-a="copy">Скопировать</button><button type="button" data-a="reset">Сбросить</button>`;
+  bar.querySelector('.dr-chat').textContent = chat;
+  document.body.append(bar);
+  const line = bar.querySelector('output');
+
+  const hooks = (window.deckReviewHooks ??= {});
+  window.deckReview = { refresh: () => render() };
+
+  function render() {
+    const parts = [];
+    let done = 0;
+    let open = 0;
+    for (const [label, { item, buttons, note, fold }] of controls) {
+      const entry = state[label] ?? {};
+      const accepted = entry.v === ACCEPT;
+      item.toggleAttribute('data-dr-folded', accepted && !unfolded.has(label));
+      fold.hidden = !accepted;
+      fold.textContent = unfolded.has(label) ? 'Свернуть' : 'Развернуть';
+      for (const button of buttons) button.setAttribute('aria-pressed', String(entry.v === button.dataset.v));
+      note.hidden = entry.v !== REMARK;
+      if (note.value !== (entry.note ?? '')) note.value = entry.note ?? '';
+      if (!accepted) open++;
+      if (!entry.v) continue;
+      if (!accepted) done++;
+      const text = entry.note?.trim().replace(/\s+/g, ' ');
+      parts.push(entry.v === REMARK ? `${label} - замечание${text ? `: «${text}»` : ''}` : `${label} - принято`);
+    }
+    const extra = hooks.extra?.();
+    if (extra) parts.push(extra);
+    bar.querySelector('b').textContent = `${done} из ${open}`;
+    line.textContent = parts.length ? `Дека ${document.title}: ${parts.join('; ')}` : 'пока ничего не выбрано';
+  }
+
+  bar.addEventListener('click', (event) => {
+    const action = event.target.closest('button')?.dataset.a;
+    if (action === 'copy') {
+      const button = event.target.closest('button');
+      navigator.clipboard?.writeText(line.textContent).then(() => {
+        button.dataset.done = '';
+        button.textContent = 'Скопировано';
+        setTimeout(() => { delete button.dataset.done; button.textContent = 'Скопировать'; }, 1500);
+      });
+    }
+    if (action === 'reset') { for (const label of Object.keys(state)) delete state[label]; write(); hooks.onReset?.(); render(); }
+  });
+  render();
+})();
+</script>
+<!-- /deck-review -->
+</body>
+</html>

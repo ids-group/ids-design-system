@@ -1125,6 +1125,8 @@ file** — the number moves; cite the filename.
 | 26 | `26-chart-motion-timing` | Whether pointer-following glides and series dimming each use one speed: as today, one per kind, or all 120ms; found by the chart duplication audit. | none |
 | 27 | `27-info-hint-content` | How `ds-info-hint` takes rich content from the consumer (mm-ecm ME-495 «Published» list): content projection, a template input, or a standard trigger for `ds-popover`; and, only if the ME-495 icon verdict is A, how a status icon becomes the hint trigger: any `IconName` with a colour token, or a `tone` input. | the info-hint rich-content P2 in Asked by Stas |
 | 28 | `28-chart-pin-line` | Whether a pinned category keeps the cursor line without the band: only the pin, the line where a line series is drawn, or the line in every category chart; Stas's proposal from the line chart page. | none |
+| 29 | `29-chart-hover-linger` | How long a chart's hover stays after the pointer leaves: 500ms everywhere, at once when it leaves the chart, or 150ms everywhere; the restart bug behind the multi-second hang is fixed on `fix/chart-hover-batch`. | none |
+| 30 | `30-line-change-segments` | Which stretches `showChange` colours at the hovered reading: the incoming one, or both neighbours. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
