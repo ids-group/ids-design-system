@@ -809,13 +809,28 @@
   .ag-cost b { color: var(--text-primary); }
   .ag-err { color: var(--error-text); font-weight: var(--font-weight-bold); }
   .ag-ok { color: var(--success-text); font-weight: var(--font-weight-bold); }
+  .pf-bars { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-1) var(--space-2); inline-size: 100%; max-inline-size: 360px; min-inline-size: 0; font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
+  .pf-bars i { block-size: 10px; border-radius: 2px; background: var(--chart-categorical-3); }
+  .pf-bars b { font-family: var(--font-mono); color: var(--text-primary); }
+  .pf-slow { display: inline-flex; align-items: center; gap: var(--space-1); font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); cursor: pointer; }
+  .pf-plot { cursor: crosshair; }
+  .pf-plot .ag-ring, .pf-plot .ag-tether { visibility: hidden; }
+  .pf-col { transition: filter calc(var(--ds-motion-chart-state-duration) * var(--pf-slow, 1)) var(--ds-motion-chart-state-easing); }
+  .pf-col.is-lit { filter: brightness(1.12) saturate(1.1); }
+  .ag-svg text.pf-label { transition: fill calc(var(--ds-motion-chart-state-duration) * var(--pf-slow, 1)) var(--ds-motion-chart-state-easing), font-weight calc(var(--ds-motion-chart-state-duration) * var(--pf-slow, 1)) var(--ds-motion-chart-state-easing); }
+  .ag-svg text.pf-label.is-hot { fill: var(--text-primary); font-weight: var(--font-weight-bold); }
+  .pf-readout { opacity: 0; }
+  .pf-readout.is-on { opacity: 1; }
+  .pf-readout.placed { transition: transform calc(var(--ds-motion-chart-tooltip-move-duration) * var(--pf-slow, 1)) var(--ds-motion-chart-tooltip-move-easing); }
+  [data-pf-columns="instant"] .pf-col, .ag-svg[data-pf-columns="instant"] text.pf-label,
+  [data-pf-columns="none"] .pf-col, .ag-svg[data-pf-columns="none"] text.pf-label, [data-pf-columns="none"] .pf-readout.placed { transition: none; }
   [data-q^="ag-"] .opt .css { white-space: pre-wrap; }
   [data-q^="ag-"] .opt > .badge { align-self: flex-start; }
 </style>
 
 <main>
   <div class="masthead">
-    <h1>5 асков консьюмеров и 46 решений, каждое с нарисованными вариантами</h1>
+    <h1>5 асков консьюмеров и 48 решений, каждое с нарисованными вариантами</h1>
     <p class="lede">
       Сверху - всё, чего ждёт консьюмер: фиксы, хуки и фичи из бэклога, каждый показан как есть
       сейчас и как будет после. Ниже - открытые деки и бакет <code>Decisions</code>. Вариант
@@ -2749,6 +2764,94 @@ Jan#1: mark-leave, гаснет</p></div>
     </div>
   </section>
 
+  <section class="q" data-q="ag-scatter-tether-paint">
+    <div class="q-head">
+      <span class="q-num">52</span>
+      <h2 class="q-title">Пунктир от курсора к точке в scatter стоит перерисовки всей страницы</h2>
+      <span class="q-src">scatter-chart.component.ts:497 · scatter-chart.component.html:155 · scatter-chart.component.scss:130 · 46a912b46</span>
+    </div>
+    <p class="q-sub">Пунктир выбран в деке <a href="implemented/chart-motion-extras.html">chart-motion-extras</a>, карточка «Ближайшая точка в scatter». Замер perf-агента, трейс CDP Tracing от 2026-10-12, один и тот же проход мышью по 40 точкам. Любое изменение геометрии внутри SVG графика перерисовывает слой страницы docs; сдвиг пунктира через <code>transform</code> или <code>pathLength</code> перерисовывает так же. Веди курсор по полю.</p>
+    <div class="stage">
+      <div class="spec"><p class="cap">Paint за проход, perf-агент 2026-10-12</p><div class="pf-bars">
+        <span>с пунктиром</span><i style="inline-size:100%"></i><b>752ms</b>
+        <span>без кольца и пунктира</span><i style="inline-size:3.06%"></i><b>23ms</b>
+      </div><p class="says">около 4ms перерисовки всей страницы на каждое движение курсора</p></div>
+      <label class="pf-slow"><input type="checkbox"> Замедлить ×5</label>
+    </div>
+    <div class="opts">
+      <div class="opt is-today"><h3>Оставить</h3><span class="badge is-same">сейчас в dev</span>
+        <svg class="ag-svg pf-plot" data-pf-scatter="always" viewBox="0 0 160 90" aria-hidden="true">
+          <rect x="4" y="4" width="152" height="82" fill="none" class="ag-grid"/>
+          <circle class="ag-c1" cx="24" cy="66" r="3"/><circle class="ag-c1" cx="40" cy="30" r="3"/><circle class="ag-c1" cx="58" cy="52" r="3"/><circle class="ag-c1" cx="76" cy="20" r="3"/><circle class="ag-c1" cx="92" cy="62" r="3"/><circle class="ag-c1" cx="110" cy="38" r="3"/><circle class="ag-c1" cx="128" cy="70" r="3"/><circle class="ag-c1" cx="140" cy="22" r="3"/>
+          <line class="ag-tether" x1="0" y1="0" x2="0" y2="0"/><circle class="ag-ring" cx="0" cy="0" r="6"/>
+        </svg>
+        <p class="ag-cost">Пунктир идёт за курсором всё время. <b>Цена:</b> 752ms Paint за проход против 23ms.</p></div>
+      <div class="opt"><h3>Только пока кольцо едет</h3>
+        <svg class="ag-svg pf-plot" data-pf-scatter="glide" viewBox="0 0 160 90" aria-hidden="true">
+          <rect x="4" y="4" width="152" height="82" fill="none" class="ag-grid"/>
+          <circle class="ag-c1" cx="24" cy="66" r="3"/><circle class="ag-c1" cx="40" cy="30" r="3"/><circle class="ag-c1" cx="58" cy="52" r="3"/><circle class="ag-c1" cx="76" cy="20" r="3"/><circle class="ag-c1" cx="92" cy="62" r="3"/><circle class="ag-c1" cx="110" cy="38" r="3"/><circle class="ag-c1" cx="128" cy="70" r="3"/><circle class="ag-c1" cx="140" cy="22" r="3"/>
+          <line class="ag-tether" x1="0" y1="0" x2="0" y2="0"/><circle class="ag-ring" cx="0" cy="0" r="6"/>
+        </svg>
+        <p class="ag-cost">Пунктир виден, пока кольцо скользит к новой точке, потом гаснет. <b>Цена:</b> перерисовка остаётся на время скольжения, замера этого варианта нет.</p></div>
+      <div class="opt"><h3>Убрать пунктир</h3>
+        <svg class="ag-svg pf-plot" data-pf-scatter="none" viewBox="0 0 160 90" aria-hidden="true">
+          <rect x="4" y="4" width="152" height="82" fill="none" class="ag-grid"/>
+          <circle class="ag-c1" cx="24" cy="66" r="3"/><circle class="ag-c1" cx="40" cy="30" r="3"/><circle class="ag-c1" cx="58" cy="52" r="3"/><circle class="ag-c1" cx="76" cy="20" r="3"/><circle class="ag-c1" cx="92" cy="62" r="3"/><circle class="ag-c1" cx="110" cy="38" r="3"/><circle class="ag-c1" cx="128" cy="70" r="3"/><circle class="ag-c1" cx="140" cy="22" r="3"/>
+          <line class="ag-tether" x1="0" y1="0" x2="0" y2="0"/><circle class="ag-ring" cx="0" cy="0" r="6"/>
+        </svg>
+        <p class="ag-cost">Выбранную точку показывает только кольцо. <b>Цена:</b> уходит часть выбранного в деке chart-motion-extras.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-hover-transitions-paint">
+    <div class="q-head">
+      <span class="q-num">53</span>
+      <h2 class="q-title">Переходы при наведении перерисовывают график каждый кадр</h2>
+      <span class="q-src">_chart-interactive.scss:6 · column-series.component.scss:66 · heatmap-chart.component.scss:53 · chart.component.scss:152 · :159 · :164 · 737838eac · 6502f09e0</span>
+    </div>
+    <p class="q-sub">На наведении три перехода: яркость метки (<code>filter: brightness(1.12) saturate(1.1)</code> за <code>--ds-motion-chart-state-duration</code>, 120ms), жирная подпись категории (переход <code>font-weight</code>, те же 120ms) и скольжение пилюли на оси (<code>--ds-motion-chart-tooltip-move-duration</code>, 300ms). Замер perf-агента, трейс CDP Tracing от 2026-10-12, один и тот же проход мышью по heatmap. Веди курсор по колонкам.</p>
+    <div class="stage">
+      <div class="spec"><p class="cap">Paint heatmap за проход, perf-агент 2026-10-12</p><div class="pf-bars">
+        <span>с переходами</span><i style="inline-size:100%"></i><b>905ms</b>
+        <span><code>filter: none</code></span><i style="inline-size:60.33%"></i><b>546ms</b>
+        <span>все переходы выкл</span><i style="inline-size:27.51%"></i><b>249ms</b>
+      </div></div>
+      <label class="pf-slow"><input type="checkbox"> Замедлить ×5</label>
+    </div>
+    <div class="opts">
+      <div class="opt is-today"><h3>Оставить переходы</h3><span class="badge is-same">сейчас в dev</span>
+        <svg class="ag-svg" data-pf-columns="all" viewBox="-14 0 184 86" aria-hidden="true">
+          <text x="30" y="13" text-anchor="end">2M</text><text x="30" y="43" text-anchor="end">1M</text><text x="30" y="73" text-anchor="end">0</text>
+          <line class="ag-grid" x1="34" y1="10" x2="164" y2="10"/><line class="ag-grid" x1="34" y1="40" x2="164" y2="40"/><line class="ag-base" x1="34" y1="70" x2="164" y2="70"/>
+          <rect class="ag-c1 pf-col" data-value="800,000" x="47" y="46" width="16" height="24"/><rect class="ag-c1 pf-col" data-value="1,600,000" x="77" y="22" width="16" height="48"/><rect class="ag-c1 pf-col" data-value="1,234,567" x="107" y="33" width="16" height="37"/><rect class="ag-c1 pf-col" data-value="600,000" x="137" y="52" width="16" height="18"/>
+          <g class="pf-readout"><line class="ag-guide" x1="34" y1="0" x2="63" y2="0"/><rect class="ag-pill" x="-12" y="-6" width="44" height="12" rx="3"/><text class="ag-pill-text" x="10" y="3" text-anchor="middle"></text></g>
+          <text class="pf-label" x="55" y="81" text-anchor="middle">Jan</text><text class="pf-label" x="85" y="81" text-anchor="middle">Feb</text><text class="pf-label" x="115" y="81" text-anchor="middle">Mar</text><text class="pf-label" x="145" y="81" text-anchor="middle">Apr</text>
+          <rect data-i="0" x="40" y="0" width="30" height="86" fill="transparent"/><rect data-i="1" x="70" y="0" width="30" height="86" fill="transparent"/><rect data-i="2" x="100" y="0" width="30" height="86" fill="transparent"/><rect data-i="3" x="130" y="0" width="30" height="86" fill="transparent"/>
+        </svg>
+        <p class="ag-cost">Яркость и жирность нарастают, пилюля скользит. <b>Цена:</b> 905ms Paint за проход.</p></div>
+      <div class="opt"><h3>Яркость и жирность сразу, без перехода</h3>
+        <svg class="ag-svg" data-pf-columns="instant" viewBox="-14 0 184 86" aria-hidden="true">
+          <text x="30" y="13" text-anchor="end">2M</text><text x="30" y="43" text-anchor="end">1M</text><text x="30" y="73" text-anchor="end">0</text>
+          <line class="ag-grid" x1="34" y1="10" x2="164" y2="10"/><line class="ag-grid" x1="34" y1="40" x2="164" y2="40"/><line class="ag-base" x1="34" y1="70" x2="164" y2="70"/>
+          <rect class="ag-c1 pf-col" data-value="800,000" x="47" y="46" width="16" height="24"/><rect class="ag-c1 pf-col" data-value="1,600,000" x="77" y="22" width="16" height="48"/><rect class="ag-c1 pf-col" data-value="1,234,567" x="107" y="33" width="16" height="37"/><rect class="ag-c1 pf-col" data-value="600,000" x="137" y="52" width="16" height="18"/>
+          <g class="pf-readout"><line class="ag-guide" x1="34" y1="0" x2="63" y2="0"/><rect class="ag-pill" x="-12" y="-6" width="44" height="12" rx="3"/><text class="ag-pill-text" x="10" y="3" text-anchor="middle"></text></g>
+          <text class="pf-label" x="55" y="81" text-anchor="middle">Jan</text><text class="pf-label" x="85" y="81" text-anchor="middle">Feb</text><text class="pf-label" x="115" y="81" text-anchor="middle">Mar</text><text class="pf-label" x="145" y="81" text-anchor="middle">Apr</text>
+          <rect data-i="0" x="40" y="0" width="30" height="86" fill="transparent"/><rect data-i="1" x="70" y="0" width="30" height="86" fill="transparent"/><rect data-i="2" x="100" y="0" width="30" height="86" fill="transparent"/><rect data-i="3" x="130" y="0" width="30" height="86" fill="transparent"/>
+        </svg>
+        <p class="ag-cost">Пилюля на оси скользит как сейчас. <b>Цена:</b> замера этого варианта нет; ближе всего 546ms, замер без яркости вовсе.</p></div>
+      <div class="opt"><h3>Без переходов при наведении</h3>
+        <svg class="ag-svg" data-pf-columns="none" viewBox="-14 0 184 86" aria-hidden="true">
+          <text x="30" y="13" text-anchor="end">2M</text><text x="30" y="43" text-anchor="end">1M</text><text x="30" y="73" text-anchor="end">0</text>
+          <line class="ag-grid" x1="34" y1="10" x2="164" y2="10"/><line class="ag-grid" x1="34" y1="40" x2="164" y2="40"/><line class="ag-base" x1="34" y1="70" x2="164" y2="70"/>
+          <rect class="ag-c1 pf-col" data-value="800,000" x="47" y="46" width="16" height="24"/><rect class="ag-c1 pf-col" data-value="1,600,000" x="77" y="22" width="16" height="48"/><rect class="ag-c1 pf-col" data-value="1,234,567" x="107" y="33" width="16" height="37"/><rect class="ag-c1 pf-col" data-value="600,000" x="137" y="52" width="16" height="18"/>
+          <g class="pf-readout"><line class="ag-guide" x1="34" y1="0" x2="63" y2="0"/><rect class="ag-pill" x="-12" y="-6" width="44" height="12" rx="3"/><text class="ag-pill-text" x="10" y="3" text-anchor="middle"></text></g>
+          <text class="pf-label" x="55" y="81" text-anchor="middle">Jan</text><text class="pf-label" x="85" y="81" text-anchor="middle">Feb</text><text class="pf-label" x="115" y="81" text-anchor="middle">Mar</text><text class="pf-label" x="145" y="81" text-anchor="middle">Apr</text>
+          <rect data-i="0" x="40" y="0" width="30" height="86" fill="transparent"/><rect data-i="1" x="70" y="0" width="30" height="86" fill="transparent"/><rect data-i="2" x="100" y="0" width="30" height="86" fill="transparent"/><rect data-i="3" x="130" y="0" width="30" height="86" fill="transparent"/>
+        </svg>
+        <p class="ag-cost">Всё переключается сразу, пилюля прыгает. <b>Цена:</b> около 249ms, замер со всеми переходами выкл.</p></div>
+    </div>
+  </section>
+
   <p class="group">Уже решено</p>
 
   <section class="q is-settled" data-done="ask-table-expand-leave">
@@ -2978,4 +3081,102 @@ Jan#1: mark-leave, гаснет</p></div>
   });
 
   render();
+
+  const motionMs = (token) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(token)) || 0;
+  const slowFactor = (section) => parseFloat(section.style.getPropertyValue('--pf-slow')) || 1;
+
+  for (const toggle of document.querySelectorAll('.pf-slow input')) {
+    toggle.addEventListener('change', () => toggle.closest('.q').style.setProperty('--pf-slow', toggle.checked ? 5 : 1));
+  }
+
+  for (const plot of document.querySelectorAll('[data-pf-scatter]')) {
+    const section = plot.closest('.q');
+    const mode = plot.dataset.pfScatter;
+    const dots = [...plot.querySelectorAll('.ag-c1')].map((dot) => ({ x: +dot.getAttribute('cx'), y: +dot.getAttribute('cy') }));
+    const ring = plot.querySelector('.ag-ring');
+    const tether = plot.querySelector('.ag-tether');
+    let pointer = null;
+    let ringAt = null;
+    let target = null;
+    let frame = 0;
+    const draw = (gliding) => {
+      ring.setAttribute('cx', ringAt.x);
+      ring.setAttribute('cy', ringAt.y);
+      const showTether = mode === 'always' || (mode === 'glide' && gliding);
+      tether.style.visibility = showTether ? 'visible' : 'hidden';
+      if (showTether) {
+        tether.setAttribute('x1', pointer.x);
+        tether.setAttribute('y1', pointer.y);
+        tether.setAttribute('x2', ringAt.x);
+        tether.setAttribute('y2', ringAt.y);
+      }
+    };
+    plot.addEventListener('pointermove', (event) => {
+      const at = new DOMPoint(event.clientX, event.clientY).matrixTransform(plot.getScreenCTM().inverse());
+      pointer = { x: at.x, y: at.y };
+      const nearest = dots.reduce((best, dot) => (Math.hypot(dot.x - at.x, dot.y - at.y) < Math.hypot(best.x - at.x, best.y - at.y) ? dot : best));
+      ring.style.visibility = 'visible';
+      if (nearest === target) {
+        if (!frame) draw(false);
+        return;
+      }
+      target = nearest;
+      cancelAnimationFrame(frame);
+      frame = 0;
+      const from = ringAt ?? nearest;
+      if (from === nearest) {
+        ringAt = nearest;
+        draw(false);
+        return;
+      }
+      const duration = motionMs('--ds-motion-chart-state-duration') * slowFactor(section);
+      const start = performance.now();
+      const step = (now) => {
+        const progress = duration > 0 ? Math.min(1, (now - start) / duration) : 1;
+        const eased = 1 - (1 - progress) ** 3;
+        ringAt = { x: from.x + (nearest.x - from.x) * eased, y: from.y + (nearest.y - from.y) * eased };
+        draw(progress < 1);
+        frame = progress < 1 ? requestAnimationFrame(step) : 0;
+      };
+      frame = requestAnimationFrame(step);
+    });
+    plot.addEventListener('pointerleave', () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      target = null;
+      ringAt = null;
+      ring.style.visibility = 'hidden';
+      tether.style.visibility = 'hidden';
+    });
+  }
+
+  for (const chart of document.querySelectorAll('[data-pf-columns]')) {
+    const columns = [...chart.querySelectorAll('.pf-col')];
+    const labels = [...chart.querySelectorAll('.pf-label')];
+    const readout = chart.querySelector('.pf-readout');
+    let hot = -1;
+    const light = (index) => {
+      columns.forEach((column, at) => column.classList.toggle('is-lit', at === index));
+      labels.forEach((label, at) => label.classList.toggle('is-hot', at === index));
+    };
+    chart.addEventListener('pointerover', (event) => {
+      const hit = event.target.closest('[data-i]');
+      if (!hit || +hit.dataset.i === hot) return;
+      hot = +hit.dataset.i;
+      light(hot);
+      const column = columns[hot];
+      readout.querySelector('line').setAttribute('x2', +column.getAttribute('x') + +column.getAttribute('width'));
+      readout.querySelector('text').textContent = column.dataset.value;
+      readout.style.transform = `translate(0px, ${column.getAttribute('y')}px)`;
+      if (!readout.classList.contains('is-on')) {
+        readout.classList.add('is-on');
+        requestAnimationFrame(() => readout.classList.add('placed'));
+      }
+    });
+    chart.addEventListener('pointerleave', () => {
+      hot = -1;
+      light(-1);
+      readout.classList.remove('is-on', 'placed');
+    });
+  }
 </script>
