@@ -344,6 +344,7 @@ styles/_chart-data-table.scss {
 
 styles/_chart-frame.scss {
     --ds-chart-axis-line-color: (none);
+    --ds-chart-bg-color: (none);
     --ds-chart-focus-halo-color: var(--ds-chart-bg-color);
     --ds-chart-focus-ring-color: (none);
     --ds-chart-frame-bg-color: var(--ds-chart-bg-color);

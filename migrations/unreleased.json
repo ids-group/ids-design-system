@@ -269,6 +269,10 @@
     {
       "text": "A `ds-funnel-chart` stage enters growing from 96% about its own centre, as a `ds-scatter-chart` point does; it grew right and down from its top-left corner.",
       "verify": "Load a ds-funnel-chart and confirm each stage's centre holds still while it grows, with its left and right edges moving outward together."
+    },
+    {
+      "text": "Under forced colours a `ds-line-chart` annotation prints in `CanvasText` over a `Canvas` halo, as a reference-line label does; it kept its own colour on a white patch. `--ds-line-chart-annotation-halo-color` and `--ds-line-chart-annotation-halo-width` still set the halo in normal colours.",
+      "verify": "Turn on Windows high contrast, open a ds-line-chart with annotations and confirm each annotation reads in the system text colour over the system background."
     }
   ],
   "deleteList": [

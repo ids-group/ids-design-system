@@ -503,7 +503,6 @@ g[dsLineSeries] {
 
 g[dsReferenceLabel] {
     --ds-chart-axis-font-size: (none);
-    --ds-chart-bg-color: (none);
     --ds-chart-threshold-color: var(--chart-threshold-color);
 }
 

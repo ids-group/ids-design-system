@@ -1,22 +1,13 @@
+@use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/component-base' as component-base;
 @include component-base.rules;
 
-// `paint-order` puts the halo stroke under the glyphs; no backing rectangle to measure.
 .threshold-label {
   --_chart-threshold-color: var(--ds-chart-threshold-color, var(--chart-threshold-color));
 
   fill: var(--_chart-threshold-color);
   font-size: var(--ds-chart-axis-font-size);
   font-weight: 600;
-  paint-order: stroke;
-  stroke: var(--ds-chart-bg-color);
-  stroke-width: 3;
-  stroke-linejoin: round;
-}
 
-@media (forced-colors: active) {
-  .threshold-label {
-    fill: CanvasText;
-    stroke: Canvas;
-  }
+  @include chart-frame.label-halo;
 }

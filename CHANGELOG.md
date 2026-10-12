@@ -204,6 +204,11 @@
 - **An expanded `ds-table` row folds all the way.** Opening a row's panel started 24px tall and
   closing it stopped at 24px before the row dropped out: the cell padding sat outside the fold. The
   padding now folds with the panel, so the row grows from 0 and shrinks to 0.
+- **Chart labels share one halo.** A `ds-line-chart` annotation, a reference-line label and the
+  `showChange` percentage draw the same 3px halo in `--ds-chart-bg-color` with rounded joins, and
+  under forced colours each prints in `CanvasText` over a `Canvas` halo; an annotation kept its
+  own colour on a white patch there, and the percentage's halo had sharp corners.
+  `--ds-line-chart-annotation-halo-color` and `-halo-width` still set the annotation's halo.
 
 ### What you can now DELETE
 
