@@ -10,6 +10,7 @@ import {
   afterRenderEffect,
   booleanAttribute,
   computed,
+  contentChildren,
   effect,
   forwardRef,
   inject,
@@ -84,6 +85,7 @@ import {
   type ChartScales,
   type ChartTooltipSource,
 } from './chart-scales.token';
+import { LineSeriesComponent } from './line-series.component';
 
 // Between the value axis and the pill that prints the reading there.
 const READOUT_PILL_GAP = 2;
@@ -206,6 +208,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
    *  press released in its own category still pins. Off by default. */
   readonly selectRange = input(false, { transform: booleanAttribute });
 
+  /** Answers the pointer on the axes: the category label in bold, a guide from the value axis and
+   *  the value there in a pill on the axis. On by default. */
+  readonly axisReadout = input(true, { transform: booleanAttribute });
+
   protected readonly tooltipSwatchesResolved = this.defaults.tooltipSwatches;
   readonly hoverDelayMs = this.defaults.hoverDelayMs;
 
@@ -308,7 +314,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
     afterRenderEffect({
       read: () => {
-        this.axisReadout();
+        this.shownReadout();
         this.rangeTotal();
         this.readoutTextWidth.set(this.widestLabel('.readout-text'));
         this.rangeTextWidth.set(this.widestLabel('.range-text'));
@@ -850,6 +856,12 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     this.cursorPinned() && this.cursorBand() ? [this.activeIndex()] : [],
   );
 
+  private readonly lineSeries = contentChildren(LineSeriesComponent, {
+    descendants: true,
+  });
+
+  protected readonly pinnedLine = computed(() => this.lineSeries().length > 0);
+
   protected readonly bandPins = computed(
     () => this.pinOnClickResolved() && this.pointerInBand(),
   );
@@ -1148,8 +1160,8 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   private readonly readoutTextWidth = signal(0);
 
   /** A guide from the value axis at the active reading, and the axis value there in a pill on the axis. */
-  protected readonly axisReadout = computed(() => {
-    const readout = this.activeReadout();
+  protected readonly shownReadout = computed(() => {
+    const readout = this.axisReadout() ? this.activeReadout() : null;
     if (!readout) {
       return null;
     }
@@ -1170,7 +1182,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     return {
       categoryIndex: readout.categoryIndex,
       y: readout.y,
-      label: this.valueFormatResolved()(value, 'tooltip'),
+      label: this.valueFormatResolved()(value, 'readout'),
       x1: onRight && toMark ? centre - half : this.plot().left,
       x2: !onRight && toMark ? centre + half : this.plotRight(),
       pillWidth,
@@ -1181,7 +1193,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   });
 
   protected readonly hotCategory = computed(
-    () => this.axisReadout()?.categoryIndex ?? -1,
+    () => this.shownReadout()?.categoryIndex ?? -1,
   );
 
   private readonly bandElement = viewChild<ElementRef<Element>>('cursorBandEl');

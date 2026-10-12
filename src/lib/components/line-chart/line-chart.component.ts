@@ -263,6 +263,10 @@ export class LineChartComponent
    *  it, and the readings outside faded. Escape or a press outside clears it. Off by default. */
   readonly selectRange = input(false, { transform: booleanAttribute });
 
+  /** Answers the pointer on the axes: the category label in bold, a guide from the value axis and
+   *  the value there in a pill on the axis. On by default. */
+  readonly axisReadout = input(true, { transform: booleanAttribute });
+
   /** On the hovered reading, thickens the stretches from the reading before it and to the reading
    *  after it, each in its own rising or falling colour and with its own change in percent; with
    *  several series, for the one singled out. */

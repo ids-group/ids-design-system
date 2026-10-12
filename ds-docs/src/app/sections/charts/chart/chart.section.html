@@ -901,6 +901,33 @@
     </li>
 
     <li>
+      With a <code class="t-mono-inline">dsLineSeries</code> in the chart, a
+      pinned category keeps its line; a column-only chart keeps the pin alone.
+    </li>
+
+    <li>
+      The axes answer the pointer: a bold category label, a guide and the value
+      in a pill on the axis.
+      <code class="t-mono-inline">
+        axisReadout="false"
+      </code> turns it off, on
+      <code class="t-mono-inline">
+        ds-chart
+      </code> and the column, line and
+      waterfall charts.
+    </li>
+
+    <li>
+      The pill prints through the chart's
+      <code class="t-mono-inline">
+        valueFormat
+      </code> at the location
+      <code class="t-mono-inline">
+        'readout'
+      </code>; the built-in format spells it out in full, as in a tooltip.
+    </li>
+
+    <li>
       Keys, with <code class="t-mono-inline">interactive</code> on chart and
       marks: the category cursor table in
       <a routerLink="/foundations/charts">
@@ -959,6 +986,44 @@
 
       <div class="state-cell-label">
         cursor = none, two marks: each mark answers
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-chart
+        axisReadout="false"
+        [categories]="orderMonths">
+        <svg:g
+          dsColumnSeries
+          seriesLabel="Orders"
+          [data]="orderColumns"
+          [showValues]="false" />
+
+        <svg:g
+          dsLineSeries
+          [data]="basketSeries" />
+      </ds-chart>
+
+      <div class="state-cell-label">
+        axisReadout = false: no label, guide or pill
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-chart
+        interactive
+        [categories]="orderMonths"
+        [valueFormat]="compactReadout">
+        <svg:g
+          dsColumnSeries
+          interactive
+          seriesLabel="Revenue"
+          [data]="revenueColumns"
+          [showValues]="false" />
+      </ds-chart>
+
+      <div class="state-cell-label">
+        valueFormat: a compact pill, a full tooltip
       </div>
     </div>
   </div>
