@@ -4,7 +4,7 @@
 
 ```ts
 @Component({ selector: 'ds-scatter-chart', exportAs: 'dsScatterChart' })
-export class ScatterChartComponent extends DsChartBase implements ChartDimmable, ChartWithDataTable, ChartWithTooltipTrigger {
+export class ScatterChartComponent extends DsChartBase implements ChartDimmable, ChartStaggered, ChartWithDataTable, ChartWithTooltipTrigger {
     public constructor();
     protected readonly accessibleName = computed(…);
     protected readonly activeMark = chartActiveMark(…);
@@ -21,6 +21,7 @@ export class ScatterChartComponent extends DsChartBase implements ChartDimmable,
     protected readonly droppedCount = computed(…);
     private readonly extent;
     private readonly flatMarks;
+    private readonly followRing;
     protected readonly highlightedSeries = signal<string | null>(…);
     private hoveredIndex;
     protected readonly isEmpty = computed(…);
@@ -40,13 +41,20 @@ export class ScatterChartComponent extends DsChartBase implements ChartDimmable,
     protected readonly plotRight = this.plot.left + this.plot.width;
     public readonly pointClicked = output<ScatterChartReading>();
     protected pointLabel(series: ScatterChartSeries, point: ScatterPoint): string;
+    protected pointStagger(cx: number): string;
+    protected readonly pointer = signal<{ x: number; y: number; } | null>(…);
     protected readonly renderReady = chartRenderGate(…);
+    private readonly ringElement;
+    protected readonly ringedMark = computed(…);
     protected readonly series = computed<readonly PlacedSeries[]>(…);
     protected readonly seriesStart = computed(…);
     protected readonly skeletonLayout = (() => { const share = (value: number, of: number) => `${(value / of) * 100}%`; const steps = [0, 0.25, 0.5, 0.75, 1]; return { plotLeft: share(this.plot.left, SCATTER_VIEW_WIDTH), plotWidth: share(this.plot.width, SCATTER_VIEW_WIDTH), labelEnd: share(SCATTER_VIEW_WIDTH - this.plot.left + 8, SCATTER_VIEW_WIDTH), categoryTop: share(this.plotBottom + 10, SCATTER_VIEW_HEIGHT), titleTop: share(this.plotBottom + 26, SCATTER_VIEW_HEIGHT), rows: steps.map((step) => share(this.plot.top + step * this.plot.height, SCATTER_VIEW_HEIGHT)), columns: steps.map((step) => share(this.plot.left + step * this.plot.width, SCATTER_VIEW_WIDTH)) }; })(…);
+    public readonly staggerMs = input(40, { transform: numberAttribute });
+    private readonly staggerSpread;
     protected readonly tableIsOpen = computed(…);
     protected readonly tableOpen = signal(…);
     protected readonly tableRows = computed(…);
+    private readonly tetherElement;
     public readonly tickCount = input(SCATTER_DEFAULT_TICK_COUNT, { transform: numberAttribute });
     public readonly tooltip = input<ChartItemTooltipTrigger>('item');
     protected readonly tooltipContext = computed<ChartTooltipContext | null>(…);
@@ -55,6 +63,7 @@ export class ScatterChartComponent extends DsChartBase implements ChartDimmable,
     protected readonly xTicks = computed(…);
     public readonly yLabel = input<string | null>(null);
     protected readonly yTicks = computed(…);
+    private readonly zone;
 }
 
 export type ScatterChartDecimator = 'minMax' | 'lttb' | 'none';
@@ -81,10 +90,13 @@ export interface ScatterPoint {
 
 ```css
 ds-scatter-chart {
+    --ds-chart-cursor-line-color: (none);
     --ds-chart-dim-opacity: (none);
     --ds-chart-plot-bg-color: transparent;
     --ds-motion-chart-mark-duration: (none);
     --ds-motion-chart-mark-easing: (none);
+    --ds-motion-chart-state-duration: (none);
+    --ds-motion-chart-state-easing: (none);
     --ds-scatter-chart-axis-font-size: var(--ds-chart-axis-font-size);
     --ds-scatter-chart-axis-label-color: var(--ds-chart-axis-label-color);
     --ds-scatter-chart-axis-line-color: var(--ds-chart-axis-line-color);

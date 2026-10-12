@@ -11,8 +11,10 @@ export class PieChartComponent extends DsChartBase implements ChartDimmable, Cha
     protected readonly activeMark = chartActiveMark(…);
     private arcAt;
     public readonly centerCompact = input(true, { transform: booleanAttribute });
+    private readonly centerEntry;
     private readonly centerFit;
     protected readonly centerFontSize = computed(…);
+    protected readonly centerKey = computed(…);
     public readonly centerLabel = input<string | null>(null);
     public readonly centerPlacement = input<PieChartCenterPlacement>('inside');
     protected readonly centerText = computed(…);
@@ -31,12 +33,9 @@ export class PieChartComponent extends DsChartBase implements ChartDimmable, Cha
     private readonly fitsInside;
     protected readonly hole = computed(…);
     public readonly innerRadius = input(DEFAULT_INNER_RADIUS, { transform: numberAttribute });
-    protected isDimmed(index: number): boolean;
     protected readonly isEmpty = computed(…);
     protected readonly leaveMark = leaveMark;
     public readonly legend = input<'end' | 'bottom' | 'none'>('end');
-    private readonly legendDwell;
-    private readonly legendHighlight;
     public readonly maxSlices = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
     protected onLegendClick(slice: PieChartSlice, index: number, event: Event): void;
     protected onLegendEnter(index: number, event: Event): void;
@@ -57,6 +56,8 @@ export class PieChartComponent extends DsChartBase implements ChartDimmable, Cha
     private readonly ringElement;
     private readonly ringWidth;
     protected readonly roving = rovingMarks(…);
+    protected readonly shownCenterLabel = computed(…);
+    private readonly shownCenterValue;
     public readonly skeletonCount = input(CHART_SKELETON_COUNT, { transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT) });
     protected readonly skeletonMarks = computed(…);
     protected readonly skeletonRows = computed(…);
