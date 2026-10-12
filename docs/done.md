@@ -73,14 +73,14 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 
 ## Pressed state on neutral rows and small buttons (2026-09-24)
 - Neutral rows and small buttons step to `--surface-muted` on `:active` (sidenav, date/time pickers, toast action, copy button, multi-select select-all, tab close button)
-- An interactive `ds-tag` takes the shared `press.feedback` dip instead (Stas, deck `3-interaction-formula`)
+- An interactive `ds-tag` takes the shared `press.feedback` dip instead (Stas, deck `interaction-formula`)
 
 ## Button colour-family slots spelled out (2026-09-24)
 - `ds-button` and `ds-icon-button` private slots `--c-*` are `--_family-*`, and inner classes `.c-<color>` and `.v-<variant>` are `.color-<color>` and `.variant-<variant>` (three `class-rename` items)
 
 ## Waterfall deck closed and interaction deck narrowed (2026-09-24)
 - Decided: `ds-waterfall-chart` keeps its own tag, deck `waterfall-mode-or-component` moved to `implemented/` (Stas)
-- Decided: override slot recorded for later and formula deferred (Stas); success/warning pressed was found already in the code (deck `3-interaction-formula`)
+- Decided: override slot recorded for later and formula deferred (Stas); success/warning pressed was found already in the code (deck `interaction-formula`)
 
 ## Chart tooltip, focus and hatching fixes (2026-09-24)
 - The category tooltip panel hangs over the highest reading at the active category via mark `axisOrigin`
