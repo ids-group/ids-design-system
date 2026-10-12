@@ -13,7 +13,9 @@ import type { PaginationLayout } from './pagination.types';
 
 export interface DsConfig {
   /** BCP-47 locale every component formats numbers and dates in. Default is Angular's
-   *  `LOCALE_ID`. A section key that names a locale (`datePicker.locale`) wins over this. */
+   *  `LOCALE_ID`, except that its own default `'en-US'` reads as `'en-GB'`: English with a
+   *  Monday week, a 24-hour clock and day-month-year dates. Set `'en-US'` here for US formats. A
+   *  section key that names a locale (`datePicker.locale`) wins over this. */
   locale?: string;
   field?: {
     /** Default for every field's `reserveMessage`. Default `false`. `true` applies to EVERY field

@@ -127,14 +127,20 @@
   `morphGrowth`, `morphing` and `ngOnChanges`; the internal `ChartLegendComponent` gained `highlight`
   and lost `onItemEnter` and `onItemLeave`. The internal `pointScale` with its `PointScale` type,
   `tickStep` and `polylinePoints` are removed.
+- **An app that never set a locale formats in British English.** Angular's default `LOCALE_ID`,
+  `'en-US'`, now reads as `'en-GB'` everywhere the library formats: English names, Monday-first
+  weeks, a 24-hour clock and `DD/MM/YYYY` typed dates in `ds-date-picker`, where the picker used
+  `MM/DD/YYYY`. Numbers do not change. Any other `LOCALE_ID`, and `DsConfig.locale`, are used as
+  given; `ds-sparkline` now reads `DsConfig.locale` too. For US formats:
+  `provideDsConfig({ locale: 'en-US' })`.
 - **The calendar week and the clock follow the locale.** Unset, `ds-date-picker` starts its week
   on the first day of its locale (`locale`, `datePicker.locale`, the config `locale`, then
-  `LOCALE_ID`) and `ds-time-picker` shows the clock of the config `locale`, then `LOCALE_ID`:
-  en-US, the default `LOCALE_ID`, now gets Sunday-first weeks and 12-hour times, en-GB and de-DE
-  keep Monday and 24 hours. A browser with no week data keeps Monday. `firstDayOfWeek`,
-  `datePicker.firstDayOfWeek`, `format` and `timePicker.format` still win;
+  `LOCALE_ID`) and `ds-time-picker` shows the clock of the config `locale`, then `LOCALE_ID`: en-GB
+  (also an app with no locale), de-DE and ru-RU keep Monday and 24 hours; a `DsConfig.locale` of
+  en-US gets Sunday-first weeks and 12-hour times. A browser with no week data keeps Monday.
+  `firstDayOfWeek`, `datePicker.firstDayOfWeek`, `format` and `timePicker.format` still win;
   `provideDsConfig({ datePicker: { firstDayOfWeek: 1 }, timePicker: { format: '24h' } })` keeps
-  the old Monday and 24 hours.
+  Monday and 24 hours under any locale.
 
 ### Fixed
 
@@ -179,8 +185,6 @@
 | Delete | Why | Replace with |
 | --- | --- | --- |
 | `rescaleOnHide` on `ds-line-chart` | `true` is the default | nothing |
-| `[firstDayOfWeek]="0"` on `ds-date-picker` under an en-US locale | Sunday is that locale's first day | nothing |
-| `format="12h"` on `ds-time-picker` under an en-US locale | 12 hours is that locale's clock | nothing |
 
 ## 0.15.0 — 2026-10-09
 
