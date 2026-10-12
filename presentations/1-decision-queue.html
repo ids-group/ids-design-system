@@ -853,7 +853,7 @@
 
 <main>
   <div class="masthead">
-    <h1>5 асков консьюмеров и 52 решения, каждое с нарисованными вариантами</h1>
+    <h1>7 асков консьюмеров и 52 решения, каждое с нарисованными вариантами</h1>
     <p class="lede">
       Сверху - всё, чего ждёт консьюмер: фиксы, хуки и фичи из бэклога, каждый показан как есть
       сейчас и как будет после. Ниже - открытые деки и бакет <code>Decisions</code>. Вариант
@@ -973,6 +973,59 @@
       </div>
     </section>
 
+  <section class="q" data-q="ask-info-hint-content">
+      <div class="q-head">
+        <span class="q-num">02</span>
+        <h2 class="q-title">ⓘ с содержимым, а не только текстом</h2>
+        <a class="q-src" href="27-info-hint-content.html">P2 · mm-ecm ME-495 · фича · дека</a>
+      </div>
+      <p class="q-sub">
+        На Data ingest самодельная ⓘ открывает <code>ds-popover</code>-диалог «Published» со списком версий.
+        <code>ds-info-hint</code> сегодня берёт только строку <code>text</code>. Нужно то же поведение ⓘ с содержимым от консьюмера.
+      </p>
+      <div class="opts">
+        <div class="opt"><h3>A · Содержимое внутри тега <span class="star">★</span></h3>
+          <p class="css">&lt;ds-info-hint ariaLabel="..."&gt;
+  &lt;ul&gt;...&lt;/ul&gt;
+&lt;/ds-info-hint&gt;</p>
+          <dl class="layer"><dt>Библиотека</dt><dd class="gain">text необязателен, ng-content в окно</dd></dl>
+        </div>
+        <div class="opt"><h3>B · Шаблон во входе</h3>
+          <p class="css">&lt;ds-info-hint [content]="pubList" /&gt;
+&lt;ng-template #pubList&gt;...</p>
+          <dl class="layer"><dt>Библиотека</dt><dd>вход TemplateRef, разметка в двух местах</dd></dl>
+        </div>
+        <div class="opt"><h3>C · ds-popover со стандартной ⓘ</h3>
+          <p class="css">&lt;ds-info-hint mode="dialog"
+  [popover]="pubPop" /&gt;</p>
+          <dl class="layer"><dt>Поведение</dt><dd>только клик, крестик, ловушка фокуса</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-info-hint-icon">
+      <div class="q-head">
+        <span class="q-num">03</span>
+        <h2 class="q-title">Значок как кнопка подсказки</h2>
+        <a class="q-src" href="27-info-hint-content.html">P2 · mm-ecm ME-495 · фича · дека</a>
+      </div>
+      <p class="q-sub">
+        Нужно, только если в ME-495 выберешь вариант A для значка. Сегодня <code>icon</code> - только <code>help</code> или <code>info</code>,
+        цвет кнопка ставит сама.
+      </p>
+      <div class="opts">
+        <div class="opt"><h3>A · Любой значок DS, цвет от консьюмера <span class="star">★</span></h3>
+          <p class="css">&lt;ds-info-hint icon="warn" ... /&gt;
+--ds-info-hint-color: var(--warning-text);</p>
+          <dl class="layer"><dt>Библиотека</dt><dd class="gain">IconName + токен цвета</dd></dl>
+        </div>
+        <div class="opt"><h3>B · Вход tone</h3>
+          <p class="css">&lt;ds-info-hint icon="warn" tone="warning" /&gt;</p>
+          <dl class="layer"><dt>Библиотека</dt><dd>neutral, warning, danger</dd></dl>
+        </div>
+      </div>
+    </section>
+
 
 
 
@@ -989,7 +1042,7 @@
 
   <section class="q" data-q="ask-indeterminate">
     <div class="q-head">
-      <span class="q-num">02</span>
+      <span class="q-num">04</span>
       <h2 class="q-title">Форма неопределённого прогресса на узком треке</h2>
       <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
     </div>
@@ -1066,7 +1119,7 @@
 
   <section class="q" data-q="ask-journey-canvas">
       <div class="q-head">
-        <span class="q-num">03</span>
+        <span class="q-num">05</span>
         <h2 class="q-title">Ни один компонент не рисует ветвящийся граф узлов и рёбер</h2>
         <span class="q-src">P3 · mm-ecm-kb · припарковано Stas: ждать второго консьюмера</span>
       </div>
@@ -1109,7 +1162,7 @@
 
   <section class="q" data-q="ask-text-muted">
       <div class="q-head">
-        <span class="q-num">04</span>
+        <span class="q-num">06</span>
         <h2 class="q-title">Приглушённый текст по умолчанию не проходит AA</h2>
         <span class="q-src">P3 · ai-sdlc · контраст, запаркован</span>
       </div>
@@ -1165,7 +1218,7 @@
 
   <section class="q" data-q="ask-brand-residue">
       <div class="q-head">
-        <span class="q-num">05</span>
+        <span class="q-num">07</span>
         <h2 class="q-title">На бренде другого цвета остаются синие ссылки и подложки</h2>
         <span class="q-src">P3 · pinkmoon, ai-sdlc · бренд, запаркован</span>
       </div>
@@ -1215,7 +1268,7 @@
 
   <section class="q" data-q="chart-palette-lightness">
     <div class="q-head">
-      <span class="q-num">06</span>
+      <span class="q-num">08</span>
       <h2 class="q-title">Палитра чартов разделяет по тону и почти не по светлоте</h2>
       <a class="q-src" href="../docs/todo.md">палитра чартов по светлоте</a>
     </div>
@@ -1243,7 +1296,7 @@
 
   <section class="q" data-q="colour-engine">
     <div class="q-head">
-      <span class="q-num">07</span>
+      <span class="q-num">09</span>
       <h2 class="q-title">Каким методом выводить цвет из одного токена на роль</h2>
       <a class="q-src" href="2-color-engine-derivation.html">дека color-engine-derivation</a>
     </div>
@@ -1281,7 +1334,7 @@
 
   <section class="q" data-q="interaction-b1">
     <div class="q-head">
-      <span class="q-num">08</span>
+      <span class="q-num">10</span>
       <h2 class="q-title">Pressed у тональной кнопки и у danger-пункта меню</h2>
       <a class="q-src" href="4-interaction-formula.html">дека interaction-formula</a>
     </div>
@@ -1318,7 +1371,7 @@
 
   <section class="q" data-q="theme-recipe">
     <div class="q-head">
-      <span class="q-num">09</span>
+      <span class="q-num">11</span>
       <h2 class="q-title">Рецепт темы против ручных пиков</h2>
       <a class="q-src" href="../docs/todo.md">рецепт темы против ручных пиков</a>
     </div>
@@ -1354,7 +1407,7 @@
 
   <section class="q" data-q="warning-text">
     <div class="q-head">
-      <span class="q-num">10</span>
+      <span class="q-num">12</span>
       <h2 class="q-title">Какой цвет текста ставить на жёлтый тинт</h2>
       <a class="q-src" href="7-warning-text-colour.html">дека warning-text-colour</a>
     </div>
@@ -1403,7 +1456,7 @@
 
   <section class="q" data-q="locale-week-and-hour">
     <div class="q-head">
-      <span class="q-num">11</span>
+      <span class="q-num">13</span>
       <h2 class="q-title">Неделя и 12/24 часа по локали</h2>
       <a class="q-src" href="9-locale-week-and-hour.html">дека locale-week-and-hour</a>
     </div>
@@ -1439,7 +1492,7 @@
 
   <section class="q" data-q="stepper-dropzone-fields">
     <div class="q-head">
-      <span class="q-num">12</span>
+      <span class="q-num">14</span>
       <h2 class="q-title">ds-number-stepper и ds-dropzone - поля или нет</h2>
       <a class="q-src" href="../docs/todo.md">ds-number-stepper и ds-dropzone в системе полей</a>
     </div>
@@ -1470,7 +1523,7 @@
 
   <section class="q" data-q="select-multi">
     <div class="q-head">
-      <span class="q-num">13</span>
+      <span class="q-num">15</span>
       <h2 class="q-title">ds-select с multi - строить ли</h2>
       <a class="q-src" href="6-select-native-multi.html">дека select-native-multi</a>
     </div>
@@ -1495,7 +1548,7 @@
 
   <section class="q" data-q="picker-height">
     <div class="q-head">
-      <span class="q-num">14</span>
+      <span class="q-num">16</span>
       <h2 class="q-title">Высота списка пикера - какой ручкой задавать</h2>
       <a class="q-src" href="8-picker-list-height.html">дека picker-list-height</a>
     </div>
@@ -1555,7 +1608,7 @@
 
   <section class="q" data-q="cdk-menu">
     <div class="q-head">
-      <span class="q-num">15</span>
+      <span class="q-num">17</span>
       <h2 class="q-title">Переходить ли на CDK Menu</h2>
       <a class="q-src" href="../docs/todo.md">переход на CDK Menu</a>
     </div>
@@ -1586,7 +1639,7 @@
 
   <section class="q" data-q="signal-forms">
     <div class="q-head">
-      <span class="q-num">16</span>
+      <span class="q-num">18</span>
       <h2 class="q-title">Как выглядят pending и dirty</h2>
       <a class="q-src" href="../docs/todo.md">вид pending и dirty у signal-forms</a>
     </div>
@@ -1625,7 +1678,7 @@
 
   <section class="q" data-q="row-chart-row-type">
     <div class="q-head">
-      <span class="q-num">17</span>
+      <span class="q-num">19</span>
       <h2 class="q-title">Имя типа строки у <code>ds-row-chart</code></h2>
       <a class="q-src" href="../docs/todo.md">переименование ds-bar-chart</a>
     </div>
@@ -1680,7 +1733,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
 
   <section class="q" data-q="waterfall-rename">
     <div class="q-head">
-      <span class="q-num">18</span>
+      <span class="q-num">20</span>
       <h2 class="q-title">Переименовать ли ds-waterfall-chart</h2>
       <a class="q-src" href="../docs/todo.md">переименование ds-waterfall-chart</a>
     </div>
@@ -1714,7 +1767,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="typography-classes">
     <div class="q-head">
-      <span class="q-num">19</span>
+      <span class="q-num">21</span>
       <h2 class="q-title">20 классов типографики всё ещё .t-*</h2>
       <a class="q-src" href="../docs/todo.md">классы типографики .t-*</a>
     </div>
@@ -1745,7 +1798,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="chart-motion">
     <div class="q-head">
-      <span class="q-num">20</span>
+      <span class="q-num">22</span>
       <h2 class="q-title">Сколько движения добавить в графики</h2>
       <a class="q-src" href="12-chart-motion.html">дека chart-motion</a>
     </div>
@@ -1760,7 +1813,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="chart-motion-extras">
     <div class="q-head">
-      <span class="q-num">21</span>
+      <span class="q-num">23</span>
       <h2 class="q-title">Какие дополнения строить к выбранному объёму движения</h2>
       <a class="q-src" href="13-chart-motion-extras.html">дека chart-motion-extras</a>
     </div>
@@ -1773,7 +1826,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="unread-tokens">
     <div class="q-head">
-      <span class="q-num">22</span>
+      <span class="q-num">24</span>
       <h2 class="q-title">121 публичный токен не читает сама библиотека</h2>
       <a class="q-src" href="14-unread-tokens.html">дека unread-tokens</a>
     </div>
@@ -1787,7 +1840,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="unasked-decisions">
     <div class="q-head">
-      <span class="q-num">23</span>
+      <span class="q-num">25</span>
       <h2 class="q-title">Шесть изменений поведения, сделанных без выбора</h2>
       <a class="q-src" href="15-unasked-decisions.html">дека unasked-decisions</a>
     </div>
@@ -1802,7 +1855,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="angular-22">
     <div class="q-head">
-      <span class="q-num">24</span>
+      <span class="q-num">26</span>
       <h2 class="q-title">Когда переходим на Angular 22</h2>
       <a class="q-src" href="../docs/todo.md">апгрейд на Angular 22, P3</a>
     </div>
@@ -1841,7 +1894,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="npm-2027">
     <div class="q-head">
-      <span class="q-num">25</span>
+      <span class="q-num">27</span>
       <h2 class="q-title">Чем заменить публикацию в npm с января 2027</h2>
       <a class="q-src" href="../docs/todo.md">публикация в npm после января 2027</a>
     </div>
@@ -1886,7 +1939,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="claude-design-ci">
     <div class="q-head">
-      <span class="q-num">26</span>
+      <span class="q-num">28</span>
       <h2 class="q-title">Публикация в Claude Design из Bitbucket</h2>
       <a class="q-src" href="../docs/todo.md">публикация в Claude Design из CI</a>
     </div>
@@ -1920,7 +1973,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="changelog-wrap">
     <div class="q-head">
-      <span class="q-num">27</span>
+      <span class="q-num">29</span>
       <h2 class="q-title">Перевёрстывать ли CHANGELOG в 100 колонок</h2>
       <a class="q-src" href="../docs/todo.md">перевёрстка CHANGELOG в 100 колонок</a>
     </div>
@@ -1966,7 +2019,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="fix-all-html">
     <div class="q-head">
-      <span class="q-num">28</span>
+      <span class="q-num">30</span>
       <h2 class="q-title">fix:all переформатирует HTML, с которым потом спорит eslint</h2>
       <a class="q-src" href="../docs/todo.md">fix:all против eslint на HTML</a>
     </div>
@@ -2007,7 +2060,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="stale-ds-css">
     <div class="q-head">
-      <span class="q-num">29</span>
+      <span class="q-num">31</span>
       <h2 class="q-title">Ничто не ловит устаревший presentations/ds.css</h2>
       <a class="q-src" href="../docs/todo.md">устаревший presentations/ds.css</a>
     </div>
@@ -2045,7 +2098,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="todo-index-gate">
     <div class="q-head">
-      <span class="q-num">30</span>
+      <span class="q-num">32</span>
       <h2 class="q-title">todo-index --check вне lint:all</h2>
       <a class="q-src" href="../docs/todo.md">todo-index --check вне lint:all</a>
     </div>
@@ -2085,7 +2138,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="manifest-practices">
     <div class="q-head">
-      <span class="q-num">31</span>
+      <span class="q-num">33</span>
       <h2 class="q-title">Какие из десяти практик формата манифестов берём</h2>
       <a class="q-src" href="5-migration-manifest-audit.html">дека migration-manifest-audit</a>
     </div>
@@ -2185,7 +2238,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="automation-coverage">
     <div class="q-head">
-      <span class="q-num">32</span>
+      <span class="q-num">34</span>
       <h2 class="q-title">Три пути ds-table и пять групп компонентов ни разу не прокликаны</h2>
       <a class="q-src" href="../docs/todo.md">непрокликанные пути ds-table</a>
     </div>
@@ -2235,7 +2288,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="schematics-tsconfig">
     <div class="q-head">
-      <span class="q-num">33</span>
+      <span class="q-num">35</span>
       <h2 class="q-title">schematics/tsconfig просит moduleResolution: node</h2>
       <a class="q-src" href="../docs/todo.md">schematics/tsconfig moduleResolution</a>
     </div>
@@ -2272,7 +2325,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="design-manifest-templates">
     <div class="q-head">
-      <span class="q-num">34</span>
+      <span class="q-num">36</span>
       <h2 class="q-title">templates и startingPoints в манифесте Claude Design</h2>
       <a class="q-src" href="../docs/todo.md">templates и startingPoints в манифесте</a>
     </div>
@@ -2308,7 +2361,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="docs-blocks">
     <div class="q-head">
-      <span class="q-num">35</span>
+      <span class="q-num">37</span>
       <h2 class="q-title">TimeColumns без собственного блока в ds-docs</h2>
       <a class="q-src" href="../docs/todo.md">компоненты без блока в ds-docs</a>
     </div>
@@ -2363,7 +2416,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="text-snap-press">
     <div class="q-head">
-      <span class="q-num">36</span>
+      <span class="q-num">38</span>
       <h2 class="q-title">Рывок текста в конце нажатия кнопки</h2>
       <a class="q-src" href="22-text-snap-scale.html">дека text-snap-scale</a>
     </div>
@@ -2380,7 +2433,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="text-snap-card">
     <div class="q-head">
-      <span class="q-num">37</span>
+      <span class="q-num">39</span>
       <h2 class="q-title">Card при наведении: подъём или рост</h2>
       <a class="q-src" href="22-text-snap-scale.html">дека text-snap-scale</a>
     </div>
@@ -2395,7 +2448,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="text-snap-rule">
     <div class="q-head">
-      <span class="q-num">38</span>
+      <span class="q-num">40</span>
       <h2 class="q-title">Как в DS масштабировать текст</h2>
       <a class="q-src" href="22-text-snap-scale.html">дека text-snap-scale</a>
     </div>
@@ -2408,7 +2461,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="text-snap-funnel">
     <div class="q-head">
-      <span class="q-num">39</span>
+      <span class="q-num">41</span>
       <h2 class="q-title">Ступень funnel растёт с маленьким шагом в конце</h2>
       <a class="q-src" href="22-text-snap-scale.html">дека text-snap-scale</a>
     </div>
@@ -2423,7 +2476,7 @@ ds-waterfall-chart { --ds-waterfall-chart-connector-color: currentColor; }</p>
 
   <section class="q" data-q="ag-duplicate-labels">
     <div class="q-head">
-      <span class="q-num">40</span>
+      <span class="q-num">42</span>
       <h2 class="q-title">Две колонки с меткой «Jan»: при удалении первой едет не та</h2>
       <span class="q-src">chart.math.ts:426 · column-series.component.ts:437 · 0e868e686</span>
     </div>
@@ -2470,7 +2523,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-hide-rescale">
     <div class="q-head">
-      <span class="q-num">41</span>
+      <span class="q-num">43</span>
       <h2 class="q-title">Скрыл серию в легенде: колонки перемасштабируют ось, линия нет</h2>
       <span class="q-src">column-chart.component.ts:291 · line-chart.component.ts:242 · a89b2eaec</span>
     </div>
@@ -2505,7 +2558,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-readout-switch">
     <div class="q-head">
-      <span class="q-num">42</span>
+      <span class="q-num">44</span>
       <h2 class="q-title">Отклик оси на наведение не выключается</h2>
       <span class="q-src">chart.component.ts:1146 · chart.component.html:174 · 6502f09e0</span>
     </div>
@@ -2545,7 +2598,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-readout-format">
     <div class="q-head">
-      <span class="q-num">43</span>
+      <span class="q-num">45</span>
       <h2 class="q-title">Пилюля на оси печатает полное число, а тики - короткое</h2>
       <span class="q-src">chart.component.ts:1168 · charts-format.ts:27 · 6502f09e0</span>
     </div>
@@ -2570,7 +2623,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-show-change">
     <div class="q-head">
-      <span class="q-num">44</span>
+      <span class="q-num">46</span>
       <h2 class="q-title">«Изменение к прошлой точке» включено по умолчанию</h2>
       <span class="q-src">line-series.component.ts:213 · line-chart.component.ts:268 · 50b5c54fa</span>
     </div>
@@ -2597,7 +2650,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-hover-switches">
     <div class="q-head">
-      <span class="q-num">45</span>
+      <span class="q-num">47</span>
       <h2 class="q-title">Центр pie, метка на шкале heatmap, ближайшая точка scatter: не выключаются</h2>
       <span class="q-src">pie-chart.component.ts:441 · heatmap-chart.component.ts:156 · scatter-chart.component.ts:481 · 30e6a5bb1 · f4fa4867b · 46a912b46</span>
     </div>
@@ -2623,7 +2676,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-scatter-reach">
     <div class="q-head">
-      <span class="q-num">46</span>
+      <span class="q-num">48</span>
       <h2 class="q-title">Scatter отвечает ближайшей точкой с любого места поля</h2>
       <span class="q-src">scatter-chart.component.ts:80 · :481 · 46a912b46</span>
     </div>
@@ -2661,7 +2714,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-heatmap-gap">
     <div class="q-head">
-      <span class="q-num">47</span>
+      <span class="q-num">49</span>
       <h2 class="q-title">Шкала heatmap опустилась на 12px под метку</h2>
       <span class="q-src">heatmap-chart.component.scss:142 · f4fa4867b</span>
     </div>
@@ -2684,7 +2737,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-legend-dim">
     <div class="q-head">
-      <span class="q-num">48</span>
+      <span class="q-num">50</span>
       <h2 class="q-title">Легенда больше не приглушает остальное без dimOthers</h2>
       <span class="q-src">5e96d7cac · CHANGELOG Unreleased, Fixed</span>
     </div>
@@ -2713,7 +2766,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-intl-range">
     <div class="q-head">
-      <span class="q-num">49</span>
+      <span class="q-num">51</span>
       <h2 class="q-title">Ключ DsIntl.chart.rangeTotal обязательный</h2>
       <span class="q-src">ds-intl.types.ts:358 · ds-intl-defaults.ts:300 · 6502f09e0</span>
     </div>
@@ -2738,7 +2791,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-heatmap-settle">
     <div class="q-head">
-      <span class="q-num">50</span>
+      <span class="q-num">52</span>
       <h2 class="q-title">Метка heatmap ждёт 120ms: число в коде, не токен</h2>
       <span class="q-src">heatmap-chart.component.ts:44 · :158 · f4fa4867b</span>
     </div>
@@ -2762,7 +2815,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-running-total-fade">
     <div class="q-head">
-      <span class="q-num">51</span>
+      <span class="q-num">53</span>
       <h2 class="q-title">Waterfall гасит шаги после наведённого без dimOthers</h2>
       <span class="q-src">column-series.component.ts:582 · column-series.component.scss:75 · 318893176</span>
     </div>
@@ -2789,7 +2842,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-scatter-tether-paint">
     <div class="q-head">
-      <span class="q-num">52</span>
+      <span class="q-num">54</span>
       <h2 class="q-title">Пунктир от курсора к точке в scatter стоит перерисовки всей страницы</h2>
       <span class="q-src">scatter-chart.component.ts:497 · scatter-chart.component.html:155 · scatter-chart.component.scss:130 · 46a912b46</span>
     </div>
@@ -2828,7 +2881,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-hover-transitions-paint">
     <div class="q-head">
-      <span class="q-num">53</span>
+      <span class="q-num">55</span>
       <h2 class="q-title">Переходы при наведении перерисовывают график каждый кадр</h2>
       <span class="q-src">_chart-interactive.scss:6 · column-series.component.scss:66 · heatmap-chart.component.scss:53 · chart.component.scss:152 · :159 · :164 · 737838eac · 6502f09e0</span>
     </div>
@@ -2877,7 +2930,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-funnel-settle-origin">
     <div class="q-head">
-      <span class="q-num">54</span>
+      <span class="q-num">56</span>
       <h2 class="q-title">Ступень воронки проявляется от своего левого верхнего угла, общий settles-in - от центра</h2>
       <span class="q-src">funnel-chart.component.scss:9 · :11 · funnel-chart.component.html:103 · _chart-motion.scss:47 · :154 · scatter-chart.component.scss:8 · bf6fb9dd7</span>
     </div>
@@ -2904,7 +2957,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-halo-copies">
     <div class="q-head">
-      <span class="q-num">55</span>
+      <span class="q-num">57</span>
       <h2 class="q-title">Ореол подписи на графике написан трижды, и у «+24.0%» он другой</h2>
       <span class="q-src">reference-label.component.scss:5 · :17 · series-annotation.component.scss:13 · line-series.component.scss:141 · :229 · _chart-frame.scss:49 · bf6fb9dd7</span>
     </div>
@@ -2981,7 +3034,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-change-fade-timing">
     <div class="q-head">
-      <span class="q-num">56</span>
+      <span class="q-num">58</span>
       <h2 class="q-title">Изменение к прошлой точке появляется по таймингу состояния, а не меток</h2>
       <span class="q-src">line-series.component.scss:118 · :124 · line-series.component.ts:303 · _chart-motion.scss:82 · :89 · :143 · bf6fb9dd7</span>
     </div>
@@ -3014,7 +3067,7 @@ Jan#1: mark-leave, гаснет</p></div>
 
   <section class="q" data-q="ag-morph-finish">
     <div class="q-head">
-      <span class="q-num">57</span>
+      <span class="q-num">59</span>
       <h2 class="q-title">Морф скелетона обрывает все конечные анимации, колонка при сортировке - только CSS</h2>
       <span class="q-src">chart-skeleton-morph.ts:91 · :167 · :204 · column-series.component.ts:335 · :340 · column-series.component.html:78 · bf6fb9dd7</span>
     </div>

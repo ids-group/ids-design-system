@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**134 open — 2 P1, 11 P2, 121 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
+**135 open — 2 P1, 12 P2, 121 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 2
 
@@ -21,7 +21,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **Asked by Stas**
   - ½ A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
 
-### P2 — 11
+### P2 — 12
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -30,6 +30,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **Faster gates (Stas, 2026-10-09: after the release)**
   - `tools/check.mjs` runs every check of a group one after another
 - **Asked by Stas**
+  - ds-info-hint should take rich content, not only text (Stas, 2026-10-12)
   - A clipped value's tooltip should line up with the text it completes (Stas, 2026-10-10)
   - Tooltips and trigger-anchored overlays should follow their trigger on scroll, not close (Stas, 2026-10-08)
   - Document how to build `ds-modal` actions (Stas, 2026-10-06)
@@ -129,7 +130,7 @@ is stale. Closing an item means deleting the item and nothing else.
   - `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's framing; Stas 2026-09-01: a `DS_CONFIG` flag works too, as `prototype: true`)
   - Three edges left open on `ds-table` row expansion and the resize handle, each a judgement call rather than a defect
 - **The chart family read as an architecture (audited 2026-09-22)**
-  - Four exports on the package surface have no consumer in `src/`
+  - `formatTick` on the package surface has no consumer in `src/`
   - `'none'` and `'grouped'` are the same value on `ds-column-chart`
   - Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea
 - **Two chart interactions held back from deck `chart-motion-extras` (Stas, 2026-10-12: not now)**
@@ -424,6 +425,12 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 Each has somebody behind it. Nothing here is speculative work.
 
 ## Asked by Stas
+
+- [ ] **[P2] ds-info-hint should take rich content, not only text (Stas, 2026-10-12).** Work branch `ecm-feat/info-hint-content`. Deck `27-info-hint-content.html`.
+  **Consumer case (mm-ecm ME-495):** every explanatory hint moves to DS components. On Data ingest a hand-made ⓘ button opens a `ds-popover` dialog with the title «Published», a close button and a list of version + publish time (`data-ingest.page.html`, `ds-popover #pubPop`).
+  **Today:** `ds-info-hint` takes `text: string` (required), `ariaLabel` and `icon: 'help' | 'info'`; `TooltipPanelComponent` renders only a string with `**bold**` runs (`role="tooltip"`, its id added to the trigger's `aria-describedby` while open). `ds-popover` is a dialog with no trigger of its own: the consumer's button calls `toggle()`, and `panelRole` traps focus.
+  **Wanted:** the same ⓘ and the same behaviour (hover and focus show, click pins, Escape, outside click and blur close) with content from the consumer. Options in the deck: A content projection, `text` optional (recommended); B a `TemplateRef` input; C a standard ⓘ trigger for `ds-popover`. Content stays non-interactive under `role="tooltip"`, so the close button goes away.
+  **Conditional, only if Stas picks option A for the status icon in the ME-495 deck:** the icon itself is the trigger (a warning triangle in a table cell, a lock). Options: A `icon` takes any `IconName` (the triangle is `warn`) with a public colour token, since the button paints `--icon-default` itself and a host `color` does not reach it (recommended); B a `tone` input (neutral, warning, danger).
 
 - [ ] **[P2] A clipped value's tooltip should line up with the text it completes (Stas, 2026-10-10).** `dsTooltipWhenClipped` opens a panel capped at `--tooltip-maxw` (240px), so the full text of a wider clipped link wraps narrower than the ellipsized text under it (mm-ecm Workspaces, program name). **Wanted (Stas):** for a clip-test tooltip the minimum width stays as it is today, and the maximum width becomes the visible width of the clipped element, so text that would grow the panel wraps at the width of the ellipsized text. Deck before the change.
 - [~] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `ecm-fix/table-auto-column-clip`.
@@ -1078,7 +1085,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-24)
 
-**Twenty-four** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Twenty-seven** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1090,7 +1097,7 @@ file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
 | --- | --- | --- | --- |
-| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 5 asks in three groups, then 52 decisions in eight, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 52 decisions in eight, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 | 2 | `2-color-engine-derivation` | One source token per role, derived. | the colour-engine P3 |
 | 3 | `3-color-engine-relative` | The prototype half of the same question. | as above |
 | 4 | `4-interaction-formula` | The pressed recipe of the tonal button, and of the danger menu item. | the pressed-danger-menu P3 and the `.ds-interactive` P3 |
@@ -1116,6 +1123,7 @@ file** — the number moves; cite the filename.
 | 24 | `24-table-wrap-parked` | Parked: two wrap options for a `truncate` column (fill the row height, or always wrap), each rendered. | the wrap item under Parked |
 | 25 | `25-docs-table-weight` | The ds-docs policy for component inputs: as today, dense and folded, no input tables, or a generated «what you can change» strip with the full list folded; 22 of the 64 `table.tbl` are input tables, on 15 pages. | none |
 | 26 | `26-chart-motion-timing` | Whether pointer-following glides and series dimming each use one speed: as today, one per kind, or all 120ms; found by the chart duplication audit. | none |
+| 27 | `27-info-hint-content` | How `ds-info-hint` takes rich content from the consumer (mm-ecm ME-495 «Published» list): content projection, a template input, or a standard trigger for `ds-popover`; and, only if the ME-495 icon verdict is A, how a status icon becomes the hint trigger: any `IconName` with a colour token, or a `tone` input. | the info-hint rich-content P2 in Asked by Stas |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

@@ -11,7 +11,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 
 | # | Deck | Answering it unblocks |
 | --- | --- | --- |
-| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 5 asks a consumer waits on, then 52 decisions across eight groups (the last: chart choices agents made without a deck), every option drawn in its own card; answered asks sit under «Уже решено» |
+| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 7 asks a consumer waits on, then 52 decisions across eight groups (the last: chart choices agents made without a deck), every option drawn in its own card; answered asks sit under «Уже решено» |
 | 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
 | 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
 | 4 | `4-interaction-formula` | two pressed-state verdicts, both rendered and measured: the tonal button's pressed recipe and the danger menu item whose pressed equals its hover. The other three are answered and the `.ds-interactive` formula is deferred |
@@ -37,6 +37,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 24 | `24-table-wrap-parked` | parked: two wrap options for a `truncate` column - fill the height a neighbour gave the row, or always wrap - each rendered; the verdict comes later and the item waits in `docs/todo.md` |
 | 25 | `25-docs-table-weight` | the ds-docs policy for component inputs: tables as today, dense and folded, no input tables, or a generated «what you can change» strip with the full list folded - each drawn on real `ds-chart` and `ds-button` fragments; 22 hand-written input tables on 15 pages counted |
 | 26 | `26-chart-motion-timing` | whether chart motion uses one speed per kind of motion: as today (pointer-following 300 or 120ms, dimming 120 or 180ms), one speed per kind (following 300, dimming 120), or everything at 120ms - each drawn live on a column-and-line chart with a legend |
+| 27 | `27-info-hint-content` | how `ds-info-hint` takes rich content (the mm-ecm ME-495 «Published» list): content projection, a template input, or a standard ⓘ trigger for `ds-popover`, each as consumer markup with screenshots of today and the target; and a conditional second block, needed only if the ME-495 icon verdict is A: any `IconName` with a colour token, or a `tone` input |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
