@@ -3748,7 +3748,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "First weekday column: 0=Sunday … 6=Saturday. Default 1 (Monday)."
+        "description": "First weekday column: 0=Sunday … 6=Saturday. Falls back to `DS_CONFIG.datePicker.firstDayOfWeek`, then the resolved `locale`'s week, then 1 (Monday)."
       },
       {
         "name": "defaultDate",
@@ -11619,7 +11619,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Override the DS-config format for this instance."
+        "description": "Display clock; falls back to `DS_CONFIG.timePicker.format`, then the hour cycle of `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "staticPreview",

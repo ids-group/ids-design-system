@@ -47,10 +47,15 @@ import {
   TimeColumnsComponent,
   type TimeColumnId,
 } from './time-columns/time-columns.component';
-import { DS_CONFIG, DS_INTL } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_CONFIG,
+  DS_INTL,
+  injectDsLocale,
+} from '@ids-group-ltd/ids-design-system/core';
 import {
   clampToRange,
   formatTime,
+  localeTimeFormat,
   pad2,
   snapToStep,
   toMinutes,
@@ -66,6 +71,15 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 type Segment = 'single' | 'start' | 'end';
 let nextId = 0;
+
+function resolveTimeFormat(
+  format: () => TimeFormat | null,
+  configured: TimeFormat | undefined,
+) {
+  const fromLocale = localeTimeFormat(injectDsLocale());
+
+  return computed<TimeFormat>(() => format() ?? configured ?? fromLocale);
+}
 
 @Component({
   selector: 'ds-time-picker',
@@ -155,7 +169,7 @@ export class TimePickerComponent
   readonly clearable = input(false, { transform: booleanAttribute });
   /** Accessible name for the trigger(s), suffixed "(from)"/"(to)" in range mode. */
   readonly ariaLabel = input<string | null>(null);
-  /** Override the DS-config format for this instance. */
+  /** Display clock; falls back to `DS_CONFIG.timePicker.format`, then the hour cycle of `DS_CONFIG.locale` / `LOCALE_ID`. */
   readonly format = input<TimeFormat | null>(null);
 
   protected readonly uid = `ds-timepicker-${++nextId}`;
@@ -202,8 +216,9 @@ export class TimePickerComponent
   protected readonly message = this.fieldMessage.message;
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
-  readonly resolvedFormat = computed<TimeFormat>(
-    () => this.format() ?? this.config.timePicker?.format ?? '24h',
+  readonly resolvedFormat = resolveTimeFormat(
+    this.format,
+    this.config.timePicker?.format,
   );
 
   protected readonly singleValue = computed(() => {

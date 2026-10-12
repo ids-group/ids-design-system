@@ -41,7 +41,8 @@ export interface DsConfig {
     clickable?: boolean;
   };
   timePicker?: {
-    /** Display format for `ds-time-picker` / date-picker time - 24h or 12h AM/PM. Default `'24h'`. */
+    /** Display format for `ds-time-picker` - 24h or 12h AM/PM. Unset follows the hour cycle of
+     *  `locale` / `LOCALE_ID` (en-US: `'12h'`, en-GB: `'24h'`). */
     format?: '24h' | '12h';
   };
   avatar?: {
@@ -157,7 +158,8 @@ export interface DsConfig {
     locale?: string;
     /** Explicit token format, e.g. `'MM/DD/YYYY'`; overrides the locale-derived order. */
     dateFormat?: string;
-    /** First weekday column: 0=Sunday to 6=Saturday. Default `1` (Monday). */
+    /** First weekday column: 0=Sunday to 6=Saturday. Unset follows the date picker's locale
+     *  (en-US: `0`, en-GB: `1`); `1` (Monday) where the engine has no week data. */
     firstDayOfWeek?: number;
   };
 }

@@ -62,7 +62,7 @@ export class TimePickerComponent extends DsControlValueAccessor<string | TimeRan
     protected readonly preview = inject(…);
     protected readonly rangeValue = computed<TimeRangeValue>(…);
     public readonly required = input(false, { transform: booleanAttribute });
-    public readonly resolvedFormat = computed<TimeFormat>(…);
+    public readonly resolvedFormat = resolveTimeFormat(…);
     protected setNow(): void;
     protected readonly singleTrigger = viewChild<ElementRef<HTMLButtonElement>>(…);
     protected readonly singleValue = computed(…);

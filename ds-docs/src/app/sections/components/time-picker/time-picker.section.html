@@ -50,12 +50,13 @@
   </div>
 
   <h3 class="block-title t-h4">
-    12-hour (AM/PM)
+    12 or 24 hours
   </h3>
 
   <p class="block-desc t-s">
     The value is always a 24-hour <code class="t-mono-inline">"HH:MM"</code>
-    string. Set the display app-wide with
+    string. The display follows the locale's clock (en-US 12-hour, en-GB
+    24-hour). Set it app-wide with
     <code class="t-mono-inline">
       provideDsConfig({{ '{' }} timePicker: {{ '{' }} format {{ '}' }}
       {{ '}' }})
@@ -68,8 +69,14 @@
 
   <div class="row">
     <ds-time-picker
+      label="12-hour"
       format="12h"
-      placeholder="--:-- --" />
+      value="21:30" />
+
+    <ds-time-picker
+      label="24-hour"
+      format="24h"
+      value="21:30" />
   </div>
 
   <h3 class="block-title t-h4">

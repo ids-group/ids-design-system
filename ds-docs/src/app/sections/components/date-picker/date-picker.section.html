@@ -398,8 +398,9 @@
       [locale]
     </code> drives month names, weekday
     headers and value format via <code>Intl</code>, never mixed with the OS
-    locale. <code class="t-mono-inline">[firstDayOfWeek]</code> (0-6, default
-    Monday) shifts the week. App-wide:
+    locale. The week starts on the locale's first day (en-US Sunday, en-GB
+    Monday; Monday where the browser has no week data);
+    <code class="t-mono-inline">[firstDayOfWeek]</code> (0-6) overrides it. App-wide:
     <code class="t-mono-inline">
       provideDsConfig({{ '{' }} datePicker: {{ '{' }} locale, dateFormat,
       firstDayOfWeek {{ '}' }} {{ '}' }})
@@ -416,10 +417,10 @@
 
     <ds-date-picker
       mode="single"
-      label="Date (en-US, Sunday-first)"
+      label="Date (en-US, Monday pinned)"
       placeholder="Pick a date"
       locale="en-US"
-      [firstDayOfWeek]="0" />
+      [firstDayOfWeek]="1" />
   </div>
 
   <h3 class="block-title t-h4">
