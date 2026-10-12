@@ -13,6 +13,7 @@
           [size]="14" />
       }
       {{ text() }}
+      <ng-container [ngTemplateOutlet]="changedMark" />
     </span>
   } @else {
     <span
@@ -25,11 +26,26 @@
           [size]="14" />
       }
       {{ text() }}
+      <ng-container [ngTemplateOutlet]="changedMark" />
     </span>
   }
+} @else if (changed()) {
+  <span
+    class="field-message changed-only"
+    [id]="messageId()">
+    <ng-container [ngTemplateOutlet]="changedMark" />
+  </span>
 } @else if (reserve()) {
   <span
     class="field-message reserve-placeholder"
     aria-hidden="true">
   </span>
 }
+
+<ng-template #changedMark>
+  @if (changed()) {
+    <span class="changed">
+      {{ changedText() }}
+    </span>
+  }
+</ng-template>

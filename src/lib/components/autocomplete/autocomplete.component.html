@@ -127,6 +127,10 @@
     </button>
   }
 
+  <ds-field-status
+    [pending]="pendingShown()"
+    [changed]="changedShown()" />
+
   @if (showChevron()) {
     <ds-icon
       name="chevronDown"
@@ -142,7 +146,8 @@
   [text]="message().text"
   [state]="message().state"
   [messageId]="hintId()"
-  [reserve]="reserveMessageResolved()" />
+  [reserve]="reserveMessageResolved()"
+  [changed]="changedShown()" />
 
 <ng-template #panel>
   <div class="dropdown-panel">

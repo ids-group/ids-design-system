@@ -83,9 +83,9 @@
       </button>
     }
 
-    @if (loading()) {
-      <ds-spinner size="sm" />
-    }
+    <ds-field-status
+      [pending]="loading() || pendingShown()"
+      [changed]="changedShown()" />
 
     <span class="addon-slot suffix">
       <ng-content select="[dsInputSuffix]"></ng-content>
@@ -95,6 +95,7 @@
   @if (
       reserveMessageResolved() ||
       message().text ||
+      changedShown() ||
       maxLength() !== null
     ) {
     <div class="field-footer">
@@ -103,7 +104,8 @@
         [text]="message().text"
         [state]="message().state"
         [messageId]="hintId()"
-        [reserve]="reserveMessageResolved()" />
+        [reserve]="reserveMessageResolved()"
+        [changed]="changedShown()" />
 
       @if (maxLength() !== null) {
         <span

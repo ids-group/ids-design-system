@@ -26,6 +26,15 @@
   &.warning { color: var(--warning-text); }
   &.success { color: var(--success-text); }
 
+  .changed {
+    color: var(--ds-field-changed-text-color, var(--accent-strong));
+  }
+
+  /* After a message the mark adds to the icon gap, so it reads as a second fact. */
+  &:not(.changed-only) .changed {
+    margin-inline-start: var(--space-1);
+  }
+
   /* An nbsp makes the reserved row one line tall so the field does not shift when a message appears. */
   &.reserve-placeholder::before { content: '\00a0'; }
 }

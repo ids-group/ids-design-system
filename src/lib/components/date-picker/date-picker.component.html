@@ -68,6 +68,10 @@
       }
     </span>
 
+    <ds-field-status
+      [pending]="pendingShown()"
+      [changed]="changedShown()" />
+
     <button
       type="button"
       class="calendar-toggle"
@@ -91,7 +95,8 @@
     [text]="message().text"
     [state]="message().state"
     [messageId]="hintId()"
-    [reserve]="reserveMessageResolved()" />
+    [reserve]="reserveMessageResolved()"
+    [changed]="changedShown()" />
 </div>
 
 <ng-template #panel>

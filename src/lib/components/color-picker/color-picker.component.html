@@ -18,6 +18,10 @@
     {{ displayHex() }}
   </span>
 
+  <ds-field-status
+    [pending]="pendingShown()"
+    [changed]="changedShown()" />
+
   <ds-icon
     class="chevron"
     name="chevronDown"
@@ -33,7 +37,8 @@
   [text]="message().text"
   [state]="message().state"
   [messageId]="hintId()"
-  [reserve]="reserveMessageResolved()" />
+  [reserve]="reserveMessageResolved()"
+  [changed]="changedShown()" />
 
 <ng-template #panel>
   <div

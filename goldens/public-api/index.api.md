@@ -248,6 +248,7 @@ export { SelectOption } from '@ids-group-ltd/ids-design-system/components/select
 export { SelectOptionGroup } from '@ids-group-ltd/ids-design-system/components/select'; // interface
 export { SelectWidth } from '@ids-group-ltd/ids-design-system/components/select'; // type
 export { SeriesAnnotationComponent } from '@ids-group-ltd/ids-design-system/components/chart'; // component
+export { ShowDirtyDirective } from '@ids-group-ltd/ids-design-system/components/show-dirty'; // directive
 export { SidenavAlertItem } from '@ids-group-ltd/ids-design-system/components/sidenav-footer'; // interface
 export { SidenavComponent } from '@ids-group-ltd/ids-design-system/components/sidenav'; // component
 export { SidenavContract } from '@ids-group-ltd/ids-design-system/components/sidenav'; // interface

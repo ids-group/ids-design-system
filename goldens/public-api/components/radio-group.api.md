@@ -46,6 +46,7 @@ export interface RadioGroupChild {
 @Component({ selector: 'ds-radio-group' })
 export class RadioGroupComponent extends DsControlValueAccessor<unknown> implements RadioGroupContract {
     public readonly ariaLabel = input<string | null>(null);
+    protected readonly changedShown = this.fieldMessage.changed;
     protected readonly controlState = this.fieldMessage.controlState;
     public readonly disabled = input(false, { transform: booleanAttribute });
     private enabledRadios;
@@ -59,6 +60,7 @@ export class RadioGroupComponent extends DsControlValueAccessor<unknown> impleme
     protected readonly message = this.fieldMessage.message;
     public readonly name = input<string | null>(null);
     protected onKeydown(event: KeyboardEvent): void;
+    protected readonly pendingShown = this.fieldMessage.pending;
     private readonly radios;
     public select(value: unknown): void;
     protected readonly uid = nextControlId(…);

@@ -290,6 +290,7 @@ export type {
   SelectOptionGroup,
   SelectWidth,
 } from '@ids-group-ltd/ids-design-system/components/select';
+export { ShowDirtyDirective } from '@ids-group-ltd/ids-design-system/components/show-dirty';
 export {
   BrandNameDirective,
   SIDENAV,

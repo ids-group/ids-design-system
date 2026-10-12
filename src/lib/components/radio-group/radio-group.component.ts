@@ -10,7 +10,10 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
-import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  FieldMessageComponent,
+  FieldStatusComponent,
+} from '@ids-group-ltd/ids-design-system/components/field-message';
 import { resolveFieldMessage } from '@ids-group-ltd/ids-design-system/components';
 import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 import { RadioComponent } from './radio/radio.component';
@@ -24,7 +27,7 @@ import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
 @Component({
   selector: 'ds-radio-group',
   standalone: true,
-  imports: [FieldMessageComponent],
+  imports: [FieldMessageComponent, FieldStatusComponent],
   templateUrl: './radio-group.component.html',
   styleUrl: './radio-group.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -68,9 +71,12 @@ export class RadioGroupComponent
   protected readonly uid = nextControlId('ds-radio-group');
   readonly groupName = computed(() => this.name() ?? this.uid);
   protected readonly hintId = computed(() =>
-    this.message().text ? `${this.uid}-hint` : null,
+    this.message().text || this.changedShown() ? `${this.uid}-hint` : null,
   );
   private readonly fieldMessage = resolveFieldMessage({
+    pending: this.pending,
+    dirty: this.dirty,
+    showDirty: this.showDirtyResolved,
     disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
@@ -81,6 +87,8 @@ export class RadioGroupComponent
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly pendingShown = this.fieldMessage.pending;
+  protected readonly changedShown = this.fieldMessage.changed;
   protected readonly invalidResolved = this.fieldMessage.invalid;
   protected readonly controlState = this.fieldMessage.controlState;
 

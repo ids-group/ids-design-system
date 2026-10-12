@@ -16,7 +16,10 @@ import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
 import type { TextareaMaxLengthMode, TextareaResize } from './textarea.types';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
-import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  FieldMessageComponent,
+  FieldStatusComponent,
+} from '@ids-group-ltd/ids-design-system/components/field-message';
 import {
   resolveFieldMessage,
   trimmedText,
@@ -28,7 +31,12 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 @Component({
   selector: 'ds-textarea',
   standalone: true,
-  imports: [FormsModule, FieldMessageComponent, FieldClickFocusDirective],
+  imports: [
+    FormsModule,
+    FieldMessageComponent,
+    FieldStatusComponent,
+    FieldClickFocusDirective,
+  ],
   templateUrl: './textarea.component.html',
   styleUrl: './textarea.component.scss',
   host: {
@@ -179,9 +187,12 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   });
   protected readonly uid = nextControlId('ds-textarea');
   protected readonly hintId = computed(() =>
-    this.message().text ? `${this.uid}-hint` : null,
+    this.message().text || this.changedShown() ? `${this.uid}-hint` : null,
   );
   private readonly fieldMessage = resolveFieldMessage({
+    pending: this.pending,
+    dirty: this.dirty,
+    showDirty: this.showDirtyResolved,
     disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
@@ -193,6 +204,8 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly pendingShown = this.fieldMessage.pending;
+  protected readonly changedShown = this.fieldMessage.changed;
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
   protected readonly resolvedAriaLabel = computed(() =>

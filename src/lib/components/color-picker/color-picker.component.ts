@@ -26,7 +26,10 @@ import {
   DsControlValueAccessor,
   DsStaticPreview,
 } from '@ids-group-ltd/ids-design-system/components';
-import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  FieldMessageComponent,
+  FieldStatusComponent,
+} from '@ids-group-ltd/ids-design-system/components/field-message';
 import {
   resolveFieldMessage,
   trimmedText,
@@ -68,7 +71,12 @@ const DEFAULT_PRESETS: readonly string[] = [
 @Component({
   selector: 'ds-color-picker',
   standalone: true,
-  imports: [IconComponent, FieldMessageComponent, NgTemplateOutlet],
+  imports: [
+    IconComponent,
+    FieldMessageComponent,
+    FieldStatusComponent,
+    NgTemplateOutlet,
+  ],
   templateUrl: './color-picker.component.html',
   styleUrl: './color-picker.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -162,9 +170,12 @@ export class ColorPickerComponent
 
   protected readonly uid = nextControlId('ds-color-picker');
   protected readonly hintId = computed(() =>
-    this.message().text ? `${this.uid}-hint` : null,
+    this.message().text || this.changedShown() ? `${this.uid}-hint` : null,
   );
   private readonly fieldMessage = resolveFieldMessage({
+    pending: this.pending,
+    dirty: this.dirty,
+    showDirty: this.showDirtyResolved,
     disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
@@ -176,6 +187,8 @@ export class ColorPickerComponent
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly pendingShown = this.fieldMessage.pending;
+  protected readonly changedShown = this.fieldMessage.changed;
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 

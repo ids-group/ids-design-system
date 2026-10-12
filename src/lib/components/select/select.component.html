@@ -81,6 +81,10 @@
     </button>
   }
 
+  <ds-field-status
+    [pending]="pendingShown()"
+    [changed]="changedShown()" />
+
   <span class="chevron">
     <ds-icon
       name="chevronDown"
@@ -93,7 +97,8 @@
   [text]="message().text"
   [state]="message().state"
   [messageId]="hintId()"
-  [reserve]="reserveMessageResolved()" />
+  [reserve]="reserveMessageResolved()"
+  [changed]="changedShown()" />
 
 @if (preview.staticPreview()) {
   <div class="ds-dropdown-panel">

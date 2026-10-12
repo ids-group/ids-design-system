@@ -89,7 +89,7 @@ export type {
   DsRouterLink,
 } from './destination';
 export { DsEmptyTemplateDirective } from './empty-template.directive';
-export { DsFieldBase } from './field-base';
+export { DsFieldBase, DsFormControlBase } from './field-base';
 export { DsChartBase, dimmedBy } from './charts-base';
 export type {
   ChartDimmable,

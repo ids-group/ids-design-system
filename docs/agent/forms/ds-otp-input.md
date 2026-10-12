@@ -4,5 +4,5 @@
 Group: Form & input
 
 <!-- inputs:ds-otp-input -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string = ''`, `length: number = 6`, `mode: 'numeric' | 'alphanumeric' = 'numeric'`, `mask: boolean = false`, `disabled: boolean = false`, `success: string = ''`, `ariaLabel: string | null = null`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `pending: boolean = false`, `dirty: boolean = false`, `showDirty: boolean | null = null`, `hidden: boolean = false`, `value: string = ''`, `length: number = 6`, `mode: 'numeric' | 'alphanumeric' = 'numeric'`, `mask: boolean = false`, `disabled: boolean = false`, `success: string = ''`, `ariaLabel: string | null = null`
 <!-- /inputs -->
