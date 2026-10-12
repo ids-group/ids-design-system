@@ -414,6 +414,7 @@ export interface DsIntl {
         readonly directionColumn: string;
         readonly runningTotalColumn: string;
         readonly endsAt: (value: string) => string;
+        readonly rangeTotal: (range: string, total: string, average: string) => string;
     };
 }
 

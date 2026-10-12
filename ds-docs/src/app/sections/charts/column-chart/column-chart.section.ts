@@ -1,4 +1,5 @@
 import { RouterLink } from '@angular/router';
+import { ButtonComponent } from 'ds/button';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -214,6 +215,7 @@ const CUSTOM_COLOR_POINTS: readonly ColumnChartPoint[] = [
   standalone: true,
   imports: [
     RouterLink,
+    ButtonComponent,
     ChartComponent,
     ColumnChartComponent,
     ColumnSeriesComponent,
@@ -245,6 +247,19 @@ export class ColumnChartSection {
   protected readonly anchorPoints =
     signal<readonly ColumnChartPoint[]>(SPECIMEN_POINTS);
   protected readonly lastPoint = signal('');
+  protected readonly rangePoints = signal<readonly ColumnChartPoint[]>(
+    SPECIMEN_POINTS.map((point) => ({ ...point, id: point.label })),
+  );
+  protected sortRangePoints(): void {
+    const points = this.rangePoints();
+    const sorted = [...points].sort((a, b) => b.value - a.value);
+    const isSorted = points.every((point, index) => point === sorted[index]);
+    this.rangePoints.set(
+      isSorted
+        ? SPECIMEN_POINTS.map((point) => ({ ...point, id: point.label }))
+        : sorted,
+    );
+  }
   protected readonly emptyPoints = signal<readonly ColumnChartPoint[]>([]);
   protected readonly loadingPoints =
     signal<readonly ColumnChartPoint[]>(SPECIMEN_POINTS);

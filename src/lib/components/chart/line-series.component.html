@@ -35,6 +35,7 @@
         [class.is-fade]="fades"
         [class.is-stacked]="stacked()"
         [class.is-dimmed]="isDimmed(entry.series.id)"
+        [class.is-collapsed]="entry.series.hidden"
         [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
         [style.--_series-area-color]="entry.color"
         [style.fill]="fades ? 'url(#' + fadeId(entry.seriesIndex) + ')' : null"
@@ -49,6 +50,8 @@
         <svg:path
           class="series-halo"
           [class.is-dimmed]="isDimmed(entry.series.id)"
+          [attr.data-series-id]="entry.series.id"
+          [class.is-collapsed]="entry.series.hidden"
           [class.is-dashed]="dashFor(entry.seriesIndex) !== null"
           [attr.stroke-dasharray]="dashFor(entry.seriesIndex)"
           [attr.pathLength]="dashFor(entry.seriesIndex) === null ? 1 : null"
@@ -63,9 +66,12 @@
       <svg:path
         class="series-line"
         [class.is-dimmed]="isDimmed(entry.series.id)"
+        [class.is-spotlit]="isSpotlit(entry.series.id)"
+        [class.is-collapsed]="entry.series.hidden"
         [class.is-dashed]="dashFor(entry.seriesIndex) !== null"
         [attr.stroke-dasharray]="dashFor(entry.seriesIndex)"
         [attr.pathLength]="dashFor(entry.seriesIndex) === null ? 1 : null"
+        [attr.data-series-id]="entry.series.id"
         [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
         [attr.d]="path"
         [attr.stroke]="entry.color"
@@ -73,13 +79,39 @@
     }
   }
 
-  @if (showMarkers() || interactive() || pins()) {
+  @for (change of changes(); track change.key) {
+    <svg:g
+      class="change"
+      aria-hidden="true"
+      [class.is-falling]="!change.rising"
+      (animate.leave)="leaveMark($event)">
+      <svg:path
+        class="change-stretch"
+        [attr.d]="change.path" />
+
+      <svg:text
+        class="change-label"
+        text-anchor="middle"
+        [attr.x]="change.x"
+        [attr.y]="change.y">
+        {{ change.label }}
+      </svg:text>
+    </svg:g>
+  }
+
+  @if (
+      showMarkers() ||
+      interactive() ||
+      pins()
+    ) {
     @for (entry of plotted(); track entry.series.id) {
       @for (marker of entry.markers; track marker.key) {
         <svg:circle
           #markerEl
           class="series-marker"
           [class.is-dimmed]="isDimmed(entry.series.id)"
+          [class.is-collapsed]="marker.hidden"
+          [class.is-out]="isOutsideRange(marker.categoryIndex)"
           [class.ghost]="!showMarkers()"
           [class.interactive]="interactive()"
           [class.pins]="pins()"
@@ -88,17 +120,34 @@
           [attr.cx]="marker.x"
           [attr.cy]="marker.y"
           [attr.fill]="entry.color"
-          [attr.data-mark-index]="marker.markIndex"
-          [attr.role]="interactive() ? 'button' : null"
+          [attr.data-mark-index]="marker.hidden ? null : marker.markIndex"
+          [attr.data-point-key]="marker.key"
+          [attr.role]="interactive() && !marker.hidden ? 'button' : null"
           [attr.tabindex]="
-            interactive()
+            interactive() && !marker.hidden
               ? !scales.cursorOn?.() &&
                 isTabStop(entry.series.id, marker.markIndex)
                 ? 0
                 : -1
               : null
           "
-          [attr.aria-label]="interactive() ? markerLabel(marker) : null" />
+          [attr.aria-label]="
+            interactive() && !marker.hidden ? markerLabel(marker) : null
+          "
+          (animate.leave)="leaveMark($event)" />
+      }
+    }
+  }
+
+  @if (scales.cursorOn?.()) {
+    @for (entry of plotted(); track entry.series.id) {
+      @if (!entry.series.hidden) {
+        <svg:circle
+          class="travel-marker"
+          aria-hidden="true"
+          [class.is-dimmed]="isDimmed(entry.series.id)"
+          [attr.data-series-id]="entry.series.id"
+          [attr.fill]="entry.color" />
       }
     }
   }

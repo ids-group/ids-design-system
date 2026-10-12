@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>График при новой или ушедшей категории</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-12">
+<meta name="ds-deck-evidence" content="src/lib/components/chart/line-series.component.ts:610">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   :root { --deck-slow: 1; }
   .opts { grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); align-items: start; }
@@ -63,6 +65,15 @@
     <p class="chat">Ответ нести в чат: «Acc2 · Дека движения графиков»</p>
   </header>
 
+  <div class="decided">
+    <h2>Решено: «Боковой сдвиг»</h2>
+    <p>Когда категория появляется или уходит, колонки, подписи категорий и значений и точки линии едут к новым местам на таймингах меток, линия перетекает по объединению старых и новых точек, и точки всё время на ней: новая выходит из соседней, ушедшая сливается с соседней. Новая колонка растёт, ушедшая гаснет. Удержание <code>settled</code> осталось только для resize.</p>
+    <p class="evidence">2026-10-12 · src/lib/components/chart/line-series.component.ts:610</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
+
   <section class="panel q" data-review="Варианты">
     <h2>Два поведения на одних данных</h2>
     <p>Кнопки под любым графиком двигают оба сразу. «Замедлить ×5» растягивает каждое движение в пять раз, чтобы его можно было разглядеть.</p>
@@ -114,6 +125,8 @@
   </section>
 
   <p class="src"><b>Источники, проверено 2026-10-12 на <code>dev</code>.</b> «Сразу и вместе» - поведение библиотеки: <code>layout</code> в <code>src/lib/components/chart/chart.component.ts</code> - ширина и число категорий; пока <code>settledLayout</code> не догнал его через два кадра, <code>settled</code> ложно и <code>:host(.measuring)</code> в <code>chart.component.scss</code> снимает переходы с меток, осей и курсора; CHANGELOG, Unreleased: «A resize or a category coming or going redraws every mark in place at once». Линия в <code>line-series.component.scss</code> переходит по <code>d</code>, и путь с другим числом команд не интерполируется, а перескакивает; новая колонка растёт (<code>grows-up</code>, <code>--ds-motion-chart-mark-grow-*</code>), новая точка появляется (<code>enters</code>, <code>--ds-motion-chart-mark-detail-duration</code>), ушедшая метка гаснет (<code>leaveMark</code>, <code>--ds-motion-chart-mark-exit-*</code>). <b>Образцы</b> - модель поведения на SVG и JS, не код библиотеки; длительности и кривые читаются из токенов <code>ds.css</code>: значения и сдвиг - <code>--ds-motion-chart-mark-duration</code> и <code>-easing</code>, рост, появление и угасание - те же токены, что у библиотеки. При <code>prefers-reduced-motion</code> длительности токенов нулевые и всё встаёт на место сразу. Новое нажатие отменяет идущее движение и продолжает от того места, где метки сейчас.</p>
+
+  </details>
 
   <div class="bar-fixed">
     <span class="chat-name">«Acc2 · Дека движения графиков»</span>

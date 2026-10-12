@@ -9,29 +9,60 @@
       "surface": "typescript",
       "searchHints": [
         "extends ChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "extends ColumnChartComponent",
+        "extends LineChartComponent",
         "extends PieChartComponent",
         "extends HeatmapChartComponent",
         "extends ScatterChartComponent",
         "extends FunnelChartComponent",
-        "extends LineSeriesComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent"
       ],
       "detect": [
         "extends ChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "extends ColumnChartComponent",
+        "extends LineChartComponent",
         "extends PieChartComponent",
         "extends HeatmapChartComponent",
         "extends ScatterChartComponent",
         "extends FunnelChartComponent",
-        "extends LineSeriesComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent"
       ],
       "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
-      "appliesWhen": "Only a class of yours that extends ChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent, FunnelChartComponent or LineSeriesComponent, or the internal ChartTooltipPanelComponent or WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or FunnelChartComponent, or the internal ChartTooltipPanelComponent or WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
-      "verify": "The app builds with no member-collision error on a subclass of ChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent, FunnelChartComponent or LineSeriesComponent.",
-      "note": "ChartComponent gained `layout`, `measureBandPinY`, `pinnedCategories`, `settledLayout` and `stackTop`; PieChartComponent gained `centerEntry`, `centerKey`, `centerSwapElement`, `drawnArcs`, `fadeCenterSwap`, `shownCenterKey`, `shownCenterLabel`, `shownCenterValue`, `sliceHoverShift`, `stopArcTween`, `tweenArcs` and the internal `leaveMark`, and lost `isDimmed`, `legendDwell` and `legendHighlight`; HeatmapChartComponent gained `cellStagger`, `scaleMarker`, `scaleMarkerIndex`, `settleScaleMarker` and the internal `leaveMark`, and lost `columnStagger`; ScatterChartComponent gained `followRing`, `pinnedPoints`, `pointStagger`, `pointer`, `ringElement`, `ringedMark`, `staggerMs`, `staggerSpread`, `tetherElement`, `zone` and the internal `leaveMark`, and lost `pinnedPoint`; FunnelChartComponent lost `isDimmed`, `rowDwell` and `rowHighlight`; LineSeriesComponent gained `pinnedMarkers` and lost `pinnedMarker`. The internal WaterfallMarksComponent gained `leaveMark`."
+      "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
+      "note": "`ChartComponent` gained 18; `LineSeriesComponent` gained 19 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 9; `ColumnChartComponent` gained `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `selectRange` and `showChange`; `PieChartComponent` gained 12 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 5 and lost `columnStagger`; `ScatterChartComponent` gained 11 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`. The internal `WaterfallMarksComponent` gained `leaveMark`."
+    },
+    {
+      "id": "intl-chart-range-total-required",
+      "kind": "behavior",
+      "old": "DsIntl",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "DsIntl",
+        "DS_INTL",
+        "shareOfTotal"
+      ],
+      "detect": [
+        ": DsIntl =",
+        "Signal<DsIntl>",
+        "shareOfTotal:"
+      ],
+      "action": "None, unless your code builds a complete DsIntl object of its own: add chart.rangeTotal, the pill over a range selected with selectRange.",
+      "appliesWhen": "Only an object or signal typed as the full DsIntl, not as DsIntlOverrides. provideDsIntl with a partial override, and every app that leaves DS_INTL alone, is unaffected.",
+      "pitfall": "An object that spreads DS_INTL_DEFAULTS.chart compiles, but a chart section written out key by key without the spread fails with TS2741 on rangeTotal.",
+      "restore": null,
+      "verify": "The app builds, and every complete DsIntl object it declares has chart.rangeTotal.",
+      "evidence": [
+        "fixture:unreleased/intl-chart-range-total-required.ts"
+      ]
     },
     {
       "id": "chart-legend-fades-only-under-dim-others",
@@ -43,13 +74,32 @@
         "ds-pie-chart",
         "ds-funnel-chart",
         "ds-scatter-chart",
-        "ds-heatmap-chart"
+        "ds-heatmap-chart",
+        "ds-column-chart",
+        "ds-line-chart",
+        "dsColumnSeries",
+        "dsLineSeries"
       ],
-      "action": "None, unless the other marks must keep fading while a legend entry, stage-table row or scale step is hovered: then add `dimOthers` to that chart.",
-      "appliesWhen": "ds-pie-chart, ds-funnel-chart, ds-scatter-chart and ds-heatmap-chart that do not set dimOthers. A chart that sets it fades from the legend as before.",
+      "action": "None, unless the other marks must keep fading while a legend entry, stage-table row or scale step is hovered: then add `dimOthers` to that chart, or to each dsColumnSeries / dsLineSeries whose highlighted you bind.",
+      "appliesWhen": "ds-pie-chart, ds-funnel-chart, ds-scatter-chart, ds-heatmap-chart, ds-column-chart and ds-line-chart that do not set dimOthers, and a dsColumnSeries or dsLineSeries whose highlighted input you bind. A chart that sets it fades from the legend as before.",
       "pitfall": "dimOthers also fades the other marks while a mark itself is hovered, not only from the legend.",
       "restore": "dimOthers",
-      "verify": "Hover a legend entry of every ds-pie-chart, ds-funnel-chart stage row, ds-scatter-chart legend entry and ds-heatmap-chart scale step that should fade the rest, and confirm the chart carries dimOthers."
+      "verify": "Hover a legend entry of every ds-pie-chart, ds-funnel-chart stage row, ds-scatter-chart legend entry, ds-heatmap-chart scale step and multi-series ds-column-chart or ds-line-chart that should fade the rest, and confirm the chart carries dimOthers."
+    },
+    {
+      "id": "line-chart-show-change-default-on",
+      "kind": "behavior",
+      "old": "ds-line-chart",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "ds-line-chart",
+        "dsLineSeries"
+      ],
+      "action": "None, unless a hovered reading must not draw its change from the reading before it: set showChange=\"false\" on ds-line-chart or dsLineSeries.",
+      "appliesWhen": "Every ds-line-chart and dsLineSeries: on the hovered reading of a single series, or of the series singled out by hover, focus or the legend.",
+      "restore": "showChange=\"false\"",
+      "verify": "Hover the second reading of a single-series ds-line-chart and confirm the stretch from the first thickens with a percentage over it, or that nothing is drawn where showChange is false."
     }
   ],
   "informational": [
@@ -73,6 +123,19 @@
       "text": "A hovered or focused column, bar, waterfall step and heatmap cell brightens with `filter: brightness(1.12) saturate(1.1)`, a chart pin pops in, and the tooltip rows fade in when the panel moves to another category or slice. Under `prefers-reduced-motion` all of these change at once.",
       "verify": "Hover a column of a ds-column-chart and confirm it brightens; click it and confirm the pin pops in."
     },
+    {
+      "text": "The value axis of `ds-chart`, `ds-column-chart`, `ds-line-chart` and `ds-waterfall-chart` answers the hovered reading: the category label turns bold, a dashed guide in `--ds-chart-cursor-line-color` runs from the axis, and a pill on the axis prints the value there. In `ds-waterfall-chart` the guide stops at the hovered step and the steps after it fade.",
+      "verify": "Hover a column of a ds-column-chart and confirm its label is bold and a pill on the value axis prints its value."
+    },
+    {
+      "text": "`showChange` paints the thickened stretch in `--ds-chart-positive-color` or `--ds-chart-negative-color`, which `ds-chart` now reads; their defaults stay `var(--chart-positive)` and `var(--chart-negative)`. Set either on the chart to recolour it, or `showChange=\"false\"` to draw nothing.",
+      "verify": "Hover a falling reading of a ds-line-chart and confirm the stretch before it takes the negative colour."
+    },
+    {
+      "text": "When a category comes or goes, the columns, category labels, value labels and line points of `ds-chart`, `ds-column-chart` and `ds-line-chart` glide sideways on `--ds-motion-chart-mark-duration` and the line morphs with its points on it; a resize still redraws at once. A highlighted line point under the category cursor rides the line to the next category, and the focus ring of a category or column glides with the panel.",
+      "verify": "Add a category to a ds-line-chart and confirm the points slide sideways along the line rather than jumping."
+    },
+    "A `dsColumnSeries` column without an `id` is keyed by its label, so it keeps its element and glides when a category before it is removed; one with an `id` glides to its new slot when the data is reordered.",
     {
       "text": "A hovered, focused or held `ds-pie-chart` slice fades the centre to its share and name; the total comes back when the pointer leaves.",
       "verify": "Hover a slice of a ds-pie-chart and confirm the centre shows its share over its name, and the total once the pointer leaves the ring."

@@ -10,6 +10,19 @@ import type {
 export interface ChartAxisEntry extends ChartTooltipEntry {
   /** Where the reading is drawn, in plot pixels from the top; a category panel orders rows by it. */
   readonly y?: number;
+  /** The value axis `y` is measured on. Absent means the first. */
+  readonly axis?: ChartAxis;
+}
+
+/** The reading the value axis answers while a mark is hovered: a guide from the axis at `y` and the
+ *  axis value there in a pill. */
+export interface ChartAxisReadout {
+  readonly categoryIndex: number;
+  /** In plot pixels from the top, on the axis `axis` names (absent: the first). */
+  readonly y: number;
+  readonly axis?: ChartAxis;
+  /** `'plot'` runs the guide across the plot; `'mark'` stops it at the mark's category. */
+  readonly reach?: 'plot' | 'mark';
 }
 
 /** What a mark hands the container to open its panel: the mark decides the content and anchor, the container ensures a plot never opens two. */
@@ -31,6 +44,16 @@ export interface ChartTooltipSource {
   readonly axisEntries?: Signal<readonly ChartAxisEntry[]>;
   /** The drawn element of each `axisEntries` reading, same order; the keyboard focuses it. */
   readonly axisPointElements?: Signal<readonly (Element | null)[]>;
+  /** The reading of the mark answering the pointer or focus, while the category cursor is off. */
+  readonly axisReadout?: Signal<ChartAxisReadout | null>;
+  /** Every reading this mark draws, per category; a dragged range sums them. */
+  readonly valuesByCategory?: Signal<readonly (readonly number[])[]>;
+}
+
+/** The categories a drag selected, both ends included. */
+export interface ChartCategoryRange {
+  readonly from: number;
+  readonly to: number;
 }
 
 /** The drawable rectangle inside `ds-chart`, in CSS pixels; one `viewBox` user unit is one pixel. */
@@ -69,6 +92,8 @@ export interface ChartScales {
     readonly index: number;
     readonly event: PointerEvent;
   } | null>;
+  /** The categories a drag selected; marks outside it fade. Absent or `null` means none. */
+  readonly selectedRange?: Signal<ChartCategoryRange | null>;
   /** How long a resting pointer waits before a mark answers it. Absent means at once. */
   readonly hoverDelayMs?: Signal<number>;
   /** The band over the active category. `null` while `cursor` is off or nothing is active. */

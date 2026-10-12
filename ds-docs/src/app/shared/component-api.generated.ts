@@ -2155,6 +2155,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "`axisLabel` for the second axis."
       },
       {
+        "name": "selectRange",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Lets a press dragged across categories select them: a band over the range, the sum and mean of every reading in it, and the marks outside it faded. Escape or a press outside clears it; a press released in its own category still pins. Off by default."
+      },
+      {
         "name": "tooltipTemplate",
         "kind": "input",
         "type": "TemplateRef<{\n    $implicit: ChartTooltipContext;\n  }> | null",
@@ -2394,7 +2403,25 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The series the reader is pointing at in the legend. Every other series fades."
+        "description": "The series the reader is pointing at in the legend. It brightens; under `dimOthers` every other series fades instead, as the other columns do when one is hovered."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Sinks every column to the baseline and leaves the value axis to the other marks; set it rather than removing the series to animate a legend hiding it."
+      },
+      {
+        "name": "runningTotal",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Reads the columns as a running total, as a waterfall's are: hovering one fades every column after it, and the axis guide stops at the hovered column."
       }
     ],
     "outputs": [
@@ -2472,7 +2499,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Fades every series but the one under the pointer. Off by default: it costs separation between the rest."
+        "description": "Fades every series but the one under the pointer or singled out by `highlighted`. Off by default: it costs separation between the rest."
       },
       {
         "name": "highlighted",
@@ -2481,7 +2508,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The series to single out: the others draw faded and this one bold. Fades the others whether or not `dimOthers` is set."
+        "description": "The series to single out, as hovering one of its markers does: it draws bold, and under `dimOthers` the others fade."
+      },
+      {
+        "name": "showChange",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "On the hovered reading, thickens the stretch from the reading before it in the rising or falling colour (`--ds-chart-positive-color`, `--ds-chart-negative-color`) and prints the change in percent. With several series it follows the one singled out: hovered, focused or highlighted."
       },
       {
         "name": "patterns",
@@ -3312,6 +3348,45 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'item'",
         "required": false,
         "description": "Whether a hovered or focused column opens a tooltip."
+      },
+      {
+        "name": "hiddenSeries",
+        "kind": "model",
+        "type": "readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Ids of the series the legend has switched off; their columns sink to the baseline and the value axis fits what is left."
+      },
+      {
+        "name": "legendFilters",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the legend switches series off. Off leaves it a plain key."
+      },
+      {
+        "name": "legendMode",
+        "kind": "input",
+        "type": "'toggle' | 'isolate'",
+        "union": [
+          "toggle",
+          "isolate"
+        ],
+        "default": "'isolate'",
+        "required": false,
+        "description": "What a legend control does. `'isolate'` shows one series and hides the rest (radios); `'toggle'` hides one and leaves the rest (checkboxes)."
+      },
+      {
+        "name": "selectRange",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Lets a press dragged across columns select their categories: a band, the sum and mean of every column in it, and the rest faded. Escape or a press outside clears it. Off by default."
       },
       {
         "name": "tooltipAnchor",
@@ -5721,6 +5796,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Gives every series a dash pattern, so lines differ by shape as well as colour."
+      },
+      {
+        "name": "selectRange",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Lets a press dragged across categories select them: a band, the sum and mean of every reading in it, and the readings outside faded. Escape or a press outside clears it. Off by default."
+      },
+      {
+        "name": "showChange",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "On the hovered reading, thickens the stretch from the reading before it in the rising or falling colour and prints the change in percent; with several series, for the one singled out."
       },
       {
         "name": "staggerMs",

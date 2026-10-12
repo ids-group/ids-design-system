@@ -26,7 +26,8 @@
   --_chart-hatch-width: var(--ds-chart-hatch-width, 1.5px);
 }
 
-.column {
+.column,
+.focus-ring {
   --_column-mark-width: min(
     var(--_column-chart-column-share),
     var(--_column-chart-column-max-width)
@@ -65,13 +66,31 @@
   transition: chart-interactive.$highlight-transition;
 }
 
-.column.is-active .bar {
+.column.is-active .bar,
+.columns.is-spotlit:not(.dims-others) .bar {
   filter: chart-interactive.$highlight;
+}
+
+// A running total reads up to the hovered step; a dragged range keeps the categories inside it.
+.column.is-later,
+.column.is-out {
+  opacity: var(--ds-chart-dim-opacity);
+}
+
+// The columns sink to the baseline (their spans go to zero); what they print and catch goes with them.
+.columns.is-collapsed {
+  pointer-events: none;
+}
+
+.columns.is-collapsed .value {
+  opacity: 0;
+  transition: opacity var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing);
 }
 
 .bar-base,
 .bar-cap,
-.bar-hatch {
+.bar-hatch,
+.focus-ring-shape {
   width: var(--_column-mark-width);
   x: calc(var(--_column-mark-width) / -2);
 
@@ -81,6 +100,8 @@
     y var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing),
     height var(--ds-motion-chart-mark-duration)
       var(--ds-motion-chart-mark-easing),
+    width var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing),
+    x var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing),
     fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing);
 }
 
@@ -128,19 +149,49 @@
 }
 
 /* focus-ring-guard: an outline on an SVG element paints its bounding box, so the group would ring the
-   whole category slot. The ring is a stroke on the capped rect; `own-indicator` keeps the outline
-   under forced colours, where `stroke` is not remapped. */
+   whole category slot. The ring is a stroke on `.focus-ring`, shaped as the capped rect;
+   `own-indicator` keeps the outline under forced colours, where `stroke` is not remapped. */
 .column.interactive:focus-visible {
   @include focus.own-indicator;
 }
 
-.column.interactive:focus-visible .bar-cap {
+// One ring follows the focused column, gliding with the panel; under forced colours each column
+// draws its own, since the ring's stroke is not remapped.
+.focus-ring {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.focus-ring.placed {
+  transition: transform var(--ds-motion-chart-tooltip-move-duration)
+    var(--ds-motion-chart-tooltip-move-easing);
+}
+
+.focus-ring-shape {
   @include chart-frame.drawn-focus-ring;
+
+  rx: var(--_column-chart-cap-radius);
+  fill: none;
+}
+
+.focus-ring.placed .focus-ring-shape {
+  transition:
+    y var(--ds-motion-chart-tooltip-move-duration) var(--ds-motion-chart-tooltip-move-easing),
+    height var(--ds-motion-chart-tooltip-move-duration) var(--ds-motion-chart-tooltip-move-easing);
+}
+
+.columns:has(.column.interactive:focus-visible) .focus-ring {
+  opacity: 1;
 }
 
 @media (forced-colors: active) {
+  .focus-ring {
+    display: none;
+  }
+
   .column.interactive:focus-visible .bar-cap {
     stroke: Highlight;
+    stroke-width: var(--focus-ring-width);
     filter: none;
   }
 }

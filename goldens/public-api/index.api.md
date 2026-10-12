@@ -60,6 +60,7 @@ export { CellTemplateDirective } from '@ids-group-ltd/ids-design-system/componen
 export { ChartAnnotation } from '@ids-group-ltd/ids-design-system/components/chart'; // interface
 export { ChartAxis } from '@ids-group-ltd/ids-design-system/core'; // type
 export { ChartAxisMode } from '@ids-group-ltd/ids-design-system/core'; // type
+export { ChartCategoryRange } from '@ids-group-ltd/ids-design-system/components/chart'; // interface
 export { ChartComponent } from '@ids-group-ltd/ids-design-system/components/chart'; // component
 export { ChartCurve } from '@ids-group-ltd/ids-design-system/core'; // type
 export { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table'; // interface

@@ -297,5 +297,7 @@ export const DS_INTL_DEFAULTS: DsIntl = {
     directionColumn: 'Direction',
     runningTotalColumn: 'Running total',
     endsAt: (value) => `Ends at ${value}.`,
+    rangeTotal: (range, total, average) =>
+      `${range}: ${total} · avg ${average}`,
   },
 };

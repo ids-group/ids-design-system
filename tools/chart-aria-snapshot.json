@@ -16,12 +16,18 @@
     "rect: aria-hidden=true",
     "g: aria-hidden=true",
     "g: aria-hidden=true",
+    "rect: aria-hidden=true",
+    "g: aria-hidden=true",
     "rect: aria-label={stopLabel(stop.index)}",
+    "rect: aria-hidden=true",
+    "g: aria-hidden=true",
+    "g: aria-hidden=true",
     "g: aria-hidden=true"
   ],
   "column-chart": ["p: role=status", "details: aria-hidden=true"],
   "column-series": [
-    "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(mark) : null}"
+    "svg: role={interactive() && !hidden() ? 'button' : null}, aria-label={interactive() && !hidden() ? entryLabel(mark) : null}",
+    "svg: aria-hidden=true"
   ],
   "funnel-chart": [
     "p: role=status",
@@ -48,7 +54,9 @@
     "p: role=status"
   ],
   "line-series": [
-    "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? markerLabel(marker) : null}"
+    "svg: aria-hidden=true",
+    "svg: role={interactive() && !marker.hidden ? 'button' : null}, aria-label={interactive() && !marker.hidden ? markerLabel(marker) : null}",
+    "svg: aria-hidden=true"
   ],
   "pie-chart": [
     "p: role=status",

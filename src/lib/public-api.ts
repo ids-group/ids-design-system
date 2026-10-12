@@ -109,6 +109,7 @@ export {
 } from '@ids-group-ltd/ids-design-system/components/chart';
 export type {
   ChartAnnotation,
+  ChartCategoryRange,
   ChartPlot,
   ChartScales,
   ChartStackOffset,

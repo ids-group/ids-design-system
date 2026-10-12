@@ -5,6 +5,7 @@
 @include component-base.rules;
 @include chart-frame.chart-frame;
 @include chart-frame.pin-reset;
+@include chart-motion.leaves('.category-label');
 
 .chart {
   --_chart-grid-line-color: var(--ds-chart-grid-line-color, var(--chart-grid-line-color));
@@ -38,7 +39,10 @@
 :host(.measuring) .cursor,
 :host(.measuring) .cursor *,
 :host(.measuring) .band-pin,
-:host(.measuring) .band-pin * {
+:host(.measuring) .band-pin *,
+:host(.measuring) .readout,
+:host(.measuring) .range-band,
+:host(.measuring) .stop-ring {
   transition-duration: 0ms !important;
 }
 
@@ -87,12 +91,12 @@
     var(--ds-motion-chart-tooltip-move-easing);
 }
 
-.cursor.cursor-in {
+.cursor-in {
   animation: ds-chart-mark-fade-in var(--ds-motion-chart-state-duration)
     var(--ds-motion-chart-state-easing) both;
 }
 
-.cursor.cursor-out {
+.cursor-out {
   animation: ds-chart-mark-exit var(--ds-motion-chart-state-duration)
     var(--ds-motion-chart-state-easing) both;
 }
@@ -113,10 +117,112 @@
 
 @include chart-frame.no-bounding-box-focus('.category-stop');
 
-/* focus-ring-guard: drawn as a stroke, as the series markers ring, so the band reads as one of the chart's marks. */
+/* focus-ring-guard: drawn by `.stop-ring` as a stroke, as the series markers ring, so the band reads as
+   one of the chart's marks; one ring for every stop glides between them. */
 .category-stop:focus-visible {
   @include focus.own-indicator;
+}
+
+.stop-ring {
   @include chart-frame.drawn-focus-ring;
+
+  fill: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
+}
+
+.stop-ring.placed {
+  transition:
+    transform var(--ds-motion-chart-tooltip-move-duration) var(--ds-motion-chart-tooltip-move-easing),
+    opacity var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
+}
+
+.category-stops:has(.category-stop:focus-visible) .stop-ring {
+  opacity: 1;
+}
+
+@media (forced-colors: active) {
+  .stop-ring {
+    display: none;
+  }
+}
+
+// The axis answers the reading under the pointer: its category label, a guide and the value on the axis.
+.category-label {
+  transition:
+    transform var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing),
+    fill var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing),
+    font-weight var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
+}
+
+.category-label.is-hot {
+  fill: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.readout.placed {
+  transition: transform var(--ds-motion-chart-tooltip-move-duration)
+    var(--ds-motion-chart-tooltip-move-easing);
+}
+
+.readout,
+.range-pill {
+  pointer-events: none;
+}
+
+.readout-guide {
+  stroke: var(--ds-chart-cursor-line-color);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.pill {
+  y: -8px;
+  height: 16px;
+  rx: var(--radius-sm);
+  fill: var(--text-primary);
+}
+
+.pill-text {
+  fill: var(--surface-default);
+  font-size: var(--_chart-axis-font-size);
+  font-weight: var(--font-weight-bold);
+  dominant-baseline: central;
+}
+
+.range-band {
+  rx: var(--radius-sm);
+  fill: var(--accent);
+  fill-opacity: 0.08;
+  stroke: var(--accent);
+  stroke-opacity: 0.4;
+  pointer-events: none;
+}
+
+.range-band.placed {
+  transition:
+    x var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing),
+    width var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
+}
+
+// A sideways drag selects; a vertical one still scrolls the page.
+.canvas.selects-range {
+  touch-action: pan-y;
+}
+
+@media (forced-colors: active) {
+  .pill {
+    fill: CanvasText;
+  }
+
+  .pill-text {
+    fill: Canvas;
+  }
+
+  .range-band {
+    stroke: Highlight;
+  }
 }
 
 .cursor-line {
