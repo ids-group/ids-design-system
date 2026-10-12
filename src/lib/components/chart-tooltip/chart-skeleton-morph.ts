@@ -60,7 +60,8 @@ const COPIED_STYLES = [
  * chart marks what they become with `data-morph`:
  * - `mark`: a placeholder travels to the mark with the same `data-morph-key`, else the same order,
  *   taking its size and colour; a mark without one arrives by `growth`, a placeholder without one
- *   leaves by it;
+ *   leaves by it; under `up`, a mark with `data-morph-from="top"` (one hanging below the zero
+ *   line) grows down from its top edge;
  * - `line`: the skeleton's band travels onto the first drawn line; the others draw on as they would;
  * - `hold`: stays hidden until the marks have landed;
  * - `self`: a part the chart animates from the skeleton itself, such as a ring turning its slices
@@ -389,9 +390,11 @@ function collapse(
   context: Element,
 ): Shape {
   if (growth === 'up') {
+    const fromTop = context.getAttribute('data-morph-from') === 'top';
+
     return {
       ...shape,
-      top: shape.top + shape.height,
+      top: fromTop ? shape.top : shape.top + shape.height,
       height: 0,
       clip: shape.clip?.map(({ x }) => ({ x, y: 0 })) ?? null,
     };
