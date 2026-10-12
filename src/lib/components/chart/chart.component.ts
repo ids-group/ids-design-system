@@ -1196,11 +1196,12 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     const centre = this.xPosition()(readout.categoryIndex);
     const toMark = readout.reach === 'mark';
     const pillWidth = this.readoutTextWidth() + 2 * PILL_PADDING;
+    const format = this.valueFormatResolved();
 
     return {
       categoryIndex: readout.categoryIndex,
       y: readout.y,
-      label: this.valueFormatResolved()(value, 'readout'),
+      label: format(value, format.handlesReadout ? 'readout' : 'tooltip'),
       x1: onRight && toMark ? centre - half : this.plot().left,
       x2: !onRight && toMark ? centre + half : this.plotRight(),
       pillWidth,

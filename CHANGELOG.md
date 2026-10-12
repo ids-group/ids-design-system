@@ -94,10 +94,11 @@
   guide and the pill glide between readings on `--ds-motion-chart-tooltip-move-duration` and
   `-easing`. In `ds-waterfall-chart` the guide stops at the hovered step, reads its running total,
   and under `dimOthers` the steps after it fade. The new `showAxisReadout` input on all four, on by default, turns the
-  label, the guide and the pill off. The pill prints through `valueFormat` at the new
-  `ChartFormatLocation` `'readout'`: the built-in format spells it out as for `'tooltip'`, and a
-  custom formatter can return the tick's short form there. A formatter whose `location` parameter
-  is typed as its own `'tick' | 'tooltip'` union stops compiling until it takes `'readout'`.
+  label, the guide and the pill off. The pill prints through `valueFormat` at
+  `'tooltip'`, in full. A formatter that sets `handlesReadout: true` is asked for the new
+  `ChartFormatLocation` `'readout'` there instead, and can return the tick's short form. A
+  formatter typed for `'tick' | 'tooltip'` alone is a valid `ChartValueFormat` and keeps a full
+  number in the pill.
 - **One chart motion timing per kind of movement.** Whatever follows the pointer glides on
   `--ds-motion-chart-tooltip-move-duration` and `-easing`: the `ds-scatter-chart` nearest-point
   ring and the `selectRange` band join the band, the panel and the axis readout there, where they
