@@ -5,8 +5,22 @@
 ```ts
 @Component({ selector: 'ds-info-hint' })
 export class InfoHintComponent {
+    public constructor();
     public readonly ariaLabel = input.required<string>();
+    public readonly content = input<TemplateRef<unknown> | null>(null);
+    private readonly hasProjected;
     public readonly icon = input<'help' | 'info'>('help');
-    public readonly text = input.required<string>();
+    private readonly projected;
+    private readonly sources;
+    public readonly text = input<string>('');
+    protected readonly tip = computed(…);
+}
+```
+
+## CSS hooks
+
+```css
+ds-info-hint {
+    --ds-info-hint-color: var(--icon-default) | var(--icon-strong);
 }
 ```
