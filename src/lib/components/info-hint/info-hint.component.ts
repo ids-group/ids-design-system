@@ -9,10 +9,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import {
-  devWarn,
-  type IconName,
-} from '@ids-group-ltd/ids-design-system/core';
+import { devWarn, type IconName } from '@ids-group-ltd/ids-design-system/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import {
@@ -40,7 +37,10 @@ function rendersSomething(node: Node): boolean {
       [dsTooltip]="tip()">
       <ds-icon [name]="icon()" [size]="14" />
     </button>
-    <ng-template #projected><ng-content /></ng-template>
+
+    <ng-template #projected>
+      <ng-content />
+    </ng-template>
   `,
   styleUrl: './info-hint.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,7 +56,8 @@ export class InfoHintComponent {
   /** Any DS icon; `'help'` draws a question mark in a circle, `'info'` an "i". */
   readonly icon = input<IconName>('help');
 
-  private readonly projected = viewChild.required<TemplateRef<unknown>>('projected');
+  private readonly projected =
+    viewChild.required<TemplateRef<unknown>>('projected');
   private readonly hasProjected = signal<boolean | null>(null);
 
   private readonly sources = computed(() =>

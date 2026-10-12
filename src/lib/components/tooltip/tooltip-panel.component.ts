@@ -17,6 +17,7 @@ import type { TooltipPlacement } from './tooltip.types';
     @if (template(); as template) {
       <ng-container [ngTemplateOutlet]="template" />
     }
+
     @for (segment of segments(); track $index) {
       @if (segment.bold) {
         <strong [textContent]="segment.text"></strong>
