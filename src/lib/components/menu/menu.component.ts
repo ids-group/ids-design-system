@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   ViewEncapsulation,
   computed,
   contentChildren,
@@ -11,6 +12,7 @@ import { DOCUMENT } from '@angular/common';
 import { MenuItemComponent } from './menu-item.component';
 import { MenuAim } from './menu-aim';
 import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
+import { DsOverlayCloseRef } from '@ids-group-ltd/ids-design-system/overlay';
 
 @Component({
   selector: 'ds-menu',
@@ -24,11 +26,15 @@ import { isTextEntryTarget } from '@ids-group-ltd/ids-design-system/core';
   // data-focus="inset": the panel clips, so an outward ring is lost.
   host: {
     '(keydown)': 'onKeydown($event)',
+    '(focusin)': 'onFocusIn($event)',
+    '(focusout)': 'onFocusOut($event)',
     'data-focus': 'inset',
     '[class.has-icons]': 'anyIcon()',
   },
 })
 export class MenuComponent {
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly closeRef = inject(DsOverlayCloseRef, { optional: true });
   private readonly items = contentChildren(MenuItemComponent);
 
   /** One item with an icon makes every item reserve the slot, so the labels share one axis. */
@@ -53,6 +59,22 @@ export class MenuComponent {
     });
   }
 
+  protected onFocusIn(event: FocusEvent): void {
+    const index = this.items().findIndex((item) =>
+      item.contains(event.target as Node | null),
+    );
+    if (index >= 0) {
+      this.activeIndex.set(index);
+    }
+  }
+
+  // APG: a menu always opens at its first item, so the roving stop goes back there once focus leaves.
+  protected onFocusOut(event: FocusEvent): void {
+    if (!this.host.nativeElement.contains(event.relatedTarget as Node | null)) {
+      this.activeIndex.set(0);
+    }
+  }
+
   protected onKeydown(event: KeyboardEvent): void {
     const items = this.items();
     // A projected search field owns its typing; type-ahead would eat it.
@@ -63,6 +85,12 @@ export class MenuComponent {
     const focused = items.findIndex((item) =>
       item.contains(event.target as Node | null),
     );
+    // Not prevented: the overlay hands focus back to its trigger, and Tab moves on from there (APG).
+    if (event.key === 'Tab' && focused >= 0) {
+      this.closeRef?.close();
+
+      return;
+    }
     const from = focused >= 0 ? focused : this.activeIndex();
 
     if (

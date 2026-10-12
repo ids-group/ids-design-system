@@ -273,6 +273,61 @@
   under forced colours each prints in `CanvasText` over a `Canvas` halo; an annotation kept its
   own colour on a white patch there, and the percentage's halo had sharp corners.
   `--ds-line-chart-annotation-halo-color` and `-halo-width` still set the annotation's halo.
+- **The `dsTableColumns` button reports its panel open.** On a fresh page the «Columns» button kept
+  `aria-expanded="false"` while its panel was open, and followed the panel only after the column
+  order had changed once. It reads `true` while the panel is open from the first press.
+- **Dragging a `dsTableResize` column moves only that column.** The table filled its container, so
+  narrowing one column handed the freed width to the others: dragging a 188px column 480px left
+  widened the other five by 12 to 18px each. Once every visible column has a width, the table is
+  as wide as its columns and leaves the rest of the container empty. A column still stops at its
+  content's narrowest width, and `Home` on a handle returns the column to auto, which fills the
+  container again.
+- **`dsTableExport` shows its CSV button.** The toolbar above a `ds-table` showed only when its
+  `[toolbar]` slot held content, so a table with `dsTableExport` and no slotted content hid the
+  built-in Export button. The toolbar shows whenever the slot or a table feature puts a control in
+  it.
+- **A `ds-button` keeps focus while `loading`.** A button pressed from the keyboard and then set
+  `loading` was disabled natively, so focus fell to the page. A loading button takes
+  `aria-disabled="true"` beside `aria-busy` and stays focusable; the click is swallowed, so
+  `(pressed)` does not fire and a `type="submit"` does not submit. The `dsTableExport` button shows
+  the spinner while an `exportFetcher` runs, in place of the greyed "Exporting…" label. A
+  `[disabled]` bound to the same flag as `[loading]` still disables natively and drops focus;
+  remove it.
+- **Pressing Previous onto the first page, or Next onto the last, keeps focus in `ds-pagination`.**
+  The pressed button disabled under focus and focus fell to the page; it moves to the current
+  page's button. `PaginationComponent` gained a member, named in the migration manifest.
+- **Dismissing a `ds-alert`, a `ds-banner` or a toast moves focus to a neighbour.** Focus sat on
+  the close or action button and fell to the page when the element left. A dismissed alert or
+  banner hands it to the next control after it, or the one before it when nothing follows; a toast
+  hands it to the next toast in the region, else back to the element focused before focus entered
+  the region. Focus that a `(closed)` handler or a toast action's `handler` moves elsewhere stays
+  there. `ToastRegionComponent` gained members, and the `onDismiss` of `AlertComponent` and
+  `BannerComponent` takes an argument, named in the migration manifest.
+- **Move up and Move down in the `dsTableColumns` panel keep focus on the moved row.** Pressed from
+  the keyboard, three moves in four dropped focus to the page, as the row was re-inserted or its
+  button disabled at the top or bottom. Focus stays on the pressed button of the moved row, or moves
+  to its other button once the row reaches an end. The internal `TableColumnsPanelComponent`
+  gained `move` and `rescueFocus`.
+- **A `ds-menu` opens at its first item.** Reopening a `ds-split-button` menu, or any `ds-menu`
+  in a `ds-popover`, focused the item that had focus when it closed. Once focus leaves the menu,
+  its first item takes the tab stop again.
+- **Tab leaves an open `ds-menu`.** In a `ds-split-button` menu, or a `ds-menu` in a
+  `ds-popover`, Tab on an item did nothing; it closes the menu and moves focus on from its
+  trigger. In a submenu they close the submenu and the menu holding it. Choosing a submenu item
+  closes the submenu and returns focus to its parent item before the overlay closes, where the
+  submenu stayed open.
+- **A `ds-popover` holding a `ds-menu` moves focus into it.** Without `panelRole`, opening the
+  popover left focus on the trigger, so arrow keys and type-ahead never reached the menu; this hit
+  the `ds-table` row-actions menu too. A panel holding a `role="menu"` now focuses the menu's first
+  item on open, and Escape returns focus to the trigger. It is not trapped: Tab closes it.
+- **ArrowRight on a `ds-menu-item` with a `submenu` focuses the submenu's first item.** It opened
+  the submenu and left focus on the parent, so the submenu's items were out of reach; Enter and
+  Space focus the first item too. ArrowLeft and Escape close it and focus the parent, as before.
+- **A `ds-icon-button` toggle that is off says so.** With `[selected]` bound to `false` it dropped
+  `aria-pressed`, so a screen reader heard a plain button; it renders `aria-pressed="false"`, as
+  `ds-toggle-button` does. An icon button with no `selected` binding still carries no
+  `aria-pressed`. `IconButtonComponent.selected` is `boolean | null`, `null` when unbound; code
+  reading it back as a `boolean` handles `null`.
 
 ### What you can now DELETE
 

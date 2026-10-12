@@ -9,6 +9,8 @@ Content slots: default (body text, an alternative to `message`), `[actions]` (tr
 
 The companion `<ds-toast-region>` lives inside the `ToastService` (see Services) — it is auto-mounted via a CDK overlay on first `toast.show()`, so consumers do **not** need to place `<ds-toast-region>` anywhere in their markup. Render `<ds-toast>` directly only for static specimens.
 
+A toast leaving with focus inside it (its action, its close button, or `ToastRef.dismiss()`) hands focus to the next toast in the region, else back to the element focused before focus entered the region, as a dialog returns it.
+
 <!-- inputs:ds-toast -->
 All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'loading' = 'info'`, `title: string = ''`, `body: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `action: ToastAction | null = null`
 <!-- /inputs -->
