@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**135 open — 2 P1, 12 P2, 121 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
+**134 open — 2 P1, 12 P2, 120 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 2
 
@@ -43,7 +43,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 121
+### P3 — 120
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -101,7 +101,6 @@ is stale. Closing an item means deleting the item and nothing else.
 - **Open verdicts, each drawn in a deck**
   - Which public tokens the library never reads go?
   - Does the picker list height become a public token, or stay behind `panelClass`?
-  - Do the date picker's first day of the week and the time picker's 12h/24h default from …
   - Should the `ds-breadcrumbs` hover colour derive from `--text-link`, like the `.link` helper?
 - **Tooling**
   - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
@@ -1110,6 +1109,7 @@ file** — the number moves; cite the filename.
 | 23 | `23-table-wrap-parked` | Parked: two wrap options for a `truncate` column (fill the row height, or always wrap), each rendered. | the wrap item under Parked |
 | 24 | `24-info-hint-content` | How `ds-info-hint` takes rich content from the consumer (mm-ecm ME-495 «Published» list): content projection, a template input, or a standard trigger for `ds-popover`; and, only if the ME-495 icon verdict is A, how a status icon becomes the hint trigger: any `IconName` with a colour token, or a `tone` input. | the info-hint rich-content P2 in Asked by Stas |
 | 25 | `25-link-colour` | What colour a text link takes under a non-blue brand: the brand colour (dev since `b9f5a6db2`) or always blue; both drawn for a blue and a green brand in light and dark, with link-to-background and link-to-text contrast. | none |
+| 26 | `26-brand-dark-theme` | How a brand colour set once reaches the dark theme: repeat it under the dark selector (today), the dark block stops redeclaring `--primary` and its channels, or a `--ds-brand` input with a lifted dark `--primary`; drawn on the real `ds.css` for blue, green and navy brands with contrast measured. | the open queue question on deriving every shade from one brand colour |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
