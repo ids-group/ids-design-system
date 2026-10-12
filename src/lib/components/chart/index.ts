@@ -17,4 +17,8 @@ export {
 export type { ChartAnnotationMark } from './chart.math';
 export type { ChartStackOffset } from './chart.math';
 export { CHART_SCALES } from './chart-scales.token';
-export type { ChartPlot, ChartScales } from './chart-scales.token';
+export type {
+  ChartCategoryRange,
+  ChartPlot,
+  ChartScales,
+} from './chart-scales.token';
