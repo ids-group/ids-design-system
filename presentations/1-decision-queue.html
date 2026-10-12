@@ -826,11 +826,34 @@
   [data-pf-columns="none"] .pf-col, .ag-svg[data-pf-columns="none"] text.pf-label, [data-pf-columns="none"] .pf-readout.placed { transition: none; }
   [data-q^="ag-"] .opt .css { white-space: pre-wrap; }
   [data-q^="ag-"] .opt > .badge { align-self: flex-start; }
+  .pf-replay { padding: var(--space-1) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); font: var(--font-weight-bold) var(--font-size-2xs) var(--font-sans); color: var(--text-primary); cursor: pointer; }
+  .pf-replay:hover { background: var(--surface-secondary); }
+  .fn-stage { transform-box: fill-box; }
+  [data-fn-origin="center"] .fn-stage { transform-origin: center; }
+  .fn-final { fill: none; stroke: var(--border-strong); stroke-width: .75; stroke-dasharray: 2 2; }
+  .hl-svg text { font-family: var(--font-sans); }
+  .hl-svg .hl-threshold-line { stroke: var(--ds-chart-threshold-color); stroke-width: 1; stroke-dasharray: 4 3; }
+  .hl-stretch { fill: none; stroke: var(--ds-chart-positive-color); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+  .hl-svg text.hl-threshold { fill: var(--ds-chart-threshold-color); font-size: var(--ds-chart-axis-font-size); font-weight: 600; paint-order: stroke; stroke: var(--ds-chart-bg-color); stroke-width: 3; stroke-linejoin: round; }
+  .hl-svg text.hl-note { fill: var(--text-primary); font-size: var(--ds-chart-axis-font-size); font-weight: var(--font-weight-bold); paint-order: stroke; stroke: var(--ds-chart-bg-color); stroke-width: 3px; stroke-linejoin: round; }
+  .hl-svg text.hl-change { fill: var(--success-text); font-size: var(--font-size-xs); font-weight: var(--font-weight-bold); paint-order: stroke; stroke: var(--ds-chart-bg-color); stroke-width: 3px; }
+  [data-hl="shared"] .hl-svg text.hl-change, [data-hl="line"] .hl-svg text.hl-change { stroke-linejoin: round; }
+  .hl-forced { color-scheme: dark; }
+  .hl-forced .hl-canvas { fill: Canvas; }
+  .hl-forced .ag-grid, .hl-forced .ag-base, .hl-forced .ag-line { stroke: CanvasText; }
+  .hl-forced .hl-svg text.hl-threshold,
+  [data-hl="shared"] .hl-forced .hl-svg text.hl-note,
+  [data-hl="shared"] .hl-forced .hl-svg text.hl-change,
+  [data-hl="line"] .hl-forced .hl-svg text.hl-change { fill: CanvasText; stroke: Canvas; }
+  .hl-canvas { fill: var(--ds-chart-bg-color); }
+  .mo-skeleton { fill: var(--surface-secondary); }
+  .mo-slot { fill: none; stroke: var(--border-strong); stroke-width: .75; stroke-dasharray: 2 2; }
+  .mo-column { transform-box: fill-box; transform-origin: center; }
 </style>
 
 <main>
   <div class="masthead">
-    <h1>5 асков консьюмеров и 48 решений, каждое с нарисованными вариантами</h1>
+    <h1>5 асков консьюмеров и 52 решения, каждое с нарисованными вариантами</h1>
     <p class="lede">
       Сверху - всё, чего ждёт консьюмер: фиксы, хуки и фичи из бэклога, каждый показан как есть
       сейчас и как будет после. Ниже - открытые деки и бакет <code>Decisions</code>. Вариант
@@ -2852,6 +2875,176 @@ Jan#1: mark-leave, гаснет</p></div>
     </div>
   </section>
 
+  <section class="q" data-q="ag-funnel-settle-origin">
+    <div class="q-head">
+      <span class="q-num">54</span>
+      <h2 class="q-title">Ступень воронки проявляется от своего левого верхнего угла, общий settles-in - от центра</h2>
+      <span class="q-src">funnel-chart.component.scss:9 · :11 · funnel-chart.component.html:103 · _chart-motion.scss:47 · :154 · scatter-chart.component.scss:8 · bf6fb9dd7</span>
+    </div>
+    <p class="q-sub">Рефакторинг свёл дубли кода графиков, а этот оставил: объединение меняет вид. Ступень (<code>&lt;polygon class="stage"&gt;</code>) проявляется через <code>enters('.stage', ds-chart-mark-settle)</code> и <code>transform-box: fill-box</code> без <code>transform-origin</code>; у SVG-элемента он по умолчанию <code>0 0</code>, то есть левый верхний угол ступени. Общий <code>settles-in</code> - то же плюс <code>transform-origin: center</code>, им проявляются точки scatter. Keyframe: <code>opacity: 0</code>, <code>scale(0.96)</code>; 400ms <code>--ease-emphasized-decelerate</code>, задержка 120ms плюс 60ms на ступень (<code>staggerMs</code> 60, funnel-chart.component.ts:141; при 4 ступенях шаг min(60, 260/3), charts-motion.ts:19). Пунктир - где ступень встанет.</p>
+    <div class="stage">
+      <button type="button" class="pf-replay">Проиграть ещё раз</button>
+      <label class="pf-slow"><input type="checkbox"> Замедлить ×5</label>
+    </div>
+    <div class="opts">
+      <div class="opt is-today"><h3>Как сейчас: от левого верхнего угла</h3><span class="badge is-same">сейчас в dev</span>
+        <svg class="ag-svg" data-play="funnel" data-fn-origin="corner" viewBox="0 0 200 124" aria-hidden="true">
+          <polygon class="fn-final" points="5,2 195,2 175,28 25,28"/><polygon class="fn-final" points="25,32 175,32 155,58 45,58"/><polygon class="fn-final" points="45,62 155,62 137,88 63,88"/><polygon class="fn-final" points="63,92 137,92 122,118 78,118"/>
+          <polygon class="fn-stage ag-c3" data-stagger="0" points="5,2 195,2 175,28 25,28"/><polygon class="fn-stage ag-c2" data-stagger="60" points="25,32 175,32 155,58 45,58"/><polygon class="fn-stage ag-c1" data-stagger="120" points="45,62 155,62 137,88 63,88"/><polygon class="fn-stage ag-c3" data-stagger="180" points="63,92 137,92 122,118 78,118"/>
+        </svg>
+        <p class="ag-cost">Ступень дорастает вправо и вниз, правый край едет на 4% ширины. <b>Цена:</b> 0 правок, три вызова вместо одного.</p></div>
+      <div class="opt"><h3>Общий settles-in: от центра ступени <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <svg class="ag-svg" data-play="funnel" data-fn-origin="center" viewBox="0 0 200 124" aria-hidden="true">
+          <polygon class="fn-final" points="5,2 195,2 175,28 25,28"/><polygon class="fn-final" points="25,32 175,32 155,58 45,58"/><polygon class="fn-final" points="45,62 155,62 137,88 63,88"/><polygon class="fn-final" points="63,92 137,92 122,118 78,118"/>
+          <polygon class="fn-stage ag-c3" data-stagger="0" points="5,2 195,2 175,28 25,28"/><polygon class="fn-stage ag-c2" data-stagger="60" points="25,32 175,32 155,58 45,58"/><polygon class="fn-stage ag-c1" data-stagger="120" points="45,62 155,62 137,88 63,88"/><polygon class="fn-stage ag-c3" data-stagger="180" points="63,92 137,92 122,118 78,118"/>
+        </svg>
+        <p class="ag-cost">Ступень дорастает на 2% в каждую сторону, ось воронки стоит. <b>Цена:</b> одна строка вместо трёх в funnel-chart.component.scss.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-halo-copies">
+    <div class="q-head">
+      <span class="q-num">55</span>
+      <h2 class="q-title">Ореол подписи на графике написан трижды, и у «+24.0%» он другой</h2>
+      <span class="q-src">reference-label.component.scss:5 · :17 · series-annotation.component.scss:13 · line-series.component.scss:141 · :229 · _chart-frame.scss:49 · bf6fb9dd7</span>
+    </div>
+    <p class="q-sub">Подпись с ореолом (<code>paint-order: stroke</code>, обводка цветом фона 3px) есть в трёх местах. Подпись порога: <code>stroke-linejoin: round</code> и ветка forced-colors (<code>CanvasText</code> на <code>Canvas</code>). Аннотация серии: <code>round</code>, ветки forced-colors нет. Изменение к прошлой точке (<code>.change-label</code>): ни <code>stroke-linejoin</code> (по умолчанию <code>miter</code>, острые углы), ни ветки forced-colors; ветка line-series.component.scss:229 перекрашивает только линию и маркеры. Колонок с подписями значений в column-series нет. Нижняя картинка - модель: по _chart-frame.scss:49 <code>fill</code> и <code>stroke</code> в forced-colors не перекрашиваются, фон и текст взяты системными <code>Canvas</code>/<code>CanvasText</code> при тёмной схеме.</p>
+    <div class="opts">
+      <div class="opt is-today" data-hl="today"><h3>Как сейчас: три разные копии</h3><span class="badge is-same">сейчас в dev</span>
+        <p class="cap">обычный экран</p>
+        <svg class="ag-svg hl-svg" viewBox="0 0 160 90" aria-hidden="true">
+          <rect class="hl-canvas" x="0" y="0" width="160" height="90"/>
+          <line class="ag-grid" x1="4" y1="20" x2="156" y2="20"/><line class="ag-grid" x1="4" y1="45" x2="156" y2="45"/><line class="ag-base" x1="4" y1="80" x2="156" y2="80"/>
+          <rect class="ag-c2" x="14" y="44" width="16" height="36"/><rect class="ag-c2" x="44" y="30" width="16" height="50"/><rect class="ag-c2" x="74" y="52" width="16" height="28"/><rect class="ag-c2" x="104" y="36" width="16" height="44"/><rect class="ag-c2" x="134" y="24" width="16" height="56"/>
+          <line class="hl-threshold-line" x1="4" y1="28" x2="156" y2="28"/>
+          <path class="ag-line" d="M22 58 L52 40 L82 50 L112 30 L142 36"/><path class="hl-stretch" d="M82 50 L112 30"/>
+          <text class="hl-threshold" x="6" y="25">Цель 1.2M</text><text class="hl-note" x="52" y="34" text-anchor="middle">Запуск</text><text class="hl-change" x="104" y="60" text-anchor="middle">+24.0%</text>
+        </svg>
+        <p class="cap">«+24.0%» крупно, на колонке</p>
+        <svg class="ag-svg hl-svg" viewBox="0 0 60 20" aria-hidden="true"><rect class="ag-c2" x="0" y="0" width="60" height="20"/><text class="hl-change" x="30" y="15" text-anchor="middle">+24.0%</text></svg>
+        <p class="cap">forced-colors, модель</p>
+        <div class="hl-forced"><svg class="ag-svg hl-svg" viewBox="0 0 160 90" aria-hidden="true">
+          <rect class="hl-canvas" x="0" y="0" width="160" height="90"/>
+          <line class="ag-grid" x1="4" y1="20" x2="156" y2="20"/><line class="ag-grid" x1="4" y1="45" x2="156" y2="45"/><line class="ag-base" x1="4" y1="80" x2="156" y2="80"/>
+          <rect class="ag-c2" x="14" y="44" width="16" height="36"/><rect class="ag-c2" x="44" y="30" width="16" height="50"/><rect class="ag-c2" x="74" y="52" width="16" height="28"/><rect class="ag-c2" x="104" y="36" width="16" height="44"/><rect class="ag-c2" x="134" y="24" width="16" height="56"/>
+          <line class="hl-threshold-line" x1="4" y1="28" x2="156" y2="28"/>
+          <path class="ag-line" d="M22 58 L52 40 L82 50 L112 30 L142 36"/><path class="hl-stretch" d="M82 50 L112 30"/>
+          <text class="hl-threshold" x="6" y="25">Цель 1.2M</text><text class="hl-note" x="52" y="34" text-anchor="middle">Запуск</text><text class="hl-change" x="104" y="60" text-anchor="middle">+24.0%</text>
+        </svg></div>
+        <p class="ag-cost">У «+24.0%» острые выступы ореола; в forced-colors аннотация и «+24.0%» остаются в своих цветах на белом ореоле. <b>Цена:</b> 0 правок.</p></div>
+      <div class="opt" data-hl="shared"><h3>Одна общая: round-join + forced-colors везде <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <p class="cap">обычный экран</p>
+        <svg class="ag-svg hl-svg" viewBox="0 0 160 90" aria-hidden="true">
+          <rect class="hl-canvas" x="0" y="0" width="160" height="90"/>
+          <line class="ag-grid" x1="4" y1="20" x2="156" y2="20"/><line class="ag-grid" x1="4" y1="45" x2="156" y2="45"/><line class="ag-base" x1="4" y1="80" x2="156" y2="80"/>
+          <rect class="ag-c2" x="14" y="44" width="16" height="36"/><rect class="ag-c2" x="44" y="30" width="16" height="50"/><rect class="ag-c2" x="74" y="52" width="16" height="28"/><rect class="ag-c2" x="104" y="36" width="16" height="44"/><rect class="ag-c2" x="134" y="24" width="16" height="56"/>
+          <line class="hl-threshold-line" x1="4" y1="28" x2="156" y2="28"/>
+          <path class="ag-line" d="M22 58 L52 40 L82 50 L112 30 L142 36"/><path class="hl-stretch" d="M82 50 L112 30"/>
+          <text class="hl-threshold" x="6" y="25">Цель 1.2M</text><text class="hl-note" x="52" y="34" text-anchor="middle">Запуск</text><text class="hl-change" x="104" y="60" text-anchor="middle">+24.0%</text>
+        </svg>
+        <p class="cap">«+24.0%» крупно, на колонке</p>
+        <svg class="ag-svg hl-svg" viewBox="0 0 60 20" aria-hidden="true"><rect class="ag-c2" x="0" y="0" width="60" height="20"/><text class="hl-change" x="30" y="15" text-anchor="middle">+24.0%</text></svg>
+        <p class="cap">forced-colors, модель</p>
+        <div class="hl-forced"><svg class="ag-svg hl-svg" viewBox="0 0 160 90" aria-hidden="true">
+          <rect class="hl-canvas" x="0" y="0" width="160" height="90"/>
+          <line class="ag-grid" x1="4" y1="20" x2="156" y2="20"/><line class="ag-grid" x1="4" y1="45" x2="156" y2="45"/><line class="ag-base" x1="4" y1="80" x2="156" y2="80"/>
+          <rect class="ag-c2" x="14" y="44" width="16" height="36"/><rect class="ag-c2" x="44" y="30" width="16" height="50"/><rect class="ag-c2" x="74" y="52" width="16" height="28"/><rect class="ag-c2" x="104" y="36" width="16" height="44"/><rect class="ag-c2" x="134" y="24" width="16" height="56"/>
+          <line class="hl-threshold-line" x1="4" y1="28" x2="156" y2="28"/>
+          <path class="ag-line" d="M22 58 L52 40 L82 50 L112 30 L142 36"/><path class="hl-stretch" d="M82 50 L112 30"/>
+          <text class="hl-threshold" x="6" y="25">Цель 1.2M</text><text class="hl-note" x="52" y="34" text-anchor="middle">Запуск</text><text class="hl-change" x="104" y="60" text-anchor="middle">+24.0%</text>
+        </svg></div>
+        <p class="ag-cost">Все три подписи одинаковы; в forced-colors все три <code>CanvasText</code> на <code>Canvas</code>, зелёный у «+24.0%» там пропадает. <b>Цена:</b> один mixin вместо трёх блоков.</p></div>
+      <div class="opt" data-hl="line"><h3>Дописать только line-series</h3>
+        <p class="cap">обычный экран</p>
+        <svg class="ag-svg hl-svg" viewBox="0 0 160 90" aria-hidden="true">
+          <rect class="hl-canvas" x="0" y="0" width="160" height="90"/>
+          <line class="ag-grid" x1="4" y1="20" x2="156" y2="20"/><line class="ag-grid" x1="4" y1="45" x2="156" y2="45"/><line class="ag-base" x1="4" y1="80" x2="156" y2="80"/>
+          <rect class="ag-c2" x="14" y="44" width="16" height="36"/><rect class="ag-c2" x="44" y="30" width="16" height="50"/><rect class="ag-c2" x="74" y="52" width="16" height="28"/><rect class="ag-c2" x="104" y="36" width="16" height="44"/><rect class="ag-c2" x="134" y="24" width="16" height="56"/>
+          <line class="hl-threshold-line" x1="4" y1="28" x2="156" y2="28"/>
+          <path class="ag-line" d="M22 58 L52 40 L82 50 L112 30 L142 36"/><path class="hl-stretch" d="M82 50 L112 30"/>
+          <text class="hl-threshold" x="6" y="25">Цель 1.2M</text><text class="hl-note" x="52" y="34" text-anchor="middle">Запуск</text><text class="hl-change" x="104" y="60" text-anchor="middle">+24.0%</text>
+        </svg>
+        <p class="cap">«+24.0%» крупно, на колонке</p>
+        <svg class="ag-svg hl-svg" viewBox="0 0 60 20" aria-hidden="true"><rect class="ag-c2" x="0" y="0" width="60" height="20"/><text class="hl-change" x="30" y="15" text-anchor="middle">+24.0%</text></svg>
+        <p class="cap">forced-colors, модель</p>
+        <div class="hl-forced"><svg class="ag-svg hl-svg" viewBox="0 0 160 90" aria-hidden="true">
+          <rect class="hl-canvas" x="0" y="0" width="160" height="90"/>
+          <line class="ag-grid" x1="4" y1="20" x2="156" y2="20"/><line class="ag-grid" x1="4" y1="45" x2="156" y2="45"/><line class="ag-base" x1="4" y1="80" x2="156" y2="80"/>
+          <rect class="ag-c2" x="14" y="44" width="16" height="36"/><rect class="ag-c2" x="44" y="30" width="16" height="50"/><rect class="ag-c2" x="74" y="52" width="16" height="28"/><rect class="ag-c2" x="104" y="36" width="16" height="44"/><rect class="ag-c2" x="134" y="24" width="16" height="56"/>
+          <line class="hl-threshold-line" x1="4" y1="28" x2="156" y2="28"/>
+          <path class="ag-line" d="M22 58 L52 40 L82 50 L112 30 L142 36"/><path class="hl-stretch" d="M82 50 L112 30"/>
+          <text class="hl-threshold" x="6" y="25">Цель 1.2M</text><text class="hl-note" x="52" y="34" text-anchor="middle">Запуск</text><text class="hl-change" x="104" y="60" text-anchor="middle">+24.0%</text>
+        </svg></div>
+        <p class="ag-cost">«+24.0%» как порог; аннотация в forced-colors как сейчас. <b>Цена:</b> две правки в line-series.component.scss, копий по-прежнему три.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-change-fade-timing">
+    <div class="q-head">
+      <span class="q-num">56</span>
+      <h2 class="q-title">Изменение к прошлой точке появляется по таймингу состояния, а не меток</h2>
+      <span class="q-src">line-series.component.scss:118 · :124 · line-series.component.ts:303 · _chart-motion.scss:82 · :89 · :143 · bf6fb9dd7</span>
+    </div>
+    <p class="q-sub">Подпись появляется на наведённой точке (<code>showChange</code>). Сейчас: появление <code>ds-chart-mark-fade-in</code> и уход <code>ds-chart-mark-exit</code>, оба за <code>--ds-motion-chart-state-duration</code> 120ms с <code>--ease-standard</code>, без задержки. Общие mixin'ы: <code>fades-in</code> - 400ms <code>--ease-emphasized-decelerate</code> с задержкой 120ms (<code>--ds-motion-chart-mark-exit-duration</code>) и без параметра для easing; <code>leaves</code> - 120ms <code>--ease-accelerate</code>. Курсор встаёт на вторую точку и переходит на третью.</p>
+    <div class="stage">
+      <button type="button" class="pf-replay">Проиграть ещё раз</button>
+      <label class="pf-slow"><input type="checkbox"> Замедлить ×5</label>
+    </div>
+    <div class="opts">
+      <div class="opt is-today"><h3>Как сейчас: state <span class="star">★</span></h3><span class="badge is-same">сейчас в dev</span><span class="badge is-pick">рекомендую</span>
+        <svg class="ag-svg" data-play="change" data-mode="state" viewBox="0 0 160 80" aria-hidden="true">
+          <line class="ag-grid" x1="4" y1="20" x2="156" y2="20"/><line class="ag-base" x1="4" y1="74" x2="156" y2="74"/>
+          <path class="ag-line" d="M20 62 L60 50 L100 42 L140 22"/>
+          <g class="mo-change" style="opacity:0"><path class="hl-stretch" d="M20 62 L60 50"/><text class="ag-rise-text" x="40" y="46" text-anchor="middle">+12.5%</text></g>
+          <g class="mo-change" style="opacity:0"><path class="hl-stretch" d="M60 50 L100 42"/><text class="ag-rise-text" x="80" y="36" text-anchor="middle">+6.7%</text></g>
+          <circle class="ag-dot" cx="20" cy="62" r="2.5"/><circle class="ag-dot" cx="60" cy="50" r="2.5"/><circle class="ag-dot" cx="100" cy="42" r="2.5"/><circle class="ag-dot" cx="140" cy="22" r="2.5"/>
+        </svg>
+        <p class="ag-cost">Подпись успевает за курсором, как подсветка точки. <b>Цена:</b> 0 правок, две строки анимации вручную.</p></div>
+      <div class="opt"><h3>Общие fades-in и leaves</h3>
+        <svg class="ag-svg" data-play="change" data-mode="shared" viewBox="0 0 160 80" aria-hidden="true">
+          <line class="ag-grid" x1="4" y1="20" x2="156" y2="20"/><line class="ag-base" x1="4" y1="74" x2="156" y2="74"/>
+          <path class="ag-line" d="M20 62 L60 50 L100 42 L140 22"/>
+          <g class="mo-change" style="opacity:0"><path class="hl-stretch" d="M20 62 L60 50"/><text class="ag-rise-text" x="40" y="46" text-anchor="middle">+12.5%</text></g>
+          <g class="mo-change" style="opacity:0"><path class="hl-stretch" d="M60 50 L100 42"/><text class="ag-rise-text" x="80" y="36" text-anchor="middle">+6.7%</text></g>
+          <circle class="ag-dot" cx="20" cy="62" r="2.5"/><circle class="ag-dot" cx="60" cy="50" r="2.5"/><circle class="ag-dot" cx="100" cy="42" r="2.5"/><circle class="ag-dot" cx="140" cy="22" r="2.5"/>
+        </svg>
+        <p class="ag-cost">Новая подпись ждёт 120ms и проявляется 400ms. <b>Цена:</b> подпись отстаёт от наведения.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ag-morph-finish">
+    <div class="q-head">
+      <span class="q-num">57</span>
+      <h2 class="q-title">Морф скелетона обрывает все конечные анимации, колонка при сортировке - только CSS</h2>
+      <span class="q-src">chart-skeleton-morph.ts:91 · :167 · :204 · column-series.component.ts:335 · :340 · column-series.component.html:78 · bf6fb9dd7</span>
+    </div>
+    <p class="q-sub">Морф скелетона перед передачей обрывает (<code>finish()</code>) у меток каждую анимацию, кроме бесконечных: и CSS, и WAAPI. Колонка перед скольжением при сортировке обрывает только <code>CSSAnimation</code>. Общий хелпер в форме морфа в column-series оборвал бы и WAAPI-перелёт морфа: он идёт на <code>.bar</code> (<code>data-morph="mark"</code>) внутри колонки, 600ms <code>--ease-settle</code>, <code>fill: both</code>. Видно, только если данные пересортировались, пока колонка ещё летит из скелетона; прежнее скольжение новое и так перекрывает. Ниже сортировка приходит на середине перелёта, скольжение 180ms <code>--ease-decelerate</code>.</p>
+    <div class="stage">
+      <button type="button" class="pf-replay">Проиграть ещё раз</button>
+      <label class="pf-slow"><input type="checkbox"> Замедлить ×5</label>
+    </div>
+    <div class="opts">
+      <div class="opt is-today"><h3>Как сейчас <span class="star">★</span></h3><span class="badge is-same">сейчас в dev</span><span class="badge is-pick">рекомендую</span>
+        <svg class="ag-svg" data-play="morph" data-mode="today" viewBox="0 0 160 90" aria-hidden="true">
+          <line class="ag-base" x1="4" y1="80" x2="156" y2="80"/>
+          <rect class="mo-skeleton" x="14" y="50" width="16" height="30" rx="2"/>
+          <rect class="mo-slot" x="72" y="30" width="16" height="50"/><rect class="mo-slot" x="122" y="30" width="16" height="50"/>
+          <text x="22" y="88" text-anchor="middle">скелетон</text><text x="80" y="88" text-anchor="middle">место</text><text x="130" y="88" text-anchor="middle">после сортировки</text>
+          <g class="mo-glide"><rect class="ag-c1 mo-column" x="72" y="30" width="16" height="50"/></g>
+        </svg>
+        <p class="ag-cost">Перелёт из скелетона доигрывает вместе со скольжением. <b>Цена:</b> 0 правок, два похожих цикла.</p></div>
+      <div class="opt"><h3>Общий finishEntrances (обрывает и перелёт морфа)</h3>
+        <svg class="ag-svg" data-play="morph" data-mode="shared" viewBox="0 0 160 90" aria-hidden="true">
+          <line class="ag-base" x1="4" y1="80" x2="156" y2="80"/>
+          <rect class="mo-skeleton" x="14" y="50" width="16" height="30" rx="2"/>
+          <rect class="mo-slot" x="72" y="30" width="16" height="50"/><rect class="mo-slot" x="122" y="30" width="16" height="50"/>
+          <text x="22" y="88" text-anchor="middle">скелетон</text><text x="80" y="88" text-anchor="middle">место</text><text x="130" y="88" text-anchor="middle">после сортировки</text>
+          <g class="mo-glide"><rect class="ag-c1 mo-column" x="72" y="30" width="16" height="50"/></g>
+        </svg>
+        <p class="ag-cost">На сортировке колонка прыгает в конец перелёта, потом скользит. <b>Цена:</b> один хелпер вместо двух циклов.</p></div>
+    </div>
+  </section>
+
   <p class="group">Уже решено</p>
 
   <section class="q is-settled" data-done="ask-table-expand-leave">
@@ -3178,5 +3371,64 @@ Jan#1: mark-leave, гаснет</p></div>
       light(-1);
       readout.classList.remove('is-on', 'placed');
     });
+  }
+
+  const motionEasing = (token) => getComputedStyle(document.documentElement).getPropertyValue(token).trim() || 'linear';
+  const timers = new WeakMap();
+  const later = (svg, ms, run) => timers.get(svg).push(setTimeout(run, ms));
+  const players = {
+    funnel(svg, slow) {
+      for (const stage of svg.querySelectorAll('.fn-stage')) {
+        stage.animate([{ opacity: 0, transform: 'scale(0.96)' }, { opacity: 1, transform: 'scale(1)' }], {
+          duration: motionMs('--ds-motion-chart-mark-enter-duration') * slow,
+          easing: motionEasing('--ds-motion-chart-mark-enter-easing'),
+          delay: (motionMs('--ds-motion-chart-mark-exit-duration') + +stage.dataset.stagger) * slow,
+          fill: 'backwards',
+        });
+      }
+    },
+    change(svg, slow) {
+      const shared = svg.dataset.mode === 'shared';
+      const enter = shared
+        ? { duration: motionMs('--ds-motion-chart-mark-enter-duration'), easing: motionEasing('--ds-motion-chart-mark-enter-easing'), delay: motionMs('--ds-motion-chart-mark-exit-duration') }
+        : { duration: motionMs('--ds-motion-chart-state-duration'), easing: motionEasing('--ds-motion-chart-state-easing'), delay: 0 };
+      const leave = shared
+        ? { duration: motionMs('--ds-motion-chart-mark-exit-duration'), easing: motionEasing('--ds-motion-chart-mark-exit-easing') }
+        : { duration: motionMs('--ds-motion-chart-state-duration'), easing: motionEasing('--ds-motion-chart-state-easing') };
+      const fade = (group, from, to, timing) => group.animate([{ opacity: from }, { opacity: to }], { ...timing, duration: timing.duration * slow, delay: (timing.delay ?? 0) * slow, fill: 'both' });
+      const [first, second] = svg.querySelectorAll('.mo-change');
+      fade(first, 0, 1, enter);
+      later(svg, 900 * slow, () => { fade(first, 1, 0, leave); fade(second, 0, 1, enter); });
+    },
+    morph(svg, slow) {
+      const bar = svg.querySelector('.mo-column');
+      const glide = svg.querySelector('.mo-glide');
+      const flight = bar.animate([{ translate: '-58px 10px', scale: '1 0.6' }, { translate: '0px 0px', scale: '1 1' }], {
+        duration: motionMs('--ds-motion-chart-mark-grow-duration') * slow,
+        easing: motionEasing('--ds-motion-chart-mark-grow-easing'),
+        fill: 'both',
+      });
+      later(svg, (motionMs('--ds-motion-chart-mark-grow-duration') / 2) * slow, () => {
+        if (svg.dataset.mode === 'shared') flight.finish();
+        glide.animate([{ transform: 'translateX(0px)' }, { transform: 'translateX(50px)' }], {
+          duration: motionMs('--ds-motion-chart-mark-duration') * slow,
+          easing: motionEasing('--ds-motion-chart-mark-easing'),
+          fill: 'forwards',
+        });
+      });
+    },
+  };
+  const replay = (section) => {
+    for (const svg of section.querySelectorAll('[data-play]')) {
+      for (const id of timers.get(svg) ?? []) clearTimeout(id);
+      timers.set(svg, []);
+      for (const animation of svg.getAnimations({ subtree: true })) animation.cancel();
+      players[svg.dataset.play](svg, slowFactor(section));
+    }
+  };
+  for (const button of document.querySelectorAll('.pf-replay')) {
+    const section = button.closest('.q');
+    button.addEventListener('click', () => replay(section));
+    replay(section);
   }
 </script>
