@@ -396,16 +396,22 @@
       "new": null,
       "surface": "typescript",
       "searchHints": [
-        "extends PaginationComponent"
+        "extends PaginationComponent",
+        "extends AlertComponent",
+        "extends BannerComponent",
+        "extends ToastRegionComponent"
       ],
       "detect": [
-        "extends PaginationComponent"
+        "extends PaginationComponent",
+        "extends AlertComponent",
+        "extends BannerComponent",
+        "extends ToastRegionComponent"
       ],
       "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
       "appliesWhen": "Only a class of yours that extends a class this item names. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
-      "note": "`PaginationComponent` gained `rescueFocus`, and its `goTo` takes the nav element as a second argument."
+      "note": "`PaginationComponent` gained `rescueFocus`, and its `goTo` takes the nav element as a second argument. `ToastRegionComponent` gained `focusOrigin` and `onFocusIn`. The `onDismiss` of `AlertComponent` and `BannerComponent` takes the element that leaves."
     }
   ],
   "informational": [
@@ -493,7 +499,8 @@
     "`showDirty` (default `false`) on every value field, the `dsShowDirty` directive (`ShowDirtyDirective`) and `DS_CONFIG.field.showDirty` mark a value the user changed with a dot and a \"Changed\" line; off unless one of the three turns it on. The line reads the new optional `DsIntl` key `field.changed`.",
     "`ds-info-hint` takes rich content inside the tag or through the new `content` input (`text` is optional), any `IconName` in `icon`, and the new `--ds-info-hint-color` hook for the icon colour. `dsTooltip` and `dsDefinitionTerm` take a template as well as a string.",
     "`.link` takes `--ds-link-color-visited`, `--ds-link-color-visited-hover`, `--ds-link-color-visited-active`, `--ds-link-color-disabled`, `--ds-link-focus-ring-color`, `--ds-link-underline-color`, `--ds-link-underline-thickness` and `--ds-link-underline-offset`, each defaulting to the value the partial painted with.",
-    "Pressing Previous onto the first page or Next onto the last of a `ds-pagination` moves focus to the current page's button; it fell to the page."
+    "Pressing Previous onto the first page or Next onto the last of a `ds-pagination` moves focus to the current page's button; it fell to the page.",
+    "Dismissing a `ds-alert` or `ds-banner` from its close button moves focus to the next control after it, else the one before it; a toast leaving with focus inside it moves focus to the next toast, else to the element focused before focus entered the region. Focus fell to the page."
   ],
   "deleteList": [
     {

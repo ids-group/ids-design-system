@@ -69,6 +69,7 @@ export class ToastRegionComponent {
     public clear(): void;
     private clearCountdown;
     private drainQueue;
+    private focusOrigin;
     private focusWithin;
     private readonly host;
     private hovered;
@@ -80,6 +81,7 @@ export class ToastRegionComponent {
     public readonly maxVisible = input<number>(DEFAULT_MAX_VISIBLE);
     private measureTops;
     protected readonly newestFirst = (this.position?.verticalPosition ?? DS_TOAST_POSITION_DEFAULT.verticalPosition) === 'top';
+    protected onFocusIn(event: FocusEvent): void;
     protected onFocusWithin(event: FocusEvent | true): void;
     protected onHover(entered: boolean): void;
     private pauseAll;

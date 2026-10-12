@@ -99,7 +99,7 @@ export type {
   ChartWithTooltipTrigger,
 } from './charts-base';
 export { FieldClickFocusDirective } from './field-click-focus.directive';
-export { focusRescue } from './focus-rescue';
+export { focusRescue, moveFocusOutOf } from './focus-rescue';
 export {
   DS_FIELD_WARNING_KIND,
   resolveFieldMessage,

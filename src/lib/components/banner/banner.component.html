@@ -1,4 +1,6 @@
-<div [class]="classes()">
+<div
+  #banner
+  [class]="classes()">
   <ds-icon
     class="icon"
     [name]="icon() ?? defaultIcon()"
@@ -27,7 +29,7 @@
       class="close"
       type="button"
       [attr.aria-label]="intl().dialog.dismiss"
-      (click)="onDismiss()">
+      (click)="onDismiss(banner)">
       <ds-icon
         name="x"
         [size]="16">

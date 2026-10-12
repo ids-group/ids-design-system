@@ -510,6 +510,7 @@ Output: `(closed): void`
 Content slots: default (body text), `[actions]` (trailing CTAs)
 - `layout="stacked"` (default): actions wrap onto a new line, indented under the body. Use for multiple-line messages or multiple CTAs.
 - `layout="row"`: actions sit at the right edge, vertically centred with the body. Use for one-line messages with a single trailing CTA.
+- Dismissing with focus on the close button moves focus to the next control after the banner, or the one before it when nothing follows. Focus a `(closed)` handler moves elsewhere stays there.
 - `announce: boolean | null = null` resolves input → `DS_CONFIG.banner.announce` → `false`. Dev mode warns once per instance in two cases: an `error` / `warning` / `severe` banner left unbound while the key is unset (ends when the key is set, `true` or `false`), and an `info` / `success` / `neutral` banner that announces only because the key is `true` (ends at an `[announce]` binding). Neither message reaches a production build.
 
 <!-- inputs:ds-banner -->
@@ -522,6 +523,7 @@ Inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`
 Output: `(closed): void`
 Content slots: default (body text), `[actions]` (trailing CTAs)
 - `announce` follows `DS_CONFIG.alert.announce` with the same two dev warnings as `ds-banner`, prefixed `[ds-alert]`.
+- Dismissing moves focus as `ds-banner` does: to the next control after the alert, else the one before it.
 
 <!-- inputs:ds-alert -->
 All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `announce: boolean | null = null`
@@ -533,6 +535,8 @@ Output: `(closed): void`
 Content slots: default (body text, an alternative to `message`), `[actions]` (trailing CTAs). Neither is reachable through `ToastService`, which renders from `ToastOptions` — they are for a `<ds-toast>` you place yourself.
 
 The companion `<ds-toast-region>` lives inside the `ToastService` (see Services) — it is auto-mounted via a CDK overlay on first `toast.show()`, so consumers do **not** need to place `<ds-toast-region>` anywhere in their markup. Render `<ds-toast>` directly only for static specimens.
+
+A toast leaving with focus inside it (its action, its close button, or `ToastRef.dismiss()`) hands focus to the next toast in the region, else back to the element focused before focus entered the region, as a dialog returns it.
 
 <!-- inputs:ds-toast -->
 All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'loading' = 'info'`, `title: string = ''`, `body: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `action: ToastAction | null = null`

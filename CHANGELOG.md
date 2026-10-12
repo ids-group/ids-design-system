@@ -283,6 +283,13 @@
 - **Pressing Previous onto the first page, or Next onto the last, keeps focus in `ds-pagination`.**
   The pressed button disabled under focus and focus fell to the page; it moves to the current
   page's button. `PaginationComponent` gained a member, named in the migration manifest.
+- **Dismissing a `ds-alert`, a `ds-banner` or a toast moves focus to a neighbour.** Focus sat on
+  the close or action button and fell to the page when the element left. A dismissed alert or
+  banner hands it to the next control after it, or the one before it when nothing follows; a toast
+  hands it to the next toast in the region, else back to the element focused before focus entered
+  the region. Focus that a `(closed)` handler or a toast action's `handler` moves elsewhere stays
+  there. `ToastRegionComponent` gained members, and the `onDismiss` of `AlertComponent` and
+  `BannerComponent` takes an argument, named in the migration manifest.
 
 ### What you can now DELETE
 

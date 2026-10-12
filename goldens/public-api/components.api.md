@@ -458,6 +458,9 @@ export function markOf(event: Event, scope: EventTarget | null = event.currentTa
 export function minMaxDecimate(points: readonly Reading[], target: number): readonly Reading[];
 
 // @internal
+export function moveFocusOutOf(leaving: HTMLElement, within: HTMLElement, fallback: HTMLElement | null = null): void;
+
+// @internal
 export function needsDecimating(count: number, target: number): boolean;
 
 // @internal
