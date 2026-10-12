@@ -10,6 +10,7 @@ import {
   afterRenderEffect,
   booleanAttribute,
   computed,
+  contentChildren,
   effect,
   forwardRef,
   inject,
@@ -84,6 +85,7 @@ import {
   type ChartScales,
   type ChartTooltipSource,
 } from './chart-scales.token';
+import { LineSeriesComponent } from './line-series.component';
 
 // Between the value axis and the pill that prints the reading there.
 const READOUT_PILL_GAP = 2;
@@ -849,6 +851,12 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   protected readonly pinnedCategories = computed(() =>
     this.cursorPinned() && this.cursorBand() ? [this.activeIndex()] : [],
   );
+
+  private readonly lineSeries = contentChildren(LineSeriesComponent, {
+    descendants: true,
+  });
+
+  protected readonly pinnedLine = computed(() => this.lineSeries().length > 0);
 
   protected readonly bandPins = computed(
     () => this.pinOnClickResolved() && this.pointerInBand(),

@@ -95,6 +95,23 @@
         </g>
       }
 
+      @if (pinnedLine()) {
+        @for (pinnedCategory of pinnedCategories(); track pinnedCategory) {
+          @if (cursorBand(); as band) {
+            <line
+              class="cursor-line pinned-line"
+              aria-hidden="true"
+              animate.enter="cursor-in"
+              animate.leave="cursor-out"
+              [style.transform]="
+                'translateX(' + (band.x + band.width / 2) + 'px)'
+              "
+              [attr.y1]="band.top"
+              [attr.y2]="band.bottom" />
+          }
+        }
+      }
+
       <!-- Not on the svg: an aria-hidden ancestor leaves a focusable projected mark
            reachable by Tab yet invisible to a reader. -->
       <g
