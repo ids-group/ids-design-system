@@ -65,6 +65,8 @@
   .show .ch { padding: 1px var(--space-2); border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-pill); background: var(--surface-default); font: var(--font-size-2xs) / 1.5 var(--font-mono); color: var(--text-secondary); }
   .show .ch.on { border-color: var(--accent-strong); color: var(--accent-strong); font-weight: var(--font-weight-semibold); }
   @media (max-width: 640px) { .opts { grid-template-columns: minmax(0, 1fr); } }
+  .opt .pick-btn { align-self: flex-start; padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-primary); font: var(--font-weight-bold) var(--font-size-xs) var(--font-sans); cursor: pointer; }
+  .opt.is-chosen .pick-btn { background: var(--success); border-color: var(--success); color: var(--surface-default); }
 </style>
 </head>
 <body>
@@ -93,7 +95,8 @@
     <p class="cap">слева ds-chart, справа ds-button, как сейчас; фрагменты пересобраны в деке</p>
   </section>
 
-  <section class="panel q" data-review="Варианты">
+  <section class="panel q" data-review="Варианты" data-review-note-only data-review-round="2">
+    <ol data-review-history><li>2026-10-12 · «Принято» без выбранной карточки → выбор теперь только кликом по карточке или «Выбрать», «Принято» у этого блока убрано</li></ol>
     <h2>Пять вариантов</h2>
     <p>Каждая карточка - одни и те же два фрагмента, ds-chart и ds-button, в одном масштабе: высота видна глазом. Выбор - клик по карточке.</p>
     <div class="opts">
@@ -258,11 +261,20 @@
 
   const KEY = 'ds-deck-docs-table-weight-pick-v2';
   const cards = [...document.querySelectorAll('.opt[data-key]')];
+  cards.forEach((card) => {
+    const pickButton = document.createElement('button');
+    pickButton.type = 'button';
+    pickButton.className = 'pick-btn';
+    card.append(pickButton);
+  });
+  const labelPicks = () => cards.forEach((card) => { card.querySelector('.pick-btn').textContent = card.classList.contains('is-chosen') ? 'Выбрано' : 'Выбрать'; });
+  new MutationObserver(labelPicks).observe(document.querySelector('.opts'), { subtree: true, attributes: true, attributeFilter: ['class'] });
+  labelPicks();
   let picked = null;
   try { picked = localStorage.getItem(KEY); } catch { /* private window */ }
   const paint = () => cards.forEach((card) => card.classList.toggle('is-chosen', card.dataset.key === picked));
   window.deckReviewHooks = {
-    extra: () => { const card = cards.find((item) => item.dataset.key === picked); return card ? `выбор - «${card.querySelector('h3').textContent}»` : ''; },
+    extra: () => { const card = cards.find((item) => item.dataset.key === picked); return card ? `выбор - «${card.querySelector('h3').textContent}»` : 'выбор - не сделан'; },
     onReset: () => { picked = null; try { localStorage.removeItem(KEY); } catch { /* private window */ } paint(); },
   };
   cards.forEach((card) => {

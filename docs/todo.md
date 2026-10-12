@@ -1090,7 +1090,7 @@ file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
 | --- | --- | --- | --- |
-| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 5 asks in three groups, then 34 decisions in seven, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 5 asks in three groups, then 46 decisions in eight, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 | 2 | `2-color-engine-derivation` | One source token per role, derived. | the colour-engine P3 |
 | 3 | `3-color-engine-relative` | The prototype half of the same question. | as above |
 | 4 | `4-interaction-formula` | The pressed recipe of the tonal button, and of the danger menu item. | the pressed-danger-menu P3 and the `.ds-interactive` P3 |
@@ -1115,6 +1115,7 @@ file** — the number moves; cite the filename.
 | 23 | `23-table-truncate-result` | Sign-off of the `truncate` column without `width` that grows to its text: four verdicts recorded (B, A, C, A), `minWidth` built; open: the general column sizing rules and width stability across pages, each drawn on harness tables. | the P1 table item in Asked by Stas |
 | 24 | `24-table-wrap-parked` | Parked: two wrap options for a `truncate` column (fill the row height, or always wrap), each rendered. | the wrap item under Parked |
 | 25 | `25-docs-table-weight` | The ds-docs policy for component inputs: as today, dense and folded, no input tables, or a generated «what you can change» strip with the full list folded; 22 of the 64 `table.tbl` are input tables, on 15 pages. | none |
+| 26 | `26-chart-motion-timing` | Whether pointer-following glides and series dimming each use one speed: as today, one per kind, or all 120ms; found by the chart duplication audit. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
