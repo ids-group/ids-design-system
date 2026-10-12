@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Две колонки с одной подписью: какую колонку график узнаёт после удаления</title>
+<meta name="ds-deck-status" content="open">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+<style>
+  main { padding-bottom: 72px; }
+  .opt { cursor: pointer; min-inline-size: 0; }
+  .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+  .opt.is-chosen { outline: 2px solid var(--success); outline-offset: 2px; }
+  .opt ul { margin: 0; padding-inline-start: 1.1em; font-size: var(--font-size-xs); }
+  .opt .libs { margin: 0; font: var(--font-weight-semibold) var(--font-size-2xs) / 1.5 var(--font-sans); color: var(--text-secondary); }
+  .opt .pick-btn { align-self: flex-start; margin-block-start: auto; padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-primary); font: var(--font-weight-bold) var(--font-size-xs) var(--font-sans); cursor: pointer; }
+  .opt.is-chosen .pick-btn { background: var(--success); border-color: var(--success); color: var(--surface-default); }
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); margin: var(--space-2) 0 0; font: var(--font-size-xs) var(--font-sans); }
+  .controls button { padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-primary); font: var(--font-weight-bold) var(--font-size-xs) var(--font-sans); cursor: pointer; }
+  .scene { display: block; inline-size: 100%; block-size: auto; background: var(--surface-default); border-radius: var(--radius-sm); --slow: 1; }
+  .scene .grid { stroke: var(--ds-chart-grid-line-color); stroke-width: 1; }
+  .scene .axis { stroke: var(--ds-chart-axis-line-color); stroke-width: 1; }
+  .scene .tick { fill: var(--ds-chart-axis-label-color); font: 13px var(--font-sans); text-anchor: middle; transition: opacity calc(var(--ds-motion-chart-mark-duration) * var(--slow)) var(--ds-motion-chart-mark-easing); }
+  .scene .mark { transition: transform calc(var(--ds-motion-chart-mark-duration) * var(--slow)) var(--ds-motion-chart-mark-easing), opacity calc(var(--ds-motion-chart-mark-exit-duration) * var(--slow)) var(--ds-motion-chart-mark-exit-easing); }
+  .scene .mark rect { rx: var(--ds-chart-mark-cap-radius); transition: x, y, width, height, fill; transition-duration: calc(var(--ds-motion-chart-mark-duration) * var(--slow)); transition-timing-function: var(--ds-motion-chart-mark-easing); }
+  .scene .mark text { fill: var(--text-secondary); font: var(--font-weight-semibold) 13px var(--font-sans); text-anchor: middle; transition: transform calc(var(--ds-motion-chart-mark-duration) * var(--slow)) var(--ds-motion-chart-mark-easing); }
+  .scene .mark.vanish, .scene.is-reset .mark, .scene.is-reset .mark rect, .scene.is-reset .mark text, .scene.is-reset .tick { transition: none; }
+  .match { margin: 0; padding: var(--space-2); border-radius: var(--radius-sm); background: var(--surface-muted); font: var(--font-size-2xs) / 1.6 var(--font-sans); }
+  .match b { white-space: nowrap; }
+  .sw { display: inline-block; inline-size: 9px; block-size: 9px; border-radius: 2px; vertical-align: 0; }
+  .sw.s1 { background: var(--ds-chart-series-1-color); }
+  .sw.s3 { background: var(--ds-chart-series-3-color); }
+  .code { margin: 0; padding: var(--space-2); border-radius: var(--radius-sm); background: var(--surface-muted); color: var(--text-primary); font: var(--font-size-2xs) / 1.5 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .console { margin: 0; padding: var(--space-2); border-radius: var(--radius-sm); background: var(--warning-subtitle); color: var(--warning-text); font: var(--font-size-2xs) / 1.5 var(--font-mono); overflow-wrap: anywhere; }
+  .src ul { margin: 0; padding-inline-start: 1.2em; }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1>Две колонки с одной подписью: убрал первую - на её место едет не та</h1>
+    <p class="lede">Одно решение: как график узнаёт колонку между обновлениями данных.</p>
+    <p class="chat">Ответ нести в чат: «Acc2 · Дека движения графиков»</p>
+  </header>
+
+  <section class="panel" data-review="Сцена">
+    <h2>Сцена</h2>
+    <div class="stage">
+      <div class="spec"><p class="cap">данные до</p><pre class="code">[{ label: 'Jan', value: 30 },  // 2025
+ { label: 'Feb', value: 50 },
+ { label: 'Jan', value: 90 },  // 2026
+ { label: 'Mar', value: 70 }]</pre></div>
+      <div class="spec"><p class="cap">данные после</p><pre class="code">[{ label: 'Feb', value: 50 },
+ { label: 'Jan', value: 90 },  // 2026
+ { label: 'Mar', value: 70 }]</pre></div>
+    </div>
+    <ul>
+      <li>Убираем <b>первую «Jan» (30)</b>; верно: она гаснет, остальные три сдвигаются влево.</li>
+      <li>Каждая колонка своего цвета (<code>color</code> у точки), чтобы было видно, <b>чья колонка куда едет</b>.</li>
+      <li>Тайминги из токенов: сдвиг <code>--ds-motion-chart-mark-duration</code>, угасание <code>--ds-motion-chart-mark-exit-duration</code>; подписи оси одинаковы во всех карточках.</li>
+    </ul>
+  </section>
+
+  <section class="panel q" data-review="Варианты" data-review-note-only>
+    <h2>Пять вариантов</h2>
+    <div class="controls">
+      <button type="button" id="replay">Проиграть ещё раз</button>
+      <label><input type="checkbox" id="slow"> Замедлить ×5</label>
+    </div>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0" data-key="label-counter">
+        <span class="badge is-same">сейчас в dev</span>
+        <h3>По подписи с номером повтора</h3>
+        <p class="libs">ECharts, DS сейчас</p>
+        <svg class="scene" data-plan="label-counter" viewBox="0 0 320 190" aria-hidden="true"></svg>
+        <p class="match"><b><span class="sw s1"></span> Jan 30</b> → место 2-й Jan, растёт до 90 · <b><span class="sw s3"></span> Jan 90</b> гаснет · Feb, Mar к своим</p>
+        <ul>
+          <li><b>Колонка 2025 едет через Feb</b> и становится 2026-й, настоящая 2026 гаснет.</li>
+          <li>Ключ «Jan», «Jan#1»: <b>второй «Jan» узнаётся по номеру</b>, а номер сдвинулся.</li>
+        </ul>
+      </article>
+
+      <article class="opt" tabindex="0" data-key="index">
+        <h3>По месту в массиве</h3>
+        <p class="libs">Chart.js, Recharts по умолчанию, D3 по умолчанию, Highcharts без id</p>
+        <svg class="scene" data-plan="index" viewBox="0 0 320 190" aria-hidden="true"></svg>
+        <p class="match"><b>1-я → Feb</b> · <b>2-я → Jan 90</b> · <b>3-я → Mar</b> · <b>4-я</b> гаснет</p>
+        <ul>
+          <li><b>Никто не пересекается</b>, но каждая колонка меняет высоту и цвет.</li>
+          <li>Сортировка без <code>id</code> <b>перестаёт ехать</b>: столбцы перерисовываются на месте.</li>
+        </ul>
+      </article>
+
+      <article class="opt" tabindex="0" data-key="label-only">
+        <h3>Только по подписи</h3>
+        <p class="libs">Nivo</p>
+        <svg class="scene" data-plan="label-only" viewBox="0 0 320 190" aria-hidden="true"></svg>
+        <p class="match"><b><span class="sw s1"></span> Jan 30</b> исчезает без анимации · <b><span class="sw s3"></span> Jan 90</b>, Feb, Mar к своим</p>
+        <ul>
+          <li>У обеих ключ <code>value.Jan</code>: <b>выигрывает последняя</b> с этим ключом.</li>
+          <li>Убери <b>вторую «Jan»</b> - на место первой едет 2026-я: <b>верно только случайно</b>.</li>
+        </ul>
+      </article>
+
+      <article class="opt" tabindex="0" data-key="key">
+        <h3>Свой ключ у точки</h3>
+        <p class="libs">Highcharts <code>id</code>, ECharts <code>id</code>, Recharts <code>animationMatchBy</code>, D3 функция ключа, Vega <code>key</code></p>
+        <svg class="scene" data-plan="key" viewBox="0 0 320 190" aria-hidden="true"></svg>
+        <p class="match"><b><span class="sw s1"></span> jan-2025</b> гаснет · <b>jan-2026</b>, feb, mar к своим</p>
+        <pre class="code">{ id: 'jan-2025',
+  label: 'Jan', value: 30 },
+{ id: 'jan-2026',
+  label: 'Jan', value: 90 },</pre>
+        <ul>
+          <li><b>В DS это уже есть</b>: поле <code>id</code> у точки, отдельный <code>key</code> не нужен.</li>
+          <li>Без <code>id</code> остаётся то, что выбрано по умолчанию.</li>
+        </ul>
+      </article>
+
+      <article class="opt is-pick" tabindex="0" data-key="warn">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>По подписи и предупреждение в консоли</h3>
+        <p class="libs">DS: «как сейчас» + проверка в dev</p>
+        <svg class="scene" data-plan="label-counter" viewBox="0 0 320 190" aria-hidden="true"></svg>
+        <p class="console">[ds-column-chart] label "Jan" repeats; pass id to keep each column</p>
+        <ul>
+          <li>Без <code>id</code> <b>движение как «По подписи с номером повтора»</b> (нарисовано), плюс строка в консоли в dev.</li>
+          <li>С <code>id</code> <b>движение как «Свой ключ у точки»</b>.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Сводка</h2>
+    <table>
+      <thead><tr><th>Вариант</th><th>Убрал первую «Jan»</th><th>Сортировка без id</th><th>Цена</th></tr></thead>
+      <tbody>
+        <tr class="row-today"><th class="rowlabel">По подписи с номером повтора</th><td>едет не та</td><td>едет</td><td>0 правок</td></tr>
+        <tr><th class="rowlabel">По месту в массиве</th><td>все меняют высоту</td><td>не едет</td><td>смена ключа</td></tr>
+        <tr><th class="rowlabel">Только по подписи</th><td>пропадает рывком</td><td>едет</td><td>дубли ключей в <code>@for</code></td></tr>
+        <tr><th class="rowlabel">Свой ключ у точки</th><td>верно с <code>id</code></td><td>едет</td><td><code>id</code> у потребителя</td></tr>
+        <tr class="row-pick"><th class="rowlabel">По подписи и предупреждение в консоли</th><td>верно с <code>id</code>, без него подсказка</td><td>едет</td><td>одна проверка в dev</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel good">
+    <h2>Рекомендую: «По подписи и предупреждение в консоли»</h2>
+    <ul>
+      <li><b>При разных подписях ничего не меняется</b>: сортировка и фильтр едут как сейчас.</li>
+      <li>Единственный неверный случай, повтор подписи без <code>id</code>, <b>называется в консоли вместе с лекарством</b>.</li>
+      <li>Лекарство <b>уже в API</b>: поле <code>id</code> у точки, как <code>id</code> у Highcharts и ECharts.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>Что решить</h2>
+    <table>
+      <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
+      <tbody><tr class="row-pick"><th class="rowlabel">Как график узнаёт колонку без <code>id</code></th><td>По подписи с номером повтора · По месту в массиве · Только по подписи · Свой ключ у точки · По подписи и предупреждение в консоли</td><td>По подписи и предупреждение в консоли</td></tr></tbody>
+    </table>
+  </section>
+
+  <details class="src"><summary>Источники</summary>
+    <ul>
+      <li><b>Код DS, 2026-10-12:</b> <code>src/lib/components/chart/chart.math.ts</code> <code>categoryKeys</code> (подпись, со второго повтора <code>#N</code>); <code>column-series.component.ts</code>: <code>key: point.id ?? keys[index]</code>, поле <code>id?</code> у <code>ColumnSeriesPoint</code>; <code>column-chart.types.ts</code>: <code>id?</code> у <code>ColumnChartPoint</code>.</li>
+      <li><b>Код DS:</b> подписи оси в <code>chart.component.ts</code> <code>categoryLabels</code> всегда по <code>categoryKeys</code>, без <code>id</code>: подпись «Jan» с первого места проезжает на второе при любом варианте.</li>
+      <li><b>Открыл 2026-10-12:</b> ECharts <code>src/data/SeriesData.ts</code> (повтор имени: <code>id += '__ec__' + nmCnt</code>); Recharts <code>src/cartesian/Bar.tsx</code> (<code>animationMatchBy</code>, по умолчанию <code>matchAppend</code>: по индексу); Highcharts API <code>Series.setData</code>, <code>updatePoints</code>: та же длина, id или x.</li>
+      <li><b>Открыл 2026-10-12:</b> Nivo <code>packages/bar/src/compute/grouped.ts</code> (ключ <code>${key}.${indexValue}</code>) и <code>Bar.tsx</code> (<code>useTransition</code>, <code>keys: bar =&gt; bar.key</code>); react-spring <code>useTransition.tsx</code>: при двух одинаковых ключах место забирает последняя, первая не попадает в отрисовку. Поведение Nivo выведено из кода, не запущено.</li>
+      <li><b>Из исследования очереди, не переоткрывал:</b> Chart.js <code>core.datasetController.js</code> и «Updating Charts»; d3js.org «Joining data»; Vega «Marks», Vega-Lite «Encoding».</li>
+    </ul>
+  </details>
+</main>
+<script>
+(() => {
+  const DATA = {
+    a: { value: 30, label: 'Jan', color: 1 },
+    b: { value: 50, label: 'Feb', color: 2 },
+    c: { value: 90, label: 'Jan', color: 3 },
+    d: { value: 70, label: 'Mar', color: 4 },
+  };
+  const PLANS = {
+    'label-counter': [['a', 0, 'c', 1], ['b', 1, 'b', 0], ['c', 2, 'exit'], ['d', 3, 'd', 2]],
+    index: [['a', 0, 'b', 0], ['b', 1, 'c', 1], ['c', 2, 'd', 2], ['d', 3, 'exit']],
+    'label-only': [['a', 0, 'vanish'], ['b', 1, 'b', 0], ['c', 2, 'c', 1], ['d', 3, 'd', 2]],
+    key: [['a', 0, 'exit'], ['b', 1, 'b', 0], ['c', 2, 'c', 1], ['d', 3, 'd', 2]],
+  };
+  const LEFT = 16, RIGHT = 304, BASE = 160, PER_UNIT = 1.25, RATIO = 0.8;
+  const band = (count) => (RIGHT - LEFT) / count;
+  const center = (slot, count) => LEFT + band(count) * (slot + 0.5);
+  const NS = 'http://www.w3.org/2000/svg';
+  const make = (tag, attrs, parent) => { const node = document.createElementNS(NS, tag); Object.entries(attrs).forEach(([name, value]) => node.setAttribute(name, value)); parent.append(node); return node; };
+
+  const place = (mark, datum, slot, count) => {
+    const width = band(count) * RATIO, height = datum.value * PER_UNIT;
+    mark.style.transform = `translateX(${center(slot, count)}px)`;
+    Object.assign(mark.rect.style, { x: `${-width / 2}px`, y: `${BASE - height}px`, width: `${width}px`, height: `${height}px`, fill: `var(--ds-chart-series-${datum.color}-color)` });
+    mark.text.style.transform = `translateY(${BASE - height - 8}px)`;
+    mark.text.textContent = datum.value;
+  };
+
+  const scenes = [...document.querySelectorAll('.scene')].map((svg) => {
+    [40, 80, 120, 160].forEach((y) => make('line', { class: y === BASE ? 'axis' : 'grid', x1: LEFT, x2: RIGHT, y1: y, y2: y }, svg));
+    const ticks = (keys, count) => keys.map((key, slot) => { const tick = make('text', { class: 'tick', x: center(slot, count), y: 180 }, svg); tick.textContent = DATA[key].label; return tick; });
+    const before = ticks(['a', 'b', 'c', 'd'], 4), after = ticks(['b', 'c', 'd'], 3);
+    const marks = PLANS[svg.dataset.plan].map(([fromKey, fromSlot, toKey, toSlot]) => {
+      const mark = make('g', { class: 'mark' }, svg);
+      mark.rect = make('rect', {}, mark);
+      mark.text = make('text', {}, mark);
+      return { mark, fromKey, fromSlot, toKey, toSlot };
+    });
+    return { svg, before, after, marks };
+  });
+
+  const reset = () => scenes.forEach(({ svg, before, after, marks }) => {
+    svg.classList.add('is-reset');
+    before.forEach((tick) => { tick.style.opacity = 1; });
+    after.forEach((tick) => { tick.style.opacity = 0; });
+    marks.forEach(({ mark, fromKey, fromSlot }) => { mark.classList.remove('vanish'); mark.style.opacity = 1; place(mark, DATA[fromKey], fromSlot, 4); });
+    svg.getBoundingClientRect();
+    svg.classList.remove('is-reset');
+  });
+
+  const change = () => scenes.forEach(({ before, after, marks }) => {
+    before.forEach((tick) => { tick.style.opacity = 0; });
+    after.forEach((tick) => { tick.style.opacity = 1; });
+    marks.forEach(({ mark, toKey, toSlot }) => {
+      if (toKey === 'exit') { mark.style.opacity = 0; }
+      else if (toKey === 'vanish') { mark.classList.add('vanish'); mark.style.opacity = 0; }
+      else { place(mark, DATA[toKey], toSlot, 3); }
+    });
+  });
+
+  const slowBox = document.getElementById('slow');
+  let timer = 0;
+  const play = () => {
+    const slow = slowBox.checked ? 5 : 1;
+    scenes.forEach(({ svg }) => svg.style.setProperty('--slow', slow));
+    clearTimeout(timer);
+    reset();
+    timer = setTimeout(change, 700);
+  };
+  document.getElementById('replay').addEventListener('click', play);
+  slowBox.addEventListener('change', play);
+  play();
+
+  const KEY = 'ds-deck-duplicate-label-match-pick-v1';
+  const cards = [...document.querySelectorAll('.opt[data-key]')];
+  cards.forEach((card) => { const pickButton = document.createElement('button'); pickButton.type = 'button'; pickButton.className = 'pick-btn'; card.append(pickButton); });
+  let picked = null;
+  try { picked = localStorage.getItem(KEY); } catch { picked = null; }
+  const paint = () => cards.forEach((card) => {
+    card.classList.toggle('is-chosen', card.dataset.key === picked);
+    card.querySelector('.pick-btn').textContent = card.dataset.key === picked ? 'Выбрано' : 'Выбрать';
+  });
+  cards.forEach((card) => {
+    const choose = () => { picked = card.dataset.key; try { localStorage.setItem(KEY, picked); } catch { /* private window */ } paint(); window.deckReview?.refresh?.(); };
+    card.addEventListener('click', choose);
+    card.addEventListener('keydown', (event) => { if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); choose(); } });
+  });
+  paint();
+  (window.deckReviewHooks ??= {}).extra = () => { const card = cards.find((item) => item.dataset.key === picked); return card ? `выбор - «${card.querySelector('h3').textContent}»` : 'выбор - не сделан'; };
+})();
+</script>
+<!-- deck-review -->
+<script>
+// deck-review: verdict per [data-review] block, a textarea for remarks, one answer line in a fixed bar.
+// Inlined into a deck by ~/.claude/bin/deck-review-inline; contract in ~/.claude/docs/deck-review.md.
+(() => {
+  // Every key under deck-review: is a disposable reviewer answer, kept 7 days after its last change.
+  const PREFIX = 'deck-review:v1:';
+  const KEY = PREFIX + (document.documentElement.dataset.deck || document.title);
+  const KEEP_MS = 7 * 24 * 60 * 60 * 1000;
+  const ACCEPT = 'принято';
+  const REMARK = 'есть замечание';
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith('deck-review:')) continue;
+      let expires = 0;
+      try { if (key.startsWith(PREFIX)) expires = JSON.parse(localStorage.getItem(key))?.expires; } catch { /* malformed: drop */ }
+      if (!(expires > Date.now())) localStorage.removeItem(key);
+    }
+  } catch { /* private window */ }
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY))?.answers ?? {}; } catch { return {}; } };
+  const write = () => { try { localStorage.setItem(KEY, JSON.stringify({ expires: Date.now() + KEEP_MS, answers: state })); } catch { /* private window */ } };
+  const state = read();
+
+  document.head.insertAdjacentHTML('beforeend', `<style>
+    .dr-row { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px 0; }
+    .dr-btn { padding: 4px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 999px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-btn[aria-pressed="true"] { background: var(--accent-subtitle, #e6efff); border-color: var(--accent-strong, #2457c5); color: var(--accent-strong, #2457c5); }
+    .dr-btn[data-v="${REMARK}"][aria-pressed="true"] { background: var(--error-subtitle, #fdecec); border-color: var(--error-text, #b42318); color: var(--error-text, #b42318); }
+    .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--border-default, #c9ced6); border-radius: var(--radius-md, 8px); background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
+    .dr-note:focus { outline: none; border-color: var(--accent, #2457c5); box-shadow: var(--ds-field-focus-shadow, 0 0 0 3px rgb(36 87 197 / .25)); }
+    .dr-note[hidden] { display: none; }
+    .dr-history { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 4px; color: var(--text-secondary, #4b5563); font: 13px/1.45 var(--font-sans, system-ui, sans-serif); }
+    .dr-history::before { content: 'История замечаний'; display: block; margin-left: -1.2em; color: var(--text-primary, #1d2330); font-weight: 600; }
+    [data-dr-folded] > :not(h1, h2, h3, h4, .dr-row, .dr-note) { display: none !important; }
+    .dr-fold { padding: 4px 8px; border: 0; background: none; color: var(--accent-strong, #2457c5); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-fold[hidden] { display: none; }
+    .dr-btn, .dr-bar button, .dr-fold { transition: background-color .12s, border-color .12s, color .12s, box-shadow .12s; }
+    .dr-btn:hover, .dr-bar button:hover { background: var(--surface-secondary, #f3f4f6); border-color: var(--border-strong, #9aa1ad); }
+    .dr-btn:active, .dr-bar button:active { background: var(--surface-muted, #e5e7eb); }
+    .dr-btn[aria-pressed="true"]:hover { background: color-mix(in srgb, var(--accent-strong, #2457c5) 14%, var(--surface-default, #fff)); }
+    .dr-btn[data-v="есть замечание"][aria-pressed="true"]:hover { background: color-mix(in srgb, var(--error-text, #b42318) 14%, var(--surface-default, #fff)); }
+    .dr-fold:hover { text-decoration: underline; }
+    .dr-fold:active { color: var(--text-primary, #1d2330); }
+    .dr-btn:focus-visible, .dr-bar button:focus-visible, .dr-fold:focus-visible { outline: 2px solid var(--focus-ring-color, var(--accent, #2457c5)); outline-offset: 2px; }
+    .dr-bar button[data-done] { background: var(--success-subtitle, #e7f6ec); border-color: var(--success, #1a7f37); color: var(--success-text, #116329); }
+    .dr-bar { position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; padding: 10px 20px; background: var(--surface-default, #fff); border-top: 1px solid var(--border-divider, #e3e6eb); box-shadow: 0 -4px 16px rgb(0 0 0 / .08); color: var(--text-primary, #1d2330); font: 13px/1.4 var(--font-sans, system-ui, sans-serif); }
+    .dr-bar b { flex: none; }
+    .dr-bar .dr-chat { flex: none; color: var(--text-tertiary, #6b7280); }
+    .dr-bar output { flex: 1 1 auto; min-inline-size: 0; overflow-x: auto; white-space: nowrap; color: var(--text-secondary, #4b5563); font-family: var(--font-mono, ui-monospace, monospace); }
+    .dr-bar button { flex: none; padding: 6px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 6px; background: var(--surface-default, #fff); color: inherit; font: 600 13px/1.4 inherit; cursor: pointer; }
+    body { padding-block-end: 72px; }
+    @media (max-width: 640px) { .dr-bar { padding: 8px 12px; gap: 8px; } .dr-bar .dr-chat { display: none; } }
+  </style>`);
+
+  let items = [...document.querySelectorAll('[data-review]')];
+  if (!items.length) {
+    const whole = document.createElement('section');
+    whole.dataset.review = 'Дека в целом';
+    whole.innerHTML = '<h3>Дека в целом</h3>';
+    (document.querySelector('main') ?? document.body).append(whole);
+    items = [whole];
+  }
+
+  const controls = new Map();
+  const unfolded = new Set();
+  for (const item of items) {
+    const label = item.dataset.review;
+    // A deck bumps data-review-round once it has worked through the remarks of a round; answers stored
+    // for an earlier round are already in the block's history, so they leave the input.
+    const round = Number(item.dataset.reviewRound) || 1;
+    if (state[label] && (state[label].round ?? 1) !== round) { delete state[label]; write(); }
+    const own = () => Object.assign((state[label] ??= {}), { round });
+    const row = document.createElement('div');
+    row.className = 'dr-row';
+    const verdicts = item.hasAttribute('data-review-note-only') ? [REMARK] : [ACCEPT, REMARK];
+    const buttons = verdicts.map((verdict) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'dr-btn';
+      button.dataset.v = verdict;
+      button.textContent = verdict === ACCEPT ? 'Принято' : 'Есть замечание';
+      button.addEventListener('click', () => {
+        const entry = own();
+        entry.v = entry.v === verdict ? '' : verdict;
+        write();
+        render();
+        if (entry.v === REMARK) note.focus();
+      });
+      return button;
+    });
+    const note = document.createElement('textarea');
+    note.className = 'dr-note';
+    note.placeholder = 'Что не так';
+    note.setAttribute('aria-label', `Замечание: ${label}`);
+    note.addEventListener('input', () => { own().note = note.value; write(); render(); });
+    const fold = document.createElement('button');
+    fold.type = 'button';
+    fold.className = 'dr-fold';
+    fold.addEventListener('click', () => { unfolded.has(label) ? unfolded.delete(label) : unfolded.add(label); render(); });
+    row.append(...buttons, fold);
+    item.append(row, note);
+    const history = item.querySelector(':scope > [data-review-history]');
+    if (history) { history.classList.add('dr-history'); item.append(history); }
+    controls.set(label, { item, buttons, note, fold });
+  }
+
+  const chat = document.querySelector('.chat')?.textContent.replace(/^[^«]*/, '') ?? '';
+  const bar = document.createElement('div');
+  bar.className = 'dr-bar';
+  bar.innerHTML = `<b></b><span class="dr-chat"></span><output></output><button type="button" data-a="copy">Скопировать</button><button type="button" data-a="reset">Сбросить</button>`;
+  bar.querySelector('.dr-chat').textContent = chat;
+  document.body.append(bar);
+  const line = bar.querySelector('output');
+
+  const hooks = (window.deckReviewHooks ??= {});
+  window.deckReview = { refresh: () => render() };
+
+  function render() {
+    const parts = [];
+    let done = 0;
+    let open = 0;
+    for (const [label, { item, buttons, note, fold }] of controls) {
+      const entry = state[label] ?? {};
+      const accepted = entry.v === ACCEPT;
+      item.toggleAttribute('data-dr-folded', accepted && !unfolded.has(label));
+      fold.hidden = !accepted;
+      fold.textContent = unfolded.has(label) ? 'Свернуть' : 'Развернуть';
+      for (const button of buttons) button.setAttribute('aria-pressed', String(entry.v === button.dataset.v));
+      note.hidden = entry.v !== REMARK;
+      if (note.value !== (entry.note ?? '')) note.value = entry.note ?? '';
+      if (!accepted) open++;
+      if (!entry.v) continue;
+      if (!accepted) done++;
+      const text = entry.note?.trim().replace(/\s+/g, ' ');
+      parts.push(entry.v === REMARK ? `${label} - замечание${text ? `: «${text}»` : ''}` : `${label} - принято`);
+    }
+    const extra = hooks.extra?.();
+    if (extra) parts.push(extra);
+    bar.querySelector('b').textContent = `${done} из ${open}`;
+    line.textContent = parts.length ? `Дека ${document.title}: ${parts.join('; ')}` : 'пока ничего не выбрано';
+  }
+
+  bar.addEventListener('click', (event) => {
+    const action = event.target.closest('button')?.dataset.a;
+    if (action === 'copy') {
+      const button = event.target.closest('button');
+      navigator.clipboard?.writeText(line.textContent).then(() => {
+        button.dataset.done = '';
+        button.textContent = 'Скопировано';
+        setTimeout(() => { delete button.dataset.done; button.textContent = 'Скопировать'; }, 1500);
+      });
+    }
+    if (action === 'reset') { for (const label of Object.keys(state)) delete state[label]; write(); hooks.onReset?.(); render(); }
+  });
+  render();
+})();
+</script>
+<!-- /deck-review -->
+</body>
+</html>

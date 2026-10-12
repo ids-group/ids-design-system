@@ -38,11 +38,12 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 25 | `25-link-colour` | what colour a text link takes under a non-blue brand: the brand colour as on dev, or always blue with the tints still following the brand - both drawn on one fragment (inline, visited, table and «Подробнее» links) for a blue and a green brand in light and dark, contrast measured in the page |
 | 26 | `26-brand-dark-theme` | how a brand colour set once reaches the dark theme, where the DS dark block redeclares `--primary` and wins: the brand repeats it under `[data-theme='dark'][data-brand]` as today, the dark block stops declaring `--primary` and its channels so the brand's value reaches both themes, or a new `--ds-brand` input with the dark `--primary` lifted to the default's OKLCH lightness; each drawn on the real `ds.css` for the default blue, a green and a navy brand in light and dark, contrast measured in the page |
 | 27 | `27-six-behaviour-changes` | the six behaviour changes published in 0.14.7 without a choice, one section each: the theme an app set before startup, the modal confirm event, avatars past `max`, a disabled link with a reason in the Tab order, `provideDsIcons` calls adding up, the pin disc on a column - each with a before and after render and two or three drawn options to pick |
+| 28 | `28-duplicate-label-match` | how a chart recognises a column between data updates when two categories share a label: by label with a repeat counter as on dev, by array position, by label only, by an explicit point `id`, or by label with a dev console warning - each library's approach drawn as the same live animated column scene (remove the first of two «Jan»), with replay, ×5 slow-down and the libraries that do it |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
 written in Russian; `deck.css`, which sits beside `ds.css` and carries the shell, is shared by ranks
-1, 4, 5, 8-16 and 18-27 - ranks 2, 3, 6, 7 and 17 render fully inline instead.
+1, 4, 5, 8-16 and 18-28 - ranks 2, 3, 6, 7 and 17 render fully inline instead.
 
 **`implemented/` is where the answers live, and it is worth reading.** A closed deck keeps every word
 of the argument — the next person to ask the same question reads it to find out what was already
