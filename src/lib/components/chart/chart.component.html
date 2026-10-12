@@ -66,6 +66,8 @@
           #cursorBandEl
           class="cursor-anchor"
           aria-hidden="true"
+          [class.on-reading]="readingY() !== null"
+          [style.--_reading-y.px]="readingY()"
           [attr.x]="band.x"
           [attr.y]="band.top"
           [attr.width]="band.width"

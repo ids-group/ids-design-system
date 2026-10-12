@@ -645,6 +645,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
         return box.width > 0 && box.height > 0;
       });
+    const reading = this.readingAnchorTop();
+    if (reading !== null && boxes.every(({ top }) => reading <= top)) {
+      return this.cursorOrigin();
+    }
 
     return boxes.length === 0
       ? (own ?? this.cursorOrigin())
@@ -652,6 +656,39 @@ export class ChartComponent extends DsChartBase implements ChartScales {
           candidate.top < highest.top ? candidate : highest,
         ).element;
   });
+
+  /** The highest reading a mark reports without an element; the cursor band shrinks to a marker's
+   *  box there, so the panel and the pin anchor to it as to a marker. */
+  protected readonly readingY = computed(() => {
+    let highest: number | null = null;
+    for (const source of this.tooltipSources().values()) {
+      const y = source.axisReadingY?.() ?? null;
+      if (y !== null && (highest === null || y < highest)) {
+        highest = y;
+      }
+    }
+
+    return highest;
+  });
+
+  // In client pixels, as the boxes it is compared with; from the reading, not the anchor's box, which may not have moved yet.
+  private readingAnchorTop(): number | null {
+    const y = this.readingY();
+    const canvas = this.canvasElement()?.nativeElement;
+    const viewHeight = this.viewHeight();
+    if (y === null || !canvas || viewHeight <= 0) {
+      return null;
+    }
+    const frame = canvas.getBoundingClientRect();
+    const radius =
+      parseFloat(
+        getComputedStyle(this.host.nativeElement).getPropertyValue(
+          '--ds-chart-dot-radius',
+        ),
+      ) || 0;
+
+    return frame.top + ((y - radius) * frame.height) / viewHeight;
+  }
 
   protected readonly tooltipPinned = computed(
     () => (this.activeTooltip()?.pinned?.() ?? false) || this.cursorPinned(),

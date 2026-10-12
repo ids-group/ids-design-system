@@ -110,6 +110,12 @@
   pointer-events: none;
 }
 
+// The box of the marker a line without markers would draw at the reading.
+.cursor-anchor.on-reading {
+  y: calc(var(--_reading-y) - var(--ds-chart-dot-radius));
+  height: calc(2 * var(--ds-chart-dot-radius));
+}
+
 .category-stop {
   fill: transparent;
   pointer-events: none;
