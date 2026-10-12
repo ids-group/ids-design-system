@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Цвет бренда в тёмной теме</title>
+<meta name="ds-deck-status" content="open">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+<style>
+  main { max-width: 1480px; padding-bottom: 72px; }
+  .opts { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+  @media (max-width: 1000px) { .opts { grid-template-columns: minmax(0, 1fr); } }
+  .opt { cursor: pointer; min-inline-size: 0; }
+  .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+  .opt.is-chosen { outline: 2px solid var(--success); outline-offset: 2px; }
+  .opt ul { margin: 0; padding-inline-start: 1.2em; font-size: var(--font-size-xs); }
+  .opt .pick-btn { align-self: flex-start; padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-primary); font: var(--font-weight-bold) var(--font-size-xs) var(--font-sans); cursor: pointer; }
+  .opt.is-chosen .pick-btn { background: var(--success); border-color: var(--success); color: var(--surface-default); }
+  .opt pre { margin: 0; padding: var(--space-2); overflow-x: auto; border-radius: var(--radius-md); background: var(--surface-muted); color: var(--text-primary); font: var(--font-size-2xs) / 1.5 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .frags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); }
+  .frags.problem { max-inline-size: 520px; }
+  .frags iframe { display: block; inline-size: 100%; block-size: 240px; border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); background: var(--surface-default); }
+  .hint-line { margin: var(--space-2) 0 0; font: var(--font-size-xs) var(--font-sans); color: var(--text-secondary); }
+  .red { color: var(--error-text); font-weight: var(--font-weight-bold); }
+  .src ul { margin: 0; padding-inline-start: 1.2em; }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1>Бренд, заданный один раз, в тёмной теме снова синий</h1>
+    <p class="lede">Одно решение: как цвет бренда, заданный один раз, попадает в тёмную тему.</p>
+    <p class="chat">Ответ нести в чат: «Acc2 · Дека движения графиков»</p>
+  </header>
+
+  <section class="panel" data-review="Сегодня">
+    <h2>Сегодня</h2>
+    <ul>
+      <li>Бренд пишет <code>--primary</code> один раз; тёмный блок DS <code>:root[data-theme='dark']</code> объявляет его заново и <b>побеждает по специфичности</b> (0,2,0 против 0,1,0).</li>
+      <li>В тёмной теме <b>кнопка, тинты, чип, рамка фокуса и ссылка снова синие</b>; ошибки нет, видно только глазами.</li>
+      <li>Обход: <b>повторить <code>--primary</code> и три канала</b> под <code>[data-theme='dark'][data-brand]</code> - шаг чек-листа в <code>themes/README.md</code>.</li>
+      <li>Синий по умолчанию <b>в обеих темах один и тот же</b>: <code>--primary</code> = <code>--blue-600</code> = <code>#2e54ff</code>, шаг от светлой к тёмной равен нулю.</li>
+    </ul>
+    <div class="frags problem" data-option="missed" data-brands="green"></div>
+    <p class="hint-line">Зелёный бренд <code>#1F7A4D</code>, заданный только в <code>[data-brand]</code>, на настоящем <code>ds.css</code>.</p>
+  </section>
+
+  <section class="panel q" data-review="Варианты" data-review-note-only>
+    <h2>Три варианта</h2>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0" data-key="repeat">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Как сейчас: бренд повторяет цвет в тёмной теме</h3>
+        <ul>
+          <li>Бренд пишет цвет <b>дважды</b>: в <code>[data-brand]</code> и в <code>[data-theme='dark'][data-brand]</code>.</li>
+          <li>Пропущенный повтор = <b>синие кнопки в тёмной теме</b>, как на картинке выше.</li>
+          <li>Миграции нет; синий по умолчанию не меняется.</li>
+        </ul>
+        <pre>[data-brand='green'],
+[data-theme='dark'][data-brand='green'] {
+  --primary: #1F7A4D;
+  --primary-h: 150; --primary-s: 59%; --primary-l: 30%;
+}</pre>
+        <div class="frags" data-option="repeat"></div>
+      </article>
+
+      <article class="opt is-pick" tabindex="0" data-key="as-is">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Тёмная тема берёт цвет бренда как есть</h3>
+        <ul>
+          <li>Тёмный блок <b>перестаёт объявлять <code>--primary</code> и каналы</b>: их значение там то же, что в светлой.</li>
+          <li>Тёмная тема берёт <b>светлый цвет бренда без изменений</b>; тинты, текст на них и ссылка уже считаются от тона.</li>
+          <li>Тёмный бренд остаётся тёмным: край кнопки тёмно-синего на карточке <b class="red" data-num="navy-dark-edge">-</b> (нужно 3:1).</li>
+          <li>Миграции нет: повтор из варианта «как сейчас» работает и становится лишним.</li>
+        </ul>
+        <pre>[data-brand='green'] {
+  --primary: #1F7A4D;
+  --primary-h: 150; --primary-s: 59%; --primary-l: 30%;
+}</pre>
+        <div class="frags" data-option="as-is"></div>
+      </article>
+
+      <article class="opt" tabindex="0" data-key="derive">
+        <span class="badge">новый токен</span>
+        <h3>Один вход бренда, тёмная тема выводит светлее</h3>
+        <ul>
+          <li>Новый вход <b><code>--ds-brand</code></b>: светлая <code>--primary</code> = он, тёмная = <code>oklch(from var(--ds-brand) max(l, 0.54) c h)</code>.</li>
+          <li>Шаг синего по умолчанию <b>нулевой</b>, поэтому вывод - порог: бренд темнее синего (OKLCH L 0,54) поднимается до него. Зелёный <b>+0,025</b>, тёмно-синий <b>+0,21</b>.</li>
+          <li>Миграция: каждый бренд <b>переходит с <code>--primary</code> на <code>--ds-brand</code></b>; оставшийся на <code>--primary</code> в тёмной снова синий.</li>
+        </ul>
+        <pre>[data-brand='green'] {
+  --ds-brand: #1F7A4D;
+  --primary-h: 150; --primary-s: 59%; --primary-l: 30%;
+}</pre>
+        <div class="frags" data-option="derive"></div>
+      </article>
+    </div>
+    <p class="hint-line">Каждая карточка: синий по умолчанию, зелёный <code>#1F7A4D</code> и тёмно-синий <code>#1C3558</code> (CTA консьюмера из деки 9), светлая и тёмная тема. Каждый фрагмент - отдельный документ на настоящем <code>ds.css</code>; цифры посчитаны в нём из отрисованных цветов, красным - ниже порога. Тонал синего по умолчанию в тёмной (4,15) красный уже сегодня и одинаков во всех вариантах.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Что стоит каждый вариант</h2>
+    <table>
+      <thead><tr><th>Вариант</th><th>Бренд пишет</th><th>Миграция консьюмеров</th><th>Синий по умолчанию</th><th>Тёмный бренд в тёмной теме</th></tr></thead>
+      <tbody>
+        <tr class="row-today"><th class="rowlabel">Как сейчас: бренд повторяет цвет в тёмной теме</th><td>цвет в двух селекторах</td><td>нет</td><td>без изменений</td><td>как написал бренд</td></tr>
+        <tr class="row-pick"><th class="rowlabel">Тёмная тема берёт цвет бренда как есть</th><td>цвет один раз</td><td>нет; повтор можно удалить</td><td>без изменений, <span data-num="same-as-is">-</span></td><td>как в светлой; край <span data-num="navy-dark-edge">-</span></td></tr>
+        <tr><th class="rowlabel">Один вход бренда, тёмная тема выводит светлее</th><td><code>--ds-brand</code> один раз</td><td>каждый бренд: <code>--primary</code> → <code>--ds-brand</code></td><td>без изменений, <span data-num="same-derive">-</span></td><td>поднят до L 0,54; край <span data-num="navy-dark-edge-derive">-</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel good">
+    <h2>Рекомендую: «Тёмная тема берёт цвет бренда как есть»</h2>
+    <ul>
+      <li>Чинит баг <b>без нового токена и без миграции</b>: тот же CSS бренда работает в обеих темах.</li>
+      <li>Синий по умолчанию <b>совпадает пиксель в пиксель</b>: его тёмное значение уже равно светлому.</li>
+      <li>«Выводит светлее» меняет картину <b>только у очень тёмных брендов</b>; это вопрос «Как получать все оттенки цвета из одного цвета бренда» (деки <code>2-color-engine-derivation</code>, <code>3-color-engine-relative</code>), туда и переедет порог, если нужен.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>Что решить</h2>
+    <table>
+      <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
+      <tbody><tr class="row-pick"><th class="rowlabel">Как цвет бренда, заданный один раз, попадает в тёмную тему</th><td>Как сейчас: бренд повторяет цвет в тёмной теме · Тёмная тема берёт цвет бренда как есть · Один вход бренда, тёмная тема выводит светлее</td><td>Тёмная тема берёт цвет бренда как есть</td></tr></tbody>
+    </table>
+  </section>
+
+  <details class="src"><summary>Источники</summary>
+    <ul>
+      <li><b>Код, 2026-10-12:</b> <code>styles/_theme-activation.scss</code> (светлая на <code>:root</code>, тёмная на <code>:root[data-theme='dark']</code>), <code>themes/_semantic.scss</code> (<code>--primary: var(--blue-600)</code> и каналы в <code>@mixin roles</code>, который включают обе темы), <code>themes/dark/_theme.scss</code> (тинты <code>hsl(from var(--primary) h …)</code>, ссылка от <code>--primary-h</code>), <code>themes/README.md</code> (шаг чек-листа про тёмную тему).</li>
+      <li><b>Фрагменты:</b> каждый - <code>iframe</code> с <code>@import "ds.css"</code> и <code>&lt;html data-theme data-brand&gt;</code>, как у консьюмера. Кнопка <code>--accent</code> / <code>--accent-on</code>, тонал <code>--accent-muted</code> / <code>--accent-strong</code>, строка <code>--accent-surface-tint</code>, чип как <code>ds-tag</code>, поле <code>--accent</code> + <code>--focus-field</code>, ссылка <code>--text-link</code> на <code>--surface-default</code>.</li>
+      <li><b>Как нарисованы варианты 2 и 3:</b> <code>ds.css</code> импортирован в слой <code>layer(ds)</code>, поэтому <code>--primary</code> и каналы бренда побеждают и в тёмной; для бренда, задающего только их, это те же пиксели, что удаление этих объявлений из тёмного блока. Вариант 3 добавляет слой с <code>--primary</code> от <code>--ds-brand</code>.</li>
+      <li><b>Почему не слой для всех токенов темы:</b> тогда любой <code>:root</code>-оверрайд консьюмера (например, <code>--surface-canvas</code>) тоже протечёт в тёмную тему. Снять только вход бренда из тёмного блока уже, чем слой, и даёт тот же результат для бренда.</li>
+      <li><b>Шаг синего:</b> <code>--primary</code> посчитан в обеих темах на этой странице (<span data-num="blue-step">-</span>); OKLCH L синего 0,540, зелёного 0,515, тёмно-синего 0,330 (sRGB → OKLab, формулы Оттосона).</li>
+    </ul>
+  </details>
+</main>
+
+<script>
+  const BRANDS = {
+    blue: { label: 'Синий по умолчанию', colour: null },
+    green: { label: 'Зелёный', colour: '#1F7A4D', h: 150, s: '59%', l: '30%' },
+    navy: { label: 'Тёмно-синий', colour: '#1C3558', h: 215, s: '52%', l: '23%' },
+  };
+  const DERIVE = `@layer ds-proposal {
+  :root { --primary: var(--ds-brand, var(--blue-600)); }
+  :root[data-theme='dark'] { --primary: oklch(from var(--ds-brand, var(--blue-600)) max(l, 0.54) c h); }
+}`;
+  const channels = (brand) => `--primary-h: ${brand.h}; --primary-s: ${brand.s}; --primary-l: ${brand.l};`;
+  const OPTIONS = {
+    missed: { importLine: '@import url("ds.css");', consumer: (key, brand) => `[data-brand='${key}'] { --primary: ${brand.colour}; ${channels(brand)} }` },
+    repeat: { importLine: '@import url("ds.css");', consumer: (key, brand) => `[data-brand='${key}'], [data-theme='dark'][data-brand='${key}'] { --primary: ${brand.colour}; ${channels(brand)} }` },
+    'as-is': { importLine: '@import url("ds.css") layer(ds);', consumer: (key, brand) => `[data-brand='${key}'] { --primary: ${brand.colour}; ${channels(brand)} }` },
+    derive: { importLine: '@import url("ds.css") layer(ds);\n' + DERIVE, consumer: (key, brand) => `[data-brand='${key}'] { --ds-brand: ${brand.colour}; ${channels(brand)} }` },
+  };
+
+  const FRAGMENT_CSS = `
+    html, body { margin: 0; }
+    body { padding: 10px; background: var(--surface-default); color: var(--text-primary); font: 12px / 1.4 var(--font-sans); }
+    .tag { display: block; margin-block-end: 6px; font-weight: 700; font-size: 11px; color: var(--text-secondary); }
+    .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-block-end: 6px; }
+    .button { padding: 4px 10px; border: 0; border-radius: var(--ds-radius-control); font: 600 12px / 1.5 var(--font-sans); }
+    .solid { background: var(--accent); color: var(--accent-on); }
+    .tonal { background: var(--accent-muted); color: var(--accent-strong); }
+    .chip { padding: 2px 8px; border-radius: var(--ds-radius-control); background: var(--accent); color: var(--accent-on); font-weight: 700; font-size: 11px; }
+    .item { padding: 4px 8px; margin-block-end: 6px; border-radius: var(--radius-sm); background: var(--accent-surface-tint); color: var(--accent-strong); font-weight: 600; }
+    .field { padding: 4px 8px; margin: 0 3px 8px; border: 1px solid var(--accent); border-radius: var(--ds-radius-control); box-shadow: var(--focus-field); background: var(--surface-default); color: var(--text-secondary); }
+    a { color: var(--text-link); text-decoration: underline 1px; text-underline-offset: 2px; }
+    .nums { margin: 6px 0 0; padding-block-start: 6px; border-block-start: 1px dashed var(--border-default); font: 10.5px / 1.45 var(--font-mono); color: var(--text-secondary); }
+    .nums b { color: var(--text-primary); }
+    .nums .low { color: var(--error-text); font-weight: 700; }`;
+
+  const MEASURE = `
+    const probe = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+    const rgbOf = (css) => { probe.clearRect(0, 0, 1, 1); probe.fillStyle = '#010203'; probe.fillStyle = css; probe.fillRect(0, 0, 1, 1); return [...probe.getImageData(0, 0, 1, 1).data.slice(0, 3)]; };
+    const luminance = (rgb) => { const [r, g, b] = rgb.map((c) => { const v = c / 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+    const contrast = (a, b) => { const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x); return (hi + 0.05) / (lo + 0.05); };
+    const hex = (rgb) => '#' + rgb.map((v) => v.toString(16).padStart(2, '0')).join('');
+    const cs = (sel) => getComputedStyle(document.querySelector(sel));
+    window.addEventListener('load', () => {
+      const surface = rgbOf(getComputedStyle(document.body).backgroundColor);
+      const solid = cs('.solid'), tonal = cs('.tonal'), item = cs('.item');
+      const fill = rgbOf(solid.backgroundColor);
+      const values = {
+        primary: hex(fill),
+        label: contrast(rgbOf(solid.color), fill),
+        edge: contrast(fill, surface),
+        tonal: contrast(rgbOf(tonal.color), rgbOf(tonal.backgroundColor)),
+        row: contrast(rgbOf(item.color), rgbOf(item.backgroundColor)),
+        focus: contrast(rgbOf(cs('.field').borderTopColor), surface),
+        link: contrast(rgbOf(cs('a').color), surface),
+        pixels: [fill, rgbOf(tonal.backgroundColor), rgbOf(tonal.color), rgbOf(item.backgroundColor), rgbOf(item.color), rgbOf(cs('a').color)].map(hex).join(' '),
+      };
+      const f = (v, min) => '<span class="' + (v < min ? 'low' : '') + '">' + v.toFixed(2).replace('.', ',') + '</span>';
+      document.querySelector('.nums').innerHTML =
+        '<b>' + values.primary + '</b> кнопка ' + f(values.label, 4.5) + ' · край ' + f(values.edge, 3) + '<br>' +
+        'тонал ' + f(values.tonal, 4.5) + ' · строка ' + f(values.row, 4.5) + '<br>' +
+        'фокус ' + f(values.focus, 3) + ' · ссылка ' + f(values.link, 4.5);
+      document.documentElement.dataset.measured = JSON.stringify(values);
+      parent.postMessage({ deckBrandDark: true, id: window.name, values }, '*');
+    });
+    new ResizeObserver(() => parent.postMessage({ deckBrandDark: true, id: window.name, height: document.documentElement.scrollHeight }, '*')).observe(document.body);`;
+
+  const fragment = (brandKey, theme, label) => `<!doctype html><html lang="ru"${theme === 'dark' ? " data-theme='dark'" : ''}${brandKey === 'blue' ? '' : ` data-brand='${brandKey}'`}><head><meta charset="utf-8"><style>{{CSS}}</style></head><body>
+    <span class="tag">${label} · ${theme === 'dark' ? 'тёмная' : 'светлая'}</span>
+    <div class="row"><button class="button solid" type="button">Сохранить</button><button class="button tonal" type="button">Черновик</button><span class="chip">Новое</span></div>
+    <div class="item">Входящие</div>
+    <div class="field">Поиск по договорам</div>
+    <a href="#">Подробнее</a>
+    <p class="nums"></p>
+    <script>${MEASURE}<\/script></body></html>`;
+
+  const results = {};
+  document.querySelectorAll('.frags').forEach((host) => {
+    const option = OPTIONS[host.dataset.option];
+    const brandKeys = (host.dataset.brands || 'blue green navy').split(' ');
+    for (const brandKey of brandKeys) {
+      for (const theme of ['light', 'dark']) {
+        const brand = BRANDS[brandKey];
+        const css = [option.importLine, brand.colour ? option.consumer(brandKey, brand) : '', FRAGMENT_CSS].join('\n');
+        const frame = document.createElement('iframe');
+        frame.name = `${host.dataset.option}:${brandKey}:${theme}`;
+        frame.title = `${brand.label}, ${theme === 'dark' ? 'тёмная' : 'светлая'} тема`;
+        frame.srcdoc = fragment(brandKey, theme, brand.label).replace('{{CSS}}', css);
+        host.append(frame);
+      }
+    }
+  });
+
+  const ratio = (value) => `${value.toFixed(2).replace('.', ',')}:1`;
+  const setNum = (key, html) => document.querySelectorAll(`[data-num="${key}"]`).forEach((node) => { node.innerHTML = html; });
+  const summarise = () => {
+    const get = (id) => results[id];
+    if (get('as-is:navy:dark')) setNum('navy-dark-edge', ratio(get('as-is:navy:dark').edge));
+    if (get('derive:navy:dark')) setNum('navy-dark-edge-derive', ratio(get('derive:navy:dark').edge));
+    for (const option of ['as-is', 'derive']) {
+      const pairs = ['light', 'dark'].map((theme) => [get(`repeat:blue:${theme}`), get(`${option}:blue:${theme}`)]);
+      if (pairs.every(([today, candidate]) => today && candidate)) {
+        const same = pairs.every(([today, candidate]) => today.pixels === candidate.pixels);
+        setNum(`same-${option}`, same ? 'пиксели совпадают' : '<span class="red">пиксели отличаются</span>');
+      }
+    }
+    const light = get('repeat:blue:light'), dark = get('repeat:blue:dark');
+    if (light && dark) setNum('blue-step', `светлая ${light.primary}, тёмная ${dark.primary}`);
+  };
+  window.addEventListener('message', (event) => {
+    if (!event.data?.deckBrandDark) return;
+    if (event.data.height) {
+      const frame = document.querySelector(`iframe[name="${event.data.id}"]`);
+      if (frame) frame.style.blockSize = `${event.data.height + 2}px`;
+      return;
+    }
+    results[event.data.id] = event.data.values;
+    summarise();
+  });
+  window.deckBrandDarkResults = results;
+
+  const KEY = 'ds-deck-brand-dark-theme-pick-v1';
+  const cards = [...document.querySelectorAll('.opt[data-key]')];
+  cards.forEach((card) => {
+    const pickButton = document.createElement('button');
+    pickButton.type = 'button';
+    pickButton.className = 'pick-btn';
+    card.append(pickButton);
+  });
+  let picked = null;
+  try { picked = localStorage.getItem(KEY); } catch { picked = null; }
+  const paint = () => cards.forEach((card) => {
+    card.classList.toggle('is-chosen', card.dataset.key === picked);
+    card.querySelector('.pick-btn').textContent = card.dataset.key === picked ? 'Выбрано' : 'Выбрать';
+  });
+  cards.forEach((card) => {
+    const choose = () => { picked = card.dataset.key; try { localStorage.setItem(KEY, picked); } catch { /* private window */ } paint(); window.deckReview?.refresh?.(); };
+    card.addEventListener('click', (event) => { if (!event.target.closest('.frags, pre')) choose(); });
+    card.addEventListener('keydown', (event) => { if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); choose(); } });
+  });
+  paint();
+  (window.deckReviewHooks ??= {}).extra = () => { const card = cards.find((item) => item.dataset.key === picked); return card ? `выбор - «${card.querySelector('h3').textContent}»` : 'выбор - не сделан'; };
+  (window.deckReviewHooks ??= {}).onReset = () => { picked = null; try { localStorage.removeItem(KEY); } catch { /* private window */ } paint(); };
+</script>
+<!-- deck-review -->
+<script>
+// deck-review: verdict per [data-review] block, a textarea for remarks, one answer line in a fixed bar.
+// Inlined into a deck by ~/.claude/bin/deck-review-inline; contract in ~/.claude/docs/deck-review.md.
+(() => {
+  // Every key under deck-review: is a disposable reviewer answer, kept 7 days after its last change.
+  const PREFIX = 'deck-review:v1:';
+  const KEY = PREFIX + (document.documentElement.dataset.deck || document.title);
+  const KEEP_MS = 7 * 24 * 60 * 60 * 1000;
+  const ACCEPT = 'принято';
+  const REMARK = 'есть замечание';
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith('deck-review:')) continue;
+      let expires = 0;
+      try { if (key.startsWith(PREFIX)) expires = JSON.parse(localStorage.getItem(key))?.expires; } catch { /* malformed: drop */ }
+      if (!(expires > Date.now())) localStorage.removeItem(key);
+    }
+  } catch { /* private window */ }
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY))?.answers ?? {}; } catch { return {}; } };
+  const write = () => { try { localStorage.setItem(KEY, JSON.stringify({ expires: Date.now() + KEEP_MS, answers: state })); } catch { /* private window */ } };
+  const state = read();
+
+  document.head.insertAdjacentHTML('beforeend', `<style>
+    .dr-row { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px 0; }
+    .dr-btn { padding: 4px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 999px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-btn[aria-pressed="true"] { background: var(--accent-subtitle, #e6efff); border-color: var(--accent-strong, #2457c5); color: var(--accent-strong, #2457c5); }
+    .dr-btn[data-v="${REMARK}"][aria-pressed="true"] { background: var(--error-subtitle, #fdecec); border-color: var(--error-text, #b42318); color: var(--error-text, #b42318); }
+    .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--border-default, #c9ced6); border-radius: var(--radius-md, 8px); background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
+    .dr-note:focus { outline: none; border-color: var(--accent, #2457c5); box-shadow: var(--ds-field-focus-shadow, 0 0 0 3px rgb(36 87 197 / .25)); }
+    .dr-note[hidden] { display: none; }
+    .dr-history { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 4px; color: var(--text-secondary, #4b5563); font: 13px/1.45 var(--font-sans, system-ui, sans-serif); }
+    .dr-history::before { content: 'История замечаний'; display: block; margin-left: -1.2em; color: var(--text-primary, #1d2330); font-weight: 600; }
+    [data-dr-folded] > :not(h1, h2, h3, h4, .dr-row, .dr-note) { display: none !important; }
+    .dr-fold { padding: 4px 8px; border: 0; background: none; color: var(--accent-strong, #2457c5); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-fold[hidden] { display: none; }
+    .dr-btn, .dr-bar button, .dr-fold { transition: background-color .12s, border-color .12s, color .12s, box-shadow .12s; }
+    .dr-btn:hover, .dr-bar button:hover { background: var(--surface-secondary, #f3f4f6); border-color: var(--border-strong, #9aa1ad); }
+    .dr-btn:active, .dr-bar button:active { background: var(--surface-muted, #e5e7eb); }
+    .dr-btn[aria-pressed="true"]:hover { background: color-mix(in srgb, var(--accent-strong, #2457c5) 14%, var(--surface-default, #fff)); }
+    .dr-btn[data-v="есть замечание"][aria-pressed="true"]:hover { background: color-mix(in srgb, var(--error-text, #b42318) 14%, var(--surface-default, #fff)); }
+    .dr-fold:hover { text-decoration: underline; }
+    .dr-fold:active { color: var(--text-primary, #1d2330); }
+    .dr-btn:focus-visible, .dr-bar button:focus-visible, .dr-fold:focus-visible { outline: 2px solid var(--focus-ring-color, var(--accent, #2457c5)); outline-offset: 2px; }
+    .dr-bar button[data-done] { background: var(--success-subtitle, #e7f6ec); border-color: var(--success, #1a7f37); color: var(--success-text, #116329); }
+    .dr-bar { position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; padding: 10px 20px; background: var(--surface-default, #fff); border-top: 1px solid var(--border-divider, #e3e6eb); box-shadow: 0 -4px 16px rgb(0 0 0 / .08); color: var(--text-primary, #1d2330); font: 13px/1.4 var(--font-sans, system-ui, sans-serif); }
+    .dr-bar b { flex: none; }
+    .dr-bar .dr-chat { flex: none; color: var(--text-tertiary, #6b7280); }
+    .dr-bar output { flex: 1 1 auto; min-inline-size: 0; overflow-x: auto; white-space: nowrap; color: var(--text-secondary, #4b5563); font-family: var(--font-mono, ui-monospace, monospace); }
+    .dr-bar button { flex: none; padding: 6px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 6px; background: var(--surface-default, #fff); color: inherit; font: 600 13px/1.4 inherit; cursor: pointer; }
+    body { padding-block-end: 72px; }
+    @media (max-width: 640px) { .dr-bar { padding: 8px 12px; gap: 8px; } .dr-bar .dr-chat { display: none; } }
+  </style>`);
+
+  let items = [...document.querySelectorAll('[data-review]')];
+  if (!items.length) {
+    const whole = document.createElement('section');
+    whole.dataset.review = 'Дека в целом';
+    whole.innerHTML = '<h3>Дека в целом</h3>';
+    (document.querySelector('main') ?? document.body).append(whole);
+    items = [whole];
+  }
+
+  const controls = new Map();
+  const unfolded = new Set();
+  for (const item of items) {
+    const label = item.dataset.review;
+    // A deck bumps data-review-round once it has worked through the remarks of a round; answers stored
+    // for an earlier round are already in the block's history, so they leave the input.
+    const round = Number(item.dataset.reviewRound) || 1;
+    if (state[label] && (state[label].round ?? 1) !== round) { delete state[label]; write(); }
+    const own = () => Object.assign((state[label] ??= {}), { round });
+    const row = document.createElement('div');
+    row.className = 'dr-row';
+    const verdicts = item.hasAttribute('data-review-note-only') ? [REMARK] : [ACCEPT, REMARK];
+    const buttons = verdicts.map((verdict) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'dr-btn';
+      button.dataset.v = verdict;
+      button.textContent = verdict === ACCEPT ? 'Принято' : 'Есть замечание';
+      button.addEventListener('click', () => {
+        const entry = own();
+        entry.v = entry.v === verdict ? '' : verdict;
+        write();
+        render();
+        if (entry.v === REMARK) note.focus();
+      });
+      return button;
+    });
+    const note = document.createElement('textarea');
+    note.className = 'dr-note';
+    note.placeholder = 'Что не так';
+    note.setAttribute('aria-label', `Замечание: ${label}`);
+    note.addEventListener('input', () => { own().note = note.value; write(); render(); });
+    const fold = document.createElement('button');
+    fold.type = 'button';
+    fold.className = 'dr-fold';
+    fold.addEventListener('click', () => { unfolded.has(label) ? unfolded.delete(label) : unfolded.add(label); render(); });
+    row.append(...buttons, fold);
+    item.append(row, note);
+    const history = item.querySelector(':scope > [data-review-history]');
+    if (history) { history.classList.add('dr-history'); item.append(history); }
+    controls.set(label, { item, buttons, note, fold });
+  }
+
+  const chat = document.querySelector('.chat')?.textContent.replace(/^[^«]*/, '') ?? '';
+  const bar = document.createElement('div');
+  bar.className = 'dr-bar';
+  bar.innerHTML = `<b></b><span class="dr-chat"></span><output></output><button type="button" data-a="copy">Скопировать</button><button type="button" data-a="reset">Сбросить</button>`;
+  bar.querySelector('.dr-chat').textContent = chat;
+  document.body.append(bar);
+  const line = bar.querySelector('output');
+
+  const hooks = (window.deckReviewHooks ??= {});
+  window.deckReview = { refresh: () => render() };
+
+  function render() {
+    const parts = [];
+    let done = 0;
+    let open = 0;
+    for (const [label, { item, buttons, note, fold }] of controls) {
+      const entry = state[label] ?? {};
+      const accepted = entry.v === ACCEPT;
+      item.toggleAttribute('data-dr-folded', accepted && !unfolded.has(label));
+      fold.hidden = !accepted;
+      fold.textContent = unfolded.has(label) ? 'Свернуть' : 'Развернуть';
+      for (const button of buttons) button.setAttribute('aria-pressed', String(entry.v === button.dataset.v));
+      note.hidden = entry.v !== REMARK;
+      if (note.value !== (entry.note ?? '')) note.value = entry.note ?? '';
+      if (!accepted) open++;
+      if (!entry.v) continue;
+      if (!accepted) done++;
+      const text = entry.note?.trim().replace(/\s+/g, ' ');
+      parts.push(entry.v === REMARK ? `${label} - замечание${text ? `: «${text}»` : ''}` : `${label} - принято`);
+    }
+    const extra = hooks.extra?.();
+    if (extra) parts.push(extra);
+    bar.querySelector('b').textContent = `${done} из ${open}`;
+    line.textContent = parts.length ? `Дека ${document.title}: ${parts.join('; ')}` : 'пока ничего не выбрано';
+  }
+
+  bar.addEventListener('click', (event) => {
+    const action = event.target.closest('button')?.dataset.a;
+    if (action === 'copy') {
+      const button = event.target.closest('button');
+      navigator.clipboard?.writeText(line.textContent).then(() => {
+        button.dataset.done = '';
+        button.textContent = 'Скопировано';
+        setTimeout(() => { delete button.dataset.done; button.textContent = 'Скопировать'; }, 1500);
+      });
+    }
+    if (action === 'reset') { for (const label of Object.keys(state)) delete state[label]; write(); hooks.onReset?.(); render(); }
+  });
+  render();
+})();
+</script>
+<!-- /deck-review -->
+</body>
+</html>
