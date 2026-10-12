@@ -886,13 +886,23 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   // Read once per hover and dropped on scroll: reading on every move forces a second layout after the band update.
   private canvasRect: DOMRect | null = null;
 
-  private plotPointer(event: PointerEvent, canvas: SVGSVGElement): void {
+  private readonly forgetCanvasRect = (): void => {
+    this.canvasRect = null;
+  };
+
+  // Client x to view units: the canvas is scaled to its box.
+  private viewXOf(event: PointerEvent, canvas: SVGSVGElement): number {
     this.canvasRect ??= canvas.getBoundingClientRect();
-    const plot = this.plot();
-    // Client x to view units: the canvas is scaled to its box.
-    const viewX =
+
+    return (
       ((event.clientX - this.canvasRect.left) / this.canvasRect.width) *
-      this.viewWidth();
+      this.viewWidth()
+    );
+  }
+
+  private plotPointer(event: PointerEvent, canvas: SVGSVGElement): void {
+    const plot = this.plot();
+    const viewX = this.viewXOf(event, canvas);
     // Every point belongs to its nearest category, so the cursor never passes through "none".
     const index = this.clampIndex(
       categoryAt(viewX, plot.left, plot.width, this.categories().length),
@@ -924,9 +934,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   /** Listens only when a category cursor is drawn, outside the zone. */
   private listenForCursor(canvas: SVGSVGElement): () => void {
-    const forgetRect = (): void => {
-      this.canvasRect = null;
-    };
+    const forgetRect = this.forgetCanvasRect;
     const onPointer = (event: PointerEvent): void => {
       if (event.type === 'pointerdown' && !isPrimaryPress(event)) {
         return;
@@ -977,11 +985,11 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     const view = document.defaultView ?? window;
     let anchor = -1;
     let dragged = false;
+    const forgetRectWhileDragging = (): void => this.forgetCanvasRect();
     // Past either end of the plot a drag holds the nearest category.
     const categoryOf = (event: PointerEvent, clamp: boolean): number => {
-      const box = canvas.getBoundingClientRect();
       const plot = this.plot();
-      const viewX = ((event.clientX - box.left) / box.width) * this.viewWidth();
+      const viewX = this.viewXOf(event, canvas);
       const x = clamp
         ? Math.min(Math.max(viewX, plot.left), plot.left + plot.width)
         : viewX;
@@ -1002,6 +1010,9 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     const stopDrag = (): void => {
       view.removeEventListener('pointermove', onMove);
       view.removeEventListener('pointerup', onUp);
+      view.removeEventListener('scroll', forgetRectWhileDragging, {
+        capture: true,
+      });
       anchor = -1;
     };
     const onUp = (event: PointerEvent): void => {
@@ -1017,10 +1028,15 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       stopDrag();
       this.range.set(null);
       dragged = false;
+      this.forgetCanvasRect();
       anchor = categoryOf(event, false);
       if (anchor >= 0) {
         view.addEventListener('pointermove', onMove);
         view.addEventListener('pointerup', onUp);
+        view.addEventListener('scroll', forgetRectWhileDragging, {
+          capture: true,
+          passive: true,
+        });
       }
     };
     const onOutside = (event: PointerEvent): void => {
