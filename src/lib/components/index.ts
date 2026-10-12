@@ -44,6 +44,7 @@ export {
 export type { BandScale, NiceDomain } from './charts-scale';
 export {
   afterTwoFrames,
+  CHART_GLIDE_HEAD_START_MS,
   chartTiming,
   leaveMark,
   staggerDelay,

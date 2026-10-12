@@ -112,6 +112,10 @@
 - **Only the main mouse button pins a chart.** A right or middle press on a `ds-chart` category, or
   on any chart's mark, takes no pin, and one outside the chart leaves a held pin in place. The
   chart-tooltip entry point exports the internal `isPrimaryPress`.
+- **A fast pointer no longer leaves the panel and the travelling marker behind.** Crossing a
+  category every frame restarted their glide at zero each time, so on a long `ds-line-chart` or
+  `ds-chart` they stood still until the pointer stopped while the cursor moved on. Each glide now
+  starts two frames in; the scatter ring and the pie arcs glide the same way.
 - **A chart's panel closes while the pointer moves over another chart.** Every element the pointer
   crossed outside a chart restarted its `tooltipLingerMs` wait, so a panel, cursor and travelling
   marker stayed up for as long as the pointer kept moving elsewhere. The wait now runs once.

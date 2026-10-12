@@ -21,6 +21,7 @@ import {
   disposeWithLeave,
   forwardOverlayTokens,
   listenForEscape,
+  CHART_GLIDE_HEAD_START_MS,
   chartTiming,
 } from '@ids-group-ltd/ids-design-system/components';
 import { ChartTooltipPanelComponent } from './chart-tooltip-panel.component';
@@ -192,7 +193,7 @@ export class ChartTooltipDirective {
     }
     this.glide = pane.animate(
       [{ translate: `${deltaX}px ${deltaY}px` }, { translate: '0 0' }],
-      timing,
+      { ...timing, delay: -CHART_GLIDE_HEAD_START_MS },
     );
   }
 
