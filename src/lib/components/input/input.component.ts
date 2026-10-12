@@ -14,9 +14,11 @@ import {
 import { DS_INTL, optionalBound } from '@ids-group-ltd/ids-design-system/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
-import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  FieldMessageComponent,
+  FieldStatusComponent,
+} from '@ids-group-ltd/ids-design-system/components/field-message';
 import {
   resolveFieldMessage,
   trimmedText,
@@ -39,8 +41,8 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
   imports: [
     FormsModule,
     IconComponent,
-    SpinnerComponent,
     FieldMessageComponent,
+    FieldStatusComponent,
     FieldClickFocusDirective,
   ],
   host: {
@@ -191,7 +193,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
   });
   protected readonly uid = nextControlId('ds-input');
   protected readonly hintId = computed(() =>
-    this.message().text ? `${this.uid}-hint` : null,
+    this.message().text || this.changedShown() ? `${this.uid}-hint` : null,
   );
   protected readonly describedBy = computed(() => {
     return describedByIds(
@@ -201,6 +203,9 @@ export class InputComponent extends DsControlValueAccessor<string> {
     );
   });
   private readonly fieldMessage = resolveFieldMessage({
+    pending: this.pending,
+    dirty: this.dirty,
+    showDirty: this.showDirtyResolved,
     disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
@@ -212,6 +217,8 @@ export class InputComponent extends DsControlValueAccessor<string> {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly pendingShown = this.fieldMessage.pending;
+  protected readonly changedShown = this.fieldMessage.changed;
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly groupMessage = groupMessageId();
   protected readonly invalidResolved = groupInvalid(this.fieldMessage.invalid);
@@ -265,7 +272,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
     if (this.isReadOnly()) {
       parts.push('read-only');
     }
-    if (this.loading()) {
+    if (this.loading() || this.pendingShown()) {
       parts.push('loading');
     }
 

@@ -40,7 +40,10 @@ import {
   DsControlValueAccessor,
   DsStaticPreview,
 } from '@ids-group-ltd/ids-design-system/components';
-import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  FieldMessageComponent,
+  FieldStatusComponent,
+} from '@ids-group-ltd/ids-design-system/components/field-message';
 import {
   resolveFieldMessage,
   trimmedText,
@@ -111,6 +114,7 @@ interface DayCell {
     IconComponent,
     CalendarDayComponent,
     FieldMessageComponent,
+    FieldStatusComponent,
     A11yModule,
     NgTemplateOutlet,
   ],
@@ -277,7 +281,7 @@ export class DatePickerComponent
     () => this.disabled() || this.formDisabled(),
   );
   protected readonly hintId = computed(() =>
-    this.message().text ? `${this.uid}-hint` : null,
+    this.message().text || this.changedShown() ? `${this.uid}-hint` : null,
   );
   // An unparseable date is the picker's OWN error: it enters the ladder at the error rung rather than replacing the hint.
   // An explicit `error` still wins.
@@ -301,6 +305,9 @@ export class DatePickerComponent
     () => this.invalid() || this.typedInvalid() || this.rangeInvalid(),
   );
   private readonly fieldMessage = resolveFieldMessage({
+    pending: this.pending,
+    dirty: this.dirty,
+    showDirty: this.showDirtyResolved,
     disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
@@ -312,6 +319,8 @@ export class DatePickerComponent
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly pendingShown = this.fieldMessage.pending;
+  protected readonly changedShown = this.fieldMessage.changed;
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly groupMessage = groupMessageId();
   protected readonly describedByIds = describedByIds;

@@ -38,6 +38,21 @@
   while the drag lasts; `DsTableResize` hands the table the edge through a new internal `guide`
   signal.
 
+- **`showDirty` marks a changed field, off by default.** On `ds-input`, `ds-textarea`, `ds-select`,
+  `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker`, `ds-color-picker`,
+  `ds-checkbox`, `ds-switch`, `ds-radio-group`, `ds-segmented`, `ds-slider` and `ds-otp-input`, a
+  value the user changed carries a dot at the end of the control and a "Changed" line under it,
+  which the control's `aria-describedby` reads. Turn it on per field with `[showDirty]`, per form
+  with the new `dsShowDirty` directive (`ShowDirtyDirective`), or app-wide with
+  `DS_CONFIG.field.showDirty`; a field's own binding wins. The state comes from the new `dirty`
+  input, which signal forms binds by name, or from the `NgControl` of a reactive or template-driven
+  form, so resetting the form clears the mark. The line reads the new optional `DsIntl` key
+  `field.changed`, default `'Changed'`; `--ds-field-changed-color` recolours the dot and
+  `--ds-field-changed-text-color` the line. The `pending`, `dirty`, `showDirty` and
+  `showDirtyResolved` members sit on the internal `DsFormControlBase` both value-accessor bases
+  extend; the internal `ds-field-message` takes `changed` (with `changedText` and `intl`), and the
+  new internal `ds-field-status` draws the spinner and the dot.
+
 ### Changed
 
 - **Links and every brand shade follow `--primary`.** In light, `--surface-tint` and
@@ -161,6 +176,16 @@
   `--error-muted` on press, over the `--error-subtitle` hover, the pair a ghost error `ds-button`
   uses; the press showed the hover fill.
 
+- **Every field shows a spinner while its value is checked.** `ds-input`, `ds-textarea`,
+  `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker`,
+  `ds-color-picker`, `ds-checkbox`, `ds-switch`, `ds-radio-group`, `ds-segmented`, `ds-slider` and
+  `ds-otp-input` take a `pending` input, which signal forms binds by name, and read `pending` from
+  the `NgControl` of a reactive or template-driven form: while an async validator runs, the field
+  shows the small spinner `ds-input` shows for `loading`. It sits at the end of the control; on
+  `ds-checkbox` and `ds-switch` after the label, on `ds-radio-group` and `ds-segmented` beside the
+  label, or after the options without one, on `ds-slider` under the track and on `ds-otp-input`
+  after the cells. A `[loading]` on `ds-input` bound to its own control's pending restates it.
+
 ### Fixed
 
 - **A legend fades the other marks only under `dimOthers`, as hovering a mark does.** Hovering or
@@ -207,6 +232,7 @@
 | Delete | Why | Replace with |
 | --- | --- | --- |
 | `rescaleOnHide` on `ds-line-chart` | `true` is the default | nothing |
+| `[loading]` on a `ds-input` bound to its own control: `.pending()"` or `.pending"` | the field shows the spinner whenever its control is pending | nothing |
 
 ## 0.15.0 — 2026-10-09
 

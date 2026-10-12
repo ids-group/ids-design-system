@@ -10,6 +10,7 @@ export class TimePickerComponent extends DsControlValueAccessor<string | TimeRan
     public constructor();
     public readonly ariaLabel = input<string | null>(null);
     protected ariaLabelFor(segment: Segment): string;
+    protected readonly changedShown = this.fieldMessage.changed;
     protected clear(event: Event): void;
     public readonly clearable = input(false, { transform: booleanAttribute });
     protected close(cause: DsOverlayCloseCause = 'select'): void;
@@ -57,6 +58,7 @@ export class TimePickerComponent extends DsControlValueAccessor<string | TimeRan
     private readonly panelTokens;
     protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>(…);
     protected readonly panelValue = computed(…);
+    protected readonly pendingShown = this.fieldMessage.pending;
     private readonly pickedParts;
     public readonly placeholder = input<string>('--:--');
     protected readonly preview = inject(…);

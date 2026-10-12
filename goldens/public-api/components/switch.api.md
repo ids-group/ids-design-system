@@ -6,6 +6,7 @@
 @Component({ selector: 'ds-switch' })
 export class SwitchComponent extends DsBooleanControlValueAccessor {
     public readonly ariaLabel = input<string | null>(null);
+    protected readonly changedShown = this.fieldMessage.changed;
     public readonly checked = model<boolean>(false);
     public readonly checkedRequested = output<boolean>();
     protected readonly controlId = computed(…);
@@ -22,6 +23,7 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
     public readonly name = input<string | null>(null);
     protected onCheckedChange(event: Event): void;
     protected onClick(event: MouseEvent): void;
+    protected readonly pendingShown = this.fieldMessage.pending;
     public readonly required = input(false, { transform: booleanAttribute });
     protected readonly resolvedAriaLabel = computed(…);
     public readonly size = input<DsSize | null>(null);

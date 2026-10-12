@@ -21,6 +21,9 @@ export interface DsConfig {
     /** Default for every field's `reserveMessage`. Default `false`. `true` applies to EVERY field
      *  in the injector's subtree; prefer `dsReserveMessages` on the form that validates. */
     reserveMessage?: boolean;
+    /** Default for every field's `showDirty`. Default `false`. Prefer `dsShowDirty` on the form
+     *  that wants the mark. */
+    showDirty?: boolean;
     /** Fallback text per validation-error kind, for validators with no `message` (Angular's
      *  built-ins never carry one). A message on the error itself wins. Unmapped kinds warn in dev. */
     errorMessages?: Record<string, string>;

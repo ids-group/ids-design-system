@@ -11,6 +11,7 @@ export class AutocompleteComponent<T = unknown> extends DsControlValueAccessor<T
     protected readonly allOptions = computed<readonly AutocompleteOption<T>[]>(…);
     public readonly allowCreate = input(false, { transform: booleanAttribute });
     public readonly ariaLabel = input<string | null>(null);
+    protected readonly changedShown = this.fieldMessage.changed;
     private readonly chipBudget;
     private readonly chipRow;
     protected readonly chipTemplate = contentChild(…);
@@ -85,6 +86,7 @@ export class AutocompleteComponent<T = unknown> extends DsControlValueAccessor<T
     protected readonly panelHeaderTemplate = contentChild(…);
     private readonly panelTokens;
     protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>(…);
+    protected readonly pendingShown = this.fieldMessage.pending;
     protected readonly pickerTrigger = contentChild(…);
     public readonly placeholder = input<string | null>(null);
     public readonly placeholderResolved = computed(…);

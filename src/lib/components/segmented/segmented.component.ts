@@ -12,7 +12,10 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
-import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  FieldMessageComponent,
+  FieldStatusComponent,
+} from '@ids-group-ltd/ids-design-system/components/field-message';
 import { resolveFieldMessage } from '@ids-group-ltd/ids-design-system/components';
 import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 import type { SegmentedOption } from './segmented.types';
@@ -20,7 +23,7 @@ import type { SegmentedOption } from './segmented.types';
 @Component({
   selector: 'ds-segmented',
   standalone: true,
-  imports: [IconComponent, FieldMessageComponent],
+  imports: [IconComponent, FieldMessageComponent, FieldStatusComponent],
   templateUrl: './segmented.component.html',
   styleUrl: './segmented.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -58,9 +61,12 @@ export class SegmentedComponent extends DsControlValueAccessor<string> {
 
   protected readonly uid = nextControlId('ds-segmented');
   protected readonly hintId = computed(() =>
-    this.message().text ? `${this.uid}-hint` : null,
+    this.message().text || this.changedShown() ? `${this.uid}-hint` : null,
   );
   private readonly fieldMessage = resolveFieldMessage({
+    pending: this.pending,
+    dirty: this.dirty,
+    showDirty: this.showDirtyResolved,
     disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
@@ -71,6 +77,8 @@ export class SegmentedComponent extends DsControlValueAccessor<string> {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly pendingShown = this.fieldMessage.pending;
+  protected readonly changedShown = this.fieldMessage.changed;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
   private readonly buttons = viewChildren<ElementRef<HTMLButtonElement>>('seg');

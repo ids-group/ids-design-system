@@ -60,6 +60,7 @@ export const DS_INTL = new InjectionToken<Signal<DsIntl>>('DS_INTL', {
 });
 
 export const DS_INTL_DEFAULTS: DsIntl & {
+    readonly field: Required<DsIntl['field']>;
     readonly chart: Required<DsIntl['chart']>;
 };
 
@@ -67,6 +68,7 @@ export interface DsConfig {
     locale?: string;
     field?: {
         reserveMessage?: boolean;
+        showDirty?: boolean;
         errorMessages?: Record<string, string>;
         stateIcons?: false | {
             error?: IconName | false;
@@ -156,6 +158,7 @@ export interface DsIntl {
         readonly showPassword: string;
         readonly hidePassword: string;
         readonly overLimit: (excess: number) => string;
+        readonly changed?: string;
     };
     readonly picker: {
         readonly placeholder: string;

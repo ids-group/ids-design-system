@@ -6,6 +6,7 @@
 @Component({ selector: 'ds-slider' })
 export class SliderComponent extends DsControlValueAccessor<SliderValue> {
     public readonly ariaLabel = input<string | null>(null);
+    protected readonly changedShown = this.fieldMessage.changed;
     public readonly disabled = input(false, { transform: booleanAttribute });
     private dragging;
     private readonly fieldMessage;
@@ -22,6 +23,7 @@ export class SliderComponent extends DsControlValueAccessor<SliderValue> {
     protected onTrackPointerDown(event: PointerEvent): void;
     protected onTrackPointerMove(event: PointerEvent): void;
     protected onTrackPointerUp(event: PointerEvent): void;
+    protected readonly pendingShown = this.fieldMessage.pending;
     protected percent(value: number): number;
     public readonly range = input(false, { transform: booleanAttribute });
     private setThumb;

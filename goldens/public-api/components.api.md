@@ -68,7 +68,7 @@ export type DsAriaCurrent = 'page' | 'step' | 'location' | 'date' | 'time' | tru
 
 // @internal
 @Directive()
-export abstract class DsBooleanControlValueAccessor extends DsFieldBase implements ControlValueAccessor {
+export abstract class DsBooleanControlValueAccessor extends DsFormControlBase implements ControlValueAccessor {
     public constructor();
     public blur(): void;
     public abstract readonly checked: ModelSignal<boolean>;
@@ -118,7 +118,7 @@ export class DsChipTemplateDirective {
 
 // @internal
 @Directive()
-export abstract class DsControlValueAccessor<T> extends DsFieldBase implements ControlValueAccessor {
+export abstract class DsControlValueAccessor<T> extends DsFormControlBase implements ControlValueAccessor {
     public blur(): void;
     private readonly bridge;
     public focus(options?: FocusOptions): void;
@@ -165,6 +165,15 @@ export type DsFieldErrorsInput = string | DsFieldError | readonly DsFieldError[]
 export interface DsFieldMessage {
     readonly text: string;
     readonly state: FieldMessageState;
+}
+
+// @internal
+@Directive()
+export abstract class DsFormControlBase extends DsFieldBase {
+    public readonly dirty = input(false, { transform: booleanAttribute });
+    public readonly pending = input(false, { transform: booleanAttribute });
+    public readonly showDirty = input<boolean | null, unknown>(null, { transform: (value) => (value == null ? null : booleanAttribute(value)) });
+    public readonly showDirtyResolved = resolveShowDirty(…);
 }
 
 @Directive({ selector: '[dsGroupLabelTemplate]' })

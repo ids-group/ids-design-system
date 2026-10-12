@@ -91,6 +91,12 @@ export interface DsFieldMessageSources {
   touchedSelf?: Signal<boolean>;
   /** Bound by signal forms as part of the `FormUiControl` contract. */
   touched?: Signal<boolean>;
+  /** Bound by signal forms; an async validator is running. */
+  pending?: Signal<boolean>;
+  /** Bound by signal forms; the user changed the value. */
+  dirty?: Signal<boolean>;
+  /** The field's resolved `showDirty`: whether a changed value is marked. */
+  showDirty?: Signal<boolean>;
 }
 
 export interface DsFieldMessageResolution {
@@ -98,6 +104,10 @@ export interface DsFieldMessageResolution {
   readonly invalid: Signal<boolean>;
   /** The state the CONTROL paints, for `[attr.data-field-state]`; not `message().state`, which can differ. */
   readonly controlState: Signal<FieldMessageState | null>;
+  /** An async validator is running: from `pending`, or the `NgControl`'s status. */
+  readonly pending: Signal<boolean>;
+  /** The value was changed and the field marks it (`showDirty`). */
+  readonly changed: Signal<boolean>;
 }
 
 const EMPTY_MESSAGE: DsFieldMessage = { text: '', state: 'default' };
@@ -105,9 +115,16 @@ const EMPTY_MESSAGE: DsFieldMessage = { text: '', state: 'default' };
 interface ControlState {
   readonly errors: readonly DsFieldError[];
   readonly touched: boolean;
+  readonly pending: boolean;
+  readonly dirty: boolean;
 }
 
-const NO_CONTROL: ControlState = { errors: NO_ERRORS, touched: false };
+const NO_CONTROL: ControlState = {
+  errors: NO_ERRORS,
+  touched: false,
+  pending: false,
+  dirty: false,
+};
 
 /**
  * Resolves the one message a field shows, from every source that can supply one.
@@ -224,7 +241,16 @@ export function resolveFieldMessage(
     return sources.success?.() ? 'success' : null;
   });
 
-  return { message, invalid, controlState: paintedState };
+  const pending = computed(
+    () => (sources.pending?.() ?? false) || controlState().pending,
+  );
+  const changed = computed(
+    () =>
+      (sources.showDirty?.() ?? false) &&
+      ((sources.dirty?.() ?? false) || controlState().dirty),
+  );
+
+  return { message, invalid, controlState: paintedState, pending, changed };
 }
 
 /**
@@ -253,6 +279,8 @@ function watchNgControl(): Signal<ControlState> {
       state.set({
         errors: fromValidationErrors(control.errors),
         touched: control.touched || submitted(),
+        pending: control.pending,
+        dirty: control.dirty,
       });
 
     // Signal forms bridges an NgControl whose `control` has no `events` stream. Staying at

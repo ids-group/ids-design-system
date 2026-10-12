@@ -409,6 +409,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -2867,6 +2894,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -3058,6 +3112,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
+      },
+      {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
       },
       {
         "name": "hidden",
@@ -3544,6 +3625,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
+      },
+      {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
       },
       {
         "name": "hidden",
@@ -5057,6 +5165,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -6516,6 +6651,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -6958,6 +7120,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
+      },
+      {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
       },
       {
         "name": "hidden",
@@ -7966,6 +8155,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -8482,6 +8698,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -8629,6 +8872,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
+      },
+      {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
       },
       {
         "name": "hidden",
@@ -8838,6 +9108,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The panel closed, for any reason - a pick, Escape, an outside click, a scroll."
       }
     ]
+  },
+  "show-dirty": {
+    "key": "show-dirty",
+    "selector": "[dsShowDirty]",
+    "isElement": false,
+    "className": "ShowDirtyDirective",
+    "status": "stable",
+    "importName": "ShowDirtyDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/show-dirty",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
   },
   "sidenav:BrandNameDirective": {
     "key": "sidenav",
@@ -9362,6 +9645,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
+      },
+      {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
       },
       {
         "name": "hidden",
@@ -9938,6 +10248,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
+      },
+      {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
       },
       {
         "name": "hidden",
@@ -11136,6 +11473,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -11439,6 +11803,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
+      },
+      {
+        "name": "pending",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an async validator is running. Bound by signal forms; shows a trailing spinner."
+      },
+      {
+        "name": "dirty",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`."
+      },
+      {
+        "name": "showDirty",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Marks a changed value with a dot and a \"Changed\" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`."
       },
       {
         "name": "hidden",
