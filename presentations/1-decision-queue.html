@@ -34,6 +34,24 @@
   .ih-icons span { display: inline-flex; align-items: center; gap: var(--space-1); }
   .ih-icons svg { inline-size: 16px; block-size: 16px; }
 
+  .ut-waffle { display: grid; grid-template-columns: repeat(11, 12px); gap: 2px; }
+  .ut-waffle i, .ut-legend i { inline-size: 12px; block-size: 12px; border-radius: 2px; }
+  .ut-d { background: var(--warning); }
+  .ut-n { background: var(--border-strong); }
+  .ut-c { background: var(--primary); }
+  .ut-waffle i.is-gone { background: none; box-shadow: inset 0 0 0 1px var(--border-default); }
+  .ut-waffle i.ut-c.is-gone { box-shadow: inset 0 0 0 2px var(--error); }
+  .ut-legend { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: var(--space-2) 0 0; font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
+  .ut-legend span { display: inline-flex; align-items: center; gap: var(--space-1); }
+  .ud-board { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; font: var(--font-size-2xs) / 1.35 var(--font-sans); }
+  .ud-board li { display: grid; grid-template-columns: 1rem 1fr; column-gap: var(--space-2); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: var(--surface-secondary); }
+  .ud-board .ud-mark { grid-row: span 3; font-weight: var(--font-weight-bold); }
+  .ud-board li.is-kept .ud-mark { color: var(--success-text); }
+  .ud-board li.is-open .ud-mark { color: var(--primary); }
+  .ud-board span:not(.ud-mark) { color: var(--text-secondary); }
+  .ud-board em { font-style: normal; font-weight: var(--font-weight-bold); color: var(--text-tertiary); }
+  .ud-board li.is-open { background: none; box-shadow: inset 0 0 0 1px var(--border-default); }
+
   .opt { cursor: pointer; }
   .opt.is-chosen { border-color: var(--success); box-shadow: inset 0 0 0 1px var(--success); }
   .opt > h3 { display: flex; align-items: baseline; gap: var(--space-2); }
@@ -1321,46 +1339,43 @@
   <section class="q" data-q="locale-week-and-hour">
     <div class="q-head">
       <span class="q-num">13</span>
-      <h2 class="q-title">Неделя и 12/24 часа по локали</h2>
+      <h2 class="q-title">Календарь и часы не следуют языку и стране приложения</h2>
       <a class="q-src" href="9-locale-week-and-hour.html">дека locale-week-and-hour</a>
     </div>
-    <p class="q-sub">Календарь всегда начинает неделю с понедельника, а часы всегда 24-часовые, что бы ни говорила локаль. Четыре варианта нарисованы на шести локалях в деке locale-week-and-hour: как сегодня, всё из локали, только неделя, только часы.</p>
-    <div class="stage">
-      <div class="spec"><p class="cap">как сегодня · en-US</p>
+    <p class="q-sub">Сегодня календарь всегда начинает неделю с понедельника, а время всегда 24-часовое. Приложение без своей локали получает от Angular en-US, где неделя с воскресенья и часы 12-часовые. Выбрать, что брать из локали. Ниже en-US, сентябрь 2026; жёлтая рамка - что поменялось; шесть локалей - в деке.</p>
+    <div class="opts">
+      <div class="opt is-today"><h3>Как сейчас: понедельник и 24 часа</h3><span class="badge is-same">сейчас в dev</span>
         <div class="lw-cal"><div class="lw-dow"><b>Mon</b><b>Tue</b><b>Wed</b><b>Thu</b><b>Fri</b><b>Sat</b><b>Sun</b></div><div class="lw-days"><i></i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i><i>13</i></div></div>
         <div class="lw-time">21:30</div>
         <p class="lw-pills"><span class="lw-pill">пн</span><span class="lw-pill">24ч</span></p>
       </div>
-      <div class="spec"><p class="cap">всё из локали · en-US</p>
+      <div class="opt"><h3>Всё из локали <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
         <div class="lw-cal lw-moved"><div class="lw-dow"><b>Sun</b><b>Mon</b><b>Tue</b><b>Wed</b><b>Thu</b><b>Fri</b><b>Sat</b></div><div class="lw-days"><i></i><i></i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i></div></div>
         <div class="lw-time lw-moved">09:30 PM</div>
-        <p class="lw-pills"><span class="lw-pill is-moved">вс</span><span class="lw-pill is-moved">12ч</span><span class="lw-pill is-pick">рекомендую</span></p>
+        <p class="lw-pills"><span class="lw-pill is-moved">вс</span><span class="lw-pill is-moved">12ч</span></p>
       </div>
-      <div class="spec"><p class="cap">только неделя · en-US</p>
+      <div class="opt"><h3>Только неделя из локали</h3>
         <div class="lw-cal lw-moved"><div class="lw-dow"><b>Sun</b><b>Mon</b><b>Tue</b><b>Wed</b><b>Thu</b><b>Fri</b><b>Sat</b></div><div class="lw-days"><i></i><i></i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i></div></div>
         <div class="lw-time">21:30</div>
         <p class="lw-pills"><span class="lw-pill is-moved">вс</span><span class="lw-pill">24ч</span></p>
       </div>
-      <div class="spec"><p class="cap">только часы · en-US</p>
+      <div class="opt"><h3>Только часы из локали</h3>
         <div class="lw-cal"><div class="lw-dow"><b>Mon</b><b>Tue</b><b>Wed</b><b>Thu</b><b>Fri</b><b>Sat</b><b>Sun</b></div><div class="lw-days"><i></i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i><i>13</i></div></div>
         <div class="lw-time lw-moved">09:30 PM</div>
         <p class="lw-pills"><span class="lw-pill">пн</span><span class="lw-pill is-moved">12ч</span></p>
       </div>
     </div>
     <p class="says">сентябрь 2026, en-US - приложение без LOCALE_ID и DS_CONFIG.locale; жёлтая рамка - дефолт сменился</p>
-    <div class="opts">
-      <div class="opt"><h3>Решить в деке locale-week-and-hour</h3></div>
-    </div>
   </section>
 
 
   <section class="q" data-q="stepper-dropzone-fields">
     <div class="q-head">
       <span class="q-num">14</span>
-      <h2 class="q-title">ds-number-stepper и ds-dropzone - поля или нет</h2>
+      <h2 class="q-title">Счётчик и зона загрузки файлов не умеют подпись и ошибку, как остальные поля</h2>
       <a class="q-src" href="../docs/todo.md">ds-number-stepper и ds-dropzone в системе полей</a>
     </div>
-    <p class="q-sub">Ни у одного нет <code>label</code>, <code>hint</code>, <code>error</code>, <code>ds-field-message</code> и миксина <code>field-label</code> - они никогда не были в системе полей, а не потеряли её. У остальных четырнадцати полей есть всё.</p>
+    <p class="q-sub">У четырнадцати полей DS есть подпись, подсказка, ошибка и строка сообщения. У <code>ds-number-stepper</code> и <code>ds-dropzone</code> их нет и никогда не было: консьюмер рисует подпись и ошибку рядом руками. Выбрать: сделать их полями или записать в документации, что это не поля.</p>
     <div class="stage">
       <div class="spec"><p class="cap">ds-input сегодня</p>
         <div class="sd-field"><p class="sd-label">Количество мест</p><div class="sd-box">12</div><p class="sd-msg">Не больше 40</p></div></div>
@@ -1372,12 +1387,12 @@
         <p class="says">accept multiple files disabled + слот [hint]</p></div>
     </div>
     <div class="opts">
-      <div class="opt"><h3>Внести в систему полей</h3>
+      <div class="opt"><h3>Сделать полями</h3>
         <div class="sd-field"><p class="sd-label">Количество мест <i>*</i></p><div class="sd-stepper is-invalid"><b>&minus;</b><span>44</span><b>+</b></div><p class="sd-msg is-error">Не больше 40</p></div>
         <div class="sd-field"><p class="sd-label">Договор</p><div class="sd-drop is-invalid"><span class="sd-up">&uarr;</span><b>Drop files here</b></div><p class="sd-msg is-error">Файл отклонён</p></div>
         <dl class="layer"><dt>Новые входы у каждого</dt><dd class="gain">label hint error errors invalid touched reserveMessage</dd><dt>И ещё</dt><dd class="gain">CVA для форм</dd></dl>
         <p>Семь входов и обёртка на каждый.</p></div>
-      <div class="opt"><h3>Объявить, что это не поля</h3>
+      <div class="opt"><h3>Записать, что это не поля</h3>
         <div class="sd-field sd-hand"><p class="sd-label">Количество мест</p><div class="sd-stepper"><b>&minus;</b><span>44</span><b>+</b></div><p class="sd-msg is-error">Не больше 40</p><span class="sd-tag">label и ошибка - руками</span></div>
         <p class="sd-doc"><code>ds-number-stepper</code> и <code>ds-dropzone</code> - контролы, не поля. Подпись и ошибку ставит форма.</p>
         <dl class="layer"><dt>Новые входы</dt><dd class="none">нет</dd><dt>В доках</dt><dd>одна строка</dd></dl>
@@ -1390,12 +1405,12 @@
   <section class="q" data-q="picker-height">
     <div class="q-head">
       <span class="q-num">16</span>
-      <h2 class="q-title">Высота списка пикера - какой ручкой задавать</h2>
+      <h2 class="q-title">Высоту выпадающего списка нельзя поднять выше 280px общей настройкой</h2>
       <a class="q-src" href="8-picker-list-height.html">дека picker-list-height</a>
     </div>
-    <p class="q-sub">Три варианта нарисованы и измерены в деке picker-list-height: одна ручка <code>--ds-dropdown-panel-max-height</code> (рекомендую), только <code>panelClass</code>, отдельный токен списка.</p>
+    <p class="q-sub">У выпадающей панели две границы: публичная настройка высоты панели и внутренняя высота списка 280px. Консьюмер ставит панели 480px, а список всё равно режется на 8.75 строки. Выбрать, какой ручкой задавать высоту списка. Ты склоняешься к первой (2026-09-24).</p>
     <div class="stage">
-      <div class="spec"><p class="cap">сегодня · токен 480px</p>
+      <div class="spec"><p class="cap">сегодня: панель 480px, список упёрся в 280px</p>
         <p class="css">ds-select {
   --ds-dropdown-panel-max-height:
     480px;
@@ -1405,7 +1420,9 @@
         </div>
         <p class="says">список упёрся в --picker-maxh 280px</p>
       </div>
-      <div class="spec"><p class="cap">одна ручка · рекомендую</p>
+    </div>
+    <div class="opts">
+      <div class="opt"><h3>Одна настройка панели управляет и списком <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
         <p class="css">ds-select {
   --ds-dropdown-panel-max-height:
     480px;
@@ -1415,7 +1432,7 @@
         </div>
         <p class="ph-tags"><span class="ph-pill">1 число</span><span class="ph-pill">0 новых имён</span></p>
       </div>
-      <div class="spec"><p class="cap">только panelClass</p>
+      <div class="opt"><h3>Только через свой класс панели</h3>
         <p class="css">.depot {
   --ds-dropdown-panel-max-height:
     490px;
@@ -1429,7 +1446,7 @@
         </div>
         <p class="ph-tags"><span class="ph-pill is-bad">2 числа</span><span class="ph-pill">0 новых имён</span></p>
       </div>
-      <div class="spec"><p class="cap">отдельный токен списка</p>
+      <div class="opt"><h3>Новая отдельная настройка списка</h3>
         <p class="css">ds-select {
   --ds-picker-list-max-height:
     480px;
@@ -1442,18 +1459,15 @@
       </div>
     </div>
     <p class="says">панели в масштабе 1:4, ds-select на 20 строк; замер деки picker-list-height от 2026-09-24, шаг строки 32px</p>
-    <div class="opts">
-      <div class="opt"><h3>Решить в деке picker-list-height</h3></div>
-    </div>
   </section>
 
   <section class="q" data-q="cdk-menu">
     <div class="q-head">
       <span class="q-num">17</span>
-      <h2 class="q-title">Переходить ли на CDK Menu</h2>
+      <h2 class="q-title">Переводить ли меню на готовую клавиатуру и фокус из Angular</h2>
       <a class="q-src" href="../docs/todo.md">переход на CDK Menu</a>
     </div>
-    <p class="q-sub">Припарковано: только если появятся вложенные подменю, menubar или контекстное меню.</p>
+    <p class="q-sub"><code>ds-menu</code> сам ведёт клавиатуру и фокус, подменю у него уже есть. Готовый модуль Angular (теперь <code>@angular/aria</code> вместо CDK Menu) нужен только для строки меню сверху и меню по правому клику, а их никто не просил. Пункт припаркован до такой задачи.</p>
     <div class="stage">
       <div class="spec"><p class="cap">ds-menu сегодня</p>
         <div class="cm-wrap"><div class="menu-mock"><span>Открыть</span><span class="hov">Экспорт <i class="cm-chev">&rsaquo;</i></span><span class="danger">Удалить</span></div><div class="menu-mock cm-sub"><span>PDF</span><span>CSV</span></div></div>
@@ -1469,7 +1483,7 @@
         <p class="cm-pills"><span class="cm-pill is-on">подменю</span><span class="cm-pill">menubar</span><span class="cm-pill">контекстное</span></p>
         <dl class="layer"><dt>Клавиатура и фокус</dt><dd>свой roving + DsOverlayCloseRef</dd></dl>
         <p>Как сейчас.</p></div>
-      <div class="opt"><h3>Брать сейчас</h3>
+      <div class="opt"><h3>Перейти сейчас</h3>
         <div class="cm-bar"><span class="is-open">Файл</span><span>Правка</span><span>Вид</span></div>
         <div class="menu-mock cm-drop"><span>Открыть</span><span class="hov">Экспорт <i class="cm-chev">&rsaquo;</i></span><span class="danger">Удалить</span></div>
         <p class="cm-pills"><span class="cm-pill is-on">подменю</span><span class="cm-pill is-on">menubar</span><span class="cm-pill is-on">контекстное</span></p>
@@ -1481,14 +1495,14 @@
   <section class="q" data-q="signal-forms">
     <div class="q-head">
       <span class="q-num">18</span>
-      <h2 class="q-title">Как выглядят pending и dirty</h2>
+      <h2 class="q-title">Как поле показывает «идёт проверка» и «значение изменено»</h2>
       <a class="q-src" href="../docs/todo.md">вид pending и dirty у signal-forms</a>
     </div>
-    <p class="q-sub">Два из трёх членов контракта signal-forms ждут не проводки, а вида. <code>pending</code>: у <code>ds-input</code> есть спиннер, у остальных нет. <code>dirty</code>: библиотека нигде не рисует «изменено».</p>
+    <p class="q-sub">Новые формы Angular сообщают полю два состояния: идёт асинхронная проверка и значение изменено. Спиннер проверки есть только у <code>ds-input</code>, «изменено» не рисует никто. Без вида эти два состояния к полям не подключить. Выбрать, что рисовать.</p>
     <div class="stage"><div class="spec"><p class="cap">pending: есть у ds-input</p><div class="field-mock"><div class="box">acme-holdings<span class="spin"></span></div></div><p class="says">вход loading, спиннер в конце поля</p></div><div class="spec"><p class="cap">pending: у остальных нечем</p><div class="field-mock"><div class="box">Лондон<span class="sf-chev">&#8964;</span></div></div></div><div class="spec"><p class="cap">dirty: нигде</p><div class="field-mock"><div class="box">ACME</div></div><p class="says">изменённое поле выглядит как нетронутое</p></div></div>
 
     <div class="opts">
-      <div class="opt"><h3>Нарисовать оба</h3>
+      <div class="opt"><h3>Спиннер везде и точка «изменено»</h3>
         <div class="sf-stack">
           <div class="field-mock"><label>Компания</label><div class="box">acme-holdings<span class="spin"></span></div></div>
           <div class="field-mock"><label>Город</label><div class="box">Лондон<span class="spin"></span><span class="sf-chev is-after">&#8964;</span></div></div>
@@ -1496,7 +1510,7 @@
         </div>
         <dl class="layer"><dt>pending</dt><dd class="gain">спиннер во всех полях</dd><dt>dirty</dt><dd class="gain">точка у поля</dd></dl>
         <p>Спиннер во все поля, треугольник или точка для dirty.</p></div>
-      <div class="opt"><h3>Только pending</h3>
+      <div class="opt"><h3>Только спиннер во всех полях</h3>
         <div class="sf-stack">
           <div class="field-mock"><label>Компания</label><div class="box">acme-holdings<span class="spin"></span></div></div>
           <div class="field-mock"><label>Город</label><div class="box">Лондон<span class="spin"></span><span class="sf-chev is-after">&#8964;</span></div></div>
@@ -1504,7 +1518,7 @@
         </div>
         <dl class="layer"><dt>pending</dt><dd class="gain">спиннер во всех полях</dd><dt>dirty</dt><dd class="none">не видно</dd></dl>
         <p>Dirty остаётся без визуального представления.</p></div>
-      <div class="opt"><h3>Ни одного</h3>
+      <div class="opt"><h3>Ничего, как сейчас</h3>
         <div class="sf-stack">
           <div class="field-mock"><label>Компания</label><div class="box">acme-holdings<span class="spin"></span></div></div>
           <div class="field-mock"><label>Город</label><div class="box">Лондон<span class="sf-chev">&#8964;</span></div></div>
@@ -1515,15 +1529,15 @@
     </div>
   </section>
 
-  <p class="group">Имена и типографика</p>
+  <p class="group">Имена и токены</p>
 
   <section class="q" data-q="row-chart-row-type">
     <div class="q-head">
       <span class="q-num">19</span>
-      <h2 class="q-title">Имя типа строки у <code>ds-row-chart</code></h2>
+      <h2 class="q-title">Как назвать тип строки данных у графика с горизонтальными полосами</h2>
       <a class="q-src" href="../docs/todo.md">переименование ds-bar-chart</a>
     </div>
-    <p class="q-sub"><code>ds-bar-chart</code> становится <code>ds-row-chart</code>, и тип одной строки данных нужно назвать заново. Имена данных у остальных графиков: <code>ColumnChartPoint</code>, <code>FunnelChartStage</code>, <code>PieChartSlice</code>, <code>LineChartReading</code>, <code>WaterfallChartBar</code>, <code>HeatmapChartRow</code>. Одна и та же задача потребителя с каждым кандидатом, вывод остаётся <code>rowClicked</code>:</p>
+    <p class="q-sub"><code>ds-bar-chart</code> переименовывается в <code>ds-row-chart</code> (твоя просьба 2026-09-24), и тип одной строки данных нужно назвать заново. У соседних графиков: <code>ColumnChartPoint</code>, <code>PieChartSlice</code>, <code>LineChartReading</code>, <code>WaterfallChartBar</code>, <code>HeatmapChartRow</code>. Ниже одна и та же задача консьюмера с каждым кандидатом; событие клика остаётся <code>rowClicked</code>.</p>
     <div class="stage">
       <div class="spec"><p class="cap">сегодня в ds-bar-chart</p><p class="css">rows: <b>BarChartRow</b>[] = [
   { label: 'Europe', value: 42 },
@@ -1579,27 +1593,38 @@ onRow(row: <b>RowChartEntry</b>)</p>
   <section class="q" data-q="unread-tokens">
     <div class="q-head">
       <span class="q-num">24</span>
-      <h2 class="q-title">121 публичный токен не читает сама библиотека</h2>
-      <a class="q-src" href="14-unread-tokens.html">дека unread-tokens</a>
+      <h2 class="q-title">121 публичный токен никто в библиотеке не читает: что удалить</h2>
+      <a class="q-src" href="12-unread-tokens.html">дека unread-tokens</a>
     </div>
-    <p class="q-sub">Измерено 2026-10-02: 51 размер компонентов и паттернов, которых нет, и 68 имён шкал, палитры и ролей. Списки токенов и замеры по консьюмерам - в деке.</p>
+    <p class="q-sub">Из 746 токенов DS 121 не читается нигде в библиотеке: 51 размер компонентов и паттернов, которых нет (<code>--cmdk-*</code>, <code>--wizard-*</code>), и 70 имён шкал, палитры и ролей. У pinkmoon, mm-ecm и mm-broker 51 размер не читает никто, из 70 имён читают 12. Замер 2026-10-05. Каждый квадрат - один токен.</p>
     <div class="opts">
-      <div class="opt"><h3>Ничего</h3><p class="says">0 правок у консьюмеров</p><p>51 имя без смысла остаётся в справочнике.</p></div>
-      <div class="opt"><h3>Только мёртвые размеры</h3><p class="says">0 чтений в pinkmoon, mm-ecm, mm-broker</p><p>Уходят 51 размер; словарь цел. Рекомендую.</p></div>
-      <div class="opt"><h3>Всё без читателя</h3><p class="says">12 имён читают консьюмеры</p><p>Уходят 121, дыры в шкалах и палитре.</p></div>
+      <div class="opt is-today"><h3>Ничего не удалять</h3>
+        <div class="ut-waffle"><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-d"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i></div>
+        <p class="ag-cost">121 имя остаётся в справочнике токенов. <b>Цена:</b> 0 правок у консьюмеров.</p></div>
+      <div class="opt"><h3>Удалить 51 размер несуществующего <span class="star">★</span></h3><span class="badge is-pick">рекомендую</span>
+        <div class="ut-waffle"><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-n"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i><i class="ut-c"></i></div>
+        <p class="ag-cost">Шкалы, палитра и роли целы. <b>Цена:</b> 0 правок, этих имён не читает ни один консьюмер.</p></div>
+      <div class="opt"><h3>Удалить все 121</h3>
+        <div class="ut-waffle"><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-d is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-n is-gone"></i><i class="ut-c is-gone"></i><i class="ut-c is-gone"></i><i class="ut-c is-gone"></i><i class="ut-c is-gone"></i><i class="ut-c is-gone"></i><i class="ut-c is-gone"></i><i class="ut-c is-gone"></i><i class="ut-c is-gone"></i><i class="ut-c is-gone"></i><i class="ut-c is-gone"></i><i class="ut-c is-gone"></i><i class="ut-c is-gone"></i></div>
+        <p class="ag-cost">Дыры в шкалах и палитре. <b>Цена:</b> 12 имён, которые читают консьюмеры, ломаются.</p></div>
     </div>
+    <p class="ut-legend"><span><i class="ut-d"></i>51 размер несуществующих компонентов</span><span><i class="ut-n"></i>58 имён шкал и ролей</span><span><i class="ut-c"></i>12 читают консьюмеры</span></p>
   </section>
 
   <section class="q" data-q="unasked-decisions">
     <div class="q-head">
       <span class="q-num">25</span>
-      <h2 class="q-title">Шесть изменений поведения, сделанных без выбора</h2>
-      <a class="q-src" href="15-unasked-decisions.html">дека unasked-decisions</a>
+      <h2 class="q-title">Шесть изменений поведения ушли в Unreleased без выбора между вариантами</h2>
+      <a class="q-src" href="13-unasked-decisions.html">дека unasked-decisions</a>
     </div>
-    <p class="q-sub">Уже в Unreleased: ручной <code>data-theme</code>, <code>dsModalConfirm</code>, <code>max</code> у avatar-group, Tab-остановка у ссылки с причиной, слияние <code>provideDsIcons</code>, геометрия пина. Шесть отдельных выборов, у каждого варианты нарисованы в деке.</p>
+    <p class="q-sub">Каждое уже в коде и ждёт релиза; варианты по каждому нарисованы в деке unasked-decisions. Выбрать: оставить все шесть как сделаны или разобрать их по одному в деке до релиза.</p>
     <div class="opts">
-      <div class="opt"><h3>Оставить как сделано</h3><p class="says">по каждому пункту отдельно</p></div>
-      <div class="opt"><h3>Переделать</h3><p class="says">до выпуска релиза</p></div>
+      <div class="opt"><h3>Оставить все шесть как сделаны</h3>
+        <ul class="ud-board"><li class="is-kept"><span class="ud-mark">✓</span><b>Тема</b><span>ручной data-theme на &lt;html&gt; держится всегда</span><em>так и выйдет</em></li><li class="is-kept"><span class="ud-mark">✓</span><b>Модалка</b><span>подтверждение через директиву, пока модалка открыта</span><em>так и выйдет</em></li><li class="is-kept"><span class="ud-mark">✓</span><b>Группа аватаров</b><span>max прячет лишние аватары</span><em>так и выйдет</em></li><li class="is-kept"><span class="ud-mark">✓</span><b>Неактивная ссылка с причиной</b><span>остаётся в порядке Tab</span><em>так и выйдет</em></li><li class="is-kept"><span class="ud-mark">✓</span><b>Два набора иконок</b><span>сливаются, поздний выигрывает</span><em>так и выйдет</em></li><li class="is-kept"><span class="ud-mark">✓</span><b>Пин на графике</b><span>кружок в 8px над значением</span><em>так и выйдет</em></li></ul>
+        <p class="ag-cost"><b>Цена:</b> ничего, релиз выходит как есть.</p></div>
+      <div class="opt"><h3>Разобрать по одному в деке</h3>
+        <ul class="ud-board"><li class="is-open"><span class="ud-mark">?</span><b>Тема</b><span>ручной data-theme на &lt;html&gt; держится всегда</span><em>выбор в деке</em></li><li class="is-open"><span class="ud-mark">?</span><b>Модалка</b><span>подтверждение через директиву, пока модалка открыта</span><em>выбор в деке</em></li><li class="is-open"><span class="ud-mark">?</span><b>Группа аватаров</b><span>max прячет лишние аватары</span><em>выбор в деке</em></li><li class="is-open"><span class="ud-mark">?</span><b>Неактивная ссылка с причиной</b><span>остаётся в порядке Tab</span><em>выбор в деке</em></li><li class="is-open"><span class="ud-mark">?</span><b>Два набора иконок</b><span>сливаются, поздний выигрывает</span><em>выбор в деке</em></li><li class="is-open"><span class="ud-mark">?</span><b>Пин на графике</b><span>кружок в 8px над значением</span><em>выбор в деке</em></li></ul>
+        <p class="ag-cost"><b>Цена:</b> шесть ответов в деке unasked-decisions; что отличается от сделанного, переделывается до релиза.</p></div>
     </div>
   </section>
 
@@ -2127,7 +2152,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
     <div class="q-head">
       <span class="q-num">38</span>
       <h2 class="q-title">Рывок текста в конце нажатия кнопки</h2>
-      <a class="q-src" href="22-text-snap-scale.html">дека text-snap-scale</a>
+      <a class="q-src" href="18-text-snap-scale.html">дека text-snap-scale</a>
     </div>
     <p class="q-sub">Сжатие 0.98 при отпускании кончается рывком: текст перерисовывается по пиксельной сетке. Предварительно - как сейчас. Замеры на ds-button при 150% и живые кнопки - в деке.</p>
     <div class="opts">
@@ -2144,7 +2169,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
     <div class="q-head">
       <span class="q-num">39</span>
       <h2 class="q-title">Card при наведении: подъём или рост</h2>
-      <a class="q-src" href="22-text-snap-scale.html">дека text-snap-scale</a>
+      <a class="q-src" href="18-text-snap-scale.html">дека text-snap-scale</a>
     </div>
     <p class="q-sub">Подъём на 1px чистый в обе стороны; рост всей карточки даёт рывок при уходе курсора. Живые карточки как ds-card - в деке.</p>
     <div class="opts">
@@ -2160,7 +2185,7 @@ onRow(row: <b>RowChartEntry</b>)</p>
     <div class="q-head">
       <span class="q-num">41</span>
       <h2 class="q-title">Ступень funnel растёт с маленьким шагом в конце</h2>
-      <a class="q-src" href="22-text-snap-scale.html">дека text-snap-scale</a>
+      <a class="q-src" href="18-text-snap-scale.html">дека text-snap-scale</a>
     </div>
     <p class="q-sub">Ступени растут из 96% и проявляются; в конце роста шаг до 51 из 255 на краях фигуры, текста в ступени нет.</p>
     <div class="opts">
