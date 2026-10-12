@@ -13,6 +13,7 @@ import {
   afterRenderEffect,
   booleanAttribute,
   computed,
+  effect,
   inject,
   input,
   numberAttribute,
@@ -34,6 +35,7 @@ import {
   tickValues,
   chartRenderGate,
   staggerDelay,
+  tweenMarks,
   DsChartBase,
 } from '@ids-group-ltd/ids-design-system/components';
 import type { MarkHit } from '@ids-group-ltd/ids-design-system/components';
@@ -44,7 +46,6 @@ import {
   CHART_PIN_GAP,
   CHART_PIN_RADIUS,
   ChartPinMarkerComponent,
-  ChartPlacedDirective,
   ChartTooltipDirective,
   ChartStatesComponent,
   chartActiveMark,
@@ -102,7 +103,6 @@ interface PlacedSeries {
     ChartLegendComponent,
     ChartTooltipDirective,
     ChartPinMarkerComponent,
-    ChartPlacedDirective,
     ChartStatesComponent,
     SkeletonComponent,
     ChartDataTableComponent,
@@ -417,14 +417,16 @@ export class ScatterChartComponent
 
   private hoveredIndex = -1;
 
-  /** The pointer in viewBox units while it is over the plot; the tether runs from it to the ring. */
-  protected readonly pointer = signal<{ x: number; y: number } | null>(null);
+  /** Whether the pointer is over the plot; the tether runs from it to the ring. */
+  protected readonly pointerOverPlot = signal(false);
 
   /** The answered point, which the ring circles. */
   protected readonly ringedMark = computed(
     () => this.flatMarks()[this.activeMark.index()]?.mark ?? null,
   );
 
+  private readonly canvasElement =
+    viewChild<ElementRef<SVGSVGElement>>('canvas');
   private readonly ringElement =
     viewChild<ElementRef<SVGCircleElement>>('ring');
   private readonly tetherElement =
@@ -432,46 +434,101 @@ export class ScatterChartComponent
 
   private readonly zone = inject(NgZone);
 
-  // The ring glides on a CSS transition; the tether's far end reads where the ring is each frame.
-  private readonly followRing = afterRenderEffect((onCleanup) => {
-    const ring = this.ringElement()?.nativeElement;
-    const tether = this.tetherElement()?.nativeElement;
-    if (!ring || !tether) {
+  // In viewBox units; the tether and the ring are written here, not bound, so a pointer move costs no change detection.
+  private pointerAt: { x: number; y: number } | null = null;
+  private ringAt: { x: number; y: number } | null = null;
+  private stopRingGlide: () => void = () => undefined;
+
+  private readonly listenForPointer = effect((onCleanup) => {
+    const canvas = this.canvasElement()?.nativeElement;
+    if (!canvas) {
       return;
     }
-    let frame = 0;
-    const stick = (): void => {
-      const style = getComputedStyle(ring);
-      tether.setAttribute('x2', String(parseFloat(style.cx)));
-      tether.setAttribute('y2', String(parseFloat(style.cy)));
-      frame = requestAnimationFrame(stick);
-    };
-    this.zone.runOutsideAngular(() => (frame = requestAnimationFrame(stick)));
-    onCleanup(() => cancelAnimationFrame(frame));
+    const onPointer = (event: PointerEvent): void =>
+      this.onCanvasPointer(canvas, event);
+    const onLeave = (): void => this.onCanvasLeave();
+    this.zone.runOutsideAngular(() => {
+      canvas.addEventListener('pointerover', onPointer);
+      canvas.addEventListener('pointermove', onPointer);
+      canvas.addEventListener('pointerleave', onLeave);
+    });
+    onCleanup(() => {
+      canvas.removeEventListener('pointerover', onPointer);
+      canvas.removeEventListener('pointermove', onPointer);
+      canvas.removeEventListener('pointerleave', onLeave);
+    });
   });
+
+  // The ring appears on its point and glides to the next one; the tether's far end rides it.
+  private readonly glideRing = afterRenderEffect(() => {
+    const target = this.ringedMark();
+    const ring = this.ringElement()?.nativeElement;
+    this.stopRingGlide();
+    if (!target || !ring) {
+      this.ringAt = null;
+
+      return;
+    }
+    const from = this.ringAt ?? { x: target.cx, y: target.cy };
+    this.placeRing(ring, from.x, from.y);
+    this.zone.runOutsideAngular(() => {
+      this.stopRingGlide = tweenMarks(
+        ring,
+        [from.x, from.y],
+        [target.cx, target.cy],
+        ([x, y]) => this.placeRing(ring, x, y),
+        'state',
+      );
+    });
+  });
+
+  private readonly drawTether = afterRenderEffect(() => {
+    this.tetherElement();
+    this.placeTether();
+  });
+
+  // Placed by `transform`, not `cx`: a geometry change repaints the page each frame of the glide.
+  private placeRing(ring: SVGCircleElement, x: number, y: number): void {
+    this.ringAt = { x, y };
+    ring.style.transform = `translate(${x}px, ${y}px)`;
+    this.placeTether();
+  }
+
+  private placeTether(): void {
+    const tether = this.tetherElement()?.nativeElement;
+    if (!tether || !this.pointerAt || !this.ringAt) {
+      return;
+    }
+    tether.setAttribute('x1', String(this.pointerAt.x));
+    tether.setAttribute('y1', String(this.pointerAt.y));
+    tether.setAttribute('x2', String(this.ringAt.x));
+    tether.setAttribute('y2', String(this.ringAt.y));
+  }
 
   // Entered on every move, not only on change: the active mark schedules a clear on any
   // `pointerover` outside the point's element, and re-entering cancels it.
-  protected onCanvasPointer(event: PointerEvent): void {
-    const canvas = event.currentTarget;
-    const nearest =
-      canvas instanceof SVGSVGElement ? this.nearestMark(canvas, event) : null;
-    if (nearest) {
-      this.hoveredIndex = nearest.hit.index;
-      this.pointer.set(nearest.pointer);
-      this.activeMark.enter(
-        nearest.hit.index,
-        event,
-        undefined,
-        nearest.hit.element,
-      );
-    } else {
+  private onCanvasPointer(canvas: SVGSVGElement, event: PointerEvent): void {
+    const nearest = this.nearestMark(canvas, event);
+    if (!nearest) {
       this.onCanvasLeave();
+
+      return;
     }
+    this.hoveredIndex = nearest.hit.index;
+    this.pointerAt = nearest.pointer;
+    this.placeTether();
+    this.pointerOverPlot.set(true);
+    this.activeMark.enter(
+      nearest.hit.index,
+      event,
+      undefined,
+      nearest.hit.element,
+    );
   }
 
-  protected onCanvasLeave(): void {
-    this.pointer.set(null);
+  private onCanvasLeave(): void {
+    this.pointerAt = null;
+    this.pointerOverPlot.set(false);
     if (this.hoveredIndex !== -1) {
       this.hoveredIndex = -1;
       this.activeMark.leave();

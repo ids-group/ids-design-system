@@ -64,6 +64,7 @@
 
 <ng-template #body>
   <svg
+    #canvas
     class="canvas"
     [attr.viewBox]="viewBox"
     [class.dims-others]="dimOthers()"
@@ -72,10 +73,7 @@
     [dsChartTooltip]="tooltipContext()"
     [dsChartTooltipSwatches]="defaults.tooltipSwatches()"
     [dsChartTooltipPinned]="activeMark.pinned()"
-    [dsChartTooltipOrigin]="activeMark.origin()"
-    (pointerover)="onCanvasPointer($event)"
-    (pointermove)="onCanvasPointer($event)"
-    (pointerleave)="onCanvasLeave()">
+    [dsChartTooltipOrigin]="activeMark.origin()">
     <rect
       class="plot-bg"
       [attr.x]="plot.left"
@@ -153,25 +151,16 @@
       </g>
     }
 
-    @if (ringedMark(); as ringed) {
-      @if (pointer(); as at) {
-        @if (!activeMark.pinned()) {
-          <line
-            #tether
-            class="nearest-tether"
-            [attr.x1]="at.x"
-            [attr.y1]="at.y"
-            [attr.x2]="ringed.cx"
-            [attr.y2]="ringed.cy" />
-        }
+    @if (ringedMark()) {
+      @if (pointerOverPlot() && !activeMark.pinned()) {
+        <line
+          #tether
+          class="nearest-tether" />
       }
 
       <circle
         #ring
-        class="nearest-ring"
-        dsChartPlaced
-        [style.cx.px]="ringed.cx"
-        [style.cy.px]="ringed.cy" />
+        class="nearest-ring" />
     }
 
     @for (pinned of pinnedPoints(); track pinned.index) {
