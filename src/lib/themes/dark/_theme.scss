@@ -25,11 +25,11 @@
   --warning-pressed:        color-mix(in srgb, var(--warning) 76%, white);
   --info-hover:             color-mix(in srgb, var(--info) 88%, white);
 
-  --surface-tint:         hsl(var(--primary-h) 45% 16%);
-  --primary-subtitle:     hsl(var(--primary-h) 45% 18%);
-  --primary-muted:        hsl(var(--primary-h) 40% 26%);
-  --primary-muted-strong: hsl(var(--primary-h) 42% 32%);
-  --primary-strong:       hsl(var(--primary-h) 90% 72%);
+  --surface-tint:         hsl(from var(--primary) h 45% 16%);
+  --primary-subtitle:     hsl(from var(--primary) h 45% 18%);
+  --primary-muted:        hsl(from var(--primary) h 40% 26%);
+  --primary-muted-strong: hsl(from var(--primary) h 42% 32%);
+  --primary-strong:       hsl(from var(--primary) h 90% 72%);
 
   --secondary-subtitle:   hsl(var(--secondary-h) 45% 18%);
   --secondary-muted:      hsl(var(--secondary-h) 40% 26%);

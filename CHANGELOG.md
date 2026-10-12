@@ -40,16 +40,22 @@
 
 ### Changed
 
-- **Links and the brand tints follow `--primary` in the light theme.** `--surface-tint` and
-  `--primary-subtitle` are `hsl(from var(--primary) h 100% 97%)`, `--primary-muted` is
-  `hsl(from var(--primary) h 95% 94%)` and `--text-link` is
+- **Links and every brand shade follow `--primary`.** In light, `--surface-tint` and
+  `--primary-subtitle` are `hsl(from var(--primary) h 100% 97%)`, `--primary-muted`
+  `h 95% 94%`, `--primary-muted-strong` `h 95% 89%`, and `--text-link` and `--primary-strong`
   `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))`, where they were the `--blue-50`,
-  `--blue-100` and `--blue-700` steps. A brand that sets only `--primary` gets links, active rows,
-  selected options and tonal fills in its own hue; one that sets them itself keeps its values.
-  A light brand colour (yellow, lime, cyan) derives a link under 4.5:1 on white: the theming page
-  lists the four with what each paints and the contrast it must meet. Restore with
-  `--text-link: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle: var(--blue-50);
-  --primary-muted: var(--blue-100);`.
+  `--blue-100`, `--blue-200` and `--blue-700` steps. In dark, `--surface-tint`,
+  `--primary-subtitle`, `--primary-muted`, `--primary-muted-strong` and `--primary-strong` take
+  their hue from `--primary` where they took `--primary-h`, at the same saturation and lightness.
+  The default blue renders the same RGB. A brand that sets only `--primary` gets links, active
+  rows, selected options, tonal fills and the text on them in its own hue; one that sets them
+  itself keeps its values. A light brand colour (yellow, lime, cyan) derives a link and a
+  `--primary-strong` under 4.5:1 on white: the theming page lists the six with what each paints
+  and the contrast it must meet. The focus ring, the field halo, `--link-visited` and the dark
+  `--text-link` still read `--primary-h/s/l`. Restore with `--text-link: var(--blue-700);
+  --primary-strong: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle:
+  var(--blue-50); --primary-muted: var(--blue-100); --primary-muted-strong: var(--blue-200);` in
+  light, and `hsl(var(--primary-h) …)` at the same saturation and lightness in dark.
 - **`ds-line-chart` re-scales the value axis when a series is hidden.** `rescaleOnHide` defaults to
   `true`, as on `ds-column-chart` and `ds-chart`: the axis fits the series left showing. Set
   `[rescaleOnHide]="false"` to hold it where it stands with every series shown; a bare

@@ -80,8 +80,8 @@
   --primary-selected-hover:  color-mix(in srgb, var(--primary) 88%, black);
   --primary-subtitle:        hsl(from var(--primary) h 100% 97%);
   --primary-muted:           hsl(from var(--primary) h 95% 94%);
-  --primary-muted-strong:    var(--blue-200);
-  --primary-strong:          var(--blue-700);
+  --primary-muted-strong:    hsl(from var(--primary) h 95% 89%);
+  --primary-strong:          hsl(from var(--primary) h calc(s * 0.85) calc(l - 7));
   --primary-on:              white;
 
   /* Override --secondary-h/s/l to reskin; --secondary, hover and pressed recompose. */

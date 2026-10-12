@@ -52,12 +52,12 @@ export const SEMANTIC_PRIMARY: readonly ColourRow[] = [
   },
   {
     "name": "--primary-muted-strong",
-    "value": "var(--blue-200)",
+    "value": "hsl(from var(--primary) h 95% 89%)",
     "notes": "Strongest tint in the brand-muted family."
   },
   {
     "name": "--primary-strong",
-    "value": "var(--blue-700)",
+    "value": "hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))",
     "notes": "Darker brand for text on brand tints."
   },
   {
@@ -7452,6 +7452,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Table fill."
       },
       {
+        "name": "--ds-table-sort-active-icon-color",
+        "value": "var(--accent)",
+        "notes": "Active sort caret."
+      },
+      {
         "name": "--ds-table-sticky-scrollbar-offset",
         "value": "var(\n      --_table-sticky-scrollbar-offset,\n      calc(-1 * var(--_table-scroller-pad-bottom, 0px))\n    )",
         "notes": "Where the sticky horizontal scrollbar comes to rest, as any CSS length. Unset, the table measures its scroll container's bottom padding and cancels it, so the bar sits on the edge the reader sees; set this for a scrollport whose reachable edge is somewhere else. Overrides `[stickyScrollbarOffset]` and `DS_CONFIG.table.stickyScrollbarOffset`."
@@ -7515,11 +7520,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-table-divider",
         "value": "var(--border-divider)",
         "notes": "Row divider."
-      },
-      {
-        "name": "--ds-table-sort-active-icon-color",
-        "value": "var(--accent)",
-        "notes": "Active sort caret."
       },
       {
         "name": "--ds-table-icon-button-color",
