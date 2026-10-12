@@ -94,6 +94,15 @@ for (const prerelease of prereleaseManifests) {
     process.exit(1);
   }
 }
+// The fixtures move to `migrations/fixtures/<version>/` below, so the evidence naming them follows.
+const fixtureSources = [...prereleaseManifests, 'unreleased'];
+function manifestText(manifest) {
+  let text = JSON.stringify(manifest, null, 2) + '\n';
+  for (const source of fixtureSources)
+    for (const prefix of ['"fixture:', '"fixture:migrations/fixtures/'])
+      text = text.replaceAll(`${prefix}${source}/`, `${prefix}${version}/`);
+  return text;
+}
 if (prereleaseManifests.length) {
   const target = `migrations/${version}.json`;
   if (existsSync(target)) {
@@ -118,7 +127,7 @@ if (prereleaseManifests.length) {
     );
     process.exit(1);
   }
-  writeFileSync(target, JSON.stringify(folded, null, 2) + '\n');
+  writeFileSync(target, manifestText(folded));
   for (const path of sources) rmSync(path);
   execSync(`git rm --cached --ignore-unmatch --quiet -- ${sources.join(' ')}`);
   execSync(`git add ${target}`);
@@ -141,7 +150,7 @@ if (prereleaseManifests.length) {
     process.exit(1);
   }
   manifest.version = version;
-  writeFileSync(target, JSON.stringify(manifest, null, 2) + '\n');
+  writeFileSync(target, manifestText(manifest));
   rmSync(draft);
   execSync(`git add ${draft} ${target}`);
   console.log(`changelog: promoted ${draft} -> ${target}.`);
