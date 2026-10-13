@@ -348,7 +348,7 @@ export const SEMANTIC_TEXT: readonly ColourRow[] = [
   },
   {
     "name": "--text-link",
-    "value": "hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))",
+    "value": "var(--blue-700)",
     "notes": "Hyperlink text."
   },
   {
@@ -694,7 +694,7 @@ export const SEMANTIC_STATUS: readonly ColourRow[] = [
 export const SEMANTIC_LINK: readonly ColourRow[] = [
   {
     "name": "--link-visited",
-    "value": "hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%)",
+    "value": "hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)",
     "notes": "Visited link colour — desaturated, darkened primary hue."
   }
 ];
