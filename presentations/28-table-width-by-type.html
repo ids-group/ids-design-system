@@ -39,6 +39,17 @@
   .opts.wide { grid-template-columns: minmax(0, 1fr); }
   .pill.rec { background: var(--accent-subtitle); color: var(--accent-strong); }
   details.why > summary { cursor: pointer; font: var(--font-weight-semibold) var(--font-size-s) / 1.4 var(--font-sans); color: var(--text-secondary); }
+  .pill.warn { background: var(--warning-subtitle); color: var(--warning-text); }
+  .opt[data-rz] { cursor: pointer; }
+  .rz-wrap { display: flex; overflow-x: auto; max-width: 900px; background: var(--surface-muted); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); }
+  .rz-table { flex: none; margin: 0; table-layout: fixed; border-collapse: collapse; background: var(--surface-default); font: var(--font-size-xs) / 1.4 var(--font-sans); color: var(--text-primary); }
+  .rz-table th, .rz-table td { padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-divider); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+  .rz-table th { position: relative; font-weight: var(--font-weight-semibold); background: var(--surface-default); }
+  .rz-table .right { text-align: right; }
+  .rz-handle { position: absolute; top: 0; right: 0; bottom: 0; width: var(--space-2); cursor: col-resize; touch-action: none; }
+  .rz-handle::after { content: ""; position: absolute; top: var(--space-2); bottom: var(--space-2); right: 0; border-right: var(--border-width-default) solid var(--border-divider); }
+  .rz-handle:hover::after, .rz-handle.on::after { border-right-color: var(--accent-strong); border-right-width: 2px; }
+  .rz-reset { justify-self: start; padding: 1px var(--space-3); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-pill); background: var(--deck-card); color: var(--text-primary); font: var(--font-size-xs) / 1.5 var(--font-sans); cursor: pointer; }
   @media (max-width: 760px) { .cols { grid-template-columns: minmax(0, 1fr); } }
 </style>
 </head>
@@ -48,7 +59,38 @@
     <p class="chat">Ответ нести в чат: «Acc2 · pp-ревью и Dashboard Review»</p>
     <div class="chips"><span class="chip">ветка ecm-feat/table-width-by-type</span><span class="chip">решения деки 22: A по типу, 240</span></div>
     <p class="lede">Слева <b>dev</b>, справа <b>ветка</b>. Настоящие рендеры стенда <code>/harness/table-clip</code>, ширины заголовков в px под каждым.</p>
-  </header><section class="panel" id="slack" data-review="Свободное место, когда все ширины заданы" data-review-note-only="">
+  </header><section class="panel" id="strip" data-review="После перетаскивания: без пустой полосы" data-review-note-only="">
+    <h2>Открытый вопрос: после перетаскивания колонки справа не должно быть пустой полосы</h2>
+    <p class="lead">Потяните разделитель у любого заголовка: каждая карточка - живая таблица шириной 900 px с тем же правилом, что в варианте. Клик по карточке выбирает её, повторный клик снимает выбор.</p>
+    <div class="opts wide">
+      <div class="opt" data-q="strip" data-v="A" data-rz="A" aria-pressed="false"><span class="opt-head"><b>A</b> Как сейчас в dev: по сумме колонок <span class="pill no">пустая полоса</span><span class="pill same">ничего не прыгает</span><span class="pill same">много колонок: скролл по сумме</span></span>
+        <div class="rz-wrap"><table class="rz-table"><colgroup></colgroup><thead><tr></tr></thead><tbody></tbody></table></div>
+        <p class="nums rz-readout"></p><button type="button" class="rz-reset">Сбросить</button>
+        <details class="why"><summary>Почему так</summary><ul class="points">
+          <li>Первое перетаскивание фиксирует ширину всех колонок, таблица становится равной их сумме.</li>
+          <li>Сузили колонку - справа пустая полоса, расширили - таблица растёт и скроллится.</li>
+          <li>Владелец отклонил полосу: «пустых мест в таблицах быть не должно».</li></ul></details></div>
+      <div class="opt" data-q="strip" data-v="B" data-rz="B" aria-pressed="false"><span class="opt-head"><b>B</b> Остаток берут нетянутые текстовые <span class="pill rec">рекомендую</span><span class="pill ok">пустого места нет</span><span class="pill warn">прыгают нетянутые текстовые</span><span class="pill ok">много колонок: скролл, как сейчас</span></span>
+        <div class="rz-wrap"><table class="rz-table"><colgroup></colgroup><thead><tr></tr></thead><tbody></tbody></table></div>
+        <p class="nums rz-readout"></p><button type="button" class="rz-reset">Сбросить</button>
+        <details class="why"><summary>Почему так</summary><ul class="points">
+          <li>Тянутая колонка держит свою ширину, kind-колонки (премия 120, статус 110) свои.</li>
+          <li>Текстовые колонки, которые читатель не тянул, делят остаток поровну: то, что уже делает таблица до первого перетаскивания.</li>
+          <li>Если вытянуты все колонки, остаток берёт последняя. Таблица всегда на всю ширину; когда сумма шире контейнера - горизонтальный скролл, как сейчас.</li>
+          <li>В библиотеке: перетаскивание фиксирует только свою колонку, класс <code>sized-columns</code> с <code>width: 0</code> уходит. Ветка <code>ecm-fix/table-resize-fill</code>, не влита.</li></ul></details></div>
+      <div class="opt" data-q="strip" data-v="C" data-rz="C" aria-pressed="false"><span class="opt-head"><b>C</b> Остаток всегда берёт последняя колонка <span class="pill ok">пустого места нет</span><span class="pill warn">прыгает только последняя</span><span class="pill warn">много колонок: последняя сжимается до 48, дальше скролл</span><span class="pill same">последнюю не тянуть</span></span>
+        <div class="rz-wrap"><table class="rz-table"><colgroup></colgroup><thead><tr></tr></thead><tbody></tbody></table></div>
+        <p class="nums rz-readout"></p><button type="button" class="rz-reset">Сбросить</button>
+        <details class="why"><summary>Почему так</summary><ul class="points">
+          <li>Первое перетаскивание фиксирует все колонки, кроме последней; она всегда равна остатку.</li>
+          <li>Статус или действия в конце раздуваются при каждом сужении соседа.</li>
+          <li>Когда остальные колонки шире контейнера, последняя сжимается до 48 px и таблица скроллится.</li></ul></details></div>
+    </div>
+    <details class="why"><summary>Как сделано</summary><ul class="points">
+      <li>Живые таблицы на HTML и CSS с <code>table-layout: fixed</code>: ширины <code>&lt;col&gt;</code> считает небольшой скрипт по правилу варианта; разделитель двигается мышью и пальцем.</li>
+      <li>Колонки: три текстовые, число 120, статус 110, как <code>kind</code> в 0.15.1. Минимум колонки 48 px, максимум - ширина контейнера, как в <code>dsTableResize</code>.</li>
+      <li>Вариант B собран в ветке <code>ecm-fix/table-resize-fill</code>, проверен стендом <code>resize-fill</code> на 900 px: таблица равна контейнеру после каждого шага, при вытянутых всех колонках последняя берёт остаток 364 px, при перетягивании шире контейнера появляется скролл, ширины восстанавливаются после перезагрузки.</li></ul></details>
+  </section><section class="panel" id="slack" data-review="Свободное место, когда все ширины заданы" data-review-note-only="">
     <h2>Открытый вопрос: все ширины заданы, а таблица шире их суммы</h2>
     <p class="lead">После перетаскивания у каждой колонки своя ширина. Если их сумма меньше контейнера, браузер раздаёт остаток <b>всем</b> колонкам: колонка встаёт не там, где её отпустили.</p>
     <ul class="points"><li><span class="pill no">+6 px</span> email задан 105, нарисован 111; name 155 → 164, notes 360 → 381, amount 215 → 228. Сумма 835, контейнер 884.</li>
@@ -217,7 +259,7 @@
 <script>
 (() => {
   const KEY = 'deck-picks:28-table-width-by-type';
-  const NAMES = { slack: 'Свободное место' };
+  const NAMES = { strip: 'После перетаскивания', slack: 'Свободное место' };
   let picks = {};
   try { picks = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { picks = {}; }
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(picks)); } catch { /* storage unavailable */ } };
@@ -241,6 +283,147 @@
     onReset: () => { picks = {}; save(); paint(); },
   };
   paint();
+})();
+</script>
+<script>
+(() => {
+  const COLUMNS = [
+    { key: 'name', label: 'Имя' },
+    { key: 'email', label: 'Email' },
+    { key: 'notes', label: 'Заметки' },
+    { key: 'amount', label: 'Премия', fixed: 120, right: true },
+    { key: 'status', label: 'Статус', fixed: 110 },
+  ];
+  const ROWS = [
+    ['Анна Ковалевская', 'anna.kovalevskaya@example.com', 'Продление полиса, звонок во вторник', '1 240', 'Активен'],
+    ['Олег Миронов', 'o.mironov@example.com', 'Просит счёт на юрлицо', '860', 'Ожидает'],
+    ['Ирина Левицкая', 'irina.levitskaya@example.com', 'Нет замечаний', '2 015', 'Активен'],
+    ['Павел Шевчук', 'p.shevchuk@example.com', 'Переезд, новый адрес уточняется', '430', 'Закрыт'],
+  ];
+  const MIN_WIDTH = 48;
+  const lastKey = COLUMNS[COLUMNS.length - 1].key;
+  const sumOf = (values) => Object.values(values).reduce((sum, value) => sum + value, 0);
+
+  const initCard = (card) => {
+    const strategy = card.dataset.rz;
+    const wrap = card.querySelector('.rz-wrap');
+    const table = card.querySelector('.rz-table');
+    const colgroup = table.querySelector('colgroup');
+    const readout = card.querySelector('.rz-readout');
+    let pinned = {};
+    let widths = {};
+
+    const layout = () => {
+      const container = wrap.clientWidth;
+      const next = {};
+      const flexible = [];
+      for (const column of COLUMNS) {
+        if (pinned[column.key] !== undefined) {
+          next[column.key] = pinned[column.key];
+        } else if (column.fixed) {
+          next[column.key] = column.fixed;
+        } else {
+          flexible.push(column.key);
+        }
+      }
+      const everyColumnSized = flexible.length === 0;
+      if (strategy === 'C' && Object.keys(pinned).length > 0) {
+        delete next[lastKey];
+        next[lastKey] = Math.max(MIN_WIDTH, container - sumOf(next));
+      } else if (!everyColumnSized) {
+        const share = Math.max(MIN_WIDTH, (container - sumOf(next)) / flexible.length);
+        for (const key of flexible) {
+          next[key] = share;
+        }
+      } else if (strategy === 'B') {
+        next[lastKey] += Math.max(0, container - sumOf(next));
+      }
+      widths = next;
+      const total = sumOf(next);
+      const followsColumns = strategy === 'A' && everyColumnSized && Object.keys(pinned).length > 0;
+      const tableWidth = followsColumns ? total : Math.max(container, total);
+      table.style.width = tableWidth + 'px';
+      [...colgroup.children].forEach((col, index) => {
+        col.style.width = next[COLUMNS[index].key] + 'px';
+      });
+      const gap = Math.round(container - tableWidth);
+      const state = gap > 0
+        ? 'пустая полоса ' + gap + ' px'
+        : tableWidth > container + 1
+          ? 'скролл ' + Math.round(tableWidth - container) + ' px'
+          : 'без полосы';
+      readout.textContent = 'таблица ' + Math.round(tableWidth) + ' px, контейнер ' + container + ' px: ' + state;
+    };
+
+    const startDrag = (event, column, cell, handle) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (strategy !== 'B' && Object.keys(pinned).length === 0) {
+        pinned = { ...widths };
+        if (strategy === 'C') {
+          delete pinned[lastKey];
+        }
+      }
+      const startX = event.clientX;
+      const startWidth = cell.offsetWidth;
+      handle.setPointerCapture(event.pointerId);
+      handle.classList.add('on');
+      const move = (moveEvent) => {
+        const wanted = startWidth + moveEvent.clientX - startX;
+        pinned[column.key] = Math.round(Math.min(wrap.clientWidth, Math.max(MIN_WIDTH, wanted)));
+        layout();
+      };
+      const stop = () => {
+        handle.classList.remove('on');
+        handle.removeEventListener('pointermove', move);
+        handle.removeEventListener('pointerup', stop);
+        handle.removeEventListener('pointercancel', stop);
+      };
+      handle.addEventListener('pointermove', move);
+      handle.addEventListener('pointerup', stop);
+      handle.addEventListener('pointercancel', stop);
+    };
+
+    colgroup.replaceChildren(...COLUMNS.map(() => document.createElement('col')));
+    table.querySelector('thead tr').replaceChildren(...COLUMNS.map((column) => {
+      const cell = document.createElement('th');
+      cell.textContent = column.label;
+      if (column.right) {
+        cell.className = 'right';
+      }
+      if (!(strategy === 'C' && column.key === lastKey)) {
+        const handle = document.createElement('span');
+        handle.className = 'rz-handle';
+        handle.addEventListener('click', (event) => event.stopPropagation());
+        handle.addEventListener('pointerdown', (event) => startDrag(event, column, cell, handle));
+        cell.append(handle);
+      }
+      return cell;
+    }));
+    table.querySelector('tbody').replaceChildren(...ROWS.map((row) => {
+      const line = document.createElement('tr');
+      line.replaceChildren(...row.map((value, index) => {
+        const cell = document.createElement('td');
+        cell.textContent = value;
+        if (COLUMNS[index].right) {
+          cell.className = 'right';
+        }
+        return cell;
+      }));
+      return line;
+    }));
+    card.querySelector('.rz-reset').addEventListener('click', (event) => {
+      event.stopPropagation();
+      pinned = {};
+      layout();
+    });
+    layout();
+    window.addEventListener('resize', layout);
+  };
+
+  for (const card of document.querySelectorAll('[data-rz]')) {
+    initCard(card);
+  }
 })();
 </script>
 <!-- deck-review -->
