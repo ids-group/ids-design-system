@@ -130,11 +130,13 @@
       "detect": [
         "[dsTooltip]=\"`",
         "'**",
-        "\"**"
+        "\"**",
+        "dsTooltipWhenClipped",
+        "truncate: true"
       ],
-      "action": "None, unless a tooltip string holds `**` meant literally: write `\\*\\*` there.",
+      "action": "None, unless a tooltip string holds `**` meant literally: write `\\*\\*` there. Where `[dsTooltip]` repeats text its host already prints, drop `[dsTooltip]` and keep `dsTooltipWhenClipped`, which shows the host's text as written.",
       "appliesWhen": "Every `dsTooltip` string, including one a component builds from data. `dsTooltipWhenClipped` with no `dsTooltip` shows the host's text as written and is unaffected.",
-      "pitfall": "A string with two `**` loses both and the text between them turns bold, with no error; user-supplied text reaching a tooltip needs its `**` escaped.",
+      "pitfall": "A string with two `**` loses both and the text between them turns bold, with no error; user-supplied text reaching a tooltip needs its `**` escaped. A `[dsTooltip]` bound to the same stored text its host prints shows it differently once that text holds a `**` pair: asterisks on the page, bold in the tip. A `truncate` column of `ds-table` passes its cell value to `dsTooltip` the same way.",
       "restore": "[dsTooltip]=\"text().replaceAll('**', '\\*\\*')\"",
       "verify": "Every tooltip string whose text contains `**` shows the asterisks, or bold where bold was meant."
     },
@@ -223,9 +225,9 @@
       "detect": [
         "truncate: true"
       ],
-      "action": "None, unless a column needs the old 240px cap: add `width: 272` to it (240 plus the cell padding at the default density).",
+      "action": "None, unless a column needs the old 240px cap: add `width: 272` to it (240 plus the cell padding at the default density); where it must only stop shrinking, set `minWidth` and the table scrolls sideways instead.",
       "appliesWhen": "A `ds-table` column with `truncate: true` and no `width`. A column with a numeric `width` or `width: 'content'` clips as before, and a column without `truncate` is unaffected.",
-      "pitfall": "A column of long values now takes the room the other columns leave, up to the widest value on any page, so a screenshot shows it wider when the table has room and narrower, down to its header label, when it does not; in a table that scrolls sideways anyway it keeps the 240px clip.",
+      "pitfall": "A column of long values now takes the room the other columns leave, up to the widest value on any page, so a screenshot shows it wider when the table has room and narrower, down to its header label, or to its `minWidth`, when it does not; in a table that scrolls sideways anyway it keeps the 240px clip.",
       "restore": "{ key: 'email', label: 'Email', truncate: true, width: 272 }",
       "verify": "Open a table with a `truncate` column without `width`: a short value shows whole, a long one is cut at the column's edge with no empty space after the ellipsis, the column keeps its width when you page, and in a table that scrolls sideways anyway it clips at 240px."
     },
@@ -278,13 +280,17 @@
         "outline"
       ],
       "detect": [
+        "border-bottom: 2px solid",
+        "border-left: 1px solid",
+        "border-right: 1px solid",
+        "background: transparent;",
         ":focus-visible {",
         ":focus-visible{",
         "&:focus-visible"
       ],
-      "action": "None, unless an element of yours paints a background or border, declares no border-radius and must stay square while focused: declare `border-radius: 0` on it.",
-      "appliesWhen": "Ships in `styles/focus`, which `styles/ds` forwards, and for a component's own elements in that component's stylesheet. Every keyboard-focused element that declares no border-radius takes `--focus-ring-radius` through `:where(:focus-visible)`; an element that declares any radius, `0` included, is unaffected.",
-      "pitfall": "A full-width row or flat button with a fill and no declared radius shows rounded fill corners only while focused, so a screenshot taken at rest looks unchanged.",
+      "action": "Declare `border-radius: 0` on every button, link or tabindex element of yours that draws a background, a hover fill or a one-sided border (a tab underline, a divider) and declares no `border-radius`. An element that declares any radius needs nothing.",
+      "appliesWhen": "Ships in `styles/focus`, which `styles/ds` forwards, and for a component's own elements in that component's stylesheet; an app that assembles the partials itself and includes `focus.emit-rules` gets it too. Every keyboard-focused element that declares no border-radius takes `--focus-ring-radius` through `:where(:focus-visible)`; an element that declares any radius, `0` included, is unaffected.",
+      "pitfall": "A full-width row or flat button with a fill and no declared radius shows rounded fill corners only while focused, so a screenshot taken at rest looks unchanged. A one-sided border bends at both ends while focused: a tab's `border-bottom` underline curves up into the corners and a `border-left` divider bows, on keyboard focus only.",
       "restore": ":where(:focus-visible) { border-radius: 0; }",
       "verify": "The built CSS has `border-radius:var(--focus-ring-radius)` inside `:where(:focus-visible)`, and a focused element with a fill keeps the corners it shows at rest."
     },
@@ -860,7 +866,32 @@
       "text": "A ds-line-chart skeleton under `--ds-line-chart-placeholder-height` is that tall with its axis labels included; unset, it is as tall as the drawn plot with its labels.",
       "verify": "Set `--ds-line-chart-placeholder-height: 200px` on a loading ds-line-chart with no series and confirm the skeleton above the legend placeholders is 200px tall."
     },
-    "While loading keeps options on screen under the overlay, ds-select, ds-multi-select and ds-autocomplete ignore the arrow, PageUp, PageDown, Home, End and Enter keys and mark the field aria-busy until loading clears; typing in the filter and the multi-select select-all row stay live."
+    "While loading keeps options on screen under the overlay, ds-select, ds-multi-select and ds-autocomplete ignore the arrow, PageUp, PageDown, Home, End and Enter keys and mark the field aria-busy until loading clears; typing in the filter and the multi-select select-all row stay live.",
+    {
+      "text": "Every icon-only control takes the pointer over at least `--hit-xs` (24px) around the size it is drawn at: the close and remove buttons of `ds-alert`, `ds-banner`, `ds-toast`, `ds-dropzone` and `ds-tag`, the clear button of `ds-input`, `ds-search`, `ds-select`, `ds-autocomplete`, `ds-multi-select` and `ds-time-picker`, the `ds-date-picker` calendar toggle, the `ds-description-item` copy button, the `ds-bar-chart` row toggle, the `ds-sidenav-footer` search clear, an icon-only `ds-breadcrumbs` item and `ds-info-hint`. The focus ring is drawn on that target, except on `ds-info-hint` and an icon-only `ds-breadcrumbs` item, whose ring stays on the icon. Nothing around them moves, except the arrows of the `ds-table` width panel, which sit `--space-2-5` apart instead of `--space-1`.",
+      "verify": "Point just outside the close button of a `ds-banner` and confirm a click there still closes it, and tab to it and confirm the focus ring surrounds a 24px square rather than the icon."
+    },
+    {
+      "text": "The `ds-table` column filter button takes a 24px target and sits `--space-2` after its label instead of `--space-1`, so the header label of a filterable column clips 4px sooner. The button is at full opacity while focused.",
+      "verify": "Open a table whose filterable column has a header label within 4px of fitting and confirm it now ends in an ellipsis, then tab to its filter button and confirm it shows at full opacity."
+    },
+    {
+      "text": "The close button of `ds-banner`, `ds-alert`, `ds-toast` and `ds-drawer` and the `ds-dropzone` remove button centre their icon in a square box, so it sits in the middle of the focus ring instead of on a text line.",
+      "verify": "Tab to the close button of a `ds-banner` and a `ds-toast` and confirm the icon sits in the middle of its focus ring."
+    },
+    {
+      "text": "The focus ring of a `ds-table` header label, a `ds-list-item` and a `ds-breadcrumbs` link is drawn outside the text instead of over its first and last letter.",
+      "verify": "Tab to a breadcrumb link and a list item and confirm the ring clears the first and last letter."
+    },
+    {
+      "text": "The `ds-date-picker` month and year arrows sit in the centre of their button.",
+      "verify": "Open a date picker and confirm each arrow sits in the middle of its hover fill."
+    },
+    "The content of a chart tooltip no longer sets `pointer-events: none`, so a pinned chart tooltip, whose pane takes the pointer, lets its text be selected and a link in a `tooltipTemplate` be clicked.",
+    "`TableColumn.minWidth` sets the narrowest a `ds-table` column gets, in px with the padding: a `truncate` column without `width` stops shrinking at it and the table scrolls sideways instead. It is ignored when `width` is a number.",
+    "`styles/target` gives an icon-only control of yours the library's 24px target: `@include target.min-size` last in its rule.",
+    "`styles/component-base` gives a component of yours the library's base: `@include component-base.rules` first in its stylesheet sets `border-box`, the inherited font on form controls, zero heading margins and the base focus ring on its own elements.",
+    "`--ds-date-picker-max-width` caps the width of `ds-date-picker`. It defaults to `100%`, so nothing changes until it is set."
   ],
   "deleteList": [
     {
@@ -895,11 +926,11 @@
       ],
       "find": [
         "min-width: 100%",
-        "width: 0;",
+        "width: 0; min-width: 100%",
         "dsTooltipWhenClipped"
       ],
       "why": "`truncate: true` on a column without `width` clips at the column width and shows the full value in a tooltip. The wrapper is still legitimate where the column must yield all its room to its neighbours rather than grow to its text.",
-      "replaceWith": "`truncate: true` on the column"
+      "replaceWith": "`truncate: true` on the column; in the cell template drop the wrapper's `width: 0`, `min-width: 100%`, `overflow`, `text-overflow` and `white-space` and its `dsTooltipWhenClipped`, and keep the template only for markup it adds besides the value. The cell's tooltip shows the column's `cell` for the row, or the row's value under `key` when `cell` is unset, not what the template renders: a template that formats the value, such as a `??` fallback or a pipe, needs the same formatting in `cell`."
     },
     {
       "id": "skeleton-shimmer-use",
