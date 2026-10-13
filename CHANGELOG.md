@@ -1,5 +1,16 @@
 ## Unreleased
 
+### Changed
+
+- **`showChange` colours a stretch that starts at zero.** On `dsLineSeries` and `ds-line-chart`,
+  the stretch from a reading of 0 thickens in `--ds-chart-positive-color` or
+  `--ds-chart-negative-color` like any other, and prints no percentage.
+
+- **The `showChange` stretch and percentage fade in as the chart's other labels do.** They wait
+  `--ds-motion-chart-mark-exit-duration` and fade in over `--ds-motion-chart-mark-enter-duration`
+  (120ms and 400ms by default), where they appeared at once over 120ms, and leave on
+  `--ds-motion-chart-mark-exit-duration` and `--ds-motion-chart-mark-exit-easing`.
+
 ## 0.15.1 — 2026-10-13
 
 ### Breaking
