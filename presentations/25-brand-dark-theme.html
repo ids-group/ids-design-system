@@ -131,7 +131,7 @@
   <details class="src"><summary>Источники</summary>
     <ul>
       <li><b>Код, 2026-10-12:</b> <code>styles/_theme-activation.scss</code> (светлая на <code>:root</code>, тёмная на <code>:root[data-theme='dark']</code>), <code>themes/_semantic.scss</code> (<code>--primary: var(--blue-600)</code> и каналы в <code>@mixin roles</code>, который включают обе темы), <code>themes/dark/_theme.scss</code> (тинты <code>hsl(from var(--primary) h …)</code>, ссылка от <code>--primary-h</code>), <code>themes/README.md</code> (шаг чек-листа про тёмную тему).</li>
-      <li><b>Фрагменты:</b> каждый - <code>iframe</code> с <code>@import "ds.css"</code> и <code>&lt;html data-theme data-brand&gt;</code>, как у консьюмера. Кнопка <code>--accent</code> / <code>--accent-on</code>, тонал <code>--accent-muted</code> / <code>--accent-strong</code>, строка <code>--accent-surface-tint</code>, чип как <code>ds-tag</code>, поле <code>--accent</code> + <code>--focus-field</code>, ссылка <code>--text-link</code> на <code>--surface-default</code>.</li>
+      <li><b>Фрагменты:</b> каждый - <code>iframe</code> с <code>@import "ds.css"</code> и <code>&lt;html data-theme data-brand&gt;</code>, как у консьюмера. Кнопка <code>--accent</code> / <code>--accent-on</code>, тонал <code>--accent-muted</code> / <code>--accent-strong</code>, строка <code>--accent-surface-tint</code>, чип как <code>ds-tag</code>, поле <code>--accent</code> + <code>--focus-field</code>, ссылка <code>.link</code> (синяя из палитры) на <code>--surface-default</code>.</li>
       <li><b>Как нарисованы варианты 2 и 3:</b> <code>ds.css</code> импортирован в слой <code>layer(ds)</code>, поэтому <code>--primary</code> и каналы бренда побеждают и в тёмной; для бренда, задающего только их, это те же пиксели, что удаление этих объявлений из тёмного блока. Вариант 3 добавляет слой с <code>--primary</code> от <code>--ds-brand</code>.</li>
       <li><b>Почему не слой для всех токенов темы:</b> тогда любой <code>:root</code>-оверрайд консьюмера (например, <code>--surface-canvas</code>) тоже протечёт в тёмную тему. Снять только вход бренда из тёмного блока уже, чем слой, и даёт тот же результат для бренда.</li>
       <li><b>Шаг синего:</b> <code>--primary</code> посчитан в обеих темах на этой странице (<span data-num="blue-step">-</span>); OKLCH L синего 0,540, зелёного 0,515, тёмно-синего 0,330 (sRGB → OKLab, формулы Оттосона).</li>
@@ -168,7 +168,7 @@
     .chip { padding: 2px 8px; border-radius: var(--ds-radius-control); background: var(--accent); color: var(--accent-on); font-weight: 700; font-size: 11px; }
     .item { padding: 4px 8px; margin-block-end: 6px; border-radius: var(--radius-sm); background: var(--accent-surface-tint); color: var(--accent-strong); font-weight: 600; }
     .field { padding: 4px 8px; margin: 0 3px 8px; border: 1px solid var(--accent); border-radius: var(--ds-radius-control); box-shadow: var(--focus-field); background: var(--surface-default); color: var(--text-secondary); }
-    a { color: var(--text-link); text-decoration: underline 1px; text-underline-offset: 2px; }
+    a { color: var(--ds-link-color, var(--blue-700)); text-decoration: underline 1px; text-underline-offset: 2px; }
     .nums { margin: 6px 0 0; padding-block-start: 6px; border-block-start: 1px dashed var(--border-default); font: 10.5px / 1.45 var(--font-mono); color: var(--text-secondary); }
     .nums b { color: var(--text-primary); }
     .nums .low { color: var(--error-text); font-weight: 700; }`;

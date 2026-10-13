@@ -24,8 +24,8 @@
     .matrix-cell-eyebrow { color: var(--text-tertiary); }
     .matrix-cell-title { margin: var(--space-2) 0 var(--space-1); }
     .matrix-cell-body { color: var(--text-secondary); margin: 0 0 var(--space-3); }
-    .matrix-cell-link { color: var(--text-link); text-decoration: underline; text-underline-offset: 3px; }
-    .link { color: var(--text-link); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+    .matrix-cell-link { text-decoration: underline; text-underline-offset: 3px; }
+    .link { text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 
     /* ---------- Composition grid ---------- */
     .grid-3 {
@@ -62,7 +62,7 @@
       padding-top: var(--space-3);
       border-top: var(--border-width-default) solid var(--border-divider);
     }
-    .card-foot a { color: var(--text-link); text-decoration: underline; text-underline-offset: 3px; }
+    .card-foot a { text-decoration: underline; text-underline-offset: 3px; }
 
     // A child whose background reaches the card edge — the shape --ds-card-overflow
     // exists for. The strip carries the radius of nothing, on purpose.

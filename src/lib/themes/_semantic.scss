@@ -26,8 +26,6 @@
   /* Divider on a coloured fill (split-button chevron); a translucent white reads on any brand hue. */
   --btn-split-divider: hsl(0deg 0% 100% / 25%);
 
-  --link-visited:      hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%);
-
   --border-default:    var(--neutral-200);
   --border-strong:     var(--neutral-300);
   --border-subtitle:     var(--neutral-150);
@@ -44,7 +42,6 @@
 
   --text-on-media:        white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
-  --text-link:         var(--blue-700);
   --text-on-primary:     white;
   --text-on-success:   white;
 
