@@ -1,13 +1,13 @@
 <figure
   class="heatmap-chart"
   dsChartStates
+  dataTable="toggle"
   [pinned]="activeMark.pinned()"
   [caption]="caption()"
   [error]="error()"
   [errorText]="errorTextResolved()"
   [pending]="(loading() && isEmpty()) || !renderReady()"
   [reloading]="loading()"
-  dataTable="toggle"
   [shimmer]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
