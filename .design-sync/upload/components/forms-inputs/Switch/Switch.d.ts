@@ -21,6 +21,12 @@ export interface SwitchProps {
   invalid?: boolean;
   /** Whether the user has interacted with the field. Bound by signal forms; gates `errors`. */
   touched?: boolean;
+  /** Whether an async validator is running. Bound by signal forms; shows a trailing spinner. */
+  pending?: boolean;
+  /** Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`. */
+  dirty?: boolean;
+  /** Marks a changed value with a dot and a "Changed" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`. */
+  showDirty?: boolean | null;
   /** Hides the control; see `DsControlValueAccessor.hidden`. */
   hidden?: boolean;
   /** On/off state, two-way bound. */

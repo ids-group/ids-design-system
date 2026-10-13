@@ -11,7 +11,7 @@ export interface PopoverProps {
   placement?: ('top' | 'bottom' | 'left' | 'right');
   /** Render a small caret pointing at the trigger. */
   arrow?: boolean;
-  /** ARIA role for the panel (e.g. 'dialog'). When set, the panel traps focus and captures it on open; Escape or an in-panel close returns focus to the trigger, an outside click or scroll does not (non-modal). Leave null for plain text popovers. */
+  /** ARIA role for the panel (e.g. 'dialog'). When set, the panel traps focus and captures it on open; Escape or an in-panel close returns focus to the trigger, an outside click or scroll does not (non-modal). Leave null for plain text popovers. A panel holding a `role="menu"` (a `ds-menu`) captures focus on open without it, untrapped. */
   panelRole?: string | null;
   /** Accessible name for the panel; pair with `panelRole`. */
   panelLabel?: string | null;

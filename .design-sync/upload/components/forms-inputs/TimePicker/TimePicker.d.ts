@@ -21,6 +21,12 @@ export interface TimePickerProps {
   invalid?: boolean;
   /** Whether the user has interacted with the field. Bound by signal forms; gates `errors`. */
   touched?: boolean;
+  /** Whether an async validator is running. Bound by signal forms; shows a trailing spinner. */
+  pending?: boolean;
+  /** Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`. */
+  dirty?: boolean;
+  /** Marks a changed value with a dot and a "Changed" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`. */
+  showDirty?: boolean | null;
   /** Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display. */
   hidden?: boolean;
   /** Selected time, or `[start, end]` tuple when `mode="range"`. Two-way bound. */
@@ -58,7 +64,7 @@ export interface TimePickerProps {
   clearable?: boolean;
   /** Accessible name for the trigger(s), suffixed "(from)"/"(to)" in range mode. */
   ariaLabel?: string | null;
-  /** Override the DS-config format for this instance. */
+  /** Display clock; falls back to `DS_CONFIG.timePicker.format`, then the hour cycle of `DS_CONFIG.locale` / `LOCALE_ID`. */
   format?: ('24h' | '12h') | null;
   staticPreview?: boolean;
   /** Element content. */

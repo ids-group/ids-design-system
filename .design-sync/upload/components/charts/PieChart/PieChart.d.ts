@@ -25,7 +25,7 @@ export interface PieChartProps {
   interactive?: boolean;
   /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings. */
   tooltipSwatches?: boolean | null;
-  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
+  /** How long the tooltip stays after the pointer leaves the mark for another part of the chart, in milliseconds; zero closes it at once. A pointer that leaves the chart closes it at once whatever this says. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
   tooltipLingerMs?: number | null;
   /** Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way. */
   pinOnClick?: boolean | null;
@@ -39,6 +39,8 @@ export interface PieChartProps {
   centerCompact?: boolean;
   /** `'below'` prints the value and its caption under the ring at full size, never shrunk or shortened. */
   centerPlacement?: ('inside' | 'below');
+  /** The hovered, focused or held slice prints its value and label in the centre in place of `centerValue` and `centerLabel`. */
+  showHoverCenter?: boolean;
   /** Legend placement, logical so it flips in right-to-left. */
   legend?: 'end' | 'bottom' | 'none';
   /** How many slices, and legend rows, the loading skeleton draws before the data is known. */

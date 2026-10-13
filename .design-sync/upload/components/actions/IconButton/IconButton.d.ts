@@ -21,8 +21,8 @@ export interface IconButtonProps {
   type?: ('button' | 'submit' | 'reset');
   /** Disables the button and blocks `pressed`. */
   disabled?: boolean;
-  /** Toggle state: renders the pressed look and sets `aria-pressed`. */
-  selected?: boolean;
+  /** Toggle state: renders the pressed look and sets `aria-pressed`, `"false"` when bound off. Unbound, the button is no toggle and carries no `aria-pressed`. */
+  selected?: boolean | null;
   /** `aria-expanded` on the inner `<button>`; bind to the open state. On the host it would land on a non-focusable wrapper. */
   ariaExpanded?: boolean | null;
   /** `aria-controls` on the inner `<button>`: the id of the panel this button opens. */

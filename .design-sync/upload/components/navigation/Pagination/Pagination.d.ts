@@ -23,7 +23,7 @@ export interface PaginationProps {
   size?: ('sm' | 'md' | 'lg') | null;
   /** `'grouped'` keeps the label beside the controls. `'spread'` pushes them to opposite edges of whatever width the nav is given. Unset falls back to `DS_CONFIG.pagination.layout`, then `'grouped'`. */
   layout?: ('grouped' | 'spread') | null;
-  /** The host is still fetching: every control disables, the range label is masked with a `<ds-skeleton>` so a stale `total` is never quoted, and the nav reports `aria-busy`. */
+  /** The host is still fetching: the page buttons take `aria-disabled` and ignore presses while staying focusable, the size select disables, the range label is masked with a `<ds-skeleton>` so a stale `total` is never quoted, and the nav reports `aria-busy`. */
   loading?: boolean;
   /** Element content. */
   children?: React.ReactNode;
