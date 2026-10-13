@@ -575,7 +575,9 @@ export class ScatterChartComponent
       return null;
     }
     let nearestIndex = -1;
-    const radius = this.showNearestPoint() ? this.nearestRadius() : HOVER_REACH_PX;
+    const radius = this.showNearestPoint()
+      ? this.nearestRadius()
+      : HOVER_REACH_PX;
     let nearestDistance = radius === null ? Infinity : (radius / matrix.a) ** 2;
     this.flatMarks().forEach(({ mark }, index) => {
       const distance = (mark.cx - pointer.x) ** 2 + (mark.cy - pointer.y) ** 2;

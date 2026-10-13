@@ -77,7 +77,9 @@ export type ChartMotionDelay = 'scale-marker';
  *  @internal */
 export function chartDelay(element: Element, delay: ChartMotionDelay): number {
   return cssDurationMs(
-    getComputedStyle(element).getPropertyValue(`--ds-motion-chart-${delay}-delay`),
+    getComputedStyle(element).getPropertyValue(
+      `--ds-motion-chart-${delay}-delay`,
+    ),
   );
 }
 
