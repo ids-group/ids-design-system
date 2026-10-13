@@ -12,6 +12,7 @@ export const policyColumns: TableColumn<Policy>[] = [
   { key: 'holder', label: 'Policyholder', truncate: true },
   { key: 'premium', label: 'Premium', align: 'right' },
   { key: 'renewal', label: 'Renewal', sortValue: (policy) => policy.renewal },
+  { key: 'open', label: '' },
 ];
 
 export const claimColumns = [

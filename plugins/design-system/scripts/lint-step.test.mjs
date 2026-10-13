@@ -4,7 +4,14 @@
 // keeps, the hits it drops, the skip notes without any linter installed, the `--tools` fallback, and that nothing is written.
 //
 //   node lint-step.test.mjs     # exit 0 = every case matches
-import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import {
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  symlinkSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -119,6 +126,23 @@ await check('a consumer without linters runs on --tools', async () => {
     rmSync(empty, { recursive: true, force: true });
   }
 });
+
+await check(
+  'runs when started through a junction to its directory',
+  async () => {
+    const outside = mkdtempSync(join(tmpdir(), 'lint-step-link-'));
+    const link = join(outside, 'scripts');
+    try {
+      symlinkSync(here, link, 'junction');
+      const run = spawnSync(process.execPath, [join(link, 'lint-step.mjs')], {
+        encoding: 'utf8',
+      });
+      assert.match(`${run.stdout}${run.stderr}`, /usage: node lint-step\.mjs/);
+    } finally {
+      rmSync(outside, { recursive: true, force: true });
+    }
+  },
+);
 
 await check('nothing under the source root is written', async () => {
   assert.deepEqual(snapshot(sourceRoot), before);
