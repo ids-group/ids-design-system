@@ -4,8 +4,7 @@
   title="App layout"
   [apiKeys]="['sidenav-footer']">
   <span lede>
-    The fixed app frame: rail and topbar stay pinned, only the content
-    scrolls.
+    The fixed app frame: rail and topbar stay pinned, only the content scrolls.
   </span>
 
   <h3
@@ -21,11 +20,10 @@
     </code>,
     <code class="t-mono-inline">
       [topbar]
-    </code> and the default slot; the layout renders
-    <code class="t-mono-inline">
-      &lt;main&gt;
-    </code> and compensates the
-    scrollbar. Default: rail full height, topbar over the content column.
+    </code> and the default slot; the
+    layout renders <code class="t-mono-inline"> &lt;main&gt; </code> and
+    compensates the scrollbar. Default: rail full height, topbar over the
+    content column.
   </p>
 
   <div class="layout-demo">
@@ -313,10 +311,12 @@
 
         <td>
           Path-only <code class="t-mono-inline">NavigationEnd</code>,
-          de-duplicated,
-          skips <code class="t-mono-inline">state: {{ '{' }} dsSamePage: true
-          {{ '}' }}</code>.
-          Inject it; do not derive your own.
+          de-duplicated, skips
+          <code class="t-mono-inline"
+            >
+            state: {{ '{' }} dsSamePage: true {{ '}' }}
+          </code
+          >. Inject it; do not derive your own.
         </td>
       </tr>
 
@@ -357,8 +357,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       &lt;ds-sidenav-footer&gt;
-    </code> is configured,
-    not composed: profile row, alert bell, collapse handle.
+    </code> is
+    configured, not composed: profile row, alert bell, collapse handle.
   </p>
 
   <ul class="rules">
@@ -374,8 +374,7 @@
       <code class="t-mono-inline">
         signOutSelected
       </code>; the parent acts, so
-      the
-      unbound collapse row here does nothing
+      the unbound collapse row here does nothing
     </li>
 
     <li>

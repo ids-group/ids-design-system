@@ -303,7 +303,11 @@
                   </td>
                 }
 
-                @for (col of visibleColumns(); track col.key; let first = $first) {
+                @for (
+                  col of visibleColumns();
+                  track col.key;
+                  let first = $first
+                ) {
                   <td
                     [class.numeric]="col.align === 'right'"
                     [class.pin-first]="first && stickyFirstColumn()"

@@ -220,13 +220,16 @@
       </code> so the first error
       shifts nothing:
       <code class="t-mono-inline">
-        [reserveMessage] &gt; form dsReserveMessages &gt; DS_CONFIG.field.reserveMessage &gt; false
+        [reserveMessage] &gt; form dsReserveMessages &gt;
+        DS_CONFIG.field.reserveMessage &gt; false
       </code>
     </li>
 
     <li>
-      Stack reserved fields in <code class="t-mono-inline">&lt;ds-stack
-      gap="none"&gt;</code>: a reserved
+      Stack reserved fields in
+      <code class="t-mono-inline">
+        &lt;ds-stack gap="none"&gt;
+      </code>: a reserved
       row carries ~23px of trailing rhythm
     </li>
 
@@ -246,16 +249,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    Same fields, <code class="t-mono-inline">
-      reserveMessage
-    </code> on. Left,
+    Same fields, <code class="t-mono-inline"> reserveMessage </code> on. Left,
     <code class="t-mono-inline">
       gap="md"
     </code> doubles the rhythm; right,
     <code class="t-mono-inline">
       gap="none"
-    </code> is correct. Toggle the error:
-    neither shifts.
+    </code> is correct. Toggle the
+    error: neither shifts.
   </p>
 
   <div class="gap-demo">
@@ -324,12 +325,9 @@
     A mixed stack goes ragged: under
     <code class="t-mono-inline">
       gap="none"
-    </code>, a child without a message row
-    (a
-    <code class="t-mono-inline">
-      [reserveMessage]="false"
-    </code> field, switch, button row,
-    divider) sits flush against its neighbour.
+    </code>, a child without a message
+    row (a <code class="t-mono-inline"> [reserveMessage]="false" </code> field,
+    switch, button row, divider) sits flush against its neighbour.
   </p>
 
   <div class="gap-demo">

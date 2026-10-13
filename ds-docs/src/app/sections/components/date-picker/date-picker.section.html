@@ -172,11 +172,15 @@
     </code> takes
     <code class="t-mono-inline">
       sm
-    </code>, <code class="t-mono-inline">md</code>
-    or <code class="t-mono-inline">lg</code>. The field is as wide as its date format;
+    </code>,
     <code class="t-mono-inline">
-      [fullWidth]="true"
-    </code> fills the container, up to
+      md
+    </code> or
+    <code class="t-mono-inline">
+      lg
+    </code>. The field is as wide as its date
+    format; <code class="t-mono-inline"> [fullWidth]="true" </code> fills the
+    container, up to
     <code class="t-mono-inline">
       --ds-date-picker-max-width
     </code>
@@ -223,7 +227,8 @@
     </code> paints the state only;
     <code class="t-mono-inline">
       [disabled]="true"
-    </code> makes the picker inert.
+    </code> makes the picker
+    inert.
   </p>
 
   <div class="grid-2">
@@ -300,17 +305,14 @@
     <code class="t-mono-inline">
       [presets]
     </code> adds a quick-pick column to
-    the panel. Each preset has a
-    <code class="t-mono-inline">
-      label
-    </code> and a
-    <code class="t-mono-inline">
-      value
-    </code> (<code class="t-mono-inline"
+    the panel. Each preset has a <code class="t-mono-inline"> label </code> and
+    a <code class="t-mono-inline"> value </code> (<code class="t-mono-inline"
       >Date</code
     >
-    or <code class="t-mono-inline">DateRangeValue</code>), disabled when
-    outside <code class="t-mono-inline">minDate</code> /
+    or <code class="t-mono-inline">DateRangeValue</code>), disabled when outside
+    <code class="t-mono-inline">
+      minDate
+    </code> /
     <code class="t-mono-inline">
       maxDate
     </code> /
@@ -334,13 +336,14 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [allowInput]="true"
-    </code> (default): the trigger
-    is a text field masked to the locale format.
+    </code> (default): the
+    trigger is a text field masked to the locale format.
   </p>
 
   <ul class="block-desc t-s">
     <li>
-      Non-digits are rejected; an impossible or out-of-range date errors on blur.
+      Non-digits are rejected; an impossible or out-of-range date errors on
+      blur.
     </li>
 
     <li>
@@ -398,10 +401,13 @@
       [locale]
     </code> drives month names, weekday
     headers and value format via <code>Intl</code>, never mixed with the OS
-    locale. With no locale set it is en-GB: Monday first, DD/MM/YYYY. The
-    week starts on the locale's first day (en-US Sunday, en-GB Monday; Monday
-    where the browser has no week data);
-    <code class="t-mono-inline">[firstDayOfWeek]</code> (0-6) overrides it. App-wide:
+    locale. With no locale set it is en-GB: Monday first, DD/MM/YYYY. The week
+    starts on the locale's first day (en-US Sunday, en-GB Monday; Monday where
+    the browser has no week data);
+    <code class="t-mono-inline">
+      [firstDayOfWeek]
+    </code> (0-6) overrides it.
+    App-wide:
     <code class="t-mono-inline">
       provideDsConfig({{ '{' }} datePicker: {{ '{' }} locale, dateFormat,
       firstDayOfWeek {{ '}' }} {{ '}' }})
@@ -456,8 +462,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [allowInput]="false"
-    </code> makes the trigger a
-    button; dates come from the calendar only.
+    </code> makes the trigger
+    a button; dates come from the calendar only.
   </p>
 
   <div class="row">

@@ -3,8 +3,8 @@
   eyebrow="Components"
   title="Popover">
   <span lede>
-    Panel on a trigger for a few lines and at most one action; richer content
-    is a modal or drawer.
+    Panel on a trigger for a few lines and at most one action; richer content is
+    a modal or drawer.
   </span>
 
   <docs-nonmodal-note />
@@ -46,7 +46,15 @@
 
   <ul class="block-desc t-s">
     <li>
-      Interactive content needs <code class="t-mono-inline">panelRole</code> and <code class="t-mono-inline">panelLabel</code>; only then the panel traps focus and moves it inside on open. A projected <code class="t-mono-inline">ds-menu</code> takes focus on open without them and closes on Tab.
+      Interactive content needs <code class="t-mono-inline">panelRole</code> and
+      <code class="t-mono-inline">
+        panelLabel
+      </code>; only then the panel traps
+      focus and moves it inside on open. A projected
+      <code class="t-mono-inline">
+        ds-menu
+      </code> takes focus on open without
+      them and closes on Tab.
     </li>
 
     <li>
@@ -56,7 +64,10 @@
     </li>
 
     <li>
-      Close from inside - <code class="t-mono-inline">close()</code>, or inject <code class="t-mono-inline">DsOverlayCloseRef</code> in projected content.
+      Close from inside - <code class="t-mono-inline">close()</code>, or inject
+      <code class="t-mono-inline">
+        DsOverlayCloseRef
+      </code> in projected content.
     </li>
   </ul>
 
@@ -102,11 +113,8 @@
     <code class="t-mono-inline">
       align="start"
     </code> (default) aligns to the
-    trigger's left edge;
-    <code class="t-mono-inline">
-      align="end"
-    </code> to its right, for triggers near
-    the viewport's right edge. Only for
+    trigger's left edge; <code class="t-mono-inline"> align="end" </code> to its
+    right, for triggers near the viewport's right edge. Only for
     <code class="t-mono-inline">
       top
     </code> and

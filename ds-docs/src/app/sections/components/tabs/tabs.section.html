@@ -19,11 +19,21 @@
     </li>
 
     <li>
-      Pills look like <code class="t-mono-inline">ds-segmented</code> but are <code class="t-mono-inline">tablist</code> tabs owning panels; a panel-less value toggle is <code class="t-mono-inline">ds-segmented</code>.
+      Pills look like <code class="t-mono-inline">ds-segmented</code> but are
+      <code class="t-mono-inline">
+        tablist
+      </code> tabs owning panels; a
+      panel-less value toggle is
+      <code class="t-mono-inline">
+        ds-segmented
+      </code>.
     </li>
 
     <li>
-      Arrows move and activate, skipping disabled tabs; <kbd>Home</kbd> / <kbd>End</kbd> jump to the ends.
+      Arrows move and activate, skipping disabled tabs; <kbd>Home</kbd> /
+      <kbd>
+        End
+      </kbd> jump to the ends.
     </li>
   </ul>
 
@@ -142,8 +152,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       scrollable
-    </code> scrolls the strip: a page-turn arrow on each
-    side that hides tabs, the active tab kept in view.
+    </code> scrolls the strip: a
+    page-turn arrow on each side that hides tabs, the active tab kept in view.
   </p>
 
   <div class="variant-row">
@@ -307,7 +317,16 @@
     <li>
       <code class="t-mono-inline">
         closable
-      </code> - a close button emitting <code class="t-mono-inline">tabClosed</code> with the tab's <code class="t-mono-inline">value</code>, else its label; <kbd>Delete</kbd> on a focused tab too.
+      </code> - a close button emitting
+      <code class="t-mono-inline">
+        tabClosed
+      </code> with the tab's
+      <code class="t-mono-inline">
+        value
+      </code>, else its label;
+      <kbd>
+        Delete
+      </kbd> on a focused tab too.
     </li>
 
     <li>
@@ -342,8 +361,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       orientation="vertical"
-    </code> stacks the tabs beside the panel,
-    indicator on the right edge.
+    </code> stacks the tabs
+    beside the panel, indicator on the right edge.
   </p>
 
   <div class="variant-row">
@@ -383,8 +402,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       lazy
-    </code> creates a panel on first activation and keeps it;
-    otherwise only the active panel renders.
+    </code> creates a panel on first
+    activation and keeps it; otherwise only the active panel renders.
   </p>
 
   <div class="variant-row">
@@ -587,8 +606,8 @@
     </code> keeps the active tab in
     <code class="t-mono-inline">
       ?tab=&lt;name&gt;
-    </code>, surviving reload, sharing and Back.
-    Inert outside a routed context.
+    </code>, surviving reload,
+    sharing and Back. Inert outside a routed context.
   </p>
 
   <pre class="t-mono-block"><code>&lt;ds-tabs urlParam="tab"&gt;
@@ -600,23 +619,37 @@
 
   <ul class="block-desc t-s">
     <li>
-      Name - the tab's <code class="t-mono-inline">value</code>, else a slug of its <code class="t-mono-inline">label</code> ("License Verification Status" gives <code class="t-mono-inline">license-verification-status</code>).
+      Name - the tab's <code class="t-mono-inline">value</code>, else a slug of
+      its <code class="t-mono-inline">label</code> ("License Verification
+      Status" gives
+      <code class="t-mono-inline">
+        license-verification-status
+      </code>).
     </li>
 
     <li>
-      Set <code class="t-mono-inline">value</code> so a rename keeps links; without it, <code class="t-mono-inline">tabClosed</code> emits the raw label, not the slug.
+      Set <code class="t-mono-inline">value</code> so a rename keeps links;
+      without it, <code class="t-mono-inline">tabClosed</code> emits the raw
+      label, not the slug.
     </li>
 
     <li>
-      The first tab writes no parameter; writes replace history; an unknown name opens the first tab.
+      The first tab writes no parameter; writes replace history; an unknown name
+      opens the first tab.
     </li>
 
     <li>
-      Query-only writes skip <code class="t-mono-inline">ds-app-layout</code>'s <code class="t-mono-inline">pathChanged</code> scroll reset.
+      Query-only writes skip <code class="t-mono-inline">ds-app-layout</code>'s
+      <code class="t-mono-inline">
+        pathChanged
+      </code> scroll reset.
     </li>
 
     <li>
-      One strip per parameter name (<code class="t-mono-inline">tab</code>, <code class="t-mono-inline">subtab</code>); dev mode warns on a clash.
+      One strip per parameter name (<code class="t-mono-inline">tab</code>,
+      <code class="t-mono-inline">
+        subtab
+      </code>); dev mode warns on a clash.
     </li>
   </ul>
 
@@ -630,9 +663,8 @@
     </code> (needs
     <code class="t-mono-inline">
       urlParam
-    </code>) reopens the last tab per path from
-    <code class="t-mono-inline">
-      sessionStorage
-    </code>. A link wins; storage failures are ignored.
+    </code>) reopens the last tab per path
+    from <code class="t-mono-inline"> sessionStorage </code>. A link wins;
+    storage failures are ignored.
   </p>
 </docs-section>

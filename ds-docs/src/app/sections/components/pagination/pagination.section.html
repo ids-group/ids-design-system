@@ -10,17 +10,23 @@
     <li>
       <code class="t-mono-inline">
         DS_INTL.pagination.label
-      </code> names the <code class="t-mono-inline">&lt;nav&gt;</code>; the current page button carries <code class="t-mono-inline">aria-current="page"</code>.
+      </code> names the
+      <code class="t-mono-inline">
+        &lt;nav&gt;
+      </code>; the current page button
+      carries <code class="t-mono-inline">aria-current="page"</code>.
     </li>
 
     <li>
       <code class="t-mono-inline">
         DS_INTL.pagination.*
-      </code> - localises previous, next, page and rows-per-page labels.
+      </code> - localises
+      previous, next, page and rows-per-page labels.
     </li>
 
     <li>
-      Tokens <code class="t-mono-inline">--ds-pagination-*</code>: button bg/label/border and hover, active bg/label and hover, radius, label font.
+      Tokens <code class="t-mono-inline">--ds-pagination-*</code>: button
+      bg/label/border and hover, active bg/label and hover, radius, label font.
     </li>
   </ul>
 
@@ -48,13 +54,23 @@
     <li>
       <code class="t-mono-inline">
         loading
-      </code> - page buttons take <code class="t-mono-inline">aria-disabled</code> and ignore presses but keep focus, the size select disables; masks the range label with a skeleton, sets <code class="t-mono-inline">aria-busy</code> on the nav.
+      </code> - page buttons take
+      <code class="t-mono-inline">
+        aria-disabled
+      </code> and ignore presses but
+      keep focus, the size select disables; masks the range label with a
+      skeleton, sets <code class="t-mono-inline">aria-busy</code> on the nav.
     </li>
 
     <li>
       <code class="t-mono-inline">
         total
-      </code> 0 - "Showing 0 of 0" via <code class="t-mono-inline">DS_INTL.pagination.range(0, 0, 0)</code> (a custom <code class="t-mono-inline">range</code> must handle it); every button disabled, none current.
+      </code> 0 - "Showing 0 of 0" via
+      <code class="t-mono-inline">
+        DS_INTL.pagination.range(0, 0, 0)
+      </code> (a
+      custom <code class="t-mono-inline">range</code> must handle it); every
+      button disabled, none current.
     </li>
   </ul>
 
@@ -231,21 +247,27 @@
     <li>
       <code class="t-mono-inline">
         layout="grouped"
-      </code> (default) - label and buttons together, natural width.
+      </code> (default) - label
+      and buttons together, natural width.
     </li>
 
     <li>
       <code class="t-mono-inline">
         layout="spread"
-      </code> - full width, label at one end, for under a table.
+      </code> - full width, label
+      at one end, for under a table.
     </li>
 
     <li>
-      Both also apply to the pager inside <code class="t-mono-inline">ds-table</code>.
+      Both also apply to the pager inside
+      <code class="t-mono-inline">
+        ds-table
+      </code>.
     </li>
   </ul>
 
-  <pre class="t-mono-block"><code>size:   input &gt; DS_CONFIG.pagination.size &gt; DS_CONFIG.control.size &gt; 'sm'
+  <pre
+    class="t-mono-block"><code>size:   input &gt; DS_CONFIG.pagination.size &gt; DS_CONFIG.control.size &gt; 'sm'
   layout: input &gt; DS_CONFIG.pagination.layout &gt; 'grouped'</code></pre>
 
   <div class="ranges">

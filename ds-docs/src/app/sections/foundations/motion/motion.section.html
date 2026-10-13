@@ -316,7 +316,8 @@
           Entrance played with
           <code class="t-mono-inline">
             {{ preset() }}
-          </code>.
+          </code
+          >.
         </ds-alert>
       }
 
@@ -412,8 +413,13 @@
         </td>
 
         <td>
-          Duration, easing, <code class="t-mono-inline">-leave-keyframes</code>
-          (<code class="t-mono-inline">ds-fade-out</code>)
+          Duration, easing,
+          <code class="t-mono-inline">
+            -leave-keyframes
+          </code> (<code
+            class="t-mono-inline"
+            >ds-fade-out</code
+          >)
         </td>
       </tr>
 
@@ -429,8 +435,13 @@
         </td>
 
         <td>
-          Duration, easing, <code class="t-mono-inline">-leave-keyframes</code>
-          (<code class="t-mono-inline">ds-slide-edge-out</code>)
+          Duration, easing,
+          <code class="t-mono-inline">
+            -leave-keyframes
+          </code> (<code
+            class="t-mono-inline"
+            >ds-slide-edge-out</code
+          >)
         </td>
       </tr>
 
@@ -498,14 +509,13 @@
     </li>
 
     <li>
-      Set them globally, per theme or per instance; portaled panels forward
-      them to their overlay pane
+      Set them globally, per theme or per instance; portaled panels forward them
+      to their overlay pane
     </li>
 
     <li>
       Custom <code class="t-mono-inline">&#64;keyframes</code> must be global:
-      emulated encapsulation
-      renames scoped ones
+      emulated encapsulation renames scoped ones
     </li>
 
     <li>

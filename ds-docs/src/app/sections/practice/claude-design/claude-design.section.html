@@ -3,8 +3,8 @@
   eyebrow="Practice"
   title="Claude Design sync">
   <span lede>
-    Loads this library into a Claude Design project, so its agent builds
-    screens from the real components.
+    Loads this library into a Claude Design project, so its agent builds screens
+    from the real components.
   </span>
 
   <h3 class="block-title t-h4">
@@ -15,7 +15,8 @@
     The agent renders
     <code class="t-mono-inline">
       React.createElement(window.IdsDs.&lt;Component&gt;)
-    </code>.
+    </code
+    >.
   </p>
 
   <dl class="spec">
@@ -26,10 +27,10 @@
     <dd>
       <strong>
         React components on
-      <code class="t-mono-inline">
-        window.IdsDs
-      </code>; React loads separately
-      as a global
+        <code class="t-mono-inline">
+          window.IdsDs
+        </code>; React loads
+        separately as a global
       </strong>
       (<code class="t-mono-inline">_vendor/react*.js</code>)
     </dd>
@@ -41,9 +42,8 @@
     <dd>
       <code class="t-mono-inline">
         _ds_bundle.js
-      </code> is never inspected, so it
-      can carry an Angular
-      runtime
+      </code> is never inspected, so
+      it can carry an Angular runtime
     </dd>
 
     <dt>
@@ -54,8 +54,8 @@
       No React: one HTML page per
       <code class="t-mono-inline">
         data-claude-design
-      </code> block, rendering its
-      chapter's section tag on the bundle
+      </code> block, rendering
+      its chapter's section tag on the bundle
     </dd>
   </dl>
 
@@ -78,21 +78,20 @@
     <li>
       <code class="t-mono-inline">
         measure-cards.mjs
-      </code> records their heights
-      in <code class="t-mono-inline">viewports.json</code>
+      </code> records their
+      heights in <code class="t-mono-inline">viewports.json</code>
     </li>
 
     <li>
       <code class="t-mono-inline">
         snapshot-cards.mjs
       </code> runs last: every
-      card not kept live
-      (<code class="t-mono-inline">live-chapters.txt</code>, panel owners)
-      becomes static HTML linking
+      card not kept live (<code class="t-mono-inline">live-chapters.txt</code>,
+      panel owners) becomes static HTML linking
       <code class="t-mono-inline">
         _ds_cards.css
-      </code>; the run records the live
-      ones in
+      </code>; the run records the
+      live ones in
       <code class="t-mono-inline">
         live-cards.txt
       </code>
@@ -143,8 +142,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       npm run check:cards
-    </code> runs the whole chain; only it
-    works in an unbuilt tree.
+    </code> runs the whole
+    chain; only it works in an unbuilt tree.
   </p>
 
   <p class="block-desc t-s">
@@ -163,8 +162,8 @@
     </code>. Only
     <code class="t-mono-inline">
       _ds_sync.json
-    </code> lives in the project alone;
-    its absence here is not drift.
+    </code> lives in the project
+    alone; its absence here is not drift.
   </p>
 
   <div class="cd-table">
@@ -194,11 +193,10 @@
   <ul class="rules">
     <li>
       <strong>
-        An agent composition sets its state as initial props, never toggles it after mount.
-      </strong> An overlay passes
-      <code class="t-mono-inline">
-        staticPreview
-      </code> or
+        An agent composition sets its state as initial props, never toggles it
+        after mount.
+      </strong>
+      An overlay passes <code class="t-mono-inline"> staticPreview </code> or
       <code class="t-mono-inline">
         open
       </code> at creation; a table with bulk
@@ -207,9 +205,12 @@
 
     <li>
       <strong>
-        A component used inside another component's template registers
-        under a <code class="t-mono-inline">ds-x-</code> alias.
-      </strong> The React wrapper emits it; callers and designs never see it.
+        A component used inside another component's template registers under a
+        <code class="t-mono-inline">
+          ds-x-
+        </code> alias.
+      </strong>
+      The React wrapper emits it; callers and designs never see it.
     </li>
   </ul>
 
