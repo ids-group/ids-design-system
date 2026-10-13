@@ -107,6 +107,7 @@ export interface ChartStatesMessageContext {
                       height="var(--space-2)"
                       [shimmer]="shimmer()" />
                   </th>
+
                   <th>
                     <ds-skeleton
                       inline
@@ -129,6 +130,7 @@ export interface ChartStatesMessageContext {
                         height="var(--space-2)"
                         [shimmer]="shimmer()" />
                     </td>
+
                     <td>
                       <ds-skeleton
                         inline
@@ -201,7 +203,9 @@ export class ChartStatesComponent implements OnChanges {
   /** How a mark the loading skeleton had no placeholder for arrives when the data lands. */
   readonly morphGrowth = input<ChartMorphGrowth>(null);
 
-  protected readonly placeholderRows = Array.from({ length: CHART_SKELETON_COUNT });
+  protected readonly placeholderRows = Array.from({
+    length: CHART_SKELETON_COUNT,
+  });
 
   private readonly morphingState = signal(false);
   /** Whether the loading skeleton is turning into the drawn chart; a chart animating its own marks
