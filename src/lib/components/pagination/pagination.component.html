@@ -29,7 +29,10 @@
     </ds-icon>
   </button>
 
-  @for (item of pageItems(); track item === 'ellipsis' ? 'ellipsis-' + $index : item) {
+  @for (
+    item of pageItems();
+    track item === 'ellipsis' ? 'ellipsis-' + $index : item
+  ) {
     @if (item === 'ellipsis') {
       <span
         class="ellipsis"

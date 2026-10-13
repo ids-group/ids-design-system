@@ -66,7 +66,8 @@
     <li>
       <code class="t-mono-inline">
         "fit"
-      </code> (default) - chips that fit, the rest behind "+N more", re-split on resize.
+      </code> (default) - chips that fit, the
+      rest behind "+N more", re-split on resize.
     </li>
 
     <li>
@@ -76,7 +77,8 @@
     <li>
       <code class="t-mono-inline">
         "all"
-      </code> - every chip; the trigger grows.
+      </code> - every chip; the trigger
+      grows.
     </li>
   </ul>
 
@@ -164,19 +166,32 @@
     <li>
       <code class="t-mono-inline">
         searchable
-      </code> - <code class="t-mono-inline">true</code> (default, always), <code class="t-mono-inline">false</code> (never), or a <strong>number</strong>: the threshold at which the row appears.
+      </code> -
+      <code class="t-mono-inline">
+        true
+      </code> (default, always),
+      <code class="t-mono-inline">
+        false
+      </code> (never), or a
+      <strong>
+        number
+      </strong>: the threshold at which the row appears.
     </li>
 
     <li>
       <code class="t-mono-inline">
         DS_CONFIG.picker.searchable
-      </code> - app-wide; inputs override it.
+      </code> -
+      app-wide; inputs override it.
     </li>
 
     <li>
       <code class="t-mono-inline">
         searchPlaceholder
-      </code> - defaults to <code class="t-mono-inline">DS_INTL.picker.filterPlaceholder</code>.
+      </code> - defaults to
+      <code class="t-mono-inline">
+        DS_INTL.picker.filterPlaceholder
+      </code>.
     </li>
   </ul>
 
@@ -355,13 +370,21 @@
     <li>
       <code class="t-mono-inline">
         width="fill"
-      </code> (default) - fills the container; the panel matches the trigger.
+      </code> (default) - fills the
+      container; the panel matches the trigger.
     </li>
 
     <li>
       <code class="t-mono-inline">
         width="content"
-      </code> - hugs the trigger's content, which floors the panel width; <code class="t-mono-inline">--ds-dropdown-panel-min-width</code> and <code class="t-mono-inline">--ds-dropdown-panel-max-width</code> bound it.
+      </code> - hugs the trigger's
+      content, which floors the panel width;
+      <code class="t-mono-inline">
+        --ds-dropdown-panel-min-width
+      </code> and
+      <code class="t-mono-inline">
+        --ds-dropdown-panel-max-width
+      </code> bound it.
     </li>
 
     <li>
@@ -417,31 +440,53 @@
     <li>
       <code class="t-mono-inline">
         error
-      </code> - replaces it, announced via <code class="t-mono-inline">role="alert"</code>.
+      </code> - replaces it, announced via
+      <code class="t-mono-inline">
+        role="alert"
+      </code>.
     </li>
 
     <li>
       <code class="t-mono-inline">
         warning
-      </code> / <code class="t-mono-inline">success</code> - their states.
+      </code> /
+      <code class="t-mono-inline">
+        success
+      </code> - their states.
     </li>
 
     <li>
       <code class="t-mono-inline">
         [invalid]
-      </code> - the error border, no text.
+      </code> - the error border, no
+      text.
     </li>
 
     <li>
       <code class="t-mono-inline">
         size
-      </code> - <code class="t-mono-inline">sm</code> · <code class="t-mono-inline">md</code> · <code class="t-mono-inline">lg</code>, falls back to <code class="t-mono-inline">DS_CONFIG.control.size</code>.
+      </code> -
+      <code class="t-mono-inline">
+        sm
+      </code> ·
+      <code class="t-mono-inline">
+        md
+      </code> ·
+      <code class="t-mono-inline">
+        lg
+      </code>, falls back to
+      <code class="t-mono-inline">
+        DS_CONFIG.control.size
+      </code>.
     </li>
 
     <li>
       <code class="t-mono-inline">
         required
-      </code>, <code class="t-mono-inline">optional</code> - mark the label.
+      </code>,
+      <code class="t-mono-inline">
+        optional
+      </code> - mark the label.
     </li>
   </ul>
 
@@ -471,7 +516,17 @@
 
   <ul class="block-desc t-s">
     <li>
-      An option's optional <code class="t-mono-inline">icon</code> renders before its label at 16px - the same <code class="t-mono-inline">DsOption</code> field as <code class="t-mono-inline">ds-select</code> and <code class="t-mono-inline">ds-autocomplete</code>.
+      An option's optional <code class="t-mono-inline">icon</code> renders
+      before its label at 16px - the same
+      <code class="t-mono-inline">
+        DsOption
+      </code> field as
+      <code class="t-mono-inline">
+        ds-select
+      </code> and
+      <code class="t-mono-inline">
+        ds-autocomplete
+      </code>.
     </li>
 
     <li>
@@ -514,8 +569,8 @@
     <li>
       <code class="t-mono-inline">
         loading
-      </code>, no options - three placeholder
-      rows.
+      </code>, no options - three
+      placeholder rows.
     </li>
 
     <li>
@@ -524,11 +579,12 @@
       </code>, with options - under a
       <code class="t-mono-inline">
         ds-loading-overlay
-      </code>, inert and deaf to arrow and Enter keys until
+      </code>, inert and deaf to
+      arrow and Enter keys until
       <code class="t-mono-inline">
         loading
-      </code> clears; filter input and select
-      all stay live.
+      </code> clears; filter input and
+      select all stay live.
     </li>
   </ul>
 
@@ -558,11 +614,22 @@
     <li>
       <code class="t-mono-inline">
         dsPanelHeaderTemplate
-      </code>, <code class="t-mono-inline">dsPanelFooterTemplate</code> - a strip above and below the options; context <code class="t-mono-inline">count</code>, <code class="t-mono-inline">total</code>, <code class="t-mono-inline">query</code>.
+      </code>,
+      <code class="t-mono-inline">
+        dsPanelFooterTemplate
+      </code> - a strip above
+      and below the options; context <code class="t-mono-inline">count</code>,
+      <code class="t-mono-inline">
+        total
+      </code>,
+      <code class="t-mono-inline">
+        query
+      </code>.
     </li>
 
     <li>
-      Both sit outside the listbox: not counted as options, not scrolled with the list.
+      Both sit outside the listbox: not counted as options, not scrolled with
+      the list.
     </li>
   </ul>
 
@@ -602,11 +669,16 @@
     <li>
       <code class="t-mono-inline">
         dsGroupLabelTemplate
-      </code> - fills a group's heading; the element and its naming id stay library-owned.
+      </code> - fills a
+      group's heading; the element and its naming id stay library-owned.
     </li>
 
     <li>
-      An option's <code class="t-mono-inline">disabledReason</code> - <code class="t-mono-inline">aria-describedby</code> on the row; try the "On leave" rows.
+      An option's <code class="t-mono-inline">disabledReason</code> -
+      <code class="t-mono-inline">
+        aria-describedby
+      </code> on the row; try the
+      "On leave" rows.
     </li>
   </ul>
 

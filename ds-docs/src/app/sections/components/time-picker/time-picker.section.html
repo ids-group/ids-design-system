@@ -55,16 +55,13 @@
 
   <p class="block-desc t-s">
     The value is always a 24-hour <code class="t-mono-inline">"HH:MM"</code>
-    string. The display follows the locale's clock (en-GB 24-hour, also
-    with no locale set; en-US 12-hour). Set it app-wide with
+    string. The display follows the locale's clock (en-GB 24-hour, also with no
+    locale set; en-US 12-hour). Set it app-wide with
     <code class="t-mono-inline">
       provideDsConfig({{ '{' }} timePicker: {{ '{' }} format {{ '}' }}
       {{ '}' }})
     </code
-    >;
-    <code class="t-mono-inline">
-      [format]
-    </code> overrides it per instance.
+    >; <code class="t-mono-inline"> [format] </code> overrides it per instance.
   </p>
 
   <div class="row">
@@ -86,7 +83,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [minuteStep]="15"
-    </code> lists quarter-hour slots.
+    </code> lists quarter-hour
+    slots.
   </p>
 
   <div class="row">
@@ -137,7 +135,8 @@
     <li>
       <code class="t-mono-inline">
         [clearable]="true"
-      </code> - a clear button once a value is set.
+      </code> - a clear button
+      once a value is set.
     </li>
 
     <li>
@@ -147,7 +146,11 @@
     <li>
       <code class="t-mono-inline">
         fullWidth
-      </code> - stretches the trigger; <code class="t-mono-inline">panelClass</code> - styles this instance's panel.
+      </code> - stretches the trigger;
+      <code class="t-mono-inline">
+        panelClass
+      </code> - styles this instance's
+      panel.
     </li>
   </ul>
 

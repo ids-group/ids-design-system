@@ -8,10 +8,8 @@
     Centered dialog over a scrim.
     <code>
       ds-modal
-    </code> wraps a
-    <code>
-      ds-modal-card
-    </code>; specimens show the card alone.
+    </code> wraps a <code> ds-modal-card </code>; specimens show
+    the card alone.
   </span>
 
   <h3 class="block-title t-h4">
@@ -21,16 +19,20 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [eyebrow]
-    </code>, <code class="t-mono-inline">[title-badge]</code>,
+    </code>,
+    <code class="t-mono-inline">
+      [title-badge]
+    </code>,
     <code class="t-mono-inline">
       [body]
-    </code>, <code class="t-mono-inline">[impact]</code> and
+    </code>,
+    <code class="t-mono-inline">
+      [impact]
+    </code> and
     <code class="t-mono-inline">
       [actions]
-    </code>. Content without a slot renders in the body after
-    <code class="t-mono-inline">
-      [body]
-    </code>.
+    </code>. Content without a slot
+    renders in the body after <code class="t-mono-inline"> [body] </code>.
   </p>
 
   <p class="block-desc t-s">
@@ -43,7 +45,8 @@
     around them; both lay the buttons out the same, with the row's gap.
   </p>
 
-  <pre class="t-mono-block"><code>&lt;ds-modal title="Unarchive program" [(open)]="open"&gt;
+  <pre
+    class="t-mono-block"><code>&lt;ds-modal title="Unarchive program" [(open)]="open"&gt;
   &lt;div body&gt;...&lt;/div&gt;
   &lt;ds-button actions variant="outline"&gt;Cancel&lt;/ds-button&gt;
   &lt;ds-button actions&gt;Unarchive&lt;/ds-button&gt;
@@ -304,8 +307,8 @@
     </code> takes
     <code class="t-mono-inline">
       DsStatus
-    </code> and sets icon-badge tint, title colour,
-    default icon and role:
+    </code> and sets icon-badge tint,
+    title colour, default icon and role:
     <code class="t-mono-inline">
       error
     </code> and
@@ -387,14 +390,16 @@
     vertical padding;
     <code class="t-mono-inline">
       --ds-modal-divider: transparent
-    </code> keeps the gap. Header and actions keep padding.
+    </code> keeps
+    the gap. Header and actions keep padding.
   </p>
 
   <p class="block-desc t-s">
     App-wide:
     <code class="t-mono-inline">
       provideDsConfig(&#123; modal: &#123; dividers: false &#125; &#125;)
-    </code>, <code class="t-mono-inline">ModalService</code>
+    </code
+    >, <code class="t-mono-inline">ModalService</code>
     included; explicit
     <code class="t-mono-inline">
       [dividers]
@@ -469,12 +474,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    Labels never wrap. A row that does not fit stacks full-width in DOM
-    order, confirm at the bottom.
+    Labels never wrap. A row that does not fit stacks full-width in DOM order,
+    confirm at the bottom.
     <code>
       --ds-modal-actions-stacked-direction: column-reverse
-    </code> puts
-    it on top.
+    </code> puts it
+    on top.
   </p>
 
   <div class="modal-grid is-2">
@@ -850,13 +855,8 @@
   <p class="block-desc t-s">
     <code>
       [persistent]="true"
-    </code> disables backdrop and
-    <kbd>
-      Esc
-    </kbd>; only a close button or
-    <code>
-      open.set(false)
-    </code> dismisses.
+    </code> disables backdrop and <kbd> Esc </kbd>;
+    only a close button or <code> open.set(false) </code> dismisses.
     <code>
       [closeOnBackdrop]="false"
     </code> disables only the backdrop.
@@ -864,13 +864,21 @@
 
   <ul class="block-desc t-s">
     <li>
-      Backdrop dismissal needs press and release on it; a drag ending outside never closes (as in <code class="t-mono-inline">ds-bottom-sheet</code>).
+      Backdrop dismissal needs press and release on it; a drag ending outside
+      never closes (as in <code class="t-mono-inline">ds-bottom-sheet</code>).
     </li>
 
     <li>
       <code class="t-mono-inline">
         ds-modal
-      </code> emits <code class="t-mono-inline">closed</code> after its leave animation; <code class="t-mono-inline">ds-modal-card</code>, on its header close click.
+      </code> emits
+      <code class="t-mono-inline">
+        closed
+      </code> after its leave animation;
+      <code class="t-mono-inline">
+        ds-modal-card
+      </code>, on its header close
+      click.
     </li>
   </ul>
 
@@ -1207,12 +1215,11 @@
     </code> (<code>'default'</code> | <code>'error'</code>),
     <code>
       icon
-    </code>, <code>typeToConfirm</code> (phrase required to
-    enable confirm).
+    </code>, <code>typeToConfirm</code> (phrase required to enable
+    confirm).
   </p>
 
-  <pre
-    class="t-mono-block"><code>private readonly modal = inject(ModalService);
+  <pre class="t-mono-block"><code>private readonly modal = inject(ModalService);
 
 const ok = await this.modal.confirm(&#123;
   title: 'Delete database?',
@@ -1263,7 +1270,20 @@ const ok = await this.modal.confirm(&#123;
     </li>
 
     <li>
-      Text - title font, title-text-color (+ <code class="t-mono-inline">-error</code> / <code class="t-mono-inline">-warning</code> / <code class="t-mono-inline">-success</code> / <code class="t-mono-inline">-info</code>), subtitle font and colour, impact-text-color, eyebrow.
+      Text - title font, title-text-color (+
+      <code class="t-mono-inline">
+        -error
+      </code> /
+      <code class="t-mono-inline">
+        -warning
+      </code> /
+      <code class="t-mono-inline">
+        -success
+      </code> /
+      <code class="t-mono-inline">
+        -info
+      </code>), subtitle font and colour,
+      impact-text-color, eyebrow.
     </li>
 
     <li>

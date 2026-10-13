@@ -27,15 +27,18 @@
     <li>
       <code class="t-mono-inline">
         'meter'
-      </code> is a measurement (rate, score,
-      count against a ceiling), role <code class="t-mono-inline">meter</code>.
+      </code> is a measurement (rate,
+      score, count against a ceiling), role
+      <code class="t-mono-inline">
+        meter
+      </code>.
     </li>
 
     <li>
       <code class="t-mono-inline">
         'none'
-      </code> is a cell that prints its figure
-      beside it, hidden from assistive technology.
+      </code> is a cell that prints its
+      figure beside it, hidden from assistive technology.
     </li>
   </ul>
 
@@ -43,10 +46,8 @@
     Progress and meter bars need an
     <code class="t-mono-inline">
       ariaLabel
-    </code> (the role has no name); with a
-    <code class="t-mono-inline">
-      target
-    </code>, name the comparison in it.
+    </code> (the role has no name); with
+    a <code class="t-mono-inline"> target </code>, name the comparison in it.
   </p>
 
   <h3
@@ -181,11 +182,15 @@
     <li>
       <code class="t-mono-inline">
         max
-      </code> - the column's largest value, so the longest bar fills its track.
+      </code> - the column's largest value, so
+      the longest bar fills its track.
     </li>
 
     <li>
-      The figure prints beside it, so bars are <code class="t-mono-inline">semantics="none"</code>.
+      The figure prints beside it, so bars are
+      <code class="t-mono-inline">
+        semantics="none"
+      </code>.
     </li>
   </ul>
 
@@ -216,7 +221,14 @@
 
   <ul class="block-desc t-s">
     <li>
-      The bar fills its box. In a content-sized box (<code class="t-mono-inline">width: 'content'</code> on <code class="t-mono-inline">ds-table</code>, a shrink-to-fit flex/grid item) it falls back to <code class="t-mono-inline">--ds-bar-min-width</code> (3rem).
+      The bar fills its box. In a content-sized box (<code class="t-mono-inline"
+        >width: 'content'</code
+      >
+      on <code class="t-mono-inline">ds-table</code>, a shrink-to-fit flex/grid
+      item) it falls back to
+      <code class="t-mono-inline">
+        --ds-bar-min-width
+      </code> (3rem).
     </li>
 
     <li>
@@ -266,7 +278,13 @@
         <td>
           <code class="t-mono-inline">
             --ds-bar-fill-color-success
-          </code> / <code class="t-mono-inline">-warning</code> / <code class="t-mono-inline">-error</code>
+          </code> /
+          <code class="t-mono-inline">
+            -warning
+          </code> /
+          <code class="t-mono-inline">
+            -error
+          </code>
         </td>
 
         <td>
@@ -278,7 +296,10 @@
         <td>
           <code class="t-mono-inline">
             --ds-bar-height
-          </code>, <code class="t-mono-inline">--ds-bar-track-color</code>
+          </code>,
+          <code class="t-mono-inline">
+            --ds-bar-track-color
+          </code>
         </td>
 
         <td>
@@ -290,7 +311,10 @@
         <td>
           <code class="t-mono-inline">
             --ds-bar-target-color
-          </code>, <code class="t-mono-inline">--ds-bar-target-width</code>
+          </code>,
+          <code class="t-mono-inline">
+            --ds-bar-target-width
+          </code>
         </td>
 
         <td>
@@ -306,7 +330,10 @@
         </td>
 
         <td>
-          Track and fill together; pill by default, square at <code class="t-mono-inline">var(--radius-0)</code>
+          Track and fill together; pill by default, square at
+          <code class="t-mono-inline">
+            var(--radius-0)
+          </code>
         </td>
       </tr>
     </tbody>
@@ -348,7 +375,8 @@
 
   <ul class="block-desc t-s">
     <li>
-      Past <code class="t-mono-inline">max</code> - fills the track, no overflow.
+      Past <code class="t-mono-inline">max</code> - fills the track, no
+      overflow.
     </li>
 
     <li>
@@ -358,13 +386,20 @@
     <li>
       <code class="t-mono-inline">
         max
-      </code> of zero or less - falls back to 100.
+      </code> of zero or less - falls back to
+      100.
     </li>
 
     <li>
       <code class="t-mono-inline">
         indeterminate
-      </code> - ignored unless <code class="t-mono-inline">semantics</code> is <code class="t-mono-inline">'progress'</code>.
+      </code> - ignored unless
+      <code class="t-mono-inline">
+        semantics
+      </code> is
+      <code class="t-mono-inline">
+        'progress'
+      </code>.
     </li>
   </ul>
 

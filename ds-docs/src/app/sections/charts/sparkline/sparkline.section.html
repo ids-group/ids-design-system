@@ -15,8 +15,8 @@
 
   <ul class="rules">
     <li>
-      One <code class="t-mono-inline">svg</code>, no container to measure: cheap in a thousand-row
-      table.
+      One <code class="t-mono-inline">svg</code>, no container to measure: cheap
+      in a thousand-row table.
     </li>
 
     <li>
@@ -28,8 +28,11 @@
     </li>
 
     <li>
-      With a <code class="t-mono-inline">label</code> and <code class="t-mono-inline">tooltip</code> on (default) it is a tab
-      stop: focus opens the tooltip on the last reading;
+      With a <code class="t-mono-inline">label</code> and
+      <code class="t-mono-inline">
+        tooltip
+      </code> on (default) it is a tab stop:
+      focus opens the tooltip on the last reading;
       <kbd>
         ←
       </kbd>
@@ -66,7 +69,10 @@
         <td>
           <code class="t-mono-inline">
             --ds-sparkline-width
-          </code> / <code class="t-mono-inline">--ds-sparkline-height</code>
+          </code> /
+          <code class="t-mono-inline">
+            --ds-sparkline-height
+          </code>
         </td>
 
         <td>
@@ -147,15 +153,15 @@
     The line spans the readings' range; with
     <code class="t-mono-inline">
       scale="zero"
-    </code> zero stays on the scale, for
-    when amount matters more than movement.
+    </code> zero stays on the scale,
+    for when amount matters more than movement.
   </p>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       valueFormat
-    </code> formats the tooltip value; unset, the locale's
-    number format.
+    </code> formats the tooltip value;
+    unset, the locale's number format.
   </p>
 
   <div class="states is-cols-2">
@@ -197,12 +203,17 @@
     <li>
       <code class="t-mono-inline">
         area
-      </code> fills down to the baseline: zero on the <code class="t-mono-inline">zero</code>
-      scale, the foot of the box on <code class="t-mono-inline">data</code>.
+      </code> fills down to the baseline: zero
+      on the <code class="t-mono-inline">zero</code> scale, the foot of the box
+      on <code class="t-mono-inline">data</code>.
     </li>
 
     <li>
-      Colour <code class="t-mono-inline">--ds-sparkline-area-color</code> (default: the line's) at
+      Colour
+      <code class="t-mono-inline">
+        --ds-sparkline-area-color
+      </code> (default: the
+      line's) at
       <code class="t-mono-inline">
         --ds-sparkline-area-opacity
       </code>.
@@ -251,8 +262,8 @@
     </code> breaks the line, not zero.
     <code class="t-mono-inline">
       [tooltip]="false"
-    </code> makes it inert, for a row that
-    is a link.
+    </code> makes it inert, for a
+    row that is a link.
   </p>
 
   <div class="states is-cols-2">

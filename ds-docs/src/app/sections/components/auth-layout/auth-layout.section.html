@@ -42,8 +42,8 @@
           A real logo, capped by
           <code class="t-mono-inline">
             --ds-auth-layout-brand-max-height
-          </code>;
-          the tile stays unless <code class="t-mono-inline">brand</code> /
+          </code
+          >; the tile stays unless <code class="t-mono-inline">brand</code> /
           <code class="t-mono-inline">
             logoLetter
           </code> are unset
@@ -105,8 +105,8 @@
         <td>
           <code class="t-mono-inline">
             contentinfo
-          </code> when this layout is the
-          page, a plain footer when nested
+          </code> when this layout is
+          the page, a plain footer when nested
         </td>
       </tr>
     </tbody>
@@ -115,8 +115,10 @@
   <p class="block-desc t-s">
     Wordmark precedence, per field:
     <code class="t-mono-inline">
-      [dsBrandName] &gt; brand input &gt; provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125; &#125;)
-    </code>.
+      [dsBrandName] &gt; brand input &gt; provideDsConfig(&#123; brand: &#123;
+      name, logoLetter, tagline &#125; &#125;)
+    </code
+    >.
   </p>
 
   <ul class="rules">
@@ -206,8 +208,8 @@
     </code> from
     <code class="t-mono-inline">
       &#64;ids-group-ltd/ids-design-system/components/sidenav
-    </code>; without it the attribute is inert and the projection lands in the
-    card.
+    </code
+    >; without it the attribute is inert and the projection lands in the card.
   </p>
 
   <p class="block-desc t-s">
@@ -277,13 +279,18 @@
       </code>, not
       <code class="t-mono-inline">
         dvh
-      </code>: the column does not re-space as a
-      mobile URL bar hides
+      </code>: the column does not re-space as
+      a mobile URL bar hides
     </li>
 
     <li>
-      A fixed <code class="t-mono-inline">--ds-auth-layout-padding-block</code>
-      or <code class="t-mono-inline">-gap</code> opts that dimension out
+      A fixed
+      <code class="t-mono-inline">
+        --ds-auth-layout-padding-block
+      </code> or
+      <code class="t-mono-inline">
+        -gap
+      </code> opts that dimension out
     </li>
 
     <li>
@@ -297,9 +304,9 @@
 
   <p class="block-desc t-s">
     Auto margins, not <code class="t-mono-inline">align-items: center</code>: in
-    a fixed-height parent
-    (<code class="t-mono-inline">--ds-auth-layout-min-height: 100%</code>) a
-    too-tall form pins to the top padding and scrolls.
+    a fixed-height parent (<code class="t-mono-inline"
+      >--ds-auth-layout-min-height: 100%</code
+    >) a too-tall form pins to the top padding and scrolls.
   </p>
 
   <h3 class="block-title t-h4">
@@ -313,7 +320,8 @@
     </code>; the insets are
     <strong>
       0 until <code class="t-mono-inline">index.html</code> opts in
-    </strong>.
+    </strong
+    >.
   </p>
 
   <pre class="t-mono-block"><code>&lt;!-- your index.html --&gt;

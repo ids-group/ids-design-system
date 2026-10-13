@@ -15,8 +15,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    One reading per cell. Magnitude reads from the step between colours, so
-    the heat scale spans the full lightness range.
+    One reading per cell. Magnitude reads from the step between colours, so the
+    heat scale spans the full lightness range.
   </p>
 
   <table class="tbl">
@@ -105,13 +105,18 @@
     <li>
       <code class="t-mono-inline">
         inline-size: fit-content
-      </code> (default) - as wide as the grid, capped at the container; a wider grid scrolls.
+      </code> (default) -
+      as wide as the grid, capped at the container; a wider grid scrolls.
     </li>
 
     <li>
       <code class="t-mono-inline">
         inline-size: auto
-      </code> - fills the container. Set it from a component stylesheet, or as <code class="t-mono-inline">:root ds-heatmap-chart</code> globally.
+      </code> - fills the
+      container. Set it from a component stylesheet, or as
+      <code class="t-mono-inline">
+        :root ds-heatmap-chart
+      </code> globally.
     </li>
   </ul>
 
@@ -148,13 +153,22 @@
       A hovered cell marks its reading on the scale;
       <code class="t-mono-inline">
         [showScaleMarker]="false"
-      </code> drops the marker.
+      </code> drops the
+      marker.
     </li>
 
     <li>
       <code class="t-mono-inline">
         tooltip="none"
-      </code> drops the panel; dimming: <a class="link" routerLink="/foundations/charts">Charts foundations</a>.
+      </code> drops the panel;
+      dimming:
+      <a
+        class="link"
+        routerLink="/foundations/charts"
+        >
+        Charts foundations
+      </a
+      >.
     </li>
   </ul>
 
@@ -169,7 +183,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    A <code class="t-mono-inline">null</code> draws in <code class="t-mono-inline">--ds-heatmap-chart-missing-color</code>
+    A <code class="t-mono-inline">null</code> draws in
+    <code class="t-mono-inline">
+      --ds-heatmap-chart-missing-color
+    </code>
     (surface-secondary), not the coldest step, and is left out of the scale.
   </p>
 
@@ -194,8 +211,11 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       min
-    </code> and <code class="t-mono-inline">max</code> pin floor and ceiling; they only widen the
-    scale.
+    </code> and
+    <code class="t-mono-inline">
+      max
+    </code> pin floor and ceiling; they only
+    widen the scale.
   </p>
 
   <div class="states is-cols-2">
@@ -228,13 +248,13 @@
     <li>
       <code class="t-mono-inline">
         showValues
-      </code> prints each reading in its cell. Off by default: a
-      dense grid has no room.
+      </code> prints each reading in its
+      cell. Off by default: a dense grid has no room.
     </li>
 
     <li>
-      The glyph takes the cell's colour inverted, legible across a scale
-      running 1.14:1 to 9.07:1 against white.
+      The glyph takes the cell's colour inverted, legible across a scale running
+      1.14:1 to 9.07:1 against white.
     </li>
   </ul>
 
@@ -275,8 +295,18 @@
     A click holds a measured cell and its tooltip; on an
     <code class="t-mono-inline">
       interactive
-    </code> heat map <code class="t-mono-inline">cellClicked</code> fires either way.
-    Release and opt-out: <a class="link" routerLink="/foundations/charts">Charts foundations</a>.
+    </code> heat map
+    <code class="t-mono-inline">
+      cellClicked
+    </code> fires either way. Release and
+    opt-out:
+    <a
+      class="link"
+      routerLink="/foundations/charts"
+      >
+      Charts foundations
+    </a
+    >.
   </p>
 
   <h3 class="block-title t-h4">
@@ -291,10 +321,11 @@
     <li>
       <code class="t-mono-inline">
         staggerMs
-      </code> sets the step between columns: default
+      </code> sets the step between
+      columns: default <code class="t-mono-inline"> 40 </code>,
       <code class="t-mono-inline">
-        40
-      </code>, <code class="t-mono-inline">0</code> the grid at once.
+        0
+      </code> the grid at once.
     </li>
 
     <li>
@@ -310,13 +341,16 @@
     <li>
       <code class="t-mono-inline">
         loading
-      </code>, no data - cell grid with labels and scale.
+      </code>, no data - cell grid with
+      labels and scale.
     </li>
 
     <li>
       <code class="t-mono-inline">
         loading
-      </code>, rows on screen - kept under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and spinner.
+      </code>, rows on screen - kept under
+      the <code class="t-mono-inline">ds-loading-overlay</code> scrim and
+      spinner.
     </li>
   </ul>
 

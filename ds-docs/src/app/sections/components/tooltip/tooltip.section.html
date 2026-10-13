@@ -136,8 +136,8 @@
     <li>
       <code class="t-mono-inline">
         **text**
-      </code> - bold; a line break shows as
-      a line break.
+      </code> - bold; a line break shows
+      as a line break.
     </li>
 
     <li>
@@ -224,14 +224,15 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       dsTooltipPinOnClick
-    </code>: opens with no delay;
-    a click keeps it open after the pointer leaves. Opt in only where the click
-    does nothing else.
+    </code>: opens with no
+    delay; a click keeps it open after the pointer leaves. Opt in only where the
+    click does nothing else.
   </p>
 
   <ul class="block-desc t-s">
     <li>
-      Closes on a click outside, <kbd>Esc</kbd>, blur or a second click on the trigger.
+      Closes on a click outside, <kbd>Esc</kbd>, blur or a second click on the
+      trigger.
     </li>
 
     <li>
@@ -239,7 +240,10 @@
     </li>
 
     <li>
-      Any scroll (window or container) closes the tip, pinned or not, and a <code class="t-mono-inline">ds-menu-item</code> submenu.
+      Any scroll (window or container) closes the tip, pinned or not, and a
+      <code class="t-mono-inline">
+        ds-menu-item
+      </code> submenu.
     </li>
   </ul>
 
@@ -276,7 +280,8 @@
     <li>
       <code class="t-mono-inline">
         icon="help"
-      </code> (default) - a question mark.
+      </code> (default) - a question
+      mark.
     </li>
 
     <li>
@@ -299,7 +304,8 @@
       Rich content: put it inside the tag, or pass a template to
       <code class="t-mono-inline">
         [content]
-      </code>. Keep it non-interactive; a screen reader reads it as flat text.
+      </code>. Keep it non-interactive; a
+      screen reader reads it as flat text.
     </li>
   </ul>
 
@@ -380,8 +386,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       dsDefinitionTerm="…"
-    </code>: a dotted underline;
-    the definition shows on hover and focus, a click pins it.
+    </code>: a dotted
+    underline; the definition shows on hover and focus, a click pins it.
   </p>
 
   <ul class="block-desc t-s">
@@ -395,15 +401,20 @@
       </code>, <kbd>Enter</kbd> /
       <kbd>
         Space
-      </kbd>; a <code class="t-mono-inline">&lt;button&gt;</code> has
-      them.
+      </kbd>; a
+      <code class="t-mono-inline">
+        &lt;button&gt;
+      </code> has them.
     </li>
 
     <li>
       <code class="t-mono-inline">
         [pinOnClick]="false"
-      </code> - where the click
-      already acts, as on a sortable <code class="t-mono-inline">ds-table</code>
+      </code> - where the
+      click already acts, as on a sortable
+      <code class="t-mono-inline">
+        ds-table
+      </code>
       header.
     </li>
   </ul>
@@ -412,11 +423,9 @@
     <p class="t-s">
       Contacts who
       <span
-        dsDefinitionTerm="Left the journey before the goal step, by any exit rule."
-        >
+        dsDefinitionTerm="Left the journey before the goal step, by any exit rule.">
         exited
-      </span
-      >
+      </span>
       the journey are not counted as
       <button
         type="button"
@@ -652,11 +661,13 @@
 
   <ul class="rules t-s">
     <li>
-      No <code class="t-mono-inline">dsTooltip</code> - shows the host's own text.
+      No <code class="t-mono-inline">dsTooltip</code> - shows the host's own
+      text.
     </li>
 
     <li>
-      A selector - aims the clip test and the text at the match; no match, no tip.
+      A selector - aims the clip test and the text at the match; no match, no
+      tip.
     </li>
 
     <li>
@@ -741,11 +752,30 @@
 
       <tr>
         <td>
-          Inside a control (native, or role <code class="t-mono-inline">button</code>, <code class="t-mono-inline">link</code>, <code class="t-mono-inline">tab</code>, <code class="t-mono-inline">option</code>, <code class="t-mono-inline">row</code>, <code class="t-mono-inline">combobox</code>, …)
+          Inside a control (native, or role
+          <code class="t-mono-inline">
+            button
+          </code>,
+          <code class="t-mono-inline">
+            link
+          </code>,
+          <code class="t-mono-inline">
+            tab
+          </code>,
+          <code class="t-mono-inline">
+            option
+          </code>,
+          <code class="t-mono-inline">
+            row
+          </code>,
+          <code class="t-mono-inline">
+            combobox
+          </code>, …)
         </td>
 
         <td>
-          Keyboard focus on the control opens it; blur, a click or any key closes it. First clipped value per control only.
+          Keyboard focus on the control opens it; blur, a click or any key
+          closes it. First clipped value per control only.
         </td>
       </tr>
 
@@ -755,7 +785,8 @@
         </td>
 
         <td>
-          Takes <code class="t-mono-inline">tabindex="0"</code> while clipped; drops it once the text fits and focus is elsewhere.
+          Takes <code class="t-mono-inline">tabindex="0"</code> while clipped;
+          drops it once the text fits and focus is elsewhere.
         </td>
       </tr>
     </tbody>
@@ -763,11 +794,16 @@
 
   <ul class="rules t-s">
     <li>
-      A <code class="t-mono-inline">tabindex</code> you set is never touched; <code class="t-mono-inline">tabindex="-1"</code> keeps a clipped value out of the Tab order.
+      A <code class="t-mono-inline">tabindex</code> you set is never touched;
+      <code class="t-mono-inline">
+        tabindex="-1"
+      </code> keeps a clipped value out
+      of the Tab order.
     </li>
 
     <li>
-      Focus on a container (tab panel, scroll region) opens nothing, so a value inside one takes its own tab stop.
+      Focus on a container (tab panel, scroll region) opens nothing, so a value
+      inside one takes its own tab stop.
     </li>
   </ul>
 

@@ -16,14 +16,18 @@
 
   <ul class="rules">
     <li>
-      Always set <code class="t-mono-inline">xLabel</code> and <code class="t-mono-inline">yLabel</code>.
+      Always set <code class="t-mono-inline">xLabel</code> and
+      <code class="t-mono-inline">
+        yLabel
+      </code>.
     </li>
 
     <li>
       Marks are semi-transparent, so pile-ups read darker:
       <code class="t-mono-inline">
         --ds-scatter-chart-dot-opacity
-      </code> (0.72), radius
+      </code>
+      (0.72), radius
       <code class="t-mono-inline">
         --ds-scatter-chart-dot-radius
       </code>.
@@ -36,13 +40,22 @@
     <li>
       <code class="t-mono-inline">
         tickCount
-      </code> hints both axes; ticks snap to a round step.
+      </code> hints both axes; ticks snap
+      to a round step.
     </li>
 
     <li>
       <code class="t-mono-inline">
         tooltip="none"
-      </code> drops the panel; dimming: <a class="link" routerLink="/foundations/charts">Charts foundations</a>.
+      </code> drops the panel;
+      dimming:
+      <a
+        class="link"
+        routerLink="/foundations/charts"
+        >
+        Charts foundations
+      </a
+      >.
     </li>
   </ul>
 
@@ -78,13 +91,16 @@
 
   <ul class="rules">
     <li>
-      One SVG node per point, not one <code class="t-mono-inline">&lt;path&gt;</code> per line:
-      Lighthouse warns near 800, errors near 1400.
+      One SVG node per point, not one
+      <code class="t-mono-inline">
+        &lt;path&gt;
+      </code> per line: Lighthouse warns
+      near 800, errors near 1400.
     </li>
 
     <li>
-      Past four times the plot width in marks, a series is decimated; the
-      chart prints how many readings it dropped.
+      Past four times the plot width in marks, a series is decimated; the chart
+      prints how many readings it dropped.
     </li>
 
     <li>
@@ -103,9 +119,9 @@
       and lowest reading, so spikes are never dropped;
       <code class="t-mono-inline">
         'lttb'
-      </code> keeps a truer silhouette without
-      that promise; <code class="t-mono-inline">'none'</code> leaves the node
-      budget to the caller.
+      </code> keeps a truer silhouette
+      without that promise; <code class="t-mono-inline">'none'</code> leaves the
+      node budget to the caller.
     </li>
   </ul>
 
@@ -144,8 +160,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       interactive
-    </code> adds the pointer
-    affordance and makes marks focusable buttons.
+    </code> adds the pointer affordance
+    and makes marks focusable buttons.
     <code class="t-mono-inline">
       pointClicked
     </code> fires on every click,
@@ -173,7 +189,8 @@
     to the pointer.
     <code class="t-mono-inline">
       [showNearestPoint]="false"
-    </code> answers only within 16px of a point, without the ring.
+    </code> answers only
+    within 16px of a point, without the ring.
   </p>
 
   <div class="states is-cols-2">
@@ -206,7 +223,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       nearestRadius
-    </code> caps the reach in CSS pixels; past it nothing answers.
+    </code> caps the reach in CSS
+    pixels; past it nothing answers.
   </p>
 
   <ds-scatter-chart
@@ -221,7 +239,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    A click holds the point and its tooltip. Release and opt-out: <a class="link" routerLink="/foundations/charts">Charts foundations</a>.
+    A click holds the point and its tooltip. Release and opt-out:
+    <a
+      class="link"
+      routerLink="/foundations/charts"
+      >
+      Charts foundations
+    </a
+    >.
   </p>
 
   <h3 class="block-title t-h4">
@@ -232,13 +257,16 @@
     <li>
       <code class="t-mono-inline">
         loading
-      </code>, no data - grid lines and labels, no dots.
+      </code>, no data - grid lines and
+      labels, no dots.
     </li>
 
     <li>
       <code class="t-mono-inline">
         loading
-      </code>, points on screen - kept under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and spinner.
+      </code>, points on screen - kept
+      under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and
+      spinner.
     </li>
   </ul>
 

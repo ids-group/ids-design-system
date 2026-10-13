@@ -13,10 +13,11 @@
   <p class="block-desc t-s">
     Top-right by default; move with
     <code class="t-mono-inline">
-      provideDsConfig({{ '{' }} toast: {{ '{' }} position: {{ '{' }}
-      horizontalPosition, verticalPosition, offset {{ '}' }} {{ '}' }} {{ '}' }})
-    </code>. Newest
-    is nearest the anchor edge.
+      provideDsConfig({{ '{' }} toast: {{ '{' }} position:
+      {{ '{' }} horizontalPosition, verticalPosition, offset {{ '}' }} {{ '}' }}
+      {{ '}' }})
+    </code
+    >. Newest is nearest the anchor edge.
   </p>
 
   <h3
@@ -61,11 +62,19 @@
     Closes after 5 s, paused while pointer or focus is in the stack.
     <code class="t-mono-inline">
       durationMs
-    </code> changes it; <code class="t-mono-inline">0</code>
-    means never. <code class="t-mono-inline">show()</code> returns a
+    </code> changes it;
+    <code class="t-mono-inline">
+      0
+    </code> means never.
+    <code class="t-mono-inline">
+      show()
+    </code> returns a
     <code class="t-mono-inline">
       ToastRef
-    </code> with <code class="t-mono-inline">dismiss()</code>;
+    </code> with
+    <code class="t-mono-inline">
+      dismiss()
+    </code>;
     <code class="t-mono-inline">
       dismissAll()
     </code> clears all.
@@ -113,16 +122,21 @@
     <li>
       <code class="t-mono-inline">
         action: {{ '{' }} label, handler {{ '}' }}
-      </code> - a button (such as Undo).
+      </code>
+      - a button (such as Undo).
     </li>
 
     <li>
-      Such a toast never auto-dismisses and is always dismissible: keyboard users cannot reach the region (last in <code class="t-mono-inline">body</code>) in five seconds.
+      Such a toast never auto-dismisses and is always dismissible: keyboard
+      users cannot reach the region (last in
+      <code class="t-mono-inline">
+        body
+      </code>) in five seconds.
     </li>
 
     <li>
-      Pressing the action or the close button hands focus to the next toast, else back to the
-      element focused before the region.
+      Pressing the action or the close button hands focus to the next toast,
+      else back to the element focused before the region.
     </li>
   </ul>
 
@@ -143,8 +157,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       ToastService.promise()
-    </code>: loading, then success
-    or error. Succeeds 60 % of the time here.
+    </code>: loading, then
+    success or error. Succeeds 60 % of the time here.
   </p>
 
   <div class="demo">
@@ -166,15 +180,26 @@
     <li>
       <code class="t-mono-inline">
         ToastService
-      </code> announces via the CDK <code class="t-mono-inline">LiveAnnouncer</code>: NVDA and JAWS ignore a live region born with text.
+      </code> announces via the CDK
+      <code class="t-mono-inline">
+        LiveAnnouncer
+      </code>: NVDA and JAWS ignore a
+      live region born with text.
     </li>
 
     <li>
-      Errors and warnings - assertive; others - polite. A burst is one announcement.
+      Errors and warnings - assertive; others - polite. A burst is one
+      announcement.
     </li>
 
     <li>
-      A hand-placed <code class="t-mono-inline">&lt;ds-toast&gt;</code> has no <code class="t-mono-inline">role</code> or <code class="t-mono-inline">aria-live</code>: use the service.
+      A hand-placed <code class="t-mono-inline">&lt;ds-toast&gt;</code> has no
+      <code class="t-mono-inline">
+        role
+      </code> or
+      <code class="t-mono-inline">
+        aria-live
+      </code>: use the service.
     </li>
   </ul>
 
@@ -182,7 +207,8 @@
     The service lifts the stack above later modals, drawers and confirms;
     <code class="t-mono-inline">
       --layer-toast
-    </code> cannot (no z-index in the top layer).
+    </code> cannot (no z-index in the
+    top layer).
   </p>
 
   <h3
@@ -193,10 +219,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    Four toasts, <code>maxVisible: 3</code>: a <code>+1</code> strip counts the queued one.
+    Four toasts, <code>maxVisible: 3</code>: a <code>+1</code> strip counts the
+    queued one.
     <code class="t-mono-inline">
       toast.showQueueCount: false
-    </code> hides the strip.
+    </code> hides the
+    strip.
   </p>
 
   <div class="states">
@@ -209,7 +237,14 @@
 
   <ul class="block-desc t-s">
     <li>
-      Dev mode - every library warning that reaches the console also shows as a <code class="t-mono-inline">warning</code> toast titled "Dev warning", once per message, once the app injects <code class="t-mono-inline">ToastService</code>.
+      Dev mode - every library warning that reaches the console also shows as a
+      <code class="t-mono-inline">
+        warning
+      </code> toast titled "Dev warning",
+      once per message, once the app injects
+      <code class="t-mono-inline">
+        ToastService
+      </code>.
     </li>
 
     <li>
@@ -219,7 +254,8 @@
     <li>
       <code class="t-mono-inline">
         toast.mirrorDevWarnings: false
-      </code> - console only.
+      </code> -
+      console only.
     </li>
   </ul>
 
@@ -235,10 +271,9 @@
     </code> in
     <code class="t-mono-inline">
       provideDsConfig
-    </code> caps concurrent toasts (default 5,
-    <code class="t-mono-inline">
-      0
-    </code> for no cap); extras queue.
+    </code> caps concurrent toasts
+    (default 5, <code class="t-mono-inline"> 0 </code> for no cap); extras
+    queue.
   </p>
 
   <div class="demo">

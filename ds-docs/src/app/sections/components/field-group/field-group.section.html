@@ -12,17 +12,23 @@
     </li>
 
     <li>
-      Controls inside detect it via <code class="t-mono-inline">DS_FIELD_GROUP</code> and render naked; no per-child flag.
+      Controls inside detect it via
+      <code class="t-mono-inline">
+        DS_FIELD_GROUP
+      </code> and render naked; no
+      per-child flag.
     </li>
 
     <li>
       <code class="t-mono-inline">
         disabled
-      </code> - dims the box only; disable each control too.
+      </code> - dims the box only; disable
+      each control too.
     </li>
 
     <li>
-      Segments hug their content; <code class="t-mono-inline">grow</code> marks the one that takes the slack.
+      Segments hug their content; <code class="t-mono-inline">grow</code> marks
+      the one that takes the slack.
     </li>
   </ul>
 
@@ -197,13 +203,15 @@
     <li>
       <code class="t-mono-inline">
         error
-      </code> - sets the state, shows its text once, under the row.
+      </code> - sets the state, shows its
+      text once, under the row.
     </li>
 
     <li>
       <code class="t-mono-inline">
         invalid
-      </code> - the state only, when the text is elsewhere (a form summary).
+      </code> - the state only, when the
+      text is elsewhere (a form summary).
     </li>
 
     <li>
@@ -243,15 +251,12 @@
 
   <p class="block-desc t-s">
     Every field segment (not a <code class="t-mono-inline">ds-button</code>)
-    carries
-    <code class="t-mono-inline">
-      aria-invalid
-    </code> while the group is in
-    error and references the message via
+    carries <code class="t-mono-inline"> aria-invalid </code> while the group is
+    in error and references the message via
     <code class="t-mono-inline">
       aria-describedby
-    </code>: tabbing to any segment
-    announces it.
+    </code>: tabbing to any
+    segment announces it.
   </p>
 
   <p class="block-desc t-s">
@@ -261,11 +266,8 @@
     </code> and
     <code class="t-mono-inline">
       hint
-    </code> are suppressed; do not set
-    them. Name each segment with
-    <code class="t-mono-inline">
-      ariaLabel
-    </code>; put a group label in your own
-    markup above.
+    </code> are suppressed; do not set them.
+    Name each segment with <code class="t-mono-inline"> ariaLabel </code>; put a
+    group label in your own markup above.
   </p>
 </docs-section>

@@ -107,10 +107,10 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       size
-    </code> matches
+    </code> matches <code> ds-input </code> /
     <code>
-      ds-input
-    </code> / <code>ds-button</code> in a toolbar.
+      ds-button
+    </code> in a toolbar.
     <code class="t-mono-inline">
       sm
     </code>,
@@ -153,8 +153,8 @@
     </code> updates; default
     <code class="t-mono-inline">
       0
-    </code> writes every keystroke. The
-    displayed text never lags.
+    </code> writes every keystroke. The displayed
+    text never lags.
   </p>
 
   <table class="tbl">
@@ -189,7 +189,10 @@
         </td>
 
         <td>
-          Flushes the pending keystroke, then emits <code class="t-mono-inline">submitted</code>.
+          Flushes the pending keystroke, then emits
+          <code class="t-mono-inline">
+            submitted
+          </code>.
         </td>
       </tr>
 
@@ -201,13 +204,20 @@
         </td>
 
         <td>
-          Empties the field, drops the pending keystroke, publishes <code class="t-mono-inline">''</code> at once, keeps focus. For an external Clear button.
+          Empties the field, drops the pending keystroke, publishes
+          <code class="t-mono-inline">
+            ''
+          </code> at once, keeps focus. For an
+          external Clear button.
         </td>
       </tr>
 
       <tr>
         <td>
-          Writing <code class="t-mono-inline">''</code> into <code class="t-mono-inline">value</code>
+          Writing <code class="t-mono-inline">''</code> into
+          <code class="t-mono-inline">
+            value
+          </code>
         </td>
 
         <td>
@@ -219,7 +229,10 @@
         <td>
           <code class="t-mono-inline">
             blur()
-          </code> / <code class="t-mono-inline">focus()</code>
+          </code> /
+          <code class="t-mono-inline">
+            focus()
+          </code>
         </td>
 
         <td>
