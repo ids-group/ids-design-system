@@ -1069,7 +1069,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-24)
 
-**Twenty-seven** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Twenty-nine** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1109,6 +1109,7 @@ file** — the number moves; cite the filename.
 | 26 | `26-six-behaviour-changes` | The six behaviour changes published in 0.14.7 without a choice, one by one: theme set before startup, modal `confirmed`, avatar-group `max`, disabled link with `disabledReason`, `provideDsIcons` merge, chart pin disc; before and after drawn, two or three options each, six picks. | the Decisions item on the six behaviour changes |
 | 27 | `27-duplicate-label-match` | How a chart matches a column across a data update when two categories share a label and the first is removed: by label with a repeat counter (today, ECharts), by array position (Chart.js, Recharts, D3, Highcharts without id), by label only (Nivo), by an explicit point `id`, or by label with a dev console warning; each drawn as the same animated scene with replay and ×5. | the queue question on two columns with one label |
 | 28 | `28-table-width-by-type` | Sign-off of the built column width by kind: dev against the branch on page 1 and 2 of server paging, client paging and a scrolling all-`truncate` table, the kind columns, the 240px clip in a scrolling table, and the taller rows where text now wraps. | the P1 table item in Asked by Stas |
+| 29 | `29-link-colour-layer` | Where the link colour lives in the token layers: roles `--text-link` and `--link-visited` back (blue in both themes, read by `.link` and the table cell link), as shipped in 0.15.1 (`.link` reads the palette, `--ds-link-color` is the brand knob), or roles derived from the brand; wiring, renders and the consumer's roles file drawn per option. Whatever the pick, the next manifest supersedes the 0.15.1 instruction to read palette values. | none |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
