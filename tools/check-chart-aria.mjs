@@ -12,6 +12,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { format, resolveConfig } from 'prettier';
 import { chartComponents, templateOf } from './chart-components.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -68,7 +69,14 @@ for (const { name, base } of chartComponents()) {
 }
 
 if (update) {
-  writeFileSync(BASELINE, `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8');
+  writeFileSync(
+    BASELINE,
+    await format(JSON.stringify(snapshot), {
+      ...(await resolveConfig(BASELINE)),
+      filepath: BASELINE,
+    }),
+    'utf8',
+  );
   console.log(
     `check-chart-aria: baseline rewritten for ${Object.keys(snapshot).length} chart(s).`,
   );
