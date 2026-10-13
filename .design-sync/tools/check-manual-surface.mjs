@@ -293,6 +293,25 @@ for (const entry of conditionalProjection) {
   }
 }
 
+const isDirectiveListParagraph = (paragraph) =>
+  /`\[ds\w+\]`/.test(paragraph) &&
+  paragraph.replace(/`\[ds\w+\]`|·|\s/g, '') === '';
+const docsOutsideDirectiveList = docs
+  .split(/\n\s*\n/)
+  .filter((paragraph) => !isDirectiveListParagraph(paragraph))
+  .join('\n\n');
+for (const selector of attributeDirectives) {
+  const name = selector.slice(1, -1);
+  if (
+    !docsOutsideDirectiveList.includes(`\`${name}\``) &&
+    !docsOutsideDirectiveList.includes(`\`${selector}\``)
+  ) {
+    errors.push(
+      `✗ ${selector} is in MANUAL-SURFACE.md's directive list but nowhere else: a list entry is not an explanation; say what it does and what a card loses without it`,
+    );
+  }
+}
+
 for (const error of errors) console.log(error);
 console.log(
   `${errors.length ? '✗' : '✓'} manual surface: ${conditionalProjection.length} conditional-projection template(s), ${attributeDirectives.length} attribute directive(s), ${componentTags.size} components documented, ${sectionSlugs.size} ds-docs section(s), ${errors.length} problem(s)`,

@@ -195,9 +195,34 @@ absent from the generated surface entirely. Twenty-four of them:
 
 `[dsModalConfirm]` wires a projected action to `ds-modal`'s `confirmed` output: behaviour with nothing to draw, so a static card loses nothing by its absence and the confirm button renders as the plain button it sits on.
 
-Most are template-slot markers for the picker family (`dsOptionTemplate`,
-`dsPanelHeaderTemplate`, …) and are meaningless without an Angular template
-anyway, so a design tool has no use for them. **`[dsTooltip]` was called the one that hurts; on a second look it does not.** A tooltip is
+Nine are template-slot markers: each sits on an `<ng-template>` that a component reads through a
+content query, so it is meaningless without an Angular template and a design tool has no use for
+it. The picker family (`ds-select`, `ds-multi-select`, `ds-autocomplete`) reads eight of them:
+`dsOptionTemplate` fills an option row's label area, `dsChipTemplate` a selected chip in the
+trigger, `dsGroupLabelTemplate` an option group's heading, `dsEmptyTemplate` the "no matches" row,
+`dsCreateTemplate` `ds-autocomplete`'s "Create «…»" row, and `dsPanelHeaderTemplate` and
+`dsPanelFooterTemplate` a strip above and below the option list, and `dsPickerTrigger` the
+contents of the trigger itself (chips, value, placeholder). The ninth, `dsCellTemplate`, replaces
+one column's cells in `ds-table`. Each fills content only: the row, chip, heading, trigger and cell stay
+library-owned, roles and keyboard handling included, and with no template the component draws its
+own default there. So a card shows every one of these surfaces in its default form and loses only
+custom markup inside it. A cell without `dsCellTemplate` shows the column's `cell(row)` text, or the
+row's value under the column key; a trigger without `dsPickerTrigger` shows the selection, which on
+`ds-multi-select` its `triggerDisplay` input shapes, and that input reaches the element unchanged.
+The two header and footer strips simply do not exist without their templates.
+
+`[dsRailTrigger]` wires a consumer's own burger button to `ds-app-layout`'s overlay rail: a click
+toggles `railOpen`, and while the rail is an overlay it keeps `aria-expanded` and `aria-controls` on
+the button in sync. It draws nothing, so a card draws the button as it is and sets `railOpen` on the
+layout to show the rail open.
+
+`[dsFieldClickFocus]` is internal to the `ds-input`, `ds-search` and `ds-textarea` templates: a
+mousedown on the field's frame (padding, an icon, an addon) focuses the inner `input` or `textarea`
+unless it is disabled or read-only, and a click on the control or on a nested button, link or input
+is left alone. It sits on an element of our own template, so it reaches the element inside its
+component, and it is behaviour with nothing to draw.
+
+**`[dsTooltip]` was called the one that hurts; on a second look it does not.** A tooltip is
 revealed on hover, and a static design card has no hover — `NOTES.md` already records the same
 thing about `ds-description-list`'s hover-revealed copy button being invisible in captures. So
 the design agent gains almost nothing from it. Searched for a way to register a directive as a
@@ -207,6 +232,14 @@ which would now work end to end because host-directive inputs reach the element 
 **Not built:** it would either add a public component to the library for a design-tool-only need,
 or add a design-sync-local component for a feature that cannot be seen in a static card. Revisit
 only if the design host ever renders interactive cards.
+
+`[dsTooltipWhenClipped]` is the same directive under a second selector: the tip opens only while the
+host shows less text than it holds, and with no `dsTooltip` it discloses the clipped text. Our own
+templates apply it to truncated text in `ds-select`, `ds-multi-select`, `ds-autocomplete`,
+`ds-breadcrumbs`, `ds-stat` and a `truncate` column of `ds-table`, where it reaches the element
+inside its component. On a consumer's own markup it has nothing to attach to, and what it adds is a
+tip revealed on hover or focus like `[dsTooltip]`'s. It only tests for clipping and never clips, so
+truncated text draws the same either way and a static card loses nothing it could show.
 
 `[dsDefinitionTerm]` marks a term that reveals its definition on hover and pins it open on a click, the same behaviour as `[dsTooltip]`. A static card has neither a hover nor a click, so nothing visible is lost; `ds-table` applies it internally.
 
@@ -218,7 +251,7 @@ same as `provideDsConfig({ field: { reserveMessage: true } })` and
 reaches the element unchanged (`reserveMessage`, `showDirty`), so a card sets it on the field and
 loses nothing.
 
-**The three `[dsTable*]` directives are the table's opt-in features** (2026-09-05), and they are a
+**`dsTableColumns`, `dsTableExport` and `dsTableResize` are the table's opt-in features** (2026-09-05), and they are a
 different case from the template-slot markers above: they carry real behaviour, not a marker. They
 exist because `ds-table` shipped the data-grid features to everyone who ever drew a table — moving
 reorder, the column picker and resizing behind directives took its marginal cost from **35 647 to
@@ -229,8 +262,12 @@ state, not a reader rearranging one: the picker opens on a click, resizing is a 
 button downloads a file — none of the three is visible in a static capture, exactly the argument
 already recorded above for `[dsTooltip]`. The features the card CAN show — columns, rows, sorting,
 selection, pagination — are all still inputs on `ds-table` itself and reach the element unchanged.
-**Nothing that was visible in a card before has stopped being visible**, because the built-in
-export button was the only rendered affordance of the three and a card never pressed it.
+What the three draw is two buttons and a drag handle: `dsTableColumns` puts the column picker's
+trigger in the header and `dsTableExport` the CSV button in the toolbar, so a card's table lacks
+two buttons whose only use is a click, and `dsTableResize` adds a separator per header cell that stays transparent
+until hovered or focused. A column's `width` is applied by the table itself, so a card sizes columns
+without `dsTableResize`. A column's `hidden` flag needs `dsTableColumns` and renders the column
+without it, so a card leaves that column out of `columns` instead.
 
 **`[dsChartTooltip]` drives the charts' own overlay** (2026-09-14), and it is applied inside our
 chart templates rather than by a consumer: a chart hands it a `ChartTooltipContext` and an origin,
