@@ -63,13 +63,15 @@
         ": TableColumn<",
         "TableColumn[]",
         "truncate: true",
-        "align: 'right'"
+        "align: 'right'",
+        "align: \"right\"",
+        "sortValue:"
       ],
-      "action": "None, unless a column holds ids, dates, numbers or statuses: add `kind: 'id'`, `'date'`, `'number'` or `'status'` to it. A column whose values must show whole gets `width: 'content'` or a `minWidth`.",
+      "action": "Give every ds-table column of ids, dates, numbers or statuses its `kind`: `'id'`, `'date'`, `'number'` or `'status'`. Start with every column config that has `align: 'right'` and no `kind`, then the id, date and status columns. A date column whose values carry a time, such as Jul 17, 2026, 9:00AM, keeps no `kind` or gets `width: 'content'`. A column whose values must show whole gets `width: 'content'` or a `minWidth`.",
       "appliesWhen": "Every ds-table column without a numeric `width`. A column with a numeric `width` is as wide as before; a column the reader dragged with dsTableResize keeps its dragged width.",
-      "pitfall": "A value longer than its column wraps (a plain column) or ellipsizes (a `truncate` column) where the column used to grow to it, and a column of short values keeps its share with space after them. A cell template holding an element wider than its column overflows into the next one.",
+      "pitfall": "A value longer than its column wraps (a plain column) or ellipsizes (a `truncate` column) where the column used to grow to it, and a column of short values keeps its share with space after them. A cell template holding an element wider than its column overflows into the next one. `kind: 'date'` is 130px with the cell padding inside it, 16px each side at the default density, so 98px of text: room for a date, not for a date with a time, which wraps there.",
       "restore": "{ key: 'notes', label: 'Notes', width: 'content' }",
-      "verify": "Page every ds-table forward and back and change its data: no column changes width, and each id, date, number and status column is 110-130px.",
+      "verify": "Every column config with `align: 'right'` carries a `kind` or a numeric `width`, every id, date and status column carries a `kind`, and no `kind: 'date'` column shows a time. Then page every ds-table forward and back and change its data: no column changes width, and each id, date, number and status column is 110-130px.",
       "supersedes": [
         "0.15.0#table-truncate-without-width-grows"
       ],
@@ -156,13 +158,14 @@
       "detect": [
         "provideDsConfig(",
         "datePicker:",
-        "LOCALE_ID"
+        "LOCALE_ID",
+        "locale:"
       ],
-      "action": "None, unless a calendar must keep starting on Monday whatever the locale: set `datePicker: { firstDayOfWeek: 1 }` in `provideDsConfig`, or `[firstDayOfWeek]=\"1\"` on the one `ds-date-picker`.",
+      "action": "Where `provideDsConfig` sets `locale` or `datePicker.locale`, pin the first weekday the app means: `datePicker: { firstDayOfWeek: 1 }` for Monday, `0` for Sunday. Where one calendar differs, bind `[firstDayOfWeek]` on that `ds-date-picker`. With no locale in the config, none, unless a calendar must keep starting on Monday whatever the locale: set `datePicker: { firstDayOfWeek: 1 }`.",
       "appliesWhen": "Every `ds-date-picker`, single and range, that binds no `firstDayOfWeek` under a config with no `datePicker.firstDayOfWeek`, in an app whose locale (`locale`, then `datePicker.locale`, then the config's `locale`, then `LOCALE_ID`) is not Monday-first: Sunday for a config `locale` of en-US and for ja-JP, Saturday for ar-EG. An app with no locale, en-GB, de-DE and ru-RU keep Monday. A browser with no week data keeps Monday. A bound `firstDayOfWeek` or `datePicker.firstDayOfWeek` wins as before.",
-      "pitfall": "A `LOCALE_ID` of en-US reads as en-GB and keeps Monday; only a config `locale: 'en-US'` brings Sunday, so look for that before assuming a screen is unaffected.",
+      "pitfall": "A `LOCALE_ID` of en-US reads as en-GB and keeps Monday; only a config `locale: 'en-US'` brings Sunday, so look for that before assuming a screen is unaffected. A config `locale` set only to format numbers and dates now also picks the first weekday: en-US starts the calendar on Sunday in a browser with Intl week data and on Monday in one without, so one build shows two calendars until `datePicker.firstDayOfWeek` is pinned.",
       "restore": "provideDsConfig({ datePicker: { firstDayOfWeek: 1 } })",
-      "verify": "Open a ds-date-picker on each screen and confirm its first weekday header is the day the app means: the locale's, or the day `firstDayOfWeek` pins."
+      "verify": "Every `provideDsConfig` that sets `locale` or `datePicker.locale` also sets `datePicker.firstDayOfWeek`. Open a ds-date-picker on each screen and confirm its first weekday header is the day the app means: the locale's, or the day `firstDayOfWeek` pins."
     },
     {
       "id": "time-picker-format-from-locale",
@@ -506,13 +509,15 @@
       "detect": [
         "toBeDisabled()",
         "button:disabled",
-        "button[disabled]"
+        "button[disabled]",
+        "(click)=",
+        "[loading]=\"true\""
       ],
-      "action": "None, unless a ds-button binds [disabled] to the same flag as [loading]: remove that [disabled]. Where a test or a stylesheet reads the native disabled state of a loading ds-button, read aria-disabled=\"true\" instead.",
+      "action": "Where a ds-button binds [disabled] to the same flag as [loading], remove that [disabled]. A ds-button that is loading for good (`[loading]=\"true\"`, a placeholder that never acts) keeps its [disabled], or gets one. Where a (click) bound on a loading ds-button starts work, guard the handler on the app's own busy flag, or move it to (pressed). Where a test or a stylesheet reads the native disabled state of a loading ds-button, read aria-disabled=\"true\" instead.",
       "appliesWhen": "Every ds-button with loading set. A ds-button rendering a link ignores loading and is not affected, and a ds-button with disabled set keeps the native attribute.",
-      "pitfall": "A [disabled] bound to the same flag as [loading] still disables the button natively, so focus still falls to the page the moment the work starts.",
+      "pitfall": "A [disabled] bound to the same flag as [loading] still disables the button natively, so focus still falls to the page the moment the work starts. A ds-button with loading and no disabled is focusable and reached by Tab, so one that loads for good is a control that never acts. A focused loading ds-button turns Enter and Space into a click: the component calls preventDefault and withholds (pressed), but the click still bubbles to a (click) bound on the ds-button element and runs that handler again mid-work, where the native disabled of the previous release kept the button out of keyboard reach.",
       "restore": null,
-      "verify": "Press each loading-bound ds-button from the keyboard and confirm focus stays on it, with its ring, until the work ends."
+      "verify": "Press each loading-bound ds-button from the keyboard and confirm focus stays on it, with its ring, until the work ends, and that pressing Enter again while it loads starts nothing a second time. A ds-button that is always loading is skipped by Tab."
     },
     {
       "id": "pagination-loading-keeps-focus",
