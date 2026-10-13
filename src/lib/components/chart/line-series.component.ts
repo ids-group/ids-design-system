@@ -23,7 +23,6 @@ import {
   areaPath,
   chartValueFormat,
   focusMark,
-  formatPercent,
   tweenMarks,
   listenForMarkFocus,
   markOf,
@@ -63,7 +62,12 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
 import type { ChartAxisEntry, ChartAxisReadout } from './chart-scales.token';
-import { categoryKeys, outsideRange, topDown } from './chart.math';
+import {
+  categoryKeys,
+  changeBetween,
+  outsideRange,
+  topDown,
+} from './chart.math';
 
 export interface LineSeriesData {
   id: string;
@@ -315,7 +319,7 @@ export class LineSeriesComponent implements OnDestroy {
 
   /** On the hovered reading, thickens the stretches from the reading before it and to the reading
    *  after it, each in its own rising or falling colour (`--ds-chart-positive-color`,
-   *  `--ds-chart-negative-color`) and with its own change in percent. With several series it follows the one singled out: hovered, focused or highlighted. */
+   *  `--ds-chart-negative-color`) and, unless it starts at zero, with its own change in percent. With several series it follows the one singled out: hovered, focused or highlighted. */
   readonly showChange = input(false, { transform: booleanAttribute });
 
   /** A dash pattern per series, in series order. A series past the end, or given `''`, draws solid. */
@@ -983,17 +987,15 @@ export class LineSeriesComponent implements OnDestroy {
     ] as const;
 
     return stretches.flatMap(([from, to]) => {
-      if (!from || !to || from.value === 0) {
+      if (!from || !to) {
         return [];
       }
-      const change = to.value - from.value;
 
       return [
         {
           key: `${current.seriesId}-${from.categoryIndex}`,
           path: linePath([from, to], this.curve()),
-          rising: change >= 0,
-          label: `${change > 0 ? '+' : ''}${formatPercent(change, Math.abs(from.value), this.locale)}`,
+          ...changeBetween(from.value, to.value, this.locale),
           x: (from.x + to.x) / 2,
           y: Math.min(from.y, to.y) - CHANGE_LABEL_GAP,
         },
