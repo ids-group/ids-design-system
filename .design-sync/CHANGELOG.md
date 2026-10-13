@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 0.15.1 — 2026-10-13
+
 ### Cards
 
 - **`ds-field-status` has a usage doc and a section.** The design agent reads `FieldStatus` as the

@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.15.1 — 2026-10-13
+
 ### Breaking
 
 - **`--text-link` and `--link-visited` are removed; `.link` sets its own colour.** Its defaults
