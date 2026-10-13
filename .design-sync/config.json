@@ -25,6 +25,7 @@
     "DescriptionItem": "components/description-list",
     "Divider": "foundations/borders",
     "FieldMessage": "components/input",
+    "FieldStatus": "practice/signal-forms",
     "FunnelChart": "charts/funnel-chart",
     "HeatmapChart": "charts/heatmap-chart",
     "InfoHint": "components/tooltip",
