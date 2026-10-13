@@ -7434,7 +7434,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "The host is still fetching: every control disables, the range label is masked with a `<ds-skeleton>` so a stale `total` is never quoted, and the nav reports `aria-busy`."
+        "description": "The host is still fetching: the page buttons take `aria-disabled` and ignore presses while staying focusable, the size select disables, the range label is masked with a `<ds-skeleton>` so a stale `total` is never quoted, and the nav reports `aria-busy`."
       }
     ],
     "outputs": []

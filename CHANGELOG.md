@@ -1,5 +1,16 @@
 ## Unreleased
 
+### Breaking
+
+- **`--text-link` and `--link-visited` are removed; `.link` sets its own colour.** Its defaults
+  live in `styles/link` and read the palette: `--ds-link-color` defaults to `var(--blue-700)`, and
+  to `hsl(var(--blue-h) 90% 74%)` in dark; `--ds-link-color-visited` to
+  `hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)`, and to `hsl(var(--blue-h) 50% 70%)` in dark.
+  The rendered colours are the same in both themes. A declaration of either removed token sets
+  nothing: set `--ds-link-color` or `--ds-link-color-visited` on `.link` or an ancestor instead.
+  A read of either resolves to nothing, and so would a read of `--ds-link-color`, which is unset
+  until you set it: put the `link` class on the element, or name the palette value.
+
 ### Added
 
 - **`selectRange` sums a dragged range of categories.** On `ds-chart`, `ds-column-chart` and
@@ -70,8 +81,8 @@
   in the migration manifest, as is the one `TooltipDirective` lost; a subclass declaring one of
   those names must rename it.
 
-- **`.link` takes a token per state.** `--ds-link-color-visited` (default `var(--link-visited)`)
-  with `--ds-link-color-visited-hover` and `--ds-link-color-visited-active`, which derive from it
+- **`.link` takes a token per state.** `--ds-link-color-visited` (default
+  `hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)`, `hsl(var(--blue-h) 50% 70%)` in dark) with `--ds-link-color-visited-hover` and `--ds-link-color-visited-active`, which derive from it
   as `--ds-link-color-hover` and `--ds-link-color-active` derive from `--ds-link-color`;
   `--ds-link-color-disabled` (default `var(--text-disabled)`); `--ds-link-focus-ring-color`
   (default `var(--focus-ring-color)`); and `--ds-link-underline-color` (default `currentcolor`),
@@ -79,11 +90,13 @@
 
 ### Changed
 
-- **A visited `.link` takes `--link-visited`.** It painted in the link colour; it now paints in
-  `--ds-link-color-visited`, default `var(--link-visited)`, and darkens from it on hover and press.
+- **A visited `.link` takes its own colour.** It painted in the link colour; it now paints in
+  `--ds-link-color-visited`, a desaturated blue, and darkens from it on hover and press.
   `.link.quiet` and a disabled link keep their own colour. The underline follows the text colour in
   every state, a focused link's included. To keep visited links in the link colour, set
-  `.link { --ds-link-color-visited: var(--ds-link-color, var(--text-link)); }`.
+  `--ds-link-color-visited` to the value you give `--ds-link-color`, or to
+  `var(--ds-link-color, var(--blue-700))`, and to `var(--ds-link-color, hsl(var(--blue-h) 90% 74%))`
+  under `:root[data-theme='dark'] .link`.
 
 - **Every brand shade follows `--primary`; links stay blue.** In light, `--surface-tint` and
   `--primary-subtitle` are `hsl(from var(--primary) h 100% 97%)`, `--primary-muted`
@@ -94,9 +107,9 @@
   their hue from `--primary` where they took `--primary-h`, at the same saturation and lightness.
   The default blue renders the same RGB. A brand that sets only `--primary` gets active rows,
   selected options, tonal fills and the text on them in its own hue; one that sets them itself
-  keeps its values. Links are not a brand shade: `--text-link` and `--link-visited` read the
-  `--blue-*` palette in both themes, so a link stays blue under any brand, where the dark link and
-  visited link took the `--primary-h/s/l` channels. A light brand colour (yellow, lime, cyan)
+  keeps its values. Links are not a brand shade: `.link` defaults to the `--blue-*` palette in
+  both themes, so a link stays blue under any brand, where the dark link and visited link took the
+  `--primary-h/s/l` channels; set `--ds-link-color` to change it. A light brand colour (yellow, lime, cyan)
   derives a `--primary-strong` under 4.5:1 on white: the theming page lists the five with what
   each paints and the contrast it must meet. The focus ring and the field halo still read
   `--primary-h/s/l`. Restore with `--primary-strong: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle:

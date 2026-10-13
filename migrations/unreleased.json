@@ -198,7 +198,7 @@
     {
       "id": "links-stay-blue-under-a-brand",
       "kind": "behavior",
-      "old": "--text-link",
+      "old": ".link",
       "new": null,
       "surface": "style",
       "searchHints": [
@@ -212,14 +212,60 @@
       "detect": [
         "--primary-h"
       ],
-      "action": "None, unless your brand set `--primary-h/s/l` to colour its links in dark or its visited links: set `--text-link` and `--link-visited` yourself where you want brand-coloured links.",
-      "appliesWhen": "A theme that sets `--primary-h`, `--primary-s` or `--primary-l` to its brand. In dark, `--text-link` was `hsl(var(--primary-h) 90% 74%)` and `--link-visited` `hsl(var(--primary-h) 50% 70%)`; in light `--link-visited` was `hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%)`. They now read `--blue-h` and `--blue-s`, and light `--text-link` stays `var(--blue-700)`, so links are blue under any brand. A theme that leaves the channels alone sees no change.",
+      "action": "None, unless your brand set `--primary-h/s/l` to colour its links in dark or its visited links: set `--ds-link-color` and `--ds-link-color-visited` yourself where you want brand-coloured links.",
+      "appliesWhen": "A theme that sets `--primary-h`, `--primary-s` or `--primary-l` to its brand. In dark, the link was `hsl(var(--primary-h) 90% 74%)` and the visited link `hsl(var(--primary-h) 50% 70%)`; in light the visited link was `hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%)`. `.link` now defaults to the `--blue-*` palette in both themes, from `styles/link`, which `styles/ds` forwards, so links are blue under any brand. A theme that leaves the channels alone sees no change.",
       "pitfall": "A theme that re-points the `--blue-*` palette itself recolours links with it; only the `--primary-*` channels lost their hold on links.",
-      "restore": "under [data-theme='dark']: --text-link: hsl(var(--primary-h) 90% 74%); --link-visited: hsl(var(--primary-h) 50% 70%); and on the theme root: --link-visited: hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%);",
+      "restore": ".link { --ds-link-color-visited: hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%); } :root[data-theme='dark'] .link { --ds-link-color: hsl(var(--primary-h) 90% 74%); --ds-link-color-visited: hsl(var(--primary-h) 50% 70%); }",
       "verify": "Under your brand open a page with a link and a visited link in light and dark and confirm the colour is the one you want.",
       "evidence": [
-        "tokens:--text-link",
-        "tokens:--link-visited"
+        "tokens:--ds-link-color",
+        "tokens:--ds-link-color-visited"
+      ]
+    },
+    {
+      "id": "text-link-token-removed",
+      "kind": "removed-api",
+      "old": "--text-link",
+      "new": "--ds-link-color",
+      "surface": "style",
+      "searchHints": [
+        "--text-link",
+        "var(--text-link"
+      ],
+      "detect": [
+        "--text-link"
+      ],
+      "action": "Where you SET `--text-link`, set `--ds-link-color` on `.link` or an ancestor instead. Where you READ `var(--text-link)`, put the `link` class on the element, or name the palette value: `var(--blue-700)` in light, `hsl(var(--blue-h) 90% 74%)` in dark.",
+      "appliesWhen": "Every stylesheet that declares or reads `--text-link`. `.link` sets its own default for `--ds-link-color` in `styles/link`, which `styles/ds` forwards, and renders the same colour in both themes.",
+      "pitfall": "`--ds-link-color` is unset until you set it, so replacing a read of `var(--text-link)` with `var(--ds-link-color)` resolves to nothing and the element takes the inherited colour, without an error. Only a declaration swaps one for one.",
+      "restore": null,
+      "verify": "No stylesheet declares or reads `--text-link`, and an element that read it paints in the link colour in light and dark.",
+      "evidence": [
+        "tokens:--ds-link-color",
+        "tokens:--ds-link-color-visited"
+      ]
+    },
+    {
+      "id": "link-visited-token-removed",
+      "kind": "removed-api",
+      "old": "--link-visited",
+      "new": "--ds-link-color-visited",
+      "surface": "style",
+      "searchHints": [
+        "--link-visited",
+        "var(--link-visited"
+      ],
+      "detect": [
+        "--link-visited"
+      ],
+      "action": "Where you SET `--link-visited`, set `--ds-link-color-visited` on `.link` or an ancestor instead. Where you READ `var(--link-visited)`, put the `link` class on the element, or name the palette value: `hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)` in light, `hsl(var(--blue-h) 50% 70%)` in dark.",
+      "appliesWhen": "Every stylesheet that declares or reads `--link-visited`. `.link` sets its own default for `--ds-link-color-visited` in `styles/link`, which `styles/ds` forwards, and renders the same colour in both themes.",
+      "pitfall": "`--ds-link-color-visited` is unset until you set it, so replacing a read of `var(--link-visited)` with `var(--ds-link-color-visited)` resolves to nothing and the element takes the inherited colour, without an error. Only a declaration swaps one for one.",
+      "restore": null,
+      "verify": "No stylesheet declares or reads `--link-visited`, and an element that read it paints in the visited link colour in light and dark.",
+      "evidence": [
+        "tokens:--ds-link-color",
+        "tokens:--ds-link-color-visited"
       ]
     },
     {
@@ -392,7 +438,7 @@
       ]
     },
     {
-      "id": "link-visited-takes-link-visited",
+      "id": "link-visited-takes-its-own-colour",
       "kind": "behavior",
       "old": ".link",
       "new": null,
@@ -408,10 +454,10 @@
         ".link:visited",
         ":visited {"
       ],
-      "action": "None, unless visited links must keep the link colour: then set `.link { --ds-link-color-visited: var(--ds-link-color, var(--text-link)); }`, and delete a `:visited` rule of yours that recoloured `.link` in favour of `--ds-link-color-visited`.",
+      "action": "None, unless visited links must keep the link colour: then set `.link { --ds-link-color-visited: var(--ds-link-color, var(--blue-700)); }` and `:root[data-theme='dark'] .link { --ds-link-color-visited: var(--ds-link-color, hsl(var(--blue-h) 90% 74%)); }`, and delete a `:visited` rule of yours that recoloured `.link` in favour of `--ds-link-color-visited`.",
       "appliesWhen": "Every `.link` whose `href` the browser history holds, from `styles/link`, which `styles/ds` forwards. `.link.quiet`, a link with `aria-disabled=\"true\"` and a `<button class=\"link\">` keep their colour.",
       "pitfall": "Browsers ignore custom properties declared inside a `:visited` rule, so `.link:visited { --ds-link-color: red; }` does nothing; set `--ds-link-color-visited` on `.link` or an ancestor.",
-      "restore": ".link { --ds-link-color-visited: var(--ds-link-color, var(--text-link)); }",
+      "restore": ".link { --ds-link-color-visited: var(--ds-link-color, var(--blue-700)); } :root[data-theme='dark'] .link { --ds-link-color-visited: var(--ds-link-color, hsl(var(--blue-h) 90% 74%)); }",
       "verify": "The built CSS carries `.link:where(:visited)`, and a visited link in the app paints in the colour the app intends."
     },
     {
