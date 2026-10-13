@@ -1,0 +1,11 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    {
+      "text": "A `ds-table` `width: 'content'` column no longer collapses to 0px after its rows, page or fonts change while the table sits under a `display: none` ancestor such as an inactive `ds-tabs` panel; the table measures the column when it is shown.",
+      "verify": "Change the data of a ds-table with a width: 'content' column while its ds-tabs panel is inactive, switch back, and confirm the column fits its widest cell instead of collapsing."
+    }
+  ],
+  "deleteList": []
+}
