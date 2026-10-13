@@ -54,54 +54,34 @@
   },
   "overrides": {
     "Button": {
-      "replaces": [
-        "button"
-      ]
+      "replaces": ["button"]
     },
     "Checkbox": {
-      "replaces": [
-        "input[type=checkbox]"
-      ]
+      "replaces": ["input[type=checkbox]"]
     },
     "Input": {
-      "replaces": [
-        "input"
-      ]
+      "replaces": ["input"]
     },
     "List": {
-      "replaces": [
-        "ul"
-      ]
+      "replaces": ["ul"]
     },
     "Modal": {
-      "replaces": [
-        "dialog"
-      ]
+      "replaces": ["dialog"]
     },
     "Radio": {
-      "replaces": [
-        "input[type=radio]"
-      ]
+      "replaces": ["input[type=radio]"]
     },
     "Select": {
-      "replaces": [
-        "select"
-      ]
+      "replaces": ["select"]
     },
     "Slider": {
-      "replaces": [
-        "input[type=range]"
-      ]
+      "replaces": ["input[type=range]"]
     },
     "Table": {
-      "replaces": [
-        "table"
-      ]
+      "replaces": ["table"]
     },
     "Textarea": {
-      "replaces": [
-        "textarea"
-      ]
+      "replaces": ["textarea"]
     }
   },
   "buildCmd": "node .design-sync/elements/tools/gen.mjs && npx ng build ds-elements && node .design-sync/elements/tools/build-bundle.mjs"
