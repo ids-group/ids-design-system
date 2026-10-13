@@ -141,16 +141,17 @@ Components never change — they consume semantic roles, which the active theme 
 Every shade of the primary family takes its hue from `--primary` through relative colour syntax,
 in both themes; in light `--primary-strong` takes its saturation and lightness too. A brand that
 sets `--primary` gets all of them. Check each against your brand; set it explicitly where it fails.
-Links are not a brand shade: `--text-link` and `--link-visited` stay blue (`--blue-*`) under any
-brand, so a link reads as a link everywhere; set them yourself only to break that on purpose.
+Links are not a brand shade: `.link` takes its colour from its own tokens, which default to the
+`--blue-*` palette in both themes, so a link stays blue under any brand. Set `--ds-link-color` (and
+`--ds-link-color-visited`) to change it.
 
-| Token                    | Paints                                                                                                              | Light default                                           | Dark default                    | Must meet                                            |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------- | ---------------------------------------------------- |
-| `--primary-strong`       | text and icons on a tint: tag, chip, tonal button, selected row, tab, sidenav item, through `--accent-strong`       | `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))` | `h 90% 72%`                     | 4.5:1 on every tint below and on `--surface-default` |
-| `--surface-tint`         | active rows and items (list, tree, empty state), through `--accent-surface-tint`                                    | `hsl(from var(--primary) h 100% 97%)`                   | `h 45% 16%`                     | `--text-primary` and `--text-link` 4.5:1 on it       |
-| `--primary-subtitle`     | dropdown selected option; tonal fills (button, tabs, table, calendar day, sidenav item) through `--accent-subtitle` | `hsl(from var(--primary) h 100% 97%)`                   | `h 45% 18%`                     | the text on it 4.5:1                                 |
-| `--primary-muted`        | dropdown selected option on hover; button, tag, avatar, sidenav item through `--accent-muted`                       | `hsl(from var(--primary) h 95% 94%)`                    | `h 40% 26%`                     | the text on it 4.5:1                                 |
-| `--primary-muted-strong` | tonal button hover, outline button border, through `--accent-muted-strong`                                          | `hsl(from var(--primary) h 95% 89%)`                    | `h 42% 32%`                     | the hover label 4.5:1; the default dark holds 3.5:1  |
+| Token                    | Paints                                                                                                              | Light default                                           | Dark default | Must meet                                            |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ------------ | ---------------------------------------------------- |
+| `--primary-strong`       | text and icons on a tint: tag, chip, tonal button, selected row, tab, sidenav item, through `--accent-strong`       | `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))` | `h 90% 72%`  | 4.5:1 on every tint below and on `--surface-default` |
+| `--surface-tint`         | active rows and items (list, tree, empty state), through `--accent-surface-tint`                                    | `hsl(from var(--primary) h 100% 97%)`                   | `h 45% 16%`  | `--text-primary` and a link 4.5:1 on it              |
+| `--primary-subtitle`     | dropdown selected option; tonal fills (button, tabs, table, calendar day, sidenav item) through `--accent-subtitle` | `hsl(from var(--primary) h 100% 97%)`                   | `h 45% 18%`  | the text on it 4.5:1                                 |
+| `--primary-muted`        | dropdown selected option on hover; button, tag, avatar, sidenav item through `--accent-muted`                       | `hsl(from var(--primary) h 95% 94%)`                    | `h 40% 26%`  | the text on it 4.5:1                                 |
+| `--primary-muted-strong` | tonal button hover, outline button border, through `--accent-muted-strong`                                          | `hsl(from var(--primary) h 95% 89%)`                    | `h 42% 32%`  | the hover label 4.5:1; the default dark holds 3.5:1  |
 
 Dark defaults are `hsl(from var(--primary) …)` with the hue, saturation and lightness shown.
 

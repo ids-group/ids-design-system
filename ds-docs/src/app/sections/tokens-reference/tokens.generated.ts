@@ -347,11 +347,6 @@ export const SEMANTIC_TEXT: readonly ColourRow[] = [
     "inverted": true
   },
   {
-    "name": "--text-link",
-    "value": "var(--blue-700)",
-    "notes": "Hyperlink text."
-  },
-  {
     "name": "--text-on-primary",
     "value": "white",
     "notes": "Text on brand fill.",
@@ -691,13 +686,7 @@ export const SEMANTIC_STATUS: readonly ColourRow[] = [
   }
 ];
 
-export const SEMANTIC_LINK: readonly ColourRow[] = [
-  {
-    "name": "--link-visited",
-    "value": "hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)",
-    "notes": "Visited link colour — desaturated, darkened primary hue."
-  }
-];
+export const SEMANTIC_LINK: readonly ColourRow[] = [];
 
 export const CHARTS: readonly ColourRow[] = [
   {
@@ -5014,8 +5003,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-link-color",
-        "value": "var(--text-link)",
-        "notes": "Link text colour. Defaults to --text-link."
+        "value": "var(--blue-700)",
+        "notes": "Link text colour. Defaults to --blue-700 in light and a light blue from the --blue-h hue in dark."
       },
       {
         "name": "--ds-link-color-hover",
@@ -5029,7 +5018,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-link-color-visited",
-        "value": "var(--link-visited)",
+        "value": "hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)",
         "notes": ""
       },
       {
