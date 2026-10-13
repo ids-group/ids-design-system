@@ -649,6 +649,19 @@ export class TableClipHarnessPage {
       columns: pagingColumns,
     },
     {
+      id: 'short-text',
+      title: 'Short values on page 1, longer names on page 2, 1100px',
+      width: 1100,
+      data: pageOne,
+      pageTwo,
+      columns: [
+        { key: 'name', label: 'Policyholder' },
+        { key: 'city', label: 'City' },
+        { key: 'status', label: 'Status', kind: 'status' },
+        { key: 'amount', label: 'Amount', align: 'right', kind: 'number' },
+      ],
+    },
+    {
       id: 'min-width-column',
       title: 'Truncate column with minWidth 160, 600px',
       width: 600,
