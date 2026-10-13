@@ -256,6 +256,7 @@ export class TableComponent<T extends object> {
     public readonly rangeAnnouncement = input<((first: number, last: number, total: number) => string) | null>(null);
     public readonly rangeAnnouncementResolved = computed(…);
     private readonly rangeMessage;
+    private readonly rendered;
     private restoreLayout;
     public readonly rowActionSelected = output<TableRowActionEvent<T>>();
     public readonly rowActions = input<readonly TableRowAction<T>[]>([]);
