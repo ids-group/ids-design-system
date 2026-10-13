@@ -24,7 +24,7 @@ providers: [provideDsTheme({ followSystem: true })]`;
   protected readonly brandSnippet = `// _brand-acme.scss - on <html>, authored on the light theme
 [data-brand='acme'] {
   // Palette channels: the --blue-* ramp, --primary and every --primary-h/s/l
-  // reader (focus rings, field halos, dark and visited links) recompose from them.
+  // reader (focus rings, field halos) and the links recompose from them.
   --blue-h: 258;
   --blue-s: 63%;
   --blue-l: 54%;
@@ -33,7 +33,6 @@ providers: [provideDsTheme({ followSystem: true })]`;
 [data-theme='dark'][data-brand='acme'] { --primary: #8a63e8; }`;
 
   protected readonly brandChecklistSnippet = `// Light defaults; dark keeps each hue from --primary
---text-link:            hsl(from var(--primary) h calc(s * 0.85) calc(l - 7));
 --primary-strong:       hsl(from var(--primary) h calc(s * 0.85) calc(l - 7));
 --surface-tint:         hsl(from var(--primary) h 100% 97%);
 --primary-subtitle:     hsl(from var(--primary) h 100% 97%);
@@ -45,10 +44,7 @@ providers: [provideDsTheme({ followSystem: true })]`;
   --primary: #1f7a4d;
   --primary-h: 150; --primary-s: 60%; --primary-l: 30%;
   // derived: tint and subtitle #f0fff7, muted #e1fef0,
-  // link and strong #1d583b (8.33:1 on white, 8.07:1 on the tint)
-  // or the brand colour as the link, with a tint it holds on:
-  // --text-link: #1f7a4d;     5.32:1 on white
-  // --surface-tint: #e8f4ee;  link 4.71:1 on it
+  // strong #1d583b (8.33:1 on white, 8.07:1 on the tint); links stay blue
 }
 [data-theme='dark'][data-brand='green'] {
   --primary: #1f7a4d;

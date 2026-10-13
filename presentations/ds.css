@@ -144,7 +144,7 @@
   --surface-scrim: hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%);
   /* Divider on a coloured fill (split-button chevron); a translucent white reads on any brand hue. */
   --btn-split-divider: hsl(0deg 0% 100% / 25%);
-  --link-visited: hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%);
+  --link-visited: hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%);
   --border-default: var(--neutral-200);
   --border-strong: var(--neutral-300);
   --border-subtitle: var(--neutral-150);
@@ -159,7 +159,7 @@
   --text-inverted: var(--neutral-0);
   --text-on-media: white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
-  --text-link: hsl(from var(--primary) h calc(s * 0.85) calc(l - 7));
+  --text-link: var(--blue-700);
   --text-on-primary: white;
   --text-on-success: white;
   /* White on the yellow warning fill (--yellow-400) is ~1.5:1 and fails WCAG; the darkest neutral is ~10:1. */
@@ -379,7 +379,7 @@
   --surface-scrim: hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%);
   /* Divider on a coloured fill (split-button chevron); a translucent white reads on any brand hue. */
   --btn-split-divider: hsl(0deg 0% 100% / 25%);
-  --link-visited: hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%);
+  --link-visited: hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%);
   --border-default: var(--neutral-200);
   --border-strong: var(--neutral-300);
   --border-subtitle: var(--neutral-150);
@@ -394,7 +394,7 @@
   --text-inverted: var(--neutral-0);
   --text-on-media: white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
-  --text-link: hsl(from var(--primary) h calc(s * 0.85) calc(l - 7));
+  --text-link: var(--blue-700);
   --text-on-primary: white;
   --text-on-success: white;
   /* White on the yellow warning fill (--yellow-400) is ~1.5:1 and fails WCAG; the darkest neutral is ~10:1. */
@@ -586,8 +586,8 @@
   --tertiary-muted: hsl(var(--tertiary-h) 40% 26%);
   --tertiary-muted-strong: hsl(var(--tertiary-h) 42% 32%);
   --tertiary-strong: hsl(var(--tertiary-h) 90% 72%);
-  --text-link: hsl(var(--primary-h) 90% 74%);
-  --link-visited: hsl(var(--primary-h) 50% 70%);
+  --text-link: hsl(var(--blue-h) 90% 74%);
+  --link-visited: hsl(var(--blue-h) 50% 70%);
   --success-subtitle: hsl(132deg 38% 14%);
   --success-muted: hsl(132deg 34% 20%);
   --success-muted-strong: hsl(132deg 30% 28%);

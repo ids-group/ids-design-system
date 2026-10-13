@@ -162,12 +162,11 @@
     {
       "id": "brand-shades-follow-primary",
       "kind": "behavior",
-      "old": "--text-link",
+      "old": "--primary-strong",
       "new": null,
       "surface": "style",
       "searchHints": [
         "--primary:",
-        "--text-link",
         "--primary-strong",
         "--primary-muted-strong",
         "--surface-tint",
@@ -183,18 +182,44 @@
         "--primary-h",
         "data-brand"
       ],
-      "action": "None, unless your brand sets `--primary`, `--primary-h` or `--blue-h/s/l`: check `--text-link` and `--primary-strong` against 4.5:1 on white and on `--surface-tint` in light, the text on each tint in dark, and set `--text-link`, `--primary-strong`, `--surface-tint`, `--primary-subtitle`, `--primary-muted` or `--primary-muted-strong` explicitly where the derived value fails or is not the colour you want.",
-      "appliesWhen": "In light, `--text-link`, `--primary-strong`, `--surface-tint`, `--primary-subtitle`, `--primary-muted` and `--primary-muted-strong` were the `--blue-*` steps `--blue-700`, `--blue-700`, `--blue-50`, `--blue-50`, `--blue-100` and `--blue-200`; they now take the hue of `--primary` (`hsl(from var(--primary) h 100% 97%)` for both tints, `h 95% 94%` for `--primary-muted`, `h 95% 89%` for `--primary-muted-strong`), and `--text-link` and `--primary-strong` are `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))`. In dark, `--surface-tint`, `--primary-subtitle`, `--primary-muted`, `--primary-muted-strong` and `--primary-strong` were `hsl(var(--primary-h) …)` and are `hsl(from var(--primary) …)` at the same saturation and lightness. The default blue renders the same RGB. A brand that sets them itself keeps its values. The dark `--text-link`, `--link-visited`, the focus ring and the field halo are unchanged and read `--primary-h/s/l`.",
+      "action": "None, unless your brand sets `--primary`, `--primary-h` or `--blue-h/s/l`: check `--primary-strong` against 4.5:1 on white and on `--surface-tint` in light, the text on each tint in dark, and set `--primary-strong`, `--surface-tint`, `--primary-subtitle`, `--primary-muted` or `--primary-muted-strong` explicitly where the derived value fails or is not the colour you want.",
+      "appliesWhen": "In light, `--primary-strong`, `--surface-tint`, `--primary-subtitle`, `--primary-muted` and `--primary-muted-strong` were the `--blue-*` steps `--blue-700`, `--blue-50`, `--blue-50`, `--blue-100` and `--blue-200`; they now take the hue of `--primary` (`hsl(from var(--primary) h 100% 97%)` for both tints, `h 95% 94%` for `--primary-muted`, `h 95% 89%` for `--primary-muted-strong`), and `--primary-strong` is `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))`. In dark, `--surface-tint`, `--primary-subtitle`, `--primary-muted`, `--primary-muted-strong` and `--primary-strong` were `hsl(var(--primary-h) …)` and are `hsl(from var(--primary) …)` at the same saturation and lightness. The default blue renders the same RGB. A brand that sets them itself keeps its values. The focus ring and the field halo are unchanged and read `--primary-h/s/l`; links stay blue under any brand.",
       "pitfall": "A brand that re-pointed the `--blue-50`, `--blue-100`, `--blue-200` or `--blue-700` steps, or `--primary-h` in dark, without moving `--primary`'s hue no longer reaches these tokens through them; a light brand colour (yellow, lime, cyan) derives a link and on-tint text under 4.5:1 on white; and an achromatic `--primary` (black, gray) has no hue, so the tints turn pink in light and dark red in dark, with no error anywhere.",
-      "restore": "--text-link: var(--blue-700); --primary-strong: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle: var(--blue-50); --primary-muted: var(--blue-100); --primary-muted-strong: var(--blue-200); and under [data-theme='dark']: --surface-tint: hsl(var(--primary-h) 45% 16%); --primary-subtitle: hsl(var(--primary-h) 45% 18%); --primary-muted: hsl(var(--primary-h) 40% 26%); --primary-muted-strong: hsl(var(--primary-h) 42% 32%); --primary-strong: hsl(var(--primary-h) 90% 72%);",
+      "restore": "--primary-strong: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle: var(--blue-50); --primary-muted: var(--blue-100); --primary-muted-strong: var(--blue-200); and under [data-theme='dark']: --surface-tint: hsl(var(--primary-h) 45% 16%); --primary-subtitle: hsl(var(--primary-h) 45% 18%); --primary-muted: hsl(var(--primary-h) 40% 26%); --primary-muted-strong: hsl(var(--primary-h) 42% 32%); --primary-strong: hsl(var(--primary-h) 90% 72%);",
       "verify": "With the brand applied in each theme it ships, a link and the label of a selected tag, tab or list row read at least 4.5:1 on their background, and the active row, the selected dropdown option, tonal fills and the text on them are in the brand hue or set deliberately.",
       "evidence": [
         "tokens:--surface-tint",
         "tokens:--primary-subtitle",
         "tokens:--primary-muted",
         "tokens:--primary-muted-strong",
-        "tokens:--primary-strong",
-        "tokens:--text-link"
+        "tokens:--primary-strong"
+      ]
+    },
+    {
+      "id": "links-stay-blue-under-a-brand",
+      "kind": "behavior",
+      "old": "--text-link",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "--primary-h",
+        "--primary-s",
+        "--primary-l",
+        "--text-link",
+        "--link-visited",
+        "data-brand"
+      ],
+      "detect": [
+        "--primary-h"
+      ],
+      "action": "None, unless your brand set `--primary-h/s/l` to colour its links in dark or its visited links: set `--text-link` and `--link-visited` yourself where you want brand-coloured links.",
+      "appliesWhen": "A theme that sets `--primary-h`, `--primary-s` or `--primary-l` to its brand. In dark, `--text-link` was `hsl(var(--primary-h) 90% 74%)` and `--link-visited` `hsl(var(--primary-h) 50% 70%)`; in light `--link-visited` was `hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%)`. They now read `--blue-h` and `--blue-s`, and light `--text-link` stays `var(--blue-700)`, so links are blue under any brand. A theme that leaves the channels alone sees no change.",
+      "pitfall": "A theme that re-points the `--blue-*` palette itself recolours links with it; only the `--primary-*` channels lost their hold on links.",
+      "restore": "under [data-theme='dark']: --text-link: hsl(var(--primary-h) 90% 74%); --link-visited: hsl(var(--primary-h) 50% 70%); and on the theme root: --link-visited: hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%);",
+      "verify": "Under your brand open a page with a link and a visited link in light and dark and confirm the colour is the one you want.",
+      "evidence": [
+        "tokens:--text-link",
+        "tokens:--link-visited"
       ]
     },
     {

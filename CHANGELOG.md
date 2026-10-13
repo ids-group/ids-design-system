@@ -85,20 +85,21 @@
   every state, a focused link's included. To keep visited links in the link colour, set
   `.link { --ds-link-color-visited: var(--ds-link-color, var(--text-link)); }`.
 
-- **Links and every brand shade follow `--primary`.** In light, `--surface-tint` and
+- **Every brand shade follows `--primary`; links stay blue.** In light, `--surface-tint` and
   `--primary-subtitle` are `hsl(from var(--primary) h 100% 97%)`, `--primary-muted`
-  `h 95% 94%`, `--primary-muted-strong` `h 95% 89%`, and `--text-link` and `--primary-strong`
+  `h 95% 94%`, `--primary-muted-strong` `h 95% 89%`, and `--primary-strong`
   `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))`, where they were the `--blue-50`,
   `--blue-100`, `--blue-200` and `--blue-700` steps. In dark, `--surface-tint`,
   `--primary-subtitle`, `--primary-muted`, `--primary-muted-strong` and `--primary-strong` take
   their hue from `--primary` where they took `--primary-h`, at the same saturation and lightness.
-  The default blue renders the same RGB. A brand that sets only `--primary` gets links, active
-  rows, selected options, tonal fills and the text on them in its own hue; one that sets them
-  itself keeps its values. A light brand colour (yellow, lime, cyan) derives a link and a
-  `--primary-strong` under 4.5:1 on white: the theming page lists the six with what each paints
-  and the contrast it must meet. The focus ring, the field halo, `--link-visited` and the dark
-  `--text-link` still read `--primary-h/s/l`. Restore with `--text-link: var(--blue-700);
-  --primary-strong: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle:
+  The default blue renders the same RGB. A brand that sets only `--primary` gets active rows,
+  selected options, tonal fills and the text on them in its own hue; one that sets them itself
+  keeps its values. Links are not a brand shade: `--text-link` and `--link-visited` read the
+  `--blue-*` palette in both themes, so a link stays blue under any brand, where the dark link and
+  visited link took the `--primary-h/s/l` channels. A light brand colour (yellow, lime, cyan)
+  derives a `--primary-strong` under 4.5:1 on white: the theming page lists the five with what
+  each paints and the contrast it must meet. The focus ring and the field halo still read
+  `--primary-h/s/l`. Restore with `--primary-strong: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle:
   var(--blue-50); --primary-muted: var(--blue-100); --primary-muted-strong: var(--blue-200);` in
   light, and `hsl(var(--primary-h) …)` at the same saturation and lightness in dark.
 
