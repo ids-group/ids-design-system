@@ -37,7 +37,7 @@ Consumers of the derived chain:
 
 | Location                                                   | Formula                                                                                                 | Deviation                                                                                |
 | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `src/lib/styles/_link.scss:7-8`                            | `color-mix(in srgb, var(--text-link) 80%, black)` hover, `65%, black` active                            | Steps −20%/−35% instead of theme's −12%/−24%; pressed ≠ 2×hover                          |
+| `src/lib/styles/_link.scss:7-8`                            | `color-mix(in srgb, var(--_link-color) 80%, black)` hover, `65%, black` active                          | Steps −20%/−35% instead of theme's −12%/−24%; pressed ≠ 2×hover                          |
 | `src/lib/components/sidenav/sidenav-item.component.scss:9` | `color-mix(in srgb, var(--ds-sidenav-item-bg-active) 88%, white)`                                       | Same 88% constant but mixes toward **white** (base is dark); direction hardcoded locally |
 | `src/lib/components/button/button.component.scss:38`       | `--ds-button-pressed-shadow: 0 0 0 3px color-mix(in srgb, var(--ds-button-bg-active) 35%, transparent)` | One-off alpha formula (shadow, acceptable)                                               |
 

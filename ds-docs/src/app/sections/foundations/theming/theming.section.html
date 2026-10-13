@@ -297,13 +297,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    Six tokens take their hue from
+    Five tokens take their hue from
     <code class="t-mono-inline">
       --primary
-    </code> in both themes, the dark link from
+    </code> in both themes. Check each against the brand; set it where it
+    fails. Links stay blue under any brand: set
     <code class="t-mono-inline">
-      --primary-h
-    </code>. Check each against the brand; set it where it fails.
+      --ds-link-color
+    </code> to change them.
   </p>
 
   <table class="tbl">
@@ -324,25 +325,6 @@
     </thead>
 
     <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            --text-link
-          </code>
-        </td>
-
-        <td>
-          Links
-        </td>
-
-        <td>
-          4.5:1 on <code class="t-mono-inline">--surface-default</code> and on
-          <code class="t-mono-inline">
-            --surface-tint
-          </code>
-        </td>
-      </tr>
-
       <tr>
         <td>
           <code class="t-mono-inline">
@@ -431,21 +413,15 @@
 
   <ul class="rules">
     <li>
-      Light brand (yellow, lime, cyan): the derived link and
+      Light brand (yellow, lime, cyan): the derived
       <code class="t-mono-inline">
         --primary-strong
-      </code> fail, set both
+      </code> fails, set it
     </li>
 
     <li>
       Still on <code class="t-mono-inline">--primary-h/s/l</code>: focus ring,
-      field halo,
-      <code class="t-mono-inline">
-        --link-visited
-      </code>, dark
-      <code class="t-mono-inline">
-        --text-link
-      </code>; set the channels
+      field halo; set the channels
     </li>
 
     <li>

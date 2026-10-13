@@ -7,16 +7,20 @@ export type ChartFrame = 'auto' | 'none';
 
 /** Where a chart-value formatter is printing: the compact `'tick'` label on the value axis,
  *  `'readout'` for the hovered value in a pill on the axis, or `'tooltip'` for every value spelled
- *  out in full (annex table, description, beside a mark). The built-in format prints `'readout'`
- *  in full, as `'tooltip'`. */
+ *  out in full (annex table, description, beside a mark). `'readout'` reaches only a formatter
+ *  that sets `handlesReadout`. */
 export type ChartFormatLocation = 'tick' | 'readout' | 'tooltip';
 
 /** Formats every value a chart prints, annex table and generated description included.
- *  Receives the location, so one function can abbreviate on the axis only. */
-export type ChartValueFormat = (
-  value: number,
-  location: ChartFormatLocation,
-) => string;
+ *  Receives the location, so one function can abbreviate on the axis only.
+ *
+ *  The axis readout pill asks for `'tooltip'`, unless the formatter carries
+ *  `handlesReadout: true`; only then is it called with `'readout'`. A formatter written for
+ *  `'tick' | 'tooltip'` therefore compiles and keeps a full number in the pill. */
+export type ChartValueFormat = {
+  // Method syntax makes `location` bivariant, so a formatter typed `'tick' | 'tooltip'` compiles.
+  format(value: number, location: ChartFormatLocation): string;
+}['format'] & { readonly handlesReadout?: boolean };
 
 /** How a reference line is stroked. */
 export type ChartThresholdDash = 'solid' | 'dashed' | 'dotted';

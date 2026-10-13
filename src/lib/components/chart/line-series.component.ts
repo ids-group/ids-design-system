@@ -387,6 +387,7 @@ export class LineSeriesComponent implements OnDestroy {
       offersTooltip: computed(() => this.tooltip() !== 'none'),
       readsCategory: computed(() => this.tooltip() === 'axis'),
       axisOrigin: this.topReadingElement,
+      axisReadingY: this.topReadingY,
       axisEntries: this.axisEntries,
       axisPointElements: this.axisPointElements,
       axisReadout: this.axisReadout,
@@ -1173,13 +1174,13 @@ export class LineSeriesComponent implements OnDestroy {
     ),
   );
 
-  /** The topmost reading at the active category, as an element; the cursor band spans the plot and would open an `'axis'` panel at the top. */
-  private readonly topReadingElement = computed<Element | null>(() => {
+  private readonly topReading = computed(() => {
     const categoryIndex = this.scales.activeIndex();
     if (categoryIndex < 0) {
       return null;
     }
-    const highest = this.allMarkers()
+
+    return this.allMarkers()
       .filter(
         (marker) => marker.categoryIndex === categoryIndex && !marker.hidden,
       )
@@ -1187,11 +1188,20 @@ export class LineSeriesComponent implements OnDestroy {
         (top, marker) => (top === null || marker.y < top.y ? marker : top),
         null,
       );
+  });
+
+  /** The topmost reading at the active category, as an element; the cursor band spans the plot and would open an `'axis'` panel at the top. */
+  private readonly topReadingElement = computed<Element | null>(() => {
+    const highest = this.topReading();
 
     return highest
       ? (this.markerElements()[highest.markIndex]?.nativeElement ?? null)
       : null;
   });
+
+  private readonly topReadingY = computed(() =>
+    this.topReadingElement() ? null : (this.topReading()?.y ?? null),
+  );
 
   private readonly axisReadout = computed<ChartAxisReadout | null>(() => {
     const marker = this.allMarkers()[this.activeMark.index()];

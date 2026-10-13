@@ -1737,7 +1737,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Busy state: disables interaction and sets `aria-busy`. Button-only; ignored on an anchor with a dev warning."
+        "description": "Busy state: blocks `pressed` and sets `aria-busy` and `aria-disabled`, keeping the button focusable so focus stays on it while the work runs. Button-only; ignored on an anchor with a dev warning."
       },
       {
         "name": "fullWidth",
@@ -2200,7 +2200,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Lets a press dragged across categories select them: a band over the range, the sum and mean of every reading in it, and the marks outside it faded. Escape or a press outside clears it; a press released in its own category still pins. Off by default."
       },
       {
-        "name": "axisReadout",
+        "name": "showAxisReadout",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -3497,7 +3497,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Lets a press dragged across columns select their categories: a band, the sum and mean of every column in it, and the rest faded. Escape or a press outside clears it. Off by default."
       },
       {
-        "name": "axisReadout",
+        "name": "showAxisReadout",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -5000,11 +5000,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "selected",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Toggle state: renders the pressed look and sets `aria-pressed`."
+        "description": "Toggle state: renders the pressed look and sets `aria-pressed`, `\"false\"` when bound off. Unbound, the button is no toggle and carries no `aria-pressed`."
       },
       {
         "name": "ariaExpanded",
@@ -5993,7 +5993,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Lets a press dragged across categories select them: a band, the sum and mean of every reading in it, and the readings outside faded. Escape or a press outside clears it. Off by default."
       },
       {
-        "name": "axisReadout",
+        "name": "showAxisReadout",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -7434,7 +7434,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "The host is still fetching: every control disables, the range label is masked with a `<ds-skeleton>` so a stale `total` is never quoted, and the nav reports `aria-busy`."
+        "description": "The host is still fetching: the page buttons take `aria-disabled` and ignore presses while staying focusable, the size select disables, the range label is masked with a `<ds-skeleton>` so a stale `total` is never quoted, and the nav reports `aria-busy`."
       }
     ],
     "outputs": []
@@ -7708,7 +7708,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "`'below'` prints the value and its caption under the ring at full size, never shrunk or shortened."
       },
       {
-        "name": "centerFollowsHover",
+        "name": "showHoverCenter",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -7874,7 +7874,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "ARIA role for the panel (e.g. 'dialog'). When set, the panel traps focus and captures it on open; Escape or an in-panel close returns focus to the trigger, an outside click or scroll does not (non-modal). Leave null for plain text popovers."
+        "description": "ARIA role for the panel (e.g. 'dialog'). When set, the panel traps focus and captures it on open; Escape or an in-panel close returns focus to the trigger, an outside click or scroll does not (non-modal). Leave null for plain text popovers. A panel holding a `role=\"menu\"` (a `ds-menu`) captures focus on open without it, untrapped."
       },
       {
         "name": "panelLabel",
@@ -8463,7 +8463,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fades every mark but the one under the pointer; on a scatter this hides pile-ups."
       },
       {
-        "name": "nearestPoint",
+        "name": "showNearestPoint",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -8478,7 +8478,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How far the pointer may be from a point's centre, in CSS pixels and inclusive, for the point to answer under `nearestPoint`; `null` sets no limit."
+        "description": "How far the pointer may be from a point's centre, in CSS pixels and inclusive, for the point to answer under `showNearestPoint`; `null` sets no limit."
       },
       {
         "name": "staggerMs",
@@ -12659,7 +12659,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Dims every OTHER bar while one is hovered or focused."
       },
       {
-        "name": "axisReadout",
+        "name": "showAxisReadout",
         "kind": "input",
         "type": "boolean",
         "union": null,

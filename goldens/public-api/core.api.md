@@ -49,7 +49,11 @@ export interface ChartThreshold {
 
 export type ChartThresholdDash = 'solid' | 'dashed' | 'dotted';
 
-export type ChartValueFormat = (value: number, location: ChartFormatLocation) => string;
+export type ChartValueFormat = {
+    format(value: number, location: ChartFormatLocation): string;
+}['format'] & {
+    readonly handlesReadout?: boolean;
+};
 
 export const DS_CONFIG = new InjectionToken<DsConfig>('DS_CONFIG', {
     factory: () => ({}),

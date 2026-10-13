@@ -13,7 +13,6 @@ export class PieChartComponent extends DsChartBase implements ChartDimmable, Cha
     public readonly centerCompact = input(true, { transform: booleanAttribute });
     private readonly centerEntry;
     private readonly centerFit;
-    public readonly centerFollowsHover = input(true, { transform: booleanAttribute });
     protected readonly centerFontSize = computed(…);
     private readonly centerKey;
     public readonly centerLabel = input<string | null>(null);
@@ -59,6 +58,7 @@ export class PieChartComponent extends DsChartBase implements ChartDimmable, Cha
     private readonly ringElement;
     private readonly ringWidth;
     protected readonly roving = rovingMarks(…);
+    public readonly showHoverCenter = input(true, { transform: booleanAttribute });
     private shownCenterKey;
     protected readonly shownCenterLabel = computed(…);
     private readonly shownCenterValue;

@@ -2,6 +2,11 @@
 
 One line per closed item. Open work lives in `todo.md`; the detail behind an entry is in git history.
 
+## Brand colour reaches every shade; links stay blue (2026-10-13)
+- Light and dark primary shades take their hue from `--primary` (`themes/_semantic.scss`, `themes/dark/_theme.scss`); the brand checklist is in `themes/README.md` and the docs theming page
+- `.link` sets its own colour from the `--blue-*` palette (`styles/_link.scss`), `--ds-link-color` overrides it; `--text-link` and `--link-visited` are removed
+- Decided: derive the tone from the brand colour plus a checklist; links always blue (Stas, decision queue and deck `link-colour`)
+
 ## Calendar week and clock from the locale (2026-10-12)
 - `ds-date-picker` starts the week on its locale's first day (`localeFirstDayOfWeek`, Monday without week data); `ds-time-picker` shows the locale's 12h or 24h clock (`localeTimeFormat`); inputs and `DS_CONFIG` still win
 - Decided: everything from the locale (Stas, deck `implemented/locale-week-and-hour`)

@@ -347,11 +347,6 @@ export const SEMANTIC_TEXT: readonly ColourRow[] = [
     "inverted": true
   },
   {
-    "name": "--text-link",
-    "value": "hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))",
-    "notes": "Hyperlink text."
-  },
-  {
     "name": "--text-on-primary",
     "value": "white",
     "notes": "Text on brand fill.",
@@ -691,13 +686,7 @@ export const SEMANTIC_STATUS: readonly ColourRow[] = [
   }
 ];
 
-export const SEMANTIC_LINK: readonly ColourRow[] = [
-  {
-    "name": "--link-visited",
-    "value": "hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%)",
-    "notes": "Visited link colour — desaturated, darkened primary hue."
-  }
-];
+export const SEMANTIC_LINK: readonly ColourRow[] = [];
 
 export const CHARTS: readonly ColourRow[] = [
   {
@@ -5014,8 +5003,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-link-color",
-        "value": "var(--text-link)",
-        "notes": "Link text colour. Defaults to --text-link."
+        "value": "var(--blue-700)",
+        "notes": "Link text colour. Defaults to --blue-700 in light and a light blue from the --blue-h hue in dark."
       },
       {
         "name": "--ds-link-color-hover",
@@ -5026,6 +5015,46 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-link-color-active",
         "value": "color-mix(in srgb, var(--_link-color) 65%, black)",
         "notes": "Link colour while pressed. Defaults to the link colour mixed 65% with black."
+      },
+      {
+        "name": "--ds-link-color-visited",
+        "value": "hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-color-visited-hover",
+        "value": "color-mix(in srgb, var(--_link-color-visited) 80%, black)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-color-visited-active",
+        "value": "color-mix(in srgb, var(--_link-color-visited) 65%, black)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-color-disabled",
+        "value": "var(--text-disabled)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-underline-color",
+        "value": "currentcolor",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-underline-thickness",
+        "value": "1px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-underline-offset",
+        "value": "2px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-focus-ring-color",
+        "value": "var(--focus-ring-color)",
+        "notes": ""
       }
     ]
   },

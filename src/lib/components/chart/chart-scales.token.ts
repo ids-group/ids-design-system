@@ -40,6 +40,9 @@ export interface ChartTooltipSource {
   readonly stacked?: Signal<boolean>;
   /** This mark's reading at the cursor's category as an element; a category panel hangs over the highest. Absent falls back to `origin`. */
   readonly axisOrigin?: Signal<Element | null>;
+  /** This mark's top reading at the cursor's category in plot pixels from the top, while it draws no
+   *  element there; the panel and the pin anchor to it as to a marker. */
+  readonly axisReadingY?: Signal<number | null>;
   /** What this mark reads at the cursor's category, whatever its own tooltip setting. */
   readonly axisEntries?: Signal<readonly ChartAxisEntry[]>;
   /** The drawn element of each `axisEntries` reading, same order; the keyboard focuses it. */

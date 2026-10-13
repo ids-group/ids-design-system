@@ -43,7 +43,6 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     public readonly axisLabel = input<string | null>(null);
     protected readonly axisLabelFill = computed(…);
     protected readonly axisLabelX = computed(…);
-    public readonly axisReadout = input(true, { transform: booleanAttribute });
     protected readonly axisTitleGutter = computed(…);
     protected readonly axisTitleX = computed(…);
     private bandAt;
@@ -138,6 +137,8 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     private readonly rangeTextWidth;
     private readonly rangeTotal;
     protected readonly reachesBelowZero = computed(…);
+    private readingAnchorTop;
+    protected readonly readingY = computed(…);
     private readingsTopDown;
     private readonly readoutTextWidth;
     private refocusStop;
@@ -169,6 +170,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     public setActiveIndex(index: number): void;
     protected readonly settled = computed(…);
     private readonly settledLayout;
+    public readonly showAxisReadout = input(true, { transform: booleanAttribute });
     protected readonly showSecondaryGridlines = computed(…);
     protected readonly shownReadout = computed(…);
     public readonly skeletonCount = input(CHART_SKELETON_COUNT, { transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT) });
@@ -400,7 +402,9 @@ export class LineSeriesComponent implements OnDestroy {
     public readonly tooltipContext = computed<ChartTooltipContext | null>(…);
     public readonly tooltipLingerMs = input(CHART_TOOLTIP_LINGER_MS, { transform: numberAttribute });
     public readonly tooltipOrigin = computed<ChartTooltipOrigin | null>(…);
+    private readonly topReading;
     private readonly topReadingElement;
+    private readonly topReadingY;
     private readonly travel;
     public readonly valueFormat = input<ChartValueFormat>(chartValueFormat(injectDsLocale()));
     private readonly valuesByCategory;
@@ -461,6 +465,7 @@ ds-chart {
     --ds-chart-axis-label-color: var(--chart-axis-label-color);
     --ds-chart-axis-line-color: var(--chart-axis-line-color);
     --ds-chart-cursor-line-color: (none);
+    --ds-chart-dot-radius: (none);
     --ds-chart-grid-line-color: var(--chart-grid-line-color);
     --ds-chart-hover-bg-color: (none);
     --ds-chart-plot-bg-color: transparent;

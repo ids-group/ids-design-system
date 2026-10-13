@@ -187,7 +187,7 @@
       "restore": null,
       "verify": "The app builds, and every complete DsIntl object it declares has chart.rowsUnder.",
       "evidence": [
-        "fixture:unreleased/intl-chart-rows-under-required.ts"
+        "fixture:0.15.0/intl-chart-rows-under-required.ts"
       ]
     },
     {

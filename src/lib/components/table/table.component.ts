@@ -438,6 +438,15 @@ export class TableComponent<T extends object> {
     }
     if (this.virtualizing()) {
       parts.push('virtual');
+    } else if (
+      this.layout.resize() !== null &&
+      this.visibleColumns().every(
+        (col) =>
+          this.layout.resize()?.widthOverride(col.key) !== undefined ||
+          typeof col.width === 'number',
+      )
+    ) {
+      parts.push('sized-columns');
     }
 
     return parts.join(' ');

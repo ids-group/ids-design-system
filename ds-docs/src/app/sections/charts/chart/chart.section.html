@@ -195,7 +195,7 @@
       The axes answer the pointer: a bold category label, a guide and the value
       in a pill on the axis.
       <code class="t-mono-inline">
-        axisReadout="false"
+        showAxisReadout="false"
       </code> turns it off, on
       <code class="t-mono-inline">
         ds-chart
@@ -209,8 +209,14 @@
         valueFormat
       </code> at the location
       <code class="t-mono-inline">
+        'tooltip'
+      </code>, in full. A formatter that sets
+      <code class="t-mono-inline">
+        handlesReadout: true
+      </code> is asked for
+      <code class="t-mono-inline">
         'readout'
-      </code>; the built-in format spells it out in full, as in a tooltip.
+      </code> there instead, and can return a short form.
     </li>
 
     <li>
@@ -277,7 +283,7 @@
 
     <div class="state-cell">
       <ds-chart
-        axisReadout="false"
+        showAxisReadout="false"
         [categories]="orderMonths">
         <svg:g
           dsColumnSeries
@@ -291,7 +297,7 @@
       </ds-chart>
 
       <div class="state-cell-label">
-        axisReadout = false: no label, guide or pill
+        showAxisReadout = false: no label, guide or pill
       </div>
     </div>
 

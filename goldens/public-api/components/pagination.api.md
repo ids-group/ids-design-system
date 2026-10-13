@@ -9,7 +9,7 @@ export { PaginationLayout } from '@ids-group-ltd/ids-design-system/core'; // typ
 export class PaginationComponent {
     public readonly currentPage = model<number>(1);
     protected readonly empty = computed(…);
-    protected goTo(page: number): void;
+    protected goTo(page: number, nav: HTMLElement): void;
     protected readonly intl = inject(…);
     public readonly layout = input<PaginationLayout | null>(null);
     public readonly layoutResolved = resolveWithConfig(…);
@@ -21,6 +21,7 @@ export class PaginationComponent {
     public readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
     protected readonly pageSizeStr = computed(…);
     protected readonly rangeLabel = computed(…);
+    private readonly rescueFocus;
     public readonly showLabel = input(true, { transform: booleanAttribute });
     public readonly showPageSize = input(true, { transform: booleanAttribute });
     public readonly size = input<DsSize | null>(null);

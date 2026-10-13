@@ -110,7 +110,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-breadcrumbs> — BreadcrumbsComponent](navigation/ds-breadcrumbs.md) — <!-- inputs:ds-breadcrumbs -->
 - [<ds-tabs> + <ds-tab> — TabsComponent, TabComponent](navigation/ds-tabs.md) — Container holds <ds-tab label="…"> children.
 - [<ds-stepper> — StepperComponent](navigation/ds-stepper.md) — <!-- inputs:ds-stepper -->
-- [<ds-pagination> — PaginationComponent](navigation/ds-pagination.md) — <!-- inputs:ds-pagination -->
+- [<ds-pagination> — PaginationComponent](navigation/ds-pagination.md) — Previous and Next disable on the first and last page; pressing one onto that page moves focus to the current p
 - [<ds-divider> — DividerComponent](navigation/ds-divider.md) — Content: label text (when variant="label").
 - [<ds-container> — ContainerComponent](navigation/ds-container.md) — <!-- inputs:ds-container -->
 - [<ds-inline> — InlineComponent](navigation/ds-inline.md) — <!-- inputs:ds-inline -->
@@ -151,5 +151,5 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-table> — TableComponent<T extends { id: string }>](tables/ds-table.md) — Column shape: { key: string, label: string, sortable?: boolean, align?: 'left' | 'right' | 'center', cell?: (r
 - [[dsCellTemplate] — CellTemplateDirective](tables/ds-cell-template.md) — <!-- inputs:[dsCellTemplate] -->
 - [<ng-template[dsHeaderFilter]> — HeaderFilterDirective](tables/header-filter-directive.md) — <!-- inputs:ng-template[dsHeaderFilter] -->
-- [[dsTableColumns] — DsTableColumns](tables/ds-table-columns.md) — <!-- inputs:[dsTableColumns] -->
+- [[dsTableColumns] — DsTableColumns](tables/ds-table-columns.md) — Column panel Move up and Move down keep focus on the moved row: the pressed button, or the other at an end.
 - [[dsTableExport] — DsTableExport](tables/ds-table-export.md) — <!-- inputs:[dsTableExport] -->

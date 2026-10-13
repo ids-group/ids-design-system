@@ -48,8 +48,12 @@ export class IconButtonComponent {
   readonly type = input<IconButtonType>('button');
   /** Disables the button and blocks `pressed`. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Toggle state: renders the pressed look and sets `aria-pressed`. */
-  readonly selected = input(false, { transform: booleanAttribute });
+  /** Toggle state: renders the pressed look and sets `aria-pressed`, `"false"` when bound off.
+   *  Unbound, the button is no toggle and carries no `aria-pressed`. */
+  readonly selected = input<boolean | null>(null, {
+    transform: (value: unknown) =>
+      value == null ? null : booleanAttribute(value),
+  });
   /** `aria-expanded` on the inner `<button>`; bind to the open state. On the host it would land
    *  on a non-focusable wrapper. */
   readonly ariaExpanded = input<boolean | null>(null);

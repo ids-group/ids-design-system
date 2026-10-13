@@ -1,4 +1,5 @@
 <nav
+  #nav
   [attr.aria-label]="intl().pagination.label"
   [attr.aria-busy]="loading() ? 'true' : null"
   [class]="navClass()">
@@ -19,15 +20,16 @@
     class="pagination-button"
     type="button"
     [attr.aria-label]="intl().pagination.previous"
-    [disabled]="loading() || empty() || currentPage() === 1"
-    (click)="goTo(currentPage() - 1)">
+    [attr.aria-disabled]="loading() ? 'true' : null"
+    [disabled]="empty() || currentPage() === 1"
+    (click)="goTo(currentPage() - 1, nav)">
     <ds-icon
       name="chevronLeft"
       [size]="14">
     </ds-icon>
   </button>
 
-  @for (item of pageItems(); track $index) {
+  @for (item of pageItems(); track item === 'ellipsis' ? 'ellipsis-' + $index : item) {
     @if (item === 'ellipsis') {
       <span
         class="ellipsis"
@@ -39,10 +41,11 @@
         class="pagination-button"
         type="button"
         [class.active]="item === currentPage() && !empty()"
-        [disabled]="loading() || empty()"
+        [attr.aria-disabled]="loading() ? 'true' : null"
+        [disabled]="empty()"
         [attr.aria-label]="intl().pagination.page(item)"
         [attr.aria-current]="item === currentPage() && !empty() ? 'page' : null"
-        (click)="goTo(item)">
+        (click)="goTo(item, nav)">
         {{ item }}
       </button>
     }
@@ -52,8 +55,9 @@
     class="pagination-button"
     type="button"
     [attr.aria-label]="intl().pagination.next"
-    [disabled]="loading() || empty() || currentPage() === totalPages()"
-    (click)="goTo(currentPage() + 1)">
+    [attr.aria-disabled]="loading() ? 'true' : null"
+    [disabled]="empty() || currentPage() === totalPages()"
+    (click)="goTo(currentPage() + 1, nav)">
     <ds-icon
       name="chevronRight"
       [size]="14">

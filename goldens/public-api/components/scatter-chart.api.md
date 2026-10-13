@@ -33,7 +33,6 @@ export class ScatterChartComponent extends DsChartBase implements ChartDimmable,
     private readonly listenForPointer;
     protected readonly multiSeries = computed(…);
     private nearestMark;
-    public readonly nearestPoint = input(true, { transform: booleanAttribute });
     public readonly nearestRadius = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
     private onCanvasLeave;
     private onCanvasPointer;
@@ -58,6 +57,7 @@ export class ScatterChartComponent extends DsChartBase implements ChartDimmable,
     protected readonly ringedMark = computed(…);
     protected readonly series = computed<readonly PlacedSeries[]>(…);
     protected readonly seriesStart = computed(…);
+    public readonly showNearestPoint = input(true, { transform: booleanAttribute });
     protected readonly skeletonLayout = (() => { const share = (value: number, of: number) => `${(value / of) * 100}%`; const steps = [0, 0.25, 0.5, 0.75, 1]; return { plotLeft: share(this.plot.left, SCATTER_VIEW_WIDTH), plotWidth: share(this.plot.width, SCATTER_VIEW_WIDTH), labelEnd: share(SCATTER_VIEW_WIDTH - this.plot.left + 8, SCATTER_VIEW_WIDTH), categoryTop: share(this.plotBottom + 10, SCATTER_VIEW_HEIGHT), titleTop: share(this.plotBottom + 26, SCATTER_VIEW_HEIGHT), rows: steps.map((step) => share(this.plot.top + step * this.plot.height, SCATTER_VIEW_HEIGHT)), columns: steps.map((step) => share(this.plot.left + step * this.plot.width, SCATTER_VIEW_WIDTH)) }; })(…);
     public readonly staggerMs = input(40, { transform: numberAttribute });
     private readonly staggerSpread;

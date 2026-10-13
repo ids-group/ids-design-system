@@ -172,7 +172,7 @@
     Anywhere over the plot answers with the nearest point, ringed and tethered
     to the pointer.
     <code class="t-mono-inline">
-      [nearestPoint]="false"
+      [showNearestPoint]="false"
     </code> answers only within 16px of a point, without the ring.
   </p>
 
@@ -195,10 +195,10 @@
         xLabel="Weight, kg"
         yLabel="Cost"
         [data]="oneSeries"
-        [nearestPoint]="false" />
+        [showNearestPoint]="false" />
 
       <div class="state-cell-label">
-        nearestPoint = false
+        showNearestPoint = false
       </div>
     </div>
   </div>

@@ -16,7 +16,7 @@ export class IconButtonComponent {
     protected readonly iconSize = computed(…);
     protected onClick(event: MouseEvent): void;
     public readonly pressed = output<MouseEvent>();
-    public readonly selected = input(false, { transform: booleanAttribute });
+    public readonly selected = input<boolean | null>(null, { transform: (value: unknown) => value == null ? null : booleanAttribute(value) });
     public readonly size = input<DsSize | null>(null);
     public readonly sizeResolved = resolveWithConfig(…);
     public readonly type = input<IconButtonType>('button');

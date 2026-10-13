@@ -401,6 +401,9 @@ export function focusIsInside(overlayRef: OverlayRef): boolean;
 export function focusMark(scope: Element | null, index: number, within = ''): void;
 
 // @internal
+export function focusRescue(): (target: () => HTMLElement | null | undefined) => void;
+
+// @internal
 export function formatPercent(value: number, total: number, locale: string): string;
 
 // @internal
@@ -453,6 +456,9 @@ export function markOf(event: Event, scope: EventTarget | null = event.currentTa
 
 // @internal
 export function minMaxDecimate(points: readonly Reading[], target: number): readonly Reading[];
+
+// @internal
+export function moveFocusOutOf(leaving: HTMLElement, within: HTMLElement, fallback: HTMLElement | null = null): void;
 
 // @internal
 export function needsDecimating(count: number, target: number): boolean;

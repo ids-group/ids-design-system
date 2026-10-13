@@ -144,7 +144,6 @@
   --surface-scrim: hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%);
   /* Divider on a coloured fill (split-button chevron); a translucent white reads on any brand hue. */
   --btn-split-divider: hsl(0deg 0% 100% / 25%);
-  --link-visited: hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%);
   --border-default: var(--neutral-200);
   --border-strong: var(--neutral-300);
   --border-subtitle: var(--neutral-150);
@@ -159,7 +158,6 @@
   --text-inverted: var(--neutral-0);
   --text-on-media: white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
-  --text-link: hsl(from var(--primary) h calc(s * 0.85) calc(l - 7));
   --text-on-primary: white;
   --text-on-success: white;
   /* White on the yellow warning fill (--yellow-400) is ~1.5:1 and fails WCAG; the darkest neutral is ~10:1. */
@@ -379,7 +377,6 @@
   --surface-scrim: hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%);
   /* Divider on a coloured fill (split-button chevron); a translucent white reads on any brand hue. */
   --btn-split-divider: hsl(0deg 0% 100% / 25%);
-  --link-visited: hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%);
   --border-default: var(--neutral-200);
   --border-strong: var(--neutral-300);
   --border-subtitle: var(--neutral-150);
@@ -394,7 +391,6 @@
   --text-inverted: var(--neutral-0);
   --text-on-media: white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
-  --text-link: hsl(from var(--primary) h calc(s * 0.85) calc(l - 7));
   --text-on-primary: white;
   --text-on-success: white;
   /* White on the yellow warning fill (--yellow-400) is ~1.5:1 and fails WCAG; the darkest neutral is ~10:1. */
@@ -586,8 +582,6 @@
   --tertiary-muted: hsl(var(--tertiary-h) 40% 26%);
   --tertiary-muted-strong: hsl(var(--tertiary-h) 42% 32%);
   --tertiary-strong: hsl(var(--tertiary-h) 90% 72%);
-  --text-link: hsl(var(--primary-h) 90% 74%);
-  --link-visited: hsl(var(--primary-h) 50% 70%);
   --success-subtitle: hsl(132deg 38% 14%);
   --success-muted: hsl(132deg 34% 20%);
   --success-muted-strong: hsl(132deg 30% 28%);
@@ -1533,36 +1527,55 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Pure CSS class so inline anchors in <p> text keep their line flow. */
 .link {
-  --_link-color: var(--ds-link-color, var(--text-link));
+  --_link-color: var(--ds-link-color, var(--blue-700));
   --_link-color-hover: var(--ds-link-color-hover, color-mix(in srgb, var(--_link-color) 80%, black));
   --_link-color-active: var(--ds-link-color-active, color-mix(in srgb, var(--_link-color) 65%, black));
+  --_link-color-visited: var(--ds-link-color-visited, hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%));
+  --_link-color-visited-hover: var(--ds-link-color-visited-hover, color-mix(in srgb, var(--_link-color-visited) 80%, black));
+  --_link-color-visited-active: var(--ds-link-color-visited-active, color-mix(in srgb, var(--_link-color-visited) 65%, black));
+  --_link-color-disabled: var(--ds-link-color-disabled, var(--text-disabled));
+  --_link-underline-color: var(--ds-link-underline-color, currentcolor);
+  --_link-underline-thickness: var(--ds-link-underline-thickness, 1px);
+  --_link-underline-offset: var(--ds-link-underline-offset, 2px);
+  --_link-focus-ring-color: var(--ds-link-focus-ring-color, var(--focus-ring-color));
   color: var(--_link-color);
   text-decoration: underline;
-  text-decoration-color: var(--_link-color);
-  text-underline-offset: 2px;
-  text-decoration-thickness: 1px;
+  text-decoration-color: var(--_link-underline-color);
+  text-underline-offset: var(--_link-underline-offset);
+  text-decoration-thickness: var(--_link-underline-thickness);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition: color var(--duration-fast) var(--ease-standard), text-decoration-color var(--duration-fast) var(--ease-standard);
 }
 .link:hover {
   color: var(--_link-color-hover);
-  text-decoration-color: var(--_link-color-hover);
 }
 .link:active {
   color: var(--_link-color-active);
-  text-decoration-color: var(--_link-color-active);
+}
+.link {
+  /* Browsers apply only colour properties under `:visited` and ignore custom properties declared there,
+     so the resolvers live on `.link` and these rules set `color` alone. `:where()` keeps each at the
+     specificity of its unvisited twin, so `.quiet` and `[aria-disabled]` below still win. */
+}
+.link:where(:visited) {
+  color: var(--_link-color-visited);
+}
+.link:where(:visited):hover {
+  color: var(--_link-color-visited-hover);
+}
+.link:where(:visited):active {
+  color: var(--_link-color-visited-active);
 }
 .link:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
   animation: ds-focus-ring-in var(--duration-fast) var(--ease-standard);
+  outline-color: var(--_link-focus-ring-color);
   border-radius: var(--radius-sm);
-  text-decoration-color: var(--_link-color);
 }
 .link[aria-disabled=true] {
-  color: var(--text-disabled);
-  text-decoration-color: var(--text-disabled);
+  color: var(--_link-color-disabled);
   pointer-events: none;
   cursor: default;
 }
@@ -1587,12 +1600,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 .link.quiet {
   color: var(--text-secondary);
-  text-decoration-color: var(--text-secondary);
   font-weight: var(--font-weight-medium);
 }
 .link.quiet:hover {
   color: var(--text-primary);
-  text-decoration-color: var(--text-primary);
 }
 .link.inline {
   font-weight: inherit;
@@ -1621,6 +1632,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 .link.lg {
   font-size: var(--font-size-l);
+}
+
+:root[data-theme=dark] .link {
+  --_link-color: var(--ds-link-color, hsl(var(--blue-h) 90% 74%));
+  --_link-color-visited: var(--ds-link-color-visited, hsl(var(--blue-h) 50% 70%));
 }
 
 [ds-color=secondary] {

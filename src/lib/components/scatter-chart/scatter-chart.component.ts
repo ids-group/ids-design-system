@@ -79,7 +79,7 @@ const CATEGORY_GUTTER = 34;
 const EDGE_GUTTER = 12;
 // Clearance past the point's default radius, `--chart-dot-radius`.
 const PIN_POINT_CLEARANCE = 4;
-// Screen pixels past the plot's edge within which hover still answers, and, with `nearestPoint` off,
+// Screen pixels past the plot's edge within which hover still answers, and, with `showNearestPoint` off,
 // from a point's centre.
 const HOVER_REACH_PX = 16;
 
@@ -158,10 +158,10 @@ export class ScatterChartComponent
 
   /** Anywhere over the plot answers with the nearest point, ringed and tethered to the pointer. Off,
    *  a point answers only within 16 CSS pixels of its centre, without the ring and tether. */
-  readonly nearestPoint = input(true, { transform: booleanAttribute });
+  readonly showNearestPoint = input(true, { transform: booleanAttribute });
 
   /** How far the pointer may be from a point's centre, in CSS pixels and inclusive, for the point to
-   *  answer under `nearestPoint`; `null` sets no limit. */
+   *  answer under `showNearestPoint`; `null` sets no limit. */
   readonly nearestRadius = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
@@ -575,7 +575,7 @@ export class ScatterChartComponent
       return null;
     }
     let nearestIndex = -1;
-    const radius = this.nearestPoint() ? this.nearestRadius() : HOVER_REACH_PX;
+    const radius = this.showNearestPoint() ? this.nearestRadius() : HOVER_REACH_PX;
     let nearestDistance = radius === null ? Infinity : (radius / matrix.a) ** 2;
     this.flatMarks().forEach(({ mark }, index) => {
       const distance = (mark.cx - pointer.x) ** 2 + (mark.cy - pointer.y) ** 2;

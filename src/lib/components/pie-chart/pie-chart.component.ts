@@ -130,7 +130,7 @@ export class PieChartComponent
 
   /** The hovered, focused or held slice prints its value and label in the centre in place of
    *  `centerValue` and `centerLabel`. */
-  readonly centerFollowsHover = input(true, { transform: booleanAttribute });
+  readonly showHoverCenter = input(true, { transform: booleanAttribute });
 
   /** Legend placement, logical so it flips in right-to-left. */
   readonly legend = input<'end' | 'bottom' | 'none'>('end');
@@ -444,7 +444,7 @@ export class PieChartComponent
 
   // The hovered, focused or held slice takes the centre from the total until the pointer leaves.
   private readonly centerEntry = computed(() =>
-    this.centerFollowsHover()
+    this.showHoverCenter()
       ? (this.slices()[this.activeMark.index()] ?? null)
       : null,
   );
