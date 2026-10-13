@@ -5,6 +5,7 @@ import { check, finish } from './probe-check.mjs';
 
 const components = registerComponentsFacade(import.meta.url, [
   'charts-scale.ts',
+  'charts-format.ts',
 ]);
 
 const {
@@ -14,6 +15,7 @@ const {
   secondaryAxis,
   annotationMarks,
   categoryAt,
+  changeBetween,
   stackOffsets,
   thresholdMarks,
   valueScale,
@@ -535,5 +537,31 @@ check(
 check('no categories means nowhere', categoryAt(340, 40, 600, 0), -1);
 check('a zero-width plot means nowhere', categoryAt(340, 40, 0, 6), -1);
 check('a NaN pointer means nowhere', categoryAt(NaN, 40, 600, 6), -1);
+
+// ------------------------------------------------------------ showChange
+check('a rise reads its percentage', changeBetween(40, 50, 'en'), {
+  rising: true,
+  label: '+25.0%',
+});
+check('a fall reads its percentage', changeBetween(50, 40, 'en'), {
+  rising: false,
+  label: '-20.0%',
+});
+check(
+  'a rise from zero is coloured and unlabelled',
+  changeBetween(0, 40, 'en'),
+  {
+    rising: true,
+    label: null,
+  },
+);
+check(
+  'a fall from zero is coloured and unlabelled',
+  changeBetween(0, -40, 'en'),
+  {
+    rising: false,
+    label: null,
+  },
+);
 
 finish('chart-math');
