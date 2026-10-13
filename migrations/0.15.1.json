@@ -65,11 +65,13 @@
         "truncate: true",
         "align: 'right'",
         "align: \"right\"",
-        "sortValue:"
+        "sortValue:",
+        "label: ''",
+        "label: \"\""
       ],
-      "action": "Give every ds-table column of ids, dates, numbers or statuses its `kind`: `'id'`, `'date'`, `'number'` or `'status'`. Start with every column config that has `align: 'right'` and no `kind`, then the id, date and status columns. A date column whose values carry a time, such as Jul 17, 2026, 9:00AM, keeps no `kind` or gets `width: 'content'`. A column whose values must show whole gets `width: 'content'` or a `minWidth`.",
+      "action": "Give every ds-table column of ids, dates, numbers or statuses its `kind`: `'id'`, `'date'`, `'number'` or `'status'`. Start with every column config that has `align: 'right'` and no `kind`, then the id, date and status columns. A date column whose values carry a time, such as Jul 17, 2026, 9:00AM, keeps no `kind` or gets `width: 'content'`. A column whose values must show whole gets `width: 'content'` or a `minWidth`. A column with an empty label and no `width` (an icon, an arrow, a row of buttons) gets `width: 'content'` or a numeric `width`.",
       "appliesWhen": "Every ds-table column without a numeric `width`. A column with a numeric `width` is as wide as before; a column the reader dragged with dsTableResize keeps its dragged width.",
-      "pitfall": "A value longer than its column wraps (a plain column) or ellipsizes (a `truncate` column) where the column used to grow to it, and a column of short values keeps its share with space after them. A cell template holding an element wider than its column overflows into the next one. `kind: 'date'` is 130px with the cell padding inside it, 16px each side at the default density, so 98px of text: room for a date, not for a date with a time, which wraps there.",
+      "pitfall": "A value longer than its column wraps (a plain column) or ellipsizes (a `truncate` column) where the column used to grow to it, and a column of short values keeps its share with space after them. A cell template holding an element wider than its column overflows into the next one. `kind: 'date'` is 130px with the cell padding inside it, 16px each side at the default density, so 98px of text: room for a date, not for a date with a time, which wraps there. A column with an empty label and no `width` is a text column too and takes an equal share: an icon or arrow column grows and squeezes its neighbours, a column of buttons shrinks and clips them.",
       "restore": "{ key: 'notes', label: 'Notes', width: 'content' }",
       "verify": "Every column config with `align: 'right'` carries a `kind` or a numeric `width`, every id, date and status column carries a `kind`, and no `kind: 'date'` column shows a time. Then page every ds-table forward and back and change its data: no column changes width, and each id, date, number and status column is 110-130px.",
       "supersedes": [
