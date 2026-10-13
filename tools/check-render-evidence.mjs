@@ -10,7 +10,11 @@
 // It fails when
 //   * a differing block names nothing the manifest text or the CHANGELOG block names: a `ds-*`
 //     element or `ds-*` class rendered inside it, the component class of such an element, or a
-//     `--ds-*` token its text prints;
+//     `--ds-*` token its text prints, and no custom property its elements read at the base side,
+//     in a `var()` of a matching style rule or inline style, is the `old` of a `removed-api` or
+//     `token-rename` item of the manifest (a family `old` expanded as the stylelint deprecation
+//     list expands it). A docs stylesheet reading a withdrawn token loses that colour with
+//     nothing of the library in its markup;
 //   * a `pixels:<block id>` evidence entry of that manifest names no block, or one that differs.
 //
 // The "to" build is the docs app of the FROM ref compiled against the library of the TO ref, so a
@@ -49,6 +53,7 @@ import {
 import http from 'node:http';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { candidatesOf } from './generate-token-deprecations.mjs';
 import { open, wait } from './headless-chrome.mjs';
 import { previousBoundary, releaseTags } from './release-tags.mjs';
 
@@ -224,10 +229,33 @@ const SETTLE_ANIMATIONS = `for (const animation of document.getAnimations()) {
   else animation.finish();
 }`;
 
-// Collects the blocks of the page into window.__renderBlocks and returns their ids and names.
+// Collects the blocks of the page into window.__renderBlocks and returns their ids, names and the
+// custom properties their elements read: those in a `var()` of an inline style or of a style rule
+// matching the element, a pseudo-element's rule counting for its host.
 const COLLECT_BLOCKS = `() => {
   const slug = (text) => text.toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   const follows = (node, other) => !!(node.compareDocumentPosition(other) & Node.DOCUMENT_POSITION_FOLLOWING);
+  const variables = (text) => [...(text ?? '').matchAll(/var[(] *(--[a-zA-Z0-9_-]+)/g)].map((match) => match[1]);
+  const readsOf = new Map();
+  const read = (element, names) => {
+    if (!names.length) return;
+    if (!readsOf.has(element)) readsOf.set(element, new Set());
+    for (const name of names) readsOf.get(element).add(name);
+  };
+  const visit = (rules) => {
+    for (const rule of rules) {
+      if (rule.selectorText !== undefined) {
+        const names = variables(rule.style?.cssText);
+        const selector = rule.selectorText.replace(/::?(before|after|marker|placeholder|first-line|first-letter|selection|backdrop|file-selector-button|-webkit-[a-z-]+)/g, '');
+        if (names.length && selector.trim())
+          try { for (const element of document.querySelectorAll(selector)) read(element, names); } catch {}
+      }
+      if (rule.cssRules) visit(rule.cssRules);
+    }
+  };
+  for (const sheet of [...document.styleSheets, ...document.adoptedStyleSheets])
+    try { visit(sheet.cssRules); } catch {}
+  for (const element of document.querySelectorAll('[style]')) read(element, variables(element.getAttribute('style')));
   const blocks = [];
   const seen = new Map();
   for (const section of document.querySelectorAll('section[data-anchor]')) {
@@ -242,8 +270,10 @@ const COLLECT_BLOCKS = `() => {
         (start ? start === element || start.contains(element) || follows(start, element) : true) &&
         (!end || (follows(element, end) && !element.contains(end)));
       const names = new Set();
+      const reads = new Set();
       for (const element of section.querySelectorAll('*')) {
         if (!inside(element)) continue;
+        for (const name of readsOf.get(element) ?? []) reads.add(name);
         const tag = element.tagName.toLowerCase();
         if (tag.startsWith('ds-')) names.add(tag);
         for (const name of element.classList) if (name.startsWith('ds-')) names.add(name);
@@ -252,11 +282,11 @@ const COLLECT_BLOCKS = `() => {
       if (start) range.setStartBefore(start); else range.setStart(section, 0);
       if (end) range.setEndBefore(end); else range.setEnd(section, section.childNodes.length);
       for (const token of range.toString().match(/--ds-[a-z0-9-]*[a-z0-9]/g) ?? []) names.add(token);
-      blocks.push({ id: count > 1 ? id + '~' + count : id, section, start, end, names: [...names].sort() });
+      blocks.push({ id: count > 1 ? id + '~' + count : id, section, start, end, names: [...names].sort(), reads: [...reads].sort() });
     });
   }
   window.__renderBlocks = blocks;
-  return blocks.map(({ id, names }) => ({ id, names }));
+  return blocks.map(({ id, names, reads }) => ({ id, names, reads }));
 }`;
 
 // Scrolls block `index` so that its part starting `offset` px below its top is at the top of the
@@ -386,7 +416,7 @@ async function renderSite(dir, pages, targets = null) {
       const last = targets
         ? found.findLastIndex(({ id }) => targets.has(id))
         : found.length - 1;
-      for (const [index, { id, names }] of found.entries()) {
+      for (const [index, { id, names, reads }] of found.entries()) {
         if (index > last) break;
         if (targets && !targets.has(id)) {
           await evaluate(placeBlock(index, 0));
@@ -397,6 +427,7 @@ async function renderSite(dir, pages, targets = null) {
         blocks.set(id, {
           page,
           names,
+          reads,
           ...(await captureBlock(browser, index)),
         });
         if (targets) await evaluate(`() => window.__renderSpacer.remove()`);
@@ -463,6 +494,7 @@ function compareBlocks(before, after) {
         change,
         page: (b ?? a).page,
         names: [...new Set([...(a?.names ?? []), ...(b?.names ?? [])])],
+        reads: (a ?? b).reads,
       });
   }
   return differing;
@@ -504,19 +536,37 @@ function verdict(differing, blocks, manifestText, changelogText, classes) {
         name.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`) +
         String.raw`(?![\w-])`,
     ).test(text);
+  let manifest = {};
+  try {
+    manifest = manifestText ? JSON.parse(manifestText) : {};
+  } catch {}
+  const withdrawn = (manifest.items ?? []).filter((item) =>
+    ['removed-api', 'token-rename'].includes(item.kind),
+  );
+  const withdrawnReads = (reads) => {
+    const read = new Set(reads);
+    return [
+      ...new Set(
+        withdrawn.flatMap((item) =>
+          candidatesOf(item.old, item.new, item.kind, read, new Set()).map(
+            ({ name }) => name,
+          ),
+        ),
+      ),
+    ].filter((name) => read.has(name));
+  };
   const results = differing.map((block) => {
     const candidates = [
       ...block.names,
       ...block.names.map((name) => classes.get(name)).filter(Boolean),
     ];
-    return { ...block, namedBy: candidates.filter(isNamed) };
+    return {
+      ...block,
+      namedBy: [...candidates.filter(isNamed), ...withdrawnReads(block.reads)],
+    };
   });
   const differingIds = new Set(differing.map((block) => block.id));
   const evidence = [];
-  let manifest = {};
-  try {
-    manifest = manifestText ? JSON.parse(manifestText) : {};
-  } catch {}
   const entries = [
     ...(manifest.items ?? []).map((item) => [
       item.id ?? '<no id>',

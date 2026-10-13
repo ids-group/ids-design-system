@@ -3,7 +3,8 @@
 // block and on a block that only moved? Synthetic sites shaped like ds-docs (a `main.content`
 // scroller, a `section[data-anchor]`, `h3.block-title` chapters) differ by one pixel column in one
 // block, or by half a pixel of height in the block above it, which moves the one below to a
-// fractional position. The check runs over them as prebuilt dists, against private copies of the
+// fractional position, or by a token a docs rule reads in a block whose markup names nothing of the
+// library. The check runs over them as prebuilt dists, against private copies of the
 // manifest and CHANGELOG, so nothing tracked is read as the subject or written.
 //
 //   node tools/check-render-evidence-selftest.mjs
@@ -16,11 +17,13 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const work = mkdtempSync(join(tmpdir(), 'render-evidence-selftest-'));
 
-const page = (widgetHeight, gadgetWidth) => `<!doctype html>
+const page = (widgetHeight, gadgetWidth, linkToken) => `<!doctype html>
 <html><head><style>
   body { margin: 0; font: 16px sans-serif; }
   main.content { height: 100vh; overflow: auto; }
   .box { display: block; height: 40px; border-radius: 50%; background: #1a4fd6; }
+  .plain-link { color: var(--text-link); }
+  ${linkToken ? ':root { --text-link: #1a4fd6; }' : ''}
 </style></head><body><main class="content">
   <section data-anchor="widget">
     <h2>Widget</h2>
@@ -29,18 +32,23 @@ const page = (widgetHeight, gadgetWidth) => `<!doctype html>
     <h3 class="block-title">Moved</h3>
     <ds-gadget class="box ds-gadget" style="width: ${gadgetWidth}px"></ds-gadget>
   </section>
+  <section data-anchor="prose">
+    <h3 class="block-title">Link</h3>
+    <a class="plain-link">Read the guide</a>
+  </section>
 </main></body></html>`;
 
-for (const [name, widgetHeight, gadgetWidth] of [
-  ['before', 40, 40],
-  ['after', 40, 41],
-  ['pushed', 40.5, 40],
-  ['pushed-and-wider', 40.5, 41],
+for (const [name, widgetHeight, gadgetWidth, linkToken] of [
+  ['before', 40, 40, true],
+  ['token-removed', 40, 40, false],
+  ['after', 40, 41, true],
+  ['pushed', 40.5, 40, true],
+  ['pushed-and-wider', 40.5, 41, true],
 ]) {
   mkdirSync(join(work, name));
   writeFileSync(
     join(work, name, 'index.html'),
-    page(widgetHeight, gadgetWidth),
+    page(widgetHeight, gadgetWidth, linkToken),
   );
 }
 
@@ -112,9 +120,9 @@ const cases = [
     present: [
       /1 differ/,
       /named\s+changed\s+widget\/same\s+by ds-widget/,
-      /1 moved block\(s\) captured again/,
+      /2 moved block\(s\) captured again/,
     ],
-    absent: [/widget\/moved/, /UNNAMED/],
+    absent: [/widget\/moved/, /prose\/link/, /UNNAMED/],
   },
   {
     name: 'FIRES on a block that moved and changed, once captured at the same position',
@@ -124,9 +132,46 @@ const cases = [
     status: 1,
     present: [
       /UNNAMED\s+changed\s+widget\/moved\s+none of: ds-gadget/,
-      /1 moved block\(s\) captured again/,
+      /2 moved block\(s\) captured again/,
     ],
     absent: [],
+  },
+  {
+    name: 'HOLDS when a removed-api item withdraws a token a docs rule in the block reads',
+    after: 'token-removed',
+    manifest: {
+      items: [
+        { id: 'text-link-removed', kind: 'removed-api', old: '--text-link' },
+      ],
+    },
+    status: 0,
+    present: [/1 differ/, /named\s+changed\s+prose\/link\s+by --text-link/],
+    absent: [/UNNAMED/],
+  },
+  {
+    name: 'FIRES when only the ## Unreleased prose names the token a docs rule reads',
+    after: 'token-removed',
+    manifest: { items: [] },
+    changelog: '- `--text-link` is removed.',
+    status: 1,
+    present: [/UNNAMED\s+changed\s+prose\/link\s/],
+    absent: [/named\s+changed\s+prose\/link/],
+  },
+  {
+    name: 'FIRES when a removed-api item withdraws only a longer token of the same stem',
+    after: 'token-removed',
+    manifest: {
+      items: [
+        {
+          id: 'text-link-hover-removed',
+          kind: 'removed-api',
+          old: '--text-link-hover',
+        },
+      ],
+    },
+    status: 1,
+    present: [/UNNAMED\s+changed\s+prose\/link\s/],
+    absent: [/named\s+changed\s+prose\/link/],
   },
   {
     name: 'HOLDS on an identical pair, where pixels: on any block is good evidence',
@@ -135,7 +180,7 @@ const cases = [
       items: [{ id: 'claims-moved', evidence: ['pixels:widget/moved'] }],
     },
     status: 0,
-    present: [/3 \/ 3 block\(s\), 0 differ/, /ok\s+pixels:widget\/moved/],
+    present: [/5 \/ 5 block\(s\), 0 differ/, /ok\s+pixels:widget\/moved/],
     absent: [/UNNAMED/, /BAD/],
   },
 ];
