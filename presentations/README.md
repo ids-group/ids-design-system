@@ -11,7 +11,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 
 | # | Deck | Answering it unblocks |
 | --- | --- | --- |
-| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 3 asks a consumer waits on, then 47 decisions across eight groups (the last two: chart, table and focus choices agents made without a deck, and «not now» answers counted as decided), every option drawn in its own card; answered questions sit under «Уже решено», each with its status and evidence |
+| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 3 asks a consumer waits on, then 47 decisions across eight groups (the last two: chart, table and focus choices agents made without a deck, and parked answers Stas never closed), every option drawn in its own card; answered questions sit under «Уже решено» - decided but not built first, built ones folded into accordions - each with its status, evidence and review history |
 | 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
 | 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
 | 4 | `4-interaction-formula` | two pressed-state verdicts, both rendered and measured: the tonal button's pressed recipe and the danger menu item whose pressed equals its hover. The other three are answered and the `.ds-interactive` formula is deferred |
@@ -39,11 +39,12 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 26 | `26-six-behaviour-changes` | the six behaviour changes published in 0.14.7 without a choice, one section each: the theme an app set before startup, the modal confirm event, avatars past `max`, a disabled link with a reason in the Tab order, `provideDsIcons` calls adding up, the pin disc on a column - each with a before and after render and two or three drawn options to pick |
 | 27 | `27-duplicate-label-match` | how a chart recognises a column between data updates when two categories share a label: by label with a repeat counter as on dev, by array position, by label only, by an explicit point `id`, or by label with a dev console warning - each library's approach drawn as the same live animated column scene (remove the first of two «Jan»), with replay, ×5 slow-down and the libraries that do it |
 | 28 | `28-table-width-by-type` | two open picks first - how text columns fill the table without empty space and without moving on paging (one-time fit by first page, kind widths plus a one-time proportional share, or equal share), each prototyped on page 1 and page 2 with widths and empty px, and where the free space goes when every column has a set width and they sum to less than the table (filler column, last text column, or as is, each rendered) - then sign-off of the built `ds-table` column width by kind: dev against the branch on the harness tables, page 1 and page 2 for server paging, client paging and a scrolling all-`truncate` table with the widths in px, the 110-130px kind columns, the 240px `truncate` column in a scrolling table, and the taller rows where a text column now wraps |
+| 29 | `29-link-colour-layer` | where the link colour lives in the token layers: `--text-link` and `--link-visited` back as roles, blue in both themes, read by `.link` and the table cell link; as shipped in 0.15.1, `.link` reading the palette with `--ds-link-color` as the brand knob; or the roles back but derived from the brand - each drawn as palette, role and component wiring with `.link` and a table cell link for the default and the green brand in light and dark, colours computed and checked in the page, and what a consumer's roles file writes |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
 written in Russian; `deck.css`, which sits beside `ds.css` and carries the shell, is shared by ranks
-1, 4, 5, 8-16 and 18-28 - ranks 2, 3, 6, 7 and 17 render fully inline instead.
+1, 4, 5, 8-16 and 18-29 - ranks 2, 3, 6, 7 and 17 render fully inline instead.
 
 **`implemented/` is where the answers live, and it is worth reading.** A closed deck keeps every word
 of the argument — the next person to ask the same question reads it to find out what was already

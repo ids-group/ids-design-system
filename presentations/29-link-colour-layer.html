@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="ru" data-deck="29-link-colour-layer">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Слой цвета ссылки</title>
+<meta name="ds-deck-status" content="open">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+<style>
+  main { max-width: 1400px; }
+  .opts { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+  @media (max-width: 1100px) { .opts { grid-template-columns: minmax(0, 1fr); } }
+  .opt { cursor: pointer; min-inline-size: 0; }
+  .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+  .opt.is-chosen { outline: 2px solid var(--success); outline-offset: 2px; }
+  .opt > .badge { align-self: flex-start; }
+  .opt > ul { margin: 0; padding-inline-start: 1.2em; font-size: var(--font-size-xs); }
+  .opt .pick-btn { align-self: flex-start; padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-primary); font: var(--font-weight-bold) var(--font-size-xs) var(--font-sans); cursor: pointer; }
+  .opt.is-chosen .pick-btn { background: var(--success); border-color: var(--success); color: var(--surface-default); }
+
+  .wire { display: grid; grid-template-columns: minmax(0, 1fr) 14px minmax(0, 1fr) 14px minmax(0, 1fr); align-items: center; row-gap: var(--space-1-5); font: var(--font-size-2xs) / 1.35 var(--font-mono); }
+  .wire .head { font: var(--font-weight-bold) var(--font-size-2xs) / 1.3 var(--font-sans); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: var(--letter-spacing-wider); }
+  .wire .box { padding: var(--space-1) var(--space-1-5); border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-sm); background: var(--surface-default); color: var(--text-primary); overflow-wrap: anywhere; }
+  .wire .box.brand { border-color: var(--success); background: var(--success-subtitle); color: var(--success-text); }
+  .wire .box.skip { border-style: dashed; border-color: var(--error-text); background: var(--error-subtitle); color: var(--error-text); font-family: var(--font-sans); text-align: center; }
+  .wire .arrow { text-align: center; color: var(--text-tertiary); }
+  .wire .arrow.bad { color: var(--error-text); font-weight: var(--font-weight-bold); }
+
+  .frags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); }
+  @media (max-width: 520px) { .frags { grid-template-columns: minmax(0, 1fr); } }
+  .frag { --s-bg: #fff; --s-text: #161a28; --s-secondary: #353b4d; --s-line: #e8ecf2; min-inline-size: 0; padding: var(--space-3); border-radius: var(--radius-md); border: var(--border-width-default) solid var(--s-line); background: var(--s-bg); color: var(--s-text); font: var(--font-size-xs) / 1.5 var(--font-sans); }
+  .frag.dark { --s-bg: #171b24; --s-text: #e7eaf2; --s-secondary: #b7bfd0; --s-line: #242a38; }
+  .frag .tag { display: block; margin-block-end: var(--space-2); font: var(--font-weight-bold) var(--font-size-2xs) / 1.3 var(--font-sans); color: var(--s-secondary); }
+  .frag p { margin: 0 0 var(--space-2); color: var(--s-text); }
+  .frag table { inline-size: 100%; margin: 0 0 var(--space-2); border-collapse: collapse; font-size: var(--font-size-2xs); }
+  .frag td { padding: var(--space-1) 0; border-block: 1px solid var(--s-line); color: var(--s-text); }
+  .frag td:last-child { text-align: end; }
+  .frag .btn { padding: var(--space-1) var(--space-3); border: 0; border-radius: var(--ds-radius-control); background: var(--primary); color: #fff; font: var(--font-weight-semibold) var(--font-size-2xs) / 1.8 var(--font-sans); }
+  .frag .nums { margin: var(--space-2) 0 0; padding-block-start: var(--space-2); border-block-start: 1px dashed var(--s-line); font: var(--font-size-2xs) / 1.5 var(--font-mono); color: var(--s-secondary); overflow-wrap: anywhere; }
+  .frag .nums b { color: var(--s-text); }
+  .frag .nums .low { color: #e5484d; }
+  .frag.dark .nums .low { color: #ff8a8f; }
+
+  /* Tier 1, as themes/_base-palette.scss and themes/_semantic.scss declare it; a brand overrides --primary and its channels. */
+  .frag { --blue-h: 229; --blue-s: 100%; --blue-l: 59%; --blue-600: hsl(var(--blue-h) var(--blue-s) var(--blue-l)); --blue-700: hsl(var(--blue-h) 85% 52%); --primary: var(--blue-600); --primary-h: var(--blue-h); --primary-s: var(--blue-s); --primary-l: var(--blue-l); --accent: var(--primary); }
+  .frag[data-brand='green'] { --primary: #1f7a4d; --primary-h: 150; --primary-s: 60%; --primary-l: 30%; }
+
+  /* Tier 2 per option: the two link roles. */
+  [data-wire='role'] .frag { --text-link: var(--blue-700); --link-visited: hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%); }
+  [data-wire='role'] .frag.dark { --text-link: hsl(var(--blue-h) 90% 74%); --link-visited: hsl(var(--blue-h) 50% 70%); }
+  [data-wire='brand'] .frag { --text-link: hsl(from var(--primary) h calc(s * 0.85) calc(l - 7)); --link-visited: hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%); }
+  [data-wire='brand'] .frag.dark { --text-link: hsl(var(--primary-h) 90% 74%); --link-visited: hsl(var(--primary-h) 50% 70%); }
+
+  /* Tier 3: .link rebuilt from styles/_link.scss, the table cell link from table.component.scss. */
+  .spec-link { color: var(--_link-color); text-decoration: underline; text-decoration-color: currentcolor; text-underline-offset: 2px; text-decoration-thickness: 1px; font-weight: var(--font-weight-medium); }
+  .spec-link.visited { color: var(--_link-color-visited); }
+  .cell-link { color: var(--_table-cell-link-color); text-decoration: underline; }
+  [data-wire='role'] .spec-link, [data-wire='brand'] .spec-link { --_link-color: var(--ds-link-color, var(--text-link)); --_link-color-visited: var(--ds-link-color-visited, var(--link-visited)); }
+  [data-wire='palette'] .spec-link { --_link-color: var(--ds-link-color, var(--blue-700)); --_link-color-visited: var(--ds-link-color-visited, hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)); }
+  [data-wire='palette'] .frag.dark .spec-link { --_link-color: var(--ds-link-color, hsl(var(--blue-h) 90% 74%)); --_link-color-visited: var(--ds-link-color-visited, hsl(var(--blue-h) 50% 70%)); }
+  [data-wire='role'] .cell-link, [data-wire='brand'] .cell-link { --_table-cell-link-color: var(--ds-table-cell-link-color, var(--text-link)); }
+  [data-wire='palette'] .cell-link { --_table-cell-link-color: var(--ds-table-cell-link-color, var(--accent)); }
+
+  .problem { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-5); align-items: start; }
+  @media (max-width: 900px) { .problem { grid-template-columns: minmax(0, 1fr); } }
+  .code { margin: 0; padding: var(--space-3); border-radius: var(--radius-md); background: var(--surface-default); color: var(--text-primary); border: var(--border-width-default) solid var(--border-divider); font: var(--font-size-2xs) / 1.6 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .code mark { background: var(--error-subtitle); color: var(--error-text); }
+  .hint-line { margin: var(--space-2) 0 0; font: var(--font-size-xs) var(--font-sans); color: var(--text-secondary); }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1>Цвет ссылки читает палитру мимо слоя ролей, и потребитель задаёт его хуком компонента на <code>:root</code></h1>
+    <p class="lede">Одно решение: в каком слое токенов живёт цвет ссылки.</p>
+    <p class="chat">Ответ нести в чат: «Acc2 · Слои токенов и ссылка»</p>
+  </header>
+
+  <section class="panel">
+    <h2>Сейчас, 0.15.1</h2>
+    <div class="problem">
+      <div>
+        <p class="cap">Зелёный бренд: <code>.link</code> синяя, ссылка в таблице зелёная</p>
+        <div class="frags" data-wire="palette" data-cases="green-light green-dark"></div>
+      </div>
+      <div>
+        <p class="cap">mm-ecm-platform, файл ролей после 0.15.1</p>
+<pre class="code">:root {
+  <mark>--ds-link-color: var(&#45;-color-link);</mark>
+  <mark>--ds-link-color-visited: var(&#45;-color-link);</mark>
+  --ds-breadcrumbs-label-color-hover: <mark>var(--ds-link-color)</mark>;
+}</pre>
+        <p class="hint-line">Хук компонента стоит в файле ролей и читается как роль другим компонентом.</p>
+      </div>
+    </div>
+    <p class="hint-line">Дека <code>24-link-colour</code> выбрала «Всегда синий», и <code>fced4cb2e</code> сделал это в слое ролей: <code>--text-link</code> и <code>--link-visited</code> синие в обеих темах. Следом <code>a6b6e9884</code> (0.15.1) без деки удалил обе роли, перенёс значения в <code>styles/_link.scss</code> чтением палитры, добавил туда <code>:root[data-theme='dark'] .link</code> и назвал <code>--ds-link-color</code> ручкой бренда.</p>
+  </section>
+
+  <section class="panel q" data-review="Варианты" data-review-note-only>
+    <h2>Три варианта</h2>
+    <div class="opts">
+      <article class="opt is-pick" tabindex="0" data-key="role">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Роль ссылки возвращается</h3>
+        <div class="wire">
+          <span class="head">Палитра</span><span></span><span class="head">Роль</span><span></span><span class="head">Компонент</span>
+          <span class="box">--blue-700</span><span class="arrow">→</span><span class="box">--text-link</span><span class="arrow">→</span><span class="box">.link</span>
+          <span class="box">--blue-700</span><span class="arrow">→</span><span class="box">--text-link</span><span class="arrow">→</span><span class="box">.cell-link</span>
+        </div>
+        <ul>
+          <li><code>--text-link</code> и <code>--link-visited</code> снова роли, синие в обеих темах, как выбрано в деке 24.</li>
+          <li><code>.link</code> читает <code>var(--ds-link-color, var(--text-link))</code>; таблица ту же роль.</li>
+        </ul>
+        <div class="frags" data-wire="role"></div>
+        <dl class="layer">
+          <dt>Файл ролей потребителя пишет</dt>
+          <dd>--text-link: var(&#45;-color-link);<br>--link-visited: var(&#45;-color-link);<br>--ds-breadcrumbs-label-color-hover: var(--text-link);</dd>
+          <dt>Тёмная ветка</dt>
+          <dd class="gain">dark/_theme.scss</dd>
+          <dt><code>--ds-link-color</code></dt>
+          <dd class="gain">хук на элементе, как у всех <code>--ds-*</code></dd>
+        </dl>
+      </article>
+
+      <article class="opt is-today" tabindex="0" data-key="palette">
+        <span class="badge is-same">как в 0.15.1</span>
+        <h3>Как в 0.15.1</h3>
+        <div class="wire">
+          <span class="head">Палитра</span><span></span><span class="head">Роль</span><span></span><span class="head">Компонент</span>
+          <span class="box">--blue-700</span><span class="arrow bad">→</span><span class="box skip">мимо</span><span class="arrow bad">→</span><span class="box">.link</span>
+          <span class="box">--blue-600</span><span class="arrow">→</span><span class="box">--accent</span><span class="arrow">→</span><span class="box">.cell-link</span>
+        </div>
+        <ul>
+          <li><code>.link</code> читает палитру; <code>--ds-link-color</code> остаётся ручкой бренда.</li>
+          <li>В README и <code>design-system.md</code> записать это как единственное исключение.</li>
+        </ul>
+        <div class="frags" data-wire="palette"></div>
+        <dl class="layer">
+          <dt>Файл ролей потребителя пишет</dt>
+          <dd>--ds-link-color: var(&#45;-color-link);<br>--ds-link-color-visited: var(&#45;-color-link);<br>--ds-breadcrumbs-label-color-hover: var(--ds-link-color);</dd>
+          <dt>Тёмная ветка</dt>
+          <dd>styles/_link.scss, :root[data-theme='dark'] .link</dd>
+          <dt><code>--ds-link-color</code></dt>
+          <dd>ставится на <code>:root</code> и читается как роль</dd>
+        </dl>
+      </article>
+
+      <article class="opt" tabindex="0" data-key="brand">
+        <span class="badge is-no">меняет выбор деки 24</span>
+        <h3>Роль ссылки от бренда</h3>
+        <div class="wire">
+          <span class="head">Палитра</span><span></span><span class="head">Роль</span><span></span><span class="head">Компонент</span>
+          <span class="box brand">--primary</span><span class="arrow">→</span><span class="box">--text-link</span><span class="arrow">→</span><span class="box">.link</span>
+          <span class="box brand">--primary</span><span class="arrow">→</span><span class="box">--text-link</span><span class="arrow">→</span><span class="box">.cell-link</span>
+        </div>
+        <ul>
+          <li>Роли возвращаются, но считаются от бренда: зелёный бренд, зелёные ссылки.</li>
+          <li>Формулы до <code>fced4cb2e</code>: <code>hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))</code>, в тёмной <code>hsl(var(--primary-h) 90% 74%)</code>.</li>
+        </ul>
+        <div class="frags" data-wire="brand"></div>
+        <dl class="layer">
+          <dt>Файл ролей потребителя пишет</dt>
+          <dd>--text-link: var(&#45;-color-link);<br>--link-visited: var(&#45;-color-link);</dd>
+          <dt>Без этих строк</dt>
+          <dd>ссылки ECM уходят в коралловый бренд <code>ecm-portal</code></dd>
+          <dt>Тёмная ветка</dt>
+          <dd class="gain">dark/_theme.scss</dd>
+        </dl>
+      </article>
+    </div>
+    <p class="hint-line">Каждая карточка: синий по умолчанию и зелёный бренд из <code>themes/README.md</code> (<code>--primary: #1f7a4d</code>, каналы 150 / 60% / 30%, повторён в тёмной), светлая и тёмная тема. Посещённая нарисована классом, <code>:visited</code> страница не задаёт. Цвета и контраст к фону посчитаны на этой странице из отрисованных значений.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Что даёт каждый</h2>
+    <table>
+      <thead><tr><th>Вариант</th><th>Компонент читает роль</th><th><code>.link</code> и таблица одним цветом</th><th>Тёмная ветка в файле темы</th><th>Ссылка синяя при бренде</th><th>Цена</th></tr></thead>
+      <tbody>
+        <tr class="row-pick"><th class="rowlabel">Роль ссылки возвращается</th><td><span class="dot on"></span></td><td><span class="dot on"></span></td><td><span class="dot on"></span></td><td><span class="dot on"></span></td><td>2 роли в обе темы, правило темы уходит из <code>_link.scss</code>; ссылка в таблице при бренде становится синей</td></tr>
+        <tr class="row-today"><th class="rowlabel">Как в 0.15.1</th><td><span class="dot off"></span></td><td><span class="dot off"></span></td><td><span class="dot off"></span></td><td><span class="dot on"></span></td><td>исключение из правила слоёв в документации; потребители читают хук как роль</td></tr>
+        <tr><th class="rowlabel">Роль ссылки от бренда</th><td><span class="dot on"></span></td><td><span class="dot on"></span></td><td><span class="dot on"></span></td><td><span class="dot off"></span></td><td>отменяет выбор деки 24; потребитель, чья ссылка не цвета бренда, пишет роль сам</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel good">
+    <h2>Рекомендую: «Роль ссылки возвращается»</h2>
+    <ul>
+      <li>Правило слоёв снова без исключений: компонент читает роль, тёмная тема живёт в <code>dark/_theme.scss</code>.</li>
+      <li>Одна роль красит <code>.link</code> и ссылку в таблице: одна строка в файле ролей двигает обе.</li>
+      <li>Файл ролей потребителя пишет роль, а <code>--ds-link-color</code> остаётся хуком на элементе; выбор деки 24, синий в обеих темах, сохраняется.</li>
+    </ul>
+  </section>
+
+  <section class="panel" data-review="При любом выборе">
+    <h2>При любом выборе</h2>
+    <p>Манифест следующего релиза заменяет указания 0.15.1 (<code>text-link-token-removed</code>, <code>link-visited-token-removed</code>, строка про ссылки в <code>themes/README.md</code>), которые велят потребителю читать значение палитры <code>var(--blue-700)</code>.<br>Новое указание называет роль <code>--text-link</code>, а при «Как в 0.15.1» класс <code>link</code>. Скажи, если не согласен.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Что решить</h2>
+    <table>
+      <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
+      <tbody><tr class="row-pick"><th class="rowlabel">В каком слое живёт цвет ссылки</th><td>Роль ссылки возвращается · Как в 0.15.1 · Роль ссылки от бренда</td><td>Роль ссылки возвращается</td></tr></tbody>
+    </table>
+  </section>
+
+  <details class="src"><summary>Источники</summary>
+    <p><b>Код, 2026-10-13, ветка от <code>dev</code> <code>7b947feb4</code>:</b> модель слоёв - <code>src/lib/styles/_tokens.scss:1-2</code>, <code>src/lib/themes/README.md:13</code> и <code>:194</code>, <code>design-system.md:122</code> (компонент не читает палитру), <code>design-system.md:298</code> (хук <code>--ds-*</code> ставится на элемент); <code>src/lib/styles/_link.scss:6</code> и <code>:9</code> читают <code>--blue-700</code> и <code>--blue-h/s</code>, <code>:118-121</code> - <code>:root[data-theme='dark'] .link</code>, единственный селектор темы в партиале вне <code>themes/</code> и <code>_theme-activation.scss</code> (grep по <code>src/lib</code>); <code>src/lib/components/table/table.component.scss:183</code> - ссылка в ячейке читает <code>var(--accent)</code>, а <code>--accent</code> это <code>--primary</code> (<code>_semantic.scss:218</code>). <code>fced4cb2e</code> перевёл <code>--text-link</code> и <code>--link-visited</code> на <code>--blue-*</code> в обеих темах; <code>a6b6e9884</code> (тег <code>v0.15.1</code>) удалил обе роли и вписал <code>--ds-link-color</code> как ручку бренда в <code>CHANGELOG.md</code> 0.15.1, <code>themes/README.md:144-146</code> и <code>migrations/0.15.1.json</code> (<code>text-link-token-removed</code>: «name the palette value: <code>var(--blue-700)</code>»). mm-ecm-platform <code>76916a914</code> (ветки <code>feat/ds-next-table-kind</code>, <code>fix/ME-495-unify-hints</code>, обновление до 0.15.1) в <code>shared-styles/_ds-roles.scss</code> заменил <code>--text-link: var(&#45;-color-link)</code> на <code>--ds-link-color</code> и <code>--ds-link-color-visited</code> на <code>:root</code> и читает <code>var(--ds-link-color)</code> в <code>--ds-breadcrumbs-label-color-hover</code>: ECM выполнил указание нашего манифеста 0.15.1. Образцы собраны из этих файлов: палитра, роли и резолверы <code>.link</code> и <code>.cell-link</code> объявлены на странице теми же формулами; фон и текст - <code>--surface-default</code> и <code>--text-primary</code> обеих тем из <code>ds.css</code>; ожидаемые RGB посчитаны отдельно из каналов (зелёная ссылка от бренда <code>#1d583b</code> совпала с цифрой в <code>themes/README.md</code>) и сверены с отрисованными в headless Chrome.</p>
+  </details>
+</main>
+
+<script>
+  const CASES = { 'blue-light': ['blue', 'light'], 'blue-dark': ['blue', 'dark'], 'green-light': ['green', 'light'], 'green-dark': ['green', 'dark'] };
+  const LABELS = { blue: 'По умолчанию', green: 'Зелёный бренд' };
+
+  const probe = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+  const rgbOf = (cssColor) => { probe.clearRect(0, 0, 1, 1); probe.fillStyle = cssColor; probe.fillRect(0, 0, 1, 1); return [...probe.getImageData(0, 0, 1, 1).data.slice(0, 3)]; };
+  const luminance = (rgb) => { const [r, g, b] = rgb.map((channel) => { const v = channel / 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+  const contrast = (first, second) => { const [hi, lo] = [luminance(first), luminance(second)].sort((a, b) => b - a); return (hi + 0.05) / (lo + 0.05); };
+  const fmt = (ratio) => `<span class="${ratio < 4.5 ? 'low' : ''}">${ratio.toFixed(2).replace('.', ',')}</span>`;
+  const hex = (rgb) => '#' + rgb.map((value) => value.toString(16).padStart(2, '0')).join('');
+
+  document.querySelectorAll('.frags').forEach((host) => {
+    for (const key of (host.dataset.cases ?? 'blue-light blue-dark green-light green-dark').split(' ')) {
+      const [brand, theme] = CASES[key];
+      const frag = document.createElement('div');
+      frag.className = `frag ${theme === 'dark' ? 'dark' : ''}`;
+      frag.dataset.brand = brand;
+      frag.dataset.theme = theme;
+      frag.innerHTML = `
+        <span class="tag">${LABELS[brand]} · ${theme === 'dark' ? 'тёмная' : 'светлая'}</span>
+        <p>Отчёт готов, <a href="#" class="spec-link current">откройте сводку</a>. Прошлый <a href="#" class="spec-link visited">просмотрен</a>.</p>
+        <table><tbody><tr><td>Договор 0412</td><td><a href="#" class="cell-link">Открыть</a></td></tr></tbody></table>
+        <button type="button" class="btn">Сохранить</button>
+        <p class="nums"></p>`;
+      host.append(frag);
+    }
+  });
+
+  const measure = () => document.querySelectorAll('.frag').forEach((frag) => {
+    const background = rgbOf(getComputedStyle(frag).backgroundColor);
+    const read = (selector) => rgbOf(getComputedStyle(frag.querySelector(selector)).color);
+    const [link, visited, cell] = [read('a.current'), read('a.visited'), read('a.cell-link')];
+    frag.dataset.link = hex(link);
+    frag.dataset.visited = hex(visited);
+    frag.dataset.cell = hex(cell);
+    frag.querySelector('.nums').innerHTML =
+      `ссылка <b>${hex(link)}</b> ${fmt(contrast(link, background))}<br>` +
+      `посещ. <b>${hex(visited)}</b> ${fmt(contrast(visited, background))}<br>` +
+      `таблица <b>${hex(cell)}</b> ${fmt(contrast(cell, background))}`;
+  });
+  document.fonts.ready.then(measure);
+  measure();
+  document.querySelectorAll('.frag a').forEach((anchor) => anchor.addEventListener('click', (event) => event.preventDefault()));
+
+  const KEY = 'ds-deck-link-colour-layer-pick-v1';
+  const cards = [...document.querySelectorAll('.opt[data-key]')];
+  cards.forEach((card) => {
+    const pickButton = document.createElement('button');
+    pickButton.type = 'button';
+    pickButton.className = 'pick-btn';
+    card.append(pickButton);
+  });
+  let picked = null;
+  try { picked = localStorage.getItem(KEY); } catch { picked = null; }
+  const paint = () => cards.forEach((card) => {
+    card.classList.toggle('is-chosen', card.dataset.key === picked);
+    card.querySelector('.pick-btn').textContent = card.dataset.key === picked ? 'Выбрано · снять' : 'Выбрать';
+  });
+  cards.forEach((card) => {
+    const choose = () => { picked = picked === card.dataset.key ? null : card.dataset.key; try { if (picked) localStorage.setItem(KEY, picked); else localStorage.removeItem(KEY); } catch { /* private window */ } paint(); window.deckReview?.refresh?.(); };
+    card.addEventListener('click', (event) => { if (!event.target.closest('.frag')) choose(); });
+    card.addEventListener('keydown', (event) => { if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); choose(); } });
+  });
+  paint();
+  const hooks = (window.deckReviewHooks ??= {});
+  hooks.extra = () => { const card = cards.find((item) => item.dataset.key === picked); return card ? `выбор - «${card.querySelector('h3').textContent}»` : 'выбор - не сделан'; };
+  hooks.onReset = () => { picked = null; try { localStorage.removeItem(KEY); } catch { /* private window */ } paint(); };
+</script>
+<!-- deck-review -->
+<script>
+// deck-review: verdict per [data-review] block, a textarea for remarks, one answer line in a fixed bar.
+// Inlined into a deck by ~/.claude/bin/deck-review-inline; contract in ~/.claude/docs/deck-review.md.
+(() => {
+  // Every key under deck-review: is a disposable reviewer answer, kept 7 days after its last change.
+  const PREFIX = 'deck-review:v1:';
+  const KEY = PREFIX + (document.documentElement.dataset.deck || document.title);
+  const KEEP_MS = 7 * 24 * 60 * 60 * 1000;
+  const ACCEPT = 'принято';
+  const REMARK = 'есть замечание';
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith('deck-review:')) continue;
+      let expires = 0;
+      try { if (key.startsWith(PREFIX)) expires = JSON.parse(localStorage.getItem(key))?.expires; } catch { /* malformed: drop */ }
+      if (!(expires > Date.now())) localStorage.removeItem(key);
+    }
+  } catch { /* private window */ }
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY))?.answers ?? {}; } catch { return {}; } };
+  const write = () => { try { localStorage.setItem(KEY, JSON.stringify({ expires: Date.now() + KEEP_MS, answers: state })); } catch { /* private window */ } };
+  const state = read();
+
+  document.head.insertAdjacentHTML('beforeend', `<style>
+    .dr-row { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px 0; }
+    .dr-btn { padding: 4px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 999px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-btn[aria-pressed="true"] { background: var(--accent-subtitle, #e6efff); border-color: var(--accent-strong, #2457c5); color: var(--accent-strong, #2457c5); }
+    .dr-btn[data-v="${REMARK}"][aria-pressed="true"] { background: var(--error-subtitle, #fdecec); border-color: var(--error-text, #b42318); color: var(--error-text, #b42318); }
+    .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--border-default, #c9ced6); border-radius: var(--radius-md, 8px); background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
+    .dr-note:focus { outline: none; border-color: var(--accent, #2457c5); box-shadow: var(--ds-field-focus-shadow, 0 0 0 3px rgb(36 87 197 / .25)); }
+    .dr-note[hidden] { display: none; }
+    .dr-history { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 4px; color: var(--text-secondary, #4b5563); font: 13px/1.45 var(--font-sans, system-ui, sans-serif); }
+    .dr-history::before { content: 'История замечаний'; display: block; margin-left: -1.2em; color: var(--text-primary, #1d2330); font-weight: 600; }
+    [data-dr-folded] > :not(h1, h2, h3, h4, .dr-row, .dr-note) { display: none !important; }
+    .dr-fold { padding: 4px 8px; border: 0; background: none; color: var(--accent-strong, #2457c5); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-fold[hidden] { display: none; }
+    .dr-btn, .dr-bar button, .dr-fold { transition: background-color .12s, border-color .12s, color .12s, box-shadow .12s; }
+    .dr-btn:hover, .dr-bar button:hover { background: var(--surface-secondary, #f3f4f6); border-color: var(--border-strong, #9aa1ad); }
+    .dr-btn:active, .dr-bar button:active { background: var(--surface-muted, #e5e7eb); }
+    .dr-btn[aria-pressed="true"]:hover { background: color-mix(in srgb, var(--accent-strong, #2457c5) 14%, var(--surface-default, #fff)); }
+    .dr-btn[data-v="есть замечание"][aria-pressed="true"]:hover { background: color-mix(in srgb, var(--error-text, #b42318) 14%, var(--surface-default, #fff)); }
+    .dr-fold:hover { text-decoration: underline; }
+    .dr-fold:active { color: var(--text-primary, #1d2330); }
+    .dr-btn:focus-visible, .dr-bar button:focus-visible, .dr-fold:focus-visible { outline: 2px solid var(--focus-ring-color, var(--accent, #2457c5)); outline-offset: 2px; }
+    .dr-bar button[data-done] { background: var(--success-subtitle, #e7f6ec); border-color: var(--success, #1a7f37); color: var(--success-text, #116329); }
+    .dr-bar { position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; padding: 10px 20px; background: var(--surface-default, #fff); border-top: 1px solid var(--border-divider, #e3e6eb); box-shadow: 0 -4px 16px rgb(0 0 0 / .08); color: var(--text-primary, #1d2330); font: 13px/1.4 var(--font-sans, system-ui, sans-serif); }
+    .dr-bar b { flex: none; }
+    .dr-bar .dr-chat { flex: none; color: var(--text-tertiary, #6b7280); }
+    .dr-bar output { flex: 1 1 auto; min-inline-size: 0; overflow-x: auto; white-space: nowrap; color: var(--text-secondary, #4b5563); font-family: var(--font-mono, ui-monospace, monospace); }
+    .dr-bar button { flex: none; padding: 6px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 6px; background: var(--surface-default, #fff); color: inherit; font: 600 13px/1.4 inherit; cursor: pointer; }
+    body { padding-block-end: 72px; }
+    @media (max-width: 640px) { .dr-bar { padding: 8px 12px; gap: 8px; } .dr-bar .dr-chat { display: none; } }
+  </style>`);
+
+  let items = [...document.querySelectorAll('[data-review]')];
+  if (!items.length) {
+    const whole = document.createElement('section');
+    whole.dataset.review = 'Дека в целом';
+    whole.innerHTML = '<h3>Дека в целом</h3>';
+    (document.querySelector('main') ?? document.body).append(whole);
+    items = [whole];
+  }
+
+  const controls = new Map();
+  const unfolded = new Set();
+  for (const item of items) {
+    const label = item.dataset.review;
+    // A deck bumps data-review-round once it has worked through the remarks of a round; answers stored
+    // for an earlier round are already in the block's history, so they leave the input.
+    const round = Number(item.dataset.reviewRound) || 1;
+    if (state[label] && (state[label].round ?? 1) !== round) { delete state[label]; write(); }
+    const own = () => Object.assign((state[label] ??= {}), { round });
+    const row = document.createElement('div');
+    row.className = 'dr-row';
+    const verdicts = item.hasAttribute('data-review-note-only') ? [REMARK] : [ACCEPT, REMARK];
+    const buttons = verdicts.map((verdict) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'dr-btn';
+      button.dataset.v = verdict;
+      button.textContent = verdict === ACCEPT ? 'Принято' : 'Есть замечание';
+      button.addEventListener('click', () => {
+        const entry = own();
+        entry.v = entry.v === verdict ? '' : verdict;
+        write();
+        render();
+        if (entry.v === REMARK) note.focus();
+      });
+      return button;
+    });
+    const note = document.createElement('textarea');
+    note.className = 'dr-note';
+    note.placeholder = 'Что не так';
+    note.setAttribute('aria-label', `Замечание: ${label}`);
+    note.addEventListener('input', () => { own().note = note.value; write(); render(); });
+    const fold = document.createElement('button');
+    fold.type = 'button';
+    fold.className = 'dr-fold';
+    fold.addEventListener('click', () => { unfolded.has(label) ? unfolded.delete(label) : unfolded.add(label); render(); });
+    row.append(...buttons, fold);
+    item.append(row, note);
+    const history = item.querySelector(':scope > [data-review-history]');
+    if (history) { history.classList.add('dr-history'); item.append(history); }
+    controls.set(label, { item, buttons, note, fold });
+  }
+
+  const chat = document.querySelector('.chat')?.textContent.replace(/^[^«]*/, '') ?? '';
+  const bar = document.createElement('div');
+  bar.className = 'dr-bar';
+  bar.innerHTML = `<b></b><span class="dr-chat"></span><output></output><button type="button" data-a="copy">Скопировать</button><button type="button" data-a="reset">Сбросить</button>`;
+  bar.querySelector('.dr-chat').textContent = chat;
+  document.body.append(bar);
+  const line = bar.querySelector('output');
+
+  const hooks = (window.deckReviewHooks ??= {});
+  window.deckReview = { refresh: () => render() };
+
+  function render() {
+    const parts = [];
+    let done = 0;
+    let open = 0;
+    for (const [label, { item, buttons, note, fold }] of controls) {
+      const entry = state[label] ?? {};
+      const accepted = entry.v === ACCEPT;
+      item.toggleAttribute('data-dr-folded', accepted && !unfolded.has(label));
+      fold.hidden = !accepted;
+      fold.textContent = unfolded.has(label) ? 'Свернуть' : 'Развернуть';
+      for (const button of buttons) button.setAttribute('aria-pressed', String(entry.v === button.dataset.v));
+      note.hidden = entry.v !== REMARK;
+      if (note.value !== (entry.note ?? '')) note.value = entry.note ?? '';
+      if (!accepted) open++;
+      if (!entry.v) continue;
+      if (!accepted) done++;
+      const text = entry.note?.trim().replace(/\s+/g, ' ');
+      parts.push(entry.v === REMARK ? `${label} - замечание${text ? `: «${text}»` : ''}` : `${label} - принято`);
+    }
+    const extra = hooks.extra?.();
+    if (extra) parts.push(extra);
+    bar.querySelector('b').textContent = `${done} из ${open}`;
+    line.textContent = parts.length ? `Дека ${document.title}: ${parts.join('; ')}` : 'пока ничего не выбрано';
+  }
+
+  bar.addEventListener('click', (event) => {
+    const action = event.target.closest('button')?.dataset.a;
+    if (action === 'copy') {
+      const button = event.target.closest('button');
+      navigator.clipboard?.writeText(line.textContent).then(() => {
+        button.dataset.done = '';
+        button.textContent = 'Скопировано';
+        setTimeout(() => { delete button.dataset.done; button.textContent = 'Скопировать'; }, 1500);
+      });
+    }
+    if (action === 'reset') { for (const label of Object.keys(state)) delete state[label]; write(); hooks.onReset?.(); render(); }
+  });
+  render();
+})();
+</script>
+<!-- /deck-review -->
+</body>
+</html>

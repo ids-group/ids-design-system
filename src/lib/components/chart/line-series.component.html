@@ -92,13 +92,15 @@
         class="change-stretch"
         [attr.d]="change.path" />
 
-      <svg:text
-        class="change-label"
-        text-anchor="middle"
-        [attr.x]="change.x"
-        [attr.y]="change.y">
-        {{ change.label }}
-      </svg:text>
+      @if (change.label) {
+        <svg:text
+          class="change-label"
+          text-anchor="middle"
+          [attr.x]="change.x"
+          [attr.y]="change.y">
+          {{ change.label }}
+        </svg:text>
+      }
     </svg:g>
   }
 
