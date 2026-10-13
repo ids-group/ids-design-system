@@ -3,10 +3,10 @@
 /* Pure CSS class so inline anchors in <p> text keep their line flow. */
 
 .link {
-  --_link-color: var(--ds-link-color, var(--blue-700));
+  --_link-color: var(--ds-link-color, var(--text-link));
   --_link-color-hover: var(--ds-link-color-hover, color-mix(in srgb, var(--_link-color) 80%, black));
   --_link-color-active: var(--ds-link-color-active, color-mix(in srgb, var(--_link-color) 65%, black));
-  --_link-color-visited: var(--ds-link-color-visited, hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%));
+  --_link-color-visited: var(--ds-link-color-visited, var(--link-visited));
   --_link-color-visited-hover: var(--ds-link-color-visited-hover, color-mix(in srgb, var(--_link-color-visited) 80%, black));
   --_link-color-visited-active: var(--ds-link-color-visited-active, color-mix(in srgb, var(--_link-color-visited) 65%, black));
   --_link-color-disabled: var(--ds-link-color-disabled, var(--text-disabled));
@@ -113,9 +113,4 @@
   &.xs { font-size: var(--font-size-xs); }
   &.sm { font-size: var(--font-size-s); }
   &.lg { font-size: var(--font-size-l); }
-}
-
-:root[data-theme='dark'] .link {
-  --_link-color: var(--ds-link-color, hsl(var(--blue-h) 90% 74%));
-  --_link-color-visited: var(--ds-link-color-visited, hsl(var(--blue-h) 50% 70%));
 }

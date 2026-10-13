@@ -1,0 +1,7 @@
+:root {
+  --ds-link-color-visited: var(--color-link);
+}
+
+.history a:visited {
+  color: hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%);
+}
