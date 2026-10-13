@@ -13,6 +13,11 @@
 
 ### Added
 
+- **`TableColumn.kind` sets a `ds-table` column's width from what it holds.** `'id'` and `'date'`
+  are 130px, `'number'` 120px and `'status'` 110px, each widened to its header label; `'text'`, the
+  default, shares the rest of the table. The type is exported as `TableColumnKind`:
+  `{ key: 'premium', label: 'Premium', kind: 'number', align: 'right' }`.
+
 - **`selectRange` sums a dragged range of categories.** On `ds-chart`, `ds-column-chart` and
   `ds-line-chart`, off by default: a press dragged across categories draws a band over them, a pill
   with the sum and mean of every reading in the range, and fades the marks outside it. With a
@@ -89,6 +94,23 @@
   `--ds-link-underline-thickness` (`1px`) and `--ds-link-underline-offset` (`2px`).
 
 ### Changed
+
+- **A `ds-table` column takes its width from its configuration, never from its rows.** The table
+  lays out with `table-layout: fixed`: a numeric `width` is exact, `kind` sizes an id, date,
+  number or status column, and the `'text'` columns share the rest equally, none narrower than its
+  header label or its `minWidth`. Changing `data`, paging the footer pager or loading a server page
+  moves no column. When the columns do not fit at those widths the table scrolls sideways, and a
+  `truncate` text column without `width` or `minWidth` is then 240px of text (272px with the
+  default cell padding, 264px compact) even when its values are shorter. A long value wraps, or
+  ellipsizes in a `truncate` column, where the column used to grow to it, and a column of short
+  values keeps its share. Give an id, date, number or status column its `kind`; `width: 'content'`
+  sizes a column to its rendered cells and is the one width that follows the rows.
+  `TableComponent` lost the protected `clipGrows`, `clipMaxWidth`, `clipMinWidth` and
+  `columnWidth` and the private `growingClipColumns`, `clipCapsSet`, `clipFit`, `clipFitWidth`,
+  `textCanvas`, `measureGrowingClips`, `widestValue` and `splitGrowingClips`, and gained the
+  protected `columnWidths` and the private `headerMetrics`, `wrapWidth`, `contentWidths`,
+  `fontsLoaded`, `measureAtMaxContent`, `measureHeader` and `measureContentColumns`, so a subclass
+  declaring one of those names must rename it.
 
 - **A visited `.link` takes its own colour.** It painted in the link colour; it now paints in
   `--ds-link-color-visited`, a desaturated blue, and darkens from it on hover and press.
