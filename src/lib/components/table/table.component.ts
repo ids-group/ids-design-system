@@ -86,6 +86,11 @@ interface HeaderMetrics {
 
 const BLANK_CELL = new Set(['', '—', '-', '–', 'n/a', 'never', 'none']);
 
+// Under a `display: none` ancestor every cell measures 0, which would be stored as a width.
+function hasLayoutBox(element: Element): boolean {
+  return element.getClientRects().length > 0;
+}
+
 function sortableOf(
   value: string | number | Date | null | undefined,
 ): string | number | Date | null {
@@ -717,6 +722,7 @@ export class TableComponent<T extends object> {
     new Map(),
   );
   private readonly fontsLoaded = signal(false);
+  private readonly rendered = signal(true);
 
   /** One per visible column; `null` leaves the column to share the slack with the others. Read
    *  from the columns, the header labels and the container, never from the rows. */
@@ -1260,9 +1266,10 @@ export class TableComponent<T extends object> {
       this.hasUtilityColumn();
       this.layout.resize();
       this.fontsLoaded();
+      this.rendered();
       const wrap = this.scrollWrap().nativeElement;
       const table = wrap.querySelector('table');
-      if (table) {
+      if (table && hasLayoutBox(table)) {
         untracked(() => this.measureHeader(wrap, table));
       }
     });
@@ -1270,6 +1277,7 @@ export class TableComponent<T extends object> {
     afterRenderEffect(() => {
       this.rowSlots();
       this.fontsLoaded();
+      this.rendered();
       const keys = this.visibleColumns()
         .filter((col) => this.fitsContent(col))
         .map((col) => col.key);
@@ -1282,7 +1290,9 @@ export class TableComponent<T extends object> {
 
         return;
       }
-      untracked(() => this.measureContentColumns(wrap, table, keys));
+      if (hasLayoutBox(table)) {
+        untracked(() => this.measureContentColumns(wrap, table, keys));
+      }
     });
     afterNextRender(() => {
       void document.fonts?.ready.then(() => this.fontsLoaded.set(true));
@@ -1296,7 +1306,10 @@ export class TableComponent<T extends object> {
       const observer = new ResizeObserver(([entry]) => {
         const width = entry.contentRect.width;
         cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(() => this.wrapWidth.set(width));
+        frame = requestAnimationFrame(() => {
+          this.wrapWidth.set(width);
+          this.rendered.set(hasLayoutBox(wrap));
+        });
       });
       observer.observe(wrap);
       this.destroyRef.onDestroy(() => {
