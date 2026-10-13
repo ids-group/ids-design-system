@@ -11,6 +11,14 @@
   (120ms and 400ms by default), where they appeared at once over 120ms, and leave on
   `--ds-motion-chart-mark-exit-duration` and `--ds-motion-chart-mark-exit-easing`.
 
+### Fixed
+
+- **A `width: 'content'` column no longer collapses to 0px once its table is shown again.** A
+  `ds-table` under a `display: none` ancestor, such as an inactive `ds-tabs` panel, re-measured its
+  `width: 'content'` columns when its rows, its page or the loaded fonts changed, read 0 for each and
+  kept that width when shown: the cells spilled over the next column, and resizing the window did
+  not bring them back. The table skips the measurement while hidden and measures when it is shown.
+
 ## 0.15.1 — 2026-10-13
 
 ### Breaking

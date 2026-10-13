@@ -9,6 +9,10 @@
     {
       "text": "The `showChange` stretch and percentage wait `--ds-motion-chart-mark-exit-duration` and fade in over `--ds-motion-chart-mark-enter-duration` (120ms and 400ms by default), as the chart's other labels do, and leave on `--ds-motion-chart-mark-exit-duration` and `--ds-motion-chart-mark-exit-easing`.",
       "verify": "Hover a reading on a ds-line-chart with showChange and confirm the percentage appears after a short pause and fades in at the pace of the column value labels."
+    },
+    {
+      "text": "A `ds-table` `width: 'content'` column no longer collapses to 0px after its rows, page or fonts change while the table sits under a `display: none` ancestor such as an inactive `ds-tabs` panel; the table measures the column when it is shown.",
+      "verify": "Change the data of a ds-table with a width: 'content' column while its ds-tabs panel is inactive, switch back, and confirm the column fits its widest cell instead of collapsing."
     }
   ],
   "deleteList": []

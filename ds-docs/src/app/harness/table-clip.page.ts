@@ -300,6 +300,13 @@ const ACTIONS: readonly TableRowAction<Row>[] = [
 export class TableClipHarnessPage {
   protected readonly people = people;
   protected readonly secondPageShown = signal<ReadonlySet<string>>(new Set());
+  protected readonly hiddenPanelShown = signal(true);
+  protected readonly hiddenPanelRows = signal<readonly Row[]>(people);
+  protected readonly hiddenPanelColumns: readonly TableColumn<Row>[] = [
+    { key: 'name', label: 'Policyholder' },
+    { key: 'status', label: 'Status', width: 'content' },
+    { key: 'email', label: 'Email' },
+  ];
 
   protected caseData(item: HarnessCase): readonly Row[] {
     return item.pageTwo && this.secondPageShown().has(item.id)

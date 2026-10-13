@@ -337,6 +337,51 @@
 </section>
 
 <section
+  class="case"
+  data-case="content-hidden-panel"
+  [style.width.px]="900">
+  <h3>
+    content-hidden-panel - width content re-measured while its panel is hidden,
+    then shown (900px)
+  </h3>
+
+  <button
+    type="button"
+    data-hidden-panel-toggle
+    (click)="hiddenPanelShown.set(!hiddenPanelShown())">
+    Toggle panel
+  </button>
+
+  <button
+    type="button"
+    data-hidden-panel-rows
+    (click)="
+      hiddenPanelRows.set(
+        hiddenPanelRows() === people ? people.slice(2) : people
+      )
+    ">
+    Swap rows
+  </button>
+
+  <div [hidden]="!hiddenPanelShown()">
+    <ds-table
+      caption="Content column in a hidden panel"
+      [data]="hiddenPanelRows()"
+      [columns]="hiddenPanelColumns"
+      [stickyHeader]="false">
+      <ng-template
+        let-row
+        dsCellTemplate="status"
+        [dsCellTemplateOf]="hiddenPanelRows()">
+        <ds-badge [withDot]="true">
+          {{ row.status }}
+        </ds-badge>
+      </ng-template>
+    </ds-table>
+  </div>
+</section>
+
+<section
   class="case-perf"
   data-perf="truncate"
   [style.width.px]="1100">
