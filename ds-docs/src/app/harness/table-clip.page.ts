@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { BadgeComponent } from 'ds/badge';
 import { CellTemplateDirective, TableComponent } from 'ds/table';
-import type { TableColumn, TableRowAction } from 'ds/table';
+import type { TableColumn, TableColumnKind, TableRowAction } from 'ds/table';
 import { DsTableResize } from 'ds/table-resize';
 import { TooltipDirective } from 'ds/tooltip';
 
@@ -25,6 +25,8 @@ interface HarnessCase {
   readonly width: number;
   readonly columns: readonly TableColumn<Row>[];
   readonly data: readonly Row[];
+  /** Swapped in for `data` by the case's "Page 2" button, as a server-paged host does. */
+  readonly pageTwo?: readonly Row[];
   readonly density?: 'default' | 'compact';
   readonly selectable?: boolean;
   readonly zebra?: boolean;
@@ -131,6 +133,24 @@ const records: readonly Row[] = Array.from({ length: 6 }, (_, index) => ({
   renewal_date: '2026-11-01',
 }));
 
+const shortRecords: readonly Row[] = records.map((row, index) => ({
+  ...row,
+  id: `rec-p2-${index}`,
+  groups: 'Q3',
+  first_name: 'Ann',
+  last_name: 'Fox',
+  email: 'a@b.io',
+  address_line_1: '1 High St',
+  city: 'Ely',
+  product: 'Motor',
+}));
+const recordKinds: Readonly<Record<string, TableColumnKind>> = {
+  policy_id: 'id',
+  postcode: 'id',
+  premium: 'number',
+  renewal_date: 'date',
+};
+
 const deltaNames = [
   ['Margaret', 'Whitfield'],
   ['Oluwaseun', 'Adeyemi-Clarke'],
@@ -160,8 +180,8 @@ const pagingColumns: readonly TableColumn<Row>[] = [
   { key: 'name', label: 'Policyholder' },
   { key: 'email', label: 'Email', truncate: true },
   { key: 'city', label: 'City' },
-  { key: 'status', label: 'Status' },
-  { key: 'amount', label: 'Amount', align: 'right' },
+  { key: 'status', label: 'Status', kind: 'status' },
+  { key: 'amount', label: 'Amount', align: 'right', kind: 'number' },
 ];
 
 // A consumer's delta review records: name + key/policy line, one address of about 290px per row.
@@ -279,6 +299,17 @@ const ACTIONS: readonly TableRowAction<Row>[] = [
 })
 export class TableClipHarnessPage {
   protected readonly people = people;
+  protected readonly secondPageShown = signal<ReadonlySet<string>>(new Set());
+
+  protected caseData(item: HarnessCase): readonly Row[] {
+    return item.pageTwo && this.secondPageShown().has(item.id)
+      ? item.pageTwo
+      : item.data;
+  }
+
+  protected showPageTwo(id: string): void {
+    this.secondPageShown.update((shown) => new Set(shown).add(id));
+  }
   protected readonly perfRows = signal<readonly Row[]>([]);
   protected readonly perfColumns =
     signal<readonly TableColumn<Row>[]>(pagingColumns);
@@ -501,10 +532,12 @@ export class TableClipHarnessPage {
       density: 'compact',
       maxHeight: '300px',
       data: records,
+      pageTwo: shortRecords,
       columns: ['groups', ...recordFields].map((key) => ({
         key,
         label: key,
         truncate: true,
+        kind: recordKinds[key],
       })),
     },
     {
@@ -605,6 +638,28 @@ export class TableClipHarnessPage {
       width: 1100,
       data: [...pageOne, ...pageTwo],
       columns: pagingColumns,
+    },
+    {
+      id: 'paging-server',
+      title:
+        'One server-paged table: the host swaps data from page 1 to page 2',
+      width: 1100,
+      data: pageOne,
+      pageTwo,
+      columns: pagingColumns,
+    },
+    {
+      id: 'short-text',
+      title: 'Short values on page 1, longer names on page 2, 1100px',
+      width: 1100,
+      data: pageOne,
+      pageTwo,
+      columns: [
+        { key: 'name', label: 'Policyholder' },
+        { key: 'city', label: 'City' },
+        { key: 'status', label: 'Status', kind: 'status' },
+        { key: 'amount', label: 'Amount', align: 'right', kind: 'number' },
+      ],
     },
     {
       id: 'min-width-column',

@@ -278,6 +278,7 @@ export { SwitchComponent } from '@ids-group-ltd/ids-design-system/components/swi
 export { TabComponent } from '@ids-group-ltd/ids-design-system/components/tabs'; // component
 export { TableCellEditEvent } from '@ids-group-ltd/ids-design-system/components/table'; // interface
 export { TableColumn } from '@ids-group-ltd/ids-design-system/components/table'; // interface
+export { TableColumnKind } from '@ids-group-ltd/ids-design-system/components/table'; // type
 export { TableComponent } from '@ids-group-ltd/ids-design-system/components/table'; // component
 export { TableExpandMode } from '@ids-group-ltd/ids-design-system/components/table'; // type
 export { TableFilterMode } from '@ids-group-ltd/ids-design-system/components/table'; // type

@@ -21,7 +21,8 @@
         "extends ChartStatesComponent",
         "extends ChartLegendComponent",
         "extends WaterfallChartComponent",
-        "extends DsTableResize"
+        "extends DsTableResize",
+        "extends TableComponent"
       ],
       "detect": [
         "extends ChartComponent",
@@ -37,13 +38,42 @@
         "extends ChartStatesComponent",
         "extends ChartLegendComponent",
         "extends WaterfallChartComponent",
-        "extends DsTableResize"
+        "extends DsTableResize",
+        "extends TableComponent"
       ],
       "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
-      "appliesWhen": "Only a class of yours that extends ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent or FunnelChartComponent, WaterfallChartComponent or DsTableResize, or the internal ChartStatesComponent, the internal ChartLegendComponent or the internal WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "appliesWhen": "Only a class of yours that extends ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent, FunnelChartComponent, WaterfallChartComponent, DsTableResize or TableComponent, or the internal ChartTooltipPanelComponent, the internal ChartStatesComponent, the internal ChartLegendComponent or the internal WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
-      "note": "`ChartComponent` gained 30; `LineSeriesComponent` gained 25 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 10; `ColumnChartComponent` gained `showAxisReadout`, `heldExtent`, `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `rescaleOnHide`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `showAxisReadout`, `selectRange` and `showChange` and lost `axisMax`, `axisMaxSecondary` and `ceilingOf`; `PieChartComponent` gained 14 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 8 and lost `columnStagger`, `onStepEnter`, `onStepLeave` and `stepDwell`; `ScatterChartComponent` gained 22 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`; `WaterfallChartComponent` gained `showAxisReadout`; `DsTableResize` gained `guide` and `placeGuide`. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 9 and its `dataTable` takes a `ChartDataTable`; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`, `onItemEnter` and `onItemLeave`."
+      "note": "`ChartComponent` gained 30; `LineSeriesComponent` gained 25 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 10; `ColumnChartComponent` gained `showAxisReadout`, `heldExtent`, `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `rescaleOnHide`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `showAxisReadout`, `selectRange` and `showChange` and lost `axisMax`, `axisMaxSecondary` and `ceilingOf`; `PieChartComponent` gained 14 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 8 and lost `columnStagger`, `onStepEnter`, `onStepLeave` and `stepDwell`; `ScatterChartComponent` gained 22 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`; `WaterfallChartComponent` gained `showAxisReadout`; `DsTableResize` gained `guide` and `placeGuide`; `TableComponent` gained 8 and lost 12. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 9 and its `dataTable` takes a `ChartDataTable`; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`, `onItemEnter` and `onItemLeave`."
+    },
+    {
+      "id": "table-column-width-from-config",
+      "kind": "behavior",
+      "old": "TableColumn.width",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "TableColumn",
+        "truncate:",
+        "minWidth:",
+        "width: 'content'"
+      ],
+      "detect": [
+        ": TableColumn<",
+        "TableColumn[]",
+        "truncate: true",
+        "align: 'right'"
+      ],
+      "action": "None, unless a column holds ids, dates, numbers or statuses: add `kind: 'id'`, `'date'`, `'number'` or `'status'` to it. A column whose values must show whole gets `width: 'content'` or a `minWidth`.",
+      "appliesWhen": "Every ds-table column without a numeric `width`. A column with a numeric `width` is as wide as before; a column the reader dragged with dsTableResize keeps its dragged width.",
+      "pitfall": "A value longer than its column wraps (a plain column) or ellipsizes (a `truncate` column) where the column used to grow to it, and a column of short values keeps its share with space after them. A cell template holding an element wider than its column overflows into the next one.",
+      "restore": "{ key: 'notes', label: 'Notes', width: 'content' }",
+      "verify": "Page every ds-table forward and back and change its data: no column changes width, and each id, date, number and status column is 110-130px.",
+      "supersedes": [
+        "0.15.0#table-truncate-without-width-grows"
+      ],
+      "note": "The table lays out with `table-layout: fixed`: `width`, then `kind` (`'id'` and `'date'` 130px, `'number'` 120px, `'status'` 110px, widened to the header label), and the `'text'` columns share the rest equally, none narrower than its header label or `minWidth`. When those widths do not fit, the table scrolls sideways and a `truncate` text column without `width` or `minWidth` is 240px of text. `width: 'content'` is measured from the rendered rows and is the one width that follows the data."
     },
     {
       "id": "chart-legend-fades-only-under-dim-others",
@@ -665,6 +695,7 @@
     },
     "`showDirty` (default `false`) on every value field, the `dsShowDirty` directive (`ShowDirtyDirective`) and `provideDsConfig({ field: { showDirty: true } })` mark a value the user changed with a dot and a \"Changed\" line; off unless one of the three turns it on. The line reads the new optional `DsIntl` key `field.changed`.",
     "`ds-info-hint` takes rich content inside the tag or through the new `content` input (`text` is optional), any `IconName` in `icon`, and the new `--ds-info-hint-color` hook for the icon colour. `dsTooltip` and `dsDefinitionTerm` take a template as well as a string.",
+    "`TableColumn.kind` (`TableColumnKind`: `'text' | 'id' | 'date' | 'number' | 'status'`) sets a ds-table column's width when `width` is unset.",
     "`.link` takes `--ds-link-color-visited`, `--ds-link-color-visited-hover`, `--ds-link-color-visited-active`, `--ds-link-color-disabled`, `--ds-link-focus-ring-color`, `--ds-link-underline-color`, `--ds-link-underline-thickness` and `--ds-link-underline-offset`, each defaulting to the value the partial painted with.",
     "The `dsTableColumns` header button sets `aria-expanded` to `true` while its column panel is open, from the first press on a fresh page.",
     {
