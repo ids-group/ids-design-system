@@ -17,6 +17,12 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Build
+
+- **`check-manual-surface` fails on an attribute directive `MANUAL-SURFACE.md` only lists.** Every
+  entry of `attributeDirectives` has to be named in backticks outside the §2 list, saying what it
+  does and what a card loses without it; all 24 are.
+
 ## 0.15.1 — 2026-10-13
 
 ### Cards
