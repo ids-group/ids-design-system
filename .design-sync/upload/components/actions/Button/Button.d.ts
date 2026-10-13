@@ -45,7 +45,7 @@ export interface ButtonProps {
   type?: ('button' | 'submit' | 'reset');
   /** Disables the button and blocks `pressed`. */
   disabled?: boolean;
-  /** Busy state: disables interaction and sets `aria-busy`. Button-only; ignored on an anchor with a dev warning. */
+  /** Busy state: blocks `pressed` and sets `aria-busy` and `aria-disabled`, keeping the button focusable so focus stays on it while the work runs. Button-only; ignored on an anchor with a dev warning. */
   loading?: boolean;
   /** Fills the container: the host becomes block-level and 100% wide. */
   fullWidth?: boolean;

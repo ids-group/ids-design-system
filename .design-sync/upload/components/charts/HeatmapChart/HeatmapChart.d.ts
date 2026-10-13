@@ -25,7 +25,7 @@ export interface HeatmapChartProps {
   interactive?: boolean;
   /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings. */
   tooltipSwatches?: boolean | null;
-  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
+  /** How long the tooltip stays after the pointer leaves the mark for another part of the chart, in milliseconds; zero closes it at once. A pointer that leaves the chart closes it at once whatever this says. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
   tooltipLingerMs?: number | null;
   /** Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way. */
   pinOnClick?: boolean | null;
@@ -39,11 +39,13 @@ export interface HeatmapChartProps {
   max?: number | null;
   /** Prints each cell's reading inside it. */
   showValues?: boolean;
+  /** Marks the hovered or focused cell's reading on the colour scale. */
+  showScaleMarker?: boolean;
   /** Fades every cell but the one under the pointer. */
   dimOthers?: boolean;
   /** Whether a hovered or focused cell opens a tooltip. */
   tooltip?: ('item' | 'none');
-  /** Milliseconds between one column's entrance and the next; `0` turns it off. The spread is capped at 260ms. */
+  /** Milliseconds between one diagonal's entrance and the next, from the top-left cell; `0` turns it off. The spread is capped at 260ms. */
   staggerMs?: number;
   /** The clicked cell, with its row and column. Never fires for an unmeasured cell. */
   onCellClicked?: (value: unknown) => void;

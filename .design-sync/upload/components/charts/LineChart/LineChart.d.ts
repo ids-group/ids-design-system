@@ -25,7 +25,7 @@ export interface LineChartProps {
   interactive?: boolean;
   /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings. */
   tooltipSwatches?: boolean | null;
-  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
+  /** How long the tooltip stays after the pointer leaves the mark for another part of the chart, in milliseconds; zero closes it at once. A pointer that leaves the chart closes it at once whatever this says. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
   tooltipLingerMs?: number | null;
   /** Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way. */
   pinOnClick?: boolean | null;
@@ -66,7 +66,7 @@ export interface LineChartProps {
   /** Ids of the series the legend has switched off. */
   hiddenSeries?: readonly string[];
   onHiddenSeriesChange?: (value: readonly string[]) => void;
-  /** Whether hiding a series re-scales the value axis to what is left. */
+  /** Whether hiding a series re-scales the value axis to what is left. Off holds the axis where it stands with every series shown. */
   rescaleOnHide?: boolean;
   /** Whether the legend switches series off. Off leaves it a plain key. */
   legendFilters?: boolean;
@@ -76,6 +76,12 @@ export interface LineChartProps {
   noVisibleSeriesText?: string | null;
   /** Gives every series a dash pattern, so lines differ by shape as well as colour. */
   patterns?: boolean;
+  /** Lets a press dragged across categories select them: a band, the sum and mean of every reading in it, and the readings outside faded. Escape or a press outside clears it. Off by default. */
+  selectRange?: boolean;
+  /** Answers the pointer on the axes: the category label in bold, a guide from the value axis and the value there in a pill on the axis. On by default. */
+  showAxisReadout?: boolean;
+  /** On the hovered reading, thickens the stretches from the reading before it and to the reading after it, each in its own rising or falling colour and with its own change in percent; with several series, for the one singled out. */
+  showChange?: boolean;
   /** Milliseconds between one series' entrance and the next; `0` turns it off. The step narrows so the last series still starts within the stagger budget. */
   staggerMs?: number;
   /** Whether the plot opens a tooltip, and for what. `'axis'` names every series at the category under the pointer; `'item'` names only the marker itself. */

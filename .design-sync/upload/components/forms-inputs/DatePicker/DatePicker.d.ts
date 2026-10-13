@@ -21,6 +21,12 @@ export interface DatePickerProps {
   invalid?: boolean;
   /** Whether the user has interacted with the field. Bound by signal forms; gates `errors`. */
   touched?: boolean;
+  /** Whether an async validator is running. Bound by signal forms; shows a trailing spinner. */
+  pending?: boolean;
+  /** Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`. */
+  dirty?: boolean;
+  /** Marks a changed value with a dot and a "Changed" line. Unset falls back to `DS_CONFIG.field.showDirty`, then `false`. */
+  showDirty?: boolean | null;
   /** Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display. */
   hidden?: boolean;
   /** Selection mode - single date or start/end range. */
@@ -64,7 +70,7 @@ export interface DatePickerProps {
   locale?: string | null;
   /** Explicit token format e.g. `'MM/DD/YYYY'`; default derived from `locale`. */
   dateFormat?: string | null;
-  /** First weekday column: 0=Sunday … 6=Saturday. Default 1 (Monday). */
+  /** First weekday column: 0=Sunday … 6=Saturday. Falls back to `DS_CONFIG.datePicker.firstDayOfWeek`, then the resolved `locale`'s week, then 1 (Monday). */
   firstDayOfWeek?: number | null;
   /** Date the calendar opens on when the value is empty; never written to `value`. */
   defaultDate?: Date | null;

@@ -25,7 +25,7 @@ export interface WaterfallChartProps {
   interactive?: boolean;
   /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then shows them for two to four readings. */
   tooltipSwatches?: boolean | null;
-  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
+  /** How long the tooltip stays after the pointer leaves the mark for another part of the chart, in milliseconds; zero closes it at once. A pointer that leaves the chart closes it at once whatever this says. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
   tooltipLingerMs?: number | null;
   /** Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way. */
   pinOnClick?: boolean | null;
@@ -37,6 +37,8 @@ export interface WaterfallChartProps {
   showConnectors?: boolean;
   /** Dims every OTHER bar while one is hovered or focused. */
   dimOthers?: boolean;
+  /** Answers the pointer on the axes: the category label in bold, a guide from the value axis and the value there in a pill on the axis. On by default. */
+  showAxisReadout?: boolean;
   /** Whether a hovered or focused bar opens a tooltip. `'axis'` is not offered: each bar is its own category. */
   tooltip?: ('item' | 'none');
   /** How many value-axis ticks to aim for; ticks snap to a round step. */
