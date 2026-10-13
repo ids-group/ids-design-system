@@ -17,6 +17,12 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **`ds-field-status` has a usage doc and a section.** The design agent reads `FieldStatus` as the
+  pending spinner and the changed dot every DS field draws itself, set through the field's
+  `pending`, `dirty` and `showDirty`. Its card resolves to the `practice/signal-forms` section.
+
 ### Upload
 
 - **`obsolete.txt` lists six more paths the project still holds.** The custom-dropdown Select

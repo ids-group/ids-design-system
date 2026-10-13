@@ -10,7 +10,11 @@
 // It fails when
 //   * a differing block names nothing the manifest text or the CHANGELOG block names: a `ds-*`
 //     element or `ds-*` class rendered inside it, the component class of such an element, or a
-//     `--ds-*` token its text prints;
+//     `--ds-*` token its text prints, and no custom property its elements read at the base side,
+//     in a `var()` of a matching style rule or inline style, is the `old` of a `removed-api` or
+//     `token-rename` item of the manifest (a family `old` expanded as the stylelint deprecation
+//     list expands it). A docs stylesheet reading a withdrawn token loses that colour with
+//     nothing of the library in its markup;
 //   * a `pixels:<block id>` evidence entry of that manifest names no block, or one that differs.
 //
 // The "to" build is the docs app of the FROM ref compiled against the library of the TO ref, so a
@@ -23,6 +27,8 @@
 // settled (every face is bundled), infinite animations paused at zero and finite ones finished,
 // software raster on one thread (RASTER_FLAGS). One build rendered twice differs in no block.
 // Equality is byte equality of the PNGs Chrome encodes, so a single pixel moved is a difference.
+// A block that only moved down the page is not one: a differing block whose document top differs
+// is captured again with the higher side pushed down to the other's top, and compared once more.
 //
 // Builds are cached under node_modules/.cache/render-evidence/, one per source tree; a stale
 // working-tree build is removed on the next run, a tag build is kept.
@@ -47,6 +53,7 @@ import {
 import http from 'node:http';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { candidatesOf } from './generate-token-deprecations.mjs';
 import { open, wait } from './headless-chrome.mjs';
 import { previousBoundary, releaseTags } from './release-tags.mjs';
 
@@ -222,10 +229,33 @@ const SETTLE_ANIMATIONS = `for (const animation of document.getAnimations()) {
   else animation.finish();
 }`;
 
-// Collects the blocks of the page into window.__renderBlocks and returns their ids and names.
+// Collects the blocks of the page into window.__renderBlocks and returns their ids, names and the
+// custom properties their elements read: those in a `var()` of an inline style or of a style rule
+// matching the element, a pseudo-element's rule counting for its host.
 const COLLECT_BLOCKS = `() => {
   const slug = (text) => text.toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   const follows = (node, other) => !!(node.compareDocumentPosition(other) & Node.DOCUMENT_POSITION_FOLLOWING);
+  const variables = (text) => [...(text ?? '').matchAll(/var[(] *(--[a-zA-Z0-9_-]+)/g)].map((match) => match[1]);
+  const readsOf = new Map();
+  const read = (element, names) => {
+    if (!names.length) return;
+    if (!readsOf.has(element)) readsOf.set(element, new Set());
+    for (const name of names) readsOf.get(element).add(name);
+  };
+  const visit = (rules) => {
+    for (const rule of rules) {
+      if (rule.selectorText !== undefined) {
+        const names = variables(rule.style?.cssText);
+        const selector = rule.selectorText.replace(/::?(before|after|marker|placeholder|first-line|first-letter|selection|backdrop|file-selector-button|-webkit-[a-z-]+)/g, '');
+        if (names.length && selector.trim())
+          try { for (const element of document.querySelectorAll(selector)) read(element, names); } catch {}
+      }
+      if (rule.cssRules) visit(rule.cssRules);
+    }
+  };
+  for (const sheet of [...document.styleSheets, ...document.adoptedStyleSheets])
+    try { visit(sheet.cssRules); } catch {}
+  for (const element of document.querySelectorAll('[style]')) read(element, variables(element.getAttribute('style')));
   const blocks = [];
   const seen = new Map();
   for (const section of document.querySelectorAll('section[data-anchor]')) {
@@ -240,8 +270,10 @@ const COLLECT_BLOCKS = `() => {
         (start ? start === element || start.contains(element) || follows(start, element) : true) &&
         (!end || (follows(element, end) && !element.contains(end)));
       const names = new Set();
+      const reads = new Set();
       for (const element of section.querySelectorAll('*')) {
         if (!inside(element)) continue;
+        for (const name of readsOf.get(element) ?? []) reads.add(name);
         const tag = element.tagName.toLowerCase();
         if (tag.startsWith('ds-')) names.add(tag);
         for (const name of element.classList) if (name.startsWith('ds-')) names.add(name);
@@ -250,11 +282,11 @@ const COLLECT_BLOCKS = `() => {
       if (start) range.setStartBefore(start); else range.setStart(section, 0);
       if (end) range.setEndBefore(end); else range.setEnd(section, section.childNodes.length);
       for (const token of range.toString().match(/--ds-[a-z0-9-]*[a-z0-9]/g) ?? []) names.add(token);
-      blocks.push({ id: count > 1 ? id + '~' + count : id, section, start, end, names: [...names].sort() });
+      blocks.push({ id: count > 1 ? id + '~' + count : id, section, start, end, names: [...names].sort(), reads: [...reads].sort() });
     });
   }
   window.__renderBlocks = blocks;
-  return blocks.map(({ id, names }) => ({ id, names }));
+  return blocks.map(({ id, names, reads }) => ({ id, names, reads }));
 }`;
 
 // Scrolls block `index` so that its part starting `offset` px below its top is at the top of the
@@ -275,10 +307,77 @@ const placeBlock = (index, offset) => `() => {
   const sectionBox = block.section.getBoundingClientRect();
   // Whole pixels: a fractional clip is resampled, and the resampling is not stable between runs.
   const y = Math.round(top() + ${offset});
-  return { moved, height, visible, clip: { x: Math.round(sectionBox.left), y, width: Math.round(sectionBox.width), height: Math.max(0, Math.round(Math.min(visible, height - ${offset}))) } };
+  return { moved, height, visible, documentTop: top() - frame.top + scroller.scrollTop, clip: { x: Math.round(sectionBox.left), y, width: Math.round(sectionBox.width), height: Math.max(0, Math.round(Math.min(visible, height - ${offset}))) } };
 }`;
 
-async function renderSite(dir, pages) {
+// Pushes block `index` down with a spacer above it until its document top is `target`, and
+// returns the top it reached. A spacer shifts the block by its height plus whatever gap the
+// container adds, so the height is corrected against a measurement rather than computed.
+const alignBlock = (index, target) => `() => {
+  const block = window.__renderBlocks[${index}];
+  const scroller = document.querySelector('main.content') ?? document.scrollingElement;
+  const frame = scroller === document.scrollingElement ? { top: 0 } : scroller.getBoundingClientRect();
+  const documentTop = () => (block.start ?? block.section).getBoundingClientRect().top - frame.top + scroller.scrollTop;
+  const spacer = document.createElement('div');
+  spacer.setAttribute('aria-hidden', 'true');
+  spacer.style.height = '0px';
+  (block.start ?? block.section).before(spacer);
+  window.__renderSpacer = spacer;
+  let height = 0;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const missing = ${target} - documentTop();
+    if (Math.abs(missing) < 0.01 || height + missing < 0) break;
+    height += missing;
+    spacer.style.height = height + 'px';
+  }
+  return documentTop();
+}`;
+
+// Screenshots block `index` in parts of one viewport, top to bottom.
+async function captureBlock({ s, evaluate }, index) {
+  const chunks = [];
+  let unstable = false;
+  let top = null;
+  let height = Infinity;
+  for (
+    let offset = 0, chunk = 0;
+    offset < height && chunk < MAX_CHUNKS;
+    chunk++
+  ) {
+    // The docs restore a scroll offset whenever content below grows, and content renders as
+    // it enters the viewport, so a placement holds only once a re-placement moves nothing,
+    // before and after the screenshot.
+    let settled = null;
+    let data = null;
+    let empty = false;
+    for (let attempt = 0; attempt < 10 && !data; attempt++) {
+      await evaluate(placeBlock(index, offset));
+      await wait(SCROLL_SETTLE_MS);
+      settled = await evaluate(placeBlock(index, offset));
+      if (settled.moved >= 1) continue;
+      empty = settled.clip.height < 1 || settled.clip.width < 1;
+      if (empty) break;
+      const shot = await s('Page.captureScreenshot', {
+        format: 'png',
+        clip: { ...settled.clip, scale: 1 },
+      });
+      if ((await evaluate(placeBlock(index, offset))).moved < 1)
+        data = shot.data;
+    }
+    top ??= settled.documentTop;
+    height = settled.height;
+    unstable ||= !data && !empty;
+    if (!data) break;
+    chunks.push(data);
+    offset += Math.max(1, settled.visible);
+  }
+  return { chunks, unstable, top };
+}
+
+// With `targets` (block id -> document top), captures only those blocks, each pushed down to its
+// target; the blocks above are still placed in order, so whatever renders on entering the
+// viewport has rendered as in a full pass.
+async function renderSite(dir, pages, targets = null) {
   const server = await serve(resolve(dir));
   const base = `http://127.0.0.1:${server.address().port}`;
   const browser = await open('about:blank', {
@@ -314,42 +413,24 @@ async function renderSite(dir, pages) {
         `() => document.querySelector('main.content')?.dispatchEvent(new WheelEvent('wheel'))`,
       );
       const found = await evaluate(COLLECT_BLOCKS);
-      for (const [index, { id, names }] of found.entries()) {
-        const chunks = [];
-        let unstable = false;
-        let height = Infinity;
-        for (
-          let offset = 0, chunk = 0;
-          offset < height && chunk < MAX_CHUNKS;
-          chunk++
-        ) {
-          // The docs restore a scroll offset whenever content below grows, and content renders as
-          // it enters the viewport, so a placement holds only once a re-placement moves nothing,
-          // before and after the screenshot.
-          let settled = null;
-          let data = null;
-          let empty = false;
-          for (let attempt = 0; attempt < 10 && !data; attempt++) {
-            await evaluate(placeBlock(index, offset));
-            await wait(SCROLL_SETTLE_MS);
-            settled = await evaluate(placeBlock(index, offset));
-            if (settled.moved >= 1) continue;
-            empty = settled.clip.height < 1 || settled.clip.width < 1;
-            if (empty) break;
-            const shot = await s('Page.captureScreenshot', {
-              format: 'png',
-              clip: { ...settled.clip, scale: 1 },
-            });
-            if ((await evaluate(placeBlock(index, offset))).moved < 1)
-              data = shot.data;
-          }
-          height = settled.height;
-          unstable ||= !data && !empty;
-          if (!data) break;
-          chunks.push(data);
-          offset += Math.max(1, settled.visible);
+      const last = targets
+        ? found.findLastIndex(({ id }) => targets.has(id))
+        : found.length - 1;
+      for (const [index, { id, names, reads }] of found.entries()) {
+        if (index > last) break;
+        if (targets && !targets.has(id)) {
+          await evaluate(placeBlock(index, 0));
+          await wait(SCROLL_SETTLE_MS);
+          continue;
         }
-        blocks.set(id, { page, names, chunks, unstable });
+        if (targets) await evaluate(alignBlock(index, targets.get(id)));
+        blocks.set(id, {
+          page,
+          names,
+          reads,
+          ...(await captureBlock(browser, index)),
+        });
+        if (targets) await evaluate(`() => window.__renderSpacer.remove()`);
       }
     }
   } finally {
@@ -357,6 +438,41 @@ async function renderSite(dir, pages) {
     server.close();
   }
   return blocks;
+}
+
+const samePixels = (a, b) =>
+  a.chunks.length === b.chunks.length &&
+  a.chunks.every((chunk, index) => chunk === b.chunks[index]);
+
+// Antialiasing depends on a block's absolute position in the document: a block pushed down 40 px
+// by a change above it repaints the edges of its circles and rounded corners a level or two apart.
+// So a differing block whose top moved is captured again on the side where it sits higher, pushed
+// down to the other side's top, and stays a difference only if it still differs there.
+async function realignMoved(sides) {
+  const targets = sides.map(() => new Map());
+  const [before, after] = sides.map(({ blocks }) => blocks);
+  for (const [id, a] of before) {
+    const b = after.get(id);
+    if (!b || a.unstable || b.unstable || samePixels(a, b)) continue;
+    if (a.top === null || b.top === null || Math.abs(a.top - b.top) < 0.01)
+      continue;
+    if (a.top < b.top) targets[0].set(id, b.top);
+    else targets[1].set(id, a.top);
+  }
+  let count = 0;
+  for (const [side, { dir, blocks }] of sides.entries()) {
+    if (!targets[side].size) continue;
+    const pages = [
+      ...new Set([...targets[side].keys()].map((id) => blocks.get(id).page)),
+    ];
+    const again = await renderSite(dir, pages, targets[side]);
+    for (const id of targets[side].keys())
+      if (again.has(id)) {
+        blocks.set(id, again.get(id));
+        count++;
+      }
+  }
+  return count;
 }
 
 function compareBlocks(before, after) {
@@ -369,16 +485,16 @@ function compareBlocks(before, after) {
         ? 'removed'
         : a.unstable || b.unstable
           ? 'unstable'
-          : a.chunks.length !== b.chunks.length ||
-              a.chunks.some((chunk, index) => chunk !== b.chunks[index])
-            ? 'changed'
-            : null;
+          : samePixels(a, b)
+            ? null
+            : 'changed';
     if (change)
       differing.push({
         id,
         change,
         page: (b ?? a).page,
         names: [...new Set([...(a?.names ?? []), ...(b?.names ?? [])])],
+        reads: (a ?? b).reads,
       });
   }
   return differing;
@@ -420,19 +536,37 @@ function verdict(differing, blocks, manifestText, changelogText, classes) {
         name.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`) +
         String.raw`(?![\w-])`,
     ).test(text);
+  let manifest = {};
+  try {
+    manifest = manifestText ? JSON.parse(manifestText) : {};
+  } catch {}
+  const withdrawn = (manifest.items ?? []).filter((item) =>
+    ['removed-api', 'token-rename'].includes(item.kind),
+  );
+  const withdrawnReads = (reads) => {
+    const read = new Set(reads);
+    return [
+      ...new Set(
+        withdrawn.flatMap((item) =>
+          candidatesOf(item.old, item.new, item.kind, read, new Set()).map(
+            ({ name }) => name,
+          ),
+        ),
+      ),
+    ].filter((name) => read.has(name));
+  };
   const results = differing.map((block) => {
     const candidates = [
       ...block.names,
       ...block.names.map((name) => classes.get(name)).filter(Boolean),
     ];
-    return { ...block, namedBy: candidates.filter(isNamed) };
+    return {
+      ...block,
+      namedBy: [...candidates.filter(isNamed), ...withdrawnReads(block.reads)],
+    };
   });
   const differingIds = new Set(differing.map((block) => block.id));
   const evidence = [];
-  let manifest = {};
-  try {
-    manifest = manifestText ? JSON.parse(manifestText) : {};
-  } catch {}
   const entries = [
     ...(manifest.items ?? []).map((item) => [
       item.id ?? '<no id>',
@@ -512,6 +646,10 @@ async function main() {
     renderSite(before.dir, pages),
     renderSite(after.dir, pages),
   ]);
+  const realigned = await realignMoved([
+    { dir: before.dir, blocks: blocksBefore },
+    { dir: after.dir, blocks: blocksAfter },
+  ]);
   const differing = compareBlocks(blocksBefore, blocksAfter);
   const manifestPath = join(MIGRATIONS, `${version}.json`);
   const manifestText = existsSync(manifestPath)
@@ -548,6 +686,10 @@ async function main() {
   console.log(
     `  ${pages.length} page(s), ${blocksBefore.size} / ${blocksAfter.size} block(s), ${differing.length} differ (${mode})`,
   );
+  if (realigned)
+    console.log(
+      `  ${realigned} moved block(s) captured again at the other side's position`,
+    );
   for (const block of results)
     console.log(
       `  ${block.namedBy.length ? 'named  ' : 'UNNAMED'}  ${block.change.padEnd(8)}  ${block.id}  ${

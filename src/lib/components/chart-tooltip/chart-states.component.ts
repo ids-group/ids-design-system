@@ -107,6 +107,7 @@ export interface ChartStatesMessageContext {
                       height="var(--space-2)"
                       [shimmer]="shimmer()" />
                   </th>
+
                   <th>
                     <ds-skeleton
                       inline
@@ -129,6 +130,7 @@ export interface ChartStatesMessageContext {
                         height="var(--space-2)"
                         [shimmer]="shimmer()" />
                     </td>
+
                     <td>
                       <ds-skeleton
                         inline

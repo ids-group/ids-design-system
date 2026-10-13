@@ -184,13 +184,13 @@ express.
 ## 2. Attribute directives — no element to register
 
 A directive has no tag, so `@angular/elements` has nothing to define and it is
-absent from the generated surface entirely. Twenty-two of them:
+absent from the generated surface entirely. Twenty-four of them:
 
-`[dsBrandName]` · `[dsCellTemplate]` · `[dsChartTooltip]` · `[dsChipTemplate]` · `[dsCreateTemplate]` ·
-`[dsDefinitionTerm]` · `[dsEmptyTemplate]` · `[dsFieldClickFocus]` · `[dsGroupLabelTemplate]` ·
-`[dsModalConfirm]` · `[dsOptionTemplate]` · `[dsPanelFooterTemplate]` · `[dsPanelHeaderTemplate]` ·
-`[dsPickerTrigger]` · `[dsProjectionDropped]` · `[dsRailTrigger]` ·
-`[dsReserveMessages]` · `[dsTableColumns]` · `[dsTableExport]` ·
+`[dsBrandName]` · `[dsCellTemplate]` · `[dsChartPlaced]` · `[dsChartTooltip]` · `[dsChipTemplate]` ·
+`[dsCreateTemplate]` · `[dsDefinitionTerm]` · `[dsEmptyTemplate]` · `[dsFieldClickFocus]` ·
+`[dsGroupLabelTemplate]` · `[dsModalConfirm]` · `[dsOptionTemplate]` · `[dsPanelFooterTemplate]` ·
+`[dsPanelHeaderTemplate]` · `[dsPickerTrigger]` · `[dsProjectionDropped]` · `[dsRailTrigger]` ·
+`[dsReserveMessages]` · `[dsShowDirty]` · `[dsTableColumns]` · `[dsTableExport]` ·
 `[dsTableResize]` · `[dsTooltip]` · `[dsTooltipWhenClipped]`
 
 `[dsModalConfirm]` wires a projected action to `ds-modal`'s `confirmed` output: behaviour with nothing to draw, so a static card loses nothing by its absence and the confirm button renders as the plain button it sits on.
@@ -212,6 +212,12 @@ only if the design host ever renders interactive cards.
 
 `[dsProjectionDropped]` is dev-only and never ships a node in production.
 
+`[dsReserveMessages]` and `[dsShowDirty]` set a field default for every field inside a form, the
+same as `provideDsConfig({ field: { reserveMessage: true } })` and
+`provideDsConfig({ field: { showDirty: true } })` for that subtree. Each has a per-field input that
+reaches the element unchanged (`reserveMessage`, `showDirty`), so a card sets it on the field and
+loses nothing.
+
 **The three `[dsTable*]` directives are the table's opt-in features** (2026-09-05), and they are a
 different case from the template-slot markers above: they carry real behaviour, not a marker. They
 exist because `ds-table` shipped the data-grid features to everyone who ever drew a table — moving
@@ -231,6 +237,10 @@ chart templates rather than by a consumer: a chart hands it a `ChartTooltipConte
 non-null opens the panel and null closes it, so pointer and keyboard share one path. The
 `components/chart-tooltip` entry point exports the class, so it is reachable, but it is inert
 without a chart's context and origin.
+
+`[dsChartPlaced]` is internal to our chart templates: it adds `placed` to a mark two frames after it
+enters the DOM, so the mark's `transition` cannot start from the origin. A static card never moves a
+mark, so nothing visible is lost.
 
 **What the elements route loses is nothing a card can show**, by the argument already recorded above
 for `[dsTooltip]`: the panel is revealed on hover, tap or focus, and a static card has none of the
