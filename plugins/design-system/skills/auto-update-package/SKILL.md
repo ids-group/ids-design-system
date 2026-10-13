@@ -286,7 +286,12 @@ step 8's question while the wave runs. Collect the whole wave before Phase B.
    the DS sources"). Its working tree stays on the default branch for the whole run, so read
    `CHANGELOG.md` there — the complete newest changelog, covering every chain version — and the
    `migrations/` manifests in place.
+   Clone with `-c core.longpaths=true`: the `.design-sync/` tree holds paths near 130 characters,
+   which with a scratchpad prefix pass the Windows 260-character limit and abort the checkout.
    Fallbacks if the clone fails (no git access):
+   (0) a local DS clone, found as in Phase D step 4: clone it the same way,
+   `git clone -c core.longpaths=true <local clone> <scratchpad>/ds`. It carries every tag, so it
+   serves every step the remote clone would;
    (a) `<target>/node_modules/@ids-group-ltd/ids-design-system/CHANGELOG.md` — OR the **workspace-root**
    `node_modules/...` (hoisted monorepos install the dependency at the root, not under the
    target). This is the OLD version's copy — for a multi-version chain it usually lacks the

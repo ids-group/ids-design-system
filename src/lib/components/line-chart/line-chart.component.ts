@@ -268,8 +268,8 @@ export class LineChartComponent
   readonly showAxisReadout = input(true, { transform: booleanAttribute });
 
   /** On the hovered reading, thickens the stretches from the reading before it and to the reading
-   *  after it, each in its own rising or falling colour and with its own change in percent; with
-   *  several series, for the one singled out. */
+   *  after it, each in its own rising or falling colour and, unless it starts at zero, with its own
+   *  change in percent; with several series, for the one singled out. */
   readonly showChange = input(false, { transform: booleanAttribute });
 
   /** Milliseconds between one series' entrance and the next; `0` turns it off. The step narrows

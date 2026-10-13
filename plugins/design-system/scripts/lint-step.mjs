@@ -21,12 +21,13 @@ import {
   existsSync,
   mkdtempSync,
   readFileSync,
+  realpathSync,
   rmSync,
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const RULE_PREFIX = 'ids-design-system/';
 const ITEM_ID = /\(([^()\s]+#[^()\s]+)\)/;
@@ -46,7 +47,7 @@ const pickExport = (target) => {
 
 // Node resolution from <consumer-root>, without a file of ours inside the consumer to resolve from.
 export const resolvePackage = (fromDirectory, name) => {
-  for (let directory = resolve(fromDirectory); ; ) {
+  for (let directory = resolve(fromDirectory); ;) {
     const packageDirectory = join(directory, 'node_modules', name);
     const manifestPath = join(packageDirectory, 'package.json');
     if (existsSync(manifestPath)) {
@@ -335,5 +336,9 @@ const main = async (argv) => {
   return 0;
 };
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href)
+// Node resolves this module to its real path, while argv keeps the junction or symlink it was
+// started through, so the two are compared after resolving both.
+if (
+  realpathSync(fileURLToPath(import.meta.url)) === realpathSync(process.argv[1])
+)
   process.exitCode = await main(process.argv.slice(2));

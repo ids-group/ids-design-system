@@ -4,6 +4,17 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.14.1 - 2026-10-14
+
+### Fixed
+
+- **`lint-step.mjs` runs when started through a junction or symlink.** Its entry check compares
+  the real paths of the module and `argv[1]`; started through the account's linked plugin cache
+  it exited 0 with no output.
+- **Phase A step 7 clones with `core.longpaths`, and a local DS clone is the first fallback.** A
+  clone without Bitbucket credentials falls back to the local clone Phase D step 4 finds, which
+  carries every tag.
+
 ## 1.14.0 - 2026-10-10
 
 ### Added
