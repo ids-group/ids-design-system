@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 // Does the render-evidence rule still FIRE on a one-pixel change, and still HOLD on an identical
-// block? Two synthetic sites shaped like ds-docs (a `main.content` scroller, a
-// `section[data-anchor]`, `h3.block-title` chapters) differ by one pixel column in one block. The
-// check runs over them as prebuilt dists, against private copies of the manifest and CHANGELOG, so
-// nothing tracked is read as the subject or written.
+// block and on a block that only moved? Synthetic sites shaped like ds-docs (a `main.content`
+// scroller, a `section[data-anchor]`, `h3.block-title` chapters) differ by one pixel column in one
+// block, or by half a pixel of height in the block above it, which moves the one below to a
+// fractional position. The check runs over them as prebuilt dists, against private copies of the
+// manifest and CHANGELOG, so nothing tracked is read as the subject or written.
 //
 //   node tools/check-render-evidence-selftest.mjs
 import { spawnSync } from 'node:child_process';
@@ -15,27 +16,32 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const work = mkdtempSync(join(tmpdir(), 'render-evidence-selftest-'));
 
-const page = (gadgetWidth) => `<!doctype html>
+const page = (widgetHeight, gadgetWidth) => `<!doctype html>
 <html><head><style>
   body { margin: 0; font: 16px sans-serif; }
   main.content { height: 100vh; overflow: auto; }
-  .box { display: block; height: 40px; background: #1a4fd6; }
+  .box { display: block; height: 40px; border-radius: 50%; background: #1a4fd6; }
 </style></head><body><main class="content">
   <section data-anchor="widget">
     <h2>Widget</h2>
     <h3 class="block-title">Same</h3>
-    <ds-widget class="box" style="width: 40px"></ds-widget>
+    <ds-widget class="box" style="width: 40px; height: ${widgetHeight}px"></ds-widget>
     <h3 class="block-title">Moved</h3>
     <ds-gadget class="box ds-gadget" style="width: ${gadgetWidth}px"></ds-gadget>
   </section>
 </main></body></html>`;
 
-for (const [name, width] of [
-  ['before', 40],
-  ['after', 41],
+for (const [name, widgetHeight, gadgetWidth] of [
+  ['before', 40, 40],
+  ['after', 40, 41],
+  ['pushed', 40.5, 40],
+  ['pushed-and-wider', 40.5, 41],
 ]) {
   mkdirSync(join(work, name));
-  writeFileSync(join(work, name, 'index.html'), page(width));
+  writeFileSync(
+    join(work, name, 'index.html'),
+    page(widgetHeight, gadgetWidth),
+  );
 }
 
 function run(after, manifest, changelog = '') {
@@ -96,6 +102,31 @@ const cases = [
     status: 0,
     present: [/named\s+changed\s+widget\/moved\s+by ds-gadget/, /1 differ/],
     absent: [/UNNAMED/, /BAD/],
+  },
+  {
+    name: 'HOLDS on a block that only moved half a pixel down, once captured at the same position',
+    after: 'pushed',
+    manifest: { items: [] },
+    changelog: '- `ds-widget` is half a pixel taller.',
+    status: 0,
+    present: [
+      /1 differ/,
+      /named\s+changed\s+widget\/same\s+by ds-widget/,
+      /1 moved block\(s\) captured again/,
+    ],
+    absent: [/widget\/moved/, /UNNAMED/],
+  },
+  {
+    name: 'FIRES on a block that moved and changed, once captured at the same position',
+    after: 'pushed-and-wider',
+    manifest: { items: [] },
+    changelog: '- `ds-widget` is half a pixel taller.',
+    status: 1,
+    present: [
+      /UNNAMED\s+changed\s+widget\/moved\s+none of: ds-gadget/,
+      /1 moved block\(s\) captured again/,
+    ],
+    absent: [],
   },
   {
     name: 'HOLDS on an identical pair, where pixels: on any block is good evidence',
