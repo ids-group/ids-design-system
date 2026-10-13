@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Слой цвета ссылки</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-14">
+<meta name="ds-deck-evidence" content="src/lib/styles/_link.scss:6 - src/lib/themes/_semantic.scss:47 - src/lib/themes/dark/_theme.scss:44 - src/lib/components/table/table.component.scss:183 - CHANGELOG.md">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 <style>
   main { max-width: 1400px; }
   .opts { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
@@ -77,6 +79,15 @@
     <p class="chat">Ответ нести в чат: «Acc2 · Слои токенов и ссылка»</p>
   </header>
 
+  <div class="decided">
+    <h2>Решено: «Роль ссылки возвращается»</h2>
+    <p><code>--text-link</code> и <code>--link-visited</code> снова роли в <code>_semantic.scss</code> и <code>dark/_theme.scss</code>, синие в обеих темах при любом бренде. <code>.link</code> читает <code>var(--ds-link-color, var(--text-link))</code> и <code>var(--ds-link-color-visited, var(--link-visited))</code>, ветка <code>:root[data-theme='dark'] .link</code> удалена. Ссылка в ячейке <code>ds-table</code> читает ту же роль вместо <code>--accent</code>: светлая #2e54ff → #1d43ed (6,82:1), тёмная #2e54ff → #8197f8 (3,14 → 6,33:1). <code>--ds-link-color</code> - хук на <code>.link</code> или предке; манифест следующего релиза заменяет указания 0.15.1.</p>
+    <p class="evidence">2026-10-14 · src/lib/styles/_link.scss:6 · src/lib/themes/_semantic.scss:47 · src/lib/components/table/table.component.scss:183 · CHANGELOG.md</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
+
   <section class="panel">
     <h2>Сейчас, 0.15.1</h2>
     <div class="problem">
@@ -97,11 +108,11 @@
     <p class="hint-line">Дека <code>24-link-colour</code> выбрала «Всегда синий», и <code>fced4cb2e</code> сделал это в слое ролей: <code>--text-link</code> и <code>--link-visited</code> синие в обеих темах. Следом <code>a6b6e9884</code> (0.15.1) без деки удалил обе роли, перенёс значения в <code>styles/_link.scss</code> чтением палитры, добавил туда <code>:root[data-theme='dark'] .link</code> и назвал <code>--ds-link-color</code> ручкой бренда.</p>
   </section>
 
-  <section class="panel q" data-review="Варианты" data-review-note-only>
+  <section class="panel q" data-review="Варианты" data-review-note-only data-review-round="2">
     <h2>Три варианта</h2>
     <div class="opts">
       <article class="opt is-pick" tabindex="0" data-key="role">
-        <span class="badge is-pick">рекомендую</span>
+        <span class="badge is-pick">выбрано</span>
         <h3>Роль ссылки возвращается</h3>
         <div class="wire">
           <span class="head">Палитра</span><span></span><span class="head">Роль</span><span></span><span class="head">Компонент</span>
@@ -169,6 +180,7 @@
         </dl>
       </article>
     </div>
+    <ol data-review-history><li>2026-10-14 · выбор - «Роль ссылки возвращается» → сделано: роли <code>--text-link</code> и <code>--link-visited</code> в обеих темах, <code>.link</code> и ссылка в ячейке таблицы читают их, тёмная ветка из <code>_link.scss</code> удалена, README тем, CHANGELOG и манифест обновлены</li></ol>
     <p class="hint-line">Каждая карточка: синий по умолчанию и зелёный бренд из <code>themes/README.md</code> (<code>--primary: #1f7a4d</code>, каналы 150 / 60% / 30%, повторён в тёмной), светлая и тёмная тема. Посещённая нарисована классом, <code>:visited</code> страница не задаёт. Цвета и контраст к фону посчитаны на этой странице из отрисованных значений.</p>
   </section>
 
@@ -193,9 +205,10 @@
     </ul>
   </section>
 
-  <section class="panel" data-review="При любом выборе">
+  <section class="panel" data-review="При любом выборе" data-review-round="2">
     <h2>При любом выборе</h2>
     <p>Манифест следующего релиза заменяет указания 0.15.1 (<code>text-link-token-removed</code>, <code>link-visited-token-removed</code>, строка про ссылки в <code>themes/README.md</code>), которые велят потребителю читать значение палитры <code>var(--blue-700)</code>.<br>Новое указание называет роль <code>--text-link</code>, а при «Как в 0.15.1» класс <code>link</code>. Скажи, если не согласен.</p>
+    <ol data-review-history><li>2026-10-14 · «ну получается меняет в одну сторону, а потом при следующей версии обратно. ну так бывает...» → принято как есть: элементы манифеста <code>link-colour-reads-text-link-role</code> и <code>link-visited-reads-link-visited-role</code> заменяют (<code>supersedes</code>) <code>0.15.1#text-link-token-removed</code>, <code>links-stay-blue-under-a-brand</code>, <code>link-visited-token-removed</code> и <code>link-visited-takes-its-own-colour</code> и называют роль <code>--text-link</code></li></ol>
   </section>
 
   <section class="panel">
@@ -208,6 +221,7 @@
 
   <details class="src"><summary>Источники</summary>
     <p><b>Код, 2026-10-13, ветка от <code>dev</code> <code>7b947feb4</code>:</b> модель слоёв - <code>src/lib/styles/_tokens.scss:1-2</code>, <code>src/lib/themes/README.md:13</code> и <code>:194</code>, <code>design-system.md:122</code> (компонент не читает палитру), <code>design-system.md:298</code> (хук <code>--ds-*</code> ставится на элемент); <code>src/lib/styles/_link.scss:6</code> и <code>:9</code> читают <code>--blue-700</code> и <code>--blue-h/s</code>, <code>:118-121</code> - <code>:root[data-theme='dark'] .link</code>, единственный селектор темы в партиале вне <code>themes/</code> и <code>_theme-activation.scss</code> (grep по <code>src/lib</code>); <code>src/lib/components/table/table.component.scss:183</code> - ссылка в ячейке читает <code>var(--accent)</code>, а <code>--accent</code> это <code>--primary</code> (<code>_semantic.scss:218</code>). <code>fced4cb2e</code> перевёл <code>--text-link</code> и <code>--link-visited</code> на <code>--blue-*</code> в обеих темах; <code>a6b6e9884</code> (тег <code>v0.15.1</code>) удалил обе роли и вписал <code>--ds-link-color</code> как ручку бренда в <code>CHANGELOG.md</code> 0.15.1, <code>themes/README.md:144-146</code> и <code>migrations/0.15.1.json</code> (<code>text-link-token-removed</code>: «name the palette value: <code>var(--blue-700)</code>»). mm-ecm-platform <code>76916a914</code> (ветки <code>feat/ds-next-table-kind</code>, <code>fix/ME-495-unify-hints</code>, обновление до 0.15.1) в <code>shared-styles/_ds-roles.scss</code> заменил <code>--text-link: var(&#45;-color-link)</code> на <code>--ds-link-color</code> и <code>--ds-link-color-visited</code> на <code>:root</code> и читает <code>var(--ds-link-color)</code> в <code>--ds-breadcrumbs-label-color-hover</code>: ECM выполнил указание нашего манифеста 0.15.1. Образцы собраны из этих файлов: палитра, роли и резолверы <code>.link</code> и <code>.cell-link</code> объявлены на странице теми же формулами; фон и текст - <code>--surface-default</code> и <code>--text-primary</code> обеих тем из <code>ds.css</code>; ожидаемые RGB посчитаны отдельно из каналов (зелёная ссылка от бренда <code>#1d583b</code> совпала с цифрой в <code>themes/README.md</code>) и сверены с отрисованными в headless Chrome.</p>
+  </details>
   </details>
 </main>
 
@@ -264,7 +278,7 @@
     card.append(pickButton);
   });
   let picked = null;
-  try { picked = localStorage.getItem(KEY); } catch { picked = null; }
+  try { picked = localStorage.getItem(KEY) ?? 'role'; } catch { picked = 'role'; }
   const paint = () => cards.forEach((card) => {
     card.classList.toggle('is-chosen', card.dataset.key === picked);
     card.querySelector('.pick-btn').textContent = card.dataset.key === picked ? 'Выбрано · снять' : 'Выбрать';
