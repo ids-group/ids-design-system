@@ -3,6 +3,8 @@
 
 Group: Tables
 
+Column panel Move up and Move down keep focus on the moved row: the pressed button, or the other at an end.
+
 <!-- inputs:[dsTableColumns] -->
 All inputs: `reorderableColumns: boolean = false`, `hiddenKeys: Set<string> | null = null`, `columnOrder: string[] | null = null`
 <!-- /inputs -->

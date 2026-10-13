@@ -7,6 +7,7 @@
 export class SegmentedComponent extends DsControlValueAccessor<string> {
     public readonly ariaLabel = input<string | null>(null);
     private readonly buttons;
+    protected readonly changedShown = this.fieldMessage.changed;
     public readonly disabled = input(false, { transform: booleanAttribute });
     private readonly fieldMessage;
     protected readonly focusableValue = computed(…);
@@ -19,6 +20,7 @@ export class SegmentedComponent extends DsControlValueAccessor<string> {
     private nextEnabled;
     protected onKeydown(event: KeyboardEvent, index: number): void;
     public readonly options = input<readonly SegmentedOption[]>([]);
+    protected readonly pendingShown = this.fieldMessage.pending;
     protected select(option: SegmentedOption): void;
     protected readonly uid = nextControlId(…);
     public readonly value = model<string>('');

@@ -14,7 +14,10 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
-import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  FieldMessageComponent,
+  FieldStatusComponent,
+} from '@ids-group-ltd/ids-design-system/components/field-message';
 import { resolveFieldMessage } from '@ids-group-ltd/ids-design-system/components';
 import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 
@@ -23,7 +26,7 @@ type SliderValue = number | readonly [number, number];
 @Component({
   selector: 'ds-slider',
   standalone: true,
-  imports: [FieldMessageComponent],
+  imports: [FieldMessageComponent, FieldStatusComponent],
   templateUrl: './slider.component.html',
   styleUrl: './slider.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -62,9 +65,12 @@ export class SliderComponent extends DsControlValueAccessor<SliderValue> {
 
   protected readonly uid = nextControlId('ds-slider');
   protected readonly hintId = computed(() =>
-    this.message().text ? `${this.uid}-hint` : null,
+    this.message().text || this.changedShown() ? `${this.uid}-hint` : null,
   );
   private readonly fieldMessage = resolveFieldMessage({
+    pending: this.pending,
+    dirty: this.dirty,
+    showDirty: this.showDirtyResolved,
     disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
@@ -75,6 +81,8 @@ export class SliderComponent extends DsControlValueAccessor<SliderValue> {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly pendingShown = this.fieldMessage.pending;
+  protected readonly changedShown = this.fieldMessage.changed;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
   protected readonly isDisabled = computed(

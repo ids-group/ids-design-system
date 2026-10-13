@@ -4,6 +4,7 @@ import {
   ElementRef,
   OnDestroy,
   ViewEncapsulation,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   effect,
@@ -18,12 +19,15 @@ import {
   CHART_SERIES_COLORS,
   CHART_TOOLTIP_LINGER_MS,
   chartValueFormat,
+  chartTiming,
   describeShare,
   listenForMarkFocus,
   markOf,
   rovingMarks,
   leaveMark,
   staggerDelay,
+  dimmedBy,
+  leftMark,
 } from '@ids-group-ltd/ids-design-system/components';
 import {
   DS_INTL,
@@ -39,6 +43,7 @@ import {
   CHART_PIN_GAP,
   CHART_PIN_RADIUS,
   ChartPinMarkerComponent,
+  ChartPlacedDirective,
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
@@ -46,8 +51,13 @@ import type {
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
-import type { ChartAxisEntry } from './chart-scales.token';
-import { chartViewHeight } from './chart.math';
+import type { ChartAxisEntry, ChartAxisReadout } from './chart-scales.token';
+import {
+  categoryKeys,
+  chartViewHeight,
+  outsideRange,
+  pinYAbove,
+} from './chart.math';
 import type { ChartStackOffset } from './chart.math';
 
 export interface ColumnSeriesPoint {
@@ -78,7 +88,7 @@ let nextSeriesId = 0;
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[dsColumnSeries]',
   standalone: true,
-  imports: [ChartPinMarkerComponent],
+  imports: [ChartPinMarkerComponent, ChartPlacedDirective],
   exportAs: 'dsColumnSeries',
   templateUrl: './column-series.component.html',
   styleUrl: './column-series.component.scss',
@@ -132,7 +142,7 @@ export class ColumnSeriesComponent implements OnDestroy {
   /** Where the tooltip is pinned: `'mark'` is the column, `'cell'` the full-height category cell (panel at the plot top). */
   readonly tooltipAnchor = input<'mark' | 'cell'>('mark');
 
-  /** Milliseconds the panel survives the pointer leaving the mark. */
+  /** Milliseconds the panel survives the pointer leaving the mark within the chart. */
   readonly tooltipLingerMs = input(CHART_TOOLTIP_LINGER_MS, {
     transform: numberAttribute,
   });
@@ -174,14 +184,26 @@ export class ColumnSeriesComponent implements OnDestroy {
   /** Identifies this series to the legend, so hovering a legend item can single it out. */
   readonly seriesKey = input<string | null>(null);
 
-  /** The series the reader is pointing at in the legend. Every other series fades. */
+  /** The series the reader is pointing at in the legend. It brightens; under `dimOthers` every other
+   *  series fades instead, as the other columns do when one is hovered. */
   readonly highlighted = input<string | null>(null);
 
-  protected readonly dimmedBySeries = computed(() => {
-    const highlighted = this.highlighted();
+  protected readonly dimmedBySeries = computed(() =>
+    dimmedBy(this.dimOthers(), this.highlighted(), this.seriesKey()),
+  );
 
-    return highlighted !== null && highlighted !== this.seriesKey();
-  });
+  protected readonly spotlit = computed(
+    () =>
+      this.highlighted() !== null && this.highlighted() === this.seriesKey(),
+  );
+
+  /** Sinks every column to the baseline; the value axis follows the chart's `rescaleOnHide`. Set it
+   *  rather than removing the series to animate a legend hiding it. */
+  readonly hidden = input(false, { transform: booleanAttribute });
+
+  /** Reads the columns as a running total, as a waterfall's are: the axis guide stops at the hovered
+   *  column, and under `dimOthers` every column after it fades. */
+  readonly runningTotal = input(false, { transform: booleanAttribute });
 
   /** The clicked datum. Fires on click and on Enter or Space, whatever `interactive` says. */
   readonly pointClicked = output<ColumnSeriesPoint>();
@@ -194,24 +216,27 @@ export class ColumnSeriesComponent implements OnDestroy {
   protected readonly hatchId = `ds-column-hatch-${this.seriesId}`;
 
   /** Where each mark spans, which the axis has to hold: a stacked segment's top is the running total. */
-  private readonly spans = computed<readonly ChartStackOffset[]>(() => {
+  private readonly spans = computed(() => this.spansOf(this.hidden()));
+
+  private spansOf(hidden: boolean): readonly ChartStackOffset[] {
     const given = this.offsets();
 
     return this.data().map(
       (point, index) =>
         given?.[index] ?? {
           from: 0,
-          to: Number.isFinite(point.value) ? point.value : 0,
+          to: Number.isFinite(point.value) && !hidden ? point.value : 0,
         },
     );
-  });
+  }
 
   constructor() {
     effect(() =>
       this.scales.reportDomain(
         this.domainId,
-        this.spans().flatMap((span) => [span.from, span.to]),
+        this.spansOf(false).flatMap((span) => [span.from, span.to]),
         this.axis(),
+        this.hidden(),
       ),
     );
     this.scales.reportTooltip(this.domainId, {
@@ -219,6 +244,7 @@ export class ColumnSeriesComponent implements OnDestroy {
       origin: computed(() => this.activeMark.origin()),
       pinned: this.activeMark.pinned,
       offersTooltip: computed(() => this.tooltip() !== 'none'),
+      stacked: computed(() => this.offsets() !== null),
       axisOrigin: computed(() => {
         const categoryIndex = this.scales.activeIndex();
 
@@ -228,6 +254,14 @@ export class ColumnSeriesComponent implements OnDestroy {
       }),
       axisEntries: this.axisEntries,
       axisPointElements: this.axisPointElements,
+      axisReadout: this.axisReadout,
+      valuesByCategory: computed(() =>
+        this.hidden()
+          ? []
+          : this.data().map((point) =>
+              Number.isFinite(point.value) ? [point.value] : [],
+            ),
+      ),
     });
     const host = this.host;
     listenForMarkFocus(
@@ -240,6 +274,12 @@ export class ColumnSeriesComponent implements OnDestroy {
         }
       },
     );
+    afterRenderEffect({
+      write: () => {
+        const marks = this.marks();
+        untracked(() => this.glideReordered(marks));
+      },
+    });
     let answeringLabel = false;
     effect(() => {
       const hover = this.scales.categoryLabelHover?.() ?? null;
@@ -268,6 +308,45 @@ export class ColumnSeriesComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.scales.releaseTooltip(this.domainId);
     this.scales.releaseDomain(this.domainId);
+  }
+
+  private placedX = new Map<string, number>();
+
+  // A column the `@for` moves to another place in the DOM restarts its style and loses the transition,
+  // so after a reorder every column whose key changed place glides from where it stood.
+  private glideReordered(marks: readonly { key: string; x: number }[]): void {
+    const previous = this.placedX;
+    this.placedX = new Map(marks.map((mark) => [mark.key, mark.x]));
+    const before = [...previous.keys()].filter((key) => this.placedX.has(key));
+    const after = marks
+      .map((mark) => mark.key)
+      .filter((key) => previous.has(key));
+    if (before.every((key, index) => key === after[index])) {
+      return;
+    }
+    marks.forEach((mark) => {
+      const from = previous.get(mark.key);
+      const column = this.host.nativeElement.querySelector(
+        `.column[data-column-key="${CSS.escape(mark.key)}"]:not(.mark-leave)`,
+      );
+      if (from === undefined || from === mark.x || !column) {
+        return;
+      }
+      const timing = chartTiming(column, 'mark');
+      if (!timing || typeof column.animate !== 'function') {
+        return;
+      }
+      // Re-inserted, the column replays its entrance; it has already arrived.
+      for (const animation of column.getAnimations({ subtree: true })) {
+        if (animation instanceof CSSAnimation) {
+          animation.finish();
+        }
+      }
+      const at = (x: number) => ({
+        transform: `translateX(calc(${x}px + var(--_column-slot-offset)))`,
+      });
+      column.animate([at(from), at(mark.x)], timing);
+    });
   }
 
   readonly activeMark = chartActiveMark(
@@ -331,6 +410,7 @@ export class ColumnSeriesComponent implements OnDestroy {
         : this.scales.yPosition();
     const spans = this.spans();
     const format = this.valueFormat();
+    const keys = categoryKeys(this.data().map((point) => point.label));
 
     return this.data().map((point, index) => {
       const span = spans[index];
@@ -347,7 +427,7 @@ export class ColumnSeriesComponent implements OnDestroy {
         CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length];
 
       return {
-        key: point.id ?? String(index),
+        key: point.id ?? keys[index],
         point,
         x: toX(index),
         tip,
@@ -368,15 +448,16 @@ export class ColumnSeriesComponent implements OnDestroy {
   /** Inside the column's top when it holds the disc - the panel opens there - and over the column
    *  and its printed value when it is too short, so the disc never crosses the baseline. */
   private pinYOf(tip: number, baseline: number, below: boolean): number {
-    const inset = CHART_PIN_RADIUS + CHART_PIN_GAP;
     const top = Math.min(tip, baseline);
-    if (Math.abs(tip - baseline) >= 2 * inset) {
-      return top + inset;
-    }
-    const value =
-      this.showValues() && !below ? VALUE_LABEL_GAP + VALUE_LABEL_HEIGHT : 0;
 
-    return top - value - inset;
+    return pinYAbove(
+      top,
+      Math.abs(tip - baseline),
+      this.showValues() && !below
+        ? top - (VALUE_LABEL_GAP + VALUE_LABEL_HEIGHT)
+        : null,
+      CHART_PIN_RADIUS + CHART_PIN_GAP,
+    );
   }
 
   protected markStagger(index: number): string {
@@ -408,11 +489,7 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   protected onMarkOut(event: PointerEvent): void {
     const hit = markOf(event);
-    const next =
-      event.relatedTarget instanceof Element
-        ? event.relatedTarget.closest('[data-mark-index]')
-        : null;
-    if (hit && next !== hit.element && !this.scales.cursorOn?.()) {
+    if (hit && leftMark(event, hit) && !this.scales.cursorOn?.()) {
       this.activeMark.leave();
     }
   }
@@ -460,7 +537,7 @@ export class ColumnSeriesComponent implements OnDestroy {
   readonly axisEntries = computed<readonly ChartAxisEntry[]>(() => {
     const categoryIndex = this.scales.activeIndex();
     const mark = this.marks()[categoryIndex];
-    if (categoryIndex < 0 || !mark) {
+    if (categoryIndex < 0 || !mark || this.hidden()) {
       return [];
     }
 
@@ -473,9 +550,40 @@ export class ColumnSeriesComponent implements OnDestroy {
         hatched: mark.hatched,
         detail: this.shareDetail(categoryIndex),
         y: mark.tip,
+        axis: this.axis(),
       },
     ];
   });
+
+  protected readonly axisReadout = computed<ChartAxisReadout | null>(() => {
+    const index = this.activeMark.index();
+    const mark = this.marks()[index];
+
+    return mark && !this.hidden()
+      ? {
+          categoryIndex: index,
+          y: mark.tip,
+          axis: this.axis(),
+          reach: this.runningTotal() ? 'mark' : 'plot',
+        }
+      : null;
+  });
+
+  protected isLater(index: number): boolean {
+    const active = this.activeMark.index();
+
+    return (
+      this.runningTotal() && this.dimOthers() && active >= 0 && index > active
+    );
+  }
+
+  protected isOutsideRange(index: number): boolean {
+    return outsideRange(this.scales.selectedRange?.() ?? null, index);
+  }
+
+  protected readonly focusedMark = computed(
+    () => this.marks()[this.roving.tabStop()] ?? null,
+  );
 
   readonly axisPointElements = computed<readonly (Element | null)[]>(() =>
     this.axisEntries().length === 0
@@ -500,7 +608,7 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   readonly tooltipContext = computed<ChartTooltipContext | null>(() => {
     const mark = this.marks()[this.activeMark.index()];
-    if (this.tooltip() === 'none' || !mark) {
+    if (this.tooltip() === 'none' || !mark || this.hidden()) {
       return null;
     }
 

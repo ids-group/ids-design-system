@@ -130,6 +130,11 @@
   pointer-events: none;
 }
 
+.center-swap {
+  display: grid;
+  justify-items: center;
+}
+
 // Halo of the frame background for text overhanging several hues.
 .center-value,
 .center-label {
@@ -172,6 +177,8 @@
 }
 
 .legend {
+  --_legend-row-gap: var(--_pie-chart-legend-row-gap);
+
   margin: 0;
   padding: 0;
   list-style: none;
@@ -233,7 +240,8 @@
   '.legend-item',
   var(--_pie-chart-legend-hover-bg-color),
   var(--_pie-chart-legend-hover-text-color),
-  '.legend-label'
+  '.legend-label',
+  $covers-gap: true
 );
 
 .legend-item.interactive,
@@ -262,9 +270,11 @@
 }
 
 .legend-bottom .legend {
+  --_legend-column-gap: var(--space-4);
+
   display: flex;
   flex-wrap: wrap;
-  gap: var(--_pie-chart-legend-row-gap) var(--space-4);
+  gap: var(--_legend-row-gap) var(--_legend-column-gap);
 }
 
 .legend-bottom .legend-item {
@@ -274,13 +284,25 @@
 
 
 .ring-svg {
-  @include chart-interactive.fades('.slice', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
+  @include chart-interactive.fades('.slice', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing), translate var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing)');
   @include chart-interactive.clickable('.slice');
+
+  overflow: visible;
 }
 
+// A transparent stroke still hit-tests: it covers the ground the slid slice leaves, so the pointer
+// near its inner edge does not drop off it and bring it straight back.
+.slice.is-active {
+  translate: var(--_slice-shift-x) var(--_slice-shift-y);
+  stroke: transparent;
+  stroke-width: calc(2 * var(--_pie-chart-hover-shift));
+}
+
+@include chart-motion.leaves('.slice');
 @include chart-frame.forced-colors;
 @include chart-frame.pin-reset;
 @include chart-frame.pin-marker;
+@include chart-motion.pops-in('.pin-marker');
 
 .ring > .pin-marker {
   position: absolute;

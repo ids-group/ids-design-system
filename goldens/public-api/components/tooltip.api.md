@@ -18,7 +18,7 @@ export class TooltipDirective implements OnDestroy {
     private disclosesOwnText;
     private disposeRef;
     private readonly document;
-    public readonly dsTooltip = input<string>('');
+    public readonly dsTooltip = input<string | TemplateRef<unknown>>('');
     public readonly dsTooltipArrow = input(true, { transform: booleanAttribute });
     public readonly dsTooltipDelay = input<number>(120);
     public readonly dsTooltipPinOnClick = input(false, { transform: booleanAttribute });
@@ -47,8 +47,8 @@ export class TooltipDirective implements OnDestroy {
     private scheduleShow;
     private show;
     private timer;
+    private tipContent;
     private readonly tipId;
-    private tipText;
     private unpin;
 }
 
@@ -58,7 +58,8 @@ export class TooltipPanelComponent {
     public readonly panelId = input<string>('');
     public readonly placement = input.required<TooltipPlacement>();
     protected readonly segments = computed(…);
-    public readonly text = input.required<string>();
+    protected readonly template = computed(…);
+    public readonly text = input.required<string | TemplateRef<unknown>>();
 }
 
 export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';

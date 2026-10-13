@@ -455,3 +455,9 @@ guides/practice/Signal Forms/Signal Forms - The whole recipe.html
 guides/practice/Signal Forms/Signal Forms - The whole recipe.prompt.md
 guides/practice/Signal Forms/Signal Forms - What the controls implement.html
 guides/practice/Signal Forms/Signal Forms - What the controls implement.prompt.md
+components/forms-inputs/Select/Select - Custom dropdown - ds-select.html
+components/forms-inputs/Select/Select - Custom dropdown - ds-select.prompt.md
+components/forms-inputs/Textarea/Textarea - Variant states - default - value - error.html
+components/forms-inputs/Textarea/Textarea - Variant states - default - value - error.prompt.md
+guides/foundations/Charts & dataviz/Charts & dataviz - Empty & loading states.html
+guides/foundations/Charts & dataviz/Charts & dataviz - Empty & loading states.prompt.md

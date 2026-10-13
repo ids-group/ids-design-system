@@ -31,26 +31,27 @@ export {
   minMaxDecimate,
   needsDecimating,
 } from './charts-decimate';
-export {
-  areaPath,
-  bandPath,
-  linePath,
-  lineSegments,
-  polylinePoints,
-} from './charts-path';
+export { areaPath, bandPath, linePath, lineSegments } from './charts-path';
 export type { LinePoint } from './charts-path';
 export {
   bandScale,
-  pointScale,
   domainMinOf,
   linearScale,
   niceDomain,
   roundStepAtLeast,
-  tickStep,
   tickValues,
 } from './charts-scale';
-export type { BandScale, NiceDomain, PointScale } from './charts-scale';
-export { leaveMark, staggerDelay } from './charts-motion';
+export type { BandScale, NiceDomain } from './charts-scale';
+export {
+  afterTwoFrames,
+  CHART_GLIDE_HEAD_START_MS,
+  chartDelay,
+  chartTiming,
+  leaveMark,
+  staggerDelay,
+  tweenMarks,
+} from './charts-motion';
+export type { ChartMotionDelay, ChartMotionTiming } from './charts-motion';
 export {
   CHART_SKELETON_COUNT,
   skeletonColumnHeights,
@@ -59,10 +60,11 @@ export {
   skeletonMarkCount,
   skeletonWaterfallSteps,
 } from './charts-skeleton';
-export { chartDwell } from './charts-dwell';
+export { chartDwell, chartOf, dwellHighlight } from './charts-dwell';
 export type { ChartDwell } from './charts-dwell';
 export {
   focusMark,
+  leftMark,
   listenForMarkFocus,
   markAt,
   markOf,
@@ -88,8 +90,8 @@ export type {
   DsRouterLink,
 } from './destination';
 export { DsEmptyTemplateDirective } from './empty-template.directive';
-export { DsFieldBase } from './field-base';
-export { DsChartBase } from './charts-base';
+export { DsFieldBase, DsFormControlBase } from './field-base';
+export { DsChartBase, dimmedBy } from './charts-base';
 export type {
   ChartDimmable,
   ChartStaggered,
@@ -97,6 +99,7 @@ export type {
   ChartWithTooltipTrigger,
 } from './charts-base';
 export { FieldClickFocusDirective } from './field-click-focus.directive';
+export { focusRescue, moveFocusOutOf } from './focus-rescue';
 export {
   DS_FIELD_WARNING_KIND,
   resolveFieldMessage,
@@ -134,7 +137,7 @@ export { scrollActiveOptionIntoView } from './scroll-active-option';
 export { DsStaticPreview } from './static-preview.directive';
 export { createTypeAhead } from './type-ahead';
 export {
-  CHART_HOVER_DELAY_MS,
   CHART_TOOLTIP_LINGER_MS,
+  chartHoverDelayMs,
   resolveChartDefaults,
 } from './charts-defaults';

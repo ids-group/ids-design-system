@@ -60,6 +60,7 @@ export { CellTemplateDirective } from '@ids-group-ltd/ids-design-system/componen
 export { ChartAnnotation } from '@ids-group-ltd/ids-design-system/components/chart'; // interface
 export { ChartAxis } from '@ids-group-ltd/ids-design-system/core'; // type
 export { ChartAxisMode } from '@ids-group-ltd/ids-design-system/core'; // type
+export { ChartCategoryRange } from '@ids-group-ltd/ids-design-system/components/chart'; // interface
 export { ChartComponent } from '@ids-group-ltd/ids-design-system/components/chart'; // component
 export { ChartCurve } from '@ids-group-ltd/ids-design-system/core'; // type
 export { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table'; // interface
@@ -247,6 +248,7 @@ export { SelectOption } from '@ids-group-ltd/ids-design-system/components/select
 export { SelectOptionGroup } from '@ids-group-ltd/ids-design-system/components/select'; // interface
 export { SelectWidth } from '@ids-group-ltd/ids-design-system/components/select'; // type
 export { SeriesAnnotationComponent } from '@ids-group-ltd/ids-design-system/components/chart'; // component
+export { ShowDirtyDirective } from '@ids-group-ltd/ids-design-system/components/show-dirty'; // directive
 export { SidenavAlertItem } from '@ids-group-ltd/ids-design-system/components/sidenav-footer'; // interface
 export { SidenavComponent } from '@ids-group-ltd/ids-design-system/components/sidenav'; // component
 export { SidenavContract } from '@ids-group-ltd/ids-design-system/components/sidenav'; // interface
@@ -276,6 +278,7 @@ export { SwitchComponent } from '@ids-group-ltd/ids-design-system/components/swi
 export { TabComponent } from '@ids-group-ltd/ids-design-system/components/tabs'; // component
 export { TableCellEditEvent } from '@ids-group-ltd/ids-design-system/components/table'; // interface
 export { TableColumn } from '@ids-group-ltd/ids-design-system/components/table'; // interface
+export { TableColumnKind } from '@ids-group-ltd/ids-design-system/components/table'; // type
 export { TableComponent } from '@ids-group-ltd/ids-design-system/components/table'; // component
 export { TableExpandMode } from '@ids-group-ltd/ids-design-system/components/table'; // type
 export { TableFilterMode } from '@ids-group-ltd/ids-design-system/components/table'; // type
@@ -343,6 +346,7 @@ styles/_chart-data-table.scss {
 
 styles/_chart-frame.scss {
     --ds-chart-axis-line-color: (none);
+    --ds-chart-bg-color: (none);
     --ds-chart-focus-halo-color: var(--ds-chart-bg-color);
     --ds-chart-focus-ring-color: (none);
     --ds-chart-frame-bg-color: var(--ds-chart-bg-color);
@@ -361,6 +365,8 @@ styles/_chart-interactive.scss {
 
 styles/_chart-motion.scss {
     --ds-motion-chart-mark-detail-duration: (none);
+    --ds-motion-chart-mark-duration: (none);
+    --ds-motion-chart-mark-easing: (none);
     --ds-motion-chart-mark-enter-duration: (none);
     --ds-motion-chart-mark-enter-easing: (none);
     --ds-motion-chart-mark-exit-duration: (none);
@@ -368,6 +374,8 @@ styles/_chart-motion.scss {
     --ds-motion-chart-mark-grow-duration: (none);
     --ds-motion-chart-mark-grow-easing: (none);
     --ds-motion-chart-mark-sweep-duration: (none);
+    --ds-motion-chart-tooltip-move-duration: (none);
+    --ds-motion-chart-tooltip-move-easing: (none);
 }
 
 styles/_check-box.scss {
@@ -449,9 +457,17 @@ styles/_icon-base.scss {
 }
 
 styles/_link.scss {
-    --ds-link-color: var(--text-link);
+    --ds-link-color: hsl(var(--blue-h) 90% 74%) | var(--blue-700);
     --ds-link-color-active: color-mix(in srgb, var(--_link-color) 65%, black);
+    --ds-link-color-disabled: var(--text-disabled);
     --ds-link-color-hover: color-mix(in srgb, var(--_link-color) 80%, black);
+    --ds-link-color-visited: hsl(var(--blue-h) 50% 70%) | hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%);
+    --ds-link-color-visited-active: color-mix(in srgb, var(--_link-color-visited) 65%, black);
+    --ds-link-color-visited-hover: color-mix(in srgb, var(--_link-color-visited) 80%, black);
+    --ds-link-focus-ring-color: var(--focus-ring-color);
+    --ds-link-underline-color: currentcolor;
+    --ds-link-underline-offset: 2px;
+    --ds-link-underline-thickness: 1px;
 }
 
 styles/_overlay-motion.scss {

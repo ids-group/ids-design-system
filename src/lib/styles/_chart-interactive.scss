@@ -2,6 +2,10 @@
 //
 // TODO(ds-interactive): migrate this onto `_interaction.scss` once that file exists.
 
+// The hovered mark brightens: a filter, not a colour, so it holds on every palette colour, a hatch and a heat ramp.
+$highlight: brightness(1.12) saturate(1.1);
+$highlight-transition: filter var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
+
 // `.is-dimmed` alone, for a mark highlighted only from outside (legend, consumer).
 //
 // `$also` adds the mark's own transitions; a second `transition` on the same selector would
@@ -38,7 +42,28 @@
 }
 
 // The negative margin offsets the padding so the tint grows without moving rows. `$label` is recoloured when it sets its own colour.
-@mixin legend-entry($entry, $hover-bg-color, $hover-text-color, $label: null) {
+//
+// `$covers-gap` stretches each entry's hit area to the middle of the container's `--_legend-row-gap`
+// and `--_legend-column-gap`, so a pointer crossing to the next entry never lands on the container
+// and the highlight never drops between rows. The children sit above that area, so a click on a label still reaches its input.
+@mixin legend-entry($entry, $hover-bg-color, $hover-text-color, $label: null, $covers-gap: false) {
+  @if $covers-gap {
+    #{$entry} {
+      position: relative;
+    }
+
+    #{$entry}::before {
+      position: absolute;
+      inset-block: min(0px, calc(var(--space-0-5) - var(--_legend-row-gap, 0px) / 2));
+      inset-inline: min(0px, calc(var(--space-1-5) - var(--_legend-column-gap, 0px) / 2));
+      content: '';
+    }
+
+    #{$entry} > * {
+      position: relative;
+    }
+  }
+
   #{$entry} {
     margin: calc(-1 * var(--space-0-5)) calc(-1 * var(--space-1-5));
     padding: var(--space-0-5) var(--space-1-5);

@@ -8,7 +8,7 @@
   [errorText]="errorTextResolved()"
   [pending]="(loading() && isEmpty()) || !renderReady()"
   [reloading]="loading()"
-  [dataTable]="dataTableResolved() !== 'none'"
+  [dataTable]="dataTableResolved()"
   [shimmer]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
@@ -27,6 +27,7 @@
     <div class="ring">
       <ds-skeleton
         class="skeleton-ring"
+        data-morph="self"
         circle
         width="100%"
         height="100%"
@@ -47,6 +48,7 @@
           <div class="skeleton-row">
             <ds-skeleton
               circle
+              data-morph="mark"
               width="var(--_pie-chart-swatch-size)"
               height="var(--_pie-chart-swatch-size)"
               [shimmer]="loading()" />
@@ -120,6 +122,7 @@
             (keydown.space)="onSliceKey(entry.slice, $event)">
             <span
               class="swatch"
+              data-morph="mark"
               [style.background]="entry.color">
             </span>
 
@@ -177,6 +180,8 @@
     [class.ring-outline]="total() === 0">
     <svg
       class="ring-svg"
+      data-morph="self"
+      [style.--_pie-chart-hover-shift.px]="sliceHoverShift"
       [class.dims-others]="dimOthers()"
       [attr.aria-hidden]="ringCarriesTheRoute() ? null : true"
       [attr.viewBox]="viewBox">
@@ -189,16 +194,18 @@
           [class.is-pinned]="
             activeMark.pinned() && activeMark.index() === index
           "
-          [class.is-dimmed]="isDimmed(index)"
           [class.focusable]="ringCarriesTheRoute()"
           [attr.d]="entry.path"
           [style.fill]="entry.color"
+          [style.--_slice-shift-x.px]="entry.shift.x"
+          [style.--_slice-shift-y.px]="entry.shift.y"
           [attr.role]="ringCarriesTheRoute() ? 'button' : null"
           [attr.tabindex]="
             ringCarriesTheRoute() ? (index === roving.tabStop() ? 0 : -1) : null
           "
           [attr.data-mark-index]="index"
           [attr.aria-label]="ringCarriesTheRoute() ? entryLabel(entry) : null"
+          (animate.leave)="leaveMark($event)"
           (pointerenter)="activeMark.enter(index, $event)"
           (pointerleave)="activeMark.leave()"
           (focus)="onMarkFocus(index, $event)"
@@ -232,15 +239,19 @@
 
 <ng-template #centerContent>
   <span
-    #centerValue
-    class="center-value"
-    [style.font-size.px]="centerFontSize()">
-    {{ centerText() }}
-  </span>
-
-  @if (centerLabel()) {
-    <span class="center-label">
-      {{ centerLabel() }}
+    #centerSwap
+    class="center-swap">
+    <span
+      #centerValue
+      class="center-value"
+      [style.font-size.px]="centerFontSize()">
+      {{ centerText() }}
     </span>
-  }
+
+    @if (shownCenterLabel()) {
+      <span class="center-label">
+        {{ shownCenterLabel() }}
+      </span>
+    }
+  </span>
 </ng-template>

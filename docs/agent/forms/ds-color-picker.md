@@ -4,5 +4,5 @@
 Group: Form & input
 
 <!-- inputs:ds-color-picker -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string = '#2F54FF'`, `presets: readonly string[]`, `panelClass: string | readonly string[] = []`, `disabled: boolean = false`, `ariaLabel: string | null = null`, `success: string = ''`, `staticPreview: boolean = false`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `pending: boolean = false`, `dirty: boolean = false`, `showDirty: boolean | null = null`, `hidden: boolean = false`, `value: string = '#2F54FF'`, `presets: readonly string[]`, `panelClass: string | readonly string[] = []`, `disabled: boolean = false`, `ariaLabel: string | null = null`, `success: string = ''`, `staticPreview: boolean = false`
 <!-- /inputs -->

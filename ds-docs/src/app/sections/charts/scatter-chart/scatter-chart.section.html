@@ -42,7 +42,7 @@
     <li>
       <code class="t-mono-inline">
         tooltip="none"
-      </code> drops the panel; dimming: <a routerLink="/foundations/charts">Charts foundations</a>.
+      </code> drops the panel; dimming: <a class="link" routerLink="/foundations/charts">Charts foundations</a>.
     </li>
   </ul>
 
@@ -92,61 +92,22 @@
         dataTable
       </code> still lists every reading.
     </li>
+
+    <li>
+      <code class="t-mono-inline">
+        decimator
+      </code>: the default
+      <code class="t-mono-inline">
+        'minMax'
+      </code> keeps each bucket's highest
+      and lowest reading, so spikes are never dropped;
+      <code class="t-mono-inline">
+        'lttb'
+      </code> keeps a truer silhouette without
+      that promise; <code class="t-mono-inline">'none'</code> leaves the node
+      budget to the caller.
+    </li>
   </ul>
-
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          <code class="t-mono-inline">
-            decimator
-          </code>
-        </th>
-
-        <th>
-          Keeps
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'minMax'
-          </code> (default)
-        </td>
-
-        <td>
-          Keeps each bucket's highest and lowest reading: spikes are never dropped
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'lttb'
-          </code>
-        </td>
-
-        <td>
-          A truer silhouette, without that promise
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'none'
-          </code>
-        </td>
-
-        <td>
-          Leaves the node budget to the caller
-        </td>
-      </tr>
-    </tbody>
-  </table>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -204,11 +165,63 @@
   </p>
 
   <h3 class="block-title t-h4">
+    Nearest point
+  </h3>
+
+  <p class="block-desc t-s">
+    Anywhere over the plot answers with the nearest point, ringed and tethered
+    to the pointer.
+    <code class="t-mono-inline">
+      [showNearestPoint]="false"
+    </code> answers only within 16px of a point, without the ring.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-scatter-chart
+        caption="Nearest point, any distance"
+        xLabel="Weight, kg"
+        yLabel="Cost"
+        [data]="oneSeries" />
+
+      <div class="state-cell-label">
+        Default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-scatter-chart
+        caption="Point under the pointer only"
+        xLabel="Weight, kg"
+        yLabel="Cost"
+        [data]="oneSeries"
+        [showNearestPoint]="false" />
+
+      <div class="state-cell-label">
+        showNearestPoint = false
+      </div>
+    </div>
+  </div>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      nearestRadius
+    </code> caps the reach in CSS pixels; past it nothing answers.
+  </p>
+
+  <ds-scatter-chart
+    caption="Nearest point within 48px"
+    xLabel="Weight, kg"
+    yLabel="Cost"
+    [data]="oneSeries"
+    [nearestRadius]="48" />
+
+  <h3 class="block-title t-h4">
     Holding a point
   </h3>
 
   <p class="block-desc t-s">
-    A click holds the point and its tooltip. Release and opt-out: <a routerLink="/foundations/charts">Charts foundations</a>.
+    A click holds the point and its tooltip. Release and opt-out: <a class="link" routerLink="/foundations/charts">Charts foundations</a>.
   </p>
 
   <h3 class="block-title t-h4">

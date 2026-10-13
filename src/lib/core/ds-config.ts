@@ -13,12 +13,17 @@ import type { PaginationLayout } from './pagination.types';
 
 export interface DsConfig {
   /** BCP-47 locale every component formats numbers and dates in. Default is Angular's
-   *  `LOCALE_ID`. A section key that names a locale (`datePicker.locale`) wins over this. */
+   *  `LOCALE_ID`, except that its own default `'en-US'` reads as `'en-GB'`: English with a
+   *  Monday week, a 24-hour clock and day-month-year dates. Set `'en-US'` here for US formats. A
+   *  section key that names a locale (`datePicker.locale`) wins over this. */
   locale?: string;
   field?: {
     /** Default for every field's `reserveMessage`. Default `false`. `true` applies to EVERY field
      *  in the injector's subtree; prefer `dsReserveMessages` on the form that validates. */
     reserveMessage?: boolean;
+    /** Default for every field's `showDirty`. Default `false`. Prefer `dsShowDirty` on the form
+     *  that wants the mark. */
+    showDirty?: boolean;
     /** Fallback text per validation-error kind, for validators with no `message` (Angular's
      *  built-ins never carry one). A message on the error itself wins. Unmapped kinds warn in dev. */
     errorMessages?: Record<string, string>;
@@ -41,7 +46,8 @@ export interface DsConfig {
     clickable?: boolean;
   };
   timePicker?: {
-    /** Display format for `ds-time-picker` / date-picker time - 24h or 12h AM/PM. Default `'24h'`. */
+    /** Display format for `ds-time-picker` - 24h or 12h AM/PM. Unset follows the hour cycle of
+     *  `locale` / `LOCALE_ID` (en-US: `'12h'`, en-GB: `'24h'`). */
     format?: '24h' | '12h';
   };
   avatar?: {
@@ -132,8 +138,9 @@ export interface DsConfig {
     dataTable?: ChartDataTable;
     /** Whether every chart draws its own bordered, padded box. Default `'auto'`, which draws it. */
     frame?: ChartFrame;
-    /** How long a chart's tooltip stays after the pointer leaves the mark, in milliseconds.
-     *  Default 500; zero closes it at once. */
+    /** How long a chart's tooltip stays after the pointer leaves the mark for another part of the
+     *  chart, in milliseconds; leaving the chart closes it at once. Default 500; zero closes it at
+     *  once everywhere. */
     tooltipLingerMs?: number;
     /** Whether a click on a mark or category holds its tooltip and highlight. Default `true`.
      *  A second click, Escape or a press elsewhere releases. A tap holds whatever this says. */
@@ -157,7 +164,8 @@ export interface DsConfig {
     locale?: string;
     /** Explicit token format, e.g. `'MM/DD/YYYY'`; overrides the locale-derived order. */
     dateFormat?: string;
-    /** First weekday column: 0=Sunday to 6=Saturday. Default `1` (Monday). */
+    /** First weekday column: 0=Sunday to 6=Saturday. Unset follows the date picker's locale
+     *  (en-US: `0`, en-GB: `1`); `1` (Monday) where the engine has no week data. */
     firstDayOfWeek?: number;
   };
 }

@@ -6,9 +6,12 @@ import type {
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  effect,
+  inject,
   input,
   numberAttribute,
   output,
@@ -16,16 +19,20 @@ import {
 } from '@angular/core';
 import {
   CHART_HEAT_COLORS,
-  chartDwell,
+  chartDelay,
   chartRenderGate,
+  dwellHighlight,
+  leaveMark,
   staggerDelay,
   DsChartBase,
+  dimmedBy,
 } from '@ids-group-ltd/ids-design-system/components';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import {
+  ChartPlacedDirective,
   ChartTooltipDirective,
   ChartStatesComponent,
   chartActiveMark,
@@ -60,6 +67,7 @@ interface PlacedRow {
   standalone: true,
   exportAs: 'dsHeatmapChart',
   imports: [
+    ChartPlacedDirective,
     ChartTooltipDirective,
     ChartStatesComponent,
     SkeletonComponent,
@@ -79,6 +87,8 @@ export class HeatmapChartComponent
   implements ChartDimmable, ChartStaggered, ChartWithTooltipTrigger
 {
   protected readonly renderReady = chartRenderGate();
+
+  protected readonly leaveMark = leaveMark;
 
   /** The column headings, left to right; a row longer than this loses its tail. */
   readonly columns = input<readonly string[]>([]);
@@ -100,19 +110,24 @@ export class HeatmapChartComponent
   /** Prints each cell's reading inside it. */
   readonly showValues = input(false, { transform: booleanAttribute });
 
+  /** Marks the hovered or focused cell's reading on the colour scale. */
+  readonly showScaleMarker = input(true, { transform: booleanAttribute });
+
   /** Fades every cell but the one under the pointer. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
   /** Whether a hovered or focused cell opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
-  /** Milliseconds between one column's entrance and the next; `0` turns it off. The spread is capped at 260ms. */
+  /** Milliseconds between one diagonal's entrance and the next, from the top-left cell; `0` turns
+   *  it off. The spread is capped at 260ms. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
-  // The stylesheet multiplies this by the column index.
-  protected readonly columnStagger = computed(
-    () => `${staggerDelay(1, this.columns().length, this.staggerMs())}ms`,
-  );
+  protected cellStagger(rowIndex: number, columnIndex: number): string {
+    const diagonals = this.data().length + this.columns().length - 1;
+
+    return `${staggerDelay(rowIndex + columnIndex, diagonals, this.staggerMs())}ms`;
+  }
 
   /** The clicked cell, with its row and column. Never fires for an unmeasured cell. */
   readonly cellClicked = output<HeatmapChartCell>();
@@ -122,25 +137,54 @@ export class HeatmapChartComponent
     () => this.defaults.hoverDelayMs(),
   );
 
-  /** The ramp step under the pointer on the scale; every cell outside it fades. */
+  /** The ramp step under the pointer on the scale; its cells brighten, and under `dimOthers` the rest fade. */
   protected readonly highlightedStep = signal<number | null>(null);
 
-  private readonly stepDwell = chartDwell(() => this.defaults.hoverDelayMs());
-
-  protected onStepEnter(step: number, event: PointerEvent): void {
-    this.stepDwell.schedule(step, () => this.highlightedStep.set(step), event);
-  }
-
-  protected onStepLeave(): void {
-    this.stepDwell.cancel();
-    this.highlightedStep.set(null);
-  }
+  protected readonly stepHighlight = dwellHighlight(this.highlightedStep, () =>
+    this.defaults.hoverDelayMs(),
+  );
 
   protected isCellDimmed(cell: PlacedCell): boolean {
-    const step = this.highlightedStep();
-
-    return step !== null && cell.step !== step;
+    return dimmedBy(this.dimOthers(), this.highlightedStep(), cell.step);
   }
+
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  private readonly scaleMarkerIndex = signal(-1);
+
+  // The marker moves once the pointer rests on a cell, so a sweep across the grid leaves it still.
+
+  private readonly settleScaleMarker = effect((onCleanup) => {
+    const index = this.activeMark.index();
+    if (index === -1) {
+      this.scaleMarkerIndex.set(-1);
+
+      return;
+    }
+    const delay = chartDelay(this.host.nativeElement, 'scale-marker');
+    if (delay <= 0) {
+      this.scaleMarkerIndex.set(index);
+
+      return;
+    }
+    const timer = setTimeout(() => this.scaleMarkerIndex.set(index), delay);
+    onCleanup(() => clearTimeout(timer));
+  });
+
+  /** Where the settled cell's reading sits along the scale, as a percentage of the ramp. */
+  protected readonly scaleMarker = computed(() => {
+    const cell = this.flatCells()[this.scaleMarkerIndex()];
+    if (!this.showScaleMarker() || !cell || cell.value === null) {
+      return null;
+    }
+    const { min, max } = this.domain();
+    const share = max > min ? (cell.value - min) / (max - min) : 0.5;
+
+    return {
+      offset: Math.min(Math.max(share, 0), 1) * 100,
+      label: this.valueFormatResolved()(cell.value, 'tick'),
+    };
+  });
 
   protected onCellPress(cell: PlacedCell, index: number, event: Event): void {
     // Enter and Space click the native button with `detail` 0; keys must not pin.

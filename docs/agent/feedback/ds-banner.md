@@ -8,6 +8,7 @@ Output: `(closed): void`
 Content slots: default (body text), `[actions]` (trailing CTAs)
 - `layout="stacked"` (default): actions wrap onto a new line, indented under the body. Use for multiple-line messages or multiple CTAs.
 - `layout="row"`: actions sit at the right edge, vertically centred with the body. Use for one-line messages with a single trailing CTA.
+- Dismissing with focus on the close button moves focus to the next control after the banner, or the one before it when nothing follows. Focus a `(closed)` handler moves elsewhere stays there.
 - `announce: boolean | null = null` resolves input → `DS_CONFIG.banner.announce` → `false`. Dev mode warns once per instance in two cases: an `error` / `warning` / `severe` banner left unbound while the key is unset (ends when the key is set, `true` or `false`), and an `info` / `success` / `neutral` banner that announces only because the key is `true` (ends at an `[announce]` binding). Neither message reaches a production build.
 
 <!-- inputs:ds-banner -->

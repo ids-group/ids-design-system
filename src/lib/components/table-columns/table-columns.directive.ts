@@ -10,6 +10,7 @@ import {
   input,
   model,
   signal,
+  untracked,
 } from '@angular/core';
 import {
   DsTableLayout,
@@ -111,15 +112,20 @@ export class DsTableColumns<T extends object> {
 
     const trigger = this.layout.view().anchor('header-utility');
     const overlays = this.layout.view().anchor('overlays');
-    let panel: ComponentRef<TableColumnsPanelComponent<T>> | null = null;
-    let button: ComponentRef<TableColumnsTriggerComponent> | null = null;
+    const panelRef = signal<ComponentRef<TableColumnsPanelComponent<T>> | null>(
+      null,
+    );
+    const buttonRef = signal<ComponentRef<TableColumnsTriggerComponent> | null>(
+      null,
+    );
 
     effect(() => {
       const host = overlays();
-      if (!host || panel) {
+      if (!host || untracked(panelRef)) {
         return;
       }
-      panel = host.createComponent(TableColumnsPanelComponent<T>);
+      const panel = host.createComponent(TableColumnsPanelComponent<T>);
+      panelRef.set(panel);
       panel.instance.toggled.subscribe((column) => this.toggleColumn(column));
       panel.instance.moved.subscribe(({ column, delta }) =>
         this.moveColumn(column, delta),
@@ -132,18 +138,21 @@ export class DsTableColumns<T extends object> {
 
     effect(() => {
       const host = trigger();
-      if (!host || button) {
+      if (!host || untracked(buttonRef)) {
         return;
       }
-      button = host.createComponent(TableColumnsTriggerComponent);
+      const button = host.createComponent(TableColumnsTriggerComponent);
+      buttonRef.set(button);
       button.instance.pressed.subscribe((event: Event) =>
-        panel?.instance.toggle(event.currentTarget as HTMLElement),
+        panelRef()?.instance.toggle(event.currentTarget as HTMLElement),
       );
     });
 
     // Separate views, not reached by the host's change detection: every input has to be written
     // when it moves.
     effect(() => {
+      const panel = panelRef();
+      const button = buttonRef();
       panel?.setInput('columns', this.ordered());
       panel?.setInput('reorderable', this.reorderableColumns());
       panel?.setInput('coarsePointer', this.coarsePointer());
@@ -168,8 +177,8 @@ export class DsTableColumns<T extends object> {
     }
 
     inject(DestroyRef).onDestroy(() => {
-      panel?.destroy();
-      button?.destroy();
+      panelRef()?.destroy();
+      buttonRef()?.destroy();
     });
   }
 

@@ -159,83 +159,35 @@
     Width
   </h3>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          Input / token
-        </th>
-
-        <th>
-          Effect
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            width="fill"
-          </code> (default)
-        </td>
-
-        <td>
-          Stretches.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            width="content"
-          </code>
-        </td>
-
-        <td>
-          Hugs chips/value plus a typing area, for toolbars.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            --ds-autocomplete-input-min-width
-          </code> (40px)
-        </td>
-
-        <td>
-          Sizes the typing area.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            --ds-autocomplete-max-width
-          </code>
-        </td>
-
-        <td>
-          Caps both modes.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            valueOverflow="wrap"
-          </code>
-        </td>
-
-        <td>
-          Long values wrap to a second line instead of ellipsising.
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
   <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        width="content"
+      </code> hugs the chips or value
+      plus a typing area, for toolbars; the default
+      <code class="t-mono-inline">
+        fill
+      </code> stretches.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        --ds-autocomplete-input-min-width
+      </code>
+      (40px) sizes the typing area;
+      <code class="t-mono-inline">
+        --ds-autocomplete-max-width
+      </code> caps both
+      modes.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        valueOverflow="wrap"
+      </code> wraps a long value
+      to a second line instead of ellipsising.
+    </li>
+
     <li>
       Long option labels, create row included, ellipsise with a hover tooltip.
     </li>

@@ -29,59 +29,13 @@
     Legend placement
   </h3>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          <code class="t-mono-inline">
-            legend
-          </code>
-        </th>
-
-        <th>
-          Use
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'end'
-          </code> (default)
-        </td>
-
-        <td>
-          Beside the ring
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'bottom'
-          </code>
-        </td>
-
-        <td>
-          Narrow columns; the ring stays full size
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'none'
-          </code>
-        </td>
-
-        <td>
-          Only when the parts are named elsewhere
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      'bottom'
+    </code> suits a narrow column: the ring
+    stays full size. <code class="t-mono-inline">'none'</code> only when the
+    parts are named elsewhere.
+  </p>
 
   <div class="states is-cols-2">
     <div class="state-cell">
@@ -188,7 +142,10 @@
     </code>. At
     <code class="t-mono-inline">
       innerRadius="0"
-    </code> neither renders.
+    </code> neither renders. A hovered slice takes the centre;
+    <code class="t-mono-inline">
+      [showHoverCenter]="false"
+    </code> keeps it.
   </p>
 
   <div class="states is-cols-2">
@@ -219,6 +176,13 @@
       <docs-chart-data-editor [(rows)]="centerValueSlices" />
     </div>
   </div>
+
+  <ds-pie-chart
+    centerLabel="Annual recurring revenue"
+    centerValue="£1.2M"
+    dataTable="none"
+    [showHoverCenter]="false"
+    [data]="centerValueSlices()" />
 
   <h3 class="block-title t-h4">
     Centre value fit
@@ -405,8 +369,8 @@
     </li>
 
     <li>
-      A hovered or focused legend item opens its arc's tooltip and dims the
-      rest.
+      A hovered or focused legend item opens its arc's tooltip and slides the
+      arc out, as hovering the arc does.
     </li>
 
     <li>
@@ -415,7 +379,7 @@
 
     <li>
       Keys and dimming:
-      <a routerLink="/foundations/charts">
+      <a class="link" routerLink="/foundations/charts">
         Charts foundations
       </a>.
     </li>
@@ -458,7 +422,7 @@
 
   <p class="block-desc t-s">
     A click holds the slice and its tooltip. Release and opt-out:
-    <a routerLink="/foundations/charts">
+    <a class="link" routerLink="/foundations/charts">
       Charts foundations
     </a>.
   </p>
@@ -500,7 +464,7 @@
       <code class="t-mono-inline">
         dataTable
       </code> values:
-      <a routerLink="/foundations/charts">
+      <a class="link" routerLink="/foundations/charts">
         Charts foundations
       </a>.
     </li>

@@ -10,7 +10,10 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsBooleanControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
-import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  FieldMessageComponent,
+  FieldStatusComponent,
+} from '@ids-group-ltd/ids-design-system/components/field-message';
 import { resolveFieldMessage } from '@ids-group-ltd/ids-design-system/components';
 import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
@@ -19,7 +22,7 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 @Component({
   selector: 'ds-switch',
   standalone: true,
-  imports: [FieldMessageComponent],
+  imports: [FieldMessageComponent, FieldStatusComponent],
   templateUrl: './switch.component.html',
   styleUrl: './switch.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -71,9 +74,12 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
   protected readonly uid = nextControlId('ds-switch');
   protected readonly controlId = computed(() => this.inputId() ?? this.uid);
   protected readonly hintId = computed(() =>
-    this.message().text ? `${this.uid}-hint` : null,
+    this.message().text || this.changedShown() ? `${this.uid}-hint` : null,
   );
   private readonly fieldMessage = resolveFieldMessage({
+    pending: this.pending,
+    dirty: this.dirty,
+    showDirty: this.showDirtyResolved,
     disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
@@ -84,6 +90,8 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly pendingShown = this.fieldMessage.pending;
+  protected readonly changedShown = this.fieldMessage.changed;
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || null,
   );

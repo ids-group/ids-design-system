@@ -31,6 +31,9 @@ export interface DsTableResizeContribution<T> {
   readonly onBlur: () => void;
   readonly onKey: (column: TableColumn<T>, event: KeyboardEvent) => void;
   readonly step: (column: TableColumn<T>, delta: number | 'auto') => void;
+  /** Where the dragged column's edge runs, in the scroll container's content box: drawn down
+   *  the whole table while a drag lasts. `null` between drags. */
+  readonly guide?: Signal<{ x: number; height: number } | null>;
 }
 
 /**

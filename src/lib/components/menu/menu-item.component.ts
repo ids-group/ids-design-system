@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  Injector,
   OnDestroy,
   TemplateRef,
   ViewContainerRef,
@@ -40,6 +41,7 @@ export class MenuItemComponent implements OnDestroy, AimHoverTarget {
   private readonly closeRef = inject(DsOverlayCloseRef, { optional: true });
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
+  private readonly injector = inject(Injector);
   private readonly hostElement = inject(ElementRef<HTMLElement>);
   private readonly aim =
     inject(MenuAim, { optional: true }) ?? new MenuAim(inject(DOCUMENT));
@@ -101,6 +103,10 @@ export class MenuItemComponent implements OnDestroy, AimHoverTarget {
     }
     if (this.hasSubmenu()) {
       this.openSubmenu();
+      // detail 0: Enter or Space, which APG has land on the submenu's first item.
+      if (event.detail === 0) {
+        this.focusSubmenu();
+      }
 
       return;
     }
@@ -116,6 +122,7 @@ export class MenuItemComponent implements OnDestroy, AimHoverTarget {
       event.preventDefault();
       event.stopPropagation();
       this.openSubmenu();
+      this.focusSubmenu();
     }
   }
 
@@ -202,7 +209,27 @@ export class MenuItemComponent implements OnDestroy, AimHoverTarget {
     );
     this.submenuRef.detachments().subscribe(stopScrollClose);
 
-    this.submenuRef.attach(new TemplatePortal(this.submenu()!, this.vcr));
+    // A submenu item's select or Tab closes this submenu first, then the overlay holding this item.
+    const submenuCloseRef: DsOverlayCloseRef = {
+      close: () => {
+        this.closeSubmenu();
+        this.focus();
+        this.closeRef?.close();
+      },
+    };
+    this.submenuRef.attach(
+      new TemplatePortal(
+        this.submenu()!,
+        this.vcr,
+        undefined,
+        Injector.create({
+          providers: [
+            { provide: DsOverlayCloseRef, useValue: submenuCloseRef },
+          ],
+          parent: this.injector,
+        }),
+      ),
+    );
 
     this.submenuRef.overlayElement.addEventListener('mouseenter', () =>
       this.aim.stop(),
@@ -233,6 +260,12 @@ export class MenuItemComponent implements OnDestroy, AimHoverTarget {
     this.submenuRef?.dispose();
     this.clearOpenTimer();
     this.aim.dropHover(this);
+  }
+
+  private focusSubmenu(): void {
+    this.submenuRef?.overlayElement
+      .querySelector<HTMLElement>('[role="menuitem"]')
+      ?.focus();
   }
 
   private clearOpenTimer(): void {

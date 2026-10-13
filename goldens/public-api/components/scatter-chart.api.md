@@ -4,11 +4,12 @@
 
 ```ts
 @Component({ selector: 'ds-scatter-chart', exportAs: 'dsScatterChart' })
-export class ScatterChartComponent extends DsChartBase implements ChartDimmable, ChartWithDataTable, ChartWithTooltipTrigger {
+export class ScatterChartComponent extends DsChartBase implements ChartDimmable, ChartStaggered, ChartWithDataTable, ChartWithTooltipTrigger {
     public constructor();
     protected readonly accessibleName = computed(…);
     protected readonly activeMark = chartActiveMark(…);
     private readonly budget;
+    private readonly canvasElement;
     public readonly data = input<readonly ScatterChartSeries[]>([]);
     public readonly dataTable = input<ChartDataTable | null>(null);
     protected readonly dataTableColumns = computed<readonly string[]>(…);
@@ -17,35 +18,54 @@ export class ScatterChartComponent extends DsChartBase implements ChartDimmable,
     public readonly decimator = input<ScatterChartDecimator>('minMax');
     public readonly dimOthers = input(false, { transform: booleanAttribute });
     private readonly domains;
+    private readonly drawTether;
     protected readonly drawnSeries = computed(…);
     protected readonly droppedCount = computed(…);
     private readonly extent;
     private readonly flatMarks;
+    private readonly glideRing;
     protected readonly highlightedSeries = signal<string | null>(…);
     private hoveredIndex;
     protected readonly isEmpty = computed(…);
+    protected isSeriesDimmed(seriesId: string): boolean;
+    protected readonly leaveMark = leaveMark;
     protected readonly legendItems = computed<readonly ChartLegendItem[]>(…);
+    private readonly listenForPointer;
     protected readonly multiSeries = computed(…);
     private nearestMark;
-    protected onCanvasLeave(): void;
-    protected onCanvasPointer(event: PointerEvent): void;
+    public readonly nearestRadius = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
+    private onCanvasLeave;
+    private onCanvasPointer;
     protected onPointActivate(event: Event): void;
     protected onPointClick(series: ScatterChartSeries, point: ScatterPoint): void;
     protected onPointPress(event: Event): void;
     protected readonly pinLift = CHART_PIN_RADIUS + CHART_PIN_GAP + PIN_POINT_CLEARANCE;
-    protected readonly pinnedPoint = computed(…);
+    protected readonly pinnedPoints = this.activeMark.pinnedAt(…);
+    private placeRing;
+    private placeTether;
     protected readonly plot: ScatterPlot = { left: AXIS_GUTTER, top: EDGE_GUTTER, width: SCATTER_VIEW_WIDTH - AXIS_GUTTER - EDGE_GUTTER, height: SCATTER_VIEW_HEIGHT - CATEGORY_GUTTER - EDGE_GUTTER };
     protected readonly plotBottom = this.plot.top + this.plot.height;
     protected readonly plotRight = this.plot.left + this.plot.width;
     public readonly pointClicked = output<ScatterChartReading>();
     protected pointLabel(series: ScatterChartSeries, point: ScatterPoint): string;
+    protected pointStagger(cx: number): string;
+    private pointerAt;
+    protected readonly pointerOverPlot = signal(…);
     protected readonly renderReady = chartRenderGate(…);
+    private ringAt;
+    private readonly ringElement;
+    protected readonly ringedMark = computed(…);
     protected readonly series = computed<readonly PlacedSeries[]>(…);
     protected readonly seriesStart = computed(…);
+    public readonly showNearestPoint = input(true, { transform: booleanAttribute });
     protected readonly skeletonLayout = (() => { const share = (value: number, of: number) => `${(value / of) * 100}%`; const steps = [0, 0.25, 0.5, 0.75, 1]; return { plotLeft: share(this.plot.left, SCATTER_VIEW_WIDTH), plotWidth: share(this.plot.width, SCATTER_VIEW_WIDTH), labelEnd: share(SCATTER_VIEW_WIDTH - this.plot.left + 8, SCATTER_VIEW_WIDTH), categoryTop: share(this.plotBottom + 10, SCATTER_VIEW_HEIGHT), titleTop: share(this.plotBottom + 26, SCATTER_VIEW_HEIGHT), rows: steps.map((step) => share(this.plot.top + step * this.plot.height, SCATTER_VIEW_HEIGHT)), columns: steps.map((step) => share(this.plot.left + step * this.plot.width, SCATTER_VIEW_WIDTH)) }; })(…);
+    public readonly staggerMs = input(40, { transform: numberAttribute });
+    private readonly staggerSpread;
+    private stopRingGlide;
     protected readonly tableIsOpen = computed(…);
     protected readonly tableOpen = signal(…);
     protected readonly tableRows = computed(…);
+    private readonly tetherElement;
     public readonly tickCount = input(SCATTER_DEFAULT_TICK_COUNT, { transform: numberAttribute });
     public readonly tooltip = input<ChartItemTooltipTrigger>('item');
     protected readonly tooltipContext = computed<ChartTooltipContext | null>(…);
@@ -54,6 +74,7 @@ export class ScatterChartComponent extends DsChartBase implements ChartDimmable,
     protected readonly xTicks = computed(…);
     public readonly yLabel = input<string | null>(null);
     protected readonly yTicks = computed(…);
+    private readonly zone;
 }
 
 export type ScatterChartDecimator = 'minMax' | 'lttb' | 'none';
@@ -80,7 +101,7 @@ export interface ScatterPoint {
 
 ```css
 ds-scatter-chart {
-    --ds-chart-dim-opacity: (none);
+    --ds-chart-cursor-line-color: (none);
     --ds-chart-plot-bg-color: transparent;
     --ds-motion-chart-mark-duration: (none);
     --ds-motion-chart-mark-easing: (none);

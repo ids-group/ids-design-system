@@ -21,7 +21,7 @@ export class BannerComponent {
     public readonly layout = input<'stacked' | 'row'>('stacked');
     private readonly liveRole;
     protected get noRail(): boolean;
-    protected onDismiss(): void;
+    protected onDismiss(leaving: HTMLElement): void;
     public readonly title = input<string>('');
     public readonly variant = input<BannerVariant>('info');
 }

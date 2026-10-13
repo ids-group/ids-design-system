@@ -109,6 +109,7 @@ export {
 } from '@ids-group-ltd/ids-design-system/components/chart';
 export type {
   ChartAnnotation,
+  ChartCategoryRange,
   ChartPlot,
   ChartScales,
   ChartStackOffset,
@@ -289,6 +290,7 @@ export type {
   SelectOptionGroup,
   SelectWidth,
 } from '@ids-group-ltd/ids-design-system/components/select';
+export { ShowDirtyDirective } from '@ids-group-ltd/ids-design-system/components/show-dirty';
 export {
   BrandNameDirective,
   SIDENAV,
@@ -336,6 +338,7 @@ export type {
   SortDirection,
   TableCellEditEvent,
   TableColumn,
+  TableColumnKind,
   TableExpandMode,
   TableFilterMode,
   TableRowAction,

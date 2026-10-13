@@ -38,6 +38,24 @@
         </caption>
       }
 
+      <colgroup>
+        @if (selectable()) {
+          <col />
+        }
+
+        @if (expandableRows()) {
+          <col />
+        }
+
+        @for (col of visibleColumns(); track col.key; let index = $index) {
+          <col [style.width.px]="columnWidths()[index]" />
+        }
+
+        @if (hasUtilityColumn()) {
+          <col />
+        }
+      </colgroup>
+
       <thead #tableHead>
         <tr>
           @if (selectable()) {
@@ -81,10 +99,6 @@
               [class]="headerClasses(col)"
               [class.numeric]="col.align === 'right'"
               [class.pin-first]="first && stickyFirstColumn()"
-              [class.fit-content]="fitsContent(col)"
-              [style.width.px]="columnWidth(col)"
-              [style.min-width.px]="columnWidth(col) ?? col.minWidth"
-              [style.max-width.px]="columnWidth(col)"
               [attr.aria-sort]="ariaSort(col)"
               [attr.data-col-key]="col.key"
               [dsTooltipWhenClipped]="!col.hint"
@@ -289,12 +303,7 @@
                   </td>
                 }
 
-                @for (
-                  col of visibleColumns();
-                  track col.key;
-                  let first = $first;
-                  let index = $index
-                ) {
+                @for (col of visibleColumns(); track col.key; let first = $first) {
                   <td
                     [class.numeric]="col.align === 'right'"
                     [class.pin-first]="first && stickyFirstColumn()"
@@ -321,11 +330,7 @@
                         (blur)="commitEdit(row, col)" />
                     } @else if (cellTemplate(col); as tpl) {
                       @if (col.truncate) {
-                        <span
-                          class="cell-clip"
-                          [class.grows]="clipGrows(col)"
-                          [style.max-width]="clipMaxWidth(col, index)"
-                          [style.min-width]="clipMinWidth(col, index)">
+                        <span class="cell-clip">
                           <span class="cell-clip-text">
                             <ng-container
                               [ngTemplateOutlet]="tpl"
@@ -346,11 +351,7 @@
                         </ng-container>
                       }
                     } @else if (col.truncate) {
-                      <span
-                        class="cell-clip"
-                        [class.grows]="clipGrows(col)"
-                        [style.max-width]="clipMaxWidth(col, index)"
-                          [style.min-width]="clipMinWidth(col, index)">
+                      <span class="cell-clip">
                         @if (cellLink(row, col); as target) {
                           <a
                             class="cell-link cell-clip-text"
@@ -414,13 +415,15 @@
                     [attr.colspan]="expandedColspan()">
                     <div class="expand-panel-inner">
                       <div class="expand-panel-content">
-                        <ng-container
-                          [ngTemplateOutlet]="rowExpandTemplate()!"
-                          [ngTemplateOutletContext]="{
-                            $implicit: row,
-                            row: row,
-                          }">
-                        </ng-container>
+                        <div class="expand-panel-body">
+                          <ng-container
+                            [ngTemplateOutlet]="rowExpandTemplate()!"
+                            [ngTemplateOutletContext]="{
+                              $implicit: row,
+                              row: row,
+                            }">
+                          </ng-container>
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -444,6 +447,15 @@
         }
       </tbody>
     </table>
+
+    @if (layout.resize()?.guide?.(); as guide) {
+      <div
+        class="resize-guide"
+        aria-hidden="true"
+        [style.left.px]="guide.x"
+        [style.height.px]="guide.height">
+      </div>
+    }
   </div>
 </ds-loading-overlay>
 

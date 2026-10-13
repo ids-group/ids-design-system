@@ -118,17 +118,29 @@
   @include chart-frame.drawn-focus-ring;
 }
 
+// Neither takes the pointer: hover reads the nearest point from the canvas.
+.nearest-ring {
+  r: calc(var(--_scatter-chart-dot-radius) + var(--space-1));
+  fill: none;
+  stroke: var(--text-primary);
+  stroke-width: 1.5;
+  pointer-events: none;
+}
+
+.nearest-tether {
+  stroke: var(--ds-chart-cursor-line-color);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  pointer-events: none;
+}
+
 .thinned {
   margin-block: var(--space-2) 0;
   color: var(--text-secondary);
   font-size: var(--font-size-xs);
 }
 
-g.is-dimmed {
-  opacity: var(--ds-chart-dim-opacity);
-  transition: opacity var(--ds-motion-chart-mark-duration)
-    var(--ds-motion-chart-mark-easing);
-}
+@include chart-interactive.dims('.point-group');
 
 // The rectangle inside the axes. Transparent unless `--ds-chart-plot-bg-color` is set, so the plot
 // shows the chart's background by default.

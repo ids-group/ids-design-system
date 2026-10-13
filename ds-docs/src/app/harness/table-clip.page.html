@@ -7,10 +7,19 @@
       {{ item.id }} - {{ item.title }} ({{ item.width }}px)
     </h3>
 
+    @if (item.pageTwo) {
+      <button
+        type="button"
+        data-show-page-two
+        (click)="showPageTwo(item.id)">
+        Page 2
+      </button>
+    }
+
     <ds-table
       sortMode="client"
       [caption]="item.title"
-      [data]="item.data"
+      [data]="caseData(item)"
       [columns]="item.columns"
       [density]="item.density ?? 'default'"
       [selectable]="item.selectable ?? false"

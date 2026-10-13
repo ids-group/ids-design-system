@@ -50,7 +50,7 @@
 }
 
 .grid {
-  @include chart-interactive.fades('.cell', ', background var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
+  @include chart-interactive.fades('.cell', ', background var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing), #{chart-interactive.$highlight-transition}');
 
   border-collapse: separate;
   border-spacing: var(--_heatmap-chart-cell-gap);
@@ -78,6 +78,8 @@
   padding: 0;
 }
 
+@include chart-motion.pops-in('.cell-slot > .pin-marker');
+
 .cell-slot > .pin-marker {
   position: absolute;
   inset: 0;
@@ -103,22 +105,16 @@
 }
 
 @include chart-motion.fades-in('.cell');
+@include chart-motion.leaves('.grid tbody > tr');
+@include chart-motion.leaves('.cell-slot');
 @include chart-motion.follows('.cell-value', var(--ds-motion-chart-mark-enter-duration));
 
-// The row label is the first child, so a slot's position is its column index + 1.
-// ponytail: columns past the 61st start together at the 61st column's delay; raise the bound if wider
-// grids appear.
-@for $column from 1 through 59 {
-  .cell-slot:nth-child(#{$column + 2}) {
-    --_chart-mark-stagger: calc(#{$column} * var(--_heatmap-chart-column-stagger, 0ms));
-  }
-}
-
-.cell-slot:nth-child(n + 62) {
-  --_chart-mark-stagger: calc(60 * var(--_heatmap-chart-column-stagger, 0ms));
-}
-
 // The ramp's first step is a real reading, so a missing cell must not use it.
+.cell.is-active,
+.cell.is-highlighted {
+  filter: chart-interactive.$highlight;
+}
+
 .cell.is-missing {
   background: var(--_heatmap-chart-missing-color);
 }
@@ -138,15 +134,50 @@
   @include focus.ring;
 }
 
+// The room above the ramp is the scale marker's.
 .scale {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  margin-block-start: var(--space-3);
+  margin-block-start: var(--space-6);
 }
 
 .scale-ramp {
+  position: relative;
   display: flex;
+}
+
+.scale-marker {
+  position: absolute;
+  inset-block-end: calc(100% + var(--space-1));
+  translate: -50% 0;
+  color: var(--text-primary);
+  font-size: var(--_heatmap-chart-label-font-size);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+
+  &:dir(rtl) {
+    translate: 50% 0;
+  }
+
+  &::after {
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline: 0;
+    inline-size: fit-content;
+    margin-inline: auto;
+    border: var(--space-1) solid transparent;
+    border-block-end-width: 0;
+    border-block-start-color: currentcolor;
+    content: '';
+  }
+
+  &.placed {
+    transition: inset-inline-start var(--ds-motion-chart-tooltip-move-duration)
+      var(--ds-motion-chart-tooltip-move-easing);
+  }
 }
 
 .scale-step {

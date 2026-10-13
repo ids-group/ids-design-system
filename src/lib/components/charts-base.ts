@@ -55,8 +55,9 @@ export abstract class DsChartBase {
       value == null ? null : booleanAttribute(value),
   });
 
-  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds; zero closes
-   *  it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
+  /** How long the tooltip stays after the pointer leaves the mark for another part of the chart,
+   *  in milliseconds; zero closes it at once. A pointer that leaves the chart closes it at once
+   *  whatever this says. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
   readonly tooltipLingerMs = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
@@ -73,6 +74,18 @@ export abstract class DsChartBase {
   readonly emptyTextResolved = this.defaults.emptyText;
   readonly errorTextResolved = this.defaults.errorText;
   readonly valueFormatResolved = this.defaults.valueFormat;
+}
+
+/** Whether the marks keyed `key` fade while `highlighted` is singled out: only under `dimOthers`,
+ *  and never the highlighted marks themselves.
+ *
+ *  @internal */
+export function dimmedBy<T>(
+  dimOthers: boolean,
+  highlighted: T | null,
+  key: T,
+): boolean {
+  return dimOthers && highlighted !== null && highlighted !== key;
 }
 
 /** A chart that can fade every mark but the one it is answering. @internal */

@@ -395,6 +395,18 @@ export function editDelete(
   return null;
 }
 
+/** The locale's first weekday, 0=Sunday to 6=Saturday; `null` when the engine has no week data. */
+export function localeFirstDayOfWeek(locale: string): number | null {
+  // Chrome 99-129 and Safari 15.4-16 expose a `weekInfo` accessor instead of `getWeekInfo()`.
+  const tag = new Intl.Locale(locale) as Intl.Locale & {
+    getWeekInfo?: () => { firstDay: number };
+    weekInfo?: { firstDay: number };
+  };
+  const firstDay = (tag.getWeekInfo?.() ?? tag.weekInfo)?.firstDay;
+
+  return firstDay === undefined ? null : firstDay % 7;
+}
+
 export function weekdayLabels(
   locale: string,
   firstDayOfWeek: number,

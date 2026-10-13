@@ -73,6 +73,10 @@
             [size]="16" />
         </button>
       </div>
+
+      <ds-field-status
+        [pending]="pendingShown()"
+        [changed]="changedShown()" />
     </div>
   } @else {
     <div class="trigger-wrap">
@@ -92,6 +96,10 @@
         <span class="time-value">
           {{ displayValue() }}
         </span>
+
+        <ds-field-status
+          [pending]="pendingShown()"
+          [changed]="changedShown()" />
 
         <ds-icon
           name="clock"
@@ -124,7 +132,8 @@
     [text]="message().text"
     [state]="message().state"
     [messageId]="hintId()"
-    [reserve]="reserveMessageResolved()" />
+    [reserve]="reserveMessageResolved()"
+    [changed]="changedShown()" />
 </div>
 
 <ng-template #panel>

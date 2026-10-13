@@ -53,18 +53,6 @@ export function lineSegments(
   return segments;
 }
 
-/** `''` rather than a partial list when a coordinate is unplottable: one `NaN` voids the whole
- *  `points` attribute and the line vanishes silently.
- *
- *  @internal */
-export function polylinePoints(segment: readonly LinePoint[]): string {
-  if (segment.length === 0 || !segment.every(isPlottable)) {
-    return '';
-  }
-
-  return segment.map((point) => coordinatePair(point)).join(' ');
-}
-
 /** Fritsch-Carlson tangents: the slope at each reading, clamped so no segment turns back on itself.
  *  A zero slope on either side pins the tangent flat, keeping a plateau flat. */
 function monotoneTangents(segment: readonly LinePoint[]): number[] {

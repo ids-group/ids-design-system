@@ -7,7 +7,10 @@ import {
   input,
   numberAttribute,
 } from '@angular/core';
-import { staggerDelay } from '@ids-group-ltd/ids-design-system/components';
+import {
+  leaveMark,
+  staggerDelay,
+} from '@ids-group-ltd/ids-design-system/components';
 import { CHART_SCALES } from '@ids-group-ltd/ids-design-system/components/chart';
 import type { ChartValueFormat } from '@ids-group-ltd/ids-design-system/core';
 import type { WaterfallChartStep } from './waterfall-chart.types';
@@ -33,6 +36,8 @@ const VALUE_LABEL_GAP = 8;
 })
 export class WaterfallMarksComponent {
   private readonly scales = inject(CHART_SCALES);
+
+  protected readonly leaveMark = leaveMark;
 
   readonly steps = input<readonly WaterfallChartStep[]>([]);
 

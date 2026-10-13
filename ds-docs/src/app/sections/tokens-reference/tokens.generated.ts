@@ -42,22 +42,22 @@ export const SEMANTIC_PRIMARY: readonly ColourRow[] = [
   },
   {
     "name": "--primary-subtitle",
-    "value": "var(--blue-50)",
+    "value": "hsl(from var(--primary) h 100% 97%)",
     "notes": "Light brand tint (active table row, date range fill)."
   },
   {
     "name": "--primary-muted",
-    "value": "var(--blue-100)",
+    "value": "hsl(from var(--primary) h 95% 94%)",
     "notes": "Slightly stronger tint than subtle."
   },
   {
     "name": "--primary-muted-strong",
-    "value": "var(--blue-200)",
+    "value": "hsl(from var(--primary) h 95% 89%)",
     "notes": "Strongest tint in the brand-muted family."
   },
   {
     "name": "--primary-strong",
-    "value": "var(--blue-700)",
+    "value": "hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))",
     "notes": "Darker brand for text on brand tints."
   },
   {
@@ -347,11 +347,6 @@ export const SEMANTIC_TEXT: readonly ColourRow[] = [
     "inverted": true
   },
   {
-    "name": "--text-link",
-    "value": "var(--blue-700)",
-    "notes": "Hyperlink text."
-  },
-  {
     "name": "--text-on-primary",
     "value": "white",
     "notes": "Text on brand fill.",
@@ -412,7 +407,7 @@ export const SEMANTIC_SURFACE: readonly ColourRow[] = [
   },
   {
     "name": "--surface-tint",
-    "value": "var(--blue-50)",
+    "value": "hsl(from var(--primary) h 100% 97%)",
     "notes": "Brand-tinted surfaces."
   },
   {
@@ -691,13 +686,7 @@ export const SEMANTIC_STATUS: readonly ColourRow[] = [
   }
 ];
 
-export const SEMANTIC_LINK: readonly ColourRow[] = [
-  {
-    "name": "--link-visited",
-    "value": "hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%)",
-    "notes": "Visited link colour — desaturated, darkened primary hue."
-  }
-];
+export const SEMANTIC_LINK: readonly ColourRow[] = [];
 
 export const CHARTS: readonly ColourRow[] = [
   {
@@ -4536,6 +4525,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-message-icon-offset",
         "value": "calc((var(--_field-message-font-size) * var(--line-height-base) - var(--icon-sm)) / 2)",
         "notes": "Top offset that centres the 14px glyph on the FIRST line of the message rather than on the whole block, which matters once a message wraps. Defaults to a calc over --ds-field-message-font-size and --line-height-base, so it still holds if the message type is retuned; set a length to override."
+      },
+      {
+        "name": "--ds-field-changed-text-color",
+        "value": "var(--accent-strong)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-field-changed-color",
+        "value": "var(--accent)",
+        "notes": ""
       }
     ]
   },
@@ -4637,6 +4636,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-heatmap-chart-missing-color",
         "value": "var(--surface-secondary)",
         "notes": "Fill of a cell whose value is null, which no step of the heat scale stands for (default --surface-secondary)."
+      },
+      {
+        "name": "--ds-motion-chart-tooltip-move-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-tooltip-move-easing",
+        "value": "—",
+        "notes": ""
       }
     ]
   },
@@ -4726,6 +4735,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-icon-button-size",
         "value": "var(--hit-cozy)",
         "notes": "Icon button hit area size (defaults to --hit-cozy)."
+      }
+    ]
+  },
+  {
+    "component": "Info Hint",
+    "selector": ".info-hint",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-info-hint-color",
+        "value": "var(--icon-default)",
+        "notes": "Info hint icon colour, at rest and on hover (defaults to --icon-default)."
       }
     ]
   },
@@ -4982,8 +5003,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-link-color",
-        "value": "var(--text-link)",
-        "notes": "Link text colour. Defaults to --text-link."
+        "value": "var(--blue-700)",
+        "notes": "Link text colour. Defaults to --blue-700 in light and a light blue from the --blue-h hue in dark."
       },
       {
         "name": "--ds-link-color-hover",
@@ -4994,6 +5015,46 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-link-color-active",
         "value": "color-mix(in srgb, var(--_link-color) 65%, black)",
         "notes": "Link colour while pressed. Defaults to the link colour mixed 65% with black."
+      },
+      {
+        "name": "--ds-link-color-visited",
+        "value": "hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-color-visited-hover",
+        "value": "color-mix(in srgb, var(--_link-color-visited) 80%, black)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-color-visited-active",
+        "value": "color-mix(in srgb, var(--_link-color-visited) 65%, black)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-color-disabled",
+        "value": "var(--text-disabled)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-underline-color",
+        "value": "currentcolor",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-underline-thickness",
+        "value": "1px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-underline-offset",
+        "value": "2px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-link-focus-ring-color",
+        "value": "var(--focus-ring-color)",
+        "notes": ""
       }
     ]
   },
@@ -7442,6 +7503,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Table fill."
       },
       {
+        "name": "--ds-table-sort-active-icon-color",
+        "value": "var(--accent)",
+        "notes": "Active sort caret."
+      },
+      {
         "name": "--ds-table-sticky-scrollbar-offset",
         "value": "var(\n      --_table-sticky-scrollbar-offset,\n      calc(-1 * var(--_table-scroller-pad-bottom, 0px))\n    )",
         "notes": "Where the sticky horizontal scrollbar comes to rest, as any CSS length. Unset, the table measures its scroll container's bottom padding and cancels it, so the bar sits on the edge the reader sees; set this for a scrollport whose reachable edge is somewhere else. Overrides `[stickyScrollbarOffset]` and `DS_CONFIG.table.stickyScrollbarOffset`."
@@ -7505,11 +7571,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-table-divider",
         "value": "var(--border-divider)",
         "notes": "Row divider."
-      },
-      {
-        "name": "--ds-table-sort-active-icon-color",
-        "value": "var(--accent)",
-        "notes": "Active sort caret."
       },
       {
         "name": "--ds-table-icon-button-color",
@@ -8738,13 +8799,8 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "color"
   },
   {
-    "name": "--ds-motion-chart-tooltip-move-duration",
-    "value": "300ms",
-    "kind": "motion"
-  },
-  {
-    "name": "--ds-motion-chart-tooltip-move-easing",
-    "value": "var(--ease-standard)",
+    "name": "--ds-motion-chart-scale-marker-delay",
+    "value": "var(--duration-fast)",
     "kind": "other"
   },
   {

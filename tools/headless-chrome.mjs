@@ -101,8 +101,10 @@ export async function open(
       socket.send(JSON.stringify({ id, method, params, sessionId }));
     });
 
+  // A tab in somebody's running browser opens behind their current one.
   const { targetId } = await send('Target.createTarget', {
     url: 'about:blank',
+    background: Boolean(browserUrl),
   });
   const { sessionId } = await send('Target.attachToTarget', {
     targetId,
@@ -110,6 +112,11 @@ export async function open(
   });
   const s = (method, params) => send(method, params, sessionId);
   await s('Page.enable');
+  if (browserUrl) {
+    // A background tab produces no frames: animation frames stall and a screenshot waits forever.
+    await s('Emulation.setFocusEmulationEnabled', { enabled: true });
+    await s('Page.setWebLifecycleState', { state: 'active' });
+  }
   await s('Emulation.setCPUThrottlingRate', { rate: Number(throttle) });
   if (initScript)
     await s('Page.addScriptToEvaluateOnNewDocument', { source: initScript });

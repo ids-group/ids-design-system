@@ -10,7 +10,7 @@ import {
   type WritableSignal,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
-import { DsFieldBase } from './field-base';
+import { DsFormControlBase } from './field-base';
 
 /**
  * Value elements are searched FIRST: the number stepper renders its decrement button before its
@@ -109,7 +109,7 @@ function blurOwnControl(host: HTMLElement): void {
   host: { '[style.display]': 'hidden() ? "none" : null' },
 })
 export abstract class DsControlValueAccessor<T>
-  extends DsFieldBase
+  extends DsFormControlBase
   implements ControlValueAccessor
 {
   abstract readonly value: ModelSignal<T>;
@@ -167,7 +167,7 @@ export abstract class DsControlValueAccessor<T>
   host: { '[style.display]': 'hidden() ? "none" : null' },
 })
 export abstract class DsBooleanControlValueAccessor
-  extends DsFieldBase
+  extends DsFormControlBase
   implements ControlValueAccessor
 {
   abstract readonly checked: ModelSignal<boolean>;

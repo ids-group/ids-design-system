@@ -15,12 +15,8 @@
   <p class="block-desc t-s">
     Every hue clears 3:1 (WCAG 1.4.11); slot 8 is the neutral "other". A
     one-series chart takes
-    <code class="t-mono-inline">
-      --ds-chart-series-default-color
-    </code>, with
-    <code class="t-mono-inline">
-      --ds-chart-series-accent-color
-    </code> for the
+    <code class="t-mono-inline"> --ds-chart-series-default-color </code>, with
+    <code class="t-mono-inline"> --ds-chart-series-accent-color </code> for the
     highlighted row.
   </p>
 
@@ -29,12 +25,9 @@
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="'var(--ds-chart-series-' + n + '-color)'">
-        </div>
+          [style.background]="'var(--ds-chart-series-' + n + '-color)'"></div>
 
-        <code class="t-mono-inline">
-          --ds-chart-series-{{ n }}-color
-        </code>
+        <code class="t-mono-inline"> --ds-chart-series-{{ n }}-color </code>
       </div>
     }
   </div>
@@ -46,13 +39,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      --ds-chart-ramp-N-color
-    </code>: one hue, mid
+    <code class="t-mono-inline"> --ds-chart-ramp-N-color </code>: one hue, mid
     lightness, for ordered stages (funnel).
-    <code class="t-mono-inline">
-      --ds-chart-heat-N-color
-    </code>: full lightness
+    <code class="t-mono-inline"> --ds-chart-heat-N-color </code>: full lightness
     range, for cell-to-cell steps (heat map).
   </p>
 
@@ -61,12 +50,9 @@
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="'var(--ds-chart-ramp-' + n + '-color)'">
-        </div>
+          [style.background]="'var(--ds-chart-ramp-' + n + '-color)'"></div>
 
-        <code class="t-mono-inline">
-          --ds-chart-ramp-{{ n }}-color
-        </code>
+        <code class="t-mono-inline"> --ds-chart-ramp-{{ n }}-color </code>
       </div>
     }
   </div>
@@ -76,12 +62,9 @@
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="'var(--ds-chart-heat-' + n + '-color)'">
-        </div>
+          [style.background]="'var(--ds-chart-heat-' + n + '-color)'"></div>
 
-        <code class="t-mono-inline">
-          --ds-chart-heat-{{ n }}-color
-        </code>
+        <code class="t-mono-inline"> --ds-chart-heat-{{ n }}-color </code>
       </div>
     }
   </div>
@@ -95,9 +78,7 @@
   <p class="block-desc t-s">
     Light → dark, for ordinal magnitudes (utilisation %). Sequential and
     divergent ramps are for hand-drawn visuals: no component reads them, no
-    <code class="t-mono-inline">
-      --ds-chart-*
-    </code> override.
+    <code class="t-mono-inline"> --ds-chart-* </code> override.
   </p>
 
   <div class="palette is-6">
@@ -105,12 +86,9 @@
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="'var(--chart-sequential-' + n + ')'">
-        </div>
+          [style.background]="'var(--chart-sequential-' + n + ')'"></div>
 
-        <code class="t-mono-inline">
-          --chart-sequential-{{ n }}
-        </code>
+        <code class="t-mono-inline"> --chart-sequential-{{ n }} </code>
       </div>
     }
   </div>
@@ -130,8 +108,7 @@
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="divToken(n)">
-        </div>
+          [style.background]="divToken(n)"></div>
 
         <code class="t-mono-inline">
           {{ n > 0 ? '+' + n : n }}
@@ -149,17 +126,11 @@
   <table class="tbl">
     <thead>
       <tr>
-        <th>
-          Token
-        </th>
+        <th>Token</th>
 
-        <th>
-          Role
-        </th>
+        <th>Role</th>
 
-        <th>
-          Default
-        </th>
+        <th>Default</th>
       </tr>
     </thead>
 
@@ -187,29 +158,19 @@
   <p class="block-desc t-s">
     Other chart tokens (axis font size, threshold, dim, hover, focus ring, cap
     radius, bar gap, area, hatch): see the
-    <a routerLink="/reference/tokens-reference">
-      tokens reference
-    </a>.
+    <a class="link" routerLink="/reference/tokens-reference"> tokens reference </a>.
   </p>
 
-  <h3 class="block-title t-h4">
-    How a chart arrives
-  </h3>
+  <h3 class="block-title t-h4">How a chart arrives</h3>
 
   <table class="tbl">
     <thead>
       <tr>
-        <th>
-          Token
-        </th>
+        <th>Token</th>
 
-        <th>
-          Marks
-        </th>
+        <th>Marks</th>
 
-        <th>
-          Default
-        </th>
+        <th>Default</th>
       </tr>
     </thead>
 
@@ -221,13 +182,9 @@
           </code>
         </td>
 
-        <td>
-          Columns, bars, waterfall steps grow from the baseline
-        </td>
+        <td>Columns, bars, waterfall steps grow from the baseline</td>
 
-        <td>
-          600ms
-        </td>
+        <td>600ms</td>
       </tr>
 
       <tr>
@@ -237,13 +194,9 @@
           </code>
         </td>
 
-        <td>
-          Rings and lines sweep in
-        </td>
+        <td>Rings and lines sweep in</td>
 
-        <td>
-          600ms
-        </td>
+        <td>600ms</td>
       </tr>
 
       <tr>
@@ -253,13 +206,9 @@
           </code>
         </td>
 
-        <td>
-          Value labels and markers follow
-        </td>
+        <td>Value labels and markers follow</td>
 
-        <td>
-          180ms
-        </td>
+        <td>180ms</td>
       </tr>
 
       <tr>
@@ -269,13 +218,9 @@
           </code>
         </td>
 
-        <td>
-          Marks that fade or settle in place
-        </td>
+        <td>Marks that fade or settle in place</td>
 
-        <td>
-          400ms
-        </td>
+        <td>400ms</td>
       </tr>
     </tbody>
   </table>
@@ -327,43 +272,36 @@
 
   <p class="block-desc t-s">
     Every chart draws these: empty data shows
-    <code class="t-mono-inline">
-      emptyText
-    </code>
+    <code class="t-mono-inline"> emptyText </code>
     and
-    <code class="t-mono-inline">
-      [error]
-    </code>
+    <code class="t-mono-inline"> [error] </code>
 
-    <code class="t-mono-inline">
-      errorText
-    </code>. Unset copy comes from
-    <code class="t-mono-inline">
-      DS_INTL.chart
-    </code>.
+    <code class="t-mono-inline"> errorText </code>. Unset copy comes from
+    <code class="t-mono-inline"> DS_INTL.chart </code>.
   </p>
 
   <ul class="block-desc t-s">
     <li>
-      <code class="t-mono-inline">
-        [loading]
-      </code>, no data - skeleton in the chart's shape.
+      <code class="t-mono-inline"> [loading] </code>, no data - skeleton in the
+      chart's shape.
     </li>
 
     <li>
-      <code class="t-mono-inline">
-        [loading]
-      </code>, data on screen - plot under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and spinner; caption uncovered.
+      <code class="t-mono-inline"> [loading] </code>, data on screen - plot
+      under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and
+      spinner; caption uncovered.
     </li>
 
-    <li>
-      Skeleton on every load - pass empty data while loading.
-    </li>
+    <li>Skeleton on every load - pass empty data while loading.</li>
 
     <li>
-      <code class="t-mono-inline">
-        skeletonCount
-      </code> (default <code class="t-mono-inline">5</code>) - skeleton marks while the data's count is unknown: columns on <code class="t-mono-inline">ds-chart</code>, <code class="t-mono-inline">ds-column-chart</code>; slices on <code class="t-mono-inline">ds-pie-chart</code>; stages on <code class="t-mono-inline">ds-funnel-chart</code>; steps on <code class="t-mono-inline">ds-waterfall-chart</code>.
+      <code class="t-mono-inline"> skeletonCount </code> (default
+      <code class="t-mono-inline">5</code>) - skeleton marks while the data's
+      count is unknown: columns on <code class="t-mono-inline">ds-chart</code>,
+      <code class="t-mono-inline">ds-column-chart</code>; slices on
+      <code class="t-mono-inline">ds-pie-chart</code>; stages on
+      <code class="t-mono-inline">ds-funnel-chart</code>; steps on
+      <code class="t-mono-inline">ds-waterfall-chart</code>.
     </li>
   </ul>
 
@@ -400,63 +338,43 @@
   <table class="tbl">
     <thead>
       <tr>
-        <th>
-          Gesture
-        </th>
+        <th>Gesture</th>
 
-        <th>
-          Result
-        </th>
+        <th>Result</th>
       </tr>
     </thead>
 
     <tbody>
       <tr>
-        <td>
-          Pointer rests on a mark
-        </td>
+        <td>Pointer rests on a mark</td>
 
         <td>
           Panel opens after
-          <code class="t-mono-inline">
-            DS_CONFIG.chart.hoverDelayMs
-          </code>
+          <code class="t-mono-inline"> DS_CONFIG.chart.hoverDelayMs </code>
           (default <code class="t-mono-inline">0</code>), then answers at once
           until the pointer leaves the chart.
         </td>
       </tr>
 
       <tr>
-        <td>
-          Focus, tap
-        </td>
+        <td>Focus, tap</td>
 
-        <td>
-          Panel opens at once.
-        </td>
+        <td>Panel opens at once.</td>
       </tr>
 
       <tr>
-        <td>
-          Pointer moves on or leaves
-        </td>
+        <td>Pointer moves on or leaves</td>
 
         <td>
           One panel glides mark to mark; it closes
-          <code class="t-mono-inline">
-            tooltipLingerMs
-          </code> after the pointer
+          <code class="t-mono-inline"> tooltipLingerMs </code> after the pointer
           leaves (default <code class="t-mono-inline">500</code>,
-          <code class="t-mono-inline">
-            0
-          </code> at once).
+          <code class="t-mono-inline"> 0 </code> at once).
         </td>
       </tr>
 
       <tr>
-        <td>
-          Click a mark
-        </td>
+        <td>Click a mark</td>
 
         <td>
           Pins it: tooltip, highlight and dimming stay, a pin disc marks it,
@@ -465,20 +383,14 @@
       </tr>
 
       <tr>
-        <td>
-          Second click, press elsewhere, Unpin
-        </td>
+        <td>Second click, press elsewhere, Unpin</td>
 
-        <td>
-          Releases the pin.
-        </td>
+        <td>Releases the pin.</td>
       </tr>
 
       <tr>
         <td>
-          <kbd>
-            Esc
-          </kbd>
+          <kbd> Esc </kbd>
         </td>
 
         <td>
@@ -488,9 +400,7 @@
       </tr>
 
       <tr>
-        <td>
-          Touch tap
-        </td>
+        <td>Touch tap</td>
 
         <td>
           Pins, whatever <code class="t-mono-inline">pinOnClick</code> says.
@@ -498,52 +408,36 @@
       </tr>
 
       <tr>
-        <td>
-          <kbd>
-            Enter
-          </kbd> / <kbd>Space</kbd> on a focused mark
-        </td>
+        <td><kbd> Enter </kbd> / <kbd>Space</kbd> on a focused mark</td>
 
-        <td>
-          Fires the click output; never pins.
-        </td>
+        <td>Fires the click output; never pins.</td>
       </tr>
 
       <tr>
-        <td>
-          Scroll
-        </td>
+        <td>Scroll</td>
 
-        <td>
-          Closes a following panel; a pinned one moves with its mark.
-        </td>
+        <td>Closes a following panel; a pinned one moves with its mark.</td>
       </tr>
     </tbody>
   </table>
 
   <ul class="rules">
     <li>
-      Pinned panel takes the pointer: its text is selectable and zoomable
-      (WCAG 1.4.13). Unpinned, the pointer passes to the plot.
+      Pinned panel takes the pointer: its text is selectable and zoomable (WCAG
+      1.4.13). Unpinned, the pointer passes to the plot.
     </li>
 
     <li>
-      <code class="t-mono-inline">
-        pinOnClick="false"
-      </code> turns click
+      <code class="t-mono-inline"> pinOnClick="false" </code> turns click
       pinning off. Precedence:
       <code class="t-mono-inline">
-        pinOnClick &gt; DS_CONFIG.chart.pinOnClick &gt; true
-      </code>.
+        pinOnClick &gt; DS_CONFIG.chart.pinOnClick &gt; true </code
+      >.
     </li>
 
     <li>
-      <code class="t-mono-inline">
-        ds-line-chart
-      </code> and a
-      <code class="t-mono-inline">
-        ds-chart
-      </code> category cursor pin the
+      <code class="t-mono-inline"> ds-line-chart </code> and a
+      <code class="t-mono-inline"> ds-chart </code> category cursor pin the
       whole category.
     </li>
   </ul>
@@ -554,16 +448,11 @@
       labels only.
     </li>
 
-    <li>
-      A dot below 1.5:1 against the panel gets a ring.
-    </li>
+    <li>A dot below 1.5:1 against the panel gets a ring.</li>
 
     <li>
-      <code class="t-mono-inline">
-        tooltipSwatches
-      </code> forces dots on or
-      off; <code class="t-mono-inline">tooltip="none"</code> removes the
-      panel.
+      <code class="t-mono-inline"> tooltipSwatches </code> forces dots on or
+      off; <code class="t-mono-inline">tooltip="none"</code> removes the panel.
     </li>
   </ul>
 
@@ -574,9 +463,7 @@
         [categories]="tooltipDemoMonths"
         [series]="tooltipDemoSeries" />
 
-      <div class="state-cell-label">
-        tooltipSwatches unset (default)
-      </div>
+      <div class="state-cell-label">tooltipSwatches unset (default)</div>
     </div>
 
     <div class="state-cell">
@@ -586,9 +473,7 @@
         [series]="tooltipDemoSeries"
         [tooltipSwatches]="false" />
 
-      <div class="state-cell-label">
-        tooltipSwatches = false
-      </div>
+      <div class="state-cell-label">tooltipSwatches = false</div>
     </div>
 
     <div class="state-cell">
@@ -598,81 +483,55 @@
         [categories]="tooltipDemoMonths"
         [series]="tooltipDemoSeries" />
 
-      <div class="state-cell-label">
-        tooltip = none
-      </div>
+      <div class="state-cell-label">tooltip = none</div>
     </div>
   </div>
 
   <table class="tbl">
     <thead>
       <tr>
-        <th>
-          Token
-        </th>
+        <th>Token</th>
 
-        <th>
-          Paints
-        </th>
+        <th>Paints</th>
 
-        <th>
-          Default
-        </th>
+        <th>Default</th>
       </tr>
     </thead>
 
     <tbody>
       <tr>
         <td>
-          <code class="t-mono-inline">
-            --ds-chart-tooltip-bg-color
-          </code>
+          <code class="t-mono-inline"> --ds-chart-tooltip-bg-color </code>
         </td>
 
-        <td>
-          Panel fill
-        </td>
+        <td>Panel fill</td>
 
         <td>
-          <code class="t-mono-inline">
-            --tooltip-bg-color
-          </code>
+          <code class="t-mono-inline"> --tooltip-bg-color </code>
         </td>
       </tr>
 
       <tr>
         <td>
-          <code class="t-mono-inline">
-            --ds-chart-tooltip-text-color
-          </code>
+          <code class="t-mono-inline"> --ds-chart-tooltip-text-color </code>
         </td>
 
-        <td>
-          Panel text
-        </td>
+        <td>Panel text</td>
 
         <td>
-          <code class="t-mono-inline">
-            --tooltip-text-color
-          </code>
+          <code class="t-mono-inline"> --tooltip-text-color </code>
         </td>
       </tr>
 
       <tr>
         <td>
-          <code class="t-mono-inline">
-            --ds-chart-tooltip-border-color
-          </code>
+          <code class="t-mono-inline"> --ds-chart-tooltip-border-color </code>
         </td>
 
-        <td>
-          Panel border
-        </td>
+        <td>Panel border</td>
 
         <td>
-          <code class="t-mono-inline">
-            --tooltip-border-color
-          </code>
+          <code class="t-mono-inline"> --tooltip-border-color </code>
         </td>
       </tr>
     </tbody>
@@ -690,9 +549,7 @@
     [categories]="tooltipDemoMonths"
     [series]="tooltipDemoSeries" />
 
-  <h3 class="block-title t-h4">
-    Keyboard
-  </h3>
+  <h3 class="block-title t-h4">Keyboard</h3>
 
   <p class="block-desc t-s">
     With <code class="t-mono-inline">interactive</code>, the marks of a bar,
@@ -703,113 +560,73 @@
   <table class="tbl">
     <thead>
       <tr>
-        <th>
-          Key
-        </th>
+        <th>Key</th>
 
-        <th>
-          Action
-        </th>
+        <th>Action</th>
       </tr>
     </thead>
 
     <tbody>
       <tr>
         <td>
-          <kbd>
-            Tab
-          </kbd>
+          <kbd> Tab </kbd>
         </td>
 
-        <td>
-          Enters on one mark; again, leaves the chart.
-        </td>
+        <td>Enters on one mark; again, leaves the chart.</td>
       </tr>
 
       <tr>
         <td>
-          <kbd>
-            ←
-          </kbd>
+          <kbd> ← </kbd>
 
-          <kbd>
-            ↑
-          </kbd> / <kbd>→</kbd>
+          <kbd> ↑ </kbd> / <kbd>→</kbd>
 
-          <kbd>
-            ↓
-          </kbd>
+          <kbd> ↓ </kbd>
         </td>
 
-        <td>
-          Previous / next mark, wrapping.
-        </td>
+        <td>Previous / next mark, wrapping.</td>
+      </tr>
+
+      <tr>
+        <td><kbd> Home </kbd> / <kbd>End</kbd></td>
+
+        <td>First / last mark.</td>
+      </tr>
+
+      <tr>
+        <td><kbd> Enter </kbd> / <kbd>Space</kbd></td>
+
+        <td>Fires the click output; never pins.</td>
       </tr>
 
       <tr>
         <td>
-          <kbd>
-            Home
-          </kbd> / <kbd>End</kbd>
+          <kbd> Esc </kbd>
         </td>
 
-        <td>
-          First / last mark.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <kbd>
-            Enter
-          </kbd> / <kbd>Space</kbd>
-        </td>
-
-        <td>
-          Fires the click output; never pins.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <kbd>
-            Esc
-          </kbd>
-        </td>
-
-        <td>
-          Closes the panel, releases a pin.
-        </td>
+        <td>Closes the panel, releases a pin.</td>
       </tr>
     </tbody>
   </table>
 
   <p class="block-desc t-s">
     Category cursor (<code class="t-mono-inline">ds-line-chart</code>,
-    <code class="t-mono-inline">
-      ds-chart cursor="category"
-    </code>):
+    <code class="t-mono-inline"> ds-chart cursor="category" </code>):
   </p>
 
   <table class="tbl">
     <thead>
       <tr>
-        <th>
-          Key
-        </th>
+        <th>Key</th>
 
-        <th>
-          Action
-        </th>
+        <th>Action</th>
       </tr>
     </thead>
 
     <tbody>
       <tr>
         <td>
-          <kbd>
-            Tab
-          </kbd>
+          <kbd> Tab </kbd>
         </td>
 
         <td>
@@ -818,62 +635,34 @@
       </tr>
 
       <tr>
-        <td>
-          <kbd>
-            ←
-          </kbd> / <kbd>→</kbd>
-        </td>
+        <td><kbd> ← </kbd> / <kbd>→</kbd></td>
 
-        <td>
-          Previous / next band, wrapping.
-        </td>
+        <td>Previous / next band, wrapping.</td>
       </tr>
 
       <tr>
-        <td>
-          <kbd>
-            Home
-          </kbd> / <kbd>End</kbd>
-        </td>
+        <td><kbd> Home </kbd> / <kbd>End</kbd></td>
 
-        <td>
-          First / last band.
-        </td>
+        <td>First / last band.</td>
       </tr>
 
       <tr>
-        <td>
-          <kbd>
-            Enter
-          </kbd> / <kbd>Space</kbd> on a band
-        </td>
+        <td><kbd> Enter </kbd> / <kbd>Space</kbd> on a band</td>
 
         <td>
           Pins the category until focus moves to another band, unless
-          <code class="t-mono-inline">
-            pinOnClick
-          </code> is off.
+          <code class="t-mono-inline"> pinOnClick </code> is off.
         </td>
       </tr>
 
       <tr>
-        <td>
-          <kbd>
-            ↑
-          </kbd> / <kbd>↓</kbd>
-        </td>
+        <td><kbd> ↑ </kbd> / <kbd>↓</kbd></td>
 
-        <td>
-          Focuses one reading; the panel names it alone.
-        </td>
+        <td>Focuses one reading; the panel names it alone.</td>
       </tr>
 
       <tr>
-        <td>
-          <kbd>
-            Enter
-          </kbd> / <kbd>Space</kbd> on a reading
-        </td>
+        <td><kbd> Enter </kbd> / <kbd>Space</kbd> on a reading</td>
 
         <td>
           Fires <code class="t-mono-inline">pointClicked</code>; never pins.
@@ -882,93 +671,67 @@
 
       <tr>
         <td>
-          <kbd>
-            Esc
-          </kbd>
+          <kbd> Esc </kbd>
         </td>
 
-        <td>
-          From a reading back to the band; on the band, closes the panel.
-        </td>
+        <td>From a reading back to the band; on the band, closes the panel.</td>
       </tr>
     </tbody>
   </table>
 
-  <h3 class="block-title t-h4">
-    Dimming the other marks
-  </h3>
+  <h3 class="block-title t-h4">Dimming the other marks</h3>
 
   <ul class="rules">
     <li>
-      <code class="t-mono-inline">
-        dimOthers
-      </code>, off by default on every
+      <code class="t-mono-inline"> dimOthers </code>, off by default on every
       chart, fades all marks but the active one to
-      <code class="t-mono-inline">
-        --ds-chart-dim-opacity
-      </code>.
+      <code class="t-mono-inline"> --ds-chart-dim-opacity </code>.
+    </li>
+
+    <li>Active: rested hover, focus or pin. A pin keeps the dimming.</li>
+
+    <li>
+      A legend entry, a stage-table row and a scale step follow the marks in
+      every chart: they dim the rest only under
+      <code class="t-mono-inline">dimOthers</code>.
     </li>
 
     <li>
-      Active: rested hover, focus or pin. A pin keeps the dimming.
-    </li>
-
-    <li>
-      Legend entries and funnel stage-table rows dim the rest on hover or
-      focus, whatever <code class="t-mono-inline">dimOthers</code> says.
-    </li>
-
-    <li>
-      <code class="t-mono-inline">
-        highlighted
-      </code> singles out a series or
-      segment, whatever <code class="t-mono-inline">dimOthers</code> says.
+      <code class="t-mono-inline"> highlighted </code> on
+      <code class="t-mono-inline">dsColumnSeries</code> and
+      <code class="t-mono-inline">dsLineSeries</code> brightens or thickens a
+      series and dims the rest only under
+      <code class="t-mono-inline">dimOthers</code>; on
+      <code class="t-mono-inline">ds-bar-chart</code> it singles out a segment
+      whatever <code class="t-mono-inline">dimOthers</code> says.
     </li>
   </ul>
 
-  <h3 class="block-title t-h4">
-    Custom tooltip content
-  </h3>
+  <h3 class="block-title t-h4">Custom tooltip content</h3>
 
   <p class="block-desc t-s">
     A projected
-    <code class="t-mono-inline">
-      &lt;ng-template #dsChartTooltip&gt;
-    </code>
+    <code class="t-mono-inline"> &lt;ng-template #dsChartTooltip&gt; </code>
     replaces the panel body on bar, column, funnel, line and pie charts.
   </p>
 
   <dl class="spec">
     <dt>
-      <code class="t-mono-inline">
-        category
-      </code>
+      <code class="t-mono-inline"> category </code>
     </dt>
 
-    <dd>
-      The category; empty where the marks are the categories.
-    </dd>
+    <dd>The category; empty where the marks are the categories.</dd>
 
     <dt>
-      <code class="t-mono-inline">
-        entries
-      </code>
+      <code class="t-mono-inline"> entries </code>
     </dt>
 
     <dd>
       One per reading: <code class="t-mono-inline">label</code>,
-      <code class="t-mono-inline">
-        value
-      </code>,
-      <code class="t-mono-inline">
-        formatted
-      </code>,
-      <code class="t-mono-inline">
-        color
-      </code>, optional
-      <code class="t-mono-inline">
-        detail
-      </code>.
+      <code class="t-mono-inline"> value </code>,
+      <code class="t-mono-inline"> formatted </code>,
+      <code class="t-mono-inline"> color </code>, optional
+      <code class="t-mono-inline"> detail </code>.
     </dd>
   </dl>
 
@@ -986,15 +749,14 @@
         </strong>
 
         @for (entry of context.entries; track entry.label) {
-          <span>
-            {{ entry.label }}: {{ entry.formatted }}
-          </span>
+          <span> {{ entry.label }}: {{ entry.formatted }} </span>
         }
       </div>
     </ng-template>
   </ds-line-chart>
 
-  <pre class="t-mono"><code ngNonBindable>&lt;ds-line-chart [categories]="months" [series]="series"&gt;
+  <pre
+    class="t-mono"><code ngNonBindable>&lt;ds-line-chart [categories]="months" [series]="series"&gt;
   &lt;ng-template #dsChartTooltip let-context&gt;
     &lt;strong&gt;&#123;&#123; context.category &#125;&#125;&lt;/strong&gt;
     &#64;for (entry of context.entries; track entry.label) &#123;
@@ -1011,12 +773,8 @@
 
   <p class="block-desc t-s">
     Charts draw a bordered, padded box by default. Inside a card, use
-    <code class="t-mono-inline">
-      frame="none"
-    </code> per chart or
-    <code class="t-mono-inline">
-      DS_CONFIG.chart.frame
-    </code> per app.
+    <code class="t-mono-inline"> frame="none" </code> per chart or
+    <code class="t-mono-inline"> DS_CONFIG.chart.frame </code> per app.
   </p>
 
   <div class="states is-cols-2">
@@ -1025,9 +783,7 @@
         dataTable="none"
         [data]="frameDemoPoints()" />
 
-      <div class="state-cell-label">
-        frame = auto (default)
-      </div>
+      <div class="state-cell-label">frame = auto (default)</div>
     </div>
 
     <div class="state-cell">
@@ -1036,47 +792,33 @@
         dataTable="none"
         [data]="frameDemoPoints()" />
 
-      <div class="state-cell-label">
-        frame = none
-      </div>
+      <div class="state-cell-label">frame = none</div>
     </div>
   </div>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      --ds-chart-frame-*
-    </code> tokens size the
+    <code class="t-mono-inline"> --ds-chart-frame-* </code> tokens size the
     frame; switch it off with the input, not them.
   </p>
 
-  <h3 class="block-title t-h4">
-    Background
-  </h3>
+  <h3 class="block-title t-h4">Background</h3>
 
   <dl class="spec">
     <dt>
-      <code class="t-mono-inline">
-        --ds-chart-bg-color
-      </code>
+      <code class="t-mono-inline"> --ds-chart-bg-color </code>
     </dt>
 
     <dd>
-      The frame and every cut between marks: line band, segment seams,
-      hatching, halos. On a tinted card with
-      <code class="t-mono-inline">
-        frame="none"
-      </code>, the card's colour.
+      The frame and every cut between marks: line band, segment seams, hatching,
+      halos. On a tinted card with
+      <code class="t-mono-inline"> frame="none" </code>, the card's colour.
     </dd>
 
     <dt>
-      <code class="t-mono-inline">
-        --ds-chart-plot-bg-color
-      </code>
+      <code class="t-mono-inline"> --ds-chart-plot-bg-color </code>
     </dt>
 
-    <dd>
-      Only the area inside the axes; transparent when unset.
-    </dd>
+    <dd>Only the area inside the axes; transparent when unset.</dd>
   </dl>
 
   <div class="states is-cols-3">
@@ -1089,9 +831,7 @@
           [series]="tooltipDemoSeries" />
       </div>
 
-      <div class="state-cell-label">
-        grey card, background unset
-      </div>
+      <div class="state-cell-label">grey card, background unset</div>
     </div>
 
     <div class="state-cell">
@@ -1104,9 +844,7 @@
           [series]="tooltipDemoSeries" />
       </div>
 
-      <div class="state-cell-label">
-        --ds-chart-bg-color = the card
-      </div>
+      <div class="state-cell-label">--ds-chart-bg-color = the card</div>
     </div>
 
     <div class="state-cell">
@@ -1116,77 +854,28 @@
         [categories]="tooltipDemoMonths"
         [series]="tooltipDemoSeries" />
 
-      <div class="state-cell-label">
-        --ds-chart-plot-bg-color set
-      </div>
+      <div class="state-cell-label">--ds-chart-plot-bg-color set</div>
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
-    The annex table
-  </h3>
+  <h3 class="block-title t-h4">The annex table</h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline"> dataTable </code> renders the plot's numbers as
+    a table: the non-visual route to them. Per chart or on
+    <code class="t-mono-inline"> DS_CONFIG.chart.dataTable </code>.
+  </p>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      dataTable
-    </code> renders the plot's numbers
-    as a table: the non-visual route to them. Per chart or on
+      'none'
+    </code> (default) only when the page
+    already tabulates the numbers; <code class="t-mono-inline">'toggle'</code>
+    puts the table behind a closed disclosure,
     <code class="t-mono-inline">
-      DS_CONFIG.chart.dataTable
-    </code>.
+      'visible'
+    </code> shows it open.
   </p>
-
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          Value
-        </th>
-
-        <th>
-          Table
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'none'
-          </code> (default)
-        </td>
-
-        <td>
-          None. Use it only when the page already tabulates the numbers.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'toggle'
-          </code>
-        </td>
-
-        <td>
-          Behind a closed disclosure
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            'visible'
-          </code>
-        </td>
-
-        <td>
-          Open
-        </td>
-      </tr>
-    </tbody>
-  </table>
 
   <p class="block-desc t-s">
     A heat map always has its table: colour is its only magnitude channel.
@@ -1196,9 +885,7 @@
     <div class="state-cell">
       <ds-column-chart [data]="frameDemoPoints()" />
 
-      <div class="state-cell-label">
-        dataTable = none (default)
-      </div>
+      <div class="state-cell-label">dataTable = none (default)</div>
     </div>
 
     <div class="state-cell">
@@ -1206,9 +893,7 @@
         dataTable="toggle"
         [data]="frameDemoPoints()" />
 
-      <div class="state-cell-label">
-        dataTable = toggle
-      </div>
+      <div class="state-cell-label">dataTable = toggle</div>
     </div>
 
     <div class="state-cell">
@@ -1216,33 +901,23 @@
         dataTable="visible"
         [data]="frameDemoPoints()" />
 
-      <div class="state-cell-label">
-        dataTable = visible
-      </div>
+      <div class="state-cell-label">dataTable = visible</div>
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
-    What a chart says to a screen reader
-  </h3>
+  <h3 class="block-title t-h4">What a chart says to a screen reader</h3>
 
   <ul class="rules">
-    <li>
-      Marks are hidden from assistive tech.
-    </li>
+    <li>Marks are hidden from assistive tech.</li>
 
     <li>
       The plot's accessible name is one generated sentence:
-      <code class="t-mono-inline">
-        caption
-      </code>, each series with its
+      <code class="t-mono-inline"> caption </code>, each series with its
       readings, then a pointer to the annex table if rendered.
     </li>
 
     <li>
-      <code class="t-mono-inline">
-        summary
-      </code> replaces the sentence on all
+      <code class="t-mono-inline"> summary </code> replaces the sentence on all
       nine charts. A hand-written one goes stale.
     </li>
 
@@ -1252,16 +927,12 @@
     </li>
 
     <li>
-      <code class="t-mono-inline">
-        ds-sparkline
-      </code> has no sentence; its
+      <code class="t-mono-inline"> ds-sparkline </code> has no sentence; its
       name is <code class="t-mono-inline">label</code>.
     </li>
   </ul>
 
-  <h3 class="block-title t-h4">
-    App-wide chart defaults
-  </h3>
+  <h3 class="block-title t-h4">App-wide chart defaults</h3>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
@@ -1271,33 +942,15 @@
 
   <ul class="rules">
     <li>
-      <code class="t-mono-inline">
-        DS_CONFIG.chart
-      </code>:
-      <code class="t-mono-inline">
-        valueFormat
-      </code>,
-      <code class="t-mono-inline">
-        dataTable
-      </code>,
-      <code class="t-mono-inline">
-        frame
-      </code>,
-      <code class="t-mono-inline">
-        tooltipLingerMs
-      </code>,
-      <code class="t-mono-inline">
-        tooltipSwatches
-      </code>,
-      <code class="t-mono-inline">
-        pinOnClick
-      </code>,
-      <code class="t-mono-inline">
-        hoverDelayMs
-      </code> (config only),
-      <code class="t-mono-inline">
-        rendering
-      </code> (below).
+      <code class="t-mono-inline"> DS_CONFIG.chart </code>:
+      <code class="t-mono-inline"> valueFormat </code>,
+      <code class="t-mono-inline"> dataTable </code>,
+      <code class="t-mono-inline"> frame </code>,
+      <code class="t-mono-inline"> tooltipLingerMs </code>,
+      <code class="t-mono-inline"> tooltipSwatches </code>,
+      <code class="t-mono-inline"> pinOnClick </code>,
+      <code class="t-mono-inline"> hoverDelayMs </code> (config only),
+      <code class="t-mono-inline"> rendering </code> (below).
     </li>
 
     <li>
@@ -1306,9 +959,7 @@
 
     <li>
       Number locale: <code class="t-mono-inline">DsConfig.locale</code>, then
-      <code class="t-mono-inline">
-        LOCALE_ID
-      </code>.
+      <code class="t-mono-inline"> LOCALE_ID </code>.
     </li>
   </ul>
 
@@ -1326,31 +977,21 @@
   provideDsIntl(&#123; chart: &#123; empty: 'Нет данных', error: 'Не удалось загрузить' &#125; &#125;),
 ]</code></pre>
 
-  <h3 class="block-title t-h4">
-    A page with dozens of charts
-  </h3>
+  <h3 class="block-title t-h4">A page with dozens of charts</h3>
 
   <ul class="rules">
     <li>
-      <code class="t-mono-inline">
-        rendering.deferUntilVisible
-      </code> - a
-      still placeholder of the chart's shape until it comes within
-      <code class="t-mono-inline">
-        visibleMargin
-      </code> of the viewport.
+      <code class="t-mono-inline"> rendering.deferUntilVisible </code> - a still
+      placeholder of the chart's shape until it comes within
+      <code class="t-mono-inline"> visibleMargin </code> of the viewport.
     </li>
 
     <li>
-      <code class="t-mono-inline">
-        buildAheadMargin
-      </code> - charts this close
+      <code class="t-mono-inline"> buildAheadMargin </code> - charts this close
       are built while the page is idle.
     </li>
 
-    <li>
-      A built chart off screen costs no style, layout or paint.
-    </li>
+    <li>A built chart off screen costs no style, layout or paint.</li>
 
     <li>
       An unbuilt chart exposes only its caption to screen readers: leave

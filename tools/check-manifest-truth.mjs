@@ -255,6 +255,13 @@ function buildSurface(files) {
       /^\s+(?:readonly\s+)?([A-Za-z_][A-Za-z0-9_]*)\??:\s/gm,
     ))
       members.add(member[1]);
+    // A type literal intersected onto another type, written on one line:
+    // `}['format'] & { readonly handlesReadout?: boolean }`.
+    for (const literal of text.matchAll(/&\s*\{([^{}]*)\}/g))
+      for (const member of literal[1].matchAll(
+        /(?:^|[;,])\s*(?:readonly\s+)?([A-Za-z_][A-Za-z0-9_]*)\??:\s/g,
+      ))
+        members.add(member[1]);
     for (const exported of text.matchAll(/exportAs:\s*'([^']+)'/g))
       directives.add(exported[1]);
 
@@ -739,6 +746,7 @@ const FRAMEWORK_NAMES = new Set([
   'routerLinkActive',
   'Signal',
   'strictTemplates',
+  'TemplateRef',
   'UrlTree',
   'useValue',
   'ValidationErrors',
@@ -765,6 +773,7 @@ const FRAMEWORK_NAMES = new Set([
   'NaN',
   'null',
   'Parameters',
+  'Record',
   'toLocaleString',
   // CSS
   'translateX',

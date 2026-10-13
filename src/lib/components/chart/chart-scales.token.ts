@@ -10,6 +10,19 @@ import type {
 export interface ChartAxisEntry extends ChartTooltipEntry {
   /** Where the reading is drawn, in plot pixels from the top; a category panel orders rows by it. */
   readonly y?: number;
+  /** The value axis `y` is measured on. Absent means the first. */
+  readonly axis?: ChartAxis;
+}
+
+/** The reading the value axis answers while a mark is hovered: a guide from the axis at `y` and the
+ *  axis value there in a pill. */
+export interface ChartAxisReadout {
+  readonly categoryIndex: number;
+  /** In plot pixels from the top, on the axis `axis` names (absent: the first). */
+  readonly y: number;
+  readonly axis?: ChartAxis;
+  /** `'plot'` runs the guide across the plot; `'mark'` stops it at the mark's category. */
+  readonly reach?: 'plot' | 'mark';
 }
 
 /** What a mark hands the container to open its panel: the mark decides the content and anchor, the container ensures a plot never opens two. */
@@ -23,12 +36,27 @@ export interface ChartTooltipSource {
   /** Whether the mark's own panel is about the category, as `tooltip="axis"` is; one such mark turns
    *  the category cursor on under `cursor="auto"`. */
   readonly readsCategory?: Signal<boolean>;
+  /** Whether the mark sits in a stack; its own panel hangs over the stack's top, clear of the segments above it. */
+  readonly stacked?: Signal<boolean>;
   /** This mark's reading at the cursor's category as an element; a category panel hangs over the highest. Absent falls back to `origin`. */
   readonly axisOrigin?: Signal<Element | null>;
+  /** This mark's top reading at the cursor's category in plot pixels from the top, while it draws no
+   *  element there; the panel and the pin anchor to it as to a marker. */
+  readonly axisReadingY?: Signal<number | null>;
   /** What this mark reads at the cursor's category, whatever its own tooltip setting. */
   readonly axisEntries?: Signal<readonly ChartAxisEntry[]>;
   /** The drawn element of each `axisEntries` reading, same order; the keyboard focuses it. */
   readonly axisPointElements?: Signal<readonly (Element | null)[]>;
+  /** The reading of the mark answering the pointer or focus, while the category cursor is off. */
+  readonly axisReadout?: Signal<ChartAxisReadout | null>;
+  /** Every reading this mark draws, per category; a dragged range sums them. */
+  readonly valuesByCategory?: Signal<readonly (readonly number[])[]>;
+}
+
+/** The categories a drag selected, both ends included. */
+export interface ChartCategoryRange {
+  readonly from: number;
+  readonly to: number;
 }
 
 /** The drawable rectangle inside `ds-chart`, in CSS pixels; one `viewBox` user unit is one pixel. */
@@ -67,6 +95,8 @@ export interface ChartScales {
     readonly index: number;
     readonly event: PointerEvent;
   } | null>;
+  /** The categories a drag selected; marks outside it fade. Absent or `null` means none. */
+  readonly selectedRange?: Signal<ChartCategoryRange | null>;
   /** How long a resting pointer waits before a mark answers it. Absent means at once. */
   readonly hoverDelayMs?: Signal<number>;
   /** The band over the active category. `null` while `cursor` is off or nothing is active. */
@@ -78,8 +108,14 @@ export interface ChartScales {
   } | null>;
   setActiveIndex(index: number): void;
   /** Contributes values to the shared domain under a caller-owned id; the same id replaces its earlier report.
-   *  Call from an `effect`: required inputs are unreadable in the constructor. */
-  reportDomain(id: string, values: readonly number[], axis?: ChartAxis): void;
+   *  Call from an `effect`: required inputs are unreadable in the constructor. A `hidden` report
+   *  holds the axis only while `rescaleOnHide` is off. */
+  reportDomain(
+    id: string,
+    values: readonly number[],
+    axis?: ChartAxis,
+    hidden?: boolean,
+  ): void;
   /** Withdraws a contribution. */
   releaseDomain(id: string): void;
   /** Offers a panel to open while this mark is active; the same id replaces the offer. */

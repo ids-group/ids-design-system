@@ -7,9 +7,12 @@
 @Component({ selector: 'ds-field-message' })
 export class FieldMessageComponent {
     private static readonly BUILT_IN;
+    public readonly changed = input(false, { transform: booleanAttribute });
+    protected readonly changedText = computed(…);
     private readonly config;
     public readonly icon = input<IconName | false | null>(null);
     protected readonly iconResolved = computed<IconName | null>(…);
+    private readonly intl;
     public readonly messageId = input<string | null>(null);
     public readonly reserve = input(false, { transform: booleanAttribute });
     public readonly state = input<FieldMessageState>('default');
@@ -18,15 +21,27 @@ export class FieldMessageComponent {
 
 // @internal
 export type FieldMessageState = 'default' | 'error' | 'warning' | 'success';
+
+// @internal
+@Component({ selector: 'ds-field-status' })
+export class FieldStatusComponent {
+    public readonly changed = input(false);
+    public readonly pending = input(false);
+}
 ```
 
 ## CSS hooks
 
 ```css
 ds-field-message {
+    --ds-field-changed-text-color: var(--accent-strong);
     --ds-field-message-color: var(--text-tertiary);
     --ds-field-message-font-size: var(--font-size-xs);
     --ds-field-message-icon-gap: var(--space-1);
     --ds-field-message-icon-offset: calc((var(--_field-message-font-size) * var(--line-height-base) - var(--icon-sm)) / 2);
+}
+
+ds-field-status {
+    --ds-field-changed-color: var(--accent);
 }
 ```

@@ -17,31 +17,35 @@ export class HeatmapChartComponent extends DsChartBase implements ChartDimmable,
     protected readonly activeMark = chartActiveMark(…);
     public readonly cellClicked = output<HeatmapChartCell>();
     protected cellIndex(rowIndex: number, columnIndex: number): number;
-    protected readonly columnStagger = computed(…);
+    protected cellStagger(rowIndex: number, columnIndex: number): string;
     public readonly columns = input<readonly string[]>([]);
     public readonly data = input<readonly HeatmapChartRow[]>([]);
     public readonly dimOthers = input(false, { transform: booleanAttribute });
     private readonly domain;
     private readonly flatCells;
     protected readonly highlightedStep = signal<number | null>(…);
+    private readonly host;
     protected isCellDimmed(cell: PlacedCell): boolean;
     protected readonly isEmpty = computed(…);
+    protected readonly leaveMark = leaveMark;
     public readonly max = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
     public readonly min = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
     protected onCellClick(row: PlacedRow, cell: PlacedCell, rowIndex: number): void;
     protected onCellPress(cell: PlacedCell, index: number, event: Event): void;
-    protected onStepEnter(step: number, event: PointerEvent): void;
-    protected onStepLeave(): void;
     protected readonly renderReady = chartRenderGate(…);
     protected readonly rows = computed<readonly PlacedRow[]>(…);
+    protected readonly scaleMarker = computed(…);
+    private readonly scaleMarkerIndex;
     protected readonly scaleMaxLabel = computed(…);
     protected readonly scaleMinLabel = computed(…);
     protected readonly scaleSteps = computed(…);
+    private readonly settleScaleMarker;
+    public readonly showScaleMarker = input(true, { transform: booleanAttribute });
     public readonly showValues = input(false, { transform: booleanAttribute });
     protected readonly skeletonColumns = computed(…);
     protected readonly skeletonRows = computed(…);
     public readonly staggerMs = input(40, { transform: numberAttribute });
-    private readonly stepDwell;
+    protected readonly stepHighlight = dwellHighlight(…);
     protected readonly tableColumns = computed<readonly string[]>(…);
     protected readonly tableRows = computed<readonly ChartDataRow[]>(…);
     public readonly tooltip = input<ChartItemTooltipTrigger>('item');
@@ -72,6 +76,8 @@ ds-heatmap-chart {
     --ds-motion-chart-mark-enter-duration: (none);
     --ds-motion-chart-state-duration: (none);
     --ds-motion-chart-state-easing: (none);
+    --ds-motion-chart-tooltip-move-duration: (none);
+    --ds-motion-chart-tooltip-move-easing: (none);
     --ds-radius-control: (none);
 }
 ```

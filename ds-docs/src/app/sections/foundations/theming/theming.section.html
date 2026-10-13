@@ -293,6 +293,149 @@
   </p>
 
   <h3 class="block-title t-h4">
+    Brand checklist
+  </h3>
+
+  <p class="block-desc t-s">
+    Five tokens take their hue from
+    <code class="t-mono-inline">
+      --primary
+    </code> in both themes. Check each against the brand; set it where it
+    fails. Links stay blue under any brand: set
+    <code class="t-mono-inline">
+      --ds-link-color
+    </code> to change them.
+  </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Token
+        </th>
+
+        <th>
+          Paints
+        </th>
+
+        <th>
+          Must meet
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --primary-strong
+          </code>
+        </td>
+
+        <td>
+          Text on a tint: tag, tonal button, selected row, tab, sidenav item
+        </td>
+
+        <td>
+          4.5:1 on every tint and on
+          <code class="t-mono-inline">
+            --surface-default
+          </code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --surface-tint
+          </code>
+        </td>
+
+        <td>
+          Active rows and items: list, tree, empty state
+        </td>
+
+        <td>
+          Text and link 4.5:1 on it
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --primary-subtitle
+          </code>
+        </td>
+
+        <td>
+          Selected option; tonal fills: button, tabs, table, calendar day,
+          sidenav item
+        </td>
+
+        <td>
+          Text 4.5:1 on it
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --primary-muted
+          </code>
+        </td>
+
+        <td>
+          Selected option on hover; button, tag, avatar, sidenav item
+        </td>
+
+        <td>
+          Text 4.5:1 on it
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">
+            --primary-muted-strong
+          </code>
+        </td>
+
+        <td>
+          Tonal button hover, outline button border
+        </td>
+
+        <td>
+          Text 4.5:1 on it
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="rules">
+    <li>
+      Light brand (yellow, lime, cyan): the derived
+      <code class="t-mono-inline">
+        --primary-strong
+      </code> fails, set it
+    </li>
+
+    <li>
+      Still on <code class="t-mono-inline">--primary-h/s/l</code>: focus ring,
+      field halo; set the channels
+    </li>
+
+    <li>
+      Dark: restate <code class="t-mono-inline">--primary</code> and the
+      channels under
+      <code class="t-mono-inline">
+        [data-theme='dark'][data-brand]
+      </code>
+    </li>
+  </ul>
+
+  <pre class="t-mono-block">{{ brandChecklistSnippet }}</pre>
+
+  <h3 class="block-title t-h4">
     Picking a theme (consumer)
   </h3>
 
@@ -375,7 +518,8 @@
           </code>, then Angular's
           <code class="t-mono-inline">
             LOCALE_ID
-          </code>
+          </code>; its default en-US reads as en-GB (Monday, 24 hours,
+          DD/MM/YYYY)
         </td>
       </tr>
 

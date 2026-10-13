@@ -1,6 +1,7 @@
 <figure
   class="waterfall-chart"
   dsChartStates
+  morphGrowth="up"
   messageAxes
   [pinned]="pinned()"
   [caption]="caption()"
@@ -8,7 +9,7 @@
   [errorText]="errorTextResolved()"
   [pending]="(loading() && isEmpty()) || !renderReady()"
   [reloading]="loading()"
-  [dataTable]="dataTableResolved() !== 'none'"
+  [dataTable]="dataTableResolved()"
   [shimmer]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
@@ -35,6 +36,7 @@
     [tickCount]="tickCount()"
     [valueFormat]="valueFormatResolved()"
     [interactive]="interactive()"
+    [showAxisReadout]="showAxisReadout()"
     [summary]="accessibleName()">
     <svg:g
       dsWaterfallMarks
@@ -49,6 +51,7 @@
       dsColumnSeries
       showValues="false"
       soleSeries
+      runningTotal
       [data]="points()"
       [offsets]="offsets()"
       [interactive]="interactive()"

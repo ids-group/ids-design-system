@@ -87,6 +87,8 @@
     color: var(--_menu-item-error-label-color);
 
     &:hover { background: var(--error-subtitle); }
+
+    &:active:not(.disabled) { background: var(--error-muted); }
   }
 
   .submenu-chevron {

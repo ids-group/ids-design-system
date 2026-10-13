@@ -12,7 +12,10 @@ const put = (path, text) => {
   mkdirSync(dirname(join(root, path)), { recursive: true });
   writeFileSync(join(root, path), text);
 };
-put('old/a.scss', '.gone-class { color: var(--ds-gone-token); }\n.kept {}\n');
+put(
+  'old/a.scss',
+  "@use 'chart-motion';\n@mixin sweeps-in($ring) {}\n@include chart-motion.sweeps-in('.ring');\n.gone-class { color: var(--ds-gone-token); width: math.div(1, 2); }\n.kept {}\n",
+);
 put('old/a.html', '<span class="markup-gone kept"></span>\n');
 put('new/a.scss', '.kept {}\n');
 put(

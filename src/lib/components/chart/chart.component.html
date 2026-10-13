@@ -1,6 +1,7 @@
 <figure
   class="chart"
   dsChartStates
+  morphGrowth="up"
   messageAxes
   [unpin]="drawsUnpin"
   [pinned]="cursorPinned()"
@@ -41,6 +42,7 @@
       class="canvas"
       preserveAspectRatio="xMidYMid meet"
       [class.pins]="bandPins()"
+      [class.selects-range]="selectRange()"
       [style.block-size.px]="viewHeight()"
       [attr.viewBox]="viewBox()">
       <rect
@@ -64,6 +66,8 @@
           #cursorBandEl
           class="cursor-anchor"
           aria-hidden="true"
+          [class.on-reading]="readingY() !== null"
+          [style.--_reading-y.px]="readingY()"
           [attr.x]="band.x"
           [attr.y]="band.top"
           [attr.width]="band.width"
@@ -74,22 +78,39 @@
         <g
           class="cursor"
           aria-hidden="true"
+          dsChartPlaced
           animate.enter="cursor-in"
-          animate.leave="cursor-out">
+          animate.leave="cursor-out"
+          [style.transform]="'translateX(' + band.x + 'px)'">
           <rect
             class="category-band"
-            [attr.x]="band.x"
             [attr.y]="band.top"
             [attr.width]="band.width"
             [attr.height]="band.bottom - band.top" />
 
           <line
             class="cursor-line"
-            [attr.x1]="band.x + band.width / 2"
-            [attr.x2]="band.x + band.width / 2"
+            [attr.x1]="band.width / 2"
+            [attr.x2]="band.width / 2"
             [attr.y1]="band.top"
             [attr.y2]="band.bottom" />
         </g>
+      }
+
+      @if (
+          pinnedLine() &&
+          cursorPinned() &&
+          cursorBand(); as band
+        ) {
+        <line
+          class="cursor-line pinned-line"
+          aria-hidden="true"
+          dsChartPlaced
+          animate.enter="cursor-in"
+          animate.leave="cursor-out"
+          [style.transform]="'translateX(' + (band.x + band.width / 2) + 'px)'"
+          [attr.y1]="band.top"
+          [attr.y2]="band.bottom" />
       }
 
       <!-- Not on the svg: an aria-hidden ancestor leaves a focusable projected mark
@@ -102,8 +123,7 @@
             class="grid-line"
             [attr.x1]="plot().left"
             [attr.x2]="plotRight()"
-            [attr.y1]="tick.y"
-            [attr.y2]="tick.y" />
+            [style.transform]="'translateY(' + tick.y + 'px)'" />
         }
 
         <line
@@ -126,8 +146,7 @@
               class="grid-line is-secondary"
               [attr.x1]="plot().left"
               [attr.x2]="plotRight()"
-              [attr.y1]="tick.y"
-              [attr.y2]="tick.y" />
+              [style.transform]="'translateY(' + tick.y + 'px)'" />
           }
         }
 
@@ -157,6 +176,34 @@
         }
       </g>
 
+      @if (rangeBand(); as range) {
+        <rect
+          class="range-band"
+          aria-hidden="true"
+          dsChartPlaced
+          animate.enter="cursor-in"
+          animate.leave="cursor-out"
+          [attr.x]="range.x"
+          [attr.y]="range.top"
+          [attr.width]="range.width"
+          [attr.height]="range.height" />
+      }
+
+      @if (shownReadout(); as readout) {
+        <g
+          class="readout"
+          aria-hidden="true"
+          dsChartPlaced
+          animate.enter="cursor-in"
+          animate.leave="cursor-out"
+          [style.transform]="'translateY(' + readout.y + 'px)'">
+          <line
+            class="readout-guide"
+            [attr.x1]="readout.x1"
+            [attr.x2]="readout.x2" />
+        </g>
+      }
+
       <!-- Two slots so a reference line paints under the marks in any source order. Both stay
            inside `.marks`, which the boot transition guard is keyed on. -->
       <g class="marks">
@@ -183,6 +230,16 @@
               (focus)="onStopFocus(stop.index, $event)"
               (blur)="onStopBlur($event)" />
           }
+
+          <!-- One ring for every stop, so focus glides to the next category with the panel. -->
+          <rect
+            class="stop-ring"
+            aria-hidden="true"
+            dsChartPlaced
+            [attr.y]="plot().top"
+            [attr.width]="bandWidth()"
+            [attr.height]="plot().height"
+            [style.transform]="'translateX(' + focusedStopX() + 'px)'" />
         </g>
       }
 
@@ -231,7 +288,7 @@
             text-anchor="end"
             [style.fill]="axisLabelFill()"
             [attr.x]="axisLabelX()"
-            [attr.y]="tick.y">
+            [style.transform]="'translateY(' + tick.y + 'px)'">
             {{ tick.label }}
           </text>
         }
@@ -242,23 +299,28 @@
             [style.fill]="secondaryAxisLabelFill()"
             [attr.text-anchor]="secondaryLabelAnchor()"
             [attr.x]="secondaryLabelX()"
-            [attr.y]="tick.y">
+            [style.transform]="'translateY(' + tick.y + 'px)'">
             {{ tick.label }}
           </text>
         }
 
-        @for (label of categoryLabels(); track label.index) {
+        <!-- Keyed by category and placed by `transform`, so a label glides with its column when
+             another category comes or goes. -->
+        @for (label of categoryLabels(); track label.key) {
           <text
             class="category-label"
+            [class.is-hot]="label.index === hotCategory()"
             [class.is-rotated]="categoryLabelsRotated()"
             [attr.text-anchor]="categoryLabelsRotated() ? 'end' : 'middle'"
-            [attr.x]="label.x"
-            [attr.y]="categoryLabelY()"
-            [attr.transform]="
-              categoryLabelsRotated()
-                ? 'rotate(-45 ' + label.x + ' ' + categoryLabelY() + ')'
-                : null
+            [style.transform]="
+              'translate(' +
+              label.x +
+              'px, ' +
+              categoryLabelY() +
+              'px)' +
+              (categoryLabelsRotated() ? ' rotate(-45deg)' : '')
             "
+            (animate.leave)="leaveMark($event)"
             (pointerenter)="onCategoryLabelEnter(label.index, $event)"
             (pointerleave)="onCategoryLabelLeave()">
             {{ label.text }}
@@ -269,17 +331,65 @@
         <ng-content select="[dsReferenceLabel], [dsSeriesAnnotation]" />
       </g>
 
-      @if (cursorPinned() && cursorBand(); as band) {
+      <!-- Over the tick labels it covers; its guide stays under the marks. -->
+      @if (shownReadout(); as readout) {
         <g
-          dsChartPinMarker
-          [attr.transform]="
-            'translate(' +
-            (band.x + band.width / 2) +
-            ',' +
-            bandPinY() +
-            ')'
-          ">
+          class="readout"
+          aria-hidden="true"
+          dsChartPlaced
+          animate.enter="cursor-in"
+          animate.leave="cursor-out"
+          [style.transform]="'translateY(' + readout.y + 'px)'">
+          <rect
+            class="pill"
+            [attr.x]="readout.pillX"
+            [attr.width]="readout.pillWidth" />
+
+          <text
+            class="readout-text pill-text"
+            text-anchor="middle"
+            [attr.x]="readout.pillX + readout.pillWidth / 2">
+            {{ readout.label }}
+          </text>
         </g>
+      }
+
+      @if (rangeBand(); as range) {
+        <g
+          class="range-pill"
+          aria-hidden="true"
+          animate.enter="cursor-in"
+          animate.leave="cursor-out"
+          [style.transform]="
+            'translate(' + range.pillX + 'px, ' + range.pillY + 'px)'
+          ">
+          <rect
+            class="pill"
+            [attr.x]="-range.pillWidth / 2"
+            [attr.width]="range.pillWidth" />
+
+          <text
+            class="range-text pill-text"
+            text-anchor="middle">
+            {{ range.label }}
+          </text>
+        </g>
+      }
+
+      <!-- Keyed by category: another category takes a new pin that pops in; the same one glides with the data. -->
+      @for (pinnedCategory of pinnedCategories(); track pinnedCategory) {
+        @if (cursorBand(); as band) {
+          <g
+            class="band-pin"
+            [style.transform]="
+              'translateX(' + (band.x + band.width / 2) + 'px)'
+            ">
+            <g
+              dsChartPinMarker
+              [attr.transform]="'translate(0,' + bandPinY() + ')'">
+            </g>
+          </g>
+        }
       }
     </svg>
   </div>

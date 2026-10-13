@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**133 open — 2 P1, 10 P2, 121 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
+**133 open — 2 P1, 11 P2, 120 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 2
 
@@ -21,7 +21,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **Asked by Stas**
   - ½ A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
 
-### P2 — 10
+### P2 — 11
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -30,18 +30,19 @@ is stale. Closing an item means deleting the item and nothing else.
 - **Faster gates (Stas, 2026-10-09: after the release)**
   - `tools/check.mjs` runs every check of a group one after another
 - **Asked by Stas**
+  - A clipped value's tooltip should line up with the text it completes (Stas, 2026-10-10)
   - Tooltips and trigger-anchored overlays should follow their trigger on scroll, not close (Stas, 2026-10-08)
   - Document how to build `ds-modal` actions (Stas, 2026-10-06)
   - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
 - **Open verdicts, each drawn in a deck**
-  - Six Unreleased behaviour changes shipped without a choice between alternatives
+  - Six behaviour changes published in 0.14.7 without a choice between alternatives
 - **Tooling**
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 121
+### P3 — 120
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -98,10 +99,8 @@ is stale. Closing an item means deleting the item and nothing else.
   - `ds-autocomplete`'s arrow keys walk a private copy of the list cursor
 - **Open verdicts, each drawn in a deck**
   - Which public tokens the library never reads go?
-  - How much motion do the charts get?
   - Does the picker list height become a public token, or stay behind `panelClass`?
-  - Do the date picker's first day of the week and the time picker's 12h/24h default from …
-  - Should the `ds-breadcrumbs` hover colour derive from `--text-link`, like the `.link` helper?
+  - Should the `ds-breadcrumbs` hover colour derive from the link colour (`--ds-link-color`), like the `.link` helper?
 - **Tooling**
   - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
@@ -126,14 +125,17 @@ is stale. Closing an item means deleting the item and nothing else.
 - **Component feature gaps**
   - What the glyph-clip fix leaves to measure or decide
   - `ds-select` cannot offer "create «what I typed»", and the reason is that it has no place to type (recorded 2026-09-09, Stas)
+  - Keep one of the two ways `ds-info-hint` takes rich content (Stas, after consumers use them)
   - `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's framing; Stas 2026-09-01: a `DS_CONFIG` flag works too, as `prototype: true`)
   - Three edges left open on `ds-table` row expansion and the resize handle, each a judgement call rather than a defect
 - **The chart family read as an architecture (audited 2026-09-22)**
-  - Four exports on the package surface have no consumer in `src/`
+  - `formatTick` on the package surface has no consumer in `src/`
   - `'none'` and `'grouped'` are the same value on `ds-column-chart`
   - Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea
+- **Two chart interactions held back from deck `chart-motion-extras` (Stas, 2026-10-12: not now)**
+  - «Разница между двумя колонками» and «Отток виден на воронке», drawn live in deck `implemented/chart-motion-extras.html`
 - **Wrapping in a `ds-table` cell (recorded 2026-10-09, Stas: parked, come back later)**
-  - Two wrap options for a `truncate` column, drawn in deck `26-table-wrap-parked.html`
+  - Two wrap options for a `truncate` column, drawn in deck `23-table-wrap-parked.html`
 - **ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)**
   - `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them
 - **The global `.icon` squeezes the `ds-icon` box (recorded 2026-10-09, from the mm-ecm consumer)**
@@ -146,7 +148,6 @@ is stale. Closing an item means deleting the item and nothing else.
   - Primary-button CTA token layer — ASKED 2026-08-05, Stas: keep in the backlog
   - MED cluster — ASKED 2026-08-05, Stas: keep in the backlog
   - Default muted-text token fails WCAG AA (surfaced 2026-07-13 by the NPA-85 Branding agent's contrast audit)
-  - Brand-unsafe role tokens — several roles keep the blue ramp on a non-blue brand (surfaced 2026-07-13, NPA-85 Branding agent)
 - **Virtualising a long picker list (recorded 2026-08-31, §9 P5, Stas: record only)**
   - Five thousand options render five thousand rows
 - **A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)**
@@ -423,8 +424,13 @@ Each has somebody behind it. Nothing here is speculative work.
 
 ## Asked by Stas
 
-- [~] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `ecm-fix/table-auto-column-clip`.
-  Stas picked «Колонка растёт до текста» (deck `20-table-truncate-clip.html` on branch `ecm-feat/table-truncate-column-clip`): a `truncate` column without `width` takes what the other columns leave at their content width, up to its text, and clips at its column width; its floor is the header label. Built on the work branch with the regression harness `tools/table-clip-harness.mjs` (dev-only route `/harness/table-clip`). Left: Stas's two open verdicts in deck `25-table-truncate-result.html` - the general column sizing rules (by column kind, by text length as built, or equal shares) and width stability across pages (the built rule measures the rows on screen: harness `paging-page-1` / `-2` at 1100px, Email 302 -> 552px, City 200 -> 80px between pages; options: widths from config and headers, measured once and locked, or from all data / a server hint); then merge.
+- [ ] **[P2] A clipped value's tooltip should line up with the text it completes (Stas, 2026-10-10).** `dsTooltipWhenClipped` opens a panel capped at `--tooltip-maxw` (240px), so the full text of a wider clipped link wraps narrower than the ellipsized text under it (mm-ecm Workspaces, program name). **Wanted (Stas):** for a clip-test tooltip the minimum width stays as it is today, and the maximum width becomes the visible width of the clipped element, so text that would grow the panel wraps at the width of the ellipsized text. Deck before the change.
+- [~] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `ecm-feat/table-width-by-type`, built and waiting on the sign-off in deck `28-table-width-by-type`.
+  **Decided 2026-10-12 (Stas, deck 22), under his condition that column widths never move when the data or the page changes:** widths come from the column config, never from the rows - by column kind (A); a `truncate` column in a table that scrolls anyway is exactly 240px of text (A).
+  **Built on the branch:** `table-layout: fixed` with a `<colgroup>`; `TableColumn.kind` (`TableColumnKind`): `id` and `date` 130px, `number` 120px, `status` 110px, each widened to its header label; `text` columns share the rest equally, floored at the header label or `minWidth`; when the floors do not fit, the table scrolls and a `truncate` text column without `width`/`minWidth` is 240px of text (272 default, 264 compact). Header labels are measured at max-content when the column set, density or fonts change, never per row; `width: 'content'` is re-measured from the rendered rows. `measureGrowingClips`, `widestValue`, the canvas and the per-data split are gone; `minWidth`, numeric `width`, drag and the link focus fix stay. CHANGELOG `## Unreleased` and `migrations/unreleased.json#table-column-width-from-config` (supersedes `0.15.0#table-truncate-without-width-grows`); the 0.15.0 verify line no longer claims the width holds across pages.
+  **Measured 2026-10-13, harness `paging-pager` / `paging-server` / `ecm-seg-records` page 1 -> page 2:** dev Email 620 -> 553 / 303 -> 553 / 264 -> 69 px; branch 285 -> 285 / 285 -> 285 / 264 -> 264, every column equal on both pages.
+  **Left for the review:** rows grow where text columns now share equally (harness `auto-mixed` row 52 -> 80, `content-wide` 52 -> 94), a column of short values keeps its share, and a table whose every column is explicit and narrower than the container spreads the slack over all of them (harness `resize` step 4: email set 105, drawn 111; the same on dev) - open in deck 28 as «Свободное место, когда все ширины заданы»: A last text column takes the rest (recommended), C as is, B filler column (leaves empty space); nothing built until Stas picks.
+  **Decided 2026-10-13 (Stas, deck 28 «Без пустых мест»):** C, text columns share equally as built; the one-time fit by the first page (A, B) rejected: «вариант "ширину один раз подбирает по тексту первой страницы и дальше её держит" я НЕ ВЫБИРАЮ. это странный вариант».
   **Decided 2026-10-09 (Stas, deck 24):** table width stays 100% with the slack in the auto column (B); a cell template that ellipsizes its own text gets the tooltip from the DS clip test, which counts descendants (A, nothing to build; option B, mm-ecm putting `dsTooltipWhenClipped` on the clipped span itself, stays possible); `truncate` stays one line with an ellipsis (C; B and D parked below); a column minimum set by the consumer (A, built: `TableColumn.minWidth`).
   **Consumer workaround to remove after the release** (mm-ecm ME-493, Delta review): `delta-records-table.component.*` wraps the value in `.value { display: block; width: 0; min-width: 100% }` with `dsTooltipWhenClipped`, marked `TODO(ds-clip-default)`; `truncate: true` on those columns replaces it.
 
@@ -455,8 +461,8 @@ Each has somebody behind it. Nothing here is speculative work.
   error: Angular renders nothing and logs nothing outside strict schema mode, so a missed one is a
   chart that silently vanished.
 
-- [ ] **[P3] Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24).** Reverses the name kept in
-  `presentations/implemented/ds-bar-name-collision.html`, whose decided block is now superseded. The
+- [ ] **[P3] Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24).** Reverses the name kept by the
+  `ds-bar-name-collision` decision. The
   type name is drawn in `1-decision-queue`'s `row-chart-row-type` section. Migration: a
   `selector-rename`, one `type-rename` per exported symbol, a `token-rename` for the
   `--ds-bar-chart-*` prefix and a `class-rename` for the internal `.bar-chart` class - the same shape
@@ -1024,11 +1030,11 @@ that already existed, because both are the kind of ask that comes back.
 
 ## Open verdicts, each drawn in a deck
 
-- [ ] **[P2] Six Unreleased behaviour changes shipped without a choice between alternatives.** Drawn in
-  deck `unasked-decisions`: `provideDsTheme` keeps a preset `data-theme`, `dsModalConfirm`, avatar-group
-  hides past `max`, a disabled link with `disabledReason` keeps a Tab stop, `provideDsIcons` calls merge,
-  chart pin geometry (8px gap, lift over a short column). They stay as built until Stas picks; a pick
-  that differs is reworked before the next release is cut.
+- [ ] **[P2] Six behaviour changes published in 0.14.7 without a choice between alternatives.** Being
+  taken one by one in deck `six-behaviour-changes`: `provideDsTheme` keeps a preset `data-theme`,
+  `dsModalConfirm`, avatar-group hides past `max`, a disabled link with `disabledReason` keeps a Tab
+  stop, `provideDsIcons` calls merge, chart pin geometry (8px gap, lift over a short column). They stay
+  as built until Stas picks; a pick that differs ships as a behaviour change in the next release.
 
 - [ ] **[P3] Which public tokens the library never reads go?** Drawn in deck `unread-tokens`.
   Measured 2026-10-05 (`var(--name` over `src/lib` and `ds-docs/src`): of 746 tokens in `styles/`
@@ -1036,12 +1042,6 @@ that already existed, because both are the kind of ask that comes back.
   exist (`--cmdk-*`, `--wizard-*`, `--matrix-*`, `--calendar-*`, `--settings-*` and others, two of
   them read only by ds-docs), and 70 scale, palette and role names. In pinkmoon, mm-ecm and mm-broker
   the 51 have 0 readers; 12 of the 70 are read. Options: none, the 51 dead sizes, or all 121.
-
-- [ ] **[P3] How much motion do the charts get?** Drawn in deck `chart-motion`. Verified 2026-10-05:
-  columns tween `y`/`height`, while the line path, its markers, the value labels, the pin, the
-  gridlines and the crosshair band snap; the tooltip glides 300ms past a band that jumps; no column,
-  bar, slice, stage or cell answers a hover unless `dimOthers` is set; heatmap, scatter and pie bind
-  no `animate.leave`. Options: none, sync, sync and response (recommended), full with counting numbers.
 
 - [ ] **[P3] Does the picker list height become a public token, or stay behind `panelClass`?** Drawn
   in deck `picker-list-height`. Two caps sit on one panel and the settable-looking one is not the
@@ -1058,30 +1058,18 @@ that already existed, because both are the kind of ask that comes back.
   is sized by a public host token and none by `panelClass`. Stas leans to (a), verdict later
   (2026-09-24).
 
-- [ ] **[P3] Do the date picker's first day of the week and the time picker's 12h/24h default from
-  the locale?** Drawn in deck `locale-week-and-hour`. Today both are fixed: `resolvedFirstDay` is
-  `firstDayOfWeek() ?? config.datePicker?.firstDayOfWeek ?? 1` (`date-picker.component.ts:327-328`) and
-  `resolvedFormat` is `format() ?? config.timePicker?.format ?? '24h'` (`time-picker.component.ts:212`).
-  The global `DS_CONFIG.locale` (plan-C, task 21) defaults to `LOCALE_ID`,
-  which is `en-US` unless an app sets it, so deriving both makes every such app start the week on
-  Sunday and show 12h. The browser gives both: `Intl.Locale#getWeekInfo()` (Chrome 130, Firefox 153,
-  Safari 17; `weekInfo` accessor in Chrome 99-129 and Safari 15.4-16) and
-  `Intl.DateTimeFormat(tag, { hour: 'numeric' }).resolvedOptions().hourCycle`. Four options: fixed as
-  today, both from the locale, week only, hours only. Recommended in the deck: both from the locale,
-  with Monday where the engine has no week data.
-
-- [ ] **[P3] Should the `ds-breadcrumbs` hover colour derive from `--text-link`, like the `.link` helper?**
+- [ ] **[P3] Should the `ds-breadcrumbs` hover colour derive from the link colour (`--ds-link-color`), like the `.link` helper?**
   `--_breadcrumbs-label-color-hover` defaults to `--accent` (`breadcrumbs.component.scss`), while the
-  `.link` helper (`src/lib/styles/_link.scss`) hovers from `--text-link` mixed 80% with black. A
+  `.link` helper (`src/lib/styles/_link.scss`) hovers from its link colour mixed 80% with black. A
   consumer whose accent is a brand colour gets breadcrumb links that hover in a different colour from
   every other link. **Wanted:** a verdict on whether the breadcrumb hover default derives from
-  `--text-link` the way `.link` does. The default is unchanged until it is given.
+  the link colour the way `.link` does. The default is unchanged until it is given.
 
 None of these is blocked on effort. Each is a verdict, and most carry a deck that renders the options.
 
 ## Decks awaiting a verdict (re-audited 2026-09-24)
 
-**Twenty-four** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Twenty-seven** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1093,7 +1081,7 @@ file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
 | --- | --- | --- | --- |
-| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 5 asks in three groups, then 34 decisions in seven, every option drawn in its own card. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 3 asks in three groups, then 47 decisions in eight, every option drawn in its own card; 35 answered under «Уже решено». | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 | 2 | `2-color-engine-derivation` | One source token per role, derived. | the colour-engine P3 |
 | 3 | `3-color-engine-relative` | The prototype half of the same question. | as above |
 | 4 | `4-interaction-formula` | The pressed recipe of the tonal button, and of the danger menu item. | the pressed-danger-menu P3 and the `.ds-interactive` P3 |
@@ -1101,24 +1089,26 @@ file** — the number moves; cite the filename.
 | 6 | `6-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
 | 7 | `7-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
 | 8 | `8-picker-list-height` | Which knob caps a picker's list: one cap, `panelClass`, or a new list token, all three drawn and measured. | the picker-cap Decision (task 53) |
-| 9 | `9-locale-week-and-hour` | Whether the date picker's first day of the week and the time picker's 12h/24h follow `DS_CONFIG.locale`: fixed as today, both, week only, or hours only, each drawn over six locales. | the locale-defaults Decision (plan-C, task 21) |
-| 10 | `10-docs-reasoning-blocks` | What ds-docs does with its ~27 reasoning blocks: keep, fold to the chapter end, move to a proof page, or delete. | none - the Claude Design side is settled in `.design-sync/CARDS.md` |
-| 11 | `11-deerns-atlas-feedback` | Nine design calls and a per-component scope call raised by the Deerns Atlas prototype on the Claude Design bundle; twenty one-answer fixes (inputs before first CD on React 18 for NG0950 and mount flicker, empty Tabs, `ds-x-*` alias vs tag selectors, `.link` on button, Tag nowrap, agent catalogue) are listed in the deck. | Deerns Atlas feedback |
-| 12 | `12-chart-motion` | How much motion the charts get: none, sync, sync and response, or full; each drawn as a live mini chart. | the chart-motion Decision |
-| 13 | `13-chart-motion-extras` | Which of ten motion and hover additions to build if a motion level is chosen in `chart-motion`; all on by default, each one live. | the chart-motion Decision |
-| 14 | `14-unread-tokens` | Which public tokens the library never reads to remove: none, the 51 dead component and pattern sizes, or all 121. | none |
-| 15 | `15-unasked-decisions` | Six Unreleased behaviour changes made without a choice: keep, adjust or revert each. | none |
-| 16 | `16-column-chart-filter` | How `ds-column-chart` takes a caption under each column and a persistent selection, so a consumer's filter chart can move onto it: point fields, chart inputs with a template, or nothing; `value: number | null` is settled. | none |
-| 17 | `17-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
-| 18 | `18-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
-| 19 | `19-interaction-states` | General rules for the states of interactive elements as levels on three channels, with live sliders for the step numbers; one neutral hover surface; a check against empty cells; whether to merge the pilot; open questions on top. | none |
-| 20 | `20-text-snap-scale` | How a scaling animation ends without the text snapping a pixel: press (as today for now), card hover, the scaling rule, the funnel stage step. | the overlay-enter-snap fix |
-| 21 | `21-tooltip-mechanism` | Three open questions on the tooltip: the six listeners per table cell (measured) and what to do about them, loading the panel at idle after start, and one app-wide delegated listener for every directive with events. Answered and finished proposals are folded below. | none |
-| 22 | `22-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
-| 23 | `23-docs-table-look` | Which look `table.tbl` takes on every ds-docs page: bordered everywhere, plain everywhere, or as today (Charts and Z-index override the shared bordered rule); all four pages drawn in each look. | none |
-| 24 | `24-density-scope` | Where `data-density` works: only on `<html>` with the docs corrected, or on any container by re-declaring `--field-h-sm`, `--field-h-md`, `--sidenav-collapsed-item` and `--calendar-cell-min` inside `[data-density]`; both drawn at four tiers and nested. | none |
-| 25 | `25-table-truncate-result` | Sign-off of the `truncate` column without `width` that grows to its text: four verdicts recorded (B, A, C, A), `minWidth` built; open: the general column sizing rules and width stability across pages, each drawn on harness tables. | the P1 table item in Asked by Stas |
-| 26 | `26-table-wrap-parked` | Parked: two wrap options for a `truncate` column (fill the row height, or always wrap), each rendered. | the wrap item under Parked |
+| 9 | `9-docs-reasoning-blocks` | What ds-docs does with its ~27 reasoning blocks: keep, fold to the chapter end, move to a proof page, or delete. | none - the Claude Design side is settled in `.design-sync/CARDS.md` |
+| 10 | `10-deerns-atlas-feedback` | Nine design calls and a per-component scope call raised by the Deerns Atlas prototype on the Claude Design bundle; twenty one-answer fixes (inputs before first CD on React 18 for NG0950 and mount flicker, empty Tabs, `ds-x-*` alias vs tag selectors, `.link` on button, Tag nowrap, agent catalogue) are listed in the deck. | Deerns Atlas feedback |
+| 11 | `11-unread-tokens` | Which public tokens the library never reads to remove: none, the 51 dead component and pattern sizes, or all 121. | none |
+| 12 | `12-unasked-decisions` | Six Unreleased behaviour changes made without a choice: keep, adjust or revert each. | none |
+| 13 | `13-column-chart-filter` | How `ds-column-chart` takes a caption under each column and a persistent selection, so a consumer's filter chart can move onto it: point fields, chart inputs with a template, or nothing; `value: number | null` is settled. | none |
+| 14 | `14-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
+| 15 | `15-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
+| 16 | `16-interaction-states` | General rules for the states of interactive elements as levels on three channels, with live sliders for the step numbers; one neutral hover surface; a check against empty cells; whether to merge the pilot; open questions on top. | none |
+| 17 | `17-text-snap-scale` | How a scaling animation ends without the text snapping a pixel: press (as today for now), card hover, the scaling rule, the funnel stage step. | the overlay-enter-snap fix |
+| 18 | `18-tooltip-mechanism` | Three open questions on the tooltip: the six listeners per table cell (measured) and what to do about them, loading the panel at idle after start, and one app-wide delegated listener for every directive with events. Answered and finished proposals are folded below. | none |
+| 19 | `19-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
+| 20 | `20-docs-table-look` | Which look `table.tbl` takes on every ds-docs page: bordered everywhere, plain everywhere, or as today (Charts and Z-index override the shared bordered rule); all four pages drawn in each look. | none |
+| 21 | `21-density-scope` | Where `data-density` works: only on `<html>` with the docs corrected, or on any container by re-declaring `--field-h-sm`, `--field-h-md`, `--sidenav-collapsed-item` and `--calendar-cell-min` inside `[data-density]`; both drawn at four tiers and nested. | none |
+| 22 | `22-table-truncate-result` | Sign-off of the `truncate` column without `width` that grows to its text: six verdicts recorded (B, A, C, A, then width by column kind and 240 under the condition that widths never move when the data or the page changes), `minWidth` built; carries the 0.15.0 audit and how other table libraries size columns. Open until the next version builds the width by kind. | the P1 table item in Asked by Stas |
+| 23 | `23-table-wrap-parked` | Parked: two wrap options for a `truncate` column (fill the row height, or always wrap), each rendered. | the wrap item under Parked |
+| 24 | `24-link-colour` | What colour a text link takes under a non-blue brand: the brand colour (dev since `b9f5a6db2`) or always blue; both drawn for a blue and a green brand in light and dark, with link-to-background and link-to-text contrast. | none |
+| 25 | `25-brand-dark-theme` | How a brand colour set once reaches the dark theme: repeat it under the dark selector (today), the dark block stops redeclaring `--primary` and its channels, or a `--ds-brand` input with a lifted dark `--primary`; drawn on the real `ds.css` for blue, green and navy brands with contrast measured. | the open queue question on deriving every shade from one brand colour |
+| 26 | `26-six-behaviour-changes` | The six behaviour changes published in 0.14.7 without a choice, one by one: theme set before startup, modal `confirmed`, avatar-group `max`, disabled link with `disabledReason`, `provideDsIcons` merge, chart pin disc; before and after drawn, two or three options each, six picks. | the Decisions item on the six behaviour changes |
+| 27 | `27-duplicate-label-match` | How a chart matches a column across a data update when two categories share a label and the first is removed: by label with a repeat counter (today, ECharts), by array position (Chart.js, Recharts, D3, Highcharts without id), by label only (Nivo), by an explicit point `id`, or by label with a dev console warning; each drawn as the same animated scene with replay and ×5. | the queue question on two columns with one label |
+| 28 | `28-table-width-by-type` | Sign-off of the built column width by kind: dev against the branch on page 1 and 2 of server paging, client paging and a scrolling all-`truncate` table, the kind columns, the 240px clip in a scrolling table, and the taller rows where text now wraps. | the P1 table item in Asked by Stas |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1133,7 +1123,9 @@ same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was 
 
 **Closed on 2026-10-05 and moved to `implemented/`:** `pie-chart-center-value` - option K: the centre value shrinks to the hole down to `--ds-pie-chart-center-value-min-font-size`, then prints the `'tick'` form unless `[centerCompact]="false"`; `centerPlacement="below"` prints it under the ring.
 
-**Closed on 2026-10-09 and moved to `implemented/`:** `loading-states` - each chart's picked skeleton, `skeletonCount`, the plot-bound reload overlay, the heatmap card hugging its grid and the picker list states, built on `ecm-feat/loading-skeletons`; `loading-skeletons` - its before and after, all 12 blocks accepted and merged into dev; `component-owned-styles` - every component carries its own base (`border-box`, control font, heading margins, base focus ring) in `@layer ds-component-base`, plus breakpoints, the picker empty row and the reduced-motion shimmer; a lint guard holds it. Its icon question moved to `23-icon-box-size`. `focus-ring-follows-shape` - the focus ring takes `--focus-ring-radius` wherever an element declares no radius; close buttons centre their glyph in a square box, the `ds-table` column filter is a 24px target, a cell link is ringed outside its text. `clipped-value-tab-stop` - a clipped `dsTooltipWhenClipped` value that no keyboard path reaches takes `tabindex="0"` while clipped, one stop per value in a long table too (option A); one roving stop per table with arrows is under *Parked*.
+**Closed on 2026-10-09 and moved to `implemented/`:** `loading-states` - each chart's picked skeleton, `skeletonCount`, the plot-bound reload overlay, the heatmap card hugging its grid and the picker list states, built on `ecm-feat/loading-skeletons`; `loading-skeletons` - its before and after, all 12 blocks accepted and merged into dev; `component-owned-styles` - every component carries its own base (`border-box`, control font, heading margins, base focus ring) in `@layer ds-component-base`, plus breakpoints, the picker empty row and the reduced-motion shimmer; a lint guard holds it. Its icon question moved to `19-icon-box-size`. `focus-ring-follows-shape` - the focus ring takes `--focus-ring-radius` wherever an element declares no radius; close buttons centre their glyph in a square box, the `ds-table` column filter is a 24px target, a cell link is ringed outside its text. `clipped-value-tab-stop` - a clipped `dsTooltipWhenClipped` value that no keyboard path reaches takes `tabindex="0"` while clipped, one stop per value in a long table too (option A); one roving stop per table with arrows is under *Parked*.
+
+**Closed on 2026-10-12 and moved to `implemented/`:** `info-hint-content` - `ds-info-hint` takes projected content and a `[content]` template (both, until consumers show which to keep), any `IconName` in `icon`, and `--ds-info-hint-color` for the icon colour.
 
 **Ranks 1-10 have a twin on this board, so one answer closes two lines** — which is what
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
@@ -1275,6 +1267,8 @@ and the fifteen lint rules.
   **So this is a feature request, not a missing template binding, and it arrives in that order:** first a panel filter field (the thing `ds-multi-select` already has as `.search-row`), then `allowCreate` plus a `created` output and the no-match branch — `ds-autocomplete` carries all three already and is the model to copy rather than re-derive. Only then does reading `[dsCreateTemplate]` mean anything.
   **The product question to settle first:** should a single select have a filter field at all? A short list does not need one and gains a control to tab through; a long one is unusable without it. `ds-autocomplete` already exists for "type to narrow, maybe create", so the honest answer may be to send consumers there instead of growing `ds-select` toward it. Settle that before writing code, or the field lands and then has to be argued about.
 
+- [ ] **[P3] Keep one of the two ways `ds-info-hint` takes rich content (Stas, after consumers use them).** Projected content (A) and the `[content]` template (B) both ship, marked `TODO(info-hint-content)` in `info-hint.component.ts`. Compare how consumers write them - markup in one place against content built only on open - and drop the other in a major.
+
 - [ ] **[P3] `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's framing; Stas 2026-09-01: a `DS_CONFIG` flag works too, as `prototype: true`).** One flag in the existing `DS_CONFIG` that puts the whole library in prototype mode instead of asking a consumer to pick a package. **The honest caveat, and it must be settled before this is built:** a runtime config flag CANNOT reduce the bundle — the code for the features it disables is still imported and still ships, so `prototype: true` buys behaviour, not bytes. Only the directive split above removes bytes. So decide what the flag is actually FOR: (a) turning off advanced affordances so a prototype's UI stays simple and demo-able — a real and useful thing, unrelated to size; (b) build-time dead-code elimination, which would need it to be a compile-time constant a bundler can fold, not a DI value. Do not ship (a) while implying it does (b). `DS_CONFIG` already resolves per-component defaults via `resolveWithConfig`, so (a) is a small build.
 
 - [ ] **[P3] Three edges left open on `ds-table` row expansion and the resize handle, each a judgement call rather than a defect.** (a) On a page with no rows the expand-all chevron still renders and its label reads "Expand all rows", while clicking it does nothing — the handler early-returns. This is an exact clone of what the select-all checkbox next to it does on an empty page, so it was left for symmetry; breaking the symmetry needs a disabled state on `.expand-btn`, which the shared icon-button chrome has no styling for. (b) Under `lazy` (no `pageSize`, `total` set) `expandAllLabel` omits " on this page" because it keys on `pageSize()`, while expand-all only reaches the rows that have arrived. Inside the already-declared-unsupported `virtualScroll` + `expandableRows` combination. (c) The expander column's `<th>` had no accessible name and now takes one from the expand-all button — which FLIPS between "Expand all rows" and "Collapse all rows", so in table-navigation mode every body cell in that column inherits a changing column name. The `select-col` `<th>` sets the precedent of naming itself from its control, but with a STABLE name. Fixing it means an `aria-label` on the `<th>` naming the column, which is a pattern the component does not use anywhere else.
@@ -1283,10 +1277,8 @@ and the fifteen lint rules.
 
 *This section also has items under **Bugs**, **Parked**, **Records**.*
 
-- [ ] **[P3] Four exports on the package surface have no consumer in `src/`.** `pointScale`
-  (`charts-scale.ts:120`, 32 lines), `tickStep` (`:73`), `formatTick` (`charts-format.ts:126`, 27
-  lines) and `polylinePoints` (`charts-path.ts:61`) are re-exported by `components/index.ts`;
-  the last three are referenced only from `tools/probes/`, `pointScale` from nowhere.
+- [ ] **[P3] `formatTick` on the package surface has no consumer in `src/`.** `charts-format.ts:126`
+  (27 lines) is re-exported by `components/index.ts` and referenced only from `tools/probes/`.
   `ChartScales.zeroOffset` (`chart-scales.token.ts:70`) is declared on the mark contract and read by
   no mark - only the container's own template reads it.
 
@@ -1308,9 +1300,13 @@ and the fifteen lint rules.
 
 Ordered by how close each is to a first consumer ask, which is the only thing that unparks any of them.
 
+## Two chart interactions held back from deck `chart-motion-extras` (Stas, 2026-10-12: not now)
+
+- [ ] **[P3] «Разница между двумя колонками» and «Отток виден на воронке», drawn live in deck `implemented/chart-motion-extras.html`.** The first: a clicked column becomes the base and the hovered one shows a bracket with the difference («+130 (+18%)»), built on the existing pin. The second: the hovered `ds-funnel-chart` stage draws the previous stage's width behind it, outlined, with the drop («-34%»); today the drop exists only as a number (`stageDrops`, `fellAway`). Both are new gestures or new marks, so opt-in when built.
+
 ## Wrapping in a `ds-table` cell (recorded 2026-10-09, Stas: parked, come back later)
 
-- [ ] **[P3] Two wrap options for a `truncate` column, drawn in deck `26-table-wrap-parked.html`.** Today a `truncate` column is one line with an ellipsis (picked C in deck `25-table-truncate-result`). B: the clipped text fills the height a neighbour already gave the row (lines = row height / line height), needs a per-row measurement on every resize and does not work under virtual scroll. D: always wrap, as a column without `truncate` does.
+- [ ] **[P3] Two wrap options for a `truncate` column, drawn in deck `23-table-wrap-parked.html`.** Today a `truncate` column is one line with an ellipsis (picked C in deck `22-table-truncate-result`). B: the clipped text fills the height a neighbour already gave the row (lines = row height / line height), needs a per-row measurement on every resize and does not work under virtual scroll. D: always wrap, as a column without `truncate` does.
 
 ## ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)
 
@@ -1335,7 +1331,7 @@ Stas: keep it in the backlog.
 
 - [ ] **[P3] In `ds-banner` and `ds-dropzone` the `ds-icon` box is 16px while its svg draws 20px.**
   `.icon` from `styles/icon-base` is the only rule setting a width on the `<ds-icon class="icon">`
-  host; the 20 sits on the svg alone. Options, each drawn in `presentations/22-icon-box-size.html`:
+  host; the 20 sits on the svg alone. Options, each drawn in `presentations/19-icon-box-size.html`:
   **A** `ds-icon` keeps its own size (recommended: fixes the source, consumers included; text moves
   4px), **B** rename the class in the two components (as `option-icon`; a consumer's own
   `class="icon"` stays squeezed), **C** keep 16 (glyph shrinks, text stays), **D** nothing. No code
@@ -1358,8 +1354,6 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 - [ ] **[P3] MED cluster — ASKED 2026-08-05, Stas: keep in the backlog.** Density beyond hit-targets (fonts/icons/pad — `[data-density]` scales heights/pad/avatars today but NOT `--font-size-*`/`--icon-*`, verified 2026-07-24) · fluid typography (`clamp()` — type tokens are fixed px). **No longer speculative — there is now a MEASURED case (2026-08-10).** Controls that hold chips set a `min-height` rather than a height, so when a tier floor drops below what the text needs they stop following it: under `ultra-compact` `ds-multi-select` measures **33px** and `ds-autocomplete` **29px** where the other seven reach 24px. The floor is applied correctly (`min-height: 24px`); the content cannot shrink, because at a 14px font the line box alone is 19.6px. Proved by hand: dropping `--font-size-s` to 11px in that container pulled them to 31px and 25px. So "density does not scale type" is not a nicety — it is why the bottom tier does not level. `compact` is unaffected in practice (33 against 32). _(The third clause — motion semantic presets — MOVED 2026-07-31 into the customizable-motion item under "Motion / overlays" as its slice 3; don't re-open it here.)_ Both remaining pieces are speculative, no active request; split into their own items if ever prioritized. _(high-contrast/forced-colors + RTL/logical-properties dropped — Stas 2026-07-07.)_
 
 - [ ] **[P3] Default muted-text token fails WCAG AA (surfaced 2026-07-13 by the NPA-85 Branding agent's contrast audit).** Only `--text-muted` fails: `var(--neutral-400)` = `#9BA3B4` (`themes/_semantic.scss:60`) is **2.42:1** on the canvas `#F8FAFC` — below the 3.0 large-text bar, let alone 4.5 for body. `--text-tertiary` (`:59`, `#6B7388`) is already **4.53:1** and passes, so the starter's pin of `--text-tertiary` to `#6b7280` is redundant against the current DS. The DS itself reads `--text-muted` only for date-picker outside-month days (`calendar-day.component.scss:21`, `date-picker.component.scss:252`). Decide whether `--text-muted` should move, or is officially "decorative only" (then document the constraint).
-
-- [ ] **[P3] Brand-unsafe role tokens — several roles keep the blue ramp on a non-blue brand (surfaced 2026-07-13, NPA-85 Branding agent).** When a consumer rebrands via a theme that re-points `--primary`, a handful of DS role tokens are NOT derived from it and keep the literal blue ramp → **blue residue** on a non-blue brand: `--surface-tint` (blue-50; the empty-state tile, and list-item and tree selected rows via `--accent-surface-tint`), `--text-link` (blue-700; read only by the global `.link` helper, `_link.scss:9` - ds-button's text variant reads `--_family-strong` -> `--primary-strong` instead), and `--primary-subtitle` / `--primary-muted` (blue-50 / blue-100, `_semantic.scss:112-113`). `--focus-ring-inverted` (blue-300) is literal too but no component reads it, so it leaves no visible residue. Light theme only: the dark theme already derives `--surface-tint` and `--text-link` from `--primary-h`. The consumer theme has to hand-rebind each. Deriving the hue alone is not enough for `--text-link`: on a green brand #1F7A4D (hue 150.3) `hsl(150.3 85% 52%)` = #1DED86 is 1.56:1 on white (computed 2026-10-02), so a derivation takes the lightness from the brand too. Either derive them from `--primary` (pairs with the **single-source colour engine** item above) or document them as a "must-rebind" checklist for brand themes. (The starter's branding skill now rebinds `--surface-tint`/`--text-link` per brand as a workaround.)
 
 ## Virtualising a long picker list (recorded 2026-08-31, §9 P5, Stas: record only)
 
@@ -1428,7 +1422,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 - [ ] **[P3] An icon-only control's focus ring 1px outside its 24px target, 26px on every control.**
   `target.min-size` in `styles/_target.scss` draws the ring on the target's edge, 24px across on
   every icon-only control; one more pixel of `outline-offset` there gives 26px on all of them
-  (measured on ten controls in `presentations/implemented/focus-ring-followups.html`). Stas, 2026-10-09: 24
+  (measured on ten controls). Stas, 2026-10-09: 24
   for now, recheck 26 later.
 
 - [ ] **[P3] The `ds-tag` remove button's focus ring does not show on a solid tag.** The ring is
@@ -1502,7 +1496,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 
 *This section also has items under **Asks**, **Decisions**.*
 
-- [ ] **[P3] One tab stop per long table, arrow keys between its clipped values - PARKED 2026-10-09 by Stas.** A clipped `dsTooltipWhenClipped` value that no keyboard path reaches is a tab stop of its own while clipped, so a 25-row `ds-table` with two clipped columns holds 50 stops (measured in the ds-docs build, deck `presentations/implemented/clipped-value-tab-stop.html`). The parked alternative: roving tabindex, one clipped value at `tabindex="0"` and the rest at `-1`, arrows moving between them. APG allows that only inside a composite widget, so the table becomes `role="grid"` and `ds-table` takes the grid keyboard model (arrows, Home/End, PageUp/PageDown); without the role a screen reader in browse mode keeps the arrows for itself. Unparks when a consumer reports the stop count in a long table.
+- [ ] **[P3] One tab stop per long table, arrow keys between its clipped values - PARKED 2026-10-09 by Stas.** A clipped `dsTooltipWhenClipped` value that no keyboard path reaches is a tab stop of its own while clipped, so a 25-row `ds-table` with two clipped columns holds 50 stops (measured in the ds-docs build). The parked alternative: roving tabindex, one clipped value at `tabindex="0"` and the rest at `-1`, arrows moving between them. APG allows that only inside a composite widget, so the table becomes `role="grid"` and `ds-table` takes the grid keyboard model (arrows, Home/End, PageUp/PageDown); without the role a screen reader in browse mode keeps the arrows for itself. Unparks when a consumer reports the stop count in a long table.
 
 - [ ] **[P3] The clipped-value tab stop on a 500-row table: the reported 4x long task did not reproduce - PARKED 2026-10-09 by Stas, after the release.** An audit reported the largest long task after injecting 500 rows into a `ds-table` with two `truncate` columns going from 160-179 ms before the tab stop to 654-719 ms with it. Measured 2026-10-09 on production ds-docs builds, one fresh page per run, the truncate demo given 500 rows (1000 clipped values, 833 stops written): before the tab stop 199, 342, 129, 225 ms; with it 262, 176, 228 ms; with every host measured before any `tabindex` is written 184, 239, 141 ms. The shared ResizeObserver callback took 7-8 ms for a 994-entry batch with reads and writes interleaved, so writing `tabindex` does not invalidate layout there. Left to find: the audit's setup (viewport, CPU throttling, a resize after render, the accessibility tree on) and whether the cost sits outside the callback, in the style recalc of 833 newly focusable cells or in the per-host `closest` and MutationObserver registration at render; a performance trace of the inject task on both builds splits it. Unparks after the release.
 
@@ -1804,7 +1798,7 @@ Bar and column are settled separately and stay apart.
   **1. Lightness is flat.** Seven of the eight categorical slots sit between OKLab L 0.625 and 0.673 - a spread of 0.048 - and the closest two are 0.002 apart. Only slot 8 breaks the band at 0.394. A chart screenshotted into a black-and-white document loses every series distinction, and the same flatness is why simulated colour blindness collapses six pairs: it removes hue, and there is no lightness left underneath. Fixing it means moving colours, so it is a repaint and needs its own deck.
   **2. The gate only ever sees the light palette.** `tools/check-chart-palette-separation.mjs` reads `_tokens-charts.scss`; `src/lib/themes/dark/_theme.scss` overrides `--chart-categorical-8` alone, so the dark theme's effective palette is seven inherited slots plus one. Checked by hand on 2026-09-21 and it passes (`node tools/check-chart-palette-separation.mjs --hexes '#e75740,#11a793,#5a83e2,#a173de,#e25a9e,#2ca565,#d85ad8,#8b93a7'`), but nothing holds it there - and in the dark theme all eight slots land in L 0.625-0.673, because slot 8 flips to 0.663.
   **3. Slot order is right and unguarded.** The worst pair among the first 2 slots is 29.0, the first 3 is 18.4, the first 4 is 10.2 - so the charts that use two to four series get the widest gaps, which is the correct arrangement. No gate enforces it, so a future reorder can quietly hand the common case the narrow pairs.
-  A fourth thing, not a defect: the dark theme's own comment reasons in protanopia deltas ("dE 12 from the orchid"), although colour-vision support is not a requirement of this system - see `presentations/implemented/chart-palette-v2.html`.
+  A fourth thing, not a defect: the dark theme's own comment reasons in protanopia deltas ("dE 12 from the orchid"), although colour-vision support is not a requirement of this system.
 
 - [ ] **[P3] Three `ds-table` paths have never been driven by automation, and five component groups have never been clicked through.** The paths: dragging a column by its handle to reorder, drag-resizing a column, and CSV export — each is pointer-sequence or file-download work that every sweep so far has read statically or skipped. The groups whose demos no automated pass has ever exercised: `actions`, `navigation`, `feedback-status`, `overlays`, `page-structure`. Recorded so the coverage is a known hole rather than an assumption: the focus and accessible-name sweeps DID load all thirteen group pages, so what is missing is interaction, not rendering.
 

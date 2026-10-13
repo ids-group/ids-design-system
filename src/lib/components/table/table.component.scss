@@ -141,6 +141,15 @@
   }
 }
 
+.resize-guide {
+  position: absolute;
+  top: 0;
+  width: var(--border-width-strong);
+  translate: -100% 0;
+  background-color: var(--ds-table-sort-active-icon-color, var(--accent));
+  pointer-events: none;
+}
+
 .hscroll-proxy {
   position: sticky;
   bottom: var(
@@ -198,18 +207,31 @@
   --_table-head-letter-spacing: var(--ds-table-head-letter-spacing, var(--letter-spacing-wider));
 
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
   background-color: var(--_table-bg-color);
 
-  /* `width: 1%` is the shrink-to-fit trick: a table lays out at least the content width, so an
-     under-sized request collapses the column onto its widest cell and hands the slack to the
-     others. nowrap stops that cell wrapping and defeating the point. */
-  th.fit-content,
   td.fit-content {
-    width: 1%;
     white-space: nowrap;
+  }
+
+  /* Auto layout at max-content for one synchronous read: every cell asks for its full width, which
+     the fixed layout never does. `!important` beats the inline widths on the <col> elements. */
+  &.measuring-head,
+  &.measuring-rows {
+    table-layout: auto;
+    width: max-content;
+    min-width: 0;
+
+    col {
+      width: auto !important;
+    }
+  }
+
+  &.measuring-head tbody {
+    display: none;
   }
 
   thead th {
@@ -344,6 +366,9 @@
       box-shadow: inset 0 calc(-1 * var(--border-width-default)) 0 var(--_table-divider);
       vertical-align: middle;
 
+      // The fixed layout never widens a column for a word longer than it.
+      overflow-wrap: anywhere;
+
       &.numeric {
         text-align: right;
       }
@@ -417,7 +442,7 @@
     }
 
     .expand-panel-cell {
-      padding: var(--_table-cell-padding-top) var(--_table-cell-padding-right) var(--_table-cell-padding-bottom) var(--_table-cell-padding-left);
+      padding: 0;
     }
 
     /* A keyframe, not a transition: the row is
@@ -443,6 +468,11 @@
       // glyph-clip-guard: collapses the expanded row; open, the panel pads its text off this edge
       overflow: hidden;
       min-height: 0;
+    }
+
+    // Inside the fold, so the padding collapses with the panel rather than snapping at the end.
+    .expand-panel-body {
+      padding: var(--_table-cell-padding-top) var(--_table-cell-padding-right) var(--_table-cell-padding-bottom) var(--_table-cell-padding-left);
     }
 
     @keyframes ds-table-expand {
@@ -476,13 +506,6 @@
 
     .cell-clip {
       display: block;
-    }
-
-    /* The text adds nothing to the column's width: the table sets the clip's min and max width
-       from what the other columns leave, up to the widest value. */
-    .cell-clip.grows > .cell-clip-text {
-      width: 0;
-      min-width: 100%;
     }
 
     .cell-clip-text {
@@ -532,12 +555,16 @@
     background-color: var(--_table-row-stripe-bg-color);
   }
 
-  /* Every row must be exactly --_table-virtual-row-h tall or every offset below it is wrong:
-     no wrapping, and a fixed layout (auto re-measures against the rendered rows and columns
-     twitch on scroll). */
-  &.virtual {
-    table-layout: fixed;
+  /* At 100% the layout hands the container's slack to every column, so shrinking one widens the
+     rest. Once each column has a pixel width the table is as wide as its columns: a fixed table is
+     never narrower than its columns, and `auto` would turn the fixed layout off. */
+  &.sized-columns {
+    width: 0;
+  }
 
+  /* Every row must be exactly --_table-virtual-row-h tall or every offset below it is wrong:
+     no wrapping. */
+  &.virtual {
     tbody tr:not(.spacer) {
       height: var(--_table-virtual-row-h);
     }
@@ -856,9 +883,9 @@
   gap: var(--space-2);
   margin-bottom: var(--space-2);
 
-  /* Always in the markup, so it hides itself when the slot is empty. `:has()`, not `:empty`,
-     which whitespace text nodes defeat. */
-  &:not(:has(.toolbar-slot > *, > ds-button)) {
+  /* Always in the markup, so it hides itself when the slot is empty and no feature has inserted
+     its control beside it. `:has()`, not `:empty`, which whitespace text nodes defeat. */
+  &:not(:has(.toolbar-slot > *, > :not(.toolbar-slot))) {
     display: none;
   }
 }

@@ -19,91 +19,26 @@
     own, not <code class="t-mono-inline">ds-button</code>'s.
   </p>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          variant
-        </th>
-
-        <th>
-          Fill
-        </th>
-
-        <th>
-          color tints
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            standard
-          </code>
-        </td>
-
-        <td>
-          Chromeless
-        </td>
-
-        <td>
-          Selected state only; neutral at rest
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            filled
-          </code>
-        </td>
-
-        <td>
-          Solid
-        </td>
-
-        <td>
-          Yes
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            tonal
-          </code>
-        </td>
-
-        <td>
-          Tinted
-        </td>
-
-        <td>
-          Yes
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <code class="t-mono-inline">
-            outlined
-          </code>
-        </td>
-
-        <td>
-          Border
-        </td>
-
-        <td>
-          Selected state only; neutral at rest
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
   <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        filled
+      </code> and
+      <code class="t-mono-inline">
+        tonal
+      </code> take the
+      <code class="t-mono-inline">
+        color
+      </code> tint;
+      <code class="t-mono-inline">
+        standard
+      </code> and
+      <code class="t-mono-inline">
+        outlined
+      </code> stay neutral at rest and tint
+      only when selected.
+    </li>
+
     <li>
       <code class="t-mono-inline">
         secondary
@@ -266,7 +201,7 @@
     <code class="t-mono-inline">
       [selected]
     </code> renders the pressed state
-    and sets <code class="t-mono-inline">aria-pressed</code>. As a menu
+    and sets <code class="t-mono-inline">aria-pressed</code>, <code class="t-mono-inline">"false"</code> when off; an icon button with no <code class="t-mono-inline">[selected]</code> is no toggle and has none. As a menu
     trigger, bind <code class="t-mono-inline">[ariaExpanded]</code> and
     <code class="t-mono-inline">
       [ariaControls]

@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Входы компонентов в ds-docs</title>
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-10-12">
+<meta name="ds-deck-evidence" content="ds-docs/src/app/shared/docs-section.component.html:17 - ds-docs/src/app/sections/charts/chart/chart.section.html:148">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
+<style>
+  main { max-width: 1480px; }
+  .opts { grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: start; }
+  @media (max-width: 1100px) { .opts { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); } }
+  .opt { cursor: pointer; min-width: 0; }
+  .opt:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+  .opt.is-chosen { outline: 2px solid var(--success); outline-offset: 2px; }
+  .pills { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  .pill { padding: 2px var(--space-2); border-radius: var(--radius-pill); font: var(--font-weight-semibold) var(--font-size-2xs) / 1.5 var(--font-sans); }
+  .pill.good { background: var(--success-subtitle); color: var(--success-text); }
+  .pill.mid { background: var(--warning-subtitle); color: var(--warning-text); }
+  .facts { margin: 0; padding-left: 1.2em; display: grid; gap: var(--space-1); }
+  .facts li { font: var(--font-size-s) / var(--line-height-base) var(--font-sans); }
+
+  .mini { min-width: 0; overflow: hidden; border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); background: var(--surface-default); }
+  .mini + .mini { margin-top: var(--space-2); }
+  .mini > .pg { zoom: .45; }
+  .full { flex: 1 1 560px; min-width: 0; max-block-size: 520px; overflow: auto; border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); background: var(--surface-default); }
+  .pg { inline-size: 640px; padding: var(--space-6); box-sizing: border-box; font: var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-primary); }
+  .full > .pg { inline-size: auto; }
+  .pg .eb { color: var(--text-tertiary); font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-sans); text-transform: uppercase; letter-spacing: var(--letter-spacing-wider); }
+  .pg .ttl { margin: var(--space-1) 0 var(--space-2); font: var(--font-weight-bold) 26px / 1.2 var(--font-sans); }
+  .pg .tags { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-bottom: var(--space-4); }
+  .pg .tag { padding: 2px var(--space-2); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-pill); font: var(--font-size-2xs) / 1.5 var(--font-mono); color: var(--text-secondary); }
+  .pg .demo { display: block; inline-size: 100%; block-size: auto; margin-bottom: var(--space-4); }
+  .pg .demo .col { fill: var(--chart-categorical-1); }
+  .pg .demo .axis { stroke: var(--chart-axis-line-color); }
+  .pg .btns { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-4); }
+  .pg .btn { padding: var(--space-2) var(--space-4); border-radius: var(--ds-radius-control); font: var(--font-weight-semibold) var(--font-size-s) / 1.4 var(--font-sans); border: var(--border-width-default) solid transparent; }
+  .pg .btn.solid { background: var(--primary); color: var(--text-on-primary); }
+  .pg .btn.tonal { background: var(--accent-subtitle); color: var(--accent-strong); }
+  .pg .btn.ghost { color: var(--accent-strong); }
+  .pg .btn.outline { border-color: var(--accent-strong); color: var(--accent-strong); }
+  .pg .btn.text { padding-inline: 0; color: var(--accent-strong); text-decoration: underline; }
+  .pg .none { padding: var(--space-2) 0; color: var(--text-tertiary); font-size: var(--font-size-xs); font-style: italic; }
+
+  table.tbl { width: 100%; border-collapse: separate; border-spacing: 0; border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); overflow: hidden; background: var(--surface-default); }
+  table.tbl th, table.tbl td { padding: var(--space-3) var(--space-4); text-align: left; border-bottom: var(--border-width-default) solid var(--border-divider); font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-primary); }
+  table.tbl th { background: var(--surface-secondary); font-weight: var(--font-weight-bold); color: var(--text-secondary); font-size: var(--font-size-xs); text-transform: uppercase; letter-spacing: var(--letter-spacing-wider); }
+  table.tbl tr:last-child td { border-bottom: 0; }
+  table.tbl code { padding: 1px 6px; border-radius: var(--radius-sm); background: var(--surface-secondary); font: var(--font-size-xs) / 1.4 var(--font-mono); }
+  .dense table.tbl th, .dense table.tbl td { padding: 5px var(--space-3); font-size: var(--font-size-xs); line-height: 1.4; }
+  .dense table.tbl th { text-transform: none; letter-spacing: 0; font-size: var(--font-size-2xs); }
+  .dense table.tbl code { padding: 0; background: none; color: var(--text-primary); }
+
+  details.fold { border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); background: var(--surface-default); }
+  details.fold > summary { padding: var(--space-2) var(--space-3); cursor: pointer; font: var(--font-weight-semibold) var(--font-size-xs) / 1.4 var(--font-sans); color: var(--text-secondary); }
+  details.fold > summary .count { color: var(--text-tertiary); font-weight: var(--font-weight-regular); }
+  details.fold[open] > summary { border-bottom: var(--border-width-default) solid var(--border-divider); }
+  details.fold table.tbl { border: 0; border-radius: 0; }
+
+  .show { margin-bottom: var(--space-3); padding: var(--space-3); border-radius: var(--radius-md); background: var(--surface-secondary); display: grid; gap: var(--space-1-5); }
+  .show .hd { font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-sans); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: var(--letter-spacing-wider); }
+  .show .kv { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); }
+  .show .k { min-inline-size: 104px; font: var(--font-weight-semibold) var(--font-size-xs) / 1.4 var(--font-mono); color: var(--text-primary); }
+  .show .ch { padding: 1px var(--space-2); border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-pill); background: var(--surface-default); font: var(--font-size-2xs) / 1.5 var(--font-mono); color: var(--text-secondary); }
+  .show .ch.on { border-color: var(--accent-strong); color: var(--accent-strong); font-weight: var(--font-weight-semibold); }
+  @media (max-width: 640px) { .opts { grid-template-columns: minmax(0, 1fr); } }
+  .opt .pick-btn { align-self: flex-start; padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-primary); font: var(--font-weight-bold) var(--font-size-xs) var(--font-sans); cursor: pointer; }
+  .opt.is-chosen .pick-btn { background: var(--success); border-color: var(--success); color: var(--surface-default); }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1>Таблицы входов в ds-docs занимают экран, а читать их никто не будет</h1>
+    <p class="lede">Одно решение: общая политика ds-docs для входов компонентов, на все страницы сразу.</p>
+    <p class="chat">Ответ нести в чат: «Acc2 · Дека движения графиков»</p>
+  </header>
+
+  <div class="decided">
+    <h2>Решено: «Без таблиц входов»</h2>
+    <p>22 ручные таблицы входов удалены из 15 файлов <code>ds-docs/src/app/sections</code>; то, чего нет в JSDoc и на странице (что делает каждое значение <code>cursor</code>, <code>stack</code>, <code>curve</code>, <code>gaps</code>, <code>tooltipAnchor</code> и других), стоит одной фразой или коротким списком у живого примера. Сгенерированный API не выводится. В шапке раздела нет entry point; селектор свёрнут под закрытой плашкой «Selector».</p>
+    <p class="evidence">2026-10-12 · ds-docs/src/app/shared/docs-section.component.html:17</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
+
+  <section class="panel" data-review="Сегодня">
+    <h2>Сегодня</h2>
+    <ul class="facts">
+      <li><b>Ручные таблицы.</b> <code>table.tbl</code> в <code>ds-docs/src/app/sections/**/*.html</code>: 64 таблицы в 38 файлах, 246 строк (всего <code>&lt;table&gt;</code> там 104 в 105 файлах).</li>
+      <li><b>Из них о входах - 22 таблицы, 94 строки, 15 файлов.</b> Списки входов: 4 таблицы, 43 строки, 3 файла (<code>charts/chart</code>: <code>dsColumnSeries</code> 20 строк и <code>dsLineSeries</code> 12; <code>avatar</code> 6; <code>autocomplete</code> 5). Значения одного входа: 18 таблиц, 51 строка, 13 файлов (<code>cursor</code>, <code>stack</code>, <code>curve</code>, <code>gaps</code>, <code>tooltipAnchor</code>, <code>legend</code>, <code>decimator</code>, <code>filterMode</code> и другие).</li>
+      <li><b>Не о входах, остаются в любом варианте:</b> токены 12 таблиц / 41 строка / 9 файлов; клавиши, озвучка, жесты 13 / 56 / 11; прочая справка (слоты, слои, брейкпоинты) 17 / 55 / 14.</li>
+      <li><b>Сгенерированный API</b> <code>shared/component-api.generated.ts</code>: 118 компонентов, 1030 входов (1016 с описанием), 62 выхода. На странице компонента из него выводится только чип: селектор, entry point, summary (<code>docs-component-meta</code> из <code>docs-section</code>). Таблица <code>docs-api-table</code> для компонентов не вызывается нигде; свёрнутой <code>&lt;details&gt;</code> она стоит только у 6 сервисов (<code>ToastService</code>: 47px закрытая).</li>
+      <li><b>Значит сегодня так:</b> полный список входов есть у 2 из 118 компонентов (<code>dsColumnSeries</code>, <code>dsLineSeries</code>), у остальных 116 на странице нет ни одного списка.</li>
+      <li><b>Витрина уже есть:</b> сетки <code>.states</code> 93 раза в 35 файлах (823 ячейки), <code>docs-matrix</code> на button и icon-button, <code>docs-specimens</code> на badge, редакторы данных графиков в 12 файлах, повтор анимации в 8, <code>⚙ Tweaks</code> на весь сайт: бренд, тема, плотность, размер шрифта.</li>
+      <li><b>Замер в Chrome</b> (окно 1807px, колонка 1152px): страница <code>ds-chart</code> 8818px, таблицы на ней 1736px, из них два списка входов 928 + 633px. Все 10 страниц графиков 69222px, таблицы 4321px, из них о входах 3441px. <code>ds-button</code>: 30 входов, таблиц 0; «Color × variant» 775px, «Sizes» 145px, «States» 433px.</li>
+    </ul>
+    <div class="stage">
+      <div class="spec full"><div data-page="chart" data-variant="today"></div></div>
+      <div class="spec full"><div data-page="button" data-variant="today"></div></div>
+    </div>
+    <p class="cap">слева ds-chart, справа ds-button, как сейчас; фрагменты пересобраны в деке</p>
+  </section>
+
+  <section class="panel q" data-review="Варианты" data-review-note-only data-review-round="3">
+    <ol data-review-history><li>2026-10-12 · «Принято» без выбранной карточки → выбор теперь только кликом по карточке или «Выбрать», «Принято» у этого блока убрано</li><li>2026-10-12 · выбор «Без таблиц входов»; «&lt;ds-button&gt; @ids-group-ltd/ids-design-system/components/button - вообще не надо. максимум - тег и то лучше его тоже в скрытую область перенести.» → 22 таблицы входов удалены; чип entry point убран со всех страниц, селектор в закрытой плашке «Selector» (несколько селекторов - «Selectors») под заголовком раздела</li></ol>
+    <h2>Пять вариантов</h2>
+    <p>Каждая карточка - одни и те же два фрагмента, ds-chart и ds-button, в одном масштабе: высота видна глазом. Выбор - клик по карточке.</p>
+    <div class="opts">
+      <article class="opt is-today" tabindex="0" data-key="today">
+        <span class="badge is-same">как сейчас</span>
+        <h3>Как сейчас</h3>
+        <div class="mini"><div data-page="chart" data-variant="today"></div></div>
+        <div class="mini"><div data-page="button" data-variant="today"></div></div>
+        <div class="pills"><span class="pill mid">блок входов ds-chart: <span data-h="today"></span></span><span class="pill mid">22 ручные таблицы</span><span class="pill mid">список у 2 из 118</span></div>
+        <dl class="layer"><dt>В ds-docs</dt><dd class="none">ничего</dd></dl>
+      </article>
+
+      <article class="opt" tabindex="0" data-key="folded">
+        <span class="badge">свернуть</span>
+        <h3>Свёрнута под счётчиком</h3>
+        <div class="mini"><div data-page="chart" data-variant="folded"></div></div>
+        <div class="mini"><div data-page="button" data-variant="folded"></div></div>
+        <div class="pills"><span class="pill good">закрытая: <span data-h="folded"></span></span><span class="pill good">строка API свёрнута</span><span class="pill mid">18 таблиц значений одного входа открыты</span></div>
+        <dl class="layer"><dt>В ds-docs</dt><dd class="gain">общий <code>docs-fold</code>: 3 полных списка входов (<code>dsColumnSeries</code>, <code>dsLineSeries</code>, avatar) и строка селекторов и entry points вверху каждого раздела закрыты под «Inputs · N» и «API · N»; стиль таблиц прежний</dd></dl>
+      </article>
+
+      <article class="opt" tabindex="0" data-key="dense-folded">
+        <span class="badge">осторожно</span>
+        <h3>Плотная и свёрнутая</h3>
+        <div class="mini"><div data-page="chart" data-variant="dense-folded"></div></div>
+        <div class="mini"><div data-page="button" data-variant="dense-folded"></div></div>
+        <div class="pills"><span class="pill good">закрытая: <span data-h="dense-folded"></span></span><span class="pill mid">22 ручные таблицы остаются</span><span class="pill mid">список у 2 из 118</span></div>
+        <dl class="layer"><dt>В ds-docs</dt><dd class="gain">одно правило CSS на 64 <code>table.tbl</code>; 3 таблицы длиннее 8 строк сворачиваются под счётчик</dd></dl>
+      </article>
+
+      <article class="opt" tabindex="0" data-key="no-tables">
+        <span class="badge">убрать</span>
+        <h3>Без таблиц входов</h3>
+        <div class="mini"><div data-page="chart" data-variant="no-tables"></div></div>
+        <div class="mini"><div data-page="button" data-variant="no-tables"></div></div>
+        <div class="pills"><span class="pill good">блок входов: <span data-h="no-tables"></span></span><span class="pill good">графики: минус 3441 из 69222px</span><span class="pill mid">списка входов нет ни у одного</span></div>
+        <dl class="layer"><dt>В ds-docs</dt><dd class="gain">22 таблицы удаляются из 15 файлов; сгенерированный API для компонентов не выводится, как сегодня у 116 из 118</dd></dl>
+      </article>
+
+      <article class="opt is-pick" tabindex="0" data-key="showcase">
+        <span class="badge is-pick">рекомендую</span>
+        <h3>Витрина настроек</h3>
+        <div class="mini"><div data-page="chart" data-variant="showcase"></div></div>
+        <div class="mini"><div data-page="button" data-variant="showcase"></div></div>
+        <div class="pills"><span class="pill good">блок входов: <span data-h="showcase"></span></span><span class="pill good">генерируется: 433 входа в 89 компонентах</span><span class="pill good">полный список у 118 из 118, свёрнут</span></div>
+        <dl class="layer"><dt>В ds-docs</dt><dd class="gain">22 таблицы удаляются из 15 файлов; <code>docs-section</code> выводит «Можно менять» из <code>union</code> и <code>boolean</code> входов (без <code>aria*</code> и <code>type</code>) и одну свёрнутую строку «Все входы» через готовый <code>docs-api-table</code></dd><dt>Предел</dt><dd class="none">у <code>ds-table</code> 21 чип, это самый длинный блок</dd></dl>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Сравнение</h2>
+    <table>
+      <thead><tr><th>Что</th><th>Как сейчас</th><th>Свёрнута под счётчиком</th><th>Плотная и свёрнутая</th><th>Без таблиц входов</th><th>Витрина настроек</th></tr></thead>
+      <tbody>
+        <tr><th class="rowlabel">Блок входов ds-chart, ширина 640px</th><td data-h="today"></td><td data-h="folded"></td><td data-h="dense-folded"></td><td data-h="no-tables"></td><td data-h="showcase"></td></tr>
+        <tr><th class="rowlabel">Ручные таблицы входов</th><td>22</td><td>22, 3 полных свёрнуты</td><td>22</td><td>0</td><td>0</td></tr>
+        <tr><th class="rowlabel">Что видно сразу</th><td>таблица</td><td>строки «API · N» и «Inputs · N», таблицы значений</td><td>строка-счётчик</td><td>только демо</td><td>имена входов и их значения</td></tr>
+        <tr><th class="rowlabel">Полный список входов</th><td>у 2 из 118, развёрнут</td><td>у 2 из 118, свёрнут</td><td>у 2 из 118, свёрнут</td><td>нет</td><td>у 118 из 118, свёрнут</td></tr>
+        <tr><th class="rowlabel">Откуда текст</th><td>руками</td><td>руками</td><td>руками</td><td>нет текста</td><td>из <code>component-api.generated.ts</code></td></tr>
+        <tr><th class="rowlabel">Правки</th><td>0</td><td><code>docs-fold</code> + 3 таблицы + шапка раздела</td><td>CSS + обёртка 3 таблиц</td><td>15 файлов</td><td>15 файлов + <code>docs-section</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel good">
+    <h2>Рекомендую: «Витрина настроек»</h2>
+    <p>Сразу видно, что в компоненте можно менять, одной строкой чипов; живые образцы уже стоят выше на странице. Чипы и полный список строятся из сгенерированного API, поэтому не расходятся с кодом и не требуют ручных таблиц. Полный список свёрнут в одну строку на каждой странице, а не развёрнут на двух.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Что решить</h2>
+    <table>
+      <thead><tr><th>Вопрос</th><th>Варианты</th><th>Рекомендую</th></tr></thead>
+      <tbody><tr class="row-pick"><th class="rowlabel">Как ds-docs показывает входы компонентов</th><td>Как сейчас · Свёрнута под счётчиком · Плотная и свёрнутая · Без таблиц входов · Витрина настроек</td><td>Витрина настроек</td></tr></tbody>
+    </table>
+  </section>
+
+  <p class="src"><b>Источники, проверено 2026-10-12 на <code>dev</code> (<code>f8998fe2</code>).</b> Таблицы: разбор каждой <code>table.tbl</code> в <code>ds-docs/src/app/sections/**/*.html</code> по заголовкам колонок (скрипт в scratchpad), классы назначены вручную по шапке. API: <code>shared/component-api.generated.ts</code> прочитан целиком в node; число чипов - входы с <code>union</code> или <code>boolean</code>, кроме <code>aria*</code> и <code>type</code>. Рендер: <code>docs-section.component.html</code> выводит <code>docs-component-meta</code> для компонентов и <code>docs-api-table</code> только для <code>serviceNames()</code>. Высоты страниц и таблиц измерены в Chrome на <code>localhost:4300</code> (<code>/charts/chart</code>, <code>/components/button</code>, <code>/components/toast</code>), окно 1807px. Строки таблицы <code>dsColumnSeries</code> - из <code>charts/chart/chart.section.html</code>; стиль таблицы перенесён из <code>docs-section.component.scss</code>. Высоты блока входов на фрагментах меряются в этой странице при открытии на ширине 640px.</p>
+  </details>
+</main>
+
+<script>
+  const rows = [
+    ['data', '[]', 'One point per category'],
+    ['showValues', 'true', 'Values above columns'],
+    ['interactive', 'false', 'Pointer cursor and hover tint; <code>pointClicked</code> fires either way'],
+    ['pinOnClick', 'null', 'Holds the clicked mark; unset reads <code>DS_CONFIG.chart.pinOnClick</code>, then <code>true</code>'],
+    ['dimOthers', 'false', 'Fades all but the active mark'],
+    ['staggerMs', '40', 'Entrance delay between marks; <code>0</code> off'],
+    ['partOfWhole', 'false', 'Share in the tooltip'],
+    ['tooltip', "'item'", "<code>'none'</code>: hover and focus open no panel"],
+    ['tooltipAnchor', "'mark'", "<code>'cell'</code>: the full-height category cell"],
+    ['tooltipLingerMs', '500', 'How long the panel outlives the pointer'],
+    ['valueFormat', 'locale number', 'Formats printed values'],
+    ['columnWidthRatio', '0.8', 'Share of the slot before the max-width cap'],
+    ['slot / slotCount', '0 / 1', "This series' slot in a category, and how many: hand-grouped columns"],
+    ['offsets', 'null', "Each mark's value-axis start and end: hand-stacked columns. Unset, from zero"],
+    ['soleSeries', 'false', 'Alone in its slot; marks answer over the full plot height'],
+    ['axis', "'primary'", "or <code>'secondary'</code>"],
+    ['seriesColor / seriesFill', 'null', "Series colour; fill <code>'solid'</code> / <code>'hatched'</code>. A point's own wins"],
+    ['seriesLabel', 'null', 'Names the series in the tooltip'],
+    ['seriesKey / highlighted', 'null', 'Legend identity; all but the highlighted series fade'],
+    ['(pointClicked)', '', 'Emits the clicked point'],
+  ];
+  const showcase = {
+    chart: { title: 'dsColumnSeries', total: 22, unions: [['tooltip', ['item', 'none'], 'item'], ['tooltipAnchor', ['mark', 'cell'], 'mark'], ['axis', ['primary', 'secondary'], 'primary'], ['seriesFill', ['solid', 'hatched'], '']], flags: ['showValues', 'interactive', 'dimOthers', 'partOfWhole', 'soleSeries'] },
+    button: { title: 'ds-button', total: 30, unions: [['color', ['primary', 'secondary', 'tertiary', 'neutral', 'error', 'success', 'warning'], 'primary'], ['variant', ['solid', 'tonal', 'ghost', 'outline', 'text'], 'solid'], ['size', ['sm', 'md', 'lg'], ''], ['align', ['center', 'between'], 'center']], flags: ['disabled', 'loading', 'fullWidth'] },
+  };
+  const code = (text) => text.split(' / ').map((part) => `<code>${part}</code>`).join(' / ');
+  const table = () => `<table class="tbl"><thead><tr><th>dsColumnSeries</th><th>Default</th><th>Meaning</th></tr></thead><tbody>${rows.map(([name, value, meaning]) => `<tr><td>${code(name)}</td><td>${value === 'locale number' || !value ? value : code(value)}</td><td>${meaning}</td></tr>`).join('')}</tbody></table>`;
+  const fold = (label, count, dense) => `<details class="fold${dense ? ' dense' : ''}"><summary>${label} <span class="count">· ${count}</span></summary>${table()}</details>`;
+  const strip = (kind) => {
+    const data = showcase[kind];
+    const unions = data.unions.map(([name, values, fallback]) => `<div class="kv"><span class="k">${name}</span>${values.map((value) => `<span class="ch${value === fallback ? ' on' : ''}">${value}</span>`).join('')}</div>`).join('');
+    return `<div class="show"><div class="hd">Можно менять</div>${unions}<div class="kv"><span class="k">флаги</span>${data.flags.map((flag) => `<span class="ch">${flag}</span>`).join('')}</div></div>`;
+  };
+  const heights = [62, 96, 74, 120, 88, 104];
+  const demo = `<svg class="demo" viewBox="0 0 600 150" aria-hidden="true"><line class="axis" x1="20" y1="136" x2="590" y2="136"/>${heights.map((height, index) => `<rect class="col" x="${40 + index * 92}" y="${136 - height}" width="56" height="${height}" rx="3"/>`).join('')}</svg>`;
+  const buttons = `<div class="btns">${['solid', 'tonal', 'ghost', 'outline', 'text'].map((variant) => `<span class="btn ${variant}">${variant[0].toUpperCase() + variant.slice(1)}</span>`).join('')}</div>`;
+  const part = {
+    chart: {
+      today: () => table(),
+      folded: () => fold('dsColumnSeries inputs', rows.length, false),
+      'dense-folded': () => fold('dsColumnSeries inputs', rows.length, true),
+      'no-tables': () => '',
+      showcase: () => `${strip('chart')}${fold('Все входы dsColumnSeries', showcase.chart.total, true)}`,
+    },
+    button: {
+      today: () => '<div class="none">таблицы входов нет: 0 из 30 на странице</div>',
+      folded: () => '<div class="none">таблицы входов нет: 0 из 30 на странице</div>',
+      'dense-folded': () => '<div class="none">таблицы входов нет: 0 из 30 на странице</div>',
+      'no-tables': () => '<div class="none">таблицы входов нет: 0 из 30 на странице</div>',
+      showcase: () => `${strip('button')}${fold('Все входы ds-button', showcase.button.total, true)}`,
+    },
+  };
+  const tags = (variant, selector, entry) => {
+    const row = `<div class="tags"><span class="tag">${selector}</span><span class="tag">@ids-group-ltd/ids-design-system/components/${entry}</span></div>`;
+    return variant === 'folded' ? `<details class="fold"><summary>API <span class="count">· 1</span></summary>${row}</details>` : row;
+  };
+  const page = (kind, variant) => kind === 'chart'
+    ? `<div class="pg"><div class="eb">Charts</div><div class="ttl">Chart container</div>${tags(variant, '&lt;g dsColumnSeries&gt;', 'chart')}${demo}<div data-part>${part.chart[variant]()}</div></div>`
+    : `<div class="pg"><div class="eb">Components</div><div class="ttl">Button</div>${tags(variant, '&lt;ds-button&gt;', 'button')}${buttons}<div data-part>${part.button[variant]()}</div></div>`;
+  document.querySelectorAll('[data-page]').forEach((host) => { host.outerHTML = page(host.dataset.page, host.dataset.variant); });
+
+  const fit = () => document.querySelectorAll('.mini').forEach((frame) => { frame.firstElementChild.style.zoom = String(Math.min(1, frame.clientWidth / 640)); });
+  new ResizeObserver(fit).observe(document.body);
+  fit();
+
+  const measure = (variant) => {
+    const probe = document.createElement('div');
+    probe.style.cssText = 'position:absolute; visibility:hidden; inset-inline-start:0; inset-block-start:0';
+    probe.innerHTML = page('chart', variant);
+    document.body.append(probe);
+    const height = Math.round(probe.querySelector('[data-part]').getBoundingClientRect().height);
+    probe.remove();
+    return `${height}px`;
+  };
+  document.fonts.ready.then(() => {
+    const measured = Object.fromEntries(['today', 'folded', 'dense-folded', 'no-tables', 'showcase'].map((variant) => [variant, measure(variant)]));
+    document.querySelectorAll('[data-h]').forEach((cell) => { cell.textContent = measured[cell.dataset.h]; });
+  });
+
+  const KEY = 'ds-deck-docs-table-weight-pick-v2';
+  const cards = [...document.querySelectorAll('.opt[data-key]')];
+  cards.forEach((card) => {
+    const pickButton = document.createElement('button');
+    pickButton.type = 'button';
+    pickButton.className = 'pick-btn';
+    card.append(pickButton);
+  });
+  const labelPicks = () => cards.forEach((card) => { card.querySelector('.pick-btn').textContent = card.classList.contains('is-chosen') ? 'Выбрано' : 'Выбрать'; });
+  new MutationObserver(labelPicks).observe(document.querySelector('.opts'), { subtree: true, attributes: true, attributeFilter: ['class'] });
+  labelPicks();
+  let picked = null;
+  try { picked = localStorage.getItem(KEY); } catch { /* private window */ }
+  const paint = () => cards.forEach((card) => card.classList.toggle('is-chosen', card.dataset.key === picked));
+  window.deckReviewHooks = {
+    extra: () => { const card = cards.find((item) => item.dataset.key === picked); return card ? `выбор - «${card.querySelector('h3').textContent}»` : 'выбор - не сделан'; },
+    onReset: () => { picked = null; try { localStorage.removeItem(KEY); } catch { /* private window */ } paint(); },
+  };
+  cards.forEach((card) => {
+    const choose = () => { picked = card.dataset.key; try { localStorage.setItem(KEY, picked); } catch { /* private window */ } paint(); window.deckReview?.refresh(); };
+    card.addEventListener('click', (event) => { if (!event.target.closest('summary, details')) choose(); });
+    card.addEventListener('keydown', (event) => { if (event.target === card && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); choose(); } });
+  });
+  paint();
+</script>
+<!-- deck-review -->
+<script>
+// deck-review: verdict per [data-review] block, a textarea for remarks, one answer line in a fixed bar.
+// Inlined into a deck by ~/.claude/bin/deck-review-inline; contract in ~/.claude/docs/deck-review.md.
+(() => {
+  // Every key under deck-review: is a disposable reviewer answer, kept 7 days after its last change.
+  const PREFIX = 'deck-review:v1:';
+  const KEY = PREFIX + (document.documentElement.dataset.deck || document.title);
+  const KEEP_MS = 7 * 24 * 60 * 60 * 1000;
+  const ACCEPT = 'принято';
+  const REMARK = 'есть замечание';
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith('deck-review:')) continue;
+      let expires = 0;
+      try { if (key.startsWith(PREFIX)) expires = JSON.parse(localStorage.getItem(key))?.expires; } catch { /* malformed: drop */ }
+      if (!(expires > Date.now())) localStorage.removeItem(key);
+    }
+  } catch { /* private window */ }
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY))?.answers ?? {}; } catch { return {}; } };
+  const write = () => { try { localStorage.setItem(KEY, JSON.stringify({ expires: Date.now() + KEEP_MS, answers: state })); } catch { /* private window */ } };
+  const state = read();
+
+  document.head.insertAdjacentHTML('beforeend', `<style>
+    .dr-row { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px 0; }
+    .dr-btn { padding: 4px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 999px; background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-btn[aria-pressed="true"] { background: var(--accent-subtitle, #e6efff); border-color: var(--accent-strong, #2457c5); color: var(--accent-strong, #2457c5); }
+    .dr-btn[data-v="${REMARK}"][aria-pressed="true"] { background: var(--error-subtitle, #fdecec); border-color: var(--error-text, #b42318); color: var(--error-text, #b42318); }
+    .dr-note { display: block; box-sizing: border-box; inline-size: 100%; min-block-size: 64px; field-sizing: content; margin-block-start: 8px; padding: 8px 10px; border: 1px solid var(--border-default, #c9ced6); border-radius: var(--radius-md, 8px); background: var(--surface-default, #fff); color: var(--text-primary, #1d2330); font: 14px/1.45 var(--font-sans, system-ui, sans-serif); resize: vertical; }
+    .dr-note:focus { outline: none; border-color: var(--accent, #2457c5); box-shadow: var(--ds-field-focus-shadow, 0 0 0 3px rgb(36 87 197 / .25)); }
+    .dr-note[hidden] { display: none; }
+    .dr-history { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 4px; color: var(--text-secondary, #4b5563); font: 13px/1.45 var(--font-sans, system-ui, sans-serif); }
+    .dr-history::before { content: 'История замечаний'; display: block; margin-left: -1.2em; color: var(--text-primary, #1d2330); font-weight: 600; }
+    [data-dr-folded] > :not(h1, h2, h3, h4, .dr-row, .dr-note) { display: none !important; }
+    .dr-fold { padding: 4px 8px; border: 0; background: none; color: var(--accent-strong, #2457c5); font: 600 13px/1.4 var(--font-sans, system-ui, sans-serif); cursor: pointer; }
+    .dr-fold[hidden] { display: none; }
+    .dr-btn, .dr-bar button, .dr-fold { transition: background-color .12s, border-color .12s, color .12s, box-shadow .12s; }
+    .dr-btn:hover, .dr-bar button:hover { background: var(--surface-secondary, #f3f4f6); border-color: var(--border-strong, #9aa1ad); }
+    .dr-btn:active, .dr-bar button:active { background: var(--surface-muted, #e5e7eb); }
+    .dr-btn[aria-pressed="true"]:hover { background: color-mix(in srgb, var(--accent-strong, #2457c5) 14%, var(--surface-default, #fff)); }
+    .dr-btn[data-v="есть замечание"][aria-pressed="true"]:hover { background: color-mix(in srgb, var(--error-text, #b42318) 14%, var(--surface-default, #fff)); }
+    .dr-fold:hover { text-decoration: underline; }
+    .dr-fold:active { color: var(--text-primary, #1d2330); }
+    .dr-btn:focus-visible, .dr-bar button:focus-visible, .dr-fold:focus-visible { outline: 2px solid var(--focus-ring-color, var(--accent, #2457c5)); outline-offset: 2px; }
+    .dr-bar button[data-done] { background: var(--success-subtitle, #e7f6ec); border-color: var(--success, #1a7f37); color: var(--success-text, #116329); }
+    .dr-bar { position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; padding: 10px 20px; background: var(--surface-default, #fff); border-top: 1px solid var(--border-divider, #e3e6eb); box-shadow: 0 -4px 16px rgb(0 0 0 / .08); color: var(--text-primary, #1d2330); font: 13px/1.4 var(--font-sans, system-ui, sans-serif); }
+    .dr-bar b { flex: none; }
+    .dr-bar .dr-chat { flex: none; color: var(--text-tertiary, #6b7280); }
+    .dr-bar output { flex: 1 1 auto; min-inline-size: 0; overflow-x: auto; white-space: nowrap; color: var(--text-secondary, #4b5563); font-family: var(--font-mono, ui-monospace, monospace); }
+    .dr-bar button { flex: none; padding: 6px 12px; border: 1px solid var(--border-default, #c9ced6); border-radius: 6px; background: var(--surface-default, #fff); color: inherit; font: 600 13px/1.4 inherit; cursor: pointer; }
+    body { padding-block-end: 72px; }
+    @media (max-width: 640px) { .dr-bar { padding: 8px 12px; gap: 8px; } .dr-bar .dr-chat { display: none; } }
+  </style>`);
+
+  let items = [...document.querySelectorAll('[data-review]')];
+  if (!items.length) {
+    const whole = document.createElement('section');
+    whole.dataset.review = 'Дека в целом';
+    whole.innerHTML = '<h3>Дека в целом</h3>';
+    (document.querySelector('main') ?? document.body).append(whole);
+    items = [whole];
+  }
+
+  const controls = new Map();
+  const unfolded = new Set();
+  for (const item of items) {
+    const label = item.dataset.review;
+    // A deck bumps data-review-round once it has worked through the remarks of a round; answers stored
+    // for an earlier round are already in the block's history, so they leave the input.
+    const round = Number(item.dataset.reviewRound) || 1;
+    if (state[label] && (state[label].round ?? 1) !== round) { delete state[label]; write(); }
+    const own = () => Object.assign((state[label] ??= {}), { round });
+    const row = document.createElement('div');
+    row.className = 'dr-row';
+    const verdicts = item.hasAttribute('data-review-note-only') ? [REMARK] : [ACCEPT, REMARK];
+    const buttons = verdicts.map((verdict) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'dr-btn';
+      button.dataset.v = verdict;
+      button.textContent = verdict === ACCEPT ? 'Принято' : 'Есть замечание';
+      button.addEventListener('click', () => {
+        const entry = own();
+        entry.v = entry.v === verdict ? '' : verdict;
+        write();
+        render();
+        if (entry.v === REMARK) note.focus();
+      });
+      return button;
+    });
+    const note = document.createElement('textarea');
+    note.className = 'dr-note';
+    note.placeholder = 'Что не так';
+    note.setAttribute('aria-label', `Замечание: ${label}`);
+    note.addEventListener('input', () => { own().note = note.value; write(); render(); });
+    const fold = document.createElement('button');
+    fold.type = 'button';
+    fold.className = 'dr-fold';
+    fold.addEventListener('click', () => { unfolded.has(label) ? unfolded.delete(label) : unfolded.add(label); render(); });
+    row.append(...buttons, fold);
+    item.append(row, note);
+    const history = item.querySelector(':scope > [data-review-history]');
+    if (history) { history.classList.add('dr-history'); item.append(history); }
+    controls.set(label, { item, buttons, note, fold });
+  }
+
+  const chat = document.querySelector('.chat')?.textContent.replace(/^[^«]*/, '') ?? '';
+  const bar = document.createElement('div');
+  bar.className = 'dr-bar';
+  bar.innerHTML = `<b></b><span class="dr-chat"></span><output></output><button type="button" data-a="copy">Скопировать</button><button type="button" data-a="reset">Сбросить</button>`;
+  bar.querySelector('.dr-chat').textContent = chat;
+  document.body.append(bar);
+  const line = bar.querySelector('output');
+
+  const hooks = (window.deckReviewHooks ??= {});
+  window.deckReview = { refresh: () => render() };
+
+  function render() {
+    const parts = [];
+    let done = 0;
+    let open = 0;
+    for (const [label, { item, buttons, note, fold }] of controls) {
+      const entry = state[label] ?? {};
+      const accepted = entry.v === ACCEPT;
+      item.toggleAttribute('data-dr-folded', accepted && !unfolded.has(label));
+      fold.hidden = !accepted;
+      fold.textContent = unfolded.has(label) ? 'Свернуть' : 'Развернуть';
+      for (const button of buttons) button.setAttribute('aria-pressed', String(entry.v === button.dataset.v));
+      note.hidden = entry.v !== REMARK;
+      if (note.value !== (entry.note ?? '')) note.value = entry.note ?? '';
+      if (!accepted) open++;
+      if (!entry.v) continue;
+      if (!accepted) done++;
+      const text = entry.note?.trim().replace(/\s+/g, ' ');
+      parts.push(entry.v === REMARK ? `${label} - замечание${text ? `: «${text}»` : ''}` : `${label} - принято`);
+    }
+    const extra = hooks.extra?.();
+    if (extra) parts.push(extra);
+    bar.querySelector('b').textContent = `${done} из ${open}`;
+    line.textContent = parts.length ? `Дека ${document.title}: ${parts.join('; ')}` : 'пока ничего не выбрано';
+  }
+
+  bar.addEventListener('click', (event) => {
+    const action = event.target.closest('button')?.dataset.a;
+    if (action === 'copy') {
+      const button = event.target.closest('button');
+      navigator.clipboard?.writeText(line.textContent).then(() => {
+        button.dataset.done = '';
+        button.textContent = 'Скопировано';
+        setTimeout(() => { delete button.dataset.done; button.textContent = 'Скопировать'; }, 1500);
+      });
+    }
+    if (action === 'reset') { for (const label of Object.keys(state)) delete state[label]; write(); hooks.onReset?.(); render(); }
+  });
+  render();
+})();
+</script>
+<!-- /deck-review -->
+</body>
+</html>

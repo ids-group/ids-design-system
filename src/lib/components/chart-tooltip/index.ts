@@ -6,7 +6,7 @@ export type {
   ChartTooltipOrigin,
   ChartTooltipTrigger,
 } from './chart-tooltip.types';
-export { chartActiveMark } from './chart-active-mark';
+export { chartActiveMark, isPrimaryPress } from './chart-active-mark';
 export type { ChartActiveMark } from './chart-active-mark';
 export {
   CHART_PIN_GAP,
@@ -22,5 +22,6 @@ export {
   ChartSkeletonComponent,
 } from './chart-skeleton.component';
 export type { ChartSkeletonMarks } from './chart-skeleton.component';
+export { ChartPlacedDirective } from './chart-placed.directive';
 export { ChartStatesComponent } from './chart-states.component';
 export type { ChartStatesMessageContext } from './chart-states.component';

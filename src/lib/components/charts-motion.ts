@@ -1,4 +1,4 @@
-import type { AnimationCallbackEvent } from '@angular/core';
+import type { AnimationCallbackEvent, NgZone } from '@angular/core';
 
 // The whole spread of a series' arrival; past it the entrance reads as a queue, not one gesture.
 const STAGGER_BUDGET_MS = 260;
@@ -25,4 +25,137 @@ export function staggerDelay(
  *  @internal */
 export function leaveMark(event: AnimationCallbackEvent): void {
   event.target.classList.add('mark-leave');
+}
+
+// A CSS duration (`300ms`, `0.3s`) in milliseconds; anything unparsable is `0`.
+function cssDurationMs(duration: string): number {
+  const value = parseFloat(duration);
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+
+  return duration.trim().endsWith('ms') ? value : value * 1000;
+}
+
+/** How far a glide starts in. A glide re-aimed every frame, as a fast pointer re-aims it, otherwise
+ *  draws its zero-progress frame each time and stands still until the pointer stops. @internal */
+export const CHART_GLIDE_HEAD_START_MS = 1000 / 30;
+
+/** A chart motion timing, read from `--ds-motion-chart-<timing>-duration` and `-easing`. @internal */
+export type ChartMotionTiming = 'mark' | 'mark-grow' | 'state' | 'tooltip-move';
+
+/** The duration and easing `element` inherits from `--ds-motion-chart-<timing>-*`, or `null` when the
+ *  duration is zero, as under reduced motion.
+ *
+ *  @internal */
+export function chartTiming(
+  element: Element,
+  timing: ChartMotionTiming,
+): { duration: number; easing: string } | null {
+  const style = getComputedStyle(element);
+  const duration = cssDurationMs(
+    style.getPropertyValue(`--ds-motion-chart-${timing}-duration`),
+  );
+  if (duration <= 0) {
+    return null;
+  }
+
+  return {
+    duration,
+    easing:
+      style.getPropertyValue(`--ds-motion-chart-${timing}-easing`).trim() ||
+      'ease',
+  };
+}
+
+/** A chart motion delay, read from `--ds-motion-chart-<delay>-delay`. @internal */
+export type ChartMotionDelay = 'scale-marker';
+
+/** The delay `element` inherits from `--ds-motion-chart-<delay>-delay`, in milliseconds; `0` under
+ *  reduced motion.
+ *
+ *  @internal */
+export function chartDelay(element: Element, delay: ChartMotionDelay): number {
+  return cssDurationMs(
+    getComputedStyle(element).getPropertyValue(
+      `--ds-motion-chart-${delay}-delay`,
+    ),
+  );
+}
+
+/** Eases `apply` from `from` to `to` on the timing `element` inherits (`--ds-motion-chart-<timing>-*`),
+ *  for geometry CSS cannot interpolate. A zero duration, as under reduced motion, applies `to` at once.
+ *  `onDone` runs after the last apply, inside this call when there is no motion. Returns the cancel;
+ *  a caller starting the next tween cancels this one and passes what it last applied.
+ *
+ *  Frames run in whatever zone the call runs in: call it outside Angular's zone, or every frame is
+ *  an application tick.
+ *
+ *  @internal */
+export function tweenMarks(
+  element: Element,
+  from: readonly number[],
+  to: readonly number[],
+  apply: (values: readonly number[]) => void,
+  timing: ChartMotionTiming = 'mark',
+  onDone: () => void = () => undefined,
+): () => void {
+  const eased = chartTiming(element, timing);
+  if (
+    !eased ||
+    from.length !== to.length ||
+    typeof KeyframeEffect === 'undefined'
+  ) {
+    apply(to);
+    onDone();
+
+    return () => undefined;
+  }
+  // A target-less effect is only a clock: it eases by the token's own curve, whatever its form.
+  const clock = new Animation(
+    new KeyframeEffect(null, null, {
+      ...eased,
+      delay: -CHART_GLIDE_HEAD_START_MS,
+      fill: 'forwards',
+    }),
+  );
+  let frame = 0;
+  const step = (): void => {
+    const progress = clock.effect?.getComputedTiming().progress ?? 1;
+    apply(
+      to.map((value, index) => from[index] + (value - from[index]) * progress),
+    );
+    if (clock.playState !== 'finished') {
+      frame = requestAnimationFrame(step);
+
+      return;
+    }
+    onDone();
+  };
+  clock.play();
+  frame = requestAnimationFrame(step);
+
+  return () => {
+    cancelAnimationFrame(frame);
+    clock.cancel();
+  };
+}
+
+/** Runs `run` two frames from now, outside Angular's zone; returns the cancel.
+ *
+ *  @internal */
+export function afterTwoFrames(zone: NgZone, run: () => void): () => void {
+  let first = 0;
+  let second = 0;
+  // Outside the zone: under zone.js each frame callback is a full application tick.
+  zone.runOutsideAngular(() => {
+    first = requestAnimationFrame(() => {
+      second = requestAnimationFrame(run);
+    });
+  });
+
+  return () => {
+    cancelAnimationFrame(first);
+    cancelAnimationFrame(second);
+  };
 }

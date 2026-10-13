@@ -1,6 +1,7 @@
 <figure
   class="column-chart"
   dsChartStates
+  morphGrowth="up"
   messageAxes
   [pinned]="!!pinnedSeries()"
   [caption]="caption()"
@@ -8,7 +9,7 @@
   [errorText]="errorTextResolved()"
   [pending]="(loading() && isEmpty()) || !renderReady()"
   [reloading]="loading()"
-  [dataTable]="dataTableResolved() !== 'none'"
+  [dataTable]="dataTableResolved()"
   [shimmer]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
@@ -37,7 +38,12 @@
     [tickCount]="tickCount()"
     [valueFormat]="axisFormat()"
     [interactive]="interactive()"
+    [selectRange]="selectRange()"
+    [showAxisReadout]="showAxisReadout()"
     [summary]="accessibleName()"
+    [rescaleOnHide]="rescaleOnHide()"
+    [min]="heldExtent().min"
+    [max]="heldExtent().max"
     [plotHeight]="geometry().plotHeight"
     [axisGutter]="geometry().axisGutter"
     [valueSpace]="geometry().valueSpace">
@@ -56,7 +62,8 @@
         dsColumnSeries
         [data]="series.points"
         [seriesKey]="series.key"
-        [highlighted]="highlightedSeries()"
+        [highlighted]="spotlitSeries()"
+        [hidden]="isHidden(series.key)"
         [slot]="slotCount() > 1 ? seriesIndex : 0"
         [slotCount]="slotCount()"
         [offsets]="offsetsFor(seriesIndex)"
@@ -87,6 +94,9 @@
   @if (multiSeries()) {
     <ds-chart-legend
       [items]="legendItems()"
+      [toggleable]="legendFilters()"
+      [mode]="legendMode()"
+      [(hidden)]="hiddenSeries"
       [(highlighted)]="highlightedSeries" />
   }
 

@@ -32,8 +32,17 @@ function optional<T>(
   return computed(() => input()?.() ?? null);
 }
 
-/** Default hover delay, in milliseconds. @internal */
-export const CHART_HOVER_DELAY_MS = 0;
+const CHART_HOVER_DELAY_MS = 0;
+
+/** How long a pointer rests on a mark before the chart answers, in milliseconds:
+ *  `DS_CONFIG.chart.hoverDelayMs`, else `0`. Call from an injection context. @internal */
+export function chartHoverDelayMs(): Signal<number> {
+  return resolveWithConfig(
+    NO_HOVER_DELAY_INPUT,
+    (config) => config.chart?.hoverDelayMs,
+    CHART_HOVER_DELAY_MS,
+  );
+}
 
 /** Default tooltip linger, in milliseconds; long enough to cross to the next mark. @internal */
 export const CHART_TOOLTIP_LINGER_MS = 500;
@@ -73,11 +82,7 @@ export function resolveChartDefaults(inputs: ChartDefaultInputs) {
       (config) => config.chart?.pinOnClick,
       true,
     ),
-    hoverDelayMs: resolveWithConfig(
-      NO_HOVER_DELAY_INPUT,
-      (config) => config.chart?.hoverDelayMs,
-      CHART_HOVER_DELAY_MS,
-    ),
+    hoverDelayMs: chartHoverDelayMs(),
     tooltipSwatches: resolveWithConfig<boolean | 'auto'>(
       optional(() => inputs.tooltipSwatches),
       (config) => config.chart?.tooltipSwatches,

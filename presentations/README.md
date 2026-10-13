@@ -11,7 +11,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 
 | # | Deck | Answering it unblocks |
 | --- | --- | --- |
-| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 5 asks a consumer waits on, then 34 decisions across seven groups, every option drawn in its own card; answered asks sit under «Уже решено» |
+| 1 | `1-decision-queue` | every consumer ask and every open question in one page - 3 asks a consumer waits on, then 47 decisions across eight groups (the last two: chart, table and focus choices agents made without a deck, and «not now» answers counted as decided), every option drawn in its own card; answered questions sit under «Уже решено», each with its status and evidence |
 | 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
 | 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
 | 4 | `4-interaction-formula` | two pressed-state verdicts, both rendered and measured: the tonal button's pressed recipe and the danger menu item whose pressed equals its hover. The other three are answered and the `.ds-interactive` formula is deferred |
@@ -19,42 +19,44 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 6 | `6-select-native-multi` | the cheapest to close: "keep parked" is a complete answer, and it is the answer already given — it stays only because closing it was declined |
 | 7 | `7-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4", and `docs/todo.md` still carries the measured 4.42:1 failure |
 | 8 | `8-picker-list-height` | which knob caps a picker's list: the public `--ds-dropdown-panel-max-height` lowers the list but cannot raise it past the internal 280px `--picker-maxh`; all three options rendered and measured, one cap recommended |
-| 9 | `9-locale-week-and-hour` | whether the date picker's first day of the week and the time picker's 12h/24h follow the new `DS_CONFIG.locale`: four options drawn over six locales, each computed by `Intl` in the page; the en-US row shows the default every consumer without a locale gets |
-| 10 | `10-docs-reasoning-blocks` | what ds-docs does with its ~27 reasoning blocks (fix proofs, edge-case guards, internals): keep, fold to the chapter end, move to a proof page, or delete - drawn on the real Table chapter |
-| 11 | `11-deerns-atlas-feedback` | the Deerns Atlas prototype feedback and its flicker-on-mount report, every claim checked against the uploaded bundle: nine drawn decisions (missing required input, Badge tone, Stat frame, Timeline spine, narrow Topbar, clipped SidenavItem label, Input in a narrow grid, Alert entrance on screen mount) and a build-extend-recipe-consumer call for each requested component; twenty one-answer fixes listed |
-| 12 | `12-chart-motion` | how much motion the charts get: none, sync (line, labels, pin, grid and crosshair follow the columns), sync plus a response to every hover, or full with counting numbers - four live mini charts to hover, pin and re-feed |
-| 13 | `13-chart-motion-extras` | which of ten additions ship with the motion level picked in `chart-motion`: axis answers the hover, pie centre shows the slice, legend collapses a series, heatmap crosshair, scatter nearest point, marker halo, skeleton crossfade, scatter and heatmap stagger, gliding keyboard focus, columns that move on sort - each live |
-| 14 | `14-unread-tokens` | which of the 121 public tokens the library never reads to remove: none, the 51 sizes of components and patterns that do not exist (0 reads in three consumers), or all 121 (12 of them read by a consumer) |
-| 15 | `15-unasked-decisions` | six behaviour changes already in Unreleased that shipped without a choice between alternatives - theme attribute ownership, modal confirm, avatar-group max, disabled link reason, icon registry merge, chart pin geometry - each with its options drawn |
-| 16 | `16-column-chart-filter` | how `ds-column-chart` gets a caption under each column and a persistent selection - point fields, chart inputs with a template, or nothing - each written as the same consumer task with its rendering |
-| 17 | `17-table-column-hint` | what a `ds-table` header with `hint` shows when its label does not fit the column: only the hint as today, the full label over the hint, or a header that wraps instead - before/after screenshots of the docs demo at `8eb6ab9e` and `e0ff159f`, the three options drawn |
-| 18 | `18-table-header-clip` | the `ds-table` header label that clips with an ellipsis inside its column and the tooltip of a clipped hinted header (label, then hint) - before/after screenshots of the docs demo on dev and on `fix/table-header-clip`: narrow headers, focus ring, plain and hinted tooltip, with the measurements |
-| 19 | `19-interaction-states` | general rules for the states of interactive elements (rest, hover, pressed, focus, on, on + hover, on + pressed, disabled) as levels on three channels (fill, underline, icon ink) with live sliders for the step numbers, one neutral hover surface, a check that catches empty cells, and whether to merge the pilot; the four open questions on top, rules and measurements folded below |
-| 20 | `20-text-snap-scale` | how a scaling animation ends without the text snapping a pixel: the press (left as today for now, every variant still open), the card hover lift or growth, the rule for scaling text, and the funnel stage's residual step - every variant live and measured in Chrome at 150% |
-| 21 | `21-tooltip-mechanism` | three open questions on the tooltip, each with a measurement or sizes and what other libraries do: the six listeners every table cell carries (measured on 1000 rows, a directive only on clipped cells against one app-wide delegated listener), loading the panel at idle after start, and one app-wide delegated listener for every directive with events; the finished and answered proposals folded below |
-| 22 | `22-icon-box-size` | parked: how `ds-banner` and `ds-dropzone` size their icon while `styles/icon-base`'s `.icon` shrinks the `ds-icon` box to 16px under a 20px glyph - four options drawn as clickable cards, one recommended, before and after in two columns; the verdict comes later and the item waits in `docs/todo.md` |
-| 23 | `23-docs-table-look` | which look `table.tbl` has across ds-docs: the shared bordered table (Scrollbar, Density) against the plain local override (Charts, Z-index) - bordered everywhere, plain everywhere, or as today; all four pages' real tables rebuilt in each look, one recommended |
-| 24 | `24-density-scope` | where `data-density` works: only on `<html>` (today; on a container the fields, button and search stay 40px while the icon button follows) or on any container, nesting included, by re-declaring the four `:root` tokens derived from `--hit-cozy`/`--hit-min` inside `[data-density]` - both drawn at four tiers and one nested container, heights measured in the page |
-| 25 | `25-table-truncate-result` | sign-off of the `ds-table` `truncate` column without `width` that grows to its text: before/after screenshots of the harness tables, the width rule drawn as bars over real renders, four decisions recorded with `minWidth` built, and two open ones drawn on the same tables - general column sizing rules and widths that stay put between pages |
-| 26 | `26-table-wrap-parked` | parked: two wrap options for a `truncate` column - fill the height a neighbour gave the row, or always wrap - each rendered; the verdict comes later and the item waits in `docs/todo.md` |
+| 9 | `9-docs-reasoning-blocks` | what ds-docs does with its ~27 reasoning blocks (fix proofs, edge-case guards, internals): keep, fold to the chapter end, move to a proof page, or delete - drawn on the real Table chapter |
+| 10 | `10-deerns-atlas-feedback` | the Deerns Atlas prototype feedback and its flicker-on-mount report, every claim checked against the uploaded bundle: nine drawn decisions (missing required input, Badge tone, Stat frame, Timeline spine, narrow Topbar, clipped SidenavItem label, Input in a narrow grid, Alert entrance on screen mount) and a build-extend-recipe-consumer call for each requested component; twenty one-answer fixes listed |
+| 11 | `11-unread-tokens` | which of the 121 public tokens the library never reads to remove: none, the 51 sizes of components and patterns that do not exist (0 reads in three consumers), or all 121 (12 of them read by a consumer) |
+| 12 | `12-unasked-decisions` | six behaviour changes already in Unreleased that shipped without a choice between alternatives - theme attribute ownership, modal confirm, avatar-group max, disabled link reason, icon registry merge, chart pin geometry - each with its options drawn |
+| 13 | `13-column-chart-filter` | how `ds-column-chart` gets a caption under each column and a persistent selection - point fields, chart inputs with a template, or nothing - each written as the same consumer task with its rendering |
+| 14 | `14-table-column-hint` | what a `ds-table` header with `hint` shows when its label does not fit the column: only the hint as today, the full label over the hint, or a header that wraps instead - before/after screenshots of the docs demo at `8eb6ab9e` and `e0ff159f`, the three options drawn |
+| 15 | `15-table-header-clip` | the `ds-table` header label that clips with an ellipsis inside its column and the tooltip of a clipped hinted header (label, then hint) - before/after screenshots of the docs demo on dev and on `fix/table-header-clip`: narrow headers, focus ring, plain and hinted tooltip, with the measurements |
+| 16 | `16-interaction-states` | general rules for the states of interactive elements (rest, hover, pressed, focus, on, on + hover, on + pressed, disabled) as levels on three channels (fill, underline, icon ink) with live sliders for the step numbers, one neutral hover surface, a check that catches empty cells, and whether to merge the pilot; the four open questions on top, rules and measurements folded below |
+| 17 | `17-text-snap-scale` | how a scaling animation ends without the text snapping a pixel: the press (left as today for now, every variant still open), the card hover lift or growth, the rule for scaling text, and the funnel stage's residual step - every variant live and measured in Chrome at 150% |
+| 18 | `18-tooltip-mechanism` | three open questions on the tooltip, each with a measurement or sizes and what other libraries do: the six listeners every table cell carries (measured on 1000 rows, a directive only on clipped cells against one app-wide delegated listener), loading the panel at idle after start, and one app-wide delegated listener for every directive with events; the finished and answered proposals folded below |
+| 19 | `19-icon-box-size` | parked: how `ds-banner` and `ds-dropzone` size their icon while `styles/icon-base`'s `.icon` shrinks the `ds-icon` box to 16px under a 20px glyph - four options drawn as clickable cards, one recommended, before and after in two columns; the verdict comes later and the item waits in `docs/todo.md` |
+| 20 | `20-docs-table-look` | which look `table.tbl` has across ds-docs: the shared bordered table (Scrollbar, Density) against the plain local override (Charts, Z-index) - bordered everywhere, plain everywhere, or as today; all four pages' real tables rebuilt in each look, one recommended |
+| 21 | `21-density-scope` | where `data-density` works: only on `<html>` (today; on a container the fields, button and search stay 40px while the icon button follows) or on any container, nesting included, by re-declaring the four `:root` tokens derived from `--hit-cozy`/`--hit-min` inside `[data-density]` - both drawn at four tiers and one nested container, heights measured in the page |
+| 22 | `22-table-truncate-result` | sign-off of the `ds-table` `truncate` column without `width` that grows to its text: before/after screenshots of the harness tables, the width rule drawn as bars over real renders, four decisions recorded with `minWidth` built, and two decided 2026-10-12 under the condition that column widths never move when the data or the page changes - widths from the column config by column kind, and a `truncate` column in a scrolling table exactly 240px of text - with an audit of what 0.15.0 shipped and how other table libraries size columns |
+| 23 | `23-table-wrap-parked` | parked: two wrap options for a `truncate` column - fill the height a neighbour gave the row, or always wrap - each rendered; the verdict comes later and the item waits in `docs/todo.md` |
+| 24 | `24-link-colour` | what colour a text link takes under a non-blue brand: the brand colour as on dev, or always blue with the tints still following the brand - both drawn on one fragment (inline, visited, table and «Подробнее» links) for a blue and a green brand in light and dark, contrast measured in the page |
+| 25 | `25-brand-dark-theme` | how a brand colour set once reaches the dark theme, where the DS dark block redeclares `--primary` and wins: the brand repeats it under `[data-theme='dark'][data-brand]` as today, the dark block stops declaring `--primary` and its channels so the brand's value reaches both themes, or a new `--ds-brand` input with the dark `--primary` lifted to the default's OKLCH lightness; each drawn on the real `ds.css` for the default blue, a green and a navy brand in light and dark, contrast measured in the page |
+| 26 | `26-six-behaviour-changes` | the six behaviour changes published in 0.14.7 without a choice, one section each: the theme an app set before startup, the modal confirm event, avatars past `max`, a disabled link with a reason in the Tab order, `provideDsIcons` calls adding up, the pin disc on a column - each with a before and after render and two or three drawn options to pick |
+| 27 | `27-duplicate-label-match` | how a chart recognises a column between data updates when two categories share a label: by label with a repeat counter as on dev, by array position, by label only, by an explicit point `id`, or by label with a dev console warning - each library's approach drawn as the same live animated column scene (remove the first of two «Jan»), with replay, ×5 slow-down and the libraries that do it |
+| 28 | `28-table-width-by-type` | two open picks first - how text columns fill the table without empty space and without moving on paging (one-time fit by first page, kind widths plus a one-time proportional share, or equal share), each prototyped on page 1 and page 2 with widths and empty px, and where the free space goes when every column has a set width and they sum to less than the table (filler column, last text column, or as is, each rendered) - then sign-off of the built `ds-table` column width by kind: dev against the branch on the harness tables, page 1 and page 2 for server paging, client paging and a scrolling all-`truncate` table with the widths in px, the 110-130px kind columns, the 240px `truncate` column in a scrolling table, and the taller rows where a text column now wraps |
 
 **Rank 1 is the way in: the decision queue, every open question on one page. Ranks 2-4 are the two
 biggest lanes** — the colour engine, then the interaction formula that reads its ramp. Every rank is
 written in Russian; `deck.css`, which sits beside `ds.css` and carries the shell, is shared by ranks
-1, 4, 5 and 8-15 - ranks 2, 3, 6 and 7 render fully inline instead.
+1, 4, 5, 8-16 and 18-28 - ranks 2, 3, 6, 7 and 17 render fully inline instead.
 
 **`implemented/` is where the answers live, and it is worth reading.** A closed deck keeps every word
 of the argument — the next person to ask the same question reads it to find out what was already
 weighed — but it stops LOOKING like a question: the verdict sits in a `.decided` banner at the top
 with its evidence line, and the argument folds into a `<details class="folded">` accordion under it.
-Eight closed on 2026-09-19 with the charts phase-2 work: the composition model, the area mode, the
-four axis modes and their names, the rescale-on-hide default, the phase-2 marks, the docs chapter
-nav, and the scatter's phase — which went to phase 2 with its decimation layer rather than to 3.
+Decks whose decision shipped in 0.15.0 or earlier are not in the folder; their verdicts are in
+`docs/done.md` and `CHANGELOG.md`, and `git log --diff-filter=D -- presentations/implemented/` finds
+the files.
 
 **A `tool` here takes no number.** `rejected-with-numbers.html` is read whenever rather than at a
 moment, so it stays unnumbered and sorts below the queue.
 
-**`1-decision-queue` carries every open question but the one in `10-docs-reasoning-blocks`** — first every ask a consumer is
+**`1-decision-queue` carries every open question but the one in `9-docs-reasoning-blocks`** — first every ask a consumer is
 waiting on, from any bucket of `docs/todo.md`, most urgent first in three groups (urgent P2, P3,
 parked) with priority, consumer and kind beside each; then each open deck
 plus the whole `Decisions` bucket, grouped by area. Every one has its options rendered rather
@@ -104,8 +106,8 @@ no evidence is treated as `open`** - otherwise the marker is just a second opini
 stops meaning anything.
 
 **Whoever ships the decision writes the marker, in the same commit as the code.** That is the only
-moment the evidence is known for certain. `avatar-tints.html` is the shape to copy: deck and
-implementation landed together in `63aa3954`.
+moment the evidence is known for certain. Commit `63aa3954` is the shape to copy: deck and
+implementation landed together.
 
 ## A deck names the chat its answer goes back to
 
@@ -127,8 +129,7 @@ The marker is a claim, not proof. Before moving anything into `implemented/`, co
 order, and stop at the first source that answers:
 
 1. **The code.** Does the chosen API, token or value actually exist? The only source that cannot go
-   stale. (`menu-item-radius.html` reads as "8px today, three options"; the code ships radius 0 -
-   variant C - so the deck's own framing was two decisions behind.)
+   stale.
 2. **`docs/done.md` and `CHANGELOG.md`.** Which variant was picked, and when.
 3. **`docs/todo.md`.** If the item is still there the deck is `open`, whatever the code shows: a
    half-built decision is not an implemented one.
@@ -136,13 +137,12 @@ order, and stop at the first source that answers:
    committed alongside its implementation is a decision already taken.
 
 **Never classify from the deck's own prose.** A deck is a snapshot of a question and has no way to
-update itself when the answer arrives - `consumer-default-overrides.html` still ends "which is why
-none of it has been touched" about four items, three of which were closed and the fourth shipped.
+update itself when the answer arrives.
 
 **Three outcomes, not two.** *Decided and built* moves. *Decided and NOT built* stays `open`, and the
 work belongs in `docs/todo.md` rather than only in the deck - a verdict that lives nowhere but a deck
 is a verdict nobody will execute. *Moot* - the question dissolved instead of being answered - counts
-as `implemented`, and the evidence line says which of the two it was (`combobox-single-display.html`).
+as `implemented`, and the evidence line says which of the two it was.
 
 ### Fix the stylesheet path on the way down
 
@@ -171,11 +171,12 @@ check. It is in `lint:all`, and every rule is a defect that actually shipped:
 | D012 | `var(--token)` that resolves to nothing: no fallback, undeclared here, absent from `ds.css` |
 | D013 | `ds-deck-evidence` citing a path that does not exist |
 | D015 | no `<title>`, so the tab and every listing show a filename |
+| D016 | an open deck whose pick a second click cannot clear, so a stray click reads as a decision |
 
 **D012 is the one with real blood on it.** On 2026-09-01 ten decks referenced four tokens the DS does
 not define — `--space-7`, `--border-subtle` (missed by the `subtle`→`subtitle` rename), `--shadow-md`
 and `--shadow-lg`. None had a usable fallback, so each voided its whole shorthand: five `h2` margins,
-two borders and a shadow were never applied, and three status pills in `new-components.html` rendered
+two borders and a shadow were never applied, and three status pills in one deck rendered
 transparent. Nothing looked broken enough to notice.
 
 The selftest exists because a rule that cannot match is invisible — the lint stays green either way.

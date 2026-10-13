@@ -46,6 +46,20 @@
   }
 }
 
+// `paint-order` puts the halo under the glyphs; a stroke over them would thicken the letters. Forced
+// colours remap neither `fill` nor `stroke`, so the label takes the system pair there.
+@mixin label-halo($color: var(--ds-chart-bg-color), $width: 3px) {
+  paint-order: stroke;
+  stroke: $color;
+  stroke-width: $width;
+  stroke-linejoin: round;
+
+  @media (forced-colors: active) {
+    fill: CanvasText;
+    stroke: Canvas;
+  }
+}
+
 // `fill` and `stroke` are not remapped by forced colours; system keywords restore the structure.
 @mixin forced-colors {
   @media (forced-colors: active) {

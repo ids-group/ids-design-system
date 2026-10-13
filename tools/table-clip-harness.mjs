@@ -9,7 +9,9 @@
 // With CDP_BROWSER_URL set, `run` drives a tab of that running Chrome instead of launching one.
 // `check` pins the truncate contract: a `truncate` column without `width` clips at its own column
 // width, causes no horizontal overflow where its header fits, clips at 240px of text in a table
-// that scrolls anyway, and every case with no such column renders exactly as in `baseDir`.
+// that scrolls anyway, keeps every column width when the case turns to page 2 (a `Page 2` button
+// swapping `data`, or the pager's next button), and every case with no such column renders exactly
+// as in `baseDir`.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { open, wait } from './headless-chrome.mjs';
@@ -40,7 +42,8 @@ const measureCase = `(id) => {
       key: th.dataset.colKey,
       width: Math.round(th.getBoundingClientRect().width),
       headerFloor: Math.round((th.querySelector('.th-label')?.scrollWidth ?? 0) + parseFloat(style.paddingLeft) + parseFloat(style.paddingRight)),
-      dragged: th.style.width ? Math.round(parseFloat(th.style.width)) : null,
+      // Widths sit on the <col>; in a dsTableResize case an explicit one is read as dragged.
+      dragged: (() => { const col = th.closest('table').querySelector('colgroup')?.children[th.cellIndex]; const width = col?.style.width || th.style.width; return width && th.closest('[dstableresize]') ? Math.round(parseFloat(width)) : null; })(),
       content: Math.round(content),
       truncate,
       clipped: cells.map((td, index) => {
@@ -72,14 +75,24 @@ const measureCase = `(id) => {
 
 async function run(url, outDir) {
   const { s, evaluate, close } = await open(url);
-  const result = { url, cases: {}, container: {}, drags: {}, dark: {} };
+  const result = {
+    url,
+    cases: {},
+    pages: {},
+    container: {},
+    drags: {},
+    dark: {},
+  };
   try {
-    await s('Emulation.setDeviceMetricsOverride', {
-      width: 1900,
-      height: 1300,
-      deviceScaleFactor: 1,
-      mobile: false,
-    });
+    // A metrics override in a tab of a running browser stalls its frames, and so every screenshot.
+    const attached = Boolean(process.env.CDP_BROWSER_URL);
+    if (!attached)
+      await s('Emulation.setDeviceMetricsOverride', {
+        width: 1900,
+        height: 1300,
+        deviceScaleFactor: 1,
+        mobile: false,
+      });
     for (let attempt = 0; attempt < 120; attempt++) {
       const ready = await evaluate(
         `() => document.querySelectorAll('[data-case] ds-table tbody tr').length > 0 && document.fonts.status === 'loaded'`,
@@ -98,13 +111,14 @@ async function run(url, outDir) {
 
     const shoot = async (id, file) => {
       const rect = await evaluate(
-        `() => { const section = document.querySelector('[data-case="${id}"]'); section.scrollIntoView({ block: 'start' }); const box = section.getBoundingClientRect(); return { x: box.x, y: box.y, width: box.width, height: Math.min(box.height, 1250) }; }`,
+        `() => { const section = document.querySelector('[data-case="${id}"]'); section.scrollIntoView({ block: 'start' }); const box = section.getBoundingClientRect(); const page = ${attached}; return { x: box.x + (page ? scrollX : 0), y: box.y + (page ? scrollY : 0), width: box.width, height: Math.min(box.height, 1250) }; }`,
       );
       await wait(150);
       // A browser zoomed to other than 100% takes the clip in device pixels, not CSS pixels.
       const { zoom = 1 } = (await s('Page.getLayoutMetrics')).cssVisualViewport;
-      const { data } = await s('Page.captureScreenshot', {
+      const params = {
         format: 'png',
+        captureBeyondViewport: attached,
         clip: {
           x: rect.x * zoom,
           y: rect.y * zoom,
@@ -112,7 +126,19 @@ async function run(url, outDir) {
           height: rect.height * zoom,
           scale: 1 / zoom,
         },
-      });
+      };
+      // A background tab composites rarely, so a capture can wait for a frame that does not come;
+      // asking again gets one.
+      let data = null;
+      for (let attempt = 0; attempt < 6 && data === null; attempt++)
+        data = await Promise.race([
+          s('Page.captureScreenshot', params).then((shot) => shot.data),
+          wait(20000).then(() => null),
+        ]);
+      if (data === null) {
+        console.error(`table-clip-harness: no screenshot for ${file}`);
+        return;
+      }
       writeFileSync(file, Buffer.from(data, 'base64'));
     };
 
@@ -134,6 +160,19 @@ async function run(url, outDir) {
     }
     await setTheme('light');
     await wait(300);
+
+    mkdirSync(join(outDir, 'pages'), { recursive: true });
+    const pagedIds = await evaluate(
+      `() => [...document.querySelectorAll('[data-case]')].filter((section) => section.querySelector('[data-show-page-two], ds-pagination')).map((section) => section.dataset.case)`,
+    );
+    for (const id of pagedIds) {
+      await evaluate(
+        `() => { const section = document.querySelector('[data-case="${id}"]'); const swap = section.querySelector('[data-show-page-two]'); (swap ?? [...section.querySelectorAll('ds-pagination button.pagination-button')].at(-1)).click(); }`,
+      );
+      await wait(600);
+      result.pages[id] = await evaluate(`() => (${measureCase})('${id}')`);
+      await shoot(id, join(outDir, 'pages', `${id}-2.png`));
+    }
 
     mkdirSync(join(outDir, 'container'), { recursive: true });
     for (const width of [1200, 800, 480, 320]) {
@@ -296,6 +335,11 @@ function diff(baseDir, afterDir) {
     lines.push(...differences(base.cases[id], after.cases[id], id));
   for (const id of Object.keys(base.dark))
     lines.push(...differences(base.dark[id], after.dark[id], `dark ${id}`));
+  for (const id of Object.keys(base.pages ?? {}))
+    if (after.pages?.[id])
+      lines.push(
+        ...differences(base.pages[id], after.pages[id], `page 2 ${id}`),
+      );
   for (const width of Object.keys(base.container))
     lines.push(
       ...differences(
@@ -371,14 +415,30 @@ function check(outDir, baseDir) {
     'expand-truncate',
     'resize-content',
   ]);
-  // min-width-token is wider than its container by declaration; the other three clip inside a
-  // numeric width that used to get the cell padding on top.
+  // min-width-token is wider than its container by declaration; three clip inside a numeric width
+  // that used to get the cell padding on top; the rest hold a text column, whose share comes from
+  // the column config.
   const widthChanging = new Set([
     ...autoTruncate,
     'min-width-token',
     'ecm-microsites-cta',
     'broker-ai-stats',
     'numeric-truncate-narrow',
+    'paging-page-1',
+    'paging-page-2',
+    'paging-pager',
+    'paging-all',
+    'paging-server',
+    'truncate-link',
+    'min-width-column',
+    'min-width-column-off',
+    'auto-mixed',
+    'content-wide',
+    'ecm-delta-workaround',
+    'equal-stretch',
+    'fixed-widths',
+    'header-longer',
+    'trunc-content',
   ]);
   const fixedTruncate = {
     'ecm-microsites-cta': ['name'],
@@ -405,7 +465,6 @@ function check(outDir, baseDir) {
       columns: columnsOf(id).filter((column) => keys.includes(column.key)),
     });
   for (const id of [
-    'trunc-room',
     'few-wide',
     'delta-review-unchanged-truncate',
     'delta-review-removed-truncate',
@@ -461,8 +520,15 @@ function check(outDir, baseDir) {
       const now = step.columns.find((column) => column.key === key).width;
       const column = step.columns.find((candidate) => candidate.key === key);
       if (delta === 'home') {
-        if (column.dragged !== null)
-          fail(`${id} #${index + 1}: Home kept ${key} at ${column.dragged}px`);
+        // Home drops the override; the width that follows depends on the columns still dragged.
+        const lastDrag = steps
+          .slice(0, index)
+          .findLast((earlier) => earlier.step.startsWith(`${key} `));
+        const draggedTo = lastDrag?.columns.find(
+          (candidate) => candidate.key === key,
+        ).width;
+        if (draggedTo !== undefined && Math.abs(now - draggedTo) <= 1)
+          fail(`${id} #${index + 1}: Home kept ${key} at ${now}px`);
       } else {
         const expected = Math.max(48, before + Number(delta));
         if (Math.abs(column.dragged - expected) > 2)
@@ -480,6 +546,22 @@ function check(outDir, baseDir) {
       }
       fair(`${id} #${index + 1}`, step);
     });
+  }
+  for (const [id, pageTwo] of Object.entries(result.pages ?? {})) {
+    const pageOne = result.cases[id];
+    if (pageOne.tableWidth !== pageTwo.tableWidth)
+      fail(
+        `${id}: table ${pageOne.tableWidth} -> ${pageTwo.tableWidth}px on page 2`,
+      );
+    for (const column of pageOne.columns) {
+      const next = pageTwo.columns.find(
+        (candidate) => candidate.key === column.key,
+      );
+      if (column.width !== next?.width)
+        fail(
+          `${id}: ${column.key} ${column.width} -> ${next?.width}px on page 2`,
+        );
+    }
   }
   const tips = result.tooltips ?? {};
   const expectTip = (label, wanted) => {

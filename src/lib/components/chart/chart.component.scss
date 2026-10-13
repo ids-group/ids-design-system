@@ -1,9 +1,11 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/focus' as focus;
 @use '../../styles/component-base' as component-base;
+@use '../../styles/chart-motion' as chart-motion;
 @include component-base.rules;
 @include chart-frame.chart-frame;
 @include chart-frame.pin-reset;
+@include chart-motion.leaves('.category-label');
 
 .chart {
   --_chart-grid-line-color: var(--ds-chart-grid-line-color, var(--chart-grid-line-color));
@@ -29,10 +31,24 @@
   cursor: pointer;
 }
 
-/* Holds marks still until `settled`, or a mark inserted at the fallback width animates its correction.
-   `::ng-deep` reaches projected marks' stylesheets. */
-:host(.measuring) .marks ::ng-deep * {
+/* Holds marks still until `settled`, or a mark inserted at the fallback width animates its correction
+   and a resize drags the plot behind the pointer. `::ng-deep` reaches projected marks' stylesheets. */
+:host(.measuring) .marks ::ng-deep *,
+:host(.measuring) .axes *,
+:host(.measuring) .labels *,
+:host(.measuring) .cursor,
+:host(.measuring) .cursor *,
+:host(.measuring) .band-pin,
+:host(.measuring) .band-pin *,
+:host(.measuring) .readout,
+:host(.measuring) .range-band,
+:host(.measuring) .stop-ring {
   transition-duration: 0ms !important;
+}
+
+.grid-line,
+.axis-label {
+  transition: chart-motion.moves(transform);
 }
 
 .grid-line {
@@ -69,12 +85,18 @@
 
 @include chart-frame.forced-colors;
 
-.cursor.cursor-in {
+// With the panel, not the marks: the band, its pin and the panel move across as one.
+.cursor.placed,
+.pinned-line.placed {
+  transition: chart-motion.glides(transform);
+}
+
+.cursor-in {
   animation: ds-chart-mark-fade-in var(--ds-motion-chart-state-duration)
     var(--ds-motion-chart-state-easing) both;
 }
 
-.cursor.cursor-out {
+.cursor-out {
   animation: ds-chart-mark-exit var(--ds-motion-chart-state-duration)
     var(--ds-motion-chart-state-easing) both;
 }
@@ -88,6 +110,12 @@
   pointer-events: none;
 }
 
+// The box of the marker a line without markers would draw at the reading.
+.cursor-anchor.on-reading {
+  y: calc(var(--_reading-y) - var(--ds-chart-dot-radius));
+  height: calc(2 * var(--ds-chart-dot-radius));
+}
+
 .category-stop {
   fill: transparent;
   pointer-events: none;
@@ -95,10 +123,109 @@
 
 @include chart-frame.no-bounding-box-focus('.category-stop');
 
-/* focus-ring-guard: drawn as a stroke, as the series markers ring, so the band reads as one of the chart's marks. */
+/* focus-ring-guard: drawn by `.stop-ring` as a stroke, as the series markers ring, so the band reads as
+   one of the chart's marks; one ring for every stop glides between them. */
 .category-stop:focus-visible {
   @include focus.own-indicator;
+}
+
+.stop-ring {
   @include chart-frame.drawn-focus-ring;
+
+  fill: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
+}
+
+.stop-ring.placed {
+  transition:
+    chart-motion.glides(transform),
+    opacity var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
+}
+
+.category-stops:has(.category-stop:focus-visible) .stop-ring {
+  opacity: 1;
+}
+
+@media (forced-colors: active) {
+  .stop-ring {
+    display: none;
+  }
+}
+
+// The axis answers the reading under the pointer: its category label, a guide and the value on the axis.
+.category-label {
+  transition:
+    transform var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing),
+    fill var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing),
+    font-weight var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing);
+}
+
+.category-label.is-hot {
+  fill: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.readout.placed {
+  transition: chart-motion.glides(transform);
+}
+
+.readout,
+.range-pill {
+  pointer-events: none;
+}
+
+.readout-guide {
+  stroke: var(--ds-chart-cursor-line-color);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.pill {
+  y: -8px;
+  height: 16px;
+  rx: var(--radius-sm);
+  fill: var(--text-primary);
+}
+
+.pill-text {
+  fill: var(--surface-default);
+  font-size: var(--_chart-axis-font-size);
+  font-weight: var(--font-weight-bold);
+  dominant-baseline: central;
+}
+
+.range-band {
+  rx: var(--radius-sm);
+  fill: var(--accent);
+  fill-opacity: 0.08;
+  stroke: var(--accent);
+  stroke-opacity: 0.4;
+  pointer-events: none;
+}
+
+.range-band.placed {
+  transition: chart-motion.glides(x, width);
+}
+
+// A sideways drag selects; a vertical one still scrolls the page.
+.canvas.selects-range {
+  touch-action: pan-y;
+}
+
+@media (forced-colors: active) {
+  .pill {
+    fill: CanvasText;
+  }
+
+  .pill-text {
+    fill: Canvas;
+  }
+
+  .range-band {
+    stroke: Highlight;
+  }
 }
 
 .cursor-line {

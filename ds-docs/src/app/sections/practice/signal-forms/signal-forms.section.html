@@ -102,6 +102,59 @@
   </p>
 
   <h3 class="block-title t-h4">
+    Checking and changed
+  </h3>
+
+  <p class="block-desc t-s">
+    Every field shows a trailing spinner while an async validator runs. The
+    changed mark is opt-in: put
+    <code class="t-mono-inline">
+      dsShowDirty
+    </code> on the form, or bind
+    <code class="t-mono-inline">
+      [showDirty]
+    </code> on one field. Both forms
+    below check each value for 1.5 s; pick "Taken" to see a rejection.
+  </p>
+
+  <pre class="t-mono-block">{{ stateSnippet }}</pre>
+
+  <div class="state-demo">
+    <div
+      class="demo-form"
+      data-demo="pending">
+      <ds-input
+        label="Company"
+        [formField]="pendingForm.company" />
+
+      <ds-select
+        label="City"
+        [options]="cities"
+        [formField]="pendingForm.city" />
+    </div>
+
+    <form
+      dsShowDirty
+      class="demo-form"
+      data-demo="dirty">
+      <ds-input
+        label="Company"
+        [formField]="dirtyForm.company" />
+
+      <ds-select
+        label="City"
+        [options]="cities"
+        [formField]="dirtyForm.city" />
+
+      <ds-button
+        variant="outline"
+        (pressed)="dirtyForm().reset({ company: 'acme', city: 'london' })">
+        Reset
+      </ds-button>
+    </form>
+  </div>
+
+  <h3 class="block-title t-h4">
     What the controls implement
   </h3>
 

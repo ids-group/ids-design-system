@@ -1,5 +1,6 @@
 import type {
   ChartDimmable,
+  ChartStaggered,
   ChartWithDataTable,
   ChartWithTooltipTrigger,
 } from '@ids-group-ltd/ids-design-system/components';
@@ -7,20 +8,25 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  NgZone,
   ViewEncapsulation,
+  afterRenderEffect,
   booleanAttribute,
   computed,
+  effect,
   inject,
   input,
   numberAttribute,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
   decimationTarget,
   linearScale,
   listenForMarkFocus,
+  leaveMark,
   lttbDecimate,
   markOf,
   minMaxDecimate,
@@ -28,7 +34,11 @@ import {
   niceDomain,
   tickValues,
   chartRenderGate,
+  staggerDelay,
+  tweenMarks,
   DsChartBase,
+  dimmedBy,
+  markAt,
 } from '@ids-group-ltd/ids-design-system/components';
 import type { MarkHit } from '@ids-group-ltd/ids-design-system/components';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
@@ -69,7 +79,8 @@ const CATEGORY_GUTTER = 34;
 const EDGE_GUTTER = 12;
 // Clearance past the point's default radius, `--chart-dot-radius`.
 const PIN_POINT_CLEARANCE = 4;
-// Screen pixels from the pointer to a point's centre within which hover answers.
+// Screen pixels past the plot's edge within which hover still answers, and, with `showNearestPoint` off,
+// from a point's centre.
 const HOVER_REACH_PX = 16;
 
 interface PlacedPoint {
@@ -109,9 +120,15 @@ interface PlacedSeries {
 })
 export class ScatterChartComponent
   extends DsChartBase
-  implements ChartDimmable, ChartWithDataTable, ChartWithTooltipTrigger
+  implements
+    ChartDimmable,
+    ChartStaggered,
+    ChartWithDataTable,
+    ChartWithTooltipTrigger
 {
   protected readonly renderReady = chartRenderGate();
+
+  protected readonly leaveMark = leaveMark;
 
   /** One entry per series. */
   readonly data = input<readonly ScatterChartSeries[]>([]);
@@ -138,6 +155,30 @@ export class ScatterChartComponent
 
   /** Fades every mark but the one under the pointer; on a scatter this hides pile-ups. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
+
+  /** Anywhere over the plot answers with the nearest point, ringed and tethered to the pointer. Off,
+   *  a point answers only within 16 CSS pixels of its centre, without the ring and tether. */
+  readonly showNearestPoint = input(true, { transform: booleanAttribute });
+
+  /** How far the pointer may be from a point's centre, in CSS pixels and inclusive, for the point to
+   *  answer under `showNearestPoint`; `null` sets no limit. */
+  readonly nearestRadius = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
+
+  /** Milliseconds between one point's entrance and the next, left to right; `0` turns it off. The
+   *  spread is capped at 260ms. */
+  readonly staggerMs = input(40, { transform: numberAttribute });
+
+  private readonly staggerSpread = computed(() => {
+    const count = this.flatMarks().length;
+
+    return staggerDelay(count - 1, count, this.staggerMs());
+  });
+
+  protected pointStagger(cx: number): string {
+    return `${((cx - this.plot.left) / this.plot.width) * this.staggerSpread()}ms`;
+  }
 
   /** The clicked reading, with the series it belongs to. Fires on click and on Enter or Space. */
   readonly pointClicked = output<ScatterChartReading>();
@@ -267,8 +308,12 @@ export class ScatterChartComponent
 
   protected readonly multiSeries = computed(() => this.data().length > 1);
 
-  /** The series named in the legend under the pointer, which fades the rest. */
+  /** The series named in the legend under the pointer; under `dimOthers` it fades the rest. */
   protected readonly highlightedSeries = signal<string | null>(null);
+
+  protected isSeriesDimmed(seriesId: string): boolean {
+    return dimmedBy(this.dimOthers(), this.highlightedSeries(), seriesId);
+  }
 
   protected readonly legendItems = computed<readonly ChartLegendItem[]>(() =>
     this.series().map((entry) => ({
@@ -389,21 +434,118 @@ export class ScatterChartComponent
 
   private hoveredIndex = -1;
 
-  // Entered on every move, not only on change: the active mark schedules a clear on any
-  // `pointerover` outside the point's element, and re-entering cancels it.
-  protected onCanvasPointer(event: PointerEvent): void {
-    const canvas = event.currentTarget;
-    const nearest =
-      canvas instanceof SVGSVGElement ? this.nearestMark(canvas, event) : null;
-    if (nearest) {
-      this.hoveredIndex = nearest.index;
-      this.activeMark.enter(nearest.index, event, undefined, nearest.element);
-    } else {
-      this.onCanvasLeave();
+  /** Whether the pointer is over the plot; the tether runs from it to the ring. */
+  protected readonly pointerOverPlot = signal(false);
+
+  /** The answered point, which the ring circles. */
+  protected readonly ringedMark = computed(
+    () => this.flatMarks()[this.activeMark.index()]?.mark ?? null,
+  );
+
+  private readonly canvasElement =
+    viewChild<ElementRef<SVGSVGElement>>('canvas');
+  private readonly ringElement =
+    viewChild<ElementRef<SVGCircleElement>>('ring');
+  private readonly tetherElement =
+    viewChild<ElementRef<SVGLineElement>>('tether');
+
+  private readonly zone = inject(NgZone);
+
+  // In viewBox units; the tether and the ring are written here, not bound, so a pointer move costs no change detection.
+  private pointerAt: { x: number; y: number } | null = null;
+  private ringAt: { x: number; y: number } | null = null;
+  private stopRingGlide: () => void = () => undefined;
+
+  private readonly listenForPointer = effect((onCleanup) => {
+    const canvas = this.canvasElement()?.nativeElement;
+    if (!canvas) {
+      return;
     }
+    const onPointer = (event: PointerEvent): void =>
+      this.onCanvasPointer(canvas, event);
+    const onLeave = (): void => this.onCanvasLeave();
+    this.zone.runOutsideAngular(() => {
+      canvas.addEventListener('pointerover', onPointer);
+      canvas.addEventListener('pointermove', onPointer);
+      canvas.addEventListener('pointerleave', onLeave);
+    });
+    onCleanup(() => {
+      canvas.removeEventListener('pointerover', onPointer);
+      canvas.removeEventListener('pointermove', onPointer);
+      canvas.removeEventListener('pointerleave', onLeave);
+    });
+  });
+
+  // The ring appears on its point and glides to the next one; the tether's far end rides it.
+  private readonly glideRing = afterRenderEffect(() => {
+    const target = this.ringedMark();
+    const ring = this.ringElement()?.nativeElement;
+    this.stopRingGlide();
+    if (!target || !ring) {
+      this.ringAt = null;
+
+      return;
+    }
+    const from = this.ringAt ?? { x: target.cx, y: target.cy };
+    this.placeRing(ring, from.x, from.y);
+    this.zone.runOutsideAngular(() => {
+      this.stopRingGlide = tweenMarks(
+        ring,
+        [from.x, from.y],
+        [target.cx, target.cy],
+        ([x, y]) => this.placeRing(ring, x, y),
+        'tooltip-move',
+      );
+    });
+  });
+
+  private readonly drawTether = afterRenderEffect(() => {
+    this.tetherElement();
+    this.placeTether();
+  });
+
+  // Placed by `transform`, not `cx`: a geometry change repaints the page each frame of the glide.
+  private placeRing(ring: SVGCircleElement, x: number, y: number): void {
+    this.ringAt = { x, y };
+    ring.style.transform = `translate(${x}px, ${y}px)`;
+    this.placeTether();
   }
 
-  protected onCanvasLeave(): void {
+  private placeTether(): void {
+    const tether = this.tetherElement()?.nativeElement;
+    if (!tether || !this.pointerAt || !this.ringAt) {
+      return;
+    }
+    tether.setAttribute('x1', String(this.pointerAt.x));
+    tether.setAttribute('y1', String(this.pointerAt.y));
+    tether.setAttribute('x2', String(this.ringAt.x));
+    tether.setAttribute('y2', String(this.ringAt.y));
+  }
+
+  // Entered on every move, not only on change: the active mark schedules a clear on any
+  // `pointerover` outside the point's element, and re-entering cancels it.
+  private onCanvasPointer(canvas: SVGSVGElement, event: PointerEvent): void {
+    const nearest = this.nearestMark(canvas, event);
+    if (!nearest) {
+      this.onCanvasLeave();
+
+      return;
+    }
+    this.hoveredIndex = nearest.hit.index;
+    this.pointerAt = nearest.pointer;
+    this.placeTether();
+    this.pointerOverPlot.set(true);
+    this.activeMark.enter(
+      nearest.hit.index,
+      event,
+      undefined,
+      nearest.hit.element,
+    );
+  }
+
+  private onCanvasLeave(): void {
+    this.pointerAt = null;
+    this.pointerOverPlot.set(false);
     if (this.hoveredIndex !== -1) {
       this.hoveredIndex = -1;
       this.activeMark.leave();
@@ -415,7 +557,7 @@ export class ScatterChartComponent
   private nearestMark(
     canvas: SVGSVGElement,
     event: PointerEvent,
-  ): MarkHit | null {
+  ): { hit: MarkHit; pointer: { x: number; y: number } } | null {
     const matrix = canvas.getScreenCTM();
     if (!matrix) {
       return null;
@@ -424,8 +566,19 @@ export class ScatterChartComponent
       matrix.inverse(),
     );
     const reach = HOVER_REACH_PX / matrix.a;
+    const overPlot =
+      pointer.x >= this.plot.left - reach &&
+      pointer.x <= this.plotRight + reach &&
+      pointer.y >= this.plot.top - reach &&
+      pointer.y <= this.plotBottom + reach;
+    if (!overPlot) {
+      return null;
+    }
     let nearestIndex = -1;
-    let nearestDistance = reach * reach;
+    const radius = this.showNearestPoint()
+      ? this.nearestRadius()
+      : HOVER_REACH_PX;
+    let nearestDistance = radius === null ? Infinity : (radius / matrix.a) ** 2;
     this.flatMarks().forEach(({ mark }, index) => {
       const distance = (mark.cx - pointer.x) ** 2 + (mark.cy - pointer.y) ** 2;
       if (distance <= nearestDistance) {
@@ -433,12 +586,14 @@ export class ScatterChartComponent
         nearestDistance = distance;
       }
     });
-    const element =
-      nearestIndex === -1
-        ? null
-        : canvas.querySelector(`[data-mark-index="${nearestIndex}"]`);
+    const element = nearestIndex === -1 ? null : markAt(canvas, nearestIndex);
 
-    return element ? { element, index: nearestIndex } : null;
+    return element
+      ? {
+          hit: { element, index: nearestIndex },
+          pointer: { x: pointer.x, y: pointer.y },
+        }
+      : null;
   }
 
   protected onPointPress(event: Event): void {
@@ -449,10 +604,8 @@ export class ScatterChartComponent
     this.onPointActivate(event);
   }
 
-  protected readonly pinnedPoint = computed(() =>
-    this.activeMark.pinned()
-      ? (this.flatMarks()[this.activeMark.index()]?.mark ?? null)
-      : null,
+  protected readonly pinnedPoints = this.activeMark.pinnedAt(
+    (index) => this.flatMarks()[index]?.mark,
   );
 
   protected readonly pinLift =

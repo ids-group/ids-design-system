@@ -7,7 +7,7 @@
   [errorText]="errorTextResolved()"
   [pending]="(loading() && isEmpty()) || !renderReady()"
   [reloading]="loading()"
-  [dataTable]="true"
+  dataTable="toggle"
   [shimmer]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
@@ -39,7 +39,7 @@
       </thead>
 
       <tbody>
-        @for (row of skeletonRows(); track $index) {
+        @for (row of skeletonRows(); track $index; let rowIndex = $index) {
           <tr>
             <th class="row-label">
               <ds-skeleton
@@ -54,6 +54,8 @@
               <td class="cell-slot">
                 <ds-skeleton
                   class="cell"
+                  data-morph="mark"
+                  [attr.data-morph-key]="rowIndex + ':' + $index"
                   [shimmer]="loading()" />
               </td>
             }
@@ -95,8 +97,7 @@
     [dsChartTooltipOrigin]="activeMark.origin()">
     <table
       class="grid"
-      [class.dims-others]="dimOthers()"
-      [style.--_heatmap-chart-column-stagger]="columnStagger()">
+      [class.dims-others]="dimOthers()">
       <thead>
         <tr>
           <td class="corner"></td>
@@ -113,7 +114,7 @@
 
       <tbody>
         @for (entry of rows(); track entry.key; let rowIndex = $index) {
-          <tr>
+          <tr (animate.leave)="leaveMark($event)">
             <th
               class="row-label"
               scope="row">
@@ -128,16 +129,25 @@
               <td
                 class="cell-slot"
                 [attr.data-mark-index]="index"
+                [style.--_chart-mark-stagger]="
+                  cellStagger(rowIndex, cell.columnIndex)
+                "
+                (animate.leave)="leaveMark($event)"
                 (pointerenter)="activeMark.enter(index, $event)"
                 (pointerleave)="activeMark.leave()"
                 (click)="onCellPress(cell, index, $event)">
                 @if (interactive() && cell.value !== null) {
                   <button
                     class="cell interactive"
+                    data-morph="mark"
                     type="button"
+                    [attr.data-morph-key]="rowIndex + ':' + cell.columnIndex"
                     [class.pins]="pins"
                     [class.is-active]="activeMark.index() === index"
                     [class.is-pinned]="pinned"
+                    [class.is-highlighted]="
+                      cell.step !== null && highlightedStep() === cell.step
+                    "
                     [class.is-dimmed]="isCellDimmed(cell)"
                     [style.background]="cell.color"
                     [attr.aria-label]="cell.accessibleName"
@@ -155,10 +165,15 @@
                   <span
                     class="cell"
                     role="img"
+                    data-morph="mark"
+                    [attr.data-morph-key]="rowIndex + ':' + cell.columnIndex"
                     [class.is-missing]="cell.value === null"
                     [class.pins]="pins"
                     [class.is-active]="activeMark.index() === index"
                     [class.is-pinned]="pinned"
+                    [class.is-highlighted]="
+                      cell.step !== null && highlightedStep() === cell.step
+                    "
                     [class.is-dimmed]="isCellDimmed(cell)"
                     [style.background]="cell.color"
                     [attr.aria-label]="cell.accessibleName">
@@ -196,8 +211,17 @@
         <span
           class="scale-step"
           [style.background]="step"
-          (pointerenter)="onStepEnter(stepIndex, $event)"
-          (pointerleave)="onStepLeave()">
+          (pointerenter)="stepHighlight.enter(stepIndex, $event)"
+          (pointerleave)="stepHighlight.leave()">
+        </span>
+      }
+
+      @if (scaleMarker(); as marker) {
+        <span
+          class="scale-marker"
+          dsChartPlaced
+          [style.inset-inline-start.%]="marker.offset">
+          {{ marker.label }}
         </span>
       }
     </span>

@@ -51,7 +51,10 @@ import {
   type SelectWidth,
 } from './select.types';
 import { DS_INTL, type DsSize } from '@ids-group-ltd/ids-design-system/core';
-import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  FieldMessageComponent,
+  FieldStatusComponent,
+} from '@ids-group-ltd/ids-design-system/components/field-message';
 import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import {
   resolveFieldMessage,
@@ -83,6 +86,7 @@ import { createTypeAhead } from '@ids-group-ltd/ids-design-system/components';
     IconComponent,
     NgTemplateOutlet,
     FieldMessageComponent,
+    FieldStatusComponent,
     TooltipDirective,
   ],
   host: {
@@ -209,9 +213,12 @@ export class SelectComponent
   protected readonly labelId = `${this.uid}-label`;
   protected readonly listboxId = `${this.uid}-listbox`;
   protected readonly hintId = computed(() =>
-    this.message().text ? `${this.uid}-hint` : null,
+    this.message().text || this.changedShown() ? `${this.uid}-hint` : null,
   );
   private readonly fieldMessage = resolveFieldMessage({
+    pending: this.pending,
+    dirty: this.dirty,
+    showDirty: this.showDirtyResolved,
     disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
@@ -223,6 +230,8 @@ export class SelectComponent
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly pendingShown = this.fieldMessage.pending;
+  protected readonly changedShown = this.fieldMessage.changed;
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly groupMessage = groupMessageId();
   protected readonly describedByIds = describedByIds;

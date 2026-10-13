@@ -22,7 +22,7 @@ export type ChartCurve = 'linear' | 'step' | 'smooth';
 
 export type ChartDataTable = 'toggle' | 'visible' | 'none';
 
-export type ChartFormatLocation = 'tick' | 'tooltip';
+export type ChartFormatLocation = 'tick' | 'readout' | 'tooltip';
 
 export type ChartFrame = 'auto' | 'none';
 
@@ -49,7 +49,11 @@ export interface ChartThreshold {
 
 export type ChartThresholdDash = 'solid' | 'dashed' | 'dotted';
 
-export type ChartValueFormat = (value: number, location: ChartFormatLocation) => string;
+export type ChartValueFormat = {
+    format(value: number, location: ChartFormatLocation): string;
+}['format'] & {
+    readonly handlesReadout?: boolean;
+};
 
 export const DS_CONFIG = new InjectionToken<DsConfig>('DS_CONFIG', {
     factory: () => ({}),
@@ -59,12 +63,16 @@ export const DS_INTL = new InjectionToken<Signal<DsIntl>>('DS_INTL', {
     factory: () => DEFAULTS,
 });
 
-export const DS_INTL_DEFAULTS: DsIntl;
+export const DS_INTL_DEFAULTS: DsIntl & {
+    readonly field: Required<DsIntl['field']>;
+    readonly chart: Required<DsIntl['chart']>;
+};
 
 export interface DsConfig {
     locale?: string;
     field?: {
         reserveMessage?: boolean;
+        showDirty?: boolean;
         errorMessages?: Record<string, string>;
         stateIcons?: false | {
             error?: IconName | false;
@@ -154,6 +162,7 @@ export interface DsIntl {
         readonly showPassword: string;
         readonly hidePassword: string;
         readonly overLimit: (excess: number) => string;
+        readonly changed?: string;
     };
     readonly picker: {
         readonly placeholder: string;
@@ -414,6 +423,7 @@ export interface DsIntl {
         readonly directionColumn: string;
         readonly runningTotalColumn: string;
         readonly endsAt: (value: string) => string;
+        readonly rangeTotal?: (range: string, total: string, average: string) => string;
     };
 }
 

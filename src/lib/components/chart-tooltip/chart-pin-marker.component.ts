@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { ICONS } from '@ids-group-ltd/ids-design-system/core';
+import { ChartPlacedDirective } from './chart-placed.directive';
 
 /** Radius of the pin disc, in plot pixels.
  *
@@ -30,38 +31,27 @@ const GLYPH_SIZE = 14;
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[dsChartPinMarker]',
   standalone: true,
+  hostDirectives: [ChartPlacedDirective],
   template: `
-    <svg:circle class="pin-disc" [attr.r]="radius" />
+    <svg:g class="pin-body">
+      <svg:circle class="pin-disc" [attr.r]="radius" />
 
-    <svg:svg
-      class="pin-glyph"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.75"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      [attr.x]="glyphOffset"
-      [attr.y]="glyphOffset"
-      [attr.width]="glyphSize"
-      [attr.height]="glyphSize"
-      [innerHTML]="glyph" />
+      <svg:svg
+        class="pin-glyph"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        [attr.x]="glyphOffset"
+        [attr.y]="glyphOffset"
+        [attr.width]="glyphSize"
+        [attr.height]="glyphSize"
+        [innerHTML]="glyph" />
+    </svg:g>
   `,
-  styles: `
-    :host {
-      pointer-events: none;
-    }
-
-    .pin-disc {
-      fill: var(--surface-default);
-      stroke: var(--border-divider);
-      stroke-width: var(--border-width-default);
-    }
-
-    .pin-glyph {
-      color: var(--text-primary);
-    }
-  `,
+  styleUrl: './chart-pin-marker.component.scss',
   host: {
     class: 'pin-marker',
     'aria-hidden': 'true',

@@ -2,15 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  LOCALE_ID,
   ViewEncapsulation,
   booleanAttribute,
   computed,
-  inject,
   input,
   signal,
   viewChild,
 } from '@angular/core';
+import { injectDsLocale } from '@ids-group-ltd/ids-design-system/core';
 import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
   ChartTooltipContext,
@@ -64,7 +63,7 @@ export class SparklineComponent {
   /** Formats the value the tooltip prints. Unset, the locale's plain number format. */
   readonly valueFormat = input<((value: number) => string) | null>(null);
 
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = injectDsLocale();
 
   private readonly canvas =
     viewChild.required<ElementRef<SVGSVGElement>>('canvas');

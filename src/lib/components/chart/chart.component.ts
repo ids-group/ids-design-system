@@ -8,7 +8,9 @@ import {
   Signal,
   ViewEncapsulation,
   afterRenderEffect,
+  booleanAttribute,
   computed,
+  contentChildren,
   effect,
   forwardRef,
   inject,
@@ -20,6 +22,7 @@ import {
   viewChild,
 } from '@angular/core';
 import {
+  afterTwoFrames,
   bandScale,
   elementWidth,
   labelInterval,
@@ -27,6 +30,7 @@ import {
   rotationWouldFit,
   tickValues,
   chartRenderGate,
+  leaveMark,
   CHART_SKELETON_COUNT,
   DsChartBase,
   skeletonMarkCount,
@@ -37,19 +41,25 @@ import {
   CHART_PIN_RADIUS,
   CHART_UNPIN_DRAWN_BY_HOST,
   ChartPinMarkerComponent,
+  ChartPlacedDirective,
   ChartSkeletonComponent,
   ChartTooltipDirective,
   ChartStatesComponent,
   chartActiveMark,
+  isPrimaryPress,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type { ChartTooltipContext } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_INTL_DEFAULTS,
+  resolveWithConfig,
+} from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartAxis,
   ChartAxisMode,
 } from '@ids-group-ltd/ids-design-system/core';
 import {
   categoryAt,
+  categoryKeys,
   CHART_AXIS_LABEL_GAP,
   CHART_AXIS_TITLE_BAND,
   CHART_BAND_PADDING,
@@ -64,6 +74,7 @@ import {
   axisDomain,
   chartPlot,
   chartViewHeight,
+  pinYAbove,
   secondaryAxis,
   topDown,
   valueScale,
@@ -71,10 +82,21 @@ import {
 import {
   CHART_SCALES,
   type ChartAxisEntry,
+  type ChartAxisReadout,
+  type ChartCategoryRange,
   type ChartPlot,
   type ChartScales,
   type ChartTooltipSource,
 } from './chart-scales.token';
+import { LineSeriesComponent } from './line-series.component';
+
+// Between the value axis and the pill that prints the reading there.
+const READOUT_PILL_GAP = 2;
+// Text to edge, either side, of a pill drawn on the canvas.
+const PILL_PADDING = 6;
+const RANGE_BAND_INSET = 2;
+// Above the plot's top edge, inside the value space reserved there.
+const RANGE_PILL_RISE = 10;
 
 @Component({
   selector: 'ds-chart',
@@ -84,6 +106,7 @@ import {
     ChartSkeletonComponent,
     ChartTooltipDirective,
     ChartPinMarkerComponent,
+    ChartPlacedDirective,
     ChartStatesComponent,
   ],
   templateUrl: './chart.component.html',
@@ -105,6 +128,8 @@ import {
   ],
 })
 export class ChartComponent extends DsChartBase implements ChartScales {
+  protected readonly leaveMark = leaveMark;
+
   protected readonly renderReady = chartRenderGate();
 
   /** One band per category; every projected mark is positioned against them. */
@@ -146,6 +171,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     true,
   );
 
+  /** Whether hiding a series re-scales the value axes to what is left. Off holds them where they
+   *  stand with every series shown. */
+  readonly rescaleOnHide = input(true, { transform: booleanAttribute });
+
   /** Pins the ceiling of the SECOND value axis, the way `max` pins the first. */
   readonly maxSecondary = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
@@ -181,6 +210,15 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   /** `axisLabel` for the second axis. */
   readonly secondaryAxisLabel = input<string | null>(null);
 
+  /** Lets a press dragged across categories select them: a band over the range, the sum and mean of
+   *  every reading in it, and the marks outside it faded. Escape or a press outside clears it; a
+   *  press released in its own category still pins. Off by default. */
+  readonly selectRange = input(false, { transform: booleanAttribute });
+
+  /** Answers the pointer on the axes: the category label in bold, a guide from the value axis and
+   *  the value there in a pill on the axis. On by default. */
+  readonly showAxisReadout = input(true, { transform: booleanAttribute });
+
   protected readonly tooltipSwatchesResolved = this.defaults.tooltipSwatches;
   readonly hoverDelayMs = this.defaults.hoverDelayMs;
 
@@ -200,28 +238,30 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     () => this.measuredWidth() || CHART_FALLBACK_WIDTH,
   );
 
-  /** Whether the marks may animate: the correction after measuring must not. Two frames, because
-   *  after one the corrected geometry is unstyled and `transitionrun` fires on `x` and `width`. */
-  protected readonly settled = signal(false);
+  /** The geometry a resize redraws; marks hold still while it changes. A category coming or going is
+   *  not part of it: the marks glide sideways and a line morphs to its new point count. */
+  private readonly layout = computed(() => `${this.measuredWidth()}`);
+
+  private readonly settledLayout = signal('');
+
+  /** Whether the marks may animate: the correction after measuring and a resize must not, or the plot
+   *  drags behind the pointer. Derived from the layout, so the hold lands in the same render as the new
+   *  geometry. Two frames, because after one the corrected geometry is unstyled and `transitionrun`
+   *  fires on `x` and `width`. */
+  protected readonly settled = computed(
+    () => this.measuredWidth() > 0 && this.layout() === this.settledLayout(),
+  );
 
   constructor() {
     super();
     effect((onCleanup) => {
-      if (this.settled() || this.measuredWidth() === 0) {
+      const layout = this.layout();
+      if (this.measuredWidth() === 0 || layout === this.settledLayout()) {
         return;
       }
-      let first = 0;
-      let second = 0;
-      // Outside the zone: under zone.js each frame callback is a full application tick.
-      this.zone.runOutsideAngular(() => {
-        first = requestAnimationFrame(() => {
-          second = requestAnimationFrame(() => this.settled.set(true));
-        });
-      });
-      onCleanup(() => {
-        cancelAnimationFrame(first);
-        cancelAnimationFrame(second);
-      });
+      onCleanup(
+        afterTwoFrames(this.zone, () => this.settledLayout.set(layout)),
+      );
     });
 
     // Before the view drops the stops past the new end, while the focused one is still in the DOM.
@@ -234,6 +274,9 @@ export class ChartComponent extends DsChartBase implements ChartScales {
         }
         if (this.roving() > last && this.keyboardFocusInside()) {
           this.refocusStop = true;
+        }
+        if ((this.range()?.to ?? -1) > last) {
+          this.range.set(null);
         }
       });
     });
@@ -253,6 +296,15 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       }
     });
 
+    effect((onCleanup) => {
+      const canvas = this.canvasElement()?.nativeElement;
+      if (canvas && this.selectRange()) {
+        onCleanup(this.listenForRange(canvas));
+      } else {
+        untracked(() => this.range.set(null));
+      }
+    });
+
     // Read phase: every `getComputedTextLength` before any write, or each label forces a layout.
     afterRenderEffect({
       read: () => {
@@ -269,15 +321,50 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
     afterRenderEffect({
       read: () => {
+        this.shownReadout();
+        this.rangeTotal();
+        this.readoutTextWidth.set(this.widestLabel('.readout-text'));
+        this.rangeTextWidth.set(this.widestLabel('.range-text'));
+      },
+    });
+
+    // The readings and the scales change with the data, so a held pin follows its category's new geometry.
+    afterRenderEffect({
+      read: () => {
+        this.tooltipContext();
+        this.yPosition();
+        this.secondaryYPosition();
+        this.bandPinY.set(this.measureBandPinY());
+      },
+    });
+
+    // Where the pin and the anchor land, not their boxes: a pin moving to another mark is mid-glide here.
+    afterRenderEffect({
+      read: () => {
+        this.tooltipContext();
+        this.bandPinY();
         const origin = this.tooltipOrigin();
+        const canvas = this.canvasElement()?.nativeElement;
         const pin = this.tooltipPinned()
           ? this.host.nativeElement.querySelector('[dschartpinmarker]')
           : null;
+        const viewHeight = this.viewHeight();
+        if (
+          !(origin instanceof Element) ||
+          !pin ||
+          !canvas ||
+          viewHeight <= 0
+        ) {
+          this.pinRise.set(0);
+
+          return;
+        }
+        const pixelsPerUnit =
+          canvas.getBoundingClientRect().height / viewHeight;
+        const pinTop = landedTranslateY(pin) - CHART_PIN_RADIUS;
         const rise =
-          origin instanceof Element && pin
-            ? origin.getBoundingClientRect().top -
-              pin.getBoundingClientRect().top
-            : 0;
+          (landedExtent(origin, canvas, viewHeight).top - pinTop) *
+          pixelsPerUnit;
         this.pinRise.set(Math.max(0, Math.round(rise)));
       },
     });
@@ -378,7 +465,11 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   private readonly reportedDomains = signal<
     ReadonlyMap<
       string,
-      { readonly axis: ChartAxis; readonly values: readonly number[] }
+      {
+        readonly axis: ChartAxis;
+        readonly values: readonly number[];
+        readonly hidden: boolean;
+      }
     >
   >(new Map());
 
@@ -386,16 +477,20 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     id: string,
     values: readonly number[],
     axis: ChartAxis = 'primary',
+    hidden = false,
   ): void {
     this.reportedDomains.update((reported) =>
-      new Map(reported).set(id, { axis, values }),
+      new Map(reported).set(id, { axis, values, hidden }),
     );
   }
 
-  private valuesOn(axis: ChartAxis): readonly (readonly number[])[] {
+  private valuesOn(
+    axis: ChartAxis,
+    withHidden = false,
+  ): readonly (readonly number[])[] {
     const found: (readonly number[])[] = [];
     for (const report of this.reportedDomains().values()) {
-      if (report.axis === axis) {
+      if (report.axis === axis && (withHidden || !report.hidden)) {
         found.push(report.values);
       }
     }
@@ -530,6 +625,9 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   private readonly categoryOrigin = computed(() => {
     const own = this.activeTooltip()?.origin() ?? null;
+    if (this.activeTooltip()?.stacked?.() && own instanceof Element) {
+      return this.stackTop(own);
+    }
     if (
       this.cursorResolved() !== 'category' ||
       (own !== null && !(own instanceof Element))
@@ -547,6 +645,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
         return box.width > 0 && box.height > 0;
       });
+    const reading = this.readingAnchorTop();
+    if (reading !== null && boxes.every(({ top }) => reading <= top)) {
+      return this.cursorOrigin();
+    }
 
     return boxes.length === 0
       ? (own ?? this.cursorOrigin())
@@ -554,6 +656,39 @@ export class ChartComponent extends DsChartBase implements ChartScales {
           candidate.top < highest.top ? candidate : highest,
         ).element;
   });
+
+  /** The highest reading a mark reports without an element; the cursor band shrinks to a marker's
+   *  box there, so the panel and the pin anchor to it as to a marker. */
+  protected readonly readingY = computed(() => {
+    let highest: number | null = null;
+    for (const source of this.tooltipSources().values()) {
+      const y = source.axisReadingY?.() ?? null;
+      if (y !== null && (highest === null || y < highest)) {
+        highest = y;
+      }
+    }
+
+    return highest;
+  });
+
+  // In client pixels, as the boxes it is compared with; from the reading, not the anchor's box, which may not have moved yet.
+  private readingAnchorTop(): number | null {
+    const y = this.readingY();
+    const canvas = this.canvasElement()?.nativeElement;
+    const viewHeight = this.viewHeight();
+    if (y === null || !canvas || viewHeight <= 0) {
+      return null;
+    }
+    const frame = canvas.getBoundingClientRect();
+    const radius =
+      parseFloat(
+        getComputedStyle(this.host.nativeElement).getPropertyValue(
+          '--ds-chart-dot-radius',
+        ),
+      ) || 0;
+
+    return frame.top + ((y - radius) * frame.height) / viewHeight;
+  }
 
   protected readonly tooltipPinned = computed(
     () => (this.activeTooltip()?.pinned?.() ?? false) || this.cursorPinned(),
@@ -563,7 +698,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   protected readonly domain = computed(
     () =>
       axisDomain(
-        this.valuesOn('primary'),
+        this.valuesOn('primary', !this.rescaleOnHide()),
         this.tickCount(),
         this.min(),
         this.max(),
@@ -580,7 +715,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     () =>
       secondaryAxis(
         this.ticks().map((tick) => tick.value),
-        this.valuesOn('secondary'),
+        this.valuesOn('secondary', !this.rescaleOnHide()),
         this.tickCount(),
         this.secondaryAxisMode(),
         this.maxSecondary(),
@@ -715,7 +850,36 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   /** Under the panel: it opens over the tallest reading, so the disc sits at that reading's head -
    *  inside a column, below a marker, and over a column too short to hold it. */
-  protected readonly bandPinY = computed(() => {
+  protected readonly bandPinY = signal(0);
+
+  // The highest segment at the mark's category, by where each lands: a segment glides after a data change.
+  private stackTop(segment: Element): Element {
+    const canvas = this.canvasElement()?.nativeElement;
+    const index = segment
+      .closest('[data-mark-index]')
+      ?.getAttribute('data-mark-index');
+    if (!canvas || index == null) {
+      return segment;
+    }
+    const segments = this.host.nativeElement.querySelectorAll(
+      `[data-mark-index="${index}"] > .bar`,
+    );
+    let highest = segment;
+    let highestTop = landedExtent(segment, canvas, this.viewHeight()).top;
+    for (const candidate of segments) {
+      const top = landedExtent(candidate, canvas, this.viewHeight()).top;
+      if (top < highestTop) {
+        highest = candidate;
+        highestTop = top;
+      }
+    }
+
+    return highest;
+  }
+
+  // Read from the marks' bound geometry, not their boxes: after a data change the boxes are mid-glide,
+  // and the pin glides to where the reading lands.
+  private measureBandPinY(): number {
     const band = this.cursorBand();
     const inset = CHART_PIN_RADIUS + CHART_PIN_GAP;
     const origin = this.tooltipOrigin();
@@ -723,24 +887,15 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     if (!band || !canvas || !(origin instanceof Element)) {
       return (band?.top ?? 0) + inset;
     }
-    const frame = canvas.getBoundingClientRect();
-    const scale = frame.height > 0 ? this.viewHeight() / frame.height : 1;
-    const head = origin.getBoundingClientRect();
-    const top = (head.top - frame.top) * scale;
-    const height = head.height * scale;
-    if (height >= 2 * inset) {
-      return top + inset;
-    }
-    if (!origin.matches('.bar')) {
+    const { top, height } = landedExtent(origin, canvas, this.viewHeight());
+    if (height < 2 * inset && !origin.matches('.bar')) {
       return top + height + inset;
     }
-    const value = origin.parentElement?.querySelector(':scope > .value');
-    const valueTop = value
-      ? (value.getBoundingClientRect().top - frame.top) * scale
-      : top;
+    const value =
+      origin.parentElement?.querySelector<SVGTextElement>(':scope > .value');
 
-    return Math.min(top, valueTop) - inset;
-  });
+    return pinYAbove(top, height, value ? landedTextTop(value) : null, inset);
+  }
 
   /** How far a held pin sits above the panel's anchor; the panel rises by as much to stay over it. */
   private readonly pinRise = signal(0);
@@ -748,6 +903,16 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   protected readonly tooltipGap = computed(() =>
     Math.max(this.tooltipExtraGap(), this.pinRise()),
   );
+
+  protected readonly pinnedCategories = computed(() =>
+    this.cursorPinned() && this.cursorBand() ? [this.activeIndex()] : [],
+  );
+
+  private readonly lineSeries = contentChildren(LineSeriesComponent, {
+    descendants: true,
+  });
+
+  protected readonly pinnedLine = computed(() => this.lineSeries().length > 0);
 
   protected readonly bandPins = computed(
     () => this.pinOnClickResolved() && this.pointerInBand(),
@@ -774,13 +939,23 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   // Read once per hover and dropped on scroll: reading on every move forces a second layout after the band update.
   private canvasRect: DOMRect | null = null;
 
-  private plotPointer(event: PointerEvent, canvas: SVGSVGElement): void {
+  private readonly forgetCanvasRect = (): void => {
+    this.canvasRect = null;
+  };
+
+  // Client x to view units: the canvas is scaled to its box.
+  private viewXOf(event: PointerEvent, canvas: SVGSVGElement): number {
     this.canvasRect ??= canvas.getBoundingClientRect();
-    const plot = this.plot();
-    // Client x to view units: the canvas is scaled to its box.
-    const viewX =
+
+    return (
       ((event.clientX - this.canvasRect.left) / this.canvasRect.width) *
-      this.viewWidth();
+      this.viewWidth()
+    );
+  }
+
+  private plotPointer(event: PointerEvent, canvas: SVGSVGElement): void {
+    const plot = this.plot();
+    const viewX = this.viewXOf(event, canvas);
     // Every point belongs to its nearest category, so the cursor never passes through "none".
     const index = this.clampIndex(
       categoryAt(viewX, plot.left, plot.width, this.categories().length),
@@ -797,7 +972,12 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
       return;
     }
-    if (event.type === 'pointerdown' && this.pinOnClickResolved()) {
+    // Under `selectRange` a press may become a drag; the range listener pins on a release in place.
+    if (
+      event.type === 'pointerdown' &&
+      this.pinOnClickResolved() &&
+      !this.selectRange()
+    ) {
       this.cursorState.pin(index, event);
 
       return;
@@ -807,11 +987,13 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   /** Listens only when a category cursor is drawn, outside the zone. */
   private listenForCursor(canvas: SVGSVGElement): () => void {
-    const forgetRect = (): void => {
-      this.canvasRect = null;
-    };
-    const onPointer = (event: PointerEvent): void =>
+    const forgetRect = this.forgetCanvasRect;
+    const onPointer = (event: PointerEvent): void => {
+      if (event.type === 'pointerdown' && !isPrimaryPress(event)) {
+        return;
+      }
       this.plotPointer(event, canvas);
+    };
     const onEnter = (): void =>
       window.addEventListener('scroll', forgetRect, {
         capture: true,
@@ -846,6 +1028,230 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     };
   }
 
+  private readonly range = signal<ChartCategoryRange | null>(null);
+
+  /** The categories a drag selected, both ends included; `null` when none are. */
+  readonly selectedRange = this.range.asReadonly();
+
+  private listenForRange(canvas: SVGSVGElement): () => void {
+    const document = canvas.ownerDocument;
+    const view = document.defaultView ?? window;
+    let anchor = -1;
+    let dragged = false;
+    const forgetRectWhileDragging = (): void => this.forgetCanvasRect();
+    // Past either end of the plot a drag holds the nearest category.
+    const categoryOf = (event: PointerEvent, clamp: boolean): number => {
+      const plot = this.plot();
+      const viewX = this.viewXOf(event, canvas);
+      const x = clamp
+        ? Math.min(Math.max(viewX, plot.left), plot.left + plot.width)
+        : viewX;
+
+      return categoryAt(x, plot.left, plot.width, this.categories().length);
+    };
+    const onMove = (event: PointerEvent): void => {
+      const index = categoryOf(event, true);
+      if (index < 0 || (index === anchor && !dragged)) {
+        return;
+      }
+      dragged = true;
+      this.range.set({
+        from: Math.min(anchor, index),
+        to: Math.max(anchor, index),
+      });
+    };
+    const stopDrag = (): void => {
+      view.removeEventListener('pointermove', onMove);
+      view.removeEventListener('pointerup', onUp);
+      view.removeEventListener('scroll', forgetRectWhileDragging, {
+        capture: true,
+      });
+      anchor = -1;
+    };
+    const onUp = (event: PointerEvent): void => {
+      if (!dragged && this.cursorOn() && this.pinOnClickResolved()) {
+        this.cursorState.pin(anchor, event, null, canvas);
+      }
+      stopDrag();
+    };
+    const onDown = (event: PointerEvent): void => {
+      if (!isPrimaryPress(event)) {
+        return;
+      }
+      stopDrag();
+      this.range.set(null);
+      dragged = false;
+      this.forgetCanvasRect();
+      anchor = categoryOf(event, false);
+      if (anchor >= 0) {
+        view.addEventListener('pointermove', onMove);
+        view.addEventListener('pointerup', onUp);
+        view.addEventListener('scroll', forgetRectWhileDragging, {
+          capture: true,
+          passive: true,
+        });
+      }
+    };
+    const onOutside = (event: PointerEvent): void => {
+      if (!(event.target instanceof Node) || !canvas.contains(event.target)) {
+        this.range.set(null);
+      }
+    };
+    const onEscape = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        this.range.set(null);
+      }
+    };
+    this.zone.runOutsideAngular(() => {
+      canvas.addEventListener('pointerdown', onDown);
+      document.addEventListener('pointerdown', onOutside, true);
+      document.addEventListener('keydown', onEscape);
+    });
+
+    return () => {
+      stopDrag();
+      canvas.removeEventListener('pointerdown', onDown);
+      document.removeEventListener('pointerdown', onOutside, true);
+      document.removeEventListener('keydown', onEscape);
+    };
+  }
+
+  private readonly rangeTotal = computed(() => {
+    const range = this.range();
+    if (!range) {
+      return null;
+    }
+    const perSource = [...this.tooltipSources().values()].map(
+      (source) => source.valuesByCategory?.() ?? [],
+    );
+    let total = 0;
+    let count = 0;
+    for (let index = range.from; index <= range.to; index++) {
+      for (const values of perSource) {
+        for (const value of values[index] ?? []) {
+          total += value;
+          count++;
+        }
+      }
+    }
+    const categories = this.categories();
+    const name =
+      range.from === range.to
+        ? (categories[range.from] ?? '')
+        : `${categories[range.from] ?? ''}-${categories[range.to] ?? ''}`;
+    const format = this.valueFormatResolved();
+
+    const rangeTotal =
+      this.intl().chart.rangeTotal ?? DS_INTL_DEFAULTS.chart.rangeTotal;
+
+    return rangeTotal(
+      name,
+      format(total, 'tooltip'),
+      format(count > 0 ? total / count : 0, 'tooltip'),
+    );
+  });
+
+  private readonly rangeTextWidth = signal(0);
+
+  protected readonly rangeBand = computed(() => {
+    const range = this.range();
+    const label = this.rangeTotal();
+    const count = this.categories().length;
+    if (!range || label === null || count === 0) {
+      return null;
+    }
+    const plot = this.plot();
+    const step = plot.width / count;
+    const x = plot.left + step * range.from + RANGE_BAND_INSET;
+    const width = step * (range.to - range.from + 1) - 2 * RANGE_BAND_INSET;
+    const pillWidth = this.rangeTextWidth() + 2 * PILL_PADDING;
+    const half = Math.min(pillWidth, plot.width) / 2;
+
+    return {
+      x,
+      width,
+      top: plot.top,
+      height: plot.height,
+      label,
+      pillWidth,
+      pillX: Math.min(
+        Math.max(x + width / 2, plot.left + half),
+        plot.left + plot.width - half,
+      ),
+      pillY: plot.top - RANGE_PILL_RISE,
+    };
+  });
+
+  /** Under the category cursor the highest reading at the category, or the one the keyboard picked;
+   *  otherwise the reading of the mark answering the pointer or focus. */
+  private readonly activeReadout = computed<ChartAxisReadout | null>(() => {
+    if (this.cursorOn()) {
+      const categoryIndex = this.activeIndex();
+      if (categoryIndex < 0) {
+        return null;
+      }
+      const top =
+        this.pickedReading()?.entry ??
+        highestReading(
+          [...this.tooltipSources().values()].flatMap(
+            (source) => source.axisEntries?.() ?? [],
+          ),
+        );
+
+      return top?.y === undefined
+        ? null
+        : { categoryIndex, y: top.y, axis: top.axis };
+    }
+    for (const source of this.tooltipSources().values()) {
+      const readout = source.axisReadout?.();
+      if (readout) {
+        return readout;
+      }
+    }
+
+    return null;
+  });
+
+  private readonly readoutTextWidth = signal(0);
+
+  /** A guide from the value axis at the active reading, and the axis value there in a pill on the axis. */
+  protected readonly shownReadout = computed(() => {
+    const readout = this.showAxisReadout() ? this.activeReadout() : null;
+    if (!readout) {
+      return null;
+    }
+    const secondary = readout.axis === 'secondary' && this.hasSecondaryAxis();
+    const plot = secondary ? this.secondaryPlot() : this.plot();
+    const domain = secondary ? this.secondary().domain : this.domain();
+    const share =
+      plot.height > 0 ? (plot.top + plot.height - readout.y) / plot.height : 0;
+    // Rounded off the float noise the inversion adds, so a reading of 620 prints as 620.
+    const value =
+      Math.round((domain.min + share * (domain.max - domain.min)) * 1e6) / 1e6;
+    const onRight = secondary && !this.stacked();
+    const half = this.bandWidth() / 2;
+    const centre = this.xPosition()(readout.categoryIndex);
+    const toMark = readout.reach === 'mark';
+    const pillWidth = this.readoutTextWidth() + 2 * PILL_PADDING;
+    const format = this.valueFormatResolved();
+
+    return {
+      categoryIndex: readout.categoryIndex,
+      y: readout.y,
+      label: format(value, format.handlesReadout ? 'readout' : 'tooltip'),
+      x1: onRight && toMark ? centre - half : this.plot().left,
+      x2: !onRight && toMark ? centre + half : this.plotRight(),
+      pillWidth,
+      pillX: onRight
+        ? this.plotRight() + READOUT_PILL_GAP
+        : this.plot().left - READOUT_PILL_GAP - pillWidth,
+    };
+  });
+
+  protected readonly hotCategory = computed(
+    () => this.shownReadout()?.categoryIndex ?? -1,
+  );
+
   private readonly bandElement = viewChild<ElementRef<Element>>('cursorBandEl');
 
   readonly cursorOrigin = computed<Element | null>(() =>
@@ -862,6 +1268,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   readonly focusedCategory = computed(() =>
     Math.min(this.roving(), Math.max(0, this.categories().length - 1)),
+  );
+
+  protected readonly focusedStopX = computed(
+    () => this.xPosition()(this.focusedCategory()) - this.bandWidth() / 2,
   );
 
   protected readonly categoryStops = computed(() => {
@@ -1094,6 +1504,102 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     }
   }
 
+  // Captured ahead of a series' own arrow keys, which would otherwise move focus without the range.
+  private readonly extendRangeFromKeys = this.listenForRangeKeys();
+
+  private listenForRangeKeys(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+    const host = this.host.nativeElement;
+    const onKey = (event: KeyboardEvent): void => {
+      const target = event.target;
+      if (
+        !this.selectRange() ||
+        !event.shiftKey ||
+        (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') ||
+        !(target instanceof Element)
+      ) {
+        return;
+      }
+      const stop = target.closest('.category-stop');
+      const mark = stop ? null : target.closest('[data-mark-index]');
+      // A column's mark index is its category; a line marker reports its category as it takes focus.
+      const current = stop
+        ? this.focusedCategory()
+        : mark?.hasAttribute('data-point-key')
+          ? this.activeIndex()
+          : Number(mark?.getAttribute('data-mark-index') ?? -1);
+      if ((!stop && !mark) || current < 0) {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      const next = this.extendRange(
+        current,
+        event.key === 'ArrowRight' ? 1 : -1,
+      );
+      if (next === current) {
+        return;
+      }
+      if (stop) {
+        this.focusStop(next);
+      } else if (mark) {
+        this.markInCategory(mark, current, next)?.focus();
+      }
+    };
+    host.addEventListener('keydown', onKey, true);
+    inject(DestroyRef).onDestroy(() =>
+      host.removeEventListener('keydown', onKey, true),
+    );
+  }
+
+  // Grows or shrinks the range from its far end; from a category outside the range's ends, a new one
+  // starts there. Returns the category the far end moved to.
+  private extendRange(current: number, step: 1 | -1): number {
+    const next = Math.min(
+      Math.max(current + step, 0),
+      this.categories().length - 1,
+    );
+    const range = this.range();
+    const anchor =
+      range && current === range.to
+        ? range.from
+        : range && current === range.from
+          ? range.to
+          : current;
+    this.range.set({
+      from: Math.min(anchor, next),
+      to: Math.max(anchor, next),
+    });
+
+    return next;
+  }
+
+  // The same series' mark at another category: a column is indexed by its category, a line marker keyed by it.
+  private markInCategory(
+    mark: Element,
+    current: number,
+    next: number,
+  ): SVGElement | null {
+    const pointKey = mark.getAttribute('data-point-key');
+    if (pointKey === null) {
+      return (
+        mark.parentElement?.querySelector<SVGElement>(
+          `:scope > [data-mark-index="${next}"]`,
+        ) ?? null
+      );
+    }
+    const keys = categoryKeys(this.categories());
+    const seriesId = pointKey.slice(0, -(keys[current].length + 1));
+
+    return (
+      mark.parentElement?.querySelector<SVGElement>(
+        `[data-point-key="${CSS.escape(`${seriesId}-${keys[next]}`)}"]`,
+      ) ?? null
+    );
+  }
+
   setActiveIndex(index: number): void {
     this.cursorState.setIndex(this.clampIndex(index));
   }
@@ -1182,8 +1688,10 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     const toX = this.xPosition();
     const interval = this.categoryLabelInterval();
 
+    const keys = categoryKeys(this.categories());
+
     return this.categories()
-      .map((text, index) => ({ x: toX(index), text, index }))
+      .map((text, index) => ({ x: toX(index), text, index, key: keys[index] }))
       .filter((label) => label.index % interval === 0);
   });
 
@@ -1195,4 +1703,64 @@ export class ChartComponent extends DsChartBase implements ChartScales {
   protected readonly accessibleName = computed(
     () => this.summary() ?? this.caption() ?? this.intl().chart.title,
   );
+}
+
+function highestReading(
+  readings: readonly ChartAxisEntry[],
+): ChartAxisEntry | null {
+  let highest: ChartAxisEntry | null = null;
+  for (const reading of readings) {
+    if (
+      reading.y !== undefined &&
+      (highest?.y === undefined || reading.y < highest.y)
+    ) {
+      highest = reading;
+    }
+  }
+
+  return highest;
+}
+
+// A pin's `transform` attribute is where it lands; its computed transform is mid-glide.
+function landedTranslateY(element: Element): number {
+  const match = /translate\(\s*[-\d.e]+[\s,]+([-\d.e]+)/.exec(
+    element.getAttribute('transform') ?? '',
+  );
+
+  return match ? parseFloat(match[1]) : 0;
+}
+
+function boundNumber(element: Element, name: string): number {
+  return parseFloat(element.getAttribute(name) ?? '') || 0;
+}
+
+/** Top and height in view units of where `origin` lands: a column's cap and a marker by their bound
+ *  attributes, anything else by its box. */
+function landedExtent(
+  origin: Element,
+  canvas: SVGSVGElement,
+  viewHeight: number,
+): { top: number; height: number } {
+  const cap = origin.matches('.bar') ? origin.querySelector('.bar-cap') : null;
+  if (cap) {
+    return { top: boundNumber(cap, 'y'), height: boundNumber(cap, 'height') };
+  }
+  if (origin instanceof SVGCircleElement) {
+    const radius = parseFloat(getComputedStyle(origin).r) || 0;
+
+    return { top: boundNumber(origin, 'cy') - radius, height: 2 * radius };
+  }
+  const frame = canvas.getBoundingClientRect();
+  const scale = frame.height > 0 ? viewHeight / frame.height : 1;
+  const box = origin.getBoundingClientRect();
+
+  return { top: (box.top - frame.top) * scale, height: box.height * scale };
+}
+
+// The label is placed by `--_column-value-y` (its baseline); `getBBox` is in its own space, so its `y` is the ascent.
+function landedTextTop(label: SVGTextElement): number {
+  const baseline =
+    parseFloat(label.style.getPropertyValue('--_column-value-y')) || 0;
+
+  return baseline + label.getBBox().y;
 }

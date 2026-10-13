@@ -21,6 +21,8 @@ import {
   disposeWithLeave,
   forwardOverlayTokens,
   listenForEscape,
+  CHART_GLIDE_HEAD_START_MS,
+  chartTiming,
 } from '@ids-group-ltd/ids-design-system/components';
 import { ChartTooltipPanelComponent } from './chart-tooltip-panel.component';
 import type {
@@ -185,22 +187,13 @@ export class ChartTooltipDirective {
     if ((deltaX === 0 && deltaY === 0) || typeof pane.animate !== 'function') {
       return;
     }
-    const style = getComputedStyle(pane);
-    const duration = milliseconds(
-      style.getPropertyValue('--ds-motion-chart-tooltip-move-duration'),
-    );
-    if (duration <= 0) {
+    const timing = chartTiming(pane, 'tooltip-move');
+    if (!timing) {
       return;
     }
     this.glide = pane.animate(
       [{ translate: `${deltaX}px ${deltaY}px` }, { translate: '0 0' }],
-      {
-        duration,
-        easing:
-          style
-            .getPropertyValue('--ds-motion-chart-tooltip-move-easing')
-            .trim() || 'ease',
-      },
+      { ...timing, delay: -CHART_GLIDE_HEAD_START_MS },
     );
   }
 
@@ -244,15 +237,6 @@ function hideWhileOffscreen(pane: HTMLElement, chart: HTMLElement): () => void {
   observer.observe(chart);
 
   return () => observer.disconnect();
-}
-
-function milliseconds(duration: string): number {
-  const value = parseFloat(duration);
-  if (!Number.isFinite(value)) {
-    return 0;
-  }
-
-  return duration.trim().endsWith('ms') ? value : value * 1000;
 }
 
 function coarsePointer(): boolean {

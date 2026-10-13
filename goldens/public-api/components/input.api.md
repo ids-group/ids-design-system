@@ -11,6 +11,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
     public readonly autofocus = input(false, { transform: booleanAttribute });
     public readonly blurred = output<void>();
     protected readonly canClear = computed<boolean>(…);
+    protected readonly changedShown = this.fieldMessage.changed;
     protected clear(): void;
     public readonly clearable = input<boolean | null>(null);
     private readonly control;
@@ -44,6 +45,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
     public readonly passwordVisible = model<boolean>(false);
     public readonly pattern = input<readonly RegExp[], readonly RegExp[] | string | undefined>([], { transform: (value) => value === undefined ? [] : typeof value === 'string' ? [new RegExp(value)] : value });
     protected readonly patternAttribute = computed(…);
+    protected readonly pendingShown = this.fieldMessage.pending;
     public readonly placeholder = input<string>('');
     public readonly readOnly = input(false, { transform: booleanAttribute });
     public readonly readonlyBinding = input(false, { alias: 'readonly', transform: booleanAttribute });

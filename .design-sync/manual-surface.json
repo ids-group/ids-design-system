@@ -20,6 +20,7 @@
   "attributeDirectives": [
     "[dsBrandName]",
     "[dsCellTemplate]",
+    "[dsChartPlaced]",
     "[dsChartTooltip]",
     "[dsChipTemplate]",
     "[dsCreateTemplate]",
@@ -35,6 +36,7 @@
     "[dsProjectionDropped]",
     "[dsRailTrigger]",
     "[dsReserveMessages]",
+    "[dsShowDirty]",
     "[dsTableColumns]",
     "[dsTableExport]",
     "[dsTableResize]",

@@ -2,8 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  NgZone,
   OnDestroy,
   ViewEncapsulation,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   effect,
@@ -12,6 +14,7 @@ import {
   numberAttribute,
   output,
   signal,
+  untracked,
   viewChildren,
 } from '@angular/core';
 import {
@@ -20,6 +23,8 @@ import {
   areaPath,
   chartValueFormat,
   focusMark,
+  formatPercent,
+  tweenMarks,
   listenForMarkFocus,
   markOf,
   bandPath,
@@ -28,6 +33,8 @@ import {
   linePath,
   leaveMark,
   staggerDelay,
+  dimmedBy,
+  leftMark,
 } from '@ids-group-ltd/ids-design-system/components';
 import type {
   LinePoint,
@@ -55,8 +62,8 @@ import type {
   ChartTooltipOrigin,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
-import type { ChartAxisEntry } from './chart-scales.token';
-import { topDown } from './chart.math';
+import type { ChartAxisEntry, ChartAxisReadout } from './chart-scales.token';
+import { categoryKeys, outsideRange, topDown } from './chart.math';
 
 export interface LineSeriesData {
   id: string;
@@ -73,12 +80,182 @@ export interface LineSeriesData {
   lower?: readonly (number | null)[];
   /** Any CSS colour. Unset takes the categorical palette slot for the series' position. */
   color?: string;
+  /** Erases the line back along itself and leaves the value axis to the other series; set it rather
+   *  than removing the series to animate a legend hiding it. */
+  hidden?: boolean;
 }
 
 let nextSeriesId = 0;
 
 // The active marker's default radius, `--chart-dot-radius-active`.
 const PIN_MARKER_CLEARANCE = 6;
+
+// From the higher end of a thickened change to the baseline of its percentage.
+const CHANGE_LABEL_GAP = 10;
+
+// View units between two samples of a line; a travelling marker interpolates between them.
+const PATH_SAMPLE_STEP = 2;
+
+interface PathSamples {
+  readonly geometry: string;
+  readonly xs: Float64Array;
+  readonly ys: Float64Array;
+  readonly lengths: Float64Array;
+}
+
+const sampledPaths = new WeakMap<SVGPathElement, PathSamples>();
+
+// Read once per geometry: every `getPointAtLength` forces style and layout.
+function samplesOf(path: SVGPathElement): PathSamples {
+  const geometry = `${path.getAttribute('d')}|${path.style.getPropertyValue('d')}`;
+  const cached = sampledPaths.get(path);
+  if (cached?.geometry === geometry) {
+    return cached;
+  }
+  const total = path.getTotalLength();
+  const count = Math.max(2, Math.ceil(total / PATH_SAMPLE_STEP) + 1);
+  const samples: PathSamples = {
+    geometry,
+    xs: new Float64Array(count),
+    ys: new Float64Array(count),
+    lengths: new Float64Array(count),
+  };
+  for (let index = 0; index < count; index++) {
+    const length = (total * index) / (count - 1);
+    const point = path.getPointAtLength(length);
+    samples.xs[index] = point.x;
+    samples.ys[index] = point.y;
+    samples.lengths[index] = length;
+  }
+  // Mid-glide the drawn line is not the one its `d` names.
+  if (path.getAnimations().length === 0) {
+    sampledPaths.set(path, samples);
+  }
+
+  return samples;
+}
+
+// The first index whose value reaches `target`, over ascending values.
+function firstReaching(values: Float64Array, target: number): number {
+  let low = 0;
+  let high = values.length - 1;
+  while (low < high) {
+    const middle = (low + high) >> 1;
+    if (values[middle] < target) {
+      low = middle + 1;
+    } else {
+      high = middle;
+    }
+  }
+
+  return low;
+}
+
+function shareBetween(
+  values: Float64Array,
+  index: number,
+  target: number,
+): number {
+  const span = index === 0 ? 0 : values[index] - values[index - 1];
+
+  return span > 0 ? (target - values[index - 1]) / span : 1;
+}
+
+function interpolate(
+  values: Float64Array,
+  index: number,
+  share: number,
+): number {
+  return index === 0
+    ? values[0]
+    : values[index - 1] + (values[index] - values[index - 1]) * share;
+}
+
+// Distance along a line drawn left to right at which it reaches `x`; on a vertical run at `x` (a
+// step's riser), the sample nearest `y`.
+function lengthAt(samples: PathSamples, x: number, y: number): number {
+  const index = firstReaching(samples.xs, x);
+  let nearest = index;
+  for (
+    let candidate = index + 1;
+    candidate < samples.xs.length && samples.xs[candidate] - x < 0.5;
+    candidate++
+  ) {
+    if (
+      Math.abs(samples.ys[candidate] - y) < Math.abs(samples.ys[nearest] - y)
+    ) {
+      nearest = candidate;
+    }
+  }
+  if (nearest !== index) {
+    return samples.lengths[nearest];
+  }
+
+  return interpolate(
+    samples.lengths,
+    index,
+    shareBetween(samples.xs, index, x),
+  );
+}
+
+function pointAtLength(
+  samples: PathSamples,
+  length: number,
+): { x: number; y: number } {
+  const index = firstReaching(samples.lengths, length);
+  const share = shareBetween(samples.lengths, index, length);
+
+  return {
+    x: interpolate(samples.xs, index, share),
+    y: interpolate(samples.ys, index, share),
+  };
+}
+
+// The drawn piece of a series that spans both x positions; a gap between them leaves none.
+function lineThrough(
+  paths: Iterable<SVGPathElement>,
+  fromX: number,
+  toX: number,
+): PathSamples | null {
+  const low = Math.min(fromX, toX);
+  const high = Math.max(fromX, toX);
+  for (const path of paths) {
+    const samples = samplesOf(path);
+    if (
+      samples.xs[0] <= low + 0.5 &&
+      samples.xs[samples.xs.length - 1] >= high - 0.5
+    ) {
+      return samples;
+    }
+  }
+
+  return null;
+}
+
+// The new keys in order, each removed key placed after the key it followed.
+function mergedKeys(
+  previous: readonly string[],
+  next: readonly string[],
+): string[] {
+  const merged = [...next];
+  const kept = new Set(next);
+  previous.forEach((key, index) => {
+    if (kept.has(key)) {
+      return;
+    }
+    const before = previous
+      .slice(0, index)
+      .reverse()
+      .find((candidate) => merged.includes(candidate));
+    merged.splice(
+      before === undefined ? 0 : merged.indexOf(before) + 1,
+      0,
+      key,
+    );
+  });
+
+  return merged;
+}
 
 /**
  * One line per series, drawn against the scales `ds-chart` supplies, on either value axis.
@@ -128,11 +305,18 @@ export class LineSeriesComponent implements OnDestroy {
     () => this.pinOnClickResolved() && !this.scales.cursorOn?.(),
   );
 
-  /** Fades every series but the one under the pointer. Off by default: it costs separation between the rest. */
+  /** Fades every series but the one under the pointer or singled out by `highlighted`. Off by default:
+   *  it costs separation between the rest. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** The series to single out: the others draw faded and this one bold. Fades the others whether or not `dimOthers` is set. */
+  /** The series to single out, as hovering one of its markers does: it draws bold, and under
+   *  `dimOthers` the others fade. */
   readonly highlighted = input<string | null>(null);
+
+  /** On the hovered reading, thickens the stretches from the reading before it and to the reading
+   *  after it, each in its own rising or falling colour (`--ds-chart-positive-color`,
+   *  `--ds-chart-negative-color`) and with its own change in percent. With several series it follows the one singled out: hovered, focused or highlighted. */
+  readonly showChange = input(false, { transform: booleanAttribute });
 
   /** A dash pattern per series, in series order. A series past the end, or given `''`, draws solid. */
   readonly patterns = input<readonly string[]>([]);
@@ -161,7 +345,7 @@ export class LineSeriesComponent implements OnDestroy {
   /** Where an `'axis'` panel hangs: `'reading'` over the highest reading in the category; `'pointer'` follows the cursor. */
   readonly tooltipAnchor = input<'reading' | 'pointer'>('reading');
 
-  /** Milliseconds the panel survives the pointer leaving the marker. */
+  /** Milliseconds the panel survives the pointer leaving the marker within the chart. */
   readonly tooltipLingerMs = input(CHART_TOOLTIP_LINGER_MS, {
     transform: numberAttribute,
   });
@@ -186,16 +370,16 @@ export class LineSeriesComponent implements OnDestroy {
 
   constructor() {
     effect(() => {
-      this.scales.reportDomain(
-        `${this.domainId}-primary`,
-        this.valuesOn('primary'),
-        'primary',
-      );
-      this.scales.reportDomain(
-        `${this.domainId}-secondary`,
-        this.valuesOn('secondary'),
-        'secondary',
-      );
+      for (const axis of ['primary', 'secondary'] as const) {
+        for (const hidden of [false, true]) {
+          this.scales.reportDomain(
+            this.reportIdOf(axis, hidden),
+            this.valuesOn(axis, hidden),
+            axis,
+            hidden,
+          );
+        }
+      }
     });
     this.scales.reportTooltip(this.domainId, {
       context: this.tooltipContext,
@@ -203,8 +387,30 @@ export class LineSeriesComponent implements OnDestroy {
       offersTooltip: computed(() => this.tooltip() !== 'none'),
       readsCategory: computed(() => this.tooltip() === 'axis'),
       axisOrigin: this.topReadingElement,
+      axisReadingY: this.topReadingY,
       axisEntries: this.axisEntries,
       axisPointElements: this.axisPointElements,
+      axisReadout: this.axisReadout,
+      valuesByCategory: this.valuesByCategory,
+    });
+    afterRenderEffect({
+      write: () => {
+        this.scales.activeIndex();
+        this.plotted();
+        untracked(() =>
+          this.zone.runOutsideAngular(() => this.moveTravelMarkers()),
+        );
+      },
+    });
+    afterRenderEffect({
+      write: () => {
+        const plotted = this.plotted();
+        untracked(() =>
+          this.zone.runOutsideAngular(() =>
+            this.morphOnCategoryChange(plotted),
+          ),
+        );
+      },
     });
     listenForMarkFocus(
       inject(ElementRef),
@@ -219,8 +425,10 @@ export class LineSeriesComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.scales.releaseTooltip(this.domainId);
-    this.scales.releaseDomain(`${this.domainId}-primary`);
-    this.scales.releaseDomain(`${this.domainId}-secondary`);
+    for (const axis of ['primary', 'secondary'] as const) {
+      this.scales.releaseDomain(this.reportIdOf(axis, false));
+      this.scales.releaseDomain(this.reportIdOf(axis, true));
+    }
   }
 
   readonly activeMark = chartActiveMark(
@@ -228,9 +436,17 @@ export class LineSeriesComponent implements OnDestroy {
     () => this.scales.hoverDelayMs?.() ?? 0,
   );
 
-  private valuesOn(axis: ChartAxis): number[] {
+  private reportIdOf(axis: ChartAxis, hidden: boolean): string {
+    return `${this.domainId}-${axis}${hidden ? '-hidden' : ''}`;
+  }
+
+  private valuesOn(axis: ChartAxis, hidden: boolean): number[] {
     return this.data()
-      .filter((series) => (series.axis ?? 'primary') === axis)
+      .filter(
+        (series) =>
+          (series.axis ?? 'primary') === axis &&
+          (series.hidden ?? false) === hidden,
+      )
       .flatMap((series) =>
         series.data.filter((value): value is number => value !== null),
       );
@@ -255,6 +471,7 @@ export class LineSeriesComponent implements OnDestroy {
     const primaryY = this.scales.yPosition();
     const secondaryY = this.scales.secondaryYPosition();
     const categories = this.scales.categories();
+    const keys = categoryKeys(categories);
     let markerIndex = 0;
 
     return this.data().map((series, index) => {
@@ -290,7 +507,8 @@ export class LineSeriesComponent implements OnDestroy {
         markers: points
           .filter((point): point is LinePoint => point !== null)
           .map((point) => ({
-            key: `${series.id}-${point.categoryIndex}`,
+            key: `${series.id}-${keys[point.categoryIndex]}`,
+            categoryKey: keys[point.categoryIndex],
             markIndex: markerIndex++,
             x: point.x,
             y: point.y,
@@ -301,10 +519,15 @@ export class LineSeriesComponent implements OnDestroy {
             seriesId: series.id,
             categoryIndex: point.categoryIndex,
             color,
+            hidden: series.hidden ?? false,
           })),
       };
     });
   });
+
+  private readonly visibleCount = computed(
+    () => this.data().filter((series) => !series.hidden).length,
+  );
 
   private areaPathsFor(
     series: LineSeriesData,
@@ -374,21 +597,412 @@ export class LineSeriesComponent implements OnDestroy {
   /** The series a marker holds focus on; narrows an `'axis'` panel to that reading. */
   private readonly focusedSeries = signal<string | null>(null);
 
-  /** Active when its own marker is hovered or the category cursor is on its category, so the dot grows anywhere in the band. */
+  /** Active when its own marker is hovered, or its category is active while the category cursor is
+   *  off; under the cursor a travelling marker answers the category instead. */
   protected isActiveMarker(marker: {
     markIndex: number;
     categoryIndex: number;
   }): boolean {
     return (
       marker.markIndex === this.activeMark.index() ||
-      marker.categoryIndex === this.scales.activeIndex()
+      (!this.scales.cursorOn?.() &&
+        marker.categoryIndex === this.scales.activeIndex())
     );
   }
 
-  protected readonly pinnedMarker = computed(() =>
-    this.activeMark.pinned()
-      ? (this.allMarkers()[this.activeMark.index()] ?? null)
-      : null,
+  protected isOutsideRange(categoryIndex: number): boolean {
+    return outsideRange(this.scales.selectedRange?.() ?? null, categoryIndex);
+  }
+
+  private readonly host = inject<ElementRef<Element>>(ElementRef);
+
+  private readonly zone = inject(NgZone);
+
+  private readonly travel = new Map<
+    string,
+    {
+      categoryIndex: number;
+      toX: number;
+      toY: number;
+      x: number;
+      y: number;
+      cancel: () => void;
+    }
+  >();
+
+  // One marker per series rides the line from the reading it left to the one the category cursor is
+  // on, on the panel's timing; a data change at the same category moves it on the marks' timing.
+  private moveTravelMarkers(): void {
+    const categoryIndex = this.scales.activeIndex();
+    const host = this.host.nativeElement;
+    for (const entry of this.plotted()) {
+      const id = entry.series.id;
+      const marker = host.querySelector<SVGCircleElement>(
+        `.travel-marker[data-series-id="${CSS.escape(id)}"]`,
+      );
+      const state = this.travel.get(id);
+      const target = entry.series.hidden
+        ? undefined
+        : entry.markers.find(
+            (candidate) => candidate.categoryIndex === categoryIndex,
+          );
+      if (!marker || !target) {
+        state?.cancel();
+        this.travel.delete(id);
+        marker?.classList.remove('is-shown');
+        continue;
+      }
+      if (
+        state &&
+        state.categoryIndex === categoryIndex &&
+        state.toX === target.x &&
+        state.toY === target.y
+      ) {
+        continue;
+      }
+      state?.cancel();
+      const next = {
+        categoryIndex,
+        toX: target.x,
+        toY: target.y,
+        x: target.x,
+        y: target.y,
+        cancel: (): void => undefined,
+      };
+      const place = (x: number, y: number): void => {
+        next.x = x;
+        next.y = y;
+        // `transform`, not `cx`: a geometry change re-lays out the SVG and repaints the whole page each frame.
+        marker.style.transform = `translate(${x}px, ${y}px)`;
+      };
+      this.travel.set(id, next);
+      if (!state || !marker.classList.contains('is-shown')) {
+        place(target.x, target.y);
+        marker.classList.add('is-shown');
+        continue;
+      }
+      next.x = state.x;
+      next.y = state.y;
+      const line =
+        state.categoryIndex === categoryIndex
+          ? null
+          : lineThrough(
+              host.querySelectorAll<SVGPathElement>(
+                `.series-line[data-series-id="${CSS.escape(id)}"]:not(.mark-leave)`,
+              ),
+              state.x,
+              target.x,
+            );
+      if (line) {
+        next.cancel = tweenMarks(
+          marker,
+          [lengthAt(line, state.x, state.y)],
+          [lengthAt(line, target.x, target.y)],
+          ([length]) => {
+            const point = pointAtLength(line, length);
+            place(point.x, point.y);
+          },
+          'tooltip-move',
+          () => place(target.x, target.y),
+        );
+      } else {
+        next.cancel = tweenMarks(
+          marker,
+          [state.x, state.y],
+          [target.x, target.y],
+          ([x, y]) => place(x, y),
+          state.categoryIndex === categoryIndex ? 'mark' : 'tooltip-move',
+        );
+      }
+    }
+  }
+
+  // Where each series' points are drawn, by category key; a morph starts from here.
+  private drawnPoints = new Map<
+    string,
+    Map<string, { x: number; y: number }>
+  >();
+  private drawnKeys: readonly string[] = [];
+  // Where each series' area meets its axis, in view units.
+  private drawnBaselines = new Map<string, number>();
+  private stopMorph: () => void = () => undefined;
+  private morphing = false;
+
+  // CSS cannot interpolate a `d` whose point count changed, so when a category comes or goes the line
+  // morphs here, over the union of both point sets: a new point leaves its neighbour, a removed one
+  // merges into its neighbour. The markers ride the same values, so they stay on the line.
+  private morphOnCategoryChange(
+    plotted: readonly {
+      series: LineSeriesData;
+      linePaths: readonly string[];
+      areaPaths: readonly string[];
+      markers: readonly { categoryKey: string; x: number; y: number }[];
+    }[],
+  ): void {
+    const keys = categoryKeys(this.scales.categories());
+    const previousKeys = this.drawnKeys;
+    const previous = this.drawnPoints;
+    const targets = new Map(
+      plotted.map((entry) => [
+        entry.series.id,
+        new Map(
+          entry.markers.map((marker) => [
+            marker.categoryKey,
+            { x: marker.x, y: marker.y },
+          ]),
+        ),
+      ]),
+    );
+    const targetBaselines = new Map(
+      plotted.map((entry) => [entry.series.id, this.baselineOf(entry.series)]),
+    );
+    const previousBaselines = this.drawnBaselines;
+    this.drawnKeys = keys;
+    const sameCategories =
+      previousKeys.length === keys.length &&
+      keys.every((key, index) => key === previousKeys[index]);
+    // A value change belongs to the CSS transitions, unless it lands during a morph, which then
+    // retargets from where the points are.
+    if (previousKeys.length === 0 || (sameCategories && !this.morphing)) {
+      this.drawnPoints = targets;
+      this.drawnBaselines = targetBaselines;
+
+      return;
+    }
+    this.stopMorph();
+    const merged = mergedKeys(previousKeys, keys);
+    const host = this.host.nativeElement;
+    const plans = plotted
+      .filter(
+        (entry) =>
+          entry.linePaths.length === 1 && previous.has(entry.series.id),
+      )
+      .map((entry) => {
+        const id = entry.series.id;
+        const from = previous.get(id) ?? new Map();
+        const to = targets.get(id) ?? new Map();
+        const order = merged.filter((key) => from.has(key) || to.has(key));
+        const near = (
+          key: string,
+          within: ReadonlyMap<string, { x: number; y: number }>,
+        ) => {
+          const at = order.indexOf(key);
+          const found =
+            order
+              .slice(0, at)
+              .reverse()
+              .find((candidate) => within.has(candidate)) ??
+            order.slice(at + 1).find((candidate) => within.has(candidate));
+
+          return found === undefined ? undefined : within.get(found);
+        };
+        const escaped = CSS.escape(id);
+        const baseline = targetBaselines.get(id) ?? 0;
+        // A band over `lower` has a second edge of its own; it keeps to the CSS transitions.
+        const fillsToBaseline =
+          !!entry.series.area &&
+          !entry.series.lower &&
+          entry.areaPaths.length === 1;
+
+        return {
+          id,
+          order,
+          starts: order.map(
+            (key) => from.get(key) ?? near(key, from) ?? to.get(key),
+          ),
+          ends: order.map(
+            (key) => to.get(key) ?? near(key, to) ?? from.get(key),
+          ),
+          baselineFrom: previousBaselines.get(id) ?? baseline,
+          baselineTo: baseline,
+          paths: [
+            ...host.querySelectorAll<SVGPathElement>(
+              `.series-line[data-series-id="${escaped}"]:not(.mark-leave), .series-halo[data-series-id="${escaped}"]`,
+            ),
+          ],
+          areas: fillsToBaseline
+            ? [
+                ...host.querySelectorAll<SVGPathElement>(
+                  `.series-area[data-series-id="${escaped}"]:not(.mark-leave)`,
+                ),
+              ]
+            : [],
+          // A removed point is still in the DOM while it fades, and slides into its neighbour meanwhile.
+          markers: order.map((key) =>
+            host.querySelector<SVGCircleElement>(
+              `.series-marker[data-point-key="${CSS.escape(id + '-' + key)}"]`,
+            ),
+          ),
+          leaving: order.map((key) => !to.has(key)),
+        };
+      });
+    this.drawnPoints = targets;
+    this.drawnBaselines = targetBaselines;
+    if (plans.length === 0) {
+      return;
+    }
+    const flat = (
+      points: readonly ({ x: number; y: number } | undefined)[],
+      baseline: number,
+    ) => [
+      ...points.flatMap((point) => [point?.x ?? 0, point?.y ?? 0]),
+      baseline,
+    ];
+    const from = plans.flatMap((plan) => flat(plan.starts, plan.baselineFrom));
+    const to = plans.flatMap((plan) => flat(plan.ends, plan.baselineTo));
+    const leavingMarkers = plans.flatMap((plan) =>
+      plan.markers.filter(
+        (marker, index): marker is SVGCircleElement =>
+          !!marker && plan.leaving[index],
+      ),
+    );
+    // A leaving marker keeps where it slid to until it is gone.
+    const styled = plans.flatMap((plan) => [
+      ...plan.paths,
+      ...plan.areas,
+      ...plan.markers.filter(
+        (marker, index): marker is SVGCircleElement =>
+          !!marker && !plan.leaving[index],
+      ),
+    ]);
+    const curve = this.curve();
+    const live = new Map(targets);
+    const liveBaselines = new Map(targetBaselines);
+    const apply = (values: readonly number[]): void => {
+      let offset = 0;
+      for (const plan of plans) {
+        const points = plan.order.map((_, index) => ({
+          categoryIndex: index,
+          value: 0,
+          x: values[offset + 2 * index],
+          y: values[offset + 2 * index + 1],
+        }));
+        const baseline = values[offset + 2 * plan.order.length];
+        offset += 2 * plan.order.length + 1;
+        const path = `path("${linePath(points, curve)}")`;
+        for (const element of plan.paths) {
+          element.style.setProperty('d', path);
+        }
+        const area = `path("${areaPath(points, baseline, curve)}")`;
+        for (const element of plan.areas) {
+          element.style.setProperty('d', area);
+        }
+        plan.markers.forEach((marker, index) => {
+          marker?.style.setProperty('cx', `${points[index].x}px`);
+          marker?.style.setProperty('cy', `${points[index].y}px`);
+        });
+        live.set(
+          plan.id,
+          new Map(plan.order.map((key, index) => [key, points[index]])),
+        );
+        liveBaselines.set(plan.id, baseline);
+      }
+      this.drawnPoints = live;
+      this.drawnBaselines = liveBaselines;
+    };
+    const release = (): void => {
+      for (const element of styled) {
+        element.style.removeProperty('d');
+        element.style.removeProperty('cx');
+        element.style.removeProperty('cy');
+        element.style.removeProperty('transition');
+      }
+    };
+    for (const element of [...styled, ...leavingMarkers]) {
+      element.style.setProperty('transition', 'none');
+    }
+    apply(from);
+    let cancel: () => void = () => undefined;
+    this.morphing = true;
+    this.stopMorph = () => {
+      cancel();
+      release();
+      this.morphing = false;
+    };
+    cancel = tweenMarks(host, from, to, apply, 'mark', () => {
+      release();
+      this.drawnPoints = targets;
+      this.drawnBaselines = targetBaselines;
+      this.morphing = false;
+      this.stopMorph = () => undefined;
+    });
+  }
+
+  private baselineOf(series: LineSeriesData): number {
+    const toY =
+      (series.axis ?? 'primary') === 'secondary'
+        ? this.scales.secondaryYPosition()
+        : this.scales.yPosition();
+
+    return toY(0);
+  }
+
+  private readonly hoveredSeries = computed(
+    () => this.allMarkers()[this.activeMark.index()]?.seriesId ?? null,
+  );
+
+  /** One rule for the legend and the markers: the series either singles out draws bold, and under
+   *  `dimOthers` the others fade. */
+  private readonly spotlight = computed(
+    () => this.highlighted() ?? this.hoveredSeries(),
+  );
+
+  protected isSpotlit(seriesId: string): boolean {
+    return this.visibleCount() > 1 && this.spotlight() === seriesId;
+  }
+
+  private readonly locale = injectDsLocale();
+
+  protected readonly changes = computed(() => {
+    if (!this.showChange()) {
+      return [];
+    }
+    const categoryIndex = this.scales.cursorOn?.()
+      ? this.scales.activeIndex()
+      : (this.allMarkers()[this.activeMark.index()]?.categoryIndex ?? -1);
+    const visible = this.plotted().filter((entry) => !entry.series.hidden);
+    const seriesId =
+      visible.length === 1 ? visible[0].series.id : this.spotlight();
+    const markers =
+      visible.find((entry) => entry.series.id === seriesId)?.markers ?? [];
+    const current = markers.find(
+      (marker) => marker.categoryIndex === categoryIndex,
+    );
+    if (!current) {
+      return [];
+    }
+    const stretches = [
+      [
+        markers.find((marker) => marker.categoryIndex === categoryIndex - 1),
+        current,
+      ],
+      [
+        current,
+        markers.find((marker) => marker.categoryIndex === categoryIndex + 1),
+      ],
+    ] as const;
+
+    return stretches.flatMap(([from, to]) => {
+      if (!from || !to || from.value === 0) {
+        return [];
+      }
+      const change = to.value - from.value;
+
+      return [
+        {
+          key: `${current.seriesId}-${from.categoryIndex}`,
+          path: linePath([from, to], this.curve()),
+          rising: change >= 0,
+          label: `${change > 0 ? '+' : ''}${formatPercent(change, Math.abs(from.value), this.locale)}`,
+          x: (from.x + to.x) / 2,
+          y: Math.min(from.y, to.y) - CHANGE_LABEL_GAP,
+        },
+      ];
+    });
+  });
+
+  protected readonly pinnedMarkers = this.activeMark.pinnedAt(
+    (index) => this.allMarkers()[index],
   );
 
   protected readonly pinLift =
@@ -406,11 +1020,7 @@ export class LineSeriesComponent implements OnDestroy {
     if (!hit || this.scales.cursorOn?.()) {
       return;
     }
-    const next =
-      event.relatedTarget instanceof Element
-        ? event.relatedTarget.closest('[data-mark-index]')
-        : null;
-    if (next !== hit.element) {
+    if (leftMark(event, hit)) {
       this.activeMark.leave();
     }
   }
@@ -458,9 +1068,7 @@ export class LineSeriesComponent implements OnDestroy {
   }
 
   protected isDimmed(seriesId: string): boolean {
-    const highlighted = this.highlighted();
-
-    return highlighted !== null && highlighted !== seriesId;
+    return dimmedBy(this.dimOthers(), this.spotlight(), seriesId);
   }
 
   protected onMarkerClick(event: MouseEvent): void {
@@ -506,9 +1114,11 @@ export class LineSeriesComponent implements OnDestroy {
     }
 
     return this.plotted().flatMap((entry) => {
-      const marker = entry.markers.find(
-        (candidate) => candidate.categoryIndex === categoryIndex,
-      );
+      const marker = entry.series.hidden
+        ? undefined
+        : entry.markers.find(
+            (candidate) => candidate.categoryIndex === categoryIndex,
+          );
 
       return marker
         ? [
@@ -521,6 +1131,7 @@ export class LineSeriesComponent implements OnDestroy {
                 formatted: marker.formattedValue,
                 color: marker.color,
                 y: marker.y,
+                axis: entry.series.axis ?? 'primary',
               } satisfies ChartAxisEntry,
             },
           ]
@@ -536,7 +1147,7 @@ export class LineSeriesComponent implements OnDestroy {
       return this.axisTooltipContext();
     }
     const marker = this.allMarkers()[this.activeMark.index()];
-    if (!marker) {
+    if (!marker || marker.hidden) {
       return null;
     }
 
@@ -563,22 +1174,58 @@ export class LineSeriesComponent implements OnDestroy {
     ),
   );
 
-  /** The topmost reading at the active category, as an element; the cursor band spans the plot and would open an `'axis'` panel at the top. */
-  private readonly topReadingElement = computed<Element | null>(() => {
+  private readonly topReading = computed(() => {
     const categoryIndex = this.scales.activeIndex();
     if (categoryIndex < 0) {
       return null;
     }
-    const highest = this.allMarkers()
-      .filter((marker) => marker.categoryIndex === categoryIndex)
+
+    return this.allMarkers()
+      .filter(
+        (marker) => marker.categoryIndex === categoryIndex && !marker.hidden,
+      )
       .reduce<{ markIndex: number; y: number } | null>(
         (top, marker) => (top === null || marker.y < top.y ? marker : top),
         null,
       );
+  });
+
+  /** The topmost reading at the active category, as an element; the cursor band spans the plot and would open an `'axis'` panel at the top. */
+  private readonly topReadingElement = computed<Element | null>(() => {
+    const highest = this.topReading();
 
     return highest
       ? (this.markerElements()[highest.markIndex]?.nativeElement ?? null)
       : null;
+  });
+
+  private readonly topReadingY = computed(() =>
+    this.topReadingElement() ? null : (this.topReading()?.y ?? null),
+  );
+
+  private readonly axisReadout = computed<ChartAxisReadout | null>(() => {
+    const marker = this.allMarkers()[this.activeMark.index()];
+    const series =
+      marker && this.data().find((entry) => entry.id === marker.seriesId);
+
+    return marker && !marker.hidden
+      ? {
+          categoryIndex: marker.categoryIndex,
+          y: marker.y,
+          axis: series?.axis ?? 'primary',
+        }
+      : null;
+  });
+
+  private readonly valuesByCategory = computed(() => {
+    const perCategory = this.scales.categories().map((): number[] => []);
+    for (const marker of this.allMarkers()) {
+      if (!marker.hidden) {
+        perCategory[marker.categoryIndex]?.push(marker.value);
+      }
+    }
+
+    return perCategory;
   });
 
   readonly tooltipOrigin = computed<ChartTooltipOrigin | null>(() => {

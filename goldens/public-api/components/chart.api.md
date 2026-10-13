@@ -26,11 +26,17 @@ export interface ChartAnnotationMark {
     readonly anchor: 'start' | 'middle' | 'end';
 }
 
+export interface ChartCategoryRange {
+    readonly from: number;
+    readonly to: number;
+}
+
 @Component({ selector: 'ds-chart', exportAs: 'dsChart' })
 export class ChartComponent extends DsChartBase implements ChartScales {
     public constructor();
     protected readonly accessibleName = computed(…);
     public readonly activeIndex = this.cursorState.index;
+    private readonly activeReadout;
     private readonly activeTooltip;
     public readonly axisColor = input<string | null>(null);
     public readonly axisGutter = input(CHART_DEFAULT_AXIS_GUTTER, { transform: numberAttribute });
@@ -41,7 +47,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     protected readonly axisTitleX = computed(…);
     private bandAt;
     private readonly bandElement;
-    protected readonly bandPinY = computed(…);
+    protected readonly bandPinY = signal(…);
     protected readonly bandPins = computed(…);
     public readonly bandWidth = computed(…);
     private readonly bands;
@@ -69,11 +75,16 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     protected readonly domain = computed(…);
     protected readonly drawsUnpin = !inject(CHART_UNPIN_DRAWN_BY_HOST, { optional: true });
     protected readonly effectiveAxisGutter = computed(…);
+    private extendRange;
+    private readonly extendRangeFromKeys;
     private focusStop;
     public readonly focusedCategory = computed(…);
+    protected readonly focusedStopX = computed(…);
+    private readonly forgetCanvasRect;
     public readonly hasSecondaryAxis = computed(…);
     protected readonly highlightBand = computed(…);
     private readonly host;
+    protected readonly hotCategory = computed(…);
     public readonly hoverDelayMs = this.defaults.hoverDelayMs;
     private readonly hoveredCategory;
     private readonly isBrowser;
@@ -82,11 +93,18 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     protected readonly keyboardStops = computed(…);
     private readonly labelHovered;
     private readonly labelTexts;
+    private readonly layout;
+    protected readonly leaveMark = leaveMark;
     private leavesChart;
+    private readonly lineSeries;
     private listenForCursor;
     private listenForEscapeFromMarker;
+    private listenForRange;
+    private listenForRangeKeys;
+    private markInCategory;
     public readonly max = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
     public readonly maxSecondary = input<number | null>(null, { transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)) });
+    private measureBandPinY;
     public readonly measured = computed(…);
     private readonly measuredCategoryLabelWidth;
     private readonly measuredLabelWidth;
@@ -105,6 +123,8 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     private pinFromKeyboard;
     public readonly pinOnClickResolved = resolveWithConfig(…);
     private readonly pinRise;
+    protected readonly pinnedCategories = computed(…);
+    protected readonly pinnedLine = computed(…);
     public readonly plot: Signal<ChartPlot> = computed(…);
     protected readonly plotBottom = computed(…);
     public readonly plotHeight = input(CHART_DEFAULT_PLOT_HEIGHT, { transform: numberAttribute });
@@ -112,16 +132,24 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     protected readonly plotRight = computed(…);
     private readonly pointerAt;
     private readonly pointerInBand;
+    private readonly range;
+    protected readonly rangeBand = computed(…);
+    private readonly rangeTextWidth;
+    private readonly rangeTotal;
     protected readonly reachesBelowZero = computed(…);
+    private readingAnchorTop;
+    protected readonly readingY = computed(…);
     private readingsTopDown;
+    private readonly readoutTextWidth;
     private refocusStop;
     public releaseCursor(): void;
     public releaseDomain(id: string): void;
     public releaseTooltip(id: string): void;
     protected readonly renderReady = chartRenderGate(…);
-    public reportDomain(id: string, values: readonly number[], axis: ChartAxis = 'primary'): void;
+    public reportDomain(id: string, values: readonly number[], axis: ChartAxis = 'primary', hidden = false): void;
     public reportTooltip(id: string, source: ChartTooltipSource): void;
     private readonly reportedDomains;
+    public readonly rescaleOnHide = input(true, { transform: booleanAttribute });
     protected readonly rightGutter = computed(…);
     private readonly roving;
     protected readonly secondary = computed(…);
@@ -137,11 +165,17 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     protected readonly secondaryTitleGutter = computed(…);
     protected readonly secondaryTitleX = computed(…);
     public readonly secondaryYPosition = computed(…);
+    public readonly selectRange = input(false, { transform: booleanAttribute });
+    public readonly selectedRange = this.range.asReadonly(…);
     public setActiveIndex(index: number): void;
-    protected readonly settled = signal(…);
+    protected readonly settled = computed(…);
+    private readonly settledLayout;
+    public readonly showAxisReadout = input(true, { transform: booleanAttribute });
     protected readonly showSecondaryGridlines = computed(…);
+    protected readonly shownReadout = computed(…);
     public readonly skeletonCount = input(CHART_SKELETON_COUNT, { transform: (raw: unknown) => numberAttribute(raw, CHART_SKELETON_COUNT) });
     protected readonly skeletonMarks = computed(…);
+    private stackTop;
     protected readonly stacked = computed(…);
     private readonly stepBackOnEscape;
     protected stopLabel(index: number): string;
@@ -160,6 +194,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     protected readonly viewBox = computed(…);
     protected readonly viewHeight = computed(…);
     protected readonly viewWidth = computed(…);
+    private viewXOf;
     private widestLabel;
     public readonly xPosition = computed(…);
     public readonly yPosition = computed(…);
@@ -191,6 +226,7 @@ export interface ChartScales {
         readonly index: number;
         readonly event: PointerEvent;
     } | null>;
+    readonly selectedRange?: Signal<ChartCategoryRange | null>;
     readonly hoverDelayMs?: Signal<number>;
     readonly cursorOrigin: Signal<Element | null>;
     readonly cursorPointer: Signal<{
@@ -198,7 +234,7 @@ export interface ChartScales {
         readonly y: number;
     } | null>;
     setActiveIndex(index: number): void;
-    reportDomain(id: string, values: readonly number[], axis?: ChartAxis): void;
+    reportDomain(id: string, values: readonly number[], axis?: ChartAxis, hidden?: boolean): void;
     releaseDomain(id: string): void;
     reportTooltip(id: string, source: ChartTooltipSource): void;
     releaseTooltip(id: string): void;
@@ -217,6 +253,7 @@ export class ColumnSeriesComponent implements OnDestroy {
     public readonly axis = input<ChartAxis>('primary');
     public readonly axisEntries = computed<readonly ChartAxisEntry[]>(…);
     public readonly axisPointElements = computed<readonly (Element | null)[]>(…);
+    protected readonly axisReadout = computed<ChartAxisReadout | null>(…);
     private readonly barElements;
     public readonly columnWidthRatio = input(0.8, { transform: numberAttribute });
     public readonly data = input<readonly ColumnSeriesPoint[]>([]);
@@ -224,14 +261,19 @@ export class ColumnSeriesComponent implements OnDestroy {
     protected readonly dimmedBySeries = computed(…);
     private readonly domainId;
     protected entryLabel(mark: { point: ColumnSeriesPoint; formattedValue: string; }): string;
+    protected readonly focusedMark = computed(…);
+    private glideReordered;
     protected readonly hatchId = `ds-column-hatch-${this.seriesId}`;
     protected readonly hatchInUse = computed(…);
+    public readonly hidden = input(false, { transform: booleanAttribute });
     public readonly highlighted = input<string | null>(null);
     protected hitBox(mark: { top: number; height: number; }): { y: number; height: number; };
     protected readonly hitHeight = computed(…);
     private readonly host;
     public readonly interactive = input(false, { transform: booleanAttribute });
     protected readonly intl = inject(…);
+    protected isLater(index: number): boolean;
+    protected isOutsideRange(index: number): boolean;
     protected readonly leaveMark = leaveMark;
     private readonly locale;
     protected markStagger(index: number): string;
@@ -249,8 +291,10 @@ export class ColumnSeriesComponent implements OnDestroy {
     public readonly pinOnClickResolved = resolveWithConfig(…);
     private pinYOf;
     protected readonly pins = computed(…);
+    private placedX;
     public readonly pointClicked = output<ColumnSeriesPoint>();
     protected readonly roving = rovingMarks(…);
+    public readonly runningTotal = input(false, { transform: booleanAttribute });
     protected readonly scales = inject(…);
     public readonly seriesColor = input<string | null>(null);
     public readonly seriesFill = input<'solid' | 'hatched' | null>(null);
@@ -265,6 +309,8 @@ export class ColumnSeriesComponent implements OnDestroy {
     protected readonly slotStepPx = computed(…);
     public readonly soleSeries = input(false, { transform: booleanAttribute });
     private readonly spans;
+    private spansOf;
+    protected readonly spotlit = computed(…);
     protected readonly stacked = computed(…);
     public readonly staggerMs = input(40, { transform: numberAttribute });
     public readonly tooltip = input<ChartItemTooltipTrigger>('item');
@@ -291,24 +337,38 @@ export class LineSeriesComponent implements OnDestroy {
     private areaPathsFor;
     public readonly axisEntries = computed<readonly ChartAxisEntry[]>(…);
     public readonly axisPointElements = computed<readonly (Element | null)[]>(…);
+    private readonly axisReadout;
     private readonly axisTooltipContext;
+    private baselineOf;
+    protected readonly changes = computed(…);
     public readonly curve = input<ChartCurve>('linear');
     protected dashFor(seriesIndex: number): string | null;
     public readonly data = input<readonly LineSeriesData[]>([]);
     public readonly dimOthers = input(false, { transform: booleanAttribute });
     private readonly domainId;
+    private drawnBaselines;
+    private drawnKeys;
+    private drawnPoints;
     protected fadeId(seriesIndex: number): string;
     private readonly firstMarkerBySeries;
     private readonly focusedSeries;
     public readonly gaps = input<ChartGaps>('break');
     public readonly highlighted = input<string | null>(null);
+    private readonly host;
+    private readonly hoveredSeries;
     public readonly interactive = input(false, { transform: booleanAttribute });
     protected isActiveMarker(marker: { markIndex: number; categoryIndex: number; }): boolean;
     protected isDimmed(seriesId: string): boolean;
+    protected isOutsideRange(categoryIndex: number): boolean;
+    protected isSpotlit(seriesId: string): boolean;
     protected isTabStop(seriesId: string, markIndex: number): boolean;
     protected readonly leaveMark = leaveMark;
+    private readonly locale;
     private readonly markerElements;
     protected markerLabel(marker: { seriesLabel: string; category: string; formattedValue: string; }): string;
+    private morphOnCategoryChange;
+    private morphing;
+    private moveTravelMarkers;
     public ngOnDestroy(): void;
     protected onMarkerClick(event: MouseEvent): void;
     private onMarkerFocus;
@@ -320,27 +380,37 @@ export class LineSeriesComponent implements OnDestroy {
     protected readonly pinLift = CHART_PIN_RADIUS + CHART_PIN_GAP + PIN_MARKER_CLEARANCE;
     public readonly pinOnClick = input<boolean | null, unknown>(null, { transform: (value) => (value == null ? null : booleanAttribute(value)) });
     public readonly pinOnClickResolved = resolveWithConfig(…);
-    protected readonly pinnedMarker = computed(…);
+    protected readonly pinnedMarkers = this.activeMark.pinnedAt(…);
     protected readonly pins = computed(…);
     protected readonly plotted = computed(…);
     public readonly pointClicked = output<{ series: LineSeriesData; categoryIndex: number; value: number; }>();
     private readonly readingsAtCursor;
     private readingsOf;
+    private reportIdOf;
     private readonly rovingBySeries;
     protected readonly scales = inject(…);
     private selectMarker;
     protected seriesStagger(index: number): string;
+    public readonly showChange = input(false, { transform: booleanAttribute });
     public readonly showMarkers = input(true, { transform: booleanAttribute });
+    private readonly spotlight;
     public readonly stacked = input(false, { transform: booleanAttribute });
     public readonly staggerMs = input(40, { transform: numberAttribute });
+    private stopMorph;
     public readonly tooltip = input<ChartTooltipTrigger>('item');
     public readonly tooltipAnchor = input<'reading' | 'pointer'>('reading');
     public readonly tooltipContext = computed<ChartTooltipContext | null>(…);
     public readonly tooltipLingerMs = input(CHART_TOOLTIP_LINGER_MS, { transform: numberAttribute });
     public readonly tooltipOrigin = computed<ChartTooltipOrigin | null>(…);
+    private readonly topReading;
     private readonly topReadingElement;
+    private readonly topReadingY;
+    private readonly travel;
     public readonly valueFormat = input<ChartValueFormat>(chartValueFormat(injectDsLocale()));
+    private readonly valuesByCategory;
     private valuesOn;
+    private readonly visibleCount;
+    private readonly zone;
 }
 
 export interface LineSeriesData {
@@ -351,6 +421,7 @@ export interface LineSeriesData {
     area?: boolean | 'fade';
     lower?: readonly (number | null)[];
     color?: string;
+    hidden?: boolean;
 }
 
 @Component({ selector: 'g[dsReferenceLabel]' })
@@ -394,9 +465,12 @@ ds-chart {
     --ds-chart-axis-label-color: var(--chart-axis-label-color);
     --ds-chart-axis-line-color: var(--chart-axis-line-color);
     --ds-chart-cursor-line-color: (none);
+    --ds-chart-dot-radius: (none);
     --ds-chart-grid-line-color: var(--chart-grid-line-color);
     --ds-chart-hover-bg-color: (none);
     --ds-chart-plot-bg-color: transparent;
+    --ds-motion-chart-mark-duration: (none);
+    --ds-motion-chart-mark-easing: (none);
     --ds-motion-chart-state-duration: (none);
     --ds-motion-chart-state-easing: (none);
 }
@@ -418,13 +492,14 @@ g[dsLineSeries] {
     --ds-chart-area-fade-opacity: (none);
     --ds-chart-area-opacity: (none);
     --ds-chart-bg-color: (none);
+    --ds-chart-dim-opacity: (none);
     --ds-chart-dot-radius: (none);
     --ds-chart-dot-radius-active: (none);
     --ds-chart-line-width: (none);
     --ds-chart-line-width-bold: (none);
+    --ds-chart-negative-color: (none);
+    --ds-chart-positive-color: (none);
     --ds-motion-chart-mark-detail-duration: (none);
-    --ds-motion-chart-mark-duration: (none);
-    --ds-motion-chart-mark-easing: (none);
     --ds-motion-chart-mark-enter-easing: (none);
     --ds-motion-chart-mark-sweep-duration: (none);
     --ds-motion-chart-state-duration: (none);
@@ -433,7 +508,6 @@ g[dsLineSeries] {
 
 g[dsReferenceLabel] {
     --ds-chart-axis-font-size: (none);
-    --ds-chart-bg-color: (none);
     --ds-chart-threshold-color: var(--chart-threshold-color);
 }
 

@@ -14,7 +14,10 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
-import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  FieldMessageComponent,
+  FieldStatusComponent,
+} from '@ids-group-ltd/ids-design-system/components/field-message';
 import {
   resolveFieldMessage,
   trimmedText,
@@ -26,7 +29,7 @@ export type OtpMode = 'numeric' | 'alphanumeric';
 @Component({
   selector: 'ds-otp-input',
   standalone: true,
-  imports: [FieldMessageComponent],
+  imports: [FieldMessageComponent, FieldStatusComponent],
   templateUrl: './otp-input.component.html',
   styleUrl: './otp-input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -73,9 +76,12 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
 
   protected readonly uid = nextControlId('ds-otp-input');
   protected readonly hintId = computed(() =>
-    this.message().text ? `${this.uid}-hint` : null,
+    this.message().text || this.changedShown() ? `${this.uid}-hint` : null,
   );
   private readonly fieldMessage = resolveFieldMessage({
+    pending: this.pending,
+    dirty: this.dirty,
+    showDirty: this.showDirtyResolved,
     disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
@@ -87,6 +93,8 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly pendingShown = this.fieldMessage.pending;
+  protected readonly changedShown = this.fieldMessage.changed;
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 

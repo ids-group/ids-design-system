@@ -23,16 +23,18 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import {
   CHART_SERIES_COLORS,
-  chartDwell,
+  chartTiming,
   describeSeries,
   formatWholePercent,
   largestRemainder,
+  leaveMark,
   markAt,
   rovingMarks,
   chartRenderGate,
   CHART_SKELETON_COUNT,
   DsChartBase,
   skeletonMarkCount,
+  tweenMarks,
   watchElementWidth,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -56,11 +58,12 @@ import {
   paletteIndex,
   positiveValues,
   resolveInnerRadius,
+  skeletonArcs,
   resolveTotal,
   ringCoords,
   sliceArcs,
 } from './pie-chart.math';
-import type { CenterValueFit } from './pie-chart.math';
+import type { CenterValueFit, PieArc } from './pie-chart.math';
 import type { PieChartCenterPlacement, PieChartSlice } from './pie-chart.types';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
@@ -68,6 +71,8 @@ import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/c
 const RING_VIEW_BOX_SIZE = 100;
 const RING_CENTER = RING_VIEW_BOX_SIZE / 2;
 const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
+// How far a hovered slice slides out along its bisector, in viewBox units.
+const SLICE_HOVER_SHIFT = 3;
 // The value keeps a margin from the inner edge of the ring.
 const CENTER_VALUE_HOLE_SHARE = 0.9;
 
@@ -122,6 +127,10 @@ export class PieChartComponent
   /** `'below'` prints the value and its caption under the ring at full size, never shrunk or
    *  shortened. */
   readonly centerPlacement = input<PieChartCenterPlacement>('inside');
+
+  /** The hovered, focused or held slice prints its value and label in the centre in place of
+   *  `centerValue` and `centerLabel`. */
+  readonly showHoverCenter = input(true, { transform: booleanAttribute });
 
   /** Legend placement, logical so it flips in right-to-left. */
   readonly legend = input<'end' | 'bottom' | 'none'>('end');
@@ -196,22 +205,12 @@ export class PieChartComponent
     this.activeMark.enter(index, event);
   }
 
-  private readonly legendHighlight = signal(-1);
-  private readonly legendDwell = chartDwell(() => this.defaults.hoverDelayMs());
-
-  /** A legend item opens the arc's tooltip and dims the other slices, as hovering the arc does. */
+  /** A legend item opens the arc's tooltip and slides the arc out, as hovering the arc does. */
   protected onLegendEnter(index: number, event: Event): void {
-    this.legendDwell.schedule(
-      index,
-      () => this.legendHighlight.set(index),
-      event,
-    );
     this.activeMark.enter(index, event, this.arcAt(event, index));
   }
 
   protected onLegendLeave(): void {
-    this.legendDwell.cancel();
-    this.legendHighlight.set(-1);
     this.activeMark.leave();
   }
 
@@ -236,20 +235,6 @@ export class PieChartComponent
       (event.currentTarget as Element).closest('.chart'),
       index,
       '.slice',
-    );
-  }
-
-  protected isDimmed(index: number): boolean {
-    // The legend dims the rest whether or not `dimOthers` is set; `dimOthers` governs the ring only.
-    const legendHighlight = this.legendHighlight();
-    if (legendHighlight !== -1) {
-      return legendHighlight !== index;
-    }
-
-    return (
-      this.dimOthers() &&
-      this.activeMark.index() !== -1 &&
-      this.activeMark.index() !== index
     );
   }
 
@@ -317,10 +302,80 @@ export class PieChartComponent
     })),
   );
 
+  protected readonly leaveMark = leaveMark;
+
+  protected readonly sliceHoverShift = SLICE_HOVER_SHIFT;
+
+  // Keyed by slice id, so a slice that stays tweens from where it is drawn and a new one opens from its start edge.
+  private readonly drawnArcs = signal<ReadonlyMap<string, PieArc>>(new Map());
+
+  private stopArcTween: () => void = () => undefined;
+
+  private readonly states = viewChild(ChartStatesComponent);
+
+  private readonly tweenArcs = afterRenderEffect((onCleanup) => {
+    const data = this.visibleSlices();
+    const ring = this.ringElement()?.nativeElement;
+    const target = sliceArcs(data.map((slice) => slice.value));
+    untracked(() => {
+      const drawn = this.drawnArcs();
+      const apply = (angles: readonly number[]): void =>
+        this.drawnArcs.set(
+          new Map(
+            data.map((slice, index) => [
+              slice.id,
+              {
+                startAngle: angles[2 * index],
+                endAngle: angles[2 * index + 1],
+              },
+            ]),
+          ),
+        );
+      const to = target.flatMap((arc) => [arc.startAngle, arc.endAngle]);
+      this.stopArcTween();
+      if (ring && drawn.size === 0 && this.states()?.morphing()) {
+        this.stopArcTween = tweenMarks(
+          ring,
+          skeletonArcs(data.length, skeletonMarkCount(0, this.skeletonCount())),
+          to,
+          apply,
+          'mark-grow',
+        );
+
+        return;
+      }
+      if (!ring || drawn.size === 0) {
+        apply(to);
+
+        return;
+      }
+      const from = data.flatMap((slice, index) => {
+        const arc = drawn.get(slice.id);
+
+        return arc
+          ? [arc.startAngle, arc.endAngle]
+          : [target[index].startAngle, target[index].startAngle];
+      });
+      this.stopArcTween = tweenMarks(ring, from, to, apply);
+    });
+    onCleanup(() => this.stopArcTween());
+  });
+
   protected readonly slices = computed(() => {
     const data = this.visibleSlices();
     const values = data.map((slice) => slice.value);
-    const arcs = sliceArcs(values);
+    const target = sliceArcs(values);
+    const drawn = this.drawnArcs();
+    const arcs = data.map(
+      (slice, index) =>
+        drawn.get(slice.id) ??
+        (drawn.size === 0
+          ? target[index]
+          : {
+              startAngle: target[index].startAngle,
+              endAngle: target[index].startAngle,
+            }),
+    );
     const percents = largestRemainder(positiveValues(values));
     const innerRadius = resolveInnerRadius(
       RING_OUTER_RADIUS,
@@ -333,6 +388,12 @@ export class PieChartComponent
 
     return data.map((slice, index) => ({
       slice,
+      shift: ringCoords(
+        0,
+        0,
+        SLICE_HOVER_SHIFT,
+        (arcs[index].startAngle + arcs[index].endAngle) / 2,
+      ),
       // Halfway along the arc and through the ring: inside the slice whatever its sweep.
       center: ringCoords(
         RING_CENTER,
@@ -369,8 +430,8 @@ export class PieChartComponent
     return entry
       ? {
           center: {
-            x: (entry.center.x / RING_VIEW_BOX_SIZE) * 100,
-            y: (entry.center.y / RING_VIEW_BOX_SIZE) * 100,
+            x: ((entry.center.x + entry.shift.x) / RING_VIEW_BOX_SIZE) * 100,
+            y: ((entry.center.y + entry.shift.y) / RING_VIEW_BOX_SIZE) * 100,
           },
         }
       : null;
@@ -381,8 +442,52 @@ export class PieChartComponent
       this.centerValue() ?? this.valueFormatResolved()(this.total(), 'tooltip'),
   );
 
+  // The hovered, focused or held slice takes the centre from the total until the pointer leaves.
+  private readonly centerEntry = computed(() =>
+    this.showHoverCenter()
+      ? (this.slices()[this.activeMark.index()] ?? null)
+      : null,
+  );
+
+  private readonly centerKey = computed(() =>
+    this.centerEntry() ? this.activeMark.index() : -1,
+  );
+
+  private readonly centerSwapElement =
+    viewChild<ElementRef<HTMLElement>>('centerSwap');
+
+  private shownCenterKey: number | null = null;
+
+  // Fades the centre in once per slice it names, on the hover timing; a zero duration swaps at once.
+  private readonly fadeCenterSwap = afterRenderEffect(() => {
+    const key = this.centerKey();
+    const swap = this.centerSwapElement()?.nativeElement;
+    const previous = this.shownCenterKey;
+    this.shownCenterKey = key;
+    if (!swap || previous === null || previous === key) {
+      return;
+    }
+    const timing = chartTiming(swap, 'state');
+    if (timing) {
+      swap.animate([{ opacity: 0 }, { opacity: 1 }], timing);
+    }
+  });
+
+  private readonly shownCenterValue = computed(() => {
+    const entry = this.centerEntry();
+    if (!entry) {
+      return this.resolvedCenterValue();
+    }
+
+    return this.partOfWhole() ? entry.formattedPercent : entry.formattedValue;
+  });
+
+  protected readonly shownCenterLabel = computed(
+    () => this.centerEntry()?.slice.label ?? this.centerLabel(),
+  );
+
   private readonly compactCenterValue = computed(() =>
-    this.centerCompact() && this.centerValue() === null
+    this.centerCompact() && this.centerValue() === null && !this.centerEntry()
       ? this.valueFormatResolved()(this.total(), 'tick')
       : null,
   );
@@ -397,7 +502,7 @@ export class PieChartComponent
   });
 
   protected readonly centerText = computed(
-    () => this.centerFit()?.text ?? this.resolvedCenterValue(),
+    () => this.centerFit()?.text ?? this.shownCenterValue(),
   );
 
   protected readonly centerFontSize = computed(
@@ -479,7 +584,7 @@ export class PieChartComponent
   private readonly refit = afterRenderEffect(() => {
     const value = this.centerValueElement()?.nativeElement;
     const ringWidth = this.ringWidth();
-    const full = this.resolvedCenterValue();
+    const full = this.shownCenterValue();
     const compact = this.compactCenterValue();
     const hole = this.hole();
     fontsLoaded();

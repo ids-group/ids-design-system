@@ -13,7 +13,7 @@ import type {
   ChartThresholdDash,
 } from '@ids-group-ltd/ids-design-system/core';
 import type { ChartTooltipEntry } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import type { ChartAxisEntry } from './chart-scales.token';
+import type { ChartAxisEntry, ChartCategoryRange } from './chart-scales.token';
 
 export const CHART_DEFAULT_TICK_COUNT = 5;
 export const CHART_AXIS_LABEL_GAP = 8;
@@ -412,6 +412,30 @@ export function categoryAt(
   return Math.min(categoryCount - 1, Math.floor(offset / band));
 }
 
+/** Where a pin's disc centres on a mark spanning `top` to `top + height`, `inset` being the disc's
+ *  radius plus its gap: inside the mark's upper end when it holds the disc, else above the mark and
+ *  above `valueTop`, the top of the value printed over it. */
+export function pinYAbove(
+  top: number,
+  height: number,
+  valueTop: number | null,
+  inset: number,
+): number {
+  if (height >= 2 * inset) {
+    return top + inset;
+  }
+
+  return Math.min(top, valueTop ?? top) - inset;
+}
+
+/** Whether category `index` falls outside a selected range; nothing is outside no range. */
+export function outsideRange(
+  range: ChartCategoryRange | null,
+  index: number,
+): boolean {
+  return range !== null && (index < range.from || index > range.to);
+}
+
 /** Readings ordered top to bottom with the height dropped; ties and readings with no height keep their place. */
 export function topDown(
   entries: readonly ChartAxisEntry[],
@@ -419,4 +443,17 @@ export function topDown(
   return [...entries]
     .sort((above, below) => (above.y ?? Infinity) - (below.y ?? Infinity) || 0)
     .map(({ y: _drawnAt, ...reading }) => reading);
+}
+
+/** A key per category that follows the category, not its position: its label, numbered from the
+ *  second time a label repeats. A mark keyed by it moves with its category when another comes or goes. */
+export function categoryKeys(labels: readonly string[]): string[] {
+  const seen = new Map<string, number>();
+
+  return labels.map((label) => {
+    const count = seen.get(label) ?? 0;
+    seen.set(label, count + 1);
+
+    return count === 0 ? label : `${label}#${count}`;
+  });
 }

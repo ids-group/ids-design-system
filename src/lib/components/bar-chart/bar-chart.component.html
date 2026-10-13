@@ -6,11 +6,13 @@
   <figure
     class="bar-chart"
     dsChartStates
+    morphGrowth="across"
     [pinned]="activeMark.pinned()"
     [caption]="caption()"
     [error]="error()"
     [errorText]="errorTextResolved()"
     [pending]="showsSkeleton()"
+    [dataTable]="dataTableResolved()"
     [empty]="isEmpty()"
     [emptyText]="emptyTextResolved()"
     [skeleton]="skeleton"
@@ -60,6 +62,7 @@
         <span class="track">
           <ds-skeleton
             class="track-skeleton"
+            data-morph="mark"
             height="100%"
             [shimmer]="loading()" />
         </span>
@@ -198,6 +201,7 @@
 
           <span
             class="fill"
+            data-morph="mark"
             [style.margin-inline-start.%]="entry.offsetPercent"
             [style.width.%]="entry.widthPercent"
             [style.background]="entry.segments.length ? null : entry.color">

@@ -6,13 +6,7 @@
 @use '../../styles/chart-motion' as chart-motion;
 @use '../../styles/component-base' as component-base;
 @include component-base.rules;
-@include chart-motion.enters('.stage', ds-chart-mark-settle);
-
-.stage {
-  transform-box: fill-box;
-}
-
-@include chart-motion.leaves('.stage');
+@include chart-motion.settles-in('.stage');
 @include chart-motion.follows('.stage-table tbody > tr > *', var(--ds-motion-chart-mark-enter-duration));
 @include chart-frame.chart-frame;
 @include chart-frame.no-bounding-box-focus('.stage');
@@ -58,9 +52,6 @@
 }
 
 svg {
-  // The viewBox stretches with the stage count, so a pixel of rise would stretch too.
-  --_chart-rise-distance: 10%;
-
   display: block;
   inline-size: 100%;
 }

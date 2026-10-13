@@ -40,7 +40,10 @@ import {
   DsControlValueAccessor,
   DsStaticPreview,
 } from '@ids-group-ltd/ids-design-system/components';
-import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import {
+  FieldMessageComponent,
+  FieldStatusComponent,
+} from '@ids-group-ltd/ids-design-system/components/field-message';
 import {
   resolveFieldMessage,
   trimmedText,
@@ -62,6 +65,7 @@ import {
   formatDate,
   formatRange,
   fullDateLabel,
+  localeFirstDayOfWeek,
   monthLabels,
   parseDate,
   parseDateRange,
@@ -110,6 +114,7 @@ interface DayCell {
     IconComponent,
     CalendarDayComponent,
     FieldMessageComponent,
+    FieldStatusComponent,
     A11yModule,
     NgTemplateOutlet,
   ],
@@ -265,7 +270,7 @@ export class DatePickerComponent
   readonly locale = input<string | null>(null);
   /** Explicit token format e.g. `'MM/DD/YYYY'`; default derived from `locale`. */
   readonly dateFormat = input<string | null>(null);
-  /** First weekday column: 0=Sunday … 6=Saturday. Default 1 (Monday). */
+  /** First weekday column: 0=Sunday … 6=Saturday. Falls back to `DS_CONFIG.datePicker.firstDayOfWeek`, then the resolved `locale`'s week, then 1 (Monday). */
   readonly firstDayOfWeek = input<number | null>(null);
   /** Date the calendar opens on when the value is empty; never written to `value`. */
   readonly defaultDate = input<Date | null>(null);
@@ -276,7 +281,7 @@ export class DatePickerComponent
     () => this.disabled() || this.formDisabled(),
   );
   protected readonly hintId = computed(() =>
-    this.message().text ? `${this.uid}-hint` : null,
+    this.message().text || this.changedShown() ? `${this.uid}-hint` : null,
   );
   // An unparseable date is the picker's OWN error: it enters the ladder at the error rung rather than replacing the hint.
   // An explicit `error` still wins.
@@ -300,6 +305,9 @@ export class DatePickerComponent
     () => this.invalid() || this.typedInvalid() || this.rangeInvalid(),
   );
   private readonly fieldMessage = resolveFieldMessage({
+    pending: this.pending,
+    dirty: this.dirty,
+    showDirty: this.showDirtyResolved,
     disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
@@ -311,6 +319,8 @@ export class DatePickerComponent
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly pendingShown = this.fieldMessage.pending;
+  protected readonly changedShown = this.fieldMessage.changed;
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly groupMessage = groupMessageId();
   protected readonly describedByIds = describedByIds;
@@ -320,7 +330,11 @@ export class DatePickerComponent
     () => this.locale() ?? this.config.datePicker?.locale ?? this.appLocale,
   );
   protected readonly resolvedFirstDay = computed(
-    () => this.firstDayOfWeek() ?? this.config.datePicker?.firstDayOfWeek ?? 1,
+    () =>
+      this.firstDayOfWeek() ??
+      this.config.datePicker?.firstDayOfWeek ??
+      localeFirstDayOfWeek(this.resolvedLocale()) ??
+      1,
   );
   protected readonly formatSpec = computed<DateFormatSpec>(() =>
     resolveDateFormat(

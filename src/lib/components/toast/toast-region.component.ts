@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { DS_CONFIG, DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { devWarn } from '@ids-group-ltd/ids-design-system/core';
+import { moveFocusOutOf } from '@ids-group-ltd/ids-design-system/components';
 import { DS_TOAST_POSITION_DEFAULT } from './toast.config';
 import { ToastComponent } from './toast.component';
 import type { ToastEntry } from './toast.types';
@@ -38,7 +39,7 @@ const QUEUE_COUNT_CAP = 99;
     '[attr.aria-label]': 'intl().toast.region',
     '(mouseenter)': 'onHover(true)',
     '(mouseleave)': 'onHover(false)',
-    '(focusin)': 'onFocusWithin(true)',
+    '(focusin)': 'onFocusIn($event)',
     '(focusout)': 'onFocusWithin($event)',
     '[class.stack-newest-last]': '!newestFirst',
   },
@@ -71,6 +72,7 @@ export class ToastRegionComponent {
   private readonly startedAt = new Map<number, number>();
   private hovered = false;
   private focusWithin = false;
+  private focusOrigin: HTMLElement | null = null;
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly position = inject(DS_CONFIG).toast?.position;
@@ -212,6 +214,17 @@ export class ToastRegionComponent {
     this.syncPause();
   }
 
+  protected onFocusIn(event: FocusEvent): void {
+    const from = event.relatedTarget;
+    if (
+      from instanceof HTMLElement &&
+      !this.host.nativeElement.contains(from)
+    ) {
+      this.focusOrigin = from;
+    }
+    this.onFocusWithin(true);
+  }
+
   // `focusout` also fires when focus moves BETWEEN elements inside the region; the containment check avoids re-flooring at MIN_RESUME_MS.
   protected onFocusWithin(event: FocusEvent | true): void {
     this.focusWithin =
@@ -302,6 +315,11 @@ export class ToastRegionComponent {
     }
     if (this.leaving().has(id)) {
       return;
+    }
+    const node = this.toastNodes().get(id);
+    if (node) {
+      // A neighbouring toast first, then where focus came from, as a dialog returns it.
+      moveFocusOutOf(node, this.host.nativeElement, this.focusOrigin);
     }
     this.leaving.update((set) => new Set(set).add(id));
     this.leaveTimers.set(

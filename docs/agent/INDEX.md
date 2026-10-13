@@ -110,7 +110,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-breadcrumbs> — BreadcrumbsComponent](navigation/ds-breadcrumbs.md) — <!-- inputs:ds-breadcrumbs -->
 - [<ds-tabs> + <ds-tab> — TabsComponent, TabComponent](navigation/ds-tabs.md) — Container holds <ds-tab label="…"> children.
 - [<ds-stepper> — StepperComponent](navigation/ds-stepper.md) — <!-- inputs:ds-stepper -->
-- [<ds-pagination> — PaginationComponent](navigation/ds-pagination.md) — <!-- inputs:ds-pagination -->
+- [<ds-pagination> — PaginationComponent](navigation/ds-pagination.md) — Previous and Next disable on the first and last page; pressing one onto that page moves focus to the current p
 - [<ds-divider> — DividerComponent](navigation/ds-divider.md) — Content: label text (when variant="label").
 - [<ds-container> — ContainerComponent](navigation/ds-container.md) — <!-- inputs:ds-container -->
 - [<ds-inline> — InlineComponent](navigation/ds-inline.md) — <!-- inputs:ds-inline -->
@@ -126,7 +126,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-bottom-sheet> — BottomSheetComponent](overlays/ds-bottom-sheet.md) — Mobile-first panel anchored to the bottom edge (touch equivalent of drawer/modal). Drag-down on the grab strip
 - [<ds-popover> — PopoverComponent](overlays/ds-popover.md) — Floating panel anchored to a trigger via CDK overlay. Input: align: 'start' | 'end' = 'start' — controls overl
 - [[dsTooltip] — TooltipDirective](overlays/ds-tooltip.md) — Attribute directive, applied by dsTooltip or by dsTooltipWhenClipped alone. Apply to any focusable element; wi
-- [<ds-info-hint> — InfoHintComponent](overlays/ds-info-hint.md) — An icon button (14px, a question mark in a circle by default; icon="info" draws an "i") that shows supplementa
+- [<ds-info-hint> — InfoHintComponent](overlays/ds-info-hint.md) — An icon button (14px, a question mark in a circle by default; icon="info" draws an "i", and icon takes any Ico
 - [[dsDefinitionTerm] — DefinitionTermDirective](overlays/ds-definition-term.md) — Directive, on any element: a term inside running text or a label that carries its definition, <span dsDefiniti
 - [<ds-menu> + <ds-menu-item> — MenuComponent, MenuItemComponent](overlays/ds-menu.md) — Menu is a container. Item inputs: icon: IconName | null = null, disabled: boolean = false, danger: boolean = f
 - [<ds-tooltip-panel> — TooltipPanelComponent](overlays/ds-tooltip-panel.md) — <!-- inputs:ds-tooltip-panel -->
@@ -151,5 +151,5 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-table> — TableComponent<T extends { id: string }>](tables/ds-table.md) — Column shape: { key: string, label: string, sortable?: boolean, align?: 'left' | 'right' | 'center', cell?: (r
 - [[dsCellTemplate] — CellTemplateDirective](tables/ds-cell-template.md) — <!-- inputs:[dsCellTemplate] -->
 - [<ng-template[dsHeaderFilter]> — HeaderFilterDirective](tables/header-filter-directive.md) — <!-- inputs:ng-template[dsHeaderFilter] -->
-- [[dsTableColumns] — DsTableColumns](tables/ds-table-columns.md) — <!-- inputs:[dsTableColumns] -->
+- [[dsTableColumns] — DsTableColumns](tables/ds-table-columns.md) — Column panel Move up and Move down keep focus on the moved row: the pressed button, or the other at an end.
 - [[dsTableExport] — DsTableExport](tables/ds-table-export.md) — <!-- inputs:[dsTableExport] -->

@@ -4,5 +4,5 @@
 Group: Overlay
 
 <!-- inputs:ds-tooltip-panel -->
-All inputs: `text: required string`, `placement: required 'top' | 'bottom' | 'left' | 'right'`, `arrow: boolean = true`, `panelId: string = ''`
+All inputs: `text: required string | TemplateRef<unknown>`, `placement: required 'top' | 'bottom' | 'left' | 'right'`, `arrow: boolean = true`, `panelId: string = ''`
 <!-- /inputs -->

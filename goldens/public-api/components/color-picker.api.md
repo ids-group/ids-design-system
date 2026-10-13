@@ -8,6 +8,7 @@ export class ColorPickerComponent extends DsControlValueAccessor<string> impleme
     public constructor();
     public readonly ariaLabel = input<string | null>(null);
     public readonly ariaLabelResolved = computed(…);
+    protected readonly changedShown = this.fieldMessage.changed;
     private clampPct;
     public close(cause: DsOverlayCloseCause = 'select'): void;
     private commitHex;
@@ -43,6 +44,7 @@ export class ColorPickerComponent extends DsControlValueAccessor<string> impleme
     public readonly panelClass = input<string | readonly string[]>([]);
     private readonly panelTokens;
     protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>(…);
+    protected readonly pendingShown = this.fieldMessage.pending;
     public readonly presets = input<readonly string[]>(DEFAULT_PRESETS);
     protected readonly preview = inject(…);
     protected selectPreset(hex: string): void;

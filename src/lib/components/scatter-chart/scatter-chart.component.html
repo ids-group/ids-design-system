@@ -8,7 +8,7 @@
   [errorText]="errorTextResolved()"
   [pending]="(loading() && isEmpty()) || !renderReady()"
   [reloading]="loading()"
-  [dataTable]="dataTableResolved() !== 'none'"
+  [dataTable]="dataTableResolved()"
   [shimmer]="loading()"
   [empty]="isEmpty()"
   [emptyText]="emptyTextResolved()"
@@ -24,6 +24,7 @@
     @for (row of skeletonLayout.rows; track row) {
       <span
         class="skeleton-grid-line"
+        data-morph="fade"
         [class.is-axis]="$last"
         [style.top]="row"
         [style.left]="skeletonLayout.plotLeft"
@@ -63,6 +64,7 @@
 
 <ng-template #body>
   <svg
+    #canvas
     class="canvas"
     [attr.viewBox]="viewBox"
     [class.dims-others]="dimOthers()"
@@ -71,10 +73,7 @@
     [dsChartTooltip]="tooltipContext()"
     [dsChartTooltipSwatches]="defaults.tooltipSwatches()"
     [dsChartTooltipPinned]="activeMark.pinned()"
-    [dsChartTooltipOrigin]="activeMark.origin()"
-    (pointerover)="onCanvasPointer($event)"
-    (pointermove)="onCanvasPointer($event)"
-    (pointerleave)="onCanvasLeave()">
+    [dsChartTooltipOrigin]="activeMark.origin()">
     <rect
       class="plot-bg"
       [attr.x]="plot.left"
@@ -120,10 +119,8 @@
       @let start = seriesStart().get(entry.key) ?? 0;
 
       <g
-        [class.is-dimmed]="
-          highlightedSeries() !== null &&
-          highlightedSeries() !== entry.series.id
-        "
+        class="point-group"
+        [class.is-dimmed]="isSeriesDimmed(entry.series.id)"
         [style.--_scatter-series-color]="entry.color"
         (click)="onPointPress($event)"
         (keydown.enter)="onPointActivate($event)"
@@ -139,21 +136,39 @@
             "
             [attr.cx]="mark.cx"
             [attr.cy]="mark.cy"
+            [style.--_chart-mark-stagger]="pointStagger(mark.cx)"
             [attr.role]="interactive() ? 'button' : null"
             [attr.tabindex]="interactive() ? 0 : null"
             [attr.data-mark-index]="start + index"
             [attr.aria-label]="
               interactive() ? pointLabel(entry.series, mark.point) : null
-            " />
+            "
+            (animate.leave)="leaveMark($event)" />
         }
       </g>
     }
 
-    @if (pinnedPoint(); as point) {
+    @if (showNearestPoint() && ringedMark()) {
+      @if (pointerOverPlot() && !activeMark.pinned()) {
+        <line
+          #tether
+          class="nearest-tether" />
+      }
+
+      <circle
+        #ring
+        class="nearest-ring" />
+    }
+
+    @for (pinned of pinnedPoints(); track pinned.index) {
       <svg:g
         dsChartPinMarker
         [attr.transform]="
-          'translate(' + point.cx + ',' + (point.cy - pinLift) + ')'
+          'translate(' +
+          pinned.value.cx +
+          ',' +
+          (pinned.value.cy - pinLift) +
+          ')'
         " />
     }
 

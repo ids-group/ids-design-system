@@ -16,6 +16,7 @@ coverage/
 
 # Angular build cache
 .angular/
+.cache/
 
 # Sass cache
 .sass-cache/

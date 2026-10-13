@@ -2,6 +2,8 @@
   class="columns"
   [class.dims-others]="dimOthers()"
   [class.is-dimmed]="dimmedBySeries()"
+  [class.is-spotlit]="spotlit()"
+  [class.is-collapsed]="hidden()"
   [style.--_column-chart-column-share]="markWidthPx()"
   [style.--_column-chart-slot-step]="slotStepPx()"
   [style.--_column-slot]="slot()"
@@ -44,20 +46,23 @@
       [class.is-active]="activeMark.index() === index"
       [class.below-baseline]="mark.below"
       [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
+      [class.is-later]="isLater(index)"
+      [class.is-out]="isOutsideRange(index)"
       [style.--_chart-mark-stagger]="markStagger(index)"
       [style.--_column-mark-height]="mark.height + 'px'"
       [style.--_column-baseline-y]="mark.baseline + 'px'"
       [style.--_column-x]="mark.x + 'px'"
-      [attr.data-mark-index]="index"
-      [attr.role]="interactive() ? 'button' : null"
+      [attr.data-column-key]="mark.key"
+      [attr.data-mark-index]="hidden() ? null : index"
+      [attr.role]="interactive() && !hidden() ? 'button' : null"
       [attr.tabindex]="
-        interactive()
+        interactive() && !hidden()
           ? !scales.cursorOn?.() && index === roving.tabStop()
             ? 0
             : -1
           : null
       "
-      [attr.aria-label]="interactive() ? entryLabel(mark) : null"
+      [attr.aria-label]="interactive() && !hidden() ? entryLabel(mark) : null"
       (animate.leave)="leaveMark($event)">
       <!-- The pointer target is the whole category slot, so a two-pixel column stays reachable. -->
       @let hit = hitBox(mark);
@@ -70,6 +75,8 @@
       <svg:g
         #barEl
         class="bar"
+        data-morph="mark"
+        [attr.data-morph-from]="mark.below ? 'top' : null"
         [style.transform-origin]="mark.origin">
         <!-- `rx` rounds all four corners but the cap belongs on the free end alone; this rect fills the
              two baseline corners back in. Unlike a `<path>`, both keep `y` and `height` interpolable. -->
@@ -97,8 +104,9 @@
       @if (showValues()) {
         <svg:text
           class="value"
+          data-morph="hold"
           text-anchor="middle"
-          [attr.y]="mark.labelY">
+          [style.--_column-value-y]="mark.labelY + 'px'">
           {{ mark.formattedValue }}
         </svg:text>
       }
@@ -108,6 +116,25 @@
           dsChartPinMarker
           [attr.transform]="'translate(0,' + mark.pinY + ')'" />
       }
+    </svg:g>
+  }
+
+  <!-- One ring for every column, so keyboard focus glides to the next column with the panel. -->
+  @if (
+      interactive() &&
+      !hidden() &&
+      focusedMark(); as focused
+    ) {
+    <svg:g
+      class="focus-ring"
+      aria-hidden="true"
+      dsChartPlaced
+      [style.--_column-mark-height]="focused.height + 'px'"
+      [style.--_column-x]="focused.x + 'px'">
+      <svg:rect
+        class="focus-ring-shape"
+        [attr.y]="focused.top"
+        [attr.height]="focused.height" />
     </svg:g>
   }
 </svg:g>

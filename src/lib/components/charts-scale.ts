@@ -64,13 +64,6 @@ export function niceDomain(
   };
 }
 
-/** Distance between two ticks, which `formatTick` needs to pick a precision; a single tick has no step.
- *
- *  @internal */
-export function tickStep(ticks: readonly number[]): number {
-  return ticks.length > 1 ? ticks[1] - ticks[0] : 0;
-}
-
 /** @internal */
 export function linearScale(
   domainMin: number,
@@ -86,14 +79,6 @@ export function linearScale(
 }
 
 /** @internal */
-export interface PointScale {
-  readonly step: number;
-  readonly count: number;
-  position(index: number): number;
-  indexAt(offset: number): number;
-}
-
-/** @internal */
 export interface BandScale {
   readonly bandWidth: number;
   /** Centre to centre; exceeds `bandWidth` by the padding. */
@@ -102,45 +87,6 @@ export interface BandScale {
   position(index: number): number;
   /** The band an offset falls in, clamped at both ends. `-1` when there are no bands. */
   indexAt(offset: number): number;
-}
-
-/** Positions for marks that sit at a category rather than inside it (a line's readings): first at
- *  the plot's start, last at its end, a single reading in the middle.
- *
- *  `step` is the distance between neighbours; at the two ends that slot is half outside the plot and
- *  the caller clamps it.
- *
- *  @internal */
-export function pointScale(count: number, rangeSize: number): PointScale {
-  const total = Number.isFinite(count) && count > 0 ? Math.floor(count) : 0;
-  const size = Number.isFinite(rangeSize) && rangeSize > 0 ? rangeSize : 0;
-  if (total === 0) {
-    return { step: 0, count: 0, position: () => 0, indexAt: () => -1 };
-  }
-  if (total === 1) {
-    return {
-      step: size,
-      count: 1,
-      position: () => size / 2,
-      indexAt: () => 0,
-    };
-  }
-  const step = size / (total - 1);
-
-  return {
-    step,
-    count: total,
-    position: (index) => Math.min(Math.max(index, 0), total - 1) * step,
-    // Nearest reading, not the slot the pointer is over: the end slots are half-width.
-    indexAt: (offset) => {
-      if (!Number.isFinite(offset) || step === 0) {
-        return -1;
-      }
-      const index = Math.round(offset / step);
-
-      return Math.min(Math.max(index, 0), total - 1);
-    },
-  };
 }
 
 /** @internal */

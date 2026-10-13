@@ -16,7 +16,7 @@
   --surface-overlay:        var(--neutral-0);
   --surface-inverted:       var(--neutral-900);
   --surface-inverted-hover: var(--neutral-800);
-  --surface-tint:           var(--blue-50);
+  --surface-tint:           hsl(from var(--primary) h 100% 97%);
   --surface-disabled:       var(--neutral-100);
   --surface-muted:          var(--neutral-150);
 
@@ -25,8 +25,6 @@
 
   /* Divider on a coloured fill (split-button chevron); a translucent white reads on any brand hue. */
   --btn-split-divider: hsl(0deg 0% 100% / 25%);
-
-  --link-visited:      hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%);
 
   --border-default:    var(--neutral-200);
   --border-strong:     var(--neutral-300);
@@ -44,7 +42,6 @@
 
   --text-on-media:        white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
-  --text-link:         var(--blue-700);
   --text-on-primary:     white;
   --text-on-success:   white;
 
@@ -78,10 +75,10 @@
   --primary-hover:           color-mix(in srgb, var(--primary) 88%, black);
   --primary-pressed:         color-mix(in srgb, var(--primary) 76%, black);
   --primary-selected-hover:  color-mix(in srgb, var(--primary) 88%, black);
-  --primary-subtitle:          var(--blue-50);
-  --primary-muted:           var(--blue-100);
-  --primary-muted-strong:    var(--blue-200);
-  --primary-strong:          var(--blue-700);
+  --primary-subtitle:        hsl(from var(--primary) h 100% 97%);
+  --primary-muted:           hsl(from var(--primary) h 95% 94%);
+  --primary-muted-strong:    hsl(from var(--primary) h 95% 89%);
+  --primary-strong:          hsl(from var(--primary) h calc(s * 0.85) calc(l - 7));
   --primary-on:              white;
 
   /* Override --secondary-h/s/l to reskin; --secondary, hover and pressed recompose. */

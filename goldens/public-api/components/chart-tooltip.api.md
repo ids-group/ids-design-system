@@ -25,6 +25,10 @@ export interface ChartActiveMark {
     leave(): void;
     pin(index: number, event: Event, anchor?: string | Element | null, mark?: Element): void;
     release(): void;
+    pinnedAt<T>(lookup: (index: number) => T | null | undefined): Signal<readonly {
+        index: number;
+        value: T;
+    }[]>;
 }
 
 export type ChartItemTooltipTrigger = 'item' | 'none';
@@ -36,6 +40,12 @@ export class ChartPinMarkerComponent {
     protected readonly glyphOffset = -GLYPH_SIZE / 2;
     protected readonly glyphSize = GLYPH_SIZE;
     protected readonly radius = CHART_PIN_RADIUS;
+}
+
+// @internal
+@Directive({ selector: '[dsChartPlaced]' })
+export class ChartPlacedDirective {
+    public constructor();
 }
 
 // @internal
@@ -58,23 +68,33 @@ export type ChartSkeletonMarks = 'columns' | 'line' | 'steps';
 
 // @internal
 @Component({ selector: 'figure[dsChartStates]' })
-export class ChartStatesComponent {
+export class ChartStatesComponent implements OnChanges {
+    public constructor();
     public readonly body = input.required<TemplateRef<unknown>>();
     public readonly caption = input<string | null>(null);
-    public readonly dataTable = input(false);
+    public readonly dataTable = input<ChartDataTable>('none');
     public readonly empty = input(false);
     public readonly emptyText = input('');
     public readonly error = input(false);
     public readonly errorText = input('');
+    private readonly host;
+    private readonly isBrowser;
     public readonly message = input<TemplateRef<ChartStatesMessageContext> | null>(null);
     public readonly messageAxes = input(false, { transform: booleanAttribute });
+    public readonly morphGrowth = input<ChartMorphGrowth>(null);
+    public readonly morphing = this.morphingState.asReadonly(…);
+    private readonly morphingState;
+    public ngOnChanges(changes: SimpleChanges): void;
     public readonly pending = input(false);
     public readonly pinned = input(false);
+    protected readonly placeholderRows = Array.from(…);
     public readonly release = output();
     public readonly reloading = input(false);
     public readonly shimmer = input(true);
     public readonly skeleton = input.required<TemplateRef<unknown>>();
+    private stopMorph;
     public readonly unpin = input(true, { transform: booleanAttribute });
+    private readonly zone;
 }
 
 // @internal
@@ -139,6 +159,9 @@ export class ChartUnpinComponent {
 
 // @internal
 export function chartActiveMark(lingerMs: () => number = () => 0, hoverDelayMs: () => number = () => 0): ChartActiveMark;
+
+// @internal
+export function isPrimaryPress(event: Event): boolean;
 ```
 
 ## CSS hooks
@@ -160,5 +183,10 @@ ds-chart-tooltip-panel {
 
 figure[dsChartStates] {
     --ds-chart-axis-line-color: (none);
+}
+
+g[dsChartPinMarker] {
+    --ds-motion-chart-mark-duration: (none);
+    --ds-motion-chart-mark-easing: (none);
 }
 ```

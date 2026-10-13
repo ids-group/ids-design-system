@@ -28,6 +28,7 @@ export class WaterfallChartComponent extends DsChartBase implements ChartDimmabl
     protected readonly points = computed<readonly ColumnSeriesPoint[]>(…);
     protected readonly renderReady = chartRenderGate(…);
     protected readonly series = viewChild(…);
+    public readonly showAxisReadout = input(true, { transform: booleanAttribute });
     public readonly showConnectors = input(true, { transform: booleanAttribute });
     public readonly showValues = input(true, { transform: booleanAttribute });
     protected readonly skeletonAxisGutter = CHART_DEFAULT_AXIS_GUTTER;

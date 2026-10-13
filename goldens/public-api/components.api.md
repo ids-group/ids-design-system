@@ -13,10 +13,10 @@ export interface BandScale {
 }
 
 // @internal
-export const CHART_HEAT_COLORS: readonly string[];
+export const CHART_GLIDE_HEAD_START_MS = 1000 / 30;
 
 // @internal
-export const CHART_HOVER_DELAY_MS = 0;
+export const CHART_HEAT_COLORS: readonly string[];
 
 // @internal
 export const CHART_RAMP_COLORS: readonly string[];
@@ -45,6 +45,12 @@ export interface ChartDwell {
 }
 
 // @internal
+export type ChartMotionDelay = 'scale-marker';
+
+// @internal
+export type ChartMotionTiming = 'mark' | 'mark-grow' | 'state' | 'tooltip-move';
+
+// @internal
 export interface ChartStaggered {
     readonly staggerMs: Signal<number>;
 }
@@ -65,7 +71,7 @@ export type DsAriaCurrent = 'page' | 'step' | 'location' | 'date' | 'time' | tru
 
 // @internal
 @Directive()
-export abstract class DsBooleanControlValueAccessor extends DsFieldBase implements ControlValueAccessor {
+export abstract class DsBooleanControlValueAccessor extends DsFormControlBase implements ControlValueAccessor {
     public constructor();
     public blur(): void;
     public abstract readonly checked: ModelSignal<boolean>;
@@ -115,7 +121,7 @@ export class DsChipTemplateDirective {
 
 // @internal
 @Directive()
-export abstract class DsControlValueAccessor<T> extends DsFieldBase implements ControlValueAccessor {
+export abstract class DsControlValueAccessor<T> extends DsFormControlBase implements ControlValueAccessor {
     public blur(): void;
     private readonly bridge;
     public focus(options?: FocusOptions): void;
@@ -162,6 +168,15 @@ export type DsFieldErrorsInput = string | DsFieldError | readonly DsFieldError[]
 export interface DsFieldMessage {
     readonly text: string;
     readonly state: FieldMessageState;
+}
+
+// @internal
+@Directive()
+export abstract class DsFormControlBase extends DsFieldBase {
+    public readonly dirty = input(false, { transform: booleanAttribute });
+    public readonly pending = input(false, { transform: booleanAttribute });
+    public readonly showDirty = input<boolean | null, unknown>(null, { transform: (value) => (value == null ? null : booleanAttribute(value)) });
+    public readonly showDirtyResolved = resolveShowDirty(…);
 }
 
 @Directive({ selector: '[dsGroupLabelTemplate]' })
@@ -244,14 +259,6 @@ export interface NiceDomain {
 }
 
 // @internal
-export interface PointScale {
-    readonly step: number;
-    readonly count: number;
-    position(index: number): number;
-    indexAt(offset: number): number;
-}
-
-// @internal
 @Directive({ selector: '[dsProjectionDropped]' })
 export class ProjectionDroppedDirective {
     public constructor();
@@ -272,6 +279,9 @@ export interface SummaryPoint {
     readonly label: string;
     readonly value: number;
 }
+
+// @internal
+export function afterTwoFrames(zone: NgZone, run: () => void): () => void;
 
 // @internal
 export function announceOptionCount(count: Signal<number>, active: Signal<boolean>): void;
@@ -316,10 +326,22 @@ export const chartColors = {
 } as const;
 
 // @internal
+export function chartDelay(element: Element, delay: ChartMotionDelay): number;
+
+// @internal
 export function chartDwell(delayMs: () => number): ChartDwell;
 
 // @internal
+export function chartHoverDelayMs(): Signal<number>;
+
+// @internal
+export function chartOf(element: Element | null): Element | null;
+
+// @internal
 export function chartRenderGate(): Signal<boolean>;
+
+// @internal
+export function chartTiming(element: Element, timing: ChartMotionTiming): { duration: number; easing: string; } | null;
 
 // @internal
 export function chartValueFormat(locale: string): ChartValueFormat;
@@ -349,6 +371,9 @@ export function describeSeries(words: DsIntl['chart'], label: string, points: re
 export function describeShare(values: readonly number[], index: number, locale: string, phrase: (share: string) => string): string;
 
 // @internal
+export function dimmedBy<T>(dimOthers: boolean, highlighted: T | null, key: T): boolean;
+
+// @internal
 export function disposeWithLeave(overlayRef: OverlayRef | null | undefined, cause: DsOverlayCloseCause = 'select'): void;
 
 // @internal
@@ -364,6 +389,9 @@ export function dsAriaCurrent(routerLink: Signal<DsRouterLink>, modifiers: Signa
 export function dsDestination(routerLink: Signal<DsRouterLink>, href: Signal<string>): Signal<DsDestination>;
 
 // @internal
+export function dwellHighlight<T>(highlighted: WritableSignal<T | null>, delayMs: () => number): { enter(item: T, event: Event): void; leave(): void; };
+
+// @internal
 export function elementWidth(host: ElementRef<HTMLElement>): Signal<number>;
 
 // @internal
@@ -371,6 +399,9 @@ export function focusIsInside(overlayRef: OverlayRef): boolean;
 
 // @internal
 export function focusMark(scope: Element | null, index: number, within = ''): void;
+
+// @internal
+export function focusRescue(): (target: () => HTMLElement | null | undefined) => void;
 
 // @internal
 export function formatPercent(value: number, total: number, locale: string): string;
@@ -395,6 +426,9 @@ export function largestRemainder(values: readonly number[]): number[];
 
 // @internal
 export function leaveMark(event: AnimationCallbackEvent): void;
+
+// @internal
+export function leftMark(event: PointerEvent, hit: MarkHit): boolean;
 
 // @internal
 export function linePath(segment: readonly LinePoint[], curve: ChartCurve = 'linear'): string;
@@ -424,6 +458,9 @@ export function markOf(event: Event, scope: EventTarget | null = event.currentTa
 export function minMaxDecimate(points: readonly Reading[], target: number): readonly Reading[];
 
 // @internal
+export function moveFocusOutOf(leaving: HTMLElement, within: HTMLElement, fallback: HTMLElement | null = null): void;
+
+// @internal
 export function needsDecimating(count: number, target: number): boolean;
 
 // @internal
@@ -440,12 +477,6 @@ export function overlayPlacementOf(overlayY: string, overlayX: string): DsOverla
 
 // @internal
 export function panelClassesOf(panelClass: string | readonly string[]): readonly string[];
-
-// @internal
-export function pointScale(count: number, rangeSize: number): PointScale;
-
-// @internal
-export function polylinePoints(segment: readonly LinePoint[]): string;
 
 // @internal
 export function prepareOverlayEnter(overlayRef: OverlayRef, host: HTMLElement, positionStrategy?: FlexibleConnectedPositionStrategy): void;
@@ -496,13 +527,13 @@ export function skeletonWaterfallSteps(count: number): { bottom: number; height:
 export function staggerDelay(index: number, count: number, stepMs: number): number;
 
 // @internal
-export function tickStep(ticks: readonly number[]): number;
-
-// @internal
 export function tickValues(domainMin: number, domainMax: number, targetCount: number): number[];
 
 // @internal
 export function trimmedText(value: string | null | undefined): string;
+
+// @internal
+export function tweenMarks(element: Element, from: readonly number[], to: readonly number[], apply: (values: readonly number[]) => void, timing: ChartMotionTiming = 'mark', onDone: () => void = () => undefined): () => void;
 
 // @internal
 export function valueControlBridge<T>(model: () => ModelSignal<T>): { readonly formDisabled: WritableSignal<boolean>; readonly touchedSelf: WritableSignal<boolean>; markTouched(): void; writeValue(next: T): void; registerOnChange(fn: (next: T) => void): void; registerOnTouched(fn: () => void): void; setDisabledState(isDisabled: boolean): void; };

@@ -1,0 +1,738 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "chart-classes-gained-motion-members",
+      "kind": "behavior",
+      "old": "PieChartComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends ChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "extends ColumnChartComponent",
+        "extends LineChartComponent",
+        "extends PieChartComponent",
+        "extends HeatmapChartComponent",
+        "extends ScatterChartComponent",
+        "extends FunnelChartComponent",
+        "extends WaterfallMarksComponent",
+        "extends ChartStatesComponent",
+        "extends ChartLegendComponent",
+        "extends WaterfallChartComponent",
+        "extends DsTableResize",
+        "extends TableComponent"
+      ],
+      "detect": [
+        "extends ChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "extends ColumnChartComponent",
+        "extends LineChartComponent",
+        "extends PieChartComponent",
+        "extends HeatmapChartComponent",
+        "extends ScatterChartComponent",
+        "extends FunnelChartComponent",
+        "extends WaterfallMarksComponent",
+        "extends ChartStatesComponent",
+        "extends ChartLegendComponent",
+        "extends WaterfallChartComponent",
+        "extends DsTableResize",
+        "extends TableComponent"
+      ],
+      "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
+      "appliesWhen": "Only a class of yours that extends ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ColumnChartComponent, LineChartComponent, PieChartComponent, HeatmapChartComponent, ScatterChartComponent, FunnelChartComponent, WaterfallChartComponent, DsTableResize or TableComponent, or the internal ChartTooltipPanelComponent, the internal ChartStatesComponent, the internal ChartLegendComponent or the internal WaterfallMarksComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
+      "note": "`ChartComponent` gained 30; `LineSeriesComponent` gained 25 and lost `pinnedMarker`; `ColumnSeriesComponent` gained 10; `ColumnChartComponent` gained `showAxisReadout`, `heldExtent`, `hiddenSeries`, `isHidden`, `legendFilters`, `legendMode`, `rescaleOnHide`, `selectRange` and `spotlitSeries`; `LineChartComponent` gained `showAxisReadout`, `selectRange` and `showChange` and lost `axisMax`, `axisMaxSecondary` and `ceilingOf`; `PieChartComponent` gained 14 and lost `isDimmed`, `legendDwell` and `legendHighlight`; `HeatmapChartComponent` gained 8 and lost `columnStagger`, `onStepEnter`, `onStepLeave` and `stepDwell`; `ScatterChartComponent` gained 22 and lost `pinnedPoint`; `FunnelChartComponent` lost `isDimmed`, `rowDwell` and `rowHighlight`; `WaterfallChartComponent` gained `showAxisReadout`; `DsTableResize` gained `guide` and `placeGuide`; `TableComponent` gained 8 and lost 12. The internal `WaterfallMarksComponent` gained `leaveMark`; the internal `ChartStatesComponent` gained 9 and its `dataTable` takes a `ChartDataTable`; the internal `ChartLegendComponent` gained `highlight` and lost `dwell`, `onItemEnter` and `onItemLeave`."
+    },
+    {
+      "id": "table-column-width-from-config",
+      "kind": "behavior",
+      "old": "TableColumn.width",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "TableColumn",
+        "truncate:",
+        "minWidth:",
+        "width: 'content'"
+      ],
+      "detect": [
+        ": TableColumn<",
+        "TableColumn[]",
+        "truncate: true",
+        "align: 'right'"
+      ],
+      "action": "None, unless a column holds ids, dates, numbers or statuses: add `kind: 'id'`, `'date'`, `'number'` or `'status'` to it. A column whose values must show whole gets `width: 'content'` or a `minWidth`.",
+      "appliesWhen": "Every ds-table column without a numeric `width`. A column with a numeric `width` is as wide as before; a column the reader dragged with dsTableResize keeps its dragged width.",
+      "pitfall": "A value longer than its column wraps (a plain column) or ellipsizes (a `truncate` column) where the column used to grow to it, and a column of short values keeps its share with space after them. A cell template holding an element wider than its column overflows into the next one.",
+      "restore": "{ key: 'notes', label: 'Notes', width: 'content' }",
+      "verify": "Page every ds-table forward and back and change its data: no column changes width, and each id, date, number and status column is 110-130px.",
+      "supersedes": [
+        "0.15.0#table-truncate-without-width-grows"
+      ],
+      "note": "The table lays out with `table-layout: fixed`: `width`, then `kind` (`'id'` and `'date'` 130px, `'number'` 120px, `'status'` 110px, widened to the header label), and the `'text'` columns share the rest equally, none narrower than its header label or `minWidth`. When those widths do not fit, the table scrolls sideways and a `truncate` text column without `width` or `minWidth` is 240px of text. `width: 'content'` is measured from the rendered rows and is the one width that follows the data."
+    },
+    {
+      "id": "chart-legend-fades-only-under-dim-others",
+      "kind": "behavior",
+      "old": "ds-pie-chart[dimOthers]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "ds-pie-chart",
+        "ds-funnel-chart",
+        "ds-scatter-chart",
+        "ds-heatmap-chart",
+        "ds-column-chart",
+        "ds-line-chart",
+        "dsColumnSeries",
+        "dsLineSeries"
+      ],
+      "action": "None, unless the other marks must keep fading while a legend entry, stage-table row or scale step is hovered: then add `dimOthers` to that chart, or to each dsColumnSeries / dsLineSeries whose highlighted you bind.",
+      "appliesWhen": "ds-pie-chart, ds-funnel-chart, ds-scatter-chart, ds-heatmap-chart, ds-column-chart and ds-line-chart that do not set dimOthers, and a dsColumnSeries or dsLineSeries whose highlighted input you bind. A chart that sets it fades from the legend as before.",
+      "pitfall": "dimOthers also fades the other marks while a mark itself is hovered, not only from the legend.",
+      "restore": "dimOthers",
+      "verify": "Hover a legend entry of every ds-pie-chart, ds-funnel-chart stage row, ds-scatter-chart legend entry, ds-heatmap-chart scale step and multi-series ds-column-chart or ds-line-chart that should fade the rest, and confirm the chart carries dimOthers."
+    },
+    {
+      "id": "line-chart-rescale-on-hide-default-on",
+      "kind": "behavior",
+      "old": "ds-line-chart",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "ds-line-chart",
+        "rescaleOnHide"
+      ],
+      "action": "None, unless the value axis of a ds-line-chart must stay put while the legend hides a series: set [rescaleOnHide]=\"false\" on it.",
+      "appliesWhen": "Every ds-line-chart that does not bind rescaleOnHide and lets a series be hidden through legendFilters or hiddenSeries. ds-column-chart and ds-chart re-scaled before and still do.",
+      "pitfall": "With the axis re-scaled, two screenshots of one chart with different series hidden no longer share gridlines, so a period-over-period comparison reads differently.",
+      "restore": "[rescaleOnHide]=\"false\"",
+      "verify": "Hide a series in every ds-line-chart with legendFilters and confirm the axis either re-scales to what is left or carries [rescaleOnHide]=\"false\" where it must hold."
+    },
+    {
+      "id": "default-locale-en-us-reads-en-gb",
+      "kind": "behavior",
+      "old": "DsConfig",
+      "new": null,
+      "surface": [
+        "config",
+        "none"
+      ],
+      "searchHints": [
+        "LOCALE_ID",
+        "provideDsConfig(",
+        "ds-date-picker",
+        "ds-sparkline"
+      ],
+      "detect": [
+        "LOCALE_ID",
+        "provideDsConfig(",
+        "locale:"
+      ],
+      "action": "None, unless the app must keep US formats: set `provideDsConfig({ locale: 'en-US' })`.",
+      "appliesWhen": "An app that sets no `DsConfig.locale` and either provides no `LOCALE_ID` or provides `'en-US'`. The library formats in en-GB: `ds-date-picker` types and shows `DD/MM/YYYY` where it showed `MM/DD/YYYY`, its week starts on Monday and `ds-time-picker` uses 24 hours. Names stay English and numbers do not change. An app with any other `LOCALE_ID`, or with `DsConfig.locale`, is not affected.",
+      "pitfall": "A date typed or pasted as `03/04/2026` now means 3 April, not 4 March; check any test, fixture or user guide that types US-ordered dates into a `ds-date-picker`.",
+      "restore": "provideDsConfig({ locale: 'en-US' })",
+      "verify": "Open a ds-date-picker in an app with no locale set and confirm a picked date reads DD/MM/YYYY, the week starts on Monday and a ds-time-picker shows 24-hour times."
+    },
+    {
+      "id": "date-picker-first-day-from-locale",
+      "kind": "behavior",
+      "old": "ds-date-picker",
+      "new": null,
+      "surface": [
+        "config",
+        "template"
+      ],
+      "searchHints": [
+        "ds-date-picker",
+        "firstDayOfWeek",
+        "datePicker"
+      ],
+      "detect": [
+        "provideDsConfig(",
+        "datePicker:",
+        "LOCALE_ID"
+      ],
+      "action": "None, unless a calendar must keep starting on Monday whatever the locale: set `datePicker: { firstDayOfWeek: 1 }` in `provideDsConfig`, or `[firstDayOfWeek]=\"1\"` on the one `ds-date-picker`.",
+      "appliesWhen": "Every `ds-date-picker`, single and range, that binds no `firstDayOfWeek` under a config with no `datePicker.firstDayOfWeek`, in an app whose locale (`locale`, then `datePicker.locale`, then the config's `locale`, then `LOCALE_ID`) is not Monday-first: Sunday for a config `locale` of en-US and for ja-JP, Saturday for ar-EG. An app with no locale, en-GB, de-DE and ru-RU keep Monday. A browser with no week data keeps Monday. A bound `firstDayOfWeek` or `datePicker.firstDayOfWeek` wins as before.",
+      "pitfall": "A `LOCALE_ID` of en-US reads as en-GB and keeps Monday; only a config `locale: 'en-US'` brings Sunday, so look for that before assuming a screen is unaffected.",
+      "restore": "provideDsConfig({ datePicker: { firstDayOfWeek: 1 } })",
+      "verify": "Open a ds-date-picker on each screen and confirm its first weekday header is the day the app means: the locale's, or the day `firstDayOfWeek` pins."
+    },
+    {
+      "id": "time-picker-format-from-locale",
+      "kind": "behavior",
+      "old": "ds-time-picker",
+      "new": null,
+      "surface": [
+        "config",
+        "template"
+      ],
+      "searchHints": [
+        "ds-time-picker",
+        "timePicker",
+        "format="
+      ],
+      "detect": [
+        "provideDsConfig(",
+        "timePicker:",
+        "LOCALE_ID"
+      ],
+      "action": "None, unless times must stay on the 24-hour clock whatever the locale: set `timePicker: { format: '24h' }` in `provideDsConfig`, or `format=\"24h\"` on the one `ds-time-picker`.",
+      "appliesWhen": "Every `ds-time-picker`, single and range, that binds no `format` under a config with no `timePicker.format`, in an app whose config `locale`, then `LOCALE_ID`, uses a 12-hour clock: a config `locale` of en-US, or ar-EG. An app with no locale, en-GB, de-DE, ru-RU and ja-JP keep 24 hours. The bound value stays a 24-hour `HH:mm` string.",
+      "pitfall": "Nothing fails at build: a test or a screenshot that reads the trigger as 21:30 reads 09:30 PM under a config `locale` of en-US.",
+      "restore": "provideDsConfig({ timePicker: { format: '24h' } })",
+      "verify": "Open a ds-time-picker on each screen and confirm the trigger shows the clock the app means: the locale's, or the one `format` or `timePicker.format` pins."
+    },
+    {
+      "id": "brand-shades-follow-primary",
+      "kind": "behavior",
+      "old": "--primary-strong",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "--primary:",
+        "--primary-strong",
+        "--primary-muted-strong",
+        "--surface-tint",
+        "--primary-subtitle",
+        "--primary-muted",
+        "--blue-50",
+        "--blue-100",
+        "--blue-200",
+        "--blue-700",
+        "--blue-h",
+        "--blue-s",
+        "--blue-l",
+        "--primary-h",
+        "data-brand"
+      ],
+      "action": "None, unless your brand sets `--primary`, `--primary-h` or `--blue-h/s/l`: check `--primary-strong` against 4.5:1 on white and on `--surface-tint` in light, the text on each tint in dark, and set `--primary-strong`, `--surface-tint`, `--primary-subtitle`, `--primary-muted` or `--primary-muted-strong` explicitly where the derived value fails or is not the colour you want.",
+      "appliesWhen": "In light, `--primary-strong`, `--surface-tint`, `--primary-subtitle`, `--primary-muted` and `--primary-muted-strong` were the `--blue-*` steps `--blue-700`, `--blue-50`, `--blue-50`, `--blue-100` and `--blue-200`; they now take the hue of `--primary` (`hsl(from var(--primary) h 100% 97%)` for both tints, `h 95% 94%` for `--primary-muted`, `h 95% 89%` for `--primary-muted-strong`), and `--primary-strong` is `hsl(from var(--primary) h calc(s * 0.85) calc(l - 7))`. In dark, `--surface-tint`, `--primary-subtitle`, `--primary-muted`, `--primary-muted-strong` and `--primary-strong` were `hsl(var(--primary-h) …)` and are `hsl(from var(--primary) …)` at the same saturation and lightness. The default blue renders the same RGB. A brand that sets them itself keeps its values. The focus ring and the field halo are unchanged and read `--primary-h/s/l`; links stay blue under any brand.",
+      "pitfall": "A brand that re-pointed the `--blue-50`, `--blue-100`, `--blue-200` or `--blue-700` steps, or `--primary-h` in dark, without moving `--primary`'s hue no longer reaches these tokens through them; a light brand colour (yellow, lime, cyan) derives a link and on-tint text under 4.5:1 on white; and an achromatic `--primary` (black, gray) has no hue, so the tints turn pink in light and dark red in dark, with no error anywhere.",
+      "restore": "--primary-strong: var(--blue-700); --surface-tint: var(--blue-50); --primary-subtitle: var(--blue-50); --primary-muted: var(--blue-100); --primary-muted-strong: var(--blue-200); and under [data-theme='dark']: --surface-tint: hsl(var(--primary-h) 45% 16%); --primary-subtitle: hsl(var(--primary-h) 45% 18%); --primary-muted: hsl(var(--primary-h) 40% 26%); --primary-muted-strong: hsl(var(--primary-h) 42% 32%); --primary-strong: hsl(var(--primary-h) 90% 72%);",
+      "verify": "With the brand applied in each theme it ships, a link and the label of a selected tag, tab or list row read at least 4.5:1 on their background, and the active row, the selected dropdown option, tonal fills and the text on them are in the brand hue or set deliberately.",
+      "evidence": [
+        "tokens:--surface-tint",
+        "tokens:--primary-subtitle",
+        "tokens:--primary-muted",
+        "tokens:--primary-muted-strong",
+        "tokens:--primary-strong"
+      ]
+    },
+    {
+      "id": "links-stay-blue-under-a-brand",
+      "kind": "behavior",
+      "old": ".link",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "--primary-h",
+        "--primary-s",
+        "--primary-l",
+        "--text-link",
+        "--link-visited",
+        "data-brand"
+      ],
+      "detect": [
+        "--primary-h"
+      ],
+      "action": "None, unless your brand set `--primary-h/s/l` to colour its links in dark or its visited links: set `--ds-link-color` and `--ds-link-color-visited` yourself where you want brand-coloured links.",
+      "appliesWhen": "A theme that sets `--primary-h`, `--primary-s` or `--primary-l` to its brand. In dark, the link was `hsl(var(--primary-h) 90% 74%)` and the visited link `hsl(var(--primary-h) 50% 70%)`; in light the visited link was `hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%)`. `.link` now defaults to the `--blue-*` palette in both themes, from `styles/link`, which `styles/ds` forwards, so links are blue under any brand. A theme that leaves the channels alone sees no change.",
+      "pitfall": "A theme that re-points the `--blue-*` palette itself recolours links with it; only the `--primary-*` channels lost their hold on links.",
+      "restore": ".link { --ds-link-color-visited: hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%); } :root[data-theme='dark'] .link { --ds-link-color: hsl(var(--primary-h) 90% 74%); --ds-link-color-visited: hsl(var(--primary-h) 50% 70%); }",
+      "verify": "Under your brand open a page with a link and a visited link in light and dark and confirm the colour is the one you want.",
+      "evidence": [
+        "tokens:--ds-link-color",
+        "tokens:--ds-link-color-visited"
+      ]
+    },
+    {
+      "id": "text-link-token-removed",
+      "kind": "removed-api",
+      "old": "--text-link",
+      "new": "--ds-link-color",
+      "surface": "style",
+      "searchHints": [
+        "--text-link",
+        "var(--text-link"
+      ],
+      "detect": [
+        "--text-link"
+      ],
+      "action": "Where you SET `--text-link`, set `--ds-link-color` on `.link` or an ancestor instead. Where you READ `var(--text-link)`, put the `link` class on the element, or name the palette value: `var(--blue-700)` in light, `hsl(var(--blue-h) 90% 74%)` in dark.",
+      "appliesWhen": "Every stylesheet that declares or reads `--text-link`. `.link` sets its own default for `--ds-link-color` in `styles/link`, which `styles/ds` forwards, and renders the same colour in both themes.",
+      "pitfall": "`--ds-link-color` is unset until you set it, so replacing a read of `var(--text-link)` with `var(--ds-link-color)` resolves to nothing and the element takes the inherited colour, without an error. Only a declaration swaps one for one.",
+      "restore": null,
+      "verify": "No stylesheet declares or reads `--text-link`, and an element that read it paints in the link colour in light and dark.",
+      "evidence": [
+        "tokens:--ds-link-color",
+        "tokens:--ds-link-color-visited"
+      ]
+    },
+    {
+      "id": "link-visited-token-removed",
+      "kind": "removed-api",
+      "old": "--link-visited",
+      "new": "--ds-link-color-visited",
+      "surface": "style",
+      "searchHints": [
+        "--link-visited",
+        "var(--link-visited"
+      ],
+      "detect": [
+        "--link-visited"
+      ],
+      "action": "Where you SET `--link-visited`, set `--ds-link-color-visited` on `.link` or an ancestor instead. Where you READ `var(--link-visited)`, put the `link` class on the element, or name the palette value: `hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)` in light, `hsl(var(--blue-h) 50% 70%)` in dark.",
+      "appliesWhen": "Every stylesheet that declares or reads `--link-visited`. `.link` sets its own default for `--ds-link-color-visited` in `styles/link`, which `styles/ds` forwards, and renders the same colour in both themes.",
+      "pitfall": "`--ds-link-color-visited` is unset until you set it, so replacing a read of `var(--link-visited)` with `var(--ds-link-color-visited)` resolves to nothing and the element takes the inherited colour, without an error. Only a declaration swaps one for one.",
+      "restore": null,
+      "verify": "No stylesheet declares or reads `--link-visited`, and an element that read it paints in the visited link colour in light and dark.",
+      "evidence": [
+        "tokens:--ds-link-color",
+        "tokens:--ds-link-color-visited"
+      ]
+    },
+    {
+      "id": "field-pending-spinner-on-every-field",
+      "kind": "behavior",
+      "old": "ds-input[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "pending",
+        "dsInputSuffix"
+      ],
+      "detect": [
+        ".pending()\"",
+        ".pending\""
+      ],
+      "action": "None, unless a ds-input binds [loading] to its own control's pending state: delete that binding (delete list: input-loading-bound-to-pending).",
+      "appliesWhen": "Every ds-input, ds-textarea, ds-select, ds-multi-select, ds-autocomplete, ds-date-picker, ds-time-picker, ds-color-picker, ds-checkbox, ds-switch, ds-radio-group, ds-segmented, ds-slider and ds-otp-input bound to a form control with an async validator. A [loading] on ds-select, ds-multi-select or ds-autocomplete is the option list's loading state and is not affected.",
+      "pitfall": "A spinner the app draws in a ds-input suffix slot for the same check now shows beside the field's own.",
+      "restore": null,
+      "verify": "Make each bound field's async validator run and confirm the field shows one spinner while it runs and none once it settles."
+    },
+    {
+      "id": "field-classes-gained-form-state-members",
+      "kind": "behavior",
+      "old": "InputComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends InputComponent",
+        "extends TextareaComponent",
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent",
+        "extends DatePickerComponent",
+        "extends TimePickerComponent",
+        "extends ColorPickerComponent",
+        "extends CheckboxComponent",
+        "extends SwitchComponent",
+        "extends RadioGroupComponent",
+        "extends SegmentedComponent",
+        "extends SliderComponent",
+        "extends OtpInputComponent",
+        "extends DsControlValueAccessor",
+        "extends DsBooleanControlValueAccessor",
+        "extends FieldMessageComponent",
+        "extends DsFormControlBase"
+      ],
+      "detect": [
+        "extends InputComponent",
+        "extends TextareaComponent",
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent",
+        "extends DatePickerComponent",
+        "extends TimePickerComponent",
+        "extends ColorPickerComponent",
+        "extends CheckboxComponent",
+        "extends SwitchComponent",
+        "extends RadioGroupComponent",
+        "extends SegmentedComponent",
+        "extends SliderComponent",
+        "extends OtpInputComponent",
+        "extends DsControlValueAccessor",
+        "extends DsBooleanControlValueAccessor",
+        "extends FieldMessageComponent",
+        "extends DsFormControlBase"
+      ],
+      "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
+      "appliesWhen": "Only a class of yours that extends InputComponent, TextareaComponent, SelectComponent, MultiSelectComponent, AutocompleteComponent, DatePickerComponent, TimePickerComponent, ColorPickerComponent, CheckboxComponent, SwitchComponent, RadioGroupComponent, SegmentedComponent, SliderComponent or OtpInputComponent, or the internal DsControlValueAccessor, the internal DsBooleanControlValueAccessor or the internal FieldMessageComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
+      "note": "Every field component this item names gained `pendingShown` and `changedShown`, and `pending`, `dirty`, `showDirty` and `showDirtyResolved` through the internal `DsFormControlBase`, which `DsControlValueAccessor` and `DsBooleanControlValueAccessor` now extend. The internal `FieldMessageComponent` gained `changed`, `changedText` and `intl`."
+    },
+    {
+      "id": "info-hint-tooltip-classes-gained-members",
+      "kind": "behavior",
+      "old": "InfoHintComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends InfoHintComponent",
+        "extends TooltipDirective",
+        "extends TooltipPanelComponent"
+      ],
+      "detect": [
+        "extends InfoHintComponent",
+        "extends TooltipDirective",
+        "extends TooltipPanelComponent"
+      ],
+      "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
+      "appliesWhen": "Only a class of yours that extends InfoHintComponent, TooltipDirective or TooltipPanelComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
+      "note": "`InfoHintComponent` gained `content`, `tip`, `sources`, `projected` and `hasProjected`; `TooltipDirective` gained `tipContent` and lost `tipText`; `TooltipPanelComponent` gained `template`."
+    },
+    {
+      "id": "tooltip-content-widened-to-template",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "TooltipDirective",
+        "TooltipPanelComponent",
+        "dsTooltip",
+        "DefinitionTermDirective"
+      ],
+      "detect": [
+        ".dsTooltip()",
+        "dsTooltip()",
+        ".text()",
+        "extends TooltipPanelComponent",
+        "extends TooltipDirective"
+      ],
+      "action": "Where your code reads `dsTooltip()` or `TooltipPanelComponent.text()` back as a string, check `typeof value === 'string'` first, or widen your own type to `string | TemplateRef<unknown>`.",
+      "appliesWhen": "Only TypeScript that reads `TooltipDirective.dsTooltip` or `TooltipPanelComponent.text` back, or a subclass that overrides either. Binding `[dsTooltip]`, `dsDefinitionTerm` or `[text]` in a template needs no change.",
+      "pitfall": "A helper typed `(text: string)` that receives the read value stops compiling, and a cast written to silence it passes a template where a string is expected.",
+      "note": "`TooltipDirective.dsTooltip` went from `input<string>` to `input<string | TemplateRef<unknown>>`, and `TooltipPanelComponent.text` from `input.required<string>` to `input.required<string | TemplateRef<unknown>>`.",
+      "restore": null,
+      "verify": "Every read of dsTooltip() or TooltipPanelComponent.text() handles a TemplateRef."
+    },
+    {
+      "id": "info-hint-icon-widened-to-icon-name",
+      "kind": "behavior",
+      "old": "InfoHintComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "InfoHintComponent",
+        "ds-info-hint",
+        ".icon()"
+      ],
+      "detect": [
+        ".icon()",
+        "'help' | 'info'",
+        "extends InfoHintComponent"
+      ],
+      "action": "Where your code reads `InfoHintComponent.icon()` back into a `'help' | 'info'` type, widen that type to `IconName`.",
+      "appliesWhen": "Only TypeScript that reads `icon` back off a hint, or a subclass that overrides it. `icon=\"help\"` and `icon=\"info\"` in a template need no change.",
+      "note": "`InfoHintComponent.icon` went from `input<'help' | 'info'>` to `input<IconName>`, default still `'help'`.",
+      "restore": null,
+      "verify": "Every read of InfoHintComponent.icon() accepts any IconName."
+    },
+    {
+      "id": "chart-format-location-gained-readout",
+      "kind": "behavior",
+      "old": "ChartFormatLocation",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "ChartFormatLocation",
+        "ChartValueFormat",
+        "valueFormat"
+      ],
+      "detect": [
+        "Record<ChartFormatLocation",
+        ": never =",
+        "ChartFormatLocation"
+      ],
+      "action": "Where your code maps or switches over every `ChartFormatLocation`, add a `'readout'` case or key.",
+      "appliesWhen": "Only TypeScript that enumerates `ChartFormatLocation`: a `Record<ChartFormatLocation, …>` fails with TS2741 and an exhaustive `switch` that assigns the rest to `never` fails with TS2322. A `ChartValueFormat` that branches on `'tick'` and `'tooltip'` with a fallback compiles and keeps working, because the charts pass `'readout'` only to a formatter that sets `handlesReadout: true`.",
+      "pitfall": "Mapping `'readout'` to the `'tooltip'` result keeps the full number in the axis pill; map it to the `'tick'` result for the short form, and set `handlesReadout: true` on the formatter or the charts never ask for it.",
+      "note": "`ChartFormatLocation` went from `'tick' | 'tooltip'` to `'tick' | 'readout' | 'tooltip'`, and `ChartValueFormat` from a plain function type to the same call signature with an optional `readonly handlesReadout?: boolean`.",
+      "restore": null,
+      "verify": "The app builds, and every map or switch over ChartFormatLocation names 'readout'.",
+      "evidence": [
+        "fixture:unreleased/chart-format-location-gained-readout.ts"
+      ]
+    },
+    {
+      "id": "link-visited-takes-its-own-colour",
+      "kind": "behavior",
+      "old": ".link",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        ":visited",
+        "--link-visited",
+        "--ds-link-color",
+        "class=\"link"
+      ],
+      "detect": [
+        "a:visited",
+        ".link:visited",
+        ":visited {"
+      ],
+      "action": "None, unless visited links must keep the link colour: then set `.link { --ds-link-color-visited: var(--ds-link-color, var(--blue-700)); }` and `:root[data-theme='dark'] .link { --ds-link-color-visited: var(--ds-link-color, hsl(var(--blue-h) 90% 74%)); }`, and delete a `:visited` rule of yours that recoloured `.link` in favour of `--ds-link-color-visited`.",
+      "appliesWhen": "Every `.link` whose `href` the browser history holds, from `styles/link`, which `styles/ds` forwards. `.link.quiet`, a link with `aria-disabled=\"true\"` and a `<button class=\"link\">` keep their colour.",
+      "pitfall": "Browsers ignore custom properties declared inside a `:visited` rule, so `.link:visited { --ds-link-color: red; }` does nothing; set `--ds-link-color-visited` on `.link` or an ancestor.",
+      "restore": ".link { --ds-link-color-visited: var(--ds-link-color, var(--blue-700)); } :root[data-theme='dark'] .link { --ds-link-color-visited: var(--ds-link-color, hsl(var(--blue-h) 90% 74%)); }",
+      "verify": "The built CSS carries `.link:where(:visited)`, and a visited link in the app paints in the colour the app intends."
+    },
+    {
+      "id": "button-loading-keeps-focus",
+      "kind": "behavior",
+      "old": "ds-button[loading]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript",
+        "style"
+      ],
+      "searchHints": [
+        "loading"
+      ],
+      "detect": [
+        "toBeDisabled()",
+        "button:disabled",
+        "button[disabled]"
+      ],
+      "action": "None, unless a ds-button binds [disabled] to the same flag as [loading]: remove that [disabled]. Where a test or a stylesheet reads the native disabled state of a loading ds-button, read aria-disabled=\"true\" instead.",
+      "appliesWhen": "Every ds-button with loading set. A ds-button rendering a link ignores loading and is not affected, and a ds-button with disabled set keeps the native attribute.",
+      "pitfall": "A [disabled] bound to the same flag as [loading] still disables the button natively, so focus still falls to the page the moment the work starts.",
+      "restore": null,
+      "verify": "Press each loading-bound ds-button from the keyboard and confirm focus stays on it, with its ring, until the work ends."
+    },
+    {
+      "id": "pagination-loading-keeps-focus",
+      "kind": "behavior",
+      "old": "ds-pagination[loading]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript",
+        "style"
+      ],
+      "searchHints": [
+        "loading"
+      ],
+      "detect": [
+        "toBeDisabled()",
+        "button:disabled",
+        "button[disabled]"
+      ],
+      "action": "None, unless a test or a stylesheet reads the native disabled state of a ds-pagination button while loading: read aria-disabled=\"true\" instead.",
+      "appliesWhen": "Every ds-pagination with loading set, including the pager a ds-table renders during skeleton loading. Previous on the first page, Next on the last and every button on an empty list keep the native attribute; the rows-per-page select still disables.",
+      "pitfall": "A rule styling the loading pager through `.pagination-button[disabled]` or `button:disabled` matches nothing while loading.",
+      "restore": null,
+      "verify": "Press a page button of each loading-bound ds-pagination from the keyboard and confirm focus stays on a page button, with its ring, until loading ends."
+    },
+    {
+      "id": "focus-classes-gained-members",
+      "kind": "behavior",
+      "old": "PaginationComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends PaginationComponent",
+        "extends AlertComponent",
+        "extends BannerComponent",
+        "extends ToastRegionComponent",
+        "extends TableColumnsPanelComponent"
+      ],
+      "detect": [
+        "extends PaginationComponent",
+        "extends AlertComponent",
+        "extends BannerComponent",
+        "extends ToastRegionComponent",
+        "extends TableColumnsPanelComponent"
+      ],
+      "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
+      "appliesWhen": "Only a class of yours that extends a class this item names. Template users need nothing; subclassing a DS component is unsupported.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
+      "note": "`PaginationComponent` gained `rescueFocus`, and its `goTo` takes the nav element as a second argument. `ToastRegionComponent` gained `focusOrigin` and `onFocusIn`. The `onDismiss` of `AlertComponent` and `BannerComponent` takes the element that leaves. The internal `TableColumnsPanelComponent` gained `move` and `rescueFocus`."
+    },
+    {
+      "id": "menu-classes-gained-members",
+      "kind": "behavior",
+      "old": "MenuComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends MenuComponent",
+        "extends MenuItemComponent"
+      ],
+      "detect": [
+        "extends MenuComponent",
+        "extends MenuItemComponent"
+      ],
+      "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
+      "appliesWhen": "Only a class of yours that extends MenuComponent or MenuItemComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error on a subclass of any class this item names.",
+      "note": "`MenuComponent` gained `closeRef`, `host`, `onFocusIn` and `onFocusOut`; `MenuItemComponent` gained `focusSubmenu` and `injector`."
+    },
+    {
+      "id": "icon-button-selected-widened-to-nullable",
+      "kind": "behavior",
+      "old": "IconButtonComponent",
+      "new": null,
+      "surface": [
+        "typescript",
+        "template"
+      ],
+      "searchHints": [
+        "IconButtonComponent",
+        "ds-icon-button",
+        "[selected]",
+        ".selected()"
+      ],
+      "detect": [
+        ".selected()",
+        "extends IconButtonComponent"
+      ],
+      "action": "Where your code reads `IconButtonComponent.selected()` back as a `boolean`, handle `null`, which an unbound `selected` now holds. On a `ds-icon-button` that is not a toggle, remove a `[selected]` binding.",
+      "appliesWhen": "TypeScript that reads `selected` back off an icon button or a subclass that overrides it, and a `ds-icon-button` given `[selected]` though it is not a toggle. A toggle binding `[selected]` needs no change.",
+      "pitfall": "A non-toggle button bound to `[selected]=\"false\"` now announces itself as a toggle button that is not pressed.",
+      "note": "`IconButtonComponent.selected` went from `input(false)` (`boolean`) to `input<boolean | null>(null)`. A bound `false` renders `aria-pressed=\"false\"`; unbound, the button has no `aria-pressed`.",
+      "restore": null,
+      "verify": "Every read of IconButtonComponent.selected() handles null, and every ds-icon-button with a [selected] binding is a toggle."
+    }
+  ],
+  "informational": [
+    {
+      "text": "An expanded `ds-table` row now folds to nothing on close and grows from nothing on open: the panel's cell padding moved inside the folding part, so the row no longer starts or stops 24px tall. The open panel keeps the same padding.",
+      "verify": "Open and close an expandable ds-table row and confirm it grows from and folds to zero height with no jump at either end."
+    },
+    {
+      "text": "`ds-chart`, `ds-column-chart`, `ds-line-chart` and `ds-waterfall-chart` move the line, its markers and area, the value labels, the pin, the gridlines and tick labels and the waterfall connectors on `--ds-motion-chart-mark-duration` and `--ds-motion-chart-mark-easing` when the data changes, as the columns already did; a resize redraws every mark in place at once. Set `--ds-motion-chart-mark-duration: 0ms` on the chart to make every mark land at once again.",
+      "verify": "Change the data of a ds-chart holding a column and a line series and confirm the line, its markers and the gridlines move with the columns instead of jumping."
+    },
+    {
+      "text": "`ds-chart` reads `--ds-motion-chart-tooltip-move-duration` (default 300ms) and `--ds-motion-chart-tooltip-move-easing` (default `var(--ease-standard)`) for its category band and crosshair, which moved at once and now glide with the tooltip panel. Set `--ds-motion-chart-tooltip-move-duration: 0ms` on the chart to keep the band jumping; that also stops the panel's glide.",
+      "verify": "Hover across the categories of a ds-chart with cursor=\"category\" and confirm the band glides alongside the tooltip panel."
+    },
+    {
+      "text": "A `ds-pie-chart` turns its slices to their new angles when the data changes, and a hovered slice slides out along its middle, drawing past the ring's box.",
+      "verify": "Change a ds-pie-chart's data and confirm the slices turn instead of jumping; hover a slice and confirm it slides outward and stays out while the pointer is over its inner edge."
+    },
+    {
+      "text": "A removed heatmap row or cell, scatter point, pie slice, waterfall connector or waterfall value label fades out before it leaves.",
+      "verify": "Drop a row and a column from a ds-heatmap-chart's data and confirm their cells fade out instead of vanishing."
+    },
+    {
+      "text": "A hovered or focused column, bar, waterfall step and heatmap cell brightens with `filter: brightness(1.12) saturate(1.1)` and a chart pin pops in. Under `prefers-reduced-motion` all of these change at once.",
+      "verify": "Hover a column of a ds-column-chart and confirm it brightens; click it and confirm the pin pops in."
+    },
+    {
+      "text": "The value axis of `ds-chart`, `ds-column-chart`, `ds-line-chart` and `ds-waterfall-chart` answers the hovered reading: the category label turns bold, a dashed guide in `--ds-chart-cursor-line-color` runs from the axis, and a pill on the axis prints the value there. In `ds-waterfall-chart` the guide stops at the hovered step and the steps after it fade.",
+      "verify": "Hover a column of a ds-column-chart and confirm its label is bold and a pill on the value axis prints its value."
+    },
+    {
+      "text": "`showChange` paints the thickened stretch in `--ds-chart-positive-color` or `--ds-chart-negative-color`, which `ds-chart` now reads; their defaults stay `var(--chart-positive)` and `var(--chart-negative)`. Set either on the chart to recolour it; `showChange` is off unless set.",
+      "verify": "Hover a falling reading of a ds-line-chart and confirm the stretch before it takes the negative colour."
+    },
+    {
+      "text": "When a category comes or goes, the columns, category labels, value labels and line points of `ds-chart`, `ds-column-chart` and `ds-line-chart` glide sideways on `--ds-motion-chart-mark-duration` and the line morphs with its points on it; a resize still redraws at once. A highlighted line point under the category cursor rides the line to the next category, and the focus ring of a category or column glides with the panel.",
+      "verify": "Add a category to a ds-line-chart and confirm the points slide sideways along the line rather than jumping."
+    },
+    "A `dsColumnSeries` column without an `id` is keyed by its label, so it keeps its element and glides when a category before it is removed; one with an `id` glides to its new slot when the data is reordered.",
+    {
+      "text": "A hovered, focused or held `ds-pie-chart` slice fades the centre to its share and name; the total comes back when the pointer leaves. `[showHoverCenter]=\"false\"` keeps `centerValue` and `centerLabel` there.",
+      "verify": "Hover a slice of a ds-pie-chart and confirm the centre shows its share over its name, and the total once the pointer leaves the ring."
+    },
+    {
+      "text": "Once the pointer has rested on a `ds-heatmap-chart` cell for `--ds-motion-chart-scale-marker-delay` (120ms, `0ms` under `prefers-reduced-motion`), a marker over the colour scale prints its reading and glides to it; the scale sits 12px lower (`margin-block-start` 24px, was 12px) to hold it. `[showScaleMarker]=\"false\"` drops the marker.",
+      "verify": "Rest the pointer on a heatmap cell and confirm the marker appears over the scale at its reading, and that the scale clears the grid's last row."
+    },
+    {
+      "text": "`ds-scatter-chart` answers with the point nearest the pointer anywhere over the plot, rings it and draws a dashed line to it from the pointer. `[showNearestPoint]=\"false\"` answers only within 16px of a point, without the ring and line; `nearestRadius` caps the reach in CSS pixels.",
+      "verify": "Point at empty space inside a ds-scatter-chart plot and confirm the nearest point is ringed and its tooltip opens."
+    },
+    {
+      "text": "`ds-scatter-chart` points enter left to right (`staggerMs`, default 40) and `ds-heatmap-chart` cells along the diagonals from the top-left, each within 260ms; `staggerMs=\"0\"` makes them enter together.",
+      "verify": "Load a ds-scatter-chart and confirm the leftmost points appear first."
+    },
+    {
+      "text": "Each entry of a `ds-pie-chart` legend and of the shared series legend takes the pointer up to the middle of the gap beside it, so moving across entries keeps the highlight.",
+      "verify": "Move the pointer down a ds-pie-chart legend and confirm the tint never leaves every row between two rows."
+    },
+    {
+      "text": "On the first load, a chart's loading skeleton turns into the chart in one motion when the data lands, on `--ds-motion-chart-mark-grow-duration` and `--ds-motion-chart-mark-grow-easing`: each placeholder travels to the mark in its place and takes its colour, a mark without one grows from the baseline, a spare placeholder sinks, and the tick and category placeholders fade into the labels. A reload with data on screen keeps the plot under the loading overlay as before. Set `--ds-motion-chart-mark-grow-duration: 0ms` on the chart to swap the skeleton for the chart at once.",
+      "verify": "Bind `loading` with no data to a ds-column-chart, then set data and turn `loading` off: confirm the grey placeholders move onto the columns and colour in, with no blank frame between skeleton and chart."
+    },
+    {
+      "text": "A pressed `ds-button` with `variant=\"tonal\"` fills with its rest fill mixed 28% toward the button's colour (`--primary` for primary), where it was the hover fill mixed 10% toward black. `--ds-button-bg-color-active` still sets a pressed fill of your own.",
+      "verify": "Hold the mouse down on a tonal ds-button and confirm the fill turns more saturated than the hover fill, not greyer, in the light and the dark theme."
+    },
+    {
+      "text": "A pressed `ds-menu-item` with `error` fills with `--error-muted`, one red step deeper than its `--error-subtitle` hover; the press showed the hover fill.",
+      "verify": "Hold the mouse down on an error ds-menu-item and confirm the red fill deepens from the hover fill, in the light and the dark theme."
+    },
+    {
+      "text": "A loading chart holds the height of its data-table line, and under `dataTable=\"visible\"` draws the open table with a header and five rows; `ds-bar-chart` showed no table line while loading.",
+      "verify": "Load a ds-bar-chart and a ds-column-chart with dataTable set to toggle and to visible, and confirm the data-table line or open table sits in the same place before and after the data arrives."
+    },
+    {
+      "text": "A `ds-funnel-chart` stage enters growing from 96% about its own centre, as a `ds-scatter-chart` point does; it grew right and down from its top-left corner.",
+      "verify": "Load a ds-funnel-chart and confirm each stage's centre holds still while it grows, with its left and right edges moving outward together."
+    },
+    {
+      "text": "Under forced colours a `ds-line-chart` annotation prints in the system text colour over a halo in the system background colour, as a reference-line label does; it kept its own colour on a white patch. `--ds-line-chart-annotation-halo-color` and `--ds-line-chart-annotation-halo-width` still set the halo in normal colours.",
+      "verify": "Turn on Windows high contrast, open a ds-line-chart with annotations and confirm each annotation reads in the system text colour over the system background."
+    },
+    "`showDirty` (default `false`) on every value field, the `dsShowDirty` directive (`ShowDirtyDirective`) and `provideDsConfig({ field: { showDirty: true } })` mark a value the user changed with a dot and a \"Changed\" line; off unless one of the three turns it on. The line reads the new optional `DsIntl` key `field.changed`.",
+    "`ds-info-hint` takes rich content inside the tag or through the new `content` input (`text` is optional), any `IconName` in `icon`, and the new `--ds-info-hint-color` hook for the icon colour. `dsTooltip` and `dsDefinitionTerm` take a template as well as a string.",
+    "`TableColumn.kind` (`TableColumnKind`: `'text' | 'id' | 'date' | 'number' | 'status'`) sets a ds-table column's width when `width` is unset.",
+    "`.link` takes `--ds-link-color-visited`, `--ds-link-color-visited-hover`, `--ds-link-color-visited-active`, `--ds-link-color-disabled`, `--ds-link-focus-ring-color`, `--ds-link-underline-color`, `--ds-link-underline-thickness` and `--ds-link-underline-offset`, each defaulting to the value the partial painted with.",
+    "The `dsTableColumns` header button sets `aria-expanded` to `true` while its column panel is open, from the first press on a fresh page.",
+    {
+      "text": "Under `dsTableResize`, once every visible column has a pixel width (after the first drag, or from `column.width` and persisted widths) the `ds-table` is as wide as the sum of its columns instead of its container, so narrowing a column leaves empty space after the last one rather than widening the rest. A virtual table keeps filling its container.",
+      "verify": "Drag one column edge of a ds-table with dsTableResize to the left and confirm the other columns keep their widths and the table ends short of its container."
+    },
+    {
+      "text": "The `ds-table` toolbar shows when a table feature inserts its control, as `dsTableExport` does with its Export button, and not only when the `[toolbar]` slot holds content; a table with neither keeps the toolbar hidden.",
+      "verify": "Render a ds-table with dsTableExport and nothing in its toolbar slot and confirm the Export button shows above the table."
+    },
+    "Pressing Previous onto the first page or Next onto the last of a `ds-pagination` moves focus to the current page's button; it fell to the page.",
+    "Dismissing a `ds-alert` or `ds-banner` from its close button moves focus to the next control after it, else the one before it; a toast leaving with focus inside it moves focus to the next toast, else the previous one, else to the element focused before focus entered the region. Focus fell to the page.",
+    "Move up and Move down in the `dsTableColumns` panel keep focus on the moved row's pressed button, or its other button once the row reaches the top or bottom; focus fell to the page. The internal `TableColumnsPanelComponent` gained `move` and `rescueFocus`.",
+    "A `ds-menu` in a `ds-split-button` or a `ds-popover` opens at its first item each time, whichever item had focus when it closed.",
+    "Tab on a `ds-menu` item closes the `ds-split-button` or `ds-popover` menu holding it and moves focus on from the trigger; choosing a submenu item closes the submenu.",
+    {
+      "text": "A pressed `ds-pagination` page button keeps focus on the page it names when the window of page numbers shifts; focus stayed at the same position and the button there read the next page.",
+      "verify": "Press a middle page number of a ds-pagination from the keyboard and confirm focus stays on the button for that page."
+    }
+  ],
+  "deleteList": [
+    {
+      "id": "line-chart-rescale-on-hide-bare",
+      "surface": "template",
+      "find": "rescaleOnHide",
+      "why": "true is the default of rescaleOnHide on ds-line-chart; [rescaleOnHide]=\"false\" stays where the axis must hold.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "input-loading-bound-to-pending",
+      "surface": "template",
+      "find": [
+        ".pending()\"",
+        ".pending\""
+      ],
+      "why": "Every DS field shows the spinner while its own control is pending. A [loading] bound to another control's state stays, and so does [loading] on ds-select, ds-multi-select or ds-autocomplete, which means the option list is loading.",
+      "replaceWith": "nothing"
+    }
+  ]
+}

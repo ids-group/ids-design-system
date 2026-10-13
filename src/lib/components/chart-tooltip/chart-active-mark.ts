@@ -1,5 +1,8 @@
-import { DestroyRef, Signal, inject, signal } from '@angular/core';
-import { chartDwell } from '@ids-group-ltd/ids-design-system/components';
+import { DestroyRef, Signal, computed, inject, signal } from '@angular/core';
+import {
+  chartDwell,
+  chartOf,
+} from '@ids-group-ltd/ids-design-system/components';
 
 /** @internal */
 export interface ChartActiveMark {
@@ -28,6 +31,11 @@ export interface ChartActiveMark {
     mark?: Element,
   ): void;
   release(): void;
+  /** The pinned mark, looked up by its index, as a list keyed by that index: pinning another mark
+   *  puts a new pin in the list, the same mark keeps its pin. Empty when nothing is pinned. */
+  pinnedAt<T>(
+    lookup: (index: number) => T | null | undefined,
+  ): Signal<readonly { index: number; value: T }[]>;
 }
 
 /**
@@ -110,21 +118,22 @@ export function chartActiveMark(
     }
   };
 
+  const clearHover = (): void => {
+    cancelPendingClear();
+    index.set(-1);
+    origin.set(null);
+    document.removeEventListener('pointerover', trackPointer, true);
+  };
+
   const scheduleClear = (): void => {
     cancelPendingClear();
-    pendingClear = setTimeout(
-      () => {
-        pendingClear = null;
-        index.set(-1);
-        origin.set(null);
-        document.removeEventListener('pointerover', trackPointer, true);
-      },
-      Math.max(lingerMs(), 0),
-    );
+    pendingClear = setTimeout(clearHover, Math.max(lingerMs(), 0));
   };
 
   // `pointerover` fires per element crossed: the panel cancels the clear, anything else but the mark
-  // schedules one. Without that a panel the pointer once touched never closes.
+  // schedules one. Without that a panel the pointer once touched never closes. A pending clear is
+  // kept, not restarted, or a pointer moving over another chart holds this one open forever. The
+  // wait bridges the gaps between marks; a pointer that left the chart clears it at once.
   const trackPointer = (event: PointerEvent): void => {
     if (!(event.target instanceof Element)) {
       return;
@@ -135,15 +144,20 @@ export function chartActiveMark(
       return;
     }
     // Host, not anchor: a legend item and the arc its panel points at are disjoint.
-    if (!host || !host.contains(event.target)) {
+    if (host && host.contains(event.target)) {
+      return;
+    }
+    if (host && chartOf(event.target) !== chartOf(host)) {
+      clearHover();
+    } else if (pendingClear === null) {
       scheduleClear();
     }
   };
 
-  const chartOf = (element: Element | null): Element | null =>
-    element ? element.closest('figure') : null;
-
   const release = (event: PointerEvent): void => {
+    if (!isPrimaryPress(event)) {
+      return;
+    }
     if (!(event.target instanceof Element)) {
       clear();
 
@@ -162,7 +176,6 @@ export function chartActiveMark(
 
   if (typeof document !== 'undefined') {
     inject(DestroyRef).onDestroy(() => {
-      dwell.cancel();
       cancelPendingClear();
       document.removeEventListener('pointerdown', release, true);
       document.removeEventListener('keydown', releaseOnEscape, true);
@@ -203,9 +216,17 @@ export function chartActiveMark(
         clear();
       }
     },
+    pinnedAt(lookup) {
+      return computed(() => {
+        const at = index();
+        const value = pinned() ? lookup(at) : null;
+
+        return value ? [{ index: at, value }] : [];
+      });
+    },
     pin(at, event, anchor, mark) {
       dwell.cancel();
-      if (typeof document === 'undefined') {
+      if (typeof document === 'undefined' || !isPrimaryPress(event)) {
         return;
       }
       if (pinned() && index() === at) {
@@ -250,4 +271,11 @@ export function chartActiveMark(
       tapLatched = true;
     }
   }
+}
+
+/** Whether `event` may take or drop a pin: a key or a touch always, a mouse only by its main button.
+ *
+ *  @internal */
+export function isPrimaryPress(event: Event): boolean {
+  return !(event instanceof MouseEvent) || event.button === 0;
 }

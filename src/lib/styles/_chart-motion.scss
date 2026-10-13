@@ -9,6 +9,39 @@
 // Reduced motion zeroes the durations (tokens); `enters` zeroes the delays, or a delayed mark with
 // `backwards` fill would stay invisible.
 
+@use 'sass:list';
+
+// One timing for every mark that follows a datum, so a column, its label and a line over it land together.
+@function moves($properties...) {
+  $transitions: ();
+
+  @each $property in $properties {
+    $transitions: list.append(
+      $transitions,
+      #{$property} var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing),
+      $separator: comma
+    );
+  }
+
+  @return $transitions;
+}
+
+// One timing for everything that follows the pointer, so a band, a ring and the panel arrive together.
+@function glides($properties...) {
+  $transitions: ();
+
+  @each $property in $properties {
+    $transitions: list.append(
+      $transitions,
+      #{$property} var(--ds-motion-chart-tooltip-move-duration)
+        var(--ds-motion-chart-tooltip-move-easing),
+      $separator: comma
+    );
+  }
+
+  @return $transitions;
+}
+
 @keyframes ds-chart-mark-grow-y {
   from {
     transform: scaleY(0);
@@ -24,14 +57,6 @@
 @keyframes ds-chart-mark-fade-in {
   from {
     opacity: 0;
-  }
-}
-
-// On a canvas whose viewBox stretches, a pixel is a user unit: set `--_chart-rise-distance` as a percentage of the mark's box.
-@keyframes ds-chart-mark-rise {
-  from {
-    opacity: 0;
-    transform: translateY(var(--_chart-rise-distance, 4px));
   }
 }
 
@@ -53,6 +78,20 @@
 @keyframes ds-chart-mark-exit {
   to {
     opacity: 0;
+  }
+}
+
+@keyframes ds-chart-pin-pop {
+  from {
+    scale: 0.4;
+    opacity: 0;
+  }
+}
+
+// `scale`, not `transform`, so it composes with whatever places the pin.
+@mixin pops-in($pin) {
+  #{$pin} {
+    animation: ds-chart-pin-pop var(--ds-motion-chart-mark-duration) var(--ease-spring) backwards;
   }
 }
 

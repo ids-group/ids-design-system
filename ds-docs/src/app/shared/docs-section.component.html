@@ -14,13 +14,25 @@
        the component it is ABOUT and drop the chapter's: a ToggleButton card used to open with
        Button's name and tag. -->
   @if (metaKeys().length) {
-    <div class="tagrow">
-      @for (key of metaKeys(); track key) {
-        <docs-component-meta
-          [key]="key"
-          [attr.data-key]="key" />
-      }
-    </div>
+    <details class="editor tagrow">
+      <summary>
+        {{ metaKeys().length > 1 ? 'Selectors' : 'Selector' }}
+      </summary>
+
+      <div class="body">
+        @for (key of metaKeys(); track key) {
+          <docs-component-meta
+            [key]="key"
+            [attr.data-key]="key" />
+        }
+      </div>
+    </details>
+  }
+
+  @for (summary of summaries(); track summary) {
+    <p class="summary">
+      {{ summary }}
+    </p>
   }
 
   <p class="lede t-m">

@@ -9,6 +9,7 @@ export class SelectComponent extends DsControlValueAccessor<string> implements O
     protected readonly activeDescendant = computed(…);
     protected readonly activeIndex = signal<number>(…);
     public readonly ariaLabel = input<string | null>(null);
+    protected readonly changedShown = this.fieldMessage.changed;
     public clear(): void;
     protected clearValue(event: MouseEvent): void;
     public readonly clearable = input(false, { transform: booleanAttribute });
@@ -67,6 +68,7 @@ export class SelectComponent extends DsControlValueAccessor<string> implements O
     protected readonly panelHeaderTemplate = contentChild(…);
     private readonly panelTokens;
     protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>(…);
+    protected readonly pendingShown = this.fieldMessage.pending;
     protected pick(option: SelectOption, groupDisabled = false): void;
     private pickActive;
     protected readonly pickerTrigger = contentChild(…);

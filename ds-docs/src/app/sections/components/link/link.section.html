@@ -40,6 +40,12 @@
     </a>
 
     <a
+      class="link pin-visited"
+      href="javascript:void(0)">
+      Visited (forced)
+    </a>
+
+    <a
       class="link pin-focus"
       href="javascript:void(0)">
       Focus (forced)
@@ -72,12 +78,6 @@
 
     <li>
       Sizes: <code class="t-mono-inline">xs</code> · <code class="t-mono-inline">sm</code> · <code class="t-mono-inline">lg</code>.
-    </li>
-
-    <li>
-      <code class="t-mono-inline">
-        --ds-link-color
-      </code> - recolours; hover and active derive from it unless <code class="t-mono-inline">--ds-link-color-hover</code> / <code class="t-mono-inline">--ds-link-color-active</code> are set.
     </li>
   </ul>
 
@@ -124,6 +124,188 @@
       Large link
     </a>
   </div>
+
+  <h3 class="block-title t-h4">
+    Tokens
+  </h3>
+
+  <p class="block-desc t-s">
+    Set on <code class="t-mono-inline">.link</code> or an ancestor. Hover and pressed derive from rest, the visited pair from visited.
+  </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Token
+        </th>
+
+        <th>
+          State
+        </th>
+
+        <th>
+          Default
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <code class="t-mono-inline">--ds-link-color</code>
+        </td>
+
+        <td>
+          Rest
+        </td>
+
+        <td>
+          <code class="t-mono-inline">var(--blue-700)</code>; dark <code class="t-mono-inline">hsl(var(--blue-h) 90% 74%)</code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">--ds-link-color-hover</code>
+        </td>
+
+        <td>
+          Hover
+        </td>
+
+        <td>
+          <code class="t-mono-inline">color-mix(in srgb, &lt;rest&gt; 80%, black)</code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">--ds-link-color-active</code>
+        </td>
+
+        <td>
+          Pressed
+        </td>
+
+        <td>
+          <code class="t-mono-inline">color-mix(in srgb, &lt;rest&gt; 65%, black)</code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">--ds-link-color-visited</code>
+        </td>
+
+        <td>
+          Visited
+        </td>
+
+        <td>
+          <code class="t-mono-inline">hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)</code>; dark <code class="t-mono-inline">hsl(var(--blue-h) 50% 70%)</code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">--ds-link-color-visited-hover</code>
+        </td>
+
+        <td>
+          Visited, hover
+        </td>
+
+        <td>
+          <code class="t-mono-inline">color-mix(in srgb, &lt;visited&gt; 80%, black)</code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">--ds-link-color-visited-active</code>
+        </td>
+
+        <td>
+          Visited, pressed
+        </td>
+
+        <td>
+          <code class="t-mono-inline">color-mix(in srgb, &lt;visited&gt; 65%, black)</code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">--ds-link-color-disabled</code>
+        </td>
+
+        <td>
+          Disabled
+        </td>
+
+        <td>
+          <code class="t-mono-inline">var(--text-disabled)</code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">--ds-link-focus-ring-color</code>
+        </td>
+
+        <td>
+          Focus ring
+        </td>
+
+        <td>
+          <code class="t-mono-inline">var(--focus-ring-color)</code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">--ds-link-underline-color</code>
+        </td>
+
+        <td>
+          Underline
+        </td>
+
+        <td>
+          <code class="t-mono-inline">currentcolor</code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">--ds-link-underline-thickness</code>
+        </td>
+
+        <td>
+          Underline
+        </td>
+
+        <td>
+          <code class="t-mono-inline">1px</code>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <code class="t-mono-inline">--ds-link-underline-offset</code>
+        </td>
+
+        <td>
+          Underline
+        </td>
+
+        <td>
+          <code class="t-mono-inline">2px</code>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <h3
     data-claude-design
