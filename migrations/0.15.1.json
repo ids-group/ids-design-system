@@ -1,5 +1,5 @@
 {
-  "version": "unreleased",
+  "version": "0.15.1",
   "items": [
     {
       "id": "chart-classes-gained-motion-members",
@@ -464,7 +464,7 @@
       "restore": null,
       "verify": "The app builds, and every map or switch over ChartFormatLocation names 'readout'.",
       "evidence": [
-        "fixture:unreleased/chart-format-location-gained-readout.ts"
+        "fixture:0.15.1/chart-format-location-gained-readout.ts"
       ]
     },
     {
