@@ -18,25 +18,31 @@
   `--text-link-visited` there instead, and read `var(--text-link)` where you read
   `var(--ds-link-color)` or a palette value such as `var(--blue-700)` for the link colour. The
   visited role 0.15.0 named `--link-visited` is `--text-link-visited`: where you set or read
-  `--link-visited`, set or read `--text-link-visited`. To keep a table link in the brand colour, set
-  `--ds-table-cell-link-color: var(--accent)` on `ds-table`.
+  `--link-visited`, set or read `--text-link-visited`. Its default reads `--blue-h` and `--blue-s`
+  where `--link-visited` read `--primary-h` and `--primary-s`, so it stays blue under a brand that
+  sets `--primary-h` or `--primary-s`, as `--text-link` does in dark. To keep a table link in the
+  brand colour, set `--ds-table-cell-link-color: var(--accent)` on `ds-table`.
 
 - **`showChange` colours a stretch that starts at zero.** On `dsLineSeries` and `ds-line-chart`,
   the stretch from a reading of 0 thickens in `--ds-chart-positive-color` or
   `--ds-chart-negative-color` like any other, and prints no percentage.
 
-- **The `showChange` stretch and percentage fade in as the chart's other labels do.** They wait
+- **The `showChange` stretch and percentage fade in as the chart's other marks do.** They wait
   `--ds-motion-chart-mark-exit-duration` and fade in over `--ds-motion-chart-mark-enter-duration`
   (120ms and 400ms by default), where they appeared at once over 120ms, and leave on
   `--ds-motion-chart-mark-exit-duration` and `--ds-motion-chart-mark-exit-easing`.
 
 ### Fixed
 
-- **A `width: 'content'` column no longer collapses to 0px once its table is shown again.** A
-  `ds-table` under a `display: none` ancestor, such as an inactive `ds-tabs` panel, re-measured its
-  `width: 'content'` columns when its rows, its page or the loaded fonts changed, read 0 for each and
-  kept that width when shown: the cells spilled over the next column, and resizing the window did
-  not bring them back. The table skips the measurement while hidden and measures when it is shown.
+- **A `ds-table` measured while hidden no longer keeps the widths it read there.** A table under a
+  `display: none` ancestor, such as an inactive `ds-tabs` panel, measured its header labels when it
+  rendered there or its columns, its density or the loaded fonts changed there, and its
+  `width: 'content'` columns when it rendered there or its rows, its page or the loaded fonts
+  changed there. It read 0 for each and kept those widths when shown: a `width: 'content'` column
+  collapsed to 0px and its cells spilled over the next column, a column could shrink below its
+  header label, and resizing the window did not bring them back. The table skips both measurements
+  while hidden and measures when it is shown. `TableComponent` gained the private `rendered`; a
+  subclass declaring it must rename it.
 
 ## 0.15.1 — 2026-10-13
 
