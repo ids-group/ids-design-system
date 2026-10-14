@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 0.15.2 — 2026-10-14
+
 ### Build
 
 - **`check-manual-surface` fails on an attribute directive `MANUAL-SURFACE.md` only lists.** Every

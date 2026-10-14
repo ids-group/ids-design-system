@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.15.2 — 2026-10-14
+
 ### Added
 
 - **`ds-table` takes `layout`, and `DsConfig.table.layout` sets it for every table.** `'fixed'`, the

@@ -2622,7 +2622,7 @@
     "replacement": "--text-link-visited",
     "kind": "renamed",
     "since": "0.15.1",
-    "itemId": "unreleased#link-visited-role-is-text-link-visited"
+    "itemId": "0.15.2#link-visited-role-is-text-link-visited"
   },
   {
     "name": "--opacity-muted",
