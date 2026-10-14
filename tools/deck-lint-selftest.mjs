@@ -18,6 +18,7 @@ import {
   cpSync,
   existsSync,
   readdirSync,
+  mkdirSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
@@ -32,6 +33,7 @@ const DECKS = join(tmpdir(), `deck-lint-selftest.${process.pid}`);
 const ARCHIVE = join(DECKS, 'implemented');
 rmSync(DECKS, { recursive: true, force: true });
 cpSync(join(ROOT, 'presentations'), DECKS, { recursive: true });
+mkdirSync(ARCHIVE, { recursive: true });
 // On 'exit', not in a finally: the baseline branch leaves through process.exit, which skips finally.
 process.on('exit', () => rmSync(DECKS, { recursive: true, force: true }));
 
