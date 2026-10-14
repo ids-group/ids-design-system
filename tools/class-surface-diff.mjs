@@ -1,25 +1,19 @@
 #!/usr/bin/env node
 /**
  * Which exported classes grew or lost members, and which exported types changed,
- * since a ref.
+ * since a ref. `check-changelog-pending` reads the member lists to ask that a class
+ * whose surface moved is named in the release notes; subclassing is unsupported, so
+ * the notes never list the members themselves.
  *
- * Subclassing a DS component is unsupported, but consumers do it, and then a
- * release that only ADDS fails their build: TS4114 wants `override`, TS2415 fires
- * on a redeclared private. Assembling that list by eye missed it twice, both times
- * found in a consumer's build log rather than here.
- *
- * Type CHANGES hide even better than additions: widening an exported type
- * (`width?: number` → `number | 'content'`, an input going nullable) is
- * source-compatible for whoever WRITES the value and breaking for whoever READS
- * or overrides it — which is exactly why 0.10.0 shipped two of them with nothing
- * actionable in the manifest. So same-named members whose type-bearing
- * declaration changed are diffed too: explicitly annotated class fields,
- * input/model/output initializers, exported interface members, type aliases.
+ * Widening an exported type (`width?: number` → `number | 'content'`, an input
+ * going nullable) is source-compatible for whoever WRITES the value and breaking
+ * for whoever READS it, so same-named members whose type-bearing declaration
+ * changed are diffed too: explicitly annotated class fields, input/model/output
+ * initializers, exported interface members, type aliases.
  *
  *   node tools/class-surface-diff.mjs [base-ref] [head-ref]   # defaults: last tag → HEAD
  *
- * Reports per class, so the answer can be pasted into the migration entry. Prints
- * nothing but a clean line when no surface moved.
+ * Reports per class. Prints nothing but a clean line when no surface moved.
  */
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
@@ -441,9 +435,7 @@ function main() {
 
   console.log(`class-surface: comparing ${base}..${head}\n`);
   if (grew.length) {
-    console.log(
-      'GAINED members — a subclass declaring the same name stops building:',
-    );
+    console.log('GAINED members — no manifest entry lists them:');
     for (const [label, names, isNew] of grew) {
       console.log(`  ${label}${isNew ? '  (new file)' : ''}`);
       console.log(`    ${names.join(', ')}`);
@@ -452,7 +444,7 @@ function main() {
   }
   if (shrank.length) {
     console.log(
-      'LOST members — a subclass that overrode one now overrides nothing:',
+      'LOST members — a removed public input, output or method is a removal to migrate:',
     );
     for (const [label, names] of shrank) {
       console.log(`  ${label}\n    ${names.join(', ')}`);
@@ -461,7 +453,7 @@ function main() {
   }
   if (changed.length) {
     console.log(
-      'CHANGED types — same name, different type; readers and overriders may stop compiling:',
+      'CHANGED types — same name, different type; readers may stop compiling:',
     );
     for (const [label, entries] of changed) {
       console.log(`  ${label}`);
@@ -470,10 +462,10 @@ function main() {
     console.log('');
   }
   console.log(
-    'Mirror GAINED/LOST into ONE `behavior` entry (see 0.8.0 / 0.9.0\n' +
-      '`exported-class-members-grew`), and each CHANGED type into its own `behavior` entry naming\n' +
-      'who breaks (AUTHORING.md § widening). Still invisible here: a member whose BEHAVIOR changed\n' +
-      'under the same signature, and a member that moved to a base class — check the diff by hand.',
+    'Give each CHANGED type of a public input, output or exported interface its own `behavior`\n' +
+      'entry naming who breaks (AUTHORING.md § widening). Subclassing is unsupported, so no entry\n' +
+      'lists GAINED or LOST members. Still invisible here: a member whose BEHAVIOR changed under the\n' +
+      'same signature, and a member that moved to a base class — check the diff by hand.',
   );
 }
 
