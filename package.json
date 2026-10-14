@@ -23,7 +23,6 @@
   },
   "scripts": {
     "agent-catalogue": "node tools/split-agent-catalogue.mjs",
-    "build:deck-css": "node tools/build-deck-css.mjs",
     "build:docs": "npm run extract-docs && ng build ds-docs",
     "build:docs:dev": "npm run extract-docs && ng build ds-docs --configuration development",
     "build:elements": "node .design-sync/elements/tools/gen.mjs && ng build ds-elements && node .design-sync/elements/tools/build-bundle.mjs",

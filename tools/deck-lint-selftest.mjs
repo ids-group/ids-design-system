@@ -32,6 +32,12 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DECKS = join(tmpdir(), `deck-lint-selftest.${process.pid}`);
 const ARCHIVE = join(DECKS, 'implemented');
 rmSync(DECKS, { recursive: true, force: true });
+// presentations/ is local to each checkout, so a clean clone compiles the stylesheet first.
+if (!existsSync(join(ROOT, 'presentations', 'ds.css')))
+  execFileSync(process.execPath, [join(ROOT, 'tools', 'build-deck-css.mjs')], {
+    cwd: ROOT,
+    stdio: 'inherit',
+  });
 cpSync(join(ROOT, 'presentations'), DECKS, { recursive: true });
 mkdirSync(ARCHIVE, { recursive: true });
 // On 'exit', not in a finally: the baseline branch leaves through process.exit, which skips finally.
