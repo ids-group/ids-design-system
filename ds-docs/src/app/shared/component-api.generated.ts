@@ -2562,7 +2562,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "On the hovered reading, thickens the stretches from the reading before it and to the reading after it, each in its own rising or falling colour (`--ds-chart-positive-color`, `--ds-chart-negative-color`) and with its own change in percent. With several series it follows the one singled out: hovered, focused or highlighted."
+        "description": "On the hovered reading, thickens the stretches from the reading before it and to the reading after it, each in its own rising or falling colour (`--ds-chart-positive-color`, `--ds-chart-negative-color`) and, unless it starts at zero, with its own change in percent. With several series it follows the one singled out: hovered, focused or highlighted."
       },
       {
         "name": "patterns",
@@ -6008,7 +6008,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "On the hovered reading, thickens the stretches from the reading before it and to the reading after it, each in its own rising or falling colour and with its own change in percent; with several series, for the one singled out."
+        "description": "On the hovered reading, thickens the stretches from the reading before it and to the reading after it, each in its own rising or falling colour and, unless it starts at zero, with its own change in percent; with several series, for the one singled out."
       },
       {
         "name": "staggerMs",
@@ -10848,6 +10848,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Where the sticky horizontal scrollbar rests, as a CSS length. Unset, the table cancels its scroll container's bottom padding. Falls back to `DS_CONFIG.table.stickyScrollbarOffset`; `--ds-table-sticky-scrollbar-offset` wins over both."
+      },
+      {
+        "name": "layout",
+        "kind": "input",
+        "type": "'fixed' | 'auto' | null",
+        "union": [
+          "fixed",
+          "auto"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what the others leave, whatever its cells hold. `'auto'`, deprecated: the 0.15.0 widths, which follow the cell content and ignore `kind`. Unset falls back to `DS_CONFIG.table.layout`, then `'fixed'`."
       },
       {
         "name": "stickyFirstColumn",

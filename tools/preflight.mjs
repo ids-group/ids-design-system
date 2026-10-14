@@ -67,9 +67,9 @@ const selftestHint = (lint) =>
 const HINTS = {
   'tools-parse':
     'a script in tools/ does not parse — the file and the error are above.',
-  'class-surface-entry':
-    'the class-surface entry check did not pass — read its output above. If it named classes, ' +
-    'the `## Unreleased` entry is behind the code; if it named none, it could not run.',
+  'template-context-guard':
+    'a class gained a template context guard that no `surface: template` item in the draft ' +
+    'manifest names (output above).',
   'migration-lint:selftest': selftestHint('migration-lint'),
   'migration-lint':
     'the manifest lint did not pass — the rule it names above is the diagnosis.',

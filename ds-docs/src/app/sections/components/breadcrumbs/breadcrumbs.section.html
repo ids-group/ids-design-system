@@ -26,11 +26,22 @@
     <li>
       <code class="t-mono-inline">
         [maxItems]="4"
-      </code> - keeps the first and last crumbs, collapses the middle to <code class="t-mono-inline">… N more</code>.
+      </code> - keeps the first and
+      last crumbs, collapses the middle to
+      <code class="t-mono-inline">
+        … N more
+      </code>.
     </li>
 
     <li>
-      Set it on any deep trail: the row is <code class="t-mono-inline">nowrap</code> + <code class="t-mono-inline">overflow-x: clip</code>, so uncapped, the current page clips off.
+      Set it on any deep trail: the row is
+      <code class="t-mono-inline">
+        nowrap
+      </code> +
+      <code class="t-mono-inline">
+        overflow-x: clip
+      </code>, so uncapped, the
+      current page clips off.
     </li>
   </ul>
 
@@ -113,8 +124,8 @@
     </code> and
     <code class="t-mono-inline">
       --ds-breadcrumbs-radius
-    </code> makes each crumb
-    a pill on hover.
+    </code> makes each
+    crumb a pill on hover.
   </p>
 
   <div class="stage">
@@ -137,10 +148,8 @@
     </code>,
     <code class="t-mono-inline">
       --ds-breadcrumbs-current-label-font-weight
-    </code>,
-    <code class="t-mono-inline">
-      --ds-breadcrumbs-gap
-    </code>,
+    </code
+    >, <code class="t-mono-inline"> --ds-breadcrumbs-gap </code>,
     <code class="t-mono-inline">
       --ds-breadcrumbs-label-max-width
     </code> and
@@ -196,7 +205,10 @@
         </td>
 
         <td>
-          Prevents the default, emits <code class="t-mono-inline">(navigate)</code>; unbound, does nothing.
+          Prevents the default, emits
+          <code class="t-mono-inline">
+            (navigate)
+          </code>; unbound, does nothing.
         </td>
       </tr>
 
@@ -204,20 +216,25 @@
         <td>
           <kbd>
             Ctrl
-          </kbd>, <kbd>Cmd</kbd>, <kbd>Shift</kbd>, <kbd>Alt</kbd>, middle button
+          </kbd>, <kbd>Cmd</kbd>, <kbd>Shift</kbd>, <kbd>Alt</kbd>,
+          middle button
         </td>
 
         <td>
           <code class="t-mono-inline">
             href
-          </code> to the browser, emits nothing.
+          </code> to the browser, emits
+          nothing.
         </td>
       </tr>
     </tbody>
   </table>
 
   <p class="block-desc t-s">
-    Route with <code class="t-mono-inline">Router.navigateByUrl(item.href)</code>.
+    Route with
+    <code class="t-mono-inline">
+      Router.navigateByUrl(item.href)
+    </code>.
   </p>
 
   <div class="stage">
@@ -262,19 +279,34 @@
 
   <ul class="block-desc t-s">
     <li>
-      No <code class="t-mono-inline">[items]</code> - reads <code class="t-mono-inline">BreadcrumbsService.items</code>, fed from route data or an effect.
+      No <code class="t-mono-inline">[items]</code> - reads
+      <code class="t-mono-inline">
+        BreadcrumbsService.items
+      </code>, fed from
+      route data or an effect.
     </li>
 
     <li>
       <code class="t-mono-inline">
         providedIn: 'root'
-      </code>: a trail persists across routes; each page calls <code class="t-mono-inline">set</code> (or <code class="t-mono-inline">clear</code>).
+      </code>: a trail persists
+      across routes; each page calls <code class="t-mono-inline">set</code> (or
+      <code class="t-mono-inline">
+        clear
+      </code>).
     </li>
 
     <li>
       <code class="t-mono-inline">
         push
-      </code>, <code class="t-mono-inline">pop</code>, <code class="t-mono-inline">replaceLast</code> - edit the end of the trail.
+      </code>,
+      <code class="t-mono-inline">
+        pop
+      </code>,
+      <code class="t-mono-inline">
+        replaceLast
+      </code> - edit the end of the
+      trail.
     </li>
   </ul>
 

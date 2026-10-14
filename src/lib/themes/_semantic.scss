@@ -42,6 +42,8 @@
 
   --text-on-media:        white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
+  --text-link:         var(--blue-700);
+  --text-link-visited: hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%);
   --text-on-primary:     white;
   --text-on-success:   white;
 

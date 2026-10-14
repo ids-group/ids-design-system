@@ -202,6 +202,9 @@ function listSources(directory) {
 
 // The external applier reports `loc` as `path:line[:column]` relative to the root it was given.
 function applyExternal(sourceRoot, manifestPaths) {
+  // Straight after a release the draft is gone and nothing lies between the tag and the tree;
+  // the applier rejects a call with no manifest.
+  if (!manifestPaths.length) return [];
   const report = JSON.parse(
     execFileSync(process.execPath, [APPLIER, sourceRoot, ...manifestPaths], {
       encoding: 'utf8',

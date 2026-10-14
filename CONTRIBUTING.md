@@ -216,10 +216,9 @@ changelog is also a page on the docs site. So their reader is an external develo
 no access to this repository, our tracker, our decks or our other clients — and every
 consumer reads about the others.
 
-**Run the release gates AFTER committing, not before.** `check-class-surface-entry` and
+**Run the release gates AFTER committing, not before.** `check-template-context-guard` and
 `class-surface` compare `HEAD` against the last tag, so a change still sitting in the working tree
-is invisible to them and they report OK. Both went green on an uncommitted change and red the
-instant it was committed.
+is invisible to them and they report OK.
 
 `node tools/check.mjs changelog-lint` fails the PR gate on the mechanical half of this list. The
 judgment half is yours.

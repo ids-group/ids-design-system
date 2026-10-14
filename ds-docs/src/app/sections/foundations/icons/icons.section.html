@@ -21,9 +21,9 @@
     Five sizes, <code class="t-mono-inline">--icon-2xs</code> to
     <code class="t-mono-inline">
       --icon-lg
-    </code>; glyphs use a 24-unit viewBox. Default 16px
-    (<code class="t-mono-inline">DS_CONFIG.icon.size</code>); stroke 1.75
-    (<code class="t-mono-inline">[stroke]</code>), rounded caps.
+    </code>; glyphs use a 24-unit
+    viewBox. Default 16px (<code class="t-mono-inline">DS_CONFIG.icon.size</code
+    >); stroke 1.75 (<code class="t-mono-inline">[stroke]</code>), rounded caps.
   </p>
 
   <div class="size-row">
@@ -62,16 +62,14 @@
     with
     <code class="t-mono-inline">
       provideDsIcons({{ '{' }} name: '&lt;path …/&gt;' {{ '}' }})
-    </code>;
-    built-ins win a clash; an unknown name renders nothing and warns in dev
+    </code
+    >; built-ins win a clash; an unknown name renders nothing and warns in dev
     mode.
   </p>
 
   <p class="block-desc t-s">
-    Decorative by default (<code class="t-mono-inline">aria-hidden="true"</code>);
-    <code class="t-mono-inline">
-      ariaLabel
-    </code> on a meaningful icon adds
+    Decorative by default (<code class="t-mono-inline">aria-hidden="true"</code
+    >); <code class="t-mono-inline"> ariaLabel </code> on a meaningful icon adds
     <code class="t-mono-inline">
       role="img"
     </code>.

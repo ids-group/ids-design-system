@@ -26,41 +26,48 @@
       "kind": "behavior",
       "old": "--ds-*-fg",
       "new": null,
-      "action": "For each `-fg` token you override, look the replacement up in the 0.3.0 token reference on the documentation site, which lists every `--ds-*`; the global roles are also readable in the installed package under `themes/` and `styles/`. Three suffixes are in play and the split is real: at 0.3.0 the package exposes 16 `--ds-*-text-color`, 30 `-label-color` and 10 `-icon-color` hooks (state variants such as `-hover` included).",
+      "action": "For each `-fg` token you override, look the replacement up in the 0.3.0 token reference on the documentation site, which lists every `--ds-*`; the global roles are also readable in the installed package under `themes/` and `styles/`. Three suffixes are in play and the split is real: at 0.3.0 the package exposes 16 `--ds-*-text-color`, 30 `-label-color` and 10 `-icon-color` hooks (state variants such as `-hover` included). A state variant keeps its state after the new suffix: `--ds-tab-fg-hover` becomes `--ds-tab-label-color-hover`, `--ds-modal-title-fg-error` becomes `--ds-modal-title-text-color-error`.",
       "appliesWhen": "Only to DS-owned tokens. A variable of your own ending in `-fg` is untouched.",
-      "pitfall": "The suffix is NOT derivable from the old name, so guessing produces a name nothing reads and a silently unstyled element. Same shape, three answers: `--ds-modal-title-fg` became `-text-color`, `--ds-sidenav-group-fg` became `-label-color`, `--ds-icon-button-fg` became `-icon-color`.",
+      "pitfall": "The suffix is NOT derivable from the old name, so guessing produces a name nothing reads and a silently unstyled element. Same shape, three answers: `--ds-modal-title-fg` became `--ds-modal-title-text-color`, `--ds-sidenav-group-fg` became `--ds-sidenav-group-label-color`, `--ds-icon-button-fg` became `--ds-icon-button-icon-color`.",
       "note": "The `fg` abbreviation was dropped for a suffix that says what the token paints — text, a control or nav label, or a glyph. It covers the public `--ds-<component>-…-fg` hooks on avatar, badge, banner, breadcrumbs, button, date-picker, dropzone, empty-state, icon-button, input, menu, modal, page-header, pagination, search, sidenav, table, tabs, tag and topbar, plus the `--status-*` globals and `--chart-tooltip-fg`.",
       "searchHints": [
         "-fg:",
         "-fg)",
+        "-fg-",
         "--chart-tooltip-fg",
         "--status-"
       ],
       "surface": "style",
-      "verify": "No stylesheet declares or reads a --ds-*-fg token; each one names the semantic replacement its component reads (-text-color / -label-color / -icon-color)."
+      "verify": "No stylesheet declares or reads a --ds-*-fg or --ds-*-fg-<state> token, --chart-tooltip-fg or a --status-*-fg token; each one names the semantic replacement its component reads (-text-color / -label-color / -icon-color)."
     },
     {
       "id": "stepper-labels-now-visible",
       "kind": "behavior",
       "old": "ds-stepper",
       "new": null,
-      "action": "Read every caption you pass in `[steps]` as on-screen text and reword the ones written to be heard rather than seen. `labelPosition` (`bottom` | `inline`, default `bottom`) sets where they sit.",
-      "pitfall": "Nothing breaks and no build fails, so this ships unless somebody looks. Captions authored for a screen reader tend to carry the context the screen already gives — \"Step 2 of 5: enter your details\" reads fine when announced and badly when printed under a numbered dot.",
+      "action": "Read every caption you pass in `[steps]` as on-screen text and reword the ones written to be heard rather than seen. `labelPosition` (`bottom` | `inline`, default `bottom`) sets where they sit; where a stepper sits in a compact row beside other content, set `labelPosition=\"inline\"`. Style the captions through `--ds-stepper-label-color`, `--ds-stepper-label-color-current` and `--ds-stepper-label-font-size`.",
+      "pitfall": "Nothing breaks and no build fails, so this ships unless somebody looks. Captions authored for a screen reader tend to carry the context the screen already gives — \"Step 2 of 5: enter your details\" reads fine when announced and badly when printed under a numbered dot. A rule of yours on `ds-stepper .bar` now matches nothing: the connector is `.connector`, inside each step, and under `bottom` its width is the segment's, not a fixed length.",
       "note": "`[steps]` takes a `readonly string[]`, and those strings used to be screen-reader-only: on screen a step showed only its number. They render as visible labels now.",
       "searchHints": [
         "<ds-stepper",
-        "[steps]"
+        "[steps]",
+        "--ds-stepper-label",
+        "--stepper-bar-w"
       ],
       "surface": [
         "template",
-        "typescript"
+        "typescript",
+        "style"
       ],
       "detect": [
         "[steps]=",
         "steps: string[]",
-        "readonly string[]"
+        "readonly string[]",
+        "ds-stepper .bar",
+        "--stepper-bar-w"
       ],
-      "verify": "Every caption passed in [steps] is written to be READ on screen, not only announced - they render visibly now."
+      "verify": "Every caption passed in [steps] is written to be READ on screen, not only announced - they render visibly now, every stepper placed in a compact row sets labelPosition=\"inline\", and no stylesheet targets ds-stepper .bar.",
+      "appliesWhen": "Every `ds-stepper`. Under the default `labelPosition` (`bottom`) the host is `display: flex` where it was `inline-flex`, each step takes an equal share of the row, and the connector spans from node centre to node centre, so `--stepper-bar-w` sizes it only under `labelPosition=\"inline\"`."
     },
     {
       "id": "exported-class-members-grew",

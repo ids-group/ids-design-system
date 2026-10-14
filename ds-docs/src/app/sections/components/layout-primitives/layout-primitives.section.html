@@ -16,19 +16,19 @@
   </h3>
 
   <p class="block-desc t-s">
-    Vertical column. <code>gap</code>: <code>none</code> ·
+    Vertical column. <code>gap</code>: <code>none</code> · <code> xs </code> ·
     <code>
-      xs
-    </code> · <code>sm</code> · <code>md</code> · <code>lg</code> ·
+      sm
+    </code> · <code>md</code> · <code>lg</code> · <code> xl </code>;
     <code>
-      xl
-    </code>; <code>align</code>: <code>start</code> ·
+      align
+    </code>: <code>start</code> · <code> center </code> ·
     <code>
-      center
-    </code> · <code>end</code> · <code>stretch</code>. Unset
+      end
+    </code> · <code>stretch</code>. Unset <code> gap </code> reads
     <code>
-      gap
-    </code> reads <code>--ds-stack-gap</code>.
+      --ds-stack-gap
+    </code>.
   </p>
 
   <div class="demo-panel">
@@ -74,17 +74,37 @@
     <li>
       <code class="t-mono-inline">
         gap
-      </code>, <code class="t-mono-inline">align</code> - Stack's values; items centre vertically by default. Unset <code class="t-mono-inline">gap</code> reads <code class="t-mono-inline">--ds-inline-gap</code>.
+      </code>,
+      <code class="t-mono-inline">
+        align
+      </code> - Stack's values; items centre
+      vertically by default. Unset <code class="t-mono-inline">gap</code> reads
+      <code class="t-mono-inline">
+        --ds-inline-gap
+      </code>.
     </li>
 
     <li>
       <code class="t-mono-inline">
         justify
-      </code> - <code class="t-mono-inline">start</code> · <code class="t-mono-inline">center</code> · <code class="t-mono-inline">end</code> · <code class="t-mono-inline">between</code>.
+      </code> -
+      <code class="t-mono-inline">
+        start
+      </code> ·
+      <code class="t-mono-inline">
+        center
+      </code> ·
+      <code class="t-mono-inline">
+        end
+      </code> ·
+      <code class="t-mono-inline">
+        between
+      </code>.
     </li>
 
     <li>
-      Wraps by default; <code class="t-mono-inline">[wrap]="false"</code> keeps one line and overflows.
+      Wraps by default; <code class="t-mono-inline">[wrap]="false"</code> keeps
+      one line and overflows.
     </li>
   </ul>
 

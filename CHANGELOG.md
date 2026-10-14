@@ -1,5 +1,69 @@
 ## Unreleased
 
+### Added
+
+- **`ds-table` takes `layout`, and `DsConfig.table.layout` sets it for every table.** `'fixed'`, the
+  default, is the layout 0.15.1 introduced. `'auto'` lays a table out as 0.15.0 did: each column
+  follows its cell content, `kind` has no effect, and a numeric `width`, `width: 'content'`,
+  `minWidth` and `truncate` size the column as they did on 0.15.0. A `layout` on the element wins
+  over the config. To keep the 0.15.0 look across an app until its tables are reviewed:
+  `provideDsConfig({ table: { layout: 'auto' } })`. A table with `virtualScroll` keeps
+  `table-layout: fixed` either way. `TableComponent` gained the public `layoutMode` (the `layout`
+  input), the protected `autoLayout`, `autoLayoutWidth`, `autoLayoutMinWidth`, `clipGrows`,
+  `clipMaxWidth` and `clipMinWidth` and the private `layoutResolved`, `growingClipColumns`,
+  `clipCapsSet`, `clipFit`, `clipFitWidth`, `textCanvas`, `measureGrowingClips`, `widestValue` and
+  `splitGrowingClips`, so a subclass declaring one of those names must rename it.
+
+### Changed
+
+- **`--text-link` and `--text-link-visited` are theme roles; `.link` and the `ds-table` cell link
+  read them.** `--text-link` is `var(--blue-700)` in light and `hsl(var(--blue-h) 90% 74%)` in
+  dark; `--text-link-visited` is `hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)` and
+  `hsl(var(--blue-h) 50% 70%)`; both stay blue under any brand. `.link` reads
+  `var(--ds-link-color, var(--text-link))` and, visited,
+  `var(--ds-link-color-visited, var(--text-link-visited))`, at the colours it painted. A `ds-table`
+  link cell and a hovered `interactive` cell read
+  `var(--ds-table-cell-link-color, var(--text-link))`
+  where they read `--accent`: `#1d43ed` where they were `#2e54ff` in light, `#8197f8` where they
+  were `#2e54ff` (3.14:1 on the dark surface, now 6.33:1) in dark, and blue under a brand that set
+  `--primary`. A brand recolours links by setting `--text-link` and `--text-link-visited` in each
+  theme block; `--ds-link-color` and `--ds-link-color-visited` are `.link` hooks, set on `.link` or
+  an ancestor. If your theme sets them on `:root` as its link colour, set `--text-link` and
+  `--text-link-visited` there instead, and read `var(--text-link)` where you read
+  `var(--ds-link-color)` or a palette value such as `var(--blue-700)` for the link colour. The
+  visited role 0.15.0 named `--link-visited` is `--text-link-visited`: where you set or read
+  `--link-visited`, set or read `--text-link-visited`. Its default reads `--blue-h` and `--blue-s`
+  where `--link-visited` read `--primary-h` and `--primary-s`, so it stays blue under a brand that
+  sets `--primary-h` or `--primary-s`, as `--text-link` does in dark. To keep a table link in the
+  brand colour, set `--ds-table-cell-link-color: var(--accent)` on `ds-table`.
+
+- **`showChange` colours a stretch that starts at zero.** On `dsLineSeries` and `ds-line-chart`,
+  the stretch from a reading of 0 thickens in `--ds-chart-positive-color` or
+  `--ds-chart-negative-color` like any other, and prints no percentage.
+
+- **The `showChange` stretch and percentage fade in as the chart's other marks do.** They wait
+  `--ds-motion-chart-mark-exit-duration` and fade in over `--ds-motion-chart-mark-enter-duration`
+  (120ms and 400ms by default), where they appeared at once over 120ms, and leave on
+  `--ds-motion-chart-mark-exit-duration` and `--ds-motion-chart-mark-exit-easing`.
+
+### Deprecated
+
+- **`layout: 'auto'` on `ds-table` and in `DsConfig.table.layout`.** It is a temporary way back to
+  the 0.15.0 column widths and will be removed. A development build warns once per page while a
+  table uses it. Review each table under `'fixed'`, giving a column `width`, `kind` or `minWidth`
+  where it needs one, then delete the binding or the config key.
+
+### Fixed
+
+- **A `ds-table` measured while hidden no longer keeps the widths it read there.** A table under a
+  `display: none` ancestor, such as an inactive `ds-tabs` panel, measured its header labels when it
+  rendered there or its columns, its density or the loaded fonts changed there, and its
+  `width: 'content'` columns when it rendered there or its rows, its page or the loaded fonts
+  changed there. It read 0 for each and kept those widths when shown: a `width: 'content'` column
+  collapsed to 0px and its cells spilled over the next column, a column could shrink below its
+  header label, and resizing the window did not bring them back. The table skips both measurements
+  while hidden and measures when it is shown.
+
 ## 0.15.1 — 2026-10-13
 
 ### Breaking

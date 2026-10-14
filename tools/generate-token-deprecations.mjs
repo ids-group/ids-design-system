@@ -20,7 +20,7 @@
 //   node tools/generate-token-deprecations.mjs           # write the JSON
 //   node tools/generate-token-deprecations.mjs --check   # fail when the committed JSON is stale
 //   node tools/generate-token-deprecations.mjs --report  # also list the names the trees refused
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
@@ -101,6 +101,30 @@ export function candidatesOf(
     });
   });
   return candidates;
+}
+
+// A gone name takes its advice from the newest manifest naming it as a plain `old`, the draft
+// newest of all, and keeps the `since` of the release that removed it.
+export function applyNewestAdvice(entries, mentions, headTokens) {
+  for (const { label, manifest } of mentions)
+    for (const item of manifest.items ?? []) {
+      if (item.kind !== 'token-rename' && item.kind !== 'removed-api') continue;
+      for (const { name, replacement, renamed } of candidatesOf(
+        item.old,
+        item.new,
+        item.kind,
+        new Set(),
+        new Set(),
+      )) {
+        const entry = entries.get(name);
+        if (!entry) continue;
+        if (label !== 'unreleased' && compareVersions(label, entry.since) <= 0)
+          continue;
+        entry.replacement = replacement;
+        entry.renamed = renamed && headTokens.has(replacement);
+        entry.itemId = `${label}#${item.id}`;
+      }
+    }
 }
 
 export function buildDeprecations({ report = [] } = {}) {
@@ -188,6 +212,20 @@ export function buildDeprecations({ report = [] } = {}) {
         });
       }
   }
+
+  const draftPath = join(ROOT, 'migrations', 'unreleased.json');
+  const mentions = versions.map((version) => ({
+    label: version,
+    manifest: JSON.parse(
+      readFileSync(join(ROOT, 'migrations', `${version}.json`), 'utf8'),
+    ),
+  }));
+  if (existsSync(draftPath))
+    mentions.push({
+      label: 'unreleased',
+      manifest: JSON.parse(readFileSync(draftPath, 'utf8')),
+    });
+  applyNewestAdvice(entries, mentions, head);
 
   for (const entry of entries.values()) {
     if (head.has(entry.name)) {

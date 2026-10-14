@@ -1,5 +1,6 @@
 import {
   domainMinOf,
+  formatPercent,
   linearScale,
   niceDomain,
   roundStepAtLeast,
@@ -456,4 +457,21 @@ export function categoryKeys(labels: readonly string[]): string[] {
 
     return count === 0 ? label : `${label}#${count}`;
   });
+}
+
+/** The change from one reading to the next: its direction, and its percentage, which is `null` from zero. */
+export function changeBetween(
+  from: number,
+  to: number,
+  locale: string,
+): { rising: boolean; label: string | null } {
+  const change = to - from;
+
+  return {
+    rising: change >= 0,
+    label:
+      from === 0
+        ? null
+        : `${change > 0 ? '+' : ''}${formatPercent(change, Math.abs(from), locale)}`,
+  };
 }

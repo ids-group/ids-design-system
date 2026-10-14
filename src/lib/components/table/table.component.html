@@ -99,6 +99,10 @@
               [class]="headerClasses(col)"
               [class.numeric]="col.align === 'right'"
               [class.pin-first]="first && stickyFirstColumn()"
+              [class.fit-content]="autoLayout() && fitsContent(col)"
+              [style.width.px]="autoLayoutWidth(col)"
+              [style.min-width.px]="autoLayoutMinWidth(col)"
+              [style.max-width.px]="autoLayoutWidth(col)"
               [attr.aria-sort]="ariaSort(col)"
               [attr.data-col-key]="col.key"
               [dsTooltipWhenClipped]="!col.hint"
@@ -303,7 +307,12 @@
                   </td>
                 }
 
-                @for (col of visibleColumns(); track col.key; let first = $first) {
+                @for (
+                  col of visibleColumns();
+                  track col.key;
+                  let first = $first;
+                  let index = $index
+                ) {
                   <td
                     [class.numeric]="col.align === 'right'"
                     [class.pin-first]="first && stickyFirstColumn()"
@@ -330,7 +339,11 @@
                         (blur)="commitEdit(row, col)" />
                     } @else if (cellTemplate(col); as tpl) {
                       @if (col.truncate) {
-                        <span class="cell-clip">
+                        <span
+                          class="cell-clip"
+                          [class.grows]="clipGrows(col)"
+                          [style.max-width]="clipMaxWidth(col, index)"
+                          [style.min-width]="clipMinWidth(col, index)">
                           <span class="cell-clip-text">
                             <ng-container
                               [ngTemplateOutlet]="tpl"
@@ -351,7 +364,11 @@
                         </ng-container>
                       }
                     } @else if (col.truncate) {
-                      <span class="cell-clip">
+                      <span
+                        class="cell-clip"
+                        [class.grows]="clipGrows(col)"
+                        [style.max-width]="clipMaxWidth(col, index)"
+                        [style.min-width]="clipMinWidth(col, index)">
                         @if (cellLink(row, col); as target) {
                           <a
                             class="cell-link cell-clip-text"

@@ -1,9 +1,11 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import { Component, Directive, ViewEncapsulation, signal } from '@angular/core';
+import { provideDsConfig } from 'ds/core';
 import { BadgeComponent } from 'ds/badge';
 import { CellTemplateDirective, TableComponent } from 'ds/table';
 import type { TableColumn, TableColumnKind, TableRowAction } from 'ds/table';
 import { DsTableResize } from 'ds/table-resize';
 import { TooltipDirective } from 'ds/tooltip';
+import { LAYOUT_CASES } from './table-layout.cases';
 
 interface Row {
   readonly id: string;
@@ -202,6 +204,13 @@ const ACTIONS: readonly TableRowAction<Row>[] = [
   { id: 'delete', label: 'Delete', error: true },
 ];
 
+@Directive({
+  selector: '[docsAutoLayoutConfig]',
+  standalone: true,
+  providers: [provideDsConfig({ table: { layout: 'auto' } })],
+})
+class AutoLayoutConfigDirective {}
+
 @Component({
   selector: 'page-table-clip-harness',
   standalone: true,
@@ -211,6 +220,7 @@ const ACTIONS: readonly TableRowAction<Row>[] = [
     DsTableResize,
     BadgeComponent,
     TooltipDirective,
+    AutoLayoutConfigDirective,
   ],
   encapsulation: ViewEncapsulation.None,
   templateUrl: './table-clip.page.html',
@@ -299,7 +309,15 @@ const ACTIONS: readonly TableRowAction<Row>[] = [
 })
 export class TableClipHarnessPage {
   protected readonly people = people;
+  protected readonly layoutCases = LAYOUT_CASES;
   protected readonly secondPageShown = signal<ReadonlySet<string>>(new Set());
+  protected readonly hiddenPanelShown = signal(true);
+  protected readonly hiddenPanelRows = signal<readonly Row[]>(people);
+  protected readonly hiddenPanelColumns: readonly TableColumn<Row>[] = [
+    { key: 'name', label: 'Policyholder' },
+    { key: 'status', label: 'Status', width: 'content' },
+    { key: 'email', label: 'Email' },
+  ];
 
   protected caseData(item: HarnessCase): readonly Row[] {
     return item.pageTwo && this.secondPageShown().has(item.id)

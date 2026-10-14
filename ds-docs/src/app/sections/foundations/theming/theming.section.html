@@ -3,8 +3,8 @@
   eyebrow="Foundations"
   title="Theming &amp; dark mode">
   <span lede>
-    Three colour layers (base palette, light / dark role maps, brand
-    overlays) let a theme or brand re-skin every component.
+    Three colour layers (base palette, light / dark role maps, brand overlays)
+    let a theme or brand re-skin every component.
   </span>
 
   <h3
@@ -44,18 +44,23 @@
     <code class="t-mono-inline">
       &lt;html data-neutrals="brand"&gt;
     </code>
-    re-tints the neutral ramp from <code class="t-mono-inline">--primary-h</code>;
-    light theme only, dark keeps its own ramp.
+    re-tints the neutral ramp from
+    <code class="t-mono-inline">
+      --primary-h
+    </code>; light theme only, dark keeps
+    its own ramp.
   </p>
 
   <p class="block-desc t-s">
     <strong>
       No automatic <code class="t-mono-inline">prefers-color-scheme</code>
       switch.
-    </strong> To follow the OS, add
+    </strong>
+    To follow the OS, add
     <code class="t-mono-inline">
       provideDsTheme({{ '{' }} followSystem: true {{ '}' }})
-    </code>.
+    </code
+    >.
   </p>
 
   <ul class="rules">
@@ -188,11 +193,11 @@
     <strong>
       Hard rule:
     </strong> components never read base-palette primitives
-    (<code class="t-mono-inline">--blue-600</code>), only Tier-2 roles
-    (<code class="t-mono-inline">--primary</code>,
-    <code class="t-mono-inline">
-      --text-secondary
-    </code>) or component tokens.
+    (<code class="t-mono-inline">--blue-600</code>), only Tier-2 roles (<code
+      class="t-mono-inline"
+      >--primary</code
+    >, <code class="t-mono-inline"> --text-secondary </code>) or component
+    tokens.
   </p>
 
   <h3 class="block-title t-h4">
@@ -233,8 +238,8 @@
       </code> on
       <code class="t-mono-inline">
         &lt;html&gt;
-      </code>: re-point palette channels
-      (<code class="t-mono-inline">--blue-h/s/l</code>, read by
+      </code>: re-point palette
+      channels (<code class="t-mono-inline">--blue-h/s/l</code>, read by
       <code class="t-mono-inline">
         --primary-h/s/l
       </code>), optionally a few
@@ -300,11 +305,10 @@
     Five tokens take their hue from
     <code class="t-mono-inline">
       --primary
-    </code> in both themes. Check each against the brand; set it where it
-    fails. Links stay blue under any brand: set
-    <code class="t-mono-inline">
-      --ds-link-color
-    </code> to change them.
+    </code> in both themes. Check each
+    against the brand; set it where it fails. Links stay blue under any brand:
+    set <code class="t-mono-inline"> --text-link </code> and
+    <code class="t-mono-inline"> --text-link-visited </code> to change them.
   </p>
 
   <table class="tbl">
@@ -485,8 +489,8 @@
         [data-density]
       </code>.
     </strong>
-    Density rewrites hit targets and padding per route; size picks one of
-    three control sizes. Both apply.
+    Density rewrites hit targets and padding per route; size picks one of three
+    control sizes. Both apply.
   </p>
 
   <h3 class="block-title t-h4">
@@ -518,8 +522,8 @@
           </code>, then Angular's
           <code class="t-mono-inline">
             LOCALE_ID
-          </code>; its default en-US reads as en-GB (Monday, 24 hours,
-          DD/MM/YYYY)
+          </code>; its default en-US
+          reads as en-GB (Monday, 24 hours, DD/MM/YYYY)
         </td>
       </tr>
 
@@ -584,11 +588,12 @@
       These read the scale directly, so zero
       <code class="t-mono-inline">
         --radius-*
-      </code> too: accordion, breadcrumbs,
-      button-group, chart frames, bars, funnel and states, colour-picker,
-      date-picker, definition term, dropzone, empty-state, input, links, menu,
-      confirm modal, number-stepper, OTP input, sidenav (rail, groups,
-      footer), skeleton, split-button, table, tabs, toast, toggle-button, w3w
+      </code> too: accordion,
+      breadcrumbs, button-group, chart frames, bars, funnel and states,
+      colour-picker, date-picker, definition term, dropzone, empty-state, input,
+      links, menu, confirm modal, number-stepper, OTP input, sidenav (rail,
+      groups, footer), skeleton, split-button, table, tabs, toast,
+      toggle-button, w3w
     </li>
 
     <li>
@@ -600,8 +605,8 @@
   <p class="block-desc t-s">
     <strong>
       Roles also allow the partial case
-    </strong> the scale cannot: one declaration moves a family, not its
-    neighbour:
+    </strong> the scale cannot: one
+    declaration moves a family, not its neighbour:
   </p>
 
   <pre class="t-mono-block">{{ squarePartialSnippet }}</pre>

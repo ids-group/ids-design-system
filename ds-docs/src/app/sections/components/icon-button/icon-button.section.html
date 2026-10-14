@@ -35,14 +35,18 @@
       </code> and
       <code class="t-mono-inline">
         outlined
-      </code> stay neutral at rest and tint
-      only when selected.
+      </code> stay neutral at rest and
+      tint only when selected.
     </li>
 
     <li>
       <code class="t-mono-inline">
         secondary
-      </code> / <code class="t-mono-inline">tertiary</code> default to orange / violet, independent of <code class="t-mono-inline">--primary</code>.
+      </code> /
+      <code class="t-mono-inline">
+        tertiary
+      </code> default to orange / violet,
+      independent of <code class="t-mono-inline">--primary</code>.
     </li>
   </ul>
 
@@ -78,8 +82,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Primary colour. Hover, focus and active are pinned via the component's
-    own resolvers.
+    Primary colour. Hover, focus and active are pinned via the component's own
+    resolvers.
   </p>
 
   <div class="matrix-scroll">
@@ -201,8 +205,14 @@
     <code class="t-mono-inline">
       [selected]
     </code> renders the pressed state
-    and sets <code class="t-mono-inline">aria-pressed</code>, <code class="t-mono-inline">"false"</code> when off; an icon button with no <code class="t-mono-inline">[selected]</code> is no toggle and has none. As a menu
-    trigger, bind <code class="t-mono-inline">[ariaExpanded]</code> and
+    and sets <code class="t-mono-inline">aria-pressed</code>,
+    <code class="t-mono-inline">
+      "false"
+    </code> when off; an icon button with no
+    <code class="t-mono-inline">
+      [selected]
+    </code> is no toggle and has none. As
+    a menu trigger, bind <code class="t-mono-inline">[ariaExpanded]</code> and
     <code class="t-mono-inline">
       [ariaControls]
     </code>; host attributes land on
@@ -232,10 +242,7 @@
     <code class="t-mono-inline">
       filled
     </code> (and selected) derives its fill
-    with
-    <code class="t-mono-inline">
-      oklch()
-    </code>;
+    with <code class="t-mono-inline"> oklch() </code>;
     <code class="t-mono-inline">
       standard
     </code> stays boxless, icon muted.

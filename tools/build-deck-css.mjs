@@ -29,6 +29,7 @@ const FONTS_TO = join(ROOT, 'presentations/fonts');
 
 // The JS API, not the `sass` CLI: Node refuses to spawn a .cmd shim on Windows
 // without a shell, and this needs no subprocess at all.
+mkdirSync(dirname(TARGET), { recursive: true });
 writeFileSync(TARGET, sass.compile(SOURCE, { style: 'expanded' }).css, 'utf8');
 
 rmSync(FONTS_TO, { recursive: true, force: true });

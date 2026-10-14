@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**133 open — 2 P1, 11 P2, 120 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
+**135 open — 2 P1, 11 P2, 122 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 2
 
@@ -42,7 +42,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 120
+### P3 — 122
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -52,6 +52,8 @@ is stale. Closing an item means deleting the item and nothing else.
   - ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01)
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - `g[dsLineSeries]` demonstrates `stacked` and `tooltipAnchor` only on the preset
+- **Faster gates (Stas, 2026-10-09: after the release)**
+  - Rewrite the gates in Rust or C++ (idea, Stas 2026-10-14: «переписать все гейты на раст
 - **Keyboard reach reported by Stas, 2026-10-09 (record only, fix after the release)**
   - The password field's show/hide toggle is not reachable by Tab
   - `ds-menu` opened from the keyboard does not take focus, and Tab walks the wrong menu
@@ -60,6 +62,7 @@ is stale. Closing an item means deleting the item and nothing else.
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
   - A pressed danger menu item shows its hover colour (recorded 2026-09-24)
 - **Asked by Stas**
+  - A single select with a search box (Stas, 2026-10-14, from mm-ecm ME-530)
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
   - Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24)
   - Pin more than one mark at a time (Stas, 2026-09-29)
@@ -341,6 +344,13 @@ Constraints and decisions that read as removable and are not.
   and the exit code the same; checks that build or share a cache stay serial or get a lock.
   Measure the group before and after.
 
+- [ ] **[P3] Rewrite the gates in Rust or C++ (idea, Stas 2026-10-14: «переписать все гейты на раст
+  или c++ чтобы очень быстро было»).** Before choosing what to port, measure where each gate spends
+  its time (`tools/check.mjs` per-check timings): the slow ones build the docs, run headless Chrome
+  or the Angular compiler, which a rewrite does not speed up; the candidates are the pure file-walking
+  and text-matching checks. Compare against the cheaper steps above (parallel `check.mjs`, shared
+  render-evidence cache, `--affected`) first.
+
 ## Keyboard reach reported by Stas, 2026-10-09 (record only, fix after the release)
 
 - [ ] **[P3] The password field's show/hide toggle is not reachable by Tab.**
@@ -423,6 +433,9 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 Each has somebody behind it. Nothing here is speculative work.
 
 ## Asked by Stas
+
+- [ ] **[P3] A single select with a search box (Stas, 2026-10-14, from mm-ecm ME-530).** The ECM Audit & History «Event type» filter (69 options) got search on ECM's own `app-field-select` (button trigger, filter row in the panel, groups) instead of `ds-autocomplete`. Stas: leave an ask in the DS for such a component or feature. Drawn in deck `32-searchable-select-ask` (local); options A `searchable` on `ds-select`, B new component, C a select-only mode on `ds-autocomplete`, D nothing.
+  **Today:** `ds-select` has no input (`select.component.html:24`, only `createTypeAhead`); `ds-multi-select` has the filter row, `searchable` (boolean or option-count threshold, default `DS_CONFIG.picker.searchable`), `filterWith`, `filterChange` (`multi-select.component.html:173`, `.ts:150-174`); `ds-autocomplete` types into the trigger itself (`autocomplete.component.html:83`). Same product question as the «create what I typed» item under Component feature gaps.
 
 - [ ] **[P2] A clipped value's tooltip should line up with the text it completes (Stas, 2026-10-10).** `dsTooltipWhenClipped` opens a panel capped at `--tooltip-maxw` (240px), so the full text of a wider clipped link wraps narrower than the ellipsized text under it (mm-ecm Workspaces, program name). **Wanted (Stas):** for a clip-test tooltip the minimum width stays as it is today, and the maximum width becomes the visible width of the clipped element, so text that would grow the panel wraps at the width of the ellipsized text. Deck before the change.
 - [~] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `ecm-feat/table-width-by-type`, built and waiting on the sign-off in deck `28-table-width-by-type`.
@@ -1066,74 +1079,6 @@ that already existed, because both are the kind of ask that comes back.
   the link colour the way `.link` does. The default is unchanged until it is given.
 
 None of these is blocked on effort. Each is a verdict, and most carry a deck that renders the options.
-
-## Decks awaiting a verdict (re-audited 2026-09-24)
-
-**Twenty-seven** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
-short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
-answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
-changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one. **`presentations/1-decision-queue.html` carries every open question** — every open
-deck's question with its options in that deck's own words, the recommendation starred, a link back
-for the argument, and the two questions that have no deck. It duplicates no argument, so it cannot
-contradict a deck; re-check it when a deck's OPTIONS change. **Never cite a deck by number from this
-file** — the number moves; cite the filename.
-
-| # | Deck | Asks | Twin on this board |
-| --- | --- | --- | --- |
-| 1 | `1-decision-queue` | Every consumer ask and every open question in one page - 3 asks in three groups, then 47 decisions in eight, every option drawn in its own card; 35 answered under «Уже решено». | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
-| 2 | `2-color-engine-derivation` | One source token per role, derived. | the colour-engine P3 |
-| 3 | `3-color-engine-relative` | The prototype half of the same question. | as above |
-| 4 | `4-interaction-formula` | The pressed recipe of the tonal button, and of the danger menu item. | the pressed-danger-menu P3 and the `.ds-interactive` P3 |
-| 5 | `5-migration-manifest-audit` | Which of ten format practices marked *Adopt* are worth the tooling. | the manifest-practices P3 |
-| 6 | `6-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
-| 7 | `7-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
-| 8 | `8-picker-list-height` | Which knob caps a picker's list: one cap, `panelClass`, or a new list token, all three drawn and measured. | the picker-cap Decision (task 53) |
-| 9 | `9-docs-reasoning-blocks` | What ds-docs does with its ~27 reasoning blocks: keep, fold to the chapter end, move to a proof page, or delete. | none - the Claude Design side is settled in `.design-sync/CARDS.md` |
-| 10 | `10-deerns-atlas-feedback` | Nine design calls and a per-component scope call raised by the Deerns Atlas prototype on the Claude Design bundle; twenty one-answer fixes (inputs before first CD on React 18 for NG0950 and mount flicker, empty Tabs, `ds-x-*` alias vs tag selectors, `.link` on button, Tag nowrap, agent catalogue) are listed in the deck. | Deerns Atlas feedback |
-| 11 | `11-unread-tokens` | Which public tokens the library never reads to remove: none, the 51 dead component and pattern sizes, or all 121. | none |
-| 12 | `12-unasked-decisions` | Six Unreleased behaviour changes made without a choice: keep, adjust or revert each. | none |
-| 13 | `13-column-chart-filter` | How `ds-column-chart` takes a caption under each column and a persistent selection, so a consumer's filter chart can move onto it: point fields, chart inputs with a template, or nothing; `value: number | null` is settled. | none |
-| 14 | `14-table-column-hint` | What the tooltip of a clipped `ds-table` header with `hint` shows: only the hint (as shipped), the full label then the hint, or a hinted header that wraps and never clips. | none |
-| 15 | `15-table-header-clip` | Before and after of `fix/table-header-clip`: a `ds-table` header label clips with an ellipsis in its column, and a clipped hinted header's tooltip shows the label, then the hint. | none |
-| 16 | `16-interaction-states` | General rules for the states of interactive elements as levels on three channels, with live sliders for the step numbers; one neutral hover surface; a check against empty cells; whether to merge the pilot; open questions on top. | none |
-| 17 | `17-text-snap-scale` | How a scaling animation ends without the text snapping a pixel: press (as today for now), card hover, the scaling rule, the funnel stage step. | the overlay-enter-snap fix |
-| 18 | `18-tooltip-mechanism` | Three open questions on the tooltip: the six listeners per table cell (measured) and what to do about them, loading the panel at idle after start, and one app-wide delegated listener for every directive with events. Answered and finished proposals are folded below. | none |
-| 19 | `19-icon-box-size` | How `ds-banner` and `ds-dropzone` size their icon under `styles/icon-base`: four options drawn, one recommended; parked, decided later. | the global `.icon` item under Parked |
-| 20 | `20-docs-table-look` | Which look `table.tbl` takes on every ds-docs page: bordered everywhere, plain everywhere, or as today (Charts and Z-index override the shared bordered rule); all four pages drawn in each look. | none |
-| 21 | `21-density-scope` | Where `data-density` works: only on `<html>` with the docs corrected, or on any container by re-declaring `--field-h-sm`, `--field-h-md`, `--sidenav-collapsed-item` and `--calendar-cell-min` inside `[data-density]`; both drawn at four tiers and nested. | none |
-| 22 | `22-table-truncate-result` | Sign-off of the `truncate` column without `width` that grows to its text: six verdicts recorded (B, A, C, A, then width by column kind and 240 under the condition that widths never move when the data or the page changes), `minWidth` built; carries the 0.15.0 audit and how other table libraries size columns. Open until the next version builds the width by kind. | the P1 table item in Asked by Stas |
-| 23 | `23-table-wrap-parked` | Parked: two wrap options for a `truncate` column (fill the row height, or always wrap), each rendered. | the wrap item under Parked |
-| 24 | `24-link-colour` | What colour a text link takes under a non-blue brand: the brand colour (dev since `b9f5a6db2`) or always blue; both drawn for a blue and a green brand in light and dark, with link-to-background and link-to-text contrast. | none |
-| 25 | `25-brand-dark-theme` | How a brand colour set once reaches the dark theme: repeat it under the dark selector (today), the dark block stops redeclaring `--primary` and its channels, or a `--ds-brand` input with a lifted dark `--primary`; drawn on the real `ds.css` for blue, green and navy brands with contrast measured. | the open queue question on deriving every shade from one brand colour |
-| 26 | `26-six-behaviour-changes` | The six behaviour changes published in 0.14.7 without a choice, one by one: theme set before startup, modal `confirmed`, avatar-group `max`, disabled link with `disabledReason`, `provideDsIcons` merge, chart pin disc; before and after drawn, two or three options each, six picks. | the Decisions item on the six behaviour changes |
-| 27 | `27-duplicate-label-match` | How a chart matches a column across a data update when two categories share a label and the first is removed: by label with a repeat counter (today, ECharts), by array position (Chart.js, Recharts, D3, Highcharts without id), by label only (Nivo), by an explicit point `id`, or by label with a dev console warning; each drawn as the same animated scene with replay and ×5. | the queue question on two columns with one label |
-| 28 | `28-table-width-by-type` | Sign-off of the built column width by kind: dev against the branch on page 1 and 2 of server paging, client paging and a scrolling all-`truncate` table, the kind columns, the 240px clip in a scrolling table, and the taller rows where text now wraps. | the P1 table item in Asked by Stas |
-
-**Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
-directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
-CSS rejected at 1 kB for a consumer who does not exist), `sidebar-states` (variant E, and the code
-carries it: the item fills with `--accent-subtitle`, the group never fills) and `stat-value-overflow`
-(one line plus a tip on hover, three hooks over it). `6-rejected-with-numbers` left the queue the
-same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was owed.
-
-**Closed on 2026-09-19 and moved to `implemented/`:** the chart lane in one pass - `chart-composition-model` (marks project into the container, one `<svg>` per chart), `chart-phase-2-marks` (the whole Phase 2 layer built), `chart-dual-axis` (a second axis rises only when a mark contributes values to it), `chart-axis-mode-names` (`yAxisMode` renamed), `chart-area-mode-or-component` (a mode on the line chart, not its own tag), `chart-rescale-on-hide` (the domain drops a hidden series) - plus `docs-chapter-nav`.
-
-**Closed on 2026-09-21 and moved to `implemented/`:** `chart-palette-v2` - the two greens moved apart by one token (`--chart-categorical-6`, 152deg to 148deg), and `tools/check-chart-palette-separation.mjs` went into `lint:all` holding the 6 floor under normal vision. Colour-vision deficiency is reported by that gate and not enforced: Stas confirmed the system never took that commitment on, which is why the full repaint was declined.
-
-**Closed on 2026-10-05 and moved to `implemented/`:** `pie-chart-center-value` - option K: the centre value shrinks to the hole down to `--ds-pie-chart-center-value-min-font-size`, then prints the `'tick'` form unless `[centerCompact]="false"`; `centerPlacement="below"` prints it under the ring.
-
-**Closed on 2026-10-09 and moved to `implemented/`:** `loading-states` - each chart's picked skeleton, `skeletonCount`, the plot-bound reload overlay, the heatmap card hugging its grid and the picker list states, built on `ecm-feat/loading-skeletons`; `loading-skeletons` - its before and after, all 12 blocks accepted and merged into dev; `component-owned-styles` - every component carries its own base (`border-box`, control font, heading margins, base focus ring) in `@layer ds-component-base`, plus breakpoints, the picker empty row and the reduced-motion shimmer; a lint guard holds it. Its icon question moved to `19-icon-box-size`. `focus-ring-follows-shape` - the focus ring takes `--focus-ring-radius` wherever an element declares no radius; close buttons centre their glyph in a square box, the `ds-table` column filter is a 24px target, a cell link is ringed outside its text. `clipped-value-tab-stop` - a clipped `dsTooltipWhenClipped` value that no keyboard path reaches takes `tabindex="0"` while clipped, one stop per value in a long table too (option A); one roving stop per table with arrows is under *Parked*.
-
-**Closed on 2026-10-12 and moved to `implemented/`:** `info-hint-content` - `ds-info-hint` takes projected content and a `[content]` template (both, until consumers show which to keep), any `IconName` in `icon`, and `--ds-info-hint-color` for the icon colour.
-
-**Ranks 1-10 have a twin on this board, so one answer closes two lines** — which is what
-makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
-answer, and it has already been given — the deck stays only because closing it was declined.
-
-**Every rank is written in Russian; ranks 1, 4, 5 and 8-11 share `presentations/deck.css`**, and ranks
-2, 3, 6 and 7 carry their own inline styles. `presentations/README.md` holds the authoring contract
-and the fifteen lint rules.
 
 ## Tooling
 

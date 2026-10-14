@@ -180,7 +180,7 @@
   --_table-row-pressed-bg-color: var(--ds-table-row-pressed-bg-color, var(--surface-muted));
   --_table-row-active-bg-color: var(--ds-table-row-active-bg-color, var(--accent-subtitle));
   --_table-row-stripe-bg-color: var(--ds-table-row-stripe-bg-color, var(--surface-secondary));
-  --_table-cell-link-color: var(--ds-table-cell-link-color, var(--accent));
+  --_table-cell-link-color: var(--ds-table-cell-link-color, var(--text-link));
   --_table-cell-link-decoration: var(--ds-table-cell-link-decoration, underline);
   --_table-head-text-color:         var(--ds-table-head-text-color,         var(--text-secondary));
   --_table-head-bg-color:         var(--ds-table-head-bg-color,         var(--surface-secondary));
@@ -215,6 +215,25 @@
 
   td.fit-content {
     white-space: nowrap;
+  }
+
+  /* `layout="auto"`. `width: 1%` is the shrink-to-fit trick: a table lays out at least the content
+     width, so an under-sized request collapses the column onto its widest cell and hands the slack
+     to the others. nowrap stops that cell wrapping and defeating the point. */
+  &.auto-layout:not(.virtual) {
+    table-layout: auto;
+  }
+
+  &.auto-layout {
+    th.fit-content,
+    td.fit-content {
+      width: 1%;
+      white-space: nowrap;
+    }
+
+    tbody td {
+      overflow-wrap: normal;
+    }
   }
 
   /* Auto layout at max-content for one synchronous read: every cell asks for its full width, which
@@ -506,6 +525,13 @@
 
     .cell-clip {
       display: block;
+    }
+
+    /* `layout="auto"`: the text adds nothing to the column's width; the table sets the clip's min
+       and max width from what the other columns leave, up to the widest value. */
+    .cell-clip.grows > .cell-clip-text {
+      width: 0;
+      min-width: 100%;
     }
 
     .cell-clip-text {

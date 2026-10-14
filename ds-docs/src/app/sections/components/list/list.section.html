@@ -16,11 +16,14 @@
   <p class="block-desc t-s">
     <code>
       [leading]
-    </code> and <code>[trailing]</code> take icons or avatars. Dividers are on
-    until
+    </code> and <code>[trailing]</code> take icons or avatars.
+    Dividers are on until
     <code class="t-mono-inline">
       [dividers]="false"
-    </code>. Tokens: <code>--ds-list-divider-color</code> and
+    </code>. Tokens:
+    <code>
+      --ds-list-divider-color
+    </code> and
     <code>
       --ds-list-item-*
     </code> (padding-y/x, gap, hover-bg-color,
@@ -155,17 +158,26 @@
     <code>
       [leading]
     </code> and <code>[trailing]</code> sit outside the row's
-    button, so a row can hold its own control (a bulk-action checkbox) and
-    still select.
+    button, so a row can hold its own control (a bulk-action checkbox) and still
+    select.
   </p>
 
   <ul class="block-desc t-s">
     <li>
-      A checkbox inside a <code class="t-mono-inline">&lt;button&gt;</code> is invalid HTML, bubbles into <code class="t-mono-inline">activated</code> and loses its checked state for screen readers.
+      A checkbox inside a <code class="t-mono-inline">&lt;button&gt;</code> is
+      invalid HTML, bubbles into
+      <code class="t-mono-inline">
+        activated
+      </code> and loses its checked state
+      for screen readers.
     </li>
 
     <li>
-      The host is <code class="t-mono-inline">role="list"</code>, not <code class="t-mono-inline">listbox</code>, whose options cannot hold interactive content.
+      The host is <code class="t-mono-inline">role="list"</code>, not
+      <code class="t-mono-inline">
+        listbox
+      </code>, whose options cannot hold
+      interactive content.
     </li>
   </ul>
 

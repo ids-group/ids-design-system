@@ -4,8 +4,8 @@
   title="Waterfall chart"
   [chapters]="true">
   <span lede>
-    A running total, bar by bar: where a figure started, what moved it, where
-    it ended.
+    A running total, bar by bar: where a figure started, what moved it, where it
+    ended.
   </span>
 
   <h3
@@ -16,11 +16,13 @@
 
   <ul class="rules">
     <li>
-      Each bar's <code class="t-mono-inline">value</code> adds to the running total.
+      Each bar's <code class="t-mono-inline">value</code> adds to the running
+      total.
     </li>
 
     <li>
-      A <code class="t-mono-inline">delta</code> (default) hangs from the previous bar's end.
+      A <code class="t-mono-inline">delta</code> (default) hangs from the
+      previous bar's end.
     </li>
 
     <li>
@@ -28,8 +30,11 @@
     </li>
 
     <li>
-      A closing total usually carries <code class="t-mono-inline">value: 0</code>: it prints the sum,
-      not a change.
+      A closing total usually carries
+      <code class="t-mono-inline">
+        value: 0
+      </code>: it prints the sum, not a
+      change.
     </li>
   </ul>
 
@@ -43,19 +48,26 @@
 
   <ul class="rules">
     <li>
-      Deltas print a signed change; accessible names say "increase",
-      "decrease" or "total". Both survive forced colours and monochrome.
+      Deltas print a signed change; accessible names say "increase", "decrease"
+      or "total". Both survive forced colours and monochrome.
     </li>
 
     <li>
-      Rise and fall use the palette's lead hues, not <code class="t-mono-inline">--success</code> /
+      Rise and fall use the palette's lead hues, not
+      <code class="t-mono-inline">
+        --success
+      </code> /
       <code class="t-mono-inline">
         --error
-      </code>: a change is a direction, not a verdict.
+      </code>: a change is a direction, not
+      a verdict.
     </li>
 
     <li>
-      Recolour with <code class="t-mono-inline">--ds-chart-positive-color</code> and
+      Recolour with
+      <code class="t-mono-inline">
+        --ds-chart-positive-color
+      </code> and
       <code class="t-mono-inline">
         --ds-chart-negative-color
       </code>; totals use
@@ -106,12 +118,10 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       showValues
-    </code> prints changes and sums above
-    bars;
-    <code class="t-mono-inline">
-      showConnectors
-    </code> draws dashed rules between
-    them. Both default on; turn off beside a table, or when bars are cramped.
+    </code> prints changes and sums
+    above bars; <code class="t-mono-inline"> showConnectors </code> draws dashed
+    rules between them. Both default on; turn off beside a table, or when bars
+    are cramped.
   </p>
 
   <div class="states is-cols-3">
@@ -148,7 +158,8 @@
     Hovering a step stops the axis guide at it; under
     <code class="t-mono-inline">
       dimOthers
-    </code> the other bars, and the steps after it, fade.
+    </code> the other bars, and the steps
+    after it, fade.
   </p>
 
   <ds-waterfall-chart
@@ -164,11 +175,8 @@
     <code class="t-mono-inline">
       interactive
     </code> adds the affordance and
-    keyboard route;
-    <code class="t-mono-inline">
-      barClicked
-    </code> emits the datum. Any point,
-    axis labels included, hits its nearest step.
+    keyboard route; <code class="t-mono-inline"> barClicked </code> emits the
+    datum. Any point, axis labels included, hits its nearest step.
   </p>
 
   <ds-waterfall-chart
@@ -187,8 +195,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    A click holds a bar and its tooltip; <code class="t-mono-inline">barClicked</code> fires either
-    way. Release and opt-out: <a class="link" routerLink="/foundations/charts">Charts foundations</a>.
+    A click holds a bar and its tooltip;
+    <code class="t-mono-inline">
+      barClicked
+    </code> fires either way. Release and
+    opt-out:
+    <a
+      class="link"
+      routerLink="/foundations/charts"
+      >
+      Charts foundations
+    </a
+    >.
   </p>
 
   <h3 class="block-title t-h4">
@@ -199,20 +217,29 @@
     <li>
       <code class="t-mono-inline">
         tooltip
-      </code>: <code class="t-mono-inline">'item'</code> (default) opens a panel per step,
+      </code>:
       <code class="t-mono-inline">
-        'none'
-      </code> removes it.
+        'item'
+      </code> (default) opens a panel per
+      step, <code class="t-mono-inline"> 'none' </code> removes it.
     </li>
 
     <li>
-      No <code class="t-mono-inline">'axis'</code>: each bar is its own category.
+      No <code class="t-mono-inline">'axis'</code>: each bar is its own
+      category.
     </li>
 
     <li>
       <code class="t-mono-inline">
         dimOthers
-      </code>: <a class="link" routerLink="/foundations/charts">Charts foundations</a>.
+      </code>:
+      <a
+        class="link"
+        routerLink="/foundations/charts"
+        >
+        Charts foundations
+      </a
+      >.
     </li>
   </ul>
 
@@ -231,10 +258,8 @@
       staggerMs
     </code> delays each bar's growth
     (<code class="t-mono-inline">40</code> by default), capped so the spread
-    fits 260ms.
-    <code class="t-mono-inline">
-      0
-    </code> brings every step in at once.
+    fits 260ms. <code class="t-mono-inline"> 0 </code> brings every step in at
+    once.
   </p>
 
   <h3 class="block-title t-h4">
@@ -245,13 +270,16 @@
     <li>
       <code class="t-mono-inline">
         loading
-      </code>, no data - total, floating steps, closing total.
+      </code>, no data - total, floating
+      steps, closing total.
     </li>
 
     <li>
       <code class="t-mono-inline">
         loading
-      </code>, bars on screen - kept under the <code class="t-mono-inline">ds-loading-overlay</code> scrim and spinner.
+      </code>, bars on screen - kept under
+      the <code class="t-mono-inline">ds-loading-overlay</code> scrim and
+      spinner.
     </li>
   </ul>
 

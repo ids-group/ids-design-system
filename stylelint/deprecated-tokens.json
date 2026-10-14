@@ -2619,10 +2619,10 @@
   },
   {
     "name": "--link-visited",
-    "replacement": "--ds-link-color-visited",
-    "kind": "removed",
+    "replacement": "--text-link-visited",
+    "kind": "renamed",
     "since": "0.15.1",
-    "itemId": "0.15.1#link-visited-token-removed"
+    "itemId": "unreleased#link-visited-role-is-text-link-visited"
   },
   {
     "name": "--opacity-muted",
@@ -2693,13 +2693,6 @@
     "kind": "renamed",
     "since": "0.2.0",
     "itemId": "0.2.0#surface-subtle-token-rename"
-  },
-  {
-    "name": "--text-link",
-    "replacement": "--ds-link-color",
-    "kind": "removed",
-    "since": "0.15.1",
-    "itemId": "0.15.1#text-link-token-removed"
   },
   {
     "name": "--warning-subtle",

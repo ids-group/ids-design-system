@@ -8,17 +8,29 @@
 
   <ul class="block-desc t-s">
     <li>
-      Each filter - an <code class="t-mono-inline">ng-template [dsFilterItem]</code> with its width in px (<code class="t-mono-inline">[dsFilterItem]="170"</code>; bare = 180).
+      Each filter - an
+      <code class="t-mono-inline">
+        ng-template [dsFilterItem]
+      </code> with its
+      width in px (<code class="t-mono-inline">[dsFilterItem]="170"</code>; bare
+      = 180).
     </li>
 
     <li>
-      The split reads those widths and one <code class="t-mono-inline">ResizeObserver</code> on the row; filters are never measured, so nothing flashes.
+      The split reads those widths and one
+      <code class="t-mono-inline">
+        ResizeObserver
+      </code> on the row; filters are
+      never measured, so nothing flashes.
     </li>
   </ul>
 
   <ul class="block-desc t-s">
     <li>
-      Filters collapse into the panel from the right; <code class="t-mono-inline">dsFilterBarTrailing</code> controls stay.
+      Filters collapse into the panel from the right;
+      <code class="t-mono-inline">
+        dsFilterBarTrailing
+      </code> controls stay.
     </li>
 
     <li>
@@ -26,7 +38,10 @@
     </li>
 
     <li>
-      Neither a <code class="t-mono-inline">dsFilterItem</code> template nor <code class="t-mono-inline">dsFilterBarTrailing</code> - not rendered.
+      Neither a <code class="t-mono-inline">dsFilterItem</code> template nor
+      <code class="t-mono-inline">
+        dsFilterBarTrailing
+      </code> - not rendered.
     </li>
   </ul>
 
@@ -37,8 +52,7 @@
     </code> and give its
     <code class="t-mono-inline">
       :host
-    </code> the bar's trailing rule
-    (below).
+    </code> the bar's trailing rule (below).
   </p>
 
   <pre class="t-mono-block">{{ trailingWrapperSnippet }}</pre>
@@ -52,15 +66,13 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       triggerSize
-    </code> (default <code class="t-mono-inline">md</code>) sets the "+N"
-    trigger height; match it to the filters'
+    </code> (default
     <code class="t-mono-inline">
-      size
-    </code>, which the bar cannot read
-    (unset beside
-    <code class="t-mono-inline">
-      sm
-    </code> filters, it is 8px taller).
+      md
+    </code>) sets the "+N" trigger height; match
+    it to the filters' <code class="t-mono-inline"> size </code>, which the bar
+    cannot read (unset beside <code class="t-mono-inline"> sm </code> filters,
+    it is 8px taller).
   </p>
 
   <div class="width-control">
@@ -140,15 +152,21 @@
 
   <ul class="block-desc t-s">
     <li>
-      Each slot is exactly its declared width, in row and panel; a wider control is narrowed.
+      Each slot is exactly its declared width, in row and panel; a wider control
+      is narrowed.
     </li>
 
     <li>
-      Moving between them re-creates the filter: an open dropdown or focus is lost; the value survives in your signal or form control.
+      Moving between them re-creates the filter: an open dropdown or focus is
+      lost; the value survives in your signal or form control.
     </li>
 
     <li>
-      The trigger shows the count as text, with <code class="t-mono-inline">aria-expanded</code>; the panel is a focus-trapped dialog.
+      The trigger shows the count as text, with
+      <code class="t-mono-inline">
+        aria-expanded
+      </code>; the panel is a
+      focus-trapped dialog.
     </li>
 
     <li>

@@ -32,6 +32,55 @@
   </section>
 }
 
+@for (item of layoutCases; track item.id) {
+  <section
+    class="case"
+    [attr.data-case]="item.id"
+    [style.width.px]="item.width">
+    <h3>
+      {{ item.id }} - {{ item.title }} ({{ item.width }}px)
+    </h3>
+
+    <ds-table
+      [caption]="item.title"
+      [data]="item.data"
+      [columns]="item.columns"
+      [density]="item.density" />
+  </section>
+
+  <section
+    class="case"
+    [attr.data-case]="item.id + '-auto'"
+    [style.width.px]="item.width">
+    <h3>
+      {{ item.id }}-auto - {{ item.title }}, layout="auto" ({{ item.width }}px)
+    </h3>
+
+    <ds-table
+      layout="auto"
+      [caption]="item.title"
+      [data]="item.data"
+      [columns]="item.columns"
+      [density]="item.density" />
+  </section>
+
+  <section
+    class="case"
+    docsAutoLayoutConfig
+    [attr.data-case]="item.id + '-config'"
+    [style.width.px]="item.width">
+    <h3>
+      {{ item.id }}-config - {{ item.title }}, DS_CONFIG.table.layout "auto" ({{ item.width }}px)
+    </h3>
+
+    <ds-table
+      [caption]="item.title"
+      [data]="item.data"
+      [columns]="item.columns"
+      [density]="item.density" />
+  </section>
+}
+
 <section
   class="case"
   data-case="templates-hints"
@@ -285,7 +334,8 @@
   data-case="expand-truncate"
   [style.width.px]="900">
   <h3>
-    expand-truncate - expandable rows, selectable, truncate without width (900px)
+    expand-truncate - expandable rows, selectable, truncate without width
+    (900px)
   </h3>
 
   <ds-table
@@ -308,7 +358,8 @@
   data-case="min-width-token"
   [style.width.px]="700">
   <h3>
-    min-width-token - --ds-table-min-width 1100px, truncate without width (700px)
+    min-width-token - --ds-table-min-width 1100px, truncate without width
+    (700px)
   </h3>
 
   <ds-table
@@ -322,7 +373,8 @@
   data-case="resize-content"
   [style.width.px]="900">
   <h3>
-    resize-content - dsTableResize on content, truncate, wrapping and numeric columns (900px)
+    resize-content - dsTableResize on content, truncate, wrapping and numeric
+    columns (900px)
   </h3>
 
   <ds-table
@@ -331,6 +383,51 @@
     [data]="people"
     [columns]="resizeContentColumns"
     [stickyHeader]="false" />
+</section>
+
+<section
+  class="case"
+  data-case="content-hidden-panel"
+  [style.width.px]="900">
+  <h3>
+    content-hidden-panel - width content re-measured while its panel is hidden,
+    then shown (900px)
+  </h3>
+
+  <button
+    type="button"
+    data-hidden-panel-toggle
+    (click)="hiddenPanelShown.set(!hiddenPanelShown())">
+    Toggle panel
+  </button>
+
+  <button
+    type="button"
+    data-hidden-panel-rows
+    (click)="
+      hiddenPanelRows.set(
+        hiddenPanelRows() === people ? people.slice(2) : people
+      )
+    ">
+    Swap rows
+  </button>
+
+  <div [hidden]="!hiddenPanelShown()">
+    <ds-table
+      caption="Content column in a hidden panel"
+      [data]="hiddenPanelRows()"
+      [columns]="hiddenPanelColumns"
+      [stickyHeader]="false">
+      <ng-template
+        let-row
+        dsCellTemplate="status"
+        [dsCellTemplateOf]="hiddenPanelRows()">
+        <ds-badge [withDot]="true">
+          {{ row.status }}
+        </ds-badge>
+      </ng-template>
+    </ds-table>
+  </div>
 </section>
 
 <section

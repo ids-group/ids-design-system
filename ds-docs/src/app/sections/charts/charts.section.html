@@ -16,7 +16,8 @@
     Rows keep the order given. Bar length and percent are shares of
     <code class="t-mono-inline">
       max
-    </code>: the input, else the largest bar end, target or band.
+    </code>: the input, else the largest bar
+    end, target or band.
   </p>
 
   <ds-bar-chart
@@ -105,8 +106,8 @@
     </li>
 
     <li>
-      A sum that differs from <code class="t-mono-inline">value</code> is a
-      data error, not a gap.
+      A sum that differs from <code class="t-mono-inline">value</code> is a data
+      error, not a gap.
     </li>
 
     <li>
@@ -161,8 +162,8 @@
     </code> names one segment by
     <code class="t-mono-inline">
       id
-    </code>; every other part in every row
-    fades to <code class="t-mono-inline">--ds-chart-dim-opacity</code>.
+    </code>; every other part in every row fades
+    to <code class="t-mono-inline">--ds-chart-dim-opacity</code>.
   </p>
 
   <p class="block-desc t-s">
@@ -255,7 +256,14 @@
     <code class="t-mono-inline">
       rowClicked
     </code> fires either way. Release
-    and opt-out: <a class="link" routerLink="/foundations/charts">Charts foundations</a>.
+    and opt-out:
+    <a
+      class="link"
+      routerLink="/foundations/charts"
+      >
+      Charts foundations
+    </a
+    >.
   </p>
 
   <ds-bar-chart
@@ -321,8 +329,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       labelPosition="start"
-    </code> puts each label in
-    a column before its bar; labels, bars, values and percents line up across
+    </code> puts each label
+    in a column before its bar; labels, bars, values and percents line up across
     rows.
   </p>
 
@@ -330,13 +338,23 @@
     <li>
       <code class="t-mono-inline">
         --ds-bar-chart-label-column-max-width
-      </code> - label column cap, default <code class="t-mono-inline">40%</code>.
+      </code>
+      - label column cap, default <code class="t-mono-inline">40%</code>.
     </li>
 
     <li>
       <code class="t-mono-inline">
         --ds-bar-chart-row-gap
-      </code> - <code class="t-mono-inline">var(--space-3)</code> here, <code class="t-mono-inline">var(--space-5)</code> under <code class="t-mono-inline">'top'</code>.
+      </code> -
+      <code class="t-mono-inline">
+        var(--space-3)
+      </code> here,
+      <code class="t-mono-inline">
+        var(--space-5)
+      </code> under
+      <code class="t-mono-inline">
+        'top'
+      </code>.
     </li>
   </ul>
 
@@ -382,9 +400,8 @@
     <li>
       <code class="t-mono-inline">
         children
-      </code> nests rows under one,
-      behind a disclosure button after its label, closed at first. One level
-      deep.
+      </code> nests rows under one, behind
+      a disclosure button after its label, closed at first. One level deep.
     </li>
 
     <li>
@@ -410,13 +427,15 @@
     <li>
       <code class="t-mono-inline">
         DsIntl.chart.rowsUnder
-      </code> - disclosure button name.
+      </code> - disclosure
+      button name.
     </li>
 
     <li>
       <code class="t-mono-inline">
         interactive
-      </code> - <kbd>Right</kbd> opens a group, <kbd>Left</kbd> closes it.
+      </code> - <kbd>Right</kbd> opens
+      a group, <kbd>Left</kbd> closes it.
     </li>
   </ul>
 
@@ -454,8 +473,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       emphasis
-    </code> prints a row's label in bold, as
-    for the first and last rows of a funnel.
+    </code> prints a row's label in bold,
+    as for the first and last rows of a funnel.
   </p>
 
   <ds-bar-chart
@@ -488,8 +507,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       detached
-    </code> marks a row that is not a
-    step of the others, such as a total who finished or left.
+    </code> marks a row that is not a step
+    of the others, such as a total who finished or left.
   </p>
 
   <p class="block-desc t-s">
@@ -534,8 +553,7 @@
       <code class="t-mono-inline">
         loading
       </code>, rows on screen - kept under
-      the overlay <code class="t-mono-inline">ds-table</code> uses on a
-      reload.
+      the overlay <code class="t-mono-inline">ds-table</code> uses on a reload.
     </li>
   </ul>
 
@@ -668,9 +686,12 @@
 
     <li>
       Keys and dimming:
-      <a class="link" routerLink="/foundations/charts">
+      <a
+        class="link"
+        routerLink="/foundations/charts">
         Charts foundations
-      </a>.
+      </a
+      >.
     </li>
   </ul>
 
@@ -694,13 +715,8 @@
     <code class="t-mono-inline">
       staggerMs
     </code> spaces out the rows' arrivals
-    (default
-    <code class="t-mono-inline">
-      40
-    </code>; the whole spread fits in 260ms;
-    <code class="t-mono-inline">
-      0
-    </code> turns it off).
+    (default <code class="t-mono-inline"> 40 </code>; the whole spread fits in
+    260ms; <code class="t-mono-inline"> 0 </code> turns it off).
   </p>
 
   <div class="states is-cols-2">
@@ -736,9 +752,12 @@
     <code class="t-mono-inline">
       dataTable="visible"
     </code> here. Values:
-    <a class="link" routerLink="/foundations/charts">
+    <a
+      class="link"
+      routerLink="/foundations/charts">
       Charts foundations
-    </a>.
+    </a
+    >.
   </p>
 
   <ds-bar-chart

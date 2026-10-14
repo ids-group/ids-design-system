@@ -994,6 +994,7 @@ function sweep() {
         after,
         prev,
         draft ? 'the working tree' : `v${version}`,
+        supersededBoundaries(item, tags),
       );
       defects.push(
         ...verdict.defects.map((line) => `${file}  ${item.id}\n      ${line}`),
@@ -1089,9 +1090,53 @@ function sweep() {
   });
 }
 
+// The tree before each release an item names in `supersedes`: `0.15.1#x` reads v0.15.0.
+function supersededBoundaries(item, tags) {
+  return (item.supersedes ?? []).map((reference) => {
+    const boundary = previousBoundary(tags, reference.split('#')[0]);
+    return boundary ? surfaceAt(boundary) : null;
+  });
+}
+
+export function unionSurface(base, ...extras) {
+  if (!extras.length) return base;
+  const union = {};
+  for (const [key, value] of Object.entries(base)) {
+    if (value instanceof Set)
+      union[key] = new Set(
+        [value, ...extras.map((extra) => extra[key] ?? [])].flatMap((set) => [
+          ...set,
+        ]),
+      );
+    else if (value instanceof Map) {
+      const merged = new Map(value);
+      for (const extra of extras)
+        for (const [name, entry] of extra[key] ?? [])
+          merged.set(
+            name,
+            entry instanceof Set && merged.get(name) instanceof Set
+              ? new Set([...merged.get(name), ...entry])
+              : (merged.get(name) ?? entry),
+          );
+      union[key] = merged;
+    } else union[key] = value;
+  }
+  return union;
+}
+
 // Exported so the selftest can exercise the rules against synthetic surfaces: the checkout is
 // shared with other sessions, so a test that mutates a real manifest can lose a race for the file.
-export function checkItem(item, before, after, prevTag, tag) {
+export function checkItem(
+  item,
+  before,
+  after,
+  prevTag,
+  tag,
+  supersededBefore = [],
+) {
+  // A consumer whose upgrade skips a superseded item still carries the names that item's
+  // release removed, so this item may name them as its `old` and in its prose.
+  before = unionSurface(before, ...supersededBefore.filter(Boolean));
   const defects = [];
   // What the prose-name and unread-value rules find. The caller fails the draft on these and
   // reports them for a published manifest, which is corrected by hand before they can gate it.

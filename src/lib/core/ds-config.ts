@@ -124,6 +124,11 @@ export interface DsConfig {
     /** Default for `ds-table`'s `stickyScrollbarOffset`, as any CSS length. Unset, each table
      *  cancels its scroll container's bottom padding. */
     stickyScrollbarOffset?: string;
+    /** Default for `ds-table`'s `layout`. Default `'fixed'`.
+     *  @deprecated `'auto'` is a temporary way back to the 0.15.0 column widths, which follow the
+     *  cell content and ignore `kind`; it will be removed. Review each table under `'fixed'`,
+     *  setting `width`, `kind` or `minWidth` where a column needs it, then delete this key. */
+    layout?: 'fixed' | 'auto';
   };
   icon?: {
     /** Default pixel `size` for `ds-icon`. Default `16`. */

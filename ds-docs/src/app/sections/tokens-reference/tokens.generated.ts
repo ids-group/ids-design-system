@@ -347,6 +347,16 @@ export const SEMANTIC_TEXT: readonly ColourRow[] = [
     "inverted": true
   },
   {
+    "name": "--text-link",
+    "value": "var(--blue-700)",
+    "notes": "Hyperlink text: blue in both themes under any brand."
+  },
+  {
+    "name": "--text-link-visited",
+    "value": "hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)",
+    "notes": "Visited link colour, a desaturated blue in both themes."
+  },
+  {
     "name": "--text-on-primary",
     "value": "white",
     "notes": "Text on brand fill.",
@@ -5003,8 +5013,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-link-color",
-        "value": "var(--blue-700)",
-        "notes": "Link text colour. Defaults to --blue-700 in light and a light blue from the --blue-h hue in dark."
+        "value": "var(--text-link)",
+        "notes": "Link text colour. Defaults to --text-link."
       },
       {
         "name": "--ds-link-color-hover",
@@ -5018,7 +5028,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-link-color-visited",
-        "value": "hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)",
+        "value": "var(--text-link-visited)",
         "notes": ""
       },
       {
@@ -7544,8 +7554,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-table-cell-link-color",
-        "value": "var(--accent)",
-        "notes": "Colour a cell marked `interactive: true` takes while its row is hovered on a `rowInteractive` table (default --accent). It names WHICH text opens the record, where the row tint only says the row is clickable."
+        "value": "var(--text-link)",
+        "notes": "Colour a cell marked `interactive: true` takes while its row is hovered on a `rowInteractive` table (default --text-link). It names WHICH text opens the record, where the row tint only says the row is clickable."
       },
       {
         "name": "--ds-table-cell-link-decoration",

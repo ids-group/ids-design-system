@@ -14,13 +14,10 @@
 
   <p class="block-desc t-s">
     Title is optional; <code class="t-mono-inline">icon</code> overrides the
-    icon.
-    <code class="t-mono-inline">
-      [dismissible]="true"
-    </code> adds a close
-    button emitting <code class="t-mono-inline">(closed)</code>; the banner
-    does not hide itself, so remove it there. Focus moves to the next control after it, else the
-    one before.
+    icon. <code class="t-mono-inline"> [dismissible]="true" </code> adds a close
+    button emitting <code class="t-mono-inline">(closed)</code>; the banner does
+    not hide itself, so remove it there. Focus moves to the next control after
+    it, else the one before.
   </p>
 
   <div class="states is-cols-1">
@@ -309,12 +306,12 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       layout="stacked"
-    </code> (default): actions on a new
-    line, for long messages or several CTAs.
+    </code> (default): actions on
+    a new line, for long messages or several CTAs.
     <code class="t-mono-inline">
       layout="row"
-    </code>: actions right, centred, for
-    one line and one CTA.
+    </code>: actions right, centred,
+    for one line and one CTA.
   </p>
 
   <div class="states is-cols-1">
@@ -420,8 +417,9 @@
     </code> is off unless bound or set via
     <code class="t-mono-inline">
       provideDsConfig(&#123; banner: &#123; announce: true &#125; &#125;)
-    </code>:
-    a live region fires on insertion, so page furniture would interrupt every route.
+    </code
+    >: a live region fires on insertion, so page furniture would interrupt every
+    route.
   </p>
 
   <table class="tbl">

@@ -54,7 +54,6 @@ const EXTRA = {
   'manifest-compile:audit': ['tools/check-manifest-compile.mjs', '--audit'],
   'manifest-detect:audit': ['tools/check-manifest-detect.mjs', '--audit'],
   'token-defaults:audit': ['tools/check-token-defaults.mjs', '--audit'],
-  'class-member-notes:audit': ['tools/check-class-member-notes.mjs', '--audit'],
   'heavy-lock:selftest': ['tools/heavy-lock-selftest.mjs'],
   probes: ['tools/run-probes.mjs'],
   schematics: ['tools/run-schematic-tests.mjs'],
@@ -79,11 +78,10 @@ export const GROUPS = {
   // and `delete-tables` answer about a release boundary that cannot move without a commit touching
   // the manifests, and the first reads 27 release trees; `manifest-compile` type-checks every
   // fixture at two extracted release trees (3 min for 73 fixtures, 2026-10-08); `todo-index`
-  // compares against `docs/todo.md`, which parallel sessions edit in a shared checkout;
-  // `class-member-notes` reads `migrations/unreleased.json`, which is drafted at the cut, so
-  // mid-cycle it would be red on every commit that adds a member. `token-deprecations` reads every
-  // release tree (42 s, 2026-10-08) and moves only with a manifest; its selftest is in, because the
-  // rule it tests ships to consumers and runs in under 3 s.
+  // compares against `docs/todo.md`, which parallel sessions edit in a shared checkout.
+  // `token-deprecations` reads every release tree (42 s, 2026-10-08) and moves only with a
+  // manifest; its selftest is in, because the rule it tests ships to consumers and runs in under
+  // 3 s.
   // `api-deprecations` and its selftest are in: the generator reads the manifests and the working
   // tree alone (1.0 s and 1.7 s, 2026-10-08), and a PR that brings a listed input or symbol back
   // has to take it off the shipped ESLint list in the same commit.
@@ -150,10 +148,9 @@ export const GROUPS = {
   // `token-defaults` for the same reason: an unmeasured claim and a default that moved unnamed both
   // read as facts the moment they ship. `manifest-detect` too: a locator that finds nothing is
   // recorded "not applicable" by the consumer's upgrade, and a clean re-check agrees.
-  // `class-member-notes` follows `class-surface-entry`: that one asks whether a class is named, this
-  // one whether every member it gained or lost is. The PR gate
-  // runs most of the rest too, but it is manual, so a release can be cut from a branch where it never
-  // fired. `token-deprecations` is here because the stylelint list ships in the package, and a
+  // `template-context-guard` because a context guard turns a template's `any` into a checked
+  // type, and the draft is complete only at the cut. The PR gate runs most of the rest too, but it
+  // is manual, so a release can be cut from a branch where it never fired. `token-deprecations` is here because the stylelint list ships in the package, and a
   // manifest edited without regenerating it would publish a list that misses the release's own
   // renames; `api-deprecations` for the same reason, with the ESLint list. `changelog-pending` is here because the cut folds `## Unreleased` into the release block,
   // and a change it never named leaves with nothing describing it. `public-api-golden` because the
@@ -169,9 +166,7 @@ export const GROUPS = {
   // and screenshots every block, minutes rather than seconds, so it is here and not in `lint`.
   release: [
     'tools-parse',
-    'class-surface-entry',
-    'class-member-notes:selftest',
-    'class-member-notes',
+    'template-context-guard',
     'release-fold:selftest',
     'migration-lint:selftest',
     'migration-lint',
