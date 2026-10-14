@@ -628,6 +628,38 @@ const rules = [
     findings: 1,
     unread: '',
   },
+  {
+    name: 'HOLDS: a rename whose old exists only before the release it supersedes',
+    item: {
+      id: 'x',
+      kind: 'token-rename',
+      old: '--link-visited',
+      new: '--text-link-visited',
+      supersedes: ['0.0.0#link-visited-token-removed'],
+      action: 'Rewrite `--link-visited` to `--text-link-visited`.',
+    },
+    before: surface({ tokens: ['--text-link'] }),
+    after: surface({ tokens: ['--text-link', '--text-link-visited'] }),
+    superseded: [surface({ tokens: ['--text-link', '--link-visited'] })],
+    expect: 'hold',
+    findings: 0,
+  },
+  {
+    name: 'FIRES: a phantom old beside an unrelated supersedes',
+    item: {
+      id: 'x',
+      kind: 'token-rename',
+      old: '--link-visted',
+      new: '--text-link-visited',
+      supersedes: ['0.0.0#link-visited-token-removed'],
+      action: 'Rewrite `--link-visted` to `--text-link-visited`.',
+    },
+    before: surface({ tokens: ['--text-link'] }),
+    after: surface({ tokens: ['--text-link', '--text-link-visited'] }),
+    superseded: [surface({ tokens: ['--text-link', '--link-visited'] })],
+    expect: 'fire',
+    findings: 1,
+  },
 ];
 
 let failed = 0;
@@ -639,6 +671,7 @@ for (const testCase of rules) {
     testCase.after,
     'v0.0.0',
     'v0.0.1',
+    testCase.superseded ?? [],
   );
   const got = verdict.defects.length ? 'fire' : 'hold';
   ran++;
