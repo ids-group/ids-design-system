@@ -30,12 +30,22 @@
 // A block that only moved down the page is not one: a differing block whose document top differs
 // is captured again with the higher side pushed down to the other's top, and compared once more.
 //
-// Builds are cached under node_modules/.cache/render-evidence/, one per source tree; a stale
-// working-tree build is removed on the next run, a tag build is kept.
+// A build of two committed trees is cached under the git common directory
+// (`render-evidence-cache/`, or DS_RENDER_EVIDENCE_CACHE), so every worktree of the repository
+// shares it and a tag is built once. A build that includes the working tree is cached under this
+// checkout's node_modules/.cache/render-evidence/, and a stale one is removed on the next run.
+// A build is published by renaming a finished copy into place, so a run never serves a
+// half-written one and two runs building the same tree do not clobber each other.
+//
+// With --affected only the blocks that render a component whose `src/lib/components/<name>/`
+// changed between the two refs are screenshotted; the others are listed as skipped. A change in
+// `src/` outside a component folder (styles, tokens, core) cannot be mapped to blocks, so the run
+// is the full one. The run without the flag is the release gate.
 //
 //   node tools/check-render-evidence.mjs                       # last tag vs working tree, fails
 //   node tools/check-render-evidence.mjs --from v0.14.7 --to v0.14.8   # history, reports only
 //   ... --dists <fromDir> <toDir> --pages /a,/b                # two prebuilt sites (the selftest)
+//   ... --affected                                             # screenshot only blocks of changed components
 //   ... --crops <dir>                                          # write before/after PNGs of each differing block
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -44,6 +54,7 @@ import {
   existsSync,
   mkdirSync,
   readFileSync,
+  cpSync,
   readdirSync,
   renameSync,
   rmSync,
@@ -61,6 +72,17 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const MIGRATIONS = process.env.DS_MIGRATIONS_DIR || join(ROOT, 'migrations');
 const CHANGELOG = process.env.DS_CHANGELOG_PATH || join(ROOT, 'CHANGELOG.md');
 const CACHE = join(ROOT, 'node_modules/.cache/render-evidence');
+const SHARED_CACHE =
+  process.env.DS_RENDER_EVIDENCE_CACHE ||
+  join(
+    resolve(
+      ROOT,
+      execFileSync('git', ['-C', ROOT, 'rev-parse', '--git-common-dir'], {
+        encoding: 'utf8',
+      }).trim(),
+    ),
+    'render-evidence-cache',
+  );
 const DOCS_PATHS = [
   'angular.json',
   'tsconfig.json',
@@ -131,12 +153,13 @@ const treeOf = (ref) =>
 
 // Builds the docs of `docsTree` against the library of `libraryTree` and returns the directory of
 // the built site, reusing a cached build of the same pair of trees.
-function buildDocs(docsTree, libraryTree, label) {
+function buildDocs(docsTree, libraryTree, label, committed) {
+  const cache = committed ? SHARED_CACHE : CACHE;
   const listing =
     git(['ls-tree', docsTree, '--', ...DOCS_PATHS]) +
     git(['ls-tree', libraryTree, '--', ...LIBRARY_PATHS]);
   const key = createHash('sha1').update(listing).digest('hex').slice(0, 16);
-  const output = join(CACHE, key);
+  const output = join(cache, key);
   if (existsSync(join(output, 'index.html'))) {
     console.log(`  ${label}: cached build ${key}`);
     return { dir: output, key };
@@ -168,8 +191,20 @@ function buildDocs(docsTree, libraryTree, label) {
       );
       return null;
     }
-    mkdirSync(CACHE, { recursive: true });
-    renameSync(join(source, 'dist/ds-docs/browser'), output);
+    mkdirSync(cache, { recursive: true });
+    const staged = join(cache, `.staging-${key}-${process.pid}`);
+    try {
+      cpSync(join(source, 'dist/ds-docs/browser'), staged, { recursive: true });
+      try {
+        renameSync(staged, output);
+      } catch (error) {
+        if (!existsSync(join(output, 'index.html'))) {
+          throw error;
+        }
+      }
+    } finally {
+      rmSync(staged, { recursive: true, force: true });
+    }
     console.log(
       `  ${label}: built ${key} in ${Math.round((Date.now() - started) / 1000)} s`,
     );
@@ -377,7 +412,7 @@ async function captureBlock({ s, evaluate }, index) {
 // With `targets` (block id -> document top), captures only those blocks, each pushed down to its
 // target; the blocks above are still placed in order, so whatever renders on entering the
 // viewport has rendered as in a full pass.
-async function renderSite(dir, pages, targets = null) {
+async function renderSite(dir, pages, targets = null, only = null) {
   const server = await serve(resolve(dir));
   const base = `http://127.0.0.1:${server.address().port}`;
   const browser = await open('about:blank', {
@@ -386,6 +421,7 @@ async function renderSite(dir, pages, targets = null) {
   });
   const { s, evaluate } = browser;
   const blocks = new Map();
+  blocks.skipped = [];
   try {
     await s('Emulation.setDeviceMetricsOverride', {
       ...VIEWPORT,
@@ -413,12 +449,17 @@ async function renderSite(dir, pages, targets = null) {
         `() => document.querySelector('main.content')?.dispatchEvent(new WheelEvent('wheel'))`,
       );
       const found = await evaluate(COLLECT_BLOCKS);
-      const last = targets
-        ? found.findLastIndex(({ id }) => targets.has(id))
-        : found.length - 1;
+      const wanted = (block) =>
+        targets ? targets.has(block.id) : !only || only(block);
+      const last = found.findLastIndex(wanted);
       for (const [index, { id, names, reads }] of found.entries()) {
-        if (index > last) break;
-        if (targets && !targets.has(id)) {
+        if (!wanted({ id, names })) {
+          blocks.skipped.push({ id, page });
+        }
+        if (index > last) {
+          continue;
+        }
+        if (!wanted({ id, names })) {
           await evaluate(placeBlock(index, 0));
           await wait(SCROLL_SETTLE_MS);
           continue;
@@ -592,6 +633,52 @@ function verdict(differing, blocks, manifestText, changelogText, classes) {
   return { results, evidence };
 }
 
+// Library components whose folder changed between `fromRef` and `to` (the working tree when null),
+// or the reason the change cannot be mapped to docs blocks.
+function affectedComponents(fromRef, to) {
+  const changed = new Set(
+    git(['diff', '--name-only', fromRef, ...(to ? [to] : []), '--', 'src'])
+      .split('\n')
+      .filter(Boolean),
+  );
+  if (!to) {
+    for (const file of git([
+      'ls-files',
+      '-o',
+      '--exclude-standard',
+      '--',
+      'src',
+    ]).split('\n')) {
+      if (file) {
+        changed.add(file);
+      }
+    }
+  }
+  const components = new Set();
+  for (const file of changed) {
+    const match = /^src\/lib\/components\/([^/]+)\//.exec(file);
+    if (!match) {
+      return { reason: `${file} is outside src/lib/components/<name>/` };
+    }
+    components.add(match[1]);
+  }
+  return { components: [...components].sort() };
+}
+
+function reportSkipped(skippedBefore, skippedAfter, affectedNote) {
+  const byPage = new Map();
+  for (const { id, page } of [...skippedBefore, ...skippedAfter]) {
+    byPage.set(page, new Set([...(byPage.get(page) ?? []), id]));
+  }
+  const total = new Set([...byPage.values()].flatMap((ids) => [...ids])).size;
+  console.log(
+    `  ${affectedNote}; ${total} block(s) skipped, they render no ds-<component> element of a changed component:`,
+  );
+  for (const [page, ids] of byPage) {
+    console.log(`    ${page}: ${[...ids].join(', ')}`);
+  }
+}
+
 async function main() {
   const started = Date.now();
   const from = option('--from');
@@ -599,6 +686,7 @@ async function main() {
   const dists = option('--dists', 2);
   const pagesOption = option('--pages');
   const crops = option('--crops');
+  const affected = argv.includes('--affected');
   const history = Boolean(to);
   const tags = releaseTags(ROOT);
   const fromRef =
@@ -618,21 +706,23 @@ async function main() {
     const fromTree = treeOf(fromRef);
     const toTree = treeOf(to);
     pages = pagesOption ? pagesOption.split(',') : pagesOf(fromTree);
-    before = buildDocs(fromTree, fromTree, fromRef);
+    before = buildDocs(fromTree, fromTree, fromRef, true);
     after = buildDocs(
       fromTree,
       toTree,
       `${fromRef} docs, ${to ?? 'working tree'} library`,
+      Boolean(to),
     );
     if (!after) {
       mode =
         'docs and library of each side (the base docs do not compile against the new library)';
-      after = buildDocs(toTree, toTree, to ?? 'working tree');
+      after = buildDocs(toTree, toTree, to ?? 'working tree', Boolean(to));
       pages = [...new Set([...pages, ...(pagesOption ? [] : pagesOf(toTree))])];
     }
     if (!before || !after) fail('a docs build failed');
     // A working-tree build is superseded by the next edit; tag builds are the ones worth keeping.
     if (!to) {
+      mkdirSync(CACHE, { recursive: true });
       const keep = new Set([before.key, after.key]);
       writeFileSync(join(CACHE, after.key, '.working-tree'), '');
       for (const entry of readdirSync(CACHE))
@@ -642,9 +732,28 @@ async function main() {
   }
   const builtAt = Date.now();
 
+  let only = null;
+  let affectedNote = '';
+  if (affected) {
+    const plan = dists ? null : affectedComponents(fromRef, to);
+    if (plan?.components?.length) {
+      const prefixes = plan.components.map((name) => `ds-${name}`);
+      only = ({ names }) =>
+        names.some((name) =>
+          prefixes.some(
+            (prefix) => name === prefix || name.startsWith(`${prefix}-`),
+          ),
+        );
+      affectedNote = `affected: ${plan.components.join(', ')}`;
+    } else {
+      console.log(
+        `  --affected: ${plan?.reason ?? 'needs refs, not --dists'}; running the full comparison`,
+      );
+    }
+  }
   const [blocksBefore, blocksAfter] = await Promise.all([
-    renderSite(before.dir, pages),
-    renderSite(after.dir, pages),
+    renderSite(before.dir, pages, null, only),
+    renderSite(after.dir, pages, null, only),
   ]);
   const realigned = await realignMoved([
     { dir: before.dir, blocks: blocksBefore },
@@ -657,7 +766,12 @@ async function main() {
     : '';
   const { results, evidence } = verdict(
     differing,
-    new Map([...blocksBefore, ...blocksAfter]),
+    new Map([
+      ...blocksBefore.skipped.map(({ id }) => [id, null]),
+      ...blocksAfter.skipped.map(({ id }) => [id, null]),
+      ...blocksBefore,
+      ...blocksAfter,
+    ]),
     manifestText,
     changelogBlock(version),
     componentClasses(),
@@ -690,6 +804,9 @@ async function main() {
     console.log(
       `  ${realigned} moved block(s) captured again at the other side's position`,
     );
+  if (only) {
+    reportSkipped(blocksBefore.skipped, blocksAfter.skipped, affectedNote);
+  }
   for (const block of results)
     console.log(
       `  ${block.namedBy.length ? 'named  ' : 'UNNAMED'}  ${block.change.padEnd(8)}  ${block.id}  ${

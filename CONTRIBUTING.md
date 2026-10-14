@@ -216,6 +216,8 @@ changelog is also a page on the docs site. So their reader is an external develo
 no access to this repository, our tracker, our decks or our other clients — and every
 consumer reads about the others.
 
+**`node tools/check.mjs --group release` runs once before a release, never on a branch** (it builds the docs twice and installs two apps; `render-evidence --affected` is the branch-sized check for a rendering change).
+
 **Run the release gates AFTER committing, not before.** `check-template-context-guard` and
 `class-surface` compare `HEAD` against the last tag, so a change still sitting in the working tree
 is invisible to them and they report OK.
