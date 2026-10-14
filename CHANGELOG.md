@@ -41,8 +41,7 @@
   changed there. It read 0 for each and kept those widths when shown: a `width: 'content'` column
   collapsed to 0px and its cells spilled over the next column, a column could shrink below its
   header label, and resizing the window did not bring them back. The table skips both measurements
-  while hidden and measures when it is shown. `TableComponent` gained the private `rendered`; a
-  subclass declaring it must rename it.
+  while hidden and measures when it is shown.
 
 ## 0.15.1 — 2026-10-13
 
