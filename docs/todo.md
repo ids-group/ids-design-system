@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**133 open — 2 P1, 11 P2, 120 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
+**134 open — 2 P1, 11 P2, 121 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 2
 
@@ -42,7 +42,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 120
+### P3 — 121
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -60,6 +60,7 @@ is stale. Closing an item means deleting the item and nothing else.
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
   - A pressed danger menu item shows its hover colour (recorded 2026-09-24)
 - **Asked by Stas**
+  - A single select with a search box (Stas, 2026-10-14, from mm-ecm ME-530)
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
   - Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24)
   - Pin more than one mark at a time (Stas, 2026-09-29)
@@ -423,6 +424,9 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 Each has somebody behind it. Nothing here is speculative work.
 
 ## Asked by Stas
+
+- [ ] **[P3] A single select with a search box (Stas, 2026-10-14, from mm-ecm ME-530).** The ECM Audit & History «Event type» filter (69 options) got search on ECM's own `app-field-select` (button trigger, filter row in the panel, groups) instead of `ds-autocomplete`. Stas: leave an ask in the DS for such a component or feature. Drawn in deck `32-searchable-select-ask` (local); options A `searchable` on `ds-select`, B new component, C a select-only mode on `ds-autocomplete`, D nothing.
+  **Today:** `ds-select` has no input (`select.component.html:24`, only `createTypeAhead`); `ds-multi-select` has the filter row, `searchable` (boolean or option-count threshold, default `DS_CONFIG.picker.searchable`), `filterWith`, `filterChange` (`multi-select.component.html:173`, `.ts:150-174`); `ds-autocomplete` types into the trigger itself (`autocomplete.component.html:83`). Same product question as the «create what I typed» item under Component feature gaps.
 
 - [ ] **[P2] A clipped value's tooltip should line up with the text it completes (Stas, 2026-10-10).** `dsTooltipWhenClipped` opens a panel capped at `--tooltip-maxw` (240px), so the full text of a wider clipped link wraps narrower than the ellipsized text under it (mm-ecm Workspaces, program name). **Wanted (Stas):** for a clip-test tooltip the minimum width stays as it is today, and the maximum width becomes the visible width of the clipped element, so text that would grow the panel wraps at the width of the ellipsized text. Deck before the change.
 - [~] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `ecm-feat/table-width-by-type`, built and waiting on the sign-off in deck `28-table-width-by-type`.
