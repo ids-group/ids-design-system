@@ -256,6 +256,7 @@ export class TableComponent<T extends object> {
     public readonly rangeAnnouncement = input<((first: number, last: number, total: number) => string) | null>(null);
     public readonly rangeAnnouncementResolved = computed(…);
     private readonly rangeMessage;
+    private readonly rendered;
     private restoreLayout;
     public readonly rowActionSelected = output<TableRowActionEvent<T>>();
     public readonly rowActions = input<readonly TableRowAction<T>[]>([]);
@@ -360,7 +361,7 @@ ds-table {
     --ds-radius-inner: (none);
     --ds-table-bg-color: var(--surface-default);
     --ds-table-border: var(--border-default);
-    --ds-table-cell-link-color: var(--accent);
+    --ds-table-cell-link-color: var(--text-link);
     --ds-table-cell-link-decoration: underline;
     --ds-table-cell-padding-bottom: var(--_table-cell-padding-y);
     --ds-table-cell-padding-left: var(--_table-cell-padding-x) | var(--ds-table-cell-padding-x, var(--table-cell-pad-x));
