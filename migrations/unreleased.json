@@ -118,6 +118,34 @@
       ]
     },
     {
+      "id": "table-layout-auto-keeps-0-15-0-widths",
+      "kind": "behavior",
+      "old": "provideDsConfig",
+      "new": null,
+      "surface": [
+        "config",
+        "template"
+      ],
+      "searchHints": [
+        "provideDsConfig",
+        "DS_CONFIG",
+        "<ds-table"
+      ],
+      "detect": [
+        "provideDsConfig({",
+        "table: {",
+        "<ds-table"
+      ],
+      "action": "None, unless the app's tables must keep the 0.15.0 look: set `provideDsConfig({ table: { layout: 'auto' } })` to keep the 0.15.0 look until your tables are reviewed, or `layout=\"auto\"` on one `ds-table`. Keep it only until each table reads right under `'fixed'`.",
+      "appliesWhen": "Every `ds-table` without its own `layout`, once `DsConfig.table.layout` is `'auto'`; a `layout` on the element wins over the config. Under `'auto'` each column follows its cell content as on 0.15.0: `kind` has no effect, and a numeric `width`, `width: 'content'`, `minWidth` and `truncate` size the column as on 0.15.0. A table with `virtualScroll` keeps `table-layout: fixed`.",
+      "pitfall": "`'auto'` is deprecated and will be removed, and a development build warns once per page while a table uses it. A `kind` added for 0.15.1 does nothing under `'auto'`, so a table that reads right under `'auto'` still has to be reviewed under `'fixed'` before the key is deleted.",
+      "restore": "provideDsConfig({ table: { layout: 'auto' } })",
+      "verify": "With the key set, each `ds-table` shows the column widths it had on 0.15.0, and the console shows the `layout=\"auto\"` deprecation warning once.",
+      "evidence": [
+        "command:node tools/table-clip-harness.mjs layout <0.15.0 docs url>/harness/table-clip <docs url>/harness/table-clip"
+      ]
+    },
+    {
       "id": "table-component-gained-rendered",
       "kind": "behavior",
       "old": "TableComponent",
@@ -129,11 +157,11 @@
       "detect": [
         "extends TableComponent"
       ],
-      "action": "Rename your subclass's own member where it collides.",
+      "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
       "appliesWhen": "Only a class of yours that extends TableComponent. Template users need nothing; subclassing a DS component is unsupported.",
       "restore": null,
       "verify": "The app builds with no member-collision error on a subclass of TableComponent.",
-      "note": "`TableComponent` gained the private `rendered`."
+      "note": "`TableComponent` gained `autoLayout`, `autoLayoutMinWidth`, `autoLayoutWidth`, `clipCapsSet`, `clipFit`, `clipFitWidth`, `clipGrows`, `clipMaxWidth`, `clipMinWidth`, `growingClipColumns`, `layoutMode`, `layoutResolved`, `measureGrowingClips`, `rendered`, `splitGrowingClips`, `textCanvas` and `widestValue`."
     }
   ],
   "informational": [

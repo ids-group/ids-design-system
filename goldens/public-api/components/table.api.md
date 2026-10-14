@@ -134,6 +134,9 @@ export class TableComponent<T extends object> {
     public readonly animateHeight = input(false, { transform: booleanAttribute });
     protected readonly anySelected = computed(…);
     protected ariaSort(col: TableColumn<T>): 'ascending' | 'descending' | 'none' | null;
+    protected readonly autoLayout = computed(…);
+    protected autoLayoutMinWidth(col: TableColumn<T>): number | null;
+    protected autoLayoutWidth(col: TableColumn<T>): number | null;
     public readonly bordered = input<boolean | null, unknown>(null, { transform: (value) => (value == null ? null : booleanAttribute(value)) });
     public readonly borderedResolved = resolveWithConfig(…);
     protected cancelEdit(): void;
@@ -146,6 +149,12 @@ export class TableComponent<T extends object> {
     protected readonly cellTemplates = computed<Record<string, TemplateRef<{ $implicit: unknown; row: unknown; }>>>(…);
     protected cellValue(row: T, col: TableColumn<T>): string;
     protected clearColumnFilter(): void;
+    private clipCapsSet;
+    private clipFit;
+    private clipFitWidth;
+    protected clipGrows(col: TableColumn<T>): boolean;
+    protected clipMaxWidth(col: TableColumn<T>, index: number): string | null;
+    protected clipMinWidth(col: TableColumn<T>, index: number): string | null;
     public readonly columnFilterOptions = input<ReadonlyMap<string, readonly string[]>>(new Map());
     private readonly columnFilterPopover;
     public readonly columnFilters = model<Map<string, ReadonlySet<string>>>(new Map());
@@ -186,6 +195,7 @@ export class TableComponent<T extends object> {
     protected readonly filteredData = computed<readonly T[]>(…);
     protected fitsContent(col: TableColumn<T>): boolean;
     private readonly fontsLoaded;
+    private readonly growingClipColumns;
     protected hasActionsFor(row: T): boolean;
     protected readonly hasAnyColumnFilter = computed(…);
     protected hasColumnFilter(col: TableColumn<T>): boolean;
@@ -219,6 +229,8 @@ export class TableComponent<T extends object> {
     private lastLazyRequest;
     protected readonly layout = inject<DsTableLayout<T>>(…);
     private layoutKey;
+    public readonly layoutMode = input<'fixed' | 'auto' | null>(null, { alias: 'layout' });
+    private readonly layoutResolved;
     private layoutRestored;
     public readonly lazy = input(false, { transform: booleanAttribute });
     public readonly lazyLoad = output<{ first: number; rows: number; }>();
@@ -227,6 +239,7 @@ export class TableComponent<T extends object> {
     public readonly maxHeight = input<string | null>(null);
     private measureAtMaxContent;
     private measureContentColumns;
+    private measureGrowingClips;
     private measureHeader;
     protected readonly menuRow = signal<T | null>(…);
     protected onColumnFilterClick(col: TableColumn<T>, event: Event): void;
@@ -303,6 +316,7 @@ export class TableComponent<T extends object> {
     protected sortableCol(col: TableColumn<T>): boolean;
     protected readonly sortedData = computed<readonly T[]>(…);
     public readonly sortingOrder = input<SortDirection[]>(['asc', 'desc', null]);
+    private splitGrowingClips;
     protected startEdit(row: T, col: TableColumn<T>, event: Event): void;
     protected readonly statusMessage = computed<string>(…);
     public readonly stickyFirstColumn = input(false, { transform: booleanAttribute });
@@ -314,6 +328,7 @@ export class TableComponent<T extends object> {
     public readonly storageKey = input<string>('');
     protected readonly tableClasses = computed(…);
     private readonly tableHead;
+    private textCanvas;
     protected toggleFilterValue(value: string): void;
     private readonly toolbarAnchor;
     public readonly total = input<number | null>(null);
@@ -327,6 +342,7 @@ export class TableComponent<T extends object> {
     protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(…);
     protected readonly visibleRowActions = computed<readonly TableRowAction<T>[]>(…);
     private warnNoExport;
+    private widestValue;
     private readonly wrapWidth;
     public readonly zebra = input(false, { transform: booleanAttribute });
 }

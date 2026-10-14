@@ -32,6 +32,55 @@
   </section>
 }
 
+@for (item of layoutCases; track item.id) {
+  <section
+    class="case"
+    [attr.data-case]="item.id"
+    [style.width.px]="item.width">
+    <h3>
+      {{ item.id }} - {{ item.title }} ({{ item.width }}px)
+    </h3>
+
+    <ds-table
+      [caption]="item.title"
+      [data]="item.data"
+      [columns]="item.columns"
+      [density]="item.density" />
+  </section>
+
+  <section
+    class="case"
+    [attr.data-case]="item.id + '-auto'"
+    [style.width.px]="item.width">
+    <h3>
+      {{ item.id }}-auto - {{ item.title }}, layout="auto" ({{ item.width }}px)
+    </h3>
+
+    <ds-table
+      layout="auto"
+      [caption]="item.title"
+      [data]="item.data"
+      [columns]="item.columns"
+      [density]="item.density" />
+  </section>
+
+  <section
+    class="case"
+    docsAutoLayoutConfig
+    [attr.data-case]="item.id + '-config'"
+    [style.width.px]="item.width">
+    <h3>
+      {{ item.id }}-config - {{ item.title }}, DS_CONFIG.table.layout "auto" ({{ item.width }}px)
+    </h3>
+
+    <ds-table
+      [caption]="item.title"
+      [data]="item.data"
+      [columns]="item.columns"
+      [density]="item.density" />
+  </section>
+}
+
 <section
   class="case"
   data-case="templates-hints"

@@ -4,6 +4,9 @@
 //   node tools/table-clip-harness.mjs run <docsUrl> <outDir>      measure + screenshots
 //   node tools/table-clip-harness.mjs diff <baseDir> <afterDir>   print every number that moved
 //   node tools/table-clip-harness.mjs check <outDir> [baseDir]    exit 1 when an invariant fails
+//   node tools/table-clip-harness.mjs layout <baselineUrl> <docsUrl>
+//                                                                exit 1 when a `layout="auto"` column
+//                                                                is not as wide as on the baseline
 //
 // Serve the docs app first (`ng serve ds-docs --port <port>`); the route exists in dev mode only.
 // With CDP_BROWSER_URL set, `run` drives a tab of that running Chrome instead of launching one.
@@ -12,6 +15,9 @@
 // that scrolls anyway, keeps every column width when the case turns to page 2 (a `Page 2` button
 // swapping `data`, or the pager's next button), and every case with no such column renders exactly
 // as in `baseDir`.
+// `layout` reads the `layout-*` cases: `<baselineUrl>` serves the page from a 0.15.0 checkout with
+// `ds-docs/src/app/harness/table-layout.cases.ts` and its plain `@for` block copied in, `<docsUrl>`
+// this checkout, where each case renders under the default layout and again as `<id>-auto`.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { open, wait } from './headless-chrome.mjs';
@@ -636,12 +642,103 @@ function check(outDir, baseDir) {
   console.log('table-clip-harness: every invariant holds');
 }
 
+async function measureLayoutCases(url) {
+  const { s, evaluate, close } = await open(url);
+  try {
+    if (!process.env.CDP_BROWSER_URL)
+      await s('Emulation.setDeviceMetricsOverride', {
+        width: 1900,
+        height: 1300,
+        deviceScaleFactor: 1,
+        mobile: false,
+      });
+    for (let attempt = 0; attempt < 120; attempt++) {
+      const ready = await evaluate(
+        `() => document.querySelectorAll('[data-case^="layout-"] ds-table tbody tr').length > 0 && document.fonts.status === 'loaded'`,
+      ).catch(() => false);
+      if (ready) break;
+      await wait(500);
+    }
+    await wait(1500);
+    const ids = await evaluate(
+      `() => [...document.querySelectorAll('[data-case^="layout-"]')].map((section) => section.dataset.case)`,
+    );
+    if (ids.length === 0)
+      throw new Error(`no [data-case^="layout-"] sections at ${url}`);
+    const measured = {};
+    for (const id of ids)
+      measured[id] = await evaluate(`() => (${measureCase})('${id}')`);
+    return measured;
+  } finally {
+    await close();
+  }
+}
+
+async function layout(baselineUrl, url) {
+  const baseline = await measureLayoutCases(baselineUrl);
+  const current = await measureLayoutCases(url);
+  const failures = [];
+  for (const [id, base] of Object.entries(baseline)) {
+    const auto = current[`${id}-auto`];
+    const fixed = current[id];
+    if (!auto || !fixed) {
+      failures.push(`${id}: missing ${auto ? id : `${id}-auto`} at ${url}`);
+      continue;
+    }
+    console.log(`${id}  (key: 0.15.0 / auto / fixed px)`);
+    for (const column of base.columns) {
+      const autoWidth = auto.columns.find(
+        (candidate) => candidate.key === column.key,
+      )?.width;
+      const fixedWidth = fixed.columns.find(
+        (candidate) => candidate.key === column.key,
+      )?.width;
+      console.log(
+        `  ${column.key}: ${column.width} / ${autoWidth} / ${fixedWidth}`,
+      );
+      if (
+        autoWidth === undefined ||
+        Math.abs(autoWidth - column.width) > TOLERANCE
+      )
+        failures.push(
+          `${id}: ${column.key} is ${autoWidth}px under layout="auto", ${column.width}px on the baseline`,
+        );
+    }
+    const config = current[`${id}-config`];
+    for (const column of base.columns) {
+      const configWidth = config?.columns.find(
+        (candidate) => candidate.key === column.key,
+      )?.width;
+      if (
+        configWidth === undefined ||
+        Math.abs(configWidth - column.width) > TOLERANCE
+      )
+        failures.push(
+          `${id}: ${column.key} is ${configWidth}px under DS_CONFIG.table.layout 'auto', ${column.width}px on the baseline`,
+        );
+    }
+    if (Math.abs(auto.overflow - base.overflow) > TOLERANCE)
+      failures.push(
+        `${id}: overflow ${base.overflow} -> ${auto.overflow} under layout="auto"`,
+      );
+  }
+  if (failures.length) {
+    console.error(failures.join('\n'));
+    console.error(`\ntable-clip-harness layout: ${failures.length} failure(s)`);
+    process.exit(1);
+  }
+  console.log(
+    'table-clip-harness layout: every layout="auto" column matches the baseline',
+  );
+}
+
 if (mode === 'run' && first && second) await run(first, second);
+else if (mode === 'layout' && first && second) await layout(first, second);
 else if (mode === 'diff' && first && second) diff(first, second);
 else if (mode === 'check' && first) check(first, second);
 else {
   console.error(
-    'usage: node tools/table-clip-harness.mjs run <docsUrl> <outDir> | diff <baseDir> <afterDir> | check <outDir> [baseDir]',
+    'usage: node tools/table-clip-harness.mjs run <docsUrl> <outDir> | diff <baseDir> <afterDir> | check <outDir> [baseDir] | layout <baselineUrl> <docsUrl>',
   );
   process.exit(2);
 }

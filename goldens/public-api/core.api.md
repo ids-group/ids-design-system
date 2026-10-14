@@ -129,6 +129,7 @@ export interface DsConfig {
         stickyScrollbar?: boolean;
         bordered?: boolean;
         stickyScrollbarOffset?: string;
+        layout?: 'fixed' | 'auto';
     };
     icon?: {
         size?: number;
