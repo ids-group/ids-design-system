@@ -80,7 +80,7 @@ export interface LineChartProps {
   selectRange?: boolean;
   /** Answers the pointer on the axes: the category label in bold, a guide from the value axis and the value there in a pill on the axis. On by default. */
   showAxisReadout?: boolean;
-  /** On the hovered reading, thickens the stretches from the reading before it and to the reading after it, each in its own rising or falling colour and with its own change in percent; with several series, for the one singled out. */
+  /** On the hovered reading, thickens the stretches from the reading before it and to the reading after it, each in its own rising or falling colour and, unless it starts at zero, with its own change in percent; with several series, for the one singled out. */
   showChange?: boolean;
   /** Milliseconds between one series' entrance and the next; `0` turns it off. The step narrows so the last series still starts within the stagger budget. */
   staggerMs?: number;

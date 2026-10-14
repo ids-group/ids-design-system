@@ -494,8 +494,8 @@
         "message": "<Tab> doesn't accept that prop. Declared props: label, icon, count, disabled, value, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Table'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|rowId|columns|selectable|bordered|loading|stickyHeader|maxHeight|density|zebra|animateHeight|selectedIds|sortKey|onSortKeyChange|sortDirection|onSortDirectionChange|sortingOrder|sortAnnouncement|rangeAnnouncement|skeletonRows|caption|rowInteractive|activeRowId|filterQuery|columnFilters|persistLayout|storageKey|stickyScrollbar|pageSize|page|pageSizeOptions|showPageSize|showLabel|paginationSize|paginationLayout|total|scrollToTopOnPageChange|sortMode|filterMode|columnFilterOptions|stickyScrollbarOffset|stickyFirstColumn|virtualScroll|virtualRowSize|lazy|onLazyLoad|onRowClicked|onSortChange|rowActions|onRowActionSelected|onCellEdited|cellTemplateMap|emptyTemplate|expandableRows|expandedIds|expandMode|expandAllToggle|onRowExpanded|onRowCollapsed|rowExpandTemplate|onSelectedIdsChange|onColumnFiltersChange|onPageSizeChange|onPageChange|onExpandedIdsChange|toolbar|empty|bulkActions|children|key|ref|className|style)$/]",
-        "message": "<Table> doesn't accept that prop. Declared props: data, rowId, columns, selectable, bordered, loading, stickyHeader, maxHeight, density, zebra, animateHeight, selectedIds, sortKey, onSortKeyChange, sortDirection, onSortDirectionChange, sortingOrder, sortAnnouncement, rangeAnnouncement, skeletonRows, caption, rowInteractive, activeRowId, filterQuery, columnFilters, persistLayout, storageKey, stickyScrollbar, pageSize, page, pageSizeOptions, showPageSize, showLabel, paginationSize, paginationLayout, total, scrollToTopOnPageChange, sortMode, filterMode, columnFilterOptions, stickyScrollbarOffset, stickyFirstColumn, virtualScroll, virtualRowSize, lazy, onLazyLoad, onRowClicked, onSortChange, rowActions, onRowActionSelected, onCellEdited, cellTemplateMap, emptyTemplate, expandableRows, expandedIds, expandMode, expandAllToggle, onRowExpanded, onRowCollapsed, rowExpandTemplate, onSelectedIdsChange, onColumnFiltersChange, onPageSizeChange, onPageChange, onExpandedIdsChange, toolbar, empty, bulkActions, children."
+        "selector": "JSXOpeningElement[name.name='Table'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|rowId|columns|selectable|bordered|loading|stickyHeader|maxHeight|density|zebra|animateHeight|selectedIds|sortKey|onSortKeyChange|sortDirection|onSortDirectionChange|sortingOrder|sortAnnouncement|rangeAnnouncement|skeletonRows|caption|rowInteractive|activeRowId|filterQuery|columnFilters|persistLayout|storageKey|stickyScrollbar|pageSize|page|pageSizeOptions|showPageSize|showLabel|paginationSize|paginationLayout|total|scrollToTopOnPageChange|sortMode|filterMode|columnFilterOptions|stickyScrollbarOffset|layoutMode|stickyFirstColumn|virtualScroll|virtualRowSize|lazy|onLazyLoad|onRowClicked|onSortChange|rowActions|onRowActionSelected|onCellEdited|cellTemplateMap|emptyTemplate|expandableRows|expandedIds|expandMode|expandAllToggle|onRowExpanded|onRowCollapsed|rowExpandTemplate|onSelectedIdsChange|onColumnFiltersChange|onPageSizeChange|onPageChange|onExpandedIdsChange|toolbar|empty|bulkActions|children|key|ref|className|style)$/]",
+        "message": "<Table> doesn't accept that prop. Declared props: data, rowId, columns, selectable, bordered, loading, stickyHeader, maxHeight, density, zebra, animateHeight, selectedIds, sortKey, onSortKeyChange, sortDirection, onSortDirectionChange, sortingOrder, sortAnnouncement, rangeAnnouncement, skeletonRows, caption, rowInteractive, activeRowId, filterQuery, columnFilters, persistLayout, storageKey, stickyScrollbar, pageSize, page, pageSizeOptions, showPageSize, showLabel, paginationSize, paginationLayout, total, scrollToTopOnPageChange, sortMode, filterMode, columnFilterOptions, stickyScrollbarOffset, layoutMode, stickyFirstColumn, virtualScroll, virtualRowSize, lazy, onLazyLoad, onRowClicked, onSortChange, rowActions, onRowActionSelected, onCellEdited, cellTemplateMap, emptyTemplate, expandableRows, expandedIds, expandMode, expandAllToggle, onRowExpanded, onRowCollapsed, rowExpandTemplate, onSelectedIdsChange, onColumnFiltersChange, onPageSizeChange, onPageChange, onExpandedIdsChange, toolbar, empty, bulkActions, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Tabs'] > JSXAttribute > JSXIdentifier[name!=/^(?:selectedIndex|variant|lazy|scrollable|closable|orientation|urlParam|rememberLastTab|onTabClosed|onSelectedIndexChange|children|key|ref|className|style)$/]",
@@ -1807,6 +1807,8 @@
       "--tertiary-text",
       "--text-disabled",
       "--text-inverted",
+      "--text-link",
+      "--text-link-visited",
       "--text-muted",
       "--text-on-error",
       "--text-on-media",
@@ -2006,6 +2008,8 @@
       "--text-inverted": "other",
       "--text-on-media": "other",
       "--text-on-media-shadow": "other",
+      "--text-link": "color",
+      "--text-link-visited": "color",
       "--text-on-primary": "other",
       "--text-on-success": "other",
       "--text-on-warning": "other",

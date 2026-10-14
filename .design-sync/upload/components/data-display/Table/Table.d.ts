@@ -91,6 +91,8 @@ export interface TableProps {
   columnFilterOptions?: unknown;
   /** Where the sticky horizontal scrollbar rests, as a CSS length. Unset, the table cancels its scroll container's bottom padding. Falls back to `DS_CONFIG.table.stickyScrollbarOffset`; `--ds-table-sticky-scrollbar-offset` wins over both. */
   stickyScrollbarOffset?: string | null;
+  /** `'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what the others leave, whatever its cells hold. `'auto'`, deprecated: the 0.15.0 widths, which follow the cell content and ignore `kind`. Unset falls back to `DS_CONFIG.table.layout`, then `'fixed'`. */
+  layoutMode?: 'fixed' | 'auto' | null;
   /** Pin the first data column (and the select column) on horizontal scroll. */
   stickyFirstColumn?: boolean;
   /** Render only the rows in view, padding the rest with spacer rows. Needs `maxHeight` (dev-warned, nothing virtualizes without a bounded scroller). Every row must be `virtualRowSize` tall, so virtual mode forces `table-layout: fixed`, single-line cells and no expansion panel. */
