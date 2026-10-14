@@ -3108,6 +3108,18 @@
       "definedIn": "_ds_bundle.css"
     },
     {
+      "name": "--text-link",
+      "value": "var(--blue-700)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--text-link-visited",
+      "value": "hsl(var(--blue-h) calc(var(--blue-s) * .6) 45%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
       "name": "--text-on-primary",
       "value": "white",
       "kind": "color",
@@ -4180,6 +4192,20 @@
       "scope": ":root[data-theme=dark]"
     },
     {
+      "name": "--text-link",
+      "value": "var(--blue-700)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--text-link-visited",
+      "value": "hsl(var(--blue-h) calc(var(--blue-s) * .6) 45%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
       "name": "--text-on-primary",
       "value": "white",
       "kind": "color",
@@ -5190,6 +5216,20 @@
     {
       "name": "--tertiary-strong",
       "value": "hsl(var(--tertiary-h) 90% 72%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--text-link",
+      "value": "hsl(var(--blue-h) 90% 74%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--text-link-visited",
+      "value": "hsl(var(--blue-h) 50% 70%)",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ":root[data-theme=dark]"
@@ -8844,7 +8884,7 @@
     },
     {
       "name": "--_link-color",
-      "value": "var(--ds-link-color, var(--blue-700))",
+      "value": "var(--ds-link-color, var(--text-link))",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ".link"
@@ -8865,7 +8905,7 @@
     },
     {
       "name": "--_link-color-visited",
-      "value": "var(--ds-link-color-visited, hsl(var(--blue-h) calc(var(--blue-s) * .6) 45%))",
+      "value": "var(--ds-link-color-visited, var(--text-link-visited))",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ".link"
@@ -8918,20 +8958,6 @@
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ".link"
-    },
-    {
-      "name": "--_link-color",
-      "value": "var(--ds-link-color, hsl(var(--blue-h) 90% 74%))",
-      "kind": "color",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-theme=dark] .link"
-    },
-    {
-      "name": "--_link-color-visited",
-      "value": "var(--ds-link-color-visited, hsl(var(--blue-h) 50% 70%))",
-      "kind": "color",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-theme=dark] .link"
     },
     {
       "name": "--accent",
