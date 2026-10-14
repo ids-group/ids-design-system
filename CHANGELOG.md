@@ -10,11 +10,7 @@
   `minWidth` and `truncate` size the column as they did on 0.15.0. A `layout` on the element wins
   over the config. To keep the 0.15.0 look across an app until its tables are reviewed:
   `provideDsConfig({ table: { layout: 'auto' } })`. A table with `virtualScroll` keeps
-  `table-layout: fixed` either way. `TableComponent` gained the public `layoutMode` (the `layout`
-  input), the protected `autoLayout`, `autoLayoutWidth`, `autoLayoutMinWidth`, `clipGrows`,
-  `clipMaxWidth` and `clipMinWidth` and the private `layoutResolved`, `growingClipColumns`,
-  `clipCapsSet`, `clipFit`, `clipFitWidth`, `textCanvas`, `measureGrowingClips`, `widestValue` and
-  `splitGrowingClips`, so a subclass declaring one of those names must rename it.
+  `table-layout: fixed` either way.
 
 ### Changed
 
