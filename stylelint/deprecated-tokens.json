@@ -2619,10 +2619,10 @@
   },
   {
     "name": "--link-visited",
-    "replacement": "--ds-link-color-visited",
-    "kind": "removed",
+    "replacement": "--text-link-visited",
+    "kind": "renamed",
     "since": "0.15.1",
-    "itemId": "0.15.1#link-visited-token-removed"
+    "itemId": "unreleased#link-visited-role-is-text-link-visited"
   },
   {
     "name": "--opacity-muted",
