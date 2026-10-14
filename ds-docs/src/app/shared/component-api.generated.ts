@@ -10850,6 +10850,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Where the sticky horizontal scrollbar rests, as a CSS length. Unset, the table cancels its scroll container's bottom padding. Falls back to `DS_CONFIG.table.stickyScrollbarOffset`; `--ds-table-sticky-scrollbar-offset` wins over both."
       },
       {
+        "name": "layout",
+        "kind": "input",
+        "type": "'fixed' | 'auto' | null",
+        "union": [
+          "fixed",
+          "auto"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what the others leave, whatever its cells hold. `'auto'`, deprecated: the 0.15.0 widths, which follow the cell content and ignore `kind`. Unset falls back to `DS_CONFIG.table.layout`, then `'fixed'`."
+      },
+      {
         "name": "stickyFirstColumn",
         "kind": "input",
         "type": "boolean",

@@ -1,5 +1,19 @@
 ## Unreleased
 
+### Added
+
+- **`ds-table` takes `layout`, and `DsConfig.table.layout` sets it for every table.** `'fixed'`, the
+  default, is the layout 0.15.1 introduced. `'auto'` lays a table out as 0.15.0 did: each column
+  follows its cell content, `kind` has no effect, and a numeric `width`, `width: 'content'`,
+  `minWidth` and `truncate` size the column as they did on 0.15.0. A `layout` on the element wins
+  over the config. To keep the 0.15.0 look across an app until its tables are reviewed:
+  `provideDsConfig({ table: { layout: 'auto' } })`. A table with `virtualScroll` keeps
+  `table-layout: fixed` either way. `TableComponent` gained the public `layoutMode` (the `layout`
+  input), the protected `autoLayout`, `autoLayoutWidth`, `autoLayoutMinWidth`, `clipGrows`,
+  `clipMaxWidth` and `clipMinWidth` and the private `layoutResolved`, `growingClipColumns`,
+  `clipCapsSet`, `clipFit`, `clipFitWidth`, `textCanvas`, `measureGrowingClips`, `widestValue` and
+  `splitGrowingClips`, so a subclass declaring one of those names must rename it.
+
 ### Changed
 
 - **`--text-link` and `--link-visited` are theme roles; `.link` and the `ds-table` cell link read
@@ -26,6 +40,13 @@
   `--ds-motion-chart-mark-exit-duration` and fade in over `--ds-motion-chart-mark-enter-duration`
   (120ms and 400ms by default), where they appeared at once over 120ms, and leave on
   `--ds-motion-chart-mark-exit-duration` and `--ds-motion-chart-mark-exit-easing`.
+
+### Deprecated
+
+- **`layout: 'auto'` on `ds-table` and in `DsConfig.table.layout`.** It is a temporary way back to
+  the 0.15.0 column widths and will be removed. A development build warns once per page while a
+  table uses it. Review each table under `'fixed'`, giving a column `width`, `kind` or `minWidth`
+  where it needs one, then delete the binding or the config key.
 
 ### Fixed
 
