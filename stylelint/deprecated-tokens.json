@@ -2618,6 +2618,13 @@
     "itemId": "0.2.0#info-subtle-token-rename"
   },
   {
+    "name": "--link-visited",
+    "replacement": "--ds-link-color-visited",
+    "kind": "removed",
+    "since": "0.15.1",
+    "itemId": "0.15.1#link-visited-token-removed"
+  },
+  {
     "name": "--opacity-muted",
     "replacement": null,
     "kind": "removed",
