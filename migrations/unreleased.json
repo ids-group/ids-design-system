@@ -35,7 +35,7 @@
       ]
     },
     {
-      "id": "link-visited-reads-link-visited-role",
+      "id": "link-visited-reads-text-link-visited-role",
       "kind": "behavior",
       "old": "--ds-link-color-visited",
       "new": null,
@@ -47,6 +47,7 @@
       "searchHints": [
         "--ds-link-color-visited",
         "--link-visited",
+        "--text-link-visited",
         "--blue-h",
         ":visited"
       ],
@@ -54,15 +55,17 @@
         "--ds-link-color-visited:",
         "var(--ds-link-color-visited)",
         "hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)",
-        "hsl(var(--blue-h) 50% 70%)"
+        "hsl(var(--blue-h) 50% 70%)",
+        "--link-visited:",
+        "var(--link-visited)"
       ],
-      "action": "Where your theme or brand sets `--ds-link-color-visited` on `:root` as its visited link colour, set `--link-visited` there instead, in each theme block it applies to. Where you read `var(--ds-link-color-visited)` or a palette value standing for the visited link colour outside `.link`, read `var(--link-visited)`. To keep visited links in the link colour, set `--link-visited: var(--text-link)` in both theme blocks.",
-      "appliesWhen": "`--link-visited` is a theme role in both themes: `hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)` in light, `hsl(var(--blue-h) 50% 70%)` in dark. A visited `.link` reads `var(--ds-link-color-visited, var(--link-visited))` from `styles/link`, which `styles/ds` forwards. `.link.quiet`, a link with `aria-disabled=\"true\"` and a `<button class=\"link\">` keep their colour.",
-      "pitfall": "Browsers ignore custom properties declared inside a `:visited` rule, so `.link:visited { --link-visited: red; }` does nothing; set the role in the theme block or `--ds-link-color-visited` on `.link` or an ancestor.",
+      "action": "Where your theme or brand sets `--ds-link-color-visited` on `:root` as its visited link colour, set `--text-link-visited` there instead, in each theme block it applies to. Where a stylesheet written against 0.15.0 sets or reads the visited role under its 0.15.0 name (the --link-visited shapes in detect), rename it to `--text-link-visited`, keeping the value. Where you read `var(--ds-link-color-visited)` or a palette value standing for the visited link colour outside `.link`, read `var(--text-link-visited)`. To keep visited links in the link colour, set `--text-link-visited: var(--text-link)` in both theme blocks.",
+      "appliesWhen": "`--text-link-visited` is a theme role in both themes: `hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)` in light, `hsl(var(--blue-h) 50% 70%)` in dark. A visited `.link` reads `var(--ds-link-color-visited, var(--text-link-visited))` from `styles/link`, which `styles/ds` forwards. `.link.quiet`, a link with `aria-disabled=\"true\"` and a `<button class=\"link\">` keep their colour.",
+      "pitfall": "Browsers ignore custom properties declared inside a `:visited` rule, so `.link:visited { --text-link-visited: red; }` does nothing; set the role in the theme block or `--ds-link-color-visited` on `.link` or an ancestor.",
       "restore": ".link { --ds-link-color-visited: hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%); } :root[data-theme='dark'] .link { --ds-link-color-visited: hsl(var(--blue-h) 50% 70%); }",
-      "verify": "No stylesheet sets `--ds-link-color-visited` on `:root` as a theme role or reads a `--blue-*` value as the visited link colour, and a visited `.link` paints in the colour the app intends in light and dark.",
+      "verify": "No stylesheet sets `--ds-link-color-visited` on `:root` as a theme role or reads a `--blue-*` value as the visited link colour, no stylesheet declares or reads --link-visited, and a visited `.link` paints in the colour the app intends in light and dark.",
       "evidence": [
-        "tokens:--link-visited",
+        "tokens:--text-link-visited",
         "tokens:--ds-link-color-visited"
       ]
     },

@@ -2,21 +2,24 @@
 
 ### Changed
 
-- **`--text-link` and `--link-visited` are theme roles; `.link` and the `ds-table` cell link read
-  them.** `--text-link` is `var(--blue-700)` in light and `hsl(var(--blue-h) 90% 74%)` in dark;
-  `--link-visited` is `hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)` and
+- **`--text-link` and `--text-link-visited` are theme roles; `.link` and the `ds-table` cell link
+  read them.** `--text-link` is `var(--blue-700)` in light and `hsl(var(--blue-h) 90% 74%)` in
+  dark; `--text-link-visited` is `hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)` and
   `hsl(var(--blue-h) 50% 70%)`; both stay blue under any brand. `.link` reads
   `var(--ds-link-color, var(--text-link))` and, visited,
-  `var(--ds-link-color-visited, var(--link-visited))`, at the colours it painted. A `ds-table` link
-  cell and a hovered `interactive` cell read `var(--ds-table-cell-link-color, var(--text-link))`
+  `var(--ds-link-color-visited, var(--text-link-visited))`, at the colours it painted. A `ds-table`
+  link cell and a hovered `interactive` cell read
+  `var(--ds-table-cell-link-color, var(--text-link))`
   where they read `--accent`: `#1d43ed` where they were `#2e54ff` in light, `#8197f8` where they
   were `#2e54ff` (3.14:1 on the dark surface, now 6.33:1) in dark, and blue under a brand that set
-  `--primary`. A brand recolours links by setting `--text-link` and `--link-visited` in each theme
-  block; `--ds-link-color` and `--ds-link-color-visited` are `.link` hooks, set on `.link` or an
-  ancestor. If your theme sets them on `:root` as its link colour, set `--text-link` and
-  `--link-visited` there instead, and read `var(--text-link)` where you read `var(--ds-link-color)`
-  or a palette value such as `var(--blue-700)` for the link colour. To keep a table link in the
-  brand colour, set `--ds-table-cell-link-color: var(--accent)` on `ds-table`.
+  `--primary`. A brand recolours links by setting `--text-link` and `--text-link-visited` in each
+  theme block; `--ds-link-color` and `--ds-link-color-visited` are `.link` hooks, set on `.link` or
+  an ancestor. If your theme sets them on `:root` as its link colour, set `--text-link` and
+  `--text-link-visited` there instead, and read `var(--text-link)` where you read
+  `var(--ds-link-color)` or a palette value such as `var(--blue-700)` for the link colour. The
+  visited role 0.15.0 named `--link-visited` is `--text-link-visited`: where you set or read
+  `--link-visited`, set or read `--text-link-visited`. To keep a table link in the brand colour, set
+  `--ds-table-cell-link-color: var(--accent)` on `ds-table`.
 
 - **`showChange` colours a stretch that starts at zero.** On `dsLineSeries` and `ds-line-chart`,
   the stretch from a reading of 0 thickens in `--ds-chart-positive-color` or
