@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**134 open — 2 P1, 11 P2, 121 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
+**135 open — 2 P1, 11 P2, 122 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 2
 
@@ -42,7 +42,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 121
+### P3 — 122
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -52,6 +52,8 @@ is stale. Closing an item means deleting the item and nothing else.
   - ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01)
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - `g[dsLineSeries]` demonstrates `stacked` and `tooltipAnchor` only on the preset
+- **Faster gates (Stas, 2026-10-09: after the release)**
+  - Rewrite the gates in Rust or C++ (idea, Stas 2026-10-14: «переписать все гейты на раст
 - **Keyboard reach reported by Stas, 2026-10-09 (record only, fix after the release)**
   - The password field's show/hide toggle is not reachable by Tab
   - `ds-menu` opened from the keyboard does not take focus, and Tab walks the wrong menu
@@ -341,6 +343,13 @@ Constraints and decisions that read as removable and are not.
   Run independent checks in a worker pool (bounded by CPU count), keep the output grouped per check
   and the exit code the same; checks that build or share a cache stay serial or get a lock.
   Measure the group before and after.
+
+- [ ] **[P3] Rewrite the gates in Rust or C++ (idea, Stas 2026-10-14: «переписать все гейты на раст
+  или c++ чтобы очень быстро было»).** Before choosing what to port, measure where each gate spends
+  its time (`tools/check.mjs` per-check timings): the slow ones build the docs, run headless Chrome
+  or the Angular compiler, which a rewrite does not speed up; the candidates are the pure file-walking
+  and text-matching checks. Compare against the cheaper steps above (parallel `check.mjs`, shared
+  render-evidence cache, `--affected`) first.
 
 ## Keyboard reach reported by Stas, 2026-10-09 (record only, fix after the release)
 
