@@ -13,6 +13,7 @@
 // and the h2 margins, two borders and a shadow were never applied at all (D012).
 //
 //   node tools/deck-lint.mjs
+import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname, relative, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -66,6 +67,12 @@ function unresolvableTokens(html, stylesheet) {
   );
 }
 
+// presentations/ is local to each checkout, so a clean clone compiles the stylesheet first.
+if (!existsSync(join(DECKS, 'ds.css')) && DECKS === join(ROOT, 'presentations'))
+  execFileSync(process.execPath, [join(ROOT, 'tools', 'build-deck-css.mjs')], {
+    cwd: ROOT,
+    stdio: 'inherit',
+  });
 const stylesheet = existsSync(join(DECKS, 'ds.css'))
   ? readFileSync(join(DECKS, 'ds.css'), 'utf8')
   : '';

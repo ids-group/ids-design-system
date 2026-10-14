@@ -32,6 +32,7 @@
 // TypeScript is not read, so a void token there is invisible to this gate.
 //
 //   node tools/check-void-tokens.mjs
+import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -136,12 +137,12 @@ const declared = new Set();
 
 // Rule 3: the compiled stylesheet is what the library really emits, loop-generated tokens included.
 const compiled = join(ROOT, 'presentations', 'ds.css');
-if (!existsSync(compiled)) {
-  console.error(
-    'check-void-tokens: presentations/ds.css is missing — run build:deck-css.',
-  );
-  process.exit(1);
-}
+// presentations/ is local to each checkout, so a clean clone compiles the stylesheet first.
+if (!existsSync(compiled))
+  execFileSync(process.execPath, [join(ROOT, 'tools', 'build-deck-css.mjs')], {
+    cwd: ROOT,
+    stdio: 'inherit',
+  });
 for (const [, token] of readFileSync(compiled, 'utf8').matchAll(
   /(--[\w-]+)\s*:/g,
 )) {
