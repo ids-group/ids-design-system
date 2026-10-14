@@ -12,7 +12,13 @@
 // case and again at the end.
 //
 //   node tools/deck-lint-selftest.mjs
-import { writeFileSync, rmSync, cpSync, existsSync } from 'node:fs';
+import {
+  writeFileSync,
+  rmSync,
+  cpSync,
+  existsSync,
+  readdirSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -159,6 +165,10 @@ const write = (dir, name, html) => {
 const cleanup = () => {
   for (const path of written.splice(0)) if (existsSync(path)) rmSync(path);
 };
+
+// The rank-clash case needs a deck already holding rank 1, and a checkout without the decks has none.
+if (!readdirSync(DECKS).some((name) => /^1-.*\.html$/.test(name)))
+  writeFileSync(join(DECKS, '1-selftest-anchor.html'), deck(), 'utf8');
 
 try {
   const baseline = run();
