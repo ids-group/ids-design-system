@@ -342,39 +342,19 @@ This is not a `surface: none` item. An item exists when there is something a con
 as its `verify`; when nothing a consumer could write changes the outcome, it is `informational`,
 with `verify` when rendering moved.
 
-**Members added to an exported class are actionable even when the feature is additive.** Subclassing
-a DS component is unsupported (`design-system.md` § Components), but a consumer who does it breaks on
-a name collision — TS4114 demands `override`, TS2416 fires when the signature differs — so a release
-that only ADDS can fail their build. Emit ONE `behavior` item per release naming the classes whose
-member surface grew, with the added member names where few enough to list and the count where not,
-`searchHints` that locate the subclass (`extends TableComponent`, `extends `), and a `note` giving the
-resolution: rename the subclass's own member, or add `override` where the base's semantics genuinely
-match. Keep the feature bullets themselves in `informational` — the item is the collision, not the
-feature.
-
-**In that item the names go in `note`, and every class goes in `detect` — not the other way
-round.** `detect` is what the updater greps with, so it must name EVERY class the tool reported:
-0.11.1's entry listed `extends SelectComponent` and `extends MultiSelectComponent` and omitted
-`AutocompleteComponent`, which had grown just as many members, so an autocomplete subclass was
-never surfaced. And `action` must NOT re-list the member names — the compiler enumerates every
-collision the moment the consumer builds, so a list typed into `action` is a second copy that
-goes stale on the next feature commit (0.11.0's went a class short twice in one day). Keep
-`action` the imperative — rename yours, or add `override` — and let `note` carry the record.
-`tools/check-class-surface-entry.mjs` fails the release gate on both halves: a class missing
-from the CHANGELOG entry, and a class no `detect` in the draft manifest names. It skips a class
-whose file is new in the range — nothing pre-existing can subclass it.
+**Subclassing a DS component is unsupported (`components.md`), so a release lists no gained or
+lost class members; a change to the TYPE of a public input, output or exported interface member
+stays actionable under the widening rule below.**
 
 **Widening an exported type is actionable, and it will not look it.** A field on an exported
 interface going `number` → `number | 'content'`, an input going `boolean` → `boolean | null`, a
 returned union growing a member — each is source-compatible for whoever WRITES the value and
-breaking for whoever READS it back (`sum += col.width` → TS2365) or overrides it in a subclass
-(the `equal` position of `InputSignalWithTransform` is invariant, so TS2416 fires even when the
-values are compatible). That asymmetry is exactly why release notes describe a widening as a new
-capability: 0.10.0 shipped two of these with nothing actionable in the manifest, and the
-consumer's type-checker was the only finder — firing only after the bump was already installed.
-Emit a `behavior` entry per widened type naming who breaks (readers and overriders — not the
-writers, who are fine), with the resolution in the `note`: usually "handle the new union member
-where the field is read back", with the literal old → new type.
+breaking for whoever READS it back (`sum += col.width` → TS2365). That asymmetry is exactly why
+release notes describe a widening as a new capability: 0.10.0 shipped two of these with nothing
+actionable in the manifest, and the consumer's type-checker was the only finder — firing only after
+the bump was already installed. Emit a `behavior` entry per widened type naming who breaks
+(readers, not the writers, who are fine), with the resolution in the `note`: usually "handle the
+new union member where the field is read back", with the literal old → new type.
 
 **Tightening a template context is actionable, in the opposite direction.** A directive whose
 context a consumer's template reads - `let-row` on a `dsCellTemplate` - is typed `any` until the
@@ -384,23 +364,19 @@ yesterday fails with TS2571 or TS2345, although nothing was removed and the rele
 stricter typing. Emit a `behavior` item on `surface: template` (plus `typescript` where the context
 reaches a typed method), `old` naming the directive class, the build errors in `detect`
 (`Object is of type 'unknown'`), and the binding that types the context in `action`
-(`0.14.0#cell-template-context-typed-unknown` is the shape). The subclass-collision item does not
-cover it even when `class-surface` lists the new members: it tells subclassers to rename, and the
-consumers who break here subclass nothing. `tools/check-class-surface-entry.mjs` fails the release
-when a static `ngTemplateContextGuard` appears in a pre-existing file whose exported class no
-`surface: template` item in the draft manifest names. A generic parameter alone has no such gate:
-`class-surface` prints it under CHANGED types, and that line is the cue.
+(`0.14.0#cell-template-context-typed-unknown` is the shape).
+`tools/check-template-context-guard.mjs` fails the release when a static `ngTemplateContextGuard`
+appears in a pre-existing file whose exported class no `surface: template` item in the draft
+manifest names. A generic parameter alone has no such gate: `class-surface` prints it under CHANGED
+types, and that line is the cue.
 
-**Do not compile either list by eye — run `npm run class-surface`.** It diffs the exported surface
-between the last tag and HEAD (`[base] [head]` overrides both ends) and prints it per class:
-gained/lost member names AND changed types — annotated fields, `input`/`model`/`output`
-initializers, exported interface members, type aliases and `extends` clauses. Twice the names list
-was assembled by reading the diff and twice it was wrong in a way a consumer found first (0.8.0's
-private `saveLayout`, 0.9.0's seventeen grown classes); the type diff exists because 0.10.0 then
-shipped two widenings the same way. What it still cannot see, so check by hand: a member whose
-BEHAVIOR changed under an unchanged signature (`TableComponent.isStriped()` went window-relative
-to absolute), and a CLASS member that moved to a base class (interface members that move get a
-"check the base" hint).
+**Do not compile the list of changed types by eye — run `npm run class-surface`.** It diffs the
+exported surface between the last tag and HEAD (`[base] [head]` overrides both ends) and prints,
+per class, the changed types — annotated fields, `input`/`model`/`output` initializers, exported
+interface members, type aliases and `extends` clauses — beside the gained and lost member names,
+which no entry lists. What it cannot see, so check by hand: a member whose BEHAVIOR changed under
+an unchanged signature (`TableComponent.isStriped()` went window-relative to absolute), and a CLASS
+member that moved to a base class (interface members that move get a "check the base" hint).
 
 ## Per-entry checklist
 
@@ -444,13 +420,9 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
 - [ ] Non-mechanical entries carry the decision rule + where to read the real new name, not "review".
 - [ ] Widened/changed exported types each have a `behavior` entry naming who breaks
       (run `npm run class-surface` — do not assemble the list by eye).
-- [ ] For every exported class whose members moved, a `behavior` item's `detect` names it and that
-      item's `note` names every gained and lost member, or states the count beside the class
-      ("`LineSeriesComponent` gained 18", "... lost 2"); a count must match, and a member the
-      note lists as changed must have changed. (`tools/check-class-member-notes.mjs`, at the cut)
 - [ ] A directive that gained a template context guard or an `unknown`-defaulting generic has a
       `behavior` item on `surface: template` with the consumer's build error in `detect`.
-      (`tools/check-class-surface-entry.mjs`, for the guard half, at the cut)
+      (`tools/check-template-context-guard.mjs`, for the guard half, at the cut)
 - [ ] `deleteList` holds every "you can now delete X" — with a greppable `find`, not our token name,
       and a word on when the workaround is still legitimate. (lint, for the shape)
 - [ ] Every delete instruction cites its row as `(delete list: <id>)`, or does not promise a
@@ -533,8 +505,9 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       symbol that resolves against the library tree, and a manifest that mentions none of them. So
       it cannot be answered with prose — name the surface, or the entry needed no line and is not
       asked for one.
-- [ ] Every public change since the last tag - a class member, an exported symbol, an element, a
-      `--ds-*` hook or its fallback - is named under `## Unreleased` or in `unreleased.json` by the
+- [ ] Every public change since the last tag - a class whose members moved (by its class or
+      element, never by member), an exported symbol, an element, a `--ds-*` hook or its
+      fallback - is named under `## Unreleased` or in `unreleased.json` by the
       change that makes it; a commit that changes none carries the trailer `Changelog: none`.
       (`tools/check-changelog-pending.mjs`, in lint, the PR gate and the preflight)
 
