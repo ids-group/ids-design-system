@@ -5,11 +5,3 @@
 .history a:visited {
   color: hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%);
 }
-
-.visited-legacy a:visited {
-  color: var(--link-visited);
-}
-
-[data-brand="acme"] {
-  --link-visited: #5b3a8c;
-}

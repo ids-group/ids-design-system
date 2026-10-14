@@ -1,0 +1,7 @@
+.history a:visited {
+  color: var(--link-visited);
+}
+
+[data-brand="acme"] {
+  --link-visited: #5b3a8c;
+}
