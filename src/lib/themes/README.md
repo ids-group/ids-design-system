@@ -141,7 +141,7 @@ Components never change — they consume semantic roles, which the active theme 
 Every shade of the primary family takes its hue from `--primary` through relative colour syntax,
 in both themes; in light `--primary-strong` takes its saturation and lightness too. A brand that
 sets `--primary` gets all of them. Check each against your brand; set it explicitly where it fails.
-Links are not a brand shade: `--text-link` and `--link-visited` stay blue (`--blue-*`) in both
+Links are not a brand shade: `--text-link` and `--text-link-visited` stay blue (`--blue-*`) in both
 themes under any brand, so a link reads as a link everywhere. They are the roles a brand sets to
 recolour links: `.link` and the `ds-table` cell link read them. `--ds-link-color` and
 `--ds-link-color-visited` are component hooks, set on `.link` or an ancestor, not on `:root` as a

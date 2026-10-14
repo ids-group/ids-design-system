@@ -352,6 +352,11 @@ export const SEMANTIC_TEXT: readonly ColourRow[] = [
     "notes": "Hyperlink text: blue in both themes under any brand."
   },
   {
+    "name": "--text-link-visited",
+    "value": "hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)",
+    "notes": "Visited link colour, a desaturated blue in both themes."
+  },
+  {
     "name": "--text-on-primary",
     "value": "white",
     "notes": "Text on brand fill.",
@@ -691,13 +696,7 @@ export const SEMANTIC_STATUS: readonly ColourRow[] = [
   }
 ];
 
-export const SEMANTIC_LINK: readonly ColourRow[] = [
-  {
-    "name": "--link-visited",
-    "value": "hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)",
-    "notes": "Visited link colour, a desaturated blue in both themes."
-  }
-];
+export const SEMANTIC_LINK: readonly ColourRow[] = [];
 
 export const CHARTS: readonly ColourRow[] = [
   {
@@ -5029,7 +5028,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-link-color-visited",
-        "value": "var(--link-visited)",
+        "value": "var(--text-link-visited)",
         "notes": ""
       },
       {

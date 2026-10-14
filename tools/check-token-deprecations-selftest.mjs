@@ -8,7 +8,10 @@
 //   node tools/check-token-deprecations-selftest.mjs
 import assert from 'node:assert/strict';
 import stylelint from 'stylelint';
-import { candidatesOf } from './generate-token-deprecations.mjs';
+import {
+  applyNewestAdvice,
+  candidatesOf,
+} from './generate-token-deprecations.mjs';
 
 const config = {
   plugins: [new URL('../stylelint/index.mjs', import.meta.url).href],
@@ -167,9 +170,78 @@ await test('a removed-api replacement is advice, never a rename', () => {
   );
 });
 
+await test('the newest manifest naming a gone token gives its advice, the draft last', () => {
+  const entries = new Map([
+    [
+      '--link-visited',
+      {
+        name: '--link-visited',
+        replacement: '--ds-link-color-visited',
+        renamed: false,
+        since: '0.15.1',
+        itemId: '0.15.1#link-visited-token-removed',
+      },
+    ],
+    [
+      '--opacity-muted',
+      {
+        name: '--opacity-muted',
+        replacement: null,
+        renamed: false,
+        since: '0.10.1',
+        itemId: '0.10.1#opacity-muted-removed',
+      },
+    ],
+  ]);
+  const item = (id, kind, old, replacement) => ({
+    items: [{ id, kind, old, new: replacement }],
+  });
+  applyNewestAdvice(
+    entries,
+    [
+      {
+        label: '0.10.1',
+        manifest: item(
+          'opacity-muted-twin',
+          'removed-api',
+          '--opacity-muted',
+          '--x',
+        ),
+      },
+      {
+        label: '0.15.1',
+        manifest: item(
+          'link-visited-token-removed',
+          'removed-api',
+          '--link-visited',
+          '--ds-link-color-visited',
+        ),
+      },
+      {
+        label: 'unreleased',
+        manifest: item(
+          'link-visited-role-is-text-link-visited',
+          'token-rename',
+          '--link-visited',
+          '--text-link-visited',
+        ),
+      },
+    ],
+    new Set(['--text-link-visited']),
+  );
+  assert.deepEqual(entries.get('--link-visited'), {
+    name: '--link-visited',
+    replacement: '--text-link-visited',
+    renamed: true,
+    since: '0.15.1',
+    itemId: 'unreleased#link-visited-role-is-text-link-visited',
+  });
+  assert.equal(entries.get('--opacity-muted').replacement, null);
+});
+
 if (failures.length) {
   console.error(
     `token-deprecations:selftest: ${failures.length} failure(s)\n  ${failures.join('\n  ')}`,
   );
   process.exitCode = 1;
-} else console.log('token-deprecations:selftest: OK - 8 case(s).');
+} else console.log('token-deprecations:selftest: OK - 9 case(s).');
