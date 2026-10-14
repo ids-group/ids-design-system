@@ -120,6 +120,24 @@
       "evidence": [
         "command:node tools/table-clip-harness.mjs layout <0.15.0 docs url>/harness/table-clip <docs url>/harness/table-clip"
       ]
+    },
+    {
+      "id": "table-class-gained-layout-members",
+      "kind": "behavior",
+      "old": "TableComponent",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "extends TableComponent"
+      ],
+      "detect": [
+        "extends TableComponent"
+      ],
+      "action": "Rename your subclass's own member where it collides, or add `override` where the base's member genuinely means the same.",
+      "appliesWhen": "Only a class of yours that extends TableComponent. Template users need nothing; subclassing a DS component is unsupported.",
+      "restore": null,
+      "verify": "The app builds with no member-collision error on a subclass of TableComponent.",
+      "note": "`TableComponent` gained `autoLayout`, `autoLayoutMinWidth`, `autoLayoutWidth`, `clipCapsSet`, `clipFit`, `clipFitWidth`, `clipGrows`, `clipMaxWidth`, `clipMinWidth`, `growingClipColumns`, `layoutMode`, `layoutResolved`, `measureGrowingClips`, `rendered`, `splitGrowingClips`, `textCanvas` and `widestValue`."
     }
   ],
   "informational": [

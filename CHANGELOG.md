@@ -11,8 +11,8 @@
   `table-layout: fixed` either way. `TableComponent` gained the public `layoutMode` (the `layout`
   input), the protected `autoLayout`, `autoLayoutWidth`, `autoLayoutMinWidth`, `clipGrows`,
   `clipMaxWidth` and `clipMinWidth` and the private `layoutResolved`, `growingClipColumns`,
-  `clipCapsSet`, `clipFit`, `clipFitWidth`, `textCanvas`, `measureGrowingClips`, `widestValue` and
-  `splitGrowingClips`, so a subclass declaring one of those names must rename it.
+  `clipCapsSet`, `clipFit`, `clipFitWidth`, `textCanvas`, `measureGrowingClips`, `widestValue`,
+  `splitGrowingClips` and `rendered`, so a subclass declaring one of those names must rename it.
 
 ### Changed
 
