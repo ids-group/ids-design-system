@@ -33,8 +33,9 @@ const meta = (html, name) =>
     new RegExp(`name=["']ds-deck-${name}["']\\s+content=["']([^"']*)["']`),
   )?.[1];
 
+// The decks are local files; a clean clone has no deck folder at all.
 const decksIn = (dir) =>
-  readdirSync(dir)
+  (existsSync(dir) ? readdirSync(dir) : [])
     .filter((entry) => entry.endsWith('.html'))
     .map((entry) => join(dir, entry));
 
