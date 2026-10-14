@@ -35,7 +35,7 @@
       ]
     },
     {
-      "id": "link-visited-reads-link-visited-role",
+      "id": "link-visited-reads-text-link-visited-role",
       "kind": "behavior",
       "old": "--ds-link-color-visited",
       "new": null,
@@ -46,7 +46,7 @@
       ],
       "searchHints": [
         "--ds-link-color-visited",
-        "--link-visited",
+        "--text-link-visited",
         "--blue-h",
         ":visited"
       ],
@@ -56,15 +56,39 @@
         "hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)",
         "hsl(var(--blue-h) 50% 70%)"
       ],
-      "action": "Where your theme or brand sets `--ds-link-color-visited` on `:root` as its visited link colour, set `--link-visited` there instead, in each theme block it applies to. Where you read `var(--ds-link-color-visited)` or a palette value standing for the visited link colour outside `.link`, read `var(--link-visited)`. To keep visited links in the link colour, set `--link-visited: var(--text-link)` in both theme blocks.",
-      "appliesWhen": "`--link-visited` is a theme role in both themes: `hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)` in light, `hsl(var(--blue-h) 50% 70%)` in dark. A visited `.link` reads `var(--ds-link-color-visited, var(--link-visited))` from `styles/link`, which `styles/ds` forwards. `.link.quiet`, a link with `aria-disabled=\"true\"` and a `<button class=\"link\">` keep their colour.",
-      "pitfall": "Browsers ignore custom properties declared inside a `:visited` rule, so `.link:visited { --link-visited: red; }` does nothing; set the role in the theme block or `--ds-link-color-visited` on `.link` or an ancestor.",
+      "action": "Where your theme or brand sets `--ds-link-color-visited` on `:root` as its visited link colour, set `--text-link-visited` there instead, in each theme block it applies to. Where you read `var(--ds-link-color-visited)` or a palette value standing for the visited link colour outside `.link`, read `var(--text-link-visited)`. To keep visited links in the link colour, set `--text-link-visited: var(--text-link)` in both theme blocks.",
+      "appliesWhen": "`--text-link-visited` is a theme role in both themes: `hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%)` in light, `hsl(var(--blue-h) 50% 70%)` in dark. A visited `.link` reads `var(--ds-link-color-visited, var(--text-link-visited))` from `styles/link`, which `styles/ds` forwards. `.link.quiet`, a link with `aria-disabled=\"true\"` and a `<button class=\"link\">` keep their colour.",
+      "pitfall": "Browsers ignore custom properties declared inside a `:visited` rule, so `.link:visited { --text-link-visited: red; }` does nothing; set the role in the theme block or `--ds-link-color-visited` on `.link` or an ancestor.",
       "restore": ".link { --ds-link-color-visited: hsl(var(--blue-h) calc(var(--blue-s) * 0.6) 45%); } :root[data-theme='dark'] .link { --ds-link-color-visited: hsl(var(--blue-h) 50% 70%); }",
       "verify": "No stylesheet sets `--ds-link-color-visited` on `:root` as a theme role or reads a `--blue-*` value as the visited link colour, and a visited `.link` paints in the colour the app intends in light and dark.",
       "evidence": [
-        "tokens:--link-visited",
+        "tokens:--text-link-visited",
         "tokens:--ds-link-color-visited"
       ]
+    },
+    {
+      "id": "link-visited-role-is-text-link-visited",
+      "kind": "token-rename",
+      "old": "--link-visited",
+      "new": "--text-link-visited",
+      "surface": "style",
+      "supersedes": [
+        "0.15.1#link-visited-token-removed"
+      ],
+      "action": "Rewrite `--link-visited` to `--text-link-visited`, keeping the value.",
+      "appliesWhen": "A stylesheet written against 0.15.0 that sets `--link-visited` in a theme block or reads `var(--link-visited)`. `--text-link`, `--ds-link-color` and `--ds-link-color-visited` keep their names. The default moved with the name: 0.15.0 built `--link-visited`, and the dark `--text-link`, from `--primary-h` and `--primary-s`; `--text-link-visited` and the dark `--text-link` take `--blue-h` and `--blue-s`, so under a brand that sets `--primary-h` or `--primary-s` both stay blue.",
+      "pitfall": "The old name is inert rather than invalid: a declaration left behind sets nothing, and a read left behind resolves to nothing, so the element takes its inherited colour with no error. A brand that relied on 0.15.0 deriving the visited or dark link colour from `--primary-h` must set `--text-link-visited`, and the dark `--text-link`, itself.",
+      "restore": null,
+      "searchHints": [
+        "--link-visited",
+        "--primary-h",
+        "--primary-s"
+      ],
+      "detect": [
+        "--link-visited:",
+        "var(--link-visited)"
+      ],
+      "verify": "No stylesheet declares or reads `--link-visited`, and a visited `.link` paints in the colour the app intends in light and dark."
     },
     {
       "id": "table-cell-link-reads-text-link",
@@ -122,7 +146,7 @@
       ]
     },
     {
-      "id": "table-class-gained-layout-members",
+      "id": "table-component-gained-rendered",
       "kind": "behavior",
       "old": "TableComponent",
       "new": null,
@@ -146,12 +170,12 @@
       "verify": "Hover the reading after a 0 on a ds-line-chart with showChange and confirm the stretch from the 0 is thickened in the rising or falling colour with no percentage above it."
     },
     {
-      "text": "The `showChange` stretch and percentage wait `--ds-motion-chart-mark-exit-duration` and fade in over `--ds-motion-chart-mark-enter-duration` (120ms and 400ms by default), as the chart's other labels do, and leave on `--ds-motion-chart-mark-exit-duration` and `--ds-motion-chart-mark-exit-easing`.",
-      "verify": "Hover a reading on a ds-line-chart with showChange and confirm the percentage appears after a short pause and fades in at the pace of the column value labels."
+      "text": "The `showChange` stretch and percentage wait `--ds-motion-chart-mark-exit-duration` and fade in over `--ds-motion-chart-mark-enter-duration` (120ms and 400ms by default), as the chart's other marks do, such as a heatmap cell or a pie slice, and leave on `--ds-motion-chart-mark-exit-duration` and `--ds-motion-chart-mark-exit-easing`.",
+      "verify": "Hover a reading on a ds-line-chart with showChange and confirm the percentage appears after a short pause and fades in over about 400ms."
     },
     {
-      "text": "A `ds-table` `width: 'content'` column no longer collapses to 0px after its rows, page or fonts change while the table sits under a `display: none` ancestor such as an inactive `ds-tabs` panel; the table measures the column when it is shown.",
-      "verify": "Change the data of a ds-table with a width: 'content' column while its ds-tabs panel is inactive, switch back, and confirm the column fits its widest cell instead of collapsing."
+      "text": "A `ds-table` under a `display: none` ancestor, such as an inactive `ds-tabs` panel, no longer measures its header labels or its `width: 'content'` columns there; it measures them when it is shown, so a `width: 'content'` column no longer collapses to 0px and no column shrinks below its header label after the table is shown.",
+      "verify": "Render a ds-table with a width: 'content' column inside an inactive ds-tabs panel, change its data there, switch to the panel, and confirm the column fits its widest cell and every column is at least as wide as its header label."
     }
   ],
   "deleteList": []

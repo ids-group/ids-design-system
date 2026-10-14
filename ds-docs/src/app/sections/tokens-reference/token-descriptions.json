@@ -1337,7 +1337,7 @@
   "--line-height-loose": "Long-form prose, mono blocks.",
   "--line-height-snug": "h2–h5.",
   "--line-height-tight": "Display + h1.",
-  "--link-visited": "Visited link colour, a desaturated blue in both themes.",
+  "--text-link-visited": "Visited link colour, a desaturated blue in both themes.",
   "--list-item-gap": "Gap between list item content parts (16px).",
   "--list-item-pad-x": "List item horizontal padding (16px).",
   "--list-item-pad-y": "List item vertical padding (16px).",

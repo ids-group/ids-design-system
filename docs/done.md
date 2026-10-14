@@ -3,7 +3,7 @@
 One line per closed item. Open work lives in `todo.md`; the detail behind an entry is in git history.
 
 ## Link colour is a theme role (2026-10-14)
-- `--text-link` and `--link-visited` are roles in both themes, blue under any brand (`themes/_semantic.scss`, `themes/dark/_theme.scss`); `.link` and the `ds-table` cell link read them, `--ds-link-color` stays the `.link` hook
+- `--text-link` and `--text-link-visited` are roles in both themes, blue under any brand (`themes/_semantic.scss`, `themes/dark/_theme.scss`); `.link` and the `ds-table` cell link read them, `--ds-link-color` stays the `.link` hook
 - Decided: «Роль ссылки возвращается» (Stas, deck `implemented/link-colour-layer`)
 
 ## Brand colour reaches every shade; links stay blue (2026-10-13)
