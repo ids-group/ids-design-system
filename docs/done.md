@@ -2,9 +2,12 @@
 
 One line per closed item. Open work lives in `todo.md`; the detail behind an entry is in git history.
 
+## Link colour is a theme role (2026-10-14)
+- `--text-link` and `--link-visited` are roles in both themes, blue under any brand (`themes/_semantic.scss`, `themes/dark/_theme.scss`); `.link` and the `ds-table` cell link read them, `--ds-link-color` stays the `.link` hook
+- Decided: «Роль ссылки возвращается» (Stas, deck `implemented/link-colour-layer`)
+
 ## Brand colour reaches every shade; links stay blue (2026-10-13)
 - Light and dark primary shades take their hue from `--primary` (`themes/_semantic.scss`, `themes/dark/_theme.scss`); the brand checklist is in `themes/README.md` and the docs theming page
-- `.link` sets its own colour from the `--blue-*` palette (`styles/_link.scss`), `--ds-link-color` overrides it; `--text-link` and `--link-visited` are removed
 - Decided: derive the tone from the brand colour plus a checklist; links always blue (Stas, decision queue and deck `link-colour`)
 
 ## Calendar week and clock from the locale (2026-10-12)

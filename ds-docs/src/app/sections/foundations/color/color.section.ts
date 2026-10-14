@@ -130,6 +130,7 @@ export class ColorSection {
         { name: 'secondary', token: '--text-secondary' },
         { name: 'tertiary', token: '--text-tertiary' },
         { name: 'muted', token: '--text-muted' },
+        { name: 'link', token: '--text-link' },
       ],
     },
     {
