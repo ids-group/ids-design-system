@@ -9,7 +9,9 @@ import {
   input,
   numberAttribute,
   output,
+  signal,
   untracked,
+  viewChild,
   viewChildren,
 } from '@angular/core';
 import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
@@ -25,13 +27,11 @@ import {
 import type {
   TimeConstraints,
   TimeFormat,
+  TimePickerLoop,
 } from '../../time-picker/time-picker.types';
 
 /** Which of the panel's listbox columns a pick came from. */
 export type TimeColumnId = 'hours' | 'minutes' | 'period';
-// ponytail: a cell count, not a measured height; a column of this many rows outgrows its 13.5rem.
-const LOOP_MIN_CELLS = 6;
-
 interface Cell<T> {
   value: T;
   label: string;
@@ -67,6 +67,9 @@ export class TimeColumnsComponent {
   readonly maxTime = input<string | null>(null);
   /** Per-time predicate receiving `HH:mm`; return true to disable. */
   readonly disabledTime = input<((time: string) => boolean) | null>(null);
+  /** Whether the hour and minute columns run on past either end; `'auto'` loops a column that holds
+   *  more values than it shows. */
+  readonly loop = input<TimePickerLoop>('auto');
   /** A complete time was picked, as `HH:mm`; not emitted while only one column has moved. */
   readonly timeChange = output<string>();
   /** Which column the pick came from, emitted right after `timeChange`, which carries a whole time and cannot say which half moved. */
@@ -141,12 +144,18 @@ export class TimeColumnsComponent {
     }));
   });
 
-  /** Hours and minutes run on past either end; AM/PM is two rows and stays put. */
-  protected readonly hoursLoop = computed(
-    () => this.hourCells().length >= LOOP_MIN_CELLS,
+  private readonly hourColumn = viewChild<ElementRef<HTMLElement>>('hourCol');
+  private readonly minuteColumn =
+    viewChild<ElementRef<HTMLElement>>('minuteCol');
+  // One set of values taller than the column, measured after render; AM/PM is two rows and never loops.
+  private readonly hoursOverflow = signal(false);
+  private readonly minutesOverflow = signal(false);
+
+  protected readonly hoursLoop = computed(() =>
+    this.loops(this.hoursOverflow()),
   );
-  protected readonly minutesLoop = computed(
-    () => this.minuteCells().length >= LOOP_MIN_CELLS,
+  protected readonly minutesLoop = computed(() =>
+    this.loops(this.minutesOverflow()),
   );
 
   protected readonly pickHour = (cell: Cell<number>): void =>
@@ -156,10 +165,23 @@ export class TimeColumnsComponent {
 
   constructor() {
     afterRenderEffect(() => {
+      this.hourCells();
+      this.minuteCells();
+      this.hoursOverflow.set(this.overflows(this.hourColumn()));
+      this.minutesOverflow.set(this.overflows(this.minuteColumn()));
+    });
+    // Again on the next frame: a column that starts looping in this pass renders its copies above the
+    // selected cell on the next one, pushing it down by a set.
+    afterRenderEffect(() => {
+      this.hoursLoop();
+      this.minutesLoop();
       this.hourEntry();
       this.minuteEntry();
       this.periodEntry();
-      untracked(() => this.scrollSelectedIntoView());
+      untracked(() => {
+        this.scrollSelectedIntoView();
+        requestAnimationFrame(() => this.scrollSelectedIntoView());
+      });
     });
   }
 
@@ -172,6 +194,22 @@ export class TimeColumnsComponent {
   protected readonly periodEntry = computed(() =>
     this.entryIndex(this.periodCells()),
   );
+
+  private loops(overflows: boolean): boolean {
+    const mode = this.loop();
+
+    return mode === 'always' || (mode === 'auto' && overflows);
+  }
+
+  private overflows(column: ElementRef<HTMLElement> | undefined): boolean {
+    const element = column?.nativeElement;
+    if (!element) {
+      return false;
+    }
+    const sets = element.classList.contains('loops') ? 3 : 1;
+
+    return element.scrollHeight / sets > element.clientHeight + 1;
+  }
 
   /** Keeps a looping column inside its middle set, so a copy is always beyond either edge. */
   protected wrapScroll(event: Event, count: number): void {

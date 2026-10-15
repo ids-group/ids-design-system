@@ -66,6 +66,7 @@ import {
 import type {
   TimeConstraints,
   TimeFormat,
+  TimePickerLoop,
   TimePickerMode,
   TimeRangeValue,
 } from './time-picker.types';
@@ -175,6 +176,14 @@ export class TimePickerComponent
   readonly ariaLabel = input<string | null>(null);
   /** Display clock; falls back to `DS_CONFIG.timePicker.format`, then the hour cycle of `DS_CONFIG.locale` / `LOCALE_ID`. */
   readonly format = input<TimeFormat | null>(null);
+  /** Whether the hour and minute columns run on past either end; falls back to
+   *  `DS_CONFIG.timePicker.loop`, then `'auto'`, which loops a column that holds more values than it shows. */
+  readonly loop = input<TimePickerLoop | null>(null);
+  protected readonly loopResolved = resolveWithConfig(
+    this.loop,
+    (config) => config.timePicker?.loop,
+    'auto' as TimePickerLoop,
+  );
 
   protected readonly uid = `ds-timepicker-${++nextId}`;
   protected readonly labelId = `${this.uid}-label`;

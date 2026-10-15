@@ -40,6 +40,15 @@
     Open wheels
   </h3>
 
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">loop</code> runs the hour and minute columns
+    on past either end: <code class="t-mono-inline">'auto'</code> (default) a
+    column that holds more values than it shows,
+    <code class="t-mono-inline">'always'</code> or
+    <code class="t-mono-inline">'never'</code>; app-wide in
+    <code class="t-mono-inline">DS_CONFIG.timePicker.loop</code>.
+  </p>
+
   <div class="row">
     <ds-time-picker
       staticPreview
@@ -47,6 +56,14 @@
       value="14:30"
       format="12h"
       minuteStep="15" />
+
+    <ds-time-picker
+      staticPreview
+      label="loop = always"
+      value="14:30"
+      format="12h"
+      minuteStep="15"
+      loop="always" />
   </div>
 
   <h3 class="block-title t-h4">
