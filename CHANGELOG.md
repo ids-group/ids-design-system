@@ -2,6 +2,12 @@
 
 ### Added
 
+- **Every chart takes `highlightActive`, and `DsConfig.chart.highlightActive` sets it app-wide.**
+  `false` keeps the hovered or focused column, bar or heatmap cell at its own colour; unset falls
+  back to the config, then `true`, which brightens it. An input on the element wins over the
+  config. The input is declared on the internal `DsChartBase`, the base every chart
+  extends.
+
 - **`ds-time-picker` takes `loop`, and `DsConfig.timePicker.loop` sets it app-wide.** `'auto'`, the
   default, runs a column on past either end when it holds more values than it shows; `'always'` runs
   every hour and minute column; `'never'` keeps them as lists. An input on the element wins over the
@@ -9,11 +15,32 @@
 
 ### Changed
 
+- **A `ds-select`, `ds-multi-select` or `ds-autocomplete` panel is at least 240px wide.**
+  `--ds-dropdown-panel-min-width` now defaults to `240px` and floors the panel in both `width`
+  modes; a trigger wider than it still sets the width. The floor is the overlay's own width, so a
+  panel opened beside the right edge of the viewport is placed to stay on screen.
+  `--ds-dropdown-panel-max-width` still applies only under `width="content"`.
+
+- **A pinned column, bar or heatmap cell no longer stays brightened.** The highlight follows the
+  pointer and keyboard focus only: once a click holds a mark or a category and the pointer moves
+  off it, it keeps its pin at its own colour, and the mark under the pointer brightens instead.
+
+- **Under the category cursor, the column at the hovered category brightens.** A `dsColumnSeries` in
+  a `ds-chart` whose `cursor` is `'category'`, or resolves to it under `'auto'`, brightens the column
+  at the category under the pointer, as a hovered column does under `cursor="none"`. A series with
+  `tooltip="none"` stays as it is.
+
 - **The `ds-time-picker` hour and minute columns run on past either end.** In `ds-time-columns`,
   after the last hour or minute the first comes round again, the selected value is scrolled to the
   middle of its column, and a running column shows no scrollbar and fades at its edges. Under the
   default `loop`, a column that shows all its values, such as `minuteStep` 15, and the AM/PM column
   stay as lists.
+
+### Fixed
+
+- **A long group name no longer scrolls the `ds-multi-select` list sideways.** The per-group select-all
+  row of `selectAll="group"` and `selectAll="both"` cuts its label to the panel width with an
+  ellipsis, as the top select-all row does.
 
 ## 0.15.2 — 2026-10-14
 

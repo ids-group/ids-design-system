@@ -143,6 +143,7 @@ export interface DsConfig {
         frame?: ChartFrame;
         tooltipLingerMs?: number;
         pinOnClick?: boolean;
+        highlightActive?: boolean;
         hoverDelayMs?: number;
         tooltipSwatches?: boolean;
         valueFormat?: ChartValueFormat;

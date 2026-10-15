@@ -119,6 +119,7 @@ export {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  dropdownMinWidth,
   dropdownOverlay,
   focusIsInside,
   forwardOverlayTokens,

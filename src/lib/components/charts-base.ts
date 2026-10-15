@@ -15,7 +15,11 @@ import type {
 import { resolveChartDefaults } from './charts-defaults';
 
 /** The inputs every chart has, declared once. Inputs only some charts have stay on those charts. @internal */
-@Directive()
+@Directive({
+  host: {
+    '[style.--_chart-highlight]': "highlightActiveResolved() ? null : 'none'",
+  },
+})
 export abstract class DsChartBase {
   /** `'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart
    *  inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`. */
@@ -68,12 +72,19 @@ export abstract class DsChartBase {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
 
+  /** Whether the hovered or focused column, bar or heatmap cell brightens. Unset falls back
+   *  to `DS_CONFIG.chart.highlightActive`, then `true`. */
+  readonly highlightActive = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+
   protected readonly defaults = resolveChartDefaults(this);
   protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly emptyTextResolved = this.defaults.emptyText;
   readonly errorTextResolved = this.defaults.errorText;
   readonly valueFormatResolved = this.defaults.valueFormat;
+  readonly highlightActiveResolved = this.defaults.highlightActive;
 }
 
 /** Whether the marks keyed `key` fade while `highlighted` is singled out: only under `dimOthers`,

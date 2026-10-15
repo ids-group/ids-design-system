@@ -67,8 +67,14 @@
 }
 
 .column.is-active .bar,
+.columns.holds .column:hover .bar,
 .columns.is-spotlit:not(.dims-others) .bar {
-  filter: chart-interactive.$highlight;
+  filter: var(--_chart-highlight, #{chart-interactive.$highlight});
+}
+
+// The highlight is a hover effect: a held column or category keeps its pin, not its glow.
+.columns.holds .column.is-active:not(:hover) .bar {
+  filter: none;
 }
 
 // A running total reads up to the hovered step; a dragged range keeps the categories inside it.

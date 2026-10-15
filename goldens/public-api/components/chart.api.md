@@ -222,6 +222,7 @@ export interface ChartScales {
     readonly zeroOffset: Signal<number>;
     readonly activeIndex: Signal<number>;
     readonly cursorOn?: Signal<boolean>;
+    readonly cursorPinned?: Signal<boolean>;
     readonly categoryLabelHover?: Signal<{
         readonly index: number;
         readonly event: PointerEvent;

@@ -94,6 +94,7 @@ export class SidebarComponent {
     this.layout.railOverlay() ? false : this.collapsed(),
   );
 
+  protected readonly nav = NAV;
   protected readonly urlForAnchor = urlForAnchor;
   protected readonly urlForGroupPath = urlForGroupPath;
 

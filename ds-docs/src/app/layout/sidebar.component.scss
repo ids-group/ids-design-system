@@ -416,3 +416,93 @@
     transform: rotate(0deg);
   }
 }
+
+.rail-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+
+.rail-icon {
+  display: grid;
+  place-items: center;
+  inline-size: var(--space-8);
+  block-size: var(--space-8);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+
+  &:hover {
+    background: var(--surface-secondary);
+    color: var(--text-primary);
+  }
+
+  &.is-active {
+    background: var(--accent-subtitle);
+    color: var(--accent-strong);
+  }
+
+  &:focus-visible {
+    @include focus.ring;
+  }
+}
+
+// Fixed and anchored to its icon: the rail is a scroll container and would clip an absolute
+// flyout. The transparent left padding bridges the gap, so the pointer keeps the group hovered.
+.rail-flyout {
+  position: fixed;
+  position-anchor: inherit;
+  inset-block-start: anchor(top);
+  inset-inline-start: anchor(right);
+  z-index: var(--layer-popover);
+  display: none;
+  flex-direction: column;
+  min-inline-size: 180px;
+  padding-inline-start: var(--space-2);
+}
+
+.rail-group:hover .rail-flyout,
+.rail-group:focus-within .rail-flyout {
+  display: flex;
+}
+
+.rail-flyout-panel {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-1);
+  background: var(--surface-overlay);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-popover);
+}
+
+.rail-flyout-title {
+  padding: var(--space-2) var(--space-2-5) var(--space-1-5);
+  font: var(--font-weight-bold) var(--font-size-2xs) / 1 var(--font-sans);
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
+.rail-flyout-item {
+  padding: var(--space-1-5) var(--space-2-5);
+  border-radius: var(--radius-md);
+  font: var(--font-weight-medium) 13px / 1.4 var(--font-sans);
+  color: var(--text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--surface-secondary);
+    color: var(--text-primary);
+  }
+
+  &.is-active {
+    background: var(--accent-subtitle);
+    color: var(--accent-strong);
+  }
+
+  &:focus-visible {
+    @include focus.ring(calc(-1 * var(--focus-ring-width)));
+  }
+}

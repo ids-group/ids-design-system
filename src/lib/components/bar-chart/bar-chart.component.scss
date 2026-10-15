@@ -147,8 +147,14 @@
     chart-interactive.$highlight-transition;
 }
 
-.row.is-active .fill {
-  filter: chart-interactive.$highlight;
+.row.is-active .fill,
+:host:has(.row.is-pinned) .row:hover .fill {
+  filter: var(--_chart-highlight, #{chart-interactive.$highlight});
+}
+
+// The highlight is a hover effect: a held bar keeps its pin, not its glow.
+:host:has(.row.is-pinned) .row.is-active:not(:hover) .fill {
+  filter: none;
 }
 
 @include chart-frame.forced-colors;
