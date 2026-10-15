@@ -2,7 +2,9 @@
   anchor="time-picker"
   eyebrow="Components"
   title="Time picker">
-  <span lede> Time field with hour, minute and (12-hour) AM/PM wheels. </span>
+  <span lede>
+    Time field with hour, minute and (12-hour) AM/PM wheels.
+  </span>
 
   <docs-nonmodal-note />
 
@@ -13,8 +15,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> label </code> matches
-    <code class="t-mono-inline"> ds-date-picker </code>'s, so both align in one
+    <code class="t-mono-inline">
+      label
+    </code> matches
+    <code class="t-mono-inline">
+      ds-date-picker
+    </code>'s, so both align in one
     form row.
   </p>
 
@@ -37,12 +43,20 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">loop</code> runs the hour and minute columns on
+    <code class="t-mono-inline">
+      loop
+    </code> runs the hour and minute columns on
     past either end: <code class="t-mono-inline">'auto'</code> (default) a
     column that holds more values than it shows,
-    <code class="t-mono-inline">'always'</code> or
-    <code class="t-mono-inline">'never'</code>; app-wide in
-    <code class="t-mono-inline">DS_CONFIG.timePicker.loop</code>.
+    <code class="t-mono-inline">
+      'always'
+    </code> or
+    <code class="t-mono-inline">
+      'never'
+    </code>; app-wide in
+    <code class="t-mono-inline">
+      DS_CONFIG.timePicker.loop
+    </code>.
   </p>
 
   <div class="row">
@@ -70,7 +84,9 @@
       loop="never" />
   </div>
 
-  <h3 class="block-title t-h4">12 or 24 hours</h3>
+  <h3 class="block-title t-h4">
+    12 or 24 hours
+  </h3>
 
   <p class="block-desc t-s">
     The value is always a 24-hour <code class="t-mono-inline">"HH:MM"</code>
@@ -78,7 +94,8 @@
     locale set; en-US 12-hour). Set it app-wide with
     <code class="t-mono-inline">
       provideDsConfig({{ '{' }} timePicker: {{ '{' }} format {{ '}' }}
-      {{ '}' }}) </code
+      {{ '}' }})
+    </code
     >; <code class="t-mono-inline"> [format] </code> overrides it per instance.
   </p>
 
@@ -94,10 +111,14 @@
       value="21:30" />
   </div>
 
-  <h3 class="block-title t-h4">Minute step</h3>
+  <h3 class="block-title t-h4">
+    Minute step
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> [minuteStep]="15" </code> lists quarter-hour
+    <code class="t-mono-inline">
+      [minuteStep]="15"
+    </code> lists quarter-hour
     slots.
   </p>
 
@@ -113,12 +134,20 @@
     </span>
   </div>
 
-  <h3 class="block-title t-h4">Min · max · disabled slots</h3>
+  <h3 class="block-title t-h4">
+    Min · max · disabled slots
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> [minTime] </code> /
-    <code class="t-mono-inline"> [maxTime] </code> bound the range;
-    <code class="t-mono-inline"> [disabledTime] </code> is a predicate, here
+    <code class="t-mono-inline">
+      [minTime]
+    </code> /
+    <code class="t-mono-inline">
+      [maxTime]
+    </code> bound the range;
+    <code class="t-mono-inline">
+      [disabledTime]
+    </code> is a predicate, here
     blocking 12:00-12:59.
   </p>
 
@@ -137,19 +166,29 @@
     </span>
   </div>
 
-  <h3 class="block-title t-h4">Clearable · sizes</h3>
+  <h3 class="block-title t-h4">
+    Clearable · sizes
+  </h3>
 
   <ul class="block-desc t-s">
     <li>
-      <code class="t-mono-inline"> [clearable]="true" </code> - a clear button
+      <code class="t-mono-inline">
+        [clearable]="true"
+      </code> - a clear button
       once a value is set.
     </li>
 
-    <li>Heights: sm 32 / md 40 / lg 48.</li>
+    <li>
+      Heights: sm 32 / md 40 / lg 48.
+    </li>
 
     <li>
-      <code class="t-mono-inline"> fullWidth </code> - stretches the trigger;
-      <code class="t-mono-inline"> panelClass </code> - styles this instance's
+      <code class="t-mono-inline">
+        fullWidth
+      </code> - stretches the trigger;
+      <code class="t-mono-inline">
+        panelClass
+      </code> - styles this instance's
       panel.
     </li>
   </ul>
@@ -178,7 +217,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> mode="range" </code> renders a from-to pair;
+    <code class="t-mono-inline">
+      mode="range"
+    </code> renders a from-to pair;
     the end cannot precede the start.
   </p>
 
@@ -200,12 +241,18 @@
     </span>
   </div>
 
-  <h3 class="block-title t-h4">Validation · reactive forms</h3>
+  <h3 class="block-title t-h4">
+    Validation · reactive forms
+  </h3>
 
   <p class="block-desc t-s">
     Binds with <code class="t-mono-inline">[formControl]</code>.
-    <code class="t-mono-inline"> error </code> (or the control's
-    <code class="t-mono-inline"> errors </code> once touched) shows the error
+    <code class="t-mono-inline">
+      error
+    </code> (or the control's
+    <code class="t-mono-inline">
+      errors
+    </code> once touched) shows the error
     line; <code class="t-mono-inline">[invalid]</code> paints it without text.
   </p>
 
