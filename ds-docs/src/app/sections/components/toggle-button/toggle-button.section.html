@@ -1,0 +1,28 @@
+<docs-section
+  anchor="toggle-button"
+  eyebrow="Components"
+  title="Toggle button">
+  <span lede> A button that stays on or off. </span>
+
+  <h3
+    data-claude-design
+    class="block-title t-h4"
+    data-for="toggle-button">
+    On and off
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline"> [pressed] </code> holds the on/off state,
+    exposed as <code class="t-mono-inline">aria-pressed</code>.
+  </p>
+
+  <div class="row">
+    <ds-toggle-button icon="filter"> Conflicts only </ds-toggle-button>
+
+    <ds-toggle-button
+      icon="check"
+      [pressed]="true">
+      Confirmed
+    </ds-toggle-button>
+  </div>
+</docs-section>

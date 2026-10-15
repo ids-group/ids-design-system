@@ -6,6 +6,7 @@ import { ButtonSection } from './sections/components/button/button.section';
 import { SegmentedSection } from './sections/components/segmented/segmented.section';
 import { IconButtonSection } from './sections/components/icon-button/icon-button.section';
 import { SplitButtonSection } from './sections/components/split-button/split-button.section';
+import { ToggleButtonSection } from './sections/components/toggle-button/toggle-button.section';
 import { LinkSection } from './sections/components/link/link.section';
 
 import { AutocompleteSection } from './sections/components/autocomplete/autocomplete.section';
@@ -132,9 +133,10 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
     title: 'Actions',
     sections: [
       ButtonSection,
-      SegmentedSection,
       IconButtonSection,
+      ToggleButtonSection,
       SplitButtonSection,
+      SegmentedSection,
       LinkSection,
     ],
   },
@@ -289,10 +291,10 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
     title: 'Practice',
     sections: [
       RulesSection,
-      ClaudeDesignSection,
       DoDontSection,
       TokenDisciplineSection,
       SignalFormsSection,
+      ClaudeDesignSection,
     ],
   },
   {

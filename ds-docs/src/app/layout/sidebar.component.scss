@@ -167,6 +167,11 @@
     background-color var(--duration-fast) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard);
 }
+.link,
+.chapter {
+  scroll-margin-block: var(--space-12);
+}
+
 .link-label {
   @include text-clip.single-line-ellipsis;
 

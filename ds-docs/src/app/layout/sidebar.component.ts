@@ -2,10 +2,12 @@ import { DOCUMENT } from '@angular/common';
 import {
   Component,
   DestroyRef,
+  ElementRef,
   ViewEncapsulation,
   computed,
   effect,
   inject,
+  isDevMode,
   output,
   signal,
 } from '@angular/core';
@@ -64,6 +66,7 @@ const ANCHOR_SETTLE_SLACK_PX = 4;
 export class SidebarComponent {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly router = inject(Router);
   private readonly layoutScroll = inject(AppLayoutScrollService);
   protected readonly layout = inject(AppLayoutComponent);
@@ -245,6 +248,26 @@ export class SidebarComponent {
       void this.router.navigateByUrl(target, {
         replaceUrl: true,
         state: { dsSamePage: true },
+      });
+    });
+
+    // Keeps the active row in view; the gap from the rail's edge is the rows' scroll-margin.
+    effect(() => {
+      this.activeAnchor();
+      this.activeChapter();
+      requestAnimationFrame(() => {
+        const row = this.host.nativeElement.querySelector(
+          '.chapter.is-active, .link.is-active',
+        );
+        const reduceMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)',
+        ).matches;
+        // `container: 'nearest'` stops at the rail instead of also scrolling the page.
+        row?.scrollIntoView({
+          block: 'nearest',
+          behavior: reduceMotion ? 'auto' : 'smooth',
+          container: 'nearest',
+        } as ScrollIntoViewOptions);
       });
     });
 
@@ -556,6 +579,9 @@ export class SidebarComponent {
         this.anchorToSection.set(anchor, section);
       }
     }
+    if (isDevMode()) {
+      this.warnOnNavOrder([...this.anchorToSection.keys()]);
+    }
 
     const firstAnchor = sections[0]?.dataset['anchor'] ?? '';
     if (firstAnchor && !this.activeAnchor()) {
@@ -580,19 +606,16 @@ export class SidebarComponent {
           }
         }
 
-        // Picks the topmost intersecting section (smallest non-negative top vs. the topbar line); falls back to the closest
-        // section above the line if none qualify, or keeps the last active anchor if nothing intersects at all.
+        // Picks the topmost intersecting section (smallest non-negative top vs. the topbar line); falls back to the
+        // closest anchor above the line. The fallback scans every anchor, not only the intersecting ones: an anchor on a
+        // heading nested inside a section leaves the band as soon as the heading scrolls past, while its block goes on.
         let bestAnchor: string | null = null;
         let bestNonNeg = Number.POSITIVE_INFINITY;
         let fallbackAnchor: string | null = null;
         let fallbackTop = Number.NEGATIVE_INFINITY;
-        for (const anchor of this.intersecting) {
-          const section = this.anchorToSection.get(anchor);
-          if (!section) {
-            continue;
-          }
+        for (const [anchor, section] of this.anchorToSection) {
           const top = section.getBoundingClientRect().top - topbarH;
-          if (top >= 0 && top < bestNonNeg) {
+          if (top >= 0 && top < bestNonNeg && this.intersecting.has(anchor)) {
             bestNonNeg = top;
             bestAnchor = anchor;
           } else if (top < 0 && top > fallbackTop) {
@@ -614,6 +637,31 @@ export class SidebarComponent {
 
     for (const section of sections) {
       this.observer.observe(section);
+    }
+  }
+
+  /** The spy walks the page top to bottom, so a page whose anchors run in another order than the
+   *  sidebar makes the URL and the highlight jump back and forth. `tools/check-docs-nav-order.mjs`
+   *  fails the same mismatch in CI. */
+  private warnOnNavOrder(pageAnchors: readonly string[]): void {
+    const group = NAV.find((each) =>
+      each.items.some((item) => pageAnchors.includes(item.anchor)),
+    );
+    if (!group) {
+      return;
+    }
+    const navAnchors = group.items.map((item) => item.anchor);
+    const page = pageAnchors.filter((anchor) => navAnchors.includes(anchor));
+    const sidebar = navAnchors.filter((anchor) => page.includes(anchor));
+    if (page.join() !== sidebar.join()) {
+      console.warn(
+        `ds-docs: the ${group.path} page renders its sections in another order than the sidebar.
+` +
+          `  sidebar: ${sidebar.join(' ')}
+  page:    ${page.join(' ')}
+` +
+          'Reorder the sections in group-pages.ts to the order in core/nav.config.ts.',
+      );
     }
   }
 
