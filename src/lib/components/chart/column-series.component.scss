@@ -68,7 +68,7 @@
 
 .column.is-active .bar,
 .columns.is-spotlit:not(.dims-others) .bar {
-  filter: chart-interactive.$highlight;
+  filter: var(--_chart-highlight, #{chart-interactive.$highlight});
 }
 
 // A running total reads up to the hovered step; a dragged range keeps the categories inside it.

@@ -148,7 +148,7 @@
 }
 
 .row.is-active .fill {
-  filter: chart-interactive.$highlight;
+  filter: var(--_chart-highlight, #{chart-interactive.$highlight});
 }
 
 @include chart-frame.forced-colors;
