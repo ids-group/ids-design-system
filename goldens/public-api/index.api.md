@@ -406,7 +406,7 @@ styles/_dropdown-overlay.scss {
     --ds-dropdown-panel-border-color: var(--border-default);
     --ds-dropdown-panel-max-height: 320px;
     --ds-dropdown-panel-max-width: none;
-    --ds-dropdown-panel-min-width: 0;
+    --ds-dropdown-panel-min-width: 240px;
     --ds-dropdown-panel-radius: var(--ds-radius-panel);
     --ds-dropdown-panel-shadow: var(--shadow-popover);
     --ds-option-bg-color-active: var(--surface-secondary);

@@ -27,6 +27,7 @@ import {
   closeOnScroll,
   disposeWithLeave,
   type DsOverlayCloseCause,
+  dropdownMinWidth,
   forwardOverlayTokens,
   dropdownOverlay,
   panelClassesOf,
@@ -707,13 +708,14 @@ export class AutocompleteComponent<T = unknown>
     );
     const triggerWidth = triggerElement.getBoundingClientRect().width;
     if (this.width() === 'content') {
-      overlayConfig.minWidth = triggerWidth;
+      overlayConfig.minWidth = dropdownMinWidth(triggerWidth);
       overlayConfig.panelClass = [
         ...panelClassesOf(overlayConfig.panelClass ?? []),
         'ds-dropdown-panel-content-width',
       ];
     } else {
       overlayConfig.width = triggerWidth;
+      overlayConfig.minWidth = dropdownMinWidth(triggerWidth);
     }
     this.overlayRef = this.overlay.create(overlayConfig);
     prepareOverlayEnter(

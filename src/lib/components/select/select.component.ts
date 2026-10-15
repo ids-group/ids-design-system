@@ -27,6 +27,7 @@ import {
   disposeWithLeave,
   dropdownOverlay,
   type DsOverlayCloseCause,
+  dropdownMinWidth,
   forwardOverlayTokens,
   panelClassesOf,
   prepareOverlayEnter,
@@ -383,13 +384,14 @@ export class SelectComponent
       ['ds-select-panel', ...panelClassesOf(this.panelClass())],
     );
     if (this.width() === 'content') {
-      config.minWidth = triggerWidth;
+      config.minWidth = dropdownMinWidth(triggerWidth);
       config.panelClass = [
         ...panelClassesOf(config.panelClass ?? []),
         'ds-dropdown-panel-content-width',
       ];
     } else {
       config.width = triggerWidth;
+      config.minWidth = dropdownMinWidth(triggerWidth);
     }
     this.overlayRef = this.overlay.create(config);
     prepareOverlayEnter(

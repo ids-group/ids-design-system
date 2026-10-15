@@ -1,5 +1,13 @@
 ## Unreleased
 
+### Changed
+
+- **A `ds-select`, `ds-multi-select` or `ds-autocomplete` panel is at least 240px wide.**
+  `--ds-dropdown-panel-min-width` now defaults to `240px` and floors the panel in both `width`
+  modes; a trigger wider than it still sets the width. The floor is the overlay's own width, so a
+  panel opened beside the right edge of the viewport is placed to stay on screen.
+  `--ds-dropdown-panel-max-width` still applies only under `width="content"`.
+
 ## 0.15.2 — 2026-10-14
 
 ### Added

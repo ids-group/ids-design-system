@@ -34,6 +34,7 @@ import {
   disposeWithLeave,
   type DsOverlayCloseCause,
   focusIsInside,
+  dropdownMinWidth,
   forwardOverlayTokens,
   dropdownOverlay,
   panelClassesOf,
@@ -734,13 +735,14 @@ export class MultiSelectComponent
     const triggerWidth = triggerElement.getBoundingClientRect().width;
     // A compact trigger hugs its caption: its width is a floor here even without `content`.
     if (this.width() === 'content' || this.showsCompactTrigger()) {
-      config.minWidth = triggerWidth;
+      config.minWidth = dropdownMinWidth(triggerWidth);
       config.panelClass = [
         ...panelClassesOf(config.panelClass ?? []),
         'ds-dropdown-panel-content-width',
       ];
     } else {
       config.width = triggerWidth;
+      config.minWidth = dropdownMinWidth(triggerWidth);
     }
     this.overlayRef = this.overlay.create(config);
     prepareOverlayEnter(
