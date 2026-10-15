@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**134 open — 2 P1, 11 P2, 121 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
+**134 open — 2 P1, 11 P2, 121 P3**, 1 of them half-done and waiting on a verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 2
 
@@ -34,7 +34,7 @@ is stale. Closing an item means deleting the item and nothing else.
   - Tooltips and trigger-anchored overlays should follow their trigger on scroll, not close (Stas, 2026-10-08)
   - Document how to build `ds-modal` actions (Stas, 2026-10-06)
   - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
-- **Open verdicts, each drawn in a deck**
+- **Open verdicts**
   - Six behaviour changes published in 0.14.7 without a choice between alternatives
 - **Tooling**
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
@@ -72,10 +72,10 @@ is stale. Closing an item means deleting the item and nothing else.
   - Split IDS into rules/design system and a UI kit? An idea to think through (Stas
   - Fix what the Claude Design run surfaced (Stas, 2026-10-05)
   - Collect concrete ideas from the live integration runs (Stas, 2026-10-05)
-  - Pass attributes through to the native elements (Vanya's AI deck, 2026-10-05)
-  - An accessible stepper (Vanya's AI deck, 2026-10-05)
-  - Hooks in toasts (Vanya's AI deck, 2026-10-05)
-  - Styles in cascade layers (Vanya's AI deck, 2026-10-05)
+  - Pass attributes through to the native elements (Vanya, 2026-10-05)
+  - An accessible stepper (Vanya, 2026-10-05)
+  - Hooks in toasts (Vanya, 2026-10-05)
+  - Styles in cascade layers (Vanya, 2026-10-05)
 - **Tooling**
   - `build-cards.mjs` cannot slice a chapter that nests a `block-title` heading inside `details.edge-cases`
   - No pixel comparison was run over the 2026-09-29/30 library comment sweep (recorded 2026-09-30)
@@ -99,7 +99,7 @@ is stale. Closing an item means deleting the item and nothing else.
   - Thirteen obsolete paths on the project can only be deleted by its owner
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-autocomplete`'s arrow keys walk a private copy of the list cursor
-- **Open verdicts, each drawn in a deck**
+- **Open verdicts**
   - Which public tokens the library never reads go?
   - Does the picker list height become a public token, or stay behind `panelClass`?
   - Should the `ds-breadcrumbs` hover colour derive from the link colour (`--ds-link-color`), like the `.link` helper?
@@ -107,7 +107,7 @@ is stale. Closing an item means deleting the item and nothing else.
   - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
   - `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green
-  - Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of deck `4-migration-manifest-audit`)
+  - Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of the migration-manifest audit)
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in, or say they are not fields (Stas asked 2026-08-20)
 - **Colour, interaction and typography tokens**
@@ -134,10 +134,10 @@ is stale. Closing an item means deleting the item and nothing else.
   - `formatTick` on the package surface has no consumer in `src/`
   - `'none'` and `'grouped'` are the same value on `ds-column-chart`
   - Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea
-- **Two chart interactions held back from deck `chart-motion-extras` (Stas, 2026-10-12: not now)**
-  - «Разница между двумя колонками» and «Отток виден на воронке», drawn live in deck `implemented/chart-motion-extras.html`
+- **Two chart interactions held back (Stas, 2026-10-12: not now)**
+  - «Разница между двумя колонками» and «Отток виден на воронке»
 - **Wrapping in a `ds-table` cell (recorded 2026-10-09, Stas: parked, come back later)**
-  - Two wrap options for a `truncate` column, drawn in deck `20-table-wrap-parked.html`
+  - Two wrap options for a `truncate` column
 - **ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)**
   - `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them
 - **The global `.icon` squeezes the `ds-icon` box (recorded 2026-10-09, from the mm-ecm consumer)**
@@ -177,7 +177,7 @@ is stale. Closing an item means deleting the item and nothing else.
   - Split the design system from the UI kit as two packages (Mikhail, 2026-08-30)
   - A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies
   - `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber
-  - Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck attached (not built, not closed)
+  - Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog (not built, not closed)
 - **DS-docs**
   - Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below)
 - **The field system — the two controls outside it, and the two with no box to paint**
@@ -222,9 +222,8 @@ is stale. Closing an item means deleting the item and nothing else.
 
 ## What is actionable today (recut 2026-09-24)
 
-**Consumer asks are the head of the board.** Every item a consumer is waiting on is drawn, with its
-before and after, in deck `decision-queue` under *Ждут консьюмеры*; pick there, and the items here
-are the work. Two are open: the control-edge contrast (:212) under *Bugs* and the indeterminate
+**Consumer asks are the head of the board.** Every item a consumer is waiting on is the work.
+Two are open: the control-edge contrast (:212) under *Bugs* and the indeterminate
 bar's stripe verdict (:1031). The 0.9.0-0.13.3 manifest walk and the eleven
 reached-past styling hooks are both closed.
 
@@ -273,7 +272,7 @@ gap ... shows whatever is actually behind it" and "the same pixels show through"
 box-shadow layer paints nothing and reserves nothing, so there was no gap between v0.10.2 and the
 fix. The record cannot be corrected (a published manifest is frozen, `AUTHORING.md:183`) and
 `CONTRIBUTING.md:168-174` forbids describing it in a new entry, so the new item carries `supersedes`
-and says nothing about the old one. Measured on three grounds: `presentations/focus-ring-gap.png`.
+and says nothing about the old one. Measured on three grounds.
 
 - [ ] **[P3] Thirteen ds-docs forced-state pins misrepresent their component.** Three change pixels
   today: the dropzone pin invents a text colour from a token nothing else reads (itself a published
@@ -425,17 +424,17 @@ Each has somebody behind it. Nothing here is speculative work.
 
 ## Asked by Stas
 
-- [ ] **[P3] A single select with a search box (Stas, 2026-10-14, from mm-ecm ME-530).** The ECM Audit & History «Event type» filter (69 options) got search on ECM's own `app-field-select` (button trigger, filter row in the panel, groups) instead of `ds-autocomplete`. Stas: leave an ask in the DS for such a component or feature. Drawn in deck `27-searchable-select-ask` (local); options A `searchable` on `ds-select`, B new component, C a select-only mode on `ds-autocomplete`, D nothing.
+- [ ] **[P3] A single select with a search box (Stas, 2026-10-14, from mm-ecm ME-530).** The ECM Audit & History «Event type» filter (69 options) got search on ECM's own `app-field-select` (button trigger, filter row in the panel, groups) instead of `ds-autocomplete`. Stas: leave an ask in the DS for such a component or feature. Options: A `searchable` on `ds-select`, B new component, C a select-only mode on `ds-autocomplete`, D nothing.
   **Today:** `ds-select` has no input (`select.component.html:24`, only `createTypeAhead`); `ds-multi-select` has the filter row, `searchable` (boolean or option-count threshold, default `DS_CONFIG.picker.searchable`), `filterWith`, `filterChange` (`multi-select.component.html:173`, `.ts:150-174`); `ds-autocomplete` types into the trigger itself (`autocomplete.component.html:83`). Same product question as the «create what I typed» item under Component feature gaps.
 
-- [ ] **[P2] A clipped value's tooltip should line up with the text it completes (Stas, 2026-10-10).** `dsTooltipWhenClipped` opens a panel capped at `--tooltip-maxw` (240px), so the full text of a wider clipped link wraps narrower than the ellipsized text under it (mm-ecm Workspaces, program name). **Wanted (Stas):** for a clip-test tooltip the minimum width stays as it is today, and the maximum width becomes the visible width of the clipped element, so text that would grow the panel wraps at the width of the ellipsized text. Deck before the change.
-- [~] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `ecm-feat/table-width-by-type`, built and waiting on the sign-off in deck `25-table-width-by-type`.
-  **Decided 2026-10-12 (Stas, deck 22), under his condition that column widths never move when the data or the page changes:** widths come from the column config, never from the rows - by column kind (A); a `truncate` column in a table that scrolls anyway is exactly 240px of text (A).
+- [ ] **[P2] A clipped value's tooltip should line up with the text it completes (Stas, 2026-10-10).** `dsTooltipWhenClipped` opens a panel capped at `--tooltip-maxw` (240px), so the full text of a wider clipped link wraps narrower than the ellipsized text under it (mm-ecm Workspaces, program name). **Wanted (Stas):** for a clip-test tooltip the minimum width stays as it is today, and the maximum width becomes the visible width of the clipped element, so text that would grow the panel wraps at the width of the ellipsized text.
+- [~] **[P1] A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06).** Work branch `ecm-feat/table-width-by-type`, built and waiting on Stas's sign-off.
+  **Decided 2026-10-12 (Stas), under his condition that column widths never move when the data or the page changes:** widths come from the column config, never from the rows - by column kind (A); a `truncate` column in a table that scrolls anyway is exactly 240px of text (A).
   **Built on the branch:** `table-layout: fixed` with a `<colgroup>`; `TableColumn.kind` (`TableColumnKind`): `id` and `date` 130px, `number` 120px, `status` 110px, each widened to its header label; `text` columns share the rest equally, floored at the header label or `minWidth`; when the floors do not fit, the table scrolls and a `truncate` text column without `width`/`minWidth` is 240px of text (272 default, 264 compact). Header labels are measured at max-content when the column set, density or fonts change, never per row; `width: 'content'` is re-measured from the rendered rows. `measureGrowingClips`, `widestValue`, the canvas and the per-data split are gone; `minWidth`, numeric `width`, drag and the link focus fix stay. CHANGELOG `## Unreleased` and `migrations/unreleased.json#table-column-width-from-config` (supersedes `0.15.0#table-truncate-without-width-grows`); the 0.15.0 verify line no longer claims the width holds across pages.
   **Measured 2026-10-13, harness `paging-pager` / `paging-server` / `ecm-seg-records` page 1 -> page 2:** dev Email 620 -> 553 / 303 -> 553 / 264 -> 69 px; branch 285 -> 285 / 285 -> 285 / 264 -> 264, every column equal on both pages.
-  **Left for the review:** rows grow where text columns now share equally (harness `auto-mixed` row 52 -> 80, `content-wide` 52 -> 94), a column of short values keeps its share, and a table whose every column is explicit and narrower than the container spreads the slack over all of them (harness `resize` step 4: email set 105, drawn 111; the same on dev) - open in deck 28 as «Свободное место, когда все ширины заданы»: A last text column takes the rest (recommended), C as is, B filler column (leaves empty space); nothing built until Stas picks.
-  **Decided 2026-10-13 (Stas, deck `25-table-width-by-type`, the empty-space block):** C, text columns share equally as built; the one-time fit by the first page (A, B) rejected by Stas.
-  **Decided 2026-10-09 (Stas, deck 24):** table width stays 100% with the slack in the auto column (B); a cell template that ellipsizes its own text gets the tooltip from the DS clip test, which counts descendants (A, nothing to build; option B, mm-ecm putting `dsTooltipWhenClipped` on the clipped span itself, stays possible); `truncate` stays one line with an ellipsis (C; B and D parked below); a column minimum set by the consumer (A, built: `TableColumn.minWidth`).
+  **Left for the review:** rows grow where text columns now share equally (harness `auto-mixed` row 52 -> 80, `content-wide` 52 -> 94), a column of short values keeps its share, and a table whose every column is explicit and narrower than the container spreads the slack over all of them (harness `resize` step 4: email set 105, drawn 111; the same on dev) - open: A last text column takes the rest (recommended), C as is, B filler column (leaves empty space); nothing built until Stas picks.
+  **Decided 2026-10-13 (Stas, the free space when every width is set):** C, text columns share equally as built; the one-time fit by the first page (A, B) rejected by Stas.
+  **Decided 2026-10-09 (Stas):** table width stays 100% with the slack in the auto column (B); a cell template that ellipsizes its own text gets the tooltip from the DS clip test, which counts descendants (A, nothing to build; option B, mm-ecm putting `dsTooltipWhenClipped` on the clipped span itself, stays possible); `truncate` stays one line with an ellipsis (C; B and D parked below); a column minimum set by the consumer (A, built: `TableColumn.minWidth`).
   **Consumer workaround to remove after the release** (mm-ecm ME-493, Delta review): `delta-records-table.component.*` wraps the value in `.value { display: block; width: 0; min-width: 100% }` with `dsTooltipWhenClipped`, marked `TODO(ds-clip-default)`; `truncate: true` on those columns replaces it.
 
 - [ ] **[P2] Tooltips and trigger-anchored overlays should follow their trigger on scroll, not close (Stas, 2026-10-08).** Today every one closes: `TooltipDirective` and the `ds-menu-item` submenu call `closeOnScroll` (`overlay-motion.ts`), as `ds-popover`, `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker` and `ds-color-picker` already did; only a pinned chart tooltip repositions. The cause of the earlier detach: CDK's `close()` and `reposition()` scroll strategies hear only the window and `cdkScrollable` ancestors, not a plain `overflow: auto` container such as the ds-docs content pane - measured 2026-10-08 in the ds-docs build: before the fix a hover tip, a pinned tip and an open submenu stayed put (pane moved 0px) while their trigger moved 59.7-60.3px; a pinned chart tooltip moved 59.7px with its mark. **Wanted:** follow the trigger (the chart tooltip's `closeOnScroll` + `updatePosition()` is the shape), close only when the trigger leaves the visible part of its scroll container.
@@ -466,8 +465,7 @@ Each has somebody behind it. Nothing here is speculative work.
   chart that silently vanished.
 
 - [ ] **[P3] Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24).** Reverses the name kept by the
-  `ds-bar-name-collision` decision. The
-  type name is drawn in `1-decision-queue`'s `row-chart-row-type` section. Migration: a
+  `ds-bar-name-collision` decision. Migration: a
   `selector-rename`, one `type-rename` per exported symbol, a `token-rename` for the
   `--ds-bar-chart-*` prefix and a `class-rename` for the internal `.bar-chart` class - the same shape
   as the `ds-waterfall-chart` item above.
@@ -524,14 +522,13 @@ Each has somebody behind it. Nothing here is speculative work.
 - [ ] **[P3] Collect concrete ideas from the live integration runs (Stas, 2026-10-05).** Vanya's
   docs and the live runs are useful input; ask the team for specific proposals and brainstorm them
   together.
-- [ ] **[P3] Pass attributes through to the native elements (Vanya's AI deck, 2026-10-05).** From
-  the last slide of the deck in the dev chat: attributes set on an IDS component should reach the
-  native element it wraps. Think through which components and which attributes first.
-- [ ] **[P3] An accessible stepper (Vanya's AI deck, 2026-10-05).** Same slide: the stepper needs
+- [ ] **[P3] Pass attributes through to the native elements (Vanya, 2026-10-05).** Attributes set
+  on an IDS component should reach the native element it wraps. Think through which components and which attributes first.
+- [ ] **[P3] An accessible stepper (Vanya, 2026-10-05).** The stepper needs
   accessibility work. Audit `ds-stepper` (roles, current step, keyboard) before choosing the fix.
-- [ ] **[P3] Hooks in toasts (Vanya's AI deck, 2026-10-05).** Same slide: consumers want hooks into
+- [ ] **[P3] Hooks in toasts (Vanya, 2026-10-05).** Consumers want hooks into
   the toast (custom content or lifecycle callbacks). Find out which hook his run reached for.
-- [ ] **[P3] Styles in cascade layers (Vanya's AI deck, 2026-10-05).** Same slide: ship the library
+- [ ] **[P3] Styles in cascade layers (Vanya, 2026-10-05).** Ship the library
   CSS inside `@layer` so a consumer's styles win without specificity fights. Weigh the effect on
   existing consumers' overrides.
 
@@ -724,7 +721,7 @@ beside another lane changing those three files.
   **What already shipped, so nobody re-solves it:** `components.md` (1285 lines / 153,880 B, six `##` sections, measured 2026-09-24) is a monolith with no unit smaller than a sixth of the file to load. `tools/split-agent-catalogue.mjs` generates `docs/agent/` from it - `INDEX.md` (15.8 KB) plus one leaf per component, grouped into 10 area folders, 112 files - and a `--check` gate fails the build when the leaves drift from the source. That closed the COST of the monolith for one file.
   **What it did not close, and this item is about:** the split is one-directional. A leaf cannot say "this is the same field as that one", no leaf links to another, and nothing links a component to the token roles it reads. `design-system.md` (461 lines / 24,539 B) is still a separate monolith with one route into the leaves (`foundations/grid.md`). An agent that lands on `ds-input` cannot walk from there to the field-message rules, the status vocabulary, or the sibling controls.
   **Ask:** design the whole md layout as a graph — a single entry point that routes, then area → component → field, with cross-links between leaves the way an Obsidian vault links notes, so an agent reaches one fact by following edges rather than by loading a file that might contain it.
-  **The sequence Stas asked for, and it is not negotiable:** research the practice first (how other design systems and agent-facing docs do this, what actually works), then ask him 10-20 questions, then a written plan, possibly a deck — and only after his explicit go-ahead does anything get implemented. He parked it on 2026-09-01 until the Claude Design work was finished; that work is finished.
+  **The sequence Stas asked for, and it is not negotiable:** research the practice first (how other design systems and agent-facing docs do this, what actually works), then ask him 10-20 questions, then a written plan — and only after his explicit go-ahead does anything get implemented. He parked it on 2026-09-01 until the Claude Design work was finished; that work is finished.
   **Points to settle when it is designed:** how the split is addressed (per component, per area, or per question); what stays in the root files as the always-loaded core; how a link is expressed so it survives both a generator and a human reader; how the index and the edges stay correct as components are added; and what the package ships versus what stays in-repo.
   **Precedent already in the repo:** `tools/extract-tokens.mjs`, `tools/extract-component-api.mjs` and `tools/split-agent-catalogue.mjs` all generate documentation from source at prebuild, each with a `--check` gate. Whatever architecture is chosen should be generated the same way wherever it can be, so it cannot drift.
 
@@ -1032,23 +1029,23 @@ that already existed, because both are the kind of ask that comes back.
 
 # Decisions — waiting on Stas, not on work
 
-## Open verdicts, each drawn in a deck
+## Open verdicts
 
 - [ ] **[P2] Six behaviour changes published in 0.14.7 without a choice between alternatives.** Being
-  taken one by one in deck `six-behaviour-changes`: `provideDsTheme` keeps a preset `data-theme`,
+  taken one by one: `provideDsTheme` keeps a preset `data-theme`,
   `dsModalConfirm`, avatar-group hides past `max`, a disabled link with `disabledReason` keeps a Tab
   stop, `provideDsIcons` calls merge, chart pin geometry (8px gap, lift over a short column). They stay
   as built until Stas picks; a pick that differs ships as a behaviour change in the next release.
 
-- [ ] **[P3] Which public tokens the library never reads go?** Drawn in deck `unread-tokens`.
+- [ ] **[P3] Which public tokens the library never reads go?**
   Measured 2026-10-05 (`var(--name` over `src/lib` and `ds-docs/src`): of 746 tokens in `styles/`
   and `themes/`, 121 have no reader in the library - 51 sizes of components and patterns that do not
   exist (`--cmdk-*`, `--wizard-*`, `--matrix-*`, `--calendar-*`, `--settings-*` and others, two of
   them read only by ds-docs), and 70 scale, palette and role names. In pinkmoon, mm-ecm and mm-broker
   the 51 have 0 readers; 12 of the 70 are read. Options: none, the 51 dead sizes, or all 121.
 
-- [ ] **[P3] Does the picker list height become a public token, or stay behind `panelClass`?** Drawn
-  in deck `picker-list-height`. Two caps sit on one panel and the settable-looking one is not the
+- [ ] **[P3] Does the picker list height become a public token, or stay behind `panelClass`?**
+  Two caps sit on one panel and the settable-looking one is not the
   one that governs the visible rows: `--ds-dropdown-panel-max-height` caps the box and is forwarded,
   `--picker-maxh` caps the list and is not. `panelClass` has expressed a per-picker list height
   since 0.13.1; a public token would add a second way to say it, and `--picker-maxh` resolves at
@@ -1069,7 +1066,7 @@ that already existed, because both are the kind of ask that comes back.
   every other link. **Wanted:** a verdict on whether the breadcrumb hover default derives from
   the link colour the way `.link` does. The default is unchanged until it is given.
 
-None of these is blocked on effort. Each is a verdict, and most carry a deck that renders the options.
+None of these is blocked on effort. Each is a verdict.
 
 ## Tooling
 
@@ -1098,7 +1095,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
   **The fix is one glob, and it needs a decision because it is a policy file.** Drop `html` from `format:fix` so prettier owns ts/json/md and the two `ds/template/*` rules own templates, which is the shape `lint:all` already assumes. The alternatives are to drop the two ds rules and let prettier own html (bigger diff, loses the attribute-order convention the repo chose), or to leave it and say so in the script so nobody expects `fix:all` to converge.
   **Earlier measurements, still valid as evidence:** prettier reformatted 140 files (115 html + 25 ts) and eslint pulled 77 back (2026-08-25); in the order prettier → stylelint → eslint, `eslint --fix` reverted 111 of prettier's 112, leaving 8 files of whitespace inside inline elements that Angular discards. The tree has been in eslint's shape all along.
 
-- [ ] **[P3] Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of deck `4-migration-manifest-audit`).** The audit's own header says it: "the verdict column is a judgement about this repo, not about the practice." So *Adopt* there is a recommendation, not a decision — and the recommendations have sat only inside a deck since 2026-08-25, which is the shape of a verdict nobody executes. **The decision is which of the ten, if any**, not whether each is defensible; every one was sourced from a primary doc, so they are all defensible and adopting all ten is a tooling project no consumer is pulling on.
+- [ ] **[P3] Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of the migration-manifest audit).** The audit's own header says it: "the verdict column is a judgement about this repo, not about the practice." So *Adopt* there is a recommendation, not a decision — and the recommendations have sat unratified since 2026-08-25, which is the shape of a verdict nobody executes. **The decision is which of the ten, if any**, not whether each is defensible; every one was sourced from a primary doc, so they are all defensible and adopting all ten is a tooling project no consumer is pulling on.
   **Three of the thirteen are already settled and are NOT part of this item:** the instruction/rationale split shipped as `action` (the prose-split pass, 2026-08-25); package reachability shipped — `package.json` already exports `"./migrations/*"`; and `schemaVersion` was **rejected** in the prose-split session along with `author`, `place`, `outcome`, `unchanged` and `source`.
   **The ten, with what each would cost, verified as absent today** (grep: none of these keys or checks exists in `tools/migration-lint.mjs` or `migrations/AUTHORING.md`):
   (1) **precondition guard** — a no-op check each runbook opens with, so an item cannot half-apply (OpenRewrite `Preconditions.check`, Nx agentic runbooks); (2) **`replaceIn` polarity** — CDK's `CssTokenUpgradeData` defaults to ALL files and narrows; no manifest or tool here has a `replaceIn` key, so this must be re-grounded on whatever key actually scopes files before it can be decided; (3) **executable verification** — Polaris ships a literal alternation `RegExp` per token group, where our `verify` is prose; (4) **runtime signal ids** — Vue/Ember collect what actually fired per app, and `devWarn` already exists here, so this is wiring rather than a mechanism; (5) **escalation marker** — Next.js codemods write a comment that breaks the build until removed (adopt the comment half only); (6) **explicit "no replacement"** — ESLint's `replacedBy` may be an empty array to SAY there is none, and the back-fill count has not been re-run against today's 36 manifests; (7) **`deprecatedIn`** — one half of ESLint `deprecatedSince` / Ember RFC 0649 `since`; the `availableUntil` half was rejected; (8) **provenance link** — CDK makes the PR link a required member; adopt it optional and lint it only on `unreleased`; (9) **`ng-update` requirements key** — the hard pre-flight the Angular CLI enforces (adopt the key, NOT a port to real schematics); (10) **dry-run hit counts** — jscodeshift prints per-file outcomes and Next.js warns that a wrong path reports 0 rather than failing; this one lands in the plugin, not the lint.
@@ -1120,9 +1117,9 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Colour, interaction and typography tokens
 
-- [ ] **[P3] Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24).** ROOT CAUSE (surfaced when a consumer scoped `--primary-h/s/l` on a checkbox and ONLY the focus halo moved): "primary" has TWO decoupled reps — (a) `--primary` + hand-picked ramp shades read by component FILLS; (b) `--primary-h/s/l` HSL channels feeding ONLY math-derived halos/ramp/gray-tint — with **no live link**, so a coherent scoped recolour needs BOTH the channels AND a `--primary` re-composition (the 3-/4-token footgun). **Re-verified true 2026-09-23** (`src/lib/themes/_semantic.scss:89-91` channels; `:109-110` hover/pressed already `color-mix`; halos `:214`, `:257`; gray tint `_base-palette.scss:28`). **IDEA:** one colour token per role as the only source; shades via `color-mix()`, hue via `hsl(from var(--primary) h <S> <L>)` keeping each step's hand-tuned S/L (see [[feedback-handtuned-colors-beat-formulas]] — only the HUE is single-sourced); drop `--primary-h/s/l` as PUBLIC API. Scoped recolour becomes ONE declaration; the `ds-color`/`--accent-*` indirection this would have unblocked already shipped in `src/lib/styles/_ds-color.scss`. **OPEN for the spec:** (a) colour space (`oklch`/`oklab` perceptual vs `srgb`/`hsl` matches today) — verify each derived role visually; (b) pure-derived vs hand-pick per role; (c) relative-colour + `var()` edge cases in the 3 target engines; (d) dark-theme interplay. Prototype: decks `3-color-engine-relative` and `2-color-engine-derivation`.
+- [ ] **[P3] Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24).** ROOT CAUSE (surfaced when a consumer scoped `--primary-h/s/l` on a checkbox and ONLY the focus halo moved): "primary" has TWO decoupled reps — (a) `--primary` + hand-picked ramp shades read by component FILLS; (b) `--primary-h/s/l` HSL channels feeding ONLY math-derived halos/ramp/gray-tint — with **no live link**, so a coherent scoped recolour needs BOTH the channels AND a `--primary` re-composition (the 3-/4-token footgun). **Re-verified true 2026-09-23** (`src/lib/themes/_semantic.scss:89-91` channels; `:109-110` hover/pressed already `color-mix`; halos `:214`, `:257`; gray tint `_base-palette.scss:28`). **IDEA:** one colour token per role as the only source; shades via `color-mix()`, hue via `hsl(from var(--primary) h <S> <L>)` keeping each step's hand-tuned S/L (see [[feedback-handtuned-colors-beat-formulas]] — only the HUE is single-sourced); drop `--primary-h/s/l` as PUBLIC API. Scoped recolour becomes ONE declaration; the `ds-color`/`--accent-*` indirection this would have unblocked already shipped in `src/lib/styles/_ds-color.scss`. **OPEN for the spec:** (a) colour space (`oklch`/`oklab` perceptual vs `srgb`/`hsl` matches today) — verify each derived role visually; (b) pure-derived vs hand-pick per role; (c) relative-colour + `var()` edge cases in the 3 target engines; (d) dark-theme interplay.
 
-- [ ] **[P3] `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]]).** Stas 2026-09-24: the formula is not built now, the override slot comes later; the two pressed verdicts are built (0.15.1, deck `implemented/interaction-formula`). Replace per-component `--ds-*-bg-hover/-active` + scattered `color-mix()` with ONE contract: a `.ds-interactive` class + presets driven by `--state-step-*` tokens in a NEW `src/lib/styles/_interaction.scss` (**still absent — verified 2026-07-24**), with an override slot (`--interactive-*-set`). Then migrate interactive components off their local recipes. **Rewritten 2026-07-24:** the old "retire `_forced-states` duplication" clause is now MOOT — `_forced-states.scss` no longer exists (docs state-forcing is per-section `:host ::ng-deep .pin-*` reading each component's `--_*` resolvers). What survives is the broader "should presentational/state styling live in global partials (like `_link.scss`) with components as thin sugar" question. (Housekeeping DONE — re-grepped 2026-08-10, the stale `_forced-states` refs are gone from `README.md` and `table.component.scss`; nothing outside `.claude/` mentions it.)
+- [ ] **[P3] `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]]).** Stas 2026-09-24: the formula is not built now, the override slot comes later; the two pressed verdicts are built (0.15.1). Replace per-component `--ds-*-bg-hover/-active` + scattered `color-mix()` with ONE contract: a `.ds-interactive` class + presets driven by `--state-step-*` tokens in a NEW `src/lib/styles/_interaction.scss` (**still absent — verified 2026-07-24**), with an override slot (`--interactive-*-set`). Then migrate interactive components off their local recipes. **Rewritten 2026-07-24:** the old "retire `_forced-states` duplication" clause is now MOOT — `_forced-states.scss` no longer exists (docs state-forcing is per-section `:host ::ng-deep .pin-*` reading each component's `--_*` resolvers). What survives is the broader "should presentational/state styling live in global partials (like `_link.scss`) with components as thin sugar" question. (Housekeeping DONE — re-grepped 2026-08-10, the stale `_forced-states` refs are gone from `README.md` and `table.component.scss`; nothing outside `.claude/` mentions it.)
 
 - [ ] **[P3] Theme recipe vs hand-tuned picks — alignment decision.** Button/icon-button state derivation uses the theme's 88%/76% mix-to-black recipe (**verified `button.component.scss:57-58`, `icon-button.component.scss:113-114,172-173`, `themes/_semantic.scss:109-110`, 2026-09-23**). If the single-source-colour calibration replaces `--primary-hover/-pressed` with hand-tuned values, the button defaults (color-mix off the resolved bg) diverge from the theme roles — decide then: components read role tokens again, or theme keeps the formula. **This is a concrete instance of the single-source item's open question (b); resolve it inside that spec, not separately.**
 
@@ -1236,13 +1233,13 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 Ordered by how close each is to a first consumer ask, which is the only thing that unparks any of them.
 
-## Two chart interactions held back from deck `chart-motion-extras` (Stas, 2026-10-12: not now)
+## Two chart interactions held back (Stas, 2026-10-12: not now)
 
-- [ ] **[P3] «Разница между двумя колонками» and «Отток виден на воронке», drawn live in deck `implemented/chart-motion-extras.html`.** The first: a clicked column becomes the base and the hovered one shows a bracket with the difference («+130 (+18%)»), built on the existing pin. The second: the hovered `ds-funnel-chart` stage draws the previous stage's width behind it, outlined, with the drop («-34%»); today the drop exists only as a number (`stageDrops`, `fellAway`). Both are new gestures or new marks, so opt-in when built.
+- [ ] **[P3] «Разница между двумя колонками» and «Отток виден на воронке».** The first: a clicked column becomes the base and the hovered one shows a bracket with the difference («+130 (+18%)»), built on the existing pin. The second: the hovered `ds-funnel-chart` stage draws the previous stage's width behind it, outlined, with the drop («-34%»); today the drop exists only as a number (`stageDrops`, `fellAway`). Both are new gestures or new marks, so opt-in when built.
 
 ## Wrapping in a `ds-table` cell (recorded 2026-10-09, Stas: parked, come back later)
 
-- [ ] **[P3] Two wrap options for a `truncate` column, drawn in deck `20-table-wrap-parked.html`.** Today a `truncate` column is one line with an ellipsis (picked C in deck `19-table-truncate-result`). B: the clipped text fills the height a neighbour already gave the row (lines = row height / line height), needs a per-row measurement on every resize and does not work under virtual scroll. D: always wrap, as a column without `truncate` does.
+- [ ] **[P3] Two wrap options for a `truncate` column.** Today a `truncate` column is one line with an ellipsis (picked C). B: the clipped text fills the height a neighbour already gave the row (lines = row height / line height), needs a per-row measurement on every resize and does not work under virtual scroll. D: always wrap, as a column without `truncate` does.
 
 ## ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)
 
@@ -1267,7 +1264,7 @@ Stas: keep it in the backlog.
 
 - [ ] **[P3] In `ds-banner` and `ds-dropzone` the `ds-icon` box is 16px while its svg draws 20px.**
   `.icon` from `styles/icon-base` is the only rule setting a width on the `<ds-icon class="icon">`
-  host; the 20 sits on the svg alone. Options, each drawn in `presentations/19-icon-box-size.html`:
+  host; the 20 sits on the svg alone. Options:
   **A** `ds-icon` keeps its own size (recommended: fixes the source, consumers included; text moves
   4px), **B** rename the class in the two components (as `option-icon`; a consumer's own
   `class="icon"` stays squeezed), **C** keep 16 (glyph shrinks, text stays), **D** nothing. No code
@@ -1444,7 +1441,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 
 - [ ] **[P3] `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber.** Today it's a raw `value: number` + `min`/`max`/`step` + spinner, no display formatting. PrimeNG InputNumber's value-add is a formatted numeric field: thousands grouping, fixed decimals, currency/percent, locale-aware, parsed back to a number on edit. Add opt-in `mode` (decimal/currency/percent) + `locale`/`currency`/`minFractionDigits`/`maxFractionDigits`/`useGrouping`; format on display/blur, parse on focus/input. Masking prior art in-house: [[reference-masked-input-dom-writeback]] (pinkmoon phone/w3w imperative `element.value` write-back). No active request — likely pulled by the financial-admin consumers (mm-broker admin, pinkmoon amounts/rates/%); gate on the first such form. **GATE HELD 2026-08-25 (Stas), asked explicitly.**
 
-- [ ] **[P3] Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck attached (not built, not closed).** Deck `select-native-multi` — three variants live, comparison matrix and sources; it is the prepared answer if a consumer ever pulls on this. Native `<select multiple>` is not a cheaper spelling of the same control, it is a documented antipattern: multi-selection is reachable only through Ctrl/Cmd- or Shift-click with nothing in the control announcing it, an unmodified click **discards the entire prior selection**, non-adjacent options cannot be selected from the keyboard at all, and screen readers handle it worse than a single `<select>`. The consensus alternative is a checkbox list — which is exactly what `ds-multi-select` already is.
+- [ ] **[P3] Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog (not built, not closed).** Native `<select multiple>` is not a cheaper spelling of the same control, it is a documented antipattern: multi-selection is reachable only through Ctrl/Cmd- or Shift-click with nothing in the control announcing it, an unmodified click **discards the entire prior selection**, non-adjacent options cannot be selected from the keyboard at all, and screen readers handle it worse than a single `<select>`. The consensus alternative is a checkbox list — which is exactly what `ds-multi-select` already is.
   **The soft version of the ask does not survive either:** the moment a hypothetical `ds-select multi` is made usable it has to open a checkbox list, i.e. it becomes `ds-multi-select`, and the only genuine difference left is chips-in-trigger vs an "N selected" summary. If a consumer ever wants the compact trigger, the honest answer is the existing `[triggerDisplay]="'count'"` input, not a second component and a fork in the docs. The one case where nativeness would really matter — a plain HTTP form POST with no JS — is solved by a hidden `<select multiple>` inside `ds-multi-select`, not by changing the UI.
 
 ## DS-docs
@@ -1731,7 +1728,7 @@ Bar and column are settled separately and stay apart.
 *This section also has items under **Asks**, **Decisions**, **Parked**.*
 
 - [ ] **[P3] The chart palette separates by hue and barely at all by lightness, and nothing measures the dark theme (recorded 2026-09-21, Stas: record only).** Three findings, each with the command that produced it.
-  **1. Lightness is flat.** Seven of the eight categorical slots sit between OKLab L 0.625 and 0.673 - a spread of 0.048 - and the closest two are 0.002 apart. Only slot 8 breaks the band at 0.394. A chart screenshotted into a black-and-white document loses every series distinction, and the same flatness is why simulated colour blindness collapses six pairs: it removes hue, and there is no lightness left underneath. Fixing it means moving colours, so it is a repaint and needs its own deck.
+  **1. Lightness is flat.** Seven of the eight categorical slots sit between OKLab L 0.625 and 0.673 - a spread of 0.048 - and the closest two are 0.002 apart. Only slot 8 breaks the band at 0.394. A chart screenshotted into a black-and-white document loses every series distinction, and the same flatness is why simulated colour blindness collapses six pairs: it removes hue, and there is no lightness left underneath. Fixing it means moving colours, so it is a repaint.
   **2. The gate only ever sees the light palette.** `tools/check-chart-palette-separation.mjs` reads `_tokens-charts.scss`; `src/lib/themes/dark/_theme.scss` overrides `--chart-categorical-8` alone, so the dark theme's effective palette is seven inherited slots plus one. Checked by hand on 2026-09-21 and it passes (`node tools/check-chart-palette-separation.mjs --hexes '#e75740,#11a793,#5a83e2,#a173de,#e25a9e,#2ca565,#d85ad8,#8b93a7'`), but nothing holds it there - and in the dark theme all eight slots land in L 0.625-0.673, because slot 8 flips to 0.663.
   **3. Slot order is right and unguarded.** The worst pair among the first 2 slots is 29.0, the first 3 is 18.4, the first 4 is 10.2 - so the charts that use two to four series get the widest gaps, which is the correct arrangement. No gate enforces it, so a future reorder can quietly hand the common case the narrow pairs.
   A fourth thing, not a defect: the dark theme's own comment reasons in protanopia deltas ("dE 12 from the orchid"), although colour-vision support is not a requirement of this system.

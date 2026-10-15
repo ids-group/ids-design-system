@@ -54,7 +54,7 @@ const out = [START, ''];
 out.push(
   `**${items.length} open — ${counts.map(([p, n]) => `${n} ${p}`).join(', ')}**` +
     (partial
-      ? `, ${partial} of them half-done and waiting on a deck verdict`
+      ? `, ${partial} of them half-done and waiting on a verdict`
       : '') +
     `. Counted by \`node tools/todo-index.mjs\` from the items themselves.`,
 );
