@@ -35,7 +35,7 @@
 
   /* The min width is the pane's (`dropdownMinWidth` reads it), so the overlay is placed by the width
      it is drawn at. The max width only applies in `content` mode; `fill` pins the pane to the trigger. */
-  --_dropdown-panel-min-width: var(--ds-dropdown-panel-min-width, 240px);
+  --_dropdown-panel-min-width: var(--ds-dropdown-panel-min-width, 220px);
   --_dropdown-panel-max-width: none;
 
   &.ds-dropdown-panel-content-width {
