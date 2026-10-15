@@ -1,5 +1,13 @@
 ## Unreleased
 
+### Added
+
+- **Every chart takes `highlightActive`, and `DsConfig.chart.highlightActive` sets it app-wide.**
+  `false` keeps the hovered or focused column, bar or heatmap cell at its own colour; unset falls
+  back to the config, then `true`, which brightens it. An input on the element wins over the
+  config. The input is declared on the internal `DsChartBase`, the base every chart
+  extends.
+
 ### Changed
 
 - **A `ds-select`, `ds-multi-select` or `ds-autocomplete` panel is at least 240px wide.**
@@ -7,6 +15,15 @@
   modes; a trigger wider than it still sets the width. The floor is the overlay's own width, so a
   panel opened beside the right edge of the viewport is placed to stay on screen.
   `--ds-dropdown-panel-max-width` still applies only under `width="content"`.
+
+- **A pinned column, bar or heatmap cell no longer stays brightened.** The highlight follows the
+  pointer and keyboard focus only: once a click holds a mark or a category and the pointer moves
+  off it, it keeps its pin at its own colour, and the mark under the pointer brightens instead.
+
+- **Under the category cursor, the column at the hovered category brightens.** A `dsColumnSeries` in
+  a `ds-chart` whose `cursor` is `'category'`, or resolves to it under `'auto'`, brightens the column
+  at the category under the pointer, as a hovered column does under `cursor="none"`. A series with
+  `tooltip="none"` stays as it is.
 
 ### Fixed
 

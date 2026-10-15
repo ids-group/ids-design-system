@@ -9,6 +9,10 @@
     {
       "text": "`--ds-dropdown-panel-min-width` defaults to `240px` and floors the `ds-select`, `ds-multi-select` and `ds-autocomplete` panel in both `width` modes, so a panel under a trigger narrower than 240px is 240px wide; a wider trigger still sets the width. Set `--ds-dropdown-panel-min-width: 0` on the component to keep a panel as wide as its trigger.",
       "verify": "Open a ds-select narrower than 240px and confirm its panel is 240px wide, then open one beside the right edge of the viewport and confirm the panel stays on screen."
+    },
+    {
+      "text": "A `dsColumnSeries` in a `ds-chart` whose `cursor` is `'category'`, or resolves to it under `'auto'`, brightens the column at the category under the pointer, as a hovered column does under `cursor=\"none\"`.",
+      "verify": "Hover a category of a ds-chart holding a dsColumnSeries and a dsLineSeries and confirm the column at that category brightens."
     }
   ],
   "deleteList": []

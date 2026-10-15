@@ -103,6 +103,8 @@ export abstract class DsChartBase {
     public readonly errorTextResolved = this.defaults.errorText;
     public readonly frame = input<ChartFrame | null>(null);
     public readonly frameResolved = this.defaults.frame;
+    public readonly highlightActive = input<boolean | null, unknown>(null, { transform: (value) => (value == null ? null : booleanAttribute(value)) });
+    public readonly highlightActiveResolved = this.defaults.highlightActive;
     public readonly interactive = input(false, { transform: booleanAttribute });
     protected readonly intl = inject(…);
     public readonly loading = input(false, { transform: booleanAttribute });
