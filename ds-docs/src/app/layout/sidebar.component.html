@@ -166,10 +166,15 @@
     <!-- Collapsed: a group's icon goes to its page; hovering or focusing it shows its items beside
          the rail, which stays collapsed. -->
     <div class="rail-groups">
-      @for (group of nav; track group.title; let index = $index) {
+      @for (group of nav; track group.title) {
         <div
           class="rail-group"
-          [style.anchor-name]="'--rail-group-' + index">
+          [class.is-dismissed]="dismissedGroup() === group.title"
+          (mouseenter)="placeFlyout($event)"
+          (focusin)="placeFlyout($event)"
+          (mouseleave)="dismissedGroup.set(null)"
+          (focusout)="onGroupFocusOut($event)"
+          (keydown.escape)="dismissFlyout(group.title, $event)">
           <a
             class="rail-icon"
             [class.is-active]="isGroupActive(group)"
@@ -181,9 +186,7 @@
               [size]="18" />
           </a>
 
-          <div
-            class="rail-flyout"
-            [style.position-anchor]="'--rail-group-' + index">
+          <div class="rail-flyout">
             <div class="rail-flyout-panel">
               <div class="rail-flyout-title">
                 {{ group.title }}

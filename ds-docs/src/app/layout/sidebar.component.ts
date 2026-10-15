@@ -95,6 +95,33 @@ export class SidebarComponent {
   );
 
   protected readonly nav = NAV;
+
+  /** The collapsed-rail group whose flyout Escape closed; it stays closed until the pointer or
+   *  focus leaves the group. */
+  protected readonly dismissedGroup = signal<string | null>(null);
+
+  protected placeFlyout(event: Event): void {
+    const group = event.currentTarget as HTMLElement;
+    const icon = group.querySelector('.rail-icon')?.getBoundingClientRect();
+    if (icon) {
+      group.style.setProperty('--_flyout-top', `${icon.top}px`);
+      group.style.setProperty('--_flyout-left', `${icon.right}px`);
+    }
+  }
+
+  protected dismissFlyout(title: string, event: Event): void {
+    this.dismissedGroup.set(title);
+    (event.currentTarget as HTMLElement)
+      .querySelector<HTMLElement>('.rail-icon')
+      ?.focus();
+  }
+
+  protected onGroupFocusOut(event: FocusEvent): void {
+    const group = event.currentTarget as HTMLElement;
+    if (!group.contains(event.relatedTarget as Node | null)) {
+      this.dismissedGroup.set(null);
+    }
+  }
   protected readonly urlForAnchor = urlForAnchor;
   protected readonly urlForGroupPath = urlForGroupPath;
 
