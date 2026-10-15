@@ -17,6 +17,10 @@
     {
       "text": "The `ds-time-picker` hour and minute columns that hold more values than they show run on past either end: after the last value the first comes round again, the selected value is scrolled to the middle of its column, and the column shows no scrollbar. `loop=\"never\"`, or `DsConfig.timePicker.loop: 'never'`, keeps them as lists.",
       "verify": "Open a ds-time-picker, scroll the hour column past its last hour and confirm the first hour follows, then reopen it and confirm the selected hour sits in the middle of the column."
+    },
+    {
+      "text": "`styles/ds` rings a focusable element the library does not render without giving it `--focus-ring-radius`: the ring follows the element's own `border-radius`, so an element of the app that declares none is no longer rounded while focused. A `border-radius: 0` added only to undo that rounding can go.",
+      "verify": "Tab to a square element of the app that sets no border-radius and confirm it keeps square corners while focused, then tab to a ds-button and confirm its ring is still rounded."
     }
   ],
   "deleteList": []
