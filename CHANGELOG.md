@@ -15,6 +15,11 @@
 
 ### Changed
 
+- **The focus ring no longer rounds an element the library does not render.** `styles/ds` still
+  rings any focusable element that styles nothing itself, in the same colour, width and offset, but
+  no longer gives it `--focus-ring-radius`: the ring follows the element's own `border-radius`, so a
+  square tab, stripe or row stays square while focused. A library component keeps its rounded ring.
+
 - **A `ds-select`, `ds-multi-select` or `ds-autocomplete` panel is at least 220px wide.**
   `--ds-dropdown-panel-min-width` now defaults to `220px` and floors the panel in both `width`
   modes; a trigger wider than it still sets the width. The floor is the overlay's own width, so a
