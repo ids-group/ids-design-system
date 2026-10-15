@@ -29,10 +29,10 @@ export const NAV: NavGroup[] = [
     kind: 'component',
     items: [
       { label: 'Buttons', anchor: 'button' },
-      { label: 'Buttons · toggle', anchor: 'toggle-button' },
-      { label: 'Buttons · group & segmented', anchor: 'segmented' },
       { label: 'Buttons · icon', anchor: 'icon-button' },
+      { label: 'Buttons · toggle', anchor: 'toggle-button' },
       { label: 'Buttons · split', anchor: 'split-button' },
+      { label: 'Buttons · group & segmented', anchor: 'segmented' },
       { label: 'Link', anchor: 'link' },
     ],
   },
@@ -194,10 +194,10 @@ export const NAV: NavGroup[] = [
     path: 'practice',
     items: [
       { label: 'Composition rules', anchor: 'practice-rules' },
-      { label: 'Claude Design sync', anchor: 'practice-claude-design' },
       { label: "Do / Don't", anchor: 'practice-do-dont' },
       { label: 'Token Discipline', anchor: 'practice-token-discipline' },
       { label: 'Signal Forms', anchor: 'practice-signal-forms' },
+      { label: 'Claude Design sync', anchor: 'practice-claude-design' },
     ],
   },
   {
