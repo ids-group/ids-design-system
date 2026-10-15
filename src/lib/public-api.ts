@@ -366,6 +366,7 @@ export type {
 export { TimePickerComponent } from '@ids-group-ltd/ids-design-system/components/time-picker';
 export type {
   TimeFormat,
+  TimePickerLoop,
   TimePickerMode,
   TimePickerValue,
   TimeRangeValue,

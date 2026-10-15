@@ -49,6 +49,9 @@ export interface DsConfig {
     /** Display format for `ds-time-picker` - 24h or 12h AM/PM. Unset follows the hour cycle of
      *  `locale` / `LOCALE_ID` (en-US: `'12h'`, en-GB: `'24h'`). */
     format?: '24h' | '12h';
+    /** Whether the hour and minute columns run on past either end. Default `'auto'`: a column that
+     *  holds more values than it shows. */
+    loop?: 'auto' | 'always' | 'never';
   };
   avatar?: {
     /** How `ds-avatar` turns its `name` into initials, app-wide. The built-in rule takes the

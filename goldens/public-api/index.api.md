@@ -295,6 +295,7 @@ export { TextareaMaxLengthMode } from '@ids-group-ltd/ids-design-system/componen
 export { TextareaResize } from '@ids-group-ltd/ids-design-system/components/textarea'; // type
 export { TimeFormat } from '@ids-group-ltd/ids-design-system/components/time-picker'; // type
 export { TimePickerComponent } from '@ids-group-ltd/ids-design-system/components/time-picker'; // component
+export { TimePickerLoop } from '@ids-group-ltd/ids-design-system/components/time-picker'; // type
 export { TimePickerMode } from '@ids-group-ltd/ids-design-system/components/time-picker'; // type
 export { TimePickerValue } from '@ids-group-ltd/ids-design-system/components/time-picker'; // type
 export { TimeRangeValue } from '@ids-group-ltd/ids-design-system/components/time-picker'; // type

@@ -12103,6 +12103,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Display clock; falls back to `DS_CONFIG.timePicker.format`, then the hour cycle of `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
+        "name": "loop",
+        "kind": "input",
+        "type": "TimePickerLoop | null",
+        "union": [
+          "auto",
+          "always",
+          "never"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Whether the hour and minute columns run on past either end; falls back to `DS_CONFIG.timePicker.loop`, then `'auto'`, which loops a column that holds more values than it shows."
+      },
+      {
         "name": "staticPreview",
         "kind": "input",
         "type": "boolean",

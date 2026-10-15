@@ -8,6 +8,11 @@
   config. The input is declared on the internal `DsChartBase`, the base every chart
   extends.
 
+- **`ds-time-picker` takes `loop`, and `DsConfig.timePicker.loop` sets it app-wide.** `'auto'`, the
+  default, runs a column on past either end when it holds more values than it shows; `'always'` runs
+  every hour and minute column; `'never'` keeps them as lists. An input on the element wins over the
+  config. `TimePickerLoop` types the value.
+
 ### Changed
 
 - **A `ds-select`, `ds-multi-select` or `ds-autocomplete` panel is at least 240px wide.**
@@ -24,6 +29,12 @@
   a `ds-chart` whose `cursor` is `'category'`, or resolves to it under `'auto'`, brightens the column
   at the category under the pointer, as a hovered column does under `cursor="none"`. A series with
   `tooltip="none"` stays as it is.
+
+- **The `ds-time-picker` hour and minute columns run on past either end.** In `ds-time-columns`,
+  after the last hour or minute the first comes round again, the selected value is scrolled to the
+  middle of its column, and a running column shows no scrollbar and fades at its edges. Under the
+  default `loop`, a column that shows all its values, such as `minuteStep` 15, and the AM/PM column
+  stay as lists.
 
 ### Fixed
 

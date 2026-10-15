@@ -87,6 +87,7 @@ export interface DsConfig {
     };
     timePicker?: {
         format?: '24h' | '12h';
+        loop?: 'auto' | 'always' | 'never';
     };
     avatar?: {
         initials?: (name: string) => string;
