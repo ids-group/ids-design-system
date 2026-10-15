@@ -447,13 +447,12 @@
   }
 }
 
-// Fixed and anchored to its icon: the rail is a scroll container and would clip an absolute
+// Fixed beside its icon (`placeFlyout`): the rail is a scroll container and would clip an absolute
 // flyout. The transparent left padding bridges the gap, so the pointer keeps the group hovered.
 .rail-flyout {
   position: fixed;
-  position-anchor: inherit;
-  inset-block-start: anchor(top);
-  inset-inline-start: anchor(right);
+  inset-block-start: var(--_flyout-top);
+  inset-inline-start: var(--_flyout-left);
   z-index: var(--layer-popover);
   display: none;
   flex-direction: column;
@@ -464,6 +463,10 @@
 .rail-group:hover .rail-flyout,
 .rail-group:focus-within .rail-flyout {
   display: flex;
+}
+
+.rail-group.is-dismissed .rail-flyout {
+  display: none;
 }
 
 .rail-flyout-panel {
