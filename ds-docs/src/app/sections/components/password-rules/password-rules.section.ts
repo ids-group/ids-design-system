@@ -16,10 +16,14 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './password-rules.section.html',
-  styleUrls: ['../../../shared/section-demo.scss'],
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    './password-rules.section.scss',
+  ],
 })
 export class PasswordRulesSection {
   protected readonly password = signal('');
+  protected readonly widePassword = signal('');
   protected readonly submitted = signal(false);
 
   // The consumer owns the policy — these predicates are what has to mirror the

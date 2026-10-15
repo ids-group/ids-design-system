@@ -8,6 +8,12 @@
   panel opened beside the right edge of the viewport is placed to stay on screen.
   `--ds-dropdown-panel-max-width` still applies only under `width="content"`.
 
+### Fixed
+
+- **A long group name no longer scrolls the `ds-multi-select` list sideways.** The per-group select-all
+  row of `selectAll="group"` and `selectAll="both"` cuts its label to the panel width with an
+  ellipsis, as the top select-all row does.
+
 ## 0.15.2 — 2026-10-14
 
 ### Added

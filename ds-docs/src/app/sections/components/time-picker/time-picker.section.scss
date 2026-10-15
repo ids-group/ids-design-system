@@ -1,8 +1,21 @@
 .row {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+
+  // Fields line up by their boxes: a labelled and an unlabelled picker share the bottom edge.
+  align-items: flex-end;
   gap: var(--space-4);
+}
+
+// A field with a message under it: its box is the top of the row, not the bottom.
+.row.field-top {
+  align-items: flex-start;
+}
+
+.value-slot {
+  display: flex;
+  align-items: center;
+  height: var(--field-h-md);
 }
 
 .value-tag {
