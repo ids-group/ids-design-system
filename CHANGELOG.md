@@ -15,6 +15,10 @@
 
 ### Changed
 
+- **The agent catalogue ships at `agent/INDEX.md`, where it was `docs/agent/INDEX.md`.** Every leaf
+  keeps its path under `agent/`. An agent rule or prompt that reads the catalogue from the installed
+  package points at `agent/` instead.
+
 - **The focus ring no longer rounds an element the library does not render.** `styles/ds` still
   rings any focusable element that styles nothing itself, in the same colour, width and offset, but
   no longer gives it `--focus-ring-radius`: the ring follows the element's own `border-radius`, so a

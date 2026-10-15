@@ -21,6 +21,10 @@
     {
       "text": "`styles/ds` rings a focusable element the library does not render without giving it `--focus-ring-radius`: the ring follows the element's own `border-radius`, so an element of the app that declares none is no longer rounded while focused. A `border-radius: 0` added only to undo that rounding can go.",
       "verify": "Tab to a square element of the app that sets no border-radius and confirm it keeps square corners while focused, then tab to a ds-button and confirm its ring is still rounded."
+    },
+    {
+      "text": "The agent catalogue ships at `agent/INDEX.md` in the package, where it was `docs/agent/INDEX.md`; every leaf keeps its path under `agent/`. An agent rule or prompt that reads the catalogue from `node_modules` points at `agent/`.",
+      "verify": "Search the app's agent rules and prompts for `docs/agent/` and confirm none is left."
     }
   ],
   "deleteList": []
