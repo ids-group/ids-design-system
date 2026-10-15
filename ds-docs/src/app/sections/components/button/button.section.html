@@ -2,7 +2,7 @@
   anchor="button"
   eyebrow="Components"
   title="Buttons"
-  [apiKeys]="['button-group', 'toggle-button']">
+  [apiKeys]="['button-group']">
   <span lede>
     Two axes: <code class="t-mono-inline">color</code> (hue family) ×
     <code class="t-mono-inline">
@@ -497,33 +497,6 @@
       trailingIcon="chevronRight">
       Continue to payment
     </ds-button>
-  </div>
-
-  <h3
-    data-claude-design
-    class="block-title t-h4"
-    data-anchor="toggle-button"
-    data-for="toggle-button">
-    Toggle
-  </h3>
-
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [pressed]
-    </code> holds the on/off state,
-    exposed as <code class="t-mono-inline">aria-pressed</code>.
-  </p>
-
-  <div class="row">
-    <ds-toggle-button icon="filter">
-      Conflicts only
-    </ds-toggle-button>
-
-    <ds-toggle-button
-      icon="check"
-      [pressed]="true">
-      Confirmed
-    </ds-toggle-button>
   </div>
 
   <h3

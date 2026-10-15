@@ -2,7 +2,6 @@ import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { ButtonComponent } from 'ds/button';
 import type { ButtonVariant } from 'ds/button';
 import { SwitchComponent } from 'ds/switch';
-import { ToggleButtonComponent } from 'ds/toggle-button';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsMatrixComponent,
@@ -22,7 +21,6 @@ interface VariantSpec {
     DocsSectionComponent,
     DocsMatrixComponent,
     SwitchComponent,
-    ToggleButtonComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './button.section.html',
