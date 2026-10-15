@@ -3,6 +3,7 @@
   [class.dims-others]="dimOthers()"
   [class.is-dimmed]="dimmedBySeries()"
   [class.is-spotlit]="spotlit()"
+  [class.holds]="activeMark.pinned() || (scales.cursorPinned?.() ?? false)"
   [class.is-collapsed]="hidden()"
   [style.--_column-chart-column-share]="markWidthPx()"
   [style.--_column-chart-slot-step]="slotStepPx()"

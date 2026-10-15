@@ -72,7 +72,7 @@ export abstract class DsChartBase {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
 
-  /** Whether the hovered, focused or pinned column, bar or heatmap cell brightens. Unset falls back
+  /** Whether the hovered or focused column, bar or heatmap cell brightens. Unset falls back
    *  to `DS_CONFIG.chart.highlightActive`, then `true`. */
   readonly highlightActive = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),

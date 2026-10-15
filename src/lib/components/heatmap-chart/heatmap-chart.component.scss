@@ -111,8 +111,14 @@
 
 // The ramp's first step is a real reading, so a missing cell must not use it.
 .cell.is-active,
-.cell.is-highlighted {
+.cell.is-highlighted,
+:host:has(.cell.is-pinned) .cell:hover {
   filter: var(--_chart-highlight, #{chart-interactive.$highlight});
+}
+
+// The highlight is a hover effect: a held cell keeps its pin, not its glow.
+:host:has(.cell.is-pinned) .cell.is-active:not(:hover) {
+  filter: none;
 }
 
 .cell.is-missing {

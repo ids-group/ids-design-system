@@ -3,12 +3,16 @@
 ### Added
 
 - **Every chart takes `highlightActive`, and `DsConfig.chart.highlightActive` sets it app-wide.**
-  `false` keeps the hovered, focused or pinned column, bar or heatmap cell at its own colour; unset
-  falls back to the config, then `true`, which brightens it as before. An input on the element wins
-  over the config. The input is declared on the internal `DsChartBase`, the base every chart
+  `false` keeps the hovered or focused column, bar or heatmap cell at its own colour; unset falls
+  back to the config, then `true`, which brightens it. An input on the element wins over the
+  config. The input is declared on the internal `DsChartBase`, the base every chart
   extends.
 
 ### Changed
+
+- **A pinned column, bar or heatmap cell no longer stays brightened.** The highlight follows the
+  pointer and keyboard focus only: once a click holds a mark or a category and the pointer moves
+  off it, it keeps its pin at its own colour, and the mark under the pointer brightens instead.
 
 - **Under the category cursor, the column at the hovered category brightens.** A `dsColumnSeries` in
   a `ds-chart` whose `cursor` is `'category'`, or resolves to it under `'auto'`, brightens the column

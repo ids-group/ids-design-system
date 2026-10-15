@@ -150,7 +150,7 @@ export interface DsConfig {
     /** Whether a click on a mark or category holds its tooltip and highlight. Default `true`.
      *  A second click, Escape or a press elsewhere releases. A tap holds whatever this says. */
     pinOnClick?: boolean;
-    /** Whether the hovered, focused or pinned column, bar or heatmap cell brightens. Default `true`. */
+    /** Whether the hovered or focused column, bar or heatmap cell brightens. Default `true`. */
     highlightActive?: boolean;
     /** Milliseconds the pointer rests on a mark, category or legend entry before the chart answers.
      *  Default 0. After one answer the next is immediate until the pointer leaves the chart;
