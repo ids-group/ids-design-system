@@ -1,0 +1,11 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    {
+      "text": "The per-group select-all row of a `ds-multi-select` with `selectAll=\"group\"` or `selectAll=\"both\"` cuts its label to the panel width with an ellipsis, as the top select-all row does, so a long group name no longer scrolls the list sideways.",
+      "verify": "Open a narrow ds-multi-select with selectAll=\"both\" and a long group name and confirm the group's select-all row ends in an ellipsis and the list has no horizontal scrollbar."
+    }
+  ],
+  "deleteList": []
+}

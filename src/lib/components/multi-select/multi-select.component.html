@@ -121,11 +121,11 @@
   }
 
   @if (
-      clearable() &&
-      selectedOptions().length > 0 &&
-      !isDisabled() &&
-      !isReadOnly()
-    ) {
+    clearable() &&
+    selectedOptions().length > 0 &&
+    !isDisabled() &&
+    !isReadOnly()
+  ) {
     <button
       type="button"
       class="clear-btn"
@@ -276,7 +276,9 @@
                     <span class="tick"></span>
                   </span>
 
-                  {{ intl().picker.selectAllInGroup(item.label) }}
+                  <span class="select-all-label">
+                    {{ intl().picker.selectAllInGroup(item.label) }}
+                  </span>
                 </button>
               }
 
