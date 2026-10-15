@@ -708,6 +708,10 @@ export class AutocompleteComponent<T = unknown>
     const triggerWidth = triggerElement.getBoundingClientRect().width;
     if (this.width() === 'content') {
       overlayConfig.minWidth = triggerWidth;
+      overlayConfig.panelClass = [
+        ...panelClassesOf(overlayConfig.panelClass ?? []),
+        'ds-dropdown-panel-content-width',
+      ];
     } else {
       overlayConfig.width = triggerWidth;
     }

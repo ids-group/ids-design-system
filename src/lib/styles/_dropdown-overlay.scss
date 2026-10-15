@@ -33,9 +33,15 @@
   --_dropdown-panel-shadow: var(--ds-dropdown-panel-shadow, var(--shadow-popover));
   --_dropdown-panel-max-height: var(--ds-dropdown-panel-max-height, 320px);
 
-  /* Min/max width only apply in `content` width mode; `fill` pins the pane to the trigger. */
-  --_dropdown-panel-min-width: var(--ds-dropdown-panel-min-width, 0);
-  --_dropdown-panel-max-width: var(--ds-dropdown-panel-max-width, none);
+  /* Min/max width only apply in `content` width mode; `fill` pins the pane to the trigger, and a
+     panel wider than its pane would overflow it past the edge the overlay was placed against. */
+  --_dropdown-panel-min-width: 0;
+  --_dropdown-panel-max-width: none;
+
+  &.ds-dropdown-panel-content-width {
+    --_dropdown-panel-min-width: var(--ds-dropdown-panel-min-width, 0);
+    --_dropdown-panel-max-width: var(--ds-dropdown-panel-max-width, none);
+  }
 
   .dropdown-panel {
     // The panel is a flex child of the pane; without this it shrinks to its option content.

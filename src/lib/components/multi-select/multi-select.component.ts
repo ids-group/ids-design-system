@@ -735,6 +735,10 @@ export class MultiSelectComponent
     // A compact trigger hugs its caption: its width is a floor here even without `content`.
     if (this.width() === 'content' || this.showsCompactTrigger()) {
       config.minWidth = triggerWidth;
+      config.panelClass = [
+        ...panelClassesOf(config.panelClass ?? []),
+        'ds-dropdown-panel-content-width',
+      ];
     } else {
       config.width = triggerWidth;
     }

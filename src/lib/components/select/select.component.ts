@@ -384,6 +384,10 @@ export class SelectComponent
     );
     if (this.width() === 'content') {
       config.minWidth = triggerWidth;
+      config.panelClass = [
+        ...panelClassesOf(config.panelClass ?? []),
+        'ds-dropdown-panel-content-width',
+      ];
     } else {
       config.width = triggerWidth;
     }
