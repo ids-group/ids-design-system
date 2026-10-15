@@ -1,5 +1,12 @@
 ## Unreleased
 
+### Changed
+
+- **The `ds-time-picker` hour and minute columns run on past either end.** In `ds-time-columns`,
+  after the last hour or minute the first comes round again, the selected value is scrolled to the
+  middle of its column, and a running column shows no scrollbar and fades at its edges. A short
+  column, such as `minuteStep` 15, and the AM/PM column scroll as before.
+
 ## 0.15.2 — 2026-10-14
 
 ### Added

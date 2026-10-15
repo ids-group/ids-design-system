@@ -22,6 +22,7 @@
 }
 
 .col {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-0-5);
@@ -30,6 +31,16 @@
   overflow-y: auto;
   scrollbar-width: thin;
   padding-inline: var(--space-0-5);
+
+  &.loops {
+    scrollbar-width: none;
+    mask-image: linear-gradient(
+      transparent,
+      #000 var(--space-6),
+      #000 calc(100% - var(--space-6)),
+      transparent
+    );
+  }
 
   &:not(:last-child) {
     border-right: var(--border-width-default) solid var(--border-subtitle);
@@ -54,11 +65,11 @@
 
   // `:not(.is-selected)` is load-bearing: `.opt:hover:not(:disabled)` (0,3,0) out-ranks `.opt.is-selected` (0,2,0) and paints the
   // hover fill over the selected one (white text on pale grey). On touch the last-tapped cell keeps `:hover`.
-  &:hover:not(:disabled, .is-selected) {
+  &:hover:not(:disabled, .is-disabled, .is-selected) {
     background-color: var(--_time-picker-option-bg-color-hover);
   }
 
-  &:active:not(:disabled, .is-selected) { background-color: var(--surface-muted); }
+  &:active:not(:disabled, .is-disabled, .is-selected) { background-color: var(--surface-muted); }
 
   &.is-selected {
     background-color: var(--_time-picker-option-bg-color-selected);
@@ -69,7 +80,8 @@
     @include focus.ring(calc(-1 * var(--focus-ring-width)));
   }
 
-  &:disabled {
+  &:disabled,
+  &.is-disabled {
     color: var(--text-disabled);
     cursor: default;
   }

@@ -1,0 +1,11 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    {
+      "text": "The `ds-time-picker` hour and minute columns run on past either end: after the last value the first comes round again, the selected value is scrolled to the middle of its column, and the column shows no scrollbar. A short column, such as `minuteStep` 15, and the AM/PM column scroll as before.",
+      "verify": "Open a ds-time-picker, scroll the hour column past its last hour and confirm the first hour follows, then reopen it and confirm the selected hour sits in the middle of the column."
+    }
+  ],
+  "deleteList": []
+}
