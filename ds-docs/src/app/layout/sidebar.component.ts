@@ -6,6 +6,7 @@ import {
   computed,
   effect,
   inject,
+  isDevMode,
   output,
   signal,
 } from '@angular/core';
@@ -556,6 +557,9 @@ export class SidebarComponent {
         this.anchorToSection.set(anchor, section);
       }
     }
+    if (isDevMode()) {
+      this.warnOnNavOrder([...this.anchorToSection.keys()]);
+    }
 
     const firstAnchor = sections[0]?.dataset['anchor'] ?? '';
     if (firstAnchor && !this.activeAnchor()) {
@@ -611,6 +615,31 @@ export class SidebarComponent {
 
     for (const section of sections) {
       this.observer.observe(section);
+    }
+  }
+
+  /** The spy walks the page top to bottom, so a page whose anchors run in another order than the
+   *  sidebar makes the URL and the highlight jump back and forth. `tools/check-docs-nav-order.mjs`
+   *  fails the same mismatch in CI. */
+  private warnOnNavOrder(pageAnchors: readonly string[]): void {
+    const group = NAV.find((each) =>
+      each.items.some((item) => pageAnchors.includes(item.anchor)),
+    );
+    if (!group) {
+      return;
+    }
+    const navAnchors = group.items.map((item) => item.anchor);
+    const page = pageAnchors.filter((anchor) => navAnchors.includes(anchor));
+    const sidebar = navAnchors.filter((anchor) => page.includes(anchor));
+    if (page.join() !== sidebar.join()) {
+      console.warn(
+        `ds-docs: the ${group.path} page renders its sections in another order than the sidebar.
+` +
+          `  sidebar: ${sidebar.join(' ')}
+  page:    ${page.join(' ')}
+` +
+          'Reorder the sections in group-pages.ts to the order in core/nav.config.ts.',
+      );
     }
   }
 
