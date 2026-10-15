@@ -29,8 +29,10 @@
       label="Time"
       [(value)]="single" />
 
-    <span class="value-tag t-mono-inline">
-      {{ single() ?? '—' }}
+    <span class="value-slot">
+      <span class="value-tag t-mono-inline">
+        {{ single() ?? '—' }}
+      </span>
     </span>
   </div>
 
@@ -92,8 +94,10 @@
       [minuteStep]="15"
       [(value)]="stepped" />
 
-    <span class="value-tag t-mono-inline">
-      {{ stepped() ?? '—' }}
+    <span class="value-slot">
+      <span class="value-tag t-mono-inline">
+        {{ stepped() ?? '—' }}
+      </span>
     </span>
   </div>
 
@@ -122,8 +126,10 @@
       [disabledTime]="noLunch"
       [(value)]="bounded" />
 
-    <span class="value-tag t-mono-inline">
-      {{ bounded() ?? '—' }}
+    <span class="value-slot">
+      <span class="value-tag t-mono-inline">
+        {{ bounded() ?? '—' }}
+      </span>
     </span>
   </div>
 
@@ -195,8 +201,10 @@
       [required]="true"
       [(value)]="requiredRange" />
 
-    <span class="value-tag t-mono-inline">
-      {{ range() }}
+    <span class="value-slot">
+      <span class="value-tag t-mono-inline">
+        {{ range() }}
+      </span>
     </span>
   </div>
 
@@ -215,13 +223,15 @@
     line; <code class="t-mono-inline">[invalid]</code> paints it without text.
   </p>
 
-  <div class="row">
+  <div class="row field-top">
     <ds-time-picker
       error="A time is required."
       [formControl]="timeControl" />
 
-    <span class="value-tag t-mono-inline">
-      {{ timeControl.value ?? '—' }}
+    <span class="value-slot">
+      <span class="value-tag t-mono-inline">
+        {{ timeControl.value ?? '—' }}
+      </span>
     </span>
   </div>
 </docs-section>

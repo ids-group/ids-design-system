@@ -1,5 +1,6 @@
 // Docs TOC config — one entry per `data-anchor` on the group's section components. Items sort A→Z except Reference
 // (token-reading order); group-pages.ts render order mirrors this so the sidenav/scroll-spy stay monotonic.
+import type { IconName } from 'ds/core';
 
 export interface NavItem {
   label: string;
@@ -10,6 +11,8 @@ export interface NavItem {
 
 export interface NavGroup {
   title: string;
+  /** The group's mark in the collapsed rail. */
+  icon: IconName;
   /** Route this group's page lives at (e.g. 'components/actions', 'home'). */
   path: string;
   /** Marks a group whose items are components — summed for the home component count. */
@@ -21,11 +24,13 @@ export const NAV: NavGroup[] = [
   {
     title: 'Start',
     path: '',
+    icon: 'home',
     items: [{ label: 'Start here', anchor: 'home' }],
   },
   {
     title: 'Actions',
     path: 'components/actions',
+    icon: 'play',
     kind: 'component',
     items: [
       { label: 'Buttons', anchor: 'button' },
@@ -39,6 +44,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Forms & inputs',
     path: 'components/forms-inputs',
+    icon: 'edit',
     kind: 'component',
     items: [
       { label: 'Autocomplete', anchor: 'autocomplete' },
@@ -65,6 +71,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Navigation',
     path: 'components/navigation',
+    icon: 'map',
     kind: 'component',
     items: [
       { label: 'App layout', anchor: 'app-layout' },
@@ -81,6 +88,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Data display',
     path: 'components/data-display',
+    icon: 'grid',
     kind: 'component',
     items: [
       { label: 'Accordion', anchor: 'accordion' },
@@ -99,6 +107,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Feedback & status',
     path: 'components/feedback-status',
+    icon: 'bell',
     kind: 'component',
     items: [
       { label: 'Alert', anchor: 'alert' },
@@ -116,6 +125,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Overlays',
     path: 'components/overlays',
+    icon: 'layers',
     kind: 'component',
     items: [
       { label: 'Bottom sheet', anchor: 'bottom-sheet' },
@@ -128,6 +138,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Page structure',
     path: 'components/page-structure',
+    icon: 'file',
     kind: 'component',
     items: [
       { label: 'Filter bar', anchor: 'filter-bar' },
@@ -138,6 +149,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Charts',
     path: 'charts',
+    icon: 'chart',
     kind: 'component',
     items: [
       { label: 'Bar chart', anchor: 'bar-chart' },
@@ -155,6 +167,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Foundations',
     path: 'foundations',
+    icon: 'package',
     items: [
       { label: 'Accessibility', anchor: 'accessibility' },
       { label: 'Borders', anchor: 'borders' },
@@ -180,6 +193,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Patterns',
     path: 'patterns',
+    icon: 'copy',
     items: [
       { label: 'Page composition', anchor: 'pattern-page-composition' },
       { label: 'Activity', anchor: 'pattern-activity' },
@@ -192,6 +206,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Practice',
     path: 'practice',
+    icon: 'check-circle',
     items: [
       { label: 'Composition rules', anchor: 'practice-rules' },
       { label: "Do / Don't", anchor: 'practice-do-dont' },
@@ -203,6 +218,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Reference',
     path: 'reference',
+    icon: 'list',
     items: [
       { label: 'Tokens reference', anchor: 'tokens-reference' },
       { label: 'Semantic tokens', anchor: 'semantic-tokens' },
@@ -223,6 +239,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Changelog',
     path: 'changelog',
+    icon: 'clock',
     items: [{ label: 'Changelog', anchor: 'changelog' }],
   },
 ];
