@@ -68,7 +68,9 @@ export function panelClassesOf(
 }
 
 /** The pane's floor: the trigger, or `--ds-dropdown-panel-min-width` when that is wider. Set on the
- *  pane, not the panel inside it, so the overlay is placed by the width it is drawn at. */
+ *  pane, not the panel inside it, so the overlay is placed by the width it is drawn at.
+ *  @internal
+ */
 export function dropdownMinWidth(triggerWidth: number): string {
   return `max(${triggerWidth}px, var(--_dropdown-panel-min-width))`;
 }

@@ -380,6 +380,9 @@ export function disposeWithLeave(overlayRef: OverlayRef | null | undefined, caus
 export function domainMinOf(values: readonly number[]): number;
 
 // @internal
+export function dropdownMinWidth(triggerWidth: number): string;
+
+// @internal
 export function dropdownOverlay(overlay: Overlay, trigger: HTMLElement, extraPanelClass: string | readonly string[] = []): { positionStrategy: FlexibleConnectedPositionStrategy; config: OverlayConfig; };
 
 // @internal
