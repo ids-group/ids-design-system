@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import {
   Component,
   DestroyRef,
+  ElementRef,
   ViewEncapsulation,
   computed,
   effect,
@@ -65,6 +66,7 @@ const ANCHOR_SETTLE_SLACK_PX = 4;
 export class SidebarComponent {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly router = inject(Router);
   private readonly layoutScroll = inject(AppLayoutScrollService);
   protected readonly layout = inject(AppLayoutComponent);
@@ -246,6 +248,26 @@ export class SidebarComponent {
       void this.router.navigateByUrl(target, {
         replaceUrl: true,
         state: { dsSamePage: true },
+      });
+    });
+
+    // Keeps the active row in view; the gap from the rail's edge is the rows' scroll-margin.
+    effect(() => {
+      this.activeAnchor();
+      this.activeChapter();
+      requestAnimationFrame(() => {
+        const row = this.host.nativeElement.querySelector(
+          '.chapter.is-active, .link.is-active',
+        );
+        const reduceMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)',
+        ).matches;
+        // `container: 'nearest'` stops at the rail instead of also scrolling the page.
+        row?.scrollIntoView({
+          block: 'nearest',
+          behavior: reduceMotion ? 'auto' : 'smooth',
+          container: 'nearest',
+        } as ScrollIntoViewOptions);
       });
     });
 
