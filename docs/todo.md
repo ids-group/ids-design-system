@@ -53,7 +53,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - `g[dsLineSeries]` demonstrates `stacked` and `tooltipAnchor` only on the preset
 - **Faster gates (Stas, 2026-10-09: after the release)**
-  - Rewrite the gates in Rust or C++ (idea, Stas 2026-10-14: «переписать все гейты на раст
+  - Rewrite the gates in Rust or C++ (Stas's idea, 2026-10-14, for speed)
 - **Keyboard reach reported by Stas, 2026-10-09 (record only, fix after the release)**
   - The password field's show/hide toggle is not reachable by Tab
   - `ds-menu` opened from the keyboard does not take focus, and Tab walks the wrong menu
@@ -334,8 +334,7 @@ Constraints and decisions that read as removable and are not.
   `node:22-alpine`: «Chrome not found. Set CHROME_PATH to its executable.»), so `tools/preflight.mjs`
   skips both when `CI` or `BITBUCKET_BUILD_NUMBER` is set (TODO(render-evidence-ci)). Fix: install
   Chromium and fonts in the release step, add `/usr/bin/chromium-browser` to `headless-chrome.mjs`
-  and launch with `--no-sandbox` under root, then drop the skip. Stas, 2026-10-09: «пока что выключи
-  потом починим».
+  and launch with `--no-sandbox` under root, then drop the skip. Stas, 2026-10-09: skip it for now, fix it later.
 
 - [ ] **[P2] `tools/check.mjs` runs every check of a group one after another.**
   `lint:all` walks its 36 checks serially, so every agent and every merge waits for the sum of them.
@@ -343,8 +342,7 @@ Constraints and decisions that read as removable and are not.
   and the exit code the same; checks that build or share a cache stay serial or get a lock.
   Measure the group before and after.
 
-- [ ] **[P3] Rewrite the gates in Rust or C++ (idea, Stas 2026-10-14: «переписать все гейты на раст
-  или c++ чтобы очень быстро было»).** Before choosing what to port, measure where each gate spends
+- [ ] **[P3] Rewrite the gates in Rust or C++ (Stas's idea, 2026-10-14, for speed).** Before choosing what to port, measure where each gate spends
   its time (`tools/check.mjs` per-check timings): the slow ones build the docs, run headless Chrome
   or the Angular compiler, which a rewrite does not speed up; the candidates are the pure file-walking
   and text-matching checks. Compare against the cheaper steps above (parallel `check.mjs`, shared
@@ -436,7 +434,7 @@ Each has somebody behind it. Nothing here is speculative work.
   **Built on the branch:** `table-layout: fixed` with a `<colgroup>`; `TableColumn.kind` (`TableColumnKind`): `id` and `date` 130px, `number` 120px, `status` 110px, each widened to its header label; `text` columns share the rest equally, floored at the header label or `minWidth`; when the floors do not fit, the table scrolls and a `truncate` text column without `width`/`minWidth` is 240px of text (272 default, 264 compact). Header labels are measured at max-content when the column set, density or fonts change, never per row; `width: 'content'` is re-measured from the rendered rows. `measureGrowingClips`, `widestValue`, the canvas and the per-data split are gone; `minWidth`, numeric `width`, drag and the link focus fix stay. CHANGELOG `## Unreleased` and `migrations/unreleased.json#table-column-width-from-config` (supersedes `0.15.0#table-truncate-without-width-grows`); the 0.15.0 verify line no longer claims the width holds across pages.
   **Measured 2026-10-13, harness `paging-pager` / `paging-server` / `ecm-seg-records` page 1 -> page 2:** dev Email 620 -> 553 / 303 -> 553 / 264 -> 69 px; branch 285 -> 285 / 285 -> 285 / 264 -> 264, every column equal on both pages.
   **Left for the review:** rows grow where text columns now share equally (harness `auto-mixed` row 52 -> 80, `content-wide` 52 -> 94), a column of short values keeps its share, and a table whose every column is explicit and narrower than the container spreads the slack over all of them (harness `resize` step 4: email set 105, drawn 111; the same on dev) - open in deck 28 as «Свободное место, когда все ширины заданы»: A last text column takes the rest (recommended), C as is, B filler column (leaves empty space); nothing built until Stas picks.
-  **Decided 2026-10-13 (Stas, deck 28 «Без пустых мест»):** C, text columns share equally as built; the one-time fit by the first page (A, B) rejected: «вариант "ширину один раз подбирает по тексту первой страницы и дальше её держит" я НЕ ВЫБИРАЮ. это странный вариант».
+  **Decided 2026-10-13 (Stas, deck `25-table-width-by-type`, the empty-space block):** C, text columns share equally as built; the one-time fit by the first page (A, B) rejected by Stas.
   **Decided 2026-10-09 (Stas, deck 24):** table width stays 100% with the slack in the auto column (B); a cell template that ellipsizes its own text gets the tooltip from the DS clip test, which counts descendants (A, nothing to build; option B, mm-ecm putting `dsTooltipWhenClipped` on the clipped span itself, stays possible); `truncate` stays one line with an ellipsis (C; B and D parked below); a column minimum set by the consumer (A, built: `TableColumn.minWidth`).
   **Consumer workaround to remove after the release** (mm-ecm ME-493, Delta review): `delta-records-table.component.*` wraps the value in `.value { display: block; width: 0; min-width: 100% }` with `dsTooltipWhenClipped`, marked `TODO(ds-clip-default)`; `truncate: true` on those columns replaces it.
 
