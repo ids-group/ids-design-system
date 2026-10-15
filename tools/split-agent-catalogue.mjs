@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Generates the agent-facing catalogue: docs/agent/INDEX.md plus one leaf per entry,
+// Generates the agent-facing catalogue: agent/INDEX.md plus one leaf per entry,
 // split out of components.md.
 //
 //   node tools/split-agent-catalogue.mjs          # regenerate
@@ -22,7 +22,7 @@ import { fileURLToPath } from 'node:url';
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SOURCE = join(repo, 'components.md');
-const OUT = join(repo, 'docs', 'agent');
+const OUT = join(repo, 'agent');
 const check = process.argv.includes('--check');
 
 const source = readFileSync(SOURCE, 'utf8').replace(/\r\n/g, '\n');
@@ -292,9 +292,9 @@ if (check) {
   const orphans = walk(OUT).filter((path) => !expected.has(path));
   if (stale.length || orphans.length) {
     for (const path of stale)
-      console.error(`✗ docs/agent/${path} is out of date`);
+      console.error(`✗ agent/${path} is out of date`);
     for (const path of orphans)
-      console.error(`✗ docs/agent/${path} has no entry in components.md`);
+      console.error(`✗ agent/${path} has no entry in components.md`);
     console.error(
       '  run `node tools/split-agent-catalogue.mjs` and commit the result',
     );

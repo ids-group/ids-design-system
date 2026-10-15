@@ -2,7 +2,7 @@
 
 > Index of the design system components, global helpers, tokens and icons. Use it as a single reference when migrating UI to DS.
 >
-> **If you are an agent, read `docs/agent/INDEX.md` instead of this file.** The same content
+> **If you are an agent, read `agent/INDEX.md` instead of this file.** The same content
 > is generated there as an index plus one leaf per entry, so answering a question about one
 > component costs ~1.6 KB and the index, not the 58 KB of this catalogue. This file stays the
 > single place a human edits — the leaves are derived from it and a CI gate fails when they

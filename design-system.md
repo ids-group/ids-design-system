@@ -370,7 +370,7 @@ follows.
 ## 9. Page composition — where things go
 
 The grid itself (tiers, spans, the canonical 8+4 / 6+6 / 9+3 splits, the forbidden 7+5, the
-720px prose cap) is specified in `docs/agent/foundations/grid.md`. This section is the layer
+720px prose cap) is specified in `agent/foundations/grid.md`. This section is the layer
 above it: which region holds what, and in which order.
 
 ### The page is four regions, and three of them are components

@@ -126,7 +126,7 @@ function docsSiteSources() {
   };
   for (const [name, keep] of [
     ['ds-docs/src', (n) => /\.(html|ts|scss|json|md)$/.test(n)],
-    ['docs/agent', (n) => n.endsWith('.md')],
+    ['agent', (n) => n.endsWith('.md')],
   ]) {
     const before = found.length;
     crawl(join(ROOT, name), keep);

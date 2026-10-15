@@ -314,7 +314,7 @@ and says nothing about the old one. Measured on three grounds.
 ## What v0.13.3 added and the docs site never shows (measured 2026-09-22)
 
 Every new component landed everywhere - five charts plus `g[dsSeriesAnnotation]` have a section, a
-`components.md` entry and a `docs/agent` file. The gap is below the component line, and the site's
+`components.md` entry and a `agent/` file. The gap is below the component line, and the site's
 generated API table carries the NAMES, so this is about a reader meeting an input with no example
 rather than never meeting it at all.
 
@@ -718,7 +718,7 @@ beside another lane changing those three files.
 ## Agent-facing docs — the rules an agent needs to prototype a page, and an md layout it can navigate
 
 - [ ] **[P3] An md ARCHITECTURE for the whole design system — cross-linked like a graph, not a pile of files (Stas, 2026-09-01, re-scoped 2026-09-02). NEXT UP, and the first step is RESEARCH, not code.**
-  **What already shipped, so nobody re-solves it:** `components.md` (1285 lines / 153,880 B, six `##` sections, measured 2026-09-24) is a monolith with no unit smaller than a sixth of the file to load. `tools/split-agent-catalogue.mjs` generates `docs/agent/` from it - `INDEX.md` (15.8 KB) plus one leaf per component, grouped into 10 area folders, 112 files - and a `--check` gate fails the build when the leaves drift from the source. That closed the COST of the monolith for one file.
+  **What already shipped, so nobody re-solves it:** `components.md` (1285 lines / 153,880 B, six `##` sections, measured 2026-09-24) is a monolith with no unit smaller than a sixth of the file to load. `tools/split-agent-catalogue.mjs` generates `agent/` from it - `INDEX.md` (15.8 KB) plus one leaf per component, grouped into 10 area folders, 112 files - and a `--check` gate fails the build when the leaves drift from the source. That closed the COST of the monolith for one file.
   **What it did not close, and this item is about:** the split is one-directional. A leaf cannot say "this is the same field as that one", no leaf links to another, and nothing links a component to the token roles it reads. `design-system.md` (461 lines / 24,539 B) is still a separate monolith with one route into the leaves (`foundations/grid.md`). An agent that lands on `ds-input` cannot walk from there to the field-message rules, the status vocabulary, or the sibling controls.
   **Ask:** design the whole md layout as a graph — a single entry point that routes, then area → component → field, with cross-links between leaves the way an Obsidian vault links notes, so an agent reaches one fact by following edges rather than by loading a file that might contain it.
   **The sequence Stas asked for, and it is not negotiable:** research the practice first (how other design systems and agent-facing docs do this, what actually works), then ask him 10-20 questions, then a written plan — and only after his explicit go-ahead does anything get implemented. He parked it on 2026-09-01 until the Claude Design work was finished; that work is finished.
@@ -1623,7 +1623,7 @@ Bar and column are settled separately and stay apart.
   `dataTable` and `data` in seven - 108 declarations for 13 names.
 
   Each carries its own docblock, and `extract-docs` turns those into the per-component input
-  tables in `components.md` and `docs/agent/`. A base class or a `hostDirective` would buy roughly
+  tables in `components.md` and `agent/`. A base class or a `hostDirective` would buy roughly
   a hundred lines and cost the documentation pipeline the per-component wording, which is what
   makes a chart's API page read as that chart's rather than as a shared preamble.
   **Not obviously worth doing.** Recorded so the next reader does not re-derive the measurement,
