@@ -1,5 +1,12 @@
 ## Unreleased
 
+### Changed
+
+- **Under the category cursor, the column at the hovered category brightens.** A `dsColumnSeries` in
+  a `ds-chart` whose `cursor` is `'category'`, or resolves to it under `'auto'`, brightens the column
+  at the category under the pointer, as a hovered column does under `cursor="none"`. A series with
+  `tooltip="none"` stays as it is.
+
 ## 0.15.2 — 2026-10-14
 
 ### Added

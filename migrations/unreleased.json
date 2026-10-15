@@ -1,0 +1,11 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    {
+      "text": "A `dsColumnSeries` in a `ds-chart` whose `cursor` is `'category'`, or resolves to it under `'auto'`, brightens the column at the category under the pointer, as a hovered column does under `cursor=\"none\"`.",
+      "verify": "Hover a category of a ds-chart holding a dsColumnSeries and a dsLineSeries and confirm the column at that category brightens."
+    }
+  ],
+  "deleteList": []
+}
