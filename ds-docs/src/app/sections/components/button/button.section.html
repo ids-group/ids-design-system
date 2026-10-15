@@ -5,54 +5,30 @@
   [apiKeys]="['button-group']">
   <span lede>
     Two axes: <code class="t-mono-inline">color</code> (hue family) ×
-    <code class="t-mono-inline">
-      variant
-    </code> (solid · tonal · outline ·
+    <code class="t-mono-inline"> variant </code> (solid · tonal · outline ·
     ghost · text); loudness is the variant (solid &gt; tonal &gt;
     outline/ghost).
   </span>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      type
-    </code> defaults to
-    <code class="t-mono-inline">
-      'button'
-    </code> (never submits); use
-    <code class="t-mono-inline">
-      type="submit"
-    </code> to submit. Overlay
+    <code class="t-mono-inline"> type </code> defaults to
+    <code class="t-mono-inline"> 'button' </code> (never submits); use
+    <code class="t-mono-inline"> type="submit" </code> to submit. Overlay
     triggers bind <code class="t-mono-inline">ariaHasPopup</code>,
-    <code class="t-mono-inline">
-      ariaExpanded
-    </code>,
-    <code class="t-mono-inline">
-      ariaControls
-    </code>; these and
-    <code class="t-mono-inline">
-      ariaLabel
-    </code> land on the inner control.
+    <code class="t-mono-inline"> ariaExpanded </code>,
+    <code class="t-mono-inline"> ariaControls </code>; these and
+    <code class="t-mono-inline"> ariaLabel </code> land on the inner control.
     Labelled groups: <code class="t-mono-inline">ds-button-group</code>.
   </p>
 
   <p class="block-desc t-s">
-    <strong>
-      Only solid and tonal paint a fill.
-    </strong>
+    <strong> Only solid and tonal paint a fill. </strong>
 
-    <code class="t-mono-inline">
-      outline
-    </code>,
-    <code class="t-mono-inline">
-      ghost
-    </code>,
-    <code class="t-mono-inline">
-      text
-    </code> show the surface beneath; on a
+    <code class="t-mono-inline"> outline </code>,
+    <code class="t-mono-inline"> ghost </code>,
+    <code class="t-mono-inline"> text </code> show the surface beneath; on a
     photo or gradient set
-    <code class="t-mono-inline">
-      --ds-button-bg-color
-    </code>.
+    <code class="t-mono-inline"> --ds-button-bg-color </code>.
   </p>
 
   <h3
@@ -63,51 +39,29 @@
 
   <p class="block-desc t-s">
     Defaults:
-    <code class="t-mono-inline">
-      color="primary" variant="solid"
-    </code>. ⚠ cells
-    work (with a dev warning) but read poorly: grey <em>solid</em> looks
+    <code class="t-mono-inline"> color="primary" variant="solid" </code>. ⚠
+    cells work (with a dev warning) but read poorly: grey <em>solid</em> looks
     disabled; outline/ghost <em>success/warning</em> lack contrast; use
     solid/tonal there.
   </p>
 
   <p class="block-desc t-s">
     The <strong>text</strong> column is ⚠: it duplicates
-    <code class="t-mono-inline">
-      .link
-    </code> on
-    <code class="t-mono-inline">
-      &lt;a&gt;
-    </code>/<code class="t-mono-inline"
+    <code class="t-mono-inline"> .link </code> on
+    <code class="t-mono-inline"> &lt;a&gt; </code>/<code class="t-mono-inline"
       >&lt;button&gt;</code
     >. Use <code class="t-mono-inline">variant="text"</code> only for
-    <code class="t-mono-inline">
-      loading
-    </code>,
-    <code class="t-mono-inline">
-      fullWidth
-    </code>,
-    <code class="t-mono-inline">
-      (pressed)
-    </code> or icons on that look.
+    <code class="t-mono-inline"> loading </code>,
+    <code class="t-mono-inline"> fullWidth </code>,
+    <code class="t-mono-inline"> (pressed) </code> or icons on that look.
   </p>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      secondary
-    </code> (orange) and
-    <code class="t-mono-inline">
-      tertiary
-    </code> (violet) are independent of
-    <code class="t-mono-inline">
-      --primary
-    </code>; recolour via
-    <code class="t-mono-inline">
-      --secondary-h/s/l
-    </code>,
-    <code class="t-mono-inline">
-      --tertiary-h/s/l
-    </code>.
+    <code class="t-mono-inline"> secondary </code> (orange) and
+    <code class="t-mono-inline"> tertiary </code> (violet) are independent of
+    <code class="t-mono-inline"> --primary </code>; recolour via
+    <code class="t-mono-inline"> --secondary-h/s/l </code>,
+    <code class="t-mono-inline"> --tertiary-h/s/l </code>.
   </p>
 
   <div class="brand-demo">
@@ -143,32 +97,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      sm
-    </code> ·
-    <code class="t-mono-inline">
-      md
-    </code> (default; follows
-    <code class="t-mono-inline">
-      DS_CONFIG.control.size
-    </code>) ·
-    <code class="t-mono-inline">
-      lg
-    </code>: 32 / 40 / 48, as fields.
+    <code class="t-mono-inline"> sm </code> ·
+    <code class="t-mono-inline"> md </code> (default; follows
+    <code class="t-mono-inline"> DS_CONFIG.control.size </code>) ·
+    <code class="t-mono-inline"> lg </code>: 32 / 40 / 48, as fields.
   </p>
 
   <div class="row">
-    <ds-button size="sm">
-      Small
-    </ds-button>
+    <ds-button size="sm"> Small </ds-button>
 
-    <ds-button size="md">
-      Medium
-    </ds-button>
+    <ds-button size="md"> Medium </ds-button>
 
-    <ds-button size="lg">
-      Large
-    </ds-button>
+    <ds-button size="lg"> Large </ds-button>
   </div>
 
   <h3
@@ -250,9 +190,7 @@
   </p>
 
   <div class="row">
-    <ds-button icon="plus">
-      New record
-    </ds-button>
+    <ds-button icon="plus"> New record </ds-button>
 
     <ds-button
       variant="tonal"
@@ -275,9 +213,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [dsButtonSubtext]
-    </code> adds a helper line
+    <code class="t-mono-inline"> [dsButtonSubtext] </code> adds a helper line
     (e.g. why it is locked), stacking the button only when filled. It inherits
     the button's colour, disabled tone included.
   </p>
@@ -311,28 +247,16 @@
 
   <div class="refusals">
     <div class="refusal">
-      <span class="refusal-tag is-standing">
-        Standing
-      </span>
+      <span class="refusal-tag is-standing"> Standing </span>
 
-      <p class="refusal-lede t-s">
-        Nothing on this screen will lift it.
-      </p>
+      <p class="refusal-lede t-s">Nothing on this screen will lift it.</p>
 
       <p class="t-s refusal-copy">
-        <code class="t-mono-inline">
-          disabledReason
-        </code> with
-        <code class="t-mono-inline">
-          disabled
-        </code> adds the reason as a
+        <code class="t-mono-inline"> disabledReason </code> with
+        <code class="t-mono-inline"> disabled </code> adds the reason as a
         second line and swaps native
-        <code class="t-mono-inline">
-          disabled
-        </code> for
-        <code class="t-mono-inline">
-          aria-disabled
-        </code>: still tabbable
+        <code class="t-mono-inline"> disabled </code> for
+        <code class="t-mono-inline"> aria-disabled </code>: still tabbable
         (links too), reason announced, clicks swallowed. Long reasons wrap.
       </p>
 
@@ -361,25 +285,15 @@
     </div>
 
     <div class="refusal">
-      <span class="refusal-tag is-temporary">
-        Temporary
-      </span>
+      <span class="refusal-tag is-temporary"> Temporary </span>
 
-      <p class="refusal-lede t-s">
-        The user's own next action lifts it.
-      </p>
+      <p class="refusal-lede t-s">The user's own next action lifts it.</p>
 
       <p class="t-s refusal-copy">
         Keep it live, validate on submit, and explain with the fields'
-        <code class="t-mono-inline">
-          hint
-        </code>,
-        <code class="t-mono-inline">
-          warning
-        </code> or
-        <code class="t-mono-inline">
-          error
-        </code> line. A longer message widens
+        <code class="t-mono-inline"> hint </code>,
+        <code class="t-mono-inline"> warning </code> or
+        <code class="t-mono-inline"> error </code> line. A longer message widens
         the button.
       </p>
 
@@ -401,22 +315,16 @@
     </div>
 
     <div class="refusal">
-      <span class="refusal-tag is-room">
-        Reserved room
-      </span>
+      <span class="refusal-tag is-room"> Reserved room </span>
 
       <p class="refusal-lede t-s">
         The room the second one needs, held before it is used.
       </p>
 
       <p class="t-s refusal-copy">
-        <code class="t-mono-inline">
-          reserveMessage
-        </code> holds the empty
+        <code class="t-mono-inline"> reserveMessage </code> holds the empty
         line, so a late error does not shift layout. Falls back to
-        <code class="t-mono-inline">
-          DS_CONFIG.field.reserveMessage
-        </code>, as
+        <code class="t-mono-inline"> DS_CONFIG.field.reserveMessage </code>, as
         on fields.
       </p>
 
@@ -440,30 +348,20 @@
   </div>
 
   <p class="refusal-note t-s">
-    <code class="t-mono-inline">
-      ds-icon-button
-    </code> has none of these; use
-    <code class="t-mono-inline">
-      ariaDescribedBy
-    </code> pointing at visible
+    <code class="t-mono-inline"> ds-icon-button </code> has none of these; use
+    <code class="t-mono-inline"> ariaDescribedBy </code> pointing at visible
     text.
   </p>
 
-  <h3 class="block-title t-h4">
-    Full width
-  </h3>
+  <h3 class="block-title t-h4">Full width</h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      fullWidth
-    </code>: block-level, 100% width, for
+    <code class="t-mono-inline"> fullWidth </code>: block-level, 100% width, for
     mobile CTAs and full-bleed submits.
   </p>
 
   <div class="fullwidth-demo">
-    <ds-button fullWidth>
-      Continue
-    </ds-button>
+    <ds-button fullWidth> Continue </ds-button>
 
     <ds-button
       color="neutral"
@@ -475,12 +373,8 @@
 
   <p class="block-desc t-s">
     With <code class="t-mono-inline">fullWidth</code>,
-    <code class="t-mono-inline">
-      align
-    </code> places the contents;
-    <code class="t-mono-inline">
-      'between'
-    </code> splits label and trailing
+    <code class="t-mono-inline"> align </code> places the contents;
+    <code class="t-mono-inline"> 'between' </code> splits label and trailing
     icon to opposite edges.
   </p>
 
@@ -506,36 +400,20 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      routerLink
-    </code> renders
-    <code class="t-mono-inline">
-      &lt;a [routerLink]&gt;
-    </code>,
-    <code class="t-mono-inline">
-      href
-    </code>
+    <code class="t-mono-inline"> routerLink </code> renders
+    <code class="t-mono-inline"> &lt;a [routerLink]&gt; </code>,
+    <code class="t-mono-inline"> href </code>
 
-    <code class="t-mono-inline">
-      &lt;a href&gt;
-    </code>, neither
-    <code class="t-mono-inline">
-      &lt;button type="button"&gt;
-    </code>, all
+    <code class="t-mono-inline"> &lt;a href&gt; </code>, neither
+    <code class="t-mono-inline"> &lt;button type="button"&gt; </code>, all
     styled alike, so links keep middle-click, new-tab and the "link" role.
   </p>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      type
-    </code> and
-    <code class="t-mono-inline">
-      loading
-    </code> warn in dev on links. A
+    <code class="t-mono-inline"> type </code> and
+    <code class="t-mono-inline"> loading </code> warn in dev on links. A
     disabled link gets <code class="t-mono-inline">aria-disabled</code> and
-    <code class="t-mono-inline">
-      tabindex="-1"
-    </code>.
+    <code class="t-mono-inline"> tabindex="-1" </code>.
   </p>
 
   <div class="row">
@@ -567,38 +445,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      fragment
-    </code>,
-    <code class="t-mono-inline">
-      queryParams
-    </code> and
-    <code class="t-mono-inline">
-      queryParamsHandling
-    </code> go with a
-    <code class="t-mono-inline">
-      routerLink
-    </code>;
-    <code class="t-mono-inline">
-      target
-    </code> and
-    <code class="t-mono-inline">
-      rel
-    </code> with either; each warns in dev
+    <code class="t-mono-inline"> fragment </code>,
+    <code class="t-mono-inline"> queryParams </code> and
+    <code class="t-mono-inline"> queryParamsHandling </code> go with a
+    <code class="t-mono-inline"> routerLink </code>;
+    <code class="t-mono-inline"> target </code> and
+    <code class="t-mono-inline"> rel </code> with either; each warns in dev
     where it cannot apply. For <code class="t-mono-inline">relativeTo</code> or
-    <code class="t-mono-inline">
-      preserveFragment
-    </code>, pass a
-    <code class="t-mono-inline">
-      Router.createUrlTree
-    </code>
+    <code class="t-mono-inline"> preserveFragment </code>, pass a
+    <code class="t-mono-inline"> Router.createUrlTree </code>
 
-    <code class="t-mono-inline">
-      UrlTree
-    </code> as
-    <code class="t-mono-inline">
-      routerLink
-    </code>.
+    <code class="t-mono-inline"> UrlTree </code> as
+    <code class="t-mono-inline"> routerLink </code>.
   </p>
 
   <pre
@@ -640,16 +498,10 @@
 
   <p class="block-desc t-s">
     The current page announces
-    <code class="t-mono-inline">
-      aria-current="page"
-    </code>; an enclosing
+    <code class="t-mono-inline"> aria-current="page" </code>; an enclosing
     section <code class="t-mono-inline">aria-current="true"</code>. The
-    <code class="t-mono-inline">
-      active
-    </code> class stays prefix-matched;
-    <code class="t-mono-inline">
-      routerLinkActiveOptions
-    </code> moves only the
+    <code class="t-mono-inline"> active </code> class stays prefix-matched;
+    <code class="t-mono-inline"> routerLinkActiveOptions </code> moves only the
     class, <code class="t-mono-inline">ariaCurrent</code> only the announcement.
   </p>
 
@@ -675,12 +527,8 @@
 
   <p class="block-desc t-s">
     Global <code class="t-mono-inline">.link</code> on a
-    <code class="t-mono-inline">
-      &lt;button&gt;
-    </code>, preferred over
-    <code class="t-mono-inline">
-      variant="text"
-    </code>. For navigation see
+    <code class="t-mono-inline"> &lt;button&gt; </code>, preferred over
+    <code class="t-mono-inline"> variant="text" </code>. For navigation see
     Link.
   </p>
 

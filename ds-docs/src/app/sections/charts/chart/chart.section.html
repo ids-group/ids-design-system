@@ -8,16 +8,12 @@
     inside column, line and waterfall charts. Use it when no preset fits.
   </span>
 
-  <h3 class="block-title t-h4">
-    Composing a chart
-  </h3>
+  <h3 class="block-title t-h4">Composing a chart</h3>
 
   <ul class="rules">
     <li>
       A mark is an attribute on a real
-      <code class="t-mono-inline">
-        &lt;svg:g&gt;
-      </code>: SVG renders nothing
+      <code class="t-mono-inline"> &lt;svg:g&gt; </code>: SVG renders nothing
       for unknown elements.
     </li>
 
@@ -33,9 +29,7 @@
   </ul>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      ds-column-chart
-    </code> builds this demo from
+    <code class="t-mono-inline"> ds-column-chart </code> builds this demo from
     its <code class="t-mono-inline">thresholds</code> input.
   </p>
 
@@ -57,121 +51,64 @@
       [thresholds]="latencyThresholds" />
   </ds-chart>
 
-  <h3 class="block-title t-h4">
-    Mark inputs
-  </h3>
+  <h3 class="block-title t-h4">Mark inputs</h3>
 
   <p class="block-desc t-s">
     Pin, dim and keyboard rules:
     <a
       class="link"
       routerLink="/foundations/charts">
-      Charts foundations
-    </a
+      Charts foundations </a
     >.
   </p>
 
   <dl class="spec">
     <dt>
-      <code class="t-mono-inline">
-        dsReferenceLine
-      </code> /
-      <code class="t-mono-inline">
-        dsReferenceLabel
-      </code>
+      <code class="t-mono-inline"> dsReferenceLine </code> /
+      <code class="t-mono-inline"> dsReferenceLabel </code>
     </dt>
 
     <dd>
-      <code class="t-mono-inline">
-        thresholds
-      </code>: one
-      <code class="t-mono-inline">
-        ChartThreshold
-      </code> list for both, each
+      <code class="t-mono-inline"> thresholds </code>: one
+      <code class="t-mono-inline"> ChartThreshold </code> list for both, each
       widening the value axis. Fields:
-      <code class="t-mono-inline">
-        value
-      </code>, optional
-      <code class="t-mono-inline">
-        label
-      </code>,
-      <code class="t-mono-inline">
-        color
-      </code> (default
-      <code class="t-mono-inline">
-        --ds-chart-threshold-color
-      </code>),
-      <code class="t-mono-inline">
-        dash
-      </code>
+      <code class="t-mono-inline"> value </code>, optional
+      <code class="t-mono-inline"> label </code>,
+      <code class="t-mono-inline"> color </code> (default
+      <code class="t-mono-inline"> --ds-chart-threshold-color </code>),
+      <code class="t-mono-inline"> dash </code>
       (<code class="t-mono-inline">'solid'</code> /
-      <code class="t-mono-inline">
-        'dashed'
-      </code> default /
-      <code class="t-mono-inline">
-        'dotted'
-      </code>),
-      <code class="t-mono-inline">
-        to
-      </code> for a band.
+      <code class="t-mono-inline"> 'dashed' </code> default /
+      <code class="t-mono-inline"> 'dotted' </code>),
+      <code class="t-mono-inline"> to </code> for a band.
     </dd>
 
     <dt>
-      <code class="t-mono-inline">
-        dsSeriesAnnotation
-      </code>
+      <code class="t-mono-inline"> dsSeriesAnnotation </code>
     </dt>
 
     <dd>
-      <code class="t-mono-inline">
-        annotations
-      </code>:
-      <code class="t-mono-inline">
-        ChartAnnotation
-      </code> entries with
-      <code class="t-mono-inline">
-        categoryIndex
-      </code> (0-based),
-      <code class="t-mono-inline">
-        value
-      </code>,
-      <code class="t-mono-inline">
-        label
-      </code>, optional
-      <code class="t-mono-inline">
-        axis
-      </code>.
+      <code class="t-mono-inline"> annotations </code>:
+      <code class="t-mono-inline"> ChartAnnotation </code> entries with
+      <code class="t-mono-inline"> categoryIndex </code> (0-based),
+      <code class="t-mono-inline"> value </code>,
+      <code class="t-mono-inline"> label </code>, optional
+      <code class="t-mono-inline"> axis </code>.
     </dd>
   </dl>
 
-  <h3 class="block-title t-h4">
-    Category cursor
-  </h3>
+  <h3 class="block-title t-h4">Category cursor</h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      cursor
-    </code>:
-    <code class="t-mono-inline">
-      'category'
-    </code> draws a band and crosshair
+    <code class="t-mono-inline"> cursor </code>:
+    <code class="t-mono-inline"> 'category' </code> draws a band and crosshair
     on the hovered category, and the panel lists every reading there;
-    <code class="t-mono-inline">
-      'none'
-    </code> lets each mark answer alone;
-    <code class="t-mono-inline">
-      'auto'
-    </code> (default) is
-    <code class="t-mono-inline">
-      'category'
-    </code> with two or more
+    <code class="t-mono-inline"> 'none' </code> lets each mark answer alone;
+    <code class="t-mono-inline"> 'auto' </code> (default) is
+    <code class="t-mono-inline"> 'category' </code> with two or more
     tooltip-showing marks, or one with
-    <code class="t-mono-inline">
-      tooltip="axis"
-    </code>, else
-    <code class="t-mono-inline">
-      'none'
-    </code>.
+    <code class="t-mono-inline"> tooltip="axis" </code>, else
+    <code class="t-mono-inline"> 'none' </code>.
   </p>
 
   <ul class="rules">
@@ -180,9 +117,7 @@
       category, so bands are contiguous.
     </li>
 
-    <li>
-      Marks inside open no panel on hover and do not pin on click.
-    </li>
+    <li>Marks inside open no panel on hover and do not pin on click.</li>
 
     <li>
       A click on a mark fires <code class="t-mono-inline">pointClicked</code>; a
@@ -197,21 +132,15 @@
     <li>
       The axes answer the pointer: a bold category label, a guide and the value
       in a pill on the axis.
-      <code class="t-mono-inline">
-        showAxisReadout="false"
-      </code> turns it off,
+      <code class="t-mono-inline"> showAxisReadout="false" </code> turns it off,
       on <code class="t-mono-inline"> ds-chart </code> and the column, line and
       waterfall charts.
     </li>
 
     <li>
       The pill prints through the chart's
-      <code class="t-mono-inline">
-        valueFormat
-      </code> at the location
-      <code class="t-mono-inline">
-        'tooltip'
-      </code>, in full. A formatter that
+      <code class="t-mono-inline"> valueFormat </code> at the location
+      <code class="t-mono-inline"> 'tooltip' </code>, in full. A formatter that
       sets <code class="t-mono-inline"> handlesReadout: true </code> is asked
       for <code class="t-mono-inline"> 'readout' </code> there instead, and can
       return a short form.
@@ -223,8 +152,7 @@
       <a
         class="link"
         routerLink="/foundations/charts">
-        Charts foundations
-      </a
+        Charts foundations </a
       >.
     </li>
   </ul>
@@ -350,55 +278,37 @@
 
   <p class="block-desc t-s">
     A mark picks its axis:
-    <code class="t-mono-inline">
-      axis: 'secondary'
-    </code> in line data,
-    <code class="t-mono-inline">
-      axis="secondary"
-    </code> on a column series;
-    <code class="t-mono-inline">
-      secondaryAxisMode
-    </code> relates it to the
+    <code class="t-mono-inline"> axis: 'secondary' </code> in line data,
+    <code class="t-mono-inline"> axis="secondary" </code> on a column series;
+    <code class="t-mono-inline"> secondaryAxisMode </code> relates it to the
     first:
   </p>
 
   <ul class="block-desc t-s">
     <li>
-      <code class="t-mono-inline">
-        'aligned'
-      </code> (default) - on the first
+      <code class="t-mono-inline"> 'aligned' </code> (default) - on the first
       axis's gridlines at a round step; one plot.
     </li>
 
     <li>
-      <code class="t-mono-inline">
-        'split'
-      </code> - two plots over the same
+      <code class="t-mono-inline"> 'split' </code> - two plots over the same
       category axis.
     </li>
 
     <li>
-      <code class="t-mono-inline">
-        'exact'
-      </code> - one grid; the second axis
+      <code class="t-mono-inline"> 'exact' </code> - one grid; the second axis
       ends at its largest reading, with unround labels.
     </li>
 
     <li>
-      <code class="t-mono-inline">
-        'dual-grid'
-      </code> - each axis scaled and
+      <code class="t-mono-inline"> 'dual-grid' </code> - each axis scaled and
       gridded on its own.
     </li>
   </ul>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      axisColor
-    </code> and
-    <code class="t-mono-inline">
-      secondaryAxisColor
-    </code> colour each axis's
+    <code class="t-mono-inline"> axisColor </code> and
+    <code class="t-mono-inline"> secondaryAxisColor </code> colour each axis's
     labels like its marks - the only cue to which axis a mark reads.
   </p>
 
@@ -504,8 +414,7 @@
     <a
       class="link"
       routerLink="/charts/column-chart">
-      Column chart
-    </a
+      Column chart </a
     >, "Columns and a line, on two scales".
   </p>
 
@@ -516,26 +425,18 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      dsSeriesAnnotation
-    </code> pins a label to a
+    <code class="t-mono-inline"> dsSeriesAnnotation </code> pins a label to a
     reading, legible without a pointer and in print.
   </p>
 
   <ul class="rules">
     <li>
       Pass the reading: <code class="t-mono-inline">categoryIndex</code>,
-      <code class="t-mono-inline">
-        value
-      </code>, optional
-      <code class="t-mono-inline">
-        axis
-      </code>. Marks never see each other.
+      <code class="t-mono-inline"> value </code>, optional
+      <code class="t-mono-inline"> axis </code>. Marks never see each other.
     </li>
 
-    <li>
-      It reports no domain.
-    </li>
+    <li>It reports no domain.</li>
   </ul>
 
   <ds-chart
@@ -560,43 +461,29 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      ds-chart-data-table
-    </code> is every chart's
+    <code class="t-mono-inline"> ds-chart-data-table </code> is every chart's
     annex: each reading in an openable
-    <code class="t-mono-inline">
-      details
-    </code>, cells formatted by the chart.
+    <code class="t-mono-inline"> details </code>, cells formatted by the chart.
   </p>
 
   <dl class="spec">
     <dt>
-      <code class="t-mono-inline">
-        rowHeader
-      </code>
+      <code class="t-mono-inline"> rowHeader </code>
     </dt>
 
     <dd>
       Each row's first cell is a
-      <code class="t-mono-inline">
-        th scope="row"
-      </code>, for named rows.
+      <code class="t-mono-inline"> th scope="row" </code>, for named rows.
     </dd>
 
     <dt>
-      <code class="t-mono-inline">
-        nested
-      </code>
+      <code class="t-mono-inline"> nested </code>
     </dt>
 
-    <dd>
-      Makes a row part of the one above.
-    </dd>
+    <dd>Makes a row part of the one above.</dd>
 
     <dt>
-      <code class="t-mono-inline">
-        (toggled)
-      </code>
+      <code class="t-mono-inline"> (toggled) </code>
     </dt>
 
     <dd>
@@ -618,36 +505,24 @@
 
   <dl class="spec">
     <dt>
-      <code class="t-mono-inline">
-        axisLabel
-      </code> /
-      <code class="t-mono-inline">
-        secondaryAxisLabel
-      </code>
+      <code class="t-mono-inline"> axisLabel </code> /
+      <code class="t-mono-inline"> secondaryAxisLabel </code>
     </dt>
 
-    <dd>
-      Each axis's unit, rotated down its gutter.
-    </dd>
+    <dd>Each axis's unit, rotated down its gutter.</dd>
 
     <dt>
-      <code class="t-mono-inline">
-        maxSecondary
-      </code>
+      <code class="t-mono-inline"> maxSecondary </code>
     </dt>
 
     <dd>
       Pins the second axis's ceiling as
-      <code class="t-mono-inline">
-        max
-      </code> pins the first, so compared plots
+      <code class="t-mono-inline"> max </code> pins the first, so compared plots
       do not rescale.
     </dd>
 
     <dt>
-      <code class="t-mono-inline">
-        rescaleOnHide
-      </code>
+      <code class="t-mono-inline"> rescaleOnHide </code>
     </dt>
 
     <dd>
@@ -667,18 +542,13 @@
       <a
         class="link"
         routerLink="/foundations/charts">
-        Charts foundations
-      </a
+        Charts foundations </a
       >.
     </li>
 
     <li>
-      <code class="t-mono-inline">
-        cursorPinned()
-      </code> /
-      <code class="t-mono-inline">
-        releaseCursor()
-      </code> read and release the
+      <code class="t-mono-inline"> cursorPinned() </code> /
+      <code class="t-mono-inline"> releaseCursor() </code> read and release the
       pin from code.
     </li>
 
@@ -706,38 +576,26 @@
       [data]="basketSeries" />
   </ds-chart>
 
-  <h3 class="block-title t-h4">
-    The tooltip of a composed chart
-  </h3>
+  <h3 class="block-title t-h4">The tooltip of a composed chart</h3>
 
   <ul class="rules">
-    <li>
-      The container opens the one tooltip; bind nothing on marks.
-    </li>
+    <li>The container opens the one tooltip; bind nothing on marks.</li>
 
     <li>
-      <code class="t-mono-inline">
-        tooltipTemplate
-      </code> replaces the panel
+      <code class="t-mono-inline"> tooltipTemplate </code> replaces the panel
       body; it receives <code class="t-mono-inline">ChartTooltipContext</code>,
       values formatted by the chart's
-      <code class="t-mono-inline">
-        valueFormat
-      </code>.
+      <code class="t-mono-inline"> valueFormat </code>.
     </li>
 
     <li>
-      <code class="t-mono-inline">
-        tooltipExtraGap
-      </code> moves the panel off
+      <code class="t-mono-inline"> tooltipExtraGap </code> moves the panel off
       the mark, clearing printed value labels.
     </li>
 
     <li>
       A line sits on a surface-colour band,
-      <code class="t-mono-inline">
-        outline
-      </code> (default on), legible across
+      <code class="t-mono-inline"> outline </code> (default on), legible across
       columns.
     </li>
   </ul>
@@ -781,29 +639,21 @@
       </strong>
 
       @for (entry of context.entries; track entry.label) {
-        <span>
-          {{ entry.label }}: {{ entry.formatted }}
-        </span>
+        <span> {{ entry.label }}: {{ entry.formatted }} </span>
       }
     </div>
   </ng-template>
 
-  <h3 class="block-title t-h4">
-    What a line series does on its own
-  </h3>
+  <h3 class="block-title t-h4">What a line series does on its own</h3>
 
   <p class="block-desc t-s">
     The inputs above, for when
-    <code class="t-mono-inline">
-      ds-line-chart
-    </code> stops fitting.
+    <code class="t-mono-inline"> ds-line-chart </code> stops fitting.
   </p>
 
   <ul class="rules">
     <li>
-      <code class="t-mono-inline">
-        dimOthers
-      </code> governs only the
+      <code class="t-mono-inline"> dimOthers </code> governs only the
       marker-hover fade.
     </li>
 
@@ -813,20 +663,14 @@
     </li>
 
     <li>
-      <code class="t-mono-inline">
-        pinOnClick
-      </code> holds a reading; under the
+      <code class="t-mono-inline"> pinOnClick </code> holds a reading; under the
       cursor, the container's holds the category.
     </li>
 
     <li>
       An entry's <code class="t-mono-inline">area</code>:
-      <code class="t-mono-inline">
-        true
-      </code> a flat tint,
-      <code class="t-mono-inline">
-        'fade'
-      </code> fading to the baseline.
+      <code class="t-mono-inline"> true </code> a flat tint,
+      <code class="t-mono-inline"> 'fade' </code> fading to the baseline.
     </li>
   </ul>
 
@@ -863,22 +707,16 @@
       [interactive]="true" />
   </ds-chart>
 
-  <h3 class="block-title t-h4">
-    Loading
-  </h3>
+  <h3 class="block-title t-h4">Loading</h3>
 
   <ul class="block-desc t-s">
     <li>
-      <code class="t-mono-inline">
-        loading
-      </code>, no data - axes, label
+      <code class="t-mono-inline"> loading </code>, no data - axes, label
       placeholders, columns.
     </li>
 
     <li>
-      <code class="t-mono-inline">
-        loading
-      </code>, marks on screen - kept under
+      <code class="t-mono-inline"> loading </code>, marks on screen - kept under
       the <code class="t-mono-inline">ds-loading-overlay</code> scrim and
       spinner.
     </li>
@@ -890,9 +728,7 @@
         loading
         [categories]="[]" />
 
-      <div class="state-cell-label">
-        Loading, no data
-      </div>
+      <div class="state-cell-label">Loading, no data</div>
     </div>
 
     <div class="state-cell">
@@ -906,9 +742,7 @@
           [showValues]="false" />
       </ds-chart>
 
-      <div class="state-cell-label">
-        Reloading
-      </div>
+      <div class="state-cell-label">Reloading</div>
     </div>
   </div>
 </docs-section>
