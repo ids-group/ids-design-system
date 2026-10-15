@@ -4218,13 +4218,13 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-dropdown-panel-min-width",
-        "value": "0",
-        "notes": "Lower bound for the connected dropdown panel behind ds-select and ds-multi-select. Only bites in `width=\"content\"`, where the pane is auto-sized and the trigger is merely its floor; in `fill` the component pins the pane to the trigger and there is nothing left to bound. Forwarded onto the portaled pane, so a host-scoped value reaches it."
+        "value": "240px",
+        "notes": "Lower bound for the connected dropdown panel behind ds-select, ds-multi-select and ds-autocomplete, 240px by default. Set on the pane in both width modes, so a panel never narrows below it and is placed by the width it is drawn at; a wider trigger still sets the width. Forwarded onto the portaled pane, so a host-scoped value reaches it."
       },
       {
         "name": "--ds-dropdown-panel-max-width",
         "value": "none",
-        "notes": "Upper bound for the same panel, and the reason `width=\"content\"` is safe over a trigger whose options are long: without it the panel grows to its widest option. Same `content`-only caveat as --ds-dropdown-panel-min-width."
+        "notes": "Upper bound for the same panel, and the reason `width=\"content\"` is safe over a trigger whose options are long: without it the panel grows to its widest option. Only bites in `width=\"content\"`; in `fill` the pane is pinned to the trigger."
       },
       {
         "name": "--ds-typography-s-font-family",

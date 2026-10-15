@@ -112,6 +112,13 @@
   border-radius: var(--radius-lg);
 }
 
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
 .demo-row {
   display: flex;
   flex-wrap: wrap;
