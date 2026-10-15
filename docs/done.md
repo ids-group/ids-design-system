@@ -2,6 +2,10 @@
 
 One line per closed item. Open work lives in `todo.md`; the detail behind an entry is in git history.
 
+## Pressed tonal button and danger menu item (2026-10-12)
+- A pressed tonal `ds-button` mixes 28% of its colour (`button.component.scss:216`); a pressed error `ds-menu-item` fills with `--error-muted` (`menu-item.component.scss:91`), released in 0.15.1
+- Decided: «28%» and «Красный на шаг глубже» (Stas, decision queue, deck `implemented/interaction-formula`)
+
 ## Link colour is a theme role (2026-10-14)
 - `--text-link` and `--text-link-visited` are roles in both themes, blue under any brand (`themes/_semantic.scss`, `themes/dark/_theme.scss`); `.link` and the `ds-table` cell link read them, `--ds-link-color` stays the `.link` hook
 - Decided: «Роль ссылки возвращается» (Stas, deck `implemented/link-colour-layer`)
