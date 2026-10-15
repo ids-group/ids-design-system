@@ -580,19 +580,16 @@ export class SidebarComponent {
           }
         }
 
-        // Picks the topmost intersecting section (smallest non-negative top vs. the topbar line); falls back to the closest
-        // section above the line if none qualify, or keeps the last active anchor if nothing intersects at all.
+        // Picks the topmost intersecting section (smallest non-negative top vs. the topbar line); falls back to the
+        // closest anchor above the line. The fallback scans every anchor, not only the intersecting ones: an anchor on a
+        // heading nested inside a section leaves the band as soon as the heading scrolls past, while its block goes on.
         let bestAnchor: string | null = null;
         let bestNonNeg = Number.POSITIVE_INFINITY;
         let fallbackAnchor: string | null = null;
         let fallbackTop = Number.NEGATIVE_INFINITY;
-        for (const anchor of this.intersecting) {
-          const section = this.anchorToSection.get(anchor);
-          if (!section) {
-            continue;
-          }
+        for (const [anchor, section] of this.anchorToSection) {
           const top = section.getBoundingClientRect().top - topbarH;
-          if (top >= 0 && top < bestNonNeg) {
+          if (top >= 0 && top < bestNonNeg && this.intersecting.has(anchor)) {
             bestNonNeg = top;
             bestAnchor = anchor;
           } else if (top < 0 && top > fallbackTop) {
