@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**134 open — 2 P1, 11 P2, 121 P3**, 1 of them half-done and waiting on a verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
+**135 open — 2 P1, 12 P2, 121 P3**, 1 of them half-done and waiting on a verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 2
 
@@ -21,7 +21,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **Asked by Stas**
   - ½ A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
 
-### P2 — 11
+### P2 — 12
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -36,6 +36,7 @@ is stale. Closing an item means deleting the item and nothing else.
   - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
 - **Open verdicts**
   - Six behaviour changes published in 0.14.7 without a choice between alternatives
+  - ITB-2: style removal relayout from @layer
 - **Tooling**
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
@@ -1036,6 +1037,18 @@ that already existed, because both are the kind of ask that comes back.
   `dsModalConfirm`, avatar-group hides past `max`, a disabled link with `disabledReason` keeps a Tab
   stop, `provideDsIcons` calls merge, chart pin geometry (8px gap, lift over a short column). They stay
   as built until Stas picks; a pick that differs ships as a behaviour change in the next release.
+
+- [ ] **[P2] ITB-2: style removal relayout from @layer.** Angular 17+ removes a component's
+  `<style>` with its last instance (`REMOVE_STYLES_ON_COMPONENT_DESTROY` defaults to `true`), and
+  `ds-tooltip-panel` is created on each show and destroyed on each hide (`tooltip.directive.ts:355`,
+  `:302`). Every component sheet carries `@layer ds-component-base` (`styles/_component-base.scss:12`),
+  and Chromium escalates a removed sheet with cascade layers to a whole-page relayout. Measured
+  2026-10-16, Chromium 148, 11 005 elements, per add or remove: `@layer` 43.9 ms, the same rules under
+  `:where()` without a layer 3.59 ms, scoped only 3.55 ms; 22 005 elements: 105 against 10.9.
+  **The fork:** the base rules at zero specificity without a layer (an app rule at zero specificity
+  then ties and the DS sheet wins by order), the layer in one permanent sheet (a host marker; the base
+  reaches projected content), the layer as is with the flag documented as `false`, or nothing. Whatever
+  is picked, the integration guide gets a sentence on `REMOVE_STYLES_ON_COMPONENT_DESTROY`.
 
 - [ ] **[P3] Which public tokens the library never reads go?**
   Measured 2026-10-05 (`var(--name` over `src/lib` and `ds-docs/src`): of 746 tokens in `styles/`
