@@ -5,52 +5,43 @@
 // elements only; `interpolate-size` is inherited, so content projected into the host takes it as
 // under the reset.
 //
-// In a cascade layer, so any unlayered rule wins over it whatever its specificity: the component's
-// own rules, `styles/reset` and `styles/focus` where the app loads them, and the app's own global
-// rules such as a custom `:focus-visible` ring. It only fills what nothing else sets.
+// Each selector sits in `:where()`, so any rule above zero specificity wins over it, the app's own
+// global rules such as a custom `:focus-visible` ring included; a zero-specificity rule ties and the
+// later one wins, so include this first. A pseudo-element cannot sit in `:where()`, so `::before`
+// and `::after` take the encapsulation attribute's (0,1,1). Not a cascade layer: Chromium relayouts
+// the whole page whenever a stylesheet holding one is removed, as Angular does when a component's
+// last instance is destroyed.
 @mixin rules {
-  @layer ds-component-base {
-    :host {
-      box-sizing: border-box;
-      interpolate-size: allow-keywords;
-    }
+  :where(:host) {
+    box-sizing: border-box;
+    interpolate-size: allow-keywords;
+  }
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-    }
+  :where(*),
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-    button,
-    input,
-    select,
-    textarea {
-      font-family: inherit;
-    }
+  :where(button, input, select, textarea) {
+    font-family: inherit;
+  }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      margin: 0;
-    }
+  :where(h1, h2, h3, h4, h5, h6) {
+    margin: 0;
+  }
 
-    // The base ring of `focus.emit-rules`, for what the component does not style itself.
-    :host(:where(:focus-visible)),
-    :where(:focus-visible) {
-      @include focus.ring;
+  // The base ring of `focus.emit-rules`, for what the component does not style itself.
+  :where(:host(:focus-visible), :focus-visible) {
+    @include focus.ring;
 
-      border-radius: var(--focus-ring-radius);
-    }
+    border-radius: var(--focus-ring-radius);
+  }
 
-    @media (forced-colors: active) {
-      :host(:where(:focus-visible)),
-      :where(:focus-visible) {
-        outline: var(--focus-ring-width) solid CanvasText;
-        outline-offset: var(--focus-ring-offset);
-      }
+  @media (forced-colors: active) {
+    :where(:host(:focus-visible), :focus-visible) {
+      outline: var(--focus-ring-width) solid CanvasText;
+      outline-offset: var(--focus-ring-offset);
     }
   }
 }

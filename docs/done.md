@@ -2,6 +2,10 @@
 
 One line per closed item. Open work lives in `todo.md`; the detail behind an entry is in git history.
 
+## ITB-2: component base without a cascade layer (2026-10-16)
+- `component-base.rules` and the inline bases of `ds-accordion` and `ds-icon` sit in `:where()`, no `@layer` (`styles/_component-base.scss`); `check-component-owned-styles` fails a library stylesheet holding `@layer`. Removing the compiled `ds-tooltip-panel` sheet at 11 007 elements, Chromium 148: 40.5 ms before, 1.5 ms after
+- Decided: zero specificity without a layer (Stas)
+
 ## Pressed tonal button and danger menu item (2026-10-12)
 - A pressed tonal `ds-button` mixes 28% of its colour (`button.component.scss:216`); a pressed error `ds-menu-item` fills with `--error-muted` (`menu-item.component.scss:91`), released in 0.15.1
 - Decided by Stas

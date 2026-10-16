@@ -642,7 +642,8 @@
       &#64;include component-base.rules;
     </code>
     (<code class="t-mono-inline">styles/component-base</code>) first in the
-    stylesheet. It sits in a cascade layer, so any unlayered rule wins.
+    stylesheet. Its selectors sit in <code class="t-mono-inline">:where()</code>,
+    so any rule above zero specificity wins.
   </p>
 
   <ul class="rules">
