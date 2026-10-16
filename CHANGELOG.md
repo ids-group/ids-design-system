@@ -51,6 +51,16 @@
   row of `selectAll="group"` and `selectAll="both"` cuts its label to the panel width with an
   ellipsis, as the top select-all row does.
 
+- **Destroying the last instance of a component no longer relayouts the whole page in Chromium.**
+  The base rules every component carries, and `styles/component-base` gives a component of yours,
+  sit in `:where()` at zero specificity instead of in `@layer ds-component-base`: Chromium relayouts
+  every element when a stylesheet holding a cascade layer is removed, as Angular removes a
+  component's stylesheet with its last instance, a tooltip on every hide. A rule of yours above zero
+  specificity still wins over the base. One at zero specificity, such as `*` or
+  `:where(:focus-visible)`, now ties with it inside a component and the component's stylesheet,
+  inserted later, wins; on `::before` and `::after` the base sits at (0,1,1). Raise such a rule's
+  specificity to keep it.
+
 ## 0.15.2 — 2026-10-14
 
 ### Added
