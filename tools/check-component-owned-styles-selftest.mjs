@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-// Does check-component-owned-styles still FIRE on a template borrowing a global class and on a
-// global partial aiming at a component host, and stay QUIET where the class is the component's own,
-// waived, set only through a binding, or sits in a doc comment of consumer markup?
+// Does check-component-owned-styles still FIRE on a template borrowing a global class, on a global
+// partial aiming at a component host and on a stylesheet holding `@layer`, and stay QUIET where the
+// class is the component's own, waived, set only through a binding, or sits in a doc comment of
+// consumer markup?
 //
 // Each case writes a miniature library into a private fixture tree under the OS temp dir and points
 // the gate at it. Never into `src/`: this checkout is shared.
@@ -146,6 +147,32 @@ const cases = [
     {
       'components/foo/foo.component.scss':
         '/* component-owned-styles: base the host only toggles display */\n:host { display: none; }',
+    },
+    false,
+  ],
+  [
+    'a component stylesheet holding a cascade layer',
+    {
+      'components/foo/foo.component.scss':
+        "@use '../../styles/component-base';\n@include component-base.rules;\n@layer base { :host { display: block; } }",
+    },
+    true,
+    'holds `@layer`',
+  ],
+  [
+    'an inline component style holding a cascade layer',
+    {
+      'components/foo/foo.component.ts':
+        "@Component({ selector: 'ds-foo', template: '', styles: [`@layer base { :host { display: block; } }`] })\nexport class Foo {}",
+    },
+    true,
+    'holds `@layer`',
+  ],
+  [
+    'a cascade layer named only in a comment',
+    {
+      'components/foo/foo.component.scss':
+        "@use '../../styles/component-base';\n@include component-base.rules;\n// no @layer here\n:where(:host) { display: block; }",
     },
     false,
   ],

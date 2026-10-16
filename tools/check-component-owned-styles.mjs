@@ -12,6 +12,9 @@
 //      which gives the component's own elements what `styles/reset` and `styles/focus` give a page:
 //      `border-box`, form controls in the inherited font, heading margins and the base focus ring.
 //      A stylesheet that genuinely needs none of it says so: `component-owned-styles: base <reason>`.
+//   4. A library stylesheet or inline `styles:` holding `@layer`. Chromium relayouts the whole page
+//      whenever a stylesheet with a cascade layer is removed, and Angular removes a component's
+//      stylesheet when its last instance is destroyed; `component-base` uses `:where()` instead.
 //
 // A partial that IS a component's stylesheet and can only be global is listed in GLOBAL_BY_NECESSITY
 // with its reason, and both rules skip it. The list lives here rather than as a marker in the
@@ -207,6 +210,16 @@ for (const file of libFiles.filter(
     `${name(file)}  does not include \`component-base.rules\`, so its elements take box-sizing, form ` +
       `fonts, heading margins and the base focus ring from whatever the page loads. Add ` +
       `\`@use '../../styles/component-base'; @include component-base.rules;\` first in the file.`,
+  );
+}
+
+for (const file of libFiles.filter((path) => /\.(scss|ts)$/.test(path))) {
+  const text = withoutComments(readFileSync(file, 'utf8'));
+  const layer = /@layer\b/.exec(text);
+  if (!layer) continue;
+  violations.push(
+    `${name(file)}:${lineOf(text, layer.index)}  holds \`@layer\`: removing a stylesheet with a cascade ` +
+      `layer relayouts the whole page in Chromium. Write the rules with \`:where()\` instead.`,
   );
 }
 
