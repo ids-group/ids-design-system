@@ -1,0 +1,8 @@
+:where(:focus-visible) {
+  outline: 3px solid var(--app-ring);
+  outline-offset: 2px;
+}
+
+*, *::before, *::after {
+  box-sizing: content-box;
+}

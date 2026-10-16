@@ -1,6 +1,31 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "component-base-zero-specificity",
+      "kind": "behavior",
+      "old": "@use 'styles/component-base'",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        ":where(",
+        "box-sizing",
+        ":focus-visible"
+      ],
+      "detect": [
+        ":where(:focus-visible)",
+        "*, *::before, *::after",
+        "*::before",
+        "* {",
+        "box-sizing: content-box"
+      ],
+      "action": "None, unless a global rule of yours at zero specificity (`*`, `:where(...)`) is meant to reach the elements inside library components and sets `box-sizing`, `font-family` on a form control, `margin` on a heading, or `outline`, `outline-offset`, `animation` or `border-radius` on a focused element: raise its specificity above zero, for example `:focus-visible` in place of `:where(:focus-visible)`.",
+      "appliesWhen": "Ships in every library component's own stylesheet, and in `styles/component-base` for a component of yours that includes `component-base.rules`. A rule of yours above zero specificity wins as before. A zero-specificity rule ties with the base, and the component's stylesheet, inserted after your global styles, wins. On `::before` and `::after` the base is (0,1,1), so a rule such as `*::before` loses there too.",
+      "pitfall": "A custom ring written as `:where(:focus-visible) { outline: ... }` keeps showing on your own elements and loses only inside library components, which then show the library ring; check a focused `ds-button`, not your own markup.",
+      "restore": null,
+      "verify": "The built CSS of a library component holds `:where([_nghost-` and no `@layer`, and a custom focus ring of yours shows on a focused `ds-button`."
+    }
+  ],
   "informational": [
     {
       "text": "The per-group select-all row of a `ds-multi-select` with `selectAll=\"group\"` or `selectAll=\"both\"` cuts its label to the panel width with an ellipsis, as the top select-all row does, so a long group name no longer scrolls the list sideways.",
