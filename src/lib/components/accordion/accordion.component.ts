@@ -21,10 +21,8 @@ import type { AccordionChevron } from './accordion.types';
   template: `<ng-content></ng-content>`,
   styles: [
     `
-      @layer ds-component-base {
-        :host {
-          box-sizing: border-box;
-        }
+      :where(:host) {
+        box-sizing: border-box;
       }
       :host {
         display: block;
