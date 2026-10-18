@@ -46,6 +46,7 @@
 
   &::before {
     content: '';
+    box-sizing: border-box;
     position: absolute;
     width: var(--_popover-arrow-size);
     height: var(--_popover-arrow-size);

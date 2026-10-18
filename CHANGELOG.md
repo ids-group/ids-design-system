@@ -58,8 +58,10 @@
   component's stylesheet with its last instance, a tooltip on every hide. A rule of yours above zero
   specificity still wins over the base. One at zero specificity, such as `*` or
   `:where(:focus-visible)`, now ties with it inside a component and the component's stylesheet,
-  inserted later, wins; on `::before` and `::after` the base sits at (0,1,1). Raise such a rule's
-  specificity to keep it.
+  inserted later, wins. Raise such a rule's specificity to keep it. The base no longer sets
+  `box-sizing` on `::before` and `::after`, so your rule for them applies inside components too;
+  the button spinner and the popover and tooltip arrows set `border-box` themselves, and the tooltip
+  arrow now has it without `styles/reset` as well.
 
 ## 0.15.2 — 2026-10-14
 
