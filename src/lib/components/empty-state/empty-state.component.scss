@@ -1,4 +1,5 @@
 @use '../../styles/component-base' as component-base;
+@use '../../styles/text-clip' as text-clip;
 @include component-base.rules;
 
 /* Truncation contract:
@@ -47,9 +48,7 @@
     margin: 0;
 
     &.clip {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      @include text-clip.single-line-ellipsis;
     }
   }
   .body {
