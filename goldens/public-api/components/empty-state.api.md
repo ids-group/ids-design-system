@@ -28,6 +28,7 @@ ds-empty-state {
     --ds-empty-state-title-font-family: var(--font-sans);
     --ds-empty-state-title-font-size: var(--font-size-h5);
     --ds-empty-state-title-font-weight: var(--font-weight-bold);
+    --ds-empty-state-title-max-width: var(--empty-body-maxw);
     --ds-empty-state-title-text-color: var(--text-primary);
 }
 ```

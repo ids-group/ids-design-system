@@ -520,6 +520,7 @@
   "--ds-empty-state-title-font-family": "Empty state title face (default --font-sans; ds-modal's title uses --font-heading, so a display face on both is two declarations).",
   "--ds-empty-state-title-font-size": "Empty state title font size (defaults to --font-size-h5).",
   "--ds-empty-state-title-font-weight": "Empty state title weight (default --font-weight-bold).",
+  "--ds-empty-state-title-max-width": "Title max width.",
   "--ds-empty-state-title-text-color": "Title colour.",
   "--ds-field-border-color": "Resting border colour for the text-entry fields - input, textarea, select, multi-select, autocomplete and search - read under each one's own border token, so --ds-input-border or --ds-select-border-color still wins where set. Default --border-default. The date, time and colour pickers keep their own -trigger-* tokens.",
   "--ds-field-border-color-focus": "Focused (and open, for the pickers) border colour for the same six fields, under each one's own token. Default --accent.",

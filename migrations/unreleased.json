@@ -24,6 +24,27 @@
       "pitfall": "A custom ring written as `:where(:focus-visible) { outline: ... }` keeps showing on your own elements and loses only inside library components, which then show the library ring; check a focused `ds-button`, not your own markup.",
       "restore": null,
       "verify": "The built CSS of a library component holds `:where([_nghost-` and no `@layer`, and a custom focus ring of yours shows on a focused `ds-button`."
+    },
+    {
+      "id": "empty-state-title-max-width",
+      "kind": "behavior",
+      "old": "ds-empty-state[title]",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "ds-empty-state",
+        "--ds-empty-state-title"
+      ],
+      "detect": [
+        "ds-empty-state .title",
+        "overflow-wrap",
+        "word-break"
+      ],
+      "action": "None, unless an empty state's title should run wider than 360px: set `--ds-empty-state-title-max-width: none` on that `ds-empty-state`.",
+      "appliesWhen": "Every `ds-empty-state` with a `title`. The title was as wide as the component and is now capped at `--empty-body-maxw`, the body's width, and a word longer than a line breaks instead of overflowing.",
+      "pitfall": "A title that fit on one line under the old width can now take two; check an empty state inside a wide card, not a narrow one.",
+      "restore": "--ds-empty-state-title-max-width: none;",
+      "verify": "A `ds-empty-state` whose title is a 60-character word with no spaces wraps inside the component and adds no horizontal scrollbar."
     }
   ],
   "informational": [
