@@ -13,6 +13,10 @@
   every hour and minute column; `'never'` keeps them as lists. An input on the element wins over the
   config. `TimePickerLoop` types the value.
 
+- **`ds-empty-state` takes `titleOverflow`.** `'wrap'`, the default, breaks a long title over
+  lines; `'clip'` keeps it on one line, ends it with an ellipsis and shows the full title in a
+  tooltip on hover and keyboard focus. `EmptyStateTitleOverflow` types the value.
+
 ### Changed
 
 - **The agent catalogue ships at `agent/INDEX.md`, where it was `docs/agent/INDEX.md`.** Every leaf

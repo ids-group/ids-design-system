@@ -160,7 +160,10 @@ export type {
   DropzoneFileState,
 } from '@ids-group-ltd/ids-design-system/components/dropzone';
 export { EmptyStateComponent } from '@ids-group-ltd/ids-design-system/components/empty-state';
-export type { EmptyStateTitleOverflow, EmptyStateVariant } from '@ids-group-ltd/ids-design-system/components/empty-state';
+export type {
+  EmptyStateTitleOverflow,
+  EmptyStateVariant,
+} from '@ids-group-ltd/ids-design-system/components/empty-state';
 export {
   DS_FIELD_GROUP,
   FieldGroupComponent,

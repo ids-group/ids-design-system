@@ -158,6 +158,7 @@ export { DsToastPosition } from '@ids-group-ltd/ids-design-system/core'; // inte
 export { DsToastVerticalPosition } from '@ids-group-ltd/ids-design-system/core'; // type
 export { DsTriggerDisplay } from '@ids-group-ltd/ids-design-system/core'; // type
 export { EmptyStateComponent } from '@ids-group-ltd/ids-design-system/components/empty-state'; // component
+export { EmptyStateTitleOverflow } from '@ids-group-ltd/ids-design-system/components/empty-state'; // type
 export { EmptyStateVariant } from '@ids-group-ltd/ids-design-system/components/empty-state'; // type
 export { FieldClickFocusDirective } from '@ids-group-ltd/ids-design-system/components'; // directive
 export { FieldGroupComponent } from '@ids-group-ltd/ids-design-system/components/field-group'; // component
