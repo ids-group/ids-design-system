@@ -4,3 +4,5 @@ export type EmptyStateVariant =
   | 'error'
   | 'locked'
   | 'success';
+
+export type EmptyStateTitleOverflow = 'wrap' | 'clip';

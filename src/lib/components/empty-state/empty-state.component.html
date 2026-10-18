@@ -11,7 +11,10 @@
     </span>
 
     @if (title()) {
-      <span class="title">
+      <span
+        class="title"
+        [class.clip]="titleOverflow() === 'clip'"
+        [dsTooltipWhenClipped]="titleOverflow() === 'clip'">
         {{ title() }}
       </span>
     }
