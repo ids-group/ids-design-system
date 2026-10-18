@@ -7,8 +7,9 @@
 //
 // Each selector sits in `:where()`, so any rule above zero specificity wins over it, the app's own
 // global rules such as a custom `:focus-visible` ring included; a zero-specificity rule ties and the
-// later one wins, so include this first. A pseudo-element cannot sit in `:where()`, so `::before`
-// and `::after` take the encapsulation attribute's (0,1,1). Not a cascade layer: Chromium relayouts
+// later one wins, so include this first. No `::before`/`::after` rule: a pseudo-element cannot sit in
+// `:where()`, so it would take the encapsulation attribute's (0,1,1) and beat the app's own; a
+// component sets `box-sizing` on each pseudo-element whose size depends on it. Not a cascade layer: Chromium relayouts
 // the whole page whenever a stylesheet holding one is removed, as Angular does when a component's
 // last instance is destroyed.
 @mixin rules {
@@ -17,9 +18,7 @@
     interpolate-size: allow-keywords;
   }
 
-  :where(*),
-  *::before,
-  *::after {
+  :where(*) {
     box-sizing: border-box;
   }
 

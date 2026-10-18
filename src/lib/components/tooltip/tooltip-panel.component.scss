@@ -34,6 +34,7 @@
 
   &::after {
     content: "";
+    box-sizing: border-box;
     position: absolute;
     width: var(--space-2);
     height: var(--space-2);
