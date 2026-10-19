@@ -4,4 +4,5 @@ export {
   TooltipDirective,
 } from './tooltip.directive';
 export { TooltipPanelComponent } from './tooltip-panel.component';
-export type { TooltipPlacement } from './tooltip.types';
+export type { DsTooltipConfig } from './tooltip.types';
+export type { TooltipPlacement } from '@ids-group-ltd/ids-design-system/core';

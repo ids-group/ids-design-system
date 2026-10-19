@@ -14,7 +14,11 @@ import {
   renameSync,
 } from 'node:fs';
 import { compareVersions, isPrerelease } from './release-tags.mjs';
-import { foldChangelog, foldManifests } from './release-fold.mjs';
+import {
+  foldChangelog,
+  foldManifests,
+  unreleasedHasEntry,
+} from './release-fold.mjs';
 
 const version = process.env.npm_package_version;
 if (!version) {
@@ -53,9 +57,7 @@ function stampUnreleased(path) {
 }
 
 function hasUnreleasedEntry(path) {
-  const text = readFileSync(path, 'utf8').replace(/\r\n/g, '\n');
-  const section = text.split(/^## Unreleased$/m)[1]?.split(/^## /m)[0] ?? '';
-  return /^\s*-\s+\S/m.test(section);
+  return unreleasedHasEntry(readFileSync(path, 'utf8'));
 }
 
 function hasPrereleaseBlock(path) {
