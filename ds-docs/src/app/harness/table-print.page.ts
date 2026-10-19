@@ -20,23 +20,7 @@ const OFFICES = [
 @Component({
   selector: 'app-table-print-harness',
   imports: [TableComponent],
-  template: `
-    <h2>Paged, sortable</h2>
-    <ds-table
-      sortMode="client"
-      caption="Agents"
-      [data]="rows"
-      [columns]="columns"
-      [pageSize]="25">
-      <span toolbar>Toolbar content</span>
-    </ds-table>
-    <h2>Unpaged, sortable</h2>
-    <ds-table
-      sortMode="client"
-      caption="Agents, unpaged"
-      [data]="rows"
-      [columns]="columns" />
-  `,
+  templateUrl: './table-print.page.html',
 })
 export class TablePrintHarnessPage {
   protected readonly columns: readonly TableColumn<AgentRow>[] = [
