@@ -336,7 +336,6 @@ export { provideDsConfig } from '@ids-group-ltd/ids-design-system/core'; // func
 export { provideDsIcons } from '@ids-group-ltd/ids-design-system/icons'; // function
 export { provideDsIntl } from '@ids-group-ltd/ids-design-system/core'; // function
 export { provideDsTheme } from '@ids-group-ltd/ids-design-system/theme'; // function
-export { retainStyles } from '@ids-group-ltd/ids-design-system/core'; // function
 export { stackOffsets } from '@ids-group-ltd/ids-design-system/components/chart'; // function
 ```
 

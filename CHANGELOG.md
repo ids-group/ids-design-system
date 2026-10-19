@@ -2,11 +2,6 @@
 
 ### Added
 
-- **`retainStyles(component)` from `core` keeps a component's stylesheet in the document for the life
-  of the app.** Angular removes a component's sheet with its last instance; one hidden instance, never
-  attached or rendered, keeps it. Call it in the constructor of a component of yours that appears and
-  disappears often.
-
 - **Every chart takes `highlightActive`, and `DsConfig.chart.highlightActive` sets it app-wide.**
   `false` keeps the hovered or focused column, bar or heatmap cell at its own colour; unset falls
   back to the config, then `true`, which brightens it. An input on the element wins over the
