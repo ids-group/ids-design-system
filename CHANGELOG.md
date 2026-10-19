@@ -591,7 +591,7 @@
 
 | Delete | Why | Replace with |
 | --- | --- | --- |
-| `rescaleOnHide` on `ds-line-chart` | `true` is the default | nothing |
+| `[rescaleOnHide]="true"` or a bare `rescaleOnHide` on `ds-line-chart` | `true` is the default | nothing |
 | `[loading]` on a `ds-input` bound to its own control: `.pending()"` or `.pending"` | the field shows the spinner whenever its control is pending | nothing |
 
 ## 0.15.0 — 2026-10-09
@@ -7888,7 +7888,7 @@ None of this is required — skipping it leaves working code that is merely redu
 | The computed beside every list table - `items().length > 0 ? 'overlay' : 'skeleton'`. | `[loading]="true"`, which resolves the treatment itself; pin a value only where you mean to override the rule |
 | An override retuning `--opacity-muted` to compensate for a washed-out disabled state. That token is a de-emphasis level for hints and secondary text and carries no disabled state at all - and on `ds-button` / `ds-icon-button` it was always inert, because neither ever read it. | `--ds-button-label-color-disabled` / `--ds-icon-button-icon-color-disabled` |
 | A `::ng-deep ds-table { .table th, .table td { width: 1%; white-space: nowrap } }` override - the shrink-to-content idiom. | `TableColumn.width: 'content'` |
-| A `stopPropagation()` on a control inside a clickable row, added so the row would not steal the control's KEY. Read each hit before deleting: a CLICK still bubbles (`onRowClick` only skips a target inside an `<input>`), so a click-path guard stays. | nothing on the key path - `onRowKey` now requires `target === currentTarget` |
+| A `(keydown.enter)="$event.stopPropagation()"` (or `.space`) on a control inside a clickable row, added so the row would not steal the control's KEY. Read each hit before deleting: a CLICK still bubbles (`onRowClick` only skips a target inside an `<input>`), so a click-path guard stays. | nothing on the key path - `onRowKey` now requires `target === currentTarget` |
 | `sortChange`, `sortKey`, `sortDir`, `setTimeout` | Host code that re-bound the sort after a cleared sort, written because the header lost its indicator whenever the host default equalled the last value Angular had written. The marked state is a linkedSignal over both inputs now. Replace with: nothing - answer the cleared sort with your default and stop there. |
 | `.visually-hidden`, `clip: rect`, `clip-path: inset(50%)` | Your own .visually-hidden definition, or a rule targeting the pending row glyph by name, written because the class ds-password-rules used was declared by no stylesheet and its screen-reader text rendered visibly. One shared mixin backs all four components now. Replace with: nothing - the components carry the class themselves. |
 | `ds-timeline-item`, `margin-top`, `margin: -` | A margin you added on ds-timeline-item or its node to pull the marker onto the heading centre. The component pulls the node column up itself now, so your compensation double-applies. Replace with: nothing - remove the margin. |
