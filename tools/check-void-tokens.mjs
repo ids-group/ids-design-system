@@ -5,7 +5,7 @@
 // `.chapter { padding: 5px var(--space-2-5) 5px var(--space-7) }` with --space-7 declared nowhere
 // (the scale runs 6 → 8), so every chapter row rendered at padding 0 — 16.8px tall instead of
 // 26.8px, text flush against its thread. `deck-lint`'s D012 had caught exactly this class of bug
-// in `presentations/`, but the rule stopped at that folder.
+// in `decks/`, but the rule stopped at that folder.
 //
 // Five rules earn their keep, measured on this repo's own history: without the first four the sweep
 // reports 26 non-defects.
@@ -13,7 +13,7 @@
 //   2. A custom property may be written from the template (`[style.--x]`) or from script
 //      (`setProperty('--x')`) — that is how --_table-virtual-row-h and --demo-dur arrive.
 //   3. Tokens can be emitted by a Sass loop, so no literal `--bp-sm:` exists to grep for. The
-//      compiled `presentations/ds.css` is the authority on what the library actually emits.
+//      compiled `decks/ds.css` is the authority on what the library actually emits.
 //   4. A fallback is only consulted when the primary is undeclared, so
 //      `var(--warning-subtitle, var(--surface-subtitle))` is sound while --warning-subtitle
 //      resolves — the void fallback is dead code, not a defect.
@@ -136,8 +136,8 @@ const styleFiles = sources.filter((f) => /\.(scss|css)$/.test(f));
 const declared = new Set();
 
 // Rule 3: the compiled stylesheet is what the library really emits, loop-generated tokens included.
-const compiled = join(ROOT, 'presentations', 'ds.css');
-// presentations/ is local to each checkout, so a clean clone compiles the stylesheet first.
+const compiled = join(ROOT, 'decks', 'ds.css');
+// decks/ is local to each checkout, so a clean clone compiles the stylesheet first.
 if (!existsSync(compiled))
   execFileSync(process.execPath, [join(ROOT, 'tools', 'build-deck-css.mjs')], {
     cwd: ROOT,

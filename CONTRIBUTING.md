@@ -232,7 +232,7 @@ judgment half is yours.
   are the same disclosure with the name filed off.
 - **An internal tracker key** — `MBP-…`, `PIN-…`, `MM-…`.
 - **A person's name.** "Found by X testing on a phone" → "Found while testing on a phone".
-- **A path outside the published tree.** `src/lib/…`, `tools/…`, `presentations/…`,
+- **A path outside the published tree.** `src/lib/…`, `tools/…`, `decks/…`,
   `docs/todo.md`, `.claude/…`, `migrations/AUTHORING.md`. The published tree holds
   `styles/`, `themes/`, `migrations/` and `schematics/`, plus the four root documents.
 - **One of our npm scripts.** `npm run class-surface` does not exist for the reader —
