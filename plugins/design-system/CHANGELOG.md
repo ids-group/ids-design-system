@@ -4,6 +4,22 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.15.2 - 2026-10-19
+
+### Fixed
+
+- **`unreleased` mode starts from the newest published version.** A beta published after the
+  latest stable is a chain step of its own, so its manifest is applied, and the tree before the
+  `unreleased` step is that beta's tag.
+- **`unreleased <path>` takes a DS checkout only.** The step reads `## Unreleased`,
+  `migrations/unreleased.json` and `src/lib` there, which a built `dist/ds` does not carry.
+- **A dev build is recognised by `-dev.` in its version.** The checkout's `dist/ds` is reused
+  only when its version ends in `-dev.g<sha>` of the checkout's HEAD; otherwise `build:lib` runs.
+  A build without `-dev.` means `## Unreleased` is empty, and the step is dropped.
+- **The packed `.tgz` sits beside the ledger**, and the ledger records
+  `unreleased: { checkout, tgz, version }`. A resume whose `.tgz` is gone packs it again.
+- **`unreleased dry-run` builds, packs and installs nothing.**
+
 ## 1.15.0 - 2026-10-19
 
 ### Added
