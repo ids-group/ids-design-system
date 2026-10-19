@@ -81,7 +81,7 @@ ALREADY existed, because a release note says what broke and never says what beca
 **Those entries are the `deleteList` ARRAY, not prose.** A delete hint written as a sentence inside
 `informational` has no `find` for a finder to run, so it waits for a human to recognise their own
 code in it. Write each as `{ id, surface, find, why, replaceWith }` — `find` being the shape in the
-CONSUMER's code, a string or an array of them — and keep the human copy in that version's CHANGELOG
+CONSUMER's code, always an array, even of one shape — and keep the human copy in that version's CHANGELOG
 "What you can now DELETE" table. Two copies, each read by someone; the third copy in `informational`
 is the one that goes stale, so new manifests do not carry it.
 
