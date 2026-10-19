@@ -37,7 +37,8 @@
   `--ds-dropdown-panel-min-width` now defaults to `220px` and floors the panel in both `width`
   modes; a trigger wider than it still sets the width. The floor is the overlay's own width, so a
   panel opened beside the right edge of the viewport is placed to stay on screen.
-  `--ds-dropdown-panel-max-width` still applies only under `width="content"`.
+  `--ds-dropdown-panel-max-width` now applies only under `width="content"`: under the default
+  `width="fill"` the panel follows the trigger and the token no longer caps it.
 
 - **A pinned column, bar or heatmap cell no longer stays brightened.** The highlight follows the
   pointer and keyboard focus only: once a click holds a mark or a category and the pointer moves
@@ -45,8 +46,9 @@
 
 - **Under the category cursor, the column at the hovered category brightens.** A `dsColumnSeries` in
   a `ds-chart` whose `cursor` is `'category'`, or resolves to it under `'auto'`, brightens the column
-  at the category under the pointer, as a hovered column does under `cursor="none"`. A series with
-  `tooltip="none"` stays as it is.
+  at the category under the pointer, as a hovered column does under `cursor="none"`. `'auto'`, the
+  default, resolves to `'category'` when two or more series show a tooltip or a series reads the
+  category, and to `'none'` otherwise, where only the hovered column brightens.
 
 - **The `ds-time-picker` hour and minute columns run on past either end.** In `ds-time-columns`,
   after the last hour or minute the first comes round again, the selected value is scrolled to the

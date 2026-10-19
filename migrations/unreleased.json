@@ -52,7 +52,7 @@
       "verify": "Open a narrow ds-multi-select with selectAll=\"both\" and a long group name and confirm the group's select-all row ends in an ellipsis and the list has no horizontal scrollbar."
     },
     {
-      "text": "`--ds-dropdown-panel-min-width` defaults to `220px` and floors the `ds-select`, `ds-multi-select` and `ds-autocomplete` panel in both `width` modes, so a panel under a trigger narrower than 220px is 220px wide; a wider trigger still sets the width. Set `--ds-dropdown-panel-min-width: 0` on the component to keep a panel as wide as its trigger.",
+      "text": "`--ds-dropdown-panel-min-width` defaults to `220px` and floors the `ds-select`, `ds-multi-select` and `ds-autocomplete` panel in both `width` modes, so a panel under a trigger narrower than 220px is 220px wide; a wider trigger still sets the width. Set `--ds-dropdown-panel-min-width: 0` on the component to keep a panel as wide as its trigger. `--ds-dropdown-panel-max-width` applies only under `width=\"content\"`; under the default `width=\"fill\"` it no longer caps the panel.",
       "verify": "Open a ds-select narrower than 220px and confirm its panel is 220px wide, then open one beside the right edge of the viewport and confirm the panel stays on screen."
     },
     {
@@ -70,6 +70,10 @@
     {
       "text": "The agent catalogue ships at `agent/INDEX.md` in the package, where it was `docs/agent/INDEX.md`; every leaf keeps its path under `agent/`. An agent rule or prompt that reads the catalogue from `node_modules` points at `agent/`.",
       "verify": "Search the app's agent rules and prompts for `docs/agent/` and confirm none is left."
+    },
+    {
+      "text": "A `dsTooltipWhenClipped` tip (`TooltipDirective`) also opens when its host's text is cut by lines, under `line-clamp` or a height with `overflow: hidden` or `clip`, as it did for text cut by width. A scroll box does not count.",
+      "verify": "Put dsTooltipWhenClipped on a block with -webkit-line-clamp: 2 holding four lines of text, hover it and confirm the tip opens; shorten the text to one line and confirm it does not."
     },
     "`ds-empty-state` takes `titleOverflow`: `'wrap'`, the default, keeps the title wrapping as before; `'clip'` keeps it on one line with an ellipsis and the full title in a tooltip."
   ],
