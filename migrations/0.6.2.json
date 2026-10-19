@@ -51,6 +51,7 @@
       "find": [
         "scrollTop",
         "style.overflow = 'hidden'",
+        "style.overflow = \"hidden\"",
         "'overflow', 'hidden'",
         "ds-bottom-sheet"
       ],

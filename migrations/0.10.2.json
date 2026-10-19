@@ -524,7 +524,8 @@
       "surface": "style",
       "find": [
         "padding-block",
-        "option-label"
+        "option-label",
+        ".cell-clip"
       ],
       "why": "A padding or line-height override added to an option label, a clipped table cell or a breadcrumb to stop the descenders being shaved.",
       "replaceWith": "nothing: the clip carries a --space-1 margin now, at the same row height"

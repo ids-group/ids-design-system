@@ -8336,7 +8336,7 @@ skipping it leaves working code that is merely redundant.
 | --- | --- |
 | `.button.button.button { … }` or rules against `.v-outline` / `.c-secondary` | `ds-button` reflects `[data-variant]` and `[data-color]` on the HOST. Use `ds-button[data-variant="outline"]` |
 | your own vertical-padding override on a `sm`/`lg` textarea (a `--ds-input-pad-y` retune or a local rule compensating the wrong padding) | sm/lg textareas rendered the md vertical padding; they are corrected now, so the compensation stacks on top of the fix. A deliberate global `--ds-input-pad-y` retune is a legitimate hook and stays. |
-| a `height`/`min-height` pinned in a `ds-autocomplete {` rule or one on `ds-multi-select`, `ds-color-picker`, `ds-number-stepper` or `ds-split-button` to make `--ds-field-height` "work" | Those six spelled their height as the raw `--hit-*` value, so the token did nothing for them; they read the field scale now. |
+| a `height`/`min-height` pinned in a `ds-multi-select {` rule or one on `ds-autocomplete`, `ds-color-picker`, `ds-number-stepper` or `ds-split-button` to make `--ds-field-height` "work" | Those six spelled their height as the raw `--hit-*` value, so the token did nothing for them; they read the field scale now. |
 | `--radius-sm: 0` to square a checkbox | `--ds-checkbox-radius` |
 | `.title.title { font-size }` inside a modal | `--ds-modal-title-font-size` |
 | Pagination label type overrides — a rule on `ds-pagination` setting `--ds-pagination-label-*` | `--ds-pagination-label-*` |

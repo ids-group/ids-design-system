@@ -141,7 +141,8 @@
       "find": [
         "::ng-deep ds-button button",
         "ds-button button",
-        "::ng-deep button"
+        "::ng-deep button",
+        "ds-button .button"
       ],
       "why": "A deep selector into ds-button's inner <button> kept alive only by a resting box-shadow — background, colour, weight and border already had tokens.",
       "replaceWith": "--ds-button-shadow (and --ds-button-shadow-hover) on the ds-button host"

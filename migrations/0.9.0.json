@@ -446,7 +446,8 @@
       ],
       "find": [
         ".autocomplete-chevron",
-        ".autocomplete-input"
+        ".autocomplete-input",
+        "ds-autocomplete {"
       ],
       "why": "Absolutely positioning a search glyph over an autocomplete, or hiding `.autocomplete-chevron`",
       "replaceWith": "`dsAutocompletePrefix` and `[showChevron]=\"false\"`"
