@@ -425,7 +425,6 @@ export {
   isTextClipped,
   provideDsConfig,
   provideDsIntl,
-  retainStyles,
 } from '@ids-group-ltd/ids-design-system/core';
 export type {
   AnnounceState,

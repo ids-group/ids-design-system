@@ -624,6 +624,7 @@ export function reportDevWarning(message: string): void;
 // @internal
 export function resolveWithConfig<T>(value: Signal<T | null>, pick: (config: DsConfig) => T | undefined, fallback: T): Signal<T>;
 
+// @internal
 export function retainStyles(component: Type<unknown>, providers: StaticProvider[] = []): void;
 
 // @internal

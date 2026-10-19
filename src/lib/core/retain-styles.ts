@@ -14,7 +14,8 @@ const retainedByApp = new WeakMap<ApplicationRef, Set<Type<unknown>>>();
  *  component's last instance; one hidden instance, never attached or rendered, keeps the count above zero, so
  *  showing and hiding the component inserts and removes no sheet. Call in an injection context; the first call
  *  per app and component creates the instance, later calls do nothing. `providers` satisfy what the component's
- *  constructor injects beyond the environment. */
+ *  constructor injects beyond the environment.
+ *  @internal */
 export function retainStyles(
   component: Type<unknown>,
   providers: StaticProvider[] = [],
