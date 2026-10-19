@@ -4887,7 +4887,7 @@
 | --- | --- | --- |
 | `class="btn` — a hand-written button class kept only for controls that need `fragment`, `queryParams`, `target` or `rel` | those reach `ds-button` now, so the control can move with the rest | `ds-button` with the matching input |
 | `[routerLink]="'/path?a=1#b'"` — a query or hash folded into the link string | the string was percent-encoded into the path and never worked; the inputs carry them properly | `[queryParams]` and `fragment` |
-| importing `RouterLink` in your own component to write `[queryParams]` on a `<ds-button>` | that put a second `RouterLink` on the host, disagreeing with the anchor's about the destination | the component's own inputs |
+| `import { RouterLink }` in your own component, only to write `[queryParams]` on a `<ds-button>` | that put a second `RouterLink` on the host, disagreeing with the anchor's about the destination | the component's own inputs |
 | `ds-stat { --ds-stat-value-white-space: normal; }` written only to stop a long value painting over the tile beside it | the value clips by default, so it no longer escapes its card | nothing — keep the hook only where you want the value wrapped and the tile taller |
 | `ds-stat .value { overflow: hidden; text-overflow: ellipsis; }` — your own clip on the value | the component clips it, and with `overflow: clip` plus a clip margin, so descenders survive where `hidden` shaved them | nothing |
 | `.cell-text-pop` — a rule sizing or colouring the table's full-value popover | the popover is gone; a clipped cell opens a tooltip instead | `--ds-tooltip-*`, if the panel needs changing at all |
@@ -6405,7 +6405,7 @@ this package ships under `migrations/`.
 
 | If you have                                                       | Delete it, because                                                                                                                                                                                                                                                                                                                                                                             |
 | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `.ds-overlay-pane .autocomplete-list`, `padding`, `border-radius` | The autocomplete panel shipped with `padding: 0` and square rows while ds-select's dropdown had `--space-1` padding and rounded rows, so consumers patched the difference globally. The panel now uses the same shared partial as the other two pickers and matches without help. Replace with: nothing — the padding is `--space-1` and the row radius is `--ds-radius-inner` out of the box. |
+| `.ds-overlay-pane .autocomplete-list`                             | The autocomplete panel shipped with `padding: 0` and square rows while ds-select's dropdown had `--space-1` padding and rounded rows, so consumers patched the difference globally. The panel now uses the same shared partial as the other two pickers and matches without help. Replace with: nothing — the padding is `--space-1` and the row radius is `--ds-radius-inner` out of the box. |
 ## 0.11.0 — 2026-08-26
 
 ### Added
@@ -6678,7 +6678,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 | If you have | Delete it, because |
 | --- | --- |
 | `ds-input input`, `ds-textarea textarea`, `--ds-input-focus-shadow`, `box-shadow: none` | A rule killing one of the two focus rings a ds-input or ds-textarea used to paint - typically box-shadow: none on the inner input, or --ds-input-focus-shadow re-declared as none to hide the doubling. Replace with: nothing - the component now paints one ring on its own. |
-| `.search-clear`, `ds-search`, `:focus-visible`, `box-shadow` | A focus rule you added to the ds-search clear button because it showed no indicator at all - the shell-wide reset 0.10.2 used silenced that tab stop too. Every shell names the one control it silences now, so the button keeps its own ring. Replace with: nothing - the component paints it. |
+| `.search-clear`, `ds-search` | A focus rule you added to the ds-search clear button because it showed no indicator at all - the shell-wide reset 0.10.2 used silenced that tab stop too. Every shell names the one control it silences now, so the button keeps its own ring. Replace with: nothing - the component paints it. |
 
 ## 0.10.2 — 2026-08-24
 
@@ -6965,7 +6965,7 @@ workaround written against a hook that only landed in this release.
 | A `::ng-deep ds-table tr:hover .some-cell { color; text-decoration }` rule to make one cell read as the row's link target | `interactive: true` on that column, retuned with `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration` |
 | `name="error"`, `name="warn"`, `.field-message` | A `ds-icon` rendered by hand beside a field's error or warning text, or a rule on the message row nudging it into line against the old centred layout. Replace with: the built-in state glyph (error / warning / success carry one now), retuned through DS_CONFIG.field.stateIcons or messageIcon, with --ds-field-message-icon-gap / -offset for the spacing. |
 | `box-shadow: none`, `--ds-field-focus-shadow` | A rule that killed one of the two focus rings a field used to paint - on an inner input, or by re-declaring the field focus shadow. SCOPE, and it matters: this release suppresses the inner ring on ds-search, ds-autocomplete, ds-date-picker, ds-number-stepper and ds-field-group ONLY. A workaround on ds-input or ds-textarea is still load-bearing here - deleting it brings the double ring back. Leave those two until you are on the release that names them. Also leave any rule you wrote against the universal :where(:focus-visible) base indicator itself: that rule is still the one this library ships. Replace with: nothing: the field paints one ring now. |
-| `padding-block`, `line-height`, `option-label` | A padding or line-height override added to an option label, a clipped table cell or a breadcrumb to stop the descenders being shaved. Replace with: nothing: the clip carries a --space-1 margin now, at the same row height. |
+| `padding-block`, `option-label` | A padding or line-height override added to an option label, a clipped table cell or a breadcrumb to stop the descenders being shaved. Replace with: nothing: the clip carries a --space-1 margin now, at the same row height. |
 
 ## 0.10.1 — 2026-08-20
 

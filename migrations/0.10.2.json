@@ -423,7 +423,6 @@
       "id": "search-clear-timer",
       "surface": "typescript",
       "find": [
-        "setTimeout",
         "ds-search"
       ],
       "why": "A timer around a Clear button, or a value written twice to make the debounce let go.",
@@ -462,8 +461,7 @@
       "id": "menu-radius-deep-rule",
       "surface": "style",
       "find": [
-        "ds-menu",
-        "border-radius"
+        "ds-menu"
       ],
       "why": "A ::ng-deep radius rule on a bare ds-menu, written when the panel had no hook.",
       "replaceWith": "--ds-menu-radius"
@@ -526,7 +524,6 @@
       "surface": "style",
       "find": [
         "padding-block",
-        "line-height",
         "option-label"
       ],
       "why": "A padding or line-height override added to an option label, a clipped table cell or a breadcrumb to stop the descenders being shaved.",
