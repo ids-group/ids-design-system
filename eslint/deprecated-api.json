@@ -674,6 +674,13 @@
       "itemId": "0.7.0#shell-scroll-service-to-layout-scroll-service"
     },
     {
+      "name": "SortDir",
+      "replacement": "SortDirection",
+      "renamed": true,
+      "since": "0.13.4",
+      "itemId": "0.13.4#table-sort-dir-type-spelled-out"
+    },
+    {
       "name": "SpinnerSize",
       "replacement": "DsSize",
       "renamed": true,

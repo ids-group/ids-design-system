@@ -604,7 +604,6 @@
         "typescript"
       ],
       "find": [
-        "preventDefault()",
         "emit(!this.checked())",
         "requestChange"
       ],

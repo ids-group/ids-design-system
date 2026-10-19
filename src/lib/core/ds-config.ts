@@ -10,6 +10,7 @@ import type {
 } from './chart.types';
 import type { DsToastPosition } from './toast-position';
 import type { PaginationLayout } from './pagination.types';
+import type { TooltipPlacement } from './tooltip.types';
 
 export interface DsConfig {
   /** BCP-47 locale every component formats numbers and dates in. Default is Angular's
@@ -167,6 +168,16 @@ export interface DsConfig {
     valueFormat?: ChartValueFormat;
     /** How charts build themselves on a long page. All off by default. */
     rendering?: ChartRendering;
+  };
+  tooltip?: {
+    /** Default side for every `dsTooltip`. Default `'top'`. */
+    placement?: TooltipPlacement;
+    /** Default milliseconds before a tip appears. Default `120`. */
+    delay?: number;
+    /** Whether every tip draws the arrow that points at its host. Default `true`. */
+    arrow?: boolean;
+    /** Whether a click on the host keeps every tip open. Default `false`. */
+    pinOnClick?: boolean;
   };
   datePicker?: {
     /** BCP-47 locale for `ds-date-picker` names and value format. Unset falls back to

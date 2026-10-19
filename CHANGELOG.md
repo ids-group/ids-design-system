@@ -17,6 +17,13 @@
   lines; `'clip'` keeps it on one line, ends it with an ellipsis and shows the full title in a
   tooltip on hover and keyboard focus. `EmptyStateTitleOverflow` types the value.
 
+- **`dsTooltip` takes `dsTooltipConfig`, and `DsConfig.tooltip` sets its options app-wide.**
+  `[dsTooltipConfig]="{ placement, delay, arrow, pinOnClick, whenClipped }"` sets one tip;
+  `provideDsConfig({ tooltip: { placement, delay, arrow, pinOnClick } })` sets every tip. An unset
+  field falls back to the config, then to `'top'`, 120 ms, an arrow and no pin. `whenClipped` reads
+  as `dsTooltipWhenClipped`, which wins when set. `DsTooltipConfig` types the object and
+  `TooltipPlacement` its `placement`.
+
 ### Changed
 
 - **A `dsTooltipWhenClipped` tip (`TooltipDirective`) also opens on text cut by lines.** A block
@@ -37,7 +44,8 @@
   `--ds-dropdown-panel-min-width` now defaults to `220px` and floors the panel in both `width`
   modes; a trigger wider than it still sets the width. The floor is the overlay's own width, so a
   panel opened beside the right edge of the viewport is placed to stay on screen.
-  `--ds-dropdown-panel-max-width` still applies only under `width="content"`.
+  `--ds-dropdown-panel-max-width` now applies only under `width="content"`: under the default
+  `width="fill"` the panel follows the trigger and the token no longer caps it.
 
 - **A pinned column, bar or heatmap cell no longer stays brightened.** The highlight follows the
   pointer and keyboard focus only: once a click holds a mark or a category and the pointer moves
@@ -45,8 +53,9 @@
 
 - **Under the category cursor, the column at the hovered category brightens.** A `dsColumnSeries` in
   a `ds-chart` whose `cursor` is `'category'`, or resolves to it under `'auto'`, brightens the column
-  at the category under the pointer, as a hovered column does under `cursor="none"`. A series with
-  `tooltip="none"` stays as it is.
+  at the category under the pointer, as a hovered column does under `cursor="none"`. `'auto'`, the
+  default, resolves to `'category'` when two or more series show a tooltip or a series reads the
+  category, and to `'none'` otherwise, where only the hovered column brightens.
 
 - **The `ds-time-picker` hour and minute columns run on past either end.** In `ds-time-columns`,
   after the last hour or minute the first comes round again, the selected value is scrolled to the
@@ -58,6 +67,16 @@
   `--ds-empty-state-title-max-width`, which defaults to `--empty-body-maxw` like the body, and a word
   longer than the line, such as a pasted search term, breaks instead of running past the card. Set
   `--ds-empty-state-title-max-width: none` on a `ds-empty-state` to keep its title the full width.
+
+### Deprecated
+
+- **`dsTooltipPlacement`, `dsTooltipDelay`, `dsTooltipArrow` and `dsTooltipPinOnClick`.** Each still
+  works and wins over `dsTooltipConfig` and `DsConfig.tooltip` while set. Move the value into
+  `[dsTooltipConfig]` on the same element, or into `provideDsConfig({ tooltip })` where every tip of
+  the app takes it. On a `dsDefinitionTerm`, `dsTooltipPlacement` stays the way to place the tip.
+  Unset, each input now reads back `null` rather than its default, so code that
+  reads `TooltipDirective.dsTooltipPlacement()` and the other three gets `null` where it got
+  `'top'`, `120`, `true` or `false`.
 
 ### Fixed
 
@@ -509,7 +528,8 @@
   `(pressed)` does not fire and a `type="submit"` does not submit. The `dsTableExport` button shows
   the spinner while an `exportFetcher` runs, in place of the greyed "Preparing…" label. A
   `[disabled]` bound to the same flag as `[loading]` still disables natively and drops focus;
-  remove it.
+  remove it. Where `[disabled]` combines that flag with other conditions, remove the flag from
+  the expression and keep the rest.
 
 - **A pressed `ds-pagination` page keeps focus on its own number.** Page buttons were matched by
   position, so when the window of numbers shifted the focused button relabelled itself: with eight

@@ -270,8 +270,8 @@ upgrade; the delete entry is what a finder can run. The linter flags a default-c
 ## A `deleteList` entry is a find, a why, and a replacement
 
 `{ id, surface, find, why, replaceWith }`. The whole value is in `find`: the shape in the CONSUMER's
-code, written the way they wrote it, a string or an array of them (`["ds-table tr:hover",
-"::ng-deep ds-table"]`). `why` says what made it unnecessary — a hook that already existed, a default
+code, written the way they wrote it, always an array, even of one shape (`["ds-table tr:hover",
+"::ng-deep ds-table"]`, `["rescaleOnHide"]`). (lint, M030) `why` says what made it unnecessary — a hook that already existed, a default
 that moved, an API that became public. `replaceWith` names the API that replaces it, or the literal
 word "nothing" where the answer is simply to delete.
 

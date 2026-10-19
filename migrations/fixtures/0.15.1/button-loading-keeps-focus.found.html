@@ -10,3 +10,11 @@
   (click)="export()">
   Export
 </ds-button>
+
+<ds-button
+  color="error"
+  [disabled]="deleting() || saving()"
+  [loading]="deleting()"
+  (pressed)="remove()">
+  Delete
+</ds-button>
