@@ -25,12 +25,12 @@ only when a version cannot be made green.
 - **A semver** (e.g. `0.4.0`, or a beta such as `0.15.1-beta.2`) → target version: end the chain
   there instead of the latest. A beta target has its own rules in Phase A step 6.
 - **`dry-run`** (or `plan`) → **plan-only mode**: run Phase A read-only (no branch, no
-  AskUserQuestion about git strategy), then run the step-2 script ONCE with `--dry-run` and every
-  chain version's manifest in chain order (it carries each version's edits into the next in memory
-  and writes nothing), and for each chain version run plan + find on what it left + a read-only
-  customization-drift scan (the extracted `v<V>` tree lets you check consumer deep
-  selectors/tokens against V's internals WITHOUT installing anything), plus the lint step (Phase
-  A step 11) with V's range, which reads the tree on disk, so its hits are the pre-script ones.
+  AskUserQuestion about git strategy). Its step-12 whole-chain pre-pass is the dry-run's script
+  and lint run (the script carries each version's edits into the next in memory and writes
+  nothing; the lint reads the tree on disk, so its hits are the pre-script ones). Then for each
+  flagged chain version run plan + find on what the script left, and for every chain version a
+  read-only customization-drift scan (the extracted `v<V>` tree lets you check consumer deep
+  selectors/tokens against V's internals WITHOUT installing anything).
   Report per version: the
   MigrationItems, which are applicable (with file/hit counts, the script's edit and left
   counts, and the lint hit counts), which are not, expected drift, and
@@ -91,16 +91,20 @@ a normal run, with these differences:
 ## Model tiering (dispatch these subagents)
 
 - `ds-migration-planner` (opus) - changelog block → structured MigrationPlan. One per chain
-  version, all dispatched in Phase A.
+  version that has no manifest or that the whole-chain pre-pass flags (Phase A step 12), all
+  dispatched in Phase A.
 - `scripts/apply-mechanical.mjs` and `scripts/lint-step.mjs` (no model) - the mechanical rewrite
   and the lint finder and re-check of each step (Phase B steps 2 and 7), run before the agents.
 - `ds-usage-finder` (sonnet) - locate old-API usages. One per batch of 3-4 related items (same
-  surface or same component family), never one per item; the output stays keyed per item.
+  surface or same component family), never one per item; the output stays keyed per item. In
+  the whole-chain pre-pass, one per range of consecutive chain versions.
 - `ds-migration-applier` (sonnet) — apply edits. Parallel; one per file, or one per **small
   disjoint batch** of files (≤~5) — a file is never shared between concurrent appliers.
-- `ds-recheck` (sonnet) — independent re-check of every item, ALWAYS run (never skipped, even when
-  your own verify was green and you fixed everything inline): grep for mechanical, semantic for
-  behavioral. One per batch of 3-4 related items, one verdict object per item.
+- `ds-recheck` (sonnet) — independent re-check of every flagged item (Phase A step 12), ALWAYS
+  run (never skipped, even when your own verify was green and you fixed everything inline): grep
+  for mechanical, semantic for
+  behavioral. One per batch of 3-4 related items, one verdict object per item. An item the
+  pre-pass closed is re-checked too: its re-check is the pre-pass grep (no model).
 - `ds-delete-judge` (sonnet) - the deleteList pass (step 8). One per group of rows whose hit files
   are disjoint; a file is never shared between concurrent judges.
 - `ds-visual-check` (sonnet) - measures a rendering change on a consumer screen in a real browser
@@ -215,7 +219,7 @@ outside the consumer repo — the OS temp dir, keyed by the consumer's path (e.g
 `<os-tmpdir>/ds-update-ledger-<slug-of-consumer-path>.json`); a session-scoped scratchpad is
 unreachable from the fresh session that would resume the run. A dry-run uses its OWN suffixed path
 (`…-dryrun.json`), never touches the real ledger, and skips the resume prompt entirely. Shape:
-`{ branch, headAtStart, chain, mode, unreleased: { checkout, tgz, version } | null, lint: { source, toolsDir, toolsSource, ran, skipped }, feedback: [], perTarget: { "<t>": { baseline, overridesBaseline, perVersion: { "<V>": {
+`{ branch, headAtStart, chain, mode, unreleased: { checkout, tgz, version } | null, lint: { source, toolsDir, toolsSource, ran, skipped }, feedback: [], perTarget: { "<t>": { baseline, overridesBaseline, prepass, perVersion: { "<V>": {
 plan, items: { "<id>": "applied | not-applicable | locator-dead | superseded | unattempted-degraded
 | needsReview | rechecked" }, hitCounts, lintHits: { found, remaining }, driftHits: [], touchedFiles: [], attempts,
 deleteList: { "<id>": "deleted | kept-<reason>" }, committed } } } } }` — per TARGET, because
@@ -223,7 +227,9 @@ deleteList: { "<id>": "deleted | kept-<reason>" }, committed } } } } }` — per 
 so a resume reuses the same item ids (a prose-derived plan re-derived later has no id stability).
 `baseline` is the errors and warnings each target's verify command printed on the installed version
 (Phase A step 9); `overridesBaseline` is the `check-overrides` lines on the installed version
-(Phase A step 9; `null` with a reason when skipped); `driftHits` is the step-5 drift-scan `hits`;
+(Phase A step 9; `null` with a reason when skipped); `prepass` is the whole-chain pre-pass record
+(Phase A step 12): `{ "<V>#<id>": { script, lint, rawMatches, grep, flagged } }` plus the flagged
+versions; `driftHits` is the step-5 drift-scan `hits`;
 `feedback` is every feedback entry of the run (see "Feedback"), appended the
 moment it arrives so an interrupted run keeps it.
 Update it at every step boundary (plan done / apply wave done / bumped / verified / re-checked /
@@ -267,9 +273,10 @@ manifest:<V>#<itemId>` (or `tool:check-manifest-truth` when the tool, not the ma
 Steps 1-6 are quick local reads and run in order until the chain is known. Everything after that
 is ONE parallel wave: start the clone (step 7), the peers fetch (step 6) and the baseline builds
 (step 9) together as background commands; the moment the clone lands, extract every tree and the
-lint plugin copy (step 11), start the
-manifest-truth check and dispatch a planner for EVERY chain version (step 10), all at once. Ask
-step 8's question while the wave runs. Collect the whole wave before Phase B.
+lint plugin copy (step 11), start the manifest-truth check, dispatch a planner for every chain
+version without a manifest (step 10) and run the whole-chain pre-pass (step 12), all at once; the
+planners of the versions the pre-pass flags go out the moment it lands. Ask step 8's question
+while the wave runs. Collect the whole wave before Phase B.
 
 1. **Confirm consumer + find targets.** Read `package.json`; find `@ids-group-ltd/ids-design-system`
    in dependencies/devDependencies. In a monorepo, locate the declaring manifests by
@@ -382,12 +389,14 @@ step 8's question while the wave runs. Collect the whole wave before Phase B.
    in each target (read-only) and store every line it prints in the ledger's `overridesBaseline`.
    - `current` older than 0.14.1 (no schematic): skip; store `null` and the reason.
    - Phase C splits the after-chain lines against this list.
-10. **Plan every chain version (parallel, opus).** Extract the tree of every chain version and of
-    `current` (see "Reading the DS sources"). Dispatch one `ds-migration-planner` per chain version,
-    all at once, each with V's changelog block, the `v<V>` tree and the tree of the tag before it,
+10. **Plan the chain versions that need it (parallel, opus).** Extract the tree of every chain
+    version and of `current` (see "Reading the DS sources"). Dispatch one `ds-migration-planner`
+    per chain version without a manifest and per version the pre-pass flags (step 12), each with
+    V's changelog block, the `v<V>` tree and the tree of the tag before it,
     **and, if the clone carries a manifest `migrations/<V>.json`, pass it VERBATIM too**: the
     planner validates and prefers the manifest (deterministic plan), deriving from prose only when
-    it's absent or malformed. Parse each MigrationPlan into the ledger.
+    it's absent or malformed. Parse each MigrationPlan into the ledger; an unflagged version's
+    plan is its manifest, verbatim.
     When the manifest-truth check lands, apply it to the plans: a flagged item's plan entry is
     derived from prose instead of trusted (re-dispatch that version's planner with the flagged ids
     and the check's lines; a fallback, not verified ground: the prose can carry the same phantom,
@@ -441,6 +450,39 @@ step 8's question while the wave runs. Collect the whole wave before Phase B.
     It never runs with `--fix`: the step-2 script is the one writer of mechanical renames, and an
     autofix would rewrite exactly the occurrences that script deliberately leaves (a type imported
     from a secondary entry point, whose new name may live in another one).
+12. **Whole-chain pre-pass (per target, before any per-item agent).** Most items of a long chain
+    find nothing in one consumer; this pass proves which, once, so per-item planners, finders and
+    re-checks go only where there is something. The items are the clone's manifests (a version
+    without one enters with its step-10 plan). Run together, on the tree as it stands:
+    - `node <plugin-root>/scripts/apply-mechanical.mjs <source root> <every chain manifest, in chain order> --dry-run`
+      (writes nothing): an item with a status other than `untouched`, or with a `reason`, is hit.
+    - The lint step (step 11) once over the whole chain, `--from <current> --to <last chain version>`:
+      every item named in `hits` is hit.
+    - One `ds-usage-finder` per range of consecutive chain versions, sized so the chain fits one
+      wave, with every item of its range the two scripts did not hit, passed verbatim as in Phase B
+      step 2: an item with hits, or with any `rawMatches` count > 0, is hit.
+    - Every `deleteList` row's `find` shapes grepped over the source root.
+
+    Then, for every item none of these hit, one **grep re-check (no model)**: write its `old`, each
+    `detect` shape and each `searchHints` string to a scratchpad file, one per line and no blank
+    line (a blank line matches everything), and run, over the finder's files and exclusions:
+    `grep -rlF -f <that file> --include='*.html' --include='*.ts' --include='*.scss' --include='*.css' --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.angular --exclude-dir=.git <source root>`.
+    Exit 0 is a hit, and the files it lists join the item's pre-pass record; exit 1 is empty; any
+    other exit, or an item with no locator string to write, counts as a hit.
+
+    An item is **flagged** when it is hit, by the grep too; when it is a `code-add`, or a `behavior` /
+    `removed-api` item whose `surface` is not `template` or `none` (the two zero-hit exceptions of
+    Phase B step 2, which no grep settles); or when its `old`, `detect` or `searchHints` names the
+    `new` of an earlier flagged item of the chain (it meets the tree that item leaves, which this
+    pass never saw). A version is flagged when it has a flagged item, a `deleteList` row with a
+    hit, no manifest, or a manifest-truth flag. Record every item's script status, lint hit count,
+    `rawMatches`, grep result and flag in the ledger's `prepass`. A flagged item goes through the
+    per-item planner, finder, applier and `ds-recheck` of Phase B like any item. An unflagged item
+    is **closed**: every locator matched nothing in the shared pass and in its grep, so it is
+    locator-dead (Phase B step 2), recorded as "no hits, grep re-check empty" with its pre-pass
+    record as the evidence. That grep is its step-7 re-check, so it gets no planner, finder or
+    `ds-recheck` dispatch. Every item, `surface: "none"` included, is listed, never dropped, and
+    the step-7 lint re-check of each version still covers it.
 
 ## Phase B — Per-version loop (for each target, for each version V in the chain, ascending)
 
@@ -462,7 +504,9 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 1. **Plan.** Take V's MigrationPlan from the ledger (Phase A step 10). Every dispatch in this
    version carries the `v<V>` tree and the tree of the tag before it. If `items` is empty, V is a
    no-migration version: skip steps 2-3 and go to step 4, but a non-empty `deleteList` still gets
-   its step-8 pass before the commit, and the step-7 lint re-check still runs.
+   its step-8 pass before the commit, and the step-7 lint re-check still runs. A version the
+   pre-pass left unflagged (Phase A step 12) takes the same path, its items closed as "no hits,
+   grep re-check empty".
 2. **Mechanical pre-pass (script), then find.** Before any agent, run
    `node <plugin-root>/scripts/apply-mechanical.mjs <source root> <clone>/migrations/<V>.json`
    (`<plugin-root>` as for the drift scan in step 5; a version without a manifest skips this). It
@@ -477,7 +521,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
      and no applier. Where `action` asks for more (a component class or import path to change, a
      `semantics` to add), dispatch an applier for the rest with the script's `edits` as its hits.
    - `partial` or `left` - no finder: the `left` entries ARE the item's hits for step 3.
-   - `untouched` - the item goes to the finder below as before.
+   - `untouched` - a flagged item (Phase A step 12) goes to the finder below; a closed one stays
+     closed as "no hits, grep re-check empty", with no finder.
      A record with a `reason` is a refusal: the script cannot apply the item's `old`/`new` as an
      exact, scoped swap of one name for another, so it rewrote nothing and listed every occurrence
      of `old` as left. Its
@@ -498,7 +543,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
      plan derived from prose, or ids that disagree) is a feedback entry on `tool:lint-step` and goes
      to an applier on its own, with its `message`, which names the replacement, as the `action`.
      Record each item's lint hit count beside its hit count.
-     **Find (parallel, sonnet).** Batch the remaining items by surface or component family, 3-4 per batch,
+     **Find (parallel, sonnet).** Batch the remaining flagged items by surface or component family, 3-4 per batch,
      and dispatch one `ds-usage-finder` per batch with the target's source
      root — passing each MigrationItem **verbatim** (`id` / `kind` / `old` / `new` / `searchHints` /
      `map` / `surface` / `detect` / `appliesWhen` as the planner emitted them — `new` is what lets the
@@ -668,7 +713,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    it, record `needsReview`." If two consecutive attempts on an item produce an identical edit,
    short-circuit that item to the manual-review list rather than burning the remaining cap. Add any
    newly-touched files to the touched-files union, then re-verify. Bounded by the 3-attempt cap.
-7. **Re-check (parallel, sonnet) - every item, ALWAYS.** Batch the items as in step 2, 3-4
+7. **Re-check (parallel, sonnet) - every item, ALWAYS.** An item the pre-pass closed (Phase A
+   step 12) was re-checked by its grep there; every other item goes to `ds-recheck`. Batch the items as in step 2, 3-4
    related items per `ds-recheck`, each item judged on its own; a redo of one item goes out alone.
    Re-attach its full MigrationItem by `id` from the plan (the applier's report is id-keyed
    only) — plus the applier's reported mode (`replaced | inserted | no-op` — it decides what the
@@ -686,7 +732,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    real-miss. **A real-miss in an unreported file is a finder miss:** dispatch an applier for that file
    and re-verify before green — do not trust the finder's file set as complete. **Include the items
    dropped at step 2 as zero-hit, passing each one's classification (not-applicable | locator-dead)
-   in the dispatch — but NOT the superseded ones, whose skip reason is final:** for those the re-check doubles as an independent not-applicability
+   in the dispatch — but NOT the superseded ones, whose skip reason is final, nor the ones the
+   pre-pass closed, whose grep is that confirmation:** for those the re-check doubles as an independent not-applicability
    confirmation (a finder false-zero is otherwise silent); a usage found for a "not-applicable" or
    "locator-dead" item re-enters it into the pipeline at step 3 — the re-entry COUNTS as a fix
    cycle (increment `attempts`) — and a locator-dead verdict the
@@ -749,7 +796,9 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 - Per target: versions completed + committed (from→to); items **auto-applied** (mechanical AND
   behavioral); items not-applicable — **every item with its hit count**.
 - **Locator-dead — evidence about the manifests, not this consumer:** the items where every locator
-  matched nothing repo-wide, with version and id. One can be a consumer quirk; several in one chain
+  matched nothing repo-wide, with version and id; an item the pre-pass closed is marked "no hits,
+  grep re-check empty" and carries its pre-pass record (script status, lint hit count,
+  `rawMatches`, grep result). One can be a consumer quirk; several in one chain
   mean the manifests are wrong. Each is a feedback entry that Phase D delivers to the
   design-system repo; never fold them into the not-applicable total.
   **A feedback entry filed back must be complete and evidenced:** any claim that the DS removed or voided
