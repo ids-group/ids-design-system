@@ -8,7 +8,11 @@ import {
   nextBeta,
   previousBoundary,
 } from './release-tags.mjs';
-import { foldChangelog, foldManifests } from './release-fold.mjs';
+import {
+  foldChangelog,
+  foldManifests,
+  unreleasedHasEntry,
+} from './release-fold.mjs';
 
 let ran = 0;
 let failed = 0;
@@ -219,6 +223,26 @@ expect(
 );
 expectThrow('an unknown manifest key is refused rather than dropped', () =>
   foldManifests('0.14.6', [{ ...beta1, notes: 'x' }]),
+);
+
+const devLog =
+  '## Unreleased\r\n\r\n### Fixed\r\n\r\n- **A fix.**\r\n\r\n## 0.15.2 — 2026-10-14\r\n\r\n- **Old.**\r\n';
+expect(
+  'a dev changelog has an Unreleased entry',
+  unreleasedHasEntry(devLog),
+  true,
+);
+expect(
+  'the release stamp leaves Unreleased without an entry',
+  unreleasedHasEntry(
+    foldChangelog(
+      devLog
+        .replace(/\r\n/g, '\n')
+        .replace(/^## Unreleased$/m, '## Unreleased\n\n## 0.15.3 — 2026-10-19'),
+      '0.15.3',
+    ).text,
+  ),
+  false,
 );
 
 console.log(`\n${ran - failed} of ${ran} case(s) right.`);
