@@ -82,7 +82,8 @@ export class TooltipDirective implements OnDestroy {
   readonly dsTooltipDelay = input<number>(120);
   /** Draws the arrow that points at the host. Turn it off where the tip sits flush against it. */
   readonly dsTooltipArrow = input(true, { transform: booleanAttribute });
-  /** Show the tip only while the host shows less text than it holds. Re-tested on every open.
+  /** Show the tip only while the host shows less text than it holds: cut by width, or by lines
+   *  under `overflow: hidden` or `clip`, as with `line-clamp`. Re-tested on every open.
    *  A boolean or the bare attribute tests the host. A selector tests the element it matches inside
    *  the host and discloses that element's text; while nothing matches, no clipped tip opens.
    *
@@ -96,9 +97,6 @@ export class TooltipDirective implements OnDestroy {
     TooltipClipTarget | null,
     boolean | string | null | undefined
   >(null, { transform: toClipTarget });
-  /** With `dsTooltipWhenClipped`, text cut by lines also counts as clipped, such as a block under
-   *  `line-clamp` or a fixed height. Off, only text cut by width does. */
-  readonly dsTooltipClipLines = input(false, { transform: booleanAttribute });
 
   /** Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves
    *  until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip.
@@ -106,11 +104,7 @@ export class TooltipDirective implements OnDestroy {
   readonly dsTooltipPinOnClick = input(false, { transform: booleanAttribute });
 
   private isClipped(): boolean {
-    return isHostClipped(
-      this.hostElement,
-      this.dsTooltipWhenClipped(),
-      this.dsTooltipClipLines(),
-    );
+    return isHostClipped(this.hostElement, this.dsTooltipWhenClipped());
   }
 
   private get hostElement(): HTMLElement {
