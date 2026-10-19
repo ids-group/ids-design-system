@@ -18,6 +18,10 @@ that are dead in THIS consumer and keep every one that is still load-bearing.
 - For each row, grep its `find` shapes over the source root (`*.html`, `*.ts`, `*.scss`, `*.css`;
   skip `node_modules`, `dist`, `.angular`, `.git`), searching every surface and ranking by the
   row's `surface`. Your grep is the hit list; do not trust one handed to you.
+- **A `find` shape is a literal string, never a regex.** `[rescaleOnHide]="true"` read as a regex
+  is a character class and matches none of the code it names. Escape every regex metacharacter
+  (`[ ] ( ) { } . * + ? ^ $ | \`) before passing the shape to Grep, or search with fixed strings
+  (`rg -F`, `grep -F`).
 - **Judge each hit on its own.** The row's `why` is the library's claim about V, not evidence.
   Before deleting, confirm in the `v<V>` tree that V covers the case this consumer's code covers:
   the same element, the same state, the same values. A workaround stays where it is still needed:
