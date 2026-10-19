@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Does the locator check still FIRE on consumer code no locator finds, on a look-alike that
-// survives the element scope, on an unknown id or extension and on a draft item with no fixture -
-// and stay green when the same locators find the target and drop the look-alike?
+// survives the element scope, on an unknown id or extension, on a draft item with no fixture and
+// on a deleteList find shape that matches the neutral corpus - and stay green when the same
+// locators find the target and drop the look-alike?
 //
 // Nothing tracked is written: each case builds its own migrations directory under the OS temp dir
 // and points the check at it through DS_MIGRATIONS_DIR.
@@ -16,7 +17,8 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const BASE = join(tmpdir(), `manifest-detect-selftest.${process.pid}`);
 
-const manifest = (version, items) => JSON.stringify({ version, items });
+const manifest = (version, items, deleteList = []) =>
+  JSON.stringify({ version, items, deleteList });
 const remap = {
   id: 'button-variant-remap',
   kind: 'value-remap',
@@ -32,7 +34,25 @@ const storeBehavior = {
   detect: ['sortKey()!'],
   surface: 'typescript',
 };
-const PUBLISHED = manifest('1.0.0', [remap, storeBehavior]);
+const reserveMessageRow = {
+  id: 'reserve-message-false',
+  surface: 'template',
+  find: ['[reserveMessage]="false"'],
+  why: 'false is the default.',
+  replaceWith: 'nothing',
+};
+const PUBLISHED = manifest(
+  '1.0.0',
+  [remap, storeBehavior],
+  [reserveMessageRow],
+);
+const BROAD_PUBLISHED = manifest(
+  '1.0.0',
+  [remap, storeBehavior],
+  [{ ...reserveMessageRow, find: ['reserveMessage'] }],
+);
+const NEUTRAL =
+  '<ds-input label="Name" [reserveMessage]="true" formControlName="name" />\n';
 const DRAFT = manifest('unreleased', [{ ...storeBehavior, id: 'draft-item' }]);
 const STORE =
   'export const sorting = { path: store.sortKey()!, order: store.sortDir() };\n';
@@ -72,6 +92,7 @@ try {
     'fixtures/1.0.0/button-variant-remap.ignored.html': BADGE,
     'fixtures/1.0.0/sort-key-kept.found.ts': STORE,
     'fixtures/unreleased/draft-item.found.ts': STORE,
+    'fixtures/_neutral/profile.component.html': NEUTRAL,
   });
   console.log(
     'HOLDS when the locators find the target and drop the look-alike',
@@ -89,9 +110,15 @@ try {
     'a detect shape on a typescript surface is not element-scoped',
     good.output.includes('sort-key-kept.found.ts: located'),
   );
+  expect(
+    'a find shape absent from the neutral corpus passes',
+    /1 deleteList find shape\(s\) run over 1 neutral file\(s\)/.test(
+      good.output,
+    ),
+  );
 
   const bad = run('bad', {
-    '1.0.0.json': PUBLISHED,
+    '1.0.0.json': BROAD_PUBLISHED,
     'unreleased.json': DRAFT,
     'fixtures/1.0.0/button-variant-remap.found.html': BADGE,
     'fixtures/1.0.0/button-variant-remap.ignored.html': BUTTON,
@@ -99,6 +126,7 @@ try {
       'export const sorting = store.sortKey() ? 1 : 0;\n',
     'fixtures/1.0.0/no-such-item.found.ts': STORE,
     'fixtures/1.0.0/sort-key-kept.ignored.css': STORE,
+    'fixtures/_neutral/profile.component.html': NEUTRAL,
   });
   console.log('FIRES on each defect');
   expect('exits 1', bad.status === 1);
@@ -131,6 +159,12 @@ try {
   expect(
     'a draft item with no .found fixture',
     bad.output.includes('unreleased#draft-item  behavior'),
+  );
+  expect(
+    'a find shape that matches ordinary code in the neutral corpus',
+    bad.output.includes(
+      '1.0.0#reserve-message-false: find "reserveMessage" matches ordinary code at fixtures/_neutral/profile.component.html:1',
+    ),
   );
 } finally {
   rmSync(BASE, { recursive: true, force: true });

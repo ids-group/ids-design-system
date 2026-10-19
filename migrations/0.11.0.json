@@ -151,9 +151,7 @@
       "id": "button-disabled-reason-tooltip",
       "surface": "template",
       "find": [
-        "dsTooltip",
-        "ds-button",
-        "disabled"
+        "dsTooltip"
       ],
       "why": "A tooltip on a disabled ds-button used to carry the reason it is refused. It reaches a mouse only: a natively disabled button never takes focus, so a keyboard user gets nothing and a screen reader gets no description. Applies to the tooltip that EXPLAINS the refusal, not to one that merely names the action - leave the latter alone.",
       "replaceWith": "[disabledReason]=\"'...'\" on the ds-button for a standing refusal (no permission, no integration); for a refusal the user can lift by filling the form in, drop `disabled` altogether and use [error]/[warning]/[hint] with validity judged in the submit handler"

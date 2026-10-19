@@ -926,7 +926,9 @@
       "id": "row-control-stop-propagation-for-keys",
       "surface": "template",
       "find": [
-        "stopPropagation"
+        "(keydown.enter)=\"$event.stopPropagation()\"",
+        "(keydown.space)=\"$event.stopPropagation()\"",
+        "(keydown)=\"$event.stopPropagation()\""
       ],
       "why": "A `stopPropagation()` on a control inside a clickable row, added so the row would not steal the control's KEY. Read each hit before deleting: a CLICK still bubbles (`onRowClick` only skips a target inside an `<input>`), so a click-path guard stays.",
       "replaceWith": "nothing on the key path - `onRowKey` now requires `target === currentTarget`"
@@ -996,7 +998,7 @@
         "ds-field-group",
         "::ng-deep",
         "border-error",
-        "invalid"
+        "ds-field-group.invalid"
       ],
       "why": "A ::ng-deep override forcing the group invalid border back to red, or suppressing a segment fill inside a group. Both existed because the group read an undeclared token and a segment repainted its own state mid-row; both are fixed in the component.",
       "replaceWith": "nothing - both overrides are redundant"

@@ -727,7 +727,7 @@
     {
       "id": "line-chart-rescale-on-hide-bare",
       "surface": "template",
-      "find": ["rescaleOnHide"],
+      "find": ["[rescaleOnHide]=\"true\"", " rescaleOnHide"],
       "why": "true is the default of rescaleOnHide on ds-line-chart; [rescaleOnHide]=\"false\" stays where the axis must hold.",
       "replaceWith": "nothing"
     },
