@@ -552,16 +552,16 @@ for (const [name, manifest] of manifests) {
   const seenDeleteIds = new Set();
   for (const entry of manifest.deleteList ?? []) {
     const id = entry.id ?? '<no id>';
-    const finds = [entry.find ?? []].flat();
     if (
-      !finds.length ||
-      finds.some((one) => typeof one !== 'string' || !one.trim())
+      !Array.isArray(entry.find) ||
+      !entry.find.length ||
+      entry.find.some((one) => typeof one !== 'string' || !one.trim())
     ) {
       report(
         errors,
         file,
         'M030',
-        `${id}: delete entry needs \`find\` (a string or an array)`,
+        `${id}: delete entry needs \`find\` as a non-empty array of strings`,
       );
     }
     if (typeof entry.why !== 'string' || entry.why.trim().length < 20) {

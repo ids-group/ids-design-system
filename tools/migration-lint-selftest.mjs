@@ -196,6 +196,11 @@ const negativeControls = [
     },
   },
   {
+    label: 'M030 stays quiet on a delete entry whose `find` is an array of one string',
+    code: 'M030',
+    mutate: (m) => (m.deleteList[0].find = ['ds-table tr:hover']),
+  },
+  {
     label: 'M013 stays quiet when a non-rename item has no `note` at all',
     code: 'M013',
     mutate: (m) => {
@@ -311,6 +316,11 @@ const extraCases = [
       const i = m.items.find((x) => x.id === 'auth-shell-tokens-to-auth-layout');
       i.new = '--ds-auth-frame-';
     },
+  },
+  {
+    label: 'M030 on a delete entry whose `find` is a bare string',
+    code: 'M030',
+    mutate: (m) => (m.deleteList[0].find = 'ds-table tr:hover'),
   },
   {
     label: 'M046 on an informational object with text but no verify',
