@@ -96,6 +96,8 @@ try {
     'fixtures/1.0.0/sort-key-kept.found.ts': STORE,
     'fixtures/unreleased/draft-item.found.ts': STORE,
     'fixtures/1.0.0/reserve-message-false.found.html': OPT_OUT,
+    'fixtures/1.0.0/reserve-message-false.multi-line.found.html':
+      '<ds-input\n  label="Name"\n  [reserveMessage]="false" />\n',
     'fixtures/1.0.0/reserve-message-false.ignored.html': OPT_IN,
     'fixtures/_neutral/profile.component.html': NEUTRAL,
   });
@@ -104,12 +106,15 @@ try {
   );
   expect('exits 0', good.status === 0);
   expect(
-    'runs all six fixtures',
-    /6 locator fixture\(s\) run/.test(good.output),
+    'runs all seven fixtures',
+    /7 locator fixture\(s\) run/.test(good.output),
   );
   expect(
-    'a deleteList row finds its workaround and skips the binding it keeps',
+    'a deleteList row finds each spelling of its workaround and skips the look-alike',
     good.output.includes('reserve-message-false.found.html: located') &&
+      good.output.includes(
+        'reserve-message-false.multi-line.found.html: located',
+      ) &&
       good.output.includes('reserve-message-false.ignored.html: ignored'),
   );
   expect(
@@ -172,7 +177,7 @@ try {
     ),
   );
   expect(
-    'a deleteList row whose find hits the code it keeps',
+    'a deleteList row whose find hits a look-alike',
     bad.output.includes(
       'reserve-message-false.ignored.html: a look-alike still counts',
     ),

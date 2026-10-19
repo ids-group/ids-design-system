@@ -6,8 +6,10 @@
 //
 // Reads `migrations/fixtures/<version>/<id>.found.<html|ts|scss>` and `<id>.ignored.<ext>`
 // (`unreleased/` for the draft), named by an item id of `migrations/<version>.json`, or by a
-// `deleteList` row id: then `.found` is the workaround the row deletes and `.ignored` is code of
-// the same feature the row keeps, and the row's `find` shapes are the only locators.
+// `deleteList` row id: then `.found` is a spelling of the workaround the row deletes, `.ignored`
+// unrelated code that resembles it, and the row's `find` shapes are the only locators. A variant
+// between the id and the expectation - `<id>.tab-indented.found.html` - holds one more spelling,
+// and each file must be hit on its own.
 //
 // Locating mirrors plugins/design-system/agents/ds-usage-finder.md: a literal, case-sensitive
 // grep for `old` (the attribute of an `element[attr]`, nothing for a comma-joined list), every
@@ -17,13 +19,15 @@
 // stylesheet. A `detect` hit is scoped the same way only on a template-only item; on a
 // `typescript`, `style` or `config` surface there is no element to scope to.
 //
-// `migrations/fixtures/_neutral/` is ordinary consumer code no `deleteList` row of any manifest
-// may hit: the delete judge greps every `find` shape over the whole source tree, so a shape that
-// also matches unrelated code sends it after lines the row does not mean.
+// `migrations/fixtures/_neutral/` is ordinary consumer code, unrelated to any workaround a
+// `deleteList` row names, that no row of any manifest may hit: the delete judge greps every `find`
+// shape over the whole source tree, so a shape that also matches unrelated code sends it after
+// lines the row does not mean. Code of the row's own feature that the judge keeps - a
+// `[rescaleOnHide]="false"` beside a row deleting `true` - is not neutral and stays out of it.
 //
 // Fails on: a `.found` snippet no locator hits, an `.ignored` snippet a locator hit survives the
 // element scope in, a fixture whose id is not in its manifest or whose name or extension is not
-// one of the above, a row `.found` fixture no find shape hits, an item of `migrations/unreleased.json` with no `.found` fixture, and a
+// one of the above, an item of `migrations/unreleased.json` with no `.found` fixture, and a
 // `deleteList` find shape found in the neutral corpus.
 //
 //   node tools/check-manifest-detect.mjs            # every fixture, plus the draft's coverage
@@ -38,7 +42,8 @@ const MIGRATIONS = process.env.DS_MIGRATIONS_DIR || join(ROOT, 'migrations');
 const FIXTURES = join(MIGRATIONS, 'fixtures');
 const NEUTRAL = '_neutral';
 const AUDIT = process.argv.includes('--audit');
-const FIXTURE_NAME = /^(.+)\.(found|ignored)\.(html|ts|scss)$/;
+const FIXTURE_NAME =
+  /^([a-z0-9-]+)(?:\.[a-z0-9-]+)?\.(found|ignored)\.(html|ts|scss)$/;
 const MANIFEST_NAME = /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)\.json$/;
 const ELEMENT_OF_OLD = /^(ds-[a-z0-9-]+)(?:\[([^\]]+)\]$|[\s.])/;
 

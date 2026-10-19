@@ -150,9 +150,10 @@ literal grep for `old` (the attribute of an `element[attr]`), every `searchHints
 `detect` hit is scoped the same way only on a template-only item. A `.found` snippet nothing locates
 is a locator defect in the manifest, and an `.ignored` one a hit survives in is a scope defect.
 Every item of the draft carries a `.found` fixture; they are kept in the repository and not shipped.
-A fixture named by a `deleteList` row id instead holds the workaround the row deletes (`.found`)
-or code of the same feature the row keeps (`.ignored`), searched with the row's `find` shapes
-alone, as literal strings.
+A fixture named by a `deleteList` row id instead holds a spelling of the workaround the row
+deletes (`.found`) or unrelated code that resembles it (`.ignored`), searched with the row's
+`find` shapes alone, as literal strings. `<id>.<variant>.found.<ext>` adds one more spelling, and
+each file must be hit on its own.
 
 The prose CHANGELOG is the human copy of a release; the manifest is its machine mirror of the
 same release. Where the two disagree, the CHANGELOG is the one to trust.
