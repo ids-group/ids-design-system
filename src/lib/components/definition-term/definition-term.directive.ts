@@ -1,21 +1,17 @@
 import {
-  ApplicationRef,
   Directive,
   ElementRef,
-  EnvironmentInjector,
   booleanAttribute,
-  createComponent,
   inject,
   input,
 } from '@angular/core';
+import { retainStyles } from '@ids-group-ltd/ids-design-system/core';
 import {
   TOOLTIP_LEADS_WITH_OWN_TEXT,
   TOOLTIP_PIN_ON_CLICK,
   TooltipDirective,
 } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import { DefinitionTermStylesComponent } from './definition-term-styles.component';
-
-const appsWithTermStyles = new WeakSet<ApplicationRef>();
 
 /** Marks a term that carries its definition, on any element: `<span dsDefinitionTerm="…">term</span>`.
  *  Brings its own `.ds-definition-term` styles; no stylesheet import is needed. A host other than `<button>` gets
@@ -54,15 +50,7 @@ export class DefinitionTermDirective {
   protected readonly isButton = this.host.tagName === 'BUTTON';
 
   constructor() {
-    const app = inject(ApplicationRef);
-    if (appsWithTermStyles.has(app)) {
-      return;
-    }
-    appsWithTermStyles.add(app);
-    const styles = createComponent(DefinitionTermStylesComponent, {
-      environmentInjector: inject(EnvironmentInjector),
-    });
-    app.onDestroy(() => styles.destroy());
+    retainStyles(DefinitionTermStylesComponent);
   }
 
   /** Keeps the definition open after a click until a click outside, `Escape` or blur. Turn it off

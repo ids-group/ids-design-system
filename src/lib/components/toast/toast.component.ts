@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
-import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
+import { DS_INTL, retainStyles } from '@ids-group-ltd/ids-design-system/core';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import type { ToastAction, ToastVariant } from './toast.types';
 
@@ -45,6 +45,10 @@ export class ToastComponent {
   readonly closed = output<void>();
 
   protected readonly isLoading = computed(() => this.variant() === 'loading');
+
+  constructor() {
+    retainStyles(ToastComponent);
+  }
 
   protected onAction(action: ToastAction): void {
     action.handler();

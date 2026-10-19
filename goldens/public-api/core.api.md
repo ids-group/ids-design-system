@@ -624,6 +624,8 @@ export function reportDevWarning(message: string): void;
 // @internal
 export function resolveWithConfig<T>(value: Signal<T | null>, pick: (config: DsConfig) => T | undefined, fallback: T): Signal<T>;
 
+export function retainStyles(component: Type<unknown>, providers: StaticProvider[] = []): void;
+
 // @internal
 export function warnAnnounceOversight(tag: 'ds-banner' | 'ds-alert', section: 'banner' | 'alert', state: () => AnnounceState): void;
 ```

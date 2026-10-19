@@ -5,6 +5,7 @@
 ```ts
 @Component({ selector: 'ds-loading-overlay' })
 export class LoadingOverlayComponent {
+    public constructor();
     public readonly blur = input(true, { transform: booleanAttribute });
     public readonly inertContent = input(true, { transform: booleanAttribute });
     public readonly insetTop = input<string>('0');

@@ -16,6 +16,7 @@ export interface ToastAction {
 
 @Component({ selector: 'ds-toast' })
 export class ToastComponent {
+    public constructor();
     public readonly action = input<ToastAction | null>(null);
     public readonly body = input<string>('');
     protected readonly classes = computed(…);

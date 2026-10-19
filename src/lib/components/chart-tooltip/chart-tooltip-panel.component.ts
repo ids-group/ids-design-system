@@ -9,6 +9,7 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { retainStyles } from '@ids-group-ltd/ids-design-system/core';
 import { NgTemplateOutlet } from '@angular/common';
 import type { ChartTooltipContext } from './chart-tooltip.types';
 import { swatchBlendsInto } from './swatch-contrast';
@@ -52,6 +53,7 @@ export class ChartTooltipPanelComponent {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   constructor() {
+    retainStyles(ChartTooltipPanelComponent);
     afterRenderEffect({
       earlyRead: () => {
         this.context();

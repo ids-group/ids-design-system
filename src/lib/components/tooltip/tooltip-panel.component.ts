@@ -5,6 +5,7 @@ import {
   computed,
   input,
 } from '@angular/core';
+import { retainStyles } from '@ids-group-ltd/ids-design-system/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { parseTooltipMarkup } from './tooltip-markup';
 import type { TooltipPlacement } from './tooltip.types';
@@ -57,4 +58,8 @@ export class TooltipPanelComponent {
   readonly arrow = input(true);
   /** Element `id`, referenced by the trigger's `aria-describedby`. */
   readonly panelId = input<string>('');
+
+  constructor() {
+    retainStyles(TooltipPanelComponent);
+  }
 }

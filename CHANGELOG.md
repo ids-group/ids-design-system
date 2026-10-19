@@ -2,6 +2,11 @@
 
 ### Added
 
+- **`retainStyles(component)` from `core` keeps a component's stylesheet in the document for the life
+  of the app.** Angular removes a component's sheet with its last instance; one hidden instance, never
+  attached or rendered, keeps it. Call it in the constructor of a component of yours that appears and
+  disappears often.
+
 - **Every chart takes `highlightActive`, and `DsConfig.chart.highlightActive` sets it app-wide.**
   `false` keeps the hovered or focused column, bar or heatmap cell at its own colour; unset falls
   back to the config, then `true`, which brightens it. An input on the element wins over the
@@ -55,6 +60,11 @@
   `--ds-empty-state-title-max-width: none` on a `ds-empty-state` to keep its title the full width.
 
 ### Fixed
+
+- **Showing and hiding a tooltip, a chart tooltip, a modal, a confirm, a toast, a spinner, a skeleton
+  or a loading overlay no longer inserts and removes its stylesheet each time.** The first instance
+  keeps the sheet for the life of the app, so Firefox no longer restyles the whole page on every
+  show and hide (10 to 21 ms per show on a page of 11 000 elements, measured 2026-10-17).
 
 - **A long group name no longer scrolls the `ds-multi-select` list sideways.** The per-group select-all
   row of `selectAll="group"` and `selectAll="both"` cuts its label to the panel width with an

@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, inject, input } from '@angular/core';
-import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
+import { DS_INTL, retainStyles } from '@ids-group-ltd/ids-design-system/core';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
@@ -20,4 +20,8 @@ export class SpinnerComponent {
 
   /** Spinner size - sm/md/lg. */
   readonly size = input<DsSize>('md');
+
+  constructor() {
+    retainStyles(SpinnerComponent);
+  }
 }

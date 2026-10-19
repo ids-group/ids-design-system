@@ -8,6 +8,7 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { retainStyles } from '@ids-group-ltd/ids-design-system/core';
 
 // The shimmer animates `background-position` on the main thread even off screen; one shared
 // observer pauses the skeletons out of view.
@@ -56,6 +57,7 @@ export class SkeletonComponent {
   readonly shimmer = input(true, { transform: booleanAttribute });
 
   constructor() {
+    retainStyles(SkeletonComponent);
     if (typeof IntersectionObserver === 'undefined') {
       return;
     }
