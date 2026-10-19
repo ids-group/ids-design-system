@@ -4,6 +4,7 @@ import {
   booleanAttribute,
   input,
 } from '@angular/core';
+import { retainStyles } from '@ids-group-ltd/ids-design-system/core';
 import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 
@@ -37,4 +38,8 @@ export class LoadingOverlayComponent {
    * `inert` yourself.
    */
   readonly inertContent = input(true, { transform: booleanAttribute });
+
+  constructor() {
+    retainStyles(LoadingOverlayComponent);
+  }
 }

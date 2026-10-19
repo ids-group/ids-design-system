@@ -54,6 +54,7 @@ export class TooltipDirective implements OnDestroy {
 
 @Component({ selector: 'ds-tooltip-panel' })
 export class TooltipPanelComponent {
+    public constructor();
     public readonly arrow = input(true);
     public readonly panelId = input<string>('');
     public readonly placement = input.required<TooltipPlacement>();

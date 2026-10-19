@@ -8,7 +8,7 @@ import {
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 import type { ButtonColor } from '@ids-group-ltd/ids-design-system/components/button';
-import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
+import { DS_INTL, retainStyles } from '@ids-group-ltd/ids-design-system/core';
 import { ModalCardComponent } from './modal-card.component';
 import { MODAL_CONFIRM_DATA } from './modal-confirm.types';
 
@@ -40,6 +40,15 @@ export class ModalConfirmComponent {
 
     return !!phrase && this.typed() !== phrase;
   });
+
+  constructor() {
+    retainStyles(ModalConfirmComponent, [
+      {
+        provide: MODAL_CONFIRM_DATA,
+        useValue: { options: {}, resolve: () => undefined },
+      },
+    ]);
+  }
 
   protected onType(event: Event): void {
     this.typed.set((event.target as HTMLInputElement).value);
