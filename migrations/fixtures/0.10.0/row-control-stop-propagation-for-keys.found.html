@@ -1,0 +1,7 @@
+<ng-template dsCellTemplate="active" let-row>
+  <ds-switch
+    [label]="row.name"
+    [checked]="row.active"
+    (keydown.enter)="$event.stopPropagation()"
+    (checkedChange)="toggle(row, $event)" />
+</ng-template>

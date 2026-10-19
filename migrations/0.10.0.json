@@ -995,10 +995,9 @@
       "id": "field-group-invalid-border-override",
       "surface": "style",
       "find": [
-        "ds-field-group",
-        "::ng-deep",
+        "ds-field-group.invalid",
         "border-error",
-        "ds-field-group.invalid"
+        "ds-field-group ::ng-deep"
       ],
       "why": "A ::ng-deep override forcing the group invalid border back to red, or suppressing a segment fill inside a group. Both existed because the group read an undeclared token and a segment repainted its own state mid-row; both are fixed in the component.",
       "replaceWith": "nothing - both overrides are redundant"

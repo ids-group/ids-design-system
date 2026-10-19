@@ -1,0 +1,3 @@
+<ng-template dsCellTemplate="selected" let-row>
+  <ds-checkbox [label]="row.name" (keydown.space)="$event.stopPropagation()" />
+</ng-template>
