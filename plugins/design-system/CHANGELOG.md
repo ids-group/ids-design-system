@@ -4,6 +4,15 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.16.1 - 2026-10-20
+
+### Fixed
+
+- **`deleteList` `find` shapes are grepped as literals.** The step-12 pre-pass and the step-8
+  delete-list sweep grep with fixed strings (`grep -rlF`), and `ds-delete-judge` escapes regex
+  metacharacters before its Grep or searches with `-F`. A shape such as `[rescaleOnHide]="true"`
+  is a character class as a regex and matches none of the code it names.
+
 ## 1.16.0 - 2026-10-19
 
 ### Changed

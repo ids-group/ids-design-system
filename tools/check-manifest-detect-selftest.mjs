@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 // Does the locator check still FIRE on consumer code no locator finds, on a look-alike that
-// survives the element scope, on an unknown id or extension, on a draft item with no fixture and
-// on a deleteList find shape that matches the neutral corpus - and stay green when the same
-// locators find the target and drop the look-alike?
+// survives the element scope, on an unknown id or extension, on a draft item with no fixture, on
+// a deleteList workaround its find shapes miss or keep-code they hit, and on a deleteList find
+// shape that matches the neutral corpus - and stay green when the same locators find the target
+// and drop the look-alike?
 //
 // Nothing tracked is written: each case builds its own migrations directory under the OS temp dir
 // and points the check at it through DS_MIGRATIONS_DIR.
@@ -59,6 +60,8 @@ const STORE =
 const BUTTON =
   '<ds-button\n  [disabled]="count > 0"\n  variant="secondary"\n/>\n';
 const BADGE = '<ds-badge variant="secondary">New</ds-badge>\n';
+const OPT_OUT = '<ds-input label="Name" [reserveMessage]="false" />\n';
+const OPT_IN = '<ds-input label="Name" [reserveMessage]="true" />\n';
 
 function run(name, files) {
   const migrations = join(BASE, name);
@@ -92,6 +95,10 @@ try {
     'fixtures/1.0.0/button-variant-remap.ignored.html': BADGE,
     'fixtures/1.0.0/sort-key-kept.found.ts': STORE,
     'fixtures/unreleased/draft-item.found.ts': STORE,
+    'fixtures/1.0.0/reserve-message-false.found.html': OPT_OUT,
+    'fixtures/1.0.0/reserve-message-false.multi-line.found.html':
+      '<ds-input\n  label="Name"\n  [reserveMessage]="false" />\n',
+    'fixtures/1.0.0/reserve-message-false.ignored.html': OPT_IN,
     'fixtures/_neutral/profile.component.html': NEUTRAL,
   });
   console.log(
@@ -99,8 +106,16 @@ try {
   );
   expect('exits 0', good.status === 0);
   expect(
-    'runs all four fixtures',
-    /4 locator fixture\(s\) run/.test(good.output),
+    'runs all seven fixtures',
+    /7 locator fixture\(s\) run/.test(good.output),
+  );
+  expect(
+    'a deleteList row finds each spelling of its workaround and skips the look-alike',
+    good.output.includes('reserve-message-false.found.html: located') &&
+      good.output.includes(
+        'reserve-message-false.multi-line.found.html: located',
+      ) &&
+      good.output.includes('reserve-message-false.ignored.html: ignored'),
   );
   expect(
     'a hint inside a multi-line tag with `>` in a binding is located',
@@ -126,6 +141,9 @@ try {
       'export const sorting = store.sortKey() ? 1 : 0;\n',
     'fixtures/1.0.0/no-such-item.found.ts': STORE,
     'fixtures/1.0.0/sort-key-kept.ignored.css': STORE,
+    'fixtures/1.0.0/reserve-message-false.found.html':
+      '<ds-input label="Name" />\n',
+    'fixtures/1.0.0/reserve-message-false.ignored.html': OPT_IN,
     'fixtures/_neutral/profile.component.html': NEUTRAL,
   });
   console.log('FIRES on each defect');
@@ -150,7 +168,19 @@ try {
   );
   expect(
     'an id the manifest does not have',
-    bad.output.includes('has no item "no-such-item"'),
+    bad.output.includes('has no item or deleteList row "no-such-item"'),
+  );
+  expect(
+    'a deleteList workaround no find shape matches',
+    bad.output.includes(
+      'reserve-message-false.found.html: no find shape of deleteList row 1.0.0#reserve-message-false',
+    ),
+  );
+  expect(
+    'a deleteList row whose find hits a look-alike',
+    bad.output.includes(
+      'reserve-message-false.ignored.html: a look-alike still counts',
+    ),
   );
   expect(
     'an extension outside html, ts and scss',

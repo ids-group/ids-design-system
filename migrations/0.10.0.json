@@ -740,8 +740,8 @@
       "id": "chip-trigger-height-cap",
       "surface": "style",
       "find": [
-        "max-height",
-        "overflow: hidden"
+        ".field-trigger",
+        ".autocomplete-trigger"
       ],
       "why": "A `max-height` plus `overflow: hidden` on a chip trigger, stopping it growing a line per selection - it clips a chip mid-glyph and hides the count.",
       "replaceWith": "`maxVisibleChips` (a number, or `\"fit\"`), which drops whole chips and reports how many are hidden"
@@ -750,7 +750,6 @@
       "id": "sidenav-brand-logo-max-height",
       "surface": "style",
       "find": [
-        "max-height",
         "[brand]"
       ],
       "why": "Your own `max-height` on a logo projected into `ds-sidenav`'s `[brand]` slot, or a wrapper sized to hold it.",
@@ -834,7 +833,8 @@
       "find": [
         "[dividers]=\"false\"",
         ".modal > .header",
-        "!important"
+        ".modal .header",
+        ".modal .body"
       ],
       "why": "`[dividers]=\"false\"` repeated on every modal, or a reach into `.modal > .header` / `.body` / `.actions` with `!important` because hiding the rules left the padding stacked.",
       "replaceWith": "`provideDsConfig({ modal: { dividers: false } })`, which drops the rules AND the padding that existed to clear them"
@@ -843,8 +843,7 @@
       "id": "tab-last-visited-helper",
       "surface": "typescript",
       "find": [
-        "sessionStorage",
-        "tab"
+        "sessionStorage"
       ],
       "why": "A helper keeping the last visited tab per path in `sessionStorage`.",
       "replaceWith": "`rememberLastTab` on `ds-tabs` (needs `urlParam`, which supplies the names)"
@@ -853,7 +852,7 @@
       "id": "auth-brand-adapter",
       "surface": "typescript",
       "find": [
-        "logoLetter",
+        "[logoLetter]=",
         "brandAccent",
         "indexOf"
       ],
@@ -916,8 +915,7 @@
       "id": "table-fit-content-deep-rule",
       "surface": "style",
       "find": [
-        "width: 1%",
-        "white-space: nowrap"
+        "width: 1%"
       ],
       "why": "A `::ng-deep ds-table { .table th, .table td { width: 1%; white-space: nowrap } }` override - the shrink-to-content idiom.",
       "replaceWith": "`TableColumn.width: 'content'`"
@@ -939,7 +937,7 @@
       "find": [
         "@if(!loading)",
         "*ngIf=\"!loading\"",
-        "ds-table",
+        "@if (!loading",
         "empty"
       ],
       "why": "A guard wrapped around your own empty-state template so it would not show during a load. It existed because only loading=\"skeleton\" suppressed the empty row, so an overlay reload with zero rows painted \"no rows\" under the spinner. ds-table suppresses it for every loading value now.",
@@ -949,10 +947,8 @@
       "id": "table-sort-rebind-after-clear",
       "surface": "typescript",
       "find": [
-        "sortChange",
-        "sortKey",
-        "sortDir",
-        "setTimeout"
+        "setTimeout(() => this.sort",
+        "sortKey.set(null)"
       ],
       "why": "Host code that re-bound the sort after a cleared sort, written because the header lost its indicator whenever the host default equalled the last value Angular had written. The marked state is a linkedSignal over both inputs now.",
       "replaceWith": "nothing - answer the cleared sort with your default and stop there"
@@ -972,10 +968,8 @@
       "id": "collapsed-sidenav-item-width-override",
       "surface": "style",
       "find": [
-        "ds-sidenav",
-        "::ng-deep",
-        "width",
-        "align-items: center"
+        "ds-sidenav.collapsed",
+        "ds-sidenav[collapsed]"
       ],
       "why": "A ::ng-deep width override on a collapsed ds-sidenav, written because the rail set align-items: center and every item shrank to its 20px icon inside the 40px rail. Items fill the rail column now, so the override double-applies.",
       "replaceWith": "nothing - remove the override"
@@ -985,7 +979,8 @@
       "surface": "style",
       "find": [
         "ds-timeline-item",
-        "margin-top",
+        ".node-col",
+        "ds-timeline-item .node",
         "margin: -"
       ],
       "why": "A margin you added on ds-timeline-item or its node to pull the marker onto the heading centre. The component pulls the node column up itself now, so your compensation double-applies.",
@@ -995,10 +990,10 @@
       "id": "field-group-invalid-border-override",
       "surface": "style",
       "find": [
-        "ds-field-group",
-        "::ng-deep",
+        "ds-field-group.invalid",
         "border-error",
-        "ds-field-group.invalid"
+        "ds-field-group ::ng-deep",
+        "::ng-deep ds-field-group"
       ],
       "why": "A ::ng-deep override forcing the group invalid border back to red, or suppressing a segment fill inside a group. Both existed because the group read an undeclared token and a segment repainted its own state mid-row; both are fixed in the component.",
       "replaceWith": "nothing - both overrides are redundant"

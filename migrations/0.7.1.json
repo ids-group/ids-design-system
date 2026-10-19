@@ -304,8 +304,7 @@
       "surface": "style",
       "find": [
         "ds-pagination",
-        "ds-field-message",
-        "display: none"
+        "ds-field-message"
       ],
       "why": "A rule hiding the empty message row inside the pagination rows-per-page select. The component pins that select to its own compact shape now, so the row is gone at the source.",
       "replaceWith": "nothing - delete the rule"

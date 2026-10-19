@@ -1,0 +1,7 @@
+::ng-deep ds-table {
+  .table th,
+  .table td {
+    width: 1%;
+    white-space: nowrap;
+  }
+}

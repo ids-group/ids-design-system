@@ -604,7 +604,7 @@
         "typescript"
       ],
       "find": [
-        "emit(!this.checked())",
+        "emit(!this.checked",
         "requestChange"
       ],
       "why": "ds-switch cancels its own native toggle under `controlled` and reports the asked-for value through `checkedRequested`, so a wrapper that preventDefaults the click and re-emits !checked restates it.",

@@ -461,7 +461,9 @@ while the wave runs. Collect the whole wave before Phase B.
     - One `ds-usage-finder` per range of consecutive chain versions, sized so the chain fits one
       wave, with every item of its range the two scripts did not hit, passed verbatim as in Phase B
       step 2: an item with hits, or with any `rawMatches` count > 0, is hit.
-    - Every `deleteList` row's `find` shapes grepped over the source root.
+    - Every `deleteList` row's `find` shapes grepped over the source root as fixed strings
+      (`grep -rlF`): a shape is a literal, and `[rescaleOnHide]="true"` read as a regex matches
+      nothing it names.
 
     Then, for every item none of these hit, one **grep re-check (no model)**: write its `old`, each
     `detect` shape and each `searchHints` string to a scratchpad file, one per line and no blank
@@ -754,7 +756,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 8. **Delete-list pass (the plan's `deleteList`) — a separate sweep, after the items are green.**
    These are not migrations; they are the workarounds this version made unnecessary, and they are the
    half of an upgrade that is otherwise never done. Grep every row's `find` shapes over the source
-   root to learn which files each row hits, then group the rows so that no file is hit by two
+   root as fixed strings (`grep -rlF`; a shape is a literal, never a regex) to learn which files
+   each row hits, then group the rows so that no file is hit by two
    groups (rows sharing a file go in one group), and dispatch one `ds-delete-judge` per group, all
    at once, each with its rows verbatim, the files it owns, and both extracted trees. A judge
    re-greps its rows, decides each hit dead or kept against the `v<V>` tree (a row's `why` is the
