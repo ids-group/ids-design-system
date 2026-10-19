@@ -2,10 +2,6 @@
 
 ### Added
 
-- **`dsTooltip` (`TooltipDirective`) takes `dsTooltipClipLines`.** With `dsTooltipWhenClipped`,
-  text cut by lines also counts as clipped, such as a block under `line-clamp` or a fixed height,
-  tested on every open. Off by default: only text cut by width counts, as before.
-
 - **Every chart takes `highlightActive`, and `DsConfig.chart.highlightActive` sets it app-wide.**
   `false` keeps the hovered or focused column, bar or heatmap cell at its own colour; unset falls
   back to the config, then `true`, which brightens it. An input on the element wins over the
@@ -22,6 +18,11 @@
   tooltip on hover and keyboard focus. `EmptyStateTitleOverflow` types the value.
 
 ### Changed
+
+- **A `dsTooltipWhenClipped` tip (`TooltipDirective`) also opens on text cut by lines.** A block
+  under `line-clamp`, or any host whose text overflows its height under `overflow: hidden` or
+  `clip`, counts as clipped, as text cut by width did. A scroll box does not: its text can be
+  reached.
 
 - **The agent catalogue ships at `agent/INDEX.md`, where it was `docs/agent/INDEX.md`.** Every leaf
   keeps its path under `agent/`. An agent rule or prompt that reads the catalogue from the installed
