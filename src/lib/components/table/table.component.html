@@ -156,6 +156,29 @@
                 </span>
               }
 
+              @if (sortableCol(col) || col.hint) {
+                <!-- Chromium leaves a button's content unpainted in a header group repeated on a printed
+                     continuation page, so print shows this copy instead. -->
+                <span
+                  class="th-label th-print-label"
+                  aria-hidden="true">
+                  <ng-container
+                    [ngTemplateOutlet]="thText"
+                    [ngTemplateOutletContext]="{ $implicit: col }" />
+
+                  @if (
+                    ariaSort(col) === 'ascending' ||
+                    ariaSort(col) === 'descending'
+                  ) {
+                    <ds-icon
+                      class="sort-icon"
+                      [name]="sortIcon(col)"
+                      [size]="12">
+                    </ds-icon>
+                  }
+                </span>
+              }
+
               @if (hasColumnFilter(col)) {
                 <button
                   type="button"

@@ -932,3 +932,32 @@
     min-width: 0;
   }
 }
+
+.table thead th .th-print-label {
+  display: none;
+}
+
+@media print {
+  .table thead th {
+    button.th-label,
+    .col-filter-btn,
+    .col-resize,
+    .expand-btn {
+      display: none;
+    }
+
+    .th-print-label {
+      display: inline-flex;
+    }
+  }
+
+  .table tbody tr {
+    break-inside: avoid;
+  }
+
+  .table-toolbar > :not(.toolbar-slot),
+  .pagination-footer,
+  .hscroll-proxy {
+    display: none;
+  }
+}
