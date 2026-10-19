@@ -4,6 +4,12 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.14.2 - 2026-10-19
+
+### Fixed
+
+- **`apply-mechanical.mjs` renames `SortDir` to `SortDirection` in a consumer's imports and type arguments.** The 0.13.4 manifest carried the type inside the `table-sort-dir-spelled-out` input rename, which only rewrites bindings, so `applied` was reported with a root-entry `import type { SortDir }` and `computed<SortDir>` untouched. The type has its own `type-rename` item, `table-sort-dir-type-spelled-out`, which rewrites multi-line imports and every whole-word use.
+
 ## 1.14.1 - 2026-10-14
 
 ### Fixed
