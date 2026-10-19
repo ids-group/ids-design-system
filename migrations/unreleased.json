@@ -44,6 +44,54 @@
       "pitfall": "A title that fit on one line under the old width can now take two; check an empty state inside a wide card, not a narrow one.",
       "restore": "--ds-empty-state-title-max-width: none;",
       "verify": "A `ds-empty-state` whose title is a 60-character word with no spaces wraps inside the component and adds no horizontal scrollbar."
+    },
+    {
+      "id": "tooltip-single-inputs-deprecated",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": [
+        "template",
+        "config"
+      ],
+      "searchHints": [
+        "dsTooltipPlacement",
+        "dsTooltipDelay",
+        "dsTooltipArrow",
+        "dsTooltipPinOnClick"
+      ],
+      "detect": [
+        "dsTooltipPlacement=",
+        "[dsTooltipDelay]=",
+        "[dsTooltipArrow]=",
+        "dsTooltipPinOnClick"
+      ],
+      "action": "Move each value into `[dsTooltipConfig]` on the same element and remove the old binding: `dsTooltipPlacement=\"right\"` becomes `[dsTooltipConfig]=\"{ placement: 'right' }\"`, `[dsTooltipDelay]` becomes `delay`, `[dsTooltipArrow]` becomes `arrow`, and a bare `dsTooltipPinOnClick` becomes `pinOnClick: true`; several go into one object. Where every tip of the app takes the same value, set it once in `provideDsConfig({ tooltip: { ... } })` instead.",
+      "appliesWhen": "Elements carrying `dsTooltip` or `dsTooltipWhenClipped` that bind `dsTooltipPlacement`, `dsTooltipDelay`, `dsTooltipArrow` or `dsTooltipPinOnClick`. Not a `dsDefinitionTerm`: there `dsTooltipPlacement` stays the way to place the tip, and the term takes no `dsTooltipConfig`. `dsTooltip` and `dsTooltipWhenClipped` are not deprecated.",
+      "pitfall": "A deprecated binding left beside `[dsTooltipConfig]` wins over the config field of the same name, so the tip keeps the old placement, delay, arrow or pin whatever the object says. A bare `dsTooltipArrow` or `dsTooltipPinOnClick` means `true`, so it moves as `arrow: true` or `pinOnClick: true`.",
+      "restore": null,
+      "verify": "No element with `dsTooltip` or `dsTooltipWhenClipped` binds one of the four inputs outside a `dsDefinitionTerm`, and each moved tip opens on the same side, after the same delay and with the same arrow as before."
+    },
+    {
+      "id": "tooltip-single-inputs-read-null",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "TooltipDirective"
+      ],
+      "detect": [
+        ".dsTooltipPlacement()",
+        ".dsTooltipDelay()",
+        ".dsTooltipArrow()",
+        ".dsTooltipPinOnClick()"
+      ],
+      "action": "None, unless your code reads `dsTooltipPlacement()`, `dsTooltipDelay()`, `dsTooltipArrow()` or `dsTooltipPinOnClick()` back from a `TooltipDirective`: handle `null` there, for example `tip.dsTooltipPlacement() ?? 'top'`.",
+      "appliesWhen": "Code that holds a `TooltipDirective` instance, through `viewChild` or an injection, and reads one of the four signals. Each was typed without `null` and read back its default when unbound; it is now `| null` and reads `null` when unbound. Binding the inputs in a template is not affected.",
+      "pitfall": "A fallback such as `?? 'top'` gives the built-in default, not a value set through `dsTooltipConfig` or `DsConfig.tooltip`; read those from where your code set them.",
+      "restore": null,
+      "verify": "Every read of the four signals in the app handles `null`, and the app type-checks under `strict`."
     }
   ],
   "informational": [

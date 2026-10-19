@@ -149,6 +149,12 @@ export interface DsConfig {
         valueFormat?: ChartValueFormat;
         rendering?: ChartRendering;
     };
+    tooltip?: {
+        placement?: TooltipPlacement;
+        delay?: number;
+        arrow?: boolean;
+        pinOnClick?: boolean;
+    };
     datePicker?: {
         locale?: string;
         dateFormat?: string;
@@ -572,6 +578,8 @@ export const ICONS = {
 export type IconName = keyof typeof ICONS | (string & {});
 
 export type PaginationLayout = 'grouped' | 'spread';
+
+export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 
 // @internal
 export function addDevWarningSink(sink: (message: string) => void): () => void;
