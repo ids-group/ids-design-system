@@ -214,7 +214,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 
 ## Void var(--token) gate (2026-09-09)
 - `tools/check-void-tokens` fails on an unresolvable `var(--x)` in `.scss`/`.css` under `src` and `ds-docs/src`, in `lint:all` with a `void-tokens:selftest`
-- The gate ignores comments, resolves `[style.--x]` and `setProperty()` writes and compiled `presentations/ds.css`, and follows a fallback only when the primary is undeclared
+- The gate ignores comments, resolves `[style.--x]` and `setProperty()` writes and compiled `decks/ds.css`, and follows a fallback only when the primary is undeclared
 - Sidebar `.chapter` uses `--space-6` and `--space-8` instead of the undeclared `--space-7` (ds-docs)
 - `activity.section.scss` empty-state avatar no longer uses the non-existent `--surface-subtitle`
 
@@ -340,7 +340,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - Decided: no length cap on `disabledReason`, the text wraps and the button grows (Stas, `ds-button`)
 - Closed unbuilt: reason as a sibling element with the button left natively disabled (focus never lands, so it is never announced)
 - Docs: `/components/button` has a "Refused with reason" section, `components.md` is updated, and a `deleteList` entry retires the `[dsTooltip]`-on-a-disabled-button workaround (`ds-button`)
-- Deck CSS is built by `tools/build-deck-css.mjs`, which copies the woff2 fonts beside `ds.css` and exits non-zero on any unresolved `url()` (`presentations/ds.css`, `decks/fonts`)
+- Deck CSS is built by `tools/build-deck-css.mjs`, which copies the woff2 fonts beside `ds.css` and exits non-zero on any unresolved `url()` (`decks/ds.css`, `decks/fonts`)
 - `TableColumn.link: (row) => string | readonly unknown[] | null` renders a cell as `<a [routerLink]>`, `null` gives plain text, a click does not fire the row handler (`ds-table`)
 - Table link cells paint `--ds-table-cell-link-color` plus underline without hover, and `RouterLink` is instantiated only in the link branch (`ds-table`)
 - `--ds-card-overflow` is new and defaults to `visible`; docs recommend `clip` paired with `data-focus="inset"` (`ds-card`)

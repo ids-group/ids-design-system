@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Compiles the token stylesheet into presentations/ds.css AND copies the font files
+// Compiles the token stylesheet into decks/ds.css AND copies the font files
 // it references. The copy is not a convenience: ds.css carries the library's
 // @font-face rules with source-relative `url('./fonts/*.woff2')`, so without the
 // files beside it every deck falls back to a substitute face — which corrupts any
@@ -23,9 +23,9 @@ import * as sass from 'sass';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SOURCE = join(ROOT, 'src/lib/styles/ds.scss');
-const TARGET = join(ROOT, 'presentations/ds.css');
+const TARGET = join(ROOT, 'decks/ds.css');
 const FONTS_FROM = join(ROOT, 'src/lib/styles/fonts');
-const FONTS_TO = join(ROOT, 'presentations/fonts');
+const FONTS_TO = join(ROOT, 'decks/fonts');
 
 // The JS API, not the `sass` CLI: Node refuses to spawn a .cmd shim on Windows
 // without a shell, and this needs no subprocess at all.
@@ -54,5 +54,5 @@ if (missing.length > 0) {
 }
 
 console.log(
-  `build:deck-css: presentations/ds.css written, ${referenced.length} referenced file(s) all present`,
+  `build:deck-css: decks/ds.css written, ${referenced.length} referenced file(s) all present`,
 );

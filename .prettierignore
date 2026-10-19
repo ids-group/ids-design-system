@@ -42,7 +42,7 @@ design-system.md
 .design-sync/docs
 
 # Decks are finished artifacts with their own hand-written shell; deck-lint owns their rules.
-presentations
+decks
 
 # Append-only history that changelog-lint owns. Reflowing 302 lines of published entries is churn on
 # a file several sessions hold at once, and it rewrites records rather than formatting source.

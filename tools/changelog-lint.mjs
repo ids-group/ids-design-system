@@ -165,7 +165,7 @@ const CLIENTS = [
 const INTERNAL_PATHS = [
   'src/lib/',
   'tools/',
-  'presentations/',
+  'decks/',
   'ds-docs/',
   'infrastructure/',
   '.claude/',
