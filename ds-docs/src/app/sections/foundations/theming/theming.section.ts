@@ -97,6 +97,7 @@ providers: [
     brand: { name: 'Acme', tagline: 'Cover, sorted' },
     datePicker: { firstDayOfWeek: 1 },
     timePicker: { format: '12h' },
+    tooltip: { placement: 'bottom', delay: 300 }, // every dsTooltip; a dsTooltipConfig key wins
     breadcrumbs: { separator: 'chevronRight' },
     avatar: { initials: (name) => name.slice(0, 2).toUpperCase() },
   }),

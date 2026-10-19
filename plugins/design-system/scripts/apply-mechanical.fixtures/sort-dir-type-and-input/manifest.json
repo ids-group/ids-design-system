@@ -1,0 +1,4 @@
+{ "version": "0.13.4", "items": [
+  { "id": "table-sort-dir-spelled-out", "kind": "input-rename", "old": "ds-table[sortDir]", "new": "sortDirection", "surface": ["template", "typescript"] },
+  { "id": "table-sort-dir-type-spelled-out", "kind": "type-rename", "old": "SortDir", "new": "SortDirection", "surface": "typescript" }
+] }

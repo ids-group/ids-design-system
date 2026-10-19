@@ -1,7 +1,7 @@
 ---
 description: Update @ids-group-ltd/ids-design-system in this repo from its installed version up to the latest, one version at a time, applying documented changelog migrations with checks and re-checks.
 model: opus
-argument-hint: '[target-version | dry-run]'
+argument-hint: '[target-version | dry-run | unreleased [<ds-checkout>]]'
 allowed-tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, Task, AskUserQuestion
 hooks:
   PreToolUse:
@@ -37,12 +37,56 @@ only when a version cannot be made green.
   any command-type items (the real run will pause for approval on those) — and
   make NO edits, NO bump/install, NO commits. Phase D still runs: it writes the feedback files
   to the OS temp dir and offers only "Just give me the file" or "Skip".
+- **`unreleased [<path>]`** → **unreleased mode**: the chain to the newest published version, then
+  one last step to the DS's unreleased changes, installed from a local build. `<path>` is a DS dev
+  checkout; without it, find a local DS clone as in Phase D step 4. See "Unreleased mode". Combines
+  with `dry-run`.
 - **Empty** → default: full run to the latest stable.
 
 Dispatch subagents by name via the Task tool. Don't do a subagent's job inline — with one pragmatic
 exception: a trivial, already-verified micro-edit (a couple of one-line fixes you have personally
 diffed and confirmed) may be done directly; bulk finding/applying always goes through the agents,
 and the step-7 re-check covers inline edits the same as agent edits.
+
+## Unreleased mode
+
+Prepares a consumer branch for the next DS release before it is published. Every step runs as in
+a normal run, with these differences:
+
+- **Phase A, npm only.** The local package is installed with `npm install --no-save`, so a
+  consumer whose lockfile is not `package-lock.json` stops here with that reason.
+- **Phase A step 6.** The published chain ends at the newest published version, stable or
+  prerelease: when a beta newer than the latest stable is published, the chain takes it as a
+  prerelease target does, so its manifest is applied. Then one last step `unreleased`. An empty
+  published chain is not "up to date" here: the chain is that one step.
+- **Phase A step 7.** The `unreleased` step reads `## Unreleased` of the DS checkout's
+  `CHANGELOG.md` and its `migrations/unreleased.json`, never the clone's default branch, which
+  holds release commits only. Its source tree is the checkout's `src/lib`, and the tree before it
+  is the tag of the last published chain step, or of `current` when that chain is empty. The
+  manifest-truth check does not cover it.
+- **Build and pack, once, before Phase B (not in dry-run).** A build carrying unreleased changes is
+  versioned `<next>-dev.g<sha>`, with `.dirty` appended when the checkout had uncommitted
+  changes; that `-dev.` is how the step recognises it. Reuse the checkout's `dist/ds` only when
+  its `package.json` version ends in `-dev.g<sha>` with `<sha>` a prefix of
+  `git -C <checkout> rev-parse HEAD`; otherwise run `npm run build:lib` there (with `CI=true`).
+  A version without `-dev.` after that build means `## Unreleased` is empty: say so and drop the
+  step. Pack into a directory beside the ledger,
+  `npm pack <checkout>/dist/ds --pack-destination <os-tmpdir>/ds-update-unreleased-<slug-of-consumer-path>`,
+  and record `unreleased: { checkout, tgz, version }` in the ledger. A resume whose `tgz` is gone
+  builds and packs again, and asks (AskUserQuestion) before going on when the new version differs
+  from the recorded one. The directory is deleted with the ledger.
+- **Dry-run.** Nothing is built, packed or installed: the step is planned and searched from the
+  checkout's files alone.
+- **Phase B step 2.** The mechanical pre-pass reads the checkout's `migrations/unreleased.json`.
+- **Phase B step 4.** No bump: run `npm install --no-save <tgz>` in each target and confirm
+  `node_modules/@ids-group-ltd/ids-design-system/package.json` reads the packed version. The
+  target's `package.json` and lockfile stay untouched. Peers come from the packed `package.json`.
+- **Phase B step 9.** Stage the touched files only, never `package.json` or the lockfile, and
+  commit `chore(deps): migrate to unreleased @ids-group-ltd/ids-design-system`, the packed version
+  in the body.
+- **Phase C.** Say that the branch builds against a local package: once the release is published,
+  set the dependency to that version in `package.json` and run `npm i`, which writes the lockfile
+  and replaces the local install. Until then a fresh `npm ci` installs the last published version.
 
 ## Model tiering (dispatch these subagents)
 
@@ -171,7 +215,7 @@ outside the consumer repo — the OS temp dir, keyed by the consumer's path (e.g
 `<os-tmpdir>/ds-update-ledger-<slug-of-consumer-path>.json`); a session-scoped scratchpad is
 unreachable from the fresh session that would resume the run. A dry-run uses its OWN suffixed path
 (`…-dryrun.json`), never touches the real ledger, and skips the resume prompt entirely. Shape:
-`{ branch, headAtStart, chain, mode, lint: { source, toolsDir, toolsSource, ran, skipped }, feedback: [], perTarget: { "<t>": { baseline, overridesBaseline, perVersion: { "<V>": {
+`{ branch, headAtStart, chain, mode, unreleased: { checkout, tgz, version } | null, lint: { source, toolsDir, toolsSource, ran, skipped }, feedback: [], perTarget: { "<t>": { baseline, overridesBaseline, perVersion: { "<V>": {
 plan, items: { "<id>": "applied | not-applicable | locator-dead | superseded | unattempted-degraded
 | needsReview | rechecked" }, hitCounts, lintHits: { found, remaining }, driftHits: [], touchedFiles: [], attempts,
 deleteList: { "<id>": "deleted | kept-<reason>" }, committed } } } } }` — per TARGET, because

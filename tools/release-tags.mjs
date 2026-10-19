@@ -8,8 +8,8 @@ import { execFileSync } from 'node:child_process';
 export const isPrerelease = (version) => version.includes('-');
 
 export function compareVersions(a, b) {
-  const [coreA, preA] = a.split('-');
-  const [coreB, preB] = b.split('-');
+  const [coreA, preA] = a.split(/-(.*)/s);
+  const [coreB, preB] = b.split(/-(.*)/s);
   const core = coreA.localeCompare(coreB, undefined, { numeric: true });
   if (core) return core;
   if (!preA || !preB) return preA ? -1 : preB ? 1 : 0;
@@ -29,6 +29,15 @@ export function nextBeta(current) {
   }
   const [major, minor, patch] = core.split('.').map(Number);
   return `${major}.${minor}.${patch + 1}-beta.1`;
+}
+
+// A dev build sorts above the version it was built past and below the release it leads to: a
+// stable 0.15.2 gives 0.15.3-dev.g<sha>, a 0.15.3-beta.1 gives 0.15.3-dev.g<sha>, since `dev`
+// sorts after `beta`. The `g` keeps an all-digit sha from reading as a numeric identifier,
+// which semver forbids to start with 0.
+export function devVersion(current, sha, dirty) {
+  const build = sha ? `g${sha}${dirty ? '.dirty' : ''}` : 'local';
+  return `${nextBeta(current).split('-')[0]}-dev.${build}`;
 }
 
 export function releaseTags(root) {

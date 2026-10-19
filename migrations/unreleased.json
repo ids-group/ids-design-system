@@ -44,6 +44,54 @@
       "pitfall": "A title that fit on one line under the old width can now take two; check an empty state inside a wide card, not a narrow one.",
       "restore": "--ds-empty-state-title-max-width: none;",
       "verify": "A `ds-empty-state` whose title is a 60-character word with no spaces wraps inside the component and adds no horizontal scrollbar."
+    },
+    {
+      "id": "tooltip-single-inputs-deprecated",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": [
+        "template",
+        "config"
+      ],
+      "searchHints": [
+        "dsTooltipPlacement",
+        "dsTooltipDelay",
+        "dsTooltipArrow",
+        "dsTooltipPinOnClick"
+      ],
+      "detect": [
+        "dsTooltipPlacement=",
+        "[dsTooltipDelay]=",
+        "[dsTooltipArrow]=",
+        "dsTooltipPinOnClick"
+      ],
+      "action": "Move each value into `[dsTooltipConfig]` on the same element and remove the old binding: `dsTooltipPlacement=\"right\"` becomes `[dsTooltipConfig]=\"{ placement: 'right' }\"`, `[dsTooltipDelay]` becomes `delay`, `[dsTooltipArrow]` becomes `arrow`, and a bare `dsTooltipPinOnClick` becomes `pinOnClick: true`; several go into one object. Where every tip of the app takes the same value, set it once in `provideDsConfig({ tooltip: { ... } })` instead.",
+      "appliesWhen": "Elements carrying `dsTooltip` or `dsTooltipWhenClipped` that bind `dsTooltipPlacement`, `dsTooltipDelay`, `dsTooltipArrow` or `dsTooltipPinOnClick`. Not a `dsDefinitionTerm`: there `dsTooltipPlacement` stays the way to place the tip, and the term takes no `dsTooltipConfig`. `dsTooltip` and `dsTooltipWhenClipped` are not deprecated.",
+      "pitfall": "A deprecated binding left beside `[dsTooltipConfig]` wins over the config field of the same name, so the tip keeps the old placement, delay, arrow or pin whatever the object says. A bare `dsTooltipArrow` or `dsTooltipPinOnClick` means `true`, so it moves as `arrow: true` or `pinOnClick: true`.",
+      "restore": null,
+      "verify": "No element with `dsTooltip` or `dsTooltipWhenClipped` binds `dsTooltipPlacement`, `dsTooltipDelay`, `dsTooltipArrow` or `dsTooltipPinOnClick` outside a `dsDefinitionTerm`, and each moved tip opens on the same side, after the same delay and with the same arrow as before."
+    },
+    {
+      "id": "tooltip-single-inputs-read-null",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "TooltipDirective"
+      ],
+      "detect": [
+        ".dsTooltipPlacement()",
+        ".dsTooltipDelay()",
+        ".dsTooltipArrow()",
+        ".dsTooltipPinOnClick()"
+      ],
+      "action": "None, unless your code reads `dsTooltipPlacement()`, `dsTooltipDelay()`, `dsTooltipArrow()` or `dsTooltipPinOnClick()` back from a `TooltipDirective`: handle `null` there, for example `tip.dsTooltipPlacement() ?? 'top'`.",
+      "appliesWhen": "Code that holds a `TooltipDirective` instance, through `viewChild` or an injection, and reads `dsTooltipPlacement`, `dsTooltipDelay`, `dsTooltipArrow` or `dsTooltipPinOnClick`. Each was typed without `null` and read back its default when unbound; it is now `| null` and reads `null` when unbound. Binding the inputs in a template is not affected.",
+      "pitfall": "A fallback such as `?? 'top'` gives the built-in default, not a value set through `dsTooltipConfig` or `DsConfig.tooltip`; read those from where your code set them.",
+      "restore": null,
+      "verify": "Every read of `dsTooltipPlacement`, `dsTooltipDelay`, `dsTooltipArrow` and `dsTooltipPinOnClick` in the app handles `null`, and the app type-checks under `strict`."
     }
   ],
   "informational": [
@@ -52,7 +100,7 @@
       "verify": "Open a narrow ds-multi-select with selectAll=\"both\" and a long group name and confirm the group's select-all row ends in an ellipsis and the list has no horizontal scrollbar."
     },
     {
-      "text": "`--ds-dropdown-panel-min-width` defaults to `220px` and floors the `ds-select`, `ds-multi-select` and `ds-autocomplete` panel in both `width` modes, so a panel under a trigger narrower than 220px is 220px wide; a wider trigger still sets the width. Set `--ds-dropdown-panel-min-width: 0` on the component to keep a panel as wide as its trigger.",
+      "text": "`--ds-dropdown-panel-min-width` defaults to `220px` and floors the `ds-select`, `ds-multi-select` and `ds-autocomplete` panel in both `width` modes, so a panel under a trigger narrower than 220px is 220px wide; a wider trigger still sets the width. Set `--ds-dropdown-panel-min-width: 0` on the component to keep a panel as wide as its trigger. `--ds-dropdown-panel-max-width` applies only under `width=\"content\"`; under the default `width=\"fill\"` it no longer caps the panel.",
       "verify": "Open a ds-select narrower than 220px and confirm its panel is 220px wide, then open one beside the right edge of the viewport and confirm the panel stays on screen."
     },
     {
@@ -70,6 +118,10 @@
     {
       "text": "The agent catalogue ships at `agent/INDEX.md` in the package, where it was `docs/agent/INDEX.md`; every leaf keeps its path under `agent/`. An agent rule or prompt that reads the catalogue from `node_modules` points at `agent/`.",
       "verify": "Search the app's agent rules and prompts for `docs/agent/` and confirm none is left."
+    },
+    {
+      "text": "A `dsTooltipWhenClipped` tip (`TooltipDirective`) also opens when its host's text is cut by lines, under `line-clamp` or a height with `overflow: hidden` or `clip`, as it did for text cut by width. A scroll box does not count.",
+      "verify": "Put dsTooltipWhenClipped on a block with -webkit-line-clamp: 2 holding four lines of text, hover it and confirm the tip opens; shorten the text to one line and confirm it does not."
     },
     "`ds-empty-state` takes `titleOverflow`: `'wrap'`, the default, keeps the title wrapping as before; `'clip'` keeps it on one line with an ellipsis and the full title in a tooltip."
   ],

@@ -402,7 +402,10 @@ export {
   TooltipDirective,
   TooltipPanelComponent,
 } from '@ids-group-ltd/ids-design-system/components/tooltip';
-export type { TooltipPlacement } from '@ids-group-ltd/ids-design-system/components/tooltip';
+export type {
+  DsTooltipConfig,
+  TooltipPlacement,
+} from '@ids-group-ltd/ids-design-system/components/tooltip';
 export { TopBarComponent } from '@ids-group-ltd/ids-design-system/components/topbar';
 export { TreeComponent } from '@ids-group-ltd/ids-design-system/components/tree';
 export type { TreeNode } from '@ids-group-ltd/ids-design-system/components/tree';

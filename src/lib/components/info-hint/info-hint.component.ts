@@ -32,7 +32,7 @@ function rendersSomething(node: Node): boolean {
     <button
       type="button"
       class="info-hint"
-      dsTooltipPinOnClick
+      [dsTooltipConfig]="{ pinOnClick: true }"
       [attr.aria-label]="ariaLabel()"
       [dsTooltip]="tip()">
       <ds-icon [name]="icon()" [size]="14" />
