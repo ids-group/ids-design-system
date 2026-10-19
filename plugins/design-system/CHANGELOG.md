@@ -4,6 +4,16 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.15.0 - 2026-10-19
+
+### Added
+
+- **`unreleased [<path>]` mode.** After the published chain, one more step to the DS's unreleased
+  changes: a DS dev checkout is built and packed (or a built `dist/ds` is packed), installed with
+  `npm install --no-save`, and migrated from `## Unreleased` and `migrations/unreleased.json`. The
+  consumer's `package.json` and lockfile stay untouched; the report says to set the version and run
+  `npm i` once the release is published.
+
 ## 1.14.1 - 2026-10-14
 
 ### Fixed
