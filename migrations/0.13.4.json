@@ -2046,22 +2046,38 @@
         "template",
         "typescript"
       ],
-      "action": "Rename the `sortDir` binding on every `ds-table` to `sortDirection` and the exported type `SortDir` to `SortDirection`. `SortChangeEvent` keeps its `dir` field, now typed `SortDirection`.",
+      "action": "Rename the `sortDir` binding on every `ds-table` to `sortDirection`. `SortChangeEvent` keeps its `dir` field, now typed `SortDirection`; the exported type moves with `table-sort-dir-type-spelled-out`.",
       "appliesWhen": "The table's sort family only. `sortKey`, `sortMode` and `sortingOrder` keep their names.",
       "pitfall": "An unknown static attribute is not an error: Angular leaves `sortDir=\"asc\"` on the DOM, the input keeps its default, and the table renders sorted by nothing with no warning. A `[sortDir]` property binding does fail the build; a plain attribute does not.",
       "restore": null,
       "searchHints": [
         "sortDir",
-        "SortDir",
         "sortChange"
       ],
       "detect": [
         "sortDir",
-        "SortDir",
         "order: "
       ],
-      "verify": "No `sortDir` binding and no `SortDir` type remains; `SortChangeEvent.dir` is still read as `dir`.",
+      "verify": "No `sortDir` binding remains; `SortChangeEvent.dir` is still read as `dir`.",
       "note": "`Dir` reads as a directory. Rename `sortDirChange` first - `sortDir` is a substring of it, and a plain replace would corrupt the longer name."
+    },
+    {
+      "id": "table-sort-dir-type-spelled-out",
+      "kind": "type-rename",
+      "old": "SortDir",
+      "new": "SortDirection",
+      "surface": "typescript",
+      "action": "Rename the exported type `SortDir` to `SortDirection`.",
+      "appliesWhen": "Only that type. A consumer's own `SortDir` is not ours - match on a whole word and confirm the import.",
+      "restore": null,
+      "searchHints": [
+        "SortDir"
+      ],
+      "detect": [
+        "SortDir"
+      ],
+      "verify": "No bare `SortDir` is imported from the package.",
+      "note": "`Dir` reads as a directory."
     },
     {
       "id": "date-range-value-is-qualified",
