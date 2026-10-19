@@ -17,7 +17,7 @@ Then, inside a consumer repo:
 /design-system:auto-update-package                  # full run, up to the latest stable
 /design-system:auto-update-package 0.4.0            # stop the chain at a target version
 /design-system:auto-update-package dry-run          # read-only plan+find+drift report, zero edits
-/design-system:auto-update-package unreleased <ds>  # then one step to a local dev build of the DS
+/design-system:auto-update-package unreleased <ds>  # then one step to a dev build of a DS checkout
 ```
 
 It detects the installed version, computes the chain of published versions up to the latest,
