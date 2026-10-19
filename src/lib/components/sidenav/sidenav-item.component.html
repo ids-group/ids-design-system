@@ -3,7 +3,7 @@
 @if (routerLink()) {
   <a
     routerLinkActive="active"
-    dsTooltipPlacement="right"
+    [dsTooltipConfig]="{ placement: 'right' }"
     [routerLink]="disabled() ? null : routerLink()"
     [class]="linkClasses()"
     [attr.aria-label]="collapsedAriaLabel()"
@@ -16,7 +16,7 @@
   </a>
 } @else if (href()) {
   <a
-    dsTooltipPlacement="right"
+    [dsTooltipConfig]="{ placement: 'right' }"
     [href]="href()"
     [class]="linkClasses()"
     [attr.aria-label]="collapsedAriaLabel()"
@@ -31,7 +31,7 @@
   <!-- No destination, so a button: `href="#"` would rewrite the URL and discard the scroll position. -->
   <button
     type="button"
-    dsTooltipPlacement="right"
+    [dsTooltipConfig]="{ placement: 'right' }"
     [class]="linkClasses()"
     [attr.aria-label]="collapsedAriaLabel()"
     [attr.aria-current]="active() ? 'page' : null"
