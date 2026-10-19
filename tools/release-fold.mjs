@@ -46,6 +46,16 @@ function mergeBodies(bodies) {
   return parts.join('\n\n');
 }
 
+// The release stamp leaves `## Unreleased` empty, so an entry under it marks a tree past its release.
+export function unreleasedHasEntry(text) {
+  const section =
+    text
+      .replace(/\r\n/g, '\n')
+      .split(/^## Unreleased$/m)[1]
+      ?.split(/^## /m)[0] ?? '';
+  return /^\s*-\s+\S/m.test(section);
+}
+
 // `text` has already been stamped: `## <version> — <date>` directly under `## Unreleased`.
 // Returns the text with the prerelease blocks right below that block merged into it.
 export function foldChangelog(text, version) {
