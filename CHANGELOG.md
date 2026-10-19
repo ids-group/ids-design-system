@@ -2,6 +2,10 @@
 
 ### Added
 
+- **`dsTooltip` (`TooltipDirective`) takes `dsTooltipClipLines`.** With `dsTooltipWhenClipped`,
+  text cut by lines also counts as clipped, such as a block under `line-clamp` or a fixed height,
+  tested on every open. Off by default: only text cut by width counts, as before.
+
 - **Every chart takes `highlightActive`, and `DsConfig.chart.highlightActive` sets it app-wide.**
   `false` keeps the hovered or focused column, bar or heatmap cell at its own colour; unset falls
   back to the config, then `true`, which brightens it. An input on the element wins over the

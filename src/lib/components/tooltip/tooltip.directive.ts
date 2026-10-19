@@ -96,6 +96,9 @@ export class TooltipDirective implements OnDestroy {
     TooltipClipTarget | null,
     boolean | string | null | undefined
   >(null, { transform: toClipTarget });
+  /** With `dsTooltipWhenClipped`, text cut by lines also counts as clipped, such as a block under
+   *  `line-clamp` or a fixed height. Off, only text cut by width does. */
+  readonly dsTooltipClipLines = input(false, { transform: booleanAttribute });
 
   /** Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves
    *  until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip.
@@ -103,7 +106,11 @@ export class TooltipDirective implements OnDestroy {
   readonly dsTooltipPinOnClick = input(false, { transform: booleanAttribute });
 
   private isClipped(): boolean {
-    return isHostClipped(this.hostElement, this.dsTooltipWhenClipped());
+    return isHostClipped(
+      this.hostElement,
+      this.dsTooltipWhenClipped(),
+      this.dsTooltipClipLines(),
+    );
   }
 
   private get hostElement(): HTMLElement {

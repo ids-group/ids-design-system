@@ -673,6 +673,13 @@
     <li>
       Bound - a selector or <code class="t-mono-inline">false</code>.
     </li>
+
+    <li>
+      <code class="t-mono-inline">
+        dsTooltipClipLines
+      </code> - text cut by lines,
+      such as <code class="t-mono-inline">line-clamp</code>, counts too.
+    </li>
   </ul>
 
   <pre class="t-mono-block">{{ whenClippedSnippet }}</pre>
@@ -696,6 +703,24 @@
       dsTooltipWhenClipped>
       Antwerp
     </span>
+  </div>
+
+  <div class="demo">
+    <p
+      class="t-s"
+      style="
+        display: -webkit-box;
+        max-inline-size: 220px;
+        margin: 0;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      "
+      dsTooltipWhenClipped
+      dsTooltipClipLines>
+      Move the Rotterdam container slots to the Maasvlakte II deep-sea terminal
+      before the berth window closes on Friday
+    </p>
   </div>
 
   <div class="demo">
@@ -797,8 +822,8 @@
       A <code class="t-mono-inline">tabindex</code> you set is never touched;
       <code class="t-mono-inline">
         tabindex="-1"
-      </code> keeps a clipped value out
-      of the Tab order.
+      </code> keeps a clipped value
+      out of the Tab order.
     </li>
 
     <li>

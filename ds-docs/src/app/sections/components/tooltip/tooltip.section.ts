@@ -30,7 +30,8 @@ export class TooltipSection {
 
   protected readonly whenClippedSnippet = `<span dsTooltipWhenClipped>…</span>
 <div dsTooltipWhenClipped=".label">…</div>
-<div [dsTooltipWhenClipped]="truncate ? ':scope > .cell' : false">…</div>`;
+<div [dsTooltipWhenClipped]="truncate ? ':scope > .cell' : false">…</div>
+<p class="two-lines" dsTooltipWhenClipped dsTooltipClipLines>…</p>`;
 
   protected readonly infoHintContentSnippet = `<ds-info-hint ariaLabel="When v4 was published">
   <ul>…</ul>
