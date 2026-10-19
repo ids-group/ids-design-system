@@ -4,6 +4,19 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.15.0 - 2026-10-19
+
+### Changed
+
+- **Phase A step 12: a whole-chain pre-pass decides which items get per-item agents.** Once per
+  target it runs `apply-mechanical.mjs --dry-run` over every chain manifest, the lint step over the
+  whole range, one `ds-usage-finder` per range of versions and a grep of every `deleteList` row.
+  Planners, per-item finders and `ds-recheck` go only to flagged items and versions: a hit, a
+  `rawMatches` count > 0, a `code-add`, a non-template `behavior`/`removed-api`, an item naming an
+  earlier flagged item's `new`, or a version with no manifest or a manifest-truth flag. An
+  unflagged item is locator-dead on its pre-pass record and still listed; the per-version lint
+  re-check still covers it. Ledger gains `prepass`.
+
 ## 1.14.1 - 2026-10-14
 
 ### Fixed
