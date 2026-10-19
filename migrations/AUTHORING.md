@@ -279,6 +279,9 @@ Two things to get right, both learned from the 45 prose entries that nothing act
 
 - **Never a bare token as the `find`.** `--ds-menu-item-radius` is OUR name for the fix; their code
   says `ds-menu-divider { padding: 0 }`. Grep-ability decides whether the entry exists in practice.
+- **A `find` shape must not match ordinary code** - `rescaleOnHide` also hits the
+  `[rescaleOnHide]="false"` the row says to keep. `node tools/check.mjs manifest-detect` runs every
+  shape over the plain consumer code in `migrations/fixtures/_neutral/` and fails on a hit.
 - **A sentence in `informational` that tells the consumer to delete something must NAME its row**,
   as `(delete list: <id>)`. Prose is not executed: 0.9.0 shipped five such sentences and four had no
   row behind them. The citation is what a tool can check — a shape test alone goes quiet as soon as
