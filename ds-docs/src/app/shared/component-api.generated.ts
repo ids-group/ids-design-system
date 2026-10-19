@@ -4253,6 +4253,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Optional heading below the icon."
       },
       {
+        "name": "titleOverflow",
+        "kind": "input",
+        "type": "EmptyStateTitleOverflow",
+        "union": [
+          "wrap",
+          "clip"
+        ],
+        "default": "'wrap'",
+        "required": false,
+        "description": "`'wrap'` breaks a long title over lines; `'clip'` keeps one line, ends it with an ellipsis and shows the full title in a tooltip."
+      },
+      {
         "name": "body",
         "kind": "input",
         "type": "string",
@@ -12414,6 +12426,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Show the tip only while the host shows less text than it holds. Re-tested on every open. A boolean or the bare attribute tests the host. A selector tests the element it matches inside the host and discloses that element's text; while nothing matches, no clipped tip opens. Applies the tooltip on its own: without a `dsTooltip` the tested text is disclosed. A tip whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip` that says more than the host does describes it as usual. Keyboard focus opens it too: on the host, on a control or widget around it, or on a control inside it. A clipped host that none of these reaches takes `tabindex=\"0\"` while it is clipped."
+      },
+      {
+        "name": "dsTooltipClipLines",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "With `dsTooltipWhenClipped`, text cut by lines also counts as clipped, such as a block under `line-clamp` or a fixed height. Off, only text cut by width does."
       },
       {
         "name": "dsTooltipPinOnClick",

@@ -501,7 +501,7 @@ Inputs: `variant: 'none' | 'loading' | 'error' | 'locked' = 'none'`, `icon: Icon
 Content slot: `[actions]` — CTA buttons / links.
 
 <!-- inputs:ds-empty-state -->
-All inputs: `variant: 'none' | 'loading' | 'error' | 'locked' | 'success' = 'none'`, `icon: IconName | null = null`, `title: string = ''`, `body: string = ''`
+All inputs: `variant: 'none' | 'loading' | 'error' | 'locked' | 'success' = 'none'`, `icon: IconName | null = null`, `title: string = ''`, `titleOverflow: 'wrap' | 'clip' = 'wrap'`, `body: string = ''`
 <!-- /inputs -->
 
 #### `<ds-banner>` — `BannerComponent`

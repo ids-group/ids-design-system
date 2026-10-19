@@ -20,6 +20,7 @@ export class TooltipDirective implements OnDestroy {
     private readonly document;
     public readonly dsTooltip = input<string | TemplateRef<unknown>>('');
     public readonly dsTooltipArrow = input(true, { transform: booleanAttribute });
+    public readonly dsTooltipClipLines = input(false, { transform: booleanAttribute });
     public readonly dsTooltipDelay = input<number>(120);
     public readonly dsTooltipPinOnClick = input(false, { transform: booleanAttribute });
     public readonly dsTooltipPlacement = input<TooltipPlacement>('top');
