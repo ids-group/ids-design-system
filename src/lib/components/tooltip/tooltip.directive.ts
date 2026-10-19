@@ -146,13 +146,13 @@ export class TooltipDirective implements OnDestroy {
   );
 
   private resolve<K extends keyof TooltipOptions>(
-    single: Signal<TooltipOptions[K] | null>,
+    deprecatedInput: Signal<TooltipOptions[K] | null>,
     key: K,
     fallback: NonNullable<TooltipOptions[K]>,
   ): Signal<NonNullable<TooltipOptions[K]>> {
     return computed(
       () =>
-        single() ??
+        deprecatedInput() ??
         this.dsTooltipConfig()?.[key] ??
         this.config.tooltip?.[key] ??
         fallback,
