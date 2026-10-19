@@ -103,7 +103,8 @@ a normal run, with these differences:
 - `ds-recheck` (sonnet) — independent re-check of every flagged item (Phase A step 12), ALWAYS
   run (never skipped, even when your own verify was green and you fixed everything inline): grep
   for mechanical, semantic for
-  behavioral. One per batch of 3-4 related items, one verdict object per item.
+  behavioral. One per batch of 3-4 related items, one verdict object per item. An item the
+  pre-pass closed is re-checked too: its re-check is the pre-pass grep (no model).
 - `ds-delete-judge` (sonnet) - the deleteList pass (step 8). One per group of rows whose hit files
   are disjoint; a file is never shared between concurrent judges.
 - `ds-visual-check` (sonnet) - measures a rendering change on a consumer screen in a real browser
@@ -227,7 +228,7 @@ so a resume reuses the same item ids (a prose-derived plan re-derived later has 
 `baseline` is the errors and warnings each target's verify command printed on the installed version
 (Phase A step 9); `overridesBaseline` is the `check-overrides` lines on the installed version
 (Phase A step 9; `null` with a reason when skipped); `prepass` is the whole-chain pre-pass record
-(Phase A step 12): `{ "<V>#<id>": { script, lint, rawMatches, flagged } }` plus the flagged
+(Phase A step 12): `{ "<V>#<id>": { script, lint, rawMatches, grep, flagged } }` plus the flagged
 versions; `driftHits` is the step-5 drift-scan `hits`;
 `feedback` is every feedback entry of the run (see "Feedback"), appended the
 moment it arrives so an interrupted run keeps it.
@@ -462,16 +463,26 @@ while the wave runs. Collect the whole wave before Phase B.
       step 2: an item with hits, or with any `rawMatches` count > 0, is hit.
     - Every `deleteList` row's `find` shapes grepped over the source root.
 
-    An item is **flagged** when it is hit; when it is a `code-add`, or a `behavior` /
+    Then, for every item none of these hit, one **grep re-check (no model)**: write its `old`, each
+    `detect` shape and each `searchHints` string to a scratchpad file, one per line and no blank
+    line (a blank line matches everything), and run, over the finder's files and exclusions:
+    `grep -rlF -f <that file> --include='*.html' --include='*.ts' --include='*.scss' --include='*.css' --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.angular --exclude-dir=.git <source root>`.
+    Exit 0 is a hit, and the files it lists join the item's pre-pass record; exit 1 is empty; any
+    other exit, or an item with no locator string to write, counts as a hit.
+
+    An item is **flagged** when it is hit, by the grep too; when it is a `code-add`, or a `behavior` /
     `removed-api` item whose `surface` is not `template` or `none` (the two zero-hit exceptions of
     Phase B step 2, which no grep settles); or when its `old`, `detect` or `searchHints` names the
     `new` of an earlier flagged item of the chain (it meets the tree that item leaves, which this
     pass never saw). A version is flagged when it has a flagged item, a `deleteList` row with a
     hit, no manifest, or a manifest-truth flag. Record every item's script status, lint hit count,
-    `rawMatches` and flag in the ledger's `prepass`. An unflagged item gets no planner, finder or
-    re-check dispatch: every locator matched nothing, so it is locator-dead (Phase B step 2) with
-    its pre-pass record as the evidence, and it is still listed, never dropped. The step-7 lint
-    re-check of each version still covers it.
+    `rawMatches`, grep result and flag in the ledger's `prepass`. A flagged item goes through the
+    per-item planner, finder, applier and `ds-recheck` of Phase B like any item. An unflagged item
+    is **closed**: every locator matched nothing in the shared pass and in its grep, so it is
+    locator-dead (Phase B step 2), recorded as "no hits, grep re-check empty" with its pre-pass
+    record as the evidence. That grep is its step-7 re-check, so it gets no planner, finder or
+    `ds-recheck` dispatch. Every item, `surface: "none"` included, is listed, never dropped, and
+    the step-7 lint re-check of each version still covers it.
 
 ## Phase B — Per-version loop (for each target, for each version V in the chain, ascending)
 
@@ -494,8 +505,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    version carries the `v<V>` tree and the tree of the tag before it. If `items` is empty, V is a
    no-migration version: skip steps 2-3 and go to step 4, but a non-empty `deleteList` still gets
    its step-8 pass before the commit, and the step-7 lint re-check still runs. A version the
-   pre-pass left unflagged (Phase A step 12) takes the same path, its items recorded locator-dead
-   from their pre-pass record.
+   pre-pass left unflagged (Phase A step 12) takes the same path, its items closed as "no hits,
+   grep re-check empty".
 2. **Mechanical pre-pass (script), then find.** Before any agent, run
    `node <plugin-root>/scripts/apply-mechanical.mjs <source root> <clone>/migrations/<V>.json`
    (`<plugin-root>` as for the drift scan in step 5; a version without a manifest skips this). It
@@ -510,8 +521,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
      and no applier. Where `action` asks for more (a component class or import path to change, a
      `semantics` to add), dispatch an applier for the rest with the script's `edits` as its hits.
    - `partial` or `left` - no finder: the `left` entries ARE the item's hits for step 3.
-   - `untouched` - a flagged item (Phase A step 12) goes to the finder below; an unflagged one is
-     recorded locator-dead from its pre-pass record, with no finder.
+   - `untouched` - a flagged item (Phase A step 12) goes to the finder below; a closed one stays
+     closed as "no hits, grep re-check empty", with no finder.
      A record with a `reason` is a refusal: the script cannot apply the item's `old`/`new` as an
      exact, scoped swap of one name for another, so it rewrote nothing and listed every occurrence
      of `old` as left. Its
@@ -702,7 +713,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    it, record `needsReview`." If two consecutive attempts on an item produce an identical edit,
    short-circuit that item to the manual-review list rather than burning the remaining cap. Add any
    newly-touched files to the touched-files union, then re-verify. Bounded by the 3-attempt cap.
-7. **Re-check (parallel, sonnet) - every flagged item, ALWAYS.** Batch the items as in step 2, 3-4
+7. **Re-check (parallel, sonnet) - every item, ALWAYS.** An item the pre-pass closed (Phase A
+   step 12) was re-checked by its grep there; every other item goes to `ds-recheck`. Batch the items as in step 2, 3-4
    related items per `ds-recheck`, each item judged on its own; a redo of one item goes out alone.
    Re-attach its full MigrationItem by `id` from the plan (the applier's report is id-keyed
    only) — plus the applier's reported mode (`replaced | inserted | no-op` — it decides what the
@@ -720,8 +732,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    real-miss. **A real-miss in an unreported file is a finder miss:** dispatch an applier for that file
    and re-verify before green — do not trust the finder's file set as complete. **Include the items
    dropped at step 2 as zero-hit, passing each one's classification (not-applicable | locator-dead)
-   in the dispatch — but NOT the superseded ones, whose skip reason is final, nor the unflagged
-   ones, whose pre-pass record is that confirmation:** for those the re-check doubles as an independent not-applicability
+   in the dispatch — but NOT the superseded ones, whose skip reason is final, nor the ones the
+   pre-pass closed, whose grep is that confirmation:** for those the re-check doubles as an independent not-applicability
    confirmation (a finder false-zero is otherwise silent); a usage found for a "not-applicable" or
    "locator-dead" item re-enters it into the pipeline at step 3 — the re-entry COUNTS as a fix
    cycle (increment `attempts`) — and a locator-dead verdict the
@@ -784,8 +796,9 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 - Per target: versions completed + committed (from→to); items **auto-applied** (mechanical AND
   behavioral); items not-applicable — **every item with its hit count**.
 - **Locator-dead — evidence about the manifests, not this consumer:** the items where every locator
-  matched nothing repo-wide, with version and id; an item the pre-pass left unflagged carries its
-  pre-pass record (script status, lint hit count, `rawMatches`). One can be a consumer quirk; several in one chain
+  matched nothing repo-wide, with version and id; an item the pre-pass closed is marked "no hits,
+  grep re-check empty" and carries its pre-pass record (script status, lint hit count,
+  `rawMatches`, grep result). One can be a consumer quirk; several in one chain
   mean the manifests are wrong. Each is a feedback entry that Phase D delivers to the
   design-system repo; never fold them into the not-applicable total.
   **A feedback entry filed back must be complete and evidenced:** any claim that the DS removed or voided

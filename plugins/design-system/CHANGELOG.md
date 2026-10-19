@@ -11,11 +11,13 @@ source, agent); **major** = a change to the workflow's behavior contract. Bump `
 - **Phase A step 12: a whole-chain pre-pass decides which items get per-item agents.** Once per
   target it runs `apply-mechanical.mjs --dry-run` over every chain manifest, the lint step over the
   whole range, one `ds-usage-finder` per range of versions and a grep of every `deleteList` row.
-  Planners, per-item finders and `ds-recheck` go only to flagged items and versions: a hit, a
-  `rawMatches` count > 0, a `code-add`, a non-template `behavior`/`removed-api`, an item naming an
-  earlier flagged item's `new`, or a version with no manifest or a manifest-truth flag. An
-  unflagged item is locator-dead on its pre-pass record and still listed; the per-version lint
-  re-check still covers it. Ledger gains `prepass`.
+  Every item none of them hit gets a `grep -rlF` of its `old`, `detect` and `searchHints` over the
+  finder's files, with no model. Planners, per-item finders and `ds-recheck` go only to flagged
+  items and versions: a hit (the grep's included), a `code-add`, a non-template
+  `behavior`/`removed-api`, an item naming an earlier flagged item's `new`, or a version with no
+  manifest or a manifest-truth flag. An unflagged item is closed as "no hits, grep re-check
+  empty": that grep is its re-check, and it is still listed, `surface: "none"` items included.
+  Ledger gains `prepass`.
 
 ## 1.15.3 - 2026-10-19
 
