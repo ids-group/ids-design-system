@@ -46,14 +46,17 @@ function mergeBodies(bodies) {
   return parts.join('\n\n');
 }
 
-// The release stamp leaves `## Unreleased` empty, so an entry under it marks a tree past its release.
+// The release stamp leaves `## Unreleased` empty, so any line under it other than a heading marks
+// a tree past its release.
 export function unreleasedHasEntry(text) {
-  const section =
-    text
-      .replace(/\r\n/g, '\n')
-      .split(/^## Unreleased$/m)[1]
-      ?.split(/^## /m)[0] ?? '';
-  return /^\s*-\s+\S/m.test(section);
+  const lines = text.replace(/\r\n/g, '\n').split('\n');
+  const start = lines.findIndex((line) => /^## Unreleased\s*$/.test(line));
+  if (start < 0) return false;
+  const section = lines.slice(start + 1);
+  const end = section.findIndex((line) => line.startsWith('## '));
+  return section
+    .slice(0, end < 0 ? undefined : end)
+    .some((line) => line.trim() && !/^#{3,}\s/.test(line));
 }
 
 // `text` has already been stamped: `## <version> — <date>` directly under `## Unreleased`.
