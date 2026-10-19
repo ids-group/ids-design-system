@@ -39,8 +39,8 @@
         "style"
       ],
       "find": [
-        "position: absolute",
-        "ds-sidenav"
+        "ds-sidenav .brand",
+        "ds-sidenav ::ng-deep .brand"
       ],
       "why": "A logo overlaid or absolutely positioned on top of ds-sidenav's brand row, written when there was no slot for one.",
       "replaceWith": "project it into `[brand]`"
@@ -50,7 +50,7 @@
       "surface": "typescript",
       "find": [
         "scrollTop",
-        "overflow: hidden",
+        "style.overflow = 'hidden'",
         "ds-bottom-sheet"
       ],
       "why": "A scrollTop pin or a scroll-lock hack written against the content jolt an opening sheet used to cause in a shell that is a containing block for fixed descendants.",

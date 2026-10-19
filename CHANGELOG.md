@@ -8702,7 +8702,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 
 | If you have | Delete it, because |
 | --- | --- |
-| `ds-table`, `z-index`, `--table-sticky-corner-z`, `sticky` | A consumer z-index on DS table cells, raised to stop the first body row painting over the header when stickyHeader and stickyFirstColumn were both on. The sticky-header rule out-specified --table-sticky-corner-z and both landed on the same z-index; that is fixed in the component. Replace with: nothing - the component orders the layers itself. |
+| `.pin-first`, `.pin-select`, `--table-sticky-corner-z`, `sticky` | A consumer z-index on DS table cells, raised to stop the first body row painting over the header when stickyHeader and stickyFirstColumn were both on. The sticky-header rule out-specified --table-sticky-corner-z and both landed on the same z-index; that is fixed in the component. Replace with: nothing - the component orders the layers itself. |
 
 ## 0.7.1 — 2026-08-04
 
@@ -8985,7 +8985,7 @@ workaround this release made unnecessary. Generated from the `deleteList` in `mi
 | --- | --- |
 | `[reserveMessage]="false"` | The default is FALSE again, so an opt-out binding only restates it - unless the field sits under a `dsReserveMessages` host or an app config that turns it on, where the binding is still the way back out. Replace with: nothing - delete the binding where no host reserves. |
 | `gap: var(--space-1)`, `margin-top: -` | A tighter sub-stack or a negative margin added to swallow the reserved message row is now over-tightening a form that no longer reserves it. Replace with: the normal 16px field stack. |
-| `ds-pagination`, `ds-field-message`, `display: none` | A rule hiding the empty message row inside the pagination rows-per-page select. The component pins that select to its own compact shape now, so the row is gone at the source. Replace with: nothing - delete the rule. |
+| `ds-pagination`, `ds-field-message` | A rule hiding the empty message row inside the pagination rows-per-page select. The component pins that select to its own compact shape now, so the row is gone at the source. Replace with: nothing - delete the rule. |
 
 ## 0.7.0 — 2026-07-30
 
@@ -9345,7 +9345,7 @@ None of this is required — skipping it leaves working code that is merely redu
 
 | If you have | Delete it, because |
 | --- | --- |
-| A logo overlaid on ds-sidenav’s brand row — `position: absolute` against `ds-sidenav`'s brand row, written when there was no slot for one. | project it into `[brand]` |
+| A logo overlaid on ds-sidenav’s brand row — `position: absolute` against `ds-sidenav .brand`, written when there was no slot for one. | project it into `[brand]` |
 | A scrollTop pin or a scroll-lock hack written against the content jolt an opening sheet used to cause in a shell that is a containing block for fixed descendants. | nothing - the entering panel no longer contributes that overflow |
 
 ## 0.6.1 — 2026-07-16
