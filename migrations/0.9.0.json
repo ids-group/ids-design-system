@@ -378,8 +378,7 @@
       "id": "pager-size-select-hidden",
       "surface": "style",
       "find": [
-        ".size",
-        "display: none"
+        ".size"
       ],
       "why": "`.size { display: none }` on a pager",
       "replaceWith": "`[showPageSize]=\"false\"` — and it is now forwarded through `ds-table` too"
@@ -397,8 +396,7 @@
       "id": "modal-divider-transparent-plus-padding",
       "surface": "style",
       "find": [
-        "--ds-modal-divider",
-        "!important"
+        "--ds-modal-divider"
       ],
       "why": "`--ds-modal-divider: transparent`, plus whatever you rewrote the modal padding to afterwards",
       "replaceWith": "`[dividers]=\"false\"` — it drops the rules *and* the padding that existed to clear them"
@@ -407,8 +405,7 @@
       "id": "dropdown-selected-row-hover-guard",
       "surface": "style",
       "find": [
-        "is-selected",
-        ":hover"
+        "is-selected"
       ],
       "why": "A defensive hover rule on the selected dropdown row",
       "replaceWith": "The `:not(.is-selected)` branch already handles it"
@@ -449,7 +446,7 @@
       ],
       "find": [
         ".autocomplete-chevron",
-        "position: absolute"
+        ".autocomplete-input"
       ],
       "why": "Absolutely positioning a search glyph over an autocomplete, or hiding `.autocomplete-chevron`",
       "replaceWith": "`dsAutocompletePrefix` and `[showChevron]=\"false\"`"
@@ -524,7 +521,7 @@
       "surface": "style",
       "find": [
         "::ng-deep .card",
-        "height: 100%"
+        "ds-card .card"
       ],
       "why": "`::ng-deep .card { height: 100% }` for equal-height cards",
       "replaceWith": "The card's box fills a stretched host on its own"
@@ -533,7 +530,6 @@
       "id": "compact-cell-padding-important",
       "surface": "style",
       "find": [
-        "!important",
         "density=",
         "--ds-table-cell-pad"
       ],
@@ -548,8 +544,7 @@
       ],
       "find": [
         "aria-live",
-        "role=\"separator\"",
-        "ds-table"
+        "role=\"separator\""
       ],
       "why": "A wrapper around `ds-table` for sort/range announcements, keyboard column resize, or a header filter the checklist cannot express",
       "replaceWith": "All three ship: the live region, the `role=\"separator\"` handle, and `dsHeaderFilter`"
@@ -573,10 +568,7 @@
         "typescript"
       ],
       "find": [
-        "exportFetcher",
-        "ds-table",
-        "catch",
-        "try {"
+        "exportFetcher"
       ],
       "why": "A wrapper around the export button that caught a rejected exportFetcher, written because the table surfaced no failure of its own. ds-table emits exportFailed now.",
       "replaceWith": "bind (exportFailed) on ds-table"
@@ -609,8 +601,7 @@
       ],
       "find": [
         "aria-live",
-        "role=\"status\"",
-        "ds-table"
+        "role=\"status\""
       ],
       "why": "A live region you wrapped around ds-table to announce sort state or row range. The table announces both through its own role=\"status\" region now, so keeping yours gives the screen reader every change twice.",
       "replaceWith": "nothing - retune the wording through sortAnnouncement and rangeAnnouncement"
@@ -628,8 +619,11 @@
       "id": "field-height-pin-on-late-adopters",
       "surface": "style",
       "find": [
-        "min-height",
-        "height"
+        "ds-autocomplete {",
+        "ds-multi-select {",
+        "ds-color-picker {",
+        "ds-number-stepper {",
+        "ds-split-button {"
       ],
       "why": "ds-autocomplete, ds-multi-select, ds-color-picker, ds-number-stepper and ds-split-button spelled their height as the raw --hit-* value, so --ds-field-height did nothing for them and consumers pinned height directly; they read the field scale now. Only a height/min-height pinned on one of those five counts — any other height in the app stays.",
       "replaceWith": "--ds-field-height (or nothing - the default now lands)"
