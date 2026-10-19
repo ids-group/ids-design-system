@@ -509,7 +509,8 @@
   `(pressed)` does not fire and a `type="submit"` does not submit. The `dsTableExport` button shows
   the spinner while an `exportFetcher` runs, in place of the greyed "Preparing…" label. A
   `[disabled]` bound to the same flag as `[loading]` still disables natively and drops focus;
-  remove it.
+  remove it. Where `[disabled]` combines that flag with other conditions, remove the flag from
+  the expression and keep the rest.
 
 - **A pressed `ds-pagination` page keeps focus on its own number.** Page buttons were matched by
   position, so when the window of numbers shifted the focused button relabelled itself: with eight
