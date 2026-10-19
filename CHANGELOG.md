@@ -17,6 +17,13 @@
   lines; `'clip'` keeps it on one line, ends it with an ellipsis and shows the full title in a
   tooltip on hover and keyboard focus. `EmptyStateTitleOverflow` types the value.
 
+- **`dsTooltip` takes `dsTooltipConfig`, and `DsConfig.tooltip` sets its options app-wide.**
+  `[dsTooltipConfig]="{ placement, delay, arrow, pinOnClick, whenClipped }"` sets one tip;
+  `provideDsConfig({ tooltip: { placement, delay, arrow, pinOnClick } })` sets every tip. An unset
+  field falls back to the config, then to `'top'`, 120 ms, an arrow and no pin. `whenClipped` reads
+  as `dsTooltipWhenClipped`, which wins when set. `DsTooltipConfig` types the object and
+  `TooltipPlacement` its `placement`.
+
 ### Changed
 
 - **A `dsTooltipWhenClipped` tip (`TooltipDirective`) also opens on text cut by lines.** A block
@@ -60,6 +67,16 @@
   `--ds-empty-state-title-max-width`, which defaults to `--empty-body-maxw` like the body, and a word
   longer than the line, such as a pasted search term, breaks instead of running past the card. Set
   `--ds-empty-state-title-max-width: none` on a `ds-empty-state` to keep its title the full width.
+
+### Deprecated
+
+- **`dsTooltipPlacement`, `dsTooltipDelay`, `dsTooltipArrow` and `dsTooltipPinOnClick`.** Each still
+  works and wins over `dsTooltipConfig` and `DsConfig.tooltip` while set. Move the value into
+  `[dsTooltipConfig]` on the same element, or into `provideDsConfig({ tooltip })` where every tip of
+  the app takes it. On a `dsDefinitionTerm`, `dsTooltipPlacement` stays the way to place the tip.
+  Unset, each input now reads back `null` rather than its default, so code that
+  reads `TooltipDirective.dsTooltipPlacement()` and the other three gets `null` where it got
+  `'top'`, `120`, `true` or `false`.
 
 ### Fixed
 
