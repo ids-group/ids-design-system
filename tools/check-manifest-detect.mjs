@@ -5,7 +5,9 @@
 // located and over look-alikes that must NOT count, the way the plugin's usage finder does.
 //
 // Reads `migrations/fixtures/<version>/<id>.found.<html|ts|scss>` and `<id>.ignored.<ext>`
-// (`unreleased/` for the draft), named by an item id of `migrations/<version>.json`.
+// (`unreleased/` for the draft), named by an item id of `migrations/<version>.json`, or by a
+// `deleteList` row id: then `.found` is the workaround the row deletes and `.ignored` is code of
+// the same feature the row keeps, and the row's `find` shapes are the only locators.
 //
 // Locating mirrors plugins/design-system/agents/ds-usage-finder.md: a literal, case-sensitive
 // grep for `old` (the attribute of an `element[attr]`, nothing for a comma-joined list), every
@@ -21,7 +23,7 @@
 //
 // Fails on: a `.found` snippet no locator hits, an `.ignored` snippet a locator hit survives the
 // element scope in, a fixture whose id is not in its manifest or whose name or extension is not
-// one of the above, an item of `migrations/unreleased.json` with no `.found` fixture, and a
+// one of the above, a row `.found` fixture no find shape hits, an item of `migrations/unreleased.json` with no `.found` fixture, and a
 // `deleteList` find shape found in the neutral corpus.
 //
 //   node tools/check-manifest-detect.mjs            # every fixture, plus the draft's coverage
@@ -43,12 +45,20 @@ const ELEMENT_OF_OLD = /^(ds-[a-z0-9-]+)(?:\[([^\]]+)\]$|[\s.])/;
 const problems = [];
 const results = [];
 
-const manifestItems = (version) => {
+const manifestOf = (version) => {
   const path = join(MIGRATIONS, `${version}.json`);
-  return existsSync(path)
-    ? (JSON.parse(readFileSync(path, 'utf8')).items ?? [])
-    : null;
+  return existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : null;
 };
+const manifestItems = (version) => manifestOf(version)?.items ?? null;
+
+// A deleteList row is located by its `find` shapes alone, as literals over the whole file: the
+// delete judge greps them over the source tree with no element to scope to.
+const rowLocators = (row) => ({
+  element: null,
+  locators: [row.find ?? []]
+    .flat()
+    .map((text) => ({ text, field: 'find', scoped: false })),
+});
 
 function locatorsOf(item) {
   const scopedElement = ELEMENT_OF_OLD.exec(item.old ?? '');
@@ -145,7 +155,9 @@ if (existsSync(FIXTURES)) {
   for (const folder of readdirSync(FIXTURES, { withFileTypes: true })) {
     if (!folder.isDirectory() || folder.name === NEUTRAL) continue;
     const version = folder.name;
-    const items = manifestItems(version);
+    const manifest = manifestOf(version);
+    const items = manifest?.items ?? null;
+    const rows = manifest?.deleteList ?? [];
     for (const file of readdirSync(join(FIXTURES, version))) {
       if (!/\.(found|ignored)\./.test(file)) continue;
       const name = `fixtures/${version}/${file}`;
@@ -158,21 +170,25 @@ if (existsSync(FIXTURES)) {
       }
       const [, id, expectation, extension] = parts;
       const item = items?.find((candidate) => candidate.id === id);
-      if (!item) {
+      const row = item ? null : rows.find((candidate) => candidate.id === id);
+      if (!item && !row) {
         problems.push(
-          `${name}: migrations/${version}.json has no item "${id}"`,
+          `${name}: migrations/${version}.json has no item or deleteList row "${id}"`,
         );
         continue;
       }
       fixtures.push({ name, version, id, expectation });
+      const located = item ? locatorsOf(item) : rowLocators(row);
       const hits = survivingHits(
         readFileSync(join(FIXTURES, version, file), 'utf8'),
         extension,
-        locatorsOf(item),
+        located,
       );
       if (expectation === 'found' && hits.length === 0)
         problems.push(
-          `${name}: no locator of ${version}#${id} finds this consumer code (old, searchHints and detect all miss, or every hit falls outside ${locatorsOf(item).element ?? 'the file'})`,
+          item
+            ? `${name}: no locator of ${version}#${id} finds this consumer code (old, searchHints and detect all miss, or every hit falls outside ${located.element ?? 'the file'})`
+            : `${name}: no find shape of deleteList row ${version}#${id} matches this workaround`,
         );
       else if (expectation === 'ignored' && hits.length > 0)
         problems.push(
