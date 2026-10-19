@@ -13,6 +13,10 @@
   every hour and minute column; `'never'` keeps them as lists. An input on the element wins over the
   config. `TimePickerLoop` types the value.
 
+- **`ds-empty-state` takes `titleOverflow`.** `'wrap'`, the default, breaks a long title over
+  lines; `'clip'` keeps it on one line, ends it with an ellipsis and shows the full title in a
+  tooltip on hover and keyboard focus. `EmptyStateTitleOverflow` types the value.
+
 ### Changed
 
 - **The agent catalogue ships at `agent/INDEX.md`, where it was `docs/agent/INDEX.md`.** Every leaf
@@ -44,6 +48,11 @@
   middle of its column, and a running column shows no scrollbar and fades at its edges. Under the
   default `loop`, a column that shows all its values, such as `minuteStep` 15, and the AM/PM column
   stay as lists.
+
+- **A `ds-empty-state` title is as wide as its body, 360px, and breaks a long word.** It wraps at
+  `--ds-empty-state-title-max-width`, which defaults to `--empty-body-maxw` like the body, and a word
+  longer than the line, such as a pasted search term, breaks instead of running past the card. Set
+  `--ds-empty-state-title-max-width: none` on a `ds-empty-state` to keep its title the full width.
 
 ### Fixed
 

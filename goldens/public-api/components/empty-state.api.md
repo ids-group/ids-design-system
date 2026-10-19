@@ -10,8 +10,11 @@ export class EmptyStateComponent {
     public readonly icon = input<IconName | null>(null);
     protected readonly resolvedIcon = computed<IconName>(…);
     public readonly title = input<string>('');
+    public readonly titleOverflow = input<EmptyStateTitleOverflow>('wrap');
     public readonly variant = input<EmptyStateVariant>('none');
 }
+
+export type EmptyStateTitleOverflow = 'wrap' | 'clip';
 
 export type EmptyStateVariant = 'none' | 'loading' | 'error' | 'locked' | 'success';
 ```
@@ -28,6 +31,7 @@ ds-empty-state {
     --ds-empty-state-title-font-family: var(--font-sans);
     --ds-empty-state-title-font-size: var(--font-size-h5);
     --ds-empty-state-title-font-weight: var(--font-weight-bold);
+    --ds-empty-state-title-max-width: var(--empty-body-maxw);
     --ds-empty-state-title-text-color: var(--text-primary);
 }
 ```

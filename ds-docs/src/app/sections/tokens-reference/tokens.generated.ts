@@ -4366,6 +4366,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Empty state title weight (default --font-weight-bold)."
       },
       {
+        "name": "--ds-empty-state-title-max-width",
+        "value": "var(--empty-body-maxw)",
+        "notes": "Title max width."
+      },
+      {
         "name": "--ds-empty-state-body-text-color",
         "value": "var(--text-secondary)",
         "notes": "Body colour."

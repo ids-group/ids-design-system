@@ -1,8 +1,9 @@
 @use '../../styles/component-base' as component-base;
+@use '../../styles/text-clip' as text-clip;
 @include component-base.rules;
 
 /* Truncation contract:
-   Title - wraps to a second line if needed, never clipped: the user needs the full sentence.
+   Title - wraps by default; titleOverflow="clip" keeps one line and moves the full text to a tooltip.
    CTA label - short verb phrases only (Retry, Allocate resources). */
 
 :host {
@@ -12,6 +13,7 @@
   --_empty-state-title-font-size: var(--ds-empty-state-title-font-size, var(--font-size-h5));
   --_empty-state-title-font-family: var(--ds-empty-state-title-font-family, var(--font-sans));
   --_empty-state-title-font-weight: var(--ds-empty-state-title-font-weight, var(--font-weight-bold));
+  --_empty-state-title-max-width: var(--ds-empty-state-title-max-width, var(--empty-body-maxw));
   --_empty-state-body-text-color:   var(--ds-empty-state-body-text-color,  var(--text-secondary));
   --_empty-state-body-max-width: var(--ds-empty-state-body-max-width, var(--empty-body-maxw));
   --_empty-state-padding:       var(--ds-empty-state-padding,       var(--space-12) var(--space-6));
@@ -41,7 +43,13 @@
   .title {
     font: var(--_empty-state-title-font-weight) var(--_empty-state-title-font-size) / var(--line-height-snug) var(--_empty-state-title-font-family);
     color: var(--_empty-state-title-text-color);
+    max-width: var(--_empty-state-title-max-width);
+    overflow-wrap: anywhere;
     margin: 0;
+
+    &.clip {
+      @include text-clip.single-line-ellipsis;
+    }
   }
   .body {
     font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
