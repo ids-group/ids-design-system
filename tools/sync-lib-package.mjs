@@ -4,13 +4,15 @@
 // hand-edited copies in step, the publishable fields are copied from the root
 // package.json into src/lib/package.json. `--check` fails instead of writing, so a
 // release cannot ship a version the root never bumped. `--dist`, run after `ng build ds`, marks a
-// build with entries under `## Unreleased` as `<version>-dev.<sha>` in dist/ds/package.json only:
-// the release stamp empties that section, so a release build keeps the plain version.
+// build with entries under `## Unreleased` as `<next>-dev.g<sha>[.dirty]` and `private` in
+// dist/ds/package.json only, so npm refuses to publish it: the release stamp empties that section,
+// so a release build keeps the plain version.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { unreleasedHasEntry } from './release-fold.mjs';
+import { devVersion } from './release-tags.mjs';
 
 const repo = join(dirname(fileURLToPath(import.meta.url)), '..');
 const rootPath = join(repo, 'package.json');
@@ -41,15 +43,16 @@ if (process.argv.includes('--dist')) {
   const distPath = join(repo, 'dist', 'ds', 'package.json');
   const dist = JSON.parse(readFileSync(distPath, 'utf8'));
   if (unreleasedHasEntry(readFileSync(join(repo, 'CHANGELOG.md'), 'utf8'))) {
-    let sha = 'local';
+    const git = (...args) =>
+      execFileSync('git', args, { cwd: repo, encoding: 'utf8' }).trim();
+    let sha = null;
+    let dirty = false;
     try {
-      sha = execFileSync('git', ['rev-parse', '--short', 'HEAD'], {
-        cwd: repo,
-        encoding: 'utf8',
-      }).trim();
+      sha = git('rev-parse', '--short', 'HEAD');
+      dirty = Boolean(git('status', '--porcelain'));
     } catch {}
-    dist.version = `${root.version}-dev.${sha}`;
-    dist.publishConfig = { ...dist.publishConfig, tag: 'dev' };
+    dist.version = devVersion(root.version, sha, dirty);
+    dist.private = true;
     writeFileSync(distPath, JSON.stringify(dist, null, 2) + '\n');
   }
   console.log(
