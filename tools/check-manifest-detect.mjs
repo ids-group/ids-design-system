@@ -15,9 +15,14 @@
 // stylesheet. A `detect` hit is scoped the same way only on a template-only item; on a
 // `typescript`, `style` or `config` surface there is no element to scope to.
 //
+// `migrations/fixtures/_neutral/` is ordinary consumer code no `deleteList` row of any manifest
+// may hit: the delete judge greps every `find` shape over the whole source tree, so a shape that
+// also matches unrelated code sends it after lines the row does not mean.
+//
 // Fails on: a `.found` snippet no locator hits, an `.ignored` snippet a locator hit survives the
 // element scope in, a fixture whose id is not in its manifest or whose name or extension is not
-// one of the above, and an item of `migrations/unreleased.json` with no `.found` fixture.
+// one of the above, an item of `migrations/unreleased.json` with no `.found` fixture, and a
+// `deleteList` find shape found in the neutral corpus.
 //
 //   node tools/check-manifest-detect.mjs            # every fixture, plus the draft's coverage
 //   node tools/check-manifest-detect.mjs --audit    # the same, then every published item with no
@@ -29,6 +34,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const MIGRATIONS = process.env.DS_MIGRATIONS_DIR || join(ROOT, 'migrations');
 const FIXTURES = join(MIGRATIONS, 'fixtures');
+const NEUTRAL = '_neutral';
 const AUDIT = process.argv.includes('--audit');
 const FIXTURE_NAME = /^(.+)\.(found|ignored)\.(html|ts|scss)$/;
 const MANIFEST_NAME = /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)\.json$/;
@@ -137,7 +143,7 @@ function survivingHits(text, extension, { element, locators }) {
 const fixtures = [];
 if (existsSync(FIXTURES)) {
   for (const folder of readdirSync(FIXTURES, { withFileTypes: true })) {
-    if (!folder.isDirectory()) continue;
+    if (!folder.isDirectory() || folder.name === NEUTRAL) continue;
     const version = folder.name;
     const items = manifestItems(version);
     for (const file of readdirSync(join(FIXTURES, version))) {
@@ -200,14 +206,46 @@ problems.push(
   ),
 );
 
+const manifestNames = readdirSync(MIGRATIONS)
+  .filter((file) => MANIFEST_NAME.test(file))
+  .map((file) => file.slice(0, -'.json'.length))
+  .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+const neutralFolder = join(FIXTURES, NEUTRAL);
+const neutralFiles = existsSync(neutralFolder)
+  ? readdirSync(neutralFolder).map((file) => ({
+      name: `fixtures/${NEUTRAL}/${file}`,
+      text: readFileSync(join(neutralFolder, file), 'utf8'),
+    }))
+  : [];
+let neutralShapes = 0;
+for (const version of manifestNames) {
+  const rows =
+    JSON.parse(readFileSync(join(MIGRATIONS, `${version}.json`), 'utf8'))
+      .deleteList ?? [];
+  for (const row of rows) {
+    for (const shape of [row.find ?? []].flat()) {
+      neutralShapes++;
+      for (const file of neutralFiles) {
+        file.text.split('\n').forEach((text, index) => {
+          if (text.includes(shape))
+            problems.push(
+              `${version}#${row.id}: find "${shape}" matches ordinary code at ${file.name}:${index + 1}`,
+            );
+        });
+      }
+    }
+  }
+}
+
 console.log(`check-manifest-detect: ${fixtures.length} locator fixture(s) run`);
+console.log(
+  `check-manifest-detect: ${neutralShapes} deleteList find shape(s) run over ${neutralFiles.length} neutral file(s)`,
+);
 for (const line of results) console.log(`  ${line}`);
 
 if (AUDIT) {
-  const published = readdirSync(MIGRATIONS)
-    .filter((file) => MANIFEST_NAME.test(file) && file !== 'unreleased.json')
-    .map((file) => file.slice(0, -'.json'.length))
-    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  const published = manifestNames.filter((version) => version !== 'unreleased');
   const gaps = published.flatMap(uncovered);
   console.log(
     `\ncheck-manifest-detect --audit: ${gaps.length} published item(s) have no .found fixture`,

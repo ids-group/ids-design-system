@@ -1,0 +1,8 @@
+<form [formGroup]="form" (submit)="onSubmit($event)">
+  <ds-input label="Email" type="email" formControlName="email" required />
+  <ds-input label="Password" type="password" formControlName="password" required />
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <ds-button type="submit" [loading]="submitting()">Sign in</ds-button>
+</form>
