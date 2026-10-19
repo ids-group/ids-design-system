@@ -4,6 +4,14 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.14.3 - 2026-10-19
+
+### Fixed
+
+- **`drift-scan.mjs` matches a stylesheet class only in code, never in a comment, string or `url()`.**
+  A `//` or `/* */` comment naming `<html>` or `index.html` no longer reports the gone class `html`;
+  template and TypeScript matching is unchanged.
+
 ## 1.14.1 - 2026-10-14
 
 ### Fixed

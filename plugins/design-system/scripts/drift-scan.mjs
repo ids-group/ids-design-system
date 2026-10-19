@@ -15,6 +15,13 @@ const TOKEN = /--ds-[a-z0-9-]+/g;
 const SASS_AT_RULE = /@(?:include|mixin|function|use|forward)\b[^;{]*/g;
 const STYLE_CLASS = /\.([a-z][a-z0-9-]{2,})(?![a-z0-9(-])/g;
 const HTML_CLASS = /class="([^"]*)"/g;
+// Comments, quoted strings and url() bodies hold prose and paths (`index.html`), never selectors.
+const STYLE_NON_SELECTOR =
+  /\/\*[\s\S]*?\*\/|\/\/[^\n]*|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'|url\([^)]*\)/g;
+
+// Blanked in place so line numbers survive.
+const stylesheetCode = (text) =>
+  text.replace(STYLE_NON_SELECTOR, (match) => match.replace(/[^\n]/g, ' '));
 
 function* walk(dir, extensions) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -33,7 +40,9 @@ function surface(tree) {
     const extension = extname(file);
     for (const match of text.matchAll(TOKEN)) tokens.add(match[0]);
     if (extension === '.scss' || extension === '.css')
-      for (const match of text.replace(SASS_AT_RULE, '').matchAll(STYLE_CLASS))
+      for (const match of stylesheetCode(text)
+        .replace(SASS_AT_RULE, '')
+        .matchAll(STYLE_CLASS))
         classes.add(match[1]);
     if (extension === '.html')
       for (const match of text.matchAll(HTML_CLASS))
@@ -77,17 +86,20 @@ for (const file of walk(
   new Set(['.scss', '.css', '.html', '.ts']),
 )) {
   const extension = extname(file);
-  const patterns =
-    extension === '.scss' || extension === '.css'
-      ? [...tokenPatterns, ...classPatterns]
-      : tokenPatterns;
+  const isStylesheet = extension === '.scss' || extension === '.css';
+  const patterns = isStylesheet
+    ? [...tokenPatterns, ...classPatterns]
+    : tokenPatterns;
   if (!patterns.length) continue;
-  readFileSync(file, 'utf8')
-    .split('\n')
-    .forEach((text, index) => {
-      for (const [name, pattern] of patterns)
-        if (pattern.test(text)) hits.push({ file, line: index + 1, name });
-    });
+  const source = readFileSync(file, 'utf8');
+  const codeLines = (isStylesheet ? stylesheetCode(source) : source).split(
+    '\n',
+  );
+  source.split('\n').forEach((text, index) => {
+    for (const [name, pattern] of patterns)
+      if (pattern.test(name.startsWith('--ds-') ? text : codeLines[index]))
+        hits.push({ file, line: index + 1, name });
+  });
 }
 
 process.stdout.write(
