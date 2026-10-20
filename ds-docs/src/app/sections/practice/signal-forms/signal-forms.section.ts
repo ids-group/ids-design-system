@@ -1,4 +1,13 @@
-import { Component, ViewEncapsulation, resource, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Injector,
+  ViewEncapsulation,
+  afterNextRender,
+  inject,
+  resource,
+  signal,
+} from '@angular/core';
 import {
   FormField,
   email,
@@ -109,22 +118,63 @@ export class SignalFormsSection {
   <ds-select label="City" [options]="cities" [formField]="accountForm.city" />
 </form>`;
 
+  protected readonly submitted = signal(false);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly injector = inject(Injector);
+
   protected sendInvite(): void {
-    void submit(this.demoForm, async () => undefined);
+    this.submitted.set(true);
+    void submit(this.demoForm, {
+      action: async () => undefined,
+      onInvalid: () =>
+        afterNextRender(
+          () =>
+            this.host.nativeElement
+              .querySelector<HTMLElement>('.demo-form [aria-invalid="true"]')
+              ?.focus(),
+          { injector: this.injector },
+        ),
+    });
   }
 
-  protected readonly snippet = `import { form, required, email } from '@angular/forms/signals';
+  protected readonly snippet = `import { form, required, email, submit } from '@angular/forms/signals';
 
 model = signal({ email: '', role: '', terms: false });
+submitted = signal(false);
+host = inject<ElementRef<HTMLElement>>(ElementRef);
+injector = inject(Injector);
 
 loginForm = form(this.model, (path) => {
   required(path.email, { message: 'We need an email' });
   email(path.email, { message: 'That is not an email address' });
-});`;
+});
+
+send(): void {
+  this.submitted.set(true);
+  void submit(this.loginForm, {
+    action: async () => save(this.model()),
+    onInvalid: () =>
+      afterNextRender(
+        () => this.host.nativeElement.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus(),
+        { injector: this.injector },
+      ),
+  });
+}
+
+clear(): void {
+  this.loginForm().reset({ email: '', role: '', terms: false });
+  this.submitted.set(false);
+}`;
 
   protected readonly templateSnippet = `<ds-input label="Email" [formField]="loginForm.email" />
 <ds-select label="Role" [options]="roles" [formField]="loginForm.role" />
-<ds-checkbox label="I agree" [formField]="loginForm.terms" />`;
+<ds-checkbox label="I agree" [formField]="loginForm.terms" />
+<ds-button
+  [disabled]="submitted() && loginForm().invalid()"
+  [loading]="loginForm().submitting()"
+  (pressed)="send()">
+  Send
+</ds-button>`;
 
   protected readonly messagesSnippet = `provideDsConfig({
   field: {

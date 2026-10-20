@@ -54,7 +54,7 @@
       [formField]="demoForm.terms" />
 
     <ds-button
-      [disabled]="!demoForm.email().value()"
+      [disabled]="submitted() && demoForm().invalid()"
       [loading]="demoForm().submitting()"
       (pressed)="sendInvite()">
       Send invite
@@ -70,14 +70,28 @@
     </li>
 
     <li>
-      The button gates on presence and in-flight only, never validity
+      The button stays enabled until the first submit; after a failed one it is
+      disabled while the form is invalid, live until the form is reset
+    </li>
+
+    <li>
+      In flight:
+      <code class="t-mono-inline">
+        [loading]
+      </code>, never the loading flag inside
+      <code class="t-mono-inline">
+        [disabled]
+      </code>
     </li>
 
     <li>
       <code class="t-mono-inline">
         submit()
       </code> touches every field and
-      sends only a valid form
+      sends only a valid form;
+      <code class="t-mono-inline">
+        onInvalid
+      </code> focuses the first invalid field
     </li>
   </ul>
 
