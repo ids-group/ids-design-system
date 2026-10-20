@@ -25,8 +25,9 @@
 // Rendering is pinned so a block differs only when its pixels do: a 1440x900 viewport at scale 1,
 // `prefers-reduced-motion: reduce`, light scheme, hidden scrollbars and carets, `document.fonts`
 // settled (every face is bundled), infinite animations paused at zero and finite ones finished,
-// software raster on one thread (RASTER_FLAGS). One build rendered twice differs in no block.
-// Equality is byte equality of the PNGs Chrome encodes, so a single pixel moved is a difference.
+// software raster on one thread (RASTER_FLAGS). Two blocks are equal when their PNGs are equal
+// byte for byte, or when they differ only as antialiasing does: no channel more than
+// ANTIALIAS_CHANNEL_DELTA apart, on at most ANTIALIAS_PIXEL_SHARE of the block's pixels.
 // A block that only moved down the page is not one: a differing block whose document top differs
 // is captured again with the higher side pushed down to the other's top, and compared once more.
 //
@@ -481,6 +482,61 @@ async function renderSite(dir, pages, targets = null, only = null) {
   return blocks;
 }
 
+// Chrome rasterises curves and glyph edges a level or two apart when a layer elsewhere on the page
+// changes size (a table 1 000 000px wide stretches the scroller's layer), which no realignment
+// undoes. A tint moved across a whole block exceeds the share, a moved edge exceeds the delta.
+const ANTIALIAS_CHANNEL_DELTA = 8;
+const ANTIALIAS_PIXEL_SHARE = 0.01;
+
+// Decoded inside a page: PNG decoding and getImageData are native there.
+async function antialiasOnly(before, after) {
+  const pairs = [...before].flatMap(([id, a]) => {
+    const b = after.get(id);
+    return b &&
+      !a.unstable &&
+      !b.unstable &&
+      a.chunks.length === b.chunks.length &&
+      !samePixels(a, b)
+      ? [[id, a.chunks, b.chunks]]
+      : [];
+  });
+  const same = new Set();
+  if (!pairs.length) return same;
+  const browser = await open('about:blank');
+  try {
+    for (const [id, left, right] of pairs) {
+      const near = await browser.evaluate(`async () => {
+        const load = (data) => new Promise((done) => { const image = new Image(); image.onload = () => done(image); image.src = 'data:image/png;base64,' + data; });
+        const left = ${JSON.stringify(left)};
+        const right = ${JSON.stringify(right)};
+        let differing = 0;
+        let total = 0;
+        for (let index = 0; index < left.length; index++) {
+          const [a, b] = [await load(left[index]), await load(right[index])];
+          if (a.width !== b.width || a.height !== b.height) return false;
+          const context = new OffscreenCanvas(a.width, a.height).getContext('2d');
+          context.drawImage(a, 0, 0);
+          const pixelsA = context.getImageData(0, 0, a.width, a.height).data;
+          context.clearRect(0, 0, a.width, a.height);
+          context.drawImage(b, 0, 0);
+          const pixelsB = context.getImageData(0, 0, b.width, b.height).data;
+          for (let p = 0; p < pixelsA.length; p += 4) {
+            const delta = Math.max(Math.abs(pixelsA[p] - pixelsB[p]), Math.abs(pixelsA[p + 1] - pixelsB[p + 1]), Math.abs(pixelsA[p + 2] - pixelsB[p + 2]));
+            if (delta > ${ANTIALIAS_CHANNEL_DELTA}) return false;
+            if (delta > 0) differing++;
+          }
+          total += a.width * a.height;
+        }
+        return differing <= total * ${ANTIALIAS_PIXEL_SHARE};
+      }`);
+      if (near) same.add(id);
+    }
+  } finally {
+    await browser.close();
+  }
+  return same;
+}
+
 const samePixels = (a, b) =>
   a.chunks.length === b.chunks.length &&
   a.chunks.every((chunk, index) => chunk === b.chunks[index]);
@@ -516,7 +572,7 @@ async function realignMoved(sides) {
   return count;
 }
 
-function compareBlocks(before, after) {
+function compareBlocks(before, after, antialiased) {
   const differing = [];
   for (const id of new Set([...before.keys(), ...after.keys()])) {
     const [a, b] = [before.get(id), after.get(id)];
@@ -526,7 +582,7 @@ function compareBlocks(before, after) {
         ? 'removed'
         : a.unstable || b.unstable
           ? 'unstable'
-          : samePixels(a, b)
+          : samePixels(a, b) || antialiased.has(id)
             ? null
             : 'changed';
     if (change)
@@ -759,7 +815,8 @@ async function main() {
     { dir: before.dir, blocks: blocksBefore },
     { dir: after.dir, blocks: blocksAfter },
   ]);
-  const differing = compareBlocks(blocksBefore, blocksAfter);
+  const antialiased = await antialiasOnly(blocksBefore, blocksAfter);
+  const differing = compareBlocks(blocksBefore, blocksAfter, antialiased);
   const manifestPath = join(MIGRATIONS, `${version}.json`);
   const manifestText = existsSync(manifestPath)
     ? readFileSync(manifestPath, 'utf8')
@@ -800,6 +857,10 @@ async function main() {
   console.log(
     `  ${pages.length} page(s), ${blocksBefore.size} / ${blocksAfter.size} block(s), ${differing.length} differ (${mode})`,
   );
+  if (antialiased.size)
+    console.log(
+      `  ${antialiased.size} block(s) differ by antialiasing only (no channel more than ${ANTIALIAS_CHANNEL_DELTA}/255 apart, on at most ${ANTIALIAS_PIXEL_SHARE * 100}% of pixels)`,
+    );
   if (realigned)
     console.log(
       `  ${realigned} moved block(s) captured again at the other side's position`,
