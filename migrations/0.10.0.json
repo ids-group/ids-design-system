@@ -948,7 +948,8 @@
       "surface": "typescript",
       "find": [
         "setTimeout(() => this.sort",
-        "sortKey.set(null)"
+        "sortKey.set(null)",
+        "this.sortKey.set("
       ],
       "why": "Host code that re-bound the sort after a cleared sort, written because the header lost its indicator whenever the host default equalled the last value Angular had written. The marked state is a linkedSignal over both inputs now.",
       "replaceWith": "nothing - answer the cleared sort with your default and stop there"
