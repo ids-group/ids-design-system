@@ -4,7 +4,7 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
-## 1.16.2 - 2026-10-20
+## 1.18.0 - 2026-10-20
 
 ### Changed
 
@@ -13,6 +13,14 @@ source, agent); **major** = a change to the workflow's behavior contract. Bump `
   finder hit and their applier touched near the changed surface, and deletes a workaround only when
   the `v<V>` tree shows V covers the case; results are keyed `item:<id>`. Feedback never proposes
   new `deleteList` rows.
+
+## 1.17.0 - 2026-10-20
+
+### Removed
+
+- **`unreleased [<path>]` mode removed from the plugin.** The skill steps a consumer through
+  published versions only: `argument-hint` is `[target-version | dry-run]`, and the ledger drops
+  `unreleased`.
 
 ## 1.16.1 - 2026-10-20
 
