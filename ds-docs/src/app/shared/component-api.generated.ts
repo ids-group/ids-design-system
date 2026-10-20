@@ -10634,6 +10634,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prints every row of a client-paged table instead of the page on screen, without the pager. A server-paged table (`total`) holds only its page, so it prints that page."
       },
       {
+        "name": "printHeading",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Prints as the first row of the header, repeated on every printed page with it, so a table's heading never ends a page without the table. Hidden on screen."
+      },
+      {
+        "name": "printHeadingNote",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "A line under `printHeading` in the printout."
+      },
+      {
         "name": "maxHeight",
         "kind": "input",
         "type": "string | null",

@@ -2,6 +2,11 @@
 
 ### Added
 
+- **`ds-table` takes `printHeading` and `printHeadingNote`.** In print the table opens its header
+  with a row holding the heading and the line under it, repeated with the header on every page, so
+  the heading of a table never ends a page without its rows. Both are hidden on screen; leave them
+  unset to print as before.
+
 - **`ds-table` takes `printAllRows`.** A table paged on the client prints every row instead of the
   page on screen, and leaves the pager out of the printout. A table paged by the server (`total`)
   holds only its page and prints that page with its range label. The default, `false`, prints the

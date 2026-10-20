@@ -268,6 +268,8 @@ export class TableComponent<T extends object> {
     private parseDurationMs;
     public readonly persistLayout = input(false, { transform: booleanAttribute });
     public readonly printAllRows = input(false, { transform: booleanAttribute });
+    public readonly printHeading = input<string | null>(null);
+    public readonly printHeadingNote = input<string | null>(null);
     protected readonly printing = signal(…);
     private publishHeadHeight;
     public readonly rangeAnnouncement = input<((first: number, last: number, total: number) => string) | null>(null);
