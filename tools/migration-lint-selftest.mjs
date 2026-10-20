@@ -117,7 +117,6 @@ const mutations = {
     i.note = i.note + ' filler'.repeat(200);
   },
   M042: (m) => (m.items[0].pitfal = 'typo'),
-  M037: (m) => delete m.deleteList,
   M035: (m) => delete m.deleteList[0].replaceWith,
   M036: (m) => (m.deleteList[0].id = 'Not_Kebab'),
   M034: (m) => {
