@@ -57,7 +57,7 @@ One file per released version — `migrations/<version>.json` — mirroring that
   (`<section anchor>/<chapter slug>`, such as `button/sizes`, whose pixels did not change across
   the boundary), `tokens:<token name>`, or `command:<shell command>`. Optional on an item and on an object-form
   `informational` entry, and required wherever the prose makes such a claim.
-- **`deleteList`** — the structured form of "what you can now delete" (see below).
+- **`deleteList`** - rows in published manifests; not written for new entries (see below).
 - **`informational`** — a non-actionable FYI, a bare string or `{ "text": "...", "verify": "..." }`
   where `verify` is the one eyeball check for a change to rendering alone (no symbol for a grep or
   a build to catch); the object carries `evidence` when `text` asserts a measured outcome.
@@ -74,16 +74,12 @@ A version may also ship a sibling folder `migrations/<version>/*.md` holding a w
 before/after too long for a `note` — `migrations/0.5.1/badge-statuses.md` is the one that exists.
 It never matches the `*.json` glob, so tooling ignores it.
 
-**What the manifest must carry that a release note usually omits: what the consumer can now DELETE.**
-Most workarounds in an app are written against hooks that
-ALREADY existed, because a release note says what broke and never says what became unnecessary.
-
-**Those entries are the `deleteList` ARRAY, not prose.** A delete hint written as a sentence inside
-`informational` has no `find` for a finder to run, so it waits for a human to recognise their own
-code in it. Write each as `{ id, surface, find, why, replaceWith }` — `find` being the shape in the
-CONSUMER's code, always an array, even of one shape — and keep the human copy in that version's CHANGELOG
-"What you can now DELETE" table. Two copies, each read by someone; the third copy in `informational`
-is the one that goes stale, so new manifests do not carry it.
+**A manifest says what changed and where; it does not say what to delete.** Published manifests
+carry `deleteList` rows, `{ id, surface, find, why, replaceWith }` with `find` the shape in the
+consumer's code (always an array), each mirrored in that version's CHANGELOG "What you can now
+DELETE" table. New entries carry no row: an upgrade agent reads the changed surface each item names,
+looks there for a workaround the change makes unnecessary, and removes it only when the new version
+covers the case. The key may be absent or `[]`.
 
 **What made an item findable is now part of the schema, because a well-formed item can still be
 undetectable.** Two shapes slip past a find/apply/recheck loop — not malformed, not ambiguous, just

@@ -10,13 +10,14 @@
 //     around a DS input — so DS-named search hints return zero hits and the clean
 //     recheck grep CONFIRMS the false negative;
 //   · an instruction to delete something now redundant, written as prose inside a
-//     long note instead of a structured entry, is simply never executed.
+//     long note, is simply never executed. A manifest promises no deletion: the
+//     consumer's upgrade agent looks for workarounds under each changed surface.
 //
 // So the rules below are about DETECTABILITY, not spelling: an item has to say
 // WHERE a consumer's own code changes (`surface`), what that code LOOKS like
 // when it is not a DS symbol (`detect`), what proves the migration landed
-// (`verify`), what became redundant (`deleteList`), and which earlier item it
-// reverses (`supersedes`).
+// (`verify`), and which earlier item it reverses (`supersedes`). `deleteList` rows exist in
+// published manifests only; the rules for them check the rows that are there.
 //
 // There is no legacy tier: every published manifest meets this contract, so a gap is
 // an error wherever it appears.
@@ -273,14 +274,6 @@ for (const [name, manifest] of manifests) {
       }
     });
   }
-  if (!Array.isArray(manifest.deleteList)) {
-    report(
-      errors,
-      file,
-      'M037',
-      'no `deleteList` array (use [] when this release made nothing redundant) — an absent key reads as "nobody looked"',
-    );
-  }
   for (const key of Object.keys(manifest)) {
     if (!TOP_KEYS.has(key))
       report(errors, file, 'M042', `unknown top-level key \`${key}\``);
@@ -335,7 +328,7 @@ for (const [name, manifest] of manifests) {
         at(
           'M047',
           `\`action\` deletes or re-values as well as renaming (${JSON.stringify(valueSentence.trim().slice(0, 70))}) — ` +
-            'the swap runs before anyone reads `action`, so that part is a `behavior` item or a `deleteList` row',
+            'the swap runs before anyone reads `action`, so that part is a `behavior` item',
         );
       }
       const trees =
@@ -682,7 +675,7 @@ for (const [name, manifest] of manifests) {
         file,
         'M034',
         where +
-          ` carries ${unsatisfied} delete instruction(s) with no own citation — each needs its "(delete list: <id>)", e.g.: ` +
+          ` carries ${unsatisfied} delete instruction(s) with no own citation to an existing row - say what changed and drop the promise, e.g.: ` +
           JSON.stringify(
             String(report.lastGuilty ?? '')
               .trim()

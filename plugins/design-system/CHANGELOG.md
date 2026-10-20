@@ -4,6 +4,16 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.18.0 - 2026-10-20
+
+### Changed
+
+- **Step 8 looks for workarounds under every applied item, not only under `deleteList` rows.**
+  New manifests write no rows. `ds-delete-judge` also takes applied items, reads the files their
+  finder hit and their applier touched near the changed surface, and deletes a workaround only when
+  the `v<V>` tree shows V covers the case; results are keyed `item:<id>`. Feedback never proposes
+  new `deleteList` rows.
+
 ## 1.17.0 - 2026-10-20
 
 ### Removed
