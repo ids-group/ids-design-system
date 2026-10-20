@@ -112,3 +112,13 @@
     flex: 0 0 auto;
   }
 }
+
+@media print {
+  .pagination {
+    .pagination-button,
+    .ellipsis,
+    .size {
+      display: none;
+    }
+  }
+}

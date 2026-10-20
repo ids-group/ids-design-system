@@ -123,7 +123,8 @@
       "text": "A `dsTooltipWhenClipped` tip (`TooltipDirective`) also opens when its host's text is cut by lines, under `line-clamp` or a height with `overflow: hidden` or `clip`, as it did for text cut by width. A scroll box does not count.",
       "verify": "Put dsTooltipWhenClipped on a block with -webkit-line-clamp: 2 holding four lines of text, hover it and confirm the tip opens; shorten the text to one line and confirm it does not."
     },
-    "`ds-empty-state` takes `titleOverflow`: `'wrap'`, the default, keeps the title wrapping as before; `'clip'` keeps it on one line with an ellipsis and the full title in a tooltip."
+    "`ds-empty-state` takes `titleOverflow`: `'wrap'`, the default, keeps the title wrapping as before; `'clip'` keeps it on one line with an ellipsis and the full title in a tooltip.",
+    "A printed `ds-table` keeps its column names on every page, keeps each row on one page and leaves its own controls out of the printout: the pager buttons and page-size select, the column filter, resize and expand buttons and the controls it adds to its toolbar. The pager's range label still prints. Nothing to change in consumer code; `printAllRows` opts a client-paged table into printing every row."
   ],
   "deleteList": []
 }
