@@ -10970,7 +10970,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what the others leave, whatever its cells hold. `'auto'`, deprecated: the 0.15.0 widths, which follow the cell content and ignore `kind`. Unset falls back to `DS_CONFIG.table.layout`, then `'fixed'`."
+        "description": "`'auto'`, the default: the 0.15.0 widths, which follow the cell content and ignore `kind`. `'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what the others leave, whatever its cells hold. Unset falls back to `DS_CONFIG.table.layout`, then `'auto'`."
       },
       {
         "name": "stickyFirstColumn",

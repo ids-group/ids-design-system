@@ -1573,6 +1573,20 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
+      layout
+    </code> defaults to <code class="t-mono-inline">'auto'</code>, the 0.15.0
+    widths: columns follow their content and
+    <code class="t-mono-inline">
+      kind
+    </code> has no effect. It is deprecated and will be removed; set
+    <code class="t-mono-inline">
+      layout="fixed"
+    </code> for the widths below.
+  </p>
+
+  <p class="block-desc t-s">
+    Under <code class="t-mono-inline">'fixed'</code>,
+    <code class="t-mono-inline">
       width: 'content'
     </code> fits the widest
     rendered cell, unwrapped, and is re-measured when the rows change; every
