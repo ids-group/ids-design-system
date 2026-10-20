@@ -40,10 +40,12 @@
   no longer gives it `--focus-ring-radius`: the ring follows the element's own `border-radius`, so a
   square tab, stripe or row stays square while focused. A library component keeps its rounded ring.
 
-- **A `ds-select`, `ds-multi-select` or `ds-autocomplete` panel is at least 220px wide.**
-  `--ds-dropdown-panel-min-width` now defaults to `220px` and floors the panel in both `width`
-  modes; a trigger wider than it still sets the width. The floor is the overlay's own width, so a
-  panel opened beside the right edge of the viewport is placed to stay on screen.
+- **`--ds-dropdown-panel-min-width` floors the whole `ds-select`, `ds-multi-select` or
+  `ds-autocomplete` pane, in both `width` modes.** The default stays `0`, so a panel is as wide as
+  its trigger; a consumer whose options outgrow a narrow trigger sets its own floor:
+  `ds-multi-select.owner-filter { --ds-dropdown-panel-min-width: 220px; }`. The floor is the
+  overlay's own width, so a widened panel opened beside the right edge of the viewport is placed
+  to stay on screen.
   `--ds-dropdown-panel-max-width` now applies only under `width="content"`: under the default
   `width="fill"` the panel follows the trigger and the token no longer caps it.
 

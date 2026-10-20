@@ -100,8 +100,8 @@
       "verify": "Open a narrow ds-multi-select with selectAll=\"both\" and a long group name and confirm the group's select-all row ends in an ellipsis and the list has no horizontal scrollbar."
     },
     {
-      "text": "`--ds-dropdown-panel-min-width` defaults to `220px` and floors the `ds-select`, `ds-multi-select` and `ds-autocomplete` panel in both `width` modes, so a panel under a trigger narrower than 220px is 220px wide; a wider trigger still sets the width. Set `--ds-dropdown-panel-min-width: 0` on the component to keep a panel as wide as its trigger. `--ds-dropdown-panel-max-width` applies only under `width=\"content\"`; under the default `width=\"fill\"` it no longer caps the panel.",
-      "verify": "Open a ds-select narrower than 220px and confirm its panel is 220px wide, then open one beside the right edge of the viewport and confirm the panel stays on screen."
+      "text": "`--ds-dropdown-panel-min-width` (default `0`) floors the whole `ds-select`, `ds-multi-select` and `ds-autocomplete` pane in both `width` modes, so a panel widened by it is placed by the width it is drawn at and stays on screen beside the right edge of the viewport; a wider trigger still sets the width. `--ds-dropdown-panel-max-width` applies only under `width=\"content\"`; under the default `width=\"fill\"` it no longer caps the panel.",
+      "verify": "Open a narrow ds-select and confirm its panel is as wide as its trigger, then set --ds-dropdown-panel-min-width: 220px on one beside the right edge of the viewport and confirm the 220px panel stays on screen."
     },
     {
       "text": "A `dsColumnSeries` in a `ds-chart` whose `cursor` is `'category'`, or resolves to it under `'auto'`, brightens the column at the category under the pointer, as a hovered column does under `cursor=\"none\"`.",
