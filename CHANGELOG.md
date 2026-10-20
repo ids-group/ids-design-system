@@ -559,8 +559,11 @@
   the spinner while an `exportFetcher` runs, in place of the greyed "Preparing…" label. A
   `[disabled]` bound to the same flag as `[loading]` still disables natively and drops focus;
   remove it. Where `[disabled]` ORs that flag with other conditions, remove the flag from the
-  expression and keep the rest, provided the rest is false while the button loads; where it ANDs
-  them, remove the whole `[disabled]`.
+  expression and keep the rest, provided the rest is false while the button loads. Where it ANDs
+  that flag with validity (`busy() && invalid()`), put a submit-attempt flag in its place
+  (`submitted() && invalid()`); a component without one sets it at the start of its submit
+  handler and moves focus to the first invalid field when a submit fails, since the button
+  disables while focused.
 
 - **A pressed `ds-pagination` page keeps focus on its own number.** Page buttons were matched by
   position, so when the window of numbers shifted the focused button relabelled itself: with eight
