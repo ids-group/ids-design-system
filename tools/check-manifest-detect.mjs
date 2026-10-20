@@ -50,6 +50,7 @@ const MANIFEST_NAME = /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)\.json$/;
 const ELEMENT_OF_OLD = /^(ds-[a-z0-9-]+)(?:\[([^\]]+)\]$|[\s.])/;
 const NEUTRAL_ALLOWED = new Set([
   '0.13.0#routerlink-imported-for-extra-inputs fixtures/_neutral/orders-page.component.ts',
+  '0.10.0#table-sort-rebind-after-clear fixtures/_neutral/orders-page.component.ts',
 ]);
 
 const problems = [];
