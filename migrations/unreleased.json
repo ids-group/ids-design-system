@@ -130,6 +130,13 @@
   ],
   "informational": [
     {
+      "text": "A `ds-table` under `layout=\"fixed\"` or with `virtualScroll`, inside a container sized to its content (a `max-content` grid track, `width: max-content`, an inline-block, an absolutely positioned box without a width), is as wide as its columns at their declared widths and header labels, where it grew to 1 000 000px or to all the width there was. A table in a container with a width of its own is unchanged.",
+      "verify": "Put a ds-table with layout=\"fixed\" in a div at width: max-content and confirm the table is as wide as its columns, not 1000000px.",
+      "evidence": [
+        "command:node tools/table-clip-harness.mjs check <run of this checkout's /harness/table-clip> <run of the base's /harness/table-clip>"
+      ]
+    },
+    {
       "text": "The per-group select-all row of a `ds-multi-select` with `selectAll=\"group\"` or `selectAll=\"both\"` cuts its label to the panel width with an ellipsis, as the top select-all row does, so a long group name no longer scrolls the list sideways.",
       "verify": "Open a narrow ds-multi-select with selectAll=\"both\" and a long group name and confirm the group's select-all row ends in an ellipsis and the list has no horizontal scrollbar."
     },
