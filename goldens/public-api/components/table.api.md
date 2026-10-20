@@ -148,6 +148,7 @@ export class TableComponent<T extends object> {
     public readonly cellTemplateMap = input<Record<string, TemplateRef<{ $implicit: unknown; row: unknown; }>>>({});
     protected readonly cellTemplates = computed<Record<string, TemplateRef<{ $implicit: unknown; row: unknown; }>>>(…);
     protected cellValue(row: T, col: TableColumn<T>): string;
+    private readonly changeDetector;
     protected clearColumnFilter(): void;
     private clipCapsSet;
     private clipFit;
@@ -228,9 +229,9 @@ export class TableComponent<T extends object> {
     protected isStriped(absoluteIndex: number): boolean;
     private lastLazyRequest;
     protected readonly layout = inject<DsTableLayout<T>>(…);
+    private readonly layoutChosen;
     private layoutKey;
     public readonly layoutMode = input<'fixed' | 'auto' | null>(null, { alias: 'layout' });
-    private readonly layoutResolved;
     private layoutRestored;
     public readonly lazy = input(false, { transform: booleanAttribute });
     public readonly lazyLoad = output<{ first: number; rows: number; }>();
@@ -245,6 +246,7 @@ export class TableComponent<T extends object> {
     protected onColumnFilterClick(col: TableColumn<T>, event: Event): void;
     protected onEditInput(event: Event): void;
     protected onFilterSearch(event: Event): void;
+    protected onPrintChange(printing: boolean): void;
     protected onRowAction(action: TableRowAction<T>): void;
     protected onRowClick(row: T, event: Event): void;
     protected onRowKey(row: T, event: Event): void;
@@ -265,6 +267,10 @@ export class TableComponent<T extends object> {
     public readonly paginationSize = input<DsSize | null>(null);
     private parseDurationMs;
     public readonly persistLayout = input(false, { transform: booleanAttribute });
+    public readonly printAllRows = input(false, { transform: booleanAttribute });
+    public readonly printHeading = input<string | null>(null);
+    public readonly printHeadingNote = input<string | null>(null);
+    protected readonly printing = signal(…);
     private publishHeadHeight;
     public readonly rangeAnnouncement = input<((first: number, last: number, total: number) => string) | null>(null);
     public readonly rangeAnnouncementResolved = computed(…);

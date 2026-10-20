@@ -32,6 +32,13 @@ export const routes: Routes = [
               (m) => m.TableClipHarnessPage,
             ),
         },
+        {
+          path: 'harness/table-print',
+          loadComponent: () =>
+            import('./harness/table-print.page').then(
+              (m) => m.TablePrintHarnessPage,
+            ),
+        },
       ]
     : []),
   { path: ':area/:anchor', loadComponent: load },

@@ -156,6 +156,7 @@ export { DsThemeOptions } from '@ids-group-ltd/ids-design-system/theme'; // inte
 export { DsToastHorizontalPosition } from '@ids-group-ltd/ids-design-system/core'; // type
 export { DsToastPosition } from '@ids-group-ltd/ids-design-system/core'; // interface
 export { DsToastVerticalPosition } from '@ids-group-ltd/ids-design-system/core'; // type
+export { DsTooltipConfig } from '@ids-group-ltd/ids-design-system/components/tooltip'; // interface
 export { DsTriggerDisplay } from '@ids-group-ltd/ids-design-system/core'; // type
 export { EmptyStateComponent } from '@ids-group-ltd/ids-design-system/components/empty-state'; // component
 export { EmptyStateTitleOverflow } from '@ids-group-ltd/ids-design-system/components/empty-state'; // type
@@ -316,7 +317,7 @@ export { ToastVariant } from '@ids-group-ltd/ids-design-system/components/toast'
 export { ToggleButtonComponent } from '@ids-group-ltd/ids-design-system/components/toggle-button'; // component
 export { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip'; // directive
 export { TooltipPanelComponent } from '@ids-group-ltd/ids-design-system/components/tooltip'; // component
-export { TooltipPlacement } from '@ids-group-ltd/ids-design-system/components/tooltip'; // type
+export { TooltipPlacement } from '@ids-group-ltd/ids-design-system/core'; // type
 export { TopBarComponent } from '@ids-group-ltd/ids-design-system/components/topbar'; // component
 export { TreeComponent } from '@ids-group-ltd/ids-design-system/components/tree'; // component
 export { TreeNode } from '@ids-group-ltd/ids-design-system/components/tree'; // interface
@@ -408,7 +409,7 @@ styles/_dropdown-overlay.scss {
     --ds-dropdown-panel-border-color: var(--border-default);
     --ds-dropdown-panel-max-height: 320px;
     --ds-dropdown-panel-max-width: none;
-    --ds-dropdown-panel-min-width: 220px;
+    --ds-dropdown-panel-min-width: 0;
     --ds-dropdown-panel-radius: var(--ds-radius-panel);
     --ds-dropdown-panel-shadow: var(--shadow-popover);
     --ds-option-bg-color-active: var(--surface-secondary);

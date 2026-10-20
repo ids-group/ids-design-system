@@ -255,6 +255,7 @@ function collectFixtures() {
   if (!existsSync(FIXTURES)) return [];
   const fixtures = [];
   for (const folder of readdirSync(FIXTURES, { withFileTypes: true })) {
+    if (folder.name === '_neutral') continue;
     if (!folder.isDirectory() || !VERSION_FOLDER.test(folder.name)) {
       problems.push(
         `fixtures/${folder.name}: not a <version> or unreleased folder`,

@@ -27,7 +27,7 @@
     "build:docs:dev": "npm run extract-docs && ng build ds-docs --configuration development",
     "build:elements": "node .design-sync/elements/tools/gen.mjs && ng build ds-elements && node .design-sync/elements/tools/build-bundle.mjs",
     "build:upload": "node .design-sync/tools/build-upload.mjs",
-    "build:lib": "npm run sync-lib-package && ng build ds && node tools/add-entry-aliases.mjs && node tools/build-schematics.mjs",
+    "build:lib": "npm run sync-lib-package && ng build ds && node tools/sync-lib-package.mjs --dist && node tools/add-entry-aliases.mjs && node tools/build-schematics.mjs",
     "entry-aliases": "node tools/add-entry-aliases.mjs",
     "sync-lib-package": "node tools/sync-lib-package.mjs",
     "build:lib:dev": "npm run sync-lib-package && ng build ds --configuration development",

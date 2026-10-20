@@ -19,7 +19,7 @@ bootstrapApplication(AppComponent, {
 
 `DsConfig` shape (the exported `DsConfig` type is the full contract):
 
-Eighteen sections and one top-level `locale`. The exported `DsConfig` type is the source of truth — each key carries its own
+Nineteen sections and one top-level `locale`. The exported `DsConfig` type is the source of truth — each key carries its own
 doc comment there, including why it is an app-level decision at all.
 
 ```ts
@@ -45,6 +45,7 @@ interface DsConfig {
   breadcrumbs?: { separator?: IconName; clickable?: boolean };
   datePicker?: { locale?: string; dateFormat?: string; firstDayOfWeek?: number };
   timePicker?: { format?: '24h' | '12h' };
+  tooltip?: { placement?: TooltipPlacement; delay?: number; arrow?: boolean; pinOnClick?: boolean }; // every dsTooltip
   avatar?: { initials?: (name: string) => string };
   brand?: { name?: string; logoLetter?: string; tagline?: string };
 }

@@ -3947,16 +3947,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dsTooltipPlacement",
         "kind": "input",
-        "type": "TooltipPlacement",
+        "type": "TooltipPlacement | null",
         "union": [
           "top",
           "bottom",
           "left",
           "right"
         ],
-        "default": "'top'",
+        "default": "null",
         "required": false,
-        "description": "Which side the tip opens on. With no room there it opens on the opposite side."
+        "description": "Which side the tip opens on. Wins over `dsTooltipConfig.placement`."
       }
     ],
     "outputs": []
@@ -10625,6 +10625,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Keeps the header row pinned while the body scrolls."
       },
       {
+        "name": "printAllRows",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Prints every row of a client-paged table instead of the page on screen, without the pager. A server-paged table (`total`) holds only its page, so it prints that page."
+      },
+      {
+        "name": "printHeading",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Prints as the first row of the header, repeated on every printed page with it, so a table's heading never ends a page without the table. Hidden on screen."
+      },
+      {
+        "name": "printHeadingNote",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "A line under `printHeading` in the printout."
+      },
+      {
         "name": "maxHeight",
         "kind": "input",
         "type": "string | null",
@@ -10943,7 +10970,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what the others leave, whatever its cells hold. `'auto'`, deprecated: the 0.15.0 widths, which follow the cell content and ignore `kind`. Unset falls back to `DS_CONFIG.table.layout`, then `'fixed'`."
+        "description": "`'auto'`, the default: the 0.15.0 widths, which follow the cell content and ignore `kind`. `'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what the others leave, whatever its cells hold. Unset falls back to `DS_CONFIG.table.layout`, then `'auto'`."
       },
       {
         "name": "stickyFirstColumn",
@@ -12387,36 +12414,45 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Tip text, or a template the panel renders as given. An empty string turns the tooltip off. Keep a template's content non-interactive: the panel is `role=\"tooltip\"` and never takes focus."
       },
       {
+        "name": "dsTooltipConfig",
+        "kind": "input",
+        "type": "DsTooltipConfig | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Placement, delay, arrow, pin-on-click and the clipped test for this tip. An unset field falls back to `DsConfig.tooltip`, then the built-in default."
+      },
+      {
         "name": "dsTooltipPlacement",
         "kind": "input",
-        "type": "TooltipPlacement",
+        "type": "TooltipPlacement | null",
         "union": [
           "top",
           "bottom",
           "left",
           "right"
         ],
-        "default": "'top'",
+        "default": "null",
         "required": false,
-        "description": "Which side the tip opens on. With no room there it opens on the opposite side."
+        "description": "Which side the tip opens on. Wins over `dsTooltipConfig.placement`."
       },
       {
         "name": "dsTooltipDelay",
         "kind": "input",
-        "type": "number",
+        "type": "number | null",
         "union": null,
-        "default": "120",
+        "default": "null",
         "required": false,
-        "description": "Milliseconds before the tip appears. Hiding is immediate."
+        "description": "Milliseconds before the tip appears. Wins over `dsTooltipConfig.delay`."
       },
       {
         "name": "dsTooltipArrow",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Draws the arrow that points at the host. Turn it off where the tip sits flush against it."
+        "description": "Draws the arrow that points at the host. Wins over `dsTooltipConfig.arrow`."
       },
       {
         "name": "dsTooltipWhenClipped",
@@ -12430,11 +12466,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dsTooltipPinOnClick",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip. While pinned the host carries `data-ds-tooltip-pinned`, a hook for styling the pinned trigger."
+        "description": "Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip. While pinned the host carries `data-ds-tooltip-pinned`, a hook for styling the pinned trigger. Wins over `dsTooltipConfig.pinOnClick`."
       }
     ],
     "outputs": []

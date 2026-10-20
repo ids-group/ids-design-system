@@ -51,5 +51,6 @@ export type {
   DsToastPosition,
   DsToastVerticalPosition,
 } from './toast-position';
+export type { TooltipPlacement } from './tooltip.types';
 export type { DsTriggerDisplay } from './trigger-display';
 export type { DsControlWidth } from './width';

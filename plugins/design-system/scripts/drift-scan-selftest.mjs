@@ -19,6 +19,10 @@ put(
 put('old/a.html', '<span class="markup-gone kept"></span>\n');
 put('new/a.scss', '.kept {}\n');
 put(
+  'old/b.scss',
+  '.html {}\n// see theme.comment-only\n/* and .block-only */\n',
+);
+put(
   'app/x.scss',
   '.gone-class {}\n.gone-classy {}\n.gone-class-y {}\n.markup-gone {}\n',
 );
@@ -27,6 +31,10 @@ put(
   'const token = "--ds-gone-token"; const selector = ".gone-class";\n',
 );
 put('app/z.html', '<i style="color: var(--ds-gone-token-x)"></i>\n');
+put(
+  'app/c.scss',
+  '// via <html data-brand="app"> (see index.html)\n/* .gone-class\n   index.html */\n.kept { background: url(index.html); content: "a.html"; }\n.html {}\n',
+);
 put('app/node_modules/n.scss', '.gone-class {}\n');
 
 try {
@@ -44,13 +52,14 @@ try {
     ),
   );
   assert.deepEqual(out.goneTokens, ['--ds-gone-token']);
-  assert.deepEqual(out.goneClasses, ['gone-class', 'markup-gone']);
+  assert.deepEqual(out.goneClasses, ['gone-class', 'html', 'markup-gone']);
   assert.deepEqual(
     out.hits.map(
       (hit) =>
         `${hit.file.slice(root.length + 1).replace(/\\/g, '/')}:${hit.line} ${hit.name}`,
     ),
     [
+      'app/c.scss:5 html',
       'app/x.scss:1 gone-class',
       'app/x.scss:4 markup-gone',
       'app/y.ts:1 --ds-gone-token',

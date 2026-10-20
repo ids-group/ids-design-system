@@ -124,13 +124,13 @@
 
   <ul class="block-desc t-s">
     <li>
-      Opens after <code class="t-mono-inline">dsTooltipDelay</code> (120 ms),
-      hides at once; <kbd>Esc</kbd> closes it.
+      Opens after <code class="t-mono-inline">delay</code> (120 ms), hides at
+      once; <kbd>Esc</kbd> closes it.
     </li>
 
     <li>
-      No room on the <code class="t-mono-inline">dsTooltipPlacement</code> side
-      - flips, arrow included, 8px clear of the viewport edge.
+      No room on the <code class="t-mono-inline">placement</code> side - flips,
+      arrow included, 8px clear of the viewport edge.
     </li>
 
     <li>
@@ -142,7 +142,7 @@
 
     <li>
       <code class="t-mono-inline">
-        [dsTooltipArrow]="false"
+        arrow: false
       </code> - no arrow.
     </li>
 
@@ -166,19 +166,19 @@
 
   <div class="demo">
     <ds-button
-      dsTooltipPlacement="top"
       color="neutral"
       variant="outline"
       size="sm"
+      [dsTooltipConfig]="{ placement: 'top' }"
       [dsTooltip]="'Recompute pending — 3 affected'">
       Hover me · top
     </ds-button>
 
     <ds-button
-      dsTooltipPlacement="bottom"
       color="neutral"
       variant="outline"
       size="sm"
+      [dsTooltipConfig]="{ placement: 'bottom' }"
       [dsTooltip]="'Last synced 14m ago'">
       Hover me · bottom
     </ds-button>
@@ -211,9 +211,94 @@
       color="neutral"
       variant="outline"
       size="sm"
-      [dsTooltipArrow]="false"
+      [dsTooltipConfig]="{ arrow: false }"
       [dsTooltip]="'No arrow on this one'">
       Hover me · no arrow
+    </ds-button>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Options
+  </h3>
+
+  <ul class="block-desc t-s">
+    <li>
+      Per tip: <code class="t-mono-inline">[dsTooltipConfig]</code> -
+      <code class="t-mono-inline">
+        placement
+      </code>,
+      <code class="t-mono-inline">
+        delay
+      </code>,
+      <code class="t-mono-inline">
+        arrow
+      </code>,
+      <code class="t-mono-inline">
+        pinOnClick
+      </code>,
+      <code class="t-mono-inline">
+        whenClipped
+      </code>.
+    </li>
+
+    <li>
+      App-wide: <code class="t-mono-inline">provideDsConfig</code> with
+      <code class="t-mono-inline">
+        tooltip
+      </code> - the same keys but
+      <code class="t-mono-inline">
+        whenClipped
+      </code>.
+    </li>
+
+    <li>
+      Precedence: <code class="t-mono-inline">dsTooltipConfig</code> &gt;
+      <code class="t-mono-inline">
+        DsConfig.tooltip
+      </code> &gt; built-in: top,
+      120 ms, arrow, no pin.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        dsTooltipPlacement
+      </code>,
+      <code class="t-mono-inline">
+        dsTooltipDelay
+      </code>,
+      <code class="t-mono-inline">
+        dsTooltipArrow
+      </code>,
+      <code class="t-mono-inline">
+        dsTooltipPinOnClick
+      </code> - deprecated;
+      still win over both while set.
+    </li>
+  </ul>
+
+  <pre class="t-mono-block">{{ optionsSnippet }}</pre>
+
+  <div class="demo">
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm"
+      data-demo="tooltip-config"
+      [dsTooltipConfig]="{ placement: 'bottom', delay: 600, arrow: false }"
+      [dsTooltip]="'Bottom, 600 ms, no arrow'">
+      Config · bottom, slow
+    </ds-button>
+
+    <!-- Deprecated input kept here to show that it still wins over the config. -->
+    <ds-button
+      dsTooltipPlacement="left"
+      color="neutral"
+      variant="outline"
+      size="sm"
+      data-demo="tooltip-deprecated-wins"
+      [dsTooltipConfig]="{ placement: 'right' }"
+      [dsTooltip]="'dsTooltipPlacement wins: left'">
+      Deprecated input wins
     </ds-button>
   </div>
 
@@ -223,10 +308,10 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      dsTooltipPinOnClick
-    </code>: opens with no
-    delay; a click keeps it open after the pointer leaves. Opt in only where the
-    click does nothing else.
+      pinOnClick: true
+    </code>: opens with no delay;
+    a click keeps it open after the pointer leaves. Opt in only where the click
+    does nothing else.
   </p>
 
   <ul class="block-desc t-s">
@@ -249,10 +334,10 @@
 
   <div class="demo">
     <ds-button
-      dsTooltipPinOnClick
       color="neutral"
       variant="outline"
       size="sm"
+      [dsTooltipConfig]="{ pinOnClick: true }"
       [dsTooltip]="'Stays open after a click'">
       Click to pin
     </ds-button>
@@ -472,7 +557,7 @@
       <code class="t-mono-inline">
         data-ds-tooltip-pinned
       </code>, styleable on
-      any <code class="t-mono-inline">dsTooltipPinOnClick</code> host.
+      any <code class="t-mono-inline">pinOnClick</code> host.
     </li>
 
     <li>

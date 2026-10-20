@@ -4218,8 +4218,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-dropdown-panel-min-width",
-        "value": "220px",
-        "notes": "Lower bound for the connected dropdown panel behind ds-select, ds-multi-select and ds-autocomplete, 220px by default. Set on the pane in both width modes, so a panel never narrows below it and is placed by the width it is drawn at; a wider trigger still sets the width. Forwarded onto the portaled pane, so a host-scoped value reaches it."
+        "value": "0",
+        "notes": "Lower bound for the connected dropdown panel behind ds-select, ds-multi-select and ds-autocomplete, 0 by default, so the panel is as wide as its trigger. Set on the pane in both width modes, so a panel never narrows below it and is placed by the width it is drawn at; a wider trigger still sets the width. Forwarded onto the portaled pane, so a host-scoped value reaches it."
       },
       {
         "name": "--ds-dropdown-panel-max-width",

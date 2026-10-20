@@ -17,7 +17,7 @@
 // as in `baseDir`.
 // `layout` reads the `layout-*` cases: `<baselineUrl>` serves the page from a 0.15.0 checkout with
 // `ds-docs/src/app/harness/table-layout.cases.ts` and its plain `@for` block copied in, `<docsUrl>`
-// this checkout, where each case renders under the default layout and again as `<id>-auto`.
+// this checkout, where each case renders under the page's `'fixed'` config and again as `<id>-auto`.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { open, wait } from './headless-chrome.mjs';

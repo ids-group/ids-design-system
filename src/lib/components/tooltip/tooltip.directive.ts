@@ -9,6 +9,7 @@ import {
   TemplateRef,
   afterNextRender,
   booleanAttribute,
+  computed,
   inject,
   input,
 } from '@angular/core';
@@ -41,7 +42,17 @@ import {
   pointArrowAtHost,
   positionsFor,
 } from './tooltip-position';
-import type { TooltipPlacement } from './tooltip.types';
+import {
+  DS_CONFIG,
+  type DsConfig,
+  type TooltipPlacement,
+} from '@ids-group-ltd/ids-design-system/core';
+import type { DsTooltipConfig } from './tooltip.types';
+
+type TooltipOptions = NonNullable<DsConfig['tooltip']>;
+
+const toOptionalBoolean = (value: unknown): boolean | null =>
+  value == null ? null : booleanAttribute(value);
 
 const PINNED_ATTRIBUTE = 'data-ds-tooltip-pinned';
 
@@ -65,6 +76,7 @@ export class TooltipDirective implements OnDestroy {
   private readonly overlay = inject(Overlay);
   private readonly host = inject(ElementRef<HTMLElement>);
   private readonly document = inject(DOCUMENT);
+  private readonly config = inject(DS_CONFIG);
   private readonly hostPinOnClick = inject(TOOLTIP_PIN_ON_CLICK, {
     self: true,
     optional: true,
@@ -76,12 +88,20 @@ export class TooltipDirective implements OnDestroy {
   /** Tip text, or a template the panel renders as given. An empty string turns the tooltip off.
    *  Keep a template's content non-interactive: the panel is `role="tooltip"` and never takes focus. */
   readonly dsTooltip = input<string | TemplateRef<unknown>>('');
-  /** Which side the tip opens on. With no room there it opens on the opposite side. */
-  readonly dsTooltipPlacement = input<TooltipPlacement>('top');
-  /** Milliseconds before the tip appears. Hiding is immediate. */
-  readonly dsTooltipDelay = input<number>(120);
-  /** Draws the arrow that points at the host. Turn it off where the tip sits flush against it. */
-  readonly dsTooltipArrow = input(true, { transform: booleanAttribute });
+  /** Placement, delay, arrow, pin-on-click and the clipped test for this tip. An unset field falls
+   *  back to `DsConfig.tooltip`, then the built-in default. */
+  readonly dsTooltipConfig = input<DsTooltipConfig | null>(null);
+  /** Which side the tip opens on. Wins over `dsTooltipConfig.placement`.
+   *  @deprecated Use `[dsTooltipConfig]="{ placement }"`, or `provideDsConfig({ tooltip: { placement } })` app-wide. */
+  readonly dsTooltipPlacement = input<TooltipPlacement | null>(null);
+  /** Milliseconds before the tip appears. Wins over `dsTooltipConfig.delay`.
+   *  @deprecated Use `[dsTooltipConfig]="{ delay }"`, or `provideDsConfig({ tooltip: { delay } })` app-wide. */
+  readonly dsTooltipDelay = input<number | null>(null);
+  /** Draws the arrow that points at the host. Wins over `dsTooltipConfig.arrow`.
+   *  @deprecated Use `[dsTooltipConfig]="{ arrow }"`, or `provideDsConfig({ tooltip: { arrow } })` app-wide. */
+  readonly dsTooltipArrow = input<boolean | null, unknown>(null, {
+    transform: toOptionalBoolean,
+  });
   /** Show the tip only while the host shows less text than it holds: cut by width, or by lines
    *  under `overflow: hidden` or `clip`, as with `line-clamp`. Re-tested on every open.
    *  A boolean or the bare attribute tests the host. A selector tests the element it matches inside
@@ -100,11 +120,47 @@ export class TooltipDirective implements OnDestroy {
 
   /** Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves
    *  until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip.
-   *  While pinned the host carries `data-ds-tooltip-pinned`, a hook for styling the pinned trigger. */
-  readonly dsTooltipPinOnClick = input(false, { transform: booleanAttribute });
+   *  While pinned the host carries `data-ds-tooltip-pinned`, a hook for styling the pinned trigger.
+   *  Wins over `dsTooltipConfig.pinOnClick`.
+   *  @deprecated Use `[dsTooltipConfig]="{ pinOnClick: true }"`, or `provideDsConfig({ tooltip: { pinOnClick } })` app-wide. */
+  readonly dsTooltipPinOnClick = input<boolean | null, unknown>(null, {
+    transform: toOptionalBoolean,
+  });
+
+  private readonly placement = this.resolve(
+    this.dsTooltipPlacement,
+    'placement',
+    'top',
+  );
+  private readonly delay = this.resolve(this.dsTooltipDelay, 'delay', 120);
+  private readonly arrow = this.resolve(this.dsTooltipArrow, 'arrow', true);
+  private readonly pinOnClick = this.resolve(
+    this.dsTooltipPinOnClick,
+    'pinOnClick',
+    false,
+  );
+  private readonly whenClipped = computed(
+    () =>
+      this.dsTooltipWhenClipped() ??
+      toClipTarget(this.dsTooltipConfig()?.whenClipped),
+  );
+
+  private resolve<K extends keyof TooltipOptions>(
+    deprecatedInput: Signal<TooltipOptions[K] | null>,
+    key: K,
+    fallback: NonNullable<TooltipOptions[K]>,
+  ): Signal<NonNullable<TooltipOptions[K]>> {
+    return computed(
+      () =>
+        deprecatedInput() ??
+        this.dsTooltipConfig()?.[key] ??
+        this.config.tooltip?.[key] ??
+        fallback,
+    );
+  }
 
   private isClipped(): boolean {
-    return isHostClipped(this.hostElement, this.dsTooltipWhenClipped());
+    return isHostClipped(this.hostElement, this.whenClipped());
   }
 
   private get hostElement(): HTMLElement {
@@ -112,13 +168,11 @@ export class TooltipDirective implements OnDestroy {
   }
 
   private pinsOnClick(): boolean {
-    return this.hostPinOnClick?.() ?? this.dsTooltipPinOnClick();
+    return this.hostPinOnClick?.() ?? this.pinOnClick();
   }
 
   private ownText(): string {
-    return ownTextOf(
-      clipElement(this.hostElement, this.dsTooltipWhenClipped()),
-    );
+    return ownTextOf(clipElement(this.hostElement, this.whenClipped()));
   }
 
   /** A host that leads with its own text puts it, in bold, above the tip while it is clipped, unless the tip already says it. */
@@ -129,7 +183,7 @@ export class TooltipDirective implements OnDestroy {
     }
     const own = this.ownText();
     if (!given) {
-      return this.dsTooltipWhenClipped() ? escapeTooltipMarkup(own) : '';
+      return this.whenClipped() ? escapeTooltipMarkup(own) : '';
     }
     if (
       this.leadsWithOwnText &&
@@ -146,7 +200,7 @@ ${given}`;
 
   /** A clipped host's full text is already in the DOM; describing it again would announce it twice. */
   private disclosesOwnText(text: string): boolean {
-    if (!this.dsTooltipWhenClipped()) {
+    if (!this.whenClipped()) {
       return false;
     }
 
@@ -188,7 +242,7 @@ ${given}`;
 
   constructor() {
     afterNextRender(() => {
-      if (this.dsTooltipWhenClipped()) {
+      if (this.whenClipped()) {
         this.detachAncestor =
           watchFocusableAncestor(this.ancestorFocusTrigger) ??
           tabStopWhileClipped(this.ancestorFocusTrigger);
@@ -206,7 +260,7 @@ ${given}`;
   protected onFocusIn(event: FocusEvent): void {
     const host = this.hostElement;
     if (
-      this.dsTooltipWhenClipped() &&
+      this.whenClipped() &&
       host.matches(FOCUSABLE) &&
       (event.target !== host || !host.matches(':focus-visible'))
     ) {
@@ -231,7 +285,7 @@ ${given}`;
     if (this.pinsOnClick() && this.ref?.hasAttached()) {
       return;
     }
-    if (this.dsTooltipWhenClipped() && !this.isClipped()) {
+    if (this.whenClipped() && !this.isClipped()) {
       return;
     }
     if (this.timer !== null) {
@@ -239,7 +293,7 @@ ${given}`;
     }
     this.timer = window.setTimeout(
       () => this.show(),
-      this.pinsOnClick() ? 0 : this.dsTooltipDelay(),
+      this.pinsOnClick() ? 0 : this.delay(),
     );
   }
 
@@ -321,7 +375,7 @@ ${given}`;
 
   @HostListener('keydown')
   protected onKeydown(): void {
-    if (this.dsTooltipWhenClipped()) {
+    if (this.whenClipped()) {
       this.onClose();
     }
   }
@@ -336,7 +390,7 @@ ${given}`;
   private show(): void {
     // show() can be re-entered with a panel open: dispose it first to avoid a leaked OverlayRef and a duplicate id.
     this.disposeRef();
-    const placement = this.dsTooltipPlacement();
+    const placement = this.placement();
     const positionStrategy = this.overlay
       .position()
       .flexibleConnectedTo(this.host)
@@ -357,7 +411,7 @@ ${given}`;
     const tip = this.tipContent();
     cmpRef.setInput('text', tip);
     cmpRef.setInput('placement', placement);
-    cmpRef.setInput('arrow', this.dsTooltipArrow());
+    cmpRef.setInput('arrow', this.arrow());
     positionStrategy.positionChanges.subscribe(({ connectionPair }) =>
       cmpRef.setInput(
         'placement',

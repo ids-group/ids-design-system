@@ -1,0 +1,14 @@
+.search-field {
+  position: relative;
+}
+
+.search-glyph {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+}
+
+.search-field ::ng-deep .autocomplete-input {
+  padding-left: 36px;
+}

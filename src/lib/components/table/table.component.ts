@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Injector,
@@ -178,6 +179,9 @@ function compareSortValues(
     '[class.expandable]': 'expandableRows()',
     '[class.sticky-scrollbar]': 'stickyScrollbarResolved()',
     '[class.resizable]': 'layout.resize() !== null',
+    '[class.print-all-rows]': 'printAllRows() && total() === null',
+    '(window:beforeprint)': 'onPrintChange(true)',
+    '(window:afterprint)': 'onPrintChange(false)',
   },
   providers: [DsTableLayout],
 })
@@ -216,6 +220,18 @@ export class TableComponent<T extends object> {
   );
   /** Keeps the header row pinned while the body scrolls. */
   readonly stickyHeader = input(true, { transform: booleanAttribute });
+  /**
+   * Prints every row of a client-paged table instead of the page on screen, without the
+   * pager. A server-paged table (`total`) holds only its page, so it prints that page.
+   */
+  readonly printAllRows = input(false, { transform: booleanAttribute });
+  /**
+   * Prints as the first row of the header, repeated on every printed page with it, so a
+   * table's heading never ends a page without the table. Hidden on screen.
+   */
+  readonly printHeading = input<string | null>(null);
+  /** A line under `printHeading` in the printout. */
+  readonly printHeadingNote = input<string | null>(null);
   /** Caps the scroll body height (any CSS length) and scrolls it vertically; pair with
    *  `stickyHeader`. `null` (default) grows to content. */
   readonly maxHeight = input<string | null>(null);
@@ -358,24 +374,23 @@ export class TableComponent<T extends object> {
     null,
   );
 
-  /** `'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what
-   *  the others leave, whatever its cells hold. `'auto'`, deprecated: the 0.15.0 widths, which
-   *  follow the cell content and ignore `kind`. Unset falls back to `DS_CONFIG.table.layout`, then
-   *  `'fixed'`.
-   *  @deprecated `'auto'` is a temporary way back to the 0.15.0 column widths and will be removed.
-   *  Review the table under `'fixed'`, setting `width`, `kind` or `minWidth` where a column needs
-   *  it, then delete the binding. */
+  /** `'auto'`, the default: the 0.15.0 widths, which follow the cell content and ignore `kind`.
+   *  `'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what
+   *  the others leave, whatever its cells hold. Unset falls back to `DS_CONFIG.table.layout`, then
+   *  `'auto'`.
+   *  @deprecated `'auto'` is a temporary default and will be removed. Binding it changes nothing,
+   *  so delete the binding; to take the configured widths now, set `'fixed'`. */
   readonly layoutMode = input<'fixed' | 'auto' | null>(null, {
     // eslint-disable-next-line @angular-eslint/no-input-rename
     alias: 'layout',
   });
-  private readonly layoutResolved = resolveWithConfig(
+  private readonly layoutChosen = resolveWithConfig<'fixed' | 'auto' | null>(
     this.layoutMode,
     (config) => config.table?.layout,
-    'fixed',
+    null,
   );
   protected readonly autoLayout = computed(
-    () => this.layoutResolved() === 'auto',
+    () => (this.layoutChosen() ?? 'auto') === 'auto',
   );
 
   /** Pin the first data column (and the select column) on horizontal scroll. */
@@ -713,6 +728,17 @@ export class TableComponent<T extends object> {
 
   private readonly injector = inject(Injector);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly changeDetector = inject(ChangeDetectorRef);
+  protected readonly printing = signal(false);
+
+  protected onPrintChange(printing: boolean): void {
+    if (!this.printAllRows()) {
+      return;
+    }
+    this.printing.set(printing);
+    // Chromium lays out the printout right after the beforeprint task: a render scheduled later misses it.
+    this.changeDetector.detectChanges();
+  }
   private readonly editInput =
     viewChild<ElementRef<HTMLInputElement>>('editInput');
   protected readonly editingCell = signal<{
@@ -1224,7 +1250,9 @@ export class TableComponent<T extends object> {
   });
 
   protected readonly displayData = computed<readonly T[]>(() =>
-    this.pageSize() !== null ? this.pagedData() : this.sortedData(),
+    this.pageSize() !== null && !this.printing()
+      ? this.pagedData()
+      : this.sortedData(),
   );
 
   // Loading wins while it lasts. `aria-live="polite"` does not announce a region's initial
@@ -1674,8 +1702,8 @@ export class TableComponent<T extends object> {
 
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       devWarn(() =>
-        this.autoLayout()
-          ? '[ds-table] layout="auto" (or DS_CONFIG.table.layout) is deprecated and will be removed: it brings back the 0.15.0 column widths, which follow the cell content and ignore `kind`. Review each table under layout="fixed", setting `width`, `kind` or `minWidth` where a column needs it.'
+        this.layoutChosen() === 'auto'
+          ? '[ds-table] layout="auto" (or DS_CONFIG.table.layout) is deprecated and will be removed. It is the default already, so delete the binding or the config key; to take the configured widths now, set layout="fixed".'
           : null,
       );
 

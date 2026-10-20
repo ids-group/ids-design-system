@@ -81,9 +81,7 @@
       "surface": "style",
       "find": [
         ".search-clear",
-        "ds-search",
-        ":focus-visible",
-        "box-shadow"
+        "ds-search"
       ],
       "why": "A focus rule you added to the ds-search clear button because it showed no indicator at all - the shell-wide reset 0.10.2 used silenced that tab stop too. Every shell names the one control it silences now, so the button keeps its own ring.",
       "replaceWith": "nothing - the component paints it"
