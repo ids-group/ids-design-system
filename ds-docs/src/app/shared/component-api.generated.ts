@@ -10625,6 +10625,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Keeps the header row pinned while the body scrolls."
       },
       {
+        "name": "printAllRows",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Prints every row of a client-paged table instead of the page on screen, without the pager. A server-paged table (`total`) holds only its page, so it prints that page."
+      },
+      {
         "name": "maxHeight",
         "kind": "input",
         "type": "string | null",

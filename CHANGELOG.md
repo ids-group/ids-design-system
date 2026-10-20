@@ -2,6 +2,11 @@
 
 ### Added
 
+- **`ds-table` takes `printAllRows`.** A table paged on the client prints every row instead of the
+  page on screen, and leaves the pager out of the printout. A table paged by the server (`total`)
+  holds only its page and prints that page with its range label. The default, `false`, prints the
+  page on screen.
+
 - **Every chart takes `highlightActive`, and `DsConfig.chart.highlightActive` sets it app-wide.**
   `false` keeps the hovered or focused column, bar or heatmap cell at its own colour; unset falls
   back to the config, then `true`, which brightens it. An input on the element wins over the
@@ -79,6 +84,13 @@
   `'top'`, `120`, `true` or `false`.
 
 ### Fixed
+
+- **A printed `ds-table` keeps its column names on every page.** The header row repeated on a
+  page after the first printed without its labels; it prints them now. A row no longer splits
+  across a page break, and the printout leaves out the table's own controls: the pager buttons
+  and page-size select, the column filter, resize and expand buttons, and the controls the table
+  adds to its toolbar. The range label of the pager still prints, and content projected into the
+  toolbar stays.
 
 - **Showing and hiding a tooltip, a chart tooltip, a modal, a confirm, a toast, a spinner, a skeleton
   or a loading overlay no longer inserts and removes its stylesheet each time.** The first instance
