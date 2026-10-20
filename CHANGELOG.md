@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.15.3 — 2026-10-20
+
 ### Added
 
 - **`ds-table` takes `printHeading` and `printHeadingNote`.** In print the table opens its header
