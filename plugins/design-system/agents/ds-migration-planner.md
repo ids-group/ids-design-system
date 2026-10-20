@@ -35,8 +35,8 @@ rewrite: you are not changing the migration, you are stating where to look for i
 the artifact it describes (a store, a query, a stylesheet, a template) and for the shapes it quotes;
 a note that says "a server query built as `orderBy: sortKey()` must skip the clause when `sortDirection()`
 is null" is handing you both `surface: "typescript"` and two `detect` strings.
-A top-level `deleteList` is DATA, not something to reconstruct: every published manifest carries
-it as `{ id, surface, find, why, replaceWith }` rows — pass them through verbatim (the
+A top-level `deleteList` is DATA, not something to reconstruct: where a published manifest carries
+`{ id, surface, find, why, replaceWith }` rows (new manifests write none) — pass them through verbatim (the
 orchestrator's delete-list pass runs each `find`, not you). Build one from prose only when
 planning a version that ships no manifest at all — or when a shipped manifest's `deleteList` is
 empty while the prose plainly creates redundancy — taking the `find` from whatever consumer-side

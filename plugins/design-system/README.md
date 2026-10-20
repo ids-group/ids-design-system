@@ -73,8 +73,9 @@ documented mechanism for marketplace fetches — do not rely on it.
   disjoint batch) per agent — a file is never shared between concurrent agents.
 - `agents/ds-recheck.md` (sonnet) — independently re-verify every migration item (grep for
   mechanical, semantic for behavioral); always runs as a second pass.
-- `agents/ds-delete-judge.md` (sonnet) - the deleteList pass: judge each hit dead or kept against
-  the release's tree and delete the dead ones; one per group of rows with disjoint files.
+- `agents/ds-delete-judge.md` (sonnet) - the deleteList and workaround pass: judge each hit dead or kept
+  against the release's tree and delete the dead ones; one per group of rows and applied items
+  with disjoint files.
 - `agents/ds-visual-check.md` (sonnet) - measure a rendering change on a consumer screen in a real
   browser; dispatched only when the session has browser tools.
 - `scripts/apply-mechanical.mjs` - applies a version's token-, selector-, input-, output-, class-

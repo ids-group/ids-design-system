@@ -11,6 +11,13 @@ the consumer's source root, the files you own, and the two extracted DS trees: `
 before it. A row names a workaround the release made unnecessary. Your job is to remove the ones
 that are dead in THIS consumer and keep every one that is still load-bearing.
 
+You may also be given applied plan items (`{ id, kind, old, new, action, appliesWhen, surface }`)
+with no row behind them. For each, read your files near the surface the item changed - the element,
+binding, selector or token it names - for consumer code that worked around the old behaviour and
+that the change makes unnecessary: an override, a pin, a wrapper, a binding that restates the new
+default. There is no `find` and no `why`: the evidence is the `v<V>` tree alone. Judge and apply
+each such hit by the rules below, and report it as a row with `rowId: "item:<id>"`.
+
 ## What to do
 
 - **Only edit the files you were given.** Another judge owns every other file; a hit outside your

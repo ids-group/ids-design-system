@@ -105,8 +105,8 @@ a normal run, with these differences:
   for mechanical, semantic for
   behavioral. One per batch of 3-4 related items, one verdict object per item. An item the
   pre-pass closed is re-checked too: its re-check is the pre-pass grep (no model).
-- `ds-delete-judge` (sonnet) - the deleteList pass (step 8). One per group of rows whose hit files
-  are disjoint; a file is never shared between concurrent judges.
+- `ds-delete-judge` (sonnet) - the deleteList and workaround pass (step 8). One per group of rows
+  and applied items whose files are disjoint; a file is never shared between concurrent judges.
 - `ds-visual-check` (sonnet) - measures a rendering change on a consumer screen in a real browser
   (step 5). One per screen, dispatched only when the session has browser tools.
 
@@ -770,6 +770,15 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    Re-run the verify command after any deletion, before the commit. A deletion in
    `rendersDifferently` gets a visual check the same way as step 5 and goes to "applied - human
    should eyeball".
+   **Workarounds under each applied item, in the same sweep.** A manifest says what changed and
+   where; most write no `deleteList` row. So every item of V with status `applied` also goes to a
+   judge: its files are the ones its finder hit and its applier touched, merged with the row hits
+   before grouping so no file has two judges. The judge reads those files near the changed surface
+   (the element, binding, selector or token the item names) for a workaround the change makes
+   unnecessary - an override, a pin, a wrapper, a binding that restates the new default - and
+   applies the row rules above: delete only what the `v<V>` tree shows V now covers for this
+   consumer's case, keep when unsure. Its result is keyed `item:<id>` and is recorded and reported
+   with the rows.
 9. **Green → commit.** Green includes a clean lint re-check (step 7) on the final tree, where the
    lint step ran. Stage EXACTLY the touched-files union (step 3) plus the target's
    `package.json` plus the lockfile, by explicit pathspec (never `git add -A`, never a bare
@@ -806,10 +815,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
   design-system repo; never fold them into the not-applicable total.
   **A feedback entry filed back must be complete and evidenced:** any claim that the DS removed or voided
   something carries file:line at BOTH tag boundaries (see the planner's both-boundaries rule) —
-  removal asserted from absence in one file is the known false-positive class; and a defect that
-  proposes `deleteList` rows also names the paired CHANGELOG edit, because the DS's
-  `check-delete-tables` gate requires every row's `find` shape verbatim in that version's "What you
-  can now DELETE" table — a rows-only ask fails the release.
+  removal asserted from absence in one file is the known false-positive class. Never propose new
+  `deleteList` rows: the DS writes none for new entries, and finding workarounds is step 8's job.
 - **Informational (FYI, no action):** documented changes needing no consumer code edit (from the
   plan's `informational`) — listed so the human is aware, NOT a to-do. A bare-string entry stays
   here; an entry shaped `{ text, verify }` goes in "applied — human should eyeball" instead, with
