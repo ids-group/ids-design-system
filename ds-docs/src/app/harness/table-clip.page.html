@@ -460,3 +460,36 @@
     [data]="perfRows()"
     [columns]="perfColumns()" />
 </section>
+
+@if (cases[0]; as first) {
+  <section
+    class="case"
+    data-case="max-content-fixed"
+    style="width: max-content">
+    <h3>
+      max-content-fixed - layout "fixed" in a width: max-content container
+    </h3>
+
+    <ds-table
+      [caption]="first.title"
+      [data]="first.data"
+      [columns]="first.columns" />
+  </section>
+
+  <section
+    class="case"
+    data-case="max-content-virtual"
+    style="width: max-content">
+    <h3>
+      max-content-virtual - virtualScroll in a width: max-content container
+    </h3>
+
+    <ds-table
+      layout="auto"
+      [virtualScroll]="true"
+      [maxHeight]="'240px'"
+      [caption]="first.title"
+      [data]="first.data"
+      [columns]="first.columns" />
+  </section>
+}

@@ -513,6 +513,13 @@ function check(outDir, baseDir) {
     if (result.cases[id].overflow > 0)
       fail(`${id}: horizontal overflow ${result.cases[id].overflow}px`);
   }
+  for (const id of ['max-content-fixed', 'max-content-virtual']) {
+    if (!result.cases[id]) fail(`${id}: case missing`);
+    else if (result.cases[id].tableWidth > 2000)
+      fail(
+        `${id}: a max-content container widened the table to ${result.cases[id].tableWidth}px`,
+      );
+  }
   for (const [width, measured] of Object.entries(result.container)) {
     if (Number(width) >= 800 && measured.overflow > 0)
       fail(`container ${width}: horizontal overflow ${measured.overflow}px`);

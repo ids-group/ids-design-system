@@ -103,6 +103,13 @@
 
 ### Fixed
 
+- **A `ds-table` under `layout="fixed"`, or with `virtualScroll`, no longer grows to 1 000 000px in
+  a container sized to its content.** In a `max-content` grid track or a box at
+  `width: max-content` the table took the engine's maximum width, and in an inline-block or an
+  absolutely positioned box without a width it took all the width there was. It is now as
+  wide as its columns at their declared widths and header labels. In a container with a width of
+  its own, nothing changes.
+
 - **A printed `ds-table` keeps its column names on every page.** The header row repeated on a
   page after the first printed without its labels; it prints them now. A row no longer splits
   across a page break, and the printout leaves out the table's own controls: the pager buttons

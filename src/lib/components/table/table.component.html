@@ -17,6 +17,8 @@
     #scrollWrap
     class="scroll-wrap"
     [class.scroll-y]="maxHeight()"
+    [class.fixed-intrinsic]="intrinsicWidth() !== null"
+    [style.contain-intrinsic-inline-size.px]="intrinsicWidth()"
     [style.max-height]="maxHeight()">
     <div
       class="visually-hidden"

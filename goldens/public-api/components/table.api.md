@@ -159,6 +159,7 @@ export class TableComponent<T extends object> {
     public readonly columnFilterOptions = input<ReadonlyMap<string, readonly string[]>>(new Map());
     private readonly columnFilterPopover;
     public readonly columnFilters = model<Map<string, ReadonlySet<string>>>(new Map());
+    private columnFloor;
     private readonly columnPickerPopover;
     private readonly columnWidthControls;
     protected readonly columnWidths = computed<readonly (number | null)[]>(…);
@@ -166,6 +167,7 @@ export class TableComponent<T extends object> {
     protected commitEdit(row: T, col: TableColumn<T>): void;
     private readonly contentWidths;
     public readonly data = input.required<readonly T[]>();
+    private readonly declaredWidths;
     public readonly density = input<'default' | 'compact'>('default');
     private readonly destroyRef;
     protected readonly displayData = computed<readonly T[]>(…);
@@ -216,6 +218,7 @@ export class TableComponent<T extends object> {
     private readonly hscrollProxy;
     private readonly injector;
     protected readonly intl = inject(…);
+    protected readonly intrinsicWidth = computed<number | null>(…);
     protected isActionDisabled(action: TableRowAction<T>): boolean;
     protected isColumnFiltered(col: TableColumn<T>): boolean;
     protected isEditing(row: T, col: TableColumn<T>): boolean;
