@@ -229,9 +229,9 @@ export class TableComponent<T extends object> {
     protected isStriped(absoluteIndex: number): boolean;
     private lastLazyRequest;
     protected readonly layout = inject<DsTableLayout<T>>(…);
+    private readonly layoutChosen;
     private layoutKey;
     public readonly layoutMode = input<'fixed' | 'auto' | null>(null, { alias: 'layout' });
-    private readonly layoutResolved;
     private layoutRestored;
     public readonly lazy = input(false, { transform: booleanAttribute });
     public readonly lazyLoad = output<{ first: number; rows: number; }>();

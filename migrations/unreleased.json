@@ -93,6 +93,39 @@
       "pitfall": "A fallback such as `?? 'top'` gives the built-in default, not a value set through `dsTooltipConfig` or `DsConfig.tooltip`; read those from where your code set them.",
       "restore": null,
       "verify": "Every read of `dsTooltipPlacement`, `dsTooltipDelay`, `dsTooltipArrow` and `dsTooltipPinOnClick` in the app handles `null`, and the app type-checks under `strict`."
+    },
+    {
+      "id": "table-layout-default-auto",
+      "kind": "behavior",
+      "old": "provideDsConfig",
+      "new": null,
+      "surface": [
+        "config",
+        "template"
+      ],
+      "searchHints": [
+        "provideDsConfig",
+        "DS_CONFIG",
+        "<ds-table",
+        "layout=\"auto\""
+      ],
+      "detect": [
+        "provideDsConfig({",
+        "table: {",
+        "layout: 'auto'",
+        "<ds-table"
+      ],
+      "action": "None, unless the app's tables must keep the 0.15.1 widths: set `provideDsConfig({ table: { layout: 'fixed' } })`, or `layout=\"fixed\"` on one `ds-table`. Delete `layout: 'auto'` from `provideDsConfig` and `layout=\"auto\"` from every `ds-table`: both are the default now.",
+      "appliesWhen": "Every `ds-table` without its own `layout`, in an app whose `DsConfig.table.layout` is unset. Under `'auto'` each column follows its cell content as on 0.15.0: `kind` has no effect, and a numeric `width`, `width: 'content'`, `minWidth` and `truncate` size the column as on 0.15.0. A table with `virtualScroll` keeps `table-layout: fixed`. An app that already set `'auto'` sees no change.",
+      "pitfall": "A `kind` or `minWidth` added for 0.15.1 does nothing under `'auto'`, so a table tuned for `'fixed'` changes width without a build error; check it with the app's real rows. `'auto'` is still deprecated, and a development build warns once per page while a binding or config key sets it.",
+      "restore": "provideDsConfig({ table: { layout: 'fixed' } })",
+      "verify": "Without a `layout` anywhere, each `ds-table` shows the column widths it had on 0.15.0, and the console shows no `layout=\"auto\"` deprecation warning.",
+      "supersedes": [
+        "0.15.1#table-column-width-from-config"
+      ],
+      "evidence": [
+        "command:node tools/table-clip-harness.mjs layout <0.15.0 docs url>/harness/table-clip <docs url>/harness/table-clip"
+      ]
     }
   ],
   "informational": [

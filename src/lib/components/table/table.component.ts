@@ -374,24 +374,23 @@ export class TableComponent<T extends object> {
     null,
   );
 
-  /** `'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what
-   *  the others leave, whatever its cells hold. `'auto'`, deprecated: the 0.15.0 widths, which
-   *  follow the cell content and ignore `kind`. Unset falls back to `DS_CONFIG.table.layout`, then
-   *  `'fixed'`.
-   *  @deprecated `'auto'` is a temporary way back to the 0.15.0 column widths and will be removed.
-   *  Review the table under `'fixed'`, setting `width`, `kind` or `minWidth` where a column needs
-   *  it, then delete the binding. */
+  /** `'auto'`, the default: the 0.15.0 widths, which follow the cell content and ignore `kind`.
+   *  `'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what
+   *  the others leave, whatever its cells hold. Unset falls back to `DS_CONFIG.table.layout`, then
+   *  `'auto'`.
+   *  @deprecated `'auto'` is a temporary default and will be removed. Binding it changes nothing,
+   *  so delete the binding; to take the configured widths now, set `'fixed'`. */
   readonly layoutMode = input<'fixed' | 'auto' | null>(null, {
     // eslint-disable-next-line @angular-eslint/no-input-rename
     alias: 'layout',
   });
-  private readonly layoutResolved = resolveWithConfig(
+  private readonly layoutChosen = resolveWithConfig<'fixed' | 'auto' | null>(
     this.layoutMode,
     (config) => config.table?.layout,
-    'fixed',
+    null,
   );
   protected readonly autoLayout = computed(
-    () => this.layoutResolved() === 'auto',
+    () => (this.layoutChosen() ?? 'auto') === 'auto',
   );
 
   /** Pin the first data column (and the select column) on horizontal scroll. */
@@ -1703,8 +1702,8 @@ export class TableComponent<T extends object> {
 
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       devWarn(() =>
-        this.autoLayout()
-          ? '[ds-table] layout="auto" (or DS_CONFIG.table.layout) is deprecated and will be removed: it brings back the 0.15.0 column widths, which follow the cell content and ignore `kind`. Review each table under layout="fixed", setting `width`, `kind` or `minWidth` where a column needs it.'
+        this.layoutChosen() === 'auto'
+          ? '[ds-table] layout="auto" (or DS_CONFIG.table.layout) is deprecated and will be removed. It is the default already, so delete the binding or the config key; to take the configured widths now, set layout="fixed".'
           : null,
       );
 

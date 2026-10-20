@@ -223,6 +223,7 @@ class AutoLayoutConfigDirective {}
     AutoLayoutConfigDirective,
   ],
   encapsulation: ViewEncapsulation.None,
+  providers: [provideDsConfig({ table: { layout: 'fixed' } })],
   templateUrl: './table-clip.page.html',
   styles: `
     page-table-clip-harness {

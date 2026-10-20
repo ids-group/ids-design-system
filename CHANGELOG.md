@@ -36,6 +36,14 @@
 
 ### Changed
 
+- **`ds-table` lays columns out as 0.15.0 did by default: `layout` and `DsConfig.table.layout`
+  default to `'auto'`, where they defaulted to `'fixed'`.** Each column follows its cell content,
+  `kind` has no effect, and a numeric `width`, `width: 'content'`, `minWidth` and `truncate` size
+  the column as on 0.15.0. `'auto'` stays deprecated: a binding or config key that sets it changes
+  nothing now, and a development build warns once per page while one does. To keep the 0.15.1
+  widths: `provideDsConfig({ table: { layout: 'fixed' } })`, or `layout="fixed"` on one table. A
+  table with `virtualScroll` keeps `table-layout: fixed` either way.
+
 - **A `dsTooltipWhenClipped` tip (`TooltipDirective`) also opens on text cut by lines.** A block
   under `line-clamp`, or any host whose text overflows its height under `overflow: hidden` or
   `clip`, counts as clipped, as text cut by width did. A scroll box does not: its text can be
