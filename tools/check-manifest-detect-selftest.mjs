@@ -2,8 +2,8 @@
 // Does the locator check still FIRE on consumer code no locator finds, on a look-alike that
 // survives the element scope, on an unknown id or extension, on a draft item with no fixture, on
 // a deleteList workaround its find shapes miss or keep-code they hit, and on a deleteList find
-// shape that matches the neutral corpus - and stay green when the same locators find the target
-// and drop the look-alike?
+// shape that matches the neutral corpus outside its one allowed file - and stay green when the
+// same locators find the target and drop the look-alike?
 //
 // Nothing tracked is written: each case builds its own migrations directory under the OS temp dir
 // and points the check at it through DS_MIGRATIONS_DIR.
@@ -194,6 +194,55 @@ try {
     'a find shape that matches ordinary code in the neutral corpus',
     bad.output.includes(
       '1.0.0#reserve-message-false: find "reserveMessage" matches ordinary code at fixtures/_neutral/profile.component.html:1',
+    ),
+  );
+
+  const routerImport =
+    "import { ActivatedRoute, RouterLink } from '@angular/router';\n";
+  const routerShapeHit =
+    'routerlink-imported-for-extra-inputs: find "RouterLink } from \'@angular/router\'" matches ordinary code at';
+  const allowance = run('allowance', {
+    '0.13.0.json': manifest(
+      '0.13.0',
+      [],
+      [
+        {
+          id: 'routerlink-imported-for-extra-inputs',
+          surface: 'typescript',
+          find: ["RouterLink } from '@angular/router'"],
+          why: 'a second RouterLink on the host.',
+          replaceWith: 'nothing',
+        },
+        {
+          id: 'activated-route-import',
+          surface: 'typescript',
+          find: ['ActivatedRoute'],
+          why: 'unused.',
+          replaceWith: 'nothing',
+        },
+      ],
+    ),
+    'fixtures/_neutral/orders-page.component.ts': routerImport,
+    'fixtures/_neutral/profile-page.component.ts': routerImport,
+  });
+  console.log('ALLOWS one row on one neutral file, and nothing else');
+  expect('exits 1', allowance.status === 1);
+  expect(
+    'the allowed row on the allowed file passes',
+    !allowance.output.includes(
+      `${routerShapeHit} fixtures/_neutral/orders-page.component.ts`,
+    ),
+  );
+  expect(
+    'the allowed row on another neutral file fails',
+    allowance.output.includes(
+      `${routerShapeHit} fixtures/_neutral/profile-page.component.ts:1`,
+    ),
+  );
+  expect(
+    'another row on the allowed file fails',
+    allowance.output.includes(
+      '0.13.0#activated-route-import: find "ActivatedRoute" matches ordinary code at fixtures/_neutral/orders-page.component.ts:1',
     ),
   );
 } finally {
