@@ -6,7 +6,7 @@
       "name": "design-system",
       "source": "./plugins/design-system",
       "description": "Update @ids-group-ltd/ids-design-system across versions with autonomous, changelog-driven migrations.",
-      "version": "1.16.1"
+      "version": "1.17.0"
     }
   ]
 }
