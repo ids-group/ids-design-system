@@ -24,6 +24,8 @@
 // shape over the whole source tree, so a shape that also matches unrelated code sends it after
 // lines the row does not mean. Code of the row's own feature that the judge keeps - a
 // `[rescaleOnHide]="false"` beside a row deleting `true` - is not neutral and stays out of it.
+// `NEUTRAL_ALLOWED` lets one row hit one neutral file where no literal can tell the workaround
+// from ordinary code and the judge separates them by reading the file.
 //
 // Fails on: a `.found` snippet no locator hits, an `.ignored` snippet a locator hit survives the
 // element scope in, a fixture whose id is not in its manifest or whose name or extension is not
@@ -46,6 +48,9 @@ const FIXTURE_NAME =
   /^([a-z0-9-]+)(?:\.[a-z0-9-]+)?\.(found|ignored)\.(html|ts|scss)$/;
 const MANIFEST_NAME = /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)\.json$/;
 const ELEMENT_OF_OLD = /^(ds-[a-z0-9-]+)(?:\[([^\]]+)\]$|[\s.])/;
+const NEUTRAL_ALLOWED = new Set([
+  '0.13.0#routerlink-imported-for-extra-inputs fixtures/_neutral/orders-page.component.ts',
+]);
 
 const problems = [];
 const results = [];
@@ -248,6 +253,7 @@ for (const version of manifestNames) {
     for (const shape of [row.find ?? []].flat()) {
       neutralShapes++;
       for (const file of neutralFiles) {
+        if (NEUTRAL_ALLOWED.has(`${version}#${row.id} ${file.name}`)) continue;
         file.text.split('\n').forEach((text, index) => {
           if (text.includes(shape))
             problems.push(
