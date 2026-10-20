@@ -1012,17 +1012,21 @@ export class TableComponent<T extends object> {
 
   /** One per visible column; `null` leaves the column to share the slack with the others. Read
    *  from the columns, the header labels and the container, never from the rows. */
-  protected readonly columnWidths = computed<readonly (number | null)[]>(() => {
-    const columns = this.visibleColumns();
-    if (this.autoLayout()) {
-      return columns.map(() => null);
-    }
-    const metrics = this.headerMetrics();
+  private columnFloor(col: TableColumn<T>): number {
+    return Math.max(
+      this.headerMetrics()?.floors.get(col.key) ?? 0,
+      col.minWidth ?? 0,
+    );
+  }
+
+  /** `undefined` for a column that takes a share of the slack. */
+  private readonly declaredWidths = computed<
+    readonly (number | null | undefined)[]
+  >(() => {
     const resize = this.layout.resize();
     const contentWidths = this.contentWidths();
-    const floorOf = (col: TableColumn<T>): number =>
-      Math.max(metrics?.floors.get(col.key) ?? 0, col.minWidth ?? 0);
-    const declared = columns.map((col): number | null | undefined => {
+
+    return this.visibleColumns().map((col) => {
       const dragged = resize?.widthOverride(col.key);
       if (dragged !== undefined) {
         return dragged;
@@ -1034,11 +1038,42 @@ export class TableComponent<T extends object> {
         return contentWidths.get(col.key) ?? null;
       }
       if (col.kind && col.kind !== 'text') {
-        return Math.max(KIND_WIDTH_PX[col.kind], floorOf(col));
+        return Math.max(KIND_WIDTH_PX[col.kind], this.columnFloor(col));
       }
 
       return undefined;
     });
+  });
+
+  /** A `table-layout: fixed` table at `width: 100%` has no max-content width, so a `max-content`
+   *  container widens it to the engine's cap (1 000 000px in Chromium and WebKit). The wrap gives
+   *  a shrink-to-fit container the columns at their floors instead. */
+  protected readonly intrinsicWidth = computed<number | null>(() => {
+    if (this.autoLayout() && !this.virtualizing()) {
+      return null;
+    }
+    const metrics = this.headerMetrics();
+    const declared = this.declaredWidths();
+    const columns = this.visibleColumns();
+
+    return Math.max(
+      metrics?.tableMinWidth ?? 0,
+      (metrics?.utilityWidth ?? 0) +
+        columns.reduce(
+          (sum, col, index) => sum + (declared[index] ?? this.columnFloor(col)),
+          0,
+        ),
+    );
+  });
+
+  protected readonly columnWidths = computed<readonly (number | null)[]>(() => {
+    const columns = this.visibleColumns();
+    if (this.autoLayout()) {
+      return columns.map(() => null);
+    }
+    const metrics = this.headerMetrics();
+    const floorOf = (col: TableColumn<T>): number => this.columnFloor(col);
+    const declared = this.declaredWidths();
     if (!metrics) {
       return declared.map((width) => width ?? null);
     }

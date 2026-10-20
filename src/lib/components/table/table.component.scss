@@ -81,6 +81,10 @@
   }
 }
 
+.scroll-wrap.fixed-intrinsic {
+  contain: inline-size;
+}
+
 /* The native bar is safe to hide only because `.hscroll-proxy` mirrors
    scrollLeft both ways. */
 :host(.sticky-scrollbar) .scroll-wrap {
