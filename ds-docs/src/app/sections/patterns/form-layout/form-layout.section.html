@@ -203,14 +203,37 @@
 
   <ul class="rules">
     <li>
-      Gate submit on presence and not-in-flight only, never format validity: a
-      half-typed email must not leave a dead button.
+      Submit is enabled until the first error: before the first submit the
+      button is live and no error shows, not on blur, not while typing.
     </li>
 
     <li>
-      Check validity in the submit handler; the attempt reveals the messages. An
-      early <code class="t-mono-inline">return</code> that renders nothing is a
+      Check validity in the submit handler; a failed attempt shows the errors
+      inline, focuses the first invalid field and disables the button while
+      the form stays invalid. An early
+      <code class="t-mono-inline">return</code> that renders nothing is a
       silent no-op.
+    </li>
+
+    <li>
+      From then on validation is live until the form is reset: a fix enables
+      the button at once, a new error disables it at once, with no second
+      submit.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        [disabled]="submitted() &amp;&amp; invalid()"
+      </code>, with
+      <code class="t-mono-inline">
+        submitted = signal(false)
+      </code> set at the start of the submit handler and reset with the form.
+    </li>
+
+    <li>
+      In flight: <code class="t-mono-inline">[loading]</code>, never the
+      loading flag inside <code class="t-mono-inline">[disabled]</code>; a
+      loading button keeps focus and blocks presses.
     </li>
 
     <li>
