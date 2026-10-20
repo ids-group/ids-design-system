@@ -959,4 +959,8 @@
   .hscroll-proxy {
     display: none;
   }
+
+  :host(.print-all-rows) .pagination-footer {
+    display: none;
+  }
 }

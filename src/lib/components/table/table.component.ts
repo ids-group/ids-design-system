@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Injector,
@@ -178,6 +179,9 @@ function compareSortValues(
     '[class.expandable]': 'expandableRows()',
     '[class.sticky-scrollbar]': 'stickyScrollbarResolved()',
     '[class.resizable]': 'layout.resize() !== null',
+    '[class.print-all-rows]': 'printAllRows() && total() === null',
+    '(window:beforeprint)': 'onPrintChange(true)',
+    '(window:afterprint)': 'onPrintChange(false)',
   },
   providers: [DsTableLayout],
 })
@@ -216,6 +220,11 @@ export class TableComponent<T extends object> {
   );
   /** Keeps the header row pinned while the body scrolls. */
   readonly stickyHeader = input(true, { transform: booleanAttribute });
+  /**
+   * Prints every row of a client-paged table instead of the page on screen, without the
+   * pager. A server-paged table (`total`) holds only its page, so it prints that page.
+   */
+  readonly printAllRows = input(false, { transform: booleanAttribute });
   /** Caps the scroll body height (any CSS length) and scrolls it vertically; pair with
    *  `stickyHeader`. `null` (default) grows to content. */
   readonly maxHeight = input<string | null>(null);
@@ -713,6 +722,17 @@ export class TableComponent<T extends object> {
 
   private readonly injector = inject(Injector);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly changeDetector = inject(ChangeDetectorRef);
+  protected readonly printing = signal(false);
+
+  protected onPrintChange(printing: boolean): void {
+    if (!this.printAllRows()) {
+      return;
+    }
+    this.printing.set(printing);
+    // Chromium lays out the printout right after the beforeprint task: a render scheduled later misses it.
+    this.changeDetector.detectChanges();
+  }
   private readonly editInput =
     viewChild<ElementRef<HTMLInputElement>>('editInput');
   protected readonly editingCell = signal<{
@@ -1224,7 +1244,9 @@ export class TableComponent<T extends object> {
   });
 
   protected readonly displayData = computed<readonly T[]>(() =>
-    this.pageSize() !== null ? this.pagedData() : this.sortedData(),
+    this.pageSize() !== null && !this.printing()
+      ? this.pagedData()
+      : this.sortedData(),
   );
 
   // Loading wins while it lasts. `aria-live="polite"` does not announce a region's initial
