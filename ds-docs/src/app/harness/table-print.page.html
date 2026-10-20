@@ -1,0 +1,49 @@
+<h2>
+  Paged, sortable
+</h2>
+
+<ds-table
+  sortMode="client"
+  caption="Agents"
+  [data]="rows"
+  [columns]="columns"
+  [pageSize]="25">
+  <span toolbar>
+    Toolbar content
+  </span>
+</ds-table>
+
+<h2>
+  Unpaged, sortable
+</h2>
+
+<ds-table
+  sortMode="client"
+  caption="Agents, unpaged"
+  [data]="rows"
+  [columns]="columns" />
+
+<h2>
+  Paged, prints every row
+</h2>
+
+<ds-table
+  sortMode="client"
+  caption="Agents, every row in print"
+  [data]="rows"
+  [columns]="columns"
+  [pageSize]="25"
+  printAllRows />
+
+<h2>
+  Paged, with a print heading
+</h2>
+
+<ds-table
+  sortMode="client"
+  caption="Agents with a print heading"
+  [data]="rows"
+  [columns]="columns"
+  [pageSize]="25"
+  printHeading="Agent performance"
+  printHeadingNote="One row per agent with policyholders in scope" />

@@ -293,8 +293,8 @@
       "id": "table-sticky-corner-zindex-workaround",
       "surface": "style",
       "find": [
-        "ds-table",
-        "z-index",
+        ".pin-first",
+        ".pin-select",
         "--table-sticky-corner-z",
         "sticky"
       ],

@@ -27,7 +27,7 @@ const PATTERNS: readonly PagePattern[] = [
   {
     name: 'Form',
     madeOf: 'page header · one card per section · actions in the last card',
-    missed: 'One primary; submit gates on presence, never on validity',
+    missed: 'One primary; submit stays enabled until the first error',
   },
   {
     name: 'Dashboard',

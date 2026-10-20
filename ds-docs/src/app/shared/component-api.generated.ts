@@ -1275,6 +1275,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
       },
       {
+        "name": "highlightActive",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the hovered or focused column, bar or heatmap cell brightens. Unset falls back to `DS_CONFIG.chart.highlightActive`, then `true`."
+      },
+      {
         "name": "data",
         "kind": "input",
         "type": "readonly BarChartRow[]",
@@ -2036,6 +2045,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
+      },
+      {
+        "name": "highlightActive",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the hovered or focused column, bar or heatmap cell brightens. Unset falls back to `DS_CONFIG.chart.highlightActive`, then `true`."
       },
       {
         "name": "categories",
@@ -3338,6 +3356,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
       },
       {
+        "name": "highlightActive",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the hovered or focused column, bar or heatmap cell brightens. Unset falls back to `DS_CONFIG.chart.highlightActive`, then `true`."
+      },
+      {
         "name": "data",
         "kind": "input",
         "type": "readonly ColumnChartPoint[] | readonly ColumnChartSeries[]",
@@ -3920,16 +3947,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dsTooltipPlacement",
         "kind": "input",
-        "type": "TooltipPlacement",
+        "type": "TooltipPlacement | null",
         "union": [
           "top",
           "bottom",
           "left",
           "right"
         ],
-        "default": "'top'",
+        "default": "null",
         "required": false,
-        "description": "Which side the tip opens on. With no room there it opens on the opposite side."
+        "description": "Which side the tip opens on. Wins over `dsTooltipConfig.placement`."
       }
     ],
     "outputs": []
@@ -4224,6 +4251,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Optional heading below the icon."
+      },
+      {
+        "name": "titleOverflow",
+        "kind": "input",
+        "type": "EmptyStateTitleOverflow",
+        "union": [
+          "wrap",
+          "clip"
+        ],
+        "default": "'wrap'",
+        "required": false,
+        "description": "`'wrap'` breaks a long title over lines; `'clip'` keeps one line, ends it with an ellipsis and shows the full title in a tooltip."
       },
       {
         "name": "body",
@@ -4553,6 +4592,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
       },
       {
+        "name": "highlightActive",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the hovered or focused column, bar or heatmap cell brightens. Unset falls back to `DS_CONFIG.chart.highlightActive`, then `true`."
+      },
+      {
         "name": "data",
         "kind": "input",
         "type": "readonly FunnelChartStage[]",
@@ -4795,6 +4843,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
+      },
+      {
+        "name": "highlightActive",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the hovered or focused column, bar or heatmap cell brightens. Unset falls back to `DS_CONFIG.chart.highlightActive`, then `true`."
       },
       {
         "name": "columns",
@@ -5761,6 +5818,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
+      },
+      {
+        "name": "highlightActive",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the hovered or focused column, bar or heatmap cell brightens. Unset falls back to `DS_CONFIG.chart.highlightActive`, then `true`."
       },
       {
         "name": "categories",
@@ -7660,6 +7726,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
       },
       {
+        "name": "highlightActive",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the hovered or focused column, bar or heatmap cell brightens. Unset falls back to `DS_CONFIG.chart.highlightActive`, then `true`."
+      },
+      {
         "name": "data",
         "kind": "input",
         "type": "readonly PieChartSlice[]",
@@ -8378,6 +8453,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
+      },
+      {
+        "name": "highlightActive",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the hovered or focused column, bar or heatmap cell brightens. Unset falls back to `DS_CONFIG.chart.highlightActive`, then `true`."
       },
       {
         "name": "data",
@@ -10541,6 +10625,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Keeps the header row pinned while the body scrolls."
       },
       {
+        "name": "printAllRows",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Prints every row of a client-paged table instead of the page on screen, without the pager. A server-paged table (`total`) holds only its page, so it prints that page."
+      },
+      {
+        "name": "printHeading",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Prints as the first row of the header, repeated on every printed page with it, so a table's heading never ends a page without the table. Hidden on screen."
+      },
+      {
+        "name": "printHeadingNote",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "A line under `printHeading` in the printout."
+      },
+      {
         "name": "maxHeight",
         "kind": "input",
         "type": "string | null",
@@ -10859,7 +10970,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what the others leave, whatever its cells hold. `'auto'`, deprecated: the 0.15.0 widths, which follow the cell content and ignore `kind`. Unset falls back to `DS_CONFIG.table.layout`, then `'fixed'`."
+        "description": "`'auto'`, the default: the 0.15.0 widths, which follow the cell content and ignore `kind`. `'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what the others leave, whatever its cells hold. Unset falls back to `DS_CONFIG.table.layout`, then `'auto'`."
       },
       {
         "name": "stickyFirstColumn",
@@ -12031,6 +12142,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Display clock; falls back to `DS_CONFIG.timePicker.format`, then the hour cycle of `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
+        "name": "loop",
+        "kind": "input",
+        "type": "TimePickerLoop | null",
+        "union": [
+          "auto",
+          "always",
+          "never"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Whether the hour and minute columns run on past either end; falls back to `DS_CONFIG.timePicker.loop`, then `'auto'`, which loops a column that holds more values than it shows."
+      },
+      {
         "name": "staticPreview",
         "kind": "input",
         "type": "boolean",
@@ -12290,36 +12414,45 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Tip text, or a template the panel renders as given. An empty string turns the tooltip off. Keep a template's content non-interactive: the panel is `role=\"tooltip\"` and never takes focus."
       },
       {
+        "name": "dsTooltipConfig",
+        "kind": "input",
+        "type": "DsTooltipConfig | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Placement, delay, arrow, pin-on-click and the clipped test for this tip. An unset field falls back to `DsConfig.tooltip`, then the built-in default."
+      },
+      {
         "name": "dsTooltipPlacement",
         "kind": "input",
-        "type": "TooltipPlacement",
+        "type": "TooltipPlacement | null",
         "union": [
           "top",
           "bottom",
           "left",
           "right"
         ],
-        "default": "'top'",
+        "default": "null",
         "required": false,
-        "description": "Which side the tip opens on. With no room there it opens on the opposite side."
+        "description": "Which side the tip opens on. Wins over `dsTooltipConfig.placement`."
       },
       {
         "name": "dsTooltipDelay",
         "kind": "input",
-        "type": "number",
+        "type": "number | null",
         "union": null,
-        "default": "120",
+        "default": "null",
         "required": false,
-        "description": "Milliseconds before the tip appears. Hiding is immediate."
+        "description": "Milliseconds before the tip appears. Wins over `dsTooltipConfig.delay`."
       },
       {
         "name": "dsTooltipArrow",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Draws the arrow that points at the host. Turn it off where the tip sits flush against it."
+        "description": "Draws the arrow that points at the host. Wins over `dsTooltipConfig.arrow`."
       },
       {
         "name": "dsTooltipWhenClipped",
@@ -12328,16 +12461,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Show the tip only while the host shows less text than it holds. Re-tested on every open. A boolean or the bare attribute tests the host. A selector tests the element it matches inside the host and discloses that element's text; while nothing matches, no clipped tip opens. Applies the tooltip on its own: without a `dsTooltip` the tested text is disclosed. A tip whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip` that says more than the host does describes it as usual. Keyboard focus opens it too: on the host, on a control or widget around it, or on a control inside it. A clipped host that none of these reaches takes `tabindex=\"0\"` while it is clipped."
+        "description": "Show the tip only while the host shows less text than it holds: cut by width, or by lines under `overflow: hidden` or `clip`, as with `line-clamp`. Re-tested on every open. A boolean or the bare attribute tests the host. A selector tests the element it matches inside the host and discloses that element's text; while nothing matches, no clipped tip opens. Applies the tooltip on its own: without a `dsTooltip` the tested text is disclosed. A tip whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip` that says more than the host does describes it as usual. Keyboard focus opens it too: on the host, on a control or widget around it, or on a control inside it. A clipped host that none of these reaches takes `tabindex=\"0\"` while it is clipped."
       },
       {
         "name": "dsTooltipPinOnClick",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip. While pinned the host carries `data-ds-tooltip-pinned`, a hook for styling the pinned trigger."
+        "description": "Opens the tip with no delay, and a click on the host keeps it open after the pointer leaves until a click outside, `Escape` or blur; a second click closes it. Without it a click closes the tip. While pinned the host carries `data-ds-tooltip-pinned`, a hook for styling the pinned trigger. Wins over `dsTooltipConfig.pinOnClick`."
       }
     ],
     "outputs": []
@@ -12633,6 +12766,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way."
+      },
+      {
+        "name": "highlightActive",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the hovered or focused column, bar or heatmap cell brightens. Unset falls back to `DS_CONFIG.chart.highlightActive`, then `true`."
       },
       {
         "name": "data",

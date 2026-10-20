@@ -3,6 +3,7 @@
   [class.dims-others]="dimOthers()"
   [class.is-dimmed]="dimmedBySeries()"
   [class.is-spotlit]="spotlit()"
+  [class.holds]="activeMark.pinned() || (scales.cursorPinned?.() ?? false)"
   [class.is-collapsed]="hidden()"
   [style.--_column-chart-column-share]="markWidthPx()"
   [style.--_column-chart-slot-step]="slotStepPx()"
@@ -43,7 +44,10 @@
       class="column"
       [class.interactive]="interactive()"
       [class.pins]="pins()"
-      [class.is-active]="activeMark.index() === index"
+      [class.is-active]="
+        activeMark.index() === index ||
+        (scales.cursorOn?.() && scales.activeIndex() === index)
+      "
       [class.below-baseline]="mark.below"
       [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
       [class.is-later]="isLater(index)"
@@ -120,11 +124,7 @@
   }
 
   <!-- One ring for every column, so keyboard focus glides to the next column with the panel. -->
-  @if (
-      interactive() &&
-      !hidden() &&
-      focusedMark(); as focused
-    ) {
+  @if (interactive() && !hidden() && focusedMark(); as focused) {
     <svg:g
       class="focus-ring"
       aria-hidden="true"

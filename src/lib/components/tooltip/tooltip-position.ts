@@ -1,5 +1,5 @@
 import type { OverlayRef } from '@angular/cdk/overlay';
-import type { TooltipPlacement } from './tooltip.types';
+import type { TooltipPlacement } from '@ids-group-ltd/ids-design-system/core';
 
 const TRIGGER_GAP_PX = 8;
 export const VIEWPORT_MARGIN_PX = 8;

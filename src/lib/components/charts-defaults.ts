@@ -20,6 +20,7 @@ export interface ChartDefaultInputs {
   readonly valueFormat: Signal<ChartValueFormat | null>;
   readonly tooltipLingerMs?: Signal<number | null>;
   readonly pinOnClick?: Signal<boolean | null>;
+  readonly highlightActive?: Signal<boolean | null>;
   readonly tooltipSwatches?: Signal<boolean | null>;
 }
 
@@ -83,6 +84,11 @@ export function resolveChartDefaults(inputs: ChartDefaultInputs) {
       true,
     ),
     hoverDelayMs: chartHoverDelayMs(),
+    highlightActive: resolveWithConfig(
+      optional(() => inputs.highlightActive),
+      (config) => config.chart?.highlightActive,
+      true,
+    ),
     tooltipSwatches: resolveWithConfig<boolean | 'auto'>(
       optional(() => inputs.tooltipSwatches),
       (config) => config.chart?.tooltipSwatches,

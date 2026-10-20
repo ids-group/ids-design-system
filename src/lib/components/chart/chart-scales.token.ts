@@ -90,6 +90,8 @@ export interface ChartScales {
   readonly activeIndex: Signal<number>;
   /** Whether the category cursor answers the pointer; while it does, marks answer focus and clicks only. Absent means off. */
   readonly cursorOn?: Signal<boolean>;
+  /** Whether a click holds the category cursor where it is. Absent means it never does. */
+  readonly cursorPinned?: Signal<boolean>;
   /** The category whose axis label the pointer is on, while the category cursor is off. */
   readonly categoryLabelHover?: Signal<{
     readonly index: number;

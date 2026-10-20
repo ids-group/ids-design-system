@@ -1,0 +1,175 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "component-base-zero-specificity",
+      "kind": "behavior",
+      "old": "@use 'styles/component-base'",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        ":where(",
+        "box-sizing",
+        ":focus-visible"
+      ],
+      "detect": [
+        ":where(:focus-visible)",
+        "*, *::before, *::after",
+        "* {",
+        "box-sizing: content-box"
+      ],
+      "action": "None, unless a global rule of yours at zero specificity (`*`, `:where(...)`) is meant to reach the elements inside library components and sets `box-sizing`, `font-family` on a form control, `margin` on a heading, or `outline`, `outline-offset`, `animation` or `border-radius` on a focused element: raise its specificity above zero, for example `:focus-visible` in place of `:where(:focus-visible)`.",
+      "appliesWhen": "Ships in every library component's own stylesheet, and in `styles/component-base` for a component of yours that includes `component-base.rules`. A rule of yours above zero specificity wins as before. A zero-specificity rule ties with the base, and the component's stylesheet, inserted after your global styles, wins. The base sets nothing on `::before` and `::after`, so a rule of yours for them applies inside components, except on the `ds-button` spinner and the popover and tooltip arrows, which set `box-sizing: border-box` themselves.",
+      "pitfall": "A custom ring written as `:where(:focus-visible) { outline: ... }` keeps showing on your own elements and loses only inside library components, which then show the library ring; check a focused `ds-button`, not your own markup.",
+      "restore": null,
+      "verify": "The built CSS of a library component holds `:where([_nghost-` and no `@layer`, and a custom focus ring of yours shows on a focused `ds-button`."
+    },
+    {
+      "id": "empty-state-title-max-width",
+      "kind": "behavior",
+      "old": "ds-empty-state[title]",
+      "new": null,
+      "surface": "style",
+      "searchHints": [
+        "ds-empty-state",
+        "--ds-empty-state-title"
+      ],
+      "detect": [
+        "ds-empty-state .title",
+        "overflow-wrap",
+        "word-break"
+      ],
+      "action": "None, unless an empty state's title should run wider than 360px: set `--ds-empty-state-title-max-width: none` on that `ds-empty-state`.",
+      "appliesWhen": "Every `ds-empty-state` with a `title`. The title was as wide as the component and is now capped at `--empty-body-maxw`, the body's width, and a word longer than a line breaks instead of overflowing.",
+      "pitfall": "A title that fit on one line under the old width can now take two; check an empty state inside a wide card, not a narrow one.",
+      "restore": "--ds-empty-state-title-max-width: none;",
+      "verify": "A `ds-empty-state` whose title is a 60-character word with no spaces wraps inside the component and adds no horizontal scrollbar."
+    },
+    {
+      "id": "tooltip-single-inputs-deprecated",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": [
+        "template",
+        "config"
+      ],
+      "searchHints": [
+        "dsTooltipPlacement",
+        "dsTooltipDelay",
+        "dsTooltipArrow",
+        "dsTooltipPinOnClick"
+      ],
+      "detect": [
+        "dsTooltipPlacement=",
+        "[dsTooltipPlacement]=",
+        "[dsTooltipDelay]=",
+        "dsTooltipArrow",
+        "dsTooltipPinOnClick"
+      ],
+      "action": "Move each value into `[dsTooltipConfig]` on the same element and remove the old binding: `dsTooltipPlacement=\"right\"` becomes `[dsTooltipConfig]=\"{ placement: 'right' }\"`, `[dsTooltipDelay]` becomes `delay`, `[dsTooltipArrow]` becomes `arrow`, and a bare `dsTooltipPinOnClick` becomes `pinOnClick: true`; several go into one object. Where every tip of the app takes the same value, set it once in `provideDsConfig({ tooltip: { ... } })` instead.",
+      "appliesWhen": "Elements carrying `dsTooltip` or `dsTooltipWhenClipped` that bind `dsTooltipPlacement`, `dsTooltipDelay`, `dsTooltipArrow` or `dsTooltipPinOnClick`. Not a `dsDefinitionTerm`: there `dsTooltipPlacement` stays the way to place the tip, and the term takes no `dsTooltipConfig`. `dsTooltip` and `dsTooltipWhenClipped` are not deprecated.",
+      "pitfall": "A deprecated binding left beside `[dsTooltipConfig]` wins over the config field of the same name, so the tip keeps the old placement, delay, arrow or pin whatever the object says. A bare `dsTooltipArrow` or `dsTooltipPinOnClick` means `true`, so it moves as `arrow: true` or `pinOnClick: true`.",
+      "restore": null,
+      "verify": "No element with `dsTooltip` or `dsTooltipWhenClipped` binds `dsTooltipPlacement`, `dsTooltipDelay`, `dsTooltipArrow` or `dsTooltipPinOnClick` outside a `dsDefinitionTerm`, and each moved tip opens on the same side, after the same delay and with the same arrow as before."
+    },
+    {
+      "id": "tooltip-single-inputs-read-null",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "searchHints": [
+        "TooltipDirective"
+      ],
+      "detect": [
+        ".dsTooltipPlacement()",
+        ".dsTooltipDelay()",
+        ".dsTooltipArrow()",
+        ".dsTooltipPinOnClick()"
+      ],
+      "action": "None, unless your code reads `dsTooltipPlacement()`, `dsTooltipDelay()`, `dsTooltipArrow()` or `dsTooltipPinOnClick()` back from a `TooltipDirective`: handle `null` there, for example `tip.dsTooltipPlacement() ?? 'top'`.",
+      "appliesWhen": "Code that holds a `TooltipDirective` instance, through `viewChild` or an injection, and reads `dsTooltipPlacement`, `dsTooltipDelay`, `dsTooltipArrow` or `dsTooltipPinOnClick`. Each was typed without `null` and read back its default when unbound; it is now `| null` and reads `null` when unbound. Binding the inputs in a template is not affected.",
+      "pitfall": "A fallback such as `?? 'top'` gives the built-in default, not a value set through `dsTooltipConfig` or `DsConfig.tooltip`; read those from where your code set them.",
+      "restore": null,
+      "verify": "Every read of `dsTooltipPlacement`, `dsTooltipDelay`, `dsTooltipArrow` and `dsTooltipPinOnClick` in the app handles `null`, and the app type-checks under `strict`."
+    },
+    {
+      "id": "table-layout-default-auto",
+      "kind": "behavior",
+      "old": "provideDsConfig",
+      "new": null,
+      "surface": [
+        "config",
+        "template"
+      ],
+      "searchHints": [
+        "provideDsConfig",
+        "DS_CONFIG",
+        "<ds-table",
+        "layout=\"auto\""
+      ],
+      "detect": [
+        "provideDsConfig({",
+        "table: {",
+        "layout: 'auto'",
+        "<ds-table"
+      ],
+      "action": "None, unless the app's tables must keep the 0.15.1 widths: set `provideDsConfig({ table: { layout: 'fixed' } })`, or `layout=\"fixed\"` on one `ds-table`. Delete `layout: 'auto'` from `provideDsConfig` and `layout=\"auto\"` from every `ds-table`: both are the default now.",
+      "appliesWhen": "Every `ds-table` without its own `layout`, in an app whose `DsConfig.table.layout` is unset. Under `'auto'` each column follows its cell content as on 0.15.0: `kind` has no effect, and a numeric `width`, `width: 'content'`, `minWidth` and `truncate` size the column as on 0.15.0. A table with `virtualScroll` keeps `table-layout: fixed`. An app that already set `'auto'` sees no change.",
+      "pitfall": "A `kind` or `minWidth` added for 0.15.1 does nothing under `'auto'`, so a table tuned for `'fixed'` changes width without a build error; check it with the app's real rows. `'auto'` is still deprecated, and a development build warns once per page while a binding or config key sets it.",
+      "restore": "provideDsConfig({ table: { layout: 'fixed' } })",
+      "verify": "Without a `layout` anywhere, each `ds-table` shows the column widths it had on 0.15.0, and the console shows no `layout=\"auto\"` deprecation warning.",
+      "supersedes": [
+        "0.15.1#table-column-width-from-config"
+      ],
+      "evidence": [
+        "command:node tools/table-clip-harness.mjs layout <0.15.0 docs url>/harness/table-clip <docs url>/harness/table-clip"
+      ]
+    }
+  ],
+  "informational": [
+    {
+      "text": "A `ds-table` under `layout=\"fixed\"` or with `virtualScroll`, inside a container sized to its content (a `max-content` grid track, `width: max-content`, an inline-block, an absolutely positioned box without a width), is as wide as its columns at their declared widths and header labels, where it grew to 1 000 000px or to all the width there was. A table in a container with a width of its own is unchanged.",
+      "verify": "Put a ds-table with layout=\"fixed\" in a div at width: max-content and confirm the table is as wide as its columns, not 1000000px.",
+      "evidence": [
+        "command:node tools/table-clip-harness.mjs check <run of this checkout's /harness/table-clip> <run of the base's /harness/table-clip>"
+      ]
+    },
+    {
+      "text": "The per-group select-all row of a `ds-multi-select` with `selectAll=\"group\"` or `selectAll=\"both\"` cuts its label to the panel width with an ellipsis, as the top select-all row does, so a long group name no longer scrolls the list sideways.",
+      "verify": "Open a narrow ds-multi-select with selectAll=\"both\" and a long group name and confirm the group's select-all row ends in an ellipsis and the list has no horizontal scrollbar."
+    },
+    {
+      "text": "`--ds-dropdown-panel-min-width` (default `0`) floors the whole `ds-select`, `ds-multi-select` and `ds-autocomplete` pane in both `width` modes, so a panel widened by it is placed by the width it is drawn at and stays on screen beside the right edge of the viewport; a wider trigger still sets the width. `--ds-dropdown-panel-max-width` applies only under `width=\"content\"`; under the default `width=\"fill\"` it no longer caps the panel.",
+      "verify": "Open a narrow ds-select and confirm its panel is as wide as its trigger, then set --ds-dropdown-panel-min-width: 220px on one beside the right edge of the viewport and confirm the 220px panel stays on screen."
+    },
+    {
+      "text": "A `dsColumnSeries` in a `ds-chart` whose `cursor` is `'category'`, or resolves to it under `'auto'`, brightens the column at the category under the pointer, as a hovered column does under `cursor=\"none\"`.",
+      "verify": "Hover a category of a ds-chart holding a dsColumnSeries and a dsLineSeries and confirm the column at that category brightens."
+    },
+    {
+      "text": "The `ds-time-picker` hour and minute columns that hold more values than they show run on past either end: after the last value the first comes round again, the selected value is scrolled to the middle of its column, and the column shows no scrollbar. `loop=\"never\"`, or `DsConfig.timePicker.loop: 'never'`, keeps them as lists.",
+      "verify": "Open a ds-time-picker, scroll the hour column past its last hour and confirm the first hour follows, then reopen it and confirm the selected hour sits in the middle of the column."
+    },
+    {
+      "text": "`styles/ds` rings a focusable element the library does not render without giving it `--focus-ring-radius`: the ring follows the element's own `border-radius`, so an element of the app that declares none is no longer rounded while focused. A `border-radius: 0` added only to undo that rounding can go.",
+      "verify": "Tab to a square element of the app that sets no border-radius and confirm it keeps square corners while focused, then tab to a ds-button and confirm its ring is still rounded."
+    },
+    {
+      "text": "The agent catalogue ships at `agent/INDEX.md` in the package, where it was `docs/agent/INDEX.md`; every leaf keeps its path under `agent/`. An agent rule or prompt that reads the catalogue from `node_modules` points at `agent/`.",
+      "verify": "Search the app's agent rules and prompts for `docs/agent/` and confirm none is left."
+    },
+    {
+      "text": "A `dsTooltipWhenClipped` tip (`TooltipDirective`) also opens when its host's text is cut by lines, under `line-clamp` or a height with `overflow: hidden` or `clip`, as it did for text cut by width. A scroll box does not count.",
+      "verify": "Put dsTooltipWhenClipped on a block with -webkit-line-clamp: 2 holding four lines of text, hover it and confirm the tip opens; shorten the text to one line and confirm it does not."
+    },
+    "`ds-empty-state` takes `titleOverflow`: `'wrap'`, the default, keeps the title wrapping as before; `'clip'` keeps it on one line with an ellipsis and the full title in a tooltip.",
+    {
+      "text": "A printed `ds-pagination` shows only its range label: its page buttons, ellipsis and page-size select are left out of the printout, inside a `ds-table` and on their own.",
+      "verify": "Open the browser's print preview of a page holding a ds-pagination and confirm only its range label is printed."
+    },
+    "A printed `ds-table` keeps its column names on every page, keeps each row on one page and leaves its own controls out of the printout: the pager buttons and page-size select, the column filter, resize and expand buttons and the controls it adds to its toolbar. The pager's range label still prints. Nothing to change in consumer code; `printAllRows` opts a client-paged table into printing every row."
+  ],
+  "deleteList": []
+}

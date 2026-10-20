@@ -2,7 +2,7 @@
   "name": "design-system",
   "displayName": "IDS Design System",
   "description": "Step a consumer repo from its installed @ids-group-ltd/ids-design-system version up to the latest, one version at a time, applying documented changelog migrations with automated checks and re-checks.",
-  "version": "1.14.1",
+  "version": "1.18.0",
   "author": { "name": "IDS Group" },
   "homepage": "https://ids-ds.proto.ids-group.co.uk/",
   "repository": "https://bitbucket.org/itband/ids-design-system.git",

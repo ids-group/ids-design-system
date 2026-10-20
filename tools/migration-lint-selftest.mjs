@@ -117,7 +117,6 @@ const mutations = {
     i.note = i.note + ' filler'.repeat(200);
   },
   M042: (m) => (m.items[0].pitfal = 'typo'),
-  M037: (m) => delete m.deleteList,
   M035: (m) => delete m.deleteList[0].replaceWith,
   M036: (m) => (m.deleteList[0].id = 'Not_Kebab'),
   M034: (m) => {
@@ -194,6 +193,11 @@ const negativeControls = [
       i.new = 'ds-auth-layout[appearance]';
       i.action = `${i.action} (delete list: ${m.deleteList[0].id})`;
     },
+  },
+  {
+    label: 'M030 stays quiet on a delete entry whose `find` is an array of one string',
+    code: 'M030',
+    mutate: (m) => (m.deleteList[0].find = ['ds-table tr:hover']),
   },
   {
     label: 'M013 stays quiet when a non-rename item has no `note` at all',
@@ -311,6 +315,11 @@ const extraCases = [
       const i = m.items.find((x) => x.id === 'auth-shell-tokens-to-auth-layout');
       i.new = '--ds-auth-frame-';
     },
+  },
+  {
+    label: 'M030 on a delete entry whose `find` is a bare string',
+    code: 'M030',
+    mutate: (m) => (m.deleteList[0].find = 'ds-table tr:hover'),
   },
   {
     label: 'M046 on an informational object with text but no verify',

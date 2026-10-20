@@ -284,6 +284,27 @@
 
     <div class="state-cell">
       <ds-chart
+        data-testid="chart-no-highlight"
+        [highlightActive]="false"
+        [categories]="orderMonths">
+        <svg:g
+          dsColumnSeries
+          seriesLabel="Orders"
+          [data]="orderColumns"
+          [showValues]="false" />
+
+        <svg:g
+          dsLineSeries
+          [data]="basketSeries" />
+      </ds-chart>
+
+      <div class="state-cell-label">
+        highlightActive = false: no column brightens
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-chart
         showAxisReadout="false"
         [categories]="orderMonths">
         <svg:g

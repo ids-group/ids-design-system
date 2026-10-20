@@ -1,0 +1,5 @@
+<ds-table [data]="rows()" [columns]="columns" [loading]="loading()">
+  @if (!loading()) {
+    <div empty class="no-rows">No orders yet</div>
+  }
+</ds-table>

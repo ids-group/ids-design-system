@@ -119,8 +119,7 @@
       "surface": "style",
       "find": [
         "ds-card .card",
-        "overflow: hidden",
-        "::ng-deep"
+        "ds-card ::ng-deep .card"
       ],
       "why": "A ::ng-deep reach into ds-card's inner .card to clip a full-bleed child (an image or footer strip) inside the card radius, because no token exposed it.",
       "replaceWith": "--ds-card-overflow: clip on the card (clip, not hidden — it keeps the card from becoming a scroll container)"
@@ -142,7 +141,8 @@
       "find": [
         "::ng-deep ds-button button",
         "ds-button button",
-        "box-shadow"
+        "::ng-deep button",
+        "ds-button .button"
       ],
       "why": "A deep selector into ds-button's inner <button> kept alive only by a resting box-shadow — background, colour, weight and border already had tokens.",
       "replaceWith": "--ds-button-shadow (and --ds-button-shadow-hover) on the ds-button host"
@@ -151,9 +151,7 @@
       "id": "button-disabled-reason-tooltip",
       "surface": "template",
       "find": [
-        "dsTooltip",
-        "ds-button",
-        "disabled"
+        "dsTooltip"
       ],
       "why": "A tooltip on a disabled ds-button used to carry the reason it is refused. It reaches a mouse only: a natively disabled button never takes focus, so a keyboard user gets nothing and a screen reader gets no description. Applies to the tooltip that EXPLAINS the refusal, not to one that merely names the action - leave the latter alone.",
       "replaceWith": "[disabledReason]=\"'...'\" on the ds-button for a standing refusal (no permission, no integration); for a refusal the user can lift by filling the form in, drop `disabled` altogether and use [error]/[warning]/[hint] with validity judged in the submit handler"

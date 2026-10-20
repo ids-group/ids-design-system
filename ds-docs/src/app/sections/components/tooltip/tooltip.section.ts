@@ -28,9 +28,15 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 export class TooltipSection {
   protected readonly truncate = signal(true);
 
+  protected readonly optionsSnippet = `<button dsTooltip="Saved">…</button>
+<button dsTooltip="Saved" [dsTooltipConfig]="{ placement: 'right', delay: 0 }">…</button>
+
+providers: [provideDsConfig({ tooltip: { placement: 'bottom', arrow: false } })]`;
+
   protected readonly whenClippedSnippet = `<span dsTooltipWhenClipped>…</span>
 <div dsTooltipWhenClipped=".label">…</div>
-<div [dsTooltipWhenClipped]="truncate ? ':scope > .cell' : false">…</div>`;
+<div [dsTooltipWhenClipped]="truncate ? ':scope > .cell' : false">…</div>
+<p class="two-lines" dsTooltipWhenClipped>…</p>`;
 
   protected readonly infoHintContentSnippet = `<ds-info-hint ariaLabel="When v4 was published">
   <ul>…</ul>

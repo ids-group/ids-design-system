@@ -5,6 +5,7 @@
 ```ts
 @Component({ selector: 'ds-spinner' })
 export class SpinnerComponent {
+    public constructor();
     protected readonly intl = inject(…);
     public readonly size = input<DsSize>('md');
 }

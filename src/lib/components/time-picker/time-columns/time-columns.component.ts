@@ -1,12 +1,17 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   ElementRef,
   ViewEncapsulation,
+  afterRenderEffect,
   computed,
   inject,
   input,
   numberAttribute,
   output,
+  signal,
+  untracked,
+  viewChild,
   viewChildren,
 } from '@angular/core';
 import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
@@ -22,6 +27,7 @@ import {
 import type {
   TimeConstraints,
   TimeFormat,
+  TimePickerLoop,
 } from '../../time-picker/time-picker.types';
 
 /** Which of the panel's listbox columns a pick came from. */
@@ -37,6 +43,7 @@ interface Cell<T> {
 @Component({
   selector: 'ds-time-columns',
   standalone: true,
+  imports: [NgTemplateOutlet],
   templateUrl: './time-columns.component.html',
   styleUrl: './time-columns.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -60,6 +67,9 @@ export class TimeColumnsComponent {
   readonly maxTime = input<string | null>(null);
   /** Per-time predicate receiving `HH:mm`; return true to disable. */
   readonly disabledTime = input<((time: string) => boolean) | null>(null);
+  /** Whether the hour and minute columns run on past either end; `'auto'` loops a column that holds
+   *  more values than it shows. */
+  readonly loop = input<TimePickerLoop>('auto');
   /** A complete time was picked, as `HH:mm`; not emitted while only one column has moved. */
   readonly timeChange = output<string>();
   /** Which column the pick came from, emitted right after `timeChange`, which carries a whole time and cannot say which half moved. */
@@ -134,6 +144,47 @@ export class TimeColumnsComponent {
     }));
   });
 
+  private readonly hourColumn = viewChild<ElementRef<HTMLElement>>('hourCol');
+  private readonly minuteColumn =
+    viewChild<ElementRef<HTMLElement>>('minuteCol');
+  // One set of values taller than the column, measured after render; AM/PM is two rows and never loops.
+  private readonly hoursOverflow = signal(false);
+  private readonly minutesOverflow = signal(false);
+
+  protected readonly hoursLoop = computed(() =>
+    this.loops(this.hoursOverflow()),
+  );
+  protected readonly minutesLoop = computed(() =>
+    this.loops(this.minutesOverflow()),
+  );
+
+  protected readonly pickHour = (cell: Cell<number>): void =>
+    this.selectHour(cell);
+  protected readonly pickMinute = (cell: Cell<number>): void =>
+    this.selectMinute(cell);
+
+  constructor() {
+    afterRenderEffect(() => {
+      this.hourCells();
+      this.minuteCells();
+      this.hoursOverflow.set(this.overflows(this.hourColumn()));
+      this.minutesOverflow.set(this.overflows(this.minuteColumn()));
+    });
+    // Again on the next frame: a column that starts looping in this pass renders its copies above the
+    // selected cell on the next one, pushing it down by a set.
+    afterRenderEffect(() => {
+      this.hoursLoop();
+      this.minutesLoop();
+      this.hourEntry();
+      this.minuteEntry();
+      this.periodEntry();
+      untracked(() => {
+        this.scrollSelectedIntoView();
+        requestAnimationFrame(() => this.scrollSelectedIntoView());
+      });
+    });
+  }
+
   protected readonly hourEntry = computed(() =>
     this.entryIndex(this.hourCells()),
   );
@@ -143,6 +194,37 @@ export class TimeColumnsComponent {
   protected readonly periodEntry = computed(() =>
     this.entryIndex(this.periodCells()),
   );
+
+  private loops(overflows: boolean): boolean {
+    const mode = this.loop();
+
+    return mode === 'always' || (mode === 'auto' && overflows);
+  }
+
+  private overflows(column: ElementRef<HTMLElement> | undefined): boolean {
+    const element = column?.nativeElement;
+    if (!element) {
+      return false;
+    }
+    const sets = element.classList.contains('loops') ? 3 : 1;
+
+    return element.scrollHeight / sets > element.clientHeight + 1;
+  }
+
+  /** Keeps a looping column inside its middle set, so a copy is always beyond either edge. */
+  protected wrapScroll(event: Event, count: number): void {
+    const column = event.target as HTMLElement;
+    const [first, second] = column.children as HTMLCollectionOf<HTMLElement>;
+    if (!column.classList.contains('loops') || !second) {
+      return;
+    }
+    const set = (second.offsetTop - first.offsetTop) * count;
+    if (column.scrollTop < set * 0.5) {
+      column.scrollTop += set;
+    } else if (column.scrollTop > set * 1.5) {
+      column.scrollTop -= set;
+    }
+  }
 
   protected selectHour(cell: Cell<number>): void {
     if (cell.disabled) {
@@ -360,8 +442,12 @@ export class TimeColumnsComponent {
     buttons: readonly ElementRef<HTMLButtonElement>[],
     index: number,
   ): void {
-    buttons[Math.max(index, 0)]?.nativeElement.scrollIntoView({
-      block: 'center',
-    });
+    // The column alone: scrollIntoView would also scroll the page under the overlay.
+    const button = buttons[Math.max(index, 0)]?.nativeElement;
+    const column = button?.parentElement;
+    if (button && column) {
+      column.scrollTop =
+        button.offsetTop - (column.clientHeight - button.offsetHeight) / 2;
+    }
   }
 }

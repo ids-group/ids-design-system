@@ -13,6 +13,7 @@
 //   node tools/check.mjs                              # list every check and the groups
 //   node tools/check.mjs void-tokens deck-lint        # run these, stopping at the first failure
 //   node tools/check.mjs --group lint --keep-going    # run a set, reporting every failure at the end
+// The release group runs once before a release, never on a branch.
 //   node tools/check.mjs --group release --list       # print a set's members without running them
 import { readdirSync, existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
@@ -128,6 +129,7 @@ export const GROUPS = {
     'token-defaults',
     'design-sync-log',
     'docs-attrs',
+    'docs-nav-order',
     'doc-tokens',
     'agent-catalogue',
     'void-tokens',
@@ -195,6 +197,7 @@ export const GROUPS = {
     'public-api-golden',
     'focus-rings',
     'docs-attrs',
+    'docs-nav-order',
     'color-families',
     'docblock-drift',
     'lib-package',

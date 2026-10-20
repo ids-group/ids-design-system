@@ -1,0 +1,50 @@
+<div class="orders-shell">
+  <ds-sidenav brand="Acme Ops" logoLetter="A">
+    <ds-sidenav-item icon="home" label="Dashboard" routerLink="/dashboard" />
+    <ds-sidenav-item icon="file" label="Orders" routerLink="/orders" active />
+    <ds-sidenav-item icon="users" label="Customers" routerLink="/customers" />
+    <ds-sidenav-item icon="settings" label="Settings" routerLink="/settings" />
+  </ds-sidenav>
+
+  <main class="orders-content">
+    <header class="orders-header">
+      <h1>Orders</h1>
+      <a class="new-order" routerLink="/orders/new">New order</a>
+    </header>
+
+    <nav class="status-tabs" aria-label="Order status">
+      @for (tab of statusTabs; track tab.value) {
+        <button
+          type="button"
+          class="status-tab"
+          [class.active]="statusFilter() === tab.value"
+          [attr.aria-pressed]="statusFilter() === tab.value"
+          (click)="selectStatus(tab.value)">
+          {{ tab.label }}
+        </button>
+      }
+    </nav>
+
+    @if (loadFailed()) {
+      <p class="load-error" role="alert">
+        Orders could not be loaded.
+        <button type="button" (click)="load()">Retry</button>
+      </p>
+    }
+
+    <ds-table
+      [data]="visibleRows()"
+      [columns]="columns"
+      [rowId]="orderId"
+      [loading]="loading()"
+      [sortKey]="sortKey()"
+      [sortDirection]="sortDirection()"
+      [activeRowId]="highlightedId()"
+      [pageSize]="25"
+      sortMode="server"
+      caption="Orders"
+      rowInteractive
+      (sortChange)="onSort($event)"
+      (rowClicked)="openOrder($event)" />
+  </main>
+</div>

@@ -11,21 +11,15 @@
       class="brand-home"
       routerLink="/"
       aria-label="Design System, home">
-      <span class="mark">
-        D
-      </span>
+      <span class="mark"> D </span>
 
       <!-- Always rendered, hidden by CSS when collapsed: mounting it on expand put
            the full name into a rail still 48px wide, so it wrapped to two lines and
            unwrapped again as the width animated. -->
       <div class="brand-text">
-        <span class="brand-name">
-          Design System
-        </span>
+        <span class="brand-name"> Design System </span>
 
-        <small>
-          Boilerplate v{{ version }}
-        </small>
+        <small> Boilerplate v{{ version }} </small>
       </div>
     </a>
 
@@ -117,9 +111,7 @@
                     </span>
 
                     @if (item.new) {
-                      <span class="nav-new">
-                        new
-                      </span>
+                      <span class="nav-new"> new </span>
                     }
                   </a>
 
@@ -168,9 +160,52 @@
     }
 
     @if (filteredNav().length === 0) {
-      <div class="nav-empty">
-        Nothing found
-      </div>
+      <div class="nav-empty">Nothing found</div>
     }
+  } @else {
+    <!-- Collapsed: a group's icon goes to its page; hovering or focusing it shows its items beside
+         the rail, which stays collapsed. -->
+    <div class="rail-groups">
+      @for (group of nav; track group.title) {
+        <div
+          class="rail-group"
+          [class.is-dismissed]="dismissedGroup() === group.title"
+          (mouseenter)="placeFlyout($event)"
+          (focusin)="placeFlyout($event)"
+          (mouseleave)="dismissedGroup.set(null)"
+          (focusout)="onGroupFocusOut($event)"
+          (keydown.escape)="dismissFlyout(group.title, $event)">
+          <a
+            class="rail-icon"
+            [class.is-active]="isGroupActive(group)"
+            [routerLink]="urlForGroupPath(group.path)"
+            [attr.aria-label]="group.title"
+            (click)="navigated.emit()">
+            <ds-icon
+              [name]="group.icon"
+              [size]="18" />
+          </a>
+
+          <div class="rail-flyout">
+            <div class="rail-flyout-panel">
+              <div class="rail-flyout-title">
+                {{ group.title }}
+              </div>
+
+              @for (item of group.items; track item.anchor) {
+                <a
+                  class="rail-flyout-item"
+                  [class.is-active]="isActive(item.anchor)"
+                  [routerLink]="urlForAnchor(group.path, item.anchor)"
+                  [state]="linkState(group.path)"
+                  (click)="onItem(item.anchor)">
+                  {{ item.label }}
+                </a>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
   }
 </nav>

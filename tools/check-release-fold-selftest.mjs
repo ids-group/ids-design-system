@@ -5,10 +5,15 @@
 //   node tools/check-release-fold-selftest.mjs
 import {
   compareVersions,
+  devVersion,
   nextBeta,
   previousBoundary,
 } from './release-tags.mjs';
-import { foldChangelog, foldManifests } from './release-fold.mjs';
+import {
+  foldChangelog,
+  foldManifests,
+  unreleasedHasEntry,
+} from './release-fold.mjs';
 
 let ran = 0;
 let failed = 0;
@@ -219,6 +224,71 @@ expect(
 );
 expectThrow('an unknown manifest key is refused rather than dropped', () =>
   foldManifests('0.14.6', [{ ...beta1, notes: 'x' }]),
+);
+
+const devLog =
+  '## Unreleased\r\n\r\n### Fixed\r\n\r\n- **A fix.**\r\n\r\n## 0.15.2 — 2026-10-14\r\n\r\n- **Old.**\r\n';
+expect(
+  'a dev changelog has an Unreleased entry',
+  unreleasedHasEntry(devLog),
+  true,
+);
+expect(
+  'the release stamp leaves Unreleased without an entry',
+  unreleasedHasEntry(
+    foldChangelog(
+      devLog
+        .replace(/\r\n/g, '\n')
+        .replace(/^## Unreleased$/m, '## Unreleased\n\n## 0.15.3 — 2026-10-19'),
+      '0.15.3',
+    ).text,
+  ),
+  false,
+);
+
+const unreleased = (body) =>
+  unreleasedHasEntry(
+    `# Changelog\n\n${body}\n## 0.15.2 — 2026-10-14\n\n- **Old.**\n`,
+  );
+expect(
+  'prose, a star bullet or a trailing-space heading counts as an Unreleased entry',
+  [
+    unreleased('## Unreleased\n\nA paragraph.\n'),
+    unreleased('## Unreleased\n\n### Fixed\n\n* **A fix.**\n'),
+    unreleased('## Unreleased \n\n- **A fix.**\n'),
+  ],
+  [true, true, true],
+);
+expect(
+  'headings and blank lines alone are no Unreleased entry',
+  unreleased('## Unreleased\n\n### Added\n\n### Fixed\n\n'),
+  false,
+);
+expect(
+  'a fenced block under Unreleased is an entry',
+  unreleased('## Unreleased\n\n```ts\n- x\n```\n'),
+  true,
+);
+expect(
+  'a dev build is the next patch with a g-prefixed sha, dirty marked',
+  [
+    devVersion('0.15.2', '0123456', false),
+    devVersion('0.15.3-beta.1', 'abc1234', true),
+    devVersion('0.15.2', null, false),
+  ],
+  ['0.15.3-dev.g0123456', '0.15.3-dev.gabc1234.dirty', '0.15.3-dev.local'],
+);
+expect(
+  'a dev build sorts between the release it follows and the next one',
+  ['0.15.3', '0.15.3-dev.g0123456', '0.15.2', '0.15.3-beta.1'].sort(
+    compareVersions,
+  ),
+  ['0.15.2', '0.15.3-beta.1', '0.15.3-dev.g0123456', '0.15.3'],
+);
+expect(
+  'a prerelease with a second hyphen keeps it in the comparison',
+  compareVersions('0.15.3-dev.g1-a', '0.15.3-dev.g1-b'),
+  -1,
 );
 
 console.log(`\n${ran - failed} of ${ran} case(s) right.`);

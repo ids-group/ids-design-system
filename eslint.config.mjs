@@ -18,7 +18,7 @@ export default defineConfig(
       // Standalone decks: single-file HTML with inline scripts, written to be
       // opened straight from disk. They are not part of the app or the library,
       // and the app's rules (Angular templates, module syntax) do not apply.
-      'presentations/**',
+      'decks/**',
     ],
   },
   {

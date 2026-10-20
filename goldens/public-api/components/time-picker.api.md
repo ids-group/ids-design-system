@@ -36,6 +36,8 @@ export class TimePickerComponent extends DsControlValueAccessor<string | TimeRan
     public readonly label = input<string>('');
     protected readonly labelId = `${this.uid}-label`;
     private laterOf;
+    public readonly loop = input<TimePickerLoop | null>(null);
+    protected readonly loopResolved = resolveWithConfig(…);
     public readonly maxTime = input<string | null>(null);
     protected readonly message = this.fieldMessage.message;
     public readonly minTime = input<string | null>(null);
@@ -78,6 +80,8 @@ export class TimePickerComponent extends DsControlValueAccessor<string | TimeRan
     public readonly value = model<string | TimeRangeValue | null>(null);
     private readonly vcr;
 }
+
+export type TimePickerLoop = 'auto' | 'always' | 'never';
 
 export type TimePickerMode = 'single' | 'range';
 

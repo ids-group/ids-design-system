@@ -103,6 +103,8 @@ export abstract class DsChartBase {
     public readonly errorTextResolved = this.defaults.errorText;
     public readonly frame = input<ChartFrame | null>(null);
     public readonly frameResolved = this.defaults.frame;
+    public readonly highlightActive = input<boolean | null, unknown>(null, { transform: (value) => (value == null ? null : booleanAttribute(value)) });
+    public readonly highlightActiveResolved = this.defaults.highlightActive;
     public readonly interactive = input(false, { transform: booleanAttribute });
     protected readonly intl = inject(…);
     public readonly loading = input(false, { transform: booleanAttribute });
@@ -378,6 +380,9 @@ export function disposeWithLeave(overlayRef: OverlayRef | null | undefined, caus
 
 // @internal
 export function domainMinOf(values: readonly number[]): number;
+
+// @internal
+export function dropdownMinWidth(triggerWidth: number): string;
 
 // @internal
 export function dropdownOverlay(overlay: Overlay, trigger: HTMLElement, extraPanelClass: string | readonly string[] = []): { positionStrategy: FlexibleConnectedPositionStrategy; config: OverlayConfig; };

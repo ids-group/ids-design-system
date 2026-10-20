@@ -29,8 +29,10 @@
       label="Time"
       [(value)]="single" />
 
-    <span class="value-tag t-mono-inline">
-      {{ single() ?? '—' }}
+    <span class="value-slot">
+      <span class="value-tag t-mono-inline">
+        {{ single() ?? '—' }}
+      </span>
     </span>
   </div>
 
@@ -40,6 +42,23 @@
     Open wheels
   </h3>
 
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      loop
+    </code> runs the hour and minute columns on
+    past either end: <code class="t-mono-inline">'auto'</code> (default) a
+    column that holds more values than it shows,
+    <code class="t-mono-inline">
+      'always'
+    </code> or
+    <code class="t-mono-inline">
+      'never'
+    </code>; app-wide in
+    <code class="t-mono-inline">
+      DS_CONFIG.timePicker.loop
+    </code>.
+  </p>
+
   <div class="row">
     <ds-time-picker
       staticPreview
@@ -47,6 +66,22 @@
       value="14:30"
       format="12h"
       minuteStep="15" />
+
+    <ds-time-picker
+      staticPreview
+      label="loop = always"
+      value="14:30"
+      format="12h"
+      minuteStep="15"
+      loop="always" />
+
+    <ds-time-picker
+      staticPreview
+      label="loop = never"
+      value="14:30"
+      format="12h"
+      minuteStep="15"
+      loop="never" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -92,8 +127,10 @@
       [minuteStep]="15"
       [(value)]="stepped" />
 
-    <span class="value-tag t-mono-inline">
-      {{ stepped() ?? '—' }}
+    <span class="value-slot">
+      <span class="value-tag t-mono-inline">
+        {{ stepped() ?? '—' }}
+      </span>
     </span>
   </div>
 
@@ -122,8 +159,10 @@
       [disabledTime]="noLunch"
       [(value)]="bounded" />
 
-    <span class="value-tag t-mono-inline">
-      {{ bounded() ?? '—' }}
+    <span class="value-slot">
+      <span class="value-tag t-mono-inline">
+        {{ bounded() ?? '—' }}
+      </span>
     </span>
   </div>
 
@@ -195,8 +234,10 @@
       [required]="true"
       [(value)]="requiredRange" />
 
-    <span class="value-tag t-mono-inline">
-      {{ range() }}
+    <span class="value-slot">
+      <span class="value-tag t-mono-inline">
+        {{ range() }}
+      </span>
     </span>
   </div>
 
@@ -215,13 +256,15 @@
     line; <code class="t-mono-inline">[invalid]</code> paints it without text.
   </p>
 
-  <div class="row">
+  <div class="row field-top">
     <ds-time-picker
       error="A time is required."
       [formControl]="timeControl" />
 
-    <span class="value-tag t-mono-inline">
-      {{ timeControl.value ?? '—' }}
+    <span class="value-slot">
+      <span class="value-tag t-mono-inline">
+        {{ timeControl.value ?? '—' }}
+      </span>
     </span>
   </div>
 </docs-section>

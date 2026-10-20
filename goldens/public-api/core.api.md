@@ -87,6 +87,7 @@ export interface DsConfig {
     };
     timePicker?: {
         format?: '24h' | '12h';
+        loop?: 'auto' | 'always' | 'never';
     };
     avatar?: {
         initials?: (name: string) => string;
@@ -142,10 +143,17 @@ export interface DsConfig {
         frame?: ChartFrame;
         tooltipLingerMs?: number;
         pinOnClick?: boolean;
+        highlightActive?: boolean;
         hoverDelayMs?: number;
         tooltipSwatches?: boolean;
         valueFormat?: ChartValueFormat;
         rendering?: ChartRendering;
+    };
+    tooltip?: {
+        placement?: TooltipPlacement;
+        delay?: number;
+        arrow?: boolean;
+        pinOnClick?: boolean;
     };
     datePicker?: {
         locale?: string;
@@ -571,6 +579,8 @@ export type IconName = keyof typeof ICONS | (string & {});
 
 export type PaginationLayout = 'grouped' | 'spread';
 
+export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
+
 // @internal
 export function addDevWarningSink(sink: (message: string) => void): () => void;
 
@@ -621,6 +631,9 @@ export function reportDevWarning(message: string): void;
 
 // @internal
 export function resolveWithConfig<T>(value: Signal<T | null>, pick: (config: DsConfig) => T | undefined, fallback: T): Signal<T>;
+
+// @internal
+export function retainStyles(component: Type<unknown>, providers: StaticProvider[] = []): void;
 
 // @internal
 export function warnAnnounceOversight(tag: 'ds-banner' | 'ds-alert', section: 'banner' | 'alert', state: () => AnnounceState): void;

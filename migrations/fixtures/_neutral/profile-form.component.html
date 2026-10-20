@@ -1,0 +1,18 @@
+<form [formGroup]="form">
+  <ds-input label="Name" formControlName="name" />
+  <ds-input label="Phone" formControlName="phone" />
+
+  <ul class="addresses">
+    @for (address of addresses; track address.id) {
+      <li (click)="select(address)">
+        {{ address.line1 }}, {{ address.city }}
+        <ds-button variant="text" (click)="removeAddress($event, address)">Remove</ds-button>
+      </li>
+    }
+  </ul>
+
+  <div class="actions">
+    <ds-button variant="outline" (click)="reset()">Cancel</ds-button>
+    <ds-button [disabled]="form.pristine" [loading]="saving" (click)="save()">Save</ds-button>
+  </div>
+</form>

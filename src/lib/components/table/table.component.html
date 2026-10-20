@@ -17,6 +17,8 @@
     #scrollWrap
     class="scroll-wrap"
     [class.scroll-y]="maxHeight()"
+    [class.fixed-intrinsic]="intrinsicWidth() !== null"
+    [style.contain-intrinsic-inline-size.px]="intrinsicWidth()"
     [style.max-height]="maxHeight()">
     <div
       class="visually-hidden"
@@ -57,6 +59,19 @@
       </colgroup>
 
       <thead #tableHead>
+        @if (printHeading()) {
+          <tr class="print-heading-row">
+            <th
+              scope="colgroup"
+              class="print-heading"
+              [attr.colspan]="expandedColspan()">
+              <span class="print-heading-title">{{ printHeading() }}</span>
+              @if (printHeadingNote()) {
+                <span class="print-heading-note">{{ printHeadingNote() }}</span>
+              }
+            </th>
+          </tr>
+        }
         <tr>
           @if (selectable()) {
             <th
@@ -153,6 +168,29 @@
                   <ng-container
                     [ngTemplateOutlet]="thText"
                     [ngTemplateOutletContext]="{ $implicit: col }" />
+                </span>
+              }
+
+              @if (sortableCol(col) || col.hint) {
+                <!-- Chromium leaves a button's content unpainted in a header group repeated on a printed
+                     continuation page, so print shows this copy instead. -->
+                <span
+                  class="th-label th-print-label"
+                  aria-hidden="true">
+                  <ng-container
+                    [ngTemplateOutlet]="thText"
+                    [ngTemplateOutletContext]="{ $implicit: col }" />
+
+                  @if (
+                    ariaSort(col) === 'ascending' ||
+                    ariaSort(col) === 'descending'
+                  ) {
+                    <ds-icon
+                      class="sort-icon"
+                      [name]="sortIcon(col)"
+                      [size]="12">
+                    </ds-icon>
+                  }
                 </span>
               }
 

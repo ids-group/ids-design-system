@@ -4,6 +4,88 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.18.0 - 2026-10-20
+
+### Changed
+
+- **Step 8 looks for workarounds under every applied item, not only under `deleteList` rows.**
+  New manifests write no rows. `ds-delete-judge` also takes applied items, reads the files their
+  finder hit and their applier touched near the changed surface, and deletes a workaround only when
+  the `v<V>` tree shows V covers the case; results are keyed `item:<id>`. Feedback never proposes
+  new `deleteList` rows.
+
+## 1.17.0 - 2026-10-20
+
+### Removed
+
+- **`unreleased [<path>]` mode removed from the plugin.** The skill steps a consumer through
+  published versions only: `argument-hint` is `[target-version | dry-run]`, and the ledger drops
+  `unreleased`.
+
+## 1.16.1 - 2026-10-20
+
+### Fixed
+
+- **`deleteList` `find` shapes are grepped as literals.** The step-12 pre-pass and the step-8
+  delete-list sweep grep with fixed strings (`grep -rlF`), and `ds-delete-judge` escapes regex
+  metacharacters before its Grep or searches with `-F`. A shape such as `[rescaleOnHide]="true"`
+  is a character class as a regex and matches none of the code it names.
+
+## 1.16.0 - 2026-10-19
+
+### Changed
+
+- **Phase A step 12: a whole-chain pre-pass decides which items get per-item agents.** Once per
+  target it runs `apply-mechanical.mjs --dry-run` over every chain manifest, the lint step over the
+  whole range, one `ds-usage-finder` per range of versions and a grep of every `deleteList` row.
+  Every item none of them hit gets a `grep -rlF` of its `old`, `detect` and `searchHints` over the
+  finder's files, with no model. Planners, per-item finders and `ds-recheck` go only to flagged
+  items and versions: a hit (the grep's included), a `code-add`, a non-template
+  `behavior`/`removed-api`, an item naming an earlier flagged item's `new`, or a version with no
+  manifest or a manifest-truth flag. An unflagged item is closed as "no hits, grep re-check
+  empty": that grep is its re-check, and it is still listed, `surface: "none"` items included.
+  Ledger gains `prepass`.
+
+## 1.15.3 - 2026-10-19
+
+### Fixed
+
+- **`drift-scan.mjs` matches a stylesheet class only in code, never in a comment, string or `url()`.**
+  A `//` or `/* */` comment naming `<html>` or `index.html` no longer reports the gone class `html`;
+  template and TypeScript matching is unchanged.
+
+## 1.15.2 - 2026-10-19
+
+### Fixed
+
+- **`unreleased` mode starts from the newest published version.** A beta published after the
+  latest stable is a chain step of its own, so its manifest is applied, and the tree before the
+  `unreleased` step is that beta's tag.
+- **`unreleased <path>` takes a DS checkout only.** The step reads `## Unreleased`,
+  `migrations/unreleased.json` and `src/lib` there, which a built `dist/ds` does not carry.
+- **A dev build is recognised by `-dev.` in its version.** The checkout's `dist/ds` is reused
+  only when its version ends in `-dev.g<sha>` of the checkout's HEAD; otherwise `build:lib` runs.
+  A build without `-dev.` means `## Unreleased` is empty, and the step is dropped.
+- **The packed `.tgz` sits beside the ledger**, and the ledger records
+  `unreleased: { checkout, tgz, version }`. A resume whose `.tgz` is gone packs it again.
+- **`unreleased dry-run` builds, packs and installs nothing.**
+
+## 1.15.1 - 2026-10-19
+
+### Fixed
+
+- **`apply-mechanical.mjs` renames `SortDir` to `SortDirection` in a consumer's imports and type arguments.** The 0.13.4 manifest carried the type inside the `table-sort-dir-spelled-out` input rename, which only rewrites bindings, so `applied` was reported with a root-entry `import type { SortDir }` and `computed<SortDir>` untouched. The type has its own `type-rename` item, `table-sort-dir-type-spelled-out`, which rewrites multi-line imports and every whole-word use.
+
+## 1.15.0 - 2026-10-19
+
+### Added
+
+- **`unreleased [<path>]` mode.** After the published chain, one more step to the DS's unreleased
+  changes: a DS dev checkout is built and packed (or a built `dist/ds` is packed), installed with
+  `npm install --no-save`, and migrated from `## Unreleased` and `migrations/unreleased.json`. The
+  consumer's `package.json` and lockfile stay untouched; the report says to set the version and run
+  `npm i` once the release is published.
+
 ## 1.14.1 - 2026-10-14
 
 ### Fixed

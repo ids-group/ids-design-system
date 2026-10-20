@@ -17,7 +17,7 @@
 // as in `baseDir`.
 // `layout` reads the `layout-*` cases: `<baselineUrl>` serves the page from a 0.15.0 checkout with
 // `ds-docs/src/app/harness/table-layout.cases.ts` and its plain `@for` block copied in, `<docsUrl>`
-// this checkout, where each case renders under the default layout and again as `<id>-auto`.
+// this checkout, where each case renders under the page's `'fixed'` config and again as `<id>-auto`.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { open, wait } from './headless-chrome.mjs';
@@ -512,6 +512,13 @@ function check(outDir, baseDir) {
   ]) {
     if (result.cases[id].overflow > 0)
       fail(`${id}: horizontal overflow ${result.cases[id].overflow}px`);
+  }
+  for (const id of ['max-content-fixed', 'max-content-virtual']) {
+    if (!result.cases[id]) fail(`${id}: case missing`);
+    else if (result.cases[id].tableWidth > 2000)
+      fail(
+        `${id}: a max-content container widened the table to ${result.cases[id].tableWidth}px`,
+      );
   }
   for (const [width, measured] of Object.entries(result.container)) {
     if (Number(width) >= 800 && measured.overflow > 0)

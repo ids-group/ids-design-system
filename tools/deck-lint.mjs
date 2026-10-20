@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Are the decks in presentations/ telling the truth about themselves? A deck is a
+// Are the decks in decks/ telling the truth about themselves? A deck is a
 // snapshot of a question and has no way to update itself when the answer arrives, so
 // every claim it makes about its own state rots silently — nothing renders red, and
 // the folder quietly stops meaning anything.
@@ -22,7 +22,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 // Overridable so the selftest can write its fixtures into a private copy. Writing them into the
 // tracked directory turned this very gate red in a concurrent session, and a crash left a
 // `selftest-*.html` behind that `git add -A` would stage.
-const DECKS = process.env.DS_DECKS_DIR || join(ROOT, 'presentations');
+const DECKS = process.env.DS_DECKS_DIR || join(ROOT, 'decks');
 const ARCHIVE = join(DECKS, 'implemented');
 const STATUSES = ['open', 'implemented', 'tool'];
 
@@ -67,8 +67,8 @@ function unresolvableTokens(html, stylesheet) {
   );
 }
 
-// presentations/ is local to each checkout, so a clean clone compiles the stylesheet first.
-if (!existsSync(join(DECKS, 'ds.css')) && DECKS === join(ROOT, 'presentations'))
+// decks/ is local to each checkout, so a clean clone compiles the stylesheet first.
+if (!existsSync(join(DECKS, 'ds.css')) && DECKS === join(ROOT, 'decks'))
   execFileSync(process.execPath, [join(ROOT, 'tools', 'build-deck-css.mjs')], {
     cwd: ROOT,
     stdio: 'inherit',
@@ -78,7 +78,7 @@ const stylesheet = existsSync(join(DECKS, 'ds.css'))
   : '';
 if (stylesheet === '') {
   console.error(
-    'deck-lint: presentations/ds.css is missing — run build:deck-css.',
+    'deck-lint: decks/ds.css is missing — run build:deck-css.',
   );
   process.exit(1);
 }
@@ -134,7 +134,7 @@ for (const dir of [DECKS, ARCHIVE]) {
       fail(
         'D003',
         where,
-        'claims implemented but sits at root — move it to presentations/implemented/.',
+        'claims implemented but sits at root — move it to decks/implemented/.',
       );
     }
     if (archived && status !== 'implemented') {
@@ -222,7 +222,7 @@ sorted.forEach((rank, index) => {
   if (rank !== index + 1) {
     fail(
       'D008',
-      'presentations/',
+      'decks/',
       `ranks are not a contiguous 1..N run — found ${sorted.join(', ')}.`,
     );
   }

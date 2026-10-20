@@ -2,23 +2,31 @@
 
 One line per closed item. Open work lives in `todo.md`; the detail behind an entry is in git history.
 
+## ITB-2: component base without a cascade layer (2026-10-16)
+- `component-base.rules` and the inline bases of `ds-accordion` and `ds-icon` sit in `:where()`, no `@layer` (`styles/_component-base.scss`); `check-component-owned-styles` fails a library stylesheet holding `@layer`. Removing the compiled `ds-tooltip-panel` sheet at 11 007 elements, Chromium 148: 40.5 ms before, 1.5 ms after
+- Decided: zero specificity without a layer (Stas)
+
+## Pressed tonal button and danger menu item (2026-10-12)
+- A pressed tonal `ds-button` mixes 28% of its colour (`button.component.scss:216`); a pressed error `ds-menu-item` fills with `--error-muted` (`menu-item.component.scss:91`), released in 0.15.1
+- Decided by Stas
+
 ## Link colour is a theme role (2026-10-14)
 - `--text-link` and `--text-link-visited` are roles in both themes, blue under any brand (`themes/_semantic.scss`, `themes/dark/_theme.scss`); `.link` and the `ds-table` cell link read them, `--ds-link-color` stays the `.link` hook
-- Decided: «Роль ссылки возвращается» (Stas, deck `implemented/link-colour-layer`)
+- Decided by Stas
 
 ## Brand colour reaches every shade; links stay blue (2026-10-13)
 - Light and dark primary shades take their hue from `--primary` (`themes/_semantic.scss`, `themes/dark/_theme.scss`); the brand checklist is in `themes/README.md` and the docs theming page
-- Decided: derive the tone from the brand colour plus a checklist; links always blue (Stas, decision queue and deck `link-colour`)
+- Decided: derive the tone from the brand colour plus a checklist; links always blue (Stas)
 
 ## Calendar week and clock from the locale (2026-10-12)
 - `ds-date-picker` starts the week on its locale's first day (`localeFirstDayOfWeek`, Monday without week data); `ds-time-picker` shows the locale's 12h or 24h clock (`localeTimeFormat`); inputs and `DS_CONFIG` still win
-- Decided: everything from the locale (Stas, deck `implemented/locale-week-and-hour`)
+- Decided: everything from the locale (Stas)
 
 ## Chart motion: sync and response (2026-10-11)
 - Line, markers, area, value labels, pins, gridlines, tick labels and waterfall connectors move on the column timing; the category band glides with the tooltip panel and a held band pin follows the data (`chart-motion.moves`, `measureBandPinY`)
 - `ds-pie-chart` tweens slice angles through `tweenMarks` (`charts-motion.ts`); heatmap rows and cells, scatter points, pie slices and waterfall connectors and labels leave with a fade
 - Hovered column, bar, waterfall step and heatmap cell brighten (`chart-interactive.$highlight`); a hovered pie slice slides out 3 units; pins pop in; tooltip rows fade in on a new category
-- Decided: sync and response, no counting numbers (Stas, deck `chart-motion`)
+- Decided: sync and response, no counting numbers (Stas)
 
 ## Chart and picker loading (2026-10-09)
 - Eight charts keep the plot under `ds-loading-overlay` on a reload, bound to the plot with an 8px reach and the caption uncovered (`ChartStatesComponent`, `reloading`)
@@ -26,23 +34,23 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - `skeletonCount` on `ds-chart`, `ds-column-chart`, `ds-pie-chart`, `ds-funnel-chart`, `ds-waterfall-chart`, default 5; `--ds-waterfall-chart-skeleton-height` removed
 - `ds-heatmap-chart` hugs its grid (`inline-size: fit-content`)
 - `ds-select`, `ds-multi-select`, `ds-autocomplete`: placeholder option rows while empty, the list under an overlay on a reload; the multi-select filter and select all stay live
-- Decided: ds-chart, column, line, heatmap A; pie, funnel, waterfall B; scatter A without dots; heatmap card hugs the grid; multi-select A (Stas, deck `implemented/loading-states`, asked by mm-ecm)
-- Accepted: every block of the before and after (Stas, deck `implemented/loading-skeletons`)
+- Decided: ds-chart, column, line, heatmap A; pie, funnel, waterfall B; scatter A without dots; heatmap card hugs the grid; multi-select A (Stas, asked by mm-ecm)
+- Accepted: every block of the before and after (Stas)
 
 ## Bar chart rows and loading (2026-10-08)
 - `ds-bar-chart` takes `labelPosition: 'top' | 'start'` and `BarChartRow.children`, `hint`, `emphasis`, `showPercent`, `detached` (`bar-chart.math.ts`: `placeRows`, `shownRows`, `partSpans`)
 - New tokens `--ds-bar-chart-label-column-max-width`, `--ds-bar-chart-child-fill-opacity`, `--ds-bar-chart-divider-color`, and `DsIntl.chart.rowsUnder` (`ds-bar-chart`)
 - Loading follows `ds-table`: skeleton rows while `data` is empty, `ds-loading-overlay` over the rows on a reload, no `loadingStyle` input (`showsSkeleton`)
 - The reload overlay covers the card to its rounded corners (`--ds-loading-overlay-radius`); a bordered `ds-table` rounds the overlay's bottom corners
-- Decided: skeleton plus overlay, every drawn variant accepted (Stas, deck `implemented/bar-chart`, asked by mm-ecm)
+- Decided: skeleton plus overlay, every drawn variant accepted (Stas, asked by mm-ecm)
 
 ## Pie chart centre value fitting (2026-10-05)
 - `ds-pie-chart` keeps the centre value on one line, shrinking to `--ds-pie-chart-center-value-min-font-size` then using the `'tick'` form (`pie-chart.component.ts`, `fitCenterValue`)
 - `[centerCompact]="false"` keeps the full sum at the floor and `centerPlacement="below"` prints value and caption under the ring (`ds-pie-chart`)
-- Decided: option K, refit only on ring width, text, hole or font-load change (Stas, deck `pie-chart-center-value`)
+- Decided: option K, refit only on ring width, text, hole or font-load change (Stas)
 
 ## Unslotted overlay content (2026-10-05)
-- `ds-modal`, `ds-modal-card` and `ds-drawer` render slotless content in the body; `ds-drawer` also takes `[body]` and `[actions]` (Stas picked the all-together option, deck `unslotted-content`)
+- `ds-modal`, `ds-modal-card` and `ds-drawer` render slotless content in the body; `ds-drawer` also takes `[body]` and `[actions]` (Stas picked the all-together option)
 - Dev mode warns once per message on unslotted content and on unknown slot names (`core/unslotted-content-warning.ts`, `warnUnslottedContent`)
 
 ## ds-docs audit findings (2026-10-02)
@@ -85,14 +93,14 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 
 ## Pressed state on neutral rows and small buttons (2026-09-24)
 - Neutral rows and small buttons step to `--surface-muted` on `:active` (sidenav, date/time pickers, toast action, copy button, multi-select select-all, tab close button)
-- An interactive `ds-tag` takes the shared `press.feedback` dip instead (Stas, deck `interaction-formula`)
+- An interactive `ds-tag` takes the shared `press.feedback` dip instead (Stas)
 
 ## Button colour-family slots spelled out (2026-09-24)
 - `ds-button` and `ds-icon-button` private slots `--c-*` are `--_family-*`, and inner classes `.c-<color>` and `.v-<variant>` are `.color-<color>` and `.variant-<variant>` (three `class-rename` items)
 
-## Waterfall deck closed and interaction deck narrowed (2026-09-24)
-- Decided: `ds-waterfall-chart` keeps its own tag, deck `waterfall-mode-or-component` moved to `implemented/` (Stas)
-- Decided: override slot recorded for later and formula deferred (Stas); success/warning pressed was found already in the code (deck `interaction-formula`)
+## Waterfall chart tag and interaction formula scope (2026-09-24)
+- Decided: `ds-waterfall-chart` keeps its own tag (Stas)
+- Decided: override slot recorded for later and formula deferred (Stas); success/warning pressed was found already in the code
 
 ## Chart tooltip, focus and hatching fixes (2026-09-24)
 - The category tooltip panel hangs over the highest reading at the active category via mark `axisOrigin`
@@ -126,7 +134,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 ## Announce oversight dev warning (2026-09-24)
 - `ds-banner` and `ds-alert` warn in dev mode when `announce` is undecided under an assertive variant, or polite but announcing only via config `true` (`core/announce-warning.ts`, `warnAnnounceOversight`)
 - ds-docs sets `banner.announce` and `alert.announce` to `false` at the root (ds-docs)
-- Decided: the assertive warning fires while `announce` is unset and stops once the key is set to either value (Stas, deck `banner-announce-warning`)
+- Decided: the assertive warning fires while `announce` is unset and stops once the key is set to either value (Stas)
 
 ## Closing overlays are click-through (2026-09-24)
 - `.modal-backdrop.closing`, `.drawer-root.closing` and `.sheet-overlay.closing` carry `pointer-events: none` for the whole leave (`ds-modal`, `ds-drawer`, `ds-bottom-sheet`)
@@ -176,7 +184,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - The four 0.13.4 generic spell-out items are 97 exact `token-rename` pairs generated from the tag diff, each `detect` anchored `(?![A-Za-z0-9_-])`
 - `donut-chart-renamed-to-pie-chart` and six older selector renames list `style`; `M045` fails a `selector-rename` without it
 - `--ds-line-chart-plot-height` sizes the plot and `--ds-line-chart-placeholder-height` the skeleton, empty and error boxes; a 0.13.4 `behavior` item records it
-- Decided: deck `ds-bar-name-collision` archived with the name kept (Stas)
+- Decided: the `ds-bar` name is kept (Stas)
 
 ## Expanded table row spans its row (2026-09-23)
 - `check-manifest-truth` lists every unread old/new value, reads selectors, token families, functions and `@use` paths, and scans prose fields for phantom `--ds-*` names
@@ -206,7 +214,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 
 ## Void var(--token) gate (2026-09-09)
 - `tools/check-void-tokens` fails on an unresolvable `var(--x)` in `.scss`/`.css` under `src` and `ds-docs/src`, in `lint:all` with a `void-tokens:selftest`
-- The gate ignores comments, resolves `[style.--x]` and `setProperty()` writes and compiled `presentations/ds.css`, and follows a fallback only when the primary is undeclared
+- The gate ignores comments, resolves `[style.--x]` and `setProperty()` writes and compiled `decks/ds.css`, and follows a fallback only when the primary is undeclared
 - Sidebar `.chapter` uses `--space-6` and `--space-8` instead of the undeclared `--space-7` (ds-docs)
 - `activity.section.scss` empty-state avatar no longer uses the non-existent `--surface-subtitle`
 
@@ -229,7 +237,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - `accordion-item.component.scss` disabled chevron uses `--text-disabled` instead of the undefined `--icon-disabled`
 
 ## Banner and toast icon centred on message block (2026-09-01)
-- The icon is `align-self: center` in `ds-banner` and `ds-toast`, centred on the message block; `layout-row` and `compact` icon overrides removed (Stas picked B, deck `banner-toast-icon-alignment`)
+- The icon is `align-self: center` in `ds-banner` and `ds-toast`, centred on the message block; `layout-row` and `compact` icon overrides removed (Stas)
 - `--banner-ic-mt` removed from `_tokens.scss`
 
 ## Table swipe no longer eaten by resize handles (2026-09-02)
@@ -267,19 +275,18 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - `chipFit` measures the parent's available content width instead of the trigger's own, and `ds-autocomplete` shares the correction through one helper
 - `check-class-surface-entry` fails on a class missing from the prose and on one missing from every `detect`, skipping classes new in the range
 - `migrations/AUTHORING.md`: `detect` names every class from the class-surface report, `action` names none
-- Both picker decks moved to `presentations/implemented/`
 - Fixed `super()` called twice in `SelectComponent` and the `clear()` doc drifted onto `clearValue()`
 
-## Picker deck proposals (2026-08-31)
+## Picker proposals (2026-08-31)
 - Shared helpers: `core/list-cursor.ts`, `components/scroll-active-option.ts`, `components/picker-announcer.ts`, `components/type-ahead.ts`
 - `filterWith: predicate | 'none'` is one input covering custom matching and no filtering (pickers)
 - Decided: no type-ahead for `ds-autocomplete`, no `compareWith` for string-keyed pickers
 - `ds-multi-select` declares no panel rule of its own; the select-all row reads the shared option-row gap token
-- Not built, kept open in `todo.md`: list virtualisation, which fights `aria-activedescendant` (picker deck section 9)
+- Not built, kept open in `todo.md`: list virtualisation, which fights `aria-activedescendant`
 - Decided: no `aria-multiselectable` on `ds-select` (ARIA permits it only on multi-value listboxes, `docs/picker-contract.md`)
 
 ## Picker lane review round (2026-08-31)
-- Five adversarial review passes found 43 defects in the picker branch; 42 are fixed (picker lane, deck `picker-review-findings`)
+- Five adversarial review passes found 43 defects in the picker branch; 42 are fixed (picker lane)
 - With the filter row hidden, `Enter` on the trigger now selects an option, so keyboard selection works without `searchable` (picker trigger)
 - An option inside a `disabled` group keeps object identity, so `flatIndexOf`, option ids and `aria-activedescendant` are correct (picker flattening helper)
 - `dsChipTemplate` is rendered on `ds-autocomplete`, and `selectAll="group"` no longer draws the panel-wide row (`ds-autocomplete`, select-all)
@@ -329,11 +336,11 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - `ds-button` takes `hint` / `warning` / `error` / `messageIcon` / `reserveMessage`, rendered as `ds-field-message` under the button (`ds-button`)
 - `ds-button` and `ds-icon-button` take `ariaDescribedBy`; the icon button gets nothing else (`ds-button`, `ds-icon-button`)
 - The message inputs moved from `DsFieldBase` into a new `DsMessageBase` that `DsFieldBase` extends (`DsMessageBase`, `DsFieldBase`)
-- Decided: standing refusals go inside the button via `disabledReason`, transient refusals use the field message under it, tooltips are out of both (Stas, deck `button-refusal-reason`)
+- Decided: standing refusals go inside the button via `disabledReason`, transient refusals use the field message under it, tooltips are out of both (Stas)
 - Decided: no length cap on `disabledReason`, the text wraps and the button grows (Stas, `ds-button`)
 - Closed unbuilt: reason as a sibling element with the button left natively disabled (focus never lands, so it is never announced)
 - Docs: `/components/button` has a "Refused with reason" section, `components.md` is updated, and a `deleteList` entry retires the `[dsTooltip]`-on-a-disabled-button workaround (`ds-button`)
-- Deck CSS is built by `tools/build-deck-css.mjs`, which copies the woff2 fonts beside `ds.css` and exits non-zero on any unresolved `url()` (`presentations/ds.css`, `decks/fonts`)
+- Deck CSS is built by `tools/build-deck-css.mjs`, which copies the woff2 fonts beside `ds.css` and exits non-zero on any unresolved `url()` (`decks/ds.css`, `decks/fonts`)
 - `TableColumn.link: (row) => string | readonly unknown[] | null` renders a cell as `<a [routerLink]>`, `null` gives plain text, a click does not fire the row handler (`ds-table`)
 - Table link cells paint `--ds-table-cell-link-color` plus underline without hover, and `RouterLink` is instantiated only in the link branch (`ds-table`)
 - `--ds-card-overflow` is new and defaults to `visible`; docs recommend `clip` paired with `data-focus="inset"` (`ds-card`)
@@ -351,7 +358,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - `DS_CONFIG.field.stateIcons` defaults a per-state glyph; each of `error` / `warning` / `success` / `hint` can be replaced or `false`, and `false` restores the old look (`DS_CONFIG`)
 - `messageIcon` on all fifteen field components overrides `stateIcons`; the glyph is 14px = `--icon-sm` (field components)
 - `--ds-field-message-icon-gap` and `--ds-field-message-icon-offset` are new; the glyph centres on the first message line (`ds-field-message`)
-- Decided: per-state glyph is the default and configurable per state (Stas, deck `field-message-glyph`, option C)
+- Decided: per-state glyph is the default and configurable per state (Stas)
 - Documented trap: two `provideDsConfig` calls in one `providers` array do not merge (`provideDsConfig`)
 - Option labels use `overflow: clip` with a `var(--space-1)` clip margin, so descenders show and row heights stay (`ds-select`, `ds-multi-select`, `ds-table`, `ds-breadcrumbs`, `ds-topbar`, `ds-page-header`)
 - `valueControlBridge()` holds the `ControlValueAccessor` plumbing; `DsControlValueAccessor` delegates to it and `ds-search` takes the bridge alone (`ds-search`, `DsControlValueAccessor`)
@@ -370,7 +377,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - `TableRowAction` takes `hidden?: (row) => boolean` and `disabledReason?: string | ((row) => string)`; a row with every item hidden renders no kebab (`ds-table`)
 - Not built here, kept open as their own P3: `label`-as-a-function and a divider on `TableRowAction` (`ds-table`)
 - `ds-modal` takes `status: DsStatus` instead of `error: boolean`, driving badge tint, title colour, default icon and `alertdialog` role; `ds-modal-card` takes it too (`ds-modal`, `ds-modal-card`)
-- Decided: modal status is a tinted surface rather than an accent stripe, matching `ds-alert` (Stas, deck `breaking-batch`)
+- Decided: modal status is a tinted surface rather than an accent stripe, matching `ds-alert` (Stas)
 - Chip overflow defaults to `"fit"` (`maxVisibleChips` resolves `null` to `"fit"`); `null` shows all chips and a number caps them (`ds-autocomplete`, `ds-multi-select`)
 - Decided: packaging leaves the breaking batch, since no consumer import breaks (breaking batch)
 - `ds-breadcrumbs` takes count-based `maxItems`; tabs, `ds-button-group` and `ds-segmented` keep their current behaviour (`ds-breadcrumbs`)
@@ -404,13 +411,13 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - `ds-date-picker` clears `typedInvalid` and `rangeInvalid` when `value` changes from outside, so no stale "Enter a valid date" over an empty field (`ds-date-picker`)
 - `ds-table` row key guard (`event.target !== event.currentTarget`) is in `v0.10.0`; no further DS work (`ds-table`)
 - `maxVisibleChips` JSDoc says a number is a ceiling in both pickers (`ds-autocomplete`, `ds-multi-select`)
-- Decided: `ds-table` head, `ds-stat` padding (shared `--ds-container-pad`) and `ds-page-header` 28px title stay as defaults; overrides go through tokens (Stas, deck `consumer-default-overrides`)
+- Decided: `ds-table` head, `ds-stat` padding (shared `--ds-container-pad`) and `ds-page-header` 28px title stay as defaults; overrides go through tokens (Stas)
 - `ultra-compact` density drops `--ds-container-pad` to 16px (density tiers)
 - `ds-modal` has six tokens `--ds-modal-<header|body|actions>-pad-top` / `-pad-bottom`, each defaulting to the region's `pad-y` (`ds-modal`)
 - `AUTHORING.md` requires a `behavior` manifest entry for widened exported types, and `tools/class-surface-diff.mjs` diffs member types (`migrations/AUTHORING.md`)
 - `ds-menu-item` has a `description` input rendered under the label, `aria-describedby`, width cap `--ds-menu-item-description-max-width` (`ds-menu-item`)
 - `ds-list-item` renders `[leading]` and `[trailing]` outside the button; `selected` puts `aria-current` on the host; migration entry written (`ds-list-item`)
-- Decided: border only (Stas, 2026-08-13); the fill he parked closed on six-system evidence with no field fill and the error/warning/success ladder kept (deck `field-validation-states`)
+- Decided: border only (Stas, 2026-08-13); the fill he parked closed on six-system evidence with no field fill and the error/warning/success ladder kept
 - `ds-segmented` is a form control with `NG_VALUE_ACCESSOR`, `resolveFieldMessage` and an inner `.track` (`ds-segmented`)
 - `ds-search` has a form accessor, a `disabled` input, `markTouched()` on blur and a disabled style (`ds-search`)
 - Decided: standalone `ds-radio` stays `[(checked)]`-only and the docs say so on `checked`; the group is the form control (`ds-radio`)
@@ -430,7 +437,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - Chips cap by width by default (`maxVisibleChips: "fit"`); `null` restores growth (`ds-multi-select`, `ds-autocomplete`)
 - Decided: page-header 28px title, table head colours and stat 24px padding stay; four identical overrides in one workspace count as one opinion (researched and decided 2026-08-12, C1-C3)
 - `ultra-compact` compresses `--ds-container-pad` to 16px so cards match the compressed cells (density tiers)
-- Disabled picker options dim once; `ds-button` and `ds-icon-button` never read `--opacity-muted` (deck `disabled-recipe`)
+- Disabled picker options dim once; `ds-button` and `ds-icon-button` never read `--opacity-muted`
 - `ds-table` `[loading]="true"` shows a skeleton while no rows are visible and an overlay once there are (`ds-table`)
 - `ds-table` `sortKey` and `sortDir` are `input` + `output` pairs over a `linkedSignal`, so the sort direction no longer vanishes (`ds-table`)
 - `ds-table` has one `[toolbar]` slot; several controls are laid out by the row, a single element gets the full width, and the row hides when empty (`ds-table`)
@@ -756,7 +763,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - `_forced-states.scss` split into 13 partials under `ds-docs/src/styles/forced/` with the same entry (`ds-docs`)
 
 ## Breakpoint tokens and reduced-motion loops (2026-06-25)
-- Breakpoints come from one `$breakpoints` map that emits `--bp-*`, `$bp-*` aliases and `up()`/`down()` mixins (`src/lib/styles/_breakpoints.scss`, deck bp-aliases)
+- Breakpoints come from one `$breakpoints` map that emits `--bp-*`, `$bp-*` aliases and `up()`/`down()` mixins (`src/lib/styles/_breakpoints.scss`)
 - `_page-grid.scss` uses `bp.up(sm)`/`up(lg)`/`up(xl)`; the old +1 values snap to 640/1024 (`_page-grid.scss`)
 - Decided: off-scale content-fit `@media` literals (720, 1100, 820px) stay raw; `down()` has no consumer yet (Stas; `page-header.component.scss`, `_layout-utils.scss`)
 - Fixed: `prefers-reduced-motion` no longer freezes spinners and indeterminate progress; only `transition-duration:0` is forced and loop tokens are slowed (`_tokens.scss`)
@@ -842,7 +849,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 ## Focus, packaging and a11y closures (2026-09-10)
 - Wrong-element focus sweep fixed four more shells (`ds-sidenav-footer` search, table column filter and cell editor, `ds-dropzone` input), with two planted-defect gates (`tools/check-focus-rings.mjs`)
 - Focus ring animates with `animation` instead of `transition`, so component transitions survive focus (`focus.ring`)
-- Selection controls ring `.control-line` through `focus.ring-for($control)` so focus differs from selected (`styles/_control-line.scss`, deck selection-focus-ring)
+- Selection controls ring `.control-line` through `focus.ring-for($control)` so focus differs from selected (`styles/_control-line.scss`)
 - Focus ring is an `outline` with `outline-offset` instead of a box-shadow, a major change to the `--ds-*-focus-shadow` tokens (`styles/_focus.scss`)
 - forced-colors handled by an `own-indicator` mixin inside `@media not (forced-colors: active)`; the floor-rule `!important` is gone, gate added (`tools/check-focus-rings.mjs`)
 - `field-state` no longer paints on disabled fields; read-only keeps the paint because it is still submitted (`styles/_field-state.scss`)
@@ -866,7 +873,7 @@ One line per closed item. Open work lives in `todo.md`; the detail behind an ent
 - Closed: 77-way facade name collisions and Angular 22 packaging risks checked and dismissed
 - Closed unbuilt: splitting the icon map (whole set is 2.5 KB gzip, per-icon exports would break `IconName`)
 - Decided: A3 stands; an eager-shell consumer saves about 72 KB gzip with per-component entries (`packaging-chunking-audit.md`)
-- Decided: no basic/advanced split if the measurement favours the table's opt-in directives, and the work moved to directives A1/A2 (Stas, deck 5)
+- Decided: no basic/advanced split if the measurement favours the table's opt-in directives, and the work moved to directives A1/A2 (Stas)
 - Closed unbuilt: `DsButtonMessage` directive for `ds-button` (built and reverted, probe bundle 308 B worse)
 - `ds-stat` `variant="error"` recolours the value by moving the `--_stat-value-color` resolver (`ds-stat`)
 - `ds-sidenav-footer` collapse button and icon-only `ds-breadcrumbs` crumbs get accessible names; `BreadcrumbItem` can name an icon-only crumb (`BreadcrumbItem`)

@@ -156,8 +156,10 @@ export { DsThemeOptions } from '@ids-group-ltd/ids-design-system/theme'; // inte
 export { DsToastHorizontalPosition } from '@ids-group-ltd/ids-design-system/core'; // type
 export { DsToastPosition } from '@ids-group-ltd/ids-design-system/core'; // interface
 export { DsToastVerticalPosition } from '@ids-group-ltd/ids-design-system/core'; // type
+export { DsTooltipConfig } from '@ids-group-ltd/ids-design-system/components/tooltip'; // interface
 export { DsTriggerDisplay } from '@ids-group-ltd/ids-design-system/core'; // type
 export { EmptyStateComponent } from '@ids-group-ltd/ids-design-system/components/empty-state'; // component
+export { EmptyStateTitleOverflow } from '@ids-group-ltd/ids-design-system/components/empty-state'; // type
 export { EmptyStateVariant } from '@ids-group-ltd/ids-design-system/components/empty-state'; // type
 export { FieldClickFocusDirective } from '@ids-group-ltd/ids-design-system/components'; // directive
 export { FieldGroupComponent } from '@ids-group-ltd/ids-design-system/components/field-group'; // component
@@ -295,6 +297,7 @@ export { TextareaMaxLengthMode } from '@ids-group-ltd/ids-design-system/componen
 export { TextareaResize } from '@ids-group-ltd/ids-design-system/components/textarea'; // type
 export { TimeFormat } from '@ids-group-ltd/ids-design-system/components/time-picker'; // type
 export { TimePickerComponent } from '@ids-group-ltd/ids-design-system/components/time-picker'; // component
+export { TimePickerLoop } from '@ids-group-ltd/ids-design-system/components/time-picker'; // type
 export { TimePickerMode } from '@ids-group-ltd/ids-design-system/components/time-picker'; // type
 export { TimePickerValue } from '@ids-group-ltd/ids-design-system/components/time-picker'; // type
 export { TimeRangeValue } from '@ids-group-ltd/ids-design-system/components/time-picker'; // type
@@ -314,7 +317,7 @@ export { ToastVariant } from '@ids-group-ltd/ids-design-system/components/toast'
 export { ToggleButtonComponent } from '@ids-group-ltd/ids-design-system/components/toggle-button'; // component
 export { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip'; // directive
 export { TooltipPanelComponent } from '@ids-group-ltd/ids-design-system/components/tooltip'; // component
-export { TooltipPlacement } from '@ids-group-ltd/ids-design-system/components/tooltip'; // type
+export { TooltipPlacement } from '@ids-group-ltd/ids-design-system/core'; // type
 export { TopBarComponent } from '@ids-group-ltd/ids-design-system/components/topbar'; // component
 export { TreeComponent } from '@ids-group-ltd/ids-design-system/components/tree'; // component
 export { TreeNode } from '@ids-group-ltd/ids-design-system/components/tree'; // interface

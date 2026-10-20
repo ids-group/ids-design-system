@@ -148,6 +148,7 @@ export class TableComponent<T extends object> {
     public readonly cellTemplateMap = input<Record<string, TemplateRef<{ $implicit: unknown; row: unknown; }>>>({});
     protected readonly cellTemplates = computed<Record<string, TemplateRef<{ $implicit: unknown; row: unknown; }>>>(…);
     protected cellValue(row: T, col: TableColumn<T>): string;
+    private readonly changeDetector;
     protected clearColumnFilter(): void;
     private clipCapsSet;
     private clipFit;
@@ -158,6 +159,7 @@ export class TableComponent<T extends object> {
     public readonly columnFilterOptions = input<ReadonlyMap<string, readonly string[]>>(new Map());
     private readonly columnFilterPopover;
     public readonly columnFilters = model<Map<string, ReadonlySet<string>>>(new Map());
+    private columnFloor;
     private readonly columnPickerPopover;
     private readonly columnWidthControls;
     protected readonly columnWidths = computed<readonly (number | null)[]>(…);
@@ -165,6 +167,7 @@ export class TableComponent<T extends object> {
     protected commitEdit(row: T, col: TableColumn<T>): void;
     private readonly contentWidths;
     public readonly data = input.required<readonly T[]>();
+    private readonly declaredWidths;
     public readonly density = input<'default' | 'compact'>('default');
     private readonly destroyRef;
     protected readonly displayData = computed<readonly T[]>(…);
@@ -215,6 +218,7 @@ export class TableComponent<T extends object> {
     private readonly hscrollProxy;
     private readonly injector;
     protected readonly intl = inject(…);
+    protected readonly intrinsicWidth = computed<number | null>(…);
     protected isActionDisabled(action: TableRowAction<T>): boolean;
     protected isColumnFiltered(col: TableColumn<T>): boolean;
     protected isEditing(row: T, col: TableColumn<T>): boolean;
@@ -228,9 +232,9 @@ export class TableComponent<T extends object> {
     protected isStriped(absoluteIndex: number): boolean;
     private lastLazyRequest;
     protected readonly layout = inject<DsTableLayout<T>>(…);
+    private readonly layoutChosen;
     private layoutKey;
     public readonly layoutMode = input<'fixed' | 'auto' | null>(null, { alias: 'layout' });
-    private readonly layoutResolved;
     private layoutRestored;
     public readonly lazy = input(false, { transform: booleanAttribute });
     public readonly lazyLoad = output<{ first: number; rows: number; }>();
@@ -245,6 +249,7 @@ export class TableComponent<T extends object> {
     protected onColumnFilterClick(col: TableColumn<T>, event: Event): void;
     protected onEditInput(event: Event): void;
     protected onFilterSearch(event: Event): void;
+    protected onPrintChange(printing: boolean): void;
     protected onRowAction(action: TableRowAction<T>): void;
     protected onRowClick(row: T, event: Event): void;
     protected onRowKey(row: T, event: Event): void;
@@ -265,6 +270,10 @@ export class TableComponent<T extends object> {
     public readonly paginationSize = input<DsSize | null>(null);
     private parseDurationMs;
     public readonly persistLayout = input(false, { transform: booleanAttribute });
+    public readonly printAllRows = input(false, { transform: booleanAttribute });
+    public readonly printHeading = input<string | null>(null);
+    public readonly printHeadingNote = input<string | null>(null);
+    protected readonly printing = signal(…);
     private publishHeadHeight;
     public readonly rangeAnnouncement = input<((first: number, last: number, total: number) => string) | null>(null);
     public readonly rangeAnnouncementResolved = computed(…);

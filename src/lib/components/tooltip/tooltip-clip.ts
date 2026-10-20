@@ -32,8 +32,22 @@ export function isHostClipped(
   target: TooltipClipTarget | null,
 ): boolean {
   const element = clipElement(host, target);
+  if (element === null) {
+    return false;
+  }
 
-  return element !== null && isTextClipped(element);
+  return isTextClipped(element) || isClippedByLines(element);
+}
+
+// A line clamp hides whole lines, so the block never overflows its width. Only hidden overflow
+// counts: text in a scroll box can still be reached. The pixel absorbs sub-pixel line heights.
+function isClippedByLines(element: HTMLElement): boolean {
+  if (element.scrollHeight <= element.clientHeight + 1) {
+    return false;
+  }
+  const overflow = getComputedStyle(element).overflowY;
+
+  return overflow === 'hidden' || overflow === 'clip';
 }
 
 export function ownTextOf(element: HTMLElement | null): string {

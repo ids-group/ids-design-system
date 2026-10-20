@@ -10,6 +10,7 @@ import type {
 } from './chart.types';
 import type { DsToastPosition } from './toast-position';
 import type { PaginationLayout } from './pagination.types';
+import type { TooltipPlacement } from './tooltip.types';
 
 export interface DsConfig {
   /** BCP-47 locale every component formats numbers and dates in. Default is Angular's
@@ -49,6 +50,9 @@ export interface DsConfig {
     /** Display format for `ds-time-picker` - 24h or 12h AM/PM. Unset follows the hour cycle of
      *  `locale` / `LOCALE_ID` (en-US: `'12h'`, en-GB: `'24h'`). */
     format?: '24h' | '12h';
+    /** Whether the hour and minute columns run on past either end. Default `'auto'`: a column that
+     *  holds more values than it shows. */
+    loop?: 'auto' | 'always' | 'never';
   };
   avatar?: {
     /** How `ds-avatar` turns its `name` into initials, app-wide. The built-in rule takes the
@@ -124,10 +128,10 @@ export interface DsConfig {
     /** Default for `ds-table`'s `stickyScrollbarOffset`, as any CSS length. Unset, each table
      *  cancels its scroll container's bottom padding. */
     stickyScrollbarOffset?: string;
-    /** Default for `ds-table`'s `layout`. Default `'fixed'`.
-     *  @deprecated `'auto'` is a temporary way back to the 0.15.0 column widths, which follow the
-     *  cell content and ignore `kind`; it will be removed. Review each table under `'fixed'`,
-     *  setting `width`, `kind` or `minWidth` where a column needs it, then delete this key. */
+    /** Default for `ds-table`'s `layout`. Default `'auto'`, the 0.15.0 widths, which follow the
+     *  cell content and ignore `kind`; `'fixed'` takes each column's `width`, `kind` or share.
+     *  @deprecated `'auto'` is a temporary default and will be removed. Setting it changes nothing,
+     *  so delete the key; to take the configured widths now, set `'fixed'`. */
     layout?: 'fixed' | 'auto';
   };
   icon?: {
@@ -150,6 +154,8 @@ export interface DsConfig {
     /** Whether a click on a mark or category holds its tooltip and highlight. Default `true`.
      *  A second click, Escape or a press elsewhere releases. A tap holds whatever this says. */
     pinOnClick?: boolean;
+    /** Whether the hovered or focused column, bar or heatmap cell brightens. Default `true`. */
+    highlightActive?: boolean;
     /** Milliseconds the pointer rests on a mark, category or legend entry before the chart answers.
      *  Default 0. After one answer the next is immediate until the pointer leaves the chart;
      *  focus, a tap and a pinning click are always immediate. */
@@ -162,6 +168,16 @@ export interface DsConfig {
     valueFormat?: ChartValueFormat;
     /** How charts build themselves on a long page. All off by default. */
     rendering?: ChartRendering;
+  };
+  tooltip?: {
+    /** Default side for every `dsTooltip`. Default `'top'`. */
+    placement?: TooltipPlacement;
+    /** Default milliseconds before a tip appears. Default `120`. */
+    delay?: number;
+    /** Whether every tip draws the arrow that points at its host. Default `true`. */
+    arrow?: boolean;
+    /** Whether a click on the host keeps every tip open. Default `false`. */
+    pinOnClick?: boolean;
   };
   datePicker?: {
     /** BCP-47 locale for `ds-date-picker` names and value format. Unset falls back to

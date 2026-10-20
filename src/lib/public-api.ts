@@ -160,7 +160,10 @@ export type {
   DropzoneFileState,
 } from '@ids-group-ltd/ids-design-system/components/dropzone';
 export { EmptyStateComponent } from '@ids-group-ltd/ids-design-system/components/empty-state';
-export type { EmptyStateVariant } from '@ids-group-ltd/ids-design-system/components/empty-state';
+export type {
+  EmptyStateTitleOverflow,
+  EmptyStateVariant,
+} from '@ids-group-ltd/ids-design-system/components/empty-state';
 export {
   DS_FIELD_GROUP,
   FieldGroupComponent,
@@ -366,6 +369,7 @@ export type {
 export { TimePickerComponent } from '@ids-group-ltd/ids-design-system/components/time-picker';
 export type {
   TimeFormat,
+  TimePickerLoop,
   TimePickerMode,
   TimePickerValue,
   TimeRangeValue,
@@ -398,7 +402,10 @@ export {
   TooltipDirective,
   TooltipPanelComponent,
 } from '@ids-group-ltd/ids-design-system/components/tooltip';
-export type { TooltipPlacement } from '@ids-group-ltd/ids-design-system/components/tooltip';
+export type {
+  DsTooltipConfig,
+  TooltipPlacement,
+} from '@ids-group-ltd/ids-design-system/components/tooltip';
 export { TopBarComponent } from '@ids-group-ltd/ids-design-system/components/topbar';
 export { TreeComponent } from '@ids-group-ltd/ids-design-system/components/tree';
 export type { TreeNode } from '@ids-group-ltd/ids-design-system/components/tree';

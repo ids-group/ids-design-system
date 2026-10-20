@@ -11,6 +11,13 @@ the consumer's source root, the files you own, and the two extracted DS trees: `
 before it. A row names a workaround the release made unnecessary. Your job is to remove the ones
 that are dead in THIS consumer and keep every one that is still load-bearing.
 
+You may also be given applied plan items (`{ id, kind, old, new, action, appliesWhen, surface }`)
+with no row behind them. For each, read your files near the surface the item changed - the element,
+binding, selector or token it names - for consumer code that worked around the old behaviour and
+that the change makes unnecessary: an override, a pin, a wrapper, a binding that restates the new
+default. There is no `find` and no `why`: the evidence is the `v<V>` tree alone. Judge and apply
+each such hit by the rules below, and report it as a row with `rowId: "item:<id>"`.
+
 ## What to do
 
 - **Only edit the files you were given.** Another judge owns every other file; a hit outside your
@@ -18,6 +25,10 @@ that are dead in THIS consumer and keep every one that is still load-bearing.
 - For each row, grep its `find` shapes over the source root (`*.html`, `*.ts`, `*.scss`, `*.css`;
   skip `node_modules`, `dist`, `.angular`, `.git`), searching every surface and ranking by the
   row's `surface`. Your grep is the hit list; do not trust one handed to you.
+- **A `find` shape is a literal string, never a regex.** `[rescaleOnHide]="true"` read as a regex
+  is a character class and matches none of the code it names. Escape every regex metacharacter
+  (`[ ] ( ) { } . * + ? ^ $ | \`) before passing the shape to Grep, or search with fixed strings
+  (`rg -F`, `grep -F`).
 - **Judge each hit on its own.** The row's `why` is the library's claim about V, not evidence.
   Before deleting, confirm in the `v<V>` tree that V covers the case this consumer's code covers:
   the same element, the same state, the same values. A workaround stays where it is still needed:
